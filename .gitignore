@@ -1,0 +1,59 @@
+.flattened-pom.xml
+
+*.class
+
+#for docker-build
+.m2/repository 
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# logs
+*.log*
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+# gitbash error
+vim.exe.stackdump
+
+#standar folder for docker volumes
+docker-data
+
+# eclipse project
+.classpath
+.project
+.settings
+.factorypath
+target
+bin
+
+# Archivos que representen bases de datos en memoria
+*.db
+*.orig
+
+# IntelliJ IDEA
+*.iml
+*/.idea/
+*.idea/
+
+# Os X Files
+.DS_Store
+
+#Vim
+*.swp
+*.swo
+logs
+
+# Carpetas creadas automaticamente por el IDE
+back-end/.metadata/
+back-end/.recommenders/
+.metadata/
+build/
+/.sonarlint
+sonarlint.json
