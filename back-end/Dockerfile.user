@@ -1,0 +1,8 @@
+ARG VERSION=0.1.0-SNAPSHOT
+
+FROM openjdk:8-jdk-alpine
+ARG VERSION
+WORKDIR /app
+COPY hospital-api/target/hospital-api-${VERSION}.jar /app/hospital-api.jar
+EXPOSE 8080  
+ENTRYPOINT ["java","-jar","/app/hospital-api.jar"]

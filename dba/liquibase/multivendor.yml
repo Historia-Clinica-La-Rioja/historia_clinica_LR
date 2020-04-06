@@ -1,0 +1,86 @@
+databaseChangeLog:
+    - logicalFilePath: multivendor.yml
+    - property: 
+        name: boolean.false
+        value: 0
+        dbms: mssql 
+    - property:
+        name: boolean.false
+        value: false
+        dbms: postgresql
+    - property:
+        name: boolean.false
+        value: false
+        dbms: db2
+    - property: 
+        name: date.now 
+        value: getdate()
+        dbms: mssql 
+    - property:
+        name: date.now
+        value: CURRENT_DATE
+        dbms: postgresql
+    - property:
+        name: date.now
+        value: CURRENT DATE
+        dbms: db2
+    - property: 
+        name: varchar.max 
+        value: varchar(MAX)
+        dbms: mssql 
+    - property:
+        name: varchar.max
+        value: varchar #defaults has no limit
+        dbms: postgresql
+    - property:
+        name: varchar.max
+        value: causar_error #revisar
+        dbms: db2
+    - property: 
+        name: limit1 
+        value: "" 
+        dbms: mssql 
+    - property:
+        name: limit1
+        value: limit 1
+        dbms: postgresql
+    - property:
+        name: limit1
+        value: limit 1
+        dbms: db2
+    - property: 
+        name: top1 
+        value: top 1 
+        dbms: mssql 
+    - property:
+        name: top1
+        value: ""
+        dbms: postgresql
+    - property:
+        name: top1
+        value: ""
+        dbms: db2
+    - property: 
+        name: CROSS-APPLY
+        value: CROSS APPLY
+        dbms: mssql 
+    - property:
+        name: CROSS-APPLY
+        value: CROSS JOIN LATERAL
+        dbms: postgresql
+    - property:
+        name: CROSS-APPLY
+        value: CROSS JOIN LATERAL
+        dbms: db2
+    - property: 
+        name: concat 
+        value: "+"
+        dbms: mssql 
+    - property:
+        name: concat
+        value: "||"
+        dbms: postgresql
+    - property:
+        name: concat
+        value: "concat"
+        dbms: db2

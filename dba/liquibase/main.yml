@@ -1,0 +1,7 @@
+databaseChangeLog:
+- include:
+    file: multivendor.yml
+    relativeToChangelogFile: true
+- include:
+    file: baseline.yml
+    relativeToChangelogFile: true

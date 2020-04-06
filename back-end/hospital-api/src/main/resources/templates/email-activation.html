@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	    <meta charset="utf-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	    <title>Email</title>
+	
+	    <meta name="description" content="Source code generated using layoutit.com">
+	    <meta name="author" content="LayoutIt!">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<style type="text/css">
+			img {
+		   		max-width: 100%;
+		   		max-height: 100%;
+			}
+			.headercolor{
+				background-color: #F7F7F7;
+			}
+			.templateHeader {
+				background-image: none;
+				background-repeat: no-repeat;
+				background-position: center;
+				background-size: cover;
+				border-top: 0;
+				border-bottom: 0;
+				padding-top: 45px;
+				padding-bottom: 45px;
+			}
+		
+			h1 {
+				color: #222222;
+				font-family: Helvetica;
+				font-size: 40px;
+				font-style: normal;
+				font-weight: bold;
+				line-height: 150%;
+				letter-spacing: normal;
+				text-align: center;
+			}
+			h3 {
+				color: #444444;
+				font-family: Helvetica;
+				font-size: 22px;
+				font-style: normal;
+				font-weight: bold;
+				line-height: 150%;
+				letter-spacing: normal;
+				text-align: left;
+			}
+			.img-container {
+		       	text-align: center;
+		       	display: block;
+		     	}
+		
+			.centerstyle{
+				text-align: center;
+		       	display: block;
+			}
+		
+			body {
+				background-color: #333333;
+			}
+		
+			.templateFooter {
+				background-color: #333333;
+				background-image: none;
+				background-repeat: no-repeat;
+				background-position: center;
+				background-size: cover;
+				border-top: 0;
+				border-bottom: 0;
+				padding-top: 45px;
+				padding-bottom: 63px;
+			}
+			.whitebackground {
+				background-color:white;
+			} 
+			.mail-button {
+				border-collapse: separate !important;
+				border-radius: 3px;
+				background-color: #CA2E2E;
+				text-align: center;
+				border-color: #CA2E2E;
+				font-family: Helvetica;
+			    font-size: 18px;
+				color: #fff;
+				font-weight: bold;
+			}
+		
+			.margin{
+				margin-top: 15px;
+		   		margin-bottom: 15px;
+			}
+		
+			.padding { 
+				padding-bottom: 20px;
+		   		padding-top: 20px
+			}
+		
+			.item.social {
+				text-align: center;
+			}
+			.item.social > a {
+				font-size: 20px;
+				width: 36px;
+				height: 36px;
+				line-height: 36px;
+				display: inline-block;
+				text-align: center;
+				margin: 0 8px;
+				color: #fff;
+				opacity: 0.75;
+			}
+			.footer-dark {
+				background-color: #333333;
+			}
+			.nodecor:hover {
+			  text-decoration: none;
+			}
+			@media only screen and (max-width: 480px){
+				h1{
+					font-size:20px !important;
+					line-height:125% !important;
+				}
+				h2{
+					font-size:18px !important;
+					line-height:125% !important;
+				}
+		
+				h3{
+					font-size:15px !important;
+					line-height:150% !important;
+				}
+		
+				h4{
+					font-size:12px !important;
+					line-height:150% !important;
+				}
+				.templateHeader {
+					padding-top: 5px;
+					padding-bottom: 5px;
+				}
+				.mail-button {
+					font-size: 10px;
+				}	
+			}
+			@media only screen and (min-width: 481px) and (max-width: 768px){
+				h1{
+					font-size:25px !important;
+					line-height:125% !important;
+				}
+				h2{
+					font-size:20px !important;
+					line-height:125% !important;
+				}
+		
+				h3{
+					font-size:18px !important;
+					line-height:150% !important;
+				}
+		
+				h4{
+					font-size:15px !important;
+					line-height:150% !important;
+				}
+				.templateHeader {
+					padding-top: 5px;
+					padding-bottom: 5px;
+				}
+				.mail-button {
+					font-size: 15px;
+				}	
+			}
+		</style>
+	</head>
+	<body>
+	    <!-- /*  Multiple fragments may be defined in one file */-->
+	    <div class="container-fluid">
+		    <div th:replace="fragments/header :: header">
+		      &copy; 2016 Footer
+		    </div>
+			<div class="row headercolor">
+				<div class="col-12">
+					<h3 style="text-align: center; margin-top: 0px;  margin-bottom: 0px;  padding-bottom: 20px;">
+						Ya puedes empezar a usar tu cuenta! 
+					</h3>
+				</div>
+			</div>
+		    <div class="row whitebackground padding">
+				<div class="col-lg-6 offset-lg-3 col-md-8  offset-md-2 col-sm-10 offset-sm-1 margin">
+					<div class="row">
+						<div class="col-lg-8 offset-lg-2 col-md-8  offset-md-2 col-sm-12 offset-sm-0 padding">
+							<h3 style="text-align: center;">Este enlace solo puede usarse una vez para validar tu cuenta.</h3>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12 centerstyle">
+							<button type="button" class="btn btn-success mail-button" >
+								<a th:href="${verificationlink}" class="nodecor" style="color:white;text-decoration:none !important">Activar cuenta</a>
+							</button>
+						    
+						</div>
+					</div>
+				</div>
+			</div>
+	    </div>
+  	</body>
+ 	<footer class="footer-dark">
+	    <div th:replace="fragments/footer :: footer">
+	      &copy; 2016 Admin Footer
+	    </div>
+    </footer>
+</html>

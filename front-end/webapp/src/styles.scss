@@ -1,0 +1,38 @@
+@import "./assets/styles/variables.scss";
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  background-color: #f5f5f5;
+  font-family: $sgh-default-fonts;
+}
+
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+article {
+  color: #333;
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  @media (max-width: 600px) {
+	padding: 1vw 1vw;
+  }
+
+  mat-card {
+    margin: 20px 0;
+  }
+}
+
+.clickeable {
+	cursor: pointer;
+}
+
+a.page-action {
+	position: absolute;
+	right: 30px;
+	bottom: 15px;
+}

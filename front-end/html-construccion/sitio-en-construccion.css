@@ -1,0 +1,21 @@
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+}
+
+article {
+    height: 100%; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center;
+  }
+  
+.text {
+  font-size: 25px; 
+  margin: 40px;
+}
