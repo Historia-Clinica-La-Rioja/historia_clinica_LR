@@ -13,6 +13,18 @@ databaseChangeLog:
         value: false
         dbms: db2
     - property: 
+        name: boolean.true
+        value: 1
+        dbms: mssql 
+    - property:
+        name: boolean.true
+        value: true
+        dbms: postgresql
+    - property:
+        name: boolean.true
+        value: true
+        dbms: db2
+    - property: 
         name: date.now 
         value: getdate()
         dbms: mssql 
