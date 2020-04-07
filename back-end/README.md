@@ -21,6 +21,19 @@ Si todo es correcto se puede comprobar accediendo a la siguiente url http://loca
 
 Haciendo uso del siguiente usuario y contraseña: admin@example.com/admin123 se pueden logear en el endpoint de authenticación y obtener un token valido.
 
+### Profiles
+
+Se hara uso de SpringProfile para determinar en que contexto se encuentra la aplicacion. 
+
+Se encuentran 3 arhivos de propiedades, uno para cada **Profile** :
+* `application-dev.properties`: desarrollo
+* `application-test.properties`: testing
+* `application-prod.properties`: ambiente productivo
+
+La forma de activar un **Profile** es mediante la propiedad `spring.profiles.active=` 
+> Ejemplo: `spring.profiles.active=dev` 
+
+Para el desarrollo se debe usar `dev` (se encuentra por defecto)
 
 
 ### Convenciones de desarrollo
@@ -353,8 +366,6 @@ public class AlumnosDatosPersonalesController {
 
 }
 ```
-
-
 
 
 
