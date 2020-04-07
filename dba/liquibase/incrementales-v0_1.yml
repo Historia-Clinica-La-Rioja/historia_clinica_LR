@@ -1,0 +1,421 @@
+﻿databaseChangeLog:
+- logicalFilePath: incrementales-v0_1
+- changeSet:
+    id: address-table
+    author: saguero
+    changes: 
+    - createTable: 
+        tableName: address
+        columns: 
+        - column:
+            autoIncrement: true
+            constraints:
+                primaryKey: true
+                primaryKeyName: PK_address
+            name: id
+            type: int
+        - column:
+            constraints:
+                nullable: false
+            name: street
+            type: varchar(35)
+        - column:
+            constraints:
+                nullable: false
+            name: number
+            type: varchar(5)
+        - column:
+            name: floor
+            type: varchar(2)
+        - column:
+            name: apartment
+            type: varchar(3)
+        - column:
+            name: quarter
+            type: varchar(30)
+        - column:
+            constraints:
+                nullable: false
+            name: city_id
+            type: smallint
+        - column:
+            constraints:
+                nullable: false
+            name: postcode
+            type: varchar(6)
+- changeSet:
+    id: identification_type-table
+    author: saguero
+    changes: 
+    - createTable: 
+        tableName: identification_type
+        columns: 
+        - column:
+            constraints:
+                primaryKey: true
+                primaryKeyName: PK_identification_type
+            name: id
+            type: smallint
+        - column:
+            constraints:
+                nullable: false
+            name: description
+            type: varchar(30)
+    - sql:
+        sql: |-
+            INSERT INTO identification_type (id,description) VALUES (1,'DNI');
+            INSERT INTO identification_type (id,description) VALUES (2,'CI');
+            INSERT INTO identification_type (id,description) VALUES (3,'LC');
+            INSERT INTO identification_type (id,description) VALUES (4,'LE');
+            INSERT INTO identification_type (id,description) VALUES (5,'Cédula Mercosur');
+            INSERT INTO identification_type (id,description) VALUES (6,'CUIT');
+            INSERT INTO identification_type (id,description) VALUES (7,'CUIL');
+            INSERT INTO identification_type (id,description) VALUES (8,'Pasaporte extranjero');
+            INSERT INTO identification_type (id,description) VALUES (9,'Cédula de identidad extranjera');
+            INSERT INTO identification_type (id,description) VALUES (10,'Otro documento extranjero');
+            INSERT INTO identification_type (id,description) VALUES (11,'No posee');
+            INSERT INTO identification_type (id,description) VALUES (12,'En trámite');
+
+- changeSet:
+    id: gender-table
+    author: saguero
+    changes: 
+    - createTable: 
+        tableName: gender
+        columns: 
+        - column:
+            constraints:
+                primaryKey: true
+                primaryKeyName: PK_gender
+            name: id
+            type: smallint
+        - column:
+            constraints:
+                nullable: false
+            name: description
+            type: varchar(9)
+    - sql:
+        sql: |-
+            INSERT INTO gender (id,description) VALUES (1,'Femenino');
+            INSERT INTO gender (id,description) VALUES (2,'Masculino');
+
+- changeSet:
+    id: patient_type-table
+    author: saguero
+    changes: 
+    - createTable: 
+        tableName: patient_type
+        columns: 
+        - column:
+            constraints:
+                primaryKey: true
+                primaryKeyName: PK_patient_type
+            name: id
+            type: smallint
+        - column:
+            constraints:
+                nullable: false
+            name: description
+            type: varchar(10)
+        - column:
+            constraints:
+                nullable: false
+            name: active
+            type: boolean
+        - column:
+            constraints:
+                nullable: false
+            name: audit
+            type: boolean
+    - sql:
+        sql: |-
+            INSERT INTO patient_type (id,description,active,audit) VALUES (1,'Permanente',${boolean.true},${boolean.false});
+            INSERT INTO patient_type (id,description,active,audit) VALUES (2,'Validado',${boolean.true},${boolean.false});
+            INSERT INTO patient_type (id,description,active,audit) VALUES (3,'Temporario',${boolean.true},${boolean.true});
+            INSERT INTO patient_type (id,description,active,audit) VALUES (4,'Histórico',${boolean.true},${boolean.true});
+            INSERT INTO patient_type (id,description,active,audit) VALUES (5,'Telefónico',${boolean.true},${boolean.true});
+            INSERT INTO patient_type (id,description,active,audit) VALUES (6,'Rechazado',${boolean.false},${boolean.false});
+
+- changeSet:
+    id: health_insurance-table
+    author: saguero
+    changes: 
+    - createTable: 
+        tableName: health_insurance
+        columns: 
+        - column:
+            autoIncrement: true
+            constraints:
+                primaryKey: true
+                primaryKeyName: PK_health_insurance
+            name: id
+            type: smallint
+        - column:
+            constraints:
+                nullable: false
+            name: rnos
+            type: varchar(6)
+        - column:
+            constraints:
+                nullable: false
+            name: name
+            type: varchar(255) 
+        - column:
+            name: acronym
+            type: varchar(18)
+        - column:
+            constraints:
+                nullable: false
+            name: query_date
+            type: date
+- changeSet:
+    id: person-table
+    author: saguero
+    changes: 
+    - createTable: 
+        tableName: person
+        columns: 
+        - column:
+            autoIncrement: true
+            constraints:
+                primaryKey: true
+                primaryKeyName: PK_person
+            name: id 
+            type: int
+        - column:
+            constraints:
+                nullable: false
+            name: first_name
+            type: varchar(20)
+        - column:
+            name: middle_names
+            type: varchar(20)
+        - column:
+            constraints:
+                nullable: false
+            name: last_name
+            type: varchar(20)
+        - column:
+            name: other_last_names
+            type: varchar(20)
+        - column:
+            constraints:
+                nullable: false
+            name: identification_type_id
+            type: smallint
+        - column:
+            name: identification_number
+            type: varchar(10)
+        - column:
+            constraints:
+                nullable: false
+            name: gender_id
+            type: smallint
+        - column:
+            constraints:
+                nullable: false
+            name: birth_date
+            type: date
+- changeSet:
+    id: person_extended-table
+    author: saguero
+    changes: 
+    - createTable: 
+        tableName: person_extended
+        columns: 
+        - column:
+            constraints:
+                primaryKey: true
+                primaryKeyName: PK_person_extended
+            name: person_id
+            type: int
+        - column:
+            name: cuil
+            type: varchar(10)
+        - column:
+            name: mothers_last_name
+            type: varchar(20)
+        - column:
+            constraints:
+                nullable: false
+            name: address_id
+            type: int
+        - column:
+            constraints:
+                nullable: false
+            name: phone_number
+            type: varchar(15)
+        - column:
+            constraints:
+                nullable: false
+            name: email
+            type: varchar(100)
+        - column:
+            name: ethnic
+            type: varchar(25)
+        - column:
+            name: religion 
+            type: varchar(25)
+        - column:
+            name: name_self_determination
+            type: varchar(25)            
+        - column:
+            name: gender_self_determination
+            type: smallint
+        - column:
+            name: health_insurance_id
+            type: smallint
+- changeSet:
+    id: patient-table
+    author: saguero
+    changes: 
+    - createTable: 
+        tableName: patient
+        columns: 
+        - column:
+            autoIncrement: true
+            constraints:
+                primaryKey: true
+                primaryKeyName: PK_patient
+            name: id
+            type: int
+        - column:
+            name: person_id
+            type: int
+        - column:
+            constraints:
+                nullable: false
+            name: type_id
+            type: smallint
+        - column:
+            constraints:
+                nullable: false
+            name: possible_duplicate
+            type: boolean
+        - column:
+            name: national_id
+            type: int  
+
+- changeSet:
+    id: fk_address_city_id
+    author: saguero
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: city_id
+        baseTableName: address
+        constraintName: FK_address_city_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: city
+        validate: true
+- changeSet:
+    id: fk_person_identification_type_id
+    author: saguero
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: identification_type_id
+        baseTableName: person
+        constraintName: FK_person_identification_type_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: identification_type
+        validate: true
+        
+- changeSet:
+    id: fk_person_gender_id
+    author: saguero
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: gender_id
+        baseTableName: person
+        constraintName: FK_person_gender_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: gender
+        validate: true
+- changeSet:
+    id: fk_person_extended_person_id
+    author: saguero
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: person_id
+        baseTableName: person_extended
+        constraintName: FK_person_extended_person_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: person
+        validate: true
+
+- changeSet:
+    id: fk_person_extended_address_id
+    author: saguero
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: address_id
+        baseTableName: person_extended 
+        constraintName: FK_person_extended_address_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: address
+        validate: true
+
+- changeSet:
+    id: fk_person_extended_health_insurance_id
+    author: saguero
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: health_insurance_id
+        baseTableName: person_extended
+        constraintName: FK_person_extended_health_insurance_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: health_insurance
+        validate: true
+
+- changeSet:
+    id: fk_person_extended_gender_id
+    author: saguero
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: gender_self_determination
+        baseTableName: person_extended
+        constraintName: FK_person_extended_gender_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: gender
+        validate: true
+
+- changeSet:
+    id: fk_patient_person_id
+    author: saguero
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: person_id
+        baseTableName: patient
+        constraintName: FK_patient_person_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: person
+        validate: true
+
+- changeSet:
+    id: fk_patient_type_id
+    author: saguero
+    changes: 
+    - addForeignKeyConstraint:
+        baseColumnNames: type_id
+        baseTableName: patient
+        constraintName: FK_patient_type_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: patient_type
+        validate: true
