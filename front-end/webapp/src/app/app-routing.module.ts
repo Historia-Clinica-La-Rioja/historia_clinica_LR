@@ -8,6 +8,10 @@ const routes: Routes = [
 		component: InicioComponent,
 		pathMatch: 'full',
 	},
+	{
+		path: 'pacientes',
+		loadChildren: () => import('./modules/pacientes/pacientes.module').then(m => m.PacientesModule)
+	},
 ];
 
 @NgModule({

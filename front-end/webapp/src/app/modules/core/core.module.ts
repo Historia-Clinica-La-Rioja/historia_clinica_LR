@@ -10,7 +10,7 @@ import { PresentationModule } from '../presentation/presentation.module';
 import { TranslateModule } from "@ngx-translate/core";
 import { RECAPTCHA_SETTINGS, RecaptchaFormsModule, RecaptchaModule, RecaptchaSettings } from "ng-recaptcha";
 
-const globalSettings: RecaptchaSettings = { siteKey: '6LcVh-UUAAAAAExavpQdi-VgdyObNuSOUI2s8cct' };
+const globalSettings: RecaptchaSettings = { siteKey: '' }; // TODO completar cuando se implemente para esta aplicacion
 
 @NgModule({
 	declarations: [
