@@ -20,15 +20,16 @@ const globalSettings: RecaptchaSettings = { siteKey: '' }; // TODO completar cua
 		FooterComponent,
 	],
 	imports: [
-		CommonModule,
 		AppMaterialModule,
+		CommonModule,
 		HttpClientModule,
 		PresentationModule,
-		TranslateModule,
 		RecaptchaModule,
 		RecaptchaFormsModule,
+		TranslateModule,
 	],
 	exports: [
+		AppMaterialModule,
 		BarComponent,
 		CommonModule,
 		ContentComponent,

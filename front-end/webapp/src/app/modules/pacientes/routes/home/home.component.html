@@ -1,2 +1,22 @@
 <app-bar></app-bar>
-<p>home works!</p>
+<app-content width="full">
+	<h1 [translate]="'pacientes.home.TITLE'">Pacientes</h1>
+
+	<mat-card>
+		<mat-card-header>
+			<mat-card-title [translate]="'pacientes.home.find_add_section.TITLE'"></mat-card-title>
+		</mat-card-header>
+		<mat-card-content>
+			<p ></p>
+		</mat-card-content>
+		<mat-card-footer>
+			<button mat-stroked-button color="primary" (click)="onClickBusqueda()">
+				<span [translate]="'pacientes.home.find_add_section.BUTTON_SEARCH'"></span>
+			</button>
+			<button mat-stroked-button color="primary" (click)="onClickAdd()">
+				<span [translate]="'pacientes.home.find_add_section.BUTTON_ADD'"></span>
+			</button>
+		</mat-card-footer>
+	</mat-card>
+</app-content>
+

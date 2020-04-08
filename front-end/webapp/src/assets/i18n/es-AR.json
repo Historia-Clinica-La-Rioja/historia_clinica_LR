@@ -4,5 +4,15 @@
 		"SUBTITLE": "Sistema de gestión hospitalaria"
 	},
 	"core": {
+	},
+	"pacientes": {
+		"home": {
+			"TITLE": "PACIENTES",
+			"find_add_section": {
+				"TITLE": "Búsqueda / Creación de HC",
+				"BUTTON_ADD": "Crear paciente temporal",
+				"BUTTON_SEARCH": "Buscar"
+			}
+		}
 	}
 }
