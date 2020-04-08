@@ -31,7 +31,7 @@ public class Room {
 	private String type;
 	
 	@Column(name = "sector_id", nullable = false)
-	private String sector_id;
+	private Integer sector_id;
 	
 	@Column(name = "discharge_date", nullable = true)
 	private LocalDateTime discharge_date;

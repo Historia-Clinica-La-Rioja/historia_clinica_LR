@@ -13,12 +13,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "sector_floor")
+@Table(name = "bed_category")
 @Getter
 @Setter
 
-public class SectorFloor {
-	
+public class BedCategory {
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +25,10 @@ public class SectorFloor {
 	
 	@Column(name = "description", nullable = false)
 	private String description;
-
+	
+	@Column(name = "bed_category_id", nullable = false)
+	private Integer bed_category_id;
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -40,13 +42,13 @@ public class SectorFloor {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		SectorFloor other = (SectorFloor) obj;
+		BedCategory other = (BedCategory) obj;
 		return Objects.equals(id, other.id);
 	}
 
 	@Override
 	public String toString() {
-		return "SectorFloor [id=" + id + ", description=" + description + "]";
+		return "BedCategory [id=" + id + ", description=" + description + "]";
 	}
 	
 	

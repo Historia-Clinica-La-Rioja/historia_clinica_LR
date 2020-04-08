@@ -25,7 +25,7 @@ public class Bed {
 	private Integer id;
 	
 	@Column(name = "room_id", nullable = false)
-	private String sector_id;
+	private String room_id;
 	
 	@Column(name = "category", nullable = true)
 	private String category;
@@ -49,7 +49,7 @@ public class Bed {
 
 	@Override
 	public String toString() {
-		return "Bed [id=" + id + ", sector_id=" + sector_id + ", category=" + category + "]";
+		return "Bed [id=" + id + ", sector_id=" + room_id + ", category=" + category + "]";
 	}
 	
 }
