@@ -30,6 +30,7 @@ const globalSettings: RecaptchaSettings = { siteKey: '' }; // TODO completar cua
 	],
 	exports: [
 		BarComponent,
+		CommonModule,
 		ContentComponent,
 		FooterComponent,
 		HttpClientModule,
