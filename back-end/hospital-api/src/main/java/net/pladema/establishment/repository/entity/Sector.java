@@ -24,11 +24,11 @@ public class Sector {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Short id;
 	
-	@Column(name = "description", nullable = false)
+	@Column(name = "description", nullable = false, length = 255)
 	private String description;
 	
 	@Column(name = "institution_id", nullable = false)
-	private Integer institution_id;
+	private Integer institutionId;
 	
 	
 	@Override
@@ -50,6 +50,6 @@ public class Sector {
 
 	@Override
 	public String toString() {
-		return "Sector [id=" + id + ", description=" + description + ", institution_id=" + institution_id + "]";
+		return "Sector [id=" + id + ", description=" + description + ", institution_id=" + institutionId + "]";
 	}
 }

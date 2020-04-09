@@ -25,10 +25,10 @@ public class Bed {
 	private Integer id;
 	
 	@Column(name = "room_id", nullable = false)
-	private Integer room_id;
+	private Integer roomId;
 	
 	@Column(name = "bed_category_id", nullable = false)
-	private Short bed_category_id;
+	private Short bedCategoryId;
 	
 	@Override
 	public int hashCode() {
@@ -49,7 +49,7 @@ public class Bed {
 
 	@Override
 	public String toString() {
-		return "Bed [id=" + id + ", sector_id=" + room_id + "]";
+		return "Bed [id=" + id + ", sector_id=" + roomId + "]";
 	}
 	
 }

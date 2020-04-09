@@ -24,31 +24,31 @@ public class Institution {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	@Column(name = "name", nullable = false)
+	@Column(name = "name", nullable = false, length = 255)
 	private String name;
 	
 	@Column(name = "address_id", nullable = false)
-	private Integer address_id;
+	private Integer addressId;
 	
-	@Column(name = "website", nullable = false)
+	@Column(name = "website", nullable = false, length = 255)
 	private String website;
 	
-	@Column(name = "phone", nullable = false)
+	@Column(name = "phone", nullable = false, length = 15)
 	private String phone;
 	
-	@Column(name = "email", nullable = false)
+	@Column(name = "email", nullable = false, length = 100)
 	private String email;
 	
 	@Column(name = "cuit", nullable = false)
 	private String cuit;
 	
 	@Column(name = "sisa_code", nullable = false)
-	private String sisa_code;
+	private String sisaCode;
 
 	@Override
 	public String toString() {
-		return "Institution [id=" + id + ", name=" + name + ", address_id=" + address_id + ", website=" + website
-				+ ", phone=" + phone + ", email=" + email + ", cuit=" + cuit + ", sisa_code=" + sisa_code + "]";
+		return "Institution [id=" + id + ", name=" + name + ", address_id=" + addressId + ", website=" + website
+				+ ", phone=" + phone + ", email=" + email + ", cuit=" + cuit + ", sisa_code=" + sisaCode + "]";
 	}
 	
 	@Override

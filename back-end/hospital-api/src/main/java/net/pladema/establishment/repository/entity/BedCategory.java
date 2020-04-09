@@ -23,7 +23,7 @@ public class BedCategory {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Short id;
 	
-	@Column(name = "description", nullable = false)
+	@Column(name = "description", nullable = false, length = 50)
 	private String description;
 	
 	@Override

@@ -24,17 +24,17 @@ public class Room {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Short id;
 	
-	@Column(name = "description", nullable = false)
+	@Column(name = "description", nullable = false, length = 255)
 	private String description;
 	
-	@Column(name = "type", nullable = false)
+	@Column(name = "type", nullable = false, length = 255)
 	private String type;
 	
 	@Column(name = "sector_id", nullable = false)
-	private Short sector_id;
+	private Short sectorId;
 	
 	@Column(name = "discharge_date", nullable = true)
-	private LocalDateTime discharge_date;
+	private LocalDateTime dischargeDate;
 	
 	@Override
 	public int hashCode() {
@@ -55,8 +55,8 @@ public class Room {
 
 	@Override
 	public String toString() {
-		return "Room [id=" + id + ", description=" + description + ", type=" + type + ", sector_id=" + sector_id
-				+ ", discharge_date=" + discharge_date + "]";
+		return "Room [id=" + id + ", description=" + description + ", type=" + type + ", sector_id=" + sectorId
+				+ ", discharge_date=" + dischargeDate + "]";
 	}
 	
 	
