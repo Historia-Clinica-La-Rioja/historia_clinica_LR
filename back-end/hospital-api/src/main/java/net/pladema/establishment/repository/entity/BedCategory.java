@@ -21,13 +21,10 @@ public class BedCategory {
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private Short id;
 	
 	@Column(name = "description", nullable = false)
 	private String description;
-	
-	@Column(name = "bed_category_id", nullable = false)
-	private int bed_category_id;
 	
 	@Override
 	public int hashCode() {

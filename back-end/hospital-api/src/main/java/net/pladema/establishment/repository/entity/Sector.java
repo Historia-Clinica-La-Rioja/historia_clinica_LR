@@ -22,13 +22,13 @@ public class Sector {
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private Short id;
 	
 	@Column(name = "description", nullable = false)
 	private String description;
 	
 	@Column(name = "institution_id", nullable = false)
-	private int institution_id;
+	private Integer institution_id;
 	
 	
 	@Override

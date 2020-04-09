@@ -22,13 +22,13 @@ public class Institution {
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private Integer id;
 	
 	@Column(name = "name", nullable = false)
 	private String name;
 	
 	@Column(name = "address_id", nullable = false)
-	private int address_id;
+	private Integer address_id;
 	
 	@Column(name = "website", nullable = false)
 	private String website;

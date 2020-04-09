@@ -21,7 +21,7 @@ public class InstitutionType {
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private Short id;
 	
 	@Column(name = "description", nullable = false)
 	private String description;

@@ -22,13 +22,13 @@ public class Bed {
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private Integer id;
 	
 	@Column(name = "room_id", nullable = false)
-	private int room_id;
+	private Integer room_id;
 	
-	@Column(name = "category", nullable = true)
-	private String category;
+	@Column(name = "bed_category_id", nullable = false)
+	private Short bed_category_id;
 	
 	@Override
 	public int hashCode() {
@@ -49,7 +49,7 @@ public class Bed {
 
 	@Override
 	public String toString() {
-		return "Bed [id=" + id + ", sector_id=" + room_id + ", category=" + category + "]";
+		return "Bed [id=" + id + ", sector_id=" + room_id + "]";
 	}
 	
 }
