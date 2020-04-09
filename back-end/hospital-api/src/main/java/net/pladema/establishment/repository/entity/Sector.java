@@ -22,7 +22,7 @@ public class Sector {
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	private int id;
 	
 	@Column(name = "description", nullable = false)
 	private String description;

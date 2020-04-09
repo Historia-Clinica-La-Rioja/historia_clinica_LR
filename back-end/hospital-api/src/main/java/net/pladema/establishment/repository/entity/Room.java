@@ -22,7 +22,7 @@ public class Room {
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	private int id;
 	
 	@Column(name = "description", nullable = false)
 	private String description;
@@ -31,7 +31,7 @@ public class Room {
 	private String type;
 	
 	@Column(name = "sector_id", nullable = false)
-	private Integer sector_id;
+	private int sector_id;
 	
 	@Column(name = "discharge_date", nullable = true)
 	private LocalDateTime discharge_date;

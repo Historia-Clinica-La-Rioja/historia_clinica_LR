@@ -22,10 +22,10 @@ public class Bed {
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	private int id;
 	
 	@Column(name = "room_id", nullable = false)
-	private String room_id;
+	private int room_id;
 	
 	@Column(name = "category", nullable = true)
 	private String category;

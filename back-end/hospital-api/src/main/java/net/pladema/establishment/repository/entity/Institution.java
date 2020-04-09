@@ -22,7 +22,7 @@ public class Institution {
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	private int id;
 	
 	@Column(name = "name", nullable = false)
 	private String name;
