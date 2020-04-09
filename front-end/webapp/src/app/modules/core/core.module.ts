@@ -9,6 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { PresentationModule } from '../presentation/presentation.module';
 import { TranslateModule } from "@ngx-translate/core";
 import { RECAPTCHA_SETTINGS, RecaptchaFormsModule, RecaptchaModule, RecaptchaSettings } from "ng-recaptcha";
+import { SidenavComponent } from './components/sidenav/sidenav.component';
 
 const globalSettings: RecaptchaSettings = { siteKey: '' }; // TODO completar cuando se implemente para esta aplicacion
 
@@ -18,6 +19,7 @@ const globalSettings: RecaptchaSettings = { siteKey: '' }; // TODO completar cua
 		BarComponent,
 		ContentComponent,
 		FooterComponent,
+		SidenavComponent,
 	],
 	imports: [
 		AppMaterialModule,
@@ -38,6 +40,7 @@ const globalSettings: RecaptchaSettings = { siteKey: '' }; // TODO completar cua
 		TranslateModule,
 		RecaptchaModule,
 		RecaptchaFormsModule,
+		SidenavComponent,
 	],
 	providers: [{
 		provide: RECAPTCHA_SETTINGS,

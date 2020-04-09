@@ -1,0 +1,16 @@
+<mat-sidenav-container class="sidenav-container">
+	<mat-sidenav mode="side" opened>
+		<div class="container-buttons">
+			<div [ngClass]="{'selected': activeIndex === i}" *ngFor="let menuItem of menuItems; let i = index">
+				<button mat-button
+						(click)="clickMenu(menuItem, i)">
+					<mat-icon>{{menuItem.icon}}</mat-icon>
+					{{menuItem.text | translate}}
+				</button>
+			</div>
+		</div>
+	</mat-sidenav>
+	<mat-sidenav-content>
+		<ng-content></ng-content>
+	</mat-sidenav-content>
+</mat-sidenav-container>
