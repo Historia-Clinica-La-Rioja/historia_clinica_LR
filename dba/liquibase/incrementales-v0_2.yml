@@ -1,0 +1,213 @@
+# Agrega las tablas del módulo establishment
+databaseChangeLog:
+    - logicalFilePath: incrementales-v0_2
+    - changeSet:
+        id: institution-table
+        author: efernandez
+        changes:
+            - createTable:
+                tableName: institution
+                columns:
+                    - column:
+                        name: id
+                        type: int
+                        autoIncrement: true
+                        constraints:
+                            primaryKey: true
+                            primaryKeyName: PK_institution
+                    - column:
+                        name: name
+                        type: varchar(255)
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: address_id
+                        type: int
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: website
+                        type: varchar(255)
+                        constraints:
+                            nullable: true
+                    - column:
+                        name: phone_number
+                        type: varchar(15)
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: email
+                        type: varchar(100)
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: cuit
+                        type: varchar(20)
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: sisa_code
+                        type: varchar(15)
+                        constraints:
+                            nullable: false
+            - addForeignKeyConstraint:
+                baseColumnNames: address_id
+                baseTableName: institution
+                constraintName: FK_institution_address_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: address
+                validate: true
+
+    - changeSet:
+        id: sector-table
+        author: efernandez
+        changes:
+            - createTable:
+                tableName: sector
+                columns:
+                    - column:
+                        name: id
+                        type: int
+                        autoIncrement: true
+                        constraints:
+                            primaryKey: true
+                            primaryKeyName: PK_sector
+                    - column:
+                        name: institution_id
+                        type: int
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: description
+                        type: varchar(255)
+                        constraints:
+                            nullable: false
+            - addForeignKeyConstraint:
+                baseColumnNames: institution_id
+                baseTableName: sector
+                constraintName: FK_sector_institution_id
+                onDelete: CASCADE
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: institution
+                validate: true
+
+    - changeSet:
+        id: room-table
+        author: efernandez
+        changes:
+            - createTable:
+                tableName: room
+                columns:
+                    - column:
+                        name: id
+                        type: int
+                        autoIncrement: true
+                        constraints:
+                            primaryKey: true
+                            primaryKeyName: PK_room
+                    - column:
+                        name: sector_id
+                        type: int
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: description
+                        type: varchar(255)
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: type
+                        type: varchar(255)
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: discharge_date
+                        type: date
+                        constraints:
+                            nullable: true
+            - addForeignKeyConstraint:
+                baseColumnNames: sector_id
+                baseTableName: room
+                constraintName: FK_room_sector_id
+                onDelete: CASCADE
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: sector
+                validate: true
+
+    - changeSet:
+        id: bed_category-table
+        author: efernandez
+        changes:
+            - createTable:
+                tableName: bed_category
+                columns:
+                    - column:
+                        name: id
+                        type: smallint
+                        constraints:
+                            primaryKey: true
+                            primaryKeyName: PK_bed_category
+                    - column:
+                        name: description
+                        type: varchar(50)
+                        constraints:
+                            nullable: false
+            - sql:
+                sql: |-
+                    INSERT INTO bed_category VALUES (1, 'Cuidados especiales');
+                    INSERT INTO bed_category VALUES (2, 'General');
+                    INSERT INTO bed_category VALUES (3, 'Internación prolongada');
+                    INSERT INTO bed_category VALUES (4, 'Maternidad');
+                    INSERT INTO bed_category VALUES (5, 'Neonatología');
+                    INSERT INTO bed_category VALUES (6, 'No Discriminada');
+                    INSERT INTO bed_category VALUES (7, 'Pediátrica');
+                    INSERT INTO bed_category VALUES (8, 'Terapia intensiva adultos');
+                    INSERT INTO bed_category VALUES (9, 'Terapia intensiva pediátrica');
+                    INSERT INTO bed_category VALUES (10, 'Uso transitorio');
+
+    - changeSet:
+        id: bed-table
+        author: efernandez
+        changes:
+            - createTable:
+                tableName: bed
+                columns:
+                    - column:
+                        name: id
+                        type: int
+                        autoIncrement: true
+                        constraints:
+                            primaryKey: true
+                            primaryKeyName: PK_bed
+                    - column:
+                        name: room_id
+                        type: int
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: bed_category_id
+                        type: smallint
+                        constraints:
+                            nullable: false
+            - addForeignKeyConstraint:
+                baseColumnNames: room_id
+                baseTableName: bed
+                constraintName: FK_bed_room_id
+                onDelete: CASCADE
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: room
+                validate: true
+            - addForeignKeyConstraint:
+                baseColumnNames: bed_category_id
+                baseTableName: bed
+                constraintName: FK_bed_bed_category_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: bed_category
+                validate: true
