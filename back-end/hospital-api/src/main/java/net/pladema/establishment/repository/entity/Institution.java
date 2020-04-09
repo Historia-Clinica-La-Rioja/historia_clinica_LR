@@ -11,11 +11,13 @@ import javax.persistence.Table;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "institution")
 @Getter
 @Setter
+@ToString
 
 public class Institution {
 
@@ -30,7 +32,7 @@ public class Institution {
 	@Column(name = "address_id", nullable = false)
 	private Integer addressId;
 	
-	@Column(name = "website", nullable = false, length = 255)
+	@Column(name = "website", nullable = true, length = 255)
 	private String website;
 	
 	@Column(name = "phone", nullable = false, length = 15)
@@ -39,18 +41,12 @@ public class Institution {
 	@Column(name = "email", nullable = false, length = 100)
 	private String email;
 	
-	@Column(name = "cuit", nullable = false)
+	@Column(name = "cuit", nullable = false, length = 20)
 	private String cuit;
 	
-	@Column(name = "sisa_code", nullable = false)
+	@Column(name = "sisa_code", nullable = false, length = 15)
 	private String sisaCode;
 
-	@Override
-	public String toString() {
-		return "Institution [id=" + id + ", name=" + name + ", address_id=" + addressId + ", website=" + website
-				+ ", phone=" + phone + ", email=" + email + ", cuit=" + cuit + ", sisa_code=" + sisaCode + "]";
-	}
-	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);

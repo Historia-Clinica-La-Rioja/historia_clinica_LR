@@ -1,6 +1,6 @@
 package net.pladema.establishment.repository.entity;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -12,11 +12,13 @@ import javax.persistence.Table;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "room")
 @Getter
 @Setter
+@ToString
 
 public class Room {
 	@Id
@@ -34,7 +36,7 @@ public class Room {
 	private Short sectorId;
 	
 	@Column(name = "discharge_date", nullable = true)
-	private LocalDateTime dischargeDate;
+	private LocalDate dischargeDate;
 	
 	@Override
 	public int hashCode() {
@@ -52,12 +54,5 @@ public class Room {
 		Room other = (Room) obj;
 		return Objects.equals(id, other.id);
 	}
-
-	@Override
-	public String toString() {
-		return "Room [id=" + id + ", description=" + description + ", type=" + type + ", sector_id=" + sectorId
-				+ ", discharge_date=" + dischargeDate + "]";
-	}
-	
 	
 }

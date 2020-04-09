@@ -11,11 +11,13 @@ import javax.persistence.Table;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "sector")
 @Getter
 @Setter
+@ToString
 
 public class Sector {
 
@@ -48,8 +50,4 @@ public class Sector {
 		return Objects.equals(id, other.id);
 	}
 
-	@Override
-	public String toString() {
-		return "Sector [id=" + id + ", description=" + description + ", institution_id=" + institutionId + "]";
-	}
 }

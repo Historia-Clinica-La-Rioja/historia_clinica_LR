@@ -11,11 +11,13 @@ import javax.persistence.Table;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "bed_category")
 @Getter
 @Setter
+@ToString
 
 public class BedCategory {
 	@Id
@@ -42,11 +44,5 @@ public class BedCategory {
 		BedCategory other = (BedCategory) obj;
 		return Objects.equals(id, other.id);
 	}
-
-	@Override
-	public String toString() {
-		return "BedCategory [id=" + id + ", description=" + description + "]";
-	}
-	
 	
 }

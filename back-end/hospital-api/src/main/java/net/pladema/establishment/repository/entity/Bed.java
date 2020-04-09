@@ -11,11 +11,13 @@ import javax.persistence.Table;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "bed")
 @Getter
 @Setter
+@ToString
 
 public class Bed {
 	
@@ -45,11 +47,6 @@ public class Bed {
 			return false;
 		Bed other = (Bed) obj;
 		return Objects.equals(id, other.id);
-	}
-
-	@Override
-	public String toString() {
-		return "Bed [id=" + id + ", sector_id=" + roomId + "]";
 	}
 	
 }
