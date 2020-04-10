@@ -35,7 +35,7 @@ public class Institution {
 	@Column(name = "website", nullable = true, length = 255)
 	private String website;
 	
-	@Column(name = "phone", nullable = false, length = 15)
+	@Column(name = "phone_number", nullable = false, length = 15)
 	private String phone;
 	
 	@Column(name = "email", nullable = false, length = 100)
