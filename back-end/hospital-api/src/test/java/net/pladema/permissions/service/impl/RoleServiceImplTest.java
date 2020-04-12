@@ -41,7 +41,7 @@ public class RoleServiceImplTest {
 		when(licenseRepository.findByDescription(any())).thenReturn(Optional.empty());
 
 		User user = createUser("username9@mail.com");
-		licenseServiceImpl.createUserRole(user.getId(), ERole.PATIENT_USER);
+		licenseServiceImpl.createUserRole(user.getId(), ERole.ADVANCED_USER);
 	}
 
 	@Test

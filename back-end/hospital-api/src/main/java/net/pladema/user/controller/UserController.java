@@ -68,7 +68,7 @@ public class UserController {
 		createdUser.setEnable(true);
 		createdUser = userService.addUser(createdUser);
 		userPasswordService.addPassword(createdUser, userDto.getPassword());
-		roleService.createUserRole(createdUser.getId(), ERole.BACKOFFICE_USER);
+		roleService.createUserRole(createdUser.getId(), ERole.BASIC_USER);
 		eventPublisher.publishEvent(new OnRegistrationCompleteEvent(createdUser));
 		return ResponseEntity.created(new URI("")).body(userMapper.fromUser(createdUser));
 	}

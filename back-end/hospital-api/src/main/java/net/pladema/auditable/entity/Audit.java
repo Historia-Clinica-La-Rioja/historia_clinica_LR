@@ -8,6 +8,10 @@ import javax.persistence.Embeddable;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 
 @Embeddable
 @Getter
@@ -28,8 +32,14 @@ public class Audit implements Serializable {
 	@Column(name = "deleted", nullable = false)
 	private Boolean deleted = false;
 
-	@Column(name = "delete_date_time")
-	private LocalDateTime deleteDateTime;
+	@Column(name = "delete_on")
+	private LocalDateTime deleteOn;
+
+	@Column(name = "created_by")
+	private Integer createdBy;
+
+	@Column(name = "modified_by")
+	private Integer modifiedBy;
 
 	public boolean isDeleted() {
 		return deleted;

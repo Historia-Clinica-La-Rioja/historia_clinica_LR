@@ -3,9 +3,9 @@ package net.pladema.permissions.repository.enums;
 public enum ERole {
 
 	ADMIN("ADMIN"),
-    ADMINAPP("ADMIN_APP"),
-    BACKOFFICE_USER("BACKOFFICE_USER"),
-    PATIENT_USER("PATIENT_USER");
+    ADMIN_APP("ADMIN_APP"),
+    ADVANCED_USER("ADVANCED_USER"),
+    BASIC_USER("BASIC_USER");
  
     private String value;
  

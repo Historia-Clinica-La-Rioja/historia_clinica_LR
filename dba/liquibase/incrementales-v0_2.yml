@@ -211,3 +211,172 @@ databaseChangeLog:
                 referencedColumnNames: id
                 referencedTableName: bed_category
                 validate: true
+
+    - changeSet:
+        id: renameColumn-permission_delete_date_time
+        author: etrapani
+        changes:
+        - renameColumn:
+            columnDataType: date
+            newColumnName: delete_on
+            oldColumnName: delete_date_time
+            tableName: permission
+
+    - changeSet:
+        id: permission-add-new-audit-columns
+        author: etrapani
+        changes:
+        - addColumn:
+            columns:
+            - column:
+                name: created_by
+                type: int
+                constraints:
+                    nullable: true  
+            - column:
+                name: modified_by
+                type: int
+                constraints:
+                    nullable: true
+            tableName: permission
+
+    - changeSet:
+        id: renameColumn-role_delete_date_time
+        author: etrapani
+        changes:
+        - renameColumn:
+            columnDataType: date
+            newColumnName: delete_on
+            oldColumnName: delete_date_time
+            tableName: role
+
+
+    - changeSet:
+        id: role-add-new-audit-columns
+        author: etrapani
+        changes:
+        - addColumn:
+            columns:
+            - column:
+                name: created_by
+                type: int
+                constraints:
+                    nullable: true
+            - column:
+                name: modified_by
+                type: int
+                constraints:
+                    nullable: true
+            tableName: role
+                    
+    - changeSet:
+        id: renameColumn-role_permission_delete_date_time
+        author: etrapani
+        changes:
+        - renameColumn:
+            columnDataType: date
+            newColumnName: delete_on
+            oldColumnName: delete_date_time
+            tableName: role_permission
+
+    - changeSet:
+        id: role_permission-add-new-audit-columns
+        author: etrapani
+        changes:
+        - addColumn:
+            columns:
+            - column:
+                name: created_by
+                type: int
+                constraints:
+                    nullable: true
+            - column:
+                name: modified_by
+                type: int
+                constraints:
+                    nullable: true
+            tableName: role_permission   
+
+    - changeSet:
+        id: renameColumn-user_password_delete_date_time
+        author: etrapani
+        changes:
+        - renameColumn:
+            columnDataType: date
+            newColumnName: delete_on
+            oldColumnName: delete_date_time
+            tableName: user_password
+
+    - changeSet:
+        id: user_password-add-new-audit-columns
+        author: etrapani
+        changes:
+        - addColumn:
+            columns:
+            - column:
+                name: created_by
+                type: int
+                constraints:
+                    nullable: true
+            - column:
+                name: modified_by
+                type: int
+                constraints:
+                    nullable: true
+            tableName: user_password    
+
+    - changeSet:
+        id: renameColumn-user_role_delete_date_time
+        author: etrapani
+        changes:
+        - renameColumn:
+            columnDataType: date
+            newColumnName: delete_on
+            oldColumnName: delete_date_time
+            tableName: user_role
+
+    - changeSet:
+        id: user_role-add-new-audit-columns
+        author: etrapani
+        changes:
+        - addColumn:
+            columns:
+            - column:
+                name: created_by
+                type: int
+                constraints:
+                    nullable: true
+            - column:
+                name: modified_by
+                type: int
+                constraints:
+                    nullable: true
+            tableName: user_role       
+
+    - changeSet:
+        id: renameColumn-users_delete_date_time
+        author: etrapani
+        changes:
+        - renameColumn:
+            columnDataType: date
+            newColumnName: delete_on
+            oldColumnName: delete_date_time
+            tableName: users
+
+    - changeSet:
+        id: users-add-new-audit-columns
+        author: etrapani
+        changes:
+        - addColumn:
+            columns:
+            - column:
+                name: created_by
+                type: int
+                constraints:
+                    nullable: true
+            - column:
+                name: modified_by
+                type: int
+                constraints:
+                    nullable: true
+            tableName: users 
