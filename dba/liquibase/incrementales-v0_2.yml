@@ -380,3 +380,66 @@ databaseChangeLog:
                 constraints:
                     nullable: true
             tableName: users 
+
+
+    - changeSet:
+        id: fixColumn-permission_delete_date_time
+        author: etrapani
+        changes:
+        - renameColumn:
+            columnDataType: date
+            newColumnName: deleted_on
+            oldColumnName: delete_on
+            tableName: permission
+
+    - changeSet:
+        id: fixColumn-role_delete_date_time
+        author: etrapani
+        changes:
+        - renameColumn:
+            columnDataType: date
+            newColumnName: deleted_on
+            oldColumnName: delete_on
+            tableName: role
+
+                                
+    - changeSet:
+        id: fixColumn-role_permission_delete_date_time
+        author: etrapani
+        changes:
+        - renameColumn:
+            columnDataType: date
+            newColumnName: deleted_on
+            oldColumnName: delete_on
+            tableName: role_permission
+
+
+    - changeSet:
+        id: fixColumn-user_role_delete_date_time
+        author: etrapani
+        changes:
+        - renameColumn:
+            columnDataType: date
+            newColumnName: deleted_on
+            oldColumnName: delete_on
+            tableName: user_role
+
+    - changeSet:
+        id: fixColumn-user_password_delete_date_time
+        author: etrapani
+        changes:
+        - renameColumn:
+            columnDataType: date
+            newColumnName: deleted_on
+            oldColumnName: delete_on
+            tableName: user_password
+
+    - changeSet:
+        id: fixColumn-users_delete_date_time
+        author: etrapani
+        changes:
+        - renameColumn:
+            columnDataType: date
+            newColumnName: deleted_on
+            oldColumnName: delete_on
+            tableName: users

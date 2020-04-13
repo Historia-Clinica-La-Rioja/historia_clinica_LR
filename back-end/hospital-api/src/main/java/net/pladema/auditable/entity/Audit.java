@@ -32,8 +32,8 @@ public class Audit implements Serializable {
 	@Column(name = "deleted", nullable = false)
 	private Boolean deleted = false;
 
-	@Column(name = "delete_on")
-	private LocalDateTime deleteOn;
+	@Column(name = "deleted_on")
+	private LocalDateTime deletedOn;
 
 	@Column(name = "created_by")
 	private Integer createdBy;
