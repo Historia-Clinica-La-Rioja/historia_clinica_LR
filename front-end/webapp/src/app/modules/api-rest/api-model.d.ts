@@ -1,6 +1,34 @@
 /* tslint:disable */
 /* eslint-disable */
 
+export interface APersonDto {
+    addressId: number;
+    apartment: string;
+    birthDate: Date;
+    cityId: number;
+    cuil: string;
+    email: string;
+    ethnic: string;
+    firstName: string;
+    floor: string;
+    genderId: string;
+    genderSelfDetermination: number;
+    healthInsuranceId: string;
+    identificationNumber: string;
+    identificationTypeId: number;
+    lastName: string;
+    middleNames: string;
+    mothersLastName: string;
+    nameSelfDetermination: string;
+    number: string;
+    otherLastNames: string;
+    phoneNumber: string;
+    postCode: string;
+    quarter: string;
+    religion: string;
+    street: string;
+}
+
 export interface AbstractUserDto extends Serializable {
 }
 
@@ -13,6 +41,10 @@ export interface ApiError {
     errors: string[];
     message: string;
     status: HttpStatus;
+}
+
+export interface BMPersonDto extends APersonDto {
+    id: number;
 }
 
 export interface JWTokenDto extends Serializable {
