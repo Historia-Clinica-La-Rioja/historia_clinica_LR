@@ -13,6 +13,11 @@
 				"BUTTON_ADD": "Crear paciente temporal",
 				"BUTTON_SEARCH": "Buscar"
 			}
+		},
+		"layout": {
+			"PACIENTES": "Pacientes",
+			"INTERNACION": "HCE Internación",
+			"CAMAS": "Gestión de camas"
 		}
 	}
 }
