@@ -1,0 +1,15 @@
+@import '../../../../../assets/styles/mixins';
+
+table {
+	width: 100%;
+
+	tr.mat-header-row {
+		display: none;
+	}
+
+	td {
+		button {
+			background-color: $color-primary;
+		}
+	}
+}

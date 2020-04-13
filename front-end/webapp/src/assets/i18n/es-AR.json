@@ -7,11 +7,13 @@
 	},
 	"pacientes": {
 		"home": {
-			"TITLE": "PACIENTES",
+			"TITLE": "Pacientes",
+			"TITLE_SEARCH": "Búsqueda de pacientes",
 			"find_add_section": {
-				"TITLE": "Búsqueda / Creación de HC",
 				"BUTTON_ADD": "Crear paciente temporal",
-				"BUTTON_SEARCH": "Buscar"
+				"BUTTON_SEARCH": "Buscar",
+				"NO_IDENTITY": "No acredita identidad",
+				"TITLE": "Búsqueda / Creación de HC"
 			}
 		},
 		"layout": {

@@ -26,11 +26,11 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatFormFieldModule } from "@angular/material/form-field";
 
 @NgModule({
 	imports: [
 		MatNativeDateModule,
-
 		MatButtonModule,
 		MatCardModule,
 		MatCheckboxModule,
@@ -38,6 +38,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 		MatDatepickerModule,
 		MatDialogModule,
 		MatExpansionModule,
+		MatFormFieldModule,
 		MatGridListModule,
 		MatIconModule,
 		MatInputModule,
@@ -66,6 +67,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 		MatDatepickerModule,
 		MatDialogModule,
 		MatExpansionModule,
+		MatFormFieldModule,
 		MatGridListModule,
 		MatIconModule,
 		MatInputModule,

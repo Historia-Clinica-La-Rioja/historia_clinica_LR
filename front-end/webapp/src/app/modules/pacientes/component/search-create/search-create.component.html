@@ -1,0 +1,99 @@
+<mat-card class="mat-typography">
+	<mat-card-header>
+		<mat-card-title [translate]="'pacientes.home.find_add_section.TITLE'"></mat-card-title>
+		<mat-card-subtitle>
+			Ingresá un nuevo paciente
+		</mat-card-subtitle>
+	</mat-card-header>
+	<mat-card-content>
+		<form [formGroup]="formSearch" (ngSubmit)="search()">
+			<div class="">
+				<mat-form-field>
+					<mat-label>Tipo</mat-label>
+					<input matInput type="text"
+						   id="identifType"
+						   name="identifType"
+						   formControlName="identifType"
+						   placeholder="">
+				</mat-form-field>
+				<mat-form-field>
+					<mat-label>Nro de documento</mat-label>
+					<input matInput type="number"
+						   id="identifNumber"
+						   name="identifNumber"
+						   formControlName="identifNumber"
+						   placeholder="Nro de documento">
+				</mat-form-field>
+			</div>
+			<div class="">
+				<mat-label>Sexo</mat-label>
+				<div class="">
+					<mat-radio-group name="gender" formControlName="gender">
+						<mat-radio-button *ngFor="let gender of genderOptions" [value]="gender">
+							{{gender}}
+						</mat-radio-button>
+					</mat-radio-group>
+				</div>
+			</div>
+			<div class="">
+				<section>
+					<mat-checkbox class="" (change)="noIdentityChange()">
+						No acredita identidad
+					</mat-checkbox>
+				</section>
+
+			</div>
+		</form>
+	</mat-card-content>
+	<mat-card-actions>
+		<div align="end">
+			<button mat-flat-button color="primary" type="submit" *ngIf="!noIdentity">
+				<span [translate]="'pacientes.home.find_add_section.BUTTON_SEARCH'"></span>
+			</button>
+		</div>
+	</mat-card-actions>
+
+
+	<mat-card-header>
+		<mat-card-title
+			[translate]="'pacientes.home.find_add_section.NO_IDENTITY'"
+			*ngIf="noIdentity">
+		</mat-card-title>
+	</mat-card-header>
+	<mat-card-content>
+		<form [formGroup]="formAdd" (ngSubmit)="add()" [hidden]="!noIdentity">
+			<mat-form-field>
+				<mat-label>Seleccione motivo</mat-label>
+				<mat-select>
+					<mat-option
+						id="causeOptions"
+						*ngFor="let cause of causeOptions" [value]="cause">
+						{{cause}}
+					</mat-option>
+				</mat-select>
+			</mat-form-field>
+			<mat-form-field>
+				<mat-label>Comentarios</mat-label>
+				<textarea
+					matInput
+					cdkTextareaAutosize
+					id="comments"
+					cdkAutosizeMinRows="1"
+					cdkAutosizeMaxRows="5"
+					formControlName="comments">
+				</textarea>
+			</mat-form-field>
+		</form>
+	</mat-card-content>
+	<mat-card-actions>
+		<div align="end">
+			<button mat-flat-button color="primary" type="submit" *ngIf="noIdentity">
+				<span [translate]="'pacientes.home.find_add_section.BUTTON_ADD'"></span>
+			</button>
+		</div>
+	</mat-card-actions>
+
+	<mat-card-footer>
+	</mat-card-footer>
+</mat-card>
+

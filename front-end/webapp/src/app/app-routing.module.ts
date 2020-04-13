@@ -1,11 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { InicioComponent } from './modules/core/route/inicio/inicio.component';
 
 const routes: Routes = [
 	{
 		path: '',
-		component: InicioComponent,
+		redirectTo: 'pacientes',
 		pathMatch: 'full',
 	},
 	{

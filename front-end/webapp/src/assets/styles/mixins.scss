@@ -18,3 +18,11 @@
     flex-direction: row;
     flex-wrap: wrap;
 }
+
+@mixin card-properties {
+	width: 50%;
+}
+
+@mixin card-content {
+	margin: 0 16px;
+}

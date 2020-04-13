@@ -7,7 +7,8 @@
 	},
 	"pacientes": {
 		"home": {
-			"TITLE": "PATIENTS",
+			"TITLE": "Patients",
+			"TITLE_SEARCH": "Patients search",
 			"find_add_section": {
 				"TITLE": "Find / Add HC",
 				"BUTTON_ADD": "Add patient",

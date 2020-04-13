@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { InicioComponent } from './route/inicio/inicio.component';
 import { AppMaterialModule } from 'src/app/app.material.module';
 import { FooterComponent } from './components/footer/footer.component';
 import { BarComponent } from './components/bar/bar.component';
@@ -15,7 +14,6 @@ const globalSettings: RecaptchaSettings = { siteKey: '' }; // TODO completar cua
 
 @NgModule({
 	declarations: [
-		InicioComponent,
 		BarComponent,
 		ContentComponent,
 		FooterComponent,
@@ -31,7 +29,6 @@ const globalSettings: RecaptchaSettings = { siteKey: '' }; // TODO completar cua
 		TranslateModule,
 	],
 	exports: [
-		AppMaterialModule,
 		BarComponent,
 		CommonModule,
 		ContentComponent,

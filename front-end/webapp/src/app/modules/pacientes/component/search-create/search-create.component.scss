@@ -1,0 +1,31 @@
+@import '../../../../../assets/styles/mixins';
+
+.mat-card {
+	@include card-properties;
+
+	mat-card-content {
+		@include card-content;
+	}
+
+	::ng-deep .mat-radio-group {
+		.mat-radio-checked {
+			.mat-radio-outer-circle {
+				border-color: $color-primary;
+			}
+
+			.mat-radio-inner-circle {
+				background-color: $color-primary;
+			}
+		}
+	}
+
+	::ng-deep .mat-checkbox-checked {
+		.mat-checkbox-background {
+			background-color: $color-primary;
+		}
+	}
+
+	button {
+		background-color: $color-primary;
+	}
+}
