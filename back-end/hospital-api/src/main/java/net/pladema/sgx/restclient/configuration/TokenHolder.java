@@ -1,0 +1,25 @@
+package net.pladema.sgx.restclient.configuration;
+
+public class TokenHolder {
+	private long validTime;
+	private long tokenDueTimestamp;
+	private String token = null;
+
+
+	public TokenHolder(long seconds) {
+		this.validTime =  1000 * seconds;
+	}
+
+	public boolean isValid() {
+		return token != null && (System.currentTimeMillis() < this.tokenDueTimestamp );
+	}
+
+	public String get() {
+		return token;
+	}
+
+	public void set(String token) {
+		this.token = token;
+		this.tokenDueTimestamp = System.currentTimeMillis() + validTime;
+	}
+}
