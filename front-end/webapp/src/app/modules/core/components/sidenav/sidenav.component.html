@@ -1,9 +1,12 @@
 <mat-sidenav-container class="sidenav-container">
 	<mat-sidenav mode="side" opened>
 		<mat-nav-list>
-			<mat-list-item [ngClass]="{ active: activeIndex === i }" *ngFor=" let menuItem of menuItems; index as i">
+			<mat-list-item
+					[routerLink]=menuItem.url
+					routerLinkActive="active"
+					*ngFor="let menuItem of menuItems">
 				<mat-icon matListIcon>{{menuItem.icon}}</mat-icon>
-				<a (click)="clickMenu(menuItem); activeIndex = i">{{ menuItem.text | translate }}</a>
+				<span [translate]=menuItem.text></span>
 			</mat-list-item>
 		</mat-nav-list>
 	</mat-sidenav>

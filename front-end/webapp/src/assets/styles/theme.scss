@@ -1,4 +1,4 @@
-@import '~@angular/material/theming';
+@import 'mat-mixins';
 
 @include mat-core();
 
@@ -8,3 +8,4 @@ $accent:  mat-palette($mat-deep-purple, A200, A100, A400);
 $theme: mat-light-theme($primary, $accent);
 
 @include angular-material-theme($theme);
+@include mat-nav-list($theme);

@@ -1,0 +1,19 @@
+@import '~@angular/material/theming';
+
+@mixin mat-nav-list($theme) {
+  $primary: map-get($theme, primary);
+  $opacity-default: 0.9;
+  $opacity-lighter: 0.7;
+  mat-list-item.mat-list-item.active, mat-list-item.mat-list-item.active:focus {
+    background-color: mat-color($primary, default, $opacity-default);
+    span, mat-icon {
+      color: mat-color($primary, default-contrast, $opacity-default);
+    }
+    &:hover {
+      background-color: mat-color($primary, lighter, $opacity-default);
+      span, mat-icon {
+        color: mat-color($primary, lighter-contrast, $opacity-lighter);
+      }
+    }
+  }
+}
