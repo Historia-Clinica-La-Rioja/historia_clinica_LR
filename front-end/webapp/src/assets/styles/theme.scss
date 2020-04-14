@@ -1,9 +1,10 @@
 @import 'mat-mixins';
+@import 'palettes';
 
 @include mat-core();
 
-$primary: mat-palette($mat-deep-purple);
-$accent:  mat-palette($mat-deep-purple, A200, A100, A400);
+$primary: mat-palette($primary-palette);
+$accent:  mat-palette($primary-palette);
 
 $theme: mat-light-theme($primary, $accent);
 
