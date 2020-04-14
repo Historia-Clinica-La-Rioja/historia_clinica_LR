@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
-import { VALIDATIONS } from "@core/utils";
+import { VALIDATIONS } from "@core/utils/form.utils";
 
 const ROUTE_SEARCH = 'pacientes/search';
 const ROUTE_ADD = 'pacientes/add';
