@@ -1,4 +1,4 @@
-package net.pladema.person.entity;
+package net.pladema.person.repository.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,7 +32,7 @@ public class PersonExtended implements Serializable {
     @Column(name = "mothers_last_name", length = 20)
     private String mothersLastName;
 
-    @Column(name = "addres_id", nullable = false)
+    @Column(name = "address_id", nullable = false)
     private Integer addressId;
 
     @Column(name = "phone_number", length = 15, nullable = false)
@@ -51,7 +51,7 @@ public class PersonExtended implements Serializable {
     private String nameSelfDetermination;
 
     @Column(name = "gender_self_determination")
-    private Short genderSelfDetermination;
+    private Short genderSelfDeterminationId;
 
     @Column(name = "health_insurance_id")
     private Short healthInsuranceId;

@@ -1,9 +1,10 @@
 package net.pladema.address.service;
 
+import net.pladema.address.repository.entity.Address;
+import net.pladema.address.repository.entity.City;
+
 import java.util.Collection;
 import java.util.Optional;
-
-import net.pladema.address.repository.entity.City;
 
 public interface AddressService {
 
@@ -19,4 +20,5 @@ public interface AddressService {
 
 	public Optional<City> findCityById(Integer idCity);
 
+	public Address addAddress(Address address);
 }

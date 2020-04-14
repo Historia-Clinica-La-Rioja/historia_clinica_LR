@@ -2,7 +2,6 @@
 /* eslint-disable */
 
 export interface APersonDto {
-    addressId: number;
     apartment: string;
     birthDate: Date;
     cityId: number;
@@ -11,7 +10,7 @@ export interface APersonDto {
     ethnic: string;
     firstName: string;
     floor: string;
-    genderId: string;
+    genderId: number;
     genderSelfDetermination: number;
     healthInsuranceId: string;
     identificationNumber: string;
@@ -23,7 +22,7 @@ export interface APersonDto {
     number: string;
     otherLastNames: string;
     phoneNumber: string;
-    postCode: string;
+    postcode: string;
     quarter: string;
     religion: string;
     street: string;

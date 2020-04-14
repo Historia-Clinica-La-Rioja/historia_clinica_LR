@@ -1,16 +1,20 @@
 package net.pladema.person.controller.mapper;
 
+import net.pladema.address.repository.entity.Address;
 import net.pladema.person.controller.dto.APersonDto;
-import net.pladema.person.entity.Person;
-import net.pladema.person.entity.PersonExtended;
+import net.pladema.person.controller.dto.BMPersonDto;
+import net.pladema.person.repository.entity.Person;
+import net.pladema.person.repository.entity.PersonExtended;
 import org.mapstruct.Mapper;
 
 @Mapper
 public interface PersonMapper {
 
-    public APersonDto fromPerson(Person person);
+    public BMPersonDto fromPerson(Person person);
 
     public Person fromPersonDto(APersonDto person);
 
-    public PersonExtended updatePersonExtended(APersonDto person);
+    public PersonExtended updatePersonExtended(BMPersonDto person, Integer addressId);
+
+    public Address updatePersonAddress(APersonDto person);
 }

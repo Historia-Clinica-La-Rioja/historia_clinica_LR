@@ -1,4 +1,4 @@
-package net.pladema.person.entity;
+package net.pladema.person.repository.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,10 +1,13 @@
 package net.pladema.person.controller;
 
 import io.swagger.annotations.Api;
+import net.pladema.address.repository.entity.Address;
 import net.pladema.person.controller.dto.APersonDto;
+import net.pladema.person.controller.dto.BMPersonDto;
 import net.pladema.person.controller.mapper.PersonMapper;
-import net.pladema.person.entity.Person;
-import net.pladema.person.entity.PersonExtended;
+import net.pladema.person.repository.entity.Person;
+import net.pladema.person.repository.entity.PersonExtended;
+import net.pladema.person.service.AddressExternalService;
 import net.pladema.person.service.PersonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,25 +29,34 @@ public class PersonController {
 
     private final PersonService personService;
 
+    private final AddressExternalService addressExternalService;
+
     private final PersonMapper personMapper;
 
 
-    public PersonController(PersonService personService, PersonMapper personMapper) {
+    public PersonController(PersonService personService, PersonMapper personMapper, AddressExternalService addressExternalService) {
         super();
         this.personService = personService;
         this.personMapper = personMapper;
+        this.addressExternalService = addressExternalService;
     }
 
     @PostMapping
-    public ResponseEntity<APersonDto> addPerson(
+    public ResponseEntity<BMPersonDto> addPerson(
             @RequestBody APersonDto personDto) throws URISyntaxException {
 
         Person personToAdd = personMapper.fromPersonDto(personDto);
-        LOG.debug("Going to add person -> {}", personDto);
+        LOG.debug("Going to add person -> {}", personToAdd);
         Person createdPerson = personService.addPerson(personToAdd);
-        PersonExtended personExtendedtoAdd = personMapper.updatePersonExtended(personDto);
-        LOG.debug("Going to add person extended -> {}", personDto);
+
+        Address addressToAdd = personMapper.updatePersonAddress(personDto);
+        LOG.debug("Going to add address -> {}", addressToAdd);
+        Address createdAddress = addressExternalService.addAddress(addressToAdd);
+
+        PersonExtended personExtendedtoAdd = personMapper.updatePersonExtended(personMapper.fromPerson(createdPerson), createdAddress.getId());
+        LOG.debug("Going to add person extended -> {}", personExtendedtoAdd);
         PersonExtended createdPersonExtended = personService.addPersonExtended(personExtendedtoAdd);
+
         return ResponseEntity.created(new URI("")).body(personMapper.fromPerson(createdPerson));
     }
 }

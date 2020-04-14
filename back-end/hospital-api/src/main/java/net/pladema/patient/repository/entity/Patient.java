@@ -29,7 +29,7 @@ public class Patient extends AuditableEntity {
     private Integer id;
 
     @Column(name = "person_id")
-    private String personId;
+    private Integer personId;
 
     @Column(name = "type_id", nullable = false)
     private Short typeId;

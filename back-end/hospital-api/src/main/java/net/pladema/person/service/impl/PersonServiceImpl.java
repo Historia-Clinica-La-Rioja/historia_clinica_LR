@@ -1,7 +1,7 @@
 package net.pladema.person.service.impl;
 
-import net.pladema.person.entity.Person;
-import net.pladema.person.entity.PersonExtended;
+import net.pladema.person.repository.entity.Person;
+import net.pladema.person.repository.entity.PersonExtended;
 import net.pladema.person.repository.PersonExtendedRepository;
 import net.pladema.person.repository.PersonRepository;
 import net.pladema.person.service.PersonService;
@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.Optional;
 
 @Service
 public class PersonServiceImpl implements PersonService {

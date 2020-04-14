@@ -14,6 +14,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class APersonDto {
 
+    /* datos de Persona*/
     @NotNull
     private String firstName;
 
@@ -30,31 +31,16 @@ public class APersonDto {
     private String identificationNumber;
 
     @NotNull
-    private String genderId;
+    private Short genderId;
 
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
 
+    /*datos de persona Extended*/
     private String cuil;
 
     private String mothersLastName;
-
-    private Integer addressId;
-
-    private String street;
-
-    private String number;
-
-    private String floor;
-
-    private String apartment;
-
-    private String quarter;
-
-    private Short cityId;
-
-    private String postCode;
 
     private String phoneNumber;
 
@@ -69,5 +55,20 @@ public class APersonDto {
     private Short genderSelfDetermination;
 
     private String healthInsuranceId;
+
+    /*datos de Address*/
+    private String street;
+
+    private String number;
+
+    private String floor;
+
+    private String apartment;
+
+    private String quarter;
+
+    private Short cityId;
+
+    private String postcode;
 
 }

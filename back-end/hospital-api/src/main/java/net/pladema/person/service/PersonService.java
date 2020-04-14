@@ -1,8 +1,6 @@
 package net.pladema.person.service;
-import net.pladema.person.entity.Person;
-import net.pladema.person.entity.PersonExtended;
-
-import java.util.Optional;
+import net.pladema.person.repository.entity.Person;
+import net.pladema.person.repository.entity.PersonExtended;
 
 public interface PersonService {
 
