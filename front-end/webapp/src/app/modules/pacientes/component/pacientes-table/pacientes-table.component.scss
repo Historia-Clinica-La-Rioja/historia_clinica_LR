@@ -6,10 +6,8 @@ table {
 	tr.mat-header-row {
 		display: none;
 	}
+}
 
-	td {
-		button {
-			background-color: $color-primary;
-		}
-	}
+.mat-form-field {
+	width: 100%;
 }

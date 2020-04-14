@@ -1,30 +1,9 @@
 @import "../../../../../assets/styles/mixins";
 
 .sidenav-container {
-	height: 100vh;
+	height: 100%;
 }
 
-.container-buttons {
-	display: flex;
-	flex-direction: column;
-}
-
-mat-sidenav {
-	display: flex;
-	flex-direction: row;
-}
-
-button {
-	color: $color-primary;
-	border-radius: 0;
-	max-width: 30vw;
-	padding-left: 3vw;
-	padding-right: 3vw;
-}
-
-.selected {
-	background-color: $color-primary;
-	button {
-		color: white;
-	}
+mat-nav-list {
+	padding-top: 35px;
 }

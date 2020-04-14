@@ -53,15 +53,14 @@
 		</div>
 	</mat-card-actions>
 
-
-	<mat-card-header>
+	<mat-card-header *ngIf="noIdentity">
 		<mat-card-title
 			[translate]="'pacientes.home.find_add_section.NO_IDENTITY'"
-			*ngIf="noIdentity">
+			>
 		</mat-card-title>
 	</mat-card-header>
-	<mat-card-content>
-		<form [formGroup]="formAdd" (ngSubmit)="add()" [hidden]="!noIdentity">
+	<mat-card-content *ngIf="noIdentity">
+		<form [formGroup]="formAdd" (ngSubmit)="add()">
 			<mat-form-field>
 				<mat-label>Seleccione motivo</mat-label>
 				<mat-select>
@@ -85,15 +84,12 @@
 			</mat-form-field>
 		</form>
 	</mat-card-content>
-	<mat-card-actions>
+	<mat-card-actions *ngIf="noIdentity">
 		<div align="end">
-			<button mat-flat-button color="primary" type="submit" *ngIf="noIdentity">
+			<button mat-flat-button color="primary" type="submit">
 				<span [translate]="'pacientes.home.find_add_section.BUTTON_ADD'"></span>
 			</button>
 		</div>
 	</mat-card-actions>
-
-	<mat-card-footer>
-	</mat-card-footer>
 </mat-card>
 

@@ -1,9 +1,6 @@
 {
 	"header": {
-		"TITLE": "SGH",
-		"SUBTITLE": "Sistema de gestión hospitalaria"
-	},
-	"core": {
+		"TITLE": "Sistema de Gestión Hospitalaria"
 	},
 	"pacientes": {
 		"home": {

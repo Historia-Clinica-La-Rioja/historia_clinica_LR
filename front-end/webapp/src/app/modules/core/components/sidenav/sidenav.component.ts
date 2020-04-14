@@ -19,9 +19,7 @@ export class SidenavComponent implements OnInit {
 	ngOnInit(): void {
 	}
 
-	clickMenu(menuItem: MenuItem, menuIndex: number) {
-		this.activeIndex = menuIndex;
-		console.log(menuItem);
+	clickMenu(menuItem: MenuItem) {
 		this.router.navigate([menuItem.actionURL]);
 	}
 

@@ -1,9 +1,6 @@
 <mat-toolbar>
 	<mat-toolbar-row class="mat-elevation-z6">
 		<ng-content></ng-content>
-		<div class="app-title clickeable" (click)="goHome()">
-			<span class="t-header" [translate]="'header.TITLE'"></span>
-			<span class="t-subheader" [translate]="'header.SUBTITLE'"></span>
-		</div>
+		<h1 [translate]="'header.TITLE'"></h1>
 	</mat-toolbar-row>
 </mat-toolbar>

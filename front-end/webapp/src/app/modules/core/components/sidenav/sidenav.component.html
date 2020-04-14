@@ -1,14 +1,11 @@
 <mat-sidenav-container class="sidenav-container">
 	<mat-sidenav mode="side" opened>
-		<div class="container-buttons">
-			<div [ngClass]="{'selected': activeIndex === i}" *ngFor="let menuItem of menuItems; let i = index">
-				<button mat-button
-						(click)="clickMenu(menuItem, i)">
-					<mat-icon>{{menuItem.icon}}</mat-icon>
-					{{menuItem.text | translate}}
-				</button>
-			</div>
-		</div>
+		<mat-nav-list>
+			<mat-list-item [ngClass]="{ active: activeIndex === i }" *ngFor=" let menuItem of menuItems; index as i">
+				<mat-icon matListIcon>{{menuItem.icon}}</mat-icon>
+				<a (click)="clickMenu(menuItem); activeIndex = i">{{ menuItem.text | translate }}</a>
+			</mat-list-item>
+		</mat-nav-list>
 	</mat-sidenav>
 	<mat-sidenav-content>
 		<ng-content></ng-content>

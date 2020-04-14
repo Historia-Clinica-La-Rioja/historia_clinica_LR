@@ -1,26 +1,7 @@
 @import "../../../../../assets/styles/mixins";
 
 mat-toolbar-row {
-	background-color: #FFFFFF;
+	z-index: 2;
 	max-height: 100px;
-	min-height: 62px;
-	height: 12vh;
-
-	div.app-title {
-		display: flex;
-		flex-direction: column;
-		justify-content: space-around;
-		text-transform: uppercase;
-		text-decoration: none;
-		line-height: 22px;
-		margin: 0 10px;
-
-		span.t-header {
-			font-weight: 800;
-			font-size: $font-size-me;
-		}
-		span.t-subheader {
-			color: $color-secondary;
-		}
-	}
+	min-height: 60px;
 }

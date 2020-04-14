@@ -1,18 +1,5 @@
 @import "variables";
 
-@mixin article {
-    margin: 20px;
-}
-
-@mixin label-title {
-    font-size: 20px;
-}
-
-@mixin mat-radio-button {
-    margin-left: 20px;
-    margin-top: 1%;
-}
-
 @mixin form-row {
     display: flex;
     flex-direction: row;
