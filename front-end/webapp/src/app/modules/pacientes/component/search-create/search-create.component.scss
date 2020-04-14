@@ -6,4 +6,12 @@
 	mat-card-content {
 		@include card-content;
 	}
+
+	.mat-radio-button {
+		@include form-radio-button;
+	}
+
+	.mat-form-field + .mat-form-field {
+		@include form-field;
+	}
 }
