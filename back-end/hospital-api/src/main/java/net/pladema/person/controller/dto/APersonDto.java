@@ -52,9 +52,9 @@ public class APersonDto {
 
     private String nameSelfDetermination;
 
-    private Short genderSelfDetermination;
+    private Short genderSelfDeterminationId;
 
-    private String healthInsuranceId;
+    private Short healthInsuranceId;
 
     /*datos de Address*/
     private String street;

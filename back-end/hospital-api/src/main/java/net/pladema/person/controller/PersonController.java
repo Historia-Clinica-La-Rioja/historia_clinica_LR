@@ -53,7 +53,9 @@ public class PersonController {
         LOG.debug("Going to add address -> {}", addressToAdd);
         Address createdAddress = addressExternalService.addAddress(addressToAdd);
 
-        PersonExtended personExtendedtoAdd = personMapper.updatePersonExtended(personMapper.fromPerson(createdPerson), createdAddress.getId());
+
+        PersonExtended personExtendedtoAdd = personMapper.updatePersonExtended(personDto, createdAddress.getId());
+        personExtendedtoAdd.setId(createdPerson.getId());
         LOG.debug("Going to add person extended -> {}", personExtendedtoAdd);
         PersonExtended createdPersonExtended = personService.addPersonExtended(personExtendedtoAdd);
 

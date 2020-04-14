@@ -14,7 +14,7 @@ public interface PersonMapper {
 
     public Person fromPersonDto(APersonDto person);
 
-    public PersonExtended updatePersonExtended(BMPersonDto person, Integer addressId);
+    public PersonExtended updatePersonExtended(APersonDto person, Integer addressId);
 
     public Address updatePersonAddress(APersonDto person);
 }
