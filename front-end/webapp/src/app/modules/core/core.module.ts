@@ -27,8 +27,8 @@ const globalSettings: RecaptchaSettings = { siteKey: '' }; // TODO completar cua
 		PresentationModule,
 		RecaptchaModule,
 		RecaptchaFormsModule,
-		TranslateModule,
 		RouterModule,
+		TranslateModule,
 	],
 	exports: [
 		BarComponent,
@@ -36,11 +36,11 @@ const globalSettings: RecaptchaSettings = { siteKey: '' }; // TODO completar cua
 		ContentComponent,
 		FooterComponent,
 		HttpClientModule,
-		TranslateModule,
 		RecaptchaModule,
 		RecaptchaFormsModule,
+		RouterModule,
 		SidenavComponent,
-		RouterModule
+		TranslateModule
 	],
 	providers: [{
 		provide: RECAPTCHA_SETTINGS,

@@ -1,38 +1,49 @@
 <mat-card class="mat-typography">
-	<mat-card-header>
-		<mat-card-title [translate]="'pacientes.home.find_add_section.TITLE'"></mat-card-title>
-		<mat-card-subtitle>
-			Ingresá un nuevo paciente
-		</mat-card-subtitle>
-	</mat-card-header>
-	<mat-card-content>
-		<form [formGroup]="formSearch" (ngSubmit)="search()">
+	<form [formGroup]="formSearch" (ngSubmit)="search()">
+		<mat-card-header>
+			<mat-card-title [translate]="'pacientes.home.find_add_section.TITLE'"></mat-card-title>
+			<mat-card-subtitle>
+				Ingresá un nuevo paciente
+			</mat-card-subtitle>
+		</mat-card-header>
+		<mat-card-content>
 			<div class="">
 				<mat-form-field>
 					<mat-label>Tipo</mat-label>
-					<input matInput type="text"
+					<input matInput
+						   type="text"
 						   id="identifType"
 						   name="identifType"
 						   formControlName="identifType"
 						   placeholder="">
+					<mat-error *ngIf="formSearchSubmitted && formSearch.controls.identifType.errors.required">
+						El campo es requerido
+					</mat-error>
 				</mat-form-field>
 				<mat-form-field>
 					<mat-label>Nro de documento</mat-label>
-					<input matInput type="number"
+					<input matInput
+						   type="number"
 						   id="identifNumber"
 						   name="identifNumber"
 						   formControlName="identifNumber"
 						   placeholder="Nro de documento">
+					<mat-error *ngIf="formSearchSubmitted && formSearch.controls.identifNumber.errors.required">
+						El campo es requerido
+					</mat-error>
 				</mat-form-field>
 			</div>
 			<div class="">
 				<mat-label>Sexo</mat-label>
 				<div class="">
-					<mat-radio-group name="gender" formControlName="gender">
+					<mat-radio-group name="gender" id="gender" formControlName="gender">
 						<mat-radio-button *ngFor="let gender of genderOptions" [value]="gender">
 							{{gender}}
 						</mat-radio-button>
 					</mat-radio-group>
+					<mat-error *ngIf="formSearchSubmitted && formSearch.controls.gender.errors.required">
+						Género requerido
+					</mat-error>
 				</div>
 			</div>
 			<div class="">
@@ -43,33 +54,37 @@
 				</section>
 
 			</div>
-		</form>
-	</mat-card-content>
-	<mat-card-actions>
-		<div align="end">
-			<button mat-flat-button color="primary" type="submit" *ngIf="!noIdentity">
-				<span [translate]="'pacientes.home.find_add_section.BUTTON_SEARCH'"></span>
-			</button>
-		</div>
-	</mat-card-actions>
+		</mat-card-content>
+		<mat-card-actions>
+			<div align="end">
+				<button mat-flat-button color="primary" type="submit" *ngIf="!noIdentity">
+					<span [translate]="'pacientes.home.find_add_section.BUTTON_SEARCH'"></span>
+				</button>
+			</div>
+		</mat-card-actions>
+	</form>
 
-	<mat-card-header *ngIf="noIdentity">
-		<mat-card-title
-			[translate]="'pacientes.home.find_add_section.NO_IDENTITY'"
+	<form [formGroup]="formAdd" (ngSubmit)="add()">
+		<mat-card-header *ngIf="noIdentity">
+			<mat-card-title
+				[translate]="'pacientes.home.find_add_section.NO_IDENTITY'"
 			>
-		</mat-card-title>
-	</mat-card-header>
-	<mat-card-content *ngIf="noIdentity">
-		<form [formGroup]="formAdd" (ngSubmit)="add()">
+			</mat-card-title>
+		</mat-card-header>
+		<mat-card-content *ngIf="noIdentity">
 			<mat-form-field>
 				<mat-label>Seleccione motivo</mat-label>
-				<mat-select>
+				<mat-select
+					formControlName="causeOptions">
 					<mat-option
 						id="causeOptions"
-						*ngFor="let cause of causeOptions" [value]="cause">
-						{{cause}}
+						*ngFor="let cause of causeOptionsArray" [value]="cause.id">
+						{{cause.description}}
 					</mat-option>
 				</mat-select>
+				<mat-error>
+					El campo es requerido
+				</mat-error>
 			</mat-form-field>
 			<mat-form-field>
 				<mat-label>Comentarios</mat-label>
@@ -82,14 +97,14 @@
 					formControlName="comments">
 				</textarea>
 			</mat-form-field>
-		</form>
-	</mat-card-content>
-	<mat-card-actions *ngIf="noIdentity">
-		<div align="end">
-			<button mat-flat-button color="primary" type="submit">
-				<span [translate]="'pacientes.home.find_add_section.BUTTON_ADD'"></span>
-			</button>
-		</div>
-	</mat-card-actions>
+		</mat-card-content>
+		<mat-card-actions *ngIf="noIdentity">
+			<div align="end">
+				<button mat-flat-button color="primary" type="submit">
+					<span [translate]="'pacientes.home.find_add_section.BUTTON_ADD'"></span>
+				</button>
+			</div>
+		</mat-card-actions>
+	</form>
 </mat-card>
 

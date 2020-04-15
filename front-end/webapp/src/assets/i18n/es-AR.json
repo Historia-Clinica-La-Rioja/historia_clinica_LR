@@ -14,9 +14,9 @@
 			}
 		},
 		"layout": {
-			"PACIENTES": "Pacientes",
 			"INTERNACION": "HCE Internación",
-			"CAMAS": "Gestión de camas"
+			"CAMAS": "Gestión de camas",
+			"PACIENTES": "Pacientes"
 		}
 	}
 }

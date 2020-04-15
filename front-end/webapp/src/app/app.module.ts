@@ -22,24 +22,24 @@ import { environment } from '../environments/environment';
 		AppComponent,
 	],
 	imports: [
-		BrowserModule,
-		RouterModule,
-		AppMaterialModule,
-		BrowserAnimationsModule,
-		FormsModule,
-		AppRoutingModule,
-		CoreModule,
-		PresentationModule,
 		ApiRestModule,
+		AppMaterialModule,
+		AppRoutingModule,
+		BrowserAnimationsModule,
+		BrowserModule,
+		CoreModule,
+		FormsModule,
 		HttpClientModule,
+		PresentationModule,
+		RouterModule,
+		ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
 		TranslateModule.forRoot({
 			loader: {
 				provide: TranslateLoader,
 				useFactory: (createTranslateLoader),
 				deps: [HttpClient]
 			}
-		}),
-		ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+		})
 	],
 	providers: [httpInterceptorProviders],
 	bootstrap: [AppComponent]
