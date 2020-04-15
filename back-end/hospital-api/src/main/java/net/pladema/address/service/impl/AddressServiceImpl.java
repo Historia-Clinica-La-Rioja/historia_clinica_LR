@@ -1,18 +1,20 @@
 package net.pladema.address.service.impl;
 
-import java.awt.*;
 import java.util.Collection;
 import java.util.Optional;
 
-import net.pladema.address.repository.*;
-import net.pladema.address.repository.entity.Address;
-import net.pladema.person.repository.entity.Person;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 
+import net.pladema.address.repository.AddressRepository;
+import net.pladema.address.repository.CityRepository;
+import net.pladema.address.repository.CountryRepository;
+import net.pladema.address.repository.DepartmentRepository;
+import net.pladema.address.repository.ProvinceRepository;
+import net.pladema.address.repository.entity.Address;
 import net.pladema.address.repository.entity.City;
 import net.pladema.address.service.AddressService;
 

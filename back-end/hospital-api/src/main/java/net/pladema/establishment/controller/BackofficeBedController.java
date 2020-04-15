@@ -8,7 +8,7 @@ import net.pladema.establishment.repository.entity.Bed;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
 
 @RestController
-@RequestMapping("backoffice/establishment/beds")
+@RequestMapping("backoffice/beds")
 public class BackofficeBedController extends AbstractBackofficeController<Bed, Integer> {
 
 	public BackofficeBedController(BedRepository repository) {

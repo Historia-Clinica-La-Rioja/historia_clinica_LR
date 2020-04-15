@@ -22,5 +22,33 @@ export default {
                 description: 'Nombre',
             },
         }, 
+        addresses: {
+            name: 'Dirección |||| Direcciones',
+            fields: {
+                street: 'Calle',
+                number: 'Número',
+                floor: 'Piso',
+                apartment: 'Nro. Dpto.',
+                quarter: 'Cuarto',
+                postcode: 'Código Postal',
+            },
+        }, 
+        institutions: {
+            name: 'Institución |||| Instituciones',
+            fields: {
+                name: 'Nombre',
+                website: 'Sitio Web',
+                phone: 'Teléfono',
+                sisaCode: 'Código SISA',
+                addressId: 'Dirección',
+            },
+        }, 
+        sectors: {
+            name: 'Sector |||| Sectores',
+            fields: {
+                institutionId: 'Institución',
+                description: 'Nombre',
+            }
+        }, 
     },
 };

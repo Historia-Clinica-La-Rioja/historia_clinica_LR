@@ -67,7 +67,7 @@ public class APersonDto {
 
     private String quarter;
 
-    private Short cityId;
+    private Integer cityId;
 
     private String postcode;
 

@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+import lombok.ToString;
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -13,6 +13,8 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class Address implements Serializable {
     /**
      *
@@ -40,8 +42,18 @@ public class Address implements Serializable {
     private String quarter;
 
     @Column(name = "city_id", nullable = false)
-    private Short cityId;
+    private Integer cityId;
 
     @Column(name = "postcode", length = 6, nullable = false)
     private String postcode;
+    
+    public static Address buildDummy() {
+		Address newAddress = new Address();
+		newAddress.setStreet("");
+		newAddress.setNumber("");
+		newAddress.setCityId(1);
+		newAddress.setPostcode("");
+		return newAddress;
+    }
+
 }

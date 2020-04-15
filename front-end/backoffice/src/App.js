@@ -5,6 +5,9 @@ import { Dashboard } from './dashboard';
 
 import cities from './modules/cities';
 import departments from './modules/departments';
+import institutions from './modules/institutions';
+import addresses from './modules/addresses';
+import sectors from './modules/sectors';
 
 import springbootRestProvider from './providers/sgxDataProvider';
 import authProvider from './providers/authProvider';
@@ -22,6 +25,10 @@ const App = () => (
     >
         <Resource name="cities" {...cities} />
         <Resource name="departments" {...departments} />
+        <Resource name="institutions" {...institutions} />
+        <Resource name="provinces" />
+        <Resource name="addresses" {...addresses}/>
+        <Resource name="sectors" {...sectors}/>
     </Admin>
 );
 

@@ -24,7 +24,7 @@ public class Sector {
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Short id;
+	private Integer id;
 	
 	@Column(name = "description", nullable = false, length = 255)
 	private String description;
