@@ -1,6 +1,12 @@
 {
-	"header": {
-		"TITLE": "Sistema de Gestión Hospitalaria"
+	"app": {
+		"header": {
+			"TITLE": "Sistema de Gestión Hospitalaria"
+		},
+		"menu": {
+			"INTERNACION": "HCE Internación",
+			"PACIENTES": "Pacientes"
+		}
 	},
 	"pacientes": {
 		"home": {
@@ -12,11 +18,6 @@
 				"NO_IDENTITY": "No acredita identidad",
 				"TITLE": "Búsqueda / Creación de HC"
 			}
-		},
-		"layout": {
-			"INTERNACION": "HCE Internación",
-			"CAMAS": "Gestión de camas",
-			"PACIENTES": "Pacientes"
 		}
 	}
 }

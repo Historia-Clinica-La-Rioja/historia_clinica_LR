@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from '@core/services/language.service';
+import { MenuItem } from '@core/core-model';
+import { SIDEBAR_MENU } from './modules/pacientes/constants/menu';
 
 const defaultLang = 'es-AR'; // TODO english version 'en-US';
 
@@ -12,6 +14,7 @@ const defaultLang = 'es-AR'; // TODO english version 'en-US';
 export class AppComponent {
 	title = 'sgh';
 	currentBrowserLanguage = this.translate.getBrowserLang();
+	menuItems: MenuItem[] = SIDEBAR_MENU;
 
 	constructor(private translate: TranslateService,
 				private languageService: LanguageService) {

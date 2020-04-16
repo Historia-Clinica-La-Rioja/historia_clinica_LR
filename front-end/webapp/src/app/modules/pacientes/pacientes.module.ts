@@ -7,13 +7,11 @@ import { AppMaterialModule } from "../../app.material.module";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { PacientesTableComponent } from './component/pacientes-table/pacientes-table.component';
 import { SearchCreateComponent } from './component/search-create/search-create.component';
-import { PacientesLayoutComponent } from './pacientes-layout/pacientes-layout.component';
 
 
 @NgModule({
 	declarations: [
 		HomeComponent,
-		PacientesLayoutComponent,
 		PacientesTableComponent,
 		SearchCreateComponent,
 	],
