@@ -9,4 +9,6 @@ $accent:  mat-palette($primary-palette);
 $theme: mat-light-theme($primary, $accent);
 
 @include angular-material-theme($theme);
+
 @include mat-nav-list($theme);
+@include mat-table($theme);

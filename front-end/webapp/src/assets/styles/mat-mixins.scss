@@ -16,3 +16,22 @@
 		}
 	}
 }
+
+@mixin mat-table($theme) {
+	$primary-palette: map-get($theme, primary);
+
+	.mat-form-field {
+		width: 50%;
+	}
+	table.mat-table {
+		width: 100%;
+		text-align: center;
+		thead {
+			background-color: mat-color($primary-palette, default);
+			th {
+				text-align: center;
+				color: mat-color($primary, default-contrast);
+			}
+		}
+	}
+}
