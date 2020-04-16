@@ -12,7 +12,6 @@ export interface APersonDto {
     floor: string;
     genderId: number;
     genderSelfDeterminationId: number;
-    healthInsuranceId: number;
     identificationNumber: string;
     identificationTypeId: number;
     lastName: string;

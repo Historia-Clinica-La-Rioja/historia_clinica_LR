@@ -1,15 +1,18 @@
 package net.pladema.person.service.impl;
 
-import net.pladema.person.repository.entity.Person;
-import net.pladema.person.repository.entity.PersonExtended;
 import net.pladema.person.repository.PersonExtendedRepository;
 import net.pladema.person.repository.PersonRepository;
+import net.pladema.person.repository.domain.CompleteDataPerson;
+import net.pladema.person.repository.entity.Person;
+import net.pladema.person.repository.entity.PersonExtended;
 import net.pladema.person.service.PersonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PersonServiceImpl implements PersonService {
@@ -51,5 +54,13 @@ public class PersonServiceImpl implements PersonService {
         PersonExtended personSaved = personExtendedRepository.save(person);
         LOG.debug("Person extended saved -> {}", personSaved);
         return personSaved;
+    }
+
+    @Override
+    public List<CompleteDataPerson> getPersonByDniAndGender(Short identificationTypeId, String identificationNumber, Short genderId) {
+        LOG.debug("Input data -> {}", identificationTypeId, identificationNumber, genderId);
+        List<CompleteDataPerson> result = personRepository.findByDniAndGender(identificationTypeId, identificationNumber, genderId);
+        LOG.debug("Ids resultantes -> {}", result.stream().map(x -> x.getPerson().getId()).collect(Collectors.toList()));
+        return result;
     }
 }

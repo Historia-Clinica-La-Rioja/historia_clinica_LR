@@ -1,6 +1,10 @@
 package net.pladema.person.service;
+
+import net.pladema.person.repository.domain.CompleteDataPerson;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;
+
+import java.util.List;
 
 public interface PersonService {
 
@@ -9,4 +13,7 @@ public interface PersonService {
     Person getPerson(Integer id);
 
     PersonExtended addPersonExtended(PersonExtended person);
+
+    List<CompleteDataPerson> getPersonByDniAndGender(Short identificationTypeId, String identificationNumber, Short genderId);
+
 }

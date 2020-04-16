@@ -13,13 +13,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/person")
@@ -41,7 +40,7 @@ public class PersonController {
         this.personMapper = personMapper;
         this.addressExternalService = addressExternalService;
     }
-
+    
     @PostMapping
     @Transactional
     public ResponseEntity<BMPersonDto> addPerson(
@@ -55,12 +54,22 @@ public class PersonController {
         LOG.debug("Going to add address -> {}", addressToAdd);
         Address createdAddress = addressExternalService.addAddress(addressToAdd);
 
-
         PersonExtended personExtendedtoAdd = personMapper.updatePersonExtended(personDto, createdAddress.getId());
         personExtendedtoAdd.setId(createdPerson.getId());
         LOG.debug("Going to add person extended -> {}", personExtendedtoAdd);
         PersonExtended createdPersonExtended = personService.addPersonExtended(personExtendedtoAdd);
 
         return ResponseEntity.created(new URI("")).body(personMapper.fromPerson(createdPerson));
+    }
+
+    @GetMapping(value = "/minimalsearch")
+    public ResponseEntity<List<BMPersonDto>> getPersonMinimal(
+            @RequestParam(value = "identificationTypeId", required = true) Short identificationTypeId,
+            @RequestParam(value = "identificationNumber", required = true) String identificationNumber,
+            @RequestParam(value = "genderId", required = true) Short genderId){
+        LOG.debug("Input data -> {}", identificationTypeId, identificationNumber, genderId);
+        List<BMPersonDto> result = personMapper.fromfromCompleteDataPersonList(personService.getPersonByDniAndGender(identificationTypeId,identificationNumber, genderId));
+        LOG.debug("Ids resultantes -> {}", result.stream().map(x -> x.getId()).collect(Collectors.toList()));
+        return  ResponseEntity.ok().body(result);
     }
 }

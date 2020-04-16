@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
@@ -53,8 +52,6 @@ public class APersonDto {
     private String nameSelfDetermination;
 
     private Short genderSelfDeterminationId;
-
-    private Short healthInsuranceId;
 
     /*datos de Address*/
     private String street;
