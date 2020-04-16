@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
 import net.pladema.error.controller.dto.ApiError;
+import net.pladema.patient.service.domain.MatchCalculationException;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice
@@ -92,6 +93,14 @@ public class RestExceptionHandler {
 	@ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
 	@ExceptionHandler(MessagingException.class)
 	public String invalidEntity(MessagingException ex, Locale locale) {
+		String errorMessage = messageSource.getMessage(ex.getMessage(), null, locale);
+		LOG.error(errorMessage, ex);
+		return errorMessage;
+	}
+	
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	@ExceptionHandler(MatchCalculationException.class)
+	public String handleCalculation(MatchCalculationException ex, Locale locale) {
 		String errorMessage = messageSource.getMessage(ex.getMessage(), null, locale);
 		LOG.error(errorMessage, ex);
 		return errorMessage;

@@ -21,6 +21,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	private static final String PERSON = "/person";
 	
+	private static final String PATIENT = "/patient/**";
+	
 	private static final String HEALTH = "/health";
 
 	private static final String ADDRESS = "/address";
@@ -73,6 +75,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.POST, apiUser + "/activationlink/resend").permitAll()
 				.antMatchers(apiPassword + apiPasswordReset ).permitAll()
 				.antMatchers(HttpMethod.POST, PERSON ).permitAll()
+				.antMatchers(PATIENT).permitAll()
 				.antMatchers(HEALTH + "/**").permitAll()
 				.antMatchers(I18N + "/**").permitAll()
 				.antMatchers(RECAPTCHA + "/**").permitAll()
