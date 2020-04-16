@@ -11,27 +11,27 @@
 
 	<ng-container matColumnDef="Nro. Documento">
 		<th mat-header-cell *matHeaderCellDef>Nro. Documento</th>
-		<td mat-cell *matCellDef="let element"> {{element.name}} </td>
+		<td mat-cell *matCellDef="let element"> {{element.person.identificationNumber}} </td>
 	</ng-container>
 
-	<ng-container matColumnDef="Nombres">
-		<th mat-header-cell *matHeaderCellDef>Nombres</th>
-		<td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+	<ng-container matColumnDef="Nombre">
+		<th mat-header-cell *matHeaderCellDef>Nombre</th>
+		<td mat-cell *matCellDef="let element"> {{element.person.first_name}} </td>
 	</ng-container>
 
-	<ng-container matColumnDef="Apellidos">
-		<th mat-header-cell *matHeaderCellDef>Apellidos</th>
-		<td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+	<ng-container matColumnDef="Apellido">
+		<th mat-header-cell *matHeaderCellDef>Apellido</th>
+		<td mat-cell *matCellDef="let element"> {{element.person.last_name}} </td>
 	</ng-container>
 
 	<ng-container matColumnDef="F. Nac">
 		<th mat-header-cell *matHeaderCellDef>F. Nac</th>
-		<td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+		<td mat-cell *matCellDef="let element"> {{element.person.birthDate}} </td>
 	</ng-container>
 
 	<ng-container matColumnDef="Sexo">
 		<th mat-header-cell *matHeaderCellDef>Sexo</th>
-		<td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+		<td mat-cell *matCellDef="let element"> {{element.person.gender.description}} </td>
 	</ng-container>
 
 	<ng-container matColumnDef="Action">

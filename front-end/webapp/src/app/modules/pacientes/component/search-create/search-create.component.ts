@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
-import { VALIDATIONS } from "@core/utils/form.utils";
+import { VALIDATIONS, hasError } from "@core/utils/form.utils";
 import { PatientService } from "@api-rest/services/patient.service";
 
 const ROUTE_SEARCH = 'pacientes/search';
@@ -24,6 +24,11 @@ export class SearchCreateComponent implements OnInit {
 		{id: '1', description: 'Falta documento'},
 		{id: '2', description: 'Recien nacido'},
 		{id: '3', description: 'Otros'}];
+	public identifyTypeArray = [
+		{id: '1', description: 'DNI'},
+		{id: '0', description: 'CUIL'}
+	]
+	public hasError = hasError;
 
 	constructor(private formBuilder: FormBuilder,
 				private router: Router,
@@ -33,7 +38,7 @@ export class SearchCreateComponent implements OnInit {
 	ngOnInit(): void {
 		this.formSearch = this.formBuilder.group({
 			identifType: [null, Validators.required],
-			identifNumber: [null, Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.dni)],
+			identifNumber: [null, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
 			gender: [null, Validators.required],
 		});
 

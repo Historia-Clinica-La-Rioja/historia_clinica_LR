@@ -10,26 +10,32 @@
 			<div class="">
 				<mat-form-field>
 					<mat-label>Tipo</mat-label>
-					<input matInput
-						   type="text"
-						   id="identifType"
-						   name="identifType"
-						   formControlName="identifType"
-						   placeholder="">
-					<mat-error *ngIf="formSearchSubmitted && formSearch.controls.identifType.errors.required">
+					<mat-select
+						formControlName="identifType">
+						<mat-option
+							id="identifType"
+							name="identifType"
+							*ngFor="let type of identifyTypeArray" [value]="type.id">
+							{{type.description}}
+						</mat-option>
+					</mat-select>
+					<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'identifType')">
 						El campo es requerido
 					</mat-error>
 				</mat-form-field>
 				<mat-form-field>
 					<mat-label>Nro de documento</mat-label>
 					<input matInput
-						   type="number"
+						   type="text"
 						   id="identifNumber"
 						   name="identifNumber"
 						   formControlName="identifNumber"
 						   placeholder="Nro de documento">
-					<mat-error *ngIf="formSearchSubmitted && formSearch.controls.identifNumber.errors.required">
+					<mat-error *ngIf="formSearchSubmitted &&  hasError(formSearch, 'required', 'identifNumber')">
 						El campo es requerido
+					</mat-error>
+					<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'maxlength', 'identifNumber')">
+						Introduzca como máximo 11 caracteres
 					</mat-error>
 				</mat-form-field>
 			</div>
@@ -41,7 +47,7 @@
 							{{gender}}
 						</mat-radio-button>
 					</mat-radio-group>
-					<mat-error *ngIf="formSearchSubmitted && formSearch.controls.gender.errors.required">
+					<mat-error *ngIf="formSearchSubmitted &&  hasError(formSearch, 'required', 'gender')">
 						Género requerido
 					</mat-error>
 				</div>
