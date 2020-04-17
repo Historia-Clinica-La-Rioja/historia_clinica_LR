@@ -24,7 +24,6 @@ const globalSettings: RecaptchaSettings = { siteKey: '' }; // TODO completar cua
 		AppMaterialModule,
 		CommonModule,
 		HttpClientModule,
-		PresentationModule,
 		RecaptchaModule,
 		RecaptchaFormsModule,
 		RouterModule,

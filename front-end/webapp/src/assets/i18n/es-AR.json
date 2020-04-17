@@ -22,5 +22,10 @@
 		"search": {
 			"TITLE": "Búsqueda de pacientes"
 		}
+	},
+	"presentation": {
+		"ficha-paciente": {
+			"GENDER_AGE": "{{gender}} · {{age}} años"
+		}
 	}
 }

@@ -1,0 +1,19 @@
+<mat-card>
+	<ng-content select="[header]"></ng-content>
+	<mat-card-header>
+		<div mat-card-avatar class="header-image"></div>
+		<mat-card-title class="patient-card">
+			{{patientReduced.firstname}} {{patientReduced.lastname}}
+		</mat-card-title>
+		<mat-card-subtitle>
+			<span>ID {{patientReduced.id}}</span><br>
+			<span class="subtitle-2"
+				  [translate]="'presentation.patient-card.GENDER_AGE'"
+				  [translateParams]="{ gender: patientReduced.gender, age: patientReduced.age }">
+			</span>
+		</mat-card-subtitle>
+	</mat-card-header>
+	<mat-card-content>
+		<ng-content select="[content]"></ng-content>
+	</mat-card-content>
+</mat-card>

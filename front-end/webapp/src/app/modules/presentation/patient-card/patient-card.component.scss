@@ -1,0 +1,22 @@
+@import "src/assets/styles/variables.scss";
+
+.header-image {
+	background-image: url("src/assets/images/empty-profile.svg");
+	background-size: cover;
+}
+
+mat-card-title.patient-card {
+	font-weight: 500;
+	font-size: $font-size-lg;
+}
+
+mat-card-subtitle > span {
+	color: #282828;
+	font-weight: normal;
+	font-size: $font-size-sm;
+
+	&:first-child {
+		font-weight: 500;
+		font-size: $font-size-me;
+	}
+}
