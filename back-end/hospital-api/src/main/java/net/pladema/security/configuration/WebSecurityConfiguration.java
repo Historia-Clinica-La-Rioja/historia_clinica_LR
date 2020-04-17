@@ -76,6 +76,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(apiPassword + apiPasswordReset ).permitAll()
 				.antMatchers(HttpMethod.POST, PERSON ).permitAll()
 				.antMatchers(PATIENT).permitAll()
+				.antMatchers(HttpMethod.GET, PERSON+"/**" ).permitAll()
 				.antMatchers(HEALTH + "/**").permitAll()
 				.antMatchers(I18N + "/**").permitAll()
 				.antMatchers(RECAPTCHA + "/**").permitAll()

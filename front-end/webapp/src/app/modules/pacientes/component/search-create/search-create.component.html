@@ -43,8 +43,8 @@
 				<mat-label>Sexo</mat-label>
 				<div class="">
 					<mat-radio-group name="gender" id="gender" formControlName="gender">
-						<mat-radio-button *ngFor="let gender of genderOptions" [value]="gender">
-							{{gender}}
+						<mat-radio-button *ngFor="let gender of genderOptions" [value]="gender.id">
+							{{gender.description}}
 						</mat-radio-button>
 					</mat-radio-group>
 					<mat-error *ngIf="formSearchSubmitted &&  hasError(formSearch, 'required', 'gender')">

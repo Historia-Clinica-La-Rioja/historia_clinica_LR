@@ -55,6 +55,20 @@ export interface LoginDto extends Serializable {
     username: string;
 }
 
+export interface PatientSearchDto {
+    person: BMPersonDto;
+    ranking: number;
+}
+
+export interface PatientSearchFilter {
+    birthDate: Date;
+    firstName: string;
+    genderId: number;
+    identificationNumber: string;
+    identificationTypeId: number;
+    lastName: string;
+}
+
 export interface RequestUserRoleDto extends Serializable {
     roleId: number;
     userId: number;

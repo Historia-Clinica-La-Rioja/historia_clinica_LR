@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from "rxjs";
+import { environment } from "@environments/environment";
+import { HttpClient } from "@angular/common/http";
+import { BMPersonDto } from "@api-rest/api-model";
 
 const PATIENTS_DATA = [
 	{
@@ -37,11 +40,12 @@ const PATIENTS_DATA = [
 })
 export class PatientService {
 
-	constructor() {
+	constructor(private http: HttpClient) {
 	}
 
-	quickGetPatient(): Observable<any>  {
-		return of([]);
+	quickGetPatient(params): Observable<BMPersonDto[]>  {
+		let url = `${environment.apiBase}/person/minimalsearch`;
+		return this.http.get<BMPersonDto[]>(url, {params: params});
 	}
 
 	getPatient(): Observable<any>  {

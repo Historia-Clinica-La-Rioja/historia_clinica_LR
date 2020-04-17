@@ -6,6 +6,7 @@ import { PatientService } from "@api-rest/services/patient.service";
 
 const ROUTE_SEARCH = 'pacientes/search';
 const ROUTE_NEW = 'pacientes/new';
+const ROUTE_PROFILE = 'pacientes/profile';
 
 @Component({
 	selector: 'app-search-create',
@@ -17,7 +18,10 @@ export class SearchCreateComponent implements OnInit {
 	public formSearch: FormGroup;
 	public formSearchSubmitted: boolean = false;
 	public formAdd: FormGroup;
-	public genderOptions = ['masculino', 'femenino'];
+	public genderOptions = [
+		{id: '1', description: 'femenino'},
+		{id: '2', description: 'masculino'}
+	];
 	public noIdentity = false;
 	public causeOptionsArray = [
 		{id: '0', description: 'Alta de emergencia'},
@@ -51,10 +55,19 @@ export class SearchCreateComponent implements OnInit {
 	search(): void {
 		this.formSearchSubmitted = true;
 		if (this.formSearch.valid) {
-			this.patientService.quickGetPatient().subscribe(
+			let searchRequest = {
+				identificationTypeId: this.formSearch.controls.identifType.value,
+				identificationNumber: this.formSearch.controls.identifNumber.value,
+				genderId: this.formSearch.controls.gender.value,
+			}
+			this.patientService.quickGetPatient(searchRequest).subscribe(
 				data => {
-					if (data.length == 0) {
-						this.router.navigate([ROUTE_SEARCH])
+					if(!data.length){
+						this.router.navigate([ROUTE_SEARCH]);
+					}
+					else {
+						let idPatient = data[0].id;
+						this.router.navigate([ROUTE_PROFILE,  { id: idPatient }]);
 					}
 				}
 			);

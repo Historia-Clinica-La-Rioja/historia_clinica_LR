@@ -18,6 +18,9 @@
 				"NO_IDENTITY": "No acredita identidad",
 				"TITLE": "Búsqueda / Creación de HC"
 			}
+		},
+		"search": {
+			"TITLE": "Búsqueda de pacientes"
 		}
 	}
 }

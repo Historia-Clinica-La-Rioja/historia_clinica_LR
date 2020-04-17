@@ -1,10 +1,11 @@
 <app-content width="full">
-    <div class="container" *ngIf="viewSearchComponent()">
-		<div class="header">
-			<div class="title"><span [translate]="'Busqueda de pacientes'"></span></div>
-			<div class="subtitle"><span [translate]="'No se ha encontrado un paciente registrado con ese tipo y numero de documento.
-				Complete los siguientes datos para una busqueda avanzada.'"></span></div>
-		</div>
+    <section *ngIf="viewSearchComponent()">
+		<h1 [translate]="'pacientes.search.TITLE'">Búsqueda de pacientes</h1>
+		<p>
+			<span [translate]="'No se ha encontrado un paciente registrado con ese tipo y numero de documento.'"></span>
+			<br>
+			<span [translate]="'Complete los siguientes datos para una busqueda avanzada.'"></span>
+		</p>
 		<div class="content">
 			<form [formGroup]="formSearch" (ngSubmit)="serch()">
 				<br>
@@ -47,13 +48,11 @@
 				</div>
 				<br>
 				<mat-form-field>
-					<mat-label>Primer Nombre</mat-label>
+					<mat-label>Nombre</mat-label>
 					<input id="firstName"
 							formControlName="firstName"
 							[(ngModel)]="datosPersonales.firstName"
-							placeholder="Completo"
-							matInput
-					>
+							matInput>
 					<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'firstName')">
 						El campo es requerido
 					</mat-error>
@@ -63,9 +62,7 @@
 					<input id="middleNames"
 							formControlName="middleNames"
 							[(ngModel)]="datosPersonales.middleNames"
-							placeholder="Completo"
-							matInput
-					>
+							matInput>
 				</mat-form-field>
 				<br>
 				<mat-form-field>
@@ -73,9 +70,7 @@
 					<input  id="lastName"
 							formControlName="lastName"
 							[(ngModel)]="datosPersonales.lastName"
-							placeholder="Completo"
-							matInput
-					>
+							matInput>
 					<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'lastName')">
 						El campo es requerido
 					</mat-error>
@@ -85,13 +80,11 @@
 					<input  id="mothersLastName"
 							formControlName="mothersLastName"
 							[(ngModel)]="datosPersonales.mothersLastName"
-							placeholder="Completo"
-							matInput
-					>
+							matInput>
 				</mat-form-field>
 				<br>
 				<mat-form-field>
-					<mat-label>Fecha de nacimiento</mat-label>					
+					<mat-label>Fecha de nacimiento</mat-label>
 					<input matInput id="birthDate"
 									formControlName="birthDate"
 									[(ngModel)]="datosPersonales.birthDate"
@@ -103,19 +96,17 @@
 					<mat-datepicker #picker></mat-datepicker>
 				</mat-form-field>
 				<br>
-				<div class="button-container">
-					<button mat-raised-button color="primary" matBadgeColor="accent" type="submit">
-						<span [translate]="'Buscar'"></span>
-					</button>
-				</div>
-				<div class="button-container">
+				<mat-action-row>
 					<button mat-button class="button-continuar" (click)="back()">
 						<span [translate]="'Volver'"></span>
 					</button>
-				</div>
+					<button mat-raised-button color="primary" matBadgeColor="accent" type="submit">
+						<span [translate]="'Buscar'"></span>
+					</button>
+				</mat-action-row>
 			</form>
 		</div>
-	</div>
+	</section>
 	<div class="container" *ngIf="!viewSearchComponent()">
 		<app-partial-matches-table>
 		</app-partial-matches-table>
