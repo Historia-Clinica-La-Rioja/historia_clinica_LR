@@ -5,7 +5,11 @@ import net.pladema.address.repository.entity.Address;
 import net.pladema.address.service.AddressService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
+
+@Service
 public class AddressServiceImpl implements AddressService {
 
     private  final Logger LOG = LoggerFactory.getLogger(this.getClass());
