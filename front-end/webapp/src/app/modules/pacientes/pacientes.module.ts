@@ -13,10 +13,10 @@ import { PartialMatchesTableComponent } from './component/partial-matches-table/
 @NgModule({
 	declarations: [
 		HomeComponent,
-		PacientesTableComponent,
+        PacientesTableComponent,
+        PartialMatchesTableComponent,
         SearchCreateComponent,
         SearchComponent,
-        PartialMatchesTableComponent,
 	],
 	imports: [
 		AppMaterialModule,
@@ -27,33 +27,4 @@ import { PartialMatchesTableComponent } from './component/partial-matches-table/
 	]
 })
 export class PacientesModule {
-}
-
-export class DatosPersonales {
-    firstName:string;
-    middleNames:string;
-    lastName:string;
-    otherLastNames:string;
-    identificationTypeId:number;
-    identificationNumber:string;
-    genderId:number;
-    birthDate:Date;
-    //Person_extended
-    cuil:string;
-    mothersLastName:string;
-    phoneNumber:string;
-    email:string;
-    ethnic:string;
-    religion:string;
-    nameSelfDetermination:string;
-    genderSelfDeterminationId:number;
-    healthInsuranceId:number;
-    //Address
-    addressStreet:string;
-    addressNumber:string;
-    addressFloor:string;
-    addressApartment:string;
-    addressQuarter:string;
-    addressCityId:number;
-    addressPostcode:string;
 }

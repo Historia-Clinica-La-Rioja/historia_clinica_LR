@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DatosPersonales } from '../../pacientes.module';
 import { SearchPatientService } from '@api-rest/services/search-patient.service';
 import { VALIDATIONS, hasError } from "@core/utils/form.utils";
 import { Router } from '@angular/router';
@@ -15,10 +14,12 @@ const ROUTE_HOME = 'pacientes';
 })
 export class SearchComponent implements OnInit {
 
-	public datosPersonales: DatosPersonales = new DatosPersonales();
 	public formSearchSubmitted: boolean = false;
 	public formSearch: FormGroup;
-	public genderOptions = ['masculino', 'femenino'];
+	public genderOptions = [
+		{id: '1', description: 'femenino'},
+		{id: '2', description: 'masculino'}
+	];
 	public viewSearch: boolean = true;
 	public hasError = hasError;
 
@@ -47,12 +48,29 @@ export class SearchComponent implements OnInit {
 	serch() {
 		this.formSearchSubmitted = true;
 		if (this.formSearch.valid) {
-			this.searchPatientService.getPatientByCMD(this.datosPersonales).subscribe(
+//			let searchRequest: String;
+/* 			searchRequest["firstName"] =this.formSearch.controls.firstName.value;
+			searchRequest["lastName"] =this.formSearch.controls.lastName.value;
+			searchRequest["genderId"] =this.formSearch.controls.gender.value;
+			searchRequest["identificationTypeId"] =this.formSearch.controls.identificationNumber.value;
+			searchRequest["identificationNumber"] =this.formSearch.controls.identificationTypeId.value; */
+			
+			let searchRequest = {
+				searchFilterStr: {
+					lastName: this.formSearch.controls.firstName.value,
+					firsName: this.formSearch.controls.lastName.value,
+					genderId: this.formSearch.controls.gender.value,
+					identificationTypeId: this.formSearch.controls.identificationNumber.value,
+					identificationNumber: this.formSearch.controls.identificationTypeId.value,
+				}
+			}
+			this.searchPatientService.getPatientByCMD(JSON.stringify(searchRequest)).subscribe(
 				data => {
-					if (data.length == 0) {
-						// ToDo ir a nuevo paciente
-						this.router.navigate([ROUTE_NEW])
-					}else{
+					if(!data.length){
+						this.router.navigate([ROUTE_NEW]);
+					}
+					else {
+						// ocultar Search y ver Tabla de coincidencias parciales
 						this.viewSearch = false;
 					}
 				}

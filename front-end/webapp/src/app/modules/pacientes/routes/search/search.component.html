@@ -13,7 +13,6 @@
 					<mat-label>Tipo</mat-label>
 					<input id="identificationNumber"
 						   formControlName="identificationNumber"
-					       [(ngModel)]="datosPersonales.identificationNumber"
 					       placeholder="DNI"
 						   matInput>
 					<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'identificationNumber')">
@@ -24,7 +23,6 @@
 					<mat-label>Documento</mat-label>
 					<input id="identificationTypeId"
 						   formControlName="identificationTypeId"
-					       [(ngModel)]="datosPersonales.identificationTypeId"
 					       placeholder="Sin puntos"
 						   matInput>
 					<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'identificationTypeId')">
@@ -34,16 +32,13 @@
 				<br>
 				<mat-label>Sexo</mat-label>
 				<div class="">
-					<mat-radio-group name="gender"
-									 id="gender"
-									 formControlName="gender"
-									 [(ngModel)]="datosPersonales.nameSelfDetermination">
-						<mat-radio-button *ngFor="let gender of genderOptions" [value]="gender">
-							{{gender}}
+					<mat-radio-group name="gender" id="gender" formControlName="gender">
+						<mat-radio-button *ngFor="let gender of genderOptions" [value]="gender.id">
+							{{gender.description}}
 						</mat-radio-button>
 					</mat-radio-group>
-					<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'gender')">
-						El campo es requerido
+					<mat-error *ngIf="formSearchSubmitted &&  hasError(formSearch, 'required', 'gender')">
+						Género requerido
 					</mat-error>
 				</div>
 				<br>
@@ -51,7 +46,6 @@
 					<mat-label>Nombre</mat-label>
 					<input id="firstName"
 							formControlName="firstName"
-							[(ngModel)]="datosPersonales.firstName"
 							matInput>
 					<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'firstName')">
 						El campo es requerido
@@ -61,7 +55,6 @@
 					<mat-label>Segundo Nombre</mat-label>
 					<input id="middleNames"
 							formControlName="middleNames"
-							[(ngModel)]="datosPersonales.middleNames"
 							matInput>
 				</mat-form-field>
 				<br>
@@ -69,7 +62,6 @@
 					<mat-label>Apellido</mat-label>
 					<input  id="lastName"
 							formControlName="lastName"
-							[(ngModel)]="datosPersonales.lastName"
 							matInput>
 					<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'lastName')">
 						El campo es requerido
@@ -79,7 +71,6 @@
 					<mat-label>Apellido materno</mat-label>
 					<input  id="mothersLastName"
 							formControlName="mothersLastName"
-							[(ngModel)]="datosPersonales.mothersLastName"
 							matInput>
 				</mat-form-field>
 				<br>
@@ -87,7 +78,6 @@
 					<mat-label>Fecha de nacimiento</mat-label>
 					<input matInput id="birthDate"
 									formControlName="birthDate"
-									[(ngModel)]="datosPersonales.birthDate"
 									[matDatepicker]="picker">
 					<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'birthDate')">
 						El campo es requerido
