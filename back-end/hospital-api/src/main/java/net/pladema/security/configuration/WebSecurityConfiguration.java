@@ -25,6 +25,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
 	private static final String HEALTH = "/health";
 
+	private static final String MASTERDATA_ADDRESS = "/address/masterdata";
+
 	private static final String ADDRESS = "/address";
 
 	private static final String MASTERDATA_HEALTH = "/masterdata/health";
@@ -71,10 +73,12 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers("/actuator/**").access(actuatorConfiguration.getAccessInfo())
 				.antMatchers(apiAuth + "/**").permitAll()
 				.antMatchers(HttpMethod.GET, ADDRESS+ "/**").permitAll()
+				.antMatchers(HttpMethod.GET, MASTERDATA_ADDRESS+ "/**").permitAll()
 				.antMatchers(HttpMethod.GET, apiUser + "/{id}" + activateApiUser).permitAll()
 				.antMatchers(HttpMethod.POST, apiUser + "/activationlink/resend").permitAll()
 				.antMatchers(apiPassword + apiPasswordReset ).permitAll()
 				.antMatchers(HttpMethod.POST, PERSON ).permitAll()
+				.antMatchers(HttpMethod.GET, PERSON+"/**" ).permitAll()
 				.antMatchers(PATIENT).permitAll()
 				.antMatchers(HttpMethod.GET, PERSON+"/**" ).permitAll()
 				.antMatchers(HEALTH + "/**").permitAll()
