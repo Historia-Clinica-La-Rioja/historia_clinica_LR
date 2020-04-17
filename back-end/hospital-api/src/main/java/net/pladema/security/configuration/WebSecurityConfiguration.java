@@ -29,7 +29,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	private static final String ADDRESS = "/address";
 
-	private static final String MASTERDATA_HEALTH = "/masterdata/health";
+	private static final String MASTERDATA = "/masterdata/**";
 
 	private static final String I18N = "/i18n";
 
@@ -84,7 +84,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HEALTH + "/**").permitAll()
 				.antMatchers(I18N + "/**").permitAll()
 				.antMatchers(RECAPTCHA + "/**").permitAll()
-				.antMatchers(MASTERDATA_HEALTH + "/**").permitAll()
+				.antMatchers(MASTERDATA).permitAll()
 				.antMatchers("/v2/**","/swagger-ui.html","/swagger-resources/**","/webjars/springfox-swagger-ui/**").permitAll()
 				.anyRequest().authenticated();
 		// @formatter:on

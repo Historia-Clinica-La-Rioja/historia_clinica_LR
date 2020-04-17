@@ -427,7 +427,7 @@ databaseChangeLog:
     - changeSet:
         id: fixColumn-user_password_delete_date_time
         author: etrapani
-        changes:
+        changes:    
         - renameColumn:
             columnDataType: date
             newColumnName: deleted_on
@@ -2207,3 +2207,35 @@ databaseChangeLog:
             validate: true
 
                 
+            
+    - changeSet:
+        id: addTable-identity_verification_status
+        comment: Crea tabla identity_verification_status
+        author: gmurgolo
+        changes:
+            - createTable:
+                tableName: identity_verification_status
+                columns:
+                    - column:
+                        name: id
+                        type: smallint
+                        constraints:
+                            primaryKey: true
+                            primaryKeyName: PK_identity_verification_status
+                    - column:
+                        name: description
+                        type: varchar(20)
+                        constraints:
+                            nullable: false
+    - changeSet:
+        id: loadData-identity_verification_status
+        comment: Carga de datos identity_verification_status
+        author: gmurgolo
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    INSERT INTO identity_verification_status VALUES (1, 'Alta de emergencia');
+                    INSERT INTO identity_verification_status VALUES (2, 'Falta documento');
+                    INSERT INTO identity_verification_status VALUES (3, 'Recién nacido');
+                    INSERT INTO identity_verification_status VALUES (4, 'Otros');
