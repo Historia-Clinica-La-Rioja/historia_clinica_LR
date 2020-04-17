@@ -443,3 +443,1767 @@ databaseChangeLog:
             newColumnName: deleted_on
             oldColumnName: delete_on
             tableName: users
+  
+            
+    - changeSet:       
+        id: snomed table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: snomed
+            columns: 
+            - column:
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_snomed
+                name: id
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: fsn
+                type: varchar(100)            
+            - column:
+                constraints:
+                    nullable: false
+                name: parent_id
+                type: varchar(20) 
+            - column:
+                constraints:
+                    nullable: false
+                name: parent_fsn
+                type: varchar(100)            
+
+    - changeSet:       
+        id: allergy_intolerance_category table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: allergy_intolerance_category
+            columns: 
+            - column:
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_allergy_intolerance_category
+                name: id
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: description
+                type: varchar(100)
+
+    - changeSet:
+        id: allergy_intolerance_clinical_status table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: allergy_intolerance_clinical_status
+            columns: 
+            - column:
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_allergy_intolerance_clinical_status
+                name: id
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: description
+                type: varchar(100)
+
+
+    - changeSet:
+        id: allergy_intolerance_verification_status table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: allergy_intolerance_verification_status
+            columns: 
+            - column:
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_allergy_intolerance_verification_status
+                name: id
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: description
+                type: varchar(100)
+
+    - changeSet:
+        id: condition_clinical_status table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: condition_clinical_status
+            columns: 
+            - column:
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_condition_clinical_status
+                name: id
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: description
+                type: varchar(100)
+
+    - changeSet:
+        id: condition_verification_status table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: condition_verification_status
+            columns: 
+            - column:
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_condition_verification_status
+                name: id
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: description
+                type: varchar(100)
+    
+    - changeSet:
+        id: condition_problem_type table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: condition_problem_type
+            columns: 
+            - column:
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_condition_problem_type
+                name: id
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: description
+                type: varchar(100)
+    
+    
+    - changeSet:
+        id: medication_statement_status table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: medication_statement_status
+            columns: 
+            - column:
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_medication_statement_status
+                name: id
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: description
+                type: varchar(100)
+    
+    - changeSet:
+        id: inmunization_status table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: inmunization_status
+            columns: 
+            - column:
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_inmunization_status
+                name: id
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: description
+                type: varchar(100)
+
+    - changeSet:
+        id: observation_status table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: observation_status
+            columns: 
+            - column:
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_observation_status
+                name: id
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: description
+                type: varchar(100)
+
+    - changeSet:
+        id: note table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: note
+            columns: 
+            - column:
+                autoIncrement: true
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_note
+                name: id
+                type: bigint
+            - column:
+                constraints:
+                    nullable: false
+                name: description
+                type: varchar(1024)
+
+    - changeSet:
+        id: allergy_intolerance table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: allergy_intolerance
+            columns: 
+            - column:
+                autoIncrement: true
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_allergy_intolerance
+                name: id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: patient_id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: sctid_code
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: status_id
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: verification_status_id
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: category_id
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: true
+                name: start_date
+                type: date
+            - column:
+                constraints:
+                    nullable: true
+                name: note_id
+                type: bigint 
+            - column:
+                constraints:
+                    nullable: false
+                name: created_by
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: modified_by
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: created_on
+                type: date
+                defaultValueDate: ${date.now}
+            - column:
+                constraints:
+                    nullable: false
+                name: update_on
+                type: date
+                defaultValueDate: ${date.now}            
+        - addForeignKeyConstraint:
+            baseColumnNames: patient_id
+            baseTableName: allergy_intolerance
+            constraintName: FK_allergy_intolerance_patient_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: patient
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: status_id
+            baseTableName: allergy_intolerance
+            constraintName: FK_allergy_intolerance_status_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: allergy_intolerance_clinical_status
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: verification_status_id
+            baseTableName: allergy_intolerance
+            constraintName: FK_allergy_intolerance_verification_status_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: allergy_intolerance_verification_status
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: category_id
+            baseTableName: allergy_intolerance
+            constraintName: FK_allergy_intolerance_category_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: allergy_intolerance_category
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: sctid_code
+            baseTableName: allergy_intolerance
+            constraintName: FK_allergy_intolerance_sctid_code
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: snomed
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: note_id
+            baseTableName: allergy_intolerance
+            constraintName: FK_allergy_intolerance_note_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: note
+            validate: true 
+
+    - changeSet:
+        id: IDX_allergy_intolerance_patient_id
+        author: etrapani
+        changes:
+        - createIndex:
+            columns:
+            - column:
+                name: patient_id
+            indexName: IDX_allergy_intolerance_patient_id
+            tableName: allergy_intolerance
+
+    - changeSet:
+        id: health_condition table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: health_condition
+            columns: 
+            - column:
+                autoIncrement: true
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_health_condition
+                name: id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: patient_id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: sctid_code
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: status_id
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: verification_status_id
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: problem_type_id
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: true
+                name: start_date
+                type: date
+            - column:
+                constraints:
+                    nullable: true
+                name: inactivation_date
+                type: date
+            - column:
+                constraints:
+                    nullable: false
+                name: personal
+                type: boolean
+                defaultValue: ${boolean.false}
+            - column:
+                constraints:
+                    nullable: true
+                name: note_id
+                type: bigint                 
+            - column:
+                constraints:
+                    nullable: false
+                name: created_by
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: modified_by
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: created_on
+                type: date
+                defaultValueDate: ${date.now}
+            - column:
+                constraints:
+                    nullable: false
+                name: update_on
+                type: date
+                defaultValueDate: ${date.now}   
+        - addForeignKeyConstraint:
+            baseColumnNames: patient_id
+            baseTableName: health_condition
+            constraintName: FK_health_condition_patient_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: patient
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: status_id
+            baseTableName: health_condition
+            constraintName: FK_health_condition_status_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: condition_clinical_status
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: verification_status_id
+            baseTableName: health_condition
+            constraintName: FK_health_condition_verification_status_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: condition_verification_status
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: problem_type_id
+            baseTableName: health_condition
+            constraintName: FK_health_condition_problem_type_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: condition_problem_type
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: sctid_code
+            baseTableName: health_condition
+            constraintName: FK_health_condition_sctid_code
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: snomed
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: note_id
+            baseTableName: health_condition
+            constraintName: FK_health_condition_note_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: note
+            validate: true 
+
+    - changeSet:
+        id: IDX_health_condition_patient_id
+        author: etrapani
+        changes:
+        - createIndex:
+            columns:
+            - column:
+                name: patient_id
+            indexName: IDX_health_condition_patient_id
+            tableName: health_condition
+
+    - changeSet:
+        id: medication_statement table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: medication_statement
+            columns: 
+            - column:
+                autoIncrement: true
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_medication_statement
+                name: id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: patient_id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: sctid_code
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: status_id
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: true
+                name: note_id
+                type: bigint                   
+            - column:
+                constraints:
+                    nullable: false
+                name: created_by
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: modified_by
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: created_on
+                type: date
+                defaultValueDate: ${date.now}
+            - column:
+                constraints:
+                    nullable: false
+                name: update_on
+                type: date
+                defaultValueDate: ${date.now}   
+        - addForeignKeyConstraint:
+            baseColumnNames: patient_id
+            baseTableName: medication_statement
+            constraintName: FK_medication_statement_patient_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: patient
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: status_id
+            baseTableName: medication_statement
+            constraintName: FK_medication_statement_status_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: medication_statement_status
+            validate: true  
+        - addForeignKeyConstraint:
+            baseColumnNames: sctid_code
+            baseTableName: medication_statement
+            constraintName: FK_medication_statement_sctid_code
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: snomed
+            validate: true  
+        - addForeignKeyConstraint:
+            baseColumnNames: note_id
+            baseTableName: medication_statement
+            constraintName: FK_medication_statement_note_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: note
+            validate: true     
+
+    - changeSet:
+        id: IDX_medication_statement_patient_id
+        author: etrapani
+        changes:
+        - createIndex:
+            columns:
+            - column:
+                name: patient_id
+            indexName: IDX_medication_statement_patient_id
+            tableName: medication_statement
+
+    - changeSet:
+        id: inmunization table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: inmunization
+            columns: 
+            - column:
+                autoIncrement: true
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_inmunization
+                name: id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: patient_id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: sctid_code
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: status_id
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: institution_id
+                type: int            
+            - column:
+                constraints:
+                    nullable: false
+                name: administration_date
+                type: date
+            - column:
+                name: expiration_date
+                type: date
+            - column:
+                constraints:
+                    nullable: true
+                name: note_id
+                type: bigint                 
+            - column:
+                constraints:
+                    nullable: false
+                name: created_by
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: modified_by
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: created_on
+                type: date
+                defaultValueDate: ${date.now}
+            - column:
+                constraints:
+                    nullable: false
+                name: update_on
+                type: date
+                defaultValueDate: ${date.now}   
+        - addForeignKeyConstraint:
+            baseColumnNames: patient_id
+            baseTableName: inmunization
+            constraintName: FK_inmunization_patient_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: patient
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: status_id
+            baseTableName: inmunization
+            constraintName: FK_inmunization_status_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: inmunization_status
+            validate: true 
+        - addForeignKeyConstraint:
+            baseColumnNames: sctid_code
+            baseTableName: inmunization
+            constraintName: FK_inmunization_sctid_code
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: snomed
+            validate: true  
+        - addForeignKeyConstraint:
+            baseColumnNames: note_id
+            baseTableName: inmunization
+            constraintName: FK_inmunization_note_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: note
+            validate: true    
+
+    - changeSet:
+        id: IDX_inmunization_patient_id
+        author: etrapani
+        changes:
+        - createIndex:
+            columns:
+            - column:
+                name: patient_id
+            indexName: IDX_inmunization_patient_id
+            tableName: inmunization
+
+    - changeSet:
+        id: observation_vital_sign table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: observation_vital_sign
+            columns: 
+            - column:
+                autoIncrement: true
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_observation_vital_sign
+                name: id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: patient_id
+                type: int
+            - column:
+                name: loinc_code
+                type: varchar(20)
+            - column:
+                name: sctid_code
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: status_id
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: category_id
+                type: varchar(20)   
+            - column:
+                constraints:
+                    nullable: false
+                name: value
+                type: varchar(20)  
+            - column:
+                constraints:
+                    nullable: false
+                name: effective_time
+                type: date
+            - column:
+                constraints:
+                    nullable: true
+                name: note_id
+                type: bigint                 
+            - column:
+                constraints:
+                    nullable: false
+                name: created_by
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: modified_by
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: created_on
+                type: date
+                defaultValueDate: ${date.now}
+            - column:
+                constraints:
+                    nullable: false
+                name: update_on
+                type: date
+                defaultValueDate: ${date.now}   
+        - addForeignKeyConstraint:
+            baseColumnNames: patient_id
+            baseTableName: observation_vital_sign
+            constraintName: FK_observation_vital_sign_patient_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: patient
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: status_id
+            baseTableName: observation_vital_sign
+            constraintName: FK_observation_vital_sign_status_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: observation_status
+            validate: true 
+        - addForeignKeyConstraint:
+            baseColumnNames: sctid_code
+            baseTableName: observation_vital_sign
+            constraintName: FK_observation_vital_sign_sctid_code
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: snomed
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: note_id
+            baseTableName: observation_vital_sign
+            constraintName: FK_observation_vital_sign_note_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: note
+            validate: true         
+
+    - changeSet:
+        id: IDX_observation_vital_sign_patient_id
+        author: etrapani
+        changes:
+        - createIndex:
+            columns:
+            - column:
+                name: patient_id
+            indexName: IDX_observation_vital_sign_patient_id
+            tableName: observation_vital_sign
+
+
+    - changeSet:
+        id: observation_lab table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: observation_lab
+            columns: 
+            - column:
+                autoIncrement: true
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_observation_lab
+                name: id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: patient_id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: sctid_code
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: status_id
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: category_id
+                type: varchar(20)  
+            - column:
+                constraints:
+                    nullable: false
+                name: value
+                type: varchar(20)   
+            - column:
+                constraints:
+                    nullable: false
+                name: effective_time
+                type: date
+            - column:
+                constraints:
+                    nullable: true
+                name: note_id
+                type: bigint                 
+            - column:
+                constraints:
+                    nullable: false
+                name: created_by
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: modified_by
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: created_on
+                type: date
+                defaultValueDate: ${date.now}
+            - column:
+                constraints:
+                    nullable: false
+                name: update_on
+                type: date
+                defaultValueDate: ${date.now}   
+        - addForeignKeyConstraint:
+            baseColumnNames: patient_id
+            baseTableName: observation_lab
+            constraintName: FK_observation_lab_patient_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: patient
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: status_id
+            baseTableName: observation_lab
+            constraintName: FK_observation_lab_status_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: observation_status
+            validate: true 
+        - addForeignKeyConstraint:
+            baseColumnNames: sctid_code
+            baseTableName: observation_lab
+            constraintName: FK_observation_lab_sctid_code
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: snomed
+            validate: true 
+        - addForeignKeyConstraint:
+            baseColumnNames: note_id
+            baseTableName: observation_lab
+            constraintName: FK_observation_lab_note_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: note
+            validate: true     
+
+    - changeSet:
+        id: IDX_observation_lab_patient_id
+        author: etrapani
+        changes:
+        - createIndex:
+            columns:
+            - column:
+                name: patient_id
+            indexName: IDX_observation_lab_patient_id
+            tableName: observation_lab
+        
+
+    - changeSet:
+        id: document_type table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: document_type
+            columns: 
+            - column:
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_document_type
+                name: id
+                type: smallint
+            - column:
+                constraints:
+                    nullable: false
+                name: description
+                type: varchar(100)
+
+    - changeSet:
+        id: document_status table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: document_status
+            columns: 
+            - column:
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_document_status
+                name: id
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: description
+                type: varchar(100)
+
+    - changeSet:
+        id: internment_episode_status table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: internment_episode_status
+            columns: 
+            - column:
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_internment_episode_status
+                name: id
+                type: smallint
+            - column:
+                constraints:
+                    nullable: false
+                name: description
+                type: varchar(100)           
+
+    - changeSet:
+        id: internment_episode table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: internment_episode
+            columns: 
+            - column:
+                autoIncrement: true
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_internment_episode
+                name: id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: patient_id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: bed_id
+                type: int 
+            - column:
+                constraints:
+                    nullable: true
+                name: clinical_speciality_id
+                type: varchar(20)                 
+            - column:
+                constraints:
+                    nullable: false
+                name: status_id
+                type: smallint
+            - column:
+                constraints:
+                    nullable: true
+                name: note_id
+                type: bigint 
+            - column:
+                constraints:
+                    nullable: true
+                name: anamnesis_doc_id
+                type: bigint 
+            - column:
+                constraints:
+                    nullable: true
+                name: epicrisis_doc_id
+                type: bigint 
+            - column:
+                constraints:
+                    nullable: false
+                name: entry_date
+                type: date
+                defaultValueDate: ${date.now}
+            - column:
+                constraints:
+                    nullable: true
+                name: discharge_date
+                type: date
+                defaultValueDate: ${date.now}
+            - column:
+                constraints:
+                    nullable: false
+                name: created_by
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: modified_by
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: created_on
+                type: date
+                defaultValueDate: ${date.now}
+            - column:
+                constraints:
+                    nullable: false
+                name: update_on
+                type: date
+                defaultValueDate: ${date.now} 
+        - addForeignKeyConstraint:
+            baseColumnNames: patient_id
+            baseTableName: internment_episode
+            constraintName: FK_internment_episode_patient_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: patient
+            validate: true   
+        - addForeignKeyConstraint:
+            baseColumnNames: status_id
+            baseTableName: internment_episode
+            constraintName: FK_internment_episode_status_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: internment_episode_status
+            validate: true                   
+        - addForeignKeyConstraint:
+            baseColumnNames: bed_id
+            baseTableName: internment_episode
+            constraintName: FK_internment_episode_bed_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: bed
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: note_id
+            baseTableName: internment_episode
+            constraintName: FK_internment_episode_note_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: note
+            validate: true 
+
+    - changeSet:
+        id: IDX_internment_episode_patient_id
+        author: etrapani
+        changes:
+        - createIndex:
+            columns:
+            - column:
+                name: patient_id
+            indexName: IDX_internment_episode_patient_id
+            tableName: internment_episode
+
+    - changeSet:
+        id: document table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: document
+            columns: 
+            - column:
+                autoIncrement: true
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_document
+                name: id
+                type: bigint
+            - column:
+                constraints:
+                    nullable: false
+                name: internment_episode_id
+                type: int
+            - column:
+                constraints:
+                    nullable: true
+                name: note_id
+                type: bigint         
+            - column:
+                constraints:
+                    nullable: false
+                name: status_id
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: type_id
+                type: smallint
+            - column:
+                constraints:
+                    nullable: false
+                name: created_by
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: modified_by
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: created_on
+                type: date
+                defaultValueDate: ${date.now}
+            - column:
+                constraints:
+                    nullable: false
+                name: update_on
+                type: date
+                defaultValueDate: ${date.now} 
+        - addForeignKeyConstraint:
+            baseColumnNames: internment_episode_id
+            baseTableName: document
+            constraintName: FK_document_internment_episode_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: internment_episode
+            validate: true   
+        - addForeignKeyConstraint:
+            baseColumnNames: status_id
+            baseTableName: document
+            constraintName: FK_document_status_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: document_status
+            validate: true                   
+        - addForeignKeyConstraint:
+            baseColumnNames: type_id
+            baseTableName: document
+            constraintName: FK_document_type_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: document_type
+            validate: true   
+        - addForeignKeyConstraint:
+            baseColumnNames: note_id
+            baseTableName: document
+            constraintName: FK_document_note_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: note
+            validate: true 
+    
+    - changeSet:
+        id: IDX_document_internment_episode_id
+        author: etrapani
+        changes:
+        - createIndex:
+            columns:
+            - column:
+                name: internment_episode_id
+            indexName: IDX_document_internment_episode_id
+            tableName: document
+
+    - changeSet:
+        id: FK_internment_episode_anamnesis_doc_id
+        author: etrapani
+        changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: anamnesis_doc_id
+            baseTableName: internment_episode
+            constraintName: FK_internment_episode_anamnesis_doc_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: document
+            validate: true
+
+    - changeSet:
+        id: FK_internment_episode_epicrisis_doc_id
+        author: etrapani
+        changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: epicrisis_doc_id
+            baseTableName: internment_episode
+            constraintName: FK_internment_episode_epicrisis_doc_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: document
+            validate: true
+
+    - changeSet:
+        id: document_historic table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: document_historic
+            columns: 
+            - column:
+                constraints:
+                    nullable: false
+                name: id
+                type: bigint
+            - column:
+                constraints:
+                    nullable: false
+                name: created_on
+                type: date
+            - column:
+                constraints:
+                    nullable: false
+                name: internment_episode_id
+                type: int
+            - column:
+                constraints:
+                    nullable: true
+                name: note_id
+                type: bigint         
+            - column:
+                constraints:
+                    nullable: false
+                name: status_id
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: type_id
+                type: smallint
+            - column:
+                constraints:
+                    nullable: false
+                name: created_by
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: modified_by
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: update_on
+                type: date
+                defaultValueDate: ${date.now} 
+        - addForeignKeyConstraint:
+            baseColumnNames: internment_episode_id
+            baseTableName: document_historic
+            constraintName: FK_document_historic_internment_episode_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: internment_episode
+            validate: true   
+        - addForeignKeyConstraint:
+            baseColumnNames: status_id
+            baseTableName: document_historic
+            constraintName: FK_document_historic_status_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: document_status
+            validate: true                   
+        - addForeignKeyConstraint:
+            baseColumnNames: type_id
+            baseTableName: document_historic
+            constraintName: FK_document_historic_type_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: document_type
+            validate: true   
+        - addForeignKeyConstraint:
+            baseColumnNames: note_id
+            baseTableName: document_historic
+            constraintName: FK_document_historic_note_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: note
+            validate: true 
+        - addForeignKeyConstraint:
+            baseColumnNames: id
+            baseTableName: document_historic
+            constraintName: FK_document_historic_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: document
+            validate: true 
+        - addPrimaryKey:
+            clustered: true
+            columnNames: id, created_on
+            constraintName: PK_document_historic
+            tableName: document_historic
+            validate: true
+    
+    - changeSet:
+        id: IDX_document_historic_internment_episode_id
+        author: etrapani
+        changes:
+        - createIndex:
+            columns:
+            - column:
+                name: internment_episode_id
+            indexName: IDX_document_historic_internment_episode_id
+            tableName: document_historic
+
+    - changeSet:
+        id: evaluation_note_document table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: evaluation_note_document
+            columns: 
+            - column:
+                constraints:
+                    nullable: false
+                name: document_id
+                type: bigint
+            - column:
+                constraints:
+                    nullable: false
+                name: internment_episode_id
+                type: int
+        - addPrimaryKey:
+            clustered: true
+            columnNames: document_id, internment_episode_id
+            constraintName: PK_evaluation_note_document
+            tableName: evaluation_note_document
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: document_id
+            baseTableName: evaluation_note_document
+            constraintName: FK_evaluation_note_document_document_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: document
+            validate: true 
+        - addForeignKeyConstraint:
+            baseColumnNames: internment_episode_id
+            baseTableName: evaluation_note_document
+            constraintName: FK_evaluation_note_document_internment_episode_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: internment_episode
+            validate: true 
+
+
+    - changeSet:
+        id: healthcare_professional_group table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: healthcare_professional_group
+            columns: 
+            - column:
+                constraints:
+                    nullable: false
+                name: healthcare_professional_id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: internment_episode_id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: responsable                
+                type: boolean
+                defaultValue: ${boolean.false}
+        - addPrimaryKey:
+            clustered: true
+            columnNames: internment_episode_id, healthcare_professional_id
+            constraintName: PK_healthcare_professional_group_group
+            tableName: healthcare_professional_group
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: internment_episode_id
+            baseTableName: healthcare_professional_group
+            constraintName: FK_healthcare_professional_group_internment_episode_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: internment_episode
+            validate: true 
+
+    - changeSet:
+        id: documented_vital_sign table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: documented_vital_sign
+            columns: 
+            - column:
+                constraints:
+                    nullable: false
+                name: observation_vital_sign_id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: document_id
+                type: bigint
+        - addPrimaryKey:
+            clustered: true
+            columnNames: document_id, observation_vital_sign_id
+            constraintName: PK_documented_vital_sign
+            tableName: documented_vital_sign
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: document_id
+            baseTableName: documented_vital_sign
+            constraintName: FK_documented_vital_sign_document_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: document
+            validate: true 
+        - addForeignKeyConstraint:
+            baseColumnNames: observation_vital_sign_id
+            baseTableName: documented_vital_sign
+            constraintName: FK_documented_vital_sign_observation_vital_sign_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: observation_vital_sign
+            validate: true 
+
+    - changeSet:
+        id: documented_lab table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: documented_lab
+            columns: 
+            - column:
+                constraints:
+                    nullable: false
+                name: observation_lab_id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: document_id
+                type: bigint
+        - addPrimaryKey:
+            clustered: true
+            columnNames: document_id, observation_lab_id
+            constraintName: PK_documented_lab
+            tableName: documented_lab
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: document_id
+            baseTableName: documented_lab
+            constraintName: FK_documented_lab_document_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: document
+            validate: true 
+        - addForeignKeyConstraint:
+            baseColumnNames: observation_lab_id
+            baseTableName: documented_lab
+            constraintName: FK_documented_lab_observation_lab_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: observation_lab
+            validate: true 
+
+            
+    - changeSet:
+        id: document_allergy_intolerance table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: document_allergy_intolerance
+            columns: 
+            - column:
+                constraints:
+                    nullable: false
+                name: allergy_intolerance_id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: document_id
+                type: bigint
+        - addPrimaryKey:
+            clustered: true
+            columnNames: document_id, allergy_intolerance_id
+            constraintName: PK_document_allergy_intolerance
+            tableName: document_allergy_intolerance
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: document_id
+            baseTableName: document_allergy_intolerance
+            constraintName: FK_document_allergy_intolerance_document_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: document
+            validate: true 
+        - addForeignKeyConstraint:
+            baseColumnNames: allergy_intolerance_id
+            baseTableName: document_allergy_intolerance
+            constraintName: FK_document_allergy_intolerance_allergy_intolerance_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: allergy_intolerance
+            validate: true 
+
+
+    - changeSet:
+        id: document_health_condition table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: document_health_condition
+            columns: 
+            - column:
+                constraints:
+                    nullable: false
+                name: health_condition_id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: document_id
+                type: bigint
+        - addPrimaryKey:
+            clustered: true
+            columnNames: document_id, health_condition_id
+            constraintName: PK_document_health_condition
+            tableName: document_health_condition
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: document_id
+            baseTableName: document_health_condition
+            constraintName: FK_document_health_condition_document_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: document
+            validate: true 
+        - addForeignKeyConstraint:
+            baseColumnNames: health_condition_id
+            baseTableName: document_health_condition
+            constraintName: FK_document_health_condition_health_condition_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: health_condition
+            validate: true 
+
+
+    - changeSet:
+        id: document_medicament_statement table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: document_medicament_statement
+            columns: 
+            - column:
+                constraints:
+                    nullable: false
+                name: medication_statement_id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: document_id
+                type: bigint
+        - addPrimaryKey:
+            clustered: true
+            columnNames: document_id, medication_statement_id
+            constraintName: PK_document_medicament_statement
+            tableName: document_medicament_statement
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: document_id
+            baseTableName: document_medicament_statement
+            constraintName: FK_document_medicament_statement_document_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: document
+            validate: true 
+        - addForeignKeyConstraint:
+            baseColumnNames: medication_statement_id
+            baseTableName: document_medicament_statement
+            constraintName: FK_document_medicament_statement_medication_statement_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: medication_statement
+            validate: true
+
+
+    - changeSet:
+        id: document_inmunization table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: document_inmunization
+            columns: 
+            - column:
+                constraints:
+                    nullable: false
+                name: inmunization_id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: document_id
+                type: bigint
+        - addPrimaryKey:
+            clustered: true
+            columnNames: document_id, inmunization_id
+            constraintName: PK_document_inmunization
+            tableName: document_inmunization
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: document_id
+            baseTableName: document_inmunization
+            constraintName: FK_document_inmunization_document_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: document
+            validate: true 
+        - addForeignKeyConstraint:
+            baseColumnNames: inmunization_id
+            baseTableName: document_inmunization
+            constraintName: FK_document_inmunization_inmunization_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: inmunization
+            validate: true
+
+                
