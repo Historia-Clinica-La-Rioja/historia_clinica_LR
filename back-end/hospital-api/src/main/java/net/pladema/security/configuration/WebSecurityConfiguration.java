@@ -35,6 +35,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	private static final String RECAPTCHA = "/recaptcha";
 
+	private static final String INTERMENT_PATIENT = "/institution/{institutionId}/internment/patient";
+
 	@Value("${api.user}")
 	protected String apiUser;
 
@@ -72,6 +74,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 				.antMatchers("/actuator/**").access(actuatorConfiguration.getAccessInfo())
 				.antMatchers(apiAuth + "/**").permitAll()
+				.antMatchers(INTERMENT_PATIENT + "/**").permitAll()
 				.antMatchers(HttpMethod.GET, ADDRESS+ "/**").permitAll()
 				.antMatchers(HttpMethod.GET, MASTERDATA_ADDRESS+ "/**").permitAll()
 				.antMatchers(HttpMethod.GET, apiUser + "/{id}" + activateApiUser).permitAll()
