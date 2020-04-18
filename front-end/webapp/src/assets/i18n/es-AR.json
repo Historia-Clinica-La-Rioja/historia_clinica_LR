@@ -24,7 +24,7 @@
 		}
 	},
 	"presentation": {
-		"ficha-paciente": {
+		"patient-card": {
 			"GENDER_AGE": "{{gender}} · {{age}} años"
 		}
 	}
