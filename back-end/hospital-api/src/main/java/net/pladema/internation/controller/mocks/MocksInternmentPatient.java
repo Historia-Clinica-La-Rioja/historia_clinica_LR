@@ -28,9 +28,9 @@ public class MocksInternmentPatient {
 
     private static PatientDto mockPatientDto(int i) {
         PatientDto result = new PatientDto();
-        result.setPatientId(i);
-        result.setName("Nombre " + i);
-        result.setSurname("Apellido " +i);
+        result.setId(i);
+        result.setFirstName("Nombre " + i);
+        result.setLastName("Apellido " +i);
         return result;
     }
 

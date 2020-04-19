@@ -9,13 +9,15 @@ import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.controller.dto.PersonalInformationDto;
 import net.pladema.person.repository.domain.CompleteDataPerson;
 import net.pladema.person.repository.domain.PersonalInformation;
+import net.pladema.person.repository.entity.Gender;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 
-@Mapper(uses = {AddressMapper.class, HealthInsuranceMapper.class, IdentificationTypeDtoMapper.class})
+@Mapper(uses = {AddressMapper.class, HealthInsuranceMapper.class, IdentificationTypeMapper.class, GenderMapper.class})
 public interface PersonMapper {
 
     public BMPersonDto fromPerson(Person person);
@@ -58,7 +60,14 @@ public interface PersonMapper {
     @Mapping(target = "postcode", source = "address.postcode")
     public BMPersonDto fromCompleteDataPerson(CompleteDataPerson completeDataPerson);
 
-    BasicDataPersonDto basicDatafromPerson(Person person);
 
+    @Mapping(target = "id", source = "person.id")
+    @Mapping(target = "gender", source = "gender", qualifiedByName = "fromGender")
+    BasicDataPersonDto basicDatafromPerson(Person person, Gender gender);
+
+
+    @Mapping(target = "identificationType", source = "identificationType", qualifiedByName = "fromIdentificationType")
+    @Mapping(target = "healthInsurance", source = "healthInsurance", qualifiedByName = "fromHealthInsurance")
+    @Mapping(target = "address", source="personalInformation", qualifiedByName = "toAddressComplete")
     PersonalInformationDto fromPersonalInformation(PersonalInformation personalInformation);
 }

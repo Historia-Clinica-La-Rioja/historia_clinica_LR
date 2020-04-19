@@ -17,7 +17,7 @@ public class BasicDataPersonDto {
 
     private String lastName;
 
-    private Short genderId;
+    private GenderDto gender;
 
     private Short age;
 }

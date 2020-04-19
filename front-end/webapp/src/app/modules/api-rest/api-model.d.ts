@@ -90,7 +90,7 @@ export interface BMPersonDto extends APersonDto {
 export interface BasicDataPersonDto {
     age: number;
     firstName: string;
-    genderId: number;
+    gender: GenderDto;
     id: number;
     lastName: string;
 }
@@ -118,6 +118,10 @@ export interface ClinicalSpecialityDto {
 export interface ClinicalSpecialtyDto {
     id: number;
     name: string;
+}
+
+export interface GenderDto extends MasterdataDto<number> {
+    id: number;
 }
 
 export interface HealthInsuranceDto {
@@ -156,9 +160,9 @@ export interface MasterdataDto<T> extends MasterDataInterface<T> {
 }
 
 export interface PatientDto {
-    name: string;
-    patientId: number;
-    surname: string;
+    firstName: string;
+    id: number;
+    lastName: string;
 }
 
 export interface PatientSearchDto {

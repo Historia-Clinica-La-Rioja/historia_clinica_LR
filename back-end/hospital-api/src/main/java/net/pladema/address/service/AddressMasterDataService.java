@@ -2,6 +2,7 @@ package net.pladema.address.service;
 
 import net.pladema.address.repository.entity.Address;
 import net.pladema.address.repository.entity.City;
+import net.pladema.address.repository.entity.Province;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -19,4 +20,6 @@ public interface AddressMasterDataService {
 	public <T> Collection<T> findCitiesByDepartment(Short department_id, Class<T> clazz);
 
 	public Optional<City> findCityById(Integer idCity);
+
+	public Optional<Province> findProvinceById(Short provinceId);
 }

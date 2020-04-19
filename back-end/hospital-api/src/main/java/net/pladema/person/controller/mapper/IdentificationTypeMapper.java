@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 
 @Mapper
-public interface IdentificationTypeDtoMapper {
+public interface IdentificationTypeMapper {
 
     @Named("fromIdentificationType")
     public IdentificationTypeDto fromIdentificationType(IdentificationType identificationType);

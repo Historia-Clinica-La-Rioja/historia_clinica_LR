@@ -3,6 +3,7 @@ package net.pladema.address.service.impl;
 import java.util.Collection;
 import java.util.Optional;
 
+import net.pladema.address.repository.entity.Province;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
@@ -75,4 +76,11 @@ public class AddressMasterDataServiceImpl implements AddressMasterDataService {
 	public Optional<City> findCityById(Integer idCity) {
 		return cityRepository.findById(idCity);
 	}
+
+	@Override
+	public Optional<Province> findProvinceById(Short provinceId) {
+		return provinceRepository.findById(provinceId);
+	}
+
+
 }

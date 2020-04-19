@@ -27,7 +27,7 @@ export class InternacionesTableComponent implements OnInit {
 	}
 
 	actionRow(internacion: InternmentEpisodeDto): void {
-		let url = `internaciones/internacion/${internacion.id}/paciente/${internacion.patient.patientId}`;
+		let url = `internaciones/internacion/${internacion.id}/paciente/${internacion.patient.id}`;
 		this.router.navigate([url]);
 	}
 

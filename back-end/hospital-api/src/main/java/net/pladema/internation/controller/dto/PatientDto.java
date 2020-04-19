@@ -9,9 +9,9 @@ import lombok.ToString;
 @ToString
 public class PatientDto {
 
-    private Integer patientId;
+    private Integer id;
 
-    private String name;
+    private String firstName;
 
-    private String surname;
+    private String lastName;
 }

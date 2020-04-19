@@ -5,14 +5,17 @@ import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.person.controller.dto.BMPersonDto;
 import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.controller.mapper.PersonMapper;
+import net.pladema.person.repository.entity.Gender;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;
+import net.pladema.person.service.PersonMasterDataService;
 import net.pladema.person.service.PersonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PersonExternalServiceImpl implements PersonExternalService {
@@ -21,11 +24,15 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 
     private final PersonService personService;
 
+    private final PersonMasterDataService personMasterDataService;
+
     private final PersonMapper personMapper;
 
-    public PersonExternalServiceImpl(PersonService personService, PersonMapper personMapper){
+    public PersonExternalServiceImpl(PersonService personService, PersonMasterDataService personMasterDataService,
+                                     PersonMapper personMapper){
         super();
         this.personService = personService;
+        this.personMasterDataService = personMasterDataService;
         this.personMapper = personMapper;
         LOG.debug("{}", "created service");
     }
@@ -65,7 +72,8 @@ public class PersonExternalServiceImpl implements PersonExternalService {
     public BasicDataPersonDto getBasicDataPerson(Integer personId) {
         LOG.debug("Input parameters -> {}", personId);
         Person person = personService.getPerson(personId);
-        BasicDataPersonDto result = personMapper.basicDatafromPerson(person);
+        Gender gender = personMasterDataService.getGender(person.getGenderId()).orElse(new Gender());
+        BasicDataPersonDto result = personMapper.basicDatafromPerson(person, gender);
         LOG.debug("Output -> {}", result);
         return result;
     }
