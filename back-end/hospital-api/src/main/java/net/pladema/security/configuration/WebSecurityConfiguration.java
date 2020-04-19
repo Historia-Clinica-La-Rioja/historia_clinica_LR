@@ -35,7 +35,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	private static final String RECAPTCHA = "/recaptcha";
 
-	private static final String INTERMENT_PATIENT = "/institution/{institutionId}/internment/patient";
+	private static final String INTERMENT_PATIENT = "/institutions/{institutionId}/internments/patients";
 
 	@Value("${api.user}")
 	protected String apiUser;

@@ -7,17 +7,15 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class InternmentPatientDto {
+public class InternmentEpisodeDto {
 
-    private Integer patientId;
+    private Integer id;
 
-    private String name;
-
-    private String surname;
+    private PatientDto patient;
 
     private BedDto bed;
 
-    private ResponsableDoctorDto doctor;
+    private ResponsibleDoctorDto doctor;
 
 
 

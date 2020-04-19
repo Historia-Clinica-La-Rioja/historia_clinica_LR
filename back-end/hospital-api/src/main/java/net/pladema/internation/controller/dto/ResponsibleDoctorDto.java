@@ -9,14 +9,11 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
-public class RoomDto implements Serializable {
+public class ResponsibleDoctorDto implements Serializable {
 
     private Integer id;
 
-    private Short roomNumber;
+    private String name;
 
-    private SectorDto sector;
-
-    private ClinicalSpecialtyDto specialty;
-
+    private String surname;
 }

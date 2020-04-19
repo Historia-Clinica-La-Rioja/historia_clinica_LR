@@ -56,12 +56,16 @@ export interface ClinicalSpecialityDto {
     name: string;
 }
 
-export interface InternmentPatientDto {
-    bed: BedDto;
-    doctor: ResponsableDoctorDto;
+export interface ClinicalSpecialtyDto {
+    id: number;
     name: string;
-    patientId: number;
-    surname: string;
+}
+
+export interface InternmentEpisodeDto {
+    bed: BedDto;
+    doctor: ResponsibleDoctorDto;
+    id: number;
+    patient: PatientDto;
 }
 
 export interface JWTokenDto extends Serializable {
@@ -72,6 +76,12 @@ export interface JWTokenDto extends Serializable {
 export interface LoginDto extends Serializable {
     password: string;
     username: string;
+}
+
+export interface PatientDto {
+    name: string;
+    patientId: number;
+    surname: string;
 }
 
 export interface PatientSearchDto {
@@ -99,11 +109,17 @@ export interface ResponsableDoctorDto extends Serializable {
     surname: string;
 }
 
+export interface ResponsibleDoctorDto extends Serializable {
+    id: number;
+    name: string;
+    surname: string;
+}
+
 export interface RoomDto extends Serializable {
     id: number;
     roomNumber: number;
     sector: SectorDto;
-    speciality: ClinicalSpecialityDto;
+    specialty: ClinicalSpecialtyDto;
 }
 
 export interface SectorDto {
