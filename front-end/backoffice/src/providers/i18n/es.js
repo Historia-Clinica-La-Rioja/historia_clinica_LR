@@ -50,5 +50,21 @@ export default {
                 description: 'Nombre',
             }
         }, 
+        clinicalspecialties: {
+            name: 'Especialidad |||| Especialidades',
+            fields: {
+                name: 'Nombre',
+                description: 'Descripción',
+                sctidCode: 'Código SNOMED',
+            }
+        }, 
+        clinicalspecialtysectors: {
+            name: 'Especialidad | Sector',
+            fields: {
+                description: 'Descripción',
+                sectorId: 'Sector',
+                clinicalSpecialtyId: 'Especialidad',
+            }
+        }, 
     },
 };

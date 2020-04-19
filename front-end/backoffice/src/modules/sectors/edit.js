@@ -10,7 +10,7 @@ import {
 
 const SectorEdit = props => (
     <Edit {...props}>
-        <SimpleForm >
+        <SimpleForm redirect="show" >
             <TextInput source="description" validate={[required()]} />
             <ReferenceInput
                 source="institutionId"

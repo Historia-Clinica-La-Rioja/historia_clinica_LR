@@ -2239,3 +2239,89 @@ databaseChangeLog:
                     INSERT INTO identity_verification_status VALUES (2, 'Falta documento');
                     INSERT INTO identity_verification_status VALUES (3, 'Recién nacido');
                     INSERT INTO identity_verification_status VALUES (4, 'Otros');
+
+    # Agrega tablas clinical_specialty_sector
+    - changeSet:
+        id: clinical_specialty-table
+        author: efernandez
+        changes:
+            - createTable:
+                tableName: clinical_specialty
+                columns:
+                    - column:
+                        name: id
+                        type: int
+                        autoIncrement: true
+                        constraints:
+                            primaryKey: true
+                            primaryKeyName: PK_clinical_specialty
+                    - column:
+                        name: name
+                        type: varchar(100)
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: description
+                        type: varchar(255)
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: sctid_code
+                        type: varchar(15)
+                        constraints:
+                            nullable: false
+    - changeSet:
+        id: clinical_specialty_sector-table
+        author: efernandez
+        changes:
+            - createTable:
+                tableName: clinical_specialty_sector
+                columns:
+                    - column:
+                        name: id
+                        type: int
+                        autoIncrement: true
+                        constraints:
+                            primaryKey: true
+                            primaryKeyName: PK_clinical_specialty_sector
+                    - column:
+                        name: description
+                        type: varchar(255)
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: clinical_specialty_id
+                        type: int
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: sector_id
+                        type: int
+                        constraints:
+                            nullable: false
+            - addForeignKeyConstraint:
+                constraintName: FK_clinical_specialty_sector__sector
+                baseTableName: clinical_specialty_sector
+                baseColumnNames: sector_id
+                referencedTableName: sector 
+                referencedColumnNames: id
+                validate: true
+                onDelete: CASCADE
+                onUpdate: NO ACTION
+            - addForeignKeyConstraint:
+                constraintName: FK_clinical_specialty_sector__clinical_specialty
+                baseTableName: clinical_specialty_sector
+                baseColumnNames: clinical_specialty_id
+                referencedTableName: clinical_specialty
+                referencedColumnNames: id
+                validate: true
+                onDelete: CASCADE
+                onUpdate: NO ACTION
+    - changeSet:
+        id: clinical_specialty_sector-unique_constraint
+        author: efernandez
+        changes:
+            - addUniqueConstraint:
+                tableName: clinical_specialty_sector
+                columnNames: sector_id, clinical_specialty_id
+                constraintName: UQ_clinical_specialty_sector
