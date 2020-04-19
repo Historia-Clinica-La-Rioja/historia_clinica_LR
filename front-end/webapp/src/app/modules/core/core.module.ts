@@ -5,7 +5,6 @@ import { FooterComponent } from './components/footer/footer.component';
 import { BarComponent } from './components/bar/bar.component';
 import { ContentComponent } from './components/content/content.component';
 import { HttpClientModule } from '@angular/common/http';
-import { PresentationModule } from '../presentation/presentation.module';
 import { TranslateModule } from "@ngx-translate/core";
 import { RECAPTCHA_SETTINGS, RecaptchaFormsModule, RecaptchaModule, RecaptchaSettings } from "ng-recaptcha";
 import { SidenavComponent } from './components/sidenav/sidenav.component';

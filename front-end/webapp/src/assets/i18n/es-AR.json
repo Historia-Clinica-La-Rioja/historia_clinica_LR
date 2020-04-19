@@ -23,6 +23,11 @@
 			"TITLE": "Búsqueda de pacientes"
 		}
 	},
+	"internacion": {
+		"internados-table": {
+			"TITLE": "Búsqueda de pacientes"
+		}
+	},
 	"presentation": {
 		"patient-card": {
 			"GENDER_AGE": "{{gender}} · {{age}} años"

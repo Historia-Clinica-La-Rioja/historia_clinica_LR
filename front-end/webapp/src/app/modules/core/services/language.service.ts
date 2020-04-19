@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '@environments/environment';
+// import { environment } from '@environments/environment';
 
 @Injectable({
 	providedIn: 'root'
@@ -10,8 +10,9 @@ export class LanguageService {
 
 	private languages: string[] = ['es-AR', 'en-US'];
 
-	constructor(private http: HttpClient) {
-	}
+	constructor(
+		// private http: HttpClient
+	) {	}
 
 	getCurrentLanguage(): Observable<any> {
 		return of(this.languages);
