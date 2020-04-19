@@ -1,6 +1,8 @@
 package net.pladema.person.controller.mapper;
 
+import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.address.repository.entity.Address;
+import net.pladema.patient.controller.dto.APatientDto;
 import net.pladema.person.controller.dto.APersonDto;
 import net.pladema.person.controller.dto.BMPersonDto;
 import net.pladema.person.repository.domain.CompleteDataPerson;
@@ -20,7 +22,11 @@ public interface PersonMapper {
 
     public PersonExtended updatePersonExtended(APersonDto person, Integer addressId);
 
-    public Address updatePersonAddress(APersonDto person);
+    public PersonExtended updatePersonExtendedPatient(APatientDto patient, Integer addresId);
+
+    public AddressDto updatePersonAddress(APersonDto person);
+
+    public Person fromAPatientDto(APatientDto patient);
 
     @Mapping(target = "id", source = "person.id")
     @Mapping(target = "firstName", source = "person.firstName")
@@ -50,5 +56,4 @@ public interface PersonMapper {
     @Mapping(target = "postcode", source = "address.postcode")
     public BMPersonDto fromCompleteDataPerson(CompleteDataPerson completeDataPerson);
 
-    public List<BMPersonDto> fromfromCompleteDataPersonList(List<CompleteDataPerson> completeDataPersonList);
 }

@@ -1,13 +1,13 @@
 package net.pladema.person.controller;
 
 import io.swagger.annotations.Api;
-import net.pladema.address.repository.entity.Address;
+import net.pladema.address.controller.dto.AddressDto;
+import net.pladema.address.controller.service.AddressExternalService;
 import net.pladema.person.controller.dto.APersonDto;
 import net.pladema.person.controller.dto.BMPersonDto;
 import net.pladema.person.controller.mapper.PersonMapper;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;
-import net.pladema.person.service.AddressExternalService;
 import net.pladema.person.service.PersonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/person")
@@ -50,11 +49,11 @@ public class PersonController {
         LOG.debug("Going to add person -> {}", personToAdd);
         Person createdPerson = personService.addPerson(personToAdd);
 
-        Address addressToAdd = personMapper.updatePersonAddress(personDto);
+        AddressDto addressToAdd = personMapper.updatePersonAddress(personDto);
         LOG.debug("Going to add address -> {}", addressToAdd);
-        Address createdAddress = addressExternalService.addAddress(addressToAdd);
+        addressToAdd = addressExternalService.addAddress(addressToAdd);
 
-        PersonExtended personExtendedtoAdd = personMapper.updatePersonExtended(personDto, createdAddress.getId());
+        PersonExtended personExtendedtoAdd = personMapper.updatePersonExtended(personDto, addressToAdd.getId());
         personExtendedtoAdd.setId(createdPerson.getId());
         LOG.debug("Going to add person extended -> {}", personExtendedtoAdd);
         PersonExtended createdPersonExtended = personService.addPersonExtended(personExtendedtoAdd);
@@ -63,13 +62,13 @@ public class PersonController {
     }
 
     @GetMapping(value = "/minimalsearch")
-    public ResponseEntity<List<BMPersonDto>> getPersonMinimal(
+    public ResponseEntity<List<Integer>> getPersonMinimal(
             @RequestParam(value = "identificationTypeId", required = true) Short identificationTypeId,
             @RequestParam(value = "identificationNumber", required = true) String identificationNumber,
             @RequestParam(value = "genderId", required = true) Short genderId){
         LOG.debug("Input data -> {}", identificationTypeId, identificationNumber, genderId);
-        List<BMPersonDto> result = personMapper.fromfromCompleteDataPersonList(personService.getPersonByDniAndGender(identificationTypeId,identificationNumber, genderId));
-        LOG.debug("Ids resultantes -> {}", result.stream().map(x -> x.getId()).collect(Collectors.toList()));
+        List<Integer> result = personService.getPersonByDniAndGender(identificationTypeId,identificationNumber, genderId);
+        LOG.debug("Ids resultantes -> {}", result);
         return  ResponseEntity.ok().body(result);
     }
 }

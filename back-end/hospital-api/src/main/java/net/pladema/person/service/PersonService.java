@@ -14,6 +14,6 @@ public interface PersonService {
 
     PersonExtended addPersonExtended(PersonExtended person);
 
-    List<CompleteDataPerson> getPersonByDniAndGender(Short identificationTypeId, String identificationNumber, Short genderId);
+    List<Integer> getPersonByDniAndGender(Short identificationTypeId, String identificationNumber, Short genderId);
 
 }

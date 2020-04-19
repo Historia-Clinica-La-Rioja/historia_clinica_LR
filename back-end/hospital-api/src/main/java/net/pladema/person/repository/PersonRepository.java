@@ -14,12 +14,11 @@ import java.util.List;
 public interface PersonRepository extends JpaRepository<Person, Integer> {
 
     @Transactional(readOnly = true)
-    @Query("SELECT NEW net.pladema.person.repository.domain.CompleteDataPerson(p, e, a) FROM Person as p " +
-            "JOIN PersonExtended as e ON (e.id = p.id) " +
-            "JOIN Address as a ON (a.id = e.addressId) " +
-            "WHERE p.identificationTypeId = :identificationTypeId " +
-            "AND p.identificationNumber = :identificationNumber " +
-            "AND p.genderId = :genderId")
-    List<CompleteDataPerson> findByDniAndGender(@Param("identificationTypeId") Short identificationTypeId, @Param("identificationNumber") String identificationNumber,
+    @Query("SELECT pa.id FROM Patient as pa " +
+            "JOIN Person as pe ON (pe.id = pa.personId) " +
+            "WHERE pe.identificationTypeId = :identificationTypeId " +
+            "AND pe.identificationNumber = :identificationNumber " +
+            "AND pe.genderId = :genderId")
+    List<Integer> findByDniAndGender(@Param("identificationTypeId") Short identificationTypeId, @Param("identificationNumber") String identificationNumber,
                                                 @Param("genderId") Short genderId);
 }

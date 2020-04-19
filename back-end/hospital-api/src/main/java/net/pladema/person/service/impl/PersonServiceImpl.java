@@ -30,7 +30,6 @@ public class PersonServiceImpl implements PersonService {
         this.personExtendedRepository = personExtendedRepository;
     }
 
-
     @Override
     public Person addPerson(Person person) {
             LOG.debug("Going to save -> {}", person);
@@ -57,10 +56,10 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public List<CompleteDataPerson> getPersonByDniAndGender(Short identificationTypeId, String identificationNumber, Short genderId) {
+    public List<Integer> getPersonByDniAndGender(Short identificationTypeId, String identificationNumber, Short genderId) {
         LOG.debug("Input data -> {}", identificationTypeId, identificationNumber, genderId);
-        List<CompleteDataPerson> result = personRepository.findByDniAndGender(identificationTypeId, identificationNumber, genderId);
-        LOG.debug("Ids resultantes -> {}", result.stream().map(x -> x.getPerson().getId()).collect(Collectors.toList()));
+        List<Integer> result = personRepository.findByDniAndGender(identificationTypeId, identificationNumber, genderId);
+        LOG.debug("Ids resultantes -> {}", result);
         return result;
     }
 }
