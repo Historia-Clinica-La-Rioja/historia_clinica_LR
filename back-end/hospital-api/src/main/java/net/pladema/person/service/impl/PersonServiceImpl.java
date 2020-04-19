@@ -32,10 +32,10 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public Person addPerson(Person person) {
-            LOG.debug("Going to save -> {}", person);
-            Person personSaved = personRepository.save(person);
-            LOG.debug("Person saved -> {}", personSaved);
-            return personSaved;
+        LOG.debug("Going to save -> {}", person);
+        Person personSaved = personRepository.save(person);
+        LOG.debug("Person saved -> {}", personSaved);
+        return personSaved;
     }
 
     @Override

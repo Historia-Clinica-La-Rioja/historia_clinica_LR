@@ -7,11 +7,12 @@ import java.util.List;
 
 import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.address.controller.service.AddressExternalService;
-import net.pladema.patient.controller.dto.APatientDto;
-import net.pladema.patient.controller.dto.BMPatientDto;
+import net.pladema.patient.controller.dto.*;
+import net.pladema.patient.controller.mocks.MocksPatient;
+import net.pladema.patient.repository.entity.Patient;
 import net.pladema.person.controller.dto.BMPersonDto;
+import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.controller.service.PersonExternalService;
-import net.pladema.person.controller.mapper.PersonMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +22,11 @@ import org.springframework.web.bind.annotation.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.swagger.annotations.Api;
-import net.pladema.patient.controller.dto.PatientSearchDto;
-import net.pladema.patient.controller.dto.PatientSearchFilter;
 import net.pladema.patient.controller.mapper.PatientMapper;
 import net.pladema.patient.service.PatientService;
 import net.pladema.patient.service.domain.PatientSearch;
+
+import javax.persistence.EntityNotFoundException;
 
 @RestController
 @RequestMapping("/patient")
@@ -44,7 +45,8 @@ public class PatientController {
 
 	private final ObjectMapper jackson;
 	
-	public PatientController(PatientService patientService, PersonExternalService personExternalService, AddressExternalService addressExternalService, ObjectMapper jackson, PatientMapper patientMapper, PersonMapper personMapper) {
+	public PatientController(PatientService patientService, PersonExternalService personExternalService, AddressExternalService addressExternalService,
+							 PatientMapper patientMapper, ObjectMapper jackson) {
 		this.patientService = patientService;
 		this.personExternalService = personExternalService;
 		this.addressExternalService = addressExternalService;
@@ -52,7 +54,7 @@ public class PatientController {
 		this.patientMapper = patientMapper;
 	}
 
-	@RequestMapping(value = "/search")
+	@GetMapping(value = "/search")
 	public ResponseEntity<List<PatientSearchDto>> searchPatient(@RequestParam String searchFilterStr){
 		PatientSearchFilter searchFilter = null;
 		try {
@@ -83,10 +85,26 @@ public class PatientController {
 	public ResponseEntity<List<Integer>> getPatientMinimal(
 			@RequestParam(value = "identificationTypeId", required = true) Short identificationTypeId,
 			@RequestParam(value = "identificationNumber"  , required = true) String identificationNumber,
-			@RequestParam(value = "genderId", required = true) Short genderId){
+			@RequestParam(value = "genderId", required = true) Short genderId) {
 		LOG.debug("Input data -> {}", identificationTypeId, identificationNumber, genderId);
-		List<Integer> result = personExternalService.getPersonByDniAndGender(identificationTypeId,identificationNumber, genderId);
+		List<Integer> result = personExternalService.getPersonByDniAndGender(identificationTypeId, identificationNumber, genderId);
 		LOG.debug("Ids resultantes -> {}", result);
+		return ResponseEntity.ok().body(result);
+	}
+
+	@GetMapping("/{patientId}/basicdata")
+	public ResponseEntity<BasicPatientDto> getBasicDataPatient(@PathVariable(name = "patientId") Integer patientId){
+		LOG.debug("Input parameters -> {}", patientId);
+		BasicPatientDto result;
+		try {
+			Patient patient = patientService.getPatient(patientId)
+					.orElseThrow(() -> new EntityNotFoundException("patient.invalid"));
+			BasicDataPersonDto personData = personExternalService.getBasicDataPerson(patient.getPersonId());
+			result = new BasicPatientDto(patient.getId(), personData);
+		} catch (Exception e) {
+			result = MocksPatient.mockBasicPatientDto(patientId);
+		}
+		LOG.debug("Output -> {}", result);
 		return  ResponseEntity.ok().body(result);
 	}
 }

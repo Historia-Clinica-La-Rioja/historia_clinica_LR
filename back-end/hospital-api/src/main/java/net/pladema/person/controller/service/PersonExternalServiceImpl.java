@@ -1,7 +1,9 @@
 package net.pladema.person.controller.service;
 
 import net.pladema.patient.controller.dto.APatientDto;
+import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.person.controller.dto.BMPersonDto;
+import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.controller.mapper.PersonMapper;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;
@@ -56,6 +58,15 @@ public class PersonExternalServiceImpl implements PersonExternalService {
     @Override
     public List<Integer> getPersonByDniAndGender(Short identificationTypeId, String identificationNumber, Short genderId) {
         List<Integer> result = personService.getPersonByDniAndGender(identificationTypeId, identificationNumber, genderId);
+        return result;
+    }
+
+    @Override
+    public BasicDataPersonDto getBasicDataPerson(Integer personId) {
+        LOG.debug("Input parameters -> {}", personId);
+        Person person = personService.getPerson(personId);
+        BasicDataPersonDto result = personMapper.basicDatafromPerson(person);
+        LOG.debug("Output -> {}", result);
         return result;
     }
 }

@@ -86,6 +86,19 @@ export interface BMPersonDto extends APersonDto {
     id: number;
 }
 
+export interface BasicDataPersonDto {
+    age: number;
+    firstName: string;
+    genderId: number;
+    id: number;
+    lastName: string;
+}
+
+export interface BasicPatientDto {
+    id: number;
+    person: BasicDataPersonDto;
+}
+
 export interface BedDto extends Serializable {
     bedNumber: number;
     id: number;

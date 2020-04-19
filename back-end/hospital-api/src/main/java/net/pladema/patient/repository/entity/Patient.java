@@ -16,7 +16,7 @@ import java.math.BigInteger;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Patient extends AuditableEntity {
+public class Patient implements Serializable{
 
     /**
      *

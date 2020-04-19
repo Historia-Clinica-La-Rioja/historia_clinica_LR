@@ -5,6 +5,7 @@ import net.pladema.address.repository.entity.Address;
 import net.pladema.patient.controller.dto.APatientDto;
 import net.pladema.person.controller.dto.APersonDto;
 import net.pladema.person.controller.dto.BMPersonDto;
+import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.repository.domain.CompleteDataPerson;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;
@@ -56,4 +57,5 @@ public interface PersonMapper {
     @Mapping(target = "postcode", source = "address.postcode")
     public BMPersonDto fromCompleteDataPerson(CompleteDataPerson completeDataPerson);
 
+    BasicDataPersonDto basicDatafromPerson(Person person);
 }

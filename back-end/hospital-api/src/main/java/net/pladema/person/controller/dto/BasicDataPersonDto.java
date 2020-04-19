@@ -1,0 +1,23 @@
+package net.pladema.person.controller.dto;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+import javax.persistence.Column;
+
+@Getter
+@Setter
+@ToString
+public class BasicDataPersonDto {
+
+    private Integer id;
+
+    private String firstName;
+
+    private String lastName;
+
+    private Short genderId;
+
+    private Short age;
+}
