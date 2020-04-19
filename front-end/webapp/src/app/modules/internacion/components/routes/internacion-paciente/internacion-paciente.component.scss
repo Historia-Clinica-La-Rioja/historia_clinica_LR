@@ -1,0 +1,9 @@
+.flex-layout {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	& * {
+		flex-basis: 48%;
+		flex-grow: 0;
+	}
+}

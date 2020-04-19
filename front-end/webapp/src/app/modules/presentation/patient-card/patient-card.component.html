@@ -2,14 +2,13 @@
 	<ng-content select="[header]"></ng-content>
 	<mat-card-header>
 		<div mat-card-avatar class="header-image"></div>
-		<mat-card-title class="patient-card">
-			{{patientReduced.firstname}} {{patientReduced.lastname}}
+		<mat-card-title>
+			<span class="capitalize">{{ patient?.firstName }} {{patient?.lastName}}</span>
+			<span class="uppercase">ID {{patient?.id}}</span>
 		</mat-card-title>
 		<mat-card-subtitle>
-			<span>ID {{patientReduced.id}}</span><br>
-			<span class="subtitle-2"
-				  [translate]="'presentation.patient-card.GENDER_AGE'"
-				  [translateParams]="{ gender: patientReduced.gender, age: patientReduced.age }">
+			<span [translate]="'presentation.patient-card.GENDER_AGE'"
+				[translateParams]="{ gender: patient?.gender, age: patient?.age }">
 			</span>
 		</mat-card-subtitle>
 	</mat-card-header>

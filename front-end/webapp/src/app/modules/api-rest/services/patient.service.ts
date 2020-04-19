@@ -43,16 +43,21 @@ export class PatientService {
 	constructor(private http: HttpClient) {
 	}
 
-	quickGetPatient(params): Observable<BMPersonDto[]>  {
+	quickGetPatient(params): Observable<BMPersonDto[]> {
 		let url = `${environment.apiBase}/person/minimalsearch`;
-		return this.http.get<BMPersonDto[]>(url, {params: params});
+		return this.http.get<BMPersonDto[]>(url, { params: params });
 	}
 
-	getPatient(): Observable<any>  {
+	getPatient(): Observable<any> {
 		return of([]);
 	}
 
-	getAllPatients(): Observable<any>  {
+	getPatientBasicData<BasicPatientDto>(patientId: number): Observable<BasicPatientDto> {
+		let url = `${environment.apiBase}/patient/${patientId}/basicdata`;
+		return this.http.get<BasicPatientDto>(url);
+	}
+
+	getAllPatients(): Observable<any> {
 		return of(PATIENTS_DATA);
 	}
 }

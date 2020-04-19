@@ -9,9 +9,14 @@
 		<td mat-cell *matCellDef="let element"> {{ element.patient.patientId }} </td>
 	</ng-container>
 
-	<ng-container matColumnDef="Médico">
-		<th mat-header-cell *matHeaderCellDef>Médico</th>
-		<td mat-cell *matCellDef="let element"> {{ element.doctor.surname }}, {{ element.doctor.name }} </td>
+	<ng-container matColumnDef="Nombre Médico">
+		<th mat-header-cell *matHeaderCellDef>Nombre Médico</th>
+		<td mat-cell *matCellDef="let element"> {{ element.doctor.surname }} </td>
+	</ng-container>
+
+	<ng-container matColumnDef="Apellido Médico">
+		<th mat-header-cell *matHeaderCellDef>Apellido Médico</th>
+		<td mat-cell *matCellDef="let element"> {{ element.doctor.name }} </td>
 	</ng-container>
 
 	<ng-container matColumnDef="Sector">

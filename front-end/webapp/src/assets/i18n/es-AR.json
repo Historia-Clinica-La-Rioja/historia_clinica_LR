@@ -23,9 +23,12 @@
 			"TITLE": "Búsqueda de pacientes"
 		}
 	},
-	"internacion": {
+	"internaciones": {
 		"internados-table": {
 			"TITLE": "Búsqueda de pacientes"
+		},
+		"internacion-paciente": {
+			"TITLE": "HCE Internación"
 		}
 	},
 	"presentation": {

@@ -7,20 +7,18 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class PatientCardComponent implements OnInit {
 
-	@Input() patientReduced: PatientReduced;
+	@Input() patient: PatientBasicData;
 
-	constructor() {
-	}
+	constructor() {	}
 
-	ngOnInit(): void {
-	}
+	ngOnInit(): void { }
 
 }
 
-export class PatientReduced {
-	id: string;
-	firstname: string;
-	lastname: string;
+export class PatientBasicData {
+	id: number;
+	firstName: string;
+	lastName: string;
 	gender: string;
 	age: number;
 }

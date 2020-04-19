@@ -3,20 +3,16 @@
 .header-image {
 	background-image: url("src/assets/images/empty-profile.svg");
 	background-size: cover;
+	width: 65px;
+	height: 65px;
 }
 
-mat-card-title.patient-card {
-	font-weight: 500;
-	font-size: $font-size-lg;
+mat-card-title {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
 }
 
-mat-card-subtitle > span {
-	color: #282828;
-	font-weight: normal;
-	font-size: $font-size-sm;
-
-	&:first-child {
-		font-weight: 500;
-		font-size: $font-size-me;
-	}
+mat-card-subtitle {
+	margin-bottom: 0;
 }

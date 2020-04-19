@@ -3,6 +3,7 @@ import { InternacionService } from '@api-rest/services/internacion.service';
 import { TableService } from '@core/services/table.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { InternmentEpisodeDto } from '@api-rest/api-model';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-internaciones-table',
@@ -11,12 +12,13 @@ import { InternmentEpisodeDto } from '@api-rest/api-model';
 })
 export class InternacionesTableComponent implements OnInit {
 
-	displayedColumns: string[] = ['ID Paciente', 'Médico', 'Sector', 'Especialidad', 'Nro Habitación' , 'Nro Cama', 'Action'];
+	displayedColumns: string[] = ['ID Paciente', 'Nombre Médico', 'Apellido Médico', 'Sector', 'Especialidad', 'Nro Habitación' , 'Nro Cama', 'Action'];
 	dataSource: MatTableDataSource<InternmentEpisodeDto> = new MatTableDataSource([]);
 
 	constructor(
 		private internacionService: InternacionService,
 		private tableService: TableService,
+		private router: Router,
 	) { }
 
 	ngOnInit(): void {
@@ -24,9 +26,9 @@ export class InternacionesTableComponent implements OnInit {
 		this.internacionService.getAllPacientesInternados<InternmentEpisodeDto>().subscribe(data => this.dataSource.data = data);
 	}
 
-	actionRow(pacienteInternado: InternmentEpisodeDto): void {
-		//TODO redirect
-		console.log(pacienteInternado);
+	actionRow(internacion: InternmentEpisodeDto): void {
+		let url = `internaciones/internacion/${internacion.id}/paciente/${internacion.patient.patientId}`;
+		this.router.navigate([url]);
 	}
 
 	applyFilter(event: Event) {
