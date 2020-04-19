@@ -63,11 +63,12 @@ export interface AddUserDto extends AbstractUserDto {
 
 export interface AddressDto extends Serializable {
     apartment: string;
-    cityId: number;
+    city: CityDto;
     floor: string;
     id: number;
     number: string;
     postcode: string;
+    province: ProvinceDto;
     quarter: string;
     street: string;
 }
@@ -105,6 +106,10 @@ export interface BedDto extends Serializable {
     room: RoomDto;
 }
 
+export interface CityDto extends MasterdataDto<number> {
+    id: number;
+}
+
 export interface ClinicalSpecialityDto {
     id: number;
     name: string;
@@ -113,6 +118,16 @@ export interface ClinicalSpecialityDto {
 export interface ClinicalSpecialtyDto {
     id: number;
     name: string;
+}
+
+export interface HealthInsuranceDto {
+    acronym: string;
+    id: number;
+    rnos: string;
+}
+
+export interface IdentificationTypeDto extends MasterdataDto<number> {
+    id: number;
 }
 
 export interface InternmentEpisodeDto {
@@ -130,6 +145,14 @@ export interface JWTokenDto extends Serializable {
 export interface LoginDto extends Serializable {
     password: string;
     username: string;
+}
+
+export interface MasterDataInterface<T> {
+    description: string;
+    id: T;
+}
+
+export interface MasterdataDto<T> extends MasterDataInterface<T> {
 }
 
 export interface PatientDto {
@@ -150,6 +173,22 @@ export interface PatientSearchFilter {
     identificationNumber: string;
     identificationTypeId: number;
     lastName: string;
+}
+
+export interface PersonalInformationDto {
+    address: AddressDto;
+    birthDate: Date;
+    cuil: string;
+    email: string;
+    healthInsurance: HealthInsuranceDto;
+    id: number;
+    identificationNumber: string;
+    identificationType: IdentificationTypeDto;
+    phoneNumber: string;
+}
+
+export interface ProvinceDto extends MasterdataDto<number> {
+    id: number;
 }
 
 export interface RequestUserRoleDto extends Serializable {

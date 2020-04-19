@@ -3,9 +3,16 @@ package net.pladema.person.controller;
 import io.swagger.annotations.Api;
 import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.address.controller.service.AddressExternalService;
+import net.pladema.patient.controller.dto.BasicPatientDto;
+import net.pladema.patient.controller.mocks.MocksPatient;
+import net.pladema.patient.repository.entity.Patient;
 import net.pladema.person.controller.dto.APersonDto;
 import net.pladema.person.controller.dto.BMPersonDto;
+import net.pladema.person.controller.dto.BasicDataPersonDto;
+import net.pladema.person.controller.dto.PersonalInformationDto;
 import net.pladema.person.controller.mapper.PersonMapper;
+import net.pladema.person.controller.mock.MocksPerson;
+import net.pladema.person.repository.domain.PersonalInformation;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;
 import net.pladema.person.service.PersonService;
@@ -15,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -69,6 +77,22 @@ public class PersonController {
         LOG.debug("Input data -> {}", identificationTypeId, identificationNumber, genderId);
         List<Integer> result = personService.getPersonByDniAndGender(identificationTypeId,identificationNumber, genderId);
         LOG.debug("Ids resultantes -> {}", result);
+        return  ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/{personId}/personalInformation")
+    public ResponseEntity<PersonalInformationDto> getPersonalInformation(@PathVariable(name = "personId") Integer personId){
+        LOG.debug("Input parameters -> {}", personId);
+        PersonalInformationDto result;
+        try {
+            PersonalInformation personalInformation = personService.getPersonalInformation(personId)
+                    .orElseThrow(() -> new EntityNotFoundException("person.invalid"));
+            result = personMapper.fromPersonalInformation(personalInformation);
+        } catch (Exception e) {
+            LOG.error("{}",e);
+            result = MocksPerson.mockPersonalInformation(personId);
+        }
+        LOG.debug("Output -> {}", result);
         return  ResponseEntity.ok().body(result);
     }
 }

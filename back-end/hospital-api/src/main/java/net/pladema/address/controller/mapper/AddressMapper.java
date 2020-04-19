@@ -12,7 +12,7 @@ import org.mapstruct.Mapper;
 
 import java.util.List;
 
-@Mapper
+@Mapper(uses = {CityMapper.class, ProvinceMapper.class})
 public interface AddressMapper {
 
     public Address fromAddressDto(AddressDto addressDto);

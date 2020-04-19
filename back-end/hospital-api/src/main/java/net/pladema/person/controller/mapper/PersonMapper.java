@@ -1,20 +1,21 @@
 package net.pladema.person.controller.mapper;
 
 import net.pladema.address.controller.dto.AddressDto;
-import net.pladema.address.repository.entity.Address;
+import net.pladema.address.controller.mapper.AddressMapper;
 import net.pladema.patient.controller.dto.APatientDto;
 import net.pladema.person.controller.dto.APersonDto;
 import net.pladema.person.controller.dto.BMPersonDto;
 import net.pladema.person.controller.dto.BasicDataPersonDto;
+import net.pladema.person.controller.dto.PersonalInformationDto;
 import net.pladema.person.repository.domain.CompleteDataPerson;
+import net.pladema.person.repository.domain.PersonalInformation;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import java.util.List;
 
-@Mapper
+@Mapper(uses = {AddressMapper.class, HealthInsuranceMapper.class, IdentificationTypeDtoMapper.class})
 public interface PersonMapper {
 
     public BMPersonDto fromPerson(Person person);
@@ -58,4 +59,6 @@ public interface PersonMapper {
     public BMPersonDto fromCompleteDataPerson(CompleteDataPerson completeDataPerson);
 
     BasicDataPersonDto basicDatafromPerson(Person person);
+
+    PersonalInformationDto fromPersonalInformation(PersonalInformation personalInformation);
 }

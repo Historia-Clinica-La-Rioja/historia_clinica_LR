@@ -2,7 +2,7 @@ package net.pladema.person.service.impl;
 
 import net.pladema.person.repository.PersonExtendedRepository;
 import net.pladema.person.repository.PersonRepository;
-import net.pladema.person.repository.domain.CompleteDataPerson;
+import net.pladema.person.repository.domain.PersonalInformation;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;
 import net.pladema.person.service.PersonService;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 public class PersonServiceImpl implements PersonService {
@@ -60,6 +60,14 @@ public class PersonServiceImpl implements PersonService {
         LOG.debug("Input data -> {}", identificationTypeId, identificationNumber, genderId);
         List<Integer> result = personRepository.findByDniAndGender(identificationTypeId, identificationNumber, genderId);
         LOG.debug("Ids resultantes -> {}", result);
+        return result;
+    }
+
+    @Override
+    public Optional<PersonalInformation> getPersonalInformation(Integer personId) {
+        LOG.debug("Input parameters -> {}", personId);
+        Optional<PersonalInformation> result = personRepository.getPersonalInformation(personId);
+        LOG.debug("Output -> {}", result);
         return result;
     }
 }

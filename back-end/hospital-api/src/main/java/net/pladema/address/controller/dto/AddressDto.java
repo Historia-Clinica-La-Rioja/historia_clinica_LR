@@ -28,17 +28,10 @@ public class AddressDto implements Serializable {
 
     private String quarter;
 
-    private Integer cityId;
-
     private String postcode;
-    
-    public static AddressDto buildDummy() {
-		AddressDto newAddress = new AddressDto();
-		newAddress.setStreet("");
-		newAddress.setNumber("");
-		newAddress.setCityId(1);
-		newAddress.setPostcode("");
-		return newAddress;
-    }
+
+    private CityDto city;
+
+    private ProvinceDto province;
 
 }
