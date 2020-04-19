@@ -6,5 +6,15 @@
 	"/backoffice": {
 		"target": "http://localhost:3000",
 		"secure": false
+	},
+	"/MAIN": {
+		"target": {
+			"host": "snowstorm.msal.gov.ar",
+			"protocol": "https:",
+			"port": 443
+		},
+		"secure": false,
+		"changeOrigin": true,
+		"logLevel": "info"
 	}
 }
