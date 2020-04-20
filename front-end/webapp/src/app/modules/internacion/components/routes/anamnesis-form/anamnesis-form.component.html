@@ -4,17 +4,17 @@
 
 		<div class="container-column">
 			<section>
-				<h1 [translate]="'internacion.anamnesis.TITLE'"></h1>
-				<h2 [translate]="'internacion.anamnesis.SUBTITLE'"></h2>
+				<h1 [translate]="'internaciones.anamnesis.TITLE'"></h1>
+				<h2 [translate]="'internaciones.anamnesis.SUBTITLE'"></h2>
 			</section>
 
 			<section id="observations">
-				<span [translate]="'internacion.anamnesis.observations.TITLE'"></span>
+				<span [translate]="'internaciones.anamnesis.observations.TITLE'"></span>
 
 				<form [formGroup]="form" (ngSubmit)="save()">
 					<div>
 						<div>
-							<mat-label [translate]="'internacion.anamnesis.observations.CURRENT_DISEASE'"></mat-label>
+							<mat-label [translate]="'internaciones.anamnesis.observations.CURRENT_DISEASE'"></mat-label>
 						</div>
 						<mat-form-field [floatLabel]="'never'" appearance="outline">
 							<textarea matInput
@@ -22,7 +22,7 @@
 									  id="current_disease"
 									  name="current_disease"
 									  formControlName="current_disease"
-									  placeholder="{{'internacion.anamnesis.observations.DESCRIPTION' | translate }}">
+									  placeholder="{{'internaciones.anamnesis.observations.DESCRIPTION' | translate }}">
 							</textarea>
 						</mat-form-field>
 					</div>
@@ -30,7 +30,7 @@
 					<div>
 						<div>
 							<mat-label
-								[translate]="'internacion.anamnesis.observations.PHYSICAL_EXAMINATION'"></mat-label>
+								[translate]="'internaciones.anamnesis.observations.PHYSICAL_EXAMINATION'"></mat-label>
 						</div>
 						<mat-form-field [floatLabel]="'never'" appearance="outline">
 							<textarea matInput
@@ -38,7 +38,7 @@
 									  id="physical_examination"
 									  name="physical_examination"
 									  formControlName="physical_examination"
-									  placeholder="{{'internacion.anamnesis.observations.DESCRIPTION' | translate }}">
+									  placeholder="{{'internaciones.anamnesis.observations.DESCRIPTION' | translate }}">
 							</textarea>
 						</mat-form-field>
 					</div>
@@ -46,7 +46,7 @@
 					<div>
 						<div>
 							<mat-label
-								[translate]="'internacion.anamnesis.observations.STUDIES_PROCEDURES'"></mat-label>
+								[translate]="'internaciones.anamnesis.observations.STUDIES_PROCEDURES'"></mat-label>
 						</div>
 						<mat-form-field [floatLabel]="'never'" appearance="outline">
 							<textarea matInput
@@ -54,14 +54,14 @@
 									  id="studies_procedures"
 									  name="studies_procedures"
 									  formControlName="studies_procedures"
-									  placeholder="{{'internacion.anamnesis.observations.DESCRIPTION' | translate }}">
+									  placeholder="{{'internaciones.anamnesis.observations.DESCRIPTION' | translate }}">
 							</textarea>
 						</mat-form-field>
 					</div>
 
 					<div>
 						<div>
-							<mat-label [translate]="'internacion.anamnesis.observations.PATIENT_PROGRESS'"></mat-label>
+							<mat-label [translate]="'internaciones.anamnesis.observations.PATIENT_PROGRESS'"></mat-label>
 						</div>
 						<mat-form-field [floatLabel]="'never'" appearance="outline">
 							<textarea matInput
@@ -69,7 +69,7 @@
 									  id="patient_progress"
 									  name="patient_progress"
 									  formControlName="patient_progress"
-									  placeholder="{{'internacion.anamnesis.observations.DESCRIPTION' | translate }}">
+									  placeholder="{{'internaciones.anamnesis.observations.DESCRIPTION' | translate }}">
 							</textarea>
 						</mat-form-field>
 					</div>
@@ -77,7 +77,7 @@
 					<div>
 						<div>
 							<mat-label
-								[translate]="'internacion.anamnesis.observations.CLINICAL_IMPRESSION'"></mat-label>
+								[translate]="'internaciones.anamnesis.observations.CLINICAL_IMPRESSION'"></mat-label>
 						</div>
 						<mat-form-field [floatLabel]="'never'" appearance="outline">
 							<textarea matInput
@@ -85,14 +85,14 @@
 									  id="clinical_impression"
 									  name="clinical_impression"
 									  formControlName="clinical_impression"
-									  placeholder="{{'internacion.anamnesis.observations.DESCRIPTION' | translate }}">
+									  placeholder="{{'internaciones.anamnesis.observations.DESCRIPTION' | translate }}">
 							</textarea>
 						</mat-form-field>
 					</div>
 
 					<div>
 						<div>
-							<mat-label [translate]="'internacion.anamnesis.observations.OTHERS'"></mat-label>
+							<mat-label [translate]="'internaciones.anamnesis.observations.OTHERS'"></mat-label>
 						</div>
 						<mat-form-field [floatLabel]="'never'" appearance="outline">
 							<textarea matInput
@@ -100,7 +100,7 @@
 									  id="others"
 									  name="others"
 									  formControlName="others"
-									  placeholder="{{'internacion.anamnesis.observations.DESCRIPTION' | translate }}">
+									  placeholder="{{'internaciones.anamnesis.observations.DESCRIPTION' | translate }}">
 							</textarea>
 						</mat-form-field>
 					</div>
@@ -112,5 +112,8 @@
 				</form>
 			</section>
 		</div>
+
+		<app-patient-internment-card>
+		</app-patient-internment-card>
 	</div>
 </app-content>

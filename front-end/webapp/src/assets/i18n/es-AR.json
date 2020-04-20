@@ -64,10 +64,28 @@
 		}
 	},
 	"internaciones": {
+		"anamnesis": {
+			"TITLE": "Evaluación de ingreso",
+			"SUBTITLE": "Completa los siguientes datos.",
+			"observations": {
+				"TITLE": "Observaciones",
+				"CURRENT_DISEASE": "Enfermedad actual",
+				"PHYSICAL_EXAMINATION": "Exámen físico",
+				"STUDIES_PROCEDURES": "Resumen de estudios y procedimientos realizados",
+				"PATIENT_PROGRESS": "Evolución",
+				"CLINICAL_IMPRESSION": "Impresión clínica y plan",
+				"OTHERS": "Otras observaciones",
+				"DESCRIPTION": "Descripción"
+			}
+		},
 		"internados-table": {
 			"TITLE": "Búsqueda de pacientes"
 		},
 		"internacion-paciente": {
+			"card": {
+				"DAYS_INTERNED": "{{days}} días internado",
+				"ADMISSION": "Ingreso: {{datetime}}"
+			},
 			"TITLE": "HCE Internación"
 		}
 	},

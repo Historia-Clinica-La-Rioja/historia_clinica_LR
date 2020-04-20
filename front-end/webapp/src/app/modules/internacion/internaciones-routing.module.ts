@@ -15,7 +15,7 @@ const routes: Routes = [
 		component: InternacionPacienteComponent,
 	},
 	{
-		path: 'anamnesis',
+		path: 'internacion/:idInternacion/paciente/:idPaciente/anamnesis',
 		component: AnamnesisFormComponent
 	}
 ];
