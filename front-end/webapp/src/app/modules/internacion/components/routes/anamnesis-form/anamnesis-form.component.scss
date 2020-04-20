@@ -1,0 +1,22 @@
+.container-row {
+	display: flex;
+	flex-direction: row;
+}
+
+.container-column {
+	display: flex;
+	flex-direction: column;
+	width: 70%;
+
+	section {
+		margin: 1vh;
+	}
+}
+
+form {
+	padding-top: 25px;
+
+	mat-form-field {
+		width: 60%;
+	}
+}

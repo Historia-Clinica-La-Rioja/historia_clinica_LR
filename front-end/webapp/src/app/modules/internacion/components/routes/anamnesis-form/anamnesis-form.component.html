@@ -1,0 +1,116 @@
+<app-content width="full">
+
+	<div class="container-row">
+
+		<div class="container-column">
+			<section>
+				<h1 [translate]="'internacion.anamnesis.TITLE'"></h1>
+				<h2 [translate]="'internacion.anamnesis.SUBTITLE'"></h2>
+			</section>
+
+			<section id="observations">
+				<span [translate]="'internacion.anamnesis.observations.TITLE'"></span>
+
+				<form [formGroup]="form" (ngSubmit)="save()">
+					<div>
+						<div>
+							<mat-label [translate]="'internacion.anamnesis.observations.CURRENT_DISEASE'"></mat-label>
+						</div>
+						<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<textarea matInput
+									  type="text"
+									  id="current_disease"
+									  name="current_disease"
+									  formControlName="current_disease"
+									  placeholder="{{'internacion.anamnesis.observations.DESCRIPTION' | translate }}">
+							</textarea>
+						</mat-form-field>
+					</div>
+
+					<div>
+						<div>
+							<mat-label
+								[translate]="'internacion.anamnesis.observations.PHYSICAL_EXAMINATION'"></mat-label>
+						</div>
+						<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<textarea matInput
+									  type="text"
+									  id="physical_examination"
+									  name="physical_examination"
+									  formControlName="physical_examination"
+									  placeholder="{{'internacion.anamnesis.observations.DESCRIPTION' | translate }}">
+							</textarea>
+						</mat-form-field>
+					</div>
+
+					<div>
+						<div>
+							<mat-label
+								[translate]="'internacion.anamnesis.observations.STUDIES_PROCEDURES'"></mat-label>
+						</div>
+						<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<textarea matInput
+									  type="text"
+									  id="studies_procedures"
+									  name="studies_procedures"
+									  formControlName="studies_procedures"
+									  placeholder="{{'internacion.anamnesis.observations.DESCRIPTION' | translate }}">
+							</textarea>
+						</mat-form-field>
+					</div>
+
+					<div>
+						<div>
+							<mat-label [translate]="'internacion.anamnesis.observations.PATIENT_PROGRESS'"></mat-label>
+						</div>
+						<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<textarea matInput
+									  type="text"
+									  id="patient_progress"
+									  name="patient_progress"
+									  formControlName="patient_progress"
+									  placeholder="{{'internacion.anamnesis.observations.DESCRIPTION' | translate }}">
+							</textarea>
+						</mat-form-field>
+					</div>
+
+					<div>
+						<div>
+							<mat-label
+								[translate]="'internacion.anamnesis.observations.CLINICAL_IMPRESSION'"></mat-label>
+						</div>
+						<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<textarea matInput
+									  type="text"
+									  id="clinical_impression"
+									  name="clinical_impression"
+									  formControlName="clinical_impression"
+									  placeholder="{{'internacion.anamnesis.observations.DESCRIPTION' | translate }}">
+							</textarea>
+						</mat-form-field>
+					</div>
+
+					<div>
+						<div>
+							<mat-label [translate]="'internacion.anamnesis.observations.OTHERS'"></mat-label>
+						</div>
+						<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<textarea matInput
+									  type="text"
+									  id="others"
+									  name="others"
+									  formControlName="others"
+									  placeholder="{{'internacion.anamnesis.observations.DESCRIPTION' | translate }}">
+							</textarea>
+						</mat-form-field>
+					</div>
+
+					<button mat-button type="submit">
+						<span>Firmar y Confirmar</span>
+					</button>
+
+				</form>
+			</section>
+		</div>
+	</div>
+</app-content>

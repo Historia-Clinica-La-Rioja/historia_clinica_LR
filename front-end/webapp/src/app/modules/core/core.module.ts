@@ -9,6 +9,7 @@ import { TranslateModule } from "@ngx-translate/core";
 import { RECAPTCHA_SETTINGS, RecaptchaFormsModule, RecaptchaModule, RecaptchaSettings } from "ng-recaptcha";
 import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { RouterModule } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
 
 const globalSettings: RecaptchaSettings = { siteKey: '' }; // TODO completar cuando se implemente para esta aplicacion
 
@@ -23,6 +24,7 @@ const globalSettings: RecaptchaSettings = { siteKey: '' }; // TODO completar cua
 		AppMaterialModule,
 		CommonModule,
 		HttpClientModule,
+		ReactiveFormsModule,
 		RecaptchaModule,
 		RecaptchaFormsModule,
 		RouterModule,
@@ -34,6 +36,7 @@ const globalSettings: RecaptchaSettings = { siteKey: '' }; // TODO completar cua
 		ContentComponent,
 		FooterComponent,
 		HttpClientModule,
+		ReactiveFormsModule,
 		RecaptchaModule,
 		RecaptchaFormsModule,
 		RouterModule,

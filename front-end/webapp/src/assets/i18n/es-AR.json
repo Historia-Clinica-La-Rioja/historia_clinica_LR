@@ -32,7 +32,7 @@
 			"GENDER_SELF_DETERMINATION": "Género autopercibido",
 			"IDENTIFICATION_TYPE": "Tipo de documento",
 			"IDENTIFICATION_NUMBER": "Nro. de documento",
-			"INVALID": "El campo es invalido.",			
+			"INVALID": "El campo es invalido.",
 			"LAST_NAME":"Primer apellido",
 			"LAST_NAME_TITLE":"Apellidos",
 			"MIDDLE_NAMES": "Otros nombres",
@@ -40,7 +40,7 @@
 			"NAME_SELF_DETERMINATION": "Nombre autopercibido",
 			"ONLY_NUMBERS": "Solo números",
 			"OTHER_LAST_NAMES": "Otros apellidos",
-			"PHONE_NUMBER": "Teléfono",				
+			"PHONE_NUMBER": "Teléfono",
 			"RELIGION": "Religion",
 			"REQUIRED": "El campo es requerido.",
 			"SELECT": "Seleccionar"
@@ -58,7 +58,7 @@
 		"new": {
 			"TITLE": "Nuevo Paciente",
 			"SUBTITLE": "Ingresá los siguientes datos."
-		},	
+		},
 		"search": {
 			"TITLE": "Búsqueda de pacientes"
 		}
