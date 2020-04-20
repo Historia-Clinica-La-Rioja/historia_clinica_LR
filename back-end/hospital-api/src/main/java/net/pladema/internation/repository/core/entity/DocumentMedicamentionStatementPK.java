@@ -14,7 +14,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
-public class DocumentMedicamentStatmentPK implements Serializable {
+public class DocumentMedicamentionStatementPK implements Serializable {
 
 	/**
 	 *
@@ -31,7 +31,7 @@ public class DocumentMedicamentStatmentPK implements Serializable {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		DocumentMedicamentStatmentPK that = (DocumentMedicamentStatmentPK) o;
+		DocumentMedicamentionStatementPK that = (DocumentMedicamentionStatementPK) o;
 		return documentId.equals(that.documentId) &&
 				medicationStatementId.equals(that.medicationStatementId);
 	}

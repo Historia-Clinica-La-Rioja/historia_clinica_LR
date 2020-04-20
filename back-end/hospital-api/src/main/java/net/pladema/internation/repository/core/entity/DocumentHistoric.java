@@ -7,6 +7,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -38,7 +39,7 @@ public class DocumentHistoric {
 	private Short typeId;
 
 
-	public DocumentHistoric(Long id, LocalDate createdOn){
+	public DocumentHistoric(Long id, LocalDateTime createdOn){
 		pk = new DocumentHistoricPK(id, createdOn);
 	}
 

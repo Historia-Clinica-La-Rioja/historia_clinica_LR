@@ -43,7 +43,7 @@ public class Patient implements Serializable{
     private Boolean possibleDuplicate;
 
     @Column(name = "national_id")
-    private BigInteger nationalId;
+    private Integer nationalId;
     
     @Column(name = "comments", length = 255)
     private String comments;

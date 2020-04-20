@@ -19,12 +19,12 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-
 public class Room {
+
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Short id;
+	private Integer id;
 	
 	@Column(name = "description", nullable = false, length = 255)
 	private String description;
@@ -32,8 +32,8 @@ public class Room {
 	@Column(name = "type", nullable = false, length = 255)
 	private String type;
 	
-	@Column(name = "sector_id", nullable = false)
-	private Short sectorId;
+	@Column(name = "clinical_specialty_sector_id", nullable = false)
+	private Integer clinicalSpecialtySectorId;
 	
 	@Column(name = "discharge_date", nullable = true)
 	private LocalDate dischargeDate;

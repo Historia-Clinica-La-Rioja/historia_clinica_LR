@@ -2,7 +2,6 @@ package net.pladema.auditable.listener;
 
 import net.pladema.auditable.Auditable;
 import net.pladema.auditable.entity.Audit;
-import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -19,7 +18,7 @@ public class AuditListener {
 			audit.setCreatedOn(LocalDateTime.now());
 			audit.setUpdatedOn(LocalDateTime.now());
 			audit.setCreatedBy(getCurrentAuditor());
-			audit.setModifiedBy(getCurrentAuditor());
+			audit.setUpdatedBy(getCurrentAuditor());
 			auditable.setAudit(audit);
 		}
 	}
@@ -28,7 +27,7 @@ public class AuditListener {
 	public void setUpdatedOn(Auditable auditable) {
 		auditable.getAudit().ifPresent(a -> {
 			a.setUpdatedOn(LocalDateTime.now());
-			a.setModifiedBy(getCurrentAuditor());
+			a.setUpdatedBy(getCurrentAuditor());
 		});
 	}
 

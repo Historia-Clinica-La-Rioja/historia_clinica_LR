@@ -12,7 +12,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-@Table(name = "document_vital_sign")
+@Table(name = "document_allergy_intolerance")
 @Getter
 @Setter
 @ToString

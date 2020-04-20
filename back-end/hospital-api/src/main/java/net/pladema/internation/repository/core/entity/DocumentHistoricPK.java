@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 
@@ -25,7 +26,7 @@ public class DocumentHistoricPK implements Serializable {
 	private Long id;
 
 	@Column(name = "created_on", nullable = false)
-	private LocalDate createdOn;
+	private LocalDateTime createdOn;
 
 	@Override
 	public boolean equals(Object o) {

@@ -29,28 +29,28 @@ public class Person implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "first_name", nullable = false)
+    @Column(name = "first_name")
     private String firstName;
 
     @Column(name = "middle_names")
     private String middleNames;
 
-    @Column(name = "last_name", nullable = false)
+    @Column(name = "last_name")
     private String lastName;
 
     @Column(name = "other_last_names")
     private String otherLastNames;
 
-    @Column(name = "identification_type_id", nullable = false)
+    @Column(name = "identification_type_id")
     private Short identificationTypeId;
 
-    @Column(name = "identification_number")
+    @Column(name = "identification_number", length = 11)
     private String identificationNumber;
 
-    @Column(name = "gender_id", nullable = false)
+    @Column(name = "gender_id")
     private Short genderId;
 
-    @Column(name = "birth_date", nullable = false)
+    @Column(name = "birth_date")
     private LocalDate birthDate;
 
     private Short getAge(){

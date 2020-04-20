@@ -41,9 +41,6 @@ public class Inmunization extends InternationAuditableEntity {
 	@Column(name = "status_id", length = 20, nullable = false)
 	private String statusId;
 
-	@Column(name = "category_id", length = 20, nullable = false)
-	private String categoryId;
-
 	@Column(name = "expiration_date")
 	private LocalDate expirationDate;
 

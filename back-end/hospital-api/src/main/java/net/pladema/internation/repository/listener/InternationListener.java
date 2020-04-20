@@ -14,13 +14,13 @@ public class InternationListener {
 		auditable.setCreatedOn(LocalDateTime.now());
 		auditable.setUpdatedOn(LocalDateTime.now());
 		auditable.setCreatedBy(getCurrentAuditor());
-		auditable.setModifiedBy(getCurrentAuditor());
+		auditable.setUpdatedBy(getCurrentAuditor());
 	}
 
 	@PreUpdate
 	public void setUpdatedOn(InternationAuditableEntity auditable) {
 		auditable.setUpdatedOn(LocalDateTime.now());
-		auditable.setModifiedBy(getCurrentAuditor());
+		auditable.setUpdatedBy(getCurrentAuditor());
 	}
 
 

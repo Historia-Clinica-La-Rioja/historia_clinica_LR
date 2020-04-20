@@ -18,7 +18,7 @@ public class Updateable {
 	@Column(name = "updated_on")
 	private LocalDateTime updatedOn;
 
-	@Column(name = "modified_by")
-	private Integer modifiedBy;
+	@Column(name = "updated_by")
+	private Integer updatedBy;
 
 }

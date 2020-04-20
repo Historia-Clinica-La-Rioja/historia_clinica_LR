@@ -22,7 +22,7 @@ databaseChangeLog:
             name: created_on
             type: datetime
         - column:
-            name: delete_date_time
+            name: deleted_on
             type: datetime
         - column:
             constraints:
@@ -37,6 +37,16 @@ databaseChangeLog:
               nullable: false
             name: description
             type: varchar(255)
+        - column:
+            name: created_by
+            type: int
+            constraints:
+                nullable: true  
+        - column:
+            name: updated_by
+            type: int
+            constraints:
+                nullable: true
 - changeSet:
     id: role-table
     author: etrapani
@@ -55,7 +65,7 @@ databaseChangeLog:
             name: created_on
             type: datetime
         - column:
-            name: delete_date_time
+            name: deleted_on
             type: datetime
         - column:
             constraints:
@@ -70,6 +80,17 @@ databaseChangeLog:
               nullable: false
             name: description
             type: varchar(255)
+        - column:
+            name: created_by
+            type: int
+            constraints:
+                nullable: true
+        - column:
+            name: updated_by
+            type: int
+            constraints:
+                nullable: true
+
 - changeSet:
     id: role_permission-table
     author: etrapani
@@ -93,7 +114,7 @@ databaseChangeLog:
             name: created_on
             type: datetime
         - column:
-            name: delete_date_time
+            name: deleted_on
             type: datetime
         - column:
             constraints:
@@ -103,6 +124,17 @@ databaseChangeLog:
         - column:
             name: updated_on
             type: datetime
+        - column:
+            name: created_by
+            type: int
+            constraints:
+                nullable: true
+        - column:
+            name: updated_by
+            type: int
+            constraints:
+                nullable: true
+
 - changeSet:
     id: user_password-table
     author: etrapani
@@ -120,7 +152,7 @@ databaseChangeLog:
             name: created_on
             type: datetime
         - column:
-            name: delete_date_time
+            name: deleted_on
             type: datetime
         - column:
             constraints:
@@ -145,6 +177,17 @@ databaseChangeLog:
               nullable: false
             name: salt
             type: varchar(255)
+        - column:
+            name: created_by
+            type: int
+            constraints:
+                nullable: true
+        - column:
+            name: updated_by
+            type: int
+            constraints:
+                nullable: true
+
 - changeSet:
     id: user_role-table
     author: etrapani
@@ -168,7 +211,7 @@ databaseChangeLog:
             name: created_on
             type: datetime
         - column:
-            name: delete_date_time
+            name: deleted_on
             type: datetime
         - column:
             constraints:
@@ -178,6 +221,16 @@ databaseChangeLog:
         - column:
             name: updated_on
             type: datetime
+        - column:
+            name: created_by
+            type: int
+            constraints:
+                nullable: true
+        - column:
+            name: updated_by
+            type: int
+            constraints:
+                nullable: true
 
 - changeSet:
     id: users-table
@@ -197,7 +250,7 @@ databaseChangeLog:
             name: created_on
             type: datetime
         - column:
-            name: delete_date_time
+            name: deleted_on
             type: datetime
         - column:
             constraints:
@@ -223,6 +276,16 @@ databaseChangeLog:
         - column:
             name: person_id
             type: int
+        - column:
+            name: created_by
+            type: int
+            constraints:
+                nullable: true
+        - column:
+            name: updated_by
+            type: int
+            constraints:
+                nullable: true
 
 - changeSet:
     id: UQ_username

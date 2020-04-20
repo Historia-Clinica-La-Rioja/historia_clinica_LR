@@ -26,19 +26,19 @@ public class PersonExtended implements Serializable {
     @Column(name = "person_id", nullable = false)
     private Integer id;
 
-    @Column(name = "cuil", length = 10)
+    @Column(name = "cuil", length = 11)
     private String cuil;
 
     @Column(name = "mothers_last_name", length = 20)
     private String mothersLastName;
 
-    @Column(name = "address_id", nullable = false)
+    @Column(name = "address_id")
     private Integer addressId;
 
-    @Column(name = "phone_number", length = 15, nullable = false)
+    @Column(name = "phone_number", length = 15)
     private String phoneNumber;
 
-    @Column(name = "email", length = 100,  nullable = false)
+    @Column(name = "email", length = 100)
     private String email;
 
     @Column(name = "ethnic", length = 25)

@@ -1,6 +1,6 @@
 #Se agregan tablas Datos Maestros para códigos de SNOMED CT
 databaseChangeLog: 
-- logicalFilePath: incrementales-v0_3
+- logicalFilePath: incrementales-v0_1_3
 - changeSet: 
     id: observation_status-metadata
     author: saguero
@@ -166,4 +166,27 @@ databaseChangeLog:
         validate: true
 
 
-        
+- changeSet:
+    comment: Crea tabla shedlock
+    id: shedlock
+    author: etrapani
+    changes:
+        - createTable:
+            tableName: shedlock
+            columns:
+            - column:
+                name: name
+                type: varchar(150)
+                constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_shedlock
+            - column:
+                name: lock_until
+                type: DATETIME
+            - column:
+                name: locked_at
+                type: DATETIME
+            - column:
+                name: locked_by
+                type: varchar(150) 

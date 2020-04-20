@@ -2,8 +2,6 @@ package net.pladema.internation.repository.ips;
 
 import net.pladema.BaseRepositoryTest;
 import net.pladema.internation.repository.ips.entity.AllergyIntolerance;
-import net.pladema.permissions.repository.RoleRepository;
-import net.pladema.permissions.repository.entity.Role;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,14 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-
-import java.time.LocalDate;
-
-import static net.pladema.TestUtils.assertCreateAuditableEntity;
-import static net.pladema.permissions.RoleTestUtils.createLicense;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -45,7 +35,7 @@ public class AllergyIntoleranceRepositoryTest extends BaseRepositoryTest {
 		assertThat(allergy.getCreatedBy())
 				.isNull();
 
-		assertThat(allergy.getModifiedBy())
+		assertThat(allergy.getUpdatedBy())
 				.isNull();
 
 		allergy = allergyIntoleranceRepository.save(allergy);
@@ -59,7 +49,7 @@ public class AllergyIntoleranceRepositoryTest extends BaseRepositoryTest {
 		assertThat(allergy.getCreatedBy())
 				.isNotNull();
 
-		assertThat(allergy.getModifiedBy())
+		assertThat(allergy.getUpdatedBy())
 				.isNotNull();
 	}
 

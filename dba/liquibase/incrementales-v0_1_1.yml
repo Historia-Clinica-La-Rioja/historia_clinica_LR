@@ -1,5 +1,5 @@
 ﻿databaseChangeLog:
-- logicalFilePath: incrementales-v0_1
+- logicalFilePath: incrementales-v0_1_1
 - changeSet:
     id: address-table
     author: saguero
@@ -16,33 +16,40 @@
             type: int
         - column:
             constraints:
-                nullable: false
+                nullable: true
             name: street
             type: varchar(35)
         - column:
             constraints:
-                nullable: false
+                nullable: true
             name: number
             type: varchar(5)
         - column:
+            constraints:
+                nullable: true
             name: floor
             type: varchar(2)
         - column:
+            constraints:
+                nullable: true
             name: apartment
             type: varchar(3)
         - column:
+            constraints:
+                nullable: true
             name: quarter
             type: varchar(30)
         - column:
             constraints:
-                nullable: false
+                nullable: true
             name: city_id
-            type: smallint
+            type: int
         - column:
             constraints:
-                nullable: false
+                nullable: true
             name: postcode
             type: varchar(6)
+
 - changeSet:
     id: identification_type-table
     author: saguero
@@ -61,20 +68,25 @@
                 nullable: false
             name: description
             type: varchar(30)
-    - sql:
-        sql: |-
-            INSERT INTO identification_type (id,description) VALUES (1,'DNI');
-            INSERT INTO identification_type (id,description) VALUES (2,'CI');
-            INSERT INTO identification_type (id,description) VALUES (3,'LC');
-            INSERT INTO identification_type (id,description) VALUES (4,'LE');
-            INSERT INTO identification_type (id,description) VALUES (5,'Cédula Mercosur');
-            INSERT INTO identification_type (id,description) VALUES (6,'CUIT');
-            INSERT INTO identification_type (id,description) VALUES (7,'CUIL');
-            INSERT INTO identification_type (id,description) VALUES (8,'Pasaporte extranjero');
-            INSERT INTO identification_type (id,description) VALUES (9,'Cédula de identidad extranjera');
-            INSERT INTO identification_type (id,description) VALUES (10,'Otro documento extranjero');
-            INSERT INTO identification_type (id,description) VALUES (11,'No posee');
-            INSERT INTO identification_type (id,description) VALUES (12,'En trámite');
+
+- changeSet: 
+    id: identification_type-metadata
+    author: saguero
+    changes: 
+        - sql:
+            sql: |-
+                INSERT INTO identification_type (id,description) VALUES (1,'DNI');
+                INSERT INTO identification_type (id,description) VALUES (2,'CI');
+                INSERT INTO identification_type (id,description) VALUES (3,'LC');
+                INSERT INTO identification_type (id,description) VALUES (4,'LE');
+                INSERT INTO identification_type (id,description) VALUES (5,'Cédula Mercosur');
+                INSERT INTO identification_type (id,description) VALUES (6,'CUIT');
+                INSERT INTO identification_type (id,description) VALUES (7,'CUIL');
+                INSERT INTO identification_type (id,description) VALUES (8,'Pasaporte extranjero');
+                INSERT INTO identification_type (id,description) VALUES (9,'Cédula de identidad extranjera');
+                INSERT INTO identification_type (id,description) VALUES (10,'Otro documento extranjero');
+                INSERT INTO identification_type (id,description) VALUES (11,'No posee');
+                INSERT INTO identification_type (id,description) VALUES (12,'En trámite');
 
 - changeSet:
     id: gender-table
@@ -94,10 +106,15 @@
                 nullable: false
             name: description
             type: varchar(9)
-    - sql:
-        sql: |-
-            INSERT INTO gender (id,description) VALUES (1,'Femenino');
-            INSERT INTO gender (id,description) VALUES (2,'Masculino');
+
+- changeSet: 
+    id: gender-metadata
+    author: saguero
+    changes: 
+        - sql:
+            sql: |-
+                INSERT INTO gender (id,description) VALUES (1,'Femenino');
+                INSERT INTO gender (id,description) VALUES (2,'Masculino');
 
 - changeSet:
     id: patient_type-table
@@ -127,14 +144,19 @@
                 nullable: false
             name: audit
             type: boolean
-    - sql:
-        sql: |-
-            INSERT INTO patient_type (id,description,active,audit) VALUES (1,'Permanente',${boolean.true},${boolean.false});
-            INSERT INTO patient_type (id,description,active,audit) VALUES (2,'Validado',${boolean.true},${boolean.false});
-            INSERT INTO patient_type (id,description,active,audit) VALUES (3,'Temporario',${boolean.true},${boolean.true});
-            INSERT INTO patient_type (id,description,active,audit) VALUES (4,'Histórico',${boolean.true},${boolean.true});
-            INSERT INTO patient_type (id,description,active,audit) VALUES (5,'Telefónico',${boolean.true},${boolean.true});
-            INSERT INTO patient_type (id,description,active,audit) VALUES (6,'Rechazado',${boolean.false},${boolean.false});
+
+- changeSet: 
+    id: patient_type-metadata
+    author: saguero
+    changes: 
+        - sql:
+            sql: |-
+                INSERT INTO patient_type (id,description,active,audit) VALUES (1,'Permanente',${boolean.true},${boolean.false});
+                INSERT INTO patient_type (id,description,active,audit) VALUES (2,'Validado',${boolean.true},${boolean.false});
+                INSERT INTO patient_type (id,description,active,audit) VALUES (3,'Temporario',${boolean.true},${boolean.true});
+                INSERT INTO patient_type (id,description,active,audit) VALUES (4,'Histórico',${boolean.true},${boolean.true});
+                INSERT INTO patient_type (id,description,active,audit) VALUES (5,'Telefónico',${boolean.true},${boolean.true});
+                INSERT INTO patient_type (id,description,active,audit) VALUES (6,'Rechazado',${boolean.false},${boolean.false});
 
 - changeSet:
     id: health_insurance-table
@@ -168,6 +190,7 @@
                 nullable: false
             name: query_date
             type: date
+
 - changeSet:
     id: person-table
     author: saguero
@@ -184,38 +207,45 @@
             type: int
         - column:
             constraints:
-                nullable: false
+                nullable: true
             name: first_name
             type: varchar(20)
         - column:
+            constraints:
+                nullable: true
             name: middle_names
             type: varchar(20)
         - column:
             constraints:
-                nullable: false
+                nullable: true
             name: last_name
             type: varchar(20)
         - column:
+            constraints:
+                nullable: true
             name: other_last_names
             type: varchar(20)
         - column:
             constraints:
-                nullable: false
+                nullable: true
             name: identification_type_id
             type: smallint
         - column:
+            constraints:
+                nullable: true
             name: identification_number
-            type: varchar(10)
+            type: varchar(11)
         - column:
             constraints:
-                nullable: false
+                nullable: true
             name: gender_id
             type: smallint
         - column:
             constraints:
-                nullable: false
+                nullable: true
             name: birth_date
             type: date
+
 - changeSet:
     id: person_extended-table
     author: saguero
@@ -230,41 +260,56 @@
             name: person_id
             type: int
         - column:
+            constraints:
+                nullable: true
             name: cuil
-            type: varchar(10)
+            type: varchar(11)
         - column:
+            constraints:
+                nullable: true
             name: mothers_last_name
             type: varchar(20)
         - column:
             constraints:
-                nullable: false
+                nullable: true
             name: address_id
             type: int
         - column:
             constraints:
-                nullable: false
+                nullable: true
             name: phone_number
             type: varchar(15)
         - column:
             constraints:
-                nullable: false
+                nullable: true
             name: email
             type: varchar(100)
         - column:
+            constraints:
+                nullable: true
             name: ethnic
             type: varchar(25)
         - column:
+            constraints:
+                nullable: true
             name: religion 
             type: varchar(25)
         - column:
+            constraints:
+                nullable: true
             name: name_self_determination
             type: varchar(25)            
         - column:
+            constraints:
+                nullable: true
             name: gender_self_determination
             type: smallint
         - column:
+            constraints:
+                nullable: true
             name: health_insurance_id
             type: smallint
+
 - changeSet:
     id: patient-table
     author: saguero
@@ -309,6 +354,7 @@
         referencedColumnNames: id
         referencedTableName: city
         validate: true
+
 - changeSet:
     id: fk_person_identification_type_id
     author: saguero
@@ -336,6 +382,7 @@
         referencedColumnNames: id
         referencedTableName: gender
         validate: true
+        
 - changeSet:
     id: fk_person_extended_person_id
     author: saguero

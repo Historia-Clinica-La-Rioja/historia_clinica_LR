@@ -11,6 +11,7 @@ import net.pladema.internation.repository.listener.InternationListener;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -48,7 +49,7 @@ public class ObservationLab extends InternationAuditableEntity {
 	private String value;
 
 	@Column(name = "effective_time", nullable = false)
-	private LocalDate effectiveTime;
+	private LocalDateTime effectiveTime;
 
 	@Column(name = "note_id")
 	private Long noteId;

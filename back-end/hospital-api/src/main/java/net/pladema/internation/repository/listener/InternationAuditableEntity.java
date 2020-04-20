@@ -1,10 +1,7 @@
 package net.pladema.internation.repository.listener;
 
-import net.pladema.auditable.Auditable;
 import net.pladema.auditable.CreationableEntity;
-import net.pladema.auditable.DeleteableEntity;
 import net.pladema.auditable.UpdateableEntity;
-import net.pladema.auditable.entity.Audit;
 import net.pladema.auditable.entity.Creationable;
 import net.pladema.auditable.entity.Updateable;
 
@@ -12,7 +9,6 @@ import javax.persistence.Embedded;
 import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @MappedSuperclass
 public abstract class InternationAuditableEntity implements CreationableEntity<Integer>, UpdateableEntity<Integer>, Serializable {
@@ -58,17 +54,17 @@ public abstract class InternationAuditableEntity implements CreationableEntity<I
 
 
 	@Override
-	public Integer getModifiedBy() {
+	public Integer getUpdatedBy() {
 		if (updateable != null)
-			return updateable.getModifiedBy();
+			return updateable.getUpdatedBy();
 		return null;
 	}
 
 	@Override
-	public void setModifiedBy(Integer user) {
+	public void setUpdatedBy(Integer user) {
 		if (updateable == null)
 			updateable = new Updateable();
-		updateable.setModifiedBy(user);
+		updateable.setUpdatedBy(user);
 	}
 
 	@Override

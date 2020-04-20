@@ -12,12 +12,12 @@ import javax.persistence.Table;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "medicament_statment_status")
+@Table(name = "medication_statement_status")
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
-public class MedicamentStatmentStatus implements Serializable {
+public class MedicationStatementStatus implements Serializable {
 
 	/**
 	 * 

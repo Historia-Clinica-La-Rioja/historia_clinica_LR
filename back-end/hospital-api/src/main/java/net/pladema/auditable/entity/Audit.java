@@ -38,8 +38,8 @@ public class Audit implements Serializable {
 	@Column(name = "created_by")
 	private Integer createdBy;
 
-	@Column(name = "modified_by")
-	private Integer modifiedBy;
+	@Column(name = "updated_by")
+	private Integer updatedBy;
 
 	public boolean isDeleted() {
 		return deleted;

@@ -4,8 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.auditable.entity.AuditableEntity;
-import net.pladema.auditable.listener.AuditListener;
 import net.pladema.internation.repository.listener.InternationAuditableEntity;
 import net.pladema.internation.repository.listener.InternationListener;
 
@@ -13,13 +11,13 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "medication_statment")
+@Table(name = "medication_statement")
 @EntityListeners(InternationListener.class)
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
-public class MedicationStatment extends InternationAuditableEntity {
+public class MedicationStatement extends InternationAuditableEntity {
 
 	/**
 	 * 
@@ -48,7 +46,7 @@ public class MedicationStatment extends InternationAuditableEntity {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		MedicationStatment that = (MedicationStatment) o;
+		MedicationStatement that = (MedicationStatement) o;
 		return id.equals(that.id) &&
 				patientId.equals(that.patientId);
 	}

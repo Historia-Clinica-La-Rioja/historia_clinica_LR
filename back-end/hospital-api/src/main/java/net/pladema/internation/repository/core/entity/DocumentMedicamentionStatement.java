@@ -12,12 +12,12 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-@Table(name = "document_medicament_statement")
+@Table(name = "document_medicamention_statement")
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
-public class DocumentMedicamentStatment implements Serializable {
+public class DocumentMedicamentionStatement implements Serializable {
 
 	/**
 	 *
@@ -25,17 +25,17 @@ public class DocumentMedicamentStatment implements Serializable {
 	private static final long serialVersionUID = -3053291021636483828L;
 
 	@EmbeddedId
-	private DocumentMedicamentStatmentPK pk;
+	private DocumentMedicamentionStatementPK pk;
 
-	public DocumentMedicamentStatment(Long documentId, Integer medicationStatementId){
-		pk = new DocumentMedicamentStatmentPK(documentId, medicationStatementId);
+	public DocumentMedicamentionStatement(Long documentId, Integer medicationStatementId){
+		pk = new DocumentMedicamentionStatementPK(documentId, medicationStatementId);
 	}
 
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		DocumentMedicamentStatment that = (DocumentMedicamentStatment) o;
+		DocumentMedicamentionStatement that = (DocumentMedicamentionStatement) o;
 		return Objects.equals(pk, that.pk);
 	}
 
