@@ -13,10 +13,8 @@ public class RoomDto implements Serializable {
 
     private Integer id;
 
-    private Short roomNumber;
+    private String roomNumber;
 
     private SectorDto sector;
-
-    private ClinicalSpecialtyDto specialty;
 
 }

@@ -1,6 +1,7 @@
 package net.pladema.internation.controller;
 
 import net.pladema.BaseControllerTest;
+import net.pladema.internation.controller.mapper.InternmentEpisodeMapper;
 import net.pladema.internation.service.InternmentEpisodeService;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,21 +17,27 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(InternmentPatientController.class)
-public class InternmentPatientControllerTest extends BaseControllerTest {
+@WebMvcTest(InternmentEpisodeController.class)
+public class InternmentEpisodeControllerTest extends BaseControllerTest {
+
+	@MockBean
+	private InternmentEpisodeService InternmentEpisodeService;
+
+	@MockBean
+	private InternmentEpisodeMapper internmentEpisodeMapper;
 
 	@Before
 	public void setup() {
 	}
 
 	@Test
-	public void getAllInternmentPatient() throws Exception {
-		final Integer institutionId = 10;
-		final String URL = "/institutions/ "+institutionId+"/internments/patients";
+	public void getInternmentSummary() throws Exception {
+		final Integer internmentEpisodeId = 10;
+		final String URL = "/institutions/1/internments/" +internmentEpisodeId +"/summary";
 		mockMvc.perform(get(URL))
-			.andDo(log())
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$", hasSize(institutionId)));
+				.andDo(log())
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.id").value(internmentEpisodeId));
 	}
 	
 }

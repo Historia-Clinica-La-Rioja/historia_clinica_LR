@@ -1,22 +1,24 @@
 package net.pladema.internation.controller.dto;
 
+
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@ToString
-public class InternmentEpisodeDto {
+public class InternmentSummaryDto {
 
     private Integer id;
-
-    private PatientDto patient;
 
     private BedDto bed;
 
     private ResponsibleDoctorDto doctor;
 
-    private ClinicalSpecialtyDto specialty;
+    private LocalDateTime createdOn;
 
+    private int totalInternmentDays;
+
+    private ClinicalSpecialtyDto specialty;
 }

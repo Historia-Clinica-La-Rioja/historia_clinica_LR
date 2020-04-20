@@ -16,4 +16,6 @@ public class ResponsibleDoctorDto implements Serializable {
     private String firstName;
 
     private String lastName;
+
+    private String licence;
 }

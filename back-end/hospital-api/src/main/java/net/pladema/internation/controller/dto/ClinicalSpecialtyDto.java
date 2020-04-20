@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString
 public class ClinicalSpecialtyDto {
 
-    private Short id;
+    private Integer id;
 
     private String name;
 }

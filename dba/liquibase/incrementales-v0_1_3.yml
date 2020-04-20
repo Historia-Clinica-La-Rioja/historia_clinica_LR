@@ -234,3 +234,46 @@ databaseChangeLog:
             tableName: room
             columnNames: room_number, clinical_specialty_sector_id
             constraintName: UQ_room
+
+- changeSet:
+    id: renameColumn-healthcare_professional_group-responsable
+    author: etrapani
+    changes:
+    - renameColumn:
+        columnDataType: boolean
+        newColumnName: responsible
+        oldColumnName: responsable
+        tableName: healthcare_professional_group
+
+- changeSet:
+    id: renameColumn-internment_episode-clinical_speciality_id
+    author: etrapani
+    changes:
+    - renameColumn:
+        columnDataType: varchar(20)
+        newColumnName: clinical_specialty_id
+        oldColumnName: clinical_speciality_id
+        tableName: internment_episode
+
+- changeSet:
+    id: modifyDataType-internment_episode-clinical_specialty_id
+    author: etrapani
+    changes:
+    - modifyDataType:
+        columnName: clinical_specialty_id
+        newDataType: int
+        tableName: internment_episode
+
+- changeSet:
+    id: addForeignKeyConstraint-internment_episode-clinical_specialty_id
+    author: etrapani
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: clinical_specialty_id
+        baseTableName: internment_episode
+        constraintName: FK_internment_episode_clinical_specialty_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: clinical_specialty
+        validate: true

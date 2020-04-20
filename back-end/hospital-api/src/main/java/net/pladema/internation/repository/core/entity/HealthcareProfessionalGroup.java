@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -26,6 +27,9 @@ public class HealthcareProfessionalGroup implements Serializable {
 
 	@EmbeddedId
 	private HealthcareProfessionalGroupPK pk;
+
+	@Column(name = "responsible")
+	private Boolean responsible;
 
 	public HealthcareProfessionalGroup(Integer internmentEpisodeId, Integer healthcareProfessionalId){
 		pk = new HealthcareProfessionalGroupPK(internmentEpisodeId, healthcareProfessionalId);

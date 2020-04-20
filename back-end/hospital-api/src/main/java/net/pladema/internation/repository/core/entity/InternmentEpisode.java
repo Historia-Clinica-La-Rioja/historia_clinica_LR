@@ -11,6 +11,8 @@ import net.pladema.internation.repository.listener.InternationListener;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.Objects;
 
 @Entity
@@ -38,8 +40,8 @@ public class InternmentEpisode extends InternationAuditableEntity {
 	@Column(name = "bed_id", nullable = false)
 	private Integer bedId;
 
-	@Column(name = "clinical_speciality_id", length = 20, nullable = true)
-	private String clinicalSpecialityId;
+	@Column(name = "clinical_specialty_id", length = 20, nullable = true)
+	private Integer clinicalSpecialtyId;
 
 	@Column(name = "status_id", nullable = false)
 	private Short statusId;
@@ -58,6 +60,12 @@ public class InternmentEpisode extends InternationAuditableEntity {
 
 	@Column(name = "discharge_date")
 	private LocalDate dischargeDate;
+
+	private int totalInternmentDays(){
+		LocalDate today = LocalDate.now();
+		Period p = Period.between(getCreatedOn().toLocalDate(), today);
+		return p.getDays();
+	}
 
 	@Override
 	public boolean equals(Object o) {

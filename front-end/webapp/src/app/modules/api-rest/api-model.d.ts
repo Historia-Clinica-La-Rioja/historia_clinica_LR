@@ -102,18 +102,13 @@ export interface BasicPatientDto {
 }
 
 export interface BedDto extends Serializable {
-    bedNumber: number;
+    bedNumber: string;
     id: number;
     room: RoomDto;
 }
 
 export interface CityDto extends MasterdataDto<number> {
     id: number;
-}
-
-export interface ClinicalSpecialityDto {
-    id: number;
-    name: string;
 }
 
 export interface ClinicalSpecialtyDto {
@@ -140,6 +135,16 @@ export interface InternmentEpisodeDto {
     doctor: ResponsibleDoctorDto;
     id: number;
     patient: PatientDto;
+    specialty: ClinicalSpecialtyDto;
+}
+
+export interface InternmentSummaryDto {
+    bed: BedDto;
+    createdOn: Date;
+    doctor: ResponsibleDoctorDto;
+    id: number;
+    specialty: ClinicalSpecialtyDto;
+    totalInternmentDays: number;
 }
 
 export interface JWTokenDto extends Serializable {
@@ -201,12 +206,6 @@ export interface RequestUserRoleDto extends Serializable {
     userId: number;
 }
 
-export interface ResponsableDoctorDto extends Serializable {
-    id: number;
-    name: string;
-    surname: string;
-}
-
 export interface ResponsibleDoctorDto extends Serializable {
     firstName: string;
     id: number;
@@ -215,14 +214,13 @@ export interface ResponsibleDoctorDto extends Serializable {
 
 export interface RoomDto extends Serializable {
     id: number;
-    roomNumber: number;
+    roomNumber: string;
     sector: SectorDto;
-    specialty: ClinicalSpecialtyDto;
 }
 
 export interface SectorDto {
+    description: string;
     id: number;
-    name: string;
 }
 
 export interface Serializable {

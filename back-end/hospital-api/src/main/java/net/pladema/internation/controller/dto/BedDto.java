@@ -13,7 +13,7 @@ public class BedDto implements Serializable {
 
     private Integer id;
 
-    private Short bedNumber;
+    private String bedNumber;
 
     private RoomDto room;
 }
