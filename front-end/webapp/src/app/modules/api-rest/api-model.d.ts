@@ -210,6 +210,7 @@ export interface ResponsibleDoctorDto extends Serializable {
     firstName: string;
     id: number;
     lastName: string;
+    licence: string;
 }
 
 export interface RoomDto extends Serializable {

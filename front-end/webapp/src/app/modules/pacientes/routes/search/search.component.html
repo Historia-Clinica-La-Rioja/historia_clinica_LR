@@ -12,7 +12,7 @@
 				<mat-form-field appearance="outline">
 					<mat-label>Tipo</mat-label>
 					<mat-select
-						formControlName="identifType">
+						formControlName="identificationType">
 						<mat-option
 							id="identifType"
 							name="identifType"
@@ -24,10 +24,10 @@
 				<mat-form-field appearance="outline">
 					<mat-label>Documento</mat-label>
 					<input id="identificationTypeId"
-						   formControlName="identificationTypeId"
+						   formControlName="identificationNumber"
 					       placeholder="Sin puntos"
 						   matInput>
-					<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'identificationTypeId')">
+					<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'identificationNumber')">
 						El campo es requerido
 					</mat-error>
 				</mat-form-field>

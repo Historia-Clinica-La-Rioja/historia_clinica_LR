@@ -46,8 +46,8 @@ export class SearchComponent implements OnInit {
 			this.genderId = params['genderId'];
 
 			this.formSearch = this.formBuilder.group({
-				identifType: [this.identificationTypeId, Validators.required],
-				identificationTypeId: [this.identificationNumber, Validators.required],
+				identificationType: [this.identificationTypeId, Validators.required],
+				identificationNumber: [this.identificationNumber, Validators.required],
 				firstName: [null, Validators.required],
 				middleNames: [null],
 				lastName: [null, Validators.required],
@@ -70,7 +70,7 @@ export class SearchComponent implements OnInit {
 					firstName: this.formSearch.controls.firstName.value,
 					lastName: this.formSearch.controls.lastName.value,
 					genderId: this.formSearch.controls.gender.value,
-					identificationTypeId: this.formSearch.controls.identificationTypeId.value,
+					identificationTypeId: this.formSearch.controls.identificationType.value,
 					identificationNumber: this.formSearch.controls.identificationNumber.value,
 				}
 			}
@@ -80,7 +80,7 @@ export class SearchComponent implements OnInit {
 						this.router.navigate([ROUTE_NEW],
 							{
 								queryParams: {
-									identificationTypeId: this.formSearch.controls.identificationTypeId.value,
+									identificationTypeId: this.formSearch.controls.identificationType.value,
 									identificationNumber: this.formSearch.controls.identificationNumber.value,
 									genderId: this.formSearch.controls.gender.value,
 									firstName: this.formSearch.controls.firstName.value,
