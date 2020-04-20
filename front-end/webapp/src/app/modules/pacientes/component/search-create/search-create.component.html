@@ -8,7 +8,7 @@
 		</mat-card-header>
 		<mat-card-content>
 			<div class="">
-				<mat-form-field>
+				<mat-form-field appearance="outline">
 					<mat-label>Tipo</mat-label>
 					<mat-select
 						formControlName="identifType">
@@ -23,7 +23,7 @@
 						El campo es requerido
 					</mat-error>
 				</mat-form-field>
-				<mat-form-field>
+				<mat-form-field appearance="outline">
 					<mat-label>Nro de documento</mat-label>
 					<input matInput
 						   type="text"
@@ -78,7 +78,7 @@
 			</mat-card-title>
 		</mat-card-header>
 		<mat-card-content *ngIf="noIdentity">
-			<mat-form-field>
+			<mat-form-field appearance="outline">
 				<mat-label>Seleccione motivo</mat-label>
 				<mat-select
 					formControlName="causeOptions">
@@ -92,7 +92,7 @@
 					El campo es requerido
 				</mat-error>
 			</mat-form-field>
-			<mat-form-field>
+			<mat-form-field appearance="outline">
 				<mat-label>Comentarios</mat-label>
 				<textarea
 					matInput

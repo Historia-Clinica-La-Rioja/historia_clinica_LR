@@ -44,7 +44,7 @@ export class PatientService {
 	}
 
 	quickGetPatient(params): Observable<BMPersonDto[]> {
-		let url = `${environment.apiBase}/person/minimalsearch`;
+		let url = `${environment.apiBase}/patient/minimalsearch`;
 		return this.http.get<BMPersonDto[]>(url, { params: params });
 	}
 
