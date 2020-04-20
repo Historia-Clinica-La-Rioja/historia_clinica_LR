@@ -40,21 +40,21 @@ export class SearchComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.formSearch = this.formBuilder.group({
-			identifType: [null, Validators.required],
-			identificationTypeId: [null, Validators.required],
-			firstName: [null, Validators.required],
-			middleNames: [null],
-			lastName: [null, Validators.required],
-			mothersLastName: [null],
-			gender: [null, Validators.required],
-			birthDate: [null, Validators.required]
-		});
-
 		this.route.queryParams.subscribe(params => {
 			this.identificationTypeId = params['identificationTypeId'];
 			this.identificationNumber = params['identificationNumber'];
 			this.genderId = params['genderId'];
+
+			this.formSearch = this.formBuilder.group({
+				identifType: [this.identificationTypeId, Validators.required],
+				identificationTypeId: [this.identificationNumber, Validators.required],
+				firstName: [null, Validators.required],
+				middleNames: [null],
+				lastName: [null, Validators.required],
+				mothersLastName: [null],
+				gender: [this.genderId, Validators.required],
+				birthDate: [null, Validators.required]
+			});
 		});
 	}
 
@@ -62,7 +62,7 @@ export class SearchComponent implements OnInit {
 		this.router.navigate([ROUTE_HOME])
 	}
 
-	serch() {
+	search() {
 		this.formSearchSubmitted = true;
 		if (this.formSearch.valid) {
 			let searchRequest = {
@@ -70,8 +70,8 @@ export class SearchComponent implements OnInit {
 					firstName: this.formSearch.controls.firstName.value,
 					lastName: this.formSearch.controls.lastName.value,
 					genderId: this.formSearch.controls.gender.value,
-					identificationTypeId: this.formSearch.controls.identificationNumber.value,
-					identificationNumber: this.formSearch.controls.identificationTypeId.value,
+					identificationTypeId: this.formSearch.controls.identificationTypeId.value,
+					identificationNumber: this.formSearch.controls.identificationNumber.value,
 				}
 			}
 			this.searchPatientService.getPatientByCMD(JSON.stringify(searchRequest)).subscribe(
