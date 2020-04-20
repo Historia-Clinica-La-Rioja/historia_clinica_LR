@@ -1,14 +1,19 @@
 package net.pladema.patient.repository.entity;
 
+import java.io.Serializable;
+import java.math.BigInteger;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.pladema.auditable.entity.AuditableEntity;
-
-import javax.persistence.*;
-import java.io.Serializable;
-import java.math.BigInteger;
 
 @Entity
 @Table(name = "patient")
@@ -39,5 +44,11 @@ public class Patient implements Serializable{
 
     @Column(name = "national_id")
     private BigInteger nationalId;
+    
+    @Column(name = "comments", length = 255)
+    private String comments;
+    
+    @Column(name = "identity_verification_status_id")
+    private Short identityVerificationStatusId;
 }
 

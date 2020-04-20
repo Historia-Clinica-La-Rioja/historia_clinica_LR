@@ -137,5 +137,33 @@ databaseChangeLog:
                 INSERT INTO document_type (id, description) VALUES(1, 'Anamnesis');  
                 INSERT INTO document_type (id, description) VALUES(2, 'Nota de evaluación');  
                 INSERT INTO document_type (id, description) VALUES(3, 'Epicrisis');  
+             
+- changeSet:
+    id: patient-addColumn-identity_verification_status&&coments
+    author: gmurgolo
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: identity_verification_status_id
+            type: smallint
+            constraints:
+                nullable: true  
+        - column:
+            name: comments
+            type: varchar(255)
+            constraints:
+                nullable: true
+        tableName: patient
+    - addForeignKeyConstraint:
+        baseColumnNames: identity_verification_status_id
+        baseTableName: patient
+        constraintName: FK_identity_verification_status_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: identity_verification_status
+        validate: true
+
 
         
