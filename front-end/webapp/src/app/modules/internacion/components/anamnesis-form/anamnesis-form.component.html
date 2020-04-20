@@ -79,9 +79,22 @@
 				</mat-form-field>
 			</div>
 
-			<button mat-button type="submit">
-				<span>Firmar y Confirmar</span>
-			</button>
+			<div class="form-buttons">
+				<div>
+					<button mat-stroked-button>
+						<span class="uppercase">Volver</span>
+					</button>
+					<button mat-stroked-button>
+						<span class="uppercase">Guardar borrador</span>
+					</button>
+				</div>
+				<div class="firma-buttons">
+					<mat-checkbox>Adjuntar firma digital</mat-checkbox>
+					<button mat-raised-button color="primary" type="submit">
+						<span class="uppercase">Firmar y Confirmar</span>
+					</button>
+				</div>
+			</div>
 
 		</form>
 	</section>
