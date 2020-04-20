@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { InternacionesHomeComponent } from './components/routes/home/internaciones-home.component';
 import { InternacionPacienteComponent } from './components/routes/internacion-paciente/internacion-paciente.component';
-import { AnamnesisFormComponent } from './components/routes/anamnesis-form/anamnesis-form.component';
+import { AnamnesisComponent } from './components/routes/anamnesis/anamnesis.component';
 
 
 const routes: Routes = [
@@ -16,7 +16,7 @@ const routes: Routes = [
 	},
 	{
 		path: 'internacion/:idInternacion/paciente/:idPaciente/anamnesis',
-		component: AnamnesisFormComponent
+		component: AnamnesisComponent
 	}
 ];
 

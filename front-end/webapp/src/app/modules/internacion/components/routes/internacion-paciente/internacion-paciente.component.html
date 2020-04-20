@@ -3,7 +3,9 @@
 		<h1 [translate]="'internaciones.internacion-paciente.TITLE'"></h1>
 		<div class="flex-layout">
 			<app-patient-card [patient]="patient$ | async"></app-patient-card>
-			<app-summary-card [header]="internacionSummary"></app-summary-card>
+			<app-summary-card [header]="internacionSummary">
+				<app-internment-episode-summary></app-internment-episode-summary>
+			</app-summary-card>
 		</div>
 	</section>
 </app-content>

@@ -5,11 +5,11 @@ import { InternacionesRoutingModule } from './internaciones-routing.module';
 import { AppMaterialModule } from 'src/app/app.material.module';
 import { CoreModule } from '@core/core.module';
 import { PresentationModule } from '../presentation/presentation.module';
-import { AnamnesisFormComponent } from './components/routes/anamnesis-form/anamnesis-form.component';
+import { AnamnesisFormComponent } from './components/anamnesis-form/anamnesis-form.component';
 import { InternacionesHomeComponent } from './components/routes/home/internaciones-home.component';
 import { InternacionesTableComponent } from './components/internaciones-table/internaciones-table.component';
 import { InternacionPacienteComponent } from './components/routes/internacion-paciente/internacion-paciente.component';
-import { PatientInternmentCardComponent } from './components/patient-internment-card/patient-internment-card.component';
+import { AnamnesisComponent } from './components/routes/anamnesis/anamnesis.component';
 
 @NgModule({
 	declarations: [
@@ -17,7 +17,7 @@ import { PatientInternmentCardComponent } from './components/patient-internment-
 		InternacionesTableComponent,
 		InternacionesHomeComponent,
 		InternacionPacienteComponent,
-		PatientInternmentCardComponent
+		AnamnesisComponent
 	],
 	imports: [
 		CommonModule,
