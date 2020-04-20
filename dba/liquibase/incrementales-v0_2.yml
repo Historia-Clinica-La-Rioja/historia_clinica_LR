@@ -2325,3 +2325,25 @@ databaseChangeLog:
                 tableName: clinical_specialty_sector
                 columnNames: sector_id, clinical_specialty_id
                 constraintName: UQ_clinical_specialty_sector
+    - changeSet:
+        id: room_fk_clinical_specialty_sector
+        comment: room ahora apunta a clinical_specialty_sector
+        author: efernandez
+        changes:
+            - dropForeignKeyConstraint:
+                baseTableName: room
+                constraintName: FK_room_sector_id
+            - renameColumn:
+                columnDataType: int
+                newColumnName: clinical_specialty_sector_id
+                oldColumnName: sector_id
+                tableName: room
+            - addForeignKeyConstraint:
+                constraintName: FK_room__clinical_specialty_sector_id
+                baseTableName: room
+                baseColumnNames: clinical_specialty_sector_id
+                referencedTableName: clinical_specialty_sector
+                referencedColumnNames: id
+                validate: true
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
