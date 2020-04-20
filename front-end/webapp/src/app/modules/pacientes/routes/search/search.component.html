@@ -9,7 +9,7 @@
 		<div class="content">
 			<form [formGroup]="formSearch" (ngSubmit)="serch()">
 				<br>
-				<mat-form-field >
+				<mat-form-field appearance="outline">
 					<mat-label>Tipo</mat-label>
 					<input id="identificationNumber"
 						   formControlName="identificationNumber"
@@ -19,7 +19,7 @@
 						El campo es requerido
 					</mat-error>
 				</mat-form-field>
-				<mat-form-field >
+				<mat-form-field appearance="outline">
 					<mat-label>Documento</mat-label>
 					<input id="identificationTypeId"
 						   formControlName="identificationTypeId"
@@ -42,7 +42,7 @@
 					</mat-error>
 				</div>
 				<br>
-				<mat-form-field>
+				<mat-form-field appearance="outline">
 					<mat-label>Nombre</mat-label>
 					<input id="firstName"
 							formControlName="firstName"
@@ -51,14 +51,14 @@
 						El campo es requerido
 					</mat-error>
 				</mat-form-field>
-				<mat-form-field>
+				<mat-form-field appearance="outline">
 					<mat-label>Segundo Nombre</mat-label>
 					<input id="middleNames"
 							formControlName="middleNames"
 							matInput>
 				</mat-form-field>
 				<br>
-				<mat-form-field>
+				<mat-form-field appearance="outline">
 					<mat-label>Apellido</mat-label>
 					<input  id="lastName"
 							formControlName="lastName"
@@ -67,14 +67,14 @@
 						El campo es requerido
 					</mat-error>
 				</mat-form-field>
-				<mat-form-field>
+				<mat-form-field appearance="outline">
 					<mat-label>Apellido materno</mat-label>
 					<input  id="mothersLastName"
 							formControlName="mothersLastName"
 							matInput>
 				</mat-form-field>
 				<br>
-				<mat-form-field>
+				<mat-form-field appearance="outline">
 					<mat-label>Fecha de nacimiento</mat-label>
 					<input matInput id="birthDate"
 									formControlName="birthDate"
@@ -97,7 +97,7 @@
 			</form>
 		</div>
 	</section>
-	<div class="container" >
+	<div class="container" *ngIf="!viewSearchComponent()">
 		<app-partial-matches-table>
 		</app-partial-matches-table>
 	</div>

@@ -17,8 +17,8 @@ export class SearchComponent implements OnInit {
 	public formSearchSubmitted: boolean = false;
 	public formSearch: FormGroup;
 	public genderOptions = [
-		{id: '1', description: 'femenino'},
-		{id: '2', description: 'masculino'}
+		{id: '1', description: 'Femenino'},
+		{id: '2', description: 'Masculino'}
 	];
 	public viewSearch: boolean = true;
 	public hasError = hasError;
@@ -47,14 +47,7 @@ export class SearchComponent implements OnInit {
 
 	serch() {
 		this.formSearchSubmitted = true;
-		if (this.formSearch.valid) {
-//			let searchRequest: String;
-/* 			searchRequest["firstName"] =this.formSearch.controls.firstName.value;
-			searchRequest["lastName"] =this.formSearch.controls.lastName.value;
-			searchRequest["genderId"] =this.formSearch.controls.gender.value;
-			searchRequest["identificationTypeId"] =this.formSearch.controls.identificationNumber.value;
-			searchRequest["identificationNumber"] =this.formSearch.controls.identificationTypeId.value; */
-			
+		if (this.formSearch.valid) {			
 			let searchRequest = {
 				searchFilterStr: {
 					lastName: this.formSearch.controls.firstName.value,
