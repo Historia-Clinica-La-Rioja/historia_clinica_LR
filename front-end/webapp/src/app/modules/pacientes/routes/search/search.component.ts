@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SearchPatientService } from '@api-rest/services/search-patient.service';
 import { hasError } from "@core/utils/form.utils";
 import { ActivatedRoute, Router } from '@angular/router';
+import { PatientSearchDto } from '@api-rest/api-model';
 
 const ROUTE_NEW = 'pacientes/new';
 const ROUTE_HOME = 'pacientes';
@@ -16,6 +17,10 @@ export class SearchComponent implements OnInit {
 
 	public formSearchSubmitted: boolean = false;
 	public formSearch: FormGroup;
+	public identifyTypeArray = [
+		{id: '1', description: 'DNI'},
+		{id: '0', description: 'CUIL'}
+	]
 	public genderOptions = [
 		{id: '1', description: 'Femenino'},
 		{id: '2', description: 'Masculino'}
@@ -25,6 +30,7 @@ export class SearchComponent implements OnInit {
 	public identificationTypeId;
 	public identificationNumber;
 	public genderId;
+	public matchingPatient: PatientSearchDto[];
 
 	constructor(private formBuilder: FormBuilder,
 				private searchPatientService: SearchPatientService,
@@ -35,7 +41,7 @@ export class SearchComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.formSearch = this.formBuilder.group({
-			identificationNumber: [null, Validators.required],
+			identifType: [null, Validators.required],
 			identificationTypeId: [null, Validators.required],
 			firstName: [null, Validators.required],
 			middleNames: [null],
@@ -83,6 +89,7 @@ export class SearchComponent implements OnInit {
 							});
 					} else {
 						// ocultar Search y ver Tabla de coincidencias parciales
+						this.matchingPatient = data;
 						this.viewSearch = false;
 					}
 				}

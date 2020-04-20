@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { MatTableDataSource } from "@angular/material/table";
+import { PatientSearchDto } from '@api-rest/api-model';
 
 @Component({
 	selector: 'app-partial-matches-table',
@@ -7,6 +8,8 @@ import { MatTableDataSource } from "@angular/material/table";
 	styleUrls: ['./partial-matches-table.component.scss']
 })
 export class PartialMatchesTableComponent implements OnInit {
+
+	@Input('matchingPatient') matchingPatient: PatientSearchDto[];
 
 	displayedColumns: string[] = ['ID', 'Nombres', 'Apellidos', 'Sexo', 'F. Nac', 'DNI', 'Estado', 'Coincidencia'];
 	dataSource = new MatTableDataSource([

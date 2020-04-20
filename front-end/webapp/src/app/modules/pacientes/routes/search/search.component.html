@@ -11,13 +11,15 @@
 				<br>
 				<mat-form-field appearance="outline">
 					<mat-label>Tipo</mat-label>
-					<input id="identificationNumber"
-						   formControlName="identificationNumber"
-					       placeholder="DNI"
-						   matInput>
-					<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'identificationNumber')">
-						El campo es requerido
-					</mat-error>
+					<mat-select
+						formControlName="identifType">
+						<mat-option
+							id="identifType"
+							name="identifType"
+							*ngFor="let type of identifyTypeArray" [value]="type.id">
+							{{type.description}}
+						</mat-option>
+					</mat-select>
 				</mat-form-field>
 				<mat-form-field appearance="outline">
 					<mat-label>Documento</mat-label>
@@ -98,7 +100,7 @@
 		</div>
 	</section>
 	<div class="container" *ngIf="!viewSearchComponent()">
-		<app-partial-matches-table>
+		<app-partial-matches-table [matchingPatient]="matchingPatient">
 		</app-partial-matches-table>
 	</div>
 </app-content>
