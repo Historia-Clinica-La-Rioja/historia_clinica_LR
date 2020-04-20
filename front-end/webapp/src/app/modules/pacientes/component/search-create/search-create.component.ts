@@ -62,12 +62,18 @@ export class SearchCreateComponent implements OnInit {
 			}
 			this.patientService.quickGetPatient(searchRequest).subscribe(
 				data => {
-					if(!data.length){
-						this.router.navigate([ROUTE_SEARCH]);
-					}
-					else {
+					if (!data.length) {
+						this.router.navigate([ROUTE_SEARCH],
+							{
+								queryParams: {
+									identificationTypeId: this.formSearch.controls.identifType.value,
+									identificationNumber: this.formSearch.controls.identifNumber.value,
+									genderId: this.formSearch.controls.gender.value
+								}
+							});
+					} else {
 						let idPatient = data[0].id;
-						this.router.navigate([ROUTE_PROFILE,  { id: idPatient }]);
+						this.router.navigate([ROUTE_PROFILE, {id: idPatient}]);
 					}
 				}
 			);
@@ -76,8 +82,13 @@ export class SearchCreateComponent implements OnInit {
 
 	add(): void {
 		if (this.formAdd.valid) {
-			//TODO enviar datos de motivo y comentarios
-			this.router.navigate([ROUTE_NEW]);
+			this.router.navigate([ROUTE_NEW],
+				{
+					queryParams: {
+						causeOptions: this.formAdd.controls.causeOptions.value,
+						comments: this.formAdd.controls.comments.value
+					}
+				});
 		}
 	}
 

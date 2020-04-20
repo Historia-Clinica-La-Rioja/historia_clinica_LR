@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SearchPatientService } from '@api-rest/services/search-patient.service';
-import { VALIDATIONS, hasError } from "@core/utils/form.utils";
-import { Router } from '@angular/router';
+import { hasError } from "@core/utils/form.utils";
+import { ActivatedRoute, Router } from '@angular/router';
 
 const ROUTE_NEW = 'pacientes/new';
 const ROUTE_HOME = 'pacientes';
 
 @Component({
-  selector: 'app-search',
-  templateUrl: './search.component.html',
-  styleUrls: ['./search.component.scss']
+	selector: 'app-search',
+	templateUrl: './search.component.html',
+	styleUrls: ['./search.component.scss']
 })
 export class SearchComponent implements OnInit {
 
@@ -22,11 +22,16 @@ export class SearchComponent implements OnInit {
 	];
 	public viewSearch: boolean = true;
 	public hasError = hasError;
+	public identificationTypeId;
+	public identificationNumber;
+	public genderId;
 
-  constructor(private formBuilder: FormBuilder,
-			  private searchPatientService: SearchPatientService,
-			  private router: Router,
-			  ) { }
+	constructor(private formBuilder: FormBuilder,
+				private searchPatientService: SearchPatientService,
+				private router: Router,
+				private route: ActivatedRoute
+	) {
+	}
 
 	ngOnInit(): void {
 		this.formSearch = this.formBuilder.group({
@@ -38,20 +43,26 @@ export class SearchComponent implements OnInit {
 			mothersLastName: [null],
 			gender: [null, Validators.required],
 			birthDate: [null, Validators.required]
-		 });
+		});
+
+		this.route.queryParams.subscribe(params => {
+			this.identificationTypeId = params['identificationTypeId'];
+			this.identificationNumber = params['identificationNumber'];
+			this.genderId = params['genderId'];
+		});
 	}
 
-	back(){
+	back() {
 		this.router.navigate([ROUTE_HOME])
 	}
 
 	serch() {
 		this.formSearchSubmitted = true;
-		if (this.formSearch.valid) {			
+		if (this.formSearch.valid) {
 			let searchRequest = {
 				searchFilterStr: {
-					lastName: this.formSearch.controls.firstName.value,
-					firsName: this.formSearch.controls.lastName.value,
+					firstName: this.formSearch.controls.firstName.value,
+					lastName: this.formSearch.controls.lastName.value,
 					genderId: this.formSearch.controls.gender.value,
 					identificationTypeId: this.formSearch.controls.identificationNumber.value,
 					identificationNumber: this.formSearch.controls.identificationTypeId.value,
@@ -59,10 +70,18 @@ export class SearchComponent implements OnInit {
 			}
 			this.searchPatientService.getPatientByCMD(JSON.stringify(searchRequest)).subscribe(
 				data => {
-					if(!data.length){
-						this.router.navigate([ROUTE_NEW]);
-					}
-					else {
+					if (!data.length) {
+						this.router.navigate([ROUTE_NEW],
+							{
+								queryParams: {
+									identificationTypeId: this.formSearch.controls.identificationTypeId.value,
+									identificationNumber: this.formSearch.controls.identificationNumber.value,
+									genderId: this.formSearch.controls.gender.value,
+									firstName: this.formSearch.controls.firstName.value,
+									lastName: this.formSearch.controls.lastName.value,
+								}
+							});
+					} else {
 						// ocultar Search y ver Tabla de coincidencias parciales
 						this.viewSearch = false;
 					}
@@ -71,7 +90,7 @@ export class SearchComponent implements OnInit {
 		}
 	}
 
-	viewSearchComponent(){
+	viewSearchComponent() {
 		return this.viewSearch;
 	}
 
