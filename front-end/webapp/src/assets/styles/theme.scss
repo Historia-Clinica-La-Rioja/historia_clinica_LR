@@ -12,3 +12,4 @@ $theme: mat-light-theme($primary, $accent);
 
 @include mat-nav-list($theme);
 @include mat-table($theme);
+@include mat-card-box($theme);

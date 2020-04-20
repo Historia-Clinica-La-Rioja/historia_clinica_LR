@@ -32,3 +32,29 @@
 		}
 	}
 }
+
+@mixin mat-card-box($theme) {
+	$primary-palette: map-get($theme, primary);
+
+	mat-card.box {
+		padding: 0;
+		mat-card-header {
+			padding: 10px;
+			border-top-left-radius: 4px;
+			border-top-right-radius: 4px;
+			background-color: mat-color($primary-palette, default);
+			color: mat-color($primary, default-contrast);
+			& div.mat-card-header-text {
+				align-self: center;
+				mat-card-title.mat-card-title {
+					font-weight: normal;
+					font-size: medium;
+					margin-bottom: 0;
+				}
+			}
+		}
+		mat-card-content {
+			padding: 10px;
+		}
+	}
+}

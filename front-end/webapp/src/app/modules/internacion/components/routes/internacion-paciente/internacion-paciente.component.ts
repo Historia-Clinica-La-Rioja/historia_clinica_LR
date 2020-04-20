@@ -5,6 +5,7 @@ import { BasicPatientDto } from '@api-rest/api-model';
 import { map } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import { SummaryHeader } from 'src/app/modules/presentation/summary-card/summary-card.component';
 
 @Component({
 	selector: 'app-internacion-paciente',
@@ -14,6 +15,10 @@ import { Observable } from 'rxjs';
 export class InternacionPacienteComponent implements OnInit {
 
 	public patient$: Observable<PatientBasicData>;
+	public internacionSummary: SummaryHeader = {
+		title: 'Resumen internación',
+		matIcon: 'single_bed'
+	};
 
 	constructor(
 		private patientService: PatientService,
