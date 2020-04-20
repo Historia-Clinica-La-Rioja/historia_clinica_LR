@@ -12,7 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatOptionModule, MatNativeDateModule } from '@angular/material/core';
+import { MatOptionModule, MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -99,5 +99,10 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 		MatToolbarModule,
 		MatToolbarModule,
 	],
+	providers: [
+        {provide:
+            MAT_DATE_LOCALE,
+            useValue: 'es-AR'},
+    ],
 })
 export class AppMaterialModule { }

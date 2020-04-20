@@ -17,11 +17,15 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 
-@Mapper(uses = {AddressMapper.class, HealthInsuranceMapper.class, IdentificationTypeMapper.class, GenderMapper.class})
+
+@Mapper(uses = {AddressMapper.class, HealthInsuranceMapper.class, IdentificationTypeMapper.class, GenderMapper.class},
+        imports = {java.time.LocalDateTime.class,java.time.LocalTime.class})
 public interface PersonMapper {
 
+    @Mapping( target="birthDate",  expression = "java(LocalDateTime.of(person.getBirthDate(), LocalTime.now()))")
     public BMPersonDto fromPerson(Person person);
 
+    @Mapping( target="birthDate",  expression = "java(person.getBirthDate().toLocalDate())")
     public Person fromPersonDto(APersonDto person);
 
     public PersonExtended updatePersonExtended(APersonDto person, Integer addressId);
@@ -30,6 +34,7 @@ public interface PersonMapper {
 
     public AddressDto updatePersonAddress(APersonDto person);
 
+    @Mapping( target="birthDate",  expression = "java(patient.getBirthDate().toLocalDate())")
     public Person fromAPatientDto(APatientDto patient);
 
     @Mapping(target = "id", source = "person.id")
@@ -40,7 +45,7 @@ public interface PersonMapper {
     @Mapping(target = "identificationTypeId", source = "person.identificationTypeId")
     @Mapping(target = "identificationNumber", source = "person.identificationNumber")
     @Mapping(target = "genderId", source = "person.genderId")
-    @Mapping(target = "birthDate", source = "person.birthDate")
+    @Mapping(target = "birthDate",  expression = "java(LocalDateTime.of(completeDataPerson.getPerson().getBirthDate(), LocalTime.now()))")
 
     @Mapping(target = "cuil", source = "personExtended.cuil")
     @Mapping(target = "mothersLastName", source = "personExtended.mothersLastName")

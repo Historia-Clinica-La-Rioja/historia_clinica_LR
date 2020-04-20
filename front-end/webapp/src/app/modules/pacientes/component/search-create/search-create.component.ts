@@ -5,7 +5,7 @@ import { VALIDATIONS, hasError } from "@core/utils/form.utils";
 import { PatientService } from "@api-rest/services/patient.service";
 
 const ROUTE_SEARCH = 'pacientes/search';
-const ROUTE_NEW = 'pacientes/new';
+const ROUTE_NEW = 'pacientes/temporary';
 const ROUTE_PROFILE = 'pacientes/profile';
 
 @Component({

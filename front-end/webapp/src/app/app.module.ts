@@ -15,6 +15,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { httpInterceptorProviders } from './http-interceptors';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { PacientesModule } from './modules/pacientes/pacientes.module';
 
 
 @NgModule({
@@ -33,6 +34,7 @@ import { environment } from '../environments/environment';
 		PresentationModule,
 		RouterModule,
 		ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+		PacientesModule,
 		TranslateModule.forRoot({
 			loader: {
 				provide: TranslateLoader,

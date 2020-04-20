@@ -32,6 +32,8 @@ public class AddressDto implements Serializable {
 
     private CityDto city;
 
+    private Integer cityId;
+
     private ProvinceDto province;
 
 }

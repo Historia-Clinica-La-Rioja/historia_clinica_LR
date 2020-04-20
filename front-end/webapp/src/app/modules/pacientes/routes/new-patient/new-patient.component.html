@@ -1,0 +1,344 @@
+<app-content>
+    <div>
+        <h1 [translate]="'pacientes.new.TITLE'"></h1>
+        <h3 [translate]="'pacientes.new.SUBTITLE'"></h3>
+        <form [formGroup]="form" (ngSubmit)="save()">
+            <div class="form-row">
+                <div>                     
+                    <div>
+                        <span [translate]="'pacientes.form.IDENTIFICATION_TYPE'"></span>
+                    </div>
+                    <mat-form-field appearance="outline">
+                        <mat-select id="identificationTypeId"
+                            name="identificationTypeId"
+                            formControlName="identificationTypeId"
+                            [(ngModel)]="datosPersonales.identificationTypeId"
+                            placeholder="{{'pacientes.form.SELECT' | translate}}"
+                        >
+                            <mat-option *ngFor="let identificationType of identificationTypeList"
+                                                    [value]="identificationType.id">
+                                            {{identificationType.description}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error [translate]="'pacientes.form.REQUIRED'"></mat-error>
+                    </mat-form-field>   
+                </div>
+                    
+                <div>
+                    <div>
+                        <span [translate]="'pacientes.form.IDENTIFICATION_NUMBER'"></span>
+                    </div>
+                    <mat-form-field  appearance="outline">
+                        <input id="identificationNumber"
+                            name="identificationNumber"
+                            formControlName="identificationNumber"
+                            [(ngModel)]="datosPersonales.identificationNumber"
+                            placeholder="{{'pacientes.form.ONLY_NUMBERS' | translate}}"
+                            maxlength="10"
+                            matInput
+                        >
+                    </mat-form-field>    
+                </div>
+            </div>  
+            
+            <div>
+                <div>
+                    <span [translate]="'pacientes.form.GENDER'"></span>
+                </div>
+                <mat-radio-group formControlName="genderId" [(ngModel)]="datosPersonales.genderId">
+                    <mat-radio-button *ngFor="let gender of genders" [value]="gender.id">{{gender.description}}</mat-radio-button>
+                </mat-radio-group>
+                <mat-error *ngIf="hasError(form,'required','genderId') && formSubmitted" [translate]="'pacientes.form.REQUIRED'"></mat-error>
+            </div>
+            <br>
+            
+            <div>
+                <span [translate]="'pacientes.form.FIRST_NAMES_TITLE'"></span>
+            </div>
+            <div class="form-row">
+                <div>   
+                    <mat-form-field  appearance="outline">
+                        <input id="firstName"
+                            name="firstName"
+                            formControlName="firstName"
+                            [(ngModel)]="datosPersonales.firstName"
+                            placeholder="{{'pacientes.form.FIRST_NAME' | translate}}"
+                            maxlength="20"
+                            matInput
+                        >
+                        <mat-error [translate]="'pacientes.form.REQUIRED'"></mat-error>
+                    </mat-form-field>
+                </div>  
+
+                <mat-form-field  appearance="outline">    
+                    <input id="middleNames"
+                        name="middleNames"
+                        formControlName="middleNames"
+                        [(ngModel)]="datosPersonales.middleNames"
+                        placeholder="{{'pacientes.form.MIDDLE_NAMES' | translate}}"
+                        maxlength="20"
+                        matInput
+                    >
+                </mat-form-field>
+            </div>
+            <br>
+        <div class="form-row">
+            <div>
+                <div>
+                    <span [translate]="'pacientes.form.LAST_NAME_TITLE'"></span>
+                </div>
+                <mat-form-field  appearance="outline">
+                    <input id="lastName"
+                        name="lastName"
+                        formControlName="lastName"
+                        [(ngModel)]="datosPersonales.lastName"
+                        placeholder="{{'pacientes.form.LAST_NAME' | translate}}"
+                        maxlength="20"
+                        matInput
+                    >
+                    <mat-error [translate]="'pacientes.form.REQUIRED'"></mat-error>
+                </mat-form-field> 
+                <mat-form-field  appearance="outline">    
+                    <input id="otherLastNames"
+                        name="otherLastNames"
+                        formControlName="otherLastNames"
+                        [(ngModel)]="datosPersonales.otherLastNames"
+                        placeholder="{{'pacientes.form.OTHER_LAST_NAMES' | translate}}"
+                        maxlength="20"
+                        matInput
+                    >
+                </mat-form-field> 
+            </div>
+        </div>
+        
+        <div>
+            <span [translate]="'pacientes.form.BIRTH_DATE'"></span>
+        </div>
+        <div>
+            <mat-form-field appearance="outline">
+                <input formControlName="birthDate" id="birthDate" matInput [max]="todaysDate" [matDatepicker]="picker2"  [(ngModel)]="datosPersonales.birthDate">
+                <mat-datepicker-toggle  matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+            </mat-form-field> 
+            <mat-error *ngIf="hasError(form,'required', 'birthDate')  && formSubmitted" [translate]="'pacientes.form.REQUIRED'"></mat-error>
+        </div>
+        
+        <div>
+            <div>
+                <span [translate]="'pacientes.form.GENDER_SELF_DETERMINATION'"></span>
+            </div>
+            <mat-radio-group formControlName="genderSelfDeterminationId" [(ngModel)]="datosPersonales.genderSelfDeterminationId">
+                <mat-radio-button *ngFor="let gender of genders" [value]="gender.id">{{gender.description}}</mat-radio-button>
+            </mat-radio-group>
+        </div>
+        <br>
+
+        <div>
+            <div>
+                <span [translate]="'pacientes.form.NAME_SELF_DETERMINATION'"></span>
+            </div>
+            <mat-form-field appearance="outline">
+                <input id="nameSelfDetermination"
+                    name="nameSelfDetermination"
+                    formControlName="nameSelfDetermination"
+                    [(ngModel)]="datosPersonales.nameSelfDetermination"
+                    placeholder="{{'pacientes.form.NAME_SELF_DETERMINATION' | translate}}"
+                    maxlength="25"
+                    matInput
+                >
+            </mat-form-field>
+        </div>
+
+        <div>
+            <span [translate]="'pacientes.form.MOTHERS_LAST_NAME'"></span>
+        </div>
+        <mat-form-field  appearance="outline">
+            <input id="mothersLastName"
+                name="mothersLastName"
+                formControlName="mothersLastName"
+                [(ngModel)]="datosPersonales.mothersLastName"
+                placeholder= "{{'pacientes.form.MOTHERS_LAST_NAME' | translate}}"
+                maxlength="20"
+                matInput
+            >
+        </mat-form-field>    
+
+        <div>
+            <span [translate]="'pacientes.form.CUIT_CUIL'"></span>
+        </div>
+        <mat-form-field  appearance="outline">
+            <input id="cuil"
+                name="cuil"
+                formControlName="cuil"
+                maxlength="10"
+                [(ngModel)]="datosPersonales.cuil"
+                placeholder="{{'pacientes.form.ONLY_NUMBERS' | translate}}"
+                matInput
+            >
+        </mat-form-field>
+
+        <div>
+            <span [translate]="'pacientes.form.ADDRESS'"></span>
+        </div>
+        <div class="form-row">
+            <mat-form-field  appearance="outline">
+                <mat-select id="addressCityId"
+                    name="addressCityId"
+                    formControlName="addressCityId"
+                    [(ngModel)]="datosPersonales.addressCityId"
+                    placeholder="{{'pacientes.form.ADDRESS_CITY' | translate}}"
+                >
+                    <mat-option *ngFor="let city of cities"
+                                            [value]="city.id">
+                                    {{city.description}}
+                    </mat-option>
+                </mat-select>
+                <mat-error [translate]="'pacientes.form.REQUIRED'"></mat-error>
+            </mat-form-field>
+            <mat-form-field  appearance="outline">     
+                <input id="addressPostcode"
+                name="addressPostcode"
+                formControlName="addressPostcode"
+                maxlength="6"
+                pattern="[0-9]{1,6}"
+                [(ngModel)]="datosPersonales.addressPostcode"
+                placeholder="{{'pacientes.form.ADDRESS_POSTCODE' | translate}}"
+                matInput
+                >
+                <mat-error *ngIf="hasError(form,'required', 'addressPostcode')  && formSubmitted" [translate]="'pacientes.form.REQUIRED'"></mat-error>
+                <mat-error *ngIf="hasError(form,'pattern', 'addressPostcode')  && formSubmitted" [translate]="'pacientes.form.INVALID'"></mat-error>
+            </mat-form-field>
+
+            <mat-form-field  appearance="outline">         
+                <input id="addressStreet"
+                name="addressStreet"
+                formControlName="addressStreet"
+                maxlength="35"
+                [(ngModel)]="datosPersonales.addressStreet"
+                maxlength="35"
+                placeholder="{{'pacientes.form.ADDRESS_STREET' | translate}}"
+                matInput
+                >
+                <mat-error [translate]="'pacientes.form.REQUIRED'"></mat-error>
+            </mat-form-field>
+
+            <mat-form-field  appearance="outline">     
+                <input id="addressNumber"
+                name="addressNumber"
+                formControlName="addressNumber"
+                maxlength="5"
+                [(ngModel)]="datosPersonales.addressNumber"
+                placeholder="{{'pacientes.form.ADDRESS_NUMBER' | translate}}"
+                matInput
+                >
+                <mat-error [translate]="'pacientes.form.REQUIRED'"></mat-error>
+            </mat-form-field>
+
+            <mat-form-field  appearance="outline">     
+                <input id="addressFloor"
+                name="addressFloor"
+                formControlName="addressFloor"
+                maxlength="2"
+                [(ngModel)]="datosPersonales.addressFloor"
+                placeholder="{{'pacientes.form.ADDRESS_FLOOR' | translate}}"
+                matInput
+                >
+            </mat-form-field>
+
+            <mat-form-field  appearance="outline">     
+                <input id="addressApartment"
+                name="addressApartment"
+                formControlName="addressApartment"
+                maxlength="3"
+                [(ngModel)]="datosPersonales.addressApartment"
+                placeholder="{{'pacientes.form.ADDRESS_APARTMENT' | translate}}"
+                matInput
+                >
+            </mat-form-field>
+
+            <mat-form-field  appearance="outline">     
+                <input id="addressQuarter"
+                name="addressQuarter"
+                formControlName="addressQuarter"
+                maxlength="30"
+                [(ngModel)]="datosPersonales.addressQuarter"
+                placeholder="{{'pacientes.form.ADDRESS_QUARTER' | translate}}"
+                matInput
+                >
+            </mat-form-field>          
+        </div>
+
+        <div>
+            <span [translate]="'pacientes.form.PHONE_NUMBER'"></span>
+        </div>
+        <mat-form-field  appearance="outline">
+            <input id="phoneNumber"
+                name="phoneNumber"
+                formControlName="phoneNumber"
+                maxlength="15"
+                [(ngModel)]="datosPersonales.phoneNumber"
+                placeholder="{{'pacientes.form.PHONE_NUMBER' | translate}}"
+                matInput
+            >
+            <mat-error *ngIf="hasError(form,'required', 'phoneNumber')  && formSubmitted" [translate]="'pacientes.form.REQUIRED'"></mat-error>
+        </mat-form-field>
+
+        <div>
+            <span [translate]="'pacientes.form.EMAIL'"></span>
+        </div>        
+        <mat-form-field  appearance="outline">
+            <input id="email"
+                name="email"
+                formControlName="email"
+                [(ngModel)]="datosPersonales.email"
+                placeholder="usuario@usuario.com"
+                maxlength="100"
+                matInput
+            >
+            <mat-error *ngIf="hasError(form,'required', 'email')  && formSubmitted" [translate]="'pacientes.form.REQUIRED'"></mat-error>
+            <mat-error *ngIf="hasError(form,'email', 'email')  && formSubmitted" [translate]="'pacientes.form.INVALID'"></mat-error>
+        </mat-form-field>
+        <br>
+        <div>
+            <div>
+                <span [translate]="'pacientes.form.RELIGION'"></span>
+            </div>
+            <mat-form-field  appearance="outline">
+                <input id="religion"
+                    name="religion"
+                    formControlName="religion"
+                    maxlength="25"
+                    [(ngModel)]="datosPersonales.religion"
+                    placeholder="{{'pacientes.form.RELIGION' | translate}}"
+                    matInput
+                >
+            </mat-form-field>    
+        </div>
+
+        <div>
+            <div>
+                <span [translate]="'pacientes.form.ETHNIC'"></span>
+            </div>
+            <mat-form-field  appearance="outline">
+                <input id="ethnic"
+                    name="ethnic"
+                    formControlName="ethnic"
+                    maxlength="25"
+                    [(ngModel)]="datosPersonales.ethnic"
+                    placeholder="{{'pacientes.form.ETHNIC' | translate}}"
+                    matInput
+                >
+            </mat-form-field>    
+        </div>
+        
+        <div>
+            <button mat-flat-button color="secondary" (click)="goBack()">
+                <span [translate]="'buttons.BACK'"></span>
+            </button>
+            <button  mat-flat-button color="primary" type="submit">
+                <span [translate]="'buttons.CONTINUE'"></span>
+            </button>    
+        </div>  
+      </form>
+    </div>
+</app-content>

@@ -64,6 +64,7 @@ export interface AddUserDto extends AbstractUserDto {
 export interface AddressDto extends Serializable {
     apartment: string;
     city: CityDto;
+    cityId: number;
     floor: string;
     id: number;
     number: string;

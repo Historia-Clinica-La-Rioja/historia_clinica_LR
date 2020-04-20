@@ -8,7 +8,43 @@
 			"PACIENTES": "Pacientes"
 		}
 	},
+	"buttons":{
+		"BACK": "Volver",
+		"CONTINUE": "Continuar"
+	},
 	"pacientes": {
+		"form": {
+			"ADDRESS" : "Domicilio",
+			"ADDRESS_APARTMENT":"Departamento",
+			"ADDRESS_CITY":"Ciudad",
+			"ADDRESS_FLOOR":"Piso",
+			"ADDRESS_NUMBER":"Número",
+			"ADDRESS_POSTCODE":"Código  postal",
+			"ADDRESS_QUARTER":"Barrio",
+			"ADDRESS_STREET":"Calle",
+			"BIRTH_DATE": "Fecha de nacimiento",
+			"CUIT_CUIL": "CUIT / CUIL",
+			"EMAIL": "Email",
+			"ETHNIC": "Etnia",
+			"FIRST_NAME": "Primer nombre",
+			"FIRST_NAMES_TITLE": "Nombres",
+			"GENDER": "Sexo",
+			"GENDER_SELF_DETERMINATION": "Género autopercibido",
+			"IDENTIFICATION_TYPE": "Tipo de documento",
+			"IDENTIFICATION_NUMBER": "Nro. de documento",
+			"INVALID": "El campo es invalido.",			
+			"LAST_NAME":"Primer apellido",
+			"LAST_NAME_TITLE":"Apellidos",
+			"MIDDLE_NAMES": "Otros nombres",
+			"MOTHERS_LAST_NAME": "Apellido materno",
+			"NAME_SELF_DETERMINATION": "Nombre autopercibido",
+			"ONLY_NUMBERS": "Solo números",
+			"OTHER_LAST_NAMES": "Otros apellidos",
+			"PHONE_NUMBER": "Teléfono",				
+			"RELIGION": "Religion",
+			"REQUIRED": "El campo es requerido.",
+			"SELECT": "Seleccionar"
+		},
 		"home": {
 			"TITLE": "Pacientes",
 			"TITLE_SEARCH": "Búsqueda de pacientes",
@@ -19,6 +55,10 @@
 				"TITLE": "Búsqueda / Creación de HC"
 			}
 		},
+		"new": {
+			"TITLE": "Nuevo Paciente",
+			"SUBTITLE": "Ingresá los siguientes datos."
+		},	
 		"search": {
 			"TITLE": "Búsqueda de pacientes"
 		}

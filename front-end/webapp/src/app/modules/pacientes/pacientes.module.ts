@@ -9,6 +9,7 @@ import { SearchCreateComponent } from './component/search-create/search-create.c
 import { SearchComponent } from './routes/search/search.component';
 import { PartialMatchesTableComponent } from './component/partial-matches-table/partial-matches-table.component';
 
+import { NewPatientComponent } from './routes/new-patient/new-patient.component';
 
 @NgModule({
 	declarations: [
@@ -17,6 +18,7 @@ import { PartialMatchesTableComponent } from './component/partial-matches-table/
         PartialMatchesTableComponent,
         SearchCreateComponent,
         SearchComponent,
+		NewPatientComponent,
 	],
 	imports: [
 		AppMaterialModule,
