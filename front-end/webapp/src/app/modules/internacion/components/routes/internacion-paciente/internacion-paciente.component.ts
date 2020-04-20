@@ -30,7 +30,7 @@ export class InternacionPacienteComponent implements OnInit {
 							id: patient.id,
 							firstName: patient.person.firstName,
 							lastName: patient.person.lastName,
-							gender: 'gender',
+							gender: patient.person.gender.description,
 							age: patient.person.age
 						}
 					})
