@@ -37,8 +37,8 @@ public class MocksInternmentPatient {
     private static ResponsibleDoctorDto mockDoctorDto(int i) {
         ResponsibleDoctorDto result = new ResponsibleDoctorDto();
         result.setId(i);
-        result.setName("Doctor name " + i);
-        result.setSurname("Doctor surname " +i);
+        result.setFirstName("Doctor name " + i);
+        result.setLastName("Doctor surname " +i);
         return result;
     }
 

@@ -207,9 +207,9 @@ export interface ResponsableDoctorDto extends Serializable {
 }
 
 export interface ResponsibleDoctorDto extends Serializable {
+    firstName: string;
     id: number;
-    name: string;
-    surname: string;
+    lastName: string;
 }
 
 export interface RoomDto extends Serializable {

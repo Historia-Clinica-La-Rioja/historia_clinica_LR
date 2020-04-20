@@ -11,12 +11,12 @@
 
 	<ng-container matColumnDef="Nombre Médico">
 		<th mat-header-cell *matHeaderCellDef>Nombre Médico</th>
-		<td mat-cell *matCellDef="let element"> {{ element.doctor.lastName }} </td>
+		<td mat-cell *matCellDef="let element"> {{ element.doctor.firstName }} </td>
 	</ng-container>
 
 	<ng-container matColumnDef="Apellido Médico">
 		<th mat-header-cell *matHeaderCellDef>Apellido Médico</th>
-		<td mat-cell *matCellDef="let element"> {{ element.doctor.firstName }} </td>
+		<td mat-cell *matCellDef="let element"> {{ element.doctor.lastName }} </td>
 	</ng-container>
 
 	<ng-container matColumnDef="Sector">
