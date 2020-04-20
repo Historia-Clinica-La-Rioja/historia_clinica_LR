@@ -10,6 +10,8 @@ import addresses from './modules/addresses';
 import sectors from './modules/sectors';
 import clinicalspecialties from './modules/clinicalspecialties';
 import clinicalspecialtysectors from './modules/clinicalspecialtysectors';
+import rooms from './modules/rooms'
+import beds from './modules/beds'
 
 import springbootRestProvider from './providers/sgxDataProvider';
 import authProvider from './providers/authProvider';
@@ -33,6 +35,9 @@ const App = () => (
         <Resource name="sectors" {...sectors}/>
         <Resource name="clinicalspecialties" {...clinicalspecialties}/>
         <Resource name="clinicalspecialtysectors" {...clinicalspecialtysectors}/>
+        <Resource name="bedCategories" />
+        <Resource name="beds" {...beds}/>
+        <Resource name="rooms" {...rooms}/>
     </Admin>
 );
 

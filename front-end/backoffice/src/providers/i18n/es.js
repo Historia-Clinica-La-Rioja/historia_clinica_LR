@@ -8,7 +8,24 @@ export default {
             subtitle: 'Bienvenido',
         }
     },
-    resources: {    
+    resources: {
+
+        beds: {
+            name: 'Cama |||| Camas',
+            fields: {
+                roomId: 'Habitación',
+            },
+        },
+        rooms: {
+          name: 'Habitación |||| Habitaciones',
+          fields: {
+              description: 'Nombre',
+              type: 'Tipo',
+              specialityId: 'Especialidad',
+              dischargeDate: 'Fecha de alta',
+              sectorId: 'Sector'
+          },
+        },
         cities: {
             name: 'Ciudad |||| Ciudades',
             fields: {

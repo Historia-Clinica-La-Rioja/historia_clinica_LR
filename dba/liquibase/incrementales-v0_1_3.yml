@@ -190,3 +190,47 @@ databaseChangeLog:
             - column:
                 name: locked_by
                 type: varchar(150) 
+
+- changeSet:
+    id: bed-addColumn-bed_number
+    author: lmanterola
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: bed_number
+            type: varchar(50)
+            constraints:
+                nullable: false
+        tableName: bed
+
+- changeSet:
+    id: room-addColumn-room_number
+    author: lmanterola
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: room_number
+            type: varchar(50)
+            constraints:
+                nullable: false
+        tableName: room
+
+- changeSet:
+    id: bed-unique_constraint
+    author: lmanterola
+    changes:
+        - addUniqueConstraint:
+            tableName: bed
+            columnNames: bed_number, room_id
+            constraintName: UQ_bed
+
+- changeSet:
+    id: room-unique_constraint
+    author: lmanterola
+    changes:
+        - addUniqueConstraint:
+            tableName: room
+            columnNames: room_number, clinical_specialty_sector_id
+            constraintName: UQ_room
