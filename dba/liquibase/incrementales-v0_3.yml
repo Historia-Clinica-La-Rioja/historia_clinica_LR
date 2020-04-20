@@ -1,0 +1,141 @@
+#Se agregan tablas Datos Maestros para códigos de SNOMED CT
+databaseChangeLog: 
+- logicalFilePath: incrementales-v0_3
+- changeSet: 
+    id: observation_status-metadata
+    author: saguero
+    changes: 
+        - sql: 
+            sql: |- 
+                INSERT INTO observation_status (id, description) VALUES('160476009', 'Característica observable relacionada con antecedente personal / social (entidad observable)');
+                INSERT INTO observation_status (id, description) VALUES('118227000', 'Hallazgo en los signos vitales (hallazgo)');
+                INSERT INTO observation_status (id, description) VALUES('399060005', 'Característica observable de imágenes (entidad observable)');
+                INSERT INTO observation_status (id, description) VALUES('364712009', 'Característica observable de prueba de laboratorio (entidad observable)');
+                INSERT INTO observation_status (id, description) VALUES('416342005', 'Característica observable relacionada con un procedimiento (entidad observable)');
+                INSERT INTO observation_status (id, description) VALUES('118243007', 'Hallazgo por inspección (observación simple) (hallazgo)');
+                INSERT INTO observation_status (id, description) VALUES('271906008', 'Hallazgo del examen físico (entidad observable)');
+                INSERT INTO observation_status (id, description) VALUES('363819003', 'Característica observable del tratamiento farmacológico (entidad observable)');
+                INSERT INTO observation_status (id, description) VALUES('257733005', 'Actividad (entidad observable)');
+  
+- changeSet: 
+    id: allergy_intolerance_verification_status-metadata
+    author: saguero
+    changes: 
+        - sql: 
+            sql: |- 
+                INSERT INTO allergy_intolerance_verification_status (id, description) VALUES('59156000', 'Confirmado por (calificador)');
+                INSERT INTO allergy_intolerance_verification_status (id, description) VALUES('76104008', 'No confirmado por (calificador)');
+                INSERT INTO allergy_intolerance_verification_status (id, description) VALUES('723511001', 'Refutado (calificador)');
+                INSERT INTO allergy_intolerance_verification_status (id, description) VALUES('723510000', 'Ingresado por error (calificador)');
+                
+- changeSet: 
+    id: allergy_intolerance_clinical_status-metadata
+    author: saguero
+    changes: 
+        - sql: 
+            sql: |- 
+                INSERT INTO allergy_intolerance_clinical_status (id, description) VALUES('55561003', 'Activo (calificador)');  
+                INSERT INTO allergy_intolerance_clinical_status (id, description) VALUES('73425007', 'Inactivo (calificador)');  
+                INSERT INTO allergy_intolerance_clinical_status (id, description) VALUES('723506003', 'Resuelto (calificador)');                  
+
+- changeSet: 
+    id: allergy_intolerance_category-metadata
+    author: saguero
+    changes: 
+        - sql: 
+            sql: |- 
+                INSERT INTO allergy_intolerance_category (id, description) VALUES('414285001', 'Alergia alimentaria (hallazgo)');
+                INSERT INTO allergy_intolerance_category (id, description) VALUES('416098002', 'Alergia medicamentosa (hallazgo)');
+                INSERT INTO allergy_intolerance_category (id, description) VALUES('426232007', 'Alergia ambiental (hallazgo)');
+                INSERT INTO allergy_intolerance_category (id, description) VALUES('402591008', 'Alergia a agente biocida (hallazgo)');
+   
+- changeSet: 
+    id: condition_clinical_status-metadata
+    author: saguero
+    changes: 
+        - sql: 
+            sql: |- 
+                INSERT INTO condition_clinical_status (id, description) VALUES('55561003', 'Activo (calificador)'); 
+                INSERT INTO condition_clinical_status (id, description) VALUES('246455001', 'Recidiva (calificador)'); 
+                INSERT INTO condition_clinical_status (id, description) VALUES('263855007', 'Recaída (calificador)'); 
+                INSERT INTO condition_clinical_status (id, description) VALUES('73425007', 'Inactivo (calificador)');  
+                INSERT INTO condition_clinical_status (id, description) VALUES('277022003', 'Remisión (calificador)'); 
+                INSERT INTO condition_clinical_status (id, description) VALUES('723506003', 'Resuelto (calificador)'); 
+
+- changeSet: 
+    id: condition_verification_status-metadata
+    author: saguero
+    changes: 
+        - sql: 
+            sql: |- 
+                INSERT INTO condition_verification_status (id, description) VALUES('76104008', 'No confirmado por (calificador)');
+                INSERT INTO condition_verification_status (id, description) VALUES('5558000', 'Diagnóstico provisional (calificador contextual) (calificador)');
+                INSERT INTO condition_verification_status (id, description) VALUES('47965005', 'Diagnóstico diferencial (calificador)');
+                INSERT INTO condition_verification_status (id, description) VALUES('59156000', 'Confirmado por (calificador)');
+                INSERT INTO condition_verification_status (id, description) VALUES('723511001', 'Refutado (calificador)');
+                INSERT INTO condition_verification_status (id, description) VALUES('723510000', 'Ingresado por error (calificador)');
+                
+- changeSet: 
+    id: condition_problem_type-metadata
+    author: saguero
+    changes: 
+        - sql: 
+            sql: |- 
+                INSERT INTO condition_problem_type (id, description) VALUES('55607006', 'Problema (hallazgo)');                 
+
+- changeSet: 
+    id: medication_statement_status-metadata
+    author: saguero
+    changes: 
+        - sql: 
+            sql: |- 
+                INSERT INTO medication_statement_status (id, description) VALUES('55561003', 'Activo (calificador)');
+                INSERT INTO medication_statement_status (id, description) VALUES('255594003', 'Completo (calificador)');
+                INSERT INTO medication_statement_status (id, description) VALUES('723510000', 'Ingresado por error (calificador)');
+                INSERT INTO medication_statement_status (id, description) VALUES('18629005', 'Administración de fármaco o medicamento (procedimiento)');
+                INSERT INTO medication_statement_status (id, description) VALUES('6155003', 'Detenido (calificador)');
+                INSERT INTO medication_statement_status (id, description) VALUES('385655000', 'Suspendido (calificador)');
+                INSERT INTO medication_statement_status (id, description) VALUES('261665006', 'Desconocido (calificador)');
+                INSERT INTO medication_statement_status (id, description) VALUES('266710000', 'Fármacos no ingeridos/tratamiento incompleto (situación)');
+
+- changeSet: 
+    id: inmunization_status-metadata
+    author: saguero
+    changes: 
+        - sql: 
+            sql: |- 
+                INSERT INTO inmunization_status (id, description) VALUES('255594003', 'Completo (calificador)');  
+                INSERT INTO inmunization_status (id, description) VALUES('723510000', 'Ingresado por error (calificador)'); 
+                INSERT INTO inmunization_status (id, description) VALUES('385660001', 'No efectuado (calificador)'); 
+                
+- changeSet: 
+    id: document_status-metadata
+    author: saguero
+    changes: 
+        - sql: 
+            sql: |- 
+                INSERT INTO document_status (id, description) VALUES('445667001', 'Informe preliminar (elemento de registro)');  
+                INSERT INTO document_status (id, description) VALUES('445665009', 'Informe final (elemento de registro)'); 
+                INSERT INTO document_status (id, description) VALUES('445664008', 'Informe enmendado (elemento de registro)');  
+                INSERT INTO document_status (id, description) VALUES('723510000', 'Ingresado por error (calificador)');  
+                
+- changeSet: 
+    id: internment_episode_status-metadata
+    author: saguero
+    changes: 
+        - sql: 
+            sql: |- 
+                INSERT INTO internment_episode_status (id, description) VALUES(1, 'Activo');  
+                INSERT INTO internment_episode_status (id, description) VALUES(2, 'Inactivo');  
+
+- changeSet: 
+    id: document_type-metadata
+    author: saguero
+    changes: 
+        - sql: 
+            sql: |- 
+                INSERT INTO document_type (id, description) VALUES(1, 'Anamnesis');  
+                INSERT INTO document_type (id, description) VALUES(2, 'Nota de evaluación');  
+                INSERT INTO document_type (id, description) VALUES(3, 'Epicrisis');  
+
+        
