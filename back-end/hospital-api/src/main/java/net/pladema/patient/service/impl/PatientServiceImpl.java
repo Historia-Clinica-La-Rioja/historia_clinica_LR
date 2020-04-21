@@ -1,23 +1,23 @@
 package net.pladema.patient.service.impl;
 
-import net.pladema.patient.controller.dto.PatientSearchFilter;
-import net.pladema.patient.repository.PatientRepository;
-import net.pladema.patient.repository.domain.BasicListedPatient;
-import net.pladema.patient.repository.entity.Patient;
-import net.pladema.patient.service.PatientService;
-import net.pladema.patient.service.domain.PatientSearch;
-import net.pladema.person.repository.entity.Person;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import static net.pladema.patient.service.MathScore.calculateMatch;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static net.pladema.patient.service.MathScore.calculateMatch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import net.pladema.patient.controller.dto.PatientSearchFilter;
+import net.pladema.patient.repository.PatientRepository;
+import net.pladema.patient.repository.domain.BasicListedPatient;
+import net.pladema.patient.repository.entity.Patient;
+import net.pladema.patient.service.PatientService;
+import net.pladema.patient.service.domain.PatientSearch;
 
 @Service
 public class PatientServiceImpl implements PatientService {
@@ -34,11 +34,11 @@ public class PatientServiceImpl implements PatientService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<PatientSearch> searchPatient(PatientSearchFilter searchFilter) {
-		Stream<Person> allPatients = patientRepository.getAllByFilter(searchFilter.getFirstName(),
+		Stream<PatientSearch> allPatients = patientRepository.getAllByFilter(searchFilter.getFirstName(),
 				searchFilter.getLastName(), searchFilter.getIdentificationNumber(), searchFilter.getBirthDate());
 		return allPatients
-				.map(patient -> new PatientSearch(patient, calculateMatch(searchFilter, patient)))
-				.filter(patientDto -> patientDto.getRanking() > THRESHOLD)
+				.peek(patient -> patient.setRanking(calculateMatch(searchFilter, patient.getPerson())))
+				.filter(patient -> patient.getRanking() > THRESHOLD)
 				.collect(Collectors.toList());
 	}
 

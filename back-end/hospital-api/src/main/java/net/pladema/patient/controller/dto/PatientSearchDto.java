@@ -12,10 +12,7 @@ public class PatientSearchDto {
 	
 	private BMPersonDto person;
 	private float ranking; 
+	private Integer idPatient;
+	private Boolean activo;
 
-	public PatientSearchDto(float ranking) {
-		super();
-		this.ranking = ranking;
-	}
-	
 }

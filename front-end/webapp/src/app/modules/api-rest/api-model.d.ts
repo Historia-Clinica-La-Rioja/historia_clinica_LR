@@ -152,6 +152,8 @@ export interface PatientDto {
 }
 
 export interface PatientSearchDto {
+    activo: boolean;
+    idPatient: number;
     person: BMPersonDto;
     ranking: number;
 }

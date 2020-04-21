@@ -11,7 +11,15 @@ import net.pladema.person.repository.entity.Person;
 public class PatientSearch {
 
 	private Person person;
-	
+	private Integer idPatient;
+	private Boolean activo;
 	private float ranking;
+	
+	public PatientSearch(Person person, int idPatient, boolean activo, int ranking) {
+		this.person = person;
+		this.idPatient = idPatient;
+		this.activo = activo;
+		this.ranking = ranking;
+	}
 	
 }
