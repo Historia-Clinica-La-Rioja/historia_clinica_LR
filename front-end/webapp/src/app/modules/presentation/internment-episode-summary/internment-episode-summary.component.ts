@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Component({
 	selector: 'app-internment-episode-summary',
@@ -7,25 +8,7 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class InternmentEpisodeSummaryComponent implements OnInit {
 
-	@Input() internmentEpisode: InternmentEpisode = {
-		room: {
-			number: 404
-		},
-		bed: {
-			number: 600
-		},
-		floor: {
-			number: '5° PISO',
-			description: 'Terapia intensiva'
-		},
-		doctor: {
-			firstName: 'Tomas',
-			lastName: 'Lopez',
-			license: '12345',
-		},
-		daysInterned: 50,
-		admissionDatetime: '20/06/2020 - 8:26hs',
-	};
+	@Input() internmentEpisode: InternmentEpisode;
 
 	constructor() { }
 
@@ -36,10 +19,29 @@ export class InternmentEpisodeSummaryComponent implements OnInit {
 
 export interface InternmentEpisode {
 	room: {
-		number: number;
+		number: string;
 	},
 	bed: {
-		number: number;
+		number: string;
+	},
+	specialty: {
+		name: string;
+	};
+	doctor: {
+		firstName: string;
+		lastName: string;
+		license: string;
+	};
+	totalInternmentDays: number;
+	admissionDatetime: string;
+}
+
+/*export interface InternmentEpisode {
+	room: {
+		number: string;
+	},
+	bed: {
+		number: string;
 	},
 	floor: {
 		number: string;
@@ -52,4 +54,4 @@ export interface InternmentEpisode {
 	};
 	daysInterned: number;
 	admissionDatetime: string;
-}
+}*/

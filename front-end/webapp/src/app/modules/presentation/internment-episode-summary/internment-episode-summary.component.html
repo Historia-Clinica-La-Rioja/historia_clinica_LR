@@ -2,11 +2,11 @@
 	<mat-list-item id="bed">
 		<div class="flex-container">
 			<mat-icon color="accent" mat-list-icon [inline]="true">meeting_room</mat-icon>
-			<span class="mat-body-2">{{ internmentEpisode.room.number }}</span>
+			<span class="mat-body-2">{{ internmentEpisode?.room?.number }}</span>
 			<mat-icon color="accent" mat-list-icon [inline]="true">single_bed</mat-icon>
-			<span class="mat-body-2">{{ internmentEpisode.bed.number }}</span>
+			<span class="mat-body-2">{{ internmentEpisode?.bed?.number }}</span>
 			<span class="mat-body-2">
-				{{ internmentEpisode.floor.number }} - {{ internmentEpisode.floor.description }}
+				{{ internmentEpisode?.specialty?.name }}
 			</span>
 		</div>
 	</mat-list-item>
@@ -16,9 +16,9 @@
 	<mat-list-item id="doctor">
 		<mat-icon color="accent" mat-list-icon>person</mat-icon>
 		<span class="mat-body-2">
-			{{internmentEpisode.doctor.firstName}} {{internmentEpisode.doctor.lastName}}
+			{{internmentEpisode?.doctor?.firstName}} {{internmentEpisode?.doctor?.lastName}}
 		</span>
-		<span class="mat-caption"> {{internmentEpisode.doctor.license}}</span>
+		<span class="mat-caption"> {{internmentEpisode?.doctor?.license}}</span>
 	</mat-list-item>
 
 	<mat-divider inset></mat-divider>
@@ -27,12 +27,12 @@
 		<div mat-line>
 			<span class="mat-body-2"
 					  [translate]="'internaciones.internacion-paciente.card.DAYS_INTERNED'"
-					  [translateParams]="{ days: internmentEpisode.daysInterned }">
+					  [translateParams]="{ days: internmentEpisode?.totalInternmentDays }">
 			</span>
 		</div>
 		<div mat-line>
 			<span 	[translate]="'internaciones.internacion-paciente.card.ADMISSION'"
-					  [translateParams]="{ datetime: internmentEpisode.admissionDatetime }">
+					  [translateParams]="{ datetime: internmentEpisode?.admissionDatetime }">
 			</span>
 		</div>
 	</mat-list-item>

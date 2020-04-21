@@ -2,7 +2,7 @@
 	<div class="container-row">
 		<app-anamnesis-form></app-anamnesis-form>
 		<app-patient-card [patient]="patient$ | async">
-			<app-internment-episode-summary content></app-internment-episode-summary>
+			<app-internment-episode-summary [internmentEpisode]="internmentEpisode$ | async" content></app-internment-episode-summary>
 		</app-patient-card>
 	</div>
 </app-content>
