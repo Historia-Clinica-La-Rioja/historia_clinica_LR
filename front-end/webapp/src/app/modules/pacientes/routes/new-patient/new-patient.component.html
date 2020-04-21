@@ -1,10 +1,10 @@
 <app-content>
     <div>
-        <h1 [translate]="'pacientes.new.TITLE'"></h1>
+        <h2 [translate]="'pacientes.new.TITLE'"></h2>
         <h3 [translate]="'pacientes.new.SUBTITLE'"></h3>
         <form [formGroup]="form" (ngSubmit)="save()">
             <div class="form-row">
-                <div>                     
+                <div>
                     <div>
                         <span [translate]="'pacientes.form.IDENTIFICATION_TYPE'"></span>
                     </div>
@@ -21,9 +21,9 @@
                             </mat-option>
                         </mat-select>
                         <mat-error [translate]="'pacientes.form.REQUIRED'"></mat-error>
-                    </mat-form-field>   
+                    </mat-form-field>
                 </div>
-                    
+
                 <div>
                     <div>
                         <span [translate]="'pacientes.form.IDENTIFICATION_NUMBER'"></span>
@@ -38,10 +38,10 @@
                             matInput
                         >
                         <mat-error [translate]="'pacientes.form.REQUIRED'"></mat-error>
-                    </mat-form-field>    
+                    </mat-form-field>
                 </div>
-            </div>  
-            
+            </div>
+
             <div>
                 <div>
                     <span [translate]="'pacientes.form.GENDER'"></span>
@@ -52,12 +52,12 @@
                 <mat-error *ngIf="hasError(form,'required','genderId') && formSubmitted" [translate]="'pacientes.form.REQUIRED'"></mat-error>
             </div>
             <br>
-            
+
             <div>
                 <span [translate]="'pacientes.form.FIRST_NAMES_TITLE'"></span>
             </div>
             <div class="form-row">
-                <div>   
+                <div>
                     <mat-form-field  appearance="outline">
                         <input id="firstName"
                             name="firstName"
@@ -69,9 +69,9 @@
                         >
                         <mat-error [translate]="'pacientes.form.REQUIRED'"></mat-error>
                     </mat-form-field>
-                </div>  
+                </div>
 
-                <mat-form-field  appearance="outline">    
+                <mat-form-field  appearance="outline">
                     <input id="middleNames"
                         name="middleNames"
                         formControlName="middleNames"
@@ -98,8 +98,8 @@
                         matInput
                     >
                     <mat-error [translate]="'pacientes.form.REQUIRED'"></mat-error>
-                </mat-form-field> 
-                <mat-form-field  appearance="outline">    
+                </mat-form-field>
+                <mat-form-field  appearance="outline">
                     <input id="otherLastNames"
                         name="otherLastNames"
                         formControlName="otherLastNames"
@@ -108,10 +108,10 @@
                         maxlength="20"
                         matInput
                     >
-                </mat-form-field> 
+                </mat-form-field>
             </div>
         </div>
-        
+
         <div>
             <span [translate]="'pacientes.form.BIRTH_DATE'"></span>
         </div>
@@ -120,10 +120,10 @@
                 <input formControlName="birthDate" id="birthDate" matInput [max]="todaysDate" [matDatepicker]="picker2" [(ngModel)]="datosPersonales.birthDate">
                 <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                 <mat-datepicker #picker2></mat-datepicker>
-            </mat-form-field> 
+            </mat-form-field>
             <mat-error *ngIf="hasError(form,'required', 'birthDate')  && formSubmitted" [translate]="'pacientes.form.REQUIRED'"></mat-error>
         </div>
-        
+
         <div>
             <div>
                 <span [translate]="'pacientes.form.GENDER_SELF_DETERMINATION'"></span>
@@ -162,7 +162,7 @@
                 maxlength="20"
                 matInput
             >
-        </mat-form-field>    
+        </mat-form-field>
 
         <div>
             <span [translate]="'pacientes.form.CUIT_CUIL'"></span>
@@ -195,7 +195,7 @@
                     </mat-option>
                 </mat-select>
             </mat-form-field>
-            <mat-form-field  appearance="outline">     
+            <mat-form-field  appearance="outline">
                 <input id="addressPostcode"
                 name="addressPostcode"
                 formControlName="addressPostcode"
@@ -208,7 +208,7 @@
                 <mat-error *ngIf="hasError(form,'pattern', 'addressPostcode')  && formSubmitted" [translate]="'pacientes.form.INVALID'"></mat-error>
             </mat-form-field>
 
-            <mat-form-field  appearance="outline">         
+            <mat-form-field  appearance="outline">
                 <input id="addressStreet"
                 name="addressStreet"
                 formControlName="addressStreet"
@@ -220,7 +220,7 @@
                 >
             </mat-form-field>
 
-            <mat-form-field  appearance="outline">     
+            <mat-form-field  appearance="outline">
                 <input id="addressNumber"
                 name="addressNumber"
                 formControlName="addressNumber"
@@ -231,7 +231,7 @@
                 >
             </mat-form-field>
 
-            <mat-form-field  appearance="outline">     
+            <mat-form-field  appearance="outline">
                 <input id="addressFloor"
                 name="addressFloor"
                 formControlName="addressFloor"
@@ -242,7 +242,7 @@
                 >
             </mat-form-field>
 
-            <mat-form-field  appearance="outline">     
+            <mat-form-field  appearance="outline">
                 <input id="addressApartment"
                 name="addressApartment"
                 formControlName="addressApartment"
@@ -253,7 +253,7 @@
                 >
             </mat-form-field>
 
-            <mat-form-field  appearance="outline">     
+            <mat-form-field  appearance="outline">
                 <input id="addressQuarter"
                 name="addressQuarter"
                 formControlName="addressQuarter"
@@ -262,7 +262,7 @@
                 placeholder="{{'pacientes.form.ADDRESS_QUARTER' | translate}}"
                 matInput
                 >
-            </mat-form-field>          
+            </mat-form-field>
         </div>
 
         <div>
@@ -281,7 +281,7 @@
 
         <div>
             <span [translate]="'pacientes.form.EMAIL'"></span>
-        </div>        
+        </div>
         <mat-form-field  appearance="outline">
             <input id="email"
                 name="email"
@@ -307,7 +307,7 @@
                     placeholder="{{'pacientes.form.RELIGION' | translate}}"
                     matInput
                 >
-            </mat-form-field>    
+            </mat-form-field>
         </div>
 
         <div>
@@ -323,17 +323,17 @@
                     placeholder="{{'pacientes.form.ETHNIC' | translate}}"
                     matInput
                 >
-            </mat-form-field>    
+            </mat-form-field>
         </div>
-        
+
         <div>
             <button mat-flat-button color="secondary" (click)="goBack()">
                 <span [translate]="'buttons.BACK'"></span>
             </button>
             <button  mat-flat-button color="primary" type="submit">
                 <span [translate]="'buttons.CONTINUE'"></span>
-            </button>    
-        </div>  
+            </button>
+        </div>
       </form>
     </div>
 </app-content>
