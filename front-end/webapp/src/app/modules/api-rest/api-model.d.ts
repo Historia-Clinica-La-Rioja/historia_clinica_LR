@@ -1,30 +1,10 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export interface APatientDto {
-    apartment: string;
-    birthDate: Date;
-    cityId: number;
-    cuil: string;
-    email: string;
-    ethnic: string;
-    firstName: string;
-    floor: string;
-    genderId: number;
-    genderSelfDeterminationId: number;
-    identificationNumber: string;
-    identificationTypeId: number;
-    lastName: string;
-    middleNames: string;
-    mothersLastName: string;
-    nameSelfDetermination: string;
-    number: string;
-    otherLastNames: string;
-    phoneNumber: string;
-    postcode: string;
-    quarter: string;
-    religion: string;
-    street: string;
+export interface APatientDto extends APersonDto {
+    comments: string;
+    identityVerificationStatusId: number;
+    typeId: number;
 }
 
 export interface APersonDto {
@@ -80,7 +60,7 @@ export interface ApiError {
     status: HttpStatus;
 }
 
-export interface BMPatientDto extends APersonDto {
+export interface BMPatientDto extends APatientDto {
     id: number;
 }
 

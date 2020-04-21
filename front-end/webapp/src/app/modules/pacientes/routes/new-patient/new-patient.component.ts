@@ -114,7 +114,11 @@ export class NewPatientComponent implements OnInit {
         number:datosPersonales.addressNumber,
         postcode:datosPersonales.addressPostcode,
         quarter:datosPersonales.addressQuarter,
-        street:datosPersonales.addressStreet
+        street:datosPersonales.addressStreet,
+        //Mock
+        typeId: 1,
+        comments: "Sin comentarios",
+        identityVerificationStatusId: 1
       };
        
     }

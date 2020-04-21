@@ -78,7 +78,10 @@ public class PatientController {
 		LOG.debug("Going to add address -> {}", addressToAdd);
 		addressToAdd = addressExternalService.addAddress(addressToAdd);
 		personExternalService.addPersonExtended(patientDto, createdPerson.getId(), addressToAdd.getId());
-		return ResponseEntity.created(new URI("")).body(patientMapper.fromPerson(createdPerson));
+		Patient patientToAdd =  patientMapper.fromPatientDto(patientDto);
+		patientToAdd.setPersonId(createdPerson.getId());
+		Patient createdPatient = patientService.addPatient(patientToAdd);
+		return ResponseEntity.created(new URI("")).body(patientMapper.fromPatient(createdPatient));
 	}
 
 	@GetMapping(value = "/minimalsearch")

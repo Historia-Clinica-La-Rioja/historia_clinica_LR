@@ -40,7 +40,7 @@ public class Patient implements Serializable{
     private Short typeId;
 
     @Column(name = "possible_duplicate", nullable = false)
-    private Boolean possibleDuplicate;
+    private Boolean possibleDuplicate = false;
 
     @Column(name = "national_id")
     private Integer nationalId;

@@ -1,13 +1,14 @@
 package net.pladema.person.controller.dto;
 
+import java.time.LocalDateTime;
+
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
