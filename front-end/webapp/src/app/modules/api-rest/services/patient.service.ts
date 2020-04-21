@@ -67,28 +67,6 @@ export class PatientService {
 		return of(PATIENTS_DATA);
 	}
 
-	getGenders(){
-		//let url = `${environment.apiBase}/genders`;
-		//return this.http.get<DTO>(url);
-		return of([{id: '1', description: 'Femenino'},{id: '2', description: 'Masculino'}]);
-	}
-	
-	getIdentitifacionType(){
-		//let url = `${environment.apiBase}/IdentitifacionTypes`;
-		//return this.http.get<DTO>(url);
-		return of([
-		  { id: 1, description: 'DNI' },
-		  { id: 2, description: 'CI' },
-		  { id: 3, description: 'LC' },
-		  { id: 4, description: 'LE' },
-		  { id: 5, description: 'Cédula Mercosur' },
-		  { id: 6, description: 'CUIT' },
-		  { id: 7, description: 'CUIL' },
-		  { id: 8, description: 'Pasaporte extranjero' },
-		  { id: 9, description: 'Cédula de identidad extranjera' },
-		]);
-	}
-	
 	getCities(){
 		//let url = `${environment.apiBase}/cities`;
 		//return this.http.get<DTO>(url);

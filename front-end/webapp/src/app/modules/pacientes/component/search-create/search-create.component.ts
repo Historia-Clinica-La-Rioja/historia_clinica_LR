@@ -5,6 +5,7 @@ import { VALIDATIONS, hasError } from "@core/utils/form.utils";
 import { PatientService } from "@api-rest/services/patient.service";
 import { PatientMasterDataService } from "@api-rest/services/patient-master-data.service";
 import { IdentityVerificationStatus } from "../../pacientes.model";
+import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 
 const ROUTE_SEARCH = 'pacientes/search';
 const ROUTE_NEW = 'pacientes/temporary';
@@ -29,26 +30,22 @@ export class SearchCreateComponent implements OnInit {
 	constructor(private formBuilder: FormBuilder,
 				private router: Router,
 				private patientService: PatientService,
-				private patientMasterDataService: PatientMasterDataService) {
+				private patientMasterDataService: PatientMasterDataService,
+				private personMasterDataService: PersonMasterDataService) {
 	}
 
 	ngOnInit(): void {
 		this.formSearch = this.formBuilder.group({
 			identifType: [null, Validators.required],
 			identifNumber: [null, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
+			gender: [null, Validators.required],	
 		});
 
-		this.patientService.getIdentitifacionType().subscribe(
-			identificationTypes => {
-				this.identifyTypeArray = identificationTypes;
-				this.formSearch.addControl('identifType', new FormControl(null, Validators.required));
-			});
+		this.personMasterDataService.getIdentificationTypes().subscribe(
+			identificationTypes => { this.identifyTypeArray = identificationTypes; });
 
-		this.patientService.getGenders().subscribe(
-			genders => {
-				this.genderOptions = genders;
-				this.formSearch.addControl('gender', new FormControl(null, Validators.required));
-			});
+		this.personMasterDataService.getGenders().subscribe(
+			genders => { this.genderOptions = genders;});
 
 		this.formAdd = this.formBuilder.group({
 			IdentityVerificationStatus: [null, Validators.required],

@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { hasError } from "@core/utils/form.utils";
 import { ActivatedRoute, Router } from '@angular/router';
-import { PatientSearchDto } from '@api-rest/api-model';
+import { PatientSearchDto, GenderDto, IdentificationTypeDto } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
+import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 
 const ROUTE_NEW = 'pacientes/new';
 const ROUTE_HOME = 'pacientes';
@@ -17,8 +18,8 @@ export class SearchComponent implements OnInit {
 
 	public formSearchSubmitted: boolean = false;
 	public formSearch: FormGroup;
-	public identifyTypeArray;
-	public genderOptions;
+	public identifyTypeArray: IdentificationTypeDto[];
+	public genderOptions: GenderDto[];
 	public viewSearch: boolean = true;
 	public hasError = hasError;
 	public identificationTypeId;
@@ -29,7 +30,8 @@ export class SearchComponent implements OnInit {
 	constructor(private formBuilder: FormBuilder,
 				private patientService: PatientService,
 				private router: Router,
-				private route: ActivatedRoute
+				private route: ActivatedRoute,
+				private personMasterDataService : PersonMasterDataService
 	) {
 	}
 
@@ -41,23 +43,20 @@ export class SearchComponent implements OnInit {
 
 			this.formSearch = this.formBuilder.group({
 				identificationNumber: [this.identificationNumber, Validators.required],
+				identificationType: [Number(this.identificationTypeId), Validators.required],
 				firstName: [null, Validators.required],
 				middleNames: [null],
 				lastName: [null, Validators.required],
 				otherLastNames: [null],
-				gender: [this.genderId, Validators.required],
+				gender: [Number(this.genderId), Validators.required],
 				birthDate: [null, Validators.required]
 			});
-			this.patientService.getIdentitifacionType().subscribe(
-				identificationTypes => { 
-					this.identifyTypeArray = identificationTypes;
-					this.formSearch.addControl('identificationType',new FormControl(this.identificationTypeId, Validators.required));
-			});
-			this.patientService.getGenders().subscribe(
-				genders => { 
-					this.genderOptions = genders;
-					this.formSearch.addControl('gender',new FormControl(this.genderId, Validators.required));
-			});
+			
+			this.personMasterDataService.getIdentificationTypes().subscribe(
+				identificationTypes => { this.identifyTypeArray = identificationTypes; });
+
+			this.personMasterDataService.getGenders().subscribe(
+				genders => { this.genderOptions = genders; });
 		});
 	}
 
