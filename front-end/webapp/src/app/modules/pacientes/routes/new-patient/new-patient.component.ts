@@ -5,6 +5,8 @@ import { DatosPersonales} from '../../pacientes.model';
 import { APatientDto, BMPatientDto } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { scrollIntoError, hasError } from "@core/utils/form.utils";
+
+const VALID_PATIENT = 2;
 @Component({
   selector: 'app-new-patient',
   templateUrl: './new-patient.component.html',
@@ -132,10 +134,10 @@ export class NewPatientComponent implements OnInit {
         postcode:datosPersonales.addressPostcode,
         quarter:datosPersonales.addressQuarter,
         street:datosPersonales.addressStreet,
-        //Mock
-        typeId: 1,
-        comments: "Sin comentarios",
-        identityVerificationStatusId: 1
+        //Patient
+        typeId: VALID_PATIENT,
+        comments: null,
+        identityVerificationStatusId: null
       };
        
     }
