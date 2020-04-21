@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.persistence.EntityNotFoundException;
 
 @RestController
-@RequestMapping("/institutions/{institutionId}/internments/")
-@Api(value = "Internment Patient", tags = { "Internment Patient" })
+@RequestMapping("/institutions/{institutionId}/internments")
+@Api(value = "Internment Episode", tags = { "Internment Episode" })
 public class InternmentEpisodeController {
 
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
@@ -33,7 +33,9 @@ public class InternmentEpisodeController {
     }
 
     @GetMapping("/{internmentEpisodeId}/summary")
-    public ResponseEntity<InternmentSummaryDto> internmentEpisodeSummary(@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
+    public ResponseEntity<InternmentSummaryDto> internmentEpisodeSummary(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
         LOG.debug("Input parameters -> {}", internmentEpisodeId);
         InternmentSummaryDto result;
         try {
