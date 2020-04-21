@@ -8,23 +8,17 @@ import { PatientBasicData } from '../components/patient-card/patient-card.compon
 })
 export class MapperService {
 
-	toInternmentEpisode: (InternmentSummaryDto) => InternmentEpisode = MapperService._toInternmentEpisode;
-	toPatientBasicData: (BasicPatientDto) => PatientBasicData = MapperService._toPatientBasicData;
+	toInternmentEpisode: (o: InternmentSummaryDto) => InternmentEpisode = MapperService._toInternmentEpisode;
+	toPatientBasicData: (o: BasicPatientDto) => PatientBasicData = MapperService._toPatientBasicData;
 
 	constructor() {
 	}
 
 	private static _toInternmentEpisode(internmentSummary: InternmentSummaryDto): InternmentEpisode {
 		return {
-			bed: {
-				number: internmentSummary.bed.bedNumber
-			},
-			room: {
-				number: internmentSummary.bed.room.roomNumber
-			},
-			specialty: {
-				name: internmentSummary.specialty.name
-			},
+			bedNumber: internmentSummary.bed.bedNumber,
+			roomNumber: internmentSummary.bed.room.roomNumber,
+			specialtyName: internmentSummary.specialty.name,
 			doctor: {
 				firstName: internmentSummary.doctor.firstName,
 				lastName: internmentSummary.doctor.lastName,

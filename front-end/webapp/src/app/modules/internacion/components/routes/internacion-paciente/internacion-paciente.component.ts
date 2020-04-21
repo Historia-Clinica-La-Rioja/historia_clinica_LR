@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { PatientBasicData } from 'src/app/modules/presentation/components/patient-card/patient-card.component';
 import { PatientService } from '@api-rest/services/patient.service';
-import { BasicPatientDto } from '@api-rest/api-model';
+import { BasicPatientDto, InternmentSummaryDto } from '@api-rest/api-model';
 import { map } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { SummaryHeader } from 'src/app/modules/presentation/components/summary-card/summary-card.component';
+import { MapperService } from 'src/app/modules/presentation/services/mapper.service';
+import { InternacionService } from '@api-rest/services/internacion.service';
+import { InternmentEpisode } from 'src/app/modules/presentation/components/internment-episode-summary/internment-episode-summary.component';
 
 @Component({
 	selector: 'app-internacion-paciente',
@@ -15,6 +18,7 @@ import { SummaryHeader } from 'src/app/modules/presentation/components/summary-c
 export class InternacionPacienteComponent implements OnInit {
 
 	public patient$: Observable<PatientBasicData>;
+	public internmentEpisode$: Observable<InternmentEpisode>;
 	public internacionSummary: SummaryHeader = {
 		title: 'Resumen internación',
 		matIcon: 'single_bed'
@@ -22,6 +26,8 @@ export class InternacionPacienteComponent implements OnInit {
 
 	constructor(
 		private patientService: PatientService,
+		private internmentService: InternacionService,
+		private mapperService: MapperService,
 		private route: ActivatedRoute,
 	) { }
 
@@ -29,16 +35,14 @@ export class InternacionPacienteComponent implements OnInit {
 		this.route.paramMap.subscribe(
 			(params) => {
 				let patientId = Number(params.get('idPaciente'));
+				let internmentId = Number(params.get('idInternacion'));
+
 				this.patient$ = this.patientService.getPatientBasicData<BasicPatientDto>(patientId).pipe(
-					map((patient: BasicPatientDto): PatientBasicData => {
-						return {
-							id: patient.id,
-							firstName: patient.person.firstName,
-							lastName: patient.person.lastName,
-							gender: patient.person.gender.description,
-							age: patient.person.age
-						}
-					})
+					map(patient => this.mapperService.toPatientBasicData(patient))
+				);
+
+				this.internmentEpisode$ = this.internmentService.getInternmentEpisodeSummary<InternmentSummaryDto>(internmentId).pipe(
+					map(internmentEpisodeSummary => this.mapperService.toInternmentEpisode(internmentEpisodeSummary))
 				);
 			}
 		);
