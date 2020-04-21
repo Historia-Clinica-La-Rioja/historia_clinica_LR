@@ -1,5 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Observable } from 'rxjs';
 
 @Component({
 	selector: 'app-internment-episode-summary',
@@ -35,23 +34,3 @@ export interface InternmentEpisode {
 	totalInternmentDays: number;
 	admissionDatetime: string;
 }
-
-/*export interface InternmentEpisode {
-	room: {
-		number: string;
-	},
-	bed: {
-		number: string;
-	},
-	floor: {
-		number: string;
-		description: string;
-	};
-	doctor: {
-		firstName: string;
-		lastName: string;
-		license: string;
-	};
-	daysInterned: number;
-	admissionDatetime: string;
-}*/

@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { PatientBasicData } from 'src/app/modules/presentation/patient-card/patient-card.component';
+import { PatientBasicData } from 'src/app/modules/presentation/components/patient-card/patient-card.component';
 import { PatientService } from '@api-rest/services/patient.service';
 import { BasicPatientDto } from '@api-rest/api-model';
 import { map } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { SummaryHeader } from 'src/app/modules/presentation/summary-card/summary-card.component';
+import { SummaryHeader } from 'src/app/modules/presentation/components/summary-card/summary-card.component';
 
 @Component({
 	selector: 'app-internacion-paciente',
