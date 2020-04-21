@@ -1,23 +1,23 @@
 package net.pladema.patient.service.impl;
 
-import static net.pladema.patient.service.MathScore.calculateMatch;
+import net.pladema.patient.controller.dto.PatientSearchFilter;
+import net.pladema.patient.repository.PatientRepository;
+import net.pladema.patient.repository.domain.BasicListedPatient;
+import net.pladema.patient.repository.entity.Patient;
+import net.pladema.patient.service.PatientService;
+import net.pladema.patient.service.domain.PatientSearch;
+import net.pladema.person.repository.entity.Person;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import net.pladema.patient.controller.dto.PatientSearchFilter;
-import net.pladema.patient.repository.PatientRepository;
-import net.pladema.patient.repository.entity.Patient;
-import net.pladema.patient.service.PatientService;
-import net.pladema.patient.service.domain.PatientSearch;
-import net.pladema.person.repository.entity.Person;
+import static net.pladema.patient.service.MathScore.calculateMatch;
 
 @Service
 public class PatientServiceImpl implements PatientService {
@@ -58,4 +58,9 @@ public class PatientServiceImpl implements PatientService {
 		return patientSaved;
 	}
 
+	public List<BasicListedPatient> getPatients() {
+		List<BasicListedPatient> result = patientRepository.findAllPatientsListedData();
+		LOG.debug("Output -> {}", result);
+		return result;
+	}
 }

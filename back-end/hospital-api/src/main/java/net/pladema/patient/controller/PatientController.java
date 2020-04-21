@@ -3,12 +3,14 @@ package net.pladema.patient.controller;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 
 import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.address.controller.service.AddressExternalService;
 import net.pladema.patient.controller.dto.*;
 import net.pladema.patient.controller.mocks.MocksPatient;
+import net.pladema.patient.repository.domain.BasicListedPatient;
 import net.pladema.patient.repository.entity.Patient;
 import net.pladema.person.controller.dto.BMPersonDto;
 import net.pladema.person.controller.dto.BasicDataPersonDto;
@@ -108,6 +110,15 @@ public class PatientController {
 			result = MocksPatient.mockBasicPatientDto(patientId);
 		}
 		LOG.debug("Output -> {}", result);
+		return  ResponseEntity.ok().body(result);
+	}
+
+	@GetMapping("/basicdata")
+	public ResponseEntity<List<BMPatientDto>> getAllPatientsData(){
+		List<BasicListedPatient> patients = patientService.getPatients();
+		List<BMPatientDto> result = patientMapper.fromBasicListedPatientList(patients);
+		if (result.isEmpty())
+			result.addAll(MocksPatient.mockBasicListedPatientsList());
 		return  ResponseEntity.ok().body(result);
 	}
 }
