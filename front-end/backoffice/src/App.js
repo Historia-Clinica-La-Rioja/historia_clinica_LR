@@ -12,6 +12,10 @@ import clinicalspecialties from './modules/clinicalspecialties';
 import clinicalspecialtysectors from './modules/clinicalspecialtysectors';
 import rooms from './modules/rooms'
 import beds from './modules/beds'
+import healthcareprofessionals from './modules/healthcareprofessionals'
+import professionalspecialties from './modules/professionalspecialties'
+import healthcareprofessionalspecialties from './modules/healthcareprofessionalspecialties'
+import people from './modules/people'
 
 import springbootRestProvider from './providers/sgxDataProvider';
 import authProvider from './providers/authProvider';
@@ -35,9 +39,14 @@ const App = () => (
         <Resource name="sectors" {...sectors}/>
         <Resource name="clinicalspecialties" {...clinicalspecialties}/>
         <Resource name="clinicalspecialtysectors" {...clinicalspecialtysectors}/>
-        <Resource name="bedCategories" />
         <Resource name="beds" {...beds}/>
         <Resource name="rooms" {...rooms}/>
+        <Resource name="bedcategories" />
+        <Resource name="healthcareprofessionals" {...healthcareprofessionals}/>
+        <Resource name="professionalspecialties" {...professionalspecialties}/>
+        <Resource name="healthcareprofessionalspecialties" {...healthcareprofessionalspecialties}/>
+        <Resource name="educationtypes"/>
+        <Resource name="people" {...people}/>
     </Admin>
 );
 

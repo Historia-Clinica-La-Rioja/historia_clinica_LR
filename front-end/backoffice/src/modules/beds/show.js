@@ -4,27 +4,19 @@ import {
     SimpleShowLayout,
     ReferenceField,
     TextField,
-    TopToolbar,
-    EditButton,
+    FunctionField,
 } from 'react-admin';
 
-
-const BedShowActions = ({ data }) => {
-    return (!data || !data.id) ? <TopToolbar></TopToolbar> :
-    (
-    <TopToolbar>
-    <EditButton basePath="/beds" record={{ id: data.id }} />
-    </TopToolbar>
-)
-};
+const renderRoom = room => `${room.roomNumber} - ${room.description}`;
 const BedShow = props => (
-    <Show actions={<BedShowActions />} {...props}>
-<SimpleShowLayout>
-<TextField source="id" />
-    <TextField source="bedNumber" />
-    <ReferenceField source="roomId" reference="rooms">
-    </ReferenceField>
-    </SimpleShowLayout>
+    <Show {...props}>
+        <SimpleShowLayout>
+            <TextField source="id" />
+            <TextField source="bedNumber" />
+            <ReferenceField source="roomId" reference="rooms">
+                <FunctionField render={renderRoom} />
+            </ReferenceField>
+        </SimpleShowLayout>
     </Show>
 );
 

@@ -14,6 +14,8 @@ export default {
             name: 'Cama |||| Camas',
             fields: {
                 roomId: 'Habitación',
+                bedNumber: 'Nro. de cama',
+                bedCategoryId: 'Categoría',
             },
         },
         rooms: {
@@ -23,7 +25,9 @@ export default {
               type: 'Tipo',
               specialityId: 'Especialidad',
               dischargeDate: 'Fecha de alta',
-              sectorId: 'Sector'
+              sectorId: 'Sector',
+              clinicalSpecialtySectorId: 'Especialidad | Sector',
+              roomNumber: 'Nro. habitación'
           },
         },
         cities: {
@@ -45,16 +49,16 @@ export default {
                 street: 'Calle',
                 number: 'Número',
                 floor: 'Piso',
-                apartment: 'Nro. Dpto.',
+                apartment: 'Nro. dpto.',
                 quarter: 'Cuarto',
-                postcode: 'Código Postal',
+                postcode: 'Código postal',
             },
         }, 
         institutions: {
             name: 'Institución |||| Instituciones',
             fields: {
                 name: 'Nombre',
-                website: 'Sitio Web',
+                website: 'Sitio web',
                 phone: 'Teléfono',
                 sisaCode: 'Código SISA',
                 addressId: 'Dirección',
@@ -81,6 +85,32 @@ export default {
                 description: 'Descripción',
                 sectorId: 'Sector',
                 clinicalSpecialtyId: 'Especialidad',
+            }
+        }, 
+        professionalspecialties: {
+            name: 'Profesión |||| Profesiones',
+            fields: {
+                description: 'Descripción',
+                descriptionProfessionRef: 'Descripción profesión padre',
+                sctidCode: 'Código SNOMED',
+                educationTypeId: 'Formación',
+            }
+        }, 
+        healthcareprofessionals: {
+            name: 'Profesional |||| Profesionales',
+            fields: {
+                personId: 'Persona',
+                licenseNumber: 'Nro. Licencia',
+                isMedicalDoctor: 'Es médico?',
+            }
+        }, 
+        healthcareprofessionalspecialties: {
+            name: 'Profesional | Profesión',
+            fields: {
+                healthcareProfessionalId: 'Profesional',
+                professionalSpecialtyId: 'Profesión',
+                personId: 'Persona',
+                description: 'Descripción',
             }
         }, 
     },

@@ -4,35 +4,19 @@ import {
     SimpleShowLayout,
     ReferenceField,
     TextField,
-    TopToolbar,
-    EditButton,
     DateField,
-    TextInput,
 } from 'react-admin';
 
 
-const RoomShowActions = ({ data }) => {
-    return (!data || !data.id) ? <TopToolbar></TopToolbar> :
-        (
-            <TopToolbar>
-                <EditButton basePath="/room" record={{ id: data.id }} />
-            </TopToolbar>
-        )
-};
 const RoomShow = props => (
-    <Show actions={<RoomShowActions />} {...props}>
+    <Show  {...props}>
         <SimpleShowLayout>
-            <TextField source="id" />
-            <TextInput source="roomNumber"/>
+            <TextField source="roomNumber"/>
             <TextField source="description" />
             <TextField source="type" />
-            <TextField source="sectorId" />
             <DateField source="dischargeDate" />
-            <ReferenceField source="sectorId" reference="sectors">
+            <ReferenceField source="clinicalSpecialtySectorId" reference="clinicalspecialtysectors">
                 <TextField source="description"/>
-            </ReferenceField>
-            <ReferenceField source="specialityId" reference="specialities">
-                <TextField source="name"/>
             </ReferenceField>
         </SimpleShowLayout>
     </Show>

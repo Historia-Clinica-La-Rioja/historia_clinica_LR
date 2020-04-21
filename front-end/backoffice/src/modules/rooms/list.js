@@ -3,18 +3,20 @@ import {
     List,
     Datagrid,
     TextField,
-    DateField, TextInput
+    ReferenceField,
+    DateField,
 } from 'react-admin';
 
 const InstitutionList = props => (
-    <List {...props} bulkActionButtons={false}>
+    <List {...props} >
         <Datagrid rowClick="show">
-            <TextField source="id" />
-            <TextInput source="roomNumber" />
+            <TextField source="roomNumber"/>
             <TextField source="description" />
             <TextField source="type" />
-            <TextField source="sectorId" />
             <DateField source="dischargeDate" />
+            <ReferenceField source="clinicalSpecialtySectorId" reference="clinicalspecialtysectors">
+                <TextField source="description"/>
+            </ReferenceField>
         </Datagrid>
     </List>
 );

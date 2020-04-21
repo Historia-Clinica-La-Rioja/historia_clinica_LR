@@ -1,20 +1,28 @@
 import React from 'react';
 import {
     TextInput,
+    AutocompleteInput,
+    ReferenceInput,
     Edit,
     SimpleForm,
     required,
     DateInput
 } from 'react-admin';
-import OnlySaveToolbar from "../components/only-save-toolbar";
 
 const BedEdit = props => (
     <Edit {...props}>
-        <SimpleForm redirect="show" toolbar={<OnlySaveToolbar />}>
+        <SimpleForm redirect="show">
             <TextInput source="roomNumber" validate={[required()]} />
             <TextInput source="description" validate={[required()]} />
-            <TextInput source="type" />
+            <TextInput source="type" validate={[required()]} />
             <DateInput source="dischargeDate" />
+            <ReferenceInput
+                source="clinicalSpecialtySectorId"
+                reference="clinicalspecialtysectors"
+                sort={{ field: 'description', order: 'ASC' }}
+            >
+                <AutocompleteInput optionText="description" optionValue="id"/>
+            </ReferenceInput>
         </SimpleForm>
     </Edit>
 );

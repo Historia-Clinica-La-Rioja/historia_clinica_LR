@@ -276,3 +276,151 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: clinical_specialty
         validate: true
+
+- changeSet:
+    id: healthcare_professional-table
+    comments: Tablas staff medico y especialidades médicas
+    author: efernandez
+    changes:
+        - createTable:
+            tableName: healthcare_professional
+            columns:
+                - column:
+                    name: id
+                    type: int
+                    autoIncrement: true
+                    constraints:
+                        primaryKey: true
+                        primaryKeyName: PK_healthcare_professional
+                - column:
+                    name: license_number
+                    type: varchar(512)
+                    constraints:
+                        nullable: false
+                - column:
+                    name: person_id
+                    type: int
+                    constraints:
+                        nullable: false
+                - column:
+                    name: is_medical_doctor
+                    type: boolean
+                    constraints:
+                        nullable: false
+        - addForeignKeyConstraint:
+            constraintName: FK_healthcare_professional__person_id
+            baseTableName: healthcare_professional
+            baseColumnNames: person_id
+            referencedTableName: person 
+            referencedColumnNames: id
+            validate: true
+            onDelete: CASCADE
+            onUpdate: NO ACTION
+        - createTable:
+            tableName: education_type
+            columns:
+                - column:
+                    name: id
+                    type: smallint
+                    constraints:
+                        primaryKey: true
+                        primaryKeyName: PK_education_type
+                - column:
+                    name: description
+                    type: varchar(100)
+                    constraints:
+                        nullable: false
+        - createTable:
+            tableName: professional_specialty
+            columns:
+                - column:
+                    name: id
+                    type: int
+                    autoIncrement: true
+                    constraints:
+                        primaryKey: true
+                        primaryKeyName: PK_professional_specialty
+                - column:
+                    name: description
+                    type: varchar(255)
+                    constraints:
+                        nullable: false
+                - column:
+                    name: description_profession_ref
+                    type: varchar(255)
+                    constraints:
+                        nullable: false
+                - column:
+                    name: sctid_code
+                    type: varchar(20)
+                    constraints:
+                        nullable: true
+                - column:
+                    name: education_type_id
+                    type: smallint
+                    constraints:
+                        nullable: false
+        - addForeignKeyConstraint:
+            constraintName: FK_professional_specialty__education_type_id
+            baseTableName: professional_specialty
+            baseColumnNames: education_type_id
+            referencedTableName: education_type 
+            referencedColumnNames: id
+            validate: true
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+        - createTable:
+            tableName: healthcare_professional_specialty
+            columns:
+                - column:
+                    name: id
+                    type: int
+                    autoIncrement: true
+                    constraints:
+                        primaryKey: true
+                        primaryKeyName: PK_healthcare_professional_specialty
+                - column:
+                    name: description
+                    type: varchar(255)
+                    constraints:
+                        nullable: false
+                - column:
+                    name: healthcare_professional_id
+                    type: int
+                    constraints:
+                        nullable: false
+                - column:
+                    name: professional_specialty_id
+                    type: int
+                    constraints:
+                        nullable: false
+        - addForeignKeyConstraint:
+            constraintName: FK_healthcare_professional_specialty__healthcare_professional_id
+            baseTableName: healthcare_professional_specialty
+            baseColumnNames: healthcare_professional_id
+            referencedTableName: healthcare_professional
+            referencedColumnNames: id
+            validate: true
+            onDelete: CASCADE
+            onUpdate: NO ACTION
+        - addForeignKeyConstraint:
+            constraintName: FK_healthcare_professional_specialty__professional_specialty_id
+            baseTableName: healthcare_professional_specialty
+            baseColumnNames: professional_specialty_id
+            referencedTableName: professional_specialty
+            referencedColumnNames: id
+            validate: true
+            onDelete: CASCADE
+            onUpdate: NO ACTION
+
+- changeSet:
+    id: education_type-data
+    comment: Carga de datos education_type
+    author: efernandez
+    context: "!schema-only"
+    changes:
+        - sql:
+            sql: |-
+                INSERT INTO education_type VALUES (1, 'Auxiliarato');
+                INSERT INTO education_type VALUES (2, 'Grado Universitario');
+                INSERT INTO education_type VALUES (3, 'Tecnicatura');
