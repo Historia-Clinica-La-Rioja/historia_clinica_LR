@@ -1,6 +1,6 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { DatosPersonales} from '../../pacientes.model';
 import { APatientDto, BMPatientDto } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
@@ -29,9 +29,26 @@ export class NewPatientComponent implements OnInit {
     private router: Router,
     private el: ElementRef,
     private patientService: PatientService,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
+    
+    this.route.queryParams
+      .subscribe(params => {
+        if (params){
+          this.datosPersonales.birthDate = new Date(params.birthDate);
+          this.datosPersonales.firstName = params.firstName;
+          //this.datosPersonales.genderId = params.genderId,
+          this.datosPersonales.identificationTypeId = params.identificationTypeId;
+          this.datosPersonales.identificationNumber = params.identificationNumber;
+          this.datosPersonales.lastName = params.lastName;
+          this.datosPersonales.middleNames = params.middleNames;
+          this.datosPersonales.mothersLastName = params.mothersLastName;
+        }
+      }
+      );
+
     this.form = this.formBuilder.group({
       firstName: [null, [Validators.required]],
       middleNames: [],

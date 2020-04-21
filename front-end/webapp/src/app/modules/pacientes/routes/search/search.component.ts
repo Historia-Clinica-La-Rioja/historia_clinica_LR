@@ -85,6 +85,9 @@ export class SearchComponent implements OnInit {
 									genderId: this.formSearch.controls.gender.value,
 									firstName: this.formSearch.controls.firstName.value,
 									lastName: this.formSearch.controls.lastName.value,
+									middleNames: this.formSearch.controls.middleNames.value,
+									birthDate: this.formSearch.controls.birthDate.value,
+									mothersLastName: this.formSearch.controls.mothersLastName.value,
 								}
 							});
 					} else {

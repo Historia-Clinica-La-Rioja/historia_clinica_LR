@@ -16,7 +16,7 @@
                             placeholder="{{'pacientes.form.SELECT' | translate}}"
                         >
                             <mat-option *ngFor="let identificationType of identificationTypeList"
-                                                    [value]="identificationType.id">
+                                                    [value]="datosPersonales.identificationTypeId">
                                             {{identificationType.description}}
                             </mat-option>
                         </mat-select>
@@ -81,7 +81,7 @@
                     >
                 </mat-form-field>
             </div>
-            <br>
+
         <div class="form-row">
             <div>
                 <div>
@@ -116,8 +116,8 @@
         </div>
         <div>
             <mat-form-field appearance="outline">
-                <input formControlName="birthDate" id="birthDate" matInput [max]="todaysDate" [matDatepicker]="picker2"  [(ngModel)]="datosPersonales.birthDate">
-                <mat-datepicker-toggle  matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <input formControlName="birthDate" id="birthDate" matInput [max]="todaysDate" [matDatepicker]="picker2" [(ngModel)]="datosPersonales.birthDate">
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                 <mat-datepicker #picker2></mat-datepicker>
             </mat-form-field> 
             <mat-error *ngIf="hasError(form,'required', 'birthDate')  && formSubmitted" [translate]="'pacientes.form.REQUIRED'"></mat-error>
