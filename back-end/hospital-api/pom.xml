@@ -334,8 +334,8 @@
 					<noFileComment>true</noFileComment>
 					<sortDeclarations>true</sortDeclarations>
 					<classPatterns>
-						<pattern>net.pladema.*.controller.dto.*</pattern>
-						<pattern>net.pladema.security.authentication.controller.dto.*</pattern>
+						<pattern>net.pladema.*.controller.dto.**</pattern>
+						<pattern>net.pladema.security.authentication.controller.dto.**</pattern>
 					</classPatterns>
 					<outputKind>module</outputKind>
 					<outputFile>../../front-end/webapp/src/app/modules/api-rest/api-model.d.ts</outputFile>
