@@ -1,5 +1,10 @@
 package net.pladema.patient.controller.mapper;
 
+import java.util.List;
+
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+
 import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.patient.controller.dto.APatientDto;
 import net.pladema.patient.controller.dto.BMPatientDto;
@@ -9,12 +14,8 @@ import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.service.domain.PatientSearch;
 import net.pladema.person.controller.dto.BMPersonDto;
 import net.pladema.person.controller.mapper.PersonMapper;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
-import java.util.List;
-
-@Mapper(uses = {PersonMapper.class}, imports = {java.time.LocalDateTime.class,java.time.LocalTime.class})
+@Mapper(uses = {PersonMapper.class, LocalDateMapper.class})
 public interface PatientMapper {
 
 	public PatientSearchDto fromPatientSearch(PatientSearch patientSeach);
@@ -30,7 +31,6 @@ public interface PatientMapper {
 	public BMPatientDto fromPatient(Patient patient);
 
     @Mapping(target = "id", source = "patientId")
-    @Mapping( target="birthDate",  expression = "java(LocalDateTime.of(patient.getBirthDate(), LocalTime.now()))")
     public BMPatientDto fromBasicListedPatient(BasicListedPatient patient);
 
     public List<BMPatientDto> fromBasicListedPatientList(List<BasicListedPatient> patientsList);
