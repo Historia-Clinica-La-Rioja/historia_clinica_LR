@@ -2,7 +2,7 @@
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
-		& > *:first-child {
-			 width: 70%;
-		 }
+	& > *:first-child {
+		width: 100%;
+	}
 }

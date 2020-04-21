@@ -1,6 +1,11 @@
 <app-content width="full">
 	<section>
 		<h1 [translate]="'internaciones.internacion-paciente.TITLE'"></h1>
+		<div class="buttons">
+			<button mat-flat-button color="primary" (click)="goToAnamnesis()">
+				<span class="uppercase" [translate]="'internaciones.internacion-paciente.actions.ADD_EVAL_INGRESO'"></span>
+			</button>
+		</div>
 		<div class="flex-layout">
 			<app-patient-card [patient]="patient$ | async"></app-patient-card>
 			<app-summary-card [header]="internacionSummary">

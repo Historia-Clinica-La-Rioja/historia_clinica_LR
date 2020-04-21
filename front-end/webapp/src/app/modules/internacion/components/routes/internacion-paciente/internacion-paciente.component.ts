@@ -3,7 +3,7 @@ import { PatientBasicData } from 'src/app/modules/presentation/components/patien
 import { PatientService } from '@api-rest/services/patient.service';
 import { BasicPatientDto, InternmentSummaryDto } from '@api-rest/api-model';
 import { map } from 'rxjs/operators';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { SummaryHeader } from 'src/app/modules/presentation/components/summary-card/summary-card.component';
 import { MapperService } from 'src/app/modules/presentation/services/mapper.service';
@@ -29,6 +29,7 @@ export class InternacionPacienteComponent implements OnInit {
 		private internmentService: InternacionService,
 		private mapperService: MapperService,
 		private route: ActivatedRoute,
+		private router: Router,
 	) { }
 
 	ngOnInit(): void {
@@ -46,6 +47,10 @@ export class InternacionPacienteComponent implements OnInit {
 				);
 			}
 		);
+	}
+
+	goToAnamnesis(): void {
+		this.router.navigate([`${this.router.url}/anamnesis`]);
 	}
 
 }

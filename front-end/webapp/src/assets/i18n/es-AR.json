@@ -82,11 +82,14 @@
 			"TITLE": "Búsqueda de pacientes"
 		},
 		"internacion-paciente": {
+			"TITLE": "HCE Internación",
+			"actions": {
+				"ADD_EVAL_INGRESO": "Generar evaluación de ingreso"
+			},
 			"card": {
 				"DAYS_INTERNED": "{{days}} días internado",
 				"ADMISSION": "Ingreso: {{datetime}}"
-			},
-			"TITLE": "HCE Internación"
+			}
 		}
 	},
 	"presentation": {
