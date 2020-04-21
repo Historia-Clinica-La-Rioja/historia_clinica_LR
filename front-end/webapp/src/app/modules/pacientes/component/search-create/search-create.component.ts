@@ -3,6 +3,8 @@ import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms"
 import { Router } from "@angular/router";
 import { VALIDATIONS, hasError } from "@core/utils/form.utils";
 import { PatientService } from "@api-rest/services/patient.service";
+import { PatientMasterDataService } from "@api-rest/services/patient-master-data.service";
+import { IdentityVerificationStatus } from "../../pacientes.model";
 
 const ROUTE_SEARCH = 'pacientes/search';
 const ROUTE_NEW = 'pacientes/temporary';
@@ -20,17 +22,14 @@ export class SearchCreateComponent implements OnInit {
 	public formAdd: FormGroup;
 	public genderOptions;
 	public noIdentity = false;
-	public causeOptionsArray = [
-		{id: '0', description: 'Alta de emergencia'},
-		{id: '1', description: 'Falta documento'},
-		{id: '2', description: 'Recien nacido'},
-		{id: '3', description: 'Otros'}];
+	public IdentityVerificationStatusArray;
 	public identifyTypeArray;
 	public hasError = hasError;
 
 	constructor(private formBuilder: FormBuilder,
 				private router: Router,
-				private patientService: PatientService) {
+				private patientService: PatientService,
+				private patientMasterDataService: PatientMasterDataService) {
 	}
 
 	ngOnInit(): void {
@@ -38,20 +37,27 @@ export class SearchCreateComponent implements OnInit {
 			identifType: [null, Validators.required],
 			identifNumber: [null, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
 		});
+
 		this.patientService.getIdentitifacionType().subscribe(
-			identificationTypes => { 
+			identificationTypes => {
 				this.identifyTypeArray = identificationTypes;
-				this.formSearch.addControl('identifType',new FormControl(null, Validators.required));
-		});
+				this.formSearch.addControl('identifType', new FormControl(null, Validators.required));
+			});
+
 		this.patientService.getGenders().subscribe(
-			genders => { 
+			genders => {
 				this.genderOptions = genders;
-				this.formSearch.addControl('gender',new FormControl(null, Validators.required));
-		});
+				this.formSearch.addControl('gender', new FormControl(null, Validators.required));
+			});
+
 		this.formAdd = this.formBuilder.group({
-			causeOptions: [null, Validators.required],
+			IdentityVerificationStatus: [null, Validators.required],
 			comments: [],
 		});
+
+		this.patientMasterDataService.getIdentityVerificationStatus().subscribe(
+			data => { this.IdentityVerificationStatusArray = data });
+
 	}
 
 	search(): void {
@@ -87,7 +93,7 @@ export class SearchCreateComponent implements OnInit {
 			this.router.navigate([ROUTE_NEW],
 				{
 					queryParams: {
-						causeOptions: this.formAdd.controls.causeOptions.value,
+						IdentityVerificationStatus: this.formAdd.controls.IdentityVerificationStatus.value,
 						comments: this.formAdd.controls.comments.value
 					}
 				});

@@ -29,3 +29,8 @@ export class DatosPersonales {
     addressPostcode: string;
 
 }
+
+export class IdentityVerificationStatus {
+	id: number;
+	description: string;
+}
