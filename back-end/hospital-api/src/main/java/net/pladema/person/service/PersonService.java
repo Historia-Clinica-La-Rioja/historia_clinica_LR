@@ -1,6 +1,5 @@
 package net.pladema.person.service;
 
-import net.pladema.person.repository.domain.CompleteDataPerson;
 import net.pladema.person.repository.domain.PersonalInformation;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;

@@ -1,7 +1,6 @@
 package net.pladema.person.controller.service;
 
 import net.pladema.patient.controller.dto.APatientDto;
-import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.person.controller.dto.BMPersonDto;
 import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.controller.mapper.PersonMapper;
@@ -15,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PersonExternalServiceImpl implements PersonExternalService {
