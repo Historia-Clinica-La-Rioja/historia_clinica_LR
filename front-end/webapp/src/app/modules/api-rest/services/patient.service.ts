@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from "rxjs";
 import { environment } from "@environments/environment";
 import { HttpClient } from "@angular/common/http";
-import { APersonDto,BMPersonDto, APatientDto, BMPatientDto } from "@api-rest/api-model";
+import { APersonDto,BMPersonDto, APatientDto, BMPatientDto, PatientSearchDto } from "@api-rest/api-model";
 
 const PATIENTS_DATA = [
 	{
@@ -70,7 +70,7 @@ export class PatientService {
 	getGenders(){
 		//let url = `${environment.apiBase}/genders`;
 		//return this.http.get<DTO>(url);
-		return of([{id: 1, description: 'Femenino'},{id: 2, description: 'Masculino'}]);
+		return of([{id: '1', description: 'Femenino'},{id: '2', description: 'Masculino'}]);
 	}
 	
 	getIdentitifacionType(){
@@ -87,12 +87,17 @@ export class PatientService {
 		  { id: 8, description: 'Pasaporte extranjero' },
 		  { id: 9, description: 'Cédula de identidad extranjera' },
 		]);
-	  }
+	}
 	
 	getCities(){
 		//let url = `${environment.apiBase}/cities`;
 		//return this.http.get<DTO>(url);
 		return of([{id: 1, description: 'Azul'},{id: 2, description: 'Tandil'}]);
-	  }
+	}
+
+	getPatientByCMD(params): Observable<PatientSearchDto[]> {
+		let url = `${environment.apiBase}/patient/search`;
+		return this.http.get<PatientSearchDto[]>(url, {params: {'searchFilterStr' :params}});
+  	}
 
 }

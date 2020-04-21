@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SearchPatientService } from '@api-rest/services/search-patient.service';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { hasError } from "@core/utils/form.utils";
 import { ActivatedRoute, Router } from '@angular/router';
 import { PatientSearchDto } from '@api-rest/api-model';
+import { PatientService } from '@api-rest/services/patient.service';
 
 const ROUTE_NEW = 'pacientes/new';
 const ROUTE_HOME = 'pacientes';
@@ -17,14 +17,8 @@ export class SearchComponent implements OnInit {
 
 	public formSearchSubmitted: boolean = false;
 	public formSearch: FormGroup;
-	public identifyTypeArray = [
-		{id: '1', description: 'DNI'},
-		{id: '0', description: 'CUIL'}
-	]
-	public genderOptions = [
-		{id: '1', description: 'Femenino'},
-		{id: '2', description: 'Masculino'}
-	];
+	public identifyTypeArray;
+	public genderOptions;
 	public viewSearch: boolean = true;
 	public hasError = hasError;
 	public identificationTypeId;
@@ -33,7 +27,7 @@ export class SearchComponent implements OnInit {
 	public matchingPatient: PatientSearchDto[];
 
 	constructor(private formBuilder: FormBuilder,
-				private searchPatientService: SearchPatientService,
+				private patientService: PatientService,
 				private router: Router,
 				private route: ActivatedRoute
 	) {
@@ -46,14 +40,23 @@ export class SearchComponent implements OnInit {
 			this.genderId = params['genderId'];
 
 			this.formSearch = this.formBuilder.group({
-				identificationType: [this.identificationTypeId, Validators.required],
 				identificationNumber: [this.identificationNumber, Validators.required],
 				firstName: [null, Validators.required],
 				middleNames: [null],
 				lastName: [null, Validators.required],
-				mothersLastName: [null],
+				otherLastNames: [null],
 				gender: [this.genderId, Validators.required],
 				birthDate: [null, Validators.required]
+			});
+			this.patientService.getIdentitifacionType().subscribe(
+				identificationTypes => { 
+					this.identifyTypeArray = identificationTypes;
+					this.formSearch.addControl('identificationType',new FormControl(this.identificationTypeId, Validators.required));
+			});
+			this.patientService.getGenders().subscribe(
+				genders => { 
+					this.genderOptions = genders;
+					this.formSearch.addControl('gender',new FormControl(this.genderId, Validators.required));
 			});
 		});
 	}
@@ -74,7 +77,7 @@ export class SearchComponent implements OnInit {
 					identificationNumber: this.formSearch.controls.identificationNumber.value,
 				}
 			}
-			this.searchPatientService.getPatientByCMD(JSON.stringify(searchRequest)).subscribe(
+			this.patientService.getPatientByCMD(JSON.stringify(searchRequest)).subscribe(
 				data => {
 					if (!data.length) {
 						this.router.navigate([ROUTE_NEW],
@@ -87,7 +90,7 @@ export class SearchComponent implements OnInit {
 									lastName: this.formSearch.controls.lastName.value,
 									middleNames: this.formSearch.controls.middleNames.value,
 									birthDate: this.formSearch.controls.birthDate.value,
-									mothersLastName: this.formSearch.controls.mothersLastName.value,
+									otherLastNames: this.formSearch.controls.otherLastNames.value,
 								}
 							});
 					} else {

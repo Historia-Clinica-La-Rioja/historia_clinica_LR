@@ -18,20 +18,14 @@ export class SearchCreateComponent implements OnInit {
 	public formSearch: FormGroup;
 	public formSearchSubmitted: boolean = false;
 	public formAdd: FormGroup;
-	public genderOptions = [
-		{id: '1', description: 'femenino'},
-		{id: '2', description: 'masculino'}
-	];
+	public genderOptions;
 	public noIdentity = false;
 	public causeOptionsArray = [
 		{id: '0', description: 'Alta de emergencia'},
 		{id: '1', description: 'Falta documento'},
 		{id: '2', description: 'Recien nacido'},
 		{id: '3', description: 'Otros'}];
-	public identifyTypeArray = [
-		{id: '1', description: 'DNI'},
-		{id: '0', description: 'CUIL'}
-	]
+	public identifyTypeArray;
 	public hasError = hasError;
 
 	constructor(private formBuilder: FormBuilder,
@@ -43,9 +37,17 @@ export class SearchCreateComponent implements OnInit {
 		this.formSearch = this.formBuilder.group({
 			identifType: [null, Validators.required],
 			identifNumber: [null, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
-			gender: [null, Validators.required],
 		});
-
+		this.patientService.getIdentitifacionType().subscribe(
+			identificationTypes => { 
+				this.identifyTypeArray = identificationTypes;
+				this.formSearch.addControl('identifType',new FormControl(null, Validators.required));
+		});
+		this.patientService.getGenders().subscribe(
+			genders => { 
+				this.genderOptions = genders;
+				this.formSearch.addControl('gender',new FormControl(null, Validators.required));
+		});
 		this.formAdd = this.formBuilder.group({
 			causeOptions: [null, Validators.required],
 			comments: [],

@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
-import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup, FormArray, FormControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DatosPersonales} from '../../pacientes.model';
 import { APatientDto, BMPatientDto } from '@api-rest/api-model';
@@ -41,12 +41,12 @@ export class NewPatientComponent implements OnInit {
         if (params){
           this.datosPersonales.birthDate = new Date(params.birthDate);
           this.datosPersonales.firstName = params.firstName;
-          //this.datosPersonales.genderId = params.genderId,
+          this.datosPersonales.genderId = params.genderId,
           this.datosPersonales.identificationTypeId = params.identificationTypeId;
           this.datosPersonales.identificationNumber = params.identificationNumber;
           this.datosPersonales.lastName = params.lastName;
           this.datosPersonales.middleNames = params.middleNames;
-          this.datosPersonales.mothersLastName = params.mothersLastName;
+          this.datosPersonales.otherLastNames = params.otherLastNames;
         }
       }
       );
@@ -58,7 +58,6 @@ export class NewPatientComponent implements OnInit {
       otherLastNames: [],
       identificationTypeId: [null, [Validators.required]],
       identificationNumber: [null, [Validators.required]],
-      genderId: [null, [Validators.required]],
       birthDate: [null, [Validators.required]],
       
       //Person extended
@@ -82,8 +81,10 @@ export class NewPatientComponent implements OnInit {
     });
     
     this.patientService.getGenders().subscribe(
-        genders => { this.genders = genders;}
-    );
+        genders => { 
+          this.genders = genders;
+          this.form.addControl('genderId',new FormControl(this.datosPersonales.genderId, Validators.required));
+    });
 
     this.patientService.getCities().subscribe(
       cities => { this.cities = cities;}
@@ -116,13 +117,13 @@ export class NewPatientComponent implements OnInit {
         identificationNumber: datosPersonales.identificationNumber,
         lastName: datosPersonales.lastName,
         middleNames: datosPersonales.middleNames.length ? datosPersonales.middleNames : null,
-        otherLastNames: datosPersonales.otherLastNames, 
+        otherLastNames: datosPersonales.otherLastNames.length ? datosPersonales.otherLastNames :null,
         //Person extended
         cuil: datosPersonales.cuil,
         email: datosPersonales.email,
         ethnic: datosPersonales.ethnic,
         genderSelfDeterminationId: datosPersonales.genderSelfDeterminationId,
-        mothersLastName: datosPersonales.mothersLastName.length ? datosPersonales.mothersLastName :null,
+        mothersLastName: datosPersonales.mothersLastName, 
         nameSelfDetermination: datosPersonales.nameSelfDetermination,
         phoneNumber: datosPersonales.phoneNumber, 
         religion: datosPersonales.religion,
