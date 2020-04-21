@@ -245,6 +245,10 @@ export interface RequestUserRoleDto extends Serializable {
     userId: number;
 }
 
+export interface ResponseAnamnesisDto extends AnamnesisDto {
+    anamnesisId: number;
+}
+
 export interface ResponsibleDoctorDto extends Serializable {
     firstName: string;
     id: number;
