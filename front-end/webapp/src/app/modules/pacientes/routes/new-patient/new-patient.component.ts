@@ -57,28 +57,28 @@ export class NewPatientComponent implements OnInit {
       lastName: [null, [Validators.required]],
       otherLastNames: [],
       identificationTypeId: [null, [Validators.required]],
-      identificationNumber: [],
+      identificationNumber: [null, [Validators.required]],
       genderId: [null, [Validators.required]],
       birthDate: [null, [Validators.required]],
       
       //Person extended
       cuil: [],
       mothersLastName: [],
-      phoneNumber: [null, [Validators.required]], 
-      email: [null, [Validators.required,Validators.email]],
+      phoneNumber: [], 
+      email: [],
       ethnic: [],
       religion: [],
       nameSelfDetermination: [],
       genderSelfDeterminationId: [],
 
       //Address
-      addressStreet: [null, [Validators.required]],
-      addressNumber: [null, [Validators.required]],
-      addressFloor: [null],
-      addressApartment: [null],
-      addressQuarter:[null],
-      addressCityId:  [null, [Validators.required]],
-      addressPostcode: [null, [Validators.required]]
+      addressStreet: [],
+      addressNumber: [],
+      addressFloor: [],
+      addressApartment: [],
+      addressQuarter:[],
+      addressCityId:  [],
+      addressPostcode: []
     });
     
     this.patientService.getGenders().subscribe(
@@ -115,14 +115,14 @@ export class NewPatientComponent implements OnInit {
         identificationTypeId: datosPersonales.identificationTypeId,
         identificationNumber: datosPersonales.identificationNumber,
         lastName: datosPersonales.lastName,
-        middleNames: datosPersonales.middleNames,
+        middleNames: datosPersonales.middleNames.length ? datosPersonales.middleNames : null,
         otherLastNames: datosPersonales.otherLastNames, 
         //Person extended
         cuil: datosPersonales.cuil,
         email: datosPersonales.email,
         ethnic: datosPersonales.ethnic,
         genderSelfDeterminationId: datosPersonales.genderSelfDeterminationId,
-        mothersLastName: datosPersonales.mothersLastName,
+        mothersLastName: datosPersonales.mothersLastName.length ? datosPersonales.mothersLastName :null,
         nameSelfDetermination: datosPersonales.nameSelfDetermination,
         phoneNumber: datosPersonales.phoneNumber, 
         religion: datosPersonales.religion,

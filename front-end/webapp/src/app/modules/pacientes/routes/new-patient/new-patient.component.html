@@ -37,6 +37,7 @@
                             maxlength="10"
                             matInput
                         >
+                        <mat-error [translate]="'pacientes.form.REQUIRED'"></mat-error>
                     </mat-form-field>    
                 </div>
             </div>  
@@ -193,7 +194,6 @@
                                     {{city.description}}
                     </mat-option>
                 </mat-select>
-                <mat-error [translate]="'pacientes.form.REQUIRED'"></mat-error>
             </mat-form-field>
             <mat-form-field  appearance="outline">     
                 <input id="addressPostcode"
@@ -205,7 +205,6 @@
                 placeholder="{{'pacientes.form.ADDRESS_POSTCODE' | translate}}"
                 matInput
                 >
-                <mat-error *ngIf="hasError(form,'required', 'addressPostcode')  && formSubmitted" [translate]="'pacientes.form.REQUIRED'"></mat-error>
                 <mat-error *ngIf="hasError(form,'pattern', 'addressPostcode')  && formSubmitted" [translate]="'pacientes.form.INVALID'"></mat-error>
             </mat-form-field>
 
@@ -219,7 +218,6 @@
                 placeholder="{{'pacientes.form.ADDRESS_STREET' | translate}}"
                 matInput
                 >
-                <mat-error [translate]="'pacientes.form.REQUIRED'"></mat-error>
             </mat-form-field>
 
             <mat-form-field  appearance="outline">     
@@ -231,7 +229,6 @@
                 placeholder="{{'pacientes.form.ADDRESS_NUMBER' | translate}}"
                 matInput
                 >
-                <mat-error [translate]="'pacientes.form.REQUIRED'"></mat-error>
             </mat-form-field>
 
             <mat-form-field  appearance="outline">     
@@ -280,7 +277,6 @@
                 placeholder="{{'pacientes.form.PHONE_NUMBER' | translate}}"
                 matInput
             >
-            <mat-error *ngIf="hasError(form,'required', 'phoneNumber')  && formSubmitted" [translate]="'pacientes.form.REQUIRED'"></mat-error>
         </mat-form-field>
 
         <div>
@@ -295,7 +291,6 @@
                 maxlength="100"
                 matInput
             >
-            <mat-error *ngIf="hasError(form,'required', 'email')  && formSubmitted" [translate]="'pacientes.form.REQUIRED'"></mat-error>
             <mat-error *ngIf="hasError(form,'email', 'email')  && formSubmitted" [translate]="'pacientes.form.INVALID'"></mat-error>
         </mat-form-field>
         <br>
