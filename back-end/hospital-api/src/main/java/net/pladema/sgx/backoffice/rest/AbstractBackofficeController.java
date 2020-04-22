@@ -1,11 +1,11 @@
 package net.pladema.sgx.backoffice.rest;
 
+import net.pladema.sgx.backoffice.permissions.BackofficePermissionValidator;
+import net.pladema.sgx.backoffice.repository.BackofficeRepository;
+import net.pladema.sgx.backoffice.repository.BackofficeStore;
 import net.pladema.sgx.backoffice.rest.dto.BackofficeDeleteResponse;
-
-import net.pladema.sgx.acl.service.AclCrudPermissionValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -24,39 +24,42 @@ import java.util.List;
 
 public abstract class AbstractBackofficeController<E, I> {
 	protected final Logger logger;
-	private final JpaRepository<E, I> repository;
-	private final AclCrudPermissionValidator<E, I> permissionValidator;
-	private final BackofficeQueryAdapter<E> mapper;
+	protected final BackofficeStore<E, I> store;
+	private final BackofficePermissionValidator<E, I> permissionValidator;
 
 	public AbstractBackofficeController(
-			JpaRepository<E, I> repository,
-			AclCrudPermissionValidator<E, I> permissionValidator,
-			BackofficeQueryAdapter<E> mapper
+			BackofficeStore<E, I> repository,
+			BackofficePermissionValidator<E, I> permissionValidator
 	) {
 		this.logger = LoggerFactory.getLogger(this.getClass());
-		this.repository = repository;
+		this.store = repository;
 		this.permissionValidator = permissionValidator;
-		this.mapper = mapper;
+	}
+
+	public AbstractBackofficeController(
+			BackofficeStore<E, I> repository
+	) {
+		this(
+				repository,
+				new BackofficePermissionValidatorAdapter<>()
+		);
 	}
 
 	public AbstractBackofficeController(
 			JpaRepository<E, I> repository
 	) {
 		this(
-				repository,
-				new AclCrudPermissionValidatorAdapter<>(),
-				new BackofficeQueryAdapter<>()
+				new BackofficeRepository (repository)
 		);
 	}
 
 	public AbstractBackofficeController(
 			JpaRepository<E, I> repository,
-			BackofficeQueryAdapter<E> mapper
+			BackofficePermissionValidator<E, I> permissionValidator
 	) {
 		this(
-				repository,
-				new AclCrudPermissionValidatorAdapter<>(),
-				mapper
+				new BackofficeRepository(repository),
+				permissionValidator
 		);
 	}
 
@@ -65,14 +68,13 @@ public abstract class AbstractBackofficeController<E, I> {
 	Page<E> getList(Pageable pageable, E entity) {
 		logger.debug("GET_LIST {}", entity);
 		permissionValidator.assertGetList(entity);
-		Example<E> example = mapper.buildExample(entity);
-		return repository.findAll(example, pageable);
+		return store.findAll(entity, pageable);
 	}
 
 	@GetMapping(params = "ids")
 	public @ResponseBody
 	Iterable<E> getMany(@RequestParam List<I> ids) {
-		return repository.findAllById(ids);
+		return store.findAllById(ids);
 	}
 
 	@GetMapping("/{id}")
@@ -80,7 +82,7 @@ public abstract class AbstractBackofficeController<E, I> {
 	E getOne(@PathVariable("id") I id) {
 		logger.debug("GET_ONE[id={}]", id);
 		permissionValidator.assertGetOne(id);
-		return repository.findById(id)
+		return store.findById(id)
 				.orElseThrow(() -> new RuntimeException("Not found " + id));
 	}
 
@@ -90,7 +92,7 @@ public abstract class AbstractBackofficeController<E, I> {
 	E create(@Valid @RequestBody E entity) {
 		logger.debug("CREATE {}", entity);
 		permissionValidator.assertCreate(entity);
-		return repository.save(entity);
+		return store.save(entity);
 	}
 
 
@@ -98,8 +100,8 @@ public abstract class AbstractBackofficeController<E, I> {
 	public @ResponseBody
 	E update(@PathVariable("id") I id, @RequestBody E body) {
 		logger.debug("UPDATE[id={}] {}", id, body);
-		permissionValidator.assertUpdate(id);
-		return repository.save(body);
+		permissionValidator.assertUpdate(id, body);
+		return store.save(body);
 	}
 
 	@DeleteMapping("/{id}")
@@ -107,7 +109,7 @@ public abstract class AbstractBackofficeController<E, I> {
 	BackofficeDeleteResponse delete(@PathVariable("id") I id) {
 		logger.debug("DELETE[id={}]", id);
 		permissionValidator.assertDelete(id);
-		repository.deleteById(id);
+		store.deleteById(id);
 
 		return new BackofficeDeleteResponse<>(id);
 	}
