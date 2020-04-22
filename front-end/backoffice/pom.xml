@@ -16,6 +16,14 @@
 	<name>hospital-managment-backoffice</name>
 	<description>Hospital Managment Backoffice</description>
 
+	<properties>
+		<!-- <sonar.typescript.node>./node/node</sonar.typescript.node> -->
+		<sonar.sources>src/</sonar.sources>
+		<sonar.exclusions>node_modules/**</sonar.exclusions>
+		<sonar.tests>test/</sonar.tests>
+		<sonar.test.inclusions>**/*.spec.ts</sonar.test.inclusions>
+	</properties>
+
 	<build>
 		<plugins>
 			<plugin>
