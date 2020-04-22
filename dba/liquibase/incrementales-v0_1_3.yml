@@ -567,3 +567,56 @@ databaseChangeLog:
                 INSERT INTO clinical_specialty (name, sctid_code) VALUES('Endocrinología', 700434000);
                 INSERT INTO clinical_specialty (name, sctid_code) VALUES('Ginecología y obstetricia', 310060005);
                 INSERT INTO clinical_specialty (name, sctid_code) VALUES('Musicoterapia', 310086000);
+
+- changeSet:
+    id: problem_type-table
+    author: saguero
+    changes:
+        - createTable:
+            tableName: problem_type
+            columns:
+            - column:
+                name: id
+                type: varchar(20)
+                constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: PK_problem_type
+            - column:
+                name: description
+                type: varchar(100) 
+                constraints: 
+                    nullable: false
+
+- changeSet:
+    id: health_condition-addColumn-problem_id
+    author: saguero
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: problem_id
+            type: varchar(20)
+            constraints:
+                nullable: false  
+        tableName: health_condition
+    - addForeignKeyConstraint:
+        baseColumnNames: problem_id
+        baseTableName: health_condition
+        constraintName: FK_health_condition_problem_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: problem_type
+        validate: true
+                    
+- changeSet:
+    id: problem_type-masterdata
+    comment: Carga de datos problem_type
+    author: saguero
+    changes:
+        - sql:
+            sql: |-
+                INSERT INTO problem_type VALUES ('439401001', 'Diagnóstico (entidad observable)');
+                INSERT INTO problem_type VALUES ('55607006', 'Problema (hallazgo)');
+                INSERT INTO problem_type VALUES ('57177007', 'Antecedente familiar con contexto explícito (situación)');

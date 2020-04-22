@@ -57,6 +57,9 @@ public class HealthCondition extends InternationAuditableEntity {
 	@Column(name = "note_id")
 	private Long noteId;
 
+	@Column(name = "problem_id", length = 20, nullable = false)
+	private String problemId;
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
