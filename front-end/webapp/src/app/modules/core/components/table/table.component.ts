@@ -3,11 +3,11 @@ import { MatTableDataSource } from '@angular/material/table';
 import { TableService } from '@core/services/table.service';
 
 @Component({
-	selector: 'app-table-simple',
-	templateUrl: './table-simple.component.html',
-	styleUrls: ['./table-simple.component.scss']
+	selector: 'app-table',
+	templateUrl: './table.component.html',
+	styleUrls: ['./table.component.scss']
 })
-export class TableSimpleComponent implements OnInit {
+export class TableComponent implements OnInit {
 
 	@Input() model: TableModel<any>;
 	@Input() tableClass: string;
