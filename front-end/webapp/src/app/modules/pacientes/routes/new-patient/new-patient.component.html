@@ -174,10 +174,59 @@
         </div>
         <div class="form-row">
             <mat-form-field  appearance="outline">
+                <mat-select id="addressCountryId"
+                    name="addressCountryId"
+                    formControlName="addressCountryId"
+                    placeholder="{{'pacientes.form.ADDRESS_COUNTRY' | translate}}"
+                    (selectionChange)="changeStatus('addressProvinceId')" 
+                    (selectionChange)="setProvinces('addressCountryId')" 
+                >
+                    <mat-option *ngFor="let country of countries"
+                                [value]="country.id"
+                                >
+                                {{country.description}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field  appearance="outline">
+                <mat-select id="addressProvinceId"
+                    name="addressProvinceId"
+                    formControlName="addressProvinceId"
+                    placeholder="{{'pacientes.form.ADDRESS_PROVINCE' | translate}}"
+                    [disabled]="true"
+                    (selectionChange)="changeStatus('addressDepartmentId')"
+                    (selectionChange)="setDepartments('addressProvinceId')"
+                >
+                    <mat-option *ngFor="let province of provinces"
+                                            [value]="province.id">
+                                    {{province.description}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field  appearance="outline">
+                <mat-select id="addressDepartmentId"
+                    name="addressDepartmentId"
+                    formControlName="addressDepartmentId"
+                    placeholder="{{'pacientes.form.ADDRESS_DEPARTMENT' | translate}}"
+                    [disabled]="true"
+                    (selectionChange)="changeStatus('addressCityId')"
+                    (selectionChange)="setCities('addressDepartmentId')" 
+                >
+                    <mat-option *ngFor="let department of departments"
+                                            [value]="department.id">
+                                    {{department.description}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field  appearance="outline">
                 <mat-select id="addressCityId"
                     name="addressCityId"
                     formControlName="addressCityId"
                     placeholder="{{'pacientes.form.ADDRESS_CITY' | translate}}"
+                    [disabled]="true"
                 >
                     <mat-option *ngFor="let city of cities"
                                             [value]="city.id">

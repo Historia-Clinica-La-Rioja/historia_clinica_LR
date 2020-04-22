@@ -5,6 +5,7 @@ import { APatientDto, BMPatientDto, GenderDto, IdentificationTypeDto } from '@ap
 import { PatientService } from '@api-rest/services/patient.service';
 import { scrollIntoError, hasError } from "@core/utils/form.utils";
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
+import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
 
 const VALID_PATIENT = 2;
 @Component({
@@ -21,16 +22,19 @@ export class NewPatientComponent implements OnInit {
 	public hasError = hasError;
 	// CAMBIAR LOS TIPOS POR LOS DTOS CORRESPONDIENTES
 	public genders:GenderDto[];
+	public countries:any[];
+	public provinces:any[];
+	public departments:any[];
 	public cities:any[];
 	public identificationTypeList:IdentificationTypeDto[];
-	
 	constructor(
 		private formBuilder: FormBuilder,
 		private router: Router,
 		private el: ElementRef,
 		private patientService: PatientService,
 		private route: ActivatedRoute,
-		private personMasterDataService : PersonMasterDataService
+		private personMasterDataService: PersonMasterDataService,
+		private addressMasterDataService: AddressMasterDataService
 	) { }
 
 	ngOnInit(): void {
@@ -64,7 +68,11 @@ export class NewPatientComponent implements OnInit {
 					addressApartment: [],
 					addressQuarter:[],
 					addressCityId:  [],
-					addressPostcode: []
+					addressPostcode: [],
+
+					addressProvinceId: [],
+					addressCountryId: [],
+					addressDepartmentId:[]
 				});
 
 				this.personMasterDataService.getGenders()
@@ -74,9 +82,9 @@ export class NewPatientComponent implements OnInit {
 					.subscribe( identificationTypes => { this.identificationTypeList = identificationTypes; });
 			});
 
-		this.patientService.getCities().subscribe(
-			cities => { this.cities = cities;}
-		);
+		this.addressMasterDataService.getAllCountries()
+			.subscribe(countries => {this.countries = countries});
+
 	}
 
 	save():void{
@@ -126,6 +134,28 @@ export class NewPatientComponent implements OnInit {
 			identityVerificationStatusId: null
 		};
 		 
+	}
+
+	changeStatus(nextControl:string): void {
+		this.form.controls[nextControl].enable();
+	}
+
+	setProvinces(control: string){
+		let idCountry:number = this.form.get(control).value;
+		this.addressMasterDataService.getByCountry(idCountry)
+			.subscribe(provinces => {this.provinces = provinces});		
+	}
+
+	setDepartments(control: string){
+		let idProvince:number = this.form.get(control).value;
+		this.addressMasterDataService.getDepartmentsByProvince(idProvince)
+			.subscribe(departments => {this.departments = departments});	
+	}
+
+	setCities(control: string){
+		let idDepartment:number = this.form.get(control).value;
+		this.addressMasterDataService.getCitiesByDepartment(idDepartment)
+			.subscribe( cities => { this.cities = cities;});
 	}
 
 	goBack(): void {
