@@ -17,7 +17,7 @@ cd -
 
 cd back-end
 mvn -B -e dependency:go-offline -B
-mvn clean package -DskipTests 
+mvn clean package
 cd -
 
 cp back-end/hospital-api/target/hospital*.jar hospital.jar
