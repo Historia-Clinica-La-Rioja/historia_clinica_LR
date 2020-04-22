@@ -5,13 +5,13 @@
   <parent>
     <groupId>net.pladema.hospital</groupId>
     <artifactId>hospital-parent</artifactId>
-    <version>dev</version>
+    <version>${revision}</version>
     <relativePath>../pom-parent.xml</relativePath>
   </parent>
 
   <groupId>net.pladema.hospital</groupId>
   <artifactId>hospital-db</artifactId>
-  <version>dev</version>
+  <version>${revision}</version>
   <packaging>pom</packaging>
 
   <properties>
