@@ -10,6 +10,7 @@ import net.pladema.internation.service.documents.anamnesis.UpdateAnamnesisServic
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -22,6 +23,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @WebMvcTest(AnamnesisController.class)
 public class AnamnesisControllerTest extends BaseControllerTest {
+
+	@MockBean
+	private InternmentEpisodeService internmentEpisodeService;
 
 	@MockBean
 	private CreateAnamnesisService createAnamnesisService;

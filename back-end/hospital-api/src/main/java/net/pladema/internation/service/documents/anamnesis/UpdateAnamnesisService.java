@@ -4,5 +4,5 @@ import net.pladema.internation.service.domain.Anamnesis;
 
 public interface UpdateAnamnesisService {
 
-    public Anamnesis updateAnanmesisDocument(Anamnesis anamnesis);
+    public Anamnesis updateAnanmesisDocument(Integer internmentEpisodeId, Integer patientId, Anamnesis anamnesis);
 }

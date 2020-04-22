@@ -28,4 +28,11 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             "JOIN HealthcareProfessionalGroup hpg ON (hpg.pk.internmentEpisodeId = ie.id and hpg.responsible = true) " +
             "WHERE ie.id = :internmentEpisodeId")
     Optional<InternmentSummary> getSummary(@Param("internmentEpisodeId") Integer internmentEpisodeId);
+
+
+    @Transactional(readOnly = true)
+    @Query("SELECT ie.patientId " +
+            "FROM InternmentEpisode ie " +
+            "WHERE ie.id = :internmentEpisodeId")
+    Optional<Integer> getPatient(@Param("internmentEpisodeId") Integer internmentEpisodeId);
 }

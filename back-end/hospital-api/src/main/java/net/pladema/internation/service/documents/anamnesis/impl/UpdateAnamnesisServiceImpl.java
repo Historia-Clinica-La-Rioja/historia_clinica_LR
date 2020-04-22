@@ -16,8 +16,8 @@ public class UpdateAnamnesisServiceImpl implements UpdateAnamnesisService {
 
 
     @Override
-    public Anamnesis updateAnanmesisDocument(Anamnesis anamnesis) {
-        LOG.debug("Input parameters {}", anamnesis);
+    public Anamnesis updateAnanmesisDocument(Integer IntermentEpisodeId, Integer patientId, Anamnesis anamnesis) {
+        LOG.debug("Input parameters -> intermentEpisodeId {}, patientId {}, anamnesis {}", anamnesis);
         return null;
     }
 

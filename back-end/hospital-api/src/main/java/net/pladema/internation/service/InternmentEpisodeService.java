@@ -7,4 +7,6 @@ import java.util.Optional;
 public interface InternmentEpisodeService {
 
     Optional<InternmentSummary> getIntermentSummary(Integer internmentEpisodeId);
+
+    Optional<Integer> getPatient(Integer internmentEpisodeId);
 }

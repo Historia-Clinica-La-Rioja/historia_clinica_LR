@@ -28,4 +28,12 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
         LOG.debug("Output -> {}", result);
         return result;
     }
+
+    @Override
+    public Optional<Integer> getPatient(Integer internmentEpisodeId) {
+        LOG.debug("Input parameters -> {}", internmentEpisodeId);
+        Optional<Integer> result = internmentEpisodeRepository.getPatient(internmentEpisodeId);
+        LOG.debug("Output -> {}", result);
+        return result;
+    }
 }

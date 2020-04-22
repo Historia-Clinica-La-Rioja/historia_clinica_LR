@@ -7,5 +7,5 @@ import java.util.Collection;
 
 public interface CreateAnamnesisService {
 
-    public Anamnesis createAnanmesisDocument(Anamnesis anamnesis);
+    public Anamnesis createAnanmesisDocument(Integer IntermentEpisodeId, Integer patientId, Anamnesis anamnesis);
 }
