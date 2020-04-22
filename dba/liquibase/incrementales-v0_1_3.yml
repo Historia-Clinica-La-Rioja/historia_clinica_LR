@@ -7,16 +7,15 @@ databaseChangeLog:
     changes: 
         - sql: 
             sql: |- 
-                INSERT INTO observation_status (id, description) VALUES('160476009', 'Característica observable relacionada con antecedente personal / social (entidad observable)');
-                INSERT INTO observation_status (id, description) VALUES('118227000', 'Hallazgo en los signos vitales (hallazgo)');
-                INSERT INTO observation_status (id, description) VALUES('399060005', 'Característica observable de imágenes (entidad observable)');
-                INSERT INTO observation_status (id, description) VALUES('364712009', 'Característica observable de prueba de laboratorio (entidad observable)');
-                INSERT INTO observation_status (id, description) VALUES('416342005', 'Característica observable relacionada con un procedimiento (entidad observable)');
-                INSERT INTO observation_status (id, description) VALUES('118243007', 'Hallazgo por inspección (observación simple) (hallazgo)');
-                INSERT INTO observation_status (id, description) VALUES('271906008', 'Hallazgo del examen físico (entidad observable)');
-                INSERT INTO observation_status (id, description) VALUES('363819003', 'Característica observable del tratamiento farmacológico (entidad observable)');
-                INSERT INTO observation_status (id, description) VALUES('257733005', 'Actividad (entidad observable)');
-  
+                INSERT INTO observation_status (id, description) VALUES('307827002 ', 'Estado de registro (hallazgo)');
+                INSERT INTO observation_status (id, description) VALUES('261420005', 'Preliminar (calificador)');
+                INSERT INTO observation_status (id, description) VALUES('261782000', 'Final (calificador)');
+                INSERT INTO observation_status (id, description) VALUES('18307000', 'Modificado (calificador)');
+                INSERT INTO observation_status (id, description) VALUES('33714007', 'Corregido (calificador)');
+                INSERT INTO observation_status (id, description) VALUES('89925002', 'Cancelado (calificador)');
+                INSERT INTO observation_status (id, description) VALUES('723510000', 'Ingresado por error (calificador)');
+                INSERT INTO observation_status (id, description) VALUES('261665006', 'Desconocido (calificador)');
+ 
 - changeSet: 
     id: allergy_intolerance_verification_status-metadata
     author: saguero
