@@ -1,3 +1,7 @@
+<mat-form-field *ngIf="filterEnabled">
+	<mat-label>Filtro</mat-label>
+	<input matInput (keyup)="applyFilter($event)">
+</mat-form-field>
 <table mat-table [dataSource]="dataSource" [class]="tableClass">
 	<ng-container *ngFor="let column of columns" [matColumnDef]="column.columnDef">
 		<th *matHeaderCellDef>{{ column.header | translate }}</th>

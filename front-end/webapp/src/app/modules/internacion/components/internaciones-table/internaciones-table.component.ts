@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { InternacionService } from '@api-rest/services/internacion.service';
-import { TableService } from '@core/services/table.service';
-import { MatTableDataSource } from '@angular/material/table';
 import { InternmentEpisodeDto } from '@api-rest/api-model';
 import { Router } from '@angular/router';
+import { TableModel } from 'src/app/modules/presentation/components/table-simple/table-simple.component';
 
 @Component({
 	selector: 'app-internaciones-table',
@@ -12,28 +11,71 @@ import { Router } from '@angular/router';
 })
 export class InternacionesTableComponent implements OnInit {
 
-	displayedColumns: string[] = ['ID Paciente', 'Nombre Médico', 'Apellido Médico', 'Sector', 'Especialidad', 'Nro Habitación' , 'Nro Cama', 'Action'];
-	dataSource: MatTableDataSource<InternmentEpisodeDto> = new MatTableDataSource([]);
+	internacionesTable: TableModel<InternmentEpisodeDto>;
 
 	constructor(
 		private internacionService: InternacionService,
-		private tableService: TableService,
 		private router: Router,
 	) { }
 
+	private buildTable(data: InternmentEpisodeDto[]): TableModel<InternmentEpisodeDto> {
+		return {
+			columns: [
+				{
+					columnDef: 'patiendId',
+					header: 'ID Paciente',
+					text: (row) => row.patient.id
+				},
+				{
+					columnDef: 'doctorName',
+					header: 'Nombre Médico',
+					text: (row) => row.doctor.firstName
+				},
+				{
+					columnDef: 'doctorLastName',
+					header: 'Apellido Médico',
+					text: (row) => row.doctor.lastName
+				},
+				{
+					columnDef: 'sectorName',
+					header: 'Sector',
+					text: (row) => row.bed.room.sector.description
+				},
+				{
+					columnDef: 'specialityName',
+					header: 'Especialidad',
+					text: (row) => row.specialty.name
+				},
+				{
+					columnDef: 'roomNumber',
+					header: 'Nro. Habitación',
+					text: (row) => row.bed.room.roomNumber
+				},
+				{
+					columnDef: 'bedNumber',
+					header: 'Nro. Cama',
+					text: (row) => row.bed.bedNumber
+				},
+				{
+					columnDef: 'action',
+					action: {
+						text: 'Ver',
+						do: (internacion) => {
+							let url = `internaciones/internacion/${internacion.id}/paciente/${internacion.patient.id}`;
+							this.router.navigate([url]);
+						}
+					}
+				},
+			],
+			data,
+			enableFilter: true
+		};
+	}
+
 	ngOnInit(): void {
-		this.dataSource.filterPredicate = this.tableService.predicateFilter;
-		this.internacionService.getAllPacientesInternados<InternmentEpisodeDto>().subscribe(data => this.dataSource.data = data);
-	}
-
-	actionRow(internacion: InternmentEpisodeDto): void {
-		let url = `internaciones/internacion/${internacion.id}/paciente/${internacion.patient.id}`;
-		this.router.navigate([url]);
-	}
-
-	applyFilter(event: Event) {
-		const filterValue = (event.target as HTMLInputElement).value;
-		this.dataSource.filter = filterValue.trim().toLowerCase();
+		this.internacionService.getAllPacientesInternados<InternmentEpisodeDto>().subscribe(
+			data => this.internacionesTable = this.buildTable(data)
+		);
 	}
 
 }
