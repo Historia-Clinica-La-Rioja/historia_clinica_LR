@@ -424,3 +424,146 @@ databaseChangeLog:
                 INSERT INTO education_type VALUES (1, 'Auxiliarato');
                 INSERT INTO education_type VALUES (2, 'Grado Universitario');
                 INSERT INTO education_type VALUES (3, 'Tecnicatura');
+
+- changeSet:
+    id: dropColumn-clinical_specialty
+    author: lmanterola
+    changes:
+    - dropColumn:
+        columnName: description
+        tableName: clinical_specialty
+
+- changeSet:
+    id: clinical_specialty-metadata
+    author: lmanterola
+    context: "!schema-only"
+    changes: 
+        - sql:
+            sql: |- 
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Pediatría', 310066004);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Enfermería UTI neonatal', 321781000221104);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Gastroenterología pediátrica', 3771000175106);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Terapia intensiva', 310032008);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Cardiología', 320281000221100);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Psiquiatría de niños y adolescentes', 310117003);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Neurología', 320791000221109);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Clínica médica', 320611000221107);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Geriatría', 3531000175102);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Diagnóstico por imágenes', 708175003);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Emergentología pediátrica', 419917007);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Reumatología', 3621000175101);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Cirugía de cabeza y cuello', 320351000221102);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Farmacia', 310080006);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Nutrición', 310090003);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Kinesiología en respiratorio de adultos', 322771000221107);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Trabajo social', 320831000221100);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Cirugía maxilofacial', 710028007);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Cirugía bucal', 310145009);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Farmacología clínica', 700436003);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Salud laboral', 310064001);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Microbiología médica', 310078000);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Cirugía dental', 310143002);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Neurocirugía', 310159002);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Prostodoncia', 734863003);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Enfermería', 708170008);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Nutrición y alimentación clínica del adultos', 322401000221106);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Oncología pediátrica', 310069006);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Cirugía vascular', 310168000);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Anatomía patológica', 708183009);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Kinesiología en rehabilitación psicofísica', 322761000221103);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Cuidados paliativos', 310073009);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Enfermería en salud materno infantil y del adolescente', 321171000221103);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Terapia ocupacional', 310093001);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Ortopedia y traumatología infantil', 322261000221106);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Adolescencia', 320121000221106);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Diagnóstico por imágenes bucomaxilofacial', 320561000221109);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Odontología pediátrica', 320521000221101);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Kinesiología', 322361000221104);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Atención neonatal especial', 310070007);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Citogenética', 708178001);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Genética', 320601000221109);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Alergología', 711332004);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Oftalmología', 310160007);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Ortodoncia', 310146005);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Psicología', 310123008);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Oncología quirúrgica', 699478002);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Hepatología', 23901000087101);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Coloproctología', 320451000221106);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Medicina vascular', 722352000);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Seguridad y eficacia de medicamentos', 322171000221106);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Educación para la salud', 322381000221106);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Psicopedagogía', 322391000221109);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Diagnóstico por imágenes pediátrico', 320571000221100);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Urología', 310167005);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Infectología pediátrica', 3781000175109);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Ginecología', 310061009);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Cirugía', 310138009);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Psicología comunitaria', 322131000221108);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Medicina del deporte', 2351000175106);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Otorrinolaringología', 310149003);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Cirugía cardiovascular pediátrica', 320321000221108);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Neumonología pediátrica', 3801000175108);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Odontología', 722176000);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Dermatología', 700241009);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Psiquiatría', 310116007);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Erfermería general y familiar', 321271000221107);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Radioterapia', 310023006);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Reumatología infantil', 320811000221108);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Nefrología', 320731000221105);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Cardiología pediátrica', 320291000221102);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Cuidados intensivos neonatales', 741073001);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Salud mental', 708168004);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Auditoría de servicios de salud', 321511000221104);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Hematología', 708196005);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Inmunología pediátrica', 321751000221109);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Cirugía gastrointestinal', 310151004);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Nutrición y alimentación clínica infantojuvenil', 322411000221109);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Fonoaudiología', 310101009);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Neurología pediátrica', 310068003);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Hematología pediátrica', 322351000221101);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Hemoterapia', 320671000221101);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Infectología', 320721000221107);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Rehabilitación', 310129007);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Salud pública veterinaria', 322181000221109);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Terapia intensiva pediátrica', 310034009);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Oncología clínica', 310022001);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Bioquímica clínica', 310076001);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Obstetricia', 310063007);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Servicios médicos de emergencia', 409971007);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Medicina general', 700232004);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Medicina legal', 722393008);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Fisiatría', 773558007);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Mastología', 322241000221107);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Radiología', 310125001);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Cirugía plástica', 310164003);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Kinesiología en pediátria y neonatología', 322371000221108);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Salud pública', 310115006);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Ortopedia y traumatología', 331081000221104);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Electrofisiología cardíaca', 320661000221105);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Endocrinología pediátrica', 3761000175103);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Enfermería en salud familiar y comunitaria', 321131000221101);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Gastroenterología', 700433006);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Neurocirugía pediátrica', 320761000221104);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Farmacología clínica comunitaria', 320581000221102);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Nefrología pediátrica', 3791000175107);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Epidemiología', 321461000221102);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Cirugía en trasplantes', 310165002);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Otorrinolaringología pediátrica', 322481000221100);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Neumonología', 320741000221103);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Estomatología clínica', 320551000221107);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Anestesia', 310001007);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Perinatología', 2451000175103);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Quemados pediátricos', 322031000221107);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Hemato-oncología pediátrica', 320621000221102);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Enfermería pediátrica', 320801000221105);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Toxicología', 708191000);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Cirugía torácica', 310141000);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Cirugía pediátrica', 310163009);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Psicología infanto-juvenil', 322081000221108);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Trauma', 322061000221101);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Dermatología pediátrica', 320491000221103);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Esterilización', 331181000221103);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Psicología clínica y comunitaria', 322121000221105);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Endocrinología', 700434000);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Ginecología y obstetricia', 310060005);
+                INSERT INTO clinical_specialty (name, sctid_code) VALUES('Musicoterapia', 310086000);

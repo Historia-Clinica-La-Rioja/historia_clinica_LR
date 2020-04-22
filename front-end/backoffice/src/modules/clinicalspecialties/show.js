@@ -9,7 +9,6 @@ const ClinicalSpecialtyShow = props => (
     <Show {...props}>
         <SimpleShowLayout>
             <TextField source="name" />
-            <TextField source="description" />
             <TextField source="sctidCode" />
         </SimpleShowLayout>
     </Show>

@@ -33,9 +33,6 @@ public class ClinicalSpecialty implements Serializable {
 	@Column(name = "name", nullable = false, length = 100)
 	private String name;
 
-	@Column(name = "description", nullable = false, length = 100)
-	private String description;
-	
 	@Column(name = "sctid_code", nullable = false, length = 15)
 	private String sctidCode;
 
