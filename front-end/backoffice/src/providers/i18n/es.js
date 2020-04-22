@@ -113,5 +113,21 @@ export default {
                 description: 'Descripción',
             }
         }, 
+        users: {
+            name: 'Usuario |||| Usuarios',
+            fields: {
+                username: 'Nombre de usuario',
+                personId: 'Persona',
+                enable: 'Habilitado',
+                lastLogin: 'Último ingreso'
+            },
+            fieldGroups: {
+                passwordResets: 'Establecer clave de acceso'
+            },
+            action: {
+                reset: 'Visitar link',
+                newReset: 'Generar link',
+            }
+        },
     },
 };

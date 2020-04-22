@@ -15,7 +15,7 @@ import apiRest from './utils/sgxApiRest';
  * Maps react-admin queries to a REST API implemented using Java Spring Boot and Swagger
  *
  * @example
- * GET_LIST     => GET http://my.api.url/posts?page=0&size=10
+ * GET_LIST     => GET http://my.api.url/posts?page=0&pageSize=10
  * GET_ONE      => GET http://my.api.url/posts/123
  * GET_MANY     => GET http://my.api.url/posts?id=1234&id=5678
  * UPDATE       => PUT http://my.api.url/posts/123
@@ -54,7 +54,7 @@ export default (apiUrl, mappers) => {
         const { page, perPage } = params.pagination;
         const { field, order } = params.sort;
         const filter = stringify(params.filter);
-        url = `${apiUrl}/${resource}?page=${page-1}&size=${perPage}&sort=${field},${order}&${filter}`;
+        url = `${apiUrl}/${resource}?page=${page-1}&pageSize=${perPage}&sort=${field},${order}&${filter}`;
         break;
       }
       case GET_ONE:
@@ -85,7 +85,7 @@ export default (apiUrl, mappers) => {
         const { target, id } = params;
         const { field, order } = params.sort;
         const { page, perPage } = params.pagination;
-        url = `${apiUrl}/${resource}?page=${page-1}&size=${perPage}&sort=${field},${order}&${target}=${id}`;
+        url = `${apiUrl}/${resource}?page=${page-1}&pageSize=${perPage}&sort=${field},${order}&${target}=${id}`;
         break;
       }
       case UPDATE:
@@ -130,7 +130,7 @@ export default (apiUrl, mappers) => {
           total: parseInt(json.totalElements, 10)
         };
       case CREATE:
-        return { data: { ...params.data, id: json.id } };
+        return { data: json };
       default:
         return { data: json };
     }

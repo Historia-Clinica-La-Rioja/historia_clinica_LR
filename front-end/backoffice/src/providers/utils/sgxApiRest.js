@@ -1,6 +1,10 @@
 import { fetchUtils } from 'react-admin';
 
+import SGXPermissions from './SGXPermissions';
+
+const apiUrl = '/api';
 class SgxApiRest {
+    _permission$ = Promise.resolve(new SGXPermissions({authorities:[{authority: 'BACKOFFICE_USER'}]}));//undefined;
 
     auth(username, password) {
         this.logout();
@@ -9,7 +13,7 @@ class SgxApiRest {
             headers: new Headers({ Accept: 'application/json' }),
             body: JSON.stringify({username, password}) 
         };
-        return fetchUtils.fetchJson('/api/auth', options)
+        return fetchUtils.fetchJson(apiUrl + '/auth', options)
             .then(response => {
                 return response.json;
             }).then(({ token }) => {
@@ -17,10 +21,18 @@ class SgxApiRest {
             });
     }
 
-    hasToken() {
+    get permission$() {
         const isTokenStored = !!localStorage.getItem('token');
-        //console.log(`hasToken?`, isTokenStored);
-        return isTokenStored;
+        if (!isTokenStored) {
+            return Promise.reject();
+        }
+        if (!this._permission$) {
+            this._permission$ = this.fetch('/account')
+                .then(({json}) => {
+                    return new SGXPermissions(json);
+                });
+        }
+        return this._permission$;
     }
   
     fetch(url, options = {}) {
@@ -29,11 +41,12 @@ class SgxApiRest {
         }
         const token = localStorage.getItem('token');
         options.headers.set('X-Auth-Token', token);
-        return fetchUtils.fetchJson(url, options);
+        return fetchUtils.fetchJson(apiUrl + url, options);
     };
 
     logout() {
         localStorage.clear();
+        this._account$ = undefined;
     }
 
   }

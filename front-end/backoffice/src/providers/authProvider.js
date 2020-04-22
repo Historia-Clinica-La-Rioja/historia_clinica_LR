@@ -1,28 +1,33 @@
 
 import apiRest from './utils/sgxApiRest';
 
-
 const authProvider = {
     login: ({ username, password }) => {
         return apiRest
             .auth(username, password);
     },
-    logout: () => { 
+    logout: () => {
         apiRest.logout();
         return Promise.resolve();
     },
     checkAuth: () => {
-        return apiRest.hasToken() ? Promise.resolve() : Promise.reject();
+        return apiRest.permission$
+            .then(permissions => {
+                if (!permissions.hasAnyAuthority('ADMIN', 'ADMIN_APP', 'BACKOFFICE_USER')) {
+                    return Promise.reject({ redirectTo: '/home' });
+                }
+            });
     },
     checkError: (error) => {
         const status = error.status;
         if (status === 401) {
-            apiRest.auth();
             return Promise.reject();
         }
         return Promise.resolve();
     },
-    getPermissions: params => Promise.resolve(),
+    getPermissions: () => {
+        return apiRest.permission$;
+    },
 };
 
 export default authProvider;
