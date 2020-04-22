@@ -1,6 +1,7 @@
 package net.pladema.user.repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -64,5 +65,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 			+ "FROM User u "
 			+ "JOIN UserRole ur ON (ur.userRolePK.userId = u.id) "
 			+ "WHERE ur.userRolePK.roleId = 1")
-	User getAdminUser();
+	List<User> getAdminUser();
 }

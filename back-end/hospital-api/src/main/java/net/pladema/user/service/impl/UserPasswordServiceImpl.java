@@ -2,6 +2,7 @@ package net.pladema.user.service.impl;
 
 import java.time.LocalDateTime;
 
+import net.pladema.auditable.entity.Audit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -30,17 +31,19 @@ public class UserPasswordServiceImpl implements UserPasswordService {
 
 	@Override
 	public UserPassword addPassword(User user, String password) {
-		UserPassword userPassword = createPassword(user, password);
+		UserPassword userPassword = createPassword(user.getId(), password);
 		userPassword = userPasswordRepository.save(userPassword);
 		LOG.debug("{}", "Password created");
 		return userPassword;
 	}
 
-	protected UserPassword createPassword(User user, String password) {
-		UserPassword userPassword = new UserPassword(user);
+	protected UserPassword createPassword(Integer userId, String password) {
+		UserPassword userPassword = new UserPassword();
+		userPassword.setId(userId);
 		userPassword.setPassword(bCryptPasswordEncoder.encode(password));
 		userPassword.setHashAlgorithm("hashAlgorithm");
 		userPassword.setSalt("salt");
+		userPassword.setAudit(new Audit());
 		return userPassword;
 	}
 
@@ -58,6 +61,13 @@ public class UserPasswordServiceImpl implements UserPasswordService {
 	@Override
 	public boolean passwordUpdated(Integer userId, LocalDateTime tokenDate) {
 		return (userPasswordRepository.passwordUpdateAfter(userId, tokenDate) > 0);
+	}
+
+	@Override
+	public void setPassword(Integer userId, String password) {
+		UserPassword userPassword = createPassword(userId, password);
+		userPasswordRepository.save(userPassword);
+		LOG.debug("{}", "Password set");
 	}
 
 }

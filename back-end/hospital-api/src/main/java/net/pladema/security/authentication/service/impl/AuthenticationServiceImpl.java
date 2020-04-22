@@ -18,7 +18,7 @@ import net.pladema.user.service.UserService;
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-	private static final Logger LOG = LoggerFactory.getLogger(AuthenticationServiceImpl.class);
+	private final Logger logger;
 
 	private final TokenService tokenService;
 
@@ -26,9 +26,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 	private final UserPasswordService userPasswordService;
 
-	public AuthenticationServiceImpl(TokenService tokenService, UserService userService,
-			UserPasswordService userPasswordService) {
-		super();
+	public AuthenticationServiceImpl(
+			TokenService tokenService,
+			UserService userService,
+			UserPasswordService userPasswordService
+	) {
+		this.logger = LoggerFactory.getLogger(this.getClass());
 		this.tokenService = tokenService;
 		this.userService = userService;
 		this.userPasswordService = userPasswordService;
@@ -36,20 +39,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 	@Override
 	public JWToken login(Login login) {
-		Optional<User> opUser = Optional
-				.ofNullable(userService.getUser(login.getUsername()));
-		return opUser.map(u -> {
-			if (validLogin(login, u.getId())) {
-				LOG.debug("{}", "Credenciales validas");
-				userService.updateLoginDate(opUser.get().getId());
-				return tokenService.generateToken(login);
-			}
-			throw new BadCredentialsException("invalid.username");
-		}).orElseThrow(() -> new BadCredentialsException("invalid.username"));
-	}
+		Optional<User> optUser = userService.getUser(login.getUsername());
+		User user = optUser.orElseThrow(
+				() -> new BadCredentialsException("invalid.credentials")
+		);
+		if (!user.getEnable()) {
+			throw new BadCredentialsException("disabled.username");
+		}
+		if (!userPasswordService.validCredentials(login.getPassword(), user.getId())) {
+			throw new BadCredentialsException("invalid.credentials");
+		}
 
-	protected boolean validLogin(Login login, Integer userId) {
-		return userPasswordService.validCredentials(login.getPassword(), userId);
+		logger.debug("Credenciales validas");
+		userService.updateLoginDate(user.getId());
+		return tokenService.generateToken(login);
 	}
 
 }

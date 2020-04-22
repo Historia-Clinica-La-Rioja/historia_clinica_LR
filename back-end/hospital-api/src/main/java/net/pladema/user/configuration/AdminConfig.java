@@ -1,12 +1,15 @@
 package net.pladema.user.configuration;
 
+import java.time.LocalDate;
+import java.util.Optional;
+
 import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.permissions.service.RoleService;
@@ -15,7 +18,7 @@ import net.pladema.user.service.UserPasswordService;
 import net.pladema.user.service.UserService;
 
 @Configuration
-@Profile("!test")
+@ConditionalOnExpression("'${api.profile}'=='prod'")
 public class AdminConfig {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AdminConfig.class);
@@ -44,9 +47,9 @@ public class AdminConfig {
 
 	@PostConstruct
 	public void init() {
-		User admin = userService.getAdminUser();
-		if (admin != null)
-			updateUser(admin);
+		Optional<User> admin = userService.getUser(adminMail);
+		if (admin.isPresent())
+			updateUser(admin.get());
 		else createAdminUser();
 	}
 

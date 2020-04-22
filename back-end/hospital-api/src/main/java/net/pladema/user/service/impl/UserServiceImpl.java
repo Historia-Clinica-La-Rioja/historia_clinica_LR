@@ -1,6 +1,8 @@
 package net.pladema.user.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,8 +44,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User getUser(String username) {
-		return userRepository.findByUsername(username).orElseThrow(() -> new BadCredentialsException(INVALID_USERNAME));
+	public Optional<User> getUser(String username) {
+		return userRepository.findByUsername(username);
 	}
 
 	@Override
@@ -89,11 +91,6 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean existUser(Integer id) {
 		return userRepository.existsById(id);
-	}
-
-	@Override
-	public User getAdminUser() {
-		return userRepository.getAdminUser();
 	}
 
 }

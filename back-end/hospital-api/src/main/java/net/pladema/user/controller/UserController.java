@@ -1,13 +1,8 @@
 package net.pladema.user.controller;
 
 import io.swagger.annotations.Api;
-import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.permissions.service.RoleService;
-import net.pladema.user.controller.dto.AddUserDto;
-import net.pladema.user.controller.dto.UserDto;
 import net.pladema.user.controller.mappers.UserMapper;
-import net.pladema.user.events.OnRegistrationCompleteEvent;
-import net.pladema.user.repository.entity.User;
 import net.pladema.user.repository.projections.PageableUsers;
 import net.pladema.user.service.UserPasswordService;
 import net.pladema.user.service.UserService;
@@ -23,10 +18,6 @@ import org.springframework.data.web.SortDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 @RestController
 @RequestMapping("/users")
@@ -58,19 +49,6 @@ public class UserController {
 		this.roleService = roleService;
 		this.userMapper = userMapper;
 		this.eventPublisher = eventPublisher;
-	}
-
-	@PreAuthorize("hasAnyAuthority('ADMIN', 'ADMIN_APP')")
-	@PostMapping
-	public ResponseEntity<UserDto> addUser(@Valid @RequestBody AddUserDto userDto) throws URISyntaxException {
-		LOG.debug("{}", USER_VALID);
-		User createdUser = userMapper.mapNewUser(userDto);
-		createdUser.setEnable(true);
-		createdUser = userService.addUser(createdUser);
-		userPasswordService.addPassword(createdUser, userDto.getPassword());
-		roleService.createUserRole(createdUser.getId(), ERole.BASIC_USER);
-		eventPublisher.publishEvent(new OnRegistrationCompleteEvent(createdUser));
-		return ResponseEntity.created(new URI("")).body(userMapper.fromUser(createdUser));
 	}
 
 	@PreAuthorize("hasAnyAuthority('ADMIN', 'ADMIN_APP')")

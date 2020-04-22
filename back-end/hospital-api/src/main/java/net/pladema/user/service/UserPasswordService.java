@@ -7,12 +7,13 @@ import net.pladema.user.repository.entity.UserPassword;
 
 public interface UserPasswordService {
 
-	public UserPassword addPassword(User user, String password);
+	UserPassword addPassword(User user, String password);
 	
-	public boolean validCredentials(String password, Integer userId);
+	boolean validCredentials(String password, Integer userId);
 
-	public void updatePassword(Integer userId, String password);
+	void updatePassword(Integer userId, String password);
 
-	public boolean passwordUpdated(Integer userId, LocalDateTime tokenExpirationDate);
+	boolean passwordUpdated(Integer userId, LocalDateTime tokenExpirationDate);
 
+	void setPassword(Integer userId, String password);
 }

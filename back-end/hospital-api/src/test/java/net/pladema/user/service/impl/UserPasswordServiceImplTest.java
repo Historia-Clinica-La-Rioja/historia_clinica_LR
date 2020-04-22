@@ -39,7 +39,7 @@ public class UserPasswordServiceImplTest {
 		String encriptedPassword = "PasswordEncriptada";
 		
 		when(bCryptPasswordEncoder.encode(any())).thenReturn(encriptedPassword);
-		UserPassword response = userPasswordService.createPassword(user, "Password");
+		UserPassword response = userPasswordService.createPassword(user.getId(), "Password");
 
 		assertThat(response).isNotNull();
 

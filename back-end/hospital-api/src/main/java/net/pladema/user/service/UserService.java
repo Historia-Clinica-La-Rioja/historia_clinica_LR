@@ -6,13 +6,16 @@ import org.springframework.data.domain.Pageable;
 import net.pladema.user.repository.entity.User;
 import net.pladema.user.repository.projections.PageableUsers;
 
+import java.util.List;
+import java.util.Optional;
+
 public interface UserService {
 
 	public User addUser(User user);
 
 	public User updateUser(User user);
 	
-	public User getUser(String username);
+	Optional<User> getUser(String username);
 	
 	public User getUser(Integer id);
 	
@@ -31,7 +34,5 @@ public interface UserService {
 	public boolean isEnable(Integer id);
 
 	public Page<PageableUsers> pegeableUsers(Pageable pageable);
-
-	public User getAdminUser();
 
 }

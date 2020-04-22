@@ -2,8 +2,6 @@ package net.pladema.user;
 
 import java.util.Random;
 
-import net.pladema.user.controller.dto.AbstractUserDto;
-import net.pladema.user.controller.dto.AddUserDto;
 import net.pladema.user.repository.entity.User;
 import net.pladema.user.repository.entity.UserPassword;
 
@@ -33,24 +31,24 @@ public class UserTestUtils {
     	password.setHashAlgorithm("HASHALGORITHM");
     	return password;    	
     }
-    
-	public static AddUserDto addUserDtoValid() {
-		AddUserDto response = new AddUserDto();
-		response.setPassword("PASSWORD");
-		response.setEmail("EMAIL@GMAIL.COM");
-		return response;
-	}
-	
-	public static AbstractUserDto addUserDtoInvalidEmail() {
-		AddUserDto response = addUserDtoValid();
-		response.setEmail("BadEMail");
-		return response;
-	}
-
-	public static AddUserDto addUserDtoInvalid() {
-		AddUserDto response = addUserDtoValid();
-		response.setPassword(null);
-		response.setEmail("BadEMail");
-		return response;
-	}
+//
+//	public static AddUserDto addUserDtoValid() {
+//		AddUserDto response = new AddUserDto();
+//		response.setPassword("PASSWORD");
+//		response.setEmail("EMAIL@GMAIL.COM");
+//		return response;
+//	}
+//
+//	public static AbstractUserDto addUserDtoInvalidEmail() {
+//		AddUserDto response = addUserDtoValid();
+//		response.setEmail("BadEMail");
+//		return response;
+//	}
+//
+//	public static AddUserDto addUserDtoInvalid() {
+//		AddUserDto response = addUserDtoValid();
+//		response.setPassword(null);
+//		response.setEmail("BadEMail");
+//		return response;
+//	}
 }
