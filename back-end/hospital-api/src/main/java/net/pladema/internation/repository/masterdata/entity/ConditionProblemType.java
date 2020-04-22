@@ -24,6 +24,9 @@ public class ConditionProblemType implements Serializable {
 	 */
 	private static final long serialVersionUID = -3053291021636483828L;
 
+	public static final String PROBLEMA = "55607006";
+
+
 	@Id
 	@Column(name = "id", length = 20)
 	private String id;

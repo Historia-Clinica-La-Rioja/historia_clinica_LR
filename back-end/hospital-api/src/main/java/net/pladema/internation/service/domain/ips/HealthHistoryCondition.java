@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class HealthHistoryCondition extends HealthCondition {
+public class HealthHistoryCondition extends HealthConditionBo {
 
     private String date;
 

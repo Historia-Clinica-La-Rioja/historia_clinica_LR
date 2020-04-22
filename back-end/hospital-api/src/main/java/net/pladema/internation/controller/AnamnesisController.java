@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/internments/{internmentEpisodeId}/anamnesis")
@@ -46,6 +47,7 @@ public class AnamnesisController {
         this.anamnesisMapper = anamnesisMapper;
     }
 
+    @Transactional
     @PostMapping
     //TODO validar que exista la internación institución
     public ResponseEntity<ResponseAnamnesisDto> createAnamnesis(

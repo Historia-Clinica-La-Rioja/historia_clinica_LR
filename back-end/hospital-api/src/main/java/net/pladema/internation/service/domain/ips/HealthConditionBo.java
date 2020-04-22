@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class HealthCondition extends ClinicalTerm {
+public class HealthConditionBo extends ClinicalTerm {
 
     private String verificationId;
 

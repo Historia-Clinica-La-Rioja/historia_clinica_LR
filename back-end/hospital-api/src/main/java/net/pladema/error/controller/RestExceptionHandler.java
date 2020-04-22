@@ -69,7 +69,7 @@ public class RestExceptionHandler {
 	@ExceptionHandler(DataIntegrityViolationException.class)
 	public Map<String, String> handleDataIntegrityExceptions(DataIntegrityViolationException ex) {
 		Map<String, String> errors = new HashMap<>();
-		errors.put("ERROR", ex.getMessage());
+		errors.put("ERROR", ex.getCause().getCause().toString());
 		LOG.error(ex.getMessage(), ex);
 		return errors;
 	}
@@ -101,6 +101,14 @@ public class RestExceptionHandler {
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler(MatchCalculationException.class)
 	public String handleCalculation(MatchCalculationException ex, Locale locale) {
+		String errorMessage = messageSource.getMessage(ex.getMessage(), null, locale);
+		LOG.error(errorMessage, ex);
+		return errorMessage;
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(IllegalArgumentException.class)
+	public String handleIllegalArgumentExceptions(IllegalArgumentException ex, Locale locale) {
 		String errorMessage = messageSource.getMessage(ex.getMessage(), null, locale);
 		LOG.error(errorMessage, ex);
 		return errorMessage;

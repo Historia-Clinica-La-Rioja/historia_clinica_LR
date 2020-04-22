@@ -26,7 +26,8 @@ public class InternationListener {
 
 	public Integer getCurrentAuditor() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication == null || !authentication.isAuthenticated())
+		if (authentication == null || !authentication.isAuthenticated() ||
+				authentication.getPrincipal().equals("anonymousUser"))
 			return -1;
 		return (Integer) authentication.getPrincipal();
 	}

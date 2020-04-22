@@ -3,7 +3,6 @@ package net.pladema.internation.service.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.internation.controller.dto.ObservationsDto;
 import net.pladema.internation.controller.dto.ips.*;
 import net.pladema.internation.service.domain.ips.*;
 
@@ -21,7 +20,7 @@ public class Anamnesis implements Serializable {
 
     private Observations notes;
 
-    private List<HealthCondition> diagnosis;
+    private List<HealthConditionBo> diagnosis;
 
     private List<HealthHistoryCondition> personalHistory;
 

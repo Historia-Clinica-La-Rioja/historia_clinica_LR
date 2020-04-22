@@ -1,11 +1,8 @@
 package net.pladema.internation.service.documents.anamnesis.impl;
 
 import net.pladema.internation.controller.dto.ips.VitalSignDto;
-import net.pladema.internation.repository.core.DocumentRepository;
-import net.pladema.internation.repository.ips.ObservationLabRepository;
-import net.pladema.internation.repository.ips.ObservationVitalSignRepository;
-import net.pladema.internation.repository.ips.entity.ObservationVitalSign;
 import net.pladema.internation.service.documents.anamnesis.CreateAnamnesisService;
+import net.pladema.internation.service.documents.anamnesis.HealthConditionService;
 import net.pladema.internation.service.domain.Anamnesis;
 import net.pladema.internation.service.domain.ips.*;
 import org.slf4j.Logger;
@@ -19,25 +16,23 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
 
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
-    public CreateAnamnesisServiceImpl() {
+    private final HealthConditionService healthConditionService;
+
+    public CreateAnamnesisServiceImpl(HealthConditionService healthConditionService) {
+        this.healthConditionService = healthConditionService;
     }
 
     @Override
     public Anamnesis createAnanmesisDocument(Integer IntermentEpisodeId, Integer patientId, Anamnesis anamnesis) {
         LOG.debug("Input parameters -> intermentEpisodeId {}, patientId {}, anamnesis {}", anamnesis);
-        return null;
-    }
 
-    private void loadDiagnosis(List<HealthCondition> diagnosis) {
-        //TODO
-    }
+        //Todo: reemplazar la línea siguiente
+        Long documentId = 2L;
+        healthConditionService.loadDiagnosis(patientId, documentId, anamnesis.getDiagnosis());
+        healthConditionService.loadPersonalHistories(patientId, documentId, anamnesis.getPersonalHistory());
+        healthConditionService.loadFamilyHistories(patientId, documentId, anamnesis.getFamilyHistory());
 
-    private void loadPersonalHistories(List<HealthHistoryCondition> personalHistories) {
-        //TODO
-    }
-
-    private void loadFamilyHistories(List<HealthHistoryCondition> familyHistories) {
-        //TODO
+        return anamnesis;
     }
 
     private void loadAllergies(List<HealthHistoryCondition> allergies) {
