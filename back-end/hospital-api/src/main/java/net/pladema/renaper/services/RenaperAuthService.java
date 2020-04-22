@@ -6,13 +6,13 @@ import org.springframework.stereotype.Service;
 
 import net.pladema.renaper.configuration.RenaperWSConfig;
 import net.pladema.renaper.services.domain.RenaperLoginPayload;
+import net.pladema.renaper.services.domain.RenaperLoginResponse;
 import net.pladema.sgx.restclient.configuration.resttemplate.RestTemplateSSL;
 import net.pladema.sgx.restclient.services.AuthService;
-import net.pladema.sgx.restclient.services.domain.LoginResponse;
 import net.pladema.sgx.restclient.services.domain.WSResponseException;
 
 @Service
-public class RenaperAuthService extends AuthService {
+public class RenaperAuthService extends AuthService<RenaperLoginResponse> {
 
 	private RenaperWSConfig renaperWSConfig;
 
@@ -24,9 +24,9 @@ public class RenaperAuthService extends AuthService {
 	}
 
 	@Override
-	protected ResponseEntity<LoginResponse> callLogin()  throws WSResponseException {
-		ResponseEntity<LoginResponse> result = exchangePost(relUrl, new RenaperLoginPayload(renaperWSConfig.getNombre(),
-				renaperWSConfig.getClave(), renaperWSConfig.getDominio()), LoginResponse.class);
+	protected ResponseEntity<RenaperLoginResponse> callLogin()  throws WSResponseException {
+		ResponseEntity<RenaperLoginResponse> result = exchangePost(relUrl, new RenaperLoginPayload(renaperWSConfig.getNombre(),
+				renaperWSConfig.getClave(), renaperWSConfig.getDominio()), RenaperLoginResponse.class);
 		return result;
 	}
 

@@ -8,7 +8,7 @@ import net.pladema.sgx.restclient.configuration.resttemplate.RestTemplateSSL;
 import net.pladema.sgx.restclient.services.domain.LoginResponse;
 import net.pladema.sgx.restclient.services.domain.WSResponseException;
 
-public abstract class AuthService extends RestClient {
+public abstract class AuthService<R extends LoginResponse> extends RestClient {
 
 	protected final String relUrl;
 
@@ -17,20 +17,20 @@ public abstract class AuthService extends RestClient {
 		this.relUrl = relUrl;
 	}
 
-	protected abstract ResponseEntity<LoginResponse> callLogin() throws WSResponseException;
+	protected abstract ResponseEntity<R> callLogin() throws WSResponseException;
 
-	public LoginResponse login() throws WSResponseException {
+	public R login() throws WSResponseException {
 		return getValidResponse(callLogin());
 	}
 
-	private static LoginResponse getValidResponse(ResponseEntity<LoginResponse> result) throws WSResponseException {
+	private R getValidResponse(ResponseEntity<R> result) throws WSResponseException {
 		assertValidStatusCode(result);
-		LoginResponse loginResponse = result.getBody();
+		R loginResponse = result.getBody();
 		assertValidResponse(loginResponse);
 		return loginResponse;
 	}
 
-	private static void assertValidResponse(LoginResponse loginResponse) throws WSResponseException {
+	protected void assertValidResponse(R loginResponse) throws WSResponseException {
 		if (loginResponse == null) {
 			throw new WSResponseException("WS Response is null");
 		}
@@ -39,7 +39,7 @@ public abstract class AuthService extends RestClient {
 		}
 	}
 
-	private static void assertValidStatusCode(ResponseEntity<?> responseEntity) throws WSResponseException {
+	protected static void assertValidStatusCode(ResponseEntity<?> responseEntity) throws WSResponseException {
 		if (responseEntity.getStatusCode() != HttpStatus.OK) {
 			throw new WSResponseException(
 					String.format("WS Response status code is %s", responseEntity.getStatusCode()));

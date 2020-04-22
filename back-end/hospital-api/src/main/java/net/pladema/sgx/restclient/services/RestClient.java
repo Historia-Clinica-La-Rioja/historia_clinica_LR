@@ -1,9 +1,10 @@
 package net.pladema.sgx.restclient.services;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
@@ -21,7 +22,7 @@ public class RestClient {
 
 	private static HttpHeaders getHeaders() {
 		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+		headers.setContentType(APPLICATION_JSON);
 		return headers;
 	}
 

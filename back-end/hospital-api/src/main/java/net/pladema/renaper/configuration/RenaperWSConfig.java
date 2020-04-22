@@ -19,11 +19,13 @@ public class RenaperWSConfig extends WSConfig{
 
     private static final String PERSONA = "persona";
 	private static final String COBERTURA = "cobertura";
+	private static final long DEFAULT_TOKEN_EXPIRATION = 10l;
+	
 	private String nombre;
     private String clave;
     private String dominio;
     private Map<String, String> url;
-	private Long tokenExpiration;
+	private long tokenExpiration = DEFAULT_TOKEN_EXPIRATION;
 
 	
 	public RenaperWSConfig(@Value("${ws.renaper.url.base:https://federador.msal.gob.ar/masterfile-federacion-service/api}") String baseUrl) {

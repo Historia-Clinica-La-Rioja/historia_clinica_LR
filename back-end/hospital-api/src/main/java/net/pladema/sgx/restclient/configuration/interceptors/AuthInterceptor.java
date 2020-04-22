@@ -13,19 +13,21 @@ import org.springframework.http.client.ClientHttpResponse;
 
 import net.pladema.sgx.restclient.configuration.TokenHolder;
 import net.pladema.sgx.restclient.services.AuthService;
+import net.pladema.sgx.restclient.services.domain.LoginResponse;
 import net.pladema.sgx.restclient.services.domain.WSResponseException;
 
-public abstract class AuthInterceptor<AS extends AuthService> implements ClientHttpRequestInterceptor {
+public abstract class AuthInterceptor<AR extends LoginResponse, AS extends AuthService<AR>>
+		implements ClientHttpRequestInterceptor {
 
 	protected final TokenHolder token;
-	
+
 	private AS authService;
 
 	public AuthInterceptor(AS authService, TokenHolder tokenHolder) {
 		this.authService = authService;
 		this.token = tokenHolder;
 	}
-	
+
 	@Override
 	public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
 			throws IOException {
@@ -42,7 +44,7 @@ public abstract class AuthInterceptor<AS extends AuthService> implements ClientH
 		}
 		return response;
 	}
-	
+
 	protected abstract void addAuthHeaders(HttpHeaders headers);
 
 	private boolean loginRequired(ClientHttpResponse response) throws IOException {
