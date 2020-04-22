@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PatientSearchDto, GenderDto, IdentificationTypeDto } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
+import { DatePipe } from '@angular/common';
 
 const ROUTE_NEW = 'pacientes/new';
 const ROUTE_HOME = 'pacientes';
@@ -67,14 +68,14 @@ export class SearchComponent implements OnInit {
 	search() {
 		this.formSearchSubmitted = true;
 		if (this.formSearch.valid) {
+			let datePipe = new DatePipe('en-US');
 			let searchRequest = {
-				searchFilterStr: {
 					firstName: this.formSearch.controls.firstName.value,
 					lastName: this.formSearch.controls.lastName.value,
 					genderId: this.formSearch.controls.gender.value,
 					identificationTypeId: this.formSearch.controls.identificationType.value,
 					identificationNumber: this.formSearch.controls.identificationNumber.value,
-				}
+					birthDate: datePipe.transform(this.formSearch.controls.birthDate.value,'yyyy-MM-dd') 
 			}
 			this.patientService.getPatientByCMD(JSON.stringify(searchRequest)).subscribe(
 				data => {

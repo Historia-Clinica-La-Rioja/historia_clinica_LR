@@ -11,27 +11,27 @@
 
 	<ng-container matColumnDef="Nro. Documento">
 		<th mat-header-cell *matHeaderCellDef>Nro. Documento</th>
-		<td mat-cell *matCellDef="let element"> {{element.person.identificationNumber}} </td>
+		<td mat-cell *matCellDef="let element"> {{element.identificationNumber}} </td>
 	</ng-container>
 
 	<ng-container matColumnDef="Nombre">
 		<th mat-header-cell *matHeaderCellDef>Nombre</th>
-		<td mat-cell *matCellDef="let element"> {{element.person.first_name}} </td>
+		<td mat-cell *matCellDef="let element"> {{element.firstName}} </td>
 	</ng-container>
 
 	<ng-container matColumnDef="Apellido">
 		<th mat-header-cell *matHeaderCellDef>Apellido</th>
-		<td mat-cell *matCellDef="let element"> {{element.person.last_name}} </td>
+		<td mat-cell *matCellDef="let element"> {{element.lastName}} </td>
 	</ng-container>
 
 	<ng-container matColumnDef="F. Nac">
 		<th mat-header-cell *matHeaderCellDef>F. Nac</th>
-		<td mat-cell *matCellDef="let element"> {{element.person.birthDate}} </td>
+		<td mat-cell *matCellDef="let element"> {{element.birthDate}} </td>
 	</ng-container>
 
 	<ng-container matColumnDef="Sexo">
 		<th mat-header-cell *matHeaderCellDef>Sexo</th>
-		<td mat-cell *matCellDef="let element"> {{element.person.gender.description}} </td>
+		<td mat-cell *matCellDef="let element"> {{genderOptions[element.genderId]}} </td>
 	</ng-container>
 
 	<ng-container matColumnDef="Action">
