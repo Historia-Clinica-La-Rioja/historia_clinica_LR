@@ -12,6 +12,39 @@
 		"BACK": "Volver",
 		"CONTINUE": "Continuar"
 	},
+	"internaciones": {
+		"anamnesis": {
+			"TITLE": "Evaluación de ingreso",
+			"SUBTITLE": "Completa los siguientes datos.",
+			"antecedentes-personales": {
+				"TITLE": "Antecedentes personales",
+				"TABLE_TITLE": "Antecedentes personales registrados"
+			},
+			"observations": {
+				"TITLE": "Observaciones",
+				"CURRENT_DISEASE": "Enfermedad actual",
+				"PHYSICAL_EXAMINATION": "Exámen físico",
+				"STUDIES_PROCEDURES": "Resumen de estudios y procedimientos realizados",
+				"PATIENT_PROGRESS": "Evolución",
+				"CLINICAL_IMPRESSION": "Impresión clínica y plan",
+				"OTHERS": "Otras observaciones",
+				"DESCRIPTION": "Descripción"
+			}
+		},
+		"internados-table": {
+			"TITLE": "Búsqueda de pacientes"
+		},
+		"internacion-paciente": {
+			"TITLE": "HCE Internación",
+			"actions": {
+				"ADD_EVAL_INGRESO": "Generar evaluación de ingreso"
+			},
+			"card": {
+				"DAYS_INTERNED": "{{days}} días internado",
+				"ADMISSION": "Ingreso: {{datetime}}"
+			}
+		}
+	},
 	"pacientes": {
 		"form": {
 			"ADDRESS" : "Domicilio",
@@ -61,35 +94,6 @@
 		},
 		"search": {
 			"TITLE": "Búsqueda de pacientes"
-		}
-	},
-	"internaciones": {
-		"anamnesis": {
-			"TITLE": "Evaluación de ingreso",
-			"SUBTITLE": "Completa los siguientes datos.",
-			"observations": {
-				"TITLE": "Observaciones",
-				"CURRENT_DISEASE": "Enfermedad actual",
-				"PHYSICAL_EXAMINATION": "Exámen físico",
-				"STUDIES_PROCEDURES": "Resumen de estudios y procedimientos realizados",
-				"PATIENT_PROGRESS": "Evolución",
-				"CLINICAL_IMPRESSION": "Impresión clínica y plan",
-				"OTHERS": "Otras observaciones",
-				"DESCRIPTION": "Descripción"
-			}
-		},
-		"internados-table": {
-			"TITLE": "Búsqueda de pacientes"
-		},
-		"internacion-paciente": {
-			"TITLE": "HCE Internación",
-			"actions": {
-				"ADD_EVAL_INGRESO": "Generar evaluación de ingreso"
-			},
-			"card": {
-				"DAYS_INTERNED": "{{days}} días internado",
-				"ADMISSION": "Ingreso: {{datetime}}"
-			}
 		}
 	},
 	"presentation": {

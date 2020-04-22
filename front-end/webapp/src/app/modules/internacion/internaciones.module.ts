@@ -10,6 +10,7 @@ import { InternacionesHomeComponent } from './components/routes/home/internacion
 import { InternacionesTableComponent } from './components/internaciones-table/internaciones-table.component';
 import { InternacionPacienteComponent } from './components/routes/internacion-paciente/internacion-paciente.component';
 import { AnamnesisComponent } from './components/routes/anamnesis/anamnesis.component';
+import { AntecentesPersonalesComponent } from './components/antecentes-personales/antecentes-personales.component';
 
 @NgModule({
 	declarations: [
@@ -17,7 +18,8 @@ import { AnamnesisComponent } from './components/routes/anamnesis/anamnesis.comp
 		InternacionesTableComponent,
 		InternacionesHomeComponent,
 		InternacionPacienteComponent,
-		AnamnesisComponent
+		AnamnesisComponent,
+		AntecentesPersonalesComponent
 	],
 	imports: [
 		CommonModule,
