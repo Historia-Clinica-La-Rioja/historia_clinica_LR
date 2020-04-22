@@ -30,6 +30,21 @@
 				color: mat-color($primary, default-contrast);
 			}
 		}
+		&.secondary {
+			border-collapse: collapse;
+			thead {
+				background-color: #F0F0F0;
+				th {
+					color: #282828;
+				}
+			}
+			tr {
+				border: solid 1px #A8A8A8;
+				th, td {
+					border-bottom: none;
+				}
+			}
+		}
 	}
 }
 

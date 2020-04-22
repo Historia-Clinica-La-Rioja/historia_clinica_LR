@@ -1,0 +1,25 @@
+<table mat-table [dataSource]="dataSource" [class]="tableClass">
+	<ng-container *ngFor="let column of columns" [matColumnDef]="column.columnDef">
+		<th *matHeaderCellDef>{{ column.header | translate }}</th>
+		<td *matCellDef="let row">
+			<ng-container *ngIf="column.action else default">
+				<ng-container *ngIf="column.action.isDelete else button">
+					<button mat-icon-button color="warn" (click)="column.action.do(row)">
+						<mat-icon>delete_outline</mat-icon>
+					  </button>
+				</ng-container>
+				<ng-template #button>
+					<button mat-flat-button color="primary" (click)="column.action.do(row)">
+						<span *ngIf="column.action.text">{{ column.action.text | translate }}</span>
+					</button>
+				</ng-template>
+			</ng-container>
+			<ng-template #default>
+				<span *ngIf="column.text">{{ column.text(row)  | translate }}</span>
+			</ng-template>
+		</td>
+	</ng-container>
+
+	<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+	<tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>
