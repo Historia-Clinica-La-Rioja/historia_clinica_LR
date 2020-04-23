@@ -11,16 +11,15 @@ import {
 } from 'react-admin';
 
 import OnlySaveToolbar from '../components/only-save-toolbar';
-// import Aside from './Aside'
+import PeopleReferenceField from '../people/PeopleReferenceField';
+import Aside from './Aside'
 
 const UserEdit = props => (
     <Edit {...props} 
-        // aside={<Aside />} 
+        aside={<Aside />} 
     >
         <SimpleForm toolbar={<OnlySaveToolbar />}>
-            <ReferenceField source="personId" reference="persons" validate={[required()]}>
-                <TextField source="completeName" />
-            </ReferenceField>
+            <PeopleReferenceField source="personId" />
             <TextInput source="username" validate={[required()]}/>
             <BooleanInput source="enable" validate={[required()]}/>
             <DateField source="lastLogin" showTime locales="es-AR"/>

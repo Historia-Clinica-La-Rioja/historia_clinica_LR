@@ -3,19 +3,16 @@ import {
     List,
     Datagrid,
     BooleanField,
-    ReferenceField,
-    FunctionField,
     TextField,
 } from 'react-admin';
 
-const renderPerson = (choice) => `${choice.identificationNumber} ${choice.lastName} ${choice.firstName}`;
+import PeopleReferenceField from '../people/PeopleReferenceField';
+
 const HealthcareProfessionalList = props => (
     <List {...props} >
         <Datagrid rowClick="show">
             <TextField source="licenseNumber" />
-            <ReferenceField source="personId" reference="people">
-                <FunctionField render={renderPerson}/>
-            </ReferenceField>
+            <PeopleReferenceField source="personId" />
             <BooleanField source="isMedicalDoctor" />
         </Datagrid>
     </List>

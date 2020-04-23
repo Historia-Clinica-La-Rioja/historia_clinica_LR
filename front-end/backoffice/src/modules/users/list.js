@@ -6,21 +6,14 @@ import {
     DateField,
     BooleanField, 
     Filter,
-    ReferenceField,
     TextInput,
-    ReferenceInput,
-    AutocompleteInput,
 } from 'react-admin';
+
+import PeopleReferenceField from '../people/PeopleReferenceField';
 
 const PersonFilter = (props) => (
     <Filter {...props}>
         <TextInput source="username" />
-
-        <ReferenceInput source="id" reference="persons" 
-            allowEmpty={false}
-            filterToQuery={searchText => ({ completeName: searchText })}>
-            <AutocompleteInput optionText="completeName"/>
-        </ReferenceInput>
     </Filter>
 );
 
@@ -28,9 +21,7 @@ const UserList = props => (
     <List {...props} filters={<PersonFilter />} bulkActionButtons={false}>
         <Datagrid rowClick="edit">
             <TextField source="username" />
-            <ReferenceField source="personId" reference="persons" link="show" sortable={false}>
-                <TextField source="completeName" />
-            </ReferenceField>
+            <PeopleReferenceField source="personId" sortable={false}/>
             <BooleanField source="enable" />
             <DateField source="lastLogin" />
         </Datagrid>
