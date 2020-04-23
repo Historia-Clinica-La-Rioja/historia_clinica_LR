@@ -5,8 +5,25 @@
 			[text]="'internaciones.anamnesis.antecedentes-personales.table.columns.PROBLEM_TYPE'"
 			(onSelect)=setConcept($event)>
 		</app-concepts-search>
-		<!-- form -->
-	</mat-card-content>
+		<form [formGroup]="form" (ngSubmit)="save()">
+			<div>
+				<mat-label [translate]="'internaciones.anamnesis.antecedentes-personales.FECHA_REGISTRO'"></mat-label>
+			</div>
+			<mat-form-field>
+				<input matInput readonly [matDatepicker]="myDatepicker" formControlName="date" [max]="this.today">
+				<mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
+				<mat-datepicker #myDatepicker
+								startView="multi-year"
+								(yearSelected)="chosenYearHandler($event)"
+								(monthSelected)="chosenMonthHandler($event)">
+				</mat-datepicker>
+			</mat-form-field>
+			<div>
+				<button mat-raised-button color="primary" type="submit">
+					<span [translate]="'internaciones.anamnesis.antecedentes-personales.AGREGAR'"></span>
+				</button>
+			</div>
+		</form>	</mat-card-content>
 </mat-card>
 
 <section>

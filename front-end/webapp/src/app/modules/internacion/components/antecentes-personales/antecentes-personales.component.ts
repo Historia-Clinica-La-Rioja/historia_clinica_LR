@@ -11,6 +11,8 @@ import { MatTableDataSource } from '@angular/material/table';
 export class AntecentesPersonalesComponent implements OnInit {
 
 	current: any = {};
+	form: FormGroup;
+	today: Date = new Date();
 
 	//Mat table
 	columns = [
@@ -28,11 +30,37 @@ export class AntecentesPersonalesComponent implements OnInit {
 	displayedColumns: string[] = [];
 	apDataSource = new MatTableDataSource<any>([]);
 
-	constructor() {
+	constructor(
+		private formBuilder: FormBuilder
+	) {
 		this.displayedColumns = this.columns?.map(c => c.def).concat(['remove']);
 	}
 
-	ngOnInit(): void { }
+	ngOnInit(): void {
+		this.form = this.formBuilder.group({
+			date: [],
+		});
+	}
+
+	chosenYearHandler(newDate: Date) {
+		if (this.form.controls.date.value !== null) {
+			const ctrlDate: Date = this.form.controls.date.value;
+			ctrlDate.setFullYear(newDate.getFullYear());
+			this.form.controls.date.setValue(ctrlDate);
+		} else {
+			this.form.controls.date.setValue(newDate);
+		}
+	}
+
+	chosenMonthHandler(newDate: Date) {
+		if (this.form.controls.date.value !== null) {
+			const ctrlDate: Date = this.form.controls.date.value;
+			ctrlDate.setMonth(newDate.getMonth());
+			this.form.controls.date.setValue(ctrlDate);
+		} else {
+			this.form.controls.date.setValue(newDate);
+		}
+	}
 
 	setConcept(selectedConcept: SnomedDto): void {
 		this.current.snomed = selectedConcept;

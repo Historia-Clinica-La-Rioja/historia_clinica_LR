@@ -24,7 +24,8 @@
 					"TITLE": "Antecedentes personales registrados",
 					"columns": {
 						"PROBLEM_TYPE": "Tipo de problema",
-						"REGISTRY_DATE": "Fecha registro"
+						"REGISTRY_DATE": "Fecha registro",
+						"AGREGAR": "Agregar antecedente"
 					}
 				}
 			},
