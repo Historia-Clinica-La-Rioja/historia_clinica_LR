@@ -10,7 +10,7 @@
 				<ng-container *ngIf="column.action.isDelete else button">
 					<button mat-icon-button color="warn" (click)="column.action.do(row)">
 						<mat-icon>delete_outline</mat-icon>
-					  </button>
+					</button>
 				</ng-container>
 				<ng-template #button>
 					<button mat-flat-button color="primary" (click)="column.action.do(row)">
@@ -27,3 +27,6 @@
 	<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
 	<tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>
+<div class="mat-h3 no-data" *ngIf="dataSource?.data?.length === 0">
+	<span [translate]="'messages.NO_DATA'"></span>
+</div>

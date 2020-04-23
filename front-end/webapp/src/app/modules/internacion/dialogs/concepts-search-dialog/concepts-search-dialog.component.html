@@ -1,0 +1,12 @@
+<div mat-dialog-title>
+	<div class="mat-h1">{{ data.searchValue }}</div>
+	<span class="mat-body-1">{{ 'internaciones.snomed-search.modal.SUBTITLE' | translate }}
+		<span class="mat-body-2">{{ data.searchValue }}</span>
+	</span>
+</div>
+<div mat-dialog-content>
+	<app-table [model]="conceptsResultsTable" [tableClass]="'secondary'"></app-table>
+</div>
+<mat-dialog-actions align="end">
+	<button mat-button mat-dialog-close><span [translate]="'buttons.CLOSE'"></span></button>
+</mat-dialog-actions>

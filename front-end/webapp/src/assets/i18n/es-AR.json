@@ -10,7 +10,9 @@
 	},
 	"buttons":{
 		"BACK": "Volver",
-		"CONTINUE": "Continuar"
+		"CONTINUE": "Continuar",
+		"CLOSE": "Cerrar",
+		"SEARCH": "Buscar"
 	},
 	"internaciones": {
 		"anamnesis": {
@@ -18,7 +20,13 @@
 			"SUBTITLE": "Completa los siguientes datos.",
 			"antecedentes-personales": {
 				"TITLE": "Antecedentes personales",
-				"TABLE_TITLE": "Antecedentes personales registrados"
+				"table": {
+					"TITLE": "Antecedentes personales registrados",
+					"columns": {
+						"PROBLEM_TYPE": "Tipo de problema",
+						"REGISTRY_DATE": "Fecha registro"
+					}
+				}
 			},
 			"observations": {
 				"TITLE": "Observaciones",
@@ -43,7 +51,15 @@
 				"DAYS_INTERNED": "{{days}} días internado",
 				"ADMISSION": "Ingreso: {{datetime}}"
 			}
+		},
+		"snomed-search": {
+			"modal": {
+				"SUBTITLE": "Resultados de búsqueda para: "
+			}
 		}
+	},
+	"messages": {
+		"NO_DATA": "No hay información para mostrar"
 	},
 	"pacientes": {
 		"form": {

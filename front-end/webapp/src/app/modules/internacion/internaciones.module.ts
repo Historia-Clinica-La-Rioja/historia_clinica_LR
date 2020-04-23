@@ -11,6 +11,9 @@ import { InternacionesTableComponent } from './components/internaciones-table/in
 import { InternacionPacienteComponent } from './components/routes/internacion-paciente/internacion-paciente.component';
 import { AnamnesisComponent } from './components/routes/anamnesis/anamnesis.component';
 import { AntecentesPersonalesComponent } from './components/antecentes-personales/antecentes-personales.component';
+import { ConceptsSearchDialogComponent } from './dialogs/concepts-search-dialog/concepts-search-dialog.component';
+import { ConceptsSearchComponent } from './components/concepts-search/concepts-search.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
 	declarations: [
@@ -19,14 +22,17 @@ import { AntecentesPersonalesComponent } from './components/antecentes-personale
 		InternacionesHomeComponent,
 		InternacionPacienteComponent,
 		AnamnesisComponent,
-		AntecentesPersonalesComponent
+		AntecentesPersonalesComponent,
+		ConceptsSearchDialogComponent,
+		ConceptsSearchComponent,
 	],
 	imports: [
-		CommonModule,
 		AppMaterialModule,
-		PresentationModule,
 		CoreModule,
+		CommonModule,
+		FormsModule,
 		InternacionesRoutingModule,
+		PresentationModule,
 	]
 })
 export class InternacionesModule { }

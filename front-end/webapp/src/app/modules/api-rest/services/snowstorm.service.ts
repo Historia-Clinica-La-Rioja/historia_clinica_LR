@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { environment } from '@environments/environment';
+import { map } from 'rxjs/operators';
+import { SnomedDto } from '@api-rest/api-model';
+import { Observable } from 'rxjs';
 
 const CONCEPTS = 'concepts';
 const PREFERRED_CONCEPT = '900000000000548007';
@@ -23,7 +26,7 @@ export class SnowstormService {
 		private http: HttpClient
 	) { }
 
-	getSNOMEDConcepts(params: ConceptRequestParams) {
+	getSNOMEDConcepts(params: ConceptRequestParams): Observable<SnomedDto[]> {
 		Object.keys(params).forEach(
 			keyParam => this.params = this.params.set(`${keyParam}`, `${params[keyParam]}`)
 		);
@@ -31,7 +34,17 @@ export class SnowstormService {
 		return this.http.get<any>(url, {
 			headers: this.headers,
 			params: this.params
-		});
+		}).pipe(map(results => results.items.map(
+			(i: any): SnomedDto => {
+				return {
+					id: i.conceptId,
+					fsn: i.fsn.term,
+					// TODO no llegan las siguientes propiedades desde este endpoint de snowstorm
+					parentFsn: '',
+					parentId: ''
+				};
+			}
+		)));
 	}
 
 }

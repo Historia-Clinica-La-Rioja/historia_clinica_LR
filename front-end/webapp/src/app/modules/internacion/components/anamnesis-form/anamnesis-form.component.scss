@@ -1,6 +1,7 @@
-.container-column {
+.container {
 	display: flex;
 	flex-direction: column;
+	width: 80%;
 
 	section {
 		margin: 1vh;
@@ -10,8 +11,8 @@
 form {
 	padding-top: 25px;
 
-	mat-form-field, .form-buttons {
-		width: 70%;
+	mat-form-field {
+		width: 100%;
 	}
 
 	.form-buttons {

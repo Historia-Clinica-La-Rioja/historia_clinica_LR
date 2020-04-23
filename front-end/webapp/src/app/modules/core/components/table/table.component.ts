@@ -22,9 +22,7 @@ export class TableComponent implements OnInit {
 		private tableService: TableService
 	) { }
 
-	ngOnInit(): void {
-		this.setUpTable();
-	}
+	ngOnInit(): void { }
 
 	ngOnChanges() {
 		this.setUpTable();

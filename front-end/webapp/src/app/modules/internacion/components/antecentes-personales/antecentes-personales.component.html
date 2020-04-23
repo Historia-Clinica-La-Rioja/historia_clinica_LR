@@ -1,3 +1,11 @@
-<h3 [translate]="'internaciones.anamnesis.antecedentes-personales.TITLE'"></h3>
+<div class="container">
+	<section>
+		<h3 [translate]="'internaciones.anamnesis.antecedentes-personales.TITLE'"></h3>
+		<app-concepts-search (onSelect)=setConcept($event)></app-concepts-search>
+	</section>
 
-<span class="mat-body-2" [translate]="'internaciones.anamnesis.antecedentes-personales.TABLE_TITLE'"></span>
+	<section>
+		<h3 class="mat-body-2" [translate]="'internaciones.anamnesis.antecedentes-personales.table.TITLE'"></h3>
+		<app-table [model]="antecedentesPersonalesTable" [tableClass]="'secondary'"></app-table>
+	</section>
+</div>
