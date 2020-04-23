@@ -666,7 +666,6 @@ databaseChangeLog:
         columnNames: token
         constraintName: UC_token_password_reset_token
 
-
 - changeSet:
     id: snomed-masterdata
     comment: Cargo datos base de snomed
@@ -686,7 +685,6 @@ databaseChangeLog:
                 INSERT INTO snomed (id, fsn, parent_id, parent_fsn) VALUES('60621009', 'índice de masa corporal (entidad observable)', '60621009', 'índice de masa corporal (entidad observable)');
                 INSERT INTO snomed (id, fsn, parent_id, parent_fsn) VALUES('365636006', 'hallazgo relacionado con el grupo sanguíneo (hallazgo)', '365636006', 'hallazgo relacionado con el grupo sanguíneo (hallazgo)');
 
- 
 - changeSet:
     id: professional_specialty-metadata
     author: lmanterola
@@ -1254,3 +1252,27 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: note
         validate: true  
+
+- changeSet:
+    id: user_role__institution_id
+    comment: Add institution_id column to user_role
+    author: efernandez
+    changes:
+    - addColumn:
+        tableName: user_role
+        columns:
+        - column:
+            name: institution_id
+            type: integer
+            constraints:
+                nullable: true  
+    - addForeignKeyConstraint:
+        baseColumnNames: institution_id
+        baseTableName: user_role
+        constraintName: FK_user_role__institution_id
+        onDelete: CASCADE
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: institution
+        validate: true
+

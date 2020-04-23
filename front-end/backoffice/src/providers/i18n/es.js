@@ -119,7 +119,9 @@ export default {
                 username: 'Nombre de usuario',
                 personId: 'Persona',
                 enable: 'Habilitado',
-                lastLogin: 'Último ingreso'
+                lastLogin: 'Último ingreso',
+                institutionId: 'Institución',
+                roleId: 'Rol'
             },
             fieldGroups: {
                 passwordResets: 'Establecer clave de acceso'

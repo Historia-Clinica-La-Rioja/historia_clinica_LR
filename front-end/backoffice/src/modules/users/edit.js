@@ -4,7 +4,12 @@ import {
     SimpleForm,
     BooleanInput,
     TextInput,
+    ArrayInput,
     DateField,
+    SimpleFormIterator,
+    ReferenceInput,
+    AutocompleteInput,
+    SelectInput,
     required,
 } from 'react-admin';
 
@@ -21,6 +26,20 @@ const UserEdit = props => (
             <TextInput source="username" validate={[required()]}/>
             <BooleanInput source="enable" validate={[required()]}/>
             <DateField source="lastLogin" showTime locales="es-AR"/>
+            <ArrayInput source="roles">
+                <SimpleFormIterator>
+                    <ReferenceInput source="roleId" reference="roles" validate={[required()]}>
+                        <SelectInput optionText="description" optionValue="id"/>
+                    </ReferenceInput>
+                    <ReferenceInput
+                        source="institutionId"
+                        reference="institutions"
+                        sort={{ field: 'name', order: 'ASC' }}
+                    >
+                        <AutocompleteInput optionText="name" optionValue="id"/>
+                    </ReferenceInput>
+                </SimpleFormIterator>
+            </ArrayInput>
         </SimpleForm>
     </Edit>
 );
