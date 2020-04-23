@@ -3,7 +3,7 @@ package net.pladema.internation.controller.dto.core;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.internation.controller.dto.ObservationsDto;
+import net.pladema.internation.controller.dto.DocumentObservationsDto;
 import net.pladema.internation.controller.dto.ips.*;
 
 import java.io.Serializable;
@@ -16,7 +16,7 @@ public class AnamnesisDto implements Serializable {
 
     private String documentStatusId;
 
-    private ObservationsDto notes;
+    private DocumentObservationsDto notes;
 
     private List<HealthConditionDto> diagnosis;
 

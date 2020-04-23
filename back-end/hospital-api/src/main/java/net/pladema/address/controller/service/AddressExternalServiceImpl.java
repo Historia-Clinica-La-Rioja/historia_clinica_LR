@@ -3,7 +3,6 @@ package net.pladema.address.controller.service;
 import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.address.controller.mapper.AddressMapper;
 import net.pladema.address.repository.entity.Address;
-import net.pladema.address.service.AddressMasterDataService;
 import net.pladema.address.service.AddressService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,13 +17,10 @@ public class AddressExternalServiceImpl implements AddressExternalService {
 
     private final AddressService addressService;
 
-    private final AddressMasterDataService addressMasterDataService;
-
-    public AddressExternalServiceImpl(AddressMapper addressMapper, AddressService addressService, AddressMasterDataService addressMasterDataService) {
+    public AddressExternalServiceImpl(AddressMapper addressMapper, AddressService addressService) {
         super();
         this.addressService = addressService;
         this.addressMapper = addressMapper;
-        this.addressMasterDataService = addressMasterDataService;
         LOG.debug("{}", "created service");
     }
 

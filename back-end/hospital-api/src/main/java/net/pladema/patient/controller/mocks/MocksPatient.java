@@ -2,10 +2,8 @@ package net.pladema.patient.controller.mocks;
 
 import net.pladema.patient.controller.dto.BMPatientDto;
 import net.pladema.patient.controller.dto.BasicPatientDto;
-import net.pladema.patient.repository.domain.BasicListedPatient;
 import net.pladema.person.controller.mock.MocksPerson;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +11,10 @@ import java.util.List;
 
 public class MocksPatient {
 
+
+    private MocksPatient(){
+        super();
+    }
 
     public static BasicPatientDto mockBasicPatientDto(int i) {
         BasicPatientDto result = new BasicPatientDto();

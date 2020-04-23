@@ -665,3 +665,25 @@ databaseChangeLog:
         tableName: password_reset_token
         columnNames: token
         constraintName: UC_token_password_reset_token
+
+
+- changeSet:
+    id: snomed-masterdata
+    comment: Cargo datos base de snomed
+    author: etrapani
+    changes:
+        - sql:
+            sql: |-
+                INSERT INTO snomed (id, fsn, parent_id, parent_fsn) VALUES('271649006', 'presión sistólica (entidad observable)', '271649006', 'presión sistólica (entidad observable)');
+                INSERT INTO snomed (id, fsn, parent_id, parent_fsn) VALUES('271650006', 'presión diastólica (entidad observable)', '271650006', 'presión diastólica (entidad observable)');
+                INSERT INTO snomed (id, fsn, parent_id, parent_fsn) VALUES('6797001', 'presión arterial media (entidad observable)', '6797001', 'presión arterial media (entidad observable)');
+                INSERT INTO snomed (id, fsn, parent_id, parent_fsn) VALUES('703421000', 'temperatura (entidad observable)', '703421000', 'temperatura (entidad observable)');
+                INSERT INTO snomed (id, fsn, parent_id, parent_fsn) VALUES('364075005', 'frecuencia cardíaca (entidad observable)', '364075005', 'frecuencia cardíaca (entidad observable)');
+                INSERT INTO snomed (id, fsn, parent_id, parent_fsn) VALUES('86290005', 'frecuencia respiratoria (entidad observable)', '86290005', 'frecuencia respiratoria (entidad observable)');
+                INSERT INTO snomed (id, fsn, parent_id, parent_fsn) VALUES('103228002', 'saturación de hemoglobina con oxígeno (entidad observable)', '103228002', 'saturación de hemoglobina con oxígeno (entidad observable)');
+                INSERT INTO snomed (id, fsn, parent_id, parent_fsn) VALUES('50373000', 'altura corporal (entidad observable)', '50373000', 'altura corporal (entidad observable)');
+                INSERT INTO snomed (id, fsn, parent_id, parent_fsn) VALUES('27113001', 'peso corporal (entidad observable)', '27113001', 'peso corporal (entidad observable)');
+                INSERT INTO snomed (id, fsn, parent_id, parent_fsn) VALUES('60621009', 'índice de masa corporal (entidad observable)', '60621009', 'índice de masa corporal (entidad observable)');
+                INSERT INTO snomed (id, fsn, parent_id, parent_fsn) VALUES('365636006', 'hallazgo relacionado con el grupo sanguíneo (hallazgo)', '365636006', 'hallazgo relacionado con el grupo sanguíneo (hallazgo)');
+
+ 

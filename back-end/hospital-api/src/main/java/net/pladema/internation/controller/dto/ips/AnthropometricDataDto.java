@@ -11,9 +11,9 @@ import java.io.Serializable;
 @ToString
 public class AnthropometricDataDto implements Serializable {
 
-    private String bloodType;
+    private ClinicalObservationDto bloodType;
 
-    private String heigth;
+    private ClinicalObservationDto height;
 
-    private String weigth;
+    private ClinicalObservationDto weight;
 }

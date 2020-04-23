@@ -1,24 +1,21 @@
 package net.pladema.user.configuration;
 
-import java.time.LocalDate;
-import java.util.Optional;
-
-import javax.annotation.PostConstruct;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
-import org.springframework.context.annotation.Configuration;
-
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.permissions.service.RoleService;
 import net.pladema.user.repository.entity.User;
 import net.pladema.user.service.UserPasswordService;
 import net.pladema.user.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+
+import javax.annotation.PostConstruct;
+import java.util.Optional;
 
 @Configuration
-@ConditionalOnExpression("'${api.profile}'=='prod'")
+@Profile("!test")
 public class AdminConfig {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AdminConfig.class);

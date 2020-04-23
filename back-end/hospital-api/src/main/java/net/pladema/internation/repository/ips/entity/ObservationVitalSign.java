@@ -6,6 +6,8 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.internation.repository.listener.InternationAuditableEntity;
 import net.pladema.internation.repository.listener.InternationListener;
+import net.pladema.internation.repository.masterdata.entity.ObservationStatus;
+import net.pladema.internation.service.domain.ips.enums.EVitalSign;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -24,6 +26,8 @@ public class ObservationVitalSign extends InternationAuditableEntity {
 	 * 
 	 */
 	private static final long serialVersionUID = -3053291021636483828L;
+	private static final String VITAL_SIGN = "61746007";
+	private static final String VITAL_SIGN_LOINC = "85353-1";
 
 	@Id
 	@Column(name = "id")
@@ -54,6 +58,22 @@ public class ObservationVitalSign extends InternationAuditableEntity {
 	@Column(name = "note_id")
 	private Long noteId;
 
+	public ObservationVitalSign(Integer patientId, String value, EVitalSign evitalSign, Boolean deleted){
+		this.patientId = patientId;
+		this.statusId = ObservationStatus.FINAL;
+		if (deleted)
+			this.statusId = ObservationStatus.ERROR;
+		this.categoryId = VITAL_SIGN;
+		this.value = value;
+		this.sctidCode = evitalSign.getSctidCode();
+		this.loincCode = evitalSign.getLoincCode();
+		this.effectiveTime = LocalDateTime.now();
+	}
+
+	public boolean isDeleted() {
+		return this.statusId.equals(ObservationStatus.ERROR);
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -67,4 +87,6 @@ public class ObservationVitalSign extends InternationAuditableEntity {
 	public int hashCode() {
 		return Objects.hash(id, patientId);
 	}
+
+
 }

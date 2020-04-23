@@ -9,6 +9,6 @@ import lombok.ToString;
 @ToString
 public class ResponseAnamnesisDto extends AnamnesisDto {
 
-    private Integer anamnesisId;
+    private Integer id;
 
 }

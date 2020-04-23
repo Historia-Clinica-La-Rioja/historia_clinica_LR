@@ -3,7 +3,6 @@ package net.pladema.internation.service.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.internation.controller.dto.ips.*;
 import net.pladema.internation.service.domain.ips.*;
 
 import java.io.Serializable;
@@ -14,11 +13,11 @@ import java.util.List;
 @ToString
 public class Anamnesis implements Serializable {
 
-    private Integer anamnesisId;
+    private Long id;
 
     private String documentStatusId;
 
-    private Observations notes;
+    private DocumentObservations notes;
 
     private List<HealthConditionBo> diagnosis;
 
@@ -32,8 +31,8 @@ public class Anamnesis implements Serializable {
 
     private List<AllergyCondition> allergy;
 
-    private AnthropometricData anthropometricData;
+    private AnthropometricDataBo anthropometricData;
 
-    private VitalSignDto vitalSigns;
+    private VitalSignBo vitalSigns;
 
 }

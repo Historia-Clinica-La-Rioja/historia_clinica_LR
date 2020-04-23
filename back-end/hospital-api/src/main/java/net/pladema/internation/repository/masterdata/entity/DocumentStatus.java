@@ -24,6 +24,11 @@ public class DocumentStatus implements Serializable {
 	 */
 	private static final long serialVersionUID = -3053291021636483828L;
 
+	public static final String DRAFT = "445667001";
+	public static final String FINAL = "445665009";
+	public static final String FIXED = "445665009";
+	public static final String ERROR = "445665009";
+
 	@Id
 	@Column(name = "id", length = 20)
 	private String id;

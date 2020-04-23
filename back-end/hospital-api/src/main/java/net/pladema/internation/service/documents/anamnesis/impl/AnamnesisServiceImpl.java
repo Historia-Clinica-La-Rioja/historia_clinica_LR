@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class AnamnesisServiceImpl implements AnamnesisService {
 
-    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOG = LoggerFactory.getLogger(AnamnesisServiceImpl.class);
 
     public AnamnesisServiceImpl() {
     }

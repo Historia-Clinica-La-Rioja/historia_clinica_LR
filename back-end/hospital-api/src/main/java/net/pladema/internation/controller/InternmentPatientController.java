@@ -15,7 +15,7 @@ import java.util.List;
 @Api(value = "Internment Patient", tags = { "Internment Patient" })
 public class InternmentPatientController {
 
-    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOG = LoggerFactory.getLogger(InternmentPatientController.class);
 
     public InternmentPatientController() {
         super();

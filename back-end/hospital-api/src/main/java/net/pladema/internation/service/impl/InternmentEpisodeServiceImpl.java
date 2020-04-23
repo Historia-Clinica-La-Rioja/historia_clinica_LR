@@ -12,7 +12,7 @@ import java.util.Optional;
 @Service
 public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 
-    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOG = LoggerFactory.getLogger(InternmentEpisodeServiceImpl.class);
 
     private final InternmentEpisodeRepository internmentEpisodeRepository;
 

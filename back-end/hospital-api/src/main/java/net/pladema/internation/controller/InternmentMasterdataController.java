@@ -18,7 +18,7 @@ import java.util.Collection;
 @Api(value = "Internments Master Data", tags = { "Internments Master Data" })
 public class InternmentMasterdataController {
 
-    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOG = LoggerFactory.getLogger(InternmentMasterdataController.class);
 
     private final InternmentMasterDataService internmentMasterDataService;
 

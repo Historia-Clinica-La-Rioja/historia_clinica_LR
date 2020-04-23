@@ -41,6 +41,13 @@ public class Document extends InternationAuditableEntity {
 	@Column(name = "type_id", nullable = false)
 	private Short typeId;
 
+	public Document(Integer internmentEpisodeId, String statusId, Short typeId) {
+		this.internmentEpisodeId = internmentEpisodeId;
+		this.statusId = statusId;
+		this.typeId = typeId;
+
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;

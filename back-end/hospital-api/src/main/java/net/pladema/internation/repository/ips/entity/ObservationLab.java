@@ -6,6 +6,9 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.internation.repository.listener.InternationAuditableEntity;
 import net.pladema.internation.repository.listener.InternationListener;
+import net.pladema.internation.repository.masterdata.entity.ObservationStatus;
+import net.pladema.internation.service.domain.ips.enums.ELab;
+import net.pladema.internation.service.domain.ips.enums.EVitalSign;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -24,6 +27,8 @@ public class ObservationLab extends InternationAuditableEntity {
 	 * 
 	 */
 	private static final long serialVersionUID = -3053291021636483828L;
+
+	private static final String LAB = "lab";
 
 	@Id
 	@Column(name = "id")
@@ -50,6 +55,21 @@ public class ObservationLab extends InternationAuditableEntity {
 
 	@Column(name = "note_id")
 	private Long noteId;
+
+	public ObservationLab(Integer patientId, String value, ELab eLab, boolean deleted){
+		this.patientId = patientId;
+		this.statusId = ObservationStatus.FINAL;
+		if (deleted)
+			this.statusId = ObservationStatus.ERROR;
+		this.categoryId = LAB;
+		this.value = value;
+		this.sctidCode = eLab.getSctidCode();
+		this.effectiveTime = LocalDateTime.now();
+	}
+
+	public boolean isDeleted() {
+		return this.statusId.equals(ObservationStatus.ERROR);
+	}
 
 	@Override
 	public boolean equals(Object o) {

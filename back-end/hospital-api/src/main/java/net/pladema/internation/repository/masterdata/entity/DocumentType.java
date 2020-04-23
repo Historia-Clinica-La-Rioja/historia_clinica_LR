@@ -21,6 +21,10 @@ public class DocumentType implements Serializable {
 	 */
 	private static final long serialVersionUID = -3053291021636483828L;
 
+	public static final Short ANAMNESIS = (short)1;
+	public static final Short EVALUATION_NOTE = (short)2;
+	public static final Short EPICRISIS = (short)3;
+
 	@Id
 	@Column(name = "id")
 	private Short id;
@@ -28,3 +32,4 @@ public class DocumentType implements Serializable {
 	@Column(name = "description", nullable = false, length = 100)
 	private String description;
 }
+

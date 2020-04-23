@@ -21,7 +21,7 @@ import javax.persistence.EntityNotFoundException;
 @Api(value = "Internment Episode", tags = { "Internment Episode" })
 public class InternmentEpisodeController {
 
-    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOG = LoggerFactory.getLogger(InternmentEpisodeController.class);
 
     private final InternmentEpisodeService internmentEpisodeService;
 

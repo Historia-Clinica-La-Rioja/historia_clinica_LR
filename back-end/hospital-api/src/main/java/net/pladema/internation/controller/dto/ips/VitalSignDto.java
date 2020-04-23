@@ -11,18 +11,18 @@ import java.io.Serializable;
 @ToString
 public class VitalSignDto implements Serializable {
 
-    private String systolicBloodPresure;
+    private ClinicalObservationDto systolicBloodPressure;
 
-    private String diastolicBloodPresure;
+    private ClinicalObservationDto diastolicBloodPressure;
 
-    private String meanPresure;
+    private ClinicalObservationDto meanPressure;
 
-    private String temperature;
+    private ClinicalObservationDto temperature;
 
-    private String heartRate;
+    private ClinicalObservationDto heartRate;
 
-    private String respiratoryRate;
+    private ClinicalObservationDto respiratoryRate;
 
-    private String bloodOxygenSaturation;
+    private ClinicalObservationDto bloodOxygenSaturation;
 
 }
