@@ -1152,3 +1152,105 @@ databaseChangeLog:
                 VALUES(2, 'Asistente social', 'Trabajador Social', 106328005);
                 INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
                 VALUES(2, 'Licenciado en asistencia social', 'Trabajador Social', 106328005);
+
+- changeSet:
+    id: renameColumn-document-note_id
+    author: etrapani
+    changes:
+    - renameColumn:
+        columnDataType: bigint
+        newColumnName: other_note_id
+        oldColumnName: note_id
+        tableName: document                
+ 
+- changeSet:
+    id: document-addColumn-notes
+    author: etrapani
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: physical_exam_note_id
+            type: bigint
+            constraints:
+                nullable: true  
+        - column:
+            name: studies_summary_note_id
+            type: bigint
+            constraints:
+                nullable: true  
+        - column:
+            name: evolution_note_id
+            type: bigint
+            constraints:
+                nullable: true 
+        - column:
+            name: clinical_impression_note_id
+            type: bigint
+            constraints:
+                nullable: true  
+        - column:
+            name: current_illness_note_id
+            type: bigint
+            constraints:
+                nullable: true 
+        - column:
+            name: indications_note_id
+            type: bigint
+            constraints:
+                nullable: true 
+        tableName: document
+    - addForeignKeyConstraint:
+        baseColumnNames: physical_exam_note_id
+        baseTableName: document
+        constraintName: FK_document_physical_exam_note_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: note
+        validate: true 
+    - addForeignKeyConstraint:
+        baseColumnNames: studies_summary_note_id
+        baseTableName: document
+        constraintName: FK_document_studies_summary_note_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: note
+        validate: true 
+    - addForeignKeyConstraint:
+        baseColumnNames: evolution_note_id
+        baseTableName: document
+        constraintName: FK_document_evolution_note_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: note
+        validate: true 
+    - addForeignKeyConstraint:
+        baseColumnNames: clinical_impression_note_id
+        baseTableName: document
+        constraintName: FK_document_clinical_impression_note_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: note
+        validate: true 
+    - addForeignKeyConstraint:
+        baseColumnNames: current_illness_note_id
+        baseTableName: document
+        constraintName: FK_document_current_illness_note_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: note
+        validate: true
+    - addForeignKeyConstraint:
+        baseColumnNames: indications_note_id
+        baseTableName: document
+        constraintName: FK_document_indications_note_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: note
+        validate: true  

@@ -1,6 +1,7 @@
 package net.pladema.internation.service.documents.anamnesis.impl;
 
 import net.pladema.internation.repository.core.DocumentRepository;
+import net.pladema.internation.service.NoteService;
 import net.pladema.internation.service.documents.anamnesis.CreateVitalSignLabService;
 import net.pladema.internation.service.documents.anamnesis.HealthConditionService;
 import org.junit.Before;
@@ -17,17 +18,20 @@ public class CreateAnamnesisServiceImplTest {
 	private CreateAnamnesisServiceImpl createAnamnesisServiceImpl;
 
 	@MockBean
-	private HealthConditionService healthConditionService;
+	private DocumentRepository documentRepository;
 
 	@MockBean
-	private DocumentRepository documentRepository;
+	private NoteService noteService;
+
+	@MockBean
+	private HealthConditionService healthConditionService;
 
 	@MockBean
 	private CreateVitalSignLabService createVitalSignLabService;
 
 	@Before
 	public void setUp() {
-		createAnamnesisServiceImpl = new CreateAnamnesisServiceImpl(documentRepository, healthConditionService, createVitalSignLabService);
+		createAnamnesisServiceImpl = new CreateAnamnesisServiceImpl(documentRepository, noteService, healthConditionService, createVitalSignLabService);
 	}
 
 

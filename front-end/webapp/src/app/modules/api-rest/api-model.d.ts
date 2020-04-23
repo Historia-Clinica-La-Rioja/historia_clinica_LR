@@ -142,12 +142,13 @@ export interface ClinicalTermDto extends Serializable {
 }
 
 export interface DocumentObservationsDto extends Serializable {
-    clinicalReport: string;
-    evolution: string;
-    extra: string;
-    physicalExamination: string;
-    presentIllness: string;
-    procedure: string;
+    clinicalImpressionNote: string;
+    currentIllnessNote: string;
+    evolutionNote: string;
+    indicationsNote: string;
+    otherNote: string;
+    physicalExamNote: string;
+    studiesSummaryNote: string;
 }
 
 export interface GenderDto extends MasterdataDto<number> {

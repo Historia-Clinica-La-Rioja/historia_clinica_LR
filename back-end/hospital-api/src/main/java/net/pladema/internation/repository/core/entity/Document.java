@@ -35,8 +35,26 @@ public class Document extends InternationAuditableEntity {
 	@Column(name = "status_id", length = 20, nullable = false)
 	private String statusId;
 
-	@Column(name = "note_id")
-	private Long noteId;
+	@Column(name = "other_note_id")
+	private Long otherNoteId;
+
+	@Column(name = "physical_exam_note_id")
+	private Long physicalExamNoteId;
+
+	@Column(name = "studies_summary_note_id")
+	private Long studiesSummaryNoteId;
+
+	@Column(name = "evolution_note_id")
+	private Long evolutionNoteId;
+
+	@Column(name = "clinical_impression_note_id")
+	private Long clinicalImpressionNoteId;
+
+	@Column(name = "current_illness_note_id")
+	private Long currentIllnessNoteId;
+
+	@Column(name = "indications_note_id")
+	private Long indicationsNoteId;
 
 	@Column(name = "type_id", nullable = false)
 	private Short typeId;

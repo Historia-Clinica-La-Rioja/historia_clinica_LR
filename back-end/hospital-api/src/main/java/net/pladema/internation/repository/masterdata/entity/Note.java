@@ -28,4 +28,8 @@ public class Note implements Serializable {
 
 	@Column(name = "description", nullable = false, length = 1024)
 	private String description;
+
+	public Note(String description) {
+		this.description = description;
+	}
 }

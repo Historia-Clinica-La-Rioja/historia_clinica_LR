@@ -11,15 +11,17 @@ import java.io.Serializable;
 @ToString
 public class DocumentObservations implements Serializable {
 
-    private String presentIllness;
+    private String otherNote;
 
-    private String physicalExamination;
+    private String physicalExamNote;
 
-    private String procedure;
+    private String studiesSummaryNote;
 
-    private String evolution;
+    private String evolutionNote;
 
-    private String clinicalReport;
+    private String clinicalImpressionNote;
 
-    private String extra;
+    private String currentIllnessNote;
+
+    private String indicationsNote;
 }
