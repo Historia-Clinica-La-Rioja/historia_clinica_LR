@@ -83,6 +83,7 @@ export class AntecentesPersonalesComponent implements OnInit {
 		console.log(this.form.value);
 		let aux: HealthHistoryConditionDto = this.form.value;
 		console.log('HHC', aux);
+		this.add(aux);
 	}
 
 	setConcept(selectedConcept: SnomedDto): void {
