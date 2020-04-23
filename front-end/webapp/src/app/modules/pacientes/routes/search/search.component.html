@@ -30,6 +30,9 @@
 					<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'identificationNumber')">
 						El campo es requerido
 					</mat-error>
+					<mat-error *ngIf="hasError(formSearch, 'maxlength', 'identificationNumber')">
+						Introduzca como máximo 11 caracteres
+					</mat-error>
 				</mat-form-field>
 				<br>
 				<mat-label>Sexo</mat-label>

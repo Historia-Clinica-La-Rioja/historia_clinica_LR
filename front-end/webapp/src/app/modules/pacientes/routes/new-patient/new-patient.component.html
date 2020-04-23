@@ -32,10 +32,12 @@
                             name="identificationNumber"
                             formControlName="identificationNumber"
                             placeholder="{{'pacientes.form.ONLY_NUMBERS' | translate}}"
-                            maxlength="10"
                             matInput
                         >
-                        <mat-error [translate]="'pacientes.form.REQUIRED'"></mat-error>
+                        <mat-error *ngIf="hasError(form, 'required', 'identificationNumber')" [translate]="'pacientes.form.REQUIRED'"></mat-error>
+                        <mat-error *ngIf="hasError(form, 'maxlength', 'identificationNumber')">
+                            Introduzca como máximo 11 caracteres
+                        </mat-error>
                     </mat-form-field>
                 </div>
             </div>
@@ -163,10 +165,12 @@
             <input id="cuil"
                 name="cuil"
                 formControlName="cuil"
-                maxlength="10"
                 placeholder="{{'pacientes.form.ONLY_NUMBERS' | translate}}"
                 matInput
             >
+            <mat-error *ngIf="hasError(form, 'maxlength', 'cuil')">
+                Introduzca como máximo 11 caracteres
+            </mat-error>
         </mat-form-field>
 
         <div>

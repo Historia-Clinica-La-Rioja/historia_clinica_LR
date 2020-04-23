@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { hasError } from "@core/utils/form.utils";
+import { hasError, VALIDATIONS } from "@core/utils/form.utils";
 import { ActivatedRoute, Router } from '@angular/router';
 import { PatientSearchDto, GenderDto, IdentificationTypeDto } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
@@ -43,7 +43,7 @@ export class SearchComponent implements OnInit {
 			this.genderId = params['genderId'];
 
 			this.formSearch = this.formBuilder.group({
-				identificationNumber: [this.identificationNumber, Validators.required],
+				identificationNumber: [this.identificationNumber, [Validators.required,Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
 				identificationType: [Number(this.identificationTypeId), Validators.required],
 				firstName: [null, Validators.required],
 				middleNames: [null],

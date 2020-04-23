@@ -3,7 +3,7 @@ import { FormBuilder, Validators, FormGroup, FormArray, FormControl } from '@ang
 import { Router, ActivatedRoute } from '@angular/router';
 import { APatientDto, BMPatientDto, GenderDto, IdentificationTypeDto } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
-import { scrollIntoError, hasError } from "@core/utils/form.utils";
+import { scrollIntoError, hasError, VALIDATIONS } from "@core/utils/form.utils";
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
 
@@ -47,12 +47,12 @@ export class NewPatientComponent implements OnInit {
 					lastName: [params.lastName, [Validators.required]],
 					otherLastNames: [params.otherLastNames],
 					genderId: [Number(params.genderId), [Validators.required]],
-					identificationNumber: [params.identificationNumber, [Validators.required]],
+					identificationNumber: [params.identificationNumber, [Validators.required,Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
 					identificationTypeId: [Number(params.identificationTypeId), [Validators.required]],
 					birthDate: [new Date(params.birthDate), [Validators.required]],
 					
 					//Person extended
-					cuil: [],
+					cuil: [null, [Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)]],
 					mothersLastName: [],
 					phoneNumber: [], 
 					email: [null,Validators.email],
