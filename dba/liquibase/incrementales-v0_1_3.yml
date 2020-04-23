@@ -422,8 +422,8 @@ databaseChangeLog:
         - sql:
             sql: |-
                 INSERT INTO education_type VALUES (1, 'Auxiliarato');
-                INSERT INTO education_type VALUES (2, 'Grado Universitario');
-                INSERT INTO education_type VALUES (3, 'Tecnicatura');
+                INSERT INTO education_type VALUES (2, '2');
+                INSERT INTO education_type VALUES (3, '3');
 
 - changeSet:
     id: dropColumn-clinical_specialty
@@ -687,3 +687,468 @@ databaseChangeLog:
                 INSERT INTO snomed (id, fsn, parent_id, parent_fsn) VALUES('365636006', 'hallazgo relacionado con el grupo sanguíneo (hallazgo)', '365636006', 'hallazgo relacionado con el grupo sanguíneo (hallazgo)');
 
  
+- changeSet:
+    id: professional_specialty-metadata
+    author: lmanterola
+    context: "!schema-only"
+    changes: 
+        - sql:
+            sql: |- 
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Acompañante terapéutico', 'Acompañante Terapéutico', 1561000221109);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(1, 'Agente de propaganda médica', 'Agente Propaganda Médica', 1541000221105);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(1, 'Visitador médico', 'Agente Propaganda Médica', 1541000221105);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en salud rural', 'Agente Sanitario', 1491000221103);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Agente sanitario', 'Agente Sanitario', 1491000221103);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico superior en agente sanitario', 'Agente Sanitario', 1491000221103);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Ing. agrónomo', 'Agrónomo', 88955002);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Antropólogo', 'Antropólogo', 50835006);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(1, 'Auxiliar de odontología', 'Asistente Dental', 4162009);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(1, 'Asistente odontología', 'Asistente Dental', 4162009); 
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(1, 'Asistente dental', 'Asistente Dental', 4162009);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(1, 'Auxiliar Acompañante Terapéutico', 'Auxiliar Acompañante Terapeútico', 1711000221102);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(1, 'Agente sanitario', 'Auxiliar Agente Sanitario', 1651000221108);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(1, 'Auxiliar de educación sanitaria', 'Auxiliar Agente Sanitario', 1651000221108);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(1, 'Auxiliar de anestesia', 'Auxiliar De Anestesia', 1601000221109);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(1, 'Auxiliar técnico de anestesia', 'Auxiliar De Anestesia',	1601000221109);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(1, 'Auxiliar de bromatología', 'Auxiliar De Bromatología', 1661000221105);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(1, 'Inspector de bromatología', 'Auxiliar De Bromatología', 1661000221105);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(1, 'Auxiliar instrum. quirúrgica', 'Auxiliar De Cirugía', 1611000221107);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(1, 'Auxiliar de diálisis', 'Auxiliar De Diálisis', 1721000221107);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(1, 'Auxiliar de estadística de salud', 'Auxiliar De Estadística', 1931000221107);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(1, 'Auxiliar de estadística', 'Auxiliar De Estadística', 1931000221107);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(1, 'Auxiliar de esterilización', 'Auxiliar De Esterilización', 1621000221102);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(1, 'Auxiliar de familia especializado en cuidado de personas', 'Auxiliar De Familia Especializado En Cuidado De Personas', 1691000221100);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(1, 'Auxiliar de familia especializado en cuidado de personas con discapacidad', 'Auxiliar De Familia Especializado En Cuidado De Personas Con Discapacidad',	1581000221102);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(1, 'Auxiliar de farmacia', 'Auxiliar De Farmacia', 44652006);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(1, 'Idóneos de farmacia', 'Auxiliar De Farmacia', 44652006);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(1, 'Auxiliar de fonoaudiología', 'Auxiliar De Fonoaudiología', 1731000221105);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(1, 'Auxiliar de hemoterapia', 'Auxiliar De Hemoterapia', 1631000221104);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(1, 'Auxiliar de laboratorio', 'Auxiliar De Laboratorio', 386629007);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(1, 'Auxiliar de bioquímica', 'Auxiliar De Laboratorio', 386629007);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(1, 'Auxiliar de radiología', 'Auxiliar De Radiología', 1641000221106);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(1, 'Auxiliar de veterinaria', 'Auxiliar De Veterinaria', 53216000);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(1, 'Auxiliar dietista', 'Auxiliar Dietista', 1671000221101);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(1, 'Auxiliar en electrocardiografía', 'Auxiliar En Electrocardiografía', 1741000221103);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(1, 'Auxiliar en electroencefalografía', 'Auxiliar En Electroencefalografía', 1681000221103);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(1, 'Auxiliar de enfermería', 'Auxiliar En Enfermería', 5275007);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(1, 'Asistente de enfermería', 'Auxiliar En Enfermería', 5275007);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(1, 'Auxiliar en geriatría', 'Auxiliar En Geriatría', 1571000221100);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(1, 'Auxiliar en patología', 'Auxiliar En Patología',	1591000221104);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Bacteriólogo', 'Bacteriólogo', 18537005);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Bacteriólogo clínico industrial', 'Bacteriólogo', 18537005);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Licenciado en biología', 'Biólogo', 72327007);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Biólogo', 'Biólogo', 72327007);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Licenciado en biología molecular', 'Biólogo', 72327007);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Bioquímico', 'Bioquímico', 35513000);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Licenciado en bioquímica', 'Bioquímico',	35513000);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Lic. en biotecnología', 'Biotecnólogo', 1941000221100);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Contador', 'Contador', 106302007);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(1, 'Cosmetólogo', 'Cosmetólogo', 68529004);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Educador sanitario', 'Educador Sanitario', 409974004);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Enfermero', 'Enfermero', 308211001);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Enfermero superior no universitario', 'Enfermero', 308211001);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Enfermero universitario', 'Enfermero', 308211001);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Enfermero profesional', 'Enfermero', 308211001);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Farmacéutico', 'Farmacéutico', 46255001);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Fonoaudiólogo', 'Fonoaudiólogo', 1251000221105);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Licenciado en fonoaudiología', 'Fonoaudiólogo', 1251000221105);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Licenciado en genética', 'Genetista', 159141008);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Ingeniero biomédico', 'Ingeniero Biomédico', 1751000221101);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Instrumentador quirúrgico', 'Instrumentador Quirúrgico', 1361000221100);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Instrumentista universitario', 'Instrumentador Quirúrgico', 1361000221100);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Instrumentista no universitario', 'Instrumentador Quirúrgico', 1361000221100);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico superior instrumentación quirúrgica', 'Instrumentador Quirúrgico', 1361000221100);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en quirófano', 'Instrumentador Quirúrgico', 1361000221100);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico universitario en quirófano', 'Instrumentador Quirúrgico', 1361000221100);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Kinesiólogo', 'Kinesiólogo', 1221000221104);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Licenciado en kinesiología', 'Kinesiólogo', 1221000221104);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Licenciado terapia física', 'Kinesiólogo', 1221000221104);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Licenciado en estadística para la salud', 'Lic. Estadística En Salud', 1311000221103);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Obstétrico', 'Lic. Obstetricia', 1261000221107);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Licenciado en obstetricia', 'Lic. Obstetricia', 1261000221107);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Licenciado en administración', 'Licenciado En Administración', 1761000221104);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Licenciado en comunicación social', 'Licenciado En Comunicación Social', 1331000221106);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Licenciado en Economía', 'Licenciado En Economía', 1771000221108);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Licenciado en educación para la salud', 'Licenciado En Educación Para La Salud', 1321000221108);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Licenciado enfermería', 'Licenciado En Enfermería', 1951000221103);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Licenciado en instrumentación quirúrgica', 'Licenciado En Instrumentación Quirúrgica', 1781000221106);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Licenciado en radiología', 'Licenciado En Producción De Bioimágenes', 1291000221102);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Licenciado en producción bioimágenes', 'Licenciado En Producción De Bioimágenes', 1291000221102);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Licenciado en diagnóstico por imágenes', 'Licenciado En Producción De Bioimágenes', 1291000221102);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Licenciado en prótesis y órtesis', 'Licenciado En Prótesis Y Órtesis', 1231000221101);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Médico', 'Médico', 309343006);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Médico veterinario', 'Médico Veterinario', 106290006);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Licenciado microbiología', 'Microbiólogo', 159138004);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Microbiólogo', 'Microbiólogo', 159138004);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Musicoterapeuta', 'Musicoterapeuta', 309412003);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Licenciado en musicoterapia', 'Musicoterapeuta', 309412003);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Nutricionista', 'Nutricionista', 768827000);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Licenciado en nutrición', 'Nutricionista', 768827000);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Nutricionista dietista', 'Nutricionista', 768827000);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Odontólogo', 'Odontólogo', 158979008);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(1, 'Operador socio-comunitario especializado en atención de las adicciones', 'Operador Socio-Comunitario Especializado En Atención De Las Adicciones', 1791000221109);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Periodista', 'Periodista', 29536009);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Podólogo universitario', 'Podólogo', 224603001);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Podólogo', 'Podólogo', 224603001);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Pedicuro', 'Podólogo', 224603001);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Profesional de análisis clínicos', 'Profesional De Análisis Clínicos', 1301000221101);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Licenciado en química', 'Profesional De Análisis Clínicos', 1301000221101);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Químico', 'Profesional De Análisis Clínicos', 1301000221101);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Licenciado en física-química', 'Profesional De Análisis Clínicos', 1301000221101);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Licenciado en química industrial', 'Profesional De Análisis Clínicos', 1301000221101);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Licenciado en análisis clínicos', 'Profesional De Análisis Clínicos', 1301000221101);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Ingeniero químico', 'Profesional De Análisis Clínicos', 1301000221101);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Lic. en ciencias químicas', 'Profesional De Análisis Clínicos', 1301000221101);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Lic. en hemoterapia e inmunohematología', 'Profesional De Análisis Clínicos', 1301000221101);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Profesor en psicomotricidad', 'Profesor En Educación Especial', 106309003);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Prof. educación especial', 'Profesor En Educación Especial', 106309003);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Prof. deficientes mentales', 'Profesor En Educación Especial', 106309003);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Prof. educador sordos', 'Profesor En Educación Especial', 106309003);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Prof. deficientes del oído, voz y palabra', 'Profesor En Educación Especial', 106309003);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Prof. sordos y terapeuta del lenguaje', 'Profesor En Educación Especial', 106309003);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Psicólogo', 'Psicólogo', 59944000);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Licenciado en psicología', 'Psicólogo', 59944000);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Licenciado en psicomotrocidad', 'Psicomotricista',  1241000221108);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Psicopedagogo', 'Psicopedagogo', 1211000221109);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Licenciado en psicopedagogía', 'Psicopedagogo', 1211000221109);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Licenciado en saneamiento y protección ambiental', 'Saneamiento Ambiental', 1341000221104);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Ambientólogo', 'Saneamiento Ambiental', 1341000221104);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Ingeniero sanitario', 'Saneamiento Ambiental', 1341000221104);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Bioingeniería', 'Saneamiento Ambiental', 1341000221104);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Sociólogo', 'Sociólogo', 824004);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico administración social y de salud', 'Técnico Administración En Salud', 1501000221108);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en administración y gestión', 'Técnico Administración En Salud', 1501000221108);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico univ. en administración', 'Técnico Administración En Salud', 1501000221108);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico laboratorio análisis clínicos', 'Técnico De Laboratorio', 159282002);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico laboratorio', 'Técnico De Laboratorio', 159282002);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico superior laboratorio', 'Técnico De Laboratorio', 159282002);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico análisis clínicos', 'Técnico De Laboratorio', 159282002);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico químico', 'Técnico De Laboratorio', 159282002);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico químico orientación laboratorista', 'Técnico De Laboratorio', 159282002);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Analista químico biológico', 'Técnico De Laboratorio', 159282002);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Perito químico', 'Técnico De Laboratorio', 159282002);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico bacteriólogo','Técnico de laboratorio', 159282002);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico químico industrial','Técnico de laboratorio', 159282002);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Asistente químico industrial','Técnico de laboratorio', 159282002);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en diálisis', 'Técnico Diálisis', 1401000221107);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico hemodiálisis', 'Técnico Diálisis', 1401000221107);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico alimentación', 'Técnico En Alimentos', 58288008);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico industria alimentos', 'Técnico En Alimentos', 58288008);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico superior industria alimentaria', 'Técnico En Alimentos', 58288008);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en bromatología', 'Técnico En Alimentos', 58288008);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico superior en alimentos con orientación en bromatología', 'Técnico En Alimentos', 58288008);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en lechería y tecnología alimentos', 'Técnico En Alimentos', 58288008);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Bromatólogo', 'Técnico En Alimentos', 58288008);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en anestesia', 'Técnico En Anestesia', 331091000221101);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en histología', 'Técnico En Citología', 386627009);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico laboratorio clínico e histopatología', 'Técnico En Citología', 386627009);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Citotécnico', 'Técnico En Citología', 386627009);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en citología', 'Técnico En Citología', 386627009);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico preparador de histología', 'Técnico En Citología', 386627009);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en anatomía patológica', 'Técnico En Citología', 386627009);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en emergencia médica', 'Técnico En Emergencia Médica', 1521000221101);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Tecnico Universitario en Emergencias Sanitarias y Desastres', 'Técnico En Emergencia Médica', 1521000221101);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico estadística', 'Técnico En Estadística', 1441000221109);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico bioestadística', 'Técnico En Estadística', 1441000221109);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico estadística en salud', 'Técnico En Estadística', 1441000221109);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico superior en esterilización', 'Técnico En Esterilización', 1351000221102);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en esterilización', 'Técnico En Esterilización', 1351000221102);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en farmacia', 'Técnico En Farmacia', 159040006);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en farmacia hospitalaria', 'Técnico En Farmacia', 159040006);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en fonoaudiología', 'Técnico En Fonoaudiología', 1831000221100);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en hemoterapia', 'Técnico En Hemoterapia', 1371000221109);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en hemoterapia e inmunohematología', 'Técnico En Hemoterapia', 1371000221109);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico hematólogo', 'Técnico En Hemoterapia', 1371000221109);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico de transfusión', 'Técnico En Hemoterapia', 1371000221109);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en inmunohematología', 'Técnico En Hemoterapia', 1371000221109);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en identificacion del recién nacido', 'Técnico En Identificación Del Recién Nacido', 1511000221106);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en electroencefalografía', 'Técnico En Neurofisiología', 1391000221105);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en neurofisiología', 'Técnico En Neurofisiología', 1391000221105);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en obstetricia', 'Técnico En Obstetricia', 1471000221104);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Obstétrico', 'Técnico En Obstetricia', 1471000221104);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Obstetra', 'Técnico En Obstetricia', 1471000221104);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en prácticas cardiológicas', 'Técnico En Prácticas Cardiológicas', 1381000221107);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico cardiólogo', 'Técnico En Prácticas Cardiológicas', 1381000221107);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en electrocardiografía', 'Técnico En Prácticas Cardiológicas', 1381000221107);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en Prevención de la Drogadependencia', 'Técnico En Prevención De La Drogadependencia', 1821000221103);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en prótesis dental', 'Técnico En Prótesis Dental', 1411000221105);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico protesista dental', 'Técnico En Prótesis Dental', 1411000221105);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Protésico dental universitario', 'Técnico En Prótesis Dental', 1411000221105);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Mecánico dental', 'Técnico En Prótesis Dental', 1411000221105);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en odontología', 'Técnico En Prótesis Dental', 1411000221105);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Mecánico para odontólogos', 'Técnico En Prótesis Dental', 1411000221105);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico de laboratorio para odontólogos', 'Técnico En Prótesis Dental', 1411000221105);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en prótesis y órtesis', 'Técnico En Prótesis Y Órtesis', 1421000221100);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico ortopédico ortóptico', 'Técnico En Prótesis Y Órtesis', 1421000221100);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico ortesista protesista', 'Técnico En Prótesis Y Órtesis', 1421000221100);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Terapista ocupacional', 'Técnico En Rehabilitación', 1461000221108);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en estimulación temprana', 'Técnico En Rehabilitación', 1461000221108);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en disc. intelectual y estimulación temprana', 'Técnico En Rehabilitación', 1461000221108);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Psicomotricista', 'Técnico En Rehabilitación', 1461000221108);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en psicomotricidad', 'Técnico En Rehabilitación', 1461000221108);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Musicoterapeuta', 'Técnico En Rehabilitación', 1461000221108);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en psicogerontología', 'Técnico En Rehabilitación', 1461000221108);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico kinesiólogo', 'Técnico En Rehabilitación', 1461000221108);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Psicopedagogo', 'Técnico En Rehabilitación', 1461000221108);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en saneamiento', 'Técnico En Saneamiento Ambiental',	1531000221103);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en saneamiento ambiental', 'Técnico En Saneamiento Ambiental', 1531000221103);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Trabajador social', 'Técnico En Trabajo Social', 1481000221101);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Asistente social', 'Técnico En Trabajo Social', 1481000221101);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en veterinaria', 'Técnico En Veterinaria', 1551000221107);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Nutricionista', 'Técnico Nutricionista', 1451000221106);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico óptico', 'Técnico Óptico', 1431000221102);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en óptica', 'Técnico Óptico', 1431000221102);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Óptico técnico/contactólogo', 'Técnico Óptico', 1431000221102);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico óptica (contac. e instrumental)', 'Técnico Óptico', 1431000221102);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico oftalmología', 'Técnico Óptico', 1431000221102);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico radiólogo', 'Técnico Radiólogo', 41904004);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico superior en radiología', 'Técnico Radiólogo', 41904004);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico diagnóstico por imágenes', 'Técnico Radiólogo', 41904004);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en radiodiagnóstico', 'Técnico Radiólogo', 41904004);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en bioimágenes', 'Técnico Radiólogo', 41904004);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en radiología y terapia radiante', 'Técnico Radiólogo', 41904004);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en tomografía axial computada', 'Técnico Radiólogo', 41904004);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico radiante', 'Técnico Radiólogo', 41904004);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(3, 'Técnico en medicina nuclear', 'Técnico Radiólogo', 41904004);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Licenciado en bromatología', 'Tecnología Alimentaria', 58288008);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Licenciado en tecnología y alimentos', 'Tecnología Alimentaria', 58288008);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Ingeniero en industria de la alimentación', 'Tecnología Alimentaria', 58288008);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Fruticultor - enólogo', 'Tecnología Alimentaria', 58288008);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Lic. en gestión de agroalimentos', 'Tecnología Alimentaria', 58288008);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Ingeniero en alimentos', 'Tecnología Alimentaria', 58288008);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Terapista ocupacional', 'Terapista Ocupacional', 80546007);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Licenciado en terapia ocupacional', 'Terapista Ocupacional', 80546007);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Licenciado en trabajo social', 'Trabajador Social', 106328005);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Trabajador social', 'Trabajador Social', 106328005);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Licenciado en servicio social', 'Trabajador Social', 106328005);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Asistente social', 'Trabajador Social', 106328005);
+                INSERT INTO professional_specialty (education_type_id, description, description_profession_ref, sctid_code) 
+                VALUES(2, 'Licenciado en asistencia social', 'Trabajador Social', 106328005);
