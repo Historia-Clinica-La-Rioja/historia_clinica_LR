@@ -11,6 +11,9 @@ import javax.persistence.EntityNotFoundException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
+import net.pladema.error.controller.dto.ApiErrorMessage;
+import net.pladema.sgx.exceptions.NotFoundException;
+import net.pladema.sgx.exceptions.PermissionDeniedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
@@ -29,7 +32,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
 import net.pladema.error.controller.dto.ApiError;
-import net.pladema.patient.service.domain.MatchCalculationException;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice
@@ -43,16 +46,16 @@ public class RestExceptionHandler {
 		this.messageSource = messageSource;
 	}
 
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
+
 	@ExceptionHandler({ MethodArgumentNotValidException.class })
-	public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
 		Map<String, String> errors = new HashMap<>();
 		ex.getBindingResult().getAllErrors().forEach(error -> {
 			String fieldName = ((FieldError) error).getField();
 			String errorMessage = error.getDefaultMessage();
 			errors.put(fieldName, errorMessage);
 		});
-		return errors;
+		return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -74,12 +77,11 @@ public class RestExceptionHandler {
 		return errors;
 	}
 
-	@ResponseStatus(HttpStatus.UNAUTHORIZED)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler({ BadCredentialsException.class })
-	public ResponseEntity<String> invalidCredentials(Exception ex, Locale locale) {
-		String errorMessage = messageSource.getMessage(ex.getMessage(), null, locale);
-		LOG.error(errorMessage, ex);
-		return new ResponseEntity<>(errorMessage, HttpStatus.UNAUTHORIZED);
+	public ResponseEntity<ApiErrorMessage> invalidCredentials(BadCredentialsException ex, Locale locale) {
+		LOG.warn(ex.getMessage(), ex);
+		return new ResponseEntity<>(new ApiErrorMessage(ex.getMessage(), "Nombre de usuario o clave inválidos"), HttpStatus.BAD_REQUEST);
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -97,13 +99,12 @@ public class RestExceptionHandler {
 		LOG.error(errorMessage, ex);
 		return errorMessage;
 	}
-	
-	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	@ExceptionHandler(MatchCalculationException.class)
-	public String handleCalculation(MatchCalculationException ex, Locale locale) {
-		String errorMessage = messageSource.getMessage(ex.getMessage(), null, locale);
-		LOG.error(errorMessage, ex);
-		return errorMessage;
+
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	@ExceptionHandler(NotFoundException.class)
+	public ResponseEntity<ApiErrorMessage> notFound(NotFoundException ex) {
+		LOG.warn(ex.getMessage(), ex);
+		return new ResponseEntity<>(new ApiErrorMessage(ex.messageId, ex.getMessage()), HttpStatus.NOT_FOUND);
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -113,4 +114,13 @@ public class RestExceptionHandler {
 		LOG.error(errorMessage, ex);
 		return errorMessage;
 	}
+	
+	@ResponseStatus(HttpStatus.FORBIDDEN)
+	@ExceptionHandler(PermissionDeniedException.class)
+	public ResponseEntity<ApiErrorMessage> permissionDenied(PermissionDeniedException ex) {
+		LOG.warn(ex.getMessage(), ex);
+		return new ResponseEntity<>(new ApiErrorMessage("forbidden", ex.getMessage()), HttpStatus.FORBIDDEN);
+	}
+
+
 }

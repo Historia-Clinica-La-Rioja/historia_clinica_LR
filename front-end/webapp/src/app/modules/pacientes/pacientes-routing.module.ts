@@ -8,16 +8,18 @@ import { NewPatientComponent } from './routes/new-patient/new-patient.component'
 
 const routes: Routes = [
 	{
-		path: '',
-		component: HomeComponent
+		path: 'pacientes',
+		component: HomeComponent,
+		children: [
+			{
+				path: 'search',
+				component: SearchComponent
+			},
+			{	path: 'pacientes/new',
+				component: NewPatientComponent
+			}
+		]
 	},
-	{
-		path: 'search',
-		component: SearchComponent
-	},
-	{	path: 'pacientes/new',
-		component: NewPatientComponent
-	}
 ];
 
 @NgModule({
@@ -25,7 +27,8 @@ const routes: Routes = [
 		CoreModule,
 		ReactiveFormsModule,
 		FormsModule,
-		RouterModule.forChild(routes)],
+		RouterModule.forChild(routes)
+	],
 	exports: [RouterModule]
 })
 export class PacientesRoutingModule {

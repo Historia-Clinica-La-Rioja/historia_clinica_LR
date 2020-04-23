@@ -80,6 +80,11 @@ export interface ApiError {
     status: HttpStatus;
 }
 
+export interface ApiErrorMessage {
+    code: string;
+    text: string;
+}
+
 export interface BMPatientDto extends APatientDto {
     id: number;
 }

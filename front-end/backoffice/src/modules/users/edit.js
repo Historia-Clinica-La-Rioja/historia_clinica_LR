@@ -4,8 +4,6 @@ import {
     SimpleForm,
     BooleanInput,
     TextInput,
-    TextField,
-    ReferenceField,
     DateField,
     required,
 } from 'react-admin';

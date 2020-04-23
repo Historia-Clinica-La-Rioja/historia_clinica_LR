@@ -1,4 +1,4 @@
 
 
 
-export const openPasswordReset = (token) => window.open(`/password-reset/${token}`, '_blank');
+export const openPasswordReset = (token) => window.open(`/auth/password-reset/${token}`, '_blank');
