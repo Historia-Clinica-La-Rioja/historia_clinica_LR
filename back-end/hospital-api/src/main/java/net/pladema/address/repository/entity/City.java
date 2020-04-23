@@ -35,7 +35,7 @@ public class City implements Serializable {
 	private Short departmentId;
 
 	@Column(name = "city_type")
-	private Character city_type;
+	private Character cityType;
 
 	@Column(name = "active")
 	private Boolean active;

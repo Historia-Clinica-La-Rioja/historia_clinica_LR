@@ -1,6 +1,5 @@
 package net.pladema.address.service;
 
-import net.pladema.address.repository.entity.Address;
 import net.pladema.address.repository.entity.City;
 import net.pladema.address.repository.entity.Province;
 

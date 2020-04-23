@@ -1,11 +1,11 @@
 package net.pladema.masterdata.dto;
 
-import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serializable;
+
 @ToString
-public abstract class MasterdataDto <T> implements MasterDataInterface <T>{
+public abstract class MasterdataDto <T> implements MasterDataInterface <T>, Serializable {
 
     private T id;
 

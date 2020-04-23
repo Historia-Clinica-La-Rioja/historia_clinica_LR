@@ -4,15 +4,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.auditable.entity.AuditableEntity;
-import net.pladema.auditable.listener.AuditListener;
 import net.pladema.internation.repository.listener.InternationAuditableEntity;
 import net.pladema.internation.repository.listener.InternationListener;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Period;
 import java.util.Objects;
 
 @Entity
@@ -60,12 +56,6 @@ public class InternmentEpisode extends InternationAuditableEntity {
 
 	@Column(name = "discharge_date")
 	private LocalDate dischargeDate;
-
-	private int totalInternmentDays(){
-		LocalDate today = LocalDate.now();
-		Period p = Period.between(getCreatedOn().toLocalDate(), today);
-		return p.getDays();
-	}
 
 	@Override
 	public boolean equals(Object o) {

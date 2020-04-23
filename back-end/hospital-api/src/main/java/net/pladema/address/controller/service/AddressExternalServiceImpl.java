@@ -3,8 +3,6 @@ package net.pladema.address.controller.service;
 import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.address.controller.mapper.AddressMapper;
 import net.pladema.address.repository.entity.Address;
-import net.pladema.address.repository.entity.City;
-import net.pladema.address.repository.entity.Province;
 import net.pladema.address.service.AddressMasterDataService;
 import net.pladema.address.service.AddressService;
 import org.slf4j.Logger;

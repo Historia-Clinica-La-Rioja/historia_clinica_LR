@@ -42,7 +42,7 @@ public class AnamnesisController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
             @RequestBody AnamnesisDto anamnesisDto){
-        LOG.debug("Input parameters -> instituionId {}, internmentEpisodeId {}, anamnesisId {}, ananmnesis {}",
+        LOG.debug("Input parameters -> instituionId {}, internmentEpisodeId {}, ananmnesis {}",
                 institutionId, internmentEpisodeId, anamnesisDto);
         Anamnesis anamnesis = anamnesisMapper.fromAnamnesisDto(anamnesisDto);
         anamnesis = createAnamnesisService.createAnanmesisDocument(anamnesis);

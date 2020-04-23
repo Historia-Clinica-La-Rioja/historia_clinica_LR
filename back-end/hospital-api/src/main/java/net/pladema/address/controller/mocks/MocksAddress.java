@@ -4,12 +4,8 @@ package net.pladema.address.controller.mocks;
 import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.address.controller.dto.CityDto;
 import net.pladema.address.controller.dto.ProvinceDto;
-import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.controller.dto.HealthInsuranceDto;
 import net.pladema.person.controller.dto.IdentificationTypeDto;
-import net.pladema.person.controller.dto.PersonalInformationDto;
-
-import java.time.LocalDate;
 
 public class MocksAddress {
 

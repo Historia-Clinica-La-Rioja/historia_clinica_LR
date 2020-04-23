@@ -4,7 +4,6 @@ import net.pladema.internation.controller.dto.core.AnamnesisDto;
 import net.pladema.internation.controller.dto.core.ResponseAnamnesisDto;
 import net.pladema.internation.service.domain.Anamnesis;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 @Mapper

@@ -36,11 +36,6 @@ export interface APersonDto {
 export interface AbstractUserDto extends Serializable {
 }
 
-export interface AddUserDto extends AbstractUserDto {
-    email: string;
-    password: string;
-}
-
 export interface AddressDto extends Serializable {
     apartment: string;
     city: CityDto;
@@ -91,6 +86,14 @@ export interface BMPatientDto extends APatientDto {
 
 export interface BMPersonDto extends APersonDto {
     id: number;
+}
+
+export interface BackofficeUserDto {
+    enable: boolean;
+    id: number;
+    lastLogin: Date;
+    personId: number;
+    username: string;
 }
 
 export interface BasicDataPersonDto {
@@ -186,7 +189,7 @@ export interface MasterDataInterface<T> {
     id: T;
 }
 
-export interface MasterdataDto<T> extends MasterDataInterface<T> {
+export interface MasterdataDto<T> extends MasterDataInterface<T>, Serializable {
 }
 
 export interface MedicationDto extends ClinicalTermDto {
@@ -200,6 +203,11 @@ export interface ObservationsDto extends Serializable {
     physicalExamination: string;
     presentIllness: string;
     procedure: string;
+}
+
+export interface PasswordResetDto {
+    password: string;
+    token: string;
 }
 
 export interface PatientDto {
@@ -262,7 +270,7 @@ export interface RoomDto extends Serializable {
     sector: SectorDto;
 }
 
-export interface SectorDto {
+export interface SectorDto extends Serializable {
     description: string;
     id: number;
 }
