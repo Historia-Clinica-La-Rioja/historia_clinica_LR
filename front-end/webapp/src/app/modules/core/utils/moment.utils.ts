@@ -5,6 +5,7 @@ moment.locale('es-AR');
 
 export enum DateFormat {
 	API_DATE = 'YYYY-MM-DD',
+	VIEW_DATE = 'DD/MM/YYYY',
 	MONTH_AND_YEAR = 'MMMM YYYY',
 	WEEK_DAY = 'ddd D',
 	HUMAN = 'dddd LL',

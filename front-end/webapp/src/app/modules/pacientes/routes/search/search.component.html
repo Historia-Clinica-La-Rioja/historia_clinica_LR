@@ -47,8 +47,11 @@
 					</mat-error>
 				</div>
 				<br>
+				<div>
+					<span [translate]="'pacientes.form.FIRST_NAMES_TITLE'"></span>
+				</div>
 				<mat-form-field appearance="outline">
-					<mat-label>Nombre</mat-label>
+					<mat-label>Primer nombre</mat-label>
 					<input id="firstName"
 							formControlName="firstName"
 							matInput>
@@ -57,14 +60,17 @@
 					</mat-error>
 				</mat-form-field>
 				<mat-form-field appearance="outline">
-					<mat-label>Segundo Nombre</mat-label>
+					<mat-label>Otros nombres</mat-label>
 					<input id="middleNames"
 							formControlName="middleNames"
 							matInput>
 				</mat-form-field>
 				<br>
+				<div>
+					<span [translate]="'pacientes.form.LAST_NAME_TITLE'"></span>
+				</div>
 				<mat-form-field appearance="outline">
-					<mat-label>Apellido</mat-label>
+					<mat-label>Primer apellido</mat-label>
 					<input  id="lastName"
 							formControlName="lastName"
 							matInput>
@@ -103,7 +109,9 @@
 		</div>
 	</section>
 	<div class="container" *ngIf="!viewSearchComponent()">
-		<app-partial-matches-table [matchingPatient]="matchingPatient">
-		</app-partial-matches-table>
+		<section>
+			<h3 class="mat-body-2" [translate]="'Pacientes Coincidentes'"></h3>
+			<app-table [model]="matchingPatient" [tableClass]="'mat-elevation-z8'"></app-table>
+		</section>
 	</div>
 </app-content>
