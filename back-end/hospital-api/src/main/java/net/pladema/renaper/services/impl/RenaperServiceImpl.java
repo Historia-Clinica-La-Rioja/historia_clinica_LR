@@ -8,12 +8,11 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import net.pladema.renaper.configuration.RenaperAuthInterceptor;
+import net.pladema.renaper.configuration.RenaperRestTemplateAuth;
 import net.pladema.renaper.configuration.RenaperWSConfig;
 import net.pladema.renaper.services.RenaperService;
-import net.pladema.renaper.services.domain.PersonMedicalCoverageResponse;
 import net.pladema.renaper.services.domain.PersonDataResponse;
-import net.pladema.sgx.restclient.configuration.resttemplate.RestTemplateAuth;
+import net.pladema.renaper.services.domain.PersonMedicalCoverageResponse;
 import net.pladema.sgx.restclient.services.RestClient;
 
 @Service
@@ -22,7 +21,7 @@ public class RenaperServiceImpl extends RestClient implements RenaperService {
 
 	private RenaperWSConfig renaperWSConfig;
 	
-	public RenaperServiceImpl(RestTemplateAuth<RenaperAuthInterceptor> restTemplateAuth, RenaperWSConfig wsConfig) {
+	public RenaperServiceImpl(RenaperRestTemplateAuth restTemplateAuth, RenaperWSConfig wsConfig) throws Exception {
 		super(restTemplateAuth, wsConfig);
 		this.renaperWSConfig = wsConfig;
 	}

@@ -6,11 +6,10 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import net.pladema.federar.configuration.FederarAuthInterceptor;
+import net.pladema.federar.configuration.FederarRestTemplateAuth;
 import net.pladema.federar.configuration.FederarWSConfig;
 import net.pladema.federar.services.FederarService;
 import net.pladema.federar.services.domain.LocalIdSearchResponse;
-import net.pladema.sgx.restclient.configuration.resttemplate.RestTemplateAuth;
 import net.pladema.sgx.restclient.services.RestClient;
 
 @Service
@@ -19,7 +18,7 @@ public class FederarServiceImpl extends RestClient implements FederarService {
 
 	private FederarWSConfig federarWSConfig;
 	
-	public FederarServiceImpl(RestTemplateAuth<FederarAuthInterceptor> restTemplateAuth, FederarWSConfig wsConfig) {
+	public FederarServiceImpl(FederarRestTemplateAuth restTemplateAuth, FederarWSConfig wsConfig) {
 		super(restTemplateAuth, wsConfig);
 		this.federarWSConfig = wsConfig;
 	}
