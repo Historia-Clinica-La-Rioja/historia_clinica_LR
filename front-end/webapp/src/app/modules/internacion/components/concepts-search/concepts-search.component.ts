@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ConceptsSearchDialogComponent } from '../../dialogs/concepts-search-dialog/concepts-search-dialog.component';
 import { SnomedDto } from '@api-rest/api-model';
@@ -10,6 +10,7 @@ import { SnomedDto } from '@api-rest/api-model';
 })
 export class ConceptsSearchComponent implements OnInit {
 
+	@Input() text: string = '';
 	@Output() onSelect = new EventEmitter<SnomedDto>();
 
 	searchValue: string = '';

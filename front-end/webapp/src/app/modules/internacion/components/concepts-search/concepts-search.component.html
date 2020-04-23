@@ -1,15 +1,10 @@
-<mat-card>
-	<mat-card-content>
-		<mat-form-field>
-			<mat-label [translate]="'internaciones.anamnesis.antecedentes-personales.table.columns.PROBLEM_TYPE'"></mat-label>
-			<input matInput type="text" [(ngModel)]="searchValue" matTooltip="{{ searchValue }}">
-			<button id="clear" mat-button *ngIf="searchValue" matSuffix color="warn" mat-icon-button (click)="searchValue = ''">
-				<mat-icon>close</mat-icon>
-			  </button>
-			<button mat-flat-button color="primary" matSuffix (click)="openDialog()">
-				<span class="uppercase" [translate]="'buttons.SEARCH'"></span>
-			</button>
-		</mat-form-field>
-		<ng-content></ng-content>
-	</mat-card-content>
-</mat-card>
+<mat-form-field>
+	<mat-label [translate]="text"></mat-label>
+	<input matInput type="text" [(ngModel)]="searchValue" matTooltip="{{ searchValue }}">
+	<button id="clear" mat-button *ngIf="searchValue" matSuffix color="warn" mat-icon-button (click)="searchValue = ''">
+		<mat-icon>close</mat-icon>
+	</button>
+	<button mat-flat-button color="primary" matSuffix (click)="openDialog()">
+		<span class="uppercase" [translate]="'buttons.SEARCH'"></span>
+	</button>
+</mat-form-field>

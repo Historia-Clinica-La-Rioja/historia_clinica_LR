@@ -24,35 +24,36 @@
 		.mat-form-field {
 			width: 50%;
 		}
+	}
 
-		div.no-data.mat-h3 {
-			padding: 30px 0;
-			text-align: center;
-			border: solid 1px #A8A8A8;
+	div.table-no-data.mat-h3 {
+		padding: 30px 0;
+		text-align: center;
+		border: solid 1px #A8A8A8;
+	}
+
+	table.mat-table {
+		width: 100%;
+		text-align: center;
+		thead {
+			background-color: mat-color($primary-palette, default);
+			th {
+				text-align: center;
+				color: mat-color($primary, default-contrast);
+			}
 		}
-		table.mat-table {
-			width: 100%;
-			text-align: center;
+		&.secondary {
+			border-collapse: collapse;
 			thead {
-				background-color: mat-color($primary-palette, default);
+				background-color: #F0F0F0;
 				th {
-					text-align: center;
-					color: mat-color($primary, default-contrast);
+					color: #282828;
 				}
 			}
-			&.secondary {
-				border-collapse: collapse;
-				thead {
-					background-color: #F0F0F0;
-					th {
-						color: #282828;
-					}
-				}
-				tr {
-					border: solid 1px #A8A8A8;
-					th, td {
-						border-bottom: none;
-					}
+			tr {
+				border: solid 1px #A8A8A8;
+				th, td {
+					border-bottom: none;
 				}
 			}
 		}
