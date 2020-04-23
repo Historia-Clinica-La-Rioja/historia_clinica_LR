@@ -8,6 +8,8 @@ export const VALIDATIONS = {
 	}
 }
 
+export const DEFAULT_COUNTRY_ID = 14;
+
 export function hasError(form: FormGroup, type: string, control: string): boolean {
 	return form.get(control).hasError(type);
 }
