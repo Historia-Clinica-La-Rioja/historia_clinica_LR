@@ -28,6 +28,11 @@ cp $TEMPLATE_FILE env.properties
 [ "$DB_TYPE" != "mssql" ] || echo "spring.datasource.driver-class-name=com.microsoft.sqlserver.jdbc.SQLServerDriver" >> env.properties
 [ "$DB_TYPE" != "mssql" ] || echo "spring.jpa.database-platform=org.hibernate.dialect.SQLServer2012Dialect" >> env.properties
 
+if [ -z $PROPERTIES_REPO ]; then
+  echo "No se uso repo de properties";
+  exit 0;
+fi
+
 echo "
 # -----------------------------------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------------------------------

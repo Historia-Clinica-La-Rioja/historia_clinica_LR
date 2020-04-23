@@ -48,3 +48,25 @@ Para unicamente migrar, ir a la carpeta /dba y ejecutar el siguiente comando
 ```shell
 mvn -Dliquibase.propertyFile=liquibase/postgresql.properties liquibase:update
 ```
+
+
+## Ambiente completo con Docker (simil ambientes de QA)
+
+Ejecutar los pasos de BBDD para tener la BBDD local. Despues en la raiz del proyecto.
+Utiliza algunas variables ya creadas en el script de migracion, asegurarse de que estén creadas.
+
+```shell
+# Compilar binarios
+./scripts/build-pack.sh 
+# Preparar archivo de propiedades
+./scripts/prepare-property-file.sh /dev/null "" "" postgresql $JDBC_URL postgres Local123
+cp env.properties /tmp/app-local-test.properties
+# Construir imagen docker
+./scripts/build-docker.sh -t app:local
+# desplegar usando la version que acabamos de buildear
+./scripts/deploy-with-docker.sh app-local-test app:local url.example.com true true
+# Ver el puerto en el que se mapeo con 
+docker ps
+```
+
+

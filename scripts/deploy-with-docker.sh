@@ -10,6 +10,7 @@ export DOCKER_IMAGE=$2
 export REVIEW_APP_URL=$3
 # optional parameter with default value
 export TEMPORAL=${4:-true}
+export USE_LOCAL_BUILD=${5:-false}
 GLOWROOT_PROJECT="sgh"
 
 if [ -z $ENV_NAME ] || [ -z $DOCKER_IMAGE ] || 
@@ -19,8 +20,11 @@ if [ -z $ENV_NAME ] || [ -z $DOCKER_IMAGE ] ||
 fi
 
 # Download new image
-docker pull ${DOCKER_IMAGE} || 
+if [ "$USE_LOCAL_BUILD" = "false" ]; then
+  docker pull ${DOCKER_IMAGE} || 
     (echo "ERROR: La imagen de docker no existe, corra el \"build docker\" de nuevo y reintente" && exit 1)
+fi
+
 # Kill old name convention environment
 docker rm -f reviewapp-${ENV_NAME} 2> /dev/null || true
 # Rename previous environment (if exists), avoid deadlocks killing multiple olds environments 
