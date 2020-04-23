@@ -6,24 +6,62 @@
 			(onSelect)=setConcept($event)>
 		</app-concepts-search>
 		<form [formGroup]="form" (ngSubmit)="save()">
+
 			<div>
-				<mat-label [translate]="'internaciones.anamnesis.antecedentes-personales.FECHA_REGISTRO'"></mat-label>
+				<mat-form-field>
+					<mat-label [translate]="'internaciones.anamnesis.antecedentes-personales.form.REGISTRY_DATE'"></mat-label>
+					<input matInput readonly id="date"
+						   [matDatepicker]="myDatepicker"
+						   formControlName="date"
+						   [max]="this.today">
+					<mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
+					<mat-datepicker #myDatepicker
+									startView="multi-year"
+									(yearSelected)="chosenYearHandler($event)"
+									(monthSelected)="chosenMonthHandler($event)">
+					</mat-datepicker>
+				</mat-form-field>
 			</div>
-			<mat-form-field>
-				<input matInput readonly [matDatepicker]="myDatepicker" formControlName="date" [max]="this.today">
-				<mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
-				<mat-datepicker #myDatepicker
-								startView="multi-year"
-								(yearSelected)="chosenYearHandler($event)"
-								(monthSelected)="chosenMonthHandler($event)">
-				</mat-datepicker>
-			</mat-form-field>
+
+			<div>
+				<mat-form-field appearance="outline">
+					<mat-label [translate]="'internaciones.anamnesis.antecedentes-personales.form.NOTE'"></mat-label>
+					<textarea matInput type="text" id="note" name="note"
+							  formControlName="note"
+							  placeholder="{{'internaciones.anamnesis.observations.DESCRIPTION' | translate }}">
+					</textarea>
+				</mat-form-field>
+			</div>
+
+			<div>
+				<mat-form-field>
+					<mat-label [translate]="'internaciones.anamnesis.antecedentes-personales.form.CONDITION_VERIFICATION_STATUS'"></mat-label>
+					<mat-select formControlName="verificationId" name="verificationId">
+						<mat-option *ngFor="let verification of conditionsVerification" [value]="verification.id">
+							{{verification.description}}
+						</mat-option>
+					</mat-select>
+				</mat-form-field>
+			</div>
+
+			<div>
+				<mat-form-field>
+					<mat-label [translate]="'internaciones.anamnesis.antecedentes-personales.form.CONDITION_CLINICAL_STATUS'"></mat-label>
+					<mat-select formControlName="statusId" name="statusId">
+						<mat-option *ngFor="let clinicalStatus of conditionsClinicalStatus" [value]="clinicalStatus.id">
+							{{clinicalStatus.description}}
+						</mat-option>
+					</mat-select>
+				</mat-form-field>
+			</div>
+
 			<div>
 				<button mat-raised-button color="primary" type="submit">
-					<span [translate]="'internaciones.anamnesis.antecedentes-personales.AGREGAR'"></span>
+					<span [translate]="'internaciones.anamnesis.antecedentes-personales.ADD'"></span>
 				</button>
 			</div>
-		</form>	</mat-card-content>
+		</form>
+	</mat-card-content>
 </mat-card>
 
 <section>

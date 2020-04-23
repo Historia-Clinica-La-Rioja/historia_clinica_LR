@@ -20,12 +20,20 @@
 			"SUBTITLE": "Completa los siguientes datos.",
 			"antecedentes-personales": {
 				"TITLE": "Antecedentes personales",
+				"ADD": "Agregar antecedente",
+				"PROBLEM_TYPE": "Tipo de problema",
+				"form": {
+					"REGISTRY_DATE": "Fecha registro",
+					"NOTE": "Notas",
+					"CONDITION_VERIFICATION_STATUS": "Estado de verificación",
+					"CONDITION_CLINICAL_STATUS": "Estado clínico"
+				},
+
 				"table": {
 					"TITLE": "Antecedentes personales registrados",
 					"columns": {
 						"PROBLEM_TYPE": "Tipo de problema",
-						"REGISTRY_DATE": "Fecha registro",
-						"AGREGAR": "Agregar antecedente"
+						"REGISTRY_DATE": "Fecha registro"
 					}
 				}
 			},

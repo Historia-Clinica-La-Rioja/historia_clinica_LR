@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { SnomedDto, HealthHistoryConditionDto } from '@api-rest/api-model';
-import { TableModel } from '@core/components/table/table.component';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { SnomedDto, HealthHistoryConditionDto, MasterDataInterface } from '@api-rest/api-model';
 import { MatTableDataSource } from '@angular/material/table';
+import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 
 @Component({
 	selector: 'app-antecentes-personales',
@@ -13,6 +14,8 @@ export class AntecentesPersonalesComponent implements OnInit {
 	current: any = {};
 	form: FormGroup;
 	today: Date = new Date();
+	conditionsVerification: MasterDataInterface<string>[] = [{id: 'a', description: 'description a'}, {id: 'b', description: 'description b'}, {id: 'c', description: 'description c'}];
+	conditionsClinicalStatus: MasterDataInterface<string>[] = [{id: 'a', description: 'description a'}, {id: 'b', description: 'description b'}, {id: 'c', description: 'description c'}];
 
 	//Mat table
 	columns = [
@@ -31,15 +34,29 @@ export class AntecentesPersonalesComponent implements OnInit {
 	apDataSource = new MatTableDataSource<any>([]);
 
 	constructor(
-		private formBuilder: FormBuilder
-	) {
+		private formBuilder: FormBuilder,
+		private internacionMasterDataService: InternacionMasterDataService
+	)
+	{
 		this.displayedColumns = this.columns?.map(c => c.def).concat(['remove']);
 	}
 
 	ngOnInit(): void {
 		this.form = this.formBuilder.group({
-			date: [],
+			date: [null, Validators.required],
+			note: [null, Validators.required],
+			verificationId: [null, Validators.required],
+			statusId: [null, Validators.required],
+			snomed: [null, Validators.required]
 		});
+
+		/*this.internacionMasterDataService.getHealthClinical().subscribe(healthClinical => {
+			this.conditionsClinicalStatus = healthClinical;
+		});
+
+		this.internacionMasterDataService.getHealthVerification().subscribe(healthVerification => {
+			this.conditionsVerification = healthVerification;
+		});*/
 	}
 
 	chosenYearHandler(newDate: Date) {
@@ -62,8 +79,15 @@ export class AntecentesPersonalesComponent implements OnInit {
 		}
 	}
 
+	save() {
+		console.log(this.form.value);
+		let aux: HealthHistoryConditionDto = this.form.value;
+		console.log('HHC', aux);
+	}
+
 	setConcept(selectedConcept: SnomedDto): void {
 		this.current.snomed = selectedConcept;
+		this.form.controls.snomed.setValue(selectedConcept);
 	}
 
 	add(ap): void {
