@@ -35,6 +35,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	private static final String RECAPTCHA = "/recaptcha";
 
+	private static final String MASTERDATA_INTERNMENT = "/internments/masterdata";
+
 	private static final String INTERMENT = "/institutions/{institutionId}/internments/";
 
 	private static final String ANAMNESIS = "/institutions/{institutionId}/internments/{internmentEpisodeId}/anamnesis";
@@ -76,6 +78,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 				.antMatchers("/actuator/**").access(actuatorConfiguration.getAccessInfo())
 				.antMatchers(apiAuth + "/**").permitAll()
+				.antMatchers(HttpMethod.GET,MASTERDATA_INTERNMENT + "/**").permitAll()
 				.antMatchers(INTERMENT + "/**").permitAll()
 				.antMatchers(ANAMNESIS + "/**").permitAll()
 				.antMatchers(HttpMethod.GET, ADDRESS+ "/**").permitAll()
