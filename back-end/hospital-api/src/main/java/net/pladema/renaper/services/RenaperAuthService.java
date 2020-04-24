@@ -17,7 +17,7 @@ public class RenaperAuthService extends AuthService<RenaperLoginResponse> {
 	private RenaperWSConfig renaperWSConfig;
 
 	public RenaperAuthService(
-			@Value("${ws.renaper.url.login:/masterfile-federacion-service/api/usuarios/aplicacion/login}") String relUrl,
+			@Value("${ws.renaper.url.login:/usuarios/aplicacion/login}") String relUrl,
 			RestTemplateSSL restTemplateSSL, RenaperWSConfig wsConfig) {
 		super(relUrl, restTemplateSSL, wsConfig);
 		renaperWSConfig = wsConfig;

@@ -27,17 +27,17 @@ public class RenaperServiceImpl extends RestClient implements RenaperService {
 	}
 
 	@Override
-	public List<PersonMedicalCoverageResponse> getPersonMedicalCoverage(String nroDocumento, Integer idSexo) {
+	public List<PersonMedicalCoverageResponse> getPersonMedicalCoverage(String nroDocumento, Short idSexo) {
 		String urlWithParams = renaperWSConfig.getUrlCobertura() + "?nroDocumento=" + nroDocumento + "&idSexo=" + idSexo; 
 		ResponseEntity<PersonMedicalCoverageResponse[]> response = exchangeGet(urlWithParams, PersonMedicalCoverageResponse[].class);
 		return Arrays.asList(response.getBody());
 	}
 
 	@Override
-	public Optional<PersonDataResponse> getPersonData(String nroDocumento, Integer idSexo) {
+	public Optional<PersonDataResponse> getPersonData(String nroDocumento, Short idSexo) {
 		String urlWithParams = renaperWSConfig.getUrlPersona() + "?nroDocumento=" + nroDocumento + "&idSexo=" + idSexo; 
 		ResponseEntity<PersonDataResponse> response = exchangeGet(urlWithParams, PersonDataResponse.class);
-		return Optional.of(response.getBody());
+		return Optional.ofNullable(response.getBody());
 	}
 
 	

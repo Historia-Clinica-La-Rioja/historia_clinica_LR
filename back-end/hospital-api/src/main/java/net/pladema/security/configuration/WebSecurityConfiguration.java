@@ -1,7 +1,5 @@
 package net.pladema.security.configuration;
 
-import net.pladema.actuator.configuration.ActuatorConfiguration;
-import net.pladema.security.filters.AuthenticationTokenFilter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -14,6 +12,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import net.pladema.actuator.configuration.ActuatorConfiguration;
+import net.pladema.security.filters.AuthenticationTokenFilter;
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -22,6 +23,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	private static final String PERSON = "/person";
 	
 	private static final String PATIENT = "/patient/**";
+
+	private static final String RENAPER = "/renaper/**";
 	
 	private static final String HEALTH = "/health";
 
@@ -91,6 +94,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.POST, PERSON ).permitAll()
 				.antMatchers(HttpMethod.GET, PERSON+"/**" ).permitAll()
 				.antMatchers(PATIENT).permitAll()
+				.antMatchers(RENAPER).permitAll()
 				.antMatchers(HttpMethod.GET, PERSON+"/**" ).permitAll()
 				.antMatchers(HEALTH + "/**").permitAll()
 				.antMatchers(I18N + "/**").permitAll()

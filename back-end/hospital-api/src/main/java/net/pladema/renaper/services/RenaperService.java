@@ -8,7 +8,7 @@ import net.pladema.renaper.services.domain.PersonDataResponse;
 
 public interface RenaperService {
 	
-	public Optional<PersonDataResponse> getPersonData(String nroDocumento, Integer idSexo);
+	public Optional<PersonDataResponse> getPersonData(String nroDocumento, Short idSexo);
 	
-	public List<PersonMedicalCoverageResponse> getPersonMedicalCoverage(String nroDocumento, Integer idSexo);  
+	public List<PersonMedicalCoverageResponse> getPersonMedicalCoverage(String nroDocumento, Short idSexo);
 }
