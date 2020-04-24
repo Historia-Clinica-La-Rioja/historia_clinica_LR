@@ -71,12 +71,12 @@ export class NewPatientComponent implements OnInit {
 					addressFloor: [],
 					addressApartment: [],
 					addressQuarter: [],
-					addressCityId: [],
+					addressCityId: { value: null, disabled: true },
 					addressPostcode: [],
 
 					addressProvinceId: [],
 					addressCountryId: [],
-					addressDepartmentId: []
+					addressDepartmentId: { value: null, disabled: true },
 				});
 
 				this.personMasterDataService.getGenders()
@@ -94,20 +94,7 @@ export class NewPatientComponent implements OnInit {
 			.subscribe(countries => {
 				this.countries = countries;
 				this.form.controls.addressCountryId.setValue(DEFAULT_COUNTRY_ID);
-				this.setProvinces('addressCountryId');
-				this.form.controls.addressDepartmentId.setValue(
-					{
-						value: null,
-						disabled: this.form.controls.addressProvinceId.valid ? false : true
-					}
-				);
-				this.form.controls.addressCityId.setValue(
-					{
-						value: null,
-						disabled: this.form.controls.addressDepartmentId.valid ? false : true
-					}
-				);
-				this.setProvinces('addressCountryId');
+				this.setProvinces();
 			});
 
 	}
@@ -165,28 +152,30 @@ export class NewPatientComponent implements OnInit {
 		this.form.controls[nextControl].enable();
 	}
 
-	setProvinces(control: string) {
-		let idCountry: number = this.form.get(control).value;
+	setProvinces() {
+		let idCountry: number = this.form.controls.addressCountryId.value;
 		this.addressMasterDataService.getByCountry(idCountry)
 			.subscribe(provinces => {
 				this.provinces = provinces
 			});
 	}
 
-	setDepartments(control: string) {
-		let idProvince: number = this.form.get(control).value;
+	setDepartments() {
+		let idProvince: number = this.form.controls.addressProvinceId.value;
 		this.addressMasterDataService.getDepartmentsByProvince(idProvince)
 			.subscribe(departments => {
 				this.departments = departments
 			});
+		this.form.controls.addressDepartmentId.enable();
 	}
 
-	setCities(control: string) {
-		let idDepartment: number = this.form.get(control).value;
+	setCities() {
+		let idDepartment: number = this.form.controls.addressDepartmentId.value;
 		this.addressMasterDataService.getCitiesByDepartment(idDepartment)
 			.subscribe(cities => {
 				this.cities = cities;
 			});
+		this.form.controls.addressCityId.enable();
 	}
 
 	goBack(): void {

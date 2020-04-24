@@ -178,7 +178,7 @@
 								name="addressCountryId"
 								formControlName="addressCountryId"
 								placeholder="{{'pacientes.form.ADDRESS_COUNTRY' | translate}}"
-								(selectionChange)="setProvinces('addressCountryId')">
+								(selectionChange)="setProvinces()">
 						<mat-option *ngFor="let country of countries"
 									[value]="country.id">
 							{{country.description}}
@@ -191,7 +191,7 @@
 								name="addressProvinceId"
 								formControlName="addressProvinceId"
 								placeholder="{{'pacientes.form.ADDRESS_PROVINCE' | translate}}"
-								(selectionChange)="setDepartments('addressProvinceId')">
+								(selectionChange)="setDepartments()">
 						<mat-option *ngFor="let province of provinces"
 									[value]="province.id">
 							{{province.description}}
@@ -204,7 +204,7 @@
 								name="addressDepartmentId"
 								formControlName="addressDepartmentId"
 								placeholder="{{'pacientes.form.ADDRESS_DEPARTMENT' | translate}}"
-								(selectionChange)="setCities('addressDepartmentId')">
+								(selectionChange)="setCities()">
 						<mat-option *ngFor="let department of departments"
 									[value]="department.id">
 							{{department.description}}
