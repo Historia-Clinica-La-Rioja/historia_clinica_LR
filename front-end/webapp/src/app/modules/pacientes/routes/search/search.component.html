@@ -89,7 +89,8 @@
 					<mat-label>Fecha de nacimiento</mat-label>
 					<input matInput id="birthDate"
 									formControlName="birthDate"
-									[matDatepicker]="picker">
+									[matDatepicker]="picker"
+						   			[max]="today">
 					<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'birthDate')">
 						El campo es requerido
 					</mat-error>

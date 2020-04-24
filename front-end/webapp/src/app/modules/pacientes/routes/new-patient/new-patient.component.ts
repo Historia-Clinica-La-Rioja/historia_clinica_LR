@@ -1,6 +1,8 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
-import { FormBuilder, Validators, FormGroup, FormArray, FormControl } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Moment } from 'moment';
+import * as moment from 'moment';
 import { APatientDto, BMPatientDto, GenderDto, IdentificationTypeDto } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID } from "@core/utils/form.utils";
@@ -19,7 +21,7 @@ export class NewPatientComponent implements OnInit {
 	public form: FormGroup;
 	public personResponse: BMPatientDto;
 	public formSubmitted: boolean = false;
-	public todaysDate: Date = new Date();
+	public today: Moment = moment();
 	public hasError = hasError;
 	// CAMBIAR LOS TIPOS POR LOS DTOS CORRESPONDIENTES
 	public genders: GenderDto[];
@@ -41,7 +43,6 @@ export class NewPatientComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-
 		this.route.queryParams
 			.subscribe(params => {
 				this.form = this.formBuilder.group({
@@ -52,7 +53,7 @@ export class NewPatientComponent implements OnInit {
 					genderId: [Number(params.genderId), [Validators.required]],
 					identificationNumber: [params.identificationNumber, [Validators.required,Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
 					identificationTypeId: [Number(params.identificationTypeId), [Validators.required]],
-					birthDate: [new Date(params.birthDate), [Validators.required]],
+					birthDate: [moment(params.birthDate), [Validators.required]],
 
 					//Person extended
 					cuil: [null, [Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)]],
@@ -127,7 +128,7 @@ export class NewPatientComponent implements OnInit {
 
 	private mapToPersonRequest(): APatientDto {
 		return {
-			birthDate: this.form.controls.birthDate.value,
+			birthDate: this.form.controls.birthDate.value.toDate(),
 			firstName: this.form.controls.firstName.value,
 			genderId: this.form.controls.genderId.value,
 			identificationTypeId: this.form.controls.identificationTypeId.value,

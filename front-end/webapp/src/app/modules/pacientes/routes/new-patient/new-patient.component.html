@@ -109,7 +109,7 @@
 			</div>
 			<div>
 				<mat-form-field appearance="outline">
-					<input formControlName="birthDate" id="birthDate" matInput [max]="todaysDate"
+					<input formControlName="birthDate" id="birthDate" matInput [max]="today"
 						   [matDatepicker]="picker2">
 					<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
 					<mat-datepicker #picker2></mat-datepicker>

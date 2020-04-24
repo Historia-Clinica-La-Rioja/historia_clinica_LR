@@ -6,8 +6,6 @@
 			(onSelect)=setConcept($event)>
 		</app-concepts-search>
 		<form [formGroup]="form" (ngSubmit)="save()">
-
-			<div>
 				<mat-form-field appearance="outline">
 					<mat-label [translate]="'internaciones.anamnesis.antecedentes-personales.form.REGISTRY_DATE'"></mat-label>
 					<input matInput readonly id="date"
@@ -21,9 +19,7 @@
 									(monthSelected)="chosenMonthHandler($event)">
 					</mat-datepicker>
 				</mat-form-field>
-			</div>
 
-			<div>
 				<mat-form-field appearance="outline">
 					<mat-label [translate]="'internaciones.anamnesis.antecedentes-personales.form.NOTE'"></mat-label>
 					<textarea matInput type="text" id="note" name="note"
@@ -31,9 +27,7 @@
 							  placeholder="{{'internaciones.anamnesis.observations.DESCRIPTION' | translate }}">
 					</textarea>
 				</mat-form-field>
-			</div>
 
-			<div>
 				<mat-form-field appearance="outline">
 					<mat-label [translate]="'internaciones.anamnesis.antecedentes-personales.form.CONDITION_VERIFICATION_STATUS'"></mat-label>
 					<mat-select formControlName="verificationId" name="verificationId">
@@ -42,9 +36,7 @@
 						</mat-option>
 					</mat-select>
 				</mat-form-field>
-			</div>
 
-			<div>
 				<mat-form-field appearance="outline">
 					<mat-label [translate]="'internaciones.anamnesis.antecedentes-personales.form.CONDITION_CLINICAL_STATUS'"></mat-label>
 					<mat-select formControlName="statusId" name="statusId">
@@ -53,9 +45,8 @@
 						</mat-option>
 					</mat-select>
 				</mat-form-field>
-			</div>
 
-			<div class="flex-button">
+			<div align="end">
 				<button mat-raised-button color="primary" type="submit">
 					<span [translate]="'internaciones.anamnesis.antecedentes-personales.ADD'"></span>
 				</button>

@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SnomedDto, HealthHistoryConditionDto, MasterDataInterface } from '@api-rest/api-model';
+import { HealthHistoryConditionDto, MasterDataInterface, SnomedDto } from '@api-rest/api-model';
 import { MatTableDataSource } from '@angular/material/table';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
+import { DateFormat } from '@core/utils/moment.utils';
+import { Moment } from 'moment';
+import * as moment from 'moment';
 import { DatePipe } from '@angular/common';
 
 @Component({
@@ -14,7 +17,8 @@ export class AntecentesPersonalesComponent implements OnInit {
 
 	current: any = {};
 	form: FormGroup;
-	today: Date = new Date();
+	today: Moment = moment();
+
 	conditionsVerification: MasterDataInterface<string>[] = [{id: 'a', description: 'description a'}, {id: 'b', description: 'description b'}, {id: 'c', description: 'description c'}];
 	conditionsClinicalStatus: MasterDataInterface<string>[] = [{id: 'a', description: 'description a'}, {id: 'b', description: 'description b'}, {id: 'c', description: 'description c'}];
 
@@ -61,20 +65,20 @@ export class AntecentesPersonalesComponent implements OnInit {
 		});*/
 	}
 
-	chosenYearHandler(newDate: Date) {
+	chosenYearHandler(newDate: Moment) {
 		if (this.form.controls.date.value !== null) {
-			const ctrlDate: Date = this.form.controls.date.value;
-			ctrlDate.setFullYear(newDate.getFullYear());
+			const ctrlDate: Moment = this.form.controls.date.value;
+			ctrlDate.year(newDate.year());
 			this.form.controls.date.setValue(ctrlDate);
 		} else {
 			this.form.controls.date.setValue(newDate);
 		}
 	}
 
-	chosenMonthHandler(newDate: Date) {
+	chosenMonthHandler(newDate: Moment) {
 		if (this.form.controls.date.value !== null) {
-			const ctrlDate: Date = this.form.controls.date.value;
-			ctrlDate.setMonth(newDate.getMonth());
+			const ctrlDate: Moment = this.form.controls.date.value;
+			ctrlDate.month(newDate.month());
 			this.form.controls.date.setValue(ctrlDate);
 		} else {
 			this.form.controls.date.setValue(newDate);
@@ -82,10 +86,11 @@ export class AntecentesPersonalesComponent implements OnInit {
 	}
 
 	save() {
-		console.log(this.form.value);
-		let aux: HealthHistoryConditionDto = this.form.value;
-		console.log('HHC', aux);
-		this.add(aux);
+		if (this.form.valid) {
+			let aux: HealthHistoryConditionDto = this.form.value;
+			aux.date = this.form.controls.date.value.format(DateFormat.API_DATE);
+			this.add(aux);
+		}
 	}
 
 	setConcept(selectedConcept: SnomedDto): void {
@@ -95,7 +100,6 @@ export class AntecentesPersonalesComponent implements OnInit {
 
 	add(ap): void {
 		// TODO validacion snomed requerido
-
 		// had to use an assignment instead of push method to produce a change on the variable observed by mat-table (apDataSource)
 		this.apDataSource.data = this.apDataSource.data.concat([ap]);
 		this.current = {};

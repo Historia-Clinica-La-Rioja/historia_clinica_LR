@@ -12,7 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatOptionModule, MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatOptionModule, MatNativeDateModule, MAT_DATE_LOCALE, DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -28,6 +28,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatMomentDateModule, MomentDateAdapter } from '@angular/material-moment-adapter';
+import { MAT_APP_DATE_FORMATS } from '@core/utils/moment.utils';
 
 @NgModule({
 	imports: [
@@ -47,6 +49,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 		MatListModule,
 		MatListModule,
 		MatMenuModule,
+		MatMomentDateModule,
 		MatNativeDateModule,
 		MatOptionModule,
 		MatPaginatorModule,
@@ -82,6 +85,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 		MatListModule,
 		MatListModule,
 		MatMenuModule,
+		MatMomentDateModule,
 		MatNativeDateModule,
 		MatOptionModule,
 		MatPaginatorModule,
@@ -101,9 +105,20 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 		MatTooltipModule,
 	],
 	providers: [
-        {provide:
-            MAT_DATE_LOCALE,
-            useValue: 'es-AR'},
-    ],
+		{
+			provide:
+			MAT_DATE_LOCALE,
+			useValue: 'es-AR'
+		},
+		{
+			provide: DateAdapter,
+			useClass: MomentDateAdapter,
+			deps: [MAT_DATE_LOCALE]
+		},
+		{
+			provide: MAT_DATE_FORMATS,
+			useValue: MAT_APP_DATE_FORMATS
+		},
+	],
 })
 export class AppMaterialModule { }

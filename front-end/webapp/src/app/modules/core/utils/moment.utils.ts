@@ -13,6 +13,18 @@ export enum DateFormat {
 	MONTH_FULL = 'MM',
 }
 
+export const MAT_APP_DATE_FORMATS = {
+	parse: {
+		dateInput: 'L',
+	},
+	display: {
+		dateInput: 'L',
+		monthYearLabel: 'MMM YYYY',
+		dateA11yLabel: 'LL',
+		monthYearA11yLabel: 'MMMM YYYY',
+	},
+};
+
 export const newMoment = (): Moment => moment.utc(Date.now());
 
 export const momentParseDate = (dateStr: string): Moment => moment.parseZone(dateStr);

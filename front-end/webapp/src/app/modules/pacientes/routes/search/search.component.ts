@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { hasError, VALIDATIONS } from "@core/utils/form.utils";
 import { ActivatedRoute, Router } from '@angular/router';
+import { Moment } from 'moment';
+import * as moment from 'moment';
 import { PatientSearchDto, GenderDto, IdentificationTypeDto } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
-import { DatePipe } from '@angular/common';
 import { TableModel } from '@core/components/table/table.component';
 import { momentFormatDate, DateFormat } from '@core/utils/moment.utils';
 
@@ -19,6 +20,7 @@ const ROUTE_HOME = 'pacientes';
 })
 export class SearchComponent implements OnInit {
 
+	today: Moment = moment();
 	public formSearchSubmitted: boolean = false;
 	public formSearch: FormGroup;
 	public identifyTypeArray: IdentificationTypeDto[];
@@ -55,13 +57,13 @@ export class SearchComponent implements OnInit {
 				gender: [Number(this.genderId), Validators.required],
 				birthDate: [null, Validators.required]
 			});
-			
+
 			this.personMasterDataService.getIdentificationTypes().subscribe(
 				identificationTypes => { this.identifyTypeArray = identificationTypes; });
 
 			this.personMasterDataService.getGenders().subscribe(
-				genders => { 
-					this.genderOptions = genders; 
+				genders => {
+					this.genderOptions = genders;
 					genders.forEach(gender => {
 						this.genderOptionsViewTable[gender.id]=gender.description
 					});
@@ -95,8 +97,8 @@ export class SearchComponent implements OnInit {
  				{
 					columnDef: 'birthDate',
 					header: 'F. Nac',
-					text: (row) =>  momentFormatDate(new Date(row.person.birthDate),DateFormat.VIEW_DATE)
-				}, 
+					text: (row) => momentFormatDate(new Date(row.person.birthDate), DateFormat.VIEW_DATE)
+				},
 				{
 					columnDef: 'numberDni',
 					header: 'Nro. Documento',
@@ -136,15 +138,14 @@ export class SearchComponent implements OnInit {
 	search() {
 		this.formSearchSubmitted = true;
 		if (this.formSearch.valid) {
-			let datePipe = new DatePipe('en-US');
 			let searchRequest = {
 					firstName: this.formSearch.controls.firstName.value,
 					lastName: this.formSearch.controls.lastName.value,
 					genderId: this.formSearch.controls.gender.value,
 					identificationTypeId: this.formSearch.controls.identificationType.value,
 					identificationNumber: this.formSearch.controls.identificationNumber.value,
-					birthDate: datePipe.transform(this.formSearch.controls.birthDate.value,'yyyy-MM-dd') 
-			}
+					birthDate: this.formSearch.controls.birthDate.value.format(DateFormat.API_DATE)
+			};
 			this.patientService.getPatientByCMD(JSON.stringify(searchRequest)).subscribe(
 				data => {
 					if (!data.length) {
@@ -157,7 +158,7 @@ export class SearchComponent implements OnInit {
 									firstName: this.formSearch.controls.firstName.value,
 									lastName: this.formSearch.controls.lastName.value,
 									middleNames: this.formSearch.controls.middleNames.value,
-									birthDate: this.formSearch.controls.birthDate.value,
+									birthDate: this.formSearch.controls.birthDate.value.format(DateFormat.API_DATE),
 									otherLastNames: this.formSearch.controls.otherLastNames.value,
 								}
 							});
