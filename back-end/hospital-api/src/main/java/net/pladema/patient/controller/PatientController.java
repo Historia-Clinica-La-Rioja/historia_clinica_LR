@@ -1,17 +1,16 @@
 package net.pladema.patient.controller;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.annotations.Api;
 import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.address.controller.service.AddressExternalService;
 import net.pladema.patient.controller.dto.*;
+import net.pladema.patient.controller.mapper.PatientMapper;
 import net.pladema.patient.controller.mocks.MocksPatient;
 import net.pladema.patient.repository.domain.BasicListedPatient;
 import net.pladema.patient.repository.entity.Patient;
+import net.pladema.patient.service.PatientService;
+import net.pladema.patient.service.domain.PatientSearch;
 import net.pladema.person.controller.dto.BMPersonDto;
 import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.controller.service.PersonExternalService;
@@ -21,21 +20,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import io.swagger.annotations.Api;
-import net.pladema.patient.controller.mapper.PatientMapper;
-import net.pladema.patient.service.PatientService;
-import net.pladema.patient.service.domain.PatientSearch;
-
 import javax.persistence.EntityNotFoundException;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/patient")
 @Api(value = "Patient", tags = { "Patient" })
 public class PatientController {
 
-	private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+	private static final Logger LOG = LoggerFactory.getLogger(PatientController.class);
 
 	private final PatientService patientService;
 

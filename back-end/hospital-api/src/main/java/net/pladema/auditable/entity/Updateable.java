@@ -5,12 +5,13 @@ import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Embeddable
 @Getter
 @Setter
-public class Updateable {
+public class Updateable implements Serializable {
 
 	@Column(name = "updated_on")
 	private LocalDateTime updatedOn;

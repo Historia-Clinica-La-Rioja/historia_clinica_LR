@@ -4,13 +4,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.auditable.entity.AuditableEntity;
-import net.pladema.auditable.listener.AuditListener;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Entity
 @Table(name = "allergy_intolerance_category")

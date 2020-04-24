@@ -2,7 +2,6 @@ package net.pladema.internation.controller.mocks;
 
 import net.pladema.internation.controller.dto.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +9,10 @@ import java.util.List;
 
 public class MocksInternmentPatient {
 
+
+    private MocksInternmentPatient() {
+        super();
+    }
 
     public static List<InternmentEpisodeDto> mockInternmentPatients(Integer institutionId){
         List<InternmentEpisodeDto> result = new ArrayList<>();

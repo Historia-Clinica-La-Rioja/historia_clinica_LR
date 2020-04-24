@@ -18,7 +18,7 @@ import java.util.Collection;
 @Api(value = "Address Master Data", tags = { "Address Master Data" })
 public class AddressMasterDataController {
 
-	private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+	private static final Logger LOG = LoggerFactory.getLogger(AddressMasterDataController.class);
 
 	private final AddressMasterDataService addressMasterDataService;
 

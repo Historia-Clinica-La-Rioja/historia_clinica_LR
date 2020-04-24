@@ -12,12 +12,13 @@ public class UpdateAnamnesisServiceImpl implements UpdateAnamnesisService {
     private static final Logger LOG = LoggerFactory.getLogger(UpdateAnamnesisServiceImpl.class);
 
     public UpdateAnamnesisServiceImpl() {
+        super();
     }
 
 
     @Override
-    public Anamnesis updateAnanmesisDocument(Integer IntermentEpisodeId, Integer patientId, Anamnesis anamnesis) {
-        LOG.debug("Input parameters -> intermentEpisodeId {}, patientId {}, anamnesis {}", anamnesis);
+    public Anamnesis updateAnanmesisDocument(Integer intermentEpisodeId, Integer patientId, Anamnesis anamnesis) {
+        LOG.debug("Input parameters -> intermentEpisodeId {}, patientId {}, anamnesis {}", intermentEpisodeId, patientId, anamnesis);
         return null;
     }
 

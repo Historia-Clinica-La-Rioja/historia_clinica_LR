@@ -9,6 +9,9 @@ import net.pladema.person.controller.dto.IdentificationTypeDto;
 
 public class MocksAddress {
 
+    private MocksAddress(){
+        super();
+    }
 
     public static AddressDto mockAddressDto(int id) {
         AddressDto result = new AddressDto();

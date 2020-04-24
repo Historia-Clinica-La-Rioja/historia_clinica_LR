@@ -8,7 +8,6 @@ import net.pladema.internation.repository.listener.InternationAuditableEntity;
 import net.pladema.internation.repository.listener.InternationListener;
 import net.pladema.internation.repository.masterdata.entity.ObservationStatus;
 import net.pladema.internation.service.domain.ips.enums.ELab;
-import net.pladema.internation.service.domain.ips.enums.EVitalSign;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

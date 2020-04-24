@@ -1,28 +1,27 @@
 package net.pladema.patient.service.impl;
 
-import static net.pladema.patient.service.MathScore.calculateMatch;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import net.pladema.patient.controller.dto.PatientSearchFilter;
 import net.pladema.patient.repository.PatientRepository;
 import net.pladema.patient.repository.domain.BasicListedPatient;
 import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.service.PatientService;
 import net.pladema.patient.service.domain.PatientSearch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static net.pladema.patient.service.MathScore.calculateMatch;
 
 @Service
 public class PatientServiceImpl implements PatientService {
 
-	private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+	private static final Logger LOG = LoggerFactory.getLogger(PatientServiceImpl.class);
 
 	private static final float THRESHOLD = 75.0f;
 	private final PatientRepository patientRepository;

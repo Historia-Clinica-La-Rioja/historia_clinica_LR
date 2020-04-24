@@ -8,7 +8,9 @@ import net.pladema.internation.controller.dto.ips.VitalSignDto;
 
 public class MocksAnamnesis {
 
-    private MocksAnamnesis(){};
+    private MocksAnamnesis(){
+        super();
+    };
 
     public static AnamnesisDto mockAnamnesisDto(Integer id){
         AnamnesisDto result = new AnamnesisDto();

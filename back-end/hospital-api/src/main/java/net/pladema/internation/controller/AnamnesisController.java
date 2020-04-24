@@ -26,6 +26,7 @@ import javax.validation.Valid;
 public class AnamnesisController {
 
     private static final Logger LOG = LoggerFactory.getLogger(AnamnesisController.class);
+    public static final String OUTPUT = "Output -> {}";
 
     private final InternmentEpisodeService internmentEpisodeService;
 
@@ -68,7 +69,7 @@ public class AnamnesisController {
         Anamnesis anamnesis = anamnesisMapper.fromAnamnesisDto(anamnesisDto);
         anamnesis = createAnamnesisService.createAnanmesisDocument(internmentEpisodeId, patientId, anamnesis);
         ResponseAnamnesisDto result = anamnesisMapper.fromAnamnesis(anamnesis);
-        LOG.debug("Output -> {}", result);
+        LOG.debug(OUTPUT, result);
         return  ResponseEntity.ok().body(result);
     }
 
@@ -82,14 +83,14 @@ public class AnamnesisController {
             @PathVariable(name = "anamnesisId") Long anamnesisId,
             @Valid @RequestBody AnamnesisDto anamnesisDto){
         LOG.debug("Input parameters -> instituionId {}, internmentEpisodeId {}, anamnesisId {}, ananmnesis {}",
-                institutionId, internmentEpisodeId, anamnesisDto);
+                institutionId, internmentEpisodeId, anamnesisId, anamnesisDto);
         Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
                 .orElseThrow(() -> new EntityNotFoundException("internmentepisode.invalid"));
         Anamnesis anamnesis = anamnesisMapper.fromAnamnesisDto(anamnesisDto);
         anamnesis.setId(anamnesisId);
         anamnesis = updateAnamnesisService.updateAnanmesisDocument(internmentEpisodeId, patientId, anamnesis);
         ResponseAnamnesisDto result = anamnesisMapper.fromAnamnesis(anamnesis);
-        LOG.debug("Output -> {}", result);
+        LOG.debug(OUTPUT, result);
         return  ResponseEntity.ok().body(result);
     }
 
@@ -104,7 +105,7 @@ public class AnamnesisController {
                 institutionId, internmentEpisodeId, anamnesisId);
         Anamnesis anamnesis = anamnesisService.getAnamnesis(anamnesisId);
         ResponseAnamnesisDto result = anamnesisMapper.fromAnamnesis(anamnesis);
-        LOG.debug("Output -> {}", result);
+        LOG.debug(OUTPUT, result);
         return  ResponseEntity.ok().body(result);
     }
 

@@ -73,20 +73,15 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
     }
 
     private Document loadNotes(Document anamnesisDocument, Optional<DocumentObservations> optNotes) {
+        LOG.debug("Input parameters -> anamnesisDocument {}, notes {}", anamnesisDocument, optNotes);
         optNotes.ifPresent(notes -> {
-                setNotes(anamnesisDocument, notes);
+            anamnesisDocument.setCurrentIllnessNoteId(noteService.createNote(notes.getCurrentIllnessNote()));
+            anamnesisDocument.setPhysicalExamNoteId(noteService.createNote(notes.getPhysicalExamNote()));
+            anamnesisDocument.setStudiesSummaryNoteId(noteService.createNote(notes.getStudiesSummaryNote()));
+            anamnesisDocument.setEvolutionNoteId(noteService.createNote(notes.getEvolutionNote()));
+            anamnesisDocument.setClinicalImpressionNoteId(noteService.createNote(notes.getClinicalImpressionNote()));
+            anamnesisDocument.setOtherNoteId(noteService.createNote(notes.getOtherNote()));
         });
-        return anamnesisDocument;
-    }
-
-    private Document setNotes(Document anamnesisDocument, DocumentObservations notes) {
-        LOG.debug("Input parameters -> anamnesisDocument {}, notes {}", anamnesisDocument, notes);
-        anamnesisDocument.setCurrentIllnessNoteId(noteService.createNote(notes.getCurrentIllnessNote()));
-        anamnesisDocument.setPhysicalExamNoteId(noteService.createNote(notes.getPhysicalExamNote()));
-        anamnesisDocument.setStudiesSummaryNoteId(noteService.createNote(notes.getStudiesSummaryNote()));
-        anamnesisDocument.setEvolutionNoteId(noteService.createNote(notes.getEvolutionNote()));
-        anamnesisDocument.setClinicalImpressionNoteId(noteService.createNote(notes.getClinicalImpressionNote()));
-        anamnesisDocument.setOtherNoteId(noteService.createNote(notes.getOtherNote()));
         LOG.debug(OUTPUT, anamnesisDocument);
         return anamnesisDocument;
     }

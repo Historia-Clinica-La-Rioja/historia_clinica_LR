@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class AddressExternalServiceImpl implements AddressExternalService {
 
-    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOG = LoggerFactory.getLogger(AddressExternalServiceImpl.class);
 
     private final AddressMapper addressMapper;
 
