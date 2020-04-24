@@ -28,12 +28,13 @@
 	}
 
 	div.table-no-data {
-		padding: 30px 0;
-		text-align: center;
+		padding: 20px 0;
+		margin-top: -1px;
 		border: solid 1px #A8A8A8;
-		color: mat-color($accent-palette, default);
+		text-align: center;
 		font-weight: bold;
 		background-color: white;
+		color: mat-color($accent-palette, default);
 	}
 
 	table.mat-table {
@@ -97,5 +98,11 @@
 		div.mat-h1 {
 			color: mat-color($primary, default);
 		}
+	}
+}
+
+@mixin mat-button($theme) {
+	.mat-stroked-button {
+		background-color: white;
 	}
 }

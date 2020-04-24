@@ -5,4 +5,9 @@
 	& > *:first-child {
 		width: 100%;
 	}
+	.sticky {
+		position: -webkit-sticky; /* Safari */
+		position: sticky;
+		top: 8%;
+	}
 }

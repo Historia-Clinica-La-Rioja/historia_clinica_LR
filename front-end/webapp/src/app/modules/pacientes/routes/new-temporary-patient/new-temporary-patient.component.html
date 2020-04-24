@@ -1,6 +1,6 @@
-<app-content>
-	<div>
-		<h2 [translate]="'pacientes.new.TITLE_TEMPORARY'"></h2>
+<app-content width="full">
+	<section>
+		<h2 class="page-title" [translate]="'pacientes.new.TITLE_TEMPORARY'"></h2>
 		<h3 [translate]="'pacientes.new.SUBTITLE'"></h3>
 		<form [formGroup]="form" (ngSubmit)="save()">
 			<div class="form-row">
@@ -27,10 +27,10 @@
 					</div>
 					<mat-form-field appearance="outline">
 						<input id="identificationNumber"
-							   name="identificationNumber"
-							   formControlName="identificationNumber"
-							   placeholder="{{'pacientes.form.ONLY_NUMBERS' | translate}}"
-							   matInput>
+								name="identificationNumber"
+								formControlName="identificationNumber"
+								placeholder="{{'pacientes.form.ONLY_NUMBERS' | translate}}"
+								matInput>
 						<mat-error *ngIf="hasError(form, 'maxlength', 'identificationNumber')">
 							Introduzca como máximo 11 caracteres
 						</mat-error>
@@ -44,7 +44,7 @@
 				</div>
 				<mat-radio-group formControlName="genderId">
 					<mat-radio-button *ngFor="let gender of genders"
-									  [value]="gender.id">{{gender.description}}</mat-radio-button>
+										[value]="gender.id">{{gender.description}}</mat-radio-button>
 				</mat-radio-group>
 			</div>
 			<br>
@@ -56,21 +56,21 @@
 				<div>
 					<mat-form-field appearance="outline">
 						<input id="firstName"
-							   name="firstName"
-							   formControlName="firstName"
-							   placeholder="{{'pacientes.form.FIRST_NAME' | translate}}"
-							   maxlength="20"
-							   matInput>
+								name="firstName"
+								formControlName="firstName"
+								placeholder="{{'pacientes.form.FIRST_NAME' | translate}}"
+								maxlength="20"
+								matInput>
 					</mat-form-field>
 				</div>
 
 				<mat-form-field appearance="outline">
 					<input id="middleNames"
-						   name="middleNames"
-						   formControlName="middleNames"
-						   placeholder="{{'pacientes.form.MIDDLE_NAMES' | translate}}"
-						   maxlength="20"
-						   matInput>
+							name="middleNames"
+							formControlName="middleNames"
+							placeholder="{{'pacientes.form.MIDDLE_NAMES' | translate}}"
+							maxlength="20"
+							matInput>
 				</mat-form-field>
 			</div>
 
@@ -81,19 +81,19 @@
 					</div>
 					<mat-form-field appearance="outline">
 						<input id="lastName"
-							   name="lastName"
-							   formControlName="lastName"
-							   placeholder="{{'pacientes.form.LAST_NAME' | translate}}"
-							   maxlength="20"
-							   matInput>
+								name="lastName"
+								formControlName="lastName"
+								placeholder="{{'pacientes.form.LAST_NAME' | translate}}"
+								maxlength="20"
+								matInput>
 					</mat-form-field>
 					<mat-form-field appearance="outline">
 						<input id="otherLastNames"
-							   name="otherLastNames"
-							   formControlName="otherLastNames"
-							   placeholder="{{'pacientes.form.OTHER_LAST_NAMES' | translate}}"
-							   maxlength="20"
-							   matInput>
+								name="otherLastNames"
+								formControlName="otherLastNames"
+								placeholder="{{'pacientes.form.OTHER_LAST_NAMES' | translate}}"
+								maxlength="20"
+								matInput>
 					</mat-form-field>
 				</div>
 			</div>
@@ -104,7 +104,7 @@
 			<div>
 				<mat-form-field appearance="outline">
 					<input formControlName="birthDate" id="birthDate" matInput [max]="today"
-						   [matDatepicker]="picker2">
+							[matDatepicker]="picker2">
 					<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
 					<mat-datepicker #picker2></mat-datepicker>
 				</mat-form-field>
@@ -116,7 +116,7 @@
 				</div>
 				<mat-radio-group formControlName="genderSelfDeterminationId">
 					<mat-radio-button *ngFor="let gender of genders"
-									  [value]="gender.id">{{gender.description}}</mat-radio-button>
+										[value]="gender.id">{{gender.description}}</mat-radio-button>
 				</mat-radio-group>
 			</div>
 			<br>
@@ -127,11 +127,11 @@
 				</div>
 				<mat-form-field appearance="outline">
 					<input id="nameSelfDetermination"
-						   name="nameSelfDetermination"
-						   formControlName="nameSelfDetermination"
-						   placeholder="{{'pacientes.form.NAME_SELF_DETERMINATION' | translate}}"
-						   maxlength="25"
-						   matInput>
+							name="nameSelfDetermination"
+							formControlName="nameSelfDetermination"
+							placeholder="{{'pacientes.form.NAME_SELF_DETERMINATION' | translate}}"
+							maxlength="25"
+							matInput>
 				</mat-form-field>
 			</div>
 
@@ -140,11 +140,11 @@
 			</div>
 			<mat-form-field appearance="outline">
 				<input id="mothersLastName"
-					   name="mothersLastName"
-					   formControlName="mothersLastName"
-					   placeholder="{{'pacientes.form.MOTHERS_LAST_NAME' | translate}}"
-					   maxlength="20"
-					   matInput>
+						name="mothersLastName"
+						formControlName="mothersLastName"
+						placeholder="{{'pacientes.form.MOTHERS_LAST_NAME' | translate}}"
+						maxlength="20"
+						matInput>
 			</mat-form-field>
 
 			<div>
@@ -152,10 +152,10 @@
 			</div>
 			<mat-form-field appearance="outline">
 				<input id="cuil"
-					   name="cuil"
-					   formControlName="cuil"
-					   placeholder="{{'pacientes.form.ONLY_NUMBERS' | translate}}"
-					   matInput>
+						name="cuil"
+						formControlName="cuil"
+						placeholder="{{'pacientes.form.ONLY_NUMBERS' | translate}}"
+						matInput>
 			</mat-form-field>
 			<mat-error *ngIf="hasError(form, 'maxlength', 'cuil')">
 				Introduzca como máximo 11 caracteres
@@ -217,60 +217,60 @@
 				</mat-form-field>
 				<mat-form-field appearance="outline">
 					<input id="addressPostcode"
-						   name="addressPostcode"
-						   formControlName="addressPostcode"
-						   maxlength="6"
-						   pattern="[0-9]{1,6}"
-						   placeholder="{{'pacientes.form.ADDRESS_POSTCODE' | translate}}"
-						   matInput>
+							name="addressPostcode"
+							formControlName="addressPostcode"
+							maxlength="6"
+							pattern="[0-9]{1,6}"
+							placeholder="{{'pacientes.form.ADDRESS_POSTCODE' | translate}}"
+							matInput>
 					<mat-error *ngIf="hasError(form,'pattern', 'addressPostcode')  && formSubmitted"
-							   [translate]="'pacientes.form.INVALID'"></mat-error>
+								[translate]="'pacientes.form.INVALID'"></mat-error>
 				</mat-form-field>
 
 				<mat-form-field appearance="outline">
 					<input id="addressStreet"
-						   name="addressStreet"
-						   formControlName="addressStreet"
-						   maxlength="35"
-						   maxlength="35"
-						   placeholder="{{'pacientes.form.ADDRESS_STREET' | translate}}"
-						   matInput>
+							name="addressStreet"
+							formControlName="addressStreet"
+							maxlength="35"
+							maxlength="35"
+							placeholder="{{'pacientes.form.ADDRESS_STREET' | translate}}"
+							matInput>
 				</mat-form-field>
 
 				<mat-form-field appearance="outline">
 					<input id="addressNumber"
-						   name="addressNumber"
-						   formControlName="addressNumber"
-						   maxlength="5"
-						   placeholder="{{'pacientes.form.ADDRESS_NUMBER' | translate}}"
-						   matInput>
+							name="addressNumber"
+							formControlName="addressNumber"
+							maxlength="5"
+							placeholder="{{'pacientes.form.ADDRESS_NUMBER' | translate}}"
+							matInput>
 				</mat-form-field>
 
 				<mat-form-field appearance="outline">
 					<input id="addressFloor"
-						   name="addressFloor"
-						   formControlName="addressFloor"
-						   maxlength="2"
-						   placeholder="{{'pacientes.form.ADDRESS_FLOOR' | translate}}"
-						   matInput>
+							name="addressFloor"
+							formControlName="addressFloor"
+							maxlength="2"
+							placeholder="{{'pacientes.form.ADDRESS_FLOOR' | translate}}"
+							matInput>
 				</mat-form-field>
 
 				<mat-form-field appearance="outline">
 					<input id="addressApartment"
-						   name="addressApartment"
-						   formControlName="addressApartment"
-						   maxlength="3"
-						   placeholder="{{'pacientes.form.ADDRESS_APARTMENT' | translate}}"
-						   matInput>
+							name="addressApartment"
+							formControlName="addressApartment"
+							maxlength="3"
+							placeholder="{{'pacientes.form.ADDRESS_APARTMENT' | translate}}"
+							matInput>
 				</mat-form-field>
 
 				<mat-form-field appearance="outline">
 					<input id="addressQuarter"
-						   name="addressQuarter"
-						   formControlName="addressQuarter"
-						   maxlength="30"
-						   placeholder="{{'pacientes.form.ADDRESS_QUARTER' | translate}}"
-						   matInput>
+							name="addressQuarter"
+							formControlName="addressQuarter"
+							maxlength="30"
+							placeholder="{{'pacientes.form.ADDRESS_QUARTER' | translate}}"
+							matInput>
 				</mat-form-field>
 			</div>
 
@@ -279,11 +279,11 @@
 			</div>
 			<mat-form-field appearance="outline">
 				<input id="phoneNumber"
-					   name="phoneNumber"
-					   formControlName="phoneNumber"
-					   maxlength="15"
-					   placeholder="{{'pacientes.form.PHONE_NUMBER' | translate}}"
-					   matInput>
+						name="phoneNumber"
+						formControlName="phoneNumber"
+						maxlength="15"
+						placeholder="{{'pacientes.form.PHONE_NUMBER' | translate}}"
+						matInput>
 			</mat-form-field>
 
 			<div>
@@ -291,13 +291,13 @@
 			</div>
 			<mat-form-field appearance="outline">
 				<input id="email"
-					   name="email"
-					   formControlName="email"
-					   placeholder="usuario@usuario.com"
-					   maxlength="100"
-					   matInput>
+						name="email"
+						formControlName="email"
+						placeholder="usuario@usuario.com"
+						maxlength="100"
+						matInput>
 				<mat-error *ngIf="hasError(form,'email', 'email')  && formSubmitted"
-						   [translate]="'pacientes.form.INVALID'"></mat-error>
+							[translate]="'pacientes.form.INVALID'"></mat-error>
 			</mat-form-field>
 			<br>
 			<div>
@@ -306,11 +306,11 @@
 				</div>
 				<mat-form-field appearance="outline">
 					<input id="religion"
-						   name="religion"
-						   formControlName="religion"
-						   maxlength="25"
-						   placeholder="{{'pacientes.form.RELIGION' | translate}}"
-						   matInput
+							name="religion"
+							formControlName="religion"
+							maxlength="25"
+							placeholder="{{'pacientes.form.RELIGION' | translate}}"
+							matInput
 					>
 				</mat-form-field>
 			</div>
@@ -321,22 +321,21 @@
 				</div>
 				<mat-form-field appearance="outline">
 					<input id="ethnic"
-						   name="ethnic"
-						   formControlName="ethnic"
-						   maxlength="25"
-						   placeholder="{{'pacientes.form.ETHNIC' | translate}}"
-						   matInput>
+							name="ethnic"
+							formControlName="ethnic"
+							maxlength="25"
+							placeholder="{{'pacientes.form.ETHNIC' | translate}}"
+							matInput>
 				</mat-form-field>
 			</div>
-
-			<div>
-				<button mat-flat-button color="secondary" (click)="goBack()">
+			<div class="form-buttons">
+				<button mat-stroked-button color="secondary" (click)="goBack()">
 					<span [translate]="'buttons.BACK'"></span>
 				</button>
-				<button mat-flat-button color="primary" type="submit">
+				<button mat-raised-button color="primary" type="submit">
 					<span [translate]="'buttons.CONTINUE'"></span>
 				</button>
 			</div>
 		</form>
-	</div>
+	</section>
 </app-content>

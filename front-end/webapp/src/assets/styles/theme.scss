@@ -14,3 +14,4 @@ $theme: mat-light-theme($primary, $accent);
 @include mat-table($theme);
 @include mat-card-box($theme);
 @include mat-dialog($theme);
+@include mat-button($theme);

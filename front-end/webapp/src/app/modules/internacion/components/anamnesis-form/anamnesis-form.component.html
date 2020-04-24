@@ -12,62 +12,59 @@
 
 	<section id="observations">
 		<h2 [translate]="'internaciones.anamnesis.observations.TITLE'"></h2>
-
 		<form [formGroup]="form" (ngSubmit)="save()">
-			<div>
-				<mat-label [translate]="'internaciones.anamnesis.observations.CURRENT_DISEASE'"></mat-label>
-				<mat-form-field [floatLabel]="'never'" appearance="outline">
-					<textarea matInput type="text" id="current_disease" name="current_disease"
-						formControlName="current_disease"
-						placeholder="{{'internaciones.anamnesis.observations.DESCRIPTION' | translate }}">
-								</textarea>
-				</mat-form-field>
-			</div>
-			<div>
-				<mat-label [translate]="'internaciones.anamnesis.observations.PHYSICAL_EXAMINATION'"></mat-label>
-				<mat-form-field [floatLabel]="'never'" appearance="outline">
-					<textarea matInput type="text" id="physical_examination" name="physical_examination"
-						formControlName="physical_examination"
-						placeholder="{{'internaciones.anamnesis.observations.DESCRIPTION' | translate }}">
-								</textarea>
-				</mat-form-field>
-			</div>
-			<div>
-				<mat-label [translate]="'internaciones.anamnesis.observations.STUDIES_PROCEDURES'"></mat-label>
-				<mat-form-field [floatLabel]="'never'" appearance="outline">
-					<textarea matInput type="text" id="studies_procedures" name="studies_procedures"
-						formControlName="studies_procedures"
-						placeholder="{{'internaciones.anamnesis.observations.DESCRIPTION' | translate }}">
-								</textarea>
-				</mat-form-field>
-			</div>
-			<div>
-				<mat-label [translate]="'internaciones.anamnesis.observations.PATIENT_PROGRESS'"></mat-label>
-				<mat-form-field [floatLabel]="'never'" appearance="outline">
-					<textarea matInput type="text" id="patient_progress" name="patient_progress"
-						formControlName="patient_progress"
-						placeholder="{{'internaciones.anamnesis.observations.DESCRIPTION' | translate }}">
-								</textarea>
-				</mat-form-field>
-			</div>
-			<div>
-				<mat-label [translate]="'internaciones.anamnesis.observations.CLINICAL_IMPRESSION'"></mat-label>
-				<mat-form-field [floatLabel]="'never'" appearance="outline">
-					<textarea matInput type="text" id="clinical_impression" name="clinical_impression"
-						formControlName="clinical_impression"
-						placeholder="{{'internaciones.anamnesis.observations.DESCRIPTION' | translate }}">
-								</textarea>
-				</mat-form-field>
-			</div>
-			<div>
-				<mat-label [translate]="'internaciones.anamnesis.observations.OTHERS'"></mat-label>
-				<mat-form-field [floatLabel]="'never'" appearance="outline">
-					<textarea matInput type="text" id="others" name="others" formControlName="others"
-						placeholder="{{'internaciones.anamnesis.observations.DESCRIPTION' | translate }}">
+			<mat-card>
+				<mat-card-content>
+					<div>
+						<mat-label [translate]="'internaciones.anamnesis.observations.CURRENT_DISEASE'"></mat-label>
+						<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<textarea matInput type="text" id="current_disease" name="current_disease"
+								formControlName="current_disease">
+										</textarea>
+						</mat-form-field>
+					</div>
+					<div>
+						<mat-label [translate]="'internaciones.anamnesis.observations.PHYSICAL_EXAMINATION'"></mat-label>
+						<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<textarea matInput type="text" id="physical_examination" name="physical_examination"
+								formControlName="physical_examination">
 							</textarea>
-				</mat-form-field>
-			</div>
+						</mat-form-field>
+					</div>
+					<div>
+						<mat-label [translate]="'internaciones.anamnesis.observations.STUDIES_PROCEDURES'"></mat-label>
+						<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<textarea matInput type="text" id="studies_procedures" name="studies_procedures"
+								formControlName="studies_procedures">
+							</textarea>
+						</mat-form-field>
+					</div>
+					<div>
+						<mat-label [translate]="'internaciones.anamnesis.observations.PATIENT_PROGRESS'"></mat-label>
+						<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<textarea matInput type="text" id="patient_progress" name="patient_progress"
+								formControlName="patient_progress">
+							</textarea>
+						</mat-form-field>
+					</div>
+					<div>
+						<mat-label [translate]="'internaciones.anamnesis.observations.CLINICAL_IMPRESSION'"></mat-label>
+						<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<textarea matInput type="text" id="clinical_impression" name="clinical_impression"
+								formControlName="clinical_impression">
+							</textarea>
+						</mat-form-field>
+					</div>
+					<div>
+						<mat-label [translate]="'internaciones.anamnesis.observations.OTHERS'"></mat-label>
+						<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<textarea matInput type="text" id="others" name="others" formControlName="others">
+							</textarea>
+						</mat-form-field>
+					</div>
 
+				</mat-card-content>
+			</mat-card>
 			<div class="form-buttons">
 				<div class="buttons">
 					<button mat-stroked-button color="primary">

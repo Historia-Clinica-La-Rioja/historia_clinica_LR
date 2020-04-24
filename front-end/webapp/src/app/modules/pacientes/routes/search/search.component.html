@@ -1,8 +1,8 @@
 <app-content width="full">
-	<mat-spinner class="content" *ngIf="showSpinner()"></mat-spinner>
+	<mat-spinner *ngIf="showSpinner()"></mat-spinner>
 
     <section *ngIf="viewSearchComponent() && !showSpinner()">
-		<h2 [translate]="'pacientes.search.TITLE'">Búsqueda de pacientes</h2>
+		<h2  class="page-title" [translate]="'pacientes.search.TITLE'"></h2>
 		<p>
 			<span [translate]="'No se ha encontrado un paciente registrado con ese tipo y número de documento.'"></span>
 			<br>
@@ -101,7 +101,7 @@
 				</mat-form-field>
 				<br>
 				<mat-action-row>
-					<button mat-button class="button-continuar" (click)="back()">
+					<button mat-stroked-button (click)="back()">
 						<span [translate]="'Volver'"></span>
 					</button>
 					<button mat-raised-button color="primary" matBadgeColor="accent" type="submit">
