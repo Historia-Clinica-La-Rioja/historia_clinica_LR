@@ -8,18 +8,16 @@ import { NewPatientComponent } from './routes/new-patient/new-patient.component'
 
 const routes: Routes = [
 	{
-		path: 'pacientes',
-		component: HomeComponent,
-		children: [
-			{
-				path: 'search',
-				component: SearchComponent
-			},
-			{	path: 'pacientes/new',
-				component: NewPatientComponent
-			}
-		]
+		path: '',
+		component: HomeComponent
 	},
+	{
+		path: 'search',
+		component: SearchComponent
+	},
+	{	path: 'pacientes/new',
+		component: NewPatientComponent
+	}
 ];
 
 @NgModule({
