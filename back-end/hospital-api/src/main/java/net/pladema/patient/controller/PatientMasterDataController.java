@@ -1,23 +1,22 @@
 package net.pladema.patient.controller;
 
-import java.util.List;
-
+import io.swagger.annotations.Api;
+import net.pladema.patient.repository.IdentityVerificationStatusRepository;
+import net.pladema.patient.repository.entity.IdentityVerificationStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.annotations.Api;
-import net.pladema.patient.repository.IdentityVerificationStatusRepository;
-import net.pladema.patient.repository.entity.IdentityVerificationStatus;
+import java.util.List;
 
 @RestController
 @RequestMapping("masterdata/patient")
 @Api(value = "PatientMasterData", tags = { "PatientMasterData" })
 public class PatientMasterDataController {
 
-	private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+	private static final Logger LOG = LoggerFactory.getLogger(PatientMasterDataController.class);
 
 	private final IdentityVerificationStatusRepository identityVerificationStatusRepository;
 

@@ -33,6 +33,8 @@ public class PatientController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(PatientController.class);
 
+	public static final String OUTPUT = "Output -> {}";
+
 	private final PatientService patientService;
 
 	private final PersonExternalService personExternalService;
@@ -54,6 +56,7 @@ public class PatientController {
 
 	@GetMapping(value = "/search")
 	public ResponseEntity<List<PatientSearchDto>> searchPatient(@RequestParam String searchFilterStr){
+		LOG.debug("Input data -> searchFilterStr {} ", searchFilterStr);
 		PatientSearchFilter searchFilter = null;
 		try {
 			searchFilter = jackson.readValue(searchFilterStr, PatientSearchFilter.class);
@@ -69,7 +72,7 @@ public class PatientController {
 	@Transactional
 	public ResponseEntity<BMPatientDto> addPatient(
 			@RequestBody APatientDto patientDto) throws URISyntaxException {
-
+		LOG.debug("Input data -> APatientDto {} ", patientDto);
 		BMPersonDto createdPerson = personExternalService.addPerson(patientDto);
 
 		AddressDto addressToAdd = patientMapper.updatePatientAddress(patientDto);
@@ -87,15 +90,15 @@ public class PatientController {
 			@RequestParam(value = "identificationTypeId", required = true) Short identificationTypeId,
 			@RequestParam(value = "identificationNumber"  , required = true) String identificationNumber,
 			@RequestParam(value = "genderId", required = true) Short genderId) {
-		LOG.debug("Input data -> {}", identificationTypeId, identificationNumber, genderId);
+		LOG.debug("Input data -> identificationTypeId {}, identificationNumber {}, genderId {}", identificationTypeId, identificationNumber, genderId);
 		List<Integer> result = personExternalService.getPersonByDniAndGender(identificationTypeId, identificationNumber, genderId);
-		LOG.debug("Ids resultantes -> {}", result);
+		LOG.debug("Ids results -> {}", result);
 		return ResponseEntity.ok().body(result);
 	}
 
 	@GetMapping("/{patientId}/basicdata")
 	public ResponseEntity<BasicPatientDto> getBasicDataPatient(@PathVariable(name = "patientId") Integer patientId){
-		LOG.debug("Input parameters -> {}", patientId);
+		LOG.debug("Input parameters -> patientId {}", patientId);
 		BasicPatientDto result;
 		try {
 			Patient patient = patientService.getPatient(patientId)
@@ -105,7 +108,7 @@ public class PatientController {
 		} catch (Exception e) {
 			result = MocksPatient.mockBasicPatientDto(patientId);
 		}
-		LOG.debug("Output -> {}", result);
+		LOG.debug(OUTPUT, result);
 		return  ResponseEntity.ok().body(result);
 	}
 
@@ -115,6 +118,7 @@ public class PatientController {
 		List<BMPatientDto> result = patientMapper.fromBasicListedPatientList(patients);
 		if (result.isEmpty())
 			result.addAll(MocksPatient.mockBasicListedPatientsList());
+		LOG.debug(OUTPUT, result);
 		return  ResponseEntity.ok().body(result);
 	}
 }

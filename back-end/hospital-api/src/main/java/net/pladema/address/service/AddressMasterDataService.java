@@ -1,24 +1,17 @@
 package net.pladema.address.service;
 
-import net.pladema.address.repository.entity.City;
-import net.pladema.address.repository.entity.Province;
-
 import java.util.Collection;
-import java.util.Optional;
 
 public interface AddressMasterDataService {
 
-	public <T> Collection<T> findCityByProvince(Short provinceId, Class<T> clazz);
+	<T> Collection<T> findCityByProvince(Short provinceId, Class<T> clazz);
 
-	public <T> Collection<T> findDepartmentByProvince(Short provinceId, Class<T> clazz);
+	<T> Collection<T> findDepartmentByProvince(Short provinceId, Class<T> clazz);
 
-	public <T> Collection<T> findByCountry(Short countryId, Class<T> clazz);
+	<T> Collection<T> findByCountry(Short countryId, Class<T> clazz);
 
-	public <T> Collection<T> findAllCountry(Class<T> clazz);
+	<T> Collection<T> findAllCountry(Class<T> clazz);
 
-	public <T> Collection<T> findCitiesByDepartment(Short department_id, Class<T> clazz);
+	<T> Collection<T> findCitiesByDepartment(Short departmentId, Class<T> clazz);
 
-	public Optional<City> findCityById(Integer idCity);
-
-	public Optional<Province> findProvinceById(Short provinceId);
 }

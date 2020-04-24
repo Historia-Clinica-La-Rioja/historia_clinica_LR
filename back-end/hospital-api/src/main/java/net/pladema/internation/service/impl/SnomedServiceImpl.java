@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class SnomedServiceImpl implements SnomedService {
 
+    public static final String OUTPUT = "Output -> {}";
     private static final Logger LOG = LoggerFactory.getLogger(SnomedServiceImpl.class);
 
     private final SnomedRepository snomedRepository;
@@ -22,16 +23,20 @@ public class SnomedServiceImpl implements SnomedService {
 
     @Override
     public String createSnomedTerm(SnomedDto snomedTerm){
-        if(!StringHelper.isNullOrWhiteSpace(snomedTerm.getId()) && !StringHelper.isNullOrWhiteSpace(snomedTerm.getFsn())){
-            Snomed snomed = new Snomed(
-                    snomedTerm.getId(),
-                    snomedTerm.getFsn(),
-                    snomedTerm.getId(),
-                    snomedTerm.getFsn());
-            snomed = snomedRepository.save(snomed);
+        LOG.debug("Input parameters -> {}", snomedTerm);
+        Snomed snomed = new Snomed();
+        if(StringHelper.isNullOrWhiteSpace(snomedTerm.getId()) || StringHelper.isNullOrWhiteSpace(snomedTerm.getFsn())) {
+            LOG.debug(OUTPUT, snomed.getId());
             return snomed.getId();
         }
-        return null;
+        snomed = new Snomed(
+                snomedTerm.getId(),
+                snomedTerm.getFsn(),
+                snomedTerm.getId(),
+                snomedTerm.getFsn());
+        snomed = snomedRepository.save(snomed);
+        LOG.debug(OUTPUT, snomed.getId());
+        return snomed.getId();
     }
 
 }

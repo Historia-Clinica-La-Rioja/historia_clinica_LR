@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { MatTableDataSource } from "@angular/material/table";
 import { PatientService } from "@api-rest/services/patient.service";
 import { TableService } from '@core/services/table.service';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';

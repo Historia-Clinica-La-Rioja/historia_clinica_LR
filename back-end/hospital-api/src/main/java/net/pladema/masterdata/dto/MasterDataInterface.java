@@ -1,6 +1,8 @@
 package net.pladema.masterdata.dto;
 
-public interface MasterDataInterface <T> {
+import java.io.Serializable;
+
+public interface MasterDataInterface <T extends Serializable > {
 
     public T getId();
 

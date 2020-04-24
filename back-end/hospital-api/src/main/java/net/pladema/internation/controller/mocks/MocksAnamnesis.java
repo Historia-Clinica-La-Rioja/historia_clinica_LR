@@ -10,7 +10,7 @@ public class MocksAnamnesis {
 
     private MocksAnamnesis(){
         super();
-    };
+    }
 
     public static AnamnesisDto mockAnamnesisDto(Integer id){
         AnamnesisDto result = new AnamnesisDto();

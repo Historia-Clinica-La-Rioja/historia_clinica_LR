@@ -8,6 +8,9 @@ import java.time.LocalDate;
 
 public class MocksPerson {
 
+    private MocksPerson() {
+        super();
+    }
 
     public static BasicDataPersonDto mockBasicPersonDto(int id) {
         BasicDataPersonDto result = new BasicDataPersonDto();

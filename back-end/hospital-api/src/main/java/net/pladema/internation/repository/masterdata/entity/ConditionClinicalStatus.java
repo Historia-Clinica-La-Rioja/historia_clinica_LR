@@ -4,8 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.auditable.entity.AuditableEntity;
-import net.pladema.auditable.listener.AuditListener;
 
 import javax.persistence.*;
 import java.io.Serializable;

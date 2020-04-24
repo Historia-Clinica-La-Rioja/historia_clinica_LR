@@ -8,8 +8,6 @@ import net.pladema.address.repository.entity.City;
 import net.pladema.address.repository.entity.Province;
 import net.pladema.person.repository.entity.HealthInsurance;
 import net.pladema.person.repository.entity.IdentificationType;
-import net.pladema.person.repository.entity.Person;
-import net.pladema.person.repository.entity.PersonExtended;
 
 import java.time.LocalDate;
 

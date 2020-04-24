@@ -18,7 +18,9 @@ import java.util.List;
 @Service
 public class PersonExternalServiceImpl implements PersonExternalService {
 
-    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOG = LoggerFactory.getLogger(PersonExternalServiceImpl.class);
+
+    public static final String OUTPUT = "Output -> {}";
 
     private final PersonService personService;
 
@@ -43,7 +45,7 @@ public class PersonExternalServiceImpl implements PersonExternalService {
         newPerson = personService.addPerson(newPerson);
         BMPersonDto result = personMapper.fromPerson(newPerson);
         LOG.debug("Mapped result fromPerson -> {}", result);
-        LOG.debug("Output -> {}", result);
+        LOG.debug(OUTPUT, result);
         return result;
     }
 
@@ -57,12 +59,13 @@ public class PersonExternalServiceImpl implements PersonExternalService {
         personExtendedToAdd.setAddressId(addressId);
         LOG.debug("Going to add person extended -> {}", personExtendedToAdd);
         PersonExtended personExtendedSaved = personService.addPersonExtended(personExtendedToAdd);
-        LOG.debug("PersonExtended added -> {}", personExtendedToAdd);
+        LOG.debug("PersonExtended added -> {}", personExtendedSaved);
     }
 
     @Override
     public List<Integer> getPersonByDniAndGender(Short identificationTypeId, String identificationNumber, Short genderId) {
         List<Integer> result = personService.getPersonByDniAndGender(identificationTypeId, identificationNumber, genderId);
+        LOG.debug(OUTPUT, result);
         return result;
     }
 
@@ -72,7 +75,7 @@ public class PersonExternalServiceImpl implements PersonExternalService {
         Person person = personService.getPerson(personId);
         Gender gender = personMasterDataService.getGender(person.getGenderId()).orElse(new Gender());
         BasicDataPersonDto result = personMapper.basicDatafromPerson(person, gender);
-        LOG.debug("Output -> {}", result);
+        LOG.debug(OUTPUT, result);
         return result;
     }
 }

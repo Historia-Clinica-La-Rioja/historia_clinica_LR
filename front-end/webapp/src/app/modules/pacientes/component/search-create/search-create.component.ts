@@ -4,7 +4,6 @@ import { Router } from "@angular/router";
 import { VALIDATIONS, hasError } from "@core/utils/form.utils";
 import { PatientService } from "@api-rest/services/patient.service";
 import { PatientMasterDataService } from "@api-rest/services/patient-master-data.service";
-import { IdentityVerificationStatus } from "../../pacientes.model";
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 
 const ROUTE_SEARCH = 'pacientes/search';

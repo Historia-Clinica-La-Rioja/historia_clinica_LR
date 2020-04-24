@@ -12,6 +12,7 @@ public class AnamnesisServiceImpl implements AnamnesisService {
     private static final Logger LOG = LoggerFactory.getLogger(AnamnesisServiceImpl.class);
 
     public AnamnesisServiceImpl() {
+        super();
     }
 
     @Override

@@ -28,7 +28,7 @@ import java.util.List;
 @Api(value = "Person", tags = { "Person" })
 public class PersonController {
 
-    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOG = LoggerFactory.getLogger(PersonController.class);
 
     private final PersonService personService;
 

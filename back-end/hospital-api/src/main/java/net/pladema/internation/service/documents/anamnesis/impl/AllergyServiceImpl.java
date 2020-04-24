@@ -8,7 +8,6 @@ import net.pladema.internation.service.documents.anamnesis.AllergyService;
 import net.pladema.internation.service.domain.ips.AllergyConditionBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,7 +32,7 @@ public class AllergyServiceImpl implements AllergyService {
     }
 
     @Override
-    public void loadAllergies(Integer patientId, Long documentId, List<AllergyConditionBo> allergies) throws DataIntegrityViolationException {
+    public void loadAllergies(Integer patientId, Long documentId, List<AllergyConditionBo> allergies) {
         LOG.debug("Going to load allergies -> {}", allergies);
         LOG.debug("Input parameters -> patientId {}, documentId {}, allergies {}", documentId, patientId, allergies);
         allergies.forEach(allergy -> {

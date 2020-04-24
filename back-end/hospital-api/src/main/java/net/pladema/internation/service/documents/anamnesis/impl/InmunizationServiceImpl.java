@@ -20,18 +20,14 @@ public class InmunizationServiceImpl implements InmunizationService {
 
     private final InmunizationRepository inmunizationRepository;
 
-    private final NoteRepository noteRepository;
-
     private final SnomedService snomedService;
 
     private final DocumentService documentService;
 
     public InmunizationServiceImpl(InmunizationRepository inmunizationRepository,
-                                   NoteRepository noteRepository,
                                    SnomedService snomedService,
                                    DocumentService documentService){
         this.inmunizationRepository = inmunizationRepository;
-        this.noteRepository = noteRepository;
         this.snomedService = snomedService;
         this.documentService = documentService;
     }

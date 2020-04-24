@@ -4,8 +4,6 @@ package net.pladema.address.controller.mocks;
 import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.address.controller.dto.CityDto;
 import net.pladema.address.controller.dto.ProvinceDto;
-import net.pladema.person.controller.dto.HealthInsuranceDto;
-import net.pladema.person.controller.dto.IdentificationTypeDto;
 
 public class MocksAddress {
 
@@ -38,21 +36,6 @@ public class MocksAddress {
         ProvinceDto result = new ProvinceDto();
         result.setId((short)id);
         result.setDescription("Provincia");
-        return result;
-    }
-
-    private static HealthInsuranceDto mockHealthInsuranceDto(Integer id){
-        HealthInsuranceDto result = new HealthInsuranceDto();
-        result.setId(Short.valueOf(id + ""));
-        result.setAcronym("OSDE");
-        result.setRnos("0123456");
-        return result;
-    }
-
-    private static IdentificationTypeDto mockIdentificationTypeDto(Integer id){
-        IdentificationTypeDto result = new IdentificationTypeDto();
-        result.setId(Short.valueOf(id + ""));
-        result.setDescription("DNI");
         return result;
     }
 }

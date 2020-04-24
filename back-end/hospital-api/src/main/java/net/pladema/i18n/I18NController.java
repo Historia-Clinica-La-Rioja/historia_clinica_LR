@@ -41,6 +41,7 @@ public class I18NController {
 		AcceptHeaderLocaleResolver locale = (AcceptHeaderLocaleResolver)localeResolver;
 		locale.getDefaultLocale();
 		locale.getSupportedLocales();
+		LOG.debug("Output -> ", result);
 		return ResponseEntity.ok().body(result);
 	}
 	

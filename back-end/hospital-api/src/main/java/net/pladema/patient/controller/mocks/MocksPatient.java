@@ -25,7 +25,7 @@ public class MocksPatient {
 
     public static List<BMPatientDto> mockBasicListedPatientsList(){
         List<BMPatientDto> result = new ArrayList<>();
-        BMPatientDto patient = new BMPatientDto();
+        BMPatientDto patient;
         for(int id = 1; id < 11 ; id++){
             patient = mockBasicListedPatient(id);
             result.add(patient);

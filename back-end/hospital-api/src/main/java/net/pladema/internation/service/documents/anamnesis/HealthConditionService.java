@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface HealthConditionService {
 
-    public void loadDiagnosis(Integer patientId, Long documentId, List<HealthConditionBo> diagnosis);
+    void loadDiagnosis(Integer patientId, Long documentId, List<HealthConditionBo> diagnosis);
 
-    public void loadPersonalHistories(Integer patientId, Long documentId, List<HealthHistoryCondition> personalHistories);
+    void loadPersonalHistories(Integer patientId, Long documentId, List<HealthHistoryCondition> personalHistories);
 
-    public void loadFamilyHistories(Integer patientId, Long documentId, List<HealthHistoryCondition> familyHistories);
+    void loadFamilyHistories(Integer patientId, Long documentId, List<HealthHistoryCondition> familyHistories);
 }

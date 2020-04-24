@@ -38,7 +38,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     }
 
     @Override
-    public void loadDiagnosis(Integer patientId, Long documentId, List<HealthConditionBo> diagnosis) throws DataIntegrityViolationException {
+    public void loadDiagnosis(Integer patientId, Long documentId, List<HealthConditionBo> diagnosis) {
         LOG.debug("Going to load diagnosis -> {}", diagnosis);
         if(diagnosis.isEmpty())
             throw new IllegalArgumentException("diagnosis.mandatory");
@@ -51,7 +51,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     }
 
     @Override
-    public void loadPersonalHistories(Integer patientId, Long documentId, List<HealthHistoryCondition> personalHistories) throws DataIntegrityViolationException {
+    public void loadPersonalHistories(Integer patientId, Long documentId, List<HealthHistoryCondition> personalHistories) {
         LOG.debug("Going to load Personal Histories -> {}", personalHistories);
         personalHistories.forEach(ph -> {
             HealthCondition healthCondition = buildHistoryHealth(patientId, ph, true);
@@ -62,7 +62,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     }
 
     @Override
-    public void loadFamilyHistories(Integer patientId, Long documentId, List<HealthHistoryCondition> familyHistories) throws DataIntegrityViolationException {
+    public void loadFamilyHistories(Integer patientId, Long documentId, List<HealthHistoryCondition> familyHistories) {
         LOG.debug("Going to load Family Histories -> {}", familyHistories);
         familyHistories.forEach(ph -> {
             HealthCondition healthCondition = buildHistoryHealth(patientId, ph, false);
@@ -72,7 +72,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         });
     }
 
-    private <T extends HealthConditionBo> HealthCondition buildHealth(Integer patientId, T info, boolean personal) throws NullPointerException{
+    private <T extends HealthConditionBo> HealthCondition buildHealth(Integer patientId, T info, boolean personal) {
 
         String sctid = snomedService.createSnomedTerm(info.getSnomed());
         if(sctid == null)
@@ -89,7 +89,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         return healthCondition;
     }
 
-    private <T extends HealthHistoryCondition> HealthCondition buildHistoryHealth(Integer patientId, T healthHistory, boolean personal) throws NullPointerException{
+    private <T extends HealthHistoryCondition> HealthCondition buildHistoryHealth(Integer patientId, T healthHistory, boolean personal) {
         HealthCondition healthCondition = buildHealth(patientId, healthHistory, personal);
         healthCondition.setProblemId(personal ? ProblemType.PROBLEMA : ProblemType.ANTECEDENTE);
         healthCondition.setStartDate(healthHistory.getDate());

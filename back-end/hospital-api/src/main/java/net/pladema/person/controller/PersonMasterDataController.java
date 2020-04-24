@@ -21,9 +21,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/person/masterdata")
 @Api(value = "Person Master Data", tags = { "Person Master Data" })
-public class personMasterDataController {
+public class PersonMasterDataController {
 
-    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOG = LoggerFactory.getLogger(PersonMasterDataController.class);
+    public static final String OUTPUT = "Output -> ";
 
     private final PersonMasterDataService personMasterDataService;
 
@@ -31,7 +32,7 @@ public class personMasterDataController {
 
     private final IdentificationTypeMapper identificationTypeMapper;
 
-    public personMasterDataController(PersonMasterDataService personMasterDataService, GenderMapper genderMapper, IdentificationTypeMapper identificationTypeMapper) {
+    public PersonMasterDataController(PersonMasterDataService personMasterDataService, GenderMapper genderMapper, IdentificationTypeMapper identificationTypeMapper) {
         super();
         this.personMasterDataService = personMasterDataService;
         this.genderMapper = genderMapper;
@@ -43,6 +44,7 @@ public class personMasterDataController {
         LOG.debug("{}", "All genders");
         List<Gender> genders = personMasterDataService.getGenders();
         List<GenderDto> result = genderMapper.fromGenderList(genders);
+        LOG.debug(OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }
 
@@ -51,6 +53,7 @@ public class personMasterDataController {
         LOG.debug("{}", "All identificationTypes");
         List<IdentificationType> identificationTypes = personMasterDataService.getIdentificationTypes();
         List<IdentificationTypeDto> result = identificationTypeMapper.fromIdentificationTypeList(identificationTypes);
+        LOG.debug(OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }
 }

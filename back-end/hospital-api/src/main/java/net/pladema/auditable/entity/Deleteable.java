@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Embeddable
 @Getter
 @Setter
-public class Deleteable {
+public class Deleteable implements Serializable {
 
 	@Column(name = "deleted", nullable = false)
 	private Boolean deleted = false;

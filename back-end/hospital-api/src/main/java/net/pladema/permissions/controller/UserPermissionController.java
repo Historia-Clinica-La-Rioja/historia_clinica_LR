@@ -12,19 +12,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/permissions")
 public class UserPermissionController {
-	private final Logger logger;
+
+	private static final Logger LOG = LoggerFactory.getLogger(UserPermissionController.class);
+
 	private final LoggedUserService loggedUserService;
 
-	public UserPermissionController(
-			LoggedUserService loggedUserService
-	) {
+	public UserPermissionController(LoggedUserService loggedUserService) {
 		this.loggedUserService = loggedUserService;
-		this.logger = LoggerFactory.getLogger(this.getClass());
 	}
+
 	@GetMapping
 	public ResponseEntity<PermissionsDto> getPermissions() {
-		return ResponseEntity.ok(new PermissionsDto(
-				loggedUserService.getPermissionAssignment()
-		));
+		PermissionsDto result = new PermissionsDto(loggedUserService.getPermissionAssignment());
+		LOG.debug("Output -> {}", result);
+		return ResponseEntity.ok(result);
 	}
 }

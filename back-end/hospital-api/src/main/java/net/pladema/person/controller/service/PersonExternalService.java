@@ -10,7 +10,7 @@ public interface PersonExternalService {
 
     BMPersonDto addPerson(APatientDto patient);
 
-    void addPersonExtended(APatientDto patient, Integer PersonId, Integer AddressId);
+    void addPersonExtended(APatientDto patient, Integer personId, Integer addressId);
 
     List<Integer> getPersonByDniAndGender(Short identificationTypeId, String identificationNumber, Short genderId);
 

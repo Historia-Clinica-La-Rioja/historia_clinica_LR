@@ -5,8 +5,6 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.masterdata.dto.MasterdataDto;
 
-import javax.persistence.Column;
-
 @Getter
 @Setter
 @ToString

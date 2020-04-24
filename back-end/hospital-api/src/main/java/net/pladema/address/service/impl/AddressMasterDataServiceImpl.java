@@ -1,8 +1,9 @@
 package net.pladema.address.service.impl;
 
-import net.pladema.address.repository.*;
-import net.pladema.address.repository.entity.City;
-import net.pladema.address.repository.entity.Province;
+import net.pladema.address.repository.CityRepository;
+import net.pladema.address.repository.CountryRepository;
+import net.pladema.address.repository.DepartmentRepository;
+import net.pladema.address.repository.ProvinceRepository;
 import net.pladema.address.service.AddressMasterDataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +12,6 @@ import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.Optional;
 
 @Service
 public class AddressMasterDataServiceImpl implements AddressMasterDataService {
@@ -59,19 +59,8 @@ public class AddressMasterDataServiceImpl implements AddressMasterDataService {
 	}
 
 	@Override
-	public <T> Collection<T> findCitiesByDepartment(Short department_id, Class<T> clazz) {
-		return cityRepository.findByDepartment(department_id, Sort.by(Order.asc(DESCRIPTION)), clazz);
+	public <T> Collection<T> findCitiesByDepartment(Short departmentId, Class<T> clazz) {
+		return cityRepository.findByDepartment(departmentId, Sort.by(Order.asc(DESCRIPTION)), clazz);
 	}
-
-	@Override
-	public Optional<City> findCityById(Integer idCity) {
-		return cityRepository.findById(idCity);
-	}
-
-	@Override
-	public Optional<Province> findProvinceById(Short provinceId) {
-		return provinceRepository.findById(provinceId);
-	}
-
 
 }

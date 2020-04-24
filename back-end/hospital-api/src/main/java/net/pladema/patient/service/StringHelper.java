@@ -4,6 +4,10 @@ import java.util.Collections;
 
 public class StringHelper {
 
+	private StringHelper() {
+		super();
+	}
+
 	public static String soundex(String data) {
 		StringBuilder result = new StringBuilder();
 		if (data != null && !data.isEmpty()) {
@@ -60,6 +64,6 @@ public class StringHelper {
 	}
 
 	public static boolean isNullOrWhiteSpace(String str) {
-		return (str == null || str.length() == 0 | str.equals(" "));
+		return (str == null || str.length() == 0 || str.equals(" "));
 	}
 }

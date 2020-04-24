@@ -17,11 +17,10 @@ import java.util.List;
 @Service
 public class RoleServiceImpl implements RoleService {
 
-	private static final String INVALID_ROLE = "role.invalid";
-
-	private static final String INVALID_USER = "invalid.iduser";
-
 	private static final Logger LOG = LoggerFactory.getLogger(RoleServiceImpl.class);
+
+	private static final String INVALID_ROLE = "role.invalid";
+	public static final String OUTPUT = "Output -> {}";
 
 	private final UserRoleRepository userRoleRepository;
 
@@ -48,14 +47,14 @@ public class RoleServiceImpl implements RoleService {
 	protected UserRole saveRole(Integer userId, Short roleId) {
 		UserRole userRole = new UserRole(userId, roleId);
 		userRole = userRoleRepository.save(userRole);
-		LOG.debug("{}", "Role creada");
+		LOG.debug(OUTPUT, userRole);
 		return userRole;
 	}
 
 	@Override
 	public List<String> getAuthoritiesClaims(Integer userId) {
 		List<String> authorities = userRoleRepository.getActiveRole(userId, PageRequest.of(0, 1)).getContent();
-		LOG.debug("Generated authorities {}", authorities);
+		LOG.debug(OUTPUT, authorities);
 		return authorities;
 	}
 

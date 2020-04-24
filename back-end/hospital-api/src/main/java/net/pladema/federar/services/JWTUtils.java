@@ -1,14 +1,18 @@
 package net.pladema.federar.services;
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-
 public class JWTUtils {
+
+	private JWTUtils(){
+		super();
+	}
 
 	public static String generateJWT(Map<String, String> claims, String signKey, Integer secondsAlive) {
 		Calendar cal = Calendar.getInstance();
