@@ -2,18 +2,15 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
+	// ver AuthRoutingModule para /auth/login o /auth/reset-password
 	{
 		path: '',
 		redirectTo: 'pacientes',
 		pathMatch: 'full',
 	},
-	// Si el usuario ingresa a pacientes/ se carga el PacientesModule
+	// ver PacientesRoutingModule para /pacientes, /pacientes/search, etc
 	{
-		path: 'pacientes',
-		loadChildren: () => import('./modules/pacientes/pacientes.module').then(m => m.PacientesModule)
-	},
-	// Si el usuario ingresa a internaciones/ se carga el InternacionesModule
-	{
+		// Si el usuario ingresa a internaciones/ se carga el InternacionesModule
 		path: 'internaciones',
 		loadChildren: () => import('./modules/internacion/internaciones.module').then(m => m.InternacionesModule)
 	},

@@ -33,8 +33,8 @@ import { DiagnosticosComponent } from './components/diagnosticos/diagnosticos.co
 		CoreModule,
 		CommonModule,
 		FormsModule,
-		InternacionesRoutingModule,
 		PresentationModule,
+		InternacionesRoutingModule,
 	]
 })
 export class InternacionesModule { }

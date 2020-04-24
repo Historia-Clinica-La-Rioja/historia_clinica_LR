@@ -21,8 +21,8 @@ import { NewPatientComponent } from './routes/new-patient/new-patient.component'
 		AppMaterialModule,
 		CoreModule,
 		FormsModule,
-		PacientesRoutingModule,
         ReactiveFormsModule,
+		PacientesRoutingModule,
 	]
 })
 export class PacientesModule {
