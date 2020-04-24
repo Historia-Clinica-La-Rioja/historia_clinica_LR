@@ -5,9 +5,9 @@ import { BasicPatientDto, InternmentSummaryDto } from '@api-rest/api-model';
 import { PatientBasicData } from 'src/app/modules/presentation/components/patient-card/patient-card.component';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { InternmentEpisode } from '../../../../presentation/components/internment-episode-summary/internment-episode-summary.component';
+import { InternmentEpisode } from '../../../presentation/components/internment-episode-summary/internment-episode-summary.component';
 import { InternacionService } from '@api-rest/services/internacion.service';
-import { MapperService } from '../../../../presentation/services/mapper.service';
+import { MapperService } from '../../../presentation/services/mapper.service';
 
 @Component({
 	selector: 'app-anamnesis',

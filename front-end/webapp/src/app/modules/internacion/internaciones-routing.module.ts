@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { InternacionesHomeComponent } from './components/routes/home/internaciones-home.component';
-import { InternacionPacienteComponent } from './components/routes/internacion-paciente/internacion-paciente.component';
-import { AnamnesisComponent } from './components/routes/anamnesis/anamnesis.component';
+import { InternacionesHomeComponent } from './routes/home/internaciones-home.component';
+import { InternacionPacienteComponent } from './routes/internacion-paciente/internacion-paciente.component';
+import { AnamnesisComponent } from './routes/anamnesis/anamnesis.component';
 
 
 const routes: Routes = [
