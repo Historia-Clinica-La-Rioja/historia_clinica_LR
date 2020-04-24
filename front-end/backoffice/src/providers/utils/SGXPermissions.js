@@ -1,17 +1,17 @@
 
 class SGXPermissions {
 
-    constructor(accountDto) {
-        this.authorities = accountDto.authorities;
+    constructor(permissions) {
+        this.roleAssignments = permissions.roleAssignments;
     }
 
 
-    hasAnyAuthority(...anyAuthorities) {
-        if (anyAuthorities.length === 0) {
+    hasAnyAssignment(...anyAssignments) {
+        if (anyAssignments.length === 0) {
             return true;
         }
-        let hasAny = anyAuthorities.find(auth => 
-            this.authorities.find(userAuthority => userAuthority.authority === auth)
+        let hasAny = anyAssignments.find(assignment => 
+            this.roleAssignments.find(userAssignment => userAssignment.role === assignment.role && userAssignment.institutionId === assignment.institutionId)
         ) !== undefined;
 
         return hasAny;

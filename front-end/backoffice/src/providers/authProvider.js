@@ -13,7 +13,7 @@ const authProvider = {
     checkAuth: () => {
         return apiRest.permission$
             .then(permissions => {
-                if (!permissions.hasAnyAuthority('ADMIN', 'ADMIN_APP', 'BACKOFFICE_USER')) {
+                if (!permissions.hasAnyAssignment({role: 'ADMIN'}, {role: 'ADMIN_APP'})) {
                     return Promise.reject({ redirectTo: '/home' });
                 }
             });

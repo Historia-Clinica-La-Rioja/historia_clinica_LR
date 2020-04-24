@@ -36,7 +36,7 @@ const App = () => (
     dashboard={Dashboard}
     >
         {
-        permissions => permissions.hasAnyAuthority('ADMIN', 'ADMIN_APP', 'BACKOFFICE_USER') ?
+        permissions => permissions.hasAnyAssignment({role: 'ADMIN'}, {role: 'ADMIN_APP'}) ?
         [
             <Resource name="cities" {...cities} />,
             <Resource name="departments" {...departments} />,

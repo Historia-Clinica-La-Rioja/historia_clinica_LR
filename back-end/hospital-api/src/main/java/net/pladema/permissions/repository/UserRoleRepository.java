@@ -2,6 +2,7 @@ package net.pladema.permissions.repository;
 
 import net.pladema.permissions.repository.entity.UserRole;
 import net.pladema.permissions.repository.entity.UserRolePK;
+import net.pladema.permissions.service.dto.RoleAssignment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -42,6 +43,17 @@ public interface UserRoleRepository extends JpaRepository<UserRole, UserRolePK> 
 			+ "WHERE ur.userRolePK.userId = :userId ")
 	void deleteByUserId(@Param("userId") Integer userId);
 	
-	// @formatter:on
 
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW net.pladema.permissions.service.dto.RoleAssignment( " +
+			"	r.description, " +
+			"	ur.institutionId" +
+			" )"
+			+ "FROM UserRole ur "
+			+ "JOIN Role r ON (r.id = ur.userRolePK.roleId) "
+			+ "WHERE ur.userRolePK.userId = :userId "
+			)
+	List<RoleAssignment> getRoleAssignments(@Param("userId") Integer userId);
+
+	// @formatter:on
 }

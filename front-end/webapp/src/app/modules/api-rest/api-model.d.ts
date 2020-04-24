@@ -98,7 +98,14 @@ export interface BackofficeUserDto {
     id: number;
     lastLogin: Date;
     personId: number;
+    roles: BackofficeUserRoleDto[];
     username: string;
+}
+
+export interface BackofficeUserRoleDto {
+    institutionId: number;
+    roleId: number;
+    userId: number;
 }
 
 export interface BasicDataPersonDto {
@@ -245,6 +252,10 @@ export interface PatientSearchFilter {
     lastName: string;
 }
 
+export interface PermissionsDto {
+    roleAssignments: RoleAssignment[];
+}
+
 export interface PersonalInformationDto {
     address: AddressDto;
     birthDate: Date;
@@ -275,6 +286,11 @@ export interface ResponsibleDoctorDto extends Serializable {
     id: number;
     lastName: string;
     licence: string;
+}
+
+export interface RoleAssignment {
+    institutionId: number;
+    role: string;
 }
 
 export interface RoomDto extends Serializable {

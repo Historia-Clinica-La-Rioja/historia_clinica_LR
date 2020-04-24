@@ -1,14 +1,9 @@
 package net.pladema.user.controller;
 
-import net.pladema.permissions.repository.enums.ERole;
-import net.pladema.permissions.service.impl.RoleServiceImpl;
+import net.pladema.permissions.service.LoggedUserService;
+import net.pladema.permissions.service.RoleService;
 import net.pladema.sgx.exceptions.PermissionDeniedException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public final class BackofficeAuthoritiesValidator {
@@ -19,21 +14,20 @@ public final class BackofficeAuthoritiesValidator {
 //			ERole.BASIC_USER // menor rango, index 3
 //	).map(ERole::getValue).collect(Collectors.toList());
 
-	private final RoleServiceImpl roleService;
+	private final LoggedUserService loggedUserService;
 
-	public BackofficeAuthoritiesValidator(RoleServiceImpl roleService) {
-		this.roleService = roleService;
-	}
-
-	private Integer loggedUserId() {
-		return (Integer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	public BackofficeAuthoritiesValidator(
+			LoggedUserService loggedUserService,
+			RoleService roleService
+	) {
+		this.loggedUserService = loggedUserService;
 	}
 
 	protected void assertAllowed(Integer entityUserId) {
 		if (entityUserId == null) {
 			throw new PermissionDeniedException("Operación no permitida");
 		}
-		Integer loggedUserId = loggedUserId();
+		Integer loggedUserId = loggedUserService.getUserId();
 		if (entityUserId.equals(loggedUserId)) {
 			return; // mismo usuario
 		}
@@ -69,6 +63,6 @@ public final class BackofficeAuthoritiesValidator {
 //	}
 
 	public boolean isLoggedUserId(Integer id) {
-		return loggedUserId() == id;
+		return loggedUserService.getUserId() == id;
 	}
 }

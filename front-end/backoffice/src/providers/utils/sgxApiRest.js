@@ -4,7 +4,7 @@ import SGXPermissions from './SGXPermissions';
 
 const apiUrl = '/api';
 class SgxApiRest {
-    _permission$ = Promise.resolve(new SGXPermissions({authorities:[{authority: 'BACKOFFICE_USER'}]}));//undefined;
+    _permission$ = undefined;
 
     auth(username, password) {
         this.logout();
@@ -27,7 +27,7 @@ class SgxApiRest {
             return Promise.reject();
         }
         if (!this._permission$) {
-            this._permission$ = this.fetch('/account')
+            this._permission$ = this.fetch('/permissions')
                 .then(({json}) => {
                     return new SGXPermissions(json);
                 });
