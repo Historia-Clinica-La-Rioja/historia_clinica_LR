@@ -1,19 +1,15 @@
 package net.pladema.internation.service.documents.anamnesis.impl;
 
-import net.pladema.internation.controller.dto.SnomedDto;
 import net.pladema.internation.repository.ips.HealthConditionRepository;
 import net.pladema.internation.repository.ips.entity.HealthCondition;
-import net.pladema.internation.repository.masterdata.NoteRepository;
-import net.pladema.internation.repository.masterdata.SnomedRepository;
 import net.pladema.internation.repository.masterdata.entity.ConditionProblemType;
-import net.pladema.internation.repository.masterdata.entity.Note;
 import net.pladema.internation.repository.masterdata.entity.ProblemType;
-import net.pladema.internation.repository.masterdata.entity.Snomed;
+import net.pladema.internation.service.NoteService;
+import net.pladema.internation.service.SnomedService;
 import net.pladema.internation.service.documents.DocumentService;
 import net.pladema.internation.service.documents.anamnesis.HealthConditionService;
 import net.pladema.internation.service.domain.ips.HealthConditionBo;
 import net.pladema.internation.service.domain.ips.HealthHistoryCondition;
-import net.pladema.patient.service.StringHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -28,18 +24,18 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     private static final Logger LOG = LoggerFactory.getLogger(HealthConditionServiceImpl.class);
 
     private final HealthConditionRepository healthConditionRepository;
-    private final NoteRepository noteRepository;
-    private final SnomedRepository snomedRepository;
+    private final SnomedService snomedService;
     private final DocumentService documentService;
+    private final NoteService noteService;
 
     public HealthConditionServiceImpl(HealthConditionRepository healthConditionRepository,
-                                      NoteRepository noteRepository,
-                                      SnomedRepository snomedRepository,
-                                      DocumentService documentService){
+                                      SnomedService snomedService,
+                                      DocumentService documentService,
+                                      NoteService noteService){
         this.healthConditionRepository = healthConditionRepository;
-        this.noteRepository = noteRepository;
-        this.snomedRepository = snomedRepository;
+        this.snomedService = snomedService;
         this.documentService = documentService;
+        this.noteService = noteService;
     }
 
     @Override
@@ -51,7 +47,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
             HealthCondition healthCondition = buildHealth(patientId, d, true);
             healthCondition = healthConditionRepository.save(healthCondition);
 
-            documentService.createHealthConditionIndex(documentId, healthCondition.getId());
+            documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
         });
     }
 
@@ -60,9 +56,9 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         LOG.debug("Going to load Personal Histories -> {}", personalHistories);
         personalHistories.forEach(ph -> {
             HealthCondition healthCondition = buildHistoryHealth(patientId, ph, true);
-            healthConditionRepository.save(healthCondition);
+            healthCondition = healthConditionRepository.save(healthCondition);
 
-            documentService.createHealthConditionIndex(documentId, healthCondition.getId());
+            documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
         });
     }
 
@@ -71,15 +67,17 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         LOG.debug("Going to load Family Histories -> {}", familyHistories);
         familyHistories.forEach(ph -> {
             HealthCondition healthCondition = buildHistoryHealth(patientId, ph, false);
-            healthConditionRepository.save(healthCondition);
+            healthCondition = healthConditionRepository.save(healthCondition);
 
-            documentService.createHealthConditionIndex(documentId, healthCondition.getId());
+            documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
         });
     }
 
     private <T extends HealthConditionBo> HealthCondition buildHealth(Integer patientId, T info, boolean personal) throws NullPointerException{
 
-        saveSnomedTerm(info.getSnomed());
+        String sctid = snomedService.createSnomedTerm(info.getSnomed());
+        if(sctid == null)
+            throw new IllegalArgumentException("snomed.invalid");
 
         HealthCondition healthCondition = new HealthCondition();
         healthCondition.setPatientId(patientId);
@@ -96,27 +94,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         HealthCondition healthCondition = buildHealth(patientId, healthHistory, personal);
         healthCondition.setProblemId(personal ? ProblemType.PROBLEMA : ProblemType.ANTECEDENTE);
         healthCondition.setStartDate(LocalDate.parse(healthHistory.getDate()));
-        healthCondition.setNoteId(saveNote(healthHistory.getNote()));
+        healthCondition.setNoteId(noteService.createNote(healthHistory.getNote()));
         return healthCondition;
-    }
-
-    private void saveSnomedTerm(SnomedDto snomedTerm){
-        if(!StringHelper.isNullOrWhiteSpace(snomedTerm.getId()) && !StringHelper.isNullOrWhiteSpace(snomedTerm.getFsn()))
-            snomedRepository.save(new Snomed(
-                    snomedTerm.getId(),
-                    snomedTerm.getFsn(),
-                    snomedTerm.getId(),
-                    snomedTerm.getFsn())
-            );
-    }
-
-    private Long saveNote(String description){
-        if(!StringHelper.isNullOrWhiteSpace(description)) {
-            Note note = new Note();
-            note.setDescription(description);
-            note = noteRepository.save(note);
-            return note.getId();
-        }
-        return -1L;
     }
 }

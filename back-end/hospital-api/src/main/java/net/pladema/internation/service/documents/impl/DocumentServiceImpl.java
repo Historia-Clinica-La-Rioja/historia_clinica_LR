@@ -1,12 +1,7 @@
 package net.pladema.internation.service.documents.impl;
 
-import net.pladema.internation.repository.core.DocumentHealthConditionRepository;
-import net.pladema.internation.repository.core.DocumentLabRepository;
-import net.pladema.internation.repository.core.DocumentVitalSignRepository;
-import net.pladema.internation.repository.core.entity.DocumentHealthCondition;
-import net.pladema.internation.repository.core.entity.DocumentHealthConditionPK;
-import net.pladema.internation.repository.core.entity.DocumentLab;
-import net.pladema.internation.repository.core.entity.DocumentVitalSign;
+import net.pladema.internation.repository.core.*;
+import net.pladema.internation.repository.core.entity.*;
 import net.pladema.internation.service.documents.DocumentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,26 +14,37 @@ public class DocumentServiceImpl implements DocumentService {
 
     private static final Logger LOG = LoggerFactory.getLogger(DocumentServiceImpl.class);
 
+    private final DocumentRepository documentRepository;
+
     private final DocumentHealthConditionRepository documentHealthConditionRepository;
 
     private final DocumentVitalSignRepository documentVitalSignRepository;
 
     private final DocumentLabRepository documentLabRepository;
 
-    public DocumentServiceImpl(DocumentHealthConditionRepository documentHealthConditionRepository,
+    private final DocumentAllergyIntoleranceRepository documentAllergyIntoleranceRepository;
+
+    public DocumentServiceImpl(DocumentRepository documentRepository,
+                               DocumentHealthConditionRepository documentHealthConditionRepository,
                                DocumentVitalSignRepository documentVitalSignRepository,
-                               DocumentLabRepository documentLabRepository) {
+                               DocumentLabRepository documentLabRepository,
+                               DocumentAllergyIntoleranceRepository documentAllergyIntoleranceRepository) {
+        this.documentRepository = documentRepository;
         this.documentHealthConditionRepository = documentHealthConditionRepository;
         this.documentVitalSignRepository = documentVitalSignRepository;
         this.documentLabRepository = documentLabRepository;
+        this.documentAllergyIntoleranceRepository = documentAllergyIntoleranceRepository;
     }
 
     @Override
-    public void createHealthConditionIndex(Long documentId, Integer healthConditionId) {
+    public Document create(Document document) {
+        return documentRepository.save(document);
+    }
+
+    @Override
+    public void createDocumentHealthCondition(Long documentId, Integer healthConditionId) {
         LOG.debug("Input parameters -> documentId {}, healthConditionId {}", documentId, healthConditionId);
-        DocumentHealthConditionPK pk = new DocumentHealthConditionPK(documentId, healthConditionId);
-        DocumentHealthCondition document = new DocumentHealthCondition();
-        document.setPk(pk);
+        DocumentHealthCondition document = new DocumentHealthCondition(documentId, healthConditionId);
         documentHealthConditionRepository.save(document);
     }
 
@@ -58,5 +64,12 @@ public class DocumentServiceImpl implements DocumentService {
         result = documentLabRepository.save(result);
         LOG.debug(OUTPUT, result);
         return result;
+    }
+
+    @Override
+    public void createDocumentAllergyIntolerance(Long documentId, Integer allergyIntoleranceId) {
+        LOG.debug("Input parameters -> documentId {}, allergyIntoleranceId {}", documentId, allergyIntoleranceId);
+        DocumentAllergyIntolerance document = new DocumentAllergyIntolerance(documentId, allergyIntoleranceId);
+        documentAllergyIntoleranceRepository.save(document);
     }
 }
