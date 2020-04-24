@@ -1,5 +1,7 @@
 <app-content width="full">
-    <section *ngIf="viewSearchComponent()">
+	<mat-spinner class="content" *ngIf="showSpinner()"></mat-spinner>
+
+    <section *ngIf="viewSearchComponent() && !showSpinner()">
 		<h2 [translate]="'pacientes.search.TITLE'">Búsqueda de pacientes</h2>
 		<p>
 			<span [translate]="'No se ha encontrado un paciente registrado con ese tipo y número de documento.'"></span>
@@ -7,7 +9,7 @@
 			<span [translate]="'Complete los siguientes datos para una búsqueda avanzada.'"></span>
 		</p>
 		<div class="content">
-			<form [formGroup]="formSearch" (ngSubmit)="search()">
+			<form [formGroup]="formSearch" (ngSubmit)="submit()">
 				<br>
 				<mat-form-field appearance="outline">
 					<mat-label>Tipo</mat-label>
@@ -109,7 +111,7 @@
 			</form>
 		</div>
 	</section>
-	<div class="container" *ngIf="!viewSearchComponent()">
+	<div class="container" *ngIf="!viewSearchComponent() && !showSpinner()">
 		<section>
 			<h3 class="mat-body-2" [translate]="'Pacientes Coincidentes'"></h3>
 			<app-table [model]="matchingPatient" [tableClass]="'mat-elevation-z8'"></app-table>

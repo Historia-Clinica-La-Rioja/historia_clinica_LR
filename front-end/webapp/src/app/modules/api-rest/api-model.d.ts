@@ -256,6 +256,12 @@ export interface PermissionsDto {
     roleAssignments: RoleAssignment[];
 }
 
+export interface PersonBasicDataResponseDto {
+    birthDate: string;
+    firstName: string;
+    lastName: string;
+}
+
 export interface PersonalInformationDto {
     address: AddressDto;
     birthDate: Date;

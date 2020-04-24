@@ -9,6 +9,7 @@ import { PatientService } from '@api-rest/services/patient.service';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { TableModel } from '@core/components/table/table.component';
 import { momentFormatDate, DateFormat } from '@core/utils/moment.utils';
+import { PersonService } from '@api-rest/services/person.service';
 
 const ROUTE_NEW = 'pacientes/new';
 const ROUTE_HOME = 'pacientes';
@@ -27,6 +28,7 @@ export class SearchComponent implements OnInit {
 	public genderOptions: GenderDto[];
 	public genderOptionsViewTable = {};
 	public viewSearch: boolean = true;
+	public isLoading: boolean = true;
 	public hasError = hasError;
 	public identificationTypeId;
 	public identificationNumber;
@@ -34,10 +36,11 @@ export class SearchComponent implements OnInit {
 	public matchingPatient: TableModel<PatientSearchDto>;
 
 	constructor(private formBuilder: FormBuilder,
-				private patientService: PatientService,
-				private router: Router,
-				private route: ActivatedRoute,
-				private personMasterDataService : PersonMasterDataService
+		private patientService: PatientService,
+		private personService: PersonService,
+		private router: Router,
+		private route: ActivatedRoute,
+		private personMasterDataService: PersonMasterDataService
 	) {
 	}
 
@@ -47,16 +50,20 @@ export class SearchComponent implements OnInit {
 			this.identificationNumber = params['identificationNumber'];
 			this.genderId = params['genderId'];
 
-			this.formSearch = this.formBuilder.group({
-				identificationNumber: [this.identificationNumber, [Validators.required,Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
-				identificationType: [Number(this.identificationTypeId), Validators.required],
-				firstName: [null, Validators.required],
-				middleNames: [null],
-				lastName: [null, Validators.required],
-				otherLastNames: [null],
-				gender: [Number(this.genderId), Validators.required],
-				birthDate: [null, Validators.required]
-			});
+			this.buildFormSearch();
+
+			this.personService.getRenaperPersonData({ identificationNumber: this.identificationNumber, genderId: this.genderId }).subscribe(
+				personData => {
+					this.isLoading = false;
+					if (personData) {
+						let personToAdd: any = { ...personData };
+						personToAdd.identificationType = this.identificationTypeId;
+						personToAdd.identificationNumber = this.identificationNumber;
+						personToAdd.genderId = this.genderId;
+						this.goToNextState(personToAdd);
+					}
+				});
+
 
 			this.personMasterDataService.getIdentificationTypes().subscribe(
 				identificationTypes => { this.identifyTypeArray = identificationTypes; });
@@ -65,7 +72,7 @@ export class SearchComponent implements OnInit {
 				genders => {
 					this.genderOptions = genders;
 					genders.forEach(gender => {
-						this.genderOptionsViewTable[gender.id]=gender.description
+						this.genderOptionsViewTable[gender.id] = gender.description
 					});
 				});
 		});
@@ -94,7 +101,7 @@ export class SearchComponent implements OnInit {
 					header: 'Sexo',
 					text: (row) => this.genderOptionsViewTable[row.person.genderId]
 				},
- 				{
+				{
 					columnDef: 'birthDate',
 					header: 'F. Nac',
 					text: (row) => momentFormatDate(new Date(row.person.birthDate), DateFormat.VIEW_DATE)
@@ -112,7 +119,7 @@ export class SearchComponent implements OnInit {
 				{
 					columnDef: 'ranking',
 					header: 'Coincidencia',
-					text: (row) => row.ranking+" %"
+					text: (row) => row.ranking + " %"
 				},
 				{
 					columnDef: 'action',
@@ -131,49 +138,74 @@ export class SearchComponent implements OnInit {
 	}
 
 
+	private buildFormSearch() {
+		this.formSearch = this.formBuilder.group({
+			identificationNumber: [this.identificationNumber, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
+			identificationType: [Number(this.identificationTypeId), Validators.required],
+			firstName: [null, Validators.required],
+			middleNames: [null],
+			lastName: [null, Validators.required],
+			otherLastNames: [null],
+			gender: [Number(this.genderId), Validators.required],
+			birthDate: [null, Validators.required]
+		});
+	}
+
 	back() {
 		this.router.navigate([ROUTE_HOME])
 	}
 
-	search() {
+	submit() {
 		this.formSearchSubmitted = true;
 		if (this.formSearch.valid) {
 			let searchRequest = {
-					firstName: this.formSearch.controls.firstName.value,
-					lastName: this.formSearch.controls.lastName.value,
-					genderId: this.formSearch.controls.gender.value,
-					identificationTypeId: this.formSearch.controls.identificationType.value,
-					identificationNumber: this.formSearch.controls.identificationNumber.value,
-					birthDate: this.formSearch.controls.birthDate.value.format(DateFormat.API_DATE)
-			};
-			this.patientService.getPatientByCMD(JSON.stringify(searchRequest)).subscribe(
-				data => {
-					if (!data.length) {
-						this.router.navigate([ROUTE_NEW],
-							{
-								queryParams: {
-									identificationTypeId: this.formSearch.controls.identificationType.value,
-									identificationNumber: this.formSearch.controls.identificationNumber.value,
-									genderId: this.formSearch.controls.gender.value,
-									firstName: this.formSearch.controls.firstName.value,
-									lastName: this.formSearch.controls.lastName.value,
-									middleNames: this.formSearch.controls.middleNames.value,
-									birthDate: this.formSearch.controls.birthDate.value.format(DateFormat.API_DATE),
-									otherLastNames: this.formSearch.controls.otherLastNames.value,
-								}
-							});
-					} else {
-						// ocultar Search y ver Tabla de coincidencias parciales
-						this.matchingPatient = this.buildTable(data);
-						this.viewSearch = false;
-					}
-				}
-			);
+				firstName: this.formSearch.controls.firstName.value,
+				lastName: this.formSearch.controls.lastName.value,
+				genderId: this.formSearch.controls.gender.value,
+				identificationTypeId: this.formSearch.controls.identificationType.value,
+				identificationNumber: this.formSearch.controls.identificationNumber.value,
+				birthDate: this.formSearch.controls.birthDate.value.format(DateFormat.API_DATE),
+				otherLastNames: this.formSearch.controls.otherLastNames.value,
+				middleNames: this.formSearch.controls.middleNames.value
+			}
+			this.goToNextState(searchRequest);
 		}
 	}
 
-	viewSearchComponent() {
+	private goToNextState(person) {
+		this.patientService.getPatientByCMD(JSON.stringify(person)).subscribe(
+			patientsFound => {
+				if (!patientsFound.length) {
+					this.goToAddPatient(person);
+				} else {
+					this.matchingPatient = this.buildTable(patientsFound);
+					this.viewSearch = false;
+				}
+			}
+		);
+	}
+
+	private goToAddPatient(personToSearch: any) {
+		this.router.navigate([ROUTE_NEW], {
+			queryParams: {
+				identificationTypeId: personToSearch.identificationType,
+				identificationNumber: personToSearch.identificationNumber,
+				genderId: personToSearch.genderId,
+				firstName: personToSearch.firstName,
+				lastName: personToSearch.lastName,
+				middleNames: personToSearch.middleNames,
+				birthDate: personToSearch.birthDate,
+				otherLastNames: personToSearch.otherLastNames
+			}
+		});
+	}
+
+	viewSearchComponent(): boolean {
 		return this.viewSearch;
+	}
+
+	showSpinner(): boolean {
+		return this.isLoading;
 	}
 
 }
