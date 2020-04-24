@@ -14,6 +14,7 @@ import { AntecentesPersonalesComponent } from './components/antecentes-personale
 import { ConceptsSearchDialogComponent } from './dialogs/concepts-search-dialog/concepts-search-dialog.component';
 import { ConceptsSearchComponent } from './components/concepts-search/concepts-search.component';
 import { FormsModule } from '@angular/forms';
+import { DiagnosticosComponent } from './components/diagnosticos/diagnosticos.component';
 
 @NgModule({
 	declarations: [
@@ -25,6 +26,7 @@ import { FormsModule } from '@angular/forms';
 		AntecentesPersonalesComponent,
 		ConceptsSearchDialogComponent,
 		ConceptsSearchComponent,
+		DiagnosticosComponent,
 	],
 	imports: [
 		AppMaterialModule,

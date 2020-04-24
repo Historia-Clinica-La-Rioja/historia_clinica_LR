@@ -25,15 +25,34 @@
 				"form": {
 					"REGISTRY_DATE": "Fecha registro",
 					"NOTE": "Notas",
-					"CONDITION_VERIFICATION_STATUS": "Estado de verificación",
-					"CONDITION_CLINICAL_STATUS": "Estado clínico"
+					"VERIFICATION_STATUS": "Estado de verificación",
+					"CLINICAL_STATUS": "Estado clínico"
 				},
 
 				"table": {
 					"TITLE": "Antecedentes personales registrados",
 					"columns": {
 						"PROBLEM_TYPE": "Tipo de problema",
+						"STATUS": "Estado",
+						"VERIFICATION": "Verificación",
 						"REGISTRY_DATE": "Fecha registro"
+					}
+				}
+			},
+			"diagnosticos": {
+				"TITLE": "Diagnósticos",
+				"ADD": "Agregar diagnóstico",
+				"PROBLEM_TYPE": "Tipo de problema",
+				"form": {
+					"VERIFICATION_STATUS": "Estado de verificación",
+					"CLINICAL_STATUS": "Estado clínico"
+				},
+				"table": {
+					"TITLE": "Diagnósticos registrados",
+					"columns": {
+						"DIAGNOSIS": "Diagnóstico",
+						"STATUS": "Estado",
+						"VERIFICATION": "Verificación"
 					}
 				}
 			},

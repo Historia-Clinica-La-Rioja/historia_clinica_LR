@@ -19,8 +19,8 @@ export class AntecentesPersonalesComponent implements OnInit {
 	form: FormGroup;
 	today: Moment = moment();
 
-	conditionsVerification: MasterDataInterface<string>[] = [{id: 'a', description: 'description a'}, {id: 'b', description: 'description b'}, {id: 'c', description: 'description c'}];
-	conditionsClinicalStatus: MasterDataInterface<string>[] = [{id: 'a', description: 'description a'}, {id: 'b', description: 'description b'}, {id: 'c', description: 'description c'}];
+	verifications: MasterDataInterface<string>[] = [{id: 'a', description: 'description a'}, {id: 'b', description: 'description b'}, {id: 'c', description: 'description c'}];
+	clinicalStatus: MasterDataInterface<string>[] = [{id: 'a', description: 'description a'}, {id: 'b', description: 'description b'}, {id: 'c', description: 'description c'}];
 
 	//Mat table
 	columns = [
@@ -28,6 +28,16 @@ export class AntecentesPersonalesComponent implements OnInit {
 			def: "problemType",
 			header: 'internaciones.anamnesis.antecedentes-personales.table.columns.PROBLEM_TYPE',
 			text: ap => ap.snomed.fsn
+		},
+		{
+			def: "clinicalStatus",
+			header: 'internaciones.anamnesis.antecedentes-personales.table.columns.STATUS',
+			text: ap => this.clinicalStatus.find(status => status.id === ap.statusId).description
+		},
+		{
+			def: 'verification',
+			header: 'internaciones.anamnesis.antecedentes-personales.table.columns.VERIFICATION',
+			text: ap => this.verifications.find(verification => verification.id === ap.verificationId).description
 		},
 		{
 			def: 'date',
@@ -57,11 +67,11 @@ export class AntecentesPersonalesComponent implements OnInit {
 		});
 
 		/*this.internacionMasterDataService.getHealthClinical().subscribe(healthClinical => {
-			this.conditionsClinicalStatus = healthClinical;
+			this.clinicalStatus = healthClinical;
 		});
 
 		this.internacionMasterDataService.getHealthVerification().subscribe(healthVerification => {
-			this.conditionsVerification = healthVerification;
+			this.verifications = healthVerification;
 		});*/
 	}
 
@@ -85,7 +95,7 @@ export class AntecentesPersonalesComponent implements OnInit {
 		}
 	}
 
-	save() {
+	addToList() {
 		if (this.form.valid) {
 			let aux: HealthHistoryConditionDto = this.form.value;
 			aux.date = this.form.controls.date.value.format(DateFormat.API_DATE);

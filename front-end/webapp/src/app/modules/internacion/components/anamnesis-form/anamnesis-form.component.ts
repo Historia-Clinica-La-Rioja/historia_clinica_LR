@@ -10,8 +10,9 @@ export class AnamnesisFormComponent implements OnInit {
 
 	public form: FormGroup;
 
-	constructor(private formBuilder: FormBuilder) {
-	}
+	constructor(
+		private formBuilder: FormBuilder
+	) {	}
 
 	ngOnInit(): void {
 		this.form = this.formBuilder.group({
@@ -26,6 +27,10 @@ export class AnamnesisFormComponent implements OnInit {
 
 	save(): void {
 		console.log('form: ', this.form);
+	}
+
+	back(): void {
+		window.history.back();
 	}
 
 }

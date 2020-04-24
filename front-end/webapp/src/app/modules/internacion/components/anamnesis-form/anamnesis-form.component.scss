@@ -3,33 +3,36 @@
 	flex-direction: column;
 	width: 80%;
 
+	h2.page-title {
+		font-size: x-large;
+	}
+
 	section {
 		margin: 1vh;
 	}
-}
-
-form {
-	padding-top: 25px;
-
-	mat-form-field {
-		width: 100%;
-	}
-
-	.form-buttons {
-		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-		align-items: flex-end;
-		button {
-			margin-right: 10px;
-			margin-top: 10px;
+	form {
+		mat-form-field {
+			width: 100%;
+		}
+		.form-buttons {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+			align-items: flex-end;
+			.buttons {
+				background-color: white;
+				button {
+					margin-right: 10px;
+					margin-top: 10px;
+				}
+			}
+			.firma-buttons {
+				display: flex;
+				flex-direction: column;
+				button {
+					margin-top: 10px;
+				}
+			}
 		}
 	}
-
-	.firma-buttons {
-		display: flex;
-		flex-direction: column;
-		width: 40%;
-	}
 }
-

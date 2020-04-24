@@ -1,12 +1,11 @@
-<h2 class="mat-h2" [translate]="'internaciones.anamnesis.antecedentes-personales.TITLE'"></h2>
+<h2 class="mat-h2" [translate]="'internaciones.anamnesis.diagnosticos.TITLE'"></h2>
 <mat-card>
 	<mat-card-content>
-		<app-concepts-search [text]="'internaciones.anamnesis.antecedentes-personales.PROBLEM_TYPE'"
-			(onSelect)=setConcept($event)>
+		<app-concepts-search [text]="'internaciones.anamnesis.diagnosticos.PROBLEM_TYPE'" (onSelect)=setConcept($event)>
 		</app-concepts-search>
 		<form [formGroup]="form" (ngSubmit)="addToList()">
 			<mat-form-field appearance="outline">
-				<mat-label [translate]="'internaciones.anamnesis.antecedentes-personales.form.CLINICAL_STATUS'">
+				<mat-label [translate]="'internaciones.anamnesis.diagnosticos.form.CLINICAL_STATUS'">
 				</mat-label>
 				<mat-select formControlName="statusId" name="statusId">
 					<mat-option *ngFor="let status of clinicalStatus" [value]="status.id">
@@ -15,7 +14,7 @@
 				</mat-select>
 			</mat-form-field>
 			<mat-form-field appearance="outline">
-				<mat-label [translate]="'internaciones.anamnesis.antecedentes-personales.form.VERIFICATION_STATUS'">
+				<mat-label [translate]="'internaciones.anamnesis.diagnosticos.form.VERIFICATION_STATUS'">
 				</mat-label>
 				<mat-select formControlName="verificationId" name="verificationId">
 					<mat-option *ngFor="let verification of verifications" [value]="verification.id">
@@ -23,26 +22,10 @@
 					</mat-option>
 				</mat-select>
 			</mat-form-field>
-			<mat-form-field appearance="outline">
-				<mat-label [translate]="'internaciones.anamnesis.antecedentes-personales.form.REGISTRY_DATE'">
-				</mat-label>
-				<input matInput readonly id="date" [matDatepicker]="myDatepicker" formControlName="date"
-					[max]="this.today">
-				<mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
-				<mat-datepicker #myDatepicker startView="multi-year" (yearSelected)="chosenYearHandler($event)"
-					(monthSelected)="chosenMonthHandler($event)">
-				</mat-datepicker>
-			</mat-form-field>
 
-			<mat-form-field appearance="outline">
-				<mat-label [translate]="'internaciones.anamnesis.antecedentes-personales.form.NOTE'"></mat-label>
-				<textarea matInput type="text" id="note" name="note" formControlName="note"
-					placeholder="{{'internaciones.anamnesis.observations.DESCRIPTION' | translate }}">
-					</textarea>
-			</mat-form-field>
 			<div align="end">
 				<button mat-raised-button color="primary" type="submit">
-					<span [translate]="'internaciones.anamnesis.antecedentes-personales.ADD'"></span>
+					<span [translate]="'internaciones.anamnesis.diagnosticos.ADD'"></span>
 				</button>
 			</div>
 		</form>
@@ -50,7 +33,7 @@
 </mat-card>
 
 <section>
-	<h3 class="mat-h2" [translate]="'internaciones.anamnesis.antecedentes-personales.table.TITLE'"></h3>
+	<h3 class="mat-body-2" [translate]="'internaciones.anamnesis.diagnosticos.table.TITLE'"></h3>
 	<table mat-table [dataSource]="apDataSource" class="secondary">
 
 		<ng-container *ngFor="let column of columns" [matColumnDef]="column.def">
