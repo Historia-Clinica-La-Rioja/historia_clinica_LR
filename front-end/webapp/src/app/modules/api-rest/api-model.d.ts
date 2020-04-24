@@ -56,15 +56,15 @@ export interface AllergyConditionDto extends HealthConditionDto {
 }
 
 export interface AnamnesisDto extends Serializable {
-    allergy: AllergyConditionDto[];
+    allergies: AllergyConditionDto[];
     anthropometricData: AnthropometricDataDto;
     diagnosis: HealthConditionDto[];
     documentStatusId: string;
-    familyHistory: HealthHistoryConditionDto[];
-    inmunization: InmunizationDto[];
-    medication: MedicationDto[];
+    familyHistories: HealthHistoryConditionDto[];
+    inmunizations: InmunizationDto[];
+    medications: MedicationDto[];
     notes: DocumentObservationsDto;
-    personalHistory: HealthHistoryConditionDto[];
+    personalHistories: HealthHistoryConditionDto[];
     vitalSigns: VitalSignDto;
 }
 
@@ -182,7 +182,7 @@ export interface IdentificationTypeDto extends MasterdataDto<number> {
 }
 
 export interface InmunizationDto extends ClinicalTermDto {
-    date: string;
+    administrationDate: string;
     note: string;
 }
 

@@ -6,7 +6,7 @@ import org.mapstruct.Mapping;
 import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.address.controller.mapper.AddressMapper;
 import net.pladema.patient.controller.dto.APatientDto;
-import net.pladema.patient.controller.mapper.LocalDateMapper;
+import net.pladema.dates.configuration.LocalDateMapper;
 import net.pladema.person.controller.dto.APersonDto;
 import net.pladema.person.controller.dto.BMPersonDto;
 import net.pladema.person.controller.dto.BasicDataPersonDto;

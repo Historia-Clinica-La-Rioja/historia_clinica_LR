@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -93,7 +92,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     private <T extends HealthHistoryCondition> HealthCondition buildHistoryHealth(Integer patientId, T healthHistory, boolean personal) throws NullPointerException{
         HealthCondition healthCondition = buildHealth(patientId, healthHistory, personal);
         healthCondition.setProblemId(personal ? ProblemType.PROBLEMA : ProblemType.ANTECEDENTE);
-        healthCondition.setStartDate(LocalDate.parse(healthHistory.getDate()));
+        healthCondition.setStartDate(healthHistory.getDate());
         healthCondition.setNoteId(noteService.createNote(healthHistory.getNote()));
         return healthCondition;
     }

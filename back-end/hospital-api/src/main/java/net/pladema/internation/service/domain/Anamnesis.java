@@ -21,15 +21,15 @@ public class Anamnesis implements Serializable {
 
     private List<HealthConditionBo> diagnosis;
 
-    private List<HealthHistoryCondition> personalHistory;
+    private List<HealthHistoryCondition> personalHistories;
 
-    private List<HealthHistoryCondition> familyHistory;
+    private List<HealthHistoryCondition> familyHistories;
 
-    private List<Medication> medication;
+    private List<Medication> medications;
 
-    private List<Inmunization> inmunization;
+    private List<InmunizationBo> inmunizations;
 
-    private List<AllergyCondition> allergy;
+    private List<AllergyConditionBo> allergies;
 
     private AnthropometricDataBo anthropometricData;
 

@@ -13,13 +13,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/internments/{internmentEpisodeId}/anamnesis")
 @Api(value = "Anamnesis", tags = { "Anamnesis" })
+@Validated
 public class AnamnesisController {
 
     private static final Logger LOG = LoggerFactory.getLogger(AnamnesisController.class);
@@ -52,7 +55,7 @@ public class AnamnesisController {
     public ResponseEntity<ResponseAnamnesisDto> createAnamnesis(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
-            @RequestBody AnamnesisDto anamnesisDto){
+            @Valid @RequestBody AnamnesisDto anamnesisDto){
         LOG.debug("Input parameters -> instituionId {}, internmentEpisodeId {}, ananmnesis {}",
                 institutionId, internmentEpisodeId, anamnesisDto);
         Integer patientId;
@@ -77,7 +80,7 @@ public class AnamnesisController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
             @PathVariable(name = "anamnesisId") Long anamnesisId,
-            @RequestBody AnamnesisDto anamnesisDto){
+            @Valid @RequestBody AnamnesisDto anamnesisDto){
         LOG.debug("Input parameters -> instituionId {}, internmentEpisodeId {}, anamnesisId {}, ananmnesis {}",
                 institutionId, internmentEpisodeId, anamnesisDto);
         Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)

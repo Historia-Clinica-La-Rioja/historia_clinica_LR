@@ -1276,3 +1276,11 @@ databaseChangeLog:
         referencedTableName: institution
         validate: true
 
+- changeSet:        
+    id: dropNotNullConstraint-inmunization-institution_id
+    author: etrapani
+    changes:
+    - dropNotNullConstraint:
+        columnDataType: int
+        columnName: institution_id
+        tableName: inmunization

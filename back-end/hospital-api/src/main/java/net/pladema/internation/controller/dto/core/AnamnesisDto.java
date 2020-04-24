@@ -6,7 +6,10 @@ import lombok.ToString;
 import net.pladema.internation.controller.dto.DocumentObservationsDto;
 import net.pladema.internation.controller.dto.ips.*;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -18,17 +21,24 @@ public class AnamnesisDto implements Serializable {
 
     private DocumentObservationsDto notes;
 
+    @NotNull
+    @NotEmpty(message = "diagnosis.mandatory")
     private List<HealthConditionDto> diagnosis;
 
-    private List<HealthHistoryConditionDto> personalHistory;
+    @NotNull
+    private List<HealthHistoryConditionDto> personalHistories = new ArrayList<>();
 
-    private List<HealthHistoryConditionDto> familyHistory;
+    @NotNull
+    private List<HealthHistoryConditionDto> familyHistories = new ArrayList<>();
 
-    private List<MedicationDto> medication;
+    @NotNull
+    private List<MedicationDto> medications = new ArrayList<>();
 
-    private List<InmunizationDto> inmunization;
+    @NotNull
+    private List<InmunizationDto> inmunizations= new ArrayList<>();
 
-    private List<AllergyConditionDto> allergy;
+    @NotNull
+    private List<AllergyConditionDto> allergies = new ArrayList<>();
 
     private AnthropometricDataDto anthropometricData;
 

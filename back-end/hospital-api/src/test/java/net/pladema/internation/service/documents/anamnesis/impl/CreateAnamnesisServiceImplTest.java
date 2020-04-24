@@ -5,6 +5,7 @@ import net.pladema.internation.service.documents.DocumentService;
 import net.pladema.internation.service.documents.anamnesis.AllergyService;
 import net.pladema.internation.service.documents.anamnesis.CreateVitalSignLabService;
 import net.pladema.internation.service.documents.anamnesis.HealthConditionService;
+import net.pladema.internation.service.documents.anamnesis.InmunizationService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,6 +34,9 @@ public class CreateAnamnesisServiceImplTest {
 	@MockBean
 	private CreateVitalSignLabService createVitalSignLabService;
 
+	@MockBean
+	private InmunizationService inmunizationService;
+
 	@Before
 	public void setUp() {
 		createAnamnesisServiceImpl = new CreateAnamnesisServiceImpl(
@@ -40,7 +44,8 @@ public class CreateAnamnesisServiceImplTest {
 				noteService,
 				healthConditionService,
 				allergyService,
-				createVitalSignLabService);
+				createVitalSignLabService, 
+				inmunizationService);
 	}
 
 

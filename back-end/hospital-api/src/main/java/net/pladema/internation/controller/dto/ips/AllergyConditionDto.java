@@ -1,8 +1,12 @@
 package net.pladema.internation.controller.dto.ips;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.dates.configuration.JacksonDateFormatConfig;
+
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -13,5 +17,7 @@ public class AllergyConditionDto extends HealthConditionDto {
 
     private String severity;
 
+    @NotNull
+    @JsonFormat(pattern = JacksonDateFormatConfig.DATE_FORMAT)
     private String date;
 }

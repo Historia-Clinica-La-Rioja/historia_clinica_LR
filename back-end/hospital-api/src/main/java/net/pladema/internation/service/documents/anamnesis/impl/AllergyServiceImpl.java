@@ -5,13 +5,12 @@ import net.pladema.internation.repository.ips.entity.AllergyIntolerance;
 import net.pladema.internation.service.SnomedService;
 import net.pladema.internation.service.documents.DocumentService;
 import net.pladema.internation.service.documents.anamnesis.AllergyService;
-import net.pladema.internation.service.domain.ips.AllergyCondition;
+import net.pladema.internation.service.domain.ips.AllergyConditionBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -34,7 +33,7 @@ public class AllergyServiceImpl implements AllergyService {
     }
 
     @Override
-    public void loadAllergies(Integer patientId, Long documentId, List<AllergyCondition> allergies) throws DataIntegrityViolationException {
+    public void loadAllergies(Integer patientId, Long documentId, List<AllergyConditionBo> allergies) throws DataIntegrityViolationException {
         LOG.debug("Going to load allergies -> {}", allergies);
         LOG.debug("Input parameters -> patientId {}, documentId {}, allergies {}", documentId, patientId, allergies);
         allergies.forEach(allergy -> {
@@ -49,7 +48,7 @@ public class AllergyServiceImpl implements AllergyService {
             allergyIntolerance.setStatusId(allergy.getStatusId());
             allergyIntolerance.setVerificationStatusId(allergy.getVerificationId());
             allergyIntolerance.setCategoryId(allergy.getCategoryId());
-            allergyIntolerance.setStartDate(LocalDate.parse(allergy.getDate()));
+            allergyIntolerance.setStartDate(allergy.getDate());
 
             allergyIntolerance = allergyIntoleranceRepository.save(allergyIntolerance);
             documentService.createDocumentAllergyIntolerance(documentId, allergyIntolerance.getId());

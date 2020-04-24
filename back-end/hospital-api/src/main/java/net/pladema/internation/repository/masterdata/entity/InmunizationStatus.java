@@ -24,6 +24,10 @@ public class InmunizationStatus implements Serializable {
 	 */
 	private static final long serialVersionUID = -3053291021636483828L;
 
+	public static final String COMPLETE = "255594003";
+	public static final String ERROR = "723510000";
+	public static final String NOT_DONE = "385660001";
+
 	@Id
 	@Column(name = "id", length = 20)
 	private String id;

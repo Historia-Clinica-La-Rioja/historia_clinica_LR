@@ -4,14 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @ToString
-public class AllergyCondition extends HealthConditionBo {
+public class InmunizationBo extends ClinicalTerm {
 
-    private String categoryId;
+    private LocalDate administrationDate;
 
-    private String severity;
-
-    private String date;
+    private String note;
 }

@@ -1,6 +1,10 @@
 package net.pladema.internation.service.documents.impl;
 
 import net.pladema.internation.repository.core.*;
+import net.pladema.internation.repository.core.DocumentHealthConditionRepository;
+import net.pladema.internation.repository.core.DocumentInmunizationRepository;
+import net.pladema.internation.repository.core.DocumentLabRepository;
+import net.pladema.internation.repository.core.DocumentVitalSignRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,10 +33,14 @@ public class DocumentServiceImplTest {
 	@MockBean
 	private DocumentAllergyIntoleranceRepository documentAllergyIntoleranceRepository;
 
+	@MockBean
+	private DocumentInmunizationRepository documentInmunizationRepository;
+
 	@Before
 	public void setUp() {
 		documentServiceImpl = new DocumentServiceImpl(documentRepository, documentHealthConditionRepository,
-				documentVitalSignRepository, documentLabRepository, documentAllergyIntoleranceRepository);
+				documentInmunizationRepository, documentVitalSignRepository, documentLabRepository,
+				documentAllergyIntoleranceRepository);
 	}
 
 	@Test

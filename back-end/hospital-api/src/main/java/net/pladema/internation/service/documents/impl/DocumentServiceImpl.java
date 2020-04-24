@@ -1,6 +1,10 @@
 package net.pladema.internation.service.documents.impl;
 
 import net.pladema.internation.repository.core.*;
+import net.pladema.internation.repository.core.DocumentHealthConditionRepository;
+import net.pladema.internation.repository.core.DocumentInmunizationRepository;
+import net.pladema.internation.repository.core.DocumentLabRepository;
+import net.pladema.internation.repository.core.DocumentVitalSignRepository;
 import net.pladema.internation.repository.core.entity.*;
 import net.pladema.internation.service.documents.DocumentService;
 import org.slf4j.Logger;
@@ -18,6 +22,8 @@ public class DocumentServiceImpl implements DocumentService {
 
     private final DocumentHealthConditionRepository documentHealthConditionRepository;
 
+    private final DocumentInmunizationRepository documentInmunizationRepository;
+
     private final DocumentVitalSignRepository documentVitalSignRepository;
 
     private final DocumentLabRepository documentLabRepository;
@@ -26,11 +32,13 @@ public class DocumentServiceImpl implements DocumentService {
 
     public DocumentServiceImpl(DocumentRepository documentRepository,
                                DocumentHealthConditionRepository documentHealthConditionRepository,
+                               DocumentInmunizationRepository documentInmunizationRepository,
                                DocumentVitalSignRepository documentVitalSignRepository,
                                DocumentLabRepository documentLabRepository,
                                DocumentAllergyIntoleranceRepository documentAllergyIntoleranceRepository) {
         this.documentRepository = documentRepository;
         this.documentHealthConditionRepository = documentHealthConditionRepository;
+        this.documentInmunizationRepository = documentInmunizationRepository;
         this.documentVitalSignRepository = documentVitalSignRepository;
         this.documentLabRepository = documentLabRepository;
         this.documentAllergyIntoleranceRepository = documentAllergyIntoleranceRepository;
@@ -71,5 +79,14 @@ public class DocumentServiceImpl implements DocumentService {
         LOG.debug("Input parameters -> documentId {}, allergyIntoleranceId {}", documentId, allergyIntoleranceId);
         DocumentAllergyIntolerance document = new DocumentAllergyIntolerance(documentId, allergyIntoleranceId);
         documentAllergyIntoleranceRepository.save(document);
+    }
+
+    @Override
+    public DocumentInmunization createInmunization(Long documentId, Integer inmunizationId) {
+        LOG.debug("Input parameters -> documentId {}, inmunizationId {}", documentId, inmunizationId);
+        DocumentInmunization result = new DocumentInmunization(documentId, inmunizationId);
+        result = documentInmunizationRepository.save(result);
+        LOG.debug(OUTPUT, result);
+        return result;
     }
 }

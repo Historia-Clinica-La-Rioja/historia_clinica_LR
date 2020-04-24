@@ -2,6 +2,7 @@ package net.pladema.patient.controller.mapper;
 
 import java.util.List;
 
+import net.pladema.dates.configuration.LocalDateMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

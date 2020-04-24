@@ -9,9 +9,11 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @ToString
-public class HealthHistoryCondition extends HealthConditionBo {
+public class AllergyConditionBo extends HealthConditionBo {
+
+    private String categoryId;
+
+    private String severity;
 
     private LocalDate date;
-
-    private String note;
 }
