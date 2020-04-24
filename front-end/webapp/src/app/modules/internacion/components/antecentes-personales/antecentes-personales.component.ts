@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SnomedDto, HealthHistoryConditionDto, MasterDataInterface } from '@api-rest/api-model';
 import { MatTableDataSource } from '@angular/material/table';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
 	selector: 'app-antecentes-personales',
@@ -27,7 +28,7 @@ export class AntecentesPersonalesComponent implements OnInit {
 		{
 			def: 'date',
 			header: 'internaciones.anamnesis.antecedentes-personales.table.columns.REGISTRY_DATE',
-			text: ap => ap.date
+			text: ap => this.datePipe.transform(ap.date, 'dd/MM/yyyy')
 		},
 	];
 	displayedColumns: string[] = [];
@@ -35,6 +36,7 @@ export class AntecentesPersonalesComponent implements OnInit {
 
 	constructor(
 		private formBuilder: FormBuilder,
+		private datePipe: DatePipe,
 		private internacionMasterDataService: InternacionMasterDataService
 	)
 	{
@@ -92,8 +94,9 @@ export class AntecentesPersonalesComponent implements OnInit {
 	}
 
 	add(ap): void {
-		// TODO validacion snomed requerido'
-		// had to concat to produce a change on the variable observed by mat-table (apDataSource)
+		// TODO validacion snomed requerido
+
+		// had to use an assignment instead of push method to produce a change on the variable observed by mat-table (apDataSource)
 		this.apDataSource.data = this.apDataSource.data.concat([ap]);
 		this.current = {};
 	}

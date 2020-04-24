@@ -20,6 +20,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { CoreModule } from '@core/core.module';
 import { PacientesModule } from './modules/pacientes/pacientes.module';
 import { PresentationModule } from './modules/presentation/presentation.module';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
 	declarations: [
@@ -54,7 +55,10 @@ import { PresentationModule } from './modules/presentation/presentation.module';
 		// https://angular.io/guide/router#module-import-order
 		AppRoutingModule,
 	],
-	providers: [httpInterceptorProviders],
+	providers: [
+		httpInterceptorProviders,
+		DatePipe,
+	],
 	bootstrap: [AppComponent]
 })
 export class AppModule {
