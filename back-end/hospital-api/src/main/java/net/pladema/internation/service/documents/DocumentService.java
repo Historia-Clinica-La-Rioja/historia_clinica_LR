@@ -18,4 +18,6 @@ public interface DocumentService {
     void createDocumentAllergyIntolerance(Long documentId, Integer allergyIntoleranceId);
 
     DocumentInmunization createInmunization(Long documentId, Integer inmunizationId);
+    
+    void createDocumentMedication(Long documentId, Integer medicationStatementId);
 }

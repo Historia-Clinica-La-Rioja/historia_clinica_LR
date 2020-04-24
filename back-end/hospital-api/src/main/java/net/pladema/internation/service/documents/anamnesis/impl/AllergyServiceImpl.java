@@ -41,14 +41,13 @@ public class AllergyServiceImpl implements AllergyService {
             if(sctid == null)
                 throw new IllegalArgumentException("snomed.invalid");
 
-            AllergyIntolerance allergyIntolerance = new AllergyIntolerance();
-            allergyIntolerance.setPatientId(patientId);
-            allergyIntolerance.setSctidCode(allergy.getSnomed().getId());
-            allergyIntolerance.setStatusId(allergy.getStatusId());
-            allergyIntolerance.setVerificationStatusId(allergy.getVerificationId());
-            allergyIntolerance.setCategoryId(allergy.getCategoryId());
-            allergyIntolerance.setStartDate(allergy.getDate());
-
+            AllergyIntolerance allergyIntolerance = new AllergyIntolerance(patientId,
+                    sctid,
+                    allergy.getStatusId(),
+                    allergy.getVerificationId(),
+                    allergy.getCategoryId(),
+                    allergy.getDate(),
+                    allergy.isDeleted());
             allergyIntolerance = allergyIntoleranceRepository.save(allergyIntolerance);
             documentService.createDocumentAllergyIntolerance(documentId, allergyIntolerance.getId());
 

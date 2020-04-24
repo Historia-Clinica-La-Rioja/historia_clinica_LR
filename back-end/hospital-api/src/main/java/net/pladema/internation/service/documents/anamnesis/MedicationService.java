@@ -1,0 +1,10 @@
+package net.pladema.internation.service.documents.anamnesis;
+
+import net.pladema.internation.service.domain.ips.Medication;
+
+import java.util.List;
+
+public interface MedicationService {
+
+    public void loadMedications(Integer patientId, Long documentId, List<Medication> medications);
+}

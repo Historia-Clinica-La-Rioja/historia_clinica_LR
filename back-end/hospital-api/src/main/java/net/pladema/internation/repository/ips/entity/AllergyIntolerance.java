@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.internation.repository.listener.InternationAuditableEntity;
 import net.pladema.internation.repository.listener.InternationListener;
+import net.pladema.internation.repository.masterdata.entity.AllergyIntoleranceVerificationStatus;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -50,6 +51,19 @@ public class AllergyIntolerance extends InternationAuditableEntity {
 
 	@Column(name = "note_id")
 	private Long noteId;
+
+	public AllergyIntolerance(Integer patientId, String sctidCode, String statusId,
+							  String verificationId, String categoryId, LocalDate startDate, boolean deleted){
+		super();
+		this.patientId = patientId;
+		this.sctidCode = sctidCode;
+		this.statusId = statusId;
+		this.verificationStatusId = verificationId;
+		if (deleted)
+			this.verificationStatusId = AllergyIntoleranceVerificationStatus.ERROR;
+		this.categoryId = categoryId;
+		this.startDate = startDate;
+	}
 
 	@Override
 	public boolean equals(Object o) {

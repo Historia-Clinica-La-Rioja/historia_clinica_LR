@@ -8,12 +8,10 @@ import net.pladema.internation.service.documents.DocumentService;
 import net.pladema.internation.service.documents.anamnesis.*;
 import net.pladema.internation.service.domain.Anamnesis;
 import net.pladema.internation.service.domain.ips.DocumentObservations;
-import net.pladema.internation.service.domain.ips.Medication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -31,6 +29,8 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
 
     private final AllergyService allergyService;
 
+    private final MedicationService medicationService;
+
     private final CreateVitalSignLabService createVitalSignLabService;
 
     private final InmunizationService inmunizationService;
@@ -39,13 +39,15 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
                                       HealthConditionService healthConditionService,
                                       AllergyService allergyService,
                                       CreateVitalSignLabService createVitalSignLabService,
-                                      InmunizationService inmunizationService) {
+                                      InmunizationService inmunizationService,
+                                      MedicationService medicationService) {
         this.documentService = documentService;
         this.noteService = noteService;
         this.healthConditionService = healthConditionService;
         this.allergyService = allergyService;
         this.createVitalSignLabService = createVitalSignLabService;
         this.inmunizationService = inmunizationService;
+        this.medicationService = medicationService;
     }
 
     @Override
@@ -59,14 +61,12 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
         healthConditionService.loadDiagnosis(patientId, anamnesisDocument.getId(), anamnesis.getDiagnosis());
         healthConditionService.loadPersonalHistories(patientId, anamnesisDocument.getId(), anamnesis.getPersonalHistories());
         healthConditionService.loadFamilyHistories(patientId, anamnesisDocument.getId(), anamnesis.getFamilyHistories());
-
         allergyService.loadAllergies(patientId, anamnesisDocument.getId(), anamnesis.getAllergies());
- 
         inmunizationService.loadInmunization(patientId, anamnesisDocument.getId(), anamnesis.getInmunizations());
+        medicationService.loadMedications(patientId, anamnesisDocument.getId(), anamnesis.getMedications());
 
         anamnesis.setVitalSigns(createVitalSignLabService.loadVitalSigns(patientId, anamnesisDocument.getId(), Optional.ofNullable(anamnesis.getVitalSigns())));
         anamnesis.setAnthropometricData(createVitalSignLabService.loadAnthropometricData(patientId, anamnesisDocument.getId(), Optional.ofNullable(anamnesis.getAnthropometricData())));
-
         anamnesis.setId(anamnesisDocument.getId());
         LOG.debug(OUTPUT, anamnesis);
         return anamnesis;
@@ -84,10 +84,6 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
         });
         LOG.debug(OUTPUT, anamnesisDocument);
         return anamnesisDocument;
-    }
-
-    private void loadMedications(List<Medication> medications) {
-        //TODO
     }
 
 }

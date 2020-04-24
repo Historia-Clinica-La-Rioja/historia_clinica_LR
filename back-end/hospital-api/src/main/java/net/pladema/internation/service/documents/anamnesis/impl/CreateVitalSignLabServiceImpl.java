@@ -42,33 +42,48 @@ public class CreateVitalSignLabServiceImpl implements CreateVitalSignLabService 
     public VitalSignBo loadVitalSigns(Integer patientId, Long documentId, Optional<VitalSignBo> optVitalSigns) {
         LOG.debug("Input parameters -> documentId {}, patientId {}, vitalSigns {}", documentId, patientId, optVitalSigns);
         optVitalSigns.ifPresent(vitalSigns -> {
-            ObservationVitalSign systolicBloodPressure = createObservationVitalSign(patientId,vitalSigns.getSystolicBloodPressure(), EVitalSign.SYSTOLIC_BLOOD_PRESSURE);
-            documentService.createDocumentVitalSign(documentId, systolicBloodPressure.getId());
-            vitalSigns.setSystolicBloodPressure(createObservationFromVitalSign(systolicBloodPressure));
 
-            ObservationVitalSign diastolicBloodPressure = createObservationVitalSign(patientId, vitalSigns.getDiastolicBloodPressure(), EVitalSign.DIASTOLIC_BLOOD_PRESSURE);
-            documentService.createDocumentVitalSign(documentId, diastolicBloodPressure.getId());
-            vitalSigns.setDiastolicBloodPressure(createObservationFromVitalSign(diastolicBloodPressure));
+            if(vitalSigns.getSystolicBloodPressure() != null){
+                ObservationVitalSign systolicBloodPressure = createObservationVitalSign(patientId,vitalSigns.getSystolicBloodPressure(), EVitalSign.SYSTOLIC_BLOOD_PRESSURE);
+                documentService.createDocumentVitalSign(documentId, systolicBloodPressure.getId());
+                vitalSigns.setSystolicBloodPressure(createObservationFromVitalSign(systolicBloodPressure));
+            }
 
-            ObservationVitalSign meanPressure = createObservationVitalSign(patientId, vitalSigns.getMeanPressure(), EVitalSign.MEAN_PRESSURE);
-            documentService.createDocumentVitalSign(documentId, meanPressure.getId());
-            vitalSigns.setMeanPressure(createObservationFromVitalSign(meanPressure));
+            if(vitalSigns.getDiastolicBloodPressure() != null) {
+                ObservationVitalSign diastolicBloodPressure = createObservationVitalSign(patientId, vitalSigns.getDiastolicBloodPressure(), EVitalSign.DIASTOLIC_BLOOD_PRESSURE);
+                documentService.createDocumentVitalSign(documentId, diastolicBloodPressure.getId());
+                vitalSigns.setDiastolicBloodPressure(createObservationFromVitalSign(diastolicBloodPressure));
+            }
 
-            ObservationVitalSign temperature = createObservationVitalSign(patientId, vitalSigns.getTemperature(), EVitalSign.TEMPERATURE);
-            documentService.createDocumentVitalSign(documentId, temperature.getId());
-            vitalSigns.setTemperature(createObservationFromVitalSign(temperature));
+            if(vitalSigns.getMeanPressure() != null) {
+                ObservationVitalSign meanPressure = createObservationVitalSign(patientId, vitalSigns.getMeanPressure(), EVitalSign.MEAN_PRESSURE);
+                documentService.createDocumentVitalSign(documentId, meanPressure.getId());
+                vitalSigns.setMeanPressure(createObservationFromVitalSign(meanPressure));
+            }
 
-            ObservationVitalSign heartRate =  createObservationVitalSign(patientId, vitalSigns.getHeartRate(), EVitalSign.HEART_RATE);
-            documentService.createDocumentVitalSign(documentId, heartRate.getId());
-            vitalSigns.setHeartRate(createObservationFromVitalSign(heartRate));
+            if(vitalSigns.getTemperature() != null) {
+                ObservationVitalSign temperature = createObservationVitalSign(patientId, vitalSigns.getTemperature(), EVitalSign.TEMPERATURE);
+                documentService.createDocumentVitalSign(documentId, temperature.getId());
+                vitalSigns.setTemperature(createObservationFromVitalSign(temperature));
+            }
 
-            ObservationVitalSign respiratoryRate = createObservationVitalSign(patientId, vitalSigns.getRespiratoryRate(), EVitalSign.RESPIRATORY_RATE);
-            documentService.createDocumentVitalSign(documentId, respiratoryRate.getId());
-            vitalSigns.setRespiratoryRate(createObservationFromVitalSign(respiratoryRate));
+            if(vitalSigns.getHeartRate() != null) {
+                ObservationVitalSign heartRate = createObservationVitalSign(patientId, vitalSigns.getHeartRate(), EVitalSign.HEART_RATE);
+                documentService.createDocumentVitalSign(documentId, heartRate.getId());
+                vitalSigns.setHeartRate(createObservationFromVitalSign(heartRate));
+            }
 
-            ObservationVitalSign bloodOxygenSaturation = createObservationVitalSign(patientId, vitalSigns.getBloodOxygenSaturation(), EVitalSign.BLOOD_OXYGEN_SATURATION);
-            documentService.createDocumentVitalSign(documentId, bloodOxygenSaturation.getId());
-            vitalSigns.setBloodOxygenSaturation(createObservationFromVitalSign(bloodOxygenSaturation));
+            if(vitalSigns.getRespiratoryRate() != null) {
+                ObservationVitalSign respiratoryRate = createObservationVitalSign(patientId, vitalSigns.getRespiratoryRate(), EVitalSign.RESPIRATORY_RATE);
+                documentService.createDocumentVitalSign(documentId, respiratoryRate.getId());
+                vitalSigns.setRespiratoryRate(createObservationFromVitalSign(respiratoryRate));
+            }
+
+            if(vitalSigns.getBloodOxygenSaturation() != null) {
+                ObservationVitalSign bloodOxygenSaturation = createObservationVitalSign(patientId, vitalSigns.getBloodOxygenSaturation(), EVitalSign.BLOOD_OXYGEN_SATURATION);
+                documentService.createDocumentVitalSign(documentId, bloodOxygenSaturation.getId());
+                vitalSigns.setBloodOxygenSaturation(createObservationFromVitalSign(bloodOxygenSaturation));
+            }
         });
         LOG.debug(OUTPUT, optVitalSigns);
         return optVitalSigns.orElse(null);
@@ -78,17 +93,23 @@ public class CreateVitalSignLabServiceImpl implements CreateVitalSignLabService 
     public AnthropometricDataBo loadAnthropometricData(Integer patientId, Long documentId, Optional<AnthropometricDataBo> optAnthropometricData) {
         LOG.debug("Input parameters -> documentId {}, patientId {}, anthropometricData {}", documentId, patientId, optAnthropometricData);
         optAnthropometricData.ifPresent(anthropometricData -> {
-            ObservationVitalSign height = createObservationVitalSign(patientId, anthropometricData.getHeight(), EVitalSign.HEIGHT);
-            documentService.createDocumentVitalSign(documentId, height.getId());
-            anthropometricData.setHeight(createObservationFromVitalSign(height));
+            if(anthropometricData.getHeight() != null) {
+                ObservationVitalSign height = createObservationVitalSign(patientId, anthropometricData.getHeight(), EVitalSign.HEIGHT);
+                documentService.createDocumentVitalSign(documentId, height.getId());
+                anthropometricData.setHeight(createObservationFromVitalSign(height));
+            }
 
-            ObservationVitalSign weight = createObservationVitalSign(patientId, anthropometricData.getWeight(), EVitalSign.WEIGHT);
-            documentService.createDocumentVitalSign(documentId, weight.getId());
-            anthropometricData.setWeight(createObservationFromVitalSign(weight));
+            if(anthropometricData.getWeight() != null) {
+                ObservationVitalSign weight = createObservationVitalSign(patientId, anthropometricData.getWeight(), EVitalSign.WEIGHT);
+                documentService.createDocumentVitalSign(documentId, weight.getId());
+                anthropometricData.setWeight(createObservationFromVitalSign(weight));
+            }
 
-            ObservationLab bloodType = createObservationLab(patientId, anthropometricData.getBloodType(), ELab.BLOOD_TYPE);
-            documentService.createDocumentLab(documentId, bloodType.getId());
-            anthropometricData.setBloodType(createObservationFromLab(bloodType));
+            if(anthropometricData.getBloodType() != null) {
+                ObservationLab bloodType = createObservationLab(patientId, anthropometricData.getBloodType(), ELab.BLOOD_TYPE);
+                documentService.createDocumentLab(documentId, bloodType.getId());
+                anthropometricData.setBloodType(createObservationFromLab(bloodType));
+            }
         });
         LOG.debug(OUTPUT, optAnthropometricData);
         return optAnthropometricData.orElse(null);

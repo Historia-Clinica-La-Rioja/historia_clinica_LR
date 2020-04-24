@@ -23,17 +23,19 @@ public class SnomedServiceImpl implements SnomedService {
 
     @Override
     public String createSnomedTerm(SnomedDto snomedTerm){
+
         LOG.debug("Input parameters -> {}", snomedTerm);
         Snomed snomed = new Snomed();
         if(StringHelper.isNullOrWhiteSpace(snomedTerm.getId()) || StringHelper.isNullOrWhiteSpace(snomedTerm.getFsn())) {
             LOG.debug(OUTPUT, snomed.getId());
             return snomed.getId();
         }
+
+        String parentId = snomedTerm.getParentId() == null ? snomedTerm.getId() : snomedTerm.getParentId();
+        String parentFsn = snomedTerm.getParentFsn() == null ? snomedTerm.getFsn() : snomedTerm.getParentFsn();
+
         snomed = new Snomed(
-                snomedTerm.getId(),
-                snomedTerm.getFsn(),
-                snomedTerm.getId(),
-                snomedTerm.getFsn());
+                snomedTerm.getId(), snomedTerm.getFsn(), parentId, parentFsn);
         snomed = snomedRepository.save(snomed);
         LOG.debug(OUTPUT, snomed.getId());
         return snomed.getId();

@@ -12,8 +12,8 @@ import java.io.Serializable;
 public class ClinicalObservationDto implements Serializable {
 
     private Integer id;
-
+    
     private String value;
 
-    private boolean deleted;
+    private boolean deleted = false;
 }

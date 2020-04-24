@@ -30,18 +30,22 @@ public class DocumentServiceImpl implements DocumentService {
 
     private final DocumentAllergyIntoleranceRepository documentAllergyIntoleranceRepository;
 
+    private final DocumentMedicamentionStatementRepository documentMedicamentionStatementRepository;
+
     public DocumentServiceImpl(DocumentRepository documentRepository,
                                DocumentHealthConditionRepository documentHealthConditionRepository,
                                DocumentInmunizationRepository documentInmunizationRepository,
                                DocumentVitalSignRepository documentVitalSignRepository,
                                DocumentLabRepository documentLabRepository,
-                               DocumentAllergyIntoleranceRepository documentAllergyIntoleranceRepository) {
+                               DocumentAllergyIntoleranceRepository documentAllergyIntoleranceRepository,
+                               DocumentMedicamentionStatementRepository documentMedicamentionStatementRepository) {
         this.documentRepository = documentRepository;
         this.documentHealthConditionRepository = documentHealthConditionRepository;
         this.documentInmunizationRepository = documentInmunizationRepository;
         this.documentVitalSignRepository = documentVitalSignRepository;
         this.documentLabRepository = documentLabRepository;
         this.documentAllergyIntoleranceRepository = documentAllergyIntoleranceRepository;
+        this.documentMedicamentionStatementRepository = documentMedicamentionStatementRepository;
     }
 
     @Override
@@ -88,5 +92,12 @@ public class DocumentServiceImpl implements DocumentService {
         result = documentInmunizationRepository.save(result);
         LOG.debug(OUTPUT, result);
         return result;
+    }
+
+    @Override
+    public void createDocumentMedication(Long documentId, Integer medicationStatementId) {
+        LOG.debug("Input parameters -> documentId {}, medicationStatementId {}", documentId, medicationStatementId);
+        DocumentMedicamentionStatement document = new DocumentMedicamentionStatement(documentId, medicationStatementId);
+        documentMedicamentionStatementRepository.save(document);
     }
 }

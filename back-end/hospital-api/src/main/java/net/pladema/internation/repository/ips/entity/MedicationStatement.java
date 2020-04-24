@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.internation.repository.listener.InternationAuditableEntity;
 import net.pladema.internation.repository.listener.InternationListener;
+import net.pladema.internation.repository.masterdata.entity.MedicationStatementStatus;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -40,6 +41,16 @@ public class MedicationStatement extends InternationAuditableEntity {
 
 	@Column(name = "note_id")
 	private Long noteId;
+
+	public MedicationStatement(Integer patientId, String sctid, String statusId, Long noteId, boolean deleted) {
+		super();
+		this.patientId = patientId;
+		this.sctidCode = sctid;
+		this.statusId = statusId;
+		if(deleted)
+			this.statusId = MedicationStatementStatus.ERROR;
+		this.noteId = noteId;
+	}
 
 
 	@Override
