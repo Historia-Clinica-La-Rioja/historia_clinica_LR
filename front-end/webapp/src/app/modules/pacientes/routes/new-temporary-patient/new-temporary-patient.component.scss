@@ -1,0 +1,13 @@
+@import '../../../../../assets/styles/mixins';
+
+.mat-radio-button {
+    @include form-radio-button;
+}
+
+div .form-row {
+    @include form-row;
+}
+
+mat-form-field{
+    margin-right: 20px;
+}

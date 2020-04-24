@@ -5,6 +5,7 @@ import { HomeComponent } from './routes/home/home.component';
 import { CoreModule } from '@core/core.module';
 import { SearchComponent } from './routes/search/search.component';
 import { NewPatientComponent } from './routes/new-patient/new-patient.component';
+import { NewTemporaryPatientComponent } from './routes/new-temporary-patient/new-temporary-patient.component';
 
 const routes: Routes = [
 	{
@@ -13,6 +14,7 @@ const routes: Routes = [
 			{ path: '', component: HomeComponent },
 			{ path: 'search', component: SearchComponent },
 			{ path: 'new', component: NewPatientComponent },
+			{ path: 'temporary', component: NewTemporaryPatientComponent},
 		]
 	},
 ];

@@ -8,6 +8,7 @@ import { PacientesTableComponent } from './component/pacientes-table/pacientes-t
 import { SearchCreateComponent } from './component/search-create/search-create.component';
 import { SearchComponent } from './routes/search/search.component';
 import { NewPatientComponent } from './routes/new-patient/new-patient.component';
+import { NewTemporaryPatientComponent } from './routes/new-temporary-patient/new-temporary-patient.component';
 
 @NgModule({
 	declarations: [
@@ -16,6 +17,7 @@ import { NewPatientComponent } from './routes/new-patient/new-patient.component'
         SearchCreateComponent,
         SearchComponent,
 		NewPatientComponent,
+		NewTemporaryPatientComponent,
 	],
 	imports: [
 		AppMaterialModule,

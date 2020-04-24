@@ -111,7 +111,7 @@
 			"GENDER": "Sexo",
 			"GENDER_SELF_DETERMINATION": "Género autopercibido",
 			"IDENTIFICATION_TYPE": "Tipo de documento",
-			"IDENTIFICATION_NUMBER": "Nro. de documento",
+			"IDENTIFICATION_NUMBER": "Nº de documento",
 			"INVALID": "El campo es invalido.",
 			"LAST_NAME":"Primer apellido",
 			"LAST_NAME_TITLE":"Apellidos",
@@ -137,7 +137,8 @@
 		},
 		"new": {
 			"TITLE": "Nuevo Paciente",
-			"SUBTITLE": "Ingresá los siguientes datos."
+			"SUBTITLE": "Ingresá los siguientes datos.",
+			"TITLE_TEMPORARY":"Nuevo Paciente Temporal"
 		},
 		"search": {
 			"TITLE": "Búsqueda de pacientes"

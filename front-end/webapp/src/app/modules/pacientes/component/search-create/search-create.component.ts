@@ -37,7 +37,7 @@ export class SearchCreateComponent implements OnInit {
 		this.formSearch = this.formBuilder.group({
 			identifType: [null, Validators.required],
 			identifNumber: [null, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
-			gender: [null, Validators.required],	
+			gender: [null, Validators.required],
 		});
 
 		this.personMasterDataService.getIdentificationTypes().subscribe(
@@ -89,6 +89,9 @@ export class SearchCreateComponent implements OnInit {
 			this.router.navigate([ROUTE_NEW],
 				{
 					queryParams: {
+						identificationTypeId: this.formSearch.controls.identifType.value,
+						identificationNumber: this.formSearch.controls.identifNumber.value,
+						genderId: this.formSearch.controls.gender.value,
 						IdentityVerificationStatus: this.formAdd.controls.IdentityVerificationStatus.value,
 						comments: this.formAdd.controls.comments.value
 					}
