@@ -4,12 +4,14 @@ import { Routes, RouterModule } from '@angular/router';
 import { AuthComponent } from './auth.component';
 import { PasswordResetComponent } from './routes/password-reset/password-reset.component';
 import { LoginComponent } from './routes/login/login.component';
+import { ProfileComponent } from './routes/profile/profile.component';
 
 const routes: Routes = [
 	{
 		path: 'auth',
 		component: AuthComponent,
 		children: [
+			{ path: 'profile', component: ProfileComponent },
 			{ path: 'password-reset/:token', component: PasswordResetComponent },
 			{ path: 'login', component: LoginComponent },
 		]

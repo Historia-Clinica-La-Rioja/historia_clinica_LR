@@ -5,7 +5,40 @@
 		},
 		"menu": {
 			"INTERNACION": "HCE Internación",
-			"PACIENTES": "Pacientes"
+			"PACIENTES": "Pacientes",
+			"PERFIL": "Mi cuenta"
+		}
+	},
+	"auth": {
+		"login": {
+			"form": {
+				"TITLE": "Ingrese",
+				"USERNAME_LABEL": "Correo electrónico",
+				"USERNAME_PLACEHOLDER": "admin@example.com",
+				"USERNAME_REQUIRED": "Debe ingresar su usuario",
+				"PASSWORD_LABEL": "Clave",
+				"PASSWORD_PLACEHOLDER": "1234",
+				"PASSWORD_REQUIRED": "Debe ingresar su clave",
+				"SUBMIT": "INGRESAR"
+			}
+		},
+		"password-reset": {
+			"form": {
+				"TITLE": "Definir clave",
+				"PASSWORD_LABEL": "Nueva clave",
+				"PASSWORD_PLACEHOLDER": "Ingrese una nueva clave",
+				"PASSWORD_REQUIRED": "Debe especificar una clave",
+				"REPASSWORD_LABEL": "Confirme clave",
+				"REPASSWORD_PLACEHOLDER": "Vuelva a ingresar la nueva clave",
+				"REPASSWORD_NOTEQUIVALENT": "Deben coincidir las claves",
+				"REPASSWORD_REQUIRED": "Debe reingresar la clave",
+				"SUBMIT": "CAMBIAR"
+			},
+			"result": {
+				"ERROR": "Error definiendo nueva clave",
+				"OK": "Se definió correctamente la clave para el usuario",
+				"TITLE": "Definiendo nueva clave"
+			}
 		}
 	},
 	"buttons":{
@@ -149,4 +182,5 @@
 			"GENDER_AGE": "{{gender}} · {{age}} años"
 		}
 	}
+
 }

@@ -25,6 +25,9 @@
 			"@api-rest/*": [
 				"src/app/modules/api-rest/*"
 			],
+			"@presentation/*": [
+				"src/app/modules/presentation/*"
+			],
 		}
 	},
 	"angularCompilerOptions": {

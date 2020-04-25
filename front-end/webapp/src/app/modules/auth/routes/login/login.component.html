@@ -1,4 +1,40 @@
-<app-content width="narrow" >
-Login
-
+<app-content width="narrow">
+	<form [formGroup]="form" (ngSubmit)="submit()">
+		<mat-card>
+			<mat-card-header>
+				<mat-card-title>
+					<span translate="auth.login.form.TITLE"></span>
+				</mat-card-title>
+			</mat-card-header>
+			<mat-card-content>
+				<app-form-input label="auth.login.form.USERNAME_LABEL">
+					<mat-form-field [floatLabel]="'never'" appearance="outline">
+						<input formControlName="username"
+							type="text"
+							placeholder="{{'auth.login.form.USERNAME_PLACEHOLDER' | translate }}"
+							matInput
+						>
+						<mat-error *ngIf="hasError('required', 'username')">
+							<span translate="auth.login.form.USERNAME_REQUIRED"></span>
+						</mat-error>
+					</mat-form-field>
+				</app-form-input>
+				<app-form-input label="auth.login.form.PASSWORD_LABEL">
+					<mat-form-field [floatLabel]="'never'" appearance="outline">
+						<input formControlName="password"
+							type="password"
+							placeholder="{{'auth.login.form.PASSWORD_PLACEHOLDER' | translate }}"
+							matInput
+						>
+						<mat-error *ngIf="hasError('required', 'password')">
+							<span translate="auth.login.form.PASSWORD_REQUIRED"></span>
+						</mat-error>
+					</mat-form-field>
+				</app-form-input>
+			</mat-card-content>
+			<mat-card-actions>
+				<button mat-button type="submit" [disabled]="!form.valid" translate="auth.login.form.SUBMIT"></button>
+			</mat-card-actions>
+		</mat-card>
+	</form>
 </app-content>

@@ -27,7 +27,7 @@ export class ErrorInterceptor implements HttpInterceptor {
 				catchError((error: HttpErrorResponse) => {
 					let errorMessage = '';
 					if (this.unauthorizedError(error)) {
-						window.location.href = '/backoffice/';
+						this.router.navigate(['/auth/login']);
 						return throwError(errorMessage);
 					}
 
