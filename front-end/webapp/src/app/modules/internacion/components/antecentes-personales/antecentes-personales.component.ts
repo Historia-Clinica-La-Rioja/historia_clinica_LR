@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { HealthHistoryConditionDto, MasterDataInterface, SnomedDto } from '@api-rest/api-model';
 import { MatTableDataSource } from '@angular/material/table';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
@@ -7,6 +7,7 @@ import { DateFormat } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import * as moment from 'moment';
 import { DatePipe } from '@angular/common';
+import { AnamnesisFormService } from '../../services/anamnesis-form.service';
 
 @Component({
 	selector: 'app-antecentes-personales',
@@ -18,9 +19,8 @@ export class AntecentesPersonalesComponent implements OnInit {
 	current: any = {};
 	form: FormGroup;
 	today: Moment = moment();
-
-	verifications: MasterDataInterface<string>[] = [{id: 'a', description: 'description a'}, {id: 'b', description: 'description b'}, {id: 'c', description: 'description c'}];
-	clinicalStatus: MasterDataInterface<string>[] = [{id: 'a', description: 'description a'}, {id: 'b', description: 'description b'}, {id: 'c', description: 'description c'}];
+	verifications: MasterDataInterface<string>[];
+	clinicalStatus: MasterDataInterface<string>[];
 
 	//Mat table
 	columns = [
@@ -51,7 +51,8 @@ export class AntecentesPersonalesComponent implements OnInit {
 	constructor(
 		private formBuilder: FormBuilder,
 		private datePipe: DatePipe,
-		private internacionMasterDataService: InternacionMasterDataService
+		private internacionMasterDataService: InternacionMasterDataService,
+		private anamnesisFormService: AnamnesisFormService
 	)
 	{
 		this.displayedColumns = this.columns?.map(c => c.def).concat(['remove']);
@@ -66,13 +67,13 @@ export class AntecentesPersonalesComponent implements OnInit {
 			snomed: [null, Validators.required]
 		});
 
-		/*this.internacionMasterDataService.getHealthClinical().subscribe(healthClinical => {
+		this.internacionMasterDataService.getHealthClinical().subscribe(healthClinical => {
 			this.clinicalStatus = healthClinical;
 		});
 
 		this.internacionMasterDataService.getHealthVerification().subscribe(healthVerification => {
 			this.verifications = healthVerification;
-		});*/
+		});
 	}
 
 	chosenYearHandler(newDate: Moment) {
@@ -96,10 +97,11 @@ export class AntecentesPersonalesComponent implements OnInit {
 	}
 
 	addToList() {
+		this.anamnesisFormService.changeSubmitted(true);
 		if (this.form.valid) {
-			let aux: HealthHistoryConditionDto = this.form.value;
-			aux.date = this.form.controls.date.value.format(DateFormat.API_DATE);
-			this.add(aux);
+			let newHealthHistoryCondition: HealthHistoryConditionDto = this.form.value;
+			newHealthHistoryCondition.date = this.form.controls.date.value.format(DateFormat.API_DATE);
+			this.add(newHealthHistoryCondition);
 		}
 	}
 
@@ -109,7 +111,6 @@ export class AntecentesPersonalesComponent implements OnInit {
 	}
 
 	add(ap): void {
-		// TODO validacion snomed requerido
 		// had to use an assignment instead of push method to produce a change on the variable observed by mat-table (apDataSource)
 		this.apDataSource.data = this.apDataSource.data.concat([ap]);
 		this.current = {};

@@ -1,10 +1,19 @@
-<mat-form-field>
-	<mat-label [translate]="text"></mat-label>
-	<input matInput type="text" [(ngModel)]="searchValue" matTooltip="{{ searchValue }}">
-	<button id="clear" mat-button *ngIf="searchValue" matSuffix color="warn" mat-icon-button (click)="searchValue = ''">
-		<mat-icon>close</mat-icon>
+<form [formGroup]="form" (ngSubmit)="submit()">
+	<mat-form-field>
+		<mat-label [translate]="text"></mat-label>
+		<input matInput type="text" formControlName="search" matTooltip="{{ this.form.controls.search.value }}">
+		<button id="clear" mat-button *ngIf="this.form.controls.search.value" matSuffix color="warn" mat-icon-button (click)="clear()">
+			<mat-icon>close</mat-icon>
+		</button>
+		<button mat-flat-button color="primary" matSuffix (click)="openDialog()">
+			<span class="uppercase" [translate]="'buttons.SEARCH'"></span>
+		</button>
+		<mat-error [translate]="'internaciones.anamnesis.antecedentes-personales.form.REQUIRED'">
+		</mat-error>
+	</mat-form-field>
+	<button mat-raised-button
+			#buttonSubmit
+			type="submit"
+			style="display: none">
 	</button>
-	<button mat-flat-button color="primary" matSuffix (click)="openDialog()">
-		<span class="uppercase" [translate]="'buttons.SEARCH'"></span>
-	</button>
-</mat-form-field>
+</form>

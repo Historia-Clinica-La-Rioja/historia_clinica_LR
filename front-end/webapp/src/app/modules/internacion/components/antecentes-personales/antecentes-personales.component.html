@@ -4,6 +4,7 @@
 		<app-concepts-search [text]="'internaciones.anamnesis.antecedentes-personales.PROBLEM_TYPE'"
 			(onSelect)=setConcept($event)>
 		</app-concepts-search>
+
 		<form [formGroup]="form" (ngSubmit)="addToList()">
 			<mat-form-field appearance="outline">
 				<mat-label [translate]="'internaciones.anamnesis.antecedentes-personales.form.CLINICAL_STATUS'">
@@ -13,6 +14,8 @@
 						{{status.description}}
 					</mat-option>
 				</mat-select>
+				<mat-error [translate]="'internaciones.anamnesis.antecedentes-personales.form.REQUIRED'">
+				</mat-error>
 			</mat-form-field>
 			<mat-form-field appearance="outline">
 				<mat-label [translate]="'internaciones.anamnesis.antecedentes-personales.form.VERIFICATION_STATUS'">
@@ -22,6 +25,8 @@
 						{{verification.description}}
 					</mat-option>
 				</mat-select>
+				<mat-error [translate]="'internaciones.anamnesis.antecedentes-personales.form.REQUIRED'">
+				</mat-error>
 			</mat-form-field>
 			<mat-form-field appearance="outline">
 				<mat-label [translate]="'internaciones.anamnesis.antecedentes-personales.form.REGISTRY_DATE'">
@@ -32,6 +37,8 @@
 				<mat-datepicker #myDatepicker startView="multi-year" (yearSelected)="chosenYearHandler($event)"
 					(monthSelected)="chosenMonthHandler($event)">
 				</mat-datepicker>
+				<mat-error [translate]="'internaciones.anamnesis.antecedentes-personales.form.REQUIRED'">
+				</mat-error>
 			</mat-form-field>
 
 			<mat-form-field appearance="outline">
@@ -39,6 +46,8 @@
 				<textarea matInput type="text" id="note" name="note" formControlName="note"
 					placeholder="{{'internaciones.anamnesis.observations.DESCRIPTION' | translate }}">
 					</textarea>
+				<mat-error [translate]="'internaciones.anamnesis.antecedentes-personales.form.REQUIRED'">
+				</mat-error>
 			</mat-form-field>
 			<div align="end">
 				<button mat-raised-button color="primary" type="submit">

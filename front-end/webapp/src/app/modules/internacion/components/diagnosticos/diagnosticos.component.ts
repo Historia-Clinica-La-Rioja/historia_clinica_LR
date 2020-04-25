@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MasterDataInterface, HealthHistoryConditionDto, SnomedDto } from '@api-rest/api-model';
 import { MatTableDataSource } from '@angular/material/table';
+import { AnamnesisFormService } from '../../services/anamnesis-form.service';
 
 @Component({
 	selector: 'app-diagnosticos',
@@ -38,6 +39,7 @@ export class DiagnosticosComponent implements OnInit {
 
 	constructor(
 		private formBuilder: FormBuilder,
+		private anamnesisFormService: AnamnesisFormService
 	)
 	{
 		this.displayedColumns = this.columns?.map(c => c.def).concat(['remove']);
@@ -52,7 +54,10 @@ export class DiagnosticosComponent implements OnInit {
 	}
 
 	addToList() {
-		this.add(this.form.value);
+		this.anamnesisFormService.changeSubmitted(true);
+		if (this.form.valid) {
+			this.add(this.form.value);
+		}
 	}
 
 	setConcept(selectedConcept: SnomedDto): void {
@@ -61,8 +66,6 @@ export class DiagnosticosComponent implements OnInit {
 	}
 
 	add(ap): void {
-		// TODO validacion snomed requerido
-
 		// had to use an assignment instead of push method to produce a change on the variable observed by mat-table (apDataSource)
 		this.apDataSource.data = this.apDataSource.data.concat([ap]);
 		this.current = {};

@@ -59,7 +59,8 @@
 					"REGISTRY_DATE": "Fecha registro",
 					"NOTE": "Notas",
 					"VERIFICATION_STATUS": "Estado de verificación",
-					"CLINICAL_STATUS": "Estado clínico"
+					"CLINICAL_STATUS": "Estado clínico",
+					"REQUIRED": "El campo es requerido."
 				},
 
 				"table": {
