@@ -17,6 +17,7 @@ import { FormsModule } from '@angular/forms';
 import { DiagnosticosComponent } from './components/diagnosticos/diagnosticos.component';
 import { AlergiasComponent } from './components/alergias/alergias.component';
 import { VacunasComponent } from './components/vacunas/vacunas.component';
+import { MedicacionComponent } from './components/medicacion/medicacion.component';
 
 @NgModule({
 	declarations: [
@@ -31,6 +32,7 @@ import { VacunasComponent } from './components/vacunas/vacunas.component';
 		DiagnosticosComponent,
 		AlergiasComponent,
 		VacunasComponent,
+		MedicacionComponent,
 	],
 	imports: [
 		AppMaterialModule,

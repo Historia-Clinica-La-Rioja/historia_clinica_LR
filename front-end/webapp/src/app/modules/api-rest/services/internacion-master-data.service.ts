@@ -41,4 +41,10 @@ export class InternacionMasterDataService {
 		let url = `${environment.apiBase}/internments/masterdata/inmunization`;
 		return this.http.get<[]>(url);
 	}
+
+	getMedicationClinical(): Observable<MasterDataInterface<string>[]> {
+		let url = `${environment.apiBase}/internments/masterdata/medication`;
+		return this.http.get<[]>(url);
+	}
+
 }
