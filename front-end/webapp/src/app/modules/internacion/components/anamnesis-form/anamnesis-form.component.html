@@ -1,18 +1,56 @@
 <div class="container">
-	<section>
-		<h2 class="page-title" [translate]="'internaciones.anamnesis.TITLE'"></h2>
-		<h3 [translate]="'internaciones.anamnesis.SUBTITLE'"></h3>
-	</section>
-	<section id="diagnosticos">
-		<app-diagnosticos></app-diagnosticos>
-	</section>
-	<section id="antecedentes-personales">
-		<app-antecentes-personales></app-antecentes-personales>
-	</section>
-
-	<section id="observations">
-		<h2 [translate]="'internaciones.anamnesis.observations.TITLE'"></h2>
-		<form [formGroup]="form" (ngSubmit)="save()">
+	<form [formGroup]="form" (ngSubmit)="save()">
+		<section>
+			<h2 class="page-title" [translate]="'internaciones.anamnesis.TITLE'"></h2>
+			<h3 [translate]="'internaciones.anamnesis.SUBTITLE'"></h3>
+		</section>
+		<section id="diagnosticos">
+			<app-diagnosticos></app-diagnosticos>
+		</section>
+		<section id="datos-antropometricos">
+			<h2 [translate]="'internaciones.anamnesis.datos-antropometricos.TITLE'"></h2>
+			<mat-card class="datos-antropometricos-card">
+				<mat-card-content>
+					<div>
+						<mat-label [translate]="'internaciones.anamnesis.datos-antropometricos.BLOOD_TYPE'"></mat-label>
+						<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<mat-select formControlName="bloodType" name="bloodTypeId">
+								<mat-option *ngFor="let bloodType of bloodTypes" [value]="bloodType.id">
+									{{ bloodType.description }}
+								</mat-option>
+							</mat-select>
+						</mat-form-field>
+					</div>
+					<div>
+						<mat-label [translate]="'internaciones.anamnesis.datos-antropometricos.HEIGHT'"></mat-label>
+						<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<input id="middleNames"
+							name="height"
+							formControlName="height"
+							placeholder="Ej: 180"
+							maxlength="3"
+							matInput>
+						</mat-form-field>
+					</div>
+					<div>
+						<mat-label [translate]="'internaciones.anamnesis.datos-antropometricos.WEIGHT'"></mat-label>
+						<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<input id="middleNames"
+							name="weight"
+							formControlName="weight"
+							placeholder="Ej: 70"
+							maxlength="3"
+							matInput>
+						</mat-form-field>
+					</div>
+				</mat-card-content>
+			</mat-card>
+		</section>
+		<section id="antecedentes-personales">
+			<app-antecentes-personales></app-antecentes-personales>
+		</section>
+		<section id="observations">
+			<h2 [translate]="'internaciones.anamnesis.observations.TITLE'"></h2>
 			<mat-card>
 				<mat-card-content>
 					<div>
@@ -24,7 +62,8 @@
 						</mat-form-field>
 					</div>
 					<div>
-						<mat-label [translate]="'internaciones.anamnesis.observations.PHYSICAL_EXAMINATION'"></mat-label>
+						<mat-label [translate]="'internaciones.anamnesis.observations.PHYSICAL_EXAMINATION'">
+						</mat-label>
 						<mat-form-field [floatLabel]="'never'" appearance="outline">
 							<textarea matInput type="text" id="physical_examination" name="physical_examination"
 								formControlName="physical_examination">
@@ -81,6 +120,6 @@
 					</button>
 				</div>
 			</div>
-		</form>
-	</section>
+		</section>
+	</form>
 </div>

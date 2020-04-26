@@ -7,6 +7,9 @@
 		margin: 1vh 0;
 	}
 	form {
+		mat-card.datos-antropometricos-card {
+			width: 50%;
+		}
 		mat-form-field {
 			width: 100%;
 		}

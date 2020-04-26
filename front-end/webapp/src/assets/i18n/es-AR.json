@@ -78,6 +78,12 @@
 					}
 				}
 			},
+			"datos-antropometricos": {
+				"TITLE": "Datos antropométricos",
+				"BLOOD_TYPE": "Grupo y factor sanguíneo",
+				"HEIGHT": "Talla (cm)",
+				"WEIGHT": "Peso (kg)"
+			},
 			"diagnosticos": {
 				"TITLE": "Diagnósticos",
 				"ADD": "Agregar diagnóstico",
