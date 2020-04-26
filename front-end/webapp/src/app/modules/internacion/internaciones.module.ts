@@ -10,7 +10,6 @@ import { InternacionesHomeComponent } from './routes/home/internaciones-home.com
 import { InternacionesTableComponent } from './components/internaciones-table/internaciones-table.component';
 import { InternacionPacienteComponent } from './routes/internacion-paciente/internacion-paciente.component';
 import { AnamnesisComponent } from './routes/anamnesis/anamnesis.component';
-import { AntecentesPersonalesComponent } from './components/antecentes-personales/antecentes-personales.component';
 import { ConceptsSearchDialogComponent } from './dialogs/concepts-search-dialog/concepts-search-dialog.component';
 import { ConceptsSearchComponent } from './components/concepts-search/concepts-search.component';
 import { FormsModule } from '@angular/forms';
@@ -18,6 +17,8 @@ import { DiagnosticosComponent } from './components/diagnosticos/diagnosticos.co
 import { AlergiasComponent } from './components/alergias/alergias.component';
 import { VacunasComponent } from './components/vacunas/vacunas.component';
 import { MedicacionComponent } from './components/medicacion/medicacion.component';
+import { AntecedentesFamiliaresComponent } from './components/antecedentes-familiares/antecedentes-familiares.component';
+import { AntecedentesPersonalesComponent } from './components/antecedentes-personales/antecedentes-personales.component';
 
 @NgModule({
 	declarations: [
@@ -26,13 +27,14 @@ import { MedicacionComponent } from './components/medicacion/medicacion.componen
 		InternacionesHomeComponent,
 		InternacionPacienteComponent,
 		AnamnesisComponent,
-		AntecentesPersonalesComponent,
+		AntecedentesPersonalesComponent,
 		ConceptsSearchDialogComponent,
 		ConceptsSearchComponent,
 		DiagnosticosComponent,
 		AlergiasComponent,
 		VacunasComponent,
 		MedicacionComponent,
+		AntecedentesFamiliaresComponent,
 	],
 	imports: [
 		AppMaterialModule,

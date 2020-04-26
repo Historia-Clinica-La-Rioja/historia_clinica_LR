@@ -101,6 +101,26 @@
 					}
 				}
 			},
+			"antecedentes-familiares": {
+				"TITLE": "Antecedentes familiares",
+				"ADD": "Agregar antecedente",
+				"PROBLEM_TYPE": "Tipo de problema",
+				"form": {
+					"REGISTRY_DATE": "Fecha registro",
+					"NOTE": "Notas",
+					"VERIFICATION_STATUS": "Estado de verificación",
+					"CLINICAL_STATUS": "Estado clínico"
+				},
+				"table": {
+					"TITLE": "Antecedentes familiares registrados",
+					"columns": {
+						"PROBLEM_TYPE": "Tipo de problema",
+						"STATUS": "Estado",
+						"VERIFICATION": "Verificación",
+						"REGISTRY_DATE": "Fecha registro"
+					}
+				}
+			},
 			"datos-antropometricos": {
 				"TITLE": "Datos antropométricos",
 				"BLOOD_TYPE": "Grupo y factor sanguíneo",
