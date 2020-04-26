@@ -5,6 +5,9 @@
 	</span>
 </div>
 <div mat-dialog-content>
+	<div class="spinner">
+		<mat-spinner *ngIf="!conceptsResultsTable"></mat-spinner>
+	</div>
 	<app-table [model]="conceptsResultsTable" [tableClass]="'secondary'"></app-table>
 </div>
 <mat-dialog-actions align="end">
