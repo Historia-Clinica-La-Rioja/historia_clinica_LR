@@ -7,7 +7,7 @@ import { DateFormat } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import * as moment from 'moment';
 import { DatePipe } from '@angular/common';
-import { AnamnesisFormService } from '../../services/anamnesis-form.service';
+import { pushTo, removeFrom } from '@core/utils/array.utils';
 
 @Component({
 	selector: 'app-antecentes-personales',
@@ -16,7 +16,8 @@ import { AnamnesisFormService } from '../../services/anamnesis-form.service';
 })
 export class AntecentesPersonalesComponent implements OnInit {
 
-	current: any = {};
+	private snomedConcept: SnomedDto;
+
 	form: FormGroup;
 	today: Moment = moment();
 	verifications: MasterDataInterface<string>[];
@@ -51,8 +52,7 @@ export class AntecentesPersonalesComponent implements OnInit {
 	constructor(
 		private formBuilder: FormBuilder,
 		private datePipe: DatePipe,
-		private internacionMasterDataService: InternacionMasterDataService,
-		private anamnesisFormService: AnamnesisFormService
+		private internacionMasterDataService: InternacionMasterDataService
 	)
 	{
 		this.displayedColumns = this.columns?.map(c => c.def).concat(['remove']);
@@ -97,27 +97,25 @@ export class AntecentesPersonalesComponent implements OnInit {
 	}
 
 	addToList() {
-		this.anamnesisFormService.changeSubmitted(true);
-		if (this.form.valid) {
-			let newHealthHistoryCondition: HealthHistoryConditionDto = this.form.value;
-			newHealthHistoryCondition.date = this.form.controls.date.value.format(DateFormat.API_DATE);
-			this.add(newHealthHistoryCondition);
+		if (this.form.valid && this.snomedConcept) {
+			let antecedetePersonal: HealthHistoryConditionDto = this.form.value;
+			antecedetePersonal.date = this.form.controls.date.value.format(DateFormat.API_DATE);
+			antecedetePersonal.snomed = this.snomedConcept;
+			this.add(antecedetePersonal);
 		}
 	}
 
 	setConcept(selectedConcept: SnomedDto): void {
-		this.current.snomed = selectedConcept;
-		this.form.controls.snomed.setValue(selectedConcept);
+		this.snomedConcept = selectedConcept;
+		this.form.controls.snomed.setValue(selectedConcept.fsn);
 	}
 
-	add(ap): void {
-		// had to use an assignment instead of push method to produce a change on the variable observed by mat-table (apDataSource)
-		this.apDataSource.data = this.apDataSource.data.concat([ap]);
-		this.current = {};
+	add(ap: HealthHistoryConditionDto): void {
+		this.apDataSource.data = pushTo<HealthHistoryConditionDto>(this.apDataSource.data, ap);
 	}
 
-	remove(ap: any): void {
-		this.apDataSource.data = this.apDataSource.data.filter(_ap => _ap !== ap);
+	remove(index: number): void {
+		this.apDataSource.data = removeFrom<HealthHistoryConditionDto>(this.apDataSource.data, index);
 	}
 
 }

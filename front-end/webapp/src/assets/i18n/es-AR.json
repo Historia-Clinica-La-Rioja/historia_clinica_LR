@@ -47,10 +47,15 @@
 		"CLOSE": "Cerrar",
 		"SEARCH": "Buscar"
 	},
+	"forms": {
+		"REQUIRED": "El campo es requerido"
+	},
 	"internaciones": {
 		"anamnesis": {
 			"TITLE": "Evaluación de ingreso",
 			"SUBTITLE": "Completa los siguientes datos.",
+			"SEARCH": "Búsqueda de {{ conceptLabel }}",
+			"REQUIRED_SEARCH": "Debe seleccionar un resultado de la búsqueda",
 			"antecedentes-personales": {
 				"TITLE": "Antecedentes personales",
 				"ADD": "Agregar antecedente",
@@ -60,7 +65,7 @@
 					"NOTE": "Notas",
 					"VERIFICATION_STATUS": "Estado de verificación",
 					"CLINICAL_STATUS": "Estado clínico",
-					"REQUIRED": "El campo es requerido."
+					"REQUIRED": "El campo es requerido"
 				},
 
 				"table": {
@@ -156,7 +161,7 @@
 			"OTHER_LAST_NAMES": "Otros apellidos",
 			"PHONE_NUMBER": "Teléfono",
 			"RELIGION": "Religion",
-			"REQUIRED": "El campo es requerido.",
+			"REQUIRED": "El campo es requerido",
 			"SELECT": "Seleccionar"
 		},
 		"home": {

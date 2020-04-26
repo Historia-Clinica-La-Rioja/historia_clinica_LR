@@ -49,6 +49,12 @@
 		}
 		&.secondary {
 			border-collapse: collapse;
+			th, td {
+				text-align: left;
+				&:first-child {
+					padding-left: 24px;
+				}
+			}
 			thead {
 				background-color: #F0F0F0;
 				th {

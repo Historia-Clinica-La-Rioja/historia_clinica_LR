@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MasterDataInterface, HealthHistoryConditionDto, SnomedDto } from '@api-rest/api-model';
+import { MasterDataInterface, SnomedDto, HealthHistoryConditionDto } from '@api-rest/api-model';
 import { MatTableDataSource } from '@angular/material/table';
-import { AnamnesisFormService } from '../../services/anamnesis-form.service';
+import { pushTo, removeFrom } from '@core/utils/array.utils';
+import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 
 @Component({
 	selector: 'app-diagnosticos',
@@ -11,10 +12,11 @@ import { AnamnesisFormService } from '../../services/anamnesis-form.service';
 })
 export class DiagnosticosComponent implements OnInit {
 
-	current: any = {};
+	private snomedConcept: SnomedDto;
+
 	form: FormGroup;
-	verifications: MasterDataInterface<string>[] = [{id: 'a', description: 'description a'}, {id: 'b', description: 'description b'}, {id: 'c', description: 'description c'}];
-	clinicalStatus: MasterDataInterface<string>[] = [{id: 'a', description: 'description a'}, {id: 'b', description: 'description b'}, {id: 'c', description: 'description c'}];
+	verifications: MasterDataInterface<string>[];
+	clinicalStatus: MasterDataInterface<string>[];
 
 	//Mat table
 	columns = [
@@ -39,7 +41,7 @@ export class DiagnosticosComponent implements OnInit {
 
 	constructor(
 		private formBuilder: FormBuilder,
-		private anamnesisFormService: AnamnesisFormService
+		private internacionMasterDataService: InternacionMasterDataService,
 	)
 	{
 		this.displayedColumns = this.columns?.map(c => c.def).concat(['remove']);
@@ -51,28 +53,35 @@ export class DiagnosticosComponent implements OnInit {
 			statusId: [null, Validators.required],
 			snomed: [null, Validators.required]
 		});
+
+		this.internacionMasterDataService.getHealthClinical().subscribe(healthClinical => {
+			this.clinicalStatus = healthClinical;
+		});
+
+		this.internacionMasterDataService.getHealthVerification().subscribe(healthVerification => {
+			this.verifications = healthVerification;
+		});
 	}
 
 	addToList() {
-		this.anamnesisFormService.changeSubmitted(true);
-		if (this.form.valid) {
-			this.add(this.form.value);
+		if (this.form.valid && this.snomedConcept) {
+			let newDiagnosis: HealthHistoryConditionDto = this.form.value;
+			newDiagnosis.snomed = this.snomedConcept;
+			this.add(newDiagnosis);
 		}
 	}
 
 	setConcept(selectedConcept: SnomedDto): void {
-		this.current.snomed = selectedConcept;
-		this.form.controls.snomed.setValue(selectedConcept);
+		this.snomedConcept = selectedConcept;
+		this.form.controls.snomed.setValue(selectedConcept.fsn);
 	}
 
-	add(ap): void {
-		// had to use an assignment instead of push method to produce a change on the variable observed by mat-table (apDataSource)
-		this.apDataSource.data = this.apDataSource.data.concat([ap]);
-		this.current = {};
+	add(diagnosis): void {
+		this.apDataSource.data = pushTo(this.apDataSource.data, diagnosis);
 	}
 
-	remove(ap: any): void {
-		this.apDataSource.data = this.apDataSource.data.filter(_ap => _ap !== ap);
+	remove(index: number): void {
+		this.apDataSource.data = removeFrom(this.apDataSource.data, index);
 	}
 
 }

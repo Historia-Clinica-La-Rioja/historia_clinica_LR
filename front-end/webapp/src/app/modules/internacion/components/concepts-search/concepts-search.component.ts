@@ -1,10 +1,8 @@
-import { Component, OnInit, Output, EventEmitter, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ConceptsSearchDialogComponent } from '../../dialogs/concepts-search-dialog/concepts-search-dialog.component';
 import { SnomedDto } from '@api-rest/api-model';
-import { AnamnesisFormService } from '../../services/anamnesis-form.service';
-import { Subscription } from 'rxjs';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'app-concepts-search',
@@ -13,62 +11,40 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 })
 export class ConceptsSearchComponent implements OnInit {
 
-	private subscription: Subscription;
-
-	@Input() text: string = '';
+	@Input() label: string = '';
 	@Output() onSelect = new EventEmitter<SnomedDto>();
-	@ViewChild('buttonSubmit') buttonSubmit;
-	selectedConcept: SnomedDto;
-	form: FormGroup;
+
+	searchValue: string = '';
+	translatedLabel: string = '';
 
 	constructor(
+		private translateService: TranslateService,
 		public dialog: MatDialog,
-		private formBuilder: FormBuilder,
-		private anamnesisFormService: AnamnesisFormService
-	) {
-		this.subscription = anamnesisFormService.submitted.subscribe(
-			submitted => {
-				if (submitted) {
-					const buttonElement: HTMLElement = this.buttonSubmit._elementRef.nativeElement as HTMLElement;
-					buttonElement.click();
-					this.anamnesisFormService.changeSubmitted(false);
-				}
-			}
+	) { }
+
+	ngOnInit(): void {
+		this.translateService.get(this.label).subscribe(
+			translatedText => this.translatedLabel = translatedText.toLowerCase()
 		);
 	}
 
-	ngOnInit(): void {
-		this.form = this.formBuilder.group({
-			search: [null]
-		});
-	}
-
 	openDialog(): void {
-		if (!this.form.controls.search.value) return;
+		if (!this.searchValue) return;
 		const dialogRef = this.dialog.open(ConceptsSearchDialogComponent, {
 			width: '70%',
-			data: { searchValue: this.form.controls.search.value }
+			data: { searchValue: this.searchValue }
 		});
 
 		dialogRef.afterClosed().subscribe(
 			(selectedConcept: SnomedDto) => {
+				if (selectedConcept) this.clear();
 				this.onSelect.emit(selectedConcept);
-				this.form.controls.search.setValue(selectedConcept.fsn);
-				this.selectedConcept = selectedConcept;
 			}
 		);
 	}
 
-	submit() {
-		if (!this.selectedConcept) {
-			this.form.controls.search.setErrors({required: true});
-		}
-	}
-
 	clear(): void {
-		this.onSelect.emit();
-		this.form.controls.search.setValue('');
-		this.selectedConcept = undefined;
+		this.searchValue = '';
 	}
 
 }
