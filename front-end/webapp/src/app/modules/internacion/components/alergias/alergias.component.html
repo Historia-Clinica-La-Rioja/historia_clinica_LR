@@ -1,0 +1,109 @@
+<h2 class="mat-h2" [translate]="'internaciones.anamnesis.alergias.TITLE'"></h2>
+<mat-card>
+	<mat-card-content>
+		<app-concepts-search [label]="'internaciones.anamnesis.alergias.PROBLEM_TYPE'" (onSelect)=setConcept($event)>
+		</app-concepts-search>
+
+		<form [formGroup]="form" (ngSubmit)="addToList()">
+			<mat-form-field appearance="outline">
+				<mat-label [translate]="'internaciones.anamnesis.alergias.PROBLEM_TYPE'">
+				</mat-label>
+				<input matInput type="text" formControlName="snomed" name="snomed" readonly>
+				<mat-error [translate]="'internaciones.anamnesis.REQUIRED_SEARCH'">
+				</mat-error>
+			</mat-form-field>
+			<mat-form-field appearance="outline">
+				<mat-label [translate]="'internaciones.anamnesis.alergias.form.SEVERITY'">
+				</mat-label>
+				<input matInput type="text" formControlName="severity" name="severity">
+				<mat-error [translate]="'forms.REQUIRED'">
+				</mat-error>
+			</mat-form-field>
+			<mat-form-field appearance="outline">
+				<mat-label [translate]="'internaciones.anamnesis.alergias.form.CATEGORY'">
+				</mat-label>
+				<mat-select formControlName="categoryId" name="categoryId">
+					<mat-option *ngFor="let category of categories" [value]="category.id">
+						{{category.description}}
+					</mat-option>
+				</mat-select>
+				<mat-error [translate]="'forms.REQUIRED'">
+				</mat-error>
+			</mat-form-field>
+			<mat-form-field appearance="outline">
+				<mat-label [translate]="'internaciones.anamnesis.alergias.form.CLINICAL_STATUS'">
+				</mat-label>
+				<mat-select formControlName="statusId" name="statusId">
+					<mat-option *ngFor="let status of clinicalStatus" [value]="status.id">
+						{{status.description}}
+					</mat-option>
+				</mat-select>
+				<mat-error [translate]="'forms.REQUIRED'">
+				</mat-error>
+			</mat-form-field>
+			<mat-form-field appearance="outline">
+				<mat-label [translate]="'internaciones.anamnesis.alergias.form.VERIFICATION_STATUS'">
+				</mat-label>
+				<mat-select formControlName="verificationId" name="verificationId">
+					<mat-option *ngFor="let verification of verifications" [value]="verification.id">
+						{{verification.description}}
+					</mat-option>
+				</mat-select>
+				<mat-error [translate]="'forms.REQUIRED'">
+				</mat-error>
+			</mat-form-field>
+			<mat-form-field appearance="outline">
+				<mat-label [translate]="'internaciones.anamnesis.alergias.form.REGISTRY_DATE'">
+				</mat-label>
+				<input matInput readonly id="date" [matDatepicker]="myDatepicker" formControlName="date"
+					[max]="this.today">
+				<mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
+				<mat-datepicker #myDatepicker startView="multi-year" (yearSelected)="chosenYearHandler($event)"
+					(monthSelected)="chosenMonthHandler($event)">
+				</mat-datepicker>
+				<mat-error [translate]="'forms.REQUIRED'">
+				</mat-error>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline">
+				<mat-label [translate]="'internaciones.anamnesis.alergias.form.NOTE'"></mat-label>
+				<textarea matInput type="text" id="note" name="note" formControlName="note"
+					placeholder="{{'internaciones.anamnesis.observations.DESCRIPTION' | translate }}">
+					</textarea>
+				<mat-error [translate]="'forms.REQUIRED'">
+				</mat-error>
+			</mat-form-field>
+			<div align="end">
+				<button mat-raised-button color="primary" type="submit">
+					<span class="uppercase" [translate]="'internaciones.anamnesis.alergias.ADD'"></span>
+				</button>
+			</div>
+		</form>
+	</mat-card-content>
+</mat-card>
+
+<section>
+	<h3 class="mat-h2" [translate]="'internaciones.anamnesis.alergias.table.TITLE'"></h3>
+	<table mat-table [dataSource]="apDataSource" class="secondary">
+
+		<ng-container *ngFor="let column of columns" [matColumnDef]="column.def">
+			<th *matHeaderCellDef>{{ column.header | translate }}</th>
+			<td mat-cell *matCellDef="let element"> {{ column.text(element) }} </td>
+		</ng-container>
+
+		<ng-container matColumnDef="remove">
+			<th mat-header-cell *matHeaderCellDef></th>
+			<td mat-cell *matCellDef="let element; index as i">
+				<button mat-icon-button color="warn" (click)="remove(i)">
+					<mat-icon>delete_outline</mat-icon>
+				</button>
+			</td>
+		</ng-container>
+
+		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+		<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+	</table>
+	<div class="mat-h3 table-no-data" *ngIf="apDataSource.data.length === 0">
+		<span [translate]="'messages.NO_DATA'"></span>
+	</div>
+</section>

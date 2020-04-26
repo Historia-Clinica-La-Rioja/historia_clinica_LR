@@ -1,20 +1,20 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
-import { HealthHistoryConditionDto, MasterDataInterface, SnomedDto } from '@api-rest/api-model';
-import { MatTableDataSource } from '@angular/material/table';
+import { Component, OnInit } from '@angular/core';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
-import { DateFormat } from '@core/utils/moment.utils';
+import { AllergyConditionDto, SnomedDto, MasterDataInterface } from '@api-rest/api-model';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Moment } from 'moment';
 import * as moment from 'moment';
+import { MatTableDataSource } from '@angular/material/table';
 import { DatePipe } from '@angular/common';
+import { DateFormat } from '@core/utils/moment.utils';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
 
 @Component({
-	selector: 'app-antecentes-personales',
-	templateUrl: './antecentes-personales.component.html',
-	styleUrls: ['./antecentes-personales.component.scss']
+	selector: 'app-alergias',
+	templateUrl: './alergias.component.html',
+	styleUrls: ['./alergias.component.scss']
 })
-export class AntecentesPersonalesComponent implements OnInit {
+export class AlergiasComponent implements OnInit {
 
 	private snomedConcept: SnomedDto;
 
@@ -22,27 +22,38 @@ export class AntecentesPersonalesComponent implements OnInit {
 	today: Moment = moment();
 	verifications: MasterDataInterface<string>[];
 	clinicalStatus: MasterDataInterface<string>[];
+	categories: MasterDataInterface<string>[];
 
 	//Mat table
 	columns = [
 		{
 			def: "problemType",
-			header: 'internaciones.anamnesis.antecedentes-personales.table.columns.PROBLEM_TYPE',
+			header: 'internaciones.anamnesis.alergias.table.columns.PROBLEM_TYPE',
 			text: ap => ap.snomed.fsn
 		},
 		{
+			def: "category",
+			header: 'internaciones.anamnesis.alergias.table.columns.CATEGORY',
+			text: ap => this.categories.find(category => category.id === ap.categoryId).description
+		},
+		{
+			def: "severity",
+			header: 'internaciones.anamnesis.alergias.table.columns.SEVERITY',
+			text: ap => ap.severity
+		},
+		{
 			def: "clinicalStatus",
-			header: 'internaciones.anamnesis.antecedentes-personales.table.columns.STATUS',
+			header: 'internaciones.anamnesis.alergias.table.columns.STATUS',
 			text: ap => this.clinicalStatus.find(status => status.id === ap.statusId).description
 		},
 		{
 			def: 'verification',
-			header: 'internaciones.anamnesis.antecedentes-personales.table.columns.VERIFICATION',
+			header: 'internaciones.anamnesis.alergias.table.columns.VERIFICATION',
 			text: ap => this.verifications.find(verification => verification.id === ap.verificationId).description
 		},
 		{
 			def: 'date',
-			header: 'internaciones.anamnesis.antecedentes-personales.table.columns.REGISTRY_DATE',
+			header: 'internaciones.anamnesis.alergias.table.columns.REGISTRY_DATE',
 			text: ap => this.datePipe.transform(ap.date, 'dd/MM/yyyy')
 		},
 	];
@@ -53,27 +64,33 @@ export class AntecentesPersonalesComponent implements OnInit {
 		private formBuilder: FormBuilder,
 		private datePipe: DatePipe,
 		private internacionMasterDataService: InternacionMasterDataService
-	)
-	{
+	) {
 		this.displayedColumns = this.columns?.map(c => c.def).concat(['remove']);
 	}
 
 	ngOnInit(): void {
 		this.form = this.formBuilder.group({
 			date: [null, Validators.required],
+			severity: [null, Validators.required],
+			categoryId: [null, Validators.required],
 			note: [null, Validators.required],
 			verificationId: [null, Validators.required],
 			statusId: [null, Validators.required],
 			snomed: [null, Validators.required]
 		});
 
-		this.internacionMasterDataService.getHealthClinical().subscribe(healthClinical => {
+		this.internacionMasterDataService.getAllergyClinical().subscribe(healthClinical => {
 			this.clinicalStatus = healthClinical;
 		});
 
-		this.internacionMasterDataService.getHealthVerification().subscribe(healthVerification => {
+		this.internacionMasterDataService.getAllergyVerifications().subscribe(healthVerification => {
 			this.verifications = healthVerification;
 		});
+
+		this.internacionMasterDataService.getAllergyCategories().subscribe(categories => {
+			this.categories = categories;
+		});
+
 	}
 
 	chosenYearHandler(newDate: Moment) {
@@ -98,7 +115,7 @@ export class AntecentesPersonalesComponent implements OnInit {
 
 	addToList() {
 		if (this.form.valid && this.snomedConcept) {
-			let antecedetePersonal: HealthHistoryConditionDto = this.form.value;
+			let antecedetePersonal: AllergyConditionDto = this.form.value;
 			antecedetePersonal.date = this.form.controls.date.value.format(DateFormat.API_DATE);
 			antecedetePersonal.snomed = this.snomedConcept;
 			this.add(antecedetePersonal);
@@ -111,12 +128,12 @@ export class AntecentesPersonalesComponent implements OnInit {
 		this.form.controls.snomed.setValue(fsn);
 	}
 
-	add(ap: HealthHistoryConditionDto): void {
-		this.apDataSource.data = pushTo<HealthHistoryConditionDto>(this.apDataSource.data, ap);
+	add(ap: AllergyConditionDto): void {
+		this.apDataSource.data = pushTo<AllergyConditionDto>(this.apDataSource.data, ap);
 	}
 
 	remove(index: number): void {
-		this.apDataSource.data = removeFrom<HealthHistoryConditionDto>(this.apDataSource.data, index);
+		this.apDataSource.data = removeFrom<AllergyConditionDto>(this.apDataSource.data, index);
 	}
 
 }

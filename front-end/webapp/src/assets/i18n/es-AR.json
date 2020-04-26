@@ -56,6 +56,31 @@
 			"SUBTITLE": "Completa los siguientes datos.",
 			"SEARCH": "Búsqueda de {{ conceptLabel }}",
 			"REQUIRED_SEARCH": "Debe seleccionar un resultado de la búsqueda",
+			"alergias": {
+				"TITLE": "Alergias",
+				"ADD": "Agregar alergia",
+				"PROBLEM_TYPE": "Tipo de alergia",
+				"form": {
+					"CATEGORY": "Categoría",
+					"CLINICAL_STATUS": "Estado clínico",
+					"NOTE": "Notas",
+					"REGISTRY_DATE": "Fecha registro",
+					"SEVERITY": "Severidad",
+					"VERIFICATION_STATUS": "Estado de verificación"
+				},
+
+				"table": {
+					"TITLE": "Alergias registradas",
+					"columns": {
+						"CATEGORY": "Categoría",
+						"PROBLEM_TYPE": "Tipo de problema",
+						"REGISTRY_DATE": "Fecha registro",
+						"STATUS": "Estado",
+						"SEVERITY": "Severidad",
+						"VERIFICATION": "Verificación"
+					}
+				}
+			},
 			"antecedentes-personales": {
 				"TITLE": "Antecedentes personales",
 				"ADD": "Agregar antecedente",
@@ -64,10 +89,8 @@
 					"REGISTRY_DATE": "Fecha registro",
 					"NOTE": "Notas",
 					"VERIFICATION_STATUS": "Estado de verificación",
-					"CLINICAL_STATUS": "Estado clínico",
-					"REQUIRED": "El campo es requerido"
+					"CLINICAL_STATUS": "Estado clínico"
 				},
-
 				"table": {
 					"TITLE": "Antecedentes personales registrados",
 					"columns": {

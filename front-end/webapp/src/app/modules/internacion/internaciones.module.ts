@@ -15,6 +15,7 @@ import { ConceptsSearchDialogComponent } from './dialogs/concepts-search-dialog/
 import { ConceptsSearchComponent } from './components/concepts-search/concepts-search.component';
 import { FormsModule } from '@angular/forms';
 import { DiagnosticosComponent } from './components/diagnosticos/diagnosticos.component';
+import { AlergiasComponent } from './components/alergias/alergias.component';
 
 @NgModule({
 	declarations: [
@@ -27,6 +28,7 @@ import { DiagnosticosComponent } from './components/diagnosticos/diagnosticos.co
 		ConceptsSearchDialogComponent,
 		ConceptsSearchComponent,
 		DiagnosticosComponent,
+		AlergiasComponent,
 	],
 	imports: [
 		AppMaterialModule,

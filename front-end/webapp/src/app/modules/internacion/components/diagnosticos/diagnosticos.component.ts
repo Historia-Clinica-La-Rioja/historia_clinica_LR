@@ -73,7 +73,8 @@ export class DiagnosticosComponent implements OnInit {
 
 	setConcept(selectedConcept: SnomedDto): void {
 		this.snomedConcept = selectedConcept;
-		this.form.controls.snomed.setValue(selectedConcept.fsn);
+		let fsn = selectedConcept ? selectedConcept.fsn : '';
+		this.form.controls.snomed.setValue(fsn);
 	}
 
 	add(diagnosis): void {

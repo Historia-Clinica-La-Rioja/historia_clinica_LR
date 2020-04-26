@@ -12,9 +12,23 @@ export class InternacionMasterDataService {
 	constructor(private http: HttpClient) {
 	}
 
+	getAllergyClinical(): Observable<any[]> {
+		let url = `${environment.apiBase}/internments/masterdata/allergy/clinical`;
+		return this.http.get<any[]>(url);
+	}
+
+	getAllergyVerifications(): Observable<MasterDataInterface<string>[]> {
+		let url = `${environment.apiBase}/internments/masterdata/allergy/verification`;
+		return this.http.get<[]>(url);
+	}
+
+	getAllergyCategories(): Observable<MasterDataInterface<string>[]> {
+		let url = `${environment.apiBase}/internments/masterdata/allergy/category`;
+		return this.http.get<[]>(url);
+	}
+
 	getHealthClinical(): Observable<any[]> {
 		let url = `${environment.apiBase}/internments/masterdata/health/clinical`;
-		console.log('url', url);
 		return this.http.get<any[]>(url);
 	}
 
