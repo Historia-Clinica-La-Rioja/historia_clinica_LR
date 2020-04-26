@@ -29,36 +29,36 @@ export class AlergiasComponent implements OnInit {
 		{
 			def: "problemType",
 			header: 'internaciones.anamnesis.alergias.table.columns.PROBLEM_TYPE',
-			text: ap => ap.snomed.fsn
+			text: a => a.snomed.fsn
 		},
 		{
 			def: "category",
 			header: 'internaciones.anamnesis.alergias.table.columns.CATEGORY',
-			text: ap => this.categories.find(category => category.id === ap.categoryId).description
+			text: a => this.categories.find(category => category.id === a.categoryId).description
 		},
 		{
 			def: "severity",
 			header: 'internaciones.anamnesis.alergias.table.columns.SEVERITY',
-			text: ap => ap.severity
+			text: a => a.severity
 		},
 		{
 			def: "clinicalStatus",
 			header: 'internaciones.anamnesis.alergias.table.columns.STATUS',
-			text: ap => this.clinicalStatus.find(status => status.id === ap.statusId).description
+			text: a => this.clinicalStatus.find(status => status.id === a.statusId).description
 		},
 		{
 			def: 'verification',
 			header: 'internaciones.anamnesis.alergias.table.columns.VERIFICATION',
-			text: ap => this.verifications.find(verification => verification.id === ap.verificationId).description
+			text: a => this.verifications.find(verification => verification.id === a.verificationId).description
 		},
 		{
 			def: 'date',
 			header: 'internaciones.anamnesis.alergias.table.columns.REGISTRY_DATE',
-			text: ap => this.datePipe.transform(ap.date, 'dd/MM/yyyy')
+			text: a => this.datePipe.transform(a.date, 'dd/MM/yyyy')
 		},
 	];
 	displayedColumns: string[] = [];
-	apDataSource = new MatTableDataSource<any>([]);
+	dataSource = new MatTableDataSource<any>([]);
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -79,12 +79,12 @@ export class AlergiasComponent implements OnInit {
 			snomed: [null, Validators.required]
 		});
 
-		this.internacionMasterDataService.getAllergyClinical().subscribe(healthClinical => {
-			this.clinicalStatus = healthClinical;
+		this.internacionMasterDataService.getAllergyClinical().subscribe(clinicalStatus => {
+			this.clinicalStatus = clinicalStatus;
 		});
 
-		this.internacionMasterDataService.getAllergyVerifications().subscribe(healthVerification => {
-			this.verifications = healthVerification;
+		this.internacionMasterDataService.getAllergyVerifications().subscribe(verifications => {
+			this.verifications = verifications;
 		});
 
 		this.internacionMasterDataService.getAllergyCategories().subscribe(categories => {
@@ -115,10 +115,10 @@ export class AlergiasComponent implements OnInit {
 
 	addToList() {
 		if (this.form.valid && this.snomedConcept) {
-			let antecedetePersonal: AllergyConditionDto = this.form.value;
-			antecedetePersonal.date = this.form.controls.date.value.format(DateFormat.API_DATE);
-			antecedetePersonal.snomed = this.snomedConcept;
-			this.add(antecedetePersonal);
+			let alergia: AllergyConditionDto = this.form.value;
+			alergia.date = this.form.controls.date.value.format(DateFormat.API_DATE);
+			alergia.snomed = this.snomedConcept;
+			this.add(alergia);
 		}
 	}
 
@@ -128,12 +128,12 @@ export class AlergiasComponent implements OnInit {
 		this.form.controls.snomed.setValue(fsn);
 	}
 
-	add(ap: AllergyConditionDto): void {
-		this.apDataSource.data = pushTo<AllergyConditionDto>(this.apDataSource.data, ap);
+	add(a: AllergyConditionDto): void {
+		this.dataSource.data = pushTo<AllergyConditionDto>(this.dataSource.data, a);
 	}
 
 	remove(index: number): void {
-		this.apDataSource.data = removeFrom<AllergyConditionDto>(this.apDataSource.data, index);
+		this.dataSource.data = removeFrom<AllergyConditionDto>(this.dataSource.data, index);
 	}
 
 }

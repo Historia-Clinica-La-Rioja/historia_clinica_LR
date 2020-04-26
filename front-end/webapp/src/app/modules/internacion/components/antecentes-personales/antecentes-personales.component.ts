@@ -47,7 +47,7 @@ export class AntecentesPersonalesComponent implements OnInit {
 		},
 	];
 	displayedColumns: string[] = [];
-	apDataSource = new MatTableDataSource<any>([]);
+	dataSource = new MatTableDataSource<any>([]);
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -112,11 +112,11 @@ export class AntecentesPersonalesComponent implements OnInit {
 	}
 
 	add(ap: HealthHistoryConditionDto): void {
-		this.apDataSource.data = pushTo<HealthHistoryConditionDto>(this.apDataSource.data, ap);
+		this.dataSource.data = pushTo<HealthHistoryConditionDto>(this.dataSource.data, ap);
 	}
 
 	remove(index: number): void {
-		this.apDataSource.data = removeFrom<HealthHistoryConditionDto>(this.apDataSource.data, index);
+		this.dataSource.data = removeFrom<HealthHistoryConditionDto>(this.dataSource.data, index);
 	}
 
 }

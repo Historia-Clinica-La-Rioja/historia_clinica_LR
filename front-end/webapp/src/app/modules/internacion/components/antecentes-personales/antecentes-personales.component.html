@@ -67,7 +67,7 @@
 
 <section>
 	<h3 class="mat-h2" [translate]="'internaciones.anamnesis.antecedentes-personales.table.TITLE'"></h3>
-	<table mat-table [dataSource]="apDataSource" class="secondary">
+	<table mat-table [dataSource]="dataSource" class="secondary">
 
 		<ng-container *ngFor="let column of columns" [matColumnDef]="column.def">
 			<th *matHeaderCellDef>{{ column.header | translate }}</th>
@@ -86,7 +86,7 @@
 		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
 		<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 	</table>
-	<div class="mat-h3 table-no-data" *ngIf="apDataSource.data.length === 0">
+	<div class="mat-h3 table-no-data" *ngIf="dataSource.data.length === 0">
 		<span [translate]="'messages.NO_DATA'"></span>
 	</div>
 </section>

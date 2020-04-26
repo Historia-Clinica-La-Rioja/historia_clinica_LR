@@ -124,6 +124,24 @@
 					}
 				}
 			},
+			"vacunas": {
+				"TITLE": "Vacunas",
+				"ADD": "Agregar vacuna",
+				"PROBLEM_TYPE": "Tipo de vacuna",
+				"form": {
+					"CLINICAL_STATUS": "Estado clínico",
+					"NOTE": "Notas",
+					"REGISTRY_DATE": "Fecha registro"
+				},
+				"table": {
+					"TITLE": "Vacunas registradas",
+					"columns": {
+						"STATUS": "Estado",
+						"PROBLEM_TYPE": "Tipo de problema",
+						"REGISTRY_DATE": "Fecha registro"
+					}
+				}
+			},
 			"observations": {
 				"TITLE": "Observaciones",
 				"CURRENT_DISEASE": "Enfermedad actual",

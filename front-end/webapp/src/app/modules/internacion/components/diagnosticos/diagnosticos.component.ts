@@ -37,7 +37,7 @@ export class DiagnosticosComponent implements OnInit {
 		},
 	];
 	displayedColumns: string[] = [];
-	apDataSource = new MatTableDataSource<any>([]);
+	dataSource = new MatTableDataSource<any>([]);
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -65,9 +65,9 @@ export class DiagnosticosComponent implements OnInit {
 
 	addToList() {
 		if (this.form.valid && this.snomedConcept) {
-			let newDiagnosis: HealthHistoryConditionDto = this.form.value;
-			newDiagnosis.snomed = this.snomedConcept;
-			this.add(newDiagnosis);
+			let diagnostico: HealthHistoryConditionDto = this.form.value;
+			diagnostico.snomed = this.snomedConcept;
+			this.add(diagnostico);
 		}
 	}
 
@@ -77,12 +77,12 @@ export class DiagnosticosComponent implements OnInit {
 		this.form.controls.snomed.setValue(fsn);
 	}
 
-	add(diagnosis): void {
-		this.apDataSource.data = pushTo(this.apDataSource.data, diagnosis);
+	add(diagnostico: HealthHistoryConditionDto): void {
+		this.dataSource.data = pushTo<HealthHistoryConditionDto>(this.dataSource.data, diagnostico);
 	}
 
 	remove(index: number): void {
-		this.apDataSource.data = removeFrom(this.apDataSource.data, index);
+		this.dataSource.data = removeFrom<HealthHistoryConditionDto>(this.dataSource.data, index);
 	}
 
 }
