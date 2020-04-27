@@ -11,8 +11,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import net.pladema.permissions.repository.RoleRepository;
+import net.pladema.permissions.repository.UserRoleRepository;
+import net.pladema.permissions.service.impl.RoleServiceImpl;
 import net.pladema.security.service.impl.SecurityServiceImpl;
 
 @RunWith(SpringRunner.class)
@@ -22,9 +26,18 @@ public class SecurityServiceImplTest {
 
 	private SecurityServiceImpl securityServiceImpl;
 
+	@MockBean
+	private UserRoleRepository userLicenseRepository;
+
+	@MockBean
+	private RoleRepository licenseRepository;
+	
 	@Before
 	public void setUp() {
-		securityServiceImpl = new SecurityServiceImpl();
+		securityServiceImpl = new SecurityServiceImpl(
+				new RoleServiceImpl(
+						userLicenseRepository,
+						licenseRepository));
 	}
 
 	@Test

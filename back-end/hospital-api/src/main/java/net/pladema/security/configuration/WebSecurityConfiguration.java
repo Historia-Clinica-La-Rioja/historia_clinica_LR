@@ -17,7 +17,6 @@ import net.pladema.security.filters.AuthenticationTokenFilter;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	private static final String PERSON = "/person";

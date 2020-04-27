@@ -6,6 +6,8 @@ import net.pladema.permissions.repository.entity.Role;
 import net.pladema.permissions.repository.entity.UserRole;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.permissions.service.RoleService;
+import net.pladema.permissions.service.dto.RoleAssignment;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
@@ -54,10 +56,14 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
+	public List<RoleAssignment> getUserRoleAssignments(Integer userId) {
+		return userRoleRepository.getRoleAssignments(userId);
+	}
+
+	@Override
 	public void updateAdminRole(Integer userId, ERole admin) {
 		Role role = roleRepository.findByDescription(admin.getValue())
 				.orElseThrow(() -> new EntityNotFoundException(INVALID_ROLE));
 		userRoleRepository.updateRole(userId, role.getId());
 	}
-
 }

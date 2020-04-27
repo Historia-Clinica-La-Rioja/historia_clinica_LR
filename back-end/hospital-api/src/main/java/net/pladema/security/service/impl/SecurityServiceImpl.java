@@ -12,11 +12,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import net.pladema.permissions.service.RoleService;
+import net.pladema.permissions.service.dto.RoleAssignment;
+import net.pladema.security.authorization.InstitutionGrantedAuthority;
 import net.pladema.security.service.SecurityService;
 import net.pladema.security.service.enums.ETokenType;
 
@@ -30,7 +32,13 @@ public class SecurityServiceImpl implements SecurityService {
 	private static final String JWT_INVALID = "jwt.invalid";
 	
 	@Value("${token.secret}")
-	private String secret;	
+	private String secret;
+
+	private RoleService roleService;
+	
+	public SecurityServiceImpl(RoleService roleService) {
+		this.roleService = roleService;
+	}
 
 	@Override
 	public Optional<UsernamePasswordAuthenticationToken> getAppAuthentication(String authToken) {
@@ -45,11 +53,12 @@ public class SecurityServiceImpl implements SecurityService {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected Collection<GrantedAuthority> getAuthorities(Claims claims) {
-		Optional<Object> opAuthorities = Optional.ofNullable(claims.get("roles"));
-		List<String> authorities = (List<String>) opAuthorities
-				.orElseThrow(() -> new BadCredentialsException(JWT_INVALID));
-		return authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+	protected Collection<GrantedAuthority> getAuthorities(Claims claims) {				
+		//Los permisos del usuario se obtienen de user_role
+		return	roleService.getUserRoleAssignments(getUserId(claims))
+				.stream()
+				.map(InstitutionGrantedAuthority::new)
+				.collect(Collectors.toList());
 	}
 
 	@Override
