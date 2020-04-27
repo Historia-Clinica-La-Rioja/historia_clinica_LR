@@ -8,7 +8,7 @@ import { PersonMasterDataService } from '@api-rest/services/person-master-data.s
 
 const ROUTE_SEARCH = 'pacientes/search';
 const ROUTE_NEW = 'pacientes/temporary';
-const ROUTE_PROFILE = 'pacientes/profile';
+const ROUTE_PROFILE = 'pacientes/profile/';
 
 @Component({
 	selector: 'app-search-create',
@@ -76,8 +76,8 @@ export class SearchCreateComponent implements OnInit {
 								}
 							});
 					} else {
-						let idPatient = data[0].id;
-						this.router.navigate([ROUTE_PROFILE, {id: idPatient}]);
+						let id = data[0];
+						this.router.navigate([ROUTE_PROFILE + `${id}`]);
 					}
 				}
 			);

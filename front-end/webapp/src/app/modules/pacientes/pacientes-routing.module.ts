@@ -6,6 +6,7 @@ import { CoreModule } from '@core/core.module';
 import { SearchComponent } from './routes/search/search.component';
 import { NewPatientComponent } from './routes/new-patient/new-patient.component';
 import { NewTemporaryPatientComponent } from './routes/new-temporary-patient/new-temporary-patient.component';
+import { ProfileComponent } from "./routes/profile/profile.component";
 
 const routes: Routes = [
 	{
@@ -15,8 +16,9 @@ const routes: Routes = [
 			{ path: 'search', component: SearchComponent },
 			{ path: 'new', component: NewPatientComponent },
 			{ path: 'temporary', component: NewTemporaryPatientComponent},
+			{ path: 'profile/:id', component: ProfileComponent},
 		]
-	},
+	}
 ];
 
 @NgModule({

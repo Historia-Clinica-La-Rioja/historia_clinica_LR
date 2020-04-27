@@ -9,22 +9,26 @@ import { SearchCreateComponent } from './component/search-create/search-create.c
 import { SearchComponent } from './routes/search/search.component';
 import { NewPatientComponent } from './routes/new-patient/new-patient.component';
 import { NewTemporaryPatientComponent } from './routes/new-temporary-patient/new-temporary-patient.component';
+import { ProfileComponent } from './routes/profile/profile.component';
+import { PresentationModule } from "../presentation/presentation.module";
 
 @NgModule({
 	declarations: [
 		HomeComponent,
-        PacientesTableComponent,
-        SearchCreateComponent,
-        SearchComponent,
 		NewPatientComponent,
 		NewTemporaryPatientComponent,
+		PacientesTableComponent,
+		ProfileComponent,
+		SearchCreateComponent,
+		SearchComponent,
 	],
 	imports: [
 		AppMaterialModule,
 		CoreModule,
 		FormsModule,
-        ReactiveFormsModule,
 		PacientesRoutingModule,
+		PresentationModule,
+        ReactiveFormsModule,
 	]
 })
 export class PacientesModule {

@@ -1,0 +1,9 @@
+
+<app-content width="full">
+	<section>
+		<h2 class="page-title" [translate]="'pacientes.home.TITLE'"></h2>
+		<app-patient-card [patient]="patient$ | async">
+		</app-patient-card>
+	</section>
+</app-content>
+

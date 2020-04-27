@@ -8,7 +8,7 @@
 		</mat-card-title>
 		<mat-card-subtitle>
 			<span [translate]="'presentation.patient-card.GENDER_AGE'"
-				[translateParams]="{ gender: patient?.gender, age: patient?.age }">
+				[translateParams]="{ gender: patient?.gender, age: patient?.age? patient?.age : '' }">
 			</span>
 		</mat-card-subtitle>
 	</mat-card-header>
