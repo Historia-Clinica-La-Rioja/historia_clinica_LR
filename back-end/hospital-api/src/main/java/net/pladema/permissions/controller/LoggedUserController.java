@@ -2,6 +2,7 @@ package net.pladema.permissions.controller;
 
 import net.pladema.permissions.controller.dto.PermissionsDto;
 import net.pladema.permissions.service.LoggedUserService;
+import net.pladema.security.authentication.controller.AuthenticationController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -10,21 +11,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/permissions")
-public class UserPermissionController {
-
-	private static final Logger LOG = LoggerFactory.getLogger(UserPermissionController.class);
-
+@RequestMapping("/account")
+public class LoggedUserController {
+	private final Logger logger;
 	private final LoggedUserService loggedUserService;
 
-	public UserPermissionController(LoggedUserService loggedUserService) {
+	public LoggedUserController(
+			LoggedUserService loggedUserService
+	) {
+		this.logger = LoggerFactory.getLogger(this.getClass());
 		this.loggedUserService = loggedUserService;
 	}
-
-	@GetMapping
+	@GetMapping(value = "/permissions")
 	public ResponseEntity<PermissionsDto> getPermissions() {
 		PermissionsDto result = new PermissionsDto(loggedUserService.getPermissionAssignment());
-		LOG.debug("Output -> {}", result);
+		logger.debug("Output -> {}", result);
 		return ResponseEntity.ok(result);
 	}
 }

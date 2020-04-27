@@ -27,7 +27,7 @@ class SgxApiRest {
             return Promise.reject();
         }
         if (!this._permission$) {
-            this._permission$ = this.fetch('/permissions')
+            this._permission$ = this.fetch('/account/permissions')
                 .then(({json}) => {
                     return new SGXPermissions(json);
                 });
