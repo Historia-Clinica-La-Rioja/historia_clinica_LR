@@ -11,6 +11,8 @@ import { TableModel } from 'src/app/modules/presentation/components/table/table.
 import { momentFormatDate, DateFormat } from '@core/utils/moment.utils';
 import { PersonService } from '@api-rest/services/person.service';
 import { finalize } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
+import { ViewPatientDetailComponent } from '../../component/view-patient-detail/view-patient-detail.component';
 
 const ROUTE_NEW = 'pacientes/new';
 const ROUTE_HOME = 'pacientes';
@@ -26,6 +28,7 @@ export class SearchComponent implements OnInit {
 	public formSearchSubmitted: boolean = false;
 	public formSearch: FormGroup;
 	public identifyTypeArray: IdentificationTypeDto[];
+	public identifyTypeViewPatientDetail = {};
 	public genderOptions: GenderDto[];
 	public genderOptionsViewTable = {};
 	public viewSearch: boolean = true;
@@ -41,7 +44,8 @@ export class SearchComponent implements OnInit {
 		private personService: PersonService,
 		private router: Router,
 		private route: ActivatedRoute,
-		private personMasterDataService: PersonMasterDataService
+		private personMasterDataService: PersonMasterDataService,
+		public dialog: MatDialog
 	) {
 	}
 
@@ -78,7 +82,12 @@ export class SearchComponent implements OnInit {
 			});
 
 			this.personMasterDataService.getIdentificationTypes().subscribe(
-				identificationTypes => { this.identifyTypeArray = identificationTypes; });
+				identificationTypes => {
+					this.identifyTypeArray = identificationTypes;
+					identificationTypes.forEach(identificationType => {
+						this.identifyTypeViewPatientDetail[identificationType.id] = identificationType.description
+					});
+				});
 
 			this.personMasterDataService.getGenders().subscribe(
 				genders => {
@@ -137,9 +146,8 @@ export class SearchComponent implements OnInit {
 					columnDef: 'action',
 					action: {
 						text: 'Ver',
-						do: (internacion) => {
-							let url = `pacientes`;
-							this.router.navigate([url]);
+						do: (patient) => {
+							this.openDialog(patient);
 						}
 					}
 				},
@@ -149,6 +157,20 @@ export class SearchComponent implements OnInit {
 		};
 	}
 
+	openDialog(patient: PatientSearchDto): void {
+		const dialogRef = this.dialog.open(ViewPatientDetailComponent, {
+		  width: '450px',
+		  data: { id:patient.idPatient,
+				  firstName: patient.person.firstName,
+				  lastName: patient.person.lastName,
+				  age: this.CalculateAge(new Date(patient.person.birthDate)),
+				  gender: this.genderOptionsViewTable[patient.person.genderId],
+				  birthDate: momentFormatDate(new Date(patient.person.birthDate),DateFormat.VIEW_DATE),
+				  identificationNumber: patient.person.identificationNumber,
+				  identificationTypeId: this.identifyTypeViewPatientDetail[patient.person.identificationTypeId]
+				}
+		});
+	}
 
 	private buildFormSearch() {
 		this.formSearch = this.formBuilder.group({
@@ -161,6 +183,17 @@ export class SearchComponent implements OnInit {
 			gender: [Number(this.genderId), Validators.required],
 			birthDate: [null, Validators.required]
 		});
+	}
+
+	private CalculateAge(birthDate): number {
+		const today: Date = new Date();
+		const birth: Date = new Date(birthDate);
+		let age: number = today.getFullYear() - birth.getFullYear();
+		const month: number = today.getMonth() - birth.getMonth();
+		if (month < 0 || (month === 0 && today.getDate() < birth.getDate())) {
+			age--;
+		}
+		return age;
 	}
 
 	back() {

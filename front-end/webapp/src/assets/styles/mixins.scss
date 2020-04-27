@@ -21,3 +21,10 @@
 @mixin form-field {
 	margin-left: 10px;
 }
+
+@mixin form-buttons {
+	margin: 20px 0;
+	button {
+	margin-right: 10px;
+	}
+}

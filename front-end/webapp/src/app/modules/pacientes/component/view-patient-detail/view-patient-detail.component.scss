@@ -1,0 +1,15 @@
+@import "../../../../../assets/styles/mixins.scss";
+
+.mat-icon {
+	font-size: 60px;
+	margin-left: 165px;
+}
+
+h2.page-title {
+	font : 500 20px/32px Roboto, "Helvetica Neue", sans-serif;
+}
+
+.action {
+	@include form-buttons;
+	margin-top: 25px;
+}

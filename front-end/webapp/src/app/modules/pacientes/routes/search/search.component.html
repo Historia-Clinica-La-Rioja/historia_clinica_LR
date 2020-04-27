@@ -113,7 +113,8 @@
 	</section>
 	<div class="container" *ngIf="!viewSearchComponent() && !showSpinner()">
 		<section>
-			<h3 class="mat-body-2" [translate]="'Pacientes Coincidentes'"></h3>
+			<h2 class="mat-body-2" [translate]="'Búsqueda de pacientes'"></h2>
+			<h3 class="mat-body-2" [translate]="'Se encontraron posibles coincidencias.'"></h3>
 			<app-table [model]="matchingPatient" [tableClass]="'primary mat-elevation-z8'"></app-table>
 		</section>
 	</div>

@@ -13,4 +13,9 @@
 	.mat-form-field + .mat-form-field {
 		@include form-field;
 	}
+
+	.mat-action-row {
+		@include form-buttons;
+		margin-top: 25px;
+	}
 }

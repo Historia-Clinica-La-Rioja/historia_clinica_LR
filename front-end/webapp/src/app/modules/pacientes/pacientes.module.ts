@@ -11,6 +11,7 @@ import { NewPatientComponent } from './routes/new-patient/new-patient.component'
 import { NewTemporaryPatientComponent } from './routes/new-temporary-patient/new-temporary-patient.component';
 import { ProfileComponent } from './routes/profile/profile.component';
 import { PresentationModule } from "../presentation/presentation.module";
+import { ViewPatientDetailComponent } from './component/view-patient-detail/view-patient-detail.component';
 
 @NgModule({
 	declarations: [
@@ -21,6 +22,7 @@ import { PresentationModule } from "../presentation/presentation.module";
 		ProfileComponent,
 		SearchCreateComponent,
 		SearchComponent,
+		ViewPatientDetailComponent,
 	],
 	imports: [
 		AppMaterialModule,
