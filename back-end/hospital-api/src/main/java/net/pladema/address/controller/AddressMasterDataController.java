@@ -51,7 +51,7 @@ public class AddressMasterDataController {
 		return ResponseEntity.ok().body(addressMasterDataService.findAllCountry(AddressProjection.class));
 	}
 
-	@GetMapping(value = "/department/{department_id}/cities")
+	@GetMapping(value = "/department/{departmentId}/cities")
 	public ResponseEntity<Collection<AddressProjection>> getCitiesByDepartment(@PathVariable("departmentId") Short departmentId) {
 		LOG.debug("{}", "All cities by department");
 		return ResponseEntity.ok().body(addressMasterDataService.findCitiesByDepartment(departmentId, AddressProjection.class));

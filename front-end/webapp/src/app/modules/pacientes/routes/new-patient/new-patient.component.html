@@ -6,7 +6,7 @@
 			<div class="form-row">
 				<div>
 					<div>
-						<span [translate]="'pacientes.form.IDENTIFICATION_TYPE'"></span>
+						<span [translate]="'pacientes.form.IDENTIFICATION_TYPE'"></span>*
 					</div>
 					<mat-form-field appearance="outline">
 						<mat-select id="identificationTypeId"
@@ -24,7 +24,7 @@
 
 				<div>
 					<div>
-						<span [translate]="'pacientes.form.IDENTIFICATION_NUMBER'"></span>
+						<span [translate]="'pacientes.form.IDENTIFICATION_NUMBER'"></span>*
 					</div>
 					<mat-form-field appearance="outline">
 						<input id="identificationNumber"
@@ -42,7 +42,7 @@
 
 			<div>
 				<div>
-					<span [translate]="'pacientes.form.GENDER'"></span>
+					<span [translate]="'pacientes.form.GENDER'"></span>*
 				</div>
 				<mat-radio-group formControlName="genderId">
 					<mat-radio-button *ngFor="let gender of genders"
@@ -54,7 +54,7 @@
 			<br>
 
 			<div>
-				<span [translate]="'pacientes.form.FIRST_NAMES_TITLE'"></span>
+				<span [translate]="'pacientes.form.FIRST_NAMES_TITLE'"></span>*
 			</div>
 			<div class="form-row">
 				<div>
@@ -82,7 +82,7 @@
 			<div class="form-row">
 				<div>
 					<div>
-						<span [translate]="'pacientes.form.LAST_NAME_TITLE'"></span>
+						<span [translate]="'pacientes.form.LAST_NAME_TITLE'"></span>*
 					</div>
 					<mat-form-field appearance="outline">
 						<input id="lastName"
@@ -105,7 +105,7 @@
 			</div>
 
 			<div>
-				<span [translate]="'pacientes.form.BIRTH_DATE'"></span>
+				<span [translate]="'pacientes.form.BIRTH_DATE'"></span>*
 			</div>
 			<div>
 				<mat-form-field appearance="outline">
@@ -337,7 +337,7 @@
 				</mat-form-field>
 			</div>
 			<div class="form-buttons">
-				<button mat-stroked-button (click)="goBack()">
+				<button mat-stroked-button type="button" (click)="goBack()">
 					<span [translate]="'buttons.BACK'"></span>
 				</button>
 				<button mat-raised-button color="primary" type="submit">

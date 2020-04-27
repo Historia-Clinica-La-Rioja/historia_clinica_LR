@@ -8,6 +8,7 @@ import { PatientService } from '@api-rest/services/patient.service';
 import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID } from "@core/utils/form.utils";
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
+import { DateFormat } from '@core/utils/moment.utils';
 
 const VALID_PATIENT = 2;
 
@@ -23,7 +24,6 @@ export class NewPatientComponent implements OnInit {
 	public formSubmitted: boolean = false;
 	public today: Moment = moment();
 	public hasError = hasError;
-	// CAMBIAR LOS TIPOS POR LOS DTOS CORRESPONDIENTES
 	public genders: GenderDto[];
 	public countries: any[];
 	public provinces: any[];
@@ -78,16 +78,16 @@ export class NewPatientComponent implements OnInit {
 					addressCountryId: [],
 					addressDepartmentId: { value: null, disabled: true },
 				});
+			});
 
-				this.personMasterDataService.getGenders()
-					.subscribe(genders => {
-						this.genders = genders;
-					});
+		this.personMasterDataService.getGenders()
+			.subscribe(genders => {
+				this.genders = genders;
+			});
 
-				this.personMasterDataService.getIdentificationTypes()
-					.subscribe(identificationTypes => {
-						this.identificationTypeList = identificationTypes;
-					});
+		this.personMasterDataService.getIdentificationTypes()
+			.subscribe(identificationTypes => {
+				this.identificationTypeList = identificationTypes;
 			});
 
 		this.addressMasterDataService.getAllCountries()
@@ -148,21 +148,17 @@ export class NewPatientComponent implements OnInit {
 
 	}
 
-	changeStatus(nextControl: string): void {
-		this.form.controls[nextControl].enable();
-	}
-
 	setProvinces() {
-		let idCountry: number = this.form.controls.addressCountryId.value;
-		this.addressMasterDataService.getByCountry(idCountry)
+		let countryId: number = this.form.controls.addressCountryId.value;
+		this.addressMasterDataService.getByCountry(countryId)
 			.subscribe(provinces => {
 				this.provinces = provinces
 			});
 	}
 
 	setDepartments() {
-		let idProvince: number = this.form.controls.addressProvinceId.value;
-		this.addressMasterDataService.getDepartmentsByProvince(idProvince)
+		let provinceId: number = this.form.controls.addressProvinceId.value;
+		this.addressMasterDataService.getDepartmentsByProvince(provinceId)
 			.subscribe(departments => {
 				this.departments = departments
 			});
@@ -170,8 +166,8 @@ export class NewPatientComponent implements OnInit {
 	}
 
 	setCities() {
-		let idDepartment: number = this.form.controls.addressDepartmentId.value;
-		this.addressMasterDataService.getCitiesByDepartment(idDepartment)
+		let departmentId: number = this.form.controls.addressDepartmentId.value;
+		this.addressMasterDataService.getCitiesByDepartment(departmentId)
 			.subscribe(cities => {
 				this.cities = cities;
 			});
@@ -180,6 +176,18 @@ export class NewPatientComponent implements OnInit {
 
 	goBack(): void {
 		this.formSubmitted = false;
-		this.router.navigate(['/pacientes']);
+		this.router.navigate(['pacientes/search'],
+		{
+			queryParams: {
+				identificationTypeId: this.form.controls.identificationTypeId.value,
+				identificationNumber: this.form.controls.identificationNumber.value,
+				genderId: this.form.controls.genderId.value,
+				firstName: this.form.controls.firstName.value,
+				lastName: this.form.controls.lastName.value,
+				middleNames: this.form.controls.middleNames.value,
+				birthDate: this.form.controls.birthDate.value.format(DateFormat.API_DATE),
+				otherLastNames: this.form.controls.otherLastNames.value,
+			}
+		});
 	}
 }

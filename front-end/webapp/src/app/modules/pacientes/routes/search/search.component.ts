@@ -63,7 +63,17 @@ export class SearchComponent implements OnInit {
 						this.goToNextState(personToAdd);
 					}
 				});
-
+			let startDate = params['birthDate'] ? moment(params['birthDate']) : null ;
+			this.formSearch = this.formBuilder.group({
+				identificationNumber: [this.identificationNumber, [Validators.required,Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
+				identificationType: [Number(this.identificationTypeId), Validators.required],
+				firstName: [params['firstName'], Validators.required],
+				middleNames: [params['middleNames']],
+				lastName: [params['lastName'], Validators.required],
+				otherLastNames: params['otherLastNames'],
+				gender: [Number(this.genderId), Validators.required],
+				birthDate: [startDate, Validators.required]
+			});
 
 			this.personMasterDataService.getIdentificationTypes().subscribe(
 				identificationTypes => { this.identifyTypeArray = identificationTypes; });
@@ -188,7 +198,7 @@ export class SearchComponent implements OnInit {
 	private goToAddPatient(personToSearch: any) {
 		this.router.navigate([ROUTE_NEW], {
 			queryParams: {
-				identificationTypeId: personToSearch.identificationType,
+				identificationTypeId: personToSearch.identificationTypeId,
 				identificationNumber: personToSearch.identificationNumber,
 				genderId: personToSearch.genderId,
 				firstName: personToSearch.firstName,
