@@ -30,15 +30,15 @@ public class AuditableEntity implements Auditable, Serializable{
 	}
 
 	public LocalDateTime getCreatedOn() {
-		if (getAudit().isPresent())
-			return getAudit().get().getCreatedOn();
-		return null;
+		return getAudit()
+				.map(Audit::getCreatedOn)
+				.orElse(null);
 	}
 
 
 	public LocalDateTime getUpdatedOn() {
-		if (getAudit().isPresent())
-			return getAudit().get().getUpdatedOn();
-		return null;
+		return getAudit()
+				.map(Audit::getUpdatedOn)
+				.orElse(null);
 	}
 }

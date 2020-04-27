@@ -1,11 +1,11 @@
 package net.pladema.security.authentication.controller.dto;
 
-import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
-import net.pladema.security.authentication.constraints.EnabledUser;
+import java.io.Serializable;
 
 public class LoginDto implements Serializable {
 
@@ -16,36 +16,18 @@ public class LoginDto implements Serializable {
 
 	@NotNull(message = "{username.mandatory}")
 	@NotBlank(message = "{username.mandatory}")
-	@EnabledUser
-	private String username;
+	public final String username;
 
 	@NotNull(message = "{password.mandatory}")
 	@NotBlank(message = "{password.mandatory}")
-	private String password;
+	public final String password;
 
-	public LoginDto() {
-		super();
-	}
-
-	public LoginDto(String username, String password) {
-		super();
+	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+	public LoginDto(
+			@JsonProperty("username") String username,
+			@JsonProperty("password") String password
+	) {
 		this.username = username;
-		this.password = password;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public void setPassword(String password) {
 		this.password = password;
 	}
 

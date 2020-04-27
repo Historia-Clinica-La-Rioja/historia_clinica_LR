@@ -5,5 +5,6 @@ import net.pladema.security.token.service.domain.Login;
 
 public interface AuthenticationService {
 
-	public JWToken login(Login login);
+	JWToken login(Login login);
+
 }
