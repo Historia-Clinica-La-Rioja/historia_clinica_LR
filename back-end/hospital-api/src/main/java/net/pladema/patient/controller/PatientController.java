@@ -6,7 +6,6 @@ import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.address.controller.service.AddressExternalService;
 import net.pladema.patient.controller.dto.*;
 import net.pladema.patient.controller.mapper.PatientMapper;
-import net.pladema.patient.controller.mocks.MocksPatient;
 import net.pladema.patient.repository.domain.BasicListedPatient;
 import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.service.PatientService;
@@ -99,15 +98,11 @@ public class PatientController {
 	@GetMapping("/{patientId}/basicdata")
 	public ResponseEntity<BasicPatientDto> getBasicDataPatient(@PathVariable(name = "patientId") Integer patientId){
 		LOG.debug("Input parameters -> patientId {}", patientId);
-		BasicPatientDto result;
-		try {
-			Patient patient = patientService.getPatient(patientId)
-					.orElseThrow(() -> new EntityNotFoundException("patient.invalid"));
-			BasicDataPersonDto personData = personExternalService.getBasicDataPerson(patient.getPersonId());
-			result = new BasicPatientDto(patient.getId(), personData);
-		} catch (Exception e) {
-			result = MocksPatient.mockBasicPatientDto(patientId);
-		}
+
+		Patient patient = patientService.getPatient(patientId)
+				.orElseThrow(() -> new EntityNotFoundException("patient.invalid"));
+		BasicDataPersonDto personData = personExternalService.getBasicDataPerson(patient.getPersonId());
+		BasicPatientDto	result = new BasicPatientDto(patient.getId(), personData);
 		LOG.debug(OUTPUT, result);
 		return  ResponseEntity.ok().body(result);
 	}
@@ -116,8 +111,6 @@ public class PatientController {
 	public ResponseEntity<List<BMPatientDto>> getAllPatientsData(){
 		List<BasicListedPatient> patients = patientService.getPatients();
 		List<BMPatientDto> result = patientMapper.fromBasicListedPatientList(patients);
-		if (result.isEmpty())
-			result.addAll(MocksPatient.mockBasicListedPatientsList());
 		LOG.debug(OUTPUT, result);
 		return  ResponseEntity.ok().body(result);
 	}
