@@ -8,7 +8,6 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.Period;
 
 @Entity
 @Table(name = "person")
@@ -51,11 +50,5 @@ public class Person implements Serializable {
 
     @Column(name = "birth_date")
     private LocalDate birthDate;
-
-    private Short getAge(){
-        LocalDate today = LocalDate.now();
-        Period p = Period.between(birthDate, today);
-        return (short) p.getYears();
-    }
 
 }

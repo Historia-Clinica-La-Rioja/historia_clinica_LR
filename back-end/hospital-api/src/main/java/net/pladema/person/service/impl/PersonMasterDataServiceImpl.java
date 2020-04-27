@@ -15,7 +15,7 @@ import java.util.Optional;
 @Service
 public class PersonMasterDataServiceImpl implements PersonMasterDataService {
 
-    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOG = LoggerFactory.getLogger(PersonMasterDataServiceImpl.class);
 
     private final GenderRepository genderRepository;
 

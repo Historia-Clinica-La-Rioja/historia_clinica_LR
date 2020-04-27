@@ -6,7 +6,6 @@ import org.springframework.data.domain.Pageable;
 import net.pladema.user.repository.entity.User;
 import net.pladema.user.repository.projections.PageableUsers;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface UserService {

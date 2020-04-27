@@ -1,6 +1,5 @@
 package net.pladema.user.repository.entity;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 

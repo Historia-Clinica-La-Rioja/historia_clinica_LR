@@ -60,7 +60,7 @@ public class PersonController {
         PersonExtended personExtendedtoAdd = personMapper.updatePersonExtended(personDto, addressToAdd.getId());
         personExtendedtoAdd.setId(createdPerson.getId());
         LOG.debug("Going to add person extended -> {}", personExtendedtoAdd);
-        PersonExtended createdPersonExtended = personService.addPersonExtended(personExtendedtoAdd);
+        personService.addPersonExtended(personExtendedtoAdd);
 
         return ResponseEntity.created(new URI("")).body(personMapper.fromPerson(createdPerson));
     }
@@ -70,7 +70,8 @@ public class PersonController {
             @RequestParam(value = "identificationTypeId", required = true) Short identificationTypeId,
             @RequestParam(value = "identificationNumber", required = true) String identificationNumber,
             @RequestParam(value = "genderId", required = true) Short genderId){
-        LOG.debug("Input data -> {}", identificationTypeId, identificationNumber, genderId);
+        LOG.debug("Input data -> identificationTypeId {}, identificationNumber {}, genderId {}", identificationTypeId,
+                identificationNumber, genderId);
         List<Integer> result = personService.getPersonByDniAndGender(identificationTypeId,identificationNumber, genderId);
         LOG.debug("Ids resultantes -> {}", result);
         return  ResponseEntity.ok().body(result);

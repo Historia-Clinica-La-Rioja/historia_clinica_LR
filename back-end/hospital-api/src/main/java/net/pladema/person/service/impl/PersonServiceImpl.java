@@ -57,7 +57,8 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public List<Integer> getPersonByDniAndGender(Short identificationTypeId, String identificationNumber, Short genderId) {
-        LOG.debug("Input data -> {}", identificationTypeId, identificationNumber, genderId);
+        LOG.debug("Input data -> identificationTypeId {}, identificationNumber {}, genderId {}", identificationTypeId,
+                identificationNumber, genderId);
         List<Integer> result = personRepository.findByDniAndGender(identificationTypeId, identificationNumber, genderId);
         LOG.debug("Ids resultantes -> {}", result);
         return result;

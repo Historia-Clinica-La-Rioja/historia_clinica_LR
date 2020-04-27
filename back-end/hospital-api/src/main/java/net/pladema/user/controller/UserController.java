@@ -33,22 +33,9 @@ public class UserController {
 
 	private final UserService userService;
 
-	private final UserPasswordService userPasswordService;
-
-	private final RoleService roleService;
-
-	private final UserMapper userMapper;
-
-	private final ApplicationEventPublisher eventPublisher;
-
-	public UserController(UserService userService, UserPasswordService userPasswordService,
-			RoleService roleService, UserMapper userMapper, ApplicationEventPublisher eventPublisher) {
+	public UserController(UserService userService) {
 		super();
 		this.userService = userService;
-		this.userPasswordService = userPasswordService;
-		this.roleService = roleService;
-		this.userMapper = userMapper;
-		this.eventPublisher = eventPublisher;
 	}
 
 	@PreAuthorize("hasAnyAuthority('ADMIN', 'ADMIN_APP')")
