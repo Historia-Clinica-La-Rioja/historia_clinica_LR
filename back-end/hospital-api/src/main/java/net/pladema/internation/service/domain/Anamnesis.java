@@ -6,6 +6,7 @@ import lombok.ToString;
 import net.pladema.internation.service.domain.ips.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -31,8 +32,8 @@ public class Anamnesis implements Serializable {
 
     private List<AllergyConditionBo> allergies;
 
-    private AnthropometricDataBo anthropometricData;
+    private List<AnthropometricDataBo> anthropometricData = new ArrayList<>();
 
-    private VitalSignBo vitalSigns;
+    private List<VitalSignBo> vitalSigns = new ArrayList<>();
 
 }

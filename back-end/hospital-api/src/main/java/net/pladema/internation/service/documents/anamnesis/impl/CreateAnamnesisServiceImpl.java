@@ -65,8 +65,8 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
         inmunizationService.loadInmunization(patientId, anamnesisDocument.getId(), anamnesis.getInmunizations());
         medicationService.loadMedications(patientId, anamnesisDocument.getId(), anamnesis.getMedications());
 
-        anamnesis.setVitalSigns(createVitalSignLabService.loadVitalSigns(patientId, anamnesisDocument.getId(), Optional.ofNullable(anamnesis.getVitalSigns())));
-        anamnesis.setAnthropometricData(createVitalSignLabService.loadAnthropometricData(patientId, anamnesisDocument.getId(), Optional.ofNullable(anamnesis.getAnthropometricData())));
+        anamnesis.setVitalSigns(createVitalSignLabService.loadVitalSigns(patientId, anamnesisDocument.getId(), anamnesis.getVitalSigns()));
+        anamnesis.setAnthropometricData(createVitalSignLabService.loadAnthropometricData(patientId, anamnesisDocument.getId(), anamnesis.getAnthropometricData()));
         anamnesis.setId(anamnesisDocument.getId());
         LOG.debug(OUTPUT, anamnesis);
         return anamnesis;

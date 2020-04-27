@@ -57,7 +57,7 @@ export interface AllergyConditionDto extends HealthConditionDto {
 
 export interface AnamnesisDto extends Serializable {
     allergies: AllergyConditionDto[];
-    anthropometricData: AnthropometricDataDto;
+    anthropometricData: AnthropometricDataDto[];
     diagnosis: HealthConditionDto[];
     documentStatusId: string;
     familyHistories: HealthHistoryConditionDto[];
@@ -65,7 +65,7 @@ export interface AnamnesisDto extends Serializable {
     medications: MedicationDto[];
     notes: DocumentObservationsDto;
     personalHistories: HealthHistoryConditionDto[];
-    vitalSigns: VitalSignDto;
+    vitalSigns: VitalSignDto[];
 }
 
 export interface AnthropometricDataDto extends Serializable {
@@ -256,7 +256,7 @@ export interface PermissionsDto {
     roleAssignments: RoleAssignment[];
 }
 
-export interface PersonBasicDataResponseDto {
+export interface PersonBasicDataResponseDto extends Serializable {
     birthDate: string;
     firstName: string;
     lastName: string;

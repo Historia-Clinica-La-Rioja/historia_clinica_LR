@@ -3,11 +3,11 @@ package net.pladema.internation.service.documents.anamnesis;
 import net.pladema.internation.service.domain.ips.AnthropometricDataBo;
 import net.pladema.internation.service.domain.ips.VitalSignBo;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface CreateVitalSignLabService {
 
-    VitalSignBo loadVitalSigns(Integer patientId, Long documentId, Optional<VitalSignBo> optVitalSigns);
+    List<VitalSignBo> loadVitalSigns(Integer patientId, Long documentId, List<VitalSignBo> optVitalSigns);
 
-    AnthropometricDataBo loadAnthropometricData(Integer patientId, Long documentId, Optional<AnthropometricDataBo> optAnthropometricData);
+    List<AnthropometricDataBo> loadAnthropometricData(Integer patientId, Long documentId, List<AnthropometricDataBo> optAnthropometricData);
 }

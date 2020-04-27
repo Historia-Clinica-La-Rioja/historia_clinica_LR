@@ -40,8 +40,10 @@ public class AnamnesisDto implements Serializable {
     @NotNull
     private List<AllergyConditionDto> allergies = new ArrayList<>();
 
-    private AnthropometricDataDto anthropometricData;
+    @NotNull
+    private List<AnthropometricDataDto> anthropometricData = new ArrayList<>();
 
-    private VitalSignDto vitalSigns;
+    @NotNull
+    private List<VitalSignDto> vitalSigns = new ArrayList<>();
 
 }
