@@ -98,4 +98,10 @@ public class InternmentMasterdataController {
         LOG.debug("{}", "All internment episode status");
         return ResponseEntity.ok().body(internmentMasterDataService.findAll(InternmentEpisodeStatus.class));
     }
+
+    @GetMapping(value = "/bloodtypes")
+    ResponseEntity<Collection<InternmentMasterDataProjection>> getBloodTypes(){
+        LOG.debug("{}", "All internment episode status");
+        return ResponseEntity.ok().body(internmentMasterDataService.findAll(BloodType.class));
+    }
 }

@@ -1284,3 +1284,41 @@ databaseChangeLog:
         columnDataType: int
         columnName: institution_id
         tableName: inmunization
+
+
+
+- changeSet:
+    id: blood_type table
+    author: etrapani
+    changes: 
+    - createTable: 
+        tableName: blood_type
+        columns: 
+        - column:
+            constraints:
+                primaryKey: true
+                primaryKeyName: PK_blood_type
+            name: id
+            type: smallint
+        - column:
+            constraints:
+                nullable: false
+            name: description
+            type: varchar(3)
+
+- changeSet:
+    id: blood_type-data
+    comment: Carga de datos blood_type
+    author: etrapani
+    context: "!schema-only"
+    changes:
+        - sql:
+            sql: |-
+                INSERT INTO blood_type VALUES (1, 'O-');
+                INSERT INTO blood_type VALUES (2, 'O+');
+                INSERT INTO blood_type VALUES (3, 'A−');
+                INSERT INTO blood_type VALUES (4, 'A+');
+                INSERT INTO blood_type VALUES (5, 'B−');
+                INSERT INTO blood_type VALUES (6, 'B+');
+                INSERT INTO blood_type VALUES (7, 'AB−');
+                INSERT INTO blood_type VALUES (8, 'AB+');
