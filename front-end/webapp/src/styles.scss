@@ -2,12 +2,12 @@
 
 html,
 body {
-  height: 100%;
+	overflow: hidden;
 }
 
 body {
-  margin: 0;
-  padding: 0;
+	margin: 0;
+	padding: 0;
 }
 
 h2.page-title {
@@ -15,7 +15,7 @@ h2.page-title {
 }
 
 section {
-	margin: 3vh 0;
+	margin: 3vh 0 14vh;
 }
 
 .capitalize {
