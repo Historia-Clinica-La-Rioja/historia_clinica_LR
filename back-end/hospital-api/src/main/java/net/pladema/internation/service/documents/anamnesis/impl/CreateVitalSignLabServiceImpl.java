@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CreateVitalSignLabServiceImpl implements CreateVitalSignLabService {
@@ -41,78 +42,92 @@ public class CreateVitalSignLabServiceImpl implements CreateVitalSignLabService 
     @Override
     public List<VitalSignBo> loadVitalSigns(Integer patientId, Long documentId, List<VitalSignBo> vitalSigns) {
         LOG.debug("Input parameters -> documentId {}, patientId {}, vitalSigns {}", documentId, patientId, vitalSigns);
-        vitalSigns.forEach(vitalSign -> {
-
-            if(vitalSign.getSystolicBloodPressure() != null){
-                ObservationVitalSign systolicBloodPressure = createObservationVitalSign(patientId,vitalSign.getSystolicBloodPressure(), EVitalSign.SYSTOLIC_BLOOD_PRESSURE);
+        vitalSigns.stream().forEach(vitalSign -> {
+            if(mustSaveClinicalObservation(vitalSign.getSystolicBloodPressure())){
+                ObservationVitalSign systolicBloodPressure = createObservationVitalSign(patientId,
+                        vitalSign.getSystolicBloodPressure(), EVitalSign.SYSTOLIC_BLOOD_PRESSURE);
                 documentService.createDocumentVitalSign(documentId, systolicBloodPressure.getId());
                 vitalSign.setSystolicBloodPressure(createObservationFromVitalSign(systolicBloodPressure));
             }
 
-            if(vitalSign.getDiastolicBloodPressure() != null) {
-                ObservationVitalSign diastolicBloodPressure = createObservationVitalSign(patientId, vitalSign.getDiastolicBloodPressure(), EVitalSign.DIASTOLIC_BLOOD_PRESSURE);
+            if(mustSaveClinicalObservation(vitalSign.getDiastolicBloodPressure())) {
+                ObservationVitalSign diastolicBloodPressure = createObservationVitalSign(patientId,
+                        vitalSign.getDiastolicBloodPressure(), EVitalSign.DIASTOLIC_BLOOD_PRESSURE);
                 documentService.createDocumentVitalSign(documentId, diastolicBloodPressure.getId());
                 vitalSign.setDiastolicBloodPressure(createObservationFromVitalSign(diastolicBloodPressure));
             }
 
-            if(vitalSign.getMeanPressure() != null) {
-                ObservationVitalSign meanPressure = createObservationVitalSign(patientId, vitalSign.getMeanPressure(), EVitalSign.MEAN_PRESSURE);
+            if(mustSaveClinicalObservation(vitalSign.getMeanPressure())) {
+                ObservationVitalSign meanPressure = createObservationVitalSign(patientId,
+                        vitalSign.getMeanPressure(), EVitalSign.MEAN_PRESSURE);
                 documentService.createDocumentVitalSign(documentId, meanPressure.getId());
                 vitalSign.setMeanPressure(createObservationFromVitalSign(meanPressure));
             }
 
-            if(vitalSign.getTemperature() != null) {
-                ObservationVitalSign temperature = createObservationVitalSign(patientId, vitalSign.getTemperature(), EVitalSign.TEMPERATURE);
+            if(mustSaveClinicalObservation(vitalSign.getTemperature())) {
+                ObservationVitalSign temperature = createObservationVitalSign(patientId,
+                        vitalSign.getTemperature(), EVitalSign.TEMPERATURE);
                 documentService.createDocumentVitalSign(documentId, temperature.getId());
                 vitalSign.setTemperature(createObservationFromVitalSign(temperature));
             }
 
-            if(vitalSign.getHeartRate() != null) {
-                ObservationVitalSign heartRate = createObservationVitalSign(patientId, vitalSign.getHeartRate(), EVitalSign.HEART_RATE);
+            if(mustSaveClinicalObservation(vitalSign.getHeartRate())) {
+                ObservationVitalSign heartRate = createObservationVitalSign(patientId,
+                        vitalSign.getHeartRate(), EVitalSign.HEART_RATE);
                 documentService.createDocumentVitalSign(documentId, heartRate.getId());
                 vitalSign.setHeartRate(createObservationFromVitalSign(heartRate));
             }
 
-            if(vitalSign.getRespiratoryRate() != null) {
-                ObservationVitalSign respiratoryRate = createObservationVitalSign(patientId, vitalSign.getRespiratoryRate(), EVitalSign.RESPIRATORY_RATE);
+            if(mustSaveClinicalObservation(vitalSign.getRespiratoryRate())) {
+                ObservationVitalSign respiratoryRate = createObservationVitalSign(patientId,
+                        vitalSign.getRespiratoryRate(), EVitalSign.RESPIRATORY_RATE);
                 documentService.createDocumentVitalSign(documentId, respiratoryRate.getId());
                 vitalSign.setRespiratoryRate(createObservationFromVitalSign(respiratoryRate));
             }
 
-            if(vitalSign.getBloodOxygenSaturation() != null) {
-                ObservationVitalSign bloodOxygenSaturation = createObservationVitalSign(patientId, vitalSign.getBloodOxygenSaturation(), EVitalSign.BLOOD_OXYGEN_SATURATION);
+            if(mustSaveClinicalObservation(vitalSign.getBloodOxygenSaturation())) {
+                ObservationVitalSign bloodOxygenSaturation = createObservationVitalSign(patientId,
+                        vitalSign.getBloodOxygenSaturation(), EVitalSign.BLOOD_OXYGEN_SATURATION);
                 documentService.createDocumentVitalSign(documentId, bloodOxygenSaturation.getId());
                 vitalSign.setBloodOxygenSaturation(createObservationFromVitalSign(bloodOxygenSaturation));
             }
         });
         LOG.debug(OUTPUT, vitalSigns);
-        return vitalSigns;
+        return vitalSigns.stream().filter(v -> !v.wasDeleted()).collect(Collectors.toList());
     }
 
     @Override
     public List<AnthropometricDataBo> loadAnthropometricData(Integer patientId, Long documentId, List<AnthropometricDataBo> anthropometricDatas) {
         LOG.debug("Input parameters -> documentId {}, patientId {}, anthropometricData {}", documentId, patientId, anthropometricDatas);
         anthropometricDatas.forEach(anthropometricData -> {
-            if(anthropometricData.getHeight() != null) {
-                ObservationVitalSign height = createObservationVitalSign(patientId, anthropometricData.getHeight(), EVitalSign.HEIGHT);
+            if(mustSaveClinicalObservation(anthropometricData.getHeight())) {
+                ObservationVitalSign height = createObservationVitalSign(patientId, anthropometricData.getHeight(),
+                        EVitalSign.HEIGHT);
                 documentService.createDocumentVitalSign(documentId, height.getId());
                 anthropometricData.setHeight(createObservationFromVitalSign(height));
             }
 
-            if(anthropometricData.getWeight() != null) {
-                ObservationVitalSign weight = createObservationVitalSign(patientId, anthropometricData.getWeight(), EVitalSign.WEIGHT);
+            if(mustSaveClinicalObservation(anthropometricData.getWeight())) {
+                ObservationVitalSign weight = createObservationVitalSign(patientId, anthropometricData.getWeight(),
+                        EVitalSign.WEIGHT);
                 documentService.createDocumentVitalSign(documentId, weight.getId());
                 anthropometricData.setWeight(createObservationFromVitalSign(weight));
             }
 
-            if(anthropometricData.getBloodType() != null) {
-                ObservationLab bloodType = createObservationLab(patientId, anthropometricData.getBloodType(), ELab.BLOOD_TYPE);
+            if(mustSaveClinicalObservation(anthropometricData.getBloodType())) {
+                ObservationLab bloodType = createObservationLab(patientId, anthropometricData.getBloodType(),
+                        ELab.BLOOD_TYPE);
                 documentService.createDocumentLab(documentId, bloodType.getId());
                 anthropometricData.setBloodType(createObservationFromLab(bloodType));
             }
         });
         LOG.debug(OUTPUT, anthropometricDatas);
-        return anthropometricDatas;
+
+        return anthropometricDatas.stream().filter(a -> !a.wasDeleted()).collect(Collectors.toList());
+    }
+
+    private boolean mustSaveClinicalObservation(ClinicalObservation co) {
+        return co != null && co.mustSave();
     }
 
     private ObservationVitalSign createObservationVitalSign(Integer patientId, ClinicalObservation observation, EVitalSign eVitalSign) {
@@ -123,7 +138,7 @@ public class CreateVitalSignLabServiceImpl implements CreateVitalSignLabService 
     }
 
     private ObservationLab createObservationLab(Integer patientId, ClinicalObservation observation, ELab eLab) {
-        LOG.debug("Input parameters -> patientId {}, ClinicalObservation {}, eLab {}", patientId, observation, eLab);
+        LOG.debug("Input parameters -> patientId {}, ClinicalObservation {}, eLab {}, deleted {}", patientId, observation, eLab);
         ObservationLab observationLab = observationLabRepository.save(new ObservationLab(patientId, observation.getValue(), eLab, observation.isDeleted()));
         LOG.debug(OUTPUT, observationLab);
         return observationLab;

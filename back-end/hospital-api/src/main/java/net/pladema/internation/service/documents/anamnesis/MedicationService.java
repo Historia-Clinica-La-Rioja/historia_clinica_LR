@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface MedicationService {
 
-    public void loadMedications(Integer patientId, Long documentId, List<Medication> medications);
+    List<Medication> loadMedications(Integer patientId, Long documentId, List<Medication> medications);
 }

@@ -2,7 +2,9 @@ package net.pladema.internation.service.documents.anamnesis.impl;
 
 import net.pladema.internation.repository.ips.HealthConditionRepository;
 import net.pladema.internation.repository.ips.entity.HealthCondition;
+import net.pladema.internation.repository.masterdata.entity.ConditionClinicalStatus;
 import net.pladema.internation.repository.masterdata.entity.ConditionProblemType;
+import net.pladema.internation.repository.masterdata.entity.ConditionVerificationStatus;
 import net.pladema.internation.repository.masterdata.entity.ProblemType;
 import net.pladema.internation.service.NoteService;
 import net.pladema.internation.service.SnomedService;
@@ -15,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class HealthConditionServiceImpl implements HealthConditionService {
@@ -37,55 +40,44 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     }
 
     @Override
-    public void loadDiagnosis(Integer patientId, Long documentId, List<HealthConditionBo> diagnosis) {
-        LOG.debug("Going to load diagnosis -> {}", diagnosis);
+    public List<HealthConditionBo> loadDiagnosis(Integer patientId, Long documentId, List<HealthConditionBo> diagnosis) {
+        LOG.debug("Input parameters -> patientId {}, documentId {}, diagnosis {}", documentId, patientId, diagnosis);
         if(diagnosis.isEmpty())
             throw new IllegalArgumentException("diagnosis.mandatory");
-        diagnosis.forEach(d -> {
+        diagnosis.stream().filter(d -> d.mustSave()).forEach(d -> {
             HealthCondition healthCondition = buildHealth(patientId, d, true);
             healthCondition = healthConditionRepository.save(healthCondition);
-
+            LOG.debug("HealthCondition saved ->", healthCondition.getId());
+            d.setId(healthCondition.getId());
             documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
         });
+        return diagnosis.stream().filter(d -> !d.isDeleted()).collect(Collectors.toList());
     }
 
     @Override
-    public void loadPersonalHistories(Integer patientId, Long documentId, List<HealthHistoryCondition> personalHistories) {
-        LOG.debug("Going to load Personal Histories -> {}", personalHistories);
-        personalHistories.forEach(ph -> {
+    public List<HealthHistoryCondition> loadPersonalHistories(Integer patientId, Long documentId, List<HealthHistoryCondition> personalHistories) {
+        LOG.debug("Input parameters -> patientId {}, documentId {}, personalHistories {}", documentId, patientId, personalHistories);
+        personalHistories.stream().filter(ph -> ph.mustSave()).forEach(ph -> {
             HealthCondition healthCondition = buildHistoryHealth(patientId, ph, true);
             healthCondition = healthConditionRepository.save(healthCondition);
-
+            LOG.debug("HealthCondition saved ->", healthCondition.getId());
+            ph.setId(healthCondition.getId());
             documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
         });
+        return personalHistories.stream().filter(ph -> !ph.isDeleted()).collect(Collectors.toList());
     }
 
     @Override
-    public void loadFamilyHistories(Integer patientId, Long documentId, List<HealthHistoryCondition> familyHistories) {
-        LOG.debug("Going to load Family Histories -> {}", familyHistories);
-        familyHistories.forEach(ph -> {
+    public List<HealthHistoryCondition> loadFamilyHistories(Integer patientId, Long documentId, List<HealthHistoryCondition> familyHistories) {
+        LOG.debug("Input parameters -> patientId {}, documentId {}, familyHistories {}", documentId, patientId, familyHistories);
+        familyHistories.stream().filter(ph -> ph.mustSave()).forEach(ph -> {
             HealthCondition healthCondition = buildHistoryHealth(patientId, ph, false);
             healthCondition = healthConditionRepository.save(healthCondition);
-
+            LOG.debug("HealthCondition saved ->", healthCondition.getId());
+            ph.setId(healthCondition.getId());
             documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
         });
-    }
-
-    private <T extends HealthConditionBo> HealthCondition buildHealth(Integer patientId, T info, boolean personal) {
-
-        String sctid = snomedService.createSnomedTerm(info.getSnomed());
-        if(sctid == null)
-            throw new IllegalArgumentException("snomed.invalid");
-
-        HealthCondition healthCondition = new HealthCondition();
-        healthCondition.setPatientId(patientId);
-        healthCondition.setSctidCode(info.getSnomed().getId());
-        healthCondition.setStatusId(info.getStatusId());
-        healthCondition.setVerificationStatusId(info.getVerificationId());
-        healthCondition.setProblemTypeId(ConditionProblemType.PROBLEMA);
-        healthCondition.setPersonal(personal);
-        healthCondition.setProblemId(ProblemType.DIAGNOSTICO);
-        return healthCondition;
+        return familyHistories.stream().filter(fh -> !fh.isDeleted()).collect(Collectors.toList());
     }
 
     private <T extends HealthHistoryCondition> HealthCondition buildHistoryHealth(Integer patientId, T healthHistory, boolean personal) {
@@ -95,4 +87,20 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         healthCondition.setNoteId(noteService.createNote(healthHistory.getNote()));
         return healthCondition;
     }
+
+    private <T extends HealthConditionBo> HealthCondition buildHealth(Integer patientId, T info, boolean personal) {
+        String sctid = snomedService.createSnomedTerm(info.getSnomed());
+        HealthCondition healthCondition = new HealthCondition();
+        healthCondition.setPatientId(patientId);
+        healthCondition.setSctidCode(sctid);
+        healthCondition.setStatusId(ConditionClinicalStatus.ACTIVE);
+        healthCondition.setVerificationStatusId(ConditionVerificationStatus.CONFIRMED);
+        if (info.isDeleted())
+            healthCondition.setVerificationStatusId(ConditionVerificationStatus.ERROR);
+        healthCondition.setProblemTypeId(ConditionProblemType.PROBLEMA);
+        healthCondition.setPersonal(personal);
+        healthCondition.setProblemId(ProblemType.DIAGNOSTICO);
+        return healthCondition;
+    }
+
 }

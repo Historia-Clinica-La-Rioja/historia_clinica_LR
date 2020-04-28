@@ -144,6 +144,7 @@ export interface ClinicalSpecialtyDto {
 
 export interface ClinicalTermDto extends Serializable {
     deleted: boolean;
+    id: number;
     snomed: SnomedDto;
     statusId: string;
 }
@@ -324,7 +325,6 @@ export interface VitalSignDto extends Serializable {
     bloodOxygenSaturation: ClinicalObservationDto;
     diastolicBloodPressure: ClinicalObservationDto;
     heartRate: ClinicalObservationDto;
-    meanPressure: ClinicalObservationDto;
     respiratoryRate: ClinicalObservationDto;
     systolicBloodPressure: ClinicalObservationDto;
     temperature: ClinicalObservationDto;

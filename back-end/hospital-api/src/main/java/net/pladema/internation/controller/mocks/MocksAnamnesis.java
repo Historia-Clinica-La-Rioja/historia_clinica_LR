@@ -32,7 +32,6 @@ public class MocksAnamnesis {
             vitalSignDto.setHeartRate(mockNewClinicalObservationDto(i + 3));
             vitalSignDto.setRespiratoryRate(mockNewClinicalObservationDto(i + 4));
             vitalSignDto.setTemperature(mockNewClinicalObservationDto(i + 5));
-            vitalSignDto.setMeanPressure(mockNewClinicalObservationDto(i + 6));
             result.add(vitalSignDto);
         }
         return result;

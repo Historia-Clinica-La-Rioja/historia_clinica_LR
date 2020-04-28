@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface InmunizationService {
 
-    void loadInmunization(Integer patientId, Long documentId, List<InmunizationBo> inmunizations);
+    List<InmunizationBo> loadInmunization(Integer patientId, Long documentId, List<InmunizationBo> inmunizations);
 }

@@ -16,4 +16,13 @@ public class ClinicalObservation implements Serializable {
     private String value;
 
     private boolean deleted = false;
+
+    public boolean mustSave() {
+        return isDeleted() || isNew();
+    }
+
+    private boolean isNew() {
+        return id == null;
+    }
+
 }

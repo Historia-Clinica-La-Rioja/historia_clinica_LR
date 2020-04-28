@@ -16,4 +16,8 @@ public class AnthropometricDataBo implements Serializable {
     private ClinicalObservation height;
 
     private ClinicalObservation weight;
+
+    public boolean wasDeleted() {
+        return bloodType.isDeleted() || height.isDeleted() || weight.isDeleted();
+    }
 }

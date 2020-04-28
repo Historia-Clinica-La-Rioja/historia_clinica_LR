@@ -12,6 +12,8 @@ import java.io.Serializable;
 @ToString
 public abstract class ClinicalTermDto implements Serializable {
 
+    public Integer id;
+
     private String statusId;
 
     private SnomedDto snomed;

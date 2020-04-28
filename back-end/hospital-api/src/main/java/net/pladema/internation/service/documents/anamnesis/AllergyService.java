@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface AllergyService {
 
-    public void loadAllergies(Integer patientId, Long id, List<AllergyConditionBo> allergy);
+    List<AllergyConditionBo> loadAllergies(Integer patientId, Long id, List<AllergyConditionBo> allergy);
 }

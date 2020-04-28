@@ -58,12 +58,12 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
         loadNotes(anamnesisDocument, Optional.ofNullable(anamnesis.getNotes()));
         anamnesisDocument = documentService.create(anamnesisDocument);
 
-        healthConditionService.loadDiagnosis(patientId, anamnesisDocument.getId(), anamnesis.getDiagnosis());
-        healthConditionService.loadPersonalHistories(patientId, anamnesisDocument.getId(), anamnesis.getPersonalHistories());
-        healthConditionService.loadFamilyHistories(patientId, anamnesisDocument.getId(), anamnesis.getFamilyHistories());
-        allergyService.loadAllergies(patientId, anamnesisDocument.getId(), anamnesis.getAllergies());
-        inmunizationService.loadInmunization(patientId, anamnesisDocument.getId(), anamnesis.getInmunizations());
-        medicationService.loadMedications(patientId, anamnesisDocument.getId(), anamnesis.getMedications());
+        anamnesis.setDiagnosis(healthConditionService.loadDiagnosis(patientId, anamnesisDocument.getId(), anamnesis.getDiagnosis()));
+        anamnesis.setPersonalHistories(healthConditionService.loadPersonalHistories(patientId, anamnesisDocument.getId(), anamnesis.getPersonalHistories()));
+        anamnesis.setFamilyHistories(healthConditionService.loadFamilyHistories(patientId, anamnesisDocument.getId(), anamnesis.getFamilyHistories()));
+        anamnesis.setAllergies(allergyService.loadAllergies(patientId, anamnesisDocument.getId(), anamnesis.getAllergies()));
+        anamnesis.setInmunizations(inmunizationService.loadInmunization(patientId, anamnesisDocument.getId(), anamnesis.getInmunizations()));
+        anamnesis.setMedications(medicationService.loadMedications(patientId, anamnesisDocument.getId(), anamnesis.getMedications()));
 
         anamnesis.setVitalSigns(createVitalSignLabService.loadVitalSigns(patientId, anamnesisDocument.getId(), anamnesis.getVitalSigns()));
         anamnesis.setAnthropometricData(createVitalSignLabService.loadAnthropometricData(patientId, anamnesisDocument.getId(), anamnesis.getAnthropometricData()));

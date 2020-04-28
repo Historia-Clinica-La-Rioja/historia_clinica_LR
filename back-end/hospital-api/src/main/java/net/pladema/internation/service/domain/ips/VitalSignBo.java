@@ -25,4 +25,9 @@ public class VitalSignBo implements Serializable {
 
     private ClinicalObservation bloodOxygenSaturation;
 
+    public boolean wasDeleted() {
+        return systolicBloodPressure.isDeleted() || diastolicBloodPressure.isDeleted() ||
+                meanPressure.isDeleted() || temperature.isDeleted() || respiratoryRate.isDeleted()
+                || bloodOxygenSaturation.isDeleted();
+    }
 }

@@ -16,4 +16,5 @@ public class AnthropometricDataDto implements Serializable {
     private ClinicalObservationDto height;
 
     private ClinicalObservationDto weight;
+
 }

@@ -24,6 +24,10 @@ public class AllergyIntoleranceClinicalStatus implements Serializable {
 	 */
 	private static final long serialVersionUID = -3053291021636483828L;
 
+	public static final String ACTIVE = "55561003";
+	public static final String INACTIVE = "73425007";
+	public static final String SOLVED = "723506003";
+
 	@Id
 	@Column(name = "id", length = 20)
 	private String id;

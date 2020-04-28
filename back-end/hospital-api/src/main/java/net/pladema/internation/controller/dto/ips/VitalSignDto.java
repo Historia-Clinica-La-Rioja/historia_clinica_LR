@@ -15,8 +15,6 @@ public class VitalSignDto implements Serializable {
 
     private ClinicalObservationDto diastolicBloodPressure;
 
-    private ClinicalObservationDto meanPressure;
-
     private ClinicalObservationDto temperature;
 
     private ClinicalObservationDto heartRate;

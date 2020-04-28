@@ -38,6 +38,8 @@ public class SnomedServiceImpl implements SnomedService {
                 snomedTerm.getId(), snomedTerm.getFsn(), parentId, parentFsn);
         snomed = snomedRepository.save(snomed);
         LOG.debug(OUTPUT, snomed.getId());
+        if(snomed.getId() == null)
+            throw new IllegalArgumentException("snomed.invalid");
         return snomed.getId();
     }
 
