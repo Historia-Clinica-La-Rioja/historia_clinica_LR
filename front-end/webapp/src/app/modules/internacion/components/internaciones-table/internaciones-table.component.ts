@@ -27,14 +27,14 @@ export class InternacionesTableComponent implements OnInit {
 					text: (row) => row.patient.id
 				},
 				{
-					columnDef: 'doctorName',
-					header: 'Nombre Médico',
-					text: (row) => row.doctor.firstName
+					columnDef: 'patientName',
+					header: 'Nombre Paciente',
+					text: (row) => row.patient.firstName
 				},
 				{
-					columnDef: 'doctorLastName',
-					header: 'Apellido Médico',
-					text: (row) => row.doctor.lastName
+					columnDef: 'patientLastName',
+					header: 'Apellido Paciente',
+					text: (row) => row.patient.lastName
 				},
 				{
 					columnDef: 'sectorName',
