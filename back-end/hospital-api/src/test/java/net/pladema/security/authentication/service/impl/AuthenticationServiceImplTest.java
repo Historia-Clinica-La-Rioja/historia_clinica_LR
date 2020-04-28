@@ -1,6 +1,5 @@
 package net.pladema.security.authentication.service.impl;
 
-import net.pladema.BaseControllerTest;
 import net.pladema.security.token.service.TokenService;
 import net.pladema.security.token.service.domain.JWToken;
 import net.pladema.security.token.service.domain.JWTokenBean;

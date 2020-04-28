@@ -1,6 +1,5 @@
 package net.pladema.user.controller;
 
-import net.pladema.permissions.service.impl.RoleServiceImpl;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
 import net.pladema.user.repository.PasswordResetTokenRepository;
 import net.pladema.user.repository.entity.PasswordResetToken;

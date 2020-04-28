@@ -2,10 +2,7 @@ package net.pladema.permissions.service.impl;
 
 import net.pladema.permissions.repository.RoleRepository;
 import net.pladema.permissions.repository.UserRoleRepository;
-import net.pladema.permissions.repository.entity.Role;
-import net.pladema.permissions.repository.entity.UserRole;
 import net.pladema.permissions.repository.enums.ERole;
-import net.pladema.user.repository.entity.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -1,10 +1,6 @@
 package net.pladema.internation.service.documents.impl;
 
 import net.pladema.internation.repository.core.*;
-import net.pladema.internation.repository.core.DocumentHealthConditionRepository;
-import net.pladema.internation.repository.core.DocumentInmunizationRepository;
-import net.pladema.internation.repository.core.DocumentLabRepository;
-import net.pladema.internation.repository.core.DocumentVitalSignRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

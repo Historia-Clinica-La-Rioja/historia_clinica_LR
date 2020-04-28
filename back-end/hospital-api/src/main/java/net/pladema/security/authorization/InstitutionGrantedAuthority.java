@@ -2,7 +2,6 @@ package net.pladema.security.authorization;
 
 import org.springframework.security.core.GrantedAuthority;
 
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;

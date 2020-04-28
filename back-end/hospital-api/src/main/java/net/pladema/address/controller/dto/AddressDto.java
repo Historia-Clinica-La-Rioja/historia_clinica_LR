@@ -2,7 +2,6 @@ package net.pladema.address.controller.dto;
 
 import lombok.*;
 
-import javax.persistence.*;
 import java.io.Serializable;
 
 @Getter

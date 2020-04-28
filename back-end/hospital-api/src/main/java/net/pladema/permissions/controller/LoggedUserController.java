@@ -2,7 +2,6 @@ package net.pladema.permissions.controller;
 
 import net.pladema.permissions.controller.dto.PermissionsDto;
 import net.pladema.permissions.service.LoggedUserService;
-import net.pladema.security.authentication.controller.AuthenticationController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;

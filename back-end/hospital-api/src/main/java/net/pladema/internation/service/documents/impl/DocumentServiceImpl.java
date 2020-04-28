@@ -1,10 +1,6 @@
 package net.pladema.internation.service.documents.impl;
 
 import net.pladema.internation.repository.core.*;
-import net.pladema.internation.repository.core.DocumentHealthConditionRepository;
-import net.pladema.internation.repository.core.DocumentInmunizationRepository;
-import net.pladema.internation.repository.core.DocumentLabRepository;
-import net.pladema.internation.repository.core.DocumentVitalSignRepository;
 import net.pladema.internation.repository.core.entity.*;
 import net.pladema.internation.service.documents.DocumentService;
 import org.slf4j.Logger;

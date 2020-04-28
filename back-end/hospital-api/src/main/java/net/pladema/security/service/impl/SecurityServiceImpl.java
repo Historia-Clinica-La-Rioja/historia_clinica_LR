@@ -2,7 +2,6 @@ package net.pladema.security.service.impl;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import net.pladema.permissions.service.RoleService;
-import net.pladema.permissions.service.dto.RoleAssignment;
 import net.pladema.security.authorization.InstitutionGrantedAuthority;
 import net.pladema.security.service.SecurityService;
 import net.pladema.security.service.enums.ETokenType;

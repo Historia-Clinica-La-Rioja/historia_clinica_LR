@@ -1,7 +1,6 @@
 package net.pladema.permissions.repository.entity;
 
 import net.pladema.permissions.repository.enums.ERole;
-import net.pladema.user.repository.entity.User;
 
 public class RoleBean {
     private RoleBean() {

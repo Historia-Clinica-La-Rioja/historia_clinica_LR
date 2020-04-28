@@ -2,11 +2,7 @@ package net.pladema.person.controller;
 
 import net.pladema.BaseControllerTest;
 import net.pladema.address.controller.service.AddressExternalService;
-import net.pladema.patient.controller.PatientController;
-import net.pladema.patient.controller.mapper.PatientMapper;
-import net.pladema.patient.service.PatientService;
 import net.pladema.person.controller.mapper.PersonMapper;
-import net.pladema.person.controller.service.PersonExternalService;
 import net.pladema.person.service.PersonService;
 import org.junit.Before;
 import org.junit.Test;
