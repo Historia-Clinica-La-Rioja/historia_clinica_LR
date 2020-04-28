@@ -195,6 +195,17 @@ export interface InternmentEpisodeDto {
     specialty: ClinicalSpecialtyDto;
 }
 
+export interface InternmentGeneralStateDto extends Serializable {
+    allergies: AllergyConditionDto[];
+    anthropometricData: AnthropometricDataDto[];
+    diagnosis: HealthConditionDto[];
+    familyHistories: HealthHistoryConditionDto[];
+    inmunizations: InmunizationDto[];
+    medications: MedicationDto[];
+    personalHistories: HealthHistoryConditionDto[];
+    vitalSigns: VitalSignDto[];
+}
+
 export interface InternmentSummaryDto {
     bed: BedDto;
     createdOn: Date;

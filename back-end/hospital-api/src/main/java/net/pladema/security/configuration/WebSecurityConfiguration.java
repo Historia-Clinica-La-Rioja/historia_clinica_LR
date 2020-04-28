@@ -41,9 +41,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	private static final String MASTERDATA_INTERNMENT = "/internments/masterdata";
 
-	private static final String INTERMENT = "/institutions/{institutionId}/internments/";
+	private static final String INTERNMENT = "/institutions/{institutionId}/internments/";
 
 	private static final String ANAMNESIS = "/institutions/{institutionId}/internments/{internmentEpisodeId}/anamnesis";
+
+	private static final String INTERNMENT_STATE = "/institutions/{institutionId}/internments-state/";
 
 	@Value("${api.user}")
 	protected String apiUser;
@@ -83,7 +85,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers("/actuator/**").access(actuatorConfiguration.getAccessInfo())
 				.antMatchers(apiAuth + "/**").permitAll()
 				.antMatchers(HttpMethod.GET,MASTERDATA_INTERNMENT + "/**").permitAll()
-				.antMatchers(INTERMENT + "/**").permitAll()
+				.antMatchers(INTERNMENT + "/**").permitAll()
+				.antMatchers(INTERNMENT_STATE + "/**").permitAll()
 				.antMatchers(ANAMNESIS + "/**").permitAll()
 				.antMatchers(HttpMethod.GET, ADDRESS+ "/**").permitAll()
 				.antMatchers(HttpMethod.GET, MASTERDATA_ADDRESS+ "/**").permitAll()
