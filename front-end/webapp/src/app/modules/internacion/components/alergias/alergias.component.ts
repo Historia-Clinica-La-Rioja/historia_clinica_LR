@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
-import { AllergyConditionDto, SnomedDto, MasterDataInterface } from '@api-rest/api-model';
+import { AllergyConditionDto, SnomedDto, MasterDataInterface, HealthHistoryConditionDto } from '@api-rest/api-model';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Moment } from 'moment';
 import * as moment from 'moment';
@@ -16,6 +16,22 @@ import { pushTo, removeFrom } from '@core/utils/array.utils';
 })
 export class AlergiasComponent implements OnInit {
 
+	@Input() allergies: AllergyConditionDto[] = [{
+		categoryId: '414285001',
+		date: '2015-01-01',
+		severity: 'severity',
+		verificationId: '59156000',
+		deleted: false,
+		id: 1,
+		snomed: {
+			fsn: 'Asdravirus (organismo)',
+			id: '64620000',
+			parentFsn: '',
+			parentId: '',
+		},
+		statusId: '73425007'
+	}];
+
 	private snomedConcept: SnomedDto;
 
 	form: FormGroup;
@@ -24,32 +40,32 @@ export class AlergiasComponent implements OnInit {
 	clinicalStatus: MasterDataInterface<string>[];
 	categories: MasterDataInterface<string>[];
 
-	//Mat table
+	// Mat table
 	columns = [
 		{
-			def: "problemType",
+			def: 'problemType',
 			header: 'internaciones.anamnesis.alergias.table.columns.PROBLEM_TYPE',
 			text: a => a.snomed.fsn
 		},
 		{
-			def: "category",
+			def: 'category',
 			header: 'internaciones.anamnesis.alergias.table.columns.CATEGORY',
-			text: a => this.categories.find(category => category.id === a.categoryId).description
+			text: a => this.categories?.find(category => category.id === a.categoryId).description
 		},
 		{
-			def: "severity",
+			def: 'severity',
 			header: 'internaciones.anamnesis.alergias.table.columns.SEVERITY',
 			text: a => a.severity
 		},
 		{
-			def: "clinicalStatus",
+			def: 'clinicalStatus',
 			header: 'internaciones.anamnesis.alergias.table.columns.STATUS',
-			text: a => this.clinicalStatus.find(status => status.id === a.statusId).description
+			text: a => this.clinicalStatus?.find(status => status.id === a.statusId).description
 		},
 		{
 			def: 'verification',
 			header: 'internaciones.anamnesis.alergias.table.columns.VERIFICATION',
-			text: a => this.verifications.find(verification => verification.id === a.verificationId).description
+			text: a => this.verifications?.find(verification => verification.id === a.verificationId).description
 		},
 		{
 			def: 'date',
@@ -58,7 +74,7 @@ export class AlergiasComponent implements OnInit {
 		},
 	];
 	displayedColumns: string[] = [];
-	dataSource = new MatTableDataSource<any>([]);
+	dataSource = new MatTableDataSource<any>(this.allergies);
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -115,25 +131,40 @@ export class AlergiasComponent implements OnInit {
 
 	addToList() {
 		if (this.form.valid && this.snomedConcept) {
-			let alergia: AllergyConditionDto = this.form.value;
-			alergia.date = this.form.controls.date.value.format(DateFormat.API_DATE);
-			alergia.snomed = this.snomedConcept;
+			const alergia: AllergyConditionDto = {
+				categoryId: this.form.value.categoryId,
+				date: this.form.value.date.format(DateFormat.API_DATE),
+				severity: this.form.value.severity,
+				verificationId: this.form.value.verificationId,
+				deleted: false,
+				id: null,
+				snomed: this.snomedConcept,
+				statusId: this.form.value.statusId
+			};
 			this.add(alergia);
 		}
 	}
 
 	setConcept(selectedConcept: SnomedDto): void {
 		this.snomedConcept = selectedConcept;
-		let fsn = selectedConcept ? selectedConcept.fsn : '';
+		const fsn = selectedConcept ? selectedConcept.fsn : '';
 		this.form.controls.snomed.setValue(fsn);
 	}
 
 	add(a: AllergyConditionDto): void {
 		this.dataSource.data = pushTo<AllergyConditionDto>(this.dataSource.data, a);
+		this.allergies.push(a);
 	}
 
 	remove(index: number): void {
-		this.dataSource.data = removeFrom<AllergyConditionDto>(this.dataSource.data, index);
+		const toRemove = this.dataSource.data[index];
+		if (toRemove.id != null) {
+			this.allergies.find(item => item === toRemove).deleted = true;
+			this.dataSource.data = this.allergies.filter(item => !item.deleted);
+		} else {
+			this.dataSource.data = removeFrom<AllergyConditionDto>(this.dataSource.data, index);
+			this.allergies = this.allergies.filter(item => toRemove !== item);
+		}
 	}
 
 }

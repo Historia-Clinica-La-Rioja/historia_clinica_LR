@@ -2,27 +2,27 @@ export const VITAL_SIGNS_COLUMNS = [
 	{
 		def: 'heartRate',
 		header: 'internaciones.anamnesis.vital-signs.table.columns.HEART_RATE',
-		text: ap => ap.heartRate
+		text: ap => ap.heartRate.description
 	},
 	{
 		def: 'respiratoryRate',
 		header: 'internaciones.anamnesis.vital-signs.table.columns.RESPIRATORY_RATE',
-		text: ap => ap.respiratoryRate
+		text: ap => ap.respiratoryRate.description
 	},
 	{
 		def: 'temperature',
 		header: 'internaciones.anamnesis.vital-signs.table.columns.TEMPERATURE',
-		text: ap => ap.temperature
+		text: ap => ap.temperature.description
 	},
 	{
 		def: 'bloodOxygenSaturation',
 		header: 'internaciones.anamnesis.vital-signs.table.columns.BLOOD_OXYGEN_SATURATION',
-		text: ap => ap.bloodOxygenSaturation
+		text: ap => ap.bloodOxygenSaturation.description
 	},
 	{
 		def: 'systolicBloodPressure',
 		header: 'internaciones.anamnesis.vital-signs.table.columns.BLOOD_PRESURE',
-		text: ap => `${ap.systolicBloodPressure}/${ap.diastolicBloodPressure}`
+		text: ap => `${ap.systolicBloodPressure.description}/${ap.diastolicBloodPressure.description}`
 	}
 ];
 
@@ -30,7 +30,7 @@ export const ANTHROPOMETRIC_DATA_COLUMNS = [
 	{
 		def: 'bloodType',
 		header: 'internaciones.anamnesis.datos-antropometricos.BLOOD_TYPE',
-		text: ap => ap.bloodType
+		text: ap => ap.bloodType.description
 	},
 	{
 		def: 'height',

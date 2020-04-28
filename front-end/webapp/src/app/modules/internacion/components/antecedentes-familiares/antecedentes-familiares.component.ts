@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { SnomedDto, MasterDataInterface, HealthHistoryConditionDto } from '@api-rest/api-model';
+import { SnomedDto, MasterDataInterface, HealthHistoryConditionDto, HealthConditionDto } from '@api-rest/api-model';
 import { Moment } from 'moment';
 import * as moment from 'moment';
 import { MatTableDataSource } from '@angular/material/table';
@@ -16,6 +16,21 @@ import { pushTo, removeFrom } from '@core/utils/array.utils';
 })
 export class AntecedentesFamiliaresComponent implements OnInit {
 
+	@Input() familyHistories: HealthHistoryConditionDto[] = [{
+		date: '2015-01-01',
+		deleted: false,
+		id: null,
+		note: 'asd',
+		snomed: {
+			fsn: 'Asdravirus (organismo)',
+			id: '64620000',
+			parentFsn: '',
+			parentId: '',
+		},
+		statusId: '73425007',
+		verificationId: '47965005'
+	}];
+
 	private snomedConcept: SnomedDto;
 
 	form: FormGroup;
@@ -26,19 +41,19 @@ export class AntecedentesFamiliaresComponent implements OnInit {
 	//Mat table
 	columns = [
 		{
-			def: "problemType",
+			def: 'problemType',
 			header: 'internaciones.anamnesis.antecedentes-familiares.table.columns.PROBLEM_TYPE',
 			text: af => af.snomed.fsn
 		},
 		{
-			def: "clinicalStatus",
+			def: 'clinicalStatus',
 			header: 'internaciones.anamnesis.antecedentes-familiares.table.columns.STATUS',
-			text: af => this.clinicalStatus.find(status => status.id === af.statusId).description
+			text: af => this.clinicalStatus?.find(status => status.id === af.statusId).description
 		},
 		{
 			def: 'verification',
 			header: 'internaciones.anamnesis.antecedentes-familiares.table.columns.VERIFICATION',
-			text: af => this.verifications.find(verification => verification.id === af.verificationId).description
+			text: af => this.verifications?.find(verification => verification.id === af.verificationId).description
 		},
 		{
 			def: 'date',
@@ -47,7 +62,7 @@ export class AntecedentesFamiliaresComponent implements OnInit {
 		},
 	];
 	displayedColumns: string[] = [];
-	dataSource = new MatTableDataSource<any>([]);
+	dataSource = new MatTableDataSource<any>(this.familyHistories);
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -98,9 +113,15 @@ export class AntecedentesFamiliaresComponent implements OnInit {
 
 	addToList() {
 		if (this.form.valid && this.snomedConcept) {
-			let antecedenteFamiliar: HealthHistoryConditionDto = this.form.value;
-			antecedenteFamiliar.date = this.form.controls.date.value.format(DateFormat.API_DATE);
-			antecedenteFamiliar.snomed = this.snomedConcept;
+			const antecedenteFamiliar: HealthHistoryConditionDto = {
+				date: this.form.value.date.format(DateFormat.API_DATE),
+				note: this.form.value.note,
+				verificationId: this.form.value.verificationId,
+				deleted: false,
+				id: null,
+				snomed: this.snomedConcept,
+				statusId: this.form.value.statusId
+			};
 			this.add(antecedenteFamiliar);
 		}
 	}
@@ -113,10 +134,18 @@ export class AntecedentesFamiliaresComponent implements OnInit {
 
 	add(af: HealthHistoryConditionDto): void {
 		this.dataSource.data = pushTo<HealthHistoryConditionDto>(this.dataSource.data, af);
+		this.familyHistories.push(af);
 	}
 
 	remove(index: number): void {
-		this.dataSource.data = removeFrom<HealthHistoryConditionDto>(this.dataSource.data, index);
+		const toRemove = this.dataSource.data[index];
+		if (toRemove.id != null) {
+			this.familyHistories.find(item => item === toRemove).deleted = true;
+			this.dataSource.data = this.familyHistories.filter(item => !item.deleted);
+		} else {
+			this.dataSource.data = removeFrom<HealthHistoryConditionDto>(this.dataSource.data, index);
+			this.familyHistories = this.familyHistories.filter(item => toRemove !== item);
+		}
 	}
 
 }

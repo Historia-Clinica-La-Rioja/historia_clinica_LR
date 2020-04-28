@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HealthHistoryConditionDto, MasterDataInterface, SnomedDto } from '@api-rest/api-model';
+import { HealthConditionDto, HealthHistoryConditionDto, MasterDataInterface, SnomedDto } from '@api-rest/api-model';
 import { MatTableDataSource } from '@angular/material/table';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { DateFormat } from '@core/utils/moment.utils';
@@ -16,6 +16,21 @@ import { pushTo, removeFrom } from '@core/utils/array.utils';
 })
 export class AntecedentesPersonalesComponent implements OnInit {
 
+	@Input() personalHistories: HealthHistoryConditionDto[] = [{
+			date: '2015-01-01',
+			deleted: false,
+			id: null,
+			note: 'asd',
+			snomed: {
+				fsn: 'Asdravirus (organismo)',
+				id: '64620000',
+				parentFsn: '',
+				parentId: '',
+			},
+			statusId: '73425007',
+			verificationId: '47965005'
+	}];
+
 	private snomedConcept: SnomedDto;
 
 	form: FormGroup;
@@ -26,19 +41,19 @@ export class AntecedentesPersonalesComponent implements OnInit {
 	//Mat table
 	columns = [
 		{
-			def: "problemType",
+			def: 'problemType',
 			header: 'internaciones.anamnesis.antecedentes-personales.table.columns.PROBLEM_TYPE',
 			text: ap => ap.snomed.fsn
 		},
 		{
-			def: "clinicalStatus",
+			def: 'clinicalStatus',
 			header: 'internaciones.anamnesis.antecedentes-personales.table.columns.STATUS',
-			text: ap => this.clinicalStatus.find(status => status.id === ap.statusId).description
+			text: ap => this.clinicalStatus?.find(status => status.id === ap.statusId).description
 		},
 		{
 			def: 'verification',
 			header: 'internaciones.anamnesis.antecedentes-personales.table.columns.VERIFICATION',
-			text: ap => this.verifications.find(verification => verification.id === ap.verificationId).description
+			text: ap => this.verifications?.find(verification => verification.id === ap.verificationId).description
 		},
 		{
 			def: 'date',
@@ -47,7 +62,7 @@ export class AntecedentesPersonalesComponent implements OnInit {
 		},
 	];
 	displayedColumns: string[] = [];
-	dataSource = new MatTableDataSource<any>([]);
+	dataSource = new MatTableDataSource<any>(this.personalHistories);
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -98,9 +113,15 @@ export class AntecedentesPersonalesComponent implements OnInit {
 
 	addToList() {
 		if (this.form.valid && this.snomedConcept) {
-			let antecedentePersonal: HealthHistoryConditionDto = this.form.value;
-			antecedentePersonal.date = this.form.controls.date.value.format(DateFormat.API_DATE);
-			antecedentePersonal.snomed = this.snomedConcept;
+			const antecedentePersonal: HealthHistoryConditionDto = {
+				date: this.form.value.date.format(DateFormat.API_DATE),
+				note: this.form.value.note,
+				verificationId: this.form.value.verificationId,
+				deleted: false,
+				id: null,
+				snomed: this.snomedConcept,
+				statusId: this.form.value.statusId
+			};
 			this.add(antecedentePersonal);
 		}
 	}
@@ -113,10 +134,18 @@ export class AntecedentesPersonalesComponent implements OnInit {
 
 	add(ap: HealthHistoryConditionDto): void {
 		this.dataSource.data = pushTo<HealthHistoryConditionDto>(this.dataSource.data, ap);
+		this.personalHistories.push(ap);
 	}
 
 	remove(index: number): void {
-		this.dataSource.data = removeFrom<HealthHistoryConditionDto>(this.dataSource.data, index);
+		const toRemove = this.dataSource.data[index];
+		if (toRemove.id != null) {
+			this.personalHistories.find(item => item === toRemove).deleted = true;
+			this.dataSource.data = this.personalHistories.filter(item => !item.deleted);
+		} else {
+			this.dataSource.data = removeFrom<HealthHistoryConditionDto>(this.dataSource.data, index);
+			this.personalHistories = this.personalHistories.filter(item => toRemove !== item);
+		}
 	}
 
 }

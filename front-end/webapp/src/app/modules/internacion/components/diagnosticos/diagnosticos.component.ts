@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MasterDataInterface, SnomedDto, HealthHistoryConditionDto } from '@api-rest/api-model';
+import { MasterDataInterface, SnomedDto, HealthConditionDto } from '@api-rest/api-model';
 import { MatTableDataSource } from '@angular/material/table';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
@@ -12,6 +12,31 @@ import { InternacionMasterDataService } from '@api-rest/services/internacion-mas
 })
 export class DiagnosticosComponent implements OnInit {
 
+	@Input() diagnosis: HealthConditionDto[] = [{
+		verificationId: '47965005',
+		deleted: false,
+		id: 1,
+		snomed: {
+			fsn: 'fsn',
+			id: '1',
+			parentFsn: 'parentFsn',
+			parentId: 'parentId'
+		},
+		statusId: '55561003'
+	},
+		{
+			verificationId: '47965005',
+			deleted: false,
+			id: 2,
+			snomed: {
+				fsn: 'fsn',
+				id: '2',
+				parentFsn: 'parentFsn',
+				parentId: 'parentId'
+			},
+			statusId: '55561003'
+		}];
+
 	private snomedConcept: SnomedDto;
 
 	form: FormGroup;
@@ -21,23 +46,23 @@ export class DiagnosticosComponent implements OnInit {
 	//Mat table
 	columns = [
 		{
-			def: "diagnosis",
+			def: 'diagnosis',
 			header: 'internaciones.anamnesis.diagnosticos.table.columns.DIAGNOSIS',
 			text: ap => ap.snomed.fsn
 		},
 		{
-			def: "clinicalStatus",
+			def: 'clinicalStatus',
 			header: 'internaciones.anamnesis.diagnosticos.table.columns.STATUS',
-			text: ap => this.clinicalStatus.find(status => status.id === ap.statusId).description
+			text: ap => this.clinicalStatus?.find(status => status.id === ap.statusId).description
 		},
 		{
 			def: 'verification',
 			header: 'internaciones.anamnesis.diagnosticos.table.columns.VERIFICATION',
-			text: ap => this.verifications.find(verification => verification.id === ap.verificationId).description
+			text: ap => this.verifications?.find(verification => verification.id === ap.verificationId).description
 		},
 	];
 	displayedColumns: string[] = [];
-	dataSource = new MatTableDataSource<any>([]);
+	dataSource = new MatTableDataSource<HealthConditionDto>(this.diagnosis);
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -65,8 +90,13 @@ export class DiagnosticosComponent implements OnInit {
 
 	addToList() {
 		if (this.form.valid && this.snomedConcept) {
-			let diagnostico: HealthHistoryConditionDto = this.form.value;
-			diagnostico.snomed = this.snomedConcept;
+			let diagnostico: HealthConditionDto = {
+				verificationId: this.form.value.verificationId,
+				statusId: this.form.value.statusId,
+				id: null,
+				deleted: false,
+				snomed: this.snomedConcept
+			};
 			this.add(diagnostico);
 		}
 	}
@@ -77,12 +107,20 @@ export class DiagnosticosComponent implements OnInit {
 		this.form.controls.snomed.setValue(fsn);
 	}
 
-	add(diagnostico: HealthHistoryConditionDto): void {
-		this.dataSource.data = pushTo<HealthHistoryConditionDto>(this.dataSource.data, diagnostico);
+	add(diagnostico: HealthConditionDto): void {
+		this.dataSource.data = pushTo<HealthConditionDto>(this.dataSource.data, diagnostico);
+		this.diagnosis.push(diagnostico);
 	}
 
 	remove(index: number): void {
-		this.dataSource.data = removeFrom<HealthHistoryConditionDto>(this.dataSource.data, index);
+		const toRemove = this.dataSource.data[index];
+		if (toRemove.id != null) {
+			this.diagnosis.find(item => item === toRemove).deleted = true;
+			this.dataSource.data = this.diagnosis.filter(item => !item.deleted);
+		} else {
+			this.dataSource.data = removeFrom<HealthConditionDto>(this.dataSource.data, index);
+			this.diagnosis = this.diagnosis.filter(item => toRemove !== item);
+		}
 	}
 
 }

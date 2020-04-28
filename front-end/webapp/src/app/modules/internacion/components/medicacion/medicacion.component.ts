@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MedicationDto, SnomedDto, MasterDataInterface } from '@api-rest/api-model';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
@@ -12,6 +12,21 @@ import { pushTo, removeFrom } from '@core/utils/array.utils';
 })
 export class MedicacionComponent implements OnInit {
 
+	@Input() medications: MedicationDto[] = [
+		{
+			note: 'note',
+			deleted: false,
+			id: 1,
+			snomed: {
+				fsn: 'Asdravirus (organismo)',
+				id: '64620000',
+				parentFsn: '',
+				parentId: '',
+			},
+			statusId: '255594003'
+		}
+	];
+
 	private snomedConcept: SnomedDto;
 
 	form: FormGroup;
@@ -20,14 +35,14 @@ export class MedicacionComponent implements OnInit {
 	//Mat table
 	columns = [
 		{
-			def: "problemType",
+			def: 'problemType',
 			header: 'internaciones.anamnesis.medicacion.table.columns.PROBLEM_TYPE',
 			text: v => v.snomed.fsn
 		},
 		{
-			def: "clinicalStatus",
+			def: 'clinicalStatus',
 			header: 'internaciones.anamnesis.medicacion.table.columns.STATUS',
-			text: v => this.clinicalStatus.find(status => status.id === v.statusId).description
+			text: v => this.clinicalStatus?.find(status => status.id === v.statusId).description
 		},
 		{
 			def: 'note',
@@ -36,7 +51,7 @@ export class MedicacionComponent implements OnInit {
 		},
 	];
 	displayedColumns: string[] = [];
-	dataSource = new MatTableDataSource<any>([]);
+	dataSource = new MatTableDataSource<any>(this.medications);
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -61,8 +76,13 @@ export class MedicacionComponent implements OnInit {
 
 	addToList() {
 		if (this.form.valid && this.snomedConcept) {
-			let medicacion: MedicationDto = this.form.value;
-			medicacion.snomed = this.snomedConcept;
+			const medicacion: MedicationDto = {
+				id: null,
+				note: this.form.value.note,
+				deleted: false,
+				snomed: this.snomedConcept,
+				statusId: this.form.value.statusId
+			};
 			this.add(medicacion);
 		}
 	}
@@ -75,10 +95,18 @@ export class MedicacionComponent implements OnInit {
 
 	add(medicacion: MedicationDto): void {
 		this.dataSource.data = pushTo<MedicationDto>(this.dataSource.data, medicacion);
+		this.medications.push(medicacion);
 	}
 
 	remove(index: number): void {
-		this.dataSource.data = removeFrom<MedicationDto>(this.dataSource.data, index);
+		const toRemove = this.dataSource.data[index];
+		if (toRemove.id != null) {
+			this.medications.find(item => item === toRemove).deleted = true;
+			this.dataSource.data = this.medications.filter(item => !item.deleted);
+		} else {
+			this.dataSource.data = removeFrom<MedicationDto>(this.dataSource.data, index);
+			this.medications = this.medications.filter(item => toRemove !== item);
+		}
 	}
 
 }

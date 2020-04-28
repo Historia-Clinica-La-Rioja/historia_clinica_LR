@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { InmunizationDto, SnomedDto, MasterDataInterface } from '@api-rest/api-model';
+import { Component, Input, OnInit } from '@angular/core';
+import { InmunizationDto, SnomedDto, MasterDataInterface, AllergyConditionDto } from '@api-rest/api-model';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Moment } from 'moment';
 import * as moment from 'moment';
@@ -16,23 +16,39 @@ import { pushTo, removeFrom } from '@core/utils/array.utils';
 })
 export class VacunasComponent implements OnInit {
 
+	@Input() inmunizations: InmunizationDto[] = [
+		{
+			administrationDate: '2015-01-01',
+			note: 'note',
+			deleted: false,
+			id: 1,
+			snomed: {
+				fsn: 'Asdravirus (organismo)',
+				id: '64620000',
+				parentFsn: '',
+				parentId: '',
+			},
+			statusId: '255594003'
+		}
+	];
+
 	private snomedConcept: SnomedDto;
 
 	form: FormGroup;
 	today: Moment = moment();
 	inmunizationStatus: MasterDataInterface<string>[];
 
-	//Mat table
+	// Mat table
 	columns = [
 		{
-			def: "problemType",
+			def: 'problemType',
 			header: 'internaciones.anamnesis.vacunas.table.columns.PROBLEM_TYPE',
 			text: v => v.snomed.fsn
 		},
 		{
-			def: "clinicalStatus",
+			def: 'clinicalStatus',
 			header: 'internaciones.anamnesis.vacunas.table.columns.STATUS',
-			text: v => this.inmunizationStatus.find(status => status.id === v.statusId).description
+			text: v => this.inmunizationStatus?.find(status => status.id === v.statusId).description
 		},
 		{
 			def: 'date',
@@ -41,14 +57,13 @@ export class VacunasComponent implements OnInit {
 		},
 	];
 	displayedColumns: string[] = [];
-	dataSource = new MatTableDataSource<any>([]);
+	dataSource = new MatTableDataSource<any>(this.inmunizations);
 
 	constructor(
 		private formBuilder: FormBuilder,
 		private datePipe: DatePipe,
 		private internacionMasterDataService: InternacionMasterDataService
-	)
-	{
+	) {
 		this.displayedColumns = this.columns?.map(c => c.def).concat(['remove']);
 	}
 
@@ -88,25 +103,38 @@ export class VacunasComponent implements OnInit {
 
 	addToList() {
 		if (this.form.valid && this.snomedConcept) {
-			let vacuna: InmunizationDto = this.form.value;
-			vacuna.administrationDate = this.form.controls.date.value.format(DateFormat.API_DATE);
-			vacuna.snomed = this.snomedConcept;
+			const vacuna: InmunizationDto = {
+				administrationDate: this.form.value.date.format(DateFormat.API_DATE),
+				note: this.form.value.note,
+				deleted: false,
+				id: null,
+				snomed: this.snomedConcept,
+				statusId: this.form.value.statusId
+			};
 			this.add(vacuna);
 		}
 	}
 
 	setConcept(selectedConcept: SnomedDto): void {
 		this.snomedConcept = selectedConcept;
-		let fsn = selectedConcept ? selectedConcept.fsn : '';
+		const fsn = selectedConcept ? selectedConcept.fsn : '';
 		this.form.controls.snomed.setValue(fsn);
 	}
 
 	add(vacuna: InmunizationDto): void {
 		this.dataSource.data = pushTo<InmunizationDto>(this.dataSource.data, vacuna);
+		this.inmunizations.push(vacuna);
 	}
 
 	remove(index: number): void {
-		this.dataSource.data = removeFrom<InmunizationDto>(this.dataSource.data, index);
+		const toRemove = this.dataSource.data[index];
+		if (toRemove.id != null) {
+			this.inmunizations.find(item => item === toRemove).deleted = true;
+			this.dataSource.data = this.inmunizations.filter(item => !item.deleted);
+		} else {
+			this.dataSource.data = removeFrom<InmunizationDto>(this.dataSource.data, index);
+			this.inmunizations = this.inmunizations.filter(item => toRemove !== item);
+		}
 	}
 
 }
