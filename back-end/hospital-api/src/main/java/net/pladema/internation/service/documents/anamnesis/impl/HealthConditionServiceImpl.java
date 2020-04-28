@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -78,6 +79,21 @@ public class HealthConditionServiceImpl implements HealthConditionService {
             documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
         });
         return familyHistories.stream().filter(fh -> !fh.isDeleted()).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<HealthConditionBo> getDiagnosisGeneralState(Integer internmentEpisodeId) {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<HealthHistoryCondition> getPersonalHistoriesGeneralState(Integer internmentEpisodeId) {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<HealthHistoryCondition> getFamilyHistoriesGeneralState(Integer internmentEpisodeId) {
+        return new ArrayList<>();
     }
 
     private <T extends HealthHistoryCondition> HealthCondition buildHistoryHealth(Integer patientId, T healthHistory, boolean personal) {

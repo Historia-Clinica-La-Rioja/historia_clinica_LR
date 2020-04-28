@@ -12,4 +12,10 @@ public interface HealthConditionService {
     List<HealthHistoryCondition> loadPersonalHistories(Integer patientId, Long documentId, List<HealthHistoryCondition> personalHistories);
 
     List<HealthHistoryCondition> loadFamilyHistories(Integer patientId, Long documentId, List<HealthHistoryCondition> familyHistories);
+
+    List<HealthConditionBo> getDiagnosisGeneralState(Integer internmentEpisodeId);
+
+    List<HealthHistoryCondition> getPersonalHistoriesGeneralState(Integer internmentEpisodeId);
+
+    List<HealthHistoryCondition> getFamilyHistoriesGeneralState(Integer internmentEpisodeId);
 }

@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,6 +51,11 @@ public class MedicationServiceImpl implements MedicationService {
             documentService.createDocumentMedication(documentId, medicationStatement.getId());
         });
         return medications.stream().filter(m -> !m.isDeleted()).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Medication> getMedicationsGeneralState(Integer internmentEpisodeId) {
+        return new ArrayList<>();
     }
 
     private MedicationStatement saveMedicationStatement(Integer patientId, Medication medication, String sctid) {

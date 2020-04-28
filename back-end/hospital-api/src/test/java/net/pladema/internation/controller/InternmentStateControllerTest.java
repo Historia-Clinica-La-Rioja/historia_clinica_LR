@@ -2,6 +2,8 @@ package net.pladema.internation.controller;
 
 import net.pladema.BaseControllerTest;
 import net.pladema.internation.service.InternmentStateService;
+import net.pladema.internation.service.documents.anamnesis.HealthConditionService;
+import net.pladema.internation.service.documents.anamnesis.MedicationService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +21,12 @@ public class InternmentStateControllerTest extends BaseControllerTest {
 
 	@MockBean
 	private InternmentStateService internmentStateService;
+
+	@MockBean
+	private HealthConditionService healthConditionService;
+
+	@MockBean
+	private MedicationService medicationService;
 
 	@Before
 	public void setup() {

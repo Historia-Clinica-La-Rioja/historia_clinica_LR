@@ -7,4 +7,6 @@ import java.util.List;
 public interface MedicationService {
 
     List<Medication> loadMedications(Integer patientId, Long documentId, List<Medication> medications);
+
+    List<Medication> getMedicationsGeneralState(Integer internmentEpisodeId);
 }
