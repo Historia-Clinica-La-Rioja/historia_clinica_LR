@@ -4,8 +4,9 @@ import java.util.Collections;
 
 public class StringHelper {
 
+	private static final int MAX_LENGTH = 4;
+
 	private StringHelper() {
-		super();
 	}
 
 	public static String soundex(String data) {
@@ -18,12 +19,12 @@ public class StringHelper {
 			previousCode = "";
 			for (int i = 1; i < data.length(); i++) {
 				currentCode = encodeChar(data.charAt(i));
-				if (currentCode != previousCode)
+				if (!currentCode.equals(previousCode))
 					result.append(currentCode);
-				if (result.length() == 4)
+				if (result.length() == MAX_LENGTH)
 					break;
 				if (!currentCode.isEmpty())
-					previousCode.equals(currentCode);
+					previousCode = currentCode;
 			}
 		}
 		if (result.length() < 4)
