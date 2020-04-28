@@ -20,14 +20,6 @@ public class RoleTestUtils {
 		return permission;
 	}
 
-	public static Role createLicense(String description) {
-		Role license = new Role();
-		license.setDescription(description);
-		return license;
-	}
-
-
-
 	public static UserRole createUserLicense(User user, Role role) {
 		UserRole ul = new UserRole(user.getId(), role.getId());
 		Audit audit = new Audit();

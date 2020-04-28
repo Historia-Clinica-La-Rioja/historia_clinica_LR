@@ -1,10 +1,9 @@
 package net.pladema.user.repository;
 
 import static net.pladema.TestUtils.assertCreateAuditableEntity;
-import static net.pladema.user.UserTestUtils.createPassword;
-import static net.pladema.user.UserTestUtils.createUser;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import net.pladema.user.repository.entity.UserPasswordBean;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,14 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import net.pladema.BaseRepositoryTest;
-import net.pladema.user.repository.UserPasswordRepository;
-import net.pladema.user.repository.entity.User;
 import net.pladema.user.repository.entity.UserPassword;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest(showSql=false)
-public class UserPasswordRepositoryTest extends BaseRepositoryTest {
+public class UserPasswordRepositoryTest {
+	private final static Integer USER_ID = 1008;
 
 	@Autowired
 	private UserPasswordRepository userPasswordRepository;
@@ -30,8 +27,7 @@ public class UserPasswordRepositoryTest extends BaseRepositoryTest {
 	
 	@Test
 	public void save_create_test() {
-		User user = save(createUser("username@mail.com"));
-		UserPassword pass = createPassword(user);
+		UserPassword pass = UserPasswordBean.newUserPassword(USER_ID);
 		UserPassword createdPass = userPasswordRepository.saveAndFlush(pass);
 			
 		assertThat(createdPass)
@@ -39,7 +35,7 @@ public class UserPasswordRepositoryTest extends BaseRepositoryTest {
 		
 		assertThat(createdPass.getId())
 			.isNotNull()
-			.isEqualTo(user.getId());
+			.isEqualTo(USER_ID);
 		
 		assertCreateAuditableEntity(createdPass);
 	}

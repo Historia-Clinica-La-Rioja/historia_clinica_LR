@@ -1,8 +1,6 @@
 package net.pladema.permissions.repository;
 
 import static net.pladema.TestUtils.assertCreateAuditableEntity;
-import static net.pladema.permissions.RoleTestUtils.createLicense;
-import static net.pladema.user.UserTestUtils.createUser;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Before;
@@ -12,14 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import net.pladema.BaseRepositoryTest;
-import net.pladema.permissions.repository.entity.Role;
 import net.pladema.permissions.repository.entity.UserRole;
-import net.pladema.user.repository.entity.User;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest(showSql = false)
-public class UserRoleRepositoryTest extends BaseRepositoryTest {
+public class UserRoleRepositoryTest {
+	private final static Integer USER_ID = 1008;
+	private final static Short ROLE_ID = (short) 8;
 
 	@Autowired
 	private UserRoleRepository userLicenseRepository;
@@ -29,10 +26,8 @@ public class UserRoleRepositoryTest extends BaseRepositoryTest {
 	}
 	
 	@Test
-	public void saveCreateTest() {
-		Role role = save(createLicense("ADMIN"));
-		User user = save(createUser("username9@mail.com"));
-		UserRole userRole = new UserRole(user.getId(),role.getId());
+	public void save_ok() {
+		UserRole userRole = new UserRole(USER_ID, ROLE_ID);
 		UserRole createdUserRole = userLicenseRepository.saveAndFlush(userRole);
 		
 		assertThat(createdUserRole)
@@ -45,11 +40,11 @@ public class UserRoleRepositoryTest extends BaseRepositoryTest {
 					
 		assertThat(createdUserRole.getRoleId())
 			.isNotNull()
-			.isEqualTo(role.getId());
+			.isEqualTo(ROLE_ID);
 		
 		assertThat(createdUserRole.getUserId())
 			.isNotNull()
-			.isEqualTo(user.getId());
+			.isEqualTo(USER_ID);
 			
 	}
 }

@@ -1,8 +1,6 @@
 package net.pladema.permissions.repository;
 
 import static net.pladema.TestUtils.assertCreateAuditableEntity;
-import static net.pladema.permissions.RoleTestUtils.createLicense;
-import static net.pladema.permissions.RoleTestUtils.createPermission;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Before;
@@ -12,14 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import net.pladema.BaseRepositoryTest;
-import net.pladema.permissions.repository.entity.Role;
 import net.pladema.permissions.repository.entity.RolePermission;
-import net.pladema.permissions.repository.entity.Permission;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest(showSql = false)
-public class RolePermissionRepositoryTest extends BaseRepositoryTest {
+public class RolePermissionRepositoryTest {
+	private final static Short ROLE_ID = (short) 8;
+	private final static Short PERMISSION_ID = (short) 108;
 
 	@Autowired
 	private RolePermissionRepository rolePermissionRepository;
@@ -30,9 +27,7 @@ public class RolePermissionRepositoryTest extends BaseRepositoryTest {
 	
 	@Test
 	public void saveCreateTest() {
-		Role role = save(createLicense("ADMIN"));
-		Permission permission = save(createPermission());
-		RolePermission rolePermission = new RolePermission(role.getId(), permission.getId());
+		RolePermission rolePermission = new RolePermission(ROLE_ID, PERMISSION_ID);
 		RolePermission createdRolePermission = rolePermissionRepository.saveAndFlush(rolePermission);
 		
 		assertThat(createdRolePermission)
@@ -45,11 +40,11 @@ public class RolePermissionRepositoryTest extends BaseRepositoryTest {
 		
 		assertThat(createdRolePermission.getRoleId())
 			.isNotNull()
-			.isEqualTo(role.getId());
+			.isEqualTo(ROLE_ID);
 		
 		assertThat(createdRolePermission.getPermissionId())
 			.isNotNull()
-			.isEqualTo(permission.getId());
+			.isEqualTo(PERMISSION_ID);
 			
 	}
 }

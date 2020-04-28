@@ -15,13 +15,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
-import static net.pladema.user.UserTestUtils.createUser;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 public class RoleServiceImplTest {
+	private final static Integer USER_ID = 1008;
 
 	@MockBean
 	private UserRoleRepository userLicenseRepository;
@@ -40,8 +39,7 @@ public class RoleServiceImplTest {
 	public void createUserLicense_notExistLicense() {
 		when(licenseRepository.findByDescription(any())).thenReturn(Optional.empty());
 
-		User user = createUser("username9@mail.com");
-		licenseServiceImpl.createUserRole(user.getId(), ERole.ADVANCED_USER);
+		licenseServiceImpl.createUserRole(USER_ID, ERole.ADVANCED_USER);
 	}
 
 }

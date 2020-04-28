@@ -5,11 +5,16 @@ public class UserBean {
 	private UserBean() {
 	}
 
-	public static User newUser(Integer id, String username, Boolean enable) {
+	public static User newUser(String username) {
 		User user = new User();
+		user.setUsername(username);
+		return user;
+	}
+
+	public static User newUser(Integer id, String username, Boolean enable) {
+		User user = newUser(username);
 		user.setId(id);
 		user.setPersonId(id);
-		user.setUsername(username);
 		user.setEnable(enable);
 		return user;
 	}

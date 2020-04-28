@@ -1,20 +1,15 @@
 package net.pladema.user.service.impl;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
+import net.pladema.user.repository.UserRepository;
+import net.pladema.user.repository.entity.User;
+import net.pladema.user.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
-import net.pladema.user.repository.UserRepository;
-import net.pladema.user.repository.entity.User;
-import net.pladema.user.repository.projections.PageableUsers;
-import net.pladema.user.service.UserService;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -59,11 +54,6 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void changeStatusAccount(Integer userId, Boolean status) {
-		userRepository.changeStatusAccount(userId, status);
-	}
-
-	@Override
 	public void updateLoginDate(Integer id) {
 		userRepository.updateLoginDate(id, LocalDateTime.now());
 	}
@@ -76,11 +66,6 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean isEnable(Integer id) {
 		return userRepository.isEnable(id);
-	}
-
-	@Override
-	public Page<PageableUsers> pegeableUsers(Pageable pageable) {
-		return userRepository.pageableUsers(pageable, PageableUsers.class);
 	}
 
 	@Override
