@@ -7,6 +7,7 @@ import static org.mockito.Mockito.doReturn;
 import java.util.Calendar;
 import java.util.Optional;
 
+import net.pladema.permissions.service.UserAssignmentService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,17 +28,11 @@ public class SecurityServiceImplTest {
 	private SecurityServiceImpl securityServiceImpl;
 
 	@MockBean
-	private UserRoleRepository userLicenseRepository;
+	private UserAssignmentService userAssignmentService;
 
-	@MockBean
-	private RoleRepository licenseRepository;
-	
 	@Before
 	public void setUp() {
-		securityServiceImpl = new SecurityServiceImpl(
-				new RoleServiceImpl(
-						userLicenseRepository,
-						licenseRepository));
+		securityServiceImpl = new SecurityServiceImpl(userAssignmentService);
 	}
 
 	@Test

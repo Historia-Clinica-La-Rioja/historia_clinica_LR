@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import net.pladema.permissions.service.RoleService;
 import net.pladema.security.service.SecurityService;
 import net.pladema.security.service.enums.ETokenType;
 import net.pladema.security.token.service.TokenService;
@@ -33,14 +32,11 @@ public class TokenServiceImpl implements TokenService {
 
 	private final SecurityService securityService;
 
-	private final RoleService roleService;
-
 	private final UserService userService;
 
-	public TokenServiceImpl(SecurityService securityService, RoleService roleService, UserService userService) {
+	public TokenServiceImpl(SecurityService securityService, UserService userService) {
 		super();
 		this.securityService = securityService;
-		this.roleService = roleService;
 		this.userService = userService;
 	}
 
@@ -60,14 +56,14 @@ public class TokenServiceImpl implements TokenService {
 	protected String createRefreshToken(String username) {
 		Integer userId = userService.getUserId(username);
 		Date refreshTokenExpirationDate = generateExpirationDate(refreshTokenExpiration);
-		LocalClaims claims = new LocalClaims(ETokenType.REFRESH, userId, roleService.getAuthoritiesClaims(userId));
+		LocalClaims claims = new LocalClaims(ETokenType.REFRESH, userId);
 		return tokenToString(claims, refreshTokenExpirationDate);
 	}
 
 	protected String createNormalToken(String username) {
 		Integer userId = userService.getUserId(username);
 		Date tokenExpirationDate = generateExpirationDate(tokenExpiration);
-		LocalClaims claims = new LocalClaims(ETokenType.NORMAL, userId, roleService.getAuthoritiesClaims(userId));
+		LocalClaims claims = new LocalClaims(ETokenType.NORMAL, userId);
 		return tokenToString(claims, tokenExpirationDate);
 	}
 

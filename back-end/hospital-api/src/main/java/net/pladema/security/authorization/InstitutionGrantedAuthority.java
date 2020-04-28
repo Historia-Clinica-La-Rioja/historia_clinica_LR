@@ -32,7 +32,7 @@ public class InstitutionGrantedAuthority implements GrantedAuthority {
 
 	@Override
 	public String getAuthority() {
-		return this.roleAssignment.getRole();
+		return this.roleAssignment.getRole().getValue();
 	}
 	
 }

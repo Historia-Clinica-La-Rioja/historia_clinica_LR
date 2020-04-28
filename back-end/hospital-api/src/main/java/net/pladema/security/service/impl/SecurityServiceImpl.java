@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import net.pladema.permissions.service.UserAssignmentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import net.pladema.permissions.service.RoleService;
 import net.pladema.security.authorization.InstitutionGrantedAuthority;
 import net.pladema.security.service.SecurityService;
 import net.pladema.security.service.enums.ETokenType;
@@ -32,10 +32,10 @@ public class SecurityServiceImpl implements SecurityService {
 	@Value("${token.secret}")
 	private String secret;
 
-	private RoleService roleService;
+	private UserAssignmentService userAssignmentService;
 	
-	public SecurityServiceImpl(RoleService roleService) {
-		this.roleService = roleService;
+	public SecurityServiceImpl(UserAssignmentService userAssignmentService) {
+		this.userAssignmentService = userAssignmentService;
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class SecurityServiceImpl implements SecurityService {
 	@SuppressWarnings("unchecked")
 	protected Collection<GrantedAuthority> getAuthorities(Claims claims) {				
 		//Los permisos del usuario se obtienen de user_role
-		return	roleService.getUserRoleAssignments(getUserId(claims))
+		return	userAssignmentService.getRoleAssignment(getUserId(claims))
 				.stream()
 				.map(InstitutionGrantedAuthority::new)
 				.collect(Collectors.toList());

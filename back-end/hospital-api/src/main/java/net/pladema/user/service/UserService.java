@@ -1,6 +1,7 @@
 package net.pladema.user.service;
 
 import net.pladema.user.repository.entity.User;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
@@ -8,7 +9,7 @@ public interface UserService {
 
 	public User addUser(User user);
 
-	public User updateUser(User user);
+	void setEnable(User user, Boolean status);
 	
 	Optional<User> getUser(String username);
 	

@@ -1,6 +1,7 @@
 package net.pladema.permissions.controller;
 
 import net.pladema.BaseControllerTest;
+import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.permissions.service.LoggedUserService;
 import net.pladema.permissions.service.dto.RoleAssignment;
 import org.junit.Test;
@@ -32,7 +33,7 @@ public class LoggedUserControllerTest extends BaseControllerTest {
 	public void getPermissions_admin() throws Exception {
 
 		List<RoleAssignment> permissionAssignment = Arrays.asList(
-				new RoleAssignment("ADMIN", null)
+				new RoleAssignment(ERole.ADMIN, null)
 		);
 		when(loggedUserService.getPermissionAssignment()).thenReturn(permissionAssignment);
 
@@ -49,7 +50,7 @@ public class LoggedUserControllerTest extends BaseControllerTest {
 	public void getPermissions_hospital() throws Exception {
 
 		List<RoleAssignment> permissionAssignment = Arrays.asList(
-				new RoleAssignment("MEDICO", 99)
+				new RoleAssignment(ERole.BASIC_USER, 99)
 		);
 		when(loggedUserService.getPermissionAssignment()).thenReturn(permissionAssignment);
 
@@ -58,7 +59,7 @@ public class LoggedUserControllerTest extends BaseControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.roleAssignments").isArray())
 				.andExpect(jsonPath("$.roleAssignments", hasSize(1)))
-				.andExpect(jsonPath("$.roleAssignments[0].role").value("MEDICO"))
+				.andExpect(jsonPath("$.roleAssignments[0].role").value("BASIC_USER"))
 				.andExpect(jsonPath("$.roleAssignments[0].institutionId").value(99));
 	}
 

@@ -3,6 +3,7 @@ package net.pladema.security.authorization;
 import java.io.Serializable;
 import java.util.List;
 
+import net.pladema.permissions.repository.enums.ERole;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 
@@ -20,7 +21,7 @@ public class InstitutionPermissionEvaluator implements PermissionEvaluator {
 	 * permission: tiene que ser uno de los definidos en ERole
 	 */
     public boolean hasPermission(Authentication auth, Object targetDomainObject, Object permission) {
-    	return hasPermissionInInstitution(auth, (Integer) targetDomainObject, (String) permission);
+    	return hasRoleInInstitution(auth, (Integer) targetDomainObject, ERole.valueOf((String) permission));
     }
 
     @Override
@@ -31,13 +32,13 @@ public class InstitutionPermissionEvaluator implements PermissionEvaluator {
      */
     public boolean hasPermission(Authentication auth, Serializable targetId, String targetType, Object permission) {
     	if (!targetType.equals("Institution")) return false;
-    	return hasPermissionInInstitution(auth, (Integer) targetId, (String) permission);
+    	return hasRoleInInstitution(auth, (Integer) targetId, ERole.valueOf((String) permission));
     }
 
-	private boolean hasPermissionInInstitution(Authentication auth, Integer targetId, String permission) {
+	private boolean hasRoleInInstitution(Authentication auth, Integer targetId, ERole role) {
 		List<InstitutionGrantedAuthority> authorities = 
 				(List<InstitutionGrantedAuthority>) auth.getAuthorities();
-		RoleAssignment requestedRole = new RoleAssignment(permission, targetId);
+		RoleAssignment requestedRole = new RoleAssignment(role, targetId);
 		return authorities.contains(new InstitutionGrantedAuthority(requestedRole));
 	}
 	

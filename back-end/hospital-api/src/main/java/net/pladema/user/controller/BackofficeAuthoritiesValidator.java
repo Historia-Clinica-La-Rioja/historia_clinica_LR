@@ -1,7 +1,6 @@
 package net.pladema.user.controller;
 
 import net.pladema.permissions.service.LoggedUserService;
-import net.pladema.permissions.service.RoleService;
 import net.pladema.sgx.exceptions.PermissionDeniedException;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +16,7 @@ public final class BackofficeAuthoritiesValidator {
 	private final LoggedUserService loggedUserService;
 
 	public BackofficeAuthoritiesValidator(
-			LoggedUserService loggedUserService,
-			RoleService roleService
+			LoggedUserService loggedUserService
 	) {
 		this.loggedUserService = loggedUserService;
 	}

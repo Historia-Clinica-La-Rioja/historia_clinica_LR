@@ -1,7 +1,7 @@
 package net.pladema.user.configuration;
 
 import net.pladema.permissions.repository.enums.ERole;
-import net.pladema.permissions.service.RoleService;
+import net.pladema.permissions.service.UserAssignmentService;
 import net.pladema.user.repository.entity.User;
 import net.pladema.user.service.UserPasswordService;
 import net.pladema.user.service.UserService;
@@ -32,40 +32,38 @@ public class AdminConfig {
 
 	private final UserPasswordService userPasswordService;
 
-	private final RoleService roleService;
+	private final UserAssignmentService userAssignmentService;
 
-	public AdminConfig(UserService userService, UserPasswordService userPasswordService,
-			RoleService roleService) {
+	public AdminConfig(
+			UserService userService,
+			UserPasswordService userPasswordService,
+			UserAssignmentService userAssignmentService
+	) {
 		super();
 		this.userService = userService;
 		this.userPasswordService = userPasswordService;
-		this.roleService = roleService;
+		this.userAssignmentService = userAssignmentService;
 	}
 
 	@PostConstruct
 	public void init() {
-		Optional<User> admin = userService.getUser(adminMail);
-		if (admin.isPresent())
-			updateUser(admin.get());
-		else createAdminUser();
+		User admin = userService.getUser(adminMail)
+				.orElseGet(() -> createAdminUser());
+		updateUser(admin);
 	}
 
-	private void createAdminUser() {
+	private User createAdminUser() {
 		User admin = new User();
 		admin.setUsername(adminMail);
-		admin.setEnable(true);
-		admin = userService.addUser(admin);
-		userPasswordService.addPassword(admin, adminPassword);
-		roleService.createUserRole(admin.getId(), ERole.ADMIN);
-		LOG.info("{}", "Admin created");
+		User saved = userService.addUser(admin);
+		LOG.info("Admin created with id {}", saved.getId());
+		return saved;
 	}
 	
 	private void updateUser(User admin) {
-		admin.setUsername(adminMail);
-		admin.setEnable(true);
-		admin = userService.updateUser(admin);
+		userService.setEnable(admin, true);
 		userPasswordService.updatePassword(admin.getId(), adminPassword);
-		roleService.updateAdminRole(admin.getId(), ERole.ADMIN);
+		userAssignmentService.saveUserRole(admin.getId(), ERole.ADMIN, null);
 		LOG.info("{}", "Admin updated");
 	}
 	

@@ -17,7 +17,4 @@ public interface RoleRepository extends JpaRepository<Role, Short> {
 	@Query("SELECT r FROM Role r WHERE r.description = :description")
 	Optional<Role> findByDescription(@Param("description") String description);
 
-	@Transactional(readOnly = true)
-	@Query("SELECT (case when count(l)> 0 then true else false end) FROM Role r WHERE r.description = :description")
-	boolean existLicense(@Param("description") String description);
 }

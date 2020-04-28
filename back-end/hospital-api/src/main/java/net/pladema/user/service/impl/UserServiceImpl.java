@@ -32,10 +32,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User updateUser(User user) {
-		user = userRepository.save(user);
-		LOG.debug("Update user -> {}", user);
-		return user;
+	public void setEnable(User user, Boolean status) {
+		userRepository.changeStatusAccount(user.getId(), status);
 	}
 
 	@Override

@@ -2,7 +2,6 @@ package net.pladema.security.token.service.domain;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -16,18 +15,11 @@ public class LocalClaims implements Serializable{
 	
 	private transient Map<String, Object> data = new HashMap<>();
 
-	public LocalClaims(ETokenType tokenType, Integer userId, List<String> authorities) {
-		super();
-		data.put("userId", userId);
-		data.put("roles", authorities);
-		data.put("tokentype", tokenType.getUrl());
-		data.put("createdOn", System.currentTimeMillis());
-	}
-	
 	public LocalClaims(ETokenType tokenType, Integer userId) {
 		super();
 		data.put("userId", userId);
-		data.put("tokentype", tokenType);
+		data.put("tokentype", tokenType.getUrl());
+		data.put("createdOn", System.currentTimeMillis());
 	}
 
 	public LocalClaims(Map<String, Object> claims) {
