@@ -44,10 +44,10 @@ public class RoleServiceImpl implements RoleService {
 	 */
 	private String getRoleDescription(ERole eRole) {
 		switch (eRole) {
-			case ADMIN: return "Admin";
-			case ADMIN_APP: return "Administrador";
-			case ADVANCED_USER: return "Especialista Médico";
-			case BASIC_USER: return "Profesional de la salud";
+			case ROOT: return "ROOT";
+			case ADMINISTRADOR: return "Administrador";
+			case ESPECIALISTA_MEDICO: return "Especialista Médico";
+			case PROFESIONAL_DE_SALUD: return "Profesional de la salud";
 		}
 		throw new NotFoundException("role-not-exists", String.format("El rol %s no existe", eRole));
 	}

@@ -33,7 +33,7 @@ public class LoggedUserControllerTest extends BaseControllerTest {
 	public void getPermissions_admin() throws Exception {
 
 		List<RoleAssignment> permissionAssignment = Arrays.asList(
-				new RoleAssignment(ERole.ADMIN, null)
+				new RoleAssignment(ERole.ADMINISTRADOR, null)
 		);
 		when(loggedUserService.getPermissionAssignment()).thenReturn(permissionAssignment);
 
@@ -42,7 +42,7 @@ public class LoggedUserControllerTest extends BaseControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.roleAssignments").isArray())
 				.andExpect(jsonPath("$.roleAssignments", hasSize(1)))
-				.andExpect(jsonPath("$.roleAssignments[0].role").value("ADMIN"));
+				.andExpect(jsonPath("$.roleAssignments[0].role").value("ADMINISTRADOR"));
 	}
 
 	@Test
@@ -50,7 +50,7 @@ public class LoggedUserControllerTest extends BaseControllerTest {
 	public void getPermissions_hospital() throws Exception {
 
 		List<RoleAssignment> permissionAssignment = Arrays.asList(
-				new RoleAssignment(ERole.BASIC_USER, 99)
+				new RoleAssignment(ERole.PROFESIONAL_DE_SALUD, 99)
 		);
 		when(loggedUserService.getPermissionAssignment()).thenReturn(permissionAssignment);
 
@@ -59,7 +59,7 @@ public class LoggedUserControllerTest extends BaseControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.roleAssignments").isArray())
 				.andExpect(jsonPath("$.roleAssignments", hasSize(1)))
-				.andExpect(jsonPath("$.roleAssignments[0].role").value("BASIC_USER"))
+				.andExpect(jsonPath("$.roleAssignments[0].role").value("PROFESIONAL_DE_SALUD"))
 				.andExpect(jsonPath("$.roleAssignments[0].institutionId").value(99));
 	}
 

@@ -4,10 +4,10 @@ import net.pladema.sgx.exceptions.NotFoundException;
 
 public enum ERole {
 
-	ADMIN(1, "ADMIN"),
-    ADMIN_APP(2, "ADMIN_APP"),
-    BASIC_USER(3, "BASIC_USER"),
-    ADVANCED_USER(4, "ADVANCED_USER");
+	ROOT(1, "ROOT"),
+    ADMINISTRADOR(2, "ADMINISTRADOR"),
+    ESPECIALISTA_MEDICO(3, "ESPECIALISTA_MEDICO"),
+    PROFESIONAL_DE_SALUD(4, "PROFESIONAL_DE_SALUD");
 
 	private Short id;
     private String value;

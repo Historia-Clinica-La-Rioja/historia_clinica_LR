@@ -64,7 +64,7 @@ public class AdminConfig {
 	private void updateUser(User admin) {
 		userService.setEnable(admin, true);
 		userPasswordService.updatePassword(admin.getId(), adminPassword);
-		userAssignmentService.saveUserRole(admin.getId(), ERole.ADMIN, null);
+		userAssignmentService.saveUserRole(admin.getId(), ERole.ROOT, null);
 		LOG.info("{}", "Admin updated");
 	}
 	

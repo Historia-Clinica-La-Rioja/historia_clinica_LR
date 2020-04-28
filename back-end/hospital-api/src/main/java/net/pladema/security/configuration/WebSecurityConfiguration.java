@@ -106,7 +106,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.POST, PAS$W0RD_RESET ).permitAll()
 				.antMatchers(MASTERDATA).permitAll()
 				.antMatchers("/v2/**","/swagger-ui.html","/swagger-resources/**","/webjars/springfox-swagger-ui/**").permitAll()
-				.antMatchers(BACKOFFICE + "/**").hasAnyAuthority(ERole.ADMIN.getValue(), ERole.ADMIN_APP.getValue())
+				.antMatchers(BACKOFFICE + "/**").hasAnyAuthority(ERole.ROOT.getValue(), ERole.ADMINISTRADOR.getValue())
 				.anyRequest().authenticated();
 		// @formatter:on
 		httpSecurity.exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
