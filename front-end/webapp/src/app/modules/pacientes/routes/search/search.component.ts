@@ -10,6 +10,7 @@ import { PersonMasterDataService } from '@api-rest/services/person-master-data.s
 import { TableModel } from 'src/app/modules/presentation/components/table/table.component';
 import { momentFormatDate, DateFormat } from '@core/utils/moment.utils';
 import { PersonService } from '@api-rest/services/person.service';
+import { finalize } from 'rxjs/operators';
 
 const ROUTE_NEW = 'pacientes/new';
 const ROUTE_HOME = 'pacientes';
@@ -52,20 +53,21 @@ export class SearchComponent implements OnInit {
 
 			this.buildFormSearch();
 
-			this.personService.getRenaperPersonData({ identificationNumber: this.identificationNumber, genderId: this.genderId }).subscribe(
-				personData => {
-					this.isLoading = false;
-					if (personData) {
-						let personToAdd: any = { ...personData };
-						personToAdd.identificationType = this.identificationTypeId;
-						personToAdd.identificationNumber = this.identificationNumber;
-						personToAdd.genderId = this.genderId;
-						this.goToNextState(personToAdd);
-					}
-				});
-			let startDate = params['birthDate'] ? moment(params['birthDate']) : null ;
+			this.personService.getRenaperPersonData({ identificationNumber: this.identificationNumber, genderId: this.genderId })
+				.pipe(finalize(() => this.isLoading = false))
+				.subscribe(
+					personData => {
+						if (personData) {
+							let personToAdd: any = { ...personData };
+							personToAdd.identificationType = this.identificationTypeId;
+							personToAdd.identificationNumber = this.identificationNumber;
+							personToAdd.genderId = this.genderId;
+							this.goToNextState(personToAdd);
+						}
+					});
+			let startDate = params['birthDate'] ? moment(params['birthDate']) : null;
 			this.formSearch = this.formBuilder.group({
-				identificationNumber: [this.identificationNumber, [Validators.required,Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
+				identificationNumber: [this.identificationNumber, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
 				identificationType: [Number(this.identificationTypeId), Validators.required],
 				firstName: [params['firstName'], Validators.required],
 				middleNames: [params['middleNames']],
