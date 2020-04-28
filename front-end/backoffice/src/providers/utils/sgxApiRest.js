@@ -47,6 +47,7 @@ class SgxApiRest {
     logout() {
         localStorage.clear();
         this._account$ = undefined;
+        this._permission$ = undefined;
     }
 
   }

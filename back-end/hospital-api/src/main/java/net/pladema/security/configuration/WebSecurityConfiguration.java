@@ -12,6 +12,7 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import net.pladema.actuator.configuration.ActuatorConfiguration;
+import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.security.filters.AuthenticationTokenFilter;
 
 @Configuration
@@ -43,6 +44,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	private static final String INTERNMENT = "/institutions/{institutionId}/internments/";
 
 	private static final String ANAMNESIS = "/institutions/{institutionId}/internments/{internmentEpisodeId}/anamnesis";
+	
+	private static final String BACKOFFICE = "/backoffice";
 
 	private static final String INTERNMENT_STATE = "/institutions/{institutionId}/internments-state/";
 
@@ -103,6 +106,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.POST, PAS$W0RD_RESET ).permitAll()
 				.antMatchers(MASTERDATA).permitAll()
 				.antMatchers("/v2/**","/swagger-ui.html","/swagger-resources/**","/webjars/springfox-swagger-ui/**").permitAll()
+				.antMatchers(BACKOFFICE + "/**").hasAnyAuthority(ERole.ADMIN.getValue(), ERole.ADMIN_APP.getValue())
 				.anyRequest().authenticated();
 		// @formatter:on
 		httpSecurity.exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
