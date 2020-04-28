@@ -70,13 +70,16 @@ export class NewPatientComponent implements OnInit {
 					addressNumber: [],
 					addressFloor: [],
 					addressApartment: [],
-					addressQuarter: [],
-					addressCityId: { value: null, disabled: true },
+					addressQuarter:[],
+					addressCityId:  { value: null, disabled: true },
 					addressPostcode: [],
 
 					addressProvinceId: [],
 					addressCountryId: [],
 					addressDepartmentId: { value: null, disabled: true },
+					//Patient
+					medicalCoverageName:[null,Validators.maxLength(VALIDATIONS.MAX_LENGTH.medicalCoverageName)],
+					medicalCoverageAffiliateNumber:[null,Validators.maxLength(VALIDATIONS.MAX_LENGTH.medicalCoverageAffiliateNumber)]
 				});
 			});
 
@@ -143,7 +146,9 @@ export class NewPatientComponent implements OnInit {
 			//Patient
 			typeId: VALID_PATIENT,
 			comments: null,
-			identityVerificationStatusId: null
+			identityVerificationStatusId: null,
+			medicalCoverageName: this.form.controls.medicalCoverageName.value,
+			medicalCoverageAffiliateNumber: this.form.controls.medicalCoverageAffiliateNumber.value,
 		};
 
 	}

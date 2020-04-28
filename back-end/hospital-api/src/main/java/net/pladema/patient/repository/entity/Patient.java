@@ -43,5 +43,12 @@ public class Patient implements Serializable{
     
     @Column(name = "identity_verification_status_id")
     private Short identityVerificationStatusId;
+    
+    @Column( name = "medical_coverage_name", length = 255)
+    private String medicalCoverageName;
+ 
+    @Column( name = "medical_coverage_affiliate_number", length = 150)
+    private String medicalCoverageAffiliateNumber;
 }
+
 

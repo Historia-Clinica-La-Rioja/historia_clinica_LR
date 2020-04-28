@@ -1322,3 +1322,20 @@ databaseChangeLog:
                 INSERT INTO blood_type VALUES (6, 'B+');
                 INSERT INTO blood_type VALUES (7, 'AB−');
                 INSERT INTO blood_type VALUES (8, 'AB+');
+- changeSet:
+    id: patient-addColumns-medical_coverage
+    author: gmurgolo
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: medical_coverage_name
+            type: varchar(255)
+            constraints:
+                nullable: true  
+        - column:
+            name: medical_coverage_affiliate_number
+            type: varchar(150)
+            constraints:
+                nullable: true
+        tableName: patient

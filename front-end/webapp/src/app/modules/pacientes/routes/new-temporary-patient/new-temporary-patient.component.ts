@@ -77,7 +77,10 @@ export class NewTemporaryPatientComponent implements OnInit {
 
 				addressProvinceId: [],
 				addressCountryId: [],
-				addressDepartmentId: { value: null, disabled: true }
+				addressDepartmentId: { value: null, disabled: true },
+				//Patient
+				medicalCoverageName:[null,Validators.maxLength(VALIDATIONS.MAX_LENGTH.medicalCoverageName)],
+				medicalCoverageAffiliateNumber:[null,Validators.maxLength(VALIDATIONS.MAX_LENGTH.medicalCoverageAffiliateNumber)]
 			  });
 		});
 
@@ -143,7 +146,9 @@ export class NewTemporaryPatientComponent implements OnInit {
       //Patient
       typeId: TEMPORARY_PATIENT,
       comments: this.comments,
-      identityVerificationStatusId: this.identityVerificationStatus
+	  identityVerificationStatusId: this.identityVerificationStatus,
+	  medicalCoverageName: this.form.controls.medicalCoverageName.value,
+	  medicalCoverageAffiliateNumber: this.form.controls.medicalCoverageAffiliateNumber.value,
     };
   }
 

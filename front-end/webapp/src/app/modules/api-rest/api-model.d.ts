@@ -4,6 +4,8 @@
 export interface APatientDto extends APersonDto {
     comments: string;
     identityVerificationStatusId: number;
+    medicalCoverageAffiliateNumber: string;
+    medicalCoverageName: string;
     typeId: number;
 }
 

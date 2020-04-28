@@ -264,6 +264,8 @@
 			"INVALID": "El campo es invalido.",
 			"LAST_NAME":"Primer apellido",
 			"LAST_NAME_TITLE":"Apellidos",
+			"MEDICAL_COVERAGE_NAME":"Cobertura Social - Prepaga",
+			"MEDICAL_COVERAGE_AFFILIATE_NUMBER":"Numero de afiliado",
 			"MIDDLE_NAMES": "Otros nombres",
 			"MOTHERS_LAST_NAME": "Apellido materno",
 			"NAME_SELF_DETERMINATION": "Nombre autopercibido",

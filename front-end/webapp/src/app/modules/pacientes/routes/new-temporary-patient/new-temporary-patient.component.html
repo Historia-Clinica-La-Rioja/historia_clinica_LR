@@ -299,7 +299,39 @@
 				<mat-error *ngIf="hasError(form,'email', 'email')  && formSubmitted"
 							[translate]="'pacientes.form.INVALID'"></mat-error>
 			</mat-form-field>
-			<br>
+
+			<div class="form-row">
+				<div>
+					<div>
+						<span [translate]="'pacientes.form.MEDICAL_COVERAGE_NAME'"></span>
+					</div>
+					<mat-form-field appearance="outline">
+						<input id="medicalCoverageName"
+							name="medicalCoverageName"
+							formControlName="medicalCoverageName"
+							placeholder="{{'pacientes.form.MEDICAL_COVERAGE_NAME' | translate}}"
+							matInput
+						>
+						<mat-error *ngIf="formSubmitted && hasError(form, 'maxlength', 'medicalCoverageName')" [translate]="'pacientes.form.INVALID'"></mat-error>
+					</mat-form-field>
+				</div>
+
+				<div>
+					<div>
+						<span [translate]="'pacientes.form.MEDICAL_COVERAGE_AFFILIATE_NUMBER'"></span>
+					</div>
+					<mat-form-field appearance="outline">
+						<input id="medicalCoverageAffiliateNumber"
+							name="medicalCoverageAffiliateNumber"
+							formControlName="medicalCoverageAffiliateNumber"
+							placeholder="{{'pacientes.form.MEDICAL_COVERAGE_AFFILIATE_NUMBER' | translate}}"
+							matInput
+						>
+						<mat-error *ngIf="formSubmitted && hasError(form, 'maxlength', 'medicalCoverageAffiliateNumber')" [translate]="'pacientes.form.INVALID'"></mat-error>
+					</mat-form-field>
+				</div>
+			</div>
+
 			<div>
 				<div>
 					<span [translate]="'pacientes.form.RELIGION'"></span>
