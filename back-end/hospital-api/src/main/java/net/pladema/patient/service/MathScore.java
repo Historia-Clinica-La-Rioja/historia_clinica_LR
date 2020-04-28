@@ -1,6 +1,6 @@
 package net.pladema.patient.service;
 
-import static net.pladema.patient.service.StringHelper.soundex;
+import static net.pladema.patient.service.StringHelper.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -53,12 +53,14 @@ public class MathScore {
 		return partialResult;
 	}
 
-	private static float sumFullMatchCases(PatientSearchFilter searchFilter, Person personToMatch, Float partialResult) {
-		partialResult += personToMatch.getIdentificationTypeId().equals(searchFilter.getIdentificationTypeId())
+	private static float sumFullMatchCases(PatientSearchFilter searchFilter, Person personToMatch,
+			Float partialResult) {
+		partialResult += assertNulls(personToMatch.getIdentificationTypeId(), searchFilter.getIdentificationTypeId())
+				&& personToMatch.getIdentificationTypeId().equals(searchFilter.getIdentificationTypeId())
 				? SearchField.IdentificationType.getCoefficent()
 				: 0;
-		partialResult += personToMatch.getGenderId().equals(searchFilter.getGenderId())
-				? SearchField.Gender.getCoefficent()
+		partialResult += assertNulls(searchFilter.getGenderId(), personToMatch.getGenderId())
+				&& personToMatch.getGenderId().equals(searchFilter.getGenderId()) ? SearchField.Gender.getCoefficent()
 				: 0;
 		return partialResult;
 	}
@@ -67,11 +69,15 @@ public class MathScore {
 		return date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 	}
 	
+	private static boolean assertNulls(Object filterAtribute, Object atributeToMatchh) {
+		return filterAtribute != null && atributeToMatchh != null;
+	}
+
 	public static float calculateMatchScore(String obtainedText, String searchedText, float coefficient) {
-		if (StringHelper.isNullOrWhiteSpace(obtainedText)) {
+		if (isNullOrWhiteSpace(obtainedText)) {
 			return 0;
 		}
-		if (StringHelper.isNullOrWhiteSpace(searchedText)) {
+		if (isNullOrWhiteSpace(searchedText)) {
 			return 0;
 		}
 
