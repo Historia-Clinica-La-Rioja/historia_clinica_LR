@@ -72,6 +72,7 @@ export interface AnamnesisDto extends Serializable {
 
 export interface AnthropometricDataDto extends Serializable {
     bloodType: ClinicalObservationDto;
+    deleted: boolean;
     height: ClinicalObservationDto;
     weight: ClinicalObservationDto;
 }
@@ -336,6 +337,7 @@ export interface UserDto extends AbstractUserDto {
 
 export interface VitalSignDto extends Serializable {
     bloodOxygenSaturation: ClinicalObservationDto;
+    deleted: boolean;
     diastolicBloodPressure: ClinicalObservationDto;
     heartRate: ClinicalObservationDto;
     respiratoryRate: ClinicalObservationDto;

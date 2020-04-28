@@ -17,4 +17,6 @@ public class AnthropometricDataDto implements Serializable {
 
     private ClinicalObservationDto weight;
 
+    private boolean deleted = false;
+
 }

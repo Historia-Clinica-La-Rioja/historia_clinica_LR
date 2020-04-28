@@ -94,7 +94,7 @@ public class CreateVitalSignLabServiceImpl implements CreateVitalSignLabService 
             }
         });
         LOG.debug(OUTPUT, vitalSigns);
-        return vitalSigns.stream().filter(v -> !v.wasDeleted()).collect(Collectors.toList());
+        return vitalSigns.stream().filter(v -> !v.isDeleted()).collect(Collectors.toList());
     }
 
     @Override
@@ -124,7 +124,7 @@ public class CreateVitalSignLabServiceImpl implements CreateVitalSignLabService 
         });
         LOG.debug(OUTPUT, anthropometricDatas);
 
-        return anthropometricDatas.stream().filter(a -> !a.wasDeleted()).collect(Collectors.toList());
+        return anthropometricDatas.stream().filter(a -> !a.isDeleted()).collect(Collectors.toList());
     }
 
     private boolean mustSaveClinicalObservation(ClinicalObservation co) {
