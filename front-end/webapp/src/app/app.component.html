@@ -1,6 +1,11 @@
 <div class="app mat-typography mat-app-background">
 	<app-bar></app-bar>
-	<app-sidenav [menuItems]="menuItems">
-		<router-outlet></router-outlet>
-	</app-sidenav>
+	<ng-container *ngIf="(menuItems$ | async) as menuItems; else loading">
+		<app-sidenav [menuItems]="menuItems" >
+			<router-outlet></router-outlet>
+		</app-sidenav>
+	</ng-container>
+	<ng-template #loading>
+		<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+	</ng-template>
 </div>

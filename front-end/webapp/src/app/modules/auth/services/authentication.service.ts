@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { AuthService } from '@api-rest/services/auth.service';
+import { LoggedUserService } from './logged-user.service';
+import { Observable } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Injectable({
 	providedIn: 'root'
@@ -7,16 +10,20 @@ import { Router } from '@angular/router';
 export class AuthenticationService {
 
 	constructor(
-		private router: Router,
+		private authService: AuthService,
+		private loggedUserService: LoggedUserService,
 	) { }
 
-	public logout() {
-		this.router.navigate(['/auth/login']);
+	public logout(): Observable<any> {
+		this.authService.logout();
+		return this.loggedUserService.load();
 	}
 
-	public login(username: string, password: string) {
-		console.log('auth/authentication login ' + username);
-		this.router.navigate(['/pacientes']);
+	public login(username: string, password: string): Observable<any> {
+		//console.log('auth/authentication login ' + username);
+		return this.authService.login({username, password}).pipe(
+			switchMap(() => this.loggedUserService.load()),
+		);
 	}
 
 }

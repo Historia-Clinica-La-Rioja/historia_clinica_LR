@@ -21,15 +21,12 @@ export class ErrorInterceptor implements HttpInterceptor {
 		request: HttpRequest<any>,
 		next: HttpHandler
 	): Observable<HttpEvent<any>> {
+
 		return next.handle(request)
 			.pipe(
 				retry(1),
 				catchError((error: HttpErrorResponse) => {
 					let errorMessage = '';
-					if (this.unauthorizedError(error)) {
-						this.router.navigate(['/auth/login']);
-						return throwError(errorMessage);
-					}
 
 					if (this.clientSideError(error)) {
 						errorMessage = `Error: ${error.error.message}`;
@@ -46,8 +43,4 @@ export class ErrorInterceptor implements HttpInterceptor {
 		return error.error instanceof ErrorEvent;
 	}
 
-	private unauthorizedError(error: HttpErrorResponse) {
-		console.log(error);
-		return error.status === 401;
-	}
 }

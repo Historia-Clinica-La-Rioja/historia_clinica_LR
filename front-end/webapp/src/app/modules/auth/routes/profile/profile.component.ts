@@ -18,6 +18,6 @@ export class ProfileComponent implements OnInit {
 	}
 
 	logout(): void {
-		this.authenticationService.logout();
+		this.authenticationService.logout().subscribe();
 	}
 }
