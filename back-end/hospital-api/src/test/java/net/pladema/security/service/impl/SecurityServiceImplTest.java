@@ -15,9 +15,6 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import net.pladema.permissions.repository.RoleRepository;
-import net.pladema.permissions.repository.UserRoleRepository;
-import net.pladema.permissions.service.impl.RoleServiceImpl;
 import net.pladema.security.service.impl.SecurityServiceImpl;
 
 @RunWith(SpringRunner.class)

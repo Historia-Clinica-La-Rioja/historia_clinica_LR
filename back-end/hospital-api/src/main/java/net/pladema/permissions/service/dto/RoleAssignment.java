@@ -3,7 +3,6 @@ package net.pladema.permissions.service.dto;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import net.pladema.permissions.repository.entity.Role;
 import net.pladema.permissions.repository.enums.ERole;
 
 @EqualsAndHashCode

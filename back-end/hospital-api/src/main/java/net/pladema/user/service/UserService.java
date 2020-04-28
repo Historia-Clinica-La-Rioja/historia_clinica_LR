@@ -1,7 +1,6 @@
 package net.pladema.user.service;
 
 import net.pladema.user.repository.entity.User;
-import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 

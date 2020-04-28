@@ -4,7 +4,6 @@ import net.pladema.permissions.repository.RoleRepository;
 import net.pladema.permissions.repository.entity.Role;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.permissions.service.RoleService;
-import net.pladema.permissions.service.dto.RoleAssignment;
 import net.pladema.sgx.exceptions.NotFoundException;
 import org.springframework.stereotype.Service;
 

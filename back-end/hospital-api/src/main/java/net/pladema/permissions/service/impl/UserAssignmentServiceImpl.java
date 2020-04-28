@@ -2,16 +2,13 @@ package net.pladema.permissions.service.impl;
 
 import net.pladema.permissions.repository.RoleRepository;
 import net.pladema.permissions.repository.UserRoleRepository;
-import net.pladema.permissions.repository.entity.Role;
 import net.pladema.permissions.repository.entity.UserRole;
 import net.pladema.permissions.repository.entity.UserRolePK;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.permissions.service.UserAssignmentService;
 import net.pladema.permissions.service.dto.RoleAssignment;
-import net.pladema.sgx.exceptions.NotFoundException;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service
