@@ -47,4 +47,9 @@ export class InternacionMasterDataService {
 		return this.http.get<[]>(url);
 	}
 
+	getBloodTypes(): Observable<MasterDataInterface<string>[]> {
+		let url = `${environment.apiBase}/internments/masterdata/bloodtypes`;
+		return this.http.get<[]>(url);
+	}
+
 }

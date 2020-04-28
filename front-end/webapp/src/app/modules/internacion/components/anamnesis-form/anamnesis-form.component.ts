@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MasterDataInterface } from '@api-rest/api-model';
 import { MatTableDataSource } from '@angular/material/table';
 import { ANTHROPOMETRIC_DATA_COLUMNS, VITAL_SIGNS_COLUMNS } from '../../constants/anamnesis';
+import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 
 @Component({
 	selector: 'app-anamnesis-form',
@@ -13,7 +14,7 @@ export class AnamnesisFormComponent implements OnInit {
 
 	public form: FormGroup;
 
-	bloodTypes: MasterDataInterface<string>[] = [{id: '1', description: 'MasterData Example 1'}, {id: '2', description: 'MasterData Example 2'}, {id: '3', description: 'MasterData Example 3'}];
+	bloodTypes: MasterDataInterface<string>[];
 
 	datosAntropometricosTable: {
 		columns: any[],
@@ -29,31 +30,9 @@ export class AnamnesisFormComponent implements OnInit {
 
 
 	constructor(
-		private formBuilder: FormBuilder
+		private formBuilder: FormBuilder,
+		private internacionMasterDataService: InternacionMasterDataService
 	) {
-		this.vitalSignsTable = {
-			columns: VITAL_SIGNS_COLUMNS,
-			displayedColumns: VITAL_SIGNS_COLUMNS?.map(c => c.def),
-			dataSource: new MatTableDataSource<any>([{
-				heartRate: 10,
-				respiratoryRate: 20,
-				temperature: 3,
-				bloodOxygenSaturation: 4,
-				systolicBloodPressure: 5,
-				diastolicBloodPressure: 6
-			}])
-		};
-
-		this.datosAntropometricosTable = {
-			columns: ANTHROPOMETRIC_DATA_COLUMNS,
-			displayedColumns: ANTHROPOMETRIC_DATA_COLUMNS?.map(c => c.def),
-			dataSource: new MatTableDataSource<any>([{
-				bloodType: 'A+',
-				height: '180',
-				weight: '70',
-				IMC: '30'
-			}])
-		};
 	}
 
 	ngOnInit(): void {
@@ -79,6 +58,33 @@ export class AnamnesisFormComponent implements OnInit {
 				clinical_impression: [null, Validators.required],
 				others: [null]
 			})
+		});
+
+		this.vitalSignsTable = {
+			columns: VITAL_SIGNS_COLUMNS,
+			displayedColumns: VITAL_SIGNS_COLUMNS?.map(c => c.def),
+			dataSource: new MatTableDataSource<any>([{
+				heartRate: 10,
+				respiratoryRate: 20,
+				temperature: 3,
+				bloodOxygenSaturation: 4,
+				systolicBloodPressure: 5,
+				diastolicBloodPressure: 6
+			}])
+		};
+		this.datosAntropometricosTable = {
+			columns: ANTHROPOMETRIC_DATA_COLUMNS,
+			displayedColumns: ANTHROPOMETRIC_DATA_COLUMNS?.map(c => c.def),
+			dataSource: new MatTableDataSource<any>([{
+				bloodType: 'A+',
+				height: '180',
+				weight: '70',
+				IMC: '30'
+			}])
+		};
+
+		this.internacionMasterDataService.getBloodTypes().subscribe(bloodTypes => {
+			this.bloodTypes = bloodTypes;
 		});
 	}
 
