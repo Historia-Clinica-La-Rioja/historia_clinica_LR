@@ -44,19 +44,4 @@ public class RoleServiceImplTest {
 		licenseServiceImpl.createUserRole(user.getId(), ERole.ADVANCED_USER);
 	}
 
-	@Test
-	public void createUserLicence() {
-		Short roleId = 1;
-		Role role = new Role();
-		role.setId(roleId);
-		role.setDescription("PRUEBA");
-
-		User user = createUser("username9@mail.com");
-
-		when(licenseRepository.findById(roleId)).thenReturn(Optional.of(role));
-		when(userLicenseRepository.save(any())).thenReturn(new UserRole(user.getId(), role.getId()));
-
-		assertThat(licenseServiceImpl.createUserRole(user.getId(), roleId)).isNotNull();
-
-	}
 }

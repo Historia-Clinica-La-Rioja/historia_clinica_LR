@@ -1,13 +1,12 @@
 package net.pladema.permissions;
 
-import java.time.LocalDateTime;
-
 import net.pladema.auditable.entity.Audit;
-import net.pladema.permissions.controller.dto.RequestUserRoleDto;
-import net.pladema.permissions.repository.entity.Role;
 import net.pladema.permissions.repository.entity.Permission;
+import net.pladema.permissions.repository.entity.Role;
 import net.pladema.permissions.repository.entity.UserRole;
 import net.pladema.user.repository.entity.User;
+
+import java.time.LocalDateTime;
 
 public class RoleTestUtils {
 
@@ -27,30 +26,7 @@ public class RoleTestUtils {
 		return license;
 	}
 
-	public static RequestUserRoleDto validRequestUserLicense() {
-		RequestUserRoleDto result = new RequestUserRoleDto();
-		result.setRoleId((short) 1);
-		result.setUserId(1);
-		return result;
-	}
 
-	public static RequestUserRoleDto invalidIdLicense() {
-		RequestUserRoleDto result = validRequestUserLicense();
-		result.setRoleId((short) -1);
-		return result;
-	}
-
-	public static RequestUserRoleDto nullIdLicense() {
-		RequestUserRoleDto result = validRequestUserLicense();
-		result.setRoleId(null);
-		return result;
-	}
-
-	public static RequestUserRoleDto nullIdUser() {
-		RequestUserRoleDto result = validRequestUserLicense();
-		result.setUserId(null);
-		return result;
-	}
 
 	public static UserRole createUserLicense(User user, Role role) {
 		UserRole ul = new UserRole(user.getId(), role.getId());

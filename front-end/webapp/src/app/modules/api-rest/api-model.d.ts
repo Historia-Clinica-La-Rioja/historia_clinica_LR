@@ -278,11 +278,6 @@ export interface ProvinceDto extends MasterdataDto<number> {
     id: number;
 }
 
-export interface RequestUserRoleDto extends Serializable {
-    roleId: number;
-    userId: number;
-}
-
 export interface ResponseAnamnesisDto extends AnamnesisDto {
     id: number;
 }

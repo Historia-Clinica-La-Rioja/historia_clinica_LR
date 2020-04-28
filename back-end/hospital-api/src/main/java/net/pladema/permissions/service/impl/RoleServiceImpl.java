@@ -39,11 +39,6 @@ public class RoleServiceImpl implements RoleService {
 		return saveRole(userId, role.getId());
 	}
 
-	@Override
-	public UserRole createUserRole(Integer userId, Short roleId) {
-		return saveRole(userId, roleId);
-	}
-
 	protected UserRole saveRole(Integer userId, Short roleId) {
 		UserRole userRole = new UserRole(userId, roleId);
 		userRole = userRoleRepository.save(userRole);
@@ -59,29 +54,10 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
-	public void saveRoles(List<Role> licences) {
-		roleRepository.saveAll(licences);
-	}
-
-	@Override
-	public boolean existRole(String license) {
-		return roleRepository.existLicense(license);
-	}
-
-	@Override
-	public boolean existRole(Short licenseId) {
-		return roleRepository.existsById(licenseId);
-	}
-
-	@Override
 	public void updateAdminRole(Integer userId, ERole admin) {
 		Role role = roleRepository.findByDescription(admin.getValue())
 				.orElseThrow(() -> new EntityNotFoundException(INVALID_ROLE));
 		userRoleRepository.updateRole(userId, role.getId());
 	}
 
-	@Override
-	public void deleteByUserId(Integer userId) {
-		userRoleRepository.deleteByUserId(userId);
-	}
 }
