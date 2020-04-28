@@ -28,11 +28,10 @@ public interface UserRoleRepository extends JpaRepository<UserRole, UserRolePK> 
 
 	@Transactional(readOnly = true)
 	@Query("SELECT NEW net.pladema.permissions.service.dto.RoleAssignment( " +
-			"	r.description, " +
+			"	ur.userRolePK.roleId, " +
 			"	ur.institutionId" +
 			" )"
 			+ "FROM UserRole ur "
-			+ "JOIN Role r ON (r.id = ur.userRolePK.roleId) "
 			+ "WHERE ur.userRolePK.userId = :userId "
 			)
 	List<RoleAssignment> getRoleAssignments(@Param("userId") Integer userId);

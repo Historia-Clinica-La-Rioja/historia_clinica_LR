@@ -36,17 +36,10 @@ public class UserAssignmentServiceImpl implements UserAssignmentService {
 
 	@Override
 	public void saveUserRole(Integer userId, ERole eRole, Integer institutionId) {
-		UserRolePK pk = new UserRolePK(userId, getRoleId(eRole));
+		UserRolePK pk = new UserRolePK(userId, eRole.getId());
 		if (!userRoleRepository.findById(pk).isPresent()) {
 			userRoleRepository.save(new UserRole(pk.getUserId(), pk.getRoleId(), institutionId));
 		}
 	}
 
-	private Short getRoleId(ERole eRole) {
-		return roleRepository.findByDescription(eRole.getValue())
-				.map(Role::getId)
-				.orElseThrow(() ->
-						new NotFoundException(INVALID_ROLE, String.format("Rol %s no existe", eRole.getValue()))
-				);
-	}
 }

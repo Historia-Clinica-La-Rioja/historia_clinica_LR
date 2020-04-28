@@ -1,6 +1,7 @@
 package net.pladema.user.configuration;
 
 import net.pladema.permissions.repository.enums.ERole;
+import net.pladema.permissions.service.RoleService;
 import net.pladema.permissions.service.UserAssignmentService;
 import net.pladema.user.repository.entity.User;
 import net.pladema.user.service.UserPasswordService;
@@ -34,19 +35,20 @@ public class AdminConfig {
 
 	private final UserAssignmentService userAssignmentService;
 
-	public AdminConfig(
-			UserService userService,
-			UserPasswordService userPasswordService,
-			UserAssignmentService userAssignmentService
-	) {
+	private final RoleService roleService;
+
+	public AdminConfig(UserService userService, UserPasswordService userPasswordService, UserAssignmentService userAssignmentService, RoleService roleService) {
 		super();
 		this.userService = userService;
 		this.userPasswordService = userPasswordService;
 		this.userAssignmentService = userAssignmentService;
+		this.roleService = roleService;
 	}
 
 	@PostConstruct
 	public void init() {
+		roleService.updateRolesStore();
+
 		User admin = userService.getUser(adminMail)
 				.orElseGet(() -> createAdminUser());
 		updateUser(admin);

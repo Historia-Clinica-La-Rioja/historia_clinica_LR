@@ -6,7 +6,6 @@ import net.pladema.permissions.controller.dto.BackofficeUserRoleDto;
 import net.pladema.permissions.controller.mappers.UserRoleDtoMapper;
 import net.pladema.permissions.repository.UserRoleRepository;
 import net.pladema.permissions.repository.entity.UserRole;
-import net.pladema.permissions.service.impl.RoleServiceImpl;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
 import net.pladema.sgx.exceptions.NotFoundException;
 import net.pladema.user.controller.dto.BackofficeUserDto;
@@ -29,20 +28,17 @@ import java.util.stream.Collectors;
 public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, Integer> {
 	private final UserRepository repository;
 	private final UserRoleRepository userRoleRepository;
-	private final RoleServiceImpl roleService;
 	private final UserDtoMapper userDtoMapper;
 	private final UserRoleDtoMapper userRoleDtoMapper;
 
 
 	public BackofficeUsersStore(UserRepository repository,
 			UserRoleRepository userRoleRepository,
-			RoleServiceImpl roleService,
 			UserDtoMapper userDtoMapper,
 			UserRoleDtoMapper userRoleDtoMapper
 			) {
 		this.repository = repository;
 		this.userRoleRepository = userRoleRepository;
-		this.roleService = roleService;
 		this.userDtoMapper = userDtoMapper;
 		this.userRoleDtoMapper = userRoleDtoMapper;  
 	}

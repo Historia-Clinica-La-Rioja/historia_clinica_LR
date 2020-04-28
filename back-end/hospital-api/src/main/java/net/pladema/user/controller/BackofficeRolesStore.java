@@ -1,0 +1,55 @@
+package net.pladema.user.controller;
+
+import net.pladema.permissions.repository.RoleRepository;
+import net.pladema.permissions.repository.entity.Role;
+import net.pladema.sgx.backoffice.repository.BackofficeStore;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+@Service
+public class BackofficeRolesStore implements BackofficeStore<Role, Short> {
+	private final RoleRepository roleRepository;
+
+	public BackofficeRolesStore(RoleRepository roleRepository) {
+		this.roleRepository = roleRepository;
+	}
+
+	@Override
+	public Page<Role> findAll(Role example, Pageable pageable) {
+		List<Role> content = toList(roleRepository.findAll());
+		return new PageImpl(content, pageable, content.size());
+	}
+
+	@Override
+	public List<Role> findAllById(List<Short> ids) {
+		return toList(roleRepository.findAllById(ids));
+	}
+
+	@Override
+	public Optional<Role> findById(Short id) {
+		return roleRepository.findById(id);
+	}
+
+	@Override
+	public Role save(Role entity) {
+		return null;
+	}
+
+	@Override
+	public void deleteById(Short id) {
+
+	}
+
+	private static List<Role> toList(Iterable<Role> roles) {
+		return StreamSupport
+				.stream(roles.spliterator(), false)
+				.collect(Collectors.toList());
+	}
+}

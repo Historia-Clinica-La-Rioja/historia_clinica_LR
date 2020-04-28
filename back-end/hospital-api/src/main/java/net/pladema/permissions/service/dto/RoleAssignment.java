@@ -3,6 +3,7 @@ package net.pladema.permissions.service.dto;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import net.pladema.permissions.repository.entity.Role;
 import net.pladema.permissions.repository.enums.ERole;
 
 @EqualsAndHashCode
@@ -17,7 +18,8 @@ public class RoleAssignment {
 		this.institutionId = institutionId;
 	}
 
-	public RoleAssignment(String roleName, Integer institutionId) {
-		this(ERole.valueOf(roleName), institutionId);
+	public RoleAssignment(Short roleId, Integer institutionId) {
+		this(ERole.map(roleId), institutionId);
 	}
+
 }
