@@ -163,7 +163,7 @@
 				}
 			},
 			"medicacion": {
-				"TITLE": "Medicación",
+				"TITLE": "Medicación habitual",
 				"ADD": "Agregar medicación",
 				"PROBLEM_TYPE": "Tipo de medicación",
 				"form": {
