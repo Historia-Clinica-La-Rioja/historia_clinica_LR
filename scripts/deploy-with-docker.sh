@@ -29,7 +29,8 @@ fi
 docker rm -f reviewapp-${ENV_NAME} 2> /dev/null || true
 # Rename previous environment (if exists), avoid deadlocks killing multiple olds environments 
 docker rm -f ${ENV_NAME}_old 2> /dev/null || true
-docker rename ${ENV_NAME} ${ENV_NAME}_old 2> /dev/null || true
+echo Renombra environment anterior
+docker rename ${ENV_NAME} ${ENV_NAME}_old || true
 # Start environment
 echo Crea environment con hash: $(
     docker create -P  \
@@ -37,7 +38,7 @@ echo Crea environment con hash: $(
         -l traefik.port=8280 \
         -l temporal=${TEMPORAL} \
         --network=web \
-        --restart=always \
+        --restart=unless-stopped \
         -e GLOWROOT_PROJECT=${GLOWROOT_PROJECT} \
         -e GLOWROOT_AGENT_ID="${ENV_NAME}" \
         --name ${ENV_NAME} \
@@ -49,5 +50,6 @@ echo Inicia environment con name: $(
 )
 # Stop previous environment (if exists) 
 echo Destruye ambiente anterior con name: $(
+    docker stop ${ENV_NAME}_old >/dev/null 2>&1 || true;
     docker rm -f ${ENV_NAME}_old 2> /dev/null || true
 )
