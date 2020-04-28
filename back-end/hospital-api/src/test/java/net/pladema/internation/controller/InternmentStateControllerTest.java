@@ -1,9 +1,9 @@
 package net.pladema.internation.controller;
 
+
 import net.pladema.BaseControllerTest;
 import net.pladema.internation.service.InternmentStateService;
-import net.pladema.internation.service.documents.anamnesis.HealthConditionService;
-import net.pladema.internation.service.documents.anamnesis.MedicationService;
+import net.pladema.internation.service.documents.anamnesis.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,12 +28,21 @@ public class InternmentStateControllerTest extends BaseControllerTest {
 	@MockBean
 	private MedicationService medicationService;
 
+	@MockBean
+	private AllergyService allergyService;
+
+	@MockBean
+	private InmunizationService inmunizationService;
+
+	@MockBean
+	private CreateVitalSignLabService createVitalSignLabService;
+
 	@Before
 	public void setup() {
 	}
 
 	@Test
-	public void getInternmentSummary() throws Exception {
+	public void getGeneralState() throws Exception {
 		final Integer internmentEpisodeId = 10;
 		final String URL = "/institutions/1/internments-state/" +internmentEpisodeId +"/general";
 		mockMvc.perform(get(URL))

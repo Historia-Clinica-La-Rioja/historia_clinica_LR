@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -157,6 +158,18 @@ public class CreateVitalSignLabServiceImpl implements CreateVitalSignLabService 
         ClinicalObservation result = new ClinicalObservation(lab.getId(), lab.getValue(), lab.isDeleted());
         LOG.debug(OUTPUT, result);
         return result;
+    }
+
+    @Override
+    public List<AnthropometricDataBo> getAnthropometricDataGeneralState(Integer internmentEpisodeId) {
+        LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<VitalSignBo> getVitalSignsGeneralState(Integer internmentEpisodeId) {
+        LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
+        return Collections.emptyList();
     }
 
 }

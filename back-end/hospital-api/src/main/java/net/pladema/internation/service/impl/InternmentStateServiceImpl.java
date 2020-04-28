@@ -1,6 +1,9 @@
 package net.pladema.internation.service.impl;
 
 import net.pladema.internation.service.InternmentStateService;
+import net.pladema.internation.service.documents.anamnesis.AllergyService;
+import net.pladema.internation.service.documents.anamnesis.CreateVitalSignLabService;
+import net.pladema.internation.service.documents.anamnesis.InmunizationService;
 import net.pladema.internation.service.domain.InternmentGeneralState;
 import net.pladema.internation.service.domain.ips.*;
 import org.slf4j.Logger;
@@ -15,7 +18,16 @@ public class InternmentStateServiceImpl implements InternmentStateService {
 
     private static final Logger LOG = LoggerFactory.getLogger(InternmentStateServiceImpl.class);
 
-    public InternmentStateServiceImpl() {
+    private final AllergyService allergyService;
+
+    private final InmunizationService inmunizationService;
+
+    private final CreateVitalSignLabService createVitalSignLabService;
+
+    public InternmentStateServiceImpl(AllergyService allergyService, InmunizationService inmunizationService, CreateVitalSignLabService createVitalSignLabService) {
+        this.allergyService = allergyService;
+        this.inmunizationService = inmunizationService;
+        this.createVitalSignLabService = createVitalSignLabService;
     }
 
     @Override
@@ -46,21 +58,21 @@ public class InternmentStateServiceImpl implements InternmentStateService {
 
     private List<InmunizationBo> getInmunizationsState(Integer internmentEpisodeId){
         LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
-        return Collections.emptyList();
+        return inmunizationService.getInmunizationsGeneralState(internmentEpisodeId);
     }
 
     private List<AllergyConditionBo> getAllergiesState(Integer internmentEpisodeId){
         LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
-        return Collections.emptyList();
+        return allergyService.getAllergiesGeneralState(internmentEpisodeId);
     }
 
     private List<AnthropometricDataBo> getAntropometricDataState(Integer internmentEpisodeId){
         LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
-        return Collections.emptyList();
+        return createVitalSignLabService.getAnthropometricDataGeneralState(internmentEpisodeId);
     }
 
     private List<VitalSignBo> getVitalSignsState(Integer internmentEpisodeId){
         LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
-        return Collections.emptyList();
+        return createVitalSignLabService.getVitalSignsGeneralState(internmentEpisodeId);
     }
 }

@@ -2,16 +2,11 @@ package net.pladema.internation.controller;
 
 import io.swagger.annotations.Api;
 import net.pladema.internation.controller.dto.core.InternmentGeneralStateDto;
-import net.pladema.internation.controller.dto.ips.HealthConditionDto;
-import net.pladema.internation.controller.dto.ips.HealthHistoryConditionDto;
-import net.pladema.internation.controller.dto.ips.MedicationDto;
+import net.pladema.internation.controller.dto.ips.*;
 import net.pladema.internation.service.InternmentStateService;
-import net.pladema.internation.service.documents.anamnesis.HealthConditionService;
-import net.pladema.internation.service.documents.anamnesis.MedicationService;
+import net.pladema.internation.service.documents.anamnesis.*;
 import net.pladema.internation.service.domain.InternmentGeneralState;
-import net.pladema.internation.service.domain.ips.HealthConditionBo;
-import net.pladema.internation.service.domain.ips.HealthHistoryCondition;
-import net.pladema.internation.service.domain.ips.Medication;
+import net.pladema.internation.service.domain.ips.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -35,13 +30,25 @@ public class InternmentStateController {
     private final HealthConditionService healthConditionService;
 
     private final MedicationService medicationService;
+    
+    private final AllergyService allergyService;
 
-    public InternmentStateController(InternmentStateService internmentEpisodeService,
+    private final InmunizationService inmunizationService;
+
+    private final CreateVitalSignLabService createVitalSignLabService;
+
+    public InternmentStateController(InternmentStateService internmentStateService,
                                      HealthConditionService healthConditionService,
-                                     MedicationService medicationService) {
-        this.internmentStateService = internmentEpisodeService;
+                                     MedicationService medicationService,
+                                     AllergyService allergyService,
+                                     InmunizationService inmunizationService,
+                                     CreateVitalSignLabService createVitalSignLabService) {
+        this.internmentStateService = internmentStateService;
         this.healthConditionService = healthConditionService;
         this.medicationService = medicationService;
+        this.allergyService = allergyService;
+        this.inmunizationService = inmunizationService;
+        this.createVitalSignLabService = createVitalSignLabService;
     }
 
     @GetMapping("/{internmentEpisodeId}/general")
@@ -95,6 +102,50 @@ public class InternmentStateController {
         LOG.debug("Imput parameters -> institutionId {}, internmentEpisodeId {}", institutionId, internmentEpisodeId);
         List<Medication> medications = medicationService.getMedicationsGeneralState(internmentEpisodeId);
         List<MedicationDto> result = new ArrayList<>();
+        LOG.debug("Output -> {}", result);
+        return  ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/{internmentEpisodeId}/general/anthropometricData")
+    public ResponseEntity<List<AnthropometricDataDto>> anthropometricDataGeneralState(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
+        LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}", institutionId, internmentEpisodeId);
+        List<AnthropometricDataBo> anthropometricDatas = createVitalSignLabService.getAnthropometricDataGeneralState(internmentEpisodeId);
+        List<AnthropometricDataDto> result = new ArrayList<>();
+        LOG.debug("Output -> {}", result);
+        return  ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/{internmentEpisodeId}/general/vitalSigns")
+    public ResponseEntity<List<VitalSignDto>> vitalSignsGeneralState(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
+        LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}", institutionId, internmentEpisodeId);
+        List<VitalSignBo> vitalSignBos = createVitalSignLabService.getVitalSignsGeneralState(internmentEpisodeId);
+        List<VitalSignDto> result = new ArrayList<>();
+        LOG.debug("Output -> {}", result);
+        return  ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/{internmentEpisodeId}/general/inmunizations")
+    public ResponseEntity<List<InmunizationDto>> inmunizationsGeneralState(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
+        LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}", institutionId, internmentEpisodeId);
+        List<InmunizationBo> inmunizationBos = inmunizationService.getInmunizationsGeneralState(internmentEpisodeId);
+        List<InmunizationDto> result = new ArrayList<>();
+        LOG.debug("Output -> {}", result);
+        return  ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/{internmentEpisodeId}/general/allergies")
+    public ResponseEntity<List<AllergyConditionDto>> allergiesGeneralState(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
+        LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}", institutionId, internmentEpisodeId);
+        List<AllergyConditionBo> allergyConditionBos = allergyService.getAllergiesGeneralState(internmentEpisodeId);
+        List<AllergyConditionDto> result = new ArrayList<>();
         LOG.debug("Output -> {}", result);
         return  ResponseEntity.ok().body(result);
     }

@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,5 +62,11 @@ public class InmunizationServiceImpl implements InmunizationService {
         LOG.debug("Inmunization saved ->", inmunization.getId());
         LOG.debug(OUTPUT, inmunization);
         return inmunization;
+    }
+
+    @Override
+    public List<InmunizationBo> getInmunizationsGeneralState(Integer internmentEpisodeId) {
+        LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
+        return Collections.emptyList();
     }
 }

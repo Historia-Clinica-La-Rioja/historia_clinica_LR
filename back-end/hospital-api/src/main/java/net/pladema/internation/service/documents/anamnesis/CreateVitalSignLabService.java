@@ -10,4 +10,8 @@ public interface CreateVitalSignLabService {
     List<VitalSignBo> loadVitalSigns(Integer patientId, Long documentId, List<VitalSignBo> optVitalSigns);
 
     List<AnthropometricDataBo> loadAnthropometricData(Integer patientId, Long documentId, List<AnthropometricDataBo> optAnthropometricData);
+
+    List<AnthropometricDataBo> getAnthropometricDataGeneralState(Integer internmentEpisodeId);
+
+    List<VitalSignBo> getVitalSignsGeneralState(Integer internmentEpisodeId);
 }

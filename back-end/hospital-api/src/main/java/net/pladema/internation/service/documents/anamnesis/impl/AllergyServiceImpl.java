@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,5 +62,11 @@ public class AllergyServiceImpl implements AllergyService {
         LOG.debug("allergyIntolerance saved ->", allergyIntolerance.getId());
         LOG.debug(OUTPUT, allergyIntolerance);
         return allergyIntolerance;
+    }
+
+    @Override
+    public List<AllergyConditionBo> getAllergiesGeneralState(Integer internmentEpisodeId) {
+        LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
+        return Collections.emptyList();
     }
 }
