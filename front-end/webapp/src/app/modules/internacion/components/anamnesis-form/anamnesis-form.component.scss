@@ -32,5 +32,23 @@
 				}
 			}
 		}
+
+		.vital-signs {
+
+			.field-container {
+				display: flex;
+				flex-direction: column;
+				mat-form-field {
+					width: 90%;
+				}
+			}
+
+			.row-container {
+				display: flex;
+				flex-direction: row;
+				justify-content: flex-start;
+				align-items: flex-end;
+			}
+		}
 	}
 }

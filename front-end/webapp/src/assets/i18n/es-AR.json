@@ -125,7 +125,13 @@
 				"TITLE": "Datos antropométricos",
 				"BLOOD_TYPE": "Grupo y factor sanguíneo",
 				"HEIGHT": "Talla (cm)",
-				"WEIGHT": "Peso (kg)"
+				"WEIGHT": "Peso (kg)",
+				"table": {
+					"TITLE": "Datos antropométricos registrados",
+					"columns": {
+						"IMC": "IMC"
+					}
+				}
 			},
 			"diagnosticos": {
 				"TITLE": "Diagnósticos",
@@ -176,6 +182,26 @@
 						"NOTE": "Notas",
 						"STATUS": "Estado",
 						"PROBLEM_TYPE": "Tipo de problema"
+					}
+				}
+			},
+			"vital-signs": {
+				"form": {
+					"TITLE": "Signos vitales",
+					"HEART_RATE": "Frecuencia cardíaca (/min)",
+					"RESPIRATORY_RATE": "Frecuencia respiratoria (/min)",
+					"TEMPERATURE": "Temperatura corporal",
+					"BLOOD_OXIGEN_SATURATION": "Saturación de oxigeno (%)",
+					"BLOOD_PRESURE": "Tensión arterial (mm)"
+				},
+				"table": {
+					"TITLE": "Signos vitales registrados",
+					"columns": {
+						"HEART_RATE": "F. cardíaca",
+						"RESPIRATORY_RATE": "F. respiratoria",
+						"TEMPERATURE": "Temperatura",
+						"BLOOD_OXYGEN_SATURATION": "Oxígeno",
+						"BLOOD_PRESURE": "T. arterial"
 					}
 				}
 			},
