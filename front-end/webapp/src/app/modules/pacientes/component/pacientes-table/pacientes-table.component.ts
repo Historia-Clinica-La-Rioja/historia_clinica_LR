@@ -3,7 +3,7 @@ import { PatientService } from "@api-rest/services/patient.service";
 import { TableService } from '@core/services/table.service';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { BMPatientDto } from '@api-rest/api-model';
-import { TableModel } from '@core/components/table/table.component';
+import { TableModel } from 'src/app/modules/presentation/components/table/table.component';
 import { Router } from '@angular/router';
 import { momentFormatDate, DateFormat } from '@core/utils/moment.utils';
 
@@ -27,13 +27,13 @@ export class PacientesTableComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.personMasterDataService.getGenders().subscribe(
-			genders => { 
+			genders => {
 				genders.forEach(gender => {
 					this.genderOptions[gender.id]=gender.description
 				});
 		});
 		this.patientService.getAllPatients().subscribe(data => {
-				this.allPatient = this.buildTable(data);	
+				this.allPatient = this.buildTable(data);
 		});
 	}
 
@@ -64,7 +64,7 @@ export class PacientesTableComponent implements OnInit {
 					columnDef: 'birthDate',
 					header: 'F. Nac',
 					text: (row) =>  momentFormatDate(new Date(row.birthDate),DateFormat.VIEW_DATE)
-				}, 
+				},
 				{
 					columnDef: 'gender',
 					header: 'Sexo',

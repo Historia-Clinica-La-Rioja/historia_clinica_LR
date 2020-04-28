@@ -5,12 +5,16 @@ import { PatientCardComponent } from './components/patient-card/patient-card.com
 import { CoreModule } from '@core/core.module';
 import { SummaryCardComponent } from './components/summary-card/summary-card.component';
 import { InternmentEpisodeSummaryComponent } from './components/internment-episode-summary/internment-episode-summary.component';
+import { NoDataComponent } from './components/no-data/no-data.component';
+import { TableComponent } from './components/table/table.component';
 
 @NgModule({
 	declarations: [
 		PatientCardComponent,
 		SummaryCardComponent,
 		InternmentEpisodeSummaryComponent,
+		TableComponent,
+		NoDataComponent,
 	],
 	imports: [
 		CommonModule,
@@ -21,6 +25,8 @@ import { InternmentEpisodeSummaryComponent } from './components/internment-episo
 		PatientCardComponent,
 		SummaryCardComponent,
 		InternmentEpisodeSummaryComponent,
+		TableComponent,
+		NoDataComponent,
 	]
 })
 export class PresentationModule { }

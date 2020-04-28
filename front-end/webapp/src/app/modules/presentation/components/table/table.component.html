@@ -4,8 +4,8 @@
 </mat-form-field>
 <table mat-table [dataSource]="dataSource" [class]="tableClass">
 	<ng-container *ngFor="let column of columns" [matColumnDef]="column.columnDef">
-		<th *matHeaderCellDef>{{ column.header | translate }}</th>
-		<td *matCellDef="let row">
+		<th mat-header-cell *matHeaderCellDef>{{ column.header | translate }}</th>
+		<td mat-cell *matCellDef="let row">
 			<ng-container *ngIf="column.action else default">
 				<ng-container *ngIf="column.action.isDelete else button">
 					<button mat-icon-button color="warn" (click)="column.action.do(row)">
@@ -27,6 +27,4 @@
 	<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
 	<tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>
-<div class="mat-h3 table-no-data" *ngIf="dataSource?.data?.length === 0">
-	<span [translate]="'messages.NO_DATA'"></span>
-</div>
+<app-no-data class="table" *ngIf="dataSource?.data?.length === 0"></app-no-data>

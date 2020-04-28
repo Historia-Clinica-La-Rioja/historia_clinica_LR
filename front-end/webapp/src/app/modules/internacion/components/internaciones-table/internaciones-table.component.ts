@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { InternacionService } from '@api-rest/services/internacion.service';
 import { InternmentEpisodeDto } from '@api-rest/api-model';
 import { Router } from '@angular/router';
-import { TableModel } from '@core/components/table/table.component';
+import { TableModel } from 'src/app/modules/presentation/components/table/table.component';
 
 @Component({
 	selector: 'app-internaciones-table',

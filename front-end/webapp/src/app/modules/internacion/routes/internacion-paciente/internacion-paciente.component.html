@@ -7,10 +7,23 @@
 			</button>
 		</div>
 		<div class="flex-layout">
-			<app-patient-card [patient]="patient$ | async"></app-patient-card>
-			<app-summary-card [header]="internacionSummary">
-				<app-internment-episode-summary [internmentEpisode]="internmentEpisode$ | async"></app-internment-episode-summary>
-			</app-summary-card>
+			<div class="column">
+				<section>
+					<app-patient-card [patient]="patient$ | async"></app-patient-card>
+				</section>
+			</div>
+			<div class="column">
+				<section>
+					<app-summary-card [header]="internacionSummary">
+						<mat-card-content>
+							<app-internment-episode-summary [internmentEpisode]="internmentEpisode$ | async"></app-internment-episode-summary>
+						</mat-card-content>
+					</app-summary-card>
+				</section>
+				<section>
+					<app-diagnosis-summary [internmentEpisodeId]="(internmentEpisode$ | async)?.id"></app-diagnosis-summary>
+				</section>
+			</div>
 		</div>
 	</section>
 </app-content>

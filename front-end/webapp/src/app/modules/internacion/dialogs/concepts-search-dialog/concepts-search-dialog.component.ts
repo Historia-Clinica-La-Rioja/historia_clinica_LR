@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { TableModel } from '@core/components/table/table.component';
+import { TableModel } from 'src/app/modules/presentation/components/table/table.component';
 import { SnomedDto } from '@api-rest/api-model';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SnowstormService } from '@api-rest/services/snowstorm.service';

@@ -5,10 +5,10 @@ import { BasicPatientDto, InternmentSummaryDto } from '@api-rest/api-model';
 import { map } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { SummaryHeader } from 'src/app/modules/presentation/components/summary-card/summary-card.component';
 import { MapperService } from 'src/app/modules/presentation/services/mapper.service';
 import { InternacionService } from '@api-rest/services/internacion.service';
 import { InternmentEpisode } from 'src/app/modules/presentation/components/internment-episode-summary/internment-episode-summary.component';
+import { INTERNACION } from '../../constants/summaries';
 
 @Component({
 	selector: 'app-internacion-paciente',
@@ -18,11 +18,9 @@ import { InternmentEpisode } from 'src/app/modules/presentation/components/inter
 export class InternacionPacienteComponent implements OnInit {
 
 	public patient$: Observable<PatientBasicData>;
+
+	public internacionSummary = INTERNACION;
 	public internmentEpisode$: Observable<InternmentEpisode>;
-	public internacionSummary: SummaryHeader = {
-		title: 'Resumen internación',
-		matIcon: 'single_bed'
-	};
 
 	constructor(
 		private patientService: PatientService,
@@ -36,7 +34,7 @@ export class InternacionPacienteComponent implements OnInit {
 		this.route.paramMap.subscribe(
 			(params) => {
 				let patientId = Number(params.get('idPaciente'));
-				let internmentId = Number(params.get('idInternacion'));
+				let internmentId = String(params.get('idInternacion'));
 
 				this.patient$ = this.patientService.getPatientBasicData<BasicPatientDto>(patientId).pipe(
 					map(patient => this.mapperService.toPatientBasicData(patient))
@@ -45,6 +43,7 @@ export class InternacionPacienteComponent implements OnInit {
 				this.internmentEpisode$ = this.internmentService.getInternmentEpisodeSummary<InternmentSummaryDto>(internmentId).pipe(
 					map(internmentEpisodeSummary => this.mapperService.toInternmentEpisode(internmentEpisodeSummary))
 				);
+
 			}
 		);
 	}

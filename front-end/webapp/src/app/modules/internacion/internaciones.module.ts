@@ -19,6 +19,7 @@ import { VacunasComponent } from './components/vacunas/vacunas.component';
 import { MedicacionComponent } from './components/medicacion/medicacion.component';
 import { AntecedentesFamiliaresComponent } from './components/antecedentes-familiares/antecedentes-familiares.component';
 import { AntecedentesPersonalesComponent } from './components/antecedentes-personales/antecedentes-personales.component';
+import { DiagnosisSummaryComponent } from './components/diagnosis-summary/diagnosis-summary.component';
 
 @NgModule({
 	declarations: [
@@ -35,6 +36,7 @@ import { AntecedentesPersonalesComponent } from './components/antecedentes-perso
 		VacunasComponent,
 		MedicacionComponent,
 		AntecedentesFamiliaresComponent,
+		DiagnosisSummaryComponent,
 	],
 	imports: [
 		AppMaterialModule,
