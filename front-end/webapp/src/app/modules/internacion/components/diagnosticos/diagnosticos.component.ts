@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MasterDataInterface, SnomedDto, HealthConditionDto, DiagnosisDto } from '@api-rest/api-model';
+import { MasterDataInterface, SnomedDto, DiagnosisDto } from '@api-rest/api-model';
 import { MatTableDataSource } from '@angular/material/table';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
@@ -12,7 +12,19 @@ import { InternacionMasterDataService } from '@api-rest/services/internacion-mas
 })
 export class DiagnosticosComponent implements OnInit {
 
-	@Input() diagnosis: DiagnosisDto[] = [];
+	private diagnosisValue: DiagnosisDto[];
+
+	@Output() diagnosisChange = new EventEmitter();
+
+	@Input()
+	set diagnosis(newDiagnosis: DiagnosisDto[]) {
+		this.diagnosisValue = newDiagnosis;
+		this.diagnosisChange.emit(this.diagnosisValue);
+	}
+
+	get diagnosis(): DiagnosisDto[] {
+		return this.diagnosisValue;
+	}
 
 	private snomedConcept: SnomedDto;
 
@@ -39,7 +51,7 @@ export class DiagnosticosComponent implements OnInit {
 		},
 	];
 	displayedColumns: string[] = [];
-	dataSource = new MatTableDataSource<DiagnosisDto>(this.diagnosis);
+	dataSource: MatTableDataSource<DiagnosisDto>;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -50,6 +62,7 @@ export class DiagnosticosComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+		this.dataSource = new MatTableDataSource<DiagnosisDto>(this.diagnosis);
 		this.form = this.formBuilder.group({
 			verificationId: [null, Validators.required],
 			statusId: [null, Validators.required],

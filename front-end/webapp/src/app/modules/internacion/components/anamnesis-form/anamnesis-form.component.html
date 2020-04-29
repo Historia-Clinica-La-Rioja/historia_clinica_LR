@@ -5,7 +5,7 @@
 			<h3 [translate]="'internaciones.anamnesis.SUBTITLE'"></h3>
 		</section>
 		<section id="diagnosticos">
-			<app-diagnosticos></app-diagnosticos>
+			<app-diagnosticos [(diagnosis)]="diagnosticos"></app-diagnosticos>
 		</section>
 		<section id="datos-antropometricos">
 			<h2 [translate]="'internaciones.anamnesis.datos-antropometricos.TITLE'"></h2>
@@ -74,19 +74,19 @@
 
 		</section>
 		<section id="antecedentes-personales">
-			<app-antecedentes-personales></app-antecedentes-personales>
+			<app-antecedentes-personales [(personalHistories)]="personalHistories"></app-antecedentes-personales>
 		</section>
 		<section id="antecedentes-familiares">
-			<app-antecedentes-familiares></app-antecedentes-familiares>
+			<app-antecedentes-familiares [(familyHistories)]="familyHistories"></app-antecedentes-familiares>
 		</section>
 		<section id="alergias">
-			<app-alergias></app-alergias>
+			<app-alergias [(allergies)]="allergies"></app-alergias>
 		</section>
 		<section id="vacunas">
-			<app-vacunas></app-vacunas>
+			<app-vacunas [(inmunizations)]="inmunizations"></app-vacunas>
 		</section>
 		<section id="medicacion">
-			<app-medicacion></app-medicacion>
+			<app-medicacion [(medications)]="medications"></app-medicacion>
 		</section>
 		<section id="signos-vitales">
 			<h2 [translate]="'internaciones.anamnesis.vital-signs.form.TITLE'"></h2>

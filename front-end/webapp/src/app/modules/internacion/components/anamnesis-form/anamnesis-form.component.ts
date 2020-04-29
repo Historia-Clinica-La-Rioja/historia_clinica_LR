@@ -1,11 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ClinicalObservationDto, HealthHistoryConditionDto, MasterDataInterface } from '@api-rest/api-model';
+import {
+	AllergyConditionDto,
+	HealthConditionDto,
+	HealthHistoryConditionDto, InmunizationDto,
+	MasterDataInterface,
+	MedicationDto
+} from '@api-rest/api-model';
 import { MatTableDataSource } from '@angular/material/table';
 import { ANTHROPOMETRIC_DATA_COLUMNS, VITAL_SIGNS_COLUMNS } from '../../constants/anamnesis';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
-import { removeFrom } from '@core/utils/array.utils';
-import { MatTab } from '@angular/material/tabs';
 
 @Component({
 	selector: 'app-anamnesis-form',
@@ -17,6 +21,90 @@ export class AnamnesisFormComponent implements OnInit {
 	public form: FormGroup;
 
 	bloodTypes: MasterDataInterface<string>[];
+	diagnosticos: HealthConditionDto[] = [{
+		verificationId: '47965005',
+		deleted: false,
+		id: 50,
+		snomed: {
+			fsn: 'EFE ESE ENE',
+			id: '1',
+			parentFsn: 'parentFsn',
+			parentId: 'parentId'
+		},
+		statusId: '55561003'
+	}];
+	personalHistories: HealthHistoryConditionDto[] = [{
+		date: '2015-01-01',
+		deleted: false,
+		id: null,
+		note: 'asd',
+		snomed: {
+			fsn: 'Asdravirus (organismo)',
+			id: '64620000',
+			parentFsn: '',
+			parentId: '',
+		},
+		statusId: '73425007',
+		verificationId: '47965005'
+	}];
+	familyHistories: HealthHistoryConditionDto[] = [{
+		date: '2015-01-01',
+		deleted: false,
+		id: null,
+		note: 'asd',
+		snomed: {
+			fsn: 'Asdravirus (organismo)',
+			id: '64620000',
+			parentFsn: '',
+			parentId: '',
+		},
+		statusId: '73425007',
+		verificationId: '47965005'
+	}];
+	allergies: AllergyConditionDto[] = [{
+		categoryId: '414285001',
+		date: '2015-01-01',
+		severity: 'severity',
+		verificationId: '59156000',
+		deleted: false,
+		id: 1,
+		snomed: {
+			fsn: 'Asdravirus (organismo)',
+			id: '64620000',
+			parentFsn: '',
+			parentId: '',
+		},
+		statusId: '73425007'
+	}];
+	inmunizations: InmunizationDto[] = [
+		{
+			administrationDate: '2015-01-01',
+			note: 'note',
+			deleted: false,
+			id: 1,
+			snomed: {
+				fsn: 'Asdravirus (organismo)',
+				id: '64620000',
+				parentFsn: '',
+				parentId: '',
+			},
+			statusId: '255594003'
+		}
+	];
+	medications: MedicationDto[] = [
+		{
+			note: 'note',
+			deleted: false,
+			id: 1,
+			snomed: {
+				fsn: 'Asdravirus (organismo)',
+				id: '64620000',
+				parentFsn: '',
+				parentId: '',
+			},
+			statusId: '255594003'
+		}
+	];
 
 	datosAntropometricos = [{
 		bloodType: {id: 3, description: 'A'},
@@ -112,6 +200,13 @@ export class AnamnesisFormComponent implements OnInit {
 	}
 
 	save(): void {
+		console.log('diagnosticos: ', this.diagnosticos);
+		console.log('personalHistories:', this.personalHistories);
+		console.log('familyHistories:', this.familyHistories);
+		console.log('allergies:', this.allergies);
+		console.log('inmunizations:', this.inmunizations);
+		console.log('medications:', this.medications);
+
 		console.log('form: ', this.form);
 	}
 

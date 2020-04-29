@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { SnomedDto, MasterDataInterface, HealthHistoryConditionDto, HealthConditionDto } from '@api-rest/api-model';
+import { SnomedDto, MasterDataInterface, HealthHistoryConditionDto } from '@api-rest/api-model';
 import { Moment } from 'moment';
 import * as moment from 'moment';
 import { MatTableDataSource } from '@angular/material/table';
@@ -16,7 +16,19 @@ import { pushTo, removeFrom } from '@core/utils/array.utils';
 })
 export class AntecedentesFamiliaresComponent implements OnInit {
 
-	@Input() familyHistories: HealthHistoryConditionDto[] = [];
+	private familyHistoriesValue: HealthHistoryConditionDto[];
+
+	@Output() familyHistoriesChange = new EventEmitter();
+
+	@Input()
+	set familyHistories(familyHistories: HealthHistoryConditionDto[]) {
+		this.familyHistoriesValue = familyHistories;
+		this.familyHistoriesChange.emit(this.familyHistoriesValue);
+	}
+
+	get familyHistories(): HealthHistoryConditionDto[] {
+		return this.familyHistoriesValue;
+	}
 
 	private snomedConcept: SnomedDto;
 
@@ -49,7 +61,7 @@ export class AntecedentesFamiliaresComponent implements OnInit {
 		},
 	];
 	displayedColumns: string[] = [];
-	dataSource = new MatTableDataSource<any>(this.familyHistories);
+	dataSource: MatTableDataSource<HealthHistoryConditionDto>;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -61,6 +73,7 @@ export class AntecedentesFamiliaresComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+		this.dataSource = new MatTableDataSource<HealthHistoryConditionDto>(this.familyHistories);
 		this.form = this.formBuilder.group({
 			date: [null, Validators.required],
 			note: [null, Validators.required],

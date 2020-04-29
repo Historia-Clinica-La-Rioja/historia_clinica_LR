@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { AllergyConditionDto, SnomedDto, MasterDataInterface } from '@api-rest/api-model';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -16,7 +16,19 @@ import { pushTo, removeFrom } from '@core/utils/array.utils';
 })
 export class AlergiasComponent implements OnInit {
 
-	@Input() allergies: AllergyConditionDto[] = [];
+	private allergiesValue: AllergyConditionDto[];
+
+	@Output() allergiesChange = new EventEmitter();
+
+	@Input()
+	set allergies(allergies: AllergyConditionDto[]) {
+		this.allergiesValue = allergies;
+		this.allergiesChange.emit(this.allergiesValue);
+	}
+
+	get allergies(): AllergyConditionDto[] {
+		return this.allergiesValue;
+	}
 
 	private snomedConcept: SnomedDto;
 
@@ -60,7 +72,7 @@ export class AlergiasComponent implements OnInit {
 		},
 	];
 	displayedColumns: string[] = [];
-	dataSource = new MatTableDataSource<any>(this.allergies);
+	dataSource: MatTableDataSource<AllergyConditionDto>;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -71,6 +83,7 @@ export class AlergiasComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+		this.dataSource = new MatTableDataSource<AllergyConditionDto>(this.allergies);
 		this.form = this.formBuilder.group({
 			date: [null, Validators.required],
 			severity: [null, Validators.required],

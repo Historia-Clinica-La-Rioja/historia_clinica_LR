@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HealthConditionDto, HealthHistoryConditionDto, MasterDataInterface, SnomedDto } from '@api-rest/api-model';
+import { HealthHistoryConditionDto, MasterDataInterface, SnomedDto } from '@api-rest/api-model';
 import { MatTableDataSource } from '@angular/material/table';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { DateFormat } from '@core/utils/moment.utils';
@@ -16,7 +16,19 @@ import { pushTo, removeFrom } from '@core/utils/array.utils';
 })
 export class AntecedentesPersonalesComponent implements OnInit {
 
-	@Input() personalHistories: HealthHistoryConditionDto[] = [];
+	private personalHistoriesValue: HealthHistoryConditionDto[];
+
+	@Output() personalHistoriesChange = new EventEmitter();
+
+	@Input()
+	set personalHistories(personalHistories: HealthHistoryConditionDto[]) {
+		this.personalHistoriesValue = personalHistories;
+		this.personalHistoriesChange.emit(this.personalHistoriesValue);
+	}
+
+	get personalHistories(): HealthHistoryConditionDto[] {
+		return this.personalHistoriesValue;
+	}
 
 	private snomedConcept: SnomedDto;
 
@@ -49,7 +61,7 @@ export class AntecedentesPersonalesComponent implements OnInit {
 		},
 	];
 	displayedColumns: string[] = [];
-	dataSource = new MatTableDataSource<any>(this.personalHistories);
+	dataSource: MatTableDataSource<HealthHistoryConditionDto>;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -61,6 +73,7 @@ export class AntecedentesPersonalesComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+		this.dataSource = new MatTableDataSource<HealthHistoryConditionDto>(this.personalHistories);
 		this.form = this.formBuilder.group({
 			date: [null, Validators.required],
 			note: [null, Validators.required],

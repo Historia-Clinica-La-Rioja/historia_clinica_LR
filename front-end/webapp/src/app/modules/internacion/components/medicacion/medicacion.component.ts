@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MedicationDto, SnomedDto, MasterDataInterface } from '@api-rest/api-model';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
@@ -12,7 +12,19 @@ import { pushTo, removeFrom } from '@core/utils/array.utils';
 })
 export class MedicacionComponent implements OnInit {
 
-	@Input() medications: MedicationDto[] = [];
+	private medicationsValue: MedicationDto[];
+
+	@Output() medicationsChange = new EventEmitter();
+
+	@Input()
+	set medications(medications: MedicationDto[]) {
+		this.medicationsValue = medications;
+		this.medicationsChange.emit(this.medicationsValue);
+	}
+
+	get medications(): MedicationDto[] {
+		return this.medicationsValue;
+	}
 
 	private snomedConcept: SnomedDto;
 
@@ -38,7 +50,7 @@ export class MedicacionComponent implements OnInit {
 		},
 	];
 	displayedColumns: string[] = [];
-	dataSource = new MatTableDataSource<any>(this.medications);
+	dataSource: MatTableDataSource<MedicationDto>;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -49,6 +61,7 @@ export class MedicacionComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+		this.dataSource = new MatTableDataSource<MedicationDto>(this.medications);
 		this.form = this.formBuilder.group({
 			note: [null, Validators.required],
 			statusId: [null, Validators.required],

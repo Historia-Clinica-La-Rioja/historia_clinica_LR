@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { InmunizationDto, SnomedDto, MasterDataInterface, AllergyConditionDto } from '@api-rest/api-model';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { InmunizationDto, SnomedDto, MasterDataInterface } from '@api-rest/api-model';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Moment } from 'moment';
 import * as moment from 'moment';
@@ -16,7 +16,19 @@ import { pushTo, removeFrom } from '@core/utils/array.utils';
 })
 export class VacunasComponent implements OnInit {
 
-	@Input() inmunizations: InmunizationDto[] = [];
+	private inmunizationsValue: InmunizationDto[];
+
+	@Output() inmunizationsChange = new EventEmitter();
+
+	@Input()
+	set inmunizations(inmunizations: InmunizationDto[]) {
+		this.inmunizationsValue = inmunizations;
+		this.inmunizationsChange.emit(this.inmunizationsValue);
+	}
+
+	get inmunizations(): InmunizationDto[] {
+		return this.inmunizationsValue;
+	}
 
 	private snomedConcept: SnomedDto;
 
@@ -43,7 +55,7 @@ export class VacunasComponent implements OnInit {
 		},
 	];
 	displayedColumns: string[] = [];
-	dataSource = new MatTableDataSource<any>(this.inmunizations);
+	dataSource: MatTableDataSource<InmunizationDto>;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -54,6 +66,7 @@ export class VacunasComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+		this.dataSource = new MatTableDataSource<InmunizationDto>(this.inmunizations);
 		this.form = this.formBuilder.group({
 			date: [null, Validators.required],
 			note: [null, Validators.required],
