@@ -2,6 +2,7 @@ package net.pladema.internation.controller;
 
 
 import net.pladema.BaseControllerTest;
+import net.pladema.internation.controller.mapper.InternmentStateMapper;
 import net.pladema.internation.service.InternmentStateService;
 import net.pladema.internation.service.documents.anamnesis.*;
 import org.junit.Before;
@@ -36,6 +37,9 @@ public class InternmentStateControllerTest extends BaseControllerTest {
 
 	@MockBean
 	private CreateVitalSignLabService createVitalSignLabService;
+
+	@MockBean
+	private InternmentStateMapper internmentStateMapper;
 
 	@Before
 	public void setup() {

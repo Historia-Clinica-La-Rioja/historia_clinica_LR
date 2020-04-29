@@ -1,5 +1,6 @@
 package net.pladema.internation.service.documents.anamnesis;
 
+import net.pladema.internation.service.domain.ips.GeneralHealthConditionBo;
 import net.pladema.internation.service.domain.ips.HealthConditionBo;
 import net.pladema.internation.service.domain.ips.HealthHistoryCondition;
 
@@ -13,9 +14,12 @@ public interface HealthConditionService {
 
     List<HealthHistoryCondition> loadFamilyHistories(Integer patientId, Long documentId, List<HealthHistoryCondition> familyHistories);
 
+    GeneralHealthConditionBo getGeneralState(Integer internmentEpisodeId);
+
     List<HealthConditionBo> getDiagnosisGeneralState(Integer internmentEpisodeId);
 
     List<HealthHistoryCondition> getPersonalHistoriesGeneralState(Integer internmentEpisodeId);
 
     List<HealthHistoryCondition> getFamilyHistoriesGeneralState(Integer internmentEpisodeId);
+
 }

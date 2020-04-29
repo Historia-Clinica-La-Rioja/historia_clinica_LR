@@ -1,7 +1,9 @@
 package net.pladema.internation.service.documents.anamnesis.impl;
 
+import net.pladema.internation.controller.mapper.ips.HealthConditionMapper;
 import net.pladema.internation.repository.ips.HealthConditionRepository;
 import net.pladema.internation.repository.ips.entity.HealthCondition;
+import net.pladema.internation.repository.ips.generalstate.HealthConditionVo;
 import net.pladema.internation.repository.masterdata.entity.ConditionClinicalStatus;
 import net.pladema.internation.repository.masterdata.entity.ConditionProblemType;
 import net.pladema.internation.repository.masterdata.entity.ConditionVerificationStatus;
@@ -10,31 +12,38 @@ import net.pladema.internation.service.NoteService;
 import net.pladema.internation.service.SnomedService;
 import net.pladema.internation.service.documents.DocumentService;
 import net.pladema.internation.service.documents.anamnesis.HealthConditionService;
+import net.pladema.internation.service.domain.ips.GeneralHealthConditionBo;
 import net.pladema.internation.service.domain.ips.HealthConditionBo;
 import net.pladema.internation.service.domain.ips.HealthHistoryCondition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
 public class HealthConditionServiceImpl implements HealthConditionService {
 
+    public static final String OUTPUT = "Output -> {}";
+
     private static final Logger LOG = LoggerFactory.getLogger(HealthConditionServiceImpl.class);
 
     private final HealthConditionRepository healthConditionRepository;
+    private final HealthConditionMapper healthConditionMapper;
     private final SnomedService snomedService;
     private final DocumentService documentService;
     private final NoteService noteService;
 
     public HealthConditionServiceImpl(HealthConditionRepository healthConditionRepository,
+                                      HealthConditionMapper healthConditionMapper,
                                       SnomedService snomedService,
                                       DocumentService documentService,
                                       NoteService noteService){
         this.healthConditionRepository = healthConditionRepository;
+        this.healthConditionMapper = healthConditionMapper;
         this.snomedService = snomedService;
         this.documentService = documentService;
         this.noteService = noteService;
@@ -45,7 +54,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         LOG.debug("Input parameters -> patientId {}, documentId {}, diagnosis {}", documentId, patientId, diagnosis);
         if(diagnosis.isEmpty())
             throw new IllegalArgumentException("diagnosis.mandatory");
-        diagnosis.stream().filter(d -> d.mustSave()).forEach(d -> {
+        diagnosis.stream().filter(HealthConditionBo::mustSave).forEach(d -> {
             HealthCondition healthCondition = buildHealth(patientId, d, true);
             healthCondition = healthConditionRepository.save(healthCondition);
             LOG.debug("HealthCondition saved ->", healthCondition.getId());
@@ -58,42 +67,31 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     @Override
     public List<HealthHistoryCondition> loadPersonalHistories(Integer patientId, Long documentId, List<HealthHistoryCondition> personalHistories) {
         LOG.debug("Input parameters -> patientId {}, documentId {}, personalHistories {}", documentId, patientId, personalHistories);
-        personalHistories.stream().filter(ph -> ph.mustSave()).forEach(ph -> {
+        personalHistories.stream().filter(HealthHistoryCondition::mustSave).forEach(ph -> {
             HealthCondition healthCondition = buildHistoryHealth(patientId, ph, true);
             healthCondition = healthConditionRepository.save(healthCondition);
             LOG.debug("HealthCondition saved ->", healthCondition.getId());
             ph.setId(healthCondition.getId());
             documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
         });
-        return personalHistories.stream().filter(ph -> !ph.isDeleted()).collect(Collectors.toList());
+        List<HealthHistoryCondition> result = personalHistories.stream().filter(ph -> !ph.isDeleted()).collect(Collectors.toList());
+        LOG.debug(OUTPUT, result);
+        return result;
     }
 
     @Override
     public List<HealthHistoryCondition> loadFamilyHistories(Integer patientId, Long documentId, List<HealthHistoryCondition> familyHistories) {
         LOG.debug("Input parameters -> patientId {}, documentId {}, familyHistories {}", documentId, patientId, familyHistories);
-        familyHistories.stream().filter(ph -> ph.mustSave()).forEach(ph -> {
+        familyHistories.stream().filter(HealthHistoryCondition::mustSave).forEach(ph -> {
             HealthCondition healthCondition = buildHistoryHealth(patientId, ph, false);
             healthCondition = healthConditionRepository.save(healthCondition);
             LOG.debug("HealthCondition saved ->", healthCondition.getId());
             ph.setId(healthCondition.getId());
             documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
         });
-        return familyHistories.stream().filter(fh -> !fh.isDeleted()).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<HealthConditionBo> getDiagnosisGeneralState(Integer internmentEpisodeId) {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<HealthHistoryCondition> getPersonalHistoriesGeneralState(Integer internmentEpisodeId) {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<HealthHistoryCondition> getFamilyHistoriesGeneralState(Integer internmentEpisodeId) {
-        return new ArrayList<>();
+        List<HealthHistoryCondition> result = familyHistories.stream().filter(fh -> !fh.isDeleted()).collect(Collectors.toList());
+        LOG.debug(OUTPUT, result);
+        return result;
     }
 
     private <T extends HealthHistoryCondition> HealthCondition buildHistoryHealth(Integer patientId, T healthHistory, boolean personal) {
@@ -119,4 +117,71 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         return healthCondition;
     }
 
+    @Override
+    public GeneralHealthConditionBo getGeneralState(Integer internmentEpisodeId) {
+        LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
+        GeneralHealthConditionBo result = new GeneralHealthConditionBo();
+        List<HealthConditionVo> data = getGeneralStateData(internmentEpisodeId);
+        result.setDiagnosis(buildGeneralState(
+                data,
+                HealthConditionVo::isDiagnosis,
+                healthConditionMapper::toHealthConditionBo)
+        );
+        result.setPersonalHistories(buildGeneralState(
+                data,
+                HealthConditionVo::isPersonalHistory,
+                healthConditionMapper::toHealthHistoryCondition)
+        );
+        result.setFamilyHistories(buildGeneralState(
+                data,
+                HealthConditionVo::isFamilyHistory,
+                healthConditionMapper::toHealthHistoryCondition));
+        return result;
+    }
+
+    @Override
+    public List<HealthConditionBo> getDiagnosisGeneralState(Integer internmentEpisodeId) {
+        LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
+        List<HealthConditionBo> result = buildGeneralState(
+                getGeneralStateData(internmentEpisodeId),
+                HealthConditionVo::isDiagnosis,
+                healthConditionMapper::toHealthConditionBo);
+        LOG.debug(OUTPUT, result);
+        return result;
+    }
+
+    @Override
+    public List<HealthHistoryCondition> getPersonalHistoriesGeneralState(Integer internmentEpisodeId) {
+        LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
+       List<HealthHistoryCondition> result =  buildGeneralState(
+               getGeneralStateData(internmentEpisodeId),
+               HealthConditionVo::isPersonalHistory,
+               healthConditionMapper::toHealthHistoryCondition);
+        LOG.debug(OUTPUT, result);
+        return result;
+    }
+
+    @Override
+    public List<HealthHistoryCondition> getFamilyHistoriesGeneralState(Integer internmentEpisodeId) {
+        LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
+        List<HealthHistoryCondition> result =  buildGeneralState(
+                getGeneralStateData(internmentEpisodeId),
+                HealthConditionVo::isFamilyHistory,
+                healthConditionMapper::toHealthHistoryCondition);
+        LOG.debug(OUTPUT, result);
+        return result;
+    }
+
+    private List<HealthConditionVo> getGeneralStateData(Integer internmentEpisodeId) {
+        return healthConditionRepository.findGeneralState(internmentEpisodeId);
+    }
+
+    private <T extends HealthConditionBo> List<T> buildGeneralState(List<HealthConditionVo> data,
+                                                      Predicate<? super HealthConditionVo> filterFunction,
+                                                      Function<? super HealthConditionVo, ? extends T> mapFunction){
+        return data.stream()
+                .filter(filterFunction)
+                .map(mapFunction)
+                .collect(Collectors.toList());
+    }
 }
