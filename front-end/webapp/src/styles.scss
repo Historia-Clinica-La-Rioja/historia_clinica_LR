@@ -15,7 +15,11 @@ h2.page-title {
 }
 
 section {
-	margin: 3vh 0 14vh;
+	margin: 3vh 0;
+
+	&.page {
+		margin-bottom: 14vh;
+	}
 }
 
 .capitalize {
