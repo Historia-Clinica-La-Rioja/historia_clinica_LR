@@ -1,3 +1,4 @@
 <app-summary-card [header]="diagnosticosSummary">
-	<app-table [model]="tableModel"></app-table>
+	<app-table [model]="tableModel" *ngIf="tableModel?.data.length > 0"></app-table>
+	<app-no-data *ngIf="tableModel?.data.length === 0"></app-no-data>
 </app-summary-card>
