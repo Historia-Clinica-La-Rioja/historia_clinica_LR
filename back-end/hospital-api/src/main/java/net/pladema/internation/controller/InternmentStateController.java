@@ -36,7 +36,7 @@ public class InternmentStateController {
 
     private final InmunizationService inmunizationService;
 
-    private final CreateVitalSignLabService createVitalSignLabService;
+    private final VitalSignLabService vitalSignLabService;
 
     private final InternmentStateMapper internmentStateMapper;
 
@@ -45,15 +45,15 @@ public class InternmentStateController {
                                      MedicationService medicationService,
                                      AllergyService allergyService,
                                      InmunizationService inmunizationService,
-                                     CreateVitalSignLabService createVitalSignLabService,
-                                     InternmentStateMapper internmentStateMapper) {
+                                     InternmentStateMapper internmentStateMapper,
+                                     VitalSignLabService vitalSignLabService) {
         this.internmentStateService = internmentStateService;
         this.healthConditionService = healthConditionService;
         this.medicationService = medicationService;
         this.allergyService = allergyService;
         this.inmunizationService = inmunizationService;
-        this.createVitalSignLabService = createVitalSignLabService;
         this.internmentStateMapper = internmentStateMapper;
+        this.vitalSignLabService = vitalSignLabService;
     }
 
     @GetMapping("/{internmentEpisodeId}/general")
@@ -83,7 +83,7 @@ public class InternmentStateController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
         LOG.debug("Imput parameters -> institutionId {}, internmentEpisodeId {}", institutionId, internmentEpisodeId);
-        List<HealthHistoryCondition> personalHistories = healthConditionService.getPersonalHistoriesGeneralState(internmentEpisodeId);
+        List<HealthHistoryConditionBo> personalHistories = healthConditionService.getPersonalHistoriesGeneralState(internmentEpisodeId);
         List<HealthHistoryConditionDto> result = internmentStateMapper.toListHealthHistoryConditionDto(personalHistories);
                 LOG.debug("Output -> {}", result);
         return  ResponseEntity.ok().body(result);
@@ -94,7 +94,7 @@ public class InternmentStateController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
         LOG.debug("Imput parameters -> institutionId {}, internmentEpisodeId {}", institutionId, internmentEpisodeId);
-        List<HealthHistoryCondition> familyHistories = healthConditionService.getFamilyHistoriesGeneralState(internmentEpisodeId);
+        List<HealthHistoryConditionBo> familyHistories = healthConditionService.getFamilyHistoriesGeneralState(internmentEpisodeId);
         List<HealthHistoryConditionDto> result = internmentStateMapper.toListHealthHistoryConditionDto(familyHistories);
                 LOG.debug("Output -> {}", result);
         return  ResponseEntity.ok().body(result);
@@ -116,7 +116,7 @@ public class InternmentStateController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}", institutionId, internmentEpisodeId);
-        List<AnthropometricDataBo> anthropometricDatas = createVitalSignLabService.getAnthropometricDataGeneralState(internmentEpisodeId);
+        List<AnthropometricDataBo> anthropometricDatas = vitalSignLabService.getAnthropometricDataGeneralState(internmentEpisodeId);
         List<AnthropometricDataDto> result = new ArrayList<>();
         LOG.debug("Output -> {}", result);
         return  ResponseEntity.ok().body(result);
@@ -127,8 +127,8 @@ public class InternmentStateController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}", institutionId, internmentEpisodeId);
-        List<VitalSignBo> vitalSignBos = createVitalSignLabService.getVitalSignsGeneralState(internmentEpisodeId);
-        List<VitalSignDto> result = new ArrayList<>();
+        List<VitalSignBo> vitalSignBos = vitalSignLabService.getLast2VitalSignsGeneralState(internmentEpisodeId);
+        List<VitalSignDto> result = internmentStateMapper.toListVitalSignDto(vitalSignBos);
         LOG.debug("Output -> {}", result);
         return  ResponseEntity.ok().body(result);
     }

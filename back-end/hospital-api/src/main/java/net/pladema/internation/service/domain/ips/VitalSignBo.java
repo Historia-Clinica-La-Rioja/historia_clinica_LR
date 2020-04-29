@@ -11,19 +11,29 @@ import java.io.Serializable;
 @ToString
 public class VitalSignBo implements Serializable {
 
-    private ClinicalObservation systolicBloodPressure;
+    private ClinicalObservationBo systolicBloodPressure;
 
-    private ClinicalObservation diastolicBloodPressure;
+    private ClinicalObservationBo diastolicBloodPressure;
 
-    private ClinicalObservation meanPressure;
+    private ClinicalObservationBo meanPressure;
 
-    private ClinicalObservation temperature;
+    private ClinicalObservationBo temperature;
 
-    private ClinicalObservation heartRate;
+    private ClinicalObservationBo heartRate;
 
-    private ClinicalObservation respiratoryRate;
+    private ClinicalObservationBo respiratoryRate;
 
-    private ClinicalObservation bloodOxygenSaturation;
+    private ClinicalObservationBo bloodOxygenSaturation;
 
     private boolean deleted = false;
+
+    public boolean hasValues(){
+        return (systolicBloodPressure != null ||
+                diastolicBloodPressure != null ||
+                meanPressure != null ||
+                temperature != null ||
+                heartRate != null ||
+                respiratoryRate != null ||
+                bloodOxygenSaturation != null);
+    }
 }

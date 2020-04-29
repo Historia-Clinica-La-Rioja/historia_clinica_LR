@@ -1,7 +1,7 @@
 package net.pladema.internation.service.domain.ips.enums;
 
 
-public enum ELab {
+public enum EObservationLab {
 
 	BLOOD_TYPE("365636006", "34532-2");
 
@@ -9,7 +9,7 @@ public enum ELab {
 
     private String sctidCode;
 
-    ELab(String sctidCode, String loincCode) {
+    EObservationLab(String sctidCode, String loincCode) {
         this.sctidCode = sctidCode;
         this.loincCode = loincCode;
     }

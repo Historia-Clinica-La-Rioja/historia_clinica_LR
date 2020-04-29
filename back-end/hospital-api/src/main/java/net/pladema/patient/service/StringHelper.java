@@ -6,7 +6,8 @@ public class StringHelper {
 
 	private static final int MAX_LENGTH = 4;
 
-	private StringHelper() {
+	public StringHelper() {
+		super();
 	}
 
 	public static String soundex(String data) {

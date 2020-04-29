@@ -5,7 +5,7 @@ import net.pladema.internation.service.domain.ips.VitalSignBo;
 
 import java.util.List;
 
-public interface CreateVitalSignLabService {
+public interface VitalSignLabService {
 
     List<VitalSignBo> loadVitalSigns(Integer patientId, Long documentId, List<VitalSignBo> optVitalSigns);
 
@@ -13,5 +13,5 @@ public interface CreateVitalSignLabService {
 
     List<AnthropometricDataBo> getAnthropometricDataGeneralState(Integer internmentEpisodeId);
 
-    List<VitalSignBo> getVitalSignsGeneralState(Integer internmentEpisodeId);
+    List<VitalSignBo> getLast2VitalSignsGeneralState(Integer internmentEpisodeId);
 }

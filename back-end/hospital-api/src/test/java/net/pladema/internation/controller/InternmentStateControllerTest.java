@@ -36,7 +36,7 @@ public class InternmentStateControllerTest extends BaseControllerTest {
 	private InmunizationService inmunizationService;
 
 	@MockBean
-	private CreateVitalSignLabService createVitalSignLabService;
+	private VitalSignLabService vitalSignLabService;
 
 	@MockBean
 	private InternmentStateMapper internmentStateMapper;

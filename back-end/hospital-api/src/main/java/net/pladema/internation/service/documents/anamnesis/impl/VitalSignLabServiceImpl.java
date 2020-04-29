@@ -5,26 +5,29 @@ import net.pladema.internation.repository.ips.ObservationVitalSignRepository;
 import net.pladema.internation.repository.ips.entity.ObservationLab;
 import net.pladema.internation.repository.ips.entity.ObservationVitalSign;
 import net.pladema.internation.service.documents.DocumentService;
-import net.pladema.internation.service.documents.anamnesis.CreateVitalSignLabService;
+import net.pladema.internation.service.documents.anamnesis.VitalSignLabService;
 import net.pladema.internation.service.domain.ips.AnthropometricDataBo;
-import net.pladema.internation.service.domain.ips.ClinicalObservation;
+import net.pladema.internation.service.domain.ips.ClinicalObservationBo;
+import net.pladema.internation.service.domain.ips.MapVitalSigns;
 import net.pladema.internation.service.domain.ips.VitalSignBo;
-import net.pladema.internation.service.domain.ips.enums.ELab;
+import net.pladema.internation.service.domain.ips.enums.EObservationLab;
 import net.pladema.internation.service.domain.ips.enums.EVitalSign;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class CreateVitalSignLabServiceImpl implements CreateVitalSignLabService {
+public class VitalSignLabServiceImpl implements VitalSignLabService {
 
     public static final String OUTPUT = "Output -> {}";
 
-    private static final Logger LOG = LoggerFactory.getLogger(CreateVitalSignLabServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(VitalSignLabServiceImpl.class);
 
     private final ObservationVitalSignRepository observationVitalSignRepository;
 
@@ -32,9 +35,9 @@ public class CreateVitalSignLabServiceImpl implements CreateVitalSignLabService 
 
     private final DocumentService documentService;
 
-    public CreateVitalSignLabServiceImpl(ObservationVitalSignRepository observationVitalSignRepository,
-                                         ObservationLabRepository observationLabRepository,
-                                         DocumentService documentService) {
+    public VitalSignLabServiceImpl(ObservationVitalSignRepository observationVitalSignRepository,
+                                   ObservationLabRepository observationLabRepository,
+                                   DocumentService documentService) {
         this.observationVitalSignRepository = observationVitalSignRepository;
         this.observationLabRepository = observationLabRepository;
         this.documentService = documentService;
@@ -117,7 +120,7 @@ public class CreateVitalSignLabServiceImpl implements CreateVitalSignLabService 
 
             if(mustSaveClinicalObservation(anthropometricData.getBloodType())) {
                 ObservationLab bloodType = createObservationLab(patientId, anthropometricData.getBloodType(),
-                        ELab.BLOOD_TYPE);
+                        EObservationLab.BLOOD_TYPE);
                 documentService.createDocumentLab(documentId, bloodType.getId());
                 anthropometricData.setBloodType(createObservationFromLab(bloodType));
             }
@@ -127,35 +130,35 @@ public class CreateVitalSignLabServiceImpl implements CreateVitalSignLabService 
         return anthropometricDatas.stream().filter(a -> !a.isDeleted()).collect(Collectors.toList());
     }
 
-    private boolean mustSaveClinicalObservation(ClinicalObservation co) {
+    private boolean mustSaveClinicalObservation(ClinicalObservationBo co) {
         return co != null && co.mustSave();
     }
 
-    private ObservationVitalSign createObservationVitalSign(Integer patientId, ClinicalObservation observation, EVitalSign eVitalSign) {
+    private ObservationVitalSign createObservationVitalSign(Integer patientId, ClinicalObservationBo observation, EVitalSign eVitalSign) {
         LOG.debug("Input parameters -> patientId {}, ClinicalObservation {}, eVitalSign {}", patientId, observation, eVitalSign);
         ObservationVitalSign observationVitalSign = observationVitalSignRepository.save(new ObservationVitalSign(patientId, observation.getValue(), eVitalSign, observation.isDeleted()));
         LOG.debug(OUTPUT, observationVitalSign);
         return observationVitalSign;
     }
 
-    private ObservationLab createObservationLab(Integer patientId, ClinicalObservation observation, ELab eLab) {
-        LOG.debug("Input parameters -> patientId {}, ClinicalObservation {}, eLab {}, deleted {}", patientId, observation, eLab);
-        ObservationLab observationLab = observationLabRepository.save(new ObservationLab(patientId, observation.getValue(), eLab, observation.isDeleted()));
+    private ObservationLab createObservationLab(Integer patientId, ClinicalObservationBo observation, EObservationLab eObservationLab) {
+        LOG.debug("Input parameters -> patientId {}, ClinicalObservation {}, eLab {}", patientId, observation, eObservationLab);
+        ObservationLab observationLab = observationLabRepository.save(new ObservationLab(patientId, observation.getValue(), eObservationLab, observation.isDeleted()));
         LOG.debug(OUTPUT, observationLab);
         return observationLab;
     }
 
 
-    private ClinicalObservation createObservationFromVitalSign(ObservationVitalSign vitalSign) {
+    private ClinicalObservationBo createObservationFromVitalSign(ObservationVitalSign vitalSign) {
         LOG.debug("Input parameters -> VitalSign {}", vitalSign);
-        ClinicalObservation result = new ClinicalObservation(vitalSign.getId(), vitalSign.getValue(), vitalSign.isDeleted());
+        ClinicalObservationBo result = new ClinicalObservationBo(vitalSign.getId(), vitalSign.getValue(), vitalSign.isDeleted());
         LOG.debug(OUTPUT, result);
         return result;
     }
 
-    private ClinicalObservation createObservationFromLab(ObservationLab lab) {
+    private ClinicalObservationBo createObservationFromLab(ObservationLab lab) {
         LOG.debug("Input parameters -> ObservationLab {}", lab);
-        ClinicalObservation result = new ClinicalObservation(lab.getId(), lab.getValue(), lab.isDeleted());
+        ClinicalObservationBo result = new ClinicalObservationBo(lab.getId(), lab.getValue(), lab.isDeleted());
         LOG.debug(OUTPUT, result);
         return result;
     }
@@ -167,9 +170,48 @@ public class CreateVitalSignLabServiceImpl implements CreateVitalSignLabService 
     }
 
     @Override
-    public List<VitalSignBo> getVitalSignsGeneralState(Integer internmentEpisodeId) {
+    public List<VitalSignBo> getLast2VitalSignsGeneralState(Integer internmentEpisodeId) {
         LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
-        return Collections.emptyList();
+        MapVitalSigns resultQuery = observationVitalSignRepository.getVitalSignsGeneralStateLastSevenDays(internmentEpisodeId);
+        List<VitalSignBo> result = new ArrayList<>();
+        for (int i=0;i<2;i++){
+            loadVitalSignBo(resultQuery, i).ifPresent(v -> {
+                result.add(v);
+            });
+        }
+        LOG.debug(OUTPUT, result);
+        return result;
     }
+
+    private Optional<VitalSignBo> loadVitalSignBo(MapVitalSigns mapVitalSigns, int i) {
+        LOG.debug("Input parameters -> mapVitalSigns {}, pos {}", mapVitalSigns, i);
+        VitalSignBo vitalSignBo = new VitalSignBo();
+        mapVitalSigns.getLastNVitalSign(EVitalSign.BLOOD_OXYGEN_SATURATION.getSctidCode(),i).ifPresent(v -> {
+            vitalSignBo.setBloodOxygenSaturation(new ClinicalObservationBo(v));
+        });
+        mapVitalSigns.getLastNVitalSign(EVitalSign.DIASTOLIC_BLOOD_PRESSURE.getSctidCode(),i).ifPresent(v -> {
+            vitalSignBo.setDiastolicBloodPressure(new ClinicalObservationBo(v));
+        });
+        mapVitalSigns.getLastNVitalSign(EVitalSign.SYSTOLIC_BLOOD_PRESSURE.getSctidCode(),i).ifPresent(v -> {
+            vitalSignBo.setSystolicBloodPressure(new ClinicalObservationBo(v));
+        });
+        mapVitalSigns.getLastNVitalSign(EVitalSign.HEART_RATE.getSctidCode(),i).ifPresent(v -> {
+            vitalSignBo.setHeartRate(new ClinicalObservationBo(v));
+        });
+        mapVitalSigns.getLastNVitalSign(EVitalSign.TEMPERATURE.getSctidCode(),i).ifPresent(v -> {
+            vitalSignBo.setTemperature(new ClinicalObservationBo(v));
+        });
+        mapVitalSigns.getLastNVitalSign(EVitalSign.RESPIRATORY_RATE.getSctidCode(),i).ifPresent(v -> {
+            vitalSignBo.setRespiratoryRate(new ClinicalObservationBo(v));
+        });
+        mapVitalSigns.getLastNVitalSign(EVitalSign.MEAN_PRESSURE.getSctidCode(),i).ifPresent(v -> {
+            vitalSignBo.setMeanPressure(new ClinicalObservationBo(v));
+        });
+        LOG.debug(OUTPUT, vitalSignBo);
+        if (vitalSignBo.hasValues())
+            return Optional.of(vitalSignBo);
+        return Optional.empty();
+    }
+
 
 }

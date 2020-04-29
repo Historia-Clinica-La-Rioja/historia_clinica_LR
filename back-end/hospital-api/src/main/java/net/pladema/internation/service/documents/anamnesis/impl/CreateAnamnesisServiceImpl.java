@@ -31,21 +31,21 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
 
     private final MedicationService medicationService;
 
-    private final CreateVitalSignLabService createVitalSignLabService;
+    private final VitalSignLabService vitalSignLabService;
 
     private final InmunizationService inmunizationService;
 
     public CreateAnamnesisServiceImpl(DocumentService documentService, NoteService noteService,
                                       HealthConditionService healthConditionService,
                                       AllergyService allergyService,
-                                      CreateVitalSignLabService createVitalSignLabService,
+                                      VitalSignLabService vitalSignLabService,
                                       InmunizationService inmunizationService,
                                       MedicationService medicationService) {
         this.documentService = documentService;
         this.noteService = noteService;
         this.healthConditionService = healthConditionService;
         this.allergyService = allergyService;
-        this.createVitalSignLabService = createVitalSignLabService;
+        this.vitalSignLabService = vitalSignLabService;
         this.inmunizationService = inmunizationService;
         this.medicationService = medicationService;
     }
@@ -65,8 +65,8 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
         anamnesis.setInmunizations(inmunizationService.loadInmunization(patientId, anamnesisDocument.getId(), anamnesis.getInmunizations()));
         anamnesis.setMedications(medicationService.loadMedications(patientId, anamnesisDocument.getId(), anamnesis.getMedications()));
 
-        anamnesis.setVitalSigns(createVitalSignLabService.loadVitalSigns(patientId, anamnesisDocument.getId(), anamnesis.getVitalSigns()));
-        anamnesis.setAnthropometricData(createVitalSignLabService.loadAnthropometricData(patientId, anamnesisDocument.getId(), anamnesis.getAnthropometricData()));
+        anamnesis.setVitalSigns(vitalSignLabService.loadVitalSigns(patientId, anamnesisDocument.getId(), anamnesis.getVitalSigns()));
+        anamnesis.setAnthropometricData(vitalSignLabService.loadAnthropometricData(patientId, anamnesisDocument.getId(), anamnesis.getAnthropometricData()));
         anamnesis.setId(anamnesisDocument.getId());
         LOG.debug(OUTPUT, anamnesis);
         return anamnesis;

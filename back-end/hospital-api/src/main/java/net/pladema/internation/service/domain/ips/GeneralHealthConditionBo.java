@@ -15,7 +15,7 @@ public class GeneralHealthConditionBo implements Serializable {
 
     private List<HealthConditionBo> diagnosis = new ArrayList<>();
 
-    private List<HealthHistoryCondition> personalHistories = new ArrayList<>();
+    private List<HealthHistoryConditionBo> personalHistories = new ArrayList<>();
 
-    private List<HealthHistoryCondition> familyHistories = new ArrayList<>();
+    private List<HealthHistoryConditionBo> familyHistories = new ArrayList<>();
 }

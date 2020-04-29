@@ -1,6 +1,5 @@
-package net.pladema.internation.controller.mapper;
+package net.pladema.internation.controller.mapper.ips;
 
-import net.pladema.dates.configuration.LocalDateMapper;
 import net.pladema.internation.controller.dto.ips.AnthropometricDataDto;
 import net.pladema.internation.service.domain.ips.AnthropometricDataBo;
 import org.mapstruct.IterableMapping;
@@ -10,13 +9,13 @@ import org.mapstruct.Named;
 
 import java.util.List;
 
-@Mapper(uses = {LocalDateMapper.class})
-public interface AnthropometricDataMapper {
+@Mapper
+public interface AnthropometricDataMapper extends ClinicalObservationMapper{
 
     @Named("fromAnthropometricDataDto")
-    @Mapping(target = "bloodType.deleted", source = "deleted")
-    @Mapping(target = "height.deleted", source = "deleted")
-    @Mapping(target = "weight.deleted", source = "deleted")
+    @Mapping(target = "bloodType", expression = "java(mapClinicalObs(anthropometricDataDto.getBloodType(), anthropometricDataDto.isDeleted()))")
+    @Mapping(target = "height", expression = "java(mapClinicalObs(anthropometricDataDto.getHeight(), anthropometricDataDto.isDeleted()))")
+    @Mapping(target = "weight", expression = "java(mapClinicalObs(anthropometricDataDto.getWeight(), anthropometricDataDto.isDeleted()))")
     AnthropometricDataBo fromAnthropometricDataDto(AnthropometricDataDto anthropometricDataDto);
 
     @Named("fromListAnthropometricDataDto")

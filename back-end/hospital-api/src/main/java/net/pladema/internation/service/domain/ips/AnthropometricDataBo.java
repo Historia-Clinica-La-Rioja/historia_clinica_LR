@@ -11,11 +11,11 @@ import java.io.Serializable;
 @ToString
 public class AnthropometricDataBo implements Serializable {
 
-    private ClinicalObservation bloodType;
+    private ClinicalObservationBo bloodType;
 
-    private ClinicalObservation height;
+    private ClinicalObservationBo height;
 
-    private ClinicalObservation weight;
+    private ClinicalObservationBo weight;
 
     private boolean deleted = false;
 }

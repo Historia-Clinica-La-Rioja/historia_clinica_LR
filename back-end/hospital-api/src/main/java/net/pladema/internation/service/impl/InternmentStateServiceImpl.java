@@ -2,8 +2,8 @@ package net.pladema.internation.service.impl;
 
 import net.pladema.internation.service.InternmentStateService;
 import net.pladema.internation.service.documents.anamnesis.AllergyService;
-import net.pladema.internation.service.documents.anamnesis.CreateVitalSignLabService;
 import net.pladema.internation.service.documents.anamnesis.HealthConditionService;
+import net.pladema.internation.service.documents.anamnesis.VitalSignLabService;
 import net.pladema.internation.service.documents.anamnesis.InmunizationService;
 import net.pladema.internation.service.domain.InternmentGeneralState;
 import net.pladema.internation.service.domain.ips.*;
@@ -20,22 +20,24 @@ public class InternmentStateServiceImpl implements InternmentStateService {
 
     private static final Logger LOG = LoggerFactory.getLogger(InternmentStateServiceImpl.class);
 
+    private static final String OUTPUT = "Output -> {}";
+
     private final AllergyService allergyService;
 
     private final InmunizationService inmunizationService;
 
-    private final CreateVitalSignLabService createVitalSignLabService;
+    private final VitalSignLabService vitalSignLabService;
 
     private final HealthConditionService healthConditionService;
 
     public InternmentStateServiceImpl(AllergyService allergyService,
                                       InmunizationService inmunizationService,
-                                      CreateVitalSignLabService createVitalSignLabService,
+                                      VitalSignLabService vitalSignLabService,
                                       HealthConditionService healthConditionService) {
         this.allergyService = allergyService;
         this.inmunizationService = inmunizationService;
-        this.createVitalSignLabService = createVitalSignLabService;
         this.healthConditionService = healthConditionService;
+        this.vitalSignLabService = vitalSignLabService;
     }
 
     @Override
@@ -43,6 +45,8 @@ public class InternmentStateServiceImpl implements InternmentStateService {
         LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
         InternmentGeneralState internmentGeneralState = new InternmentGeneralState();
         loadGeneralHealthCondition(internmentEpisodeId, internmentGeneralState);
+        internmentGeneralState.setVitalSigns(getVitalSignsState(internmentEpisodeId));
+        LOG.debug(OUTPUT, internmentGeneralState);
         return internmentGeneralState;
     }
 
@@ -71,11 +75,11 @@ public class InternmentStateServiceImpl implements InternmentStateService {
 
     private List<AnthropometricDataBo> getAntropometricDataState(Integer internmentEpisodeId){
         LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
-        return createVitalSignLabService.getAnthropometricDataGeneralState(internmentEpisodeId);
+        return vitalSignLabService.getAnthropometricDataGeneralState(internmentEpisodeId);
     }
 
     private List<VitalSignBo> getVitalSignsState(Integer internmentEpisodeId){
         LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
-        return createVitalSignLabService.getVitalSignsGeneralState(internmentEpisodeId);
+        return vitalSignLabService.getLast2VitalSignsGeneralState(internmentEpisodeId);
     }
 }

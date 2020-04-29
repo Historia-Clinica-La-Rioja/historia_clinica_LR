@@ -3,7 +3,7 @@ package net.pladema.internation.service.documents.anamnesis.impl;
 import net.pladema.internation.service.NoteService;
 import net.pladema.internation.service.documents.DocumentService;
 import net.pladema.internation.service.documents.anamnesis.AllergyService;
-import net.pladema.internation.service.documents.anamnesis.CreateVitalSignLabService;
+import net.pladema.internation.service.documents.anamnesis.VitalSignLabService;
 import net.pladema.internation.service.documents.anamnesis.HealthConditionService;
 import net.pladema.internation.service.documents.anamnesis.InmunizationService;
 import net.pladema.internation.service.documents.anamnesis.MedicationService;
@@ -33,7 +33,7 @@ public class CreateAnamnesisServiceImplTest {
 	private AllergyService allergyService;
 
 	@MockBean
-	private CreateVitalSignLabService createVitalSignLabService;
+	private VitalSignLabService vitalSignLabService;
 
 	@MockBean
 	private InmunizationService inmunizationService;
@@ -48,7 +48,7 @@ public class CreateAnamnesisServiceImplTest {
 				noteService,
 				healthConditionService,
 				allergyService,
-				createVitalSignLabService, 
+                vitalSignLabService,
 				inmunizationService,
 				medicationService);
 	}

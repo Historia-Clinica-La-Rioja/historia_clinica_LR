@@ -16,9 +16,9 @@ public class InternmentGeneralState implements Serializable {
 
     private List<HealthConditionBo> diagnosis;
 
-    private List<HealthHistoryCondition> personalHistories;
+    private List<HealthHistoryConditionBo> personalHistories;
 
-    private List<HealthHistoryCondition> familyHistories;
+    private List<HealthHistoryConditionBo> familyHistories;
 
     private List<Medication> medications;
 

@@ -1,6 +1,8 @@
 package net.pladema.internation.service.domain.ips.enums;
 
 
+import java.util.Arrays;
+
 public enum EVitalSign {
 
 	SYSTOLIC_BLOOD_PRESSURE("271649006", "8480-6"),
@@ -30,4 +32,15 @@ public enum EVitalSign {
     public String getSctidCode() {
         return sctidCode;
     }
+
+    public static boolean isCodeAnthropometricData(String sctidCode) {
+        return Arrays.asList(HEIGHT.sctidCode, WEIGHT.sctidCode, BMI.sctidCode).contains(sctidCode);
+    }
+
+    public static boolean isCodeVitalSign(String sctidCode) {
+        return Arrays.asList(SYSTOLIC_BLOOD_PRESSURE.sctidCode, DIASTOLIC_BLOOD_PRESSURE.sctidCode,
+                MEAN_PRESSURE.sctidCode, TEMPERATURE.sctidCode, HEART_RATE.sctidCode,
+                RESPIRATORY_RATE.sctidCode, BLOOD_OXYGEN_SATURATION.sctidCode).contains(sctidCode);
+    }
+
 }
