@@ -1339,3 +1339,47 @@ databaseChangeLog:
             constraints:
                 nullable: true
         tableName: patient
+
+- changeSet:
+    id: dropColumn-person_extended
+    author: lbergottini
+    changes:
+    - dropColumn:
+        columnName: health_insurance_id
+        tableName: person_extended 
+
+- changeSet:
+    id: health_insurance-dropPrimaryKey
+    author: lbergottini
+    changes:
+    - dropPrimaryKey:
+        constraintName: PK_health_insurance
+        dropIndex: true
+        tableName: health_insurance
+        
+- changeSet:
+    id: health_insurance-addPrimaryKey
+    author: lbergottini
+    changes:
+    - addPrimaryKey:
+        columnNames: rnos
+        constraintName: PK_health_insurance
+        tableName: health_insurance
+        validate: true
+
+- changeSet:
+    id: dropColumn-health_insurance_id
+    author: lbergottini
+    changes:
+    - dropColumn:
+        columnName: id
+        tableName: health_insurance
+        
+- changeSet:
+    id: rnos-modifyDataType
+    author: lbergottini
+    changes:
+    - modifyDataType:
+        columnName: rnos
+        newDataType: int
+        tableName: health_insurance
