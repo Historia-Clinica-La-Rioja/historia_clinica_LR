@@ -58,7 +58,7 @@ public class InternmentStateServiceImpl implements InternmentStateService {
         internmentGeneralState.setFamilyHistories(generalHealthCondition.getFamilyHistories());
     }
 
-    private List<Medication> getMedicationsState(Integer internmentEpisodeId){
+    private List<MedicationBo> getMedicationsState(Integer internmentEpisodeId){
         LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
         return Collections.emptyList();
     }

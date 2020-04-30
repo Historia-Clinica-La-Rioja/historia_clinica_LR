@@ -20,7 +20,7 @@ public class InternmentGeneralState implements Serializable {
 
     private List<HealthHistoryConditionBo> familyHistories;
 
-    private List<Medication> medications;
+    private List<MedicationBo> medications;
 
     private List<InmunizationBo> inmunizations;
 

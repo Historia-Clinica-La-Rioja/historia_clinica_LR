@@ -1,12 +1,12 @@
 package net.pladema.internation.service.documents.anamnesis;
 
-import net.pladema.internation.service.domain.ips.Medication;
+import net.pladema.internation.service.domain.ips.MedicationBo;
 
 import java.util.List;
 
 public interface MedicationService {
 
-    List<Medication> loadMedications(Integer patientId, Long documentId, List<Medication> medications);
+    List<MedicationBo> loadMedications(Integer patientId, Long documentId, List<MedicationBo> medications);
 
-    List<Medication> getMedicationsGeneralState(Integer internmentEpisodeId);
+    List<MedicationBo> getMedicationsGeneralState(Integer internmentEpisodeId);
 }

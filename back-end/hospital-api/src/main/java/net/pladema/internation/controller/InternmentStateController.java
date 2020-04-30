@@ -105,8 +105,8 @@ public class InternmentStateController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
         LOG.debug("Imput parameters -> institutionId {}, internmentEpisodeId {}", institutionId, internmentEpisodeId);
-        List<Medication> medications = medicationService.getMedicationsGeneralState(internmentEpisodeId);
-        List<MedicationDto> result = new ArrayList<>();
+        List<MedicationBo> medications = medicationService.getMedicationsGeneralState(internmentEpisodeId);
+        List<MedicationDto> result = internmentStateMapper.toListMedicationDto(medications);
         LOG.debug("Output -> {}", result);
         return  ResponseEntity.ok().body(result);
     }
