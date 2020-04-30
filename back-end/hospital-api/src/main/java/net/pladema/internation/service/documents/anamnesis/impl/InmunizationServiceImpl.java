@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class InmunizationServiceImpl implements InmunizationService {
@@ -38,28 +37,27 @@ public class InmunizationServiceImpl implements InmunizationService {
     @Override
     public List<InmunizationBo> loadInmunization(Integer patientId, Long documentId, List<InmunizationBo> inmunizations) {
         LOG.debug("Input parameters -> {}", inmunizations);
-        inmunizations.stream().filter(inmunizationBo -> inmunizationBo.mustSave()).forEach(inmunizationBo -> {
-            Inmunization inmunization = saveInmunization(patientId, inmunizationBo);
+        inmunizations.stream().forEach(inmunizationBo -> {
+            String sctId = snomedService.createSnomedTerm(inmunizationBo.getSnomed());
+            Inmunization inmunization = saveInmunization(patientId, inmunizationBo, sctId);
+
             inmunizationBo.setId(inmunization.getId());
+            inmunizationBo.setStatusId(inmunization.getStatusId());
+            inmunizationBo.setAdministrationDate(inmunization.getAdministrationDate());
+
             documentService.createInmunization(documentId, inmunization.getId());
         });
-        return inmunizations.stream().filter(i -> !i.isDeleted()).collect(Collectors.toList());
+        List<InmunizationBo> result = inmunizations;
+        LOG.debug(OUTPUT, result);
+        return result;
     }
 
-    private <T extends InmunizationBo> Inmunization buildInmunization(Integer patientId, T info) {
-        LOG.debug("Input parameters -> patientId {}, info {}", patientId, info);
-        snomedService.createSnomedTerm(info.getSnomed());
-        Inmunization inmunization = new Inmunization(patientId, info.getSnomed().getId(), info.getStatusId()
-                , info.getAdministrationDate(), info.isDeleted());
-        LOG.debug(OUTPUT, inmunization);
-        return inmunization;
-    }
-
-    private Inmunization saveInmunization(Integer patientId, InmunizationBo inmunizationBo) {
-        LOG.debug("Input parameters -> patientId {}, inmunizationBo {}", patientId, inmunizationBo);
-        Inmunization inmunization = buildInmunization(patientId, inmunizationBo);
+    private Inmunization saveInmunization(Integer patientId, InmunizationBo inmunizationBo, String sctId) {
+        LOG.debug("Input parameters -> patientId {}, inmunizationBo {}, sctId {}", patientId, inmunizationBo, sctId);
+        Inmunization inmunization = new Inmunization(patientId, sctId, inmunizationBo.getStatusId()
+                , inmunizationBo.getAdministrationDate());
         inmunization = inmunizationRepository.save(inmunization);
-        LOG.debug("Inmunization saved ->", inmunization.getId());
+        LOG.debug("Inmunization saved -> {}", inmunization.getId());
         LOG.debug(OUTPUT, inmunization);
         return inmunization;
     }

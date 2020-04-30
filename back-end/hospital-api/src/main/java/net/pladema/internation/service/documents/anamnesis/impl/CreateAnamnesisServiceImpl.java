@@ -3,6 +3,7 @@ package net.pladema.internation.service.documents.anamnesis.impl;
 import net.pladema.internation.repository.core.entity.Document;
 import net.pladema.internation.repository.masterdata.entity.DocumentStatus;
 import net.pladema.internation.repository.masterdata.entity.DocumentType;
+import net.pladema.internation.service.InternmentEpisodeService;
 import net.pladema.internation.service.NoteService;
 import net.pladema.internation.service.documents.DocumentService;
 import net.pladema.internation.service.documents.anamnesis.*;
@@ -23,6 +24,8 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
 
     private final DocumentService documentService;
 
+    private final InternmentEpisodeService internmentEpisodeService;
+
     private final NoteService noteService;
 
     private final HealthConditionService healthConditionService;
@@ -35,13 +38,16 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
 
     private final InmunizationService inmunizationService;
 
-    public CreateAnamnesisServiceImpl(DocumentService documentService, NoteService noteService,
+    public CreateAnamnesisServiceImpl(DocumentService documentService,
+                                      InternmentEpisodeService internmentEpisodeService,
+                                      NoteService noteService,
                                       HealthConditionService healthConditionService,
                                       AllergyService allergyService,
                                       VitalSignLabService vitalSignLabService,
                                       InmunizationService inmunizationService,
                                       MedicationService medicationService) {
         this.documentService = documentService;
+        this.internmentEpisodeService = internmentEpisodeService;
         this.noteService = noteService;
         this.healthConditionService = healthConditionService;
         this.allergyService = allergyService;
@@ -65,9 +71,12 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
         anamnesis.setInmunizations(inmunizationService.loadInmunization(patientId, anamnesisDocument.getId(), anamnesis.getInmunizations()));
         anamnesis.setMedications(medicationService.loadMedications(patientId, anamnesisDocument.getId(), anamnesis.getMedications()));
 
-        anamnesis.setVitalSigns(vitalSignLabService.loadVitalSigns(patientId, anamnesisDocument.getId(), anamnesis.getVitalSigns()));
-        anamnesis.setAnthropometricData(vitalSignLabService.loadAnthropometricData(patientId, anamnesisDocument.getId(), anamnesis.getAnthropometricData()));
+        anamnesis.setVitalSigns(vitalSignLabService.loadVitalSigns(patientId, anamnesisDocument.getId(), Optional.ofNullable(anamnesis.getVitalSigns())));
+        anamnesis.setAnthropometricData(vitalSignLabService.loadAnthropometricData(patientId, anamnesisDocument.getId(), Optional.ofNullable(anamnesis.getAnthropometricData())));
+
+        internmentEpisodeService.updateAnamnesisDocumentId(intermentEpisodeId, anamnesisDocument.getId());
         anamnesis.setId(anamnesisDocument.getId());
+
         LOG.debug(OUTPUT, anamnesis);
         return anamnesis;
     }

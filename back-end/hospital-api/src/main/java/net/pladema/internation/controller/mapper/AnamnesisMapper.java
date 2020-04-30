@@ -14,12 +14,12 @@ import org.mapstruct.Named;
 public interface AnamnesisMapper {
 
     @Named("fromAnamnesisDto")
-    @Mapping(target = "vitalSigns", source = "vitalSigns", qualifiedByName = "fromListVitalSignDto")
+    @Mapping(target = "vitalSigns", source = "vitalSigns", qualifiedByName = "fromAnthropometricDataDto")
     @Mapping(target = "anthropometricData", source = "anthropometricData", qualifiedByName = "fromListAnthropometricDataDto")
     Anamnesis fromAnamnesisDto(AnamnesisDto anamnesisDto);
 
     @Named("fromAnamnesis")
-    @Mapping(target = "anthropometricData", source = "anthropometricData", qualifiedByName = "fromListAnthropometricDataBo")
-    @Mapping(target = "vitalSigns", source = "vitalSigns", qualifiedByName = "fromListVitalSignBo")
+    @Mapping(target = "anthropometricData", source = "anthropometricData", qualifiedByName = "fromAnthropometricDataBo")
+    @Mapping(target = "vitalSigns", source = "vitalSigns", qualifiedByName = "fromVitalSignBo")
     ResponseAnamnesisDto fromAnamnesis(Anamnesis anamnesis);
 }

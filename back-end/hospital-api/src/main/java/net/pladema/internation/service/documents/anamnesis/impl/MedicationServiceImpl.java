@@ -3,7 +3,6 @@ package net.pladema.internation.service.documents.anamnesis.impl;
 import net.pladema.internation.controller.mapper.ips.MedicationMapper;
 import net.pladema.internation.repository.ips.MedicationStatementRepository;
 import net.pladema.internation.repository.ips.entity.MedicationStatement;
-import net.pladema.internation.repository.masterdata.entity.MedicationStatementStatus;
 import net.pladema.internation.service.NoteService;
 import net.pladema.internation.service.SnomedService;
 import net.pladema.internation.service.documents.DocumentService;
@@ -14,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class MedicationServiceImpl implements MedicationService {
@@ -47,14 +45,19 @@ public class MedicationServiceImpl implements MedicationService {
 
     @Override
     public List<MedicationBo> loadMedications(Integer patientId, Long documentId, List<MedicationBo> medications) {
-        LOG.debug("Input parameters -> patientId {}, documentId {}, medicationBos {}", documentId, patientId, medications);
-        medications.stream().filter(MedicationBo::mustSave).forEach(medication -> {
-            String sctid = snomedService.createSnomedTerm(medication.getSnomed());
-            MedicationStatement medicationStatement = saveMedicationStatement(patientId, medication, sctid);
+        LOG.debug("Input parameters -> patientId {}, documentId {}, medications {}", documentId, patientId, medications);
+        medications.forEach(medication -> {
+            String sctId = snomedService.createSnomedTerm(medication.getSnomed());
+            MedicationStatement medicationStatement = saveMedicationStatement(patientId, medication, sctId);
+
             medication.setId(medicationStatement.getId());
+            medication.setStatusId(medicationStatement.getStatusId());
+
             documentService.createDocumentMedication(documentId, medicationStatement.getId());
         });
-        return medications.stream().filter(m -> !m.isDeleted()).collect(Collectors.toList());
+        List<MedicationBo> result = medications;
+        LOG.debug(OUTPUT, result);
+        return result;
     }
 
     @Override
@@ -66,14 +69,13 @@ public class MedicationServiceImpl implements MedicationService {
         return result;
     }
 
-    private MedicationStatement saveMedicationStatement(Integer patientId, MedicationBo medicationBo, String sctid) {
-        LOG.debug("Input parameters -> patientId {}, medicationBo {}, sctid {}", patientId, medicationBo, sctid);
+    private MedicationStatement saveMedicationStatement(Integer patientId, MedicationBo medicationBo, String sctId) {
+        LOG.debug("Input parameters -> patientId {}, medication {}, sctId {}", patientId, medicationBo, sctId);
         MedicationStatement medicationStatement = new MedicationStatement(
                 patientId,
-                sctid,
-                MedicationStatementStatus.ACTIVE,
-                noteService.createNote(medicationBo.getNote()),
-                medicationBo.isDeleted());
+                sctId,
+                medicationBo.getStatusId(),
+                noteService.createNote(medicationBo.getNote()));
 
         medicationStatement = medicationStatementRepository.save(medicationStatement);
         LOG.debug("medicationStatement saved ->", medicationStatement.getId());

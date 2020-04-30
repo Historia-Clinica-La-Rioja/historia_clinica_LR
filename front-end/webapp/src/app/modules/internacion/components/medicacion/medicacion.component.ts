@@ -66,7 +66,6 @@ export class MedicacionComponent implements OnInit {
 			const medicacion: MedicationDto = {
 				id: null,
 				note: this.form.value.note,
-				deleted: false,
 				snomed: this.snomedConcept,
 				statusId: this.form.value.statusId
 			};
@@ -87,10 +86,7 @@ export class MedicacionComponent implements OnInit {
 
 	remove(index: number): void {
 		const toRemove = this.dataSource.data[index];
-		if (toRemove.id != null) {
-			this.medications.find(item => item === toRemove).deleted = true;
-			this.dataSource.data = this.medications.filter(item => !item.deleted);
-		} else {
+		if (toRemove.id == null) {
 			this.dataSource.data = removeFrom<MedicationDto>(this.dataSource.data, index);
 			this.medications = this.medications.filter(item => toRemove !== item);
 		}

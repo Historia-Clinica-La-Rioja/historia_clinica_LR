@@ -2,8 +2,6 @@ package net.pladema.internation.service.documents.anamnesis.impl;
 
 import net.pladema.internation.repository.ips.AllergyIntoleranceRepository;
 import net.pladema.internation.repository.ips.entity.AllergyIntolerance;
-import net.pladema.internation.repository.masterdata.entity.AllergyIntoleranceClinicalStatus;
-import net.pladema.internation.repository.masterdata.entity.AllergyIntoleranceVerificationStatus;
 import net.pladema.internation.service.SnomedService;
 import net.pladema.internation.service.documents.DocumentService;
 import net.pladema.internation.service.documents.anamnesis.AllergyService;
@@ -14,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class AllergyServiceImpl implements AllergyService {
@@ -40,24 +37,31 @@ public class AllergyServiceImpl implements AllergyService {
     @Override
     public List<AllergyConditionBo> loadAllergies(Integer patientId, Long documentId, List<AllergyConditionBo> allergies) {
         LOG.debug("Input parameters -> patientId {}, documentId {}, allergies {}", documentId, patientId, allergies);
-        allergies.stream().filter(allergy -> allergy.mustSave()).forEach(allergy -> {
-            String sctid = snomedService.createSnomedTerm(allergy.getSnomed());
-            AllergyIntolerance allergyIntolerance = saveAllergyIntolerance(patientId, allergy, sctid);
+        allergies.forEach(allergy -> {
+            String sctId = snomedService.createSnomedTerm(allergy.getSnomed());
+            AllergyIntolerance allergyIntolerance = saveAllergyIntolerance(patientId, allergy, sctId);
+
             allergy.setId(allergyIntolerance.getId());
+            allergy.setVerificationId(allergyIntolerance.getVerificationStatusId());
+            allergy.setStatusId(allergyIntolerance.getStatusId());
+            allergy.setCategoryId(allergyIntolerance.getCategoryId());
+            allergy.setDate(allergyIntolerance.getStartDate());
+
             documentService.createDocumentAllergyIntolerance(documentId, allergyIntolerance.getId());
         });
-        return allergies.stream().filter(a -> !a.isDeleted()).collect(Collectors.toList());
+        List<AllergyConditionBo> result = allergies;
+        LOG.debug(OUTPUT, result);
+        return result;
     }
 
-    private AllergyIntolerance saveAllergyIntolerance(Integer patientId, AllergyConditionBo allergy, String sctid) {
-        LOG.debug("Input parameters -> patientId {}, allergy {}, sctid {}", patientId, allergy, sctid);
+    private AllergyIntolerance saveAllergyIntolerance(Integer patientId, AllergyConditionBo allergy, String sctId) {
+        LOG.debug("Input parameters -> patientId {}, allergy {}, sctId {}", patientId, allergy, sctId);
         AllergyIntolerance allergyIntolerance = new AllergyIntolerance(patientId,
-                sctid,
-                AllergyIntoleranceClinicalStatus.ACTIVE,
-                AllergyIntoleranceVerificationStatus.CONFIRMED,
+                sctId,
+                allergy.getStatusId(),
+                allergy.getVerificationId(),
                 allergy.getCategoryId(),
-                allergy.getDate(),
-                allergy.isDeleted());
+                allergy.getDate());
         allergyIntolerance = allergyIntoleranceRepository.save(allergyIntolerance);
         LOG.debug("allergyIntolerance saved ->", allergyIntolerance.getId());
         LOG.debug(OUTPUT, allergyIntolerance);

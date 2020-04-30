@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
-import { AllergyConditionDto, SnomedDto, MasterDataInterface, HealthHistoryConditionDto } from '@api-rest/api-model';
+import { AllergyConditionDto, SnomedDto, MasterDataInterface } from '@api-rest/api-model';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Moment } from 'moment';
 import * as moment from 'moment';
@@ -122,7 +122,6 @@ export class AlergiasComponent implements OnInit {
 				date: this.form.value.date.format(DateFormat.API_DATE),
 				severity: this.form.value.severity,
 				verificationId: this.form.value.verificationId,
-				deleted: false,
 				id: null,
 				snomed: this.snomedConcept,
 				statusId: this.form.value.statusId
@@ -144,10 +143,7 @@ export class AlergiasComponent implements OnInit {
 
 	remove(index: number): void {
 		const toRemove = this.dataSource.data[index];
-		if (toRemove.id != null) {
-			this.allergies.find(item => item === toRemove).deleted = true;
-			this.dataSource.data = this.allergies.filter(item => !item.deleted);
-		} else {
+		if (toRemove.id == null) {
 			this.dataSource.data = removeFrom<AllergyConditionDto>(this.dataSource.data, index);
 			this.allergies = this.allergies.filter(item => toRemove !== item);
 		}

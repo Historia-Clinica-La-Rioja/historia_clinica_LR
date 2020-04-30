@@ -1,5 +1,6 @@
 package net.pladema.internation.service.documents.anamnesis.impl;
 
+import net.pladema.internation.service.InternmentEpisodeService;
 import net.pladema.internation.service.NoteService;
 import net.pladema.internation.service.documents.DocumentService;
 import net.pladema.internation.service.documents.anamnesis.AllergyService;
@@ -24,6 +25,9 @@ public class CreateAnamnesisServiceImplTest {
 	private DocumentService documentService;
 
 	@MockBean
+	private InternmentEpisodeService internmentEpisodeService;
+
+	@MockBean
 	private NoteService noteService;
 
 	@MockBean
@@ -45,6 +49,7 @@ public class CreateAnamnesisServiceImplTest {
 	public void setUp() {
 		createAnamnesisServiceImpl = new CreateAnamnesisServiceImpl(
 				documentService,
+				internmentEpisodeService,
 				noteService,
 				healthConditionService,
 				allergyService,

@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -20,6 +21,12 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
         this.internmentEpisodeRepository = internmentEpisodeRepository;
     }
 
+
+    @Override
+    public void updateAnamnesisDocumentId(Integer internmentEpisodeId, Long anamnesisDocumentId) {
+        LOG.debug("Input parameters -> internmentEpisodeId {}, anamnesisDocumentId {}", internmentEpisodeId, anamnesisDocumentId);
+        internmentEpisodeRepository.updateAnamnesisDocumentId(internmentEpisodeId, anamnesisDocumentId, LocalDateTime.now());
+    }
 
     @Override
     public Optional<InternmentSummary> getIntermentSummary(Integer internmentEpisodeId) {

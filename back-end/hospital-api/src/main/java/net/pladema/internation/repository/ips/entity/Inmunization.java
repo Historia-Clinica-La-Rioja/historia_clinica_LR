@@ -38,7 +38,7 @@ public class Inmunization extends InternationAuditableEntity {
 	private String sctidCode;
 
 	@Column(name = "status_id", length = 20, nullable = false)
-	private String statusId;
+	private String statusId = InmunizationStatus.COMPLETE;
 
 	@Column(name = "expiration_date")
 	private LocalDate expirationDate;
@@ -52,13 +52,12 @@ public class Inmunization extends InternationAuditableEntity {
 	@Column(name = "note_id")
 	private Long noteId;
 
-	public Inmunization(Integer patientId, String sctidCode, String statusId, LocalDate administrationDate, boolean deleted) {
+	public Inmunization(Integer patientId, String sctidCode, String statusId, LocalDate administrationDate) {
 		super();
 		this.patientId = patientId;
 		this.sctidCode = sctidCode;
-		this.statusId = statusId;
-		if (deleted)
-			this.statusId = InmunizationStatus.ERROR;
+		if (statusId != null)
+			this.statusId = statusId;
 		this.administrationDate = administrationDate;
 	}
 

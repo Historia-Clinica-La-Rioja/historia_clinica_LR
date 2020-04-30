@@ -23,5 +23,4 @@ public class VitalSignDto implements Serializable {
 
     private ClinicalObservationDto bloodOxygenSaturation;
 
-    private boolean deleted = false;
 }

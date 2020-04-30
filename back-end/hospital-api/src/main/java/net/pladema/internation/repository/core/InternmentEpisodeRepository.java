@@ -3,11 +3,13 @@ package net.pladema.internation.repository.core;
 import net.pladema.internation.repository.core.domain.InternmentSummary;
 import net.pladema.internation.repository.core.entity.InternmentEpisode;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Repository
@@ -35,4 +37,14 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             "FROM InternmentEpisode ie " +
             "WHERE ie.id = :internmentEpisodeId")
     Optional<Integer> getPatient(@Param("internmentEpisodeId") Integer internmentEpisodeId);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE InternmentEpisode AS ie " +
+            "SET ie.anamnesisDocId = :anamnesisDocumentId, " +
+            "ie.updateable.updatedOn = :today " +
+            "WHERE ie.id = :internmentEpisodeId")
+    void updateAnamnesisDocumentId(@Param("internmentEpisodeId") Integer internmentEpisodeId,
+                                   @Param("anamnesisDocumentId") Long anamnesisDocumentId,
+                                   @Param("today") LocalDateTime today);
 }

@@ -40,4 +40,7 @@ public class ConditionVerificationStatus implements Serializable {
 		return new String[]{DISCARDED, ERROR};
 	}
 
+	public static boolean isDownState(String verificationId) {
+		return (verificationId.equalsIgnoreCase(ERROR) || verificationId.equalsIgnoreCase(DISCARDED));
+	}
 }

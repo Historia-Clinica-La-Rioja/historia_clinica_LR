@@ -23,5 +23,4 @@ public abstract class ClinicalTermDto implements Serializable {
 
     private SnomedDto snomed;
 
-    private boolean deleted = false;
 }

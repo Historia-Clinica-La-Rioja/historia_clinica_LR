@@ -5,9 +5,6 @@ import net.pladema.internation.controller.dto.ips.AnthropometricDataDto;
 import net.pladema.internation.controller.dto.ips.ClinicalObservationDto;
 import net.pladema.internation.controller.dto.ips.VitalSignDto;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 public class MocksAnamnesis {
 
@@ -22,36 +19,28 @@ public class MocksAnamnesis {
         return result;
     }
 
-    private static List<VitalSignDto> mockVitalSignDto(int id) {
-        List<VitalSignDto> result = new ArrayList<>();
-        for (int i = 0; i<id;i++) {
-            VitalSignDto vitalSignDto = new VitalSignDto();
-            vitalSignDto.setBloodOxygenSaturation(mockNewClinicalObservationDto(i + 1));
-            vitalSignDto.setDiastolicBloodPressure(mockNewClinicalObservationDto(i + 2));
-            vitalSignDto.setSystolicBloodPressure(mockNewClinicalObservationDto(i + 2));
-            vitalSignDto.setHeartRate(mockNewClinicalObservationDto(i + 3));
-            vitalSignDto.setRespiratoryRate(mockNewClinicalObservationDto(i + 4));
-            vitalSignDto.setTemperature(mockNewClinicalObservationDto(i + 5));
-            result.add(vitalSignDto);
-        }
-        return result;
+    private static VitalSignDto mockVitalSignDto(int id) {
+        VitalSignDto vitalSignDto = new VitalSignDto();
+        vitalSignDto.setBloodOxygenSaturation(mockNewClinicalObservationDto(id + 1));
+        vitalSignDto.setDiastolicBloodPressure(mockNewClinicalObservationDto(id + 2));
+        vitalSignDto.setSystolicBloodPressure(mockNewClinicalObservationDto(id + 2));
+        vitalSignDto.setHeartRate(mockNewClinicalObservationDto(id + 3));
+        vitalSignDto.setRespiratoryRate(mockNewClinicalObservationDto(id + 4));
+        vitalSignDto.setTemperature(mockNewClinicalObservationDto(id + 5));
+        return vitalSignDto;
     }
 
-    private static List<AnthropometricDataDto> mockAnthropometricDataDto(int id) {
-        List<AnthropometricDataDto> result = new ArrayList<>();
-        for (int i = 0; i<id;i++) {
-            AnthropometricDataDto anthropometricDataDto = new AnthropometricDataDto();
-            anthropometricDataDto.setHeight(mockNewClinicalObservationDto(i + 101));
-            anthropometricDataDto.setWeight(mockNewClinicalObservationDto(i + 102));
-            anthropometricDataDto.setBloodType(mockNewClinicalObservationDto(i + 103));
-        }
-        return result;
+    private static AnthropometricDataDto mockAnthropometricDataDto(int id) {
+        AnthropometricDataDto anthropometricDataDto = new AnthropometricDataDto();
+        anthropometricDataDto.setHeight(mockNewClinicalObservationDto(id + 101));
+        anthropometricDataDto.setWeight(mockNewClinicalObservationDto(id + 102));
+        anthropometricDataDto.setBloodType(mockNewClinicalObservationDto(id + 103));
+        return anthropometricDataDto;
     }
 
     private static ClinicalObservationDto mockNewClinicalObservationDto(int i) {
         ClinicalObservationDto result = new ClinicalObservationDto();
         result.setId(i);
-        result.setDeleted(false);
         result.setValue("Value123/%");
         return result;
     }

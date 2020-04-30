@@ -17,14 +17,4 @@ public abstract class ClinicalTerm implements Serializable {
     private String statusId;
 
     private SnomedDto snomed;
-
-    private boolean deleted = false;
-
-    private boolean isNew(){
-        return id == null;
-    }
-
-    public boolean mustSave() {
-        return isDeleted() || isNew();
-    }
 }

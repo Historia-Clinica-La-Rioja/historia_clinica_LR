@@ -17,5 +17,4 @@ public class AnthropometricDataBo implements Serializable {
 
     private ClinicalObservationBo weight;
 
-    private boolean deleted = false;
 }

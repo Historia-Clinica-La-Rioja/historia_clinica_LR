@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.internation.repository.listener.InternationAuditableEntity;
 import net.pladema.internation.repository.listener.InternationListener;
+import net.pladema.internation.repository.masterdata.entity.AllergyIntoleranceClinicalStatus;
 import net.pladema.internation.repository.masterdata.entity.AllergyIntoleranceVerificationStatus;
 
 import javax.persistence.*;
@@ -38,10 +39,10 @@ public class AllergyIntolerance extends InternationAuditableEntity {
 	private String sctidCode;
 
 	@Column(name = "status_id", length = 20, nullable = false)
-	private String statusId;
+	private String statusId = AllergyIntoleranceClinicalStatus.ACTIVE;
 
 	@Column(name = "verification_status_id", length = 20, nullable = false)
-	private String verificationStatusId;
+	private String verificationStatusId = AllergyIntoleranceVerificationStatus.CONFIRMED;
 
 	@Column(name = "category_id", length = 20, nullable = false)
 	private String categoryId;
@@ -53,14 +54,14 @@ public class AllergyIntolerance extends InternationAuditableEntity {
 	private Long noteId;
 
 	public AllergyIntolerance(Integer patientId, String sctidCode, String statusId,
-							  String verificationId, String categoryId, LocalDate startDate, boolean deleted){
+							  String verificationId, String categoryId, LocalDate startDate){
 		super();
 		this.patientId = patientId;
 		this.sctidCode = sctidCode;
-		this.statusId = statusId;
-		this.verificationStatusId = verificationId;
-		if (deleted)
-			this.verificationStatusId = AllergyIntoleranceVerificationStatus.ERROR;
+		if (statusId != null)
+			this.statusId = statusId;
+		if (verificationId != null)
+			this.verificationStatusId = verificationId;
 		this.categoryId = categoryId;
 		this.startDate = startDate;
 	}

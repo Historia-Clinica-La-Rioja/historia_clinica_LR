@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.internation.repository.listener.InternationAuditableEntity;
 import net.pladema.internation.repository.listener.InternationListener;
+import net.pladema.internation.repository.masterdata.entity.ConditionVerificationStatus;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -59,6 +60,12 @@ public class HealthCondition extends InternationAuditableEntity {
 
 	@Column(name = "problem_id", length = 20, nullable = false)
 	private String problemId;
+
+	public void setVerificationStatusId(String verificationId) {
+		this.verificationStatusId = verificationId;
+		if (verificationId == null)
+			this.verificationStatusId = ConditionVerificationStatus.CONFIRMED;
+	}
 
 	@Override
 	public boolean equals(Object o) {

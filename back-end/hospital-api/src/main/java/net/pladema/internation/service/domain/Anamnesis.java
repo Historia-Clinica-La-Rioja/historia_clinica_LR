@@ -5,14 +5,12 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.internation.service.domain.ips.*;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
 @ToString
-public class Anamnesis implements Serializable {
+public class Anamnesis {
 
     private Long id;
 
@@ -20,7 +18,7 @@ public class Anamnesis implements Serializable {
 
     private DocumentObservations notes;
 
-    private List<HealthConditionBo> diagnosis;
+    private List<DiagnosisBo> diagnosis;
 
     private List<HealthHistoryConditionBo> personalHistories;
 
@@ -32,8 +30,8 @@ public class Anamnesis implements Serializable {
 
     private List<AllergyConditionBo> allergies;
 
-    private List<AnthropometricDataBo> anthropometricData = new ArrayList<>();
+    private AnthropometricDataBo anthropometricData;
 
-    private List<VitalSignBo> vitalSigns = new ArrayList<>();
+    private VitalSignBo vitalSigns;
 
 }

@@ -92,7 +92,6 @@ export class VacunasComponent implements OnInit {
 			const vacuna: InmunizationDto = {
 				administrationDate: this.form.value.date.format(DateFormat.API_DATE),
 				note: this.form.value.note,
-				deleted: false,
 				id: null,
 				snomed: this.snomedConcept,
 				statusId: this.form.value.statusId
@@ -114,10 +113,7 @@ export class VacunasComponent implements OnInit {
 
 	remove(index: number): void {
 		const toRemove = this.dataSource.data[index];
-		if (toRemove.id != null) {
-			this.inmunizations.find(item => item === toRemove).deleted = true;
-			this.dataSource.data = this.inmunizations.filter(item => !item.deleted);
-		} else {
+		if (toRemove.id == null) {
 			this.dataSource.data = removeFrom<InmunizationDto>(this.dataSource.data, index);
 			this.inmunizations = this.inmunizations.filter(item => toRemove !== item);
 		}

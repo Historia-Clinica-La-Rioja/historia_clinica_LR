@@ -104,7 +104,6 @@ export class AntecedentesPersonalesComponent implements OnInit {
 				date: this.form.value.date.format(DateFormat.API_DATE),
 				note: this.form.value.note,
 				verificationId: this.form.value.verificationId,
-				deleted: false,
 				id: null,
 				snomed: this.snomedConcept,
 				statusId: this.form.value.statusId
@@ -126,10 +125,7 @@ export class AntecedentesPersonalesComponent implements OnInit {
 
 	remove(index: number): void {
 		const toRemove = this.dataSource.data[index];
-		if (toRemove.id != null) {
-			this.personalHistories.find(item => item === toRemove).deleted = true;
-			this.dataSource.data = this.personalHistories.filter(item => !item.deleted);
-		} else {
+		if (toRemove.id == null) {
 			this.dataSource.data = removeFrom<HealthHistoryConditionDto>(this.dataSource.data, index);
 			this.personalHistories = this.personalHistories.filter(item => toRemove !== item);
 		}

@@ -37,18 +37,17 @@ public class MedicationStatement extends InternationAuditableEntity {
 	private String sctidCode;
 
 	@Column(name = "status_id", length = 20, nullable = false)
-	private String statusId;
+	private String statusId = MedicationStatementStatus.ACTIVE;
 
 	@Column(name = "note_id")
 	private Long noteId;
 
-	public MedicationStatement(Integer patientId, String sctid, String statusId, Long noteId, boolean deleted) {
+	public MedicationStatement(Integer patientId, String sctId, String statusId, Long noteId) {
 		super();
 		this.patientId = patientId;
-		this.sctidCode = sctid;
-		this.statusId = statusId;
-		if(deleted)
-			this.statusId = MedicationStatementStatus.ERROR;
+		this.sctidCode = sctId;
+		if (statusId != null)
+			this.statusId = statusId;
 		this.noteId = noteId;
 	}
 

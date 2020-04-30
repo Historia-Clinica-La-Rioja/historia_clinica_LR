@@ -18,20 +18,10 @@ public class ClinicalObservationBo implements Serializable {
     @NotNull
     private String value;
 
-    private boolean deleted = false;
-
     public ClinicalObservationBo(VitalSignVo vitalSignVo) {
         super();
         this.id = vitalSignVo.getId();
         this.value = vitalSignVo.getValue();
-    }
-
-    public boolean mustSave() {
-        return isDeleted() || isNew();
-    }
-
-    private boolean isNew() {
-        return id == null;
     }
 
 }

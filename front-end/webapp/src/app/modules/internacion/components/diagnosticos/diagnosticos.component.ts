@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MasterDataInterface, SnomedDto, HealthConditionDto } from '@api-rest/api-model';
+import { MasterDataInterface, SnomedDto, HealthConditionDto, DiagnosisDto } from '@api-rest/api-model';
 import { MatTableDataSource } from '@angular/material/table';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
@@ -12,7 +12,7 @@ import { InternacionMasterDataService } from '@api-rest/services/internacion-mas
 })
 export class DiagnosticosComponent implements OnInit {
 
-	@Input() diagnosis: HealthConditionDto[] = [];
+	@Input() diagnosis: DiagnosisDto[] = [];
 
 	private snomedConcept: SnomedDto;
 
@@ -39,7 +39,7 @@ export class DiagnosticosComponent implements OnInit {
 		},
 	];
 	displayedColumns: string[] = [];
-	dataSource = new MatTableDataSource<HealthConditionDto>(this.diagnosis);
+	dataSource = new MatTableDataSource<DiagnosisDto>(this.diagnosis);
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -67,11 +67,11 @@ export class DiagnosticosComponent implements OnInit {
 
 	addToList() {
 		if (this.form.valid && this.snomedConcept) {
-			let diagnostico: HealthConditionDto = {
+			let diagnostico: DiagnosisDto = {
 				verificationId: this.form.value.verificationId,
 				statusId: this.form.value.statusId,
 				id: null,
-				deleted: false,
+				presumptive: false,
 				snomed: this.snomedConcept
 			};
 			this.add(diagnostico);
@@ -84,18 +84,15 @@ export class DiagnosticosComponent implements OnInit {
 		this.form.controls.snomed.setValue(fsn);
 	}
 
-	add(diagnostico: HealthConditionDto): void {
-		this.dataSource.data = pushTo<HealthConditionDto>(this.dataSource.data, diagnostico);
+	add(diagnostico: DiagnosisDto): void {
+		this.dataSource.data = pushTo<DiagnosisDto>(this.dataSource.data, diagnostico);
 		this.diagnosis.push(diagnostico);
 	}
 
 	remove(index: number): void {
 		const toRemove = this.dataSource.data[index];
-		if (toRemove.id != null) {
-			this.diagnosis.find(item => item === toRemove).deleted = true;
-			this.dataSource.data = this.diagnosis.filter(item => !item.deleted);
-		} else {
-			this.dataSource.data = removeFrom<HealthConditionDto>(this.dataSource.data, index);
+		if (toRemove.id == null) {
+			this.dataSource.data = removeFrom<DiagnosisDto>(this.dataSource.data, index);
 			this.diagnosis = this.diagnosis.filter(item => toRemove !== item);
 		}
 	}

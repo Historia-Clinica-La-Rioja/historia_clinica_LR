@@ -59,20 +59,19 @@ export interface AllergyConditionDto extends HealthConditionDto {
 
 export interface AnamnesisDto extends Serializable {
     allergies: AllergyConditionDto[];
-    anthropometricData: AnthropometricDataDto[];
-    diagnosis: HealthConditionDto[];
+    anthropometricData: AnthropometricDataDto;
+    diagnosis: DiagnosisDto[];
     documentStatusId: string;
     familyHistories: HealthHistoryConditionDto[];
     inmunizations: InmunizationDto[];
     medications: MedicationDto[];
     notes: DocumentObservationsDto;
     personalHistories: HealthHistoryConditionDto[];
-    vitalSigns: VitalSignDto[];
+    vitalSigns: VitalSignDto;
 }
 
 export interface AnthropometricDataDto extends Serializable {
     bloodType: ClinicalObservationDto;
-    deleted: boolean;
     height: ClinicalObservationDto;
     weight: ClinicalObservationDto;
 }
@@ -135,7 +134,6 @@ export interface CityDto extends MasterdataDto<number> {
 }
 
 export interface ClinicalObservationDto extends Serializable {
-    deleted: boolean;
     id: number;
     value: string;
 }
@@ -146,10 +144,13 @@ export interface ClinicalSpecialtyDto {
 }
 
 export interface ClinicalTermDto extends Serializable {
-    deleted: boolean;
     id: number;
     snomed: SnomedDto;
     statusId: string;
+}
+
+export interface DiagnosisDto extends HealthConditionDto {
+    presumptive: boolean;
 }
 
 export interface DocumentObservationsDto extends Serializable {
@@ -335,7 +336,6 @@ export interface UserDto extends AbstractUserDto {
 
 export interface VitalSignDto extends Serializable {
     bloodOxygenSaturation: ClinicalObservationDto;
-    deleted: boolean;
     diastolicBloodPressure: ClinicalObservationDto;
     heartRate: ClinicalObservationDto;
     respiratoryRate: ClinicalObservationDto;

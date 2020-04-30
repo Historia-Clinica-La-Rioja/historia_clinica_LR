@@ -41,7 +41,7 @@ public class ObservationLab extends InternationAuditableEntity {
 	private String sctidCode;
 
 	@Column(name = "status_id", length = 20, nullable = false)
-	private String statusId;
+	private String statusId = ObservationStatus.FINAL;
 
 	@Column(name = "categoryId", length = 20, nullable = false)
 	private String categoryId;
@@ -55,11 +55,8 @@ public class ObservationLab extends InternationAuditableEntity {
 	@Column(name = "note_id")
 	private Long noteId;
 
-	public ObservationLab(Integer patientId, String value, EObservationLab eObservationLab, boolean deleted){
+	public ObservationLab(Integer patientId, String value, EObservationLab eObservationLab){
 		this.patientId = patientId;
-		this.statusId = ObservationStatus.FINAL;
-		if (deleted)
-			this.statusId = ObservationStatus.ERROR;
 		this.categoryId = LAB;
 		this.value = value;
 		this.sctidCode = eObservationLab.getSctidCode();

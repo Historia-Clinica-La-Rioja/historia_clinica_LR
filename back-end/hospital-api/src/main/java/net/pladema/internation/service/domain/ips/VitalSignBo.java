@@ -25,8 +25,6 @@ public class VitalSignBo implements Serializable {
 
     private ClinicalObservationBo bloodOxygenSaturation;
 
-    private boolean deleted = false;
-
     public boolean hasValues(){
         return (systolicBloodPressure != null ||
                 diastolicBloodPressure != null ||

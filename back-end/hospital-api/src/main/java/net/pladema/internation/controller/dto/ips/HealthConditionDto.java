@@ -10,5 +10,4 @@ import lombok.ToString;
 public class HealthConditionDto extends ClinicalTermDto {
 
     private String verificationId;
-
 }

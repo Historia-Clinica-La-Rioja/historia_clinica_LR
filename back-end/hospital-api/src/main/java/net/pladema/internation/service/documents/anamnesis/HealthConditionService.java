@@ -1,5 +1,6 @@
 package net.pladema.internation.service.documents.anamnesis;
 
+import net.pladema.internation.service.domain.ips.DiagnosisBo;
 import net.pladema.internation.service.domain.ips.GeneralHealthConditionBo;
 import net.pladema.internation.service.domain.ips.HealthConditionBo;
 import net.pladema.internation.service.domain.ips.HealthHistoryConditionBo;
@@ -8,7 +9,7 @@ import java.util.List;
 
 public interface HealthConditionService {
 
-    List<HealthConditionBo> loadDiagnosis(Integer patientId, Long documentId, List<HealthConditionBo> diagnosis);
+    List<DiagnosisBo> loadDiagnosis(Integer patientId, Long documentId, List<DiagnosisBo> diagnosis);
 
     List<HealthHistoryConditionBo> loadPersonalHistories(Integer patientId, Long documentId, List<HealthHistoryConditionBo> personalHistories);
 

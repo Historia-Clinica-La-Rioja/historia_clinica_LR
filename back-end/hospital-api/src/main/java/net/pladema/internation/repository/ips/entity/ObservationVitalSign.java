@@ -44,7 +44,7 @@ public class ObservationVitalSign extends InternationAuditableEntity {
 	private String sctidCode;
 
 	@Column(name = "status_id", length = 20, nullable = false)
-	private String statusId;
+	private String statusId = ObservationStatus.FINAL;
 
 	@Column(name = "categoryId", length = 20, nullable = false)
 	private String categoryId;
@@ -58,11 +58,8 @@ public class ObservationVitalSign extends InternationAuditableEntity {
 	@Column(name = "note_id")
 	private Long noteId;
 
-	public ObservationVitalSign(Integer patientId, String value, EVitalSign evitalSign, Boolean deleted){
+	public ObservationVitalSign(Integer patientId, String value, EVitalSign evitalSign){
 		this.patientId = patientId;
-		this.statusId = ObservationStatus.FINAL;
-		if (deleted)
-			this.statusId = ObservationStatus.ERROR;
 		this.categoryId = VITAL_SIGN;
 		this.value = value;
 		this.sctidCode = evitalSign.getSctidCode();
