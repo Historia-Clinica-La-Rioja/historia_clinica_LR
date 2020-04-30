@@ -4,6 +4,8 @@ import io.swagger.annotations.Api;
 import net.pladema.internation.repository.masterdata.entity.*;
 import net.pladema.internation.repository.projections.InternmentMasterDataProjection;
 import net.pladema.internation.service.InternmentMasterDataService;
+import net.pladema.staff.repository.entity.ClinicalSpecialty;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -111,5 +113,11 @@ public class InternmentMasterdataController {
     public ResponseEntity<Collection<InternmentMasterDataProjection>> getBloodTypes(){
         LOG.debug("{}", "All internment episode status");
         return ResponseEntity.ok().body(internmentMasterDataService.findAll(BloodType.class));
+    }
+    
+    @GetMapping(value = "/clinical/specialty")
+    public ResponseEntity<Collection<InternmentMasterDataProjection>> getClinicalSpecialty(){
+        LOG.debug("{}", "All internment clinical specialty");
+        return ResponseEntity.ok().body(internmentMasterDataService.findAll(ClinicalSpecialty.class));
     }
 }
