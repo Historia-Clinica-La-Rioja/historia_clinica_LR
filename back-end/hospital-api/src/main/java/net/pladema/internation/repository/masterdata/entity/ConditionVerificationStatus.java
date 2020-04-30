@@ -24,12 +24,10 @@ public class ConditionVerificationStatus implements Serializable {
 	 */
 	private static final long serialVersionUID = -3053291021636483828L;
 
-	public static final String ERROR =  "723510000";
+	public static final String DISCARDED = "260385009";
+	public static final String PRESUMPTIVE = "76104008";
 	public static final String CONFIRMED = "59156000";
-	public static final String NOT_CONFIRMED = "76104008";
-	public static final String DISPROVED = "723511001";
-	public static final String DIFFERENTIAL_DIAGNOSIS = "47965005";
-	public static final String PROVISIONAL_DIAGNOSIS = "5558000";
+	public static final String ERROR =  "723510000";
 
 	@Id
 	@Column(name = "id", length = 20)

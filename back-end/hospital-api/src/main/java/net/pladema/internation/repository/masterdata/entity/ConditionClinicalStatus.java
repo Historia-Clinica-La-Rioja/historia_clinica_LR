@@ -22,8 +22,6 @@ public class ConditionClinicalStatus implements Serializable {
 	private static final long serialVersionUID = -3053291021636483828L;
 
 	public static final String ACTIVE =  "55561003";
-	public static final String RECEIVED = "246455001";
-	public static final String RELAPSE = "263855007";
 	public static final String INACTIVE = "73425007";
 	public static final String REMISSION = "277022003";
 	public static final String SOLVED = "723506003";

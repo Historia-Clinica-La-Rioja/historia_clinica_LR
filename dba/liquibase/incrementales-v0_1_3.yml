@@ -1,4 +1,4 @@
-#Se agregan tablas Datos Maestros para códigos de SNOMED CT
+﻿#Se agregan tablas Datos Maestros para códigos de SNOMED CT
 databaseChangeLog: 
 - logicalFilePath: incrementales-v0_1_3
 - changeSet: 
@@ -1383,3 +1383,61 @@ databaseChangeLog:
         columnName: rnos
         newDataType: int
         tableName: health_insurance
+
+- changeSet:
+    id: delete-condition_clinical_status-data
+    comment: Borrado de datos condition_clinical_status
+    author: saguero
+    context: "!schema-only"
+    changes:
+        - sql:
+            sql: |-
+                DELETE FROM condition_clinical_status WHERE id='246455001';
+                DELETE FROM condition_clinical_status WHERE id='263855007';
+
+- changeSet:
+    id: modifying-condition_clinical_status-data
+    comment: Actualizacion de datos condition_clinical_status
+    author: saguero
+    context: "!schema-only"
+    changes:
+        - sql:
+            sql: |-
+                UPDATE condition_clinical_status SET description = 'Activo' WHERE id='55561003';
+                UPDATE condition_clinical_status SET description = 'Inactivo' WHERE id='73425007';
+                UPDATE condition_clinical_status SET description = 'Remisión' WHERE id='277022003';
+                UPDATE condition_clinical_status SET description = 'Resuelto' WHERE id='723506003';
+
+- changeSet:
+    id: delete-condition_verification_status-data
+    comment: Borrado de datos condition_verification_status
+    author: saguero
+    context: "!schema-only"
+    changes:
+        - sql:
+            sql: |-
+                DELETE FROM condition_verification_status WHERE id='5558000';
+                DELETE FROM condition_verification_status WHERE id='47965005';
+                DELETE FROM condition_verification_status WHERE id='723511001';
+
+- changeSet:
+    id: add-condition_verification_status-data
+    comment: Carga de datos condition_verification_status
+    author: saguero
+    context: "!schema-only"
+    changes:
+        - sql:
+            sql: |-
+                INSERT INTO condition_verification_status(id, description) VALUES ('260385009', 'Descartado');
+
+- changeSet:
+    id: modifying-condition_verification_status-data
+    comment: Carga de datos blood_type
+    author: saguero
+    context: "!schema-only"
+    changes:
+        - sql:
+            sql: |-
+                UPDATE condition_verification_status SET description = 'Presuntivo' WHERE id='76104008';
+                UPDATE condition_verification_status SET description = 'Confirmado' WHERE id='59156000';
+                UPDATE condition_verification_status SET description = 'Ingresado por error' WHERE id='723510000';
