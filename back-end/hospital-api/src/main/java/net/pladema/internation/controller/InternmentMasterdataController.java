@@ -57,6 +57,14 @@ public class InternmentMasterdataController {
         return ResponseEntity.ok().body(internmentMasterDataService.findAll(ConditionVerificationStatus.class));
     }
 
+    @GetMapping(value = "/health/verification/down")
+    public ResponseEntity<Collection<InternmentMasterDataProjection>> getHealthVerificationDown(){
+        LOG.debug("{}", "All health condition verification status down");
+        return ResponseEntity.ok().body(internmentMasterDataService.findAll(
+                ConditionVerificationStatus.class,
+                ConditionVerificationStatus.downState()));
+    }
+
     @GetMapping(value = "/health/problem")
     public ResponseEntity<Collection<InternmentMasterDataProjection>> getHealthProblem(){
         LOG.debug("{}", "All health condition problem type");

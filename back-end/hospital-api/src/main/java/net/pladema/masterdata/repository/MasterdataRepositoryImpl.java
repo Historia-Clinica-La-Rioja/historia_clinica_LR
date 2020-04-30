@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import java.util.Arrays;
 import java.util.Collection;
 
 @Repository
@@ -21,9 +22,17 @@ public class MasterdataRepositoryImpl implements MasterdataRepository {
     @SuppressWarnings("unchecked")
     @Override
     @Transactional(readOnly = true)
-    public <T> Collection<InternmentMasterDataProjection> findAllInternmentProjectedBy(Class<T> clazz) {
-        Query query = entityManager.createQuery(
-                "SELECT p FROM " + clazz.getSimpleName() + " p ", clazz);
+    public <T> Collection<InternmentMasterDataProjection> findAllInternmentProjectedBy(Class<T> clazz, String...filterIds) {
+
+        String sqlString = "SELECT p FROM " + clazz.getSimpleName() + " p ";
+
+        if(filterIds.length > 0) {
+            sqlString += "WHERE id IN :filterIds ";
+            Query query = entityManager.createQuery(sqlString, clazz);
+            return query.setParameter("filterIds", Arrays.asList(filterIds)).getResultList();
+        }
+
+        Query query = entityManager.createQuery(sqlString, clazz);
         return query.getResultList();
     }
 }

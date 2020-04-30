@@ -21,8 +21,8 @@ public class InternmentMasterDataServiceImpl implements InternmentMasterDataServ
     }
 
     @Override
-    public <T> Collection<InternmentMasterDataProjection> findAll(Class<T> clazz) {
+    public <T> Collection<InternmentMasterDataProjection> findAll(Class<T> clazz, String...filterIds) {
         LOG.debug("Input parameters -> {}", clazz);
-        return masterdataRepository.findAllInternmentProjectedBy(clazz);
+        return masterdataRepository.findAllInternmentProjectedBy(clazz, filterIds);
     }
 }

@@ -6,5 +6,5 @@ import java.util.Collection;
 
 public interface MasterdataRepository {
 
-    <T> Collection<InternmentMasterDataProjection> findAllInternmentProjectedBy(Class<T> clazz);
+    <T> Collection<InternmentMasterDataProjection> findAllInternmentProjectedBy(Class<T> clazz, String...filterIds);
 }
