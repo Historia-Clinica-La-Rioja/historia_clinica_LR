@@ -18,7 +18,7 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
 
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.internation.repository.core.domain.InternmentSummary(" +
-            "ie.id,  ie.creationable.createdOn, " +
+            "ie.id,  ie.creationable.createdOn, ie.anamnesisDocId, " +
             "b.id as bedId, b.bedNumber, " +
             "r.id as roomId, r.roomNumber, " +
             "cs.id as clinicalSpecialtyId, cs.name as specialty, " +
@@ -26,8 +26,8 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             "FROM InternmentEpisode ie " +
             "JOIN Bed b ON (b.id = ie.bedId) " +
             "JOIN Room r ON (r.id = b.roomId) " +
-            "JOIN ClinicalSpecialty cs ON (cs.id = ie.clinicalSpecialtyId) " +
-            "JOIN HealthcareProfessionalGroup hpg ON (hpg.pk.internmentEpisodeId = ie.id and hpg.responsible = true) " +
+            "LEFT JOIN ClinicalSpecialty cs ON (cs.id = ie.clinicalSpecialtyId) " +
+            "LEFT JOIN HealthcareProfessionalGroup hpg ON (hpg.pk.internmentEpisodeId = ie.id and hpg.responsible = true) " +
             "WHERE ie.id = :internmentEpisodeId")
     Optional<InternmentSummary> getSummary(@Param("internmentEpisodeId") Integer internmentEpisodeId);
 

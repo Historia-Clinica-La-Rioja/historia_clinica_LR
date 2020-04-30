@@ -2,6 +2,7 @@ package net.pladema.internation.repository.core.domain;
 
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -12,9 +13,12 @@ import java.time.Period;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class InternmentSummary {
 
     private Integer id;
+
+    private Long anamnesisDocId;
 
     private Integer bedId;
 
@@ -38,10 +42,11 @@ public class InternmentSummary {
 
     private int totalInternmentDays;
 
-    public InternmentSummary(Integer id, LocalDateTime createdOn,
+    public InternmentSummary(Integer id, LocalDateTime createdOn, Long anamnesisDocId,
                              Integer bedId, String bedNumber, Integer roomId, String roomNumber,
                              Integer clinicalSpecialtyId, String specialty, Integer healthcareProfessionalId) {
         this.id = id;
+        this.anamnesisDocId = anamnesisDocId;
         this.bedId = bedId;
         this.bedNumber = bedNumber;
         this.roomId = roomId;

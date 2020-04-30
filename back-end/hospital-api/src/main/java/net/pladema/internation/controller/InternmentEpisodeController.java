@@ -3,7 +3,6 @@ package net.pladema.internation.controller;
 import io.swagger.annotations.Api;
 import net.pladema.internation.controller.dto.InternmentSummaryDto;
 import net.pladema.internation.controller.mapper.InternmentEpisodeMapper;
-import net.pladema.internation.controller.mocks.MocksInternmentPatient;
 import net.pladema.internation.repository.core.domain.InternmentSummary;
 import net.pladema.internation.service.InternmentEpisodeService;
 import org.slf4j.Logger;
@@ -13,8 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.persistence.EntityNotFoundException;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/internments")
@@ -37,14 +34,9 @@ public class InternmentEpisodeController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
         LOG.debug("Input parameters -> {}", internmentEpisodeId);
-        InternmentSummaryDto result;
-        try {
-            InternmentSummary internmentSummary = internmentEpisodeService.getIntermentSummary(internmentEpisodeId)
-                    .orElseThrow(() -> new EntityNotFoundException("internmentepisode.invalid"));
-            result = internmentEpisodeMapper.toInternmentSummaryDto(internmentSummary);
-        } catch (Exception e) {
-            result = MocksInternmentPatient.mockInternmentSummary(internmentEpisodeId);
-        }
+        InternmentSummary internmentSummary = internmentEpisodeService.getIntermentSummary(internmentEpisodeId)
+                .orElse(new InternmentSummary());
+        InternmentSummaryDto result = internmentEpisodeMapper.toInternmentSummaryDto(internmentSummary);
         LOG.debug("Output -> {}", result);
         return  ResponseEntity.ok().body(result);
     }

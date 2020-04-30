@@ -210,6 +210,7 @@ export interface InternmentGeneralStateDto extends Serializable {
 }
 
 export interface InternmentSummaryDto {
+    anamnesisDocId: number;
     bed: BedDto;
     createdOn: Date;
     doctor: ResponsibleDoctorDto;

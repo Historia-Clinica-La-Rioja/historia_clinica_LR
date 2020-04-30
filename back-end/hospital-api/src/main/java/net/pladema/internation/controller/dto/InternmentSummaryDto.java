@@ -12,6 +12,8 @@ public class InternmentSummaryDto {
 
     private Integer id;
 
+    private Long anamnesisDocId;
+
     private BedDto bed;
 
     private ResponsibleDoctorDto doctor;
