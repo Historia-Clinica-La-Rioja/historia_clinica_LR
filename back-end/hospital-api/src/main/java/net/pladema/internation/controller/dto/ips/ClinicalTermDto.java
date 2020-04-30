@@ -12,7 +12,12 @@ import java.io.Serializable;
 @ToString
 public abstract class ClinicalTermDto implements Serializable {
 
-    public Integer id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 3502940404811842839L;
+
+	private Integer id;
 
     private String statusId;
 

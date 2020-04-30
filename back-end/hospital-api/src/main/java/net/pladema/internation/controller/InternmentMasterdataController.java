@@ -28,79 +28,79 @@ public class InternmentMasterdataController {
     }
 
     @GetMapping(value = "/allergy/category")
-    ResponseEntity<Collection<InternmentMasterDataProjection>> getAllergyCategory(){
+    public ResponseEntity<Collection<InternmentMasterDataProjection>> getAllergyCategory(){
         LOG.debug("{}", "All allergy intolerance category");
         return ResponseEntity.ok().body(internmentMasterDataService.findAll(AllergyIntoleranceCategory.class));
     }
 
     @GetMapping(value = "/allergy/clinical")
-    ResponseEntity<Collection<InternmentMasterDataProjection>> getAllergyClinical(){
+    public ResponseEntity<Collection<InternmentMasterDataProjection>> getAllergyClinical(){
         LOG.debug("{}", "All allergy intolerance clinical status");
         return ResponseEntity.ok().body(internmentMasterDataService.findAll(AllergyIntoleranceClinicalStatus.class));
     }
 
     @GetMapping(value = "/allergy/verification")
-    ResponseEntity<Collection<InternmentMasterDataProjection>> getAllergyVerification(){
+    public ResponseEntity<Collection<InternmentMasterDataProjection>> getAllergyVerification(){
         LOG.debug("{}", "All allergy intolerance verification status");
         return ResponseEntity.ok().body(internmentMasterDataService.findAll(AllergyIntoleranceVerificationStatus.class));
     }
 
     @GetMapping(value = "/health/clinical")
-    ResponseEntity<Collection<InternmentMasterDataProjection>> getHealthClinical(){
+    public ResponseEntity<Collection<InternmentMasterDataProjection>> getHealthClinical(){
         LOG.debug("{}", "All health condition clinical status");
         return ResponseEntity.ok().body(internmentMasterDataService.findAll(ConditionClinicalStatus.class));
     }
 
     @GetMapping(value = "/health/verification")
-    ResponseEntity<Collection<InternmentMasterDataProjection>> getHealthVerification(){
+    public ResponseEntity<Collection<InternmentMasterDataProjection>> getHealthVerification(){
         LOG.debug("{}", "All health condition verification status");
         return ResponseEntity.ok().body(internmentMasterDataService.findAll(ConditionVerificationStatus.class));
     }
 
     @GetMapping(value = "/health/problem")
-    ResponseEntity<Collection<InternmentMasterDataProjection>> getHealthProblem(){
+    public ResponseEntity<Collection<InternmentMasterDataProjection>> getHealthProblem(){
         LOG.debug("{}", "All health condition problem type");
         return ResponseEntity.ok().body(internmentMasterDataService.findAll(ConditionProblemType.class));
     }
 
     @GetMapping(value = "/medication")
-    ResponseEntity<Collection<InternmentMasterDataProjection>> getHealthMedication(){
+    public ResponseEntity<Collection<InternmentMasterDataProjection>> getHealthMedication(){
         LOG.debug("{}", "All medication statement status");
         return ResponseEntity.ok().body(internmentMasterDataService.findAll(MedicationStatementStatus.class));
     }
 
     @GetMapping(value = "/inmunization")
-    ResponseEntity<Collection<InternmentMasterDataProjection>> getInmunization(){
+    public ResponseEntity<Collection<InternmentMasterDataProjection>> getInmunization(){
         LOG.debug("{}", "All inmunization status");
         return ResponseEntity.ok().body(internmentMasterDataService.findAll(InmunizationStatus.class));
     }
 
     @GetMapping(value = "/document/status")
-    ResponseEntity<Collection<InternmentMasterDataProjection>> getDocumentStatus(){
+    public ResponseEntity<Collection<InternmentMasterDataProjection>> getDocumentStatus(){
         LOG.debug("{}", "All document status");
         return ResponseEntity.ok().body(internmentMasterDataService.findAll(DocumentStatus.class));
     }
 
     @GetMapping(value = "/document/type")
-    ResponseEntity<Collection<InternmentMasterDataProjection>> getDocumentType(){
+    public ResponseEntity<Collection<InternmentMasterDataProjection>> getDocumentType(){
         LOG.debug("{}", "All document type");
         return ResponseEntity.ok().body(internmentMasterDataService.findAll(DocumentType.class));
     }
 
     @GetMapping(value = "/observation")
-    ResponseEntity<Collection<InternmentMasterDataProjection>> getObservation(){
+    public ResponseEntity<Collection<InternmentMasterDataProjection>> getObservation(){
         LOG.debug("{}", "All observation");
         return ResponseEntity.ok().body(internmentMasterDataService.findAll(ObservationStatus.class));
     }
 
     @GetMapping(value = "/episode")
-    ResponseEntity<Collection<InternmentMasterDataProjection>> getInternmentEpisode(){
+    public ResponseEntity<Collection<InternmentMasterDataProjection>> getInternmentEpisode(){
         LOG.debug("{}", "All internment episode status");
         return ResponseEntity.ok().body(internmentMasterDataService.findAll(InternmentEpisodeStatus.class));
     }
 
     @GetMapping(value = "/bloodtypes")
-    ResponseEntity<Collection<InternmentMasterDataProjection>> getBloodTypes(){
+    public ResponseEntity<Collection<InternmentMasterDataProjection>> getBloodTypes(){
         LOG.debug("{}", "All internment episode status");
         return ResponseEntity.ok().body(internmentMasterDataService.findAll(BloodType.class));
     }

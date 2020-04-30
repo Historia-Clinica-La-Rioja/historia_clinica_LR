@@ -61,6 +61,6 @@ public final class BackofficeAuthoritiesValidator {
 //	}
 
 	public boolean isLoggedUserId(Integer id) {
-		return loggedUserService.getUserId() == id;
+		return loggedUserService.getUserId().equals(id);
 	}
 }
