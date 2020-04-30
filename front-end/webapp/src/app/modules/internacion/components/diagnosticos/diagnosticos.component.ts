@@ -12,30 +12,7 @@ import { InternacionMasterDataService } from '@api-rest/services/internacion-mas
 })
 export class DiagnosticosComponent implements OnInit {
 
-	@Input() diagnosis: HealthConditionDto[] = [{
-		verificationId: '47965005',
-		deleted: false,
-		id: 1,
-		snomed: {
-			fsn: 'fsn',
-			id: '1',
-			parentFsn: 'parentFsn',
-			parentId: 'parentId'
-		},
-		statusId: '55561003'
-	},
-		{
-			verificationId: '47965005',
-			deleted: false,
-			id: 2,
-			snomed: {
-				fsn: 'fsn',
-				id: '2',
-				parentFsn: 'parentFsn',
-				parentId: 'parentId'
-			},
-			statusId: '55561003'
-		}];
+	@Input() diagnosis: HealthConditionDto[] = [];
 
 	private snomedConcept: SnomedDto;
 

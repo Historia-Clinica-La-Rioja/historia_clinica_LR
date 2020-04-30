@@ -1,9 +1,9 @@
 <mat-list content>
 	<mat-list-item id="bed">
 		<div class="flex-container">
-			<mat-icon color="accent" mat-list-icon [inline]="true">meeting_room</mat-icon>
+			<mat-icon color="primary" mat-list-icon [inline]="true">meeting_room</mat-icon>
 			<span class="mat-body-2">{{ internmentEpisode?.roomNumber }}</span>
-			<mat-icon color="accent" mat-list-icon [inline]="true">single_bed</mat-icon>
+			<mat-icon color="primary" mat-list-icon [inline]="true">single_bed</mat-icon>
 			<span class="mat-body-2">{{ internmentEpisode?.bedNumber }}</span>
 			<span class="mat-body-2">
 				{{ internmentEpisode?.specialtyName }}
@@ -14,7 +14,7 @@
 	<mat-divider inset></mat-divider>
 
 	<mat-list-item id="doctor">
-		<mat-icon color="accent" mat-list-icon>person</mat-icon>
+		<mat-icon color="primary" mat-list-icon>person</mat-icon>
 		<span class="mat-body-2">
 			{{internmentEpisode?.doctor.firstName}} {{internmentEpisode?.doctor.lastName}}
 		</span>

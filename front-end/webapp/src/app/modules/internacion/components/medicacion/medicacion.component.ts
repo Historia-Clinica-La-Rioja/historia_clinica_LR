@@ -12,20 +12,7 @@ import { pushTo, removeFrom } from '@core/utils/array.utils';
 })
 export class MedicacionComponent implements OnInit {
 
-	@Input() medications: MedicationDto[] = [
-		{
-			note: 'note',
-			deleted: false,
-			id: 1,
-			snomed: {
-				fsn: 'Asdravirus (organismo)',
-				id: '64620000',
-				parentFsn: '',
-				parentId: '',
-			},
-			statusId: '255594003'
-		}
-	];
+	@Input() medications: MedicationDto[] = [];
 
 	private snomedConcept: SnomedDto;
 

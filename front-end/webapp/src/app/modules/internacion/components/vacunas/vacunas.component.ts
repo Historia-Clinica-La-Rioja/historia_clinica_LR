@@ -16,21 +16,7 @@ import { pushTo, removeFrom } from '@core/utils/array.utils';
 })
 export class VacunasComponent implements OnInit {
 
-	@Input() inmunizations: InmunizationDto[] = [
-		{
-			administrationDate: '2015-01-01',
-			note: 'note',
-			deleted: false,
-			id: 1,
-			snomed: {
-				fsn: 'Asdravirus (organismo)',
-				id: '64620000',
-				parentFsn: '',
-				parentId: '',
-			},
-			statusId: '255594003'
-		}
-	];
+	@Input() inmunizations: InmunizationDto[] = [];
 
 	private snomedConcept: SnomedDto;
 

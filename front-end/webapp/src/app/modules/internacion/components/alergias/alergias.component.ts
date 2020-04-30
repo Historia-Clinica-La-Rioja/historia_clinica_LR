@@ -16,21 +16,7 @@ import { pushTo, removeFrom } from '@core/utils/array.utils';
 })
 export class AlergiasComponent implements OnInit {
 
-	@Input() allergies: AllergyConditionDto[] = [{
-		categoryId: '414285001',
-		date: '2015-01-01',
-		severity: 'severity',
-		verificationId: '59156000',
-		deleted: false,
-		id: 1,
-		snomed: {
-			fsn: 'Asdravirus (organismo)',
-			id: '64620000',
-			parentFsn: '',
-			parentId: '',
-		},
-		statusId: '73425007'
-	}];
+	@Input() allergies: AllergyConditionDto[] = [];
 
 	private snomedConcept: SnomedDto;
 

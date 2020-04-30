@@ -16,20 +16,7 @@ import { pushTo, removeFrom } from '@core/utils/array.utils';
 })
 export class AntecedentesFamiliaresComponent implements OnInit {
 
-	@Input() familyHistories: HealthHistoryConditionDto[] = [{
-		date: '2015-01-01',
-		deleted: false,
-		id: null,
-		note: 'asd',
-		snomed: {
-			fsn: 'Asdravirus (organismo)',
-			id: '64620000',
-			parentFsn: '',
-			parentId: '',
-		},
-		statusId: '73425007',
-		verificationId: '47965005'
-	}];
+	@Input() familyHistories: HealthHistoryConditionDto[] = [];
 
 	private snomedConcept: SnomedDto;
 

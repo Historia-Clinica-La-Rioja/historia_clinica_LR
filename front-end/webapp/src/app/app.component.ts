@@ -29,7 +29,7 @@ export class AppComponent {
 		translate.setDefaultLang(defaultLang);
 		translate.use(defaultLang);
 		this.menuItems$ = permissionsService.filterItems$(SIDEBAR_MENU).pipe(
-			tap((items: MenuItem[]) => items && items.length > 0 && this.router.navigate([items[0].url])),
+			// tap((items: MenuItem[]) => items && items.length > 0 && this.router.navigate([items[0].url])),
 		);
 	}
 
