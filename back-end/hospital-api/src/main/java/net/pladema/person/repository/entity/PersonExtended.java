@@ -18,11 +18,13 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PersonExtended implements Serializable {
-     /*
-     */
-    private static final long serialVersionUID = -4236914278481347401L;
 
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -3101907445998134429L;
+
+	@Id
     @Column(name = "person_id", nullable = false)
     private Integer id;
 
@@ -52,7 +54,4 @@ public class PersonExtended implements Serializable {
 
     @Column(name = "gender_self_determination")
     private Short genderSelfDeterminationId;
-
-    @Column(name = "health_insurance_id")
-    private Short healthInsuranceId;
 }

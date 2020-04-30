@@ -9,9 +9,7 @@ import lombok.ToString;
 @ToString
 public class HealthInsuranceDto {
 
-    private Short id;
-
-    private String rnos;
+    private Integer rnos;
 
     private String acronym;
 }

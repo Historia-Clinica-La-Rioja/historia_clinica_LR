@@ -16,61 +16,52 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class PersonalInformation {
 
-    private Integer id;
+	private Integer id;
 
-    private String identificationNumber;
+	private String identificationNumber;
 
-    private LocalDate birthDate;
+	private LocalDate birthDate;
 
-    private String email;
+	private String email;
 
-    private String cuil;
+	private String cuil;
 
-    private String phoneNumber;
+	private String phoneNumber;
 
-    private IdentificationType identificationType;
+	private IdentificationType identificationType;
 
-    private HealthInsurance healthInsurance;
+	private Address address;
 
-    private Address address;
+	private City city;
 
-    private City city;
+	private Province province;
 
-    private Province province;
+	public PersonalInformation(Integer personId, String identificationNumber, LocalDate birthDate, String email,
+			Short identificationTypeId, String identificationTypeDesc, String cuil, String phoneNumber,
+			Integer addressId, String street, String number, String floor, String apartment, Integer cityId,
+			String city, Short provinceId, String province) {
+		this.id = personId;
+		this.identificationNumber = identificationNumber;
+		this.birthDate = birthDate;
+		this.email = email;
+		this.phoneNumber = phoneNumber;
+		this.cuil = cuil;
 
-    public PersonalInformation(Integer personId, String identificationNumber, LocalDate birthDate, String email,
-                               Short identificationTypeId, String identificationTypeDesc,
-                               String cuil, String phoneNumber,
-                               Short healthInsuranceId, String acronym, String rnos,
-                               Integer addressId, String street, String number, String floor, String apartment,
-                               Integer cityId, String city, Short provinceId, String province){
-        this.id = personId;
-        this.identificationNumber = identificationNumber;
-        this.birthDate = birthDate;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.cuil = cuil;
+		this.identificationType = new IdentificationType(identificationTypeId, identificationTypeDesc);
 
-        this.identificationType = new IdentificationType(identificationTypeId, identificationTypeDesc);
+		this.address = new Address();
+		this.address.setId(addressId);
+		this.address.setStreet(street);
+		this.address.setNumber(number);
+		this.address.setFloor(floor);
+		this.address.setApartment(apartment);
 
-        this.healthInsurance =  new HealthInsurance();
-        this.healthInsurance.setId(healthInsuranceId);
-        this.healthInsurance.setAcronym(acronym);
-        this.healthInsurance.setRnos(rnos);
+		this.city = new City();
+		this.city.setId(cityId);
+		this.city.setDescription(city);
 
-        this.address = new Address();
-        this.address.setId(addressId);
-        this.address.setStreet(street);
-        this.address.setNumber(number);
-        this.address.setFloor(floor);
-        this.address.setApartment(apartment);
-
-        this.city = new City();
-        this.city.setId(cityId);
-        this.city.setDescription(city);
-
-        this.province = new Province();
-        this.province.setId(provinceId);
-        this.province.setDescription(province);
-    }
+		this.province = new Province();
+		this.province.setId(provinceId);
+		this.province.setDescription(province);
+	}
 }

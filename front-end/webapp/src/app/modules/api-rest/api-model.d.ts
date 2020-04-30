@@ -177,8 +177,7 @@ export interface HealthHistoryConditionDto extends HealthConditionDto {
 
 export interface HealthInsuranceDto {
     acronym: string;
-    id: number;
-    rnos: string;
+    rnos: number;
 }
 
 export interface IdentificationTypeDto extends MasterdataDto<number> {
@@ -282,7 +281,6 @@ export interface PersonalInformationDto {
     birthDate: Date;
     cuil: string;
     email: string;
-    healthInsurance: HealthInsuranceDto;
     id: number;
     identificationNumber: string;
     identificationType: IdentificationTypeDto;

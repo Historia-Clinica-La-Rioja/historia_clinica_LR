@@ -5,7 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -21,12 +24,8 @@ public class HealthInsurance implements Serializable {
     private static final long serialVersionUID = 2873716268832417941L;
 
     @Id
-    @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Short id;
-
-    @Column(name = "rnos", length = 6, nullable = false)
-    private String rnos;
+    @Column(name = "rnos", nullable = false)
+    private Integer rnos;
 
     @Column(name = "name", length = 255, nullable = false)
     private String name;

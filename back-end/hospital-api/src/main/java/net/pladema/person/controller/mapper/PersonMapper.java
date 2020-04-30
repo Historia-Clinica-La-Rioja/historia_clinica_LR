@@ -5,8 +5,8 @@ import org.mapstruct.Mapping;
 
 import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.address.controller.mapper.AddressMapper;
-import net.pladema.patient.controller.dto.APatientDto;
 import net.pladema.dates.configuration.LocalDateMapper;
+import net.pladema.patient.controller.dto.APatientDto;
 import net.pladema.person.controller.dto.APersonDto;
 import net.pladema.person.controller.dto.BMPersonDto;
 import net.pladema.person.controller.dto.BasicDataPersonDto;
@@ -17,7 +17,7 @@ import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;
 
 
-@Mapper(uses = {AddressMapper.class, HealthInsuranceMapper.class, IdentificationTypeMapper.class, GenderMapper.class, LocalDateMapper.class})
+@Mapper(uses = {AddressMapper.class, IdentificationTypeMapper.class, GenderMapper.class, LocalDateMapper.class})
 public interface PersonMapper {
 
     public BMPersonDto fromPerson(Person person);
@@ -38,7 +38,6 @@ public interface PersonMapper {
 
 
     @Mapping(target = "identificationType", source = "identificationType", qualifiedByName = "fromIdentificationType")
-    @Mapping(target = "healthInsurance", source = "healthInsurance", qualifiedByName = "fromHealthInsurance")
     @Mapping(target = "address", source="personalInformation", qualifiedByName = "toAddressComplete")
     PersonalInformationDto fromPersonalInformation(PersonalInformation personalInformation);
 }

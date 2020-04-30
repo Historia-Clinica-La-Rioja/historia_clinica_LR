@@ -27,8 +27,6 @@ public class PersonalInformationDto {
 
     private IdentificationTypeDto identificationType;
 
-    private HealthInsuranceDto healthInsurance;
-
     private AddressDto address;
 
 

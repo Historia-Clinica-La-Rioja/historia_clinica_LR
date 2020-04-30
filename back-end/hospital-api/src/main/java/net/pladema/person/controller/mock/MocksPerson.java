@@ -31,16 +31,7 @@ public class MocksPerson {
         result.setPhoneNumber("01165489565");
         result.setIdentificationNumber("12345678");
         result.setAddress(MocksAddress.mockAddressDto(id));
-        result.setHealthInsurance(mockHealthInsuranceDto(id));
         result.setIdentificationType(mockIdentificationTypeDto(id));
-        return result;
-    }
-
-    private static HealthInsuranceDto mockHealthInsuranceDto(int id){
-        HealthInsuranceDto result = new HealthInsuranceDto();
-        result.setId((short)id);
-        result.setAcronym("OSDE");
-        result.setRnos("0123456");
         return result;
     }
 

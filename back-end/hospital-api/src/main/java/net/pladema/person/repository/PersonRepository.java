@@ -28,7 +28,6 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
             "p.id, p.identificationNumber, p.birthDate, pe.email," +
             "it.id as identificationTypeId, it.description as identificationTypeDescription, " +
             "pe.cuil, pe.phoneNumber,  " +
-            "hi.id, hi.acronym, hi.rnos, " +
             "a.id as addressId, a.street, a.number, a.floor, a.apartment, " +
             "c.id as cityId, c.description as city, " +
             "pr.id as provinceId, pr.description as province)" +
@@ -36,7 +35,6 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
             "JOIN PersonExtended as pe ON (pe.id = p.id) " +
             "JOIN Address as a ON (a.id = pe.addressId) " +
             "JOIN IdentificationType as it ON (it.id = p.identificationTypeId) " +
-            "JOIN HealthInsurance as hi ON (hi.id = pe.healthInsuranceId) " +
             "JOIN City as c ON (c.id = a.cityId) " +
             "JOIN Department as d ON (d.id = c.departmentId) " +
             "JOIN Province as pr ON (p.id = d.provinceId) " +
