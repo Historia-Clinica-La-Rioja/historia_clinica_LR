@@ -1,17 +1,16 @@
 package net.pladema.user.service.impl;
 
-import java.time.LocalDateTime;
-
 import net.pladema.auditable.entity.Audit;
+import net.pladema.user.repository.UserPasswordRepository;
+import net.pladema.user.repository.entity.User;
+import net.pladema.user.repository.entity.UserPassword;
+import net.pladema.user.service.UserPasswordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import net.pladema.user.repository.UserPasswordRepository;
-import net.pladema.user.repository.entity.User;
-import net.pladema.user.repository.entity.UserPassword;
-import net.pladema.user.service.UserPasswordService;
+import java.time.LocalDateTime;
 
 @Service
 public class UserPasswordServiceImpl implements UserPasswordService {
@@ -55,7 +54,7 @@ public class UserPasswordServiceImpl implements UserPasswordService {
 
 	@Override
 	public void updatePassword(Integer userId, String password) {
-		userPasswordRepository.updatePassword(userId, bCryptPasswordEncoder.encode(password), LocalDateTime.now());
+		userPasswordRepository.save(createPassword(userId, password));
 	}
 
 	@Override
