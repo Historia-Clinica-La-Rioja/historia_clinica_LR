@@ -1,24 +1,18 @@
 package net.pladema.internation.repository.ips.generalstate;
 
 import lombok.*;
+import net.pladema.internation.repository.masterdata.entity.ConditionVerificationStatus;
 import net.pladema.internation.repository.masterdata.entity.ProblemType;
 import net.pladema.internation.repository.masterdata.entity.Snomed;
 
 import java.time.LocalDate;
-import java.util.Objects;
 
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class HealthConditionVo {
-
-    private Integer id;
-
-    private Snomed snomed;
-
-    private String statusId;
+public class HealthConditionVo extends ClinicalTermVo {
 
     private String verificationId;
 
@@ -26,19 +20,18 @@ public class HealthConditionVo {
 
     private LocalDate startDate;
 
+    private Long noteId;
+
     private String note;
 
-    @Override
-    public boolean equals(Object o){
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        HealthConditionVo healthCondition = (HealthConditionVo) o;
-        return Objects.equals(id, healthCondition.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, snomed);
+    public HealthConditionVo(Integer id, Snomed snomed, String statusId, String verificationId,
+                             String problemId, LocalDate startDate, Long noteId, String note) {
+        super(id, snomed, statusId);
+        this.verificationId = verificationId;
+        this.problemId = problemId;
+        this.startDate = startDate;
+        this.noteId = noteId;
+        this.note = note;
     }
 
     public boolean isDiagnosis() {
@@ -51,5 +44,9 @@ public class HealthConditionVo {
 
     public boolean isFamilyHistory() {
         return problemId.equals(ProblemType.ANTECEDENTE);
+    }
+
+    public boolean isPresumptive() {
+        return (verificationId != null && verificationId.equalsIgnoreCase(ConditionVerificationStatus.PRESUMPTIVE));
     }
 }

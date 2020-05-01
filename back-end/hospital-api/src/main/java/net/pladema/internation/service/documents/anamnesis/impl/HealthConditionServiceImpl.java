@@ -1,6 +1,5 @@
 package net.pladema.internation.service.documents.anamnesis.impl;
 
-import net.pladema.internation.controller.mapper.ips.HealthConditionMapper;
 import net.pladema.internation.repository.ips.HealthConditionRepository;
 import net.pladema.internation.repository.ips.entity.HealthCondition;
 import net.pladema.internation.repository.ips.generalstate.HealthConditionVo;
@@ -21,9 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 @Service
 public class HealthConditionServiceImpl implements HealthConditionService {
@@ -33,18 +29,15 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     private static final Logger LOG = LoggerFactory.getLogger(HealthConditionServiceImpl.class);
 
     private final HealthConditionRepository healthConditionRepository;
-    private final HealthConditionMapper healthConditionMapper;
     private final SnomedService snomedService;
     private final DocumentService documentService;
     private final NoteService noteService;
 
     public HealthConditionServiceImpl(HealthConditionRepository healthConditionRepository,
-                                      HealthConditionMapper healthConditionMapper,
                                       SnomedService snomedService,
                                       DocumentService documentService,
                                       NoteService noteService){
         this.healthConditionRepository = healthConditionRepository;
-        this.healthConditionMapper = healthConditionMapper;
         this.snomedService = snomedService;
         this.documentService = documentService;
         this.noteService = noteService;
@@ -139,33 +132,18 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     @Override
     public GeneralHealthConditionBo getGeneralState(Integer internmentEpisodeId) {
         LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
-        GeneralHealthConditionBo result = new GeneralHealthConditionBo();
         List<HealthConditionVo> data = getGeneralStateData(internmentEpisodeId);
-        result.setDiagnosis(buildGeneralState(
-                data,
-                HealthConditionVo::isDiagnosis,
-                healthConditionMapper::toHealthConditionBo)
-        );
-        result.setPersonalHistories(buildGeneralState(
-                data,
-                HealthConditionVo::isPersonalHistory,
-                healthConditionMapper::toHealthHistoryCondition)
-        );
-        result.setFamilyHistories(buildGeneralState(
-                data,
-                HealthConditionVo::isFamilyHistory,
-                healthConditionMapper::toHealthHistoryCondition));
+        GeneralHealthConditionBo result = new GeneralHealthConditionBo(data);
         LOG.debug(OUTPUT, result);
         return result;
     }
 
     @Override
-    public List<HealthConditionBo> getDiagnosisGeneralState(Integer internmentEpisodeId) {
+    public List<DiagnosisBo> getDiagnosisGeneralState(Integer internmentEpisodeId) {
         LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
-        List<HealthConditionBo> result = buildGeneralState(
-                getGeneralStateData(internmentEpisodeId),
-                HealthConditionVo::isDiagnosis,
-                healthConditionMapper::toHealthConditionBo);
+        List<HealthConditionVo> data = getGeneralStateData(internmentEpisodeId);
+        GeneralHealthConditionBo generalHealthConditionBo = new GeneralHealthConditionBo(data);
+        List<DiagnosisBo> result =  generalHealthConditionBo.getDiagnosis();
         LOG.debug(OUTPUT, result);
         return result;
     }
@@ -173,10 +151,9 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     @Override
     public List<HealthHistoryConditionBo> getPersonalHistoriesGeneralState(Integer internmentEpisodeId) {
         LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
-       List<HealthHistoryConditionBo> result =  buildGeneralState(
-               getGeneralStateData(internmentEpisodeId),
-               HealthConditionVo::isPersonalHistory,
-               healthConditionMapper::toHealthHistoryCondition);
+        List<HealthConditionVo> data = getGeneralStateData(internmentEpisodeId);
+        GeneralHealthConditionBo generalHealthConditionBo = new GeneralHealthConditionBo(data);
+        List<HealthHistoryConditionBo> result =  generalHealthConditionBo.getPersonalHistories();
         LOG.debug(OUTPUT, result);
         return result;
     }
@@ -184,10 +161,9 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     @Override
     public List<HealthHistoryConditionBo> getFamilyHistoriesGeneralState(Integer internmentEpisodeId) {
         LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
-        List<HealthHistoryConditionBo> result =  buildGeneralState(
-                getGeneralStateData(internmentEpisodeId),
-                HealthConditionVo::isFamilyHistory,
-                healthConditionMapper::toHealthHistoryCondition);
+        List<HealthConditionVo> data = getGeneralStateData(internmentEpisodeId);
+        GeneralHealthConditionBo generalHealthConditionBo = new GeneralHealthConditionBo(data);
+        List<HealthHistoryConditionBo> result =  generalHealthConditionBo.getFamilyHistories();
         LOG.debug(OUTPUT, result);
         return result;
     }
@@ -196,12 +172,5 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         return healthConditionRepository.findGeneralState(internmentEpisodeId);
     }
 
-    private <T extends HealthConditionBo> List<T> buildGeneralState(List<HealthConditionVo> data,
-                                                      Predicate<? super HealthConditionVo> filterFunction,
-                                                      Function<? super HealthConditionVo, ? extends T> mapFunction){
-        return data.stream()
-                .filter(filterFunction)
-                .map(mapFunction)
-                .collect(Collectors.toList());
-    }
+
 }

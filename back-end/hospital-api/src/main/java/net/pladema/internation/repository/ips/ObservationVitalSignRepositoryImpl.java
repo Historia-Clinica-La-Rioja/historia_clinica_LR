@@ -1,8 +1,8 @@
 package net.pladema.internation.repository.ips;
 
-import net.pladema.internation.repository.ips.generalstate.VitalSignVo;
+import net.pladema.internation.repository.ips.generalstate.ClinicalObservationVo;
 import net.pladema.internation.repository.masterdata.entity.DocumentStatus;
-import net.pladema.internation.service.domain.ips.MapVitalSigns;
+import net.pladema.internation.service.domain.ips.MapClinicalObservationVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +28,7 @@ public class ObservationVitalSignRepositoryImpl implements ObservationVitalSignR
 
     @Transactional(readOnly = true)
     @Override
-    public MapVitalSigns getVitalSignsGeneralStateLastSevenDays(Integer internmentEpisodeId) {
+    public MapClinicalObservationVo getVitalSignsGeneralStateLastSevenDays(Integer internmentEpisodeId) {
         LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
         Query query = entityManager.createQuery(
                 "   SELECT  ovs.id, " +
@@ -48,10 +48,10 @@ public class ObservationVitalSignRepositoryImpl implements ObservationVitalSignR
         query.setParameter("today", LocalDateTime.now());
         query.setParameter("statusId", DocumentStatus.FINAL);
         List<Object[]> queryResult = query.getResultList();
-        List<VitalSignVo> vitalSignVos = new ArrayList<>();
+        List<ClinicalObservationVo> clinicalObservationVos = new ArrayList<>();
         for (Object[] o : queryResult)
-            vitalSignVos.add(new VitalSignVo((int) o[0], (String) o[1], (String) o[2], (String) o[3], (LocalDateTime) o[4]));
-        MapVitalSigns result = new MapVitalSigns(vitalSignVos);
+            clinicalObservationVos.add(new ClinicalObservationVo((int) o[0], (String) o[1], (String) o[2], (String) o[3], (LocalDateTime) o[4]));
+        MapClinicalObservationVo result = new MapClinicalObservationVo(clinicalObservationVos);
         LOG.debug(OUTPUT, result);
         return result;
     }

@@ -2,7 +2,6 @@ package net.pladema.internation.service.documents.anamnesis;
 
 import net.pladema.internation.service.domain.ips.DiagnosisBo;
 import net.pladema.internation.service.domain.ips.GeneralHealthConditionBo;
-import net.pladema.internation.service.domain.ips.HealthConditionBo;
 import net.pladema.internation.service.domain.ips.HealthHistoryConditionBo;
 
 import java.util.List;
@@ -17,7 +16,7 @@ public interface HealthConditionService {
 
     GeneralHealthConditionBo getGeneralState(Integer internmentEpisodeId);
 
-    List<HealthConditionBo> getDiagnosisGeneralState(Integer internmentEpisodeId);
+    List<DiagnosisBo> getDiagnosisGeneralState(Integer internmentEpisodeId);
 
     List<HealthHistoryConditionBo> getPersonalHistoriesGeneralState(Integer internmentEpisodeId);
 

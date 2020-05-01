@@ -2,10 +2,10 @@ package net.pladema.internation.service.documents.anamnesis.impl;
 
 import net.pladema.internation.repository.ips.ObservationLabRepository;
 import net.pladema.internation.repository.ips.ObservationVitalSignRepository;
-import net.pladema.internation.repository.ips.generalstate.VitalSignVo;
+import net.pladema.internation.repository.ips.generalstate.ClinicalObservationVo;
 import net.pladema.internation.repository.masterdata.entity.ObservationStatus;
 import net.pladema.internation.service.documents.DocumentService;
-import net.pladema.internation.service.domain.ips.MapVitalSigns;
+import net.pladema.internation.service.domain.ips.MapClinicalObservationVo;
 import net.pladema.internation.service.domain.ips.VitalSignBo;
 import net.pladema.internation.service.domain.ips.enums.EVitalSign;
 import org.junit.Before;
@@ -49,7 +49,7 @@ public class VitalSignLabServiceImplTest {
 		Integer internmentEpisodeId = 1;
 		int quantity = 2;
 		when(observationVitalSignRepository.getVitalSignsGeneralStateLastSevenDays(internmentEpisodeId))
-				.thenReturn(new MapVitalSigns(mockVitalSignsVo(quantity)));
+				.thenReturn(new MapClinicalObservationVo(mockVitalSignsVo(quantity)));
 		List<VitalSignBo> vitalSignBos = vitalSignLabService.getLast2VitalSignsGeneralState(internmentEpisodeId);
 
 		assertThat(vitalSignBos)
@@ -64,7 +64,7 @@ public class VitalSignLabServiceImplTest {
 		Integer internmentEpisodeId = 1;
 		int quantity = 1;
 		when(observationVitalSignRepository.getVitalSignsGeneralStateLastSevenDays(internmentEpisodeId))
-				.thenReturn(new MapVitalSigns(mockVitalSignsVo(quantity)));
+				.thenReturn(new MapClinicalObservationVo(mockVitalSignsVo(quantity)));
 		List<VitalSignBo> vitalSignBos = vitalSignLabService.getLast2VitalSignsGeneralState(internmentEpisodeId);
 
 		assertThat(vitalSignBos)
@@ -79,7 +79,7 @@ public class VitalSignLabServiceImplTest {
 		Integer internmentEpisodeId = 1;
 		int quantity = 0;
 		when(observationVitalSignRepository.getVitalSignsGeneralStateLastSevenDays(internmentEpisodeId))
-				.thenReturn(new MapVitalSigns(mockVitalSignsVo(quantity)));
+				.thenReturn(new MapClinicalObservationVo(mockVitalSignsVo(quantity)));
 		List<VitalSignBo> vitalSignBos = vitalSignLabService.getLast2VitalSignsGeneralState(internmentEpisodeId);
 
 		assertThat(vitalSignBos)
@@ -119,28 +119,28 @@ public class VitalSignLabServiceImplTest {
 	}
 
 
-	private List<VitalSignVo> mockVitalSignsVo(int quantity){
-		List<VitalSignVo> vitalSigns = new ArrayList();
+	private List<ClinicalObservationVo> mockVitalSignsVo(int quantity){
+		List<ClinicalObservationVo> vitalSigns = new ArrayList();
 		for (int i=0;i<quantity;i++){
-			VitalSignVo diastolic = new VitalSignVo(i+1, EVitalSign.DIASTOLIC_BLOOD_PRESSURE.getSctidCode(), ObservationStatus.FINAL,"1", LocalDateTime.now());
+			ClinicalObservationVo diastolic = new ClinicalObservationVo(i+1, EVitalSign.DIASTOLIC_BLOOD_PRESSURE.getSctidCode(), ObservationStatus.FINAL,"1", LocalDateTime.now());
 			vitalSigns.add(diastolic);
 
-			VitalSignVo sistolic = new VitalSignVo(i+2, EVitalSign.SYSTOLIC_BLOOD_PRESSURE.getSctidCode(), ObservationStatus.FINAL, "11123", LocalDateTime.now());
+			ClinicalObservationVo sistolic = new ClinicalObservationVo(i+2, EVitalSign.SYSTOLIC_BLOOD_PRESSURE.getSctidCode(), ObservationStatus.FINAL, "11123", LocalDateTime.now());
 			vitalSigns.add(sistolic);
 
-			VitalSignVo temperature = new VitalSignVo(i+3, EVitalSign.TEMPERATURE.getSctidCode(), ObservationStatus.FINAL,"14", LocalDateTime.now());
+			ClinicalObservationVo temperature = new ClinicalObservationVo(i+3, EVitalSign.TEMPERATURE.getSctidCode(), ObservationStatus.FINAL,"14", LocalDateTime.now());
 			vitalSigns.add(temperature);
 
-			VitalSignVo respiratoryRate = new VitalSignVo(i+4, EVitalSign.RESPIRATORY_RATE.getSctidCode(), ObservationStatus.FINAL, "1", LocalDateTime.now());
+			ClinicalObservationVo respiratoryRate = new ClinicalObservationVo(i+4, EVitalSign.RESPIRATORY_RATE.getSctidCode(), ObservationStatus.FINAL, "1", LocalDateTime.now());
 			vitalSigns.add(respiratoryRate);
 
-			VitalSignVo heartRate = new VitalSignVo(i+5, EVitalSign.HEART_RATE.getSctidCode(), ObservationStatus.FINAL, "1", LocalDateTime.now());
+			ClinicalObservationVo heartRate = new ClinicalObservationVo(i+5, EVitalSign.HEART_RATE.getSctidCode(), ObservationStatus.FINAL, "1", LocalDateTime.now());
 			vitalSigns.add(heartRate);
 
-			VitalSignVo mean = new VitalSignVo(i+6, EVitalSign.MEAN_PRESSURE.getSctidCode(), ObservationStatus.FINAL,"1", LocalDateTime.now());
+			ClinicalObservationVo mean = new ClinicalObservationVo(i+6, EVitalSign.MEAN_PRESSURE.getSctidCode(), ObservationStatus.FINAL,"1", LocalDateTime.now());
 			vitalSigns.add(mean);
 
-			VitalSignVo bloodOxygen = new VitalSignVo(i+7, EVitalSign.BLOOD_OXYGEN_SATURATION.getSctidCode(), ObservationStatus.FINAL, "1", LocalDateTime.now());
+			ClinicalObservationVo bloodOxygen = new ClinicalObservationVo(i+7, EVitalSign.BLOOD_OXYGEN_SATURATION.getSctidCode(), ObservationStatus.FINAL, "1", LocalDateTime.now());
 			vitalSigns.add(bloodOxygen);
 		}
 		return vitalSigns;

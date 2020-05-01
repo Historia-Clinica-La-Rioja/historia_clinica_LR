@@ -68,12 +68,12 @@ public class InternmentStateController {
     }
 
     @GetMapping("/{internmentEpisodeId}/general/diagnosis")
-    public ResponseEntity<List<HealthConditionDto>> diagnosisGeneralState(
+    public ResponseEntity<List<DiagnosisDto>> diagnosisGeneralState(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
         LOG.debug("Imput parameters -> institutionId {}, internmentEpisodeId {}", institutionId, internmentEpisodeId);
-        List<HealthConditionBo> diagnosis = healthConditionService.getDiagnosisGeneralState(internmentEpisodeId);
-        List<HealthConditionDto> result = internmentStateMapper.toListHealthConditionDto(diagnosis);
+        List<DiagnosisBo> diagnosis = healthConditionService.getDiagnosisGeneralState(internmentEpisodeId);
+        List<DiagnosisDto> result = internmentStateMapper.toListDiagnosisDto(diagnosis);
         LOG.debug("Output -> {}", result);
         return  ResponseEntity.ok().body(result);
     }
@@ -106,7 +106,7 @@ public class InternmentStateController {
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
         LOG.debug("Imput parameters -> institutionId {}, internmentEpisodeId {}", institutionId, internmentEpisodeId);
         List<MedicationBo> medicationBos = medicationService.getMedicationsGeneralState(internmentEpisodeId);
-        List<MedicationDto> result = new ArrayList<>();
+        List<MedicationDto> result = internmentStateMapper.toListMedicationDto(medicationBos);
         LOG.debug("Output -> {}", result);
         return  ResponseEntity.ok().body(result);
     }

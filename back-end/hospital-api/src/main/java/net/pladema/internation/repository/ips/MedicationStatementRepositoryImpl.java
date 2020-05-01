@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,10 +37,10 @@ public class MedicationStatementRepositoryImpl implements MedicationStatementRep
                 "from document d " +
                 "join document_medicamention_statement dms on d.id = dms.document_id " +
                 "join medication_statement ms on dms.medication_statement_id = ms.id " +
-                "where internment_episode_id = 1 " +
+                "where internment_episode_id = :internmentEpisodeId " +
                 "and d.status_id = :documentStatusId " +
                 ") " +
-                "select t.id as id, s.id as sctid, s.fsn, status_id, n.description as note " +
+                "select t.id as id, s.id as sctid, s.fsn, status_id, n.id as note_id, n.description as note " +
                 "from temporal t " +
                 "left join note n on t.note_id = n.id " +
                 "join snomed s on t.sctid_code = s.id " +
@@ -47,6 +48,7 @@ public class MedicationStatementRepositoryImpl implements MedicationStatementRep
                 "order by t.updated_on";
 
         List<Object[]> queryResult = entityManager.createNativeQuery(sqlString)
+                .setParameter("internmentEpisodeId", internmentEpisodeId)
                 .setParameter("documentStatusId", DocumentStatus.FINAL)
                 .setParameter("medicationStatusId", MedicationStatementStatus.ERROR)
                 .getResultList();
@@ -54,9 +56,10 @@ public class MedicationStatementRepositoryImpl implements MedicationStatementRep
         queryResult.forEach(m -> {
             result.add(new MedicationVo(
                     (Integer)m[0],
-                    (String)m[1],
-                    new Snomed((String)m[2], (String)m[3], null, null),
-                    (String)m[4]
+                    new Snomed((String)m[1], (String)m[2], null, null),
+                    (String)m[3],
+                    m[4] != null ? ((BigInteger)m[4]).longValue() : null,
+                    (String)m[5]
             ));
         });
         return result;

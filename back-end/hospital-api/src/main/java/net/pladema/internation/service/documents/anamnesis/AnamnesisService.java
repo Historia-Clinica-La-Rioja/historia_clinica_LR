@@ -4,5 +4,5 @@ import net.pladema.internation.service.domain.Anamnesis;
 
 public interface AnamnesisService {
 
-    public Anamnesis getAnamnesis(Integer anamnesisId);
+    Anamnesis getAnamnesis(Long anamnesisId);
 }

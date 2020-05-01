@@ -1,7 +1,7 @@
 package net.pladema.internation.service.domain.ips;
 
 import lombok.*;
-import net.pladema.internation.repository.ips.generalstate.VitalSignVo;
+import net.pladema.internation.repository.ips.generalstate.ClinicalObservationVo;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -18,10 +18,10 @@ public class ClinicalObservationBo implements Serializable {
     @NotNull
     private String value;
 
-    public ClinicalObservationBo(VitalSignVo vitalSignVo) {
+    public ClinicalObservationBo(ClinicalObservationVo clinicalObservationVo) {
         super();
-        this.id = vitalSignVo.getId();
-        this.value = vitalSignVo.getValue();
+        this.id = clinicalObservationVo.getId();
+        this.value = clinicalObservationVo.getValue();
     }
 
 }

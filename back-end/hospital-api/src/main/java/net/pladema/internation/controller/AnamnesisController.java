@@ -100,7 +100,7 @@ public class AnamnesisController {
     public ResponseEntity<ResponseAnamnesisDto> getAnamnesis(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
-            @PathVariable(name = "anamnesisId") Integer anamnesisId){
+            @PathVariable(name = "anamnesisId") Long anamnesisId){
         LOG.debug("Input parameters -> instituionId {}, internmentEpisodeId {}, anamnesisId {}",
                 institutionId, internmentEpisodeId, anamnesisId);
         Anamnesis anamnesis = anamnesisService.getAnamnesis(anamnesisId);

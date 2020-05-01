@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.math.BigInteger;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,7 @@ public class HealthConditionRepositoryImpl implements HealthConditionRepositoryC
                 "where internment_episode_id = :internmentEpisodeId " +
                 "and d.status_id = :statusId )" +
                 "select t.id as id, s.id as sctid, s.fsn, status_id, verification_status_id, problem_id, " +
-                "start_date, n.description as note " +
+                "start_date, n.id note_id, n.description as note " +
                 "from t " +
                 "left join note n on note_id = n.id " +
                 "join snomed s on sctid_code = s.id " +
@@ -58,7 +59,8 @@ public class HealthConditionRepositoryImpl implements HealthConditionRepositoryC
                     (String)h[4],
                     (String)h[5],
                      h[6] != null ? ((Date)h[6]).toLocalDate() : null,
-                    (String)h[7]));
+                    h[7] != null ? ((BigInteger)h[7]).longValue() : null,
+                    (String)h[8]));
         });
         return result;
     }

@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ObservationLabRepository extends JpaRepository<ObservationLab, Integer> {
+public interface ObservationLabRepository extends JpaRepository<ObservationLab, Integer>{
 
 }

@@ -1,9 +1,11 @@
 package net.pladema.internation.controller.mapper.ips;
 
 import net.pladema.dates.configuration.LocalDateMapper;
+import net.pladema.internation.controller.dto.ips.DiagnosisDto;
 import net.pladema.internation.controller.dto.ips.HealthConditionDto;
 import net.pladema.internation.controller.dto.ips.HealthHistoryConditionDto;
 import net.pladema.internation.repository.ips.generalstate.HealthConditionVo;
+import net.pladema.internation.service.domain.ips.DiagnosisBo;
 import net.pladema.internation.service.domain.ips.HealthConditionBo;
 import net.pladema.internation.service.domain.ips.HealthHistoryConditionBo;
 import org.mapstruct.Mapper;
@@ -19,10 +21,13 @@ public interface HealthConditionMapper {
     @Named("toHealthHistoryConditionDto")
     HealthHistoryConditionDto toHealthHistoryConditionDto(HealthHistoryConditionBo healthConditionBo);
 
-    @Named("toHealthConditionBo")
-    HealthConditionBo toHealthConditionBo(HealthConditionVo healthConditionVo);
+    @Named("toDiagnosisBo")
+    DiagnosisBo toDiagnosisBo(HealthConditionVo healthConditionVo);
+
+    @Named("toDiagnosisDto")
+    DiagnosisDto toDiagnosisDto(DiagnosisBo diagnosisBo);
 
     @Named("toHealthHistoryCondition")
     @Mapping(target = "date", source = "startDate")
-    HealthHistoryConditionBo toHealthHistoryCondition(HealthConditionVo healthConditionVo);
+    HealthHistoryConditionBo toHealthHistoryConditionBo(HealthConditionVo healthConditionVo);
 }

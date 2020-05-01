@@ -1,9 +1,9 @@
 package net.pladema.internation.service.impl;
 
-import net.pladema.internation.controller.dto.SnomedDto;
 import net.pladema.internation.repository.masterdata.SnomedRepository;
 import net.pladema.internation.repository.masterdata.entity.Snomed;
 import net.pladema.internation.service.SnomedService;
+import net.pladema.internation.service.domain.SnomedBo;
 import net.pladema.patient.service.StringHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +22,7 @@ public class SnomedServiceImpl implements SnomedService {
     }
 
     @Override
-    public String createSnomedTerm(SnomedDto snomedTerm){
+    public String createSnomedTerm(SnomedBo snomedTerm){
 
         LOG.debug("Input parameters -> {}", snomedTerm);
         Snomed snomed = new Snomed();

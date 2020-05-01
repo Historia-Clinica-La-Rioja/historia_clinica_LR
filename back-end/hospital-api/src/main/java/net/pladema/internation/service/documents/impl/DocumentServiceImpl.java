@@ -2,10 +2,16 @@ package net.pladema.internation.service.documents.impl;
 
 import net.pladema.internation.repository.core.*;
 import net.pladema.internation.repository.core.entity.*;
+import net.pladema.internation.repository.ips.generalstate.*;
 import net.pladema.internation.service.documents.DocumentService;
+import net.pladema.internation.service.domain.ips.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class DocumentServiceImpl implements DocumentService {
@@ -42,6 +48,14 @@ public class DocumentServiceImpl implements DocumentService {
         this.documentLabRepository = documentLabRepository;
         this.documentAllergyIntoleranceRepository = documentAllergyIntoleranceRepository;
         this.documentMedicamentionStatementRepository = documentMedicamentionStatementRepository;
+    }
+
+    @Override
+    public Optional<Document> findById(Long documentId) {
+        LOG.debug("Input parameters -> documentId {}", documentId);
+        Optional<Document> result = documentRepository.findById(documentId);
+        LOG.debug(OUTPUT, result);
+        return result;
     }
 
     @Override
@@ -95,5 +109,61 @@ public class DocumentServiceImpl implements DocumentService {
         LOG.debug("Input parameters -> documentId {}, medicationStatementId {}", documentId, medicationStatementId);
         DocumentMedicamentionStatement document = new DocumentMedicamentionStatement(documentId, medicationStatementId);
         documentMedicamentionStatementRepository.save(document);
+    }
+
+    @Override
+    public GeneralHealthConditionBo getHealthConditionFromDocument(Long documentId) {
+        LOG.debug("Input parameters -> documentId {}", documentId);
+        List<HealthConditionVo> resultQuery = documentHealthConditionRepository.getHealthConditionFromDocument(documentId);
+        GeneralHealthConditionBo result = new GeneralHealthConditionBo(resultQuery);
+        LOG.debug(OUTPUT, result);
+        return result;
+    }
+
+    @Override
+    public List<InmunizationBo> getInmunizationStateFromDocument(Long documentId) {
+        LOG.debug("Input parameters -> documentId {}", documentId);
+        List<InmunizationVo> resultQuery = documentInmunizationRepository.getInmunizationStateFromDocument(documentId);
+        List<InmunizationBo> result = resultQuery.stream().map(InmunizationBo::new).collect(Collectors.toList());
+        LOG.debug(OUTPUT, result);
+        return result;
+    }
+
+    @Override
+    public List<AllergyConditionBo> getAllergyIntoleranceStateFromDocument(Long documentId) {
+        LOG.debug("Input parameters -> documentId {}", documentId);
+        List<AllergyConditionVo> resultQuery = documentAllergyIntoleranceRepository.getAllergyIntoleranceStateFromDocument(documentId);
+        List<AllergyConditionBo> result = resultQuery.stream().map(AllergyConditionBo::new).collect(Collectors.toList());
+        LOG.debug(OUTPUT, result);
+        return result;
+    }
+
+    @Override
+    public List<MedicationBo> getMedicationStateFromDocument(Long documentId) {
+        LOG.debug("Input parameters -> documentId {}", documentId);
+        List<MedicationVo> resultQuery = documentMedicamentionStatementRepository.getMedicationStateFromDocument(documentId);
+        List<MedicationBo> result = resultQuery.stream().map(MedicationBo::new).collect(Collectors.toList());
+        LOG.debug(OUTPUT, result);
+        return result;
+    }
+
+    @Override
+    public AnthropometricDataBo getAnthropometricDataStateFromDocument(Long documentId) {
+        LOG.debug("Input parameters -> documentId {}", documentId);
+        List<ClinicalObservationVo> clinicalObservationVos = documentVitalSignRepository.getVitalSignStateFromDocument(documentId);
+        clinicalObservationVos.addAll(documentLabRepository.getLabStateFromDocument(documentId));
+        MapClinicalObservationVo resultQuery = new MapClinicalObservationVo(clinicalObservationVos);
+        AnthropometricDataBo result = resultQuery.getLastAnthropometricData().orElse(null);
+        LOG.debug(OUTPUT, result);
+        return result;
+    }
+
+    @Override
+    public VitalSignBo getVitalSignStateFromDocument(Long documentId) {
+        LOG.debug("Input parameters -> documentId {}", documentId);
+        MapClinicalObservationVo resultQuery = new MapClinicalObservationVo(documentVitalSignRepository.getVitalSignStateFromDocument(documentId));
+        VitalSignBo result = resultQuery.getLastVitalSigns().orElse(null);
+        LOG.debug(OUTPUT, result);
+        return result;
     }
 }

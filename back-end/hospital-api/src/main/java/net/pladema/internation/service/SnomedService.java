@@ -1,8 +1,8 @@
 package net.pladema.internation.service;
 
-import net.pladema.internation.controller.dto.SnomedDto;
+import net.pladema.internation.service.domain.SnomedBo;
 
 public interface SnomedService {
 
-    public String createSnomedTerm(SnomedDto snomedTerm);
+    public String createSnomedTerm(SnomedBo snomedTerm);
 }

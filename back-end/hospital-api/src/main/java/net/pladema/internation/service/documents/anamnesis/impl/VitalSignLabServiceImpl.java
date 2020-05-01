@@ -8,7 +8,7 @@ import net.pladema.internation.service.documents.DocumentService;
 import net.pladema.internation.service.documents.anamnesis.VitalSignLabService;
 import net.pladema.internation.service.domain.ips.AnthropometricDataBo;
 import net.pladema.internation.service.domain.ips.ClinicalObservationBo;
-import net.pladema.internation.service.domain.ips.MapVitalSigns;
+import net.pladema.internation.service.domain.ips.MapClinicalObservationVo;
 import net.pladema.internation.service.domain.ips.VitalSignBo;
 import net.pladema.internation.service.domain.ips.enums.EObservationLab;
 import net.pladema.internation.service.domain.ips.enums.EVitalSign;
@@ -24,9 +24,9 @@ import java.util.Optional;
 @Service
 public class VitalSignLabServiceImpl implements VitalSignLabService {
 
-    public static final String OUTPUT = "Output -> {}";
-
     private static final Logger LOG = LoggerFactory.getLogger(VitalSignLabServiceImpl.class);
+
+    public static final String OUTPUT = "Output -> {}";
 
     private final ObservationVitalSignRepository observationVitalSignRepository;
 
@@ -172,46 +172,15 @@ public class VitalSignLabServiceImpl implements VitalSignLabService {
     @Override
     public List<VitalSignBo> getLast2VitalSignsGeneralState(Integer internmentEpisodeId) {
         LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
-        MapVitalSigns resultQuery = observationVitalSignRepository.getVitalSignsGeneralStateLastSevenDays(internmentEpisodeId);
+        MapClinicalObservationVo resultQuery = observationVitalSignRepository.getVitalSignsGeneralStateLastSevenDays(internmentEpisodeId);
         List<VitalSignBo> result = new ArrayList<>();
         for (int i=0;i<2;i++){
-            loadVitalSignBo(resultQuery, i).ifPresent(v -> {
+            resultQuery.getLastNVitalSigns(i).ifPresent(v -> {
                 result.add(v);
             });
         }
         LOG.debug(OUTPUT, result);
         return result;
     }
-
-    private Optional<VitalSignBo> loadVitalSignBo(MapVitalSigns mapVitalSigns, int i) {
-        LOG.debug("Input parameters -> mapVitalSigns {}, pos {}", mapVitalSigns, i);
-        VitalSignBo vitalSignBo = new VitalSignBo();
-        mapVitalSigns.getLastNVitalSign(EVitalSign.BLOOD_OXYGEN_SATURATION.getSctidCode(),i).ifPresent(v -> {
-            vitalSignBo.setBloodOxygenSaturation(new ClinicalObservationBo(v));
-        });
-        mapVitalSigns.getLastNVitalSign(EVitalSign.DIASTOLIC_BLOOD_PRESSURE.getSctidCode(),i).ifPresent(v -> {
-            vitalSignBo.setDiastolicBloodPressure(new ClinicalObservationBo(v));
-        });
-        mapVitalSigns.getLastNVitalSign(EVitalSign.SYSTOLIC_BLOOD_PRESSURE.getSctidCode(),i).ifPresent(v -> {
-            vitalSignBo.setSystolicBloodPressure(new ClinicalObservationBo(v));
-        });
-        mapVitalSigns.getLastNVitalSign(EVitalSign.HEART_RATE.getSctidCode(),i).ifPresent(v -> {
-            vitalSignBo.setHeartRate(new ClinicalObservationBo(v));
-        });
-        mapVitalSigns.getLastNVitalSign(EVitalSign.TEMPERATURE.getSctidCode(),i).ifPresent(v -> {
-            vitalSignBo.setTemperature(new ClinicalObservationBo(v));
-        });
-        mapVitalSigns.getLastNVitalSign(EVitalSign.RESPIRATORY_RATE.getSctidCode(),i).ifPresent(v -> {
-            vitalSignBo.setRespiratoryRate(new ClinicalObservationBo(v));
-        });
-        mapVitalSigns.getLastNVitalSign(EVitalSign.MEAN_PRESSURE.getSctidCode(),i).ifPresent(v -> {
-            vitalSignBo.setMeanPressure(new ClinicalObservationBo(v));
-        });
-        LOG.debug(OUTPUT, vitalSignBo);
-        if (vitalSignBo.hasValues())
-            return Optional.of(vitalSignBo);
-        return Optional.empty();
-    }
-
 
 }

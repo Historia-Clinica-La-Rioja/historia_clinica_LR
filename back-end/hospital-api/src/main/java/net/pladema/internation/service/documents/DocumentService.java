@@ -4,8 +4,14 @@ import net.pladema.internation.repository.core.entity.Document;
 import net.pladema.internation.repository.core.entity.DocumentInmunization;
 import net.pladema.internation.repository.core.entity.DocumentLab;
 import net.pladema.internation.repository.core.entity.DocumentVitalSign;
+import net.pladema.internation.service.domain.ips.*;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface DocumentService {
+
+    Optional<Document> findById(Long documentId);
 
     Document create(Document document);
 
@@ -20,4 +26,17 @@ public interface DocumentService {
     DocumentInmunization createInmunization(Long documentId, Integer inmunizationId);
     
     void createDocumentMedication(Long documentId, Integer medicationStatementId);
+
+    GeneralHealthConditionBo getHealthConditionFromDocument(Long documentId);
+
+    List<InmunizationBo> getInmunizationStateFromDocument(Long documentId);
+
+    List<AllergyConditionBo> getAllergyIntoleranceStateFromDocument(Long documentId);
+
+    List<MedicationBo> getMedicationStateFromDocument(Long documentId);
+
+    AnthropometricDataBo getAnthropometricDataStateFromDocument(Long documentId);
+
+    VitalSignBo getVitalSignStateFromDocument(Long documentId);
 }
+

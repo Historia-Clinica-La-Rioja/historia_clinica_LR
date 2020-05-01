@@ -17,4 +17,9 @@ public class AnthropometricDataBo implements Serializable {
 
     private ClinicalObservationBo weight;
 
+    public boolean hasValues(){
+        return (bloodType != null ||
+                height != null ||
+                weight != null);
+    }
 }

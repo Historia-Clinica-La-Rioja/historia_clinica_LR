@@ -18,7 +18,7 @@ public class InternmentGeneralStateDto implements Serializable {
 
     @NotNull
     @NotEmpty(message = "diagnosis.mandatory")
-    private List<HealthConditionDto> diagnosis;
+    private List<DiagnosisDto> diagnosis;
 
     @NotNull
     private List<HealthHistoryConditionDto> personalHistories = new ArrayList<>();

@@ -19,18 +19,26 @@ public interface LocalDateMapper {
     }
 
 	default LocalDate fromStringToLocalDate(String date) {
+		if (date == null)
+			return null;
 		return LocalDate.parse(date, DateTimeFormatter.ofPattern( JacksonDateFormatConfig.DATE_FORMAT ));
 	}
 
 	default LocalDateTime fromStringToLocalDateTime(String date) {
+		if (date == null)
+			return null;
 		return LocalDateTime.parse(date, DateTimeFormatter.ofPattern( JacksonDateFormatConfig.DATE_TIME_FORMAT ));
 	}
 
 	default String fromLocalDateToString(LocalDate date) {
+		if (date == null)
+			return null;
 		return date.format(DateTimeFormatter.ofPattern(JacksonDateFormatConfig.DATE_FORMAT));
 	}
 
 	default String fromLocalDateTimeToString(LocalDateTime localDateTime) {
+		if (localDateTime == null)
+			return null;
 		return localDateTime.format(DateTimeFormatter.ofPattern(JacksonDateFormatConfig.DATE_TIME_FORMAT));
 	}
 }

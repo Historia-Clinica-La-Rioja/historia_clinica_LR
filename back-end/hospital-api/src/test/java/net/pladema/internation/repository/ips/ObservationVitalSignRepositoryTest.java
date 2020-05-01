@@ -7,7 +7,7 @@ import net.pladema.internation.repository.ips.entity.ObservationVitalSign;
 import net.pladema.internation.repository.masterdata.entity.DocumentStatus;
 import net.pladema.internation.repository.masterdata.entity.DocumentType;
 import net.pladema.internation.repository.masterdata.entity.ObservationStatus;
-import net.pladema.internation.service.domain.ips.MapVitalSigns;
+import net.pladema.internation.service.domain.ips.MapClinicalObservationVo;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,21 +35,21 @@ public class ObservationVitalSignRepositoryTest extends BaseRepositoryTest {
 	public void saveCreateTest() {
 		Integer internmentEpisodeId = 1;
 		createInternmentStates(1);
-		MapVitalSigns mapVitalSigns = observationVitalSignRepository.getVitalSignsGeneralStateLastSevenDays(internmentEpisodeId);
+		MapClinicalObservationVo mapClinicalObservationVo = observationVitalSignRepository.getVitalSignsGeneralStateLastSevenDays(internmentEpisodeId);
 
-		assertThat(mapVitalSigns.getGroupByVitalSign().entrySet())
+		assertThat(mapClinicalObservationVo.getClinicalObservationByCode().entrySet())
 				.isNotNull()
 				.isNotEmpty();
 
-		assertThat(mapVitalSigns.getVitalSignsByCode("code1"))
+		assertThat(mapClinicalObservationVo.getClinicalObservationByCode("code1"))
 				.isNotNull()
 				.isEmpty();
 
-		assertThat(mapVitalSigns.getVitalSignsByCode("code2"))
+		assertThat(mapClinicalObservationVo.getClinicalObservationByCode("code2"))
 				.isNotNull()
 				.hasSize(1);
 
-		assertThat(mapVitalSigns.getVitalSignsByCode("code3"))
+		assertThat(mapClinicalObservationVo.getClinicalObservationByCode("code3"))
 				.isNotNull()
 				.hasSize(1);
 	}
