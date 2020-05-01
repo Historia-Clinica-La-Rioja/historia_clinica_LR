@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
-import { AllergyConditionDto, SnomedDto, MasterDataInterface } from '@api-rest/api-model';
+import { AllergyConditionDto, SnomedDto } from '@api-rest/api-model';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Moment } from 'moment';
 import * as moment from 'moment';
@@ -34,36 +33,13 @@ export class AlergiasComponent implements OnInit {
 
 	form: FormGroup;
 	today: Moment = moment();
-	verifications: MasterDataInterface<string>[];
-	clinicalStatus: MasterDataInterface<string>[];
-	categories: MasterDataInterface<string>[];
 
 	// Mat table
 	columns = [
 		{
 			def: 'problemType',
-			header: 'internaciones.anamnesis.alergias.table.columns.PROBLEM_TYPE',
+			header: 'internaciones.anamnesis.alergias.table.columns.ALLERGY',
 			text: a => a.snomed.fsn
-		},
-		{
-			def: 'category',
-			header: 'internaciones.anamnesis.alergias.table.columns.CATEGORY',
-			text: a => this.categories?.find(category => category.id === a.categoryId).description
-		},
-		{
-			def: 'severity',
-			header: 'internaciones.anamnesis.alergias.table.columns.SEVERITY',
-			text: a => a.severity
-		},
-		{
-			def: 'clinicalStatus',
-			header: 'internaciones.anamnesis.alergias.table.columns.STATUS',
-			text: a => this.clinicalStatus?.find(status => status.id === a.statusId).description
-		},
-		{
-			def: 'verification',
-			header: 'internaciones.anamnesis.alergias.table.columns.VERIFICATION',
-			text: a => this.verifications?.find(verification => verification.id === a.verificationId).description
 		},
 		{
 			def: 'date',
@@ -76,8 +52,7 @@ export class AlergiasComponent implements OnInit {
 
 	constructor(
 		private formBuilder: FormBuilder,
-		private datePipe: DatePipe,
-		private internacionMasterDataService: InternacionMasterDataService
+		private datePipe: DatePipe
 	) {
 		this.displayedColumns = this.columns?.map(c => c.def).concat(['remove']);
 	}
@@ -85,27 +60,9 @@ export class AlergiasComponent implements OnInit {
 	ngOnInit(): void {
 		this.dataSource = new MatTableDataSource<AllergyConditionDto>(this.allergies);
 		this.form = this.formBuilder.group({
-			date: [null, Validators.required],
-			severity: [null, Validators.required],
-			categoryId: [null, Validators.required],
-			note: [null, Validators.required],
-			verificationId: [null, Validators.required],
-			statusId: [null, Validators.required],
+			date: [null],
 			snomed: [null, Validators.required]
 		});
-
-		this.internacionMasterDataService.getAllergyClinical().subscribe(clinicalStatus => {
-			this.clinicalStatus = clinicalStatus;
-		});
-
-		this.internacionMasterDataService.getAllergyVerifications().subscribe(verifications => {
-			this.verifications = verifications;
-		});
-
-		this.internacionMasterDataService.getAllergyCategories().subscribe(categories => {
-			this.categories = categories;
-		});
-
 	}
 
 	chosenYearHandler(newDate: Moment) {
@@ -131,13 +88,13 @@ export class AlergiasComponent implements OnInit {
 	addToList() {
 		if (this.form.valid && this.snomedConcept) {
 			const alergia: AllergyConditionDto = {
-				categoryId: this.form.value.categoryId,
-				date: this.form.value.date.format(DateFormat.API_DATE),
-				severity: this.form.value.severity,
-				verificationId: this.form.value.verificationId,
+				categoryId: null,
+				date: this.form.value.date ? this.form.value.date.format(DateFormat.API_DATE) : null,
+				severity: null,
+				verificationId: null,
 				id: null,
 				snomed: this.snomedConcept,
-				statusId: this.form.value.statusId
+				statusId: null
 			};
 			this.add(alergia);
 		}

@@ -54,70 +54,42 @@
 		"anamnesis": {
 			"TITLE": "Evaluación de ingreso",
 			"SUBTITLE": "Completa los siguientes datos.",
-			"SEARCH": "Búsqueda de {{ conceptLabel }}",
+			"SEARCH": "Buscar {{ conceptLabel }}",
 			"REQUIRED_SEARCH": "Debe seleccionar un resultado de la búsqueda",
 			"alergias": {
 				"TITLE": "Alergias",
 				"ADD": "Agregar alergia",
-				"PROBLEM_TYPE": "Tipo de alergia",
+				"ALLERGY": "Alergia",
 				"form": {
-					"CATEGORY": "Categoría",
-					"CLINICAL_STATUS": "Estado clínico",
-					"NOTE": "Notas",
-					"REGISTRY_DATE": "Fecha registro",
-					"SEVERITY": "Severidad",
-					"VERIFICATION_STATUS": "Estado de verificación"
+					"REGISTRY_DATE": "Fecha registro"
 				},
-
 				"table": {
 					"TITLE": "Alergias registradas",
 					"columns": {
-						"CATEGORY": "Categoría",
-						"PROBLEM_TYPE": "Tipo de problema",
-						"REGISTRY_DATE": "Fecha registro",
-						"STATUS": "Estado",
-						"SEVERITY": "Severidad",
-						"VERIFICATION": "Verificación"
+						"ALLERGY": "Alergia",
+						"REGISTRY_DATE": "Fecha registro"
 					}
 				}
 			},
 			"antecedentes-personales": {
 				"TITLE": "Antecedentes personales",
 				"ADD": "Agregar antecedente",
-				"PROBLEM_TYPE": "Tipo de problema",
-				"form": {
-					"REGISTRY_DATE": "Fecha registro",
-					"NOTE": "Notas",
-					"VERIFICATION_STATUS": "Estado de verificación",
-					"CLINICAL_STATUS": "Estado clínico"
-				},
+				"PERSONAL_HISTORY": "Antecedente personal",
 				"table": {
 					"TITLE": "Antecedentes personales registrados",
 					"columns": {
-						"PROBLEM_TYPE": "Tipo de problema",
-						"STATUS": "Estado",
-						"VERIFICATION": "Verificación",
-						"REGISTRY_DATE": "Fecha registro"
+						"PERSONAL_HISTORY": "Antecedente personal"
 					}
 				}
 			},
 			"antecedentes-familiares": {
 				"TITLE": "Antecedentes familiares",
 				"ADD": "Agregar antecedente",
-				"PROBLEM_TYPE": "Tipo de problema",
-				"form": {
-					"REGISTRY_DATE": "Fecha registro",
-					"NOTE": "Notas",
-					"VERIFICATION_STATUS": "Estado de verificación",
-					"CLINICAL_STATUS": "Estado clínico"
-				},
+				"FAMILY_HISTORY": "Antecedente familiar",
 				"table": {
 					"TITLE": "Antecedentes familiares registrados",
 					"columns": {
-						"PROBLEM_TYPE": "Tipo de problema",
-						"STATUS": "Estado",
-						"VERIFICATION": "Verificación",
-						"REGISTRY_DATE": "Fecha registro"
+						"FAMILY_HISTORY": "Antecedente familiar"
 					}
 				}
 			},
@@ -125,53 +97,39 @@
 				"TITLE": "Datos antropométricos",
 				"BLOOD_TYPE": "Grupo y factor sanguíneo",
 				"HEIGHT": "Talla (cm)",
-				"WEIGHT": "Peso (kg)",
-				"table": {
-					"TITLE": "Datos antropométricos registrados",
-					"columns": {
-						"IMC": "IMC"
-					}
-				}
+				"WEIGHT": "Peso (kg)"
 			},
 			"diagnosticos": {
 				"TITLE": "Diagnósticos",
 				"ADD": "Agregar diagnóstico",
-				"PROBLEM_TYPE": "Tipo de problema",
-				"form": {
-					"VERIFICATION_STATUS": "Estado de verificación",
-					"CLINICAL_STATUS": "Estado clínico"
-				},
+				"DIAGNOSIS": "Diagnóstico",
+				"PRESUMPTIVE": "Presuntivo",
 				"table": {
 					"TITLE": "Diagnósticos registrados",
 					"columns": {
-						"DIAGNOSIS": "Diagnóstico",
-						"STATUS": "Estado",
-						"VERIFICATION": "Verificación"
+						"DIAGNOSIS": "Diagnóstico"
 					}
 				}
 			},
 			"vacunas": {
 				"TITLE": "Vacunas",
 				"ADD": "Agregar vacuna",
-				"PROBLEM_TYPE": "Tipo de vacuna",
+				"INMUNIZATION": "Vacuna",
 				"form": {
-					"CLINICAL_STATUS": "Estado clínico",
-					"NOTE": "Notas",
-					"REGISTRY_DATE": "Fecha registro"
+					"REGISTRY_DATE": "Fecha de vacunación"
 				},
 				"table": {
 					"TITLE": "Vacunas registradas",
 					"columns": {
-						"STATUS": "Estado",
-						"PROBLEM_TYPE": "Tipo de problema",
-						"REGISTRY_DATE": "Fecha registro"
+						"INMUNIZATION": "Vacuna",
+						"REGISTRY_DATE": "Fecha de vacunación"
 					}
 				}
 			},
 			"medicacion": {
 				"TITLE": "Medicación habitual",
 				"ADD": "Agregar medicación",
-				"PROBLEM_TYPE": "Tipo de medicación",
+				"MEDICATION": "Medicación",
 				"form": {
 					"CLINICAL_STATUS": "Estado clínico",
 					"NOTE": "Notas"
@@ -181,7 +139,7 @@
 					"columns": {
 						"NOTE": "Notas",
 						"STATUS": "Estado",
-						"PROBLEM_TYPE": "Tipo de problema"
+						"MEDICATION": "Medicación"
 					}
 				}
 			},
@@ -192,17 +150,8 @@
 					"RESPIRATORY_RATE": "Frecuencia respiratoria (/min)",
 					"TEMPERATURE": "Temperatura corporal",
 					"BLOOD_OXIGEN_SATURATION": "Saturación de oxigeno (%)",
-					"BLOOD_PRESURE": "Tensión arterial (mm)"
-				},
-				"table": {
-					"TITLE": "Signos vitales registrados",
-					"columns": {
-						"HEART_RATE": "F. cardíaca",
-						"RESPIRATORY_RATE": "F. respiratoria",
-						"TEMPERATURE": "Temperatura",
-						"BLOOD_OXYGEN_SATURATION": "Oxígeno",
-						"BLOOD_PRESURE": "T. arterial"
-					}
+					"SYSTOLIC_BLOOD_PRESSURE": "Tensión sistólica (mm)",
+					"DIASTOLIC_BLOOD_PRESSURE": "Tensión diastólica (mm)"
 				}
 			},
 			"observations": {

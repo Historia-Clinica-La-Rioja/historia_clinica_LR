@@ -1,61 +1,19 @@
 <h2 class="mat-h2" [translate]="'internaciones.anamnesis.antecedentes-personales.TITLE'"></h2>
 <mat-card>
 	<mat-card-content>
-		<app-concepts-search [label]="'internaciones.anamnesis.antecedentes-personales.PROBLEM_TYPE'"
+		<app-concepts-search [label]="'internaciones.anamnesis.antecedentes-personales.PERSONAL_HISTORY'"
 			(onSelect)=setConcept($event)>
 		</app-concepts-search>
 
 		<form [formGroup]="form" (ngSubmit)="addToList()">
 			<mat-form-field appearance="outline">
-				<mat-label [translate]="'internaciones.anamnesis.antecedentes-personales.PROBLEM_TYPE'">
+				<mat-label [translate]="'internaciones.anamnesis.antecedentes-personales.PERSONAL_HISTORY'">
 				</mat-label>
 				<input matInput type="text" formControlName="snomed" name="snomed" readonly>
 				<mat-error [translate]="'internaciones.anamnesis.REQUIRED_SEARCH'">
 				</mat-error>
 			</mat-form-field>
-			<mat-form-field appearance="outline">
-				<mat-label [translate]="'internaciones.anamnesis.antecedentes-personales.form.CLINICAL_STATUS'">
-				</mat-label>
-				<mat-select formControlName="statusId" name="statusId">
-					<mat-option *ngFor="let status of clinicalStatus" [value]="status.id">
-						{{status.description}}
-					</mat-option>
-				</mat-select>
-				<mat-error [translate]="'forms.REQUIRED'">
-				</mat-error>
-			</mat-form-field>
-			<mat-form-field appearance="outline">
-				<mat-label [translate]="'internaciones.anamnesis.antecedentes-personales.form.VERIFICATION_STATUS'">
-				</mat-label>
-				<mat-select formControlName="verificationId" name="verificationId">
-					<mat-option *ngFor="let verification of verifications" [value]="verification.id">
-						{{verification.description}}
-					</mat-option>
-				</mat-select>
-				<mat-error [translate]="'forms.REQUIRED'">
-				</mat-error>
-			</mat-form-field>
-			<mat-form-field appearance="outline">
-				<mat-label [translate]="'internaciones.anamnesis.antecedentes-personales.form.REGISTRY_DATE'">
-				</mat-label>
-				<input matInput readonly id="date" [matDatepicker]="myDatepicker" formControlName="date"
-					[max]="this.today">
-				<mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
-				<mat-datepicker #myDatepicker startView="multi-year" (yearSelected)="chosenYearHandler($event)"
-					(monthSelected)="chosenMonthHandler($event)">
-				</mat-datepicker>
-				<mat-error [translate]="'forms.REQUIRED'">
-				</mat-error>
-			</mat-form-field>
 
-			<mat-form-field appearance="outline">
-				<mat-label [translate]="'internaciones.anamnesis.antecedentes-personales.form.NOTE'"></mat-label>
-				<textarea matInput type="text" id="note" name="note" formControlName="note"
-					placeholder="{{'internaciones.anamnesis.observations.DESCRIPTION' | translate }}">
-					</textarea>
-				<mat-error [translate]="'forms.REQUIRED'">
-				</mat-error>
-			</mat-form-field>
 			<div align="end">
 				<button mat-raised-button color="primary" type="submit">
 					<span class="uppercase" [translate]="'internaciones.anamnesis.antecedentes-personales.ADD'"></span>

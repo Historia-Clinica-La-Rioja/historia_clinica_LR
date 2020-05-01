@@ -1,11 +1,11 @@
 <h2 class="mat-h2" [translate]="'internaciones.anamnesis.medicacion.TITLE'"></h2>
 <mat-card>
 	<mat-card-content>
-		<app-concepts-search [label]="'internaciones.anamnesis.medicacion.PROBLEM_TYPE'" (onSelect)=setConcept($event)>
+		<app-concepts-search [label]="'internaciones.anamnesis.medicacion.MEDICATION'" (onSelect)=setConcept($event)>
 		</app-concepts-search>
 		<form [formGroup]="form" (ngSubmit)="addToList()">
 			<mat-form-field appearance="outline">
-				<mat-label [translate]="'internaciones.anamnesis.medicacion.PROBLEM_TYPE'">
+				<mat-label [translate]="'internaciones.anamnesis.medicacion.MEDICATION'">
 				</mat-label>
 				<input matInput type="text" formControlName="snomed" name="snomed" readonly>
 				<mat-error [translate]="'internaciones.anamnesis.REQUIRED_SEARCH'">

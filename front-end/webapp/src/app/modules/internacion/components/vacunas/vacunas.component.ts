@@ -34,19 +34,13 @@ export class VacunasComponent implements OnInit {
 
 	form: FormGroup;
 	today: Moment = moment();
-	inmunizationStatus: MasterDataInterface<string>[];
 
 	// Mat table
 	columns = [
 		{
 			def: 'problemType',
-			header: 'internaciones.anamnesis.vacunas.table.columns.PROBLEM_TYPE',
+			header: 'internaciones.anamnesis.vacunas.table.columns.INMUNIZATION',
 			text: v => v.snomed.fsn
-		},
-		{
-			def: 'clinicalStatus',
-			header: 'internaciones.anamnesis.vacunas.table.columns.STATUS',
-			text: v => this.inmunizationStatus?.find(status => status.id === v.statusId).description
 		},
 		{
 			def: 'date',
@@ -60,7 +54,6 @@ export class VacunasComponent implements OnInit {
 	constructor(
 		private formBuilder: FormBuilder,
 		private datePipe: DatePipe,
-		private internacionMasterDataService: InternacionMasterDataService
 	) {
 		this.displayedColumns = this.columns?.map(c => c.def).concat(['remove']);
 	}
@@ -68,16 +61,9 @@ export class VacunasComponent implements OnInit {
 	ngOnInit(): void {
 		this.dataSource = new MatTableDataSource<InmunizationDto>(this.inmunizations);
 		this.form = this.formBuilder.group({
-			date: [null, Validators.required],
-			note: [null, Validators.required],
-			statusId: [null, Validators.required],
+			date: [null],
 			snomed: [null, Validators.required]
 		});
-
-		this.internacionMasterDataService.getInmunizationClinical().subscribe(inmunizationStatus => {
-			this.inmunizationStatus = inmunizationStatus;
-		});
-
 	}
 
 	chosenYearHandler(newDate: Moment) {
@@ -104,10 +90,10 @@ export class VacunasComponent implements OnInit {
 		if (this.form.valid && this.snomedConcept) {
 			const vacuna: InmunizationDto = {
 				administrationDate: this.form.value.date.format(DateFormat.API_DATE),
-				note: this.form.value.note,
+				note: null,
 				id: null,
 				snomed: this.snomedConcept,
-				statusId: this.form.value.statusId
+				statusId: null
 			};
 			this.add(vacuna);
 		}

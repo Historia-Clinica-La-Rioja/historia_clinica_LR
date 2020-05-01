@@ -46,32 +46,6 @@
 				</mat-card-content>
 			</mat-card>
 
-			<section>
-				<h3 class="mat-h2" [translate]="'internaciones.anamnesis.datos-antropometricos.table.TITLE'"></h3>
-				<table id="datos-antropometricos-table" mat-table [dataSource]="datosAntropometricosTable.dataSource" class="secondary">
-
-					<ng-container *ngFor="let column of datosAntropometricosTable.columns" [matColumnDef]="column.def">
-						<th *matHeaderCellDef>{{ column.header | translate }}</th>
-						<td mat-cell *matCellDef="let element"> {{ column.text(element) }} </td>
-					</ng-container>
-
-					<ng-container matColumnDef="remove">
-						<th mat-header-cell *matHeaderCellDef></th>
-						<td mat-cell *matCellDef="let element; index as i">
-							<button type="button" mat-icon-button color="warn" (click)="remove(datosAntropometricos, datosAntropometricosTable.dataSource, i)">
-								<mat-icon>delete_outline</mat-icon>
-							</button>
-						</td>
-					</ng-container>
-
-					<tr mat-header-row *matHeaderRowDef="datosAntropometricosTable.displayedColumns"></tr>
-					<tr mat-row *matRowDef="let row; columns: datosAntropometricosTable.displayedColumns;"></tr>
-				</table>
-				<div class="mat-h3 table-no-data" *ngIf="datosAntropometricosTable.dataSource.data.length === 0">
-					<span [translate]="'messages.NO_DATA'"></span>
-				</div>
-			</section>
-
 		</section>
 		<section id="antecedentes-personales">
 			<app-antecedentes-personales [(personalHistories)]="personalHistories"></app-antecedentes-personales>
@@ -154,7 +128,7 @@
 					<div class="row-container">
 						<div class="field-container">
 							<mat-label
-								[translate]="'internaciones.anamnesis.vital-signs.form.BLOOD_PRESURE'"></mat-label>
+								[translate]="'internaciones.anamnesis.vital-signs.form.SYSTOLIC_BLOOD_PRESSURE'"></mat-label>
 							<mat-form-field [floatLabel]="'never'" appearance="outline">
 								<input id="systolic_blood_pressure"
 									   name="systolicBloodPressure"
@@ -167,6 +141,8 @@
 							</mat-form-field>
 						</div>
 						<div class="field-container">
+							<mat-label
+								[translate]="'internaciones.anamnesis.vital-signs.form.DIASTOLIC_BLOOD_PRESSURE'"></mat-label>
 							<mat-form-field [floatLabel]="'never'" appearance="outline">
 								<input id="diastolic_blood_pressure"
 									   name="diastolicBloodPressure"
@@ -181,34 +157,6 @@
 					</div>
 				</mat-card-content>
 			</mat-card>
-			<section>
-				<h3 class="mat-h2" [translate]="'internaciones.anamnesis.vital-signs.table.TITLE'"></h3>
-				<table id="signos-vitales-table" mat-table [dataSource]="vitalSignsTable.dataSource" class="secondary">
-
-					<ng-container *ngFor="let column of vitalSignsTable.columns" [matColumnDef]="column.def">
-						<th *matHeaderCellDef>{{ column.header | translate }}</th>
-						<td mat-cell *matCellDef="let element"> {{ column.text(element) }} </td>
-					</ng-container>
-
-					<ng-container matColumnDef="remove">
-						<th mat-header-cell *matHeaderCellDef></th>
-						<td mat-cell *matCellDef="let element; index as i">
-							<button type="button" mat-icon-button color="warn" (click)="remove(vitalSigns, vitalSignsTable.dataSource, i)">
-								<mat-icon>delete_outline</mat-icon>
-							</button>
-						</td>
-					</ng-container>
-
-					<tr mat-header-row *matHeaderRowDef="vitalSignsTable.displayedColumns"></tr>
-					<tr mat-row *matRowDef="let row; columns: vitalSignsTable.displayedColumns;"></tr>
-				</table>
-				<div class="mat-h3 table-no-data" *ngIf="vitalSignsTable.dataSource.data.length === 0">
-					<span [translate]="'messages.NO_DATA'"></span>
-				</div>
-			</section>
-
-
-
 		</section>
 		<section id="observations">
 			<h2 [translate]="'internaciones.anamnesis.observations.TITLE'"></h2>

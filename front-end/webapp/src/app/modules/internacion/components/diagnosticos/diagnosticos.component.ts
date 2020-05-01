@@ -1,9 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MasterDataInterface, SnomedDto, DiagnosisDto } from '@api-rest/api-model';
+import { SnomedDto, DiagnosisDto } from '@api-rest/api-model';
 import { MatTableDataSource } from '@angular/material/table';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
-import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 
 @Component({
 	selector: 'app-diagnosticos',
@@ -29,8 +28,6 @@ export class DiagnosticosComponent implements OnInit {
 	private snomedConcept: SnomedDto;
 
 	form: FormGroup;
-	verifications: MasterDataInterface<string>[];
-	clinicalStatus: MasterDataInterface<string>[];
 
 	//Mat table
 	columns = [
@@ -38,24 +35,13 @@ export class DiagnosticosComponent implements OnInit {
 			def: 'diagnosis',
 			header: 'internaciones.anamnesis.diagnosticos.table.columns.DIAGNOSIS',
 			text: ap => ap.snomed.fsn
-		},
-		{
-			def: 'clinicalStatus',
-			header: 'internaciones.anamnesis.diagnosticos.table.columns.STATUS',
-			text: ap => this.clinicalStatus?.find(status => status.id === ap.statusId).description
-		},
-		{
-			def: 'verification',
-			header: 'internaciones.anamnesis.diagnosticos.table.columns.VERIFICATION',
-			text: ap => this.verifications?.find(verification => verification.id === ap.verificationId).description
-		},
+		}
 	];
 	displayedColumns: string[] = [];
 	dataSource: MatTableDataSource<DiagnosisDto>;
 
 	constructor(
 		private formBuilder: FormBuilder,
-		private internacionMasterDataService: InternacionMasterDataService,
 	)
 	{
 		this.displayedColumns = this.columns?.map(c => c.def).concat(['remove']);
@@ -64,27 +50,18 @@ export class DiagnosticosComponent implements OnInit {
 	ngOnInit(): void {
 		this.dataSource = new MatTableDataSource<DiagnosisDto>(this.diagnosis);
 		this.form = this.formBuilder.group({
-			verificationId: [null, Validators.required],
-			statusId: [null, Validators.required],
-			snomed: [null, Validators.required]
-		});
-
-		this.internacionMasterDataService.getHealthClinical().subscribe(healthClinical => {
-			this.clinicalStatus = healthClinical;
-		});
-
-		this.internacionMasterDataService.getHealthVerification().subscribe(healthVerification => {
-			this.verifications = healthVerification;
+			snomed: [null, Validators.required],
+			presumptive: [false]
 		});
 	}
 
 	addToList() {
 		if (this.form.valid && this.snomedConcept) {
 			let diagnostico: DiagnosisDto = {
-				verificationId: this.form.value.verificationId,
-				statusId: this.form.value.statusId,
 				id: null,
-				presumptive: false,
+				verificationId: null,
+				statusId: this.form.value.statusId,
+				presumptive: this.form.value.presumptive,
 				snomed: this.snomedConcept
 			};
 			this.add(diagnostico);

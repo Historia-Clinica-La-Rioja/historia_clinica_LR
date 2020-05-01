@@ -35,7 +35,7 @@ export class MedicacionComponent implements OnInit {
 	columns = [
 		{
 			def: 'problemType',
-			header: 'internaciones.anamnesis.medicacion.table.columns.PROBLEM_TYPE',
+			header: 'internaciones.anamnesis.medicacion.table.columns.MEDICATION',
 			text: v => v.snomed.fsn
 		},
 		{
