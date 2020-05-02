@@ -3,6 +3,7 @@ package net.pladema.internation.controller.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.pladema.internation.controller.dto.core.DocumentsSummaryDto;
 
 import java.time.LocalDateTime;
 
@@ -12,7 +13,7 @@ public class InternmentSummaryDto {
 
     private Integer id;
 
-    private Long anamnesisDocId;
+    private DocumentsSummaryDto documents;
 
     private BedDto bed;
 

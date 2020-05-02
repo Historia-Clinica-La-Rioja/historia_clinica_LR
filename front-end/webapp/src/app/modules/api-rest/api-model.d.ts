@@ -70,6 +70,11 @@ export interface AnamnesisDto extends Serializable {
     vitalSigns: VitalSignDto;
 }
 
+export interface AnamnesisSummaryDto extends Serializable {
+    confirmed: boolean;
+    id: number;
+}
+
 export interface AnthropometricDataDto extends Serializable {
     bloodType: ClinicalObservationDto;
     height: ClinicalObservationDto;
@@ -163,6 +168,10 @@ export interface DocumentObservationsDto extends Serializable {
     studiesSummaryNote: string;
 }
 
+export interface DocumentsSummaryDto extends Serializable {
+    anamnesis: AnamnesisSummaryDto;
+}
+
 export interface GenderDto extends MasterdataDto<number> {
     id: number;
 }
@@ -210,10 +219,10 @@ export interface InternmentGeneralStateDto extends Serializable {
 }
 
 export interface InternmentSummaryDto {
-    anamnesisDocId: number;
     bed: BedDto;
     createdOn: Date;
     doctor: ResponsibleDoctorDto;
+    documents: DocumentsSummaryDto;
     id: number;
     specialty: ClinicalSpecialtyDto;
     totalInternmentDays: number;

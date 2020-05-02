@@ -18,7 +18,7 @@ public class InternmentSummary {
 
     private Integer id;
 
-    private Long anamnesisDocId;
+    private DocumentSummary documents;
 
     private Integer bedId;
 
@@ -42,11 +42,11 @@ public class InternmentSummary {
 
     private int totalInternmentDays;
 
-    public InternmentSummary(Integer id, LocalDateTime createdOn, Long anamnesisDocId,
+    public InternmentSummary(Integer id, LocalDateTime createdOn, Long anamnesisDocId, String anamnesisStatusId,
                              Integer bedId, String bedNumber, Integer roomId, String roomNumber,
                              Integer clinicalSpecialtyId, String specialty, Integer healthcareProfessionalId) {
         this.id = id;
-        this.anamnesisDocId = anamnesisDocId;
+        this.documents = new DocumentSummary(new AnamnesisSummary(anamnesisDocId, anamnesisStatusId));
         this.bedId = bedId;
         this.bedNumber = bedNumber;
         this.roomId = roomId;
