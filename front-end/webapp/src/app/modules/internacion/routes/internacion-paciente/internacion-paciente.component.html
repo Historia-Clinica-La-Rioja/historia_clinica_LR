@@ -2,7 +2,7 @@
 	<section>
 		<h2 class="page-title" [translate]="'internaciones.internacion-paciente.TITLE'"></h2>
 		<div class="buttons">
-			<button mat-flat-button color="primary" (click)="goToAnamnesis()">
+			<button mat-flat-button color="primary" (click)="goToAnamnesis()" *ngIf="!anamnesisDoc || !anamnesisDoc.confirmed">
 				<span class="uppercase" [translate]="'internaciones.internacion-paciente.actions.ADD_EVAL_INGRESO'"></span>
 			</button>
 		</div>
