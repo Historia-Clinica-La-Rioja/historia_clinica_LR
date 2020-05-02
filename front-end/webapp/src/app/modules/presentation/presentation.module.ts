@@ -7,14 +7,16 @@ import { SummaryCardComponent } from './components/summary-card/summary-card.com
 import { InternmentEpisodeSummaryComponent } from './components/internment-episode-summary/internment-episode-summary.component';
 import { NoDataComponent } from './components/no-data/no-data.component';
 import { TableComponent } from './components/table/table.component';
+import { SignoVitalCurrentPreviousComponent } from './components/signo-vital-current-previous/signo-vital-current-previous.component';
 
 @NgModule({
 	declarations: [
-		PatientCardComponent,
-		SummaryCardComponent,
 		InternmentEpisodeSummaryComponent,
-		TableComponent,
 		NoDataComponent,
+		PatientCardComponent,
+		SignoVitalCurrentPreviousComponent,
+		SummaryCardComponent,
+		TableComponent,
 	],
 	imports: [
 		CommonModule,
@@ -22,11 +24,12 @@ import { TableComponent } from './components/table/table.component';
 		CoreModule,
 	],
 	exports: [
-		PatientCardComponent,
-		SummaryCardComponent,
 		InternmentEpisodeSummaryComponent,
-		TableComponent,
 		NoDataComponent,
+		PatientCardComponent,
+		SignoVitalCurrentPreviousComponent,
+		SummaryCardComponent,
+		TableComponent,
 	]
 })
 export class PresentationModule { }

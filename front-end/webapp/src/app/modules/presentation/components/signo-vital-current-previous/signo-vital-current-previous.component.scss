@@ -1,0 +1,34 @@
+mat-card.mat-card {
+	width: 16vw;
+	margin: 10px 5px;
+	padding: 5px 10px;
+}
+
+.flex-column {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+}
+
+.flex-row {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-end;
+    justify-content: space-between;
+}
+
+div.current-value {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+	align-self: center;
+	font-size: 24px;
+	font-weight: 500;
+	margin-left: 15px;
+	mat-icon {
+		&.green {
+			color: #009B68;
+		}
+		transform: scale(1.5);
+	}
+}

@@ -9,3 +9,8 @@ export const DIAGNOSTICOS: SummaryHeader = {
 	title: 'Diagnósticos de internación',
 	matIcon: 'local_hospital'
 };
+
+export const SIGNOS_VITALES: SummaryHeader = {
+	title: 'Signos vitales',
+	matIcon: 'favorite_border'
+};

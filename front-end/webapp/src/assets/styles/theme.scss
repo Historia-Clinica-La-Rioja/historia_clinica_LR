@@ -13,6 +13,7 @@ $theme: mat-light-theme($primary, $accent);
 @include mat-nav-list($theme);
 @include mat-table($theme);
 @include mat-card-box($theme);
+@include signos-vitales-box($theme);
 @include mat-dialog($theme);
 @include mat-button($theme);
 @include no-data($theme);

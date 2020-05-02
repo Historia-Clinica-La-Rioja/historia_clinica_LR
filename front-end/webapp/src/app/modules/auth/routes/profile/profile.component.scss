@@ -1,0 +1,6 @@
+@import '../../../../../assets/styles/mixins';
+
+mat-card.mat-card {
+	@include card-properties;
+
+}

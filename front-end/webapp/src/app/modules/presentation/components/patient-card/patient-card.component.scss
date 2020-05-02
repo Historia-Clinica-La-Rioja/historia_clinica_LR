@@ -1,5 +1,12 @@
 @import "../../../../../assets/styles/variables";
 
+mat-card.mat-card {
+	min-height: 20vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
 .header-image {
 	background-image: url("../../../../../assets/images/empty-profile.svg");
 	background-size: cover;

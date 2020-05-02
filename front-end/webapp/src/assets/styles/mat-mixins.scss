@@ -113,6 +113,18 @@
 	}
 }
 
+@mixin signos-vitales-box($theme) {
+	$palette: map-get($theme, primary);
+	app-signo-vital-current-previous {
+		mat-card.mat-card {
+			background-color: #EDF1F7;
+			div.current-value {
+				color: mat-color($palette, default);
+			}
+		}
+	}
+}
+
 @mixin mat-dialog($theme) {
 	$primary-palette: map-get($theme, primary);
 

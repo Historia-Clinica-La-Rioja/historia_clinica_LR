@@ -25,7 +25,7 @@ export class MapperService {
 				license: internmentSummary.doctor.licence
 			},
 			totalInternmentDays: internmentSummary.totalInternmentDays,
-			admissionDatetime: internmentSummary.createdOn.toString()
+			admissionDatetime: internmentSummary.createdOn?.toString()
 		};
 	}
 

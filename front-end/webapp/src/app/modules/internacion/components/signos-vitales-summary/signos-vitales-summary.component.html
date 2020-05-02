@@ -1,0 +1,8 @@
+<app-summary-card [header]="signosVitalesSummary">
+	<mat-card-content class="flex-row">
+		<app-signo-vital-current-previous
+			*ngFor="let signoVital of signosVitales"
+			[data]="signoVital">
+		</app-signo-vital-current-previous>
+	</mat-card-content>
+</app-summary-card>
