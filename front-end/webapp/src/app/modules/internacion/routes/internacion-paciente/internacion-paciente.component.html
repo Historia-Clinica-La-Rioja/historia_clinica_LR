@@ -14,11 +14,11 @@
 				<section>
 					<app-signos-vitales-summary [internmentEpisodeId]="(internmentEpisode$ | async)?.id"></app-signos-vitales-summary>
 				</section>
-			</div>
-			<div class="column">
 				<section>
 					<app-antropometricos-summary [internmentEpisodeId]="(internmentEpisode$ | async)?.id"></app-antropometricos-summary>
 				</section>
+			</div>
+			<div class="column">
 				<section>
 					<app-summary-card [header]="internacionSummary">
 						<mat-card-content>
