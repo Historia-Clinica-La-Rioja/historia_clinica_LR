@@ -32,7 +32,4 @@ public class HealthInsurance implements Serializable {
 
     @Column(name = "acronym", length = 18)
     private String acronym;
-
-    @Column(name = "query_date", nullable = false)
-    private LocalDate queryDate;
 }

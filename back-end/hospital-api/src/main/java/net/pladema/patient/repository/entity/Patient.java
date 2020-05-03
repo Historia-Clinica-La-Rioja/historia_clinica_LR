@@ -49,6 +49,9 @@ public class Patient implements Serializable{
  
     @Column( name = "medical_coverage_affiliate_number", length = 150)
     private String medicalCoverageAffiliateNumber;
+
+    @Column(name = "health_insurance_id")
+    private Integer healthInsuranceId;
 }
 
 

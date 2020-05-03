@@ -1441,3 +1441,336 @@ databaseChangeLog:
                 UPDATE condition_verification_status SET description = 'Presuntivo' WHERE id='76104008';
                 UPDATE condition_verification_status SET description = 'Confirmado' WHERE id='59156000';
                 UPDATE condition_verification_status SET description = 'Ingresado por error' WHERE id='723510000';
+                
+- changeSet:
+    id: patient-addColumn-health_insurance
+    author: lbergottini
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: health_insurance_id
+            type: int
+        tableName: patient
+    - addForeignKeyConstraint:
+        baseColumnNames: health_insurance_id
+        baseTableName: patient
+        constraintName: FK_health_insurance_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: rnos
+        referencedTableName: health_insurance
+        validate: true
+        
+- changeSet:
+    id: dropColumn-health_insurance_query_date
+    author: lbergottini
+    changes:
+    - dropColumn:
+        columnName: query_date
+        tableName: health_insurance
+        
+- changeSet: 
+    id: health_insurance-metadata
+    author: lbergottini
+    context: "!schema-only"
+    changes: 
+        - sql: 
+            sql: |- 
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (208,'OBRA SOCIAL DEL  PERSONAL DE LA INDUSTRIA GRAFICA DE LA PROVINCIA DE CORDOBA','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (307,' OBRA SOCIAL PORTUARIOS ARGENTINOS DE MAR DEL PLATA','OSPA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (406,'OBRA SOCIAL DEL PERSONAL DEL ORGANISMO DE CONTROL EXTERNO','OSPOCE');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (505,'OBRA SOCIAL DE CAPITANES, PILOTOS Y PATRONES DE PESCA','OSPESCA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (604,'OBRA SOCIAL DE AGENTES DE LOTERIAS Y AFINES DE LA REPUBLICA  ARGENTINA','OSALARA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (703,'MUTUAL DEL PERSONAL DEL AGUA Y LA ENERGIA  DE MENDOZA','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (901,' OBRA SOCIAL DE LA ACTIVIDAD DE SEGUROS, REASEGUROS, CAPITALIZACION Y AHORRO Y PRESTAMO PARA LA VIVIENDA','OSSEG');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (1102,'OBRA SOCIAL PARA LA ACTIVIDAD DOCENTE','OSPLAD');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (1201,'OBRA SOCIAL PARA EL PERSONAL DEL MINISTERIO DE ECONOMIA Y DE OBRAS Y SERVICIOS PUBLICOS','OSME');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (1300,'OBRA SOCIAL FERROVIARIA','OSFE');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (1508,'OBRA SOCIAL DE LA ASOCIACION CIVIL PROSINDICATO DE AMAS DE CASA DE LA REPUBLICA ARGENTINA','OSSACRA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (1607,'OBRA SOCIAL DEL SINDICATO UNIDO DE TRABAJADORES DE LA INDUSTRIA DE AGUAS GASEOSAS DE LA PROVINCIA DE SANTA FE','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (1706,'OBRA SOCIAL DEL PERSONAL JERARQUICO DE LA REPUBLICA ARGENTINA PARA EL PERSONAL JERARQUICO DE LA INDUSTRIA GRAFICA Y EL PERSONAL JERARQUICO DEL AGUA Y LA ENERGIA','OSJERA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (1805,'OBRA SOCIAL DE LOS  LEGISLADORES DE LA REPUBLICA ARGENTINA','OSLERA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (1904,'OBRA SOCIAL DE LA FEDERACION DE CAMARAS Y CENTROS COMERCIALES ZONALES DE LA REPUBLICA ARGENTINA (FEDECAMARAS)','FEDECAMARAS');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (2105,'OBRA SOCIAL PROFESIONALES DEL TURF DE LA REPUBLICA ARGENTINA','OSPROTURA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (2204,'OBRA SOCIAL DE EMPLEADOS Y PERSONAL JERARQUICO  DE LA ACTIVIDAD DEL  NEUMATICO ARGENTINO DE NEUMATICOS GOOD YEAR SRL','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (2303,'OBRA SOCIAL PARA EL  PERSONAL DE EMPRESAS DE  LIMPIEZA, SERVICIOS Y MAESTRANZA DE MENDOZA','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (2402,'OBRA SOCIAL DEL PERSONAL JERARQUICO DEL TRANSPORTE AUTOMOTOR DE PASAJEROS DE CORDOBA Y AFINES','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (2501,'OBRA SOCIAL DE MINISTROS, SECRETARIOS Y SUBSECRETARIOS','OSMISS');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (2600,'OBRA SOCIAL DE LOS TRABAJADORES DE LA CARNE Y AFINES DE LA REPUBLICA ARGENTINA','O.S.T.C.A.R.A.');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (2709,'OBRA SOCIAL DE LOS TRABAJADORES ASOCIADOS A LA ASOCIACION MUTUAL MERCANTIL ARGENTINA','OSTAMMA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (2808,'OBRA SOCIAL DE LA CAMARA DE EMPRESARIOS DE AGENCIAS DE REMISES DE ARGENTINA','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (2907,'OBRA SOCIAL ASOCIACION MUTUAL METALURGICA VILLA CONSTITUCION','OSAMMVC');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (3009,'OBRA SOCIAL DEL PERSONAL ASOCIADO A ASOCIACION MUTUAL SANCOR','O.S.PERS.A.A.M.S.');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (3108,'OBRA SOCIAL DE LOS INMIGRANTES ESPAÑOLES Y SUS DESCENDIENTES RESIDENTES EN LA REPUBLICA ARGENTINA','OSPAÑA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (3207,'OBRA SOCIAL DE TRABAJADORES SOCIOS DE LA ASOCIACION MUTUAL DEL PERSONAL JERARQUICO DE BANCOS OFICIALES NACIONALES-JERARQUICOS SALUD-','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (3306,'OBRA SOCIAL DE TRABAJADORES VENDEDORES DE DIARIOS REVISTAS Y AFINES','OSTVENDRA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (3405,'OBRA SOCIAL ASOCIACION  MUTUAL DE LOS OBREROS CATOLICOS PADRE FEDERICO GROTE','O.S.A.M.O.C');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (3504,'OBRA SOCIAL DE CONDUCTORES TITULARES DE TAXIS DE LA CIUDAD AUTONOMA DE BUENOS AIRES','O.S.TAX.B.A');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (3603,'OBRA SOCIAL PROGRAMAS MEDICOS SOCIEDAD ARGENTINA DE CONSULTORIA MUTUAL','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (3702,'OBRA SOCIAL  YACIMIENTOS CARBONIFEROS','OSYC');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (3801,'OBRA SOCIAL  WITCEL','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (100106,'OBRA SOCIAL PARA EL PERSONAL DE LA INDUSTRIA ACEITERA, DESMOTADORA Y AFINES','OSIAD');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (100205,'OBRA SOCIAL DE ACTORES','OSA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (100304,'OBRA SOCIAL DE TECNICOS DE VUELO DE LINEAS AEREAS','OSTVLA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (100403,'OBRA SOCIAL DEL PERSONAL SUPERIOR Y PROFESIONAL DE EMPRESAS AEROCOMERCIALES','OSPEA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (100502,'OBRA SOCIAL DEL PERSONAL AERONAUTICO','OSPA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (100601,'OBRA SOCIAL DEL PERSONAL DE AERONAVEGACION DE ENTES PRIVADOS','OSPADEP');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (100700,'OBRA SOCIAL DEL PERSONAL TECNICO AERONAUTICO','OSPTA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (100809,'OBRA SOCIAL DE AERONAVEGANTES','OSA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (100908,'OBRA SOCIAL  EMPLEADOS DE AGENCIAS DE INFORMES','OSEADI');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (101000,'OBRA SOCIAL DEL PERSONAL DE AGUAS GASEOSAS Y AFINES','OSPAGA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (101109,'OBRA SOCIAL DE ALFAJOREROS, REPOSTEROS, PIZZEROS Y HELADEROS','OSARPYH');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (101208,'OBRA SOCIAL DEL PERSONAL DE LA INDUSTRIA DE LA ALIMENTACION','OSPIA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (101604,'OBRA SOCIAL DEL PERSONAL DEL AUTOMOVIL  CLUB ARGENTINO','OSPACA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (101802,'OBRA SOCIAL DEL PERSONAL DEL AZUCAR DEL INGENIO LA ESPERANZA','OSPA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (101901,'OBRA SOCIAL DEL PERSONAL DEL AZUCAR DEL INGENIO LEDESMA','OSPAIL');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (102300,'OBRA SOCIAL DEL PERSONAL DEL AZUCAR DEL INGENIO SAN MARTIN','OSPA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (102706,'OBRA SOCIAL DEL PERSONAL DE LA INDUSTRIA AZUCARERA','OSPIA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (102904,'OBRA SOCIAL DEL PERSONAL DE BARRACAS DE LANAS, CUEROS Y ANEXOS','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (103006,'OBRA SOCIAL DEL PERSONAL DE LA INDUSTRIA BOTONERA','OSPIB');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (103105,'OBRA SOCIAL DEL PERSONAL DE LA INDUSTRIA DEL CALZADO','OSPICAL');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (103204,'OBRA SOCIAL DE CONDUCTORES CAMIONEROS Y PERSONAL DEL TRANSPORTE AUTOMOTOR DE CARGAS','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (103402,'OBRA SOCIAL DEL PERSONAL DE CARGA Y DESCARGA','OSPCYD');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (103600,'OBRA SOCIAL DEL PERSONAL AUXILIAR DE CASAS PARTICULARES','OSPACP');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (103709,'OBRA SOCIAL DEL PERSONAL DE LA INDUSTRIA DEL CAUCHO','OSPIC');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (103808,'OBRA SOCIAL DEL PERSONAL DEL CAUCHO','OSPECA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (103907,'OBRA SOCIAL DEL PERSONAL DE LA INDUSTRIA DEL CAUCHO DE SANTA FE','OSPIC SANTA FE');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (104009,'OBRA SOCIAL DEL PERSONAL DE CEMENTERIOS DE LA REPUBLICA ARGENTINA.','OSPCRA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (104108,'OBRA SOCIAL DE CERAMISTAS','OSCE');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (104207,'OBRA SOCIAL DEL PERSONAL DE LA CERAMICA, SANITARIOS, PORCELANA DE MESA Y AFINES','OSPCSPMYA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (104306,'OBRA SOCIAL DEL PERSONAL DE LA ACTIVIDAD CERVECERA Y AFINES','OSPACA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (104405,'OBRA SOCIAL DEL PERSONAL CINEMATOGRAFICO DE MAR DEL PLATA','OSPERCIN');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (104504,'OBRA SOCIAL DEL PERSONAL DE LA INDUSTRIA CINEMATOGRAFICA','OSPIC');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (104603,'OBRA SOCIAL DE OPERADORES CINEMATOGRAFICOS','OSOC');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (104801,'OBRA SOCIAL DE COLOCADORES DE AZULEJOS, MOSAICOS, GRANITEROS, LUSTRADORES Y PORCELANEROS','OSCAMGLYP');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (105002,'OBRA SOCIAL DE CONDUCTORES NAVALES','OSCONARA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (105309,'OBRA SOCIAL DEL PERSONAL ADMINISTRATIVO Y TECNICO DE LA CONSTRUCCION Y AFINES','OSPATCA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (105408,'OBRA SOCIAL DEL PERSONAL DE LA CONSTRUCCION','OSPECON');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (105507,'OBRA SOCIAL DE LOS CORTADORES DE LA INDUMENTARIA','OSUCI');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (105606,'OBRA SOCIAL DEL PERSONAL DE LA INDUSTRIA DEL CUERO Y AFINES','OSPICA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (105705,'OBRA SOCIAL DEL PERSONAL DE LA INDUSTRIA DEL CHACINADO Y AFINES','OSPICHA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (105804,'OBRA SOCIAL DE CHOFERES DE CAMIONES','OSCHOCA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (106005,'OBRA SOCIAL DEL PERSONAL DE ENTIDADES DEPORTIVAS Y CIVILES','OSPEDYC');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (106104,'OBRA SOCIAL DE EMPLEADOS DE DESPACHANTES DE ADUANA','OSEDA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (106203,'OBRA SOCIAL DEL PERSONAL DE DISTRIBUIDORAS CINEMATOGRAFICAS DE LA R.A.','OSPEDICI');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (106302,'OBRA SOCIAL DE DOCENTES PARTICULARES','OSDOP');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (106401,'OBRA SOCIAL DEL PERSONAL DE EDIFICIOS DE RENTA Y HORIZONTAL DE LA REPUBLICA ARGENTINA','OSPERYHRA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (106500,'OBRA SOCIAL DEL PERSONAL DE EDIFICIOS DE RENTA Y HORIZONTAL DE LA CIUDAD AUTONOMA DE BUENOS AIRES  Y GRAN BUENOS AIRES','OSPERYH');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (106609,'OBRA SOCIAL ELECTRICISTAS NAVALES','OSEN');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (106708,'OBRA SOCIAL DE OBREROS EMPACADORES DE FRUTA  DE RIO NEGRO Y NEUQUEN','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (106807,'OBRA SOCIAL DEL PERSONAL DE LA ENSEÑANZA PRIVADA','OSPEP');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (106906,'OBRA SOCIAL DEL PERSONAL DE ESCRIBANIAS DE LA PROVINCIA DE BUENOS AIRES','OSPEPBA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (107008,'OBRA SOCIAL DEL PERSONAL DE ESCRIBANOS','OSPE');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (107107,'OBRA SOCIAL DEL PERSONAL DEL ESPECTACULO PUBLICO','OSPEP');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (107206,'OBRA SOCIAL DEL PERSONAL DE ESTACIONES DE SERVICIO, GARAGES, PLAYAS DE ESTACIONAMIENTO Y LAVADEROS AUTOMATICOS','OSPESGYPE');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (107404,'OBRA SOCIAL DEL PERSONAL DE FARMACIA','OSPF');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (107800,'OBRA SOCIAL DEL PERSONAL DE LA INDUSTRIA DEL FIBROCEMENTO','OSPIF');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (107909,'OBRA SOCIAL DEL PERSONAL DE LA INDUSTRIA FIDEERA','OSPIF');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (108001,'OBRA SOCIAL  PARA EL PERSONAL DE LA INDUSTRIA FORESTAL DE SANTIAGO DEL ESTERO','OSPIFSE');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (108100,'OBRA SOCIAL DEL PERSONAL DE LA INDUSTRIA DEL FOSFORO, ENCENDIDO Y AFINES','OSPIF');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (108209,'OBRA SOCIAL DE FOTOGRAFOS','OSFOT');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (108407,'OBRA SOCIAL DEL PERSONAL DE LA ACTIVIDAD FRUTICOLA','OSPAF');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (108506,' OBRA SOCIAL DEL PERSONAL DE MANIPULEO, EMPAQUE Y EXPEDICION DE FRUTA FRESCA Y HORTALIZAS DE CUYO','OSFYHC');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (108605,'OBRA SOCIAL DE FUTBOLISTAS','FAA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (108704,'OBRA SOCIAL DE TECNICOS DE FUTBOL','OSTECF');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (108803,'OBRA SOCIAL  DE LA UNION  DE TRABAJADORES  DEL TURISMO, HOTELEROS Y GASTRONOMICOS DE LA REPUBLICA  ARGENTINA','OSUTHGRA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (109004,'OBRA SOCIAL DEL PERSONAL GRAFICO','OSPG');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (109202,'OBRA SOCIAL DE GUINCHEROS Y MAQUINISTAS DE GRUAS MOVILES','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (109301,'OBRA SOCIAL DEL PERSONAL DE CONSIGNATARIOS DEL MERCADO NACIONAL DE HACIENDA DE LINIERS','OSPEMER');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (109400,'OBRA SOCIAL DEL PERSONAL DE LA INDUSTRIA DEL HIELO Y MERCADOS PARTICULARES','OSPIHMP');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (109509,'OBRA SOCIAL DEL PERSONAL DE LOS HIPODROMOS DE BUENOS AIRES Y SAN ISIDRO','OSPHGBAYSI');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (109608,'OBRA SOCIAL DEL PERSONAL MENSUALIZADO DEL JOCKEY CLUB DE BUENOS AIRES Y LOS HIPODROMOS DE PALERMO Y SAN ISIDRO','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (109707,'OBRA SOCIAL DEL PERSONAL DE IMPRENTA, DIARIOS Y AFINES','OSPIDA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (110008,'OBRA SOCIAL DEL PERSONAL DE JABONEROS','OSPEJ');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (110107,'OBRA SOCIAL DE JARDINEROS, PARQUISTAS, VIVERISTAS Y FLORICULTORES DE LA REPUBLICA ARGENTINA','OSJPVYF');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (110206,'OBRA SOCIAL DEL PERSONAL DEL JOCKEY CLUB DE ROSARIO','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (110305,'OBRA SOCIAL DEL PERSONAL LADRILLERO','OSPL');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (110404,'OBRA SOCIAL DEL PERSONAL DE LA INDUSTRIA LADRILLERA A MAQUINA','OSPILM');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (110503,'OBRA SOCIAL DEL PERSONAL DE LA INDUSTRIA LECHERA','OSPIL');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (110602,'OBRA SOCIAL DE LOCUTORES','OSDEL');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (110701,'OBRA SOCIAL DE LA FEDERACION ARGENTINA DE TRABAJADORES DE LUZ Y FUERZA','OSFATLYF');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (110800,'OBRA SOCIAL DE LOS TRABAJADORES DE LAS EMPRESAS DE ELECTRICIDAD','OSTEE');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (110909,'OBRA SOCIAL DEL PERSONAL DE LUZ Y FUERZA DE CORDOBA','OSLYF');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (111001,'OBRA SOCIAL DEL PERSONAL DE LA INDUSTRIA MADERERA','OSPIM');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (111209,'OBRA SOCIAL DEL PERSONAL DE MAESTRANZA','OSPM');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (111308,'OBRA SOCIAL DE MAQUINISTAS DE TEATRO Y TELEVISION','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (111407,'OBRA SOCIAL DE CAPITANES DE ULTRAMAR Y OFICIALES DE LA MARINA MERCANTE','OSCOMM');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (111506,'OBRA SOCIAL DE CAPITANES BAQUEANOS FLUVIALES DE LA MARINA MERCANTE','OSCAPBAQFLU');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (111605,'OBRA SOCIAL DE EMPLEADOS DE LA MARINA MERCANTE','OSEMM');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (111704,'OBRA SOCIAL DE ENCARGADOS APUNTADORES MARITIMOS','OSEAM');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (111803,'OBRA SOCIAL DEL PERSONAL MARITIMO','OSPM');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (111902,'OBRA SOCIAL DEL SINDICATO DE MECANICOS Y AFINES DEL TRANSPORTE AUTOMOTOR','OSMATA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (112004,'OBRA SOCIAL DEL PERSONAL SUPERIOR MERCEDES BENZ ARGENTINA','OSPS MERCEDES');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (112103,'OBRA SOCIAL DE LA UNION OBRERA METALURGICA DE LA REPUBLICA ARGENTINA','OSUOMRA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (112202,'OBRA SOCIAL DE LOS  SUPERVISORES DE LA INDUSTRIA METALMECANICA DE LA REPUBLICA ARGENTINA','OSSIMRA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (112301,'OBRA SOCIAL DEL PERSONAL DE  MICROS Y OMNIBUS DE MENDOZA','OSPEMOM');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (112400,'OBRA SOCIAL DE LA ACTIVIDAD MINERA','O.S.A.M.');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (112509,'OBRA SOCIAL MODELOS ARGENTINOS','OSMA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (112608,'OBRA SOCIAL DEL PERSONAL DE LA INDUSTRIA MOLINERA','OSPIM');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (112707,'OBRA SOCIAL DEL PERSONAL MOSAISTA','OSPM');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (112806,'OBRA SOCIAL DE MUSICOS','OSDEM');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (113205,'OBRA SOCIAL DE JEFES Y OFICIALES NAVALES DE RADIOCOMUNICACIONES','OSJONR');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (113304,'OBRA SOCIAL DE JEFES Y OFICIALES MAQUINISTAS NAVALES','OSJOMN');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (113403,'OBRA SOCIAL DEL PERSONAL NAVAL','OSPENA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (113601,'OBRA SOCIAL DEL PERSONAL DE LA INDUSTRIA DEL NEUMATICO','OSPIN');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (113700,'OBRA SOCIAL DEL PERSONAL DE LA INDUSTRIA NAVAL','OSPIN');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (113809,'OBRA SOCIAL DE COMISARIOS NAVALES','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (113908,'OBRA SOCIAL DEL PERSONAL DE PANADERIAS','OSPEP');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (114000,'OBRA SOCIAL DE PANADEROS, PASTELEROS Y FACTUREROS DE ENTRE RIOS','OSSPYFER');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (114109,'OBRA SOCIAL DEL PERSONAL DEL PAPEL, CARTON Y QUIMICOS','OSPPCYQ');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (114208,'OBRA SOCIAL DE LA INDUSTRIA DE PASTAS ALIMENTICIAS','OSIPA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (114307,'OBRA SOCIAL TRABAJADORES  PASTELEROS, CONFITEROS, PIZZEROS , HELADEROS Y ALFAJOREROS DE LA REPUBLICA ARGENTINA','OSTPCHPYARA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (114505,'OBRA SOCIAL DE PATRONES DE CABOTAJE DE RIOS Y PUERTOS','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (114703,'OBRA SOCIAL DEL PERSONAL DE PELUQUERIAS, ESTETICAS Y AFINES','OSPPEA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (114901,'OBRA SOCIAL DE OFICIALES PELUQUEROS Y PEINADORES DE ROSARIO','OSOFPP DE ROSARIO');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (115003,'OBRA SOCIAL DEL PERSONAL DE LA ACTIVIDAD PERFUMISTA','OSPAP');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (115102,'OBRA SOCIAL DE TRABAJADORES DE PRENSA DE BUENOS AIRES','OSTPBA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (115201,'OBRA SOCIAL DEL PERSONAL DE LA INDUSTRIA DEL PESCADO DE MAR DEL PLATA','OSPIP');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (115300,'OBRA SOCIAL DE PETROLEROS','OSPE');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (115409,'OBRA SOCIAL DEL PETROLEO Y GAS PRIVADO','OSPEGAP');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (115508,'OBRA SOCIAL DE PETROLEROS DE CORDOBA','O.S.PE.COR');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (115607,'OBRA SOCIAL DEL PERSONAL DE LA INDUSTRIA PETROQUIMICA','OSPIP');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (115706,'OBRA SOCIAL PARA PILOTOS DE LINEAS AEREAS COMERCIALES Y REGULARES','OSPLA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (115805,'OBRA SOCIAL DEL PERSONAL DE FABRICAS DE PINTURA','UPFPARA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (116006,'OBRA SOCIAL DEL PERSONAL DE LA INDUSTRIA DEL PLASTICO','OSPIP');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (116105,'OBRA SOCIAL DE CAPATACES  ESTIBADORES PORTUARIOS','OSCEP');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (116204,'OBRA SOCIAL DE PORTUARIOS ARGENTINOS','OSPA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (116709,'OBRA SOCIAL PORTUARIOS  PUERTO SAN MARTIN Y BELLA VISTA','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (117207,'OBRA SOCIAL DEL PERSONAL DE PRENSA DE LA REPUBLICA ARGENTINA','OSPPRA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (117405,'OBRA SOCIAL DEL PERSONAL DE PRENSA DE BAHIA BLANCA','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (117702,'OBRA SOCIAL DEL PERSONAL DE PRENSA DE MAR DEL PLATA','OSPREN');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (117801,'OBRA SOCIAL DEL PERSONAL DE PRENSA DE MENDOZA','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (118002,'OBRA SOCIAL DE EMPLEADOS DE PRENSA DE CORDOBA','OSEPC');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (118200,'OBRA SOCIAL DE AGENTES DE PROPAGANDA MEDICA DE LA REPUBLICA ARGENTINA','OSAPM');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (118309,'OBRA SOCIAL DE AGENTES DE PROPAGANDA MEDICA DE CORDOBA','OSAPMCBA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (118408,'OBRA SOCIAL DE AGENTES DE PROPAGANDA MEDICA DE ENTRE RIOS','OSAPMER');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (118507,'OBRA SOCIAL DE AGENTES DE PROPAGANDA MEDICA DE ROSARIO','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (118606,'OBRA SOCIAL DEL PERSONAL DE LA PUBLICIDAD','OSPP');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (118705,'OBRA SOCIAL DEL PERSONAL DE INDUSTRIAS QUIMICAS Y PETROQUIMICAS','OSPIQYP');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (118804,'OBRA SOCIAL DE RECIBIDORES DE GRANOS Y ANEXOS','OSRGA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (118903,'OBRA SOCIAL DEL PERSONAL DE RECOLECCION Y BARRIDO DE ROSARIO','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (119005,'OBRA SOCIAL DEL PERSONAL DE REFINERIAS DE MAIZ','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (119203,'OBRA SOCIAL DE RELOJEROS Y JOYEROS','OSRJA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (119302,'OBRA SOCIAL DEL PERSONAL RURAL Y ESTIBADORES DE LA REPUBLICA ARGENTINA','OSPRERA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (119500,'OBRA SOCIAL DEL PERSONAL DE LA SANIDAD ARGENTINA','OSPSA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (119609,'OBRA SOCIAL DEL PERSONAL DE INSTALACIONES SANITARIAS','OSPIS');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (119708,'OBRA SOCIAL DEL PERSONAL DE SEGURIDAD COMERCIAL, INDUSTRIAL E INVESTIGACIONES PRIVADAS','OSPSIP');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (119906,'OBRA SOCIAL DE SERENOS DE BUQUES','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (120306,'OBRA SOCIAL DEL PERSONAL DE SUPERVISION DE LA EMPRESA SUBTERRANEOS DE BUENOS AIRES','OSPSESBA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (120405,'OBRA SOCIAL DEL PERSONAL DE DIRECCION DE LA EMPRESA SUBTERRANEOS DE BUENOS AIRES','OSPDESBA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (120504,'OBRA SOCIAL DEL PERSONAL DE LA INDUSTRIA  DEL TABACO','OSPIT');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (120603,'OBRA SOCIAL DE EMPLEADOS DEL TABACO DE LA REPUBLICA ARGENTINA','OSETRA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (120702,'OBRA SOCIAL DEL PERSONAL DE LAS TELECOMUNICACIONES DE LA REPUBLICA ARGENTINA','OSTEL');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (120801,'OBRA SOCIAL DE TRABAJADORES DE LAS COMUNICACIONES','OSTRAC');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (120900,'OBRA SOCIAL DEL PERSONAL DE TELEVISION','OSPTV');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (121002,'OBRA SOCIAL DEL PERSONAL DE LA INDUSTRIA TEXTIL','OSPIT');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (121101,'OBRA SOCIAL DE EMPLEADOS TEXTILES Y AFINES','OSETYA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (121309,'OBRA SOCIAL DEL PERSONAL DE LA INDUSTRIA DEL TRACTOR','OSPIT');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (121507,'OBRA SOCIAL DE LA INDUSTRIA DEL TRANSPORTE  AUTOMOTOR DE CORDOBA','OSITAC');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (121606,'OBRA SOCIAL CONDUCTORES DE TRANSPORTE COLECTIVO DE PASAJEROS','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (121705,'OBRA SOCIAL DEL PERSONAL DE LA ACTIVIDAD DEL TURF','OSPAT');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (121804,'OBRA SOCIAL CONDUCTORES DE TAXIS DE CORDOBA','OSTC');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (121903,'OBRA SOCIAL DE VAREADORES','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (122005,'OBRA SOCIAL DEL PERSONAL DE LA INDUSTRIA DEL VESTIDO','OSPIV');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (122104,'OBRA SOCIAL DE VIAJANTES VENDEDORES DE LA REPUBLICA ARGENTINA. (ANDAR)','OSVVRA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (122302,'OBRA SOCIAL DEL PERSONAL DE LA ACTIVIDAD VIAL','OSPA-VIAL');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (122401,'OBRA SOCIAL DE  EMPLEADOS DE LA INDUSTRIA DEL VIDRIO','OSEIV');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (122500,'OBRA SOCIAL DEL PERSONAL DE LA INDUSTRIA DEL VIDRIO','OSPIV');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (122609,'OBRA SOCIAL DEL PERSONAL DE LA ACTIVIDAD VITIVINICOLA','OSPAV');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (122807,'OBRA SOCIAL DEL PERSONAL DE VIGILANCIA Y SEGURIDAD COMERCIAL, INDUSTRIAL E INVESTIGACIONES PRIVADAS DE CORDOBA','OSPEVIC');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (122906,'OBRA SOCIAL DEL PERSONAL DE ESTACIONES DE SERVICIO, GARAGES, PLAYAS Y LAVADEROS AUTOMATICOS DE LA PROVINCIA DE SANTA FE','OSPESGA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (123008,'OBRA SOCIAL PARA EL PERSONAL DE ESTACIONES DE SERVICIO, GARAGES, PLAYAS DE ESTACIONAMIENTO, LAVADEROS AUTOMATICOS Y GOMERIAS DE LA REPUBLICA ARGENTINA','OSPES');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (123107,'OBRA SOCIAL TALLERISTAS A DOMICILIO','OSTAD');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (123305,'OBRA SOCIAL DEL PERSONAL DE SOCIEDADES DE AUTORES Y AFINES','OSPESA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (123404,'OBRA SOCIAL DEL PERSONAL DE PRENSA DE ROSARIO','OSPRO');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (123503,'OBRA SOCIAL DEL PERSONAL DE PRENSA DE TUCUMAN','OSPRENTUC');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (123602,'OBRA SOCIAL DE TRABAJADORES DE PERKINS ARGENTINA S.A.I.C','OSTP');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (123701,'OBRA SOCIAL DE PEONES DE TAXIS DE LA CAPITAL FEDERAL','OSPETAX');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (123909,'OBRA SOCIAL DE VENDEDORES AMBULANTES DE LA REPUBLICA ARGENTINA','OSVARA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (124001,'OBRA SOCIAL DE BOXEADORES AGREMIADOS DE LA REPUBLICA ARGENTINA','OSBARA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (124506,'OBRA SOCIAL DE TRABAJADORES DE LA INDUSTRIA DEL GAS','OSTIG');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (125103,'OBRA SOCIAL DE LOS PROFESIONALES UNIVERSITARIOS DEL AGUA Y LA ENERGIA ELECTRICA','OSPUAYE');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (125301,'OBRA SOCIAL FEDERAL DE LA FEDERACION NACIONAL DE TRABAJADORES DE OBRAS SANITARIAS','OSFFENTOS');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (125509,'OBRA SOCIAL DE LA FEDERACION ARGENTINA DEL TRABAJADOR  DE LAS UNIVERSIDADES NACIONALES','OSFATUN');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (125707,'OBRA SOCIAL UNION PERSONAL DE LA UNION DEL  PERSONAL CIVIL DE LA NACION','OSPCN');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (125905,'OBRA SOCIAL DE ARBITROS DEPORTIVOS DE LA REPUBLICA ARGENTINA','OSADRA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (126007,'OBRA SOCIAL DE LA FEDERACION GREMIAL DEL PERSONAL DE  LA INDUSTRIA DE LA CARNE Y SUS DERIVADOS','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (126106,'OBRA SOCIAL PARA LOS TRABAJADORES DE LA EDUCACION PRIVADA','OSTEP');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (126205,'OBRA SOCIAL DE LOS EMPLEADOS DE COMERCIO Y ACTIVIDADES CIVILES','OSECAC');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (126304,'OBRA SOCIAL SERVICIOS SOCIALES BANCARIOS','OSBA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (126502,'OBRA SOCIAL DE LA CONFEDERACION DE OBREROS Y EMPLEADOS MUNICIPALES  ARGENTINA ( OSCOEMA )','OSCOEMA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (126601,'OBRA SOCIAL DEL PERSONAL DE INDUSTRIAS  QUIMICAS Y PETROQUIMICAS DE ZARATE CAMPANA','OPZC');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (126700,'OBRA SOCIAL DEL PERSONAL DE LA ACTIVIDAD AZUCARERA TUCUMANA','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (126809,'OBRA SOCIAL DE CONDUCTORES DE REMISES Y AUTOS AL INSTANTE Y AFINES','OSCRAIA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (126908,'OBRA SOCIAL DE LOS MEDICOS DE LA CIUDAD DE BUENOS AIRES','OSMEDICA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (127000,'OBRA SOCIAL DE TRABAJADORES DE ESTACIONES DE SERVICIO','OSTES');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (127109,'OBRA SOCIAL DEL PERSONAL DE TELECOMUNICACIONES SINDICATO BUENOS AIRES','OSPETELCO');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (127208,'OBRA SOCIAL DE MANDOS MEDIOS DE TELECOMUNICACIONES EN LA REPUBLICA ARGENTINA Y MERCOSUR','OSMMEDT');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (127307,'OBRA SOCIAL DE TRABAJADORES VIALES Y AFINES DE LA REPUBLICA ARGENTINA','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (127406,'OBRA SOCIAL DE OBREROS Y EMPLEADOS TINTOREROS SOMBREREROS Y LAVADEROS DE LA REPUBLICA ARGENTINA','OSOETSYLARA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (127505,'OBRA SOCIAL DE  LAS ASOCIACIONES DE EMPLEADOS DE FARMACIA','OSADEF');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (127604,'OBRA SOCIAL PARA EL PERSONAL DE OBRAS Y SERVICIOS SANITARIOS','OSOSS');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (127703,'OBRA SOCIAL PERSONAL ESTACIONES DE SERVICIO,GARAGES,PLAYAS Y LAVADEROS DE LA PROVINCIA DEL CHACO','OSPESCHA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (127802,'OBRA SOCIAL DE LUZ Y FUERZA DE LA PATAGONIA','OSLYF PATAGONIA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (127901,'OBRA SOCIAL DE PETROLEROS PRIVADOS','OS.PE.PRI');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (128003,'OBRA SOCIAL DEL PERSONAL DE LA FEDERACION DE SINDICATOS DE LA INDUSTRIA QUIMICA Y PETROQUIMICA','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (128102,'OBRA SOCIAL DE LA UNION DE TRABAJADORES DEL INSTITUTO NACIONAL DE SERVICIOS SOCIALES PARA JUBILADOS Y PENSIONADOS DE LA REPUBLICA ARGENTINA','OSUTI');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (128201,'OBRA SOCIAL DEL SINDICATO UNICO DE RECOLECTORES DE RESIDUOS Y BARRIDO DE CORDOBA','O.S.S.U.R.R.B.A.C');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (128300,'OBRA SOCIAL PEONES DE TAXIS DE ROSARIO','O.S.PE.TAX.R');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (128409,'OBRA SOCIAL DEL SINDICATO OBREROS Y EMPLEADOS DE EMPRESAS DE LIMPIEZA,SERVICIOS Y AFINES DE CORDOBA','OSSOELSAC');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (128508,'OBRA SOCIAL DE FARMACEUTICOS Y BIOQUIMICOS','OSFYB');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (128607,'OBRA SOCIAL DE TRABAJADORES DEL PETROLEO Y GAS PRIVADO DEL CHUBUT','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (128706,'OBRA SOCIAL DEL PERSONAL DE DRAGADO Y BALIZAMIENTO','OSPEDYB');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (128805,'OBRA SOCIAL DEL PERSONAL ADUANERO DE LA REPUBLICA ARGENTINA','OSPAD');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (128904,'OBRA SOCIAL DE LOS TRABAJADORES ARGENTINOS DE CENTROS DE CONTACTOS','O.S.T.A.C.C,');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (129006,'OBRA SOCIAL DE LA ASOCIACION DEL PERSONAL SUPERIOR DE LA EMPRESA PROVINCIAL DE ENERGIA DE CORDOBA','O.S.A.P.S.E');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (200400,'OBRA SOCIAL DEL PERSONAL DE LA EMPRESA NACIONAL DE CORREOS Y TELEGRAFOS S.A. Y DE LAS  COMUNICACIONES DE LA REPULICA ARGENTINA','OSPEC');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (300704,'OBRA SOCIAL CERAS JOHNSON','JOHNSON');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (302106,'OBRA SOCIAL PARA DIRECTIVOS, TECNICOS Y EMPLEADOS DE JOHN DEERE ARGENTINA','DITEM');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (302304,'OBRA SOCIAL COMPANIA MINERA AGUILAR S.A','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (302809,'OBRA SOCIAL REFINERIAS DE MAIZ S.A.I.C.F.','OSRM');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (303109,'OBRA SOCIAL SUPERCO','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (303307,'OBRA SOCIAL CABOT ARGENTINA','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (303406,'OBRA SOCIAL DE SHELL ARGENTINA','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (303703,'OBRA SOCIAL DEL PERSONAL DE PBBPOLISUR  SA  DE  BAHIA BLANCA','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (303901,'OBRA SOCIAL DE FORD AGENTINA S.C.A','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (304003,'OBRA SOCIAL DE VOLKSWAGEN ARGENTINA S.A.','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (400107,'OBRA SOCIAL DEL PERSONAL DE DIRECCION DE LAS EMPRESAS DE LA ALIMENTACION Y DEMAS ACTIVIDADES EMPRESARIAS','OPDEA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (400206,'OBRA SOCIAL DEL PERSONAL DE DIRECCION DE LA INDUSTRIA AUTOMOTRIZ ARGENTINA','OSPREME');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (400305,'OBRA SOCIAL COOPERATIVA LTDA.  DE ASISTENCIA MEDICA Y FARMACEUTICA, SERVICIOS ASISTENCIALES Y TURISMO DEL PERSONAL SUPERIOR DE LA INDUSTRIA DEL CAUCHO Y OTRAS ACTIVIDADES INDUSTRIALES','CAMPSIC');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (400404,'OBRA SOCIAL DEL PERSONAL DE DIRECCION DE LA INDUSTRIA CERVECERA Y MALTERA','SERVESALUD');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (400503,'OBRA SOCIAL DE LA ASOCIACION DEL PERSONAL DE DIRECCION Y JERARQUICO DE LA INDUSTRIA DEL CIGARRILLO','APDJIC');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (400602,'OBRA SOCIAL DEL PERSONAL DIRECTIVO DE LA INDUSTRIA DE LA CONSTRUCCION','OSDIC');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (400701,'OBRA SOCIAL CAMARA DE LA INDUSTRIA CURTIDORA ARGENTINA','OSCICA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (400800,'OBRA SOCIAL DE EJECUTIVOS Y DEL PERSONAL DE DIRECCION DE EMPRESAS','OSDE');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (400909,'OBRA SOCIAL DEL PERSONAL DE DIRECCION  ACCION SOCIAL DE EMPRESARIOS (A:S:E.)','ASE');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (401001,'OBRA SOCIAL DEL PERSONAL DE DIRECCION DE LAS EMPRESAS QUE ACTUAN EN FRUTOS DEL PAIS','FRUTOS');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (401209,'OBRA SOCIAL DEL PERSONAL DE DIRECCION DE LA INDUSTRIA METALURGICA  Y DEMAS ACTIVIDADES EMPRESARIAS','OSIM');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (401308,'OBRA SOCIAL PARA EL PERSONAL DE DIRECCION DE LA INDUSTRIA MADERERA','OSMAD');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (401605,'OBRA SOCIAL DEL PERSONAL DE DIRECCION DE LA INDUSTRIA PRIVADA DEL PETROLEO','OSDIPP');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (401704,'OBRA SOCIAL  DE EMPRESARIOS, PROFESIONALES Y MONOTRIBUTISTAS','OSDEPYM');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (401803,'OBRA SOCIAL ASOCIACION MUTUAL DEL PERSONAL DE PHILIPS ARGENTINA (AMPAR)','AMPAR');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (401902,'OBRA SOCIAL DEL PERSONAL DE DIRECCION DE PERFUMERIA E.W. HOPE','WHOPE');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (402004,'OBRA SOCIAL DEL PERSONAL DE DIRECCION DE SANIDAD LUIS PASTEUR','OSLPASTEUR');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (402103,'OBRA SOCIAL ASOCIACION DEL PERSONAL DE DIRECCION DE LA INDUSTRIA SIDERURGICA','APDIS');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (402202,'OBRA SOCIAL MUTUALIDAD INDUSTRIAL TEXTIL ARGENTINA','OSMITA');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (402301,'OBRA SOCIAL ASOCIACION DEL PERSONAL SUPERIOR DE LA ORGANIZACION TECHINT','APSOT');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (402400,'OBRA SOCIAL PARA EL PERSONAL DE DIRECCION DE LA INDUSTRIA VITIVINICOLA Y AFINES','OSEDEIV');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (402509,'OBRA SOCIAL YPF','OSYPF');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (402608,'OBRA SOCIAL ASOCIACION DE SERVICIOS SOCIALES PARA EMPRESARIOS Y PERSONAL DE DIRECCION DE EMPRESAS DEL COMERCIO, SERVICIOS, PRODUCCION, INDUSTRIA Y CIVIL (ASSPE )','ASSPE');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (402707,'OBRA SOCIAL DE DIRECCION OSDO','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (402806,'OBRA SOCIAL DE DIRECCION DE LA ACTIVIDAD AEROCOMERCIAL  PRIVADA','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (500807,'INSTITUTO NACIONAL DE SERVICIOS SOCIALES PARA JUBILADOS Y PENSIONADOS','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (600408,'ASOCIACION DE OBRAS SOCIALES DE COMODORO RIVADAVIA','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (601104,'ASOCIACION GUALEGUAYCHU DE OBRAS SOCIALES','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (601203,'ASOCIACION DE OBRAS SOCIALES DE GUALEGUAY','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (602305,'ASOCIACION DE OBRAS SOCIALES DE ROSARIO','ADOS ROSARIO');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (603100,'ASOCIACION DE OBRAS SOCIALES DE TRELEW','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (700108,'OBRA SOCIAL DEL PERSONAL MUNICIPAL DE AVELLANEDA','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (700801,'OBRA SOCIAL DEL PERSONAL MUNICIPAL DE LA MATANZA','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (701002,'OBRA SOCIAL PARA EL  PERSONAL MUNICIPAL DE TRES DE FEBRERO','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (800105,'OBRA SOCIAL ATANOR S.A','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (800501,'OBRA SOCIAL ACEROS PARANA','');
+                INSERT INTO health_insurance (rnos, name, acronym) VALUES (900102,'OBRA SOCIAL DEL PERSONAL DE EMPRESAS FIAT Y EMPRESAS PEUGEOT CITROEN ARGENTINA','OSPEF Y EPCA');
+                
