@@ -14,3 +14,8 @@ export const SIGNOS_VITALES: SummaryHeader = {
 	title: 'Signos vitales',
 	matIcon: 'favorite_border'
 };
+
+export const ANTROPOMETRICOS: SummaryHeader = {
+	title: 'Información antropométrica',
+	matIcon: 'accessibility_new'
+};

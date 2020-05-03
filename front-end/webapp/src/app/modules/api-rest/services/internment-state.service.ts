@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from '@environments/environment';
-import { VitalSignDto } from '@api-rest/api-model';
+import { AnthropometricDataDto, VitalSignDto, HealthConditionDto } from '@api-rest/api-model';
 
 const HARD_CODE_INS_ID = 10;
 
@@ -15,14 +15,19 @@ export class InternmentStateService {
 		private http: HttpClient
 	) { }
 
-	getDiagnosis<HealthConditionDto>(internmentId): Observable <HealthConditionDto[]> {
+	getDiagnosis(internmentId): Observable<HealthConditionDto[]> {
 		let url = `${environment.apiBase}/institutions/${HARD_CODE_INS_ID}/internments-state/${HARD_CODE_INS_ID}/general/diagnosis`;
 		return this.http.get<HealthConditionDto[]>(url);
 	}
 
-	getVitalSigns<VitalSignDto>(internmentId): Observable <VitalSignDto[]> {
+	getVitalSigns(internmentId): Observable<VitalSignDto[]> {
 		let url = `${environment.apiBase}/institutions/${HARD_CODE_INS_ID}/internments-state/${HARD_CODE_INS_ID}/general/vitalSigns`;
 		return this.http.get<VitalSignDto[]>(url);
+	}
+
+	getAnthropometricData(internmentId): Observable<AnthropometricDataDto> {
+		let url = `${environment.apiBase}/institutions/${HARD_CODE_INS_ID}/internments-state/${HARD_CODE_INS_ID}/general/anthropometricData`;
+		return this.http.get<AnthropometricDataDto>(url);
 	}
 
 }

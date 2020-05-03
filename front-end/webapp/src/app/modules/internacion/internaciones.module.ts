@@ -21,6 +21,7 @@ import { AntecedentesFamiliaresComponent } from './components/antecedentes-famil
 import { AntecedentesPersonalesComponent } from './components/antecedentes-personales/antecedentes-personales.component';
 import { DiagnosisSummaryComponent } from './components/diagnosis-summary/diagnosis-summary.component';
 import { SignosVitalesSummaryComponent } from './components/signos-vitales-summary/signos-vitales-summary.component';
+import { AntropometricosSummaryComponent } from './components/antropometricos-summary/antropometricos-summary.component';
 
 @NgModule({
 	declarations: [
@@ -39,6 +40,7 @@ import { SignosVitalesSummaryComponent } from './components/signos-vitales-summa
 		AntecedentesFamiliaresComponent,
 		DiagnosisSummaryComponent,
 		SignosVitalesSummaryComponent,
+		AntropometricosSummaryComponent,
 	],
 	imports: [
 		AppMaterialModule,

@@ -8,6 +8,7 @@ import { InternmentEpisodeSummaryComponent } from './components/internment-episo
 import { NoDataComponent } from './components/no-data/no-data.component';
 import { TableComponent } from './components/table/table.component';
 import { SignoVitalCurrentPreviousComponent } from './components/signo-vital-current-previous/signo-vital-current-previous.component';
+import { DetailBoxComponent } from './components/detail-box/detail-box.component';
 
 @NgModule({
 	declarations: [
@@ -17,6 +18,7 @@ import { SignoVitalCurrentPreviousComponent } from './components/signo-vital-cur
 		SignoVitalCurrentPreviousComponent,
 		SummaryCardComponent,
 		TableComponent,
+		DetailBoxComponent,
 	],
 	imports: [
 		CommonModule,
@@ -30,6 +32,7 @@ import { SignoVitalCurrentPreviousComponent } from './components/signo-vital-cur
 		SignoVitalCurrentPreviousComponent,
 		SummaryCardComponent,
 		TableComponent,
+		DetailBoxComponent,
 	]
 })
 export class PresentationModule { }

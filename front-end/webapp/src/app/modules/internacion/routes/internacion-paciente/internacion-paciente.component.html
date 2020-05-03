@@ -12,10 +12,13 @@
 					<app-patient-card [patient]="patient$ | async"></app-patient-card>
 				</section>
 				<section>
-					<app-signos-vitales-summary></app-signos-vitales-summary>
+					<app-signos-vitales-summary [internmentEpisodeId]="(internmentEpisode$ | async)?.id"></app-signos-vitales-summary>
 				</section>
 			</div>
 			<div class="column">
+				<section>
+					<app-antropometricos-summary [internmentEpisodeId]="(internmentEpisode$ | async)?.id"></app-antropometricos-summary>
+				</section>
 				<section>
 					<app-summary-card [header]="internacionSummary">
 						<mat-card-content>

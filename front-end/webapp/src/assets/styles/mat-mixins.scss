@@ -1,5 +1,7 @@
 @import '~@angular/material/theming';
 
+$box-bg-color: #EDF1F7;
+
 @mixin mat-nav-list($theme) {
 	$primary-palette: map-get($theme, primary);
 
@@ -117,8 +119,21 @@
 	$palette: map-get($theme, primary);
 	app-signo-vital-current-previous {
 		mat-card.mat-card {
-			background-color: #EDF1F7;
+			background-color: $box-bg-color;
 			div.current-value {
+				color: mat-color($palette, default);
+			}
+		}
+	}
+}
+
+@mixin detail-box($theme) {
+	$palette: map-get($theme, primary);
+	app-detail-box {
+		mat-card.mat-card {
+			border: 1px solid mat-color($palette, default);
+			background-color: $box-bg-color;
+			span.value {
 				color: mat-color($palette, default);
 			}
 		}

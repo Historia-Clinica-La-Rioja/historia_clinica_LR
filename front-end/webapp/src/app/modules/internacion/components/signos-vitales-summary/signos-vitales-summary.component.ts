@@ -30,7 +30,7 @@ export class SignosVitalesSummaryComponent implements OnInit {
 			temperature: 'Temperatura',
 			bloodOxygenSaturation: 'Saturación de oxígeno',
 		};
-		this.internmentStateService.getVitalSigns<VitalSignDto>(this.internmentEpisodeId).subscribe(
+		this.internmentStateService.getVitalSigns(this.internmentEpisodeId).subscribe(
 			vitalSigns => {
 				let current = vitalSigns[0] || {};
 				let previous = vitalSigns[1] || {};

@@ -1,10 +1,6 @@
 .container-row {
 	display: flex;
 	flex-direction: row;
-	justify-content: space-between;
-	& > *:first-child {
-		width: 100%;
-	}
 	.sticky {
 		position: -webkit-sticky; /* Safari */
 		position: sticky;

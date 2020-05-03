@@ -3,9 +3,6 @@
 	flex-direction: column;
 	width: 80%;
 
-	section {
-		margin: 1vh 0;
-	}
 	form {
 		mat-card.datos-antropometricos-card {
 			width: 50%;
@@ -32,9 +29,7 @@
 				}
 			}
 		}
-
 		.vital-signs {
-
 			.field-container {
 				display: flex;
 				flex-direction: column;
