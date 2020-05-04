@@ -21,6 +21,7 @@ fi
 
 # Download new image
 if [ "$USE_LOCAL_BUILD" = "false" ]; then
+  echo "Bajando imagen docker"
   docker pull ${DOCKER_IMAGE} || 
     (echo "ERROR: La imagen de docker no existe, corra el \"build docker\" de nuevo y reintente" && exit 1)
 fi
@@ -32,6 +33,7 @@ docker rm -f ${ENV_NAME}_old 2> /dev/null || true
 echo Renombra environment anterior
 docker rename ${ENV_NAME} ${ENV_NAME}_old || true
 # Start environment
+echo "Se usara la imagen docker ${DOCKER_IMAGE}"
 echo Crea environment con hash: $(
     docker create -P  \
         -l traefik.frontend.rule=Host:${REVIEW_APP_URL} \
