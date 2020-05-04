@@ -59,8 +59,8 @@ public class ObservationVitalSignRepositoryTest extends BaseRepositoryTest {
 		String code1 = "code1";
 		Document firstDoc = save(createDocument(internmentEpisodeId, DocumentStatus.FINAL));
 		ObservationVitalSign vitalSignFinal0 = save(createFinalObservationVitalSign(code1, LocalDateTime.now().minusDays(8)));
-		ObservationVitalSign vitalSignFinal1 = save(createFinalObservationVitalSign(code1, LocalDateTime.now()));
-		ObservationVitalSign vitalSignError2 = save(createErrorObservationVitalSign(code1, LocalDateTime.now()));
+		ObservationVitalSign vitalSignFinal1 = save(createFinalObservationVitalSign(code1, LocalDateTime.now().plusMinutes(2)));
+		ObservationVitalSign vitalSignError2 = save(createErrorObservationVitalSign(code1, LocalDateTime.now().plusMinutes(5)));
 		save(createDocumentVitalSign(firstDoc, vitalSignFinal0));
 		save(createDocumentVitalSign(firstDoc, vitalSignFinal1));
 		save(createDocumentVitalSign(firstDoc, vitalSignError2));
@@ -68,12 +68,12 @@ public class ObservationVitalSignRepositoryTest extends BaseRepositoryTest {
 
 		String code2 = "code2";
 		Document secondDoc = save(createDocument(internmentEpisodeId, DocumentStatus.FINAL));
-		ObservationVitalSign vitalSignFinal3 = save(createFinalObservationVitalSign(code2, LocalDateTime.now()));
+		ObservationVitalSign vitalSignFinal3 = save(createFinalObservationVitalSign(code2, LocalDateTime.now().plusMinutes(6)));
 		save(createDocumentVitalSign(secondDoc, vitalSignFinal3));
 
 		String code3 = "code3";
 		Document thirdDoc = save(createDocument(internmentEpisodeId, DocumentStatus.ERROR));
-		ObservationVitalSign vitalSignFinal4 = save(createFinalObservationVitalSign(code3, LocalDateTime.now()));
+		ObservationVitalSign vitalSignFinal4 = save(createFinalObservationVitalSign(code3, LocalDateTime.now().plusMinutes(7)));
 		save(createDocumentVitalSign(thirdDoc, vitalSignFinal4));
 	}
 

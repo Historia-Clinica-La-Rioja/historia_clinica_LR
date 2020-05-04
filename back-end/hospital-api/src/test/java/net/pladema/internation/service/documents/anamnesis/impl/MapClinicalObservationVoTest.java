@@ -5,7 +5,6 @@ import net.pladema.internation.repository.masterdata.entity.ObservationStatus;
 import net.pladema.internation.service.domain.ips.MapClinicalObservationVo;
 import net.pladema.internation.service.domain.ips.enums.EVitalSign;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -25,14 +24,13 @@ public class MapClinicalObservationVoTest {
 
 
 	@Test
-	@Ignore
 	public void testMapVitalSigns() {
 		List<ClinicalObservationVo> resultQuery = new ArrayList<>();
-		resultQuery.addAll(mockVitalSign(ObservationStatus.FINAL, LocalDateTime.now()));
-		resultQuery.addAll(mockVitalSign(ObservationStatus.FINAL, LocalDateTime.now()));
-		resultQuery.addAll(mockVitalSign(ObservationStatus.ERROR, LocalDateTime.now()));
-		resultQuery.addAll(mockVitalSign(ObservationStatus.ERROR, LocalDateTime.now()));
-		resultQuery.addAll(mockVitalSign(ObservationStatus.FINAL, LocalDateTime.now()));
+		resultQuery.addAll(mockVitalSign(ObservationStatus.FINAL, LocalDateTime.now().plusMinutes(1)));
+		resultQuery.addAll(mockVitalSign(ObservationStatus.FINAL, LocalDateTime.now().plusMinutes(2)));
+		resultQuery.addAll(mockVitalSign(ObservationStatus.ERROR, LocalDateTime.now().plusMinutes(3)));
+		resultQuery.addAll(mockVitalSign(ObservationStatus.ERROR, LocalDateTime.now().plusMinutes(4)));
+		resultQuery.addAll(mockVitalSign(ObservationStatus.FINAL, LocalDateTime.now().plusMinutes(5)));
 
 		MapClinicalObservationVo mapClinicalObservationVo = new MapClinicalObservationVo(resultQuery);
 
