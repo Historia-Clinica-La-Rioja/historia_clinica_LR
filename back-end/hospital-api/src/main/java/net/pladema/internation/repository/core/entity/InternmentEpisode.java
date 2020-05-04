@@ -57,6 +57,9 @@ public class InternmentEpisode extends InternationAuditableEntity {
 	@Column(name = "discharge_date")
 	private LocalDate dischargeDate;
 
+	@Column(name = "institution_id")
+	private Integer institutionId;
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;

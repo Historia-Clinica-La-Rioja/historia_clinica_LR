@@ -1782,3 +1782,26 @@ databaseChangeLog:
         newColumnName: pt
         oldColumnName: fsn
         tableName: snomed      
+                
+- changeSet:
+    id: internment_episode-addColumn-institution_id
+    author: lbergottini
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: institution_id
+            type: int
+            constraints:
+                nullable: true  
+        tableName: internment_episode
+    - addForeignKeyConstraint:
+        baseColumnNames: institution_id
+        baseTableName: internment_episode
+        constraintName: FK_institution_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: institution
+        validate: true                
+                
