@@ -1,10 +1,13 @@
 package net.pladema.internation.controller;
 
 import net.pladema.BaseControllerTest;
+import net.pladema.internation.controller.mapper.InternmentEpisodeMapper;
+import net.pladema.internation.service.InternmentPatientService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -16,6 +19,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @WebMvcTest(InternmentPatientController.class)
 public class InternmentPatientControllerTest extends BaseControllerTest {
+
+	@MockBean
+	private InternmentPatientService internmentPatientService;
+
+	@MockBean
+	private InternmentEpisodeMapper internmentEpisodeMapper;
 
 	@Before
 	public void setup() {

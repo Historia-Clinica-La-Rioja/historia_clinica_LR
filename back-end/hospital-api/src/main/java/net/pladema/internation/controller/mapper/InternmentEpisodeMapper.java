@@ -1,10 +1,15 @@
 package net.pladema.internation.controller.mapper;
 
 import net.pladema.internation.controller.dto.InternmentSummaryDto;
+import net.pladema.internation.controller.dto.internmentpatient.InternmentPatientDto;
 import net.pladema.internation.repository.core.domain.InternmentSummary;
+import net.pladema.internation.service.domain.internment.BasicListedPatientBo;
+import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+
+import java.util.List;
 
 @Mapper
 public interface InternmentEpisodeMapper {
@@ -21,4 +26,12 @@ public interface InternmentEpisodeMapper {
     @Mapping(target = "specialty.id", source = "clinicalSpecialtyId")
     @Mapping(target = "specialty.name", source = "specialty")
     InternmentSummaryDto toInternmentSummaryDto(InternmentSummary internmentSummary);
+
+
+    @Named("toInternmentPatientDto")
+    InternmentPatientDto toInternmentPatientDto(BasicListedPatientBo basicListedPatientBo);
+
+    @Named("toListInternmentPatientDto")
+    @IterableMapping(qualifiedByName = "toInternmentPatientDto")
+    List<InternmentPatientDto> toListInternmentPatientDto(List<BasicListedPatientBo> basicListedPatientBos);
 }

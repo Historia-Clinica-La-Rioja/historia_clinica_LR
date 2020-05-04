@@ -2,6 +2,7 @@ package net.pladema.internation.repository.core;
 
 import net.pladema.internation.repository.core.domain.InternmentSummary;
 import net.pladema.internation.repository.core.entity.InternmentEpisode;
+import net.pladema.internation.service.domain.internment.BasicListedPatientBo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -48,4 +50,13 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
     void updateAnamnesisDocumentId(@Param("internmentEpisodeId") Integer internmentEpisodeId,
                                    @Param("anamnesisDocumentId") Long anamnesisDocumentId,
                                    @Param("today") LocalDateTime today);
+
+    @Transactional(readOnly = true)
+    @Query("SELECT NEW net.pladema.internation.service.domain.internment.BasicListedPatientBo(pa.id, pe.identificationTypeId, " +
+            "pe.identificationNumber, pe.firstName, pe.lastName, pe.birthDate, pe.genderId) " +
+            " FROM InternmentEpisode as ie " +
+            " JOIN Patient as pa ON (ie.patientId = pa.id) " +
+            " JOIN Person as pe ON (pa.personId = pe.id) "+
+            " WHERE ie.institutionId = :institutionId ")
+    List<BasicListedPatientBo> findAllPatientsListedData(@Param("institutionId") Integer institutionId);
 }

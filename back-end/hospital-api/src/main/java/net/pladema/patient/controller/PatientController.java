@@ -6,7 +6,6 @@ import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.address.controller.service.AddressExternalService;
 import net.pladema.patient.controller.dto.*;
 import net.pladema.patient.controller.mapper.PatientMapper;
-import net.pladema.patient.repository.domain.BasicListedPatient;
 import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.service.PatientService;
 import net.pladema.patient.service.domain.PatientSearch;
@@ -103,14 +102,6 @@ public class PatientController {
 				.orElseThrow(() -> new EntityNotFoundException("patient.invalid"));
 		BasicDataPersonDto personData = personExternalService.getBasicDataPerson(patient.getPersonId());
 		BasicPatientDto	result = new BasicPatientDto(patient.getId(), personData);
-		LOG.debug(OUTPUT, result);
-		return  ResponseEntity.ok().body(result);
-	}
-
-	@GetMapping("/basicdata")
-	public ResponseEntity<List<BMPatientDto>> getAllPatientsData(){
-		List<BasicListedPatient> patients = patientService.getPatients();
-		List<BMPatientDto> result = patientMapper.fromBasicListedPatientList(patients);
 		LOG.debug(OUTPUT, result);
 		return  ResponseEntity.ok().body(result);
 	}

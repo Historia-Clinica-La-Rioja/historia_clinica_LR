@@ -219,6 +219,16 @@ export interface InternmentGeneralStateDto extends Serializable {
     vitalSigns: VitalSignDto[];
 }
 
+export interface InternmentPatientDto {
+    birthDate: Date;
+    firstName: string;
+    genderId: number;
+    identificationNumber: string;
+    identificationTypeId: number;
+    lastName: string;
+    patientId: number;
+}
+
 export interface InternmentSummaryDto {
     bed: BedDto;
     createdOn: Date;

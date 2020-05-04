@@ -24,7 +24,8 @@ public class InternmentEpisodeController {
 
     private final InternmentEpisodeMapper internmentEpisodeMapper;
 
-    public InternmentEpisodeController(InternmentEpisodeService internmentEpisodeService, InternmentEpisodeMapper internmentEpisodeMapper) {
+    public InternmentEpisodeController(InternmentEpisodeService internmentEpisodeService,
+                                       InternmentEpisodeMapper internmentEpisodeMapper) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.internmentEpisodeMapper = internmentEpisodeMapper;
     }

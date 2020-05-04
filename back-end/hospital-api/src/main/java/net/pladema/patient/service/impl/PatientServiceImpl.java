@@ -2,7 +2,6 @@ package net.pladema.patient.service.impl;
 
 import net.pladema.patient.controller.dto.PatientSearchFilter;
 import net.pladema.patient.repository.PatientRepository;
-import net.pladema.patient.repository.domain.BasicListedPatient;
 import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.service.PatientService;
 import net.pladema.patient.service.domain.PatientSearch;
@@ -57,9 +56,4 @@ public class PatientServiceImpl implements PatientService {
 		return patientSaved;
 	}
 
-	public List<BasicListedPatient> getPatients() {
-		List<BasicListedPatient> result = patientRepository.findAllPatientsListedData();
-		LOG.debug("Output -> {}", result);
-		return result;
-	}
 }

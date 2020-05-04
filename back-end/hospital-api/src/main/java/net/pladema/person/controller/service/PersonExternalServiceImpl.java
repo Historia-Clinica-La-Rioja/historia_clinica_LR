@@ -18,7 +18,7 @@ import java.util.List;
 @Service
 public class PersonExternalServiceImpl implements PersonExternalService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PersonExternalServiceImpl.class);
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     public static final String OUTPUT = "Output -> {}";
 
