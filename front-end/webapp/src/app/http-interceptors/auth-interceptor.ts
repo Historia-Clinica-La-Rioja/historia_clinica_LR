@@ -6,15 +6,15 @@ import {
 	HttpErrorResponse,
 	HttpEvent,
 } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { throwError, Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { AuthenticationService } from '../modules/auth/services/authentication.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
 	constructor(
-		private router: Router,
+		private authenticationService: AuthenticationService,
 	) {
 
 	}
@@ -38,8 +38,7 @@ export class AuthInterceptor implements HttpInterceptor {
 	}
 
 	private handle401Error() {
-		// console.log('auth-interceptor handle401Error');
-		this.router.navigate(['/auth/login']);
+		this.authenticationService.logout();
 	}
 
 	private addToken(req: HttpRequest<any>, token: string): HttpRequest<any> {

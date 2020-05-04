@@ -24,6 +24,10 @@ export class LoggedUserService {
 		return this._assignments$;
 	}
 
+	public reset() {
+		this.assignmentsSource.next([]);
+	}
+
 	public load(): Observable<any> {
 		return this.accountService.getPermissions()
 			.pipe(
