@@ -1773,6 +1773,7 @@ databaseChangeLog:
                 INSERT INTO health_insurance (rnos, name, acronym) VALUES (800105,'OBRA SOCIAL ATANOR S.A','');
                 INSERT INTO health_insurance (rnos, name, acronym) VALUES (800501,'OBRA SOCIAL ACEROS PARANA','');
                 INSERT INTO health_insurance (rnos, name, acronym) VALUES (900102,'OBRA SOCIAL DEL PERSONAL DE EMPRESAS FIAT Y EMPRESAS PEUGEOT CITROEN ARGENTINA','OSPEF Y EPCA');
+
 - changeSet:
     id: renameColumn-snomed-pt
     author: saguero
@@ -1804,4 +1805,33 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: institution
         validate: true                
-                
+
+- changeSet:
+    id: user_role-pk-usr_role_institution
+    author: efernandez
+    comment: Cambia la pk de user_role para que incluya a institution_id
+    changes:
+    - dropPrimaryKey:
+        tableName: user_role
+        constraintName: PK_user_role
+        dropIndex: true
+    - dropForeignKeyConstraint:
+        baseTableName: user_role
+        constraintName: FK_user_role__institution_id
+    - update:
+        tableName: user_role
+        columns:
+            name: institution_id
+            valueNumeric: -1
+        where: institution_id is null
+    - addDefaultValue:
+        tableName: user_role
+        columnName: institution_id
+        defaultValueNumeric: -1
+        defaultValueConstraintName: DV_user_role__instituion_id
+    - addPrimaryKey:
+        tableName: user_role
+        columnNames: role_id, user_id, institution_id
+        constraintName: PK_user_role
+        validate: true
+

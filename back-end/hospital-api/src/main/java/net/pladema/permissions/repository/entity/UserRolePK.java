@@ -1,24 +1,41 @@
 package net.pladema.permissions.repository.entity;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.pladema.permissions.repository.enums.ERole;
 
 @Embeddable
 @Getter
 @Setter
 @NoArgsConstructor
+@EqualsAndHashCode
+/**
+ * Para el caso de los roles donde ERole.isAdmin == true, la institución es -1.
+ * Esos son roles de administración que no están asociados a ninguna institución.
+ */
 public class UserRolePK implements Serializable {
 
-	/**
-	 * 
-	 */
+	public UserRolePK(Integer userId, Short roleId) {
+		this(userId, roleId, -1);
+	}
+
+	public UserRolePK(Integer userId, Short roleId, Integer institutionId) {
+		this.userId = userId;
+		this.roleId = roleId;
+		if (institutionId == null || ERole.map(roleId).getIsAdmin()) 
+			this.institutionId = -1;
+		else
+			this.institutionId = institutionId;
+	}
+	
 	private static final long serialVersionUID = -5482098137325590681L;
 
 	@Column(name = "user_id", nullable = false)
@@ -26,28 +43,8 @@ public class UserRolePK implements Serializable {
 
 	@Column(name = "role_id", nullable = false)
 	private Short roleId;
-
-	public UserRolePK(Integer userId, Short roleId) {
-		super();
-		this.userId = userId;
-		this.roleId = roleId;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(roleId, userId);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		UserRolePK other = (UserRolePK) obj;
-		return Objects.equals(roleId, other.roleId) && Objects.equals(userId, other.userId);
-	}
+	
+	@Column(name = "institution_id", nullable = false)
+	private Integer institutionId;
 
 }

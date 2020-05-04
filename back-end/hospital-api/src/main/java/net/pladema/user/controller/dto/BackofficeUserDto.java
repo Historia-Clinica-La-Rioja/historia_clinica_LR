@@ -31,6 +31,11 @@ public class BackofficeUserDto {
 				.collect(Collectors.toList());
 	}
 	
+	/**
+	 * Para todos los userrole hijos de este usuario
+	 * se les asigna este user como padre
+	 * @param roles
+	 */
 	public void setRoles(List<BackofficeUserRoleDto> roles) {
 		this.roles = roles;
 		if (this.roles != null)

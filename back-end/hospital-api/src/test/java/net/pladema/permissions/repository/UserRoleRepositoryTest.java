@@ -11,12 +11,13 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import net.pladema.permissions.repository.entity.UserRole;
+import net.pladema.permissions.repository.enums.ERole;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest(showSql = false)
 public class UserRoleRepositoryTest {
 	private final static Integer USER_ID = 1008;
-	private final static Short ROLE_ID = (short) 8;
+	private final static Short ROLE_ID = ERole.ESPECIALISTA_MEDICO.getId();
 
 	@Autowired
 	private UserRoleRepository userLicenseRepository;
