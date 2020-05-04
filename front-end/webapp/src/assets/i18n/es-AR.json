@@ -41,7 +41,7 @@
 			}
 		}
 	},
-	"buttons":{
+	"buttons": {
 		"BACK": "Volver",
 		"CONTINUE": "Continuar",
 		"CLOSE": "Cerrar",
@@ -178,6 +178,13 @@
 				"ADMISSION": "Ingreso: {{datetime}}"
 			}
 		},
+		"new-internment": {
+			"TITLE": "Nueva internación",
+			"SUBTITLE": "Complete los siguientes datos",
+			"SECTION_SERVICE": "Especialidad / Servicio",
+			"SECTION_BED": "Asignación de cama",
+			"SECTION_DOCTOR": "Médico responsable"
+		},
 		"snomed-search": {
 			"modal": {
 				"SUBTITLE": "Resultados de búsqueda para: "
@@ -189,17 +196,17 @@
 	},
 	"pacientes": {
 		"form": {
-			"ADDRESS" : "Domicilio",
-			"ADDRESS_APARTMENT":"Departamento",
-			"ADDRESS_CITY":"Ciudad",
-			"ADDRESS_COUNTRY":"Pais",
-			"ADDRESS_DEPARTMENT":"Partido",
-			"ADDRESS_FLOOR":"Piso",
-			"ADDRESS_NUMBER":"Número",
-			"ADDRESS_POSTCODE":"Código  postal",
-			"ADDRESS_PROVINCE":"Provincia",
-			"ADDRESS_QUARTER":"Barrio",
-			"ADDRESS_STREET":"Calle",
+			"ADDRESS": "Domicilio",
+			"ADDRESS_APARTMENT": "Departamento",
+			"ADDRESS_CITY": "Ciudad",
+			"ADDRESS_COUNTRY": "Pais",
+			"ADDRESS_DEPARTMENT": "Partido",
+			"ADDRESS_FLOOR": "Piso",
+			"ADDRESS_NUMBER": "Número",
+			"ADDRESS_POSTCODE": "Código  postal",
+			"ADDRESS_PROVINCE": "Provincia",
+			"ADDRESS_QUARTER": "Barrio",
+			"ADDRESS_STREET": "Calle",
 			"BIRTH_DATE": "Fecha de nacimiento",
 			"CUIT_CUIL": "CUIT / CUIL",
 			"EMAIL": "Email",
@@ -211,10 +218,10 @@
 			"IDENTIFICATION_TYPE": "Tipo de documento",
 			"IDENTIFICATION_NUMBER": "Nº de documento",
 			"INVALID": "El campo es invalido.",
-			"LAST_NAME":"Primer apellido",
-			"LAST_NAME_TITLE":"Apellidos",
-			"MEDICAL_COVERAGE_NAME":"Cobertura Social - Prepaga",
-			"MEDICAL_COVERAGE_AFFILIATE_NUMBER":"Numero de afiliado",
+			"LAST_NAME": "Primer apellido",
+			"LAST_NAME_TITLE": "Apellidos",
+			"MEDICAL_COVERAGE_NAME": "Cobertura Social - Prepaga",
+			"MEDICAL_COVERAGE_AFFILIATE_NUMBER": "Numero de afiliado",
 			"MIDDLE_NAMES": "Otros nombres",
 			"MOTHERS_LAST_NAME": "Apellido materno",
 			"NAME_SELF_DETERMINATION": "Nombre autopercibido",
@@ -238,7 +245,7 @@
 		"new": {
 			"TITLE": "Nuevo Paciente",
 			"SUBTITLE": "Ingresá los siguientes datos.",
-			"TITLE_TEMPORARY":"Nuevo Paciente Temporal"
+			"TITLE_TEMPORARY": "Nuevo Paciente Temporal"
 		},
 		"search": {
 			"TITLE": "Búsqueda de pacientes",
@@ -250,5 +257,4 @@
 			"GENDER_AGE": "{{gender}} · {{age}} años"
 		}
 	}
-
 }

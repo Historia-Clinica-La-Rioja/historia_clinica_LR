@@ -1,0 +1,28 @@
+<app-content width="full">
+	<section class="page">
+		<h2 class="page-title" [translate]="'internaciones.new-internment.TITLE'"></h2>
+		<h4 class="page-title" [translate]="'internaciones.new-internment.SUBTITLE'"></h4>
+		<form [formGroup]="form" (ngSubmit)="save()">
+			<section>
+				<h2 [translate]="'internaciones.new-internment.SECTION_SERVICE'"></h2>
+				<div class="form-row">
+				</div>
+			</section>
+			<section>
+				<h2 [translate]="'internaciones.new-internment.SECTION_BED'"></h2>
+				<div class="form-row">
+				</div>
+			</section>
+			<section>
+				<h2 [translate]="'internaciones.new-internment.SECTION_DOCTOR'"></h2>
+				<div class="form-row">
+				</div>
+			</section>
+			<section>
+				<button mat-raised-button color="primary" type="submit">
+					<span [translate]="'buttons.CONTINUE'"></span>
+				</button>
+			</section>
+		</form>
+	</section>
+</app-content>

@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { InternacionesHomeComponent } from './routes/home/internaciones-home.component';
 import { InternacionPacienteComponent } from './routes/internacion-paciente/internacion-paciente.component';
 import { AnamnesisComponent } from './routes/anamnesis/anamnesis.component';
+import { NewInternmentComponent } from "./routes/new-internment/new-internment.component";
 
 
 const routes: Routes = [
@@ -17,6 +18,10 @@ const routes: Routes = [
 	{
 		path: 'internacion/:idInternacion/paciente/:idPaciente/anamnesis',
 		component: AnamnesisComponent
+	},
+	{
+		path: 'internacion/new',
+		component: NewInternmentComponent
 	}
 ];
 

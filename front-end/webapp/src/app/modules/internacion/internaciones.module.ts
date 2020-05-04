@@ -22,6 +22,7 @@ import { AntecedentesPersonalesComponent } from './components/antecedentes-perso
 import { DiagnosisSummaryComponent } from './components/diagnosis-summary/diagnosis-summary.component';
 import { SignosVitalesSummaryComponent } from './components/signos-vitales-summary/signos-vitales-summary.component';
 import { AntropometricosSummaryComponent } from './components/antropometricos-summary/antropometricos-summary.component';
+import { NewInternmentComponent } from './routes/new-internment/new-internment.component';
 
 @NgModule({
 	declarations: [
@@ -41,6 +42,7 @@ import { AntropometricosSummaryComponent } from './components/antropometricos-su
 		DiagnosisSummaryComponent,
 		SignosVitalesSummaryComponent,
 		AntropometricosSummaryComponent,
+		NewInternmentComponent,
 	],
 	imports: [
 		AppMaterialModule,
