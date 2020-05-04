@@ -3,6 +3,7 @@ package net.pladema.internation.service.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.internation.repository.masterdata.entity.DocumentStatus;
 import net.pladema.internation.service.domain.ips.*;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public class Anamnesis {
 
     private Long id;
 
-    private String documentStatusId;
+    private boolean confirmed;
 
     private DocumentObservations notes;
 
@@ -34,4 +35,7 @@ public class Anamnesis {
 
     private VitalSignBo vitalSigns;
 
+    public String getDocumentStatusId(){
+        return confirmed ? DocumentStatus.FINAL : DocumentStatus.DRAFT;
+    }
 }

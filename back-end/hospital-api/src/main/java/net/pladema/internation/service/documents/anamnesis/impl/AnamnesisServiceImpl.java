@@ -1,5 +1,6 @@
 package net.pladema.internation.service.documents.anamnesis.impl;
 
+import net.pladema.internation.repository.masterdata.entity.DocumentStatus;
 import net.pladema.internation.service.documents.DocumentService;
 import net.pladema.internation.service.documents.anamnesis.AnamnesisService;
 import net.pladema.internation.service.domain.Anamnesis;
@@ -27,7 +28,7 @@ public class AnamnesisServiceImpl implements AnamnesisService {
         Anamnesis result = new Anamnesis();
         documentService.findById(anamnesisId).ifPresent( document -> {
             result.setId(document.getId());
-            result.setDocumentStatusId(document.getStatusId());
+            result.setConfirmed(document.getStatusId().equalsIgnoreCase(DocumentStatus.FINAL));
 
             GeneralHealthConditionBo generalHealthConditionBo = documentService.getHealthConditionFromDocument(document.getId());
             result.setDiagnosis(generalHealthConditionBo.getDiagnosis());

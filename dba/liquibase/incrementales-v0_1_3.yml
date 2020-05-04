@@ -1835,3 +1835,21 @@ databaseChangeLog:
         constraintName: PK_user_role
         validate: true
 
+
+- changeSet:
+    id: dropNotNullConstraint-allergy_intolerance_category_id
+    author: etrapani
+    changes:
+    - dropNotNullConstraint:
+        columnDataType: varchar(20)
+        columnName: category_id
+        tableName: allergy_intolerance
+
+- changeSet:
+    id: dropNotNullConstraint-inmunization_administration_date
+    author: etrapani
+    changes:
+    - dropNotNullConstraint:
+        columnDataType: date
+        columnName: administration_date
+        tableName: inmunization

@@ -43,7 +43,7 @@ public class Inmunization extends InternationAuditableEntity {
 	@Column(name = "expiration_date")
 	private LocalDate expirationDate;
 
-	@Column(name = "administration_date", nullable = false)
+	@Column(name = "administration_date")
 	private LocalDate administrationDate;
 
 	@Column(name = "institution_id")

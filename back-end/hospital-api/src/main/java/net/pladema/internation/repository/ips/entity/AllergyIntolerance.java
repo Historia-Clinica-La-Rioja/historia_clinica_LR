@@ -44,7 +44,7 @@ public class AllergyIntolerance extends InternationAuditableEntity {
 	@Column(name = "verification_status_id", length = 20, nullable = false)
 	private String verificationStatusId = AllergyIntoleranceVerificationStatus.CONFIRMED;
 
-	@Column(name = "category_id", length = 20, nullable = false)
+	@Column(name = "category_id", length = 20)
 	private String categoryId;
 
 	@Column(name = "start_date")

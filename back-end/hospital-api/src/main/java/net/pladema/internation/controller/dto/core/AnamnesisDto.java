@@ -16,7 +16,8 @@ import java.util.List;
 @ToString
 public class AnamnesisDto implements Serializable {
 
-    private String documentStatusId;
+    @NotNull
+    private boolean confirmed = false;
 
     private DocumentObservationsDto notes;
 

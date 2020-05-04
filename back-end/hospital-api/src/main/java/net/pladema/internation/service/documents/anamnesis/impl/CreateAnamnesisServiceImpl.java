@@ -1,7 +1,6 @@
 package net.pladema.internation.service.documents.anamnesis.impl;
 
 import net.pladema.internation.repository.core.entity.Document;
-import net.pladema.internation.repository.masterdata.entity.DocumentStatus;
 import net.pladema.internation.repository.masterdata.entity.DocumentType;
 import net.pladema.internation.service.InternmentEpisodeService;
 import net.pladema.internation.service.NoteService;
@@ -60,7 +59,7 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
     public Anamnesis createAnanmesisDocument(Integer intermentEpisodeId, Integer patientId, Anamnesis anamnesis) {
         LOG.debug("Input parameters -> intermentEpisodeId {}, patientId {}, anamnesis {}", intermentEpisodeId, patientId, anamnesis);
 
-        Document anamnesisDocument = new Document(intermentEpisodeId, DocumentStatus.FINAL, DocumentType.ANAMNESIS);
+        Document anamnesisDocument = new Document(intermentEpisodeId, anamnesis.getDocumentStatusId(), DocumentType.ANAMNESIS);
         loadNotes(anamnesisDocument, Optional.ofNullable(anamnesis.getNotes()));
         anamnesisDocument = documentService.create(anamnesisDocument);
 

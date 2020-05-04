@@ -86,7 +86,7 @@ public class PersonController {
                     .orElseThrow(() -> new EntityNotFoundException("person.invalid"));
             result = personMapper.fromPersonalInformation(personalInformation);
         } catch (Exception e) {
-            LOG.error("{}",e);
+            LOG.error("Error",e);
             result = MocksPerson.mockPersonalInformation(personId);
         }
         LOG.debug("Output -> {}", result);

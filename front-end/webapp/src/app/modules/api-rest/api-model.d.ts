@@ -60,8 +60,8 @@ export interface AllergyConditionDto extends HealthConditionDto {
 export interface AnamnesisDto extends Serializable {
     allergies: AllergyConditionDto[];
     anthropometricData: AnthropometricDataDto;
+    confirmed: boolean;
     diagnosis: DiagnosisDto[];
-    documentStatusId: string;
     familyHistories: HealthHistoryConditionDto[];
     inmunizations: InmunizationDto[];
     medications: MedicationDto[];
