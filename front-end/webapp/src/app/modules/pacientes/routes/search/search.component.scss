@@ -18,4 +18,13 @@
 		@include form-buttons;
 		margin-top: 25px;
 	}
+
+}
+.table-container{
+	.new-patient-button{
+		@include form-buttons;
+		button {
+			margin-right: 0px;
+			}
+	}
 }

@@ -14,7 +14,7 @@
 				<mat-form-field appearance="outline">
 					<mat-label>Tipo</mat-label>
 					<mat-select
-						formControlName="identificationType">
+						formControlName="identificationTypeId">
 						<mat-option
 							id="identifType"
 							name="identifType"
@@ -39,12 +39,12 @@
 				<br>
 				<mat-label>Sexo</mat-label>
 				<div class="">
-					<mat-radio-group name="gender" id="gender" formControlName="gender">
+					<mat-radio-group name="genderId" id="genderId" formControlName="genderId">
 						<mat-radio-button *ngFor="let gender of genderOptions" [value]="gender.id">
 							{{gender.description}}
 						</mat-radio-button>
 					</mat-radio-group>
-					<mat-error *ngIf="formSearchSubmitted &&  hasError(formSearch, 'required', 'gender')">
+					<mat-error *ngIf="formSearchSubmitted &&  hasError(formSearch, 'required', 'genderId')">
 						Género requerido
 					</mat-error>
 				</div>
@@ -102,20 +102,25 @@
 				<br>
 				<mat-action-row>
 					<button mat-stroked-button (click)="back()">
-						<span [translate]="'Volver'"></span>
+						<span [translate]="'buttons.BACK'"></span>
 					</button>
 					<button mat-raised-button color="primary" matBadgeColor="accent" type="submit">
-						<span [translate]="'Buscar'"></span>
+						<span [translate]="'buttons.SEARCH'"></span>
 					</button>
 				</mat-action-row>
 			</form>
 		</div>
 	</section>
-	<div class="container" *ngIf="!viewSearchComponent() && !showSpinner()">
+	<div class="table-container" *ngIf="!viewSearchComponent() && !showSpinner()">
 		<section>
 			<h2 class="mat-body-2" [translate]="'Búsqueda de pacientes'"></h2>
 			<h3 class="mat-body-2" [translate]="'Se encontraron posibles coincidencias.'"></h3>
 			<app-table [model]="matchingPatient" [tableClass]="'primary mat-elevation-z8'"></app-table>
+			<div class="new-patient-button" align="end">
+				<button mat-raised-button color="primary" (click)="goToNewPatient()">
+					<span [translate]="'pacientes.search.NEW_PATIENT'"></span>
+				</button>
+			</div>
 		</section>
 	</div>
 </app-content>

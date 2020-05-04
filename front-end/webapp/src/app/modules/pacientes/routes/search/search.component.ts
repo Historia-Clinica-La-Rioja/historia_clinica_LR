@@ -72,12 +72,12 @@ export class SearchComponent implements OnInit {
 			let startDate = params['birthDate'] ? moment(params['birthDate']) : null;
 			this.formSearch = this.formBuilder.group({
 				identificationNumber: [this.identificationNumber, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
-				identificationType: [Number(this.identificationTypeId), Validators.required],
+				identificationTypeId: [Number(this.identificationTypeId), Validators.required],
 				firstName: [params['firstName'], Validators.required],
 				middleNames: [params['middleNames']],
 				lastName: [params['lastName'], Validators.required],
 				otherLastNames: params['otherLastNames'],
-				gender: [Number(this.genderId), Validators.required],
+				genderId: [Number(this.genderId), Validators.required],
 				birthDate: [startDate, Validators.required]
 			});
 
@@ -175,12 +175,12 @@ export class SearchComponent implements OnInit {
 	private buildFormSearch() {
 		this.formSearch = this.formBuilder.group({
 			identificationNumber: [this.identificationNumber, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
-			identificationType: [Number(this.identificationTypeId), Validators.required],
+			identificationTypeId: [Number(this.identificationTypeId), Validators.required],
 			firstName: [null, Validators.required],
 			middleNames: [null],
 			lastName: [null, Validators.required],
 			otherLastNames: [null],
-			gender: [Number(this.genderId), Validators.required],
+			genderId: [Number(this.genderId), Validators.required],
 			birthDate: [null, Validators.required]
 		});
 	}
@@ -203,17 +203,17 @@ export class SearchComponent implements OnInit {
 	submit() {
 		this.formSearchSubmitted = true;
 		if (this.formSearch.valid) {
-			let searchRequest = {
+			let searchPatient = {
 				firstName: this.formSearch.controls.firstName.value,
 				lastName: this.formSearch.controls.lastName.value,
-				genderId: this.formSearch.controls.gender.value,
-				identificationTypeId: this.formSearch.controls.identificationType.value,
+				genderId: this.formSearch.controls.genderId.value,
+				identificationTypeId: this.formSearch.controls.identificationTypeId.value,
 				identificationNumber: this.formSearch.controls.identificationNumber.value,
 				birthDate: this.formSearch.controls.birthDate.value.format(DateFormat.API_DATE),
 				otherLastNames: this.formSearch.controls.otherLastNames.value,
 				middleNames: this.formSearch.controls.middleNames.value
 			}
-			this.goToNextState(searchRequest);
+			this.goToNextState(searchPatient);
 		}
 	}
 
@@ -242,6 +242,14 @@ export class SearchComponent implements OnInit {
 				birthDate: personToSearch.birthDate,
 				otherLastNames: personToSearch.otherLastNames
 			}
+		});
+	}
+
+	goToNewPatient(){
+		let params = this.formSearch.value;
+		params.birthDate = this.formSearch.controls.birthDate.value.format(DateFormat.API_DATE);
+		this.router.navigate([ROUTE_NEW], {
+			queryParams: params
 		});
 	}
 

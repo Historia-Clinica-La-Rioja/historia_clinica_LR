@@ -241,7 +241,8 @@
 			"TITLE_TEMPORARY":"Nuevo Paciente Temporal"
 		},
 		"search": {
-			"TITLE": "Búsqueda de pacientes"
+			"TITLE": "Búsqueda de pacientes",
+			"NEW_PATIENT": "Crear nuevo paciente"
 		}
 	},
 	"presentation": {
