@@ -16,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -57,10 +58,13 @@ public class ObservationVitalSignRepositoryTest extends BaseRepositoryTest {
 
 	private void createInternmentStates(Integer internmentEpisodeId){
 		String code1 = "code1";
+		String date = "2020-05-04 16:00";
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
 		Document firstDoc = save(createDocument(internmentEpisodeId, DocumentStatus.FINAL));
-		ObservationVitalSign vitalSignFinal0 = save(createFinalObservationVitalSign(code1, LocalDateTime.now().minusDays(8)));
-		ObservationVitalSign vitalSignFinal1 = save(createFinalObservationVitalSign(code1, LocalDateTime.now().plusMinutes(2)));
-		ObservationVitalSign vitalSignError2 = save(createErrorObservationVitalSign(code1, LocalDateTime.now().plusMinutes(5)));
+		ObservationVitalSign vitalSignFinal0 = save(createFinalObservationVitalSign(code1, dateTime.minusDays(8)));
+		ObservationVitalSign vitalSignFinal1 = save(createFinalObservationVitalSign(code1, dateTime.plusMinutes(2)));
+		ObservationVitalSign vitalSignError2 = save(createErrorObservationVitalSign(code1, dateTime.plusMinutes(5)));
 		save(createDocumentVitalSign(firstDoc, vitalSignFinal0));
 		save(createDocumentVitalSign(firstDoc, vitalSignFinal1));
 		save(createDocumentVitalSign(firstDoc, vitalSignError2));
@@ -68,12 +72,12 @@ public class ObservationVitalSignRepositoryTest extends BaseRepositoryTest {
 
 		String code2 = "code2";
 		Document secondDoc = save(createDocument(internmentEpisodeId, DocumentStatus.FINAL));
-		ObservationVitalSign vitalSignFinal3 = save(createFinalObservationVitalSign(code2, LocalDateTime.now().plusMinutes(6)));
+		ObservationVitalSign vitalSignFinal3 = save(createFinalObservationVitalSign(code2, dateTime.plusMinutes(6)));
 		save(createDocumentVitalSign(secondDoc, vitalSignFinal3));
 
 		String code3 = "code3";
 		Document thirdDoc = save(createDocument(internmentEpisodeId, DocumentStatus.ERROR));
-		ObservationVitalSign vitalSignFinal4 = save(createFinalObservationVitalSign(code3, LocalDateTime.now().plusMinutes(7)));
+		ObservationVitalSign vitalSignFinal4 = save(createFinalObservationVitalSign(code3, dateTime.plusMinutes(7)));
 		save(createDocumentVitalSign(thirdDoc, vitalSignFinal4));
 	}
 
