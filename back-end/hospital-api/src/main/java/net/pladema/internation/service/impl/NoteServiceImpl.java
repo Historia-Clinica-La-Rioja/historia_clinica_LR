@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class NoteServiceImpl implements NoteService {
 
@@ -30,5 +32,12 @@ public class NoteServiceImpl implements NoteService {
         result = noteRepository.save(result);
         LOG.debug(OUTPUT, result);
         return result.getId();
+    }
+
+    @Override
+    public void deleteAllNotes(List<Long> notesToDelete) {
+        LOG.debug("Input parameters -> notesToDelete {}", notesToDelete);
+        if (!notesToDelete.isEmpty())
+            noteRepository.deleteAll();
     }
 }

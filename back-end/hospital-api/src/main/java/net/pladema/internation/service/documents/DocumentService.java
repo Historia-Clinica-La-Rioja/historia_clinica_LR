@@ -13,7 +13,7 @@ public interface DocumentService {
 
     Optional<Document> findById(Long documentId);
 
-    Document create(Document document);
+    Document save(Document document);
 
     void createDocumentHealthCondition(Long documentId, Integer healthConditionId);
 
@@ -38,5 +38,18 @@ public interface DocumentService {
     AnthropometricDataBo getAnthropometricDataStateFromDocument(Long documentId);
 
     VitalSignBo getVitalSignStateFromDocument(Long documentId);
+
+    void deleteHealthConditionHistory(Long documentId);
+
+    void deleteAllergiesHistory(Long documentId);
+
+    void deleteInmunizationsHistory(Long documentId);
+
+    void deleteMedicationsHistory(Long documentId);
+
+    void deleteObservationsVitalSignsHistory(Long documentId);
+
+    void deleteObservationsLabHistory(Long documentId);
+
 }
 

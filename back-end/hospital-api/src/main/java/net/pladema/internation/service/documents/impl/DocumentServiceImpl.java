@@ -59,8 +59,11 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public Document create(Document document) {
-        return documentRepository.save(document);
+    public Document save(Document document) {
+        LOG.debug("Input parameters -> document {}", document);
+        document = documentRepository.save(document);
+        LOG.debug(OUTPUT, document);
+        return document;
     }
 
     @Override
@@ -166,5 +169,48 @@ public class DocumentServiceImpl implements DocumentService {
         LOG.debug(OUTPUT, result);
         return result;
     }
+
+    @Override
+    public void deleteHealthConditionHistory(Long documentId) {
+        LOG.debug("Input parameters -> documentId {}", documentId);
+        // TODO
+        LOG.debug("Delete success");
+    }
+
+    @Override
+    public void deleteAllergiesHistory(Long documentId) {
+        LOG.debug("Input parameters -> documentId {}", documentId);
+        // TODO
+        LOG.debug("Delete success");
+    }
+
+    @Override
+    public void deleteInmunizationsHistory(Long documentId) {
+        LOG.debug("Input parameters -> documentId {}", documentId);
+        // TODO
+        LOG.debug("Delete success");
+    }
+
+    @Override
+    public void deleteMedicationsHistory(Long documentId) {
+        LOG.debug("Input parameters -> documentId {}", documentId);
+        // TODO
+        LOG.debug("Delete success");
+    }
+
+    @Override
+    public void deleteObservationsVitalSignsHistory(Long documentId) {
+        LOG.debug("Input parameters -> documentId {}", documentId);
+        // TODO
+        LOG.debug("Delete success");
+    }
+
+    @Override
+    public void deleteObservationsLabHistory(Long documentId) {
+        LOG.debug("Input parameters -> documentId {}", documentId);
+        // TODO
+        LOG.debug("Delete success");
+    }
+
 
 }

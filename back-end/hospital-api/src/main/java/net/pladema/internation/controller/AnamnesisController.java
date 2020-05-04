@@ -59,13 +59,8 @@ public class AnamnesisController {
             @Valid @RequestBody AnamnesisDto anamnesisDto){
         LOG.debug("Input parameters -> instituionId {}, internmentEpisodeId {}, ananmnesis {}",
                 institutionId, internmentEpisodeId, anamnesisDto);
-        Integer patientId;
-        try {
-            patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
-                    .orElseThrow(() -> new EntityNotFoundException("internmentepisode.invalid"));
-        } catch (Exception e) {
-            patientId = internmentEpisodeId;
-        }
+        Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
+                .orElseThrow(() -> new EntityNotFoundException("internmentepisode.invalid"));
         Anamnesis anamnesis = anamnesisMapper.fromAnamnesisDto(anamnesisDto);
         anamnesis = createAnamnesisService.createAnanmesisDocument(internmentEpisodeId, patientId, anamnesis);
         ResponseAnamnesisDto result = anamnesisMapper.fromAnamnesis(anamnesis);
@@ -82,12 +77,11 @@ public class AnamnesisController {
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
             @PathVariable(name = "anamnesisId") Long anamnesisId,
             @Valid @RequestBody AnamnesisDto anamnesisDto){
-        LOG.debug("Input parameters -> instituionId {}, internmentEpisodeId {}, anamnesisId {}, ananmnesis {}",
+        LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, anamnesisId {}, ananmnesis {}",
                 institutionId, internmentEpisodeId, anamnesisId, anamnesisDto);
+        Anamnesis anamnesis = anamnesisMapper.fromAnamnesisDto(anamnesisDto);
         Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
                 .orElseThrow(() -> new EntityNotFoundException("internmentepisode.invalid"));
-        Anamnesis anamnesis = anamnesisMapper.fromAnamnesisDto(anamnesisDto);
-        anamnesis.setId(anamnesisId);
         anamnesis = updateAnamnesisService.updateAnanmesisDocument(internmentEpisodeId, patientId, anamnesis);
         ResponseAnamnesisDto result = anamnesisMapper.fromAnamnesis(anamnesis);
         LOG.debug(OUTPUT, result);

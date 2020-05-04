@@ -1,6 +1,10 @@
 package net.pladema.internation.service;
 
+import java.util.List;
+
 public interface NoteService {
 
     Long createNote(String note);
+
+    void deleteAllNotes(List<Long> notesToDelete);
 }

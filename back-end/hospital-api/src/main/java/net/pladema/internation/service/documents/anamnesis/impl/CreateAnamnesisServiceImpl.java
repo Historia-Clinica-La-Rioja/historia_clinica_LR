@@ -61,7 +61,7 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
 
         Document anamnesisDocument = new Document(intermentEpisodeId, anamnesis.getDocumentStatusId(), DocumentType.ANAMNESIS);
         loadNotes(anamnesisDocument, Optional.ofNullable(anamnesis.getNotes()));
-        anamnesisDocument = documentService.create(anamnesisDocument);
+        anamnesisDocument = documentService.save(anamnesisDocument);
 
         anamnesis.setDiagnosis(healthConditionService.loadDiagnosis(patientId, anamnesisDocument.getId(), anamnesis.getDiagnosis()));
         anamnesis.setPersonalHistories(healthConditionService.loadPersonalHistories(patientId, anamnesisDocument.getId(), anamnesis.getPersonalHistories()));
