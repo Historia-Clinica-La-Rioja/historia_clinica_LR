@@ -111,11 +111,11 @@
 						</div>
 						<div class="field-container">
 							<mat-label
-								[translate]="'internaciones.anamnesis.vital-signs.form.BLOOD_OXIGEN_SATURATION'"></mat-label>
+								[translate]="'internaciones.anamnesis.vital-signs.form.BLOOD_OXYGEN_SATURATION'"></mat-label>
 							<mat-form-field [floatLabel]="'never'" appearance="outline">
-								<input id="blood_oxigen_saturation"
-									   name="blood_oxigen_saturation"
-									   formControlName="bloodOxigenSaturation"
+								<input id="blood_oxygen_saturation"
+									   name="blood_oxygen_saturation"
+									   formControlName="bloodOxygenSaturation"
 									   placeholder="00"
 									   type="number"
 									   matInput>
@@ -165,8 +165,8 @@
 					<div>
 						<mat-label [translate]="'internaciones.anamnesis.observations.CURRENT_DISEASE'"></mat-label>
 						<mat-form-field [floatLabel]="'never'" appearance="outline">
-							<textarea matInput type="text" id="current_disease" name="current_disease"
-								formControlName="current_disease">
+							<textarea matInput type="text" id="currentIllnessNote" name="currentIllnessNote"
+								formControlName="currentIllnessNote">
 							</textarea>
 							<mat-error [translate]="'forms.REQUIRED'">
 							</mat-error>
@@ -176,8 +176,8 @@
 						<mat-label [translate]="'internaciones.anamnesis.observations.PHYSICAL_EXAMINATION'">
 						</mat-label>
 						<mat-form-field [floatLabel]="'never'" appearance="outline">
-							<textarea matInput type="text" id="physical_examination" name="physical_examination"
-								formControlName="physical_examination">
+							<textarea matInput type="text" id="physicalExamNote" name="physicalExamNote"
+								formControlName="physicalExamNote">
 							</textarea>
 							<mat-error [translate]="'forms.REQUIRED'">
 							</mat-error>
@@ -186,8 +186,8 @@
 					<div>
 						<mat-label [translate]="'internaciones.anamnesis.observations.STUDIES_PROCEDURES'"></mat-label>
 						<mat-form-field [floatLabel]="'never'" appearance="outline">
-							<textarea matInput type="text" id="studies_procedures" name="studies_procedures"
-								formControlName="studies_procedures">
+							<textarea matInput type="text" id="studiesSummaryNote" name="studiesSummaryNote"
+								formControlName="studiesSummaryNote">
 							</textarea>
 							<mat-error [translate]="'forms.REQUIRED'">
 							</mat-error>
@@ -196,8 +196,8 @@
 					<div>
 						<mat-label [translate]="'internaciones.anamnesis.observations.PATIENT_PROGRESS'"></mat-label>
 						<mat-form-field [floatLabel]="'never'" appearance="outline">
-							<textarea matInput type="text" id="patient_progress" name="patient_progress"
-								formControlName="patient_progress">
+							<textarea matInput type="text" id="evolutionNote" name="evolutionNote"
+								formControlName="evolutionNote">
 							</textarea>
 							<mat-error [translate]="'forms.REQUIRED'">
 							</mat-error>
@@ -206,8 +206,8 @@
 					<div>
 						<mat-label [translate]="'internaciones.anamnesis.observations.CLINICAL_IMPRESSION'"></mat-label>
 						<mat-form-field [floatLabel]="'never'" appearance="outline">
-							<textarea matInput type="text" id="clinical_impression" name="clinical_impression"
-								formControlName="clinical_impression">
+							<textarea matInput type="text" id="clinicalImpressionNote" name="clinicalImpressionNote"
+								formControlName="clinicalImpressionNote">
 							</textarea>
 							<mat-error [translate]="'forms.REQUIRED'">
 							</mat-error>
@@ -216,7 +216,7 @@
 					<div>
 						<mat-label [translate]="'internaciones.anamnesis.observations.OTHERS'"></mat-label>
 						<mat-form-field [floatLabel]="'never'" appearance="outline">
-							<textarea matInput type="text" id="others" name="others" formControlName="others">
+							<textarea matInput type="text" id="otherNote" name="otherNote" formControlName="otherNote">
 							</textarea>
 						</mat-form-field>
 					</div>
@@ -225,17 +225,21 @@
 			</mat-card>
 			<div class="form-buttons">
 				<div class="buttons">
-					<button mat-stroked-button type="button" color="primary">
-						<span class="uppercase" (click)="back()">Volver</span>
+					<button mat-stroked-button type="button" color="primary" (click)="back()">
+						<span class="uppercase"
+							  [translate]="'internaciones.anamnesis.buttons.BACK'">
+						</span>
 					</button>
 					<button mat-stroked-button type="button" color="primary">
-						<span class="uppercase">Guardar borrador</span>
+						<span class="uppercase" [translate]="'internaciones.anamnesis.buttons.SAVE_DRAFT'"></span>
 					</button>
 				</div>
-				<div class="firma-buttons">
-					<mat-checkbox>Adjuntar firma digital</mat-checkbox>
+				<div class="sign-buttons">
+					<mat-checkbox formControlName="attachSignature">
+						<span [translate]="'internaciones.anamnesis.buttons.ATTACH_SIGNATURE'"></span>
+					</mat-checkbox>
 					<button mat-raised-button type="submit" color="primary">
-						<span class="uppercase">Firmar y Confirmar</span>
+						<span class="uppercase" [translate]="'internaciones.anamnesis.buttons.SIGN_CONFIRM'"></span>
 					</button>
 				</div>
 			</div>

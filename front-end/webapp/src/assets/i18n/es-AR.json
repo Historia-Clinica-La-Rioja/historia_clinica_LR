@@ -93,6 +93,12 @@
 					}
 				}
 			},
+			"buttons": {
+				"ATTACH_SIGNATURE": "Adjuntar firma digital",
+				"BACK": "Volver",
+				"SAVE_DRAFT": "Guardar borrador",
+				"SIGN_CONFIRM": "Firmar y confirmar"
+			},
 			"datos-antropometricos": {
 				"TITLE": "Datos antropométricos",
 				"BLOOD_TYPE": "Grupo y factor sanguíneo",
@@ -149,7 +155,7 @@
 					"HEART_RATE": "Frecuencia cardíaca (/min)",
 					"RESPIRATORY_RATE": "Frecuencia respiratoria (/min)",
 					"TEMPERATURE": "Temperatura corporal",
-					"BLOOD_OXIGEN_SATURATION": "Saturación de oxigeno (%)",
+					"BLOOD_OXYGEN_SATURATION": "Saturación de oxigeno (%)",
 					"SYSTOLIC_BLOOD_PRESSURE": "Tensión sistólica (mm)",
 					"DIASTOLIC_BLOOD_PRESSURE": "Tensión diastólica (mm)"
 				}

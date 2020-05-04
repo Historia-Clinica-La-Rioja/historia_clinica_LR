@@ -34,7 +34,7 @@ export class AntecedentesPersonalesComponent implements OnInit {
 		{
 			def: 'problemType',
 			header: 'internaciones.anamnesis.antecedentes-personales.table.columns.PERSONAL_HISTORY',
-			text: ap => ap.snomed.fsn
+			text: ap => ap.snomed.pt
 		}
 	];
 	displayedColumns: string[] = [];
@@ -70,8 +70,8 @@ export class AntecedentesPersonalesComponent implements OnInit {
 
 	setConcept(selectedConcept: SnomedDto): void {
 		this.snomedConcept = selectedConcept;
-		let fsn = selectedConcept ? selectedConcept.pt : '';
-		this.form.controls.snomed.setValue(fsn);
+		let pt = selectedConcept ? selectedConcept.pt : '';
+		this.form.controls.snomed.setValue(pt);
 	}
 
 	add(ap: HealthHistoryConditionDto): void {

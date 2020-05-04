@@ -34,7 +34,7 @@ export class DiagnosticosComponent implements OnInit {
 		{
 			def: 'diagnosis',
 			header: 'internaciones.anamnesis.diagnosticos.table.columns.DIAGNOSIS',
-			text: ap => ap.snomed.fsn
+			text: ap => ap.snomed.pt
 		}
 	];
 	displayedColumns: string[] = [];
@@ -70,8 +70,8 @@ export class DiagnosticosComponent implements OnInit {
 
 	setConcept(selectedConcept: SnomedDto): void {
 		this.snomedConcept = selectedConcept;
-		let fsn = selectedConcept ? selectedConcept.pt : '';
-		this.form.controls.snomed.setValue(fsn);
+		let pt = selectedConcept ? selectedConcept.pt : '';
+		this.form.controls.snomed.setValue(pt);
 	}
 
 	add(diagnostico: DiagnosisDto): void {

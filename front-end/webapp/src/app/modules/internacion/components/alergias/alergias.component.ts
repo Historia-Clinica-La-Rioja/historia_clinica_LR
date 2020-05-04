@@ -39,7 +39,7 @@ export class AlergiasComponent implements OnInit {
 		{
 			def: 'problemType',
 			header: 'internaciones.anamnesis.alergias.table.columns.ALLERGY',
-			text: a => a.snomed.fsn
+			text: a => a.snomed.pt
 		},
 		{
 			def: 'date',
@@ -102,8 +102,8 @@ export class AlergiasComponent implements OnInit {
 
 	setConcept(selectedConcept: SnomedDto): void {
 		this.snomedConcept = selectedConcept;
-		const fsn = selectedConcept ? selectedConcept.pt : '';
-		this.form.controls.snomed.setValue(fsn);
+		const pt = selectedConcept ? selectedConcept.pt : '';
+		this.form.controls.snomed.setValue(pt);
 	}
 
 	add(a: AllergyConditionDto): void {

@@ -14,7 +14,7 @@
 			<mat-form-field appearance="outline">
 				<mat-label [translate]="'internaciones.anamnesis.vacunas.form.REGISTRY_DATE'">
 				</mat-label>
-				<input matInput readonly id="date" [matDatepicker]="myDatepicker" formControlName="date"
+				<input matInput id="date" [matDatepicker]="myDatepicker" formControlName="date"
 					[max]="this.today">
 				<mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
 				<mat-datepicker #myDatepicker startView="multi-year" (yearSelected)="chosenYearHandler($event)"

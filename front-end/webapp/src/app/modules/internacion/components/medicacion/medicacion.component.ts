@@ -36,7 +36,7 @@ export class MedicacionComponent implements OnInit {
 		{
 			def: 'problemType',
 			header: 'internaciones.anamnesis.medicacion.table.columns.MEDICATION',
-			text: v => v.snomed.fsn
+			text: v => v.snomed.pt
 		},
 		{
 			def: 'clinicalStatus',
@@ -88,8 +88,8 @@ export class MedicacionComponent implements OnInit {
 
 	setConcept(selectedConcept: SnomedDto): void {
 		this.snomedConcept = selectedConcept;
-		let fsn = selectedConcept ? selectedConcept.pt : '';
-		this.form.controls.snomed.setValue(fsn);
+		let pt = selectedConcept ? selectedConcept.pt : '';
+		this.form.controls.snomed.setValue(pt);
 	}
 
 	add(medicacion: MedicationDto): void {

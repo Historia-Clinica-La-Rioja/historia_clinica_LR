@@ -40,7 +40,7 @@ export class VacunasComponent implements OnInit {
 		{
 			def: 'problemType',
 			header: 'internaciones.anamnesis.vacunas.table.columns.INMUNIZATION',
-			text: v => v.snomed.fsn
+			text: v => v.snomed.pt
 		},
 		{
 			def: 'date',
@@ -89,7 +89,7 @@ export class VacunasComponent implements OnInit {
 	addToList() {
 		if (this.form.valid && this.snomedConcept) {
 			const vacuna: InmunizationDto = {
-				administrationDate: this.form.value.date.format(DateFormat.API_DATE),
+				administrationDate: this.form.value.date ? this.form.value.date.format(DateFormat.API_DATE) : null,
 				note: null,
 				id: null,
 				snomed: this.snomedConcept,
@@ -101,8 +101,8 @@ export class VacunasComponent implements OnInit {
 
 	setConcept(selectedConcept: SnomedDto): void {
 		this.snomedConcept = selectedConcept;
-		const fsn = selectedConcept ? selectedConcept.pt : '';
-		this.form.controls.snomed.setValue(fsn);
+		const pt = selectedConcept ? selectedConcept.pt : '';
+		this.form.controls.snomed.setValue(pt);
 	}
 
 	add(vacuna: InmunizationDto): void {

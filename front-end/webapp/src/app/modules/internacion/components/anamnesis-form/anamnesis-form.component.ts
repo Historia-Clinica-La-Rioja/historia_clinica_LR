@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
-	AllergyConditionDto, DiagnosisDto,
+	AllergyConditionDto, AnamnesisDto, DiagnosisDto,
 	HealthHistoryConditionDto, InmunizationDto,
 	MasterDataInterface,
 	MedicationDto
 } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
+import { AnamnesisService } from '@api-rest/services/anamnesis.service';
 
 @Component({
 	selector: 'app-anamnesis-form',
@@ -15,7 +16,7 @@ import { InternacionMasterDataService } from '@api-rest/services/internacion-mas
 })
 export class AnamnesisFormComponent implements OnInit {
 
-	public form: FormGroup;
+	form: FormGroup;
 
 	bloodTypes: MasterDataInterface<string>[];
 	diagnosticos: DiagnosisDto[] = [];
@@ -27,7 +28,8 @@ export class AnamnesisFormComponent implements OnInit {
 
 	constructor(
 		private formBuilder: FormBuilder,
-		private internacionMasterDataService: InternacionMasterDataService
+		private internacionMasterDataService: InternacionMasterDataService,
+		private anamnesisService: AnamnesisService
 	) {
 	}
 
@@ -42,18 +44,19 @@ export class AnamnesisFormComponent implements OnInit {
 				heartRate: [null, Validators.required],
 				respiratoryRate: [null, Validators.required],
 				temperature: [null, Validators.required],
-				bloodOxigenSaturation: [null, Validators.required],
+				bloodOxygenSaturation: [null, Validators.required],
 				systolicBloodPressure: [null, Validators.required],
 				diastolicBloodPressure: [null, Validators.required],
 			}),
 			observations: this.formBuilder.group ({
-				current_disease: [null, Validators.required],
-				physical_examination: [null, Validators.required],
-				studies_procedures: [null, Validators.required],
-				patient_progress: [null, Validators.required],
-				clinical_impression: [null, Validators.required],
-				others: [null]
-			})
+				currentIllnessNote: [null, Validators.required],
+				physicalExamNote: [null, Validators.required],
+				studiesSummaryNote: [null, Validators.required],
+				evolutionNote: [null, Validators.required],
+				clinicalImpressionNote: [null, Validators.required],
+				otherNote: [null]
+			}),
+			attachSignature: [false]
 		});
 
 		this.internacionMasterDataService.getBloodTypes().subscribe(bloodTypes => {
@@ -62,14 +65,40 @@ export class AnamnesisFormComponent implements OnInit {
 	}
 
 	save(): void {
-		console.log('diagnosticos: ', this.diagnosticos);
-		console.log('personalHistories:', this.personalHistories);
-		console.log('familyHistories:', this.familyHistories);
-		console.log('allergies:', this.allergies);
-		console.log('inmunizations:', this.inmunizations);
-		console.log('medications:', this.medications);
+		if (this.form.valid && this.form.value.attachSignature) {
+			const anamnesis = this.buildAnamnesisDto();
+			this.anamnesisService.createAnamnesis(anamnesis)
+				.subscribe(anamnesisResponse => console.log('POST anamnesis', anamnesisResponse));
+		}
+	}
 
-		console.log('form: ', this.form);
+	private buildAnamnesisDto(): AnamnesisDto {
+		return {
+			confirmed: false,
+			allergies: this.allergies,
+			anthropometricData: {
+				bloodType: {
+					id: this.form.value.anthropometricData.bloodType.id,
+					value: this.form.value.anthropometricData.bloodType.description
+				},
+				height: {id: null, value: this.form.value.anthropometricData.height},
+				weight: {id: null, value: this.form.value.anthropometricData.weight},
+			},
+			diagnosis: this.diagnosticos,
+			familyHistories: this.familyHistories,
+			inmunizations: this.inmunizations,
+			medications: this.medications,
+			notes: this.form.value.observations,
+			personalHistories: this.personalHistories,
+			vitalSigns: {
+				bloodOxygenSaturation: {id: null, value: this.form.value.vitalSigns.bloodOxygenSaturation},
+				diastolicBloodPressure: {id: null, value: this.form.value.vitalSigns.diastolicBloodPressure},
+				heartRate: {id: null, value: this.form.value.vitalSigns.heartRate},
+				respiratoryRate: {id: null, value: this.form.value.vitalSigns.respiratoryRate},
+				systolicBloodPressure: {id: null, value: this.form.value.vitalSigns.systolicBloodPressure},
+				temperature: {id: null, value: this.form.value.vitalSigns.temperature},
+			}
+		};
 	}
 
 	back(): void {

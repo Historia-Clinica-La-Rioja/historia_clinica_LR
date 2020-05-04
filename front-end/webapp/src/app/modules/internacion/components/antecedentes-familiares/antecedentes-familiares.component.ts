@@ -34,7 +34,7 @@ export class AntecedentesFamiliaresComponent implements OnInit {
 		{
 			def: 'problemType',
 			header: 'internaciones.anamnesis.antecedentes-familiares.table.columns.FAMILY_HISTORY',
-			text: af => af.snomed.fsn
+			text: af => af.snomed.pt
 		}
 	];
 	displayedColumns: string[] = [];
@@ -70,8 +70,8 @@ export class AntecedentesFamiliaresComponent implements OnInit {
 
 	setConcept(selectedConcept: SnomedDto): void {
 		this.snomedConcept = selectedConcept;
-		let fsn = selectedConcept ? selectedConcept.pt : '';
-		this.form.controls.snomed.setValue(fsn);
+		let pt = selectedConcept ? selectedConcept.pt : '';
+		this.form.controls.snomed.setValue(pt);
 	}
 
 	add(af: HealthHistoryConditionDto): void {
