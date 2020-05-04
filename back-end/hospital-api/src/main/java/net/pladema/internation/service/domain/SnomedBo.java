@@ -20,7 +20,7 @@ public class SnomedBo implements Serializable {
 
     @NotNull
     @NotEmpty
-    private String fsn;
+    private String pt;
 
     private String parentId;
 
@@ -28,7 +28,7 @@ public class SnomedBo implements Serializable {
 
     public SnomedBo(Snomed snomed) {
         this.id = snomed.getId();
-        this.fsn = snomed.getFsn();
+        this.pt = snomed.getPt();
         this.parentId = snomed.getParentId();
         this.parentFsn = snomed.getParentFsn();
     }

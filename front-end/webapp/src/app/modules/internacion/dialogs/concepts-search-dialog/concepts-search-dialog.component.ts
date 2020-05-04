@@ -31,7 +31,7 @@ export class ConceptsSearchDialogComponent implements OnInit {
 				{
 					columnDef: '1',
 					header: 'Descripción SNOMED',
-					text: concept => concept.fsn
+					text: concept => concept.pt
 				},
 				{
 					columnDef: 'select',

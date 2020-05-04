@@ -102,7 +102,7 @@ export class AlergiasComponent implements OnInit {
 
 	setConcept(selectedConcept: SnomedDto): void {
 		this.snomedConcept = selectedConcept;
-		const fsn = selectedConcept ? selectedConcept.fsn : '';
+		const fsn = selectedConcept ? selectedConcept.pt : '';
 		this.form.controls.snomed.setValue(fsn);
 	}
 

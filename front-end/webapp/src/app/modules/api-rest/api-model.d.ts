@@ -333,10 +333,10 @@ export interface Serializable {
 }
 
 export interface SnomedDto extends Serializable {
-    fsn: string;
     id: string;
     parentFsn: string;
     parentId: string;
+    pt: string;
 }
 
 export interface UserDto extends AbstractUserDto {

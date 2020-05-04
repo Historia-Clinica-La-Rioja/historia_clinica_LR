@@ -26,16 +26,16 @@ public class SnomedServiceImpl implements SnomedService {
 
         LOG.debug("Input parameters -> {}", snomedTerm);
         Snomed snomed = new Snomed();
-        if(StringHelper.isNullOrWhiteSpace(snomedTerm.getId()) || StringHelper.isNullOrWhiteSpace(snomedTerm.getFsn())) {
+        if(StringHelper.isNullOrWhiteSpace(snomedTerm.getId()) || StringHelper.isNullOrWhiteSpace(snomedTerm.getPt())) {
             LOG.debug(OUTPUT, snomed.getId());
             return snomed.getId();
         }
 
         String parentId = snomedTerm.getParentId() == null ? snomedTerm.getId() : snomedTerm.getParentId();
-        String parentFsn = snomedTerm.getParentFsn() == null ? snomedTerm.getFsn() : snomedTerm.getParentFsn();
+        String parentFsn = snomedTerm.getParentFsn() == null ? snomedTerm.getPt() : snomedTerm.getParentFsn();
 
         snomed = new Snomed(
-                snomedTerm.getId(), snomedTerm.getFsn(), parentId, parentFsn);
+                snomedTerm.getId(), snomedTerm.getPt(), parentId, parentFsn);
         snomed = snomedRepository.save(snomed);
         LOG.debug(OUTPUT, snomed.getId());
         if(snomed.getId() == null)

@@ -1773,4 +1773,12 @@ databaseChangeLog:
                 INSERT INTO health_insurance (rnos, name, acronym) VALUES (800105,'OBRA SOCIAL ATANOR S.A','');
                 INSERT INTO health_insurance (rnos, name, acronym) VALUES (800501,'OBRA SOCIAL ACEROS PARANA','');
                 INSERT INTO health_insurance (rnos, name, acronym) VALUES (900102,'OBRA SOCIAL DEL PERSONAL DE EMPRESAS FIAT Y EMPRESAS PEUGEOT CITROEN ARGENTINA','OSPEF Y EPCA');
-                
+- changeSet:
+    id: renameColumn-snomed-pt
+    author: saguero
+    changes:
+    - renameColumn:
+        columnDataType: varchar(100)
+        newColumnName: pt
+        oldColumnName: fsn
+        tableName: snomed      

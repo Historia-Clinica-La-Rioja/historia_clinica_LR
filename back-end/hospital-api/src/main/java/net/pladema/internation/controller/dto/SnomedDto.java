@@ -19,7 +19,7 @@ public class SnomedDto implements Serializable {
 
     @NotNull
     @NotEmpty
-    private String fsn;
+    private String pt;
 
     private String parentId;
 

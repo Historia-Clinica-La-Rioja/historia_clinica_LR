@@ -38,7 +38,7 @@ export class SnowstormService {
 			(i: any): SnomedDto => {
 				return {
 					id: i.conceptId,
-					fsn: i.fsn.term,
+					pt: i.pt.term,
 					// TODO no llegan las siguientes propiedades desde este endpoint de snowstorm
 					parentFsn: '',
 					parentId: ''

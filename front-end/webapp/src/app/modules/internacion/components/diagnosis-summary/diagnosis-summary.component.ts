@@ -39,7 +39,7 @@ export class DiagnosisSummaryComponent implements OnInit {
 				return {
 					statusId: hc.statusId,
 					verificationId: hc.verificationId,
-					description: hc.snomed.fsn,
+					description: hc.snomed.pt,
 				}
 			}))
 		).subscribe(
