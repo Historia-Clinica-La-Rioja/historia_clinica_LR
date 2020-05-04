@@ -61,8 +61,13 @@ public class RestExceptionHandler {
 	@ExceptionHandler({ ConstraintViolationException.class })
 	public ResponseEntity<Object> handleValidationExceptions(ConstraintViolationException ex, WebRequest request) {
 		List<String> errors = new ArrayList<>();
-		for (ConstraintViolation<?> violation : ex.getConstraintViolations())
-			errors.add(violation.getPropertyPath() + ": " + violation.getMessage());
+		for (ConstraintViolation<?> violation : ex.getConstraintViolations()){
+
+			if(violation.getPropertyPath().toString().contains("<cross-parameter>"))
+				errors.add(violation.getMessage());
+			else
+				errors.add(violation.getPropertyPath() + ": " + violation.getMessage());
+		}
 		ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, "Constraint violation", errors);
 		return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
 	}

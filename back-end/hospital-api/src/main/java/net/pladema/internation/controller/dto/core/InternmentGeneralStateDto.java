@@ -16,8 +16,8 @@ import java.util.List;
 @ToString
 public class InternmentGeneralStateDto implements Serializable {
 
-    @NotNull
-    @NotEmpty(message = "diagnosis.mandatory")
+    @NotNull(message = "{value.mandatory}")
+    @NotEmpty(message = "{diagnosis.mandatory}")
     private List<DiagnosisDto> diagnosis;
 
     @NotNull

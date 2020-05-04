@@ -5,6 +5,8 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.internation.controller.dto.SnomedDto;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Getter
@@ -21,6 +23,8 @@ public abstract class ClinicalTermDto implements Serializable {
 
     private String statusId;
 
+    @NotNull(message = "{value.mandatory}")
+    @Valid
     private SnomedDto snomed;
 
 }

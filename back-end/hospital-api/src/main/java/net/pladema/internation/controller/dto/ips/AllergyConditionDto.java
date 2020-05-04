@@ -17,7 +17,7 @@ public class AllergyConditionDto extends HealthConditionDto {
 
     private String severity;
 
-    @NotNull
+    @NotNull(message = "{value.mandatory}")
     @JsonFormat(pattern = JacksonDateFormatConfig.DATE_FORMAT)
     private String date;
 }

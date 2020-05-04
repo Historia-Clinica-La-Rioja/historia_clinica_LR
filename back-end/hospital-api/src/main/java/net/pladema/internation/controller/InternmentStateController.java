@@ -1,6 +1,7 @@
 package net.pladema.internation.controller;
 
 import io.swagger.annotations.Api;
+import net.pladema.internation.controller.constraints.InternmentValid;
 import net.pladema.internation.controller.dto.core.InternmentGeneralStateDto;
 import net.pladema.internation.controller.dto.ips.*;
 import net.pladema.internation.controller.mapper.InternmentStateMapper;
@@ -11,6 +12,7 @@ import net.pladema.internation.service.domain.ips.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/institutions/{institutionId}/internments-state")
 @Api(value = "Internment State", tags = { "Internment State" })
+@Validated
 public class InternmentStateController {
 
     private static final Logger LOG = LoggerFactory.getLogger(InternmentStateController.class);
@@ -56,6 +59,7 @@ public class InternmentStateController {
         this.vitalSignLabService = vitalSignLabService;
     }
 
+    @InternmentValid
     @GetMapping("/{internmentEpisodeId}/general")
     public ResponseEntity<InternmentGeneralStateDto> internmentGeneralState(
             @PathVariable(name = "institutionId") Integer institutionId,
@@ -67,6 +71,7 @@ public class InternmentStateController {
         return  ResponseEntity.ok().body(result);
     }
 
+    @InternmentValid
     @GetMapping("/{internmentEpisodeId}/general/diagnosis")
     public ResponseEntity<List<DiagnosisDto>> diagnosisGeneralState(
             @PathVariable(name = "institutionId") Integer institutionId,
@@ -78,6 +83,7 @@ public class InternmentStateController {
         return  ResponseEntity.ok().body(result);
     }
 
+    @InternmentValid
     @GetMapping("/{internmentEpisodeId}/general/personalHistories")
     public ResponseEntity<List<HealthHistoryConditionDto>> personalHistoriesGeneralState(
             @PathVariable(name = "institutionId") Integer institutionId,
@@ -89,6 +95,7 @@ public class InternmentStateController {
         return  ResponseEntity.ok().body(result);
     }
 
+    @InternmentValid
     @GetMapping("/{internmentEpisodeId}/general/familyHistories")
     public ResponseEntity<List<HealthHistoryConditionDto>> familyHistoriesGeneralState(
             @PathVariable(name = "institutionId") Integer institutionId,
@@ -100,6 +107,7 @@ public class InternmentStateController {
         return  ResponseEntity.ok().body(result);
     }
 
+    @InternmentValid
     @GetMapping("/{internmentEpisodeId}/general/medications")
     public ResponseEntity<List<MedicationDto>> medicationsGeneralState(
             @PathVariable(name = "institutionId") Integer institutionId,
@@ -111,6 +119,7 @@ public class InternmentStateController {
         return  ResponseEntity.ok().body(result);
     }
 
+    @InternmentValid
     @GetMapping("/{internmentEpisodeId}/general/anthropometricData")
     public ResponseEntity<List<AnthropometricDataDto>> anthropometricDataGeneralState(
             @PathVariable(name = "institutionId") Integer institutionId,
@@ -122,6 +131,7 @@ public class InternmentStateController {
         return  ResponseEntity.ok().body(result);
     }
 
+    @InternmentValid
     @GetMapping("/{internmentEpisodeId}/general/vitalSigns")
     public ResponseEntity<List<VitalSignDto>> vitalSignsGeneralState(
             @PathVariable(name = "institutionId") Integer institutionId,
@@ -133,6 +143,7 @@ public class InternmentStateController {
         return  ResponseEntity.ok().body(result);
     }
 
+    @InternmentValid
     @GetMapping("/{internmentEpisodeId}/general/inmunizations")
     public ResponseEntity<List<InmunizationDto>> inmunizationsGeneralState(
             @PathVariable(name = "institutionId") Integer institutionId,
@@ -144,6 +155,7 @@ public class InternmentStateController {
         return  ResponseEntity.ok().body(result);
     }
 
+    @InternmentValid
     @GetMapping("/{internmentEpisodeId}/general/allergies")
     public ResponseEntity<List<AllergyConditionDto>> allergiesGeneralState(
             @PathVariable(name = "institutionId") Integer institutionId,

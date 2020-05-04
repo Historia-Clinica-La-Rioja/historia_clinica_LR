@@ -3,9 +3,11 @@ package net.pladema.internation.controller.dto.core;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.internation.controller.constraints.AnamnesisDiagnosisValid;
 import net.pladema.internation.controller.dto.DocumentObservationsDto;
 import net.pladema.internation.controller.dto.ips.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -22,25 +24,27 @@ public class AnamnesisDto implements Serializable {
     private DocumentObservationsDto notes;
 
     @NotNull
-    private List<DiagnosisDto> diagnosis;
+    private List<@Valid DiagnosisDto> diagnosis;
 
     @NotNull
-    private List<HealthHistoryConditionDto> personalHistories = new ArrayList<>();
+    private List<@Valid HealthHistoryConditionDto> personalHistories = new ArrayList<>();
 
     @NotNull
-    private List<HealthHistoryConditionDto> familyHistories = new ArrayList<>();
+    private List<@Valid HealthHistoryConditionDto> familyHistories = new ArrayList<>();
 
     @NotNull
-    private List<MedicationDto> medications = new ArrayList<>();
+    private  List<@Valid MedicationDto> medications = new ArrayList<>();
 
     @NotNull
-    private List<InmunizationDto> inmunizations= new ArrayList<>();
+    private List<@Valid InmunizationDto> inmunizations= new ArrayList<>();
 
     @NotNull
-    private List<AllergyConditionDto> allergies = new ArrayList<>();
+    private List<@Valid AllergyConditionDto> allergies = new ArrayList<>();
 
+    @Valid
     private AnthropometricDataDto anthropometricData;
 
+    @Valid
     private VitalSignDto vitalSigns;
 
 }

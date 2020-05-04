@@ -1,6 +1,9 @@
 package net.pladema.internation.controller;
 
 import io.swagger.annotations.Api;
+import net.pladema.internation.controller.constraints.AnamnesisDiagnosisValid;
+import net.pladema.internation.controller.constraints.InternmentValid;
+import net.pladema.internation.controller.constraints.UpdateDocumentValid;
 import net.pladema.internation.controller.dto.core.AnamnesisDto;
 import net.pladema.internation.controller.dto.core.ResponseAnamnesisDto;
 import net.pladema.internation.controller.mapper.AnamnesisMapper;
@@ -14,7 +17,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
@@ -52,11 +61,12 @@ public class AnamnesisController {
 
     @PostMapping
     @Transactional
-    //TODO validar que exista la internación institución
+    @InternmentValid
+    @AnamnesisDiagnosisValid
     public ResponseEntity<ResponseAnamnesisDto> createAnamnesis(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
-            @Valid @RequestBody AnamnesisDto anamnesisDto){
+            @RequestBody @Valid AnamnesisDto anamnesisDto){
         LOG.debug("Input parameters -> instituionId {}, internmentEpisodeId {}, ananmnesis {}",
                 institutionId, internmentEpisodeId, anamnesisDto);
         Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
@@ -70,8 +80,8 @@ public class AnamnesisController {
 
 
     @PutMapping("/{anamnesisId}")
-    //TODO validar que exista la internación institución
-    //TODO validar que este en estado borrador y que exista la anamnesis
+    @InternmentValid
+    @UpdateDocumentValid
     public ResponseEntity<ResponseAnamnesisDto> updateAnamnesis(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
@@ -89,7 +99,7 @@ public class AnamnesisController {
     }
 
     @GetMapping("/{anamnesisId}")
-    //TODO validar que exista la internación institución
+    @InternmentValid
     //TODO validar que exista la anamnesis
     public ResponseEntity<ResponseAnamnesisDto> getAnamnesis(
             @PathVariable(name = "institutionId") Integer institutionId,

@@ -2,7 +2,10 @@ package net.pladema.internation.controller;
 
 
 import net.pladema.BaseControllerTest;
+import net.pladema.establishment.repository.InstitutionRepository;
+import net.pladema.internation.controller.constraints.validator.InternmentValidator;
 import net.pladema.internation.controller.mapper.InternmentStateMapper;
+import net.pladema.internation.repository.core.InternmentEpisodeRepository;
 import net.pladema.internation.service.InternmentStateService;
 import net.pladema.internation.service.documents.anamnesis.*;
 import org.junit.Before;
@@ -41,6 +44,12 @@ public class InternmentStateControllerTest extends BaseControllerTest {
 	@MockBean
 	private InternmentStateMapper internmentStateMapper;
 
+	@MockBean
+	private InternmentEpisodeRepository internmentEpisodeRepository;
+
+	@MockBean
+	private InstitutionRepository institutionRepository;
+
 	@Before
 	public void setup() {
 	}
@@ -51,7 +60,7 @@ public class InternmentStateControllerTest extends BaseControllerTest {
 		final String URL = "/institutions/1/internments-state/" +internmentEpisodeId +"/general";
 		mockMvc.perform(get(URL))
 				.andDo(log())
-				.andExpect(status().isOk());
+				.andExpect(status().isBadRequest());
 	}
 	
 }
