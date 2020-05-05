@@ -2,6 +2,7 @@ package net.pladema.internation.service.documents.anamnesis.impl;
 
 import net.pladema.internation.repository.ips.InmunizationRepository;
 import net.pladema.internation.repository.ips.entity.Inmunization;
+import net.pladema.internation.repository.ips.generalstate.InmunizationVo;
 import net.pladema.internation.service.SnomedService;
 import net.pladema.internation.service.documents.DocumentService;
 import net.pladema.internation.service.documents.anamnesis.InmunizationService;
@@ -10,8 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class InmunizationServiceImpl implements InmunizationService {
@@ -65,6 +66,9 @@ public class InmunizationServiceImpl implements InmunizationService {
     @Override
     public List<InmunizationBo> getInmunizationsGeneralState(Integer internmentEpisodeId) {
         LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
-        return Collections.emptyList();
+        List<InmunizationVo> queryResult = inmunizationRepository.findGeneralState(internmentEpisodeId);
+        List<InmunizationBo> result = queryResult.stream().map(InmunizationBo::new).collect(Collectors.toList());
+        LOG.debug(OUTPUT, result);
+        return result;
     }
 }

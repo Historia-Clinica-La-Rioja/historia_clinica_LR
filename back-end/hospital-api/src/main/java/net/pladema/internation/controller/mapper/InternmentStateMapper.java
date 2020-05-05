@@ -2,10 +2,7 @@ package net.pladema.internation.controller.mapper;
 
 import net.pladema.internation.controller.dto.core.InternmentGeneralStateDto;
 import net.pladema.internation.controller.dto.ips.*;
-import net.pladema.internation.controller.mapper.ips.AnthropometricDataMapper;
-import net.pladema.internation.controller.mapper.ips.HealthConditionMapper;
-import net.pladema.internation.controller.mapper.ips.MedicationMapper;
-import net.pladema.internation.controller.mapper.ips.VitalSignMapper;
+import net.pladema.internation.controller.mapper.ips.*;
 import net.pladema.internation.service.domain.InternmentGeneralState;
 import net.pladema.internation.service.domain.ips.*;
 import org.mapstruct.IterableMapping;
@@ -15,7 +12,7 @@ import org.mapstruct.Named;
 
 import java.util.List;
 
-@Mapper(uses = {HealthConditionMapper.class, VitalSignMapper.class, AnthropometricDataMapper.class, MedicationMapper.class})
+@Mapper(uses = {HealthConditionMapper.class, VitalSignMapper.class, AnthropometricDataMapper.class, MedicationMapper.class, InmunizationMapper.class})
 public interface InternmentStateMapper {
 
     @Named("toDiagnosisDto")
@@ -37,6 +34,10 @@ public interface InternmentStateMapper {
     @Named("toListMedicationDto")
     @IterableMapping(qualifiedByName = "toMedicationDto")
     List<MedicationDto> toListMedicationDto(List<MedicationBo> listMedicationBo);
+
+    @Named("toListInmunizationDto")
+    @IterableMapping(qualifiedByName = "toInmunizationDto")
+    List<InmunizationDto> toListInmunizationDto(List<InmunizationBo> inmunizationBos);
 
     @Named("toInternmentGeneralStateDto")
     @Mapping(target = "diagnosis", source = "diagnosis", qualifiedByName = "toListHealthConditionDto")

@@ -150,7 +150,7 @@ public class InternmentStateController {
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}", institutionId, internmentEpisodeId);
         List<InmunizationBo> inmunizationBos = inmunizationService.getInmunizationsGeneralState(internmentEpisodeId);
-        List<InmunizationDto> result = new ArrayList<>();
+        List<InmunizationDto> result = internmentStateMapper.toListInmunizationDto(inmunizationBos);
         LOG.debug("Output -> {}", result);
         return  ResponseEntity.ok().body(result);
     }
