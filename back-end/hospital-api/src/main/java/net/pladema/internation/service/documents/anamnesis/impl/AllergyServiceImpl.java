@@ -1,5 +1,6 @@
 package net.pladema.internation.service.documents.anamnesis.impl;
 
+import net.pladema.internation.controller.mapper.ips.AllergyConditionMapper;
 import net.pladema.internation.repository.ips.AllergyIntoleranceRepository;
 import net.pladema.internation.repository.ips.entity.AllergyIntolerance;
 import net.pladema.internation.service.SnomedService;
@@ -22,14 +23,18 @@ public class AllergyServiceImpl implements AllergyService {
 
     private final AllergyIntoleranceRepository allergyIntoleranceRepository;
 
+    private final AllergyConditionMapper allergyConditionMapper;
+
     private final DocumentService documentService;
 
     private final SnomedService snomedService;
 
     public AllergyServiceImpl(AllergyIntoleranceRepository allergyIntoleranceRepository,
+                              AllergyConditionMapper allergyConditionMapper,
                               DocumentService documentService,
                               SnomedService snomedService){
         this.allergyIntoleranceRepository = allergyIntoleranceRepository;
+        this.allergyConditionMapper = allergyConditionMapper;
         this.documentService = documentService;
         this.snomedService = snomedService;
     }
@@ -71,6 +76,9 @@ public class AllergyServiceImpl implements AllergyService {
     @Override
     public List<AllergyConditionBo> getAllergiesGeneralState(Integer internmentEpisodeId) {
         LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
-        return Collections.emptyList();
+        List<AllergyConditionBo> result = allergyConditionMapper.toListAllergyConditionBo(
+                allergyIntoleranceRepository.findGeneralState(internmentEpisodeId));
+        LOG.debug(OUTPUT, result);
+        return result;
     }
 }

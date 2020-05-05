@@ -162,7 +162,7 @@ public class InternmentStateController {
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}", institutionId, internmentEpisodeId);
         List<AllergyConditionBo> allergyConditionBos = allergyService.getAllergiesGeneralState(internmentEpisodeId);
-        List<AllergyConditionDto> result = new ArrayList<>();
+        List<AllergyConditionDto> result = internmentStateMapper.toListAllergyConditionDto(allergyConditionBos);
         LOG.debug("Output -> {}", result);
         return  ResponseEntity.ok().body(result);
     }

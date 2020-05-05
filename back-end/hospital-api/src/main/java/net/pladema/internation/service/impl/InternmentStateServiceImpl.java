@@ -46,6 +46,7 @@ public class InternmentStateServiceImpl implements InternmentStateService {
         InternmentGeneralState internmentGeneralState = new InternmentGeneralState();
         loadGeneralHealthCondition(internmentEpisodeId, internmentGeneralState);
         internmentGeneralState.setMedications(getMedicationsState(internmentEpisodeId));
+        internmentGeneralState.setAllergies(getAllergiesState(internmentEpisodeId));
         internmentGeneralState.setVitalSigns(getVitalSignsState(internmentEpisodeId));
         internmentGeneralState.setAnthropometricData(getAntropometricDataState(internmentEpisodeId));
         internmentGeneralState.setInmunizations(getInmunizationsState(internmentEpisodeId));
