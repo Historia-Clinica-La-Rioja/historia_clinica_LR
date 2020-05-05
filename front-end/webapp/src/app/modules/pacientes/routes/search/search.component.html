@@ -4,15 +4,17 @@
     <section *ngIf="viewSearchComponent() && !showSpinner()">
 		<h2  class="page-title" [translate]="'pacientes.search.TITLE'"></h2>
 		<p>
-			<span [translate]="'No se ha encontrado un paciente registrado con ese tipo y número de documento.'"></span>
+			<span [translate]="'pacientes.search.SUBTITLE'"></span>
 			<br>
-			<span [translate]="'Complete los siguientes datos para una búsqueda avanzada.'"></span>
+			<span [translate]="'pacientes.search.SUBTITLE_TWO'"></span>
 		</p>
 		<div class="content">
 			<form [formGroup]="formSearch" (ngSubmit)="submit()">
 				<br>
 				<mat-form-field appearance="outline">
-					<mat-label>Tipo</mat-label>
+					<mat-label>
+						<span [translate]="'pacientes.form.IDENTIFICATION_TYPE'"></span>
+					</mat-label>
 					<mat-select
 						formControlName="identificationTypeId">
 						<mat-option
@@ -24,20 +26,24 @@
 					</mat-select>
 				</mat-form-field>
 				<mat-form-field appearance="outline">
-					<mat-label>Documento</mat-label>
+					<mat-label>
+						<span [translate]="'pacientes.form.IDENTIFICATION_NUMBER'"></span>
+					</mat-label>
 					<input id="identificationTypeId"
 						   formControlName="identificationNumber"
 					       placeholder="Sin puntos"
 						   matInput>
 					<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'identificationNumber')">
-						El campo es requerido
+						<span [translate]="'pacientes.form.REQUIRED'"></span>
 					</mat-error>
 					<mat-error *ngIf="hasError(formSearch, 'maxlength', 'identificationNumber')">
-						Introduzca como máximo 11 caracteres
+						<span [translate]="'pacientes.form.MAX_CHARACTER'"></span>
 					</mat-error>
 				</mat-form-field>
 				<br>
-				<mat-label>Sexo</mat-label>
+				<mat-label>
+					<span [translate]="'pacientes.form.GENDER'"></span>
+				</mat-label>
 				<div class="">
 					<mat-radio-group name="genderId" id="genderId" formControlName="genderId">
 						<mat-radio-button *ngFor="let gender of genderOptions" [value]="gender.id">
@@ -45,7 +51,7 @@
 						</mat-radio-button>
 					</mat-radio-group>
 					<mat-error *ngIf="formSearchSubmitted &&  hasError(formSearch, 'required', 'genderId')">
-						Género requerido
+						<span [translate]="'pacientes.form.REQUIRED_GENDER'"></span>
 					</mat-error>
 				</div>
 				<br>
@@ -53,16 +59,20 @@
 					<span [translate]="'pacientes.form.FIRST_NAMES_TITLE'"></span>
 				</div>
 				<mat-form-field appearance="outline">
-					<mat-label>Primer nombre</mat-label>
+					<mat-label>
+						<span [translate]="'pacientes.form.FIRST_NAME'"></span>
+					</mat-label>
 					<input id="firstName"
 							formControlName="firstName"
 							matInput>
 					<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'firstName')">
-						El campo es requerido
+						<span [translate]="'pacientes.form.REQUIRED'"></span>
 					</mat-error>
 				</mat-form-field>
 				<mat-form-field appearance="outline">
-					<mat-label>Otros nombres</mat-label>
+					<mat-label>
+						<span [translate]="'pacientes.form.MIDDLE_NAMES'"></span>
+					</mat-label>
 					<input id="middleNames"
 							formControlName="middleNames"
 							matInput>
@@ -72,29 +82,35 @@
 					<span [translate]="'pacientes.form.LAST_NAME_TITLE'"></span>
 				</div>
 				<mat-form-field appearance="outline">
-					<mat-label>Primer apellido</mat-label>
+					<mat-label>
+						<span [translate]="'pacientes.form.LAST_NAME'"></span>
+					</mat-label>
 					<input  id="lastName"
 							formControlName="lastName"
 							matInput>
 					<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'lastName')">
-						El campo es requerido
+						<span [translate]="'pacientes.form.REQUIRED'"></span>
 					</mat-error>
 				</mat-form-field>
 				<mat-form-field appearance="outline">
-					<mat-label>Otros apellidos</mat-label>
+					<mat-label>
+						<span [translate]="'pacientes.form.OTHER_LAST_NAMES'"></span>
+					</mat-label>
 					<input  id="otherLastNames"
 							formControlName="otherLastNames"
 							matInput>
 				</mat-form-field>
 				<br>
 				<mat-form-field appearance="outline">
-					<mat-label>Fecha de nacimiento</mat-label>
+					<mat-label>
+						<span [translate]="'pacientes.form.BIRTH_DATE'"></span>
+					</mat-label>
 					<input matInput id="birthDate"
 									formControlName="birthDate"
 									[matDatepicker]="picker"
 						   			[max]="today">
 					<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'birthDate')">
-						El campo es requerido
+						<span [translate]="'pacientes.form.REQUIRED'"></span>
 					</mat-error>
 					<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
 					<mat-datepicker #picker></mat-datepicker>

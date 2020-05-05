@@ -227,6 +227,7 @@
 			"INVALID": "El campo es invalido.",
 			"LAST_NAME": "Primer apellido",
 			"LAST_NAME_TITLE": "Apellidos",
+			"MAX_CHARACTER": "Introduzca como máximo 11 caracteres",
 			"MEDICAL_COVERAGE_NAME": "Cobertura Social - Prepaga",
 			"MEDICAL_COVERAGE_AFFILIATE_NUMBER": "Numero de afiliado",
 			"MIDDLE_NAMES": "Otros nombres",
@@ -237,6 +238,7 @@
 			"PHONE_NUMBER": "Teléfono",
 			"RELIGION": "Religion",
 			"REQUIRED": "El campo es requerido",
+			"REQUIRED_GENDER": "Género requerido",
 			"SELECT": "Seleccionar"
 		},
 		"home": {
@@ -256,6 +258,8 @@
 		},
 		"search": {
 			"TITLE": "Búsqueda de pacientes",
+			"SUBTITLE": "No se ha encontrado un paciente registrado con ese tipo y número de documento.",
+			"SUBTITLE_TWO": "Complete los siguientes datos para una búsqueda avanzada.",
 			"NEW_PATIENT": "Crear nuevo paciente"
 		}
 	},
