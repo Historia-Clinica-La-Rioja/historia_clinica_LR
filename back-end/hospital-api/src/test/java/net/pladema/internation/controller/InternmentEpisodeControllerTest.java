@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;
@@ -35,6 +36,7 @@ public class InternmentEpisodeControllerTest extends BaseControllerTest {
 	}
 
 	@Test
+	@WithMockUser(authorities = {"ROOT"})
 	public void getInternmentSummary() throws Exception {
 		final Integer internmentEpisodeId = 10;
 		when(internmentEpisodeService.getIntermentSummary(internmentEpisodeId)).thenReturn(Optional.empty());

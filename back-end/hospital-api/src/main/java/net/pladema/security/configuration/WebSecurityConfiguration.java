@@ -19,35 +19,11 @@ import net.pladema.security.filters.AuthenticationTokenFilter;
 @EnableWebSecurity
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-	private static final String PERSON = "/person";
-	
-	private static final String PATIENT = "/patient/**";
-
-	private static final String RENAPER = "/renaper/**";
-	
-	private static final String HEALTH = "/health";
-
-	private static final String MASTERDATA_ADDRESS = "/address/masterdata";
-
-	private static final String ADDRESS = "/address";
-
-	private static final String MASTERDATA = "/masterdata/**";
-
-	private static final String I18N = "/i18n";
-
 	private static final String RECAPTCHA = "/recaptcha";
 
 	private static final String PAS$W0RD_RESET = "/password-reset";
-
-	private static final String MASTERDATA_INTERNMENT = "/internments/masterdata";
-
-	private static final String INTERNMENT = "/institutions/{institutionId}/internments/";
-
-	private static final String ANAMNESIS = "/institutions/{institutionId}/internments/{internmentEpisodeId}/anamnesis";
 	
 	private static final String BACKOFFICE = "/backoffice";
-
-	private static final String INTERNMENT_STATE = "/institutions/{institutionId}/internments-state/";
 
 	@Value("${api.user}")
 	protected String apiUser;
@@ -75,39 +51,25 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
-
+		
 		// @formatter:off
 		httpSecurity.csrf().disable()
-				.sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-				.and()
-				.authorizeRequests()
-				.antMatchers().permitAll()
-				.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-				.antMatchers("/actuator/**").access(actuatorConfiguration.getAccessInfo())
-				.antMatchers(apiAuth + "/**").permitAll()
-				.antMatchers(HttpMethod.GET,MASTERDATA_INTERNMENT + "/**").permitAll()
-				.antMatchers(INTERNMENT + "/**").permitAll()
-				.antMatchers(INTERNMENT_STATE + "/**").permitAll()
-				.antMatchers(ANAMNESIS + "/**").permitAll()
-				.antMatchers(HttpMethod.GET, ADDRESS+ "/**").permitAll()
-				.antMatchers(HttpMethod.GET, MASTERDATA_ADDRESS+ "/**").permitAll()
-				.antMatchers(HttpMethod.GET, apiUser + "/{id}" + activateApiUser).permitAll()
-				.antMatchers(HttpMethod.POST, apiUser + "/activationlink/resend").permitAll()
-				.antMatchers(apiPassword + apiPasswordReset ).permitAll()
-				.antMatchers(HttpMethod.POST, PERSON ).permitAll()
-				.antMatchers(HttpMethod.GET, PERSON+"/**" ).permitAll()
-				.antMatchers(PATIENT).permitAll()
-				.antMatchers(RENAPER).permitAll()
-				.antMatchers(HttpMethod.GET, PERSON+"/**" ).permitAll()
-				.antMatchers(HEALTH + "/**").permitAll()
-				.antMatchers(I18N + "/**").permitAll()
-				.antMatchers(RECAPTCHA + "/**").permitAll()
-				.antMatchers(HttpMethod.POST, PAS$W0RD_RESET ).permitAll()
-				.antMatchers(MASTERDATA).permitAll()
-				.antMatchers("/v2/**","/swagger-ui.html","/swagger-resources/**","/webjars/springfox-swagger-ui/**").permitAll()
-				.antMatchers(BACKOFFICE + "/**").hasAnyAuthority(ERole.ROOT.getValue(), ERole.ADMINISTRADOR.getValue())
-				.anyRequest().authenticated();
+		.sessionManagement()
+		.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+		.and()
+		.authorizeRequests()
+		.antMatchers(HttpMethod.GET, apiUser + "/{id}" + activateApiUser).permitAll()
+		.antMatchers(HttpMethod.POST, apiUser + "/activationlink/resend").permitAll()
+		.antMatchers(apiPassword + apiPasswordReset ).permitAll()
+		.antMatchers("/actuator/**").access(actuatorConfiguration.getAccessInfo())
+		.antMatchers(apiAuth + "/**").permitAll()
+		.antMatchers("/v2/**","/swagger-ui.html","/swagger-resources/**","/webjars/springfox-swagger-ui/**").permitAll()
+		.antMatchers(BACKOFFICE + "/**").hasAnyAuthority(ERole.ROOT.getValue(), ERole.ADMINISTRADOR.getValue())
+		.antMatchers(RECAPTCHA + "/**").permitAll()
+		.antMatchers(HttpMethod.POST, PAS$W0RD_RESET ).permitAll()
+		.antMatchers("/**").authenticated()
+		.anyRequest().authenticated();
+
 		// @formatter:on
 		httpSecurity.exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
 		httpSecurity.addFilterAfter(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);

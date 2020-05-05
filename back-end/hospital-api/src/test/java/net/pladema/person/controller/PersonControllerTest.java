@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;
@@ -38,6 +39,7 @@ public class PersonControllerTest extends BaseControllerTest {
 	}
 
 	@Test
+	@WithMockUser(authorities = {"ROOT"})
 	public void test_getPersonalInformation() throws Exception {
 		final Integer personId = 1;
 		final String URL = "/person/"+personId +"/personalInformation";

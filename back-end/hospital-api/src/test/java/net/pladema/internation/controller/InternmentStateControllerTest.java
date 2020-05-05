@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -55,6 +56,7 @@ public class InternmentStateControllerTest extends BaseControllerTest {
 	}
 
 	@Test
+	@WithMockUser(authorities = {"ROOT"})
 	public void getGeneralState() throws Exception {
 		final Integer internmentEpisodeId = 10;
 		final String URL = "/institutions/1/internments-state/" +internmentEpisodeId +"/general";
