@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -108,10 +109,17 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         LOG.debug("Input parameters -> patientId {}, info {}, healthHistory {}", patientId, healthHistory, personal);
         HealthCondition healthCondition = buildHealth(patientId, healthHistory, personal);
         healthCondition.setProblemId(personal ? ProblemType.PROBLEMA : ProblemType.ANTECEDENTE);
-        healthCondition.setStartDate(healthHistory.getDate());
+
+        LocalDate date = healthHistory.getDate() == null ? defaultDate() : healthHistory.getDate();
+        healthCondition.setStartDate(date);
+
         healthCondition.setNoteId(noteService.createNote(healthHistory.getNote()));
         LOG.debug(OUTPUT, healthCondition);
         return healthCondition;
+    }
+
+    private LocalDate defaultDate() {
+        return LocalDate.now();
     }
 
     private <T extends HealthConditionBo> HealthCondition buildHealth(Integer patientId, T info, boolean personal) {

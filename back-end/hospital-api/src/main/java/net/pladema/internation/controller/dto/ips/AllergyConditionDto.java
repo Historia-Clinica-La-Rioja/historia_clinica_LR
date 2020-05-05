@@ -6,8 +6,6 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.dates.configuration.JacksonDateFormatConfig;
 
-import javax.validation.constraints.NotNull;
-
 @Getter
 @Setter
 @ToString
@@ -17,7 +15,6 @@ public class AllergyConditionDto extends HealthConditionDto {
 
     private String severity;
 
-    @NotNull(message = "{value.mandatory}")
     @JsonFormat(pattern = JacksonDateFormatConfig.DATE_FORMAT)
     private String date;
 }

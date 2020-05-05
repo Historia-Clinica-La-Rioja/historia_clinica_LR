@@ -10,6 +10,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import javax.validation.constraintvalidation.SupportedValidationTarget;
 import javax.validation.constraintvalidation.ValidationTarget;
+import java.util.Optional;
 
 @SupportedValidationTarget(ValidationTarget.PARAMETERS)
 public class UpdateDocumentValidator implements ConstraintValidator<UpdateDocumentValid, Object[]> {
@@ -29,15 +30,15 @@ public class UpdateDocumentValidator implements ConstraintValidator<UpdateDocume
     @Override
     public boolean isValid(Object[] parameters, ConstraintValidatorContext context) {
         Long documentId = (Long)parameters[2];
-        Document document = documentRepository.getOne(documentId);
+        Optional<Document> document = documentRepository.findById(documentId);
 
         context.disableDefaultConstraintViolation();
-        context.buildConstraintViolationWithTemplate("{}")
+        context.buildConstraintViolationWithTemplate("{document.update.invalid}")
                 .addPropertyNode(ANAMNESIS_PROPERTY)
                 .addConstraintViolation();
 
-        return document != null
-                && document.getStatusId().equals(DocumentStatus.DRAFT)
-                && document.getTypeId().equals(DocumentType.ANAMNESIS);
+        return document.isPresent() //existencia
+                    && document.get().getStatusId().equals(DocumentStatus.DRAFT)  //Estado borrador
+                    && document.get().getTypeId().equals(DocumentType.ANAMNESIS); //Tipo Anamnesis
     }
 }
