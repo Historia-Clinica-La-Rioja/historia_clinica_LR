@@ -330,9 +330,11 @@ export interface RoleAssignment {
 }
 
 export interface RoomDto extends Serializable {
+    description: string;
     id: number;
     roomNumber: string;
     sector: SectorDto;
+    type: string;
 }
 
 export interface SectorDto extends Serializable {

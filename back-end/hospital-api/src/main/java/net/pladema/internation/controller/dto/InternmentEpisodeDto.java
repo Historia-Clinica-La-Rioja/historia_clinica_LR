@@ -3,6 +3,7 @@ package net.pladema.internation.controller.dto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.establishment.controller.dto.BedDto;
 
 @Getter
 @Setter

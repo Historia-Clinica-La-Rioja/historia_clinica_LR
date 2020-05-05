@@ -1,5 +1,8 @@
 package net.pladema.internation.controller.mocks;
 
+import net.pladema.establishment.controller.dto.BedDto;
+import net.pladema.establishment.controller.dto.RoomDto;
+import net.pladema.establishment.controller.dto.SectorDto;
 import net.pladema.internation.controller.dto.*;
 
 import java.time.LocalDateTime;

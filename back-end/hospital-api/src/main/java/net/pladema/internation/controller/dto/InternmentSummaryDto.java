@@ -3,6 +3,7 @@ package net.pladema.internation.controller.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.pladema.establishment.controller.dto.BedDto;
 import net.pladema.internation.controller.dto.core.DocumentsSummaryDto;
 
 import java.time.LocalDateTime;
