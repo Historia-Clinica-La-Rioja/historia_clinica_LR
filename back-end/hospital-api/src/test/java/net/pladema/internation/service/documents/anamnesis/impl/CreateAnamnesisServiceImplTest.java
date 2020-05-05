@@ -1,13 +1,13 @@
 package net.pladema.internation.service.documents.anamnesis.impl;
 
-import net.pladema.internation.service.InternmentEpisodeService;
-import net.pladema.internation.service.NoteService;
+import net.pladema.internation.service.internment.InternmentEpisodeService;
+import net.pladema.internation.service.general.NoteService;
 import net.pladema.internation.service.documents.DocumentService;
-import net.pladema.internation.service.documents.anamnesis.AllergyService;
-import net.pladema.internation.service.documents.anamnesis.ClinicalObservationService;
-import net.pladema.internation.service.documents.anamnesis.HealthConditionService;
-import net.pladema.internation.service.documents.anamnesis.InmunizationService;
-import net.pladema.internation.service.documents.anamnesis.MedicationService;
+import net.pladema.internation.service.ips.AllergyService;
+import net.pladema.internation.service.ips.ClinicalObservationService;
+import net.pladema.internation.service.ips.HealthConditionService;
+import net.pladema.internation.service.ips.InmunizationService;
+import net.pladema.internation.service.ips.MedicationService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

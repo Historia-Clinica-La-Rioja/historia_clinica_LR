@@ -173,6 +173,32 @@ export interface DocumentsSummaryDto extends Serializable {
     anamnesis: AnamnesisSummaryDto;
 }
 
+export interface EpicrisisDto extends Serializable {
+    allergies: AllergyConditionDto[];
+    anthropometricData: AnthropometricDataDto;
+    confirmed: boolean;
+    diagnosis: DiagnosisDto[];
+    familyHistories: HealthHistoryConditionDto[];
+    inmunizations: InmunizationDto[];
+    medications: MedicationDto[];
+    notes: DocumentObservationsDto;
+    personalHistories: HealthHistoryConditionDto[];
+    vitalSigns: VitalSignDto;
+}
+
+export interface EvolutionNoteDto extends Serializable {
+    allergies: AllergyConditionDto[];
+    anthropometricData: AnthropometricDataDto;
+    confirmed: boolean;
+    diagnosis: DiagnosisDto[];
+    familyHistories: HealthHistoryConditionDto[];
+    inmunizations: InmunizationDto[];
+    medications: MedicationDto[];
+    notes: DocumentObservationsDto;
+    personalHistories: HealthHistoryConditionDto[];
+    vitalSigns: VitalSignDto;
+}
+
 export interface GenderDto extends MasterdataDto<number> {
     id: number;
 }
@@ -320,6 +346,14 @@ export interface ProvinceDto extends MasterdataDto<number> {
 }
 
 export interface ResponseAnamnesisDto extends AnamnesisDto {
+    id: number;
+}
+
+export interface ResponseEpicrisisDto extends EpicrisisDto {
+    id: number;
+}
+
+export interface ResponseEvolutionNoteDto extends EvolutionNoteDto {
     id: number;
 }
 

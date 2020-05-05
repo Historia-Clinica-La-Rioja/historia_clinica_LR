@@ -1,8 +1,9 @@
 package net.pladema.internation.controller;
 
 import net.pladema.BaseControllerTest;
-import net.pladema.internation.controller.mapper.AnamnesisMapper;
-import net.pladema.internation.service.InternmentEpisodeService;
+import net.pladema.internation.controller.documents.anamnesis.AnamnesisController;
+import net.pladema.internation.controller.documents.anamnesis.mapper.AnamnesisMapper;
+import net.pladema.internation.service.internment.InternmentEpisodeService;
 import net.pladema.internation.service.documents.anamnesis.AnamnesisService;
 import net.pladema.internation.service.documents.anamnesis.CreateAnamnesisService;
 import net.pladema.internation.service.documents.anamnesis.UpdateAnamnesisService;

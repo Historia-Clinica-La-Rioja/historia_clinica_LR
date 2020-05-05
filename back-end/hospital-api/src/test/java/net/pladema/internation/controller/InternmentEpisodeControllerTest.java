@@ -1,9 +1,10 @@
 package net.pladema.internation.controller;
 
 import net.pladema.BaseControllerTest;
-import net.pladema.internation.controller.mapper.InternmentEpisodeMapper;
+import net.pladema.internation.controller.internment.InternmentEpisodeController;
+import net.pladema.internation.controller.internment.mapper.InternmentEpisodeMapper;
 import net.pladema.internation.controller.mocks.MocksInternmentPatient;
-import net.pladema.internation.service.InternmentEpisodeService;
+import net.pladema.internation.service.internment.InternmentEpisodeService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -1,6 +1,6 @@
 package net.pladema.internation.repository.ips;
 
-import net.pladema.internation.service.domain.ips.MapClinicalObservationVo;
+import net.pladema.internation.service.ips.domain.MapClinicalObservationVo;
 
 public interface ClinicalObservationRepository {
 

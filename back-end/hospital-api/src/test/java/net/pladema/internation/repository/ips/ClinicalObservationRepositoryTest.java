@@ -9,7 +9,7 @@ import net.pladema.internation.repository.ips.entity.ObservationVitalSign;
 import net.pladema.internation.repository.masterdata.entity.DocumentStatus;
 import net.pladema.internation.repository.masterdata.entity.DocumentType;
 import net.pladema.internation.repository.masterdata.entity.ObservationStatus;
-import net.pladema.internation.service.domain.ips.MapClinicalObservationVo;
+import net.pladema.internation.service.ips.domain.MapClinicalObservationVo;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

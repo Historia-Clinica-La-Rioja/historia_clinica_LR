@@ -2,7 +2,7 @@ package net.pladema.internation.repository.ips;
 
 import net.pladema.internation.repository.ips.generalstate.ClinicalObservationVo;
 import net.pladema.internation.repository.masterdata.entity.DocumentStatus;
-import net.pladema.internation.service.domain.ips.MapClinicalObservationVo;
+import net.pladema.internation.service.ips.domain.MapClinicalObservationVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;

@@ -2,7 +2,7 @@ package net.pladema.internation.repository.ips.generalstate;
 
 import lombok.*;
 import net.pladema.internation.repository.masterdata.entity.ObservationStatus;
-import net.pladema.internation.service.domain.ips.enums.EVitalSign;
+import net.pladema.internation.service.ips.domain.enums.EVitalSign;
 
 import java.time.LocalDateTime;
 import java.util.Objects;

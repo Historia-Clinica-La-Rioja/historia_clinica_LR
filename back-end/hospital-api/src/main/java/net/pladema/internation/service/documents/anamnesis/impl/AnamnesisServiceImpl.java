@@ -2,12 +2,12 @@ package net.pladema.internation.service.documents.anamnesis.impl;
 
 import net.pladema.internation.repository.core.entity.Document;
 import net.pladema.internation.repository.masterdata.entity.DocumentStatus;
-import net.pladema.internation.service.NoteService;
+import net.pladema.internation.service.general.NoteService;
 import net.pladema.internation.service.documents.DocumentService;
 import net.pladema.internation.service.documents.anamnesis.AnamnesisService;
-import net.pladema.internation.service.domain.Anamnesis;
-import net.pladema.internation.service.domain.ips.DocumentObservations;
-import net.pladema.internation.service.domain.ips.GeneralHealthConditionBo;
+import net.pladema.internation.service.documents.anamnesis.domain.Anamnesis;
+import net.pladema.internation.service.ips.domain.DocumentObservations;
+import net.pladema.internation.service.ips.domain.GeneralHealthConditionBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -29,10 +29,10 @@ public class AnamnesisServiceImpl implements AnamnesisService {
     }
 
     @Override
-    public Anamnesis getAnamnesis(Long anamnesisId) {
-        LOG.debug("Input parameters anamnesisId {}", anamnesisId);
+    public Anamnesis getDocument(Long documentId) {
+        LOG.debug("Input parameters documentId {}", documentId);
         Anamnesis result = new Anamnesis();
-        documentService.findById(anamnesisId).ifPresent( document -> {
+        documentService.findById(documentId).ifPresent( document -> {
             result.setId(document.getId());
             result.setConfirmed(document.getStatusId().equalsIgnoreCase(DocumentStatus.FINAL));
 

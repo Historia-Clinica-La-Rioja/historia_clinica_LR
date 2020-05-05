@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.internation.repository.listener.InternationListener;
-import net.pladema.internation.service.domain.ips.enums.EObservationLab;
+import net.pladema.internation.service.ips.domain.enums.EObservationLab;
 
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;

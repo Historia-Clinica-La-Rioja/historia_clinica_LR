@@ -2,12 +2,13 @@ package net.pladema.internation.service.documents.anamnesis.impl;
 
 import net.pladema.internation.repository.core.entity.Document;
 import net.pladema.internation.repository.masterdata.entity.DocumentType;
-import net.pladema.internation.service.InternmentEpisodeService;
-import net.pladema.internation.service.NoteService;
+import net.pladema.internation.service.internment.InternmentEpisodeService;
+import net.pladema.internation.service.general.NoteService;
 import net.pladema.internation.service.documents.DocumentService;
-import net.pladema.internation.service.documents.anamnesis.*;
-import net.pladema.internation.service.domain.Anamnesis;
-import net.pladema.internation.service.domain.ips.DocumentObservations;
+import net.pladema.internation.service.documents.anamnesis.CreateAnamnesisService;
+import net.pladema.internation.service.documents.anamnesis.domain.Anamnesis;
+import net.pladema.internation.service.ips.domain.DocumentObservations;
+import net.pladema.internation.service.ips.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -56,42 +57,42 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
     }
 
     @Override
-    public Anamnesis createAnanmesisDocument(Integer intermentEpisodeId, Integer patientId, Anamnesis anamnesis) {
+    public Anamnesis createDocument(Integer intermentEpisodeId, Integer patientId, Anamnesis anamnesis) {
         LOG.debug("Input parameters -> intermentEpisodeId {}, patientId {}, anamnesis {}", intermentEpisodeId, patientId, anamnesis);
 
-        Document anamnesisDocument = new Document(intermentEpisodeId, anamnesis.getDocumentStatusId(), DocumentType.ANAMNESIS);
-        loadNotes(anamnesisDocument, Optional.ofNullable(anamnesis.getNotes()));
-        anamnesisDocument = documentService.save(anamnesisDocument);
+        Document doc = new Document(intermentEpisodeId, anamnesis.getDocumentStatusId(), DocumentType.ANAMNESIS);
+        loadNotes(doc, Optional.ofNullable(anamnesis.getNotes()));
+        doc = documentService.save(doc);
 
-        anamnesis.setDiagnosis(healthConditionService.loadDiagnosis(patientId, anamnesisDocument.getId(), anamnesis.getDiagnosis()));
-        anamnesis.setPersonalHistories(healthConditionService.loadPersonalHistories(patientId, anamnesisDocument.getId(), anamnesis.getPersonalHistories()));
-        anamnesis.setFamilyHistories(healthConditionService.loadFamilyHistories(patientId, anamnesisDocument.getId(), anamnesis.getFamilyHistories()));
-        anamnesis.setAllergies(allergyService.loadAllergies(patientId, anamnesisDocument.getId(), anamnesis.getAllergies()));
-        anamnesis.setInmunizations(inmunizationService.loadInmunization(patientId, anamnesisDocument.getId(), anamnesis.getInmunizations()));
-        anamnesis.setMedications(medicationService.loadMedications(patientId, anamnesisDocument.getId(), anamnesis.getMedications()));
+        anamnesis.setDiagnosis(healthConditionService.loadDiagnosis(patientId, doc.getId(), anamnesis.getDiagnosis()));
+        anamnesis.setPersonalHistories(healthConditionService.loadPersonalHistories(patientId, doc.getId(), anamnesis.getPersonalHistories()));
+        anamnesis.setFamilyHistories(healthConditionService.loadFamilyHistories(patientId, doc.getId(), anamnesis.getFamilyHistories()));
+        anamnesis.setAllergies(allergyService.loadAllergies(patientId, doc.getId(), anamnesis.getAllergies()));
+        anamnesis.setInmunizations(inmunizationService.loadInmunization(patientId, doc.getId(), anamnesis.getInmunizations()));
+        anamnesis.setMedications(medicationService.loadMedications(patientId, doc.getId(), anamnesis.getMedications()));
 
-        anamnesis.setVitalSigns(clinicalObservationService.loadVitalSigns(patientId, anamnesisDocument.getId(), Optional.ofNullable(anamnesis.getVitalSigns())));
-        anamnesis.setAnthropometricData(clinicalObservationService.loadAnthropometricData(patientId, anamnesisDocument.getId(), Optional.ofNullable(anamnesis.getAnthropometricData())));
+        anamnesis.setVitalSigns(clinicalObservationService.loadVitalSigns(patientId, doc.getId(), Optional.ofNullable(anamnesis.getVitalSigns())));
+        anamnesis.setAnthropometricData(clinicalObservationService.loadAnthropometricData(patientId, doc.getId(), Optional.ofNullable(anamnesis.getAnthropometricData())));
 
-        internmentEpisodeService.updateAnamnesisDocumentId(intermentEpisodeId, anamnesisDocument.getId());
-        anamnesis.setId(anamnesisDocument.getId());
+        internmentEpisodeService.updateAnamnesisDocumentId(intermentEpisodeId, doc.getId());
+        anamnesis.setId(doc.getId());
 
         LOG.debug(OUTPUT, anamnesis);
         return anamnesis;
     }
 
-    private Document loadNotes(Document anamnesisDocument, Optional<DocumentObservations> optNotes) {
-        LOG.debug("Input parameters -> anamnesisDocument {}, notes {}", anamnesisDocument, optNotes);
+    private Document loadNotes(Document document, Optional<DocumentObservations> optNotes) {
+        LOG.debug("Input parameters -> anamnesisDocument {}, notes {}", document, optNotes);
         optNotes.ifPresent(notes -> {
-            anamnesisDocument.setCurrentIllnessNoteId(noteService.createNote(notes.getCurrentIllnessNote()));
-            anamnesisDocument.setPhysicalExamNoteId(noteService.createNote(notes.getPhysicalExamNote()));
-            anamnesisDocument.setStudiesSummaryNoteId(noteService.createNote(notes.getStudiesSummaryNote()));
-            anamnesisDocument.setEvolutionNoteId(noteService.createNote(notes.getEvolutionNote()));
-            anamnesisDocument.setClinicalImpressionNoteId(noteService.createNote(notes.getClinicalImpressionNote()));
-            anamnesisDocument.setOtherNoteId(noteService.createNote(notes.getOtherNote()));
+            document.setCurrentIllnessNoteId(noteService.createNote(notes.getCurrentIllnessNote()));
+            document.setPhysicalExamNoteId(noteService.createNote(notes.getPhysicalExamNote()));
+            document.setStudiesSummaryNoteId(noteService.createNote(notes.getStudiesSummaryNote()));
+            document.setEvolutionNoteId(noteService.createNote(notes.getEvolutionNote()));
+            document.setClinicalImpressionNoteId(noteService.createNote(notes.getClinicalImpressionNote()));
+            document.setOtherNoteId(noteService.createNote(notes.getOtherNote()));
         });
-        LOG.debug(OUTPUT, anamnesisDocument);
-        return anamnesisDocument;
+        LOG.debug(OUTPUT, document);
+        return document;
     }
 
 }

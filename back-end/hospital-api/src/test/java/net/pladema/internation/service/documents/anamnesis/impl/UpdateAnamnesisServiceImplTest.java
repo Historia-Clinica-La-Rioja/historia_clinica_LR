@@ -1,9 +1,9 @@
 package net.pladema.internation.service.documents.anamnesis.impl;
 
-import net.pladema.internation.service.InternmentEpisodeService;
-import net.pladema.internation.service.NoteService;
+import net.pladema.internation.service.internment.InternmentEpisodeService;
+import net.pladema.internation.service.general.NoteService;
 import net.pladema.internation.service.documents.DocumentService;
-import net.pladema.internation.service.documents.anamnesis.*;
+import net.pladema.internation.service.ips.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.internation.repository.listener.InternationListener;
-import net.pladema.internation.service.domain.ips.enums.EVitalSign;
+import net.pladema.internation.service.ips.domain.enums.EVitalSign;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

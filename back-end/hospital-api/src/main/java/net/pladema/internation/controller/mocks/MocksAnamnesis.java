@@ -1,9 +1,9 @@
 package net.pladema.internation.controller.mocks;
 
-import net.pladema.internation.controller.dto.core.AnamnesisDto;
-import net.pladema.internation.controller.dto.ips.AnthropometricDataDto;
-import net.pladema.internation.controller.dto.ips.ClinicalObservationDto;
-import net.pladema.internation.controller.dto.ips.VitalSignDto;
+import net.pladema.internation.controller.documents.anamnesis.dto.AnamnesisDto;
+import net.pladema.internation.controller.ips.dto.AnthropometricDataDto;
+import net.pladema.internation.controller.ips.dto.ClinicalObservationDto;
+import net.pladema.internation.controller.ips.dto.VitalSignDto;
 
 
 public class MocksAnamnesis {

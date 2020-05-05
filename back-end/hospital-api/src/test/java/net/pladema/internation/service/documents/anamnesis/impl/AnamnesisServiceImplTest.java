@@ -1,6 +1,6 @@
 package net.pladema.internation.service.documents.anamnesis.impl;
 
-import net.pladema.internation.service.NoteService;
+import net.pladema.internation.service.general.NoteService;
 import net.pladema.internation.service.documents.DocumentService;
 import org.junit.Before;
 import org.junit.Test;

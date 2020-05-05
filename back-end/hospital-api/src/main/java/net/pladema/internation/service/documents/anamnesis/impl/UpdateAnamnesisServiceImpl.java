@@ -1,12 +1,13 @@
 package net.pladema.internation.service.documents.anamnesis.impl;
 
 import net.pladema.internation.repository.core.entity.Document;
-import net.pladema.internation.service.InternmentEpisodeService;
-import net.pladema.internation.service.NoteService;
+import net.pladema.internation.service.internment.InternmentEpisodeService;
+import net.pladema.internation.service.general.NoteService;
 import net.pladema.internation.service.documents.DocumentService;
 import net.pladema.internation.service.documents.anamnesis.*;
-import net.pladema.internation.service.domain.Anamnesis;
-import net.pladema.internation.service.domain.ips.DocumentObservations;
+import net.pladema.internation.service.documents.anamnesis.domain.Anamnesis;
+import net.pladema.internation.service.ips.domain.DocumentObservations;
+import net.pladema.internation.service.ips.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -58,46 +59,46 @@ public class UpdateAnamnesisServiceImpl implements UpdateAnamnesisService {
     }
 
     @Override
-    public Anamnesis updateAnanmesisDocument(Integer internmentEpisodeId, Integer patientId, Anamnesis anamnesis) {
+    public Anamnesis updateDocument(Integer internmentEpisodeId, Integer patientId, Anamnesis anamnesis) {
         LOG.debug("Input parameters -> intermentEpisodeId {}, patientId {}, anamnesis {}", internmentEpisodeId, patientId, anamnesis);
 
         Optional<Document> optDoc = documentService.findById(anamnesis.getId());
-        optDoc.ifPresent(anamnesisDoc -> {
+        optDoc.ifPresent(doc -> {
             deleteDocumentData(anamnesis.getId());
             //TODO anamnesisDocument.setStatusId();
-            loadNotes(anamnesisDoc, Optional.ofNullable(anamnesis.getNotes()));
-            anamnesisDoc = documentService.save(anamnesisDoc);
+            loadNotes(doc, Optional.ofNullable(anamnesis.getNotes()));
+            doc = documentService.save(doc);
 
-            anamnesis.setDiagnosis(healthConditionService.loadDiagnosis(patientId, anamnesisDoc.getId(), anamnesis.getDiagnosis()));
-            anamnesis.setPersonalHistories(healthConditionService.loadPersonalHistories(patientId, anamnesisDoc.getId(), anamnesis.getPersonalHistories()));
-            anamnesis.setFamilyHistories(healthConditionService.loadFamilyHistories(patientId, anamnesisDoc.getId(), anamnesis.getFamilyHistories()));
-            anamnesis.setAllergies(allergyService.loadAllergies(patientId, anamnesisDoc.getId(), anamnesis.getAllergies()));
-            anamnesis.setInmunizations(inmunizationService.loadInmunization(patientId, anamnesisDoc.getId(), anamnesis.getInmunizations()));
-            anamnesis.setMedications(medicationService.loadMedications(patientId, anamnesisDoc.getId(), anamnesis.getMedications()));
+            anamnesis.setDiagnosis(healthConditionService.loadDiagnosis(patientId, doc.getId(), anamnesis.getDiagnosis()));
+            anamnesis.setPersonalHistories(healthConditionService.loadPersonalHistories(patientId, doc.getId(), anamnesis.getPersonalHistories()));
+            anamnesis.setFamilyHistories(healthConditionService.loadFamilyHistories(patientId, doc.getId(), anamnesis.getFamilyHistories()));
+            anamnesis.setAllergies(allergyService.loadAllergies(patientId, doc.getId(), anamnesis.getAllergies()));
+            anamnesis.setInmunizations(inmunizationService.loadInmunization(patientId, doc.getId(), anamnesis.getInmunizations()));
+            anamnesis.setMedications(medicationService.loadMedications(patientId, doc.getId(), anamnesis.getMedications()));
 
-            anamnesis.setVitalSigns(clinicalObservationService.loadVitalSigns(patientId, anamnesisDoc.getId(), Optional.ofNullable(anamnesis.getVitalSigns())));
-            anamnesis.setAnthropometricData(clinicalObservationService.loadAnthropometricData(patientId, anamnesisDoc.getId(), Optional.ofNullable(anamnesis.getAnthropometricData())));
+            anamnesis.setVitalSigns(clinicalObservationService.loadVitalSigns(patientId, doc.getId(), Optional.ofNullable(anamnesis.getVitalSigns())));
+            anamnesis.setAnthropometricData(clinicalObservationService.loadAnthropometricData(patientId, doc.getId(), Optional.ofNullable(anamnesis.getAnthropometricData())));
 
-            internmentEpisodeService.updateAnamnesisDocumentId(internmentEpisodeId, anamnesisDoc.getId());
-            anamnesis.setId(anamnesisDoc.getId());
+            internmentEpisodeService.updateAnamnesisDocumentId(internmentEpisodeId, doc.getId());
+            anamnesis.setId(doc.getId());
 
             LOG.debug(OUTPUT, anamnesis);
         });
         return anamnesis;
     }
 
-    private Document loadNotes(Document anamnesisDocument, Optional<DocumentObservations> optNotes) {
-        LOG.debug("Input parameters -> anamnesisDocument {}, notes {}", anamnesisDocument, optNotes);
+    private Document loadNotes(Document document, Optional<DocumentObservations> optNotes) {
+        LOG.debug("Input parameters -> document {}, notes {}", document, optNotes);
         optNotes.ifPresent(notes -> {
-            anamnesisDocument.setCurrentIllnessNoteId(noteService.createNote(notes.getCurrentIllnessNote()));
-            anamnesisDocument.setPhysicalExamNoteId(noteService.createNote(notes.getPhysicalExamNote()));
-            anamnesisDocument.setStudiesSummaryNoteId(noteService.createNote(notes.getStudiesSummaryNote()));
-            anamnesisDocument.setEvolutionNoteId(noteService.createNote(notes.getEvolutionNote()));
-            anamnesisDocument.setClinicalImpressionNoteId(noteService.createNote(notes.getClinicalImpressionNote()));
-            anamnesisDocument.setOtherNoteId(noteService.createNote(notes.getOtherNote()));
+            document.setCurrentIllnessNoteId(noteService.createNote(notes.getCurrentIllnessNote()));
+            document.setPhysicalExamNoteId(noteService.createNote(notes.getPhysicalExamNote()));
+            document.setStudiesSummaryNoteId(noteService.createNote(notes.getStudiesSummaryNote()));
+            document.setEvolutionNoteId(noteService.createNote(notes.getEvolutionNote()));
+            document.setClinicalImpressionNoteId(noteService.createNote(notes.getClinicalImpressionNote()));
+            document.setOtherNoteId(noteService.createNote(notes.getOtherNote()));
         });
-        LOG.debug(OUTPUT, anamnesisDocument);
-        return anamnesisDocument;
+        LOG.debug(OUTPUT, document);
+        return document;
     }
 
     private void deleteDocumentData(Long documentId) {
@@ -110,23 +111,23 @@ public class UpdateAnamnesisServiceImpl implements UpdateAnamnesisService {
         documentService.deleteObservationsLabHistory(documentId);
     }
 
-    private void deleteNotes(Document anamnesisDocument) {
-        LOG.debug("Input parameters -> Document {}", anamnesisDocument);
+    private void deleteNotes(Document document) {
+        LOG.debug("Input parameters -> Document {}", document);
         List<Long> notesToDelete = new ArrayList<>();
-        if (anamnesisDocument.getClinicalImpressionNoteId() != null)
-            notesToDelete.add(anamnesisDocument.getClinicalImpressionNoteId());
-        if (anamnesisDocument.getCurrentIllnessNoteId() != null)
-            notesToDelete.add(anamnesisDocument.getCurrentIllnessNoteId());
-        if (anamnesisDocument.getEvolutionNoteId() != null)
-            notesToDelete.add(anamnesisDocument.getEvolutionNoteId());
-        if (anamnesisDocument.getIndicationsNoteId() != null)
-            notesToDelete.add(anamnesisDocument.getIndicationsNoteId());
-        if (anamnesisDocument.getPhysicalExamNoteId() != null)
-            notesToDelete.add(anamnesisDocument.getPhysicalExamNoteId());
-        if (anamnesisDocument.getStudiesSummaryNoteId() != null)
-            notesToDelete.add(anamnesisDocument.getStudiesSummaryNoteId());
-        if (anamnesisDocument.getOtherNoteId() != null)
-            notesToDelete.add(anamnesisDocument.getOtherNoteId());
+        if (document.getClinicalImpressionNoteId() != null)
+            notesToDelete.add(document.getClinicalImpressionNoteId());
+        if (document.getCurrentIllnessNoteId() != null)
+            notesToDelete.add(document.getCurrentIllnessNoteId());
+        if (document.getEvolutionNoteId() != null)
+            notesToDelete.add(document.getEvolutionNoteId());
+        if (document.getIndicationsNoteId() != null)
+            notesToDelete.add(document.getIndicationsNoteId());
+        if (document.getPhysicalExamNoteId() != null)
+            notesToDelete.add(document.getPhysicalExamNoteId());
+        if (document.getStudiesSummaryNoteId() != null)
+            notesToDelete.add(document.getStudiesSummaryNoteId());
+        if (document.getOtherNoteId() != null)
+            notesToDelete.add(document.getOtherNoteId());
         noteService.deleteAllNotes(notesToDelete);
     }
 

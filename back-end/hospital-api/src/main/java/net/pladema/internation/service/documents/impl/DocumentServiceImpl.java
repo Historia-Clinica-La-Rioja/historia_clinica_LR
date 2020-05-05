@@ -4,7 +4,7 @@ import net.pladema.internation.repository.core.*;
 import net.pladema.internation.repository.core.entity.*;
 import net.pladema.internation.repository.ips.generalstate.*;
 import net.pladema.internation.service.documents.DocumentService;
-import net.pladema.internation.service.domain.ips.*;
+import net.pladema.internation.service.ips.domain.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

@@ -2,8 +2,8 @@ package net.pladema.internation.service.documents.anamnesis.impl;
 
 import net.pladema.internation.repository.ips.generalstate.ClinicalObservationVo;
 import net.pladema.internation.repository.masterdata.entity.ObservationStatus;
-import net.pladema.internation.service.domain.ips.MapClinicalObservationVo;
-import net.pladema.internation.service.domain.ips.enums.EVitalSign;
+import net.pladema.internation.service.ips.domain.MapClinicalObservationVo;
+import net.pladema.internation.service.ips.domain.enums.EVitalSign;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

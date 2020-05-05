@@ -1,7 +1,7 @@
 package net.pladema.internation.controller.constraints.validator;
 
 import net.pladema.internation.controller.constraints.AnamnesisDiagnosisValid;
-import net.pladema.internation.controller.dto.core.AnamnesisDto;
+import net.pladema.internation.controller.documents.anamnesis.dto.AnamnesisDto;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
