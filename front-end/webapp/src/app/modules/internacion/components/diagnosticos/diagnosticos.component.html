@@ -33,7 +33,7 @@
 
 <section>
 	<h3 class="mat-body-2" [translate]="'internaciones.anamnesis.diagnosticos.table.TITLE'"></h3>
-	<table mat-table [dataSource]="dataSource" class="secondary">
+	<table mat-table [dataSource]="diagnosis" class="secondary">
 
 		<ng-container *ngFor="let column of columns" [matColumnDef]="column.def">
 			<th *matHeaderCellDef>{{ column.header | translate }}</th>
@@ -52,5 +52,5 @@
 		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
 		<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 	</table>
-	<app-no-data class="table" *ngIf="dataSource.data.length === 0"></app-no-data>
+	<app-no-data class="table" *ngIf="diagnosis.length === 0"></app-no-data>
 </section>

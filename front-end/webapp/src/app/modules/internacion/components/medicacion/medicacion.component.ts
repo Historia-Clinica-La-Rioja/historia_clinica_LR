@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MedicationDto, SnomedDto, MasterDataInterface } from '@api-rest/api-model';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MatTableDataSource } from '@angular/material/table';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
 
@@ -50,7 +49,6 @@ export class MedicacionComponent implements OnInit {
 		},
 	];
 	displayedColumns: string[] = [];
-	dataSource: MatTableDataSource<MedicationDto>;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -61,7 +59,6 @@ export class MedicacionComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.dataSource = new MatTableDataSource<MedicationDto>(this.medications);
 		this.form = this.formBuilder.group({
 			note: [null, Validators.required],
 			statusId: [null, Validators.required],
@@ -99,16 +96,11 @@ export class MedicacionComponent implements OnInit {
 	}
 
 	add(medicacion: MedicationDto): void {
-		this.dataSource.data = pushTo<MedicationDto>(this.dataSource.data, medicacion);
-		this.medications.push(medicacion);
+		this.medications = pushTo<MedicationDto>(this.medications, medicacion);
 	}
 
 	remove(index: number): void {
-		const toRemove = this.dataSource.data[index];
-		if (toRemove.id == null) {
-			this.dataSource.data = removeFrom<MedicationDto>(this.dataSource.data, index);
-			this.medications = this.medications.filter(item => toRemove !== item);
-		}
+		this.medications = removeFrom<MedicationDto>(this.medications, index);
 	}
 
 }

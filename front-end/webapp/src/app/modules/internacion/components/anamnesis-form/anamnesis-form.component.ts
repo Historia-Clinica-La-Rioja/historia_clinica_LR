@@ -4,10 +4,11 @@ import {
 	AllergyConditionDto, AnamnesisDto, DiagnosisDto,
 	HealthHistoryConditionDto, InmunizationDto,
 	MasterDataInterface,
-	MedicationDto
+	MedicationDto, ResponseAnamnesisDto
 } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { AnamnesisService } from '@api-rest/services/anamnesis.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
 	selector: 'app-anamnesis-form',
@@ -16,6 +17,7 @@ import { AnamnesisService } from '@api-rest/services/anamnesis.service';
 })
 export class AnamnesisFormComponent implements OnInit {
 
+	anamnesis: ResponseAnamnesisDto;
 	form: FormGroup;
 
 	bloodTypes: MasterDataInterface<string>[];
@@ -59,12 +61,50 @@ export class AnamnesisFormComponent implements OnInit {
 			attachSignature: [false]
 		});
 
-		this.internacionMasterDataService.getBloodTypes().subscribe(bloodTypes => {
-			this.bloodTypes = bloodTypes;
-		});
+		const docId = 19; //todo obtener de params
+		const anamnesis$ = this.anamnesisService.getAnamnesis(docId);
+		const bloodTypes$ = this.internacionMasterDataService.getBloodTypes();
+
+		if (docId) {
+			forkJoin([anamnesis$, bloodTypes$]).subscribe(results => {
+				const anamnesis = results[0];
+				this.bloodTypes = results[1];
+
+				this.allergies = anamnesis.allergies;
+				this.diagnosticos = anamnesis.diagnosis;
+				this.familyHistories = anamnesis.familyHistories;
+				this.inmunizations = anamnesis.inmunizations;
+				this.medications = anamnesis.medications;
+				this.personalHistories = anamnesis.personalHistories;
+
+				this.form.controls.anthropometricData.setValue({
+					bloodType: findBloodType(this.bloodTypes, anamnesis.anthropometricData.bloodType.id),
+					height: anamnesis.anthropometricData.height.value,
+					weight: anamnesis.anthropometricData.weight.value
+				});
+
+				this.form.controls.observations.setValue(anamnesis.notes);
+
+				this.form.controls.vitalSigns.setValue({
+					heartRate: anamnesis.vitalSigns.heartRate.value,
+					respiratoryRate: anamnesis.vitalSigns.respiratoryRate.value,
+					temperature: anamnesis.vitalSigns.temperature.value,
+					bloodOxygenSaturation: anamnesis.vitalSigns.bloodOxygenSaturation.value,
+					systolicBloodPressure: anamnesis.vitalSigns.systolicBloodPressure.value,
+					diastolicBloodPressure: anamnesis.vitalSigns.diastolicBloodPressure.value
+				});
+
+			});
+		} else {
+			bloodTypes$.subscribe(bloodTypes => this.bloodTypes = bloodTypes);
+		}
+
+		function findBloodType(bloodTypes: MasterDataInterface<string>[], id): MasterDataInterface<string> {
+			return bloodTypes.find(bloodType => bloodType.id === id);
+		}
 	}
 
-	save(): void {
+	save(event): void {
 		if (this.form.valid && this.form.value.attachSignature) {
 			const anamnesis = this.buildAnamnesisDto();
 			this.anamnesisService.createAnamnesis(anamnesis)

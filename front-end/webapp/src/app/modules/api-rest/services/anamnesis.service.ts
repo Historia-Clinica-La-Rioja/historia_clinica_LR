@@ -17,7 +17,12 @@ export class AnamnesisService {
 	) { }
 
 	createAnamnesis(anamnesis: AnamnesisDto): Observable<ResponseAnamnesisDto> {
-		let url = `${environment.apiBase}/institutions/${HARD_CODE_INSTITUTION}/internments/${HARD_CODE_INTERNMENT_EPISODE_ID}/anamnesis`;
+		const url = `${environment.apiBase}/institutions/${HARD_CODE_INSTITUTION}/internments/${HARD_CODE_INTERNMENT_EPISODE_ID}/anamnesis`;
 		return this.http.post<ResponseAnamnesisDto>(url, anamnesis);
+	}
+
+	getAnamnesis(anamnesisId: number): Observable<ResponseAnamnesisDto> {
+		const url = `${environment.apiBase}/institutions/${HARD_CODE_INSTITUTION}/internments/${HARD_CODE_INTERNMENT_EPISODE_ID}/anamnesis/${anamnesisId}`;
+		return this.http.get<ResponseAnamnesisDto>(url);
 	}
 }

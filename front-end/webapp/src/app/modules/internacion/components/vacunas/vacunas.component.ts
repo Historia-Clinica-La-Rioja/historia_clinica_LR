@@ -3,9 +3,7 @@ import { InmunizationDto, SnomedDto, MasterDataInterface } from '@api-rest/api-m
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Moment } from 'moment';
 import * as moment from 'moment';
-import { MatTableDataSource } from '@angular/material/table';
 import { DatePipe } from '@angular/common';
-import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { DateFormat } from '@core/utils/moment.utils';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
 
@@ -49,7 +47,6 @@ export class VacunasComponent implements OnInit {
 		},
 	];
 	displayedColumns: string[] = [];
-	dataSource: MatTableDataSource<InmunizationDto>;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -59,7 +56,6 @@ export class VacunasComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.dataSource = new MatTableDataSource<InmunizationDto>(this.inmunizations);
 		this.form = this.formBuilder.group({
 			date: [null],
 			snomed: [null, Validators.required]
@@ -112,16 +108,12 @@ export class VacunasComponent implements OnInit {
 	}
 
 	add(vacuna: InmunizationDto): void {
-		this.dataSource.data = pushTo<InmunizationDto>(this.dataSource.data, vacuna);
-		this.inmunizations.push(vacuna);
+		this.inmunizations = pushTo<InmunizationDto>(this.inmunizations, vacuna);
 	}
 
 	remove(index: number): void {
-		const toRemove = this.dataSource.data[index];
-		if (toRemove.id == null) {
-			this.dataSource.data = removeFrom<InmunizationDto>(this.dataSource.data, index);
-			this.inmunizations = this.inmunizations.filter(item => toRemove !== item);
-		}
+		this.inmunizations = removeFrom<InmunizationDto>(this.inmunizations, index);
+
 	}
 
 }

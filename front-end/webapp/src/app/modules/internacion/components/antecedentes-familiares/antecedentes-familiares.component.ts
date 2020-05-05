@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { SnomedDto, HealthHistoryConditionDto } from '@api-rest/api-model';
-import { MatTableDataSource } from '@angular/material/table';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
 
 @Component({
@@ -38,7 +37,6 @@ export class AntecedentesFamiliaresComponent implements OnInit {
 		}
 	];
 	displayedColumns: string[] = [];
-	dataSource: MatTableDataSource<HealthHistoryConditionDto>;
 
 	constructor(
 		private formBuilder: FormBuilder
@@ -48,7 +46,6 @@ export class AntecedentesFamiliaresComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.dataSource = new MatTableDataSource<HealthHistoryConditionDto>(this.familyHistories);
 		this.form = this.formBuilder.group({
 			snomed: [null, Validators.required]
 		});
@@ -81,16 +78,11 @@ export class AntecedentesFamiliaresComponent implements OnInit {
 	}
 
 	add(af: HealthHistoryConditionDto): void {
-		this.dataSource.data = pushTo<HealthHistoryConditionDto>(this.dataSource.data, af);
-		this.familyHistories.push(af);
+		this.familyHistories = pushTo<HealthHistoryConditionDto>(this.familyHistories, af);
 	}
 
 	remove(index: number): void {
-		const toRemove = this.dataSource.data[index];
-		if (toRemove.id == null) {
-			this.dataSource.data = removeFrom<HealthHistoryConditionDto>(this.dataSource.data, index);
-			this.familyHistories = this.familyHistories.filter(item => toRemove !== item);
-		}
+		this.familyHistories = removeFrom<HealthHistoryConditionDto>(this.familyHistories, index);
 	}
 
 }

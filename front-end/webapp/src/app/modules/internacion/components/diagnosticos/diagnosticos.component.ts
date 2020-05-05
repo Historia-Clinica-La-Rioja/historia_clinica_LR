@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { SnomedDto, DiagnosisDto } from '@api-rest/api-model';
-import { MatTableDataSource } from '@angular/material/table';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
 
 @Component({
@@ -43,7 +42,6 @@ export class DiagnosticosComponent implements OnInit {
 		}
 	];
 	displayedColumns: string[] = [];
-	dataSource: MatTableDataSource<DiagnosisDto>;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -53,7 +51,6 @@ export class DiagnosticosComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.dataSource = new MatTableDataSource<DiagnosisDto>(this.diagnosis);
 		this.form = this.formBuilder.group({
 			snomed: [null, Validators.required],
 			presumptive: [false]
@@ -86,16 +83,11 @@ export class DiagnosticosComponent implements OnInit {
 	}
 
 	add(diagnostico: DiagnosisDto): void {
-		this.dataSource.data = pushTo<DiagnosisDto>(this.dataSource.data, diagnostico);
-		this.diagnosis.push(diagnostico);
+		this.diagnosis = pushTo<DiagnosisDto>(this.diagnosis, diagnostico);
 	}
 
 	remove(index: number): void {
-		const toRemove = this.dataSource.data[index];
-		if (toRemove.id == null) {
-			this.dataSource.data = removeFrom<DiagnosisDto>(this.dataSource.data, index);
-			this.diagnosis = this.diagnosis.filter(item => toRemove !== item);
-		}
+		this.diagnosis = removeFrom<DiagnosisDto>(this.diagnosis, index);
 	}
 
 }

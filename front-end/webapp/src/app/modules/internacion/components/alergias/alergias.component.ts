@@ -48,7 +48,6 @@ export class AlergiasComponent implements OnInit {
 		},
 	];
 	displayedColumns: string[] = [];
-	dataSource: MatTableDataSource<AllergyConditionDto>;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -58,7 +57,6 @@ export class AlergiasComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.dataSource = new MatTableDataSource<AllergyConditionDto>(this.allergies);
 		this.form = this.formBuilder.group({
 			date: [null],
 			snomed: [null, Validators.required]
@@ -113,16 +111,11 @@ export class AlergiasComponent implements OnInit {
 	}
 
 	add(a: AllergyConditionDto): void {
-		this.dataSource.data = pushTo<AllergyConditionDto>(this.dataSource.data, a);
-		this.allergies.push(a);
+		this.allergies = pushTo<AllergyConditionDto>(this.allergies, a);
 	}
 
 	remove(index: number): void {
-		const toRemove = this.dataSource.data[index];
-		if (toRemove.id == null) {
-			this.dataSource.data = removeFrom<AllergyConditionDto>(this.dataSource.data, index);
-			this.allergies = this.allergies.filter(item => toRemove !== item);
-		}
+		this.allergies = removeFrom<AllergyConditionDto>(this.allergies, index);
 	}
 
 }

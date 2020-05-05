@@ -1,5 +1,5 @@
 <div class="container">
-	<form id="anamnesis-form" (keydown.enter)="false" [formGroup]="form" (ngSubmit)="save()">
+	<form id="anamnesis-form" (keydown.enter)="false" [formGroup]="form" (ngSubmit)="save($event)">
 		<section id="title">
 			<h2 class="page-title" [translate]="'internaciones.anamnesis.TITLE'"></h2>
 			<h3 [translate]="'internaciones.anamnesis.SUBTITLE'"></h3>
@@ -230,7 +230,7 @@
 							  [translate]="'internaciones.anamnesis.buttons.BACK'">
 						</span>
 					</button>
-					<button mat-stroked-button type="button" color="primary">
+					<button id="save-draft" mat-stroked-button type="button" color="primary">
 						<span class="uppercase" [translate]="'internaciones.anamnesis.buttons.SAVE_DRAFT'"></span>
 					</button>
 				</div>
@@ -238,7 +238,7 @@
 					<mat-checkbox formControlName="attachSignature">
 						<span [translate]="'internaciones.anamnesis.buttons.ATTACH_SIGNATURE'"></span>
 					</mat-checkbox>
-					<button mat-raised-button type="submit" color="primary">
+					<button id="sign-confirm" mat-raised-button type="submit" color="primary">
 						<span class="uppercase" [translate]="'internaciones.anamnesis.buttons.SIGN_CONFIRM'"></span>
 					</button>
 				</div>
