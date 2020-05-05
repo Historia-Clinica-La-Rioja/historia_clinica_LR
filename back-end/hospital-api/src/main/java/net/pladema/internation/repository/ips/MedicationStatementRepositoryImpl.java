@@ -40,7 +40,7 @@ public class MedicationStatementRepositoryImpl implements MedicationStatementRep
                 "where internment_episode_id = :internmentEpisodeId " +
                 "and d.status_id = :documentStatusId " +
                 ") " +
-                "select t.id as id, s.id as sctid, s.fsn, status_id, n.id as note_id, n.description as note " +
+                "select t.id as id, s.id as sctid, s.pt, status_id, n.id as note_id, n.description as note " +
                 "from temporal t " +
                 "left join note n on t.note_id = n.id " +
                 "join snomed s on t.sctid_code = s.id " +

@@ -36,7 +36,7 @@ public class HealthConditionRepositoryImpl implements HealthConditionRepositoryC
                 "join health_condition hc on dhc.health_condition_id = hc.id " +
                 "where internment_episode_id = :internmentEpisodeId " +
                 "and d.status_id = :statusId )" +
-                "select t.id as id, s.id as sctid, s.fsn, status_id, verification_status_id, problem_id, " +
+                "select t.id as id, s.id as sctid, s.pt, status_id, verification_status_id, problem_id, " +
                 "start_date, n.id note_id, n.description as note " +
                 "from t " +
                 "left join note n on note_id = n.id " +

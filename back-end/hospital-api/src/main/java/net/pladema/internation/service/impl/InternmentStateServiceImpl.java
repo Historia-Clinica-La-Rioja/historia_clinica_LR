@@ -1,10 +1,7 @@
 package net.pladema.internation.service.impl;
 
 import net.pladema.internation.service.InternmentStateService;
-import net.pladema.internation.service.documents.anamnesis.AllergyService;
-import net.pladema.internation.service.documents.anamnesis.HealthConditionService;
-import net.pladema.internation.service.documents.anamnesis.VitalSignLabService;
-import net.pladema.internation.service.documents.anamnesis.InmunizationService;
+import net.pladema.internation.service.documents.anamnesis.*;
 import net.pladema.internation.service.domain.InternmentGeneralState;
 import net.pladema.internation.service.domain.ips.*;
 import org.slf4j.Logger;
@@ -12,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -26,18 +22,22 @@ public class InternmentStateServiceImpl implements InternmentStateService {
 
     private final InmunizationService inmunizationService;
 
-    private final VitalSignLabService vitalSignLabService;
+    private final MedicationService medicationService;
+
+    private final ClinicalObservationService clinicalObservationService;
 
     private final HealthConditionService healthConditionService;
 
     public InternmentStateServiceImpl(AllergyService allergyService,
                                       InmunizationService inmunizationService,
-                                      VitalSignLabService vitalSignLabService,
+                                      MedicationService medicationService,
+                                      ClinicalObservationService clinicalObservationService,
                                       HealthConditionService healthConditionService) {
         this.allergyService = allergyService;
         this.inmunizationService = inmunizationService;
+        this.medicationService = medicationService;
         this.healthConditionService = healthConditionService;
-        this.vitalSignLabService = vitalSignLabService;
+        this.clinicalObservationService = clinicalObservationService;
     }
 
     @Override
@@ -45,7 +45,9 @@ public class InternmentStateServiceImpl implements InternmentStateService {
         LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
         InternmentGeneralState internmentGeneralState = new InternmentGeneralState();
         loadGeneralHealthCondition(internmentEpisodeId, internmentGeneralState);
+        internmentGeneralState.setMedications(getMedicationsState(internmentEpisodeId));
         internmentGeneralState.setVitalSigns(getVitalSignsState(internmentEpisodeId));
+        internmentGeneralState.setAnthropometricData(getAntropometricDataState(internmentEpisodeId));
         LOG.debug(OUTPUT, internmentGeneralState);
         return internmentGeneralState;
     }
@@ -60,7 +62,7 @@ public class InternmentStateServiceImpl implements InternmentStateService {
 
     private List<MedicationBo> getMedicationsState(Integer internmentEpisodeId){
         LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
-        return Collections.emptyList();
+        return medicationService.getMedicationsGeneralState(internmentEpisodeId);
     }
 
     private List<InmunizationBo> getInmunizationsState(Integer internmentEpisodeId){
@@ -75,11 +77,11 @@ public class InternmentStateServiceImpl implements InternmentStateService {
 
     private List<AnthropometricDataBo> getAntropometricDataState(Integer internmentEpisodeId){
         LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
-        return vitalSignLabService.getAnthropometricDataGeneralState(internmentEpisodeId);
+        return clinicalObservationService.getLast2AnthropometricDataGeneralState(internmentEpisodeId);
     }
 
     private List<VitalSignBo> getVitalSignsState(Integer internmentEpisodeId){
         LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
-        return vitalSignLabService.getLast2VitalSignsGeneralState(internmentEpisodeId);
+        return clinicalObservationService.getLast2VitalSignsGeneralState(internmentEpisodeId);
     }
 }

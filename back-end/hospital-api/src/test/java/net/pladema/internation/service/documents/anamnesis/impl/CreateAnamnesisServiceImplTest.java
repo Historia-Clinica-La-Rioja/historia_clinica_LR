@@ -4,7 +4,7 @@ import net.pladema.internation.service.InternmentEpisodeService;
 import net.pladema.internation.service.NoteService;
 import net.pladema.internation.service.documents.DocumentService;
 import net.pladema.internation.service.documents.anamnesis.AllergyService;
-import net.pladema.internation.service.documents.anamnesis.VitalSignLabService;
+import net.pladema.internation.service.documents.anamnesis.ClinicalObservationService;
 import net.pladema.internation.service.documents.anamnesis.HealthConditionService;
 import net.pladema.internation.service.documents.anamnesis.InmunizationService;
 import net.pladema.internation.service.documents.anamnesis.MedicationService;
@@ -37,7 +37,7 @@ public class CreateAnamnesisServiceImplTest {
 	private AllergyService allergyService;
 
 	@MockBean
-	private VitalSignLabService vitalSignLabService;
+	private ClinicalObservationService clinicalObservationService;
 
 	@MockBean
 	private InmunizationService inmunizationService;
@@ -53,7 +53,7 @@ public class CreateAnamnesisServiceImplTest {
 				noteService,
 				healthConditionService,
 				allergyService,
-                vitalSignLabService,
+                clinicalObservationService,
 				inmunizationService,
 				medicationService);
 	}

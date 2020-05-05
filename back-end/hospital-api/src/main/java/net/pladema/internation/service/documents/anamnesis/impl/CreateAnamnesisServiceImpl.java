@@ -33,7 +33,7 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
 
     private final MedicationService medicationService;
 
-    private final VitalSignLabService vitalSignLabService;
+    private final ClinicalObservationService clinicalObservationService;
 
     private final InmunizationService inmunizationService;
 
@@ -42,7 +42,7 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
                                       NoteService noteService,
                                       HealthConditionService healthConditionService,
                                       AllergyService allergyService,
-                                      VitalSignLabService vitalSignLabService,
+                                      ClinicalObservationService clinicalObservationService,
                                       InmunizationService inmunizationService,
                                       MedicationService medicationService) {
         this.documentService = documentService;
@@ -50,7 +50,7 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
         this.noteService = noteService;
         this.healthConditionService = healthConditionService;
         this.allergyService = allergyService;
-        this.vitalSignLabService = vitalSignLabService;
+        this.clinicalObservationService = clinicalObservationService;
         this.inmunizationService = inmunizationService;
         this.medicationService = medicationService;
     }
@@ -70,8 +70,8 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
         anamnesis.setInmunizations(inmunizationService.loadInmunization(patientId, anamnesisDocument.getId(), anamnesis.getInmunizations()));
         anamnesis.setMedications(medicationService.loadMedications(patientId, anamnesisDocument.getId(), anamnesis.getMedications()));
 
-        anamnesis.setVitalSigns(vitalSignLabService.loadVitalSigns(patientId, anamnesisDocument.getId(), Optional.ofNullable(anamnesis.getVitalSigns())));
-        anamnesis.setAnthropometricData(vitalSignLabService.loadAnthropometricData(patientId, anamnesisDocument.getId(), Optional.ofNullable(anamnesis.getAnthropometricData())));
+        anamnesis.setVitalSigns(clinicalObservationService.loadVitalSigns(patientId, anamnesisDocument.getId(), Optional.ofNullable(anamnesis.getVitalSigns())));
+        anamnesis.setAnthropometricData(clinicalObservationService.loadAnthropometricData(patientId, anamnesisDocument.getId(), Optional.ofNullable(anamnesis.getAnthropometricData())));
 
         internmentEpisodeService.updateAnamnesisDocumentId(intermentEpisodeId, anamnesisDocument.getId());
         anamnesis.setId(anamnesisDocument.getId());

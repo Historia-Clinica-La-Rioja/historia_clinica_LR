@@ -30,6 +30,10 @@ public interface InternmentStateMapper {
     @IterableMapping(qualifiedByName = "fromVitalSignBo")
     List<VitalSignDto> toListVitalSignDto(List<VitalSignBo> vitalSignBos);
 
+    @Named("toListAnthropometricDataDto")
+    @IterableMapping(qualifiedByName = "fromAnthropometricDataBo")
+    List<AnthropometricDataDto> toListAnthropometricDataDto(List<AnthropometricDataBo> anthropometricDatas);
+
     @Named("toListMedicationDto")
     @IterableMapping(qualifiedByName = "toMedicationDto")
     List<MedicationDto> toListMedicationDto(List<MedicationBo> listMedicationBo);
@@ -41,4 +45,5 @@ public interface InternmentStateMapper {
     @Mapping(target = "vitalSigns", source = "vitalSigns", qualifiedByName = "toListVitalSignDto")
     @Mapping(target = "medications", source = "medications", qualifiedByName = "toListMedicationDto")
     InternmentGeneralStateDto toInternmentGeneralStateDto(InternmentGeneralState interment);
+
 }

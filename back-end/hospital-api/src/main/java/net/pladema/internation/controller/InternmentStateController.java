@@ -39,7 +39,7 @@ public class InternmentStateController {
 
     private final InmunizationService inmunizationService;
 
-    private final VitalSignLabService vitalSignLabService;
+    private final ClinicalObservationService clinicalObservationService;
 
     private final InternmentStateMapper internmentStateMapper;
 
@@ -49,14 +49,14 @@ public class InternmentStateController {
                                      AllergyService allergyService,
                                      InmunizationService inmunizationService,
                                      InternmentStateMapper internmentStateMapper,
-                                     VitalSignLabService vitalSignLabService) {
+                                     ClinicalObservationService clinicalObservationService) {
         this.internmentStateService = internmentStateService;
         this.healthConditionService = healthConditionService;
         this.medicationService = medicationService;
         this.allergyService = allergyService;
         this.inmunizationService = inmunizationService;
         this.internmentStateMapper = internmentStateMapper;
-        this.vitalSignLabService = vitalSignLabService;
+        this.clinicalObservationService = clinicalObservationService;
     }
 
     @InternmentValid
@@ -125,8 +125,8 @@ public class InternmentStateController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}", institutionId, internmentEpisodeId);
-        List<AnthropometricDataBo> anthropometricDatas = vitalSignLabService.getAnthropometricDataGeneralState(internmentEpisodeId);
-        List<AnthropometricDataDto> result = new ArrayList<>();
+        List<AnthropometricDataBo> anthropometricDatas = clinicalObservationService.getLast2AnthropometricDataGeneralState(internmentEpisodeId);
+        List<AnthropometricDataDto> result = internmentStateMapper.toListAnthropometricDataDto(anthropometricDatas);
         LOG.debug("Output -> {}", result);
         return  ResponseEntity.ok().body(result);
     }
@@ -137,7 +137,7 @@ public class InternmentStateController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}", institutionId, internmentEpisodeId);
-        List<VitalSignBo> vitalSignBos = vitalSignLabService.getLast2VitalSignsGeneralState(internmentEpisodeId);
+        List<VitalSignBo> vitalSignBos = clinicalObservationService.getLast2VitalSignsGeneralState(internmentEpisodeId);
         List<VitalSignDto> result = internmentStateMapper.toListVitalSignDto(vitalSignBos);
         LOG.debug("Output -> {}", result);
         return  ResponseEntity.ok().body(result);
