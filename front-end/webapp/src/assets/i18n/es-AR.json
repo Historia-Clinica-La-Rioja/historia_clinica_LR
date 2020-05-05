@@ -113,7 +113,8 @@
 				"table": {
 					"TITLE": "Diagnósticos registrados",
 					"columns": {
-						"DIAGNOSIS": "Diagnóstico"
+						"DIAGNOSIS": "Diagnóstico",
+						"STATUS": "Estado"
 					}
 				}
 			},

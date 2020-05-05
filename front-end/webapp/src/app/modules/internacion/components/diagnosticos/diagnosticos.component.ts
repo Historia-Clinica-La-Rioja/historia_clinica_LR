@@ -35,6 +35,11 @@ export class DiagnosticosComponent implements OnInit {
 			def: 'diagnosis',
 			header: 'internaciones.anamnesis.diagnosticos.table.columns.DIAGNOSIS',
 			text: ap => ap.snomed.pt
+		},
+		{
+			def: 'status',
+			header: 'internaciones.anamnesis.diagnosticos.table.columns.STATUS',
+			text: ap => ap.presumptive ? 'Presuntivo' : 'Confirmado'
 		}
 	];
 	displayedColumns: string[] = [];

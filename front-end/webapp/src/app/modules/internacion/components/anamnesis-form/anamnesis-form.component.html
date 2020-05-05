@@ -1,5 +1,5 @@
 <div class="container">
-	<form id="anamnesis-form" [formGroup]="form" (ngSubmit)="save()">
+	<form id="anamnesis-form" (keydown.enter)="false" [formGroup]="form" (ngSubmit)="save()">
 		<section id="title">
 			<h2 class="page-title" [translate]="'internaciones.anamnesis.TITLE'"></h2>
 			<h3 [translate]="'internaciones.anamnesis.SUBTITLE'"></h3>
