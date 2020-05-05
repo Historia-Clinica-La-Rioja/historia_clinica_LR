@@ -9,6 +9,7 @@ import {
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { AnamnesisService } from '@api-rest/services/anamnesis.service';
 import { forkJoin } from 'rxjs';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 
 @Component({
 	selector: 'app-anamnesis-form',
@@ -16,6 +17,9 @@ import { forkJoin } from 'rxjs';
 	styleUrls: ['./anamnesis-form.component.scss']
 })
 export class AnamnesisFormComponent implements OnInit {
+
+	anamnesisId: number;
+	internmentEpisodeId: number;
 
 	anamnesis: ResponseAnamnesisDto;
 	form: FormGroup;
@@ -31,11 +35,19 @@ export class AnamnesisFormComponent implements OnInit {
 	constructor(
 		private formBuilder: FormBuilder,
 		private internacionMasterDataService: InternacionMasterDataService,
-		private anamnesisService: AnamnesisService
+		private anamnesisService: AnamnesisService,
+		private route: ActivatedRoute
 	) {
 	}
 
 	ngOnInit(): void {
+		this.route.paramMap.subscribe(
+			(params: ParamMap) => {
+				this.anamnesisId = Number(params.get('anamnesisId'));
+				this.internmentEpisodeId = Number(params.get('idInternacion'));
+			}
+		);
+
 		this.form = this.formBuilder.group({
 			anthropometricData: this.formBuilder.group({
 				bloodType: [null, Validators.required],
@@ -61,11 +73,10 @@ export class AnamnesisFormComponent implements OnInit {
 			attachSignature: [false]
 		});
 
-		const docId = 19; //todo obtener de params
-		const anamnesis$ = this.anamnesisService.getAnamnesis(docId);
+		const anamnesis$ = this.anamnesisService.getAnamnesis(this.anamnesisId, this.internmentEpisodeId);
 		const bloodTypes$ = this.internacionMasterDataService.getBloodTypes();
 
-		if (docId) {
+		if (this.anamnesisId) {
 			forkJoin([anamnesis$, bloodTypes$]).subscribe(results => {
 				const anamnesis = results[0];
 				this.bloodTypes = results[1];
@@ -105,16 +116,27 @@ export class AnamnesisFormComponent implements OnInit {
 	}
 
 	save(event): void {
-		if (this.form.valid && this.form.value.attachSignature) {
-			const anamnesis = this.buildAnamnesisDto();
-			this.anamnesisService.createAnamnesis(anamnesis)
-				.subscribe(anamnesisResponse => console.log('POST anamnesis', anamnesisResponse));
+		let confirmed;
+		confirmed = (event.submitter.id === 'sign-confirm');
+
+		if (!confirmed || (confirmed && this.form.value.attachSignature)) {
+			if (this.form.valid) {
+				const anamnesis = this.buildAnamnesisDto(confirmed);
+
+				if (this.anamnesisId) {
+					this.anamnesisService.updateAnamnesis(this.anamnesisId, anamnesis, this.internmentEpisodeId)
+						.subscribe(anamnesisUpdated => console.log('PUT anamnesis', anamnesisUpdated));
+				} else {
+					this.anamnesisService.createAnamnesis(anamnesis, this.internmentEpisodeId)
+						.subscribe(anamnesisResponse => console.log('POST anamnesis', anamnesisResponse));
+				}
+			}
 		}
 	}
 
-	private buildAnamnesisDto(): AnamnesisDto {
+	private buildAnamnesisDto(confirmed: boolean): AnamnesisDto {
 		return {
-			confirmed: false,
+			confirmed,
 			allergies: this.allergies,
 			anthropometricData: {
 				bloodType: {

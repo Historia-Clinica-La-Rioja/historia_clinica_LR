@@ -20,6 +20,10 @@ const routes: Routes = [
 		component: AnamnesisComponent
 	},
 	{
+		path: 'internacion/:idInternacion/paciente/:idPaciente/anamnesis/:anamnesisId',
+		component: AnamnesisComponent
+	},
+	{
 		path: 'internacion/new',
 		component: NewInternmentComponent
 	}

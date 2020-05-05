@@ -51,7 +51,10 @@ export class InternacionPacienteComponent implements OnInit {
 	}
 
 	goToAnamnesis(): void {
-		this.router.navigate([`${this.router.url}/anamnesis`]);
+		if (this.anamnesisDoc?.id)
+			this.router.navigate([`${this.router.url}/anamnesis/${this.anamnesisDoc?.id}`]);
+		else
+			this.router.navigate([`${this.router.url}/anamnesis`]);
 	}
 
 }
