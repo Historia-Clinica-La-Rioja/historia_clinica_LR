@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.validation.Valid;
 import java.io.Serializable;
 
 @Getter
@@ -16,5 +17,7 @@ public class AnthropometricDataDto implements Serializable {
     private ClinicalObservationDto height;
 
     private ClinicalObservationDto weight;
+
+    private ClinicalObservationDto BMI;
 
 }

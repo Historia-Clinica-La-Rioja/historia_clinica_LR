@@ -83,6 +83,7 @@ export class AnamnesisFormComponent implements OnInit {
 				},
 				height: {id: null, value: this.form.value.anthropometricData.height},
 				weight: {id: null, value: this.form.value.anthropometricData.weight},
+				bmi: null,
 			},
 			diagnosis: this.diagnosticos,
 			familyHistories: this.familyHistories,

@@ -22,4 +22,19 @@ public class AnthropometricDataBo implements Serializable {
                 height != null ||
                 weight != null);
     }
+
+    public ClinicalObservationBo getBMI(){
+        if (height == null || weight == null)
+            return null;
+        if (height.getValue() == null || weight.getValue() == null)
+            return null;
+        if (height.getValue().isEmpty() || weight.getValue().isEmpty())
+            return null;
+        try {
+            Double bmi = Float.parseFloat(weight.getValue()) / Math.pow((Float.parseFloat(height.getValue())/100),2);
+            return new ClinicalObservationBo(null, bmi + "");
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

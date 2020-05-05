@@ -77,6 +77,7 @@ export interface AnamnesisSummaryDto extends Serializable {
 
 export interface AnthropometricDataDto extends Serializable {
     bloodType: ClinicalObservationDto;
+    bmi: ClinicalObservationDto;
     height: ClinicalObservationDto;
     weight: ClinicalObservationDto;
 }
