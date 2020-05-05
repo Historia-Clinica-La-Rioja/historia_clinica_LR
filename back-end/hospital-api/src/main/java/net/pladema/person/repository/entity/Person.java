@@ -1,14 +1,22 @@
 package net.pladema.person.repository.entity;
 
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.Period;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import javax.persistence.*;
-import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.Period;
 
 @Entity
 @Table(name = "person")
@@ -19,9 +27,10 @@ import java.time.Period;
 public class Person implements Serializable {
 
     /**
-     *
-     */
-    private static final long serialVersionUID = 1708640067849754088L;
+	 * 
+	 */
+	private static final long serialVersionUID = -8310665281279550155L;
+
 
     @Id
     @Column(name = "id", nullable = false)
@@ -52,6 +61,7 @@ public class Person implements Serializable {
     @Column(name = "birth_date")
     private LocalDate birthDate;
 
+    @JsonIgnore
     public Short getAge(){
         if (birthDate == null)
             return null;

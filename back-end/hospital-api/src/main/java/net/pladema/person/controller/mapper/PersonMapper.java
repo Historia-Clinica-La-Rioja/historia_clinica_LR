@@ -2,6 +2,7 @@ package net.pladema.person.controller.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.address.controller.mapper.AddressMapper;
@@ -34,6 +35,7 @@ public interface PersonMapper {
 
     @Mapping(target = "id", source = "person.id")
     @Mapping(target = "gender", source = "gender", qualifiedByName = "fromGender")
+    @Named("toBasicDataPersonDto")
     BasicDataPersonDto basicDatafromPerson(Person person, Gender gender);
 
 

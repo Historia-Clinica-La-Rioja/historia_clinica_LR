@@ -191,6 +191,12 @@ export interface HealthInsuranceDto {
     rnos: number;
 }
 
+export interface HealthcareProfessionalDto {
+    id: number;
+    licenceNumber: string;
+    person: PersonBasicDataResponseDto;
+}
+
 export interface IdentificationTypeDto extends MasterdataDto<number> {
     id: number;
 }
