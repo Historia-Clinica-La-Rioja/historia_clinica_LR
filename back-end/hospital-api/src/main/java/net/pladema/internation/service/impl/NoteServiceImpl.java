@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class NoteServiceImpl implements NoteService {
@@ -39,5 +40,14 @@ public class NoteServiceImpl implements NoteService {
         LOG.debug("Input parameters -> notesToDelete {}", notesToDelete);
         if (!notesToDelete.isEmpty())
             noteRepository.deleteAll();
+    }
+
+    @Override
+    public String getDescriptionById(Long noteId) {
+        LOG.debug("Input parameters -> noteId {}", noteId);
+        Optional<Note> noteOptional = noteRepository.findById(noteId);
+        String result = noteOptional.map(Note::getDescription).orElse(null);
+        LOG.debug(OUTPUT, result);
+        return result;
     }
 }

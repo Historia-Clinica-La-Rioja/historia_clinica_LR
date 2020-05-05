@@ -1,9 +1,12 @@
 package net.pladema.internation.service.documents.anamnesis.impl;
 
+import net.pladema.internation.repository.core.entity.Document;
 import net.pladema.internation.repository.masterdata.entity.DocumentStatus;
+import net.pladema.internation.service.NoteService;
 import net.pladema.internation.service.documents.DocumentService;
 import net.pladema.internation.service.documents.anamnesis.AnamnesisService;
 import net.pladema.internation.service.domain.Anamnesis;
+import net.pladema.internation.service.domain.ips.DocumentObservations;
 import net.pladema.internation.service.domain.ips.GeneralHealthConditionBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,13 +21,16 @@ public class AnamnesisServiceImpl implements AnamnesisService {
 
     private final DocumentService documentService;
 
-    public AnamnesisServiceImpl(DocumentService documentService) {
+    private final NoteService noteService;
+
+    public AnamnesisServiceImpl(DocumentService documentService, NoteService noteService) {
         this.documentService = documentService;
+        this.noteService = noteService;
     }
 
     @Override
     public Anamnesis getAnamnesis(Long anamnesisId) {
-        LOG.debug("Input parameters {}", anamnesisId);
+        LOG.debug("Input parameters anamnesisId {}", anamnesisId);
         Anamnesis result = new Anamnesis();
         documentService.findById(anamnesisId).ifPresent( document -> {
             result.setId(document.getId());
@@ -40,7 +46,30 @@ public class AnamnesisServiceImpl implements AnamnesisService {
             result.setAllergies(documentService.getAllergyIntoleranceStateFromDocument(document.getId()));
             result.setAnthropometricData(documentService.getAnthropometricDataStateFromDocument(document.getId()));
             result.setVitalSigns(documentService.getVitalSignStateFromDocument(document.getId()));
+            
+            result.setNotes(loadNotes(document));
         });
+        LOG.debug(OUTPUT, result);
+        return result;
+    }
+
+    private DocumentObservations loadNotes(Document document) {
+        LOG.debug("Input parameters document {}", document);
+        DocumentObservations result = new DocumentObservations();
+        if (document.getClinicalImpressionNoteId() != null)
+            result.setClinicalImpressionNote(noteService.getDescriptionById(document.getClinicalImpressionNoteId()));
+        if (document.getStudiesSummaryNoteId() != null)
+            result.setStudiesSummaryNote(noteService.getDescriptionById(document.getStudiesSummaryNoteId()));
+        if (document.getPhysicalExamNoteId() != null)
+            result.setPhysicalExamNote(noteService.getDescriptionById(document.getPhysicalExamNoteId()));
+        if (document.getIndicationsNoteId() != null)
+            result.setIndicationsNote(noteService.getDescriptionById(document.getIndicationsNoteId()));
+        if (document.getEvolutionNoteId() != null)
+            result.setEvolutionNote(noteService.getDescriptionById(document.getEvolutionNoteId()));
+        if (document.getCurrentIllnessNoteId() != null)
+            result.setCurrentIllnessNote(noteService.getDescriptionById(document.getCurrentIllnessNoteId()));
+        if (document.getOtherNoteId() != null)
+            result.setOtherNote(noteService.getDescriptionById(document.getOtherNoteId()));
         LOG.debug(OUTPUT, result);
         return result;
     }

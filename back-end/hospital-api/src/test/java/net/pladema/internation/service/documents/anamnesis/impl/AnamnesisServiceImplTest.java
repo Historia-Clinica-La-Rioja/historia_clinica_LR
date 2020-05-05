@@ -1,5 +1,6 @@
 package net.pladema.internation.service.documents.anamnesis.impl;
 
+import net.pladema.internation.service.NoteService;
 import net.pladema.internation.service.documents.DocumentService;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,9 +18,12 @@ public class AnamnesisServiceImplTest {
 	@MockBean
 	private DocumentService documentService;
 
+	@MockBean
+	private NoteService noteService;
+
 	@Before
 	public void setUp() {
-		anamnesisServiceImpl = new AnamnesisServiceImpl(documentService);
+		anamnesisServiceImpl = new AnamnesisServiceImpl(documentService, noteService);
 	}
 
 
