@@ -295,6 +295,7 @@ export interface MasterdataDto<T> extends MasterDataInterface<T>, Serializable {
 
 export interface MedicationDto extends ClinicalTermDto {
     note: string;
+    suspended: boolean;
 }
 
 export interface PasswordResetDto {

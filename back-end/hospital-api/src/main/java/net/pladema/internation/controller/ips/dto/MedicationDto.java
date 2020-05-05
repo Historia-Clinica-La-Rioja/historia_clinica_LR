@@ -10,4 +10,6 @@ import lombok.ToString;
 public class MedicationDto extends ClinicalTermDto {
 
     private String note;
+
+    private boolean suspended = false;
 }
