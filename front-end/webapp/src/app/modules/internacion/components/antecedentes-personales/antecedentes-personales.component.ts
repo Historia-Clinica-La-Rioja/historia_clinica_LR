@@ -25,7 +25,7 @@ export class AntecedentesPersonalesComponent implements OnInit {
 		return this.personalHistoriesValue;
 	}
 
-	private snomedConcept: SnomedDto;
+	snomedConcept: SnomedDto;
 
 	form: FormGroup;
 
@@ -65,6 +65,7 @@ export class AntecedentesPersonalesComponent implements OnInit {
 				statusId: null
 			};
 			this.add(antecedentePersonal);
+			this.resetForm();
 		}
 	}
 
@@ -72,6 +73,11 @@ export class AntecedentesPersonalesComponent implements OnInit {
 		this.snomedConcept = selectedConcept;
 		let pt = selectedConcept ? selectedConcept.pt : '';
 		this.form.controls.snomed.setValue(pt);
+	}
+
+	resetForm(): void {
+		delete this.snomedConcept;
+		this.form.reset();
 	}
 
 	add(ap: HealthHistoryConditionDto): void {

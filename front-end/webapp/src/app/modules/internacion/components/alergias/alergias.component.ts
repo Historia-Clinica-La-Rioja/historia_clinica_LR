@@ -29,7 +29,7 @@ export class AlergiasComponent implements OnInit {
 		return this.allergiesValue;
 	}
 
-	private snomedConcept: SnomedDto;
+	snomedConcept: SnomedDto;
 
 	form: FormGroup;
 	today: Moment = moment();
@@ -97,6 +97,7 @@ export class AlergiasComponent implements OnInit {
 				statusId: null
 			};
 			this.add(alergia);
+			this.resetForm();
 		}
 	}
 
@@ -104,6 +105,11 @@ export class AlergiasComponent implements OnInit {
 		this.snomedConcept = selectedConcept;
 		const pt = selectedConcept ? selectedConcept.pt : '';
 		this.form.controls.snomed.setValue(pt);
+	}
+
+	resetForm(): void {
+		delete this.snomedConcept;
+		this.form.reset();
 	}
 
 	add(a: AllergyConditionDto): void {

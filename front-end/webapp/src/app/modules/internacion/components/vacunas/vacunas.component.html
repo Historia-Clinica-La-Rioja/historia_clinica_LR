@@ -1,32 +1,40 @@
 <h2 class="mat-h2" [translate]="'internaciones.anamnesis.vacunas.TITLE'"></h2>
 <mat-card>
 	<mat-card-content>
-		<app-concepts-search [label]="'internaciones.anamnesis.vacunas.INMUNIZATION'" (onSelect)=setConcept($event)>
+		<app-concepts-search *ngIf="!snomedConcept else vacunasForm"
+			[label]="'internaciones.anamnesis.vacunas.INMUNIZATION'"
+			(onSelect)=setConcept($event)>
 		</app-concepts-search>
-		<form [formGroup]="form" (ngSubmit)="addToList()">
-			<mat-form-field appearance="outline">
-				<mat-label [translate]="'internaciones.anamnesis.vacunas.INMUNIZATION'">
-				</mat-label>
-				<input matInput type="text" formControlName="snomed" name="snomed" readonly>
-				<mat-error [translate]="'internaciones.anamnesis.REQUIRED_SEARCH'">
-				</mat-error>
-			</mat-form-field>
-			<mat-form-field appearance="outline">
-				<mat-label [translate]="'internaciones.anamnesis.vacunas.form.REGISTRY_DATE'">
-				</mat-label>
-				<input matInput id="date" [matDatepicker]="myDatepicker" formControlName="date"
-					[max]="this.today">
-				<mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
-				<mat-datepicker #myDatepicker startView="multi-year" (yearSelected)="chosenYearHandler($event)"
-					(monthSelected)="chosenMonthHandler($event)">
-				</mat-datepicker>
-			</mat-form-field>
-			<div align="end">
-				<button class="uppercase" mat-raised-button color="primary" type="submit">
-					<span [translate]="'internaciones.anamnesis.vacunas.ADD'"></span>
-				</button>
-			</div>
-		</form>
+		<ng-template #vacunasForm>
+			<form [formGroup]="form" (ngSubmit)="addToList()">
+				<mat-form-field appearance="outline">
+					<mat-label [translate]="'internaciones.anamnesis.vacunas.INMUNIZATION'">
+					</mat-label>
+					<input matInput type="text" formControlName="snomed" name="snomed" readonly matTooltip="{{ snomedConcept.pt }}">
+					<button id="clear" mat-button matSuffix color="warn" mat-icon-button
+						(click)="resetForm()">
+						<mat-icon>close</mat-icon>
+					</button>
+					<mat-error [translate]="'internaciones.anamnesis.REQUIRED_SEARCH'">
+					</mat-error>
+				</mat-form-field>
+				<mat-form-field appearance="outline">
+					<mat-label [translate]="'internaciones.anamnesis.vacunas.form.REGISTRY_DATE'">
+					</mat-label>
+					<input matInput id="date" [matDatepicker]="myDatepicker" formControlName="date"
+						[max]="this.today">
+					<mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
+					<mat-datepicker #myDatepicker startView="multi-year" (yearSelected)="chosenYearHandler($event)"
+						(monthSelected)="chosenMonthHandler($event)">
+					</mat-datepicker>
+				</mat-form-field>
+				<div align="end">
+					<button class="uppercase" mat-raised-button color="primary" type="submit">
+						<span [translate]="'internaciones.anamnesis.vacunas.ADD'"></span>
+					</button>
+				</div>
+			</form>
+		</ng-template>
 	</mat-card-content>
 </mat-card>
 

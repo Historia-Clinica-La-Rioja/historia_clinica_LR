@@ -30,7 +30,7 @@ export class VacunasComponent implements OnInit {
 		return this.inmunizationsValue;
 	}
 
-	private snomedConcept: SnomedDto;
+	snomedConcept: SnomedDto;
 
 	form: FormGroup;
 	today: Moment = moment();
@@ -96,6 +96,7 @@ export class VacunasComponent implements OnInit {
 				statusId: null
 			};
 			this.add(vacuna);
+			this.resetForm();
 		}
 	}
 
@@ -103,6 +104,11 @@ export class VacunasComponent implements OnInit {
 		this.snomedConcept = selectedConcept;
 		const pt = selectedConcept ? selectedConcept.pt : '';
 		this.form.controls.snomed.setValue(pt);
+	}
+
+	resetForm(): void {
+		delete this.snomedConcept;
+		this.form.reset();
 	}
 
 	add(vacuna: InmunizationDto): void {

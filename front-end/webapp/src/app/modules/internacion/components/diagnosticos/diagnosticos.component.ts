@@ -25,7 +25,7 @@ export class DiagnosticosComponent implements OnInit {
 		return this.diagnosisValue;
 	}
 
-	private snomedConcept: SnomedDto;
+	snomedConcept: SnomedDto;
 
 	form: FormGroup;
 
@@ -65,6 +65,7 @@ export class DiagnosticosComponent implements OnInit {
 				snomed: this.snomedConcept
 			};
 			this.add(diagnostico);
+			this.resetForm();
 		}
 	}
 
@@ -72,6 +73,11 @@ export class DiagnosticosComponent implements OnInit {
 		this.snomedConcept = selectedConcept;
 		let pt = selectedConcept ? selectedConcept.pt : '';
 		this.form.controls.snomed.setValue(pt);
+	}
+
+	resetForm(): void {
+		delete this.snomedConcept;
+		this.form.reset();
 	}
 
 	add(diagnostico: DiagnosisDto): void {

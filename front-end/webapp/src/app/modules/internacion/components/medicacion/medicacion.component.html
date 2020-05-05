@@ -1,41 +1,49 @@
 <h2 class="mat-h2" [translate]="'internaciones.anamnesis.medicacion.TITLE'"></h2>
 <mat-card>
 	<mat-card-content>
-		<app-concepts-search [label]="'internaciones.anamnesis.medicacion.MEDICATION'" (onSelect)=setConcept($event)>
+		<app-concepts-search *ngIf="!snomedConcept else medicacionForm"
+			[label]="'internaciones.anamnesis.medicacion.MEDICATION'"
+			(onSelect)=setConcept($event)>
 		</app-concepts-search>
-		<form [formGroup]="form" (ngSubmit)="addToList()">
-			<mat-form-field appearance="outline">
-				<mat-label [translate]="'internaciones.anamnesis.medicacion.MEDICATION'">
-				</mat-label>
-				<input matInput type="text" formControlName="snomed" name="snomed" readonly>
-				<mat-error [translate]="'internaciones.anamnesis.REQUIRED_SEARCH'">
-				</mat-error>
-			</mat-form-field>
-			<mat-form-field appearance="outline">
-				<mat-label [translate]="'internaciones.anamnesis.medicacion.form.CLINICAL_STATUS'">
-				</mat-label>
-				<mat-select formControlName="statusId" name="statusId">
-					<mat-option *ngFor="let status of clinicalStatus" [value]="status.id">
-						{{status.description}}
-					</mat-option>
-				</mat-select>
-				<mat-error [translate]="'forms.REQUIRED'">
-				</mat-error>
-			</mat-form-field>
-			<mat-form-field appearance="outline">
-				<mat-label [translate]="'internaciones.anamnesis.medicacion.form.NOTE'"></mat-label>
-				<textarea matInput type="text" id="note" name="note" formControlName="note"
-					placeholder="{{'internaciones.anamnesis.observations.DESCRIPTION' | translate }}">
-					</textarea>
-				<mat-error [translate]="'forms.REQUIRED'">
-				</mat-error>
-			</mat-form-field>
-			<div align="end">
-				<button class="uppercase" mat-raised-button color="primary" type="submit">
-					<span [translate]="'internaciones.anamnesis.medicacion.ADD'"></span>
-				</button>
-			</div>
-		</form>
+		<ng-template #medicacionForm>
+			<form [formGroup]="form" (ngSubmit)="addToList()">
+				<mat-form-field appearance="outline">
+					<mat-label [translate]="'internaciones.anamnesis.medicacion.MEDICATION'">
+					</mat-label>
+					<input matInput type="text" formControlName="snomed" name="snomed" readonly matTooltip="{{ snomedConcept.pt }}">
+					<button id="clear" mat-button matSuffix color="warn" mat-icon-button
+						(click)="resetForm()">
+						<mat-icon>close</mat-icon>
+					</button>
+					<mat-error [translate]="'internaciones.anamnesis.REQUIRED_SEARCH'">
+					</mat-error>
+				</mat-form-field>
+				<mat-form-field appearance="outline">
+					<mat-label [translate]="'internaciones.anamnesis.medicacion.form.CLINICAL_STATUS'">
+					</mat-label>
+					<mat-select formControlName="statusId" name="statusId">
+						<mat-option *ngFor="let status of clinicalStatus" [value]="status.id">
+							{{status.description}}
+						</mat-option>
+					</mat-select>
+					<mat-error [translate]="'forms.REQUIRED'">
+					</mat-error>
+				</mat-form-field>
+				<mat-form-field appearance="outline">
+					<mat-label [translate]="'internaciones.anamnesis.medicacion.form.NOTE'"></mat-label>
+					<textarea matInput type="text" id="note" name="note" formControlName="note"
+						placeholder="{{'internaciones.anamnesis.observations.DESCRIPTION' | translate }}">
+						</textarea>
+					<mat-error [translate]="'forms.REQUIRED'">
+					</mat-error>
+				</mat-form-field>
+				<div align="end">
+					<button class="uppercase" mat-raised-button color="primary" type="submit">
+						<span [translate]="'internaciones.anamnesis.medicacion.ADD'"></span>
+					</button>
+				</div>
+			</form>
+		</ng-template>
 	</mat-card-content>
 </mat-card>
 

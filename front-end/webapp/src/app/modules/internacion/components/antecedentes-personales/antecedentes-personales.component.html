@@ -1,25 +1,31 @@
 <h2 class="mat-h2" [translate]="'internaciones.anamnesis.antecedentes-personales.TITLE'"></h2>
 <mat-card>
 	<mat-card-content>
-		<app-concepts-search [label]="'internaciones.anamnesis.antecedentes-personales.PERSONAL_HISTORY'"
+		<app-concepts-search *ngIf="!snomedConcept else antecedentesPersonalesForm"
+			[label]="'internaciones.anamnesis.antecedentes-personales.PERSONAL_HISTORY'"
 			(onSelect)=setConcept($event)>
 		</app-concepts-search>
+		<ng-template #antecedentesPersonalesForm>
+			<form [formGroup]="form" (ngSubmit)="addToList()">
+				<mat-form-field appearance="outline">
+					<mat-label [translate]="'internaciones.anamnesis.antecedentes-personales.PERSONAL_HISTORY'">
+					</mat-label>
+					<input matInput type="text" formControlName="snomed" name="snomed" readonly matTooltip="{{ snomedConcept.pt }}">
+					<button id="clear" mat-button matSuffix color="warn" mat-icon-button
+						(click)="resetForm()">
+						<mat-icon>close</mat-icon>
+					</button>
+					<mat-error [translate]="'internaciones.anamnesis.REQUIRED_SEARCH'">
+					</mat-error>
+				</mat-form-field>
 
-		<form [formGroup]="form" (ngSubmit)="addToList()">
-			<mat-form-field appearance="outline">
-				<mat-label [translate]="'internaciones.anamnesis.antecedentes-personales.PERSONAL_HISTORY'">
-				</mat-label>
-				<input matInput type="text" formControlName="snomed" name="snomed" readonly>
-				<mat-error [translate]="'internaciones.anamnesis.REQUIRED_SEARCH'">
-				</mat-error>
-			</mat-form-field>
-
-			<div align="end">
-				<button mat-raised-button color="primary" type="submit">
-					<span class="uppercase" [translate]="'internaciones.anamnesis.antecedentes-personales.ADD'"></span>
-				</button>
-			</div>
-		</form>
+				<div align="end">
+					<button mat-raised-button color="primary" type="submit">
+						<span class="uppercase" [translate]="'internaciones.anamnesis.antecedentes-personales.ADD'"></span>
+					</button>
+				</div>
+			</form>
+		</ng-template>
 	</mat-card-content>
 </mat-card>
 

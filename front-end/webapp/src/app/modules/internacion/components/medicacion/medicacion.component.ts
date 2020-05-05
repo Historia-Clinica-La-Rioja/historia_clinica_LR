@@ -26,7 +26,7 @@ export class MedicacionComponent implements OnInit {
 		return this.medicationsValue;
 	}
 
-	private snomedConcept: SnomedDto;
+	snomedConcept: SnomedDto;
 
 	form: FormGroup;
 	clinicalStatus: MasterDataInterface<string>[];
@@ -83,6 +83,7 @@ export class MedicacionComponent implements OnInit {
 				statusId: this.form.value.statusId
 			};
 			this.add(medicacion);
+			this.resetForm();
 		}
 	}
 
@@ -90,6 +91,11 @@ export class MedicacionComponent implements OnInit {
 		this.snomedConcept = selectedConcept;
 		let pt = selectedConcept ? selectedConcept.pt : '';
 		this.form.controls.snomed.setValue(pt);
+	}
+
+	resetForm(): void {
+		delete this.snomedConcept;
+		this.form.reset();
 	}
 
 	add(medicacion: MedicationDto): void {
