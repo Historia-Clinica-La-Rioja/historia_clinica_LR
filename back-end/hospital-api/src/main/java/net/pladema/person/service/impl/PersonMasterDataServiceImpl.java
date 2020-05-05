@@ -31,7 +31,9 @@ public class PersonMasterDataServiceImpl implements PersonMasterDataService {
     @Override
     public Optional<Gender> getGender(Short genderId) {
         LOG.debug("Input parameter -> {}", genderId);
-        Optional<Gender> result = genderRepository.findById(genderId);
+        Optional<Gender> result = Optional.empty();
+        if (genderId != null)
+            result = genderRepository.findById(genderId);
         LOG.debug("Output -> {}", result);
         return result;
     }
