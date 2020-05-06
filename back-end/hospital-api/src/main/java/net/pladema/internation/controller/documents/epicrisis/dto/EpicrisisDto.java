@@ -3,7 +3,6 @@ package net.pladema.internation.controller.documents.epicrisis.dto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.internation.controller.internment.dto.DocumentObservationsDto;
 import net.pladema.internation.controller.ips.dto.*;
 
 import javax.validation.Valid;
@@ -20,7 +19,7 @@ public class EpicrisisDto implements Serializable {
     @NotNull
     private boolean confirmed = false;
 
-    private DocumentObservationsDto notes;
+    private EpicrisisObservationsDto notes;
 
     @NotNull
     private List<@Valid DiagnosisDto> diagnosis;
@@ -39,11 +38,5 @@ public class EpicrisisDto implements Serializable {
 
     @NotNull
     private List<@Valid AllergyConditionDto> allergies = new ArrayList<>();
-
-    @Valid
-    private AnthropometricDataDto anthropometricData;
-
-    @Valid
-    private VitalSignDto vitalSigns;
 
 }

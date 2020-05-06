@@ -179,15 +179,13 @@ export interface DocumentsSummaryDto extends Serializable {
 
 export interface EpicrisisDto extends Serializable {
     allergies: AllergyConditionDto[];
-    anthropometricData: AnthropometricDataDto;
     confirmed: boolean;
     diagnosis: DiagnosisDto[];
     familyHistories: HealthHistoryConditionDto[];
     inmunizations: InmunizationDto[];
     medications: MedicationDto[];
-    notes: DocumentObservationsDto;
+    notes: EpicrisisObservationsDto;
     personalHistories: HealthHistoryConditionDto[];
-    vitalSigns: VitalSignDto;
 }
 
 export interface EpicrisisGeneralStateDto extends Serializable {
@@ -197,6 +195,14 @@ export interface EpicrisisGeneralStateDto extends Serializable {
     inmunizations: InmunizationDto[];
     medications: MedicationDto[];
     personalHistories: HealthHistoryConditionDto[];
+}
+
+export interface EpicrisisObservationsDto extends Serializable {
+    evolutionNote: string;
+    indicationsNote: string;
+    otherNote: string;
+    physicalExamNote: string;
+    studiesSummaryNote: string;
 }
 
 export interface EpicrisisSummaryDto extends DocumentSummaryDto {
