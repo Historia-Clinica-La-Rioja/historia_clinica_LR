@@ -15,8 +15,6 @@ public abstract class DocumentSummaryVo {
     private String statusId;
 
     public Boolean isConfirmed(){
-        if(id == null)
-            return null;
         return (statusId != null && statusId.equals(DocumentStatus.FINAL));
     }
 }

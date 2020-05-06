@@ -6,9 +6,11 @@ import net.pladema.internation.controller.internment.dto.InternmentPatientDto;
 import net.pladema.internation.repository.core.domain.InternmentSummaryVo;
 import net.pladema.internation.service.internment.domain.BasicListedPatientBo;
 import net.pladema.internation.service.internment.domain.InternmentEpisodeBo;
+import org.mapstruct.AfterMapping;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 
 import java.util.List;
@@ -42,4 +44,12 @@ public interface InternmentEpisodeMapper {
     @Named("toListInternmentEpisodeDto")
     @IterableMapping(qualifiedByName = "toInternmentEpisodeDto")
     List<InternmentEpisodeDto> toListInternmentEpisodeDto(List<InternmentEpisodeBo> internmentEpisodes);
+
+    @AfterMapping
+    default void configDocumentsSummary(@MappingTarget InternmentSummaryDto target, InternmentSummaryVo source){
+        if(target.getDocuments().getAnamnesis().getId() == null)
+            target.getDocuments().setAnamnesis(null);
+        if(target.getDocuments().getEpicrisis().getId() == null)
+            target.getDocuments().setEpicrisis(null);
+    }
 }
