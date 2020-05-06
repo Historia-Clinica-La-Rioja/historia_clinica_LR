@@ -1,5 +1,8 @@
 <app-content width="full">
 	<section>
+		<button mat-raised-button color="primary" (click)="goNewInternment()">
+			<span>Iniciar internación</span>
+		</button>
 		<div class="profile-card">
 			<app-patient-card [patient]="patientBasicData">
 				<div header class="header">
