@@ -12,7 +12,7 @@ const BASIC_URL_SUFIX = '/internments/patients'
 })
 export class InternmentPatientService {
 
-	private institutionId = 123456; //TODO - completar cuando dispongamos del id de institucion cargandolo dinamicamente
+	private institutionId = 10; //TODO - completar cuando dispongamos del id de institucion cargandolo dinamicamente
 
 	constructor(private http: HttpClient) {
 	}

@@ -52,4 +52,9 @@ export class InternacionMasterDataService {
 		return this.http.get<[]>(url);
 	}
 
+	getClinicalSpecialty(): Observable<MasterDataInterface<string>[]> {
+		let url = `${environment.apiBase}/internments/masterdata/clinical/specialty`;
+		return this.http.get<any[]>(url);
+	}
+
 }

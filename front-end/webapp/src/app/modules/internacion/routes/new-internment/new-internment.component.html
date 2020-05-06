@@ -2,20 +2,114 @@
 	<section class="page">
 		<h2 class="page-title" [translate]="'internaciones.new-internment.TITLE'"></h2>
 		<h4 class="page-title" [translate]="'internaciones.new-internment.SUBTITLE'"></h4>
+		<br>
 		<form [formGroup]="form" (ngSubmit)="save()">
 			<section>
 				<h2 [translate]="'internaciones.new-internment.SECTION_SERVICE'"></h2>
 				<div class="form-row">
+					<span [translate]="'Tipo de internación'"></span>
+				</div>
+				<div class="form-row">
+					<mat-form-field appearance="outline">
+						<mat-select id="specialty"
+									name="specialty"
+									formControlName="specialty"
+									placeholder="{{'pacientes.form.SELECT' | translate}}">
+							<mat-option *ngFor="let specialty of specialties"
+										[value]="specialty.id">
+								{{specialty.name}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
 				</div>
 			</section>
 			<section>
 				<h2 [translate]="'internaciones.new-internment.SECTION_BED'"></h2>
 				<div class="form-row">
+					<span [translate]="'Sector'"></span>
+				</div>
+				<div class="form-row">
+					<mat-form-field appearance="outline">
+						<mat-select id="sector"
+									name="sector"
+									formControlName="sector"
+									placeholder="{{'pacientes.form.SELECT' | translate}}"
+									(selectionChange)="setService()">
+							<mat-option *ngFor="let sector of sectors"
+										[value]="sector.id">
+								{{sector.description}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+				<div class="form-row">
+					<span [translate]="'Servicio'"></span>
+				</div>
+				<div class="form-row">
+					<mat-form-field appearance="outline">
+						<mat-select id="service"
+									name="service"
+									formControlName="service"
+									placeholder="{{'pacientes.form.SELECT' | translate}}"
+									(selectionChange)="setRoom()">
+							<mat-option *ngFor="let service of services"
+										[value]="service.id">
+								{{service.name}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+				<div class="form-row">
+					<span [translate]="'N° de habitación'"></span>
+				</div>
+				<div class="form-row">
+					<mat-form-field appearance="outline">
+						<mat-select id="room"
+									name="room"
+									formControlName="room"
+									placeholder="{{'pacientes.form.SELECT' | translate}}"
+									(selectionChange)="setBeds()">
+							<mat-option *ngFor="let room of rooms"
+										[value]="room.id">
+								{{room.roomNumber}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+				<div class="form-row">
+					<span [translate]="'N° de cama'"></span>
+				</div>
+				<div class="form-row">
+					<mat-form-field appearance="outline">
+						<mat-select id="bed"
+									name="bed"
+									formControlName="bed"
+									placeholder="{{'pacientes.form.SELECT' | translate}}">
+							<mat-option *ngFor="let specialty of specialties"
+										[value]="specialty.id">
+								{{specialty.name}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
 				</div>
 			</section>
 			<section>
 				<h2 [translate]="'internaciones.new-internment.SECTION_DOCTOR'"></h2>
 				<div class="form-row">
+					<span [translate]="'Nombre del médico'"></span>
+				</div>
+				<div class="form-row">
+					<mat-form-field appearance="outline">
+						<mat-select id="professional"
+									name="professional"
+									formControlName="professional"
+									placeholder="{{'pacientes.form.SELECT' | translate}}">
+							<mat-option *ngFor="let professional of professionals"
+										[value]="professional.id">
+								{{ professional.person.firstName + ' ' + professional.person.lastName }}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
 				</div>
 			</section>
 			<section>
