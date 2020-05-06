@@ -12,4 +12,6 @@ import java.io.Serializable;
 public class DocumentsSummaryDto implements Serializable {
 
     private AnamnesisSummaryDto anamnesis;
+
+    private EpicrisisSummaryDto epicrisis;
 }

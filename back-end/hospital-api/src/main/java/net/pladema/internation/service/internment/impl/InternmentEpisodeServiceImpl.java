@@ -2,7 +2,7 @@ package net.pladema.internation.service.internment.impl;
 
 import net.pladema.internation.repository.core.EvolutionNoteDocumentRepository;
 import net.pladema.internation.repository.core.InternmentEpisodeRepository;
-import net.pladema.internation.repository.core.domain.InternmentSummary;
+import net.pladema.internation.repository.core.domain.InternmentSummaryVo;
 import net.pladema.internation.repository.core.entity.EvolutionNoteDocument;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
 import org.slf4j.Logger;
@@ -50,9 +50,9 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
     }
 
     @Override
-    public Optional<InternmentSummary> getIntermentSummary(Integer internmentEpisodeId) {
+    public Optional<InternmentSummaryVo> getIntermentSummary(Integer internmentEpisodeId) {
         LOG.debug("Input parameters -> {}", internmentEpisodeId);
-        Optional<InternmentSummary> result = internmentEpisodeRepository.getSummary(internmentEpisodeId);
+        Optional<InternmentSummaryVo> result = internmentEpisodeRepository.getSummary(internmentEpisodeId);
         LOG.debug("Output -> {}", result);
         return result;
     }

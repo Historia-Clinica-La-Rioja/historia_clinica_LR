@@ -70,9 +70,7 @@ export interface AnamnesisDto extends Serializable {
     vitalSigns: VitalSignDto;
 }
 
-export interface AnamnesisSummaryDto extends Serializable {
-    confirmed: boolean;
-    id: number;
+export interface AnamnesisSummaryDto extends DocumentSummaryDto {
 }
 
 export interface AnthropometricDataDto extends Serializable {
@@ -169,8 +167,14 @@ export interface DocumentObservationsDto extends Serializable {
     studiesSummaryNote: string;
 }
 
+export interface DocumentSummaryDto extends Serializable {
+    confirmed: boolean;
+    id: number;
+}
+
 export interface DocumentsSummaryDto extends Serializable {
     anamnesis: AnamnesisSummaryDto;
+    epicrisis: EpicrisisSummaryDto;
 }
 
 export interface EpicrisisDto extends Serializable {
@@ -184,6 +188,9 @@ export interface EpicrisisDto extends Serializable {
     notes: DocumentObservationsDto;
     personalHistories: HealthHistoryConditionDto[];
     vitalSigns: VitalSignDto;
+}
+
+export interface EpicrisisSummaryDto extends DocumentSummaryDto {
 }
 
 export interface EvolutionNoteDto extends Serializable {

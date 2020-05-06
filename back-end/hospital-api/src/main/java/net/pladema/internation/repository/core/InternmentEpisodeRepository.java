@@ -1,6 +1,6 @@
 package net.pladema.internation.repository.core;
 
-import net.pladema.internation.repository.core.domain.InternmentSummary;
+import net.pladema.internation.repository.core.domain.InternmentSummaryVo;
 import net.pladema.internation.repository.core.entity.InternmentEpisode;
 import net.pladema.internation.service.internment.domain.BasicListedPatientBo;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,8 +19,10 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
 
 
     @Transactional(readOnly = true)
-    @Query("SELECT NEW net.pladema.internation.repository.core.domain.InternmentSummary(" +
-            "ie.id,  ie.creationable.createdOn, ie.anamnesisDocId, da.statusId as anamnesisStatusId, " +
+    @Query("SELECT NEW net.pladema.internation.repository.core.domain.InternmentSummaryVo(" +
+            "ie.id,  ie.creationable.createdOn, " +
+            "ie.anamnesisDocId, da.statusId as anamnesisStatusId, " +
+            "ie.epicrisisDocId, de.statusId as epicrisisStatusId, " +
             "b.id as bedId, b.bedNumber, " +
             "r.id as roomId, r.roomNumber, " +
             "cs.id as clinicalSpecialtyId, cs.name as specialty, " +
@@ -31,8 +33,9 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             "LEFT JOIN ClinicalSpecialty cs ON (cs.id = ie.clinicalSpecialtyId) " +
             "LEFT JOIN HealthcareProfessionalGroup hpg ON (hpg.pk.internmentEpisodeId = ie.id and hpg.responsible = true) " +
             "LEFT JOIN Document da ON (da.id = ie.anamnesisDocId) " +
+            "LEFT JOIN Document de ON (de.id = ie.epicrisisDocId) " +
             "WHERE ie.id = :internmentEpisodeId")
-    Optional<InternmentSummary> getSummary(@Param("internmentEpisodeId") Integer internmentEpisodeId);
+    Optional<InternmentSummaryVo> getSummary(@Param("internmentEpisodeId") Integer internmentEpisodeId);
 
 
     @Transactional(readOnly = true)

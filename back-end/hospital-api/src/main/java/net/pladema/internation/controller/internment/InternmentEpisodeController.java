@@ -3,7 +3,7 @@ package net.pladema.internation.controller.internment;
 import io.swagger.annotations.Api;
 import net.pladema.internation.controller.internment.dto.InternmentSummaryDto;
 import net.pladema.internation.controller.internment.mapper.InternmentEpisodeMapper;
-import net.pladema.internation.repository.core.domain.InternmentSummary;
+import net.pladema.internation.repository.core.domain.InternmentSummaryVo;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,9 +35,9 @@ public class InternmentEpisodeController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
         LOG.debug("Input parameters -> {}", internmentEpisodeId);
-        InternmentSummary internmentSummary = internmentEpisodeService.getIntermentSummary(internmentEpisodeId)
-                .orElse(new InternmentSummary());
-        InternmentSummaryDto result = internmentEpisodeMapper.toInternmentSummaryDto(internmentSummary);
+        InternmentSummaryVo internmentSummaryVo = internmentEpisodeService.getIntermentSummary(internmentEpisodeId)
+                .orElse(new InternmentSummaryVo());
+        InternmentSummaryDto result = internmentEpisodeMapper.toInternmentSummaryDto(internmentSummaryVo);
         LOG.debug("Output -> {}", result);
         return  ResponseEntity.ok().body(result);
     }
