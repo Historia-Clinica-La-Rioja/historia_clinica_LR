@@ -1,0 +1,238 @@
+<div class="container">
+	<form id="nota-evolucion-form" (keydown.enter)="false" [formGroup]="form" (ngSubmit)="save()">
+		<section id="title">
+			<h2 class="page-title" [translate]="'internaciones.nota-evolucion.TITLE'"></h2>
+			<h3 [translate]="'internaciones.nota-evolucion.SUBTITLE'"></h3>
+		</section>
+		<section id="diagnosticos">
+			<app-diagnosticos [(diagnosis)]="diagnosticos"></app-diagnosticos>
+		</section>
+		<section id="datos-antropometricos">
+			<h2 [translate]="'internaciones.anamnesis.datos-antropometricos.TITLE'"></h2>
+			<mat-card class="datos-antropometricos-card">
+				<mat-card-content formGroupName="anthropometricData">
+					<div>
+						<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<mat-label [translate]="'internaciones.anamnesis.datos-antropometricos.BLOOD_TYPE'"></mat-label>
+							<mat-select placeholder="B+" formControlName="bloodType" name="bloodTypeId">
+								<mat-option *ngFor="let bloodType of bloodTypes" [value]="bloodType">
+									{{ bloodType.description }}
+								</mat-option>
+							</mat-select>
+						</mat-form-field>
+					</div>
+					<div>
+						<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<mat-label [translate]="'internaciones.anamnesis.datos-antropometricos.HEIGHT'"></mat-label>
+							<input id="height"
+							name="height"
+							formControlName="height"
+							placeholder="Ej: 180"
+							maxlength="3"
+							matInput>
+						</mat-form-field>
+					</div>
+					<div>
+						<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<mat-label [translate]="'internaciones.anamnesis.datos-antropometricos.WEIGHT'"></mat-label>
+							<input id="weight"
+							name="weight"
+							formControlName="weight"
+							placeholder="Ej: 70"
+							maxlength="3"
+							matInput>
+						</mat-form-field>
+					</div>
+				</mat-card-content>
+			</mat-card>
+
+		</section>
+		<section id="alergias">
+			<app-alergias [(allergies)]="allergies"></app-alergias>
+		</section>
+		<section id="vacunas">
+			<app-vacunas [(inmunizations)]="inmunizations"></app-vacunas>
+		</section>
+		<section id="signos-vitales">
+			<h2 [translate]="'internaciones.anamnesis.vital-signs.form.TITLE'"></h2>
+			<mat-card>
+				<mat-card-content class="vital-signs" formGroupName="vitalSigns">
+					<div class="row-container">
+						<div class="field-container">
+							<mat-label [translate]="'internaciones.anamnesis.vital-signs.form.HEART_RATE'"></mat-label>
+							<mat-form-field [floatLabel]="'never'" appearance="outline">
+								<input id="heart_rate"
+									   name="heart_rate"
+									   formControlName="heartRate"
+									   placeholder="00"
+									   type="number"
+									   matInput>
+								<mat-error [translate]="'forms.REQUIRED'">
+								</mat-error>
+							</mat-form-field>
+						</div>
+						<div class="field-container">
+							<mat-label [translate]="'internaciones.anamnesis.vital-signs.form.RESPIRATORY_RATE'"></mat-label>
+							<mat-form-field [floatLabel]="'never'" appearance="outline">
+								<input id="respiratory_rate"
+									   name="respiratory_rate"
+									   formControlName="respiratoryRate"
+									   placeholder="00"
+									   type="number"
+									   matInput>
+								<mat-error [translate]="'forms.REQUIRED'">
+								</mat-error>
+							</mat-form-field>
+						</div>
+					</div>
+
+					<div class="row-container">
+						<div class="field-container">
+							<mat-label [translate]="'internaciones.anamnesis.vital-signs.form.TEMPERATURE'"></mat-label>
+							<mat-form-field [floatLabel]="'never'" appearance="outline">
+								<input id="temperature"
+									   name="temperature"
+									   formControlName="temperature"
+									   placeholder="00.0"
+									   type="number"
+									   matInput>
+								<mat-error [translate]="'forms.REQUIRED'">
+								</mat-error>
+							</mat-form-field>
+						</div>
+						<div class="field-container">
+							<mat-label
+								[translate]="'internaciones.anamnesis.vital-signs.form.BLOOD_OXYGEN_SATURATION'"></mat-label>
+							<mat-form-field [floatLabel]="'never'" appearance="outline">
+								<input id="blood_oxygen_saturation"
+									   name="blood_oxygen_saturation"
+									   formControlName="bloodOxygenSaturation"
+									   placeholder="00"
+									   type="number"
+									   matInput>
+								<mat-error [translate]="'forms.REQUIRED'">
+								</mat-error>
+							</mat-form-field>
+						</div>
+					</div>
+
+					<div class="row-container">
+						<div class="field-container">
+							<mat-label
+								[translate]="'internaciones.anamnesis.vital-signs.form.SYSTOLIC_BLOOD_PRESSURE'"></mat-label>
+							<mat-form-field [floatLabel]="'never'" appearance="outline">
+								<input id="systolic_blood_pressure"
+									   name="systolicBloodPressure"
+									   formControlName="systolicBloodPressure"
+									   placeholder="00"
+									   type="number"
+									   matInput>
+								<mat-error [translate]="'forms.REQUIRED'">
+								</mat-error>
+							</mat-form-field>
+						</div>
+						<div class="field-container">
+							<mat-label
+								[translate]="'internaciones.anamnesis.vital-signs.form.DIASTOLIC_BLOOD_PRESSURE'"></mat-label>
+							<mat-form-field [floatLabel]="'never'" appearance="outline">
+								<input id="diastolic_blood_pressure"
+									   name="diastolicBloodPressure"
+									   formControlName="diastolicBloodPressure"
+									   placeholder="00"
+									   type="number"
+									   matInput>
+								<mat-error [translate]="'forms.REQUIRED'">
+								</mat-error>
+							</mat-form-field>
+						</div>
+					</div>
+				</mat-card-content>
+			</mat-card>
+		</section>
+		<section id="observations">
+			<h2 [translate]="'internaciones.anamnesis.observations.TITLE'"></h2>
+			<mat-card>
+				<mat-card-content formGroupName="observations">
+					<div>
+						<mat-label [translate]="'internaciones.anamnesis.observations.CURRENT_DISEASE'"></mat-label>
+						<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<textarea matInput type="text" id="currentIllnessNote" name="currentIllnessNote"
+								formControlName="currentIllnessNote">
+							</textarea>
+							<mat-error [translate]="'forms.REQUIRED'">
+							</mat-error>
+						</mat-form-field>
+					</div>
+					<div>
+						<mat-label [translate]="'internaciones.anamnesis.observations.PHYSICAL_EXAMINATION'">
+						</mat-label>
+						<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<textarea matInput type="text" id="physicalExamNote" name="physicalExamNote"
+								formControlName="physicalExamNote">
+							</textarea>
+							<mat-error [translate]="'forms.REQUIRED'">
+							</mat-error>
+						</mat-form-field>
+					</div>
+					<div>
+						<mat-label [translate]="'internaciones.anamnesis.observations.STUDIES_PROCEDURES'"></mat-label>
+						<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<textarea matInput type="text" id="studiesSummaryNote" name="studiesSummaryNote"
+								formControlName="studiesSummaryNote">
+							</textarea>
+							<mat-error [translate]="'forms.REQUIRED'">
+							</mat-error>
+						</mat-form-field>
+					</div>
+					<div>
+						<mat-label [translate]="'internaciones.anamnesis.observations.PATIENT_PROGRESS'"></mat-label>
+						<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<textarea matInput type="text" id="evolutionNote" name="evolutionNote"
+								formControlName="evolutionNote">
+							</textarea>
+							<mat-error [translate]="'forms.REQUIRED'">
+							</mat-error>
+						</mat-form-field>
+					</div>
+					<div>
+						<mat-label [translate]="'internaciones.anamnesis.observations.CLINICAL_IMPRESSION'"></mat-label>
+						<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<textarea matInput type="text" id="clinicalImpressionNote" name="clinicalImpressionNote"
+								formControlName="clinicalImpressionNote">
+							</textarea>
+							<mat-error [translate]="'forms.REQUIRED'">
+							</mat-error>
+						</mat-form-field>
+					</div>
+					<div>
+						<mat-label [translate]="'internaciones.anamnesis.observations.OTHERS'"></mat-label>
+						<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<textarea matInput type="text" id="otherNote" name="otherNote" formControlName="otherNote">
+							</textarea>
+						</mat-form-field>
+					</div>
+
+				</mat-card-content>
+			</mat-card>
+		</section>
+
+		<section id="buttons" class="form-buttons">
+			<div class="buttons">
+				<button mat-stroked-button type="button" color="primary" (click)="back()">
+					<span class="uppercase" [translate]="'buttons.BACK'"></span>
+				</button>
+			</div>
+			<div class="sign-buttons">
+				<mat-checkbox formControlName="attachSignature">
+					<span [translate]="'internaciones.anamnesis.buttons.ATTACH_SIGNATURE'"></span>
+				</mat-checkbox>
+				<mat-error *ngIf="!form.controls.attachSignature.value && this.formSubmitted">
+					Debe adjuntar la firma
+				</mat-error>
+				<button id="sign-confirm" mat-raised-button type="submit" color="primary">
+					<span class="uppercase" [translate]="'internaciones.anamnesis.buttons.SIGN_CONFIRM'"></span>
+				</button>
+			</div>
+		</section>
+	</form>
+</div>

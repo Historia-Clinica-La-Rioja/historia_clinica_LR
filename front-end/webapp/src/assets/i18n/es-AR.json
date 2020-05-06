@@ -65,7 +65,6 @@
 			"TITLE": "Evaluación de ingreso",
 			"SUBTITLE": "Completa los siguientes datos.",
 			"SEARCH": "Buscar {{ conceptLabel }}",
-			"REQUIRED_SEARCH": "Debe seleccionar un resultado de la búsqueda",
 			"alergias": {
 				"TITLE": "Alergias",
 				"ADD": "Agregar alergia",
@@ -105,7 +104,6 @@
 			},
 			"buttons": {
 				"ATTACH_SIGNATURE": "Adjuntar firma digital",
-				"BACK": "Volver",
 				"SAVE_DRAFT": "Guardar borrador",
 				"SIGN_CONFIRM": "Firmar y confirmar"
 			},
@@ -181,6 +179,10 @@
 				"OTHERS": "Otras observaciones",
 				"DESCRIPTION": "Descripción"
 			}
+		},
+		"nota-evolucion": {
+			"TITLE": "Nota de evolución",
+			"SUBTITLE": "Completa los siguientes datos."
 		},
 		"internados-table": {
 			"TITLE": "Búsqueda de pacientes"

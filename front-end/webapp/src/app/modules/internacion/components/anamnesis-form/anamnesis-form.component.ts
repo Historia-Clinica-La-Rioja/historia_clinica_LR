@@ -23,6 +23,7 @@ export class AnamnesisFormComponent implements OnInit {
 
 	anamnesis: ResponseAnamnesisDto;
 	form: FormGroup;
+	formSubmitted: boolean = false;
 
 	bloodTypes: MasterDataInterface<string>[];
 	diagnosticos: DiagnosisDto[] = [];
@@ -116,8 +117,8 @@ export class AnamnesisFormComponent implements OnInit {
 	}
 
 	save(event): void {
-		let confirmed;
-		confirmed = (event.submitter.id === 'sign-confirm');
+		this.formSubmitted = true;
+		let confirmed = (event.submitter.id === 'sign-confirm');
 
 		if (!confirmed || (confirmed && this.form.value.attachSignature)) {
 			if (this.form.valid) {

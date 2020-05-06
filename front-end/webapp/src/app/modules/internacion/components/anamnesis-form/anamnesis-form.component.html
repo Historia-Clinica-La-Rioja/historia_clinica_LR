@@ -229,7 +229,7 @@
 			<div class="buttons">
 				<button mat-stroked-button type="button" color="primary" (click)="back()">
 					<span class="uppercase"
-						  [translate]="'internaciones.anamnesis.buttons.BACK'">
+						  [translate]="'buttons.BACK'">
 					</span>
 				</button>
 				<button *ngIf="false" id="save-draft" mat-stroked-button type="submit" color="primary">
@@ -240,6 +240,9 @@
 				<mat-checkbox formControlName="attachSignature">
 					<span [translate]="'internaciones.anamnesis.buttons.ATTACH_SIGNATURE'"></span>
 				</mat-checkbox>
+				<mat-error *ngIf="!form.controls.attachSignature.value && this.formSubmitted">
+					Debe adjuntar la firma
+				</mat-error>
 				<button id="sign-confirm" mat-raised-button type="submit" color="primary">
 					<span class="uppercase" [translate]="'internaciones.anamnesis.buttons.SIGN_CONFIRM'"></span>
 				</button>
