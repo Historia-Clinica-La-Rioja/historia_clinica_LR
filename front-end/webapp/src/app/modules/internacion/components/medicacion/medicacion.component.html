@@ -18,24 +18,12 @@
 					<mat-error [translate]="'internaciones.anamnesis.REQUIRED_SEARCH'">
 					</mat-error>
 				</mat-form-field>
-				<mat-form-field appearance="outline">
-					<mat-label [translate]="'internaciones.anamnesis.medicacion.form.CLINICAL_STATUS'">
-					</mat-label>
-					<mat-select formControlName="statusId" name="statusId">
-						<mat-option *ngFor="let status of clinicalStatus" [value]="status.id">
-							{{status.description}}
-						</mat-option>
-					</mat-select>
-					<mat-error [translate]="'forms.REQUIRED'">
-					</mat-error>
-				</mat-form-field>
+
 				<mat-form-field appearance="outline">
 					<mat-label [translate]="'internaciones.anamnesis.medicacion.form.NOTE'"></mat-label>
 					<textarea matInput type="text" id="note" name="note" formControlName="note"
 						placeholder="{{'internaciones.anamnesis.observations.DESCRIPTION' | translate }}">
 						</textarea>
-					<mat-error [translate]="'forms.REQUIRED'">
-					</mat-error>
 				</mat-form-field>
 				<div align="end">
 					<button class="uppercase" mat-raised-button color="primary" type="submit">

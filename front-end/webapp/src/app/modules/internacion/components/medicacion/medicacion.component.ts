@@ -38,11 +38,6 @@ export class MedicacionComponent implements OnInit {
 			text: v => v.snomed.pt
 		},
 		{
-			def: 'clinicalStatus',
-			header: 'internaciones.anamnesis.medicacion.table.columns.STATUS',
-			text: v => this.clinicalStatus?.find(status => status.id === v.statusId).description
-		},
-		{
 			def: 'note',
 			header: 'internaciones.anamnesis.medicacion.table.columns.NOTE',
 			text: v => v.note
@@ -51,8 +46,7 @@ export class MedicacionComponent implements OnInit {
 	displayedColumns: string[] = [];
 
 	constructor(
-		private formBuilder: FormBuilder,
-		private internacionMasterDataService: InternacionMasterDataService
+		private formBuilder: FormBuilder
 	)
 	{
 		this.displayedColumns = this.columns?.map(c => c.def).concat(['remove']);
@@ -60,13 +54,8 @@ export class MedicacionComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.form = this.formBuilder.group({
-			note: [null, Validators.required],
-			statusId: [null, Validators.required],
+			note: [null],
 			snomed: [null, Validators.required]
-		});
-
-		this.internacionMasterDataService.getMedicationClinical().subscribe(clinicalStatus => {
-			this.clinicalStatus = clinicalStatus;
 		});
 
 	}
@@ -77,7 +66,8 @@ export class MedicacionComponent implements OnInit {
 				id: null,
 				note: this.form.value.note,
 				snomed: this.snomedConcept,
-				statusId: this.form.value.statusId
+				suspended: null,
+				statusId: null
 			};
 			this.add(medicacion);
 			this.resetForm();
