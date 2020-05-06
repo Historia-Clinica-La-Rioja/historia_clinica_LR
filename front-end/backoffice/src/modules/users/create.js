@@ -5,7 +5,6 @@ import {
     ReferenceInput,
     TextInput,
     AutocompleteInput,
-    BooleanInput,
     required,
 } from 'react-admin';
 
@@ -24,7 +23,6 @@ const UserCreate = props => (
                 <AutocompleteInput optionText={renderPerson} optionValue="id"/>
             </ReferenceInput>
             <TextInput source="username" validate={[required()]}/>
-            <BooleanInput source="enable" validate={[required()]}/>
         </SimpleForm>
     </Create>
 );
