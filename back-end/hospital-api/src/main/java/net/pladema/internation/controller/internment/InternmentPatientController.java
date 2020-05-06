@@ -7,6 +7,7 @@ import net.pladema.internation.controller.internment.mapper.InternmentEpisodeMap
 import net.pladema.internation.controller.mocks.MocksInternmentPatient;
 import net.pladema.internation.service.internment.InternmentPatientService;
 import net.pladema.internation.service.internment.domain.BasicListedPatientBo;
+import net.pladema.internation.service.internment.domain.InternmentEpisodeBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -34,8 +35,10 @@ public class InternmentPatientController {
     }
 
     @GetMapping
-    public ResponseEntity<List<InternmentEpisodeDto>> getAllInternmentPatient(@PathVariable(name = "institutionId") Integer institutionId){
-        List<InternmentEpisodeDto> result = MocksInternmentPatient.mockInternmentPatients(institutionId);
+    public ResponseEntity<List<InternmentEpisodeDto>> getAllInternmentPatient(
+            @PathVariable(name = "institutionId") Integer institutionId){
+        List<InternmentEpisodeBo> internmentEpisodes = internmentPatientService.getAllInternmentPatient(institutionId);
+        List<InternmentEpisodeDto> result = internmentEpisodeMapper.toListInternmentEpisodeDto(internmentEpisodes);
         LOG.debug("Internment patients -> {}", result);
         return  ResponseEntity.ok().body(result);
     }

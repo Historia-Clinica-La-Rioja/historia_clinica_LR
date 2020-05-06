@@ -3,6 +3,7 @@ package net.pladema.internation.repository.core;
 import net.pladema.internation.repository.core.domain.InternmentSummaryVo;
 import net.pladema.internation.repository.core.entity.InternmentEpisode;
 import net.pladema.internation.service.internment.domain.BasicListedPatientBo;
+import net.pladema.internation.service.internment.domain.InternmentEpisodeBo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -73,4 +74,22 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             " WHERE ie.institutionId = :institutionId ")
     List<BasicListedPatientBo> findAllPatientsListedData(@Param("institutionId") Integer institutionId);
 
+    @Transactional(readOnly = true)
+    @Query("SELECT NEW net.pladema.internation.service.internment.domain.InternmentEpisodeBo(" +
+            "ie.id as internmentEpisodeId, " +
+            "pt.id as patientId, ps.firstName, ps.lastName, " +
+            "b.id as bedId, b.bedNumber, " +
+            "r.id as roomId, r.roomNumber, " +
+            "cs.id as clinicalSpecialtyId, cs.name, " +
+            "s.id as sectorId, s.description) " +
+            "FROM InternmentEpisode ie " +
+            "JOIN Patient pt ON (ie.patientId = pt.id) " +
+            "JOIN Person ps ON (pt.personId = ps.id) " +
+            "JOIN Bed b ON (ie.bedId = b.id) " +
+            "JOIN Room r ON (b.roomId = r.id) " +
+            "JOIN ClinicalSpecialtySector css ON (r.clinicalSpecialtySectorId = css.id) " +
+            "JOIN ClinicalSpecialty cs ON (css.clinicalSpecialtyId = cs.id) " +
+            "JOIN Sector s ON (css.sectorId = s.id) " +
+            "WHERE ie.institutionId = :institutionId")
+    List<InternmentEpisodeBo> getAllInternmentPatient(@Param("institutionId") Integer institutionId);
 }
