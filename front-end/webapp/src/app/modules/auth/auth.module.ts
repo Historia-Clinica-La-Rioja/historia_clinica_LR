@@ -11,6 +11,7 @@ import { LoginComponent } from './routes/login/login.component';
 import { PasswordResetComponent } from './routes/password-reset/password-reset.component';
 import { ProfileComponent } from './routes/profile/profile.component';
 import { FormInputComponent } from './components/form-input/form-input.component';
+import { HomeComponent } from './routes/home/home.component';
 
 @NgModule({
 	declarations: [
@@ -19,6 +20,7 @@ import { FormInputComponent } from './components/form-input/form-input.component
 		PasswordResetComponent,
 		ProfileComponent,
 		FormInputComponent,
+		HomeComponent,
 	],
 	imports: [
 		CoreModule,

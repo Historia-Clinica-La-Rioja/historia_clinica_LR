@@ -39,6 +39,16 @@
 				"OK": "Se definió correctamente la clave para el usuario",
 				"TITLE": "Definiendo nueva clave"
 			}
+		},
+		"roles": {
+			"LEVEL0": "De todo el sistema",
+			"names": {
+				"ROOT": "Soporte",
+				"ADMINISTRADOR": "Administrador",
+				"ESPECIALISTA_MEDICO": "Especialista Médico",
+				"PROFESIONAL_DE_SALUD": "Profesional de la salud",
+				"ADMINISTRATIVO": "Administrativo"
+			}
 		}
 	},
 	"buttons": {

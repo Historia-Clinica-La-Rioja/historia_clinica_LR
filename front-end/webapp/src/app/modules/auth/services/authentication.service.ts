@@ -23,6 +23,10 @@ export class AuthenticationService {
 		this.router.navigate(['/auth/login']);
 	}
 
+	public goHome() {
+		this.router.navigate(['/auth']);
+	}
+
 	public login(username: string, password: string): Observable<any> {
 		//console.log('auth/authentication login ' + username);
 		return this.authService.login({username, password}).pipe(

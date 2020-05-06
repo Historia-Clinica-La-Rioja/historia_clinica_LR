@@ -3,11 +3,24 @@
 		<mat-card-header>
 			<mat-card-title>Mi cuenta</mat-card-title>
 		</mat-card-header>
-		<mat-card-content>
-			<p>
 
-			</p>
-		</mat-card-content>
+		<mat-list role="list" *ngIf="(roleAssignments$ | async) as roleAssignments; else loading">
+			<mat-divider></mat-divider>
+			<div mat-header>Roles</div>
+			<mat-list-item *ngFor="let roleAssignment of roleAssignments" role="listitem">
+				<mat-icon mat-list-icon>verified_user</mat-icon>
+				<h3 matLine [translate]="roleAssignment.label"></h3>
+				<p matLine *ngIf="roleAssignment.institution">
+					{{roleAssignment.institution.name}}
+				</p>
+				<p matLine *ngIf="!roleAssignment.institution" [translate]="'auth.roles.LEVEL0'"></p>
+			</mat-list-item>
+			<mat-divider></mat-divider>
+		</mat-list>
+		<ng-template #loading>
+			<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+		</ng-template>
+
 		<mat-card-actions>
 			<button mat-flat-button color="warn" (click)="logout()">CERRAR SESION</button>
 		</mat-card-actions>
