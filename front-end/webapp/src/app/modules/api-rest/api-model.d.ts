@@ -257,6 +257,12 @@ export interface InmunizationDto extends ClinicalTermDto {
     note: string;
 }
 
+export interface InstitutionDto extends Serializable {
+    id: number;
+    name: string;
+    website: string;
+}
+
 export interface InternmentEpisodeDto {
     bed: BedDto;
     doctor: ResponsibleDoctorDto;

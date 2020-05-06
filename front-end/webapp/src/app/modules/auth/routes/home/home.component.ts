@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { LoggedUserService } from '../../services/logged-user.service';
-import { map, filter, tap } from 'rxjs/operators';
+import { map, filter, tap, switchMap } from 'rxjs/operators';
 import { RoleAssignment } from '@api-rest/api-model';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { InstitutionService } from '../../../api-rest/services/institution.service';
 
 //	si se cumple la condicion, retorna false y ejecuta
 const useConditionAndExecute = ( condition: (items) => boolean, command: (items) => void ) =>
@@ -27,23 +28,23 @@ export class HomeComponent implements OnInit {
 
   constructor(
 	loggedUserService: LoggedUserService,
+	institutionService: InstitutionService,
 	private router: Router,
   ) {
 	this.institutions$ = loggedUserService.assignments$.pipe(
 		map(
 			(roleAssignments: RoleAssignment[]) => roleAssignments
-				.filter(roleAssignment => roleAssignment.institutionId !== -1)
-				.map(roleAssignment =>({
-					id: roleAssignment.institutionId,
-					name: `Institución #${roleAssignment.institutionId}`,
-				}))
+				.map(roleAssignment => roleAssignment.institutionId)
+				.filter(institutionId => institutionId !== -1)
 		),
-		tap(algo => console.log('tap algo', algo)),
+		switchMap(
+			(institutionIds: number[]) => institutionService.getInstitutions(institutionIds)
+		),
 		filter(
 			// con filter puedo realizar una acción y detener la notificación a los observadores
 			// así evito que parpadee la pantalla (del cargando pasa a la otra pantalla)
 			useConditionAndExecute(
-				(institucion) => institucion.length === 0,
+				(instituciones) => instituciones.length === 0,
 				() => this.router.navigate(['/auth/profile'])
 			),
 		),

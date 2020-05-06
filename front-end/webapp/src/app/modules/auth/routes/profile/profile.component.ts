@@ -1,13 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { RoleAssignment } from '@api-rest/api-model';
+import { RoleAssignment, InstitutionDto } from '@api-rest/api-model';
 
 import { AuthenticationService } from '../../services/authentication.service';
 import { LoggedUserService } from '../../services/logged-user.service';
-import { map } from 'rxjs/operators';
-
-const getInstitucion = (institutionId: number): {name: string} =>
-	(institutionId !== -1) ? {name: `De la institución ${institutionId}`} : undefined;
+import { map, mergeMap } from 'rxjs/operators';
+import { InstitutionService } from '@api-rest/services/institution.service';
 
 @Component({
 	selector: 'app-profile',
@@ -18,14 +16,20 @@ export class ProfileComponent implements OnInit {
 	roleAssignments$: Observable<{ label: string, institution?: {name: string} }[]>;
 
 	constructor(
+		institutionService: InstitutionService,
 		loggedUserService: LoggedUserService,
 		private authenticationService: AuthenticationService,
 	) {
 		this.roleAssignments$ = loggedUserService.assignments$.pipe(
-			map((roleAssignments: RoleAssignment[]) => roleAssignments.map(roleAssignment =>({
-				label: `auth.roles.names.${roleAssignment.role}`,
-				institution: getInstitucion(roleAssignment.institutionId),
-			}))),
+			mergeMap((roleAssignments: RoleAssignment[]) =>
+				institutionService.getInstitutions(roleAssignments.map(roleAssignment => roleAssignment.institutionId))
+					.pipe(
+						map((institutions: InstitutionDto[]) => roleAssignments.map(roleAssignment =>({
+							label: `auth.roles.names.${roleAssignment.role}`,
+							institution: institutions.find(institution => institution.id === roleAssignment.institutionId),
+						})))
+					),
+			),
 		);
 	}
 
