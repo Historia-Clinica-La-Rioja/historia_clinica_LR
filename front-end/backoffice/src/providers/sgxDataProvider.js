@@ -7,6 +7,7 @@ import {
   CREATE,
   UPDATE,
   DELETE,
+  HttpError,
 } from "react-admin";
 
 import apiRest from './utils/sgxApiRest';
@@ -144,8 +145,16 @@ export default (apiUrl, mappers) => {
      */
   return (type, resource, params) => {
     const { url, options } = convertDataRequestToHTTP(type, resource, params);
-    return apiRest.fetch(url, options).then(response =>
-      convertHTTPResponse(response, type, resource, params)
+    return apiRest.fetch(url, options)
+      .then(
+        response => convertHTTPResponse(response, type, resource, params),
+        ({ status, statusText, body }) => {
+          return Promise.reject(new HttpError(
+            (body && body.code && `error.${body.code}`) || statusText,
+            status,
+            body,
+          ));
+        }
     );
   };
 };

@@ -8,6 +8,13 @@ export default {
             subtitle: 'Bienvenido',
         }
     },
+    error: {
+        "role-level": {
+            institution: {
+                required: 'El rol requiere una institución'
+            }
+        }
+    },
     resources: {
 
         beds: {

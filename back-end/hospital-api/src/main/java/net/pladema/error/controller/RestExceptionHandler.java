@@ -113,10 +113,13 @@ public class RestExceptionHandler {
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(IllegalArgumentException.class)
-	public String handleIllegalArgumentExceptions(IllegalArgumentException ex, Locale locale) {
+	public ApiErrorMessage handleIllegalArgumentExceptions(IllegalArgumentException ex, Locale locale) {
 		String errorMessage = messageSource.getMessage(ex.getMessage(), null, locale);
 		LOG.error(errorMessage, ex);
-		return errorMessage;
+		return new ApiErrorMessage(
+				ex.getMessage(),
+				errorMessage
+		);
 	}
 	
 	@ResponseStatus(HttpStatus.FORBIDDEN)
@@ -125,6 +128,5 @@ public class RestExceptionHandler {
 		LOG.warn(ex.getMessage(), ex);
 		return new ResponseEntity<>(new ApiErrorMessage("forbidden", ex.getMessage()), HttpStatus.FORBIDDEN);
 	}
-
 
 }

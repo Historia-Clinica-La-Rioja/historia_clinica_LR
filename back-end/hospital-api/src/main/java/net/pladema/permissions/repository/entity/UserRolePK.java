@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.pladema.permissions.repository.enums.ERole;
+import net.pladema.permissions.repository.enums.ERoleLevel;
+import org.springframework.util.Assert;
 
 @Embeddable
 @Getter
@@ -21,6 +23,7 @@ import net.pladema.permissions.repository.enums.ERole;
  * Esos son roles de administración que no están asociados a ninguna institución.
  */
 public class UserRolePK implements Serializable {
+	private static final String ROLE_REQUIRE_INSTITUTION = "role-level.institution.required";
 
 	public UserRolePK(Integer userId, Short roleId) {
 		this(userId, roleId, -1);
@@ -29,10 +32,12 @@ public class UserRolePK implements Serializable {
 	public UserRolePK(Integer userId, Short roleId, Integer institutionId) {
 		this.userId = userId;
 		this.roleId = roleId;
-		if (institutionId == null || ERole.map(roleId).getIsAdmin()) 
+		if (ERole.map(roleId).getLevel() == ERoleLevel.LEVEL0) {
 			this.institutionId = -1;
-		else
+		} else {
+			Assert.notNull(institutionId, ROLE_REQUIRE_INSTITUTION);
 			this.institutionId = institutionId;
+		}
 	}
 	
 	private static final long serialVersionUID = -5482098137325590681L;

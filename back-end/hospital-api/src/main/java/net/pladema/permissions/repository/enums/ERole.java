@@ -4,20 +4,20 @@ import net.pladema.sgx.exceptions.NotFoundException;
 
 public enum ERole {
 
-	ROOT(1, "ROOT", true),
-    ADMINISTRADOR(2, "ADMINISTRADOR", true),
-    ESPECIALISTA_MEDICO(3, "ESPECIALISTA_MEDICO", false),
-    PROFESIONAL_DE_SALUD(4, "PROFESIONAL_DE_SALUD", false),
-    ADMINISTRATIVO(5, "ADMINISTRATIVO", false);
+	ROOT(1, "ROOT", ERoleLevel.LEVEL0),
+    ADMINISTRADOR(2, "ADMINISTRADOR", ERoleLevel.LEVEL0),
+    ESPECIALISTA_MEDICO(3, "ESPECIALISTA_MEDICO", ERoleLevel.LEVEL1),
+    PROFESIONAL_DE_SALUD(4, "PROFESIONAL_DE_SALUD", ERoleLevel.LEVEL1),
+    ADMINISTRATIVO(5, "ADMINISTRATIVO", ERoleLevel.LEVEL1);
 
 	private Short id;
     private String value;
-    private Boolean isAdmin;
+    private ERoleLevel level;
  
-    ERole(Number id, String value, Boolean isAdmin) {
+    ERole(Number id, String value, ERoleLevel level) {
         this.id = id.shortValue();
         this.value = value;
-        this.isAdmin = isAdmin;
+        this.level = level;
     }
  
     public String getValue() {
@@ -26,8 +26,8 @@ public enum ERole {
     public Short getId() {
         return id;
     }
-    public Boolean getIsAdmin() {
-		return isAdmin;
+    public ERoleLevel getLevel() {
+		return level;
 	}
 
 	public static ERole map(java.lang.Short id) {
