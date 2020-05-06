@@ -106,9 +106,8 @@ export class NewTemporaryPatientComponent implements OnInit {
 	if (this.form.valid) {
 		let personRequest: APatientDto = this.mapToPersonRequest();
       	this.patientService.addPatient(personRequest)
-        	.subscribe(person => {
-          		this.personResponse = person;
-          				// Ir a la proxima pantalla
+        	.subscribe(patient => {
+				  this.router.navigate(['pacientes/profile/' + patient.id]);
         	});
 	} else {
 		scrollIntoError(this.form,this.el);
