@@ -81,6 +81,7 @@ export class NewPatientComponent implements OnInit {
 					medicalCoverageName:[null,Validators.maxLength(VALIDATIONS.MAX_LENGTH.medicalCoverageName)],
 					medicalCoverageAffiliateNumber:[null,Validators.maxLength(VALIDATIONS.MAX_LENGTH.medicalCoverageAffiliateNumber)]
 				});
+				this.lockFormField(params);
 			});
 
 		this.personMasterDataService.getGenders()
@@ -100,6 +101,34 @@ export class NewPatientComponent implements OnInit {
 				this.setProvinces();
 			});
 
+	}
+
+	private lockFormField(params){
+		if (params.identificationNumber){
+			this.form.controls.identificationNumber.disable();
+		}
+		if (params.identificationTypeId){
+			this.form.controls.identificationTypeId.disable();
+		}
+		if (params.genderId){
+			this.form.controls.genderId.disable();
+		}
+		if (params.firstName){
+			this.form.controls.firstName.disable();
+		}
+		if (params.lastName){
+			this.form.controls.lastName.disable();
+		}
+		if (params.birthDate){
+			this.form.controls.birthDate.disable();
+		}
+
+		if (params.middleNames){
+			this.form.controls.middleNames.disable();
+		}
+		if (params.otherLastNames){
+			this.form.controls.otherLastNames.disable();
+		}
 	}
 
 	save(): void {

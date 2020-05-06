@@ -56,7 +56,7 @@ export class SearchComponent implements OnInit {
 			this.identificationNumber = params['identificationNumber'];
 			this.genderId = params['genderId'];
 
-			this.buildFormSearch();
+			this.buildFormSearch(params);
 
 			this.personService.getRenaperPersonData({ identificationNumber: this.identificationNumber, genderId: this.genderId })
 				.pipe(finalize(() => this.isLoading = false))
@@ -64,7 +64,7 @@ export class SearchComponent implements OnInit {
 					personData => {
 						if (personData) {
 							let personToAdd: any = { ...personData };
-							personToAdd.identificationType = this.identificationTypeId;
+							personToAdd.identificationTypeId = this.identificationTypeId;
 							personToAdd.identificationNumber = this.identificationNumber;
 							personToAdd.genderId = this.genderId;
 							this.goToNextState(personToAdd);
@@ -149,43 +149,52 @@ export class SearchComponent implements OnInit {
 
 	openDialog(patient: PatientSearchDto): void {
 		const dialogRef = this.dialog.open(ViewPatientDetailComponent, {
-		  width: '450px',
-		  data: { id:patient.idPatient,
-				  firstName: patient.person.firstName,
-				  lastName: patient.person.lastName,
-				  age: this.CalculateAge(new Date(patient.person.birthDate)),
-				  gender: this.genderOptionsViewTable[patient.person.genderId],
-				  birthDate: momentFormatDate(new Date(patient.person.birthDate),DateFormat.VIEW_DATE),
-				  identificationNumber: patient.person.identificationNumber,
-				  identificationTypeId: this.identifyTypeViewPatientDetail[patient.person.identificationTypeId]
-				}
+			width: '450px',
+			data: {
+				id: patient.idPatient,
+				firstName: patient.person.firstName,
+				lastName: patient.person.lastName,
+				age: this.CalculateAge(new Date(patient.person.birthDate)),
+				gender: this.genderOptionsViewTable[patient.person.genderId],
+				birthDate: momentFormatDate(new Date(patient.person.birthDate), DateFormat.VIEW_DATE),
+				identificationNumber: patient.person.identificationNumber,
+				identificationTypeId: this.identifyTypeViewPatientDetail[patient.person.identificationTypeId]
+			}
 		});
 	}
 
-	private buildFormSearch() {
+	private buildFormSearch(params) {
 		this.formSearch = this.formBuilder.group({
-			identificationNumber: [this.identificationNumber, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
-			identificationTypeId: [Number(this.identificationTypeId), Validators.required],
-			firstName: [null, Validators.required],
-			middleNames: [null],
-			lastName: [null, Validators.required],
-			otherLastNames: [null],
-			genderId: [Number(this.genderId), Validators.required],
-			birthDate: [null, Validators.required]
+			identificationNumber: [params.identificationNumber, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
+			identificationTypeId: [Number(params.identificationTypeId), Validators.required],
+			firstName: [params.firstName, Validators.required],
+			middleNames: [params.middleNames],
+			lastName: [params.lastName, Validators.required],
+			otherLastNames: [params.otherLastNames],
+			genderId: [Number(params.genderId), Validators.required],
+			birthDate: [params.birthDate, Validators.required]
 		});
-		this.lockFormField();
+		this.lockFormField(params);
 	}
 
-	private lockFormField(){
-		if (this.identificationNumber){
+	private lockFormField(params) {
+
+		if (params.identificationNumber) {
 			this.formSearch.controls.identificationNumber.disable();
 		}
-		if (this.identificationTypeId){
+		if (params.identificationTypeId) {
 			this.formSearch.controls.identificationTypeId.disable();
 		}
-		if (this.genderId){
+		if (params.genderId) {
 			this.formSearch.controls.genderId.disable();
 		}
+		if (params.firstName) {
+			this.formSearch.controls.firstName.disable();
+		}
+		if (params.lastName) {
+			this.formSearch.controls.lastName.disable();
+		}
+
 	}
 
 	private CalculateAge(birthDate): number {
@@ -206,7 +215,7 @@ export class SearchComponent implements OnInit {
 	submit() {
 		this.formSearchSubmitted = true;
 		if (this.formSearch.valid) {
-			 this.searchPatient = {
+			this.searchPatient = {
 				firstName: this.formSearch.controls.firstName.value,
 				lastName: this.formSearch.controls.lastName.value,
 				genderId: this.formSearch.controls.genderId.value,
@@ -224,7 +233,7 @@ export class SearchComponent implements OnInit {
 		this.patientService.getPatientByCMD(JSON.stringify(person)).subscribe(
 			patientsFound => {
 				if (!patientsFound.length) {
-					this.goToNewPatient();
+					this.goToAddPatient(person);
 				} else {
 					this.matchingPatient = this.buildTable(patientsFound);
 					this.viewSearch = false;
@@ -233,10 +242,14 @@ export class SearchComponent implements OnInit {
 		);
 	}
 
-	goToNewPatient(){
+	goToAddPatient(person) {
 		this.router.navigate([ROUTE_NEW], {
-			queryParams: this.searchPatient
+			queryParams: person
 		});
+	}
+
+	goToNewPatient() {
+		this.goToAddPatient(this.searchPatient)
 	}
 
 	viewSearchComponent(): boolean {
