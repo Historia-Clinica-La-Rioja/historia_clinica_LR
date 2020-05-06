@@ -21,12 +21,6 @@ public class EvolutionNote {
 
     private List<DiagnosisBo> diagnosis;
 
-    private List<HealthHistoryConditionBo> personalHistories;
-
-    private List<HealthHistoryConditionBo> familyHistories;
-
-    private List<MedicationBo> medications;
-
     private List<InmunizationBo> inmunizations;
 
     private List<AllergyConditionBo> allergies;

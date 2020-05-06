@@ -70,11 +70,8 @@ public class UpdateEvolutionNoteServiceImpl implements UpdateEvolutionNoteServic
             doc = documentService.save(doc);
 
             evolutionNote.setDiagnosis(healthConditionService.loadDiagnosis(patientId, doc.getId(), evolutionNote.getDiagnosis()));
-            evolutionNote.setPersonalHistories(healthConditionService.loadPersonalHistories(patientId, doc.getId(), evolutionNote.getPersonalHistories()));
-            evolutionNote.setFamilyHistories(healthConditionService.loadFamilyHistories(patientId, doc.getId(), evolutionNote.getFamilyHistories()));
             evolutionNote.setAllergies(allergyService.loadAllergies(patientId, doc.getId(), evolutionNote.getAllergies()));
             evolutionNote.setInmunizations(inmunizationService.loadInmunization(patientId, doc.getId(), evolutionNote.getInmunizations()));
-            evolutionNote.setMedications(medicationService.loadMedications(patientId, doc.getId(), evolutionNote.getMedications()));
 
             evolutionNote.setVitalSigns(clinicalObservationService.loadVitalSigns(patientId, doc.getId(), Optional.ofNullable(evolutionNote.getVitalSigns())));
             evolutionNote.setAnthropometricData(clinicalObservationService.loadAnthropometricData(patientId, doc.getId(), Optional.ofNullable(evolutionNote.getAnthropometricData())));

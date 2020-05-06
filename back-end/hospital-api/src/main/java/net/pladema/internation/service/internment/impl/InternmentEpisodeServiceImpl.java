@@ -1,7 +1,9 @@
 package net.pladema.internation.service.internment.impl;
 
+import net.pladema.internation.repository.core.EvolutionNoteDocumentRepository;
 import net.pladema.internation.repository.core.InternmentEpisodeRepository;
 import net.pladema.internation.repository.core.domain.InternmentSummary;
+import net.pladema.internation.repository.core.entity.EvolutionNoteDocument;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,8 +19,12 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 
     private final InternmentEpisodeRepository internmentEpisodeRepository;
 
-    public InternmentEpisodeServiceImpl(InternmentEpisodeRepository internmentEpisodeRepository) {
+    private final EvolutionNoteDocumentRepository evolutionNoteDocumentRepository;
+
+    public InternmentEpisodeServiceImpl(InternmentEpisodeRepository internmentEpisodeRepository,
+                                        EvolutionNoteDocumentRepository evolutionNoteDocumentRepository) {
         this.internmentEpisodeRepository = internmentEpisodeRepository;
+        this.evolutionNoteDocumentRepository = evolutionNoteDocumentRepository;
     }
 
 
@@ -35,8 +41,12 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
     }
 
     @Override
-    public void addEvaluationNote(Integer intermentEpisodeId, Long id) {
-        //TODO Add a la tabla EvaluationNoteDocument una entrada nueva.
+    public EvolutionNoteDocument addEvolutionNote(Integer internmentEpisodeId, Long evolutionNoteId) {
+        LOG.debug("Input parameters -> internmentEpisodeId {}, evolutionNoteId {}", internmentEpisodeId, evolutionNoteId);
+        EvolutionNoteDocument result = new EvolutionNoteDocument(evolutionNoteId, internmentEpisodeId);
+        result = evolutionNoteDocumentRepository.save(result);
+        LOG.debug("Output -> {}", result);
+        return result;
     }
 
     @Override

@@ -26,15 +26,6 @@ public class EvolutionNoteDto implements Serializable {
     private List<@Valid DiagnosisDto> diagnosis;
 
     @NotNull
-    private List<@Valid HealthHistoryConditionDto> personalHistories = new ArrayList<>();
-
-    @NotNull
-    private List<@Valid HealthHistoryConditionDto> familyHistories = new ArrayList<>();
-
-    @NotNull
-    private  List<@Valid MedicationDto> medications = new ArrayList<>();
-
-    @NotNull
     private List<@Valid InmunizationDto> inmunizations= new ArrayList<>();
 
     @NotNull

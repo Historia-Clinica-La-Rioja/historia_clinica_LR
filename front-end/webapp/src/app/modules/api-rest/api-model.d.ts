@@ -191,11 +191,8 @@ export interface EvolutionNoteDto extends Serializable {
     anthropometricData: AnthropometricDataDto;
     confirmed: boolean;
     diagnosis: DiagnosisDto[];
-    familyHistories: HealthHistoryConditionDto[];
     inmunizations: InmunizationDto[];
-    medications: MedicationDto[];
     notes: DocumentObservationsDto;
-    personalHistories: HealthHistoryConditionDto[];
     vitalSigns: VitalSignDto;
 }
 
