@@ -1,6 +1,7 @@
 package net.pladema.internation.controller.internment;
 
 import io.swagger.annotations.Api;
+import net.pladema.internation.controller.constraints.InternmentValid;
 import net.pladema.internation.controller.internment.dto.InternmentSummaryDto;
 import net.pladema.internation.controller.internment.mapper.InternmentEpisodeMapper;
 import net.pladema.internation.repository.core.domain.InternmentSummaryVo;
@@ -30,6 +31,7 @@ public class InternmentEpisodeController {
         this.internmentEpisodeMapper = internmentEpisodeMapper;
     }
 
+    @InternmentValid
     @GetMapping("/{internmentEpisodeId}/summary")
     public ResponseEntity<InternmentSummaryDto> internmentEpisodeSummary(
             @PathVariable(name = "institutionId") Integer institutionId,
