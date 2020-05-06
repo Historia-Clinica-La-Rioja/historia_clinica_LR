@@ -5,6 +5,9 @@
 			<button mat-flat-button color="primary" (click)="goToAnamnesis()" *ngIf="!anamnesisDoc || !anamnesisDoc.confirmed">
 				<span class="uppercase" [translate]="'internaciones.internacion-paciente.actions.ADD_EVAL_INGRESO'"></span>
 			</button>
+			<button mat-flat-button color="primary" (click)="goToNotaEvolucion()">
+				<span class="uppercase" [translate]="'internaciones.internacion-paciente.actions.ADD_NOTA_EVOLUCION'"></span>
+			</button>
 			<button mat-flat-button color="primary" (click)="goToEpicrisis()">
 				<span class="uppercase" [translate]="'internaciones.internacion-paciente.actions.ADD_EPICRISIS'"></span>
 			</button>

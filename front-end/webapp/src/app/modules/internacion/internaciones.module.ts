@@ -24,6 +24,7 @@ import { SignosVitalesSummaryComponent } from './components/signos-vitales-summa
 import { AntropometricosSummaryComponent } from './components/antropometricos-summary/antropometricos-summary.component';
 import { NewInternmentComponent } from './routes/new-internment/new-internment.component';
 import { EpicrisisComponent } from './routes/epicrisis/epicrisis.component';
+import { NotaEvolucionComponent } from './routes/nota-evolucion/nota-evolucion.component';
 
 @NgModule({
 	declarations: [
@@ -45,6 +46,7 @@ import { EpicrisisComponent } from './routes/epicrisis/epicrisis.component';
 		AntropometricosSummaryComponent,
 		NewInternmentComponent,
 		EpicrisisComponent,
+		NotaEvolucionComponent,
 	],
 	imports: [
 		AppMaterialModule,

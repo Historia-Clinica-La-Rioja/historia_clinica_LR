@@ -1,0 +1,12 @@
+<app-content width="full">
+	<div class="container-row">
+		<article>
+			<!-- position sticky only works with ancestors of known elements (html5)-->
+			<div class="sticky">
+				<app-patient-card [patient]="patient$ | async">
+					<app-internment-episode-summary [internmentEpisode]="internmentEpisodeSummary$ | async" content></app-internment-episode-summary>
+				</app-patient-card>
+			</div>
+		</article>
+	</div>
+</app-content>

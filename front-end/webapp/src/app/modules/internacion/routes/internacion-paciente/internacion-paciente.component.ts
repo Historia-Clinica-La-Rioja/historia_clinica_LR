@@ -62,6 +62,10 @@ export class InternacionPacienteComponent implements OnInit {
 			this.router.navigate([`${this.router.url}/anamnesis`]);
 	}
 
+	goToNotaEvolucion(): void {
+		this.router.navigate([`${this.router.url}/nota-evolucion`]);
+	}
+
 	goToEpicrisis(): void {
 		this.router.navigate([`${this.router.url}/epicrisis`]);
 	}
