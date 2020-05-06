@@ -270,6 +270,7 @@ export interface InternmentPatientDto {
     genderId: number;
     identificationNumber: string;
     identificationTypeId: number;
+    internmentId: number;
     lastName: string;
     patientId: number;
 }

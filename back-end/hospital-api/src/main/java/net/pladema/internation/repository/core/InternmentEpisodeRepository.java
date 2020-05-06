@@ -66,7 +66,7 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
 
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.internation.service.internment.domain.BasicListedPatientBo(pa.id, pe.identificationTypeId, " +
-            "pe.identificationNumber, pe.firstName, pe.lastName, pe.birthDate, pe.genderId) " +
+            "pe.identificationNumber, pe.firstName, pe.lastName, pe.birthDate, pe.genderId, ie.id ) " +
             " FROM InternmentEpisode as ie " +
             " JOIN Patient as pa ON (ie.patientId = pa.id) " +
             " JOIN Person as pe ON (pa.personId = pe.id) "+

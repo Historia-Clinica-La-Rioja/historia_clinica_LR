@@ -12,6 +12,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class InternmentPatientDto {
 
+    private Integer internmentId;
+
     private Integer patientId;
 
     private Short identificationTypeId;

@@ -13,6 +13,8 @@ import java.time.LocalDate;
 @ToString
 public class BasicListedPatientBo {
 
+    private Integer internmentId;
+
     private Integer patientId;
 
     private Short identificationTypeId;
@@ -28,7 +30,8 @@ public class BasicListedPatientBo {
     private Short genderId;
 
     public BasicListedPatientBo(Integer patientId, Short identificationTypeId, String identificationNumber,
-                                String firstName, String lastName, LocalDate birthDate, Short genderId){
+                                String firstName, String lastName, LocalDate birthDate, Short genderId, Integer internmentId){
+        this.internmentId = internmentId;
         this.patientId = patientId;
         this.identificationTypeId = identificationTypeId;
         this.identificationNumber = identificationNumber;
