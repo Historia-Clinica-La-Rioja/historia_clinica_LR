@@ -4,6 +4,7 @@ import { InternacionesHomeComponent } from './routes/home/internaciones-home.com
 import { InternacionPacienteComponent } from './routes/internacion-paciente/internacion-paciente.component';
 import { AnamnesisComponent } from './routes/anamnesis/anamnesis.component';
 import { NewInternmentComponent } from "./routes/new-internment/new-internment.component";
+import { EpicrisisComponent } from './routes/epicrisis/epicrisis.component';
 
 
 const routes: Routes = [
@@ -22,6 +23,14 @@ const routes: Routes = [
 	{
 		path: 'internacion/:idInternacion/paciente/:idPaciente/anamnesis/:anamnesisId',
 		component: AnamnesisComponent
+	},
+	{
+		path: 'internacion/:idInternacion/paciente/:idPaciente/epicrisis',
+		component: EpicrisisComponent
+	},
+	{
+		path: 'internacion/:idInternacion/paciente/:idPaciente/epicrisis/:epicrisisId',
+		component: EpicrisisComponent
 	},
 	{
 		path: 'internacion/new',

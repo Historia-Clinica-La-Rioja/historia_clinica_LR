@@ -1,9 +1,12 @@
 <app-content width="full">
 	<section>
 		<h2 class="page-title" [translate]="'internaciones.internacion-paciente.TITLE'"></h2>
-		<div class="buttons">
+		<div class="buttons" *ngIf="!epicrisisDoc">
 			<button mat-flat-button color="primary" (click)="goToAnamnesis()" *ngIf="!anamnesisDoc || !anamnesisDoc.confirmed">
 				<span class="uppercase" [translate]="'internaciones.internacion-paciente.actions.ADD_EVAL_INGRESO'"></span>
+			</button>
+			<button mat-flat-button color="primary" (click)="goToEpicrisis()">
+				<span class="uppercase" [translate]="'internaciones.internacion-paciente.actions.ADD_EPICRISIS'"></span>
 			</button>
 		</div>
 		<div class="flex-layout">
