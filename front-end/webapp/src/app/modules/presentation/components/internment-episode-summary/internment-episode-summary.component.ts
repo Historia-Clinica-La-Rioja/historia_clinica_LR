@@ -7,7 +7,7 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class InternmentEpisodeSummaryComponent implements OnInit {
 
-	@Input() internmentEpisode: InternmentEpisode;
+	@Input() internmentEpisode: InternmentEpisodeSummary;
 
 	constructor() { }
 
@@ -16,7 +16,7 @@ export class InternmentEpisodeSummaryComponent implements OnInit {
 
 }
 
-export interface InternmentEpisode {
+export interface InternmentEpisodeSummary {
 	roomNumber: string;
 	bedNumber: string;
 	specialtyName: string;

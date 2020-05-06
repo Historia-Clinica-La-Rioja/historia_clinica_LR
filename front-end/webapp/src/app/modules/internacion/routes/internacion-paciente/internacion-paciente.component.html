@@ -12,22 +12,22 @@
 					<app-patient-card [patient]="patient$ | async"></app-patient-card>
 				</section>
 				<section>
-					<app-signos-vitales-summary [internmentEpisodeId]="(internmentEpisode$ | async)?.id"></app-signos-vitales-summary>
+					<app-signos-vitales-summary [internmentEpisodeId]="internmentEpisodeId"></app-signos-vitales-summary>
 				</section>
 				<section>
-					<app-antropometricos-summary [internmentEpisodeId]="(internmentEpisode$ | async)?.id"></app-antropometricos-summary>
+					<app-antropometricos-summary [internmentEpisodeId]="internmentEpisodeId"></app-antropometricos-summary>
 				</section>
 			</div>
 			<div class="column">
 				<section>
 					<app-summary-card [header]="internacionSummary">
 						<mat-card-content>
-							<app-internment-episode-summary [internmentEpisode]="internmentEpisode$ | async"></app-internment-episode-summary>
+							<app-internment-episode-summary [internmentEpisode]="internmentEpisodeSummary$ | async"></app-internment-episode-summary>
 						</mat-card-content>
 					</app-summary-card>
 				</section>
 				<section>
-					<app-diagnosis-summary [internmentEpisodeId]="(internmentEpisode$ | async)?.id"></app-diagnosis-summary>
+					<app-diagnosis-summary [internmentEpisodeId]="internmentEpisodeId"></app-diagnosis-summary>
 				</section>
 			</div>
 		</div>

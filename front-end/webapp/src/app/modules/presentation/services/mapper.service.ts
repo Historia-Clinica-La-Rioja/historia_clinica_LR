@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BasicPatientDto, InternmentSummaryDto } from '@api-rest/api-model';
-import { InternmentEpisode } from '../components/internment-episode-summary/internment-episode-summary.component';
+import { InternmentEpisodeSummary } from '../components/internment-episode-summary/internment-episode-summary.component';
 import { PatientBasicData } from '../components/patient-card/patient-card.component';
 
 @Injectable({
@@ -8,13 +8,13 @@ import { PatientBasicData } from '../components/patient-card/patient-card.compon
 })
 export class MapperService {
 
-	toInternmentEpisode: (o: InternmentSummaryDto) => InternmentEpisode = MapperService._toInternmentEpisode;
+	toInternmentEpisodeSummary: (o: InternmentSummaryDto) => InternmentEpisodeSummary = MapperService._toInternmentEpisodeSummary;
 	toPatientBasicData: (o: BasicPatientDto) => PatientBasicData = MapperService._toPatientBasicData;
 
 	constructor() {
 	}
 
-	private static _toInternmentEpisode(internmentSummary: InternmentSummaryDto): InternmentEpisode {
+	private static _toInternmentEpisodeSummary(internmentSummary: InternmentSummaryDto): InternmentEpisodeSummary {
 		return {
 			bedNumber: internmentSummary.bed.bedNumber,
 			roomNumber: internmentSummary.bed.room.roomNumber,

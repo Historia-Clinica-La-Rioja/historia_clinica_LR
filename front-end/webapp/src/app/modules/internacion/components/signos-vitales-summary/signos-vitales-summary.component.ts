@@ -31,7 +31,7 @@ export class SignosVitalesSummaryComponent implements OnInit {
 			bloodOxygenSaturation: 'Saturación de oxígeno',
 		};
 		this.internmentStateService.getVitalSigns(this.internmentEpisodeId).subscribe(
-			vitalSigns => {
+			(vitalSigns: VitalSignDto[]) => {
 				let current = vitalSigns[0] || {};
 				let previous = vitalSigns[1] || {};
 				Object.keys(LABELS).forEach(key => this.signosVitales.push(

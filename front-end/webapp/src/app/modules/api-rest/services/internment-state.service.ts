@@ -15,18 +15,18 @@ export class InternmentStateService {
 		private http: HttpClient
 	) { }
 
-	getDiagnosis(internmentId): Observable<HealthConditionDto[]> {
-		let url = `${environment.apiBase}/institutions/${HARD_CODE_INS_ID}/internments-state/${HARD_CODE_INS_ID}/general/diagnosis`;
+	getDiagnosis(internmentId: number): Observable<HealthConditionDto[]> {
+		let url = `${environment.apiBase}/institutions/${HARD_CODE_INS_ID}/internments-state/${internmentId}/general/diagnosis`;
 		return this.http.get<HealthConditionDto[]>(url);
 	}
 
-	getVitalSigns(internmentId): Observable<VitalSignDto[]> {
-		let url = `${environment.apiBase}/institutions/${HARD_CODE_INS_ID}/internments-state/${HARD_CODE_INS_ID}/general/vitalSigns`;
+	getVitalSigns(internmentId: number): Observable<VitalSignDto[]> {
+		let url = `${environment.apiBase}/institutions/${HARD_CODE_INS_ID}/internments-state/${internmentId}/general/vitalSigns`;
 		return this.http.get<VitalSignDto[]>(url);
 	}
 
-	getAnthropometricData(internmentId): Observable<AnthropometricDataDto> {
-		let url = `${environment.apiBase}/institutions/${HARD_CODE_INS_ID}/internments-state/${HARD_CODE_INS_ID}/general/anthropometricData`;
+	getAnthropometricData(internmentId: number): Observable<AnthropometricDataDto> {
+		let url = `${environment.apiBase}/institutions/${HARD_CODE_INS_ID}/internments-state/${internmentId}/general/anthropometricData`;
 		return this.http.get<AnthropometricDataDto>(url);
 	}
 

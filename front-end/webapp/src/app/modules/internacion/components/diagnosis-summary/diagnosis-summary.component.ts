@@ -35,7 +35,7 @@ export class DiagnosisSummaryComponent implements OnInit {
 		});
 
 		this.internmentStateService.getDiagnosis(this.internmentEpisodeId).pipe(
-			map(diagnosis => diagnosis.map((hc): HealthConditionSummary => {
+			map((diagnosis: HealthConditionDto[]) => diagnosis.map((hc): HealthConditionSummary => {
 				return {
 					statusId: hc.statusId,
 					verificationId: hc.verificationId,

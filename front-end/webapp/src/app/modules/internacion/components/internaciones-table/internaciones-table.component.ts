@@ -73,8 +73,8 @@ export class InternacionesTableComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.internacionService.getAllPacientesInternados<InternmentEpisodeDto>().subscribe(
-			data => this.internacionesTable = this.buildTable(data)
+		this.internacionService.getAllPacientesInternados().subscribe(
+			(data: InternmentEpisodeDto[]) => this.internacionesTable = this.buildTable(data)
 		);
 	}
 

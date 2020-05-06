@@ -5,7 +5,7 @@ import { BasicPatientDto, InternmentSummaryDto } from '@api-rest/api-model';
 import { PatientBasicData } from 'src/app/modules/presentation/components/patient-card/patient-card.component';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { InternmentEpisode } from '../../../presentation/components/internment-episode-summary/internment-episode-summary.component';
+import { InternmentEpisodeSummary } from '../../../presentation/components/internment-episode-summary/internment-episode-summary.component';
 import { InternacionService } from '@api-rest/services/internacion.service';
 import { MapperService } from '../../../presentation/services/mapper.service';
 
@@ -17,7 +17,7 @@ import { MapperService } from '../../../presentation/services/mapper.service';
 export class AnamnesisComponent implements OnInit {
 
 	public patient$: Observable<PatientBasicData>;
-	public internmentEpisode$: Observable<InternmentEpisode>;
+	public internmentEpisodeSummary$: Observable<InternmentEpisodeSummary>;
 
 	constructor(
 		private patientService: PatientService,
@@ -36,8 +36,8 @@ export class AnamnesisComponent implements OnInit {
 					map(patient => this.mapperService.toPatientBasicData(patient))
 				);
 
-				this.internmentEpisode$ = this.internmentService.getInternmentEpisodeSummary<InternmentSummaryDto>(internmentId).pipe(
-					map(internmentEpisodeSummary => this.mapperService.toInternmentEpisode(internmentEpisodeSummary))
+				this.internmentEpisodeSummary$ = this.internmentService.getInternmentEpisodeSummary(internmentId).pipe(
+					map((internmentEpisodeSummary: InternmentSummaryDto) => this.mapperService.toInternmentEpisodeSummary(internmentEpisodeSummary))
 				);
 			}
 		);
