@@ -5,7 +5,6 @@ import { MenuItem } from '@core/core-model';
 import { SIDEBAR_MENU } from './modules/pacientes/constants/menu';
 import { PermissionsService } from './modules/auth/services/permissions.service';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 const defaultLang = 'es-AR'; // TODO english version 'en-US';

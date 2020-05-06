@@ -19,17 +19,6 @@
 					</mat-error>
 				</mat-form-field>
 
-				<mat-form-field appearance="outline">
-					<mat-label [translate]="'internaciones.anamnesis.alergias.form.REGISTRY_DATE'">
-					</mat-label>
-					<input matInput id="date" [matDatepicker]="myDatepicker" formControlName="date"
-						[max]="this.today">
-					<mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
-					<mat-datepicker #myDatepicker startView="multi-year" (yearSelected)="chosenYearHandler($event)"
-						(monthSelected)="chosenMonthHandler($event)">
-					</mat-datepicker>
-				</mat-form-field>
-
 				<div align="end">
 					<button mat-raised-button color="primary" type="submit">
 						<span class="uppercase" [translate]="'internaciones.anamnesis.alergias.ADD'"></span>
