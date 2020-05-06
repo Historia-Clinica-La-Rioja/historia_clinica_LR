@@ -3,6 +3,7 @@ package net.pladema.patient.controller;
 import net.pladema.BaseControllerTest;
 import net.pladema.address.controller.service.AddressExternalService;
 import net.pladema.patient.controller.mapper.PatientMapper;
+import net.pladema.patient.repository.PatientTypeRepository;
 import net.pladema.patient.service.PatientService;
 import net.pladema.person.controller.service.PersonExternalService;
 import org.junit.Before;
@@ -33,6 +34,9 @@ public class PatientControllerTest extends BaseControllerTest {
 	@MockBean
 	private AddressExternalService addressExternalService;
 
+	@MockBean
+	private PatientTypeRepository patientTypeRepository;
+	
 	@MockBean
 	private PatientMapper patientMapper;
 

@@ -6,7 +6,9 @@ import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.address.controller.service.AddressExternalService;
 import net.pladema.patient.controller.dto.*;
 import net.pladema.patient.controller.mapper.PatientMapper;
+import net.pladema.patient.repository.PatientTypeRepository;
 import net.pladema.patient.repository.entity.Patient;
+import net.pladema.patient.repository.entity.PatientType;
 import net.pladema.patient.service.PatientService;
 import net.pladema.patient.service.domain.PatientSearch;
 import net.pladema.person.controller.dto.BMPersonDto;
@@ -35,6 +37,8 @@ public class PatientController {
 
 	private final PatientService patientService;
 
+	private final PatientTypeRepository patientTypeRepository;
+
 	private final PersonExternalService personExternalService;
 
 	private final AddressExternalService addressExternalService;
@@ -44,12 +48,13 @@ public class PatientController {
 	private final ObjectMapper jackson;
 	
 	public PatientController(PatientService patientService, PersonExternalService personExternalService, AddressExternalService addressExternalService,
-							 PatientMapper patientMapper, ObjectMapper jackson) {
+							 PatientMapper patientMapper, ObjectMapper jackson, PatientTypeRepository patientTypeRepository) {
 		this.patientService = patientService;
 		this.personExternalService = personExternalService;
 		this.addressExternalService = addressExternalService;
 		this.jackson = jackson;
 		this.patientMapper = patientMapper;
+		this.patientTypeRepository = patientTypeRepository;
 	}
 
 	@GetMapping(value = "/search")
@@ -102,6 +107,18 @@ public class PatientController {
 				.orElseThrow(() -> new EntityNotFoundException("patient.invalid"));
 		BasicDataPersonDto personData = personExternalService.getBasicDataPerson(patient.getPersonId());
 		BasicPatientDto	result = new BasicPatientDto(patient.getId(), personData);
+		LOG.debug(OUTPUT, result);
+		return  ResponseEntity.ok().body(result);
+	}
+
+	@GetMapping("/{patientId}/completedata")
+	public ResponseEntity<CompletePatientDto> getCompleteDataPatient(@PathVariable(name = "patientId") Integer patientId){
+		LOG.debug("Input parameters -> patientId {}", patientId);
+		Patient patient = patientService.getPatient(patientId)
+				.orElseThrow(() -> new EntityNotFoundException("patient.invalid"));
+		BasicDataPersonDto personData = personExternalService.getBasicDataPerson(patient.getPersonId());
+		PatientType patientType = patientTypeRepository.getOne(patient.getTypeId());
+		CompletePatientDto result = new CompletePatientDto(patient, patientType,personData);
 		LOG.debug(OUTPUT, result);
 		return  ResponseEntity.ok().body(result);
 	}

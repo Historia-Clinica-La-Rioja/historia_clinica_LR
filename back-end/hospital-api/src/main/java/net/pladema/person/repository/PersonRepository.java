@@ -32,12 +32,12 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
             "c.id as cityId, c.description as city, " +
             "pr.id as provinceId, pr.description as province)" +
             "FROM Person as p " +
-            "JOIN PersonExtended as pe ON (pe.id = p.id) " +
-            "JOIN Address as a ON (a.id = pe.addressId) " +
-            "JOIN IdentificationType as it ON (it.id = p.identificationTypeId) " +
-            "JOIN City as c ON (c.id = a.cityId) " +
-            "JOIN Department as d ON (d.id = c.departmentId) " +
-            "JOIN Province as pr ON (p.id = d.provinceId) " +
+            "LEFT JOIN PersonExtended as pe ON (pe.id = p.id) " +
+            "LEFT JOIN Address as a ON (a.id = pe.addressId) " +
+            "LEFT JOIN IdentificationType as it ON (it.id = p.identificationTypeId) " +
+            "LEFT JOIN City as c ON (c.id = a.cityId) " +
+            "LEFT JOIN Department as d ON (d.id = c.departmentId) " +
+            "LEFT JOIN Province as pr ON (pr.id = d.provinceId) " +
             "WHERE p.id = :personId ")
     Optional<PersonalInformation> getPersonalInformation(@Param("personId") Integer personId);
 }
