@@ -29,10 +29,6 @@ const routes: Routes = [
 		component: EpicrisisComponent
 	},
 	{
-		path: 'internacion/:idInternacion/paciente/:idPaciente/epicrisis/:epicrisisId',
-		component: EpicrisisComponent
-	},
-	{
 		path: 'internacion/new',
 		component: NewInternmentComponent
 	}

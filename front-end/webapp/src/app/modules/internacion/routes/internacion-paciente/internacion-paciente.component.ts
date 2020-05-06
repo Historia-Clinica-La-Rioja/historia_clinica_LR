@@ -63,10 +63,7 @@ export class InternacionPacienteComponent implements OnInit {
 	}
 
 	goToEpicrisis(): void {
-		if (this.epicrisisDoc?.id)
-			this.router.navigate([`${this.router.url}/epicrisis/${this.epicrisisDoc?.id}`]);
-		else
-			this.router.navigate([`${this.router.url}/epicrisis`]);
+		this.router.navigate([`${this.router.url}/epicrisis`]);
 	}
 
 }
