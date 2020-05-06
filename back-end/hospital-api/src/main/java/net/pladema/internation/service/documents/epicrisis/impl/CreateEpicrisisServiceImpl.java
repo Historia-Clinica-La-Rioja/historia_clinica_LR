@@ -8,11 +8,12 @@ import net.pladema.internation.service.documents.epicrisis.domain.Epicrisis;
 import net.pladema.internation.service.general.NoteService;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
 import net.pladema.internation.service.ips.*;
-import net.pladema.internation.service.ips.domain.DocumentObservations;
+import net.pladema.internation.service.ips.domain.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -64,15 +65,23 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
         loadNotes(document, Optional.ofNullable(epicrisis.getNotes()));
         document = documentService.save(document);
 
-        epicrisis.setDiagnosis(healthConditionService.loadDiagnosis(patientId, document.getId(), epicrisis.getDiagnosis()));
-        epicrisis.setPersonalHistories(healthConditionService.loadPersonalHistories(patientId, document.getId(), epicrisis.getPersonalHistories()));
-        epicrisis.setFamilyHistories(healthConditionService.loadFamilyHistories(patientId, document.getId(), epicrisis.getFamilyHistories()));
-        epicrisis.setAllergies(allergyService.loadAllergies(patientId, document.getId(), epicrisis.getAllergies()));
-        epicrisis.setInmunizations(inmunizationService.loadInmunization(patientId, document.getId(), epicrisis.getInmunizations()));
-        epicrisis.setMedications(medicationService.loadMedications(patientId, document.getId(), epicrisis.getMedications()));
+        List<DiagnosisBo> lastStateDiagnosis = healthConditionService.getDiagnosisGeneralState(internmentEpisodeId);
+        epicrisis.setDiagnosis(healthConditionService.loadDiagnosis(patientId, document.getId(), lastStateDiagnosis));
 
-        epicrisis.setVitalSigns(clinicalObservationService.loadVitalSigns(patientId, document.getId(), Optional.ofNullable(epicrisis.getVitalSigns())));
-        epicrisis.setAnthropometricData(clinicalObservationService.loadAnthropometricData(patientId, document.getId(), Optional.ofNullable(epicrisis.getAnthropometricData())));
+        List<HealthHistoryConditionBo> lastPersonalHistories = healthConditionService.getPersonalHistoriesGeneralState(internmentEpisodeId);
+        epicrisis.setPersonalHistories(healthConditionService.loadPersonalHistories(patientId, document.getId(), lastPersonalHistories));
+
+        List<HealthHistoryConditionBo> lastFamilyHistories = healthConditionService.getFamilyHistoriesGeneralState(internmentEpisodeId);
+        epicrisis.setFamilyHistories(healthConditionService.loadFamilyHistories(patientId, document.getId(), lastFamilyHistories));
+
+        List<AllergyConditionBo> lastAllergies = allergyService.getAllergiesGeneralState(internmentEpisodeId);
+        epicrisis.setAllergies(allergyService.loadAllergies(patientId, document.getId(), lastAllergies));
+
+        List<InmunizationBo> lastInmunizations = inmunizationService.getInmunizationsGeneralState(internmentEpisodeId);
+        epicrisis.setInmunizations(inmunizationService.loadInmunization(patientId, document.getId(), lastInmunizations));
+
+        List<MedicationBo> lastMedications = medicationService.getMedicationsGeneralState(internmentEpisodeId);
+        epicrisis.setMedications(medicationService.loadMedications(patientId, document.getId(), lastMedications));
 
         internmentEpisodeService.updateEpicrisisDocumentId(internmentEpisodeId, document.getId());
         epicrisis.setId(document.getId());
@@ -90,6 +99,7 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
             document.setEvolutionNoteId(noteService.createNote(notes.getEvolutionNote()));
             document.setClinicalImpressionNoteId(noteService.createNote(notes.getClinicalImpressionNote()));
             document.setOtherNoteId(noteService.createNote(notes.getOtherNote()));
+            document.setIndicationsNoteId(noteService.createNote(notes.getIndicationsNote()));
         });
         LOG.debug(OUTPUT, document);
         return document;
