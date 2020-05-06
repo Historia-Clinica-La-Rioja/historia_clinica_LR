@@ -190,6 +190,15 @@ export interface EpicrisisDto extends Serializable {
     vitalSigns: VitalSignDto;
 }
 
+export interface EpicrisisGeneralStateDto extends Serializable {
+    allergies: AllergyConditionDto[];
+    diagnosis: DiagnosisDto[];
+    familyHistories: HealthHistoryConditionDto[];
+    inmunizations: InmunizationDto[];
+    medications: MedicationDto[];
+    personalHistories: HealthHistoryConditionDto[];
+}
+
 export interface EpicrisisSummaryDto extends DocumentSummaryDto {
 }
 

@@ -2,10 +2,12 @@ package net.pladema.internation.controller.documents.epicrisis.mapper;
 
 import net.pladema.dates.configuration.LocalDateMapper;
 import net.pladema.internation.controller.documents.epicrisis.dto.EpicrisisDto;
+import net.pladema.internation.controller.documents.epicrisis.dto.EpicrisisGeneralStateDto;
 import net.pladema.internation.controller.documents.epicrisis.dto.ResponseEpicrisisDto;
 import net.pladema.internation.controller.ips.mapper.AnthropometricDataMapper;
 import net.pladema.internation.controller.ips.mapper.VitalSignMapper;
 import net.pladema.internation.service.documents.epicrisis.domain.Epicrisis;
+import net.pladema.internation.service.internment.domain.InternmentGeneralState;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -22,4 +24,6 @@ public interface EpicrisisMapper {
     @Mapping(target = "anthropometricData", source = "anthropometricData", qualifiedByName = "fromAnthropometricDataBo")
     @Mapping(target = "vitalSigns", source = "vitalSigns", qualifiedByName = "fromVitalSignBo")
     ResponseEpicrisisDto fromEpicrisis(Epicrisis epicrisis);
+
+    EpicrisisGeneralStateDto toEpicrisisGeneralStateDto(InternmentGeneralState interment);
 }
