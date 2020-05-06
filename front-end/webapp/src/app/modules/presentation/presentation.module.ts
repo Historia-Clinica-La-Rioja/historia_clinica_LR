@@ -9,6 +9,9 @@ import { NoDataComponent } from './components/no-data/no-data.component';
 import { TableComponent } from './components/table/table.component';
 import { SignoVitalCurrentPreviousComponent } from './components/signo-vital-current-previous/signo-vital-current-previous.component';
 import { DetailBoxComponent } from './components/detail-box/detail-box.component';
+import { FullHouseAddressPipe } from './pipes/fullHouseAddress.pipe';
+import { PersonalInformationComponent } from './components/personal-information/personal-information.component';
+import { PatientTypeLogoComponent } from './components/patient-type-logo/patient-type-logo.component';
 
 @NgModule({
 	declarations: [
@@ -19,6 +22,10 @@ import { DetailBoxComponent } from './components/detail-box/detail-box.component
 		SummaryCardComponent,
 		TableComponent,
 		DetailBoxComponent,
+		InternmentEpisodeSummaryComponent,
+		FullHouseAddressPipe,
+		PersonalInformationComponent,
+		PatientTypeLogoComponent,
 	],
 	imports: [
 		CommonModule,
@@ -33,6 +40,10 @@ import { DetailBoxComponent } from './components/detail-box/detail-box.component
 		SummaryCardComponent,
 		TableComponent,
 		DetailBoxComponent,
+		InternmentEpisodeSummaryComponent,
+		FullHouseAddressPipe,
+		PersonalInformationComponent,
+		PatientTypeLogoComponent,
 	]
 })
 export class PresentationModule { }

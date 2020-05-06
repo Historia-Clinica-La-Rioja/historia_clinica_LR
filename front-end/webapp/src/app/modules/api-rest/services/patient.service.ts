@@ -63,6 +63,11 @@ export class PatientService {
 		return this.http.get<BasicPatientDto>(url);
 	}
 
+	getPatientCompleteData<CompletePatientDto>(patientId: number): Observable<CompletePatientDto> {
+		let url = `${environment.apiBase}/patient/${patientId}/completedata`;
+		return this.http.get<CompletePatientDto>(url);
+	}
+
 	getAllPatients(): Observable<BMPatientDto[]> {
 		let url = `${environment.apiBase}/patient/basicdata`;
 		return this.http.get<BMPatientDto[]>(url);

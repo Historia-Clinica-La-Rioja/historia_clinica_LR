@@ -1,0 +1,31 @@
+@import "../../../../../assets/styles/variables";
+@import "../../../../../assets/styles/mixins.scss";
+
+.bold{
+	font-weight: bold;
+}
+
+span {
+	font-size: $font-size-sm;
+	float: left;
+	clear: left
+}
+
+.form-row{
+	@include form-row;
+	margin-top: 15px;
+	margin-bottom: 15px;
+
+
+	div{
+		height: 50%;
+		width: 50%;
+		flex-grow: 1;
+	}
+
+}
+
+.noInformation{
+	color: #A8A8A8;
+}
+

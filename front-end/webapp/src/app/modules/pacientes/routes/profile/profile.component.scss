@@ -1,0 +1,17 @@
+@import "../../../../../assets/styles/variables";
+@import "../../../../../assets/styles/mixins.scss";
+
+span {
+	font-size: $font-size-sm;
+	float: left;
+	clear: left
+}
+
+.header{
+	display: flex;
+	justify-content: flex-end;
+}
+
+.profile-card{
+	width: 40%;
+}

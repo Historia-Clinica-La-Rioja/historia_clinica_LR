@@ -1,9 +1,15 @@
 <app-content width="full">
 	<section>
-		<app-patient-card [patient]="patient$ | async">
-			<div content>
-			</div>
-		</app-patient-card>
+		<div class="profile-card">
+			<app-patient-card [patient]="patientBasicData">
+				<div header class="header">
+					<app-patient-type-logo [patientTypeData]="patientTypeData"></app-patient-type-logo>
+				</div>
+				<div content>
+					<app-personal-information [personalInformation]="personalInformation"></app-personal-information>
+				</div>
+			</app-patient-card>
+		</div>
 	</section>
 </app-content>
 

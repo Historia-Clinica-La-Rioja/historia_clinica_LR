@@ -153,6 +153,12 @@ export interface ClinicalTermDto extends Serializable {
     statusId: string;
 }
 
+export interface CompletePatientDto extends BasicPatientDto {
+    medicalCoverageAffiliateNumber: string;
+    medicalCoverageName: string;
+    patientType: PatientType;
+}
+
 export interface DiagnosisDto extends HealthConditionDto {
     presumptive: boolean;
 }
@@ -339,6 +345,13 @@ export interface PatientSearchFilter {
     identificationNumber: string;
     identificationTypeId: number;
     lastName: string;
+}
+
+export interface PatientType extends Serializable {
+    active: boolean;
+    audit: boolean;
+    description: string;
+    id: number;
 }
 
 export interface PermissionsDto {
