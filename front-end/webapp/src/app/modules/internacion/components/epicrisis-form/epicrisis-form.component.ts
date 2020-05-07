@@ -127,7 +127,7 @@ export class EpicrisisFormComponent implements OnInit {
 		this.route.paramMap.subscribe(
 			(params: ParamMap) => {
 				this.internmentEpisodeId = Number(params.get('idInternacion'));
-				this.patientId = Number(params.get('patientId'));
+				this.patientId = Number(params.get('idPaciente'));
 
 			}
 		);

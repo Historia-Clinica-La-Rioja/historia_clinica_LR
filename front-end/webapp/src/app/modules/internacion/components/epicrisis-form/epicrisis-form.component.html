@@ -55,7 +55,7 @@
 
 		<section id="allergies">
 			<h2 class="mat-h2" [translate]="'internaciones.epicrisis.alergias.TITLE'"></h2>
-			<table mat-table [dataSource]="diagnosis.data" class="secondary">
+			<table mat-table [dataSource]="allergies.data" class="secondary">
 
 				<ng-container *ngFor="let column of allergies.columns" [matColumnDef]="column.def">
 					<th *matHeaderCellDef>{{ column.header | translate }}</th>
@@ -71,7 +71,7 @@
 
 		<section id="inmunizations">
 			<h2 class="mat-h2" [translate]="'internaciones.epicrisis.vacunas.TITLE'"></h2>
-			<table mat-table [dataSource]="diagnosis.data" class="secondary">
+			<table mat-table [dataSource]="inmunizations.data" class="secondary">
 
 				<ng-container *ngFor="let column of inmunizations.columns" [matColumnDef]="column.def">
 					<th *matHeaderCellDef>{{ column.header | translate }}</th>
@@ -87,7 +87,7 @@
 
 		<section id="medications">
 			<h2 class="mat-h2" [translate]="'internaciones.epicrisis.medicacion.TITLE'"></h2>
-			<table mat-table [dataSource]="diagnosis.data" class="secondary">
+			<table mat-table [dataSource]="medications.data" class="secondary">
 
 				<ng-container *ngFor="let column of medications.columns" [matColumnDef]="column.def">
 					<th *matHeaderCellDef>{{ column.header | translate }}</th>

@@ -5,7 +5,7 @@
 <table mat-table [dataSource]="dataSource" [class]="tableClass">
 	<ng-container *ngFor="let column of columns" [matColumnDef]="column.columnDef">
 		<th mat-header-cell *matHeaderCellDef>{{ column.header | translate }}</th>
-		<td mat-cell [ngClass]="{'actions': column.action}" *matCellDef="let row">
+		<td mat-cell [ngClass]="{'actions': !!column.action}" *matCellDef="let row">
 			<ng-container *ngIf="column.action else default">
 				<ng-container *ngIf="column.action.isDelete else button">
 					<button mat-icon-button color="warn" (click)="column.action.do(row)">
