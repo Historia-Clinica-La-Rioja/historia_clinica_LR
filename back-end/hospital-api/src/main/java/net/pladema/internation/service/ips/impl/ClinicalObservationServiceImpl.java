@@ -168,15 +168,10 @@ public class ClinicalObservationServiceImpl implements ClinicalObservationServic
     }
 
     @Override
-    public List<AnthropometricDataBo> getLast2AnthropometricDataGeneralState(Integer internmentEpisodeId) {
+    public AnthropometricDataBo getLastAnthropometricDataGeneralState(Integer internmentEpisodeId) {
         LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
         MapClinicalObservationVo resultQuery = clinicalObservationRepository.getGeneralStateLastSevenDays(internmentEpisodeId);
-        List<AnthropometricDataBo> result = new ArrayList<>();
-        for (int i=0;i<2;i++){
-            resultQuery.getLastNAnthropometricData(i).ifPresent(v -> {
-                result.add(v);
-            });
-        }
+        AnthropometricDataBo result = resultQuery.getLastNAnthropometricData(0).orElse(null);
         LOG.debug(OUTPUT, result);
         return result;
     }

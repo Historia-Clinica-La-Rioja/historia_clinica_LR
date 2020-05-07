@@ -12,7 +12,7 @@ public interface ClinicalObservationService {
 
     AnthropometricDataBo loadAnthropometricData(Integer patientId, Long documentId, Optional<AnthropometricDataBo> optAnthropometricData);
 
-    List<AnthropometricDataBo> getLast2AnthropometricDataGeneralState(Integer internmentEpisodeId);
+    AnthropometricDataBo getLastAnthropometricDataGeneralState(Integer internmentEpisodeId);
 
     List<VitalSignBo> getLast2VitalSignsGeneralState(Integer internmentEpisodeId);
 }

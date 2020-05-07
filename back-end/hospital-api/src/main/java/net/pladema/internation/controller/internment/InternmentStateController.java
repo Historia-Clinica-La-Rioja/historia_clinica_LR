@@ -120,12 +120,12 @@ public class InternmentStateController {
 
     @InternmentValid
     @GetMapping("/{internmentEpisodeId}/general/anthropometricData")
-    public ResponseEntity<List<AnthropometricDataDto>> anthropometricDataGeneralState(
+    public ResponseEntity<AnthropometricDataDto> anthropometricDataGeneralState(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}", institutionId, internmentEpisodeId);
-        List<AnthropometricDataBo> anthropometricDatas = clinicalObservationService.getLast2AnthropometricDataGeneralState(internmentEpisodeId);
-        List<AnthropometricDataDto> result = internmentStateMapper.toListAnthropometricDataDto(anthropometricDatas);
+        AnthropometricDataBo anthropometricDatas = clinicalObservationService.getLastAnthropometricDataGeneralState(internmentEpisodeId);
+        AnthropometricDataDto result = internmentStateMapper.toAnthropometricDataDto(anthropometricDatas);
         LOG.debug("Output -> {}", result);
         return  ResponseEntity.ok().body(result);
     }

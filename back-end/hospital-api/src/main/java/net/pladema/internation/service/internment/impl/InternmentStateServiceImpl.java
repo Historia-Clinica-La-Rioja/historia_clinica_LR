@@ -77,9 +77,9 @@ public class InternmentStateServiceImpl implements InternmentStateService {
         return allergyService.getAllergiesGeneralState(internmentEpisodeId);
     }
 
-    private List<AnthropometricDataBo> getAntropometricDataState(Integer internmentEpisodeId){
+    private AnthropometricDataBo getAntropometricDataState(Integer internmentEpisodeId){
         LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
-        return clinicalObservationService.getLast2AnthropometricDataGeneralState(internmentEpisodeId);
+        return clinicalObservationService.getLastAnthropometricDataGeneralState(internmentEpisodeId);
     }
 
     private List<VitalSignBo> getVitalSignsState(Integer internmentEpisodeId){

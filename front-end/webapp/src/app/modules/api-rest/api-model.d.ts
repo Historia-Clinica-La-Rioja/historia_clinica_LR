@@ -273,7 +273,7 @@ export interface InternmentEpisodeDto {
 
 export interface InternmentGeneralStateDto extends Serializable {
     allergies: AllergyConditionDto[];
-    anthropometricData: AnthropometricDataDto[];
+    anthropometricData: AnthropometricDataDto;
     diagnosis: DiagnosisDto[];
     familyHistories: HealthHistoryConditionDto[];
     inmunizations: InmunizationDto[];

@@ -26,7 +26,7 @@ public class InternmentGeneralState implements Serializable {
 
     private List<AllergyConditionBo> allergies;
 
-    private List<AnthropometricDataBo> anthropometricData = new ArrayList<>();
+    private AnthropometricDataBo anthropometricData;
 
     private List<VitalSignBo> vitalSigns = new ArrayList<>();
 

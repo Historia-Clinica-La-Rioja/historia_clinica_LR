@@ -57,4 +57,6 @@ public interface InternmentStateMapper {
     @Mapping(target = "medications", source = "medications", qualifiedByName = "toListMedicationDto")
     InternmentGeneralStateDto toInternmentGeneralStateDto(InternmentGeneralState interment);
 
+    @Named("toAnthropometricDataDto")
+    AnthropometricDataDto toAnthropometricDataDto(AnthropometricDataBo anthropometricData);
 }
