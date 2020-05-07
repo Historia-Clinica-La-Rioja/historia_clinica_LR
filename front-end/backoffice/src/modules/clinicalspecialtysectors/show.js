@@ -5,11 +5,17 @@ import {
     ReferenceField,
     TextField,
 } from 'react-admin';
+import SubReference from '../components/subreference';
 
 const ClinicalSpecialtySectorShow = props => (
     <Show {...props}>
         <SimpleShowLayout>
             <TextField source="description"/>
+            <ReferenceField source="sectorId" reference="sectors" link={false} label="resources.sectors.fields.institutionId">
+                <SubReference source="institutionId" reference="institutions" link={false}>
+                    <TextField source="name"/>
+                </SubReference>
+            </ReferenceField>
             <ReferenceField source="sectorId" reference="sectors">
                 <TextField source="description" />
             </ReferenceField>
