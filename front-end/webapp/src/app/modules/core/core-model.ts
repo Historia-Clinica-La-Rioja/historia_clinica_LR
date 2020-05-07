@@ -3,4 +3,5 @@ export class MenuItem {
 	icon: string;
 	url: string;
 	permissions: string[];
+	options?: any;
 }

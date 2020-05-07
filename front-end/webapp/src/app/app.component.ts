@@ -1,13 +1,26 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { Observable } from 'rxjs';
+
 import { LanguageService } from '@core/services/language.service';
+import { ContextService } from '@core/services/context.service';
 import { MenuItem } from '@core/core-model';
+
 import { SIDEBAR_MENU } from './modules/pacientes/constants/menu';
 import { PermissionsService } from './modules/auth/services/permissions.service';
-import { Observable } from 'rxjs';
-import { Router } from '@angular/router';
+import { map, switchMap } from 'rxjs/operators';
+import { InstitutionDto } from '@api-rest/api-model';
 
 const defaultLang = 'es-AR'; // TODO english version 'en-US';
+
+const institutionMenu = (institution: InstitutionDto) => ({
+	text: institution.name,
+	icon: 'domain',
+	url: '/auth',
+	permissions: [],
+	options: {exact: true},
+});
+
 
 @Component({
 	selector: 'app-root',
@@ -22,13 +35,22 @@ export class AppComponent {
 	constructor(
 		private translate: TranslateService,
 		private languageService: LanguageService,
-		private router: Router,
+		contextService: ContextService,
 		permissionsService: PermissionsService,
 	) {
 		translate.setDefaultLang(defaultLang);
 		translate.use(defaultLang);
 		this.menuItems$ = permissionsService.filterItems$(SIDEBAR_MENU).pipe(
-			// tap((items: MenuItem[]) => items && items.length > 0 && this.router.navigate([items[0].url])),
+			switchMap((menuFiltered: MenuItem[]) =>
+				contextService.institution$.pipe(
+					map(
+						institution => institution ? [
+							institutionMenu(institution),
+							...menuFiltered
+						] : menuFiltered
+					)
+				)
+			)
 		);
 	}
 
