@@ -17,22 +17,22 @@ export class PacientesTableComponent implements OnInit {
 
 	public displayedColumns: string[] = ['ID Paciente', 'Nro. Documento', 'Nombre', 'Apellido', 'F. Nac', 'Sexo', 'Action'];
 	public allPatient: TableModel<InternmentPatientDto>;
-	public genderOptions={};
+	public genderOptions = {};
 
 	constructor(
 		private internmentPatientService: InternmentPatientService,
 		private tableService: TableService,
 		private personMasterDataService: PersonMasterDataService,
 		private router: Router,
-	) {	}
+	) { }
 
 	ngOnInit(): void {
 		this.personMasterDataService.getGenders().subscribe(
 			genders => {
 				genders.forEach(gender => {
-					this.genderOptions[gender.id]=gender.description
+					this.genderOptions[gender.id] = gender.description
 				});
-		});
+			});
 
 		this.internmentPatientService.getAllInternmentPatientsBasicData().subscribe(data => {
 			this.allPatient = this.buildTable(data);
@@ -62,10 +62,10 @@ export class PacientesTableComponent implements OnInit {
 					header: 'Apellido',
 					text: (row) => row.lastName
 				},
- 				{
+				{
 					columnDef: 'birthDate',
 					header: 'F. Nac',
-					text: (row) =>  momentFormatDate(new Date(row.birthDate),DateFormat.VIEW_DATE)
+					text: (row) => (row.birthDate == undefined) ? "" : momentFormatDate(new Date(row.birthDate), DateFormat.VIEW_DATE)
 				},
 				{
 					columnDef: 'gender',
