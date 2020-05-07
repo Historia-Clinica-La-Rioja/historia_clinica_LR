@@ -228,6 +228,12 @@ export interface GenderDto extends MasterdataDto<number> {
     id: number;
 }
 
+export interface HealthCareProfessionalGroupDto {
+    healthcareProfessionalId: number;
+    internmentEpisodeId: number;
+    responsible: boolean;
+}
+
 export interface HealthConditionDto extends ClinicalTermDto {
     verificationId: string;
 }
@@ -261,6 +267,17 @@ export interface InstitutionDto extends Serializable {
     id: number;
     name: string;
     website: string;
+}
+
+export interface InternmentEpisodeADto {
+    bedId: number;
+    clinicalSpecialtyId: number;
+    dischargeDate: Date;
+    entryDate: Date;
+    institutionId: number;
+    noteId: number;
+    patientId: number;
+    responsibleDoctorId: number;
 }
 
 export interface InternmentEpisodeDto {

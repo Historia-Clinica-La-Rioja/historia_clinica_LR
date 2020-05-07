@@ -2,8 +2,6 @@ import { Component, ElementRef, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { InternacionMasterDataService } from "@api-rest/services/internacion-master-data.service";
-import { Observable } from "rxjs";
-import { map, startWith } from "rxjs/operators";
 import { SectorService } from "@api-rest/services/sector.service";
 import { ClinicalSpecialtySectorService } from "@api-rest/services/clinical-specialty-sector.service";
 import { RoomService } from "@api-rest/services/room.service";
@@ -11,7 +9,6 @@ import { HealthcareProfessionalService } from "@api-rest/services/healthcare-pro
 import {
 	CompletePatientDto,
 	HealthcareProfessionalDto,
-	InternmentEpisodeDto,
 	PersonalInformationDto
 } from "@api-rest/api-model";
 import { PatientService } from "@api-rest/services/patient.service";
@@ -22,7 +19,7 @@ import { MapperService } from "@presentation/services/mapper.service";
 import { PersonService } from "@api-rest/services/person.service";
 import { InternmentEpisodeService } from "@api-rest/services/internment-episode.service";
 import { scrollIntoError } from "@core/utils/form.utils";
-import { ContextService } from "@core/services/context.service";
+
 
 @Component({
 	selector: 'app-new-internment',
@@ -133,7 +130,13 @@ export class NewInternmentComponent implements OnInit {
 		let intenmentEpisodeReq = this.mapToPersonInternmentEpisodeRequest();
 		if (this.form.valid) {
 			this.internmentEpisodeService.setNewInternmentEpisode(intenmentEpisodeReq)
-				.subscribe();
+				.subscribe(data => {
+					//TODO popup confirm
+					if(data && data.id) {
+						let url = `internaciones/internacion/${data.id}/paciente/${this.patientId}`;
+						this.router.navigate([url]);
+					}
+				});
 		} else {
 			scrollIntoError(this.form, this.el);
 		}
@@ -143,7 +146,8 @@ export class NewInternmentComponent implements OnInit {
 		return {
 			patientId: this.patientId,
 			bedId: this.form.controls.bedId.value,
-			clinicalSpecialtyId: this.form.controls.specialtyId.value
+			clinicalSpecialtyId: this.form.controls.specialtyId.value,
+			responsibleDoctorId: this.form.controls.doctorId.value
 		}
 	}
 
