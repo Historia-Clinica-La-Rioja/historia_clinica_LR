@@ -36,7 +36,8 @@ public class FederarWSConfig extends WSConfig{
 	//Url
 	private static final String TOKEN_VALID="validateToken";
 	private static final String SEARCH_LOCAL_ID ="localIdSearch";
-		
+	private static final String FEDERATE ="federate";
+	
     private Map<String, String> url;
     private Map<String, String> claims;
     private Map<String, String> auth;
@@ -50,6 +51,10 @@ public class FederarWSConfig extends WSConfig{
 	}
 	
 	public String getIss() {
+		return claims.get(ISS);
+	}
+	
+	public String getDomain() {
 		return claims.get(ISS);
 	}
 	
@@ -95,6 +100,10 @@ public class FederarWSConfig extends WSConfig{
 	
 	public String getLocalSearchIdUrl() {
 		return url.get(SEARCH_LOCAL_ID);
+	}
+	
+	public String getFederateUrl() {
+		return url.get(FEDERATE);
 	}
 	
 }

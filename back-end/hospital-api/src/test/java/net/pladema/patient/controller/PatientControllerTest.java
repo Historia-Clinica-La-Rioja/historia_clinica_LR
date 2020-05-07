@@ -1,11 +1,13 @@
 package net.pladema.patient.controller;
 
-import net.pladema.BaseControllerTest;
-import net.pladema.address.controller.service.AddressExternalService;
-import net.pladema.patient.controller.mapper.PatientMapper;
-import net.pladema.patient.repository.PatientTypeRepository;
-import net.pladema.patient.service.PatientService;
-import net.pladema.person.controller.service.PersonExternalService;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.Optional;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,13 +15,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Optional;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import net.pladema.BaseControllerTest;
+import net.pladema.address.controller.service.AddressExternalService;
+import net.pladema.federar.services.FederarService;
+import net.pladema.patient.controller.mapper.PatientMapper;
+import net.pladema.patient.repository.PatientTypeRepository;
+import net.pladema.patient.service.PatientService;
+import net.pladema.person.controller.mapper.PersonMapper;
+import net.pladema.person.controller.service.PersonExternalService;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(PatientController.class)
@@ -27,6 +30,9 @@ public class PatientControllerTest extends BaseControllerTest {
 
 	@MockBean
 	private PatientService patientService;
+	
+	@MockBean
+	private FederarService federarService;
 
 	@MockBean
 	private PersonExternalService personExternalService;
@@ -39,6 +45,9 @@ public class PatientControllerTest extends BaseControllerTest {
 	
 	@MockBean
 	private PatientMapper patientMapper;
+	
+	@MockBean
+	private PersonMapper personMapper;
 
 	@Before
 	public void setup() {

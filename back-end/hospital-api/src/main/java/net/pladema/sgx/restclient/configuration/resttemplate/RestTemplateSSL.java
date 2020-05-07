@@ -20,6 +20,7 @@ public class RestTemplateSSL extends RestTemplate {
 	public RestTemplateSSL(LoggingRequestInterceptor loggingRequestInterceptor) throws Exception {
 		super(new BufferingClientHttpRequestFactory(getClientHttpRequestFactory()));
 		this.getInterceptors().add(loggingRequestInterceptor);
+		this.setErrorHandler(new RestTemplateExceptionHandler());
 	}
 
 	private static HttpComponentsClientHttpRequestFactory getClientHttpRequestFactory() throws Exception {

@@ -21,6 +21,8 @@ public class PatientType implements Serializable {
     /*
      */
     private static final long serialVersionUID = -2509033551090730514L;
+    public static final Short PERMANENT = 1;
+    
 
     @Id
     @Column(name = "id", nullable = false)
