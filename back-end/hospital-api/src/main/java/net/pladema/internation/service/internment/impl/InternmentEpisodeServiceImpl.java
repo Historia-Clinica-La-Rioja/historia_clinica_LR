@@ -4,6 +4,7 @@ import net.pladema.internation.repository.core.EvolutionNoteDocumentRepository;
 import net.pladema.internation.repository.core.InternmentEpisodeRepository;
 import net.pladema.internation.repository.core.domain.InternmentSummaryVo;
 import net.pladema.internation.repository.core.entity.EvolutionNoteDocument;
+import net.pladema.internation.repository.core.entity.InternmentEpisode;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,9 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
     private final InternmentEpisodeRepository internmentEpisodeRepository;
 
     private final EvolutionNoteDocumentRepository evolutionNoteDocumentRepository;
+
+    private static final short ACTIVO =1;
+    private static final short INACTIVO =2;
 
     public InternmentEpisodeServiceImpl(InternmentEpisodeRepository internmentEpisodeRepository,
                                         EvolutionNoteDocumentRepository evolutionNoteDocumentRepository) {
@@ -45,6 +49,16 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
         LOG.debug("Input parameters -> internmentEpisodeId {}, evolutionNoteId {}", internmentEpisodeId, evolutionNoteId);
         EvolutionNoteDocument result = new EvolutionNoteDocument(evolutionNoteId, internmentEpisodeId);
         result = evolutionNoteDocumentRepository.save(result);
+        LOG.debug("Output -> {}", result);
+        return result;
+    }
+
+    @Override
+    public InternmentEpisode addInternmentEpisode(InternmentEpisode internmentEpisode, Integer institutionId) {
+        LOG.debug("Input parameters -> internmentEpisode {}, institutionId {}", internmentEpisode, institutionId);
+        internmentEpisode.setInstitutionId(institutionId);
+        internmentEpisode.setStatusId(ACTIVO);
+        InternmentEpisode result = internmentEpisodeRepository.save(internmentEpisode);
         LOG.debug("Output -> {}", result);
         return result;
     }

@@ -2,6 +2,7 @@ package net.pladema.internation.service.internment;
 
 import net.pladema.internation.repository.core.domain.InternmentSummaryVo;
 import net.pladema.internation.repository.core.entity.EvolutionNoteDocument;
+import net.pladema.internation.repository.core.entity.InternmentEpisode;
 
 import java.util.Optional;
 
@@ -16,4 +17,6 @@ public interface InternmentEpisodeService {
     void updateEpicrisisDocumentId(Integer intermentEpisodeId, Long id);
 
     EvolutionNoteDocument addEvolutionNote(Integer internmentEpisodeId, Long evolutionNoteId);
+
+    InternmentEpisode addInternmentEpisode(InternmentEpisode internmentEpisode, Integer institutionId);
 }

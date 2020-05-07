@@ -5,6 +5,7 @@ import net.pladema.internation.controller.internment.InternmentEpisodeController
 import net.pladema.internation.controller.internment.mapper.InternmentEpisodeMapper;
 import net.pladema.internation.controller.mocks.MocksInternmentPatient;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
+import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,6 +32,9 @@ public class InternmentEpisodeControllerTest extends BaseControllerTest {
 
 	@MockBean
 	private InternmentEpisodeMapper internmentEpisodeMapper;
+
+	@MockBean
+	private HealthcareProfessionalExternalService healthcareProfessionalExternalService;
 
 	@Before
 	public void setup() {
