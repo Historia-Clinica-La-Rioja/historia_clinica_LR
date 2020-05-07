@@ -1904,3 +1904,18 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: internment_episode
         validate: true 
+
+
+- changeSet:
+    id: addForeignKeyConstraint-healthcare_professional_group_healthcare_professional_id
+    author: etrapani
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: healthcare_professional_id
+        baseTableName: healthcare_professional_group
+        constraintName: FK_healthcare_professional_group_healthcare_professional_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: healthcare_professional
+        validate: true
