@@ -28,7 +28,7 @@ const dataProvider = springbootRestProvider('/backoffice', {
 });
 
 const App = () => (
-    <Admin title="Hospitales" 
+    <Admin title="Historia de salud integrada" 
     customRoutes={customRoutes}
     dataProvider={dataProvider} 
     authProvider={authProvider}

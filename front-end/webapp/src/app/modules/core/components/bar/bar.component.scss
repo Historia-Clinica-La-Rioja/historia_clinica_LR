@@ -4,4 +4,11 @@ mat-toolbar-row {
 	z-index: 2;
 	max-height: 100px;
 	min-height: 60px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+img {
+    max-width: 100%;
+	max-height: 100%;
 }

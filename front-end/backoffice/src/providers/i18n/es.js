@@ -4,7 +4,7 @@ export default {
     ...spanishMessages,
     sgh: {
         dashboard: {
-            title: 'Hospitales',
+            title: 'Historia de salud integrada',
             subtitle: 'Bienvenido',
         }
     },

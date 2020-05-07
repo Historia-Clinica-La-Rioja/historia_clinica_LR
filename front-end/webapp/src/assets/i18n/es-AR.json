@@ -1,8 +1,5 @@
 {
 	"app": {
-		"header": {
-			"TITLE": "Sistema de Gestión Hospitalaria"
-		},
 		"menu": {
 			"INTERNACION": "HCE Internación",
 			"PACIENTES": "Pacientes",
