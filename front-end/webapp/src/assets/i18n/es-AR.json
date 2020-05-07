@@ -180,6 +180,86 @@
 				"DESCRIPTION": "Descripción"
 			}
 		},
+		"epicrisis": {
+			"TITLE": "Epicrisis",
+			"SUBTITLE": "Completa los siguientes datos.",
+			"alergias": {
+				"TITLE": "Alergias",
+				"table": {
+					"TITLE": "Alergias registradas",
+					"columns": {
+						"ALLERGY": "Alergia",
+						"REGISTRY_DATE": "Fecha registro"
+					}
+				}
+			},
+			"antecedentes-personales": {
+				"TITLE": "Antecedentes personales",
+				"table": {
+					"TITLE": "Antecedentes personales registrados",
+					"columns": {
+						"PERSONAL_HISTORY": "Antecedente personal"
+					}
+				}
+			},
+			"antecedentes-familiares": {
+				"TITLE": "Antecedentes familiares",
+				"table": {
+					"TITLE": "Antecedentes familiares registrados",
+					"columns": {
+						"FAMILY_HISTORY": "Antecedente familiar"
+					}
+				}
+			},
+			"buttons": {
+				"ATTACH_SIGNATURE": "Adjuntar firma digital",
+				"SAVE_DRAFT": "Guardar borrador",
+				"SIGN_CONFIRM": "Firmar y confirmar"
+			},
+			"diagnosticos": {
+				"TITLE": "Diagnósticos",
+				"DIAGNOSIS": "Diagnóstico",
+				"PRESUMPTIVE": "Presuntivo",
+				"table": {
+					"TITLE": "Diagnósticos registrados",
+					"columns": {
+						"DIAGNOSIS": "Diagnóstico",
+						"STATUS": "Estado"
+					}
+				}
+			},
+			"vacunas": {
+				"TITLE": "Vacunas",
+				"table": {
+					"TITLE": "Vacunas registradas",
+					"columns": {
+						"INMUNIZATION": "Vacuna",
+						"REGISTRY_DATE": "Fecha de vacunación"
+					}
+				}
+			},
+			"medicacion": {
+				"TITLE": "Medicación habitual",
+				"table": {
+					"TITLE": "Medicaciones registradas",
+					"columns": {
+						"NOTE": "Notas",
+						"STATUS": "Estado",
+						"MEDICATION": "Medicación"
+					}
+				}
+			},
+			"observations": {
+				"TITLE": "Observaciones",
+				"EVOLUTION_NOTE": "Evolución",
+				"PHYSICAL_EXAMINATION": "Exámen físico",
+				"STUDIES_SUMMARY": "Resumen de estudios y procedimientos realizados",
+				"INDICATIONS_NOTE": "Indicaciones al alta",
+				"OTHERS": "Otras observaciones",
+				"DESCRIPTION": "Descripción"
+			}
+
+		},
 		"nota-evolucion": {
 			"TITLE": "Nota de evolución",
 			"SUBTITLE": "Completa los siguientes datos."

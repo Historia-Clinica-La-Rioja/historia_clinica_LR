@@ -24,6 +24,7 @@ import { SignosVitalesSummaryComponent } from './components/signos-vitales-summa
 import { AntropometricosSummaryComponent } from './components/antropometricos-summary/antropometricos-summary.component';
 import { NewInternmentComponent } from './routes/new-internment/new-internment.component';
 import { EpicrisisComponent } from './routes/epicrisis/epicrisis.component';
+import { EpicrisisFormComponent } from './components/epicrisis-form/epicrisis-form.component';
 import { NotaEvolucionComponent } from './routes/nota-evolucion/nota-evolucion.component';
 import { NotaEvolucionFormComponent } from './components/nota-evolucion-form/nota-evolucion-form.component';
 
@@ -47,6 +48,7 @@ import { NotaEvolucionFormComponent } from './components/nota-evolucion-form/not
 		AntropometricosSummaryComponent,
 		NewInternmentComponent,
 		EpicrisisComponent,
+		EpicrisisFormComponent,
 		NotaEvolucionComponent,
 		NotaEvolucionFormComponent,
 	],
