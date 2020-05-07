@@ -41,7 +41,8 @@ const HealthcareProfessionalInput = ({ formData, ...rest }) => {
         </Fragment>
     );
 };
-
+const searchToFilter = searchText => ({description: searchText ? searchText : -1});
+const renderSpecialty = (choice) => `${choice.description} - ${choice.descriptionProfessionRef}`;
 const HealthcareProfessionalSpecialtyCreate = props => (
     <Create {...props}>
         <SimpleForm redirect="show" >
@@ -54,8 +55,9 @@ const HealthcareProfessionalSpecialtyCreate = props => (
                 source="professionalSpecialtyId"
                 reference="professionalspecialties"
                 sort={{ field: 'description', order: 'ASC' }}
+                filterToQuery={searchToFilter}
             >
-                <AutocompleteInput optionText="description" optionValue="id" validate={[required()]} />
+                <AutocompleteInput optionText={renderSpecialty} optionValue="id" validate={[required()]} />
             </ReferenceInput>
         </SimpleForm>
     </Create>
