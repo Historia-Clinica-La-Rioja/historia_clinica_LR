@@ -11,25 +11,16 @@ import {
 } from 'react-admin';
 import { useForm } from 'react-final-form';
 
-import renderPerson from '../components/renderperson'
+import PeopleReferenceInput from '../people/PeopleReferenceInput';
 
 const Person = () => {
     const form = useForm();
     return (
-    <ReferenceInput
-        source="personId"
-        label="resources.healthcareprofessionalspecialties.fields.personId"
-        reference="people"
-        sort={{ field: 'identificationNumber', order: 'ASC' }}
-        filterToQuery={searchText => ( searchText ? { identificationNumber: searchText } : '')}
-        validate={[required()]}
-        onChange={value => {
-            form.change('healthcareProfessionalId', null);
-        }}
-    >
-        <AutocompleteInput optionText={renderPerson} optionValue="id"/>
-    </ReferenceInput>
-    )
+        <PeopleReferenceInput
+            source="personId"
+            onChange={value => { form.change('healthcareProfessionalId', null); }}
+        />
+    );
 };
 
 const HealthcareProfessionalInput = ({ formData, ...rest }) => {
