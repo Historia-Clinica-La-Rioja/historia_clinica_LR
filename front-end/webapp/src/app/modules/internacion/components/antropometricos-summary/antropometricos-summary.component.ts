@@ -26,7 +26,7 @@ export class AntropometricosSummaryComponent implements OnInit {
 			bloodType: 'Grupo sanguíneo',
 			height: 'Talla (cm)',
 			weight: 'Peso (kg)',
-			BMI: 'IMC',
+			bmi: 'IMC',
 		};
 		this.internmentStateService.getAnthropometricData(this.internmentEpisodeId).subscribe(
 			(anthropometricData: AnthropometricDataDto) => Object.keys(anthropometricData).forEach(key => this.details.push(
