@@ -63,7 +63,14 @@ public class Document extends InternationAuditableEntity {
 		this.internmentEpisodeId = internmentEpisodeId;
 		this.statusId = statusId;
 		this.typeId = typeId;
+	}
 
+	public boolean isType(short type){
+		return this.typeId.equals(type);
+	}
+
+	public boolean hasStatus(String statusId){
+		return this.statusId.equals(statusId);
 	}
 
 	@Override

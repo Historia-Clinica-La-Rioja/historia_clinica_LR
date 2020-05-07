@@ -1,30 +1,31 @@
 package net.pladema.internation.controller.constraints.validator;
 
-import net.pladema.internation.controller.constraints.UpdateDocumentValid;
+import net.pladema.internation.controller.constraints.DocumentValid;
 import net.pladema.internation.repository.core.DocumentRepository;
 import net.pladema.internation.repository.core.entity.Document;
 import net.pladema.internation.repository.masterdata.entity.DocumentStatus;
-import net.pladema.internation.repository.masterdata.entity.DocumentType;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import javax.validation.constraintvalidation.SupportedValidationTarget;
-import javax.validation.constraintvalidation.ValidationTarget;
 import java.util.Optional;
 
-@SupportedValidationTarget(ValidationTarget.PARAMETERS)
-public class UpdateDocumentValidator implements ConstraintValidator<UpdateDocumentValid, Object[]> {
+public class DocumentValidator implements ConstraintValidator<DocumentValid, Object[]> {
+
+    private boolean confirmed;
+    private short documentType;
 
     private static final String ANAMNESIS_PROPERTY = "anamnesisId";
 
     private final DocumentRepository documentRepository;
 
-    public UpdateDocumentValidator(DocumentRepository documentRepository){
+    public DocumentValidator(DocumentRepository documentRepository){
         this.documentRepository = documentRepository;
     }
 
     @Override
-    public void initialize(UpdateDocumentValid constraintAnnotation) {
+    public void initialize(DocumentValid constraintAnnotation) {
+        this.confirmed = constraintAnnotation.isConfirmed();
+        this.documentType = constraintAnnotation.documentType();
     }
 
     @Override
@@ -37,8 +38,11 @@ public class UpdateDocumentValidator implements ConstraintValidator<UpdateDocume
                 .addPropertyNode(ANAMNESIS_PROPERTY)
                 .addConstraintViolation();
 
+        String statusId = confirmed ? DocumentStatus.FINAL : DocumentStatus.DRAFT;
+
         return document.isPresent() //existencia
-                    && document.get().getStatusId().equals(DocumentStatus.DRAFT)  //Estado borrador
-                    && document.get().getTypeId().equals(DocumentType.ANAMNESIS); //Tipo Anamnesis
+                && document.get().isType(documentType)
+                && document.get().hasStatus(statusId);
+
     }
 }

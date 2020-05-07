@@ -1,13 +1,14 @@
 package net.pladema.internation.controller.documents.epicrisis;
 
 import io.swagger.annotations.Api;
+import net.pladema.internation.controller.constraints.DocumentValid;
 import net.pladema.internation.controller.constraints.InternmentValid;
-import net.pladema.internation.controller.constraints.UpdateDocumentValid;
 import net.pladema.internation.controller.documents.epicrisis.dto.EpicrisisDto;
 import net.pladema.internation.controller.documents.epicrisis.dto.EpicrisisGeneralStateDto;
 import net.pladema.internation.controller.documents.epicrisis.dto.NewEpicrisisDto;
 import net.pladema.internation.controller.documents.epicrisis.dto.ResponseEpicrisisDto;
 import net.pladema.internation.controller.documents.epicrisis.mapper.EpicrisisMapper;
+import net.pladema.internation.repository.masterdata.entity.DocumentType;
 import net.pladema.internation.service.documents.epicrisis.CreateEpicrisisService;
 import net.pladema.internation.service.documents.epicrisis.EpicrisisService;
 import net.pladema.internation.service.documents.epicrisis.UpdateEpicrisisService;
@@ -81,7 +82,7 @@ public class EpicrisisController {
 
     @PutMapping("/{epicrisisId}")
     @InternmentValid
-    @UpdateDocumentValid
+    @DocumentValid(isConfirmed = false, documentType = DocumentType.EPICRISIS)
     public ResponseEntity<ResponseEpicrisisDto> updateDocument(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,

@@ -2,11 +2,12 @@ package net.pladema.internation.controller.documents.anamnesis;
 
 import io.swagger.annotations.Api;
 import net.pladema.internation.controller.constraints.AnamnesisDiagnosisValid;
+import net.pladema.internation.controller.constraints.DocumentValid;
 import net.pladema.internation.controller.constraints.InternmentValid;
-import net.pladema.internation.controller.constraints.UpdateDocumentValid;
 import net.pladema.internation.controller.documents.anamnesis.dto.AnamnesisDto;
 import net.pladema.internation.controller.documents.anamnesis.dto.ResponseAnamnesisDto;
 import net.pladema.internation.controller.documents.anamnesis.mapper.AnamnesisMapper;
+import net.pladema.internation.repository.masterdata.entity.DocumentType;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
 import net.pladema.internation.service.documents.anamnesis.AnamnesisService;
 import net.pladema.internation.service.documents.anamnesis.CreateAnamnesisService;
@@ -81,7 +82,7 @@ public class AnamnesisController {
 
     @PutMapping("/{anamnesisId}")
     @InternmentValid
-    @UpdateDocumentValid
+    @DocumentValid(isConfirmed = false, documentType = DocumentType.ANAMNESIS)
     public ResponseEntity<ResponseAnamnesisDto> updateAnamnesis(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,

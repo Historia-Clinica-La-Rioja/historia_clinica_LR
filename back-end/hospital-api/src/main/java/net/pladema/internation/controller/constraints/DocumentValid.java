@@ -1,6 +1,6 @@
 package net.pladema.internation.controller.constraints;
 
-import net.pladema.internation.controller.constraints.validator.UpdateDocumentValidator;
+import net.pladema.internation.controller.constraints.validator.DocumentValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -11,12 +11,16 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Documented
-@Constraint(validatedBy = UpdateDocumentValidator.class)
-@Target( { ElementType.METHOD})
+@Constraint(validatedBy = DocumentValidator.class)
+@Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface UpdateDocumentValid {
+public @interface DocumentValid {
 
     String message() default "{document.invalid}";
+
+    boolean isConfirmed();
+
+    short documentType();
 
     Class<?>[] groups() default {};
 

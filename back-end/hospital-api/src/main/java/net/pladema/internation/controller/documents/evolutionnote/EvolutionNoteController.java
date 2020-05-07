@@ -1,11 +1,12 @@
 package net.pladema.internation.controller.documents.evolutionnote;
 
 import io.swagger.annotations.Api;
+import net.pladema.internation.controller.constraints.DocumentValid;
 import net.pladema.internation.controller.constraints.InternmentValid;
-import net.pladema.internation.controller.constraints.UpdateDocumentValid;
 import net.pladema.internation.controller.documents.evolutionnote.dto.EvolutionNoteDto;
 import net.pladema.internation.controller.documents.evolutionnote.dto.ResponseEvolutionNoteDto;
 import net.pladema.internation.controller.documents.evolutionnote.mapper.EvolutionNoteMapper;
+import net.pladema.internation.repository.masterdata.entity.DocumentType;
 import net.pladema.internation.service.documents.evolutionnote.CreateEvolutionNoteService;
 import net.pladema.internation.service.documents.evolutionnote.EvolutionNoteService;
 import net.pladema.internation.service.documents.evolutionnote.UpdateEvolutionNoteService;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import sun.nio.cs.ext.ISCII91;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
@@ -74,7 +76,7 @@ public class EvolutionNoteController {
 
     @PutMapping("/{evolutionNoteId}")
     @InternmentValid
-    @UpdateDocumentValid
+    @DocumentValid(isConfirmed = false, documentType = DocumentType.EVALUATION_NOTE)
     public ResponseEntity<ResponseEvolutionNoteDto> updateDocument(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
