@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { AnamnesisDto, ResponseAnamnesisDto } from '@api-rest/api-model';
 import { environment } from '@environments/environment';
 
-const HARD_CODE_INSTITUTION = 1;
+const HARD_CODE_INSTITUTION = 10;
 
 @Injectable({
 	providedIn: 'root'
