@@ -33,7 +33,7 @@ public class InstitutionController {
 
 		List<Institution> institutions = repository.findAllById(idsConAcceso);
 
-		List<InstitutionDto> institutionDtos = mapper.toListInstitutionDto(repository.findAllById(ids));
+		List<InstitutionDto> institutionDtos = mapper.toListInstitutionDto(institutions);
 
 		return institutionDtos;
 	}

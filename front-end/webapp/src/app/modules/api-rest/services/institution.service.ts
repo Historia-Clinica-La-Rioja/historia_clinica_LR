@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 import { InstitutionDto } from '@api-rest/api-model';
 import { environment } from "@environments/environment";
@@ -15,6 +15,9 @@ export class InstitutionService {
 	) { }
 
 	public getInstitutions(ids: number[]): Observable<InstitutionDto[]> {
+		if (!ids || ids.length === 0) {
+			return of([]);
+		}
 		return this.http.get<InstitutionDto[]>(
 			`${environment.apiBase}/institution`,
 			{

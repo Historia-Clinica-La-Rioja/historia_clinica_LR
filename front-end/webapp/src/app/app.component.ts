@@ -41,16 +41,16 @@ export class AppComponent {
 		translate.setDefaultLang(defaultLang);
 		translate.use(defaultLang);
 		this.menuItems$ = permissionsService.filterItems$(SIDEBAR_MENU).pipe(
-			switchMap((menuFiltered: MenuItem[]) =>
-				contextService.institution$.pipe(
-					map(
-						institution => institution ? [
-							institutionMenu(institution),
-							...menuFiltered
-						] : menuFiltered
-					)
-				)
-			)
+			// switchMap((menuFiltered: MenuItem[]) =>
+			// 	contextService.institution$.pipe(
+			// 		map(
+			// 			institution => institution ? [
+			// 				institutionMenu(institution),
+			// 				...menuFiltered
+			// 			] : menuFiltered
+			// 		)
+			// 	)
+			// )
 		);
 	}
 
