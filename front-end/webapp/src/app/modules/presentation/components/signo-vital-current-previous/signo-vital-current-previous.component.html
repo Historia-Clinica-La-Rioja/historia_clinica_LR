@@ -8,8 +8,6 @@
 				<span class="mat-caption">Último resultado</span>
 			</div>
 			<div class="current-value">
-				<mat-icon class="green" *ngIf="vitalSign.currentValue > vitalSign.previousValue">arrow_drop_up</mat-icon>
-				<mat-icon color="warn" *ngIf="vitalSign.currentValue < vitalSign.previousValue">arrow_drop_down</mat-icon>
 				<span>{{ vitalSign.currentValue || '-' }}</span>
 			</div>
 		</div>

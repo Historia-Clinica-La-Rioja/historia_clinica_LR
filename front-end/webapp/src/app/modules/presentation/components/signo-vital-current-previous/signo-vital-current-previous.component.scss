@@ -25,10 +25,4 @@ div.current-value {
 	font-size: 24px;
 	font-weight: 500;
 	margin-left: 15px;
-	mat-icon {
-		&.green {
-			color: #009B68;
-		}
-		transform: scale(1.5);
-	}
 }

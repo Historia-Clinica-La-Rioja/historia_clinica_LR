@@ -1,9 +1,4 @@
 .container-row {
 	display: flex;
 	flex-direction: row;
-	.sticky {
-		position: -webkit-sticky; /* Safari */
-		position: sticky;
-		top: 10%;
-	}
 }

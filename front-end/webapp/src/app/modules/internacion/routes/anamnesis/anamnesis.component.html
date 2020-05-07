@@ -1,13 +1,10 @@
 <app-content width="full">
 	<div class="container-row">
 		<app-anamnesis-form></app-anamnesis-form>
-		<article>
-			<!-- position sticky only works with ancestors of known elements (html5)-->
-			<div class="sticky">
-				<app-patient-card [patient]="patient$ | async">
-					<app-internment-episode-summary [internmentEpisode]="internmentEpisodeSummary$ | async" content></app-internment-episode-summary>
-				</app-patient-card>
-			</div>
-		</article>
+		<section>
+			<app-patient-card [patient]="patient$ | async">
+				<app-internment-episode-summary [internmentEpisode]="internmentEpisodeSummary$ | async" content></app-internment-episode-summary>
+			</app-patient-card>
+		</section>
 	</div>
 </app-content>
