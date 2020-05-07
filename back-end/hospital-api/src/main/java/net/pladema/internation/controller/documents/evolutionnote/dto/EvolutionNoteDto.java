@@ -23,10 +23,10 @@ public class EvolutionNoteDto implements Serializable {
     private DocumentObservationsDto notes;
 
     @NotNull
-    private List<@Valid DiagnosisDto> diagnosis;
+    private List<@Valid DiagnosisDto> diagnosis = new ArrayList<>();
 
     @NotNull
-    private List<@Valid InmunizationDto> inmunizations= new ArrayList<>();
+    private List<@Valid InmunizationDto> inmunizations = new ArrayList<>();
 
     @NotNull
     private List<@Valid AllergyConditionDto> allergies = new ArrayList<>();

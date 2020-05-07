@@ -47,8 +47,6 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     @Override
     public List<DiagnosisBo> loadDiagnosis(Integer patientId, Long documentId, List<DiagnosisBo> diagnosis) {
         LOG.debug("Input parameters -> patientId {}, documentId {}, diagnosis {}", documentId, patientId, diagnosis);
-        if(diagnosis.isEmpty())
-            throw new IllegalArgumentException("diagnosis.mandatory");
         diagnosis.forEach(d -> {
             HealthCondition healthCondition = buildHealth(patientId, d, true);
             if (d.isPresumptive())
