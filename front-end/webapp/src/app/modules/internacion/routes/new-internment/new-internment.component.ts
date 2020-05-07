@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { InternacionMasterDataService } from "@api-rest/services/internacion-master-data.service";
@@ -21,6 +21,7 @@ import { PatientTypeData } from "@presentation/components/patient-type-logo/pati
 import { MapperService } from "@presentation/services/mapper.service";
 import { PersonService } from "@api-rest/services/person.service";
 import { InternmentEpisodeService } from "@api-rest/services/internment-episode.service";
+import { scrollIntoError } from "@core/utils/form.utils";
 
 const INSTITUTION_ID = 10;
 
@@ -46,6 +47,7 @@ export class NewInternmentComponent implements OnInit {
 
 
 	constructor(private formBuilder: FormBuilder,
+				private el: ElementRef,
 				private router: Router,
 				private internacionMasterDataService: InternacionMasterDataService,
 				private sector: SectorService,
@@ -103,35 +105,37 @@ export class NewInternmentComponent implements OnInit {
 	}
 
 	setService() {
-		let sectorId: number = this.form.controls.sector.value;
+		let sectorId: number = this.form.controls.sectorId.value;
 		this.clinicalSpecialtySectorService.getClinicalSpecialty(sectorId).subscribe(data => {
-			this.services = data
+			console.log('getClinicalSpecialty', data);
+			this.services = data;
 		});
-		this.form.controls.service.enable();
+		this.form.controls.serviceId.enable();
 	}
 
 	setRoom() {
-		let sectorId: number = this.form.controls.sector.value;
-		let serviceId: number = this.form.controls.service.value;
+		let sectorId: number = this.form.controls.sectorId.value;
+		let serviceId: number = this.form.controls.serviceId.value;
 		this.sector.getAllRoomsBySectorAndSpecialty(sectorId, serviceId).subscribe(data => {
-			this.rooms = data
+			this.rooms = data;
 		});
-		this.form.controls.room.enable();
+		this.form.controls.roomId.enable();
 	}
 
 	setBeds() {
-		let roomId: number = this.form.controls.room.value;
+		let roomId: number = this.form.controls.roomId.value;
 		this.room.getAllBedsByRoom(roomId).subscribe(data => {
 			this.beds = data
 		})
-		this.form.controls.bed.enable();
+		this.form.controls.bedId.enable();
 	}
 
 	save(): void {
-		console.log(this.form.value);
 		let intenmentEpisodeReq = this.mapToPersonInternmentEpisodeRequest();
 		if (this.form.valid) {
 			this.internmentEpisodeService.setNewInternmentEpisode(INSTITUTION_ID, intenmentEpisodeReq).subscribe();
+		} else {
+			scrollIntoError(this.form, this.el);
 		}
 	}
 
@@ -139,7 +143,7 @@ export class NewInternmentComponent implements OnInit {
 		return {
 			patientId: this.patientId,
 			bedId: this.form.controls.bedId.value,
-			clinicalSpecialtyId: this.form.controls.bedId.value
+			clinicalSpecialtyId: this.form.controls.specialtyId.value
 		}
 	}
 
