@@ -18,3 +18,4 @@ $theme: mat-light-theme($primary, $accent);
 @include mat-dialog($theme);
 @include mat-button($theme);
 @include no-data($theme);
+@include general($theme)

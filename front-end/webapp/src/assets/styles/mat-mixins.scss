@@ -1,6 +1,13 @@
 @import '~@angular/material/theming';
 
-$box-bg-color: #EDF1F7;
+$primary-bg: #EDF1F7;
+$default-color: 100;
+
+@mixin general($theme) {
+	mat-sidenav-content {
+		background-color: $primary-bg;
+	}
+}
 
 @mixin mat-nav-list($theme) {
 	$primary-palette: map-get($theme, primary);
@@ -8,12 +15,12 @@ $box-bg-color: #EDF1F7;
 	mat-list-item.mat-list-item {
 		&.active,
 		&.active:focus {
-			background-color: mat-color($primary-palette, default);
+			background-color: mat-color($primary-palette, $default-color);
 			span, mat-icon {
-				color: mat-color($primary, default-contrast);
+				color: mat-contrast($primary-palette, $default-color);
 			}
 			&:hover {
-				background-color: mat-color($primary-palette, default, 0.8);
+				background-color: mat-color($primary-palette, $default-color, 0.8);
 			}
 		}
 	}
@@ -27,7 +34,6 @@ $box-bg-color: #EDF1F7;
 			text-align: center;
 			font-weight: bold;
 			background-color: white;
-			color: mat-color($palette, default);
 		}
 	}
 }
@@ -42,10 +48,19 @@ $box-bg-color: #EDF1F7;
 		}
 	}
 
-	app-no-data.table {
-		div.no-data {
-			margin-top: -1px;
-			border: solid 1px #A8A8A8;
+	app-no-data {
+		&.table {
+			div.no-data {
+				margin-top: -1px;
+				box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.1);
+			}
+		}
+		&.table-secondary {
+			div.no-data {
+				margin-top: -1px;
+				border: solid 1px #A8A8A8;
+				color: mat-color($primary-palette, default);
+			}
 		}
 	}
 
@@ -58,10 +73,10 @@ $box-bg-color: #EDF1F7;
 		&.primary {
 			text-align: center;
 			thead {
-				background-color: mat-color($primary-palette, default);
+				background-color: mat-color($primary-palette, $default-color);
 				th {
 					text-align: center;
-					color: mat-color($primary, default-contrast);
+					color: mat-contrast($primary-palette, $default-color);
 				}
 			}
 		}
@@ -101,8 +116,8 @@ $box-bg-color: #EDF1F7;
 			padding: 10px;
 			border-top-left-radius: 4px;
 			border-top-right-radius: 4px;
-			background-color: mat-color($palette, 300);
-			color: mat-contrast($palette, 400);
+			background-color: mat-color($palette, $default-color);
+			color: mat-contrast($palette, $default-color);
 			& div.mat-card-header-text {
 				align-self: center;
 				mat-card-title.mat-card-title {
@@ -122,7 +137,7 @@ $box-bg-color: #EDF1F7;
 	$palette: map-get($theme, primary);
 	app-signo-vital-current-previous {
 		mat-card.mat-card {
-			background-color: $box-bg-color;
+			background-color: $primary-bg;
 			div.current-value {
 				color: mat-color($palette, default);
 			}
@@ -135,7 +150,7 @@ $box-bg-color: #EDF1F7;
 	app-detail-box {
 		mat-card.mat-card {
 			border: 1px solid mat-color($palette, default);
-			background-color: $box-bg-color;
+			background-color: $primary-bg;
 			span.value {
 				color: mat-color($palette, default);
 			}

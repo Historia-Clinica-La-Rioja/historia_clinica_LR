@@ -6,7 +6,7 @@
 					routerLinkActive="active"
 					[routerLinkActiveOptions]="menuItem.options || {exact: false}"
 					*ngFor="let menuItem of menuItems">
-				<mat-icon matListIcon>{{menuItem.icon}}</mat-icon>
+				<mat-icon matListIcon fontSet="material-icons-outlined">{{menuItem.icon}}</mat-icon>
 				<span [translate]=menuItem.text></span>
 			</mat-list-item>
 		</mat-nav-list>
