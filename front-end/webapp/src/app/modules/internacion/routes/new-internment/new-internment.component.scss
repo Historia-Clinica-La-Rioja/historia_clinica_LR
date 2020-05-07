@@ -1,5 +1,16 @@
 @import "../../../../../assets/styles/mixins.scss";
 
+.section-container {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
 .form-row{
 	@include form-row;
+}
+
+.header{
+	display: flex;
+	justify-content: flex-end;
 }
