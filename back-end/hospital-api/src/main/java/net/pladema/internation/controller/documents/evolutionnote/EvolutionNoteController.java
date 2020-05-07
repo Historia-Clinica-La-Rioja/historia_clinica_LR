@@ -1,5 +1,6 @@
 package net.pladema.internation.controller.documents.evolutionnote;
 
+import com.itextpdf.text.DocumentException;
 import io.swagger.annotations.Api;
 import net.pladema.internation.controller.constraints.DocumentValid;
 import net.pladema.internation.controller.constraints.InternmentValid;
@@ -12,15 +13,23 @@ import net.pladema.internation.service.documents.evolutionnote.EvolutionNoteServ
 import net.pladema.internation.service.documents.evolutionnote.UpdateEvolutionNoteService;
 import net.pladema.internation.service.documents.evolutionnote.domain.EvolutionNote;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
+import net.pladema.patient.controller.dto.BasicPatientDto;
+import net.pladema.patient.controller.service.PatientExternalService;
+import net.pladema.pdf.PdfService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.context.Context;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Locale;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/internments/{internmentEpisodeId}/evolutionNote")
@@ -42,16 +51,24 @@ public class EvolutionNoteController {
 
     private final EvolutionNoteMapper evolutionNoteMapper;
 
+    private final PatientExternalService patientExternalService;
+
+    private final PdfService pdfService;
+
     public EvolutionNoteController(InternmentEpisodeService internmentEpisodeService,
                                    CreateEvolutionNoteService createEvolutionNoteService,
                                    UpdateEvolutionNoteService updateEvolutionNoteService,
                                    EvolutionNoteService evolutionNoteService,
-                                   EvolutionNoteMapper evolutionNoteMapper) {
+                                   EvolutionNoteMapper evolutionNoteMapper,
+                                   PatientExternalService patientExternalService,
+                                   PdfService pdfService) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.createEvolutionNoteService = createEvolutionNoteService;
         this.updateEvolutionNoteService = updateEvolutionNoteService;
         this.evolutionNoteService = evolutionNoteService;
         this.evolutionNoteMapper = evolutionNoteMapper;
+        this.patientExternalService = patientExternalService;
+        this.pdfService = pdfService;
     }
 
     @PostMapping
@@ -94,7 +111,7 @@ public class EvolutionNoteController {
 
     @GetMapping("/{evolutionNoteId}")
     @InternmentValid
-    //TODO validar que exista la anamnesis
+    @DocumentValid(isConfirmed = false, documentType = DocumentType.EVALUATION_NOTE)
     public ResponseEntity<ResponseEvolutionNoteDto> getDocument(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
@@ -105,6 +122,38 @@ public class EvolutionNoteController {
         ResponseEvolutionNoteDto result = evolutionNoteMapper.fromEvolutionNote(evolutionNote);
         LOG.debug(OUTPUT, result);
         return  ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/{evolutionNoteId}/report")
+    @InternmentValid
+    @DocumentValid(isConfirmed = true, documentType = DocumentType.EVALUATION_NOTE)
+    public ResponseEntity<InputStreamResource> getPDF(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
+            @PathVariable(name = "evolutionNoteId") Long evolutionNoteId) throws IOException, DocumentException {
+        LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, evolutionNoteId {}",
+                institutionId, internmentEpisodeId, evolutionNoteId);
+        EvolutionNote evolutionNote = evolutionNoteService.getDocument(evolutionNoteId);
+        Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
+                .orElseThrow(() -> new EntityNotFoundException("internmentepisode.invalid"));
+        BasicPatientDto patientData = patientExternalService.getBasicDataFromPatient(patientId);
+        ResponseEvolutionNoteDto result = evolutionNoteMapper.fromEvolutionNote(evolutionNote);
+        Context ctx = createEvolutionNoteContext(result, patientData);
+        String name = "EvolutionNote_" + result.getId();
+        return pdfService.getResponseEntityPdf(name, "evolutionnote", LocalDateTime.now(), ctx);
+    }
+
+    private Context createEvolutionNoteContext(ResponseEvolutionNoteDto evolutionNoteDto, BasicPatientDto patientData ) {
+        LOG.debug("Input parameters -> anamnesis {}", evolutionNoteDto);
+        Context ctx = new Context(Locale.getDefault());
+        ctx.setVariable("patient", patientData);
+        ctx.setVariable("diagnosis", evolutionNoteDto.getDiagnosis());
+        ctx.setVariable("allergies", evolutionNoteDto.getAllergies());
+        ctx.setVariable("anthropometricData", evolutionNoteDto.getAnthropometricData());
+        ctx.setVariable("vitalSigns", evolutionNoteDto.getVitalSigns());
+        ctx.setVariable("notes", evolutionNoteDto.getNotes());
+        LOG.debug(OUTPUT, ctx);
+        return ctx;
     }
 
 }

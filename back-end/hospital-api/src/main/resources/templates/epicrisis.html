@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <title>Report</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"/>
+
+    <style>
+		h3 {
+			padding-top:15px
+		}
+	</style>
+</head>
+<body>
+
+    <h2>Epicrisis</h2>
+    <p>Alta de internación</p>
+
+    <h3>Paciente</h3>
+    <div class="row ">
+        <strong>- ID: </strong><label  th:text="${patient.id}"></label><br/>
+        <strong>- Nombre: </strong><label  th:text="${patient.person.firstName}"></label><br/>
+        <strong>- Apellido: </strong><label th:text="${patient.person.lastName}"></label><br/>
+        <strong>- Edad: </strong><label th:text="${patient.person.age}"></label><br/>
+        <strong>- Sexo: </strong><label  th:text="${patient.person.gender.description}"></label><br/>
+    </div>
+
+    <h3>Diagnósticos</h3>
+    <div class="row" th:if="${#lists.isEmpty(diagnosis)}">
+        <dl class="lista" >
+            <dd><p >Sin diagnosticos</p></dd>
+        </dl>
+    </div>
+    <div class="row" th:if="${not #lists.isEmpty(diagnosis)}">
+        <dl th:each="diagnose,iter: ${diagnosis}">
+            <dd><p  th:text="${'-' + diagnose.snomed.pt}"></p></dd>
+        </dl>
+    </div>
+
+    <h3>Antecedentes personales</h3>
+    <div class="row" th:if="${#lists.isEmpty(personalHistories)}">
+        <dl>
+            <dd><p >Sin antecedentes</p></dd>
+        </dl>
+    </div>
+    <div class="row" th:if="${not #lists.isEmpty(personalHistories)}">
+        <dl th:each="personalHistory,iter: ${personalHistories}">
+            <dd><p  th:text="${'- ' + personalHistory.snomed.pt}"></p></dd>
+        </dl>
+    </div>
+
+    <h3>Antecedentes familiares</h3>
+    <div class="row" th:if="${#lists.isEmpty(familyHistories)}">
+        <dd><p>Sin antecedentes</p></dd>
+    </div>
+    <div class="row" th:if="${not #lists.isEmpty(familyHistories)}" >
+        <dl th:each="familyHistory,iter: ${familyHistories}">
+            <dd><p  th:text="${'- ' +familyHistory.snomed.pt}"></p></dd>
+        </dl>
+    </div>
+
+    <h3>Alergias</h3>
+    <div class="row" th:if="${#lists.isEmpty(allergies)}">
+        <dl>
+            <dd><p >Sin alergias</p></dd>
+        </dl>
+    </div>
+    <div class="row " th:if="${not #lists.isEmpty(allergies)}">
+        <dl class="lista" th:each="allergy,iter: ${allergies}">
+            <dd><p  th:text="${'- ' + allergy.snomed.pt}"></p></dd>
+        </dl>
+    </div>
+
+    <h3>Medicación habitual</h3>
+    <div class="row" th:if="${#lists.isEmpty(medications)}">
+        <dl>
+            <dd><p>Sin medicación</p></dd>
+        </dl>
+    </div>
+    <div class="row" th:if="${not #lists.isEmpty(medications)}">
+        <dl th:each="medication,iter: ${medications}">
+            <dd><p  th:text="${'- ' + medication.snomed.pt}"></p></dd>
+            <strong>Observaciones: </strong><label  th:text="${medication.note}"></label>
+        </dl>
+    </div>
+
+
+    <h3>Medicación ambulatoria</h3>
+    <div class="row">
+        <dl>
+            <dd><p >Sin información</p></dd>
+        </dl>
+    </div>
+
+    <h3>Observaciones</h3>
+    <div class="row">
+        <div class="col-12" th:if="${notes.evolutionNote}">
+            <strong class="center-padding">Evolución</strong>
+            <p class="center-padding" th:text="${notes.evolutionNote}"></p>
+        </div>
+        <div class="col-12" th:if="${notes.studiesSummaryNote}">
+            <strong class="center-padding">Resumen de estudios y procedimientos realizados</strong>
+            <p class="center-padding" th:text="${notes.studiesSummaryNote}"></p>
+        </div>
+        <div class="col-12 " th:if="${notes.physicalExamNote}">
+            <strong class="center-padding">Examen físico</strong>
+            <p class="center-padding" th:text="${notes.physicalExamNote}"></p>
+        </div>
+        <div class="col-12" th:if="${notes.indicationsNote}">
+            <strong class="center-padding">Indicaciones de alta</strong>
+            <p class="center-padding" th:text="${notes.indicationsNote}"></p>
+        </div>
+        <div class="col-12" th:if="${notes.otherNote}">
+            <strong class="center-padding">Otras observaciones</strong>
+            <p class="center-padding" th:text="${notes.otherNote}"></p>
+        </div>
+    </div>
+</body>
+</html>

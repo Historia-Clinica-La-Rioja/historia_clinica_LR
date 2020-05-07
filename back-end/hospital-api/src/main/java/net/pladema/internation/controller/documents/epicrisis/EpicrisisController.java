@@ -1,5 +1,6 @@
 package net.pladema.internation.controller.documents.epicrisis;
 
+import com.itextpdf.text.DocumentException;
 import io.swagger.annotations.Api;
 import net.pladema.internation.controller.constraints.DocumentValid;
 import net.pladema.internation.controller.constraints.InternmentValid;
@@ -16,15 +17,23 @@ import net.pladema.internation.service.documents.epicrisis.domain.Epicrisis;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
 import net.pladema.internation.service.internment.InternmentStateService;
 import net.pladema.internation.service.internment.domain.InternmentGeneralState;
+import net.pladema.patient.controller.dto.BasicPatientDto;
+import net.pladema.patient.controller.service.PatientExternalService;
+import net.pladema.pdf.PdfService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.context.Context;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Locale;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/internments/{internmentEpisodeId}/epicrisis")
@@ -48,17 +57,26 @@ public class EpicrisisController {
 
     private final InternmentStateService internmentStateService;
 
+    private final PatientExternalService patientExternalService;
+
+    private final PdfService pdfService;
+
     public EpicrisisController(InternmentEpisodeService internmentEpisodeService,
                                CreateEpicrisisService createEpicrisisService,
                                UpdateEpicrisisService updateEpicrisisService,
                                EpicrisisService epicrisisService,
-                               EpicrisisMapper epicrisisMapper, InternmentStateService internmentStateService) {
+                               EpicrisisMapper epicrisisMapper,
+                               InternmentStateService internmentStateService,
+                               PatientExternalService patientExternalService,
+                               PdfService pdfService) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.createEpicrisisService = createEpicrisisService;
         this.updateEpicrisisService = updateEpicrisisService;
         this.epicrisisService = epicrisisService;
         this.epicrisisMapper = epicrisisMapper;
         this.internmentStateService = internmentStateService;
+        this.patientExternalService = patientExternalService;
+        this.pdfService = pdfService;
     }
 
     @PostMapping
@@ -101,7 +119,7 @@ public class EpicrisisController {
 
     @GetMapping("/{epicrisisId}")
     @InternmentValid
-    //TODO validar que exista la anamnesis
+    @DocumentValid(isConfirmed = false, documentType = DocumentType.EPICRISIS)
     public ResponseEntity<ResponseEpicrisisDto> getDocument(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
@@ -124,6 +142,41 @@ public class EpicrisisController {
         EpicrisisGeneralStateDto result = epicrisisMapper.toEpicrisisGeneralStateDto(interment);
         LOG.debug("Output -> {}", result);
         return  ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/{epicrisisId}/report")
+    @InternmentValid
+    @DocumentValid(isConfirmed = true, documentType = DocumentType.EPICRISIS)
+    public ResponseEntity<InputStreamResource> getPDF(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
+            @PathVariable(name = "epicrisisId") Long epicrisisId) throws IOException, DocumentException {
+
+        LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, epicrisisId {}",
+                institutionId, internmentEpisodeId, epicrisisId);
+
+        Epicrisis epicrisis = epicrisisService.getDocument(epicrisisId);
+        Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
+                .orElseThrow(() -> new EntityNotFoundException("internmentepisode.invalid"));
+        BasicPatientDto patientData = patientExternalService.getBasicDataFromPatient(patientId);
+        ResponseEpicrisisDto result = epicrisisMapper.fromEpicrisis(epicrisis);
+        Context ctx = createEpicrisisContext(result, patientData);
+        String name = "Epicrisis_" + result.getId() ;
+        return pdfService.getResponseEntityPdf(name, "epicrisis", LocalDateTime.now(), ctx);
+    }
+
+    private Context createEpicrisisContext(ResponseEpicrisisDto epicrisis, BasicPatientDto patientData) {
+        LOG.debug("Input parameters -> epicrisis {}", epicrisis);
+        Context ctx = new Context(Locale.getDefault());
+        ctx.setVariable("patient", patientData);
+        ctx.setVariable("diagnosis", epicrisis.getDiagnosis());
+        ctx.setVariable("personalHistories", epicrisis.getPersonalHistories());
+        ctx.setVariable("familyHistories", epicrisis.getFamilyHistories());
+        ctx.setVariable("allergies", epicrisis.getAllergies());
+        ctx.setVariable("medications", epicrisis.getMedications());
+        ctx.setVariable("notes", epicrisis.getNotes());
+        LOG.debug(OUTPUT, ctx);
+        return ctx;
     }
 
 }
