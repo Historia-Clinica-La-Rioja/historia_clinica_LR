@@ -2,26 +2,16 @@ import React from 'react';
 import {
     Create,
     SimpleForm,
-    ReferenceInput,
     TextInput,
-    AutocompleteInput,
     required,
 } from 'react-admin';
 
-const renderPerson = (choice) => `${choice.identificationNumber} ${choice.lastName} ${choice.firstName}`;
+import PeopleReferenceInput from '../people/PeopleReferenceInput';
 
 const UserCreate = props => (
     <Create {...props}>
         <SimpleForm>
-            <ReferenceInput
-                source="personId"
-                reference="people"
-                sort={{ field: 'identificationNumber', order: 'ASC' }}
-                filterToQuery={searchText => ( searchText ? { identificationNumber: searchText } : '')}
-                validate={[required()]}
-            >
-                <AutocompleteInput optionText={renderPerson} optionValue="id"/>
-            </ReferenceInput>
+            <PeopleReferenceInput source="personId" validate={[required()]} />
             <TextInput source="username" validate={[required()]}/>
         </SimpleForm>
     </Create>
