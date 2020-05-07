@@ -20,6 +20,8 @@ public class InternmentSummaryVo {
 
     private DocumentsSummaryVo documents;
 
+    private ResponsibleDoctorVo doctor;
+
     private Integer bedId;
 
     private String bedNumber;
@@ -34,18 +36,13 @@ public class InternmentSummaryVo {
 
     private LocalDateTime createdOn;
 
-    private Integer healthcareProfessionalId;
-
-    private String firstName;
-
-    private String lastName;
-
     private int totalInternmentDays;
 
     public InternmentSummaryVo(Integer id, LocalDateTime createdOn, Long anamnesisDocId, String anamnesisStatusId,
                                Long epicrisisDocId, String epicrisisStatusId,
                                Integer bedId, String bedNumber, Integer roomId, String roomNumber,
-                               Integer clinicalSpecialtyId, String specialty, Integer healthcareProfessionalId) {
+                               Integer clinicalSpecialtyId, String specialty,
+                               Integer healthcareProfessionalId, String licenseNumber, String firstName, String lastName) {
         this.id = id;
         this.documents = new DocumentsSummaryVo();
         this.documents.setAnamnesis(new AnamnesisSummaryVo(anamnesisDocId, anamnesisStatusId));
@@ -57,8 +54,8 @@ public class InternmentSummaryVo {
         this.clinicalSpecialtyId = clinicalSpecialtyId;
         this.specialty = specialty;
         this.createdOn = createdOn;
-        this.healthcareProfessionalId = healthcareProfessionalId;
         this.totalInternmentDays = totalInternmentDays();
+        this.doctor = new ResponsibleDoctorVo(healthcareProfessionalId, firstName, lastName, licenseNumber);
     }
 
     private int totalInternmentDays(){

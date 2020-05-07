@@ -12,7 +12,6 @@ VALUES(63,'Veronica','Analía','Prado','Rojas',1,'35000001',1,'1992-01-02');
 INSERT INTO public.person (id,first_name, middle_names, last_name, other_last_names, identification_type_id, identification_number, gender_id, birth_date) 
 VALUES(64,'Alejo','Fernando','Villar','Frade',1,'34000001',2,'1985-01-01');
 
-
 select setval('person_id_seq', (select max(id) from person));
 
 ---------- ADDRESS ----------
@@ -90,3 +89,13 @@ INSERT INTO public.internment_episode (patient_id,bed_id,clinical_specialty_id,s
 VALUES (64,5,112,1,NULL,NULL,NULL,10,'2020-05-06','2020-05-06',-1,-1,'2020-05-06 00:00:00','2020-05-06 00:00:00');
 
 select setval('internment_episode_id_seq', (select max(id) from internment_episode ie));
+
+
+INSERT INTO healthcare_professional_group(healthcare_professional_id, internment_episode_id, responsible)
+VALUES (11, 1,true)
+INSERT INTO healthcare_professional_group(healthcare_professional_id, internment_episode_id, responsible)
+VALUES (11, 2,true)
+INSERT INTO healthcare_professional_group(healthcare_professional_id, internment_episode_id, responsible)
+VALUES (11, 3,true)
+INSERT INTO healthcare_professional_group(healthcare_professional_id, internment_episode_id, responsible)
+VALUES (11, 4,true)
