@@ -16,9 +16,11 @@
 						<mat-icon>close</mat-icon>
 					</button>
 				</mat-form-field>
-				<mat-checkbox formControlName="presumptive">
-					<span [translate]="'internaciones.anamnesis.diagnosticos.PRESUMPTIVE'"></span>
-				</mat-checkbox>
+				<div class="margin-bottom">
+					<mat-checkbox formControlName="presumptive">
+						<span [translate]="'internaciones.anamnesis.diagnosticos.PRESUMPTIVE'"></span>
+					</mat-checkbox>
+				</div>
 				<div align="end">
 					<button class="uppercase" mat-raised-button color="primary" type="submit">
 						<span [translate]="'internaciones.anamnesis.diagnosticos.ADD'"></span>

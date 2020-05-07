@@ -22,6 +22,12 @@ export class SignosVitalesSummaryComponent implements OnInit {
 	) { }
 
 	ngOnInit(): void {
+		this.internmentStateService.getVitalSigns(this.internmentEpisodeId).subscribe(
+			this.initSignosVitales(), this.initSignosVitales()
+		);
+	}
+
+	initSignosVitales(): (vitalSigns: VitalSignDto[]) => void {
 		const LABELS = {
 			systolicBloodPressure: 'Tensión arterial sistólica',
 			diastolicBloodPressure: 'Tensión arterial diastólica',
@@ -30,19 +36,17 @@ export class SignosVitalesSummaryComponent implements OnInit {
 			temperature: 'Temperatura',
 			bloodOxygenSaturation: 'Saturación de oxígeno',
 		};
-		this.internmentStateService.getVitalSigns(this.internmentEpisodeId).subscribe(
-			(vitalSigns: VitalSignDto[]) => {
-				let current = vitalSigns[0] || {};
-				let previous = vitalSigns[1] || {};
-				Object.keys(LABELS).forEach(key => this.signosVitales.push(
-					{
-						description: LABELS[key],
-						currentValue: Number(current[key]?.value),
-						previousValue: Number(previous[key]?.value)
-					}
-				));
-			}
-		);
+		return (vitalSigns: VitalSignDto[]) => {
+			let current = vitalSigns[0] || {};
+			let previous = vitalSigns[1] || {};
+			Object.keys(LABELS).forEach(key => this.signosVitales.push(
+				{
+					description: LABELS[key],
+					currentValue: Number(current[key]?.value),
+					previousValue: Number(previous[key]?.value)
+				}
+			));
+		}
 	}
 
 }
