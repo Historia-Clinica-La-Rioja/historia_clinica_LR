@@ -4,6 +4,8 @@ import { InstitutionService } from '@api-rest/services/institution.service';
 import { InstitutionDto } from '@api-rest/api-model';
 import { map } from 'rxjs/operators';
 
+const INSTITUTION_ID = 10; //TODO eliminar cuando dispongamos del listado de instituciones y sus asociaciones x rol
+
 @Injectable({
 	providedIn: 'root'
 })
@@ -15,7 +17,8 @@ export class ContextService {
 	) { }
 
 	get institutionId(): number {
-		return this._institutionId;
+		//return this._institutionId; TODO habilitar cuando dispongamos del listado de instituciones y sus asociaciones x rol
+		return INSTITUTION_ID;
 	}
 
 	public setInstitutionId(id: number): void {

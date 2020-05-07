@@ -22,8 +22,7 @@ import { MapperService } from "@presentation/services/mapper.service";
 import { PersonService } from "@api-rest/services/person.service";
 import { InternmentEpisodeService } from "@api-rest/services/internment-episode.service";
 import { scrollIntoError } from "@core/utils/form.utils";
-
-const INSTITUTION_ID = 10;
+import { ContextService } from "@core/services/context.service";
 
 @Component({
 	selector: 'app-new-internment',
@@ -94,7 +93,7 @@ export class NewInternmentComponent implements OnInit {
 			this.sectors = data
 		});
 
-		this.healthcareProfessionalService.getAllDoctors(INSTITUTION_ID).subscribe(data => {
+		this.healthcareProfessionalService.getAllDoctors().subscribe(data => {
 			this.doctors = data
 		});
 
@@ -133,7 +132,8 @@ export class NewInternmentComponent implements OnInit {
 	save(): void {
 		let intenmentEpisodeReq = this.mapToPersonInternmentEpisodeRequest();
 		if (this.form.valid) {
-			this.internmentEpisodeService.setNewInternmentEpisode(INSTITUTION_ID, intenmentEpisodeReq).subscribe();
+			this.internmentEpisodeService.setNewInternmentEpisode(intenmentEpisodeReq)
+				.subscribe();
 		} else {
 			scrollIntoError(this.form, this.el);
 		}
