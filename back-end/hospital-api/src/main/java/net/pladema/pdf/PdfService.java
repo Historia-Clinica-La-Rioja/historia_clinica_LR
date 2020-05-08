@@ -50,11 +50,13 @@ public class PdfService {
             XMLWorkerHelper.getInstance().parseXHtml(writer, document, is);
             document.close();
             file.close();
-            InputStreamResource resource = new InputStreamResource(new FileInputStream(pdfFile));
+            FileInputStream fileInputStream = new FileInputStream(pdfFile);
+            InputStreamResource resource = new InputStreamResource(fileInputStream);
             resource.getDescription();
             response = ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + pdfFile.getName())
                     .contentType(MediaType.APPLICATION_PDF).contentLength(pdfFile.length()).body(resource);
+            fileInputStream.close();
             pdfFile.delete();
         } catch (Exception e){
             pdfFile.delete();
