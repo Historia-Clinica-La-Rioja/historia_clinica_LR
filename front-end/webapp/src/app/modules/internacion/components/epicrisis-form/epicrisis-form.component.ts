@@ -9,6 +9,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { EpicrisisService } from '@api-rest/services/epicrisis.service';
 import { DatePipe } from '@angular/common';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
 	selector: 'app-epicrisis-form',
@@ -111,6 +112,7 @@ export class EpicrisisFormComponent implements OnInit {
 		private route: ActivatedRoute,
 		private router: Router,
 		private datePipe: DatePipe,
+		private snackBarService: SnackBarService
 	) {
 		this.diagnosis.displayedColumns = this.diagnosis.columns?.map(c => c.def);
 		this.familyHistories.displayedColumns = this.familyHistories.columns?.map(c => c.def);
@@ -163,7 +165,10 @@ export class EpicrisisFormComponent implements OnInit {
 					this.epicrisisService.getPDF(epicrisisResponse.id, this.internmentEpisodeId).subscribe(
 						_ => this.goToInternmentSummary(), _ => this.goToInternmentSummary()
 					);
-				});
+					this.snackBarService.showSuccess('internaciones.epicrisis.messages.SUCCESS');
+				}, _ => this.snackBarService.showError('internaciones.epicrisis.messages.ERROR'));
+		} else {
+			this.snackBarService.showError('internaciones.epicrisis.messages.ERROR');
 		}
 	}
 

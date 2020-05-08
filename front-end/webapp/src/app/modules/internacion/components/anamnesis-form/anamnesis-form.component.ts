@@ -10,6 +10,7 @@ import { InternacionMasterDataService } from '@api-rest/services/internacion-mas
 import { AnamnesisService } from '@api-rest/services/anamnesis.service';
 import { forkJoin } from 'rxjs';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
 	selector: 'app-anamnesis-form',
@@ -39,6 +40,7 @@ export class AnamnesisFormComponent implements OnInit {
 		private anamnesisService: AnamnesisService,
 		private route: ActivatedRoute,
 		private router: Router,
+		private snackBarService: SnackBarService
 	) {
 	}
 
@@ -133,10 +135,13 @@ export class AnamnesisFormComponent implements OnInit {
 						this.anamnesisService.getPDF(anamnesisResponse.id, this.internmentEpisodeId).subscribe(
 							_ => this.goToInternmentSummary(), _ => this.goToInternmentSummary()
 						);
-					});
+						this.snackBarService.showSuccess('internaciones.anamnesis.messages.SUCCESS');
+					}, _ => this.snackBarService.showError('internaciones.anamnesis.messages.ERROR'));
 				}
-			}
+			} else {
+			this.snackBarService.showError('internaciones.anamnesis.messages.ERROR');
 		}
+	}
 
 	private goToInternmentSummary(): void {
 		const url = `internaciones/internacion/${this.internmentEpisodeId}/paciente/${this.patientId}`;

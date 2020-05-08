@@ -250,6 +250,10 @@
 					}
 				}
 			},
+			"messages": {
+				"ERROR": "Error al guardar documento de epicrisis",
+				"SUCCESS": "El documento de epicrisis se guardó exitosamente"
+			},
 			"observations": {
 				"TITLE": "Observaciones",
 				"EVOLUTION_NOTE": "Evolución",
@@ -263,7 +267,11 @@
 		},
 		"nota-evolucion": {
 			"TITLE": "Nota de evolución",
-			"SUBTITLE": "Completa los siguientes datos."
+			"SUBTITLE": "Completa los siguientes datos.",
+			"messages": {
+				"ERROR": "Error al guardar documento de nota de evaluación",
+				"SUCCESS": "El documento de nota de evaluación se guardó exitosamente"
+			}
 		},
 		"internados-table": {
 			"TITLE": "Búsqueda de pacientes"

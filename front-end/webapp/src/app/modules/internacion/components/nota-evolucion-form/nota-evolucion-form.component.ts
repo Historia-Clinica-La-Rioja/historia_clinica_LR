@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
   selector: 'app-nota-evolucion-form',
@@ -28,6 +29,7 @@ export class NotaEvolucionFormComponent implements OnInit {
 		private evolutionNoteService: EvolutionNoteService,
 		private route: ActivatedRoute,
 		private router: Router,
+		private snackBarService: SnackBarService
 	) {
 	}
 
@@ -76,8 +78,10 @@ export class NotaEvolucionFormComponent implements OnInit {
 					this.evolutionNoteService.getPDF(evolutionNoteResponse.id, this.internmentEpisodeId).subscribe(
 						_ => this.goToInternmentSummary(), _ => this.goToInternmentSummary()
 					);
-				}
-			);
+					this.snackBarService.showSuccess('internaciones.nota-evolucion.messages.SUCCESS');
+				}, _ => this.snackBarService.showError('internaciones.nota-evolucion.messages.ERROR'));
+		} else {
+			this.snackBarService.showError('internaciones.nota-evolucion.messages.ERROR');
 		}
 	}
 
