@@ -20,7 +20,7 @@
     <p>Alta de internación</p>
 
     <h3>Paciente</h3>
-    <div class="row ">
+    <div class="row" th:if="${patient.person != null}">
         <strong>- ID: </strong><label  th:text="${patient.id}"></label><br/>
         <strong>- Nombre: </strong><label  th:text="${patient.person.firstName}"></label><br/>
         <strong>- Apellido: </strong><label th:text="${patient.person.lastName}"></label><br/>
@@ -31,7 +31,7 @@
     <h3>Diagnósticos</h3>
     <div class="row" th:if="${#lists.isEmpty(diagnosis)}">
         <dl class="lista" >
-            <dd><p >Sin diagnosticos</p></dd>
+            <dd><p >Sin cambios registrados</p></dd>
         </dl>
     </div>
     <div class="row" th:if="${not #lists.isEmpty(diagnosis)}">
@@ -43,7 +43,7 @@
     <h3>Antecedentes personales</h3>
     <div class="row" th:if="${#lists.isEmpty(personalHistories)}">
         <dl>
-            <dd><p >Sin antecedentes</p></dd>
+            <dd><p >Sin cambios registrados</p></dd>
         </dl>
     </div>
     <div class="row" th:if="${not #lists.isEmpty(personalHistories)}">
@@ -54,7 +54,7 @@
 
     <h3>Antecedentes familiares</h3>
     <div class="row" th:if="${#lists.isEmpty(familyHistories)}">
-        <dd><p>Sin antecedentes</p></dd>
+        <dd><p>Sin cambios registrados</p></dd>
     </div>
     <div class="row" th:if="${not #lists.isEmpty(familyHistories)}" >
         <dl th:each="familyHistory,iter: ${familyHistories}">
@@ -65,10 +65,10 @@
     <h3>Alergias</h3>
     <div class="row" th:if="${#lists.isEmpty(allergies)}">
         <dl>
-            <dd><p >Sin alergias</p></dd>
+            <dd><p >Sin cambios registrados</p></dd>
         </dl>
     </div>
-    <div class="row " th:if="${not #lists.isEmpty(allergies)}">
+    <div class="row" th:if="${not #lists.isEmpty(allergies)}">
         <dl class="lista" th:each="allergy,iter: ${allergies}">
             <dd><p  th:text="${'- ' + allergy.snomed.pt}"></p></dd>
         </dl>
@@ -77,7 +77,7 @@
     <h3>Medicación habitual</h3>
     <div class="row" th:if="${#lists.isEmpty(medications)}">
         <dl>
-            <dd><p>Sin medicación</p></dd>
+            <dd><p>Sin cambios registrados</p></dd>
         </dl>
     </div>
     <div class="row" th:if="${not #lists.isEmpty(medications)}">
@@ -91,12 +91,17 @@
     <h3>Medicación ambulatoria</h3>
     <div class="row">
         <dl>
-            <dd><p >Sin información</p></dd>
+            <dd><p >Sin cambios registrados</p></dd>
         </dl>
     </div>
 
     <h3>Observaciones</h3>
-    <div class="row">
+    <div class="row" th:if="${notes == null}">
+        <dl>
+            <dd><p>Sin cambios registrados</p></dd>
+        </dl>
+    </div>
+    <div class="row" th:if="${notes != null}">
         <div class="col-12" th:if="${notes.evolutionNote}">
             <strong class="center-padding">Evolución</strong>
             <p class="center-padding" th:text="${notes.evolutionNote}"></p>

@@ -20,7 +20,7 @@
 	<p>Internación</p>
 
 	<h3>Paciente</h3>
-	<div class="row ">
+	<div class="row" th:if="${patient.person != null}">
 		<strong>- ID: </strong><label  th:text="${patient.id}"></label><br/>
 		<strong>- Nombre: </strong><label  th:text="${patient.person.firstName}"></label><br/>
 		<strong>- Apellido: </strong><label th:text="${patient.person.lastName}"></label><br/>
@@ -32,7 +32,7 @@
 	<h3>Diagnóstico de ingreso</h3>
 	<div class="row" th:if="${#lists.isEmpty(diagnosis)}">
 		<dl class="lista" >
-			<dd><p >Sin diagnosticos</p></dd>
+			<dd><p >Sin cambios registrados</p></dd>
 		</dl>
 	</div>
 	<div class="row" th:if="${not #lists.isEmpty(diagnosis)}">
@@ -45,7 +45,7 @@
 
 	<div class="row" th:if="${anthropometricData == null}">
 		<dl>
-			<dd><p>Sin signos vitales</p></dd>
+			<dd><p>Sin cambios registrados</p></dd>
 		</dl>
 	</div>
 
@@ -60,7 +60,7 @@
 
 	<div class="row" th:if="${#lists.isEmpty(personalHistories)}">
 		<dl>
-			<dd><p >Sin antecedentes</p></dd>
+			<dd><p >Sin cambios registrados</p></dd>
 		</dl>
 	</div>
 	<div class="row" th:if="${not #lists.isEmpty(personalHistories)}">
@@ -72,7 +72,7 @@
 	<h3>Antecedentes familiares</h3>
 
 	<div class="row" th:if="${#lists.isEmpty(familyHistories)}">
-		<dd><p>Sin antecedentes</p></dd>
+		<dd><p>Sin cambios registrados</p></dd>
 	</div>
 	<div class="row" th:if="${not #lists.isEmpty(familyHistories)}" >
 		<dl th:each="familyHistory,iter: ${familyHistories}">
@@ -84,7 +84,7 @@
 
 	<div class="row" th:if="${#lists.isEmpty(allergies)}">
 		<dl>
-			<dd><p >Sin alergias</p></dd>
+			<dd><p >Sin cambios registrados</p></dd>
 		</dl>
 	</div>
 	<div class="row " th:if="${not #lists.isEmpty(allergies)}">
@@ -97,7 +97,7 @@
 
 	<div class="row" th:if="${#lists.isEmpty(medications)}">
 		<dl>
-			<dd><p>Sin medicación</p></dd>
+			<dd><p>Sin cambios registrados</p></dd>
 		</dl>
 	</div>
 	<div class="row" th:if="${not #lists.isEmpty(medications)}">
@@ -111,7 +111,7 @@
 
 	<div class="row" th:if="${vitalSigns  == null}">
 		<dl>
-			<dd><p>Sin signos vitales</p></dd>
+			<dd><p>Sin cambios registrados</p></dd>
 		</dl>
 	</div>
 	<div class="row " th:if="${vitalSigns != null}">
@@ -123,8 +123,13 @@
 	</div>
 
 	<h3>Observaciones</h3>
+	<div class="row" th:if="${notes == null}">
+		<dl>
+			<dd><p>Sin cambios registrados</p></dd>
+		</dl>
+	</div>
 
-	<div class="row ">
+	<div class="row" th:if="${notes != null}">
 		<div class="col-12" th:if="${notes.currentIllnessNote}">
 			<strong class="center-padding">Enfermedad actual</strong>
 			<p class="center-padding" th:text="${notes.currentIllnessNote}"></p>
