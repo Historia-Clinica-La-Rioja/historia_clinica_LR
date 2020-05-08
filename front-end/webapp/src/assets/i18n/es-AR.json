@@ -102,7 +102,7 @@
 			"buttons": {
 				"ATTACH_SIGNATURE": "Adjuntar firma digital",
 				"SAVE_DRAFT": "Guardar borrador",
-				"SIGN_CONFIRM": "Firmar y confirmar"
+				"CONFIRM": "Confirmar"
 			},
 			"datos-antropometricos": {
 				"TITLE": "Datos antropométricos",
@@ -211,7 +211,7 @@
 			"buttons": {
 				"ATTACH_SIGNATURE": "Adjuntar firma digital",
 				"SAVE_DRAFT": "Guardar borrador",
-				"SIGN_CONFIRM": "Firmar y confirmar"
+				"CONFIRM": "Confirmar"
 			},
 			"diagnosticos": {
 				"TITLE": "Diagnósticos",

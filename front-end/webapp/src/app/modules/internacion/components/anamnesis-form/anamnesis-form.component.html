@@ -1,5 +1,5 @@
 <div class="container">
-	<form id="anamnesis-form" (keydown.enter)="false" [formGroup]="form" (ngSubmit)="save($event)">
+	<form id="anamnesis-form" (keydown.enter)="false" [formGroup]="form" (ngSubmit)="save()">
 		<section id="title">
 			<h2 class="page-title" [translate]="'internaciones.anamnesis.TITLE'"></h2>
 			<h3 [translate]="'internaciones.anamnesis.SUBTITLE'"></h3>
@@ -226,27 +226,14 @@
 		</section>
 
 		<section id="buttons" class="form-buttons">
-			<div class="buttons">
-				<button mat-stroked-button type="button" color="primary" (click)="back()">
-					<span class="uppercase"
-						  [translate]="'buttons.BACK'">
-					</span>
-				</button>
-				<button *ngIf="false" id="save-draft" mat-stroked-button type="submit" color="primary">
-					<span class="uppercase" [translate]="'internaciones.anamnesis.buttons.SAVE_DRAFT'"></span>
-				</button>
-			</div>
-			<div class="sign-buttons">
-				<mat-checkbox formControlName="attachSignature">
-					<span [translate]="'internaciones.anamnesis.buttons.ATTACH_SIGNATURE'"></span>
-				</mat-checkbox>
-				<mat-error *ngIf="!form.controls.attachSignature.value && this.formSubmitted">
-					Debe adjuntar la firma
-				</mat-error>
-				<button id="sign-confirm" mat-raised-button type="submit" color="primary">
-					<span class="uppercase" [translate]="'internaciones.anamnesis.buttons.SIGN_CONFIRM'"></span>
-				</button>
-			</div>
+			<button mat-stroked-button type="button" color="primary" (click)="back()">
+				<span class="uppercase"
+					  [translate]="'buttons.BACK'">
+				</span>
+			</button>
+			<button id="sign-confirm" mat-raised-button type="submit" color="primary">
+				<span class="uppercase" [translate]="'internaciones.anamnesis.buttons.CONFIRM'"></span>
+			</button>
 		</section>
 	</form>
 </div>

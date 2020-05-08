@@ -217,22 +217,12 @@
 		</section>
 
 		<section id="buttons" class="form-buttons">
-			<div class="buttons">
-				<button mat-stroked-button type="button" color="primary" (click)="back()">
-					<span class="uppercase" [translate]="'buttons.BACK'"></span>
-				</button>
-			</div>
-			<div class="sign-buttons">
-				<mat-checkbox formControlName="attachSignature">
-					<span [translate]="'internaciones.anamnesis.buttons.ATTACH_SIGNATURE'"></span>
-				</mat-checkbox>
-				<mat-error *ngIf="!form.controls.attachSignature.value && this.formSubmitted">
-					Debe adjuntar la firma
-				</mat-error>
-				<button id="sign-confirm" mat-raised-button type="submit" color="primary">
-					<span class="uppercase" [translate]="'internaciones.anamnesis.buttons.SIGN_CONFIRM'"></span>
-				</button>
-			</div>
+			<button mat-stroked-button type="button" color="primary" (click)="back()">
+				<span class="uppercase" [translate]="'buttons.BACK'"></span>
+			</button>
+			<button id="sign-confirm" mat-raised-button type="submit" color="primary">
+				<span class="uppercase" [translate]="'internaciones.anamnesis.buttons.CONFIRM'"></span>
+			</button>
 		</section>
 	</form>
 </div>

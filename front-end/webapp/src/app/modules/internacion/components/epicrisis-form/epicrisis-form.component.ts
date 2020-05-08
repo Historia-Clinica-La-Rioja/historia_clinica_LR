@@ -22,7 +22,6 @@ export class EpicrisisFormComponent implements OnInit {
 
 	anamnesis: ResponseAnamnesisDto;
 	form: FormGroup;
-	formSubmitted: boolean = false;
 
 	diagnosis: TableData<DiagnosisDto> = {
 		data: [],
@@ -128,7 +127,6 @@ export class EpicrisisFormComponent implements OnInit {
 			(params: ParamMap) => {
 				this.internmentEpisodeId = Number(params.get('idInternacion'));
 				this.patientId = Number(params.get('idPaciente'));
-
 			}
 		);
 
@@ -141,7 +139,6 @@ export class EpicrisisFormComponent implements OnInit {
 				physicalExamNote: [null, Validators.required],
 				studiesSummaryNote: [null, Validators.required]
 			}),
-			attachSignature: [false]
 		});
 
 
@@ -157,8 +154,7 @@ export class EpicrisisFormComponent implements OnInit {
 	}
 
 	save(): void {
-		this.formSubmitted = true;
-		if (this.form.valid && this.form.value.attachSignature) {
+		if (this.form.valid) {
 			const newEpicrisis: NewEpicrisisDto = {
 				confirmed: true,
 				notes: this.form.value.observations,

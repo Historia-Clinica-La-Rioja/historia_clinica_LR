@@ -23,7 +23,6 @@ export class AnamnesisFormComponent implements OnInit {
 
 	anamnesis: ResponseAnamnesisDto;
 	form: FormGroup;
-	formSubmitted: boolean = false;
 
 	bloodTypes: MasterDataInterface<string>[];
 	diagnosticos: DiagnosisDto[] = [];
@@ -70,8 +69,7 @@ export class AnamnesisFormComponent implements OnInit {
 				evolutionNote: [null, Validators.required],
 				clinicalImpressionNote: [null, Validators.required],
 				otherNote: [null]
-			}),
-			attachSignature: [false]
+			})
 		});
 
 		const anamnesis$ = this.anamnesisService.getAnamnesis(this.anamnesisId, this.internmentEpisodeId);
@@ -116,28 +114,23 @@ export class AnamnesisFormComponent implements OnInit {
 		}
 	}
 
-	save(event): void {
-		this.formSubmitted = true;
-		let confirmed = (event.submitter.id === 'sign-confirm');
+	save(): void {
+		if (this.form.valid) {
+			const anamnesis = this.buildAnamnesisDto();
 
-		if (!confirmed || (confirmed && this.form.value.attachSignature)) {
-			if (this.form.valid) {
-				const anamnesis = this.buildAnamnesisDto(confirmed);
-
-				if (this.anamnesisId) {
-					this.anamnesisService.updateAnamnesis(this.anamnesisId, anamnesis, this.internmentEpisodeId)
-						.subscribe(anamnesisUpdated => console.log('PUT anamnesis', anamnesisUpdated));
-				} else {
-					this.anamnesisService.createAnamnesis(anamnesis, this.internmentEpisodeId)
-						.subscribe(anamnesisResponse => console.log('POST anamnesis', anamnesisResponse));
-				}
+			if (this.anamnesisId) {
+				this.anamnesisService.updateAnamnesis(this.anamnesisId, anamnesis, this.internmentEpisodeId)
+					.subscribe(anamnesisUpdated => console.log('PUT anamnesis', anamnesisUpdated));
+			} else {
+				this.anamnesisService.createAnamnesis(anamnesis, this.internmentEpisodeId)
+					.subscribe(anamnesisResponse => console.log('POST anamnesis', anamnesisResponse));
 			}
 		}
 	}
 
-	private buildAnamnesisDto(confirmed: boolean): AnamnesisDto {
+	private buildAnamnesisDto(): AnamnesisDto {
 		return {
-			confirmed,
+			confirmed: true,
 			allergies: this.allergies,
 			anthropometricData: {
 				bloodType: {

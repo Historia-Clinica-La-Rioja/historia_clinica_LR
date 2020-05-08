@@ -15,7 +15,6 @@ export class NotaEvolucionFormComponent implements OnInit {
 	internmentEpisodeId: number;
 
 	form: FormGroup;
-	formSubmitted: boolean = false;
 
 	bloodTypes: MasterDataInterface<string>[];
 	diagnosticos: DiagnosisDto[] = [];
@@ -58,8 +57,7 @@ export class NotaEvolucionFormComponent implements OnInit {
 				evolutionNote: [null, Validators.required],
 				clinicalImpressionNote: [null, Validators.required],
 				otherNote: [null]
-			}),
-			attachSignature: [null, Validators.requiredTrue]
+			})
 		});
 
 		this.internacionMasterDataService.getBloodTypes().subscribe(bloodTypes => this.bloodTypes = bloodTypes);
@@ -67,8 +65,7 @@ export class NotaEvolucionFormComponent implements OnInit {
 	}
 
 	save(): void {
-		this.formSubmitted = true;
-		if (this.form.valid && this.form.value.attachSignature) {
+		if (this.form.valid) {
 			const evolutionNote = this.buildEvolutionNoteDto();
 
 			this.evolutionNoteService.createDocument(evolutionNote, this.internmentEpisodeId)
@@ -78,7 +75,7 @@ export class NotaEvolucionFormComponent implements OnInit {
 
 	private buildEvolutionNoteDto(): EvolutionNoteDto {
 		return {
-			confirmed: this.form.value.attachSignature,
+			confirmed: true,
 			allergies: this.allergies,
 			anthropometricData: {
 				bloodType: {
