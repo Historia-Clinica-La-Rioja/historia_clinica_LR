@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import {
 	AllergyConditionDto,
 	DiagnosisDto, HealthHistoryConditionDto, InmunizationDto, MedicationDto, NewEpicrisisDto,
-	ResponseAnamnesisDto
+	ResponseAnamnesisDto,
+	ResponseEpicrisisDto
 } from '@api-rest/api-model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { EpicrisisService } from '@api-rest/services/epicrisis.service';
 import { DatePipe } from '@angular/common';
@@ -17,8 +17,8 @@ import { DatePipe } from '@angular/common';
 })
 export class EpicrisisFormComponent implements OnInit {
 
-	internmentEpisodeId: number;
-	patientId: number;
+	private internmentEpisodeId: number;
+	private patientId: number;
 
 	anamnesis: ResponseAnamnesisDto;
 	form: FormGroup;
@@ -107,7 +107,6 @@ export class EpicrisisFormComponent implements OnInit {
 
 	constructor(
 		private formBuilder: FormBuilder,
-		private internacionMasterDataService: InternacionMasterDataService,
 		private epicrisisService: EpicrisisService,
 		private route: ActivatedRoute,
 		private router: Router,
@@ -160,7 +159,7 @@ export class EpicrisisFormComponent implements OnInit {
 				notes: this.form.value.observations,
 			};
 			this.epicrisisService.createDocument(newEpicrisis, this.internmentEpisodeId)
-				.subscribe(() => {
+				.subscribe((epicrisisResponse: ResponseEpicrisisDto) => {
 					const url = `internaciones/internacion/${this.internmentEpisodeId}/paciente/${this.patientId}`;
 					this.router.navigate([url]);
 				});

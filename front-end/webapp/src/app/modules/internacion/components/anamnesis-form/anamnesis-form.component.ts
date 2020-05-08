@@ -9,7 +9,7 @@ import {
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { AnamnesisService } from '@api-rest/services/anamnesis.service';
 import { forkJoin } from 'rxjs';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 
 @Component({
 	selector: 'app-anamnesis-form',
@@ -18,8 +18,9 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 })
 export class AnamnesisFormComponent implements OnInit {
 
+	private internmentEpisodeId: number;
+	private patientId: number;
 	anamnesisId: number;
-	internmentEpisodeId: number;
 
 	anamnesis: ResponseAnamnesisDto;
 	form: FormGroup;
@@ -36,7 +37,8 @@ export class AnamnesisFormComponent implements OnInit {
 		private formBuilder: FormBuilder,
 		private internacionMasterDataService: InternacionMasterDataService,
 		private anamnesisService: AnamnesisService,
-		private route: ActivatedRoute
+		private route: ActivatedRoute,
+		private router: Router,
 	) {
 	}
 
@@ -45,6 +47,7 @@ export class AnamnesisFormComponent implements OnInit {
 			(params: ParamMap) => {
 				this.anamnesisId = Number(params.get('anamnesisId'));
 				this.internmentEpisodeId = Number(params.get('idInternacion'));
+				this.patientId = Number(params.get('idPaciente'));
 			}
 		);
 
@@ -120,10 +123,16 @@ export class AnamnesisFormComponent implements OnInit {
 
 			if (this.anamnesisId) {
 				this.anamnesisService.updateAnamnesis(this.anamnesisId, anamnesis, this.internmentEpisodeId)
-					.subscribe(anamnesisUpdated => console.log('PUT anamnesis', anamnesisUpdated));
+					.subscribe((anamnesisResponse: ResponseAnamnesisDto) => {
+							const url = `internaciones/internacion/${this.internmentEpisodeId}/paciente/${this.patientId}`;
+							this.router.navigate([url]);
+					});
 			} else {
 				this.anamnesisService.createAnamnesis(anamnesis, this.internmentEpisodeId)
-					.subscribe(anamnesisResponse => console.log('POST anamnesis', anamnesisResponse));
+				.subscribe((anamnesisResponse: ResponseAnamnesisDto) => {
+						const url = `internaciones/internacion/${this.internmentEpisodeId}/paciente/${this.patientId}`;
+						this.router.navigate([url]);
+					});
 			}
 		}
 	}

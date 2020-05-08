@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { MasterDataInterface, DiagnosisDto, AllergyConditionDto, InmunizationDto, EvolutionNoteDto } from '@api-rest/api-model';
+import { MasterDataInterface, DiagnosisDto, AllergyConditionDto, InmunizationDto, EvolutionNoteDto, ResponseEvolutionNoteDto } from '@api-rest/api-model';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
 
 @Component({
@@ -12,7 +12,8 @@ import { EvolutionNoteService } from '@api-rest/services/evolution-note.service'
 })
 export class NotaEvolucionFormComponent implements OnInit {
 
-	internmentEpisodeId: number;
+	private internmentEpisodeId: number;
+	private patientId: number;
 
 	form: FormGroup;
 
@@ -25,7 +26,8 @@ export class NotaEvolucionFormComponent implements OnInit {
 		private formBuilder: FormBuilder,
 		private internacionMasterDataService: InternacionMasterDataService,
 		private evolutionNoteService: EvolutionNoteService,
-		private route: ActivatedRoute
+		private route: ActivatedRoute,
+		private router: Router,
 	) {
 	}
 
@@ -33,6 +35,7 @@ export class NotaEvolucionFormComponent implements OnInit {
 		this.route.paramMap.subscribe(
 			(params: ParamMap) => {
 				this.internmentEpisodeId = Number(params.get('idInternacion'));
+				this.patientId = Number(params.get('idPaciente'));
 			}
 		);
 
@@ -68,8 +71,12 @@ export class NotaEvolucionFormComponent implements OnInit {
 		if (this.form.valid) {
 			const evolutionNote = this.buildEvolutionNoteDto();
 
-			this.evolutionNoteService.createDocument(evolutionNote, this.internmentEpisodeId)
-				.subscribe(anamnesisResponse => console.log('POST anamnesis', anamnesisResponse));
+			this.evolutionNoteService.createDocument(evolutionNote, this.internmentEpisodeId).subscribe(
+				(evolutionNoteResponse: ResponseEvolutionNoteDto) => {
+					const url = `internaciones/internacion/${this.internmentEpisodeId}/paciente/${this.patientId}`;
+					this.router.navigate([url]);
+				}
+			);
 		}
 	}
 
