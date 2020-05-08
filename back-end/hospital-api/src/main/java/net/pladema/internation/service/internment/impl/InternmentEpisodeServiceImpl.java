@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -58,6 +59,7 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
         LOG.debug("Input parameters -> internmentEpisode {}, institutionId {}", internmentEpisode, institutionId);
         internmentEpisode.setInstitutionId(institutionId);
         internmentEpisode.setStatusId(ACTIVO);
+        internmentEpisode.setEntryDate(LocalDate.now());
         InternmentEpisode result = internmentEpisodeRepository.save(internmentEpisode);
         LOG.debug("Output -> {}", result);
         return result;
