@@ -19,6 +19,8 @@ import { MapperService } from "@presentation/services/mapper.service";
 import { PersonService } from "@api-rest/services/person.service";
 import { InternmentEpisodeService } from "@api-rest/services/internment-episode.service";
 import { scrollIntoError } from "@core/utils/form.utils";
+import { MatDialog } from "@angular/material/dialog";
+import { ConfirmDialogComponent } from "@core/dialogs/confirm-dialog/confirm-dialog.component";
 
 
 @Component({
@@ -54,7 +56,8 @@ export class NewInternmentComponent implements OnInit {
 				private personService: PersonService,
 				private mapperService: MapperService,
 				private route: ActivatedRoute,
-				private internmentEpisodeService: InternmentEpisodeService) {
+				private internmentEpisodeService: InternmentEpisodeService,
+				public dialog: MatDialog) {
 	}
 
 	ngOnInit(): void {
@@ -103,8 +106,7 @@ export class NewInternmentComponent implements OnInit {
 	setService() {
 		let sectorId: number = this.form.controls.sectorId.value;
 		this.clinicalSpecialtySectorService.getClinicalSpecialty(sectorId).subscribe(data => {
-			console.log('getClinicalSpecialty', data);
-			this.services = data;
+			this.services = data
 		});
 		this.form.controls.serviceId.enable();
 	}
@@ -127,19 +129,37 @@ export class NewInternmentComponent implements OnInit {
 	}
 
 	save(): void {
-		let intenmentEpisodeReq = this.mapToPersonInternmentEpisodeRequest();
 		if (this.form.valid) {
-			this.internmentEpisodeService.setNewInternmentEpisode(intenmentEpisodeReq)
-				.subscribe(data => {
-					//TODO popup confirm
-					if(data && data.id) {
-						let url = `internaciones/internacion/${data.id}/paciente/${this.patientId}`;
-						this.router.navigate([url]);
-					}
-				});
+			this.openDialog();
 		} else {
 			scrollIntoError(this.form, this.el);
 		}
+	}
+
+	openDialog(): void {
+		let stringQuestion = '¿Esta seguro que desea crear una nueva internacion para el paciente ' +
+			this.patientBasicData.firstName + ' ' +
+			this.patientBasicData.lastName + '?';
+		const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+			width: '450px',
+			data: {
+				title: 'Nueva internación',
+				content: stringQuestion,
+				okButtonLabel: 'Confirmar internación'
+			}
+		});
+		dialogRef.afterClosed().subscribe(result => {
+			if(result) {
+				let intenmentEpisodeReq = this.mapToPersonInternmentEpisodeRequest();
+				this.internmentEpisodeService.setNewInternmentEpisode(intenmentEpisodeReq)
+					.subscribe(data => {
+						if(data && data.id) {
+							let url = `internaciones/internacion/${data.id}/paciente/${this.patientId}`;
+							this.router.navigate([url]);
+						}
+					});
+			}
+		});
 	}
 
 	private mapToPersonInternmentEpisodeRequest() {
