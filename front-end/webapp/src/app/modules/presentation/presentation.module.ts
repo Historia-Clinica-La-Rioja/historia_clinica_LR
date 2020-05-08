@@ -12,6 +12,7 @@ import { DetailBoxComponent } from './components/detail-box/detail-box.component
 import { FullHouseAddressPipe } from './pipes/fullHouseAddress.pipe';
 import { PersonalInformationComponent } from './components/personal-information/personal-information.component';
 import { PatientTypeLogoComponent } from './components/patient-type-logo/patient-type-logo.component';
+import { MessageSnackbarComponent } from './components/message-snackbar/message-snackbar.component';
 
 @NgModule({
 	declarations: [
@@ -26,6 +27,7 @@ import { PatientTypeLogoComponent } from './components/patient-type-logo/patient
 		FullHouseAddressPipe,
 		PersonalInformationComponent,
 		PatientTypeLogoComponent,
+		MessageSnackbarComponent,
 	],
 	imports: [
 		CommonModule,

@@ -155,6 +155,10 @@
 					}
 				}
 			},
+			"messages": {
+				"ERROR": "Error al guardar documento de evaluación de ingreso",
+				"SUCCESS": "El documento de evaluación de ingreso se guardó exitosamente"
+			},
 			"vital-signs": {
 				"form": {
 					"TITLE": "Signos vitales",
