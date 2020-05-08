@@ -160,14 +160,20 @@ export class EpicrisisFormComponent implements OnInit {
 			};
 			this.epicrisisService.createDocument(newEpicrisis, this.internmentEpisodeId)
 				.subscribe((epicrisisResponse: ResponseEpicrisisDto) => {
-					const url = `internaciones/internacion/${this.internmentEpisodeId}/paciente/${this.patientId}`;
-					this.router.navigate([url]);
+					this.epicrisisService.getPDF(epicrisisResponse.id, this.internmentEpisodeId).subscribe(
+						_ => this.goToInternmentSummary(), _ => this.goToInternmentSummary()
+					);
 				});
 		}
 	}
 
 	back(): void {
 		window.history.back();
+	}
+
+	private goToInternmentSummary(): void {
+		const url = `internaciones/internacion/${this.internmentEpisodeId}/paciente/${this.patientId}`;
+		this.router.navigate([url]);
 	}
 
 }

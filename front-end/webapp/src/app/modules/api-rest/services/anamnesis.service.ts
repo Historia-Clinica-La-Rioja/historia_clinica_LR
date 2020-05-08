@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AnamnesisDto, ResponseAnamnesisDto } from '@api-rest/api-model';
 import { environment } from '@environments/environment';
+import { DownloadService } from '@core/services/download.service';
 
 const HARD_CODE_INSTITUTION = 10;
 
@@ -12,7 +13,8 @@ const HARD_CODE_INSTITUTION = 10;
 export class AnamnesisService {
 
 	constructor(
-		private http: HttpClient
+		private http: HttpClient,
+		private downloadService: DownloadService,
 	) { }
 
 	createAnamnesis(anamnesis: AnamnesisDto, internmentEpisodeId: number): Observable<ResponseAnamnesisDto> {
@@ -29,4 +31,11 @@ export class AnamnesisService {
 		const url = `${environment.apiBase}/institutions/${HARD_CODE_INSTITUTION}/internments/${internmentEpisodeId}/anamnesis/${anamnesisId}`;
 		return this.http.get<ResponseAnamnesisDto>(url);
 	}
+
+	getPDF(anamnesisId: number, internmentEpisodeId: number): Observable<any> {
+		const url = `${environment.apiBase}/institutions/${HARD_CODE_INSTITUTION}/internments/${internmentEpisodeId}/anamnesis/${anamnesisId}/report`;
+		const fileName = `Evaluacion_ingreso_internacion_${internmentEpisodeId}`;
+		return this.downloadService.downloadPdf(url, fileName);
+	}
+
 }

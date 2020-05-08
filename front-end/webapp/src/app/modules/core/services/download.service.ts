@@ -1,0 +1,29 @@
+import { Injectable } from '@angular/core';
+import { saveAs } from 'file-saver';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+
+@Injectable({
+	providedIn: 'root'
+})
+export class DownloadService {
+
+	constructor(
+		private http: HttpClient,
+	) {	}
+
+	downloadPdf(url: string, fileName: string): Observable<any> {
+		const httpOptions = {
+			responseType  : 'arraybuffer' as 'json'
+		};
+		return this.http.get<any>(url, httpOptions).pipe(
+			tap((data: any) => {
+				const blobType = { type: 'application/pdf' };
+				const file = new Blob([data], blobType);
+				saveAs(file, fileName);
+			})
+		);
+	}
+
+}

@@ -73,11 +73,17 @@ export class NotaEvolucionFormComponent implements OnInit {
 
 			this.evolutionNoteService.createDocument(evolutionNote, this.internmentEpisodeId).subscribe(
 				(evolutionNoteResponse: ResponseEvolutionNoteDto) => {
-					const url = `internaciones/internacion/${this.internmentEpisodeId}/paciente/${this.patientId}`;
-					this.router.navigate([url]);
+					this.evolutionNoteService.getPDF(evolutionNoteResponse.id, this.internmentEpisodeId).subscribe(
+						_ => this.goToInternmentSummary(), _ => this.goToInternmentSummary()
+					);
 				}
 			);
 		}
+	}
+
+	private goToInternmentSummary(): void {
+		const url = `internaciones/internacion/${this.internmentEpisodeId}/paciente/${this.patientId}`;
+		this.router.navigate([url]);
 	}
 
 	private buildEvolutionNoteDto(): EvolutionNoteDto {

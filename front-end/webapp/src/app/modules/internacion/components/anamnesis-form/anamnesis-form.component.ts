@@ -130,11 +130,17 @@ export class AnamnesisFormComponent implements OnInit {
 			} else {
 				this.anamnesisService.createAnamnesis(anamnesis, this.internmentEpisodeId)
 				.subscribe((anamnesisResponse: ResponseAnamnesisDto) => {
-						const url = `internaciones/internacion/${this.internmentEpisodeId}/paciente/${this.patientId}`;
-						this.router.navigate([url]);
+						this.anamnesisService.getPDF(anamnesisResponse.id, this.internmentEpisodeId).subscribe(
+							_ => this.goToInternmentSummary(), _ => this.goToInternmentSummary()
+						);
 					});
+				}
 			}
 		}
+
+	private goToInternmentSummary(): void {
+		const url = `internaciones/internacion/${this.internmentEpisodeId}/paciente/${this.patientId}`;
+		this.router.navigate([url]);
 	}
 
 	private buildAnamnesisDto(): AnamnesisDto {
