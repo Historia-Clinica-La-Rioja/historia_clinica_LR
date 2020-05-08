@@ -103,7 +103,9 @@ public class PatientController {
 		Patient patientToAdd = patientMapper.fromPatientDto(patientDto);
 		patientToAdd.setPersonId(createdPerson.getId());
 		Patient createdPatient = patientService.addPatient(patientToAdd);
-		patientService.federatePatient(createdPatient, personMapper.fromPersonDto(createdPerson));
+		if (createdPatient.isValidated()) {
+			patientService.federatePatient(createdPatient, personMapper.fromPersonDto(createdPerson));
+		}
 		return ResponseEntity.created(new URI("")).body(patientMapper.fromPatient(createdPatient));
 	}
 

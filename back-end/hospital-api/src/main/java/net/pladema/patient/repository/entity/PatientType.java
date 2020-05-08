@@ -18,10 +18,13 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PatientType implements Serializable {
+	
+	public static final Short VALIDATED = 2;
+	public static final Short PERMANENT = 1;
+	
     /*
      */
     private static final long serialVersionUID = -2509033551090730514L;
-    public static final Short PERMANENT = 1;
     
 
     @Id

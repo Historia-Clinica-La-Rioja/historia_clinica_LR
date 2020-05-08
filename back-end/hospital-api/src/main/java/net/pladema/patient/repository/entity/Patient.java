@@ -60,6 +60,10 @@ public class Patient implements Serializable{
 
     @Column(name = "health_insurance_id")
     private Integer healthInsuranceId;
+    
+    public boolean isValidated() {
+    	return getTypeId().equals(PatientType.VALIDATED);
+    }
 }
 
 
