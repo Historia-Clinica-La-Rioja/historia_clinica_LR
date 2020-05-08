@@ -7,8 +7,7 @@
 			<span class="uppercase">ID {{patient?.id}}</span>
 		</mat-card-title>
 		<mat-card-subtitle>
-			<span [translate]="'presentation.patient-card.GENDER_AGE'"
-				[translateParams]="{ gender: patient?.gender, age: patient?.age }">
+			<span [translate]=viewGenderAge()>
 			</span>
 		</mat-card-subtitle>
 	</mat-card-header>
