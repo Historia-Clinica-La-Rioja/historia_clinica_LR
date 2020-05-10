@@ -1,17 +1,20 @@
 @import "../../../../../assets/styles/variables";
 
 mat-card.mat-card {
-	min-height: 20vh;
+	min-height: 25vh;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 }
 
-.header-image {
-	background-image: url("../../../../../assets/images/empty-profile.svg");
-	background-size: cover;
-	width: 65px;
-	height: 65px;
+mat-card-header {
+	align-items: center;
+	.header-image {
+		background-image: url("../../../../../assets/images/empty-profile.svg");
+		background-size: cover;
+		width: 100px;
+		height: 100px;
+	}
 }
 
 mat-card-title {

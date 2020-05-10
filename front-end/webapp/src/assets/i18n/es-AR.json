@@ -365,10 +365,5 @@
 			"SUBTITLE_TWO": "Complete los siguientes datos para una búsqueda avanzada.",
 			"NEW_PATIENT": "Crear nuevo paciente"
 		}
-	},
-	"presentation": {
-		"patient-card": {
-			"GENDER_AGE": "{{gender}} · {{age}} años"
-		}
 	}
 }

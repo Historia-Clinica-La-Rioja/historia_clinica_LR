@@ -1,40 +1,49 @@
 <app-content width="full">
 	<section>
 		<h2 class="page-title" [translate]="'internaciones.internacion-paciente.TITLE'"></h2>
-		<div class="buttons" *ngIf="!epicrisisDoc">
-			<button mat-flat-button color="primary" (click)="goToAnamnesis()" *ngIf="!anamnesisDoc || !anamnesisDoc.confirmed">
-				<span class="uppercase" [translate]="'internaciones.internacion-paciente.actions.ADD_EVAL_INGRESO'"></span>
-			</button>
-			<button mat-flat-button color="primary" (click)="goToNotaEvolucion()">
-				<span class="uppercase" [translate]="'internaciones.internacion-paciente.actions.ADD_NOTA_EVOLUCION'"></span>
-			</button>
-			<button mat-flat-button color="primary" (click)="goToEpicrisis()">
-				<span class="uppercase" [translate]="'internaciones.internacion-paciente.actions.ADD_EPICRISIS'"></span>
-			</button>
-		</div>
-		<div class="flex-layout">
-			<div class="column">
-				<section>
-					<app-patient-card [patient]="patient$ | async"></app-patient-card>
-				</section>
-				<section>
-					<app-signos-vitales-summary [internmentEpisodeId]="internmentEpisodeId"></app-signos-vitales-summary>
-				</section>
-				<section>
-					<app-antropometricos-summary [internmentEpisodeId]="internmentEpisodeId"></app-antropometricos-summary>
-				</section>
+		<div *ngIf="(internmentEpisodeSummary$ | async) as internmentEpisodeSummary">
+			<div class="buttons" *ngIf="!epicrisisDoc">
+				<button mat-flat-button color="primary" (click)="goToAnamnesis()"
+					*ngIf="!anamnesisDoc || !anamnesisDoc.confirmed">
+					<span class="uppercase"
+						[translate]="'internaciones.internacion-paciente.actions.ADD_EVAL_INGRESO'"></span>
+				</button>
+				<button mat-flat-button color="primary" (click)="goToNotaEvolucion()">
+					<span class="uppercase"
+						[translate]="'internaciones.internacion-paciente.actions.ADD_NOTA_EVOLUCION'"></span>
+				</button>
+				<button mat-flat-button color="primary" (click)="goToEpicrisis()">
+					<span class="uppercase"
+						[translate]="'internaciones.internacion-paciente.actions.ADD_EPICRISIS'"></span>
+				</button>
 			</div>
-			<div class="column">
-				<section>
-					<app-summary-card [header]="internacionSummary">
-						<mat-card-content>
-							<app-internment-episode-summary [internmentEpisode]="internmentEpisodeSummary$ | async"></app-internment-episode-summary>
-						</mat-card-content>
-					</app-summary-card>
-				</section>
-				<section>
-					<app-diagnosis-summary [internmentEpisodeId]="internmentEpisodeId"></app-diagnosis-summary>
-				</section>
+			<div class="flex-layout">
+				<div class="column">
+					<section>
+						<app-patient-card [patient]="patient$ | async"></app-patient-card>
+					</section>
+					<section>
+						<app-signos-vitales-summary [internmentEpisodeId]="internmentEpisodeId">
+						</app-signos-vitales-summary>
+					</section>
+					<section>
+						<app-antropometricos-summary [internmentEpisodeId]="internmentEpisodeId">
+						</app-antropometricos-summary>
+					</section>
+				</div>
+				<div class="column">
+					<section>
+						<app-summary-card [header]="internacionSummary">
+							<mat-card-content>
+								<app-internment-episode-summary [internmentEpisode]="internmentEpisodeSummary">
+								</app-internment-episode-summary>
+							</mat-card-content>
+						</app-summary-card>
+					</section>
+					<section>
+						<app-diagnosis-summary [internmentEpisodeId]="internmentEpisodeId"></app-diagnosis-summary>
+					</section>
+				</div>
 			</div>
 		</div>
 	</section>

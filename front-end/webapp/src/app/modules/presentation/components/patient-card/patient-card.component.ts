@@ -14,8 +14,8 @@ export class PatientCardComponent implements OnInit {
 	ngOnInit(): void { }
 
 	public viewGenderAge() {
-		let gender = (this.patient.gender) ? (this.patient.gender + " · ") : "";
-		let age = (this.patient.age) ? (this.patient.age + " años") : "";
+		let gender = (this.patient?.gender) ? (this.patient.gender + " · ") : "";
+		let age = (this.patient?.age) ? (this.patient.age + " años") : "";
 		return gender + age;
 	}
 
