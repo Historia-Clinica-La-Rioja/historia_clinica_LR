@@ -9,7 +9,10 @@ import net.pladema.internation.controller.documents.epicrisis.dto.EpicrisisGener
 import net.pladema.internation.controller.documents.epicrisis.dto.NewEpicrisisDto;
 import net.pladema.internation.controller.documents.epicrisis.dto.ResponseEpicrisisDto;
 import net.pladema.internation.controller.documents.epicrisis.mapper.EpicrisisMapper;
+import net.pladema.internation.controller.internment.dto.ResponsibleDoctorDto;
+import net.pladema.internation.controller.internment.mapper.ResponsibleDoctorMapper;
 import net.pladema.internation.repository.masterdata.entity.DocumentType;
+import net.pladema.internation.service.documents.DocumentService;
 import net.pladema.internation.service.documents.epicrisis.CreateEpicrisisService;
 import net.pladema.internation.service.documents.epicrisis.EpicrisisService;
 import net.pladema.internation.service.documents.epicrisis.UpdateEpicrisisService;
@@ -63,6 +66,10 @@ public class EpicrisisController {
 
     private final PdfService pdfService;
 
+    private final DocumentService documentService;
+
+    private final ResponsibleDoctorMapper responsibleDoctorMapper;
+
     public EpicrisisController(InternmentEpisodeService internmentEpisodeService,
                                CreateEpicrisisService createEpicrisisService,
                                UpdateEpicrisisService updateEpicrisisService,
@@ -70,7 +77,9 @@ public class EpicrisisController {
                                EpicrisisMapper epicrisisMapper,
                                InternmentStateService internmentStateService,
                                PatientExternalService patientExternalService,
-                               PdfService pdfService) {
+                               PdfService pdfService,
+                               DocumentService documentService,
+                               ResponsibleDoctorMapper responsibleDoctorMapper) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.createEpicrisisService = createEpicrisisService;
         this.updateEpicrisisService = updateEpicrisisService;
@@ -79,6 +88,8 @@ public class EpicrisisController {
         this.internmentStateService = internmentStateService;
         this.patientExternalService = patientExternalService;
         this.pdfService = pdfService;
+        this.documentService = documentService;
+        this.responsibleDoctorMapper = responsibleDoctorMapper;
     }
 
     @PostMapping
@@ -161,13 +172,15 @@ public class EpicrisisController {
         Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
                 .orElseThrow(() -> new EntityNotFoundException(INVALID_EPISODE));
         BasicPatientDto patientData = patientExternalService.getBasicDataFromPatient(patientId);
+        ResponsibleDoctorDto author = responsibleDoctorMapper.toResponsibleDoctorDto(
+                documentService.getAuthor(epicrisisId));
         ResponseEpicrisisDto result = epicrisisMapper.fromEpicrisis(epicrisis);
-        Context ctx = createEpicrisisContext(result, patientData);
+        Context ctx = createEpicrisisContext(result, patientData, author);
         String name = "Epicrisis_" + result.getId() ;
         return pdfService.getResponseEntityPdf(name, "epicrisis", LocalDateTime.now(), ctx);
     }
 
-    private Context createEpicrisisContext(ResponseEpicrisisDto epicrisis, BasicPatientDto patientData) {
+    private Context createEpicrisisContext(ResponseEpicrisisDto epicrisis, BasicPatientDto patientData, ResponsibleDoctorDto author ) {
         LOG.debug("Input parameters -> epicrisis {}", epicrisis);
         Context ctx = new Context(Locale.getDefault());
         ctx.setVariable("patient", patientData);
@@ -177,6 +190,7 @@ public class EpicrisisController {
         ctx.setVariable("allergies", epicrisis.getAllergies());
         ctx.setVariable("medications", epicrisis.getMedications());
         ctx.setVariable("notes", epicrisis.getNotes());
+        ctx.setVariable("author", author);
         LOG.debug(OUTPUT, ctx);
         return ctx;
     }

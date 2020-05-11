@@ -124,4 +124,9 @@
         </div>
     </div>
 </body>
+<footer class="footer-dark" th:if="${author != null}">
+    <div th:replace="fragments/author.html
+	:: author(firstName=${author.firstName}, lastName=${author.lastName},licenseNumber=${author.licence})">
+    </div>
+</footer>
 </html>

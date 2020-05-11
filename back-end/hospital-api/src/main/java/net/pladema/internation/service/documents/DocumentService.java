@@ -4,6 +4,7 @@ import net.pladema.internation.repository.core.entity.Document;
 import net.pladema.internation.repository.core.entity.DocumentInmunization;
 import net.pladema.internation.repository.core.entity.DocumentLab;
 import net.pladema.internation.repository.core.entity.DocumentVitalSign;
+import net.pladema.internation.service.internment.domain.ResponsibleDoctorBo;
 import net.pladema.internation.service.ips.domain.*;
 
 import java.util.List;
@@ -50,6 +51,8 @@ public interface DocumentService {
     void deleteObservationsVitalSignsHistory(Long documentId);
 
     void deleteObservationsLabHistory(Long documentId);
+
+    ResponsibleDoctorBo getAuthor(Long documentId);
 
 }
 

@@ -3,6 +3,8 @@ package net.pladema.internation.controller;
 import net.pladema.BaseControllerTest;
 import net.pladema.internation.controller.documents.anamnesis.AnamnesisController;
 import net.pladema.internation.controller.documents.anamnesis.mapper.AnamnesisMapper;
+import net.pladema.internation.controller.internment.mapper.ResponsibleDoctorMapper;
+import net.pladema.internation.service.documents.DocumentService;
 import net.pladema.internation.service.documents.anamnesis.AnamnesisService;
 import net.pladema.internation.service.documents.anamnesis.CreateAnamnesisService;
 import net.pladema.internation.service.documents.anamnesis.UpdateAnamnesisService;
@@ -40,6 +42,12 @@ public class AnamnesisControllerTest extends BaseControllerTest {
 
 	@MockBean
 	private PdfService pdfService;
+
+	@MockBean
+	private DocumentService documentService;
+
+	@MockBean
+	private ResponsibleDoctorMapper responsibleDoctorMapper;
 
 	@Before
 	public void setup() {

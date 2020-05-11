@@ -20,7 +20,7 @@
 	<p>Internación</p>
 
 	<h3>Paciente</h3>
-	<div class="row" th:if="${patient.person != null}>
+	<div class="row" th:if="${patient.person != null}">
 		<strong>- ID: </strong><label  th:text="${patient.id}"></label><br/>
 		<strong>- Nombre: </strong><label  th:text="${patient.person.firstName}"></label><br/>
 		<strong>- Apellido: </strong><label th:text="${patient.person.lastName}"></label><br/>
@@ -118,4 +118,9 @@
 		</div>
 	</div>
 </body>
+<footer class="footer-dark" th:if="${author != null}">
+	<div th:replace="fragments/author.html
+	:: author(firstName=${author.firstName}, lastName=${author.lastName},licenseNumber=${author.licence})">
+	</div>
+</footer>
 </html>

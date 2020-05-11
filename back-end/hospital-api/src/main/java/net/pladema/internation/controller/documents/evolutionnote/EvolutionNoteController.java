@@ -8,7 +8,10 @@ import net.pladema.internation.controller.constraints.InternmentValid;
 import net.pladema.internation.controller.documents.evolutionnote.dto.EvolutionNoteDto;
 import net.pladema.internation.controller.documents.evolutionnote.dto.ResponseEvolutionNoteDto;
 import net.pladema.internation.controller.documents.evolutionnote.mapper.EvolutionNoteMapper;
+import net.pladema.internation.controller.internment.dto.ResponsibleDoctorDto;
+import net.pladema.internation.controller.internment.mapper.ResponsibleDoctorMapper;
 import net.pladema.internation.repository.masterdata.entity.DocumentType;
+import net.pladema.internation.service.documents.DocumentService;
 import net.pladema.internation.service.documents.evolutionnote.CreateEvolutionNoteService;
 import net.pladema.internation.service.documents.evolutionnote.EvolutionNoteService;
 import net.pladema.internation.service.documents.evolutionnote.UpdateEvolutionNoteService;
@@ -56,13 +59,19 @@ public class EvolutionNoteController {
 
     private final PdfService pdfService;
 
+    private final DocumentService documentService;
+
+    private final ResponsibleDoctorMapper responsibleDoctorMapper;
+
     public EvolutionNoteController(InternmentEpisodeService internmentEpisodeService,
                                    CreateEvolutionNoteService createEvolutionNoteService,
                                    UpdateEvolutionNoteService updateEvolutionNoteService,
                                    EvolutionNoteService evolutionNoteService,
                                    EvolutionNoteMapper evolutionNoteMapper,
                                    PatientExternalService patientExternalService,
-                                   PdfService pdfService) {
+                                   PdfService pdfService,
+                                   DocumentService documentService,
+                                   ResponsibleDoctorMapper responsibleDoctorMapper) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.createEvolutionNoteService = createEvolutionNoteService;
         this.updateEvolutionNoteService = updateEvolutionNoteService;
@@ -70,6 +79,8 @@ public class EvolutionNoteController {
         this.evolutionNoteMapper = evolutionNoteMapper;
         this.patientExternalService = patientExternalService;
         this.pdfService = pdfService;
+        this.documentService = documentService;
+        this.responsibleDoctorMapper = responsibleDoctorMapper;
     }
 
     @PostMapping
@@ -139,13 +150,15 @@ public class EvolutionNoteController {
         Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
                 .orElseThrow(() -> new EntityNotFoundException("internmentepisode.invalid"));
         BasicPatientDto patientData = patientExternalService.getBasicDataFromPatient(patientId);
+        ResponsibleDoctorDto author = responsibleDoctorMapper.toResponsibleDoctorDto(
+                documentService.getAuthor(evolutionNoteId));
         ResponseEvolutionNoteDto result = evolutionNoteMapper.fromEvolutionNote(evolutionNote);
-        Context ctx = createEvolutionNoteContext(result, patientData);
+        Context ctx = createEvolutionNoteContext(result, patientData, author);
         String name = "EvolutionNote_" + result.getId();
         return pdfService.getResponseEntityPdf(name, "evolutionnote", LocalDateTime.now(), ctx);
     }
 
-    private Context createEvolutionNoteContext(ResponseEvolutionNoteDto evolutionNoteDto, BasicPatientDto patientData ) {
+    private Context createEvolutionNoteContext(ResponseEvolutionNoteDto evolutionNoteDto, BasicPatientDto patientData, ResponsibleDoctorDto author  ) {
         LOG.debug("Input parameters -> anamnesis {}", evolutionNoteDto);
         Context ctx = new Context(Locale.getDefault());
         ctx.setVariable("patient", patientData);
@@ -154,6 +167,7 @@ public class EvolutionNoteController {
         ctx.setVariable("anthropometricData", evolutionNoteDto.getAnthropometricData());
         ctx.setVariable("vitalSigns", evolutionNoteDto.getVitalSigns());
         ctx.setVariable("notes", evolutionNoteDto.getNotes());
+        ctx.setVariable("author", author);
         LOG.debug(OUTPUT, ctx);
         return ctx;
     }

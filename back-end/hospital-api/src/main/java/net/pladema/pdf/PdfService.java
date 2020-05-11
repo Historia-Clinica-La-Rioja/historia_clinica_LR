@@ -39,28 +39,26 @@ public class PdfService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
         String formattedDateTime = LocalDateTime.now().format(formatter);
         name = name + "_" + formattedDateTime;
-        File pdfFile = new File(name + ".pdf");
         ResponseEntity<InputStreamResource> response;
         try {
-            OutputStream file = new FileOutputStream(pdfFile);
             Document document = new Document();
-            PdfWriter writer = PdfWriter.getInstance(document, file);
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            PdfWriter writer = PdfWriter.getInstance(document, os);
             document.open();
             InputStream is = new ByteArrayInputStream(templateEngine.process(templateName, ctx).getBytes());
             XMLWorkerHelper.getInstance().parseXHtml(writer, document, is);
             document.close();
-            file.close();
-            FileInputStream fileInputStream = new FileInputStream(pdfFile);
-            InputStreamResource resource = new InputStreamResource(fileInputStream);
-            resource.getDescription();
+            writer.close();
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(os.toByteArray());
+            InputStreamResource resource = new InputStreamResource(byteArrayInputStream);
             response = ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + pdfFile.getName())
-                    .contentType(MediaType.APPLICATION_PDF).contentLength(pdfFile.length()).body(resource);
-            fileInputStream.close();
-            pdfFile.delete();
-        } catch (Exception e){
-            pdfFile.delete();
-            throw e;
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + name)
+                    .contentType(MediaType.APPLICATION_PDF).contentLength(os.size()).body(resource);
+        } catch (IOException e){
+            throw new IOException(e);
+        }
+        catch(DocumentException e) {
+            throw new DocumentException(e);
         }
         return response;
     }

@@ -8,12 +8,16 @@ import net.pladema.internation.controller.constraints.InternmentValid;
 import net.pladema.internation.controller.documents.anamnesis.dto.AnamnesisDto;
 import net.pladema.internation.controller.documents.anamnesis.dto.ResponseAnamnesisDto;
 import net.pladema.internation.controller.documents.anamnesis.mapper.AnamnesisMapper;
+import net.pladema.internation.controller.internment.dto.ResponsibleDoctorDto;
+import net.pladema.internation.controller.internment.mapper.ResponsibleDoctorMapper;
 import net.pladema.internation.repository.masterdata.entity.DocumentType;
+import net.pladema.internation.service.documents.DocumentService;
 import net.pladema.internation.service.documents.anamnesis.AnamnesisService;
 import net.pladema.internation.service.documents.anamnesis.CreateAnamnesisService;
 import net.pladema.internation.service.documents.anamnesis.UpdateAnamnesisService;
 import net.pladema.internation.service.documents.anamnesis.domain.Anamnesis;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
+import net.pladema.internation.service.internment.domain.ResponsibleDoctorBo;
 import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.pdf.PdfService;
@@ -56,13 +60,19 @@ public class AnamnesisController {
 
     private final PdfService pdfService;
 
+    private final DocumentService documentService;
+
+    private final ResponsibleDoctorMapper responsibleDoctorMapper;
+
     public AnamnesisController(InternmentEpisodeService internmentEpisodeService,
                                CreateAnamnesisService createAnamnesisService,
                                UpdateAnamnesisService updateAnamnesisService,
                                AnamnesisService anamnesisService,
                                AnamnesisMapper anamnesisMapper,
                                PatientExternalService patientExternalService,
-                               PdfService pdfService) {
+                               PdfService pdfService,
+                               DocumentService documentService,
+                               ResponsibleDoctorMapper responsibleDoctorMapper) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.createAnamnesisService = createAnamnesisService;
         this.updateAnamnesisService = updateAnamnesisService;
@@ -70,6 +80,8 @@ public class AnamnesisController {
         this.anamnesisMapper = anamnesisMapper;
         this.patientExternalService = patientExternalService;
         this.pdfService = pdfService;
+        this.documentService = documentService;
+        this.responsibleDoctorMapper = responsibleDoctorMapper;
     }
 
     @PostMapping
@@ -139,13 +151,15 @@ public class AnamnesisController {
         Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
                 .orElseThrow(() -> new EntityNotFoundException(INVALID_EPISODE));
         BasicPatientDto patientData = patientExternalService.getBasicDataFromPatient(patientId);
+        ResponsibleDoctorDto author = responsibleDoctorMapper.toResponsibleDoctorDto(
+                documentService.getAuthor(anamnesisId));
         ResponseAnamnesisDto result = anamnesisMapper.fromAnamnesis(anamnesis);
-        Context ctx = createAnamnesisContext(result, patientData);
+        Context ctx = createAnamnesisContext(result, patientData, author);
         String name = "Anamnesis_" + result.getId();
         return pdfService.getResponseEntityPdf(name, "anamnesis", LocalDateTime.now(), ctx);
     }
 
-    private Context createAnamnesisContext(ResponseAnamnesisDto anamnesis, BasicPatientDto patientData ) {
+    private Context createAnamnesisContext(ResponseAnamnesisDto anamnesis, BasicPatientDto patientData, ResponsibleDoctorDto author ) {
         LOG.debug("Input parameters -> anamnesis {}", anamnesis);
         Context ctx = new Context(Locale.getDefault());
         ctx.setVariable("patient", patientData);
@@ -157,6 +171,7 @@ public class AnamnesisController {
         ctx.setVariable("anthropometricData", anamnesis.getAnthropometricData());
         ctx.setVariable("vitalSigns", anamnesis.getVitalSigns());
         ctx.setVariable("notes", anamnesis.getNotes());
+        ctx.setVariable("author", author);
         LOG.debug(OUTPUT, ctx);
         return ctx;
     }
