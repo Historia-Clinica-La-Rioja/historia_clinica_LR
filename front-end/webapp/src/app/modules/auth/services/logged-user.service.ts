@@ -40,7 +40,7 @@ export class LoggedUserService {
 					console.log('auth/permissions load() next', permissionsDto);
 					this.contextService.setInstitutionId(permissionsDto.roleAssignments.map(roleAssignment => roleAssignment.institutionId).find(id => id !== -1))
 					this.assignmentsSource.next(permissionsDto.roleAssignments);
-				})
+				}),
 			);
 	}
 
