@@ -46,6 +46,7 @@ const SectorInput = ({ formData, ...rest }) => {
     );
 };
 
+const searchToFilter = searchText => ({name: searchText ? searchText : -1});
 const ClinicalSpecialtySectorCreate = props => (
     <Create {...props}>
         <SimpleForm redirect="show" >
@@ -59,6 +60,7 @@ const ClinicalSpecialtySectorCreate = props => (
                 source="clinicalSpecialtyId"
                 reference="clinicalspecialties"
                 sort={{ field: 'name', order: 'ASC' }}
+                filterToQuery={searchToFilter}
             >
                 <AutocompleteInput optionText="name" optionValue="id" validate={[required()]} />
             </ReferenceInput>
