@@ -274,8 +274,8 @@
 			"TITLE": "Nota de evolución",
 			"SUBTITLE": "Completa los siguientes datos.",
 			"messages": {
-				"ERROR": "Error al guardar documento de nota de evaluación",
-				"SUCCESS": "El documento de nota de evaluación se guardó exitosamente"
+				"ERROR": "Error al guardar documento de nota de evolución",
+				"SUCCESS": "El documento de nota de evolución se guardó exitosamente"
 			}
 		},
 		"internados-table": {
