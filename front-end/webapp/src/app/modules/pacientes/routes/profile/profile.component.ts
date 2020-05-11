@@ -38,21 +38,22 @@ export class ProfileComponent implements OnInit {
 				this.patientId = Number(params.get('id'));
 				this.patientService.getPatientCompleteData<CompletePatientDto>(this.patientId)
 					.subscribe(completeData => {
-							this.patientTypeData = this.mapperService.toPatientTypeData(completeData.patientType);
-							this.patientBasicData = this.mapperService.toPatientBasicData(completeData);
-							this.personService.getPersonalInformation<PersonalInformationDto>(completeData.person.id)
-								.subscribe( personInformationData => {
-									this.personalInformation = this.mapperService.toPersonalInformationData(completeData,personInformationData);
-								});
+						this.patientTypeData = this.mapperService.toPatientTypeData(completeData.patientType);
+						this.patientBasicData = this.mapperService.toPatientBasicData(completeData);
+						this.personService.getPersonalInformation<PersonalInformationDto>(completeData.person.id)
+							.subscribe(personInformationData => {
+								this.personalInformation = this.mapperService.toPersonalInformationData(completeData, personInformationData);
+							});
 					});
 			});
 
 	}
 
-	goNewInternment(): void{
+	goNewInternment(): void {
 		this.router.navigate([ROUTE_NEW_INTERNMENT],
 			{
-				queryParams: { patientId: this.patientId }});
+				queryParams: { patientId: this.patientId }
+			});
 	}
 }
 

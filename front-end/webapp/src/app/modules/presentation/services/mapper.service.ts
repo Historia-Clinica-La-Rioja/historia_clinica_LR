@@ -4,16 +4,16 @@ import { BasicPatientDto, CompletePatientDto, InternmentSummaryDto, PatientType,
 import { PatientBasicData } from '../components/patient-card/patient-card.component';
 import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
 import { PatientTypeData } from '@presentation/components/patient-type-logo/patient-type-logo.component';
-import { DateFormat, momentFormatDate, momentParseDate } from '@core/utils/moment.utils';
+import { momentFormatDate, DateFormat, momentParseDate } from '@core/utils/moment.utils';
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
 export class MapperService {
 
 	toInternmentEpisodeSummary: (o: InternmentSummaryDto) => InternmentEpisodeSummary = MapperService._toInternmentEpisodeSummary;
 	toPatientBasicData: (o: BasicPatientDto) => PatientBasicData = MapperService._toPatientBasicData;
-	toPersonalInformationData:(o1: CompletePatientDto, o2 :PersonalInformationDto) => PersonalInformation = MapperService._toPersonalInformationData;
+	toPersonalInformationData: (o1: CompletePatientDto, o2: PersonalInformationDto) => PersonalInformation = MapperService._toPersonalInformationData;
 	toPatientTypeData: (patientType: PatientType) => PatientTypeData = MapperService._toPatientTypeData;
 
 	constructor() {
@@ -44,13 +44,13 @@ export class MapperService {
 		};
 	}
 
-	private static _toPersonalInformationData(patient: CompletePatientDto, person :PersonalInformationDto) : PersonalInformation {
+	private static _toPersonalInformationData(patient: CompletePatientDto, person: PersonalInformationDto): PersonalInformation {
 		let personalInformation = {
 			identificationNumber: person.identificationNumber,
 			identificationType: person.identificationType,
 			cuil: person.cuil,
 			address: person.address,
-			birthDate: person.birthDate,
+			birthDate: momentParseDate(String(person.birthDate)).format(DateFormat.VIEW_DATE),
 			email: person.email,
 			phoneNumber: person.phoneNumber,
 			medicalCoverageName: patient.medicalCoverageName,
@@ -60,7 +60,7 @@ export class MapperService {
 		return personalInformation;
 	}
 
-	private static _toPatientTypeData(patientType: PatientType) : PatientTypeData {
+	private static _toPatientTypeData(patientType: PatientType): PatientTypeData {
 		return {
 			id: patientType.id,
 			description: patientType.description
