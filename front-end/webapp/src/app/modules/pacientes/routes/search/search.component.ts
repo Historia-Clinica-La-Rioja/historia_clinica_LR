@@ -13,6 +13,7 @@ import { PersonService } from '@api-rest/services/person.service';
 import { finalize } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { ViewPatientDetailComponent } from '../../component/view-patient-detail/view-patient-detail.component';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 const ROUTE_NEW = 'pacientes/new';
 const ROUTE_HOME = 'pacientes';
@@ -46,6 +47,7 @@ export class SearchComponent implements OnInit {
 		private router: Router,
 		private route: ActivatedRoute,
 		private personMasterDataService: PersonMasterDataService,
+		private snackBarService : SnackBarService,
 		public dialog: MatDialog
 	) {
 	}
@@ -69,7 +71,7 @@ export class SearchComponent implements OnInit {
 							personToAdd.genderId = this.genderId;
 							this.goToNextState(personToAdd);
 						}
-					});
+					}, ( ) => { this.snackBarService.showError('pacientes.search.RENAPER_TIMEOUT') } );
 
 			this.personMasterDataService.getIdentificationTypes().subscribe(
 				identificationTypes => {

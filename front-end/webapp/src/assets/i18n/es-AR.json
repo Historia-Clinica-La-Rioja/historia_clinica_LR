@@ -363,7 +363,8 @@
 			"TITLE": "Búsqueda de pacientes",
 			"SUBTITLE": "No se ha encontrado un paciente registrado con ese tipo y número de documento.",
 			"SUBTITLE_TWO": "Complete los siguientes datos para una búsqueda avanzada.",
-			"NEW_PATIENT": "Crear nuevo paciente"
+			"NEW_PATIENT": "Crear nuevo paciente",
+			"RENAPER_TIMEOUT": "No hubo respuesta del servicio de Renaper"
 		}
 	}
 }
