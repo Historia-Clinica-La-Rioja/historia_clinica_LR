@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.pladema.federar.services.FederarUtils;
 import net.pladema.sgx.restclient.configuration.WSConfig;
 
 @Component
@@ -18,24 +19,6 @@ import net.pladema.sgx.restclient.configuration.WSConfig;
 public class FederarWSConfig extends WSConfig{
 
 	private static final long DEFAULT_TOKEN_EXPIRATION = 180l;
-	
-	//Claims
-	private static final String ISS="iss";
-	private static final String SUB="sub";
-	private static final String AUD="aud";
-	private static final String NAME="name";
-	private static final String ROLE="role";
-	private static final String IDENT="ident";
-	
-	//Auth
-	private static final String GRANT_TYPE="grantType";
-	private static final String SCOPE="scope";
-	private static final String CLIENT_ASSERTION_TYPE="clientAssertionType";
-	private static final String SIGN_KEY = "signKey";
-
-	//Url
-	private static final String TOKEN_VALID="validateToken";
-	private static final String SEARCH_LOCAL_ID ="localIdSearch";
 	private static final String FEDERATE ="federate";
 	
     private Map<String, String> url;
@@ -47,59 +30,59 @@ public class FederarWSConfig extends WSConfig{
 	
 	public FederarWSConfig(@Value("${ws.federar.url.base:https://testapp.hospitalitaliano.org.ar}") String baseUrl) {
 		super(baseUrl);
-		url = new HashMap<String, String>();
+		url = new HashMap<>();
 	}
 	
 	public String getIss() {
-		return claims.get(ISS);
+		return claims.get(FederarUtils.getIss());
 	}
 	
 	public String getDomain() {
-		return claims.get(ISS);
+		return claims.get(FederarUtils.getIss());
 	}
 	
 	public String getSub() {
-		return claims.get(SUB);
+		return claims.get(FederarUtils.getSub());
 	}
 	
 	public String getAud() {
-		return claims.get(AUD);
+		return claims.get(FederarUtils.getAud());
 	}
 		
 	public String getName() {
-		return claims.get(NAME);
+		return claims.get(FederarUtils.getName());
 	}
 	
 	public String getIdent() {
-		return claims.get(IDENT);
+		return claims.get(FederarUtils.getIdent());
 	}
 	
 	public String getRole() {
-		return claims.get(ROLE);
+		return claims.get(FederarUtils.getRole());
 	}
 	
 	public String getGrantType() {
-		return auth.get(GRANT_TYPE);
+		return auth.get(FederarUtils.getGrantType());
 	}
 	
 	public String getSignKey() {
-		return auth.get(SIGN_KEY);
+		return auth.get(FederarUtils.getSignKey());
 	}
 	
 	public String getScope() {
-		return auth.get(SCOPE);
+		return auth.get(FederarUtils.getScope());
 	}
 
 	public String getClientAssertionType() {
-		return auth.get(CLIENT_ASSERTION_TYPE);
+		return auth.get(FederarUtils.getClientAssertionType());
 	}
 	
 	public String getTokenValidationURL() {
-		return url.get(TOKEN_VALID);
+		return url.get(FederarUtils.getTokenValid());
 	}
 	
 	public String getLocalSearchIdUrl() {
-		return url.get(SEARCH_LOCAL_ID);
+		return url.get(FederarUtils.getSearchLocalId());
 	}
 	
 	public String getFederateUrl() {

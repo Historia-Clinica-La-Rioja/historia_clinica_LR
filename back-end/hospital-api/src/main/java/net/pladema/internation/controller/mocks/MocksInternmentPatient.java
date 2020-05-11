@@ -1,14 +1,17 @@
 package net.pladema.internation.controller.mocks;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.pladema.establishment.controller.dto.BedDto;
 import net.pladema.establishment.controller.dto.RoomDto;
 import net.pladema.establishment.controller.dto.SectorDto;
-import net.pladema.internation.controller.internment.dto.*;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import net.pladema.internation.controller.internment.dto.ClinicalSpecialtyDto;
+import net.pladema.internation.controller.internment.dto.InternmentEpisodeDto;
+import net.pladema.internation.controller.internment.dto.InternmentSummaryDto;
+import net.pladema.internation.controller.internment.dto.PatientDto;
+import net.pladema.internation.controller.internment.dto.ResponsibleDoctorDto;
 
 
 public class MocksInternmentPatient {

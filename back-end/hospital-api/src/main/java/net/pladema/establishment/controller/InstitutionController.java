@@ -1,18 +1,18 @@
 package net.pladema.establishment.controller;
 
-import io.swagger.annotations.Api;
-import net.pladema.establishment.controller.dto.InstitutionDto;
-import net.pladema.establishment.controller.mapper.InstitutionMapper;
-import net.pladema.establishment.repository.InstitutionRepository;
-import net.pladema.establishment.repository.entity.Institution;
+import java.util.List;
+
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import io.swagger.annotations.Api;
+import net.pladema.establishment.controller.dto.InstitutionDto;
+import net.pladema.establishment.controller.mapper.InstitutionMapper;
+import net.pladema.establishment.repository.InstitutionRepository;
+import net.pladema.establishment.repository.entity.Institution;
 
 @RestController
 @Api(value = "Institution", tags = { "Institution" })
@@ -33,9 +33,7 @@ public class InstitutionController {
 
 		List<Institution> institutions = repository.findAllById(idsConAcceso);
 
-		List<InstitutionDto> institutionDtos = mapper.toListInstitutionDto(institutions);
-
-		return institutionDtos;
+		return mapper.toListInstitutionDto(institutions);
 	}
 
 }

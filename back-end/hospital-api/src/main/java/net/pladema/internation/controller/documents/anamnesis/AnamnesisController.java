@@ -40,6 +40,7 @@ public class AnamnesisController {
 
     private static final Logger LOG = LoggerFactory.getLogger(AnamnesisController.class);
     public static final String OUTPUT = "Output -> {}";
+    public static final String INVALID_EPISODE = "internmentepisode.invalid";
 
     private final InternmentEpisodeService internmentEpisodeService;
 
@@ -82,7 +83,7 @@ public class AnamnesisController {
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, ananmnesis {}",
                 institutionId, internmentEpisodeId, anamnesisDto);
         Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
-                .orElseThrow(() -> new EntityNotFoundException("internmentepisode.invalid"));
+                .orElseThrow(() -> new EntityNotFoundException(INVALID_EPISODE));
         Anamnesis anamnesis = anamnesisMapper.fromAnamnesisDto(anamnesisDto);
         anamnesis = createAnamnesisService.createDocument(internmentEpisodeId, patientId, anamnesis);
         ResponseAnamnesisDto result = anamnesisMapper.fromAnamnesis(anamnesis);
@@ -103,7 +104,7 @@ public class AnamnesisController {
                 institutionId, internmentEpisodeId, anamnesisId, anamnesisDto);
         Anamnesis anamnesis = anamnesisMapper.fromAnamnesisDto(anamnesisDto);
         Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
-                .orElseThrow(() -> new EntityNotFoundException("internmentepisode.invalid"));
+                .orElseThrow(() -> new EntityNotFoundException(INVALID_EPISODE));
         anamnesis = updateAnamnesisService.updateDocument(internmentEpisodeId, patientId, anamnesis);
         ResponseAnamnesisDto result = anamnesisMapper.fromAnamnesis(anamnesis);
         LOG.debug(OUTPUT, result);
@@ -136,7 +137,7 @@ public class AnamnesisController {
                 institutionId, internmentEpisodeId, anamnesisId);
         Anamnesis anamnesis = anamnesisService.getDocument(anamnesisId);
         Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
-                .orElseThrow(() -> new EntityNotFoundException("internmentepisode.invalid"));
+                .orElseThrow(() -> new EntityNotFoundException(INVALID_EPISODE));
         BasicPatientDto patientData = patientExternalService.getBasicDataFromPatient(patientId);
         ResponseAnamnesisDto result = anamnesisMapper.fromAnamnesis(anamnesis);
         Context ctx = createAnamnesisContext(result, patientData);

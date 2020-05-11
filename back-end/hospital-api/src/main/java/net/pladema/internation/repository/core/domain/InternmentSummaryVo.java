@@ -1,14 +1,13 @@
 package net.pladema.internation.repository.core.domain;
 
 
+import java.time.LocalDate;
+import java.time.Period;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Period;
 
 @Getter
 @Setter

@@ -44,6 +44,8 @@ public class EpicrisisController {
     private static final Logger LOG = LoggerFactory.getLogger(EpicrisisController.class);
 
     public static final String OUTPUT = "Output -> {}";
+    
+    public static final String INVALID_EPISODE = "internmentepisode.invalid";
 
     private final InternmentEpisodeService internmentEpisodeService;
 
@@ -89,7 +91,7 @@ public class EpicrisisController {
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, ananmnesis {}",
                 institutionId, internmentEpisodeId, epicrisisDto);
         Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
-                .orElseThrow(() -> new EntityNotFoundException("internmentepisode.invalid"));
+                .orElseThrow(() -> new EntityNotFoundException(INVALID_EPISODE));
         Epicrisis epicrisis = epicrisisMapper.fromNewEpicrisisDto(epicrisisDto);
         epicrisis = createEpicrisisService.createDocument(internmentEpisodeId, patientId, epicrisis);
         ResponseEpicrisisDto result = epicrisisMapper.fromEpicrisis(epicrisis);
@@ -110,7 +112,7 @@ public class EpicrisisController {
                 institutionId, internmentEpisodeId, epicrisisId, epicrisisDto);
         Epicrisis epicrisis = epicrisisMapper.fromEpicrisisDto(epicrisisDto);
         Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
-                .orElseThrow(() -> new EntityNotFoundException("internmentepisode.invalid"));
+                .orElseThrow(() -> new EntityNotFoundException(INVALID_EPISODE));
         epicrisis = updateEpicrisisService.updateDocument(internmentEpisodeId, patientId, epicrisis);
         ResponseEpicrisisDto result = epicrisisMapper.fromEpicrisis(epicrisis);
         LOG.debug(OUTPUT, result);
@@ -140,7 +142,7 @@ public class EpicrisisController {
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}", institutionId, internmentEpisodeId);
         InternmentGeneralState interment = internmentStateService.getInternmentGeneralState(internmentEpisodeId);
         EpicrisisGeneralStateDto result = epicrisisMapper.toEpicrisisGeneralStateDto(interment);
-        LOG.debug("Output -> {}", result);
+        LOG.debug(OUTPUT, result);
         return  ResponseEntity.ok().body(result);
     }
 
@@ -157,7 +159,7 @@ public class EpicrisisController {
 
         Epicrisis epicrisis = epicrisisService.getDocument(epicrisisId);
         Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
-                .orElseThrow(() -> new EntityNotFoundException("internmentepisode.invalid"));
+                .orElseThrow(() -> new EntityNotFoundException(INVALID_EPISODE));
         BasicPatientDto patientData = patientExternalService.getBasicDataFromPatient(patientId);
         ResponseEpicrisisDto result = epicrisisMapper.fromEpicrisis(epicrisis);
         Context ctx = createEpicrisisContext(result, patientData);
