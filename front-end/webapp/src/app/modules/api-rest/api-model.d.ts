@@ -64,6 +64,7 @@ export interface AnamnesisDto extends Serializable {
     diagnosis: DiagnosisDto[];
     familyHistories: HealthHistoryConditionDto[];
     inmunizations: InmunizationDto[];
+    mainDiagnosis: HealthConditionDto;
     medications: MedicationDto[];
     notes?: DocumentObservationsDto;
     personalHistories: HealthHistoryConditionDto[];

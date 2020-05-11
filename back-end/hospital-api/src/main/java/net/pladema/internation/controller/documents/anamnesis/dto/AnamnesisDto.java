@@ -23,6 +23,8 @@ public class AnamnesisDto implements Serializable {
 
     @Nullable
     private DocumentObservationsDto notes;
+    
+    private HealthConditionDto mainDiagnosis;
 
     @NotNull
     private List<@Valid DiagnosisDto> diagnosis;
