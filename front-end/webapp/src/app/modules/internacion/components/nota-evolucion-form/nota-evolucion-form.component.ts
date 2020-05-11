@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MasterDataInterface, DiagnosisDto, AllergyConditionDto, InmunizationDto, EvolutionNoteDto, ResponseEvolutionNoteDto } from '@api-rest/api-model';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
@@ -96,7 +96,7 @@ export class NotaEvolucionFormComponent implements OnInit {
 			confirmed: true,
 			allergies: this.allergies,
 			anthropometricData: isNull(formValues.anthropometricData) ? undefined : {
-				bloodType: formValues.bloodType ? {
+				bloodType: formValues.anthropometricData.bloodType ? {
 					id: formValues.anthropometricData.bloodType.id,
 					value: formValues.anthropometricData.bloodType.description
 				} : undefined,
