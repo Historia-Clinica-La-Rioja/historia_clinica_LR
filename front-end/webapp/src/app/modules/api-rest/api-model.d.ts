@@ -59,25 +59,25 @@ export interface AllergyConditionDto extends HealthConditionDto {
 
 export interface AnamnesisDto extends Serializable {
     allergies: AllergyConditionDto[];
-    anthropometricData: AnthropometricDataDto;
+    anthropometricData?: AnthropometricDataDto;
     confirmed: boolean;
     diagnosis: DiagnosisDto[];
     familyHistories: HealthHistoryConditionDto[];
     inmunizations: InmunizationDto[];
     medications: MedicationDto[];
-    notes: DocumentObservationsDto;
+    notes?: DocumentObservationsDto;
     personalHistories: HealthHistoryConditionDto[];
-    vitalSigns: VitalSignDto;
+    vitalSigns?: VitalSignDto;
 }
 
 export interface AnamnesisSummaryDto extends DocumentSummaryDto {
 }
 
 export interface AnthropometricDataDto extends Serializable {
-    bloodType: ClinicalObservationDto;
-    bmi: ClinicalObservationDto;
-    height: ClinicalObservationDto;
-    weight: ClinicalObservationDto;
+    bloodType?: ClinicalObservationDto;
+    bmi?: ClinicalObservationDto;
+    height?: ClinicalObservationDto;
+    weight?: ClinicalObservationDto;
 }
 
 export interface ApiError {
@@ -138,7 +138,7 @@ export interface CityDto extends MasterdataDto<number> {
 }
 
 export interface ClinicalObservationDto extends Serializable {
-    id: number;
+    id?: number;
     value: string;
 }
 
@@ -164,13 +164,13 @@ export interface DiagnosisDto extends HealthConditionDto {
 }
 
 export interface DocumentObservationsDto extends Serializable {
-    clinicalImpressionNote: string;
-    currentIllnessNote: string;
-    evolutionNote: string;
-    indicationsNote: string;
-    otherNote: string;
-    physicalExamNote: string;
-    studiesSummaryNote: string;
+    clinicalImpressionNote?: string;
+    currentIllnessNote?: string;
+    evolutionNote?: string;
+    indicationsNote?: string;
+    otherNote?: string;
+    physicalExamNote?: string;
+    studiesSummaryNote?: string;
 }
 
 export interface DocumentSummaryDto extends Serializable {
@@ -190,7 +190,7 @@ export interface EpicrisisDto extends Serializable {
     familyHistories: HealthHistoryConditionDto[];
     inmunizations: InmunizationDto[];
     medications: MedicationDto[];
-    notes: EpicrisisObservationsDto;
+    notes?: EpicrisisObservationsDto;
     personalHistories: HealthHistoryConditionDto[];
 }
 
@@ -204,11 +204,11 @@ export interface EpicrisisGeneralStateDto extends Serializable {
 }
 
 export interface EpicrisisObservationsDto extends Serializable {
-    evolutionNote: string;
-    indicationsNote: string;
-    otherNote: string;
-    physicalExamNote: string;
-    studiesSummaryNote: string;
+    evolutionNote?: string;
+    indicationsNote?: string;
+    otherNote?: string;
+    physicalExamNote?: string;
+    studiesSummaryNote?: string;
 }
 
 export interface EpicrisisSummaryDto extends DocumentSummaryDto {
@@ -216,12 +216,12 @@ export interface EpicrisisSummaryDto extends DocumentSummaryDto {
 
 export interface EvolutionNoteDto extends Serializable {
     allergies: AllergyConditionDto[];
-    anthropometricData: AnthropometricDataDto;
+    anthropometricData?: AnthropometricDataDto;
     confirmed: boolean;
     diagnosis: DiagnosisDto[];
     inmunizations: InmunizationDto[];
-    notes: DocumentObservationsDto;
-    vitalSigns: VitalSignDto;
+    notes?: DocumentObservationsDto;
+    vitalSigns?: VitalSignDto;
 }
 
 export interface GenderDto extends MasterdataDto<number> {
@@ -345,7 +345,7 @@ export interface MedicationDto extends ClinicalTermDto {
 
 export interface NewEpicrisisDto extends Serializable {
     confirmed: boolean;
-    notes: EpicrisisObservationsDto;
+    notes?: EpicrisisObservationsDto;
 }
 
 export interface PasswordResetDto {
@@ -460,12 +460,12 @@ export interface UserDto extends AbstractUserDto {
 }
 
 export interface VitalSignDto extends Serializable {
-    bloodOxygenSaturation: ClinicalObservationDto;
-    diastolicBloodPressure: ClinicalObservationDto;
-    heartRate: ClinicalObservationDto;
-    respiratoryRate: ClinicalObservationDto;
-    systolicBloodPressure: ClinicalObservationDto;
-    temperature: ClinicalObservationDto;
+    bloodOxygenSaturation?: ClinicalObservationDto;
+    diastolicBloodPressure?: ClinicalObservationDto;
+    heartRate?: ClinicalObservationDto;
+    respiratoryRate?: ClinicalObservationDto;
+    systolicBloodPressure?: ClinicalObservationDto;
+    temperature?: ClinicalObservationDto;
 }
 
 export type ERole = "ROOT" | "ADMINISTRADOR" | "ESPECIALISTA_MEDICO" | "PROFESIONAL_DE_SALUD" | "ADMINISTRATIVO";

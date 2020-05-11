@@ -133,7 +133,7 @@ public class ClinicalObservationServiceImpl implements ClinicalObservationServic
     }
 
     private boolean mustSaveClinicalObservation(ClinicalObservationBo co) {
-        return co != null;
+        return co != null && co.getValue() != null;
     }
 
     private ObservationVitalSign createObservationVitalSign(Integer patientId, ClinicalObservationBo observation, EVitalSign eVitalSign) {

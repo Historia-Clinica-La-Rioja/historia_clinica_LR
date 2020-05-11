@@ -6,8 +6,8 @@ import lombok.ToString;
 import net.pladema.internation.controller.internment.dto.DocumentObservationsDto;
 import net.pladema.internation.controller.ips.dto.*;
 
+import javax.annotation.Nullable;
 import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -21,10 +21,10 @@ public class AnamnesisDto implements Serializable {
     @NotNull
     private boolean confirmed = false;
 
+    @Nullable
     private DocumentObservationsDto notes;
 
     @NotNull
-    @NotEmpty(message = "{diagnosis.mandatory}")
     private List<@Valid DiagnosisDto> diagnosis;
 
     @NotNull
@@ -43,9 +43,11 @@ public class AnamnesisDto implements Serializable {
     private List<@Valid AllergyConditionDto> allergies = new ArrayList<>();
 
     @Valid
+    @Nullable
     private AnthropometricDataDto anthropometricData;
 
     @Valid
+    @Nullable
     private VitalSignDto vitalSigns;
 
 }

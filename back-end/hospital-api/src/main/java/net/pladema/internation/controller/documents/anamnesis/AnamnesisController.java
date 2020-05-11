@@ -2,7 +2,6 @@ package net.pladema.internation.controller.documents.anamnesis;
 
 import com.itextpdf.text.DocumentException;
 import io.swagger.annotations.Api;
-import net.pladema.internation.controller.constraints.AnamnesisDiagnosisValid;
 import net.pladema.internation.controller.constraints.DocumentValid;
 import net.pladema.internation.controller.constraints.InternmentValid;
 import net.pladema.internation.controller.documents.anamnesis.dto.AnamnesisDto;
@@ -75,7 +74,6 @@ public class AnamnesisController {
     @PostMapping
     @Transactional
     @InternmentValid
-    @AnamnesisDiagnosisValid
     public ResponseEntity<ResponseAnamnesisDto> createAnamnesis(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,

@@ -6,6 +6,7 @@ import lombok.ToString;
 import net.pladema.internation.controller.internment.dto.DocumentObservationsDto;
 import net.pladema.internation.controller.ips.dto.*;
 
+import javax.annotation.Nullable;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -20,6 +21,7 @@ public class EvolutionNoteDto implements Serializable {
     @NotNull
     private boolean confirmed = false;
 
+    @Nullable
     private DocumentObservationsDto notes;
 
     @NotNull
@@ -32,9 +34,11 @@ public class EvolutionNoteDto implements Serializable {
     private List<@Valid AllergyConditionDto> allergies = new ArrayList<>();
 
     @Valid
+    @Nullable
     private AnthropometricDataDto anthropometricData;
 
     @Valid
+    @Nullable
     private VitalSignDto vitalSigns;
 
 }

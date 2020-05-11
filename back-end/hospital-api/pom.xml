@@ -369,6 +369,9 @@
 					</classPatterns>
 					<outputKind>module</outputKind>
 					<outputFile>../../front-end/webapp/src/app/modules/api-rest/api-model.d.ts</outputFile>
+					<optionalAnnotations>
+						<annotation>javax.annotation.Nullable</annotation>
+					</optionalAnnotations>
 				</configuration>
 			</plugin>
 			<!-- Plugin para obtener información de git y generar el archivo git.properties -->

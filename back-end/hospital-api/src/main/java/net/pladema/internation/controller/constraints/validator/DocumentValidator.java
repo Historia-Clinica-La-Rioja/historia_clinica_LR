@@ -20,18 +20,15 @@ public class DocumentValidator implements ConstraintValidator<DocumentValid, Obj
     private boolean confirmed;
     private short documentType;
 
-    private static final Map<Short, String> properties = new HashMap<Short, String>(){
-        {
-            put(DocumentType.ANAMNESIS, "anamnesisId");
-            put(DocumentType.EVALUATION_NOTE, "evolutionNoteId");
-            put(DocumentType.EPICRISIS, "epicrisisId");
-        }
-    };
+    private static final Map<Short, String> properties = new HashMap<>();
 
     private final DocumentRepository documentRepository;
 
     public DocumentValidator(DocumentRepository documentRepository){
         this.documentRepository = documentRepository;
+        properties.put(DocumentType.ANAMNESIS, "anamnesisId");
+        properties.put(DocumentType.EVALUATION_NOTE, "evolutionNoteId");
+        properties.put(DocumentType.EPICRISIS, "epicrisisId");
     }
 
     @Override

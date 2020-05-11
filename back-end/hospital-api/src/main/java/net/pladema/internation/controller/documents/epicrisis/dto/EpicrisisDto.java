@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.internation.controller.ips.dto.*;
 
+import javax.annotation.Nullable;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -19,6 +20,7 @@ public class EpicrisisDto implements Serializable {
     @NotNull
     private boolean confirmed = false;
 
+    @Nullable
     private EpicrisisObservationsDto notes;
 
     @NotNull
