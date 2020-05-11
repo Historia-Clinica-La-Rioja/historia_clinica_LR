@@ -21,7 +21,7 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
 
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.internation.repository.core.domain.InternmentSummaryVo(" +
-            "ie.id,  ie.creationable.createdOn, " +
+            "ie.id,  ie.entryDate, " +
             "ie.anamnesisDocId, da.statusId as anamnesisStatusId, " +
             "ie.epicrisisDocId, de.statusId as epicrisisStatusId, " +
             "b.id as bedId, b.bedNumber, " +

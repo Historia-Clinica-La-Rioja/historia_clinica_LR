@@ -5,6 +5,7 @@ import net.pladema.establishment.controller.dto.RoomDto;
 import net.pladema.establishment.controller.dto.SectorDto;
 import net.pladema.internation.controller.internment.dto.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +86,7 @@ public class MocksInternmentPatient {
         InternmentSummaryDto result = new InternmentSummaryDto();
         result.setId(internmentEpisodeId);
         result.setBed(mockBed(internmentEpisodeId));
-        result.setCreatedOn(LocalDateTime.now());
+        result.setEntryDate(LocalDate.now());
         result.setDoctor(mockDoctorDto(internmentEpisodeId));
         result.setSpecialty(mockSpeciality(internmentEpisodeId));
         result.setTotalInternmentDays(50);

@@ -6,7 +6,7 @@ import lombok.Setter;
 import net.pladema.establishment.controller.dto.BedDto;
 import net.pladema.internation.controller.internment.dto.summary.DocumentsSummaryDto;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -20,7 +20,7 @@ public class InternmentSummaryDto {
 
     private ResponsibleDoctorDto doctor;
 
-    private LocalDateTime createdOn;
+    private LocalDate entryDate;
 
     private int totalInternmentDays;
 

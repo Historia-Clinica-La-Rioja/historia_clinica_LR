@@ -312,9 +312,9 @@ export interface InternmentPatientDto {
 
 export interface InternmentSummaryDto {
     bed: BedDto;
-    createdOn: Date;
     doctor: ResponsibleDoctorDto;
     documents: DocumentsSummaryDto;
+    entryDate: Date;
     id: number;
     specialty: ClinicalSpecialtyDto;
     totalInternmentDays: number;

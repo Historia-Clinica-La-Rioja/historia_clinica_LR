@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { InternmentEpisodeSummary } from '../components/internment-episode-summary/internment-episode-summary.component';
-import { BasicPatientDto, InternmentSummaryDto, CompletePatientDto, PersonalInformationDto, PatientType } from '@api-rest/api-model';
+import { BasicPatientDto, CompletePatientDto, InternmentSummaryDto, PatientType, PersonalInformationDto } from '@api-rest/api-model';
 import { PatientBasicData } from '../components/patient-card/patient-card.component';
 import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
 import { PatientTypeData } from '@presentation/components/patient-type-logo/patient-type-logo.component';
+import { DateFormat, momentFormatDate, momentParseDate } from '@core/utils/moment.utils';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +30,7 @@ export class MapperService {
 				license: internmentSummary.doctor.licence
 			},
 			totalInternmentDays: internmentSummary.totalInternmentDays,
-			admissionDatetime: internmentSummary.createdOn?.toString()
+			admissionDatetime: momentParseDate(String(internmentSummary.entryDate)).format(DateFormat.VIEW_DATE)
 		};
 	}
 

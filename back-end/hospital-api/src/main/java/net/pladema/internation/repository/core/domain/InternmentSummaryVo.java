@@ -34,11 +34,11 @@ public class InternmentSummaryVo {
 
     private String specialty;
 
-    private LocalDateTime createdOn;
+    private LocalDate entryDate;
 
     private int totalInternmentDays;
 
-    public InternmentSummaryVo(Integer id, LocalDateTime createdOn, Long anamnesisDocId, String anamnesisStatusId,
+    public InternmentSummaryVo(Integer id, LocalDate entryDate, Long anamnesisDocId, String anamnesisStatusId,
                                Long epicrisisDocId, String epicrisisStatusId,
                                Integer bedId, String bedNumber, Integer roomId, String roomNumber,
                                Integer clinicalSpecialtyId, String specialty,
@@ -53,14 +53,14 @@ public class InternmentSummaryVo {
         this.roomNumber = roomNumber;
         this.clinicalSpecialtyId = clinicalSpecialtyId;
         this.specialty = specialty;
-        this.createdOn = createdOn;
+        this.entryDate = entryDate;
         this.totalInternmentDays = totalInternmentDays();
         this.doctor = new ResponsibleDoctorVo(healthcareProfessionalId, firstName, lastName, licenseNumber);
     }
 
     private int totalInternmentDays(){
         LocalDate today = LocalDate.now();
-        Period p = Period.between(getCreatedOn().toLocalDate(), today);
+        Period p = Period.between(getEntryDate(), today);
         return p.getDays();
     }
 }
