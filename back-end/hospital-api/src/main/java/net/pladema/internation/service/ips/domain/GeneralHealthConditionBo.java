@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -23,6 +25,8 @@ public class GeneralHealthConditionBo implements Serializable {
 
     public static final String OUTPUT = "Output -> {}";
 
+    private HealthConditionBo mainDiagnosis;
+
     private List<DiagnosisBo> diagnosis = new ArrayList<>();
 
     private List<HealthHistoryConditionBo> personalHistories = new ArrayList<>();
@@ -30,9 +34,10 @@ public class GeneralHealthConditionBo implements Serializable {
     private List<HealthHistoryConditionBo> familyHistories = new ArrayList<>();
 
     public GeneralHealthConditionBo(List<HealthConditionVo> healthConditionVos) {
+        setMainDiagnosis(buildMainDiagnosis(healthConditionVos.stream().filter(HealthConditionVo::isMain).findAny()));
         setDiagnosis(buildGeneralState(
                 healthConditionVos,
-                HealthConditionVo::isDiagnosis,
+                HealthConditionVo::isSecondaryDiagnosis,
                 this::mapDiagnosis)
         );
         setPersonalHistories(buildGeneralState(
@@ -80,6 +85,20 @@ public class GeneralHealthConditionBo implements Serializable {
         LOG.debug(OUTPUT, result);
         return result;
 
+    }
+
+    public HealthConditionBo buildMainDiagnosis(Optional<HealthConditionVo> optionalHealthConditionVo) {
+        LOG.debug("Input parameters -> optionalHealthConditionVo {}", optionalHealthConditionVo);
+        AtomicReference<HealthConditionBo> result = new AtomicReference<>(null);
+        optionalHealthConditionVo.ifPresent(healthConditionVo -> {
+            result.set(new HealthConditionBo());
+            result.get().setId(healthConditionVo.getId());
+            result.get().setStatusId(healthConditionVo.getStatusId());
+            result.get().setVerificationId(healthConditionVo.getVerificationId());
+            result.get().setSnomed(new SnomedBo(healthConditionVo.getSnomed()));
+        });
+        LOG.debug(OUTPUT, result);
+        return result.get();
     }
 
 }

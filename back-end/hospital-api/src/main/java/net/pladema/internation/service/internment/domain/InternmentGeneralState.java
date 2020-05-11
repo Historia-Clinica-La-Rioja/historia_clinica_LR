@@ -14,6 +14,8 @@ import java.util.List;
 @ToString
 public class InternmentGeneralState implements Serializable {
 
+    private HealthConditionBo mainDiagnosis;
+
     private List<DiagnosisBo> diagnosis;
 
     private List<HealthHistoryConditionBo> personalHistories;

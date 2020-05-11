@@ -17,7 +17,7 @@ public interface DocumentHealthConditionRepository extends JpaRepository<Documen
 
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.internation.repository.ips.generalstate.HealthConditionVo(" +
-            "hc.id, s, hc.statusId, hc.verificationStatusId, " +
+            "hc.id, s, hc.statusId, hc.main, hc.verificationStatusId, " +
             "hc.problemId, hc.startDate, " +
             "n.id as noteId, n.description as note) " +
             "FROM DocumentHealthCondition dh " +

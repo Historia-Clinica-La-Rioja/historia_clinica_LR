@@ -74,6 +74,18 @@ public class InternmentStateController {
     }
 
     @InternmentValid
+    @GetMapping("/{internmentEpisodeId}/general/maindiagnosis")
+    public ResponseEntity<HealthConditionDto> mainDiagnosisGeneralState(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
+        LOG.debug("Imput parameters -> institutionId {}, internmentEpisodeId {}", institutionId, internmentEpisodeId);
+        HealthConditionBo mainDiagnosis = healthConditionService.getMainDiagnosisGeneralState(internmentEpisodeId);
+        HealthConditionDto result = internmentStateMapper.toHealthConditionDto(mainDiagnosis);
+        LOG.debug("Output -> {}", result);
+        return  ResponseEntity.ok().body(result);
+    }
+
+    @InternmentValid
     @GetMapping("/{internmentEpisodeId}/general/diagnosis")
     public ResponseEntity<List<DiagnosisDto>> diagnosisGeneralState(
             @PathVariable(name = "institutionId") Integer institutionId,

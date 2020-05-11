@@ -198,13 +198,6 @@
 			<artifactId>poi-scratchpad</artifactId>
 			<version>3.15</version>
 		</dependency>
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.0.1</version>
-			<scope>compile</scope>
-		</dependency>
-
 	</dependencies>
 
 	<profiles>

@@ -4,8 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.internation.controller.ips.dto.*;
+import net.pladema.internation.service.ips.domain.HealthConditionBo;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,23 +16,18 @@ import java.util.List;
 @ToString
 public class EpicrisisGeneralStateDto implements Serializable {
 
-    @NotNull(message = "{value.mandatory}")
-    @NotEmpty(message = "{diagnosis.mandatory}")
-    private List<DiagnosisDto> diagnosis;
+    private HealthConditionBo mainDiagnosis;
 
-    @NotNull
+    private List<DiagnosisDto> diagnosis = new ArrayList<>();
+
     private List<HealthHistoryConditionDto> personalHistories = new ArrayList<>();
 
-    @NotNull
     private List<HealthHistoryConditionDto> familyHistories = new ArrayList<>();
 
-    @NotNull
     private List<MedicationDto> medications = new ArrayList<>();
 
-    @NotNull
     private List<InmunizationDto> inmunizations= new ArrayList<>();
 
-    @NotNull
     private List<AllergyConditionDto> allergies = new ArrayList<>();
 
 }

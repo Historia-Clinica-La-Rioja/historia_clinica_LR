@@ -1919,3 +1919,18 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: healthcare_professional
         validate: true
+
+                     
+- changeSet:
+    id: addColumn-health_condition-main
+    author: etrapani
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: main
+            type: boolean
+            defaultValue: ${boolean.false}
+            constraints:
+                nullable: true  
+        tableName: health_condition

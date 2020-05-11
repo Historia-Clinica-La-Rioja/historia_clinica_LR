@@ -19,6 +19,8 @@ public class Anamnesis {
 
     private DocumentObservations notes;
 
+    private HealthConditionBo mainDiagnosis;
+
     private List<DiagnosisBo> diagnosis;
 
     private List<HealthHistoryConditionBo> personalHistories;

@@ -59,4 +59,7 @@ public interface InternmentStateMapper {
 
     @Named("toAnthropometricDataDto")
     AnthropometricDataDto toAnthropometricDataDto(AnthropometricDataBo anthropometricData);
+
+    @Named("toHealthConditionDto")
+    HealthConditionDto toHealthConditionDto(HealthConditionBo mainDiagnosis);
 }

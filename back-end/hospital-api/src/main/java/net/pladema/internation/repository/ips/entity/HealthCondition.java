@@ -55,6 +55,9 @@ public class HealthCondition extends InternationAuditableEntity {
 	@Column(name = "personal")
 	private Boolean personal;
 
+	@Column(name = "main", nullable = false)
+	private Boolean main = false;
+
 	@Column(name = "note_id")
 	private Long noteId;
 

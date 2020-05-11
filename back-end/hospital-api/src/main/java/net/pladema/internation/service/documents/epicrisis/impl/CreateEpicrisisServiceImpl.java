@@ -65,6 +65,9 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
         loadNotes(document, Optional.ofNullable(epicrisis.getNotes()));
         document = documentService.save(document);
 
+        HealthConditionBo mainDiagnosis = healthConditionService.getMainDiagnosisGeneralState(internmentEpisodeId);
+        epicrisis.setMainDiagnosis(healthConditionService.loadMainDiagnosis(patientId, document.getId(), Optional.ofNullable(mainDiagnosis)));
+
         List<DiagnosisBo> lastStateDiagnosis = healthConditionService.getDiagnosisGeneralState(internmentEpisodeId);
         epicrisis.setDiagnosis(healthConditionService.loadDiagnosis(patientId, document.getId(), lastStateDiagnosis));
 

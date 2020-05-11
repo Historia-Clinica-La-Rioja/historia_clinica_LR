@@ -29,9 +29,12 @@ public class HealthConditionVo extends ClinicalTermVo {
 
     private String note;
 
-    public HealthConditionVo(Integer id, Snomed snomed, String statusId, String verificationId,
+    private boolean main;
+
+    public HealthConditionVo(Integer id, Snomed snomed, String statusId, boolean main,  String verificationId,
                              String problemId, LocalDate startDate, Long noteId, String note) {
         super(id, snomed, statusId);
+        this.main = main;
         this.verificationId = verificationId;
         this.problemId = problemId;
         this.startDate = startDate;
@@ -74,4 +77,8 @@ public class HealthConditionVo extends ClinicalTermVo {
 			   Objects.equals(noteId, other.getNoteId()) &&
 			   Objects.equals(note, other.getNote());
 	}
+
+    public boolean isSecondaryDiagnosis() {
+        return problemId.equals(ProblemType.DIAGNOSTICO) && !main;
+    }
 }

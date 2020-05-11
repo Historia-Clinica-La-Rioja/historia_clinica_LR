@@ -59,6 +59,7 @@ public class InternmentStateServiceImpl implements InternmentStateService {
     private void loadGeneralHealthCondition(Integer internmentEpisodeId, @NotNull InternmentGeneralState internmentGeneralState){
         LOG.debug(LOGGING_INTERNMENT_EPISODE_ID, internmentEpisodeId);
         GeneralHealthConditionBo generalHealthCondition = healthConditionService.getGeneralState(internmentEpisodeId);
+        internmentGeneralState.setMainDiagnosis(generalHealthCondition.getMainDiagnosis());
         internmentGeneralState.setDiagnosis(generalHealthCondition.getDiagnosis());
         internmentGeneralState.setPersonalHistories(generalHealthCondition.getPersonalHistories());
         internmentGeneralState.setFamilyHistories(generalHealthCondition.getFamilyHistories());

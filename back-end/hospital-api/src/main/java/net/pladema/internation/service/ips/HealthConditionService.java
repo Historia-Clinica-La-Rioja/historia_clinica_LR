@@ -2,11 +2,15 @@ package net.pladema.internation.service.ips;
 
 import net.pladema.internation.service.ips.domain.DiagnosisBo;
 import net.pladema.internation.service.ips.domain.GeneralHealthConditionBo;
+import net.pladema.internation.service.ips.domain.HealthConditionBo;
 import net.pladema.internation.service.ips.domain.HealthHistoryConditionBo;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface HealthConditionService {
+
+    HealthConditionBo loadMainDiagnosis(Integer patientId, Long documentId, Optional<HealthConditionBo> mainDiagnosis);
 
     List<DiagnosisBo> loadDiagnosis(Integer patientId, Long documentId, List<DiagnosisBo> diagnosis);
 
@@ -15,6 +19,8 @@ public interface HealthConditionService {
     List<HealthHistoryConditionBo> loadFamilyHistories(Integer patientId, Long documentId, List<HealthHistoryConditionBo> familyHistories);
 
     GeneralHealthConditionBo getGeneralState(Integer internmentEpisodeId);
+
+    HealthConditionBo getMainDiagnosisGeneralState(Integer internmentEpisodeId);
 
     List<DiagnosisBo> getDiagnosisGeneralState(Integer internmentEpisodeId);
 

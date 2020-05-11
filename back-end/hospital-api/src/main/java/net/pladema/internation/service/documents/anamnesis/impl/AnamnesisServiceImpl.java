@@ -37,6 +37,7 @@ public class AnamnesisServiceImpl implements AnamnesisService {
             result.setConfirmed(document.getStatusId().equalsIgnoreCase(DocumentStatus.FINAL));
 
             GeneralHealthConditionBo generalHealthConditionBo = documentService.getHealthConditionFromDocument(document.getId());
+            result.setMainDiagnosis(generalHealthConditionBo.getMainDiagnosis());
             result.setDiagnosis(generalHealthConditionBo.getDiagnosis());
             result.setFamilyHistories(generalHealthConditionBo.getFamilyHistories());
             result.setPersonalHistories(generalHealthConditionBo.getPersonalHistories());
