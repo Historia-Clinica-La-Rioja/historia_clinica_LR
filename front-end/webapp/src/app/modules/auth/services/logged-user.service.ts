@@ -3,17 +3,15 @@ import { AccountService } from '@api-rest/services/account.service';
 import { ReplaySubject, Observable, of } from 'rxjs';
 import { RoleAssignment, PermissionsDto } from '@api-rest/api-model';
 import { tap, catchError } from 'rxjs/operators';
-import { ContextService } from '@core/services/context.service';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class LoggedUserService {
-	private assignmentsSource = new ReplaySubject<RoleAssignment[]>();
+	private assignmentsSource = new ReplaySubject<RoleAssignment[]>(1);
 	private _assignments$: Observable<RoleAssignment[]>;
 
 	constructor(
-		private contextService: ContextService,
 		private accountService: AccountService,
 	) { }
 
@@ -38,7 +36,6 @@ export class LoggedUserService {
 				}),
 				tap((permissionsDto: PermissionsDto) => {
 					console.log('auth/permissions load() next', permissionsDto);
-					this.contextService.setInstitutionId(permissionsDto.roleAssignments.map(roleAssignment => roleAssignment.institutionId).find(id => id !== -1))
 					this.assignmentsSource.next(permissionsDto.roleAssignments);
 				}),
 			);

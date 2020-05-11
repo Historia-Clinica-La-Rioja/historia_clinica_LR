@@ -1,21 +1,21 @@
-<app-content width="full">
+<app-content width="narrow">
 	<mat-card>
 		<mat-card-header>
 			<mat-card-title>Instituciones</mat-card-title>
 		</mat-card-header>
 		<mat-card-content>
-			<mat-list role="list" *ngIf="(institutions$ | async) as institutions; else loading">
+			<mat-action-list role="list" *ngIf="(institutions$ | async) as institutions; else loading">
 				<div mat-subheader [ngSwitch]="institutions.length">
 					<span *ngSwitchCase="0">No tiene acceso a instituciones</span>
 					<span *ngSwitchCase="1">Tiene acceso a la siguiente institución:</span>
 					<span *ngSwitchDefault>Tiene acceso a las siguientes instituciones:</span>
 				</div>
-				<mat-list-item *ngFor="let institution of institutions" role="listitem">
+				<mat-list-item *ngFor="let institution of institutions" role="listitem" (click)="ingresar(institution)">
 					<mat-icon mat-list-icon fontSet="material-icons-outlined">verified_user</mat-icon>
 					<h3 matLine >{{institution.name}}</h3>
 				</mat-list-item>
 				<mat-divider></mat-divider>
-			</mat-list>
+			</mat-action-list>
 		</mat-card-content>
 		<ng-template #loading>
 			<mat-progress-bar mode="indeterminate"></mat-progress-bar>

@@ -57,6 +57,11 @@
 	"forms": {
 		"REQUIRED": "El campo es requerido"
 	},
+	"institucion": {
+		"home": {
+			"TITLE": "Institución"
+		}
+	},
 	"internaciones": {
 		"anamnesis": {
 			"TITLE": "Evaluación de ingreso",

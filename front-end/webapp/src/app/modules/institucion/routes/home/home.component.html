@@ -1,0 +1,14 @@
+<app-content width="full">
+	<mat-card *ngIf="(institucion$ | async) as institucion; else loading">
+		<mat-card-header>
+			<mat-card-title>{{institucion.name}}</mat-card-title>
+			<mat-card-subtitle translate="institucion.home.TITLE"></mat-card-subtitle>
+		</mat-card-header>
+		<mat-card-content>
+
+		</mat-card-content>
+	</mat-card>
+	<ng-template #loading>
+		<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+	</ng-template>
+</app-content>
