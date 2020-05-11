@@ -9,6 +9,7 @@ import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID } from "@cor
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
 import { DateFormat } from '@core/utils/moment.utils';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 const VALID_PATIENT = 2;
 
@@ -38,7 +39,8 @@ export class NewPatientComponent implements OnInit {
 		private patientService: PatientService,
 		private route: ActivatedRoute,
 		private personMasterDataService: PersonMasterDataService,
-		private addressMasterDataService: AddressMasterDataService
+		private addressMasterDataService: AddressMasterDataService,
+		private snackBarService: SnackBarService
 	) {
 	}
 
@@ -138,7 +140,8 @@ export class NewPatientComponent implements OnInit {
 			this.patientService.addPatient(personRequest)
 				.subscribe(patient => {
 					this.router.navigate(['pacientes/profile/' + patient.id]);
-				});
+					this.snackBarService.showSuccess('pacientes.new.messages.SUCCESS');
+					}, _ => this.snackBarService.showError('pacientes.new.messages.ERROR'));
 		} else {
 			scrollIntoError(this.form, this.el);
 		}

@@ -8,6 +8,7 @@ import { AddressMasterDataService } from '@api-rest/services/address-master-data
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { Moment } from 'moment';
 import * as moment from 'moment';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 const TEMPORARY_PATIENT = 3;
 @Component({
@@ -38,6 +39,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 	private personMasterDataService: PersonMasterDataService,
 	private addressMasterDataService: AddressMasterDataService,
 	private route: ActivatedRoute,
+	private snackBarService: SnackBarService
   ) { }
 
   ngOnInit(): void {
@@ -108,7 +110,8 @@ export class NewTemporaryPatientComponent implements OnInit {
       	this.patientService.addPatient(personRequest)
         	.subscribe(patient => {
 				  this.router.navigate(['pacientes/profile/' + patient.id]);
-        	});
+				  this.snackBarService.showSuccess('pacientes.new.messages.SUCCESS');
+        		}, _ => this.snackBarService.showError('pacientes.new.messages.ERROR'));
 	} else {
 		scrollIntoError(this.form,this.el);
 	}

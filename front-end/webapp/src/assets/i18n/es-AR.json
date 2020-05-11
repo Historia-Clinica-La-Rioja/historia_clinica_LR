@@ -357,7 +357,11 @@
 		"new": {
 			"TITLE": "Nuevo Paciente",
 			"SUBTITLE": "Ingresá los siguientes datos.",
-			"TITLE_TEMPORARY": "Nuevo Paciente Temporal"
+			"TITLE_TEMPORARY": "Nuevo Paciente Temporal",
+			"messages": {
+				"ERROR": "Error al crear un paciente",
+				"SUCCESS": "El paciente se creó exitosamente"
+			}
 		},
 		"search": {
 			"TITLE": "Búsqueda de pacientes",
