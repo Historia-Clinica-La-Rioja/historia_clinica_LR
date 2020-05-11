@@ -1,6 +1,7 @@
 package net.pladema.internation.repository.ips;
 
 import net.pladema.BaseRepositoryTest;
+import net.pladema.dates.configuration.DateTimeProvider;
 import net.pladema.internation.repository.core.entity.Document;
 import net.pladema.internation.repository.core.entity.DocumentLab;
 import net.pladema.internation.repository.core.entity.DocumentVitalSign;
@@ -15,6 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.persistence.EntityManager;
@@ -22,6 +24,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest(showSql = false)
@@ -32,16 +35,23 @@ public class ClinicalObservationRepositoryTest extends BaseRepositoryTest {
 	@Autowired
 	private EntityManager entityManager;
 
-	@Before
-	public void setUp() throws Exception {
-		clinicalObservationRepository = new ClinicalObservationRepositoryImpl(entityManager);
-	}
+	@MockBean
+	private DateTimeProvider dateTimeProvider;
 
+	@Before
+	public void setUp() {
+		this.clinicalObservationRepository = new ClinicalObservationRepositoryImpl(entityManager, dateTimeProvider);
+	}
 
 	@Test
 	public void saveCreateTest() {
 		Integer internmentEpisodeId = 1;
-		createInternmentStates(1);
+		String date = "2020-05-04 16:00";
+		String now = "2020-05-08 16:00";
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		when(dateTimeProvider.nowDateTime()).thenReturn(LocalDateTime.parse(now, formatter));
+		createInternmentStates(1, LocalDateTime.parse(date, formatter));
+
 		MapClinicalObservationVo mapClinicalObservationVo = clinicalObservationRepository.getGeneralStateLastSevenDays(internmentEpisodeId);
 
 		assertThat(mapClinicalObservationVo.getClinicalObservationByCode().entrySet())
@@ -66,11 +76,8 @@ public class ClinicalObservationRepositoryTest extends BaseRepositoryTest {
 	}
 
 
-	private void createInternmentStates(Integer internmentEpisodeId){
+	private void createInternmentStates(Integer internmentEpisodeId, LocalDateTime dateTime){
 		String code1 = "code1";
-		String date = "2020-05-04 16:00";
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-		LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
 		Document firstDoc = save(createDocument(internmentEpisodeId, DocumentStatus.FINAL));
 		ObservationVitalSign vitalSignFinal0 = save(createFinalObservationVitalSign(code1, dateTime.minusDays(8)));
 		ObservationVitalSign vitalSignFinal1 = save(createFinalObservationVitalSign(code1, dateTime.plusMinutes(2)));

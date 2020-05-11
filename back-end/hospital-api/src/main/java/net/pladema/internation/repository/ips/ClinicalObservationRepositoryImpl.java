@@ -1,5 +1,6 @@
 package net.pladema.internation.repository.ips;
 
+import net.pladema.dates.configuration.DateTimeProvider;
 import net.pladema.internation.repository.ips.generalstate.ClinicalObservationVo;
 import net.pladema.internation.repository.masterdata.entity.DocumentStatus;
 import net.pladema.internation.service.ips.domain.MapClinicalObservationVo;
@@ -11,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,9 +24,12 @@ public class ClinicalObservationRepositoryImpl implements ClinicalObservationRep
 
     private final EntityManager entityManager;
 
-    public ClinicalObservationRepositoryImpl(EntityManager entityManager){
+    private final DateTimeProvider dateTimeProvider;
+
+    public ClinicalObservationRepositoryImpl(EntityManager entityManager, DateTimeProvider dateTimeProvider){
         super();
         this.entityManager = entityManager;
+        this.dateTimeProvider = dateTimeProvider;
     }
 
     @Transactional(readOnly = true)
@@ -60,8 +63,8 @@ public class ClinicalObservationRepositoryImpl implements ClinicalObservationRep
                 ")" +
                 "    ORDER BY effective_time DESC " );
         query.setParameter("internmentEpisodeId", internmentEpisodeId);
-        query.setParameter("sevenDaysBefore", LocalDateTime.now().minusDays(7));
-        query.setParameter("today", LocalDateTime.now());
+        query.setParameter("sevenDaysBefore", dateTimeProvider.nowDateTime().minusDays(7));
+        query.setParameter("today", dateTimeProvider.nowDateTime());
         query.setParameter("statusId", DocumentStatus.FINAL);
         List<Object[]> queryResult = query.getResultList();
         List<ClinicalObservationVo> clinicalObservationVos = new ArrayList<>();
