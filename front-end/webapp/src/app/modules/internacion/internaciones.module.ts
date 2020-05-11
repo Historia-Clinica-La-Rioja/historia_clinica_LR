@@ -26,6 +26,7 @@ import { EpicrisisComponent } from './routes/epicrisis/epicrisis.component';
 import { EpicrisisFormComponent } from './components/epicrisis-form/epicrisis-form.component';
 import { NotaEvolucionComponent } from './routes/nota-evolucion/nota-evolucion.component';
 import { NotaEvolucionFormComponent } from './components/nota-evolucion-form/nota-evolucion-form.component';
+import { DiagnosticoPrincipalComponent } from './components/diagnostico-principal/diagnostico-principal.component';
 
 @NgModule({
 	declarations: [
@@ -38,6 +39,7 @@ import { NotaEvolucionFormComponent } from './components/nota-evolucion-form/not
 		ConceptsSearchDialogComponent,
 		ConceptsSearchComponent,
 		DiagnosticosComponent,
+		DiagnosticoPrincipalComponent,
 		AlergiasComponent,
 		VacunasComponent,
 		MedicacionComponent,

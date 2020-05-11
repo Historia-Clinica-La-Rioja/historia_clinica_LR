@@ -4,7 +4,7 @@ import {
 	AllergyConditionDto, AnamnesisDto, DiagnosisDto,
 	HealthHistoryConditionDto, InmunizationDto,
 	MasterDataInterface,
-	MedicationDto, ResponseAnamnesisDto
+	MedicationDto, ResponseAnamnesisDto, HealthConditionDto
 } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { AnamnesisService } from '@api-rest/services/anamnesis.service';
@@ -28,6 +28,7 @@ export class AnamnesisFormComponent implements OnInit {
 
 	bloodTypes: MasterDataInterface<string>[];
 	diagnosticos: DiagnosisDto[] = [];
+	mainDiagnosis: HealthConditionDto;
 	personalHistories: HealthHistoryConditionDto[] = [];
 	familyHistories: HealthHistoryConditionDto[] = [];
 	allergies: AllergyConditionDto[] = [];
@@ -92,6 +93,8 @@ export class AnamnesisFormComponent implements OnInit {
 				this.medications = anamnesis.medications;
 				this.personalHistories = anamnesis.personalHistories;
 
+				this.mainDiagnosis = anamnesis.mainDiagnosis;
+
 				this.form.controls.anthropometricData.setValue({
 					bloodType: findBloodType(this.bloodTypes, anamnesis.anthropometricData.bloodType.id),
 					height: anamnesis.anthropometricData.height.value,
@@ -119,9 +122,17 @@ export class AnamnesisFormComponent implements OnInit {
 		}
 	}
 
+	setMainDiagnosis(newDiagnosis: HealthConditionDto) {
+		this.mainDiagnosis = newDiagnosis;
+	}
+
+	back(): void {
+		window.history.back();
+	}
+
 	save(): void {
 		if (this.form.valid) {
-			const anamnesis = this.buildAnamnesisDto();
+			const anamnesis: AnamnesisDto = this.buildAnamnesisDto();
 
 			if (this.anamnesisId) {
 				this.anamnesisService.updateAnamnesis(this.anamnesisId, anamnesis, this.internmentEpisodeId)
@@ -161,6 +172,7 @@ export class AnamnesisFormComponent implements OnInit {
 				height: getValue(formValues.anthropometricData.height),
 				weight: getValue(formValues.anthropometricData.weight),
 			},
+			mainDiagnosis: this.mainDiagnosis,
 			diagnosis: this.diagnosticos,
 			familyHistories: this.familyHistories,
 			inmunizations: this.inmunizations,
@@ -184,10 +196,6 @@ export class AnamnesisFormComponent implements OnInit {
 		function getValue(controlValue: any) {
 			return controlValue ? { value: controlValue } : undefined;
 		}
-	}
-
-	back(): void {
-		window.history.back();
 	}
 
 }
