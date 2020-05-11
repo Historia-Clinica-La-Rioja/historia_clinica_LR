@@ -18,14 +18,15 @@ import java.util.Optional;
 public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 
     private static final Logger LOG = LoggerFactory.getLogger(InternmentEpisodeServiceImpl.class);
+    
+    private static final String LOGGING_OUTPUT = "Output -> {}";
 
     private final InternmentEpisodeRepository internmentEpisodeRepository;
 
     private final EvolutionNoteDocumentRepository evolutionNoteDocumentRepository;
 
     private static final short ACTIVO =1;
-    private static final short INACTIVO =2;
-
+    
     public InternmentEpisodeServiceImpl(InternmentEpisodeRepository internmentEpisodeRepository,
                                         EvolutionNoteDocumentRepository evolutionNoteDocumentRepository) {
         this.internmentEpisodeRepository = internmentEpisodeRepository;
@@ -50,7 +51,7 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
         LOG.debug("Input parameters -> internmentEpisodeId {}, evolutionNoteId {}", internmentEpisodeId, evolutionNoteId);
         EvolutionNoteDocument result = new EvolutionNoteDocument(evolutionNoteId, internmentEpisodeId);
         result = evolutionNoteDocumentRepository.save(result);
-        LOG.debug("Output -> {}", result);
+        LOG.debug(LOGGING_OUTPUT, result);
         return result;
     }
 
@@ -61,7 +62,7 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
         internmentEpisode.setStatusId(ACTIVO);
         internmentEpisode.setEntryDate(LocalDate.now());
         InternmentEpisode result = internmentEpisodeRepository.save(internmentEpisode);
-        LOG.debug("Output -> {}", result);
+        LOG.debug(LOGGING_OUTPUT, result);
         return result;
     }
 
@@ -69,7 +70,7 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
     public Optional<InternmentSummaryVo> getIntermentSummary(Integer internmentEpisodeId) {
         LOG.debug("Input parameters -> {}", internmentEpisodeId);
         Optional<InternmentSummaryVo> result = internmentEpisodeRepository.getSummary(internmentEpisodeId);
-        LOG.debug("Output -> {}", result);
+        LOG.debug(LOGGING_OUTPUT, result);
         return result;
     }
 
@@ -77,7 +78,7 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
     public Optional<Integer> getPatient(Integer internmentEpisodeId) {
         LOG.debug("Input parameters -> {}", internmentEpisodeId);
         Optional<Integer> result = internmentEpisodeRepository.getPatient(internmentEpisodeId);
-        LOG.debug("Output -> {}", result);
+        LOG.debug(LOGGING_OUTPUT, result);
         return result;
     }
 

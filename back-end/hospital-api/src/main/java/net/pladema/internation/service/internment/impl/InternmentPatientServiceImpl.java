@@ -14,6 +14,8 @@ import java.util.List;
 public class InternmentPatientServiceImpl implements InternmentPatientService {
 
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+    
+    private static final String LOGGING_OUTPUT = "Output -> {}";
 
     private final InternmentEpisodeRepository internmentEpisodeRepository;
 
@@ -25,7 +27,7 @@ public class InternmentPatientServiceImpl implements InternmentPatientService {
     public List<BasicListedPatientBo> getInternmentPatients(Integer institutionId) {
         LOG.debug("Input parameters -> {}", institutionId);
         List<BasicListedPatientBo> result = internmentEpisodeRepository.findAllPatientsListedData(institutionId);
-        LOG.debug("Output -> {}", result);
+        LOG.debug(LOGGING_OUTPUT, result);
         return result;
     }
 
@@ -33,7 +35,7 @@ public class InternmentPatientServiceImpl implements InternmentPatientService {
     public List<InternmentEpisodeBo> getAllInternmentPatient(Integer institutionId) {
         LOG.debug("Input parameters -> {}", institutionId);
         List<InternmentEpisodeBo> result = internmentEpisodeRepository.getAllInternmentPatient(institutionId);
-        LOG.debug("Output -> {}", result);
+        LOG.debug(LOGGING_OUTPUT, result);
         return result;
     }
 

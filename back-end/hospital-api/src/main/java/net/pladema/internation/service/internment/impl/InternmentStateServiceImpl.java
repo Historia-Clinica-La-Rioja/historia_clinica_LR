@@ -17,6 +17,8 @@ public class InternmentStateServiceImpl implements InternmentStateService {
     private static final Logger LOG = LoggerFactory.getLogger(InternmentStateServiceImpl.class);
 
     private static final String OUTPUT = "Output -> {}";
+    
+    private static final String LOGGING_INTERNMENT_EPISODE_ID = "Input parameters -> internmentEpisodeId {}";
 
     private final AllergyService allergyService;
 
@@ -42,7 +44,7 @@ public class InternmentStateServiceImpl implements InternmentStateService {
 
     @Override
     public InternmentGeneralState getInternmentGeneralState(Integer internmentEpisodeId) {
-        LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
+        LOG.debug(LOGGING_INTERNMENT_EPISODE_ID, internmentEpisodeId);
         InternmentGeneralState internmentGeneralState = new InternmentGeneralState();
         loadGeneralHealthCondition(internmentEpisodeId, internmentGeneralState);
         internmentGeneralState.setMedications(getMedicationsState(internmentEpisodeId));
@@ -55,7 +57,7 @@ public class InternmentStateServiceImpl implements InternmentStateService {
     }
 
     private void loadGeneralHealthCondition(Integer internmentEpisodeId, @NotNull InternmentGeneralState internmentGeneralState){
-        LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
+        LOG.debug(LOGGING_INTERNMENT_EPISODE_ID, internmentEpisodeId);
         GeneralHealthConditionBo generalHealthCondition = healthConditionService.getGeneralState(internmentEpisodeId);
         internmentGeneralState.setDiagnosis(generalHealthCondition.getDiagnosis());
         internmentGeneralState.setPersonalHistories(generalHealthCondition.getPersonalHistories());
@@ -63,27 +65,27 @@ public class InternmentStateServiceImpl implements InternmentStateService {
     }
 
     private List<MedicationBo> getMedicationsState(Integer internmentEpisodeId){
-        LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
+        LOG.debug(LOGGING_INTERNMENT_EPISODE_ID, internmentEpisodeId);
         return medicationService.getMedicationsGeneralState(internmentEpisodeId);
     }
 
     private List<InmunizationBo> getInmunizationsState(Integer internmentEpisodeId){
-        LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
+        LOG.debug(LOGGING_INTERNMENT_EPISODE_ID, internmentEpisodeId);
         return inmunizationService.getInmunizationsGeneralState(internmentEpisodeId);
     }
 
     private List<AllergyConditionBo> getAllergiesState(Integer internmentEpisodeId){
-        LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
+        LOG.debug(LOGGING_INTERNMENT_EPISODE_ID, internmentEpisodeId);
         return allergyService.getAllergiesGeneralState(internmentEpisodeId);
     }
 
     private AnthropometricDataBo getAntropometricDataState(Integer internmentEpisodeId){
-        LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
+        LOG.debug(LOGGING_INTERNMENT_EPISODE_ID, internmentEpisodeId);
         return clinicalObservationService.getLastAnthropometricDataGeneralState(internmentEpisodeId);
     }
 
     private List<VitalSignBo> getVitalSignsState(Integer internmentEpisodeId){
-        LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
+        LOG.debug(LOGGING_INTERNMENT_EPISODE_ID, internmentEpisodeId);
         return clinicalObservationService.getLast2VitalSignsGeneralState(internmentEpisodeId);
     }
 }

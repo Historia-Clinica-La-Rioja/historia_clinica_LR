@@ -19,6 +19,10 @@ public class DocumentServiceImpl implements DocumentService {
     public static final String OUTPUT = "Output -> {}";
 
     private static final Logger LOG = LoggerFactory.getLogger(DocumentServiceImpl.class);
+    
+    private static final String LOGGING_DOCUMENT_ID = "Input parameters -> documentId {}";
+    
+    private static final String LOGGING_DELETE_SUCCESS = "Delete success";
 
     private final DocumentRepository documentRepository;
 
@@ -52,7 +56,7 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public Optional<Document> findById(Long documentId) {
-        LOG.debug("Input parameters -> documentId {}", documentId);
+        LOG.debug(LOGGING_DOCUMENT_ID, documentId);
         Optional<Document> result = documentRepository.findById(documentId);
         LOG.debug(OUTPUT, result);
         return result;
@@ -116,7 +120,7 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public GeneralHealthConditionBo getHealthConditionFromDocument(Long documentId) {
-        LOG.debug("Input parameters -> documentId {}", documentId);
+        LOG.debug(LOGGING_DOCUMENT_ID, documentId);
         List<HealthConditionVo> resultQuery = documentHealthConditionRepository.getHealthConditionFromDocument(documentId);
         GeneralHealthConditionBo result = new GeneralHealthConditionBo(resultQuery);
         LOG.debug(OUTPUT, result);
@@ -125,7 +129,7 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public List<InmunizationBo> getInmunizationStateFromDocument(Long documentId) {
-        LOG.debug("Input parameters -> documentId {}", documentId);
+        LOG.debug(LOGGING_DOCUMENT_ID, documentId);
         List<InmunizationVo> resultQuery = documentInmunizationRepository.getInmunizationStateFromDocument(documentId);
         List<InmunizationBo> result = resultQuery.stream().map(InmunizationBo::new).collect(Collectors.toList());
         LOG.debug(OUTPUT, result);
@@ -134,7 +138,7 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public List<AllergyConditionBo> getAllergyIntoleranceStateFromDocument(Long documentId) {
-        LOG.debug("Input parameters -> documentId {}", documentId);
+        LOG.debug(LOGGING_DOCUMENT_ID, documentId);
         List<AllergyConditionVo> resultQuery = documentAllergyIntoleranceRepository.getAllergyIntoleranceStateFromDocument(documentId);
         List<AllergyConditionBo> result = resultQuery.stream().map(AllergyConditionBo::new).collect(Collectors.toList());
         LOG.debug(OUTPUT, result);
@@ -143,7 +147,7 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public List<MedicationBo> getMedicationStateFromDocument(Long documentId) {
-        LOG.debug("Input parameters -> documentId {}", documentId);
+        LOG.debug(LOGGING_DOCUMENT_ID, documentId);
         List<MedicationVo> resultQuery = documentMedicamentionStatementRepository.getMedicationStateFromDocument(documentId);
         List<MedicationBo> result = resultQuery.stream().map(MedicationBo::new).collect(Collectors.toList());
         LOG.debug(OUTPUT, result);
@@ -152,7 +156,7 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public AnthropometricDataBo getAnthropometricDataStateFromDocument(Long documentId) {
-        LOG.debug("Input parameters -> documentId {}", documentId);
+        LOG.debug(LOGGING_DOCUMENT_ID, documentId);
         List<ClinicalObservationVo> clinicalObservationVos = documentVitalSignRepository.getVitalSignStateFromDocument(documentId);
         clinicalObservationVos.addAll(documentLabRepository.getLabStateFromDocument(documentId));
         MapClinicalObservationVo resultQuery = new MapClinicalObservationVo(clinicalObservationVos);
@@ -163,7 +167,7 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public VitalSignBo getVitalSignStateFromDocument(Long documentId) {
-        LOG.debug("Input parameters -> documentId {}", documentId);
+        LOG.debug(LOGGING_DOCUMENT_ID, documentId);
         MapClinicalObservationVo resultQuery = new MapClinicalObservationVo(documentVitalSignRepository.getVitalSignStateFromDocument(documentId));
         VitalSignBo result = resultQuery.getLastVitalSigns().orElse(null);
         LOG.debug(OUTPUT, result);
@@ -172,44 +176,44 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public void deleteHealthConditionHistory(Long documentId) {
-        LOG.debug("Input parameters -> documentId {}", documentId);
+        LOG.debug(LOGGING_DOCUMENT_ID, documentId);
         // TODO
-        LOG.debug("Delete success");
+        LOG.debug(LOGGING_DELETE_SUCCESS);
     }
 
     @Override
     public void deleteAllergiesHistory(Long documentId) {
-        LOG.debug("Input parameters -> documentId {}", documentId);
+        LOG.debug(LOGGING_DOCUMENT_ID, documentId);
         // TODO
-        LOG.debug("Delete success");
+        LOG.debug(LOGGING_DELETE_SUCCESS);
     }
 
     @Override
     public void deleteInmunizationsHistory(Long documentId) {
-        LOG.debug("Input parameters -> documentId {}", documentId);
+        LOG.debug(LOGGING_DOCUMENT_ID, documentId);
         // TODO
-        LOG.debug("Delete success");
+        LOG.debug(LOGGING_DELETE_SUCCESS);
     }
 
     @Override
     public void deleteMedicationsHistory(Long documentId) {
-        LOG.debug("Input parameters -> documentId {}", documentId);
+        LOG.debug(LOGGING_DOCUMENT_ID, documentId);
         // TODO
-        LOG.debug("Delete success");
+        LOG.debug(LOGGING_DELETE_SUCCESS);
     }
 
     @Override
     public void deleteObservationsVitalSignsHistory(Long documentId) {
-        LOG.debug("Input parameters -> documentId {}", documentId);
+        LOG.debug(LOGGING_DOCUMENT_ID, documentId);
         // TODO
-        LOG.debug("Delete success");
+        LOG.debug(LOGGING_DELETE_SUCCESS);
     }
 
     @Override
     public void deleteObservationsLabHistory(Long documentId) {
-        LOG.debug("Input parameters -> documentId {}", documentId);
+        LOG.debug(LOGGING_DOCUMENT_ID, documentId);
         // TODO
-        LOG.debug("Delete success");
+        LOG.debug(LOGGING_DELETE_SUCCESS);
     }
 
 
