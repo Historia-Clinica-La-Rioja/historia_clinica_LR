@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { InternacionesRoutingModule } from './internaciones-routing.module';
-import { AppMaterialModule } from 'src/app/app.material.module';
 import { CoreModule } from '@core/core.module';
 import { PresentationModule } from '../presentation/presentation.module';
 import { AnamnesisFormComponent } from './components/anamnesis-form/anamnesis-form.component';
@@ -53,7 +52,6 @@ import { NotaEvolucionFormComponent } from './components/nota-evolucion-form/not
 		NotaEvolucionFormComponent,
 	],
 	imports: [
-		AppMaterialModule,
 		CoreModule,
 		CommonModule,
 		FormsModule,

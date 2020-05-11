@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { CoreModule } from '@core/core.module';
-import { AppMaterialModule } from '../../app.material.module';
 import { PresentationModule } from '@presentation/presentation.module';
 
 import { AuthRoutingModule } from './auth-routing.module';
@@ -24,7 +23,6 @@ import { HomeComponent } from './routes/home/home.component';
 	],
 	imports: [
 		CoreModule,
-		AppMaterialModule,
 		PresentationModule,
 		FormsModule,
 		ReactiveFormsModule,

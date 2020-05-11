@@ -33,6 +33,8 @@ const globalSettings: RecaptchaSettings = { siteKey: '' }; // TODO completar cua
 		TranslateModule,
 	],
 	exports: [
+		AppMaterialModule,
+
 		BarComponent,
 		CommonModule,
 		ConfirmDialogComponent,
