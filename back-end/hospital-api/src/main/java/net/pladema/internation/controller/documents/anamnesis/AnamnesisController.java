@@ -5,6 +5,7 @@ import io.swagger.annotations.Api;
 import net.pladema.internation.controller.constraints.AnamnesisMainDiagnosisValid;
 import net.pladema.internation.controller.constraints.DocumentValid;
 import net.pladema.internation.controller.constraints.InternmentValid;
+import net.pladema.internation.controller.documents.anamnesis.constraints.AnamnesisValid;
 import net.pladema.internation.controller.documents.anamnesis.dto.AnamnesisDto;
 import net.pladema.internation.controller.documents.anamnesis.dto.ResponseAnamnesisDto;
 import net.pladema.internation.controller.documents.anamnesis.mapper.AnamnesisMapper;
@@ -17,7 +18,6 @@ import net.pladema.internation.service.documents.anamnesis.CreateAnamnesisServic
 import net.pladema.internation.service.documents.anamnesis.UpdateAnamnesisService;
 import net.pladema.internation.service.documents.anamnesis.domain.Anamnesis;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
-import net.pladema.internation.service.internment.domain.ResponsibleDoctorBo;
 import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.pdf.PdfService;
@@ -87,6 +87,7 @@ public class AnamnesisController {
     @PostMapping
     @Transactional
     @InternmentValid
+    @AnamnesisValid
     @AnamnesisMainDiagnosisValid
     public ResponseEntity<ResponseAnamnesisDto> createAnamnesis(
             @PathVariable(name = "institutionId") Integer institutionId,

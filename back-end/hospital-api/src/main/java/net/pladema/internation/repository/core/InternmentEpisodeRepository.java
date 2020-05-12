@@ -95,4 +95,12 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             "WHERE ie.institutionId = :institutionId " +
             "ORDER BY ps.firstName ASC, ps.lastName ASC")
     List<InternmentEpisodeBo> getAllInternmentPatient(@Param("institutionId") Integer institutionId);
+
+    @Transactional(readOnly = true)
+    @Query("SELECT (case when count(ie.id)> 0 then true else false end) " +
+            "FROM InternmentEpisode ie " +
+            "WHERE ie.id = :internmentEpisodeId " +
+            "AND ie.anamnesisDocId IS NOT NULL")
+    boolean haveAnamnesis(@Param("internmentEpisodeId") Integer internmentEpisodeId);
+
 }

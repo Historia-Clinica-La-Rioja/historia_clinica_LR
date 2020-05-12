@@ -19,4 +19,7 @@ public interface InternmentEpisodeService {
     EvolutionNoteDocument addEvolutionNote(Integer internmentEpisodeId, Long evolutionNoteId);
 
     InternmentEpisode addInternmentEpisode(InternmentEpisode internmentEpisode, Integer institutionId);
+
+    boolean haveAnamnesis(Integer internmentEpisodeId);
+
 }

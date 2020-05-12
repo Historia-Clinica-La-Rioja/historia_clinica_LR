@@ -67,6 +67,14 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
     }
 
     @Override
+    public boolean haveAnamnesis(Integer internmentEpisodeId) {
+        LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
+        boolean result = internmentEpisodeRepository.haveAnamnesis(internmentEpisodeId);
+        LOG.debug(LOGGING_OUTPUT, result);
+        return result;
+    }
+
+    @Override
     public Optional<InternmentSummaryVo> getIntermentSummary(Integer internmentEpisodeId) {
         LOG.debug("Input parameters -> {}", internmentEpisodeId);
         Optional<InternmentSummaryVo> result = internmentEpisodeRepository.getSummary(internmentEpisodeId);
