@@ -137,9 +137,8 @@ export class NewInternmentComponent implements OnInit {
 	}
 
 	openDialog(): void {
-		let stringQuestion = '¿Esta seguro que desea crear una nueva internacion para el paciente ' +
-			this.patientBasicData.firstName + ' ' +
-			this.patientBasicData.lastName + '?';
+		let stringQuestion = '¿Esta seguro que desea crear una nueva internacion para el paciente con ID ' +
+			this.patientBasicData.id + '?';
 		const dialogRef = this.dialog.open(ConfirmDialogComponent, {
 			width: '450px',
 			data: {
