@@ -3,6 +3,7 @@ package net.pladema.internation.controller.documents.evolutionnote;
 import com.itextpdf.text.DocumentException;
 import io.swagger.annotations.Api;
 import net.pladema.internation.controller.constraints.DocumentValid;
+import net.pladema.internation.controller.constraints.EvolutionNoteDiagnosisValid;
 import net.pladema.internation.controller.constraints.InternmentValid;
 import net.pladema.internation.controller.documents.evolutionnote.dto.EvolutionNoteDto;
 import net.pladema.internation.controller.documents.evolutionnote.dto.ResponseEvolutionNoteDto;
@@ -74,6 +75,7 @@ public class EvolutionNoteController {
     @PostMapping
     @Transactional
     @InternmentValid
+    @EvolutionNoteDiagnosisValid
     public ResponseEntity<ResponseEvolutionNoteDto> createDocument(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,

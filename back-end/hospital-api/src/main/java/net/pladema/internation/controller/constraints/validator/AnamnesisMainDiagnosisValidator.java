@@ -1,6 +1,6 @@
 package net.pladema.internation.controller.constraints.validator;
 
-import net.pladema.internation.controller.constraints.AnamnesisDiagnosisValid;
+import net.pladema.internation.controller.constraints.AnamnesisMainDiagnosisValid;
 import net.pladema.internation.controller.documents.anamnesis.dto.AnamnesisDto;
 
 import javax.validation.ConstraintValidator;
@@ -9,12 +9,12 @@ import javax.validation.constraintvalidation.SupportedValidationTarget;
 import javax.validation.constraintvalidation.ValidationTarget;
 
 @SupportedValidationTarget(ValidationTarget.PARAMETERS)
-public class AnamnesisDiagnosisValidator implements ConstraintValidator<AnamnesisDiagnosisValid, Object[]> {
+public class AnamnesisMainDiagnosisValidator implements ConstraintValidator<AnamnesisMainDiagnosisValid, Object[]> {
 
     private static final String DIAGNOSIS_PROPERTY = "anamnesisDto.diagnosis";
 
     @Override
-    public void initialize(AnamnesisDiagnosisValid constraintAnnotation) {
+    public void initialize(AnamnesisMainDiagnosisValid constraintAnnotation) {
 
     }
 
@@ -22,10 +22,12 @@ public class AnamnesisDiagnosisValidator implements ConstraintValidator<Anamnesi
     public boolean isValid(Object[] parameters, ConstraintValidatorContext context) {
         AnamnesisDto anamnesis = (AnamnesisDto) parameters[2];
         context.disableDefaultConstraintViolation();
-        context.buildConstraintViolationWithTemplate("{diagnosis.mandatory}")
+        context.buildConstraintViolationWithTemplate("{diagnosis.main.repeated}")
                 .addPropertyNode(DIAGNOSIS_PROPERTY)
                 .addConstraintViolation();
 
-        return anamnesis.getDiagnosis() != null && !anamnesis.getDiagnosis().isEmpty();
+        if (anamnesis.getDiagnosis() == null || anamnesis.getDiagnosis().isEmpty() || anamnesis.getMainDiagnosis() == null)
+            return true;
+        return anamnesis.getDiagnosis().stream().noneMatch(d -> d.getSnomed().equals(anamnesis.getMainDiagnosis().getSnomed()));
     }
 }

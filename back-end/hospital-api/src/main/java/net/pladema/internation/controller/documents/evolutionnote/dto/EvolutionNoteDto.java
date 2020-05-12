@@ -3,6 +3,7 @@ package net.pladema.internation.controller.documents.evolutionnote.dto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.internation.controller.constraints.DiagnosisValid;
 import net.pladema.internation.controller.internment.dto.DocumentObservationsDto;
 import net.pladema.internation.controller.ips.dto.*;
 
@@ -25,6 +26,7 @@ public class EvolutionNoteDto implements Serializable {
     private DocumentObservationsDto notes;
 
     @NotNull
+    @DiagnosisValid
     private List<@Valid DiagnosisDto> diagnosis = new ArrayList<>();
 
     @NotNull

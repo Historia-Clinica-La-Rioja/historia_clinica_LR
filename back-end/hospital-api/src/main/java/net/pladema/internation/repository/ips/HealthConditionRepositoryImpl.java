@@ -52,7 +52,7 @@ public class HealthConditionRepositoryImpl implements HealthConditionRepositoryC
 
         List<HealthConditionVo> result = new ArrayList<>();
 
-        queryResult.forEach(h ->
+        queryResult.forEach(h -> {
             result.add(new HealthConditionVo((Integer)h[0],
                     new Snomed((String)h[1], (String)h[2], null, null),
                     (String)h[3],

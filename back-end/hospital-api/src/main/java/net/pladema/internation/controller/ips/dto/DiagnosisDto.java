@@ -10,4 +10,6 @@ import lombok.ToString;
 public class DiagnosisDto extends HealthConditionDto {
 
     private boolean presumptive = false;
+
+
 }

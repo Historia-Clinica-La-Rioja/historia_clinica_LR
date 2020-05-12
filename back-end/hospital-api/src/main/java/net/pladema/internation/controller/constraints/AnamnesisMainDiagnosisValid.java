@@ -1,6 +1,6 @@
 package net.pladema.internation.controller.constraints;
 
-import net.pladema.internation.controller.constraints.validator.AnamnesisDiagnosisValidator;
+import net.pladema.internation.controller.constraints.validator.AnamnesisMainDiagnosisValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -11,12 +11,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Documented
-@Constraint(validatedBy = AnamnesisDiagnosisValidator.class)
+@Constraint(validatedBy = AnamnesisMainDiagnosisValidator.class)
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface AnamnesisDiagnosisValid {
+public @interface AnamnesisMainDiagnosisValid {
 
-    String message() default "{diagnosis.mandatory}";
+    String message() default "{diagnosis.main.repeated}";
 
     Class<?>[] groups() default {};
 
