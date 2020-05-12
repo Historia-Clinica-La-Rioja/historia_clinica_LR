@@ -229,6 +229,7 @@ export interface EvolutionNoteDto extends Serializable {
     confirmed: boolean;
     diagnosis: DiagnosisDto[];
     inmunizations: InmunizationDto[];
+    mainDiagnosis?: HealthConditionDto;
     notes?: DocumentObservationsDto;
     vitalSigns?: VitalSignDto;
 }

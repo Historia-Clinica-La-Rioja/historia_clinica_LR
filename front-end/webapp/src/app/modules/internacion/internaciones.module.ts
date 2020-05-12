@@ -27,6 +27,7 @@ import { EpicrisisFormComponent } from './components/epicrisis-form/epicrisis-fo
 import { NotaEvolucionComponent } from './routes/nota-evolucion/nota-evolucion.component';
 import { NotaEvolucionFormComponent } from './components/nota-evolucion-form/nota-evolucion-form.component';
 import { DiagnosticoPrincipalComponent } from './components/diagnostico-principal/diagnostico-principal.component';
+import { MainDiagnosisSummaryComponent } from './components/main-diagnosis-summary/main-diagnosis-summary.component';
 
 @NgModule({
 	declarations: [
@@ -52,6 +53,7 @@ import { DiagnosticoPrincipalComponent } from './components/diagnostico-principa
 		EpicrisisFormComponent,
 		NotaEvolucionComponent,
 		NotaEvolucionFormComponent,
+		MainDiagnosisSummaryComponent,
 	],
 	imports: [
 		CoreModule,

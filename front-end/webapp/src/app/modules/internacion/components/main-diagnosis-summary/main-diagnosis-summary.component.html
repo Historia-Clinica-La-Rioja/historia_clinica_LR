@@ -1,0 +1,12 @@
+<app-summary-card [header]="mainDiagnosticosSummary">
+	<mat-list *ngIf="(mainDiagnosis$ | async) as mainDiagnosis else noInfo">
+		<mat-list-item>
+			<span class="capitalize-first-letter">
+				{{ mainDiagnosis.snomed.pt }}
+			</span>
+		</mat-list-item>
+	</mat-list>
+	<ng-template #noInfo>
+		<app-no-data></app-no-data>
+	</ng-template>
+</app-summary-card>

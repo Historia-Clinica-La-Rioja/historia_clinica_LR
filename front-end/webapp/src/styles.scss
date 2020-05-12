@@ -26,6 +26,12 @@ section {
 	text-transform: capitalize;
 }
 
+.capitalize-first-letter {
+	&::first-letter {
+		text-transform: capitalize;
+	}
+}
+
 .uppercase {
 	text-transform: uppercase;
 }

@@ -15,6 +15,11 @@ export class InternmentStateService {
 		private http: HttpClient
 	) { }
 
+	getMainDiagnosis(internmentId: number): Observable<HealthConditionDto> {
+		let url = `${environment.apiBase}/institutions/${HARD_CODE_INS_ID}/internments-state/${internmentId}/general/maindiagnosis`;
+		return this.http.get<HealthConditionDto>(url);
+	}
+
 	getDiagnosis(internmentId: number): Observable<HealthConditionDto[]> {
 		let url = `${environment.apiBase}/institutions/${HARD_CODE_INS_ID}/internments-state/${internmentId}/general/diagnosis`;
 		return this.http.get<HealthConditionDto[]>(url);
