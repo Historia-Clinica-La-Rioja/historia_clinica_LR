@@ -24,6 +24,9 @@ export class MedicacionComponent implements OnInit {
 		return this.medicationsValue;
 	}
 
+	@Input() hideSuspended: boolean;
+	@Input() title: string = 'internaciones.anamnesis.medicacion.MEDICATION';
+
 	snomedConcept: SnomedDto;
 
 	form: FormGroup;

@@ -247,7 +247,7 @@
 				}
 			},
 			"medicacion": {
-				"TITLE": "Medicación habitual",
+				"TITLE": "Medicación ambulatoria",
 				"table": {
 					"TITLE": "Medicaciones registradas",
 					"columns": {

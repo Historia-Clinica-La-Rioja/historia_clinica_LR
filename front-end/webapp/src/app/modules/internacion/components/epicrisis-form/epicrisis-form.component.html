@@ -5,6 +5,21 @@
 			<h3 [translate]="'internaciones.epicrisis.SUBTITLE'"></h3>
 		</section>
 
+		<section id="mainDiagnosis">
+			<mat-card>
+				<mat-card-content>
+					<mat-form-field appearance="outline">
+						<input matInput
+							   type="text"
+							   formControlName="mainDiagnosis"
+							   name="snomed"
+							   readonly
+						>
+					</mat-form-field>
+				</mat-card-content>
+			</mat-card>
+		</section>
+
 		<section id="diagnosticos">
 			<h2 class="mat-h2" [translate]="'internaciones.epicrisis.diagnosticos.TITLE'"></h2>
 			<table mat-table [dataSource]="diagnosis.data" class="secondary">
@@ -132,6 +147,13 @@
 
 		</section>
 
+		<section id="medication">
+			<app-medicacion [(medications)]="medications"
+							[hideSuspended]="true"
+							[title]="'internaciones.epicrisis.medicacion.TITLE'">
+			</app-medicacion>
+		</section>
+
 		<section id="inmunizations">
 			<h2 class="mat-h2" [translate]="'internaciones.epicrisis.vacunas.TITLE'"></h2>
 			<table mat-table [dataSource]="inmunizations.data" class="secondary">
@@ -163,7 +185,6 @@
 			<app-no-data class="secondary" *ngIf="inmunizations.data.length === 0"></app-no-data>
 
 		</section>
-
 
 		<section id="observations">
 			<h2 [translate]="'internaciones.epicrisis.observations.TITLE'"></h2>

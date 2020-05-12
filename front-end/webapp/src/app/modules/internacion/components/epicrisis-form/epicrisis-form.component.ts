@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {
 	AllergyConditionDto,
-	DiagnosisDto, HealthHistoryConditionDto, InmunizationDto, EpicrisisDto,
+	DiagnosisDto, HealthConditionDto, HealthHistoryConditionDto, InmunizationDto, EpicrisisDto, MedicationDto,
 	ResponseAnamnesisDto,
 	ResponseEpicrisisDto
 } from '@api-rest/api-model';
@@ -25,6 +25,8 @@ export class EpicrisisFormComponent implements OnInit {
 	anamnesis: ResponseAnamnesisDto;
 	form: FormGroup;
 
+	mainDiagnosis: HealthConditionDto;
+	medications: MedicationDto[] = [];
 	diagnosis: TableData<DiagnosisDto> = {
 		data: [],
 		columns: [
@@ -122,6 +124,7 @@ export class EpicrisisFormComponent implements OnInit {
 
 
 		this.form = this.formBuilder.group({
+			mainDiagnosis: [null],
 			observations: this.formBuilder.group ({
 				evolutionNote: [null, Validators.required],
 				indicationsNote: [null, Validators.required],
@@ -148,6 +151,7 @@ export class EpicrisisFormComponent implements OnInit {
 		console.log('selected ', this.familyHistories.selection._selected);
 		console.log('selected ', this.allergies.selection._selected);
 		console.log('selected ', this.inmunizations.selection._selected);
+		console.log('selected medications', this.medications);
 
 		if (this.form.valid) {
 			const epicrisis: EpicrisisDto = {
