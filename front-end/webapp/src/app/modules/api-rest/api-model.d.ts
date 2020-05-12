@@ -347,11 +347,6 @@ export interface MedicationDto extends ClinicalTermDto {
     suspended: boolean;
 }
 
-export interface NewEpicrisisDto extends Serializable {
-    confirmed: boolean;
-    notes?: EpicrisisObservationsDto;
-}
-
 export interface PasswordResetDto {
     password: string;
     token: string;

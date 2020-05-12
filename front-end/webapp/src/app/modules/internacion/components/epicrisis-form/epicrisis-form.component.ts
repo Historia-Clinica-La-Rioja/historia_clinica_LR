@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {
 	AllergyConditionDto,
-	DiagnosisDto, HealthHistoryConditionDto, InmunizationDto, MedicationDto, NewEpicrisisDto,
+	DiagnosisDto, HealthHistoryConditionDto, InmunizationDto, MedicationDto, EpicrisisDto,
 	ResponseAnamnesisDto,
 	ResponseEpicrisisDto
 } from '@api-rest/api-model';
@@ -156,11 +156,17 @@ export class EpicrisisFormComponent implements OnInit {
 
 	save(): void {
 		if (this.form.valid) {
-			const newEpicrisis: NewEpicrisisDto = {
+			const epicrisis: EpicrisisDto = {
 				confirmed: true,
 				notes: this.form.value.observations,
+				diagnosis: [],
+				familyHistories: [],
+				personalHistories: [],
+				medications: [],
+				inmunizations: [],
+				allergies: []
 			};
-			this.epicrisisService.createDocument(newEpicrisis, this.internmentEpisodeId)
+			this.epicrisisService.createDocument(epicrisis, this.internmentEpisodeId)
 				.subscribe((epicrisisResponse: ResponseEpicrisisDto) => {
 					this.epicrisisService.getPDF(epicrisisResponse.id, this.internmentEpisodeId).subscribe(
 						_ => this.goToInternmentSummary(), _ => this.goToInternmentSummary()

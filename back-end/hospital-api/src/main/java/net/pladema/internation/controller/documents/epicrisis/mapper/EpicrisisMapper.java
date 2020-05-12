@@ -3,7 +3,6 @@ package net.pladema.internation.controller.documents.epicrisis.mapper;
 import net.pladema.dates.configuration.LocalDateMapper;
 import net.pladema.internation.controller.documents.epicrisis.dto.EpicrisisDto;
 import net.pladema.internation.controller.documents.epicrisis.dto.EpicrisisGeneralStateDto;
-import net.pladema.internation.controller.documents.epicrisis.dto.NewEpicrisisDto;
 import net.pladema.internation.controller.documents.epicrisis.dto.ResponseEpicrisisDto;
 import net.pladema.internation.controller.ips.mapper.AnthropometricDataMapper;
 import net.pladema.internation.controller.ips.mapper.VitalSignMapper;
@@ -17,9 +16,6 @@ public interface EpicrisisMapper {
 
     @Named("fromEpicrisisDto")
     Epicrisis fromEpicrisisDto(EpicrisisDto epicrisisDto);
-
-    @Named("fromNewEpicrisisDto")
-    Epicrisis fromNewEpicrisisDto(NewEpicrisisDto newEpicrisisDto);
 
     @Named("fromEpicrisis")
     ResponseEpicrisisDto fromEpicrisis(Epicrisis epicrisis);

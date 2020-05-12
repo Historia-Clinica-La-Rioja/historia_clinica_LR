@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { EpicrisisGeneralStateDto, NewEpicrisisDto, ResponseAnamnesisDto, ResponseEpicrisisDto } from '@api-rest/api-model';
+import { EpicrisisGeneralStateDto, EpicrisisDto, ResponseAnamnesisDto, ResponseEpicrisisDto } from '@api-rest/api-model';
 import { environment } from '@environments/environment';
 import { DownloadService } from '@core/services/download.service';
 
@@ -22,7 +22,7 @@ export class EpicrisisService {
 		return this.http.get<EpicrisisGeneralStateDto>(url);
 	}
 
-	createDocument(epicrisis: NewEpicrisisDto, internmentEpisodeId: number): Observable<ResponseEpicrisisDto> {
+	createDocument(epicrisis: EpicrisisDto, internmentEpisodeId: number): Observable<ResponseEpicrisisDto> {
 		const url = `${environment.apiBase}/institutions/${HARD_CODE_INSTITUTION}/internments/${internmentEpisodeId}/epicrisis`;
 		return this.http.post<ResponseEpicrisisDto>(url, epicrisis);
 	}

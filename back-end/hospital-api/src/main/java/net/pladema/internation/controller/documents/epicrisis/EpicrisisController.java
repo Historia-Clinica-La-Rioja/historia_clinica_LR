@@ -6,7 +6,6 @@ import net.pladema.internation.controller.constraints.DocumentValid;
 import net.pladema.internation.controller.constraints.InternmentValid;
 import net.pladema.internation.controller.documents.epicrisis.dto.EpicrisisDto;
 import net.pladema.internation.controller.documents.epicrisis.dto.EpicrisisGeneralStateDto;
-import net.pladema.internation.controller.documents.epicrisis.dto.NewEpicrisisDto;
 import net.pladema.internation.controller.documents.epicrisis.dto.ResponseEpicrisisDto;
 import net.pladema.internation.controller.documents.epicrisis.mapper.EpicrisisMapper;
 import net.pladema.internation.controller.internment.dto.ResponsibleDoctorDto;
@@ -98,12 +97,12 @@ public class EpicrisisController {
     public ResponseEntity<ResponseEpicrisisDto> createDocument(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
-            @RequestBody @Valid NewEpicrisisDto epicrisisDto){
+            @RequestBody @Valid EpicrisisDto epicrisisDto){
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, ananmnesis {}",
                 institutionId, internmentEpisodeId, epicrisisDto);
         Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
                 .orElseThrow(() -> new EntityNotFoundException(INVALID_EPISODE));
-        Epicrisis epicrisis = epicrisisMapper.fromNewEpicrisisDto(epicrisisDto);
+        Epicrisis epicrisis = epicrisisMapper.fromEpicrisisDto(epicrisisDto);
         epicrisis = createEpicrisisService.createDocument(internmentEpisodeId, patientId, epicrisis);
         ResponseEpicrisisDto result = epicrisisMapper.fromEpicrisis(epicrisis);
         LOG.debug(OUTPUT, result);

@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -35,8 +34,6 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
 
     private final MedicationService medicationService;
 
-    private final ClinicalObservationService clinicalObservationService;
-
     private final InmunizationService inmunizationService;
 
     public CreateEpicrisisServiceImpl(DocumentService documentService,
@@ -44,7 +41,6 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
                                       NoteService noteService,
                                       HealthConditionService healthConditionService,
                                       AllergyService allergyService,
-                                      ClinicalObservationService clinicalObservationService,
                                       InmunizationService inmunizationService,
                                       MedicationService medicationService) {
         this.documentService = documentService;
@@ -52,7 +48,6 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
         this.noteService = noteService;
         this.healthConditionService = healthConditionService;
         this.allergyService = allergyService;
-        this.clinicalObservationService = clinicalObservationService;
         this.inmunizationService = inmunizationService;
         this.medicationService = medicationService;
     }
@@ -67,24 +62,12 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
 
         HealthConditionBo mainDiagnosis = healthConditionService.getMainDiagnosisGeneralState(internmentEpisodeId);
         epicrisis.setMainDiagnosis(healthConditionService.loadMainDiagnosis(patientId, document.getId(), Optional.ofNullable(mainDiagnosis)));
-
-        List<DiagnosisBo> lastStateDiagnosis = healthConditionService.getDiagnosisGeneralState(internmentEpisodeId);
-        epicrisis.setDiagnosis(healthConditionService.loadDiagnosis(patientId, document.getId(), lastStateDiagnosis));
-
-        List<HealthHistoryConditionBo> lastPersonalHistories = healthConditionService.getPersonalHistoriesGeneralState(internmentEpisodeId);
-        epicrisis.setPersonalHistories(healthConditionService.loadPersonalHistories(patientId, document.getId(), lastPersonalHistories));
-
-        List<HealthHistoryConditionBo> lastFamilyHistories = healthConditionService.getFamilyHistoriesGeneralState(internmentEpisodeId);
-        epicrisis.setFamilyHistories(healthConditionService.loadFamilyHistories(patientId, document.getId(), lastFamilyHistories));
-
-        List<AllergyConditionBo> lastAllergies = allergyService.getAllergiesGeneralState(internmentEpisodeId);
-        epicrisis.setAllergies(allergyService.loadAllergies(patientId, document.getId(), lastAllergies));
-
-        List<InmunizationBo> lastInmunizations = inmunizationService.getInmunizationsGeneralState(internmentEpisodeId);
-        epicrisis.setInmunizations(inmunizationService.loadInmunization(patientId, document.getId(), lastInmunizations));
-
-        List<MedicationBo> lastMedications = medicationService.getMedicationsGeneralState(internmentEpisodeId);
-        epicrisis.setMedications(medicationService.loadMedications(patientId, document.getId(), lastMedications));
+        epicrisis.setDiagnosis(healthConditionService.loadDiagnosis(patientId, document.getId(), epicrisis.getDiagnosis()));
+        epicrisis.setPersonalHistories(healthConditionService.loadPersonalHistories(patientId, document.getId(), epicrisis.getPersonalHistories()));
+        epicrisis.setFamilyHistories(healthConditionService.loadFamilyHistories(patientId, document.getId(), epicrisis.getPersonalHistories()));
+        epicrisis.setAllergies(allergyService.loadAllergies(patientId, document.getId(), epicrisis.getAllergies()));
+        epicrisis.setInmunizations(inmunizationService.loadInmunization(patientId, document.getId(), epicrisis.getInmunizations()));
+        epicrisis.setMedications(medicationService.loadMedications(patientId, document.getId(), epicrisis.getMedications()));
 
         internmentEpisodeService.updateEpicrisisDocumentId(internmentEpisodeId, document.getId());
         epicrisis.setId(document.getId());
@@ -93,7 +76,7 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
         return epicrisis;
     }
 
-    private Document loadNotes(Document document, Optional<DocumentObservations> optNotes) {
+    private void loadNotes(Document document, Optional<DocumentObservations> optNotes) {
         LOG.debug("Input parameters -> document {}, notes {}", document, optNotes);
         optNotes.ifPresent(notes -> {
             document.setCurrentIllnessNoteId(noteService.createNote(notes.getCurrentIllnessNote()));
@@ -103,9 +86,8 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
             document.setClinicalImpressionNoteId(noteService.createNote(notes.getClinicalImpressionNote()));
             document.setOtherNoteId(noteService.createNote(notes.getOtherNote()));
             document.setIndicationsNoteId(noteService.createNote(notes.getIndicationsNote()));
+            LOG.debug("Notes saved -> {}", notes);
         });
-        LOG.debug(OUTPUT, document);
-        return document;
     }
 
 }
