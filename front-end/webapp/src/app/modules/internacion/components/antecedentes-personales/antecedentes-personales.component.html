@@ -48,5 +48,5 @@
 		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
 		<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 	</table>
-	<app-no-data class="table-secondary" *ngIf="personalHistories.length === 0"></app-no-data>
+	<app-no-data class="secondary" *ngIf="personalHistories.length === 0"></app-no-data>
 </section>

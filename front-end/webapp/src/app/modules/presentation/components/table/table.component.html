@@ -2,7 +2,7 @@
 	<mat-label>Filtro</mat-label>
 	<input matInput (keyup)="applyFilter($event)">
 </mat-form-field>
-<table mat-table [dataSource]="dataSource" [class]="tableClass">
+<table mat-table [dataSource]="dataSource" class="{{mainStyle}}" [ngClass]="{ 'mat-elevation-z8': mainStyle === 'primary' }">
 	<ng-container *ngFor="let column of columns" [matColumnDef]="column.columnDef">
 		<th mat-header-cell *matHeaderCellDef>{{ column.header | translate }}</th>
 		<td mat-cell [ngClass]="{'actions': !!column.action}" *matCellDef="let row">
@@ -27,4 +27,4 @@
 	<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
 	<tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>
-<app-no-data class="table" *ngIf="dataSource?.data?.length === 0"></app-no-data>
+<app-no-data class="{{mainStyle}}" *ngIf="dataSource?.data?.length === 0"></app-no-data>

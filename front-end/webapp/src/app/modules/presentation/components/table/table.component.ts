@@ -10,7 +10,7 @@ import { TableService } from '@core/services/table.service';
 export class TableComponent implements OnInit {
 
 	@Input() model: TableModel<any>;
-	@Input() tableClass: string;
+	@Input() mainStyle: TableStyle = 'default';
 
 	dataSource = new MatTableDataSource<any>([]);
 
@@ -44,6 +44,8 @@ export class TableComponent implements OnInit {
 	}
 
 }
+
+export type TableStyle = 'primary' | 'secondary' | 'default';
 
 export interface ColumnModel<T> {
 	columnDef: string;

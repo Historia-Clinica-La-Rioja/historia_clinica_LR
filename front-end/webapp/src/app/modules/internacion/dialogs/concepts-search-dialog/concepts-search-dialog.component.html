@@ -8,7 +8,7 @@
 	<div class="spinner">
 		<mat-spinner color="primary" *ngIf="!conceptsResultsTable"></mat-spinner>
 	</div>
-	<app-table [model]="conceptsResultsTable" [tableClass]="'secondary'"></app-table>
+	<app-table [model]="conceptsResultsTable" [mainStyle]="'secondary'"></app-table>
 </div>
 <mat-dialog-actions align="end">
 	<button mat-button mat-dialog-close><span [translate]="'buttons.CLOSE'"></span></button>

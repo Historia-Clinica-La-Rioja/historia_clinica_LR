@@ -17,7 +17,7 @@
 				<tr mat-header-row *matHeaderRowDef="diagnosis.displayedColumns"></tr>
 				<tr mat-row *matRowDef="let row; columns: diagnosis.displayedColumns;"></tr>
 			</table>
-			<app-no-data class="table-secondary" *ngIf="diagnosis.data.length === 0"></app-no-data>
+			<app-no-data class="secondary" *ngIf="diagnosis.data.length === 0"></app-no-data>
 
 		</section>
 
@@ -33,7 +33,7 @@
 				<tr mat-header-row *matHeaderRowDef="personalHistories.displayedColumns"></tr>
 				<tr mat-row *matRowDef="let row; columns: personalHistories.displayedColumns;"></tr>
 			</table>
-			<app-no-data class="table-secondary" *ngIf="personalHistories.data.length === 0"></app-no-data>
+			<app-no-data class="secondary" *ngIf="personalHistories.data.length === 0"></app-no-data>
 
 		</section>
 
@@ -49,7 +49,7 @@
 				<tr mat-header-row *matHeaderRowDef="familyHistories.displayedColumns"></tr>
 				<tr mat-row *matRowDef="let row; columns: familyHistories.displayedColumns;"></tr>
 			</table>
-			<app-no-data class="table-secondary" *ngIf="familyHistories.data.length === 0"></app-no-data>
+			<app-no-data class="secondary" *ngIf="familyHistories.data.length === 0"></app-no-data>
 
 		</section>
 
@@ -65,7 +65,7 @@
 				<tr mat-header-row *matHeaderRowDef="allergies.displayedColumns"></tr>
 				<tr mat-row *matRowDef="let row; columns: allergies.displayedColumns;"></tr>
 			</table>
-			<app-no-data class="table-secondary" *ngIf="allergies.data.length === 0"></app-no-data>
+			<app-no-data class="secondary" *ngIf="allergies.data.length === 0"></app-no-data>
 
 		</section>
 
@@ -81,7 +81,7 @@
 				<tr mat-header-row *matHeaderRowDef="inmunizations.displayedColumns"></tr>
 				<tr mat-row *matRowDef="let row; columns: inmunizations.displayedColumns;"></tr>
 			</table>
-			<app-no-data class="table-secondary" *ngIf="inmunizations.data.length === 0"></app-no-data>
+			<app-no-data class="secondary" *ngIf="inmunizations.data.length === 0"></app-no-data>
 
 		</section>
 
@@ -97,7 +97,7 @@
 				<tr mat-header-row *matHeaderRowDef="medications.displayedColumns"></tr>
 				<tr mat-row *matRowDef="let row; columns: medications.displayedColumns;"></tr>
 			</table>
-			<app-no-data class="table-secondary" *ngIf="medications.data.length === 0"></app-no-data>
+			<app-no-data class="secondary" *ngIf="medications.data.length === 0"></app-no-data>
 
 		</section>
 

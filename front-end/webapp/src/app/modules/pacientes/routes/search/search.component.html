@@ -131,7 +131,7 @@
 		<section>
 			<h2 class="mat-body-2" [translate]="'Búsqueda de pacientes'"></h2>
 			<h3 class="mat-body-2" [translate]="'Se encontraron posibles coincidencias.'"></h3>
-			<app-table [model]="matchingPatient" [tableClass]="'primary mat-elevation-z8'"></app-table>
+			<app-table [model]="matchingPatient" [mainStyle]="'primary'"></app-table>
 			<div class="new-patient-button" align="end">
 				<button mat-raised-button color="primary" (click)="goToNewPatient()">
 					<span [translate]="'pacientes.search.NEW_PATIENT'"></span>
