@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AuthenticationService } from '../../services/authentication.service';
+import { catchError } from 'rxjs/operators';
+import { ApiErrorMessage } from '@api-rest/api-model';
 
 @Component({
 	selector: 'app-login',
@@ -8,6 +10,7 @@ import { AuthenticationService } from '../../services/authentication.service';
 	styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
+	public apiError: ApiErrorMessage = null;
 	public form: FormGroup;
 	constructor(
 		private formBuilder: FormBuilder,
@@ -16,10 +19,9 @@ export class LoginComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.form = this.formBuilder.group({
-			username: ['admin@example.com', Validators.required],
-			password: ['admin123', Validators.required],
+			username: [null, Validators.required],
+			password: [null, Validators.required],
 		});
-		// setTimeout(() => this.form.disable(), 2000);
 	}
 
 	hasError(type: string, control: string): boolean {
@@ -34,6 +36,12 @@ export class LoginComponent implements OnInit {
 			this.authenticationService.login(
 				this.form.value.username,
 				this.form.value.password,
+			).pipe(
+				catchError((err: ApiErrorMessage) => {
+					this.apiError = err;
+					this.form.enable();
+					throw err;
+				}),
 			).subscribe(
 				() => this.authenticationService.goHome()
 			);

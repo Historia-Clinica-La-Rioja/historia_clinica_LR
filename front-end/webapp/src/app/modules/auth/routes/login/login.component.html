@@ -31,6 +31,15 @@
 						</mat-error>
 					</mat-form-field>
 				</app-form-input>
+
+				<div *ngIf="apiError">
+					<div class="container" [ngSwitch]="apiError.code">
+						<p class="mat-body" *ngSwitchCase="'invalid.credentials'">Nombre de usuario o clave inválidos</p>
+						<p class="mat-body" *ngSwitchCase="'disabled.username'">Usuario bloqueado</p>
+						<p class="mat-body" *ngSwitchDefault>{{apiError.text || 'Error de acceso'}}</p>
+					</div>
+				</div>
+
 			</mat-card-content>
 			<mat-card-actions align="end">
 				<button mat-raised-button color="primary" type="submit" [disabled]="!form.valid" translate="auth.login.form.SUBMIT"></button>

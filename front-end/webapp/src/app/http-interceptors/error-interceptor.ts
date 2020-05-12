@@ -25,15 +25,15 @@ export class ErrorInterceptor implements HttpInterceptor {
 		return next.handle(request)
 			.pipe(
 				catchError((error: HttpErrorResponse) => {
-					let errorMessage = '';
 
 					if (this.clientSideError(error)) {
-						errorMessage = `Error: ${error.error.message}`;
-					} else {
-						errorMessage = `Error Status: ${error.status}\nMessage: ${error.message}`;
+						throwError(`Error: ${error.error.message}`);
 					}
-					console.error(errorMessage);
-					return throwError(errorMessage);
+					if (error.error) {
+						// errores de BACKEND
+						return throwError(error.error);
+					}
+					return throwError(`Error Status: ${error.status}\nMessage: ${error.message}`);
 				})
 			);
 	}

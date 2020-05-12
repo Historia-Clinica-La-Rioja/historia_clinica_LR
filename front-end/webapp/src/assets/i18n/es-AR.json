@@ -14,7 +14,7 @@
 				"USERNAME_PLACEHOLDER": "admin@example.com",
 				"USERNAME_REQUIRED": "Debe ingresar su usuario",
 				"PASSWORD_LABEL": "Clave",
-				"PASSWORD_PLACEHOLDER": "1234",
+				"PASSWORD_PLACEHOLDER": "admin123",
 				"PASSWORD_REQUIRED": "Debe ingresar su clave",
 				"SUBMIT": "INGRESAR"
 			}
