@@ -184,6 +184,7 @@ public class EpicrisisController {
         LOG.debug("Input parameters -> epicrisis {}", epicrisis);
         Context ctx = new Context(Locale.getDefault());
         ctx.setVariable("patient", patientData);
+        ctx.setVariable("mainDiagnosis", epicrisis.getMainDiagnosis());
         ctx.setVariable("diagnosis", epicrisis.getDiagnosis());
         ctx.setVariable("personalHistories", epicrisis.getPersonalHistories());
         ctx.setVariable("familyHistories", epicrisis.getFamilyHistories());

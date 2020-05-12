@@ -23,6 +23,9 @@ public class EpicrisisDto implements Serializable {
     @Nullable
     private EpicrisisObservationsDto notes;
 
+    @Nullable
+    private DiagnosisDto mainDiagnosis;
+
     @NotNull
     private List<@Valid DiagnosisDto> diagnosis;
 

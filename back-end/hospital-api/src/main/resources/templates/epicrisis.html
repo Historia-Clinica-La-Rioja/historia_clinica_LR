@@ -28,7 +28,19 @@
         <strong>- Sexo: </strong><label  th:text="${patient.person.gender.description}"></label><br/>
     </div>
 
-    <h3>Diagnósticos</h3>
+    <h3>Diagnóstico principal</h3>
+    <div class="row" th:if="${mainDiagnosis == null}">
+        <dl>
+            <dd><p >Sin información</p></dd>
+        </dl>
+    </div>
+    <div class="row" th:if="${mainDiagnosis != null}">
+        <dl>
+            <dd><p  th:text="${'-' + mainDiagnosis.snomed.pt}"></p></dd>
+        </dl>
+    </div>
+
+    <h3>Otros diagnósticos</h3>
     <div class="row" th:if="${#lists.isEmpty(diagnosis)}">
         <dl class="lista" >
             <dd><p >Sin cambios registrados</p></dd>
@@ -74,7 +86,7 @@
         </dl>
     </div>
 
-    <h3>Medicación habitual</h3>
+    <h3>Medicación ambulatoria</h3>
     <div class="row" th:if="${#lists.isEmpty(medications)}">
         <dl>
             <dd><p>Sin cambios registrados</p></dd>
