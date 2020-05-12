@@ -25,6 +25,9 @@ public class EvolutionNoteDto implements Serializable {
     @Nullable
     private DocumentObservationsDto notes;
 
+    @Nullable
+    private HealthConditionDto mainDiagnosis;
+
     @NotNull
     @DiagnosisValid
     private List<@Valid DiagnosisDto> diagnosis = new ArrayList<>();

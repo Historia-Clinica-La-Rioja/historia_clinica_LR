@@ -163,6 +163,7 @@ public class AnamnesisController {
         LOG.debug("Input parameters -> anamnesis {}", anamnesis);
         Context ctx = new Context(Locale.getDefault());
         ctx.setVariable("patient", patientData);
+        ctx.setVariable("mainDiagnosis", anamnesis.getMainDiagnosis());
         ctx.setVariable("diagnosis", anamnesis.getDiagnosis());
         ctx.setVariable("personalHistories", anamnesis.getPersonalHistories());
         ctx.setVariable("familyHistories", anamnesis.getFamilyHistories());

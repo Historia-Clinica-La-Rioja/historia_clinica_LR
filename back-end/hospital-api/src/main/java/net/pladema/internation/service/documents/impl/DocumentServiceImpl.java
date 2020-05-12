@@ -227,10 +227,13 @@ public class DocumentServiceImpl implements DocumentService {
         if(author == null)
             //Responsible
             author = documentRepository.getResponsible(documentId);
-        ResponsibleDoctorBo result = new ResponsibleDoctorBo(author.getId(),
-                author.getFirstName(),
-                author.getLastName(),
-                author.getLicence());
+        ResponsibleDoctorBo result = null;
+
+        if(author != null)
+            result = new ResponsibleDoctorBo(author.getId(),
+                    author.getFirstName(),
+                    author.getLastName(),
+                    author.getLicence());
         LOG.debug(OUTPUT, result);
         return result;
     }

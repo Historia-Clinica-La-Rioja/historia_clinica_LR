@@ -19,6 +19,8 @@ public class EvolutionNote {
 
     private DocumentObservations notes;
 
+    private HealthConditionBo mainDiagnosis;
+
     private List<DiagnosisBo> diagnosis;
 
     private List<InmunizationBo> inmunizations;
