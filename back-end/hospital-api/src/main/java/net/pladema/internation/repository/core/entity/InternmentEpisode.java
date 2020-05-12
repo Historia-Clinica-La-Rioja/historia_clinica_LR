@@ -60,6 +60,10 @@ public class InternmentEpisode extends InternationAuditableEntity {
 	@Column(name = "institution_id")
 	private Integer institutionId;
 
+	public boolean hasEpicrisisDocument(){
+		return epicrisisDocId != null;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;

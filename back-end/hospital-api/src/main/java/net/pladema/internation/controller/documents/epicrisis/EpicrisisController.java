@@ -2,6 +2,7 @@ package net.pladema.internation.controller.documents.epicrisis;
 
 import com.itextpdf.text.DocumentException;
 import io.swagger.annotations.Api;
+import net.pladema.internation.controller.constraints.EpicrisisValid;
 import net.pladema.internation.controller.constraints.DocumentValid;
 import net.pladema.internation.controller.constraints.InternmentValid;
 import net.pladema.internation.controller.documents.epicrisis.dto.EpicrisisDto;
@@ -94,6 +95,7 @@ public class EpicrisisController {
     @PostMapping
     @Transactional
     @InternmentValid
+    @EpicrisisValid
     public ResponseEntity<ResponseEpicrisisDto> createDocument(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
