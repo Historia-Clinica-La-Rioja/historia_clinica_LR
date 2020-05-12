@@ -23,7 +23,7 @@ public class EvolutionNoteDiagnosisValidator implements ConstraintValidator<Evol
 
     @Override
     public void initialize(EvolutionNoteDiagnosisValid constraintAnnotation) {
-
+        // Do nothing.
     }
 
     @Override
@@ -40,6 +40,6 @@ public class EvolutionNoteDiagnosisValidator implements ConstraintValidator<Evol
         HealthConditionBo mainDiagnosis = healthConditionService.getMainDiagnosisGeneralState(internmentEpisodeId);
         if (mainDiagnosis == null)
             return true;
-        return evolutionNoteDto.getDiagnosis().stream().noneMatch(d -> d.getSnomed().equals(mainDiagnosis.getSnomed()));
+        return evolutionNoteDto.getDiagnosis().stream().noneMatch(d -> d.getSnomed().getId().equals(mainDiagnosis.getSnomed().getId()));
     }
 }
