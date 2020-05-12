@@ -15,7 +15,7 @@ public class AnamnesisMainDiagnosisValidator implements ConstraintValidator<Anam
 
     @Override
     public void initialize(AnamnesisMainDiagnosisValid constraintAnnotation) {
-
+    	//empty until done
     }
 
     @Override

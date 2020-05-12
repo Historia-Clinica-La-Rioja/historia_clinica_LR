@@ -12,7 +12,7 @@ import net.pladema.sgx.restclient.configuration.interceptors.AuthInterceptor;
 public class RenaperAuthInterceptor extends AuthInterceptor<RenaperLoginResponse,RenaperAuthService> {
 	
 	private static final String COD_DOMINIO = "codDominio";
-	private static final String TOKEN = "token";
+	private static final String TOKEN_INTERCEPTOR = "token";
 	
 	private RenaperWSConfig renaperWSConfig;
 	
@@ -23,7 +23,7 @@ public class RenaperAuthInterceptor extends AuthInterceptor<RenaperLoginResponse
 
 	@Override
 	protected void addAuthHeaders(HttpHeaders headers) {
-		headers.add(TOKEN, token.get());
+		headers.add(TOKEN_INTERCEPTOR, token.get());
 		headers.add(COD_DOMINIO, renaperWSConfig.getDominio());
 	}
 

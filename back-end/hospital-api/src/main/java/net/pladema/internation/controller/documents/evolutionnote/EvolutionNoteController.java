@@ -32,6 +32,8 @@ public class EvolutionNoteController {
     private static final Logger LOG = LoggerFactory.getLogger(EvolutionNoteController.class);
 
     public static final String OUTPUT = "Output -> {}";
+    
+    public static final String INVALID_INTERNMENT_EPISODE = "internmentepisode.invalid";
 
     private final InternmentEpisodeService internmentEpisodeService;
 
@@ -68,7 +70,7 @@ public class EvolutionNoteController {
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, evolutionNote {}",
                 institutionId, internmentEpisodeId, evolutionNoteDto);
         Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
-                .orElseThrow(() -> new EntityNotFoundException("internmentepisode.invalid"));
+                .orElseThrow(() -> new EntityNotFoundException(INVALID_INTERNMENT_EPISODE));
         EvolutionNote evolutionNote = evolutionNoteMapper.fromEvolutionNoteDto(evolutionNoteDto);
         evolutionNote = createEvolutionNoteService.createDocument(internmentEpisodeId, patientId, evolutionNote);
         ResponseEvolutionNoteDto result = evolutionNoteMapper.fromEvolutionNote(evolutionNote);
@@ -89,7 +91,7 @@ public class EvolutionNoteController {
                 institutionId, internmentEpisodeId, evolutionNoteId, evolutionNoteDto);
         EvolutionNote evolutionNote = evolutionNoteMapper.fromEvolutionNoteDto(evolutionNoteDto);
         Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
-                .orElseThrow(() -> new EntityNotFoundException("internmentepisode.invalid"));
+                .orElseThrow(() -> new EntityNotFoundException(INVALID_INTERNMENT_EPISODE));
         evolutionNote = updateEvolutionNoteService.updateDocument(internmentEpisodeId, patientId, evolutionNote);
         ResponseEvolutionNoteDto result = evolutionNoteMapper.fromEvolutionNote(evolutionNote);
         LOG.debug(OUTPUT, result);

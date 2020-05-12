@@ -14,7 +14,7 @@ public class HealthHistoryConditionValidator implements ConstraintValidator<Heal
 
     @Override
     public void initialize(HealthHistoryConditionValid constraintAnnotation) {
-
+    	//empty until done
     }
 
     @Override

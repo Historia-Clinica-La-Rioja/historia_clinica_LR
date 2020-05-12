@@ -14,7 +14,7 @@ public class DiagnosisValidator implements ConstraintValidator<DiagnosisValid, L
 
     @Override
     public void initialize(DiagnosisValid constraintAnnotation) {
-
+    	//empty until done
     }
 
     @Override

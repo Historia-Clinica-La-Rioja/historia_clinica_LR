@@ -81,7 +81,7 @@ public class InternmentStateController {
         LOG.debug("Imput parameters -> institutionId {}, internmentEpisodeId {}", institutionId, internmentEpisodeId);
         HealthConditionBo mainDiagnosis = healthConditionService.getMainDiagnosisGeneralState(internmentEpisodeId);
         HealthConditionDto result = internmentStateMapper.toHealthConditionDto(mainDiagnosis);
-        LOG.debug("Output -> {}", result);
+        LOG.debug(LOGGING_OUTPUT, result);
         return  ResponseEntity.ok().body(result);
     }
 

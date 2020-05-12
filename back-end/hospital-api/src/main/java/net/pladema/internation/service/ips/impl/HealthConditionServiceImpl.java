@@ -29,8 +29,9 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     public static final String OUTPUT = "Output -> {}";
 
     private static final Logger LOG = LoggerFactory.getLogger(HealthConditionServiceImpl.class);
-    public static final String INPUT_PARAMETERS_INTERNMENT_EPISODE_ID = "Input parameters -> internmentEpisodeId {}";
-    public static final String HEALTH_CONDITION_SAVED = "HealthCondition saved -> {}";
+
+    private static final String LOGGING_HEALTH_CONDITION = "HealthCondition saved ->";
+    private static final String LOGGING_INTERNMENT_EPISODE = "Input parameters -> internmentEpisodeId {}";
 
     private final HealthConditionRepository healthConditionRepository;
     private final SnomedService snomedService;
@@ -55,7 +56,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
             healthCondition.setMain(true);
             healthCondition = updateStatusAndVerification(healthCondition, md);
             healthCondition = healthConditionRepository.save(healthCondition);
-            LOG.debug(HEALTH_CONDITION_SAVED, healthCondition.getId());
+            LOG.debug(LOGGING_HEALTH_CONDITION, healthCondition.getId());
             md.setId(healthCondition.getId());
             md.setVerificationId(healthCondition.getVerificationStatusId());
             md.setStatusId(healthCondition.getStatusId());
@@ -76,7 +77,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
                 healthCondition.setVerificationStatusId(ConditionVerificationStatus.PRESUMPTIVE);
             healthCondition = updateStatusAndVerification(healthCondition, d);
             healthCondition = healthConditionRepository.save(healthCondition);
-            LOG.debug(HEALTH_CONDITION_SAVED, healthCondition.getId());
+            LOG.debug(LOGGING_HEALTH_CONDITION, healthCondition.getId());
 
             d.setId(healthCondition.getId());
             d.setVerificationId(healthCondition.getVerificationStatusId());
@@ -106,7 +107,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         personalHistories.forEach(ph -> {
             HealthCondition healthCondition = buildHistoryHealth(patientId, ph, true);
             healthCondition = healthConditionRepository.save(healthCondition);
-            LOG.debug(HEALTH_CONDITION_SAVED, healthCondition.getId());
+            LOG.debug(LOGGING_HEALTH_CONDITION, healthCondition.getId());
 
             ph.setId(healthCondition.getId());
             ph.setVerificationId(healthCondition.getVerificationStatusId());
@@ -125,7 +126,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         familyHistories.forEach(ph -> {
             HealthCondition healthCondition = buildHistoryHealth(patientId, ph, false);
             healthCondition = healthConditionRepository.save(healthCondition);
-            LOG.debug(HEALTH_CONDITION_SAVED, healthCondition.getId());
+            LOG.debug(LOGGING_HEALTH_CONDITION, healthCondition.getId());
 
             ph.setId(healthCondition.getId());
             ph.setVerificationId(healthCondition.getVerificationStatusId());
@@ -172,7 +173,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
 
     @Override
     public GeneralHealthConditionBo getGeneralState(Integer internmentEpisodeId) {
-        LOG.debug(INPUT_PARAMETERS_INTERNMENT_EPISODE_ID, internmentEpisodeId);
+        LOG.debug(LOGGING_INTERNMENT_EPISODE, internmentEpisodeId);
         List<HealthConditionVo> data = getGeneralStateData(internmentEpisodeId);
         GeneralHealthConditionBo result = new GeneralHealthConditionBo(data);
         LOG.debug(OUTPUT, result);
@@ -181,7 +182,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
 
     @Override
     public HealthConditionBo getMainDiagnosisGeneralState(Integer internmentEpisodeId) {
-        LOG.debug(INPUT_PARAMETERS_INTERNMENT_EPISODE_ID, internmentEpisodeId);
+        LOG.debug(LOGGING_INTERNMENT_EPISODE, internmentEpisodeId);
         List<HealthConditionVo> data = getGeneralStateData(internmentEpisodeId);
         GeneralHealthConditionBo generalHealthConditionBo = new GeneralHealthConditionBo(data);
         HealthConditionBo result =  generalHealthConditionBo.getMainDiagnosis();
@@ -191,7 +192,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
 
     @Override
     public List<DiagnosisBo> getDiagnosisGeneralState(Integer internmentEpisodeId) {
-        LOG.debug(INPUT_PARAMETERS_INTERNMENT_EPISODE_ID, internmentEpisodeId);
+        LOG.debug(LOGGING_INTERNMENT_EPISODE, internmentEpisodeId);
         List<HealthConditionVo> data = getGeneralStateData(internmentEpisodeId);
         GeneralHealthConditionBo generalHealthConditionBo = new GeneralHealthConditionBo(data);
         List<DiagnosisBo> result =  generalHealthConditionBo.getDiagnosis();
@@ -201,7 +202,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
 
     @Override
     public List<HealthHistoryConditionBo> getPersonalHistoriesGeneralState(Integer internmentEpisodeId) {
-        LOG.debug(INPUT_PARAMETERS_INTERNMENT_EPISODE_ID, internmentEpisodeId);
+        LOG.debug(LOGGING_INTERNMENT_EPISODE, internmentEpisodeId);
         List<HealthConditionVo> data = getGeneralStateData(internmentEpisodeId);
         GeneralHealthConditionBo generalHealthConditionBo = new GeneralHealthConditionBo(data);
         List<HealthHistoryConditionBo> result =  generalHealthConditionBo.getPersonalHistories();
@@ -211,7 +212,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
 
     @Override
     public List<HealthHistoryConditionBo> getFamilyHistoriesGeneralState(Integer internmentEpisodeId) {
-        LOG.debug(INPUT_PARAMETERS_INTERNMENT_EPISODE_ID, internmentEpisodeId);
+        LOG.debug(LOGGING_INTERNMENT_EPISODE, internmentEpisodeId);
         List<HealthConditionVo> data = getGeneralStateData(internmentEpisodeId);
         GeneralHealthConditionBo generalHealthConditionBo = new GeneralHealthConditionBo(data);
         List<HealthHistoryConditionBo> result =  generalHealthConditionBo.getFamilyHistories();
