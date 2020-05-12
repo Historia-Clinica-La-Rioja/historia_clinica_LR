@@ -13,7 +13,9 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class BedBo implements Serializable {
 
-    private Integer id;
+	private static final long serialVersionUID = -2293306512355827552L;
+
+	private Integer id;
 
     private String bedNumber;
 

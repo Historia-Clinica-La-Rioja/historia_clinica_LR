@@ -54,7 +54,7 @@ public class AllergyIntoleranceRepositoryImpl implements AllergyIntoleranceRepos
                 .setParameter("allergyIntoleranceStatus", AllergyIntoleranceVerificationStatus.ERROR)
                 .getResultList();
         List<AllergyConditionVo> result = new ArrayList<>();
-        queryResult.forEach(a -> {
+        queryResult.forEach(a -> 
             result.add(new AllergyConditionVo(
                     (Integer)a[0],
                     new Snomed((String)a[1], (String)a[2], null, null),
@@ -62,8 +62,8 @@ public class AllergyIntoleranceRepositoryImpl implements AllergyIntoleranceRepos
                     (String)a[4],
                     (String)a[5],
                     a[6] != null ? ((Date)a[6]).toLocalDate() : null
-            ));
-        });
+            ))
+        );
         return result;
     }
 }

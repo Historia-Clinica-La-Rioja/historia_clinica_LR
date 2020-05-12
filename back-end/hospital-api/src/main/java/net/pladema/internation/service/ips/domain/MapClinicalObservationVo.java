@@ -69,27 +69,27 @@ public class MapClinicalObservationVo {
     public Optional<VitalSignBo> getLastNVitalSigns(int i) {
         LOG.debug("Input parameters -> pos {}", i);
         VitalSignBo vitalSignBo = new VitalSignBo();
-        getLastNClinicalObservationByCode(EVitalSign.BLOOD_OXYGEN_SATURATION.getSctidCode(),i).ifPresent(v -> {
-            vitalSignBo.setBloodOxygenSaturation(new ClinicalObservationBo(v));
-        });
-        getLastNClinicalObservationByCode(EVitalSign.DIASTOLIC_BLOOD_PRESSURE.getSctidCode(),i).ifPresent(v -> {
-            vitalSignBo.setDiastolicBloodPressure(new ClinicalObservationBo(v));
-        });
-        getLastNClinicalObservationByCode(EVitalSign.SYSTOLIC_BLOOD_PRESSURE.getSctidCode(),i).ifPresent(v -> {
-            vitalSignBo.setSystolicBloodPressure(new ClinicalObservationBo(v));
-        });
-        getLastNClinicalObservationByCode(EVitalSign.HEART_RATE.getSctidCode(),i).ifPresent(v -> {
-            vitalSignBo.setHeartRate(new ClinicalObservationBo(v));
-        });
-        getLastNClinicalObservationByCode(EVitalSign.TEMPERATURE.getSctidCode(),i).ifPresent(v -> {
-            vitalSignBo.setTemperature(new ClinicalObservationBo(v));
-        });
-        getLastNClinicalObservationByCode(EVitalSign.RESPIRATORY_RATE.getSctidCode(),i).ifPresent(v -> {
-            vitalSignBo.setRespiratoryRate(new ClinicalObservationBo(v));
-        });
-        getLastNClinicalObservationByCode(EVitalSign.MEAN_PRESSURE.getSctidCode(),i).ifPresent(v -> {
-            vitalSignBo.setMeanPressure(new ClinicalObservationBo(v));
-        });
+        getLastNClinicalObservationByCode(EVitalSign.BLOOD_OXYGEN_SATURATION.getSctidCode(),i).ifPresent(v ->
+            vitalSignBo.setBloodOxygenSaturation(new ClinicalObservationBo(v))
+        );
+        getLastNClinicalObservationByCode(EVitalSign.DIASTOLIC_BLOOD_PRESSURE.getSctidCode(),i).ifPresent(v -> 
+            vitalSignBo.setDiastolicBloodPressure(new ClinicalObservationBo(v))
+        );
+        getLastNClinicalObservationByCode(EVitalSign.SYSTOLIC_BLOOD_PRESSURE.getSctidCode(),i).ifPresent(v -> 
+            vitalSignBo.setSystolicBloodPressure(new ClinicalObservationBo(v))
+        );
+        getLastNClinicalObservationByCode(EVitalSign.HEART_RATE.getSctidCode(),i).ifPresent(v -> 
+            vitalSignBo.setHeartRate(new ClinicalObservationBo(v))
+        );
+        getLastNClinicalObservationByCode(EVitalSign.TEMPERATURE.getSctidCode(),i).ifPresent(v -> 
+            vitalSignBo.setTemperature(new ClinicalObservationBo(v))
+        );
+        getLastNClinicalObservationByCode(EVitalSign.RESPIRATORY_RATE.getSctidCode(),i).ifPresent(v -> 
+            vitalSignBo.setRespiratoryRate(new ClinicalObservationBo(v))
+        );
+        getLastNClinicalObservationByCode(EVitalSign.MEAN_PRESSURE.getSctidCode(),i).ifPresent(v -> 
+            vitalSignBo.setMeanPressure(new ClinicalObservationBo(v))
+        );
         LOG.debug(OUTPUT, vitalSignBo);
         if (vitalSignBo.hasValues())
             return Optional.of(vitalSignBo);

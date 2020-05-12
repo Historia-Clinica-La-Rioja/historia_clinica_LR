@@ -1,5 +1,7 @@
 package net.pladema.internation.repository.ips.generalstate;
 
+import java.util.Objects;
+
 import lombok.*;
 import net.pladema.internation.repository.masterdata.entity.Snomed;
 
@@ -20,4 +22,23 @@ public class MedicationVo extends ClinicalTermVo{
         this.noteId = noteId;
         this.note = note;
     }
+    
+	@Override
+	public int hashCode() {
+		return Objects.hash(noteId, note);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		MedicationVo other = (MedicationVo) obj;
+		return super.equals(other) &&
+			   Objects.equals(noteId, other.getNoteId()) &&
+			   Objects.equals(note, other.getNote());
+	}
 }

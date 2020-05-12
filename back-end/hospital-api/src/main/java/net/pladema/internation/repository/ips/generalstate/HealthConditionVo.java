@@ -1,11 +1,16 @@
 package net.pladema.internation.repository.ips.generalstate;
 
-import lombok.*;
+import java.time.LocalDate;
+import java.util.Objects;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import net.pladema.internation.repository.masterdata.entity.ConditionVerificationStatus;
 import net.pladema.internation.repository.masterdata.entity.ProblemType;
 import net.pladema.internation.repository.masterdata.entity.Snomed;
-
-import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -49,4 +54,24 @@ public class HealthConditionVo extends ClinicalTermVo {
     public boolean isPresumptive() {
         return (verificationId != null && verificationId.equalsIgnoreCase(ConditionVerificationStatus.PRESUMPTIVE));
     }
+    
+	@Override
+	public int hashCode() {
+		return Objects.hash(verificationId, problemId, noteId, note);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		HealthConditionVo other = (HealthConditionVo) obj;
+		return Objects.equals(verificationId, other.getVerificationId()) && 
+			   Objects.equals(problemId, other.getProblemId()) &&
+			   Objects.equals(noteId, other.getNoteId()) &&
+			   Objects.equals(note, other.getNote());
+	}
 }

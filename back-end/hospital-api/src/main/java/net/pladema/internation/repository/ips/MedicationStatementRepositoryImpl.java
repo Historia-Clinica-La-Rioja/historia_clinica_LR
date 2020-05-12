@@ -53,15 +53,15 @@ public class MedicationStatementRepositoryImpl implements MedicationStatementRep
                 .setParameter("medicationStatusId", MedicationStatementStatus.ERROR)
                 .getResultList();
         List<MedicationVo> result = new ArrayList<>();
-        queryResult.forEach(m -> {
+        queryResult.forEach(m -> 
             result.add(new MedicationVo(
                     (Integer)m[0],
                     new Snomed((String)m[1], (String)m[2], null, null),
                     (String)m[3],
                     m[4] != null ? ((BigInteger)m[4]).longValue() : null,
                     (String)m[5]
-            ));
-        });
+            ))
+        );
         return result;
     }
 }

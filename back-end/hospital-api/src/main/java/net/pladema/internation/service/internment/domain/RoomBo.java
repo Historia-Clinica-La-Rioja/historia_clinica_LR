@@ -1,5 +1,7 @@
 package net.pladema.internation.service.internment.domain;
 
+import java.io.Serializable;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -7,9 +9,11 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class RoomBo {
+public class RoomBo implements Serializable {
 
-    private Integer id;
+	private static final long serialVersionUID = -5646044578379828761L;
+
+	private Integer id;
 
     private String description;
 

@@ -7,6 +7,8 @@ import lombok.ToString;
 import net.pladema.internation.repository.listener.InternationListener;
 import net.pladema.internation.service.ips.domain.enums.EVitalSign;
 
+import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -26,14 +28,30 @@ public class ObservationVitalSign extends ClinicalObservation {
 	 */
 	private static final long serialVersionUID = -3053291021636483828L;
 	private static final String VITAL_SIGN = "61746007";
-	private static final String VITAL_SIGN_LOINC = "85353-1";
-
+	
 	@Column(name = "loinc_code", length = 20)
 	private String loincCode;
 
 	public ObservationVitalSign(Integer patientId, String value, EVitalSign evitalSign){
 		super(patientId, value, evitalSign.getSctidCode(), VITAL_SIGN);
 		this.loincCode = evitalSign.getLoincCode();
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(loincCode);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ObservationVitalSign other = (ObservationVitalSign) obj;
+		return Objects.equals(loincCode, other.getLoincCode());
 	}
 
 }
