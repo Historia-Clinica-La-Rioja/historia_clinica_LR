@@ -150,6 +150,7 @@
 				"MEDICATION": "Medicación",
 				"form": {
 					"CLINICAL_STATUS": "Estado clínico",
+					"SUSPENDED": "Suspendido",
 					"NOTE": "Notas"
 				},
 				"table": {

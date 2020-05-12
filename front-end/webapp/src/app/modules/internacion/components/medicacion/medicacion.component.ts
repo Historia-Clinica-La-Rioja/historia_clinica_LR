@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { MedicationDto, SnomedDto, MasterDataInterface } from '@api-rest/api-model';
+import { MedicationDto, SnomedDto } from '@api-rest/api-model';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
 
 @Component({
@@ -28,7 +27,6 @@ export class MedicacionComponent implements OnInit {
 	snomedConcept: SnomedDto;
 
 	form: FormGroup;
-	clinicalStatus: MasterDataInterface<string>[];
 
 	//Mat table
 	columns = [
@@ -55,6 +53,7 @@ export class MedicacionComponent implements OnInit {
 	ngOnInit(): void {
 		this.form = this.formBuilder.group({
 			note: [null],
+			suspended: [false],
 			snomed: [null, Validators.required]
 		});
 
@@ -66,7 +65,7 @@ export class MedicacionComponent implements OnInit {
 				id: null,
 				note: this.form.value.note,
 				snomed: this.snomedConcept,
-				suspended: null,
+				suspended: this.form.value.suspended,
 				statusId: null
 			};
 			this.add(medicacion);

@@ -23,6 +23,13 @@
 						placeholder="{{'internaciones.anamnesis.observations.DESCRIPTION' | translate }}">
 						</textarea>
 				</mat-form-field>
+
+				<div class="margin-bottom">
+					<mat-checkbox formControlName="suspended">
+						<span [translate]="'internaciones.anamnesis.medicacion.form.SUSPENDED'"></span>
+					</mat-checkbox>
+				</div>
+
 				<div align="end">
 					<button class="uppercase" mat-raised-button color="primary" type="submit">
 						<span [translate]="'internaciones.anamnesis.medicacion.ADD'"></span>
