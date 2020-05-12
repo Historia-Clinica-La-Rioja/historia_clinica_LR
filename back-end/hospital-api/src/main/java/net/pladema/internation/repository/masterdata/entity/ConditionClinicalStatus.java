@@ -33,4 +33,7 @@ public class ConditionClinicalStatus implements Serializable {
 	@Column(name = "description", nullable = false, length = 100)
 	private String description;
 
+	public static String[] downState(){
+		return new String[]{REMISSION, SOLVED};
+	}
 }
