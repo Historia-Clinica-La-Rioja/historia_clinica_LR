@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {
 	AllergyConditionDto,
-	DiagnosisDto, HealthHistoryConditionDto, InmunizationDto, MedicationDto, EpicrisisDto,
+	DiagnosisDto, HealthHistoryConditionDto, InmunizationDto, EpicrisisDto,
 	ResponseAnamnesisDto,
 	ResponseEpicrisisDto
 } from '@api-rest/api-model';
@@ -10,6 +10,7 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { EpicrisisService } from '@api-rest/services/epicrisis.service';
 import { DatePipe } from '@angular/common';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
 	selector: 'app-epicrisis-form',
@@ -36,9 +37,10 @@ export class EpicrisisFormComponent implements OnInit {
 				def: 'status',
 				header: 'internaciones.epicrisis.diagnosticos.table.columns.STATUS',
 				text: ap => ap.presumptive ? 'Presuntivo' : 'Confirmado'
-			}
+			},
 		],
-		displayedColumns: []
+		displayedColumns: [],
+		selection: new SelectionModel<any>(true, [])
 	};
 	personalHistories: TableData<HealthHistoryConditionDto> = {
 		data: [],
@@ -49,7 +51,8 @@ export class EpicrisisFormComponent implements OnInit {
 				text: af => af.snomed.pt
 			}
 		],
-		displayedColumns: []
+		displayedColumns: [],
+		selection: new SelectionModel<any>(true, [])
 	};
 	familyHistories: TableData<HealthHistoryConditionDto> = {
 		data: [],
@@ -60,7 +63,8 @@ export class EpicrisisFormComponent implements OnInit {
 				text: af => af.snomed.pt
 			}
 		],
-		displayedColumns: []
+		displayedColumns: [],
+		selection: new SelectionModel<any>(true, [])
 	};
 	allergies: TableData<AllergyConditionDto> = {
 		data: [],
@@ -71,7 +75,8 @@ export class EpicrisisFormComponent implements OnInit {
 				text: a => a.snomed.pt
 			}
 		],
-		displayedColumns: []
+		displayedColumns: [],
+		selection: new SelectionModel<any>(true, [])
 	};
 	inmunizations: TableData<InmunizationDto> = {
 		data: [],
@@ -87,23 +92,8 @@ export class EpicrisisFormComponent implements OnInit {
 				text: v => this.datePipe.transform(v.administrationDate, 'dd/MM/yyyy')
 			},
 		],
-		displayedColumns: []
-	};
-	medications: TableData<MedicationDto> = {
-		data: [],
-		columns: [
-			{
-				def: 'problemType',
-				header: 'internaciones.epicrisis.medicacion.table.columns.MEDICATION',
-				text: v => v.snomed.pt
-			},
-			{
-				def: 'note',
-				header: 'internaciones.epicrisis.medicacion.table.columns.NOTE',
-				text: v => v.note
-			},
-		],
-		displayedColumns: []
+		displayedColumns: [],
+		selection: new SelectionModel<any>(true, [])
 	};
 
 	constructor(
@@ -114,12 +104,11 @@ export class EpicrisisFormComponent implements OnInit {
 		private datePipe: DatePipe,
 		private snackBarService: SnackBarService
 	) {
-		this.diagnosis.displayedColumns = this.diagnosis.columns?.map(c => c.def);
-		this.familyHistories.displayedColumns = this.familyHistories.columns?.map(c => c.def);
-		this.personalHistories.displayedColumns = this.personalHistories.columns?.map(c => c.def);
-		this.allergies.displayedColumns = this.allergies.columns?.map(c => c.def);
-		this.inmunizations.displayedColumns = this.inmunizations.columns?.map(c => c.def);
-		this.medications.displayedColumns = this.medications.columns?.map(c => c.def);
+		this.diagnosis.displayedColumns = this.diagnosis.columns?.map(c => c.def).concat(['select']);
+		this.familyHistories.displayedColumns = this.familyHistories.columns?.map(c => c.def).concat(['select']);
+		this.personalHistories.displayedColumns = this.personalHistories.columns?.map(c => c.def).concat(['select']);
+		this.allergies.displayedColumns = this.allergies.columns?.map(c => c.def).concat(['select']);
+		this.inmunizations.displayedColumns = this.inmunizations.columns?.map(c => c.def).concat(['select']);
 
 	}
 
@@ -150,11 +139,16 @@ export class EpicrisisFormComponent implements OnInit {
 			this.familyHistories.data = response.familyHistories;
 			this.allergies.data = response.allergies;
 			this.inmunizations.data = response.inmunizations;
-			this.medications.data = response.medications;
 		});
 	}
 
 	save(): void {
+		console.log('selected ', this.diagnosis.selection._selected);
+		console.log('selected ', this.personalHistories.selection._selected);
+		console.log('selected ', this.familyHistories.selection._selected);
+		console.log('selected ', this.allergies.selection._selected);
+		console.log('selected ', this.inmunizations.selection._selected);
+
 		if (this.form.valid) {
 			const epicrisis: EpicrisisDto = {
 				confirmed: true,
@@ -187,10 +181,25 @@ export class EpicrisisFormComponent implements OnInit {
 		this.router.navigate([url]);
 	}
 
+
+	isAllSelected(dataSource, selection: SelectionModel<any>) {
+		const numSelected = selection.selected.length;
+		const numRows = dataSource.length;
+		return numSelected === numRows;
+	}
+
+	/** Selects all rows if they are not all selected; otherwise clear selection. */
+	masterToggle(dataSource, selection: SelectionModel<any>) {
+		this.isAllSelected(dataSource, selection) ?
+			selection.clear() :
+			dataSource.forEach(row => selection.select(row));
+	}
+
 }
 
 interface TableData<T> {
 	data: T[];
 	columns: any[];
 	displayedColumns: string[];
+	selection;
 }
