@@ -10,9 +10,8 @@ import {
 
 const renderRoom = room => `${room.roomNumber} - ${room.description}`;
 const BedList = props => (
-    <List {...props} >
+    <List {...props} hasCreate={false} >
         <Datagrid rowClick="show">
-                <TextField source="id" />
                 <TextField source="bedNumber" />
                 <ReferenceField source="roomId" reference="rooms">
                     <FunctionField render={renderRoom} />

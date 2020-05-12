@@ -8,7 +8,7 @@ import {
 } from 'react-admin';
 
 const InstitutionList = props => (
-    <List {...props} >
+    <List {...props} hasCreate={false} >
         <Datagrid rowClick="show">
             <TextField source="roomNumber"/>
             <TextField source="description" />

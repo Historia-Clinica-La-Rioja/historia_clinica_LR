@@ -18,7 +18,7 @@ const SectorCreate = props => (
                 sort={{ field: 'name', order: 'ASC' }}
                 filterToQuery={searchText => ({name: searchText})}                
             >
-                <AutocompleteInput optionText="name" optionValue="id"/>
+                <AutocompleteInput optionText="name" optionValue="id" options={{ disabled: true }}/>
             </ReferenceInput>
         </SimpleForm>
     </Create>

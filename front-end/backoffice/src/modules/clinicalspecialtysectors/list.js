@@ -9,7 +9,7 @@ import {
 import SubReference from '../components/subreference';
 
 const ClinicalSpecialtySectorList = props => (
-    <List {...props} >
+    <List {...props} hasCreate={false} >
         <Datagrid rowClick="show">
             <TextField source="description"/>
             <ReferenceField source="sectorId" reference="sectors">

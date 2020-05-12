@@ -11,7 +11,7 @@ import SubReference from '../components/subreference';
 import renderPerson from '../components/renderperson';
 
 const HealthcareProfessionalSpecialtyList = props => (
-    <List {...props} >
+    <List {...props} hasCreate={false}>
         <Datagrid rowClick="show">
             <TextField source="description"/>
             <ReferenceField source="healthcareProfessionalId" reference="healthcareprofessionals" link={false}>

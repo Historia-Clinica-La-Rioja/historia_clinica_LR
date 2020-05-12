@@ -21,7 +21,7 @@ const BedCreate = props => (
                 validate={[required()]}
                 filterToQuery={searchText => ({description: searchText ? searchText : -1})}                
             >
-                <AutocompleteInput optionText="description" optionValue="id"/>
+                <AutocompleteInput optionText="description" optionValue="id" options={{ disabled: true }} />
             </ReferenceInput>
             <ReferenceInput
                 source="bedCategoryId"

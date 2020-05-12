@@ -22,7 +22,7 @@ const RoomCreate = props => (
                 sort={{ field: 'description', order: 'ASC' }}
                 filterToQuery={searchText => ({description: searchText})}                
             >
-                <AutocompleteInput optionText="description" optionValue="id"/>
+                <AutocompleteInput optionText="description" optionValue="id" options={{ disabled: true }} />
             </ReferenceInput>
         </SimpleForm>
     </Create>

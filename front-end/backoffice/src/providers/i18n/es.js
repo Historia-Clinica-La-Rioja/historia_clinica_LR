@@ -23,7 +23,6 @@ export default {
         "sector-description-inst-unique": "Ya existe un sector con el mismo nombre en la institución"
     },
     resources: {
-
         beds: {
             name: 'Cama |||| Camas',
             fields: {
@@ -35,6 +34,7 @@ export default {
                 free: 'Libre',
                 internmentepisodes: 'Episodios de internación activos para esta cama'
             },
+            createRelated: 'Crear Cama'
         },
         rooms: {
           name: 'Habitación |||| Habitaciones',
@@ -45,8 +45,10 @@ export default {
               dischargeDate: 'Fecha de alta',
               sectorId: 'Sector',
               clinicalSpecialtySectorId: 'Especialidad | Sector',
-              roomNumber: 'Nro. habitación'
+              roomNumber: 'Nro. habitación',
+              beds: 'Camas'
           },
+            createRelated: 'Crear Habitación'
         },
         cities: {
             name: 'Ciudad |||| Ciudades',
@@ -80,6 +82,7 @@ export default {
                 phone: 'Teléfono',
                 sisaCode: 'Código SISA',
                 addressId: 'Dirección',
+                sectors: 'Sectores',
             },
         }, 
         sectors: {
@@ -87,7 +90,9 @@ export default {
             fields: {
                 institutionId: 'Institución',
                 description: 'Nombre',
-            }
+                clinicalspecialtysectors: 'Especialidad | Sector'
+            },
+            createRelated: 'Crear Sector'
         }, 
         clinicalspecialties: {
             name: 'Especialidad |||| Especialidades',
@@ -95,7 +100,7 @@ export default {
                 name: 'Nombre',
                 description: 'Descripción',
                 sctidCode: 'Código SNOMED',
-            }
+            },
         }, 
         clinicalspecialtysectors: {
             name: 'Especialidad | Sector',
@@ -103,7 +108,9 @@ export default {
                 description: 'Descripción',
                 sectorId: 'Sector',
                 clinicalSpecialtyId: 'Especialidad',
-            }
+                rooms: 'Habitaciones',
+            },
+            createRelated: 'Crear Especialidad | Sector'
         }, 
         professionalspecialties: {
             name: 'Profesión |||| Profesiones',
@@ -120,6 +127,7 @@ export default {
                 personId: 'Persona',
                 licenseNumber: 'Nro. Licencia',
                 isMedicalDoctor: 'Es médico?',
+                healthcareprofessionalspecialties: 'Profesional | Profesión'
             }
         }, 
         healthcareprofessionalspecialties: {
@@ -129,7 +137,8 @@ export default {
                 professionalSpecialtyId: 'Profesión',
                 personId: 'Persona',
                 description: 'Descripción',
-            }
+            },
+            createRelated: 'Crear Profesional | Profesión',
         }, 
         users: {
             name: 'Usuario |||| Usuarios',

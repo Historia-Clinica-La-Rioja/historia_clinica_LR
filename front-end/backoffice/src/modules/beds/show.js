@@ -16,7 +16,6 @@ const renderRoom = room => `${room.roomNumber} - ${room.description}`;
 const BedShow = props => (
     <Show {...props}>
         <SimpleShowLayout>
-            <TextField source="id" />
             <TextField source="bedNumber" />
             <ReferenceField source="roomId" reference="rooms">
                 <FunctionField render={renderRoom} />
@@ -37,6 +36,9 @@ const BedShow = props => (
                     <DateField source="entryDate" />
                 </Datagrid>
             </ReferenceManyField>
+            <ReferenceField source="bedCategoryId" reference="bedcategories" >
+                <TextField source="description" />
+            </ReferenceField>
         </SimpleShowLayout>
     </Show>
 );

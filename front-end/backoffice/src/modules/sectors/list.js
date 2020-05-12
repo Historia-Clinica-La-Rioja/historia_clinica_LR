@@ -7,7 +7,7 @@ import {
 } from 'react-admin';
 
 const SectorList = props => (
-    <List {...props} >
+    <List {...props} hasCreate={false} >
         <Datagrid rowClick="show">
             <TextField source="description" />
             <ReferenceField source="institutionId" reference="institutions">

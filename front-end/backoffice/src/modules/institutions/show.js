@@ -6,8 +6,11 @@ import {
     TextField,
     TopToolbar,
     EditButton,
+    ReferenceManyField,
+    Datagrid,
 } from 'react-admin';
-
+import CreateRelatedButton from '../components/CreateRelatedButton';
+import SectionTitle from '../components/SectionTitle';
 
 const InstitutionShowActions = ({ data }) => {
     return (!data || !data.id) ? <TopToolbar></TopToolbar> :
@@ -36,6 +39,24 @@ const InstitutionShow = props => (
             <ReferenceField label="Longitud" source="addressId" reference="addresses" link={false}>
                 <TextField  source="longitud" />
             </ReferenceField>
+            <SectionTitle label="resources.institutions.fields.sectors"/>
+            <CreateRelatedButton
+                reference="sectors"
+                refFieldName="institutionId"
+                label="resources.sectors.createRelated"
+            />
+            {/*TODO: Aislar esto en un componente. También se usa en edit.js*/}
+            <ReferenceManyField
+                addLabel={false}
+                reference="sectors"
+                target="institutionId"
+                sort={{ field: 'description', order: 'DESC' }}
+            >
+                <Datagrid rowClick="show">
+                    <TextField source="description" />
+                    <EditButton />
+                </Datagrid>
+            </ReferenceManyField>
         </SimpleShowLayout>
     </Show>
 );
