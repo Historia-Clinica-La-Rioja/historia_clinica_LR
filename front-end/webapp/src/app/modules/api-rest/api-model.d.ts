@@ -148,12 +148,6 @@ export interface ClinicalSpecialtyDto {
     name: string;
 }
 
-export interface ClinicalTerm extends Serializable {
-    id: number;
-    snomed: SnomedBo;
-    statusId: string;
-}
-
 export interface ClinicalTermDto extends Serializable {
     id: number;
     snomed: SnomedDto;
@@ -207,7 +201,7 @@ export interface EpicrisisGeneralStateDto extends Serializable {
     diagnosis: DiagnosisDto[];
     familyHistories: HealthHistoryConditionDto[];
     inmunizations: InmunizationDto[];
-    mainDiagnosis: HealthConditionBo;
+    mainDiagnosis: HealthConditionDto;
     medications: MedicationDto[];
     personalHistories: HealthHistoryConditionDto[];
 }
@@ -242,10 +236,6 @@ export interface HealthCareProfessionalGroupDto {
     healthcareProfessionalId: number;
     internmentEpisodeId: number;
     responsible: boolean;
-}
-
-export interface HealthConditionBo extends ClinicalTerm {
-    verificationId: string;
 }
 
 export interface HealthConditionDto extends ClinicalTermDto {
@@ -459,13 +449,6 @@ export interface SectorDto extends Serializable {
 }
 
 export interface Serializable {
-}
-
-export interface SnomedBo extends Serializable {
-    id: string;
-    parentFsn: string;
-    parentId: string;
-    pt: string;
 }
 
 export interface SnomedDto extends Serializable {

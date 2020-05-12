@@ -53,6 +53,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         mainDiagnosis.ifPresent(md -> {
             HealthCondition healthCondition = buildHealth(patientId, md, true);
             healthCondition.setMain(true);
+            healthCondition = uppdateStatusAndVerification(healthCondition, md);
             healthCondition = healthConditionRepository.save(healthCondition);
             LOG.debug(HEALTH_CONDITION_SAVED, healthCondition.getId());
             md.setId(healthCondition.getId());
@@ -73,6 +74,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
             HealthCondition healthCondition = buildHealth(patientId, d, true);
             if (d.isPresumptive())
                 healthCondition.setVerificationStatusId(ConditionVerificationStatus.PRESUMPTIVE);
+            healthCondition = uppdateStatusAndVerification(healthCondition, d);
             healthCondition = healthConditionRepository.save(healthCondition);
             LOG.debug(HEALTH_CONDITION_SAVED, healthCondition.getId());
 
@@ -85,6 +87,16 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         List<DiagnosisBo> result = diagnosis;
         LOG.debug(OUTPUT, result);
         return result;
+    }
+
+    private <T extends HealthConditionBo> HealthCondition uppdateStatusAndVerification(HealthCondition healthCondition, T newDiagnosis) {
+        if (newDiagnosis.isError()) {
+            healthCondition.setStatusId(ConditionClinicalStatus.INACTIVE);
+            healthCondition.setVerificationStatusId(newDiagnosis.getVerificationId());
+        }
+        if (newDiagnosis.isDiscarded())
+            healthCondition.setVerificationStatusId(newDiagnosis.getVerificationId());
+        return healthCondition;
     }
 
     @Override

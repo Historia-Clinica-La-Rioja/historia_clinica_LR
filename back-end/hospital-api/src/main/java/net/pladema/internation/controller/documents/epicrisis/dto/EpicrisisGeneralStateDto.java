@@ -4,9 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.internation.controller.ips.dto.*;
-import net.pladema.internation.service.ips.domain.HealthConditionBo;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +14,7 @@ import java.util.List;
 @ToString
 public class EpicrisisGeneralStateDto implements Serializable {
 
-    private HealthConditionBo mainDiagnosis;
+    private HealthConditionDto mainDiagnosis;
 
     private List<DiagnosisDto> diagnosis = new ArrayList<>();
 
