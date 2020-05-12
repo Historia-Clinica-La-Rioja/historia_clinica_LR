@@ -21,6 +21,7 @@ import { InternmentEpisodeService } from "@api-rest/services/internment-episode.
 import { scrollIntoError } from "@core/utils/form.utils";
 import { MatDialog } from "@angular/material/dialog";
 import { ConfirmDialogComponent } from "@core/dialogs/confirm-dialog/confirm-dialog.component";
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 
 @Component({
@@ -57,7 +58,8 @@ export class NewInternmentComponent implements OnInit {
 				private mapperService: MapperService,
 				private route: ActivatedRoute,
 				private internmentEpisodeService: InternmentEpisodeService,
-				public dialog: MatDialog) {
+				public dialog: MatDialog,
+				private snackBarService: SnackBarService) {
 	}
 
 	ngOnInit(): void {
@@ -155,8 +157,9 @@ export class NewInternmentComponent implements OnInit {
 						if(data && data.id) {
 							let url = `internaciones/internacion/${data.id}/paciente/${this.patientId}`;
 							this.router.navigate([url]);
+							this.snackBarService.showSuccess('internaciones.new-internment.messages.SUCCESS');
 						}
-					});
+					}, _ => this.snackBarService.showError('internaciones.new-internment.messages.ERROR'));
 			}
 		});
 	}

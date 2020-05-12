@@ -300,7 +300,11 @@
 			"SUBTITLE": "Complete los siguientes datos",
 			"SECTION_SERVICE": "Especialidad / Servicio",
 			"SECTION_BED": "Asignación de cama",
-			"SECTION_DOCTOR": "Médico responsable"
+			"SECTION_DOCTOR": "Médico responsable",
+			"messages":{
+				"ERROR":"Error al crear una nueva internacion",
+				"SUCCESS":"La internación se guardó exitosamente"
+			}
 		},
 		"snomed-search": {
 			"modal": {
