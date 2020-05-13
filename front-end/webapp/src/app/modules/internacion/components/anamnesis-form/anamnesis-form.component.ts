@@ -8,6 +8,7 @@ import {
 } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { AnamnesisService } from '@api-rest/services/anamnesis.service';
+import { AnamnesisReportService } from '@api-rest/services/anamnesis-report.service';
 import { forkJoin } from 'rxjs';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -39,6 +40,7 @@ export class AnamnesisFormComponent implements OnInit {
 		private formBuilder: FormBuilder,
 		private internacionMasterDataService: InternacionMasterDataService,
 		private anamnesisService: AnamnesisService,
+		private anamnesisReportService: AnamnesisReportService,
 		private route: ActivatedRoute,
 		private router: Router,
 		private snackBarService: SnackBarService
@@ -143,7 +145,7 @@ export class AnamnesisFormComponent implements OnInit {
 			} else {
 				this.anamnesisService.createAnamnesis(anamnesis, this.internmentEpisodeId)
 				.subscribe((anamnesisResponse: ResponseAnamnesisDto) => {
-						this.anamnesisService.getPDF(anamnesisResponse.id, this.internmentEpisodeId).subscribe(
+						this.anamnesisReportService.getPDF(anamnesisResponse.id, this.internmentEpisodeId).subscribe(
 							_ => this.goToInternmentSummary(), _ => this.goToInternmentSummary()
 						);
 						this.snackBarService.showSuccess('internaciones.anamnesis.messages.SUCCESS');

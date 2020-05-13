@@ -37,7 +37,11 @@
 	</div>
 	<div class="row" th:if="${mainDiagnosis != null}">
 		<dl>
-			<dd><p  th:text="${'-' + mainDiagnosis.snomed.pt}"></p></dd>
+			<dd><p  th:text="${'- ' + mainDiagnosis.snomed.pt}"></p></dd>
+			<dl>
+				<dd><strong>Estado: </strong><label  th:text="${mainDiagnosis.status}"></label></dd>
+				<dd><strong>Verificación: </strong><label  th:text="${mainDiagnosis.verification}"></label></dd>
+			</dl>
 		</dl>
 	</div>
 
@@ -49,7 +53,11 @@
 	</div>
 	<div class="row" th:if="${not #lists.isEmpty(diagnosis)}">
 		<dl th:each="diagnose,iter: ${diagnosis}">
-			<dd><p  th:text="${'-' + diagnose.snomed.pt}"></p></dd>
+			<dd><p  th:text="${'- ' + diagnose.snomed.pt}"></p></dd>
+			<dl>
+				<dd><strong>Estado: </strong><label  th:text="${diagnose.status}"></label></dd>
+				<dd><strong>Verificación: </strong><label  th:text="${diagnose.verification}"></label></dd>
+			</dl>
 		</dl>
 	</div>
 
@@ -102,6 +110,10 @@
 	<div class="row " th:if="${not #lists.isEmpty(allergies)}">
 		<dl class="lista" th:each="allergy,iter: ${allergies}">
 			<dd><p  th:text="${'- ' + allergy.snomed.pt}"></p></dd>
+			<dl>
+				<dd><strong>Estado: </strong><label  th:text="${allergy.status}"></label></dd>
+				<dd><strong>Verificación: </strong><label  th:text="${allergy.verification}"></label></dd>
+			</dl>
 		</dl>
 	</div>
 
@@ -114,7 +126,9 @@
 	<div class="row" th:if="${not #lists.isEmpty(inmunizations)}">
 		<dl th:each="inmunization,iter: ${inmunizations}">
 			<dd><p  th:text="${'- ' + inmunization.snomed.pt}"></p></dd>
-			<strong>Observaciones: </strong><label  th:text="${inmunization.note}"></label>
+			<dl>
+				<dd><strong>Fecha de administración: </strong><label th:text="${inmunization.administrationDate}"></label></dd>
+			</dl>
 		</dl>
 	</div>
 
@@ -128,7 +142,9 @@
 	<div class="row" th:if="${not #lists.isEmpty(medications)}">
 		<dl th:each="medication,iter: ${medications}">
 			<dd><p  th:text="${'- ' + medication.snomed.pt}"></p></dd>
-			<strong>Observaciones: </strong><label  th:text="${medication.note}"></label>
+			<dl>
+				<dd><strong>Observaciones: </strong><label  th:text="${medication.note}"></label></dd>
+			</dl>
 		</dl>
 	</div>
 
