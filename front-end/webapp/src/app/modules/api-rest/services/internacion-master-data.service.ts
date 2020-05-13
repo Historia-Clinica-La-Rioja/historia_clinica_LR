@@ -32,8 +32,18 @@ export class InternacionMasterDataService {
 		return this.http.get<any[]>(url);
 	}
 
+	getHealthClinicalDown(): Observable<any[]> {
+		let url = `${environment.apiBase}/internments/masterdata/health/clinical/down`;
+		return this.http.get<any[]>(url);
+	}
+
 	getHealthVerification(): Observable<MasterDataInterface<string>[]> {
 		let url = `${environment.apiBase}/internments/masterdata/health/verification`;
+		return this.http.get<[]>(url);
+	}
+
+	getHealthVerificationDown(): Observable<MasterDataInterface<string>[]> {
+		let url = `${environment.apiBase}/internments/masterdata/health/verification/down`;
 		return this.http.get<[]>(url);
 	}
 

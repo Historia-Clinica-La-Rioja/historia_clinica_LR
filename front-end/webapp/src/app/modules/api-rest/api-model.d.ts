@@ -161,7 +161,7 @@ export interface CompletePatientDto extends BasicPatientDto {
 }
 
 export interface DiagnosisDto extends HealthConditionDto {
-    presumptive: boolean;
+    presumptive?: boolean;
 }
 
 export interface DocumentObservationsDto extends Serializable {
@@ -218,11 +218,11 @@ export interface EpicrisisSummaryDto extends DocumentSummaryDto {
 }
 
 export interface EvolutionNoteDto extends Serializable {
-    allergies: AllergyConditionDto[];
+    allergies?: AllergyConditionDto[];
     anthropometricData?: AnthropometricDataDto;
     confirmed: boolean;
-    diagnosis: DiagnosisDto[];
-    inmunizations: InmunizationDto[];
+    diagnosis?: DiagnosisDto[];
+    inmunizations?: InmunizationDto[];
     mainDiagnosis?: HealthConditionDto;
     notes?: DocumentObservationsDto;
     vitalSigns?: VitalSignDto;

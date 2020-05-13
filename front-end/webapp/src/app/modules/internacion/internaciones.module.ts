@@ -28,6 +28,7 @@ import { NotaEvolucionComponent } from './routes/nota-evolucion/nota-evolucion.c
 import { NotaEvolucionFormComponent } from './components/nota-evolucion-form/nota-evolucion-form.component';
 import { DiagnosticoPrincipalComponent } from './components/diagnostico-principal/diagnostico-principal.component';
 import { MainDiagnosisSummaryComponent } from './components/main-diagnosis-summary/main-diagnosis-summary.component';
+import { RemoveDiagnosisComponent } from './dialogs/remove-diagnosis/remove-diagnosis.component';
 
 @NgModule({
 	declarations: [
@@ -54,6 +55,7 @@ import { MainDiagnosisSummaryComponent } from './components/main-diagnosis-summa
 		NotaEvolucionComponent,
 		NotaEvolucionFormComponent,
 		MainDiagnosisSummaryComponent,
+		RemoveDiagnosisComponent,
 	],
 	imports: [
 		CoreModule,

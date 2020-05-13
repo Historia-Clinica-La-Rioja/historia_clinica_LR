@@ -4,7 +4,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '@environments/environment';
 import { DownloadService } from '@core/services/download.service';
-import { saveAs } from 'file-saver';
 
 const HARD_CODE_INSTITUTION = 10;
 

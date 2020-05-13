@@ -51,6 +51,7 @@
 	"buttons": {
 		"BACK": "Volver",
 		"CONTINUE": "Continuar",
+		"CANCEL": "Cancelar",
 		"CLOSE": "Cerrar",
 		"SEARCH": "Buscar"
 	},
@@ -294,6 +295,12 @@
 			"card": {
 				"DAYS_INTERNED": "{{days}} días internado",
 				"ADMISSION": "Ingreso: {{datetime}}"
+			},
+			"remove-diagnosis-dialog": {
+				"TITLE": "Eliminar diagnóstico",
+				"VERIFICATION_SELECT": "Motivo",
+				"STATUS_SELECT": "Estado clínico",
+				"CONFIRM_BUTTON": "Crear nota de evolución"
 			}
 		},
 		"new-internment": {
