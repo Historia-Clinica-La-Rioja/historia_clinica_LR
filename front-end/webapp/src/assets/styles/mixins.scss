@@ -10,6 +10,11 @@
 	width: 50%;
 }
 
+@mixin card-centered {
+	max-width: 400px;
+	margin: 15vh auto;
+}
+
 @mixin card-content {
 	margin: 0 16px;
 }

@@ -1,6 +1,7 @@
 {
 	"app": {
 		"menu": {
+			"INSTITUCIONES": "Instituciones",
 			"INTERNACION": "HCE Internación",
 			"PACIENTES": "Pacientes",
 			"PERFIL": "Mi cuenta"

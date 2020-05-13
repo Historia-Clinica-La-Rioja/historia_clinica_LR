@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { LoggedUserService } from '../../services/logged-user.service';
+import { LoggedUserService } from '../../../auth/services/logged-user.service';
 import { map } from 'rxjs/operators';
 import { RoleAssignment } from '@api-rest/api-model';
 import { Router } from '@angular/router';
 import { InstitutionService } from '../../../api-rest/services/institution.service';
 
 @Component({
-	selector: 'app-home',
-	templateUrl: './home.component.html',
-	styleUrls: ['./home.component.scss']
+	selector: 'app-instituciones',
+	templateUrl: './instituciones.component.html',
+	styleUrls: ['./instituciones.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class InstitucionesComponent implements OnInit {
 	institutions: { id: number, name: string }[] = null;
 	backoffice: boolean;
 

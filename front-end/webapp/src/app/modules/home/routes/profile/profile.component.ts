@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RoleAssignment, InstitutionDto } from '@api-rest/api-model';
 
-import { AuthenticationService } from '../../services/authentication.service';
-import { LoggedUserService } from '../../services/logged-user.service';
+import { AuthenticationService } from '../../../auth/services/authentication.service';
+import { LoggedUserService } from '../../../auth/services/logged-user.service';
 import { map, mergeMap } from 'rxjs/operators';
 import { InstitutionService } from '@api-rest/services/institution.service';
 

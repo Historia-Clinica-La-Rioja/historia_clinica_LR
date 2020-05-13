@@ -24,7 +24,7 @@ export class AuthenticationService {
 	}
 
 	public goHome() {
-		this.router.navigate(['/auth']);
+		this.router.navigate(['/home']);
 	}
 
 	public login(username: string, password: string): Observable<any> {

@@ -1,5 +1,5 @@
+@import '../../../../../assets/styles/mixins';
 
-mat-card {
-	max-width: 400px;
-	margin: 15vh auto;
+mat-card.mat-card {
+	@include card-centered;
 }

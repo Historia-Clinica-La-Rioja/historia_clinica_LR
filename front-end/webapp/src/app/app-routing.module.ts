@@ -7,6 +7,10 @@ const routes: Routes = [
 		redirectTo: 'auth',
 		pathMatch: 'full',
 	},
+	{
+		path: 'home',
+		loadChildren: () => import('./modules/home/home.module').then(m => m.HomeModule),
+	},
 	// ver AuthRoutingModule para /auth/login o /auth/reset-password
 	// ver PacientesRoutingModule para /pacientes, /pacientes/search, etc
 	{

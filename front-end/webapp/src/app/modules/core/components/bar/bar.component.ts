@@ -15,8 +15,4 @@ export class BarComponent implements OnInit {
 	ngOnInit(): void {
 	}
 
-	goHome(): void {
-		this.router.navigate(['']); //go home
-	}
-
 }
