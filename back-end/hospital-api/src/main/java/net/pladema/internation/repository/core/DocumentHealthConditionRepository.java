@@ -25,7 +25,7 @@ public interface DocumentHealthConditionRepository extends JpaRepository<Documen
             "JOIN Snomed s ON (s.id = hc.sctidCode) " +
             "LEFT JOIN Note n ON (n.id = hc.noteId) " +
             "WHERE dh.pk.documentId = :documentId " +
-            "AND hc.verificationStatusId NOT IN ('"+ ConditionVerificationStatus.ERROR +"','"+ConditionVerificationStatus.DISCARDED+"')")
+            "AND NOT hc.verificationStatusId = ('" + ConditionVerificationStatus.ERROR + "')")
     List<HealthConditionVo> getHealthConditionFromDocument(@Param("documentId") Long documentId);
 
 }
