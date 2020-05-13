@@ -227,6 +227,7 @@
 			},
 			"diagnosticos": {
 				"TITLE": "Diagnósticos",
+				"TITLE_PRINCIPAL": "Diagnóstico principal",
 				"DIAGNOSIS": "Diagnóstico",
 				"PRESUMPTIVE": "Presuntivo",
 				"table": {

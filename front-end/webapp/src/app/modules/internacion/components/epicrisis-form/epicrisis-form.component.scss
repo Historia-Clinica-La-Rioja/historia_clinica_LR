@@ -5,6 +5,9 @@
 	min-width: 500px;
 
 	form {
+		mat-card {
+			width: 60%;
+		}
 		mat-form-field {
 			width: 100%;
 		}
