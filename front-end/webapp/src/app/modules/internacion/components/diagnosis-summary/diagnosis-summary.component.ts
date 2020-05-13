@@ -6,6 +6,7 @@ import { InternacionMasterDataService } from '@api-rest/services/internacion-mas
 import { TableModel } from 'src/app/modules/presentation/components/table/table.component';
 import { MatDialog } from '@angular/material/dialog';
 import { RemoveDiagnosisComponent } from '../../dialogs/remove-diagnosis/remove-diagnosis.component';
+import { HEALTH_CLINICAL_STATUS } from '../../constants/ids';
 
 @Component({
 	selector: 'app-diagnosis-summary',
@@ -68,7 +69,7 @@ export class DiagnosisSummaryComponent implements OnInit {
 				columnDef: 'remove',
 				action: {
 					isDelete: true,
-					do: (row) => {
+					do: row => {
 						const diagnosis = {...row};
 						const dialogRef = this.dialog.open(RemoveDiagnosisComponent, {
 							data: {
@@ -81,8 +82,9 @@ export class DiagnosisSummaryComponent implements OnInit {
 								data => this.tableModel = this.buildTable(data)
 							)
 						);
-					}
-				}
+					},
+					hide: row => row.statusId !== HEALTH_CLINICAL_STATUS.ACTIVO
+				},
 			})
 		}
 		return model;

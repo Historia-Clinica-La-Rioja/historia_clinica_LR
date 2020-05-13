@@ -54,7 +54,8 @@ export interface ColumnModel<T> {
 	action?: {
 		isDelete?: boolean,
 		text?: string,
-		do: (row: T) => void
+		do: (row: T) => void,
+		hide?: (row: T) => boolean
 	}
 }
 

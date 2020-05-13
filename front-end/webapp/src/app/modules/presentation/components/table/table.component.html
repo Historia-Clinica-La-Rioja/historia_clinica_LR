@@ -8,12 +8,12 @@
 		<td mat-cell [ngClass]="{'actions': !!column.action}" class="capitalize-first-letter" *matCellDef="let row">
 			<ng-container *ngIf="column.action else default">
 				<ng-container *ngIf="column.action.isDelete else button">
-					<button mat-icon-button color="warn" (click)="column.action.do(row)">
+					<button mat-icon-button color="warn" *ngIf="!column.action.hide || !column.action.hide(row)" (click)="column.action.do(row)">
 						<mat-icon>delete_outline</mat-icon>
 					</button>
 				</ng-container>
 				<ng-template #button>
-					<button mat-flat-button color="primary" (click)="column.action.do(row)">
+					<button mat-flat-button color="primary" *ngIf="!column.action.hide || !column.action.hide(row)" (click)="column.action.do(row)">
 						<span *ngIf="column.action.text">{{ column.action.text | translate }}</span>
 					</button>
 				</ng-template>
