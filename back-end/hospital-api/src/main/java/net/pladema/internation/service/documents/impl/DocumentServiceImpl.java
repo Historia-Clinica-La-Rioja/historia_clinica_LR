@@ -1,11 +1,9 @@
 package net.pladema.internation.service.documents.impl;
 
 import net.pladema.internation.repository.core.*;
-import net.pladema.internation.repository.core.domain.ResponsibleDoctorVo;
 import net.pladema.internation.repository.core.entity.*;
 import net.pladema.internation.repository.ips.generalstate.*;
 import net.pladema.internation.service.documents.DocumentService;
-import net.pladema.internation.service.internment.domain.ResponsibleDoctorBo;
 import net.pladema.internation.service.ips.domain.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -217,26 +215,5 @@ public class DocumentServiceImpl implements DocumentService {
         // TODO
         LOG.debug(LOGGING_DELETE_SUCCESS);
     }
-
-    @Override
-    public ResponsibleDoctorBo getAuthor(Long documentId) {
-        LOG.debug("Input parameters -> documentId {}", documentId);
-        ResponsibleDoctorVo author;
-        //User Creator
-        author = documentRepository.getUserCreator(documentId);
-        if(author == null)
-            //Responsible
-            author = documentRepository.getResponsible(documentId);
-        ResponsibleDoctorBo result = null;
-
-        if(author != null)
-            result = new ResponsibleDoctorBo(author.getId(),
-                    author.getFirstName(),
-                    author.getLastName(),
-                    author.getLicence());
-        LOG.debug(OUTPUT, result);
-        return result;
-    }
-
 
 }

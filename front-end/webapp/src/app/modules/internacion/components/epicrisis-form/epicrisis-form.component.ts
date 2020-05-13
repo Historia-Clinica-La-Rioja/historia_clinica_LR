@@ -8,6 +8,7 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { EpicrisisService } from '@api-rest/services/epicrisis.service';
+import { EpicrisisReportService } from '@api-rest/services/epicrisis-report.service';
 import { DatePipe } from '@angular/common';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -107,6 +108,7 @@ export class EpicrisisFormComponent implements OnInit {
 	constructor(
 		private formBuilder: FormBuilder,
 		private epicrisisService: EpicrisisService,
+		private epicrisisReportService: EpicrisisReportService,
 		private route: ActivatedRoute,
 		private router: Router,
 		private datePipe: DatePipe,
@@ -170,7 +172,7 @@ export class EpicrisisFormComponent implements OnInit {
 			};
 			this.epicrisisService.createDocument(epicrisis, this.internmentEpisodeId)
 				.subscribe((epicrisisResponse: ResponseEpicrisisDto) => {
-					this.epicrisisService.getPDF(epicrisisResponse.id, this.internmentEpisodeId).subscribe(
+					this.epicrisisReportService.getPDF(epicrisisResponse.id, this.internmentEpisodeId).subscribe(
 						_ => this.goToInternmentSummary(), _ => this.goToInternmentSummary()
 					);
 					this.snackBarService.showSuccess('internaciones.epicrisis.messages.SUCCESS');
