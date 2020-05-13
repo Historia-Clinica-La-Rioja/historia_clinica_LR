@@ -25,6 +25,14 @@
 @mixin form-buttons {
 	margin: 20px 0;
 	button {
-	margin-right: 10px;
+		margin-right: 10px;
 	}
+}
+
+@mixin centered-spinner {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	width: 100%;
 }

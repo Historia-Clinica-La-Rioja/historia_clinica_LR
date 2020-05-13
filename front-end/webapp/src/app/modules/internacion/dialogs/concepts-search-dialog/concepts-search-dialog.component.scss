@@ -1,9 +1,7 @@
+@import '../../../../../assets/styles/mixins.scss';
+
 div.spinner {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	height: 100%;
-	width: 100%;
+	@include centered-spinner;
 }
 
 div.mat-h1::first-letter {

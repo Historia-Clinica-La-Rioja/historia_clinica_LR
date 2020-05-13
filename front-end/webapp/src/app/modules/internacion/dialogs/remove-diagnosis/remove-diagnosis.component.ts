@@ -17,6 +17,7 @@ export class RemoveDiagnosisComponent implements OnInit {
 
 	DESCARTADO = HEALTH_VERIFICATIONS.DESCARTADO;
 
+	loading: boolean = false;
 	removeForm: FormGroup;
 	diagnosis: HealthConditionDto;
 
@@ -62,6 +63,7 @@ export class RemoveDiagnosisComponent implements OnInit {
 
 	createEvolutionNote() {
 		if (this.removeForm.valid) {
+			this.loading = true;
 			this.diagnosis.verificationId = this.removeForm.controls['verificationId'].value;
 			this.diagnosis.statusId = this.removeForm.controls['statusId'].value;
 			const evolutionNote: EvolutionNoteDto = {
@@ -77,7 +79,10 @@ export class RemoveDiagnosisComponent implements OnInit {
 						}
 					);
 				},
-				() => this.snackBarService.showError('internaciones.nota-evolucion.messages.ERROR')
+				() => {
+					this.loading = false;
+					this.snackBarService.showError('internaciones.nota-evolucion.messages.ERROR');
+				}
 			);
 		}
 	}

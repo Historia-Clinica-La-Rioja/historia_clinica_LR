@@ -1,3 +1,5 @@
+@import '../../../../../assets/styles/mixins.scss';
+
 div[mat-dialog-title] {
 	text-align: center;
 	div.icon {
@@ -12,4 +14,8 @@ section {
 		width: 100%;
 	}
 	text-align: center;
+}
+
+div.spinner {
+	@include centered-spinner;
 }
