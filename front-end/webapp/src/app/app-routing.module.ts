@@ -11,6 +11,11 @@ const routes: Routes = [
 		path: 'home',
 		loadChildren: () => import('./modules/home/home.module').then(m => m.HomeModule),
 	},
+	{
+		path: 'institucion',
+		loadChildren: () => import('./modules/institucion/institucion.module').then(m => m.InstitucionModule),
+	},
+
 	// ver AuthRoutingModule para /auth/login o /auth/reset-password
 	// ver PacientesRoutingModule para /pacientes, /pacientes/search, etc
 	{

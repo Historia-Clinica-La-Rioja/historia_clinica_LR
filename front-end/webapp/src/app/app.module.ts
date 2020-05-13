@@ -18,7 +18,6 @@ import { ApiRestModule } from '@api-rest/api-rest.module';
 import { AppMaterialModule } from './app.material.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CoreModule } from '@core/core.module';
-import { InstitucionModule } from './modules/institucion/institucion.module';
 import { PacientesModule } from './modules/pacientes/pacientes.module';
 import { PresentationModule } from './modules/presentation/presentation.module';
 import { DatePipe } from '@angular/common';
@@ -50,7 +49,6 @@ import { DatePipe } from '@angular/common';
 		AppMaterialModule,
 		AuthModule,
 		CoreModule,
-		InstitucionModule,
 		PacientesModule,
 		PresentationModule,
 		// Module import order
