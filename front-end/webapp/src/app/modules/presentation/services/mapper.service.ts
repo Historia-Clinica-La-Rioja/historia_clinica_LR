@@ -50,7 +50,7 @@ export class MapperService {
 			identificationType: person.identificationType,
 			cuil: person.cuil,
 			address: person.address,
-			birthDate: momentParseDate(String(person.birthDate)).format(DateFormat.VIEW_DATE),
+			birthDate: person.birthDate ? momentParseDate(String(person.birthDate)).format(DateFormat.VIEW_DATE) : "",
 			email: person.email,
 			phoneNumber: person.phoneNumber,
 			medicalCoverageName: patient.medicalCoverageName,
