@@ -105,6 +105,19 @@
 		</dl>
 	</div>
 
+	<h3>Vacunas</h3>
+	<div class="row" th:if="${#lists.isEmpty(inmunizations)}">
+		<dl>
+			<dd><p>Sin cambios registrados</p></dd>
+		</dl>
+	</div>
+	<div class="row" th:if="${not #lists.isEmpty(inmunizations)}">
+		<dl th:each="inmunization,iter: ${inmunizations}">
+			<dd><p  th:text="${'- ' + inmunization.snomed.pt}"></p></dd>
+			<strong>Observaciones: </strong><label  th:text="${inmunization.note}"></label>
+		</dl>
+	</div>
+
 	<h3>Medicación habitual</h3>
 
 	<div class="row" th:if="${#lists.isEmpty(medications)}">

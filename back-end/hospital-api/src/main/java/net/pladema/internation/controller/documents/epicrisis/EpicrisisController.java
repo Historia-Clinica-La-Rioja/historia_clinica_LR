@@ -190,6 +190,7 @@ public class EpicrisisController {
         ctx.setVariable("personalHistories", epicrisis.getPersonalHistories());
         ctx.setVariable("familyHistories", epicrisis.getFamilyHistories());
         ctx.setVariable("allergies", epicrisis.getAllergies());
+        ctx.setVariable("inmunizations", epicrisis.getInmunizations());
         ctx.setVariable("medications", epicrisis.getMedications());
         ctx.setVariable("notes", epicrisis.getNotes());
         ctx.setVariable("author", author);

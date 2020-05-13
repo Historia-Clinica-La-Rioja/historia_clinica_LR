@@ -169,6 +169,7 @@ public class AnamnesisController {
         ctx.setVariable("personalHistories", anamnesis.getPersonalHistories());
         ctx.setVariable("familyHistories", anamnesis.getFamilyHistories());
         ctx.setVariable("allergies", anamnesis.getAllergies());
+        ctx.setVariable("inmunizations", anamnesis.getInmunizations());
         ctx.setVariable("medications", anamnesis.getMedications());
         ctx.setVariable("anthropometricData", anamnesis.getAnthropometricData());
         ctx.setVariable("vitalSigns", anamnesis.getVitalSigns());
