@@ -25,4 +25,17 @@ public interface DocumentAllergyIntoleranceRepository extends JpaRepository<Docu
             "WHERE da.pk.documentId = :documentId " +
             "AND ai.verificationStatusId NOT IN ('"+ AllergyIntoleranceVerificationStatus.ERROR+"')")
     List<AllergyConditionVo> getAllergyIntoleranceStateFromDocument(@Param("documentId") Long documentId);
+
+    @Transactional(readOnly = true)
+    @Query("SELECT NEW net.pladema.internation.repository.ips.generalstate.AllergyConditionVo(" +
+            "ai.id, s, ai.statusId, aics.description as status, " +
+            "ai.verificationStatusId, aivs.description as verification, " +
+            "ai.categoryId, ai.startDate) " +
+            "FROM DocumentAllergyIntolerance da " +
+            "JOIN AllergyIntolerance ai ON (da.pk.allergyIntoleranceId = ai.id) " +
+            "JOIN Snomed s ON (s.id = ai.sctidCode) " +
+            "JOIN AllergyIntoleranceClinicalStatus aics ON (aics.id = ai.statusId) " +
+            "JOIN AllergyIntoleranceVerificationStatus aivs ON (aivs.id = ai.verificationStatusId) " +
+            "WHERE da.pk.documentId = :documentId ")
+    List<AllergyConditionVo> getAllergyIntoleranceStateFromDocumentToReport(@Param("documentId") Long documentId);
 }

@@ -1,14 +1,10 @@
 package net.pladema.internation.repository.ips.generalstate;
 
+import lombok.*;
+import net.pladema.internation.repository.masterdata.entity.Snomed;
+
 import java.time.LocalDate;
 import java.util.Objects;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import net.pladema.internation.repository.masterdata.entity.Snomed;
 
 @Getter
 @Setter
@@ -30,7 +26,13 @@ public class InmunizationVo extends ClinicalTermVo{
         this.noteId = noteId;
         this.note = note;
     }
-    
+
+	public InmunizationVo(Integer id, Snomed snomed, String statusId, String status,
+						  LocalDate administrationDate, Long noteId, String note) {
+		this(id, snomed, statusId, administrationDate, noteId, note);
+		this.setStatus(status);
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(noteId, note);

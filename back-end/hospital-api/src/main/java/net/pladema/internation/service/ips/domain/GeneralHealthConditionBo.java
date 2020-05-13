@@ -66,7 +66,9 @@ public class GeneralHealthConditionBo implements Serializable {
         DiagnosisBo result = new DiagnosisBo();
         result.setId(healthConditionVo.getId());
         result.setStatusId(healthConditionVo.getStatusId());
+        result.setStatus(healthConditionVo.getStatus());
         result.setVerificationId(healthConditionVo.getVerificationId());
+        result.setVerification(healthConditionVo.getVerification());
         result.setSnomed(new SnomedBo(healthConditionVo.getSnomed()));
         result.setPresumptive(healthConditionVo.isPresumptive());
         LOG.debug(OUTPUT, result);
@@ -79,7 +81,9 @@ public class GeneralHealthConditionBo implements Serializable {
         HealthHistoryConditionBo result = new HealthHistoryConditionBo();
         result.setId(healthConditionVo.getId());
         result.setStatusId(healthConditionVo.getStatusId());
+        result.setStatus(healthConditionVo.getStatus());
         result.setVerificationId(healthConditionVo.getVerificationId());
+        result.setVerification(healthConditionVo.getVerification());
         result.setSnomed(new SnomedBo(healthConditionVo.getSnomed()));
         result.setDate(healthConditionVo.getStartDate());
         LOG.debug(OUTPUT, result);
@@ -94,7 +98,9 @@ public class GeneralHealthConditionBo implements Serializable {
             result.set(new HealthConditionBo());
             result.get().setId(healthConditionVo.getId());
             result.get().setStatusId(healthConditionVo.getStatusId());
+            result.get().setStatus(healthConditionVo.getStatus());
             result.get().setVerificationId(healthConditionVo.getVerificationId());
+            result.get().setVerification(healthConditionVo.getVerification());
             result.get().setSnomed(new SnomedBo(healthConditionVo.getSnomed()));
         });
         LOG.debug(OUTPUT, result);

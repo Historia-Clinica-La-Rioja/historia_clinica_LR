@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
+import { EvolutionNoteReportService } from '@api-rest/services/evolution-note-report.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
@@ -27,6 +28,7 @@ export class NotaEvolucionFormComponent implements OnInit {
 		private formBuilder: FormBuilder,
 		private internacionMasterDataService: InternacionMasterDataService,
 		private evolutionNoteService: EvolutionNoteService,
+		private evolutionNoteReportService: EvolutionNoteReportService,
 		private route: ActivatedRoute,
 		private router: Router,
 		private snackBarService: SnackBarService
@@ -75,7 +77,7 @@ export class NotaEvolucionFormComponent implements OnInit {
 
 			this.evolutionNoteService.createDocument(evolutionNote, this.internmentEpisodeId).subscribe(
 				(evolutionNoteResponse: ResponseEvolutionNoteDto) => {
-					this.evolutionNoteService.getPDF(evolutionNoteResponse.id, this.internmentEpisodeId).subscribe(
+					this.evolutionNoteReportService.getPDF(evolutionNoteResponse.id, this.internmentEpisodeId).subscribe(
 						_ => this.goToInternmentSummary(), _ => this.goToInternmentSummary()
 					);
 					this.snackBarService.showSuccess('internaciones.nota-evolucion.messages.SUCCESS');

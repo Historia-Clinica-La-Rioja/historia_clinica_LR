@@ -24,4 +24,5 @@ public interface DocumentVitalSignRepository extends JpaRepository<DocumentVital
             "WHERE dvs.pk.documentId = :documentId " +
             "AND ovs.statusId NOT IN ('"+ ObservationStatus.ERROR+"')")
     List<ClinicalObservationVo> getVitalSignStateFromDocument(@Param("documentId") Long documentId);
+
 }

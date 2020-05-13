@@ -23,4 +23,5 @@ public interface DocumentLabRepository extends JpaRepository<DocumentLab, Docume
             "WHERE dl.pk.documentId = :documentId " +
             "AND ol.statusId NOT IN ('"+ ObservationStatus.ERROR+"')")
     List<ClinicalObservationVo> getLabStateFromDocument(@Param("documentId") Long documentId);
+
 }

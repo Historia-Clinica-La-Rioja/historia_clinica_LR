@@ -28,4 +28,19 @@ public interface DocumentHealthConditionRepository extends JpaRepository<Documen
             "AND NOT hc.verificationStatusId = ('" + ConditionVerificationStatus.ERROR + "')")
     List<HealthConditionVo> getHealthConditionFromDocument(@Param("documentId") Long documentId);
 
+    @Transactional(readOnly = true)
+    @Query("SELECT NEW net.pladema.internation.repository.ips.generalstate.HealthConditionVo(" +
+            "hc.id, s, hc.statusId, ccs.description as status, hc.main, " +
+            "hc.verificationStatusId, cvs.description as verification, " +
+            "hc.problemId, hc.startDate, " +
+            "n.id as noteId, n.description as note) " +
+            "FROM DocumentHealthCondition dh " +
+            "JOIN HealthCondition hc ON (dh.pk.healthConditionId = hc.id) " +
+            "JOIN Snomed s ON (s.id = hc.sctidCode) " +
+            "JOIN ConditionClinicalStatus ccs ON (ccs.id = hc.statusId) " +
+            "JOIN ConditionVerificationStatus cvs ON (cvs.id = hc.verificationStatusId) " +
+            "LEFT JOIN Note n ON (n.id = hc.noteId) " +
+            "WHERE dh.pk.documentId = :documentId ")
+    List<HealthConditionVo> getHealthConditionFromDocumentToReport(@Param("documentId") Long documentId);
+
 }

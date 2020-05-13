@@ -331,8 +331,6 @@
 							<goal>repackage</goal>
 						</goals>
 						<configuration>
-							<source>${java.version}</source>
-							<target>${java.version}</target>
 							<mainClass>net.pladema.App</mainClass>
 						</configuration>
 					</execution>

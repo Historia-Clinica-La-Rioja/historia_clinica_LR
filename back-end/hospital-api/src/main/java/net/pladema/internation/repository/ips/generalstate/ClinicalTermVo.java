@@ -18,6 +18,14 @@ public abstract class ClinicalTermVo {
 
     private String statusId;
 
+    private String status;
+
+    public ClinicalTermVo(Integer id, Snomed snomed, String statusId) {
+        this.id = id;
+        this.snomed = snomed;
+        this.statusId = statusId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -1,16 +1,12 @@
 package net.pladema.internation.repository.ips.generalstate;
 
-import java.time.LocalDate;
-import java.util.Objects;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import net.pladema.internation.repository.masterdata.entity.ConditionVerificationStatus;
 import net.pladema.internation.repository.masterdata.entity.ProblemType;
 import net.pladema.internation.repository.masterdata.entity.Snomed;
+
+import java.time.LocalDate;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -20,6 +16,8 @@ import net.pladema.internation.repository.masterdata.entity.Snomed;
 public class HealthConditionVo extends ClinicalTermVo {
 
     private String verificationId;
+
+    private String verification;
 
     private String problemId;
 
@@ -42,6 +40,14 @@ public class HealthConditionVo extends ClinicalTermVo {
         this.note = note;
     }
 
+    public HealthConditionVo(Integer id, Snomed snomed, String statusId, String status, boolean main,  String verificationId,
+                             String verification, String problemId, LocalDate startDate, Long noteId, String note) {
+        this(id, snomed, statusId, main,  verificationId,
+                problemId, startDate, noteId, note);
+        this.verification = verification;
+        this.setStatus(status);
+    }
+
     public boolean isDiagnosis() {
         return problemId.equals(ProblemType.DIAGNOSTICO);
     }
@@ -60,7 +66,7 @@ public class HealthConditionVo extends ClinicalTermVo {
     
 	@Override
 	public int hashCode() {
-		return Objects.hash(verificationId, problemId, noteId, note);
+		return Objects.hash(getId());
 	}
 
 	@Override
@@ -72,10 +78,7 @@ public class HealthConditionVo extends ClinicalTermVo {
 		if (getClass() != obj.getClass())
 			return false;
 		HealthConditionVo other = (HealthConditionVo) obj;
-		return Objects.equals(verificationId, other.getVerificationId()) && 
-			   Objects.equals(problemId, other.getProblemId()) &&
-			   Objects.equals(noteId, other.getNoteId()) &&
-			   Objects.equals(note, other.getNote());
+		return Objects.equals(getId(), other.getId());
 	}
 
     public boolean isSecondaryDiagnosis() {

@@ -22,6 +22,7 @@ public class InmunizationBo extends ClinicalTerm {
         super();
         setId(inmunizationVo.getId());
         setStatusId(inmunizationVo.getStatusId());
+        setStatus(inmunizationVo.getStatus());
         setSnomed(new SnomedBo(inmunizationVo.getSnomed()));
         setAdministrationDate(inmunizationVo.getAdministrationDate());
         setNote(inmunizationVo.getNote());

@@ -21,6 +21,7 @@ public class MedicationBo extends ClinicalTerm {
         super();
         setId(medicationVo.getId());
         setStatusId(medicationVo.getStatusId());
+        setStatus(medicationVo.getStatus());
         setSnomed(new SnomedBo(medicationVo.getSnomed()));
         setNote(medicationVo.getNote());
         suspended = super.getStatusId().equalsIgnoreCase(MedicationStatementStatus.SUSPENDED);

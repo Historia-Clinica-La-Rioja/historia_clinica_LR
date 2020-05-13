@@ -41,10 +41,6 @@ public class ClinicalObservationVo {
 		return EVitalSign.isCodeAnthropometricData(sctidCode);
 	}
 
-	public boolean isVitalSign(){
-		return EVitalSign.isCodeVitalSign(sctidCode);
-	}
-
     public boolean hasError() {
 		return statusId.equalsIgnoreCase(ObservationStatus.ERROR);
     }

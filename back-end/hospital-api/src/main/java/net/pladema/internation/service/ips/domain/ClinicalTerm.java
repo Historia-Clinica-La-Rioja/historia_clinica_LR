@@ -16,4 +16,6 @@ public abstract class ClinicalTerm implements Serializable {
     private String statusId ;
 
     private SnomedBo snomed;
+
+    private String status;
 }

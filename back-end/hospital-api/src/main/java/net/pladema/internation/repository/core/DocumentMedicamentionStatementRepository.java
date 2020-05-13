@@ -27,4 +27,16 @@ public interface DocumentMedicamentionStatementRepository extends JpaRepository<
             "WHERE dm.pk.documentId = :documentId " +
             "AND ms.statusId NOT IN ('"+ MedicationStatementStatus.ERROR+"')")
     List<MedicationVo> getMedicationStateFromDocument(@Param("documentId") Long documentId);
+
+    @Transactional(readOnly = true)
+    @Query("SELECT NEW net.pladema.internation.repository.ips.generalstate.MedicationVo(" +
+            "ms.id, s, ms.statusId, mss.description as status, " +
+            "n.id as noteId, n.description as note) " +
+            "FROM DocumentMedicamentionStatement dm " +
+            "JOIN MedicationStatement ms ON (dm.pk.medicationStatementId = ms.id) " +
+            "JOIN Snomed s ON (s.id = ms.sctidCode) " +
+            "JOIN MedicationStatementStatus mss ON (mss.id = ms.statusId) " +
+            "LEFT JOIN Note n ON (n.id = ms.noteId) " +
+            "WHERE dm.pk.documentId = :documentId ")
+    List<MedicationVo> getMedicationStateFromDocumentToReport(@Param("documentId") Long documentId);
 }

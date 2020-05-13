@@ -1,9 +1,9 @@
 package net.pladema.internation.repository.ips.generalstate;
 
-import java.util.Objects;
-
 import lombok.*;
 import net.pladema.internation.repository.masterdata.entity.Snomed;
+
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -22,6 +22,12 @@ public class MedicationVo extends ClinicalTermVo{
         this.noteId = noteId;
         this.note = note;
     }
+
+	public MedicationVo(Integer id, Snomed snomed, String statusId, String status, Long noteId,
+						String note) {
+		this(id, snomed, statusId, noteId, note);
+		this.setStatus(status);
+	}
     
 	@Override
 	public int hashCode() {

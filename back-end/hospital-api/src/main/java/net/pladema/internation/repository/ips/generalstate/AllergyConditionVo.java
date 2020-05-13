@@ -1,14 +1,10 @@
 package net.pladema.internation.repository.ips.generalstate;
 
+import lombok.*;
+import net.pladema.internation.repository.masterdata.entity.Snomed;
+
 import java.time.LocalDate;
 import java.util.Objects;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import net.pladema.internation.repository.masterdata.entity.Snomed;
 
 @Getter
 @Setter
@@ -18,6 +14,8 @@ import net.pladema.internation.repository.masterdata.entity.Snomed;
 public class AllergyConditionVo extends ClinicalTermVo {
 
     private String verificationId;
+
+    private String verification;
 
     private String categoryId;
 
@@ -33,6 +31,14 @@ public class AllergyConditionVo extends ClinicalTermVo {
         this.categoryId = categoryId;
         this.date = date;
     }
+
+	public AllergyConditionVo(Integer id, Snomed snomed, String statusId, String status,
+							  String verificationId, String verification,
+							  String categoryId, LocalDate date) {
+		this(id, snomed, statusId,verificationId, categoryId, date);
+		this.setStatus(status);
+		this.setVerification(verification);
+	}
     
 	@Override
 	public int hashCode() {

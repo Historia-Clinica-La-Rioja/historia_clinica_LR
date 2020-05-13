@@ -27,4 +27,17 @@ public interface DocumentInmunizationRepository extends JpaRepository<DocumentIn
             "WHERE di.pk.documentId = :documentId " +
             "AND i.statusId NOT IN ('"+ InmunizationStatus.ERROR+"')")
     List<InmunizationVo> getInmunizationStateFromDocument(@Param("documentId") Long documentId);
+
+
+    @Transactional(readOnly = true)
+    @Query("SELECT NEW net.pladema.internation.repository.ips.generalstate.InmunizationVo(" +
+            "i.id, s, i.statusId, iss.description as status, i.administrationDate, " +
+            "n.id as noteId, n.description as note) " +
+            "FROM DocumentInmunization di " +
+            "JOIN Inmunization i ON (di.pk.inmunizationId = i.id) " +
+            "JOIN Snomed s ON (s.id = i.sctidCode) " +
+            "JOIN InmunizationStatus iss ON (iss.id = i.statusId) " +
+            "LEFT JOIN Note n ON (n.id = i.noteId) " +
+            "WHERE di.pk.documentId = :documentId ")
+    List<InmunizationVo> getInmunizationStateFromDocumentToReport(@Param("documentId") Long documentId);
 }
