@@ -87,6 +87,8 @@ public class EvolutionNoteController {
     @Transactional
     @InternmentValid
     @EvolutionNoteDiagnosisValid
+    //TODO validar que diagnosticos descatados solo tengan estado REMISSION o SOLVED
+    //TODO vaidar que diagnosticos ingresador por error solo tengan estado INACTIVE
     public ResponseEntity<ResponseEvolutionNoteDto> createDocument(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,

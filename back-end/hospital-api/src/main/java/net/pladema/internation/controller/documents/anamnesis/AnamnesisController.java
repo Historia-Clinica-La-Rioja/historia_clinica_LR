@@ -89,6 +89,8 @@ public class AnamnesisController {
     @InternmentValid
     @AnamnesisValid
     @AnamnesisMainDiagnosisValid
+    //TODO validar que diagnosticos descatados solo tengan estado REMISSION o SOLVED
+    //TODO vaidar que diagnosticos ingresador por error solo tengan estado INACTIVE
     public ResponseEntity<ResponseAnamnesisDto> createAnamnesis(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
