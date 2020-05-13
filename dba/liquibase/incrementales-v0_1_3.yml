@@ -1934,3 +1934,23 @@ databaseChangeLog:
             constraints:
                 nullable: true  
         tableName: health_condition
+
+
+- changeSet: 
+    id: changePatient_type-metadata
+    author: ltelesco
+    changes:
+        - modifyDataType:
+            columnName: description
+            newDataType: varchar(30)
+            tableName: patient_type 
+
+
+- changeSet: 
+    id: addPatient_type
+    author: ltelesco
+    context: "!schema-only"
+    changes:
+        - sql:
+            sql: |-
+                INSERT INTO patient_type (id,description,active,audit) VALUES (7,'Permanente no validado',${boolean.true},${boolean.true});
