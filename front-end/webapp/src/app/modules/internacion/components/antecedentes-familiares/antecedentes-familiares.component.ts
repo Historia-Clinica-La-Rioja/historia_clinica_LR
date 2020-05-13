@@ -56,10 +56,7 @@ export class AntecedentesFamiliaresComponent implements OnInit {
 			const antecedenteFamiliar: HealthHistoryConditionDto = {
 				date: null,
 				note: null,
-				verificationId: null,
-				id: null,
-				snomed: this.snomedConcept,
-				statusId: null
+				snomed: this.snomedConcept
 			};
 			this.add(antecedenteFamiliar);
 			this.resetForm();

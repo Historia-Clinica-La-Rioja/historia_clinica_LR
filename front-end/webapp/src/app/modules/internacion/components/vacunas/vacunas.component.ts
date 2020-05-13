@@ -87,9 +87,7 @@ export class VacunasComponent implements OnInit {
 			const vacuna: InmunizationDto = {
 				administrationDate: this.form.value.date ? this.form.value.date.format(DateFormat.API_DATE) : null,
 				note: null,
-				id: null,
-				snomed: this.snomedConcept,
-				statusId: null
+				snomed: this.snomedConcept
 			};
 			this.add(vacuna);
 			this.resetForm();

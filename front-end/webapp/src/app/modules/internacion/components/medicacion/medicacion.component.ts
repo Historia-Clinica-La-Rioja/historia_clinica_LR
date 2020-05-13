@@ -65,11 +65,9 @@ export class MedicacionComponent implements OnInit {
 	addToList() {
 		if (this.form.valid && this.snomedConcept) {
 			const medicacion: MedicationDto = {
-				id: null,
 				note: this.form.value.note,
 				snomed: this.snomedConcept,
-				suspended: this.form.value.suspended,
-				statusId: null
+				suspended: this.form.value.suspended
 			};
 			this.add(medicacion);
 			this.resetForm();

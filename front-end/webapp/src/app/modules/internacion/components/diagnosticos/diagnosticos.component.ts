@@ -60,8 +60,6 @@ export class DiagnosticosComponent implements OnInit {
 	addToList() {
 		if (this.form.valid && this.snomedConcept) {
 			let diagnostico: DiagnosisDto = {
-				id: null,
-				verificationId: null,
 				statusId: this.form.value.statusId,
 				presumptive: this.form.value.presumptive,
 				snomed: this.snomedConcept

@@ -149,9 +149,9 @@ export interface ClinicalSpecialtyDto {
 }
 
 export interface ClinicalTermDto extends Serializable {
-    id: number;
+    id?: number;
     snomed: SnomedDto;
-    statusId: string;
+    statusId?: string;
 }
 
 export interface CompletePatientDto extends BasicPatientDto {
@@ -239,7 +239,7 @@ export interface HealthCareProfessionalGroupDto {
 }
 
 export interface HealthConditionDto extends ClinicalTermDto {
-    verificationId: string;
+    verificationId?: string;
 }
 
 export interface HealthHistoryConditionDto extends HealthConditionDto {

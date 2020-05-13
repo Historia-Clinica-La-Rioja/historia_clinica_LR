@@ -56,10 +56,7 @@ export class AntecedentesPersonalesComponent implements OnInit {
 			const antecedentePersonal: HealthHistoryConditionDto = {
 				date: null,
 				note: null,
-				verificationId: null,
-				id: null,
-				snomed: this.snomedConcept,
-				statusId: null
+				snomed: this.snomedConcept
 			};
 			this.add(antecedentePersonal);
 			this.resetForm();

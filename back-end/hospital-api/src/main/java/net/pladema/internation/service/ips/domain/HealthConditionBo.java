@@ -12,11 +12,17 @@ public class HealthConditionBo extends ClinicalTerm {
 
     private String verificationId;
 
+    public String getVerificationId(){
+        if (verificationId == null)
+            return  ConditionVerificationStatus.CONFIRMED;
+        return verificationId;
+    }
+
     public boolean isError() {
-        return verificationId.equalsIgnoreCase(ConditionVerificationStatus.ERROR);
+        return getVerificationId().equalsIgnoreCase(ConditionVerificationStatus.ERROR);
     }
 
     public boolean isDiscarded() {
-        return verificationId.equalsIgnoreCase(ConditionVerificationStatus.DISCARDED);
+        return getVerificationId().equalsIgnoreCase(ConditionVerificationStatus.DISCARDED);
     }
 }
