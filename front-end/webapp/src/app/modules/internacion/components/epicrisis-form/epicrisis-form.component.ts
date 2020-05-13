@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {
 	AllergyConditionDto,
-	DiagnosisDto, HealthConditionDto, HealthHistoryConditionDto, InmunizationDto, EpicrisisDto, MedicationDto,
+	DiagnosisDto, HealthHistoryConditionDto, InmunizationDto, EpicrisisDto, MedicationDto,
 	ResponseAnamnesisDto,
-	ResponseEpicrisisDto
+	ResponseEpicrisisDto,
 } from '@api-rest/api-model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
@@ -11,6 +11,7 @@ import { EpicrisisService } from '@api-rest/services/epicrisis.service';
 import { DatePipe } from '@angular/common';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { SelectionModel } from '@angular/cdk/collections';
+import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 
 @Component({
 	selector: 'app-epicrisis-form',
@@ -21,11 +22,11 @@ export class EpicrisisFormComponent implements OnInit {
 
 	private internmentEpisodeId: number;
 	private patientId: number;
+	private healthClinicalStatus;
 
 	anamnesis: ResponseAnamnesisDto;
 	form: FormGroup;
 
-	mainDiagnosis: HealthConditionDto;
 	medications: MedicationDto[] = [];
 	diagnosis: TableData<DiagnosisDto> = {
 		data: [],
@@ -38,6 +39,11 @@ export class EpicrisisFormComponent implements OnInit {
 			{
 				def: 'status',
 				header: 'internaciones.epicrisis.diagnosticos.table.columns.STATUS',
+				text: (row) => this.healthClinicalStatus?.find(status => status.id === row.statusId).description
+			},
+			{
+				def: 'verificacion',
+				header: 'internaciones.epicrisis.diagnosticos.table.columns.VERIFICATION',
 				text: ap => ap.presumptive ? 'Presuntivo' : 'Confirmado'
 			},
 		],
@@ -104,7 +110,8 @@ export class EpicrisisFormComponent implements OnInit {
 		private route: ActivatedRoute,
 		private router: Router,
 		private datePipe: DatePipe,
-		private snackBarService: SnackBarService
+		private snackBarService: SnackBarService,
+		private internacionMasterDataService: InternacionMasterDataService
 	) {
 		this.diagnosis.displayedColumns = this.diagnosis.columns?.map(c => c.def).concat(['select']);
 		this.familyHistories.displayedColumns = this.familyHistories.columns?.map(c => c.def).concat(['select']);
@@ -122,9 +129,8 @@ export class EpicrisisFormComponent implements OnInit {
 			}
 		);
 
-
 		this.form = this.formBuilder.group({
-			mainDiagnosis: [null],
+			snomed: [null],
 			observations: this.formBuilder.group ({
 				evolutionNote: [null, Validators.required],
 				indicationsNote: [null, Validators.required],
@@ -134,35 +140,33 @@ export class EpicrisisFormComponent implements OnInit {
 			}),
 		});
 
+		const internacionMasterDataService$ = this.internacionMasterDataService.getHealthClinical();
+		internacionMasterDataService$.subscribe(healthClinical => {
+			this.healthClinicalStatus = healthClinical;
+		});
 
 		const epicrisis$ = this.epicrisisService.getInternmentGeneralState(this.internmentEpisodeId);
 		epicrisis$.subscribe(response => {
-			this.diagnosis.data = response.diagnosis;
-			this.personalHistories.data = response.personalHistories;
-			this.familyHistories.data = response.familyHistories;
-			this.allergies.data = response.allergies;
-			this.inmunizations.data = response.inmunizations;
+			this.form.controls.snomed.setValue(response.mainDiagnosis?.snomed.pt);
+			this.diagnosis.data = response.diagnosis ? response.diagnosis : [];
+			this.personalHistories.data = response.personalHistories ? response.personalHistories : [];
+			this.familyHistories.data = response.familyHistories ? response.familyHistories : [];
+			this.allergies.data = response.allergies ? response.allergies : [];
+			this.inmunizations.data = response.inmunizations ? response.inmunizations : [];
 		});
 	}
 
 	save(): void {
-		console.log('selected ', this.diagnosis.selection._selected);
-		console.log('selected ', this.personalHistories.selection._selected);
-		console.log('selected ', this.familyHistories.selection._selected);
-		console.log('selected ', this.allergies.selection._selected);
-		console.log('selected ', this.inmunizations.selection._selected);
-		console.log('selected medications', this.medications);
-
 		if (this.form.valid) {
 			const epicrisis: EpicrisisDto = {
 				confirmed: true,
 				notes: this.form.value.observations,
-				diagnosis: [],
-				familyHistories: [],
-				personalHistories: [],
-				medications: [],
-				inmunizations: [],
-				allergies: []
+				diagnosis: this.diagnosis.selection.selected,
+				familyHistories: this.familyHistories.selection.selected,
+				personalHistories: this.personalHistories.selection.selected,
+				medications: this.medications,
+				inmunizations: this.inmunizations.selection.selected,
+				allergies: this.allergies.selection.selected
 			};
 			this.epicrisisService.createDocument(epicrisis, this.internmentEpisodeId)
 				.subscribe((epicrisisResponse: ResponseEpicrisisDto) => {

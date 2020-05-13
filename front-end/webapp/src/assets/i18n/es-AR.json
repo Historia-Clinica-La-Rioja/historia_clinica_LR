@@ -232,7 +232,8 @@
 					"TITLE": "Diagnósticos registrados",
 					"columns": {
 						"DIAGNOSIS": "Diagnóstico",
-						"STATUS": "Estado"
+						"STATUS": "Estado",
+						"VERIFICATION": "Verificación"
 					}
 				}
 			},
