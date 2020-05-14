@@ -31,6 +31,7 @@ export class ConceptsSearchComponent implements OnInit {
 	openDialog(): void {
 		if (!this.searchValue) return;
 		const dialogRef = this.dialog.open(ConceptsSearchDialogComponent, {
+			disableClose: true,
 			width: '70%',
 			data: { searchValue: this.searchValue }
 		});

@@ -18,7 +18,7 @@ export class DiagnosticoPrincipalComponent implements OnInit {
 	form: FormGroup;
 
 	constructor(
-		private formBuilder: FormBuilder,
+		private readonly formBuilder: FormBuilder,
 	) { }
 
 	ngOnInit(): void {
@@ -28,14 +28,16 @@ export class DiagnosticoPrincipalComponent implements OnInit {
 	}
 
 	setConcept(selectedConcept: SnomedDto): void {
-		let pt = selectedConcept ? selectedConcept.pt : '';
-		this.form.controls.snomed.setValue(pt);
-		let newMainDiagnosis: HealthConditionDto = {
-			id: null,
-			verificationId: null,
-			statusId: null,
-			snomed: selectedConcept
-		};
+		let newMainDiagnosis: HealthConditionDto;
+		if (selectedConcept) {
+			this.form.controls.snomed.setValue(selectedConcept.pt);
+			newMainDiagnosis = {
+				id: null,
+				verificationId: null,
+				statusId: null,
+				snomed: selectedConcept
+			};
+		}
 		this.onChange.emit(newMainDiagnosis);
 	}
 
