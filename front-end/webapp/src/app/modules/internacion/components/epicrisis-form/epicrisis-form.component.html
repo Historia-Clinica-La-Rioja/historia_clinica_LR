@@ -36,7 +36,8 @@
 
 				<ng-container matColumnDef="select">
 					<th mat-header-cell class="actions" *matHeaderCellDef>
-						<mat-checkbox (change)="$event ? masterToggle(diagnosis.data, diagnosis.selection) : null"
+						<mat-checkbox *ngIf="diagnosis.data.length !== 0"
+									  (change)="$event ? masterToggle(diagnosis.data, diagnosis.selection) : null"
 									  [checked]="diagnosis.selection.hasValue() && isAllSelected(diagnosis.data, diagnosis.selection)"
 									  [indeterminate]="diagnosis.selection.hasValue() && !isAllSelected(diagnosis.data, diagnosis.selection)">
 						</mat-checkbox>
@@ -67,7 +68,8 @@
 
 				<ng-container matColumnDef="select">
 					<th mat-header-cell class="actions" *matHeaderCellDef>
-						<mat-checkbox (change)="$event ? masterToggle(personalHistories.data, personalHistories.selection) : null"
+						<mat-checkbox *ngIf="personalHistories.data.length !== 0"
+									  (change)="$event ? masterToggle(personalHistories.data, personalHistories.selection) : null"
 									  [checked]="personalHistories.selection.hasValue() && isAllSelected(personalHistories.data, personalHistories.selection)"
 									  [indeterminate]="personalHistories.selection.hasValue() && !isAllSelected(personalHistories.data, personalHistories.selection)">
 						</mat-checkbox>
@@ -99,7 +101,8 @@
 
 				<ng-container matColumnDef="select">
 					<th mat-header-cell class="actions" *matHeaderCellDef>
-						<mat-checkbox (change)="$event ? masterToggle(familyHistories.data, familyHistories.selection) : null"
+						<mat-checkbox *ngIf="familyHistories.data.length !== 0"
+									  (change)="$event ? masterToggle(familyHistories.data, familyHistories.selection) : null"
 									  [checked]="familyHistories.selection.hasValue() && isAllSelected(familyHistories.data, familyHistories.selection)"
 									  [indeterminate]="familyHistories.selection.hasValue() && !isAllSelected(familyHistories.data, familyHistories.selection)">
 						</mat-checkbox>
@@ -137,7 +140,8 @@
 						</mat-checkbox>
 					</th>
 					<td mat-cell class="actions" *matCellDef="let row">
-						<mat-checkbox (click)="$event.stopPropagation()"
+						<mat-checkbox *ngIf="allergies.data.length !== 0"
+									  (click)="$event.stopPropagation()"
 									  (change)="$event ? allergies.selection.toggle(row) : null"
 									  [checked]="allergies.selection.isSelected(row)">
 						</mat-checkbox>
@@ -170,7 +174,8 @@
 
 				<ng-container matColumnDef="select">
 					<th mat-header-cell class="actions" *matHeaderCellDef>
-						<mat-checkbox (change)="$event ? masterToggle(inmunizations.data, inmunizations.selection) : null"
+						<mat-checkbox *ngIf="inmunizations.data.length !== 0"
+									  (change)="$event ? masterToggle(inmunizations.data, inmunizations.selection) : null"
 									  [checked]="inmunizations.selection.hasValue() && isAllSelected(inmunizations.data, inmunizations.selection)"
 									  [indeterminate]="inmunizations.selection.hasValue() && !isAllSelected(inmunizations.data, inmunizations.selection)">
 						</mat-checkbox>

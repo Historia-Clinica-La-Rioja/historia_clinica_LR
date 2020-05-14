@@ -29,12 +29,16 @@ export class AntropometricosSummaryComponent implements OnInit {
 			bmi: 'IMC',
 		};
 		this.internmentStateService.getAnthropometricData(this.internmentEpisodeId).subscribe(
-			(anthropometricData: AnthropometricDataDto) => Object.keys(anthropometricData).forEach(key => this.details.push(
-				{
-					description: LABELS[key],
-					value: anthropometricData[key]?.value
+			(anthropometricData: AnthropometricDataDto) => {
+				if (anthropometricData) {
+					Object.keys(anthropometricData).forEach(key => this.details.push(
+							{
+								description: LABELS[key],
+								value: anthropometricData[key]?.value
+							}
+						));
 				}
-			))
+			}
 		);
 	}
 
