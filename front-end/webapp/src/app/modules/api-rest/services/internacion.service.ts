@@ -3,8 +3,7 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { InternmentSummaryDto, InternmentEpisodeDto } from '@api-rest/api-model';
-
-const HARD_CODE_INS_ID = 10;
+import { ContextService } from '@core/services/context.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -12,16 +11,17 @@ const HARD_CODE_INS_ID = 10;
 export class InternacionService {
 
 	constructor(
-		private http: HttpClient
+		private http: HttpClient,
+		private contextService: ContextService,
 	) {	}
 
 	getAllPacientesInternados(): Observable<InternmentEpisodeDto[]> {
-		let url = `${environment.apiBase}/institutions/${HARD_CODE_INS_ID}/internments/patients`;
+		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/patients`;
 		return this.http.get<InternmentEpisodeDto[]>(url);
 	}
 
 	getInternmentEpisodeSummary(internmentId: number): Observable<InternmentSummaryDto> {
-		let url = `${environment.apiBase}/institutions/${HARD_CODE_INS_ID}/internments/${internmentId}/summary`;
+		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentId}/summary`;
 		return this.http.get<InternmentSummaryDto>(url);
 	}
 

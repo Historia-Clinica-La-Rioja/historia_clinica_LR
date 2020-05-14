@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
-import { BedDto, HealthcareProfessionalDto } from "@api-rest/api-model";
+import { HealthcareProfessionalDto } from "@api-rest/api-model";
 import { environment } from "@environments/environment";
-import { InternmentEpisodeService } from "@api-rest/services/internment-episode.service";
 import { ContextService } from "@core/services/context.service";
 
 @Injectable({
