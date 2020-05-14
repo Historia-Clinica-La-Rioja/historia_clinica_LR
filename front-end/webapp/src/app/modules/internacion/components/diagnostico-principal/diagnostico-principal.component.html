@@ -3,6 +3,7 @@
 	<mat-card-content>
 		<app-concepts-search *ngIf="!diagnosis else mainDiagnosis"
 			[label]="'internaciones.anamnesis.diagnosticos.DIAGNOSIS'"
+			[eclFilter]="SEMANTICS_CONFIG.diagnosis"
 			(onSelect)=setConcept($event)>
 		</app-concepts-search>
 		<ng-template #mainDiagnosis>

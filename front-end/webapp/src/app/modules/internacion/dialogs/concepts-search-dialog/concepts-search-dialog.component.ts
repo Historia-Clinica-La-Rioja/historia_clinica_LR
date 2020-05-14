@@ -14,13 +14,13 @@ export class ConceptsSearchDialogComponent implements OnInit {
 	conceptsResultsTable: TableModel<any>;
 
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public data: { searchValue: string },
+		@Inject(MAT_DIALOG_DATA) public data: { searchValue: string, eclFilter: string },
 		public dialogRef: MatDialogRef<ConceptsSearchDialogComponent>,
-		private snowstormService: SnowstormService,
+		private readonly snowstormService: SnowstormService,
 	) { }
 
 	ngOnInit(): void {
-		this.snowstormService.getSNOMEDConcepts({ term: this.data.searchValue }).subscribe(
+		this.snowstormService.getSNOMEDConcepts({ term: this.data.searchValue, ecl: this.data.eclFilter }).subscribe(
 			results => this.conceptsResultsTable = this.buildConceptsResultsTable(results)
 		);
 	}

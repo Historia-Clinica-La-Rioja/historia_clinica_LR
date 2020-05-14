@@ -11,14 +11,15 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class ConceptsSearchComponent implements OnInit {
 
-	@Input() label: string = '';
+	@Input() label = '';
+	@Input() eclFilter = '';
 	@Output() onSelect = new EventEmitter<SnomedDto>();
 
-	searchValue: string = '';
-	translatedLabel: string = '';
+	searchValue = '';
+	translatedLabel = '';
 
 	constructor(
-		private translateService: TranslateService,
+		private readonly translateService: TranslateService,
 		public dialog: MatDialog,
 	) { }
 
@@ -29,16 +30,23 @@ export class ConceptsSearchComponent implements OnInit {
 	}
 
 	openDialog(): void {
-		if (!this.searchValue) return;
+		if (!this.searchValue) {
+			return;
+		}
 		const dialogRef = this.dialog.open(ConceptsSearchDialogComponent, {
 			disableClose: true,
 			width: '70%',
-			data: { searchValue: this.searchValue }
+			data: {
+				searchValue: this.searchValue,
+				eclFilter: this.eclFilter
+			}
 		});
 
 		dialogRef.afterClosed().subscribe(
 			(selectedConcept: SnomedDto) => {
-				if (selectedConcept) this.clear();
+				if (selectedConcept) {
+					this.clear();
+				}
 				this.onSelect.emit(selectedConcept);
 			}
 		);

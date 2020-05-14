@@ -3,6 +3,7 @@
 	<mat-card-content>
 		<app-concepts-search *ngIf="!snomedConcept else vacunasForm"
 			[label]="'internaciones.anamnesis.vacunas.INMUNIZATION'"
+			[eclFilter]="SEMANTICS_CONFIG.vaccine"
 			(onSelect)=setConcept($event)>
 		</app-concepts-search>
 		<ng-template #vacunasForm>

@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MedicationDto, SnomedDto } from '@api-rest/api-model';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
+import { SEMANTICS_CONFIG } from '../../constants/snomed-semantics';
 
 @Component({
 	selector: 'app-medicacion',
@@ -30,6 +31,7 @@ export class MedicacionComponent implements OnInit {
 	snomedConcept: SnomedDto;
 
 	form: FormGroup;
+	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 
 	//Mat table
 	columns = [

@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HealthHistoryConditionDto, SnomedDto } from '@api-rest/api-model';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
+import { SEMANTICS_CONFIG } from '../../constants/snomed-semantics';
 
 @Component({
 	selector: 'app-antecedentes-personales',
@@ -27,6 +28,7 @@ export class AntecedentesPersonalesComponent implements OnInit {
 	snomedConcept: SnomedDto;
 
 	form: FormGroup;
+	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 
 	//Mat table
 	columns = [

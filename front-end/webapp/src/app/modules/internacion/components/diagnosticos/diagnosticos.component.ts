@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { SnomedDto, DiagnosisDto } from '@api-rest/api-model';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
+import { SEMANTICS_CONFIG } from '../../constants/snomed-semantics';
 
 @Component({
 	selector: 'app-diagnosticos',
@@ -11,22 +12,23 @@ import { pushTo, removeFrom } from '@core/utils/array.utils';
 export class DiagnosticosComponent implements OnInit {
 
 	private diagnosisValue: DiagnosisDto[];
-
+	
 	@Output() diagnosisChange = new EventEmitter();
-
+	
 	@Input()
 	set diagnosis(newDiagnosis: DiagnosisDto[]) {
 		this.diagnosisValue = newDiagnosis;
 		this.diagnosisChange.emit(this.diagnosisValue);
 	}
-
+	
 	get diagnosis(): DiagnosisDto[] {
 		return this.diagnosisValue;
 	}
-
+	
 	snomedConcept: SnomedDto;
-
+	
 	form: FormGroup;
+	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 
 	//Mat table
 	columns = [

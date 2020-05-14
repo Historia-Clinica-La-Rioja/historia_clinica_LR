@@ -6,6 +6,7 @@ import * as moment from 'moment';
 import { DatePipe } from '@angular/common';
 import { DateFormat } from '@core/utils/moment.utils';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
+import { SEMANTICS_CONFIG } from '../../constants/snomed-semantics';
 
 @Component({
 	selector: 'app-vacunas',
@@ -32,6 +33,7 @@ export class VacunasComponent implements OnInit {
 
 	form: FormGroup;
 	today: Moment = moment();
+	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 
 	// Mat table
 	columns = [
