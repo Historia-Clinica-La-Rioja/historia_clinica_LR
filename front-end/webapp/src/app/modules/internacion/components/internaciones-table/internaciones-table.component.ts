@@ -68,7 +68,8 @@ export class InternacionesTableComponent implements OnInit {
 				},
 			],
 			data,
-			enableFilter: true
+			enableFilter: true,
+			enablePagination: true
 		};
 	}
 

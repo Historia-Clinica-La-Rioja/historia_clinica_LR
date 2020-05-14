@@ -13,7 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatOptionModule, MatNativeDateModule, MAT_DATE_LOCALE, DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
@@ -30,6 +30,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMomentDateModule, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MAT_APP_DATE_FORMATS } from '@core/utils/moment.utils';
+import { MatPaginatorIntlAR } from '@presentation/components/table/table.component';
 
 @NgModule({
 	imports: [
@@ -119,6 +120,10 @@ import { MAT_APP_DATE_FORMATS } from '@core/utils/moment.utils';
 			provide: MAT_DATE_FORMATS,
 			useValue: MAT_APP_DATE_FORMATS
 		},
+		{
+			provide: MatPaginatorIntl,
+			useClass: MatPaginatorIntlAR
+		}
 	],
 })
 export class AppMaterialModule { }

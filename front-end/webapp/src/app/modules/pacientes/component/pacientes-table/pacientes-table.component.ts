@@ -84,7 +84,8 @@ export class PacientesTableComponent implements OnInit {
 				},
 			],
 			data,
-			enableFilter: true
+			enableFilter: true,
+			enablePagination: true
 		};
 	}
 

@@ -49,8 +49,11 @@ $default-color: 100;
 	}
 
 	app-no-data {
+		width: 100%;
 		&.default{
-			margin-top: -1px;
+			div.no-data {
+				margin-top: -1px;
+			}
 		}
 		&.primary {
 			//Solo el primary usa mat-elevation-z8
@@ -65,6 +68,22 @@ $default-color: 100;
 				border: solid 1px #A8A8A8;
 				color: mat-color($primary-palette, default);
 			}
+		}
+	}
+
+	mat-paginator {
+		width: 100%;
+		&.default{
+			margin-top: -1px;
+		}
+		&.primary {
+			//Solo el primary usa mat-elevation-z8
+			margin-top: -1px;
+			box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.1);
+		}
+		&.secondary {
+			margin-top: -1px;
+			border: solid 1px #A8A8A8;
 		}
 	}
 

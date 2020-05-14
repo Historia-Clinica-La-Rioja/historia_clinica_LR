@@ -41,7 +41,8 @@ export class ConceptsSearchDialogComponent implements OnInit {
 					}
 				},
 			],
-			data
+			data,
+			enablePagination: true
 		};
 	}
 
