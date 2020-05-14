@@ -1,0 +1,21 @@
+<div class="layout-container" [class.layout-is-mobile]="mobileQuery.matches">
+	<app-bar [position]="mobileQuery.matches ? 'fixed' : 'static'">
+		<button mat-icon-button (click)="sidenav.toggle()" *ngIf="menuItems">
+			<mat-icon>menu</mat-icon>
+		</button>
+	</app-bar>
+	<mat-sidenav-container class="layout-sidenav-container"
+	[style.marginTop.px]="mobileQuery.matches ? 57 : 0">
+		<mat-sidenav #sidenav [(opened)]="opened" [mode]="mobileQuery.matches ? 'over' : 'side'"
+			[fixedInViewport]="mobileQuery.matches" fixedTopGap="57">
+			<ng-content></ng-content>
+
+			<app-menu [menuItems]="menuItems"></app-menu>
+
+		</mat-sidenav>
+
+		<mat-sidenav-content>
+			<router-outlet></router-outlet>
+		</mat-sidenav-content>
+	</mat-sidenav-container>
+</div>

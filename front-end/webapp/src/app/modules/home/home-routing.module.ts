@@ -7,7 +7,8 @@ import { ProfileComponent } from './routes/profile/profile.component';
 
 const routes: Routes = [
 	{
-		path: '', component: HomeComponent,
+		path: '',
+		component: HomeComponent,
 		children: [
 			{ path: '', pathMatch: 'full', component: InstitucionesComponent },
 			{ path: 'profile', component: ProfileComponent },

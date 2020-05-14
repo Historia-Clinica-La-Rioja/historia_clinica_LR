@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AppMaterialModule } from 'src/app/app.material.module';
 import { FooterComponent } from './components/footer/footer.component';
-import { BarComponent } from './components/bar/bar.component';
+
 import { ContentComponent } from './components/content/content.component';
 import { HttpClientModule } from '@angular/common/http';
 import { TranslateModule } from "@ngx-translate/core";
@@ -16,7 +16,6 @@ const globalSettings: RecaptchaSettings = { siteKey: '' }; // TODO completar cua
 
 @NgModule({
 	declarations: [
-		BarComponent,
 		ContentComponent,
 		FooterComponent,
 		SidenavComponent,
@@ -35,7 +34,6 @@ const globalSettings: RecaptchaSettings = { siteKey: '' }; // TODO completar cua
 	exports: [
 		AppMaterialModule,
 
-		BarComponent,
 		CommonModule,
 		ConfirmDialogComponent,
 		ContentComponent,

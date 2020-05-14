@@ -1,5 +1,6 @@
-<mat-toolbar>
+<mat-toolbar [style.position]="position">
 	<mat-toolbar-row class="mat-elevation-z6">
+		<ng-content></ng-content>
 		<img src="assets/images/ministerio-salud.png" alt="Ministerio de salud - Presidencia de la nación">
 	</mat-toolbar-row>
 </mat-toolbar>

@@ -11,6 +11,11 @@ const routes: Routes = [
 		path: 'auth',
 		component: AuthComponent,
 		children: [
+			{
+				path: '',
+				redirectTo: 'login',
+				pathMatch: 'full',
+			},
 			{ path: 'password-reset/:token', component: PasswordResetComponent },
 			{ path: 'login', component: LoginComponent },
 		]

@@ -12,9 +12,13 @@ import { FullHouseAddressPipe } from './pipes/fullHouseAddress.pipe';
 import { PersonalInformationComponent } from './components/personal-information/personal-information.component';
 import { PatientTypeLogoComponent } from './components/patient-type-logo/patient-type-logo.component';
 import { MessageSnackbarComponent } from './components/message-snackbar/message-snackbar.component';
+import { MainLayoutComponent } from './components/main-layout/main-layout.component';
+import { BarComponent } from './components/bar/bar.component';
+import { MenuComponent } from './components/menu/menu.component';
 
 @NgModule({
 	declarations: [
+		BarComponent,
 		InternmentEpisodeSummaryComponent,
 		NoDataComponent,
 		PatientCardComponent,
@@ -27,12 +31,15 @@ import { MessageSnackbarComponent } from './components/message-snackbar/message-
 		PersonalInformationComponent,
 		PatientTypeLogoComponent,
 		MessageSnackbarComponent,
+		MainLayoutComponent,
+		MenuComponent,
 	],
 	imports: [
 		CommonModule,
 		CoreModule,
 	],
 	exports: [
+		BarComponent,
 		InternmentEpisodeSummaryComponent,
 		NoDataComponent,
 		PatientCardComponent,
@@ -44,6 +51,8 @@ import { MessageSnackbarComponent } from './components/message-snackbar/message-
 		FullHouseAddressPipe,
 		PersonalInformationComponent,
 		PatientTypeLogoComponent,
+		MainLayoutComponent,
+		MenuComponent,
 	]
 })
 export class PresentationModule { }
