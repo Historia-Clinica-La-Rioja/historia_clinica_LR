@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { hasError, VALIDATIONS } from "@core/utils/form.utils";
+import { PATIENT_TYPE } from "@core/utils/patient.utils";
 import { ActivatedRoute, Router } from '@angular/router';
 import { Moment } from 'moment';
 import * as moment from 'moment';
@@ -44,14 +45,14 @@ export class SearchComponent implements OnInit {
 	private readonly routePrefix;
 
 	constructor(private formBuilder: FormBuilder,
-				private patientService: PatientService,
-				private personService: PersonService,
-				private router: Router,
-				private route: ActivatedRoute,
-				private personMasterDataService: PersonMasterDataService,
-				private snackBarService: SnackBarService,
-				public dialog: MatDialog,
-				private contextService: ContextService) {
+		private patientService: PatientService,
+		private personService: PersonService,
+		private router: Router,
+		private route: ActivatedRoute,
+		private personMasterDataService: PersonMasterDataService,
+		private snackBarService: SnackBarService,
+		public dialog: MatDialog,
+		private contextService: ContextService) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 
@@ -70,11 +71,12 @@ export class SearchComponent implements OnInit {
 				.pipe(finalize(() => this.isLoading = false))
 				.subscribe(
 					personData => {
-						if (personData) {
-							let personToAdd: any = {...personData};
+						if (personData && Object.keys(personData).length !== 0) {
+							let personToAdd: any = { ...personData };
 							personToAdd.identificationTypeId = this.identificationTypeId;
 							personToAdd.identificationNumber = this.identificationNumber;
 							personToAdd.genderId = this.genderId;
+							personToAdd.typeId = PATIENT_TYPE.VALID;
 							this.goToNextState(personToAdd);
 						}
 					}, () => {
@@ -224,7 +226,8 @@ export class SearchComponent implements OnInit {
 				identificationNumber: this.formSearch.controls.identificationNumber.value,
 				birthDate: this.formSearch.controls.birthDate.value.format(DateFormat.API_DATE),
 				otherLastNames: this.formSearch.controls.otherLastNames.value,
-				middleNames: this.formSearch.controls.middleNames.value
+				middleNames: this.formSearch.controls.middleNames.value,
+				typeId: PATIENT_TYPE.PERMANENT_INVALID
 			}
 			this.goToNextState(this.searchPatient);
 		}

@@ -12,7 +12,6 @@ import { DateFormat } from '@core/utils/moment.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from "@core/services/context.service";
 
-const VALID_PATIENT = 2;
 const ROUTE_SEARCH = 'pacientes/search';
 const ROUTE_PROFILE = 'pacientes/profile/';
 
@@ -35,16 +34,17 @@ export class NewPatientComponent implements OnInit {
 	public cities: any[];
 	public identificationTypeList: IdentificationTypeDto[];
 	private readonly routePrefix;
+	public patientType;
 
 	constructor(private formBuilder: FormBuilder,
-				private router: Router,
-				private el: ElementRef,
-				private patientService: PatientService,
-				private route: ActivatedRoute,
-				private personMasterDataService: PersonMasterDataService,
-				private addressMasterDataService: AddressMasterDataService,
-				private snackBarService: SnackBarService,
-				private contextService: ContextService) {
+		private router: Router,
+		private el: ElementRef,
+		private patientService: PatientService,
+		private route: ActivatedRoute,
+		private personMasterDataService: PersonMasterDataService,
+		private addressMasterDataService: AddressMasterDataService,
+		private snackBarService: SnackBarService,
+		private contextService: ContextService) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 
@@ -77,17 +77,18 @@ export class NewPatientComponent implements OnInit {
 					addressFloor: [],
 					addressApartment: [],
 					addressQuarter: [],
-					addressCityId: {value: null, disabled: true},
+					addressCityId: { value: null, disabled: true },
 					addressPostcode: [],
 
 					addressProvinceId: [],
 					addressCountryId: [],
-					addressDepartmentId: {value: null, disabled: true},
+					addressDepartmentId: { value: null, disabled: true },
 					//Patient
 					medicalCoverageName: [null, Validators.maxLength(VALIDATIONS.MAX_LENGTH.medicalCoverageName)],
 					medicalCoverageAffiliateNumber: [null, Validators.maxLength(VALIDATIONS.MAX_LENGTH.medicalCoverageAffiliateNumber)]
 				});
 				this.lockFormField(params);
+				this.patientType = params.typeId;
 			});
 
 		this.personMasterDataService.getGenders()
@@ -179,7 +180,7 @@ export class NewPatientComponent implements OnInit {
 			quarter: this.form.controls.addressQuarter.value,
 			street: this.form.controls.addressStreet.value,
 			//Patient
-			typeId: VALID_PATIENT,
+			typeId: this.patientType,
 			comments: null,
 			identityVerificationStatusId: null,
 			medicalCoverageName: this.form.controls.medicalCoverageName.value,
