@@ -42,14 +42,17 @@ public class MathScore {
 	}
 	
 	private static Float sumPartialMatchCases(PatientSearchFilter searchFilter, Person personToMatch, Float partialResult) {
-		partialResult += calculateMatchScore(soundex(searchFilter.getFirstName()), soundex(personToMatch.getFirstName()),
-				SearchField.FirstName.getCoefficent());
-		partialResult += calculateMatchScore(soundex(searchFilter.getLastName()), soundex(personToMatch.getLastName()),
-				SearchField.LastName.getCoefficent());
-		partialResult += calculateMatchScore(searchFilter.getIdentificationNumber(), personToMatch.getIdentificationNumber(),
-				SearchField.IdentificationNumber.getCoefficent());
-		partialResult += calculateMatchScore(formatDate(searchFilter.getBirthDate()),
-				formatDate(personToMatch.getBirthDate()), SearchField.BirthDate.getCoefficent());
+		partialResult += assertNulls(personToMatch.getFirstName(),searchFilter.getFirstName()) ?
+				calculateMatchScore(soundex(searchFilter.getFirstName()), soundex(personToMatch.getFirstName()),
+				SearchField.FirstName.getCoefficent()) : 0;
+		partialResult += assertNulls(personToMatch.getLastName(), searchFilter.getLastName()) ?
+				calculateMatchScore(soundex(searchFilter.getLastName()), soundex(personToMatch.getLastName()),
+				SearchField.LastName.getCoefficent()) : 0;
+		partialResult += assertNulls(personToMatch.getIdentificationNumber(), searchFilter.getIdentificationNumber()) ?
+				calculateMatchScore(searchFilter.getIdentificationNumber(), personToMatch.getIdentificationNumber(),
+				SearchField.IdentificationNumber.getCoefficent()) : 0;
+		partialResult += assertNulls(personToMatch.getBirthDate(), searchFilter.getBirthDate()) ?
+				calculateMatchScore(formatDate(searchFilter.getBirthDate()), formatDate(personToMatch.getBirthDate()), SearchField.BirthDate.getCoefficent()) : 0;
 		return partialResult;
 	}
 
