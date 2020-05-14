@@ -72,6 +72,7 @@ export class DiagnosisSummaryComponent implements OnInit {
 					do: row => {
 						const diagnosis = {...row};
 						const dialogRef = this.dialog.open(RemoveDiagnosisComponent, {
+							disableClose: true,
 							data: {
 								diagnosis,
 								internmentEpisodeId: this.internmentEpisodeId
