@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AppMaterialModule } from 'src/app/app.material.module';
-import { FooterComponent } from './components/footer/footer.component';
 
 import { ContentComponent } from './components/content/content.component';
 import { HttpClientModule } from '@angular/common/http';
@@ -17,7 +16,6 @@ const globalSettings: RecaptchaSettings = { siteKey: '' }; // TODO completar cua
 @NgModule({
 	declarations: [
 		ContentComponent,
-		FooterComponent,
 		SidenavComponent,
 		ConfirmDialogComponent,
 	],
@@ -37,7 +35,6 @@ const globalSettings: RecaptchaSettings = { siteKey: '' }; // TODO completar cua
 		CommonModule,
 		ConfirmDialogComponent,
 		ContentComponent,
-		FooterComponent,
 		HttpClientModule,
 		ReactiveFormsModule,
 		RecaptchaModule,

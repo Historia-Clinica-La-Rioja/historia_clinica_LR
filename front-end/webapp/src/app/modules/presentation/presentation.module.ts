@@ -15,6 +15,7 @@ import { MessageSnackbarComponent } from './components/message-snackbar/message-
 import { MainLayoutComponent } from './components/main-layout/main-layout.component';
 import { BarComponent } from './components/bar/bar.component';
 import { MenuComponent } from './components/menu/menu.component';
+import { FooterComponent } from './components/footer/footer.component';
 
 @NgModule({
 	declarations: [
@@ -33,6 +34,7 @@ import { MenuComponent } from './components/menu/menu.component';
 		MessageSnackbarComponent,
 		MainLayoutComponent,
 		MenuComponent,
+		FooterComponent,
 	],
 	imports: [
 		CommonModule,
