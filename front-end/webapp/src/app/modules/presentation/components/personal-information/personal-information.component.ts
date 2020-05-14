@@ -10,7 +10,7 @@ import { Moment } from 'moment';
 export class PersonalInformationComponent implements OnInit {
 
 	@Input() personalInformation: PersonalInformation;
-	public addressPresent: boolean;
+	public addressPresent: boolean = false;
 	constructor() { }
 
 	ngOnInit(): void {
@@ -18,7 +18,7 @@ export class PersonalInformationComponent implements OnInit {
 
 	ngOnChanges() {
 		if (this.personalInformation?.address) {
-			this.addressPresent = Object.values(this.personalInformation?.address).find(o => o != null) ? true : false;
+			this.addressPresent = Object.values(this.personalInformation?.address).find(o => o && typeof(o) !== 'object') ? true : false;
 		}
 	}
 }
