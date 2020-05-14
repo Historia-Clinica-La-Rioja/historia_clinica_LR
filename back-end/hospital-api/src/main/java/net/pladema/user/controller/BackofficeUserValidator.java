@@ -15,17 +15,17 @@ public class BackofficeUserValidator
 
 	@Override
 	public void assertGetList(BackofficeUserDto entity) {
-
+		// nothing to do
  	}
 
 	@Override
 	public void assertGetOne(Integer id) {
-
+		// nothing to do
 	}
 
 	@Override
 	public void assertCreate(BackofficeUserDto entity) {
-
+		// nothing to do
 	}
 
 	@Override
@@ -33,7 +33,6 @@ public class BackofficeUserValidator
 		if (authoritiesValidator.isLoggedUserId(id)) {
 			throw new PermissionDeniedException("No te podés editar a vos mismo");
 		}
-//		authoritiesValidator.assertRolesOfLowerRank(entity.getRoleIds());
 		authoritiesValidator.assertAllowed(id);
 	}
 

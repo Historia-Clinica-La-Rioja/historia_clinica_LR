@@ -21,7 +21,7 @@ public class EpicrisisValidator implements ConstraintValidator<EpicrisisValid, O
 
     @Override
     public void initialize(EpicrisisValid constraintAnnotation) {
-
+        // nothing to do
     }
 
     @Override

@@ -4,7 +4,6 @@ import io.swagger.annotations.Api;
 import net.pladema.internation.controller.internment.dto.InternmentEpisodeDto;
 import net.pladema.internation.controller.internment.dto.InternmentPatientDto;
 import net.pladema.internation.controller.internment.mapper.InternmentEpisodeMapper;
-import net.pladema.internation.controller.mocks.MocksInternmentPatient;
 import net.pladema.internation.service.internment.InternmentPatientService;
 import net.pladema.internation.service.internment.domain.BasicListedPatientBo;
 import net.pladema.internation.service.internment.domain.InternmentEpisodeBo;

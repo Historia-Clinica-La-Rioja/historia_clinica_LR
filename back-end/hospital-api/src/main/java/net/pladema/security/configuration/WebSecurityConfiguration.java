@@ -21,7 +21,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	private static final String RECAPTCHA = "/recaptcha";
 
-	private static final String PAS$W0RD_RESET = "/password-reset";
+	private static final String PASSWORD_RESET = "/password-reset";
 	
 	private static final String BACKOFFICE = "/backoffice";
 
@@ -66,7 +66,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.antMatchers("/v2/**","/swagger-ui.html","/swagger-resources/**","/webjars/springfox-swagger-ui/**").permitAll()
 		.antMatchers(BACKOFFICE + "/**").hasAnyAuthority(ERole.ROOT.getValue(), ERole.ADMINISTRADOR.getValue())
 		.antMatchers(RECAPTCHA + "/**").permitAll()
-		.antMatchers(HttpMethod.POST, PAS$W0RD_RESET ).permitAll()
+		.antMatchers(HttpMethod.POST, PASSWORD_RESET).permitAll()
 		.antMatchers("/**").authenticated()
 		.anyRequest().authenticated();
 

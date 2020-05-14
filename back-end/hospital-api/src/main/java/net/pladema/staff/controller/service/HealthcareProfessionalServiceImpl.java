@@ -4,7 +4,6 @@ import net.pladema.internation.controller.internment.dto.HealthCareProfessionalG
 import net.pladema.internation.controller.internment.mapper.HealthCareProfessionalGroupMapper;
 import net.pladema.internation.repository.core.HealthcareProfessionalGroupRepository;
 import net.pladema.internation.repository.core.entity.HealthcareProfessionalGroup;
-import net.pladema.internation.service.internment.impl.InternmentEpisodeServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -12,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class HealthcareProfessionalServiceImpl implements  HealthcareProfessionalService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(InternmentEpisodeServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HealthcareProfessionalServiceImpl.class);
 
     private final HealthcareProfessionalGroupRepository healthcareProfessionalGroupRepository;
 

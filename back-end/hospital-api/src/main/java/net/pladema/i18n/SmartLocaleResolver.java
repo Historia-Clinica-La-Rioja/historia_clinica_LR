@@ -19,6 +19,6 @@ public class SmartLocaleResolver extends AcceptHeaderLocaleResolver {
     public Locale resolveLocale(HttpServletRequest request) {
         final String acceptLanguage = request.getHeader("Accept-Language");
         return othersLanguages.stream().filter(l -> l.equalsIgnoreCase(acceptLanguage))
-                .findAny().map(l -> Locale.forLanguageTag(l)).orElse(Locale.forLanguageTag(defaultLanguage));
+                .findAny().map(Locale::forLanguageTag).orElse(Locale.forLanguageTag(defaultLanguage));
         }
 }

@@ -19,8 +19,6 @@ import javax.annotation.PostConstruct;
 public class AdminConfig {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AdminConfig.class);
-	
-	private static final String ADMIN = "Admin";
 
 	@Value("${admin.mail}")
 	private String adminMail;
@@ -49,7 +47,7 @@ public class AdminConfig {
 		roleService.updateRolesStore();
 
 		User admin = userService.getUser(adminMail)
-				.orElseGet(() -> createAdminUser());
+				.orElseGet(this::createAdminUser);
 		updateUser(admin);
 	}
 

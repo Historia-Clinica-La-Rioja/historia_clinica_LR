@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 public class InternmentPatientServiceImpl implements InternmentPatientService {
 
-    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOG = LoggerFactory.getLogger(InternmentPatientServiceImpl.class);
     
     private static final String LOGGING_OUTPUT = "Output -> {}";
 

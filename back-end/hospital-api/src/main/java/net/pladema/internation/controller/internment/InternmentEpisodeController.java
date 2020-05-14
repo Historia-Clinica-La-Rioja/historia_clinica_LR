@@ -53,7 +53,7 @@ public class InternmentEpisodeController {
     @PostMapping
     public ResponseEntity<InternmentEpisodeDto> addInternmentEpisode(
             @PathVariable(name = "institutionId") Integer institutionId,
-            @RequestBody InternmentEpisodeADto internmentEpisodeADto) throws URISyntaxException{
+            @RequestBody InternmentEpisodeADto internmentEpisodeADto) {
         InternmentEpisode internmentEpisodeToSave = internmentEpisodeMapper.toInternmentEpisode(internmentEpisodeADto);
         internmentEpisodeToSave = internmentEpisodeService.addInternmentEpisode(internmentEpisodeToSave, institutionId);
         InternmentEpisodeDto result = internmentEpisodeMapper.toInternmentEpisodeDto(internmentEpisodeToSave);

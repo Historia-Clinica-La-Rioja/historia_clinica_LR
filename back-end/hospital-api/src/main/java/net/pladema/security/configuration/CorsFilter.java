@@ -28,8 +28,14 @@ public class CorsFilter implements Filter {
     chain.doFilter(req, res);
   }
 
-  public void init(FilterConfig filterConfig) {}
+  @Override
+  public void init(FilterConfig filterConfig) {
+    // nothing to do
+  }
 
-  public void destroy() {}
+  @Override
+  public void destroy() {
+    // nothing to do
+  }
 
 }

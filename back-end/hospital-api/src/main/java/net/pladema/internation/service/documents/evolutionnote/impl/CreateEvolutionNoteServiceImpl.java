@@ -32,8 +32,6 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
 
     private final AllergyService allergyService;
 
-    private final MedicationService medicationService;
-
     private final ClinicalObservationService clinicalObservationService;
 
     private final InmunizationService inmunizationService;
@@ -44,8 +42,7 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
                                           HealthConditionService healthConditionService,
                                           AllergyService allergyService,
                                           ClinicalObservationService clinicalObservationService,
-                                          InmunizationService inmunizationService,
-                                          MedicationService medicationService) {
+                                          InmunizationService inmunizationService) {
         this.documentService = documentService;
         this.internmentEpisodeService = internmentEpisodeService;
         this.noteService = noteService;
@@ -53,7 +50,6 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
         this.allergyService = allergyService;
         this.clinicalObservationService = clinicalObservationService;
         this.inmunizationService = inmunizationService;
-        this.medicationService = medicationService;
     }
 
     @Override

@@ -425,7 +425,7 @@ export interface ResponsibleDoctorDto extends Serializable {
     licence: string;
 }
 
-export interface RoleAssignment {
+export interface RoleAssignment extends Serializable {
     institutionId: number;
     role: ERole;
 }

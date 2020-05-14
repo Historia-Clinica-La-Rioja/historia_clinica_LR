@@ -22,7 +22,7 @@ public class MapClinicalObservationVo {
     public MapClinicalObservationVo(List<ClinicalObservationVo> vitalsSignVos){
         super();
         clinicalObservationByCode = vitalsSignVos.stream().collect(Collectors.groupingBy(ClinicalObservationVo::getSctidCode));
-        clinicalObservationByCode.forEach((k, v) -> processData(k, v));
+        clinicalObservationByCode.forEach(this::processData);
     }
 
     private void processData(String key, List<ClinicalObservationVo> inputValues) {
@@ -103,15 +103,15 @@ public class MapClinicalObservationVo {
     public Optional<AnthropometricDataBo> getLastNAnthropometricData(int i) {
         LOG.debug("Input parameters -> pos {}", i);
         AnthropometricDataBo result = new AnthropometricDataBo();
-        getLastNClinicalObservationByCode(EVitalSign.HEIGHT.getSctidCode(),i).ifPresent(v -> {
-            result.setHeight(new ClinicalObservationBo(v));
-        });
-        getLastNClinicalObservationByCode(EVitalSign.WEIGHT.getSctidCode(),i).ifPresent(v -> {
-            result.setWeight(new ClinicalObservationBo(v));
-        });
-        getLastNClinicalObservationByCode(EObservationLab.BLOOD_TYPE.getSctidCode(),i).ifPresent(v -> {
-            result.setBloodType(new ClinicalObservationBo(v));
-        });
+        getLastNClinicalObservationByCode(EVitalSign.HEIGHT.getSctidCode(),i).ifPresent(v ->
+            result.setHeight(new ClinicalObservationBo(v))
+        );
+        getLastNClinicalObservationByCode(EVitalSign.WEIGHT.getSctidCode(),i).ifPresent(v ->
+            result.setWeight(new ClinicalObservationBo(v))
+        );
+        getLastNClinicalObservationByCode(EObservationLab.BLOOD_TYPE.getSctidCode(),i).ifPresent(v ->
+            result.setBloodType(new ClinicalObservationBo(v))
+        );
         LOG.debug(OUTPUT, result);
         if (result.hasValues())
             return Optional.of(result);

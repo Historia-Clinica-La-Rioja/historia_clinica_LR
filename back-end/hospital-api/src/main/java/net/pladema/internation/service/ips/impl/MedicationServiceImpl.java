@@ -1,6 +1,5 @@
 package net.pladema.internation.service.ips.impl;
 
-import net.pladema.internation.controller.ips.mapper.MedicationMapper;
 import net.pladema.internation.repository.ips.MedicationStatementRepository;
 import net.pladema.internation.repository.ips.entity.MedicationStatement;
 import net.pladema.internation.repository.ips.generalstate.MedicationVo;
@@ -19,13 +18,11 @@ import java.util.stream.Collectors;
 @Service
 public class MedicationServiceImpl implements MedicationService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AllergyServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MedicationServiceImpl.class);
 
     public static final String OUTPUT = "Output -> {}";
 
     private final MedicationStatementRepository medicationStatementRepository;
-
-    private final MedicationMapper medicationMapper;
 
     private final DocumentService documentService;
 
@@ -34,12 +31,10 @@ public class MedicationServiceImpl implements MedicationService {
     private final NoteService noteService;
 
     public MedicationServiceImpl(MedicationStatementRepository medicationStatementRepository,
-                                 MedicationMapper medicationMapper,
                                  DocumentService documentService,
                                  SnomedService snomedService,
                                  NoteService noteService){
         this.medicationStatementRepository = medicationStatementRepository;
-        this.medicationMapper = medicationMapper;
         this.documentService = documentService;
         this.snomedService = snomedService;
         this.noteService = noteService;
@@ -80,7 +75,7 @@ public class MedicationServiceImpl implements MedicationService {
                 noteService.createNote(medicationBo.getNote()));
 
         medicationStatement = medicationStatementRepository.save(medicationStatement);
-        LOG.debug("medicationStatement saved ->", medicationStatement.getId());
+        LOG.debug("medicationStatement saved -> {}", medicationStatement.getId());
         LOG.debug(OUTPUT, medicationStatement);
         return medicationStatement;
     }

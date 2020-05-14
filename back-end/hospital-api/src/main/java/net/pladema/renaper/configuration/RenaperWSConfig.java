@@ -30,7 +30,7 @@ public class RenaperWSConfig extends WSConfig{
 	
 	public RenaperWSConfig(@Value("${ws.renaper.url.base:https://federador.msal.gob.ar/masterfile-federacion-service/api}") String baseUrl) {
 		super(baseUrl);
-		url = new HashMap<String, String>();
+		url = new HashMap<>();
 	}
 
 	public String getUrlCobertura() {

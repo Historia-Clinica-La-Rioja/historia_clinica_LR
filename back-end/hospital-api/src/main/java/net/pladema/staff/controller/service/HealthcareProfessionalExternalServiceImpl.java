@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class HealthcareProfessionalExternalServiceImpl implements HealthcareProfessionalExternalService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(InternmentEpisodeServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HealthcareProfessionalExternalServiceImpl.class);
 
     private final HealthcareProfessionalService healthcareProfessionalService;
 

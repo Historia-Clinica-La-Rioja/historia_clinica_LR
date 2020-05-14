@@ -14,6 +14,10 @@ import org.springframework.web.client.RestTemplate;
 
 import net.pladema.sgx.restclient.configuration.interceptors.LoggingRequestInterceptor;
 
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+
 @Service
 public class RestTemplateSSL extends RestTemplate {
 	
@@ -31,7 +35,7 @@ public class RestTemplateSSL extends RestTemplate {
 		return clientHttpRequestFactory;
 	}
 
-	private static HttpClient httpClient() throws Exception {
+	private static HttpClient httpClient() throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
 		CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
 		SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(
 				new SSLContextBuilder().loadTrustMaterial(null, new TrustSelfSignedStrategy()).build());

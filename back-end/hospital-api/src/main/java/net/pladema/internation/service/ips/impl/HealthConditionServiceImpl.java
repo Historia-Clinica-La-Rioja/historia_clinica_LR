@@ -95,9 +95,10 @@ public class HealthConditionServiceImpl implements HealthConditionService {
             healthCondition.setStatusId(ConditionClinicalStatus.INACTIVE);
             healthCondition.setVerificationStatusId(newDiagnosis.getVerificationId());
         }
-        if (newDiagnosis.isDiscarded())
+        if (newDiagnosis.isDiscarded()) {
             healthCondition.setStatusId(newDiagnosis.getStatusId());
             healthCondition.setVerificationStatusId(newDiagnosis.getVerificationId());
+        }
         return healthCondition;
     }
 

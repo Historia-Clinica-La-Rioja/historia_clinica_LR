@@ -21,7 +21,7 @@ public class RenaperServiceImpl extends RestClient implements RenaperService {
 
 	private RenaperWSConfig renaperWSConfig;
 	
-	public RenaperServiceImpl(RenaperRestTemplateAuth restTemplateAuth, RenaperWSConfig wsConfig) throws Exception {
+	public RenaperServiceImpl(RenaperRestTemplateAuth restTemplateAuth, RenaperWSConfig wsConfig) {
 		super(restTemplateAuth, wsConfig);
 		this.renaperWSConfig = wsConfig;
 	}

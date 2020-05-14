@@ -5,8 +5,10 @@ import net.pladema.internation.service.documents.DocumentService;
 import net.pladema.internation.service.documents.evolutionnote.UpdateEvolutionNoteService;
 import net.pladema.internation.service.documents.evolutionnote.domain.EvolutionNote;
 import net.pladema.internation.service.general.NoteService;
-import net.pladema.internation.service.internment.InternmentEpisodeService;
-import net.pladema.internation.service.ips.*;
+import net.pladema.internation.service.ips.AllergyService;
+import net.pladema.internation.service.ips.ClinicalObservationService;
+import net.pladema.internation.service.ips.HealthConditionService;
+import net.pladema.internation.service.ips.InmunizationService;
 import net.pladema.internation.service.ips.domain.DocumentObservations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,35 +27,26 @@ public class UpdateEvolutionNoteServiceImpl implements UpdateEvolutionNoteServic
 
     private final DocumentService documentService;
 
-    private final InternmentEpisodeService internmentEpisodeService;
-
     private final NoteService noteService;
 
     private final HealthConditionService healthConditionService;
 
     private final AllergyService allergyService;
 
-    private final MedicationService medicationService;
-
     private final ClinicalObservationService clinicalObservationService;
 
     private final InmunizationService inmunizationService;
 
-
     public UpdateEvolutionNoteServiceImpl(DocumentService documentService,
-                                          InternmentEpisodeService internmentEpisodeService,
                                           NoteService noteService,
                                           HealthConditionService healthConditionService,
                                           AllergyService allergyService,
-                                          MedicationService medicationService,
                                           ClinicalObservationService clinicalObservationService,
                                           InmunizationService inmunizationService) {
         this.documentService = documentService;
-        this.internmentEpisodeService = internmentEpisodeService;
         this.noteService = noteService;
         this.healthConditionService = healthConditionService;
         this.allergyService = allergyService;
-        this.medicationService = medicationService;
         this.clinicalObservationService = clinicalObservationService;
         this.inmunizationService = inmunizationService;
     }

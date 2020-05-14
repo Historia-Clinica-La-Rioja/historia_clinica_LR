@@ -1,6 +1,5 @@
 package net.pladema.permissions.service.impl;
 
-import net.pladema.permissions.repository.RoleRepository;
 import net.pladema.permissions.repository.UserRoleRepository;
 import net.pladema.permissions.repository.entity.UserRole;
 import net.pladema.permissions.repository.entity.UserRolePK;
@@ -13,17 +12,13 @@ import java.util.List;
 
 @Service
 public class UserAssignmentServiceImpl implements UserAssignmentService {
-	private static final String INVALID_ROLE = "role.invalid";
 
 	private final UserRoleRepository userRoleRepository;
-	private final RoleRepository roleRepository;
 
 	public UserAssignmentServiceImpl(
-			UserRoleRepository userRoleRepository,
-			RoleRepository roleRepository
+			UserRoleRepository userRoleRepository
 	) {
 		this.userRoleRepository = userRoleRepository;
-		this.roleRepository = roleRepository;
 	}
 
 	@Override

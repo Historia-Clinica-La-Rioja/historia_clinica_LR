@@ -16,7 +16,6 @@ import net.pladema.internation.service.documents.epicrisis.domain.Epicrisis;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
 import net.pladema.internation.service.internment.InternmentStateService;
 import net.pladema.internation.service.internment.domain.InternmentGeneralState;
-import net.pladema.patient.controller.service.PatientExternalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -56,8 +55,7 @@ public class EpicrisisController {
                                UpdateEpicrisisService updateEpicrisisService,
                                EpicrisisService epicrisisService,
                                EpicrisisMapper epicrisisMapper,
-                               InternmentStateService internmentStateService,
-                               PatientExternalService patientExternalService) {
+                               InternmentStateService internmentStateService) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.createEpicrisisService = createEpicrisisService;
         this.updateEpicrisisService = updateEpicrisisService;

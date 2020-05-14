@@ -34,8 +34,8 @@ public class InternmentValidator implements ConstraintValidator<InternmentValid,
         Integer institutionId = (Integer)parameters[0];
         Integer internmentEpisodeId = (Integer)parameters[1];
 
-        Boolean existsInstitution = institutionRepository.existsById(institutionId);
-        Boolean existsIntenmentEpisode = internmentEpisodeRepository.existsById(internmentEpisodeId);
+        boolean existsInstitution = institutionRepository.existsById(institutionId);
+        boolean existsIntenmentEpisode = internmentEpisodeRepository.existsById(internmentEpisodeId);
 
         if(existsInstitution)
             setResponse(context, "{institution.invalid}", INSTITUTION_PROPERTY);

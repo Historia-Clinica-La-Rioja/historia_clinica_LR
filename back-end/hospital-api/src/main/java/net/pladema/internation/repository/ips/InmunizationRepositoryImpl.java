@@ -18,7 +18,7 @@ import java.util.List;
 @Repository
 public class InmunizationRepositoryImpl implements InmunizationRepositoryCustom {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ClinicalObservationRepositoryImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(InmunizationRepositoryImpl.class);
 
     public static final String OUTPUT = "Output -> {}";
 

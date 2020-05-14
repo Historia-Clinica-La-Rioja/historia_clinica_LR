@@ -67,7 +67,7 @@ public class AllergyServiceImpl implements AllergyService {
                 allergy.getCategoryId(),
                 allergy.getDate());
         allergyIntolerance = allergyIntoleranceRepository.save(allergyIntolerance);
-        LOG.debug("allergyIntolerance saved ->", allergyIntolerance.getId());
+        LOG.debug("allergyIntolerance saved -> {} ", allergyIntolerance.getId());
         LOG.debug(OUTPUT, allergyIntolerance);
         return allergyIntolerance;
     }

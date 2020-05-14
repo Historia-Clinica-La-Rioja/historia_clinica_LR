@@ -35,16 +35,16 @@ public class FederarAuthService extends AuthService<FederarLoginResponse> {
 					new FederarLoginPayload(federarWSConfig.getGrantType(), federarWSConfig.getScope(),
 							federarWSConfig.getClientAssertionType(), generateClientAssertion()),
 					FederarLoginResponse.class);
-		} catch (UnsupportedEncodingException e) {
+		} catch (Exception e) {
 			throw new WSResponseException("Error al codificar SignKey -> " + e.getMessage() ) ;
 		}
 		return result;
 	}
 
-	private String generateClientAssertion() throws UnsupportedEncodingException {
+	private String generateClientAssertion() {
 		return JWTUtils.generateJWT(federarWSConfig.getClaims(), federarWSConfig.getSignKey(), (int) federarWSConfig.getTokenExpiration());
 	}
-	
+
 	protected void assertValidResponse(FederarLoginResponse loginResponse) throws WSResponseException {
 		super.assertValidResponse(loginResponse);
 		ResponseEntity<FederarValidateTokenResponse> assertTokenResponse = exchangePost(federarWSConfig.getTokenValidationURL(),

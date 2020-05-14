@@ -94,7 +94,7 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 	private BackofficeUserDto update(BackofficeUserDto dto) {
 		BackofficeUserDto saved = repository.findById(dto.getId())
 				.map(inDb -> userDtoMapper.toModel(dto, inDb))
-				.map(toSave -> repository.save(toSave))
+				.map(repository::save)
 				.map(userDtoMapper::toDto)
 				.orElseThrow(() -> new NotFoundException("user-not-found", String.format("El usuario %s no existe", dto.getId())));
 
@@ -112,8 +112,7 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 		modelUser.setEnable(true);
 		BackofficeUserDto saved = userDtoMapper.toDto(repository.save(modelUser));
 
-		//roleService.createUserRole(modelUser.getId(), ERole.PATIENT_USER);
-		//TODO: dto role ids are valid? we should validate before update
+		//TODO: dto role ids are valid? we should validate before update roleService.createUserRole(modelUser.getId(), ERole.PATIENT_USER);
 		userRoleRepository.saveAll(roleToAdd(dto.getId(), toModel(dto.getRoles()), new ArrayList<UserRole>()));
 		
 		return saved;
@@ -143,7 +142,7 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 	private List<UserRole> toModel(List<BackofficeUserRoleDto> roles) {
 		return roles
 			.stream()
-			.map(x -> userRoleDtoMapper.toModel(x))
+			.map(userRoleDtoMapper::toModel)
 			.collect(Collectors.toList());
 	}
 	

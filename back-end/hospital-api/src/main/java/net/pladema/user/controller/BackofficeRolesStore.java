@@ -44,7 +44,7 @@ public class BackofficeRolesStore implements BackofficeStore<Role, Short> {
 
 	@Override
 	public void deleteById(Short id) {
-
+		// nothing to do
 	}
 
 	private static List<Role> toList(Iterable<Role> roles) {

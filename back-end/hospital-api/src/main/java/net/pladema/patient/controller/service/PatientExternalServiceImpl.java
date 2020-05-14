@@ -14,7 +14,7 @@ import javax.persistence.EntityNotFoundException;
 @Service
 public class PatientExternalServiceImpl implements PatientExternalService {
 
-    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOG = LoggerFactory.getLogger(PatientExternalServiceImpl.class);
 
     public static final String OUTPUT = "Output -> {}";
 

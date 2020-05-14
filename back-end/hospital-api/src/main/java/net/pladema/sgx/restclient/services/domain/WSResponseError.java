@@ -2,13 +2,15 @@ package net.pladema.sgx.restclient.services.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class WSResponseError {
+import java.io.Serializable;
+
+public class WSResponseError implements Serializable {
 	
 	@JsonProperty("msg")
 	private String msg;
 
 	public WSResponseError() {
-		
+		super();
 	}
 	
 	public WSResponseError(String msg) {
