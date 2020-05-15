@@ -42,13 +42,14 @@ public abstract class ClinicalObservation extends InternationAuditableEntity {
     @Column(name = "note_id")
     private Long noteId;
 
-    public ClinicalObservation(Integer patientId, String value, String sctidCode, String categoryId) {
+    public ClinicalObservation(Integer patientId, String value, String sctidCode, String categoryId,
+                               LocalDateTime effectiveTime) {
         super();
         this.patientId = patientId;
         this.categoryId = categoryId;
         this.value = value;
         this.sctidCode = sctidCode;
-        this.effectiveTime = LocalDateTime.now();
+        this.effectiveTime = effectiveTime;
     }
 
     public boolean isDeleted() {

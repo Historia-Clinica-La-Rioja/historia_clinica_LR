@@ -3,6 +3,7 @@ package net.pladema.internation.controller.mocks;
 import net.pladema.internation.controller.documents.anamnesis.dto.AnamnesisDto;
 import net.pladema.internation.controller.ips.dto.AnthropometricDataDto;
 import net.pladema.internation.controller.ips.dto.ClinicalObservationDto;
+import net.pladema.internation.controller.ips.dto.EffectiveClinicalObservationDto;
 import net.pladema.internation.controller.ips.dto.VitalSignDto;
 
 
@@ -21,12 +22,12 @@ public class MocksAnamnesis {
 
     private static VitalSignDto mockVitalSignDto(int id) {
         VitalSignDto vitalSignDto = new VitalSignDto();
-        vitalSignDto.setBloodOxygenSaturation(mockNewClinicalObservationDto(id + 1));
-        vitalSignDto.setDiastolicBloodPressure(mockNewClinicalObservationDto(id + 2));
-        vitalSignDto.setSystolicBloodPressure(mockNewClinicalObservationDto(id + 2));
-        vitalSignDto.setHeartRate(mockNewClinicalObservationDto(id + 3));
-        vitalSignDto.setRespiratoryRate(mockNewClinicalObservationDto(id + 4));
-        vitalSignDto.setTemperature(mockNewClinicalObservationDto(id + 5));
+        vitalSignDto.setBloodOxygenSaturation(mockNewCompleteClinicalObservationDto(id + 1));
+        vitalSignDto.setDiastolicBloodPressure(mockNewCompleteClinicalObservationDto(id + 2));
+        vitalSignDto.setSystolicBloodPressure(mockNewCompleteClinicalObservationDto(id + 2));
+        vitalSignDto.setHeartRate(mockNewCompleteClinicalObservationDto(id + 3));
+        vitalSignDto.setRespiratoryRate(mockNewCompleteClinicalObservationDto(id + 4));
+        vitalSignDto.setTemperature(mockNewCompleteClinicalObservationDto(id + 5));
         return vitalSignDto;
     }
 
@@ -42,6 +43,14 @@ public class MocksAnamnesis {
         ClinicalObservationDto result = new ClinicalObservationDto();
         result.setId(i);
         result.setValue("Value123/%");
+        return result;
+    }
+
+    private static EffectiveClinicalObservationDto mockNewCompleteClinicalObservationDto(int i) {
+        EffectiveClinicalObservationDto result = new EffectiveClinicalObservationDto();
+        result.setId(i);
+        result.setValue("Value123/%");
+        result.setEffectiveTime("2020-05-15'T'09:47:20.233'Z'");
         return result;
     }
 }

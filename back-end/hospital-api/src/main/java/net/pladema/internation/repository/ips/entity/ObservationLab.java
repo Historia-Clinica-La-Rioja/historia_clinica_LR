@@ -10,6 +10,7 @@ import net.pladema.internation.service.ips.domain.enums.EObservationLab;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "observation_lab")
@@ -27,8 +28,8 @@ public class ObservationLab extends ClinicalObservation {
 
 	private static final String LAB = "lab";
 
-	public ObservationLab(Integer patientId, String value, EObservationLab eObservationLab){
-		super(patientId, value, eObservationLab.getSctidCode(), LAB);
+	public ObservationLab(Integer patientId, String value, EObservationLab eObservationLab, LocalDateTime effectiveTime){
+		super(patientId, value, eObservationLab.getSctidCode(), LAB, effectiveTime);
 	}
 
 }

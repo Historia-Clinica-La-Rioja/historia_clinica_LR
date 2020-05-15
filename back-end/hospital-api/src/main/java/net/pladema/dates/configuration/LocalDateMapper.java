@@ -27,7 +27,7 @@ public interface LocalDateMapper {
 	default LocalDateTime fromStringToLocalDateTime(String date) {
 		if (date == null)
 			return null;
-		return LocalDateTime.parse(date, DateTimeFormatter.ofPattern( JacksonDateFormatConfig.DATE_TIME_FORMAT ));
+		return LocalDateTime.parse(date, DateTimeFormatter.ofPattern( JacksonDateFormatConfig.DATE_TIME_FORMAT));
 	}
 
 	default String fromLocalDateToString(LocalDate date) {

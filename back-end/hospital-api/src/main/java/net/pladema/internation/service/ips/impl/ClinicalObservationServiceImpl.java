@@ -139,7 +139,7 @@ public class ClinicalObservationServiceImpl implements ClinicalObservationServic
     private ObservationVitalSign createObservationVitalSign(Integer patientId, ClinicalObservationBo observation, EVitalSign eVitalSign) {
         LOG.debug("Input parameters -> patientId {}, ClinicalObservation {}, eVitalSign {}", patientId, observation, eVitalSign);
         ObservationVitalSign observationVitalSign = observationVitalSignRepository.save(
-                new ObservationVitalSign(patientId, observation.getValue(), eVitalSign));
+                new ObservationVitalSign(patientId, observation.getValue(), eVitalSign, observation.getEffectiveTime()));
         LOG.debug(OUTPUT, observationVitalSign);
         return observationVitalSign;
     }
@@ -147,7 +147,7 @@ public class ClinicalObservationServiceImpl implements ClinicalObservationServic
     private ObservationLab createObservationLab(Integer patientId, ClinicalObservationBo observation, EObservationLab eObservationLab) {
         LOG.debug("Input parameters -> patientId {}, ClinicalObservation {}, eLab {}", patientId, observation, eObservationLab);
         ObservationLab observationLab = observationLabRepository.save(
-                new ObservationLab(patientId, observation.getValue(), eObservationLab));
+                new ObservationLab(patientId, observation.getValue(), eObservationLab, observation.getEffectiveTime()));
         LOG.debug(OUTPUT, observationLab);
         return observationLab;
     }
@@ -155,14 +155,14 @@ public class ClinicalObservationServiceImpl implements ClinicalObservationServic
 
     private ClinicalObservationBo createObservationFromVitalSign(ObservationVitalSign vitalSign) {
         LOG.debug("Input parameters -> VitalSign {}", vitalSign);
-        ClinicalObservationBo result = new ClinicalObservationBo(vitalSign.getId(), vitalSign.getValue());
+        ClinicalObservationBo result = new ClinicalObservationBo(vitalSign.getId(), vitalSign.getValue(), vitalSign.getEffectiveTime());
         LOG.debug(OUTPUT, result);
         return result;
     }
 
     private ClinicalObservationBo createObservationFromLab(ObservationLab lab) {
         LOG.debug("Input parameters -> ObservationLab {}", lab);
-        ClinicalObservationBo result = new ClinicalObservationBo(lab.getId(), lab.getValue());
+        ClinicalObservationBo result = new ClinicalObservationBo(lab.getId(), lab.getValue(), lab.getEffectiveTime());
         LOG.debug(OUTPUT, result);
         return result;
     }

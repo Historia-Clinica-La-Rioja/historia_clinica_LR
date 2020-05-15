@@ -15,26 +15,26 @@ public class VitalSignDto implements Serializable {
 
     @Valid
     @Nullable
-    private ClinicalObservationDto systolicBloodPressure;
+    private EffectiveClinicalObservationDto systolicBloodPressure;
 
     @Valid
     @Nullable
-    private ClinicalObservationDto diastolicBloodPressure;
+    private EffectiveClinicalObservationDto diastolicBloodPressure;
 
     @Valid
     @Nullable
-    private ClinicalObservationDto temperature;
+    private EffectiveClinicalObservationDto temperature;
 
     @Valid
     @Nullable
-    private ClinicalObservationDto heartRate;
+    private EffectiveClinicalObservationDto heartRate;
 
     @Valid
     @Nullable
-    private ClinicalObservationDto respiratoryRate;
+    private EffectiveClinicalObservationDto respiratoryRate;
 
     @Valid
     @Nullable
-    private ClinicalObservationDto bloodOxygenSaturation;
+    private EffectiveClinicalObservationDto bloodOxygenSaturation;
 
 }

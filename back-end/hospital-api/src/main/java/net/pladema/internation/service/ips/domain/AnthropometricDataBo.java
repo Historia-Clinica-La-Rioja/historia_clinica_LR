@@ -32,7 +32,7 @@ public class AnthropometricDataBo implements Serializable {
             return null;
         try {
             Double bmi = Float.parseFloat(weight.getValue()) / Math.pow((Float.parseFloat(height.getValue())/100),2);
-            return new ClinicalObservationBo(null, String.format("%.02f", bmi));
+            return new ClinicalObservationBo(null, String.format("%.02f", bmi), weight.getEffectiveTime());
         } catch (Exception e) {
             return null;
         }

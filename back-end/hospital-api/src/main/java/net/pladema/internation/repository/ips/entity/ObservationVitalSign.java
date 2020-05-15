@@ -7,12 +7,12 @@ import lombok.ToString;
 import net.pladema.internation.repository.listener.InternationListener;
 import net.pladema.internation.service.ips.domain.enums.EVitalSign;
 
-import java.util.Objects;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "observation_vital_sign")
@@ -32,8 +32,8 @@ public class ObservationVitalSign extends ClinicalObservation {
 	@Column(name = "loinc_code", length = 20)
 	private String loincCode;
 
-	public ObservationVitalSign(Integer patientId, String value, EVitalSign evitalSign){
-		super(patientId, value, evitalSign.getSctidCode(), VITAL_SIGN);
+	public ObservationVitalSign(Integer patientId, String value, EVitalSign evitalSign, LocalDateTime effectiveTime){
+		super(patientId, value, evitalSign.getSctidCode(), VITAL_SIGN, effectiveTime);
 		this.loincCode = evitalSign.getLoincCode();
 	}
 

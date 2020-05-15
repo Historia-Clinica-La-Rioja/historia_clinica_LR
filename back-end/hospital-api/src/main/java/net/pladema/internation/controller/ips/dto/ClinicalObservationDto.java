@@ -18,5 +18,4 @@ public class ClinicalObservationDto implements Serializable {
 
     @NotNull(message = "{value.mandatory}")
     private String value;
-
 }

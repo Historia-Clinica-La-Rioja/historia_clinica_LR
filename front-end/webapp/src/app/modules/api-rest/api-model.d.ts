@@ -184,6 +184,10 @@ export interface DocumentsSummaryDto extends Serializable {
     epicrisis: EpicrisisSummaryDto;
 }
 
+export interface EffectiveClinicalObservationDto extends ClinicalObservationDto {
+    effectiveTime: string;
+}
+
 export interface EpicrisisDto extends Serializable {
     allergies: AllergyConditionDto[];
     confirmed: boolean;
@@ -459,12 +463,12 @@ export interface UserDto extends AbstractUserDto {
 }
 
 export interface VitalSignDto extends Serializable {
-    bloodOxygenSaturation?: ClinicalObservationDto;
-    diastolicBloodPressure?: ClinicalObservationDto;
-    heartRate?: ClinicalObservationDto;
-    respiratoryRate?: ClinicalObservationDto;
-    systolicBloodPressure?: ClinicalObservationDto;
-    temperature?: ClinicalObservationDto;
+    bloodOxygenSaturation?: EffectiveClinicalObservationDto;
+    diastolicBloodPressure?: EffectiveClinicalObservationDto;
+    heartRate?: EffectiveClinicalObservationDto;
+    respiratoryRate?: EffectiveClinicalObservationDto;
+    systolicBloodPressure?: EffectiveClinicalObservationDto;
+    temperature?: EffectiveClinicalObservationDto;
 }
 
 export type ERole = "ROOT" | "ADMINISTRADOR" | "ESPECIALISTA_MEDICO" | "PROFESIONAL_DE_SALUD" | "ADMINISTRATIVO";
