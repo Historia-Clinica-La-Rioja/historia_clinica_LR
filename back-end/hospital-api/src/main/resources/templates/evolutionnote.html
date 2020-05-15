@@ -108,7 +108,7 @@
 		</dl>
 	</div>
 
-	<h3>Signos vitales</h3>
+	<h3 >Signos vitales</h3>
 
 	<div class="row" th:if="${vitalSigns  == null}">
 		<dl>
@@ -116,11 +116,37 @@
 		</dl>
 	</div>
 	<div class="row " th:if="${vitalSigns != null}">
-		- Frecuencía cardíaca: <strong><label  th:if="${vitalSigns.heartRate  != null}" th:text="${vitalSigns.heartRate.value + '/min'} "></label></strong><br/>
-		- Frecuencía respiratoria: <strong><label  th:if="${vitalSigns.respiratoryRate != null}" th:text="${vitalSigns.respiratoryRate.value + '/min'}"></label></strong><br/>
-		- Tensión arterial: <strong><label  th:if="${(vitalSigns.systolicBloodPressure != null) &&  (vitalSigns.diastolicBloodPressure != null)}" th:text="${vitalSigns.systolicBloodPressure.value + '/' + vitalSigns.diastolicBloodPressure.value + ' mm Hg'}"></label></strong><br/>
-		- Temperatura corporal: <strong><label  th:if="${vitalSigns.temperature != null}" th:text="${vitalSigns.temperature.value  + '°C'}"></label></strong><br/>
-		- Saturación de oxígeno: <strong><label  th:if="${vitalSigns.bloodOxygenSaturation != null}" th:text="${vitalSigns.bloodOxygenSaturation.value+ '%'}"></label></strong><br/>
+		- Frecuencía cardíaca:
+		<strong><label  th:if="${vitalSigns.heartRate  == null}">Sin cambios registrados</label></strong>
+		<strong><label  th:if="${vitalSigns.heartRate  != null}" th:text="${vitalSigns.heartRate.value + '/min'} "></label></strong>
+		&nbsp;&nbsp;&nbsp;&nbsp;<label th:if="${vitalSigns.heartRate != null}" >Fecha de medición: </label>
+		<strong><label  th:if="${vitalSigns.heartRate != null}" th:text="${#temporals.format(vitalSigns.heartRate.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></label></strong><br/>
+
+		- Frecuencía respiratoria:
+		<strong><label  th:if="${vitalSigns.respiratoryRate  == null}">Sin cambios registrados</label></strong>
+		<strong><label  th:if="${vitalSigns.respiratoryRate != null}" th:text="${vitalSigns.respiratoryRate.value + '/min'}"></label></strong>
+		&nbsp;&nbsp;&nbsp;&nbsp;<label th:if="${vitalSigns.respiratoryRate != null}" >Fecha de medición: </label>
+		<strong><label  th:if="${vitalSigns.respiratoryRate != null}" th:text="${#temporals.format(vitalSigns.respiratoryRate.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></label></strong><br/>
+
+
+		- Tensión arterial:
+		<strong><label  th:if="${vitalSigns.systolicBloodPressure  == null}">Sin cambios registrados</label></strong>
+		<strong><label  th:if="${(vitalSigns.systolicBloodPressure != null) &&  (vitalSigns.diastolicBloodPressure != null)}" th:text="${vitalSigns.systolicBloodPressure.value + '/' + vitalSigns.diastolicBloodPressure.value + ' mm Hg'}"></label></strong>
+		&nbsp;&nbsp;&nbsp;&nbsp;<label th:if="${vitalSigns.systolicBloodPressure != null}" >Fecha de medición: </label>
+		<strong><label  th:if="${vitalSigns.systolicBloodPressure != null}" th:text="${#temporals.format(vitalSigns.systolicBloodPressure.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></label></strong><br/>
+
+		- Temperatura corporal:
+		<strong><label  th:if="${vitalSigns.temperature  == null}">Sin cambios registrados</label></strong>
+		<strong><label  th:if="${vitalSigns.temperature != null}" th:text="${vitalSigns.temperature.value  + '°C'}"></label></strong>
+		&nbsp;&nbsp;&nbsp;&nbsp;<label th:if="${vitalSigns.temperature != null}" >Fecha de medición: </label>
+		<strong><label  th:if="${vitalSigns.temperature != null}" th:text="${#temporals.format(vitalSigns.temperature.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></label></strong><br/>
+
+
+		- Saturación de oxígeno:
+		<strong><label  th:if="${vitalSigns.bloodOxygenSaturation  == null}">Sin cambios registrados</label></strong>
+		<strong><label  th:if="${vitalSigns.bloodOxygenSaturation != null}" th:text="${vitalSigns.bloodOxygenSaturation.value+ '%' + 'Hs'}"></label></strong>
+		&nbsp;&nbsp;&nbsp;&nbsp;<label th:if="${vitalSigns.bloodOxygenSaturation != null}" >Fecha de medición: </label>
+		<strong><label  th:if="${vitalSigns.bloodOxygenSaturation != null}" th:text="${#temporals.format(vitalSigns.bloodOxygenSaturation.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></label></strong><br/>
 	</div>
 
 	<h3>Observaciones</h3>
