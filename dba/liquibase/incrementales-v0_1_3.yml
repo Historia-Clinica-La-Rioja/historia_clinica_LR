@@ -1973,3 +1973,149 @@ databaseChangeLog:
         columnName:  parent_fsn  
         newDataType: varchar(255)  
         tableName:  snomed
+        
+- changeSet:
+    id: modifying-allergy_intolerance_category-data
+    comment: Actualizar descripcion
+    author: etrapani
+    context: "!schema-only"
+    changes:
+        - sql:
+            sql: |-
+                UPDATE allergy_intolerance_category SET description = 'Alergia alimentaria' WHERE id='414285001';
+                UPDATE allergy_intolerance_category SET description = 'Alergia medicamentosa' WHERE id='416098002';
+                UPDATE allergy_intolerance_category SET description = 'Alergia ambiental' WHERE id='426232007';
+                UPDATE allergy_intolerance_category SET description = 'Alergia a agente biocida' WHERE id='402591008';
+
+- changeSet:
+    id: modifying-allergy_intolerance_clinical_status-data
+    comment: Actualizar descripcion
+    author: etrapani
+    context: "!schema-only"
+    changes:
+        - sql:
+            sql: |-
+                UPDATE allergy_intolerance_clinical_status SET description = 'Activo' WHERE id='55561003';
+                UPDATE allergy_intolerance_clinical_status SET description = 'Inactivo' WHERE id='73425007';
+                UPDATE allergy_intolerance_clinical_status SET description = 'Resuelto' WHERE id='723506003';
+
+- changeSet:
+    id: modifying-allergy_intolerance_verification_status-data
+    comment: Actualizar descripcion
+    author: etrapani
+    context: "!schema-only"
+    changes:
+        - sql:
+            sql: |-
+                UPDATE allergy_intolerance_verification_status SET description = 'Confirmado' WHERE id='59156000';
+                UPDATE allergy_intolerance_verification_status SET description = 'No confirmado' WHERE id='76104008';
+                UPDATE allergy_intolerance_verification_status SET description = 'Refutado' WHERE id='723511001';
+                UPDATE allergy_intolerance_verification_status SET description = 'Ingresado por error' WHERE id='723510000';
+
+- changeSet:
+    id: modifying-allergy_intolerance_verification_status-data
+    comment: Actualizar descripcion
+    author: etrapani
+    context: "!schema-only"
+    changes:
+        - sql:
+            sql: |-
+                UPDATE allergy_intolerance_verification_status SET description = 'Confirmado' WHERE id='59156000';
+                UPDATE allergy_intolerance_verification_status SET description = 'No confirmado' WHERE id='76104008';
+                UPDATE allergy_intolerance_verification_status SET description = 'Refutado' WHERE id='723511001';
+                UPDATE allergy_intolerance_verification_status SET description = 'Ingresado por error' WHERE id='723510000';
+
+- changeSet:
+    id: modifying-condition_problem_type-data
+    comment: Actualizar descripcion
+    author: etrapani
+    context: "!schema-only"
+    changes:
+        - sql:
+            sql: |-
+                UPDATE condition_problem_type SET description = 'Problema' WHERE id='55607006';
+
+- changeSet:
+    id: modifying-allergy_intolerance_verification_status-data
+    comment: Actualizar descripcion
+    author: etrapani
+    context: "!schema-only"
+    changes:
+        - sql:
+            sql: |-
+                UPDATE allergy_intolerance_verification_status SET description = 'Confirmado' WHERE id='59156000';
+                UPDATE allergy_intolerance_verification_status SET description = 'No confirmado' WHERE id='76104008';
+                UPDATE allergy_intolerance_verification_status SET description = 'Refutado' WHERE id='723511001';
+                UPDATE allergy_intolerance_verification_status SET description = 'Ingresado por error' WHERE id='723510000';
+
+- changeSet:
+    id: modifying-document_status-data
+    comment: Actualizar descripcion
+    author: etrapani
+    context: "!schema-only"
+    changes:
+        - sql:
+            sql: |-
+                UPDATE document_status SET description = 'Informe preliminar' WHERE id='445667001';
+                UPDATE document_status SET description = 'Informe final' WHERE id='445665009';
+                UPDATE document_status SET description = 'Informe enmendado' WHERE id='445664008';
+                UPDATE document_status SET description = 'Ingresado por error' WHERE id='723510000';
+
+- changeSet:
+    id: modifying-inmunization_status-data
+    comment: Actualizar descripcion
+    author: etrapani
+    context: "!schema-only"
+    changes:
+        - sql:
+            sql: |-
+                UPDATE inmunization_status SET description = 'Completo' WHERE id='255594003';
+                UPDATE inmunization_status SET description = 'No efectuado' WHERE id='385660001';
+                UPDATE inmunization_status SET description = 'Ingresado por error' WHERE id='723510000';
+
+
+- changeSet:
+    id: modifying-medication_statement_status-data
+    comment: Actualizar descripcion
+    author: etrapani
+    context: "!schema-only"
+    changes:
+        - sql:
+            sql: |-
+                UPDATE medication_statement_status SET description = 'Activo' WHERE id='55561003';
+                UPDATE medication_statement_status SET description = 'Completo' WHERE id='255594003';
+                UPDATE medication_statement_status SET description = 'Ingresado por error' WHERE id='723510000';
+                UPDATE medication_statement_status SET description = 'Administración de fármaco o medicamento' WHERE id='18629005';
+                UPDATE medication_statement_status SET description = 'Detenido' WHERE id='6155003';
+                UPDATE medication_statement_status SET description = 'Suspendido' WHERE id='385655000';
+                UPDATE medication_statement_status SET description = 'Desconocido' WHERE id='261665006';
+                UPDATE medication_statement_status SET description = 'Fármacos no ingeridos/tratamiento incompleto' WHERE id='266710000';
+
+- changeSet:
+    id: modifying-observation_status-data
+    comment: Actualizar descripcion
+    author: etrapani
+    context: "!schema-only"
+    changes:
+        - sql:
+            sql: |-
+                UPDATE observation_status SET description = 'Estado de registro' WHERE id='307827002';
+                UPDATE observation_status SET description = 'Preliminar' WHERE id='261420005';
+                UPDATE observation_status SET description = 'Final' WHERE id='261782000';
+                UPDATE observation_status SET description = 'Modificado' WHERE id='18307000';
+                UPDATE observation_status SET description = 'Corregido' WHERE id='33714007';
+                UPDATE observation_status SET description = 'Cancelado' WHERE id='89925002';
+                UPDATE observation_status SET description = 'Ingresado por error' WHERE id='723510000';
+                UPDATE observation_status SET description = 'Desconocido' WHERE id='261665006';
+
+- changeSet:
+    id: modifying-problem_type-data
+    comment: Actualizar descripcion
+    author: etrapani
+    context: "!schema-only"
+    changes:
+        - sql:
+            sql: |-
+                UPDATE problem_type SET description = 'Diagnóstico' WHERE id='439401001';
+                UPDATE problem_type SET description = 'Problema' WHERE id='55607006';
+                UPDATE problem_type SET description = 'Antecedente familiar con contexto explícito' WHERE id='57177007';
