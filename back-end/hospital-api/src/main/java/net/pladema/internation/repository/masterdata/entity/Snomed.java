@@ -26,12 +26,12 @@ public class Snomed implements Serializable {
 	@Column(name = "id", length = 20)
 	private String id;
 
-	@Column(name = "pt", nullable = false, length = 100)
+	@Column(name = "pt", nullable = false)
 	private String pt;
 
 	@Column(name = "parent_id", length = 20)
 	private String parentId;
 
-	@Column(name = "parent_fsn", nullable = false, length = 100)
+	@Column(name = "parent_fsn", nullable = false)
 	private String parentFsn;
 }

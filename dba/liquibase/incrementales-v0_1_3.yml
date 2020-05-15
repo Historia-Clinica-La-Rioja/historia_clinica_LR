@@ -1954,3 +1954,22 @@ databaseChangeLog:
         - sql:
             sql: |-
                 INSERT INTO patient_type (id,description,active,audit) VALUES (7,'Permanente no validado',${boolean.true},${boolean.true});
+
+- changeSet:  
+    id:  modifyDataType-snomed_pt   
+    author:  etrapani 
+    changes:  
+    -  modifyDataType:  
+        columnName:  pt  
+        newDataType: varchar(255)  
+        tableName:  snomed
+              
+              
+- changeSet:  
+    id:  modifyDataType-snomed_parent_fsn   
+    author:  etrapani 
+    changes:  
+    -  modifyDataType:  
+        columnName:  parent_fsn  
+        newDataType: varchar(255)  
+        tableName:  snomed
