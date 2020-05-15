@@ -73,6 +73,7 @@ $default-color: 100;
 
 	mat-paginator {
 		width: 100%;
+		box-sizing: border-box;
 		&.default{
 			margin-top: -1px;
 		}
