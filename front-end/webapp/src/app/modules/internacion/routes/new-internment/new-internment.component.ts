@@ -22,7 +22,9 @@ import { scrollIntoError } from "@core/utils/form.utils";
 import { MatDialog } from "@angular/material/dialog";
 import { ConfirmDialogComponent } from "@core/dialogs/confirm-dialog/confirm-dialog.component";
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { ContextService } from "@core/services/context.service";
 
+const ROUTE_INTERNMENT = 'internaciones/internacion/';
 
 @Component({
 	selector: 'app-new-internment',
@@ -39,11 +41,10 @@ export class NewInternmentComponent implements OnInit {
 	public beds;
 	public doctors: HealthcareProfessionalDto[];
 	public patientId: number;
-
 	public patientBasicData: PatientBasicData;
 	public personalInformation: PersonalInformation;
 	public patientTypeData: PatientTypeData;
-
+	private readonly routePrefix;
 
 	constructor(private formBuilder: FormBuilder,
 				private el: ElementRef,
@@ -59,7 +60,9 @@ export class NewInternmentComponent implements OnInit {
 				private route: ActivatedRoute,
 				private internmentEpisodeService: InternmentEpisodeService,
 				public dialog: MatDialog,
-				private snackBarService: SnackBarService) {
+				private snackBarService: SnackBarService,
+				private contextService: ContextService) {
+		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 
 	ngOnInit(): void {
@@ -155,7 +158,7 @@ export class NewInternmentComponent implements OnInit {
 				this.internmentEpisodeService.setNewInternmentEpisode(intenmentEpisodeReq)
 					.subscribe(data => {
 						if(data && data.id) {
-							let url = `internaciones/internacion/${data.id}/paciente/${this.patientId}`;
+							let url = this.routePrefix + ROUTE_INTERNMENT + `${data.id}/paciente/${this.patientId}`;
 							this.router.navigate([url]);
 							this.snackBarService.showSuccess('internaciones.new-internment.messages.SUCCESS');
 						}

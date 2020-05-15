@@ -12,6 +12,7 @@ import { AnamnesisReportService } from '@api-rest/services/anamnesis-report.serv
 import { forkJoin } from 'rxjs';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { ContextService } from '@core/services/context.service';
 
 @Component({
 	selector: 'app-anamnesis-form',
@@ -43,6 +44,7 @@ export class AnamnesisFormComponent implements OnInit {
 		private anamnesisReportService: AnamnesisReportService,
 		private route: ActivatedRoute,
 		private router: Router,
+		private contextService: ContextService,
 		private snackBarService: SnackBarService
 	) {
 	}
@@ -157,7 +159,7 @@ export class AnamnesisFormComponent implements OnInit {
 	}
 
 	private goToInternmentSummary(): void {
-		const url = `internaciones/internacion/${this.internmentEpisodeId}/paciente/${this.patientId}`;
+		const url = `institucion/${this.contextService.institutionId}/internaciones/internacion/${this.internmentEpisodeId}/paciente/${this.patientId}`;
 		this.router.navigate([url]);
 	}
 

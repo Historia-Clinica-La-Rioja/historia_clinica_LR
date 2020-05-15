@@ -13,6 +13,7 @@ import { DatePipe } from '@angular/common';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { SelectionModel } from '@angular/cdk/collections';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
+import { ContextService } from '@core/services/context.service';
 
 @Component({
 	selector: 'app-epicrisis-form',
@@ -113,6 +114,7 @@ export class EpicrisisFormComponent implements OnInit {
 		private router: Router,
 		private datePipe: DatePipe,
 		private snackBarService: SnackBarService,
+		private contextService: ContextService,
 		private internacionMasterDataService: InternacionMasterDataService
 	) {
 		this.diagnosis.displayedColumns = this.diagnosis.columns?.map(c => c.def).concat(['select']);
@@ -187,7 +189,7 @@ export class EpicrisisFormComponent implements OnInit {
 	}
 
 	private goToInternmentSummary(): void {
-		const url = `internaciones/internacion/${this.internmentEpisodeId}/paciente/${this.patientId}`;
+		const url = `institucion/${this.contextService.institutionId}/internaciones/internacion/${this.internmentEpisodeId}/paciente/${this.patientId}`;
 		this.router.navigate([url]);
 	}
 

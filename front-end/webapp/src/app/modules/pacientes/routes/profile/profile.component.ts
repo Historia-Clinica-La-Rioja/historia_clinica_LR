@@ -7,6 +7,8 @@ import { PersonService } from "@api-rest/services/person.service";
 import { PatientBasicData } from 'src/app/modules/presentation/components/patient-card/patient-card.component';
 import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
 import { PatientTypeData } from '@presentation/components/patient-type-logo/patient-type-logo.component';
+import { SnackBarService } from "@presentation/services/snack-bar.service";
+import { ContextService } from "@core/services/context.service";
 
 const ROUTE_NEW_INTERNMENT = 'internaciones/internacion/new';
 
@@ -23,12 +25,15 @@ export class ProfileComponent implements OnInit {
 	public person: PersonalInformationDto;
 	public codigoColor: string;
 	private patientId: number;
-	constructor(
-		private patientService: PatientService,
-		private mapperService: MapperService,
-		private route: ActivatedRoute,
-		private router: Router,
-		private personService: PersonService) {
+	private readonly routePrefix;
+
+	constructor(private patientService: PatientService,
+				private mapperService: MapperService,
+				private route: ActivatedRoute,
+				private router: Router,
+				private personService: PersonService,
+				private contextService: ContextService) {
+		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 
 	ngOnInit(): void {
@@ -50,9 +55,9 @@ export class ProfileComponent implements OnInit {
 	}
 
 	goNewInternment(): void {
-		this.router.navigate([ROUTE_NEW_INTERNMENT],
+		this.router.navigate([this.routePrefix + ROUTE_NEW_INTERNMENT],
 			{
-				queryParams: { patientId: this.patientId }
+				queryParams: {patientId: this.patientId}
 			});
 	}
 }

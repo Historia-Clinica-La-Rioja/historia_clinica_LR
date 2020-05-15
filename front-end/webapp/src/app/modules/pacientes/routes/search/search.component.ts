@@ -14,6 +14,7 @@ import { finalize } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { ViewPatientDetailComponent } from '../../component/view-patient-detail/view-patient-detail.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { ContextService } from "@core/services/context.service";
 
 const ROUTE_NEW = 'pacientes/new';
 const ROUTE_HOME = 'pacientes';
@@ -40,16 +41,18 @@ export class SearchComponent implements OnInit {
 	public genderId;
 	public matchingPatient: TableModel<PatientSearchDto>;
 	public searchPatient;
+	private readonly routePrefix;
 
 	constructor(private formBuilder: FormBuilder,
-		private patientService: PatientService,
-		private personService: PersonService,
-		private router: Router,
-		private route: ActivatedRoute,
-		private personMasterDataService: PersonMasterDataService,
-		private snackBarService : SnackBarService,
-		public dialog: MatDialog
-	) {
+				private patientService: PatientService,
+				private personService: PersonService,
+				private router: Router,
+				private route: ActivatedRoute,
+				private personMasterDataService: PersonMasterDataService,
+				private snackBarService: SnackBarService,
+				public dialog: MatDialog,
+				private contextService: ContextService) {
+		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 
 	ngOnInit(): void {
@@ -60,18 +63,23 @@ export class SearchComponent implements OnInit {
 
 			this.buildFormSearch(params);
 
-			this.personService.getRenaperPersonData({ identificationNumber: this.identificationNumber, genderId: this.genderId })
+			this.personService.getRenaperPersonData({
+				identificationNumber: this.identificationNumber,
+				genderId: this.genderId
+			})
 				.pipe(finalize(() => this.isLoading = false))
 				.subscribe(
 					personData => {
 						if (personData) {
-							let personToAdd: any = { ...personData };
+							let personToAdd: any = {...personData};
 							personToAdd.identificationTypeId = this.identificationTypeId;
 							personToAdd.identificationNumber = this.identificationNumber;
 							personToAdd.genderId = this.genderId;
 							this.goToNextState(personToAdd);
 						}
-					}, ( ) => { this.snackBarService.showError('pacientes.search.RENAPER_TIMEOUT') } );
+					}, () => {
+						this.snackBarService.showError('pacientes.search.RENAPER_TIMEOUT')
+					});
 
 			this.personMasterDataService.getIdentificationTypes().subscribe(
 				identificationTypes => {
@@ -211,7 +219,7 @@ export class SearchComponent implements OnInit {
 	}
 
 	back() {
-		this.router.navigate([ROUTE_HOME])
+		this.router.navigate([this.routePrefix + ROUTE_HOME])
 	}
 
 	submit() {
@@ -245,7 +253,7 @@ export class SearchComponent implements OnInit {
 	}
 
 	goToAddPatient(person) {
-		this.router.navigate([ROUTE_NEW], {
+		this.router.navigate([this.routePrefix + ROUTE_NEW], {
 			queryParams: person
 		});
 	}

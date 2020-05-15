@@ -1,12 +1,7 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, of } from 'rxjs';
 
 import { LanguageService } from '@core/services/language.service';
-import { MenuItem } from '@core/core-model';
-
-import { SIDEBAR_MENU } from './modules/pacientes/constants/menu';
-import { delay } from 'rxjs/operators';
 
 const defaultLang = 'es-AR'; // TODO english version 'en-US';
 
@@ -18,7 +13,7 @@ const defaultLang = 'es-AR'; // TODO english version 'en-US';
 })
 export class AppComponent {
 	currentBrowserLanguage = this.translate.getBrowserLang();
-	menuItems$: Observable<MenuItem[]>;
+
 
 	constructor(
 		private translate: TranslateService,
@@ -38,7 +33,7 @@ export class AppComponent {
 			() => this.switchLanguage(defaultLang)
 		);
 
-		this.menuItems$ = of(SIDEBAR_MENU).pipe ( delay( 0 ) );
+
 	}
 
 	switchLanguage(lang: string) {

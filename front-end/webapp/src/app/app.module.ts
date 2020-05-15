@@ -18,7 +18,6 @@ import { ApiRestModule } from '@api-rest/api-rest.module';
 import { AppMaterialModule } from './app.material.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CoreModule } from '@core/core.module';
-import { PacientesModule } from './modules/pacientes/pacientes.module';
 import { PresentationModule } from './modules/presentation/presentation.module';
 import { DatePipe } from '@angular/common';
 
@@ -49,7 +48,6 @@ import { DatePipe } from '@angular/common';
 		AppMaterialModule,
 		AuthModule,
 		CoreModule,
-		PacientesModule,
 		PresentationModule,
 		// Module import order
 		// https://angular.io/guide/router#module-import-order

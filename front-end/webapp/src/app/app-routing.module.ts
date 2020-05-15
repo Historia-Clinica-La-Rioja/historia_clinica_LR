@@ -15,14 +15,6 @@ const routes: Routes = [
 		path: 'institucion',
 		loadChildren: () => import('./modules/institucion/institucion.module').then(m => m.InstitucionModule),
 	},
-
-	// ver AuthRoutingModule para /auth/login o /auth/reset-password
-	// ver PacientesRoutingModule para /pacientes, /pacientes/search, etc
-	{
-		// Si el usuario ingresa a internaciones/ se carga el InternacionesModule
-		path: 'internaciones',
-		loadChildren: () => import('./modules/internacion/internaciones.module').then(m => m.InternacionesModule)
-	},
 ];
 
 @NgModule({

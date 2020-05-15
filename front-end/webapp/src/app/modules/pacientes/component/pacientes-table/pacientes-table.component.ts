@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { PatientService } from "@api-rest/services/patient.service";
-import { TableService } from '@core/services/table.service';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
-import { BMPatientDto, InternmentPatientDto } from '@api-rest/api-model';
+import { InternmentPatientDto } from '@api-rest/api-model';
 import { TableModel } from 'src/app/modules/presentation/components/table/table.component';
 import { Router } from '@angular/router';
 import { momentFormatDate, DateFormat } from '@core/utils/moment.utils';
 import { InternmentPatientService } from "@api-rest/services/internment-patient.service";
+import { ContextService } from '@core/services/context.service';
+
+const ROUTE_INTERNMENT = 'internaciones/internacion/';
 
 @Component({
 	selector: 'app-pacientes-table',
@@ -18,13 +19,14 @@ export class PacientesTableComponent implements OnInit {
 	public displayedColumns: string[] = ['ID Paciente', 'Nro. Documento', 'Nombre', 'Apellido', 'F. Nac', 'Sexo', 'Action'];
 	public allPatient: TableModel<InternmentPatientDto>;
 	public genderOptions = {};
+	private readonly routePrefix;
 
-	constructor(
-		private internmentPatientService: InternmentPatientService,
-		private tableService: TableService,
-		private personMasterDataService: PersonMasterDataService,
-		private router: Router,
-	) { }
+	constructor(private internmentPatientService: InternmentPatientService,
+				private personMasterDataService: PersonMasterDataService,
+				private contextService: ContextService,
+				private router: Router) {
+		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
+	}
 
 	ngOnInit(): void {
 		this.personMasterDataService.getGenders().subscribe(
@@ -77,7 +79,7 @@ export class PacientesTableComponent implements OnInit {
 					action: {
 						text: 'Ver',
 						do: (internacion) => {
-							let url = `internaciones/internacion/${internacion.internmentId}/paciente/${internacion.patientId}`;
+							let url = this.routePrefix + ROUTE_INTERNMENT + `${internacion.internmentId}/paciente/${internacion.patientId}`;
 							this.router.navigate([url]);
 						}
 					}

@@ -10,6 +10,14 @@ const routes: Routes = [
 		component: InstitucionComponent,
 		children: [
 			{ path: '', component: HomeComponent },
+			{
+				path: 'pacientes',
+				loadChildren: () => import('../pacientes/pacientes.module').then(m => m.PacientesModule),
+			},
+			{
+				path: 'internaciones',
+				loadChildren: () => import('../internacion/internaciones.module').then(m => m.InternacionesModule),
+			},
 		]
 	}
 ];

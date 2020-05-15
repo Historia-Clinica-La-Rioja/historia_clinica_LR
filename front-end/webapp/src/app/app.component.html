@@ -1,8 +1,3 @@
 <div class="app mat-typography mat-app-background">
-	<ng-container *ngIf="(menuItems$ | async) as menuItems; else loading">
-		<app-main-layout [menuItems]="menuItems"></app-main-layout>
-	</ng-container>
-	<ng-template #loading>
-		<mat-progress-bar mode="indeterminate"></mat-progress-bar>
-	</ng-template>
+	<router-outlet></router-outlet>
 </div>

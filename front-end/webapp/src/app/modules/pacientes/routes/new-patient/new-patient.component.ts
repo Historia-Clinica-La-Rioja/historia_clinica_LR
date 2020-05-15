@@ -10,8 +10,11 @@ import { PersonMasterDataService } from '@api-rest/services/person-master-data.s
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
 import { DateFormat } from '@core/utils/moment.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { ContextService } from "@core/services/context.service";
 
 const VALID_PATIENT = 2;
+const ROUTE_SEARCH = 'pacientes/search';
+const ROUTE_PROFILE = 'pacientes/profile/';
 
 @Component({
 	selector: 'app-new-patient',
@@ -31,17 +34,18 @@ export class NewPatientComponent implements OnInit {
 	public departments: any[];
 	public cities: any[];
 	public identificationTypeList: IdentificationTypeDto[];
+	private readonly routePrefix;
 
-	constructor(
-		private formBuilder: FormBuilder,
-		private router: Router,
-		private el: ElementRef,
-		private patientService: PatientService,
-		private route: ActivatedRoute,
-		private personMasterDataService: PersonMasterDataService,
-		private addressMasterDataService: AddressMasterDataService,
-		private snackBarService: SnackBarService
-	) {
+	constructor(private formBuilder: FormBuilder,
+				private router: Router,
+				private el: ElementRef,
+				private patientService: PatientService,
+				private route: ActivatedRoute,
+				private personMasterDataService: PersonMasterDataService,
+				private addressMasterDataService: AddressMasterDataService,
+				private snackBarService: SnackBarService,
+				private contextService: ContextService) {
+		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 
 	ngOnInit(): void {
@@ -53,7 +57,7 @@ export class NewPatientComponent implements OnInit {
 					lastName: [params.lastName, [Validators.required]],
 					otherLastNames: [params.otherLastNames],
 					genderId: [Number(params.genderId), [Validators.required]],
-					identificationNumber: [params.identificationNumber, [Validators.required,Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
+					identificationNumber: [params.identificationNumber, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
 					identificationTypeId: [Number(params.identificationTypeId), [Validators.required]],
 					birthDate: [moment(params.birthDate), [Validators.required]],
 
@@ -72,16 +76,16 @@ export class NewPatientComponent implements OnInit {
 					addressNumber: [],
 					addressFloor: [],
 					addressApartment: [],
-					addressQuarter:[],
-					addressCityId:  { value: null, disabled: true },
+					addressQuarter: [],
+					addressCityId: {value: null, disabled: true},
 					addressPostcode: [],
 
 					addressProvinceId: [],
 					addressCountryId: [],
-					addressDepartmentId: { value: null, disabled: true },
+					addressDepartmentId: {value: null, disabled: true},
 					//Patient
-					medicalCoverageName:[null,Validators.maxLength(VALIDATIONS.MAX_LENGTH.medicalCoverageName)],
-					medicalCoverageAffiliateNumber:[null,Validators.maxLength(VALIDATIONS.MAX_LENGTH.medicalCoverageAffiliateNumber)]
+					medicalCoverageName: [null, Validators.maxLength(VALIDATIONS.MAX_LENGTH.medicalCoverageName)],
+					medicalCoverageAffiliateNumber: [null, Validators.maxLength(VALIDATIONS.MAX_LENGTH.medicalCoverageAffiliateNumber)]
 				});
 				this.lockFormField(params);
 			});
@@ -105,30 +109,30 @@ export class NewPatientComponent implements OnInit {
 
 	}
 
-	private lockFormField(params){
-		if (params.identificationNumber){
+	private lockFormField(params) {
+		if (params.identificationNumber) {
 			this.form.controls.identificationNumber.disable();
 		}
-		if (params.identificationTypeId){
+		if (params.identificationTypeId) {
 			this.form.controls.identificationTypeId.disable();
 		}
-		if (params.genderId){
+		if (params.genderId) {
 			this.form.controls.genderId.disable();
 		}
-		if (params.firstName){
+		if (params.firstName) {
 			this.form.controls.firstName.disable();
 		}
-		if (params.lastName){
+		if (params.lastName) {
 			this.form.controls.lastName.disable();
 		}
-		if (params.birthDate){
+		if (params.birthDate) {
 			this.form.controls.birthDate.disable();
 		}
 
-		if (params.middleNames){
+		if (params.middleNames) {
 			this.form.controls.middleNames.disable();
 		}
-		if (params.otherLastNames){
+		if (params.otherLastNames) {
 			this.form.controls.otherLastNames.disable();
 		}
 	}
@@ -139,9 +143,9 @@ export class NewPatientComponent implements OnInit {
 			let personRequest: APatientDto = this.mapToPersonRequest();
 			this.patientService.addPatient(personRequest)
 				.subscribe(patient => {
-					this.router.navigate(['pacientes/profile/' + patient.id]);
+					this.router.navigate([this.routePrefix + ROUTE_PROFILE + patient.id]);
 					this.snackBarService.showSuccess('pacientes.new.messages.SUCCESS');
-					}, _ => this.snackBarService.showError('pacientes.new.messages.ERROR'));
+				}, _ => this.snackBarService.showError('pacientes.new.messages.ERROR'));
 		} else {
 			scrollIntoError(this.form, this.el);
 		}
@@ -212,18 +216,18 @@ export class NewPatientComponent implements OnInit {
 
 	goBack(): void {
 		this.formSubmitted = false;
-		this.router.navigate(['pacientes/search'],
-		{
-			queryParams: {
-				identificationTypeId: this.form.controls.identificationTypeId.value,
-				identificationNumber: this.form.controls.identificationNumber.value,
-				genderId: this.form.controls.genderId.value,
-				firstName: this.form.controls.firstName.value,
-				lastName: this.form.controls.lastName.value,
-				middleNames: this.form.controls.middleNames.value,
-				birthDate: this.form.controls.birthDate.value.format(DateFormat.API_DATE),
-				otherLastNames: this.form.controls.otherLastNames.value,
-			}
-		});
+		this.router.navigate([this.routePrefix + ROUTE_SEARCH],
+			{
+				queryParams: {
+					identificationTypeId: this.form.controls.identificationTypeId.value,
+					identificationNumber: this.form.controls.identificationNumber.value,
+					genderId: this.form.controls.genderId.value,
+					firstName: this.form.controls.firstName.value,
+					lastName: this.form.controls.lastName.value,
+					middleNames: this.form.controls.middleNames.value,
+					birthDate: this.form.controls.birthDate.value.format(DateFormat.API_DATE),
+					otherLastNames: this.form.controls.otherLastNames.value,
+				}
+			});
 	}
 }

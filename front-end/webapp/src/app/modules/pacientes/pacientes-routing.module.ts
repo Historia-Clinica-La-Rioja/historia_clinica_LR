@@ -10,7 +10,7 @@ import { ProfileComponent } from "./routes/profile/profile.component";
 
 const routes: Routes = [
 	{
-		path: 'pacientes',
+		path: '',
 		children: [
 			{ path: '', component: HomeComponent },
 			{ path: 'search', component: SearchComponent },

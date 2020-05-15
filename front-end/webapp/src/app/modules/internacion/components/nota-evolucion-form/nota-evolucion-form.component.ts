@@ -6,6 +6,7 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
 import { EvolutionNoteReportService } from '@api-rest/services/evolution-note-report.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { ContextService } from '@core/services/context.service';
 
 @Component({
   selector: 'app-nota-evolucion-form',
@@ -30,6 +31,7 @@ export class NotaEvolucionFormComponent implements OnInit {
 		private evolutionNoteService: EvolutionNoteService,
 		private evolutionNoteReportService: EvolutionNoteReportService,
 		private route: ActivatedRoute,
+		private contextService: ContextService,
 		private router: Router,
 		private snackBarService: SnackBarService
 	) {
@@ -88,7 +90,7 @@ export class NotaEvolucionFormComponent implements OnInit {
 	}
 
 	private goToInternmentSummary(): void {
-		const url = `internaciones/internacion/${this.internmentEpisodeId}/paciente/${this.patientId}`;
+		const url = `institucion/${this.contextService.institutionId}/internaciones/internacion/${this.internmentEpisodeId}/paciente/${this.patientId}`;
 		this.router.navigate([url]);
 	}
 

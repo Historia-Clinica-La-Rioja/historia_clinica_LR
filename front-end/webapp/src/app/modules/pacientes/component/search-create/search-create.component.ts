@@ -5,6 +5,7 @@ import { VALIDATIONS, hasError } from "@core/utils/form.utils";
 import { PatientService } from "@api-rest/services/patient.service";
 import { PatientMasterDataService } from "@api-rest/services/patient-master-data.service";
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
+import { ContextService } from "@core/services/context.service";
 
 const ROUTE_SEARCH = 'pacientes/search';
 const ROUTE_NEW = 'pacientes/temporary';
@@ -25,12 +26,15 @@ export class SearchCreateComponent implements OnInit {
 	public IdentityVerificationStatusArray;
 	public identifyTypeArray;
 	public hasError = hasError;
+	private readonly routePrefix;
 
 	constructor(private formBuilder: FormBuilder,
 				private router: Router,
 				private patientService: PatientService,
 				private patientMasterDataService: PatientMasterDataService,
-				private personMasterDataService: PersonMasterDataService) {
+				private personMasterDataService: PersonMasterDataService,
+				private contextService: ContextService) {
+		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 
 	ngOnInit(): void {
@@ -67,7 +71,7 @@ export class SearchCreateComponent implements OnInit {
 			this.patientService.quickGetPatient(searchRequest).subscribe(
 				data => {
 					if (!data.length) {
-						this.router.navigate([ROUTE_SEARCH],
+						this.router.navigate([this.routePrefix + ROUTE_SEARCH],
 							{
 								queryParams: {
 									identificationTypeId: this.formSearch.controls.identifType.value,
@@ -77,7 +81,7 @@ export class SearchCreateComponent implements OnInit {
 							});
 					} else {
 						let id = data[0];
-						this.router.navigate([ROUTE_PROFILE + `${id}`]);
+						this.router.navigate([this.routePrefix + ROUTE_PROFILE + `${id}`]);
 					}
 				}
 			);
@@ -86,7 +90,7 @@ export class SearchCreateComponent implements OnInit {
 
 	add(): void {
 		if (this.formAdd.valid) {
-			this.router.navigate([ROUTE_NEW],
+			this.router.navigate([this.routePrefix + ROUTE_NEW],
 				{
 					queryParams: {
 						identificationTypeId: this.formSearch.controls.identifType.value,

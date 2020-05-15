@@ -61,7 +61,7 @@ export class InternacionesTableComponent implements OnInit {
 					action: {
 						text: 'Ver',
 						do: (internacion) => {
-							let url = `internaciones/internacion/${internacion.id}/paciente/${internacion.patient.id}`;
+							let url = `${this.router.url}/internacion/${internacion.id}/paciente/${internacion.patient.id}`;
 							this.router.navigate([url]);
 						}
 					}
