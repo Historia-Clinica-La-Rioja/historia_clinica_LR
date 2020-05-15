@@ -1,7 +1,8 @@
 .flex-row {
 	display: flex;
 	align-items: flex-end;
-	em {
+	font-style: italic;
+	span {
 		padding-bottom: 8px;
 	}
 }

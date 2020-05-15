@@ -30,6 +30,7 @@ import { DiagnosticoPrincipalComponent } from './components/diagnostico-principa
 import { MainDiagnosisSummaryComponent } from './components/main-diagnosis-summary/main-diagnosis-summary.component';
 import { RemoveDiagnosisComponent } from './dialogs/remove-diagnosis/remove-diagnosis.component';
 import { EffectiveTimeComponent } from './components/effective-time/effective-time.component';
+import { EffectiveTimeDialogComponent } from './dialogs/effective-time-dialog/effective-time-dialog.component';
 
 @NgModule({
 	declarations: [
@@ -58,6 +59,7 @@ import { EffectiveTimeComponent } from './components/effective-time/effective-ti
 		MainDiagnosisSummaryComponent,
 		RemoveDiagnosisComponent,
 		EffectiveTimeComponent,
+		EffectiveTimeDialogComponent,
 	],
 	imports: [
 		CoreModule,

@@ -51,8 +51,9 @@
 	},
 	"buttons": {
 		"BACK": "Volver",
-		"CONTINUE": "Continuar",
 		"CANCEL": "Cancelar",
+		"CONTINUE": "Continuar",
+		"CONFIRM": "Confirmar",
 		"CLOSE": "Cerrar",
 		"SEARCH": "Buscar"
 	},

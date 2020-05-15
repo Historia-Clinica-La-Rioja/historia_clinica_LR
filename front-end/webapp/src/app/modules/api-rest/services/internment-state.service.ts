@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '@environments/environment';
-import { AnthropometricDataDto, VitalSignDto, HealthConditionDto } from '@api-rest/api-model';
+import { AnthropometricDataDto, HealthConditionDto, Last2VitalSignsDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 
 @Injectable({
@@ -25,9 +25,9 @@ export class InternmentStateService {
 		return this.http.get<HealthConditionDto[]>(url);
 	}
 
-	getVitalSigns(internmentId: number): Observable<VitalSignDto[]> {
+	getVitalSigns(internmentId: number): Observable<Last2VitalSignsDto> {
 		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments-state/${internmentId}/general/vitalSigns`;
-		return this.http.get<VitalSignDto[]>(url);
+		return this.http.get<Last2VitalSignsDto>(url);
 	}
 
 	getAnthropometricData(internmentId: number): Observable<AnthropometricDataDto> {

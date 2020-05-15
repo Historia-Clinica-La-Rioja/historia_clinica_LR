@@ -14,6 +14,7 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from '@core/services/context.service';
 import { newMoment } from '@core/utils/moment.utils';
+import { Moment } from 'moment';
 
 @Component({
 	selector: 'app-anamnesis-form',
@@ -224,6 +225,10 @@ export class AnamnesisFormComponent implements OnInit {
 			return controlValue.value ? { value: controlValue.value, effectiveTime: controlValue.effectiveTime } : undefined;
 		}
 
+	}
+
+	setVitalSignEffectiveTime(newEffectiveTime: Moment, formField: string): void {
+		(<FormGroup>(<FormGroup>this.form.controls['vitalSigns']).controls[formField]).controls['effectiveTime'].setValue(newEffectiveTime);
 	}
 
 }

@@ -80,7 +80,7 @@
 									   type="number"
 									   matInput>
 									</mat-form-field>
-							<app-effective-time	[model]="form.value.vitalSigns.heartRate.effectiveTime"></app-effective-time>
+							<app-effective-time	[model]="form.value.vitalSigns.heartRate.effectiveTime" (onChange)="setVitalSignEffectiveTime($event, 'heartRate')"></app-effective-time>
 						</div>
 						<div class="field-container" formGroupName="respiratoryRate">
 							<mat-label [translate]="'internaciones.anamnesis.vital-signs.form.RESPIRATORY_RATE'"></mat-label>
@@ -92,7 +92,7 @@
 									   type="number"
 									   matInput>
 							</mat-form-field>
-							<app-effective-time	[model]="form.value.vitalSigns.respiratoryRate.effectiveTime"></app-effective-time>
+							<app-effective-time	[model]="form.value.vitalSigns.respiratoryRate.effectiveTime" (onChange)="setVitalSignEffectiveTime($event, 'respiratoryRate')"></app-effective-time>
 						</div>
 					</div>
 
@@ -107,7 +107,7 @@
 									   type="number"
 									   matInput>
 							</mat-form-field>
-							<app-effective-time	[model]="form.value.vitalSigns.temperature.effectiveTime"></app-effective-time>
+							<app-effective-time	[model]="form.value.vitalSigns.temperature.effectiveTime" (onChange)="setVitalSignEffectiveTime($event, 'temperature')"></app-effective-time>
 						</div>
 						<div class="field-container" formGroupName="bloodOxygenSaturation">
 							<mat-label
@@ -120,7 +120,7 @@
 									   type="number"
 									   matInput>
 							</mat-form-field>
-							<app-effective-time	[model]="form.value.vitalSigns.bloodOxygenSaturation.effectiveTime"></app-effective-time>
+							<app-effective-time	[model]="form.value.vitalSigns.bloodOxygenSaturation.effectiveTime" (onChange)="setVitalSignEffectiveTime($event, 'bloodOxygenSaturation')"></app-effective-time>
 						</div>
 					</div>
 
@@ -136,7 +136,7 @@
 									   type="number"
 									   matInput>
 							</mat-form-field>
-							<app-effective-time	[model]="form.value.vitalSigns.systolicBloodPressure.effectiveTime"></app-effective-time>
+							<app-effective-time	[model]="form.value.vitalSigns.systolicBloodPressure.effectiveTime" (onChange)="setVitalSignEffectiveTime($event, 'systolicBloodPressure')"></app-effective-time>
 						</div>
 						<div class="field-container" formGroupName="diastolicBloodPressure">
 							<mat-label
@@ -149,7 +149,7 @@
 									   type="number"
 									   matInput>
 							</mat-form-field>
-							<app-effective-time	[model]="form.value.vitalSigns.diastolicBloodPressure.effectiveTime"></app-effective-time>
+							<app-effective-time	[model]="form.value.vitalSigns.diastolicBloodPressure.effectiveTime" (onChange)="setVitalSignEffectiveTime($event, 'diastolicBloodPressure')"></app-effective-time>
 						</div>
 					</div>
 				</mat-card-content>

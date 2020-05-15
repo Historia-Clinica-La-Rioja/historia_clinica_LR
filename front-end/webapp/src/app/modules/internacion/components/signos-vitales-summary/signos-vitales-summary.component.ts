@@ -3,7 +3,7 @@ import { SummaryHeader } from 'src/app/modules/presentation/components/summary-c
 import { SIGNOS_VITALES } from '../../constants/summaries';
 import { VitalSingCurrentPrevious } from 'src/app/modules/presentation/components/signo-vital-current-previous/signo-vital-current-previous.component';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
-import { VitalSignDto } from '@api-rest/api-model';
+import { VitalSignDto, Last2VitalSignsDto } from '@api-rest/api-model';
 
 @Component({
 	selector: 'app-signos-vitales-summary',
@@ -27,7 +27,7 @@ export class SignosVitalesSummaryComponent implements OnInit {
 		);
 	}
 
-	initSignosVitales(): (vitalSigns: VitalSignDto[]) => void {
+	initSignosVitales(): (vitalSigns: Last2VitalSignsDto) => void {
 		const LABELS = {
 			systolicBloodPressure: 'Tensión arterial sistólica',
 			diastolicBloodPressure: 'Tensión arterial diastólica',
@@ -36,9 +36,9 @@ export class SignosVitalesSummaryComponent implements OnInit {
 			temperature: 'Temperatura',
 			bloodOxygenSaturation: 'Saturación de oxígeno',
 		};
-		return (vitalSigns: VitalSignDto[]) => {
-			let current = vitalSigns[0] || {};
-			let previous = vitalSigns[1] || {};
+		return (vitalSigns: Last2VitalSignsDto) => {
+			let current: VitalSignDto = vitalSigns.current || {};
+			let previous: VitalSignDto = vitalSigns.previous || {};
 			Object.keys(LABELS).forEach(key => this.signosVitales.push(
 				{
 					description: LABELS[key],

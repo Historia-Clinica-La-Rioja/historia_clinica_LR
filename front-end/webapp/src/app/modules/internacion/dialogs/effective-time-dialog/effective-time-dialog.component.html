@@ -1,0 +1,32 @@
+<div mat-dialog-title>
+	<div class="icon">
+		<mat-icon inline color="primary">access_time</mat-icon>
+	</div>
+	<h4>Fecha y hora de registro</h4>
+</div>
+<form [formGroup]="timeForm" (ngSubmit)="set()">
+	<div mat-dialog-content>
+		<section>
+			<mat-form-field appearance="outline">
+				<mat-label>Fecha</mat-label>
+				<input matInput id="date" [matDatepicker]="myDatepicker" formControlName="date"
+					[max]="today">
+				<mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
+				<mat-datepicker #myDatepicker>
+				</mat-datepicker>
+			</mat-form-field>
+			<mat-form-field appearance="outline">
+				<mat-label>Hora</mat-label>
+				<input matInput id="time" type="time" formControlName="time" required>
+			</mat-form-field>
+		</section>
+	</div>
+	<div mat-dialog-actions align="end">
+		<button type="button" mat-stroked-button color="primary" cdkFocusInitial mat-dialog-close>
+			<span [translate]="'buttons.CANCEL'"></span>
+		</button>
+		<button mat-raised-button color="primary">
+			<span [translate]="'buttons.CONFIRM'"></span>
+		</button>
+	</div>
+</form>

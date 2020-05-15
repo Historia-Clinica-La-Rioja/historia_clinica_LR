@@ -8,6 +8,7 @@ import { EvolutionNoteReportService } from '@api-rest/services/evolution-note-re
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from '@core/services/context.service';
 import { newMoment } from '@core/utils/moment.utils';
+import { Moment } from 'moment';
 
 @Component({
   selector: 'app-nota-evolucion-form',
@@ -150,6 +151,10 @@ export class NotaEvolucionFormComponent implements OnInit {
 		function getEffectiveValue(controlValue: any) {
 			return controlValue.value ? { value: controlValue.value, effectiveTime: controlValue.effectiveTime } : undefined;
 		}
+	}
+
+	setVitalSignEffectiveTime(newEffectiveTime: Moment, formField: string): void {
+		(<FormGroup>(<FormGroup>this.form.controls['vitalSigns']).controls[formField]).controls['effectiveTime'].setValue(newEffectiveTime);
 	}
 
 	back(): void {
