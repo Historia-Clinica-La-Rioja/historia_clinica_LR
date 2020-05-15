@@ -20,7 +20,7 @@ public class OnGenerateDocumentEvent extends ApplicationEvent {
 
     public OnGenerateDocumentEvent(InternmentDocument document, Integer institutionId, Integer internmentEpisodeId,
                                    Short documentType, String templateName, Integer patientId) {
-        super(document);
+        super(internmentEpisodeId);
         this.document = document;
         this.institutionId = institutionId;
         this.internmentEpisodeId = internmentEpisodeId;
