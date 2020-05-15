@@ -304,7 +304,7 @@ export interface InternmentGeneralStateDto extends Serializable {
     inmunizations: InmunizationDto[];
     medications: MedicationDto[];
     personalHistories: HealthHistoryConditionDto[];
-    vitalSigns: VitalSignDto[];
+    vitalSigns: Last2VitalSignsDto;
 }
 
 export interface InternmentPatientDto {
@@ -331,6 +331,11 @@ export interface InternmentSummaryDto {
 export interface JWTokenDto extends Serializable {
     refreshToken: string;
     token: string;
+}
+
+export interface Last2VitalSignsDto extends Serializable {
+    current: VitalSignDto;
+    previous: VitalSignDto;
 }
 
 export interface LoginDto extends Serializable {

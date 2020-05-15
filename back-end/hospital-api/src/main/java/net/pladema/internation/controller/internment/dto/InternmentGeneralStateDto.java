@@ -37,6 +37,6 @@ public class InternmentGeneralStateDto implements Serializable {
     private AnthropometricDataDto anthropometricData;
 
     @NotNull
-    private List<VitalSignDto> vitalSigns = new ArrayList<>();
+    private Last2VitalSignsDto vitalSigns;
 
 }

@@ -2,6 +2,7 @@ package net.pladema.internation.service.internment.impl;
 
 import net.pladema.internation.service.internment.InternmentStateService;
 import net.pladema.internation.service.internment.domain.InternmentGeneralState;
+import net.pladema.internation.service.internment.domain.Last2VitalSignsBo;
 import net.pladema.internation.service.ips.*;
 import net.pladema.internation.service.ips.domain.*;
 import org.slf4j.Logger;
@@ -85,7 +86,7 @@ public class InternmentStateServiceImpl implements InternmentStateService {
         return clinicalObservationService.getLastAnthropometricDataGeneralState(internmentEpisodeId);
     }
 
-    private List<VitalSignBo> getVitalSignsState(Integer internmentEpisodeId){
+    private Last2VitalSignsBo getVitalSignsState(Integer internmentEpisodeId){
         LOG.debug(LOGGING_INTERNMENT_EPISODE_ID, internmentEpisodeId);
         return clinicalObservationService.getLast2VitalSignsGeneralState(internmentEpisodeId);
     }

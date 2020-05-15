@@ -6,6 +6,7 @@ import net.pladema.internation.repository.ips.ObservationVitalSignRepository;
 import net.pladema.internation.repository.ips.generalstate.ClinicalObservationVo;
 import net.pladema.internation.repository.masterdata.entity.ObservationStatus;
 import net.pladema.internation.service.documents.DocumentService;
+import net.pladema.internation.service.internment.domain.Last2VitalSignsBo;
 import net.pladema.internation.service.ips.domain.MapClinicalObservationVo;
 import net.pladema.internation.service.ips.domain.VitalSignBo;
 import net.pladema.internation.service.ips.domain.enums.EVitalSign;
@@ -55,13 +56,20 @@ public class ClinicalObservationServiceImplTest {
 		int quantity = 2;
 		when(clinicalObservationRepository.getGeneralStateLastSevenDays(internmentEpisodeId))
 				.thenReturn(new MapClinicalObservationVo(mockVitalSignsVo(quantity)));
-		List<VitalSignBo> vitalSignBos = vitalSignLabService.getLast2VitalSignsGeneralState(internmentEpisodeId);
+		Last2VitalSignsBo last2VitalSignsBo = vitalSignLabService.getLast2VitalSignsGeneralState(internmentEpisodeId);
 
-		assertThat(vitalSignBos)
-				.isNotNull()
-				.hasSize(quantity);
+		assertThat(last2VitalSignsBo)
+				.isNotNull();
 
-		assertVitalSignsBo(vitalSignBos);
+		assertThat(last2VitalSignsBo.getCurrent())
+				.isNotNull();
+
+		assertVitalSignsBo(last2VitalSignsBo.getCurrent());
+
+		assertThat(last2VitalSignsBo.getPrevious())
+				.isNotNull();
+
+		assertVitalSignsBo(last2VitalSignsBo.getPrevious());
 	}
 
 	@Test
@@ -70,13 +78,18 @@ public class ClinicalObservationServiceImplTest {
 		int quantity = 1;
 		when(clinicalObservationRepository.getGeneralStateLastSevenDays(internmentEpisodeId))
 				.thenReturn(new MapClinicalObservationVo(mockVitalSignsVo(quantity)));
-		List<VitalSignBo> vitalSignBos = vitalSignLabService.getLast2VitalSignsGeneralState(internmentEpisodeId);
+		Last2VitalSignsBo last2VitalSignsBo = vitalSignLabService.getLast2VitalSignsGeneralState(internmentEpisodeId);
 
-		assertThat(vitalSignBos)
-				.isNotNull()
-				.hasSize(quantity);
+		assertThat(last2VitalSignsBo)
+				.isNotNull();
 
-		assertVitalSignsBo(vitalSignBos);
+		assertThat(last2VitalSignsBo.getCurrent())
+				.isNotNull();
+
+		assertVitalSignsBo(last2VitalSignsBo.getCurrent());
+
+		assertThat(last2VitalSignsBo.getPrevious())
+				.isNull();
 	}
 
 	@Test
@@ -85,42 +98,45 @@ public class ClinicalObservationServiceImplTest {
 		int quantity = 0;
 		when(clinicalObservationRepository.getGeneralStateLastSevenDays(internmentEpisodeId))
 				.thenReturn(new MapClinicalObservationVo(mockVitalSignsVo(quantity)));
-		List<VitalSignBo> vitalSignBos = vitalSignLabService.getLast2VitalSignsGeneralState(internmentEpisodeId);
+		Last2VitalSignsBo last2VitalSignsBo =  vitalSignLabService.getLast2VitalSignsGeneralState(internmentEpisodeId);
 
-		assertThat(vitalSignBos)
-				.isNotNull()
-				.hasSize(quantity);
+		assertThat(last2VitalSignsBo)
+				.isNotNull();
+
+		assertThat(last2VitalSignsBo.getCurrent())
+				.isNull();
+
+		assertThat(last2VitalSignsBo.getPrevious())
+				.isNull();
 	}
 
-	private void assertVitalSignsBo(List<VitalSignBo> vitalSignBos) {
-		for (VitalSignBo vitalSignBo : vitalSignBos) {
-			assertThat(vitalSignBo)
-					.isNotNull();
+	private void assertVitalSignsBo(VitalSignBo vitalSignBo) {
+		assertThat(vitalSignBo)
+				.isNotNull();
 
-			assertThat(vitalSignBo.hasValues())
-					.isTrue();
+		assertThat(vitalSignBo.hasValues())
+				.isTrue();
 
-			assertThat(vitalSignBo.getBloodOxygenSaturation())
-					.isNotNull();
+		assertThat(vitalSignBo.getBloodOxygenSaturation())
+				.isNotNull();
 
-			assertThat(vitalSignBo.getTemperature())
-					.isNotNull();
+		assertThat(vitalSignBo.getTemperature())
+				.isNotNull();
 
-			assertThat(vitalSignBo.getSystolicBloodPressure())
-					.isNotNull();
+		assertThat(vitalSignBo.getSystolicBloodPressure())
+				.isNotNull();
 
-			assertThat(vitalSignBo.getDiastolicBloodPressure())
-					.isNotNull();
+		assertThat(vitalSignBo.getDiastolicBloodPressure())
+				.isNotNull();
 
-			assertThat(vitalSignBo.getMeanPressure())
-					.isNotNull();
+		assertThat(vitalSignBo.getMeanPressure())
+				.isNotNull();
 
-			assertThat(vitalSignBo.getHeartRate())
-					.isNotNull();
+		assertThat(vitalSignBo.getHeartRate())
+				.isNotNull();
 
-			assertThat(vitalSignBo.getRespiratoryRate())
-					.isNotNull();
-		}
+		assertThat(vitalSignBo.getRespiratoryRate())
+				.isNotNull();
 	}
 
 

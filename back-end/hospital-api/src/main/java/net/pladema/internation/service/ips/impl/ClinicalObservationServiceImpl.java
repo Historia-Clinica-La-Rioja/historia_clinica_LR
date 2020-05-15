@@ -6,6 +6,7 @@ import net.pladema.internation.repository.ips.ObservationVitalSignRepository;
 import net.pladema.internation.repository.ips.entity.ObservationLab;
 import net.pladema.internation.repository.ips.entity.ObservationVitalSign;
 import net.pladema.internation.service.documents.DocumentService;
+import net.pladema.internation.service.internment.domain.Last2VitalSignsBo;
 import net.pladema.internation.service.ips.ClinicalObservationService;
 import net.pladema.internation.service.ips.domain.AnthropometricDataBo;
 import net.pladema.internation.service.ips.domain.ClinicalObservationBo;
@@ -17,8 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -177,14 +176,21 @@ public class ClinicalObservationServiceImpl implements ClinicalObservationServic
     }
 
     @Override
-    public List<VitalSignBo> getLast2VitalSignsGeneralState(Integer internmentEpisodeId) {
+    public Last2VitalSignsBo getLast2VitalSignsGeneralState(Integer internmentEpisodeId) {
         LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
         MapClinicalObservationVo resultQuery = clinicalObservationRepository.getGeneralStateLastSevenDays(internmentEpisodeId);
-        List<VitalSignBo> result = new ArrayList<>();
+        Last2VitalSignsBo result = new Last2VitalSignsBo();
         for (int i=0;i<2;i++){
-            resultQuery.getLastNVitalSigns(i).ifPresent(v -> {
-                result.add(v);
-            });
+            if (i==0) {
+                resultQuery.getLastNVitalSigns(i).ifPresent(v -> {
+                    result.setCurrent(v);
+                });
+            }
+            if (i==1) {
+                resultQuery.getLastNVitalSigns(i).ifPresent(v -> {
+                    result.setPrevious(v);
+                });
+            }
         }
         LOG.debug(OUTPUT, result);
         return result;

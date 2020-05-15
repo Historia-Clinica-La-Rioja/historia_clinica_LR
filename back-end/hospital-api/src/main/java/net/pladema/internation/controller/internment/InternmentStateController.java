@@ -3,10 +3,12 @@ package net.pladema.internation.controller.internment;
 import io.swagger.annotations.Api;
 import net.pladema.internation.controller.constraints.InternmentValid;
 import net.pladema.internation.controller.internment.dto.InternmentGeneralStateDto;
+import net.pladema.internation.controller.internment.dto.Last2VitalSignsDto;
 import net.pladema.internation.controller.ips.dto.*;
 import net.pladema.internation.controller.internment.mapper.InternmentStateMapper;
 import net.pladema.internation.service.internment.InternmentStateService;
 import net.pladema.internation.service.internment.domain.InternmentGeneralState;
+import net.pladema.internation.service.internment.domain.Last2VitalSignsBo;
 import net.pladema.internation.service.ips.*;
 import net.pladema.internation.service.ips.domain.*;
 import org.slf4j.Logger;
@@ -147,12 +149,12 @@ public class InternmentStateController {
 
     @InternmentValid
     @GetMapping("/{internmentEpisodeId}/general/vitalSigns")
-    public ResponseEntity<List<VitalSignDto>> vitalSignsGeneralState(
+    public ResponseEntity<Last2VitalSignsDto> vitalSignsGeneralState(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
         LOG.debug(LOGGING_INSTITUTION_AND_INTERNMENT_EPISODE, institutionId, internmentEpisodeId);
-        List<VitalSignBo> vitalSignBos = clinicalObservationService.getLast2VitalSignsGeneralState(internmentEpisodeId);
-        List<VitalSignDto> result = internmentStateMapper.toListVitalSignDto(vitalSignBos);
+        Last2VitalSignsBo vitalSignBos = clinicalObservationService.getLast2VitalSignsGeneralState(internmentEpisodeId);
+        Last2VitalSignsDto result = internmentStateMapper.toLast2VitalSignDto(vitalSignBos);
         LOG.debug(LOGGING_OUTPUT, result);
         return  ResponseEntity.ok().body(result);
     }

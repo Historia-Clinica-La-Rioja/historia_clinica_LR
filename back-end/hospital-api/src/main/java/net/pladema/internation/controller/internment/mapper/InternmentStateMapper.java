@@ -1,6 +1,7 @@
 package net.pladema.internation.controller.internment.mapper;
 
 import net.pladema.internation.controller.internment.dto.InternmentGeneralStateDto;
+import net.pladema.internation.controller.internment.dto.Last2VitalSignsDto;
 import net.pladema.internation.controller.ips.dto.*;
 import net.pladema.internation.controller.ips.mapper.AllergyConditionMapper;
 import net.pladema.internation.controller.ips.mapper.AnthropometricDataMapper;
@@ -9,6 +10,7 @@ import net.pladema.internation.controller.ips.mapper.InmunizationMapper;
 import net.pladema.internation.controller.ips.mapper.MedicationMapper;
 import net.pladema.internation.controller.ips.mapper.VitalSignMapper;
 import net.pladema.internation.service.internment.domain.InternmentGeneralState;
+import net.pladema.internation.service.internment.domain.Last2VitalSignsBo;
 import net.pladema.internation.service.ips.domain.*;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
@@ -62,4 +64,7 @@ public interface InternmentStateMapper {
 
     @Named("toHealthConditionDto")
     HealthConditionDto toHealthConditionDto(HealthConditionBo mainDiagnosis);
+
+    @Named("toLast2VitalSignDto")
+    Last2VitalSignsDto toLast2VitalSignDto(Last2VitalSignsBo vitalSignBos);
 }
