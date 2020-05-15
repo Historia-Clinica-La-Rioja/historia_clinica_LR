@@ -29,6 +29,7 @@ import { NotaEvolucionFormComponent } from './components/nota-evolucion-form/not
 import { DiagnosticoPrincipalComponent } from './components/diagnostico-principal/diagnostico-principal.component';
 import { MainDiagnosisSummaryComponent } from './components/main-diagnosis-summary/main-diagnosis-summary.component';
 import { RemoveDiagnosisComponent } from './dialogs/remove-diagnosis/remove-diagnosis.component';
+import { EffectiveTimeComponent } from './components/effective-time/effective-time.component';
 
 @NgModule({
 	declarations: [
@@ -56,6 +57,7 @@ import { RemoveDiagnosisComponent } from './dialogs/remove-diagnosis/remove-diag
 		NotaEvolucionFormComponent,
 		MainDiagnosisSummaryComponent,
 		RemoveDiagnosisComponent,
+		EffectiveTimeComponent,
 	],
 	imports: [
 		CoreModule,

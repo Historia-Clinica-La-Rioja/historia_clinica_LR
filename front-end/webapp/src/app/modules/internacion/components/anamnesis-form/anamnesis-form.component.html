@@ -70,80 +70,86 @@
 			<mat-card>
 				<mat-card-content class="vital-signs" formGroupName="vitalSigns">
 					<div class="row-container">
-						<div class="field-container">
+						<div class="field-container" formGroupName="heartRate">
 							<mat-label [translate]="'internaciones.anamnesis.vital-signs.form.HEART_RATE'"></mat-label>
 							<mat-form-field [floatLabel]="'never'" appearance="outline">
 								<input id="heart_rate"
 									   name="heart_rate"
-									   formControlName="heartRate"
+									   formControlName="value"
 									   placeholder="00"
 									   type="number"
 									   matInput>
-							</mat-form-field>
+									</mat-form-field>
+							<app-effective-time	[model]="form.value.vitalSigns.heartRate.effectiveTime"></app-effective-time>
 						</div>
-						<div class="field-container">
+						<div class="field-container" formGroupName="respiratoryRate">
 							<mat-label [translate]="'internaciones.anamnesis.vital-signs.form.RESPIRATORY_RATE'"></mat-label>
 							<mat-form-field [floatLabel]="'never'" appearance="outline">
 								<input id="respiratory_rate"
 									   name="respiratory_rate"
-									   formControlName="respiratoryRate"
+									   formControlName="value"
 									   placeholder="00"
 									   type="number"
 									   matInput>
 							</mat-form-field>
+							<app-effective-time	[model]="form.value.vitalSigns.respiratoryRate.effectiveTime"></app-effective-time>
 						</div>
 					</div>
 
 					<div class="row-container">
-						<div class="field-container">
+						<div class="field-container" formGroupName="temperature">
 							<mat-label [translate]="'internaciones.anamnesis.vital-signs.form.TEMPERATURE'"></mat-label>
 							<mat-form-field [floatLabel]="'never'" appearance="outline">
 								<input id="temperature"
 									   name="temperature"
-									   formControlName="temperature"
+									   formControlName="value"
 									   placeholder="00.0"
 									   type="number"
 									   matInput>
 							</mat-form-field>
+							<app-effective-time	[model]="form.value.vitalSigns.temperature.effectiveTime"></app-effective-time>
 						</div>
-						<div class="field-container">
+						<div class="field-container" formGroupName="bloodOxygenSaturation">
 							<mat-label
 								[translate]="'internaciones.anamnesis.vital-signs.form.BLOOD_OXYGEN_SATURATION'"></mat-label>
 							<mat-form-field [floatLabel]="'never'" appearance="outline">
 								<input id="blood_oxygen_saturation"
 									   name="blood_oxygen_saturation"
-									   formControlName="bloodOxygenSaturation"
+									   formControlName="value"
 									   placeholder="00"
 									   type="number"
 									   matInput>
 							</mat-form-field>
+							<app-effective-time	[model]="form.value.vitalSigns.bloodOxygenSaturation.effectiveTime"></app-effective-time>
 						</div>
 					</div>
 
 					<div class="row-container">
-						<div class="field-container">
+						<div class="field-container" formGroupName="systolicBloodPressure">
 							<mat-label
 								[translate]="'internaciones.anamnesis.vital-signs.form.SYSTOLIC_BLOOD_PRESSURE'"></mat-label>
 							<mat-form-field [floatLabel]="'never'" appearance="outline">
 								<input id="systolic_blood_pressure"
 									   name="systolicBloodPressure"
-									   formControlName="systolicBloodPressure"
+									   formControlName="value"
 									   placeholder="00"
 									   type="number"
 									   matInput>
 							</mat-form-field>
+							<app-effective-time	[model]="form.value.vitalSigns.systolicBloodPressure.effectiveTime"></app-effective-time>
 						</div>
-						<div class="field-container">
+						<div class="field-container" formGroupName="diastolicBloodPressure">
 							<mat-label
 								[translate]="'internaciones.anamnesis.vital-signs.form.DIASTOLIC_BLOOD_PRESSURE'"></mat-label>
 							<mat-form-field [floatLabel]="'never'" appearance="outline">
 								<input id="diastolic_blood_pressure"
 									   name="diastolicBloodPressure"
-									   formControlName="diastolicBloodPressure"
+									   formControlName="value"
 									   placeholder="00"
 									   type="number"
 									   matInput>
 							</mat-form-field>
+							<app-effective-time	[model]="form.value.vitalSigns.diastolicBloodPressure.effectiveTime"></app-effective-time>
 						</div>
 					</div>
 				</mat-card-content>

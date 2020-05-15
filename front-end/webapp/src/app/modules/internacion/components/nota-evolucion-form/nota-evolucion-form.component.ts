@@ -7,6 +7,7 @@ import { EvolutionNoteService } from '@api-rest/services/evolution-note.service'
 import { EvolutionNoteReportService } from '@api-rest/services/evolution-note-report.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from '@core/services/context.service';
+import { newMoment } from '@core/utils/moment.utils';
 
 @Component({
   selector: 'app-nota-evolucion-form',
@@ -52,12 +53,30 @@ export class NotaEvolucionFormComponent implements OnInit {
 				weight: [null],
 			}),
 			vitalSigns: this.formBuilder.group({
-				heartRate: [null],
-				respiratoryRate: [null],
-				temperature: [null],
-				bloodOxygenSaturation: [null],
-				systolicBloodPressure: [null],
-				diastolicBloodPressure: [null],
+				heartRate: this.formBuilder.group({
+					value: [null],
+					effectiveTime: [newMoment()],
+				}),
+				respiratoryRate: this.formBuilder.group({
+					value: [null],
+					effectiveTime: [newMoment()],
+				}),
+				temperature: this.formBuilder.group({
+					value: [null],
+					effectiveTime: [newMoment()],
+				}),
+				bloodOxygenSaturation: this.formBuilder.group({
+					value: [null],
+					effectiveTime: [newMoment()],
+				}),
+				systolicBloodPressure: this.formBuilder.group({
+					value: [null],
+					effectiveTime: [newMoment()],
+				}),
+				diastolicBloodPressure: this.formBuilder.group({
+					value: [null],
+					effectiveTime: [newMoment()],
+				}),
 			}),
 			observations: this.formBuilder.group ({
 				currentIllnessNote: [null],
@@ -111,12 +130,12 @@ export class NotaEvolucionFormComponent implements OnInit {
 			inmunizations: this.inmunizations,
 			notes: isNull(formValues.observations) ? undefined : formValues.observations,
 			vitalSigns: isNull(formValues.vitalSigns) ? undefined : {
-				bloodOxygenSaturation: getValue(formValues.vitalSigns.bloodOxygenSaturation),
-				diastolicBloodPressure: getValue(formValues.vitalSigns.diastolicBloodPressure),
-				heartRate: getValue(formValues.vitalSigns.heartRate),
-				respiratoryRate: getValue(formValues.vitalSigns.respiratoryRate),
-				systolicBloodPressure: getValue(formValues.vitalSigns.systolicBloodPressure),
-				temperature: getValue(formValues.vitalSigns.temperature)
+				bloodOxygenSaturation: getEffectiveValue(formValues.vitalSigns.bloodOxygenSaturation),
+				diastolicBloodPressure: getEffectiveValue(formValues.vitalSigns.diastolicBloodPressure),
+				heartRate: getEffectiveValue(formValues.vitalSigns.heartRate),
+				respiratoryRate: getEffectiveValue(formValues.vitalSigns.respiratoryRate),
+				systolicBloodPressure: getEffectiveValue(formValues.vitalSigns.systolicBloodPressure),
+				temperature: getEffectiveValue(formValues.vitalSigns.temperature)
 			}
 		};
 
@@ -126,6 +145,10 @@ export class NotaEvolucionFormComponent implements OnInit {
 
 		function getValue(controlValue: any) {
 			return controlValue ? { value: controlValue } : undefined;
+		}
+
+		function getEffectiveValue(controlValue: any) {
+			return controlValue.value ? { value: controlValue.value, effectiveTime: controlValue.effectiveTime } : undefined;
 		}
 	}
 

@@ -13,6 +13,7 @@ import { forkJoin } from 'rxjs';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from '@core/services/context.service';
+import { newMoment } from '@core/utils/moment.utils';
 
 @Component({
 	selector: 'app-anamnesis-form',
@@ -65,12 +66,30 @@ export class AnamnesisFormComponent implements OnInit {
 				weight: [null],
 			}),
 			vitalSigns: this.formBuilder.group({
-				heartRate: [null],
-				respiratoryRate: [null],
-				temperature: [null],
-				bloodOxygenSaturation: [null],
-				systolicBloodPressure: [null],
-				diastolicBloodPressure: [null],
+				heartRate: this.formBuilder.group({
+					value: [null],
+					effectiveTime: [newMoment()],
+				}),
+				respiratoryRate: this.formBuilder.group({
+					value: [null],
+					effectiveTime: [newMoment()],
+				}),
+				temperature: this.formBuilder.group({
+					value: [null],
+					effectiveTime: [newMoment()],
+				}),
+				bloodOxygenSaturation: this.formBuilder.group({
+					value: [null],
+					effectiveTime: [newMoment()],
+				}),
+				systolicBloodPressure: this.formBuilder.group({
+					value: [null],
+					effectiveTime: [newMoment()],
+				}),
+				diastolicBloodPressure: this.formBuilder.group({
+					value: [null],
+					effectiveTime: [newMoment()],
+				}),
 			}),
 			observations: this.formBuilder.group ({
 				currentIllnessNote: [null],
@@ -108,12 +127,12 @@ export class AnamnesisFormComponent implements OnInit {
 				this.form.controls.observations.setValue(anamnesis.notes);
 
 				this.form.controls.vitalSigns.setValue({
-					heartRate: anamnesis.vitalSigns.heartRate.value,
-					respiratoryRate: anamnesis.vitalSigns.respiratoryRate.value,
-					temperature: anamnesis.vitalSigns.temperature.value,
-					bloodOxygenSaturation: anamnesis.vitalSigns.bloodOxygenSaturation.value,
-					systolicBloodPressure: anamnesis.vitalSigns.systolicBloodPressure.value,
-					diastolicBloodPressure: anamnesis.vitalSigns.diastolicBloodPressure.value
+					heartRate: anamnesis.vitalSigns.heartRate,
+					respiratoryRate: anamnesis.vitalSigns.respiratoryRate,
+					temperature: anamnesis.vitalSigns.temperature,
+					bloodOxygenSaturation: anamnesis.vitalSigns.bloodOxygenSaturation,
+					systolicBloodPressure: anamnesis.vitalSigns.systolicBloodPressure,
+					diastolicBloodPressure: anamnesis.vitalSigns.diastolicBloodPressure
 				});
 
 			});
@@ -184,12 +203,12 @@ export class AnamnesisFormComponent implements OnInit {
 			notes: isNull(formValues.observations) ? undefined : formValues.observations,
 			personalHistories: this.personalHistories,
 			vitalSigns: isNull(formValues.vitalSigns) ? undefined : {
-				bloodOxygenSaturation: getValue(formValues.vitalSigns.bloodOxygenSaturation),
-				diastolicBloodPressure: getValue(formValues.vitalSigns.diastolicBloodPressure),
-				heartRate: getValue(formValues.vitalSigns.heartRate),
-				respiratoryRate: getValue(formValues.vitalSigns.respiratoryRate),
-				systolicBloodPressure: getValue(formValues.vitalSigns.systolicBloodPressure),
-				temperature: getValue(formValues.vitalSigns.temperature)
+				bloodOxygenSaturation: getEffectiveValue(formValues.vitalSigns.bloodOxygenSaturation),
+				diastolicBloodPressure: getEffectiveValue(formValues.vitalSigns.diastolicBloodPressure),
+				heartRate: getEffectiveValue(formValues.vitalSigns.heartRate),
+				respiratoryRate: getEffectiveValue(formValues.vitalSigns.respiratoryRate),
+				systolicBloodPressure: getEffectiveValue(formValues.vitalSigns.systolicBloodPressure),
+				temperature: getEffectiveValue(formValues.vitalSigns.temperature)
 			}
 		};
 
@@ -200,6 +219,11 @@ export class AnamnesisFormComponent implements OnInit {
 		function getValue(controlValue: any) {
 			return controlValue ? { value: controlValue } : undefined;
 		}
+
+		function getEffectiveValue(controlValue: any) {
+			return controlValue.value ? { value: controlValue.value, effectiveTime: controlValue.effectiveTime } : undefined;
+		}
+
 	}
 
 }
