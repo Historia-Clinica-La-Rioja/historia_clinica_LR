@@ -296,6 +296,7 @@
 			},
 			"card": {
 				"DAYS_INTERNED": "{{days}} días internado",
+				"ONE_DAY": "1 día internado",
 				"ADMISSION": "Ingreso: {{datetime}}"
 			},
 			"remove-diagnosis-dialog": {

@@ -25,10 +25,15 @@
 
 	<mat-list-item id="days">
 		<div mat-line>
-			<span class="mat-body-2"
+			<span *ngIf="internmentEpisode?.totalInternmentDays === 1 else multipleDays" class="mat-body-2"
+				  [translate]="'internaciones.internacion-paciente.card.ONE_DAY'">
+			</span>
+			<ng-template #multipleDays>
+				<span class="mat-body-2"
 					  [translate]="'internaciones.internacion-paciente.card.DAYS_INTERNED'"
 					  [translateParams]="{ days: internmentEpisode?.totalInternmentDays }">
-			</span>
+				</span>
+			</ng-template>
 		</div>
 		<div mat-line>
 			<span 	[translate]="'internaciones.internacion-paciente.card.ADMISSION'"
