@@ -8,7 +8,7 @@ import { PatientSearchDto, GenderDto, IdentificationTypeDto } from '@api-rest/ap
 import { PatientService } from '@api-rest/services/patient.service';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { TableModel } from 'src/app/modules/presentation/components/table/table.component';
-import { momentFormatDate, DateFormat } from '@core/utils/moment.utils';
+import { DateFormat, momentParseDate } from '@core/utils/moment.utils';
 import { PersonService } from '@api-rest/services/person.service';
 import { finalize } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
@@ -125,7 +125,7 @@ export class SearchComponent implements OnInit {
 				{
 					columnDef: 'birthDate',
 					header: 'F. Nac',
-					text: (row) => momentFormatDate(new Date(row.person.birthDate), DateFormat.VIEW_DATE)
+					text: (row) => momentParseDate(String(row.person.birthDate)).format(DateFormat.VIEW_DATE)
 				},
 				{
 					columnDef: 'numberDni',
@@ -164,13 +164,21 @@ export class SearchComponent implements OnInit {
 				id: patient.idPatient,
 				firstName: patient.person.firstName,
 				lastName: patient.person.lastName,
-				age: this.CalculateAge(new Date(patient.person.birthDate)),
+				age: calculateAge(String(patient.person.birthDate)),
 				gender: this.genderOptionsViewTable[patient.person.genderId],
-				birthDate: momentFormatDate(new Date(patient.person.birthDate), DateFormat.VIEW_DATE),
+				birthDate: momentParseDate(String(patient.person.birthDate)).format(DateFormat.VIEW_DATE),
 				identificationNumber: patient.person.identificationNumber,
 				identificationTypeId: this.identifyTypeViewPatientDetail[patient.person.identificationTypeId]
 			}
 		});
+
+		function calculateAge(birthDate: string): number {
+			const today: Moment = moment();
+			const birth: Moment = momentParseDate(birthDate);
+
+			const diff = today.diff(birth, 'years');
+			return diff;
+		}
 	}
 
 	private buildFormSearch(params) {
@@ -182,7 +190,7 @@ export class SearchComponent implements OnInit {
 			lastName: [params.lastName, Validators.required],
 			otherLastNames: [params.otherLastNames],
 			genderId: [Number(params.genderId), Validators.required],
-			birthDate: [params.birthDate, Validators.required]
+			birthDate: [params.birthDate ? momentParseDate(params.birthDate) : undefined, Validators.required]
 		});
 		this.lockFormField(params);
 	}
@@ -198,24 +206,7 @@ export class SearchComponent implements OnInit {
 		if (params.genderId) {
 			this.formSearch.controls.genderId.disable();
 		}
-		if (params.firstName) {
-			this.formSearch.controls.firstName.disable();
-		}
-		if (params.lastName) {
-			this.formSearch.controls.lastName.disable();
-		}
 
-	}
-
-	private CalculateAge(birthDate): number {
-		const today: Date = new Date();
-		const birth: Date = new Date(birthDate);
-		let age: number = today.getFullYear() - birth.getFullYear();
-		const month: number = today.getMonth() - birth.getMonth();
-		if (month < 0 || (month === 0 && today.getDate() < birth.getDate())) {
-			age--;
-		}
-		return age;
 	}
 
 	back() {
