@@ -415,6 +415,10 @@ export interface ProvinceDto extends MasterdataDto<number> {
     id: number;
 }
 
+export interface ReportClinicalObservationDto extends ClinicalObservationDto {
+    effectiveTime: Date;
+}
+
 export interface ResponseAnamnesisDto extends AnamnesisDto {
     id: number;
 }
@@ -474,6 +478,15 @@ export interface VitalSignDto extends Serializable {
     respiratoryRate?: EffectiveClinicalObservationDto;
     systolicBloodPressure?: EffectiveClinicalObservationDto;
     temperature?: EffectiveClinicalObservationDto;
+}
+
+export interface VitalSignsReportDto extends Serializable {
+    bloodOxygenSaturation?: ReportClinicalObservationDto;
+    diastolicBloodPressure?: ReportClinicalObservationDto;
+    heartRate?: ReportClinicalObservationDto;
+    respiratoryRate?: ReportClinicalObservationDto;
+    systolicBloodPressure?: ReportClinicalObservationDto;
+    temperature?: ReportClinicalObservationDto;
 }
 
 export type ERole = "ROOT" | "ADMINISTRADOR" | "ESPECIALISTA_MEDICO" | "PROFESIONAL_DE_SALUD" | "ADMINISTRATIVO";

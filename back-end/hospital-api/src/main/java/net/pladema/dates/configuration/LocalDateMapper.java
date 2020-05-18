@@ -2,9 +2,7 @@ package net.pladema.dates.configuration;
 
 import org.mapstruct.Mapper;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 
 @Mapper
@@ -41,4 +39,12 @@ public interface LocalDateMapper {
 			return null;
 		return localDateTime.format(DateTimeFormatter.ofPattern(JacksonDateFormatConfig.DATE_TIME_FORMAT));
 	}
+
+	default ZonedDateTime fromLocalDateTimeToZonedDateTime(LocalDateTime localDateTime) {
+		if (localDateTime == null)
+			return null;
+		ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneOffset.UTC);
+		return zonedDateTime.withZoneSameInstant(ZoneId.of(JacksonDateFormatConfig.ZONE_ID));
+	}
+
 }

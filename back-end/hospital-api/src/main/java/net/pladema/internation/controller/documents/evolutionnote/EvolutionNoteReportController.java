@@ -6,6 +6,8 @@ import net.pladema.internation.controller.constraints.DocumentValid;
 import net.pladema.internation.controller.constraints.InternmentValid;
 import net.pladema.internation.controller.internment.dto.ResponsibleDoctorDto;
 import net.pladema.internation.controller.internment.mapper.ResponsibleDoctorMapper;
+import net.pladema.internation.controller.ips.dto.VitalSignsReportDto;
+import net.pladema.internation.controller.ips.mapper.VitalSignMapper;
 import net.pladema.internation.repository.masterdata.entity.DocumentType;
 import net.pladema.internation.service.documents.ReportDocumentService;
 import net.pladema.internation.service.documents.evolutionnote.EvolutionNoteReportService;
@@ -52,18 +54,22 @@ public class EvolutionNoteReportController {
 
     private final ResponsibleDoctorMapper responsibleDoctorMapper;
 
+    private final VitalSignMapper vitalSignMapper;
+
     public EvolutionNoteReportController(InternmentEpisodeService internmentEpisodeService,
                                          EvolutionNoteReportService evolutionNoteReportService,
                                          PatientExternalService patientExternalService,
                                          PdfService pdfService,
                                          ReportDocumentService reportDocumentService,
-                                         ResponsibleDoctorMapper responsibleDoctorMapper) {
+                                         ResponsibleDoctorMapper responsibleDoctorMapper,
+                                         VitalSignMapper vitalSignMapper) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.evolutionNoteReportService = evolutionNoteReportService;
         this.patientExternalService = patientExternalService;
         this.pdfService = pdfService;
         this.reportDocumentService = reportDocumentService;
         this.responsibleDoctorMapper = responsibleDoctorMapper;
+        this.vitalSignMapper = vitalSignMapper;
     }
 
     @GetMapping("/{evolutionNoteId}")
@@ -89,13 +95,14 @@ public class EvolutionNoteReportController {
     private Context createEvolutionNoteContext(EvolutionNote evolutionNote, BasicPatientDto patientData,
                                                ResponsibleDoctorDto author) {
         LOG.debug("Input parameters -> evolutionNote {}", evolutionNote);
+        VitalSignsReportDto vitalSignsReportDto = vitalSignMapper.toVitalSignsReportDto(evolutionNote.getVitalSigns());
         Context ctx = new Context(Locale.getDefault());
         ctx.setVariable("patient", patientData);
         ctx.setVariable("diagnosis", evolutionNote.getDiagnosis());
         ctx.setVariable("allergies", evolutionNote.getAllergies());
         ctx.setVariable("inmunizations", evolutionNote.getInmunizations());
         ctx.setVariable("anthropometricData", evolutionNote.getAnthropometricData());
-        ctx.setVariable("vitalSigns", evolutionNote.getVitalSigns());
+        ctx.setVariable("vitalSigns", vitalSignsReportDto);
         ctx.setVariable("notes", evolutionNote.getNotes());
         ctx.setVariable("author", author);
         LOG.debug(OUTPUT, ctx);

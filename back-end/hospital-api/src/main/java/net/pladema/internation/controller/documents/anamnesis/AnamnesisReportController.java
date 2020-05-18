@@ -6,6 +6,8 @@ import net.pladema.internation.controller.constraints.DocumentValid;
 import net.pladema.internation.controller.constraints.InternmentValid;
 import net.pladema.internation.controller.internment.dto.ResponsibleDoctorDto;
 import net.pladema.internation.controller.internment.mapper.ResponsibleDoctorMapper;
+import net.pladema.internation.controller.ips.dto.VitalSignsReportDto;
+import net.pladema.internation.controller.ips.mapper.VitalSignMapper;
 import net.pladema.internation.repository.masterdata.entity.DocumentType;
 import net.pladema.internation.service.documents.ReportDocumentService;
 import net.pladema.internation.service.documents.anamnesis.AnamnesisReportService;
@@ -53,18 +55,22 @@ public class AnamnesisReportController {
 
     private final ResponsibleDoctorMapper responsibleDoctorMapper;
 
+    private final VitalSignMapper vitalSignMapper;
+
     public AnamnesisReportController(InternmentEpisodeService internmentEpisodeService,
                                      AnamnesisReportService anamnesisReportService,
                                      PatientExternalService patientExternalService,
                                      PdfService pdfService,
                                      ReportDocumentService reportDocumentService,
-                                     ResponsibleDoctorMapper responsibleDoctorMapper) {
+                                     ResponsibleDoctorMapper responsibleDoctorMapper,
+                                     VitalSignMapper vitalSignMapper) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.anamnesisReportService = anamnesisReportService;
         this.patientExternalService = patientExternalService;
         this.pdfService = pdfService;
         this.reportDocumentService = reportDocumentService;
         this.responsibleDoctorMapper = responsibleDoctorMapper;
+        this.vitalSignMapper = vitalSignMapper;
     }
 
 
@@ -90,6 +96,7 @@ public class AnamnesisReportController {
 
     private Context createAnamnesisContext(Anamnesis anamnesis, BasicPatientDto patientData, ResponsibleDoctorDto author ) {
         LOG.debug("Input parameters -> anamnesis {}", anamnesis);
+        VitalSignsReportDto vitalSignsReportDto = vitalSignMapper.toVitalSignsReportDto(anamnesis.getVitalSigns());
         Context ctx = new Context(Locale.getDefault());
         ctx.setVariable("patient", patientData);
         ctx.setVariable("mainDiagnosis", anamnesis.getMainDiagnosis());
@@ -100,7 +107,7 @@ public class AnamnesisReportController {
         ctx.setVariable("inmunizations", anamnesis.getInmunizations());
         ctx.setVariable("medications", anamnesis.getMedications());
         ctx.setVariable("anthropometricData", anamnesis.getAnthropometricData());
-        ctx.setVariable("vitalSigns", anamnesis.getVitalSigns());
+        ctx.setVariable("vitalSigns", vitalSignsReportDto);
         ctx.setVariable("notes", anamnesis.getNotes());
         ctx.setVariable("author", author);
         LOG.debug(OUTPUT, ctx);
