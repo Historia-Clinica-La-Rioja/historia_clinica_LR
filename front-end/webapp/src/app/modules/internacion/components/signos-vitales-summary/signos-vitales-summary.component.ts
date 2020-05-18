@@ -4,6 +4,7 @@ import { SIGNOS_VITALES } from '../../constants/summaries';
 import { VitalSingCurrentPrevious } from 'src/app/modules/presentation/components/signo-vital-current-previous/signo-vital-current-previous.component';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { VitalSignDto, Last2VitalSignsDto } from '@api-rest/api-model';
+import { momentParseDate } from '@core/utils/moment.utils';
 
 @Component({
 	selector: 'app-signos-vitales-summary',
@@ -42,8 +43,14 @@ export class SignosVitalesSummaryComponent implements OnInit {
 			Object.keys(LABELS).forEach(key => this.signosVitales.push(
 				{
 					description: LABELS[key],
-					currentValue: Number(current[key]?.value),
-					previousValue: Number(previous[key]?.value)
+					currentValue: {
+						value: Number(current[key]?.value),
+						effectiveTime: current[key]?.effectiveTime ? momentParseDate(current[key].effectiveTime) : undefined
+					},
+					previousValue: {
+						value: Number(previous[key]?.value),
+						effectiveTime: previous[key]?.effectiveTime ? momentParseDate(previous[key].effectiveTime) : undefined
+					}
 				}
 			));
 		}

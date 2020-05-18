@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Moment } from 'moment';
 
 @Component({
 	selector: 'app-signo-vital-current-previous',
@@ -18,6 +19,12 @@ export class SignoVitalCurrentPreviousComponent implements OnInit {
 
 export interface VitalSingCurrentPrevious {
 	description: string;
-	currentValue?: number;
-	previousValue?: number;
+	currentValue?: {
+		value: number,
+		effectiveTime: Moment,
+	};
+	previousValue?: {
+		value: number,
+		effectiveTime: Moment,
+	};
 }

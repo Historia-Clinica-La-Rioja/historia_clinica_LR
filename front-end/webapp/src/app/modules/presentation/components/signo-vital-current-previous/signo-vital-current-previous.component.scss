@@ -17,12 +17,20 @@ mat-card.mat-card {
     justify-content: space-between;
 }
 
+mat-icon {
+	margin: 0 3px;
+	cursor: default;
+}
+
 div.current-value {
 	display: flex;
 	flex-direction: row;
 	justify-content: flex-end;
 	align-self: center;
-	font-size: 24px;
-	font-weight: 500;
-	margin-left: 15px;
+	font-size: 18px;
+	margin-left: 5px;
+	.value {
+		font-size: 24px;
+		font-weight: 500;
+	}
 }
