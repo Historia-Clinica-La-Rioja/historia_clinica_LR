@@ -36,7 +36,7 @@
 										name="sectorId"
 										formControlName="sectorId"
 										placeholder="{{'pacientes.form.SELECT' | translate}}"
-										(selectionChange)="setService()">
+										(selectionChange)="setServices()">
 								<mat-option *ngFor="let sector of sectors"
 											[value]="sector.id">
 									{{sector.description}}
@@ -54,7 +54,7 @@
 										name="serviceId"
 										formControlName="serviceId"
 										placeholder="{{'pacientes.form.SELECT' | translate}}"
-										(selectionChange)="setRoom()">
+										(selectionChange)="setRooms()">
 								<mat-option *ngFor="let service of services"
 											[value]="service.id">
 									{{service.name}}

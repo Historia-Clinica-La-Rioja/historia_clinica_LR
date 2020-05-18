@@ -95,41 +95,50 @@ export class NewInternmentComponent implements OnInit {
 		});
 
 		this.sector.getAll().subscribe(data => {
-			this.sectors = data
+			this.sectors = data;
 		});
 
 		this.healthcareProfessionalService.getAllDoctors().subscribe(data => {
-			this.doctors = data
+			this.doctors = data;
 		});
 
 	}
 
-	getDescriptionText(option) {
-		return option.description;
-	}
-
-	setService() {
+	setServices() {
 		let sectorId: number = this.form.controls.sectorId.value;
 		this.clinicalSpecialtySectorService.getClinicalSpecialty(sectorId).subscribe(data => {
-			this.services = data
+			this.services = data;
 		});
+		this.form.controls.serviceId.reset();
 		this.form.controls.serviceId.enable();
+
+		this.form.controls.roomId.reset();
+		this.form.controls.roomId.disable();
+
+		this.form.controls.bedId.reset();
+		this.form.controls.bedId.disable();
+
 	}
 
-	setRoom() {
+	setRooms() {
 		let sectorId: number = this.form.controls.sectorId.value;
 		let serviceId: number = this.form.controls.serviceId.value;
 		this.sector.getAllRoomsBySectorAndSpecialty(sectorId, serviceId).subscribe(data => {
 			this.rooms = data;
 		});
+		this.form.controls.roomId.reset();
 		this.form.controls.roomId.enable();
+
+		this.form.controls.bedId.reset();
+		this.form.controls.bedId.disable();
 	}
 
 	setBeds() {
 		let roomId: number = this.form.controls.roomId.value;
 		this.room.getAllBedsByRoom(roomId).subscribe(data => {
-			this.beds = data
-		})
+			this.beds = data;
+		});
+		this.form.controls.bedId.reset();
 		this.form.controls.bedId.enable();
 	}
 
