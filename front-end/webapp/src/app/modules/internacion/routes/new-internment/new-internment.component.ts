@@ -46,23 +46,23 @@ export class NewInternmentComponent implements OnInit {
 	public patientTypeData: PatientTypeData;
 	private readonly routePrefix;
 
-	constructor(private formBuilder: FormBuilder,
-				private el: ElementRef,
-				private router: Router,
-				private internacionMasterDataService: InternacionMasterDataService,
-				private sector: SectorService,
-				private clinicalSpecialtySectorService: ClinicalSpecialtySectorService,
-				private room: RoomService,
-				private healthcareProfessionalService: HealthcareProfessionalService,
-				private patientService: PatientService,
-				private personService: PersonService,
-				private mapperService: MapperService,
-				private route: ActivatedRoute,
-				private internmentEpisodeService: InternmentEpisodeService,
+	constructor(private readonly formBuilder: FormBuilder,
+				private readonly el: ElementRef,
+				private readonly router: Router,
+				private readonly internacionMasterDataService: InternacionMasterDataService,
+				private readonly sector: SectorService,
+				private readonly clinicalSpecialtySectorService: ClinicalSpecialtySectorService,
+				private readonly room: RoomService,
+				private readonly healthcareProfessionalService: HealthcareProfessionalService,
+				private readonly patientService: PatientService,
+				private readonly personService: PersonService,
+				private readonly mapperService: MapperService,
+				private readonly route: ActivatedRoute,
+				private readonly internmentEpisodeService: InternmentEpisodeService,
 				public dialog: MatDialog,
-				private snackBarService: SnackBarService,
-				private contextService: ContextService) {
-		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
+				private readonly snackBarService: SnackBarService,
+				private readonly contextService: ContextService) {
+		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 	}
 
 	ngOnInit(): void {
@@ -105,7 +105,7 @@ export class NewInternmentComponent implements OnInit {
 	}
 
 	setServices() {
-		let sectorId: number = this.form.controls.sectorId.value;
+		const sectorId: number = this.form.controls.sectorId.value;
 		this.clinicalSpecialtySectorService.getClinicalSpecialty(sectorId).subscribe(data => {
 			this.services = data;
 		});
@@ -121,8 +121,8 @@ export class NewInternmentComponent implements OnInit {
 	}
 
 	setRooms() {
-		let sectorId: number = this.form.controls.sectorId.value;
-		let serviceId: number = this.form.controls.serviceId.value;
+		const sectorId: number = this.form.controls.sectorId.value;
+		const serviceId: number = this.form.controls.serviceId.value;
 		this.sector.getAllRoomsBySectorAndSpecialty(sectorId, serviceId).subscribe(data => {
 			this.rooms = data;
 		});
@@ -134,7 +134,7 @@ export class NewInternmentComponent implements OnInit {
 	}
 
 	setBeds() {
-		let roomId: number = this.form.controls.roomId.value;
+		const roomId: number = this.form.controls.roomId.value;
 		this.room.getAllBedsByRoom(roomId).subscribe(data => {
 			this.beds = data;
 		});
@@ -151,8 +151,7 @@ export class NewInternmentComponent implements OnInit {
 	}
 
 	openDialog(): void {
-		let stringQuestion = '¿Esta seguro que desea crear una nueva internacion para el paciente con ID ' +
-			this.patientBasicData.id + '?';
+		const stringQuestion = `¿Está seguro que desea crear una nueva internación para el paciente con ID ${this.patientBasicData.id} ?`;
 		const dialogRef = this.dialog.open(ConfirmDialogComponent, {
 			width: '450px',
 			data: {
@@ -163,11 +162,11 @@ export class NewInternmentComponent implements OnInit {
 		});
 		dialogRef.afterClosed().subscribe(result => {
 			if(result) {
-				let intenmentEpisodeReq = this.mapToPersonInternmentEpisodeRequest();
+				const intenmentEpisodeReq = this.mapToPersonInternmentEpisodeRequest();
 				this.internmentEpisodeService.setNewInternmentEpisode(intenmentEpisodeReq)
 					.subscribe(data => {
 						if(data && data.id) {
-							let url = this.routePrefix + ROUTE_INTERNMENT + `${data.id}/paciente/${this.patientId}`;
+							const url = `${this.routePrefix}${ROUTE_INTERNMENT}${data.id}/paciente/${this.patientId}`;
 							this.router.navigate([url]);
 							this.snackBarService.showSuccess('internaciones.new-internment.messages.SUCCESS');
 						}
