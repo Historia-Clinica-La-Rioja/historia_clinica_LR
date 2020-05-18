@@ -1,8 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { InstitutionService } from '@api-rest/services/institution.service';
-import { InstitutionDto } from '@api-rest/api-model';
-import { map } from 'rxjs/operators';
 
 @Injectable({
 	providedIn: 'root'
@@ -10,24 +6,22 @@ import { map } from 'rxjs/operators';
 export class ContextService {
 	private _institutionId: number;
 
-	constructor(
-		private institutionService: InstitutionService,
-	) {
-		//TODO eliminar cuando dispongamos del listado de instituciones y sus asociaciones x rol
-		this._institutionId = 10;
-	}
+	constructor() { }
 
+	/**
+	 * Retorna el id de la institución del contexto
+	 */
 	get institutionId(): number {
 		return this._institutionId;
 	}
 
+	/**
+	 * Permite definir la institución del contexto
+	 * Usar con cuidado ya que al no usar Observables no se puede avisar que la institución cambió.
+	 * @param id
+	 */
 	public setInstitutionId(id: number): void {
 		this._institutionId = id;
 	}
 
-	get institution$(): Observable<InstitutionDto> {
-		return this.institutionService.getInstitutions([this._institutionId]).pipe(
-			map(list => list && list.length ? list[0] : undefined),
-		);
-	}
 }

@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { ContextService } from '@core/services/context.service';
 import { Observable } from 'rxjs';
 import { InstitutionDto } from '@api-rest/api-model';
+import { InstitutionService } from '@api-rest/services/institution.service';
+import { map } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-home',
@@ -14,10 +16,13 @@ export class HomeComponent implements OnInit {
 
 	constructor(
 		private contextService: ContextService,
+		private institutionService: InstitutionService,
 	) { }
 
 	ngOnInit(): void {
-		this.institucion$ = this.contextService.institution$;
+		this.institucion$ = this.institutionService.getInstitutions([this.contextService.institutionId]).pipe(
+			map(list => list && list.length ? list[0] : undefined),
+		);
 	}
 
 }
