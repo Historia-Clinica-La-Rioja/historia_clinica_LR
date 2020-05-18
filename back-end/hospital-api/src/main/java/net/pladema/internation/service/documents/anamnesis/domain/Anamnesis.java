@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.internation.repository.masterdata.entity.DocumentStatus;
+import net.pladema.internation.service.documents.InternmentDocument;
 import net.pladema.internation.service.ips.domain.*;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class Anamnesis {
+public class Anamnesis implements InternmentDocument {
 
     private Long id;
 

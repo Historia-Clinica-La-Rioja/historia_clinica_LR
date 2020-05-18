@@ -1,5 +1,6 @@
 package net.pladema.internation.controller.documents.anamnesis;
 
+import com.itextpdf.text.DocumentException;
 import io.swagger.annotations.Api;
 import net.pladema.internation.controller.constraints.AnamnesisMainDiagnosisValid;
 import net.pladema.internation.controller.constraints.DocumentValid;
@@ -9,14 +10,17 @@ import net.pladema.internation.controller.documents.anamnesis.dto.AnamnesisDto;
 import net.pladema.internation.controller.documents.anamnesis.dto.ResponseAnamnesisDto;
 import net.pladema.internation.controller.documents.anamnesis.mapper.AnamnesisMapper;
 import net.pladema.internation.controller.ips.constraints.EffectiveVitalSignTimeValid;
+import net.pladema.internation.events.OnGenerateDocumentEvent;
 import net.pladema.internation.repository.masterdata.entity.DocumentType;
 import net.pladema.internation.service.documents.anamnesis.AnamnesisService;
 import net.pladema.internation.service.documents.anamnesis.CreateAnamnesisService;
 import net.pladema.internation.service.documents.anamnesis.UpdateAnamnesisService;
 import net.pladema.internation.service.documents.anamnesis.domain.Anamnesis;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
+import net.pladema.pdf.PdfService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -24,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/internments/{internmentEpisodeId}/anamnesis")
@@ -45,16 +50,20 @@ public class AnamnesisController {
 
     private final AnamnesisMapper anamnesisMapper;
 
+    private final PdfService pdfService;
+
     public AnamnesisController(InternmentEpisodeService internmentEpisodeService,
                                CreateAnamnesisService createAnamnesisService,
                                UpdateAnamnesisService updateAnamnesisService,
                                AnamnesisService anamnesisService,
-                               AnamnesisMapper anamnesisMapper) {
+                               AnamnesisMapper anamnesisMapper,
+                               PdfService pdfService) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.createAnamnesisService = createAnamnesisService;
         this.updateAnamnesisService = updateAnamnesisService;
         this.anamnesisService = anamnesisService;
         this.anamnesisMapper = anamnesisMapper;
+        this.pdfService = pdfService;
     }
 
     @PostMapping
@@ -68,7 +77,7 @@ public class AnamnesisController {
     public ResponseEntity<ResponseAnamnesisDto> createAnamnesis(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
-            @RequestBody @Valid AnamnesisDto anamnesisDto){
+            @RequestBody @Valid AnamnesisDto anamnesisDto) throws IOException, DocumentException {
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, ananmnesis {}",
                 institutionId, internmentEpisodeId, anamnesisDto);
         Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
@@ -77,6 +86,7 @@ public class AnamnesisController {
         anamnesis = createAnamnesisService.createDocument(internmentEpisodeId, patientId, anamnesis);
         ResponseAnamnesisDto result = anamnesisMapper.fromAnamnesis(anamnesis);
         LOG.debug(OUTPUT, result);
+        generateDocument(anamnesis, institutionId, internmentEpisodeId, patientId);
         return  ResponseEntity.ok().body(result);
     }
 
@@ -91,7 +101,7 @@ public class AnamnesisController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
             @PathVariable(name = "anamnesisId") Long anamnesisId,
-            @Valid @RequestBody AnamnesisDto anamnesisDto){
+            @Valid @RequestBody AnamnesisDto anamnesisDto) throws IOException, DocumentException  {
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, anamnesisId {}, ananmnesis {}",
                 institutionId, internmentEpisodeId, anamnesisId, anamnesisDto);
         Anamnesis anamnesis = anamnesisMapper.fromAnamnesisDto(anamnesisDto);
@@ -99,8 +109,17 @@ public class AnamnesisController {
                 .orElseThrow(() -> new EntityNotFoundException(INVALID_EPISODE));
         anamnesis = updateAnamnesisService.updateDocument(internmentEpisodeId, patientId, anamnesis);
         ResponseAnamnesisDto result = anamnesisMapper.fromAnamnesis(anamnesis);
+        generateDocument(anamnesis, institutionId, internmentEpisodeId, patientId);
         LOG.debug(OUTPUT, result);
+
         return  ResponseEntity.ok().body(result);
+    }
+
+    private void generateDocument(Anamnesis anamnesis, Integer institutionId, Integer internmentEpisodeId,
+                                  Integer patientId) throws IOException, DocumentException {
+        OnGenerateDocumentEvent event = new OnGenerateDocumentEvent(anamnesis, institutionId, internmentEpisodeId,
+                DocumentType.ANAMNESIS, "anamnesis", patientId);
+        pdfService.loadDocument(event);
     }
 
     @GetMapping("/{anamnesisId}")

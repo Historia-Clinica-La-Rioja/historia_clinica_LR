@@ -8,6 +8,7 @@ import net.pladema.internation.service.internment.domain.ResponsibleDoctorBo;
 import net.pladema.internation.service.ips.domain.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -114,19 +115,24 @@ public class ReportDocumentServiceImpl implements ReportDocumentService {
         LOG.debug(LOGGING_DOCUMENT_ID, documentId);
         ResponsibleDoctorVo author;
         //User Creator
-        author = documentRepository.getUserCreator(documentId);
-        if(author == null)
-            //Responsible
-            author = documentRepository.getResponsible(documentId);
-        ResponsibleDoctorBo result = null;
+        try {
+            author = documentRepository.getUserCreator(documentId);
+            if (author == null)
+                //Responsible
+                author = documentRepository.getResponsible(documentId);
+            ResponsibleDoctorBo result = null;
 
-        if(author != null)
-            result = new ResponsibleDoctorBo(author.getId(),
-                    author.getFirstName(),
-                    author.getLastName(),
-                    author.getLicence());
-        LOG.debug(OUTPUT, result);
-        return result;
+            if (author != null)
+                result = new ResponsibleDoctorBo(author.getId(),
+                        author.getFirstName(),
+                        author.getLastName(),
+                        author.getLicence());
+            LOG.debug(OUTPUT, result);
+            return result;
+        }
+        catch(IncorrectResultSizeDataAccessException ex) {
+            return null;
+        }
     }
 
 

@@ -1,5 +1,6 @@
 package net.pladema.internation.controller.documents.evolutionnote;
 
+import com.itextpdf.text.DocumentException;
 import io.swagger.annotations.Api;
 import net.pladema.internation.controller.constraints.DocumentValid;
 import net.pladema.internation.controller.constraints.EvolutionNoteDiagnosisValid;
@@ -8,14 +9,18 @@ import net.pladema.internation.controller.documents.evolutionnote.dto.EvolutionN
 import net.pladema.internation.controller.documents.evolutionnote.dto.ResponseEvolutionNoteDto;
 import net.pladema.internation.controller.documents.evolutionnote.mapper.EvolutionNoteMapper;
 import net.pladema.internation.controller.ips.constraints.EffectiveVitalSignTimeValid;
+import net.pladema.internation.events.OnGenerateDocumentEvent;
 import net.pladema.internation.repository.masterdata.entity.DocumentType;
+import net.pladema.internation.service.documents.epicrisis.domain.Epicrisis;
 import net.pladema.internation.service.documents.evolutionnote.CreateEvolutionNoteService;
 import net.pladema.internation.service.documents.evolutionnote.EvolutionNoteService;
 import net.pladema.internation.service.documents.evolutionnote.UpdateEvolutionNoteService;
 import net.pladema.internation.service.documents.evolutionnote.domain.EvolutionNote;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
+import net.pladema.pdf.PdfService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -23,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/internments/{internmentEpisodeId}/evolutionNote")
@@ -46,16 +52,20 @@ public class EvolutionNoteController {
 
     private final EvolutionNoteMapper evolutionNoteMapper;
 
+    private final PdfService pdfService;
+
     public EvolutionNoteController(InternmentEpisodeService internmentEpisodeService,
                                    CreateEvolutionNoteService createEvolutionNoteService,
                                    UpdateEvolutionNoteService updateEvolutionNoteService,
                                    EvolutionNoteService evolutionNoteService,
-                                   EvolutionNoteMapper evolutionNoteMapper) {
+                                   EvolutionNoteMapper evolutionNoteMapper,
+                                   PdfService pdfService) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.createEvolutionNoteService = createEvolutionNoteService;
         this.updateEvolutionNoteService = updateEvolutionNoteService;
         this.evolutionNoteService = evolutionNoteService;
         this.evolutionNoteMapper = evolutionNoteMapper;
+        this.pdfService = pdfService;
     }
 
     @PostMapping
@@ -68,7 +78,7 @@ public class EvolutionNoteController {
     public ResponseEntity<ResponseEvolutionNoteDto> createDocument(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
-            @RequestBody @Valid EvolutionNoteDto evolutionNoteDto){
+            @RequestBody @Valid EvolutionNoteDto evolutionNoteDto) throws IOException, DocumentException{
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, evolutionNote {}",
                 institutionId, internmentEpisodeId, evolutionNoteDto);
         Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
@@ -77,9 +87,9 @@ public class EvolutionNoteController {
         evolutionNote = createEvolutionNoteService.createDocument(internmentEpisodeId, patientId, evolutionNote);
         ResponseEvolutionNoteDto result = evolutionNoteMapper.fromEvolutionNote(evolutionNote);
         LOG.debug(OUTPUT, result);
+        generateDocument(evolutionNote, institutionId, internmentEpisodeId, patientId);
         return  ResponseEntity.ok().body(result);
     }
-
 
     @PutMapping("/{evolutionNoteId}")
     @InternmentValid
@@ -90,7 +100,7 @@ public class EvolutionNoteController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
             @PathVariable(name = "evolutionNoteId") Long evolutionNoteId,
-            @Valid @RequestBody EvolutionNoteDto evolutionNoteDto){
+            @Valid @RequestBody EvolutionNoteDto evolutionNoteDto) throws IOException, DocumentException{
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, evolutionNoteId {}, evolutionNote {}",
                 institutionId, internmentEpisodeId, evolutionNoteId, evolutionNoteDto);
         EvolutionNote evolutionNote = evolutionNoteMapper.fromEvolutionNoteDto(evolutionNoteDto);
@@ -99,7 +109,15 @@ public class EvolutionNoteController {
         evolutionNote = updateEvolutionNoteService.updateDocument(internmentEpisodeId, patientId, evolutionNote);
         ResponseEvolutionNoteDto result = evolutionNoteMapper.fromEvolutionNote(evolutionNote);
         LOG.debug(OUTPUT, result);
+        generateDocument(evolutionNote, institutionId, internmentEpisodeId, patientId);
         return  ResponseEntity.ok().body(result);
+    }
+
+    private void generateDocument(EvolutionNote evolutionNote, Integer institutionId, Integer internmentEpisodeId,
+                                  Integer patientId) throws IOException, DocumentException {
+        OnGenerateDocumentEvent event = new OnGenerateDocumentEvent(evolutionNote, institutionId, internmentEpisodeId,
+                DocumentType.EVALUATION_NOTE, "evolutionnote", patientId);
+        pdfService.loadDocument(event);
     }
 
     @GetMapping("/{evolutionNoteId}")

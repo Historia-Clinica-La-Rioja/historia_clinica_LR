@@ -1,5 +1,6 @@
 package net.pladema.internation.controller.documents.epicrisis;
 
+import com.itextpdf.text.DocumentException;
 import io.swagger.annotations.Api;
 import net.pladema.internation.controller.constraints.DocumentValid;
 import net.pladema.internation.controller.constraints.CreateUpdateEpicrisisValid;
@@ -8,6 +9,7 @@ import net.pladema.internation.controller.documents.epicrisis.dto.EpicrisisDto;
 import net.pladema.internation.controller.documents.epicrisis.dto.EpicrisisGeneralStateDto;
 import net.pladema.internation.controller.documents.epicrisis.dto.ResponseEpicrisisDto;
 import net.pladema.internation.controller.documents.epicrisis.mapper.EpicrisisMapper;
+import net.pladema.internation.events.OnGenerateDocumentEvent;
 import net.pladema.internation.repository.masterdata.entity.DocumentType;
 import net.pladema.internation.service.documents.epicrisis.CreateEpicrisisService;
 import net.pladema.internation.service.documents.epicrisis.EpicrisisService;
@@ -16,6 +18,7 @@ import net.pladema.internation.service.documents.epicrisis.domain.Epicrisis;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
 import net.pladema.internation.service.internment.InternmentStateService;
 import net.pladema.internation.service.internment.domain.InternmentGeneralState;
+import net.pladema.pdf.PdfService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/internments/{internmentEpisodeId}/epicrisis")
@@ -50,18 +54,22 @@ public class EpicrisisController {
 
     private final InternmentStateService internmentStateService;
 
+    private final PdfService pdfService;
+
     public EpicrisisController(InternmentEpisodeService internmentEpisodeService,
                                CreateEpicrisisService createEpicrisisService,
                                UpdateEpicrisisService updateEpicrisisService,
                                EpicrisisService epicrisisService,
                                EpicrisisMapper epicrisisMapper,
-                               InternmentStateService internmentStateService) {
+                               InternmentStateService internmentStateService,
+                               PdfService pdfService) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.createEpicrisisService = createEpicrisisService;
         this.updateEpicrisisService = updateEpicrisisService;
         this.epicrisisService = epicrisisService;
         this.epicrisisMapper = epicrisisMapper;
         this.internmentStateService = internmentStateService;
+        this.pdfService = pdfService;
     }
 
     @PostMapping
@@ -71,7 +79,7 @@ public class EpicrisisController {
     public ResponseEntity<ResponseEpicrisisDto> createDocument(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
-            @RequestBody @Valid EpicrisisDto epicrisisDto){
+            @RequestBody @Valid EpicrisisDto epicrisisDto) throws IOException, DocumentException {
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, ananmnesis {}",
                 institutionId, internmentEpisodeId, epicrisisDto);
         Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
@@ -80,6 +88,7 @@ public class EpicrisisController {
         epicrisis = createEpicrisisService.createDocument(internmentEpisodeId, patientId, epicrisis);
         ResponseEpicrisisDto result = epicrisisMapper.fromEpicrisis(epicrisis);
         LOG.debug(OUTPUT, result);
+        generateDocument(epicrisis, institutionId, internmentEpisodeId, patientId);
         return  ResponseEntity.ok().body(result);
     }
 
@@ -92,7 +101,7 @@ public class EpicrisisController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
             @PathVariable(name = "epicrisisId") Long epicrisisId,
-            @Valid @RequestBody EpicrisisDto epicrisisDto){
+            @Valid @RequestBody EpicrisisDto epicrisisDto) throws IOException, DocumentException{
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, epicrisisId {}, epicrisisDto {}",
                 institutionId, internmentEpisodeId, epicrisisId, epicrisisDto);
         Epicrisis epicrisis = epicrisisMapper.fromEpicrisisDto(epicrisisDto);
@@ -101,7 +110,15 @@ public class EpicrisisController {
         epicrisis = updateEpicrisisService.updateDocument(internmentEpisodeId, patientId, epicrisis);
         ResponseEpicrisisDto result = epicrisisMapper.fromEpicrisis(epicrisis);
         LOG.debug(OUTPUT, result);
+        generateDocument(epicrisis, institutionId, internmentEpisodeId, patientId);
         return  ResponseEntity.ok().body(result);
+    }
+
+    private void generateDocument(Epicrisis epicrisis, Integer institutionId, Integer internmentEpisodeId,
+                                  Integer patientId) throws IOException, DocumentException {
+        OnGenerateDocumentEvent event = new OnGenerateDocumentEvent(epicrisis, institutionId, internmentEpisodeId,
+                DocumentType.EPICRISIS, "epicrisis", patientId);
+        pdfService.loadDocument(event);
     }
 
     @GetMapping("/{epicrisisId}")
@@ -130,5 +147,4 @@ public class EpicrisisController {
         LOG.debug(OUTPUT, result);
         return  ResponseEntity.ok().body(result);
     }
-
 }

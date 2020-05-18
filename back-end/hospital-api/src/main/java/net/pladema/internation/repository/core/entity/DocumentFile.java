@@ -43,6 +43,16 @@ public class DocumentFile extends InternationAuditableEntity {
 	@Column(name = "uuid_file", length = 36, nullable = false)
 	private String uuidfile;
 
+	public DocumentFile(Long documentId, Integer internmentEpisodeId, Short documentType,
+						String filepath, String filename, String uuidFile){
+		this.id = documentId;
+		this.internmentEpisodeId = internmentEpisodeId;
+		this.typeId = documentType;
+		this.filepath = filepath;
+		this.filename = filename;
+		this.uuidfile = uuidFile;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
