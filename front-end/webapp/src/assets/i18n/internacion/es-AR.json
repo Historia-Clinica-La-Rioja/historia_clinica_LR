@@ -1,0 +1,261 @@
+{
+	"internaciones": {
+		"anamnesis": {
+			"TITLE": "Evaluación de ingreso",
+			"SUBTITLE": "Completa los siguientes datos.",
+			"SEARCH": "Buscar {{ conceptLabel }}",
+			"alergias": {
+				"TITLE": "Alergias",
+				"ADD": "Agregar alergia",
+				"ALLERGY": "Alergia",
+				"form": {
+					"REGISTRY_DATE": "Fecha registro"
+				},
+				"table": {
+					"TITLE": "Alergias registradas",
+					"columns": {
+						"ALLERGY": "Alergia",
+						"REGISTRY_DATE": "Fecha registro"
+					}
+				}
+			},
+			"antecedentes-personales": {
+				"TITLE": "Antecedentes personales",
+				"ADD": "Agregar antecedente",
+				"PERSONAL_HISTORY": "Antecedente personal",
+				"table": {
+					"TITLE": "Antecedentes personales registrados",
+					"columns": {
+						"PERSONAL_HISTORY": "Antecedente personal"
+					}
+				}
+			},
+			"antecedentes-familiares": {
+				"TITLE": "Antecedentes familiares",
+				"ADD": "Agregar antecedente",
+				"FAMILY_HISTORY": "Antecedente familiar",
+				"table": {
+					"TITLE": "Antecedentes familiares registrados",
+					"columns": {
+						"FAMILY_HISTORY": "Antecedente familiar"
+					}
+				}
+			},
+			"buttons": {
+				"ATTACH_SIGNATURE": "Adjuntar firma digital",
+				"SAVE_DRAFT": "Guardar borrador",
+				"CONFIRM": "Confirmar"
+			},
+			"datos-antropometricos": {
+				"TITLE": "Datos antropométricos",
+				"BLOOD_TYPE": "Grupo y factor sanguíneo",
+				"HEIGHT": "Talla (cm)",
+				"WEIGHT": "Peso (kg)"
+			},
+			"diagnosticos": {
+				"TITLE_PRINCIPAL": "Diagnóstico principal",
+				"TITLE": "Otros Diagnósticos",
+				"ADD": "Agregar diagnóstico",
+				"DIAGNOSIS": "Diagnóstico",
+				"PRESUMPTIVE": "Presuntivo",
+				"table": {
+					"TITLE": "Diagnósticos registrados",
+					"columns": {
+						"DIAGNOSIS": "Diagnóstico",
+						"STATUS": "Estado"
+					}
+				}
+			},
+			"vacunas": {
+				"TITLE": "Vacunas",
+				"ADD": "Agregar vacuna",
+				"INMUNIZATION": "Vacuna",
+				"form": {
+					"REGISTRY_DATE": "Fecha de vacunación"
+				},
+				"table": {
+					"TITLE": "Vacunas registradas",
+					"columns": {
+						"INMUNIZATION": "Vacuna",
+						"REGISTRY_DATE": "Fecha de vacunación"
+					}
+				}
+			},
+			"medicacion": {
+				"TITLE": "Medicación habitual",
+				"ADD": "Agregar medicación",
+				"MEDICATION": "Medicación",
+				"form": {
+					"CLINICAL_STATUS": "Estado clínico",
+					"SUSPENDED": "Suspendido",
+					"NOTE": "Notas"
+				},
+				"table": {
+					"TITLE": "Medicaciones registradas",
+					"columns": {
+						"NOTE": "Notas",
+						"STATUS": "Estado",
+						"MEDICATION": "Medicación"
+					}
+				}
+			},
+			"messages": {
+				"ERROR": "Error al guardar documento de evaluación de ingreso",
+				"SUCCESS": "El documento de evaluación de ingreso se guardó exitosamente"
+			},
+			"vital-signs": {
+				"form": {
+					"TITLE": "Signos vitales",
+					"HEART_RATE": "Frecuencia cardíaca (/min)",
+					"RESPIRATORY_RATE": "Frecuencia respiratoria (/min)",
+					"TEMPERATURE": "Temperatura corporal",
+					"BLOOD_OXYGEN_SATURATION": "Saturación de oxigeno (%)",
+					"SYSTOLIC_BLOOD_PRESSURE": "Tensión sistólica (mm)",
+					"DIASTOLIC_BLOOD_PRESSURE": "Tensión diastólica (mm)"
+				}
+			},
+			"observations": {
+				"TITLE": "Observaciones",
+				"CURRENT_DISEASE": "Enfermedad actual",
+				"PHYSICAL_EXAMINATION": "Exámen físico",
+				"STUDIES_PROCEDURES": "Resumen de estudios y procedimientos realizados",
+				"PATIENT_PROGRESS": "Evolución",
+				"CLINICAL_IMPRESSION": "Impresión clínica y plan",
+				"OTHERS": "Otras observaciones",
+				"DESCRIPTION": "Descripción"
+			}
+		},
+		"epicrisis": {
+			"TITLE": "Epicrisis",
+			"SUBTITLE": "Completa los siguientes datos.",
+			"alergias": {
+				"TITLE": "Alergias",
+				"table": {
+					"TITLE": "Alergias registradas",
+					"columns": {
+						"ALLERGY": "Alergia",
+						"REGISTRY_DATE": "Fecha registro"
+					}
+				}
+			},
+			"antecedentes-personales": {
+				"TITLE": "Antecedentes personales",
+				"table": {
+					"TITLE": "Antecedentes personales registrados",
+					"columns": {
+						"PERSONAL_HISTORY": "Antecedente personal"
+					}
+				}
+			},
+			"antecedentes-familiares": {
+				"TITLE": "Antecedentes familiares",
+				"table": {
+					"TITLE": "Antecedentes familiares registrados",
+					"columns": {
+						"FAMILY_HISTORY": "Antecedente familiar"
+					}
+				}
+			},
+			"buttons": {
+				"ATTACH_SIGNATURE": "Adjuntar firma digital",
+				"SAVE_DRAFT": "Guardar borrador",
+				"CONFIRM": "Confirmar"
+			},
+			"diagnosticos": {
+				"TITLE": "Diagnósticos",
+				"TITLE_PRINCIPAL": "Diagnóstico principal",
+				"DIAGNOSIS": "Diagnóstico",
+				"PRESUMPTIVE": "Presuntivo",
+				"table": {
+					"TITLE": "Diagnósticos registrados",
+					"columns": {
+						"DIAGNOSIS": "Diagnóstico",
+						"STATUS": "Estado",
+						"VERIFICATION": "Verificación"
+					}
+				}
+			},
+			"vacunas": {
+				"TITLE": "Vacunas",
+				"table": {
+					"TITLE": "Vacunas registradas",
+					"columns": {
+						"INMUNIZATION": "Vacuna",
+						"REGISTRY_DATE": "Fecha de vacunación"
+					}
+				}
+			},
+			"medicacion": {
+				"TITLE": "Medicación ambulatoria",
+				"table": {
+					"TITLE": "Medicaciones registradas",
+					"columns": {
+						"NOTE": "Notas",
+						"STATUS": "Estado",
+						"MEDICATION": "Medicación"
+					}
+				}
+			},
+			"messages": {
+				"ERROR": "Error al guardar documento de epicrisis",
+				"SUCCESS": "El documento de epicrisis se guardó exitosamente"
+			},
+			"observations": {
+				"TITLE": "Observaciones",
+				"EVOLUTION_NOTE": "Evolución",
+				"PHYSICAL_EXAMINATION": "Exámen físico",
+				"STUDIES_SUMMARY": "Resumen de estudios y procedimientos realizados",
+				"INDICATIONS_NOTE": "Indicaciones al alta",
+				"OTHERS": "Otras observaciones",
+				"DESCRIPTION": "Descripción"
+			}
+
+		},
+		"nota-evolucion": {
+			"TITLE": "Nota de evolución",
+			"SUBTITLE": "Completa los siguientes datos.",
+			"messages": {
+				"ERROR": "Error al guardar documento de nota de evolución",
+				"SUCCESS": "El documento de nota de evolución se guardó exitosamente"
+			}
+		},
+		"internados-table": {
+			"TITLE": "Búsqueda de pacientes"
+		},
+		"internacion-paciente": {
+			"TITLE": "HCE Internación",
+			"actions": {
+				"ADD_EPICRISIS": "Generar epicrisis",
+				"ADD_EVAL_INGRESO": "Generar evaluación de ingreso",
+				"ADD_NOTA_EVOLUCION": "Agregar nota de evolución"
+			},
+			"card": {
+				"DAYS_INTERNED": "{{days}} días internado",
+				"ONE_DAY": "1 día internado",
+				"ADMISSION": "Ingreso: {{datetime}}"
+			},
+			"remove-diagnosis-dialog": {
+				"TITLE": "Eliminar diagnóstico",
+				"VERIFICATION_SELECT": "Motivo",
+				"STATUS_SELECT": "Estado clínico",
+				"CONFIRM_BUTTON": "Crear nota de evolución"
+			}
+		},
+		"new-internment": {
+			"TITLE": "Nueva internación",
+			"SUBTITLE": "Complete los siguientes datos",
+			"SECTION_SERVICE": "Especialidad / Servicio",
+			"SECTION_BED": "Asignación de cama",
+			"SECTION_DOCTOR": "Médico responsable",
+			"messages":{
+				"ERROR":"Error al crear una nueva internacion",
+				"SUCCESS":"La internación se guardó exitosamente"
+			}
+		},
+		"snomed-search": {
+			"modal": {
+				"SUBTITLE": "Resultados de búsqueda para: "
+			}
+		}
+	}
+}

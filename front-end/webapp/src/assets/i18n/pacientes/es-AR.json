@@ -1,0 +1,69 @@
+{
+	"pacientes": {
+		"form": {
+			"ADDRESS": "Domicilio",
+			"ADDRESS_APARTMENT": "Departamento",
+			"ADDRESS_CITY": "Ciudad",
+			"ADDRESS_COUNTRY": "Pais",
+			"ADDRESS_DEPARTMENT": "Partido",
+			"ADDRESS_FLOOR": "Piso",
+			"ADDRESS_NUMBER": "Número",
+			"ADDRESS_POSTCODE": "Código  postal",
+			"ADDRESS_PROVINCE": "Provincia",
+			"ADDRESS_QUARTER": "Barrio",
+			"ADDRESS_STREET": "Calle",
+			"BIRTH_DATE": "Fecha de nacimiento",
+			"CUIT_CUIL": "CUIT / CUIL",
+			"EMAIL": "Email",
+			"ETHNIC": "Etnia",
+			"FIRST_NAME": "Primer nombre",
+			"FIRST_NAMES_TITLE": "Nombres",
+			"GENDER": "Sexo",
+			"GENDER_SELF_DETERMINATION": "Género autopercibido",
+			"IDENTIFICATION_TYPE": "Tipo de documento",
+			"IDENTIFICATION_NUMBER": "Nº de documento",
+			"INVALID": "El campo es invalido.",
+			"LAST_NAME": "Primer apellido",
+			"LAST_NAME_TITLE": "Apellidos",
+			"MAX_CHARACTER": "Introduzca como máximo 11 caracteres",
+			"MEDICAL_COVERAGE_NAME": "Cobertura Social - Prepaga",
+			"MEDICAL_COVERAGE_AFFILIATE_NUMBER": "Numero de afiliado",
+			"MIDDLE_NAMES": "Otros nombres",
+			"MOTHERS_LAST_NAME": "Apellido materno",
+			"NAME_SELF_DETERMINATION": "Nombre autopercibido",
+			"ONLY_NUMBERS": "Solo números",
+			"OTHER_LAST_NAMES": "Otros apellidos",
+			"PHONE_NUMBER": "Teléfono",
+			"RELIGION": "Religion",
+			"REQUIRED": "El campo es requerido",
+			"REQUIRED_GENDER": "Género requerido",
+			"SELECT": "Seleccionar"
+		},
+		"home": {
+			"TITLE": "Pacientes",
+			"TITLE_SEARCH": "Búsqueda de pacientes internados",
+			"find_add_section": {
+				"BUTTON_ADD": "Crear paciente temporal",
+				"BUTTON_SEARCH": "Buscar",
+				"NO_IDENTITY": "No acredita identidad",
+				"TITLE": "Búsqueda / Creación de HC"
+			}
+		},
+		"new": {
+			"TITLE": "Nuevo Paciente",
+			"SUBTITLE": "Ingresá los siguientes datos.",
+			"TITLE_TEMPORARY": "Nuevo Paciente Temporal",
+			"messages": {
+				"ERROR": "Error al crear un paciente",
+				"SUCCESS": "El paciente se creó exitosamente"
+			}
+		},
+		"search": {
+			"TITLE": "Búsqueda de pacientes",
+			"SUBTITLE": "No se ha encontrado un paciente registrado con ese tipo y número de documento.",
+			"SUBTITLE_TWO": "Complete los siguientes datos para una búsqueda avanzada.",
+			"NEW_PATIENT": "Crear nuevo paciente",
+			"RENAPER_TIMEOUT": "No hubo respuesta del servicio de Renaper"
+		}
+	}
+}

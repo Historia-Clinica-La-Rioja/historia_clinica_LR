@@ -7,6 +7,7 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { MultiTranslateHttpLoader } from 'ngx-translate-multi-http-loader';
 
 import { httpInterceptorProviders } from './http-interceptors';
 import { AppRoutingModule } from './app-routing.module';
@@ -63,5 +64,11 @@ export class AppModule {
 }
 
 export function createTranslateLoader(http: HttpClient) {
-	return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+	return new MultiTranslateHttpLoader(http, [
+		{prefix:'./assets/i18n/', suffix: '.json'},
+		{prefix:'./assets/i18n/auth/', suffix: '.json'},
+		{prefix:'./assets/i18n/institucion/', suffix: '.json'},
+		{prefix:'./assets/i18n/internacion/', suffix: '.json'},
+		{prefix:'./assets/i18n/pacientes/', suffix: '.json'}
+	]);
 }
