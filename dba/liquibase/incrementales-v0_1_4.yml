@@ -1,0 +1,96 @@
+﻿databaseChangeLog: 
+- logicalFilePath: incrementales-v0_1_4 
+
+#Guardado de documentos de internación respaldatorios
+- changeSet:  
+    id: document_historic-dropTable
+    comment: Delete table document_historic    
+    author: saguero  
+    changes:  
+    - dropTable:      
+        tableName: document_historic
+        
+- changeSet:
+    id: document_file-createTable
+    comment: Create table document_file 
+    author: saguero
+    changes: 
+    - createTable: 
+        tableName: document_file
+        columns: 
+        - column:
+            constraints:
+                primaryKey: true
+                primaryKeyName: PK_document_file
+            name: id
+            type: bigint
+        - column:
+            constraints:
+                nullable: false
+            name: internment_episode_id
+            type: int
+        - column:
+            constraints:
+                nullable: false
+            name: type_id
+            type: smallint
+        - column:
+            constraints:
+                nullable: false
+            name: file_path
+            type: varchar(60)         
+        - column:
+            constraints:
+                nullable: false
+            name: file_name
+            type: varchar(20)
+        - column:
+            constraints:
+                nullable: false
+            name: created_by
+            type: int
+            defaultValue: -1
+        - column:
+            constraints:
+                nullable: false
+            name: created_on
+            type: datetime
+        - column:
+            constraints:
+                nullable: false
+            name: updated_by
+            type: int
+            defaultValue: -1
+        - column:
+            constraints:
+                nullable: false
+            name: updated_on
+            type: datetime
+            defaultValueDate: ${date.now} 
+    - addForeignKeyConstraint:
+        baseColumnNames: internment_episode_id
+        baseTableName: document_file
+        constraintName: FK_document_file_internment_episode_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: internment_episode
+        validate: true              
+    - addForeignKeyConstraint:
+        baseColumnNames: type_id
+        baseTableName: document_file
+        constraintName: FK_document_file_type_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: document_type
+        validate: true   
+    - addForeignKeyConstraint:
+        baseColumnNames: id
+        baseTableName: document_file
+        constraintName: FK_document_file_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: document
+        validate: true 
