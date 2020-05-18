@@ -19,7 +19,8 @@ export default {
             "enabled-available": "Solo las camas habilitadas pueden estar disponibles",
             "available-free": "Solo las camas disponibles pueden estar libres"
         },
-        forbidden: 'No tiene los permisos necesarios'
+        forbidden: 'No tiene los permisos necesarios',
+        "sector-description-inst-unique": "Ya existe un sector con el mismo nombre en la institución"
     },
     resources: {
 

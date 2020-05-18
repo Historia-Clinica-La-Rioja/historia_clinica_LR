@@ -282,3 +282,28 @@
         columnName: file_path
         newDataType: varchar(200)
         tableName: document_file   
+
+- changeSet:
+    id: sector-description-unique-constraint-suffixdata
+    comment: Antes de agregar constraint unique sobre sector hay sacar duplicados de esa tabla. Esto agrega un sufijo a todos los sectores duplicados.
+    author: efernandez
+    context: "!schema-only"
+    changes:
+        - sql:
+            sql: |-
+                UPDATE sector
+                SET description=concat(description, cast(id AS varchar))
+                WHERE description IN
+                    (SELECT description
+                     FROM sector
+                     GROUP BY description
+                     HAVING count(id) > 1)
+
+- changeSet:
+    id: sector-description-unique-constraint
+    author: efernandez
+    changes:
+        - addUniqueConstraint:
+            tableName: sector
+            columnNames: description, institution_id
+            constraintName: UQ_sector_description_institution_id
