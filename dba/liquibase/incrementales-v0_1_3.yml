@@ -166,31 +166,6 @@ databaseChangeLog:
 
 
 - changeSet:
-    comment: Crea tabla shedlock
-    id: shedlock
-    author: etrapani
-    changes:
-        - createTable:
-            tableName: shedlock
-            columns:
-            - column:
-                name: name
-                type: varchar(150)
-                constraints:
-                    nullable: false
-                    primaryKey: true
-                    primaryKeyName: pk_shedlock
-            - column:
-                name: lock_until
-                type: DATETIME
-            - column:
-                name: locked_at
-                type: DATETIME
-            - column:
-                name: locked_by
-                type: varchar(150) 
-
-- changeSet:
     id: bed-addColumn-bed_number
     author: lmanterola
     changes:
