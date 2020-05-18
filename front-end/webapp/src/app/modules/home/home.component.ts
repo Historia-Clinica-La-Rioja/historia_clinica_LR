@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { MenuItem } from '@core/core-model';
 import { SIDEBAR_MENU } from './constants/menu';
+import { PermissionsService } from '../core/services/permissions.service';
 
 @Component({
 	selector: 'app-home',
@@ -11,10 +12,12 @@ import { SIDEBAR_MENU } from './constants/menu';
 export class HomeComponent implements OnInit {
 	menuItems$: Observable<MenuItem[]>;
 
-	constructor() { }
+	constructor(
+		private permissionsService: PermissionsService,
+	) { }
 
 
 	ngOnInit(): void {
-		this.menuItems$ = of(SIDEBAR_MENU);
+		this.menuItems$ = this.permissionsService.filterItems$(SIDEBAR_MENU);
 	}
 }
