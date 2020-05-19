@@ -5,12 +5,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.internation.repository.listener.InternationAuditableEntity;
+import net.pladema.internation.repository.listener.InternationListener;
 
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
 @Table(name = "document_file")
+@EntityListeners(InternationListener.class)
 @Getter
 @Setter
 @ToString
@@ -32,11 +34,14 @@ public class DocumentFile extends InternationAuditableEntity {
 	@Column(name = "type_id", nullable = false)
 	private Short typeId;
 
-	@Column(name = "file_path", length = 60, nullable = false)
+	@Column(name = "file_path", length = 100, nullable = false)
 	private String filepath;
 
-	@Column(name = "file_name", length = 20, nullable = false)
+	@Column(name = "file_name", length = 40, nullable = false)
 	private String filename;
+
+	@Column(name = "uuid_file", length = 36, nullable = false)
+	private String uuidfile;
 
 	@Override
 	public boolean equals(Object o) {
