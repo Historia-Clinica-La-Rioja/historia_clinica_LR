@@ -182,6 +182,7 @@ export interface DocumentSummaryDto extends Serializable {
 export interface DocumentsSummaryDto extends Serializable {
     anamnesis: AnamnesisSummaryDto;
     epicrisis: EpicrisisSummaryDto;
+    lastEvaluationNote: EvaluationNoteSummaryDto;
 }
 
 export interface EffectiveClinicalObservationDto extends ClinicalObservationDto {
@@ -219,6 +220,9 @@ export interface EpicrisisObservationsDto extends Serializable {
 }
 
 export interface EpicrisisSummaryDto extends DocumentSummaryDto {
+}
+
+export interface EvaluationNoteSummaryDto extends DocumentSummaryDto {
 }
 
 export interface EvolutionNoteDto extends Serializable {

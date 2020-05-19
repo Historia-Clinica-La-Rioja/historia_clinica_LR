@@ -13,4 +13,6 @@ public class DocumentsSummaryVo {
     private AnamnesisSummaryVo anamnesis;
 
     private EpicrisisSummaryVo epicrisis;
+
+    private EvaluationNoteSummaryVo lastEvaluationNote;
 }

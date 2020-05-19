@@ -14,4 +14,6 @@ public class DocumentsSummaryDto implements Serializable {
     private AnamnesisSummaryDto anamnesis;
 
     private EpicrisisSummaryDto epicrisis;
+
+    private EvaluationNoteSummaryDto lastEvaluationNote;
 }
