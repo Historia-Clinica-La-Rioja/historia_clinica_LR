@@ -3,6 +3,7 @@ package net.pladema.internation.repository.core;
 import net.pladema.internation.repository.core.domain.InternmentSummaryVo;
 import net.pladema.internation.repository.core.entity.InternmentEpisode;
 import net.pladema.internation.repository.masterdata.entity.DocumentStatus;
+import net.pladema.internation.repository.masterdata.entity.InternmentEpisodeStatus;
 import net.pladema.internation.service.internment.domain.BasicListedPatientBo;
 import net.pladema.internation.service.internment.domain.InternmentEpisodeBo;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,7 +21,6 @@ import java.util.Optional;
 @Repository
 public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpisode, Integer> {
 
-    static final String INACTIVE_INTERNMENT_EPISODE_STATUS = "2";
 
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.internation.repository.core.domain.InternmentSummaryVo(" +
@@ -76,7 +76,8 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             " FROM InternmentEpisode as ie " +
             " JOIN Patient as pa ON (ie.patientId = pa.id) " +
             " JOIN Person as pe ON (pa.personId = pe.id) "+
-            " WHERE ie.institutionId = :institutionId ")
+            " WHERE ie.institutionId = :institutionId "+
+            " AND ie.statusId <> " + InternmentEpisodeStatus.INACTIVE)
     List<BasicListedPatientBo> findAllPatientsListedData(@Param("institutionId") Integer institutionId);
 
     @Transactional(readOnly = true)
@@ -115,7 +116,7 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
     @Transactional(readOnly = true)
     @Query(" SELECT ie.id " +
             "FROM InternmentEpisode  ie " +
-            "WHERE  ie.patientId = :patientId and ie.institutionId = :institutionId and ie.statusId <> " + INACTIVE_INTERNMENT_EPISODE_STATUS)
+            "WHERE  ie.patientId = :patientId and ie.institutionId = :institutionId and ie.statusId <> " + InternmentEpisodeStatus.INACTIVE)
     Optional<Integer> internmentEpisodeInProcess(@Param("institutionId") Integer institutionId,
                                                  @Param("patientId") Integer patientId);
 

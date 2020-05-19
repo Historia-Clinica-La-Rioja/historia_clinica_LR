@@ -23,6 +23,7 @@ public class InternmentEpisodeStatus implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -3053291021636483828L;
+	public static final String INACTIVE = "2";
 
 	@Id
 	@Column(name = "id")
