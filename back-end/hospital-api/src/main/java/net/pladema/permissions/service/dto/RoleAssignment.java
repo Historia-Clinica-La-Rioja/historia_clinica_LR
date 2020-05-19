@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.ToString;
 import net.pladema.permissions.repository.enums.ERole;
 
-import java.io.Serializable;
-
 @EqualsAndHashCode
 @Getter
 @ToString

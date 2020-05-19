@@ -26,6 +26,6 @@ public class AnthropometricDataDto implements Serializable {
     private ClinicalObservationDto weight;
 
     @Nullable
-    private ClinicalObservationDto BMI;
+    private ClinicalObservationDto bmi;
 
 }

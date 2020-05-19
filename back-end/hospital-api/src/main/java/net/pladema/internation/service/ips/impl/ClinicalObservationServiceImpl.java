@@ -182,14 +182,10 @@ public class ClinicalObservationServiceImpl implements ClinicalObservationServic
         Last2VitalSignsBo result = new Last2VitalSignsBo();
         for (int i=0;i<2;i++){
             if (i==0) {
-                resultQuery.getLastNVitalSigns(i).ifPresent(v -> {
-                    result.setCurrent(v);
-                });
+                resultQuery.getLastNVitalSigns(i).ifPresent(result::setCurrent);
             }
             if (i==1) {
-                resultQuery.getLastNVitalSigns(i).ifPresent(v -> {
-                    result.setPrevious(v);
-                });
+                resultQuery.getLastNVitalSigns(i).ifPresent(result::setPrevious);
             }
         }
         LOG.debug(OUTPUT, result);

@@ -1,6 +1,5 @@
 package net.pladema.renaper.services;
 
-import net.pladema.person.controller.service.PersonExternalServiceImpl;
 import net.pladema.renaper.configuration.RenaperWSConfig;
 import net.pladema.renaper.services.domain.RenaperLoginPayload;
 import net.pladema.renaper.services.domain.RenaperLoginResponse;

@@ -121,7 +121,7 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 	protected List<UserRole> roleToDelete(List<UserRole> userRoles, List<UserRole> roleIds) {
 		return userRoles.stream()
 				.filter(userRole ->
-						roleIds.stream().noneMatch(roleId -> userRole.equals(roleId))
+						roleIds.stream().noneMatch(userRole::equals)
 				)
 				.collect(Collectors.toList());
 	}

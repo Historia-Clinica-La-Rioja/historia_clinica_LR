@@ -43,7 +43,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		User user = optUser.orElseThrow(
 				() -> new BadCredentialsException("invalid.credentials")
 		);
-		if (!user.getEnable()) {
+		if (Boolean.FALSE.equals(user.getEnable())) {
 			throw new BadCredentialsException("disabled.username");
 		}
 		if (!userPasswordService.validCredentials(login.getPassword(), user.getId())) {

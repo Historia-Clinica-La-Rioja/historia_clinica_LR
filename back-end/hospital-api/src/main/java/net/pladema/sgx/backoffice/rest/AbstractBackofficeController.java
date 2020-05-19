@@ -49,7 +49,7 @@ public abstract class AbstractBackofficeController<E, I> {
 			JpaRepository<E, I> repository
 	) {
 		this(
-				new BackofficeRepository (repository)
+				new BackofficeRepository<>(repository)
 		);
 	}
 
@@ -58,7 +58,7 @@ public abstract class AbstractBackofficeController<E, I> {
 			BackofficePermissionValidator<E, I> permissionValidator
 	) {
 		this(
-				new BackofficeRepository(repository),
+				new BackofficeRepository<>(repository),
 				permissionValidator
 		);
 	}
@@ -106,7 +106,7 @@ public abstract class AbstractBackofficeController<E, I> {
 
 	@DeleteMapping("/{id}")
 	public @ResponseBody
-	BackofficeDeleteResponse delete(@PathVariable("id") I id) {
+	BackofficeDeleteResponse<I> delete(@PathVariable("id") I id) {
 		logger.debug("DELETE[id={}]", id);
 		permissionValidator.assertDelete(id);
 		store.deleteById(id);

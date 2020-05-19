@@ -1,7 +1,6 @@
 package net.pladema.staff.controller.service;
 
 import net.pladema.internation.controller.internment.dto.HealthCareProfessionalGroupDto;
-import net.pladema.internation.service.internment.impl.InternmentEpisodeServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

@@ -16,14 +16,14 @@ import net.pladema.sgx.restclient.services.AuthService;
 import net.pladema.sgx.restclient.services.domain.LoginResponse;
 import net.pladema.sgx.restclient.services.domain.WSResponseException;
 
-public abstract class AuthInterceptor<AR extends LoginResponse, AS extends AuthService<AR>>
+public abstract class AuthInterceptor<R extends LoginResponse, S extends AuthService<R>>
 		implements ClientHttpRequestInterceptor {
 
 	protected final TokenHolder token;
 
-	private AS authService;
+	private S authService;
 
-	public AuthInterceptor(AS authService, TokenHolder tokenHolder) {
+	public AuthInterceptor(S authService, TokenHolder tokenHolder) {
 		this.authService = authService;
 		this.token = tokenHolder;
 	}
