@@ -13,7 +13,9 @@ export default {
             institution: {
                 required: 'El rol requiere una institución'
             }
-        }
+        },
+        "bed-enabled-available": "Solo las camas habilitadas pueden estar disponibles",
+        "bed-available-free": "Solo las camas disponibles pueden estar libres"
     },
     resources: {
 
@@ -23,6 +25,9 @@ export default {
                 roomId: 'Habitación',
                 bedNumber: 'Nro. de cama',
                 bedCategoryId: 'Categoría',
+                enabled: 'Habilitada',
+                available: 'Disponible',
+                free: 'Libre',
             },
         },
         rooms: {

@@ -36,4 +36,13 @@ public class Bed {
 	@Column(name = "bed_category_id", nullable = false)
 	private Short bedCategoryId;
 	
+	@Column(name = "enabled", nullable = false)
+	private Boolean enabled;
+	
+	@Column(name = "available", nullable = false)
+	private Boolean available;
+	
+	@Column(name = "free", nullable = false)
+	private Boolean free;
+	
 }

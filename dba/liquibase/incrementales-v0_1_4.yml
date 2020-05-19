@@ -94,3 +94,34 @@
         referencedColumnNames: id
         referencedTableName: document
         validate: true 
+
+- changeSet:
+    id: bed_add_columns_free_available_enabled
+    author: efernandez
+    changes:
+    - addColumn:
+        tableName: bed
+        columns:
+        - column:
+            name: enabled
+            type: boolean
+            defaultValue: ${boolean.true}
+            constraints:
+                nullable: false  
+        - column:
+            name: available
+            type: boolean
+            defaultValue: ${boolean.true}
+            constraints:
+                nullable: false  
+        - column:
+            name: free
+            type: boolean
+            defaultValue: ${boolean.true}
+            constraints:
+                nullable: false  
+    - sql: 
+        sql: |- 
+            ALTER TABLE bed ADD CONSTRAINT CH_bed_enabled_available CHECK (not ((enabled = ${boolean.false}) and (available = ${boolean.true})));
+            ALTER TABLE bed ADD CONSTRAINT CH_bed_available_free CHECK (not ((available = ${boolean.false}) and (free = ${boolean.true})));
+

@@ -6,7 +6,8 @@ import {
     SelectInput,
     AutocompleteInput,
     SimpleForm,
-    required
+    required,
+    BooleanInput,
 } from 'react-admin';
 
 const BedEdit = props => (
@@ -29,6 +30,9 @@ const BedEdit = props => (
             >
                 <SelectInput optionText="description" optionValue="id"/>
             </ReferenceInput>
+            <BooleanInput source="enabled" validate={[required()]} disabled={false} initialValue={true}/>
+            <BooleanInput source="available" validate={[required()]} disabled={false} initialValue={true}/>
+            <BooleanInput source="free" validate={[required()]} disabled={false} initialValue={true}/>
         </SimpleForm>
     </Edit>
 );

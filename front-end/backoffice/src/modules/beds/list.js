@@ -5,6 +5,7 @@ import {
     TextField,
     ReferenceField,
     FunctionField,
+    BooleanField
 } from 'react-admin';
 
 const renderRoom = room => `${room.roomNumber} - ${room.description}`;
@@ -16,6 +17,9 @@ const BedList = props => (
                 <ReferenceField source="roomId" reference="rooms">
                     <FunctionField render={renderRoom} />
                 </ReferenceField>
+                <BooleanField source="enabled" />
+                <BooleanField source="available" />
+                <BooleanField source="free" />
         </Datagrid>
     </List>
 );
