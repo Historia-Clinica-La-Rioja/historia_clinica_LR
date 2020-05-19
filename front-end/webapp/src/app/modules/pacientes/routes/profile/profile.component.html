@@ -1,8 +1,13 @@
 <app-content width="full">
 	<section>
-		<button mat-raised-button color="primary" (click)="goNewInternment()">
-			<span>Iniciar internación</span>
+		<button *ngIf="internmentEpisode?.inProgress; else inactiveIE" mat-raised-button color="primary" (click)="goInternmentEpisode()">
+			<span>Ver internación</span>
 		</button>
+		<ng-template #inactiveIE>
+			<button mat-raised-button color="primary" (click)="goNewInternment()">
+				<span>Iniciar internación</span>
+			</button>
+		</ng-template>
 		<div class="profile-card">
 			<app-patient-card [patient]="patientBasicData">
 				<div header class="header">

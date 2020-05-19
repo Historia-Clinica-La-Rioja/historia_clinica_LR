@@ -9,8 +9,11 @@ import { PersonalInformation } from '@presentation/components/personal-informati
 import { PatientTypeData } from '@presentation/components/patient-type-logo/patient-type-logo.component';
 import { SnackBarService } from "@presentation/services/snack-bar.service";
 import { ContextService } from "@core/services/context.service";
+import { InternmentPatientService } from '@api-rest/services/internment-patient.service';
 
 const ROUTE_NEW_INTERNMENT = 'internaciones/internacion/new';
+const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
+const ROUTE_INTERNMENT_EPISODE_SUFIX = '/paciente/';
 
 @Component({
 	selector: 'app-profile',
@@ -26,13 +29,15 @@ export class ProfileComponent implements OnInit {
 	public codigoColor: string;
 	private patientId: number;
 	private readonly routePrefix;
+	public internmentEpisode;
 
 	constructor(private patientService: PatientService,
 				private mapperService: MapperService,
 				private route: ActivatedRoute,
 				private router: Router,
 				private personService: PersonService,
-				private contextService: ContextService) {
+				private contextService: ContextService,
+				private internmentPatientService: InternmentPatientService) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 
@@ -50,6 +55,15 @@ export class ProfileComponent implements OnInit {
 								this.personalInformation = this.mapperService.toPersonalInformationData(completeData, personInformationData);
 							});
 					});
+
+				this.internmentPatientService.internmentEpisodeIdInProcess(this.patientId)
+					.subscribe(internmentEpisodeId => {
+						if (internmentEpisodeId){
+							this.internmentEpisode = {};
+							this.internmentEpisode.id = internmentEpisodeId;
+							this.internmentEpisode.inProgress = true;
+						}
+					});
 			});
 
 	}
@@ -60,5 +74,9 @@ export class ProfileComponent implements OnInit {
 				queryParams: {patientId: this.patientId}
 			});
 	}
-}
 
+	goInternmentEpisode(): void {
+		this.router.navigate([this.routePrefix + ROUTE_INTERNMENT_EPISODE_PREFIX + this.internmentEpisode.id + ROUTE_INTERNMENT_EPISODE_SUFIX + this.patientId]);
+	}
+
+}
