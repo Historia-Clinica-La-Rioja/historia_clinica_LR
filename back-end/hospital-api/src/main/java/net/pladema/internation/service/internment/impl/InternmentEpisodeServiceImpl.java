@@ -75,6 +75,14 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
     }
 
     @Override
+    public LocalDate getEntryDate(Integer internmentEpisodeId) {
+        LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
+        LocalDate result = internmentEpisodeRepository.getEntryDate(internmentEpisodeId);
+        LOG.debug(LOGGING_OUTPUT, result);
+        return result;
+    }
+
+    @Override
     public Optional<InternmentSummaryVo> getIntermentSummary(Integer internmentEpisodeId) {
         LOG.debug("Input parameters -> {}", internmentEpisodeId);
         Optional<InternmentSummaryVo> result = internmentEpisodeRepository.getSummary(internmentEpisodeId);

@@ -7,6 +7,7 @@ import net.pladema.internation.controller.constraints.InternmentValid;
 import net.pladema.internation.controller.documents.evolutionnote.dto.EvolutionNoteDto;
 import net.pladema.internation.controller.documents.evolutionnote.dto.ResponseEvolutionNoteDto;
 import net.pladema.internation.controller.documents.evolutionnote.mapper.EvolutionNoteMapper;
+import net.pladema.internation.controller.ips.constraints.EffectiveVitalSignTimeValid;
 import net.pladema.internation.repository.masterdata.entity.DocumentType;
 import net.pladema.internation.service.documents.evolutionnote.CreateEvolutionNoteService;
 import net.pladema.internation.service.documents.evolutionnote.EvolutionNoteService;
@@ -61,6 +62,7 @@ public class EvolutionNoteController {
     @Transactional
     @InternmentValid
     @EvolutionNoteDiagnosisValid
+    @EffectiveVitalSignTimeValid
     //TODO validar que diagnosticos descatados solo tengan estado REMISSION o SOLVED
     //TODO vaidar que diagnosticos ingresador por error solo tengan estado INACTIVE
     public ResponseEntity<ResponseEvolutionNoteDto> createDocument(
@@ -81,6 +83,8 @@ public class EvolutionNoteController {
 
     @PutMapping("/{evolutionNoteId}")
     @InternmentValid
+    @EvolutionNoteDiagnosisValid
+    @EffectiveVitalSignTimeValid
     @DocumentValid(isConfirmed = false, documentType = DocumentType.EVALUATION_NOTE)
     public ResponseEntity<ResponseEvolutionNoteDto> updateDocument(
             @PathVariable(name = "institutionId") Integer institutionId,

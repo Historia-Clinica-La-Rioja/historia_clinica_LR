@@ -8,6 +8,7 @@ import net.pladema.internation.controller.documents.anamnesis.constraints.Anamne
 import net.pladema.internation.controller.documents.anamnesis.dto.AnamnesisDto;
 import net.pladema.internation.controller.documents.anamnesis.dto.ResponseAnamnesisDto;
 import net.pladema.internation.controller.documents.anamnesis.mapper.AnamnesisMapper;
+import net.pladema.internation.controller.ips.constraints.EffectiveVitalSignTimeValid;
 import net.pladema.internation.repository.masterdata.entity.DocumentType;
 import net.pladema.internation.service.documents.anamnesis.AnamnesisService;
 import net.pladema.internation.service.documents.anamnesis.CreateAnamnesisService;
@@ -61,6 +62,7 @@ public class AnamnesisController {
     @InternmentValid
     @AnamnesisValid
     @AnamnesisMainDiagnosisValid
+    @EffectiveVitalSignTimeValid
     //TODO validar que diagnosticos descatados solo tengan estado REMISSION o SOLVED
     //TODO vaidar que diagnosticos ingresador por error solo tengan estado INACTIVE
     public ResponseEntity<ResponseAnamnesisDto> createAnamnesis(
@@ -81,6 +83,9 @@ public class AnamnesisController {
 
     @PutMapping("/{anamnesisId}")
     @InternmentValid
+    @AnamnesisValid
+    @AnamnesisMainDiagnosisValid
+    @EffectiveVitalSignTimeValid
     @DocumentValid(isConfirmed = false, documentType = DocumentType.ANAMNESIS)
     public ResponseEntity<ResponseAnamnesisDto> updateAnamnesis(
             @PathVariable(name = "institutionId") Integer institutionId,

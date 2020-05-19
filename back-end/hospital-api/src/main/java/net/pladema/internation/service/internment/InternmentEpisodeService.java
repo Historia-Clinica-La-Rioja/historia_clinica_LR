@@ -4,6 +4,7 @@ import net.pladema.internation.repository.core.domain.InternmentSummaryVo;
 import net.pladema.internation.repository.core.entity.EvolutionNoteDocument;
 import net.pladema.internation.repository.core.entity.InternmentEpisode;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 public interface InternmentEpisodeService {
@@ -22,4 +23,5 @@ public interface InternmentEpisodeService {
 
     boolean haveAnamnesis(Integer internmentEpisodeId);
 
+    LocalDate getEntryDate(Integer internmentEpisodeId);
 }

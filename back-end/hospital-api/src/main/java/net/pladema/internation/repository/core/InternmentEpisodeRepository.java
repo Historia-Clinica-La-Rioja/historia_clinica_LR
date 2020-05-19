@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -111,4 +112,9 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
     Optional<Integer> internmentEpisodeInProcess(@Param("institutionId") Integer institutionId,
                                                  @Param("patientId") Integer patientId);
 
+    @Transactional(readOnly = true)
+    @Query("SELECT ie.entryDate " +
+            "FROM InternmentEpisode ie " +
+            "WHERE ie.id = :internmentEpisodeId ")
+    LocalDate getEntryDate(@Param("internmentEpisodeId")  Integer internmentEpisodeId);
 }
