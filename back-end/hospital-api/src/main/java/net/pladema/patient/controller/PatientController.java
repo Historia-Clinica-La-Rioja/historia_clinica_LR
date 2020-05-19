@@ -1,35 +1,11 @@
 package net.pladema.patient.controller;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-
-import javax.persistence.EntityNotFoundException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.swagger.annotations.Api;
 import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.address.controller.service.AddressExternalService;
-import net.pladema.patient.controller.dto.APatientDto;
-import net.pladema.patient.controller.dto.BMPatientDto;
-import net.pladema.patient.controller.dto.BasicPatientDto;
-import net.pladema.patient.controller.dto.CompletePatientDto;
-import net.pladema.patient.controller.dto.PatientSearchDto;
-import net.pladema.patient.controller.dto.PatientSearchFilter;
+import net.pladema.patient.controller.constraints.FilterValid;
+import net.pladema.patient.controller.dto.*;
 import net.pladema.patient.controller.mapper.PatientMapper;
 import net.pladema.patient.repository.PatientTypeRepository;
 import net.pladema.patient.repository.entity.Patient;
@@ -40,10 +16,23 @@ import net.pladema.person.controller.dto.BMPersonDto;
 import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.controller.mapper.PersonMapper;
 import net.pladema.person.controller.service.PersonExternalService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.persistence.EntityNotFoundException;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/patient")
 @Api(value = "Patient", tags = { "Patient" })
+@Validated
 public class PatientController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(PatientController.class);
@@ -77,7 +66,7 @@ public class PatientController {
 	}
 
 	@GetMapping(value = "/search")
-	public ResponseEntity<List<PatientSearchDto>> searchPatient(@RequestParam String searchFilterStr) {
+	public ResponseEntity<List<PatientSearchDto>> searchPatient(@RequestParam @FilterValid String searchFilterStr) {
 		LOG.debug("Input data -> searchFilterStr {} ", searchFilterStr);
 		PatientSearchFilter searchFilter = null;
 		try {
