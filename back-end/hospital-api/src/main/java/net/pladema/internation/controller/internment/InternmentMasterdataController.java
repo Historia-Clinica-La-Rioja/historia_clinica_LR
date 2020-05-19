@@ -1,6 +1,7 @@
 package net.pladema.internation.controller.internment;
 
 import io.swagger.annotations.Api;
+import net.pladema.internation.repository.core.entity.DischargeType;
 import net.pladema.internation.repository.masterdata.entity.*;
 import net.pladema.internation.repository.projections.InternmentMasterDataProjection;
 import net.pladema.internation.service.internment.InternmentMasterDataService;
@@ -128,4 +129,12 @@ public class InternmentMasterdataController {
         LOG.debug("{}", "All internment clinical specialty");
         return ResponseEntity.ok().body(internmentMasterDataService.findAll(ClinicalSpecialty.class));
     }
+    
+    @GetMapping(value = "/discharge/type")
+    public ResponseEntity<Collection<InternmentMasterDataProjection>> getDischargeType(){
+        LOG.debug("All internment discharge types ");
+        return ResponseEntity.ok().body(internmentMasterDataService.findAll(DischargeType.class));
+    }
+    
+    
 }

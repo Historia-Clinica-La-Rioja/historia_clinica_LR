@@ -158,3 +158,106 @@
             name: uuid_file
             type: varchar(36)
         tableName: document_file
+
+- changeSet:
+    id: discharge_type-createTable
+    comment: Create table discharge_type 
+    author: gmurgolo
+    changes: 
+    - createTable: 
+        tableName: discharge_type
+        columns: 
+        - column:
+            constraints:
+                primaryKey: true
+                primaryKeyName: PK_discharge_type
+            name: id
+            type: smallint
+        - column:
+            constraints:
+                nullable: false
+            name: description
+            type: varchar(50)
+
+- changeSet:
+    id: discharge_type-data
+    comment: Carga de datos discharge_type
+    author: gmurgolo
+    context: "!schema-only"
+    changes:
+        - sql:
+            sql: |-
+                INSERT INTO discharge_type VALUES (1, 'Alta médica');
+                INSERT INTO discharge_type VALUES (2, 'Traslado a otro establecimiento');
+                INSERT INTO discharge_type VALUES (3, 'Defunción ');
+                INSERT INTO discharge_type VALUES (4, 'Retiro voluntario');
+                INSERT INTO discharge_type VALUES (5, 'Otro');
+
+- changeSet:
+    id: patient_discharge-createTable
+    comment: Create table patient_discharge 
+    author: gmurgolo
+    changes: 
+    - createTable: 
+        tableName: patient_discharge
+        columns: 
+        - column:
+            constraints:
+                primaryKey: true
+                primaryKeyName: PK_patient_discharge
+            name: internment_episode_id
+            type: int
+        - column:
+            constraints:
+                nullable: false
+                defaultValueDate: ${date.now}
+            name: discharge_date
+            type: datetime
+        - column:
+            constraints:
+                nullable: false
+            name: discharge_type_id
+            type: smallint
+        - column:
+            constraints:
+                nullable: false
+            name: created_by
+            type: int
+            defaultValue: -1
+        - column:
+            constraints:
+                nullable: false
+            name: updated_by
+            type: int
+            defaultValue: -1
+        - column:
+            constraints:
+                nullable: false
+            name: created_on
+            type: datetime
+            defaultValueDate: ${date.now}
+        - column:
+            constraints:
+                nullable: false
+            name: updated_on
+            type: datetime
+            defaultValueDate: ${date.now} 
+
+    - addForeignKeyConstraint:
+        baseColumnNames: internment_episode_id
+        baseTableName: patient_discharge
+        constraintName: FK_patiend_discharge_internment_episode_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: internment_episode
+        validate: true              
+    - addForeignKeyConstraint:
+        baseColumnNames: discharge_type_id
+        baseTableName: patient_discharge
+        constraintName: FK_patient_discharge_type_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: discharge_type
+        validate: true              
