@@ -24,4 +24,6 @@ public interface InternmentEpisodeService {
     boolean haveAnamnesis(Integer internmentEpisodeId);
 
     LocalDate getEntryDate(Integer internmentEpisodeId);
+
+    boolean haveAnamnesisAndEvolutionNote(Integer internmentEpisodeId);
 }

@@ -1,6 +1,6 @@
 package net.pladema.internation.controller.constraints;
 
-import net.pladema.internation.controller.constraints.validator.EpicrisisValidator;
+import net.pladema.internation.controller.constraints.validator.CreateUpdateEpicrisisValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -11,12 +11,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Documented
-@Constraint(validatedBy = EpicrisisValidator.class)
+@Constraint(validatedBy = CreateUpdateEpicrisisValidator.class)
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface EpicrisisValid {
+public @interface CreateUpdateEpicrisisValid {
 
-    String message() default "{document.create.invalid}";
+    String message() default "{epicrisis.document.create.invalid}";
 
     Class<?>[] groups() default {};
 

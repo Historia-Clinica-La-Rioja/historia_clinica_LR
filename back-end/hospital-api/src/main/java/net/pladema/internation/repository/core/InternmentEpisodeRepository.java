@@ -124,4 +124,19 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             "FROM InternmentEpisode ie " +
             "WHERE ie.id = :internmentEpisodeId ")
     LocalDate getEntryDate(@Param("internmentEpisodeId")  Integer internmentEpisodeId);
+
+
+    @Transactional(readOnly = true)
+    @Query("SELECT (case when count(ie.id)> 0 then true else false end) " +
+            "FROM InternmentEpisode ie " +
+            "JOIN Document da ON (da.id = ie.anamnesisDocId and da.statusId = '"+ DocumentStatus.FINAL + "') " +
+            "WHERE ie.id = :internmentEpisodeId " +
+            "AND EXISTS (" +
+            "               SELECT d.id " +
+            "               FROM EvolutionNoteDocument evnd " +
+            "               JOIN Document d ON (d.id = evnd.pk.documentId) " +
+            "               WHERE evnd.pk.internmentEpisodeId = ie.id " +
+            "               AND d.statusId = '"+ DocumentStatus.FINAL + "'" +
+            "           )")
+    boolean haveAnamnesisAndEvolutionNote(@Param("internmentEpisodeId")  Integer internmentEpisodeId);
 }

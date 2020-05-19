@@ -35,14 +35,14 @@ public class InternmentValidator implements ConstraintValidator<InternmentValid,
         Integer internmentEpisodeId = (Integer)parameters[1];
 
         boolean existsInstitution = institutionRepository.existsById(institutionId);
-        boolean existsIntenmentEpisode = internmentEpisodeRepository.existsById(internmentEpisodeId);
+        boolean existsInternmentEpisode = internmentEpisodeRepository.existsById(internmentEpisodeId);
 
         if(existsInstitution)
             setResponse(context, "{institution.invalid}", INSTITUTION_PROPERTY);
-        if(existsIntenmentEpisode)
+        if(existsInternmentEpisode)
             setResponse(context, "{internmentepisode.invalid}", INTERNMENT_EPISODE_PROPERTY);
 
-        return existsInstitution && existsIntenmentEpisode;
+        return existsInstitution && existsInternmentEpisode;
     }
 
     private void setResponse(ConstraintValidatorContext constraintValidatorContext,
