@@ -10,6 +10,7 @@ import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
+import { HasRoleDirective } from './directives/has-role.directive';
 
 const globalSettings: RecaptchaSettings = { siteKey: '' }; // TODO completar cuando se implemente para esta aplicacion
 
@@ -18,6 +19,7 @@ const globalSettings: RecaptchaSettings = { siteKey: '' }; // TODO completar cua
 		ContentComponent,
 		SidenavComponent,
 		ConfirmDialogComponent,
+		HasRoleDirective,
 	],
 	imports: [
 		AppMaterialModule,
@@ -42,6 +44,7 @@ const globalSettings: RecaptchaSettings = { siteKey: '' }; // TODO completar cua
 		RouterModule,
 		SidenavComponent,
 		TranslateModule,
+		HasRoleDirective,
 	],
 	providers: [{
 		provide: RECAPTCHA_SETTINGS,
