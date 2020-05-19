@@ -61,7 +61,7 @@ public class ClinicalObservationRepositoryTest extends BaseRepositoryTest {
 
 		assertThat(mapClinicalObservationVo.getClinicalObservationByCode("code3"))
 				.isNotNull()
-				.hasSize(1);
+				.isEmpty();
 
 		assertThat(mapClinicalObservationVo.getClinicalObservationByCode("code4"))
 				.isNotNull()

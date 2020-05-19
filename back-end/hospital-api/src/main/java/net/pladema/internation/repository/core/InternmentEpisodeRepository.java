@@ -2,6 +2,7 @@ package net.pladema.internation.repository.core;
 
 import net.pladema.internation.repository.core.domain.InternmentSummaryVo;
 import net.pladema.internation.repository.core.entity.InternmentEpisode;
+import net.pladema.internation.repository.masterdata.entity.DocumentStatus;
 import net.pladema.internation.service.internment.domain.BasicListedPatientBo;
 import net.pladema.internation.service.internment.domain.InternmentEpisodeBo;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -95,7 +96,13 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             "JOIN ClinicalSpecialty cs ON (css.clinicalSpecialtyId = cs.id) " +
             "JOIN Sector s ON (css.sectorId = s.id) " +
             "WHERE ie.institutionId = :institutionId " +
-            "ORDER BY ps.firstName ASC, ps.lastName ASC")
+            "AND (ie.epicrisisDocId IS NULL " +
+            "     OR NOT EXISTS (SELECT d.id " +
+            "                    FROM Document d " +
+            "                    WHERE d.id = ie.epicrisisDocId " +
+            "                    AND d.statusId = '"+ DocumentStatus.FINAL + "')" +
+            "     ) " +
+            " ORDER BY ps.firstName ASC, ps.lastName ASC")
     List<InternmentEpisodeBo> getAllInternmentPatient(@Param("institutionId") Integer institutionId);
 
     @Transactional(readOnly = true)
