@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import net.pladema.internation.controller.internment.dto.InternmentEpisodeDto;
 import net.pladema.internation.controller.internment.dto.InternmentPatientDto;
 import net.pladema.internation.controller.internment.mapper.InternmentEpisodeMapper;
+import net.pladema.internation.repository.core.InternmentEpisodeRepository;
 import net.pladema.internation.service.internment.InternmentPatientService;
 import net.pladema.internation.service.internment.domain.BasicListedPatientBo;
 import net.pladema.internation.service.internment.domain.InternmentEpisodeBo;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/internments/patients")
@@ -28,9 +30,12 @@ public class InternmentPatientController {
 
     private final InternmentEpisodeMapper internmentEpisodeMapper;
 
-    public InternmentPatientController(InternmentPatientService internmentPatientService, InternmentEpisodeMapper internmentEpisodeMapper) {
+    private final InternmentEpisodeRepository internmentEpisodeRepository;
+
+    public InternmentPatientController(InternmentPatientService internmentPatientService, InternmentEpisodeMapper internmentEpisodeMapper, InternmentEpisodeRepository internmentEpisodeRepository) {
         this.internmentPatientService = internmentPatientService;
         this.internmentEpisodeMapper = internmentEpisodeMapper;
+        this.internmentEpisodeRepository = internmentEpisodeRepository;
     }
 
     @GetMapping
@@ -52,4 +57,12 @@ public class InternmentPatientController {
         return  ResponseEntity.ok().body(result);
     }
 
+    @GetMapping("/{patientId}/internmentEpisodeIdInProcess")
+    public ResponseEntity<Integer> internmentEpisodeIdInProcess(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "patientId") Integer patientId){
+        LOG.debug("Input parameters -> {}", patientId);
+        Optional<Integer> internmentEpisodeId = internmentEpisodeRepository.internmentEpisodeInProcess(institutionId,patientId);
+        return internmentEpisodeId.isPresent() ? ResponseEntity.ok().body(internmentEpisodeId.get()) :  ResponseEntity.ok().build();
+    }
 }

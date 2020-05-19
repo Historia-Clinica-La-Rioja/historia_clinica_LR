@@ -18,6 +18,7 @@ import java.util.Optional;
 @Repository
 public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpisode, Integer> {
 
+    static final String INACTIVE_INTERNMENT_EPISODE_STATUS = "2";
 
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.internation.repository.core.domain.InternmentSummaryVo(" +
@@ -102,5 +103,12 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             "WHERE ie.id = :internmentEpisodeId " +
             "AND ie.anamnesisDocId IS NOT NULL")
     boolean haveAnamnesis(@Param("internmentEpisodeId") Integer internmentEpisodeId);
+
+    @Transactional(readOnly = true)
+    @Query(" SELECT ie.id " +
+            "FROM InternmentEpisode  ie " +
+            "WHERE  ie.patientId = :patientId and ie.institutionId = :institutionId and ie.statusId <> " + INACTIVE_INTERNMENT_EPISODE_STATUS)
+    Optional<Integer> internmentEpisodeInProcess(@Param("institutionId") Integer institutionId,
+                                                 @Param("patientId") Integer patientId);
 
 }
