@@ -24,17 +24,14 @@ public class ClinicalObservationRepositoryImpl implements ClinicalObservationRep
 
     private final EntityManager entityManager;
 
-    private final DateTimeProvider dateTimeProvider;
-
-    public ClinicalObservationRepositoryImpl(EntityManager entityManager, DateTimeProvider dateTimeProvider){
+    public ClinicalObservationRepositoryImpl(EntityManager entityManager){
         super();
         this.entityManager = entityManager;
-        this.dateTimeProvider = dateTimeProvider;
     }
 
     @Transactional(readOnly = true)
     @Override
-    public MapClinicalObservationVo getGeneralStateLastSevenDays(Integer internmentEpisodeId) {
+    public MapClinicalObservationVo getGeneralState(Integer internmentEpisodeId) {
         LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
         Query query = entityManager.createNativeQuery(
                 "   (SELECT  ovs.id, " +
@@ -47,7 +44,6 @@ public class ClinicalObservationRepositoryImpl implements ClinicalObservationRep
                 "    JOIN observation_vital_sign ovs ON (dvs.observation_vital_sign_id = ovs.id) " +
                 "    WHERE d.internment_episode_id = :internmentEpisodeId " +
                 "          AND d.status_id = :statusId " +
-                "          AND ovs.effective_time BETWEEN :sevenDaysBefore AND :today " +
                 " )UNION( " +
                 "   SELECT  ovs.id, " +
                 "            ovs.sctid_code, " +
@@ -59,12 +55,9 @@ public class ClinicalObservationRepositoryImpl implements ClinicalObservationRep
                 "    JOIN observation_lab ovs ON (dl.observation_lab_id = ovs.id) " +
                 "    WHERE d.internment_episode_id = :internmentEpisodeId " +
                 "          AND d.status_id = :statusId " +
-                "          AND ovs.effective_time BETWEEN :sevenDaysBefore AND :today " +
                 ")" +
                 "    ORDER BY effective_time DESC " );
         query.setParameter("internmentEpisodeId", internmentEpisodeId);
-        query.setParameter("sevenDaysBefore", dateTimeProvider.nowDateTime().minusDays(7));
-        query.setParameter("today", dateTimeProvider.nowDateTime());
         query.setParameter("statusId", DocumentStatus.FINAL);
         List<Object[]> queryResult = query.getResultList();
         List<ClinicalObservationVo> clinicalObservationVos = new ArrayList<>();

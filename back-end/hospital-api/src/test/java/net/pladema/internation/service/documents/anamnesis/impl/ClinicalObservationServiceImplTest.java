@@ -54,7 +54,7 @@ public class ClinicalObservationServiceImplTest {
 	public void test_getVitalSignsGeneralState_complete() {
 		Integer internmentEpisodeId = 1;
 		int quantity = 2;
-		when(clinicalObservationRepository.getGeneralStateLastSevenDays(internmentEpisodeId))
+		when(clinicalObservationRepository.getGeneralState(internmentEpisodeId))
 				.thenReturn(new MapClinicalObservationVo(mockVitalSignsVo(quantity)));
 		Last2VitalSignsBo last2VitalSignsBo = vitalSignLabService.getLast2VitalSignsGeneralState(internmentEpisodeId);
 
@@ -76,7 +76,7 @@ public class ClinicalObservationServiceImplTest {
 	public void test_getVitalSignsGeneralState_partial() {
 		Integer internmentEpisodeId = 1;
 		int quantity = 1;
-		when(clinicalObservationRepository.getGeneralStateLastSevenDays(internmentEpisodeId))
+		when(clinicalObservationRepository.getGeneralState(internmentEpisodeId))
 				.thenReturn(new MapClinicalObservationVo(mockVitalSignsVo(quantity)));
 		Last2VitalSignsBo last2VitalSignsBo = vitalSignLabService.getLast2VitalSignsGeneralState(internmentEpisodeId);
 
@@ -96,7 +96,7 @@ public class ClinicalObservationServiceImplTest {
 	public void test_getVitalSignsGeneralState_empty() {
 		Integer internmentEpisodeId = 1;
 		int quantity = 0;
-		when(clinicalObservationRepository.getGeneralStateLastSevenDays(internmentEpisodeId))
+		when(clinicalObservationRepository.getGeneralState(internmentEpisodeId))
 				.thenReturn(new MapClinicalObservationVo(mockVitalSignsVo(quantity)));
 		Last2VitalSignsBo last2VitalSignsBo =  vitalSignLabService.getLast2VitalSignsGeneralState(internmentEpisodeId);
 

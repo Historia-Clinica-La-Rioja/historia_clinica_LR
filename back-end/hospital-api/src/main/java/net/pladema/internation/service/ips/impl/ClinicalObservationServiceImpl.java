@@ -169,7 +169,7 @@ public class ClinicalObservationServiceImpl implements ClinicalObservationServic
     @Override
     public AnthropometricDataBo getLastAnthropometricDataGeneralState(Integer internmentEpisodeId) {
         LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
-        MapClinicalObservationVo resultQuery = clinicalObservationRepository.getGeneralStateLastSevenDays(internmentEpisodeId);
+        MapClinicalObservationVo resultQuery = clinicalObservationRepository.getGeneralState(internmentEpisodeId);
         AnthropometricDataBo result = resultQuery.getLastNAnthropometricData(0).orElse(null);
         LOG.debug(OUTPUT, result);
         return result;
@@ -178,7 +178,7 @@ public class ClinicalObservationServiceImpl implements ClinicalObservationServic
     @Override
     public Last2VitalSignsBo getLast2VitalSignsGeneralState(Integer internmentEpisodeId) {
         LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
-        MapClinicalObservationVo resultQuery = clinicalObservationRepository.getGeneralStateLastSevenDays(internmentEpisodeId);
+        MapClinicalObservationVo resultQuery = clinicalObservationRepository.getGeneralState(internmentEpisodeId);
         Last2VitalSignsBo result = new Last2VitalSignsBo();
         for (int i=0;i<2;i++){
             if (i==0) {

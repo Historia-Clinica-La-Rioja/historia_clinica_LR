@@ -4,5 +4,5 @@ import net.pladema.internation.service.ips.domain.MapClinicalObservationVo;
 
 public interface ClinicalObservationRepository {
 
-    MapClinicalObservationVo getGeneralStateLastSevenDays(Integer internmentEpisodeId);
+    MapClinicalObservationVo getGeneralState(Integer internmentEpisodeId);
 }

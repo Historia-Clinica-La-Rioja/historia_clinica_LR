@@ -1,7 +1,6 @@
 package net.pladema.internation.repository.ips;
 
 import net.pladema.BaseRepositoryTest;
-import net.pladema.dates.configuration.DateTimeProvider;
 import net.pladema.internation.repository.core.entity.Document;
 import net.pladema.internation.repository.core.entity.DocumentLab;
 import net.pladema.internation.repository.core.entity.DocumentVitalSign;
@@ -16,7 +15,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.persistence.EntityManager;
@@ -24,7 +22,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest(showSql = false)
@@ -35,12 +32,9 @@ public class ClinicalObservationRepositoryTest extends BaseRepositoryTest {
 	@Autowired
 	private EntityManager entityManager;
 
-	@MockBean
-	private DateTimeProvider dateTimeProvider;
-
 	@Before
 	public void setUp() {
-		this.clinicalObservationRepository = new ClinicalObservationRepositoryImpl(entityManager, dateTimeProvider);
+		this.clinicalObservationRepository = new ClinicalObservationRepositoryImpl(entityManager);
 	}
 
 	@Test
@@ -49,10 +43,9 @@ public class ClinicalObservationRepositoryTest extends BaseRepositoryTest {
 		String date = "2020-05-04 16:00";
 		String now = "2020-05-08 16:00";
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-		when(dateTimeProvider.nowDateTime()).thenReturn(LocalDateTime.parse(now, formatter));
 		createInternmentStates(1, LocalDateTime.parse(date, formatter));
 
-		MapClinicalObservationVo mapClinicalObservationVo = clinicalObservationRepository.getGeneralStateLastSevenDays(internmentEpisodeId);
+		MapClinicalObservationVo mapClinicalObservationVo = clinicalObservationRepository.getGeneralState(internmentEpisodeId);
 
 		assertThat(mapClinicalObservationVo.getClinicalObservationByCode().entrySet())
 				.isNotNull()
@@ -60,7 +53,7 @@ public class ClinicalObservationRepositoryTest extends BaseRepositoryTest {
 
 		assertThat(mapClinicalObservationVo.getClinicalObservationByCode("code1"))
 				.isNotNull()
-				.isEmpty();
+				.isNotEmpty();
 
 		assertThat(mapClinicalObservationVo.getClinicalObservationByCode("code2"))
 				.isNotNull()
