@@ -25,7 +25,7 @@ public class ActuatorConfigurationTest {
 
 		assertThat(result)
 				.isNotNull()
-				.isEqualTo("permitAll() and hasIpAddress('10.0.0.0/16') and hasIpAddress('127.0.0.1/32')");
+				.isEqualTo("permitAll() and ( hasIpAddress('10.0.0.0/16') or hasIpAddress('127.0.0.1/32') )");
 	}
 
 	@Test
@@ -48,7 +48,7 @@ public class ActuatorConfigurationTest {
 
 		assertThat(result)
 				.isNotNull()
-				.isEqualTo("isAuthenticated() and hasIpAddress('10.0.0.0/16') and hasIpAddress('127.0.0.1/32')");
+				.isEqualTo("isAuthenticated() and ( hasIpAddress('10.0.0.0/16') or hasIpAddress('127.0.0.1/32') )");
 	}
 
 	@Test
