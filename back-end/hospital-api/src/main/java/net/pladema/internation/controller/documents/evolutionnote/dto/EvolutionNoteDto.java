@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.internation.controller.constraints.DiagnosisValid;
+import net.pladema.internation.controller.documents.dto.DocumentDto;
 import net.pladema.internation.controller.internment.dto.DocumentObservationsDto;
 import net.pladema.internation.controller.ips.dto.*;
 
@@ -17,7 +18,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class EvolutionNoteDto implements Serializable {
+public class EvolutionNoteDto implements DocumentDto, Serializable {
 
     @NotNull
     private boolean confirmed = false;

@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.internation.controller.constraints.DiagnosisValid;
 import net.pladema.internation.controller.constraints.HealthHistoryConditionValid;
+import net.pladema.internation.controller.documents.dto.DocumentDto;
 import net.pladema.internation.controller.internment.dto.DocumentObservationsDto;
 import net.pladema.internation.controller.ips.dto.*;
 
@@ -18,7 +19,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class AnamnesisDto implements Serializable {
+public class AnamnesisDto implements DocumentDto, Serializable {
 
     @NotNull
     private boolean confirmed = false;

@@ -1,7 +1,7 @@
 package net.pladema.internation.controller.ips.constraints.validator;
 
 import net.pladema.dates.configuration.JacksonDateFormatConfig;
-import net.pladema.internation.controller.documents.evolutionnote.dto.EvolutionNoteDto;
+import net.pladema.internation.controller.documents.dto.DocumentDto;
 import net.pladema.internation.controller.ips.constraints.EffectiveVitalSignTimeValid;
 import net.pladema.internation.controller.ips.dto.EffectiveClinicalObservationDto;
 import net.pladema.internation.controller.ips.dto.VitalSignDto;
@@ -43,8 +43,8 @@ public class EffectiveVitalSignTimeValidator implements ConstraintValidator<Effe
     public boolean isValid(Object[] parameters, ConstraintValidatorContext context) {
         LOG.debug("Input parameters -> parameters {}", parameters);
         Integer internmentEpisodeId = (Integer) parameters[1];
-        EvolutionNoteDto evolutionNoteDto = (EvolutionNoteDto) parameters[2];
-        VitalSignDto vitalSigns = evolutionNoteDto.getVitalSigns();
+        DocumentDto documentDto = (DocumentDto) parameters[2];
+        VitalSignDto vitalSigns = documentDto.getVitalSigns();
         if (vitalSigns == null)
             return true;
 
