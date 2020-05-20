@@ -360,7 +360,7 @@
 							matInput>
 				</mat-form-field>
 			</div>
-			<div class="form-buttons">
+			<div *hasRole="['ADMINISTRATIVO']" class="form-buttons">
 				<button mat-stroked-button color="secondary" (click)="goBack()">
 					<span [translate]="'buttons.BACK'"></span>
 				</button>

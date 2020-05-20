@@ -1,10 +1,13 @@
 <app-content width="full">
 	<section>
-		<button *ngIf="internmentEpisode?.inProgress; else inactiveIE" mat-raised-button color="primary" (click)="goInternmentEpisode()">
-			<span>Ver internación</span>
-		</button>
+		<div *hasRole="['ADMINISTRATIVO']">
+			<button *ngIf="internmentEpisode?.inProgress; else inactiveIE" mat-raised-button color="primary"
+					(click)="goInternmentEpisode()">
+				<span>Ver internación</span>
+			</button>
+		</div>
 		<ng-template #inactiveIE>
-			<button mat-raised-button color="primary" (click)="goNewInternment()">
+			<button mat-raised-button color="primary" (click)="goNewInternment()" *hasRole="['ADMINISTRATIVO']">
 				<span>Iniciar internación</span>
 			</button>
 		</ng-template>

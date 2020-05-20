@@ -116,7 +116,7 @@
 					<mat-datepicker #picker></mat-datepicker>
 				</mat-form-field>
 				<br>
-				<mat-action-row>
+				<mat-action-row *hasRole="['ADMINISTRATIVO']">
 					<button mat-stroked-button (click)="back()">
 						<span [translate]="'buttons.BACK'"></span>
 					</button>
@@ -133,7 +133,7 @@
 			<h3 class="mat-body-2" [translate]="'Se encontraron posibles coincidencias.'"></h3>
 			<app-table [model]="matchingPatient" [mainStyle]="'primary'"></app-table>
 			<div class="new-patient-button" align="end">
-				<button mat-raised-button color="primary" (click)="goToNewPatient()">
+				<button *hasRole="['ADMINISTRATIVO']" mat-raised-button color="primary" (click)="goToNewPatient()">
 					<span [translate]="'pacientes.search.NEW_PATIENT'"></span>
 				</button>
 			</div>

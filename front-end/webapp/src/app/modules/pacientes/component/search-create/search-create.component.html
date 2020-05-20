@@ -60,7 +60,7 @@
 				</section>
 
 			</div>
-			<div align="end">
+			<div *hasRole="['ADMINISTRATIVO']" align="end">
 				<button mat-flat-button color="primary" type="submit" *ngIf="!noIdentity">
 					<span [translate]="'pacientes.home.find_add_section.BUTTON_SEARCH'"></span>
 				</button>
@@ -102,7 +102,7 @@
 				</textarea>
 			</mat-form-field>
 			<div align="end">
-				<button mat-flat-button color="primary" type="submit">
+				<button *hasRole="['ADMINISTRATIVO']" mat-flat-button color="primary" type="submit">
 					<span [translate]="'pacientes.home.find_add_section.BUTTON_ADD'"></span>
 				</button>
 			</div>
