@@ -272,4 +272,13 @@
         columnName:  discharge_date  
         newDataType:  date
         tableName: patient_discharge
-   
+
+- changeSet:
+    id: document_file-modifyDataType-file_path-2
+    author: saguero
+    comment: Modify data type column file_path in document_file table
+    changes:
+    - modifyDataType:
+        columnName: file_path
+        newDataType: varchar(200)
+        tableName: document_file   

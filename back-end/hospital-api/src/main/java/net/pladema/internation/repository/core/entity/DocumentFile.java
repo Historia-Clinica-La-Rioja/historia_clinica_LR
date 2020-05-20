@@ -34,7 +34,7 @@ public class DocumentFile extends InternationAuditableEntity {
 	@Column(name = "type_id", nullable = false)
 	private Short typeId;
 
-	@Column(name = "file_path", length = 100, nullable = false)
+	@Column(name = "file_path", length = 200, nullable = false)
 	private String filepath;
 
 	@Column(name = "file_name", length = 40, nullable = false)
