@@ -135,7 +135,7 @@ export class NewInternmentComponent implements OnInit {
 
 	setBeds() {
 		const roomId: number = this.form.controls.roomId.value;
-		this.room.getAllBedsByRoom(roomId).subscribe(data => {
+		this.room.getAllFreeBedsByRoom(roomId).subscribe(data => {
 			this.beds = data;
 		});
 		this.form.controls.bedId.reset();

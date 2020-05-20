@@ -57,5 +57,11 @@ public class RoomController {
 		LOG.debug("Get all Beds => {}", beds);
 		return ResponseEntity.ok(bedMapper.toListBedDto(beds));
 	}
-	
+
+	@GetMapping("/{roomId}/freebeds")
+	public ResponseEntity<List<BedDto>> getAllFreeBedsByRoom(@PathVariable(name = "roomId")  Integer roomId) {
+		List<Bed> beds = bedRepository.getAllFreeBedsByRoom(roomId);
+		LOG.debug("Get all free Beds  => {}", beds);
+		return ResponseEntity.ok(bedMapper.toListBedDto(beds));
+	}
 }

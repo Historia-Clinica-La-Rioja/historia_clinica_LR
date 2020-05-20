@@ -16,4 +16,9 @@ export class RoomService {
 		let url = `${environment.apiBase}/room/${roomId}/beds`;
 		return this.http.get<BedDto[]>(url);
 	}
+
+	getAllFreeBedsByRoom(roomId): Observable<BedDto[]> {
+		let url = `${environment.apiBase}/room/${roomId}/freebeds`;
+		return this.http.get<BedDto[]>(url);
+	}
 }
