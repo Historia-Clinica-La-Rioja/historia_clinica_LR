@@ -57,7 +57,7 @@ export interface AllergyConditionDto extends HealthConditionDto {
     severity: string;
 }
 
-export interface AnamnesisDto extends Serializable {
+export interface AnamnesisDto extends DocumentDto, Serializable {
     allergies: AllergyConditionDto[];
     anthropometricData?: AnthropometricDataDto;
     confirmed: boolean;
@@ -68,7 +68,6 @@ export interface AnamnesisDto extends Serializable {
     medications: MedicationDto[];
     notes?: DocumentObservationsDto;
     personalHistories: HealthHistoryConditionDto[];
-    vitalSigns?: VitalSignDto;
 }
 
 export interface AnamnesisSummaryDto extends DocumentSummaryDto {
@@ -164,6 +163,10 @@ export interface DiagnosisDto extends HealthConditionDto {
     presumptive?: boolean;
 }
 
+export interface DocumentDto {
+    vitalSigns?: VitalSignDto;
+}
+
 export interface DocumentObservationsDto extends Serializable {
     clinicalImpressionNote?: string;
     currentIllnessNote?: string;
@@ -225,7 +228,7 @@ export interface EpicrisisSummaryDto extends DocumentSummaryDto {
 export interface EvaluationNoteSummaryDto extends DocumentSummaryDto {
 }
 
-export interface EvolutionNoteDto extends Serializable {
+export interface EvolutionNoteDto extends DocumentDto, Serializable {
     allergies?: AllergyConditionDto[];
     anthropometricData?: AnthropometricDataDto;
     confirmed: boolean;
@@ -233,7 +236,6 @@ export interface EvolutionNoteDto extends Serializable {
     inmunizations?: InmunizationDto[];
     mainDiagnosis?: HealthConditionDto;
     notes?: DocumentObservationsDto;
-    vitalSigns?: VitalSignDto;
 }
 
 export interface GenderDto extends MasterdataDto<number> {
