@@ -59,6 +59,7 @@ const App = () => (
             <Resource name="users" {...users}/>,
             <Resource name="password-reset" {...passwordReset}/>,
             <Resource name="roles" />,
+            <Resource name="internmentepisodes" />,
         ] : [<span />]
         }
     </Admin>

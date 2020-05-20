@@ -5,7 +5,11 @@ import {
     ReferenceField,
     TextField,
     FunctionField,
-    BooleanField
+    BooleanField,
+    ReferenceManyField,
+    Datagrid,
+    DateField,
+    Pagination,
 } from 'react-admin';
 
 const renderRoom = room => `${room.roomNumber} - ${room.description}`;
@@ -20,6 +24,19 @@ const BedShow = props => (
             <BooleanField source="enabled" />
             <BooleanField source="available" />
             <BooleanField source="free" />
+            <ReferenceManyField
+                addLabel={true}
+                label="resources.beds.fields.internmentepisodes"
+                reference="internmentepisodes"
+                target="bedId"
+                sort={{ field: 'entryDate', order: 'DESC' }}
+                filter={{ status: 1 }}
+                pagination={<Pagination />}
+            >
+                <Datagrid>
+                    <DateField source="entryDate" />
+                </Datagrid>
+            </ReferenceManyField>
         </SimpleShowLayout>
     </Show>
 );

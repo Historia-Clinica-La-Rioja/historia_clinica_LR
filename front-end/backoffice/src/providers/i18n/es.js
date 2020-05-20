@@ -28,6 +28,7 @@ export default {
                 enabled: 'Habilitada',
                 available: 'Disponible',
                 free: 'Libre',
+                internmentepisodes: 'Episodios de internación activos para esta cama'
             },
         },
         rooms: {
@@ -141,6 +142,12 @@ export default {
             action: {
                 reset: 'Visitar link',
                 newReset: 'Generar link',
+            }
+        },
+        internmentepisodes: {
+            name: 'Episodio de internación ||| Episodios de internación',
+            fields: {
+                entryDate: 'Fecha de entrada'
             }
         },
     },

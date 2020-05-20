@@ -86,7 +86,8 @@ export default (apiUrl, mappers) => {
         const { target, id } = params;
         const { field, order } = params.sort;
         const { page, perPage } = params.pagination;
-        url = `${apiUrl}/${resource}?page=${page-1}&pageSize=${perPage}&sort=${field},${order}&${target}=${id}`;
+        const filter = stringify(params.filter);
+        url = `${apiUrl}/${resource}?page=${page-1}&pageSize=${perPage}&sort=${field},${order}&${target}=${id}&${filter}`;
         break;
       }
       case UPDATE:
