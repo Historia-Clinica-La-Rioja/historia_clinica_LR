@@ -1,6 +1,7 @@
 package net.pladema.internation.controller.internment;
 
 import io.swagger.annotations.Api;
+import net.pladema.establishment.controller.service.BedExternalService;
 import net.pladema.internation.controller.constraints.InternmentValid;
 import net.pladema.internation.controller.internment.dto.InternmentEpisodeADto;
 import net.pladema.internation.controller.internment.dto.InternmentEpisodeDto;
@@ -28,11 +29,14 @@ public class InternmentEpisodeController {
 
     private final InternmentEpisodeMapper internmentEpisodeMapper;
 
+    private final BedExternalService bedExternalService;
+
     public InternmentEpisodeController(InternmentEpisodeService internmentEpisodeService,
-                                       HealthcareProfessionalExternalService healthcareProfessionalExternalService, InternmentEpisodeMapper internmentEpisodeMapper) {
+                                       HealthcareProfessionalExternalService healthcareProfessionalExternalService, InternmentEpisodeMapper internmentEpisodeMapper, BedExternalService bedExternalService) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.internmentEpisodeMapper = internmentEpisodeMapper;
+        this.bedExternalService = bedExternalService;
     }
 
     @InternmentValid
@@ -55,6 +59,7 @@ public class InternmentEpisodeController {
         InternmentEpisode internmentEpisodeToSave = internmentEpisodeMapper.toInternmentEpisode(internmentEpisodeADto);
         internmentEpisodeToSave = internmentEpisodeService.addInternmentEpisode(internmentEpisodeToSave, institutionId);
         InternmentEpisodeDto result = internmentEpisodeMapper.toInternmentEpisodeDto(internmentEpisodeToSave);
+        bedExternalService.updateBedStatusOccupied(internmentEpisodeADto.getBedId());
         healthcareProfessionalExternalService.addHealthcareProfessionalGroup(result.getId(), internmentEpisodeADto.getResponsibleDoctorId());
         LOG.debug("Output -> {}", result);
         return  ResponseEntity.ok().body(result);
