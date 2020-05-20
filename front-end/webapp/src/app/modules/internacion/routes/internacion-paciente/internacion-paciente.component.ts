@@ -52,7 +52,6 @@ export class InternacionPacienteComponent implements OnInit {
 					}),
 					map((internmentEpisode: InternmentSummaryDto) => this.mapperService.toInternmentEpisodeSummary(internmentEpisode))
 				);
-
 			}
 		);
 	}
@@ -70,6 +69,10 @@ export class InternacionPacienteComponent implements OnInit {
 
 	goToEpicrisis(): void {
 		this.router.navigate([`${this.router.url}/epicrisis`]);
+	}
+
+	goToAdministrativeDischarge(): void {
+		this.router.navigate([`${this.router.url}/alta`]);
 	}
 
 }

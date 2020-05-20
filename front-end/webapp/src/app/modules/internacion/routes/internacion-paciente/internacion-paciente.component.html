@@ -20,12 +20,18 @@
 
 				<div *hasRole="['ESPECIALISTA_MEDICO']">
 					<button mat-flat-button color="primary" (click)="goToEpicrisis()"
-							*ngIf="anamnesisDoc?.confirmed && lastEvolutionNoteDoc?.confirmed">
+						*ngIf="anamnesisDoc?.confirmed && lastEvolutionNoteDoc?.confirmed">
 						<span class="uppercase"
 							[translate]="'internaciones.internacion-paciente.actions.ADD_EPICRISIS'"></span>
 					</button>
 				</div>
-
+			</div>
+			<div class="buttons" *ngIf="epicrisisDoc">
+				<button mat-flat-button color="primary" *hasRole="['ADMINISTRATIVO']"
+					(click)="goToAdministrativeDischarge()">
+					<span class="uppercase"
+						[translate]="'internaciones.internacion-paciente.actions.ADMINISTRATIVE_DISCHARGE'"></span>
+				</button>
 			</div>
 			<div class="flex-layout">
 				<div class="column">
@@ -51,10 +57,12 @@
 						</app-summary-card>
 					</section>
 					<section *hasRole="['ESPECIALISTA_MEDICO']">
-						<app-main-diagnosis-summary [internmentEpisodeId]="internmentEpisodeId"></app-main-diagnosis-summary>
+						<app-main-diagnosis-summary [internmentEpisodeId]="internmentEpisodeId">
+						</app-main-diagnosis-summary>
 					</section>
 					<section *hasRole="['ESPECIALISTA_MEDICO']">
-						<app-diagnosis-summary [internmentEpisodeId]="internmentEpisodeId" [editable]="!epicrisisDoc"></app-diagnosis-summary>
+						<app-diagnosis-summary [internmentEpisodeId]="internmentEpisodeId" [editable]="!epicrisisDoc">
+						</app-diagnosis-summary>
 					</section>
 				</div>
 			</div>

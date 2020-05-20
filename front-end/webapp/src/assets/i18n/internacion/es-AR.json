@@ -227,7 +227,8 @@
 			"actions": {
 				"ADD_EPICRISIS": "Generar epicrisis",
 				"ADD_EVAL_INGRESO": "Generar evaluación de ingreso",
-				"ADD_NOTA_EVOLUCION": "Agregar nota de evolución"
+				"ADD_NOTA_EVOLUCION": "Agregar nota de evolución",
+				"ADMINISTRATIVE_DISCHARGE": "Alta administrativa"
 			},
 			"card": {
 				"DAYS_INTERNED": "{{days}} días internado",
