@@ -39,7 +39,7 @@ export class InstitucionesComponent implements OnInit {
 
 	ingresar(institutionDto: { id: number }): void {
 		if (institutionDto.id === -1) {
-			window.location.href = '/backoffice';
+			window.location.href = '/backoffice/index.html';
 		} else {
 			this.router.navigate(['/institucion', institutionDto.id]);
 		}
