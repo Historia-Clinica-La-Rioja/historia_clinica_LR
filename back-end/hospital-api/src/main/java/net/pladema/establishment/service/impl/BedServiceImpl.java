@@ -1,19 +1,23 @@
 package net.pladema.establishment.service.impl;
 
-import net.pladema.establishment.controller.dto.BedDto;
-import net.pladema.establishment.controller.mapper.BedMapper;
-import net.pladema.establishment.controller.service.impl.BedExternalServiceImpl;
-import net.pladema.establishment.repository.BedRepository;
-import net.pladema.establishment.repository.entity.Bed;
-import net.pladema.establishment.service.BedService;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import net.pladema.establishment.controller.dto.BedDto;
+import net.pladema.establishment.controller.mapper.BedMapper;
+import net.pladema.establishment.repository.BedRepository;
+import net.pladema.establishment.repository.entity.Bed;
+import net.pladema.establishment.service.BedService;
 
 @Service
 public class BedServiceImpl implements BedService {
 
     private static final Logger LOG = LoggerFactory.getLogger(BedServiceImpl.class);
+
+	private static final boolean AVAILABLE = true;
 
     private BedRepository bedRepository;
 
@@ -34,4 +38,16 @@ public class BedServiceImpl implements BedService {
         LOG.debug("Output -> {}", result);
         return result;
     }
+
+	@Override
+	public Optional<Bed> freeBed(Integer bedId) {
+		Optional<Bed> bedOpt = bedRepository.findById(bedId);
+		bedOpt.ifPresent(bed -> {
+			bed.setAvailable(AVAILABLE);
+			bed.setFree(AVAILABLE);
+			bedRepository.save(bed);
+		});
+		return bedOpt;
+	}
+
 }

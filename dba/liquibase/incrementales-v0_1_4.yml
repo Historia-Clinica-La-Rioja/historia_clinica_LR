@@ -261,3 +261,15 @@
         referencedColumnNames: id
         referencedTableName: discharge_type
         validate: true              
+
+# TODO: Borrar para  el open-source y modificar patient_discharge-createTable:
+# -> discharge_date: date;
+- changeSet:
+    id: patient_discharge_modify_dateType
+    author: gmurgolo
+    changes:  
+    -  modifyDataType:  
+        columnName:  discharge_date  
+        newDataType:  date
+        tableName: patient_discharge
+   

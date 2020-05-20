@@ -1,58 +1,76 @@
 package net.pladema.internation.controller.internment;
 
+import javax.transaction.Transactional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import io.swagger.annotations.Api;
 import net.pladema.establishment.controller.service.BedExternalService;
 import net.pladema.internation.controller.constraints.InternmentValid;
 import net.pladema.internation.controller.internment.dto.InternmentEpisodeADto;
 import net.pladema.internation.controller.internment.dto.InternmentEpisodeDto;
 import net.pladema.internation.controller.internment.dto.InternmentSummaryDto;
+import net.pladema.internation.controller.internment.dto.PatientDischargeDto;
 import net.pladema.internation.controller.internment.mapper.InternmentEpisodeMapper;
+import net.pladema.internation.controller.internment.mapper.PatientDischargeMapper;
 import net.pladema.internation.repository.core.domain.InternmentSummaryVo;
 import net.pladema.internation.repository.core.entity.InternmentEpisode;
+import net.pladema.internation.repository.core.entity.PatientDischarge;
+import net.pladema.internation.repository.masterdata.entity.InternmentEpisodeStatus;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
+import net.pladema.sgx.exceptions.NotFoundException;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/internments")
 @Api(value = "Internment Episode", tags = { "Internment Episode" })
 public class InternmentEpisodeController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(InternmentEpisodeController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(InternmentEpisodeController.class);
 
-    private final InternmentEpisodeService internmentEpisodeService;
+	private final InternmentEpisodeService internmentEpisodeService;
 
-    private final HealthcareProfessionalExternalService healthcareProfessionalExternalService;
+	private final HealthcareProfessionalExternalService healthcareProfessionalExternalService;
 
-    private final InternmentEpisodeMapper internmentEpisodeMapper;
+	private final InternmentEpisodeMapper internmentEpisodeMapper;
 
-    private final BedExternalService bedExternalService;
+	private final PatientDischargeMapper patientDischargeMapper;
 
-    public InternmentEpisodeController(InternmentEpisodeService internmentEpisodeService,
-                                       HealthcareProfessionalExternalService healthcareProfessionalExternalService, InternmentEpisodeMapper internmentEpisodeMapper, BedExternalService bedExternalService) {
-        this.internmentEpisodeService = internmentEpisodeService;
-        this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
-        this.internmentEpisodeMapper = internmentEpisodeMapper;
-        this.bedExternalService = bedExternalService;
-    }
+	private final BedExternalService bedExternalService;
 
-    @InternmentValid
-    @GetMapping("/{internmentEpisodeId}/summary")
-    public ResponseEntity<InternmentSummaryDto> internmentEpisodeSummary(
-            @PathVariable(name = "institutionId") Integer institutionId,
-            @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
-        LOG.debug("Input parameters -> {}", internmentEpisodeId);
-        InternmentSummaryVo internmentSummaryVo = internmentEpisodeService.getIntermentSummary(internmentEpisodeId)
-                .orElse(new InternmentSummaryVo());
-        InternmentSummaryDto result = internmentEpisodeMapper.toInternmentSummaryDto(internmentSummaryVo);
-        LOG.debug("Output -> {}", result);
-        return  ResponseEntity.ok().body(result);
-    }
+	public InternmentEpisodeController(InternmentEpisodeService internmentEpisodeService,
+			HealthcareProfessionalExternalService healthcareProfessionalExternalService,
+			InternmentEpisodeMapper internmentEpisodeMapper, BedExternalService bedExternalService,
+			PatientDischargeMapper patientDischargeMapper) {
+		this.internmentEpisodeService = internmentEpisodeService;
+		this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
+		this.internmentEpisodeMapper = internmentEpisodeMapper;
+		this.bedExternalService = bedExternalService;
+		this.patientDischargeMapper = patientDischargeMapper;
+	}
 
-    @PostMapping
+	@InternmentValid
+	@GetMapping("/{internmentEpisodeId}/summary")
+	public ResponseEntity<InternmentSummaryDto> internmentEpisodeSummary(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
+		LOG.debug("Input parameters -> {}", internmentEpisodeId);
+		InternmentSummaryVo internmentSummaryVo = internmentEpisodeService.getIntermentSummary(internmentEpisodeId)
+				.orElse(new InternmentSummaryVo());
+		InternmentSummaryDto result = internmentEpisodeMapper.toInternmentSummaryDto(internmentSummaryVo);
+		LOG.debug("Output -> {}", result);
+		return ResponseEntity.ok().body(result);
+	}
+
+	   @PostMapping
     public ResponseEntity<InternmentEpisodeDto> addInternmentEpisode(
             @PathVariable(name = "institutionId") Integer institutionId,
             @RequestBody InternmentEpisodeADto internmentEpisodeADto) {
@@ -64,4 +82,21 @@ public class InternmentEpisodeController {
         LOG.debug("Output -> {}", result);
         return  ResponseEntity.ok().body(result);
     }
+
+	@Transactional
+	@PostMapping("/{internmentEpisodeId}/discharge")
+	public ResponseEntity<PatientDischargeDto> dischargeInternmentEpisode(
+			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
+			@RequestBody PatientDischargeDto patientDischargeDto) {
+		PatientDischarge patientDischarge = patientDischargeMapper.toPatientDischarge(patientDischargeDto);
+		InternmentSummaryVo internmentEpisodeSummary = internmentEpisodeService.getIntermentSummary(internmentEpisodeId)
+				.orElseThrow(() -> new NotFoundException("bad-episode-id", "Internment episode not found"));
+		patientDischarge.setInternmentEpisodeId(internmentEpisodeId);
+		PatientDischarge patientDischageSaved = internmentEpisodeService.addPatientDischarge(patientDischarge);
+		bedExternalService.freeBed(internmentEpisodeSummary.getBedId());
+		internmentEpisodeService.updateInternmentEpisodeSatus(internmentEpisodeId,
+				Short.valueOf(InternmentEpisodeStatus.INACTIVE));
+		return ResponseEntity.ok(patientDischargeMapper.toPatientDischargeDto(patientDischageSaved));
+	}
+
 }

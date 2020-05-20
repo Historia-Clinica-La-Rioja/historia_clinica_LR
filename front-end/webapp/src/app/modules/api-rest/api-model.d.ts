@@ -365,6 +365,11 @@ export interface PasswordResetDto {
     token: string;
 }
 
+export interface PatientDischargeDto {
+    dischargeDate: string;
+    dischargeTypeId: number;
+}
+
 export interface PatientDto {
     firstName: string;
     id: number;
