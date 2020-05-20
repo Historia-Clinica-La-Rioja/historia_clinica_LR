@@ -1,5 +1,5 @@
 <app-content width="full">
-	<section>
+	<section *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']">
 		<h2 class="page-title" [translate]="'internaciones.internados-table.TITLE'"></h2>
 		<app-internaciones-table></app-internaciones-table>
 	</section>

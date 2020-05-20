@@ -3,36 +3,46 @@
 		<h2 class="page-title" [translate]="'internaciones.internacion-paciente.TITLE'"></h2>
 		<div *ngIf="(internmentEpisodeSummary$ | async) as internmentEpisodeSummary">
 			<div class="buttons" *ngIf="!epicrisisDoc">
-				<button mat-flat-button color="primary" (click)="goToAnamnesis()"
-					*ngIf="!anamnesisDoc || !anamnesisDoc.confirmed">
-					<span class="uppercase"
-						[translate]="'internaciones.internacion-paciente.actions.ADD_EVAL_INGRESO'"></span>
-				</button>
-				<button mat-flat-button color="primary" (click)="goToNotaEvolucion()">
-					<span class="uppercase"
-						[translate]="'internaciones.internacion-paciente.actions.ADD_NOTA_EVOLUCION'"></span>
-				</button>
-				<button mat-flat-button color="primary" (click)="goToEpicrisis()" *ngIf="anamnesisDoc?.confirmed && lastEvolutionNoteDoc?.confirmed">
-					<span class="uppercase"
-						[translate]="'internaciones.internacion-paciente.actions.ADD_EPICRISIS'"></span>
-				</button>
+				<div *hasRole="['ESPECIALISTA_MEDICO']">
+					<button mat-flat-button color="primary" (click)="goToAnamnesis()"
+						*ngIf="!anamnesisDoc || !anamnesisDoc.confirmed">
+						<span class="uppercase"
+							[translate]="'internaciones.internacion-paciente.actions.ADD_EVAL_INGRESO'"></span>
+					</button>
+				</div>
+
+				<div *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']">
+					<button mat-flat-button color="primary" (click)="goToNotaEvolucion()">
+						<span class="uppercase"
+							[translate]="'internaciones.internacion-paciente.actions.ADD_NOTA_EVOLUCION'"></span>
+					</button>
+				</div>
+
+				<div *hasRole="['ESPECIALISTA_MEDICO']">
+					<button mat-flat-button color="primary" (click)="goToEpicrisis()"
+							*ngIf="anamnesisDoc?.confirmed && lastEvolutionNoteDoc?.confirmed">
+						<span class="uppercase"
+							[translate]="'internaciones.internacion-paciente.actions.ADD_EPICRISIS'"></span>
+					</button>
+				</div>
+
 			</div>
 			<div class="flex-layout">
 				<div class="column">
-					<section>
+					<section *hasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']">
 						<app-patient-card [patient]="patient$ | async"></app-patient-card>
 					</section>
-					<section>
+					<section *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']">
 						<app-signos-vitales-summary [internmentEpisodeId]="internmentEpisodeId">
 						</app-signos-vitales-summary>
 					</section>
-					<section>
+					<section *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']">
 						<app-antropometricos-summary [internmentEpisodeId]="internmentEpisodeId">
 						</app-antropometricos-summary>
 					</section>
 				</div>
 				<div class="column">
-					<section>
+					<section *hasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']">
 						<app-summary-card [header]="internacionSummary">
 							<mat-card-content>
 								<app-internment-episode-summary [internmentEpisode]="internmentEpisodeSummary">
@@ -40,10 +50,10 @@
 							</mat-card-content>
 						</app-summary-card>
 					</section>
-					<section>
+					<section *hasRole="['ESPECIALISTA_MEDICO']">
 						<app-main-diagnosis-summary [internmentEpisodeId]="internmentEpisodeId"></app-main-diagnosis-summary>
 					</section>
-					<section>
+					<section *hasRole="['ESPECIALISTA_MEDICO']">
 						<app-diagnosis-summary [internmentEpisodeId]="internmentEpisodeId" [editable]="!epicrisisDoc"></app-diagnosis-summary>
 					</section>
 				</div>

@@ -4,10 +4,10 @@
 			<h2 class="page-title" [translate]="'internaciones.nota-evolucion.TITLE'"></h2>
 			<h3 [translate]="'internaciones.nota-evolucion.SUBTITLE'"></h3>
 		</section>
-		<section id="diagnosticos">
+		<section id="diagnosticos" *hasRole="['ESPECIALISTA_MEDICO']">
 			<app-diagnosticos [(diagnosis)]="diagnosticos"></app-diagnosticos>
 		</section>
-		<section id="datos-antropometricos">
+		<section id="datos-antropometricos" *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']">
 			<h2 [translate]="'internaciones.anamnesis.datos-antropometricos.TITLE'"></h2>
 			<mat-card class="datos-antropometricos-card">
 				<mat-card-content formGroupName="anthropometricData">
@@ -47,13 +47,13 @@
 			</mat-card>
 
 		</section>
-		<section id="alergias">
+		<section id="alergias" *hasRole="['ESPECIALISTA_MEDICO']">
 			<app-alergias [(allergies)]="allergies"></app-alergias>
 		</section>
-		<section id="vacunas">
+		<section id="vacunas" *hasRole="['ESPECIALISTA_MEDICO']">
 			<app-vacunas [(inmunizations)]="inmunizations"></app-vacunas>
 		</section>
-		<section id="signos-vitales">
+		<section id="signos-vitales" *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']">
 			<h2 [translate]="'internaciones.anamnesis.vital-signs.form.TITLE'"></h2>
 			<mat-card>
 				<mat-card-content class="vital-signs" formGroupName="vitalSigns">
@@ -143,7 +143,7 @@
 				</mat-card-content>
 			</mat-card>
 		</section>
-		<section id="observations">
+		<section id="observations" *hasRole="['ESPECIALISTA_MEDICO']">
 			<h2 [translate]="'internaciones.anamnesis.observations.TITLE'"></h2>
 			<mat-card>
 				<mat-card-content formGroupName="observations">
@@ -204,7 +204,7 @@
 			<button mat-stroked-button type="button" color="primary" (click)="back()">
 				<span class="uppercase" [translate]="'buttons.BACK'"></span>
 			</button>
-			<button id="sign-confirm" mat-raised-button type="submit" color="primary">
+			<button id="sign-confirm" mat-raised-button type="submit" color="primary" *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']">
 				<span class="uppercase" [translate]="'internaciones.anamnesis.buttons.CONFIRM'"></span>
 			</button>
 		</section>
