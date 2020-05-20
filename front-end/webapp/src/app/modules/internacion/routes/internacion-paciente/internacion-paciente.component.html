@@ -12,7 +12,7 @@
 					<span class="uppercase"
 						[translate]="'internaciones.internacion-paciente.actions.ADD_NOTA_EVOLUCION'"></span>
 				</button>
-				<button mat-flat-button color="primary" (click)="goToEpicrisis()">
+				<button mat-flat-button color="primary" (click)="goToEpicrisis()" *ngIf="anamnesisDoc?.confirmed && lastEvolutionNoteDoc?.confirmed">
 					<span class="uppercase"
 						[translate]="'internaciones.internacion-paciente.actions.ADD_EPICRISIS'"></span>
 				</button>

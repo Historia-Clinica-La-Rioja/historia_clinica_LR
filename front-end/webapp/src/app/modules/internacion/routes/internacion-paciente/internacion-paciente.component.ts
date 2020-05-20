@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PatientBasicData } from 'src/app/modules/presentation/components/patient-card/patient-card.component';
 import { PatientService } from '@api-rest/services/patient.service';
-import { BasicPatientDto, InternmentSummaryDto, AnamnesisSummaryDto, EpicrisisSummaryDto } from '@api-rest/api-model';
+import { BasicPatientDto, InternmentSummaryDto, AnamnesisSummaryDto, EpicrisisSummaryDto, EvaluationNoteSummaryDto } from '@api-rest/api-model';
 import { map, tap } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -22,6 +22,7 @@ export class InternacionPacienteComponent implements OnInit {
 	public internacionSummary = INTERNACION;
 	public anamnesisDoc: AnamnesisSummaryDto;
 	public epicrisisDoc: EpicrisisSummaryDto;
+	public lastEvolutionNoteDoc: EvaluationNoteSummaryDto;
 	public internmentEpisodeId: number;
 	public internmentEpisodeSummary$: Observable<InternmentEpisodeSummary>;
 
@@ -47,6 +48,7 @@ export class InternacionPacienteComponent implements OnInit {
 					tap((internmentEpisode: InternmentSummaryDto) => {
 						this.anamnesisDoc = internmentEpisode.documents?.anamnesis;
 						this.epicrisisDoc = internmentEpisode.documents?.epicrisis;
+						this.lastEvolutionNoteDoc = internmentEpisode.documents?.lastEvaluationNote;
 					}),
 					map((internmentEpisode: InternmentSummaryDto) => this.mapperService.toInternmentEpisodeSummary(internmentEpisode))
 				);
