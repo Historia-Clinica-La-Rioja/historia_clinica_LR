@@ -117,22 +117,23 @@ public class ReportDocumentServiceImpl implements ReportDocumentService {
         //User Creator
         try {
             author = documentRepository.getUserCreator(documentId);
-            if (author == null)
-                //Responsible
-                author = documentRepository.getResponsible(documentId);
-            ResponsibleDoctorBo result = null;
-
-            if (author != null)
-                result = new ResponsibleDoctorBo(author.getId(),
-                        author.getFirstName(),
-                        author.getLastName(),
-                        author.getLicence());
-            LOG.debug(OUTPUT, result);
-            return result;
         }
         catch(IncorrectResultSizeDataAccessException ex) {
-            return null;
+            author = null;
         }
+        if (author == null)
+            //Responsible
+            author = documentRepository.getResponsible(documentId);
+        ResponsibleDoctorBo result = null;
+
+        if (author != null)
+            result = new ResponsibleDoctorBo(author.getId(),
+                    author.getFirstName(),
+                    author.getLastName(),
+                    author.getLicence());
+        LOG.debug(OUTPUT, result);
+        return result;
+
     }
 
 

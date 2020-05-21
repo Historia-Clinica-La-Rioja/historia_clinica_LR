@@ -28,7 +28,8 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
             "join HealthcareProfessionalGroup hcg on (d.internmentEpisodeId = hcg.pk.internmentEpisodeId) " +
             "join HealthcareProfessional hp on (hcg.pk.healthcareProfessionalId = hp.id) " +
             "join Person p on (hp.personId = p.id) " +
-            "where d.id = :documentId")
+            "where d.id = :documentId " +
+            "and hcg.responsible = true ")
     ResponsibleDoctorVo getResponsible(@Param("documentId") Long documentId);
 
 }
