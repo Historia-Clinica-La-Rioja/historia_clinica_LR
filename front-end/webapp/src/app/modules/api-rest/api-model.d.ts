@@ -302,6 +302,11 @@ export interface InternmentEpisodeDto {
     specialty: ClinicalSpecialtyDto;
 }
 
+export interface InternmentEpisodeProcessDto {
+    id?: number;
+    inProgress: boolean;
+}
+
 export interface InternmentGeneralStateDto extends Serializable {
     allergies: AllergyConditionDto[];
     anthropometricData: AnthropometricDataDto;
@@ -368,7 +373,7 @@ export interface PasswordResetDto {
 }
 
 export interface PatientDischargeDto {
-    dischargeDate: string;
+    dischargeDate: Date;
     dischargeTypeId: number;
 }
 

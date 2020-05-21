@@ -57,11 +57,9 @@ export class ProfileComponent implements OnInit {
 					});
 
 				this.internmentPatientService.internmentEpisodeIdInProcess(this.patientId)
-					.subscribe(internmentEpisodeId => {
-						if (internmentEpisodeId){
-							this.internmentEpisode = {};
-							this.internmentEpisode.id = internmentEpisodeId;
-							this.internmentEpisode.inProgress = true;
+					.subscribe(internmentEpisodeProcessDto => {
+						if (internmentEpisodeProcessDto){
+							this.internmentEpisode = internmentEpisodeProcessDto;
 						}
 					});
 			});

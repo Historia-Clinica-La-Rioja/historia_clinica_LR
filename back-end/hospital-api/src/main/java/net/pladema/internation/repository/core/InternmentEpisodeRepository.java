@@ -1,5 +1,6 @@
 package net.pladema.internation.repository.core;
 
+import net.pladema.internation.repository.core.domain.InternmentEpisodeProcessVo;
 import net.pladema.internation.repository.core.domain.InternmentSummaryVo;
 import net.pladema.internation.repository.core.entity.InternmentEpisode;
 import net.pladema.internation.repository.masterdata.entity.DocumentStatus;
@@ -114,11 +115,10 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
     boolean haveAnamnesis(@Param("internmentEpisodeId") Integer internmentEpisodeId);
 
     @Transactional(readOnly = true)
-    @Query(" SELECT ie.id " +
+    @Query(" SELECT NEW net.pladema.internation.repository.core.domain.InternmentEpisodeProcessVo(ie.id, ie.institutionId) " +
             "FROM InternmentEpisode  ie " +
-            "WHERE  ie.patientId = :patientId and ie.institutionId = :institutionId and ie.statusId <> " + InternmentEpisodeStatus.INACTIVE)
-    Optional<Integer> internmentEpisodeInProcess(@Param("institutionId") Integer institutionId,
-                                                 @Param("patientId") Integer patientId);
+            "WHERE  ie.patientId = :patientId and ie.statusId <> " + InternmentEpisodeStatus.INACTIVE)
+    Optional<InternmentEpisodeProcessVo> internmentEpisodeInProcess(@Param("patientId") Integer patientId);
 
     @Transactional(readOnly = true)
     @Query("SELECT ie.entryDate " +

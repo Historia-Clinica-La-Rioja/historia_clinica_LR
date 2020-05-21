@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
-import { InternmentPatientDto } from "@api-rest/api-model";
+import { InternmentPatientDto, InternmentEpisodeProcessDto } from "@api-rest/api-model";
 import { environment } from "@environments/environment";
 import { ContextService } from "@core/services/context.service";
 
@@ -22,8 +22,8 @@ export class InternmentPatientService {
 		return this.http.get<InternmentPatientDto[]>(url);
 	}
 
-	internmentEpisodeIdInProcess(patientId: number) :Observable<number>{
+	internmentEpisodeIdInProcess(patientId: number) :Observable<InternmentEpisodeProcessDto>{
 		let url = `${environment.apiBase}` + BASIC_URL_PREFIX + `/${this.contextService.institutionId}` + BASIC_URL_SUFIX  + `/${patientId}` + `/internmentEpisodeIdInProcess/`;
-		return this.http.get<number>(url);
+		return this.http.get<InternmentEpisodeProcessDto>(url);
 	}
 }
