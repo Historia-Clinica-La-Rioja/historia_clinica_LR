@@ -1,6 +1,5 @@
 package net.pladema.pdf;
 
-import lombok.NoArgsConstructor;
 import net.pladema.internation.repository.masterdata.entity.DocumentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +20,6 @@ import java.util.Map;
 import java.util.UUID;
 
 @Component
-@NoArgsConstructor
 class StreamFile {
 
     private static final Logger LOG = LoggerFactory.getLogger(StreamFile.class);
@@ -29,18 +27,21 @@ class StreamFile {
     @Value("${internment.document.directory:temp}")
     private String rootDirectory;
 
-    private final String PDF_EXTENSION = ".pdf";
+    private final Map<Short, String> documentTypes;
 
-    private final Map<Short, String> documentTypes = new HashMap<Short, String>(){{
-        put(DocumentType.ANAMNESIS, "anamnesis");
-        put(DocumentType.EVALUATION_NOTE, "evolutionNote");
-        put(DocumentType.EPICRISIS, "epicrisis");
-    }};
+    private static final String PDF_EXTENSION = ".pdf";
 
-    private static final String relativeDirectory = "institution/{institutionId}/internment/{internmentEpisodeId}/{documentType}/";
+    private static final String RELATIVE_DIRECTORY = "institution/{institutionId}/internment/{internmentEpisodeId}/{documentType}/";
+
+    public StreamFile(){
+        documentTypes = new HashMap<>();
+        documentTypes.put(DocumentType.ANAMNESIS, "anamnesis");
+        documentTypes.put(DocumentType.EVALUATION_NOTE, "evolutionNote");
+        documentTypes.put(DocumentType.EPICRISIS, "epicrisis");
+    }
 
     String buildPath(Integer institutionId, Integer internmentEpisodeId, Short documentType) {
-        return getRootDirectory() + relativeDirectory
+        return getRootDirectory() + RELATIVE_DIRECTORY
                         .replace("{institutionId}",institutionId.toString())
                         .replace("{internmentEpisodeId}", internmentEpisodeId.toString())
                         .replace("{documentType}", documentTypes.get(documentType)) +
@@ -65,25 +66,23 @@ class StreamFile {
     }
 
     boolean loadFileInDirectory(String path, ByteArrayOutputStream byteArrayOutputStream) throws IOException {
-        boolean fileCreated = false;
+        boolean fileCreated;
         boolean directoryCreated = true;
-        try {
-            File file = new File(path);
-            if(!file.getParentFile().exists())
-                directoryCreated = file.getParentFile().mkdirs();
 
-            if(directoryCreated && !file.exists()) {
-                fileCreated = file.createNewFile();
-                OutputStream outputStream = new FileOutputStream(file);
+        File file = new File(path);
+        if(!file.getParentFile().exists())
+            directoryCreated = file.getParentFile().mkdirs();
+
+        if(directoryCreated && !file.exists()) {
+            fileCreated = file.createNewFile();
+
+            try(OutputStream outputStream = new FileOutputStream(file)){
                 outputStream.write(byteArrayOutputStream.toByteArray());
-                outputStream.close();
             }
             LOG.debug("File loaded in directory -> {}", fileCreated);
             return fileCreated;
         }
-        catch(IOException ex){
-            throw new IOException(ex);
-        }
+        return false;
     }
 
     private String getRootDirectory() {
