@@ -67,4 +67,8 @@ export class InternacionMasterDataService {
 		return this.http.get<any[]>(url);
 	}
 
+	getDischargeType(): Observable<MasterDataInterface<string>[]> {
+		let url = `${environment.apiBase}/internments/masterdata/discharge/type`;
+		return this.http.get<any[]>(url);
+	}
 }

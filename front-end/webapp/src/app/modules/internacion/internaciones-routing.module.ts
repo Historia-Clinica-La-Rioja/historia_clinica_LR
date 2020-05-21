@@ -7,6 +7,7 @@ import { NewInternmentComponent } from "./routes/new-internment/new-internment.c
 import { EpicrisisComponent } from './routes/epicrisis/epicrisis.component';
 import { NotaEvolucionComponent } from './routes/nota-evolucion/nota-evolucion.component';
 import { RoleGuard } from '@core/guards/RoleGuard';
+import { PatientDischargeComponent } from './routes/patient-discharge/patient-discharge.component';
 
 
 const routes: Routes = [
@@ -50,6 +51,12 @@ const routes: Routes = [
 		path: 'internacion/new',
 		component: NewInternmentComponent,
 		canActivate: [RoleGuard],
+		data: { allowedRoles: ['ADMINISTRATIVO'] }
+	},
+	{
+		path: 'internacion/:idInternacion/paciente/:idPaciente/alta',
+		canActivate: [RoleGuard],
+		component: PatientDischargeComponent,
 		data: { allowedRoles: ['ADMINISTRATIVO'] }
 	}
 ];

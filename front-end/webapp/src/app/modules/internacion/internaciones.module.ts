@@ -31,6 +31,7 @@ import { MainDiagnosisSummaryComponent } from './components/main-diagnosis-summa
 import { RemoveDiagnosisComponent } from './dialogs/remove-diagnosis/remove-diagnosis.component';
 import { EffectiveTimeComponent } from './components/effective-time/effective-time.component';
 import { EffectiveTimeDialogComponent } from './dialogs/effective-time-dialog/effective-time-dialog.component';
+import { PatientDischargeComponent } from './routes/patient-discharge/patient-discharge.component';
 
 @NgModule({
 	declarations: [
@@ -60,6 +61,7 @@ import { EffectiveTimeDialogComponent } from './dialogs/effective-time-dialog/ef
 		RemoveDiagnosisComponent,
 		EffectiveTimeComponent,
 		EffectiveTimeDialogComponent,
+		PatientDischargeComponent,
 	],
 	imports: [
 		CoreModule,

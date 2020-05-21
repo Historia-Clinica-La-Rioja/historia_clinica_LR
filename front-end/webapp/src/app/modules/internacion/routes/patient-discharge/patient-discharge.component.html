@@ -1,0 +1,57 @@
+<app-content width="full">
+	<div class="section-container">
+		<section class="page">
+			<h2 class="page-title" [translate]="'internaciones.discharge.TITLE'"></h2>
+			<form [formGroup]="dischargeForm" (ngSubmit)="save()">
+
+				<span [translate]="'internaciones.discharge.DISCHARGE_DATE'"></span> *
+				<div>
+					<mat-form-field appearance="outline">
+						<input formControlName="dischargeDate" id="dischargeDate" matInput [max]="today"
+								[matDatepicker]="picker2" placeholder="{{'internaciones.discharge.DISCHARGE_DATE' | translate}}">
+						<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+						<mat-datepicker #picker2></mat-datepicker>
+
+						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+					</mat-form-field>
+				</div>
+
+				<span [translate]="'internaciones.discharge.DISCHARGE_TYPE'"></span> *
+				<div>
+					<mat-form-field appearance="outline">
+						<mat-select id="dischargeTypeId"
+									name="dischargeTypeId"
+									formControlName="dischargeTypeId"
+									placeholder="{{'internaciones.discharge.DISCHARGE_TYPE' | translate}}">
+							<mat-option *ngFor="let dischargeType of dischargeTypes"
+										[value]="dischargeType.id">
+								{{dischargeType.description}}
+							</mat-option>
+						</mat-select>
+						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+					</mat-form-field>
+				</div>
+			</form>
+
+			<button mat-stroked-button color="secondary" (click)="back()">
+				<span [translate]="'buttons.BACK'"></span>
+			</button>
+			<button mat-raised-button color="primary" (click)="save()">
+				<span [translate]="'buttons.CONTINUE'"></span>
+			</button>
+		</section>
+		<section>
+			<div class="profile-card">
+				<app-patient-card [patient]="patientBasicData">
+					<div header class="header">
+						<app-patient-type-logo [patientTypeData]="patientTypeData"></app-patient-type-logo>
+					</div>
+					<div content>
+						<app-personal-information
+							[personalInformation]="personalInformation"></app-personal-information>
+					</div>
+				</app-patient-card>
+			</div>
+		</section>
+	</div>
+</app-content>

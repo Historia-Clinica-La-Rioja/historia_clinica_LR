@@ -257,6 +257,15 @@
 			"modal": {
 				"SUBTITLE": "Resultados de búsqueda para: "
 			}
+		},
+		"discharge": {
+			"TITLE": "Alta Administrativa",
+			"DISCHARGE_DATE":"Fecha de egreso",
+			"DISCHARGE_TYPE":"Tipo de egreso",
+			"messages":{
+				"ERROR":"No se pudo dar el alta administrativa del paciente",
+				"SUCCESS":"El alta administrativa se guardó exitosamente"
+			}
 		}
 	}
 }
