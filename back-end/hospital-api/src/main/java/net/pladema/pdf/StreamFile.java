@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -86,9 +88,16 @@ class StreamFile {
 
     private String getRootDirectory() {
         if (rootDirectory != null && rootDirectory.equals("temp")) {
-            return System.getProperty("java.io.tmpdir");
+            String tempDirectory = System.getProperty("java.io.tmpdir");
+            if(hasFileSeparatorAtEnd(tempDirectory))
+                return tempDirectory;
+            return tempDirectory + File.separatorChar;
         }
         return rootDirectory;
+    }
+
+    private boolean hasFileSeparatorAtEnd(@NotNull @NotEmpty String path){
+        return path.charAt(path.length()-1) == File.separatorChar;
     }
 
 }
