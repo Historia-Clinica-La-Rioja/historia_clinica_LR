@@ -14,6 +14,7 @@ import { ContextService } from "@core/services/context.service";
 
 const ROUTE_SEARCH = 'pacientes/search';
 const ROUTE_PROFILE = 'pacientes/profile/';
+const ROUTE_HOME_PATIENT = 'pacientes';
 
 @Component({
 	selector: 'app-new-patient',
@@ -217,18 +218,6 @@ export class NewPatientComponent implements OnInit {
 
 	goBack(): void {
 		this.formSubmitted = false;
-		this.router.navigate([this.routePrefix + ROUTE_SEARCH],
-			{
-				queryParams: {
-					identificationTypeId: this.form.controls.identificationTypeId.value,
-					identificationNumber: this.form.controls.identificationNumber.value,
-					genderId: this.form.controls.genderId.value,
-					firstName: this.form.controls.firstName.value,
-					lastName: this.form.controls.lastName.value,
-					middleNames: this.form.controls.middleNames.value,
-					birthDate: this.form.controls.birthDate.value.format(DateFormat.API_DATE),
-					otherLastNames: this.form.controls.otherLastNames.value,
-				}
-			});
+		this.router.navigate([this.routePrefix + ROUTE_HOME_PATIENT]);
 	}
 }
