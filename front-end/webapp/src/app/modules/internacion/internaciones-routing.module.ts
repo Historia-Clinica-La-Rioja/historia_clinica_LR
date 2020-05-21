@@ -6,36 +6,51 @@ import { AnamnesisComponent } from './routes/anamnesis/anamnesis.component';
 import { NewInternmentComponent } from "./routes/new-internment/new-internment.component";
 import { EpicrisisComponent } from './routes/epicrisis/epicrisis.component';
 import { NotaEvolucionComponent } from './routes/nota-evolucion/nota-evolucion.component';
+import { RoleGuard } from '@core/guards/RoleGuard';
 
 
 const routes: Routes = [
 	{
 		path: '',
 		component: InternacionesHomeComponent,
+		canActivate: [RoleGuard],
+		data: { allowedRoles: ['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD'] }
 	},
 	{
 		path: 'internacion/:idInternacion/paciente/:idPaciente',
 		component: InternacionPacienteComponent,
+		canActivate: [RoleGuard],
+		data: { allowedRoles: ['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ADMINISTRATIVO'] }
 	},
 	{
 		path: 'internacion/:idInternacion/paciente/:idPaciente/anamnesis',
-		component: AnamnesisComponent
+		component: AnamnesisComponent,
+		canActivate: [RoleGuard],
+		data: { allowedRoles: ['ESPECIALISTA_MEDICO'] }
 	},
 	{
 		path: 'internacion/:idInternacion/paciente/:idPaciente/anamnesis/:anamnesisId',
-		component: AnamnesisComponent
+		component: AnamnesisComponent,
+		canActivate: [RoleGuard],
+		data: { allowedRoles: ['ESPECIALISTA_MEDICO'] }
 	},
 	{
 		path: 'internacion/:idInternacion/paciente/:idPaciente/nota-evolucion',
-		component: NotaEvolucionComponent
+		component: NotaEvolucionComponent,
+		canActivate: [RoleGuard],
+		data: { allowedRoles: ['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD'] }
 	},
 	{
 		path: 'internacion/:idInternacion/paciente/:idPaciente/epicrisis',
-		component: EpicrisisComponent
+		component: EpicrisisComponent,
+		canActivate: [RoleGuard],
+		data: { allowedRoles: ['ESPECIALISTA_MEDICO'] }
 	},
 	{
 		path: 'internacion/new',
-		component: NewInternmentComponent
+		component: NewInternmentComponent,
+		canActivate: [RoleGuard],
+		data: { allowedRoles: ['ADMINISTRATIVO'] }
 	}
 ];
 
