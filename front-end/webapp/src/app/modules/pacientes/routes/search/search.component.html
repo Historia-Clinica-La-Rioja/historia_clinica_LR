@@ -64,6 +64,7 @@
 					</mat-label>
 					<input id="firstName"
 							formControlName="firstName"
+							maxlength="20"
 							matInput>
 					<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'firstName')">
 						<span [translate]="'pacientes.form.REQUIRED'"></span>
@@ -75,6 +76,7 @@
 					</mat-label>
 					<input id="middleNames"
 							formControlName="middleNames"
+							maxlength="20"
 							matInput>
 				</mat-form-field>
 				<br>
@@ -87,6 +89,7 @@
 					</mat-label>
 					<input  id="lastName"
 							formControlName="lastName"
+							maxlength="20"
 							matInput>
 					<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'lastName')">
 						<span [translate]="'pacientes.form.REQUIRED'"></span>
@@ -96,7 +99,8 @@
 					<mat-label>
 						<span [translate]="'pacientes.form.OTHER_LAST_NAMES'"></span>
 					</mat-label>
-					<input  id="otherLastNames"
+					<input id="otherLastNames"
+							maxlength="20"
 							formControlName="otherLastNames"
 							matInput>
 				</mat-form-field>
