@@ -1,6 +1,5 @@
 package net.pladema.internation.repository.ips;
 
-import net.pladema.dates.configuration.DateTimeProvider;
 import net.pladema.internation.repository.ips.generalstate.ClinicalObservationVo;
 import net.pladema.internation.repository.masterdata.entity.DocumentStatus;
 import net.pladema.internation.service.ips.domain.MapClinicalObservationVo;

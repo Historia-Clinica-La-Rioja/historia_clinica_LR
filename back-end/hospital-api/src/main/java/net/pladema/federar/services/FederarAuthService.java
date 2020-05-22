@@ -43,6 +43,7 @@ public class FederarAuthService extends AuthService<FederarLoginResponse> {
 		return JWTUtils.generateJWT(federarWSConfig.getClaims(), federarWSConfig.getSignKey(), (int) federarWSConfig.getTokenExpiration());
 	}
 
+	@Override
 	protected void assertValidResponse(FederarLoginResponse loginResponse) throws WSResponseException {
 		super.assertValidResponse(loginResponse);
 		ResponseEntity<FederarValidateTokenResponse> assertTokenResponse = exchangePost(federarWSConfig.getTokenValidationURL(),

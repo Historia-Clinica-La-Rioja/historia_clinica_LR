@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
 import { Router } from '@angular/router';
 import { ContextService } from "@core/services/context.service";

@@ -6,7 +6,7 @@ public class StringHelper {
 
 	private static final int MAX_LENGTH = 4;
 
-	public StringHelper() {
+	private StringHelper() {
 		super();
 	}
 

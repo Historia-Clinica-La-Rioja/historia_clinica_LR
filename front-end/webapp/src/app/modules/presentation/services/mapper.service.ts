@@ -4,7 +4,7 @@ import { BasicPatientDto, CompletePatientDto, InternmentSummaryDto, PatientType,
 import { PatientBasicData } from '../components/patient-card/patient-card.component';
 import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
 import { PatientTypeData } from '@presentation/components/patient-type-logo/patient-type-logo.component';
-import { momentFormatDate, DateFormat, momentParseDate } from '@core/utils/moment.utils';
+import { DateFormat, momentParseDate } from '@core/utils/moment.utils';
 
 @Injectable({
 	providedIn: 'root'

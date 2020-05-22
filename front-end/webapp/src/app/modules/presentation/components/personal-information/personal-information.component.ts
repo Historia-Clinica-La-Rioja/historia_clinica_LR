@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { AddressDto, IdentificationTypeDto } from '@api-rest/api-model';
-import { Moment } from 'moment';
 
 @Component({
 	selector: 'app-personal-information',

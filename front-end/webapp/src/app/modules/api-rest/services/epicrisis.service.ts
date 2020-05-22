@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { EpicrisisGeneralStateDto, EpicrisisDto, ResponseAnamnesisDto, ResponseEpicrisisDto } from '@api-rest/api-model';
+import { EpicrisisGeneralStateDto, EpicrisisDto, ResponseEpicrisisDto } from '@api-rest/api-model';
 import { environment } from '@environments/environment';
 import { DownloadService } from '@core/services/download.service';
 import { ContextService } from '@core/services/context.service';

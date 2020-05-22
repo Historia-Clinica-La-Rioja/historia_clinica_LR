@@ -65,7 +65,7 @@ public class UpdateAnamnesisServiceImpl implements UpdateAnamnesisService {
         Optional<Document> optDoc = documentService.findById(anamnesis.getId());
         optDoc.ifPresent(doc -> {
             deleteDocumentData(anamnesis.getId());
-            //TODO anamnesisDocument.setStatusId();
+            //TODO setear el status id al documento de anamnesis
             loadNotes(doc, Optional.ofNullable(anamnesis.getNotes()));
             doc = documentService.save(doc);
 
@@ -110,27 +110,4 @@ public class UpdateAnamnesisServiceImpl implements UpdateAnamnesisService {
         documentService.deleteObservationsVitalSignsHistory(documentId);
         documentService.deleteObservationsLabHistory(documentId);
     }
-
-    private void deleteNotes(Document document) {
-        LOG.debug("Input parameters -> Document {}", document);
-        List<Long> notesToDelete = new ArrayList<>();
-        if (document.getClinicalImpressionNoteId() != null)
-            notesToDelete.add(document.getClinicalImpressionNoteId());
-        if (document.getCurrentIllnessNoteId() != null)
-            notesToDelete.add(document.getCurrentIllnessNoteId());
-        if (document.getEvolutionNoteId() != null)
-            notesToDelete.add(document.getEvolutionNoteId());
-        if (document.getIndicationsNoteId() != null)
-            notesToDelete.add(document.getIndicationsNoteId());
-        if (document.getPhysicalExamNoteId() != null)
-            notesToDelete.add(document.getPhysicalExamNoteId());
-        if (document.getStudiesSummaryNoteId() != null)
-            notesToDelete.add(document.getStudiesSummaryNoteId());
-        if (document.getOtherNoteId() != null)
-            notesToDelete.add(document.getOtherNoteId());
-        noteService.deleteAllNotes(notesToDelete);
-    }
-
-
-
 }

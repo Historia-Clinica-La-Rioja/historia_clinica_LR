@@ -14,8 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -58,7 +56,7 @@ public class UpdateEvolutionNoteServiceImpl implements UpdateEvolutionNoteServic
         Optional<Document> optDoc = documentService.findById(evolutionNote.getId());
         optDoc.ifPresent(doc -> {
             deleteDocumentData(evolutionNote.getId());
-            //TODO anamnesisDocument.setStatusId();
+            //TODO setear el status id del documento de anamnesis
             loadNotes(doc, Optional.ofNullable(evolutionNote.getNotes()));
             doc = documentService.save(doc);
 
@@ -99,27 +97,4 @@ public class UpdateEvolutionNoteServiceImpl implements UpdateEvolutionNoteServic
         documentService.deleteObservationsVitalSignsHistory(documentId);
         documentService.deleteObservationsLabHistory(documentId);
     }
-
-    private void deleteNotes(Document anamnesisDocument) {
-        LOG.debug("Input parameters -> Document {}", anamnesisDocument);
-        List<Long> notesToDelete = new ArrayList<>();
-        if (anamnesisDocument.getClinicalImpressionNoteId() != null)
-            notesToDelete.add(anamnesisDocument.getClinicalImpressionNoteId());
-        if (anamnesisDocument.getCurrentIllnessNoteId() != null)
-            notesToDelete.add(anamnesisDocument.getCurrentIllnessNoteId());
-        if (anamnesisDocument.getEvolutionNoteId() != null)
-            notesToDelete.add(anamnesisDocument.getEvolutionNoteId());
-        if (anamnesisDocument.getIndicationsNoteId() != null)
-            notesToDelete.add(anamnesisDocument.getIndicationsNoteId());
-        if (anamnesisDocument.getPhysicalExamNoteId() != null)
-            notesToDelete.add(anamnesisDocument.getPhysicalExamNoteId());
-        if (anamnesisDocument.getStudiesSummaryNoteId() != null)
-            notesToDelete.add(anamnesisDocument.getStudiesSummaryNoteId());
-        if (anamnesisDocument.getOtherNoteId() != null)
-            notesToDelete.add(anamnesisDocument.getOtherNoteId());
-        noteService.deleteAllNotes(notesToDelete);
-    }
-
-
-
 }

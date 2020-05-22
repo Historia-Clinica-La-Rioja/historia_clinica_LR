@@ -9,8 +9,8 @@ public class WSException extends Exception {
 
 	private static final long serialVersionUID = 8805751514318626691L;
 
-	public final HttpStatus httpStatus;
-	public final List<WSResponseError> error;
+	private final HttpStatus httpStatus;
+	private final List<WSResponseError> error;
 
 	public WSException(HttpStatus httpStatus, List<WSResponseError> error) {
 		this.httpStatus = httpStatus;

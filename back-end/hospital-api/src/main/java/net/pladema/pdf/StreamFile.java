@@ -42,9 +42,9 @@ class StreamFile {
 
     String buildPath(Integer institutionId, Integer internmentEpisodeId, Short documentType) {
         return getRootDirectory() + RELATIVE_DIRECTORY
-                        .replace("{institutionId}",institutionId.toString())
-                        .replace("{internmentEpisodeId}", internmentEpisodeId.toString())
-                        .replace("{documentType}", documentTypes.get(documentType)) +
+                .replace("{institutionId}",institutionId.toString())
+                .replace("{internmentEpisodeId}", internmentEpisodeId.toString())
+                .replace("{documentType}", documentTypes.get(documentType)) +
                 buildUUIDName() + PDF_EXTENSION;
     }
 

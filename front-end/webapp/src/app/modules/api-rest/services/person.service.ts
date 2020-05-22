@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from "rxjs";
+import { Observable } from "rxjs";
 import { environment } from "@environments/environment";
 import { HttpClient } from "@angular/common/http";
-import { BasicPatientDto, PersonalInformationDto, PersonBasicDataResponseDto } from '@api-rest/api-model';
+import { PersonBasicDataResponseDto } from '@api-rest/api-model';
 
 @Injectable({
 	providedIn: 'root'

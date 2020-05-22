@@ -1,5 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, Input } from '@angular/core';
-import { MatSidenav } from '@angular/material/sidenav';
+import { Component, OnDestroy, ChangeDetectorRef, Input } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { MenuItem } from '@core/core-model';
 

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PasswordResetService } from '../../../api-rest/services/password-reset.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { switchMap, map } from 'rxjs/operators';
-import { Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ApiErrorMessage } from '@api-rest/api-model';
 

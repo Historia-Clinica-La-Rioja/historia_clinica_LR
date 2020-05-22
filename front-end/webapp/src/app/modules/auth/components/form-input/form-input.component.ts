@@ -6,7 +6,7 @@ import { Component, OnInit, Input } from '@angular/core';
 	styleUrls: ['./form-input.component.scss']
 })
 export class FormInputComponent implements OnInit {
-	@Input('label') label: String;
+	@Input('label') label: string;
 
 	constructor() { }
 
