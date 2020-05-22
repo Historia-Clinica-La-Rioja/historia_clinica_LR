@@ -4,6 +4,7 @@ import net.pladema.internation.controller.internment.dto.InternmentEpisodeADto;
 import net.pladema.internation.controller.internment.dto.InternmentEpisodeDto;
 import net.pladema.internation.controller.internment.dto.InternmentPatientDto;
 import net.pladema.internation.controller.internment.dto.InternmentSummaryDto;
+import net.pladema.internation.controller.internment.dto.summary.InternmentEpisodeBMDto;
 import net.pladema.internation.repository.core.domain.InternmentSummaryVo;
 import net.pladema.internation.repository.core.entity.InternmentEpisode;
 import net.pladema.internation.service.internment.domain.BasicListedPatientBo;
@@ -47,6 +48,9 @@ public interface InternmentEpisodeMapper {
     @Named("toListInternmentEpisodeDto")
     @IterableMapping(qualifiedByName = "toInternmentEpisodeDto")
     List<InternmentEpisodeDto> toListInternmentEpisodeDto(List<InternmentEpisodeBo> internmentEpisodes);
+
+    @Named("toInternmentEpisodeBMDto")
+    InternmentEpisodeBMDto toInternmentEpisodeBMDto (InternmentEpisode internmentEpisode);
 
     @AfterMapping
     default void configDocumentsSummary(@MappingTarget InternmentSummaryDto target, InternmentSummaryVo source){

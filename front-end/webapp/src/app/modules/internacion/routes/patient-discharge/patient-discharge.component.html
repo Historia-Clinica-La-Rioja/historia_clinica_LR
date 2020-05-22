@@ -7,7 +7,7 @@
 				<span [translate]="'internaciones.discharge.DISCHARGE_DATE'"></span> *
 				<div>
 					<mat-form-field appearance="outline">
-						<input formControlName="dischargeDate" id="dischargeDate" matInput [max]="today"
+						<input formControlName="dischargeDate" id="dischargeDate" matInput [max]="today" [min]="internmentEpisodeEntryDate"
 								[matDatepicker]="picker2" placeholder="{{'internaciones.discharge.DISCHARGE_DATE' | translate}}">
 						<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
 						<mat-datepicker #picker2></mat-datepicker>
@@ -31,14 +31,14 @@
 						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
 					</mat-form-field>
 				</div>
-			</form>
 
-			<button mat-stroked-button color="secondary" (click)="back()">
+			<button mat-stroked-button color="secondary" type="button" (click)="back()">
 				<span [translate]="'buttons.BACK'"></span>
 			</button>
-			<button mat-raised-button color="primary" (click)="save()">
+			<button mat-raised-button color="primary">
 				<span [translate]="'buttons.CONTINUE'"></span>
 			</button>
+			</form>
 		</section>
 		<section>
 			<div class="profile-card">

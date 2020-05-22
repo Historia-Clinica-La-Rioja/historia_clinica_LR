@@ -294,6 +294,10 @@ export interface InternmentEpisodeADto {
     responsibleDoctorId: number;
 }
 
+export interface InternmentEpisodeBMDto extends InternmentEpisodeADto {
+    id: number;
+}
+
 export interface InternmentEpisodeDto {
     bed: BedDto;
     doctor: ResponsibleDoctorDto;

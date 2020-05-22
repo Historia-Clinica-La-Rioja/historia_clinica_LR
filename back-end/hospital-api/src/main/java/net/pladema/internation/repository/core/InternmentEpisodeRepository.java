@@ -140,4 +140,11 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             "               AND d.statusId = '"+ DocumentStatus.FINAL + "'" +
             "           )")
     boolean haveAnamnesisAndEvolutionNote(@Param("internmentEpisodeId")  Integer internmentEpisodeId);
+
+    @Transactional(readOnly = true)
+    @Query(" SELECT ie " +
+            "FROM InternmentEpisode  ie " +
+            "WHERE ie.id = :internmentEpisodeId and ie.institutionId = :institutionId")
+    Optional<InternmentEpisode> getInternmentEpisode(@Param("internmentEpisodeId")  Integer internmentEpisodeId, @Param("institutionId") Integer institutionId);
+
 }

@@ -147,4 +147,11 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 		internmentEpisodeRepository.save(internmentEpisode);
 	}
 
+	@Override
+	public InternmentEpisode getInternmentEpisode(Integer internmentEpisodeId, Integer institutionId) {
+		InternmentEpisode internmentEpisode = internmentEpisodeRepository.getInternmentEpisode(internmentEpisodeId,institutionId)
+				.orElseThrow(() -> new NotFoundException("wrong-id-episode", "Internment episode not found"));
+		return internmentEpisode;
+	}
+
 }

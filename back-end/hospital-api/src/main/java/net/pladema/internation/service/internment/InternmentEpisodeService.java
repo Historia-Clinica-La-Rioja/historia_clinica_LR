@@ -31,5 +31,6 @@ public interface InternmentEpisodeService {
     public PatientDischarge addPatientDischarge(PatientDischarge patientDischarge);
     
     void updateInternmentEpisodeSatus(Integer internmentEpisodeId, Short statusId);
-    
+
+    InternmentEpisode getInternmentEpisode(Integer internmentEpisodeId, Integer institutionId);
 }

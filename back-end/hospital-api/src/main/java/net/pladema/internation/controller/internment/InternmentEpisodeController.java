@@ -7,6 +7,7 @@ import net.pladema.internation.controller.internment.dto.InternmentEpisodeADto;
 import net.pladema.internation.controller.internment.dto.InternmentEpisodeDto;
 import net.pladema.internation.controller.internment.dto.InternmentSummaryDto;
 import net.pladema.internation.controller.internment.dto.PatientDischargeDto;
+import net.pladema.internation.controller.internment.dto.summary.InternmentEpisodeBMDto;
 import net.pladema.internation.controller.internment.mapper.InternmentEpisodeMapper;
 import net.pladema.internation.controller.internment.mapper.PatientDischargeMapper;
 import net.pladema.internation.repository.core.domain.InternmentSummaryVo;
@@ -91,6 +92,14 @@ public class InternmentEpisodeController {
 		internmentEpisodeService.updateInternmentEpisodeSatus(internmentEpisodeId,
 				Short.valueOf(InternmentEpisodeStatus.INACTIVE));
 		return ResponseEntity.ok(patientDischargeMapper.toPatientDischargeDto(patientDischageSaved));
+	}
+
+	@GetMapping("/{internmentEpisodeId}")
+	public ResponseEntity<InternmentEpisodeBMDto> getInternmentEpisode(
+			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
+			@PathVariable(name = "institutionId") Integer institutionId) {
+		InternmentEpisode internmentEpisode = internmentEpisodeService.getInternmentEpisode(internmentEpisodeId,institutionId);
+		return ResponseEntity.ok(internmentEpisodeMapper.toInternmentEpisodeBMDto(internmentEpisode));
 	}
 
 }
