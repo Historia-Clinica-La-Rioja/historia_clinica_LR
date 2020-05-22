@@ -15,7 +15,8 @@ export default {
             }
         },
         "bed-enabled-available": "Solo las camas habilitadas pueden estar disponibles",
-        "bed-available-free": "Solo las camas disponibles pueden estar libres"
+        "bed-available-free": "Solo las camas disponibles pueden estar libres",
+        forbidden: 'No tiene los permisos necesarios'
     },
     resources: {
 

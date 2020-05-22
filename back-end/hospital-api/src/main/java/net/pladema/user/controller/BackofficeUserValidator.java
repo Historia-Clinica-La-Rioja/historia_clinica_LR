@@ -1,6 +1,10 @@
 package net.pladema.user.controller;
 
 
+import java.util.stream.Collectors;
+
+import net.pladema.permissions.controller.dto.BackofficeUserRoleDto;
+import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.sgx.backoffice.permissions.BackofficePermissionValidator;
 import net.pladema.sgx.exceptions.PermissionDeniedException;
 import net.pladema.user.controller.dto.BackofficeUserDto;
@@ -29,18 +33,30 @@ public class BackofficeUserValidator
 	}
 
 	@Override
-	public void assertUpdate(Integer id, BackofficeUserDto entity) {
-		if (authoritiesValidator.isLoggedUserId(id)) {
+	public void assertUpdate(Integer userId, BackofficeUserDto entity) {
+		if (authoritiesValidator.hasRole(ERole.ROOT)) {
+			// ROOT puede modificar cualquier usuario
+			return;
+		}
+		if (authoritiesValidator.isLoggedUserId(userId)) {
 			throw new PermissionDeniedException("No te podés editar a vos mismo");
 		}
-		authoritiesValidator.assertAllowed(id);
+		authoritiesValidator.assertLoggedUserOutrank(userId);
+
+		authoritiesValidator.assertLoggedUserOutrank(
+				entity.getRoles().stream()
+						.map(BackofficeUserRoleDto::getRoleId)
+						.map(ERole::map)
+						.map(ERole::getValue)
+						.collect(Collectors.toList())
+		);
 	}
 
 	@Override
-	public void assertDelete(Integer id) {
-		if (authoritiesValidator.isLoggedUserId(id)) {
+	public void assertDelete(Integer userId) {
+		if (authoritiesValidator.isLoggedUserId(userId)) {
 			throw new PermissionDeniedException("Operación no permitida");
 		}
-		authoritiesValidator.assertAllowed(id);
+		authoritiesValidator.assertLoggedUserOutrank(userId);
 	}
 }

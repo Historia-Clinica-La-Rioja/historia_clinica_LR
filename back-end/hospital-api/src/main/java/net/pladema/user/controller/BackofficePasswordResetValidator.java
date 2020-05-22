@@ -13,7 +13,11 @@ public class BackofficePasswordResetValidator
 
 	@Override
 	public void assertGetList(PasswordResetToken entity) {
-		authoritiesValidator.assertAllowed(entity.getUserId());
+		if (authoritiesValidator.isLoggedUserId(entity.getUserId())) {
+			// se puede cambiar el password a si mismo
+			return;
+		}
+		authoritiesValidator.assertLoggedUserOutrank(entity.getUserId());
  	}
 
 	@Override
@@ -23,7 +27,11 @@ public class BackofficePasswordResetValidator
 
 	@Override
 	public void assertCreate(PasswordResetToken entity) {
-		authoritiesValidator.assertAllowed(entity.getUserId());
+		if (authoritiesValidator.isLoggedUserId(entity.getUserId())) {
+			// se puede cambiar el password a si mismo
+			return;
+		}
+		authoritiesValidator.assertLoggedUserOutrank(entity.getUserId());
 	}
 
 	@Override
