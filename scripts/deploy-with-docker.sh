@@ -44,6 +44,7 @@ echo Crea environment con hash: $(
         -e GLOWROOT_PROJECT=${GLOWROOT_PROJECT} \
         -e GLOWROOT_AGENT_ID="${ENV_NAME}" \
         --name ${ENV_NAME} \
+        -v /sgh/${ENV_NAME}:/sgh  \
         ${DOCKER_IMAGE} #docker image to run
 )
 docker cp /tmp/${ENV_NAME}.properties ${ENV_NAME}:/app/env.properties 
