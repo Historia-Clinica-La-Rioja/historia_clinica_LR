@@ -147,4 +147,5 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             "WHERE ie.id = :internmentEpisodeId and ie.institutionId = :institutionId")
     Optional<InternmentEpisode> getInternmentEpisode(@Param("internmentEpisodeId")  Integer internmentEpisodeId, @Param("institutionId") Integer institutionId);
 
+	List<InternmentEpisode> findByBedId(Integer bedId);
 }

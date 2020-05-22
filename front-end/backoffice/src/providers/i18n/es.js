@@ -14,8 +14,11 @@ export default {
                 required: 'El rol requiere una institución'
             }
         },
-        "bed-enabled-available": "Solo las camas habilitadas pueden estar disponibles",
-        "bed-available-free": "Solo las camas disponibles pueden estar libres",
+        "beds": {
+            "existsInternmentEpisode": "La cama tiene un episodio de internación y no puede marcarse como libre",
+            "enabled-available": "Solo las camas habilitadas pueden estar disponibles",
+            "available-free": "Solo las camas disponibles pueden estar libres"
+        },
         forbidden: 'No tiene los permisos necesarios'
     },
     resources: {

@@ -12,6 +12,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
 import net.pladema.error.controller.dto.ApiErrorMessage;
+import net.pladema.sgx.exceptions.BackofficeValidationException;
 import net.pladema.sgx.exceptions.NotFoundException;
 import net.pladema.sgx.exceptions.PermissionDeniedException;
 import org.slf4j.Logger;
@@ -114,12 +115,7 @@ public class RestExceptionHandler {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(IllegalArgumentException.class)
 	public ApiErrorMessage handleIllegalArgumentExceptions(IllegalArgumentException ex, Locale locale) {
-		String errorMessage = messageSource.getMessage(ex.getMessage(), null, locale);
-		LOG.error(errorMessage, ex);
-		return new ApiErrorMessage(
-				ex.getMessage(),
-				errorMessage
-		);
+		return handleRuntimeException(ex, locale);
 	}
 	
 	@ResponseStatus(HttpStatus.FORBIDDEN)
@@ -127,6 +123,21 @@ public class RestExceptionHandler {
 	public ResponseEntity<ApiErrorMessage> permissionDenied(PermissionDeniedException ex) {
 		LOG.warn(ex.getMessage(), ex);
 		return new ResponseEntity<>(new ApiErrorMessage("forbidden", ex.getMessage()), HttpStatus.FORBIDDEN);
+	}
+	
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({BackofficeValidationException.class})
+	public ApiErrorMessage handleBackofficeValidationException(BackofficeValidationException ex, Locale locale) {
+		return handleRuntimeException(ex, locale);
+	}
+
+	private ApiErrorMessage handleRuntimeException(RuntimeException ex, Locale locale) {
+		String errorMessage = messageSource.getMessage(ex.getMessage(), null, locale);
+		LOG.error(errorMessage, ex);
+		return new ApiErrorMessage(
+				ex.getMessage(),
+				errorMessage
+		);
 	}
 
 }

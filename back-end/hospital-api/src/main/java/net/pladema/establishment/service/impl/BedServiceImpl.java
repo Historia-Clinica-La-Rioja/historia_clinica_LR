@@ -1,5 +1,6 @@
 package net.pladema.establishment.service.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -11,6 +12,8 @@ import net.pladema.establishment.controller.mapper.BedMapper;
 import net.pladema.establishment.repository.BedRepository;
 import net.pladema.establishment.repository.entity.Bed;
 import net.pladema.establishment.service.BedService;
+import net.pladema.internation.repository.core.entity.InternmentEpisode;
+import net.pladema.internation.service.internment.InternmentEpisodeService;
 
 @Service
 public class BedServiceImpl implements BedService {
@@ -20,12 +23,15 @@ public class BedServiceImpl implements BedService {
 	private static final boolean AVAILABLE = true;
 
     private BedRepository bedRepository;
+    
+    private InternmentEpisodeService internmentEpisodeService;
 
     private BedMapper bedMapper;
 
-    public BedServiceImpl(BedRepository bedRepository, BedMapper bedMapper) {
+    public BedServiceImpl(BedRepository bedRepository, BedMapper bedMapper, InternmentEpisodeService internmentEpisodeService) {
         this.bedRepository = bedRepository;
         this.bedMapper = bedMapper;
+        this.internmentEpisodeService = internmentEpisodeService;
     }
 
     @Override
@@ -48,6 +54,16 @@ public class BedServiceImpl implements BedService {
 			bedRepository.save(bed);
 		});
 		return bedOpt;
+	}
+
+	@Override
+	public Boolean hasActiveInternmentEpisode(Integer bedId) {
+		List<InternmentEpisode> episodes = internmentEpisodeService.findByBedId(bedId);
+		return episodes != null && !episodes.isEmpty() && anyActive(episodes);
+	}
+
+	private boolean anyActive(List<InternmentEpisode> episodes) {
+		return episodes.stream().anyMatch(InternmentEpisode::isActive);
 	}
 
 }

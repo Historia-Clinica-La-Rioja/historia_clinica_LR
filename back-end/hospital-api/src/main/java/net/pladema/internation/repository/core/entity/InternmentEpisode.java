@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.internation.repository.listener.InternationAuditableEntity;
 import net.pladema.internation.repository.listener.InternationListener;
+import net.pladema.internation.repository.masterdata.entity.InternmentEpisodeStatus;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -77,5 +78,9 @@ public class InternmentEpisode extends InternationAuditableEntity {
 	@Override
 	public int hashCode() {
 		return Objects.hash(id, patientId, bedId);
+	}
+	
+	public Boolean isActive() {
+		return this.statusId.equals(InternmentEpisodeStatus.ACTIVE_ID);
 	}
 }

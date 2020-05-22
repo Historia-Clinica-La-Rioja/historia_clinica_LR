@@ -1,6 +1,7 @@
 package net.pladema.internation.service.internment;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import net.pladema.internation.repository.core.domain.InternmentSummaryVo;
@@ -33,4 +34,6 @@ public interface InternmentEpisodeService {
     void updateInternmentEpisodeSatus(Integer internmentEpisodeId, Short statusId);
 
     InternmentEpisode getInternmentEpisode(Integer internmentEpisodeId, Integer institutionId);
+
+	List<InternmentEpisode> findByBedId(Integer bedId);
 }

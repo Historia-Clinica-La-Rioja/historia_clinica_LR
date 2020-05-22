@@ -2,6 +2,7 @@ package net.pladema.internation.service.internment.impl;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -146,6 +147,12 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 		internmentEpisode.setStatusId(statusId);
 		internmentEpisodeRepository.save(internmentEpisode);
 	}
+	
+	@Override
+	public List<InternmentEpisode> findByBedId(Integer bedId) {
+		return internmentEpisodeRepository.findByBedId(bedId);
+	}
+
 
 	@Override
 	public InternmentEpisode getInternmentEpisode(Integer internmentEpisodeId, Integer institutionId) {

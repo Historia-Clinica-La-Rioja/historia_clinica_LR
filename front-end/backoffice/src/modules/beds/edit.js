@@ -44,7 +44,7 @@ const BedEdit = props => (
                 reference="internmentepisodes"
                 target="bedId"
                 sort={{ field: 'entryDate', order: 'DESC' }}
-                filter={{ status: 1 }}
+                filter={{ statusId: 1 }}
                 pagination={<Pagination />}
             >
                 <Datagrid>

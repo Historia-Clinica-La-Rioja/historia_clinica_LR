@@ -1,9 +1,13 @@
 package net.pladema.sgx.backoffice.rest;
 
+import net.pladema.permissions.repository.entity.Role;
 import net.pladema.sgx.backoffice.permissions.BackofficePermissionValidator;
 import net.pladema.sgx.backoffice.repository.BackofficeRepository;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
 import net.pladema.sgx.backoffice.rest.dto.BackofficeDeleteResponse;
+import net.pladema.sgx.backoffice.validation.BackofficeEntityValidator;
+import net.pladema.user.controller.BackofficeRolesStore;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -26,14 +30,17 @@ public abstract class AbstractBackofficeController<E, I> {
 	protected final Logger logger;
 	protected final BackofficeStore<E, I> store;
 	private final BackofficePermissionValidator<E, I> permissionValidator;
+	private final BackofficeEntityValidator<E, I> entityValidator;
 
 	public AbstractBackofficeController(
 			BackofficeStore<E, I> repository,
-			BackofficePermissionValidator<E, I> permissionValidator
+			BackofficePermissionValidator<E, I> permissionValidator,
+			BackofficeEntityValidator<E, I> entityValidator
 	) {
 		this.logger = LoggerFactory.getLogger(this.getClass());
 		this.store = repository;
 		this.permissionValidator = permissionValidator;
+		this.entityValidator = entityValidator;
 	}
 
 	public AbstractBackofficeController(
@@ -41,7 +48,8 @@ public abstract class AbstractBackofficeController<E, I> {
 	) {
 		this(
 				repository,
-				new BackofficePermissionValidatorAdapter<>()
+				new BackofficePermissionValidatorAdapter<>(),
+				new BackofficeEntityValidatorAdapter<>()
 		);
 	}
 
@@ -52,6 +60,17 @@ public abstract class AbstractBackofficeController<E, I> {
 				new BackofficeRepository<>(repository)
 		);
 	}
+	
+	public AbstractBackofficeController(
+			JpaRepository<E, I> repository,
+			BackofficeEntityValidator<E, I> entityValidator
+	) {
+		this(
+				new BackofficeRepository<>(repository),
+				new BackofficePermissionValidatorAdapter<>(),
+				entityValidator
+		);
+	}
 
 	public AbstractBackofficeController(
 			JpaRepository<E, I> repository,
@@ -59,7 +78,18 @@ public abstract class AbstractBackofficeController<E, I> {
 	) {
 		this(
 				new BackofficeRepository<>(repository),
-				permissionValidator
+				permissionValidator,
+				new BackofficeEntityValidatorAdapter<>()
+		);
+	}
+
+	public AbstractBackofficeController(
+			BackofficeStore<E, I> repository,
+			BackofficePermissionValidator<E, I> permissionValidator) {
+		this(
+				repository,
+				permissionValidator,
+				new BackofficeEntityValidatorAdapter<>()
 		);
 	}
 
@@ -92,6 +122,7 @@ public abstract class AbstractBackofficeController<E, I> {
 	E create(@Valid @RequestBody E entity) {
 		logger.debug("CREATE {}", entity);
 		permissionValidator.assertCreate(entity);
+		entityValidator.assertCreate(entity);
 		return store.save(entity);
 	}
 
@@ -101,6 +132,7 @@ public abstract class AbstractBackofficeController<E, I> {
 	E update(@PathVariable("id") I id, @RequestBody E body) {
 		logger.debug("UPDATE[id={}] {}", id, body);
 		permissionValidator.assertUpdate(id, body);
+		entityValidator.assertUpdate(id, body);
 		return store.save(body);
 	}
 
@@ -109,6 +141,7 @@ public abstract class AbstractBackofficeController<E, I> {
 	BackofficeDeleteResponse<I> delete(@PathVariable("id") I id) {
 		logger.debug("DELETE[id={}]", id);
 		permissionValidator.assertDelete(id);
+		entityValidator.assertDelete(id);
 		store.deleteById(id);
 
 		return new BackofficeDeleteResponse<>(id);
