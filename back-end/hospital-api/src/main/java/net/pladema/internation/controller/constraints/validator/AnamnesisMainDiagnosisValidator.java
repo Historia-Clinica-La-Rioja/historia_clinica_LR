@@ -15,19 +15,27 @@ public class AnamnesisMainDiagnosisValidator implements ConstraintValidator<Anam
 
     @Override
     public void initialize(AnamnesisMainDiagnosisValid constraintAnnotation) {
-    	//empty until done
+        //empty until done
     }
 
     @Override
     public boolean isValid(Object[] parameters, ConstraintValidatorContext context) {
-        AnamnesisDto anamnesis = (AnamnesisDto) parameters[2];
-        context.disableDefaultConstraintViolation();
-        context.buildConstraintViolationWithTemplate("{diagnosis.main.repeated}")
-                .addPropertyNode(DIAGNOSIS_PROPERTY)
-                .addConstraintViolation();
 
-        if (anamnesis.getDiagnosis() == null || anamnesis.getDiagnosis().isEmpty() || anamnesis.getMainDiagnosis() == null)
-            return true;
-        return anamnesis.getDiagnosis().stream().noneMatch(d -> d.getSnomed().equals(anamnesis.getMainDiagnosis().getSnomed()));
+        final AnamnesisDto anamnesis;
+        for (Object p : parameters) {
+            if (p instanceof AnamnesisDto) {
+                anamnesis = (AnamnesisDto) p;
+
+                context.disableDefaultConstraintViolation();
+                context.buildConstraintViolationWithTemplate("{diagnosis.main.repeated}")
+                        .addPropertyNode(DIAGNOSIS_PROPERTY)
+                        .addConstraintViolation();
+
+                if (anamnesis.getDiagnosis() == null || anamnesis.getDiagnosis().isEmpty() || anamnesis.getMainDiagnosis() == null)
+                    return true;
+                return anamnesis.getDiagnosis().stream().noneMatch(d -> d.getSnomed().equals(anamnesis.getMainDiagnosis().getSnomed()));
+            }
+        }
+        return false;
     }
 }

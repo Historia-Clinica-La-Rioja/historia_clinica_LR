@@ -19,7 +19,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-
 @SupportedValidationTarget(ValidationTarget.PARAMETERS)
 public class EffectiveVitalSignTimeValidator implements ConstraintValidator<EffectiveVitalSignTimeValid, Object[]> {
 
@@ -36,36 +35,54 @@ public class EffectiveVitalSignTimeValidator implements ConstraintValidator<Effe
 
     @Override
     public void initialize(EffectiveVitalSignTimeValid constraintAnnotation) {
-        // Nothing to do
+        //nothing to do
     }
 
     @Override
     public boolean isValid(Object[] parameters, ConstraintValidatorContext context) {
-        LOG.debug("Input parameters -> parameters {}", parameters);
+        LOG.debug("Input parameters -> parameters {}, context {} ", parameters, context);
         Integer internmentEpisodeId = (Integer) parameters[1];
-        DocumentDto documentDto = (DocumentDto) parameters[2];
-        VitalSignDto vitalSigns = documentDto.getVitalSigns();
-        if (vitalSigns == null)
-            return true;
+        DocumentDto documentDto = null;
 
+        for (Object p : parameters) {
+            if (p instanceof DocumentDto) {
+                documentDto = (DocumentDto) p;
+                break;
+            }
+        }
+        if(documentDto != null){
 
-        LocalDate entryDate = internmentEpisodeService.getEntryDate(internmentEpisodeId);
-        if (!validEffectiveClinicalObservation(context,"vitalsign.blood.oxygen.saturation", vitalSigns.getBloodOxygenSaturation(), entryDate))
+            VitalSignDto vitalSigns = documentDto.getVitalSigns();
+            if (vitalSigns == null)
+                return true;
+
+            LocalDate entryDate = internmentEpisodeService.getEntryDate(internmentEpisodeId);
+
+            return validEffectiveClinicalObservation(context, vitalSigns, entryDate);
+        }
+        else {
+            LOG.error("Illegal method signature, expected a parameter of type DocumentDto.");
+            return false;
+        }
+    }
+
+    private boolean validEffectiveClinicalObservation(ConstraintValidatorContext context, VitalSignDto vitalSigns, LocalDate entryDate){
+        if (!validEffectiveClinicalObservation(context, "vitalsign.blood.oxygen.saturation", vitalSigns.getBloodOxygenSaturation(), entryDate))
             return false;
 
-        if (!validEffectiveClinicalObservation(context,"vitalsign.diastolic.blood.pressure", vitalSigns.getDiastolicBloodPressure(), entryDate))
+        if (!validEffectiveClinicalObservation(context, "vitalsign.diastolic.blood.pressure", vitalSigns.getDiastolicBloodPressure(), entryDate))
             return false;
 
-        if (!validEffectiveClinicalObservation(context,"vitalsign.heart.rate", vitalSigns.getHeartRate(), entryDate))
+        if (!validEffectiveClinicalObservation(context, "vitalsign.heart.rate", vitalSigns.getHeartRate(), entryDate))
             return false;
 
-        if (!validEffectiveClinicalObservation(context,"vitalsign.respiratory.rate", vitalSigns.getRespiratoryRate(), entryDate))
+        if (!validEffectiveClinicalObservation(context, "vitalsign.respiratory.rate", vitalSigns.getRespiratoryRate(), entryDate))
             return false;
 
-        if (!validEffectiveClinicalObservation(context,"vitalsign.systolic.blood.pressure", vitalSigns.getSystolicBloodPressure(), entryDate))
+        if (!validEffectiveClinicalObservation(context, "vitalsign.systolic.blood.pressure", vitalSigns.getSystolicBloodPressure(), entryDate))
             return false;
 
-        return validEffectiveClinicalObservation(context,"vitalsign.temperature", vitalSigns.getTemperature(), entryDate);
+        return validEffectiveClinicalObservation(context, "vitalsign.temperature", vitalSigns.getTemperature(), entryDate);
     }
 
     private boolean validEffectiveClinicalObservation(ConstraintValidatorContext context, String label,
