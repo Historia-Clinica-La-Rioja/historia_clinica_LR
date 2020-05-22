@@ -1,8 +1,8 @@
 package net.pladema.internation.service.documents.epicrisis;
 
-import net.pladema.internation.service.documents.epicrisis.domain.Epicrisis;
+import net.pladema.internation.service.documents.epicrisis.domain.EpicrisisBo;
 
 public interface UpdateEpicrisisService {
 
-    Epicrisis updateDocument(Integer internmentEpisodeId, Integer patientId, Epicrisis epicrisis);
+    EpicrisisBo updateDocument(Integer internmentEpisodeId, Integer patientId, EpicrisisBo epicrisisBo);
 }

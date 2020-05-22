@@ -4,7 +4,7 @@ import net.pladema.internation.repository.core.entity.Document;
 import net.pladema.internation.repository.masterdata.entity.DocumentType;
 import net.pladema.internation.service.documents.DocumentService;
 import net.pladema.internation.service.documents.epicrisis.CreateEpicrisisService;
-import net.pladema.internation.service.documents.epicrisis.domain.Epicrisis;
+import net.pladema.internation.service.documents.epicrisis.domain.EpicrisisBo;
 import net.pladema.internation.service.general.NoteService;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
 import net.pladema.internation.service.ips.*;
@@ -53,7 +53,7 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
     }
 
     @Override
-    public Epicrisis createDocument(Integer internmentEpisodeId, Integer patientId, Epicrisis epicrisis) {
+    public EpicrisisBo createDocument(Integer internmentEpisodeId, Integer patientId, EpicrisisBo epicrisis) {
         LOG.debug("Input parameters -> internmentEpisodeId {}, patientId {}, epicrisis {}", internmentEpisodeId, patientId, epicrisis);
 
         Document document = new Document(internmentEpisodeId, epicrisis.getDocumentStatusId(), DocumentType.EPICRISIS);
@@ -76,7 +76,7 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
         return epicrisis;
     }
 
-    private void loadNotes(Document document, Optional<DocumentObservations> optNotes) {
+    private void loadNotes(Document document, Optional<DocumentObservationsBo> optNotes) {
         LOG.debug("Input parameters -> document {}, notes {}", document, optNotes);
         optNotes.ifPresent(notes -> {
             document.setCurrentIllnessNoteId(noteService.createNote(notes.getCurrentIllnessNote()));

@@ -6,7 +6,7 @@ import net.pladema.internation.controller.constraints.DocumentValid;
 import net.pladema.internation.controller.constraints.InternmentValid;
 import net.pladema.internation.repository.masterdata.entity.DocumentType;
 import net.pladema.internation.service.documents.evolutionnote.EvolutionNoteReportService;
-import net.pladema.internation.service.documents.evolutionnote.domain.EvolutionNote;
+import net.pladema.internation.service.documents.evolutionnote.domain.EvolutionNoteBo;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
 import net.pladema.pdf.PdfService;
 import org.slf4j.Logger;
@@ -55,7 +55,7 @@ public class EvolutionNoteReportController {
             @PathVariable(name = "evolutionNoteId") Long evolutionNoteId) throws IOException, DocumentException {
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, evolutionNoteId {}",
                 institutionId, internmentEpisodeId, evolutionNoteId);
-        EvolutionNote evolutionNote = evolutionNoteReportService.getDocument(evolutionNoteId);
+        EvolutionNoteBo evolutionNote = evolutionNoteReportService.getDocument(evolutionNoteId);
         Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
                 .orElseThrow(() -> new EntityNotFoundException("internmentepisode.invalid"));
         String name = "EvolutionNote_" + evolutionNote.getId();

@@ -4,11 +4,11 @@ import net.pladema.internation.repository.core.entity.Document;
 import net.pladema.internation.repository.masterdata.entity.DocumentType;
 import net.pladema.internation.service.documents.DocumentService;
 import net.pladema.internation.service.documents.evolutionnote.CreateEvolutionNoteService;
-import net.pladema.internation.service.documents.evolutionnote.domain.EvolutionNote;
+import net.pladema.internation.service.documents.evolutionnote.domain.EvolutionNoteBo;
 import net.pladema.internation.service.general.NoteService;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
 import net.pladema.internation.service.ips.*;
-import net.pladema.internation.service.ips.domain.DocumentObservations;
+import net.pladema.internation.service.ips.domain.DocumentObservationsBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -53,7 +53,7 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
     }
 
     @Override
-    public EvolutionNote createDocument(Integer intermentEpisodeId, Integer patientId, EvolutionNote evolutionNote) {
+    public EvolutionNoteBo createDocument(Integer intermentEpisodeId, Integer patientId, EvolutionNoteBo evolutionNote) {
         LOG.debug("Input parameters -> intermentEpisodeId {}, patientId {}, anamnesis {}", intermentEpisodeId, patientId, evolutionNote);
 
         Document document = new Document(intermentEpisodeId, evolutionNote.getDocumentStatusId(), DocumentType.EVALUATION_NOTE);
@@ -75,7 +75,7 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
         return evolutionNote;
     }
 
-    private Document loadNotes(Document evolutionNote, Optional<DocumentObservations> optNotes) {
+    private Document loadNotes(Document evolutionNote, Optional<DocumentObservationsBo> optNotes) {
         LOG.debug("Input parameters -> evolutionNote {}, notes {}", evolutionNote, optNotes);
         optNotes.ifPresent(notes -> {
             evolutionNote.setCurrentIllnessNoteId(noteService.createNote(notes.getCurrentIllnessNote()));

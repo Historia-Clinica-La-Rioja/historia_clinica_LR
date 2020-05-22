@@ -1,8 +1,8 @@
 package net.pladema.internation.service.documents.anamnesis;
 
-import net.pladema.internation.service.documents.anamnesis.domain.Anamnesis;
+import net.pladema.internation.service.documents.anamnesis.domain.AnamnesisBo;
 
 public interface UpdateAnamnesisService {
 
-    Anamnesis updateDocument(Integer internmentEpisodeId, Integer patientId, Anamnesis anamnesis);
+    AnamnesisBo updateDocument(Integer internmentEpisodeId, Integer patientId, AnamnesisBo anamnesisBo);
 }

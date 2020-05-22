@@ -6,8 +6,8 @@ import net.pladema.internation.service.internment.InternmentEpisodeService;
 import net.pladema.internation.service.general.NoteService;
 import net.pladema.internation.service.documents.DocumentService;
 import net.pladema.internation.service.documents.anamnesis.CreateAnamnesisService;
-import net.pladema.internation.service.documents.anamnesis.domain.Anamnesis;
-import net.pladema.internation.service.ips.domain.DocumentObservations;
+import net.pladema.internation.service.documents.anamnesis.domain.AnamnesisBo;
+import net.pladema.internation.service.ips.domain.DocumentObservationsBo;
 import net.pladema.internation.service.ips.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,7 +57,7 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
     }
 
     @Override
-    public Anamnesis createDocument(Integer intermentEpisodeId, Integer patientId, Anamnesis anamnesis) {
+    public AnamnesisBo createDocument(Integer intermentEpisodeId, Integer patientId, AnamnesisBo anamnesis) {
         LOG.debug("Input parameters -> intermentEpisodeId {}, patientId {}, anamnesis {}", intermentEpisodeId, patientId, anamnesis);
 
         Document doc = new Document(intermentEpisodeId, anamnesis.getDocumentStatusId(), DocumentType.ANAMNESIS);
@@ -82,7 +82,7 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
         return anamnesis;
     }
 
-    private Document loadNotes(Document document, Optional<DocumentObservations> optNotes) {
+    private Document loadNotes(Document document, Optional<DocumentObservationsBo> optNotes) {
         LOG.debug("Input parameters -> anamnesisDocument {}, notes {}", document, optNotes);
         optNotes.ifPresent(notes -> {
             document.setCurrentIllnessNoteId(noteService.createNote(notes.getCurrentIllnessNote()));

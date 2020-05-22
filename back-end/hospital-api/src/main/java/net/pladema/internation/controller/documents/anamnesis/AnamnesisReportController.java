@@ -6,7 +6,7 @@ import net.pladema.internation.controller.constraints.DocumentValid;
 import net.pladema.internation.controller.constraints.InternmentValid;
 import net.pladema.internation.repository.masterdata.entity.DocumentType;
 import net.pladema.internation.service.documents.anamnesis.AnamnesisReportService;
-import net.pladema.internation.service.documents.anamnesis.domain.Anamnesis;
+import net.pladema.internation.service.documents.anamnesis.domain.AnamnesisBo;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
 import net.pladema.pdf.PdfService;
 import org.slf4j.Logger;
@@ -57,7 +57,7 @@ public class AnamnesisReportController {
             @PathVariable(name = "anamnesisId") Long anamnesisId) throws IOException, DocumentException {
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, anamnesisId {}",
                 institutionId, internmentEpisodeId, anamnesisId);
-        Anamnesis anamnesis = anamnesisReportService.getDocument(anamnesisId);
+        AnamnesisBo anamnesis = anamnesisReportService.getDocument(anamnesisId);
         Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
                 .orElseThrow(() -> new EntityNotFoundException(INVALID_EPISODE));
         String name = "Anamnesis_" + anamnesis.getId();

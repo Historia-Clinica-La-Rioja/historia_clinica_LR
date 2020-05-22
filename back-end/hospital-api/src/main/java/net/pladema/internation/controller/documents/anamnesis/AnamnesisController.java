@@ -15,7 +15,7 @@ import net.pladema.internation.repository.masterdata.entity.DocumentType;
 import net.pladema.internation.service.documents.anamnesis.AnamnesisService;
 import net.pladema.internation.service.documents.anamnesis.CreateAnamnesisService;
 import net.pladema.internation.service.documents.anamnesis.UpdateAnamnesisService;
-import net.pladema.internation.service.documents.anamnesis.domain.Anamnesis;
+import net.pladema.internation.service.documents.anamnesis.domain.AnamnesisBo;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
 import net.pladema.pdf.PdfService;
 import org.slf4j.Logger;
@@ -81,7 +81,7 @@ public class AnamnesisController {
                 institutionId, internmentEpisodeId, anamnesisDto);
         Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
                 .orElseThrow(() -> new EntityNotFoundException(INVALID_EPISODE));
-        Anamnesis anamnesis = anamnesisMapper.fromAnamnesisDto(anamnesisDto);
+        AnamnesisBo anamnesis = anamnesisMapper.fromAnamnesisDto(anamnesisDto);
         anamnesis = createAnamnesisService.createDocument(internmentEpisodeId, patientId, anamnesis);
         ResponseAnamnesisDto result = anamnesisMapper.fromAnamnesis(anamnesis);
         LOG.debug(OUTPUT, result);
@@ -103,7 +103,7 @@ public class AnamnesisController {
             @Valid @RequestBody AnamnesisDto anamnesisDto) throws IOException, DocumentException  {
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, anamnesisId {}, ananmnesis {}",
                 institutionId, internmentEpisodeId, anamnesisId, anamnesisDto);
-        Anamnesis anamnesis = anamnesisMapper.fromAnamnesisDto(anamnesisDto);
+        AnamnesisBo anamnesis = anamnesisMapper.fromAnamnesisDto(anamnesisDto);
         Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
                 .orElseThrow(() -> new EntityNotFoundException(INVALID_EPISODE));
         anamnesis = updateAnamnesisService.updateDocument(internmentEpisodeId, patientId, anamnesis);
@@ -114,7 +114,7 @@ public class AnamnesisController {
         return  ResponseEntity.ok().body(result);
     }
 
-    private void generateDocument(Anamnesis anamnesis, Integer institutionId, Integer internmentEpisodeId,
+    private void generateDocument(AnamnesisBo anamnesis, Integer institutionId, Integer internmentEpisodeId,
                                   Integer patientId) throws IOException, DocumentException {
         OnGenerateDocumentEvent event = new OnGenerateDocumentEvent(anamnesis, institutionId, internmentEpisodeId,
                 DocumentType.ANAMNESIS, "anamnesis", patientId);
@@ -130,7 +130,7 @@ public class AnamnesisController {
             @PathVariable(name = "anamnesisId") Long anamnesisId){
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, anamnesisId {}",
                 institutionId, internmentEpisodeId, anamnesisId);
-        Anamnesis anamnesis = anamnesisService.getDocument(anamnesisId);
+        AnamnesisBo anamnesis = anamnesisService.getDocument(anamnesisId);
         ResponseAnamnesisDto result = anamnesisMapper.fromAnamnesis(anamnesis);
         LOG.debug(OUTPUT, result);
         return  ResponseEntity.ok().body(result);

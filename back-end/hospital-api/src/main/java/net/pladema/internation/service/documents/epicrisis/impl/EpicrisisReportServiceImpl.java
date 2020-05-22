@@ -5,9 +5,9 @@ import net.pladema.internation.repository.masterdata.entity.DocumentStatus;
 import net.pladema.internation.service.documents.DocumentService;
 import net.pladema.internation.service.documents.ReportDocumentService;
 import net.pladema.internation.service.documents.epicrisis.EpicrisisReportService;
-import net.pladema.internation.service.documents.epicrisis.domain.Epicrisis;
+import net.pladema.internation.service.documents.epicrisis.domain.EpicrisisBo;
 import net.pladema.internation.service.general.NoteService;
-import net.pladema.internation.service.ips.domain.DocumentObservations;
+import net.pladema.internation.service.ips.domain.DocumentObservationsBo;
 import net.pladema.internation.service.ips.domain.GeneralHealthConditionBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,9 +34,9 @@ public class EpicrisisReportServiceImpl implements EpicrisisReportService {
     }
 
     @Override
-    public Epicrisis getDocument(Long documentId) {
+    public EpicrisisBo getDocument(Long documentId) {
         LOG.debug("Input parameters documentId {}", documentId);
-        Epicrisis result = new Epicrisis();
+        EpicrisisBo result = new EpicrisisBo();
         documentService.findById(documentId).ifPresent( document -> {
             result.setId(document.getId());
             result.setConfirmed(document.getStatusId().equalsIgnoreCase(DocumentStatus.FINAL));
@@ -59,9 +59,9 @@ public class EpicrisisReportServiceImpl implements EpicrisisReportService {
         return result;
     }
 
-    private DocumentObservations loadNotes(Document document) {
+    private DocumentObservationsBo loadNotes(Document document) {
         LOG.debug("Input parameters document {}", document);
-        DocumentObservations result = new DocumentObservations();
+        DocumentObservationsBo result = new DocumentObservationsBo();
         if (document.getClinicalImpressionNoteId() != null)
             result.setClinicalImpressionNote(noteService.getDescriptionById(document.getClinicalImpressionNoteId()));
         if (document.getStudiesSummaryNoteId() != null)

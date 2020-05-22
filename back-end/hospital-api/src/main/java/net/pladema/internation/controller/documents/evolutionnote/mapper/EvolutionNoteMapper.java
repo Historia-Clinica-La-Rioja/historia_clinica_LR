@@ -5,7 +5,7 @@ import net.pladema.internation.controller.documents.evolutionnote.dto.EvolutionN
 import net.pladema.internation.controller.documents.evolutionnote.dto.ResponseEvolutionNoteDto;
 import net.pladema.internation.controller.ips.mapper.AnthropometricDataMapper;
 import net.pladema.internation.controller.ips.mapper.VitalSignMapper;
-import net.pladema.internation.service.documents.evolutionnote.domain.EvolutionNote;
+import net.pladema.internation.service.documents.evolutionnote.domain.EvolutionNoteBo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -16,10 +16,10 @@ public interface EvolutionNoteMapper {
     @Named("fromEvolutionNoteDto")
     @Mapping(target = "vitalSigns", source = "vitalSigns", qualifiedByName = "fromAnthropometricDataDto")
     @Mapping(target = "anthropometricData", source = "anthropometricData", qualifiedByName = "fromListAnthropometricDataDto")
-    EvolutionNote fromEvolutionNoteDto(EvolutionNoteDto evolutionNoteDto);
+    EvolutionNoteBo fromEvolutionNoteDto(EvolutionNoteDto evolutionNoteDto);
 
     @Named("fromEvolutionNote")
     @Mapping(target = "anthropometricData", source = "anthropometricData", qualifiedByName = "fromAnthropometricDataBo")
     @Mapping(target = "vitalSigns", source = "vitalSigns", qualifiedByName = "fromVitalSignBo")
-    ResponseEvolutionNoteDto fromEvolutionNote(EvolutionNote evolutionNote);
+    ResponseEvolutionNoteDto fromEvolutionNote(EvolutionNoteBo evolutionNoteBo);
 }

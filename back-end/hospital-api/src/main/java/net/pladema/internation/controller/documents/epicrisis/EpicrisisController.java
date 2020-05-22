@@ -14,7 +14,7 @@ import net.pladema.internation.repository.masterdata.entity.DocumentType;
 import net.pladema.internation.service.documents.epicrisis.CreateEpicrisisService;
 import net.pladema.internation.service.documents.epicrisis.EpicrisisService;
 import net.pladema.internation.service.documents.epicrisis.UpdateEpicrisisService;
-import net.pladema.internation.service.documents.epicrisis.domain.Epicrisis;
+import net.pladema.internation.service.documents.epicrisis.domain.EpicrisisBo;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
 import net.pladema.internation.service.internment.InternmentStateService;
 import net.pladema.internation.service.internment.domain.InternmentGeneralState;
@@ -84,7 +84,7 @@ public class EpicrisisController {
                 institutionId, internmentEpisodeId, epicrisisDto);
         Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
                 .orElseThrow(() -> new EntityNotFoundException(INVALID_EPISODE));
-        Epicrisis epicrisis = epicrisisMapper.fromEpicrisisDto(epicrisisDto);
+        EpicrisisBo epicrisis = epicrisisMapper.fromEpicrisisDto(epicrisisDto);
         epicrisis = createEpicrisisService.createDocument(internmentEpisodeId, patientId, epicrisis);
         ResponseEpicrisisDto result = epicrisisMapper.fromEpicrisis(epicrisis);
         LOG.debug(OUTPUT, result);
@@ -104,7 +104,7 @@ public class EpicrisisController {
             @Valid @RequestBody EpicrisisDto epicrisisDto) throws IOException, DocumentException{
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, epicrisisId {}, epicrisisDto {}",
                 institutionId, internmentEpisodeId, epicrisisId, epicrisisDto);
-        Epicrisis epicrisis = epicrisisMapper.fromEpicrisisDto(epicrisisDto);
+        EpicrisisBo epicrisis = epicrisisMapper.fromEpicrisisDto(epicrisisDto);
         Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
                 .orElseThrow(() -> new EntityNotFoundException(INVALID_EPISODE));
         epicrisis = updateEpicrisisService.updateDocument(internmentEpisodeId, patientId, epicrisis);
@@ -114,7 +114,7 @@ public class EpicrisisController {
         return  ResponseEntity.ok().body(result);
     }
 
-    private void generateDocument(Epicrisis epicrisis, Integer institutionId, Integer internmentEpisodeId,
+    private void generateDocument(EpicrisisBo epicrisis, Integer institutionId, Integer internmentEpisodeId,
                                   Integer patientId) throws IOException, DocumentException {
         OnGenerateDocumentEvent event = new OnGenerateDocumentEvent(epicrisis, institutionId, internmentEpisodeId,
                 DocumentType.EPICRISIS, "epicrisis", patientId);
@@ -130,7 +130,7 @@ public class EpicrisisController {
             @PathVariable(name = "epicrisisId") Long epicrisisId){
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, epicrisisId {}",
                 institutionId, internmentEpisodeId, epicrisisId);
-        Epicrisis epicrisis = epicrisisService.getDocument(epicrisisId);
+        EpicrisisBo epicrisis = epicrisisService.getDocument(epicrisisId);
         ResponseEpicrisisDto result = epicrisisMapper.fromEpicrisis(epicrisis);
         LOG.debug(OUTPUT, result);
         return  ResponseEntity.ok().body(result);

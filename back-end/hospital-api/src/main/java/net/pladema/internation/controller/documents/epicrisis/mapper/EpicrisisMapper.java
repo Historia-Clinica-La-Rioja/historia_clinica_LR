@@ -6,7 +6,7 @@ import net.pladema.internation.controller.documents.epicrisis.dto.EpicrisisGener
 import net.pladema.internation.controller.documents.epicrisis.dto.ResponseEpicrisisDto;
 import net.pladema.internation.controller.ips.mapper.AnthropometricDataMapper;
 import net.pladema.internation.controller.ips.mapper.VitalSignMapper;
-import net.pladema.internation.service.documents.epicrisis.domain.Epicrisis;
+import net.pladema.internation.service.documents.epicrisis.domain.EpicrisisBo;
 import net.pladema.internation.service.internment.domain.InternmentGeneralState;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
@@ -15,10 +15,10 @@ import org.mapstruct.Named;
 public interface EpicrisisMapper {
 
     @Named("fromEpicrisisDto")
-    Epicrisis fromEpicrisisDto(EpicrisisDto epicrisisDto);
+    EpicrisisBo fromEpicrisisDto(EpicrisisDto epicrisisDto);
 
     @Named("fromEpicrisis")
-    ResponseEpicrisisDto fromEpicrisis(Epicrisis epicrisis);
+    ResponseEpicrisisDto fromEpicrisis(EpicrisisBo epicrisisBo);
 
     EpicrisisGeneralStateDto toEpicrisisGeneralStateDto(InternmentGeneralState interment);
 }

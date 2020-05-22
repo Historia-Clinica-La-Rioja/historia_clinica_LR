@@ -12,13 +12,13 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class Epicrisis implements InternmentDocument {
+public class EpicrisisBo implements InternmentDocument {
 
     private Long id;
 
     private boolean confirmed;
 
-    private DocumentObservations notes;
+    private DocumentObservationsBo notes;
 
     private HealthConditionBo mainDiagnosis;
 

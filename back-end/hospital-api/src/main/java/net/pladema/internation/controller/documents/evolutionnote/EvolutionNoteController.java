@@ -14,7 +14,7 @@ import net.pladema.internation.repository.masterdata.entity.DocumentType;
 import net.pladema.internation.service.documents.evolutionnote.CreateEvolutionNoteService;
 import net.pladema.internation.service.documents.evolutionnote.EvolutionNoteService;
 import net.pladema.internation.service.documents.evolutionnote.UpdateEvolutionNoteService;
-import net.pladema.internation.service.documents.evolutionnote.domain.EvolutionNote;
+import net.pladema.internation.service.documents.evolutionnote.domain.EvolutionNoteBo;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
 import net.pladema.pdf.PdfService;
 import org.slf4j.Logger;
@@ -81,7 +81,7 @@ public class EvolutionNoteController {
                 institutionId, internmentEpisodeId, evolutionNoteDto);
         Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
                 .orElseThrow(() -> new EntityNotFoundException(INVALID_INTERNMENT_EPISODE));
-        EvolutionNote evolutionNote = evolutionNoteMapper.fromEvolutionNoteDto(evolutionNoteDto);
+        EvolutionNoteBo evolutionNote = evolutionNoteMapper.fromEvolutionNoteDto(evolutionNoteDto);
         evolutionNote = createEvolutionNoteService.createDocument(internmentEpisodeId, patientId, evolutionNote);
         ResponseEvolutionNoteDto result = evolutionNoteMapper.fromEvolutionNote(evolutionNote);
         LOG.debug(OUTPUT, result);
@@ -101,7 +101,7 @@ public class EvolutionNoteController {
             @Valid @RequestBody EvolutionNoteDto evolutionNoteDto) throws IOException, DocumentException{
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, evolutionNoteId {}, evolutionNote {}",
                 institutionId, internmentEpisodeId, evolutionNoteId, evolutionNoteDto);
-        EvolutionNote evolutionNote = evolutionNoteMapper.fromEvolutionNoteDto(evolutionNoteDto);
+        EvolutionNoteBo evolutionNote = evolutionNoteMapper.fromEvolutionNoteDto(evolutionNoteDto);
         Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
                 .orElseThrow(() -> new EntityNotFoundException(INVALID_INTERNMENT_EPISODE));
         evolutionNote = updateEvolutionNoteService.updateDocument(internmentEpisodeId, patientId, evolutionNote);
@@ -111,7 +111,7 @@ public class EvolutionNoteController {
         return  ResponseEntity.ok().body(result);
     }
 
-    private void generateDocument(EvolutionNote evolutionNote, Integer institutionId, Integer internmentEpisodeId,
+    private void generateDocument(EvolutionNoteBo evolutionNote, Integer institutionId, Integer internmentEpisodeId,
                                   Integer patientId) throws IOException, DocumentException {
         OnGenerateDocumentEvent event = new OnGenerateDocumentEvent(evolutionNote, institutionId, internmentEpisodeId,
                 DocumentType.EVALUATION_NOTE, "evolutionnote", patientId);
@@ -127,8 +127,8 @@ public class EvolutionNoteController {
             @PathVariable(name = "evolutionNoteId") Long evolutionNoteId){
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, evolutionNoteId {}",
                 institutionId, internmentEpisodeId, evolutionNoteId);
-        EvolutionNote evolutionNote = evolutionNoteService.getDocument(evolutionNoteId);
-        ResponseEvolutionNoteDto result = evolutionNoteMapper.fromEvolutionNote(evolutionNote);
+        EvolutionNoteBo evolutionNoteBo = evolutionNoteService.getDocument(evolutionNoteId);
+        ResponseEvolutionNoteDto result = evolutionNoteMapper.fromEvolutionNote(evolutionNoteBo);
         LOG.debug(OUTPUT, result);
         return  ResponseEntity.ok().body(result);
     }

@@ -1,8 +1,8 @@
 package net.pladema.internation.service.documents.evolutionnote;
 
-import net.pladema.internation.service.documents.evolutionnote.domain.EvolutionNote;
+import net.pladema.internation.service.documents.evolutionnote.domain.EvolutionNoteBo;
 
 public interface EvolutionNoteReportService {
 
-    EvolutionNote getDocument(Long evolutionNoteId);
+    EvolutionNoteBo getDocument(Long evolutionNoteId);
 }

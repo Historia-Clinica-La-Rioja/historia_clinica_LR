@@ -3,13 +3,13 @@ package net.pladema.internation.service.documents.evolutionnote.impl;
 import net.pladema.internation.repository.core.entity.Document;
 import net.pladema.internation.service.documents.DocumentService;
 import net.pladema.internation.service.documents.evolutionnote.UpdateEvolutionNoteService;
-import net.pladema.internation.service.documents.evolutionnote.domain.EvolutionNote;
+import net.pladema.internation.service.documents.evolutionnote.domain.EvolutionNoteBo;
 import net.pladema.internation.service.general.NoteService;
 import net.pladema.internation.service.ips.AllergyService;
 import net.pladema.internation.service.ips.ClinicalObservationService;
 import net.pladema.internation.service.ips.HealthConditionService;
 import net.pladema.internation.service.ips.InmunizationService;
-import net.pladema.internation.service.ips.domain.DocumentObservations;
+import net.pladema.internation.service.ips.domain.DocumentObservationsBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -50,13 +50,13 @@ public class UpdateEvolutionNoteServiceImpl implements UpdateEvolutionNoteServic
     }
 
     @Override
-    public EvolutionNote updateDocument(Integer internmentEpisodeId, Integer patientId, EvolutionNote evolutionNote) {
+    public EvolutionNoteBo updateDocument(Integer internmentEpisodeId, Integer patientId, EvolutionNoteBo evolutionNote) {
         LOG.debug("Input parameters -> intermentEpisodeId {}, patientId {}, evolutionNote {}", internmentEpisodeId, patientId, evolutionNote);
 
         Optional<Document> optDoc = documentService.findById(evolutionNote.getId());
         optDoc.ifPresent(doc -> {
             deleteDocumentData(evolutionNote.getId());
-            //TODO setear el status id del documento de anamnesis
+            //TODO anamnesisDocument.setStatusId();
             loadNotes(doc, Optional.ofNullable(evolutionNote.getNotes()));
             doc = documentService.save(doc);
 
@@ -74,7 +74,7 @@ public class UpdateEvolutionNoteServiceImpl implements UpdateEvolutionNoteServic
         return evolutionNote;
     }
 
-    private Document loadNotes(Document evolutionNote, Optional<DocumentObservations> optNotes) {
+    private Document loadNotes(Document evolutionNote, Optional<DocumentObservationsBo> optNotes) {
         LOG.debug("Input parameters -> evolutionNote {}, notes {}", evolutionNote, optNotes);
         optNotes.ifPresent(notes -> {
             evolutionNote.setCurrentIllnessNoteId(noteService.createNote(notes.getCurrentIllnessNote()));

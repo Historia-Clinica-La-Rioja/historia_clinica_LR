@@ -5,9 +5,9 @@ import net.pladema.internation.repository.masterdata.entity.DocumentStatus;
 import net.pladema.internation.service.documents.DocumentService;
 import net.pladema.internation.service.documents.ReportDocumentService;
 import net.pladema.internation.service.documents.evolutionnote.EvolutionNoteReportService;
-import net.pladema.internation.service.documents.evolutionnote.domain.EvolutionNote;
+import net.pladema.internation.service.documents.evolutionnote.domain.EvolutionNoteBo;
 import net.pladema.internation.service.general.NoteService;
-import net.pladema.internation.service.ips.domain.DocumentObservations;
+import net.pladema.internation.service.ips.domain.DocumentObservationsBo;
 import net.pladema.internation.service.ips.domain.GeneralHealthConditionBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,9 +34,9 @@ public class EvolutionNoteReportServiceImpl implements EvolutionNoteReportServic
     }
 
     @Override
-    public EvolutionNote getDocument(Long documentId) {
+    public EvolutionNoteBo getDocument(Long documentId) {
         LOG.debug("Input parameters documentId {}", documentId);
-        EvolutionNote result = new EvolutionNote();
+        EvolutionNoteBo result = new EvolutionNoteBo();
         documentService.findById(documentId).ifPresent( document -> {
             result.setId(document.getId());
             result.setConfirmed(document.getStatusId().equalsIgnoreCase(DocumentStatus.FINAL));
@@ -54,9 +54,9 @@ public class EvolutionNoteReportServiceImpl implements EvolutionNoteReportServic
         return result;
     }
 
-    private DocumentObservations loadNotes(Document document) {
+    private DocumentObservationsBo loadNotes(Document document) {
         LOG.debug("Input parameters document {}", document);
-        DocumentObservations result = new DocumentObservations();
+        DocumentObservationsBo result = new DocumentObservationsBo();
         if (document.getClinicalImpressionNoteId() != null)
             result.setClinicalImpressionNote(noteService.getDescriptionById(document.getClinicalImpressionNoteId()));
         if (document.getStudiesSummaryNoteId() != null)

@@ -5,7 +5,7 @@ import net.pladema.internation.controller.documents.anamnesis.dto.AnamnesisDto;
 import net.pladema.internation.controller.documents.anamnesis.dto.ResponseAnamnesisDto;
 import net.pladema.internation.controller.ips.mapper.AnthropometricDataMapper;
 import net.pladema.internation.controller.ips.mapper.VitalSignMapper;
-import net.pladema.internation.service.documents.anamnesis.domain.Anamnesis;
+import net.pladema.internation.service.documents.anamnesis.domain.AnamnesisBo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -16,10 +16,10 @@ public interface AnamnesisMapper {
     @Named("fromAnamnesisDto")
     @Mapping(target = "vitalSigns", source = "vitalSigns", qualifiedByName = "fromAnthropometricDataDto")
     @Mapping(target = "anthropometricData", source = "anthropometricData", qualifiedByName = "fromListAnthropometricDataDto")
-    Anamnesis fromAnamnesisDto(AnamnesisDto anamnesisDto);
+    AnamnesisBo fromAnamnesisDto(AnamnesisDto anamnesisDto);
 
     @Named("fromAnamnesis")
     @Mapping(target = "anthropometricData", source = "anthropometricData", qualifiedByName = "fromAnthropometricDataBo")
     @Mapping(target = "vitalSigns", source = "vitalSigns", qualifiedByName = "fromVitalSignBo")
-    ResponseAnamnesisDto fromAnamnesis(Anamnesis anamnesis);
+    ResponseAnamnesisDto fromAnamnesis(AnamnesisBo anamnesisBo);
 }

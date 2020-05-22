@@ -1,8 +1,8 @@
 package net.pladema.internation.service.documents.evolutionnote;
 
-import net.pladema.internation.service.documents.evolutionnote.domain.EvolutionNote;
+import net.pladema.internation.service.documents.evolutionnote.domain.EvolutionNoteBo;
 
 public interface UpdateEvolutionNoteService {
 
-    EvolutionNote updateDocument(Integer internmentEpisodeId, Integer patientId, EvolutionNote evolutionNote);
+    EvolutionNoteBo updateDocument(Integer internmentEpisodeId, Integer patientId, EvolutionNoteBo evolutionNoteBo);
 }

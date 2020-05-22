@@ -1,8 +1,8 @@
 package net.pladema.internation.service.documents.epicrisis;
 
-import net.pladema.internation.service.documents.epicrisis.domain.Epicrisis;
+import net.pladema.internation.service.documents.epicrisis.domain.EpicrisisBo;
 
 public interface CreateEpicrisisService {
 
-    Epicrisis createDocument(Integer intermentEpisodeId, Integer patientId, Epicrisis epicrisis);
+    EpicrisisBo createDocument(Integer intermentEpisodeId, Integer patientId, EpicrisisBo epicrisisBo);
 }

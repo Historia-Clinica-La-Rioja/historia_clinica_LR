@@ -3,11 +3,11 @@ package net.pladema.internation.service.documents.epicrisis.impl;
 import net.pladema.internation.repository.core.entity.Document;
 import net.pladema.internation.service.documents.DocumentService;
 import net.pladema.internation.service.documents.epicrisis.UpdateEpicrisisService;
-import net.pladema.internation.service.documents.epicrisis.domain.Epicrisis;
+import net.pladema.internation.service.documents.epicrisis.domain.EpicrisisBo;
 import net.pladema.internation.service.general.NoteService;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
 import net.pladema.internation.service.ips.*;
-import net.pladema.internation.service.ips.domain.DocumentObservations;
+import net.pladema.internation.service.ips.domain.DocumentObservationsBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -59,7 +59,7 @@ public class UpdateEpicrisisServiceImpl implements UpdateEpicrisisService {
     }
 
     @Override
-    public Epicrisis updateDocument(Integer internmentEpisodeId, Integer patientId, Epicrisis epicrisis) {
+    public EpicrisisBo updateDocument(Integer internmentEpisodeId, Integer patientId, EpicrisisBo epicrisis) {
         LOG.debug("Input parameters -> intermentEpisodeId {}, patientId {}, epicrisis {}", internmentEpisodeId, patientId, epicrisis);
 
         Optional<Document> optDoc = documentService.findById(epicrisis.getId());
@@ -87,7 +87,7 @@ public class UpdateEpicrisisServiceImpl implements UpdateEpicrisisService {
         return epicrisis;
     }
 
-    private Document loadNotes(Document document, Optional<DocumentObservations> optNotes) {
+    private Document loadNotes(Document document, Optional<DocumentObservationsBo> optNotes) {
         LOG.debug("Input parameters -> document {}, notes {}", document, optNotes);
         optNotes.ifPresent(notes -> {
             document.setCurrentIllnessNoteId(noteService.createNote(notes.getCurrentIllnessNote()));

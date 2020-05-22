@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
-public class DocumentObservations implements Serializable {
+public class DocumentObservationsBo implements Serializable {
 
     private String otherNote;
 

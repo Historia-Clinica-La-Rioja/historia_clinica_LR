@@ -1,14 +1,7 @@
 package net.pladema.internation.service.documents;
 
-import net.pladema.internation.service.ips.domain.AllergyConditionBo;
-import net.pladema.internation.service.ips.domain.AnthropometricDataBo;
-import net.pladema.internation.service.ips.domain.DiagnosisBo;
-import net.pladema.internation.service.ips.domain.DocumentObservations;
-import net.pladema.internation.service.ips.domain.HealthConditionBo;
-import net.pladema.internation.service.ips.domain.HealthHistoryConditionBo;
-import net.pladema.internation.service.ips.domain.InmunizationBo;
-import net.pladema.internation.service.ips.domain.MedicationBo;
-import net.pladema.internation.service.ips.domain.VitalSignBo;
+import net.pladema.internation.service.ips.domain.*;
+import net.pladema.internation.service.ips.domain.DocumentObservationsBo;
 
 import java.util.List;
 
@@ -36,5 +29,5 @@ public interface InternmentDocument {
 
     AnthropometricDataBo getAnthropometricData();
 
-    DocumentObservations getNotes();
+    DocumentObservationsBo getNotes();
 }

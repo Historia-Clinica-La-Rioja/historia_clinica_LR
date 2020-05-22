@@ -1,19 +1,17 @@
 package net.pladema.internation.service.documents.anamnesis.impl;
 
 import net.pladema.internation.repository.core.entity.Document;
-import net.pladema.internation.service.internment.InternmentEpisodeService;
-import net.pladema.internation.service.general.NoteService;
 import net.pladema.internation.service.documents.DocumentService;
-import net.pladema.internation.service.documents.anamnesis.*;
-import net.pladema.internation.service.documents.anamnesis.domain.Anamnesis;
-import net.pladema.internation.service.ips.domain.DocumentObservations;
+import net.pladema.internation.service.documents.anamnesis.UpdateAnamnesisService;
+import net.pladema.internation.service.documents.anamnesis.domain.AnamnesisBo;
+import net.pladema.internation.service.general.NoteService;
+import net.pladema.internation.service.internment.InternmentEpisodeService;
 import net.pladema.internation.service.ips.*;
+import net.pladema.internation.service.ips.domain.DocumentObservationsBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -59,13 +57,13 @@ public class UpdateAnamnesisServiceImpl implements UpdateAnamnesisService {
     }
 
     @Override
-    public Anamnesis updateDocument(Integer internmentEpisodeId, Integer patientId, Anamnesis anamnesis) {
+    public AnamnesisBo updateDocument(Integer internmentEpisodeId, Integer patientId, AnamnesisBo anamnesis) {
         LOG.debug("Input parameters -> intermentEpisodeId {}, patientId {}, anamnesis {}", internmentEpisodeId, patientId, anamnesis);
 
         Optional<Document> optDoc = documentService.findById(anamnesis.getId());
         optDoc.ifPresent(doc -> {
             deleteDocumentData(anamnesis.getId());
-            //TODO setear el status id al documento de anamnesis
+            //TODO anamnesisDocument.setStatusId();
             loadNotes(doc, Optional.ofNullable(anamnesis.getNotes()));
             doc = documentService.save(doc);
 
@@ -87,7 +85,7 @@ public class UpdateAnamnesisServiceImpl implements UpdateAnamnesisService {
         return anamnesis;
     }
 
-    private Document loadNotes(Document document, Optional<DocumentObservations> optNotes) {
+    private Document loadNotes(Document document, Optional<DocumentObservationsBo> optNotes) {
         LOG.debug("Input parameters -> document {}, notes {}", document, optNotes);
         optNotes.ifPresent(notes -> {
             document.setCurrentIllnessNoteId(noteService.createNote(notes.getCurrentIllnessNote()));

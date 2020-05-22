@@ -1,4 +1,4 @@
-package net.pladema.internation.service.documents.evolutionnote.domain;
+package net.pladema.internation.service.documents.anamnesis.domain;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,23 +7,28 @@ import net.pladema.internation.repository.masterdata.entity.DocumentStatus;
 import net.pladema.internation.service.documents.InternmentDocument;
 import net.pladema.internation.service.ips.domain.*;
 
-import java.util.Collections;
 import java.util.List;
 
 @Getter
 @Setter
 @ToString
-public class EvolutionNote implements InternmentDocument {
+public class AnamnesisBo implements InternmentDocument {
 
     private Long id;
 
     private boolean confirmed;
 
-    private DocumentObservations notes;
+    private DocumentObservationsBo notes;
 
     private HealthConditionBo mainDiagnosis;
 
     private List<DiagnosisBo> diagnosis;
+
+    private List<HealthHistoryConditionBo> personalHistories;
+
+    private List<HealthHistoryConditionBo> familyHistories;
+
+    private List<MedicationBo> medications;
 
     private List<InmunizationBo> inmunizations;
 
@@ -35,21 +40,5 @@ public class EvolutionNote implements InternmentDocument {
 
     public String getDocumentStatusId(){
         return confirmed ? DocumentStatus.FINAL : DocumentStatus.DRAFT;
-    }
-
-
-    @Override
-    public List<HealthHistoryConditionBo> getPersonalHistories() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<HealthHistoryConditionBo> getFamilyHistories() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<MedicationBo> getMedications() {
-        return Collections.emptyList();
     }
 }
