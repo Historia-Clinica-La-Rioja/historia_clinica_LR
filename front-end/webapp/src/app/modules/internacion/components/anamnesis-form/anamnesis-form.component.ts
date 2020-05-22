@@ -27,6 +27,7 @@ export class AnamnesisFormComponent implements OnInit {
 	private patientId: number;
 	anamnesisId: number;
 
+	mainDiagnosisError: string = '';
 	anamnesis: ResponseAnamnesisDto;
 	form: FormGroup;
 
@@ -148,6 +149,9 @@ export class AnamnesisFormComponent implements OnInit {
 
 	setMainDiagnosis(newDiagnosis: HealthConditionDto) {
 		this.mainDiagnosis = newDiagnosis;
+		if (newDiagnosis) {
+			delete this.mainDiagnosisError;
+		}
 	}
 
 	back(): void {
@@ -171,7 +175,11 @@ export class AnamnesisFormComponent implements OnInit {
 							_ => this.goToInternmentSummary(), _ => this.goToInternmentSummary()
 						);
 						this.snackBarService.showSuccess('internaciones.anamnesis.messages.SUCCESS');
-					}, _ => this.snackBarService.showError('internaciones.anamnesis.messages.ERROR'));
+					}, errors => {
+						//TODO imlementar estrategia para mostrar error
+						this.mainDiagnosisError = errors.mainDiagnosis;
+						this.snackBarService.showError('internaciones.anamnesis.messages.ERROR')
+					});
 				}
 			} else {
 			this.snackBarService.showError('internaciones.anamnesis.messages.ERROR');

@@ -46,6 +46,7 @@ export class DiagnosticoPrincipalComponent implements OnInit {
 	resetForm(): void {
 		delete this.diagnosis;
 		this.form.reset();
+		this.onChange.emit();
 	}
 
 }

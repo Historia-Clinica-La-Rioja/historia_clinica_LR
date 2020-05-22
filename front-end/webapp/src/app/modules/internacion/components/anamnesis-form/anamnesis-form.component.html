@@ -211,7 +211,11 @@
 				</mat-card-content>
 			</mat-card>
 		</section>
-
+		<section id="validations" *ngIf="mainDiagnosisError">
+			<mat-card>
+				<mat-error class="mat-body-2">{{ mainDiagnosisError }}</mat-error>
+			</mat-card>
+		</section>
 		<section id="buttons" class="form-buttons">
 			<button mat-stroked-button type="button" color="primary" (click)="back()">
 				<span class="uppercase"
