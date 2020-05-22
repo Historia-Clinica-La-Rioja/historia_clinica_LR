@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { LoggedUserService } from '../../auth/services/logged-user.service';
 import { ContextService } from './context.service';
-import { ERole } from '@api-rest/api-model';
+import { ERole, RoleAssignment } from '@api-rest/api-model';
 
 const itemHasAnyRole = (itemRoles: ERole[], userRoles: ERole[]) => itemRoles.some(role => userRoles.includes(role));
 
@@ -21,12 +21,18 @@ export class PermissionsService {
 	 * Permite obtener las asignaciones del usuario en el contexto actual.
 	 */
 	public contextAssignments$(): Observable<ERole[]> {
+		return this.contextService.institutionId$.pipe(
+			switchMap(() => this.loggedUserService.assignments$),
+			map(assignments => this._mapAssignments(assignments, this.contextService.institutionId))
+		);
+	}
+
+	/**
+	 * Permite obtener las asignaciones del usuario en una institución.
+	 */
+	public filterAssignments$(institutionId: number): Observable<ERole[]> {
 		return this.loggedUserService.assignments$.pipe(
-			map(assignments =>
-				assignments
-					.filter(assignment => assignment.institutionId === this.contextService.institutionId)
-					.map(assignment => assignment.role)
-			),
+			map(assignments => this._mapAssignments(assignments, institutionId))
 		);
 	}
 
@@ -38,6 +44,12 @@ export class PermissionsService {
 		return this.contextAssignments$().pipe(
 			map(contextAssignments => items.filter(item => item.permissions ? itemHasAnyRole(item.permissions, contextAssignments) : true)),
 		);
+	}
+
+	private _mapAssignments(assignments: RoleAssignment[], institutionId: number): ERole[] {
+		return assignments
+			.filter(assignment => assignment.institutionId === institutionId)
+			.map(assignment => assignment.role);
 	}
 
 }
