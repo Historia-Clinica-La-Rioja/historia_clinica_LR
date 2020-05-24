@@ -435,6 +435,10 @@ export interface ProvinceDto extends MasterdataDto<number> {
     id: number;
 }
 
+export interface PublicInfoDto {
+    flavor: string;
+}
+
 export interface ReportClinicalObservationDto extends ClinicalObservationDto {
     effectiveTime: Date;
 }

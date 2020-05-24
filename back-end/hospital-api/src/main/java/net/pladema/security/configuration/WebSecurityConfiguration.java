@@ -25,6 +25,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
 	private static final String BACKOFFICE = "/backoffice";
 
+	private static final String PUBLIC = "/public";
+
 	@Value("${api.user}")
 	protected String apiUser;
 
@@ -66,6 +68,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.antMatchers("/v2/**","/swagger-ui.html","/swagger-resources/**","/webjars/springfox-swagger-ui/**").permitAll()
 		.antMatchers(BACKOFFICE + "/**").hasAnyAuthority(ERole.ROOT.getValue(), ERole.ADMINISTRADOR.getValue())
 		.antMatchers(RECAPTCHA + "/**").permitAll()
+		.antMatchers(HttpMethod.GET,PUBLIC + "/**").permitAll()
 		.antMatchers(HttpMethod.POST, PASSWORD_RESET).permitAll()
 		.antMatchers("/**").authenticated()
 		.anyRequest().authenticated();
