@@ -1,0 +1,11 @@
+{
+	"app": {
+		"TITLE": "Hogares de Residencia de Tandil",
+		"menu": {
+			"INSTITUCIONES": "Hogares de Residencia",
+			"INTERNACION": "HCE Adultos Mayores",
+			"PACIENTES": "Adultos mayores",
+			"PERFIL": "Mi cuenta"
+		}
+	}
+}

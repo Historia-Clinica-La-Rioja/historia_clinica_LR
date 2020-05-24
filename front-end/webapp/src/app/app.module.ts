@@ -6,7 +6,6 @@ import { RouterModule } from '@angular/router';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { MultiTranslateHttpLoader } from 'ngx-translate-multi-http-loader';
 import { DatePipe } from '@angular/common';
 
 import { httpInterceptorProviders } from './http-interceptors';
@@ -20,6 +19,8 @@ import { CoreModule } from '@core/core.module';
 import { AppMaterialModule } from './app.material.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { PresentationModule } from './modules/presentation/presentation.module';
+import { FlavoredMultiTranslateHttpLoader } from '@core/utils/flavored-multi-translate-http-loader';
+import { PublicService } from '@api-rest/services/public.service';
 
 @NgModule({
 	declarations: [
@@ -38,7 +39,7 @@ import { PresentationModule } from './modules/presentation/presentation.module';
 			loader: {
 				provide: TranslateLoader,
 				useFactory: (createTranslateLoader),
-				deps: [HttpClient]
+				deps: [HttpClient, PublicService]
 			}
 		}),
 		// Módulos nuestros que se cargan al inicio
@@ -60,12 +61,16 @@ import { PresentationModule } from './modules/presentation/presentation.module';
 export class AppModule {
 }
 
-export function createTranslateLoader(http: HttpClient) {
-	return new MultiTranslateHttpLoader(http, [
-		{ prefix: './assets/i18n/', suffix: '.json' },
-		{ prefix: './assets/i18n/auth/', suffix: '.json' },
-		{ prefix: './assets/i18n/institucion/', suffix: '.json' },
-		{ prefix: './assets/i18n/internacion/', suffix: '.json' },
-		{ prefix: './assets/i18n/pacientes/', suffix: '.json' }
-	]);
+export function createTranslateLoader(http: HttpClient, publicService: PublicService): TranslateLoader {
+	return new FlavoredMultiTranslateHttpLoader(
+		http,
+		publicService.getInfo(),
+		[
+			{ prefix: './assets/i18n/', suffix: '.json' },
+			{ prefix: './assets/i18n/auth/', suffix: '.json' },
+			{ prefix: './assets/i18n/institucion/', suffix: '.json' },
+			{ prefix: './assets/i18n/internacion/', suffix: '.json' },
+			{ prefix: './assets/i18n/pacientes/', suffix: '.json' },
+		]
+	);
 }
