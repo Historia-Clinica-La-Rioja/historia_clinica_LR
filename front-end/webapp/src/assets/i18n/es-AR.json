@@ -1,5 +1,6 @@
 {
 	"app": {
+		"TITLE": "Historia de salud integrada",
 		"menu": {
 			"INSTITUCIONES": "Instituciones",
 			"INTERNACION": "HCE Internación",

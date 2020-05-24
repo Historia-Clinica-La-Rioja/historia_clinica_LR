@@ -1,10 +1,8 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { Title } from '@angular/platform-browser';
 
-import { LanguageService } from '@core/services/language.service';
-
-const defaultLang = 'es-AR'; // TODO english version 'en-US';
-
+const DEFAULT_LANG = 'es-AR';
 
 @Component({
 	selector: 'app-root',
@@ -12,31 +10,22 @@ const defaultLang = 'es-AR'; // TODO english version 'en-US';
 	styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-	currentBrowserLanguage = this.translate.getBrowserLang();
-
 
 	constructor(
-		private translate: TranslateService,
-		private languageService: LanguageService,
+		translate: TranslateService,
+		titleService: Title,
 	) {
-		translate.setDefaultLang(defaultLang);
-		translate.use(defaultLang);
-	}
+		translate.setDefaultLang(DEFAULT_LANG);
+		translate.use(DEFAULT_LANG);
 
-	ngOnInit() {
-		this.languageService.getCurrentLanguage().subscribe(
-			data => {
-				if (data[0] && data[0] !== defaultLang) {
-					this.switchLanguage(data[0]);
-				}
-			},
-			() => this.switchLanguage(defaultLang)
-		);
 
+		translate.onLangChange.subscribe(() => {
+			// Change page title when user changes language preference
+			translate.get('app.TITLE').subscribe((res: string) => {
+				titleService.setTitle(res);
+			});
+		});
 
 	}
 
-	switchLanguage(lang: string) {
-		this.translate.use(lang);
-	}
 }
