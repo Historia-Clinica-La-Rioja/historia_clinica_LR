@@ -85,8 +85,11 @@ public class PersonController {
             PersonalInformation personalInformation = personService.getPersonalInformation(personId)
                     .orElseThrow(() -> new EntityNotFoundException("person.invalid"));
             result = personMapper.fromPersonalInformation(personalInformation);
+        } catch (EntityNotFoundException e) {
+            LOG.error("Person with id {} not found", personId);
+            result = MocksPerson.mockPersonalInformation(personId);
         } catch (Exception e) {
-            LOG.error("Error",e);
+            LOG.error("Person with id " + personId, e);
             result = MocksPerson.mockPersonalInformation(personId);
         }
         LOG.debug("Output -> {}", result);

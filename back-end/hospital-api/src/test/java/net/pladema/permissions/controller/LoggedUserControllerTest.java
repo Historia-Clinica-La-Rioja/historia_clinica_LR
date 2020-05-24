@@ -17,6 +17,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -38,7 +39,7 @@ public class LoggedUserControllerTest extends BaseControllerTest {
 		when(loggedUserService.getPermissionAssignment()).thenReturn(permissionAssignment);
 
 		mockMvc.perform(get("/account/permissions"))
-				.andDo(print())
+				.andDo(log())
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.roleAssignments").isArray())
 				.andExpect(jsonPath("$.roleAssignments", hasSize(1)))
@@ -55,7 +56,7 @@ public class LoggedUserControllerTest extends BaseControllerTest {
 		when(loggedUserService.getPermissionAssignment()).thenReturn(permissionAssignment);
 
 		mockMvc.perform(get("/account/permissions"))
-				.andDo(print())
+				.andDo(log())
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.roleAssignments").isArray())
 				.andExpect(jsonPath("$.roleAssignments", hasSize(1)))
@@ -66,7 +67,7 @@ public class LoggedUserControllerTest extends BaseControllerTest {
 	@Test
 	public void getAccount_noUser() throws Exception {
 		mockMvc.perform(get("/account/permissions"))
-				.andDo(print())
+				.andDo(log())
 				.andExpect(status().isUnauthorized());
 	}
 }
