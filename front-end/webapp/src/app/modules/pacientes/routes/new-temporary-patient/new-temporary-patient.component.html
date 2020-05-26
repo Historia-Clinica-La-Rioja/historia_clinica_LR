@@ -99,6 +99,18 @@
 			</div>
 
 			<div>
+				<span [translate]="'pacientes.form.MOTHERS_LAST_NAME'"></span>
+			</div>
+			<mat-form-field appearance="outline">
+				<input id="mothersLastName"
+						name="mothersLastName"
+						formControlName="mothersLastName"
+						placeholder="{{'pacientes.form.MOTHERS_LAST_NAME' | translate}}"
+						maxlength="20"
+						matInput>
+			</mat-form-field>
+
+			<div>
 				<span [translate]="'pacientes.form.BIRTH_DATE'"></span>
 			</div>
 			<div>
@@ -134,18 +146,6 @@
 							matInput>
 				</mat-form-field>
 			</div>
-
-			<div>
-				<span [translate]="'pacientes.form.MOTHERS_LAST_NAME'"></span>
-			</div>
-			<mat-form-field appearance="outline">
-				<input id="mothersLastName"
-						name="mothersLastName"
-						formControlName="mothersLastName"
-						placeholder="{{'pacientes.form.MOTHERS_LAST_NAME' | translate}}"
-						maxlength="20"
-						matInput>
-			</mat-form-field>
 
 			<div>
 				<span [translate]="'pacientes.form.CUIT_CUIL'"></span>
