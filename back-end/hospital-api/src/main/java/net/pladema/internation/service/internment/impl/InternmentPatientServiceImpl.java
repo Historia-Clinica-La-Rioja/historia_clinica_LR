@@ -1,7 +1,7 @@
 package net.pladema.internation.service.internment.impl;
 
-import net.pladema.internation.repository.core.InternmentEpisodeRepository;
-import net.pladema.internation.repository.core.domain.InternmentEpisodeProcessVo;
+import net.pladema.internation.repository.internment.InternmentEpisodeRepository;
+import net.pladema.internation.repository.internment.domain.processepisode.InternmentEpisodeProcessVo;
 import net.pladema.internation.service.internment.InternmentPatientService;
 import net.pladema.internation.service.internment.domain.BasicListedPatientBo;
 import net.pladema.internation.service.internment.domain.InternmentEpisodeBo;

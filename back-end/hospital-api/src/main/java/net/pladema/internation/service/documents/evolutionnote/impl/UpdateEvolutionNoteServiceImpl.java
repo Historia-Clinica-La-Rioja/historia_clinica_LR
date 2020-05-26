@@ -1,6 +1,6 @@
 package net.pladema.internation.service.documents.evolutionnote.impl;
 
-import net.pladema.internation.repository.core.entity.Document;
+import net.pladema.internation.repository.documents.entity.Document;
 import net.pladema.internation.service.documents.DocumentService;
 import net.pladema.internation.service.documents.evolutionnote.UpdateEvolutionNoteService;
 import net.pladema.internation.service.documents.evolutionnote.domain.EvolutionNoteBo;

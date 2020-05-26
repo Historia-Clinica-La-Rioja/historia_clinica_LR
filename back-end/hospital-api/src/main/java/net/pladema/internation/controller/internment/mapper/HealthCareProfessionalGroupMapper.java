@@ -1,7 +1,7 @@
 package net.pladema.internation.controller.internment.mapper;
 
 import net.pladema.internation.controller.internment.dto.HealthCareProfessionalGroupDto;
-import net.pladema.internation.repository.core.entity.HealthcareProfessionalGroup;
+import net.pladema.internation.repository.documents.entity.HealthcareProfessionalGroup;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;

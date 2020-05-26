@@ -2,7 +2,7 @@ package net.pladema.internation.controller.constraints.validator;
 
 import net.pladema.establishment.repository.InstitutionRepository;
 import net.pladema.internation.controller.constraints.InternmentValid;
-import net.pladema.internation.repository.core.InternmentEpisodeRepository;
+import net.pladema.internation.repository.internment.InternmentEpisodeRepository;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

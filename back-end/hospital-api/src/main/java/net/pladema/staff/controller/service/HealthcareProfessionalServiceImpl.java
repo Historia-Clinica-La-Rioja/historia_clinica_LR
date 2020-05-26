@@ -2,8 +2,8 @@ package net.pladema.staff.controller.service;
 
 import net.pladema.internation.controller.internment.dto.HealthCareProfessionalGroupDto;
 import net.pladema.internation.controller.internment.mapper.HealthCareProfessionalGroupMapper;
-import net.pladema.internation.repository.core.HealthcareProfessionalGroupRepository;
-import net.pladema.internation.repository.core.entity.HealthcareProfessionalGroup;
+import net.pladema.internation.repository.documents.HealthcareProfessionalGroupRepository;
+import net.pladema.internation.repository.documents.entity.HealthcareProfessionalGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

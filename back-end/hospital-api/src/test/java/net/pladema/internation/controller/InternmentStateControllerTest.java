@@ -5,7 +5,7 @@ import net.pladema.BaseControllerTest;
 import net.pladema.establishment.repository.InstitutionRepository;
 import net.pladema.internation.controller.internment.InternmentStateController;
 import net.pladema.internation.controller.internment.mapper.InternmentStateMapper;
-import net.pladema.internation.repository.core.InternmentEpisodeRepository;
+import net.pladema.internation.repository.internment.InternmentEpisodeRepository;
 import net.pladema.internation.service.internment.InternmentStateService;
 import net.pladema.internation.service.ips.*;
 import org.junit.Before;

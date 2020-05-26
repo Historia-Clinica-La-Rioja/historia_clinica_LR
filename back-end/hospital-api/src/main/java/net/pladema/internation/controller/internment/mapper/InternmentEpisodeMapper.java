@@ -5,10 +5,10 @@ import net.pladema.internation.controller.internment.dto.InternmentEpisodeDto;
 import net.pladema.internation.controller.internment.dto.InternmentPatientDto;
 import net.pladema.internation.controller.internment.dto.InternmentSummaryDto;
 import net.pladema.internation.controller.internment.dto.summary.InternmentEpisodeBMDto;
-import net.pladema.internation.repository.core.domain.InternmentSummaryVo;
-import net.pladema.internation.repository.core.entity.InternmentEpisode;
+import net.pladema.internation.repository.documents.entity.InternmentEpisode;
 import net.pladema.internation.service.internment.domain.BasicListedPatientBo;
 import net.pladema.internation.service.internment.domain.InternmentEpisodeBo;
+import net.pladema.internation.service.internment.summary.domain.InternmentSummaryBo;
 import org.mapstruct.*;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public interface InternmentEpisodeMapper {
     @Mapping(target = "bed.room.roomNumber", source = "roomNumber")
     @Mapping(target = "specialty.id", source = "clinicalSpecialtyId")
     @Mapping(target = "specialty.name", source = "specialty")
-    InternmentSummaryDto toInternmentSummaryDto(InternmentSummaryVo internmentSummaryVo);
+    InternmentSummaryDto toInternmentSummaryDto(InternmentSummaryBo internmentSummaryBo);
 
     @Named("toInternmentEpisode")
     InternmentEpisode toInternmentEpisode(InternmentEpisodeADto internmentEpisodeDto);
@@ -53,7 +53,7 @@ public interface InternmentEpisodeMapper {
     InternmentEpisodeBMDto toInternmentEpisodeBMDto (InternmentEpisode internmentEpisode);
 
     @AfterMapping
-    default void configDocumentsSummary(@MappingTarget InternmentSummaryDto target, InternmentSummaryVo source){
+    default void configDocumentsSummary(@MappingTarget InternmentSummaryDto target, InternmentSummaryBo source){
         if(target.getDocuments().getAnamnesis().getId() == null)
             target.getDocuments().setAnamnesis(null);
         if(target.getDocuments().getEpicrisis().getId() == null)

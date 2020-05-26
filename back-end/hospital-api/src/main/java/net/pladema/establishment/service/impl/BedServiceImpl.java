@@ -1,19 +1,18 @@
 package net.pladema.establishment.service.impl;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
 import net.pladema.establishment.controller.dto.BedDto;
 import net.pladema.establishment.controller.mapper.BedMapper;
 import net.pladema.establishment.repository.BedRepository;
 import net.pladema.establishment.repository.entity.Bed;
 import net.pladema.establishment.service.BedService;
-import net.pladema.internation.repository.core.entity.InternmentEpisode;
+import net.pladema.internation.repository.documents.entity.InternmentEpisode;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BedServiceImpl implements BedService {

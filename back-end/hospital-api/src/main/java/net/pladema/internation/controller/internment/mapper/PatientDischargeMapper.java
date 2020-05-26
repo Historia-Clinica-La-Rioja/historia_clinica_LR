@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 
 import net.pladema.internation.controller.internment.dto.PatientDischargeDto;
-import net.pladema.internation.repository.core.entity.PatientDischarge;
+import net.pladema.internation.repository.documents.entity.PatientDischarge;
 
 @Mapper
 public interface PatientDischargeMapper {

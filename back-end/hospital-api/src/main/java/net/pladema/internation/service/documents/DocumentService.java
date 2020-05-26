@@ -1,9 +1,9 @@
 package net.pladema.internation.service.documents;
 
-import net.pladema.internation.repository.core.entity.Document;
-import net.pladema.internation.repository.core.entity.DocumentInmunization;
-import net.pladema.internation.repository.core.entity.DocumentLab;
-import net.pladema.internation.repository.core.entity.DocumentVitalSign;
+import net.pladema.internation.repository.documents.entity.Document;
+import net.pladema.internation.repository.documents.entity.DocumentInmunization;
+import net.pladema.internation.repository.documents.entity.DocumentLab;
+import net.pladema.internation.repository.documents.entity.DocumentVitalSign;
 import net.pladema.internation.service.ips.domain.*;
 
 import java.util.List;

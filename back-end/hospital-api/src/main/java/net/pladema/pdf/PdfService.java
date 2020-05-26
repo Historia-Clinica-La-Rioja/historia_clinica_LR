@@ -9,8 +9,8 @@ import net.pladema.internation.controller.internment.mapper.ResponsibleDoctorMap
 import net.pladema.internation.controller.ips.dto.VitalSignsReportDto;
 import net.pladema.internation.controller.ips.mapper.VitalSignMapper;
 import net.pladema.internation.events.OnGenerateDocumentEvent;
-import net.pladema.internation.repository.core.DocumentFileRepository;
-import net.pladema.internation.repository.core.entity.DocumentFile;
+import net.pladema.internation.repository.documents.DocumentFileRepository;
+import net.pladema.internation.repository.documents.entity.DocumentFile;
 import net.pladema.internation.service.documents.InternmentDocument;
 import net.pladema.internation.service.documents.ReportDocumentService;
 import net.pladema.patient.controller.service.PatientExternalService;

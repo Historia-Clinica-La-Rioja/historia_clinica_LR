@@ -1,6 +1,6 @@
 package net.pladema.internation.service.documents.epicrisis.impl;
 
-import net.pladema.internation.repository.core.entity.Document;
+import net.pladema.internation.repository.documents.entity.Document;
 import net.pladema.internation.repository.masterdata.entity.DocumentStatus;
 import net.pladema.internation.service.documents.DocumentService;
 import net.pladema.internation.service.documents.ReportDocumentService;

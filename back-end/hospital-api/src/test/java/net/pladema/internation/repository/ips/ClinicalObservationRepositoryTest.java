@@ -1,9 +1,9 @@
 package net.pladema.internation.repository.ips;
 
 import net.pladema.BaseRepositoryTest;
-import net.pladema.internation.repository.core.entity.Document;
-import net.pladema.internation.repository.core.entity.DocumentLab;
-import net.pladema.internation.repository.core.entity.DocumentVitalSign;
+import net.pladema.internation.repository.documents.entity.Document;
+import net.pladema.internation.repository.documents.entity.DocumentLab;
+import net.pladema.internation.repository.documents.entity.DocumentVitalSign;
 import net.pladema.internation.repository.ips.entity.ObservationLab;
 import net.pladema.internation.repository.ips.entity.ObservationVitalSign;
 import net.pladema.internation.repository.masterdata.entity.DocumentStatus;

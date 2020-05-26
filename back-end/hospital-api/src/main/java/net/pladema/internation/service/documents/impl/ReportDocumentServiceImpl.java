@@ -1,7 +1,7 @@
 package net.pladema.internation.service.documents.impl;
 
-import net.pladema.internation.repository.core.*;
-import net.pladema.internation.repository.core.domain.ResponsibleDoctorVo;
+import net.pladema.internation.repository.documents.*;
+import net.pladema.internation.repository.internment.domain.summary.ResponsibleDoctorVo;
 import net.pladema.internation.repository.ips.generalstate.*;
 import net.pladema.internation.service.documents.ReportDocumentService;
 import net.pladema.internation.service.internment.domain.ResponsibleDoctorBo;

@@ -1,8 +1,8 @@
 package net.pladema.internation.controller.constraints.validator;
 
 import net.pladema.internation.controller.constraints.DocumentValid;
-import net.pladema.internation.repository.core.DocumentRepository;
-import net.pladema.internation.repository.core.entity.Document;
+import net.pladema.internation.repository.documents.DocumentRepository;
+import net.pladema.internation.repository.documents.entity.Document;
 import net.pladema.internation.repository.masterdata.entity.DocumentStatus;
 import net.pladema.internation.repository.masterdata.entity.DocumentType;
 

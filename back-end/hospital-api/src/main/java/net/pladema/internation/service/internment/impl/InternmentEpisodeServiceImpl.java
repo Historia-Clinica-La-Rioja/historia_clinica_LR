@@ -5,22 +5,27 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import net.pladema.internation.repository.documents.EvolutionNoteDocumentRepository;
+import net.pladema.internation.repository.documents.PatientDischargeRepository;
+import net.pladema.internation.repository.documents.entity.EvolutionNoteDocument;
+import net.pladema.internation.repository.documents.entity.InternmentEpisode;
+import net.pladema.internation.repository.documents.entity.PatientDischarge;
+import net.pladema.internation.repository.internment.InternmentEpisodeRepository;
+import net.pladema.internation.repository.internment.domain.summary.EvaluationNoteSummaryVo;
+import net.pladema.internation.repository.internment.domain.summary.InternmentSummaryVo;
+import net.pladema.internation.service.internment.InternmentEpisodeService;
+import net.pladema.internation.service.internment.summary.domain.InternmentSummaryBo;
+import net.pladema.sgx.exceptions.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import net.pladema.internation.repository.core.EvolutionNoteDocumentRepository;
-import net.pladema.internation.repository.core.InternmentEpisodeRepository;
-import net.pladema.internation.repository.core.PatientDischargeRepository;
-import net.pladema.internation.repository.core.domain.EvaluationNoteSummaryVo;
-import net.pladema.internation.repository.core.domain.InternmentSummaryVo;
-import net.pladema.internation.repository.core.entity.EvolutionNoteDocument;
-import net.pladema.internation.repository.core.entity.InternmentEpisode;
-import net.pladema.internation.repository.core.entity.PatientDischarge;
-import net.pladema.internation.service.internment.InternmentEpisodeService;
-import net.pladema.sgx.exceptions.NotFoundException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
@@ -105,14 +110,17 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 	}
 
 	@Override
-	public Optional<InternmentSummaryVo> getIntermentSummary(Integer internmentEpisodeId) {
+	public Optional<InternmentSummaryBo> getIntermentSummary(Integer internmentEpisodeId) {
 		LOG.debug(INPUT_PARAMETERS, internmentEpisodeId);
-		Optional<InternmentSummaryVo> result = internmentEpisodeRepository.getSummary(internmentEpisodeId);
-        result.ifPresent(r ->
-            r.getDocuments().setLastEvaluationNote(getLastEvaluationNoteSummary(internmentEpisodeId).orElse(null))
-        );
+		Optional<InternmentSummaryVo> resultQuery = internmentEpisodeRepository.getSummary(internmentEpisodeId);
+		AtomicReference<Optional<InternmentSummaryBo>> result = new AtomicReference<>(Optional.empty());
+		resultQuery.ifPresent(r -> {
+			r.getDocuments().setLastEvaluationNote(getLastEvaluationNoteSummary(internmentEpisodeId).orElse(new EvaluationNoteSummaryVo()));
+			result.set(Optional.of(new InternmentSummaryBo(r)));
+
+		});
 		LOG.debug(LOGGING_OUTPUT, result);
-		return result;
+		return result.get();
 	}
 
     private Optional<EvaluationNoteSummaryVo> getLastEvaluationNoteSummary(Integer internmentEpisodeId){

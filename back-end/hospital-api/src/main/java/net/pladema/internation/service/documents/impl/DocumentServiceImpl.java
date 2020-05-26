@@ -1,7 +1,7 @@
 package net.pladema.internation.service.documents.impl;
 
-import net.pladema.internation.repository.core.*;
-import net.pladema.internation.repository.core.entity.*;
+import net.pladema.internation.repository.documents.*;
+import net.pladema.internation.repository.documents.entity.*;
 import net.pladema.internation.repository.ips.generalstate.*;
 import net.pladema.internation.service.documents.DocumentService;
 import net.pladema.internation.service.ips.domain.*;

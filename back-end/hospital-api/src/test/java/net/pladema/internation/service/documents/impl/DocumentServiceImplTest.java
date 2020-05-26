@@ -1,6 +1,6 @@
 package net.pladema.internation.service.documents.impl;
 
-import net.pladema.internation.repository.core.*;
+import net.pladema.internation.repository.documents.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -10,11 +10,11 @@ import net.pladema.internation.controller.internment.dto.PatientDischargeDto;
 import net.pladema.internation.controller.internment.dto.summary.InternmentEpisodeBMDto;
 import net.pladema.internation.controller.internment.mapper.InternmentEpisodeMapper;
 import net.pladema.internation.controller.internment.mapper.PatientDischargeMapper;
-import net.pladema.internation.repository.core.domain.InternmentSummaryVo;
-import net.pladema.internation.repository.core.entity.InternmentEpisode;
-import net.pladema.internation.repository.core.entity.PatientDischarge;
+import net.pladema.internation.repository.documents.entity.InternmentEpisode;
+import net.pladema.internation.repository.documents.entity.PatientDischarge;
 import net.pladema.internation.repository.masterdata.entity.InternmentEpisodeStatus;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
+import net.pladema.internation.service.internment.summary.domain.InternmentSummaryBo;
 import net.pladema.sgx.exceptions.NotFoundException;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.slf4j.Logger;
@@ -58,9 +58,9 @@ public class InternmentEpisodeController {
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
 		LOG.debug("Input parameters -> {}", internmentEpisodeId);
-		InternmentSummaryVo internmentSummaryVo = internmentEpisodeService.getIntermentSummary(internmentEpisodeId)
-				.orElse(new InternmentSummaryVo());
-		InternmentSummaryDto result = internmentEpisodeMapper.toInternmentSummaryDto(internmentSummaryVo);
+		InternmentSummaryBo internmentSummaryBo = internmentEpisodeService.getIntermentSummary(internmentEpisodeId)
+				.orElse(new InternmentSummaryBo());
+		InternmentSummaryDto result = internmentEpisodeMapper.toInternmentSummaryDto(internmentSummaryBo);
 		LOG.debug("Output -> {}", result);
 		return ResponseEntity.ok().body(result);
 	}
@@ -84,7 +84,7 @@ public class InternmentEpisodeController {
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
 			@RequestBody PatientDischargeDto patientDischargeDto) {
 		PatientDischarge patientDischarge = patientDischargeMapper.toPatientDischarge(patientDischargeDto);
-		InternmentSummaryVo internmentEpisodeSummary = internmentEpisodeService.getIntermentSummary(internmentEpisodeId)
+		InternmentSummaryBo internmentEpisodeSummary = internmentEpisodeService.getIntermentSummary(internmentEpisodeId)
 				.orElseThrow(() -> new NotFoundException("bad-episode-id", "Internment episode not found"));
 		patientDischarge.setInternmentEpisodeId(internmentEpisodeId);
 		PatientDischarge patientDischageSaved = internmentEpisodeService.addPatientDischarge(patientDischarge);

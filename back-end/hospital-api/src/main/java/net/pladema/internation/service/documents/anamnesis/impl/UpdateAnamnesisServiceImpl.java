@@ -1,6 +1,6 @@
 package net.pladema.internation.service.documents.anamnesis.impl;
 
-import net.pladema.internation.repository.core.entity.Document;
+import net.pladema.internation.repository.documents.entity.Document;
 import net.pladema.internation.service.documents.DocumentService;
 import net.pladema.internation.service.documents.anamnesis.UpdateAnamnesisService;
 import net.pladema.internation.service.documents.anamnesis.domain.AnamnesisBo;

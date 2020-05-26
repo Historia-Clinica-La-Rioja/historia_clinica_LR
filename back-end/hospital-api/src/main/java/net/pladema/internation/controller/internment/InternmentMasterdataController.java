@@ -1,7 +1,7 @@
 package net.pladema.internation.controller.internment;
 
 import io.swagger.annotations.Api;
-import net.pladema.internation.repository.core.entity.DischargeType;
+import net.pladema.internation.repository.documents.entity.DischargeType;
 import net.pladema.internation.repository.masterdata.entity.*;
 import net.pladema.internation.repository.projections.InternmentMasterDataProjection;
 import net.pladema.internation.service.internment.InternmentMasterDataService;

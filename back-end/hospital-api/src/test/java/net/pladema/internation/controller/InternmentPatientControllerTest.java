@@ -4,7 +4,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import net.pladema.internation.repository.core.InternmentEpisodeRepository;
+import net.pladema.internation.repository.internment.InternmentEpisodeRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
