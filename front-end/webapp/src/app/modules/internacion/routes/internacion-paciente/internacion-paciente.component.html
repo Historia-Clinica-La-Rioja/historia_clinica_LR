@@ -1,84 +1,87 @@
 <app-content width="full">
 	<section>
 		<h2 class="page-title" [translate]="'internaciones.internacion-paciente.TITLE'"></h2>
-		<div *ngIf="(internmentEpisodeSummary$ | async) as internmentEpisodeSummary">
-			<div class="buttons" *ngIf="!epicrisisDoc">
-				<div *hasRole="['ESPECIALISTA_MEDICO']">
-					<button mat-flat-button color="primary" (click)="goToAnamnesis()"
-						*ngIf="!anamnesisDoc || !anamnesisDoc.confirmed">
-						<span class="uppercase"
-							[translate]="'internaciones.internacion-paciente.actions.ADD_EVAL_INGRESO'"></span>
-					</button>
-				</div>
+		<div *ngIf="(internmentEpisodeSummary$ | async) as internmentEpisodeSummary" fxLayout="column" fxLayoutGap="20px">
+			<div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px">
+				<ng-container *ngIf="!epicrisisDoc else discharge">
+					<ng-container *ngIf="!anamnesisDoc || !anamnesisDoc.confirmed">
+						<button mat-flat-button color="primary" (click)="goToAnamnesis()"
+							fxFlexFill.xs
+							*hasRole="['ESPECIALISTA_MEDICO']">
+							<span class="uppercase"
+								[translate]="'internaciones.internacion-paciente.actions.ADD_EVAL_INGRESO'"></span>
+						</button>
+					</ng-container>
 
-				<div *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']">
-					<button mat-flat-button color="primary" (click)="goToNotaEvolucion()">
-						<span class="uppercase"
-							[translate]="'internaciones.internacion-paciente.actions.ADD_NOTA_EVOLUCION'"></span>
-					</button>
-				</div>
+					<ng-container *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']">
+						<button mat-flat-button color="primary" fxFlexFill.xs (click)="goToNotaEvolucion()">
+							<span class="uppercase"
+								[translate]="'internaciones.internacion-paciente.actions.ADD_NOTA_EVOLUCION'"></span>
+						</button>
+					</ng-container>
 
-				<div *hasRole="['ESPECIALISTA_MEDICO']">
-					<button mat-flat-button color="primary" (click)="goToEpicrisis()"
-						*ngIf="anamnesisDoc?.confirmed && lastEvolutionNoteDoc?.confirmed">
+					<ng-container *ngIf="anamnesisDoc?.confirmed && lastEvolutionNoteDoc?.confirmed">
+						<button mat-flat-button color="primary" fxFlexFill.xs (click)="goToEpicrisis()"
+							*hasRole="['ESPECIALISTA_MEDICO']">
+							<span class="uppercase"
+								[translate]="'internaciones.internacion-paciente.actions.ADD_EPICRISIS'"></span>
+						</button>
+					</ng-container>
+				</ng-container>
+				<ng-template #discharge>
+					<button mat-flat-button color="primary" *hasRole="['ADMINISTRATIVO']"
+						(click)="goToAdministrativeDischarge()">
 						<span class="uppercase"
-							[translate]="'internaciones.internacion-paciente.actions.ADD_EPICRISIS'"></span>
+							[translate]="'internaciones.internacion-paciente.actions.ADMINISTRATIVE_DISCHARGE'"></span>
 					</button>
-				</div>
+				</ng-template>
 			</div>
-			<div class="buttons" *ngIf="epicrisisDoc">
-				<button mat-flat-button color="primary" *hasRole="['ADMINISTRATIVO']"
-					(click)="goToAdministrativeDischarge()">
-					<span class="uppercase"
-						[translate]="'internaciones.internacion-paciente.actions.ADMINISTRATIVE_DISCHARGE'"></span>
-				</button>
-			</div>
-			<div class="flex-layout">
-				<div class="column">
-					<section *hasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']">
+			<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
+				<div fxLayout="column" fxFlex="50%" fxLayoutGap="20px">
+					<ng-container *hasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']">
 						<app-patient-card [patient]="patient$ | async"></app-patient-card>
-					</section>
-					<section *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']">
+					</ng-container>
+					<ng-container *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']">
 						<app-signos-vitales-summary [internmentEpisodeId]="internmentEpisodeId">
 						</app-signos-vitales-summary>
-					</section>
-					<section *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']">
+					</ng-container>
+					<ng-container *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']">
 						<app-antropometricos-summary [internmentEpisodeId]="internmentEpisodeId">
 						</app-antropometricos-summary>
-					</section>
-					<section *hasRole="['ESPECIALISTA_MEDICO']">
+					</ng-container>
+					<ng-container *hasRole="['ESPECIALISTA_MEDICO']">
 						<app-antecedentes-personales-summary [internmentEpisodeId]="internmentEpisodeId"></app-antecedentes-personales-summary>
-					</section>
-					<section *hasRole="['ESPECIALISTA_MEDICO']">
+					</ng-container>
+					<ng-container *hasRole="['ESPECIALISTA_MEDICO']">
 						<app-antecedentes-familiares-summary [internmentEpisodeId]="internmentEpisodeId"></app-antecedentes-familiares-summary>
-					</section>
+					</ng-container>
 				</div>
-				<div class="column">
-					<section *hasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']">
+				<div fxLayout="column" fxFlex="50%" fxLayoutGap="20px">
+					<ng-container *hasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']">
 						<app-summary-card [header]="internacionSummary">
 							<mat-card-content>
 								<app-internment-episode-summary [internmentEpisode]="internmentEpisodeSummary">
 								</app-internment-episode-summary>
 							</mat-card-content>
 						</app-summary-card>
-					</section>
-					<section *hasRole="['ESPECIALISTA_MEDICO']">
+					</ng-container>
+					<ng-container *hasRole="['ESPECIALISTA_MEDICO']">
 						<app-main-diagnosis-summary [internmentEpisodeId]="internmentEpisodeId">
 						</app-main-diagnosis-summary>
-					</section>
-					<section *hasRole="['ESPECIALISTA_MEDICO']">
+					</ng-container>
+					<ng-container *hasRole="['ESPECIALISTA_MEDICO']">
 						<app-diagnosis-summary [internmentEpisodeId]="internmentEpisodeId" [editable]="!epicrisisDoc">
 						</app-diagnosis-summary>
-					</section>
-					<section *hasRole="['ESPECIALISTA_MEDICO']">
+					</ng-container>
+					<ng-container *hasRole="['ESPECIALISTA_MEDICO']">
 						<app-alergias-summary [internmentEpisodeId]="internmentEpisodeId"></app-alergias-summary>
-					</section>
-					<section *hasRole="['ESPECIALISTA_MEDICO']">
+					</ng-container>
+					<ng-container *hasRole="['ESPECIALISTA_MEDICO']">
 						<app-medicacion-summary [internmentEpisodeId]="internmentEpisodeId"></app-medicacion-summary>
-					</section>
-					<section *hasRole="['ESPECIALISTA_MEDICO']">
+					</ng-container>
+					<ng-container *hasRole="['ESPECIALISTA_MEDICO']">
 						<app-vacunas-summary [internmentEpisodeId]="internmentEpisodeId"></app-vacunas-summary>
-					</section>
+					</ng-container>
 				</div>
 			</div>
 		</div>

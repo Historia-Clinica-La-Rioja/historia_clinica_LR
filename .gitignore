@@ -43,6 +43,10 @@ bin
 */.idea/
 *.idea/
 
+# VS Code
+
+.vscode
+
 # Os X Files
 .DS_Store
 

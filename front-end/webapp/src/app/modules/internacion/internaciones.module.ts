@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { InternacionesRoutingModule } from './internaciones-routing.module';
 import { CoreModule } from '@core/core.module';
 import { PresentationModule } from '../presentation/presentation.module';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { AnamnesisFormComponent } from './components/anamnesis-form/anamnesis-form.component';
 import { InternacionesHomeComponent } from './routes/home/internaciones-home.component';
 import { InternacionesTableComponent } from './components/internaciones-table/internaciones-table.component';
@@ -76,6 +77,7 @@ import { VacunasSummaryComponent } from './components/vacunas-summary/vacunas-su
 	imports: [
 		CoreModule,
 		CommonModule,
+		FlexLayoutModule,
 		FormsModule,
 		PresentationModule,
 		InternacionesRoutingModule,

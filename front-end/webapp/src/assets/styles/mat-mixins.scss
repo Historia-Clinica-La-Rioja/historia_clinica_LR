@@ -30,7 +30,7 @@ $default-color: 100;
 	$palette: map-get($theme, primary);
 	app-no-data {
 		div.no-data {
-			padding: 20px 0;
+			padding: 20px 5px;
 			text-align: center;
 			font-weight: bold;
 			background-color: white;

@@ -20,6 +20,7 @@ import { AppMaterialModule } from './app.material.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { PresentationModule } from './modules/presentation/presentation.module';
 import { FlavoredMultiTranslateHttpLoader } from '@core/utils/flavored-multi-translate-http-loader';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { PublicService } from '@api-rest/services/public.service';
 
 @NgModule({
@@ -29,6 +30,7 @@ import { PublicService } from '@api-rest/services/public.service';
 	imports: [
 		BrowserAnimationsModule,
 		BrowserModule,
+		FlexLayoutModule,
 		FormsModule,
 		HttpClientModule,
 		RouterModule,

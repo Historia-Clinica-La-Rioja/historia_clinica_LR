@@ -1,6 +1,7 @@
 mat-card.mat-card {
-	width: 16vw;
-	margin: 10px 5px;
+	min-width: 235px;
+	max-width: 300px;
+	margin: 5px;
 	padding: 5px 10px;
 }
 
