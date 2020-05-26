@@ -130,13 +130,9 @@ export class NewPatientComponent implements OnInit {
 		if (params.birthDate) {
 			this.form.controls.birthDate.disable();
 		}
+		this.form.controls.middleNames.disable();
+		this.form.controls.otherLastNames.disable();
 
-		if (params.middleNames) {
-			this.form.controls.middleNames.disable();
-		}
-		if (params.otherLastNames) {
-			this.form.controls.otherLastNames.disable();
-		}
 	}
 
 	save(): void {

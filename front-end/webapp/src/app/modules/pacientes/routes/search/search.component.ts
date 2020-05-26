@@ -72,7 +72,7 @@ export class SearchComponent implements OnInit {
 				.subscribe(
 					personData => {
 						if (personData && Object.keys(personData).length !== 0) {
-							let personToAdd: any = { ...personData };
+							let personToAdd = this.mapToPerson(personData);
 							personToAdd.identificationTypeId = this.identificationTypeId;
 							personToAdd.identificationNumber = this.identificationNumber;
 							personToAdd.genderId = this.genderId;
@@ -264,4 +264,26 @@ export class SearchComponent implements OnInit {
 		return this.isLoading;
 	}
 
+	private splitStringByFirstSpaceCharacter(string: String): any {
+		var spaceIndex: number = string.indexOf(' ');
+		return (spaceIndex != -1) ?
+			{
+				firstSubstring: string.substr(0,spaceIndex),
+				secondSubstring: string.substr(spaceIndex+1)
+			}
+			:
+				{firstSubstring: string}
+	}
+
+	private mapToPerson(personData): any {
+		let splitedFirstName = this.splitStringByFirstSpaceCharacter(personData.firstName);
+		let splitedLastName = this.splitStringByFirstSpaceCharacter(personData.lastName);
+		return {
+			firstName: splitedFirstName.firstSubstring,
+			middleNames: splitedFirstName.secondSubstring,
+			lastName: splitedLastName.firstSubstring,
+			otherLastNames: splitedLastName.secondSubstring,
+			birthDate: personData.birthDate
+		}
+	}
 }
