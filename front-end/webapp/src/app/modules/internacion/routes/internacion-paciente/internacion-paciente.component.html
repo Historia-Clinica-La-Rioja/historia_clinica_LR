@@ -46,6 +46,12 @@
 						<app-antropometricos-summary [internmentEpisodeId]="internmentEpisodeId">
 						</app-antropometricos-summary>
 					</section>
+					<section>
+						<app-antecedentes-familiares-summary [internmentEpisodeId]="internmentEpisodeId"></app-antecedentes-familiares-summary>
+					</section>
+					<section>
+						<app-antecedentes-personales-summary [internmentEpisodeId]="internmentEpisodeId"></app-antecedentes-personales-summary>
+					</section>
 				</div>
 				<div class="column">
 					<section *hasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']">

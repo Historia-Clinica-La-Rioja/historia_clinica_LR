@@ -24,3 +24,13 @@ export const ANTROPOMETRICOS: SummaryHeader = {
 	title: 'Información antropométrica',
 	matIcon: 'accessibility_new'
 };
+
+export const ANTECEDENTES_PERSONALES: SummaryHeader = {
+	title: 'Antecedentes personales',
+	matIcon: 'error_outline'
+};
+
+export const ANTECEDENTES_FAMILIARES: SummaryHeader = {
+	title: 'Antecedentes familiares',
+	matIcon: 'error_outline'
+};

@@ -32,6 +32,8 @@ import { RemoveDiagnosisComponent } from './dialogs/remove-diagnosis/remove-diag
 import { EffectiveTimeComponent } from './components/effective-time/effective-time.component';
 import { EffectiveTimeDialogComponent } from './dialogs/effective-time-dialog/effective-time-dialog.component';
 import { PatientDischargeComponent } from './routes/patient-discharge/patient-discharge.component';
+import { AntecedentesFamiliaresSummaryComponent } from './components/antecedentes-familiares-summary/antecedentes-familiares-summary.component';
+import { AntecedentesPersonalesSummaryComponent } from './components/antecedentes-personales-summary/antecedentes-personales-summary.component';
 
 @NgModule({
 	declarations: [
@@ -62,6 +64,8 @@ import { PatientDischargeComponent } from './routes/patient-discharge/patient-di
 		EffectiveTimeComponent,
 		EffectiveTimeDialogComponent,
 		PatientDischargeComponent,
+		AntecedentesFamiliaresSummaryComponent,
+		AntecedentesPersonalesSummaryComponent,
 	],
 	imports: [
 		CoreModule,

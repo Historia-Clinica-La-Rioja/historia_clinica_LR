@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '@environments/environment';
-import { AnthropometricDataDto, HealthConditionDto, Last2VitalSignsDto } from '@api-rest/api-model';
+import { AnthropometricDataDto, HealthConditionDto, HealthHistoryConditionDto, Last2VitalSignsDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 
 @Injectable({
@@ -35,4 +35,13 @@ export class InternmentStateService {
 		return this.http.get<AnthropometricDataDto>(url);
 	}
 
+	getPersonalHistories(internmentId: number): Observable<HealthHistoryConditionDto[]> {
+		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments-state/${internmentId}/general/personalHistories`;
+		return this.http.get<HealthHistoryConditionDto[]>(url);
+	}
+
+	getFamilyHistories(internmentId: number): Observable<HealthHistoryConditionDto[]> {
+		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments-state/${internmentId}/general/familyHistories`;
+		return this.http.get<HealthHistoryConditionDto[]>(url);
+	}
 }
