@@ -115,7 +115,7 @@
 				}
 			},
 			"observations": {
-				"TITLE": "Observaciones",
+				"TITLE": "Evaluación clínica",
 				"CURRENT_DISEASE": "Enfermedad actual",
 				"PHYSICAL_EXAMINATION": "Exámen físico",
 				"STUDIES_PROCEDURES": "Resumen de estudios y procedimientos realizados",
@@ -201,7 +201,7 @@
 				"SUCCESS": "El documento de epicrisis se guardó exitosamente"
 			},
 			"observations": {
-				"TITLE": "Observaciones",
+				"TITLE": "Evaluación clínica",
 				"EVOLUTION_NOTE": "Evolución",
 				"PHYSICAL_EXAMINATION": "Exámen físico",
 				"STUDIES_SUMMARY": "Resumen de estudios y procedimientos realizados",

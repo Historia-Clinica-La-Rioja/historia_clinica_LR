@@ -7,142 +7,6 @@
 		<section id="diagnosticos" *hasRole="['ESPECIALISTA_MEDICO']">
 			<app-diagnosticos [(diagnosis)]="diagnosticos"></app-diagnosticos>
 		</section>
-		<section id="datos-antropometricos" *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']">
-			<h2 [translate]="'internaciones.anamnesis.datos-antropometricos.TITLE'"></h2>
-			<mat-card class="datos-antropometricos-card">
-				<mat-card-content formGroupName="anthropometricData">
-					<div>
-						<mat-form-field [floatLabel]="'never'" appearance="outline">
-							<mat-label [translate]="'internaciones.anamnesis.datos-antropometricos.BLOOD_TYPE'"></mat-label>
-							<mat-select placeholder="B+" formControlName="bloodType" name="bloodTypeId">
-								<mat-option *ngFor="let bloodType of bloodTypes" [value]="bloodType">
-									{{ bloodType.description }}
-								</mat-option>
-							</mat-select>
-						</mat-form-field>
-					</div>
-					<div>
-						<mat-form-field [floatLabel]="'never'" appearance="outline">
-							<mat-label [translate]="'internaciones.anamnesis.datos-antropometricos.HEIGHT'"></mat-label>
-							<input id="height"
-							name="height"
-							formControlName="height"
-							placeholder="Ej: 180"
-							maxlength="3"
-							matInput>
-						</mat-form-field>
-					</div>
-					<div>
-						<mat-form-field [floatLabel]="'never'" appearance="outline">
-							<mat-label [translate]="'internaciones.anamnesis.datos-antropometricos.WEIGHT'"></mat-label>
-							<input id="weight"
-							name="weight"
-							formControlName="weight"
-							placeholder="Ej: 70"
-							maxlength="3"
-							matInput>
-						</mat-form-field>
-					</div>
-				</mat-card-content>
-			</mat-card>
-
-		</section>
-		<section id="alergias" *hasRole="['ESPECIALISTA_MEDICO']">
-			<app-alergias [(allergies)]="allergies"></app-alergias>
-		</section>
-		<section id="vacunas" *hasRole="['ESPECIALISTA_MEDICO']">
-			<app-vacunas [(inmunizations)]="inmunizations"></app-vacunas>
-		</section>
-		<section id="signos-vitales" *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']">
-			<h2 [translate]="'internaciones.anamnesis.vital-signs.form.TITLE'"></h2>
-			<mat-card>
-				<mat-card-content class="vital-signs" formGroupName="vitalSigns">
-					<div class="row-container">
-						<div class="field-container" formGroupName="heartRate">
-							<mat-label [translate]="'internaciones.anamnesis.vital-signs.form.HEART_RATE'"></mat-label>
-							<mat-form-field [floatLabel]="'never'" appearance="outline">
-								<input id="heart_rate"
-									   name="heart_rate"
-									   formControlName="value"
-									   placeholder="00"
-									   type="number"
-									   matInput>
-							</mat-form-field>
-							<app-effective-time	[model]="form.value.vitalSigns.heartRate.effectiveTime" (onChange)="setVitalSignEffectiveTime($event, 'heartRate')"></app-effective-time>
-						</div>
-						<div class="field-container" formGroupName="respiratoryRate">
-							<mat-label [translate]="'internaciones.anamnesis.vital-signs.form.RESPIRATORY_RATE'"></mat-label>
-							<mat-form-field [floatLabel]="'never'" appearance="outline">
-								<input id="respiratory_rate"
-									   name="respiratory_rate"
-									   formControlName="value"
-									   placeholder="00"
-									   type="number"
-									   matInput>
-							</mat-form-field>
-							<app-effective-time	[model]="form.value.vitalSigns.respiratoryRate.effectiveTime" (onChange)="setVitalSignEffectiveTime($event, 'respiratoryRate')"></app-effective-time>
-						</div>
-					</div>
-
-					<div class="row-container">
-						<div class="field-container" formGroupName="temperature">
-							<mat-label [translate]="'internaciones.anamnesis.vital-signs.form.TEMPERATURE'"></mat-label>
-							<mat-form-field [floatLabel]="'never'" appearance="outline">
-								<input id="temperature"
-									   name="temperature"
-									   formControlName="value"
-									   placeholder="00.0"
-									   type="number"
-									   matInput>
-							</mat-form-field>
-							<app-effective-time	[model]="form.value.vitalSigns.temperature.effectiveTime" (onChange)="setVitalSignEffectiveTime($event, 'temperature')"></app-effective-time>
-						</div>
-						<div class="field-container" formGroupName="bloodOxygenSaturation">
-							<mat-label
-								[translate]="'internaciones.anamnesis.vital-signs.form.BLOOD_OXYGEN_SATURATION'"></mat-label>
-							<mat-form-field [floatLabel]="'never'" appearance="outline">
-								<input id="blood_oxygen_saturation"
-									   name="blood_oxygen_saturation"
-									   formControlName="value"
-									   placeholder="00"
-									   type="number"
-									   matInput>
-							</mat-form-field>
-							<app-effective-time	[model]="form.value.vitalSigns.bloodOxygenSaturation.effectiveTime" (onChange)="setVitalSignEffectiveTime($event, 'bloodOxygenSaturation')"></app-effective-time>
-						</div>
-					</div>
-
-					<div class="row-container">
-						<div class="field-container" formGroupName="systolicBloodPressure">
-							<mat-label
-								[translate]="'internaciones.anamnesis.vital-signs.form.SYSTOLIC_BLOOD_PRESSURE'"></mat-label>
-							<mat-form-field [floatLabel]="'never'" appearance="outline">
-								<input id="systolic_blood_pressure"
-									   name="systolicBloodPressure"
-									   formControlName="value"
-									   placeholder="00"
-									   type="number"
-									   matInput>
-							</mat-form-field>
-							<app-effective-time	[model]="form.value.vitalSigns.systolicBloodPressure.effectiveTime" (onChange)="setVitalSignEffectiveTime($event, 'systolicBloodPressure')"></app-effective-time>
-						</div>
-						<div class="field-container" formGroupName="diastolicBloodPressure">
-							<mat-label
-								[translate]="'internaciones.anamnesis.vital-signs.form.DIASTOLIC_BLOOD_PRESSURE'"></mat-label>
-							<mat-form-field [floatLabel]="'never'" appearance="outline">
-								<input id="diastolic_blood_pressure"
-									   name="diastolicBloodPressure"
-									   formControlName="value"
-									   placeholder="00"
-									   type="number"
-									   matInput>
-							</mat-form-field>
-							<app-effective-time	[model]="form.value.vitalSigns.diastolicBloodPressure.effectiveTime" (onChange)="setVitalSignEffectiveTime($event, 'diastolicBloodPressure')"></app-effective-time>
-						</div>
-					</div>
-				</mat-card-content>
-			</mat-card>
-		</section>
 		<section id="observations" *hasRole="['ESPECIALISTA_MEDICO']">
 			<h2 [translate]="'internaciones.anamnesis.observations.TITLE'"></h2>
 			<mat-card>
@@ -199,12 +63,127 @@
 				</mat-card-content>
 			</mat-card>
 		</section>
+		<section id="signos-vitales" *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']">
+			<h2 [translate]="'internaciones.anamnesis.vital-signs.form.TITLE'"></h2>
+			<mat-card>
+				<mat-card-content class="vital-signs" formGroupName="vitalSigns">
+					<div class="row-container">
+						<div class="field-container" formGroupName="heartRate">
+							<mat-label [translate]="'internaciones.anamnesis.vital-signs.form.HEART_RATE'"></mat-label>
+							<mat-form-field [floatLabel]="'never'" appearance="outline">
+								<input id="heart_rate" name="heart_rate" formControlName="value" placeholder="00"
+									type="number" matInput>
+							</mat-form-field>
+							<app-effective-time [model]="form.value.vitalSigns.heartRate.effectiveTime"
+								(onChange)="setVitalSignEffectiveTime($event, 'heartRate')"></app-effective-time>
+						</div>
+						<div class="field-container" formGroupName="respiratoryRate">
+							<mat-label [translate]="'internaciones.anamnesis.vital-signs.form.RESPIRATORY_RATE'">
+							</mat-label>
+							<mat-form-field [floatLabel]="'never'" appearance="outline">
+								<input id="respiratory_rate" name="respiratory_rate" formControlName="value"
+									placeholder="00" type="number" matInput>
+							</mat-form-field>
+							<app-effective-time [model]="form.value.vitalSigns.respiratoryRate.effectiveTime"
+								(onChange)="setVitalSignEffectiveTime($event, 'respiratoryRate')"></app-effective-time>
+						</div>
+					</div>
 
+					<div class="row-container">
+						<div class="field-container" formGroupName="temperature">
+							<mat-label [translate]="'internaciones.anamnesis.vital-signs.form.TEMPERATURE'"></mat-label>
+							<mat-form-field [floatLabel]="'never'" appearance="outline">
+								<input id="temperature" name="temperature" formControlName="value" placeholder="00.0"
+									type="number" matInput>
+							</mat-form-field>
+							<app-effective-time [model]="form.value.vitalSigns.temperature.effectiveTime"
+								(onChange)="setVitalSignEffectiveTime($event, 'temperature')"></app-effective-time>
+						</div>
+						<div class="field-container" formGroupName="bloodOxygenSaturation">
+							<mat-label [translate]="'internaciones.anamnesis.vital-signs.form.BLOOD_OXYGEN_SATURATION'">
+							</mat-label>
+							<mat-form-field [floatLabel]="'never'" appearance="outline">
+								<input id="blood_oxygen_saturation" name="blood_oxygen_saturation"
+									formControlName="value" placeholder="00" type="number" matInput>
+							</mat-form-field>
+							<app-effective-time [model]="form.value.vitalSigns.bloodOxygenSaturation.effectiveTime"
+								(onChange)="setVitalSignEffectiveTime($event, 'bloodOxygenSaturation')">
+							</app-effective-time>
+						</div>
+					</div>
+
+					<div class="row-container">
+						<div class="field-container" formGroupName="systolicBloodPressure">
+							<mat-label [translate]="'internaciones.anamnesis.vital-signs.form.SYSTOLIC_BLOOD_PRESSURE'">
+							</mat-label>
+							<mat-form-field [floatLabel]="'never'" appearance="outline">
+								<input id="systolic_blood_pressure" name="systolicBloodPressure" formControlName="value"
+									placeholder="00" type="number" matInput>
+							</mat-form-field>
+							<app-effective-time [model]="form.value.vitalSigns.systolicBloodPressure.effectiveTime"
+								(onChange)="setVitalSignEffectiveTime($event, 'systolicBloodPressure')">
+							</app-effective-time>
+						</div>
+						<div class="field-container" formGroupName="diastolicBloodPressure">
+							<mat-label
+								[translate]="'internaciones.anamnesis.vital-signs.form.DIASTOLIC_BLOOD_PRESSURE'">
+							</mat-label>
+							<mat-form-field [floatLabel]="'never'" appearance="outline">
+								<input id="diastolic_blood_pressure" name="diastolicBloodPressure"
+									formControlName="value" placeholder="00" type="number" matInput>
+							</mat-form-field>
+							<app-effective-time [model]="form.value.vitalSigns.diastolicBloodPressure.effectiveTime"
+								(onChange)="setVitalSignEffectiveTime($event, 'diastolicBloodPressure')">
+							</app-effective-time>
+						</div>
+					</div>
+				</mat-card-content>
+			</mat-card>
+		</section>
+		<section id="datos-antropometricos" *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']">
+			<h2 [translate]="'internaciones.anamnesis.datos-antropometricos.TITLE'"></h2>
+			<mat-card class="datos-antropometricos-card">
+				<mat-card-content formGroupName="anthropometricData">
+					<div>
+						<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<mat-label [translate]="'internaciones.anamnesis.datos-antropometricos.BLOOD_TYPE'">
+							</mat-label>
+							<mat-select placeholder="B+" formControlName="bloodType" name="bloodTypeId">
+								<mat-option *ngFor="let bloodType of bloodTypes" [value]="bloodType">
+									{{ bloodType.description }}
+								</mat-option>
+							</mat-select>
+						</mat-form-field>
+					</div>
+					<div>
+						<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<mat-label [translate]="'internaciones.anamnesis.datos-antropometricos.HEIGHT'"></mat-label>
+							<input id="height" name="height" formControlName="height" placeholder="Ej: 180"
+								maxlength="3" matInput>
+						</mat-form-field>
+					</div>
+					<div>
+						<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<mat-label [translate]="'internaciones.anamnesis.datos-antropometricos.WEIGHT'"></mat-label>
+							<input id="weight" name="weight" formControlName="weight" placeholder="Ej: 70" maxlength="3"
+								matInput>
+						</mat-form-field>
+					</div>
+				</mat-card-content>
+			</mat-card>
+		</section>
+		<section id="alergias" *hasRole="['ESPECIALISTA_MEDICO']">
+			<app-alergias [(allergies)]="allergies"></app-alergias>
+		</section>
+		<section id="vacunas" *hasRole="['ESPECIALISTA_MEDICO']">
+			<app-vacunas [(inmunizations)]="inmunizations"></app-vacunas>
+		</section>
 		<section id="buttons" class="form-buttons">
 			<button mat-stroked-button type="button" color="primary" (click)="back()">
 				<span class="uppercase" [translate]="'buttons.BACK'"></span>
 			</button>
-			<button id="sign-confirm" mat-raised-button type="submit" color="primary" *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']">
+			<button id="sign-confirm" mat-raised-button type="submit" color="primary"
+				*hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']">
 				<span class="uppercase" [translate]="'internaciones.anamnesis.buttons.CONFIRM'"></span>
 			</button>
 		</section>
