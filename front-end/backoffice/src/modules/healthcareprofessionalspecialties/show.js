@@ -13,7 +13,7 @@ const HealthcareProfessionalSpecialtyShow = props => (
     <Show {...props}>
         <SimpleShowLayout>
             <TextField source="description"/>
-            <ReferenceField source="healthcareProfessionalId" reference="healthcareprofessionals" link={false}>
+            <ReferenceField source="healthcareProfessionalId" reference="healthcareprofessionals" link={false} label="Persona">
                 <SubReference source="personId" reference="people" link={false}>
                     <FunctionField render={renderPerson} />
                 </SubReference>

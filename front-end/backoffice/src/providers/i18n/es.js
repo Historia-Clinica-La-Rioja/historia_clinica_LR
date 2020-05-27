@@ -155,5 +155,8 @@ export default {
                 entryDate: 'Fecha de entrada'
             }
         },
+        people: {
+            name: 'Persona ||| Personas'
+        }
     },
 };

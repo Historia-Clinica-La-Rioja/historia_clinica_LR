@@ -19,6 +19,7 @@ const Person = () => {
         <PeopleReferenceInput
             source="personId"
             onChange={value => { form.change('healthcareProfessionalId', null); }}
+            label="Persona"
         />
     );
 };
