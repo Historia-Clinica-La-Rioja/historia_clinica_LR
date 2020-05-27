@@ -31,12 +31,12 @@ export class ProfileComponent implements OnInit {
 	public internmentEpisode;
 
 	constructor(private patientService: PatientService,
-				private mapperService: MapperService,
-				private route: ActivatedRoute,
-				private router: Router,
-				private personService: PersonService,
-				private contextService: ContextService,
-				private internmentPatientService: InternmentPatientService) {
+		private mapperService: MapperService,
+		private route: ActivatedRoute,
+		private router: Router,
+		private personService: PersonService,
+		private contextService: ContextService,
+		private internmentPatientService: InternmentPatientService) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 
@@ -57,7 +57,7 @@ export class ProfileComponent implements OnInit {
 
 				this.internmentPatientService.internmentEpisodeIdInProcess(this.patientId)
 					.subscribe(internmentEpisodeProcessDto => {
-						if (internmentEpisodeProcessDto){
+						if (internmentEpisodeProcessDto) {
 							this.internmentEpisode = internmentEpisodeProcessDto;
 						}
 					});
@@ -68,12 +68,17 @@ export class ProfileComponent implements OnInit {
 	goNewInternment(): void {
 		this.router.navigate([this.routePrefix + ROUTE_NEW_INTERNMENT],
 			{
-				queryParams: {patientId: this.patientId}
+				queryParams: { patientId: this.patientId }
 			});
 	}
 
 	goInternmentEpisode(): void {
 		this.router.navigate([this.routePrefix + ROUTE_INTERNMENT_EPISODE_PREFIX + this.internmentEpisode.id + ROUTE_INTERNMENT_EPISODE_SUFIX + this.patientId]);
+	}
+
+	goToEditProfile(): void {
+		//ToDO ir a nuevo formulario de edicion
+		//this.router.navigate([this.routePrefix ]);
 	}
 
 }

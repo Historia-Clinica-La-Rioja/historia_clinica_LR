@@ -1,11 +1,11 @@
 <app-content width="full">
 	<section>
 		<div *hasRole="['ADMINISTRATIVO']">
-			<button *ngIf="internmentEpisode?.id" mat-raised-button color="primary"
-					(click)="goInternmentEpisode()">
+			<button *ngIf="internmentEpisode?.id" mat-raised-button color="primary" (click)="goInternmentEpisode()">
 				<span>Ver internación</span>
 			</button>
-			<button *ngIf="!internmentEpisode?.inProgress" mat-raised-button color="primary" (click)="goNewInternment()">
+			<button *ngIf="!internmentEpisode?.inProgress" mat-raised-button color="primary"
+				(click)="goNewInternment()">
 				<span>Iniciar internación</span>
 			</button>
 		</div>
@@ -13,6 +13,9 @@
 			<app-patient-card [patient]="patientBasicData">
 				<div header class="header">
 					<app-patient-type-logo [patientTypeData]="patientTypeData"></app-patient-type-logo>
+					<button mat-icon-button color="primary" *hasRole="['ADMINISTRATIVO']" (click)="goToEditProfile()">
+						<mat-icon>edit</mat-icon>
+					</button>
 				</div>
 				<div content>
 					<app-personal-information [personalInformation]="personalInformation"></app-personal-information>
@@ -20,5 +23,6 @@
 			</app-patient-card>
 		</div>
 	</section>
-	<em *ngIf="!internmentEpisode?.id && internmentEpisode?.inProgress">El paciente se encuentra internado en otra institución.</em>
+	<em *ngIf="!internmentEpisode?.id && internmentEpisode?.inProgress">El paciente se encuentra internado en otra
+		institución.</em>
 </app-content>
