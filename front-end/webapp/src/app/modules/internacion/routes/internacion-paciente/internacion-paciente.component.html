@@ -46,11 +46,11 @@
 						<app-antropometricos-summary [internmentEpisodeId]="internmentEpisodeId">
 						</app-antropometricos-summary>
 					</section>
-					<section>
-						<app-antecedentes-familiares-summary [internmentEpisodeId]="internmentEpisodeId"></app-antecedentes-familiares-summary>
-					</section>
-					<section>
+					<section *hasRole="['ESPECIALISTA_MEDICO']">
 						<app-antecedentes-personales-summary [internmentEpisodeId]="internmentEpisodeId"></app-antecedentes-personales-summary>
+					</section>
+					<section *hasRole="['ESPECIALISTA_MEDICO']">
+						<app-antecedentes-familiares-summary [internmentEpisodeId]="internmentEpisodeId"></app-antecedentes-familiares-summary>
 					</section>
 				</div>
 				<div class="column">
@@ -69,6 +69,15 @@
 					<section *hasRole="['ESPECIALISTA_MEDICO']">
 						<app-diagnosis-summary [internmentEpisodeId]="internmentEpisodeId" [editable]="!epicrisisDoc">
 						</app-diagnosis-summary>
+					</section>
+					<section *hasRole="['ESPECIALISTA_MEDICO']">
+						<app-alergias-summary [internmentEpisodeId]="internmentEpisodeId"></app-alergias-summary>
+					</section>
+					<section *hasRole="['ESPECIALISTA_MEDICO']">
+						<app-medicacion-summary [internmentEpisodeId]="internmentEpisodeId"></app-medicacion-summary>
+					</section>
+					<section *hasRole="['ESPECIALISTA_MEDICO']">
+						<app-vacunas-summary [internmentEpisodeId]="internmentEpisodeId"></app-vacunas-summary>
 					</section>
 				</div>
 			</div>

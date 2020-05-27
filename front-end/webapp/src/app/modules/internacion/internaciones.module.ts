@@ -34,6 +34,9 @@ import { EffectiveTimeDialogComponent } from './dialogs/effective-time-dialog/ef
 import { PatientDischargeComponent } from './routes/patient-discharge/patient-discharge.component';
 import { AntecedentesFamiliaresSummaryComponent } from './components/antecedentes-familiares-summary/antecedentes-familiares-summary.component';
 import { AntecedentesPersonalesSummaryComponent } from './components/antecedentes-personales-summary/antecedentes-personales-summary.component';
+import { MedicacionSummaryComponent } from './components/medicacion-summary/medicacion-summary.component';
+import { AlergiasSummaryComponent } from './components/alergias-summary/alergias-summary.component';
+import { VacunasSummaryComponent } from './components/vacunas-summary/vacunas-summary.component';
 
 @NgModule({
 	declarations: [
@@ -66,6 +69,9 @@ import { AntecedentesPersonalesSummaryComponent } from './components/antecedente
 		PatientDischargeComponent,
 		AntecedentesFamiliaresSummaryComponent,
 		AntecedentesPersonalesSummaryComponent,
+		MedicacionSummaryComponent,
+		AlergiasSummaryComponent,
+		VacunasSummaryComponent,
 	],
 	imports: [
 		CoreModule,

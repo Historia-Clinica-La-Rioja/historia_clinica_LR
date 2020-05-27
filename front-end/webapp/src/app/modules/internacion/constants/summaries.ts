@@ -34,3 +34,18 @@ export const ANTECEDENTES_FAMILIARES: SummaryHeader = {
 	title: 'Antecedentes familiares',
 	matIcon: 'error_outline'
 };
+
+export const MEDICACION: SummaryHeader = {
+	title: 'Medicación habitual',
+	matIcon: 'event_available'
+};
+
+export const ALERGIAS: SummaryHeader = {
+	title: 'Alergias',
+	matIcon: 'queue'
+};
+
+export const VACUNAS: SummaryHeader = {
+	title: 'Vacunas suministradas',
+	matIcon: 'event_available'
+};

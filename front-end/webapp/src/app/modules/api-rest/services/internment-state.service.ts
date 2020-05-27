@@ -2,7 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '@environments/environment';
-import { AnthropometricDataDto, HealthConditionDto, HealthHistoryConditionDto, Last2VitalSignsDto } from '@api-rest/api-model';
+import {
+	AllergyConditionDto,
+	AnthropometricDataDto,
+	HealthConditionDto,
+	HealthHistoryConditionDto,
+	InmunizationDto,
+	Last2VitalSignsDto,
+	MedicationDto
+} from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 
 @Injectable({
@@ -43,5 +51,20 @@ export class InternmentStateService {
 	getFamilyHistories(internmentId: number): Observable<HealthHistoryConditionDto[]> {
 		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments-state/${internmentId}/general/familyHistories`;
 		return this.http.get<HealthHistoryConditionDto[]>(url);
+	}
+
+	getMedications(internmentId: number): Observable<MedicationDto[]> {
+		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments-state/${internmentId}/general/medications`;
+		return this.http.get<MedicationDto[]>(url);
+	}
+
+	getAllergies(internmentId: number): Observable<AllergyConditionDto[]> {
+		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments-state/${internmentId}/general/allergies`;
+		return this.http.get<AllergyConditionDto[]>(url);
+	}
+
+	getInmunizations(internmentId: number): Observable<InmunizationDto[]> {
+		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments-state/${internmentId}/general/inmunizations`;
+		return this.http.get<InmunizationDto[]>(url);
 	}
 }
