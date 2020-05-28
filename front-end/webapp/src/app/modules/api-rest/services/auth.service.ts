@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -27,6 +27,18 @@ export class AuthService {
 
 	public logout() {
 		localStorage.removeItem(TOKEN_KEY);
+	}
+
+	loginChaco(code: string): Observable<JWTokenDto> {
+		let queryParams: HttpParams = new HttpParams();
+		queryParams = queryParams.append('code', code);
+		return this.http.get<JWTokenDto>(`${environment.apiBase}/oauth/chaco`, {
+			params: queryParams
+		});
+	}
+
+	getRedirectUrl(): Observable<string> {
+		return this.http.get<string>(`${environment.apiBase}/oauth/chaco/redirectUrl`,{responseType: 'text' as 'json'});
 	}
 
 }

@@ -9,6 +9,7 @@ import { AuthComponent } from './auth.component';
 import { LoginComponent } from './routes/login/login.component';
 import { PasswordResetComponent } from './routes/password-reset/password-reset.component';
 import { FormInputComponent } from './components/form-input/form-input.component';
+import { OauthLoginComponent } from './routes/chaco-login/oauth-login.component';
 
 @NgModule({
 	declarations: [
@@ -16,6 +17,7 @@ import { FormInputComponent } from './components/form-input/form-input.component
 		LoginComponent,
 		PasswordResetComponent,
 		FormInputComponent,
+		OauthLoginComponent
 	],
 	imports: [
 		CoreModule,
