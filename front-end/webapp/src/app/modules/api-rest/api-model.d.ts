@@ -182,6 +182,11 @@ export interface DocumentDto {
     vitalSigns?: VitalSignDto;
 }
 
+export interface DocumentHistoricDto {
+    documents: DocumentSearchDto[];
+    message: string;
+}
+
 export interface DocumentObservationsDto extends Serializable {
     clinicalImpressionNote?: string;
     currentIllnessNote?: string;
@@ -190,6 +195,21 @@ export interface DocumentObservationsDto extends Serializable {
     otherNote?: string;
     physicalExamNote?: string;
     studiesSummaryNote?: string;
+}
+
+export interface DocumentSearchDto extends Serializable {
+    createdOn: Date;
+    creator: ResponsibleDoctorDto;
+    diagnosis: string[];
+    id: number;
+    mainDiagnosis: string;
+    message: string;
+    notes: DocumentObservationsDto;
+}
+
+export interface DocumentSearchFilterDto {
+    plainText: string;
+    searchType: EDocumentSearch;
 }
 
 export interface DocumentSummaryDto extends Serializable {
@@ -540,6 +560,8 @@ export interface VitalSignsReportDto extends Serializable {
     systolicBloodPressure?: ReportClinicalObservationDto;
     temperature?: ReportClinicalObservationDto;
 }
+
+export type EDocumentSearch = "DIAGNOSIS" | "DOCTOR" | "CREATEDON" | "ALL";
 
 export type ERole = "ROOT" | "ADMINISTRADOR" | "ESPECIALISTA_MEDICO" | "PROFESIONAL_DE_SALUD" | "ADMINISTRATIVO" | "ENFERMERO_ADULTO_MAYOR";
 

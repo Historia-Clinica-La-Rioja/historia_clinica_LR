@@ -25,4 +25,9 @@ public class ResponsibleDoctorBo {
         this.lastName = responsibleDoctorVo.getLastName();
         this.licence = responsibleDoctorVo.getLicence();
     }
+
+    public ResponsibleDoctorBo(String firstName, String lastName){
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 }

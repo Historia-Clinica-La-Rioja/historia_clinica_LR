@@ -1,7 +1,7 @@
 package net.pladema.internation.repository.documents;
 
-import net.pladema.internation.repository.documents.search.DocumentSearchQuery;
-import net.pladema.internation.repository.documents.search.DocumentSearchVo;
+import net.pladema.internation.repository.documents.searchdocument.DocumentSearchQuery;
+import net.pladema.internation.repository.documents.searchdocument.DocumentSearchVo;
 
 import java.util.List;
 

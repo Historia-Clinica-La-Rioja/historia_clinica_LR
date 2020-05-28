@@ -1,4 +1,4 @@
-package net.pladema.internation.repository.documents.search;
+package net.pladema.internation.repository.documents.searchdocument;
 
 import net.pladema.sgx.repository.QueryPart;
 

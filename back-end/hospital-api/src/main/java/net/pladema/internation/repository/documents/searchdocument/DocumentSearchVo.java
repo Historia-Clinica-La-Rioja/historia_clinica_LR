@@ -1,4 +1,4 @@
-package net.pladema.internation.repository.documents.search;
+package net.pladema.internation.repository.documents.searchdocument;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
