@@ -1,8 +1,10 @@
 
-export function createViewIf(condition: boolean): void {
-	if (condition) {
-		this.viewContainer.createEmbeddedView(this.templateRef);
-	} else {
-		this.viewContainer.clear();
+export function getElementViewFunction(viewContainer, templateRef): (boolean) => void {
+	return (condition: boolean) => {
+		if (condition) {
+			viewContainer.createEmbeddedView(templateRef);
+		} else {
+			viewContainer.clear();
+		}
 	}
 }
