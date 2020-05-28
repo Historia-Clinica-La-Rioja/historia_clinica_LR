@@ -32,9 +32,13 @@ public class AuditListener {
 	}
 
 
+	private static boolean isAnonymousUser(Authentication authentication){
+		return authentication.getPrincipal().equals("anonymousUser");
+	}
+	
 	public Integer getCurrentAuditor() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication == null || !authentication.isAuthenticated())
+		if (authentication == null || !authentication.isAuthenticated() || isAnonymousUser(authentication) )
 			return -1;
 		return (Integer) authentication.getPrincipal();
 	}

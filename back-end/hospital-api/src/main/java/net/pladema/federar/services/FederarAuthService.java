@@ -1,5 +1,6 @@
 package net.pladema.federar.services;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class FederarAuthService extends AuthService<FederarLoginResponse> {
 
 	public FederarAuthService(
 			@Value("${ws.federar.url.login:/bus-auth/auth}") String relUrl,
-			RestTemplateSSL restTemplateSSL, FederarWSConfig wsConfig) {
+			@Qualifier("baseRestTemplate") RestTemplateSSL restTemplateSSL, FederarWSConfig wsConfig) {
 		super(relUrl, restTemplateSSL, wsConfig);
 		federarWSConfig = wsConfig;
 	}

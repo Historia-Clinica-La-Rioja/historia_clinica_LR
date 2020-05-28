@@ -68,6 +68,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.antMatchers("/v2/**","/swagger-ui.html","/swagger-resources/**","/webjars/springfox-swagger-ui/**").permitAll()
 		.antMatchers(BACKOFFICE + "/**").hasAnyAuthority(ERole.ROOT.getValue(), ERole.ADMINISTRADOR.getValue())
 		.antMatchers(RECAPTCHA + "/**").permitAll()
+		.antMatchers("/oauth/**").permitAll()
 		.antMatchers(HttpMethod.GET,PUBLIC + "/**").permitAll()
 		.antMatchers(HttpMethod.POST, PASSWORD_RESET).permitAll()
 		.antMatchers("/**").authenticated()

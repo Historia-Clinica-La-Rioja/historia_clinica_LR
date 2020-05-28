@@ -18,7 +18,7 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 
-@Service
+@Service("baseRestTemplate")
 public class RestTemplateSSL extends RestTemplate {
 	
 	public RestTemplateSSL(LoggingRequestInterceptor loggingRequestInterceptor) throws Exception {

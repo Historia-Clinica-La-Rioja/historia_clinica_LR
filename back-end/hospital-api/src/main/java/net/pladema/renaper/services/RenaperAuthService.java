@@ -8,6 +8,7 @@ import net.pladema.sgx.restclient.services.AuthService;
 import net.pladema.sgx.restclient.services.domain.WSResponseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ public class RenaperAuthService extends AuthService<RenaperLoginResponse> {
 
 	public RenaperAuthService(
 			@Value("${ws.renaper.url.login:/usuarios/aplicacion/login}") String relUrl,
-			RestTemplateSSL restTemplateSSL, RenaperWSConfig wsConfig) {
+			@Qualifier("baseRestTemplate") RestTemplateSSL restTemplateSSL, RenaperWSConfig wsConfig) {
 		super(relUrl, restTemplateSSL, wsConfig);
 		renaperWSConfig = wsConfig;
 	}
