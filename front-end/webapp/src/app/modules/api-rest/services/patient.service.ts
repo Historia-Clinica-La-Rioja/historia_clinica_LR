@@ -73,15 +73,21 @@ export class PatientService {
 		return this.http.get<BMPatientDto[]>(url);
 	}
 
-	getCities(){
+	getCities() {
 		//let url = `${environment.apiBase}/cities`;
 		//return this.http.get<DTO>(url);
-		return of([{id: 1, description: 'Azul'},{id: 2, description: 'Tandil'}]);
+		return of([{ id: 1, description: 'Azul' }, { id: 2, description: 'Tandil' }]);
 	}
 
 	getPatientByCMD(params): Observable<PatientSearchDto[]> {
 		let url = `${environment.apiBase}/patient/search`;
-		return this.http.get<PatientSearchDto[]>(url, {params: {'searchFilterStr' :params}});
-  	}
+		return this.http.get<PatientSearchDto[]>(url, { params: { 'searchFilterStr': params } });
+	}
+
+	editPatient(datosPersonales: APatientDto, patientId: number): Observable<BMPatientDto> {
+		// cambiar a edit
+		let url = `${environment.apiBase}/patient/${patientId}`;
+		return this.http.put<BMPatientDto>(url, datosPersonales);
+	}
 
 }

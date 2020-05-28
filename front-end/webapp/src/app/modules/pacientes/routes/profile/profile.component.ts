@@ -9,10 +9,12 @@ import { PersonalInformation } from '@presentation/components/personal-informati
 import { PatientTypeData } from '@presentation/components/patient-type-logo/patient-type-logo.component';
 import { ContextService } from "@core/services/context.service";
 import { InternmentPatientService } from '@api-rest/services/internment-patient.service';
+import { DateFormat } from '@core/utils/moment.utils';
 
 const ROUTE_NEW_INTERNMENT = 'internaciones/internacion/new';
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
 const ROUTE_INTERNMENT_EPISODE_SUFIX = '/paciente/';
+const ROUTE_EDIT_PATIENT = 'pacientes/edit';
 
 @Component({
 	selector: 'app-profile',
@@ -77,8 +79,12 @@ export class ProfileComponent implements OnInit {
 	}
 
 	goToEditProfile(): void {
-		//ToDO ir a nuevo formulario de edicion
-		//this.router.navigate([this.routePrefix ]);
+		let person = {
+			id: this.patientBasicData.id,
+		}
+		this.router.navigate([this.routePrefix + ROUTE_EDIT_PATIENT], {
+			queryParams: person
+		});
 	}
 
 }

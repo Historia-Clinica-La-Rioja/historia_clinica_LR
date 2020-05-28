@@ -8,6 +8,7 @@ import { NewPatientComponent } from './routes/new-patient/new-patient.component'
 import { NewTemporaryPatientComponent } from './routes/new-temporary-patient/new-temporary-patient.component';
 import { ProfileComponent } from "./routes/profile/profile.component";
 import { RoleGuard } from '@core/guards/RoleGuard';
+import { EditPatientComponent } from './routes/edit-patient/edit-patient.component';
 
 const routes: Routes = [
 	{
@@ -32,6 +33,10 @@ const routes: Routes = [
 			{
 				path: 'profile/:id',
 				component: ProfileComponent
+			},
+			{
+				path: 'edit',
+				component: EditPatientComponent
 			},
 		],
 		canActivate: [RoleGuard],

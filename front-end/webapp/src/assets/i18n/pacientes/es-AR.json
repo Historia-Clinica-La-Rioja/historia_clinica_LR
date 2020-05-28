@@ -69,6 +69,14 @@
 			"NEW_PATIENT": "Crear nuevo paciente",
 			"RENAPER_TIMEOUT": "No hubo respuesta del servicio de Renaper",
 			"ROW_TABLE": "ID Adulto mayor"
+		},
+		"edit": {
+			"TITLE": "Editar paciente",
+			"SUBTITLE": "Se editara el paciente seleccionado",
+			"messages": {
+				"ERROR": "Error al editar un paciente",
+				"SUCCESS": "El paciente se edito exitosamente"
+			}
 		}
 	}
 }

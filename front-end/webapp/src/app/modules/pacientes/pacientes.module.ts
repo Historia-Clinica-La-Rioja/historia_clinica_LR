@@ -11,6 +11,7 @@ import { NewTemporaryPatientComponent } from './routes/new-temporary-patient/new
 import { ProfileComponent } from './routes/profile/profile.component';
 import { PresentationModule } from "../presentation/presentation.module";
 import { ViewPatientDetailComponent } from './component/view-patient-detail/view-patient-detail.component';
+import { EditPatientComponent } from './routes/edit-patient/edit-patient.component';
 
 @NgModule({
 	declarations: [
@@ -22,6 +23,7 @@ import { ViewPatientDetailComponent } from './component/view-patient-detail/view
 		SearchCreateComponent,
 		SearchComponent,
 		ViewPatientDetailComponent,
+		EditPatientComponent,
 	],
 	imports: [
 		CoreModule,
