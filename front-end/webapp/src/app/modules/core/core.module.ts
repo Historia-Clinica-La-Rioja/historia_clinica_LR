@@ -11,6 +11,7 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { HasRoleDirective } from './directives/has-role.directive';
+import { FeatureFlagDirective } from './directives/feature-flag.directive';
 
 const globalSettings: RecaptchaSettings = { siteKey: '' }; // TODO completar cuando se implemente para esta aplicacion
 
@@ -20,6 +21,7 @@ const globalSettings: RecaptchaSettings = { siteKey: '' }; // TODO completar cua
 		SidenavComponent,
 		ConfirmDialogComponent,
 		HasRoleDirective,
+		FeatureFlagDirective,
 	],
 	imports: [
 		AppMaterialModule,
@@ -33,10 +35,11 @@ const globalSettings: RecaptchaSettings = { siteKey: '' }; // TODO completar cua
 	],
 	exports: [
 		AppMaterialModule,
-
 		CommonModule,
 		ConfirmDialogComponent,
 		ContentComponent,
+		FeatureFlagDirective,
+		HasRoleDirective,
 		HttpClientModule,
 		ReactiveFormsModule,
 		RecaptchaModule,
@@ -44,7 +47,6 @@ const globalSettings: RecaptchaSettings = { siteKey: '' }; // TODO completar cua
 		RouterModule,
 		SidenavComponent,
 		TranslateModule,
-		HasRoleDirective,
 	],
 	providers: [{
 		provide: RECAPTCHA_SETTINGS,
