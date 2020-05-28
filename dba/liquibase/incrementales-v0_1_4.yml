@@ -307,3 +307,40 @@
             tableName: sector
             columnNames: description, institution_id
             constraintName: UQ_sector_description_institution_id
+
+- changeSet:
+    id: additional_doctor-createTable
+    comment: Create table additional_doctor
+    author: jlardapide
+    changes: 
+    - createTable: 
+        tableName: additional_doctor
+        columns: 
+        - column:
+            autoIncrement: true
+            constraints:
+                primaryKey: true
+                primaryKeyName: PK_additional_doctor
+            name: id
+            type: int
+        - column:
+            name: patient_id
+            type: int
+        - column:
+            name: full_name
+            type: varchar(80)
+        - column:
+            name: phone_number
+            type: varchar(15)
+        - column:
+            name: general_practitioner
+            type: boolean
+    - addForeignKeyConstraint:
+        baseColumnNames: patient_id
+        baseTableName: additional_doctor
+        constraintName: FK_additional_doctor_patient_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: patient
+        validate: true                  
