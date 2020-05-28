@@ -14,6 +14,8 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { SelectionModel } from '@angular/cdk/collections';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { ContextService } from '@core/services/context.service';
+import { TableCheckbox } from 'src/app/modules/material/model/table.model';
+import { TableService } from '@core/services/table.service';
 
 @Component({
 	selector: 'app-epicrisis-form',
@@ -26,84 +28,87 @@ export class EpicrisisFormComponent implements OnInit {
 	private patientId: number;
 	private healthClinicalStatus;
 
+	isAllSelected = this.tableService.isAllSelected;
+	masterToggle = this.tableService.masterToggle;
+
 	anamnesis: ResponseAnamnesisDto;
 	form: FormGroup;
 
 	medications: MedicationDto[] = [];
-	diagnosis: TableData<DiagnosisDto> = {
+	diagnosis: TableCheckbox<DiagnosisDto> = {
 		data: [],
 		columns: [
 			{
 				def: 'diagnosis',
 				header: 'internaciones.epicrisis.diagnosticos.table.columns.DIAGNOSIS',
-				text: ap => ap.snomed.pt
+				display: ap => ap.snomed.pt
 			},
 			{
 				def: 'status',
 				header: 'internaciones.epicrisis.diagnosticos.table.columns.STATUS',
-				text: (row) => this.healthClinicalStatus?.find(status => status.id === row.statusId).description
+				display: (row) => this.healthClinicalStatus?.find(status => status.id === row.statusId).description
 			},
 			{
 				def: 'verificacion',
 				header: 'internaciones.epicrisis.diagnosticos.table.columns.VERIFICATION',
-				text: ap => ap.presumptive ? 'Presuntivo' : 'Confirmado'
+				display: ap => ap.presumptive ? 'Presuntivo' : 'Confirmado'
 			},
 		],
 		displayedColumns: [],
-		selection: new SelectionModel<any>(true, [])
+		selection: new SelectionModel<DiagnosisDto>(true, [])
 	};
-	personalHistories: TableData<HealthHistoryConditionDto> = {
+	personalHistories: TableCheckbox<HealthHistoryConditionDto> = {
 		data: [],
 		columns: [
 			{
 				def: 'problemType',
 				header: 'internaciones.epicrisis.antecedentes-familiares.table.columns.FAMILY_HISTORY',
-				text: af => af.snomed.pt
+				display: af => af.snomed.pt
 			}
 		],
 		displayedColumns: [],
-		selection: new SelectionModel<any>(true, [])
+		selection: new SelectionModel<HealthHistoryConditionDto>(true, [])
 	};
-	familyHistories: TableData<HealthHistoryConditionDto> = {
+	familyHistories: TableCheckbox<HealthHistoryConditionDto> = {
 		data: [],
 		columns: [
 			{
 				def: 'problemType',
 				header: 'internaciones.epicrisis.antecedentes-familiares.table.columns.FAMILY_HISTORY',
-				text: af => af.snomed.pt
+				display: af => af.snomed.pt
 			}
 		],
 		displayedColumns: [],
-		selection: new SelectionModel<any>(true, [])
+		selection: new SelectionModel<HealthHistoryConditionDto>(true, [])
 	};
-	allergies: TableData<AllergyConditionDto> = {
+	allergies: TableCheckbox<AllergyConditionDto> = {
 		data: [],
 		columns: [
 			{
 				def: 'problemType',
 				header: 'internaciones.epicrisis.alergias.table.columns.ALLERGY',
-				text: a => a.snomed.pt
+				display: a => a.snomed.pt
 			}
 		],
 		displayedColumns: [],
-		selection: new SelectionModel<any>(true, [])
+		selection: new SelectionModel<AllergyConditionDto>(true, [])
 	};
-	inmunizations: TableData<InmunizationDto> = {
+	inmunizations: TableCheckbox<InmunizationDto> = {
 		data: [],
 		columns: [
 			{
 				def: 'problemType',
 				header: 'internaciones.epicrisis.vacunas.table.columns.INMUNIZATION',
-				text: v => v.snomed.pt
+				display: v => v.snomed.pt
 			},
 			{
 				def: 'date',
 				header: 'internaciones.epicrisis.vacunas.table.columns.REGISTRY_DATE',
-				text: v => this.datePipe.transform(v.administrationDate, 'dd/MM/yyyy')
+				display: v => this.datePipe.transform(v.administrationDate, 'dd/MM/yyyy')
 			},
 		],
 		displayedColumns: [],
-		selection: new SelectionModel<any>(true, [])
+		selection: new SelectionModel<InmunizationDto>(true, [])
 	};
 
 	constructor(
@@ -114,6 +119,7 @@ export class EpicrisisFormComponent implements OnInit {
 		private router: Router,
 		private datePipe: DatePipe,
 		private snackBarService: SnackBarService,
+		private tableService: TableService,
 		private contextService: ContextService,
 		private internacionMasterDataService: InternacionMasterDataService
 	) {
@@ -193,25 +199,4 @@ export class EpicrisisFormComponent implements OnInit {
 		this.router.navigate([url]);
 	}
 
-
-	isAllSelected(dataSource, selection: SelectionModel<any>) {
-		const numSelected = selection.selected.length;
-		const numRows = dataSource.length;
-		return numSelected === numRows;
-	}
-
-	/** Selects all rows if they are not all selected; otherwise clear selection. */
-	masterToggle(dataSource, selection: SelectionModel<any>) {
-		this.isAllSelected(dataSource, selection) ?
-			selection.clear() :
-			dataSource.forEach(row => selection.select(row));
-	}
-
-}
-
-interface TableData<T> {
-	data: T[];
-	columns: any[];
-	displayedColumns: string[];
-	selection;
 }

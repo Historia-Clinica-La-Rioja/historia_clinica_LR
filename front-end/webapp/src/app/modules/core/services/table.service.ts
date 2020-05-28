@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Injectable({
 	providedIn: 'root'
@@ -6,6 +7,19 @@ import { Injectable } from '@angular/core';
 export class TableService {
 
 	constructor() { }
+
+	isAllSelected = (dataSource, selection: SelectionModel<any>) => {
+		const numSelected = selection.selected.length;
+		const numRows = dataSource.length;
+		return numSelected === numRows;
+	};
+
+	/** Selects all rows if they are not all selected; otherwise clear selection. */
+	masterToggle = (dataSource, selection: SelectionModel<any>) => {
+		this.isAllSelected(dataSource, selection) ?
+			selection.clear() :
+			dataSource.forEach(row => selection.select(row));
+	};
 
 	predicateFilter = (data, filter: string) => {
 		const accumulator = (currentTerm, key) => {

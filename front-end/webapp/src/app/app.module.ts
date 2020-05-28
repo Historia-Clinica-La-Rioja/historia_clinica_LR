@@ -16,7 +16,7 @@ import { environment } from '@environments/environment';
 // Módulos nuestros que se cargan al inicio
 import { ApiRestModule } from '@api-rest/api-rest.module';
 import { CoreModule } from '@core/core.module';
-import { AppMaterialModule } from './app.material.module';
+import { AppMaterialModule } from './modules/material/app.material.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { PresentationModule } from './modules/presentation/presentation.module';
 import { FlavoredMultiTranslateHttpLoader } from '@core/utils/flavored-multi-translate-http-loader';
