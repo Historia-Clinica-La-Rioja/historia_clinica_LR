@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-public interface DocumentRepository extends JpaRepository<Document, Long> {
+public interface DocumentRepository extends JpaRepository<Document, Long>, DocumentRepositoryCustom {
 
     @Transactional(readOnly = true)
     @Query(value = "select NEW net.pladema.internation.repository.internment.domain.summary.ResponsibleDoctorVo(" +
