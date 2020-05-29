@@ -38,4 +38,6 @@ public interface InternmentEpisodeService {
     InternmentEpisode getInternmentEpisode(Integer internmentEpisodeId, Integer institutionId);
 
 	List<InternmentEpisode> findByBedId(Integer bedId);
+
+	Boolean existsActiveForBedId(Integer bedId);
 }

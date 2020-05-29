@@ -172,5 +172,15 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 				.orElseThrow(() -> new NotFoundException("wrong-id-episode", "Internment episode not found"));
 		return internmentEpisode;
 	}
+	
+	@Override
+	public Boolean existsActiveForBedId(Integer bedId) {
+		List<InternmentEpisode> episodes = this.findByBedId(bedId);
+		return episodes != null && !episodes.isEmpty() && anyActive(episodes);
+	}
+
+	private boolean anyActive(List<InternmentEpisode> episodes) {
+		return episodes.stream().anyMatch(InternmentEpisode::isActive);
+	}
 
 }

@@ -10,6 +10,4 @@ public interface BedService {
 
 	public Optional<Bed> freeBed(Integer bedId);
 	
-	public Boolean hasActiveInternmentEpisode(Integer bedId);
-	
 }

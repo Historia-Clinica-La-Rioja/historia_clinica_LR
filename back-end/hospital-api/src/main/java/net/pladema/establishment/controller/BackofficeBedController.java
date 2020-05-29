@@ -20,6 +20,7 @@ import net.pladema.establishment.controller.constraints.validator.BackofficeBedV
 import net.pladema.establishment.repository.BedRepository;
 import net.pladema.establishment.repository.entity.Bed;
 import net.pladema.establishment.service.BedService;
+import net.pladema.internation.service.internment.InternmentEpisodeExternalService;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
 
 @RestController
@@ -43,8 +44,8 @@ public class BackofficeBedController extends AbstractBackofficeController<Bed, I
 		return new ResponseEntity<>(apiErrors, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 	}
 
-	public BackofficeBedController(BedRepository repository, BedService bedService) {
-		super(repository, new BackofficeBedValidator(bedService));
+	public BackofficeBedController(BedRepository repository, InternmentEpisodeExternalService internmentEpisodeExternalService) {
+		super(repository, new BackofficeBedValidator(internmentEpisodeExternalService));
 	}
 
 }
