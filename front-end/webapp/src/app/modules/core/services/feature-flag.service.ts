@@ -18,6 +18,10 @@ const FEATURE_FLAGS = [
 	{
 		name: 'agregarMedicosAdicionales',
 		flavorMatch: [FLAVOR_TANDIL]
+	},
+	{
+		name: 'habilitarServicioRenaper',
+		flavorMatch: [FLAVOR_HOSPITALES]
 	}];
 
 @Injectable({

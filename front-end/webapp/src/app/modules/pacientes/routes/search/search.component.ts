@@ -16,9 +16,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { ViewPatientDetailComponent } from '../../component/view-patient-detail/view-patient-detail.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from "@core/services/context.service";
+import { FeatureFlagService } from "@core/services/feature-flag.service";
 
 const ROUTE_NEW = 'pacientes/new';
 const ROUTE_HOME = 'pacientes';
+const RENAPER_FFLAG = 'habilitarServicioRenaper';
 
 @Component({
 	selector: 'app-search',
@@ -45,14 +47,15 @@ export class SearchComponent implements OnInit {
 	private readonly routePrefix;
 
 	constructor(private formBuilder: FormBuilder,
-		private patientService: PatientService,
-		private personService: PersonService,
-		private router: Router,
-		private route: ActivatedRoute,
-		private personMasterDataService: PersonMasterDataService,
-		private snackBarService: SnackBarService,
-		public dialog: MatDialog,
-		private contextService: ContextService) {
+	            private patientService: PatientService,
+	            private personService: PersonService,
+	            private router: Router,
+	            private route: ActivatedRoute,
+	            private personMasterDataService: PersonMasterDataService,
+	            private snackBarService: SnackBarService,
+	            public dialog: MatDialog,
+	            private contextService: ContextService,
+	            private featureFlagService: FeatureFlagService) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 
@@ -64,24 +67,15 @@ export class SearchComponent implements OnInit {
 
 			this.buildFormSearch(params);
 
-			this.personService.getRenaperPersonData({
-				identificationNumber: this.identificationNumber,
-				genderId: this.genderId
-			})
-				.pipe(finalize(() => this.isLoading = false))
-				.subscribe(
-					personData => {
-						if (personData && Object.keys(personData).length !== 0) {
-							let personToAdd = this.mapToPerson(personData);
-							personToAdd.identificationTypeId = this.identificationTypeId;
-							personToAdd.identificationNumber = this.identificationNumber;
-							personToAdd.genderId = this.genderId;
-							personToAdd.typeId = PATIENT_TYPE.VALID;
-							this.goToNextState(personToAdd);
-						}
-					}, () => {
-						this.snackBarService.showError('pacientes.search.RENAPER_TIMEOUT')
-					});
+			this.featureFlagService.isOn(RENAPER_FFLAG)
+				.subscribe(result => {
+					if(result) {
+						this.callRenaperService();
+					}
+					else {
+						this.isLoading = false;
+					}
+				});
 
 			this.personMasterDataService.getIdentificationTypes().subscribe(
 				identificationTypes => {
@@ -270,11 +264,11 @@ export class SearchComponent implements OnInit {
 		var spaceIndex: number = string.indexOf(' ');
 		return (spaceIndex != -1) ?
 			{
-				firstSubstring: string.substr(0,spaceIndex),
-				secondSubstring: string.substr(spaceIndex+1)
+				firstSubstring: string.substr(0, spaceIndex),
+				secondSubstring: string.substr(spaceIndex + 1)
 			}
 			:
-				{firstSubstring: string}
+			{firstSubstring: string}
 	}
 
 	private mapToPerson(personData): any {
@@ -288,4 +282,26 @@ export class SearchComponent implements OnInit {
 			birthDate: personData.birthDate
 		}
 	}
+
+	private callRenaperService(): void {
+		this.personService.getRenaperPersonData({
+			identificationNumber: this.identificationNumber,
+			genderId: this.genderId
+		})
+			.pipe(finalize(() => this.isLoading = false))
+			.subscribe(
+				personData => {
+					if (personData && Object.keys(personData).length !== 0) {
+						let personToAdd = this.mapToPerson(personData);
+						personToAdd.identificationTypeId = this.identificationTypeId;
+						personToAdd.identificationNumber = this.identificationNumber;
+						personToAdd.genderId = this.genderId;
+						personToAdd.typeId = PATIENT_TYPE.VALID;
+						this.goToNextState(personToAdd);
+					}
+				}, () => {
+					this.snackBarService.showError('pacientes.search.RENAPER_TIMEOUT')
+				});
+	}
+
 }
