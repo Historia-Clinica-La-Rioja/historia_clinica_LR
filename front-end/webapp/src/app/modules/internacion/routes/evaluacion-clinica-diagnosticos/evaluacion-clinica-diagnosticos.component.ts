@@ -17,6 +17,7 @@ import { InternacionMasterDataService } from '@api-rest/services/internacion-mas
 import { TableService } from '@core/services/table.service';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
+import { HEALTH_CLINICAL_STATUS } from '../../constants/ids';
 
 const MAIN_DIAGNOSIS_INDEX = 0;
 
@@ -83,6 +84,8 @@ export class EvaluacionClinicaDiagnosticosComponent implements OnInit {
 	ngOnInit(): void {
 		this.route.paramMap.subscribe(
 			(params: ParamMap) => {
+				const routedDiagnosisId = Number(params.get('idDiagnostico'));
+
 				this.internmentEpisodeId = Number(params.get('idInternacion'));
 				this.patientId = Number(params.get('idPaciente'));
 
@@ -93,16 +96,19 @@ export class EvaluacionClinicaDiagnosticosComponent implements OnInit {
 				this.internmentEpisodeSummary$ = this.internmentService.getInternmentEpisodeSummary(this.internmentEpisodeId).pipe(
 					map((internmentEpisodeSummary: InternmentSummaryDto) => this.mapperService.toInternmentEpisodeSummary(internmentEpisodeSummary))
 				);
+
+				this.loadDiagnosticsData(this.internmentEpisodeId).subscribe(
+					diagnostics => {
+						this.diagnostics.data = diagnostics;
+						this.diagnostics.selection.select(diagnostics.find(d => d.id === routedDiagnosisId));
+					}
+				);
 			}
 		);
 
 		this.internacionMasterDataService.getHealthClinical().subscribe(healthClinical => {
 			this.healthClinicalStatus = healthClinical;
 		});
-
-		this.loadDiagnosticsData(this.internmentEpisodeId).subscribe(
-			diagnostics => this.diagnostics.data = diagnostics
-		);
 
 		this.form = this.formBuilder.group({
 			currentIllnessNote: [],
@@ -117,7 +123,9 @@ export class EvaluacionClinicaDiagnosticosComponent implements OnInit {
 
 	private loadDiagnosticsData(internmentEpisodeId: number): Observable<DiagnosisDto[]> {
 		const mainDiagnosis$ = this.internmentStateService.getMainDiagnosis(internmentEpisodeId);
-		const otherDiagnostics$ = this.internmentStateService.getDiagnosis(internmentEpisodeId);
+		const otherDiagnostics$ = this.internmentStateService.getDiagnosis(internmentEpisodeId).pipe(
+			map(otherDiagnostics => otherDiagnostics.filter(od => od.statusId === HEALTH_CLINICAL_STATUS.ACTIVO))
+		);
 		return forkJoin([mainDiagnosis$, otherDiagnostics$]).pipe(
 			//mainDiagnosis first => index === 0
 			map(([mainDiagnosis, otherDiagnostics]) => [mainDiagnosis, ...otherDiagnostics])

@@ -5,12 +5,14 @@
 	</mat-form-field>
 	<table mat-table [dataSource]="dataSource" class="{{mainStyle}}" [ngClass]="{ 'mat-elevation-z8': mainStyle === TableStyles.PRIMARY }" aria-hidden="true">
 		<ng-container *ngFor="let column of columns" [matColumnDef]="column.columnDef">
-			<th mat-header-cell *matHeaderCellDef>{{ column.header | translate }}</th>
+			<th mat-header-cell *matHeaderCellDef [ngClass]="{'actions': !!column.action}" class="capitalize-first-letter">
+				{{ column.header | translate }}
+			</th>
 			<td mat-cell [ngClass]="{'actions': !!column.action}" class="capitalize-first-letter" *matCellDef="let row">
 				<ng-container *ngIf="column.action else default">
 					<ng-container *ngIf="column.action.displayType === ActionDisplays.ICON else button">
 						<button mat-icon-button color="{{column.action.matColor}}" *ngIf="!column.action.hide || !column.action.hide(row)" (click)="column.action.do(row)">
-							<mat-icon>{{column.action.display}}</mat-icon>
+							<mat-icon fontSet="material-icons-outlined">{{column.action.display}}</mat-icon>
 						</button>
 					</ng-container>
 					<ng-template #button>

@@ -4,6 +4,9 @@
 			<span class="capitalize-first-letter">
 				{{ mainDiagnosis.snomed.pt }}
 			</span>
+			<button mat-icon-button color="primary" (click)="goToClinicalEvaluation(mainDiagnosis.id)">
+				<mat-icon fontSet="material-icons-outlined">note_add</mat-icon>
+			</button>
 		</mat-list-item>
 	</mat-list>
 	<ng-template #noInfo>

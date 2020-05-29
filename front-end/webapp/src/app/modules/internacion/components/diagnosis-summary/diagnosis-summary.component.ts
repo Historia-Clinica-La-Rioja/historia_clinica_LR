@@ -66,15 +66,28 @@ export class DiagnosisSummaryComponent implements OnInit {
 			],
 			data
 		};
-		if (this.editable) {
+		if (this.editable && data.some(d => d.statusId === HEALTH_CLINICAL_STATUS.ACTIVO)) {
+			model.columns.push({
+				columnDef: 'clinicalEval',
+				header: 'Evaluación clínica',
+				action: {
+					displayType: ActionDisplays.ICON,
+					display: 'note_add',
+					matColor: 'primary',
+					do: row => {
+						this.router.navigate([`${this.router.url}/eval-clinica-diagnosticos/${row.id}`]);
+					},
+					hide: row => row.statusId !== HEALTH_CLINICAL_STATUS.ACTIVO
+				},
+			});
 			model.columns.push({
 				columnDef: 'remove',
 				action: {
 					displayType: ActionDisplays.ICON,
-					display: 'delete_outline',
+					display: 'delete',
 					matColor: 'warn',
 					do: row => {
-						const diagnosis = {...row};
+						const diagnosis = { ...row };
 						const dialogRef = this.dialog.open(RemoveDiagnosisComponent, {
 							disableClose: true,
 							data: {

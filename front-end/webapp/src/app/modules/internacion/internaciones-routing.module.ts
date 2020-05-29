@@ -43,7 +43,7 @@ const routes: Routes = [
 		data: { allowedRoles: ['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD'] }
 	},
 	{
-		path: 'internacion/:idInternacion/paciente/:idPaciente/eval-clinica-diagnosticos',
+		path: 'internacion/:idInternacion/paciente/:idPaciente/eval-clinica-diagnosticos/:idDiagnostico',
 		component: EvaluacionClinicaDiagnosticosComponent,
 		canActivate: [RoleGuard],
 		data: { allowedRoles: ['ESPECIALISTA_MEDICO'] }

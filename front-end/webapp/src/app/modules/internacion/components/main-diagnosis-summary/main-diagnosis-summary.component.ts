@@ -3,6 +3,7 @@ import { DIAGNOSTICO_PRINCIPAL } from '../../constants/summaries';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { HealthConditionDto } from '@api-rest/api-model';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-main-diagnosis-summary',
@@ -18,10 +19,15 @@ export class MainDiagnosisSummaryComponent implements OnInit {
 
 	constructor(
 		private internmentStateService: InternmentStateService,
+		private router: Router,
 	) { }
 
 	ngOnInit(): void {
 		this.mainDiagnosis$ = this.internmentStateService.getMainDiagnosis(this.internmentEpisodeId);
+	}
+
+	goToClinicalEvaluation(id: number): void {
+		this.router.navigate([`${this.router.url}/eval-clinica-diagnosticos/${id}`]);
 	}
 
 }

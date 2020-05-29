@@ -90,10 +90,13 @@ $default-color: 100;
 
 	table.mat-table {
 		width: 100%;
-		th, td {
-			padding-left: 10px;
-			padding-right: 10px;
-			&.actions {
+		th.actions {
+			max-width: 40px;
+			text-align: center;
+		}
+		td.actions {
+			text-align: center;
+			&:last-of-type {
 				text-align: end;
 			}
 		}
@@ -115,9 +118,14 @@ $default-color: 100;
 		&.secondary {
 			border-collapse: collapse;
 			th, td {
+				padding-left: 10px;
+				padding-right: 10px;
 				text-align: left;
-				&:first-child {
+				&:first-of-type {
 					padding-left: 24px;
+				}
+				&:last-of-type {
+					padding-right: 24px;
 				}
 				&.actions {
 					text-align: end;
