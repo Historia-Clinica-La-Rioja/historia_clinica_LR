@@ -36,17 +36,17 @@ public class RoleUtilsTest {
 	public void loggedUserHasHigherRank_unrankedClaims() {
 		assertTrue("Unranked claims are lowest", RoleUtils.loggedUserHasHigherRank(
 				Arrays.asList("ROOT"),
-				Arrays.asList("ESPECIALISTA_MEDICO", "PROFESIONAL_DE_SALUD", "ADMINISTRATIVO")
+				Arrays.asList("ESPECIALISTA_MEDICO", "PROFESIONAL_DE_SALUD", "ADMINISTRATIVO", "ENFERMERO_ADULTO_MAYOR")
 		));
 
 		assertFalse("Unranked claims are lowest", RoleUtils.loggedUserHasHigherRank(
-				Arrays.asList("ESPECIALISTA_MEDICO", "PROFESIONAL_DE_SALUD", "ADMINISTRATIVO"),
+				Arrays.asList("ESPECIALISTA_MEDICO", "PROFESIONAL_DE_SALUD", "ADMINISTRATIVO", "ENFERMERO_ADULTO_MAYOR"),
 				Arrays.asList("ROOT")
 		));
 
 		assertTrue("Unranked claims are lowest", RoleUtils.loggedUserHasHigherRank(
 				Arrays.asList("ADMINISTRADOR"),
-				Arrays.asList("ESPECIALISTA_MEDICO", "PROFESIONAL_DE_SALUD", "ADMINISTRATIVO")
+				Arrays.asList("ESPECIALISTA_MEDICO", "PROFESIONAL_DE_SALUD", "ADMINISTRATIVO", "ENFERMERO_ADULTO_MAYOR")
 		));
 
 		assertTrue("Unranked claims are lowest", RoleUtils.loggedUserHasHigherRank(
@@ -67,11 +67,11 @@ public class RoleUtilsTest {
 	public void loggedUserHasHigherRank_rootClaimRank() {
 		assertTrue("ROOT should be higher", RoleUtils.loggedUserHasHigherRank(
 				Arrays.asList("ROOT"),
-				Arrays.asList("ADMINISTRADOR", "ESPECIALISTA_MEDICO", "PROFESIONAL_DE_SALUD", "ADMINISTRATIVO")
+				Arrays.asList("ADMINISTRADOR", "ESPECIALISTA_MEDICO", "PROFESIONAL_DE_SALUD", "ADMINISTRATIVO", "ENFERMERO_ADULTO_MAYOR")
 		));
 
 		assertFalse("ROOT should be higher", RoleUtils.loggedUserHasHigherRank(
-				Arrays.asList("ADMINISTRADOR", "ESPECIALISTA_MEDICO", "PROFESIONAL_DE_SALUD", "ADMINISTRATIVO"),
+				Arrays.asList("ADMINISTRADOR", "ESPECIALISTA_MEDICO", "PROFESIONAL_DE_SALUD", "ADMINISTRATIVO", "ENFERMERO_ADULTO_MAYOR"),
 				Arrays.asList("ROOT")
 		));
 	}
@@ -80,11 +80,11 @@ public class RoleUtilsTest {
 	public void loggedUserHasHigherRank_administradorClaimRank() {
 		assertTrue("ADMINISTRADOR should be higher", RoleUtils.loggedUserHasHigherRank(
 				Arrays.asList("ADMINISTRADOR"),
-				Arrays.asList("ESPECIALISTA_MEDICO", "PROFESIONAL_DE_SALUD", "ADMINISTRATIVO")
+				Arrays.asList("ESPECIALISTA_MEDICO", "PROFESIONAL_DE_SALUD", "ADMINISTRATIVO", "ENFERMERO_ADULTO_MAYOR")
 		));
 
 		assertFalse("ADMINISTRADOR should be higher", RoleUtils.loggedUserHasHigherRank(
-				Arrays.asList("ESPECIALISTA_MEDICO", "PROFESIONAL_DE_SALUD", "ADMINISTRATIVO"),
+				Arrays.asList("ESPECIALISTA_MEDICO", "PROFESIONAL_DE_SALUD", "ADMINISTRATIVO", "ENFERMERO_ADULTO_MAYOR"),
 				Arrays.asList("ADMINISTRADOR")
 		));
 	}
