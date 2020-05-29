@@ -8,6 +8,7 @@ import { EpicrisisComponent } from './routes/epicrisis/epicrisis.component';
 import { NotaEvolucionComponent } from './routes/nota-evolucion/nota-evolucion.component';
 import { RoleGuard } from '@core/guards/RoleGuard';
 import { PatientDischargeComponent } from './routes/patient-discharge/patient-discharge.component';
+import { EvaluacionClinicaDiagnosticosComponent } from './routes/evaluacion-clinica-diagnosticos/evaluacion-clinica-diagnosticos.component';
 
 
 const routes: Routes = [
@@ -40,6 +41,12 @@ const routes: Routes = [
 		component: NotaEvolucionComponent,
 		canActivate: [RoleGuard],
 		data: { allowedRoles: ['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD'] }
+	},
+	{
+		path: 'internacion/:idInternacion/paciente/:idPaciente/eval-clinica-diagnosticos',
+		component: EvaluacionClinicaDiagnosticosComponent,
+		canActivate: [RoleGuard],
+		data: { allowedRoles: ['ESPECIALISTA_MEDICO'] }
 	},
 	{
 		path: 'internacion/:idInternacion/paciente/:idPaciente/epicrisis',

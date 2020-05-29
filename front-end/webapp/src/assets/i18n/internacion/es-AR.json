@@ -209,7 +209,35 @@
 				"OTHERS": "Otras observaciones",
 				"DESCRIPTION": "Descripción"
 			}
-
+		},
+		"clinical-assessment-diagnosis": {
+			"TITLE": "Evaluación clínica de diagnósticos",
+			"SUBTITLE": "Completa los siguientes datos.",
+			"diagnostics": {
+				"TITLE": "Seleccione los diagnósticos",
+				"table": {
+					"columns": {
+						"DIAGNOSIS": "Diagnóstico",
+						"STATUS": "Estado",
+						"VERIFICATION": "Verificación",
+						"MAIN": "Principal"
+					}
+				}
+			},
+			"notes": {
+				"TITLE": "Evaluación clínica",
+				"CURRENT_DISEASE": "Enfermedad actual",
+				"PHYSICAL_EXAMINATION": "Exámen físico",
+				"STUDIES_PROCEDURES": "Resumen de estudios y procedimientos realizados",
+				"PATIENT_PROGRESS": "Evolución",
+				"CLINICAL_IMPRESSION": "Impresión clínica y plan",
+				"OTHERS": "Otras observaciones",
+				"DESCRIPTION": "Descripción"
+			},
+			"messages": {
+				"ERROR": "Error al guardar documento de evaluación clínica de diagnósticos",
+				"SUCCESS": "El documento con la evaluación clínica de diagnósticos se guardó exitosamente"
+			}
 		},
 		"nota-evolucion": {
 			"TITLE": "Nota de evolución",

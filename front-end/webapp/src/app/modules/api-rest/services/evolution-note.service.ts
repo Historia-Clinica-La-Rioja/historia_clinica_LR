@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { EvolutionNoteDto, ResponseEvolutionNoteDto } from '@api-rest/api-model';
+import { EvolutionNoteDto, ResponseEvolutionNoteDto, EvolutionDiagnosisDto } from '@api-rest/api-model';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '@environments/environment';
@@ -20,6 +20,11 @@ export class EvolutionNoteService {
 	createDocument(evolutionNote: EvolutionNoteDto, internmentEpisodeId: number): Observable<ResponseEvolutionNoteDto> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/evolutionNote`;
 		return this.http.post<ResponseEvolutionNoteDto>(url, evolutionNote);
+	}
+
+	createEvolutionDiagnosis(evolutionNote: EvolutionDiagnosisDto, internmentEpisodeId: number): Observable<number> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/evolutionNote/evolutionDiagnosis`;
+		return this.http.post<number>(url, evolutionNote);
 	}
 
 	getPDF(evolutionNoteId: number, internmentEpisodeId: number): Observable<any> {

@@ -12,6 +12,6 @@ export interface TableCheckbox<T> extends BasicTable<T>{
 
 export interface BasicColumn<T> {
 	def: string;
-	header: string;
-	display: (row: T) => string | number;
+	header?: string;
+	display: (row: T, index?: number) => string | number;
 }
