@@ -228,6 +228,11 @@ export interface EpicrisisSummaryDto extends DocumentSummaryDto {
 export interface EvaluationNoteSummaryDto extends DocumentSummaryDto {
 }
 
+export interface EvolutionDiagnosisDto extends Serializable {
+    diagnosesId?: number[];
+    notes?: DocumentObservationsDto;
+}
+
 export interface EvolutionNoteDto extends DocumentDto, Serializable {
     allergies?: AllergyConditionDto[];
     anthropometricData?: AnthropometricDataDto;

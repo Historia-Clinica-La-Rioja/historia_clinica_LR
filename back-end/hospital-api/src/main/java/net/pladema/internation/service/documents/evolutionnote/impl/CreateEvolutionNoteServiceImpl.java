@@ -1,18 +1,24 @@
 package net.pladema.internation.service.documents.evolutionnote.impl;
 
 import net.pladema.internation.repository.documents.entity.Document;
+import net.pladema.internation.repository.masterdata.entity.DocumentStatus;
 import net.pladema.internation.repository.masterdata.entity.DocumentType;
 import net.pladema.internation.service.documents.DocumentService;
 import net.pladema.internation.service.documents.evolutionnote.CreateEvolutionNoteService;
 import net.pladema.internation.service.documents.evolutionnote.domain.EvolutionNoteBo;
+import net.pladema.internation.service.documents.evolutionnote.domain.evolutiondiagnosis.EvolutionDiagnosisBo;
 import net.pladema.internation.service.general.NoteService;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
-import net.pladema.internation.service.ips.*;
+import net.pladema.internation.service.ips.AllergyService;
+import net.pladema.internation.service.ips.ClinicalObservationService;
+import net.pladema.internation.service.ips.HealthConditionService;
+import net.pladema.internation.service.ips.InmunizationService;
 import net.pladema.internation.service.ips.domain.DocumentObservationsBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -53,10 +59,10 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
     }
 
     @Override
-    public EvolutionNoteBo createDocument(Integer intermentEpisodeId, Integer patientId, EvolutionNoteBo evolutionNote) {
-        LOG.debug("Input parameters -> intermentEpisodeId {}, patientId {}, anamnesis {}", intermentEpisodeId, patientId, evolutionNote);
+    public EvolutionNoteBo createDocument(Integer internmentEpisodeId, Integer patientId, EvolutionNoteBo evolutionNote) {
+        LOG.debug("Input parameters -> intermentEpisodeId {}, patientId {}, anamnesis {}", internmentEpisodeId, patientId, evolutionNote);
 
-        Document document = new Document(intermentEpisodeId, evolutionNote.getDocumentStatusId(), DocumentType.EVALUATION_NOTE);
+        Document document = new Document(internmentEpisodeId, evolutionNote.getDocumentStatusId(), DocumentType.EVALUATION_NOTE);
         loadNotes(document, Optional.ofNullable(evolutionNote.getNotes()));
         document = documentService.save(document);
 
@@ -67,12 +73,28 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
         evolutionNote.setVitalSigns(clinicalObservationService.loadVitalSigns(patientId, document.getId(), Optional.ofNullable(evolutionNote.getVitalSigns())));
         evolutionNote.setAnthropometricData(clinicalObservationService.loadAnthropometricData(patientId, document.getId(), Optional.ofNullable(evolutionNote.getAnthropometricData())));
 
-        internmentEpisodeService.addEvolutionNote(intermentEpisodeId, document.getId());
+        internmentEpisodeService.addEvolutionNote(internmentEpisodeId, document.getId());
 
         evolutionNote.setId(document.getId());
 
         LOG.debug(OUTPUT, evolutionNote);
         return evolutionNote;
+    }
+
+    @Override
+    public Long createEvolutionDiagnosis(Integer internmentEpisodeId, Integer patientId, EvolutionDiagnosisBo evolutionDiagnosis) {
+        LOG.debug("Input parameters -> intermentEpisodeId {}, patientId {}, evolutionDiagnosis {}", internmentEpisodeId, patientId, evolutionDiagnosis);
+
+        Document doc = new Document(internmentEpisodeId, DocumentStatus.FINAL, DocumentType.EVALUATION_NOTE);
+        loadNotes(doc, Optional.ofNullable(evolutionDiagnosis.getNotes()));
+        doc = documentService.save(doc);
+        List<Integer> diagnoses = healthConditionService.copyDiagnoses(evolutionDiagnosis.getDiagnosesId());
+        Long result = doc.getId();
+        diagnoses.forEach( id -> documentService.createDocumentHealthCondition(result, id));
+        internmentEpisodeService.addEvolutionNote(internmentEpisodeId, doc.getId());
+
+        LOG.debug(OUTPUT, result);
+        return result;
     }
 
     private Document loadNotes(Document evolutionNote, Optional<DocumentObservationsBo> optNotes) {

@@ -5,16 +5,20 @@ import io.swagger.annotations.Api;
 import net.pladema.internation.controller.constraints.DocumentValid;
 import net.pladema.internation.controller.constraints.EvolutionNoteDiagnosisValid;
 import net.pladema.internation.controller.constraints.InternmentValid;
+import net.pladema.internation.controller.documents.evolutionnote.constraints.EvolutionNoteValid;
 import net.pladema.internation.controller.documents.evolutionnote.dto.EvolutionNoteDto;
 import net.pladema.internation.controller.documents.evolutionnote.dto.ResponseEvolutionNoteDto;
+import net.pladema.internation.controller.documents.evolutionnote.dto.evolutionDiagnosis.EvolutionDiagnosisDto;
 import net.pladema.internation.controller.documents.evolutionnote.mapper.EvolutionNoteMapper;
 import net.pladema.internation.controller.ips.constraints.EffectiveVitalSignTimeValid;
 import net.pladema.internation.events.OnGenerateDocumentEvent;
 import net.pladema.internation.repository.masterdata.entity.DocumentType;
+import net.pladema.internation.service.documents.InternmentDocument;
 import net.pladema.internation.service.documents.evolutionnote.CreateEvolutionNoteService;
 import net.pladema.internation.service.documents.evolutionnote.EvolutionNoteService;
 import net.pladema.internation.service.documents.evolutionnote.UpdateEvolutionNoteService;
 import net.pladema.internation.service.documents.evolutionnote.domain.EvolutionNoteBo;
+import net.pladema.internation.service.documents.evolutionnote.domain.evolutiondiagnosis.EvolutionDiagnosisBo;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
 import net.pladema.pdf.PdfService;
 import org.slf4j.Logger;
@@ -71,6 +75,7 @@ public class EvolutionNoteController {
     @InternmentValid
     @EvolutionNoteDiagnosisValid
     @EffectiveVitalSignTimeValid
+    @EvolutionNoteValid
     //TODO validar que diagnosticos descatados solo tengan estado REMISSION o SOLVED
     //TODO vaidar que diagnosticos ingresador por error solo tengan estado INACTIVE
     public ResponseEntity<ResponseEvolutionNoteDto> createDocument(
@@ -111,8 +116,33 @@ public class EvolutionNoteController {
         return  ResponseEntity.ok().body(result);
     }
 
-    private void generateDocument(EvolutionNoteBo evolutionNote, Integer institutionId, Integer internmentEpisodeId,
-                                  Integer patientId) throws IOException, DocumentException {
+    @PostMapping("/evolutionDiagnosis")
+    @Transactional
+    @InternmentValid
+    @EvolutionNoteValid
+    //TODO validar que diagnosticos descatados solo tengan estado REMISSION o SOLVED
+    //TODO vaidar que diagnosticos ingresador por error solo tengan estado INACTIVE
+    public ResponseEntity<Long> createEvolutionDiagnosis(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
+            @RequestBody @Valid EvolutionDiagnosisDto evolutionDiagnosisDto) throws IOException, DocumentException{
+        LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, evolutionDiagnosisDto {}",
+                institutionId, internmentEpisodeId, evolutionDiagnosisDto);
+        Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
+                .orElseThrow(() -> new EntityNotFoundException(INVALID_INTERNMENT_EPISODE));
+
+        EvolutionDiagnosisBo evolutionNote = evolutionNoteMapper.fromEvolutionNoteDto(evolutionDiagnosisDto);
+        Long documentId = createEvolutionNoteService.createEvolutionDiagnosis(internmentEpisodeId, patientId, evolutionNote);
+
+        EvolutionNoteBo evolutionNoteResult = evolutionNoteService.getDocument(documentId);
+        generateDocument(evolutionNoteResult, institutionId, internmentEpisodeId, patientId);
+        Long result = evolutionNoteResult.getId();
+        LOG.debug(OUTPUT, result);
+        return  ResponseEntity.ok().body(result);
+    }
+
+    private void generateDocument(InternmentDocument evolutionNote, Integer institutionId, Integer internmentEpisodeId,
+                                                                   Integer patientId) throws IOException, DocumentException {
         OnGenerateDocumentEvent event = new OnGenerateDocumentEvent(evolutionNote, institutionId, internmentEpisodeId,
                 DocumentType.EVALUATION_NOTE, "evolutionnote", patientId);
         pdfService.loadDocument(event);

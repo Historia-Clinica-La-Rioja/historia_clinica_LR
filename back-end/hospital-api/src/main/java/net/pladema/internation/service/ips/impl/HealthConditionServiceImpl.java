@@ -20,8 +20,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class HealthConditionServiceImpl implements HealthConditionService {
@@ -217,6 +219,25 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         List<HealthConditionVo> data = getGeneralStateData(internmentEpisodeId);
         GeneralHealthConditionBo generalHealthConditionBo = new GeneralHealthConditionBo(data);
         List<HealthHistoryConditionBo> result =  generalHealthConditionBo.getFamilyHistories();
+        LOG.debug(OUTPUT, result);
+        return result;
+    }
+
+    @Override
+    public List<Integer> copyDiagnoses(List<Integer> diagnosesId) {
+        LOG.debug("Input parameters -> diagnosesId {}", diagnosesId);
+        List<HealthCondition> resultQuery = new ArrayList<>();
+        if (!diagnosesId.isEmpty())
+            resultQuery = healthConditionRepository.findByIds(diagnosesId);
+
+        List<HealthCondition> clonedHc = resultQuery.stream().map(h -> {
+                HealthCondition cloned = (HealthCondition) h.clone();
+                cloned.setId(null);
+                return cloned;
+        }).collect(Collectors.toList());
+        clonedHc = healthConditionRepository.saveAll(clonedHc);
+
+        List<Integer> result = clonedHc.stream().map(HealthCondition::getId).collect(Collectors.toList());
         LOG.debug(OUTPUT, result);
         return result;
     }

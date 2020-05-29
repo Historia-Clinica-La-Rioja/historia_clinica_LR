@@ -1,10 +1,5 @@
 package net.pladema.internation.service.internment.impl;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
 import net.pladema.internation.repository.documents.EvolutionNoteDocumentRepository;
 import net.pladema.internation.repository.documents.PatientDischargeRepository;
 import net.pladema.internation.repository.documents.entity.EvolutionNoteDocument;
@@ -24,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -89,6 +85,14 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 	public boolean haveAnamnesis(Integer internmentEpisodeId) {
 		LOG.debug(INPUT_PARAMETERS_INTERNMENT_EPISODE, internmentEpisodeId);
 		boolean result = internmentEpisodeRepository.haveAnamnesis(internmentEpisodeId);
+		LOG.debug(LOGGING_OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public boolean haveEpicrisis(Integer internmentEpisodeId) {
+		LOG.debug(INPUT_PARAMETERS_INTERNMENT_EPISODE, internmentEpisodeId);
+		boolean result = internmentEpisodeRepository.haveEpicrisis(internmentEpisodeId);
 		LOG.debug(LOGGING_OUTPUT, result);
 		return result;
 	}

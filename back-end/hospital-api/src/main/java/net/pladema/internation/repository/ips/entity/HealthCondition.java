@@ -1,9 +1,6 @@
 package net.pladema.internation.repository.ips.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import net.pladema.internation.repository.listener.InternationAuditableEntity;
 import net.pladema.internation.repository.listener.InternationListener;
 import net.pladema.internation.repository.masterdata.entity.ConditionVerificationStatus;
@@ -19,7 +16,8 @@ import java.util.Objects;
 @Setter
 @ToString
 @NoArgsConstructor
-public class HealthCondition extends InternationAuditableEntity {
+@AllArgsConstructor
+public class HealthCondition extends InternationAuditableEntity  implements Cloneable{
 
 	/**
 	 * 
@@ -84,6 +82,22 @@ public class HealthCondition extends InternationAuditableEntity {
 	@Override
 	public int hashCode() {
 		return Objects.hash(id, patientId, sctidCode, startDate);
+	}
+
+	@Override
+	public Object clone() {
+		HealthCondition result = null;
+		try {
+			result = (HealthCondition) super.clone();
+		} catch (CloneNotSupportedException e) {
+			result = new HealthCondition(
+					this.getId(),this.getPatientId(), this.getSctidCode(),
+					this.getStatusId(), this.getVerificationStatusId(), this.getProblemTypeId(),
+					this.getStartDate(), this.getInactivationDate(), this.getPersonal(), this.getMain(),
+					this.getNoteId(), this.getProblemId()
+			);
+		}
+		return result;
 	}
 
 }
