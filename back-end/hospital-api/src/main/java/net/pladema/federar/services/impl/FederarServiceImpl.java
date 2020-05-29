@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,10 @@ import net.pladema.person.repository.entity.Person;
 import net.pladema.sgx.restclient.services.RestClient;
 
 @Service
+@ConditionalOnProperty(
+		value="federar.enabled",
+		havingValue = "true",
+		matchIfMissing = false)
 @Profile("prod")
 public class FederarServiceImpl extends RestClient implements FederarService {
 
