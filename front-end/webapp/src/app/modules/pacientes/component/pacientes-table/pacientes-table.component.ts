@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { InternmentPatientDto } from '@api-rest/api-model';
-import { TableModel } from 'src/app/modules/presentation/components/table/table.component';
+import { TableModel, ActionDisplays } from 'src/app/modules/presentation/components/table/table.component';
 import { Router } from '@angular/router';
 import { momentFormatDate, DateFormat } from '@core/utils/moment.utils';
 import { InternmentPatientService } from "@api-rest/services/internment-patient.service";
@@ -77,7 +77,9 @@ export class PacientesTableComponent implements OnInit {
 				{
 					columnDef: 'action',
 					action: {
-						text: 'Ver',
+						displayType: ActionDisplays.BUTTON,
+						display: 'Ver',
+						matColor: 'primary',
 						do: (internacion) => {
 							let url = this.routePrefix + ROUTE_INTERNMENT + `${internacion.internmentId}/paciente/${internacion.patientId}`;
 							this.router.navigate([url]);

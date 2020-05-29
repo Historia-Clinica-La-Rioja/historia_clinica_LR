@@ -3,10 +3,11 @@ import { DIAGNOSTICOS } from '../../constants/summaries';
 import { MasterDataInterface, HealthConditionDto } from '@api-rest/api-model';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
-import { TableModel } from 'src/app/modules/presentation/components/table/table.component';
+import { TableModel, ActionDisplays } from 'src/app/modules/presentation/components/table/table.component';
 import { MatDialog } from '@angular/material/dialog';
 import { RemoveDiagnosisComponent } from '../../dialogs/remove-diagnosis/remove-diagnosis.component';
 import { HEALTH_CLINICAL_STATUS } from '../../constants/ids';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-diagnosis-summary',
@@ -24,8 +25,9 @@ export class DiagnosisSummaryComponent implements OnInit {
 	tableModel: TableModel<HealthConditionDto>;
 
 	constructor(
-		private internmentStateService: InternmentStateService,
-		private internacionMasterDataService: InternacionMasterDataService,
+		private readonly internmentStateService: InternmentStateService,
+		private readonly internacionMasterDataService: InternacionMasterDataService,
+		private readonly router: Router,
 		public dialog: MatDialog,
 	) { }
 
@@ -68,7 +70,9 @@ export class DiagnosisSummaryComponent implements OnInit {
 			model.columns.push({
 				columnDef: 'remove',
 				action: {
-					isDelete: true,
+					displayType: ActionDisplays.ICON,
+					display: 'delete_outline',
+					matColor: 'warn',
 					do: row => {
 						const diagnosis = {...row};
 						const dialogRef = this.dialog.open(RemoveDiagnosisComponent, {
@@ -86,7 +90,7 @@ export class DiagnosisSummaryComponent implements OnInit {
 					},
 					hide: row => row.statusId !== HEALTH_CLINICAL_STATUS.ACTIVO
 				},
-			})
+			});
 		}
 		return model;
 	}

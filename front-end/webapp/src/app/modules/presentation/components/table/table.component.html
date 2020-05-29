@@ -3,19 +3,19 @@
 		<mat-label>Filtro</mat-label>
 		<input matInput (keyup)="applyFilter($event)">
 	</mat-form-field>
-	<table mat-table [dataSource]="dataSource" class="{{mainStyle}}" [ngClass]="{ 'mat-elevation-z8': mainStyle === 'primary' }">
+	<table mat-table [dataSource]="dataSource" class="{{mainStyle}}" [ngClass]="{ 'mat-elevation-z8': mainStyle === TableStyles.PRIMARY }" aria-hidden="true">
 		<ng-container *ngFor="let column of columns" [matColumnDef]="column.columnDef">
 			<th mat-header-cell *matHeaderCellDef>{{ column.header | translate }}</th>
 			<td mat-cell [ngClass]="{'actions': !!column.action}" class="capitalize-first-letter" *matCellDef="let row">
 				<ng-container *ngIf="column.action else default">
-					<ng-container *ngIf="column.action.isDelete else button">
-						<button mat-icon-button color="warn" *ngIf="!column.action.hide || !column.action.hide(row)" (click)="column.action.do(row)">
-							<mat-icon>delete_outline</mat-icon>
+					<ng-container *ngIf="column.action.displayType === ActionDisplays.ICON else button">
+						<button mat-icon-button color="{{column.action.matColor}}" *ngIf="!column.action.hide || !column.action.hide(row)" (click)="column.action.do(row)">
+							<mat-icon>{{column.action.display}}</mat-icon>
 						</button>
 					</ng-container>
 					<ng-template #button>
-						<button mat-flat-button color="primary" *ngIf="!column.action.hide || !column.action.hide(row)" (click)="column.action.do(row)">
-							<span *ngIf="column.action.text">{{ column.action.text | translate }}</span>
+						<button mat-flat-button color="{{column.action.matColor}}" *ngIf="!column.action.hide || !column.action.hide(row)" (click)="column.action.do(row)">
+							<span>{{ column.action.display | translate }}</span>
 						</button>
 					</ng-template>
 				</ng-container>

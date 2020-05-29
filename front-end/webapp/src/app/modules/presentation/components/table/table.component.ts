@@ -2,6 +2,7 @@ import { Component, OnInit, Input, ViewChild, Injectable } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { TableService } from '@core/services/table.service';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
+import { ThemePalette } from '@angular/material/core';
 
 @Component({
 	selector: 'app-table',
@@ -10,8 +11,11 @@ import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 })
 export class TableComponent implements OnInit {
 
+	ActionDisplays = ActionDisplays;
+	TableStyles = TableStyles;
+
 	@Input() model: TableModel<any>;
-	@Input() mainStyle: TableStyle = 'default';
+	@Input() mainStyle: TableStyle = TableStyles.DEFAULT;
 
 	@ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
 		this.dataSource.paginator = paginator;
@@ -59,15 +63,29 @@ export class TableComponent implements OnInit {
 
 }
 
-export type TableStyle = 'primary' | 'secondary' | 'default';
+export enum TableStyles {
+	PRIMARY = 'primary',
+	SECONDARY = 'secondary',
+	DEFAULT = 'default',
+}
+
+export enum ActionDisplays {
+	ICON = 'icon',
+	BUTTON = 'button',
+}
+
+
+export type TableStyle = TableStyles.PRIMARY | TableStyles.SECONDARY | TableStyles.DEFAULT;
+export type ActionDisplay = ActionDisplays.BUTTON | ActionDisplays.ICON;
 
 export interface ColumnModel<T> {
 	columnDef: string;
 	header?: string;
 	text?: (row: T) => string | number;
 	action?: {
-		isDelete?: boolean,
-		text?: string,
+		displayType: ActionDisplay,
+		display: string,
+		matColor?: ThemePalette,
 		do: (row: T) => void,
 		hide?: (row: T) => boolean
 	}

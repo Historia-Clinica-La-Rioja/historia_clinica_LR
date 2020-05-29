@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { InternacionService } from '@api-rest/services/internacion.service';
 import { InternmentEpisodeDto } from '@api-rest/api-model';
 import { Router } from '@angular/router';
-import { TableModel } from 'src/app/modules/presentation/components/table/table.component';
+import { TableModel, ActionDisplays } from 'src/app/modules/presentation/components/table/table.component';
 
 @Component({
 	selector: 'app-internaciones-table',
@@ -59,7 +59,9 @@ export class InternacionesTableComponent implements OnInit {
 				{
 					columnDef: 'action',
 					action: {
-						text: 'Ver',
+						displayType: ActionDisplays.BUTTON,
+						display: 'Ver',
+						matColor: 'primary',
 						do: (internacion) => {
 							let url = `${this.router.url}/internacion/${internacion.id}/paciente/${internacion.patient.id}`;
 							this.router.navigate([url]);

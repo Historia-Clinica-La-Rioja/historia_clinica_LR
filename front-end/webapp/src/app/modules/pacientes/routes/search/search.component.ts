@@ -8,7 +8,7 @@ import * as moment from 'moment';
 import { PatientSearchDto, GenderDto, IdentificationTypeDto } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
-import { TableModel } from 'src/app/modules/presentation/components/table/table.component';
+import { TableModel, ActionDisplays } from 'src/app/modules/presentation/components/table/table.component';
 import { DateFormat, momentParseDate } from '@core/utils/moment.utils';
 import { PersonService } from '@api-rest/services/person.service';
 import { finalize } from 'rxjs/operators';
@@ -147,7 +147,9 @@ export class SearchComponent implements OnInit {
 				{
 					columnDef: 'action',
 					action: {
-						text: 'Ver',
+						displayType: ActionDisplays.BUTTON,
+						display: 'Ver',
+						matColor: 'primary',
 						do: (patient) => {
 							this.openDialog(patient);
 						}
