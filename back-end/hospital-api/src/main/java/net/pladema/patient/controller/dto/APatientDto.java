@@ -25,4 +25,7 @@ public class APatientDto extends APersonDto{
     @Length(max = 150)
     private String medicalCoverageAffiliateNumber;
 
+    private AAdditionalDoctorDto generalPractitioner;
+
+    private AAdditionalDoctorDto pamiDoctor;
 }

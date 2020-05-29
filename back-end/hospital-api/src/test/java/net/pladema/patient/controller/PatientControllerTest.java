@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Optional;
 
+import net.pladema.patient.service.AdditionalDoctorService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,6 +49,9 @@ public class PatientControllerTest extends BaseControllerTest {
 	
 	@MockBean
 	private PersonMapper personMapper;
+
+	@MockBean
+	private AdditionalDoctorService additionalDoctorService;
 
 	@Before
 	public void setup() {

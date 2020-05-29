@@ -10,7 +10,9 @@ import net.pladema.patient.controller.mapper.PatientMapper;
 import net.pladema.patient.repository.PatientTypeRepository;
 import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.repository.entity.PatientType;
+import net.pladema.patient.service.AdditionalDoctorService;
 import net.pladema.patient.service.PatientService;
+import net.pladema.patient.service.domain.DoctorsBo;
 import net.pladema.patient.service.domain.PatientSearch;
 import net.pladema.person.controller.dto.BMPersonDto;
 import net.pladema.person.controller.dto.BasicDataPersonDto;
@@ -47,6 +49,8 @@ public class PatientController {
 
 	private final AddressExternalService addressExternalService;
 
+	private final AdditionalDoctorService additionalDoctorService;
+
 	private final PatientMapper patientMapper;
 
 	private final PersonMapper personMapper;
@@ -55,7 +59,7 @@ public class PatientController {
 
 	public PatientController(PatientService patientService, PersonExternalService personExternalService,
 			AddressExternalService addressExternalService, PatientMapper patientMapper, PersonMapper personMapper,
-			ObjectMapper jackson, PatientTypeRepository patientTypeRepository) {
+			ObjectMapper jackson, PatientTypeRepository patientTypeRepository,AdditionalDoctorService additionalDoctorService ) {
 		this.patientService = patientService;
 		this.personExternalService = personExternalService;
 		this.addressExternalService = addressExternalService;
@@ -63,6 +67,7 @@ public class PatientController {
 		this.patientMapper = patientMapper;
 		this.patientTypeRepository = patientTypeRepository;
 		this.personMapper = personMapper;
+		this.additionalDoctorService = additionalDoctorService;
 	}
 
 	@GetMapping(value = "/search")
@@ -81,7 +86,7 @@ public class PatientController {
 
 	@PostMapping
 	@Transactional
-	public ResponseEntity<BMPatientDto> addPatient(@RequestBody APatientDto patientDto) throws URISyntaxException {
+	public ResponseEntity<Integer> addPatient(@RequestBody APatientDto patientDto) throws URISyntaxException {
 		LOG.debug("Input data -> APatientDto {} ", patientDto);
 		BMPersonDto createdPerson = personExternalService.addPerson(patientDto);
 
@@ -92,11 +97,15 @@ public class PatientController {
 		Patient patientToAdd = patientMapper.fromPatientDto(patientDto);
 		patientToAdd.setPersonId(createdPerson.getId());
 		Patient createdPatient = patientService.addPatient(patientToAdd);
+		DoctorsBo doctorsBo = new DoctorsBo(patientDto.getGeneralPractitioner(),patientDto.getPamiDoctor());
+		additionalDoctorService.addAdditionalsDoctors(doctorsBo,createdPatient.getId());
 		if (createdPatient.isValidated()) {
 			patientService.federatePatient(createdPatient, personMapper.fromPersonDto(createdPerson));
 		}
-		return ResponseEntity.created(new URI("")).body(patientMapper.fromPatient(createdPatient));
+		LOG.debug("Output -> {}", createdPatient.getId());
+		return ResponseEntity.created(new URI("")).body(createdPatient.getId());
 	}
+
 
 	@GetMapping(value = "/minimalsearch")
 	public ResponseEntity<List<Integer>> getPatientMinimal(
