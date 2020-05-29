@@ -9,15 +9,15 @@ const FLAVOR_HOSPITALES = 'minsal';
 const FEATURE_FLAGS = [
 	{
 		name: 'habilitarEditarPaciente',
-		flavorMatch: FLAVOR_TANDIL
+		flavorMatch: [FLAVOR_TANDIL]
 	},
 	{
 		name: 'agregarContactoResponsable',
-		flavorMatch: FLAVOR_TANDIL
+		flavorMatch: [FLAVOR_TANDIL]
 	},
 	{
 		name: 'agregarMedicoCabecera',
-		flavorMatch: FLAVOR_TANDIL
+		flavorMatch: [FLAVOR_TANDIL]
 	}];
 
 @Injectable({
@@ -32,7 +32,7 @@ export class FeatureFlagService {
 	public isOn(ff: string): Observable<boolean> {
 		return this.publicService.getInfo().pipe(map(data => {
 			let ffObject = this.getIfIsPresent(ff);
-			return ffObject && data.flavor === ffObject.flavorMatch ? true : false;
+			return ffObject && ffObject.flavorMatch.includes(data.flavor) ? true : false;
 		}));
 	}
 
