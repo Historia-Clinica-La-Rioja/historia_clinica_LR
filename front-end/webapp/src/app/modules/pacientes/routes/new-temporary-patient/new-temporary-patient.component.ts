@@ -89,7 +89,13 @@ export class NewTemporaryPatientComponent implements OnInit {
 					addressDepartmentId: {value: null, disabled: true},
 					//Patient
 					medicalCoverageName: [null, Validators.maxLength(VALIDATIONS.MAX_LENGTH.medicalCoverageName)],
-					medicalCoverageAffiliateNumber: [null, Validators.maxLength(VALIDATIONS.MAX_LENGTH.medicalCoverageAffiliateNumber)]
+					medicalCoverageAffiliateNumber: [null, Validators.maxLength(VALIDATIONS.MAX_LENGTH.medicalCoverageAffiliateNumber)],
+
+					//doctors
+					generalPractitioner:[],
+					generalPractitionerPhoneNumber:[],
+					pamiDoctor:[],
+					pamiDoctorPhoneNumber:[]
 				});
 			});
 
@@ -119,8 +125,8 @@ export class NewTemporaryPatientComponent implements OnInit {
 		if (this.form.valid) {
 			let personRequest: APatientDto = this.mapToPersonRequest();
 			this.patientService.addPatient(personRequest)
-				.subscribe(patient => {
-					this.router.navigate([this.routePrefix + ROUTE_PROFILE + patient.id]);
+				.subscribe(patientId => {
+					this.router.navigate([this.routePrefix + ROUTE_PROFILE + patientId]);
 					this.snackBarService.showSuccess('pacientes.new.messages.SUCCESS');
 				}, _ => this.snackBarService.showError('pacientes.new.messages.ERROR'));
 		} else {
@@ -162,6 +168,17 @@ export class NewTemporaryPatientComponent implements OnInit {
 			identityVerificationStatusId: this.identityVerificationStatus,
 			medicalCoverageName: this.form.controls.medicalCoverageName.value,
 			medicalCoverageAffiliateNumber: this.form.controls.medicalCoverageAffiliateNumber.value,
+			//doctors
+			generalPractitioner: {
+				fullName: this.form.controls.generalPractitioner.value,
+				phoneNumber: this.form.controls.generalPractitionerPhoneNumber.value,
+				generalPractitioner:true
+			},
+			pamiDoctor: {
+				fullName:this.form.controls.pamiDoctor.value,
+				phoneNumber: this.form.controls.pamiDoctorPhoneNumber.value,
+				generalPractitioner:false
+			}
 		};
 	}
 

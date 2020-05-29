@@ -1,11 +1,19 @@
 /* tslint:disable */
 /* eslint-disable */
 
+export interface AAdditionalDoctorDto {
+    fullName: string;
+    generalPractitioner: boolean;
+    phoneNumber: string;
+}
+
 export interface APatientDto extends APersonDto {
     comments: string;
+    generalPractitioner: AAdditionalDoctorDto;
     identityVerificationStatusId: number;
     medicalCoverageAffiliateNumber: string;
     medicalCoverageName: string;
+    pamiDoctor: AAdditionalDoctorDto;
     typeId: number;
 }
 

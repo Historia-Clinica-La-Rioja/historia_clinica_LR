@@ -16,7 +16,7 @@ const FEATURE_FLAGS = [
 		flavorMatch: [FLAVOR_TANDIL]
 	},
 	{
-		name: 'agregarMedicoCabecera',
+		name: 'agregarMedicosAdicionales',
 		flavorMatch: [FLAVOR_TANDIL]
 	}];
 

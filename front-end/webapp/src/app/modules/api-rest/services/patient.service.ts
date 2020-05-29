@@ -48,9 +48,9 @@ export class PatientService {
 		return this.http.get<BMPersonDto[]>(url, { params: params });
 	}
 
-	addPatient(datosPersonales: APatientDto): Observable<BMPatientDto> {
+	addPatient(datosPersonales: APatientDto): Observable<number> {
 		let url = `${environment.apiBase}/patient`;
-		return this.http.post<BMPatientDto>(url,datosPersonales);
+		return this.http.post<number>(url,datosPersonales);
 	  }
 
 

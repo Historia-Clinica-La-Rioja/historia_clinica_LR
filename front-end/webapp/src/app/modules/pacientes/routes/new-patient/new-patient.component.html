@@ -340,6 +340,67 @@
 				</div>
 			</div>
 
+			<ng-container *featureFlag="'agregarMedicosAdicionales'">
+				<div class="form-row">
+					<div>
+						<div>
+							<span [translate]="'pacientes.form.GENERAL_PRACTITIONER'"></span>
+						</div>
+						<mat-form-field appearance="outline">
+							<input id="generalPractitioner"
+								name="generalPractitioner"
+								formControlName="generalPractitioner"
+								placeholder="{{'pacientes.form.GENERAL_PRACTITIONER' | translate}}"
+								matInput
+							>
+						</mat-form-field>
+					</div>
+
+					<div>
+						<div>
+							<span [translate]="'pacientes.form.PHONE_NUMBER'"></span>
+						</div>
+						<mat-form-field appearance="outline">
+							<input id="phoneNumber"
+									name="generalPractitionerPhoneNumber"
+									formControlName="generalPractitionerPhoneNumber"
+									maxlength="15"
+									placeholder="{{'pacientes.form.PHONE_NUMBER' | translate}}"
+									matInput>
+						</mat-form-field>
+					</div>
+				</div>
+
+				<div class="form-row">
+					<div>
+						<div>
+							<span [translate]="'pacientes.form.PAMI_DOCTOR'"></span>
+						</div>
+						<mat-form-field appearance="outline">
+							<input id="pamiDoctor"
+								name="pamiDoctor"
+								formControlName="pamiDoctor"
+								placeholder="{{'pacientes.form.PAMI_DOCTOR' | translate}}"
+								matInput
+							>
+						</mat-form-field>
+					</div>
+
+					<div>
+						<div>
+							<span [translate]="'pacientes.form.PHONE_NUMBER'"></span>
+						</div>
+						<mat-form-field appearance="outline">
+							<input id="pamiDoctorPhoneNumber"
+									name="pamiDoctorphoneNumber"
+									formControlName="pamiDoctorPhoneNumber"
+									maxlength="15"
+									placeholder="{{'pacientes.form.PHONE_NUMBER' | translate}}"
+									matInput>
+						</mat-form-field>
+					</div>
+				</div>
+			</ng-container>
 			<div>
 				<div>
 					<span [translate]="'pacientes.form.RELIGION'"></span>
