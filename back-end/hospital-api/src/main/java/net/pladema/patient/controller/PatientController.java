@@ -58,8 +58,8 @@ public class PatientController {
 	private final ObjectMapper jackson;
 
 	public PatientController(PatientService patientService, PersonExternalService personExternalService,
-			AddressExternalService addressExternalService, PatientMapper patientMapper, PersonMapper personMapper,
-			ObjectMapper jackson, PatientTypeRepository patientTypeRepository,AdditionalDoctorService additionalDoctorService ) {
+							 AddressExternalService addressExternalService, PatientMapper patientMapper, PersonMapper personMapper,
+							 ObjectMapper jackson, PatientTypeRepository patientTypeRepository,AdditionalDoctorService additionalDoctorService ) {
 		this.patientService = patientService;
 		this.personExternalService = personExternalService;
 		this.addressExternalService = addressExternalService;

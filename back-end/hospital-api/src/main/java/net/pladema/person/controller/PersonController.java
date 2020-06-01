@@ -15,6 +15,7 @@ import net.pladema.person.service.PersonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,6 +47,7 @@ public class PersonController {
     
     @PostMapping
     @Transactional
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
     public ResponseEntity<BMPersonDto> addPerson(
             @RequestBody APersonDto personDto) throws URISyntaxException {
 

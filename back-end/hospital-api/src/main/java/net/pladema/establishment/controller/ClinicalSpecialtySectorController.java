@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +29,7 @@ public class ClinicalSpecialtySectorController  {
 	}
 
 	@GetMapping()
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
 	public ResponseEntity<List<ClinicalSpecialty>> getAllSpecialtyBySector(@PathVariable(name = "sectorId") Integer sectorId){
 		List<ClinicalSpecialty> clinicalSpecialties = clinicalSpecialtySectorRepository.getAllBySector(sectorId);
 		LOG.debug("Get all Clinical Specialty by Sector {} => {}", sectorId, clinicalSpecialties);

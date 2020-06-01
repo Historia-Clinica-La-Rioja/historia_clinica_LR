@@ -10,6 +10,7 @@ import net.pladema.staff.repository.entity.ClinicalSpecialty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -55,6 +56,8 @@ public class InternmentMasterdataController {
     }
 
     @GetMapping(value = "/health/clinical/down")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO') || "
+    		+ "hasPermission(#institutionId, 'PROFESIONAL_DE_SALUD')")
     public ResponseEntity<Collection<InternmentMasterDataProjection>> getDownHealthClinical(){
         LOG.debug("{}", "All health condition clinical status");
         return ResponseEntity.ok().body(internmentMasterDataService.findAll(ConditionClinicalStatus.class,
@@ -63,6 +66,8 @@ public class InternmentMasterdataController {
 
 
     @GetMapping(value = "/health/verification")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO') || "
+    		+ "hasPermission(#institutionId, 'PROFESIONAL_DE_SALUD')")
     public ResponseEntity<Collection<InternmentMasterDataProjection>> getHealthVerification(){
         LOG.debug("{}", "All health condition verification status");
         return ResponseEntity.ok().body(internmentMasterDataService.findAll(ConditionVerificationStatus.class));
@@ -125,6 +130,7 @@ public class InternmentMasterdataController {
     }
     
     @GetMapping(value = "/clinical/specialty")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
     public ResponseEntity<Collection<InternmentMasterDataProjection>> getClinicalSpecialty(){
         LOG.debug("{}", "All internment clinical specialty");
         return ResponseEntity.ok().body(internmentMasterDataService.findAll(ClinicalSpecialty.class));

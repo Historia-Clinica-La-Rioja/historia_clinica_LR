@@ -12,12 +12,14 @@ import net.pladema.internation.service.internment.domain.InternmentEpisodeProces
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/internments/patients")
@@ -39,6 +41,9 @@ public class InternmentPatientController {
     }
 
     @GetMapping
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO') || "
+            + "hasPermission(#institutionId, 'PROFESIONAL_DE_SALUD') || "
+            + "hasPermission(#institutionId, 'ADMINISTRATIVO')")
     public ResponseEntity<List<InternmentEpisodeDto>> getAllInternmentPatient(
             @PathVariable(name = "institutionId") Integer institutionId){
         LOG.debug(INPUT_PARAMETERS_INSTITUTION_ID, institutionId);
@@ -49,6 +54,9 @@ public class InternmentPatientController {
     }
 
     @GetMapping("/basicdata")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO') || "
+    		+ "hasPermission(#institutionId, 'PROFESIONAL_DE_SALUD') || "
+    		+ "hasPermission(#institutionId, 'ADMINISTRATIVO')")
     public ResponseEntity<List<InternmentPatientDto>> getAllInternmentPatientsBasicData(
             @PathVariable(name = "institutionId") Integer institutionId){
         LOG.debug(INPUT_PARAMETERS_INSTITUTION_ID, institutionId);

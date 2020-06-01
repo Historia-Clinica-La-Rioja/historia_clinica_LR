@@ -21,6 +21,7 @@ import net.pladema.pdf.PdfService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -73,6 +74,7 @@ public class AnamnesisController {
     @EffectiveVitalSignTimeValid
     //TODO validar que diagnosticos descatados solo tengan estado REMISSION o SOLVED
     //TODO vaidar que diagnosticos ingresador por error solo tengan estado INACTIVE
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO')")
     public ResponseEntity<ResponseAnamnesisDto> createAnamnesis(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
@@ -96,6 +98,7 @@ public class AnamnesisController {
     @AnamnesisMainDiagnosisValid
     @EffectiveVitalSignTimeValid
     @DocumentValid(isConfirmed = false, documentType = DocumentType.ANAMNESIS)
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO')")
     public ResponseEntity<ResponseAnamnesisDto> updateAnamnesis(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
@@ -124,6 +127,8 @@ public class AnamnesisController {
     @GetMapping("/{anamnesisId}")
     @InternmentValid
     @DocumentValid(isConfirmed = false, documentType = DocumentType.ANAMNESIS)
+    //TODO validar que exista la anamnesis
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO') || hasPermission(#institutionId, 'PROFESIONAL_DE_SALUD')")
     public ResponseEntity<ResponseAnamnesisDto> getAnamnesis(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,

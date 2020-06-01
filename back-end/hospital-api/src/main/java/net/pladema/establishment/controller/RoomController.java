@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,6 +46,7 @@ public class RoomController {
 	}
 
 	@GetMapping()
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
 	public ResponseEntity<List<RoomDto>> getAll() {
 		List<Room> rooms = roomRepository.findAll();
 		LOG.debug("Get all Rooms => {}", rooms);
@@ -52,6 +54,7 @@ public class RoomController {
 	}
 
 	@GetMapping("/{roomId}/beds")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
 	public ResponseEntity<List<BedDto>> getAllBedsByRoom(@PathVariable(name = "roomId")  Integer roomId) {
 		List<Bed> beds = bedRepository.getAllByRoom(roomId);
 		LOG.debug("Get all Beds => {}", beds);
