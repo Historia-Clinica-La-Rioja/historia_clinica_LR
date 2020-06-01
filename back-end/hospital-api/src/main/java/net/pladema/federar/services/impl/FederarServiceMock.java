@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,10 @@ import net.pladema.patient.repository.entity.Patient;
 import net.pladema.person.repository.entity.Person;
 
 @Service
-@Profile("!prod")
+@ConditionalOnProperty(
+		value="ws.federar.enabled",
+		havingValue = "false",
+		matchIfMissing = true)
 public class FederarServiceMock implements FederarService{
 
 	private static final Logger LOG = LoggerFactory.getLogger(FederarServiceMock.class);

@@ -31,10 +31,9 @@ import net.pladema.sgx.restclient.services.RestClient;
 
 @Service
 @ConditionalOnProperty(
-		value="federar.enabled",
+		value="ws.federar.enabled",
 		havingValue = "true",
 		matchIfMissing = false)
-@Profile("prod")
 public class FederarServiceImpl extends RestClient implements FederarService {
 
 	private static final String FEMALE = "female";

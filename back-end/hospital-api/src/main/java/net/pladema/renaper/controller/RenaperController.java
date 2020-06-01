@@ -22,10 +22,6 @@ import net.pladema.renaper.services.RenaperService;
 import net.pladema.renaper.services.domain.PersonDataResponse;
 
 @RestController
-@ConditionalOnProperty(
-		value="renaper.enabled",
-		havingValue = "true",
-		matchIfMissing = false)
 @RequestMapping("/renaper")
 @Api(value = "Renaper", tags = { "Renaper" })
 public class RenaperController {
