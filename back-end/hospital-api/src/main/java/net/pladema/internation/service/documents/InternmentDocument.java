@@ -1,7 +1,6 @@
 package net.pladema.internation.service.documents;
 
 import net.pladema.internation.service.ips.domain.*;
-import net.pladema.internation.service.ips.domain.DocumentObservationsBo;
 
 import java.util.List;
 

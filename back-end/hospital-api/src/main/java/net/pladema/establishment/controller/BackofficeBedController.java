@@ -19,7 +19,6 @@ import net.pladema.error.controller.dto.ApiErrorMessage;
 import net.pladema.establishment.controller.constraints.validator.BackofficeBedValidator;
 import net.pladema.establishment.repository.BedRepository;
 import net.pladema.establishment.repository.entity.Bed;
-import net.pladema.establishment.service.BedService;
 import net.pladema.internation.service.internment.InternmentEpisodeExternalService;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
 

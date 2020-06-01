@@ -93,7 +93,8 @@ public class RestExceptionHandler {
 	@ExceptionHandler(EntityNotFoundException.class)
 	public ResponseEntity<String> invalidUsername(Exception ex, Locale locale) {
 		String errorMessage = messageSource.getMessage(ex.getMessage(), null, locale);
-		LOG.error(errorMessage, ex);
+		LOG.info(ex.getMessage());
+		LOG.debug(ex.getMessage(), ex);
 		return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
 	}
 
@@ -108,7 +109,8 @@ public class RestExceptionHandler {
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	@ExceptionHandler(NotFoundException.class)
 	public ResponseEntity<ApiErrorMessage> notFound(NotFoundException ex) {
-		LOG.warn(ex.getMessage(), ex);
+		LOG.info(ex.getMessage());
+		LOG.debug(ex.getMessage(), ex);
 		return new ResponseEntity<>(new ApiErrorMessage(ex.messageId, ex.getMessage()), HttpStatus.NOT_FOUND);
 	}
 
