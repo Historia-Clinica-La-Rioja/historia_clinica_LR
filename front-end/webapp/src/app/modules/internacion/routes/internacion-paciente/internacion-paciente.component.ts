@@ -9,6 +9,7 @@ import { MapperService } from 'src/app/modules/presentation/services/mapper.serv
 import { InternacionService } from '@api-rest/services/internacion.service';
 import { InternmentEpisodeSummary } from 'src/app/modules/presentation/components/internment-episode-summary/internment-episode-summary.component';
 import { INTERNACION } from '../../constants/summaries';
+import { FeatureFlagService } from "@core/services/feature-flag.service";
 
 @Component({
 	selector: 'app-internacion-paciente',
@@ -25,6 +26,7 @@ export class InternacionPacienteComponent implements OnInit {
 	public lastEvolutionNoteDoc: EvaluationNoteSummaryDto;
 	public internmentEpisodeId: number;
 	public internmentEpisodeSummary$: Observable<InternmentEpisodeSummary>;
+	public showDischarge: boolean;
 
 	constructor(
 		private patientService: PatientService,
@@ -32,6 +34,7 @@ export class InternacionPacienteComponent implements OnInit {
 		private mapperService: MapperService,
 		private route: ActivatedRoute,
 		private router: Router,
+		private featureFlagService: FeatureFlagService,
 	) { }
 
 	ngOnInit(): void {
@@ -49,11 +52,20 @@ export class InternacionPacienteComponent implements OnInit {
 						this.anamnesisDoc = internmentEpisode.documents?.anamnesis;
 						this.epicrisisDoc = internmentEpisode.documents?.epicrisis;
 						this.lastEvolutionNoteDoc = internmentEpisode.documents?.lastEvaluationNote;
+
+
+						//La alta administrativa está disponible cuando existe la epicrisis
+						//o el flag de alta sin epicrisis está activa
+						this.featureFlagService.isOn('habilitarAltaSinEpicrisis').subscribe(isOn => {
+							this.showDischarge = isOn || (this.epicrisisDoc !== undefined);
+						});
+
 					}),
 					map((internmentEpisode: InternmentSummaryDto) => this.mapperService.toInternmentEpisodeSummary(internmentEpisode))
 				);
 			}
 		);
+
 	}
 
 	goToAnamnesis(): void {

@@ -3,7 +3,7 @@
 		<h2 class="page-title" [translate]="'internaciones.internacion-paciente.TITLE'"></h2>
 		<div *ngIf="(internmentEpisodeSummary$ | async) as internmentEpisodeSummary" fxLayout="column" fxLayoutGap="20px">
 			<div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px">
-				<ng-container *ngIf="!epicrisisDoc else discharge">
+				<ng-container *ngIf="!epicrisisDoc">
 					<ng-container *ngIf="!anamnesisDoc || !anamnesisDoc.confirmed">
 						<button mat-flat-button color="primary" (click)="goToAnamnesis()"
 							fxFlexFill.xs
@@ -28,13 +28,13 @@
 						</button>
 					</ng-container>
 				</ng-container>
-				<ng-template #discharge>
+				<ng-container *ngIf="showDischarge">
 					<button mat-flat-button color="primary" *hasRole="['ADMINISTRATIVO']"
 						(click)="goToAdministrativeDischarge()">
 						<span class="uppercase"
 							[translate]="'internaciones.internacion-paciente.actions.ADMINISTRATIVE_DISCHARGE'"></span>
 					</button>
-				</ng-template>
+				</ng-container>
 			</div>
 			<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
 				<div fxLayout="column" fxFlex="50%" fxLayoutGap="20px">

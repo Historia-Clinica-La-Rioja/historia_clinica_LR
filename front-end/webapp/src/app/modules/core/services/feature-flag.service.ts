@@ -22,7 +22,12 @@ const FEATURE_FLAGS = [
 	{
 		name: 'habilitarServicioRenaper',
 		flavorMatch: [FLAVOR_HOSPITALES]
-	}];
+	},
+	{
+		name: 'habilitarAltaSinEpicrisis',
+		flavorMatch: [FLAVOR_TANDIL]
+	}
+];
 
 @Injectable({
 	providedIn: 'root'
