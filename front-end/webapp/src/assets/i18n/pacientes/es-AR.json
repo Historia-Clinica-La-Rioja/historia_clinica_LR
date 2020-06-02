@@ -45,6 +45,7 @@
 		"home": {
 			"TITLE": "Pacientes",
 			"TITLE_SEARCH": "Búsqueda de pacientes internados",
+			"SUBTITLE": "Ingresá un nuevo paciente",
 			"find_add_section": {
 				"BUTTON_ADD": "Crear paciente temporal",
 				"BUTTON_SEARCH": "Buscar",
@@ -66,7 +67,8 @@
 			"SUBTITLE": "No se ha encontrado un paciente registrado con ese tipo y número de documento.",
 			"SUBTITLE_TWO": "Complete los siguientes datos para una búsqueda avanzada.",
 			"NEW_PATIENT": "Crear nuevo paciente",
-			"RENAPER_TIMEOUT": "No hubo respuesta del servicio de Renaper"
+			"RENAPER_TIMEOUT": "No hubo respuesta del servicio de Renaper",
+			"ROW_TABLE": "ID Adulto mayor"
 		}
 	}
 }

@@ -46,7 +46,7 @@ export class PacientesTableComponent implements OnInit {
 			columns: [
 				{
 					columnDef: 'patiendId',
-					header: 'ID Paciente',
+					header: 'pacientes.search.ROW_TABLE',
 					text: (row) => row.patientId
 				},
 				{

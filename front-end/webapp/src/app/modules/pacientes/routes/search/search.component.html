@@ -133,7 +133,7 @@
 	</section>
 	<div class="table-container" *ngIf="!viewSearchComponent() && !showSpinner()">
 		<section>
-			<h2 class="mat-body-2" [translate]="'Búsqueda de pacientes'"></h2>
+			<h2 class="mat-body-2" [translate]="'pacientes.search.TITLE'"></h2>
 			<h3 class="mat-body-2" [translate]="'Se encontraron posibles coincidencias.'"></h3>
 			<app-table [model]="matchingPatient" [mainStyle]="'primary'"></app-table>
 			<div class="new-patient-button" align="end">

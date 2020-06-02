@@ -23,17 +23,17 @@ export class InternacionesTableComponent implements OnInit {
 			columns: [
 				{
 					columnDef: 'patiendId',
-					header: 'ID Paciente',
+					header: 'pacientes.search.ROW_TABLE',
 					text: (row) => row.patient.id
 				},
 				{
 					columnDef: 'patientName',
-					header: 'Nombre Paciente',
+					header: 'Nombre',
 					text: (row) => row.patient.firstName
 				},
 				{
 					columnDef: 'patientLastName',
-					header: 'Apellido Paciente',
+					header: 'Apellido',
 					text: (row) => row.patient.lastName
 				},
 				{

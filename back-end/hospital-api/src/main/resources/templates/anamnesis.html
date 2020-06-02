@@ -29,7 +29,7 @@
 	</div>
 
 
-	<h3>Diagnóstico principal</h3>
+	<h3 [translate]="'internaciones.epicrisis.diagnosticos.TITLE_PRINCIPAL'"></h3>
 	<div class="row" th:if="${mainDiagnosis == null}">
 		<dl class="lista" >
 			<dd><p >Sin cambios registrados</p></dd>
@@ -45,7 +45,7 @@
 		</dl>
 	</div>
 
-	<h3>Otros diagnósticos</h3>
+	<h3 [translate]="'internaciones.epicrisis.diagnosticos.TITLE'"></h3>
 	<div class="row" th:if="${#lists.isEmpty(diagnosis)}">
 		<dl class="lista" >
 			<dd><p >Sin cambios registrados</p></dd>

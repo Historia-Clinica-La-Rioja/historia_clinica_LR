@@ -6,12 +6,12 @@ export const INTERNACION: SummaryHeader = {
 };
 
 export const DIAGNOSTICO_PRINCIPAL: SummaryHeader = {
-	title: 'Diagnóstico principal',
+	title: 'internaciones.diagnosticos.TITLE_PRINCIPAL',
 	matIcon: 'local_hospital'
 };
 
 export const DIAGNOSTICOS: SummaryHeader = {
-	title: 'Otros diagnósticos',
+	title: 'internaciones.diagnosticos.TITLE',
 	matIcon: 'queue'
 };
 

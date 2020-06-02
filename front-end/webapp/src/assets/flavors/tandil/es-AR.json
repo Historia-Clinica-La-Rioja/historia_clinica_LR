@@ -7,5 +7,114 @@
 			"PACIENTES": "Adultos mayores",
 			"PERFIL": "Mi cuenta"
 		}
+	},
+
+	"internaciones": {
+
+		"anamnesis": {
+			"diagnosticos": {
+				"TITLE_PRINCIPAL": "Enfermedad",
+				"TITLE": "Enfermedades",
+				"ADD": "Agregar enfermedad",
+				"DIAGNOSIS": "Enfermedad",
+				"PRESUMPTIVE": "Presuntivo",
+				"table": {
+					"TITLE": "Enfermedades registradas",
+					"columns": {
+						"DIAGNOSIS": "Enfermedad",
+						"STATUS": "Estado"
+					}
+				}
+			}
+		},
+
+
+		"diagnosticos": {
+			"TITLE_PRINCIPAL": "Enfermedad",
+			"TITLE": "Enfermedades",
+			"ADD": "Agregar enfermedad",
+			"DIAGNOSIS": "Enfermedad",
+			"PRESUMPTIVE": "Presuntivo",
+			"table": {
+				"TITLE": "Enfermedades registradas",
+				"columns": {
+					"DIAGNOSIS": "Enfermedad",
+					"STATUS": "Estado"
+				}
+			}
+		},
+
+		"epicrisis": {
+			"diagnosticos": {
+				"TITLE": "Enfermedades",
+				"TITLE_PRINCIPAL": "Enfermedad",
+				"DIAGNOSIS": "Enfermedad",
+				"PRESUMPTIVE": "Presuntivo",
+				"table": {
+					"TITLE": "Enfermedades registradas",
+					"columns": {
+						"DIAGNOSIS": "Enfermedad",
+						"STATUS": "Estado",
+						"VERIFICATION": "Verificación"
+					}
+				}
+			}
+		},
+
+		"internados-table": {
+			"TITLE": "Búsqueda de adultos mayores"
+		},
+
+		"internacion-paciente": {
+			"TITLE": "HCE Adultos Mayores",
+
+			"remove-diagnosis-dialog": {
+				"TITLE": "Eliminar enfermedad",
+				"VERIFICATION_SELECT": "Motivo",
+				"STATUS_SELECT": "Estado clínico",
+				"CONFIRM_BUTTON": "Crear nota de evolución"
+			}
+		},
+
+		"discharge": {
+			"TITLE": "Alta Administrativa",
+			"DISCHARGE_DATE":"Fecha de egreso",
+			"DISCHARGE_TYPE":"Tipo de egreso",
+			"messages":{
+				"ERROR":"No se pudo dar el alta administrativa del adulto mayor",
+				"SUCCESS":"El alta administrativa se guardó exitosamente"
+			}
+		}
+	},
+
+	"pacientes": {
+		"home": {
+			"TITLE": "Adultos mayores",
+			"TITLE_SEARCH": "Búsqueda de adultos mayores internados",
+			"SUBTITLE": "Ingresá los siguientes datos",
+			"find_add_section": {
+				"BUTTON_ADD": "Crear perfil temporal de adulto mayor",
+				"BUTTON_SEARCH": "Buscar",
+				"NO_IDENTITY": "No acredita identidad",
+				"TITLE": "Búsqueda / Creación de HC"
+			}
+		},
+		"new": {
+			"TITLE": "Nuevo perfil de adulto mayor",
+			"SUBTITLE": "Ingresá los siguientes datos.",
+			"TITLE_TEMPORARY": "Nuevo perfil temporal de adulto mayor",
+			"messages": {
+				"ERROR": "Error al crear el perfil de adulto mayor",
+				"SUCCESS": "El perfil de adulto mayor se creó exitosamente"
+			}
+		},
+		"search": {
+			"TITLE": "Búsqueda de adultos mayores",
+			"SUBTITLE": "No se ha encontrado un adulto mayor registrado con ese tipo y número de documento.",
+			"SUBTITLE_TWO": "Complete los siguientes datos para una búsqueda avanzada.",
+			"NEW_PATIENT": "Crear nuevo perfil de adulto mayor",
+			"RENAPER_TIMEOUT": "No hubo respuesta del servicio de Renaper",
+			"ROW_TABLE": "ID Adulto mayor"
+		}
 	}
 }
