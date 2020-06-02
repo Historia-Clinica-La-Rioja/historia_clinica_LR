@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Optional;
 
+import net.pladema.internation.service.internment.ResponsibleContactService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,6 +45,9 @@ public class InternmentEpisodeControllerTest extends BaseControllerTest {
 
 	@MockBean
 	private BedExternalService bedExternalService;
+
+	@MockBean
+	private ResponsibleContactService responsibleContactService;
 
 	@Before
 	public void setup() {

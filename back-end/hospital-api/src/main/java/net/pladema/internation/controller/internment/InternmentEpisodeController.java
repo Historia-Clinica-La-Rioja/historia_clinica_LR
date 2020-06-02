@@ -14,6 +14,7 @@ import net.pladema.internation.repository.documents.entity.InternmentEpisode;
 import net.pladema.internation.repository.documents.entity.PatientDischarge;
 import net.pladema.internation.repository.masterdata.entity.InternmentEpisodeStatus;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
+import net.pladema.internation.service.internment.ResponsibleContactService;
 import net.pladema.internation.service.internment.summary.domain.InternmentSummaryBo;
 import net.pladema.sgx.exceptions.NotFoundException;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
@@ -43,15 +44,18 @@ public class InternmentEpisodeController {
 
 	private final BedExternalService bedExternalService;
 
+	private final ResponsibleContactService responsibleContactService;
+
 	public InternmentEpisodeController(InternmentEpisodeService internmentEpisodeService,
-			HealthcareProfessionalExternalService healthcareProfessionalExternalService,
-			InternmentEpisodeMapper internmentEpisodeMapper, BedExternalService bedExternalService,
-			PatientDischargeMapper patientDischargeMapper) {
+									   HealthcareProfessionalExternalService healthcareProfessionalExternalService,
+									   InternmentEpisodeMapper internmentEpisodeMapper, BedExternalService bedExternalService,
+									   PatientDischargeMapper patientDischargeMapper, ResponsibleContactService responsibleContactService) {
 		this.internmentEpisodeService = internmentEpisodeService;
 		this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
 		this.internmentEpisodeMapper = internmentEpisodeMapper;
 		this.bedExternalService = bedExternalService;
 		this.patientDischargeMapper = patientDischargeMapper;
+		this.responsibleContactService = responsibleContactService;
 	}
 
 	@InternmentValid
@@ -83,6 +87,7 @@ public class InternmentEpisodeController {
         bedExternalService.updateBedStatusOccupied(internmentEpisodeADto.getBedId());
         if (internmentEpisodeADto.getResponsibleDoctorId() != null)
         	healthcareProfessionalExternalService.addHealthcareProfessionalGroup(result.getId(), internmentEpisodeADto.getResponsibleDoctorId());
+		responsibleContactService.addResponsibleContact(internmentEpisodeADto.getResponsibleContact(), result.getId());
         LOG.debug("Output -> {}", result);
         return  ResponseEntity.ok().body(result);
     }

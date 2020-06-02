@@ -28,4 +28,6 @@ public class InternmentEpisodeADto {
 
     @SGHNotNull(message = "{internment.responsible.doctor.required}", ffs = {"medicoResponsableRequerido"})
     private Integer responsibleDoctorId;
+
+    private ResponsibleContactDto responsibleContact;
 }
