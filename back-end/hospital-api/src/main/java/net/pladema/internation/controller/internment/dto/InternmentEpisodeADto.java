@@ -3,6 +3,7 @@ package net.pladema.internation.controller.internment.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.pladema.featureflags.controller.constraints.SGHNotNull;
 
 import java.time.LocalDate;
 
@@ -25,5 +26,6 @@ public class InternmentEpisodeADto {
 
     private Integer institutionId;
 
+    @SGHNotNull(message = "{internment.responsible.doctor.required}", ffs = {"medicoResponsableRequerido"})
     private Integer responsibleDoctorId;
 }

@@ -1,18 +1,5 @@
 package net.pladema.internation.controller.internment;
 
-import javax.transaction.Transactional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import io.swagger.annotations.Api;
 import net.pladema.establishment.controller.service.BedExternalService;
 import net.pladema.internation.controller.constraints.InternmentValid;
@@ -30,6 +17,14 @@ import net.pladema.internation.service.internment.InternmentEpisodeService;
 import net.pladema.internation.service.internment.summary.domain.InternmentSummaryBo;
 import net.pladema.sgx.exceptions.NotFoundException;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import javax.transaction.Transactional;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/internments")
@@ -75,16 +70,19 @@ public class InternmentEpisodeController {
 		return ResponseEntity.ok().body(result);
 	}
 
+
     @PostMapping
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	@Transactional
     public ResponseEntity<InternmentEpisodeDto> addInternmentEpisode(
             @PathVariable(name = "institutionId") Integer institutionId,
-            @RequestBody InternmentEpisodeADto internmentEpisodeADto) {
+            @Valid @RequestBody InternmentEpisodeADto internmentEpisodeADto) {
         InternmentEpisode internmentEpisodeToSave = internmentEpisodeMapper.toInternmentEpisode(internmentEpisodeADto);
         internmentEpisodeToSave = internmentEpisodeService.addInternmentEpisode(internmentEpisodeToSave, institutionId);
         InternmentEpisodeDto result = internmentEpisodeMapper.toInternmentEpisodeDto(internmentEpisodeToSave);
         bedExternalService.updateBedStatusOccupied(internmentEpisodeADto.getBedId());
-        healthcareProfessionalExternalService.addHealthcareProfessionalGroup(result.getId(), internmentEpisodeADto.getResponsibleDoctorId());
+        if (internmentEpisodeADto.getResponsibleDoctorId() != null)
+        	healthcareProfessionalExternalService.addHealthcareProfessionalGroup(result.getId(), internmentEpisodeADto.getResponsibleDoctorId());
         LOG.debug("Output -> {}", result);
         return  ResponseEntity.ok().body(result);
     }
