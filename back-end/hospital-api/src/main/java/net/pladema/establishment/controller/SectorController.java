@@ -39,6 +39,7 @@ public class SectorController  {
 	}
 
 	@GetMapping()
+	//@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
 	public ResponseEntity<List<Sector>> getAll(){
 		List<Sector> sectors = sectorRepository.findAll();
 		LOG.debug("Get all Sectors => {}", sectors);
@@ -46,6 +47,7 @@ public class SectorController  {
 	}
 	
 	@GetMapping("/{sectorId}/specialty/{specialtyId}/rooms")
+	//@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
 	public ResponseEntity<List<RoomDto>> getAllRoomsBySectorAndSpecialty(@PathVariable(name = "sectorId") Integer sectorId,
 			@PathVariable(name = "specialtyId") Integer specialtyId) {
 		List<Room> rooms = roomRepository.getAllBySector(sectorId, specialtyId);

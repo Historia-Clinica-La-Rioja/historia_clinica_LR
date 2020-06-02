@@ -13,11 +13,11 @@
 					<div class="form-row">
 						<mat-form-field appearance="outline">
 							<mat-select id="specialtyId"
-										name="specialtyId"
-										formControlName="specialtyId"
-										placeholder="{{'pacientes.form.SELECT' | translate}}">
+							            name="specialtyId"
+							            formControlName="specialtyId"
+							            placeholder="{{'pacientes.form.SELECT' | translate}}">
 								<mat-option *ngFor="let specialty of specialties"
-											[value]="specialty.id">
+								            [value]="specialty.id">
 									{{specialty.name}}
 								</mat-option>
 							</mat-select>
@@ -33,12 +33,12 @@
 					<div class="form-row">
 						<mat-form-field appearance="outline">
 							<mat-select id="sectorId"
-										name="sectorId"
-										formControlName="sectorId"
-										placeholder="{{'pacientes.form.SELECT' | translate}}"
-										(selectionChange)="setServices()">
+							            name="sectorId"
+							            formControlName="sectorId"
+							            placeholder="{{'pacientes.form.SELECT' | translate}}"
+							            (selectionChange)="setServices()">
 								<mat-option *ngFor="let sector of sectors"
-											[value]="sector.id">
+								            [value]="sector.id">
 									{{sector.description}}
 								</mat-option>
 							</mat-select>
@@ -51,12 +51,12 @@
 					<div class="form-row">
 						<mat-form-field appearance="outline">
 							<mat-select id="serviceId"
-										name="serviceId"
-										formControlName="serviceId"
-										placeholder="{{'pacientes.form.SELECT' | translate}}"
-										(selectionChange)="setRooms()">
+							            name="serviceId"
+							            formControlName="serviceId"
+							            placeholder="{{'pacientes.form.SELECT' | translate}}"
+							            (selectionChange)="setRooms()">
 								<mat-option *ngFor="let service of services"
-											[value]="service.id">
+								            [value]="service.id">
 									{{service.name}}
 								</mat-option>
 							</mat-select>
@@ -69,12 +69,12 @@
 					<div class="form-row">
 						<mat-form-field appearance="outline">
 							<mat-select id="roomId"
-										name="roomId"
-										formControlName="roomId"
-										placeholder="{{'pacientes.form.SELECT' | translate}}"
-										(selectionChange)="setBeds()">
+							            name="roomId"
+							            formControlName="roomId"
+							            placeholder="{{'pacientes.form.SELECT' | translate}}"
+							            (selectionChange)="setBeds()">
 								<mat-option *ngFor="let room of rooms"
-											[value]="room.id">
+								            [value]="room.id">
 									{{room.roomNumber}}
 								</mat-option>
 							</mat-select>
@@ -87,11 +87,11 @@
 					<div class="form-row">
 						<mat-form-field appearance="outline">
 							<mat-select id="bedId"
-										name="bedId"
-										formControlName="bedId"
-										placeholder="{{'pacientes.form.SELECT' | translate}}">
+							            name="bedId"
+							            formControlName="bedId"
+							            placeholder="{{'pacientes.form.SELECT' | translate}}">
 								<mat-option *ngFor="let bed of beds"
-											[value]="bed.id">
+								            [value]="bed.id">
 									{{bed.bedNumber}}
 								</mat-option>
 							</mat-select>
@@ -107,11 +107,11 @@
 					<div class="form-row">
 						<mat-form-field appearance="outline">
 							<mat-select id="doctorId"
-										name="doctorId"
-										formControlName="doctorId"
-										placeholder="{{'pacientes.form.SELECT' | translate}}">
+							            name="doctorId"
+							            formControlName="doctorId"
+							            placeholder="{{'pacientes.form.SELECT' | translate}}">
 								<mat-option *ngFor="let doctor of doctors"
-											[value]="doctor.id">
+								            [value]="doctor.id">
 									{{ doctor.person.firstName + ' ' + doctor.person.lastName }}
 								</mat-option>
 							</mat-select>
@@ -119,6 +119,44 @@
 						</mat-form-field>
 					</div>
 				</section>
+
+				<section>
+					<h2 [translate]="'internaciones.new-internment.SECTION_CONTACT'"></h2>
+					<span [translate]="'Nombre y apellido'"></span>
+					<div class="form-row">
+						<mat-form-field appearance="outline">
+							<input id="contactName"
+							       name="contactName"
+							       formControlName="contactName"
+							       placeholder="Nombre y apellido"
+							       maxlength="40"
+							       matInput>
+						</mat-form-field>
+					</div>
+					<span [translate]="'Teléfono'"></span>
+					<div class="form-row">
+						<mat-form-field appearance="outline">
+							<input id="contactPhoneNumber"
+							       name="contactPhoneNumber"
+							       formControlName="contactPhoneNumber"
+							       placeholder="Teléfono"
+							       maxlength="20"
+							       matInput>
+						</mat-form-field>
+					</div>
+					<span [translate]="'Parentesco'"></span>
+					<div class="form-row">
+						<mat-form-field appearance="outline">
+							<input id="contactRelationship"
+							       name="contactRelationship"
+							       formControlName="contactRelationship"
+							       placeholder="Parentesco"
+							       maxlength="20"
+							       matInput>
+						</mat-form-field>
+					</div>
+				</section>
+
 				<section>
 					<button *hasRole="['ADMINISTRATIVO']" mat-raised-button color="primary" type="submit">
 						<span [translate]="'buttons.CONTINUE'"></span>

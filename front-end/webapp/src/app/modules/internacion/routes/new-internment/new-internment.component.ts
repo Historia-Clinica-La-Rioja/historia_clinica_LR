@@ -92,6 +92,9 @@ export class NewInternmentComponent implements OnInit {
 			roomId: [{value: null, disabled: true}, [Validators.required]],
 			bedId: [{value: null, disabled: true}, [Validators.required]],
 			doctorId: [null, [Validators.required]],
+			contactName:[null],
+			contactPhoneNumber:[null],
+			contactRelationship:[null],
 		});
 
 		this.internacionMasterDataService.getClinicalSpecialty().subscribe(data => {
@@ -194,7 +197,12 @@ export class NewInternmentComponent implements OnInit {
 			patientId: this.patientId,
 			bedId: this.form.controls.bedId.value,
 			clinicalSpecialtyId: this.form.controls.specialtyId.value,
-			responsibleDoctorId: this.form.controls.doctorId.value
+			responsibleDoctorId: this.form.controls.doctorId.value,
+			responsibleContact: {
+				fullName: this.form.controls.contactName.value,
+				phoneNumber: this.form.controls.contactPhoneNumber.value,
+				relationship: this.form.controls.contactRelationship.value,
+			}
 		}
 	}
 
