@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Service
 @ConditionalOnProperty(
-		value="we.renaper.enabled",
+		value="ws.renaper.enabled",
 		havingValue = "false",
 		matchIfMissing = true)
 public class RenaperServiceMock implements RenaperService{
