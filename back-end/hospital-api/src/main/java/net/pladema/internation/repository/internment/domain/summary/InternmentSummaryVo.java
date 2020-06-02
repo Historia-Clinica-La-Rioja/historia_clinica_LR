@@ -50,7 +50,8 @@ public class InternmentSummaryVo {
         this.clinicalSpecialtyId = clinicalSpecialtyId;
         this.specialty = specialty;
         this.entryDate = entryDate;
-        this.doctor = new ResponsibleDoctorVo(healthcareProfessionalId, firstName, lastName, licenseNumber);
+        if (healthcareProfessionalId != null)
+            this.doctor = new ResponsibleDoctorVo(healthcareProfessionalId, firstName, lastName, licenseNumber);
     }
 
 }

@@ -20,18 +20,22 @@ export class MapperService {
 	}
 
 	private static _toInternmentEpisodeSummary(internmentSummary: InternmentSummaryDto): InternmentEpisodeSummary {
-		return {
+		let internmentEpisodeSummary = {
 			bedNumber: internmentSummary.bed.bedNumber,
 			roomNumber: internmentSummary.bed.room.roomNumber,
 			specialtyName: internmentSummary.specialty.name,
-			doctor: {
+			totalInternmentDays: internmentSummary.totalInternmentDays,
+			doctor : null,
+			admissionDatetime: momentParseDate(String(internmentSummary.entryDate)).format(DateFormat.VIEW_DATE)
+		};
+		if (internmentSummary.doctor) {
+			internmentEpisodeSummary.doctor = {
 				firstName: internmentSummary.doctor.firstName,
 				lastName: internmentSummary.doctor.lastName,
 				license: internmentSummary.doctor.licence
-			},
-			totalInternmentDays: internmentSummary.totalInternmentDays,
-			admissionDatetime: momentParseDate(String(internmentSummary.entryDate)).format(DateFormat.VIEW_DATE)
-		};
+			};
+		}
+		return internmentEpisodeSummary;
 	}
 
 	private static _toPatientBasicData<T extends BasicPatientDto>(patient: T): PatientBasicData {

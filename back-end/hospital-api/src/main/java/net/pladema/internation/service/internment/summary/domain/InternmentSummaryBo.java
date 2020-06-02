@@ -49,7 +49,8 @@ public class InternmentSummaryBo {
         this.specialty = internmentSummaryVo.getSpecialty();
         this.entryDate = internmentSummaryVo.getEntryDate();
         this.totalInternmentDays = totalInternmentDays();
-        this.doctor = new ResponsibleDoctorBo(internmentSummaryVo.getDoctor());
+        if (internmentSummaryVo.getDoctor() != null)
+            this.doctor = new ResponsibleDoctorBo(internmentSummaryVo.getDoctor());
     }
 
     private int totalInternmentDays(){

@@ -13,7 +13,7 @@
 
 	<mat-divider inset></mat-divider>
 
-	<mat-list-item id="doctor">
+	<mat-list-item id="doctor" *ngIf="internmentEpisode?.doctor">
 		<mat-icon color="primary" mat-list-icon>person_outline</mat-icon>
 		<span class="mat-body-2">
 			{{internmentEpisode?.doctor.firstName}} {{internmentEpisode?.doctor.lastName}}

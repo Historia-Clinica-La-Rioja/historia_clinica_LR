@@ -23,6 +23,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { ConfirmDialogComponent } from "@core/dialogs/confirm-dialog/confirm-dialog.component";
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from "@core/services/context.service";
+import { FeatureFlagService } from "@core/services/feature-flag.service";
 
 const ROUTE_INTERNMENT = 'internaciones/internacion/';
 
@@ -61,7 +62,8 @@ export class NewInternmentComponent implements OnInit {
 				private readonly internmentEpisodeService: InternmentEpisodeService,
 				public dialog: MatDialog,
 				private readonly snackBarService: SnackBarService,
-				private readonly contextService: ContextService) {
+				private readonly contextService: ContextService,
+				private readonly featureFlagService: FeatureFlagService) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 	}
 
@@ -100,6 +102,13 @@ export class NewInternmentComponent implements OnInit {
 
 		this.healthcareProfessionalService.getAllDoctors().subscribe(data => {
 			this.doctors = data;
+		});
+
+		this.featureFlagService.isOn('medicoResponsableRequerido').subscribe(isOn => {
+			if (!isOn) {
+				this.form.controls.doctorId.clearValidators();
+				this.form.controls.doctorId.reset();
+			}				
 		});
 
 	}

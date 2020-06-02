@@ -26,8 +26,11 @@ const FEATURE_FLAGS = [
 	{
 		name: 'habilitarAltaSinEpicrisis',
 		flavorMatch: [FLAVOR_TANDIL]
-	}
-];
+	},
+	{
+		name: 'medicoResponsableRequerido',
+		flavorMatch: [FLAVOR_HOSPITALES]
+	}];
 
 @Injectable({
 	providedIn: 'root'
