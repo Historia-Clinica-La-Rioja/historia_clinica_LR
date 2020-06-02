@@ -26,6 +26,7 @@ public class AdditionalDoctorBo {
     }
 
     public AdditionalDoctorBo (AAdditionalDoctorDto aAdditionalDoctorDto) { // From FE to BE
+    	this.id = aAdditionalDoctorDto.getId();
         this.fullName = aAdditionalDoctorDto.getFullName();
         this.phoneNumber = aAdditionalDoctorDto.getPhoneNumber();
         this.generalPractitioner = aAdditionalDoctorDto.isGeneralPractitioner();

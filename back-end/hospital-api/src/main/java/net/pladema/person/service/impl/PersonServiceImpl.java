@@ -1,18 +1,20 @@
 package net.pladema.person.service.impl;
 
+import java.util.List;
+import java.util.Optional;
+
+import javax.persistence.EntityNotFoundException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
 import net.pladema.person.repository.PersonExtendedRepository;
 import net.pladema.person.repository.PersonRepository;
 import net.pladema.person.repository.domain.PersonalInformation;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;
 import net.pladema.person.service.PersonService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
-import javax.persistence.EntityNotFoundException;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PersonServiceImpl implements PersonService {
@@ -47,6 +49,15 @@ public class PersonServiceImpl implements PersonService {
         return result;
     }
 
+	@Override
+	public PersonExtended getPersonExtended(Integer personId) {
+		LOG.debug("Going to get PersonExtended -> {}", personId);
+		PersonExtended personExtFound = personExtendedRepository.findById(personId)
+				.orElseThrow(() -> new EntityNotFoundException(String.valueOf(personId)));
+		   LOG.debug("PersonExtended found-> {}", personExtFound);
+		return personExtFound;
+	}
+    
     @Override
     public PersonExtended addPersonExtended(PersonExtended person) {
         LOG.debug("Going to save -> {}", person);
@@ -71,4 +82,5 @@ public class PersonServiceImpl implements PersonService {
         LOG.debug("Output -> {}", result);
         return result;
     }
+
 }

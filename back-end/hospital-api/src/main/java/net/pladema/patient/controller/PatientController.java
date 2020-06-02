@@ -1,11 +1,39 @@
 package net.pladema.patient.controller;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
+
+import javax.persistence.EntityNotFoundException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.swagger.annotations.Api;
 import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.address.controller.service.AddressExternalService;
 import net.pladema.patient.controller.constraints.FilterValid;
-import net.pladema.patient.controller.dto.*;
+import net.pladema.patient.controller.dto.APatientDto;
+import net.pladema.patient.controller.dto.BasicPatientDto;
+import net.pladema.patient.controller.dto.CompletePatientDto;
+import net.pladema.patient.controller.dto.PatientSearchDto;
+import net.pladema.patient.controller.dto.PatientSearchFilter;
 import net.pladema.patient.controller.mapper.PatientMapper;
 import net.pladema.patient.repository.PatientTypeRepository;
 import net.pladema.patient.repository.entity.Patient;
@@ -18,18 +46,8 @@ import net.pladema.person.controller.dto.BMPersonDto;
 import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.controller.mapper.PersonMapper;
 import net.pladema.person.controller.service.PersonExternalService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import javax.persistence.EntityNotFoundException;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
+import net.pladema.person.repository.entity.PersonExtended;
+import net.pladema.sgx.exceptions.NotFoundException;
 
 @RestController
 @RequestMapping("/patient")
@@ -83,30 +101,38 @@ public class PatientController {
 
 		return ResponseEntity.ok(patientMapper.fromListPatientSearch(resultado));
 	}
+	
 
 	@PostMapping
 	@Transactional
 	public ResponseEntity<Integer> addPatient(@RequestBody APatientDto patientDto) throws URISyntaxException {
 		LOG.debug("Input data -> APatientDto {} ", patientDto);
 		BMPersonDto createdPerson = personExternalService.addPerson(patientDto);
-
-		AddressDto addressToAdd = patientMapper.updatePatientAddress(patientDto);
-		LOG.debug("Going to add address -> {}", addressToAdd);
-		addressToAdd = addressExternalService.addAddress(addressToAdd);
+		AddressDto addressToAdd = persistPatientAddress(patientDto, Optional.empty());
 		personExternalService.addPersonExtended(patientDto, createdPerson.getId(), addressToAdd.getId());
-		Patient patientToAdd = patientMapper.fromPatientDto(patientDto);
-		patientToAdd.setPersonId(createdPerson.getId());
-		Patient createdPatient = patientService.addPatient(patientToAdd);
-		DoctorsBo doctorsBo = new DoctorsBo(patientDto.getGeneralPractitioner(),patientDto.getPamiDoctor());
-		additionalDoctorService.addAdditionalsDoctors(doctorsBo,createdPatient.getId());
+		Patient createdPatient = persistPatientData(patientDto, createdPerson, patient->{});
 		if (createdPatient.isValidated()) {
 			patientService.federatePatient(createdPatient, personMapper.fromPersonDto(createdPerson));
 		}
-		LOG.debug("Output -> {}", createdPatient.getId());
 		return ResponseEntity.created(new URI("")).body(createdPatient.getId());
 	}
 
+	
 
+	@PutMapping(value = "/{patientId}")
+	@Transactional
+	public ResponseEntity<Integer> updatePatient(@PathVariable(name = "patientId") Integer patientId,
+			@RequestBody APatientDto patientDto) throws URISyntaxException {
+		LOG.debug("Input data -> APatientDto {} ", patientDto);
+		Patient patient = patientService.getPatient(patientId).orElseThrow(()->new NotFoundException("patient-not-found", "Patient not found"));
+		BMPersonDto createdPerson = personExternalService.updatePerson(patientDto, patient.getPersonId());
+		PersonExtended personExtendedUpdated = personExternalService.updatePersonExtended(patientDto,
+				createdPerson.getId());
+		persistPatientAddress(patientDto, Optional.of(personExtendedUpdated.getAddressId()));
+		Patient createdPatient = persistPatientData(patientDto, createdPerson, (Patient pat) -> pat.setId(patientId));
+		return ResponseEntity.created(new URI("")).body(createdPatient.getId());
+	}
+	
 	@GetMapping(value = "/minimalsearch")
 	public ResponseEntity<List<Integer>> getPatientMinimal(
 			@RequestParam(value = "identificationTypeId", required = true) Short identificationTypeId,
@@ -143,5 +169,23 @@ public class PatientController {
 		CompletePatientDto result = new CompletePatientDto(patient, patientType, personData);
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
+	}
+	
+	private AddressDto persistPatientAddress(APatientDto patientDto, Optional<Integer> idAdress) {
+		AddressDto addressToAdd = patientMapper.updatePatientAddress(patientDto);
+		LOG.debug("Going to add address -> {}", addressToAdd);
+		idAdress.ifPresent(id->addressToAdd.setId(id));
+		return addressExternalService.addAddress(addressToAdd);
+	}
+
+	private Patient persistPatientData(APatientDto patientDto, BMPersonDto createdPerson, Consumer<Patient> addIds) {
+		Patient patientToAdd = patientMapper.fromPatientDto(patientDto);
+		patientToAdd.setPersonId(createdPerson.getId());
+		addIds.accept(patientToAdd);
+		Patient createdPatient = patientService.addPatient(patientToAdd);
+		DoctorsBo doctorsBo = new DoctorsBo(patientDto.getGeneralPractitioner(),patientDto.getPamiDoctor());
+		additionalDoctorService.addAdditionalsDoctors(doctorsBo,createdPatient.getId());
+		LOG.debug(OUTPUT, createdPatient.getId());
+		return createdPatient;
 	}
 }

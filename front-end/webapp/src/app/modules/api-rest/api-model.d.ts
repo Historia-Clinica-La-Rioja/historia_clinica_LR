@@ -4,6 +4,7 @@
 export interface AAdditionalDoctorDto {
     fullName: string;
     generalPractitioner: boolean;
+    id?: number;
     phoneNumber: string;
 }
 

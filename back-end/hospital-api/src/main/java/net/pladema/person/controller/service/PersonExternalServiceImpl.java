@@ -1,5 +1,11 @@
 package net.pladema.person.controller.service;
 
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
 import net.pladema.patient.controller.dto.APatientDto;
 import net.pladema.person.controller.dto.BMPersonDto;
 import net.pladema.person.controller.dto.BasicDataPersonDto;
@@ -9,73 +15,95 @@ import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;
 import net.pladema.person.service.PersonMasterDataService;
 import net.pladema.person.service.PersonService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class PersonExternalServiceImpl implements PersonExternalService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PersonExternalServiceImpl.class);
+	private static final String ONE_INPUT_PARAMETER = "Input parameters -> {}";
 
-    public static final String OUTPUT = "Output -> {}";
+	private static final Logger LOG = LoggerFactory.getLogger(PersonExternalServiceImpl.class);
 
-    private final PersonService personService;
+	public static final String OUTPUT = "Output -> {}";
 
-    private final PersonMasterDataService personMasterDataService;
+	private final PersonService personService;
 
-    private final PersonMapper personMapper;
+	private final PersonMasterDataService personMasterDataService;
 
-    public PersonExternalServiceImpl(PersonService personService, PersonMasterDataService personMasterDataService,
-                                     PersonMapper personMapper){
-        super();
-        this.personService = personService;
-        this.personMasterDataService = personMasterDataService;
-        this.personMapper = personMapper;
-        LOG.debug("{}", "created service");
-    }
+	private final PersonMapper personMapper;
 
-    @Override
-    public BMPersonDto addPerson(APatientDto patient) {
-        LOG.debug("Input parameters -> {}", patient);
-        Person newPerson = personMapper.fromAPatientDto(patient);
-        LOG.debug("Mapped result fromAPatientDto -> {}", newPerson);
-        newPerson = personService.addPerson(newPerson);
-        BMPersonDto result = personMapper.fromPerson(newPerson);
-        LOG.debug("Mapped result fromPerson -> {}", result);
-        LOG.debug(OUTPUT, result);
-        return result;
-    }
+	public PersonExternalServiceImpl(PersonService personService, PersonMasterDataService personMasterDataService,
+			PersonMapper personMapper) {
+		super();
+		this.personService = personService;
+		this.personMasterDataService = personMasterDataService;
+		this.personMapper = personMapper;
+		LOG.debug("{}", "created service");
+	}
 
+	@Override
+	public BMPersonDto addPerson(APatientDto patient) {
+		LOG.debug(ONE_INPUT_PARAMETER, patient);
+		Person newPerson = personMapper.fromAPatientDto(patient);
+		return persistPerson(newPerson);
+	}
 
-    @Override
-    public void addPersonExtended(APatientDto patient, Integer personId, Integer addressId) {
-        LOG.debug("Input parameters -> {}, {}, {}", patient, personId, addressId);
-        PersonExtended personExtendedToAdd = personMapper.updatePersonExtendedPatient(patient, addressId);
-        LOG.debug("Mapped result updatePersonExtendedPatient -> {}", personExtendedToAdd);
-        personExtendedToAdd.setId(personId);
-        personExtendedToAdd.setAddressId(addressId);
-        LOG.debug("Going to add person extended -> {}", personExtendedToAdd);
-        PersonExtended personExtendedSaved = personService.addPersonExtended(personExtendedToAdd);
-        LOG.debug("PersonExtended added -> {}", personExtendedSaved);
-    }
+	@Override
+	public void addPersonExtended(APatientDto patient, Integer personId, Integer addressId) {
+		LOG.debug("Input parameters -> {}, {}, {}", patient, personId, addressId);
+		PersonExtended personExtendedToAdd = personMapper.updatePersonExtendedPatient(patient, addressId);
+		LOG.debug("Mapped result updatePersonExtendedPatient -> {}", personExtendedToAdd);
+		personExtendedToAdd.setId(personId);
+		personExtendedToAdd.setAddressId(addressId);
+		LOG.debug("Going to add person extended -> {}", personExtendedToAdd);
+		PersonExtended personExtendedSaved = personService.addPersonExtended(personExtendedToAdd);
+		LOG.debug("PersonExtended added -> {}", personExtendedSaved);
+	}
 
-    @Override
-    public List<Integer> getPersonByDniAndGender(Short identificationTypeId, String identificationNumber, Short genderId) {
-        List<Integer> result = personService.getPersonByDniAndGender(identificationTypeId, identificationNumber, genderId);
-        LOG.debug(OUTPUT, result);
-        return result;
-    }
+	@Override
+	public PersonExtended updatePersonExtended(APatientDto patient, Integer personId) {
+		LOG.debug("Input parameters -> {}, {}", patient, personId);
+		PersonExtended personExtendedToUpdate = personService.getPersonExtended(personId);
+		personExtendedToUpdate = personMapper.updatePersonExtendedPatient(personExtendedToUpdate, patient);
+		LOG.debug("Going to add person extended -> {}", personExtendedToUpdate);
+		PersonExtended personExtendedUpdated = personService.addPersonExtended(personExtendedToUpdate);
+		LOG.debug("PersonExtended added -> {}", personExtendedUpdated);
+		return personExtendedUpdated;
+	}
+	
+	@Override
+	public List<Integer> getPersonByDniAndGender(Short identificationTypeId, String identificationNumber,
+			Short genderId) {
+		List<Integer> result = personService.getPersonByDniAndGender(identificationTypeId, identificationNumber,
+				genderId);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
 
-    @Override
-    public BasicDataPersonDto getBasicDataPerson(Integer personId) {
-        LOG.debug("Input parameters -> {}", personId);
-        Person person = personService.getPerson(personId);
-        Gender gender = personMasterDataService.getGender(person.getGenderId()).orElse(new Gender());
-        BasicDataPersonDto result = personMapper.basicDatafromPerson(person, gender);
-        LOG.debug(OUTPUT, result);
-        return result;
-    }
+	@Override
+	public BasicDataPersonDto getBasicDataPerson(Integer personId) {
+		LOG.debug(ONE_INPUT_PARAMETER, personId);
+		Person person = personService.getPerson(personId);
+		Gender gender = personMasterDataService.getGender(person.getGenderId()).orElse(new Gender());
+		BasicDataPersonDto result = personMapper.basicDatafromPerson(person, gender);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public BMPersonDto updatePerson(APatientDto patient, Integer personId) {
+		LOG.debug(ONE_INPUT_PARAMETER, patient);
+		Person personToUpdate = personMapper.fromAPatientDto(patient);
+		personToUpdate.setId(personId);
+		return persistPerson(personToUpdate);
+	}
+
+	private BMPersonDto persistPerson(Person personToUpdate) {
+		LOG.debug("Mapped result fromAPatientDto -> {}", personToUpdate);
+		personToUpdate = personService.addPerson(personToUpdate);
+		BMPersonDto result = personMapper.fromPerson(personToUpdate);
+		LOG.debug("Mapped result fromPerson -> {}", result);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
 }

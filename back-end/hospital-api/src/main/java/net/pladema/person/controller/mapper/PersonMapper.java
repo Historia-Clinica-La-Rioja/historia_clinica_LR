@@ -2,6 +2,7 @@ package net.pladema.person.controller.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 
 import net.pladema.address.controller.dto.AddressDto;
@@ -28,6 +29,8 @@ public interface PersonMapper {
     public PersonExtended updatePersonExtended(APersonDto person, Integer addressId);
 
     public PersonExtended updatePersonExtendedPatient(APatientDto patient, Integer addresId);
+    
+    public PersonExtended updatePersonExtendedPatient(@MappingTarget PersonExtended personExtendedToUpdate, APatientDto patient);
 
     public AddressDto updatePersonAddress(APersonDto person);
 
