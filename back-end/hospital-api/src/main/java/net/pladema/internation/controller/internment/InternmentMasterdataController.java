@@ -66,8 +66,6 @@ public class InternmentMasterdataController {
 
 
     @GetMapping(value = "/health/verification")
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO') || "
-    		+ "hasPermission(#institutionId, 'PROFESIONAL_DE_SALUD')")
     public ResponseEntity<Collection<InternmentMasterDataProjection>> getHealthVerification(){
         LOG.debug("{}", "All health condition verification status");
         return ResponseEntity.ok().body(internmentMasterDataService.findAll(ConditionVerificationStatus.class));
@@ -130,7 +128,6 @@ public class InternmentMasterdataController {
     }
     
     @GetMapping(value = "/clinical/specialty")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
     public ResponseEntity<Collection<InternmentMasterDataProjection>> getClinicalSpecialty(){
         LOG.debug("{}", "All internment clinical specialty");
         return ResponseEntity.ok().body(internmentMasterDataService.findAll(ClinicalSpecialty.class));
