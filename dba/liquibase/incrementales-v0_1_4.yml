@@ -344,3 +344,36 @@
         referencedColumnNames: id
         referencedTableName: patient
         validate: true                  
+            
+- changeSet:
+    id: responsible_contact-createTable
+    author: lbergottini
+    changes:
+        - createTable:
+            tableName: responsible_contact
+            columns:
+            - column:
+                name: internment_episode_id
+                type: integer
+                constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: PK_responsible_contact
+            - column:
+                name: full_name
+                type: varchar(80) 
+            - column:
+                name: phone_number
+                type: varchar(20) 
+            - column:
+                name: relationship
+                type: varchar(100)
+        - addForeignKeyConstraint:
+            constraintName: FK_responsible_contact_id
+            baseTableName: responsible_contact
+            baseColumnNames: internment_episode_id
+            referencedTableName: internment_episode 
+            referencedColumnNames: id
+            validate: true
+            onDelete: NO ACTION
+            onUpdate: NO ACTION                  
