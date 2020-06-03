@@ -22,4 +22,9 @@ export class PersonService {
 		return this.http.get<PersonalInformationDto>(url);
 	}
 
+	getCompletePerson<BMPersonDto>(personId): Observable<BMPersonDto> {
+		let url = `${environment.apiBase}/person/${personId}`;
+		return this.http.get<BMPersonDto>(url);
+	}
+
 }

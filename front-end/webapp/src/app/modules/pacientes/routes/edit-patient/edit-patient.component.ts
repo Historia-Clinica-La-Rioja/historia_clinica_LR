@@ -3,7 +3,7 @@ import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms'
 import { Router, ActivatedRoute } from '@angular/router';
 import { Moment } from 'moment';
 import * as moment from 'moment';
-import { APatientDto, BMPatientDto, GenderDto, IdentificationTypeDto, CompletePatientDto, PersonalInformationDto } from '@api-rest/api-model';
+import { APatientDto, BMPatientDto, GenderDto, IdentificationTypeDto, CompletePatientDto, BMPersonDto } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID } from "@core/utils/form.utils";
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
@@ -60,32 +60,46 @@ export class EditPatientComponent implements OnInit {
 
 				this.patientService.getPatientCompleteData<CompletePatientDto>(this.patientId)
 					.subscribe(completeData => {
-						this.personService.getPersonalInformation<PersonalInformationDto>(completeData.person.id)
+						this.personService.getCompletePerson<BMPersonDto>(completeData.person.id)
 							.subscribe(personInformationData => {
-								this.personalInformation = this.mapperService.toPersonalInformationData(completeData, personInformationData);
-
-								this.form.setControl('identificationTypeId', new FormControl(Number(this.personalInformation.identificationType.id)));
+								this.form.setControl('identificationTypeId', new FormControl(Number(personInformationData.identificationTypeId)));
+								this.form.setControl('identificationNumber', new FormControl(Number(personInformationData.identificationNumber)));
+								//person
 								this.form.setControl('firstName', new FormControl(completeData.person.firstName));
+								this.form.setControl('middleNames', new FormControl(personInformationData.middleNames));
 								this.form.setControl('lastName', new FormControl(completeData.person.lastName));
+								this.form.setControl('otherLastNames', new FormControl(personInformationData.otherLastNames));
+								this.form.setControl('mothersLastName', new FormControl(personInformationData.mothersLastName));
 								this.form.setControl('genderId', new FormControl(Number(completeData.person.gender.id)));
-								this.form.setControl('identificationNumber', new FormControl(Number(this.personalInformation.identificationNumber)));
-								this.form.setControl('birthDate', new FormControl(new Date(this.personalInformation.birthDate)));
-								this.form.setControl('cuil', new FormControl(this.personalInformation.cuil));
-								this.form.setControl('email', new FormControl(this.personalInformation.email));
-								this.form.setControl('phoneNumber', new FormControl(this.personalInformation.phoneNumber));
-
-								this.form.setControl('medicalCoverageName', new FormControl(this.personalInformation.medicalCoverageName));
-								this.form.setControl('medicalCoverageAffiliateNumber', new FormControl(this.personalInformation.medicalCoverageAffiliateNumber));
+								this.form.setControl('genderSelfDeterminationId', new FormControl(Number(personInformationData.genderSelfDeterminationId)));
+								this.form.setControl('nameSelfDetermination', new FormControl(personInformationData.nameSelfDetermination));
+								this.form.setControl('birthDate', new FormControl(new Date(personInformationData.birthDate)));
+								this.form.setControl('cuil', new FormControl(personInformationData.cuil));
+								this.form.setControl('email', new FormControl(personInformationData.email));
+								this.form.setControl('phoneNumber', new FormControl(personInformationData.phoneNumber));
+								this.form.setControl('religion', new FormControl(personInformationData.religion));
+								this.form.setControl('ethnic', new FormControl(personInformationData.ethnic));
+								//medical
+								this.form.setControl('medicalCoverageName', new FormControl(completeData.medicalCoverageName));
+								this.form.setControl('medicalCoverageAffiliateNumber', new FormControl(completeData.medicalCoverageAffiliateNumber));
+								//address
 								this.form.setControl('addressCountryId', new FormControl(DEFAULT_COUNTRY_ID));
-								//this.form.setControl('addressProvinceId', new FormControl(this.personalInformation.address.province.id));
-								//this.form.setControl('addressDepartmentId', new FormControl(Number("1")));
-								this.form.setControl('addressCityId', new FormControl(this.personalInformation.address.city.id));
-								this.form.setControl('addressStreet', new FormControl(this.personalInformation.address.street));
-								this.form.setControl('addressNumber', new FormControl(this.personalInformation.address.number));
-								this.form.setControl('addressFloor', new FormControl(this.personalInformation.address.floor));
-								this.form.setControl('addressApartment', new FormControl(this.personalInformation.address.apartment));
-								//this.form.setControl('addressQuarter', new FormControl(this.personalInformation.address.));
-								//this.form.setControl('addressPostcode', new FormControl(this.personalInformation.address.));
+								if (personInformationData.province !== undefined) {
+									this.form.setControl('addressProvinceId', new FormControl(personInformationData.province.id));
+									this.setDepartments();
+								}
+								if (personInformationData.department !== undefined) {
+									this.form.setControl('addressDepartmentId', new FormControl(personInformationData.department.id));
+									this.setCities();
+								}
+								this.form.setControl('addressCityId', new FormControl(personInformationData.cityId));
+								this.form.setControl('addressStreet', new FormControl(personInformationData.street));
+								this.form.setControl('addressNumber', new FormControl(personInformationData.number));
+								this.form.setControl('addressFloor', new FormControl(personInformationData.floor));
+								this.form.setControl('addressApartment', new FormControl(personInformationData.apartment));
+								this.form.setControl('addressQuarter', new FormControl(personInformationData.quarter));
+								this.form.setControl('adressPostcode', new FormControl(personInformationData.postcode));
+
 							});
 						this.patientType = completeData.patientType.id;
 					});
@@ -144,9 +158,16 @@ export class EditPatientComponent implements OnInit {
 			addressProvinceId: [],
 			addressCountryId: [],
 			addressDepartmentId: [],
+
 			//Patient
 			medicalCoverageName: [null, Validators.maxLength(VALIDATIONS.MAX_LENGTH.medicalCoverageName)],
-			medicalCoverageAffiliateNumber: [null, Validators.maxLength(VALIDATIONS.MAX_LENGTH.medicalCoverageAffiliateNumber)]
+			medicalCoverageAffiliateNumber: [null, Validators.maxLength(VALIDATIONS.MAX_LENGTH.medicalCoverageAffiliateNumber)],
+
+			//doctors
+			generalPractitioner: [],
+			generalPractitionerPhoneNumber: [],
+			pamiDoctor: [],
+			pamiDoctorPhoneNumber: []
 		});
 	}
 
@@ -166,7 +187,7 @@ export class EditPatientComponent implements OnInit {
 
 	private mapToPersonRequest(): APatientDto {
 		return {
-			birthDate: this.form.controls.birthDate.value.toDate(),
+			birthDate: this.form.controls.birthDate.value,
 			firstName: this.form.controls.firstName.value,
 			genderId: this.form.controls.genderId.value,
 			identificationTypeId: this.form.controls.identificationTypeId.value,
@@ -197,15 +218,15 @@ export class EditPatientComponent implements OnInit {
 			identityVerificationStatusId: null,
 			medicalCoverageName: this.form.controls.medicalCoverageName.value,
 			medicalCoverageAffiliateNumber: this.form.controls.medicalCoverageAffiliateNumber.value,
-			//ToDo doctors
+			//Doctors
 			generalPractitioner: {
-				fullName: null,
-				phoneNumber: null,
+				fullName: this.form.controls.generalPractitioner.value,
+				phoneNumber: this.form.controls.generalPractitionerPhoneNumber.value,
 				generalPractitioner: true
 			},
 			pamiDoctor: {
-				fullName: null,
-				phoneNumber: null,
+				fullName: this.form.controls.pamiDoctor.value,
+				phoneNumber: this.form.controls.pamiDoctorPhoneNumber.value,
 				generalPractitioner: false
 
 			}
