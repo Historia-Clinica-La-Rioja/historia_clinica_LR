@@ -29,7 +29,7 @@ public class ClinicalSpecialtySectorController  {
 	}
 
 	@GetMapping()
-	//@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
 	public ResponseEntity<List<ClinicalSpecialty>> getAllSpecialtyBySector(@PathVariable(name = "sectorId") Integer sectorId){
 		List<ClinicalSpecialty> clinicalSpecialties = clinicalSpecialtySectorRepository.getAllBySector(sectorId);
 		LOG.debug("Get all Clinical Specialty by Sector {} => {}", sectorId, clinicalSpecialties);

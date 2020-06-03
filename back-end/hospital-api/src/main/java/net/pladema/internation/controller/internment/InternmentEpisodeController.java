@@ -74,7 +74,6 @@ public class InternmentEpisodeController {
 		return ResponseEntity.ok().body(result);
 	}
 
-
     @PostMapping
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
 	@Transactional

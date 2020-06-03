@@ -311,7 +311,7 @@ export interface InternmentEpisodeADto {
     institutionId: number;
     noteId: number;
     patientId: number;
-    responsibleContact: ResponsibleContactDto;
+    responsibleContact?: ResponsibleContactDto;
     responsibleDoctorId: number;
 }
 
@@ -477,9 +477,9 @@ export interface ResponseEvolutionNoteDto extends EvolutionNoteDto {
 }
 
 export interface ResponsibleContactDto extends Serializable {
-    fullName: string;
-    phoneNumber: string;
-    relationship: string;
+    fullName?: string;
+    phoneNumber?: string;
+    relationship?: string;
 }
 
 export interface ResponsibleDoctorDto extends Serializable {

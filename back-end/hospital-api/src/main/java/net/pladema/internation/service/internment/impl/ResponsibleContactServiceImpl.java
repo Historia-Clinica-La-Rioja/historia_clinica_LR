@@ -1,7 +1,5 @@
 package net.pladema.internation.service.internment.impl;
 
-import net.pladema.establishment.controller.dto.BedDto;
-import net.pladema.establishment.repository.entity.Bed;
 import net.pladema.internation.controller.internment.dto.ResponsibleContactDto;
 import net.pladema.internation.controller.internment.mapper.ResponsibleContactMapper;
 import net.pladema.internation.repository.internment.ResponsibleContactRepository;
@@ -27,12 +25,15 @@ public class ResponsibleContactServiceImpl implements ResponsibleContactService 
 
     @Override
     public ResponsibleContactDto addResponsibleContact(ResponsibleContactDto contact, Integer internmentEpisodeId) {
-        LOG.debug("Input parameters -> contact {}, id {}", contact, internmentEpisodeId);
-        ResponsibleContact RCToSave = responsibleContactMapper.toResponsibleContact(contact);
-        RCToSave.setInternmentEpisodeId(internmentEpisodeId);
-        ResponsibleContact saved = responsibleContactRepository.save(RCToSave);
-        ResponsibleContactDto result = responsibleContactMapper.toResponsibleContactDto(saved);
-        LOG.debug("Output -> {}", result);
-        return result;
+        if (contact != null) {
+            LOG.debug("Input parameters -> contact {}, id {}", contact, internmentEpisodeId);
+            ResponsibleContact rcToSave = responsibleContactMapper.toResponsibleContact(contact);
+            rcToSave.setInternmentEpisodeId(internmentEpisodeId);
+            ResponsibleContact saved = responsibleContactRepository.save(rcToSave);
+            ResponsibleContactDto result = responsibleContactMapper.toResponsibleContactDto(saved);
+            LOG.debug("Output -> {}", result);
+            return result;
+        }
+        return null;
     }
 }

@@ -128,7 +128,7 @@ public class InternmentMasterdataController {
     }
     
     @GetMapping(value = "/clinical/specialty")
-    //@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
     public ResponseEntity<Collection<InternmentMasterDataProjection>> getClinicalSpecialty(){
         LOG.debug("{}", "All internment clinical specialty");
         return ResponseEntity.ok().body(internmentMasterDataService.findAll(ClinicalSpecialty.class));

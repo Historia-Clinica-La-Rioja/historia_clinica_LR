@@ -192,18 +192,26 @@ export class NewInternmentComponent implements OnInit {
 
 	}
 
-	private mapToPersonInternmentEpisodeRequest() {
-		return {
+	private mapToPersonInternmentEpisodeRequest(){
+		var response = {
 			patientId: this.patientId,
 			bedId: this.form.controls.bedId.value,
 			clinicalSpecialtyId: this.form.controls.specialtyId.value,
 			responsibleDoctorId: this.form.controls.doctorId.value,
-			responsibleContact: {
-				fullName: this.form.controls.contactName.value,
-				phoneNumber: this.form.controls.contactPhoneNumber.value,
-				relationship: this.form.controls.contactRelationship.value,
-			}
+			responsibleContact: null
 		}
-	}
-
+		let fullname = this.form.controls.contactName.value;
+    	let phoneNumber = this.form.controls.contactPhoneNumber.value;
+    	let relationship = this.form.controls.contactRelationship.value
+		if (fullname || phoneNumber || relationship){
+            response.responsibleContact = {};
+            if (fullname)
+                response.responsibleContact.fullName = fullname;
+            if (phoneNumber)
+                response.responsibleContact.phoneNumber = phoneNumber;
+            if (relationship)
+                response.responsibleContact.relationship = relationship;
+        }
+        return response;
+    }
 }
