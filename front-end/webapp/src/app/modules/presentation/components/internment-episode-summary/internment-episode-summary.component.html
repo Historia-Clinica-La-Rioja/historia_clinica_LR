@@ -14,7 +14,7 @@
 	<mat-divider inset></mat-divider>
 
 	<mat-list-item id="doctor" *ngIf="internmentEpisode?.doctor">
-		<mat-icon color="primary" mat-list-icon>person_outline</mat-icon>
+		<mat-icon color="primary" mat-list-icon>medical_services</mat-icon>
 		<span class="mat-body-2">
 			{{internmentEpisode?.doctor.firstName}} {{internmentEpisode?.doctor.lastName}}
 		</span>
@@ -41,4 +41,17 @@
 			</span>
 		</div>
 	</mat-list-item>
+
+	<div *ngIf="internmentEpisode?.responsibleContact">
+		<mat-divider inset></mat-divider>
+		<mat-list-item id="responsibleContact">
+			<mat-icon color="primary" mat-list-icon [inline]="true" >supervised_user_circle</mat-icon>
+			<span>{{internmentEpisode?.responsibleContact?.fullName || '' }}
+				{{internmentEpisode?.responsibleContact?.relationship ? '(' + internmentEpisode.responsibleContact.relationship + ')' : '' }}
+				{{internmentEpisode?.responsibleContact?.phoneNumber ? ' - ' + internmentEpisode.responsibleContact.phoneNumber : '' }}
+			</span>
+		</mat-list-item>
+	</div>
+
+
 </mat-list>

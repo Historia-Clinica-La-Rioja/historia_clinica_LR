@@ -12,6 +12,7 @@ export class InternmentEpisodeSummaryComponent implements OnInit {
 	constructor() { }
 
 	ngOnInit(): void {
+		console.log(this.internmentEpisode);
 	}
 
 }
@@ -27,4 +28,9 @@ export interface InternmentEpisodeSummary {
 	};
 	totalInternmentDays: number;
 	admissionDatetime: string;
+	responsibleContact?: {
+		fullName: string;
+		relationship: string;
+		phoneNumber: string;
+	}
 }

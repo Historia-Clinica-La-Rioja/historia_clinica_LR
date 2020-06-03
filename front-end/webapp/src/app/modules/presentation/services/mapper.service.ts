@@ -26,7 +26,8 @@ export class MapperService {
 			specialtyName: internmentSummary.specialty.name,
 			totalInternmentDays: internmentSummary.totalInternmentDays,
 			doctor : null,
-			admissionDatetime: momentParseDate(String(internmentSummary.entryDate)).format(DateFormat.VIEW_DATE)
+			admissionDatetime: momentParseDate(String(internmentSummary.entryDate)).format(DateFormat.VIEW_DATE),
+			responsibleContact: null
 		};
 		if (internmentSummary.doctor) {
 			internmentEpisodeSummary.doctor = {
@@ -34,6 +35,13 @@ export class MapperService {
 				lastName: internmentSummary.doctor.lastName,
 				license: internmentSummary.doctor.licence
 			};
+		}
+		if(internmentSummary.responsibleContact){
+			internmentEpisodeSummary.responsibleContact = {
+				fullName:internmentSummary.responsibleContact?.fullName,
+				phoneNumber:internmentSummary.responsibleContact?.phoneNumber,
+				relationship:internmentSummary.responsibleContact?.relationship,
+			}
 		}
 		return internmentEpisodeSummary;
 	}

@@ -360,6 +360,7 @@ export interface InternmentSummaryDto {
     documents: DocumentsSummaryDto;
     entryDate: Date;
     id: number;
+    responsibleContact?: ResponsibleContactDto;
     specialty: ClinicalSpecialtyDto;
     totalInternmentDays: number;
 }
