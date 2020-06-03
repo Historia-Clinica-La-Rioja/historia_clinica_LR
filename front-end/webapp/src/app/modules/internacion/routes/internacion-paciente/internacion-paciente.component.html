@@ -20,12 +20,14 @@
 						</button>
 					</ng-container>
 
-					<ng-container *ngIf="anamnesisDoc?.confirmed && lastEvolutionNoteDoc?.confirmed">
-						<button mat-flat-button color="primary" fxFlexFill.xs (click)="goToEpicrisis()"
-							*hasRole="['ESPECIALISTA_MEDICO']">
-							<span class="uppercase"
-								[translate]="'internaciones.internacion-paciente.actions.ADD_EPICRISIS'"></span>
-						</button>
+					<ng-container *featureFlag="'epicrisisRequired'">
+						<ng-container *ngIf="anamnesisDoc?.confirmed && lastEvolutionNoteDoc?.confirmed">
+							<button mat-flat-button color="primary" fxFlexFill.xs (click)="goToEpicrisis()"
+								*hasRole="['ESPECIALISTA_MEDICO']">
+								<span class="uppercase"
+									[translate]="'internaciones.internacion-paciente.actions.ADD_EPICRISIS'"></span>
+							</button>
+						</ng-container>
 					</ng-container>
 				</ng-container>
 				<ng-container *ngIf="showDischarge">

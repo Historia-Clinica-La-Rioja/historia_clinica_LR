@@ -34,6 +34,10 @@ const FEATURE_FLAGS = [
 	{
 		name: 'mainDiagnosisRequired',
 		flavorMatch: [FLAVOR_HOSPITALES]
+	},
+	{
+		name: 'epicrisisRequired',
+		flavorMatch: [FLAVOR_HOSPITALES]
 	}];
 
 @Injectable({
