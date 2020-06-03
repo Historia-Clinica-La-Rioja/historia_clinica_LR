@@ -2,6 +2,7 @@ package net.pladema.internation.controller.internment;
 
 import io.swagger.annotations.Api;
 import net.pladema.establishment.controller.service.BedExternalService;
+import net.pladema.internation.controller.constraints.InternmentDischargeValid;
 import net.pladema.internation.controller.constraints.InternmentValid;
 import net.pladema.internation.controller.internment.dto.InternmentEpisodeADto;
 import net.pladema.internation.controller.internment.dto.InternmentEpisodeDto;
@@ -22,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
@@ -30,6 +32,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/institutions/{institutionId}/internments")
 @Api(value = "Internment Episode", tags = { "Internment Episode" })
+@Validated
 public class InternmentEpisodeController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(InternmentEpisodeController.class);
@@ -89,10 +92,11 @@ public class InternmentEpisodeController {
         return  ResponseEntity.ok().body(result);
     }
 
+    
 	@Transactional
 	@PostMapping("/{internmentEpisodeId}/discharge")
 	public ResponseEntity<PatientDischargeDto> dischargeInternmentEpisode(
-			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
+			@InternmentDischargeValid @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
 			@RequestBody PatientDischargeDto patientDischargeDto) {
 		PatientDischarge patientDischarge = patientDischargeMapper.toPatientDischarge(patientDischargeDto);
 		InternmentSummaryBo internmentEpisodeSummary = internmentEpisodeService.getIntermentSummary(internmentEpisodeId)

@@ -56,6 +56,9 @@ public class FeatureFlagsServiceImpl implements FeatureFlagsService {
 		allFlags = new ArrayList<>();
 		allFlags.add(flag("responsibleDoctorRequired", flavor.anyMatch(FlavorBo.HOSPITALES), "Medico responsable requerido ",
 				"Indica si el médico responsable de una internación es obligatorio"));
+		
+		allFlags.add(flag("habilitarAltaSinEpicrisis", flavor.anyMatch(FlavorBo.TANDIL), "Habilitar alta sin epicrisis",
+				"Indica si se puede dar de alta una internación sin tener una epicrisis asociada"));
 
 		allFlags.add(flag("mainDiagnosisRequired", flavor.anyMatch(FlavorBo.HOSPITALES), "Diagnostico principal requerido ",
 				"Indica si el diagnostico principal en una internación es obligatorio"));
