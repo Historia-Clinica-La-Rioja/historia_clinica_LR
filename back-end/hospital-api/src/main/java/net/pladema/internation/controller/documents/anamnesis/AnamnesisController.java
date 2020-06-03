@@ -74,7 +74,7 @@ public class AnamnesisController {
     @EffectiveVitalSignTimeValid
     //TODO validar que diagnosticos descatados solo tengan estado REMISSION o SOLVED
     //TODO vaidar que diagnosticos ingresador por error solo tengan estado INACTIVE
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR')")
     public ResponseEntity<ResponseAnamnesisDto> createAnamnesis(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
@@ -98,7 +98,7 @@ public class AnamnesisController {
     @AnamnesisMainDiagnosisValid
     @EffectiveVitalSignTimeValid
     @DocumentValid(isConfirmed = false, documentType = DocumentType.ANAMNESIS)
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR')")
     public ResponseEntity<ResponseAnamnesisDto> updateAnamnesis(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
@@ -128,7 +128,7 @@ public class AnamnesisController {
     @InternmentValid
     @DocumentValid(isConfirmed = false, documentType = DocumentType.ANAMNESIS)
     //TODO validar que exista la anamnesis
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO') || hasPermission(#institutionId, 'PROFESIONAL_DE_SALUD')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO_ADULTO_MAYOR')")
     public ResponseEntity<ResponseAnamnesisDto> getAnamnesis(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,

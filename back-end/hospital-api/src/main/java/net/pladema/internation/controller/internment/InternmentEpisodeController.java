@@ -60,9 +60,7 @@ public class InternmentEpisodeController {
 
 	@InternmentValid
 	@GetMapping("/{internmentEpisodeId}/summary")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO') || "
-			+ "hasPermission(#institutionId, 'PROFESIONAL_DE_SALUD') || "
-			+ "hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ADMINISTRATIVO, ENFERMERO_ADULTO_MAYOR')")
 	public ResponseEntity<InternmentSummaryDto> internmentEpisodeSummary(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {

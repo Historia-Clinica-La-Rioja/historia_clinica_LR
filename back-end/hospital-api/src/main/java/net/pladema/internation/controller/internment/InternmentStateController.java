@@ -27,8 +27,7 @@ import java.util.List;
 @RequestMapping("/institutions/{institutionId}/internments-state")
 @Api(value = "Internment State", tags = { "Internment State" })
 @Validated
-@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO') || "
-		+ "hasPermission(#institutionId, 'PROFESIONAL_DE_SALUD')")
+@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO_ADULTO_MAYOR')")
 public class InternmentStateController {
 
     private static final Logger LOG = LoggerFactory.getLogger(InternmentStateController.class);
@@ -80,8 +79,6 @@ public class InternmentStateController {
 
     @InternmentValid
     @GetMapping("/{internmentEpisodeId}/general/maindiagnosis")
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO') || "
-    		+ "hasPermission(#institutionId, 'PROFESIONAL_DE_SALUD')")
     public ResponseEntity<HealthConditionDto> mainDiagnosisGeneralState(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {

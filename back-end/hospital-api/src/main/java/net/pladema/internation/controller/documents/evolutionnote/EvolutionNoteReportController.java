@@ -50,8 +50,7 @@ public class EvolutionNoteReportController {
     @GetMapping("/{evolutionNoteId}")
     @InternmentValid
     @DocumentValid(isConfirmed = true, documentType = DocumentType.EVALUATION_NOTE)
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO') || "
-    		+ "hasPermission(#institutionId, 'PROFESIONAL_DE_SALUD')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO_ADULTO_MAYOR')")
     public ResponseEntity<InputStreamResource> getPDF(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,

@@ -1,13 +1,15 @@
 package net.pladema.security.authorization;
 
-import java.io.Serializable;
-import java.util.List;
-
 import net.pladema.permissions.repository.enums.ERole;
+import net.pladema.permissions.service.dto.RoleAssignment;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 
-import net.pladema.permissions.service.dto.RoleAssignment;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Implementa hasPermission que se puede acceder desde las anotaciones
@@ -21,8 +23,17 @@ public class InstitutionPermissionEvaluator implements PermissionEvaluator {
 	 * permission: tiene que ser uno de los definidos en ERole
 	 */
     public boolean hasPermission(Authentication auth, Object targetDomainObject, Object permission) {
-    	return hasRoleInInstitution(auth, (Integer) targetDomainObject, ERole.valueOf((String) permission));
+		if (permission instanceof String) {
+			List<String> permissions = new ArrayList<>(Arrays.asList(((String)permission).split(",")));
+			return hasPermission(auth, targetDomainObject, permissions);
+		}
+    	return false;
     }
+
+    private boolean hasPermission(Authentication auth, Object targetDomainObject, List<String> permission) {
+    	return permission.stream().anyMatch(p -> hasRoleInInstitution(auth, (Integer) targetDomainObject,
+				ERole.valueOf(StringUtils.deleteWhitespace(p))));
+	}
 
     @Override
     /**
