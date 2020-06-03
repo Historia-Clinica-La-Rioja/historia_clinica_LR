@@ -4,9 +4,13 @@
 			<h2 class="page-title" [translate]="'internaciones.anamnesis.TITLE'"></h2>
 			<h3 [translate]="'internaciones.anamnesis.SUBTITLE'"></h3>
 		</section>
-		<section id="diagnostico-principal">
-			<app-diagnostico-principal [diagnosis]="mainDiagnosis" (onChange)="setMainDiagnosis($event)"></app-diagnostico-principal>
-		</section>
+
+		<ng-container *hasRole="['ESPECIALISTA_MEDICO']">
+			<section id="diagnostico-principal">
+				<app-diagnostico-principal [diagnosis]="mainDiagnosis" (onChange)="setMainDiagnosis($event)"></app-diagnostico-principal>
+			</section>
+		</ng-container>
+
 		<section id="diagnosticos">
 			<app-diagnosticos [(diagnosis)]="diagnosticos"></app-diagnosticos>
 		</section>

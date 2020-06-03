@@ -7,7 +7,7 @@
 					<ng-container *ngIf="!anamnesisDoc || !anamnesisDoc.confirmed">
 						<button mat-flat-button color="primary" (click)="goToAnamnesis()"
 							fxFlexFill.xs
-							*hasRole="['ESPECIALISTA_MEDICO']">
+							*hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR']">
 							<span class="uppercase"
 								[translate]="'internaciones.internacion-paciente.actions.ADD_EVAL_INGRESO'"></span>
 						</button>
