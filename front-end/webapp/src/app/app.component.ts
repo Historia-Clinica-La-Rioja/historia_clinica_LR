@@ -1,6 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Title } from '@angular/platform-browser';
+import { Observable, of } from 'rxjs';
+
+import { PublicInfoDto } from '@api-rest/api-model';
+import { PublicService } from '@api-rest/services/public.service';
 
 const DEFAULT_LANG = 'es-AR';
 
@@ -10,14 +14,17 @@ const DEFAULT_LANG = 'es-AR';
 	styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+	public publicInfo$: Observable<PublicInfoDto>;
 
 	constructor(
 		translate: TranslateService,
 		titleService: Title,
+		publicService: PublicService,
 	) {
 		translate.setDefaultLang(DEFAULT_LANG);
 		translate.use(DEFAULT_LANG);
 
+		this.publicInfo$ = publicService.getInfo();
 
 		translate.onLangChange.subscribe(() => {
 			// Change page title when user changes language preference

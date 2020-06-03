@@ -31,11 +31,11 @@ export class LoggedUserService {
 		return this.accountService.getPermissions()
 			.pipe(
 				catchError(error => {
-					console.log('auth/permissions load() error', error);
+					// console.log('auth/permissions load() error', error);
 					return of({roleAssignments: []});
 				}),
 				tap((permissionsDto: PermissionsDto) => {
-					console.log('auth/permissions load() next', permissionsDto);
+					// console.log('auth/permissions load() next', permissionsDto);
 					this.assignmentsSource.next(permissionsDto.roleAssignments);
 				}),
 			);

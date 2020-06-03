@@ -347,6 +347,7 @@
 					<jsonLibrary>jackson2</jsonLibrary>
 					<noFileComment>true</noFileComment>
 					<sortDeclarations>true</sortDeclarations>
+					<loggingLevel>Info</loggingLevel>
 					<classPatterns>
 						<pattern>net.pladema.*.controller.dto.**</pattern>
 						<pattern>net.pladema.security.authentication.controller.dto.**</pattern>
