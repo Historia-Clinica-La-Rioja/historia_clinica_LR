@@ -9,6 +9,7 @@ import net.pladema.internation.repository.internment.domain.summary.InternmentSu
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Optional;
 
 @Getter
 @Setter
@@ -38,6 +39,8 @@ public class InternmentSummaryBo {
 
     private int totalInternmentDays;
 
+    private ResponsibleContactBo responsibleContact;
+
     public InternmentSummaryBo(InternmentSummaryVo internmentSummaryVo) {
         this.id = internmentSummaryVo.getId();
         this.documents = new DocumentsSummaryBo(internmentSummaryVo.getDocuments());
@@ -51,6 +54,9 @@ public class InternmentSummaryBo {
         this.totalInternmentDays = totalInternmentDays();
         if (internmentSummaryVo.getDoctor() != null)
             this.doctor = new ResponsibleDoctorBo(internmentSummaryVo.getDoctor());
+        if (internmentSummaryVo.getResponsibleContact() != null)
+            this.responsibleContact = new ResponsibleContactBo(internmentSummaryVo.getResponsibleContact());
+
     }
 
     private int totalInternmentDays(){

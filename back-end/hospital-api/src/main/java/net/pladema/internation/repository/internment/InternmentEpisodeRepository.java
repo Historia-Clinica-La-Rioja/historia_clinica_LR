@@ -31,7 +31,8 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             "b.id as bedId, b.bedNumber, " +
             "r.id as roomId, r.roomNumber, " +
             "cs.id as clinicalSpecialtyId, cs.name as specialty, " +
-            "hpg.pk.healthcareProfessionalId, hp.licenseNumber, p.firstName, p.lastName)" +
+            "hpg.pk.healthcareProfessionalId, hp.licenseNumber, p.firstName, p.lastName," +
+            "rc)" +
             "FROM InternmentEpisode ie " +
             "JOIN Bed b ON (b.id = ie.bedId) " +
             "JOIN Room r ON (r.id = b.roomId) " +
@@ -41,6 +42,7 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             "LEFT JOIN HealthcareProfessionalGroup hpg ON (hpg.pk.internmentEpisodeId = ie.id and hpg.responsible = true) " +
             "LEFT JOIN HealthcareProfessional hp ON (hpg.pk.healthcareProfessionalId = hp.id) " +
             "LEFT JOIN Person p ON (hp.personId = p.id) " +
+            "LEFT JOIN ResponsibleContact rc ON (ie.id = rc.internmentEpisodeId)" +
             "WHERE ie.id = :internmentEpisodeId")
     Optional<InternmentSummaryVo> getSummary(@Param("internmentEpisodeId") Integer internmentEpisodeId);
 

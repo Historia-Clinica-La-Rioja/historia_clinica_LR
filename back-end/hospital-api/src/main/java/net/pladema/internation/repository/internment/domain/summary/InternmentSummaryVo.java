@@ -5,8 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.internation.repository.internment.domain.ResponsibleContact;
+import net.pladema.internation.service.internment.summary.domain.ResponsibleContactVo;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Getter
 @Setter
@@ -34,11 +37,14 @@ public class InternmentSummaryVo {
 
     private LocalDate entryDate;
 
+    private ResponsibleContactVo responsibleContact;
+
     public InternmentSummaryVo(Integer id, LocalDate entryDate, Long anamnesisDocId, String anamnesisStatusId,
                                Long epicrisisDocId, String epicrisisStatusId,
                                Integer bedId, String bedNumber, Integer roomId, String roomNumber,
                                Integer clinicalSpecialtyId, String specialty,
-                               Integer healthcareProfessionalId, String licenseNumber, String firstName, String lastName) {
+                               Integer healthcareProfessionalId, String licenseNumber, String firstName, String lastName,
+                               ResponsibleContact responsibleContact) {
         this.id = id;
         this.documents = new DocumentsSummaryVo();
         this.documents.setAnamnesis(new AnamnesisSummaryVo(anamnesisDocId, anamnesisStatusId));
@@ -52,6 +58,8 @@ public class InternmentSummaryVo {
         this.entryDate = entryDate;
         if (healthcareProfessionalId != null)
             this.doctor = new ResponsibleDoctorVo(healthcareProfessionalId, firstName, lastName, licenseNumber);
+        if (responsibleContact != null)
+            this.responsibleContact = new ResponsibleContactVo(responsibleContact);
     }
 
 }
