@@ -369,7 +369,7 @@
                 name: relationship
                 type: varchar(100)
         - addForeignKeyConstraint:
-            constraintName: FK_responsible_contact_id
+            constraintName: FK_responsible_contact_internment_episode_id
             baseTableName: responsible_contact
             baseColumnNames: internment_episode_id
             referencedTableName: internment_episode 
