@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import net.pladema.person.repository.PersonExtendedRepository;
 import net.pladema.person.repository.PersonRepository;
+import net.pladema.person.repository.domain.CompletePersonVo;
 import net.pladema.person.repository.domain.PersonalInformation;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;
@@ -82,5 +83,13 @@ public class PersonServiceImpl implements PersonService {
         LOG.debug("Output -> {}", result);
         return result;
     }
+
+	@Override
+	public Optional<CompletePersonVo> getCompletePerson(Integer personId) {
+		LOG.debug("Input parameters -> {}", personId);
+        Optional<CompletePersonVo> result = personRepository.getCompletePerson(personId);
+        LOG.debug("Output -> {}", result);
+        return result;
+	}
 
 }

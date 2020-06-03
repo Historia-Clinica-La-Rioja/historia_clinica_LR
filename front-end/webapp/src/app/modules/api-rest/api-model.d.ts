@@ -105,7 +105,9 @@ export interface BMPatientDto extends APatientDto {
 }
 
 export interface BMPersonDto extends APersonDto {
+    department: DepartmentDto;
     id: number;
+    province: ProvinceDto;
 }
 
 export interface BackofficeUserDto {
@@ -166,6 +168,10 @@ export interface CompletePatientDto extends BasicPatientDto {
     medicalCoverageAffiliateNumber: string;
     medicalCoverageName: string;
     patientType: PatientType;
+}
+
+export interface DepartmentDto extends MasterdataDto<number> {
+    id: number;
 }
 
 export interface DiagnosisDto extends HealthConditionDto {

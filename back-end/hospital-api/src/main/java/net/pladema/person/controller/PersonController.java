@@ -1,5 +1,24 @@
 package net.pladema.person.controller;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+
+import javax.persistence.EntityNotFoundException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import io.swagger.annotations.Api;
 import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.address.controller.service.AddressExternalService;
@@ -8,21 +27,11 @@ import net.pladema.person.controller.dto.BMPersonDto;
 import net.pladema.person.controller.dto.PersonalInformationDto;
 import net.pladema.person.controller.mapper.PersonMapper;
 import net.pladema.person.controller.mock.MocksPerson;
+import net.pladema.person.repository.domain.CompletePersonVo;
 import net.pladema.person.repository.domain.PersonalInformation;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;
 import net.pladema.person.service.PersonService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-
-import javax.persistence.EntityNotFoundException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
 
 @RestController
 @RequestMapping("/person")
@@ -97,4 +106,22 @@ public class PersonController {
         LOG.debug("Output -> {}", result);
         return  ResponseEntity.ok().body(result);
     }
+    
+    @GetMapping("/{personId}")
+    public ResponseEntity<BMPersonDto> getCompletePerson(@PathVariable(name = "personId") Integer personId){
+        LOG.debug("Input parameters -> {}", personId);
+        BMPersonDto result;
+        try {
+            CompletePersonVo completePersonVo = personService.getCompletePerson(personId)
+                    .orElseThrow(() -> new EntityNotFoundException("person.invalid"));
+            result = personMapper.fromCompletePersonVo(completePersonVo);
+            LOG.debug("Output -> {}", result);
+            return  ResponseEntity.ok().body(result);
+        } catch (EntityNotFoundException e) {
+            LOG.error("Person with id {} not found", personId);
+        }
+        return ResponseEntity.noContent().build();
+    }
+    
+    
 }
