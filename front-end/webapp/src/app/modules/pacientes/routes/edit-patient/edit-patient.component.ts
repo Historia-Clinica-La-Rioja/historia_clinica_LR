@@ -36,8 +36,9 @@ export class EditPatientComponent implements OnInit {
 	public identificationTypeList: IdentificationTypeDto[];
 	private readonly routePrefix;
 	public patientType;
-	patientId: any;
-	personalInformation: any;
+	public completeDataPatient: CompletePatientDto;
+	public patientId: any;
+
 
 	constructor(private formBuilder: FormBuilder,
 		private router: Router,
@@ -57,9 +58,9 @@ export class EditPatientComponent implements OnInit {
 		this.route.queryParams
 			.subscribe(params => {
 				this.patientId = params.id;
-
 				this.patientService.getPatientCompleteData<CompletePatientDto>(this.patientId)
 					.subscribe(completeData => {
+						this.completeDataPatient = completeData;
 						this.personService.getCompletePerson<BMPersonDto>(completeData.person.id)
 							.subscribe(personInformationData => {
 								this.form.setControl('identificationTypeId', new FormControl(Number(personInformationData.identificationTypeId)));
@@ -99,6 +100,12 @@ export class EditPatientComponent implements OnInit {
 								this.form.setControl('addressApartment', new FormControl(personInformationData.apartment));
 								this.form.setControl('addressQuarter', new FormControl(personInformationData.quarter));
 								this.form.setControl('adressPostcode', new FormControl(personInformationData.postcode));
+								//doctors
+								this.form.setControl('generalPractitioner', new FormControl(completeData.generalPractitioner?.fullName));
+								this.form.setControl('generalPractitionerPhoneNumber', new FormControl(completeData.generalPractitioner?.phoneNumber));
+								this.form.setControl('pamiDoctor', new FormControl(completeData.pamiDoctor?.fullName));
+								this.form.setControl('pamiDoctorPhoneNumber', new FormControl(completeData.pamiDoctor?.phoneNumber));
+
 
 							});
 						this.patientType = completeData.patientType.id;
@@ -220,11 +227,13 @@ export class EditPatientComponent implements OnInit {
 			medicalCoverageAffiliateNumber: this.form.controls.medicalCoverageAffiliateNumber.value,
 			//Doctors
 			generalPractitioner: {
+				id: this.completeDataPatient.generalPractitioner?.id,
 				fullName: this.form.controls.generalPractitioner.value,
 				phoneNumber: this.form.controls.generalPractitionerPhoneNumber.value,
 				generalPractitioner: true
 			},
 			pamiDoctor: {
+				id: this.completeDataPatient.pamiDoctor?.id,
 				fullName: this.form.controls.pamiDoctor.value,
 				phoneNumber: this.form.controls.pamiDoctorPhoneNumber.value,
 				generalPractitioner: false
