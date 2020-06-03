@@ -28,7 +28,11 @@ const FEATURE_FLAGS = [
 		flavorMatch: [FLAVOR_TANDIL]
 	},
 	{
-		name: 'medicoResponsableRequerido',
+		name: 'responsibleDoctorRequired',
+		flavorMatch: [FLAVOR_HOSPITALES]
+	},
+	{
+		name: 'mainDiagnosisRequired',
 		flavorMatch: [FLAVOR_HOSPITALES]
 	}];
 

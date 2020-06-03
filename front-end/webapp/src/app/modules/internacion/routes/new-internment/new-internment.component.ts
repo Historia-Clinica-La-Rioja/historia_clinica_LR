@@ -109,13 +109,13 @@ export class NewInternmentComponent implements OnInit {
 			this.doctors = data;
 		});
 
-		this.featureFlagService.isOn('medicoResponsableRequerido').subscribe(isOn => {
+		this.featureFlagService.isOn('responsibleDoctorRequired').subscribe(isOn => {
 			if (!isOn) {
 				this.form.controls.doctorId.clearValidators();
 				this.form.controls.doctorId.reset();
 			}
 		});
-
+ 
 	}
 
 	setServices() {

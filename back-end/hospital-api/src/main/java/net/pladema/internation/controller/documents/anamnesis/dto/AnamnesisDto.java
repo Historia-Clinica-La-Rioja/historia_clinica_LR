@@ -3,6 +3,7 @@ package net.pladema.internation.controller.documents.anamnesis.dto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.featureflags.controller.constraints.SGHNotNull;
 import net.pladema.internation.controller.constraints.DiagnosisValid;
 import net.pladema.internation.controller.constraints.HealthHistoryConditionValid;
 import net.pladema.internation.controller.documents.dto.DocumentDto;
@@ -27,7 +28,7 @@ public class AnamnesisDto implements DocumentDto, Serializable {
     @Nullable
     private DocumentObservationsDto notes;
 
-    @NotNull(message = "{diagnosis.mandatory}")
+    @SGHNotNull(message = "{diagnosis.mandatory}", ffs = {"mainDiagnosisRequired"})
     private HealthConditionDto mainDiagnosis;
 
     @NotNull

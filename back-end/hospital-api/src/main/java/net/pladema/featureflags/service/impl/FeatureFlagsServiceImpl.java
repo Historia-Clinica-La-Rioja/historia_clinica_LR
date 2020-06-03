@@ -7,13 +7,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Component
+@Service
 public class FeatureFlagsServiceImpl implements FeatureFlagsService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(FeatureFlagsServiceImpl.class);
@@ -54,8 +54,11 @@ public class FeatureFlagsServiceImpl implements FeatureFlagsService {
 	@Override
 	public List<FeatureFlagBo> reset(FlavorBo flavor) {
 		allFlags = new ArrayList<>();
-		allFlags.add(flag("medicoResponsableRequerido", flavor.anyMatch(FlavorBo.HOSPITALES), "Medico responsable requerido ",
+		allFlags.add(flag("responsibleDoctorRequired", flavor.anyMatch(FlavorBo.HOSPITALES), "Medico responsable requerido ",
 				"Indica si el médico responsable de una internación es obligatorio"));
+
+		allFlags.add(flag("mainDiagnosisRequired", flavor.anyMatch(FlavorBo.HOSPITALES), "Diagnostico principal requerido ",
+				"Indica si el diagnostico principal en una internación es obligatorio"));
 
 		return allFlags;
 	}

@@ -2,6 +2,8 @@ package net.pladema.internation.controller;
 
 import net.pladema.BaseControllerTest;
 import net.pladema.establishment.repository.InstitutionRepository;
+import net.pladema.featureflags.controller.constraints.validators.SGHNotNullValidator;
+import net.pladema.featureflags.service.FeatureFlagsService;
 import net.pladema.internation.controller.documents.anamnesis.AnamnesisController;
 import net.pladema.internation.controller.documents.anamnesis.dto.AnamnesisDto;
 import net.pladema.internation.controller.documents.anamnesis.mapper.AnamnesisMapper;
@@ -92,6 +94,12 @@ public class AnamnesisControllerTest extends BaseControllerTest {
 	@MockBean
 	private EffectiveVitalSignTimeValidator effectiveVitalSignTimeValidator;
 
+	@MockBean
+	private SGHNotNullValidator sghNotNullValidator;
+
+	@MockBean
+	private FeatureFlagsService featureFlagsService;
+
 	@Autowired
 	private MessageSource messageSource;
 
@@ -105,7 +113,7 @@ public class AnamnesisControllerTest extends BaseControllerTest {
 		configContextAnamnesisValid();
 		configContextPatientExist();
 		when(effectiveVitalSignTimeValidator.isValid(any(), any())).thenReturn(true);
-
+		when(sghNotNullValidator.isValid(any(), any())).thenReturn(true);
 		this.mockMvc.perform(MockMvcRequestBuilders.post(POST)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(mockRequestBodyBasic()))
@@ -123,6 +131,7 @@ public class AnamnesisControllerTest extends BaseControllerTest {
 	@WithMockUser
 	public void test_createAnamnesisWithoutMainDiagnosis() throws Exception {
 		configContextAnamnesisValid();
+		when(featureFlagsService.isOn(any())).thenReturn(true);
 		this.mockMvc.perform(MockMvcRequestBuilders.post(POST)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(mockEmptyAnamnesisDto()))
@@ -146,6 +155,7 @@ public class AnamnesisControllerTest extends BaseControllerTest {
 	@WithMockUser
 	public void test_createAnamnesisWithoutPatient() throws Exception {
 		configContextAnamnesisValid();
+		when(sghNotNullValidator.isValid(any(), any())).thenReturn(true);
 		this.mockMvc.perform(MockMvcRequestBuilders.post(POST)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(mockRequestBodyBasic()))
@@ -190,6 +200,7 @@ public class AnamnesisControllerTest extends BaseControllerTest {
 		configContextDocumentValid();
 		configContextPatientExist();
 		when(effectiveVitalSignTimeValidator.isValid(any(), any())).thenReturn(true);
+		when(sghNotNullValidator.isValid(any(), any())).thenReturn(true);
 		this.mockMvc.perform(MockMvcRequestBuilders.put(PUT)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(mockRequestBodyBasic()))
@@ -207,6 +218,7 @@ public class AnamnesisControllerTest extends BaseControllerTest {
 	@WithMockUser
 	public void test_updateAnamnesisDocumentInvalid() throws Exception {
 		configContextInternmentValid();
+		when(sghNotNullValidator.isValid(any(), any())).thenReturn(true);
 		this.mockMvc.perform(MockMvcRequestBuilders.put(PUT)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(mockRequestBodyBasic()))
@@ -221,6 +233,7 @@ public class AnamnesisControllerTest extends BaseControllerTest {
 		configContextAnamnesisValid();
 		configContextDocumentValid();
 		when(effectiveVitalSignTimeValidator.isValid(any(), any())).thenReturn(true);
+		when(sghNotNullValidator.isValid(any(), any())).thenReturn(true);
 		this.mockMvc.perform(MockMvcRequestBuilders.put(PUT)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(mockRequestBodyBasic()))

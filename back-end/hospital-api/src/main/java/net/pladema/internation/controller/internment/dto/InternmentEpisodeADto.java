@@ -27,7 +27,7 @@ public class InternmentEpisodeADto {
 
     private Integer institutionId;
 
-    @SGHNotNull(message = "{internment.responsible.doctor.required}", ffs = {"medicoResponsableRequerido"})
+    @SGHNotNull(message = "{internment.responsible.doctor.required}", ffs = {"responsibleDoctorRequired"})
     private Integer responsibleDoctorId;
 
     @Nullable

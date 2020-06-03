@@ -65,9 +65,11 @@
 							</mat-card-content>
 						</app-summary-card>
 					</ng-container>
-					<ng-container *hasRole="['ESPECIALISTA_MEDICO']">
-						<app-main-diagnosis-summary [internmentEpisodeId]="internmentEpisodeId">
-						</app-main-diagnosis-summary>
+					<ng-container *featureFlag="'mainDiagnosisRequired'">
+						<ng-container *hasRole="['ESPECIALISTA_MEDICO']">
+							<app-main-diagnosis-summary [internmentEpisodeId]="internmentEpisodeId">
+							</app-main-diagnosis-summary>
+						</ng-container>
 					</ng-container>
 					<ng-container *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR']">
 						<app-diagnosis-summary [internmentEpisodeId]="internmentEpisodeId" [editable]="!epicrisisDoc">
