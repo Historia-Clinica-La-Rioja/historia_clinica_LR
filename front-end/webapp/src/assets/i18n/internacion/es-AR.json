@@ -252,6 +252,7 @@
 		},
 		"internacion-paciente": {
 			"TITLE": "HCE Internación",
+			"confirmacion": "¿Está seguro que desea crear una nueva internación para el paciente con ID ",
 			"actions": {
 				"ADD_EPICRISIS": "Generar epicrisis",
 				"ADD_EVAL_INGRESO": "Generar evaluación de ingreso",

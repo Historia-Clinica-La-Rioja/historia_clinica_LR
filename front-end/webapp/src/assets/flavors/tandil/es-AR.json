@@ -28,7 +28,6 @@
 			}
 		},
 
-
 		"diagnosticos": {
 			"TITLE_PRINCIPAL": "Enfermedad",
 			"TITLE": "Enfermedades",
@@ -67,7 +66,7 @@
 
 		"internacion-paciente": {
 			"TITLE": "HCE Adultos Mayores",
-
+			"confirmacion": "¿Está seguro que desea crear una nueva internación para el adulto mayor con ID ",
 			"remove-diagnosis-dialog": {
 				"TITLE": "Eliminar enfermedad",
 				"VERIFICATION_SELECT": "Motivo",

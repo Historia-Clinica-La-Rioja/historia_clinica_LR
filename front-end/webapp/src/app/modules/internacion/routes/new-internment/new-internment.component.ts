@@ -24,6 +24,7 @@ import { ConfirmDialogComponent } from "@core/dialogs/confirm-dialog/confirm-dia
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from "@core/services/context.service";
 import { FeatureFlagService } from "@core/services/feature-flag.service";
+import { TranslateService } from '@ngx-translate/core';
 
 const ROUTE_INTERNMENT = 'internaciones/internacion/';
 
@@ -61,6 +62,7 @@ export class NewInternmentComponent implements OnInit {
 				private readonly route: ActivatedRoute,
 				private readonly internmentEpisodeService: InternmentEpisodeService,
 				public dialog: MatDialog,
+				public translator: TranslateService,
 				private readonly snackBarService: SnackBarService,
 				private readonly contextService: ContextService,
 				private readonly featureFlagService: FeatureFlagService) {
@@ -108,7 +110,7 @@ export class NewInternmentComponent implements OnInit {
 			if (!isOn) {
 				this.form.controls.doctorId.clearValidators();
 				this.form.controls.doctorId.reset();
-			}				
+			}
 		});
 
 	}
@@ -160,28 +162,31 @@ export class NewInternmentComponent implements OnInit {
 	}
 
 	openDialog(): void {
-		const stringQuestion = `¿Está seguro que desea crear una nueva internación para el paciente con ID ${this.patientBasicData.id} ?`;
-		const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-			width: '450px',
-			data: {
-				title: 'Nueva internación',
-				content: stringQuestion,
-				okButtonLabel: 'Confirmar internación'
-			}
+		this.translator.get('internaciones.internacion-paciente.confirmacion').subscribe((res: string) => {
+			const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+				width: '450px',
+				data: {
+					title: 'Nueva internación',
+					content: `${res}${this.patientBasicData.id}?`,
+					okButtonLabel: 'Confirmar internación'
+				}
+			});
+
+			dialogRef.afterClosed().subscribe(result => {
+				if(result) {
+					const intenmentEpisodeReq = this.mapToPersonInternmentEpisodeRequest();
+					this.internmentEpisodeService.setNewInternmentEpisode(intenmentEpisodeReq)
+						.subscribe(data => {
+							if(data && data.id) {
+								const url = `${this.routePrefix}${ROUTE_INTERNMENT}${data.id}/paciente/${this.patientId}`;
+								this.router.navigate([url]);
+								this.snackBarService.showSuccess('internaciones.new-internment.messages.SUCCESS');
+							}
+						}, _ => this.snackBarService.showError('internaciones.new-internment.messages.ERROR'));
+				}
+			});
 		});
-		dialogRef.afterClosed().subscribe(result => {
-			if(result) {
-				const intenmentEpisodeReq = this.mapToPersonInternmentEpisodeRequest();
-				this.internmentEpisodeService.setNewInternmentEpisode(intenmentEpisodeReq)
-					.subscribe(data => {
-						if(data && data.id) {
-							const url = `${this.routePrefix}${ROUTE_INTERNMENT}${data.id}/paciente/${this.patientId}`;
-							this.router.navigate([url]);
-							this.snackBarService.showSuccess('internaciones.new-internment.messages.SUCCESS');
-						}
-					}, _ => this.snackBarService.showError('internaciones.new-internment.messages.ERROR'));
-			}
-		});
+
 	}
 
 	private mapToPersonInternmentEpisodeRequest() {
