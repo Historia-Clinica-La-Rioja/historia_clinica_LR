@@ -30,6 +30,12 @@ const InstitutionShow = props => (
             <ReferenceField source="addressId" reference="addresses">
                 <TextField source="cityId"/>
             </ReferenceField>
+            <ReferenceField label="Latitud" source="addressId" reference="addresses" link={false}>
+                <TextField  source="latitud" />
+            </ReferenceField>
+            <ReferenceField label="Longitud" source="addressId" reference="addresses" link={false}>
+                <TextField  source="longitud" />
+            </ReferenceField>
         </SimpleShowLayout>
     </Show>
 );

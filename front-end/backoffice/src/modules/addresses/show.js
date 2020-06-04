@@ -15,10 +15,11 @@ const AddressShow = props => (
             <TextField source="apartment" />
             <TextField source="quarter" />
             <TextField source="postcode" />
-            <TextField source="quarter" />
             <ReferenceField source="cityId" reference="cities">
                 <TextField source="description" />
             </ReferenceField>
+            <TextField source="latitud" />
+            <TextField source="longitud" />
         </SimpleShowLayout>
     </Show>
 );

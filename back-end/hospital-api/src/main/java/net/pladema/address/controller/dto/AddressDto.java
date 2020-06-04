@@ -35,4 +35,8 @@ public class AddressDto implements Serializable {
 
     private ProvinceDto province;
 
+    private Double latitud;
+
+    private Double longitud;
+
 }

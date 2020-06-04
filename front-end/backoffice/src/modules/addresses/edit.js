@@ -6,7 +6,8 @@ import {
     Edit,
     SimpleForm,
     FormDataConsumer,
-    required
+    required,
+    NumberInput
 } from 'react-admin';
 
 import { useForm } from 'react-final-form';
@@ -84,7 +85,9 @@ const AddressEdit = props => (
             <TextInput source="apartment" />
             <TextInput source="quarter" />
             <TextInput source="postCode" validate={[required()]} />
-            <TextInput source="quarter" />
+            <NumberInput source="latitud" />
+            <NumberInput source="longitud" />
+
         </SimpleForm>
     </Edit>
 );

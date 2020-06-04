@@ -3,7 +3,7 @@ import {
     TextInput,
     Edit,
     SimpleForm,
-    required
+    required,
 } from 'react-admin';
 
 const InstitutionEdit = props => (

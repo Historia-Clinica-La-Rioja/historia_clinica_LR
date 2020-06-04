@@ -43,6 +43,12 @@ public class Address implements Serializable {
 
     @Column(name = "postcode", length = 6, nullable = false)
     private String postcode;
+
+    @Column(name = "latitud")
+    private Double latitud;
+
+    @Column(name = "longitud")
+    private Double longitud;
     
     public static Address buildDummy() {
 		Address newAddress = new Address();
@@ -50,7 +56,9 @@ public class Address implements Serializable {
 		newAddress.setNumber("");
 		newAddress.setCityId(1);
 		newAddress.setPostcode("");
-		return newAddress;
+        newAddress.setLatitud(10.3);
+        newAddress.setLongitud(14.3);
+        return newAddress;
     }
 
 }

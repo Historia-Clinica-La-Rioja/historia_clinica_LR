@@ -377,3 +377,22 @@
             validate: true
             onDelete: NO ACTION
             onUpdate: NO ACTION                  
+
+- changeSet:
+    id: address-addColumns-latitud-longitud
+    author: lmanterola
+    comment: Add column latitud and column longitud to address table
+    changes:
+    - addColumn:
+        tableName: address
+        columns:
+        - column:
+            constraints:
+                nullable: true
+            name: latitud
+            type: float
+        - column:
+            constraints:
+                nullable: true
+            name: longitud
+            type: float
