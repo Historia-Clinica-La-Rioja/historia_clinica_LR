@@ -29,6 +29,7 @@ import io.swagger.annotations.Api;
 import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.address.controller.service.AddressExternalService;
 import net.pladema.patient.controller.constraints.FilterValid;
+import net.pladema.patient.controller.dto.AAdditionalDoctorDto;
 import net.pladema.patient.controller.dto.APatientDto;
 import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.dto.CompletePatientDto;
@@ -164,9 +165,14 @@ public class PatientController {
 		LOG.debug("Input parameters -> patientId {}", patientId);
 		Patient patient = patientService.getPatient(patientId)
 				.orElseThrow(() -> new EntityNotFoundException("patient.invalid"));
+		DoctorsBo doctorsBo = additionalDoctorService.getAdditionalsDoctors(patientId);
 		BasicDataPersonDto personData = personExternalService.getBasicDataPerson(patient.getPersonId());
 		PatientType patientType = patientTypeRepository.getOne(patient.getTypeId());
-		CompletePatientDto result = new CompletePatientDto(patient, patientType, personData);
+		CompletePatientDto result = new CompletePatientDto(patient, patientType, personData,
+				doctorsBo.getGeneralPractitionerBo() != null
+						? new AAdditionalDoctorDto(doctorsBo.getGeneralPractitionerBo())
+						: null,
+				doctorsBo.getPamiDoctorBo() != null ? new AAdditionalDoctorDto(doctorsBo.getPamiDoctorBo()) : null);
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}

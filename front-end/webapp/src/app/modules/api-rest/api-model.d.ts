@@ -165,8 +165,10 @@ export interface ClinicalTermDto extends Serializable {
 }
 
 export interface CompletePatientDto extends BasicPatientDto {
+    generalPractitioner?: AAdditionalDoctorDto;
     medicalCoverageAffiliateNumber: string;
     medicalCoverageName: string;
+    pamiDoctor?: AAdditionalDoctorDto;
     patientType: PatientType;
 }
 

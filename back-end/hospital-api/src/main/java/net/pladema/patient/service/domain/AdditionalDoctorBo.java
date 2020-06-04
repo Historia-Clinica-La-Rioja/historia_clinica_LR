@@ -22,7 +22,7 @@ public class AdditionalDoctorBo {
         this.patientId = additionalDoctor.getPatientId();
         this.fullName = additionalDoctor.getFullName();
         this.phoneNumber = additionalDoctor.getPhoneNumber();
-        this.generalPractitioner = additionalDoctor.getGeneralPractitioner();
+        this.generalPractitioner = additionalDoctor.isGeneralPractitioner();
     }
 
     public AdditionalDoctorBo (AAdditionalDoctorDto aAdditionalDoctorDto) { // From FE to BE

@@ -1,6 +1,11 @@
 package net.pladema.patient.controller.dto;
 
-import lombok.*;
+import javax.annotation.Nullable;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.repository.entity.PatientType;
 import net.pladema.person.controller.dto.BasicDataPersonDto;
@@ -14,6 +19,10 @@ public class CompletePatientDto extends BasicPatientDto {
     private String medicalCoverageName;
     private String medicalCoverageAffiliateNumber;
     private PatientType patientType;
+    @Nullable
+    private AAdditionalDoctorDto generalPractitioner;
+    @Nullable
+    private AAdditionalDoctorDto pamiDoctor;
 
     public CompletePatientDto(Patient patient, PatientType patientType, BasicDataPersonDto personData) {
         super(patient.getId(),personData);
@@ -24,4 +33,11 @@ public class CompletePatientDto extends BasicPatientDto {
         this.patientType.setId(patientType.getId());
         this.patientType.setDescription(patientType.getDescription());
     }
+
+	public CompletePatientDto(Patient patient, PatientType patientType, BasicDataPersonDto personData,
+			AAdditionalDoctorDto generalPractitioner, AAdditionalDoctorDto pamiDoctor) {
+		this(patient, patientType, personData);
+		this.generalPractitioner = generalPractitioner;
+		this.pamiDoctor = pamiDoctor;
+	}
 }

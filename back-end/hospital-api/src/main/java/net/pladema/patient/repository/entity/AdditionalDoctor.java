@@ -30,7 +30,7 @@ public class AdditionalDoctor {
     private String phoneNumber;
 
     @Column(name = "general_practitioner")
-    private Boolean generalPractitioner;
+    private boolean generalPractitioner;
 
     public AdditionalDoctor (AdditionalDoctorBo additionalDoctorBo){
         this.id = additionalDoctorBo.getId();
@@ -40,5 +40,8 @@ public class AdditionalDoctor {
         this.generalPractitioner = additionalDoctorBo.getGeneralPractitioner();
     }
 
+    public boolean isPamiDoctor() {
+		return !generalPractitioner;
+	}
 
 }

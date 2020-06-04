@@ -1,11 +1,13 @@
 package net.pladema.patient.controller.dto;
 
+import javax.annotation.Nullable;
+
+import org.hibernate.validator.constraints.Length;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
-
-import javax.annotation.Nullable;
+import net.pladema.patient.service.domain.AdditionalDoctorBo;
 
 @Getter
 @Setter
@@ -22,4 +24,12 @@ public class AAdditionalDoctorDto {
     private String phoneNumber;
 
     private boolean generalPractitioner;
+    
+    public AAdditionalDoctorDto(AdditionalDoctorBo additionalDoctorBo){
+    	this.id = additionalDoctorBo.getId();
+    	this.fullName = additionalDoctorBo.getFullName();
+    	this.phoneNumber = additionalDoctorBo.getPhoneNumber();
+    	this.generalPractitioner = additionalDoctorBo.getGeneralPractitioner();
+    }
+    
 }
