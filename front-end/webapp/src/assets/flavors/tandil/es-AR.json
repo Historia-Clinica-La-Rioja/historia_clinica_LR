@@ -83,6 +83,35 @@
 				"ERROR":"No se pudo dar el alta administrativa del adulto mayor",
 				"SUCCESS":"El alta administrativa se guardó exitosamente"
 			}
+		},
+		"clinical-assessment-diagnosis": {
+			"TITLE": "Evaluación clínica de enfermedades",
+			"SUBTITLE": "Completá los siguientes datos.",
+			"diagnostics": {
+				"TITLE": "Seleccione las enfermedades",
+				"table": {
+					"columns": {
+						"DIAGNOSIS": "Enfermedad",
+						"STATUS": "Estado",
+						"VERIFICATION": "Verificación",
+						"MAIN": "Principal"
+					}
+				}
+			},
+			"notes": {
+				"TITLE": "Evaluación clínica",
+				"CURRENT_DISEASE": "Enfermedad actual",
+				"PHYSICAL_EXAMINATION": "Examen físico",
+				"STUDIES_PROCEDURES": "Resumen de estudios y procedimientos realizados",
+				"PATIENT_PROGRESS": "Evolución",
+				"CLINICAL_IMPRESSION": "Impresión clínica y plan",
+				"OTHERS": "Otras observaciones",
+				"DESCRIPTION": "Descripción"
+			},
+			"messages": {
+				"ERROR": "Error al guardar documento de evaluación clínica de enfermedades",
+				"SUCCESS": "El documento con la evaluación clínica de enfermedades se guardó exitosamente"
+			}
 		}
 	},
 

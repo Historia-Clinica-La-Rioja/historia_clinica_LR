@@ -212,7 +212,7 @@
 		},
 		"clinical-assessment-diagnosis": {
 			"TITLE": "Evaluación clínica de diagnósticos",
-			"SUBTITLE": "Completa los siguientes datos.",
+			"SUBTITLE": "Completá los siguientes datos.",
 			"diagnostics": {
 				"TITLE": "Seleccione los diagnósticos",
 				"table": {
@@ -227,7 +227,7 @@
 			"notes": {
 				"TITLE": "Evaluación clínica",
 				"CURRENT_DISEASE": "Enfermedad actual",
-				"PHYSICAL_EXAMINATION": "Exámen físico",
+				"PHYSICAL_EXAMINATION": "Examen físico",
 				"STUDIES_PROCEDURES": "Resumen de estudios y procedimientos realizados",
 				"PATIENT_PROGRESS": "Evolución",
 				"CLINICAL_IMPRESSION": "Impresión clínica y plan",
