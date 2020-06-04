@@ -63,26 +63,26 @@ export class EditPatientComponent implements OnInit {
 						this.completeDataPatient = completeData;
 						this.personService.getCompletePerson<BMPersonDto>(completeData.person.id)
 							.subscribe(personInformationData => {
-								this.form.setControl('identificationTypeId', new FormControl(Number(personInformationData.identificationTypeId)));
-								this.form.setControl('identificationNumber', new FormControl(Number(personInformationData.identificationNumber)));
+								this.form.setControl('identificationTypeId', new FormControl(Number(personInformationData.identificationTypeId), Validators.required));
+								this.form.setControl('identificationNumber', new FormControl(Number(personInformationData.identificationNumber), [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]));
 								//person
-								this.form.setControl('firstName', new FormControl(completeData.person.firstName));
+								this.form.setControl('firstName', new FormControl(completeData.person.firstName, Validators.required));
 								this.form.setControl('middleNames', new FormControl(personInformationData.middleNames));
-								this.form.setControl('lastName', new FormControl(completeData.person.lastName));
+								this.form.setControl('lastName', new FormControl(completeData.person.lastName, Validators.required));
 								this.form.setControl('otherLastNames', new FormControl(personInformationData.otherLastNames));
 								this.form.setControl('mothersLastName', new FormControl(personInformationData.mothersLastName));
-								this.form.setControl('genderId', new FormControl(Number(completeData.person.gender.id)));
+								this.form.setControl('genderId', new FormControl(Number(completeData.person.gender.id), Validators.required));
 								this.form.setControl('genderSelfDeterminationId', new FormControl(Number(personInformationData.genderSelfDeterminationId)));
 								this.form.setControl('nameSelfDetermination', new FormControl(personInformationData.nameSelfDetermination));
-								this.form.setControl('birthDate', new FormControl(new Date(personInformationData.birthDate)));
-								this.form.setControl('cuil', new FormControl(personInformationData.cuil));
-								this.form.setControl('email', new FormControl(personInformationData.email));
+								this.form.setControl('birthDate', new FormControl(new Date(personInformationData.birthDate), Validators.required));
+								this.form.setControl('cuil', new FormControl(personInformationData.cuil, Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)));
+								this.form.setControl('email', new FormControl(personInformationData.email, Validators.email));
 								this.form.setControl('phoneNumber', new FormControl(personInformationData.phoneNumber));
 								this.form.setControl('religion', new FormControl(personInformationData.religion));
 								this.form.setControl('ethnic', new FormControl(personInformationData.ethnic));
 								//medical
-								this.form.setControl('medicalCoverageName', new FormControl(completeData.medicalCoverageName));
-								this.form.setControl('medicalCoverageAffiliateNumber', new FormControl(completeData.medicalCoverageAffiliateNumber));
+								this.form.setControl('medicalCoverageName', new FormControl(completeData.medicalCoverageName, Validators.maxLength(VALIDATIONS.MAX_LENGTH.medicalCoverageName)));
+								this.form.setControl('medicalCoverageAffiliateNumber', new FormControl(completeData.medicalCoverageAffiliateNumber, Validators.maxLength(VALIDATIONS.MAX_LENGTH.medicalCoverageAffiliateNumber)));
 								//address
 								this.form.setControl('addressCountryId', new FormControl(DEFAULT_COUNTRY_ID));
 								if (personInformationData.province !== undefined) {
@@ -99,7 +99,7 @@ export class EditPatientComponent implements OnInit {
 								this.form.setControl('addressFloor', new FormControl(personInformationData.floor));
 								this.form.setControl('addressApartment', new FormControl(personInformationData.apartment));
 								this.form.setControl('addressQuarter', new FormControl(personInformationData.quarter));
-								this.form.setControl('adressPostcode', new FormControl(personInformationData.postcode));
+								this.form.setControl('addressPostcode', new FormControl(personInformationData.postcode));
 								//doctors
 								this.form.setControl('generalPractitioner', new FormControl(completeData.generalPractitioner?.fullName));
 								this.form.setControl('generalPractitionerPhoneNumber', new FormControl(completeData.generalPractitioner?.phoneNumber));
