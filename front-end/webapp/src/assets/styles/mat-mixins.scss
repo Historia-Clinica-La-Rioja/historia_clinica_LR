@@ -1,7 +1,7 @@
 @import '~@angular/material/theming';
 
 $primary-bg: #EDF1F7;
-$default-color: 100;
+$default-color: 50;
 
 @mixin general($theme) {
 	mat-sidenav-content {
@@ -17,7 +17,7 @@ $default-color: 100;
 		&.active:focus {
 			background-color: mat-color($primary-palette, $default-color);
 			span, mat-icon {
-				color: mat-contrast($primary-palette, $default-color);
+				color: mat-color($primary-palette, default);
 			}
 			&:hover {
 				background-color: mat-color($primary-palette, $default-color, 0.8);
@@ -79,6 +79,7 @@ $default-color: 100;
 		}
 		&.primary {
 			//Solo el primary usa mat-elevation-z8
+			color: mat-color($primary-palette, default);
 			margin-top: -1px;
 			box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.1);
 		}
@@ -106,7 +107,7 @@ $default-color: 100;
 				background-color: mat-color($primary-palette, $default-color);
 				th {
 					text-align: center;
-					color: mat-contrast($primary-palette, $default-color);
+					color: mat-color($primary-palette, default);
 				}
 				th, td {
 					&.actions {
@@ -157,7 +158,7 @@ $default-color: 100;
 			border-top-left-radius: 4px;
 			border-top-right-radius: 4px;
 			background-color: mat-color($palette, $default-color);
-			color: mat-contrast($palette, $default-color);
+			color: mat-color($palette, default);
 			& div.mat-card-header-text {
 				align-self: center;
 				mat-card-title.mat-card-title {

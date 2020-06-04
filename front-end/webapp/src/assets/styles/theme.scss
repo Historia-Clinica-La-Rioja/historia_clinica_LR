@@ -3,7 +3,7 @@
 
 @include mat-core();
 
-$primary: mat-palette($primary-palette);
+$primary: mat-palette($primary-palette, 400);
 $accent:  mat-palette($accent-palette);
 
 $theme: mat-light-theme($primary, $accent);
