@@ -46,7 +46,6 @@ public class RoomController {
 	}
 
 	@GetMapping()
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
 	public ResponseEntity<List<RoomDto>> getAll() {
 		List<Room> rooms = roomRepository.findAll();
 		LOG.debug("Get all Rooms => {}", rooms);
@@ -54,7 +53,6 @@ public class RoomController {
 	}
 
 	@GetMapping("/{roomId}/beds")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
 	public ResponseEntity<List<BedDto>> getAllBedsByRoom(@PathVariable(name = "roomId")  Integer roomId) {
 		List<Bed> beds = bedRepository.getAllByRoom(roomId);
 		LOG.debug("Get all Beds => {}", beds);

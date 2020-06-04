@@ -56,7 +56,6 @@ public class PersonController {
     
     @PostMapping
     @Transactional
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
     public ResponseEntity<BMPersonDto> addPerson(
             @RequestBody APersonDto personDto) throws URISyntaxException {
 

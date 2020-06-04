@@ -1,16 +1,5 @@
 package net.pladema.establishment.controller;
 
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import io.swagger.annotations.Api;
 import net.pladema.establishment.controller.dto.RoomDto;
 import net.pladema.establishment.controller.mapper.RoomMapper;
@@ -18,6 +7,15 @@ import net.pladema.establishment.repository.RoomRepository;
 import net.pladema.establishment.repository.SectorRepository;
 import net.pladema.establishment.repository.entity.Room;
 import net.pladema.establishment.repository.entity.Sector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @Api(value = "Sector", tags = { "Sector" })
@@ -38,7 +36,7 @@ public class SectorController  {
 		this.roomMapper = roomMapper;
 	}
 
-	@GetMapping()
+	@GetMapping
 	public ResponseEntity<List<Sector>> getAll(){
 		List<Sector> sectors = sectorRepository.findAll();
 		LOG.debug("Get all Sectors => {}", sectors);
