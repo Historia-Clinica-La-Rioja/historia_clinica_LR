@@ -34,6 +34,7 @@ public class DocumentSearchBo {
     public DocumentSearchBo(DocumentSearchVo source) {
         this.id = source.getId();
         this.notes = new DocumentObservationsBo(source.getNotes());
+        this.mainDiagnosis = source.getMainDiagnosis();
         this.diagnosis = source.getDiagnosis();
         this.creator = new ResponsibleDoctorBo(source.getCreator().getFirstName(), source.getCreator().getLastName());
         this.createdOn = source.getCreatedOn();
