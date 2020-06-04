@@ -7,6 +7,7 @@ import net.pladema.sgx.repository.QueryPart;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -59,7 +60,7 @@ public class DocumentSearchQuery {
     }
 
     public QueryPart orderBy(){
-        return new QueryPart("document.creationable.createdBy DESC ");
+        return new QueryPart("document.creationable.createdOn DESC ");
     }
 
     public String noResultMessage(){
@@ -69,8 +70,11 @@ public class DocumentSearchQuery {
     public List<DocumentSearchVo> construct(List<Object[]> resultQuery){
         List<DocumentSearchVo> result = new ArrayList<>();
 
-        Map<Long, List<Object[]>> diagnosisByDocuments = resultQuery.stream()
-                .collect(Collectors.groupingBy((Object[] t) -> (Long)t[0],
+        Map<Long, List<Object[]>> diagnosisByDocuments = resultQuery
+                .stream()
+                .collect(Collectors.groupingBy(
+                        (Object[] t) -> (Long)t[0],
+                        LinkedHashMap::new,
                         toList())
                 );
         diagnosisByDocuments.forEach((k,v) -> {
