@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,7 +19,7 @@ import net.pladema.establishment.repository.entity.Bed;
 
 @RestController
 @Api(value = "Bed", tags = { "Bed" })
-@RequestMapping("/bed")
+@RequestMapping("/institution/{institutionId}/bed")
 public class BedController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(BedController.class);
@@ -34,8 +35,8 @@ public class BedController {
 
 	@GetMapping()
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
-	public ResponseEntity<List<BedDto>> getAll() {
-		List<Bed> beds = bedRepository.findAll();
+	public ResponseEntity<List<BedDto>> getAll(@PathVariable(name = "institutionId") Integer institutionId) {
+		List<Bed> beds = bedRepository.getAllByInstitucion(institutionId);
 		LOG.debug("Get all Beds  => {}", beds);
 		return ResponseEntity.ok(bedMapper.toListBedDto(beds));
 	}

@@ -10,6 +10,7 @@ import net.pladema.establishment.repository.entity.Sector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +20,7 @@ import java.util.List;
 
 @RestController
 @Api(value = "Sector", tags = { "Sector" })
-@RequestMapping("/sector")
+@RequestMapping("/institution/{institutionId}/sector")
 public class SectorController  {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SectorController.class);
@@ -37,16 +38,20 @@ public class SectorController  {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<Sector>> getAll(){
-		List<Sector> sectors = sectorRepository.findAll();
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	public ResponseEntity<List<Sector>> getAll(@PathVariable(name = "institutionId") Integer institutionId) {
+		List<Sector> sectors = sectorRepository.getSectorsByInstitution(institutionId);
 		LOG.debug("Get all Sectors => {}", sectors);
 		return ResponseEntity.ok(sectors);
 	}
 	
 	@GetMapping("/{sectorId}/specialty/{specialtyId}/rooms")
-	public ResponseEntity<List<RoomDto>> getAllRoomsBySectorAndSpecialty(@PathVariable(name = "sectorId") Integer sectorId,
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	public ResponseEntity<List<RoomDto>> getAllRoomsBySectorAndSpecialty(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "sectorId") Integer sectorId,
 			@PathVariable(name = "specialtyId") Integer specialtyId) {
-		List<Room> rooms = roomRepository.getAllBySector(sectorId, specialtyId);
+		List<Room> rooms = roomRepository.getAllBySectorAndInstitution(sectorId, specialtyId, institutionId);
 		LOG.debug("Get all Rooms => {}", rooms);
 		return ResponseEntity.ok(roomMapper.toListRoomDto(rooms));
 	}

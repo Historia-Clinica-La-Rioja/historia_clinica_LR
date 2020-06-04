@@ -17,21 +17,26 @@ import net.pladema.staff.repository.entity.ClinicalSpecialty;
 
 @RestController
 @Api(value = "ClinicalSpecialtySector", tags = { "Clinical Specialty Sector" })
-@RequestMapping("/sector/{sectorId}/clinicalspecialty")
-public class ClinicalSpecialtySectorController  {
+@RequestMapping("/institution/{institutionId}/sector/{sectorId}/clinicalspecialty")
+public class ClinicalSpecialtySectorController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ClinicalSpecialtySectorController.class);
-	
+
 	private ClinicalSpecialtySectorRepository clinicalSpecialtySectorRepository;
-	
+
 	public ClinicalSpecialtySectorController(ClinicalSpecialtySectorRepository clinicalSpecialtySectorRepository) {
 		this.clinicalSpecialtySectorRepository = clinicalSpecialtySectorRepository;
 	}
 
 	@GetMapping
-	public ResponseEntity<List<ClinicalSpecialty>> getAllSpecialtyBySector(@PathVariable(name = "sectorId") Integer sectorId){
-		List<ClinicalSpecialty> clinicalSpecialties = clinicalSpecialtySectorRepository.getAllBySector(sectorId);
-		LOG.debug("Get all Clinical Specialty by Sector {} => {}", sectorId, clinicalSpecialties);
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	public ResponseEntity<List<ClinicalSpecialty>> getAllSpecialtyBySector(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "sectorId") Integer sectorId) {
+		List<ClinicalSpecialty> clinicalSpecialties = clinicalSpecialtySectorRepository
+				.getAllBySectorAndInstitution(sectorId, institutionId);
+		LOG.debug("Get all Clinical Specialty by Sector {} and institution {} => {}", sectorId, institutionId,
+				clinicalSpecialties);
 		return ResponseEntity.ok(clinicalSpecialties);
 	}
 }

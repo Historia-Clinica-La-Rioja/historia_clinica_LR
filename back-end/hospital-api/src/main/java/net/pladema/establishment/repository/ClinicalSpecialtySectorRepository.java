@@ -11,12 +11,13 @@ import net.pladema.establishment.repository.entity.ClinicalSpecialtySector;
 import net.pladema.staff.repository.entity.ClinicalSpecialty;
 
 @Repository
-public interface ClinicalSpecialtySectorRepository extends JpaRepository<ClinicalSpecialtySector, Integer>{
+public interface ClinicalSpecialtySectorRepository extends JpaRepository<ClinicalSpecialtySector, Integer> {
 
 	@Query(value = " SELECT cs FROM  ClinicalSpecialtySector css "
 			+ " INNER JOIN ClinicalSpecialty cs ON cs.id = css.clinicalSpecialtyId "
-			+ " WHERE css.sectorId = :idSector ")
-	List<ClinicalSpecialty> getAllBySector(@Param("idSector") Integer idSector);
-	
-	
+			+ " INNER JOIN Sector s ON css.sectorId = s.id "
+			+ " WHERE css.sectorId = :idSector AND s.institutionId = :institutionId")
+	List<ClinicalSpecialty> getAllBySectorAndInstitution(@Param("idSector") Integer idSector,
+			@Param("institutionId") Integer institutionId);
+
 }

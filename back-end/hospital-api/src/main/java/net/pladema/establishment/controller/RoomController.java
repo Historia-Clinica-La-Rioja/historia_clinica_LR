@@ -23,7 +23,7 @@ import net.pladema.establishment.repository.entity.Room;
 
 @RestController
 @Api(value = "Room", tags = { "Room" })
-@RequestMapping("/room")
+@RequestMapping("/institution/{institutionId}/room")
 public class RoomController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(RoomController.class);
@@ -31,11 +31,10 @@ public class RoomController {
 	private RoomRepository roomRepository;
 
 	private RoomMapper roomMapper;
-	
+
 	private BedRepository bedRepository;
 
 	private BedMapper bedMapper;
-
 
 	public RoomController(RoomRepository roomRepository, RoomMapper roomMapper, BedRepository bedRepository,
 			BedMapper bedMapper) {
@@ -46,22 +45,28 @@ public class RoomController {
 	}
 
 	@GetMapping()
-	public ResponseEntity<List<RoomDto>> getAll() {
-		List<Room> rooms = roomRepository.findAll();
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	public ResponseEntity<List<RoomDto>> getAll(@PathVariable(name = "institutionId") Integer institutionId) {
+		List<Room> rooms = roomRepository.getAllByInstitution(institutionId);
 		LOG.debug("Get all Rooms => {}", rooms);
 		return ResponseEntity.ok(roomMapper.toListRoomDto(rooms));
 	}
 
 	@GetMapping("/{roomId}/beds")
-	public ResponseEntity<List<BedDto>> getAllBedsByRoom(@PathVariable(name = "roomId")  Integer roomId) {
-		List<Bed> beds = bedRepository.getAllByRoom(roomId);
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	public ResponseEntity<List<BedDto>> getAllBedsByRoom(@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "roomId") Integer roomId) {
+		List<Bed> beds = bedRepository.getAllByRoomAndInstitution(roomId, institutionId);
 		LOG.debug("Get all Beds => {}", beds);
 		return ResponseEntity.ok(bedMapper.toListBedDto(beds));
 	}
 
 	@GetMapping("/{roomId}/freebeds")
-	public ResponseEntity<List<BedDto>> getAllFreeBedsByRoom(@PathVariable(name = "roomId")  Integer roomId) {
-		List<Bed> beds = bedRepository.getAllFreeBedsByRoom(roomId);
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	public ResponseEntity<List<BedDto>> getAllFreeBedsByRoom(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "roomId") Integer roomId) {
+		List<Bed> beds = bedRepository.getAllFreeBedsByRoomAndInstitution(roomId, institutionId);
 		LOG.debug("Get all free Beds  => {}", beds);
 		return ResponseEntity.ok(bedMapper.toListBedDto(beds));
 	}
