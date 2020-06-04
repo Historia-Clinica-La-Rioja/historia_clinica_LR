@@ -50,7 +50,7 @@ export class DiagnosisSummaryComponent implements OnInit {
 			columns: [
 				{
 					columnDef: 'diagnosis',
-					header: 'Diagnóstico',
+					header: 'internaciones.anamnesis.diagnosticos.DIAGNOSIS',
 					text: (row) => row.snomed.pt
 				},
 				{
