@@ -16,6 +16,7 @@ import net.pladema.internation.service.documents.ReportDocumentService;
 import net.pladema.patient.controller.service.PatientExternalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -36,6 +37,8 @@ public class PdfService {
 
     public static final String OUTPUT = "Output -> {}";
 
+    private final String flavor;
+
     private final SpringTemplateEngine templateEngine;
 
     private final StreamFile streamFile;
@@ -50,14 +53,16 @@ public class PdfService {
 
     private final DocumentFileRepository documentFileRepository;
 
-    public PdfService(SpringTemplateEngine templateEngine,
-                      StreamFile streamFile,
-                      PatientExternalService patientExternalService,
-                      ReportDocumentService reportDocumentService,
-                      ResponsibleDoctorMapper responsibleDoctorMapper,
-                      VitalSignMapper vitalSignMapper,
-                      DocumentFileRepository documentFileRepository) {
+    public PdfService(@Value("${app.flavor}") String flavor,
+            SpringTemplateEngine templateEngine,
+            StreamFile streamFile,
+            PatientExternalService patientExternalService,
+            ReportDocumentService reportDocumentService,
+            ResponsibleDoctorMapper responsibleDoctorMapper,
+            VitalSignMapper vitalSignMapper,
+            DocumentFileRepository documentFileRepository) {
         super();
+        this.flavor = flavor;
         this.templateEngine = templateEngine;
         this.streamFile = streamFile;
         this.patientExternalService = patientExternalService;
@@ -67,11 +72,11 @@ public class PdfService {
         this.documentFileRepository = documentFileRepository;
     }
 
-    public ResponseEntity<InputStreamResource> getResponseEntityPdf(String name, String templateName,Context ctx)
+    public ResponseEntity<InputStreamResource> getResponseEntityPdf(String name, String fileName,Context ctx)
             throws IOException, DocumentException {
-        LOG.debug("Input parameters -> name {}, templateName {}, ctx {}",
-                name, templateName, ctx);
-
+        LOG.debug("Input parameters -> name {}, fileName {}, ctx {}",
+                name, fileName, ctx);
+        String templateName = fileName + "-" + flavor;
         ByteArrayOutputStream writer = writer(templateName, ctx);
         return reader(writer, streamFile.buildDownloadName(name));
     }
