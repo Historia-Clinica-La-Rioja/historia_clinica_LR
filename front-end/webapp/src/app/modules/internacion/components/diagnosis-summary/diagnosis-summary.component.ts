@@ -40,7 +40,7 @@ export class DiagnosisSummaryComponent implements OnInit {
 			this.verifications = healthVerification;
 		});
 
-		this.internmentStateService.getDiagnosis(this.internmentEpisodeId).subscribe(
+		this.internmentStateService.getAlternativeDiagnosesGeneralState(this.internmentEpisodeId).subscribe(
 			data => this.tableModel = this.buildTable(data)
 		);
 	}
@@ -96,7 +96,7 @@ export class DiagnosisSummaryComponent implements OnInit {
 							}
 						});
 						dialogRef.afterClosed().subscribe(
-							() => this.internmentStateService.getDiagnosis(this.internmentEpisodeId).subscribe(
+							() => this.internmentStateService.getAlternativeDiagnosesGeneralState(this.internmentEpisodeId).subscribe(
 								data => this.tableModel = this.buildTable(data)
 							)
 						);

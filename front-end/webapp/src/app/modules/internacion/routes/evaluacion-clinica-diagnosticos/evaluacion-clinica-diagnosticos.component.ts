@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from '@core/services/context.service';
-import { BasicPatientDto, InternmentSummaryDto, DiagnosisDto, MasterDataInterface, EvolutionDiagnosisDto } from '@api-rest/api-model';
+import { BasicPatientDto, InternmentSummaryDto, DiagnosesGeneralStateDto, MasterDataInterface, EvolutionDiagnosisDto } from '@api-rest/api-model';
 import { map } from 'rxjs/operators';
 import { MapperService } from '@presentation/services/mapper.service';
 import { InternacionService } from '@api-rest/services/internacion.service';
@@ -35,7 +35,7 @@ export class EvaluacionClinicaDiagnosticosComponent implements OnInit {
 	form: FormGroup;
 	patient$: Observable<PatientBasicData>;
 	internmentEpisodeSummary$: Observable<InternmentEpisodeSummary>;
-	diagnostics: TableCheckbox<DiagnosisDto> = {
+	diagnostics: TableCheckbox<DiagnosesGeneralStateDto> = {
 		data: [],
 		columns: [
 			{
@@ -55,11 +55,11 @@ export class EvaluacionClinicaDiagnosticosComponent implements OnInit {
 			},
 			{
 				def: 'type',
-				display: (_, i) => i === MAIN_DIAGNOSIS_INDEX ? 'internaciones.clinical-assessment-diagnosis.diagnostics.table.columns.MAIN' : '',
+				display: row => row.main ? 'internaciones.clinical-assessment-diagnosis.diagnostics.table.columns.MAIN' : '',
 			},
 		],
 		displayedColumns: [],
-		selection: new SelectionModel<DiagnosisDto>(true, [])
+		selection: new SelectionModel<DiagnosesGeneralStateDto>(true, [])
 	};
 	isAllSelected = this.tableService.isAllSelected;
 	masterToggle = this.tableService.masterToggle;
@@ -97,7 +97,9 @@ export class EvaluacionClinicaDiagnosticosComponent implements OnInit {
 					map((internmentEpisodeSummary: InternmentSummaryDto) => this.mapperService.toInternmentEpisodeSummary(internmentEpisodeSummary))
 				);
 
-				this.loadDiagnosticsData(this.internmentEpisodeId).subscribe(
+				this.internmentStateService.getDiagnosesGeneralState(this.internmentEpisodeId).pipe(
+					map(diagnostics => diagnostics.filter(od => od.statusId === HEALTH_CLINICAL_STATUS.ACTIVO))
+				).subscribe(
 					diagnostics => {
 						this.diagnostics.data = diagnostics;
 						this.diagnostics.selection.select(diagnostics.find(d => d.id === routedDiagnosisId));
@@ -119,17 +121,6 @@ export class EvaluacionClinicaDiagnosticosComponent implements OnInit {
 			otherNote: [],
 		});
 
-	}
-
-	private loadDiagnosticsData(internmentEpisodeId: number): Observable<DiagnosisDto[]> {
-		const mainDiagnosis$ = this.internmentStateService.getMainDiagnosis(internmentEpisodeId);
-		const otherDiagnostics$ = this.internmentStateService.getDiagnosis(internmentEpisodeId).pipe(
-			map(otherDiagnostics => otherDiagnostics.filter(od => od.statusId === HEALTH_CLINICAL_STATUS.ACTIVO))
-		);
-		return forkJoin([mainDiagnosis$, otherDiagnostics$]).pipe(
-			//mainDiagnosis first => index === 0
-			map(([mainDiagnosis, otherDiagnostics]) => [mainDiagnosis, ...otherDiagnostics])
-		);
 	}
 
 	save(): void {

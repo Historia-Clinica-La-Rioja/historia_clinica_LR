@@ -5,6 +5,7 @@ import { environment } from '@environments/environment';
 import {
 	AllergyConditionDto,
 	AnthropometricDataDto,
+	DiagnosesGeneralStateDto,
 	HealthConditionDto,
 	HealthHistoryConditionDto,
 	InmunizationDto,
@@ -28,9 +29,14 @@ export class InternmentStateService {
 		return this.http.get<HealthConditionDto>(url);
 	}
 
-	getDiagnosis(internmentId: number): Observable<HealthConditionDto[]> {
-		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments-state/${internmentId}/general/diagnosis`;
+	getAlternativeDiagnosesGeneralState(internmentId: number): Observable<HealthConditionDto[]> {
+		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments-state/${internmentId}/general/alternativeDiagnoses`;
 		return this.http.get<HealthConditionDto[]>(url);
+	}
+	
+	getDiagnosesGeneralState(internmentId: number): Observable<DiagnosesGeneralStateDto[]> {
+		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments-state/${internmentId}/general/diagnoses`;
+		return this.http.get<DiagnosesGeneralStateDto[]>(url);
 	}
 
 	getVitalSigns(internmentId: number): Observable<Last2VitalSignsDto> {

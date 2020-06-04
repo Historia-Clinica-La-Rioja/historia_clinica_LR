@@ -174,6 +174,10 @@ export interface DepartmentDto extends MasterdataDto<number> {
     id: number;
 }
 
+export interface DiagnosesGeneralStateDto extends DiagnosisDto {
+    main: boolean;
+}
+
 export interface DiagnosisDto extends HealthConditionDto {
     presumptive?: boolean;
 }

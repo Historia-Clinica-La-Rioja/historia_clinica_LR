@@ -71,6 +71,7 @@ public class GeneralHealthConditionBo implements Serializable {
         result.setVerification(healthConditionVo.getVerification());
         result.setSnomed(new SnomedBo(healthConditionVo.getSnomed()));
         result.setPresumptive(healthConditionVo.isPresumptive());
+        result.setMain(healthConditionVo.isMain());
         LOG.debug(OUTPUT, result);
         return result;
 
@@ -86,6 +87,7 @@ public class GeneralHealthConditionBo implements Serializable {
         result.setVerification(healthConditionVo.getVerification());
         result.setSnomed(new SnomedBo(healthConditionVo.getSnomed()));
         result.setDate(healthConditionVo.getStartDate());
+        result.setMain(healthConditionVo.isMain());
         LOG.debug(OUTPUT, result);
         return result;
 
@@ -102,6 +104,7 @@ public class GeneralHealthConditionBo implements Serializable {
             result.get().setVerificationId(healthConditionVo.getVerificationId());
             result.get().setVerification(healthConditionVo.getVerification());
             result.get().setSnomed(new SnomedBo(healthConditionVo.getSnomed()));
+            result.get().setMain(healthConditionVo.isMain());
         });
         LOG.debug(OUTPUT, result);
         return result.get();

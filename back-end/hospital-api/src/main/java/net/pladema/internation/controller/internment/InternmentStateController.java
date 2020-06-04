@@ -4,8 +4,9 @@ import io.swagger.annotations.Api;
 import net.pladema.internation.controller.constraints.InternmentValid;
 import net.pladema.internation.controller.internment.dto.InternmentGeneralStateDto;
 import net.pladema.internation.controller.internment.dto.Last2VitalSignsDto;
-import net.pladema.internation.controller.ips.dto.*;
+import net.pladema.internation.controller.internment.dto.internmentstate.DiagnosesGeneralStateDto;
 import net.pladema.internation.controller.internment.mapper.InternmentStateMapper;
+import net.pladema.internation.controller.ips.dto.*;
 import net.pladema.internation.service.internment.InternmentStateService;
 import net.pladema.internation.service.internment.domain.InternmentGeneralState;
 import net.pladema.internation.service.internment.domain.Last2VitalSignsBo;
@@ -90,13 +91,25 @@ public class InternmentStateController {
     }
 
     @InternmentValid
-    @GetMapping("/{internmentEpisodeId}/general/diagnosis")
-    public ResponseEntity<List<DiagnosisDto>> diagnosisGeneralState(
+    @GetMapping("/{internmentEpisodeId}/general/alternativeDiagnoses")
+    public ResponseEntity<List<DiagnosisDto>> getAlternativeDiagnosesGeneralState(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
         LOG.debug(LOGGING_INSTITUTION_AND_INTERNMENT_EPISODE, institutionId, internmentEpisodeId);
-        List<DiagnosisBo> diagnosis = healthConditionService.getDiagnosisGeneralState(internmentEpisodeId);
+        List<DiagnosisBo> diagnosis = healthConditionService.getAlternativeDiagnosisGeneralState(internmentEpisodeId);
         List<DiagnosisDto> result = internmentStateMapper.toListDiagnosisDto(diagnosis);
+        LOG.debug(LOGGING_OUTPUT, result);
+        return  ResponseEntity.ok().body(result);
+    }
+
+    @InternmentValid
+    @GetMapping("/{internmentEpisodeId}/general/diagnoses")
+    public ResponseEntity<List<DiagnosesGeneralStateDto>> getDiagnosesGeneralState(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
+        LOG.debug(LOGGING_INSTITUTION_AND_INTERNMENT_EPISODE, institutionId, internmentEpisodeId);
+        List<HealthConditionBo> diagnoses = healthConditionService.getDiagnosesGeneralState(internmentEpisodeId);
+        List<DiagnosesGeneralStateDto> result = internmentStateMapper.toListDiagnosesGeneralStateDto(diagnoses);
         LOG.debug(LOGGING_OUTPUT, result);
         return  ResponseEntity.ok().body(result);
     }

@@ -14,6 +14,8 @@ public class HealthConditionBo extends ClinicalTerm {
 
     private String verification;
 
+    private boolean main = false;
+
     public String getVerificationId(){
         if (verificationId == null)
             return  ConditionVerificationStatus.CONFIRMED;

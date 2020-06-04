@@ -194,7 +194,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     }
 
     @Override
-    public List<DiagnosisBo> getDiagnosisGeneralState(Integer internmentEpisodeId) {
+    public List<DiagnosisBo> getAlternativeDiagnosisGeneralState(Integer internmentEpisodeId) {
         LOG.debug(LOGGING_INTERNMENT_EPISODE, internmentEpisodeId);
         List<HealthConditionVo> data = getGeneralStateData(internmentEpisodeId);
         GeneralHealthConditionBo generalHealthConditionBo = new GeneralHealthConditionBo(data);
@@ -202,6 +202,21 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         LOG.debug(OUTPUT, result);
         return result;
     }
+
+    @Override
+    public List<HealthConditionBo> getDiagnosesGeneralState(Integer internmentEpisodeId) {
+        LOG.debug(LOGGING_INTERNMENT_EPISODE, internmentEpisodeId);
+        List<HealthConditionVo> data = getGeneralStateData(internmentEpisodeId);
+        GeneralHealthConditionBo generalHealthConditionBo = new GeneralHealthConditionBo(data);
+        List<HealthConditionBo> result =  new ArrayList<>();
+        HealthConditionBo mainDiagnosis =  generalHealthConditionBo.getMainDiagnosis();
+        if (mainDiagnosis != null)
+            result.add(mainDiagnosis);
+        result.addAll(generalHealthConditionBo.getDiagnosis());
+        LOG.debug(OUTPUT, result);
+        return result;
+    }
+
 
     @Override
     public List<HealthHistoryConditionBo> getPersonalHistoriesGeneralState(Integer internmentEpisodeId) {

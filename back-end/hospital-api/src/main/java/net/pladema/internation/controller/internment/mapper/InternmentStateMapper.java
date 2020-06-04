@@ -2,13 +2,9 @@ package net.pladema.internation.controller.internment.mapper;
 
 import net.pladema.internation.controller.internment.dto.InternmentGeneralStateDto;
 import net.pladema.internation.controller.internment.dto.Last2VitalSignsDto;
+import net.pladema.internation.controller.internment.dto.internmentstate.DiagnosesGeneralStateDto;
 import net.pladema.internation.controller.ips.dto.*;
-import net.pladema.internation.controller.ips.mapper.AllergyConditionMapper;
-import net.pladema.internation.controller.ips.mapper.AnthropometricDataMapper;
-import net.pladema.internation.controller.ips.mapper.HealthConditionMapper;
-import net.pladema.internation.controller.ips.mapper.InmunizationMapper;
-import net.pladema.internation.controller.ips.mapper.MedicationMapper;
-import net.pladema.internation.controller.ips.mapper.VitalSignMapper;
+import net.pladema.internation.controller.ips.mapper.*;
 import net.pladema.internation.service.internment.domain.InternmentGeneralState;
 import net.pladema.internation.service.internment.domain.Last2VitalSignsBo;
 import net.pladema.internation.service.ips.domain.*;
@@ -23,7 +19,7 @@ import java.util.List;
         MedicationMapper.class, InmunizationMapper.class, AllergyConditionMapper.class})
 public interface InternmentStateMapper {
 
-    @Named("toDiagnosisDto")
+    @Named("toListDiagnosisDto")
     @IterableMapping(qualifiedByName = "toDiagnosisDto")
     List<DiagnosisDto> toListDiagnosisDto(List<DiagnosisBo> listDiagnosisBo);
 
@@ -31,13 +27,9 @@ public interface InternmentStateMapper {
     @IterableMapping(qualifiedByName = "toHealthHistoryConditionDto")
     List<HealthHistoryConditionDto> toListHealthHistoryConditionDto(List<HealthHistoryConditionBo> listHealthHistoryCondition);
 
-    @Named("toListVitalSignDto")
-    @IterableMapping(qualifiedByName = "fromVitalSignBo")
-    List<VitalSignDto> toListVitalSignDto(List<VitalSignBo> vitalSignBos);
-
-    @Named("toListAnthropometricDataDto")
-    @IterableMapping(qualifiedByName = "fromAnthropometricDataBo")
-    List<AnthropometricDataDto> toListAnthropometricDataDto(List<AnthropometricDataBo> anthropometricDatas);
+    @Named("toListDiagnosesGeneralStateDto")
+    @IterableMapping(qualifiedByName = "toDiagnosesGeneralStateDto")
+    List<DiagnosesGeneralStateDto> toListDiagnosesGeneralStateDto(List<HealthConditionBo> diagnoses);
 
     @Named("toListMedicationDto")
     @IterableMapping(qualifiedByName = "toMedicationDto")
@@ -52,7 +44,7 @@ public interface InternmentStateMapper {
     List<AllergyConditionDto> toListAllergyConditionDto(List<AllergyConditionBo> allergyConditionBos);
 
     @Named("toInternmentGeneralStateDto")
-    @Mapping(target = "diagnosis", source = "diagnosis", qualifiedByName = "toListHealthConditionDto")
+    @Mapping(target = "diagnosis", source = "diagnosis", qualifiedByName = "toListDiagnosisDto")
     @Mapping(target = "personalHistories", source = "personalHistories", qualifiedByName = "toListHealthHistoryConditionDto")
     @Mapping(target = "familyHistories", source = "familyHistories", qualifiedByName = "toListHealthHistoryConditionDto")
     @Mapping(target = "vitalSigns", source = "vitalSigns", qualifiedByName = "toListVitalSignDto")

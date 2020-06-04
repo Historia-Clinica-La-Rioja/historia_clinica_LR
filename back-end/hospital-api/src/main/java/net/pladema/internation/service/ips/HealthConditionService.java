@@ -22,7 +22,9 @@ public interface HealthConditionService {
 
     HealthConditionBo getMainDiagnosisGeneralState(Integer internmentEpisodeId);
 
-    List<DiagnosisBo> getDiagnosisGeneralState(Integer internmentEpisodeId);
+    List<DiagnosisBo> getAlternativeDiagnosisGeneralState(Integer internmentEpisodeId);
+
+    List<HealthConditionBo> getDiagnosesGeneralState(Integer internmentEpisodeId);
 
     List<HealthHistoryConditionBo> getPersonalHistoriesGeneralState(Integer internmentEpisodeId);
 
