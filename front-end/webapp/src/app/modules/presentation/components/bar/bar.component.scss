@@ -1,7 +1,11 @@
 mat-toolbar {
+	background-color: white;
 	z-index: 2;
 	img {
 		max-width: 100%;
 		height: 80%;
+	}
+	.title {
+		font-weight: normal;
 	}
 }

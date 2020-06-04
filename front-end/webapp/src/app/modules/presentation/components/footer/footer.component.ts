@@ -1,3 +1,4 @@
+import { PublicService } from '@api-rest/services/public.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -7,9 +8,86 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FooterComponent implements OnInit {
 
-	constructor() { }
-
-	ngOnInit(): void {
+	flavoredImages: FlavoredImages = {
+		tandil: [
+			{
+				location: 'assets/flavors/tandil/images/logos/ministerio-salud.png',
+				alt: 'ministerio-salud'
+			},
+			{
+				location: 'assets/flavors/tandil/images/logos/sisp.png',
+				alt: 'sisp'
+			},
+			{
+				location: 'assets/flavors/tandil/images/logos/minicipio-tandil.png',
+				alt: 'minicipio-tandil'
+			},
+			{
+				location: 'assets/flavors/tandil/images/logos/pladema.png',
+				alt: 'pladema'
+			},
+			{
+				location: 'assets/flavors/tandil/images/logos/unicen.png',
+				alt: 'unicen'
+			},
+		],
+		minsal: [
+			{
+				location: 'assets/flavors/tandil/images/logos/ministerio-salud.png',
+				alt: 'ministerio-salud'
+			},
+			{
+				location: 'assets/flavors/tandil/images/logos/pladema.png',
+				alt: 'pladema'
+			},
+			{
+				location: 'assets/flavors/tandil/images/logos/unicen.png',
+				alt: 'unicen'
+			},
+		],
+		chaco: [
+			{
+				location: 'assets/flavors/tandil/chaco/logos/ministerio-salud.png',
+				alt: 'ministerio-salud'
+			},
+			{
+				location: 'assets/flavors/tandil/chaco/logos/prov-chaco.png',
+				alt: 'prov-chaco'
+			},
+			{
+				location: 'assets/flavors/tandil/chaco/logos/ministerio-salud-chaco.png',
+				alt: 'ministerio-salud-chaco'
+			},
+			{
+				location: 'assets/flavors/tandil/chaco/logos/pladema.png',
+				alt: 'pladema'
+			},
+			{
+				location: 'assets/flavors/tandil/chaco/logos/unicen.png',
+				alt: 'unicen'
+			},
+		],
 	}
 
+	images: ImageSrc[] = [];
+
+	constructor(
+		private readonly publicInfoService: PublicService,
+	) { }
+
+	ngOnInit(): void {
+		this.publicInfoService.getInfo().subscribe(
+			publicInfo => this.images = this.flavoredImages[publicInfo.flavor]
+		);
+	}
+
+}
+interface ImageSrc {
+	location: string
+	alt: string
+}
+interface FlavoredImages {
+	tandil: ImageSrc[]
+	minsal: ImageSrc[]
+	chaco: ImageSrc[]
 }

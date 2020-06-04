@@ -1,7 +1,7 @@
 <div class="layout-container" [class.layout-is-mobile]="mobileQuery.matches">
 	<app-bar [position]="mobileQuery.matches ? 'fixed' : 'static'">
 		<button mat-icon-button (click)="sidenav.toggle()" *ngIf="menuItems">
-			<mat-icon>menu</mat-icon>
+			<mat-icon color="primary">menu</mat-icon>
 		</button>
 	</app-bar>
 	<mat-sidenav-container class="layout-sidenav-container"
