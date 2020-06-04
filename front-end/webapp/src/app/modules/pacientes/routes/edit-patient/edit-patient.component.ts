@@ -63,15 +63,17 @@ export class EditPatientComponent implements OnInit {
 						this.completeDataPatient = completeData;
 						this.personService.getCompletePerson<BMPersonDto>(completeData.person.id)
 							.subscribe(personInformationData => {
-								this.form.setControl('identificationTypeId', new FormControl(Number(personInformationData.identificationTypeId), Validators.required));
-								this.form.setControl('identificationNumber', new FormControl(Number(personInformationData.identificationNumber), [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]));
+								if (personInformationData.identificationTypeId)
+									this.form.setControl('identificationTypeId', new FormControl(Number(personInformationData.identificationTypeId), Validators.required));
+								this.form.setControl('identificationNumber', new FormControl(personInformationData.identificationNumber, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]));
 								//person
 								this.form.setControl('firstName', new FormControl(completeData.person.firstName, Validators.required));
 								this.form.setControl('middleNames', new FormControl(personInformationData.middleNames));
 								this.form.setControl('lastName', new FormControl(completeData.person.lastName, Validators.required));
 								this.form.setControl('otherLastNames', new FormControl(personInformationData.otherLastNames));
 								this.form.setControl('mothersLastName', new FormControl(personInformationData.mothersLastName));
-								this.form.setControl('genderId', new FormControl(Number(completeData.person.gender.id), Validators.required));
+								if (completeData.person.gender.id)
+									this.form.setControl('genderId', new FormControl(Number(completeData.person.gender.id), Validators.required));
 								this.form.setControl('genderSelfDeterminationId', new FormControl(Number(personInformationData.genderSelfDeterminationId)));
 								this.form.setControl('nameSelfDetermination', new FormControl(personInformationData.nameSelfDetermination));
 								this.form.setControl('birthDate', new FormControl(new Date(personInformationData.birthDate), Validators.required));
