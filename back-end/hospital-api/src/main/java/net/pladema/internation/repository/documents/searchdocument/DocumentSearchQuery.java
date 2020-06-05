@@ -1,10 +1,10 @@
 package net.pladema.internation.repository.documents.searchdocument;
 
 import com.google.common.base.Strings;
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import net.pladema.internation.repository.ips.generalstate.DocumentObservationsVo;
 import net.pladema.internation.repository.masterdata.entity.ConditionVerificationStatus;
+import net.pladema.patient.service.StringHelper;
 import net.pladema.sgx.repository.QueryPart;
 
 import java.time.LocalDateTime;
@@ -16,12 +16,17 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
-@AllArgsConstructor
 @NoArgsConstructor
 public class DocumentSearchQuery {
 
     String plainText;
+    String escapeSqlText;
     private static final String MESSAGE = "No se han creado documentos aún";
+
+    public DocumentSearchQuery(String plainText){
+        this.plainText = plainText;
+        this.escapeSqlText = StringHelper.escapeSql(plainText);
+    }
 
     public QueryPart select() {
         return new QueryPart("document.id, \n" +

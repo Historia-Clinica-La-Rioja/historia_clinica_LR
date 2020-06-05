@@ -10,7 +10,7 @@ public class DocumentDoctorSearchQuery extends DocumentSearchQuery {
 
     @Override
     public QueryPart where() {
-        String pattern = plainText.toUpperCase();
+        String pattern = escapeSqlText.toUpperCase();
         return super.where().concatPart(new QueryPart(
                 "AND (creator.firstName LIKE '%"+pattern+"%' OR creator.lastName LIKE '%"+pattern+"%') \n"));
     }

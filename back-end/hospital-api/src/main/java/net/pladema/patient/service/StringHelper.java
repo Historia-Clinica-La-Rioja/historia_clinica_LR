@@ -68,4 +68,8 @@ public class StringHelper {
 	public static boolean isNullOrWhiteSpace(String str) {
 		return (str == null || str.length() == 0 || str.equals(" "));
 	}
+
+	public static String escapeSql(String sql){
+		return sql.replace("'", "''");
+	}
 }

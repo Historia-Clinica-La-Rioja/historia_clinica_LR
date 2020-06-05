@@ -17,7 +17,7 @@ public class DocumentDiagnosisSearchQuery extends DocumentSearchQuery {
                 "from DocumentHealthCondition as dhcSub \n " +
                 "join HealthCondition as hcSub on (dhcSub.pk.healthConditionId = hcSub.id) \n" +
                 "join Snomed as s on (hcSub.sctidCode = s.id ) \n " +
-                "where dhcSub.pk.documentId = document.id AND LOWER(s.pt) LIKE '%"+pattern+"%') \n"));
+                "where dhcSub.pk.documentId = document.id AND LOWER(s.pt) LIKE '%"+escapeSqlText+"%') \n"));
     }
 
     @Override

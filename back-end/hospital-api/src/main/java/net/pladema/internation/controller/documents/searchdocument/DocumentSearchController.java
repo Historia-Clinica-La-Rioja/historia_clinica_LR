@@ -45,6 +45,7 @@ public class DocumentSearchController {
 
     @GetMapping
     @InternmentValid
+    //TODO: validar el formato de fecha con EDocumentSearch.CREATEDON
     public ResponseEntity<DocumentHistoricDto> historic(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
