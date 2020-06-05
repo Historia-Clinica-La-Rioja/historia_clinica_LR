@@ -53,6 +53,8 @@ export interface AddressDto extends Serializable {
     cityId: number;
     floor: string;
     id: number;
+    latitud: number;
+    longitud: number;
     number: string;
     postcode: string;
     province: ProvinceDto;

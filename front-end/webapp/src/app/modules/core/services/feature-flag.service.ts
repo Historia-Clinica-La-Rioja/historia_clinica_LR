@@ -1,22 +1,23 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { PublicService } from '@api-rest/services/public.service';
 import { map } from 'rxjs/operators';
 
 const FLAVOR_TANDIL = 'tandil';
+const FLAVOR_CHACO = 'FLAVOR_CHACO';
 const FLAVOR_HOSPITALES = 'minsal';
 const FEATURE_FLAGS = [
 	{
 		name: 'habilitarEditarPaciente',
-		flavorMatch: [FLAVOR_TANDIL]
+		flavorMatch: [FLAVOR_TANDIL, FLAVOR_CHACO]
 	},
 	{
 		name: 'agregarContactoResponsable',
-		flavorMatch: [FLAVOR_TANDIL]
+		flavorMatch: [FLAVOR_TANDIL, FLAVOR_CHACO]
 	},
 	{
 		name: 'agregarMedicosAdicionales',
-		flavorMatch: [FLAVOR_TANDIL]
+		flavorMatch: [FLAVOR_TANDIL, FLAVOR_CHACO]
 	},
 	{
 		name: 'habilitarServicioRenaper',
@@ -24,7 +25,7 @@ const FEATURE_FLAGS = [
 	},
 	{
 		name: 'habilitarAltaSinEpicrisis',
-		flavorMatch: [FLAVOR_TANDIL]
+		flavorMatch: [FLAVOR_TANDIL, FLAVOR_CHACO]
 	},
 	{
 		name: 'responsibleDoctorRequired',

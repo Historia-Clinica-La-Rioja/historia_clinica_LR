@@ -16,12 +16,14 @@ export class ChacoLoginGuardService implements CanActivate {
         state: RouterStateSnapshot): Observable<boolean | UrlTree> {
         return this.publicService.getInfo().pipe(
             switchMap(publicInfo => {
-                if (publicInfo.flavor === 'chaco') {
-                    return this.authService.getRedirectUrl().pipe(map(url => {
-                        window.location.href = url;
-                        return false;
+				if (publicInfo.flavor === 'chaco') {
+					return this.authService.getRedirectUrl().pipe(map(url => {
+						if (url) {
+							window.location.href = url;
+						}
+                        return true;
                     }));
-                } else { return of(true) }
+				} else { return of(true) }
             }));
     }
 

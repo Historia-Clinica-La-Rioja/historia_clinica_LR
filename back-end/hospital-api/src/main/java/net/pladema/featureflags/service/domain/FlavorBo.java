@@ -6,6 +6,7 @@ import java.util.Optional;
 public enum FlavorBo {
 
     TANDIL("tandil"),
+    CHACO("chaco"),
     HOSPITALES("minsal");
 
     private final String text;
