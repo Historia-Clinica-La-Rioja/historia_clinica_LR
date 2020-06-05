@@ -99,6 +99,7 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             "JOIN ClinicalSpecialtySector css ON (r.clinicalSpecialtySectorId = css.id) " +
             "JOIN ClinicalSpecialty cs ON (css.clinicalSpecialtyId = cs.id) " +
             "JOIN Sector s ON (css.sectorId = s.id) " +
+            "LEFT JOIN PatientDischarge pd ON (pd.internmentEpisodeId = ie.id) " +
             "WHERE ie.institutionId = :institutionId " +
             "AND (ie.epicrisisDocId IS NULL " +
             "     OR NOT EXISTS (SELECT d.id " +
@@ -106,6 +107,7 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             "                    WHERE d.id = ie.epicrisisDocId " +
             "                    AND d.statusId = '"+ DocumentStatus.FINAL + "')" +
             "     ) " +
+            "AND pd.internmentEpisodeId IS NULL " +
             " ORDER BY ps.firstName ASC, ps.lastName ASC")
     List<InternmentEpisodeBo> getAllInternmentPatient(@Param("institutionId") Integer institutionId);
 
