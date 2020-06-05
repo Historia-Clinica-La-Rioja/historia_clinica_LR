@@ -28,7 +28,7 @@
 		<strong>- Sexo: </strong><label  th:text="${patient.person.gender.description}"></label><br/>
 	</div>
 
-	<h3 [translate]="'internaciones.epicrisis.diagnosticos.TITLE'"></h3>
+	<h3 th:text="${#strings.defaultString(#messages.msgOrNull('document.pdf.diagnosis.title.tandil'),'Enfermedades')}"></h3>
 	<div class="row" th:if="${#lists.isEmpty(diagnosis)}">
 		<dl class="lista" >
 			<dd><p >Sin cambios registrados</p></dd>
