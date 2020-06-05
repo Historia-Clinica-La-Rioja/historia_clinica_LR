@@ -1,4 +1,5 @@
 import { SummaryHeader } from '../../presentation/components/summary-card/summary-card.component';
+import { SearchField } from '../components/documents-summary/documents-summary.component';
 
 export const INTERNACION: SummaryHeader = {
 	title: 'Resumen de internación',
@@ -49,3 +50,27 @@ export const VACUNAS: SummaryHeader = {
 	title: 'Vacunas suministradas',
 	matIcon: 'event_available'
 };
+
+export const DOCUMENTS: SummaryHeader = {
+	title: 'Evoluciones',
+	matIcon: 'assignment'
+};
+
+export const DOCUMENTS_SEARCH_FIELDS: SearchField[] = [
+	{
+		field: 'DIAGNOSIS',
+		label: 'internaciones.documents-summary.search-fields.DIAGNOSIS',
+	},
+	{
+		field: 'DOCTOR',
+		label: 'internaciones.documents-summary.search-fields.DOCTOR',
+	},
+	{
+		field: 'CREATEDON',
+		label: 'internaciones.documents-summary.search-fields.CREATEDON',
+	},
+	{
+		field: 'ALL',
+		label: 'internaciones.documents-summary.search-fields.ALL',
+	}
+];

@@ -28,6 +28,15 @@
 			}
 		},
 
+		"documents-summary": {
+			"search-fields": {
+				"DIAGNOSIS": "Enfermedad",
+				"DOCTOR": "Médico",
+				"CREATEDON": "Fecha",
+				"ALL": "Todos"
+			}
+		},
+
 		"diagnosticos": {
 			"TITLE_PRINCIPAL": "Enfermedad",
 			"TITLE": "Enfermedades",

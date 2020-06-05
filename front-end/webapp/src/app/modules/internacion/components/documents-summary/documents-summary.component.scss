@@ -1,0 +1,36 @@
+mat-form-field.input {
+	width: 100%;
+}
+
+form {
+	margin-top: 10px;
+}
+
+mat-selection-list {
+	overflow: auto;
+	width: 35%;
+}
+
+.content {
+	width: 65%;
+	margin-left: 10px;
+	overflow-x: hidden;
+}
+
+.documents {
+	max-height: 50vh;
+}
+
+.no-notes {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	text-align: center;
+}
+
+::ng-deep .mat-line {
+	&:first-child {
+		font-weight: 500 !important;
+	}
+}
+

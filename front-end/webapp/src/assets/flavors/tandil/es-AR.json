@@ -43,6 +43,15 @@
 			}
 		},
 
+		"documents-summary": {
+			"search-fields": {
+				"DIAGNOSIS": "Enfermedad",
+				"DOCTOR": "Médico",
+				"CREATEDON": "Fecha",
+				"ALL": "Todos"
+			}
+		},
+
 		"epicrisis": {
 			"diagnosticos": {
 				"TITLE": "Enfermedades",

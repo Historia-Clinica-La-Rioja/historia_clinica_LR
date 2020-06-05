@@ -239,6 +239,14 @@
 				"SUCCESS": "El documento con la evaluación clínica de diagnósticos se guardó exitosamente"
 			}
 		},
+		"documents-summary": {
+			"search-fields": {
+				"DIAGNOSIS": "Diagnóstico",
+				"DOCTOR": "Médico",
+				"CREATEDON": "Fecha",
+				"ALL": "Todos"
+			}
+		},
 		"nota-evolucion": {
 			"TITLE": "Nota de evolución",
 			"SUBTITLE": "Completa los siguientes datos.",

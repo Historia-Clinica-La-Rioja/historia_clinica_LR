@@ -88,6 +88,9 @@
 					</ng-container>
 				</div>
 			</div>
+			<ng-container *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR']">
+				<app-documents-summary [internmentEpisodeId]="internmentEpisodeId"></app-documents-summary>
+			</ng-container>
 		</div>
 	</section>
 </app-content>
