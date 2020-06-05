@@ -149,7 +149,7 @@
 			"SUBTITLE": "Se editara el adulto mayor seleccionado",
 			"messages": {
 				"ERROR": "Error al editar un adulto mayor",
-				"SUCCESS": "El adulto mayor se edito exitosamente"
+				"SUCCESS": "El adulto mayor se editó exitosamente"
 			}
 		}
 	}
