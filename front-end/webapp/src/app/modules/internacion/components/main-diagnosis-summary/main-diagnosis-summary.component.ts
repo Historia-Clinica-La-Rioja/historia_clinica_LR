@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 export class MainDiagnosisSummaryComponent implements OnInit {
 
 	@Input() internmentEpisodeId: number;
+	@Input() editable: boolean = true;
 
 	mainDiagnosticosSummary = DIAGNOSTICO_PRINCIPAL;
 	mainDiagnosis$: Observable<HealthConditionDto>;

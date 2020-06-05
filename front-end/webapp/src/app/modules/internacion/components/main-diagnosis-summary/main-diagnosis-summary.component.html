@@ -3,10 +3,12 @@
 		<mat-list-item>
 			<span class="capitalize-first-letter">
 				{{ mainDiagnosis.snomed.pt }}
-			</span>
-			<button mat-icon-button color="primary" (click)="goToClinicalEvaluation(mainDiagnosis.id)">
-				<mat-icon fontSet="material-icons-outlined">note_add</mat-icon>
-			</button>
+			</span>			
+			<ng-container *ngIf="editable">
+				<button mat-icon-button color="primary" (click)="goToClinicalEvaluation(mainDiagnosis.id)">
+					<mat-icon fontSet="material-icons-outlined">note_add</mat-icon>
+				</button>
+			</ng-container>
 		</mat-list-item>
 	</mat-list>
 	<ng-template #noInfo>
