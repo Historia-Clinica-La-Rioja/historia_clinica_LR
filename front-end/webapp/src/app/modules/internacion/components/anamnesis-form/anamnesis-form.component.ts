@@ -171,10 +171,8 @@ export class AnamnesisFormComponent implements OnInit {
 			} else {
 				this.anamnesisService.createAnamnesis(anamnesis, this.internmentEpisodeId)
 				.subscribe((anamnesisResponse: ResponseAnamnesisDto) => {
-						this.anamnesisReportService.getPDF(anamnesisResponse.id, this.internmentEpisodeId).subscribe(
-							_ => this.goToInternmentSummary(), _ => this.goToInternmentSummary()
-						);
 						this.snackBarService.showSuccess('internaciones.anamnesis.messages.SUCCESS');
+						this.goToInternmentSummary();
 					}, errors => {
 						//TODO imlementar estrategia para mostrar error
 						this.mainDiagnosisError = errors.mainDiagnosis;

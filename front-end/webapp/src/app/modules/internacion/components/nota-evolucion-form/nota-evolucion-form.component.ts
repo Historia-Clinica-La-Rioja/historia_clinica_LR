@@ -99,10 +99,8 @@ export class NotaEvolucionFormComponent implements OnInit {
 
 			this.evolutionNoteService.createDocument(evolutionNote, this.internmentEpisodeId).subscribe(
 				(evolutionNoteResponse: ResponseEvolutionNoteDto) => {
-					this.evolutionNoteReportService.getPDF(evolutionNoteResponse.id, this.internmentEpisodeId).subscribe(
-						_ => this.goToInternmentSummary(), _ => this.goToInternmentSummary()
-					);
 					this.snackBarService.showSuccess('internaciones.nota-evolucion.messages.SUCCESS');
+					this.goToInternmentSummary();
 				}, _ => this.snackBarService.showError('internaciones.nota-evolucion.messages.ERROR'));
 		} else {
 			this.snackBarService.showError('internaciones.nota-evolucion.messages.ERROR');

@@ -180,10 +180,8 @@ export class EpicrisisFormComponent implements OnInit {
 			};
 			this.epicrisisService.createDocument(epicrisis, this.internmentEpisodeId)
 				.subscribe((epicrisisResponse: ResponseEpicrisisDto) => {
-					this.epicrisisReportService.getPDF(epicrisisResponse.id, this.internmentEpisodeId).subscribe(
-						_ => this.goToInternmentSummary(), _ => this.goToInternmentSummary()
-					);
 					this.snackBarService.showSuccess('internaciones.epicrisis.messages.SUCCESS');
+					this.goToInternmentSummary();
 				}, _ => this.snackBarService.showError('internaciones.epicrisis.messages.ERROR'));
 		} else {
 			this.snackBarService.showError('internaciones.epicrisis.messages.ERROR');

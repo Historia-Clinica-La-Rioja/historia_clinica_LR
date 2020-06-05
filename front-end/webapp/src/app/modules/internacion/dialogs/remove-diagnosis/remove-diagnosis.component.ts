@@ -74,12 +74,8 @@ export class RemoveDiagnosisComponent implements OnInit {
 			};
 			this.evolutionNoteService.createDocument(evolutionNote, this.data.internmentEpisodeId).subscribe(
 				(evolutionNoteResponse: ResponseEvolutionNoteDto) => {
-					this.evolutionNoteReportService.getPDF(evolutionNoteResponse.id, this.data.internmentEpisodeId).subscribe(
-						() => {
-							this.snackBarService.showSuccess('internaciones.nota-evolucion.messages.SUCCESS');
-							this.dialogRef.close();
-						}
-					);
+					this.snackBarService.showSuccess('internaciones.nota-evolucion.messages.SUCCESS');
+					this.dialogRef.close();
 				},
 				() => {
 					this.loading = false;
