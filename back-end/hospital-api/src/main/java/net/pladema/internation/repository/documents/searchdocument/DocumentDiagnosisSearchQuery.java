@@ -10,13 +10,14 @@ public class DocumentDiagnosisSearchQuery extends DocumentSearchQuery {
 
     @Override
     public QueryPart where() {
-        return new QueryPart("document.internmentEpisodeId = :internmentEpisodeId \n " +
-                "and exists( \n" +
+        String pattern = plainText.toLowerCase();
+        return super.where().concatPart(new QueryPart(
+                "AND exists( \n" +
                 "select 1 \n" +
                 "from DocumentHealthCondition as dhcSub \n " +
-                "join HealthCondition as hcSub on (dhcSub.pk.healthConditionId = hcSub.id) " +
-                "join Snomed as s on (hcSub.sctidCode = snomed.id ) \n " +
-                "where dhcSub.pk.documentId = document.id AND s.pt LIKE '%"+plainText+"%') \n");
+                "join HealthCondition as hcSub on (dhcSub.pk.healthConditionId = hcSub.id) \n" +
+                "join Snomed as s on (hcSub.sctidCode = s.id ) \n " +
+                "where dhcSub.pk.documentId = document.id AND LOWER(s.pt) LIKE '%"+pattern+"%') \n"));
     }
 
     @Override

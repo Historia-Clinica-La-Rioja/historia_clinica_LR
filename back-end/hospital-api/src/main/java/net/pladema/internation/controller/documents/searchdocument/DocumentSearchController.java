@@ -54,7 +54,7 @@ public class DocumentSearchController {
 
         DocumentSearchFilterDto filter = null;
         try {
-            if(searchFilterStr != null)
+            if(searchFilterStr != null && !searchFilterStr.equals("undefined"))
                 filter  = jackson.readValue(searchFilterStr, DocumentSearchFilterDto.class);
         }
         catch(IOException e){

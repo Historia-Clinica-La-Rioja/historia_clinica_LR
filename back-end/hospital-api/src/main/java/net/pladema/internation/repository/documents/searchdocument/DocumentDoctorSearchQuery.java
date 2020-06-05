@@ -11,8 +11,8 @@ public class DocumentDoctorSearchQuery extends DocumentSearchQuery {
     @Override
     public QueryPart where() {
         String pattern = plainText.toUpperCase();
-        return new QueryPart("document.internmentEpisodeId = :internmentEpisodeId \n" +
-                "AND (creator.firstName LIKE '%"+pattern+"%' OR creator.lastName LIKE '%"+pattern+"%') \n");
+        return super.where().concatPart(new QueryPart(
+                "AND (creator.firstName LIKE '%"+pattern+"%' OR creator.lastName LIKE '%"+pattern+"%') \n"));
     }
 
     @Override

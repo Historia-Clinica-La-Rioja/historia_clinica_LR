@@ -1,8 +1,10 @@
 package net.pladema.internation.repository.documents.searchdocument;
 
+import com.google.common.base.Strings;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import net.pladema.internation.repository.ips.generalstate.DocumentObservationsVo;
+import net.pladema.internation.repository.masterdata.entity.ConditionVerificationStatus;
 import net.pladema.sgx.repository.QueryPart;
 
 import java.time.LocalDateTime;
@@ -56,7 +58,8 @@ public class DocumentSearchQuery {
     }
 
     public QueryPart where() {
-        return new QueryPart("document.internmentEpisodeId = :internmentEpisodeId \n");
+        return new QueryPart("document.internmentEpisodeId = :internmentEpisodeId \n" +
+                "and not hc.verificationStatusId = '" + ConditionVerificationStatus.ERROR +"' \n");
     }
 
     public QueryPart orderBy(){
@@ -91,14 +94,23 @@ public class DocumentSearchQuery {
     }
 
     private DocumentObservationsVo mapNotes(Object[] tuple){
-        return new DocumentObservationsVo(
-                null,
-                (String)tuple[6], //physical-exam
-                (String)tuple[7], //studies-summary
-                (String)tuple[8], //evolution-note
-                (String)tuple[9], //clinical-impression
-                (String)tuple[10], //current-illness
-                (String)tuple[11]); //indications-note
+        String physicalExam = (String)tuple[6];
+        String studiesSummary = (String)tuple[7];
+        String evolutionNote = (String)tuple[8];
+        String clinicalImpression = (String)tuple[9];
+        String currentIllness = (String)tuple[10];
+        String indicationsNote = (String)tuple[11];
+
+        boolean withoutNotes = Strings.isNullOrEmpty(physicalExam) &&
+                Strings.isNullOrEmpty(studiesSummary) &&
+                Strings.isNullOrEmpty(evolutionNote) &&
+                Strings.isNullOrEmpty(clinicalImpression) &&
+                Strings.isNullOrEmpty(currentIllness) &&
+                Strings.isNullOrEmpty(indicationsNote);
+        if(withoutNotes)
+            return null;
+        return new DocumentObservationsVo(null, physicalExam, studiesSummary, evolutionNote,
+                clinicalImpression, currentIllness, indicationsNote);
     }
 
     private String mapMainDiagnosis(List<Object[]> tuples){

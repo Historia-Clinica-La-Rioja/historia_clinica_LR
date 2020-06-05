@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.internation.repository.ips.generalstate.DocumentObservationsVo;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Getter
@@ -28,7 +29,7 @@ public class DocumentObservationsBo implements Serializable {
 
     private String indicationsNote;
 
-    public DocumentObservationsBo(DocumentObservationsVo source) {
+    public DocumentObservationsBo(@NotNull DocumentObservationsVo source) {
         this.otherNote = source.getOtherNote();
         this.physicalExamNote = source.getPhysicalExamNote();
         this.studiesSummaryNote = source.getStudiesSummaryNote();

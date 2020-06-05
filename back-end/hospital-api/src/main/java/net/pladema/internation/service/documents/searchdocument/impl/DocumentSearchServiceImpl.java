@@ -1,7 +1,6 @@
 package net.pladema.internation.service.documents.searchdocument.impl;
 
 import net.pladema.internation.controller.documents.searchdocument.dto.DocumentSearchFilterDto;
-import net.pladema.internation.controller.documents.searchdocument.mapper.DocumentSearchMapper;
 import net.pladema.internation.repository.documents.DocumentRepository;
 import net.pladema.internation.repository.documents.searchdocument.DocumentCreatedOnSearchQuery;
 import net.pladema.internation.repository.documents.searchdocument.DocumentDiagnosisSearchQuery;
@@ -29,12 +28,8 @@ public class DocumentSearchServiceImpl implements DocumentSearchService {
 
     private final DocumentRepository documentRepository;
 
-    private final DocumentSearchMapper documentSearchMapper;
-
-    public DocumentSearchServiceImpl(DocumentRepository documentRepository,
-                                     DocumentSearchMapper documentSearchMapper){
+    public DocumentSearchServiceImpl(DocumentRepository documentRepository){
         this.documentRepository = documentRepository;
-        this.documentSearchMapper = documentSearchMapper;
     }
 
     @Override

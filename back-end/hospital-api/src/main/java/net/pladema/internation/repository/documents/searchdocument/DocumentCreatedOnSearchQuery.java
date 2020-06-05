@@ -10,8 +10,8 @@ public class DocumentCreatedOnSearchQuery extends DocumentSearchQuery {
 
     @Override
     public QueryPart where() {
-        return new QueryPart("document.internmentEpisodeId = :internmentEpisodeId \n" +
-                "AND DATE(document.creationable.createdOn) = '" + plainText + "' \n");
+        return super.where().concatPart(new QueryPart(
+                "AND DATE(document.creationable.createdOn) = '" + plainText + "' \n"));
     }
 
     @Override
