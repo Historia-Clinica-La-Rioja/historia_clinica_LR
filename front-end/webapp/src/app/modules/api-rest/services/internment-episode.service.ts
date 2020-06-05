@@ -31,4 +31,9 @@ export class InternmentEpisodeService {
 		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentId}`;
 		return this.http.get<InternmentEpisodeBMDto>(url);
 	}
+
+	getMinDischargeDate(internmentId: number) :Observable<Date> {
+		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentId}/minDischargeDate`;
+		return this.http.get<Date>(url);
+	}
 }

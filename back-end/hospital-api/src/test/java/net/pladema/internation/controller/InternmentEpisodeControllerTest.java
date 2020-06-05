@@ -10,6 +10,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Optional;
 
+import net.pladema.featureflags.service.FeatureFlagsService;
+import net.pladema.internation.repository.documents.DocumentRepository;
 import net.pladema.internation.service.internment.ResponsibleContactService;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,6 +59,12 @@ public class InternmentEpisodeControllerTest extends BaseControllerTest {
 	
 	@MockBean
 	private InstitutionRepository institutionRepository;
+
+	@MockBean
+	private FeatureFlagsService featureFlagsService;
+
+	@MockBean
+	private DocumentRepository documentRepository;
 	
 	@Before
 	public void setup() {

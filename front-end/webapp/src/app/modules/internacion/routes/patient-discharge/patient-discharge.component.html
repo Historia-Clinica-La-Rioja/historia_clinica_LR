@@ -7,7 +7,7 @@
 				<span [translate]="'internaciones.discharge.DISCHARGE_DATE'"></span> *
 				<div>
 					<mat-form-field appearance="outline">
-						<input formControlName="dischargeDate" id="dischargeDate" matInput [max]="today" [min]="internmentEpisodeEntryDate"
+						<input formControlName="dischargeDate" id="dischargeDate" matInput [max]="today" [min]="minDischargeDate"
 								[matDatepicker]="picker2" placeholder="{{'internaciones.discharge.DISCHARGE_DATE' | translate}}">
 						<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
 						<mat-datepicker #picker2></mat-datepicker>

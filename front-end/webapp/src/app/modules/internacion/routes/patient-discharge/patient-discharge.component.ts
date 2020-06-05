@@ -28,7 +28,7 @@ export class PatientDischargeComponent implements OnInit {
 
 	public dischargeForm: FormGroup;
 	public today: Moment = moment();
-	public internmentEpisodeEntryDate: Date;
+	public minDischargeDate: Date;
 	public patientBasicData: PatientBasicData;
 	public personalInformation: PersonalInformation;
 	public patientTypeData: PatientTypeData;
@@ -79,8 +79,8 @@ export class PatientDischargeComponent implements OnInit {
 					});
 			}
 		);
-		this.intermentEpisodeService.getInternmentEpisode(this.internmentId)
-			.subscribe ( internmentEpisode => this.internmentEpisodeEntryDate = internmentEpisode.entryDate)
+		this.intermentEpisodeService.getMinDischargeDate(this.internmentId)
+			.subscribe ( minDischargeDate => this.minDischargeDate = minDischargeDate);
 
 	}
 
