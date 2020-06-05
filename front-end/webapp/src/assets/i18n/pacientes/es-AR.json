@@ -68,7 +68,7 @@
 			"SUBTITLE_TWO": "Complete los siguientes datos para una búsqueda avanzada.",
 			"NEW_PATIENT": "Crear nuevo paciente",
 			"RENAPER_TIMEOUT": "No hubo respuesta del servicio de Renaper",
-			"ROW_TABLE": "ID Adulto mayor"
+			"ROW_TABLE": "ID Paciente"
 		},
 		"edit": {
 			"TITLE": "Editar paciente",
