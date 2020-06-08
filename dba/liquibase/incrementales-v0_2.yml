@@ -1,2 +1,11 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v0_2 
+    - logicalFilePath: incrementales-v0_2
+
+- changeSet: 
+    id: addRole_Enfermero
+    author: ltelesco
+    context: "!schema-only"
+    changes:
+        - sql:
+            sql: |-
+                INSERT INTO role (id,created_on,deleted_on,deleted,updated_on,description,created_by,updated_by) VALUES (7,${date.now},null,${boolean.false},${date.now},'Enfermero',-1,-1);
