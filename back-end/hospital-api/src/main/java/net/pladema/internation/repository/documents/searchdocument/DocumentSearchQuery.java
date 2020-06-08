@@ -35,6 +35,7 @@ public class DocumentSearchQuery {
                 "creator.lastName, \n" +
                 "snomed.pt as diagnosis, \n" +
                 "hc.main, \n" +
+                "othernote.description as otherNote, " +
                 "physicalnote.description as physicalNote, \n" +
                 "studiesnote.description as studiesNote, \n" +
                 "evolutionnote.description as evolutionNote,\n" +
@@ -50,6 +51,7 @@ public class DocumentSearchQuery {
                 "join User as users on (document.creationable.createdBy = users.id) \n" +
                 "join Person as creator on (users.personId = creator.id) \n" +
         //Notes
+                "left join Note othernote on (document.otherNoteId = othernote.id) \n" +
                 "left join Note physicalnote on (document.physicalExamNoteId = physicalnote.id) \n" +
                 "left join Note studiesnote on (document.studiesSummaryNoteId = studiesnote.id) \n" +
                 "left join Note evolutionnote on (document.evolutionNoteId = evolutionnote.id) \n" +
@@ -99,14 +101,17 @@ public class DocumentSearchQuery {
     }
 
     private DocumentObservationsVo mapNotes(Object[] tuple){
-        String physicalExam = (String)tuple[6];
-        String studiesSummary = (String)tuple[7];
-        String evolutionNote = (String)tuple[8];
-        String clinicalImpression = (String)tuple[9];
-        String currentIllness = (String)tuple[10];
-        String indicationsNote = (String)tuple[11];
+        int index = 6;
+        String otherNote = (String) tuple[index++];
+        String physicalExam = (String)tuple[index++];
+        String studiesSummary = (String)tuple[index++];
+        String evolutionNote = (String)tuple[index++];
+        String clinicalImpression = (String)tuple[index++];
+        String currentIllness = (String)tuple[index++];
+        String indicationsNote = (String)tuple[index];
 
-        boolean withoutNotes = Strings.isNullOrEmpty(physicalExam) &&
+        boolean withoutNotes = Strings.isNullOrEmpty(otherNote) &&
+                Strings.isNullOrEmpty(physicalExam) &&
                 Strings.isNullOrEmpty(studiesSummary) &&
                 Strings.isNullOrEmpty(evolutionNote) &&
                 Strings.isNullOrEmpty(clinicalImpression) &&
@@ -114,7 +119,7 @@ public class DocumentSearchQuery {
                 Strings.isNullOrEmpty(indicationsNote);
         if(withoutNotes)
             return null;
-        return new DocumentObservationsVo(null, physicalExam, studiesSummary, evolutionNote,
+        return new DocumentObservationsVo(otherNote, physicalExam, studiesSummary, evolutionNote,
                 clinicalImpression, currentIllness, indicationsNote);
     }
 
