@@ -4,7 +4,7 @@ import { PublicService } from '@api-rest/services/public.service';
 import { map } from 'rxjs/operators';
 
 const FLAVOR_TANDIL = 'tandil';
-const FLAVOR_CHACO = 'FLAVOR_CHACO';
+const FLAVOR_CHACO = 'chaco';
 const FLAVOR_HOSPITALES = 'minsal';
 const FEATURE_FLAGS = [
 	{
