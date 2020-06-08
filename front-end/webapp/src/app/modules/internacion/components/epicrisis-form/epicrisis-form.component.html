@@ -134,14 +134,14 @@
 
 				<ng-container matColumnDef="select">
 					<th mat-header-cell class="actions" *matHeaderCellDef>
-						<mat-checkbox (change)="$event ? masterToggle(allergies.data, allergies.selection) : null"
+						<mat-checkbox *ngIf="allergies.data.length !== 0"
+									  (change)="$event ? masterToggle(allergies.data, allergies.selection) : null"
 									  [checked]="allergies.selection.hasValue() && isAllSelected(allergies.data, allergies.selection)"
 									  [indeterminate]="allergies.selection.hasValue() && !isAllSelected(allergies.data, allergies.selection)">
 						</mat-checkbox>
 					</th>
 					<td mat-cell class="actions" *matCellDef="let row">
-						<mat-checkbox *ngIf="allergies.data.length !== 0"
-									  (click)="$event.stopPropagation()"
+						<mat-checkbox (click)="$event.stopPropagation()"
 									  (change)="$event ? allergies.selection.toggle(row) : null"
 									  [checked]="allergies.selection.isSelected(row)">
 						</mat-checkbox>
