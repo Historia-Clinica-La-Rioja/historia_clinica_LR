@@ -1,4 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
 	selector: 'app-summary-card',
@@ -8,11 +9,17 @@ import { Component, OnInit, Input } from '@angular/core';
 export class SummaryCardComponent implements OnInit {
 
 	@Input() header: SummaryHeader;
+	@Output() openInNew = new EventEmitter();
 
-	constructor() { }
+	constructor(
+		public dialog: MatDialog
+	) { }
 
 	ngOnInit(): void { }
 
+	click() {
+		this.openInNew.emit();
+	}
 }
 
 export interface SummaryHeader {

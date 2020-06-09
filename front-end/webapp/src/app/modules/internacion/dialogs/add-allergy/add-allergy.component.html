@@ -1,0 +1,37 @@
+<div mat-dialog-title>
+</div>
+<div mat-dialog-content>
+	<h2 class="mat-h2" [translate]="'internaciones.anamnesis.alergias.TITLE'"></h2>
+	<mat-card>
+		<mat-card-content>
+			<app-concepts-search  *ngIf="!snomedConcept else alergiasForm"
+								  [eclFilter]="SEMANTICS_CONFIG.allergy"
+								  [label]="'internaciones.anamnesis.alergias.ALLERGY'"
+								  (onSelect)=setConcept($event)>
+			</app-concepts-search>
+			<ng-template #alergiasForm>
+				<form [formGroup]="form" (ngSubmit)="submit()">
+					<mat-form-field appearance="outline">
+						<mat-label [translate]="'internaciones.anamnesis.alergias.ALLERGY'">
+						</mat-label>
+						<input matInput type="text" formControlName="snomed" name="snomed" readonly matTooltip="{{ snomedConcept.pt }}">
+						<button id="clear" mat-button matSuffix color="warn" mat-icon-button
+								(click)="resetForm()">
+							<mat-icon>close</mat-icon>
+						</button>
+					</mat-form-field>
+
+					<div align="end">
+						<button mat-raised-button color="primary" type="submit">
+							<span class="uppercase" [translate]="'internaciones.anamnesis.alergias.ADD'"></span>
+						</button>
+					</div>
+				</form>
+			</ng-template>
+		</mat-card-content>
+	</mat-card>
+
+</div>
+<mat-dialog-actions align="end">
+	<button mat-stroked-button color="primary" mat-dialog-close><span [translate]="'buttons.CANCEL'"></span></button>
+</mat-dialog-actions>

@@ -1,9 +1,14 @@
 <mat-card class="box">
 	<mat-card-header>
-		<mat-icon fontSet="material-icons-outlined">{{ header.matIcon }}</mat-icon>
 		<mat-card-title>
-			<span>{{ header.title | translate }}</span>
+			<div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="16px">
+				<mat-icon fontSet="material-icons-outlined">{{ header.matIcon }}</mat-icon>
+				<span>{{ header.title | translate }}</span>
+			</div>
 		</mat-card-title>
+		<button mat-icon-button (click)="click()">
+			<mat-icon fontSet="material-icons-outlined">open_in_new</mat-icon>
+		</button>
 	</mat-card-header>
 	<ng-content></ng-content>
 </mat-card>

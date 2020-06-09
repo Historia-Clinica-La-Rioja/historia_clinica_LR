@@ -40,6 +40,7 @@ import { AlergiasSummaryComponent } from './components/alergias-summary/alergias
 import { VacunasSummaryComponent } from './components/vacunas-summary/vacunas-summary.component';
 import { EvaluacionClinicaDiagnosticosComponent } from './routes/evaluacion-clinica-diagnosticos/evaluacion-clinica-diagnosticos.component';
 import { DocumentsSummaryComponent } from './components/documents-summary/documents-summary.component';
+import { AddAllergyComponent } from './dialogs/add-allergy/add-allergy.component';
 
 @NgModule({
 	declarations: [
@@ -77,6 +78,7 @@ import { DocumentsSummaryComponent } from './components/documents-summary/docume
 		VacunasSummaryComponent,
 		EvaluacionClinicaDiagnosticosComponent,
 		DocumentsSummaryComponent,
+		AddAllergyComponent,
 	],
 	imports: [
 		CoreModule,

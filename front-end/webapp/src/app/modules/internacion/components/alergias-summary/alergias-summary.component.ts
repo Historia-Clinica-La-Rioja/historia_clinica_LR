@@ -3,6 +3,8 @@ import { AllergyConditionDto, HealthConditionDto } from '@api-rest/api-model';
 import { TableModel } from '@presentation/components/table/table.component';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { ALERGIAS } from '../../constants/summaries';
+import { MatDialog } from '@angular/material/dialog';
+import { AddAllergyComponent } from '../../dialogs/add-allergy/add-allergy.component';
 
 @Component({
 	selector: 'app-alergias-summary',
@@ -18,13 +20,28 @@ export class AlergiasSummaryComponent implements OnInit {
 	tableModel: TableModel<HealthConditionDto>;
 
 	constructor(
-		private internmentStateService: InternmentStateService
+		private internmentStateService: InternmentStateService,
+		public dialog: MatDialog
 	) {
 	}
 
 	ngOnInit(): void {
 		this.internmentStateService.getAllergies(this.internmentEpisodeId).subscribe(
 			data => this.tableModel = this.buildTable(data)
+		);
+	}
+
+	openDialog() {
+		const dialogRef = this.dialog.open(AddAllergyComponent, {
+			disableClose: true,
+			width: '70%',
+			data: {}
+		});
+
+		dialogRef.afterClosed().subscribe(
+			() => {
+				console.log('closed');
+			}
 		);
 	}
 
