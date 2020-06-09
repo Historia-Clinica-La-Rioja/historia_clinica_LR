@@ -3,6 +3,7 @@ import { fetchUtils } from 'react-admin';
 import SGXPermissions from './SGXPermissions';
 
 const apiUrl = '/api';
+const oauthInfo = 'oauth-info';
 class SgxApiRest {
     _permission$ = undefined;
 
@@ -42,14 +43,27 @@ class SgxApiRest {
         const token = localStorage.getItem('token');
         options.headers.set('X-Auth-Token', token);
         return fetchUtils.fetchJson(apiUrl + url, options);
-    };
+    }
 
     logout() {
-        localStorage.clear();
+        localStorage.removeItem('token');
         this._account$ = undefined;
         this._permission$ = undefined;
     }
 
+    loadInfo() {
+        return fetchUtils.fetchJson(`${apiUrl}/oauth/config`, { method: 'GET' })
+            .then(response => {
+                return response.json;
+            }).then((object) => {
+                localStorage.setItem(oauthInfo, JSON.stringify({oauthConfig:object}));
+            });
+    }
+
+    getInfo() {
+        return JSON.parse(localStorage.getItem(oauthInfo));
+    }
+
   }
-  
+
   export default new SgxApiRest();

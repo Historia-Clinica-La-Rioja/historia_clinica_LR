@@ -2,6 +2,7 @@ package net.pladema.security.authentication.controller;
 
 import io.swagger.annotations.Api;
 import net.pladema.security.authentication.controller.dto.JWTokenDto;
+import net.pladema.security.authentication.controller.dto.OauthConfigDto;
 import net.pladema.security.authentication.controller.mapper.JWTokenMapper;
 import net.pladema.security.authentication.service.OauthService;
 import org.slf4j.Logger;
@@ -28,6 +29,12 @@ public class ExternalAuthenticationController {
 		this.oauthService = oauthService;
 	}
 
+	@GetMapping(value = "/config")
+	public ResponseEntity<OauthConfigDto> getPublicConfig() {
+		LOG.debug("Oauth get public config");
+		return ResponseEntity.ok().body(new OauthConfigDto(oauthService.getLoginUrl(), oauthService.getOauthEnabled()));
+	}
+	
 	@GetMapping(value = "/chaco")
 	public ResponseEntity<JWTokenDto> loginChaco(@RequestParam("code") String code) throws Exception {
 		LOG.debug("Login chaco with code=> {}", code);
@@ -37,7 +44,7 @@ public class ExternalAuthenticationController {
 	@GetMapping(value = "/chaco/redirectUrl")
 	public ResponseEntity<String> getChacoRedirectUrl() throws Exception {
 		LOG.debug("Get chaco redirect url");
-		return ResponseEntity.ok().body(oauthService.getRedirectUrl());
+		return ResponseEntity.ok().body(oauthService.getLoginUrl());
 	}
 	
 }

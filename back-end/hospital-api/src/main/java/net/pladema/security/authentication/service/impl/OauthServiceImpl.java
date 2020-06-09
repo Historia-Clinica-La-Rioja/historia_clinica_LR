@@ -89,6 +89,7 @@ public class OauthServiceImpl implements OauthService {
 				user.setPersonId(p.getId());
 			}
 			user.setUsername(oauthUser.getCuitCuil());
+			user.setEnable(true);
 			user = userService.addUser(user);
 			userService.updateLoginDate(user.getId());
 			logger.debug("SAVING oauth user -> {}", user);
@@ -121,7 +122,12 @@ public class OauthServiceImpl implements OauthService {
 	}
 
 	@Override
-	public String getRedirectUrl() {
+	public String getLoginUrl() {
 		return oAuthConfiguration.getLoginUrl();
+	}
+
+	@Override
+	public Boolean getOauthEnabled() {
+		return oAuthConfiguration.getEnabled();
 	}
 }

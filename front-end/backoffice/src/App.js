@@ -2,6 +2,7 @@ import React from 'react';
 import { Admin, Resource } from 'react-admin';
 
 import { Dashboard } from './dashboard';
+import OauthLoginPage from './login/OauthLoginPage';
 
 import cities from './modules/cities';
 import departments from './modules/departments';
@@ -23,16 +24,19 @@ import springbootRestProvider from './providers/sgxDataProvider';
 import authProvider from './providers/authProvider';
 import i18nProvider from './providers/i18nProvider';
 import customRoutes from './layout/routes';
+import appInfoProvider from './providers/appInfoProvider'
 
 const dataProvider = springbootRestProvider('/backoffice', {
 });
 
-const App = () => (
-    <Admin title="Historia de salud integrada" 
+const App = () => {
+    const oauth = appInfoProvider.getInfo().oauthConfig.enabled;
+    return <Admin title="Historia de salud integrada"
     customRoutes={customRoutes}
-    dataProvider={dataProvider} 
+    dataProvider={dataProvider}
     authProvider={authProvider}
     i18nProvider={i18nProvider}
+    loginPage={oauth ? OauthLoginPage : undefined}
     dashboard={Dashboard}
     >
         {
@@ -63,6 +67,6 @@ const App = () => (
         ] : [<span />]
         }
     </Admin>
-);
+}
 
 export default App;

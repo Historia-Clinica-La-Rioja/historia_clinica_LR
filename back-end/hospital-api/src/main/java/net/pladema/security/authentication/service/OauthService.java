@@ -12,5 +12,7 @@ public interface OauthService {
 
 	JWToken loginChaco(String code) throws Exception;
 	
-	String getRedirectUrl();
+	String getLoginUrl();
+	
+	Boolean getOauthEnabled();
 }
