@@ -19,7 +19,7 @@
 				"DIAGNOSIS": "Enfermedad",
 				"PRESUMPTIVE": "Presuntivo",
 				"table": {
-					"TITLE": "Enfermedades registradas",
+					"TITLE": "Enfermedades seleccionadas",
 					"columns": {
 						"DIAGNOSIS": "Enfermedad",
 						"STATUS": "Estado"
@@ -34,21 +34,6 @@
 				"DOCTOR": "Médico",
 				"CREATEDON": "Fecha",
 				"ALL": "Todos"
-			}
-		},
-
-		"diagnosticos": {
-			"TITLE_PRINCIPAL": "Enfermedad",
-			"TITLE": "Enfermedades",
-			"ADD": "Agregar enfermedad",
-			"DIAGNOSIS": "Enfermedad",
-			"PRESUMPTIVE": "Presuntivo",
-			"table": {
-				"TITLE": "Enfermedades registradas",
-				"columns": {
-					"DIAGNOSIS": "Enfermedad",
-					"STATUS": "Estado"
-				}
 			}
 		},
 

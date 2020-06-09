@@ -12,7 +12,7 @@
 					"REGISTRY_DATE": "Fecha registro"
 				},
 				"table": {
-					"TITLE": "Alergias registradas",
+					"TITLE": "Alergias seleccionadas",
 					"columns": {
 						"ALLERGY": "Alergia",
 						"REGISTRY_DATE": "Fecha registro"
@@ -24,7 +24,7 @@
 				"ADD": "Agregar antecedente",
 				"PERSONAL_HISTORY": "Antecedente personal",
 				"table": {
-					"TITLE": "Antecedentes personales registrados",
+					"TITLE": "Antecedentes personales seleccionados",
 					"columns": {
 						"PERSONAL_HISTORY": "Antecedente personal"
 					}
@@ -35,7 +35,7 @@
 				"ADD": "Agregar antecedente",
 				"FAMILY_HISTORY": "Antecedente familiar",
 				"table": {
-					"TITLE": "Antecedentes familiares registrados",
+					"TITLE": "Antecedentes familiares seleccionados",
 					"columns": {
 						"FAMILY_HISTORY": "Antecedente familiar"
 					}
@@ -59,7 +59,7 @@
 				"DIAGNOSIS": "Diagnóstico",
 				"PRESUMPTIVE": "Presuntivo",
 				"table": {
-					"TITLE": "Diagnósticos registrados",
+					"TITLE": "Diagnósticos seleccionados",
 					"columns": {
 						"DIAGNOSIS": "Diagnóstico",
 						"STATUS": "Estado"
@@ -74,7 +74,7 @@
 					"REGISTRY_DATE": "Fecha de vacunación"
 				},
 				"table": {
-					"TITLE": "Vacunas registradas",
+					"TITLE": "Vacunas seleccionadas",
 					"columns": {
 						"INMUNIZATION": "Vacuna",
 						"REGISTRY_DATE": "Fecha de vacunación"
@@ -91,7 +91,7 @@
 					"NOTE": "Notas"
 				},
 				"table": {
-					"TITLE": "Medicaciones registradas",
+					"TITLE": "Medicaciones seleccionadas",
 					"columns": {
 						"NOTE": "Notas",
 						"STATUS": "Estado",

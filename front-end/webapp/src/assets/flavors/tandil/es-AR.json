@@ -19,7 +19,7 @@
 				"DIAGNOSIS": "Enfermedad",
 				"PRESUMPTIVE": "Presuntivo",
 				"table": {
-					"TITLE": "Enfermedades registradas",
+					"TITLE": "Enfermedades seleccionadas",
 					"columns": {
 						"DIAGNOSIS": "Enfermedad",
 						"STATUS": "Estado"
@@ -28,20 +28,6 @@
 			}
 		},
 
-		"diagnosticos": {
-			"TITLE_PRINCIPAL": "Enfermedad",
-			"TITLE": "Enfermedades",
-			"ADD": "Agregar enfermedad",
-			"DIAGNOSIS": "Enfermedad",
-			"PRESUMPTIVE": "Presuntivo",
-			"table": {
-				"TITLE": "Enfermedades registradas",
-				"columns": {
-					"DIAGNOSIS": "Enfermedad",
-					"STATUS": "Estado"
-				}
-			}
-		},
 
 		"documents-summary": {
 			"search-fields": {
