@@ -14,8 +14,8 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.pladema.auditable.entity.AuditableEntity;
-import net.pladema.auditable.listener.AuditListener;
+import net.pladema.sgx.auditable.entity.AuditableEntity;
+import net.pladema.sgx.auditable.listener.AuditListener;
 
 @Entity
 @Table(name = "users")

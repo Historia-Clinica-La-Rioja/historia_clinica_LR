@@ -15,7 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import net.pladema.error.controller.dto.ApiErrorMessage;
+import net.pladema.sgx.error.controller.dto.ApiErrorMessage;
 import net.pladema.establishment.controller.constraints.validator.BackofficeBedValidator;
 import net.pladema.establishment.repository.BedRepository;
 import net.pladema.establishment.repository.entity.Bed;

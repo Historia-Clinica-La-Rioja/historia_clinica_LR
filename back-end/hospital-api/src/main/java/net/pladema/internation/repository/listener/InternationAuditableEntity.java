@@ -1,9 +1,9 @@
 package net.pladema.internation.repository.listener;
 
-import net.pladema.auditable.CreationableEntity;
-import net.pladema.auditable.UpdateableEntity;
-import net.pladema.auditable.entity.Creationable;
-import net.pladema.auditable.entity.Updateable;
+import net.pladema.sgx.auditable.CreationableEntity;
+import net.pladema.sgx.auditable.UpdateableEntity;
+import net.pladema.sgx.auditable.entity.Creationable;
+import net.pladema.sgx.auditable.entity.Updateable;
 
 import javax.persistence.Embedded;
 import javax.persistence.MappedSuperclass;

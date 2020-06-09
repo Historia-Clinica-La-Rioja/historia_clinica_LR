@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 
-import net.pladema.error.controller.dto.ApiErrorMessage;
+import net.pladema.sgx.error.controller.dto.ApiErrorMessage;
 import net.pladema.establishment.repository.SectorRepository;
 import net.pladema.establishment.repository.entity.Sector;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;

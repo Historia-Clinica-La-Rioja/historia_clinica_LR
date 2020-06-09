@@ -1,7 +1,7 @@
 package net.pladema.user.controller.mapper;
 
 
-import net.pladema.auditable.entity.Audit;
+import net.pladema.sgx.auditable.entity.Audit;
 import net.pladema.permissions.controller.dto.BackofficeUserRoleDto;
 import net.pladema.permissions.controller.mappers.UserRoleDtoMapper;
 import net.pladema.permissions.repository.UserRoleRepository;

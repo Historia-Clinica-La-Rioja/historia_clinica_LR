@@ -9,7 +9,7 @@ import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.address.controller.mapper.AddressMapper;
 import net.pladema.address.controller.mapper.DepartmentMapper;
 import net.pladema.address.controller.mapper.ProvinceMapper;
-import net.pladema.dates.configuration.LocalDateMapper;
+import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import net.pladema.patient.controller.dto.APatientDto;
 import net.pladema.person.controller.dto.APersonDto;
 import net.pladema.person.controller.dto.BMPersonDto;

@@ -11,7 +11,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import net.pladema.actuator.configuration.ActuatorConfiguration;
+import net.pladema.sgx.actuator.configuration.ActuatorConfiguration;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.security.filters.AuthenticationTokenFilter;
 

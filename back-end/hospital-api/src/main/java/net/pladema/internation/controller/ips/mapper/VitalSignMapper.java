@@ -1,6 +1,6 @@
 package net.pladema.internation.controller.ips.mapper;
 
-import net.pladema.dates.configuration.LocalDateMapper;
+import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import net.pladema.internation.controller.ips.dto.VitalSignDto;
 import net.pladema.internation.controller.ips.dto.VitalSignsReportDto;
 import net.pladema.internation.service.ips.domain.VitalSignBo;

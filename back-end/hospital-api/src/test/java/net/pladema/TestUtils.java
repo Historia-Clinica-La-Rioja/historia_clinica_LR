@@ -1,7 +1,7 @@
 package net.pladema;
 
-import net.pladema.auditable.entity.Audit;
-import net.pladema.auditable.entity.AuditableEntity;
+import net.pladema.sgx.auditable.entity.Audit;
+import net.pladema.sgx.auditable.entity.AuditableEntity;
 
 import java.util.Optional;
 

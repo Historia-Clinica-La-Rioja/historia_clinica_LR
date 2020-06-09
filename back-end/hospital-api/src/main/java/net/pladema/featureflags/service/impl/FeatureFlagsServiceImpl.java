@@ -1,8 +1,8 @@
 package net.pladema.featureflags.service.impl;
 
-import net.pladema.featureflags.service.FeatureFlagsService;
 import net.pladema.featureflags.service.domain.FeatureFlagBo;
 import net.pladema.featureflags.service.domain.FlavorBo;
+import net.pladema.featureflags.service.FeatureFlagsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

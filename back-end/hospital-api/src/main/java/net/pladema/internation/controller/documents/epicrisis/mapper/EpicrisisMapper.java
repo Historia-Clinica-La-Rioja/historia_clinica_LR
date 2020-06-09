@@ -1,6 +1,6 @@
 package net.pladema.internation.controller.documents.epicrisis.mapper;
 
-import net.pladema.dates.configuration.LocalDateMapper;
+import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import net.pladema.internation.controller.documents.epicrisis.dto.EpicrisisDto;
 import net.pladema.internation.controller.documents.epicrisis.dto.EpicrisisGeneralStateDto;
 import net.pladema.internation.controller.documents.epicrisis.dto.ResponseEpicrisisDto;

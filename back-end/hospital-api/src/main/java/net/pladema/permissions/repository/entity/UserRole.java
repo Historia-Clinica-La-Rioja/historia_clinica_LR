@@ -6,8 +6,8 @@ import javax.persistence.EntityListeners;
 import javax.persistence.Table;
 
 import lombok.EqualsAndHashCode;
-import net.pladema.auditable.entity.AuditableEntity;
-import net.pladema.auditable.listener.AuditListener;
+import net.pladema.sgx.auditable.entity.AuditableEntity;
+import net.pladema.sgx.auditable.listener.AuditListener;
 
 @Entity
 @Table(name = "user_role")

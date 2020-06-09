@@ -1,6 +1,6 @@
 package net.pladema.internation.controller.ips.mapper;
 
-import net.pladema.dates.configuration.LocalDateMapper;
+import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import net.pladema.internation.controller.ips.dto.AllergyConditionDto;
 import net.pladema.internation.repository.ips.generalstate.AllergyConditionVo;
 import net.pladema.internation.service.ips.domain.AllergyConditionBo;

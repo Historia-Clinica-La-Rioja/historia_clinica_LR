@@ -1,6 +1,6 @@
 package net.pladema.internation.controller.documents.anamnesis.mapper;
 
-import net.pladema.dates.configuration.LocalDateMapper;
+import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import net.pladema.internation.controller.documents.anamnesis.dto.AnamnesisDto;
 import net.pladema.internation.controller.documents.anamnesis.dto.ResponseAnamnesisDto;
 import net.pladema.internation.controller.ips.mapper.AnthropometricDataMapper;

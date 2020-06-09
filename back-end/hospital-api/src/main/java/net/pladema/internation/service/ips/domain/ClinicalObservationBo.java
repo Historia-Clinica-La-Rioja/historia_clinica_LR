@@ -1,7 +1,7 @@
 package net.pladema.internation.service.ips.domain;
 
 import lombok.*;
-import net.pladema.dates.configuration.JacksonDateFormatConfig;
+import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
 import net.pladema.internation.repository.ips.generalstate.ClinicalObservationVo;
 
 import javax.validation.constraints.NotNull;

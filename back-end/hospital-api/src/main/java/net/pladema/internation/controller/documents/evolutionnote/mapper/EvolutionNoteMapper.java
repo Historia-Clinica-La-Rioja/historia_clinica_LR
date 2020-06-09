@@ -1,6 +1,6 @@
 package net.pladema.internation.controller.documents.evolutionnote.mapper;
 
-import net.pladema.dates.configuration.LocalDateMapper;
+import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import net.pladema.internation.controller.documents.evolutionnote.dto.EvolutionNoteDto;
 import net.pladema.internation.controller.documents.evolutionnote.dto.ResponseEvolutionNoteDto;
 import net.pladema.internation.controller.documents.evolutionnote.dto.evolutionDiagnosis.EvolutionDiagnosisDto;

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.dates.configuration.JacksonDateFormatConfig;
+import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
 
 import javax.validation.constraints.NotNull;
 

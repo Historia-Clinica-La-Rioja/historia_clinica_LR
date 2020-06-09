@@ -8,7 +8,7 @@ import net.pladema.internation.repository.masterdata.entity.DocumentType;
 import net.pladema.internation.service.documents.epicrisis.EpicrisisReportService;
 import net.pladema.internation.service.documents.epicrisis.domain.EpicrisisBo;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
-import net.pladema.pdf.PdfService;
+import net.pladema.sgx.pdf.PdfService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;

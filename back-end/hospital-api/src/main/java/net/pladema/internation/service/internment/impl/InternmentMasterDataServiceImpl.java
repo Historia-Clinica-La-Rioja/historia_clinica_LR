@@ -2,7 +2,7 @@ package net.pladema.internation.service.internment.impl;
 
 import net.pladema.internation.repository.projections.InternmentMasterDataProjection;
 import net.pladema.internation.service.internment.InternmentMasterDataService;
-import net.pladema.masterdata.repository.MasterdataRepository;
+import net.pladema.sgx.masterdata.repository.MasterdataRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

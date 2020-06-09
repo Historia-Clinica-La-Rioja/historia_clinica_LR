@@ -1,7 +1,7 @@
 package net.pladema.patient.controller.mapper;
 
 import net.pladema.address.controller.dto.AddressDto;
-import net.pladema.dates.configuration.LocalDateMapper;
+import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import net.pladema.patient.controller.dto.APatientDto;
 import net.pladema.patient.controller.dto.BMPatientDto;
 import net.pladema.patient.controller.dto.PatientSearchDto;

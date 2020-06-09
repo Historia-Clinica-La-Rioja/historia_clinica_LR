@@ -1,6 +1,6 @@
 package net.pladema.internation.controller.ips.constraints.validator;
 
-import net.pladema.dates.configuration.JacksonDateFormatConfig;
+import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
 import net.pladema.internation.controller.documents.dto.DocumentDto;
 import net.pladema.internation.controller.ips.constraints.EffectiveVitalSignTimeValid;
 import net.pladema.internation.controller.ips.dto.EffectiveClinicalObservationDto;

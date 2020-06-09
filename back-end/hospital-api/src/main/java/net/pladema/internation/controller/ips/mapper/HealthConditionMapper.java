@@ -1,11 +1,9 @@
 package net.pladema.internation.controller.ips.mapper;
 
-import net.pladema.dates.configuration.LocalDateMapper;
+import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import net.pladema.internation.controller.internment.dto.internmentstate.DiagnosesGeneralStateDto;
 import net.pladema.internation.controller.ips.dto.DiagnosisDto;
-import net.pladema.internation.controller.ips.dto.HealthConditionDto;
 import net.pladema.internation.controller.ips.dto.HealthHistoryConditionDto;
-import net.pladema.internation.repository.ips.generalstate.HealthConditionVo;
 import net.pladema.internation.service.ips.domain.DiagnosisBo;
 import net.pladema.internation.service.ips.domain.HealthConditionBo;
 import net.pladema.internation.service.ips.domain.HealthHistoryConditionBo;

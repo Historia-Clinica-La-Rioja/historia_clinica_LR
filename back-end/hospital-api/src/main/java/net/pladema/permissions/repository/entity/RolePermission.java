@@ -5,8 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.Table;
 
-import net.pladema.auditable.entity.AuditableEntity;
-import net.pladema.auditable.listener.AuditListener;
+import net.pladema.sgx.auditable.entity.AuditableEntity;
+import net.pladema.sgx.auditable.listener.AuditListener;
 
 @Entity
 @Table(name = "role_permission")
