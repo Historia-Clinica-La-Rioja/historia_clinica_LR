@@ -1,15 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from '@core/services/context.service';
-import { BasicPatientDto, InternmentSummaryDto, DiagnosesGeneralStateDto, MasterDataInterface, EvolutionDiagnosisDto } from '@api-rest/api-model';
+import {
+	BasicPatientDto,
+	DiagnosesGeneralStateDto,
+	EvolutionDiagnosisDto,
+	InternmentSummaryDto,
+	MasterDataInterface
+} from '@api-rest/api-model';
 import { map } from 'rxjs/operators';
 import { MapperService } from '@presentation/services/mapper.service';
 import { InternacionService } from '@api-rest/services/internacion.service';
 import { PatientService } from '@api-rest/services/patient.service';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
-import { Observable, forkJoin } from 'rxjs';
+import { Observable } from 'rxjs';
 import { InternmentEpisodeSummary } from '@presentation/components/internment-episode-summary/internment-episode-summary.component';
 import { TableCheckbox } from 'src/app/modules/material/model/table.model';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -32,6 +38,7 @@ export class EvaluacionClinicaDiagnosticosComponent implements OnInit {
 	private patientId: number;
 	private healthClinicalStatus: MasterDataInterface<string>[];
 
+	verifications: MasterDataInterface<string>[];
 	form: FormGroup;
 	patient$: Observable<PatientBasicData>;
 	internmentEpisodeSummary$: Observable<InternmentEpisodeSummary>;
@@ -51,7 +58,7 @@ export class EvaluacionClinicaDiagnosticosComponent implements OnInit {
 			{
 				def: 'verificacion',
 				header: 'internaciones.clinical-assessment-diagnosis.diagnostics.table.columns.VERIFICATION',
-				display: row => row.presumptive ? 'Presuntivo' : 'Confirmado'
+				display: (row) => this.verifications?.find(verification => verification.id === row.verificationId)?.description
 			},
 			{
 				def: 'type',
@@ -108,8 +115,14 @@ export class EvaluacionClinicaDiagnosticosComponent implements OnInit {
 			}
 		);
 
-		this.internacionMasterDataService.getHealthClinical().subscribe(healthClinical => {
+		const healthClinicalMasterData$ = this.internacionMasterDataService.getHealthClinical();
+		healthClinicalMasterData$.subscribe(healthClinical => {
 			this.healthClinicalStatus = healthClinical;
+		});
+
+		const healthVerificationMasterData$ = this.internacionMasterDataService.getHealthVerification();
+		healthVerificationMasterData$.subscribe(healthVerification => {
+			this.verifications = healthVerification;
 		});
 
 		this.form = this.formBuilder.group({

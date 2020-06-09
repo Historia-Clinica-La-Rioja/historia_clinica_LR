@@ -1,7 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import {
 	AllergyConditionDto,
-	DiagnosisDto, HealthHistoryConditionDto, InmunizationDto, EpicrisisDto, MedicationDto,
+	DiagnosisDto,
+	EpicrisisDto,
+	HealthHistoryConditionDto,
+	InmunizationDto,
+	MasterDataInterface,
+	MedicationDto,
 	ResponseAnamnesisDto,
 	ResponseEpicrisisDto,
 } from '@api-rest/api-model';
@@ -31,6 +36,7 @@ export class EpicrisisFormComponent implements OnInit {
 	isAllSelected = this.tableService.isAllSelected;
 	masterToggle = this.tableService.masterToggle;
 
+	verifications: MasterDataInterface<string>[];
 	anamnesis: ResponseAnamnesisDto;
 	form: FormGroup;
 
@@ -51,7 +57,7 @@ export class EpicrisisFormComponent implements OnInit {
 			{
 				def: 'verificacion',
 				header: 'internaciones.epicrisis.diagnosticos.table.columns.VERIFICATION',
-				display: ap => ap.presumptive ? 'Presuntivo' : 'Confirmado'
+				display: (row) => this.verifications?.find(verification => verification.id === row.verificationId)?.description
 			},
 		],
 		displayedColumns: [],
@@ -150,9 +156,14 @@ export class EpicrisisFormComponent implements OnInit {
 			}),
 		});
 
-		const internacionMasterDataService$ = this.internacionMasterDataService.getHealthClinical();
-		internacionMasterDataService$.subscribe(healthClinical => {
+		const healthClinicalMasterData$ = this.internacionMasterDataService.getHealthClinical();
+		healthClinicalMasterData$.subscribe(healthClinical => {
 			this.healthClinicalStatus = healthClinical;
+		});
+
+		const healthVerificationMasterData$ = this.internacionMasterDataService.getHealthVerification();
+		healthVerificationMasterData$.subscribe(healthVerification => {
+			this.verifications = healthVerification;
 		});
 
 		const epicrisis$ = this.epicrisisService.getInternmentGeneralState(this.internmentEpisodeId);
