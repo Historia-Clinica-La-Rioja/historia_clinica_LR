@@ -12,7 +12,7 @@ public class DocumentDoctorSearchQuery extends DocumentSearchQuery {
     public QueryPart where() {
         String pattern = escapeSqlText.toUpperCase();
         return super.where().concatPart(new QueryPart(
-                "AND (CONCAT(creator.firstName,"+ "' '" +",creator.lastName) LIKE '%"+pattern+"%') \n"));
+                "AND (UPPER(CONCAT(creator.firstName,"+ "' '" +",creator.lastName)) LIKE '%"+pattern+"%') \n"));
     }
 
     @Override
