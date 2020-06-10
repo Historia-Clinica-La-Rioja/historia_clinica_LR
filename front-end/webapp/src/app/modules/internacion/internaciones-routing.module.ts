@@ -16,13 +16,13 @@ const routes: Routes = [
 		path: '',
 		component: InternacionesHomeComponent,
 		canActivate: [RoleGuard],
-		data: { allowedRoles: ['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR'] }
+		data: { allowedRoles: ['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR', 'ENFERMERO'] }
 	},
 	{
 		path: 'internacion/:idInternacion/paciente/:idPaciente',
 		component: InternacionPacienteComponent,
 		canActivate: [RoleGuard],
-		data: { allowedRoles: ['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ADMINISTRATIVO', 'ENFERMERO_ADULTO_MAYOR'] }
+		data: { allowedRoles: ['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ADMINISTRATIVO', 'ENFERMERO_ADULTO_MAYOR', 'ENFERMERO'] }
 	},
 	{
 		path: 'internacion/:idInternacion/paciente/:idPaciente/anamnesis',
@@ -40,7 +40,7 @@ const routes: Routes = [
 		path: 'internacion/:idInternacion/paciente/:idPaciente/nota-evolucion',
 		component: NotaEvolucionComponent,
 		canActivate: [RoleGuard],
-		data: { allowedRoles: ['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR'] }
+		data: { allowedRoles: ['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR', 'ENFERMERO'] }
 	},
 	{
 		path: 'internacion/:idInternacion/paciente/:idPaciente/eval-clinica-diagnosticos/:idDiagnostico',

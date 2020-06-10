@@ -23,6 +23,7 @@ export const SIDEBAR_MENU: MenuItem[] = [
 			'ESPECIALISTA_MEDICO',
 			'PROFESIONAL_DE_SALUD',
 			'ENFERMERO_ADULTO_MAYOR',
+			'ENFERMERO',
 		],
 	},
 	{

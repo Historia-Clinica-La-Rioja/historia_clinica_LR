@@ -63,7 +63,8 @@
 				</mat-card-content>
 			</mat-card>
 		</section>
-		<section id="signos-vitales" *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR']">
+		<section id="signos-vitales"
+			*hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO']">
 			<h2 [translate]="'internaciones.anamnesis.vital-signs.form.TITLE'"></h2>
 			<mat-card>
 				<mat-card-content class="vital-signs" formGroupName="vitalSigns">
@@ -140,7 +141,8 @@
 				</mat-card-content>
 			</mat-card>
 		</section>
-		<section id="datos-antropometricos" *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR']">
+		<section id="datos-antropometricos"
+			*hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO']">
 			<h2 [translate]="'internaciones.anamnesis.datos-antropometricos.TITLE'"></h2>
 			<mat-card class="datos-antropometricos-card">
 				<mat-card-content formGroupName="anthropometricData">
@@ -183,7 +185,7 @@
 				<span class="uppercase" [translate]="'buttons.BACK'"></span>
 			</button>
 			<button id="sign-confirm" mat-raised-button type="submit" color="primary"
-				*hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR']">
+				*hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO']">
 				<span class="uppercase" [translate]="'internaciones.anamnesis.buttons.CONFIRM'"></span>
 			</button>
 		</section>

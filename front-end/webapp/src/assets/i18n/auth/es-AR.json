@@ -38,7 +38,8 @@
 				"ESPECIALISTA_MEDICO": "Especialista Médico",
 				"PROFESIONAL_DE_SALUD": "Profesional de la salud",
 				"ADMINISTRATIVO": "Administrativo",
-				"ENFERMERO_ADULTO_MAYOR": "Enfermero adulto mayor"
+				"ENFERMERO_ADULTO_MAYOR": "Enfermero adulto mayor",
+				"ENFERMERO": "Enfermero"
 			}
 		}
 	}
