@@ -19,6 +19,7 @@ const BedCreate = props => (
                 reference="rooms"
                 sort={{ field: 'description', order: 'ASC' }}
                 validate={[required()]}
+                filterToQuery={searchText => ({description: searchText ? searchText : -1})}                
             >
                 <AutocompleteInput optionText="description" optionValue="id"/>
             </ReferenceInput>
