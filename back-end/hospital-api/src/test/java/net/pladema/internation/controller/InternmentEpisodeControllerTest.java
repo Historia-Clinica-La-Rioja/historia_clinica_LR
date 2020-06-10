@@ -1,18 +1,19 @@
 package net.pladema.internation.controller;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.Optional;
-
+import net.pladema.BaseControllerTest;
+import net.pladema.establishment.controller.service.BedExternalService;
+import net.pladema.establishment.repository.InstitutionRepository;
 import net.pladema.featureflags.service.FeatureFlagsService;
+import net.pladema.internation.controller.internment.InternmentEpisodeController;
+import net.pladema.internation.controller.internment.mapper.InternmentEpisodeMapper;
+import net.pladema.internation.controller.internment.mapper.PatientDischargeMapper;
+import net.pladema.internation.controller.mocks.MocksInternmentPatient;
 import net.pladema.internation.repository.documents.DocumentRepository;
+import net.pladema.internation.repository.documents.PatientDischargeRepository;
+import net.pladema.internation.repository.internment.InternmentEpisodeRepository;
+import net.pladema.internation.service.internment.InternmentEpisodeService;
 import net.pladema.internation.service.internment.ResponsibleContactService;
+import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,16 +22,15 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import net.pladema.BaseControllerTest;
-import net.pladema.establishment.controller.service.BedExternalService;
-import net.pladema.establishment.repository.InstitutionRepository;
-import net.pladema.internation.controller.internment.InternmentEpisodeController;
-import net.pladema.internation.controller.internment.mapper.InternmentEpisodeMapper;
-import net.pladema.internation.controller.internment.mapper.PatientDischargeMapper;
-import net.pladema.internation.controller.mocks.MocksInternmentPatient;
-import net.pladema.internation.repository.internment.InternmentEpisodeRepository;
-import net.pladema.internation.service.internment.InternmentEpisodeService;
-import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
+import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(InternmentEpisodeController.class)
@@ -65,6 +65,9 @@ public class InternmentEpisodeControllerTest extends BaseControllerTest {
 
 	@MockBean
 	private DocumentRepository documentRepository;
+
+	@MockBean
+	private PatientDischargeRepository patientDischargeRepository;
 	
 	@Before
 	public void setup() {
