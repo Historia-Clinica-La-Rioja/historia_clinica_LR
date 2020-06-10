@@ -34,8 +34,11 @@ public class PatientDischarge extends InternationAuditableEntity {
 	@Column(name = "internment_episode_id", nullable = false)
 	private Integer internmentEpisodeId;
 
-	@Column(name = "discharge_date", nullable = false)
-	private LocalDate dischargeDate;
+	@Column(name = "administrative_discharge_date")
+	private LocalDate administrativeDischargeDate;
+
+	@Column(name = "medical_discharge_date")
+	private LocalDate medicalDischargeDate;
 
 	@Column(name = "discharge_type_id", nullable = false)
 	private Short dischargeTypeId;

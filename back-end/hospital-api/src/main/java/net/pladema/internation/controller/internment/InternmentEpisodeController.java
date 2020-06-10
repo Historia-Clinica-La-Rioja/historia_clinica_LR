@@ -57,7 +57,7 @@ public class InternmentEpisodeController {
 
 	private final InternmentEpisodeRepository internmentEpisodeRepository;
 
-	private final FeatureFlagsService featureFlagsService;
+		private final FeatureFlagsService featureFlagsService;
 
 	private final DocumentRepository documentRepository;
 
@@ -109,9 +109,19 @@ public class InternmentEpisodeController {
         return  ResponseEntity.ok().body(result);
     }
 
+	@Transactional
+	@PostMapping("/{internmentEpisodeId}/medicaldischarge")
+	public ResponseEntity<PatientDischargeDto> medicalDischargeInternmentEpisode(
+			@InternmentDischargeValid @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
+			@RequestBody PatientDischargeDto patientDischargeDto) {
+		PatientDischarge patientDischarge = patientDischargeMapper.toPatientDischarge(patientDischargeDto);
+		patientDischarge.setInternmentEpisodeId(internmentEpisodeId);
+		PatientDischarge patientDischageSaved = internmentEpisodeService.addPatientDischarge(patientDischarge);
+		return ResponseEntity.ok(patientDischargeMapper.toPatientDischargeDto(patientDischageSaved));
+	}
     
 	@Transactional
-	@PostMapping("/{internmentEpisodeId}/discharge")
+	@PostMapping("/{internmentEpisodeId}/administrativedischarge")
 	public ResponseEntity<PatientDischargeDto> dischargeInternmentEpisode(
 			@InternmentDischargeValid @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
 			@RequestBody PatientDischargeDto patientDischargeDto) {

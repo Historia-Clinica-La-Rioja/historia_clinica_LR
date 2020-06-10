@@ -16,7 +16,10 @@ import lombok.ToString;
 public class PatientDischargeDto {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate dischargeDate;
+    private LocalDate medicalDischargeDate;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate administrativeDischargeDate;
 
     private short dischargeTypeId;
 

@@ -23,7 +23,7 @@ export class InternmentEpisodeService {
 	}
 
 	dischargeInternmentEpisode<PatientDischargeDto>(discharge: PatientDischargeDto,internmentEpisodeId: number): Observable<PatientDischargeDto> {
-		let url = `${environment.apiBase}` + BASIC_URL_PREFIX + `/${this.contextService.institutionId}` + BASIC_URL_SUFIX + `/${internmentEpisodeId}/discharge`;
+		let url = `${environment.apiBase}` + BASIC_URL_PREFIX + `/${this.contextService.institutionId}` + BASIC_URL_SUFIX + `/${internmentEpisodeId}/administrativedischarge`;
 		return this.http.post<PatientDischargeDto>(url, discharge);
 	}
 
