@@ -28,7 +28,7 @@ import java.util.List;
 @RequestMapping("/institutions/{institutionId}/internments-state")
 @Api(value = "Internment State", tags = { "Internment State" })
 @Validated
-@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO_ADULTO_MAYOR')")
+@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO_ADULTO_MAYOR, ENFERMERO')")
 public class InternmentStateController {
 
     private static final Logger LOG = LoggerFactory.getLogger(InternmentStateController.class);

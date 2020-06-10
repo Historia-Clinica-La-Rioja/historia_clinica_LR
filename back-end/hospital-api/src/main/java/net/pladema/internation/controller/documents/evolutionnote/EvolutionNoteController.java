@@ -37,7 +37,7 @@ import java.io.IOException;
 @RequestMapping("/institutions/{institutionId}/internments/{internmentEpisodeId}/evolutionNote")
 @Api(value = "Evolution Note", tags = { "Evolution note" })
 @Validated
-@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO_ADULTO_MAYOR')")
+@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO_ADULTO_MAYOR, ENFERMERO')")
 public class EvolutionNoteController {
 
     private static final Logger LOG = LoggerFactory.getLogger(EvolutionNoteController.class);
