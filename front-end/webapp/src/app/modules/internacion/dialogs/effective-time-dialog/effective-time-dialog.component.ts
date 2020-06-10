@@ -42,6 +42,20 @@ export class EffectiveTimeDialogComponent implements OnInit {
 			date: [this.data.datetime, Validators.required],
 			time: [momentFormat(this.data.datetime, DateFormat.HOUR_MINUTE), [Validators.required, futureTimeValidation]],
 		});
+
+		this.timeForm.controls['date'].valueChanges.subscribe(
+			(selectedDate: Moment) => {
+				const selectedDateString = momentFormat(selectedDate, DateFormat.API_DATE);
+				const todayDateString = momentFormat(this.today, DateFormat.API_DATE);
+				if (selectedDateString === todayDateString) {
+					this.timeForm.controls['time'].setValidators([Validators.required, futureTimeValidation]);
+					this.timeForm.controls['time'].updateValueAndValidity();
+				} else {
+					this.timeForm.controls['time'].setValidators(Validators.required);
+					this.timeForm.controls['time'].updateValueAndValidity();
+				}
+			}
+		);
 	}
 
 	set(): void {
