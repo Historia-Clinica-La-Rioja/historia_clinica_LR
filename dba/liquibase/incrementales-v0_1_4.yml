@@ -396,3 +396,35 @@
                 nullable: true
             name: longitud
             type: float
+            
+- changeSet:
+    id: patient_discharge_add_column_medical_discharge_date
+    author: lbergottini
+    changes:
+    - addColumn:
+        tableName: patient_discharge
+        columns:
+        - column:
+            name: medical_discharge_date
+            type: date
+            constraints:
+                nullable: true
+                
+- changeSet:        
+    id: dropNotNullConstraint-patient_discharge-discharge_date
+    author: lbergottini
+    changes:
+    - dropNotNullConstraint:
+        columnDataType: date
+        columnName: discharge_date
+        tableName: patient_discharge
+        
+- changeSet:
+    id: renameColumn-patient_discharge-discharge_date
+    author: lbergottini
+    changes:
+    - renameColumn:
+        columnDataType: date
+        newColumnName: administrative_discharge_date
+        oldColumnName: discharge_date
+        tableName: patient_discharge
