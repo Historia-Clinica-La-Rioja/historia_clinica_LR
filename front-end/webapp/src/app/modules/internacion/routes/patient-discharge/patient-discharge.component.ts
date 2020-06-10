@@ -16,6 +16,7 @@ import { DateFormat } from '@core/utils/moment.utils';
 import { InternmentEpisodeService } from '@api-rest/services/internment-episode.service';
 import { ContextService } from '@core/services/context.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 const ROUTE_PROFILE = 'pacientes/profile/';
 
@@ -35,7 +36,7 @@ export class PatientDischargeComponent implements OnInit {
 	public dischargeTypes: {};
 	public formSubmited: boolean;
 	private readonly routePrefix;
-
+	public dischargeWithoutEpicrisisDisabled: boolean;
 	private patientId: number;
 	private internmentId: number;
 
@@ -50,7 +51,8 @@ export class PatientDischargeComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private contextService: ContextService,
 		private route: ActivatedRoute,
-		private router: Router
+		private router: Router,
+		private featureFlagService: FeatureFlagService,
 		) {
 			this.routePrefix = 'institucion/' + this.contextService.institutionId + '/'; }
 
@@ -59,10 +61,8 @@ export class PatientDischargeComponent implements OnInit {
 		this.internacionMasterDataService.getDischargeType()
 			.subscribe(dischargeTypes => this.dischargeTypes = dischargeTypes);
 
-		this.dischargeForm = this.formBuilder.group({
-			dischargeDate: [null, [Validators.required]],
-			dischargeTypeId: [null, [Validators.required]]
-		});
+		this.loadForm();
+
 		this.route.paramMap.subscribe(
 			(params) => {
 			this.patientId = Number(params.get('idPaciente'));
@@ -77,26 +77,48 @@ export class PatientDischargeComponent implements OnInit {
 									this.mapperService.toPersonalInformationData(completeData, personInformationData);
 							});
 					});
+
+			this.featureFlagService.isOn('habilitarAltaSinEpicrisis').subscribe(epicrisisNotRequired => {
+				if (!epicrisisNotRequired)
+					this.setDischargeFormWithEpicrisisRequired();
+			});
+
+			this.setMinimumDateForDischarge();
 			}
 		);
-		this.intermentEpisodeService.getMinDischargeDate(this.internmentId)
-			.subscribe ( minDischargeDate => this.minDischargeDate = minDischargeDate);
 
+	}
+
+	private loadForm(){
+		this.dischargeForm = this.formBuilder.group({
+			dischargeDate: [null, [Validators.required]],
+			dischargeTypeId: [null, [Validators.required]]
+		});
+	}
+
+	private setDischargeFormWithEpicrisisRequired(){
+		this.dischargeForm.controls.dischargeTypeId.disable();
+		this.intermentEpisodeService.getInternmentDischarge(this.internmentId)
+			.subscribe(discharge => {
+				this.dischargeForm.controls.dischargeTypeId.setValue(Number(discharge.dischargeTypeId));
+			});
+	}
+
+	private setMinimumDateForDischarge(){
+		this.intermentEpisodeService.getMinDischargeDate(this.internmentId)
+				.subscribe ( minDischargeDate => this.minDischargeDate = minDischargeDate);
 	}
 
 	save(): void {
 		this.formSubmited = true;
 		if (this.dischargeForm.valid) {
-			let request = this.dischargeForm.value;
-			request.dischargeDate =this.dischargeForm.value.dischargeDate.format(DateFormat.API_DATE);
-			this.route.paramMap.subscribe(
-				(params) => {
-					 this.intermentEpisodeService.dischargeInternmentEpisode<PatientDischargeDto>(request,this.internmentId)
-					 	.subscribe(response => {
-							this.snackBarService.showSuccess('internaciones.discharge.messages.SUCCESS');
-							this.router.navigate([this.routePrefix + ROUTE_PROFILE + `${this.patientId}`]);
-						 }, _ => this.snackBarService.showError('internaciones.discharge.messages.ERROR'));
-				});
+			let request: PatientDischargeDto = this.dischargeForm.getRawValue();
+			request.administrativeDischargeDate =this.dischargeForm.value.dischargeDate.format(DateFormat.API_DATE);
+			this.intermentEpisodeService.dischargeInternmentEpisode<PatientDischargeDto>(request,this.internmentId)
+				.subscribe(response => {
+					this.snackBarService.showSuccess('internaciones.discharge.messages.SUCCESS');
+					this.router.navigate([this.routePrefix + ROUTE_PROFILE + `${this.patientId}`]);
+				}, _ => this.snackBarService.showError('internaciones.discharge.messages.ERROR'));
 		}
 	}
 
