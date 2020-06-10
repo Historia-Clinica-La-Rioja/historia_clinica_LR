@@ -20,6 +20,7 @@ const RoomCreate = props => (
                 source="clinicalSpecialtySectorId"
                 reference="clinicalspecialtysectors"
                 sort={{ field: 'description', order: 'ASC' }}
+                filterToQuery={searchText => ({description: searchText})}                
             >
                 <AutocompleteInput optionText="description" optionValue="id"/>
             </ReferenceInput>

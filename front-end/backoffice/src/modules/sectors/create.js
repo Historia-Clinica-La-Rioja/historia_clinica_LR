@@ -16,6 +16,7 @@ const SectorCreate = props => (
                 source="institutionId"
                 reference="institutions"
                 sort={{ field: 'name', order: 'ASC' }}
+                filterToQuery={searchText => ({name: searchText})}                
             >
                 <AutocompleteInput optionText="name" optionValue="id"/>
             </ReferenceInput>

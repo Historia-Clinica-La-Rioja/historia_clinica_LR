@@ -4,7 +4,10 @@ import net.pladema.address.repository.entity.Address;
 import net.pladema.address.service.AddressService;
 import net.pladema.establishment.repository.InstitutionRepository;
 import net.pladema.establishment.repository.entity.Institution;
+import net.pladema.sgx.backoffice.repository.BackofficeRepository;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
+import net.pladema.sgx.backoffice.rest.SingleAttributeBackofficeQueryAdapter;
+
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -16,7 +19,10 @@ public class BackofficeInstitutionController extends AbstractBackofficeControlle
 	AddressService addressService;
 	
 	public BackofficeInstitutionController(InstitutionRepository repository, AddressService addressService) {
-		super(repository);
+		super(
+				new BackofficeRepository<Institution, Integer>(
+						repository,
+						new SingleAttributeBackofficeQueryAdapter<Institution>("name")));
 		this.addressService = addressService;
 	}
 	

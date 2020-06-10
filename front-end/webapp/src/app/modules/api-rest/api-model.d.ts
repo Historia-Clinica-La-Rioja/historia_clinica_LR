@@ -421,6 +421,11 @@ export interface MedicationDto extends ClinicalTermDto {
     suspended: boolean;
 }
 
+export interface OauthConfigDto {
+    enabled: boolean;
+    loginUrl: string;
+}
+
 export interface PasswordResetDto {
     password: string;
     token: string;

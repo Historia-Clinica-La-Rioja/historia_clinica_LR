@@ -20,6 +20,7 @@ const InstitutionInput = () => {
         onChange={value => {
             form.change('sectorId', null);
         }}
+        filterToQuery={searchText => ({name: searchText})}                
     >
         <AutocompleteInput optionText="name" optionValue="id"/>
     </ReferenceInput>
