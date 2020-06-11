@@ -17,11 +17,11 @@ export class PublicService {
 
 	constructor(
 		http: HttpClient,
-		private localStorageService: LocalStorageService,
+		localStorageService: LocalStorageService,
 	) {
 		this.publicInfo$ = this.publicInfoEmitter.asObservable();
 
-		this.localStorageService.getItem<PublicInfoDto>(PUBLIC_INFO_KEY).subscribe(
+		localStorageService.getItem<PublicInfoDto>(PUBLIC_INFO_KEY).subscribe(
 			publicInfoFromCache => {
 				if (publicInfoFromCache && publicInfoFromCache.flavor) {
 					this.publicInfoEmitter.next(publicInfoFromCache)

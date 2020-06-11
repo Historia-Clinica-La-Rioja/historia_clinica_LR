@@ -5,11 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class FeatureFlagBo {
 
-    private Integer id;
-
-    private String nombre;
-
-    private String descripcion;
+    private String label;
 
     private String key;
 
@@ -31,35 +27,21 @@ public class FeatureFlagBo {
         this.active = active;
     }
 
-    public Integer getId() {
-        return id;
+    public String getLabel() {
+        return label;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     @Override
     public String toString() {
-        return "SinideFeatureFlag{" +
-                "key='" + key + '\'' +
-                ", active=" + active +
-                '}';
+        final StringBuilder sb = new StringBuilder("FeatureFlagBo{");
+        sb.append("label='").append(label).append('\'');
+        sb.append(", key='").append(key).append('\'');
+        sb.append(", active=").append(active);
+        sb.append('}');
+        return sb.toString();
     }
 }

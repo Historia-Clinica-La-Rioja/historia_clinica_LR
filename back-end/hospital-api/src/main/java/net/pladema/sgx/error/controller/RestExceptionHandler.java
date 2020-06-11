@@ -21,7 +21,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -60,7 +59,7 @@ public class RestExceptionHandler {
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler({ ConstraintViolationException.class })
-	public ResponseEntity<Object> handleValidationExceptions(ConstraintViolationException ex, WebRequest request) {
+	public ApiError handleValidationExceptions(ConstraintViolationException ex, WebRequest request) {
 		List<String> errors = new ArrayList<>();
 		for (ConstraintViolation<?> violation : ex.getConstraintViolations()){
 
@@ -69,8 +68,7 @@ public class RestExceptionHandler {
 			else
 				errors.add(violation.getPropertyPath() + ": " + violation.getMessage());
 		}
-		ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, "Constraint violation", errors);
-		return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
+		return new ApiError("Constraint violation", errors);
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)

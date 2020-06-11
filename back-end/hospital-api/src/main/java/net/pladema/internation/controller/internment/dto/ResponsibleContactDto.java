@@ -5,7 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.annotation.Nullable;
-import javax.validation.constraints.Null;
+
 import java.io.Serializable;
 
 @Getter

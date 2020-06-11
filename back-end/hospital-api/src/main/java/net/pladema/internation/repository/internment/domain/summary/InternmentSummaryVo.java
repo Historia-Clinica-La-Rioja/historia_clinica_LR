@@ -9,7 +9,6 @@ import net.pladema.internation.repository.internment.domain.ResponsibleContact;
 import net.pladema.internation.service.internment.summary.domain.ResponsibleContactVo;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 @Getter
 @Setter
