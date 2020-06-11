@@ -9,6 +9,7 @@ import net.pladema.internation.controller.constraints.HealthHistoryConditionVali
 import net.pladema.internation.controller.documents.dto.DocumentDto;
 import net.pladema.internation.controller.internment.dto.DocumentObservationsDto;
 import net.pladema.internation.controller.ips.dto.*;
+import net.pladema.sgx.featureflags.AppFeature;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;
@@ -28,7 +29,7 @@ public class AnamnesisDto implements DocumentDto, Serializable {
     @Nullable
     private DocumentObservationsDto notes;
 
-    @SGHNotNull(message = "{diagnosis.mandatory}", ffs = {"mainDiagnosisRequired"})
+    @SGHNotNull(message = "{diagnosis.mandatory}", ffs = {AppFeature.MAIN_DIAGNOSIS_REQUIRED})
     private HealthConditionDto mainDiagnosis;
 
     @NotNull

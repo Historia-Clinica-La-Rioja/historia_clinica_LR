@@ -2,6 +2,7 @@ package net.pladema.featureflags.controller.constraints.validators;
 
 import net.pladema.featureflags.controller.constraints.SGHNotNull;
 import net.pladema.featureflags.service.FeatureFlagsService;
+import net.pladema.sgx.featureflags.AppFeature;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -11,8 +12,7 @@ import java.util.List;
 
 public class SGHNotNullValidator implements ConstraintValidator<SGHNotNull, Object> {
 
-
-    private List<String> featureFlags = new ArrayList<>();
+    private List<AppFeature> featureFlags = new ArrayList<>();
 
     private final FeatureFlagsService featureFlagsService;
 
@@ -28,7 +28,7 @@ public class SGHNotNullValidator implements ConstraintValidator<SGHNotNull, Obje
 
     @Override
     public boolean isValid(Object attribute, ConstraintValidatorContext context) {
-        for (String ff : featureFlags)
+        for (AppFeature ff : featureFlags)
             if (featureFlagsService.isOn(ff))
                 return attribute != null;
         return true;

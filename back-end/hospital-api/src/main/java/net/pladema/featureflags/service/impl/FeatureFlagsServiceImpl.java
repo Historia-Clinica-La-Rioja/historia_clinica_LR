@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import net.pladema.featureflags.service.FeatureFlagsService;
 import net.pladema.featureflags.service.domain.FeatureFlagBo;
 import net.pladema.featureflags.service.domain.FlavorBo;
+import net.pladema.sgx.featureflags.AppFeature;
 
 @Service
 public class FeatureFlagsServiceImpl implements FeatureFlagsService {
@@ -30,8 +31,12 @@ public class FeatureFlagsServiceImpl implements FeatureFlagsService {
 		this.configFlavor = configFlavor;
 	}
 
-	public boolean isOn(String name) {
-		return getAll().stream().filter(f -> f.getKey().equals(name)).findFirst().map(FeatureFlagBo::isActive).orElse(false);
+	public boolean isOn(AppFeature feature) {
+		return getAll().stream()
+				.filter(f -> f.key == feature)
+				.map(f -> f.active)
+				.findFirst()
+				.orElse(false);
 	}
 
 	private List<FeatureFlagBo> getAll() {
@@ -43,34 +48,22 @@ public class FeatureFlagsServiceImpl implements FeatureFlagsService {
 
 	private List<FeatureFlagBo> reset(FlavorBo flavor) {
 		allFlags = new ArrayList<>();
-		allFlags.add(flag("responsibleDoctorRequired", flavor.anyMatch(FlavorBo.HOSPITALES),
-				"Indica si el médico responsable de una internación es obligatorio"));
+		allFlags.add(flag(AppFeature.RESPONSIBLE_DOCTOR_REQUIRED, flavor.anyMatch(FlavorBo.HOSPITALES)));
 		
-		allFlags.add(flag("habilitarAltaSinEpicrisis", flavor.anyMatch(FlavorBo.TANDIL, FlavorBo.CHACO),
-				"Indica si se puede dar de alta una internación sin tener una epicrisis asociada"));
+		allFlags.add(flag(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS, flavor.anyMatch(FlavorBo.TANDIL, FlavorBo.CHACO)));
 
-		allFlags.add(flag("mainDiagnosisRequired", flavor.anyMatch(FlavorBo.HOSPITALES),
-				"Indica si el diagnostico principal en una internación es obligatorio"));
+		allFlags.add(flag(AppFeature.MAIN_DIAGNOSIS_REQUIRED, flavor.anyMatch(FlavorBo.HOSPITALES)));
 
 		return allFlags;
 	}
 
-	/**
-	 *
-	 * @param key         nombre del flag en el archivo de configuración
-	 * @param active      valor por defecto del key
-	 * @param label      label del flag
-	 * @return el flag creado
-	 */
-	private FeatureFlagBo flag(String key, boolean active, String label) {
+	private FeatureFlagBo flag(AppFeature feature, boolean active) {
+
 		// Si se definió una property para este flag, se utiliza con mas prioridad
-		String featureFlagProperty = "sgh.feature-flag." + key;
+		String featureFlagProperty = "togglz.features." + feature.name() + ".enabled";
 		boolean isActive = Boolean.parseBoolean(env.getProperty(featureFlagProperty, Boolean.toString(active)));
 
-		FeatureFlagBo flag = new FeatureFlagBo();
-		flag.setActive(isActive);
-		flag.setKey(key);
-		flag.setLabel(label);
+		FeatureFlagBo flag = new FeatureFlagBo(feature, isActive);
 		LOG.info("Using {}", flag);
 		return flag;
 	}

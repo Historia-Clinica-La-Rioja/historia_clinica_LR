@@ -1,5 +1,7 @@
 package net.pladema.internation.controller.internment.dto;
 
+import static net.pladema.sgx.featureflags.AppFeature.RESPONSIBLE_DOCTOR_REQUIRED;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,7 +29,7 @@ public class InternmentEpisodeADto {
 
     private Integer institutionId;
 
-    @SGHNotNull(message = "{internment.responsible.doctor.required}", ffs = {"responsibleDoctorRequired"})
+    @SGHNotNull(message = "{internment.responsible.doctor.required}", ffs = {RESPONSIBLE_DOCTOR_REQUIRED})
     private Integer responsibleDoctorId;
 
     @Nullable

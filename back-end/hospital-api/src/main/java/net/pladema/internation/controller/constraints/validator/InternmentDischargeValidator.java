@@ -8,6 +8,7 @@ import javax.validation.constraintvalidation.ValidationTarget;
 import net.pladema.featureflags.service.FeatureFlagsService;
 import net.pladema.internation.controller.constraints.InternmentDischargeValid;
 import net.pladema.internation.repository.internment.InternmentEpisodeRepository;
+import net.pladema.sgx.featureflags.AppFeature;
 
 @SupportedValidationTarget(ValidationTarget.PARAMETERS)
 public class InternmentDischargeValidator implements ConstraintValidator<InternmentDischargeValid, Integer> {
@@ -37,7 +38,7 @@ public class InternmentDischargeValidator implements ConstraintValidator<Internm
         Integer internmentEpisodeId = parameters;
         boolean valid = true;
         
-        if (!featureFlagService.isOn("habilitarAltaSinEpicrisis")) {
+        if (!featureFlagService.isOn(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS)) {
         	valid = internmentEpisodeRepository.haveEpicrisis(internmentEpisodeId);
         }
         if (!valid) {

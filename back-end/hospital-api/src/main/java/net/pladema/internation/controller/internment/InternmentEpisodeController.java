@@ -22,6 +22,7 @@ import net.pladema.internation.service.internment.InternmentEpisodeService;
 import net.pladema.internation.service.internment.ResponsibleContactService;
 import net.pladema.internation.service.internment.summary.domain.InternmentSummaryBo;
 import net.pladema.sgx.exceptions.NotFoundException;
+import net.pladema.sgx.featureflags.AppFeature;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -130,7 +131,7 @@ public class InternmentEpisodeController {
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
 		InternmentEpisode internmentEpisode = internmentEpisodeRepository.findById(internmentEpisodeId)
 				.orElseThrow(() -> new NotFoundException("bad-episode-id", "Internment episode not found"));
-		if (this.featureFlagsService.isOn("habilitarAltaSinEpicrisis")) {
+		if (this.featureFlagsService.isOn(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS)) {
 			return ResponseEntity.ok(internmentEpisode.getEntryDate());
 		}
 		Document epicrisis = documentRepository.findById(internmentEpisode.getEpicrisisDocId())
