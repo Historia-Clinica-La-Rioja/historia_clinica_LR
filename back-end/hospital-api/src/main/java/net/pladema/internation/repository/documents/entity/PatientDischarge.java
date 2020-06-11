@@ -14,6 +14,7 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.internation.repository.listener.InternationAuditableEntity;
 import net.pladema.internation.repository.listener.InternationListener;
+import net.pladema.internation.service.internment.summary.domain.PatientDischargeBo;
 
 @Entity
 @Table(name = "patient_discharge")
@@ -42,5 +43,12 @@ public class PatientDischarge extends InternationAuditableEntity {
 
 	@Column(name = "discharge_type_id", nullable = false)
 	private Short dischargeTypeId;
+
+	public PatientDischarge(PatientDischargeBo patientDischargeBo){
+		this.internmentEpisodeId = patientDischargeBo.getInternmentEpisodeId();
+		this.administrativeDischargeDate = patientDischargeBo.getAdministrativeDischargeDate();
+		this.medicalDischargeDate = patientDischargeBo.getMedicalDischargeDate();
+		this.dischargeTypeId = patientDischargeBo.getDischargeTypeId();
+	}
 
 }

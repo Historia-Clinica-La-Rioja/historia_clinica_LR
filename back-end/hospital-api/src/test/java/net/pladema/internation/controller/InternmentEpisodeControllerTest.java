@@ -11,6 +11,7 @@ import net.pladema.internation.controller.mocks.MocksInternmentPatient;
 import net.pladema.internation.repository.documents.DocumentRepository;
 import net.pladema.internation.repository.documents.PatientDischargeRepository;
 import net.pladema.internation.repository.internment.InternmentEpisodeRepository;
+import net.pladema.internation.service.documents.PatientDischargeService;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
 import net.pladema.internation.service.internment.ResponsibleContactService;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
@@ -68,6 +69,9 @@ public class InternmentEpisodeControllerTest extends BaseControllerTest {
 
 	@MockBean
 	private PatientDischargeRepository patientDischargeRepository;
+
+	@MockBean
+	private PatientDischargeService patientDischargeService;
 	
 	@Before
 	public void setup() {

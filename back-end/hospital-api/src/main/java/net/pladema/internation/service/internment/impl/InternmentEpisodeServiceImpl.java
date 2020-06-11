@@ -10,6 +10,7 @@ import net.pladema.internation.repository.internment.domain.summary.EvaluationNo
 import net.pladema.internation.repository.internment.domain.summary.InternmentSummaryVo;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
 import net.pladema.internation.service.internment.summary.domain.InternmentSummaryBo;
+import net.pladema.internation.service.internment.summary.domain.PatientDischargeBo;
 import net.pladema.sgx.exceptions.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -144,11 +145,28 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 	}
 
 	@Override
-	public PatientDischarge addPatientDischarge(PatientDischarge patientDischarge) {
-		LOG.debug(INPUT_PARAMETERS, patientDischarge);
-		PatientDischarge result = patientDischargeRepository.save(patientDischarge);
-		LOG.debug(LOGGING_OUTPUT, result);
-		return result;
+	public PatientDischargeBo savePatientDischarge(PatientDischargeBo patientDischargeBo) {
+		LOG.debug(INPUT_PARAMETERS, patientDischargeBo);
+		return patientDischargeRepository.findById(patientDischargeBo.getInternmentEpisodeId()).map(pd -> {
+			PatientDischargeBo result = new PatientDischargeBo(updatePatientDischarge(pd, patientDischargeBo));
+			LOG.debug(LOGGING_OUTPUT, result);
+			return result;
+		}).orElseGet(() -> {
+			PatientDischarge entityResult = patientDischargeRepository.save(new PatientDischarge(patientDischargeBo));
+			PatientDischargeBo result = new PatientDischargeBo(entityResult);
+			LOG.debug(LOGGING_OUTPUT, result);
+			return result;
+		});
+	}
+
+	private PatientDischarge updatePatientDischarge(PatientDischarge patientDischarge, PatientDischargeBo patientDischargeBo) {
+		LOG.debug(INPUT_PARAMETERS, patientDischargeBo, patientDischarge);
+		patientDischarge.setInternmentEpisodeId(patientDischargeBo.getInternmentEpisodeId());
+		patientDischarge.setDischargeTypeId(patientDischargeBo.getDischargeTypeId());
+		patientDischarge.setAdministrativeDischargeDate(patientDischargeBo.getAdministrativeDischargeDate());
+		patientDischarge = patientDischargeRepository.save(patientDischarge);
+		LOG.debug(LOGGING_OUTPUT, patientDischarge);
+		return patientDischarge;
 	}
 
 	@Override

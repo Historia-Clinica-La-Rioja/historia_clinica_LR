@@ -1,19 +1,18 @@
 package net.pladema.internation.controller.internment.mapper;
 
+import net.pladema.internation.controller.internment.dto.PatientDischargeDto;
+import net.pladema.internation.service.internment.summary.domain.PatientDischargeBo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
-
-import net.pladema.internation.controller.internment.dto.PatientDischargeDto;
-import net.pladema.internation.repository.documents.entity.PatientDischarge;
 
 @Mapper
 public interface PatientDischargeMapper {
 
 
     @Named("toPatientDischargeDto")
-    PatientDischargeDto toPatientDischargeDto(PatientDischarge patientDischarge);
+    PatientDischargeDto toPatientDischargeDto(PatientDischargeBo patientDischarge);
     
-    @Named("toPatientDischarge")
-    PatientDischarge toPatientDischarge(PatientDischargeDto patientDischargeDto);
+    @Named("toPatientDischargeBo")
+    PatientDischargeBo toPatientDischargeBo(PatientDischargeDto patientDischargeDto);
 
 }
