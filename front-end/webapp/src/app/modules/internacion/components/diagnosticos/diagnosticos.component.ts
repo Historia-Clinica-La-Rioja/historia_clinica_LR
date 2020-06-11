@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { SnomedDto, DiagnosisDto } from '@api-rest/api-model';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DiagnosisDto, SnomedDto } from '@api-rest/api-model';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
 import { SEMANTICS_CONFIG } from '../../constants/snomed-semantics';
+import { SnomedSemanticSearch, SnomedService } from '../../services/snomed.service';
 
 @Component({
 	selector: 'app-diagnosticos',
@@ -12,21 +13,21 @@ import { SEMANTICS_CONFIG } from '../../constants/snomed-semantics';
 export class DiagnosticosComponent implements OnInit {
 
 	private diagnosisValue: DiagnosisDto[];
-	
+
 	@Output() diagnosisChange = new EventEmitter();
-	
+
 	@Input()
 	set diagnosis(newDiagnosis: DiagnosisDto[]) {
 		this.diagnosisValue = newDiagnosis;
 		this.diagnosisChange.emit(this.diagnosisValue);
 	}
-	
+
 	get diagnosis(): DiagnosisDto[] {
 		return this.diagnosisValue;
 	}
-	
+
 	snomedConcept: SnomedDto;
-	
+
 	form: FormGroup;
 	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 
@@ -47,6 +48,7 @@ export class DiagnosticosComponent implements OnInit {
 
 	constructor(
 		private formBuilder: FormBuilder,
+		private snomedService: SnomedService
 	)
 	{
 		this.displayedColumns = this.columns?.map(c => c.def).concat(['remove']);
@@ -90,4 +92,14 @@ export class DiagnosticosComponent implements OnInit {
 		this.diagnosis = removeFrom<DiagnosisDto>(this.diagnosis, index);
 	}
 
+	openSearchDialog(searchValue: string): void {
+		if (searchValue) {
+			const search: SnomedSemanticSearch = {
+				searchValue,
+				eclFilter: this.SEMANTICS_CONFIG.diagnosis
+			};
+			this.snomedService.openConceptsSearchDialog(search)
+				.subscribe((selectedConcept: SnomedDto) => this.setConcept(selectedConcept));
+		}
+	}
 }

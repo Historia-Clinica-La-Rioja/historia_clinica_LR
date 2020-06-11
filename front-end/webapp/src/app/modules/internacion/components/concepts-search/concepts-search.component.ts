@@ -1,7 +1,5 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ConceptsSearchDialogComponent } from '../../dialogs/concepts-search-dialog/concepts-search-dialog.component';
-import { SnomedDto } from '@api-rest/api-model';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -12,8 +10,7 @@ import { TranslateService } from '@ngx-translate/core';
 export class ConceptsSearchComponent implements OnInit {
 
 	@Input() label = '';
-	@Input() eclFilter = '';
-	@Output() onSelect = new EventEmitter<SnomedDto>();
+	@Output() search = new EventEmitter<string>();
 
 	searchValue = '';
 	translatedLabel = '';
@@ -29,27 +26,8 @@ export class ConceptsSearchComponent implements OnInit {
 		);
 	}
 
-	openDialog(): void {
-		if (!this.searchValue) {
-			return;
-		}
-		const dialogRef = this.dialog.open(ConceptsSearchDialogComponent, {
-			disableClose: true,
-			width: '70%',
-			data: {
-				searchValue: this.searchValue,
-				eclFilter: this.eclFilter
-			}
-		});
-
-		dialogRef.afterClosed().subscribe(
-			(selectedConcept: SnomedDto) => {
-				if (selectedConcept) {
-					this.clear();
-				}
-				this.onSelect.emit(selectedConcept);
-			}
-		);
+	emitSearch(): void {
+		this.search.emit(this.searchValue);
 	}
 
 	clear(): void {

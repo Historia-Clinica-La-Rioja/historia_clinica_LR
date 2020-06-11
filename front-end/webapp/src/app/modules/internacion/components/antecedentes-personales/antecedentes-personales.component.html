@@ -3,8 +3,7 @@
 	<mat-card-content>
 		<app-concepts-search *ngIf="!snomedConcept else antecedentesPersonalesForm"
 			[label]="'internaciones.anamnesis.antecedentes-personales.PERSONAL_HISTORY'"
-			[eclFilter]="SEMANTICS_CONFIG.personalRecord"
-			(onSelect)=setConcept($event)>
+	 		(search)="openSearchDialog($event)">
 		</app-concepts-search>
 		<ng-template #antecedentesPersonalesForm>
 			<form [formGroup]="form" (ngSubmit)="addToList()">

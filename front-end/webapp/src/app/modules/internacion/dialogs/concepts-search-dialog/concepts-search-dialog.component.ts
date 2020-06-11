@@ -1,8 +1,9 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { TableModel, ActionDisplays } from 'src/app/modules/presentation/components/table/table.component';
+import { Component, Inject, OnInit } from '@angular/core';
+import { ActionDisplays, TableModel } from 'src/app/modules/presentation/components/table/table.component';
 import { SnomedDto } from '@api-rest/api-model';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SnowstormService } from '@api-rest/services/snowstorm.service';
+import { SnomedSemanticSearch } from '../../services/snomed.service';
 
 @Component({
 	selector: 'app-concepts-search-dialog',
@@ -14,9 +15,9 @@ export class ConceptsSearchDialogComponent implements OnInit {
 	conceptsResultsTable: TableModel<any>;
 
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public data: { searchValue: string, eclFilter: string },
+		@Inject(MAT_DIALOG_DATA) public data: SnomedSemanticSearch,
 		public dialogRef: MatDialogRef<ConceptsSearchDialogComponent>,
-		private readonly snowstormService: SnowstormService,
+		private readonly snowstormService: SnowstormService
 	) { }
 
 	ngOnInit(): void {

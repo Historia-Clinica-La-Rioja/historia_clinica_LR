@@ -3,8 +3,7 @@
 	<mat-card-content>
 		<app-concepts-search *ngIf="!snomedConcept else medicacionForm"
 			[label]="title"
-			[eclFilter]="SEMANTICS_CONFIG.medicine"
-			(onSelect)=setConcept($event)>
+		 	(search)="openSearchDialog($event)">
 		</app-concepts-search>
 		<ng-template #medicacionForm>
 			<form [formGroup]="form" (ngSubmit)="addToList()">

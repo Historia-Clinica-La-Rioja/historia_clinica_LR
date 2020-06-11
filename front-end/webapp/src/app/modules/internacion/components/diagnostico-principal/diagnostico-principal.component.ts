@@ -1,7 +1,8 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { HealthConditionDto, SnomedDto } from '@api-rest/api-model';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { SEMANTICS_CONFIG } from '../../constants/snomed-semantics';
+import { SnomedSemanticSearch, SnomedService } from '../../services/snomed.service';
 
 @Component({
 	selector: 'app-diagnostico-principal',
@@ -21,6 +22,7 @@ export class DiagnosticoPrincipalComponent implements OnInit {
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
+		private snomedService: SnomedService
 	) { }
 
 	ngOnInit(): void {
@@ -49,4 +51,14 @@ export class DiagnosticoPrincipalComponent implements OnInit {
 		this.onChange.emit();
 	}
 
+	openSearchDialog(searchValue: string): void {
+		if (searchValue) {
+			const search: SnomedSemanticSearch = {
+				searchValue,
+				eclFilter: this.SEMANTICS_CONFIG.diagnosis
+			};
+			this.snomedService.openConceptsSearchDialog(search)
+				.subscribe((selectedConcept: SnomedDto) => this.setConcept(selectedConcept));
+		}
+	}
 }

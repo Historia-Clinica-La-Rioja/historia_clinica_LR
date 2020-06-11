@@ -2,9 +2,8 @@
 <mat-card>
 	<mat-card-content>
 		<app-concepts-search  *ngIf="!snomedConcept else alergiasForm"
-			[eclFilter]="SEMANTICS_CONFIG.allergy"
 			[label]="'internaciones.anamnesis.alergias.ALLERGY'"
-			(onSelect)=setConcept($event)>
+		  	(search)="openSearchDialog($event)">
 		</app-concepts-search>
 		<ng-template #alergiasForm>
 			<form [formGroup]="form" (ngSubmit)="addToList()">

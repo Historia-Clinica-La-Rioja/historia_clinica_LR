@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MedicationDto, SnomedDto } from '@api-rest/api-model';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
 import { SEMANTICS_CONFIG } from '../../constants/snomed-semantics';
+import { SnomedSemanticSearch, SnomedService } from '../../services/snomed.service';
 
 @Component({
 	selector: 'app-medicacion',
@@ -49,7 +50,8 @@ export class MedicacionComponent implements OnInit {
 	displayedColumns: string[] = [];
 
 	constructor(
-		private formBuilder: FormBuilder
+		private formBuilder: FormBuilder,
+		private snomedService: SnomedService
 	)
 	{
 		this.displayedColumns = this.columns?.map(c => c.def).concat(['remove']);
@@ -95,4 +97,14 @@ export class MedicacionComponent implements OnInit {
 		this.medications = removeFrom<MedicationDto>(this.medications, index);
 	}
 
+	openSearchDialog(searchValue: string): void {
+		if (searchValue) {
+			const search: SnomedSemanticSearch = {
+				searchValue,
+				eclFilter: this.SEMANTICS_CONFIG.medicine
+			};
+			this.snomedService.openConceptsSearchDialog(search)
+				.subscribe((selectedConcept: SnomedDto) => this.setConcept(selectedConcept));
+		}
+	}
 }

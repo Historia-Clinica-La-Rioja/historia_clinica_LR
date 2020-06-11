@@ -3,8 +3,7 @@
 	<mat-card-content>
 		<app-concepts-search *ngIf="!snomedConcept else diagnosisForm"
 			[label]="'internaciones.anamnesis.diagnosticos.DIAGNOSIS'"
-			[eclFilter]="SEMANTICS_CONFIG.diagnosis"
-			(onSelect)=setConcept($event)>
+		 	(search)="openSearchDialog($event)">
 		</app-concepts-search>
 		<ng-template #diagnosisForm>
 			<form [formGroup]="form" (ngSubmit)="addToList()">

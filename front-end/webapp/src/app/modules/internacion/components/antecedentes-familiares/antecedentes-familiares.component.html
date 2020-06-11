@@ -3,8 +3,7 @@
 	<mat-card-content>
 		<app-concepts-search *ngIf="!snomedConcept else antecedentesFamiliaresForm"
 			[label]="'internaciones.anamnesis.antecedentes-familiares.FAMILY_HISTORY'"
-			[eclFilter]="SEMANTICS_CONFIG.familyRecord"
-			(onSelect)=setConcept($event)>
+		 	(search)="openSearchDialog($event)">
 		</app-concepts-search>
 		<ng-template #antecedentesFamiliaresForm>
 			<form [formGroup]="form" (ngSubmit)="addToList()">
