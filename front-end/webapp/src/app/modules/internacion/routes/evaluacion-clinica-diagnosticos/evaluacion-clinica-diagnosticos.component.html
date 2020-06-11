@@ -15,7 +15,8 @@
 
 					<ng-container *ngFor="let column of diagnostics.columns" [matColumnDef]="column.def">
 						<th *matHeaderCellDef>{{ column.header | translate }}</th>
-						<td mat-cell *matCellDef="let element; index as i" class="capitalize-first-letter"> {{ column.display(element, i) | translate }} </td>
+						<td mat-cell *matCellDef="let element; index as i" class="capitalize-first-letter">
+							{{ column.display(element, i) | translate }} </td>
 					</ng-container>
 
 					<tr mat-header-row *matHeaderRowDef="diagnostics.displayedColumns"></tr>
@@ -45,7 +46,8 @@
 					<mat-card>
 						<mat-card-content fxLayout="column" fxLayoutGap="10px">
 							<div fxLayout="column" fxLayoutGap="5px">
-								<mat-label [translate]="'internaciones.clinical-assessment-diagnosis.notes.CURRENT_DISEASE'">
+								<mat-label
+									[translate]="'internaciones.clinical-assessment-diagnosis.notes.CURRENT_DISEASE'">
 								</mat-label>
 								<mat-form-field [floatLabel]="'never'" appearance="outline">
 									<textarea matInput type="text" id="currentIllnessNote" name="currentIllnessNote"
@@ -54,7 +56,8 @@
 								</mat-form-field>
 							</div>
 							<div fxLayout="column" fxLayoutGap="5px">
-								<mat-label [translate]="'internaciones.clinical-assessment-diagnosis.notes.PHYSICAL_EXAMINATION'">
+								<mat-label
+									[translate]="'internaciones.clinical-assessment-diagnosis.notes.PHYSICAL_EXAMINATION'">
 								</mat-label>
 								<mat-form-field [floatLabel]="'never'" appearance="outline">
 									<textarea matInput type="text" id="physicalExamNote" name="physicalExamNote"
@@ -63,7 +66,8 @@
 								</mat-form-field>
 							</div>
 							<div fxLayout="column" fxLayoutGap="5px">
-								<mat-label [translate]="'internaciones.clinical-assessment-diagnosis.notes.STUDIES_PROCEDURES'">
+								<mat-label
+									[translate]="'internaciones.clinical-assessment-diagnosis.notes.STUDIES_PROCEDURES'">
 								</mat-label>
 								<mat-form-field [floatLabel]="'never'" appearance="outline">
 									<textarea matInput type="text" id="studiesSummaryNote" name="studiesSummaryNote"
@@ -72,7 +76,8 @@
 								</mat-form-field>
 							</div>
 							<div fxLayout="column" fxLayoutGap="5px">
-								<mat-label [translate]="'internaciones.clinical-assessment-diagnosis.notes.PATIENT_PROGRESS'">
+								<mat-label
+									[translate]="'internaciones.clinical-assessment-diagnosis.notes.PATIENT_PROGRESS'">
 								</mat-label>
 								<mat-form-field [floatLabel]="'never'" appearance="outline">
 									<textarea matInput type="text" id="evolutionNote" name="evolutionNote"
@@ -81,7 +86,8 @@
 								</mat-form-field>
 							</div>
 							<div fxLayout="column" fxLayoutGap="5px">
-								<mat-label [translate]="'internaciones.clinical-assessment-diagnosis.notes.CLINICAL_IMPRESSION'">
+								<mat-label
+									[translate]="'internaciones.clinical-assessment-diagnosis.notes.CLINICAL_IMPRESSION'">
 								</mat-label>
 								<mat-form-field [floatLabel]="'never'" appearance="outline">
 									<textarea matInput type="text" id="clinicalImpressionNote"
@@ -90,7 +96,8 @@
 								</mat-form-field>
 							</div>
 							<div fxLayout="column" fxLayoutGap="5px">
-								<mat-label [translate]="'internaciones.clinical-assessment-diagnosis.notes.OTHERS'"></mat-label>
+								<mat-label [translate]="'internaciones.clinical-assessment-diagnosis.notes.OTHERS'">
+								</mat-label>
 								<mat-form-field [floatLabel]="'never'" appearance="outline">
 									<textarea matInput type="text" id="otherNote" name="otherNote"
 										formControlName="otherNote">
@@ -105,7 +112,7 @@
 						<span class="uppercase" [translate]="'buttons.BACK'"></span>
 					</button>
 					<button id="sign-confirm" mat-raised-button type="submit" color="primary"
-						*hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR']">
+						*hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD']">
 						<span class="uppercase" [translate]="'buttons.CONFIRM'"></span>
 					</button>
 				</section>

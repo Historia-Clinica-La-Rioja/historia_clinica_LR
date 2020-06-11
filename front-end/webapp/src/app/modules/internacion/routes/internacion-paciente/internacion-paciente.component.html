@@ -14,7 +14,7 @@
 					</ng-container>
 
 					<ng-container
-						*hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO']">
+						*hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD']">
 						<button mat-flat-button color="primary" fxFlexFill.xs (click)="goToNotaEvolucion()">
 							<span class="uppercase"
 								[translate]="'internaciones.internacion-paciente.actions.ADD_NOTA_EVOLUCION'"></span>
@@ -46,7 +46,7 @@
 						<app-patient-card [patient]="patient$ | async"></app-patient-card>
 					</ng-container>
 					<ng-container
-						*hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO']">
+						*hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO']">
 						<app-signos-vitales-summary [internmentEpisodeId]="internmentEpisodeId">
 						</app-signos-vitales-summary>
 					</ng-container>
@@ -75,13 +75,14 @@
 						</app-summary-card>
 					</ng-container>
 					<ng-container *featureFlag="'mainDiagnosisRequired'">
-						<ng-container *hasRole="['ESPECIALISTA_MEDICO']">
+						<ng-container *hasRole="['ESPECIALISTA_MEDICO','PROFESIONAL_DE_SALUD']">
 							<app-main-diagnosis-summary [internmentEpisodeId]="internmentEpisodeId"
 								[editable]="!epicrisisDoc">
 							</app-main-diagnosis-summary>
 						</ng-container>
 					</ng-container>
-					<ng-container *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO']">
+					<ng-container
+						*hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD']">
 						<app-diagnosis-summary [internmentEpisodeId]="internmentEpisodeId" [editable]="!epicrisisDoc">
 						</app-diagnosis-summary>
 					</ng-container>
@@ -96,8 +97,7 @@
 					</ng-container>
 				</div>
 			</div>
-			<ng-container
-				*hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO']">
+			<ng-container *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO']">
 				<app-documents-summary [internmentEpisodeId]="internmentEpisodeId"></app-documents-summary>
 			</ng-container>
 		</div>

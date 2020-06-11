@@ -46,7 +46,7 @@ const routes: Routes = [
 		path: 'internacion/:idInternacion/paciente/:idPaciente/eval-clinica-diagnosticos/:idDiagnostico',
 		component: EvaluacionClinicaDiagnosticosComponent,
 		canActivate: [RoleGuard],
-		data: { allowedRoles: ['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR'] }
+		data: { allowedRoles: ['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR', 'ENFERMERO', 'PROFESIONAL_DE_SALUD'] }
 	},
 	{
 		path: 'internacion/:idInternacion/paciente/:idPaciente/epicrisis',
