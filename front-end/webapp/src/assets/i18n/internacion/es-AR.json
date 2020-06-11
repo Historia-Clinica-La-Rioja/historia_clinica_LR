@@ -267,6 +267,9 @@
 				"ADD_NOTA_EVOLUCION": "Agregar nota de evolución",
 				"ADMINISTRATIVE_DISCHARGE": "Alta administrativa"
 			},
+			"alergias-summary": {
+				"DIALOG_TITLE": "Agregar alergia"
+			},
 			"card": {
 				"DAYS_INTERNED": "{{days}} días internado",
 				"ONE_DAY": "1 día internado",

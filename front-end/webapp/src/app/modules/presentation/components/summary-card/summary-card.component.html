@@ -6,7 +6,7 @@
 				<span>{{ header.title | translate }}</span>
 			</div>
 		</mat-card-title>
-		<button mat-icon-button (click)="click()">
+		<button mat-icon-button *ngIf="actionIcon" (click)="openInNew.emit()">
 			<mat-icon fontSet="material-icons-outlined">open_in_new</mat-icon>
 		</button>
 	</mat-card-header>

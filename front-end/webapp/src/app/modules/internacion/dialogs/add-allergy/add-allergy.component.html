@@ -1,14 +1,17 @@
 <div mat-dialog-title>
+	<div class="mat-h2" [translate]="'internaciones.internacion-paciente.alergias-summary.DIALOG_TITLE'"></div>
 </div>
 <div mat-dialog-content>
-	<h2 class="mat-h2" [translate]="'internaciones.anamnesis.alergias.TITLE'"></h2>
-	<mat-card>
-		<mat-card-content>
 			<app-concepts-search  *ngIf="!snomedConcept else alergiasForm"
-								  [eclFilter]="SEMANTICS_CONFIG.allergy"
 								  [label]="'internaciones.anamnesis.alergias.ALLERGY'"
-								  (onSelect)=setConcept($event)>
+								  (search)=onSearch($event)>
 			</app-concepts-search>
+
+			<div class="spinner">
+				<mat-spinner diameter="70" color="primary" *ngIf="searchClicked"></mat-spinner>
+			</div>
+			<app-table *ngIf="!searchClicked && !snomedConcept" [model]="conceptsResultsTable" [mainStyle]="'secondary'"></app-table>
+
 			<ng-template #alergiasForm>
 				<form [formGroup]="form" (ngSubmit)="submit()">
 					<mat-form-field appearance="outline">
@@ -20,18 +23,12 @@
 							<mat-icon>close</mat-icon>
 						</button>
 					</mat-form-field>
-
-					<div align="end">
-						<button mat-raised-button color="primary" type="submit">
-							<span class="uppercase" [translate]="'internaciones.anamnesis.alergias.ADD'"></span>
-						</button>
-					</div>
 				</form>
 			</ng-template>
-		</mat-card-content>
-	</mat-card>
-
 </div>
 <mat-dialog-actions align="end">
 	<button mat-stroked-button color="primary" mat-dialog-close><span [translate]="'buttons.CANCEL'"></span></button>
+	<button *ngIf="snomedConcept" mat-raised-button color="primary" (click)="submit()">
+		<span [translate]="'internaciones.anamnesis.alergias.ADD'"></span>
+	</button>
 </mat-dialog-actions>

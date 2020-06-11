@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 export class SummaryCardComponent implements OnInit {
 
 	@Input() header: SummaryHeader;
+	@Input() actionIcon: boolean;
 	@Output() openInNew = new EventEmitter();
 
 	constructor(
@@ -17,9 +18,6 @@ export class SummaryCardComponent implements OnInit {
 
 	ngOnInit(): void { }
 
-	click() {
-		this.openInNew.emit();
-	}
 }
 
 export interface SummaryHeader {
