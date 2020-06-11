@@ -31,6 +31,17 @@
 						</ng-container>
 					</ng-container>
 				</ng-container>
+
+				<ng-container *featureFlag="'epicrisisRequired'">
+					<ng-container *ngIf="epicrisisDoc?.confirmed && !hasMedicalDischarge">
+						<button mat-flat-button color="primary" fxFlexFill.xs (click)="goToMedicalDischarge()"
+							*hasRole="['ESPECIALISTA_MEDICO']">
+							<span class="uppercase"
+								[translate]="'internaciones.internacion-paciente.actions.MEDICAL_DISCHARGE'"></span>
+						</button>
+					</ng-container>
+				</ng-container>
+
 				<ng-container *ngIf="showDischarge">
 					<button mat-flat-button color="primary" *hasRole="['ADMINISTRATIVO']"
 						(click)="goToAdministrativeDischarge()">

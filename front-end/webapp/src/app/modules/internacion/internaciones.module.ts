@@ -42,6 +42,7 @@ import { EvaluacionClinicaDiagnosticosComponent } from './routes/evaluacion-clin
 import { DocumentsSummaryComponent } from './components/documents-summary/documents-summary.component';
 import { AddAllergyComponent } from './dialogs/add-allergy/add-allergy.component';
 import { AddAnthropometricComponent } from './dialogs/add-anthropometric/add-anthropometric.component';
+import { MedicalDischargeComponent } from './components/medical-discharge/medical-discharge.component';
 
 @NgModule({
 	declarations: [
@@ -81,6 +82,7 @@ import { AddAnthropometricComponent } from './dialogs/add-anthropometric/add-ant
 		DocumentsSummaryComponent,
 		AddAllergyComponent,
 		AddAnthropometricComponent,
+		MedicalDischargeComponent,
 	],
 	imports: [
 		CoreModule,

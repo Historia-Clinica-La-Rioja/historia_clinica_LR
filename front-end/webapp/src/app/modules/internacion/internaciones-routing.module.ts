@@ -9,6 +9,7 @@ import { NotaEvolucionComponent } from './routes/nota-evolucion/nota-evolucion.c
 import { RoleGuard } from '@core/guards/RoleGuard';
 import { PatientDischargeComponent } from './routes/patient-discharge/patient-discharge.component';
 import { EvaluacionClinicaDiagnosticosComponent } from './routes/evaluacion-clinica-diagnosticos/evaluacion-clinica-diagnosticos.component';
+import { MedicalDischargeComponent } from './components/medical-discharge/medical-discharge.component';
 
 
 const routes: Routes = [
@@ -65,6 +66,12 @@ const routes: Routes = [
 		canActivate: [RoleGuard],
 		component: PatientDischargeComponent,
 		data: { allowedRoles: ['ADMINISTRATIVO'] }
+	},
+	{
+		path: 'internacion/:idInternacion/paciente/:idPaciente/alta-medica',
+		canActivate: [RoleGuard],
+		component: MedicalDischargeComponent,
+		data: { allowedRoles: ['ESPECIALISTA_MEDICO'] }
 	}
 ];
 

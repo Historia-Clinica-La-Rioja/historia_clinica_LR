@@ -30,6 +30,7 @@ export class InternacionPacienteComponent implements OnInit {
 	public showDischarge: boolean;
 	public editDiagnosisSummary$: boolean;
 
+	public hasMedicalDischarge: boolean = false;
 	constructor(
 		private patientService: PatientService,
 		private internmentService: InternacionService,
@@ -56,11 +57,10 @@ export class InternacionPacienteComponent implements OnInit {
 						this.epicrisisDoc = internmentEpisode.documents?.epicrisis;
 						this.lastEvolutionNoteDoc = internmentEpisode.documents?.lastEvaluationNote;
 
-
 						//La alta administrativa está disponible cuando existe la epicrisis
 						//o el flag de alta sin epicrisis está activa
 						this.featureFlagService.isOn('habilitarAltaSinEpicrisis').subscribe(isOn => {
-							this.showDischarge = isOn || (this.epicrisisDoc !== undefined);
+							this.showDischarge = isOn || (this.hasMedicalDischarge === true);
 						});
 
 					}),
@@ -91,6 +91,10 @@ export class InternacionPacienteComponent implements OnInit {
 
 	goToAdministrativeDischarge(): void {
 		this.router.navigate([`${this.router.url}/alta`]);
+	}
+
+	goToMedicalDischarge(): void {
+		this.router.navigate([`${this.router.url}/alta-medica`]);
 	}
 
 }

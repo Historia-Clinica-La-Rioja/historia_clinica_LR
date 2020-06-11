@@ -436,8 +436,9 @@ export interface PasswordResetDto {
 }
 
 export interface PatientDischargeDto {
-    dischargeDate: Date;
+    administrativeDischargeDate: Date;
     dischargeTypeId: number;
+    medicalDischargeDate: Date;
 }
 
 export interface PatientDto {

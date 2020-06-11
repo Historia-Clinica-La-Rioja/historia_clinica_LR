@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 import { environment } from "@environments/environment";
 import { HttpClient } from "@angular/common/http";
 import { ContextService } from "@core/services/context.service";
-import { InternmentEpisodeBMDto } from '@api-rest/api-model';
+import { InternmentEpisodeBMDto, PatientDischargeDto } from '@api-rest/api-model';
 
 const BASIC_URL_PREFIX = '/institutions'
 const BASIC_URL_SUFIX = '/internments'
@@ -35,5 +35,22 @@ export class InternmentEpisodeService {
 	getMinDischargeDate(internmentId: number) :Observable<Date> {
 		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentId}/minDischargeDate`;
 		return this.http.get<Date>(url);
+	}
+
+	medicalDischargeInternmentEpisode(discharge: PatientDischargeDto,internmentEpisodeId: number): Observable<PatientDischargeDto> {
+		let url = `${environment.apiBase}` + BASIC_URL_PREFIX + `/${this.contextService.institutionId}` + BASIC_URL_SUFIX + `/${internmentEpisodeId}/medicaldischarge`;
+		return this.http.post<PatientDischargeDto>(url, discharge);
+	}
+
+	getInternmentDischarge(internmentEpisodeId: number): Observable<PatientDischargeDto> {
+		//let url = `${environment.apiBase}` + BASIC_URL_PREFIX + `/${this.contextService.institutionId}` + BASIC_URL_SUFIX + `/${internmentEpisodeId}/getDischarge`;
+		//return this.http.get<PatientDischargeDto>(url);
+		let discharge: PatientDischargeDto;
+		discharge = {
+			administrativeDischargeDate: new Date('2020-06-03'),
+			dischargeTypeId: 1,
+			medicalDischargeDate: new Date('2020-06-03'),
+		};
+		return of(discharge);
 	}
 }

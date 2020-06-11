@@ -265,7 +265,8 @@
 				"ADD_EPICRISIS": "Generar epicrisis",
 				"ADD_EVAL_INGRESO": "Generar evaluación de ingreso",
 				"ADD_NOTA_EVOLUCION": "Agregar nota de evolución",
-				"ADMINISTRATIVE_DISCHARGE": "Alta administrativa"
+				"ADMINISTRATIVE_DISCHARGE": "Alta administrativa",
+				"MEDICAL_DISCHARGE":"Alta médica"
 			},
 			"alergias-summary": {
 				"ADD": "Agregar alergia",
@@ -318,11 +319,14 @@
 		},
 		"discharge": {
 			"TITLE": "Alta Administrativa",
+			"MEDICAL_DISCHARGE": "Alta médica",
 			"DISCHARGE_DATE":"Fecha de egreso",
 			"DISCHARGE_TYPE":"Tipo de egreso",
 			"messages":{
 				"ERROR":"No se pudo dar el alta administrativa del paciente",
-				"SUCCESS":"El alta administrativa se guardó exitosamente"
+				"SUCCESS":"El alta administrativa se guardó exitosamente",
+				"MEDICAL_DISCHARGE_ERROR":"No se pudo dar el alta médica del paciente",
+				"MEDICAL_DISCHARGE_SUCCESS":"El alta médica se guardó exitosamente"
 			}
 		}
 	}
