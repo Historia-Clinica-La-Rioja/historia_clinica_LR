@@ -1,4 +1,4 @@
-<app-summary-card [header]="signosVitalesSummary">
+<app-summary-card [header]="signosVitalesSummary" [actionIcon]="true" (openInNew)="openDialog()">
 	<mat-card-content>
 		<div fxLayout="row wrap" fxLayoutAlign="space-evenly" fxLayoutAlign.xs="center center" fxLayout.xs="column">
 			<app-signo-vital-current-previous

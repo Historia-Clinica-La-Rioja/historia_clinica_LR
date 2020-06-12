@@ -278,8 +278,8 @@
 			"anthropometric-summary": {
 				"ADD": "Agregar información antropométrica",
 				"save": {
-					"SUCCESS": "La información antrópometrica se actualizó exitosamente",
-					"ERROR":  "Error al actualizar información antrópometrica"
+					"SUCCESS": "La información antropométrica se actualizó exitosamente",
+					"ERROR":  "Error al actualizar información antropométrica"
 				}
 			},
 			"card": {
@@ -298,6 +298,13 @@
 				"VERIFICATION_SELECT": "Motivo",
 				"STATUS_SELECT": "Estado clínico",
 				"CONFIRM_BUTTON": "Crear nota de evolución"
+			},
+			"vital-signs-summary": {
+				"UPDATE": "Actualizar signos vitales",
+				"save": {
+					"SUCCESS": "Los signos vitales se actualizaron exitosamente",
+					"ERROR":  "Error al actualizar información antropométrica"
+				}
 			}
 		},
 		"new-internment": {

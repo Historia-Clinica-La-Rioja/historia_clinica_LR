@@ -15,7 +15,8 @@
 		"CONTINUE": "Continuar",
 		"CONFIRM": "Confirmar",
 		"CLOSE": "Cerrar",
-		"SEARCH": "Buscar"
+		"SEARCH": "Buscar",
+		"UPDATE": "Actualizar"
 	},
 	"forms": {
 		"REQUIRED": "El campo es requerido"

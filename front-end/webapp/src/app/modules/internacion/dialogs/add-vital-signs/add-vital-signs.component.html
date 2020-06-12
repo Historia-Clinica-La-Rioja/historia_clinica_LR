@@ -1,0 +1,97 @@
+<div mat-dialog-title>
+	<div class="mat-h2" [translate]="'internaciones.internacion-paciente.vital-signs-summary.UPDATE'"></div>
+</div>
+
+<div mat-dialog-content class="vital-signs mat-body">
+	<form [formGroup]="form" (ngSubmit)="submit()">
+			<div class="row-container">
+				<div class="field-container" formGroupName="heartRate">
+					<mat-label [translate]="'internaciones.anamnesis.vital-signs.form.HEART_RATE'"></mat-label>
+					<mat-form-field [floatLabel]="'never'" appearance="outline">
+						<input id="heart_rate"
+							   name="heart_rate"
+							   formControlName="value"
+							   placeholder="00"
+							   type="number"
+							   matInput>
+					</mat-form-field>
+					<app-effective-time	[model]="form.value.heartRate.effectiveTime" (onChange)="setVitalSignEffectiveTime($event, 'heartRate')"></app-effective-time>
+				</div>
+				<div class="field-container" formGroupName="respiratoryRate">
+					<mat-label [translate]="'internaciones.anamnesis.vital-signs.form.RESPIRATORY_RATE'"></mat-label>
+					<mat-form-field [floatLabel]="'never'" appearance="outline">
+						<input id="respiratory_rate"
+							   name="respiratory_rate"
+							   formControlName="value"
+							   placeholder="00"
+							   type="number"
+							   matInput>
+					</mat-form-field>
+					<app-effective-time	[model]="form.value.respiratoryRate.effectiveTime" (onChange)="setVitalSignEffectiveTime($event, 'respiratoryRate')"></app-effective-time>
+				</div>
+			</div>
+
+			<div class="row-container">
+				<div class="field-container" formGroupName="temperature">
+					<mat-label [translate]="'internaciones.anamnesis.vital-signs.form.TEMPERATURE'"></mat-label>
+					<mat-form-field [floatLabel]="'never'" appearance="outline">
+						<input id="temperature"
+							   name="temperature"
+							   formControlName="value"
+							   placeholder="00.0"
+							   type="number"
+							   matInput>
+					</mat-form-field>
+					<app-effective-time	[model]="form.value.temperature.effectiveTime" (onChange)="setVitalSignEffectiveTime($event, 'temperature')"></app-effective-time>
+				</div>
+				<div class="field-container" formGroupName="bloodOxygenSaturation">
+					<mat-label
+						[translate]="'internaciones.anamnesis.vital-signs.form.BLOOD_OXYGEN_SATURATION'"></mat-label>
+					<mat-form-field [floatLabel]="'never'" appearance="outline">
+						<input id="blood_oxygen_saturation"
+							   name="blood_oxygen_saturation"
+							   formControlName="value"
+							   placeholder="00"
+							   type="number"
+							   matInput>
+					</mat-form-field>
+					<app-effective-time	[model]="form.value.bloodOxygenSaturation.effectiveTime" (onChange)="setVitalSignEffectiveTime($event, 'bloodOxygenSaturation')"></app-effective-time>
+				</div>
+			</div>
+
+			<div class="row-container">
+				<div class="field-container" formGroupName="systolicBloodPressure">
+					<mat-label
+						[translate]="'internaciones.anamnesis.vital-signs.form.SYSTOLIC_BLOOD_PRESSURE'"></mat-label>
+					<mat-form-field [floatLabel]="'never'" appearance="outline">
+						<input id="systolic_blood_pressure"
+							   name="systolicBloodPressure"
+							   formControlName="value"
+							   placeholder="00"
+							   type="number"
+							   matInput>
+					</mat-form-field>
+					<app-effective-time	[model]="form.value.systolicBloodPressure.effectiveTime" (onChange)="setVitalSignEffectiveTime($event, 'systolicBloodPressure')"></app-effective-time>
+				</div>
+				<div class="field-container" formGroupName="diastolicBloodPressure">
+					<mat-label
+						[translate]="'internaciones.anamnesis.vital-signs.form.DIASTOLIC_BLOOD_PRESSURE'"></mat-label>
+					<mat-form-field [floatLabel]="'never'" appearance="outline">
+						<input id="diastolic_blood_pressure"
+							   name="diastolicBloodPressure"
+							   formControlName="value"
+							   placeholder="00"
+							   type="number"
+							   matInput>
+					</mat-form-field>
+					<app-effective-time	[model]="form.value.diastolicBloodPressure.effectiveTime" (onChange)="setVitalSignEffectiveTime($event, 'diastolicBloodPressure')"></app-effective-time>
+				</div>
+			</div>
+	</form>
+</div>
+<mat-dialog-actions align="end">
+	<button mat-stroked-button color="primary" mat-dialog-close><span [translate]="'buttons.CANCEL'"></span></button>
+	<button *ngIf="this.form.valid" mat-raised-button color="primary" (click)="submit()">
+		<span [translate]="'buttons.UPDATE'"></span>
+	</button>
+</mat-dialog-actions>

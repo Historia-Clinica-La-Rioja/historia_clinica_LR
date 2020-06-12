@@ -64,7 +64,6 @@ export class AntropometricosSummaryComponent implements OnInit {
 		dialogRef.afterClosed().subscribe((antropometricData: any) => {
 				if (antropometricData) {
 					const evolutionNote: EvolutionNoteDto = buildEvolutionNote(antropometricData);
-					console.log(evolutionNote);
 					this.evolutionNoteService.createDocument(evolutionNote, this.internmentEpisodeId).subscribe(_ => {
 							this.snackBarService.showSuccess('internaciones.internacion-paciente.anthropometric-summary.save.SUCCESS');
 							this.updateAnthropometricData();
