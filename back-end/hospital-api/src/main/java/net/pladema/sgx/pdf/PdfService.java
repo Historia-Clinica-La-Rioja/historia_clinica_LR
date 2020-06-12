@@ -4,6 +4,8 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.tool.xml.XMLWorkerHelper;
+
+import net.pladema.flavor.service.FlavorService;
 import net.pladema.internation.controller.internment.dto.ResponsibleDoctorDto;
 import net.pladema.internation.controller.internment.mapper.ResponsibleDoctorMapper;
 import net.pladema.internation.controller.ips.dto.VitalSignsReportDto;
@@ -53,7 +55,8 @@ public class PdfService {
 
     private final DocumentFileRepository documentFileRepository;
 
-    public PdfService(@Value("${app.flavor}") String flavor,
+    public PdfService(
+            FlavorService flavorService,
             SpringTemplateEngine templateEngine,
             StreamFile streamFile,
             PatientExternalService patientExternalService,
@@ -62,7 +65,7 @@ public class PdfService {
             VitalSignMapper vitalSignMapper,
             DocumentFileRepository documentFileRepository) {
         super();
-        this.flavor = flavor;
+        this.flavor = flavorService.getFlavor().toString();
         this.templateEngine = templateEngine;
         this.streamFile = streamFile;
         this.patientExternalService = patientExternalService;

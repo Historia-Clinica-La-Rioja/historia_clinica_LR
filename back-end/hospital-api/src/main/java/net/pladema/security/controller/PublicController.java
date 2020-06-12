@@ -1,6 +1,7 @@
 package net.pladema.security.controller;
 
 import io.swagger.annotations.Api;
+import net.pladema.flavor.service.FlavorService;
 import net.pladema.security.controller.dto.PublicInfoDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,10 +17,10 @@ public class PublicController {
 	private final String flavor;
 
 	public PublicController(
-			@Value("${app.flavor}") String flavor
+			FlavorService flavorService
 	) {
 		super();
-		this.flavor = flavor;
+		this.flavor = flavorService.getFlavor().toString();
 	}
 
 	@GetMapping(value = "/info")

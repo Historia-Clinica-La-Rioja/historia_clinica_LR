@@ -1,6 +1,7 @@
 package net.pladema.featureflags.service.impl;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import net.pladema.featureflags.service.FeatureFlagsService;
 import net.pladema.featureflags.service.domain.FeatureFlagBo;
 import net.pladema.featureflags.service.domain.FlavorBo;
+import net.pladema.flavor.service.FlavorService;
 import net.pladema.sgx.featureflags.AppFeature;
 
 @Service
@@ -19,35 +21,27 @@ public class FeatureFlagsServiceImpl implements FeatureFlagsService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(FeatureFlagsServiceImpl.class);
 
-	private List<FeatureFlagBo> allFlags;
-
-	private final String configFlavor;
+	private final EnumMap<AppFeature, Boolean> flags;
 
 	private final Environment env;
 
-	public FeatureFlagsServiceImpl(Environment env, @Value("${app.flavor}") String configFlavor) {
+	public FeatureFlagsServiceImpl(Environment env, FlavorService flavorService) {
 		this.env = env;
-		this.allFlags = null;
-		this.configFlavor = configFlavor;
+		this.flags = buildFFMap(flavorService.getFlavor());
 	}
 
 	public boolean isOn(AppFeature feature) {
-		return getAll().stream()
-				.filter(f -> f.key == feature)
-				.map(f -> f.active)
-				.findFirst()
-				.orElse(false);
+		return flags.getOrDefault(feature, false);
 	}
 
-	private List<FeatureFlagBo> getAll() {
-		if (allFlags == null)
-			reset(FlavorBo.getEnum(configFlavor));
-		return allFlags;
+	private EnumMap<AppFeature, Boolean> buildFFMap(FlavorBo flavor) {
+		EnumMap<AppFeature, Boolean> map = new EnumMap<>(AppFeature.class);
+		buildFFList(flavor).forEach(featureFlagBo -> map.put(featureFlagBo.key, featureFlagBo.active));
+		return map;
 	}
 
-
-	private List<FeatureFlagBo> reset(FlavorBo flavor) {
-		allFlags = new ArrayList<>();
+	private List<FeatureFlagBo> buildFFList(FlavorBo flavor) {
+		List<FeatureFlagBo> allFlags = new ArrayList<>();
 		allFlags.add(flag(AppFeature.RESPONSIBLE_DOCTOR_REQUIRED, flavor.anyMatch(FlavorBo.HOSPITALES)));
 		
 		allFlags.add(flag(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS, flavor.anyMatch(FlavorBo.TANDIL, FlavorBo.CHACO)));
