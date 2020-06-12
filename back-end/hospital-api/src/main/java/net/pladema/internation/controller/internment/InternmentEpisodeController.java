@@ -15,6 +15,7 @@ import net.pladema.internation.controller.internment.mapper.PatientDischargeMapp
 import net.pladema.internation.repository.documents.DocumentRepository;
 import net.pladema.internation.repository.documents.PatientDischargeRepository;
 import net.pladema.internation.repository.documents.entity.InternmentEpisode;
+import net.pladema.internation.repository.documents.entity.PatientDischarge;
 import net.pladema.internation.repository.internment.InternmentEpisodeRepository;
 import net.pladema.internation.repository.masterdata.entity.InternmentEpisodeStatus;
 import net.pladema.internation.service.documents.PatientDischargeService;
@@ -22,6 +23,7 @@ import net.pladema.internation.service.internment.InternmentEpisodeService;
 import net.pladema.internation.service.internment.ResponsibleContactService;
 import net.pladema.internation.service.internment.summary.domain.InternmentSummaryBo;
 import net.pladema.internation.service.internment.summary.domain.PatientDischargeBo;
+import net.pladema.patient.repository.entity.Patient;
 import net.pladema.sgx.exceptions.NotFoundException;
 import net.pladema.sgx.featureflags.AppFeature;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
@@ -29,12 +31,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/internments")
@@ -161,6 +165,15 @@ public class InternmentEpisodeController {
 			@PathVariable(name = "institutionId") Integer institutionId) {
 		InternmentEpisode internmentEpisode = internmentEpisodeService.getInternmentEpisode(internmentEpisodeId,institutionId);
 		return ResponseEntity.ok(internmentEpisodeMapper.toInternmentEpisodeBMDto(internmentEpisode));
+	}
+
+	@GetMapping("/{internmentEpisodeId}/patientdischarge")
+	public ResponseEntity<PatientDischargeDto> getPatientDischarge(
+			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
+		PatientDischargeBo pdbo =	patientDischargeService.getPatientDischarge(internmentEpisodeId)
+				.orElseThrow(() -> new NotFoundException("bad-episode-id", "discharge not found"));
+		PatientDischargeDto result = patientDischargeMapper.toPatientDischargeDto(pdbo);
+		return ResponseEntity.ok(result);
 	}
 
 }
