@@ -4,6 +4,7 @@ import { map, switchMap, tap } from 'rxjs/operators';
 import { LoggedUserService } from '../../auth/services/logged-user.service';
 import { ContextService } from './context.service';
 import { ERole, RoleAssignment } from '@api-rest/api-model';
+import { anyMatch } from '@core/utils/array.utils';
 
 const itemHasAnyRole = (itemRoles: ERole[], userRoles: ERole[]) => itemRoles.some(role => userRoles.includes(role));
 
@@ -52,4 +53,9 @@ export class PermissionsService {
 			.map(assignment => assignment.role);
 	}
 
+	public hasRole$(allowedRoles: ERole[]): Observable<boolean> {
+		return this.contextAssignments$().pipe(
+			map((userRoles: ERole[]) => anyMatch<ERole>(userRoles, allowedRoles))
+		);
+	}
 }

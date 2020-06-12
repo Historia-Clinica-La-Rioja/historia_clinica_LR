@@ -10,6 +10,7 @@ import { InternacionService } from '@api-rest/services/internacion.service';
 import { InternmentEpisodeSummary } from 'src/app/modules/presentation/components/internment-episode-summary/internment-episode-summary.component';
 import { INTERNACION } from '../../constants/summaries';
 import { FeatureFlagService } from "@core/services/feature-flag.service";
+import { PermissionsService } from '@core/services/permissions.service';
 
 @Component({
 	selector: 'app-internacion-paciente',
@@ -27,6 +28,7 @@ export class InternacionPacienteComponent implements OnInit {
 	public internmentEpisodeId: number;
 	public internmentEpisodeSummary$: Observable<InternmentEpisodeSummary>;
 	public showDischarge: boolean;
+	public editDiagnosisSummary$: boolean;
 
 	constructor(
 		private patientService: PatientService,
@@ -35,6 +37,7 @@ export class InternacionPacienteComponent implements OnInit {
 		private route: ActivatedRoute,
 		private router: Router,
 		private featureFlagService: FeatureFlagService,
+		private readonly permissionService: PermissionsService,
 	) { }
 
 	ngOnInit(): void {
@@ -64,6 +67,9 @@ export class InternacionPacienteComponent implements OnInit {
 					map((internmentEpisode: InternmentSummaryDto) => this.mapperService.toInternmentEpisodeSummary(internmentEpisode))
 				);
 			}
+		);
+		this.permissionService.hasRole$(['ENFERMERO']).subscribe(
+			hasRole => this.editDiagnosisSummary$ = !hasRole
 		);
 
 	}
