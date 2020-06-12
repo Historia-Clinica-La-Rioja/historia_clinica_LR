@@ -1,6 +1,5 @@
 package net.pladema.featureflags.service.domain;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 public enum FlavorBo {
@@ -10,9 +9,6 @@ public enum FlavorBo {
     HOSPITALES("minsal");
 
     private final String text;
-    
-    public static final boolean ALL  = true;
-    public static final boolean NONE = false;
 
     FlavorBo(final String text) {
         this.text = text;
@@ -43,22 +39,5 @@ public enum FlavorBo {
         return Optional.empty();
     }
 
-    /**
-     * Verifica que este sabor esté en la lista
-     * @param flavors
-     * @return true solo si _este_ está en la lista
-     */
-    public boolean anyMatch(FlavorBo...flavors) {
-        return Arrays.stream(flavors).anyMatch(getEnum(text)::equals);
-    }
 
-    /**
-     * Verifica que este sabor NO esté en la lista.
-     * Se podría usar ! pero así permite mejorar la legibilidad en la definición.
-     * @param flavors
-     * @return true siempre que _este_ no esté en la lista
-     */
-    public boolean wontMatch(FlavorBo...flavors) {
-        return !anyMatch(flavors);
-    }
 }
