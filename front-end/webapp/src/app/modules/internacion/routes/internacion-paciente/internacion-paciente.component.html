@@ -45,8 +45,7 @@
 						*hasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO']">
 						<app-patient-card [patient]="patient$ | async"></app-patient-card>
 					</ng-container>
-					<ng-container
-						*hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO']">
+					<ng-container *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO']">
 						<app-signos-vitales-summary [internmentEpisodeId]="internmentEpisodeId">
 						</app-signos-vitales-summary>
 					</ng-container>
@@ -55,11 +54,11 @@
 						<app-antropometricos-summary [internmentEpisodeId]="internmentEpisodeId">
 						</app-antropometricos-summary>
 					</ng-container>
-					<ng-container *hasRole="['ESPECIALISTA_MEDICO']">
+					<ng-container *hasRole="['ESPECIALISTA_MEDICO','ENFERMERO']">
 						<app-antecedentes-personales-summary [internmentEpisodeId]="internmentEpisodeId">
 						</app-antecedentes-personales-summary>
 					</ng-container>
-					<ng-container *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR']">
+					<ng-container *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO']">
 						<app-antecedentes-familiares-summary [internmentEpisodeId]="internmentEpisodeId">
 						</app-antecedentes-familiares-summary>
 					</ng-container>
@@ -75,7 +74,7 @@
 						</app-summary-card>
 					</ng-container>
 					<ng-container *featureFlag="'mainDiagnosisRequired'">
-						<ng-container *hasRole="['ESPECIALISTA_MEDICO','PROFESIONAL_DE_SALUD']">
+						<ng-container *hasRole="['ESPECIALISTA_MEDICO','PROFESIONAL_DE_SALUD','ENFERMERO']">
 							<app-main-diagnosis-summary [internmentEpisodeId]="internmentEpisodeId"
 								[editable]="!epicrisisDoc">
 							</app-main-diagnosis-summary>
