@@ -407,6 +407,11 @@ export interface LoginDto extends Serializable {
     username: string;
 }
 
+export interface MainDiagnosisDto extends Serializable {
+    mainDiagnosis: HealthConditionDto;
+    notes: DocumentObservationsDto;
+}
+
 export interface MasterDataInterface<T> {
     description: string;
     id: T;

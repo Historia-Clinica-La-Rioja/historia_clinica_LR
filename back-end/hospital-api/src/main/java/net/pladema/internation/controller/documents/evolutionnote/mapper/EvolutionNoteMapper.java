@@ -1,6 +1,5 @@
 package net.pladema.internation.controller.documents.evolutionnote.mapper;
 
-import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import net.pladema.internation.controller.documents.evolutionnote.dto.EvolutionNoteDto;
 import net.pladema.internation.controller.documents.evolutionnote.dto.ResponseEvolutionNoteDto;
 import net.pladema.internation.controller.documents.evolutionnote.dto.evolutionDiagnosis.EvolutionDiagnosisDto;
@@ -8,6 +7,7 @@ import net.pladema.internation.controller.ips.mapper.AnthropometricDataMapper;
 import net.pladema.internation.controller.ips.mapper.VitalSignMapper;
 import net.pladema.internation.service.documents.evolutionnote.domain.EvolutionNoteBo;
 import net.pladema.internation.service.documents.evolutionnote.domain.evolutiondiagnosis.EvolutionDiagnosisBo;
+import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -26,4 +26,5 @@ public interface EvolutionNoteMapper {
     ResponseEvolutionNoteDto fromEvolutionNote(EvolutionNoteBo evolutionNoteBo);
 
     EvolutionDiagnosisBo fromEvolutionNoteDto(EvolutionDiagnosisDto evolutionDiagnosisDto);
+
 }

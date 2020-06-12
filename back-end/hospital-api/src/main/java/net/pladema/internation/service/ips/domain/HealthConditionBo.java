@@ -29,4 +29,6 @@ public class HealthConditionBo extends ClinicalTerm {
     public boolean isDiscarded() {
         return getVerificationId().equalsIgnoreCase(ConditionVerificationStatus.DISCARDED);
     }
+
+
 }
