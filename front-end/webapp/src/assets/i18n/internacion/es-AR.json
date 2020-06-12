@@ -268,7 +268,18 @@
 				"ADMINISTRATIVE_DISCHARGE": "Alta administrativa"
 			},
 			"alergias-summary": {
-				"DIALOG_TITLE": "Agregar alergia"
+				"ADD": "Agregar alergia",
+				"save": {
+					"SUCCESS": "Una nueva alergia se guardó exitosamente",
+					"ERROR":  "Error al guardar nueva alergia"
+				}
+			},
+			"anthropometric-summary": {
+				"ADD": "Agregar información antropométrica",
+				"save": {
+					"SUCCESS": "La información antrópometrica se actualizó exitosamente",
+					"ERROR":  "Error al actualizar información antrópometrica"
+				}
 			},
 			"card": {
 				"DAYS_INTERNED": "{{days}} días internado",

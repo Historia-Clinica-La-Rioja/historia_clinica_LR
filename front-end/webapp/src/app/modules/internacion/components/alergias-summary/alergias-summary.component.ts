@@ -45,10 +45,10 @@ export class AlergiasSummaryComponent implements OnInit {
 				if (allergy) {
 					const evolutionNote: EvolutionNoteDto = buildEvolutionNote(allergy);
 					this.evolutionNoteService.createDocument(evolutionNote, this.internmentEpisodeId).subscribe(_ => {
-								this.snackBarService.showSuccess('internaciones.nota-evolucion.messages.SUCCESS');
+								this.snackBarService.showSuccess('internaciones.internacion-paciente.alergias-summary.save.SUCCESS');
 								this.internmentStateService.getAllergies(this.internmentEpisodeId)
 									.subscribe(data => this.tableModel = this.buildTable(data));
-							}, _ => this.snackBarService.showError('internaciones.nota-evolucion.messages.ERROR')
+							}, _ => this.snackBarService.showError('internaciones.internacion-paciente.alergias-summary.save.ERROR')
 						);
 				}
 			}

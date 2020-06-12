@@ -1,4 +1,4 @@
-<app-summary-card [header]="antropometricosSummary">
+<app-summary-card [header]="antropometricosSummary" [actionIcon]="true" (openInNew)="openDialog()">
 	<mat-card-content class="flex-row" *ngIf="details.length > 0 else noInfo">
 		<app-detail-box *ngFor="let detail of details" [data]="detail"></app-detail-box>
 	</mat-card-content>

@@ -1,5 +1,5 @@
 <div mat-dialog-title>
-	<div class="mat-h2" [translate]="'internaciones.internacion-paciente.alergias-summary.DIALOG_TITLE'"></div>
+	<div class="mat-h2" [translate]="'internaciones.internacion-paciente.alergias-summary.ADD'"></div>
 </div>
 <div mat-dialog-content>
 			<app-concepts-search  *ngIf="!snomedConcept else alergiasForm"
@@ -17,7 +17,7 @@
 					<mat-form-field appearance="outline">
 						<mat-label [translate]="'internaciones.anamnesis.alergias.ALLERGY'">
 						</mat-label>
-						<input matInput type="text" formControlName="snomed" name="snomed" readonly matTooltip="{{ snomedConcept.pt }}">
+						<input matInput type="text" formControlName="snomed" name="snomed" readonly>
 						<button id="clear" mat-button matSuffix color="warn" mat-icon-button
 								(click)="resetForm()">
 							<mat-icon>close</mat-icon>
@@ -29,6 +29,6 @@
 <mat-dialog-actions align="end">
 	<button mat-stroked-button color="primary" mat-dialog-close><span [translate]="'buttons.CANCEL'"></span></button>
 	<button *ngIf="snomedConcept" mat-raised-button color="primary" (click)="submit()">
-		<span [translate]="'internaciones.anamnesis.alergias.ADD'"></span>
+		<span [translate]="'buttons.ADD'"></span>
 	</button>
 </mat-dialog-actions>
