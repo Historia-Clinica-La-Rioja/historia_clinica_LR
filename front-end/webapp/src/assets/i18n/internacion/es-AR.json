@@ -272,6 +272,12 @@
 				"ONE_DAY": "1 día internado",
 				"ADMISSION": "Ingreso: {{datetime}}"
 			},
+			"main-diagnosis": {
+				"TITLE": "Diagnóstico principal",
+				"actions": {
+					"ADD_CLINICAL_ASSESTMENT": "Agregar evaluación clínica"
+				}
+			},
 			"remove-diagnosis-dialog": {
 				"TITLE": "Eliminar diagnóstico",
 				"VERIFICATION_SELECT": "Motivo",

@@ -26,6 +26,18 @@ $default-color: 50;
 	}
 }
 
+@mixin mat-selection-list($theme) {
+	$palette: map-get($theme, accent);
+
+	mat-selection-list {
+		.mat-list-single-selected-option {
+			&, &:hover, &:focus {
+				background-color: mat-color($palette, 100);
+			}
+		}
+	}
+}
+
 @mixin no-data($theme) {
 	$palette: map-get($theme, primary);
 	app-no-data {

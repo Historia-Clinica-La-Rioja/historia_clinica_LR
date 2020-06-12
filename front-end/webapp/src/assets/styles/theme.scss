@@ -11,6 +11,7 @@ $theme: mat-light-theme($primary, $accent);
 @include angular-material-theme($theme);
 
 @include mat-nav-list($theme);
+@include mat-selection-list($theme);
 @include mat-table($theme);
 @include mat-card-box($theme);
 @include signos-vitales-box($theme);

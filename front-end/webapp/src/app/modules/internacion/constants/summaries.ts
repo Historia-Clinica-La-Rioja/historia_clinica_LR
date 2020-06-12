@@ -7,7 +7,7 @@ export const INTERNACION: SummaryHeader = {
 };
 
 export const DIAGNOSTICO_PRINCIPAL: SummaryHeader = {
-	title: 'internaciones.anamnesis.diagnosticos.TITLE_PRINCIPAL',
+	title: 'internaciones.internacion-paciente.main-diagnosis.TITLE',
 	matIcon: 'local_hospital'
 };
 
