@@ -128,7 +128,7 @@ public class AnamnesisController {
     @InternmentValid
     @DocumentValid(isConfirmed = false, documentType = DocumentType.ANAMNESIS)
     //TODO validar que exista la anamnesis
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO_ADULTO_MAYOR')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR')")
     public ResponseEntity<ResponseAnamnesisDto> getAnamnesis(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
