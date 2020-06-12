@@ -28,7 +28,7 @@ import java.util.List;
 @RequestMapping("/institutions/{institutionId}/internments-state")
 @Api(value = "Internment State", tags = { "Internment State" })
 @Validated
-@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR, ENFERMERO')")
+@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR, ENFERMERO, PROFESIONAL_DE_SALUD')")
 public class InternmentStateController {
 
     private static final Logger LOG = LoggerFactory.getLogger(InternmentStateController.class);
@@ -67,7 +67,6 @@ public class InternmentStateController {
     }
 
     @InternmentValid
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR, ENFERMERO, PROFESIONAL_DE_SALUD')")
     @GetMapping("/{internmentEpisodeId}/general")
     public ResponseEntity<InternmentGeneralStateDto> internmentGeneralState(
             @PathVariable(name = "institutionId") Integer institutionId,
@@ -80,7 +79,6 @@ public class InternmentStateController {
     }
 
     @InternmentValid
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR, ENFERMERO, PROFESIONAL_DE_SALUD')")
     @GetMapping("/{internmentEpisodeId}/general/maindiagnosis")
     public ResponseEntity<HealthConditionDto> mainDiagnosisGeneralState(
             @PathVariable(name = "institutionId") Integer institutionId,
@@ -93,7 +91,6 @@ public class InternmentStateController {
     }
 
     @InternmentValid
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR, ENFERMERO, PROFESIONAL_DE_SALUD')")
     @GetMapping("/{internmentEpisodeId}/general/alternativeDiagnoses")
     public ResponseEntity<List<DiagnosisDto>> getAlternativeDiagnosesGeneralState(
             @PathVariable(name = "institutionId") Integer institutionId,
@@ -106,7 +103,6 @@ public class InternmentStateController {
     }
 
     @InternmentValid
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR, ENFERMERO, PROFESIONAL_DE_SALUD')")
     @GetMapping("/{internmentEpisodeId}/general/diagnoses")
     public ResponseEntity<List<DiagnosesGeneralStateDto>> getDiagnosesGeneralState(
             @PathVariable(name = "institutionId") Integer institutionId,
@@ -155,7 +151,6 @@ public class InternmentStateController {
     }
 
     @InternmentValid
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR, ENFERMERO, PROFESIONAL_DE_SALUD')")
     @GetMapping("/{internmentEpisodeId}/general/anthropometricData")
     public ResponseEntity<AnthropometricDataDto> anthropometricDataGeneralState(
             @PathVariable(name = "institutionId") Integer institutionId,
