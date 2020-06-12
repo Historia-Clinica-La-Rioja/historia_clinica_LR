@@ -12,9 +12,7 @@ import net.pladema.internation.controller.internment.dto.PatientDischargeDto;
 import net.pladema.internation.controller.internment.dto.summary.InternmentEpisodeBMDto;
 import net.pladema.internation.controller.internment.mapper.InternmentEpisodeMapper;
 import net.pladema.internation.controller.internment.mapper.PatientDischargeMapper;
-import net.pladema.internation.repository.documents.DocumentRepository;
 import net.pladema.internation.repository.documents.entity.InternmentEpisode;
-import net.pladema.internation.repository.internment.InternmentEpisodeRepository;
 import net.pladema.internation.repository.masterdata.entity.InternmentEpisodeStatus;
 import net.pladema.internation.service.documents.PatientDischargeService;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
@@ -57,11 +55,7 @@ public class InternmentEpisodeController {
 
 	private final ResponsibleContactService responsibleContactService;
 
-	private final InternmentEpisodeRepository internmentEpisodeRepository;
-
 	private final FeatureFlagsService featureFlagsService;
-
-	private final DocumentRepository documentRepository;
 
 	private final PatientDischargeService patientDischargeService;
 
@@ -69,17 +63,15 @@ public class InternmentEpisodeController {
 									   HealthcareProfessionalExternalService healthcareProfessionalExternalService,
 									   InternmentEpisodeMapper internmentEpisodeMapper, BedExternalService bedExternalService,
 									   PatientDischargeMapper patientDischargeMapper, ResponsibleContactService responsibleContactService,
-									   InternmentEpisodeRepository internmentEpisodeRepository, FeatureFlagsService featureFlagsService,
-									   DocumentRepository documentRepository, PatientDischargeService patientDischargeService) {
+									   FeatureFlagsService featureFlagsService,
+									   PatientDischargeService patientDischargeService) {
 		this.internmentEpisodeService = internmentEpisodeService;
 		this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
 		this.internmentEpisodeMapper = internmentEpisodeMapper;
 		this.bedExternalService = bedExternalService;
 		this.patientDischargeMapper = patientDischargeMapper;
 		this.responsibleContactService = responsibleContactService;
-		this.internmentEpisodeRepository = internmentEpisodeRepository;
 		this.featureFlagsService = featureFlagsService;
-		this.documentRepository = documentRepository;
 		this.patientDischargeService = patientDischargeService;
 	}
 
@@ -130,7 +122,6 @@ public class InternmentEpisodeController {
 	public ResponseEntity<PatientDischargeDto> dischargeInternmentEpisode(
 			@InternmentDischargeValid @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
 			@RequestBody PatientDischargeDto patientDischargeDto) {
-
 		PatientDischargeBo patientDischarge = patientDischargeMapper.toPatientDischargeBo(patientDischargeDto);
 		InternmentSummaryBo internmentEpisodeSummary = internmentEpisodeService.getIntermentSummary(internmentEpisodeId)
 				.orElseThrow(() -> new NotFoundException("bad-episode-id", INTERNMENT_NOT_FOUND));
@@ -144,9 +135,9 @@ public class InternmentEpisodeController {
 
 	@GetMapping("/{internmentEpisodeId}/minDischargeDate")
 	public ResponseEntity<LocalDate> getMinDischargeDate(
+			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
-		InternmentEpisode internmentEpisode = internmentEpisodeRepository.findById(internmentEpisodeId)
-				.orElseThrow(() -> new NotFoundException("bad-episode-id", "INTERNMENT_NOT_FOUND"));
+		InternmentEpisode internmentEpisode = internmentEpisodeService.getInternmentEpisode(institutionId, internmentEpisodeId);
 		if (this.featureFlagsService.isOn(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS)) {
 			return ResponseEntity.ok(internmentEpisode.getEntryDate());
 		}

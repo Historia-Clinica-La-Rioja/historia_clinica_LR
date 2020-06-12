@@ -27,19 +27,20 @@ import java.util.concurrent.atomic.AtomicReference;
 @Service
 public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 
-	private static final String INPUT_PARAMETERS_INTERNMENT_EPISODE = "Input parameters -> internmentEpisodeId {}";
-	public static final String INPUT_PARAMETERS = "Input parameters -> {}";
+
 	private static final Logger LOG = LoggerFactory.getLogger(InternmentEpisodeServiceImpl.class);
 
+	private static final String INPUT_PARAMETERS_INTERNMENT_EPISODE = "Input parameters -> internmentEpisodeId {}";
+	private static final String INPUT_PARAMETERS = "Input parameters -> {}";
+	private static final String INTERNMENT_NOT_FOUND = "internmentepisode.not.found";
 	private static final String LOGGING_OUTPUT = "Output -> {}";
+	private static final short ACTIVO = 1;
 
 	private final InternmentEpisodeRepository internmentEpisodeRepository;
 
 	private final EvolutionNoteDocumentRepository evolutionNoteDocumentRepository;
 
 	private final PatientDischargeRepository patientDischargeRepository;
-
-	private static final short ACTIVO = 1;
 
 	public InternmentEpisodeServiceImpl(InternmentEpisodeRepository internmentEpisodeRepository,
 			EvolutionNoteDocumentRepository evolutionNoteDocumentRepository,
@@ -173,7 +174,7 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 	public void updateInternmentEpisodeSatus(Integer internmentEpisodeId, Short statusId) {
 		LOG.debug("Input parameters -> {}, {}", internmentEpisodeId, statusId);
 		InternmentEpisode internmentEpisode = internmentEpisodeRepository.findById(internmentEpisodeId)
-				.orElseThrow(() -> new NotFoundException("wrong-id-episode", "Internment episode not found"));
+				.orElseThrow(() -> new NotFoundException("wrong-id-episode", INTERNMENT_NOT_FOUND));
 		internmentEpisode.setStatusId(statusId);
 		internmentEpisodeRepository.save(internmentEpisode);
 	}
@@ -187,7 +188,7 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 	@Override
 	public InternmentEpisode getInternmentEpisode(Integer internmentEpisodeId, Integer institutionId) {
 		InternmentEpisode internmentEpisode = internmentEpisodeRepository.getInternmentEpisode(internmentEpisodeId,institutionId)
-				.orElseThrow(() -> new NotFoundException("wrong-id-episode", "Internment episode not found"));
+				.orElseThrow(() -> new NotFoundException("wrong-id-episode", INTERNMENT_NOT_FOUND));
 		return internmentEpisode;
 	}
 	
