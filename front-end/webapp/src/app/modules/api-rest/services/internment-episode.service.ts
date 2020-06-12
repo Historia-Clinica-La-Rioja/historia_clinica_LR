@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from "rxjs";
+import { Observable } from "rxjs";
 import { environment } from "@environments/environment";
 import { HttpClient } from "@angular/common/http";
 import { ContextService } from "@core/services/context.service";
@@ -42,15 +42,8 @@ export class InternmentEpisodeService {
 		return this.http.post<PatientDischargeDto>(url, discharge);
 	}
 
-	getInternmentDischarge(internmentEpisodeId: number): Observable<PatientDischargeDto> {
-		//let url = `${environment.apiBase}` + BASIC_URL_PREFIX + `/${this.contextService.institutionId}` + BASIC_URL_SUFIX + `/${internmentEpisodeId}/getDischarge`;
-		//return this.http.get<PatientDischargeDto>(url);
-		let discharge: PatientDischargeDto;
-		discharge = {
-			administrativeDischargeDate: new Date('2020-06-03'),
-			dischargeTypeId: 1,
-			medicalDischargeDate: new Date('2020-06-03'),
-		};
-		return of(discharge);
+	getPatientDischarge(internmentEpisodeId: number): Observable<PatientDischargeDto> {
+		let url = `${environment.apiBase}` + BASIC_URL_PREFIX + `/${this.contextService.institutionId}` + BASIC_URL_SUFIX + `/${internmentEpisodeId}/patientdischarge`;
+		return this.http.get<PatientDischargeDto>(url);
 	}
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PatientBasicData } from 'src/app/modules/presentation/components/patient-card/patient-card.component';
 import { PatientService } from '@api-rest/services/patient.service';
-import { BasicPatientDto, InternmentSummaryDto, AnamnesisSummaryDto, EpicrisisSummaryDto, EvaluationNoteSummaryDto } from '@api-rest/api-model';
+import { BasicPatientDto, InternmentSummaryDto, AnamnesisSummaryDto, EpicrisisSummaryDto, EvaluationNoteSummaryDto, PatientDischargeDto } from '@api-rest/api-model';
 import { map, tap } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -11,6 +11,7 @@ import { InternmentEpisodeSummary } from 'src/app/modules/presentation/component
 import { INTERNACION } from '../../constants/summaries';
 import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { PermissionsService } from '@core/services/permissions.service';
+import { InternmentEpisodeService } from '@api-rest/services/internment-episode.service';
 
 @Component({
 	selector: 'app-internacion-paciente',
@@ -29,8 +30,7 @@ export class InternacionPacienteComponent implements OnInit {
 	public internmentEpisodeSummary$: Observable<InternmentEpisodeSummary>;
 	public showDischarge: boolean;
 	public editDiagnosisSummary$: boolean;
-
-	public hasMedicalDischarge: boolean = false;
+	public hasMedicalDischarge: boolean;
 	constructor(
 		private patientService: PatientService,
 		private internmentService: InternacionService,
@@ -39,6 +39,7 @@ export class InternacionPacienteComponent implements OnInit {
 		private router: Router,
 		private featureFlagService: FeatureFlagService,
 		private readonly permissionService: PermissionsService,
+		private internmentEpisodeService: InternmentEpisodeService
 	) { }
 
 	ngOnInit(): void {
@@ -57,7 +58,7 @@ export class InternacionPacienteComponent implements OnInit {
 						this.epicrisisDoc = internmentEpisode.documents?.epicrisis;
 						this.lastEvolutionNoteDoc = internmentEpisode.documents?.lastEvaluationNote;
 
-						//La alta administrativa está disponible cuando existe la epicrisis
+						//La alta administrativa está disponible cuando existe el alta medica
 						//o el flag de alta sin epicrisis está activa
 						this.featureFlagService.isOn('habilitarAltaSinEpicrisis').subscribe(isOn => {
 							this.showDischarge = isOn || (this.hasMedicalDischarge === true);
@@ -66,6 +67,11 @@ export class InternacionPacienteComponent implements OnInit {
 					}),
 					map((internmentEpisode: InternmentSummaryDto) => this.mapperService.toInternmentEpisodeSummary(internmentEpisode))
 				);
+
+				this.internmentEpisodeService.getPatientDischarge(this.internmentEpisodeId)
+					.subscribe( (patientDischarge: PatientDischargeDto) => {
+						this.hasMedicalDischarge = patientDischarge.dischargeTypeId !== 0;
+					})
 			}
 		);
 		this.permissionService.hasRole$(['ENFERMERO']).subscribe(

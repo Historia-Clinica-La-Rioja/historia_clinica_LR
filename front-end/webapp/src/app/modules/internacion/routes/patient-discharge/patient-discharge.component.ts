@@ -98,7 +98,7 @@ export class PatientDischargeComponent implements OnInit {
 
 	private setDischargeFormWithEpicrisisRequired(){
 		this.dischargeForm.controls.dischargeTypeId.disable();
-		this.intermentEpisodeService.getInternmentDischarge(this.internmentId)
+		this.intermentEpisodeService.getPatientDischarge(this.internmentId)
 			.subscribe(discharge => {
 				this.dischargeForm.controls.dischargeTypeId.setValue(Number(discharge.dischargeTypeId));
 			});
