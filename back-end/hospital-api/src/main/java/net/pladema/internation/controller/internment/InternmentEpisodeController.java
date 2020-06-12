@@ -13,9 +13,7 @@ import net.pladema.internation.controller.internment.dto.summary.InternmentEpiso
 import net.pladema.internation.controller.internment.mapper.InternmentEpisodeMapper;
 import net.pladema.internation.controller.internment.mapper.PatientDischargeMapper;
 import net.pladema.internation.repository.documents.DocumentRepository;
-import net.pladema.internation.repository.documents.PatientDischargeRepository;
 import net.pladema.internation.repository.documents.entity.InternmentEpisode;
-import net.pladema.internation.repository.documents.entity.PatientDischarge;
 import net.pladema.internation.repository.internment.InternmentEpisodeRepository;
 import net.pladema.internation.repository.masterdata.entity.InternmentEpisodeStatus;
 import net.pladema.internation.service.documents.PatientDischargeService;
@@ -23,7 +21,6 @@ import net.pladema.internation.service.internment.InternmentEpisodeService;
 import net.pladema.internation.service.internment.ResponsibleContactService;
 import net.pladema.internation.service.internment.summary.domain.InternmentSummaryBo;
 import net.pladema.internation.service.internment.summary.domain.PatientDischargeBo;
-import net.pladema.patient.repository.entity.Patient;
 import net.pladema.sgx.exceptions.NotFoundException;
 import net.pladema.sgx.featureflags.AppFeature;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
@@ -31,14 +28,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.parameters.P;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.time.LocalDate;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/internments")
@@ -47,6 +42,8 @@ import java.util.Optional;
 public class InternmentEpisodeController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(InternmentEpisodeController.class);
+
+	public static final String INTERNMENT_NOT_FOUND = "internmentepisode.not.found";
 
 	private final InternmentEpisodeService internmentEpisodeService;
 
@@ -73,7 +70,7 @@ public class InternmentEpisodeController {
 									   InternmentEpisodeMapper internmentEpisodeMapper, BedExternalService bedExternalService,
 									   PatientDischargeMapper patientDischargeMapper, ResponsibleContactService responsibleContactService,
 									   InternmentEpisodeRepository internmentEpisodeRepository, FeatureFlagsService featureFlagsService,
-									   DocumentRepository documentRepository, PatientDischargeRepository patientDischargeRepository, PatientDischargeService patientDischargeService) {
+									   DocumentRepository documentRepository, PatientDischargeService patientDischargeService) {
 		this.internmentEpisodeService = internmentEpisodeService;
 		this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
 		this.internmentEpisodeMapper = internmentEpisodeMapper;
@@ -136,7 +133,7 @@ public class InternmentEpisodeController {
 
 		PatientDischargeBo patientDischarge = patientDischargeMapper.toPatientDischargeBo(patientDischargeDto);
 		InternmentSummaryBo internmentEpisodeSummary = internmentEpisodeService.getIntermentSummary(internmentEpisodeId)
-				.orElseThrow(() -> new NotFoundException("bad-episode-id", "Internment episode not found"));
+				.orElseThrow(() -> new NotFoundException("bad-episode-id", INTERNMENT_NOT_FOUND));
 		patientDischarge.setInternmentEpisodeId(internmentEpisodeId);
 		PatientDischargeBo patientDischageSaved = internmentEpisodeService.savePatientDischarge(patientDischarge);
 		bedExternalService.freeBed(internmentEpisodeSummary.getBedId());
@@ -149,12 +146,12 @@ public class InternmentEpisodeController {
 	public ResponseEntity<LocalDate> getMinDischargeDate(
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
 		InternmentEpisode internmentEpisode = internmentEpisodeRepository.findById(internmentEpisodeId)
-				.orElseThrow(() -> new NotFoundException("bad-episode-id", "Internment episode not found"));
+				.orElseThrow(() -> new NotFoundException("bad-episode-id", "INTERNMENT_NOT_FOUND"));
 		if (this.featureFlagsService.isOn(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS)) {
 			return ResponseEntity.ok(internmentEpisode.getEntryDate());
 		}
 		PatientDischargeBo patientDischarge =  patientDischargeService.getPatientDischarge(internmentEpisodeId)
-				.orElseThrow(() -> new NotFoundException("bad-episode-id", "Epicrisis needed for discharge"));
+				.orElseThrow(() -> new NotFoundException("bad-episode-id", INTERNMENT_NOT_FOUND));
 		LocalDate minDischargeDate = patientDischarge.getMedicalDischargeDate();
 		return ResponseEntity.ok(minDischargeDate);
 	}
@@ -171,7 +168,7 @@ public class InternmentEpisodeController {
 	public ResponseEntity<PatientDischargeDto> getPatientDischarge(
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
 		PatientDischargeBo pdbo =	patientDischargeService.getPatientDischarge(internmentEpisodeId)
-				.orElseThrow(() -> new NotFoundException("bad-episode-id", "discharge not found"));
+				.orElseThrow(() -> new NotFoundException("bad-episode-id", INTERNMENT_NOT_FOUND));
 		PatientDischargeDto result = patientDischargeMapper.toPatientDischargeDto(pdbo);
 		return ResponseEntity.ok(result);
 	}
