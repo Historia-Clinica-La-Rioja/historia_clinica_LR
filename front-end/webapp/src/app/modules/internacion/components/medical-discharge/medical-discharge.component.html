@@ -31,13 +31,14 @@
 						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
 					</mat-form-field>
 				</div>
-
-			<button mat-stroked-button color="secondary" type="button" (click)="back()">
-				<span [translate]="'buttons.BACK'"></span>
-			</button>
-			<button mat-raised-button color="primary">
-				<span [translate]="'buttons.CONTINUE'"></span>
-			</button>
+				<div class="form-buttons">
+					<button mat-stroked-button color="secondary" type="button" (click)="back()">
+						<span [translate]="'buttons.BACK'"></span>
+					</button>
+					<button mat-raised-button color="primary">
+						<span [translate]="'buttons.CONTINUE'"></span>
+					</button>
+				</div>
 			</form>
 		</section>
 		<section>
