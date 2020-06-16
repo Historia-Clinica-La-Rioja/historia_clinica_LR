@@ -1,4 +1,6 @@
-<app-summary-card (openInNew)="openDialog()" [actionIcon]="true" [header]="alergiasSummary">
+<app-summary-card [header]="alergiasSummary"
+				  [canEdit]="['ENFERMERO_ADULTO_MAYOR', 'ESPECIALISTA_MEDICO']"
+				  (openInNew)="openDialog()">
 	<app-table [model]="tableModel" *ngIf="tableModel?.data.length > 0 else noInfo"></app-table>
 	<ng-template #noInfo>
 		<app-no-data></app-no-data>

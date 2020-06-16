@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { ERole } from '@api-rest/api-model';
 
 @Component({
 	selector: 'app-summary-card',
@@ -9,7 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 export class SummaryCardComponent implements OnInit {
 
 	@Input() header: SummaryHeader;
-	@Input() actionIcon: boolean;
+	@Input() canEdit: ERole[] = [];
 	@Output() openInNew = new EventEmitter();
 
 	constructor(
