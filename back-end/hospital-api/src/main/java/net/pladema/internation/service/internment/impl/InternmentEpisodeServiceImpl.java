@@ -8,9 +8,11 @@ import net.pladema.internation.repository.documents.entity.PatientDischarge;
 import net.pladema.internation.repository.internment.InternmentEpisodeRepository;
 import net.pladema.internation.repository.internment.domain.summary.EvaluationNoteSummaryVo;
 import net.pladema.internation.repository.internment.domain.summary.InternmentSummaryVo;
+import net.pladema.internation.service.documents.DocumentService;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
 import net.pladema.internation.service.internment.summary.domain.InternmentSummaryBo;
 import net.pladema.internation.service.internment.summary.domain.PatientDischargeBo;
+import net.pladema.sgx.auditable.entity.Updateable;
 import net.pladema.sgx.exceptions.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 @Service
 public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
@@ -42,12 +45,15 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 
 	private final PatientDischargeRepository patientDischargeRepository;
 
+	private final DocumentService documentService;
+
 	public InternmentEpisodeServiceImpl(InternmentEpisodeRepository internmentEpisodeRepository,
 			EvolutionNoteDocumentRepository evolutionNoteDocumentRepository,
-			PatientDischargeRepository patientDischargeRepository) {
+			PatientDischargeRepository patientDischargeRepository,DocumentService documentService) {
 		this.internmentEpisodeRepository = internmentEpisodeRepository;
 		this.evolutionNoteDocumentRepository = evolutionNoteDocumentRepository;
 		this.patientDischargeRepository = patientDischargeRepository;
+		this.documentService = documentService;
 	}
 
 	@Override
@@ -196,6 +202,17 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 	public Boolean existsActiveForBedId(Integer bedId) {
 		List<InternmentEpisode> episodes = this.findByBedId(bedId);
 		return episodes != null && !episodes.isEmpty() && anyActive(episodes);
+	}
+
+	@Override
+	public LocalDate getLastUpdateDateOfInternmentEpisode(Integer internmentEpisodeId) {
+		LocalDate entryDate = this.getEntryDate(internmentEpisodeId);
+		List<Updateable> intermentDocuments = documentService.getUpdatablesDocuments(internmentEpisodeId);
+		List<LocalDate> dates = intermentDocuments.stream()
+				.map( doc -> doc.getUpdatedOn().toLocalDate())
+				.collect(Collectors.toList());
+		dates.add(entryDate);
+		return dates.stream().max(LocalDate::compareTo).get();
 	}
 
 	private boolean anyActive(List<InternmentEpisode> episodes) {

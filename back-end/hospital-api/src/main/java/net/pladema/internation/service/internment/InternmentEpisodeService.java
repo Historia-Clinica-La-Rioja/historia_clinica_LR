@@ -41,4 +41,6 @@ public interface InternmentEpisodeService {
 	List<InternmentEpisode> findByBedId(Integer bedId);
 
 	Boolean existsActiveForBedId(Integer bedId);
+
+	LocalDate getLastUpdateDateOfInternmentEpisode(Integer internmentEpisode);
 }

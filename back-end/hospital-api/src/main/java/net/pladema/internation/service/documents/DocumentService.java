@@ -5,6 +5,7 @@ import net.pladema.internation.repository.documents.entity.DocumentInmunization;
 import net.pladema.internation.repository.documents.entity.DocumentLab;
 import net.pladema.internation.repository.documents.entity.DocumentVitalSign;
 import net.pladema.internation.service.ips.domain.*;
+import net.pladema.sgx.auditable.entity.Updateable;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +39,8 @@ public interface DocumentService {
     AnthropometricDataBo getAnthropometricDataStateFromDocument(Long documentId);
 
     VitalSignBo getVitalSignStateFromDocument(Long documentId);
+
+    List<Updateable> getUpdatablesDocuments(Integer internmentEpisodeId);
 
     void deleteHealthConditionHistory(Long documentId);
 

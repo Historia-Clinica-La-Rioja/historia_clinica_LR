@@ -5,6 +5,7 @@ import net.pladema.internation.repository.documents.entity.*;
 import net.pladema.internation.repository.ips.generalstate.*;
 import net.pladema.internation.service.documents.DocumentService;
 import net.pladema.internation.service.ips.domain.*;
+import net.pladema.sgx.auditable.entity.Updateable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -172,6 +173,11 @@ public class DocumentServiceImpl implements DocumentService {
         VitalSignBo result = resultQuery.getLastVitalSigns().orElse(null);
         LOG.debug(OUTPUT, result);
         return result;
+    }
+
+    @Override
+    public List<Updateable> getUpdatablesDocuments(Integer internmentEpisodeId) {
+        return documentRepository.getUpdatablesDocuments(internmentEpisodeId);
     }
 
     @Override

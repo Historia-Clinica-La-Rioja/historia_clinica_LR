@@ -137,9 +137,8 @@ public class InternmentEpisodeController {
 	public ResponseEntity<LocalDate> getMinDischargeDate(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
-		InternmentEpisode internmentEpisode = internmentEpisodeService.getInternmentEpisode(institutionId, internmentEpisodeId);
 		if (this.featureFlagsService.isOn(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS)) {
-			return ResponseEntity.ok(internmentEpisode.getEntryDate());
+			return ResponseEntity.ok(internmentEpisodeService.getLastUpdateDateOfInternmentEpisode(internmentEpisodeId));
 		}
 		PatientDischargeBo patientDischarge =  patientDischargeService.getPatientDischarge(internmentEpisodeId)
 				.orElseThrow(() -> new NotFoundException("bad-episode-id", INTERNMENT_NOT_FOUND));

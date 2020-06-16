@@ -2,11 +2,14 @@ package net.pladema.internation.repository.documents;
 
 import net.pladema.internation.repository.internment.domain.summary.ResponsibleDoctorVo;
 import net.pladema.internation.repository.documents.entity.Document;
+import net.pladema.sgx.auditable.entity.Updateable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Repository
 public interface DocumentRepository extends JpaRepository<Document, Long>, DocumentRepositoryCustom {
@@ -32,4 +35,8 @@ public interface DocumentRepository extends JpaRepository<Document, Long>, Docum
             "and hcg.responsible = true ")
     ResponsibleDoctorVo getResponsible(@Param("documentId") Long documentId);
 
+    @Query(value = "SELECT d.updateable " +
+            "FROM Document d " +
+            "WHERE d.internmentEpisodeId = :internmentEpisodeId ")
+    List<Updateable> getUpdatablesDocuments(@Param("internmentEpisodeId") Integer internmentEpisodeId);
 }
