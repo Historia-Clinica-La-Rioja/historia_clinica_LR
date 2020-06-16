@@ -7,6 +7,7 @@ import {
   CREATE,
   UPDATE,
   DELETE,
+  DELETE_MANY,
   HttpError,
 } from "react-admin";
 
@@ -43,67 +44,57 @@ export default (apiUrl, mappers) => {
     let url = "";
     const options = {};
     switch (type) {
+
       case GET_LIST: {
-        //  { 
-        //    pagination: { 
-        //      page: {int} , 
-        //      perPage: {int} 
-        //    }, 
-        //    sort: { field: {string}, order: {string} }, 
-        //    filter: {Object} 
-        //  }
         const { page, perPage } = params.pagination;
         const { field, order } = params.sort;
         const filter = stringify(params.filter);
         url = `${apiUrl}/${resource}?page=${page-1}&size=${perPage}&sort=${field},${order}&${filter}`;
         break;
       }
+
       case GET_ONE:
         url = `${apiUrl}/${resource}/${params.id}`;
         break;
       case GET_MANY: {
-        //  { 
-        //    ids: {mixed[]} 
-        //  }
         const queryString = `ids=${params.ids.join(',')}`;
         url = `${apiUrl}/${resource}?${queryString}`;
         break;
       }
+
       case GET_MANY_REFERENCE: {
-        // { 
-        //     target: {string}, 
-        //     id: {mixed}, 
-        //     pagination: { 
-        //       page: {int}, 
-        //       perPage: {int} 
-        //     }, 
-        //     sort: { 
-        //       field: {string}, 
-        //       order: {string} 
-        //     }, 
-        //     filter: {Object} 
-        // }
         const { target, id } = params;
         const { field, order } = params.sort;
         const { page, perPage } = params.pagination;
         const filter = stringify(params.filter);
+
         url = `${apiUrl}/${resource}?page=${page-1}&size=${perPage}&sort=${field},${order}&${target}=${id}&${filter}`;
         break;
       }
+
       case UPDATE:
         url = `${apiUrl}/${resource}/${params.id}`;
         options.method = "PUT";
         options.body = JSON.stringify(params.data);
         break;
+
       case CREATE:
         url = `${apiUrl}/${resource}`;
         options.method = "POST";
         options.body = JSON.stringify(params.data);
         break;
+
       case DELETE:
         url = `${apiUrl}/${resource}/${params.id}`;
         options.method = "DELETE";
         break;
+
+      case DELETE_MANY:
+        const queryString = `ids=${params.ids.join(',')}`;
+        url = `${apiUrl}/${resource}?${queryString}`;
+        options.method = "DELETE";
+        break;
+
       default:
         throw new Error(`Unsupported fetch action type ${type}`);
     }

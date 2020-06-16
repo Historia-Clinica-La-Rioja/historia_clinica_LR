@@ -145,4 +145,16 @@ public abstract class AbstractBackofficeController<E, I> {
 		return new BackofficeDeleteResponse<>(id);
 	}
 
+	@DeleteMapping(params = "ids")
+	public @ResponseBody
+	BackofficeDeleteResponse<List<I>> deleteMany(@RequestParam List<I> ids) {
+		logger.debug("DELETE_MANY[ids={}]", ids);
+		ids.forEach(id ->  {
+			permissionValidator.assertDelete(id);
+			entityValidator.assertDelete(id);
+			store.deleteById(id);
+		});
+
+		return new BackofficeDeleteResponse<>(ids);
+	}
 }
