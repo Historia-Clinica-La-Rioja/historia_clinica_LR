@@ -31,7 +31,6 @@ export class NotaEvolucionFormComponent implements OnInit {
 		private formBuilder: FormBuilder,
 		private internacionMasterDataService: InternacionMasterDataService,
 		private evolutionNoteService: EvolutionNoteService,
-		private evolutionNoteReportService: EvolutionNoteReportService,
 		private route: ActivatedRoute,
 		private contextService: ContextService,
 		private router: Router,

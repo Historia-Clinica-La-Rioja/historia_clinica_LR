@@ -15,7 +15,6 @@ import { MapperService } from '@presentation/services/mapper.service';
 import { InternacionService } from '@api-rest/services/internacion.service';
 import { PatientService } from '@api-rest/services/patient.service';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
-import { Observable } from 'rxjs';
 import { InternmentEpisodeSummary } from '@presentation/components/internment-episode-summary/internment-episode-summary.component';
 import { TableCheckbox } from 'src/app/modules/material/model/table.model';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -24,6 +23,8 @@ import { TableService } from '@core/services/table.service';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
 import { HEALTH_CLINICAL_STATUS } from '../../constants/ids';
+import { PermissionsService } from '@core/services/permissions.service';
+import { Observable } from 'rxjs';
 
 const MAIN_DIAGNOSIS_INDEX = 0;
 
@@ -84,6 +85,7 @@ export class EvaluacionClinicaDiagnosticosComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private readonly route: ActivatedRoute,
 		private readonly router: Router,
+		private readonly permissionsService: PermissionsService,
 	) {
 		this.diagnostics.displayedColumns = this.diagnostics.columns?.map(c => c.def).concat(['select']);
 	}
@@ -104,14 +106,15 @@ export class EvaluacionClinicaDiagnosticosComponent implements OnInit {
 					map((internmentEpisodeSummary: InternmentSummaryDto) => this.mapperService.toInternmentEpisodeSummary(internmentEpisodeSummary))
 				);
 
-				this.internmentStateService.getDiagnosesGeneralState(this.internmentEpisodeId).pipe(
+				const diagnosesGeneralState$ = this.internmentStateService.getDiagnosesGeneralState(this.internmentEpisodeId).pipe(
 					map(diagnostics => diagnostics.filter(od => od.statusId === HEALTH_CLINICAL_STATUS.ACTIVO))
-				).subscribe(
-					diagnostics => {
-						this.diagnostics.data = diagnostics;
-						this.diagnostics.selection.select(diagnostics.find(d => d.id === routedDiagnosisId));
-					}
 				);
+				this.permissionsService.hasRole$(['PROFESIONAL_DE_SALUD']).subscribe(cantAccesMain => {
+					diagnosesGeneralState$.subscribe(diagnostics => {
+					this.diagnostics.data = diagnostics.filter(diagnostic => cantAccesMain ? !diagnostic.main : true );
+					this.diagnostics.selection.select(diagnostics.find(d => d.id === routedDiagnosisId));
+					})
+				});
 			}
 		);
 
