@@ -18,6 +18,7 @@ import { AddVitalSignsComponent } from '../../dialogs/add-vital-signs/add-vital-
 export class SignosVitalesSummaryComponent implements OnInit {
 
 	@Input() internmentEpisodeId: number;
+	@Input() editable: boolean = false;
 
 	signosVitalesSummary: SummaryHeader = SIGNOS_VITALES;
 	signosVitales: VitalSingCurrentPrevious[] = [];

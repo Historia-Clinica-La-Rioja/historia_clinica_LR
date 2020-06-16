@@ -11,6 +11,7 @@ export class SummaryCardComponent implements OnInit {
 
 	@Input() header: SummaryHeader;
 	@Input() canEdit: ERole[] = [];
+	@Input() editable: boolean = false;
 	@Output() openInNew = new EventEmitter();
 
 	constructor(

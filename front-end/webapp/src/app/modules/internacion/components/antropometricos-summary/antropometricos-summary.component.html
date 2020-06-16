@@ -1,5 +1,6 @@
 <app-summary-card [header]="antropometricosSummary"
 				  [canEdit]="['ENFERMERO', 'ENFERMERO_ADULTO_MAYOR', 'ESPECIALISTA_MEDICO']"
+				  [editable]="editable"
 				  (openInNew)="openDialog()">
 	<mat-card-content class="flex-row" *ngIf="details.length > 0 else noInfo">
 		<app-detail-box *ngFor="let detail of details" [data]="detail"></app-detail-box>

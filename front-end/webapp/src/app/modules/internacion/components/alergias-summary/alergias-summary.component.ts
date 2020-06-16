@@ -16,6 +16,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 export class AlergiasSummaryComponent implements OnInit {
 
 	@Input() internmentEpisodeId: number;
+	@Input() editable: boolean = false;
 
 	public readonly alergiasSummary = ALERGIAS;
 

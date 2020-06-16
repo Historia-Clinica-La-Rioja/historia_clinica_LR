@@ -15,8 +15,9 @@ import { AddAnthropometricComponent } from '../../dialogs/add-anthropometric/add
 })
 export class AntropometricosSummaryComponent implements OnInit {
 
-	@Input()
-	internmentEpisodeId: number;
+	@Input() internmentEpisodeId: number;
+	@Input() editable: boolean = false;
+
 	antropometricosSummary = ANTROPOMETRICOS;
 
 	details: DetailBox[] = [];
