@@ -109,11 +109,12 @@ export class EvaluacionClinicaDiagnosticosComponent implements OnInit {
 				const diagnosesGeneralState$ = this.internmentStateService.getDiagnosesGeneralState(this.internmentEpisodeId).pipe(
 					map(diagnostics => diagnostics.filter(od => od.statusId === HEALTH_CLINICAL_STATUS.ACTIVO))
 				);
-				this.permissionsService.hasRole$(['PROFESIONAL_DE_SALUD']).subscribe(cantAccesMain => {
-					diagnosesGeneralState$.subscribe(diagnostics => {
-					this.diagnostics.data = diagnostics.filter(diagnostic => cantAccesMain ? !diagnostic.main : true );
-					this.diagnostics.selection.select(diagnostics.find(d => d.id === routedDiagnosisId));
-					})
+				diagnosesGeneralState$.subscribe(diagnostics => {
+					this.permissionsService.hasRole$(['PROFESIONAL_DE_SALUD']).subscribe(cantAccesMain => {
+						diagnostics =  diagnostics.filter(diagnostic => cantAccesMain ? !diagnostic.main : true );
+						this.diagnostics.data = diagnostics;
+						this.diagnostics.selection.select(diagnostics.find(d => d.id === routedDiagnosisId));
+						});
 				});
 			}
 		);
