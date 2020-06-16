@@ -10,6 +10,7 @@ import { RoleGuard } from '@core/guards/RoleGuard';
 import { PatientDischargeComponent } from './routes/patient-discharge/patient-discharge.component';
 import { EvaluacionClinicaDiagnosticosComponent } from './routes/evaluacion-clinica-diagnosticos/evaluacion-clinica-diagnosticos.component';
 import { MedicalDischargeComponent } from './components/medical-discharge/medical-discharge.component';
+import { CambiarDiagnosticoPrincipalComponent } from './routes/cambiar-diagnostico-principal/cambiar-diagnostico-principal.component';
 
 
 const routes: Routes = [
@@ -48,6 +49,12 @@ const routes: Routes = [
 		component: EvaluacionClinicaDiagnosticosComponent,
 		canActivate: [RoleGuard],
 		data: { allowedRoles: ['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR', 'ENFERMERO', 'PROFESIONAL_DE_SALUD'] }
+	},
+	{
+		path: 'internacion/:idInternacion/paciente/:idPaciente/cambiar-diag-principal',
+		component: CambiarDiagnosticoPrincipalComponent,
+		canActivate: [RoleGuard],
+		data: { allowedRoles: ['ESPECIALISTA_MEDICO'] }
 	},
 	{
 		path: 'internacion/:idInternacion/paciente/:idPaciente/epicrisis',

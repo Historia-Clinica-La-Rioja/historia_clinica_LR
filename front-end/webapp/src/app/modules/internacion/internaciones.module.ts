@@ -44,6 +44,7 @@ import { AddAllergyComponent } from './dialogs/add-allergy/add-allergy.component
 import { AddAnthropometricComponent } from './dialogs/add-anthropometric/add-anthropometric.component';
 import { AddVitalSignsComponent } from './dialogs/add-vital-signs/add-vital-signs.component';
 import { MedicalDischargeComponent } from './components/medical-discharge/medical-discharge.component';
+import { CambiarDiagnosticoPrincipalComponent } from './routes/cambiar-diagnostico-principal/cambiar-diagnostico-principal.component';
 
 @NgModule({
 	declarations: [
@@ -85,6 +86,7 @@ import { MedicalDischargeComponent } from './components/medical-discharge/medica
 		AddAnthropometricComponent,
 		AddVitalSignsComponent,
 		MedicalDischargeComponent,
+		CambiarDiagnosticoPrincipalComponent,
 	],
 	imports: [
 		CoreModule,

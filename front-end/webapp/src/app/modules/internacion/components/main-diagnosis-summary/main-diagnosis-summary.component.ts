@@ -31,4 +31,8 @@ export class MainDiagnosisSummaryComponent implements OnInit {
 		this.router.navigate([`${this.router.url}/eval-clinica-diagnosticos/${id}`]);
 	}
 
+	goToChangeMainDiagnosis(): void {
+		this.router.navigate([`${this.router.url}/cambiar-diag-principal`]);
+	}
+
 }

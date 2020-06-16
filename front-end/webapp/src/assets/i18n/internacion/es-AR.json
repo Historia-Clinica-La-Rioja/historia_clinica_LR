@@ -239,6 +239,40 @@
 				"SUCCESS": "El documento con la evaluación clínica de diagnósticos se guardó exitosamente"
 			}
 		},
+		"change-main-diagnosis": {
+			"TITLE": "Cambiar diagnóstico principal",
+			"SUBTITLE": "Seleccione el diagnóstico principal a partir de un diagnóstico registrado o ingresando uno nuevo.",
+			"current-main": {
+				"TITLE": "Diagnóstico principal actual"
+			},
+			"select-new-main": {
+				"TITLE": "Seleccionar nuevo diagnóstico principal",
+				"panels": {
+					"new-diagnosis": {
+						"TITLE": "Nuevo diagnóstico",
+						"DESCRIPTION": "Elegir un diagnóstico nuevo"
+					},
+					"promote-diagnosis": {
+						"TITLE": "Diagnósticos registrados",
+						"DESCRIPTION": "Elegir un diagnóstico registrado del paciente"
+					}
+				}
+			},
+			"notes": {
+				"TITLE": "Evaluación clínica",
+				"CURRENT_DISEASE": "Enfermedad actual",
+				"PHYSICAL_EXAMINATION": "Examen físico",
+				"STUDIES_PROCEDURES": "Resumen de estudios y procedimientos realizados",
+				"PATIENT_PROGRESS": "Evolución",
+				"CLINICAL_IMPRESSION": "Impresión clínica y plan",
+				"OTHERS": "Otras observaciones",
+				"DESCRIPTION": "Descripción"
+			},
+			"messages": {
+				"ERROR": "Error al guardar documento para el cambio de diagnóstico principal",
+				"SUCCESS": "El documento con el cambio del diagnóstico principal se guardó exitosamente"
+			}
+		},
 		"documents-summary": {
 			"search-fields": {
 				"DIAGNOSIS": "Diagnóstico",
@@ -290,7 +324,8 @@
 			"main-diagnosis": {
 				"TITLE": "Diagnóstico principal",
 				"actions": {
-					"ADD_CLINICAL_ASSESTMENT": "Agregar evaluación clínica"
+					"ADD_CLINICAL_ASSESTMENT": "Agregar evaluación clínica",
+					"CHANGE": "Cambiar diagnóstico principal"
 				}
 			},
 			"remove-diagnosis-dialog": {
