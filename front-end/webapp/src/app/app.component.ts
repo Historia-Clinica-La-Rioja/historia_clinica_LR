@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Title } from '@angular/platform-browser';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { PublicInfoDto } from '@api-rest/api-model';
 import { PublicService } from '@api-rest/services/public.service';

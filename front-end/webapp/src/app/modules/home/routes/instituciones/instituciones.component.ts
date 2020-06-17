@@ -26,7 +26,7 @@ export class InstitucionesComponent implements OnInit {
 			),
 		).subscribe((allIds: number[]) => {
 
-			let institutionIds = allIds.filter((x) => x >= 0);
+			const institutionIds = allIds.filter((x) => x >= 0);
 			institutionService.getInstitutions(institutionIds).subscribe(institutions => {
 				this.backoffice = allIds.filter((x) => x === -1).length > 0;
 				this.institutions = institutions;

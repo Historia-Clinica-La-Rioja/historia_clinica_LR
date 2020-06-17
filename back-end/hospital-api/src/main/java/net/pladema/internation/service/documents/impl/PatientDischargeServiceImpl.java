@@ -2,7 +2,6 @@ package net.pladema.internation.service.documents.impl;
 
 import net.pladema.internation.controller.internment.mapper.PatientDischargeMapper;
 import net.pladema.internation.repository.documents.PatientDischargeRepository;
-import net.pladema.internation.repository.documents.entity.PatientDischarge;
 import net.pladema.internation.service.documents.PatientDischargeService;
 import net.pladema.internation.service.internment.summary.domain.PatientDischargeBo;
 import org.slf4j.Logger;

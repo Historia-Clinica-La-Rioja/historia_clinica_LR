@@ -10,7 +10,7 @@ class SGXPermissions {
         if (anyAssignments.length === 0) {
             return true;
         }
-        let hasAny = anyAssignments.find(assignment => 
+        const hasAny = anyAssignments.find(assignment => 
             this.roleAssignments.find(userAssignment => userAssignment.role === assignment.role && userAssignment.institutionId === assignment.institutionId)
         ) !== undefined;
 

@@ -34,8 +34,8 @@ export class PasswordResetComponent implements OnInit {
 
 	private checkIfMatchingPasswords(passwordKey: string, passwordConfirmationKey: string) {
 		return (group: FormGroup) => {
-			let passwordInput = group.controls[passwordKey],
-				passwordConfirmationInput = group.controls[passwordConfirmationKey];
+			const passwordInput = group.controls[passwordKey];
+			const passwordConfirmationInput = group.controls[passwordConfirmationKey];
 			if (passwordInput.value !== passwordConfirmationInput.value) {
 				return passwordConfirmationInput.setErrors({ notEquivalent: true })
 			}

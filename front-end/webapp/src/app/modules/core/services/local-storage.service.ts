@@ -9,8 +9,8 @@ export class LocalStorageService {
 	constructor() { }
 
 	public updateItem<T>(key: string, value: T): Observable<T> {
-		let valueToSave = JSON.stringify(value);
-		let valueInCache = localStorage.getItem(key);
+		const valueToSave = JSON.stringify(value);
+		const valueInCache = localStorage.getItem(key);
 		if (valueToSave !== valueInCache) {
 			localStorage.setItem(key, valueToSave);
 			return of(value);
@@ -20,7 +20,7 @@ export class LocalStorageService {
 	}
 
 	public getItem<T>(key: string): Observable<T> {
-		let value = localStorage.getItem(key) || '';
+		const value = localStorage.getItem(key) || '';
 		if (value !== '') {
 			return of(JSON.parse(value));
 		}

@@ -9,12 +9,12 @@ class SgxApiRest {
 
     auth(username, password) {
         this.logout();
-        const options = { 
-            method: 'POST', 
+        const options = {
+            method: 'POST',
             headers: new Headers({ Accept: 'application/json' }),
-            body: JSON.stringify({username, password}) 
+            body: JSON.stringify({username, password})
         };
-        return fetchUtils.fetchJson(apiUrl + '/auth', options)
+        return fetchUtils.fetchJson(`${apiUrl}/auth`, options)
             .then(response => {
                 return response.json;
             }).then(({ token }) => {
@@ -35,7 +35,7 @@ class SgxApiRest {
         }
         return this._permission$;
     }
-  
+
     fetch(url, options = {}) {
         if (!options.headers) {
             options.headers = new Headers({ Accept: 'application/json' });
@@ -47,7 +47,6 @@ class SgxApiRest {
 
     logout() {
         localStorage.removeItem('token');
-        this._account$ = undefined;
         this._permission$ = undefined;
     }
 

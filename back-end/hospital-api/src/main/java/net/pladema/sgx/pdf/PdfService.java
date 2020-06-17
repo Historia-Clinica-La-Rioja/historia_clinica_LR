@@ -18,7 +18,6 @@ import net.pladema.internation.service.documents.ReportDocumentService;
 import net.pladema.patient.controller.service.PatientExternalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;

@@ -81,7 +81,7 @@ export class PacientesTableComponent implements OnInit {
 						display: 'Ver',
 						matColor: 'primary',
 						do: (internacion) => {
-							let url = this.routePrefix + ROUTE_INTERNMENT + `${internacion.internmentId}/paciente/${internacion.patientId}`;
+							const url = this.routePrefix + ROUTE_INTERNMENT + `${internacion.internmentId}/paciente/${internacion.patientId}`;
 							this.router.navigate([url]);
 						}
 					}

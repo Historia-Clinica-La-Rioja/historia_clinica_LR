@@ -2,7 +2,6 @@ package net.pladema.internation.service.internment;
 
 import net.pladema.internation.repository.documents.entity.EvolutionNoteDocument;
 import net.pladema.internation.repository.documents.entity.InternmentEpisode;
-import net.pladema.internation.repository.documents.entity.PatientDischarge;
 import net.pladema.internation.service.internment.summary.domain.InternmentSummaryBo;
 import net.pladema.internation.service.internment.summary.domain.PatientDischargeBo;
 
