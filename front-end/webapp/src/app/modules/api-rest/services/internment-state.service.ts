@@ -33,6 +33,12 @@ export class InternmentStateService {
 		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments-state/${internmentId}/general/alternativeDiagnoses`;
 		return this.http.get<HealthConditionDto[]>(url);
 	}
+
+
+	getActiveAlternativeDiagnosesGeneralState(internmentId: number): Observable<HealthConditionDto[]> {
+		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments-state/${internmentId}/general/alternativeDiagnoses/active`;
+		return this.http.get<HealthConditionDto[]>(url);
+	}
 	
 	getDiagnosesGeneralState(internmentId: number): Observable<DiagnosesGeneralStateDto[]> {
 		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments-state/${internmentId}/general/diagnoses`;

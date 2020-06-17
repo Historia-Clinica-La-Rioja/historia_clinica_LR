@@ -204,6 +204,16 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     }
 
     @Override
+    public List<DiagnosisBo> getActiveAlternativeDiagnosesGeneralState(Integer internmentEpisodeId) {
+        LOG.debug(LOGGING_INTERNMENT_EPISODE, internmentEpisodeId);
+        List<HealthConditionVo> data = getGeneralStateData(internmentEpisodeId);
+        GeneralHealthConditionBo generalHealthConditionBo = new GeneralHealthConditionBo(data);
+        List<DiagnosisBo> result =  generalHealthConditionBo.getDiagnosis().stream().filter(DiagnosisBo::isActive).collect(Collectors.toList());
+        LOG.debug(OUTPUT, result);
+        return result;
+    }
+
+    @Override
     public List<HealthConditionBo> getDiagnosesGeneralState(Integer internmentEpisodeId) {
         LOG.debug(LOGGING_INTERNMENT_EPISODE, internmentEpisodeId);
         List<HealthConditionVo> data = getGeneralStateData(internmentEpisodeId);

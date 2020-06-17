@@ -31,4 +31,6 @@ public interface HealthConditionService {
     List<HealthHistoryConditionBo> getFamilyHistoriesGeneralState(Integer internmentEpisodeId);
 
     List<Integer> copyDiagnoses(List<Integer> diagnosesId);
+
+    List<DiagnosisBo> getActiveAlternativeDiagnosesGeneralState(Integer internmentEpisodeId);
 }

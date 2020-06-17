@@ -76,7 +76,7 @@ export class CambiarDiagnosticoPrincipalComponent implements OnInit {
 					mainDiagnosis => this.currentMainDiagnosis = mainDiagnosis
 				);
 
-				this.diagnostics$ = this.internmentStateService.getAlternativeDiagnosesGeneralState(this.internmentEpisodeId);
+				this.diagnostics$ = this.internmentStateService.getActiveAlternativeDiagnosesGeneralState(this.internmentEpisodeId);
 			}
 		);
 

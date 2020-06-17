@@ -32,7 +32,7 @@ import java.util.List;
 public class InternmentStateController {
 
     private static final Logger LOG = LoggerFactory.getLogger(InternmentStateController.class);
-    
+
     private static final String LOGGING_OUTPUT = "Output -> {}";
     private static final String LOGGING_INSTITUTION_AND_INTERNMENT_EPISODE = "Input parameters -> institutionId {}, internmentEpisodeId {}";
 
@@ -41,7 +41,7 @@ public class InternmentStateController {
     private final HealthConditionService healthConditionService;
 
     private final MedicationService medicationService;
-    
+
     private final AllergyService allergyService;
 
     private final InmunizationService inmunizationService;
@@ -97,6 +97,18 @@ public class InternmentStateController {
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
         LOG.debug(LOGGING_INSTITUTION_AND_INTERNMENT_EPISODE, institutionId, internmentEpisodeId);
         List<DiagnosisBo> diagnosis = healthConditionService.getAlternativeDiagnosisGeneralState(internmentEpisodeId);
+        List<DiagnosisDto> result = internmentStateMapper.toListDiagnosisDto(diagnosis);
+        LOG.debug(LOGGING_OUTPUT, result);
+        return  ResponseEntity.ok().body(result);
+    }
+
+    @InternmentValid
+    @GetMapping("/{internmentEpisodeId}/general/alternativeDiagnoses/active")
+    public ResponseEntity<List<DiagnosisDto>> getActiveAlternativeDiagnosesGeneralState(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
+        LOG.debug(LOGGING_INSTITUTION_AND_INTERNMENT_EPISODE, institutionId, internmentEpisodeId);
+        List<DiagnosisBo> diagnosis = healthConditionService.getActiveAlternativeDiagnosesGeneralState(internmentEpisodeId);
         List<DiagnosisDto> result = internmentStateMapper.toListDiagnosisDto(diagnosis);
         LOG.debug(LOGGING_OUTPUT, result);
         return  ResponseEntity.ok().body(result);

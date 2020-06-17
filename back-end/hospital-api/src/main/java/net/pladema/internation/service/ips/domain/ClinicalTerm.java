@@ -3,6 +3,7 @@ package net.pladema.internation.service.ips.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.internation.repository.masterdata.entity.ConditionClinicalStatus;
 
 import java.io.Serializable;
 
@@ -19,5 +20,9 @@ public abstract class ClinicalTerm implements Serializable {
 
     private String status;
 
+
+    public boolean isActive(){
+        return statusId.equals(ConditionClinicalStatus.ACTIVE);
+    }
 
 }
