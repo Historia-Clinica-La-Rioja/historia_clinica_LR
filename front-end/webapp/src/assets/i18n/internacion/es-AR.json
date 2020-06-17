@@ -338,7 +338,7 @@
 				"UPDATE": "Actualizar signos vitales",
 				"save": {
 					"SUCCESS": "Los signos vitales se actualizaron exitosamente",
-					"ERROR":  "Error al actualizar información antropométrica"
+					"ERROR":  "Error al actualizar signos vitales"
 				}
 			}
 		},
