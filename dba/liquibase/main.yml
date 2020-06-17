@@ -20,3 +20,7 @@ databaseChangeLog:
 - include:
     file: incrementales-v0_2.yml
     relativeToChangelogFile: true
+
+- include:
+    file: incrementales-v0_3.yml
+    relativeToChangelogFile: true
