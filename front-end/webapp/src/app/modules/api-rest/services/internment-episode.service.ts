@@ -46,4 +46,9 @@ export class InternmentEpisodeService {
 		let url = `${environment.apiBase}` + BASIC_URL_PREFIX + `/${this.contextService.institutionId}` + BASIC_URL_SUFIX + `/${internmentEpisodeId}/patientdischarge`;
 		return this.http.get<PatientDischargeDto>(url);
 	}
+
+	getLastUpdateDateOfInternmentEpisode(internmentEpisodeId: number) :Observable<Date> {
+		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/lastupdatedate`;
+		return this.http.get<Date>(url);
+	}
 }

@@ -79,8 +79,8 @@ export class MedicalDischargeComponent implements OnInit {
 					});
 			}
 		);
-		this.intermentEpisodeService.getInternmentEpisode(this.internmentId)
-			.subscribe ( internmentEpisode => this.minMedicalDischargeDate = internmentEpisode.entryDate);
+		this.intermentEpisodeService.getLastUpdateDateOfInternmentEpisode(this.internmentId)
+			.subscribe ( lastUpdateDate => this.minMedicalDischargeDate = lastUpdateDate);
 
 
 

@@ -163,4 +163,9 @@ public class InternmentEpisodeController {
 		return ResponseEntity.ok(result);
 	}
 
+	@GetMapping("/{internmentEpisodeId}/lastupdatedate")
+	public ResponseEntity<LocalDate> getLastUpdateDateOfInternmentEpisode(
+			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
+		return ResponseEntity.ok(internmentEpisodeService.getLastUpdateDateOfInternmentEpisode(internmentEpisodeId));
+	}
 }

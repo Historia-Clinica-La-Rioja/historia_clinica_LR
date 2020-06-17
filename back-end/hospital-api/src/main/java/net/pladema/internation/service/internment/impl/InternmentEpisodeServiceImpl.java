@@ -207,6 +207,8 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 	@Override
 	public LocalDate getLastUpdateDateOfInternmentEpisode(Integer internmentEpisodeId) {
 		LocalDate entryDate = this.getEntryDate(internmentEpisodeId);
+		if (entryDate == null)
+			throw new NotFoundException("wrong-id-episode", INTERNMENT_NOT_FOUND);
 		List<Updateable> intermentDocuments = documentService.getUpdatablesDocuments(internmentEpisodeId);
 		List<LocalDate> dates = intermentDocuments.stream()
 				.map( doc -> doc.getUpdatedOn().toLocalDate())
