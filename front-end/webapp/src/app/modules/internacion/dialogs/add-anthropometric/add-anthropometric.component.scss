@@ -1,3 +1,9 @@
+@import '../../../../../assets/styles/mixins.scss';
+
 mat-form-field {
 	width: 100%;
+}
+
+div.spinner {
+	@include centered-spinner;
 }

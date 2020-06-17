@@ -1,10 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { SnomedDto } from '@api-rest/api-model';
+import { AllergyConditionDto, EvolutionNoteDto, SnomedDto } from '@api-rest/api-model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SEMANTICS_CONFIG } from '../../constants/snomed-semantics';
 import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
 import { SnowstormService } from '@api-rest/services/snowstorm.service';
+import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
 	selector: 'app-add-allergy',
@@ -15,15 +17,18 @@ export class AddAllergyComponent implements OnInit {
 
 	snomedConcept: SnomedDto;
 	form: FormGroup;
+	loading = false;
 	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 
 	searchClicked = false;
 	conceptsResultsTable: TableModel<any>;
 
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public data: { searchValue: string, eclFilter: string },
+		@Inject(MAT_DIALOG_DATA) public data: { internmentEpisodeId: number },
 		public dialogRef: MatDialogRef<AddAllergyComponent>,
-		private formBuilder: FormBuilder,
+		private readonly formBuilder: FormBuilder,
+		private readonly evolutionNoteService: EvolutionNoteService,
+		private readonly snackBarService: SnackBarService,
 		private readonly snowstormService: SnowstormService
 	) {
 	}
@@ -68,10 +73,6 @@ export class AddAllergyComponent implements OnInit {
 		this.form.reset();
 	}
 
-	submit(): void {
-		this.dialogRef.close(this.snomedConcept);
-	}
-
 	onSearch(searchValue: string): void {
 		if (searchValue) {
 			this.searchClicked = true;
@@ -82,6 +83,39 @@ export class AddAllergyComponent implements OnInit {
 						this.searchClicked = false;
 					}
 				);
+		}
+	}
+
+	submit(): void {
+		if (this.snomedConcept) {
+			this.loading = true;
+			const evolutionNote: EvolutionNoteDto = buildEvolutionNote(this.snomedConcept);
+			this.evolutionNoteService.createDocument(evolutionNote, this.data.internmentEpisodeId).subscribe(_ => {
+					this.snackBarService.showSuccess('internaciones.internacion-paciente.alergias-summary.save.SUCCESS');
+					this.dialogRef.close(true);
+				}, _ => {
+					this.snackBarService.showError('internaciones.internacion-paciente.alergias-summary.save.ERROR');
+					this.loading = false;
+				}
+			);
+		}
+
+		function buildEvolutionNote(allergy: SnomedDto): EvolutionNoteDto {
+			const allergyDto: AllergyConditionDto = {
+				categoryId: null,
+				date: null,
+				severity: null,
+				verificationId: null,
+				id: null,
+				snomed: allergy,
+				statusId: null
+			};
+
+			return {
+				confirmed: true,
+				allergies: [allergyDto]
+			};
+
 		}
 	}
 

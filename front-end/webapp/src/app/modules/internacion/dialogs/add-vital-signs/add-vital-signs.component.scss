@@ -1,3 +1,5 @@
+@import '../../../../../assets/styles/mixins.scss';
+
 .vital-signs {
 	.row-container {
 		display: flex;
@@ -13,4 +15,8 @@
 			margin-bottom: 10px;
 		}
 	}
+}
+
+div.spinner {
+	@include centered-spinner;
 }

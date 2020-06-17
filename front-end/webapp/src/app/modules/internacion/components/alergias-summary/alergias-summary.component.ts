@@ -1,12 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AllergyConditionDto, EvolutionNoteDto, HealthConditionDto, SnomedDto } from '@api-rest/api-model';
+import { AllergyConditionDto, HealthConditionDto } from '@api-rest/api-model';
 import { TableModel } from '@presentation/components/table/table.component';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { ALERGIAS } from '../../constants/summaries';
 import { MatDialog } from '@angular/material/dialog';
 import { AddAllergyComponent } from '../../dialogs/add-allergy/add-allergy.component';
-import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
-import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
 	selector: 'app-alergias-summary',
@@ -15,66 +13,20 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 })
 export class AlergiasSummaryComponent implements OnInit {
 
+	constructor(
+		private readonly internmentStateService: InternmentStateService,
+		public dialog: MatDialog
+	) {
+	}
+
 	@Input() internmentEpisodeId: number;
-	@Input() editable: boolean = false;
+	@Input() editable = false;
 
 	public readonly alergiasSummary = ALERGIAS;
 
 	tableModel: TableModel<HealthConditionDto>;
 
-	constructor(
-		private internmentStateService: InternmentStateService,
-		private evolutionNoteService: EvolutionNoteService,
-		private snackBarService: SnackBarService,
-		public dialog: MatDialog
-	) {
-	}
-
-	ngOnInit(): void {
-		this.internmentStateService.getAllergies(this.internmentEpisodeId).subscribe(
-			data => this.tableModel = this.buildTable(data)
-		);
-	}
-
-	openDialog() {
-		const dialogRef = this.dialog.open(AddAllergyComponent, {
-			disableClose: true,
-			width: '35%',
-		});
-
-		dialogRef.afterClosed().subscribe((allergy: SnomedDto) => {
-				if (allergy) {
-					const evolutionNote: EvolutionNoteDto = buildEvolutionNote(allergy);
-					this.evolutionNoteService.createDocument(evolutionNote, this.internmentEpisodeId).subscribe(_ => {
-								this.snackBarService.showSuccess('internaciones.internacion-paciente.alergias-summary.save.SUCCESS');
-								this.internmentStateService.getAllergies(this.internmentEpisodeId)
-									.subscribe(data => this.tableModel = this.buildTable(data));
-							}, _ => this.snackBarService.showError('internaciones.internacion-paciente.alergias-summary.save.ERROR')
-						);
-				}
-			}
-		);
-
-		function buildEvolutionNote(allergy: SnomedDto): EvolutionNoteDto {
-			const allergyDto: AllergyConditionDto = {
-				categoryId: null,
-				date: null,
-				severity: null,
-				verificationId: null,
-				id: null,
-				snomed: allergy,
-				statusId: null
-			};
-
-			return {
-				confirmed: true,
-				allergies: [allergyDto]
-			};
-
-		}
-	}
-
-	private buildTable(data: AllergyConditionDto[]): TableModel<AllergyConditionDto> {
+	private static buildTable(data: AllergyConditionDto[]): TableModel<AllergyConditionDto> {
 		return {
 			columns: [
 				{
@@ -84,6 +36,30 @@ export class AlergiasSummaryComponent implements OnInit {
 				}],
 			data
 		};
+	}
+
+	ngOnInit(): void {
+		this.internmentStateService.getAllergies(this.internmentEpisodeId).subscribe(
+			data => this.tableModel = AlergiasSummaryComponent.buildTable(data)
+		);
+	}
+
+	openDialog() {
+		const dialogRef = this.dialog.open(AddAllergyComponent, {
+			disableClose: true,
+			width: '35%',
+			data: {
+				internmentEpisodeId: this.internmentEpisodeId
+			}
+		});
+
+		dialogRef.afterClosed().subscribe(submitted => {
+				if (submitted) {
+					this.internmentStateService.getAllergies(this.internmentEpisodeId)
+						.subscribe(data => this.tableModel = AlergiasSummaryComponent.buildTable(data));
+				}
+			}
+		);
 	}
 
 }
