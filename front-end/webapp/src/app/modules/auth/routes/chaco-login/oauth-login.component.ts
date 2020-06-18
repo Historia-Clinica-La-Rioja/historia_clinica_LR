@@ -33,7 +33,7 @@ export class OauthLoginComponent implements OnInit {
 	}
 
 	getOauthUrl(code): Observable<JWTokenDto> {
-		return this.authService.loginChaco(code);
+		return this.authService.loginOauth(code);
 	}
 
 }

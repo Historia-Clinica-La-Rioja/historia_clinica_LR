@@ -35,16 +35,10 @@ public class ExternalAuthenticationController {
 		return ResponseEntity.ok().body(new OauthConfigDto(oauthService.getLoginUrl(), oauthService.getOauthEnabled()));
 	}
 	
-	@GetMapping(value = "/chaco")
-	public ResponseEntity<JWTokenDto> loginChaco(@RequestParam("code") String code) throws Exception {
-		LOG.debug("Login chaco with code=> {}", code);
-		return ResponseEntity.ok().body(jWTokenMapper.mapNewToken(oauthService.loginChaco(code)));
+	@GetMapping(value = "/login")
+	public ResponseEntity<JWTokenDto> login(@RequestParam("code") String code) throws Exception {
+		LOG.debug("Login oauth with code=> {}", code);
+		return ResponseEntity.ok().body(jWTokenMapper.mapNewToken(oauthService.login(code)));
 	}
 
-	@GetMapping(value = "/chaco/redirectUrl")
-	public ResponseEntity<String> getChacoRedirectUrl() throws Exception {
-		LOG.debug("Get chaco redirect url");
-		return ResponseEntity.ok().body(oauthService.getLoginUrl());
-	}
-	
 }

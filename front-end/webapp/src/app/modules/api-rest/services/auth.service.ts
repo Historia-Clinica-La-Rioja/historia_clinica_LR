@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { LoginDto, JWTokenDto } from '@api-rest/api-model';
+import { LoginDto, JWTokenDto, OauthConfigDto } from '@api-rest/api-model';
 import { environment } from '@environments/environment';
 
 const TOKEN_KEY = 'token';
@@ -15,7 +15,7 @@ export class AuthService {
 
 
 	constructor(
-		private http: HttpClient,
+		private readonly http: HttpClient,
 	) { }
 
 	public login(loginDto: LoginDto): Observable<any> {
@@ -29,16 +29,20 @@ export class AuthService {
 		localStorage.removeItem(TOKEN_KEY);
 	}
 
-	loginChaco(code: string): Observable<JWTokenDto> {
+	loginOauth(code: string): Observable<JWTokenDto> {
 		let queryParams: HttpParams = new HttpParams();
 		queryParams = queryParams.append('code', code);
-		return this.http.get<JWTokenDto>(`${environment.apiBase}/oauth/chaco`, {
+		return this.http.get<JWTokenDto>(`${environment.apiBase}/oauth/login`, {
 			params: queryParams
 		});
 	}
 
 	getRedirectUrl(): Observable<string> {
-		return this.http.get<string>(`${environment.apiBase}/oauth/chaco/redirectUrl`,{responseType: 'text' as 'json'});
+		return this.http.get<string>(`${environment.apiBase}/oauth/redirectUrl`, { responseType: 'text' as 'json' });
+	}
+
+	getOauthConfig(): Observable<OauthConfigDto> {
+		return this.http.get<OauthConfigDto>(`${environment.apiBase}/oauth/config`);
 	}
 
 }

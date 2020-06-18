@@ -5,7 +5,7 @@ import { AuthComponent } from './auth.component';
 import { PasswordResetComponent } from './routes/password-reset/password-reset.component';
 import { LoginComponent } from './routes/login/login.component';
 import { OauthLoginComponent } from './routes/chaco-login/oauth-login.component';
-import { ChacoLoginGuardService } from './routes/chaco-login/chaco-login-guard.service';
+import { OauthLoginGuardService } from './routes/chaco-login/oauth-login-guard.service';
 
 
 const routes: Routes = [
@@ -19,7 +19,7 @@ const routes: Routes = [
 				pathMatch: 'full',
 			},
 			{ path: 'password-reset/:token', component: PasswordResetComponent },
-			{ path: 'login', component: LoginComponent, canActivate: [ChacoLoginGuardService] },
+			{ path: 'login', component: LoginComponent, canActivate: [OauthLoginGuardService] },
 		]
 	},
 	{
@@ -27,11 +27,11 @@ const routes: Routes = [
 		component: AuthComponent,
 		children: [
 			{
-				path: '',
-				redirectTo: 'chaco',
+				path: 'chaco',
+				redirectTo: 'login',
 				pathMatch: 'full',
 			},
-			{ path: 'chaco', component: OauthLoginComponent }
+			{ path: 'login', component: OauthLoginComponent }
 		]
 	},
 ];
@@ -41,6 +41,6 @@ const routes: Routes = [
 		RouterModule.forChild(routes)
 	],
 	exports: [RouterModule],
-	providers: [ChacoLoginGuardService]
+	providers: [OauthLoginGuardService]
 })
 export class AuthRoutingModule { }

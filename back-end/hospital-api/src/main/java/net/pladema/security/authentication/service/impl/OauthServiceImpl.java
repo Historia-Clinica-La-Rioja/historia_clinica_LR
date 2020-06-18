@@ -9,9 +9,6 @@ import org.apache.http.client.utils.URIBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -19,6 +16,7 @@ import net.pladema.person.repository.entity.Person;
 import net.pladema.person.service.PersonService;
 import net.pladema.security.authentication.business.Documento;
 import net.pladema.security.authentication.business.OauthUser;
+import net.pladema.security.authentication.service.OauthDataService;
 import net.pladema.security.authentication.service.OauthService;
 import net.pladema.security.configuration.OAuthConfiguration;
 import net.pladema.security.token.service.TokenService;
@@ -38,6 +36,7 @@ public class OauthServiceImpl implements OauthService {
 	private final PersonService personService;
 	private final RestTemplate restTemplate;
 	private final OAuthConfiguration oAuthConfiguration;
+	private final OauthDataService oauthDataService;
 
 	public OauthServiceImpl(
 			TokenService tokenService,
@@ -45,7 +44,8 @@ public class OauthServiceImpl implements OauthService {
 			@Qualifier("baseRestTemplate") RestTemplate restTemplate,
 			OAuthConfiguration oAuthConfiguration,
 			PersonService personService,
-			UserPasswordService userPasswordService
+			UserPasswordService userPasswordService,
+			OauthDataService oauthDataService
 	) {
 		this.logger = LoggerFactory.getLogger(this.getClass());
 		this.tokenService = tokenService;
@@ -54,6 +54,7 @@ public class OauthServiceImpl implements OauthService {
 		this.oAuthConfiguration = oAuthConfiguration;
 		this.personService = personService;
 		this.userPasswordService = userPasswordService;
+		this.oauthDataService = oauthDataService;
 	}
 
 	public String getOauthToken(String code) throws URISyntaxException {
@@ -67,17 +68,8 @@ public class OauthServiceImpl implements OauthService {
 		return restTemplate.getForObject(uriBuilder.build(), HashMap.class).get("access_token").toString();
 	}
 
-	public OauthUser getApiDataChaco(String token) throws URISyntaxException {
-		URIBuilder uriBuilder = new URIBuilder(oAuthConfiguration.getApiData());
-		HttpHeaders headers = new HttpHeaders();
-		headers.set(oAuthConfiguration.getTokenHeader(), "Bearer " + token);
-		HttpEntity<String> entity = new HttpEntity<>("body", headers);
-		logger.debug("GET oauth data person");
-		return restTemplate.exchange(uriBuilder.build(), HttpMethod.GET, entity, OauthUser.class).getBody();
-	}
-
-	public JWToken loginChaco(String code) throws Exception {
-		OauthUser oauthUser = getApiDataChaco(getOauthToken(code));
+	public JWToken login(String code) throws Exception {
+		OauthUser oauthUser = oauthDataService.getUserData(getOauthToken(code));
 		Optional<User> optionalUser = userService.getUser(oauthUser.getCuitCuil());
 		if (!optionalUser.isPresent()) {
 			User user = new User();
