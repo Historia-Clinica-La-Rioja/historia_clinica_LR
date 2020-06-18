@@ -334,6 +334,15 @@
 				"STATUS_SELECT": "Estado clínico",
 				"CONFIRM_BUTTON": "Crear nota de evolución"
 			},
+			"vacunas-summary": {
+				"ADD": "Agregar vacuna",
+				"INMUNIZATION": "Vacuna",
+				"REGISTRY_DATE": "Fecha de vacunación",
+				"save": {
+					"SUCCESS": "Una nueva vacuna se guardó exitosamente",
+					"ERROR":  "Error al guardar nueva vacuna"
+				}
+			},
 			"vital-signs-summary": {
 				"UPDATE": "Actualizar signos vitales",
 				"save": {

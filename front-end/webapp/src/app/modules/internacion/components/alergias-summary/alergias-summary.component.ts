@@ -13,12 +13,6 @@ import { AddAllergyComponent } from '../../dialogs/add-allergy/add-allergy.compo
 })
 export class AlergiasSummaryComponent implements OnInit {
 
-	constructor(
-		private readonly internmentStateService: InternmentStateService,
-		public dialog: MatDialog
-	) {
-	}
-
 	@Input() internmentEpisodeId: number;
 	@Input() editable = false;
 
@@ -36,6 +30,12 @@ export class AlergiasSummaryComponent implements OnInit {
 				}],
 			data
 		};
+	}
+
+	constructor(
+		private readonly internmentStateService: InternmentStateService,
+		public dialog: MatDialog
+	) {
 	}
 
 	ngOnInit(): void {

@@ -20,7 +20,7 @@ export class AddAllergyComponent implements OnInit {
 	loading = false;
 	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 
-	searchClicked = false;
+	searching = false;
 	conceptsResultsTable: TableModel<any>;
 
 	constructor(
@@ -75,12 +75,12 @@ export class AddAllergyComponent implements OnInit {
 
 	onSearch(searchValue: string): void {
 		if (searchValue) {
-			this.searchClicked = true;
+			this.searching = true;
 			this.snowstormService.getSNOMEDConcepts({term: searchValue, ecl: this.SEMANTICS_CONFIG.allergy})
 				.subscribe(
 					results => {
 						this.conceptsResultsTable = this.buildConceptsResultsTable(results);
-						this.searchClicked = false;
+						this.searching = false;
 					}
 				);
 		}

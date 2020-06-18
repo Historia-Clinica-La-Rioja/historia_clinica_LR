@@ -4,6 +4,8 @@ import { TableModel } from '@presentation/components/table/table.component';
 import { InmunizationDto } from '@api-rest/api-model';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.utils';
+import { MatDialog } from '@angular/material/dialog';
+import { AddInmunizationComponent } from '../../dialogs/add-inmunization/add-inmunization.component';
 
 @Component({
   selector: 'app-vacunas-summary',
@@ -15,17 +17,38 @@ export class VacunasSummaryComponent implements OnInit {
 	@Input() internmentEpisodeId: number;
 
 	public readonly vacunasSummary = VACUNAS;
+	@Input() editable = false;
+
 
 	tableModel: TableModel<InmunizationDto>;
 
 	constructor(
-		private internmentStateService: InternmentStateService
+		public dialog: MatDialog,
+		private readonly internmentStateService: InternmentStateService
 	) {
 	}
 
 	ngOnInit(): void {
 		this.internmentStateService.getInmunizations(this.internmentEpisodeId).subscribe(
 			data => this.tableModel = this.buildTable(data)
+		);
+	}
+
+	openDialog() {
+		const dialogRef = this.dialog.open(AddInmunizationComponent, {
+			disableClose: true,
+			width: '35%',
+			data: {
+				internmentEpisodeId: this.internmentEpisodeId
+			}
+		});
+
+		dialogRef.afterClosed().subscribe(submitted => {
+				if (submitted) {
+					this.internmentStateService.getInmunizations(this.internmentEpisodeId)
+						.subscribe(data => this.tableModel = this.buildTable(data));
+				}
+			}
 		);
 	}
 
