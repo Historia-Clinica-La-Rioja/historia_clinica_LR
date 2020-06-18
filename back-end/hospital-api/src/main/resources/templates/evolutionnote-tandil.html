@@ -2,173 +2,19 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 
 <head>
-	<title>Report</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-   <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
-    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"/>
-
-    <style>
-		h3 {
-			padding-top:15px
-		}
-	</style>
+	<th:block th:include="fragments/general.html :: headerfiles"></th:block>
 </head>
 <body>
-
-	<h2>Nota de evolución</h2>
-	<p>Internación</p>
-
-	<h3>Adulto Mayor</h3>
-	<div class="row" th:if="${patient.person != null}">
-		<strong>- ID: </strong><label  th:text="${patient.id}"></label><br/>
-		<strong>- Nombre: </strong><label  th:text="${patient.person.firstName}"></label><br/>
-		<strong>- Apellido: </strong><label th:text="${patient.person.lastName}"></label><br/>
-		<strong>- Edad: </strong><label th:text="${patient.person.age}"></label><br/>
-		<strong>- Sexo: </strong><label  th:text="${patient.person.gender.description}"></label><br/>
-	</div>
-
-	<h3 th:text="${#strings.defaultString(#messages.msgOrNull('document.pdf.diagnosis.title.tandil'),'Enfermedades')}"></h3>
-	<div class="row" th:if="${#lists.isEmpty(diagnosis)}">
-		<dl class="lista" >
-			<dd><p >Sin cambios registrados</p></dd>
-		</dl>
-	</div>
-	<div class="row" th:if="${not #lists.isEmpty(diagnosis)}">
-		<dl th:each="diagnose,iter: ${diagnosis}">
-			<dd><p  th:text="${'- ' + diagnose.snomed.pt}"></p></dd>
-			<dl>
-				<dd><strong>Estado: </strong><label  th:text="${diagnose.status}"></label></dd>
-				<dd><strong>Verificación: </strong><label  th:text="${diagnose.verification}"></label></dd>
-			</dl>
-		</dl>
-	</div>
-
-	<h3>Datos antropométricos</h3>
-
-	<div class="row" th:if="${anthropometricData == null}">
-		<dl>
-			<dd><p>Sin cambios registrados</p></dd>
-		</dl>
-	</div>
-
-	<div class="row " th:if="${anthropometricData  != null}">
-		- Factor sanguíneo: <strong><label  th:if="${anthropometricData.bloodType  != null}" th:text="${anthropometricData.bloodType.value}"></label></strong><br/>
-		- Talla: <strong><label  th:if="${anthropometricData.height  != null}" th:text="${anthropometricData.height.value + 'cm'}"></label></strong><br/>
-		- Peso: <strong><label  th:if="${anthropometricData.weight  != null}" th:text="${anthropometricData.weight.value + 'Kg'}"></label></strong><br/>
-		- IMC: <strong><label  th:if="${anthropometricData.BMI  != null}" th:text="${anthropometricData.BMI.value}"></label></strong><br/>
-	</div>
-
-	<h3>Alergias</h3>
-
-	<div class="row" th:if="${#lists.isEmpty(allergies)}">
-		<dl>
-			<dd><p >Sin cambios registrados</p></dd>
-		</dl>
-	</div>
-	<div class="row " th:if="${not #lists.isEmpty(allergies)}">
-		<dl class="lista" th:each="allergy,iter: ${allergies}">
-			<dd><p  th:text="${'- ' + allergy.snomed.pt}"></p></dd>
-			<dl>
-				<dd><strong>Estado: </strong><label  th:text="${allergy.status}"></label></dd>
-				<dd><strong>Verificación: </strong><label  th:text="${allergy.verification}"></label></dd>
-			</dl>
-		</dl>
-	</div>
-
-	<h3>Vacunas</h3>
-	<div class="row" th:if="${#lists.isEmpty(inmunizations)}">
-		<dl>
-			<dd><p>Sin cambios registrados</p></dd>
-		</dl>
-	</div>
-	<div class="row" th:if="${not #lists.isEmpty(inmunizations)}">
-		<dl th:each="inmunization,iter: ${inmunizations}">
-			<dd><p  th:text="${'- ' + inmunization.snomed.pt}"></p></dd>
-			<dl>
-				<dd><strong>Fecha de administración: </strong><label th:text="${inmunization.administrationDate}"></label></dd>
-			</dl>
-		</dl>
-	</div>
-
-	<h3 >Signos vitales</h3>
-
-	<div class="row" th:if="${vitalSigns  == null}">
-		<dl>
-			<dd><p>Sin cambios registrados</p></dd>
-		</dl>
-	</div>
-	<div class="row " th:if="${vitalSigns != null}">
-		- Frecuencía cardíaca:
-		<strong><label  th:if="${vitalSigns.heartRate  == null}">Sin cambios registrados</label></strong>
-		<strong><label  th:if="${vitalSigns.heartRate  != null}" th:text="${vitalSigns.heartRate.value + '/min'} "></label></strong>
-		&nbsp;&nbsp;&nbsp;&nbsp;<label th:if="${vitalSigns.heartRate != null}" >Fecha de medición: </label>
-		<strong><label  th:if="${vitalSigns.heartRate != null}" th:text="${#temporals.format(vitalSigns.heartRate.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></label></strong><br/>
-
-		- Frecuencía respiratoria:
-		<strong><label  th:if="${vitalSigns.respiratoryRate  == null}">Sin cambios registrados</label></strong>
-		<strong><label  th:if="${vitalSigns.respiratoryRate != null}" th:text="${vitalSigns.respiratoryRate.value + '/min'}"></label></strong>
-		&nbsp;&nbsp;&nbsp;&nbsp;<label th:if="${vitalSigns.respiratoryRate != null}" >Fecha de medición: </label>
-		<strong><label  th:if="${vitalSigns.respiratoryRate != null}" th:text="${#temporals.format(vitalSigns.respiratoryRate.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></label></strong><br/>
-
-
-		- Tensión arterial:
-		<strong><label  th:if="${vitalSigns.systolicBloodPressure  == null}">Sin cambios registrados</label></strong>
-		<strong><label  th:if="${(vitalSigns.systolicBloodPressure != null) &&  (vitalSigns.diastolicBloodPressure != null)}" th:text="${vitalSigns.systolicBloodPressure.value + '/' + vitalSigns.diastolicBloodPressure.value + ' mm Hg'}"></label></strong>
-		&nbsp;&nbsp;&nbsp;&nbsp;<label th:if="${vitalSigns.systolicBloodPressure != null}" >Fecha de medición: </label>
-		<strong><label  th:if="${vitalSigns.systolicBloodPressure != null}" th:text="${#temporals.format(vitalSigns.systolicBloodPressure.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></label></strong><br/>
-
-		- Temperatura corporal:
-		<strong><label  th:if="${vitalSigns.temperature  == null}">Sin cambios registrados</label></strong>
-		<strong><label  th:if="${vitalSigns.temperature != null}" th:text="${vitalSigns.temperature.value  + '°C'}"></label></strong>
-		&nbsp;&nbsp;&nbsp;&nbsp;<label th:if="${vitalSigns.temperature != null}" >Fecha de medición: </label>
-		<strong><label  th:if="${vitalSigns.temperature != null}" th:text="${#temporals.format(vitalSigns.temperature.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></label></strong><br/>
-
-
-		- Saturación de oxígeno:
-		<strong><label  th:if="${vitalSigns.bloodOxygenSaturation  == null}">Sin cambios registrados</label></strong>
-		<strong><label  th:if="${vitalSigns.bloodOxygenSaturation != null}" th:text="${vitalSigns.bloodOxygenSaturation.value+ '%' + 'Hs'}"></label></strong>
-		&nbsp;&nbsp;&nbsp;&nbsp;<label th:if="${vitalSigns.bloodOxygenSaturation != null}" >Fecha de medición: </label>
-		<strong><label  th:if="${vitalSigns.bloodOxygenSaturation != null}" th:text="${#temporals.format(vitalSigns.bloodOxygenSaturation.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></label></strong><br/>
-	</div>
-
-	<h3>Observaciones</h3>
-	<div class="row" th:if="${notes == null}">
-		<dl>
-			<dd><p>Sin cambios registrados</p></dd>
-		</dl>
-	</div>
-
-	<div class="row" th:if="${notes != null}">
-		<div class="col-12" th:if="${notes.currentIllnessNote}">
-			<strong class="center-padding">Enfermedad actual</strong>
-			<p class="center-padding" th:text="${notes.currentIllnessNote}"></p>
-		</div>
-		<div class="col-12 " th:if="${notes.physicalExamNote}">
-			<strong class="center-padding">Examen físico</strong>
-			<p class="center-padding" th:text="${notes.physicalExamNote}"></p>
-		</div>
-		<div class="col-12" th:if="${notes.studiesSummaryNote}">
-			<strong class="center-padding">Resumen de estudios y procedimientos realizados</strong>
-			<p class="center-padding" th:text="${notes.studiesSummaryNote}"></p>
-		</div>
-		<div class="col-12" th:if="${notes.evolutionNote}">
-			<strong class="center-padding">Evolución</strong>
-			<p class="center-padding" th:text="${notes.evolutionNote}"></p>
-		</div>
-		<div class="col-12" th:if="${notes.clinicalImpressionNote}">
-			<strong class="center-padding">Impresión clinica y plan</strong>
-			<p class="center-padding" th:text="${notes.clinicalImpressionNote}"></p>
-		</div>
-		<div class="col-12" th:if="${notes.otherNote}">
-			<strong class="center-padding">Otras observaciones</strong>
-			<p class="center-padding" th:text="${notes.otherNote}"></p>
-		</div>
-	</div>
+	<div th:replace="fragments/general.html :: header(title='Nota de evolución', subtitle=Internación)"></div>
+	<div th:replace="fragments/general.html :: personalData(patientType='Adulto Mayor')"></div>
+	<div th:replace="fragments/general.html :: diagnosis(message=document.pdf.diagnosis.title.tandil)"></div>
+	<div th:replace="fragments/general.html :: antropometicData"></div>
+	<div th:replace="fragments/general.html :: allergies"></div>
+	<div th:replace="fragments/general.html :: inmunizations"></div>
+	<div th:replace="fragments/general.html :: vitalSigns"></div>
+	<div th:replace="fragments/general.html :: notes-base"></div>
 </body>
-<footer class="footer-dark" th:if="${author != null}">
-	<div th:replace="fragments/author.html
-	:: author(firstName=${author.firstName}, lastName=${author.lastName},licenseNumber=${author.licence})">
-	</div>
+<footer>
+	<div th:replace="fragments/general.html :: footer"></div>
 </footer>
 </html>
