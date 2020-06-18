@@ -16,6 +16,16 @@ export const SIDEBAR_MENU: MenuItem[] = [
 		],
 	},
 	{
+		text: 'app.menu.AMBULATORIA',
+		icon: 'person_search',
+		url: './ambulatoria',
+		permissions: [
+			'ESPECIALISTA_MEDICO',
+			'PROFESIONAL_DE_SALUD',
+			'ENFERMERO',
+		],
+	},
+	{
 		text: 'app.menu.INTERNACION',
 		icon: 'assignment',
 		url: './internaciones',

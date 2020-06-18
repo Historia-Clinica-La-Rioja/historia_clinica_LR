@@ -2,6 +2,7 @@
 	"app": {
 		"TITLE": "Historia de salud integrada",
 		"menu": {
+			"AMBULATORIA": "HCE Ambulatoria",
 			"INSTITUCIONES": "Instituciones",
 			"INTERNACION": "HCE Internación",
 			"PACIENTES": "Pacientes",
