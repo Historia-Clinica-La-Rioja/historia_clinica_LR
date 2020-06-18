@@ -106,7 +106,10 @@ export class PatientDischargeComponent implements OnInit {
 
 	private setMinimumDateForDischarge(){
 		this.intermentEpisodeService.getMinDischargeDate(this.internmentId)
-				.subscribe ( minDischargeDate => this.minDischargeDate = minDischargeDate);
+				.subscribe ( minDischargeDate => {
+					this.minDischargeDate = minDischargeDate;
+					this.dischargeForm.controls.dischargeDate.setValue(this.minDischargeDate);
+				});
 	}
 
 	save(): void {
