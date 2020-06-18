@@ -4,7 +4,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 
 
-import { 
+import {
     useTranslate,
     Title,
  } from 'react-admin';

@@ -98,7 +98,7 @@ public class PersonController {
             LOG.error("Person with id {} not found", personId);
             result = MocksPerson.mockPersonalInformation(personId);
         } catch (Exception e) {
-            LOG.error("Person with id " + personId, e);
+            LOG.error("Person with id {}", personId, e);
             result = MocksPerson.mockPersonalInformation(personId);
         }
         LOG.debug("Output -> {}", result);

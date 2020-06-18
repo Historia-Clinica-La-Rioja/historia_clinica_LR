@@ -5,7 +5,7 @@ import {
     useMutation,
     useNotify,
 } from 'react-admin';
-import { 
+import {
     VisibilityOff,
  } from '@material-ui/icons';
 
@@ -15,7 +15,7 @@ import {
 
 
 const CreateUserButton = ({ record }) => {
-    
+
     const newUserPayload = record && {
         personId: record.id,
         username: record.email,
@@ -23,12 +23,12 @@ const CreateUserButton = ({ record }) => {
 
     const notify = useNotify();
     const redirect = useRedirect();
-    
+
     const [createPasswordReset, { loading }] = useMutation({
         type: 'create',
         resource: 'users',
         payload: { data: newUserPayload },
-    }, { 
+    }, {
         onSuccess: ({ data }) => {
             redirect("edit", "/users", data.id);
         },
@@ -39,7 +39,7 @@ const CreateUserButton = ({ record }) => {
         return (<span>...</span>);
     }
 
-    console.log('UserButton newUserPayload', newUserPayload);
+    // console.log('UserButton newUserPayload', newUserPayload);
 
     if (newUserPayload.username) {
         return (

@@ -1,16 +1,19 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+
+import { RoleGuard } from '@core/guards/RoleGuard';
+
+import { AnamnesisComponent } from './routes/anamnesis/anamnesis.component';
+import { CambiarDiagnosticoPrincipalComponent } from './routes/cambiar-diagnostico-principal/cambiar-diagnostico-principal.component';
+import { EpicrisisComponent } from './routes/epicrisis/epicrisis.component';
+import { EvaluacionClinicaDiagnosticosComponent } from './routes/evaluacion-clinica-diagnosticos/evaluacion-clinica-diagnosticos.component';
 import { InternacionesHomeComponent } from './routes/home/internaciones-home.component';
 import { InternacionPacienteComponent } from './routes/internacion-paciente/internacion-paciente.component';
-import { AnamnesisComponent } from './routes/anamnesis/anamnesis.component';
 import { NewInternmentComponent } from "./routes/new-internment/new-internment.component";
-import { EpicrisisComponent } from './routes/epicrisis/epicrisis.component';
 import { NotaEvolucionComponent } from './routes/nota-evolucion/nota-evolucion.component';
-import { RoleGuard } from '@core/guards/RoleGuard';
 import { PatientDischargeComponent } from './routes/patient-discharge/patient-discharge.component';
-import { EvaluacionClinicaDiagnosticosComponent } from './routes/evaluacion-clinica-diagnosticos/evaluacion-clinica-diagnosticos.component';
+
 import { MedicalDischargeComponent } from './components/medical-discharge/medical-discharge.component';
-import { CambiarDiagnosticoPrincipalComponent } from './routes/cambiar-diagnostico-principal/cambiar-diagnostico-principal.component';
 
 
 const routes: Routes = [

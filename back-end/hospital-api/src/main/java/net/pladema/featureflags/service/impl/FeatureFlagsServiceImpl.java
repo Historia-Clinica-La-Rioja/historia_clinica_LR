@@ -25,7 +25,9 @@ public class FeatureFlagsServiceImpl implements FeatureFlagsService {
 	}
 
 	public boolean isOn(AppFeature feature) {
-		return flags.getOrDefault(feature, false);
+		boolean isOn = flags.getOrDefault(feature, false);
+		logger.debug("Feature {} is {}", feature, isOn);
+		return isOn;
 	}
 
 }

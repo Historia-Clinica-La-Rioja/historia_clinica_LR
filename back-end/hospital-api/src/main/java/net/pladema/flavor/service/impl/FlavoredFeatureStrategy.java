@@ -7,6 +7,9 @@ import net.pladema.flavor.features.TandilGeriatricsFeatures;
 import net.pladema.sgx.featureflags.FlavoredFeatureStates;
 
 public class FlavoredFeatureStrategy {
+	private FlavoredFeatureStrategy() {
+		// utility class
+	}
 
 	public static FlavoredFeatureStates forFlavor(FlavorBo flavor) {
 		switch (flavor) {

@@ -1,17 +1,29 @@
 import { Component, OnInit } from '@angular/core';
-import { PatientBasicData } from 'src/app/modules/presentation/components/patient-card/patient-card.component';
-import { PatientService } from '@api-rest/services/patient.service';
-import { BasicPatientDto, InternmentSummaryDto, AnamnesisSummaryDto, EpicrisisSummaryDto, EvaluationNoteSummaryDto, PatientDischargeDto } from '@api-rest/api-model';
-import { map, tap } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { MapperService } from 'src/app/modules/presentation/services/mapper.service';
-import { InternacionService } from '@api-rest/services/internacion.service';
-import { InternmentEpisodeSummary } from 'src/app/modules/presentation/components/internment-episode-summary/internment-episode-summary.component';
-import { INTERNACION } from '../../constants/summaries';
+import { map, tap } from 'rxjs/operators';
+
 import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { PermissionsService } from '@core/services/permissions.service';
+
+import { InternmentEpisodeSummary } from '@presentation/components/internment-episode-summary/internment-episode-summary.component';
+import { MapperService } from '@presentation/services/mapper.service';
+import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
+
+import { PatientService } from '@api-rest/services/patient.service';
+import {
+	BasicPatientDto,
+	InternmentSummaryDto,
+	AnamnesisSummaryDto,
+	EpicrisisSummaryDto,
+	EvaluationNoteSummaryDto,
+	PatientDischargeDto,
+
+} from '@api-rest/api-model';
+import { InternacionService } from '@api-rest/services/internacion.service';
 import { InternmentEpisodeService } from '@api-rest/services/internment-episode.service';
+
+import { INTERNACION } from '../../constants/summaries';
 
 @Component({
 	selector: 'app-internacion-paciente',
@@ -40,7 +52,9 @@ export class InternacionPacienteComponent implements OnInit {
 		private featureFlagService: FeatureFlagService,
 		private readonly permissionService: PermissionsService,
 		private internmentEpisodeService: InternmentEpisodeService
-	) { }
+	) {
+		// console.log('ADMINISTRADOR: ', Runescape.ERole.ADMINISTRADOR);
+	}
 
 	ngOnInit(): void {
 		this.route.paramMap.subscribe(
@@ -74,7 +88,7 @@ export class InternacionPacienteComponent implements OnInit {
 					})
 			}
 		);
-		this.permissionService.hasRole$(['ENFERMERO']).subscribe(
+		this.permissionService.hasRole$([]).subscribe(
 			hasRole => this.editDiagnosisSummary$ = !hasRole
 		);
 

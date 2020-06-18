@@ -1,32 +1,34 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { SelectionModel } from '@angular/cdk/collections';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { ContextService } from '@core/services/context.service';
+import { TableService } from '@core/services/table.service';
+import { PermissionsService } from '@core/services/permissions.service';
+
+import { MapperService } from '@presentation/services/mapper.service';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
+import { InternmentEpisodeSummary } from '@presentation/components/internment-episode-summary/internment-episode-summary.component';
+
 import {
 	BasicPatientDto,
 	DiagnosesGeneralStateDto,
 	EvolutionDiagnosisDto,
 	InternmentSummaryDto,
-	MasterDataInterface
+	MasterDataInterface,
 } from '@api-rest/api-model';
-import { map } from 'rxjs/operators';
-import { MapperService } from '@presentation/services/mapper.service';
 import { InternacionService } from '@api-rest/services/internacion.service';
 import { PatientService } from '@api-rest/services/patient.service';
-import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
-import { InternmentEpisodeSummary } from '@presentation/components/internment-episode-summary/internment-episode-summary.component';
-import { TableCheckbox } from 'src/app/modules/material/model/table.model';
-import { SelectionModel } from '@angular/cdk/collections';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
-import { TableService } from '@core/services/table.service';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
-import { HEALTH_CLINICAL_STATUS } from '../../constants/ids';
-import { PermissionsService } from '@core/services/permissions.service';
-import { Observable } from 'rxjs';
 
-const MAIN_DIAGNOSIS_INDEX = 0;
+import { TableCheckbox } from 'src/app/modules/material/model/table.model';
+import { HEALTH_CLINICAL_STATUS } from '../../constants/ids';
 
 @Component({
 	selector: 'app-evaluacion-clinica-diagnosticos',
