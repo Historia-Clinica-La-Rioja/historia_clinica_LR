@@ -25,7 +25,7 @@ import apiRest from './utils/sgxApiRest';
  * DELETE       => DELETE http://my.api.url/posts/123
  */
 export default (apiUrl, mappers) => {
-  
+
   const mapResponse = (resource, list) => {
     const mapper = mappers[resource];
     if (!mapper) {

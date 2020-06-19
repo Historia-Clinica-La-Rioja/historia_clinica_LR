@@ -52,9 +52,7 @@ export class InternacionPacienteComponent implements OnInit {
 		private featureFlagService: FeatureFlagService,
 		private readonly permissionService: PermissionsService,
 		private internmentEpisodeService: InternmentEpisodeService
-	) {
-		// console.log('ADMINISTRADOR: ', Runescape.ERole.ADMINISTRADOR);
-	}
+	) { }
 
 	ngOnInit(): void {
 		this.route.paramMap.subscribe(
@@ -88,7 +86,7 @@ export class InternacionPacienteComponent implements OnInit {
 					})
 			}
 		);
-		this.permissionService.hasRole$([]).subscribe(
+		this.permissionService.hasRole$(['ENFERMERO']).subscribe(
 			hasRole => this.editDiagnosisSummary$ = !hasRole
 		);
 

@@ -4,7 +4,7 @@ import CardContent from '@material-ui/core/CardContent';
 import {
     Title,
     useTranslate,
-    useAuthState, 
+    useAuthState,
     Loading,
  } from 'react-admin';
 

@@ -56,7 +56,7 @@ const PasswordResetList = ({ record }) => {
         type: 'create',
         resource: 'password-reset',
         payload: { data: { userId: record && record.id } }
-    }, { 
+    }, {
         onSuccess: ({ data }) => {
             openPasswordReset(data.token);
         }
