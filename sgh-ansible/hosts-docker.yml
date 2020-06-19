@@ -1,0 +1,20 @@
+all:
+    children:
+        web_load_balancers:
+            hosts:
+                lbweb: 
+                    ansible_connection: docker
+        backservers:
+            hosts:
+                nodo_a: 
+                    ansible_connection: docker
+                nodo_b: 
+                    ansible_connection: docker
+        frontservers:
+            hosts:
+                nodo_a:
+                nodo_b:
+        databases:
+            hosts:
+                postgres: 
+                    ansible_connection: docker

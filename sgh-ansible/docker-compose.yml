@@ -1,0 +1,38 @@
+version: '3'
+services:
+  lbweb:
+    build:
+      context: '.'
+      dockerfile: systemd.Dockerfile
+    volumes: 
+      - "./:/workdir"
+      - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+    privileged: true
+    container_name: lbweb
+  nodo_a:
+    build:
+      context: '.'
+      dockerfile: systemd.Dockerfile
+    volumes: 
+      - "./:/workdir"
+      - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+    privileged: true
+    container_name: nodo_a
+  nodo_b:
+    build:
+      context: '.'
+      dockerfile: systemd.Dockerfile
+    #image: jrei/systemd-debian:10
+    volumes: 
+      - "./:/workdir"
+      - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+    privileged: true
+    container_name: nodo_b
+  postgres:
+    build:
+      context: .
+      dockerfile: pg.Dockerfile
+    environment:
+      POSTGRES_PASSWORD: Local123
+    container_name: postgres
+    
