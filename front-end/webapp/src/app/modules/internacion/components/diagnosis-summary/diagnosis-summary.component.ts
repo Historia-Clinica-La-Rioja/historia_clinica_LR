@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { DIAGNOSTICOS } from '../../constants/summaries';
-import { MasterDataInterface, HealthConditionDto } from '@api-rest/api-model';
+import { MasterDataInterface, HealthConditionDto, ResponseEvolutionNoteDto, EvolutionNoteDto } from '@api-rest/api-model';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { TableModel, ActionDisplays } from 'src/app/modules/presentation/components/table/table.component';
@@ -8,6 +8,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { RemoveDiagnosisComponent } from '../../dialogs/remove-diagnosis/remove-diagnosis.component';
 import { HEALTH_CLINICAL_STATUS } from '../../constants/ids';
 import { Router } from '@angular/router';
+import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { COVID } from '@core/utils/form.utils';
 
 @Component({
 	selector: 'app-diagnosis-summary',
@@ -23,11 +26,14 @@ export class DiagnosisSummaryComponent implements OnInit {
 	verifications: MasterDataInterface<string>[];
 	clinicalStatus: MasterDataInterface<string>[];
 	tableModel: TableModel<HealthConditionDto>;
+	viewCovidAlert: boolean = true;
 
 	constructor(
 		private readonly internmentStateService: InternmentStateService,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly router: Router,
+		private evolutionNoteService: EvolutionNoteService,
+		private snackBarService: SnackBarService,
 		public dialog: MatDialog,
 	) { }
 
@@ -41,7 +47,13 @@ export class DiagnosisSummaryComponent implements OnInit {
 		});
 
 		this.internmentStateService.getAlternativeDiagnosesGeneralState(this.internmentEpisodeId).subscribe(
-			data => this.tableModel = this.buildTable(data)
+			data => {
+				this.tableModel = this.buildTable(data);
+				data.forEach(elem => {
+					if (elem.snomed.id == COVID.id)
+						this.viewCovidAlert = false;
+				});
+			}
 		);
 	}
 
@@ -106,6 +118,30 @@ export class DiagnosisSummaryComponent implements OnInit {
 			});
 		}
 		return model;
+	}
+
+
+	generateDiagnosisCovid() {
+		const evolutionNote: EvolutionNoteDto = {
+			confirmed: true,
+			allergies: [],
+			anthropometricData: undefined,
+			diagnosis: [
+				{
+					presumptive: true,
+					snomed: { id: COVID.id, pt: COVID.pt, parentFsn: "", parentId: "" }
+				}
+			],
+			inmunizations: [],
+			notes: undefined,
+			vitalSigns: undefined
+		};
+
+		this.evolutionNoteService.createDocument(evolutionNote, this.internmentEpisodeId).subscribe(
+			(evolutionNoteResponse: ResponseEvolutionNoteDto) => {
+				window.location.reload();
+				this.snackBarService.showSuccess('internaciones.alerta-covid.messages.SUCCESS');
+			}, _ => this.snackBarService.showError('internaciones.alerta-covid.messages.ERROR'));
 	}
 
 }

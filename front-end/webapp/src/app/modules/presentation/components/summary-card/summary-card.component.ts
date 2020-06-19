@@ -12,7 +12,9 @@ export class SummaryCardComponent implements OnInit {
 	@Input() header: SummaryHeader;
 	@Input() canEdit: ERole[] = [];
 	@Input() editable: boolean = false;
+	@Input() covidAlert: boolean = false;
 	@Output() openInNew = new EventEmitter();
+	@Output() covidAlertEvent = new EventEmitter();
 
 	constructor(
 		public dialog: MatDialog

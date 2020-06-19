@@ -6,6 +6,16 @@
 				<span>{{ header.title | translate }}</span>
 			</div>
 		</mat-card-title>
+		<ng-container *featureFlag="'habilitarBotonCovidDiagnosticoPresuntivo'">
+			<div *ngIf="covidAlert">
+				<button mat-icon-button (click)="covidAlertEvent.emit()">
+					<span class="material-icons">
+						pest_control
+					</span>
+				</button>
+				<span [translate]="'internaciones.alerta-covid.TITLE'">  </span>
+			</div>
+		</ng-container>
 		<ng-container *ngIf="!editable">
 			<button mat-icon-button *hasRole="canEdit" (click)="openInNew.emit()">
 				<mat-icon fontSet="material-icons-outlined">open_in_new</mat-icon>

@@ -1,4 +1,5 @@
-<app-summary-card [header]="diagnosticosSummary">
+<app-summary-card [header]="diagnosticosSummary" [covidAlert]="viewCovidAlert"
+	(covidAlertEvent)="generateDiagnosisCovid()">
 	<app-table [model]="tableModel" *ngIf="tableModel?.data.length > 0 else noInfo"></app-table>
 	<ng-template #noInfo>
 		<app-no-data></app-no-data>
