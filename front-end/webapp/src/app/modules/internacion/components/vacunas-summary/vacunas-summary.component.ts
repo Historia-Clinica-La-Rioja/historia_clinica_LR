@@ -62,8 +62,8 @@ export class VacunasSummaryComponent implements OnInit {
 				},
 				{
 					columnDef: 'fecha',
-					header: 'Fecha',
-					text: (row) => momentFormat(momentParseDate(row.administrationDate), DateFormat.VIEW_DATE)
+					header: 'Fecha de vacunación',
+					text: (row) => row.administrationDate ? momentFormat(momentParseDate(row.administrationDate), DateFormat.VIEW_DATE) : undefined
 				}
 			],
 			data
