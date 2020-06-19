@@ -579,6 +579,19 @@ export interface VitalSignsReportDto extends Serializable {
     temperature?: ReportClinicalObservationDto;
 }
 
-export type EDocumentSearch = "DIAGNOSIS" | "DOCTOR" | "CREATEDON" | "ALL";
+export const enum EDocumentSearch {
+    DIAGNOSIS = "DIAGNOSIS",
+    DOCTOR = "DOCTOR",
+    CREATEDON = "CREATEDON",
+    ALL = "ALL",
+}
 
-export type ERole = "ROOT" | "ADMINISTRADOR" | "ESPECIALISTA_MEDICO" | "PROFESIONAL_DE_SALUD" | "ADMINISTRATIVO" | "ENFERMERO_ADULTO_MAYOR" | "ENFERMERO";
+export const enum ERole {
+    ROOT = "ROOT",
+    ADMINISTRADOR = "ADMINISTRADOR",
+    ESPECIALISTA_MEDICO = "ESPECIALISTA_MEDICO",
+    PROFESIONAL_DE_SALUD = "PROFESIONAL_DE_SALUD",
+    ADMINISTRATIVO = "ADMINISTRATIVO",
+    ENFERMERO_ADULTO_MAYOR = "ENFERMERO_ADULTO_MAYOR",
+    ENFERMERO = "ENFERMERO",
+}

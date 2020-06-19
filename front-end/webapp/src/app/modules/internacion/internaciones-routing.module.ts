@@ -3,6 +3,8 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { RoleGuard } from '@core/guards/RoleGuard';
 
+import { ERole } from '@api-rest/api-model';
+
 import { AnamnesisComponent } from './routes/anamnesis/anamnesis.component';
 import { CambiarDiagnosticoPrincipalComponent } from './routes/cambiar-diagnostico-principal/cambiar-diagnostico-principal.component';
 import { EpicrisisComponent } from './routes/epicrisis/epicrisis.component';
@@ -21,67 +23,67 @@ const routes: Routes = [
 		path: '',
 		component: InternacionesHomeComponent,
 		canActivate: [RoleGuard],
-		data: { allowedRoles: ['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR', 'ENFERMERO'] }
+		data: { allowedRoles: [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO_ADULTO_MAYOR, ERole.ENFERMERO] }
 	},
 	{
 		path: 'internacion/:idInternacion/paciente/:idPaciente',
 		component: InternacionPacienteComponent,
 		canActivate: [RoleGuard],
-		data: { allowedRoles: ['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ADMINISTRATIVO', 'ENFERMERO_ADULTO_MAYOR', 'ENFERMERO'] }
+		data: { allowedRoles: [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ADMINISTRATIVO, ERole.ENFERMERO_ADULTO_MAYOR, ERole.ENFERMERO] }
 	},
 	{
 		path: 'internacion/:idInternacion/paciente/:idPaciente/anamnesis',
 		component: AnamnesisComponent,
 		canActivate: [RoleGuard],
-		data: { allowedRoles: ['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR'] }
+		data: { allowedRoles: [ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO_ADULTO_MAYOR] }
 	},
 	{
 		path: 'internacion/:idInternacion/paciente/:idPaciente/anamnesis/:anamnesisId',
 		component: AnamnesisComponent,
 		canActivate: [RoleGuard],
-		data: { allowedRoles: ['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR'] }
+		data: { allowedRoles: [ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO_ADULTO_MAYOR] }
 	},
 	{
 		path: 'internacion/:idInternacion/paciente/:idPaciente/nota-evolucion',
 		component: NotaEvolucionComponent,
 		canActivate: [RoleGuard],
-		data: { allowedRoles: ['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR', 'ENFERMERO'] }
+		data: { allowedRoles: [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO_ADULTO_MAYOR, ERole.ENFERMERO] }
 	},
 	{
 		path: 'internacion/:idInternacion/paciente/:idPaciente/eval-clinica-diagnosticos/:idDiagnostico',
 		component: EvaluacionClinicaDiagnosticosComponent,
 		canActivate: [RoleGuard],
-		data: { allowedRoles: ['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR', 'ENFERMERO', 'PROFESIONAL_DE_SALUD'] }
+		data: { allowedRoles: [ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO_ADULTO_MAYOR, ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD] }
 	},
 	{
 		path: 'internacion/:idInternacion/paciente/:idPaciente/cambiar-diag-principal',
 		component: CambiarDiagnosticoPrincipalComponent,
 		canActivate: [RoleGuard],
-		data: { allowedRoles: ['ESPECIALISTA_MEDICO'] }
+		data: { allowedRoles: [ERole.ESPECIALISTA_MEDICO] }
 	},
 	{
 		path: 'internacion/:idInternacion/paciente/:idPaciente/epicrisis',
 		component: EpicrisisComponent,
 		canActivate: [RoleGuard],
-		data: { allowedRoles: ['ESPECIALISTA_MEDICO'] }
+		data: { allowedRoles: [ERole.ESPECIALISTA_MEDICO] }
 	},
 	{
 		path: 'internacion/new',
 		component: NewInternmentComponent,
 		canActivate: [RoleGuard],
-		data: { allowedRoles: ['ADMINISTRATIVO'] }
+		data: { allowedRoles: [ERole.ADMINISTRATIVO] }
 	},
 	{
 		path: 'internacion/:idInternacion/paciente/:idPaciente/alta',
 		canActivate: [RoleGuard],
 		component: PatientDischargeComponent,
-		data: { allowedRoles: ['ADMINISTRATIVO'] }
+		data: { allowedRoles: [ERole.ADMINISTRATIVO] }
 	},
 	{
 		path: 'internacion/:idInternacion/paciente/:idPaciente/alta-medica',
 		canActivate: [RoleGuard],
 		component: MedicalDischargeComponent,
-		data: { allowedRoles: ['ESPECIALISTA_MEDICO'] }
+		data: { allowedRoles: [ERole.ESPECIALISTA_MEDICO] }
 	}
 ];
 

@@ -29,6 +29,7 @@ import { EvolutionNoteService } from '@api-rest/services/evolution-note.service'
 
 import { TableCheckbox } from 'src/app/modules/material/model/table.model';
 import { HEALTH_CLINICAL_STATUS } from '../../constants/ids';
+import { ROLES_FOR_ACCESS_MAIN } from '../../constants/permissions';
 
 @Component({
 	selector: 'app-evaluacion-clinica-diagnosticos',
@@ -112,7 +113,7 @@ export class EvaluacionClinicaDiagnosticosComponent implements OnInit {
 					map(diagnostics => diagnostics.filter(od => od.statusId === HEALTH_CLINICAL_STATUS.ACTIVO))
 				);
 				diagnosesGeneralState$.subscribe(diagnostics => {
-					this.permissionsService.hasRole$(['PROFESIONAL_DE_SALUD']).subscribe(cantAccesMain => {
+					this.permissionsService.hasRole$(ROLES_FOR_ACCESS_MAIN).subscribe(cantAccesMain => {
 						diagnostics =  diagnostics.filter(diagnostic => cantAccesMain ? !diagnostic.main : true );
 						this.diagnostics.data = diagnostics;
 						this.diagnostics.selection.select(diagnostics.find(d => d.id === routedDiagnosisId));

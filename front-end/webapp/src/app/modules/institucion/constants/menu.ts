@@ -1,4 +1,5 @@
 import { MenuItem } from '@core/core-model';
+import { ERole } from '@api-rest/api-model';
 
 export const SIDEBAR_MENU: MenuItem[] = [
 	{
@@ -12,7 +13,7 @@ export const SIDEBAR_MENU: MenuItem[] = [
 		icon: 'person',
 		url: './pacientes',
 		permissions: [
-			'ADMINISTRATIVO',
+			ERole.ADMINISTRATIVO,
 		],
 	},
 	{
@@ -20,9 +21,9 @@ export const SIDEBAR_MENU: MenuItem[] = [
 		icon: 'person_search',
 		url: './ambulatoria',
 		permissions: [
-			'ESPECIALISTA_MEDICO',
-			'PROFESIONAL_DE_SALUD',
-			'ENFERMERO',
+			ERole.ESPECIALISTA_MEDICO,
+			ERole.PROFESIONAL_DE_SALUD,
+			ERole.ENFERMERO,
 		],
 	},
 	{
@@ -30,10 +31,10 @@ export const SIDEBAR_MENU: MenuItem[] = [
 		icon: 'assignment',
 		url: './internaciones',
 		permissions: [
-			'ESPECIALISTA_MEDICO',
-			'PROFESIONAL_DE_SALUD',
-			'ENFERMERO_ADULTO_MAYOR',
-			'ENFERMERO',
+			ERole.ESPECIALISTA_MEDICO,
+			ERole.PROFESIONAL_DE_SALUD,
+			ERole.ENFERMERO_ADULTO_MAYOR,
+			ERole.ENFERMERO,
 		],
 	},
 	{

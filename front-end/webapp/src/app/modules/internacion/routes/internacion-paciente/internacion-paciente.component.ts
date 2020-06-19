@@ -24,6 +24,7 @@ import { InternacionService } from '@api-rest/services/internacion.service';
 import { InternmentEpisodeService } from '@api-rest/services/internment-episode.service';
 
 import { INTERNACION } from '../../constants/summaries';
+import { ROLES_FOR_EDIT_DIAGNOSIS } from '../../constants/permissions';
 
 @Component({
 	selector: 'app-internacion-paciente',
@@ -86,7 +87,7 @@ export class InternacionPacienteComponent implements OnInit {
 					})
 			}
 		);
-		this.permissionService.hasRole$(['ENFERMERO']).subscribe(
+		this.permissionService.hasRole$(ROLES_FOR_EDIT_DIAGNOSIS).subscribe(
 			hasRole => this.editDiagnosisSummary$ = !hasRole
 		);
 

@@ -5,6 +5,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CoreModule } from '@core/core.module';
 import { RoleGuard } from '@core/guards/RoleGuard';
 
+import { ERole } from '@api-rest/api-model';
+
 import { EditPatientComponent } from './routes/edit-patient/edit-patient.component';
 import { HomeComponent } from './routes/home/home.component';
 import { NewPatientComponent } from './routes/new-patient/new-patient.component';
@@ -42,7 +44,7 @@ const routes: Routes = [
 			},
 		],
 		canActivate: [RoleGuard],
-		data: { allowedRoles: ['ADMINISTRATIVO'] }
+		data: { allowedRoles: [ERole.ADMINISTRATIVO] }
 	}
 ];
 

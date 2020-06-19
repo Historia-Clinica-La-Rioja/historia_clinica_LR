@@ -50,6 +50,7 @@ import { SignosVitalesSummaryComponent } from './components/signos-vitales-summa
 import { VacunasComponent } from './components/vacunas/vacunas.component';
 import { VacunasSummaryComponent } from './components/vacunas-summary/vacunas-summary.component';
 
+import { ApiRestModule } from '../api-rest/api-rest.module';
 
 @NgModule({
 	declarations: [
@@ -95,7 +96,9 @@ import { VacunasSummaryComponent } from './components/vacunas-summary/vacunas-su
 		VacunasSummaryComponent,
 	],
 	imports: [
+
 		CoreModule,
+		ApiRestModule,
 		CommonModule,
 		FlexLayoutModule,
 		FormsModule,

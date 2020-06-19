@@ -1,5 +1,6 @@
 import { SummaryHeader } from '../../presentation/components/summary-card/summary-card.component';
 import { SearchField } from '../components/documents-summary/documents-summary.component';
+import { EDocumentSearch } from '@api-rest/api-model';
 
 export const INTERNACION: SummaryHeader = {
 	title: 'Resumen de internación',
@@ -58,19 +59,19 @@ export const DOCUMENTS: SummaryHeader = {
 
 export const DOCUMENTS_SEARCH_FIELDS: SearchField[] = [
 	{
-		field: 'DIAGNOSIS',
+		field: EDocumentSearch.DIAGNOSIS,
 		label: 'internaciones.documents-summary.search-fields.DIAGNOSIS',
 	},
 	{
-		field: 'DOCTOR',
+		field: EDocumentSearch.DOCTOR,
 		label: 'internaciones.documents-summary.search-fields.DOCTOR',
 	},
 	{
-		field: 'CREATEDON',
+		field: EDocumentSearch.CREATEDON,
 		label: 'internaciones.documents-summary.search-fields.CREATEDON',
 	},
 	{
-		field: 'ALL',
+		field: EDocumentSearch.ALL,
 		label: 'internaciones.documents-summary.search-fields.ALL',
 	}
 ];
