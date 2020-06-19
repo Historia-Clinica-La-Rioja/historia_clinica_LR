@@ -10,7 +10,7 @@ import { HEALTH_CLINICAL_STATUS } from '../../constants/ids';
 import { Router } from '@angular/router';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { COVID } from '@core/utils/form.utils';
+import { COVID_SNOMED } from '@core/utils/form.utils';
 
 @Component({
 	selector: 'app-diagnosis-summary',
@@ -50,7 +50,7 @@ export class DiagnosisSummaryComponent implements OnInit {
 			data => {
 				this.tableModel = this.buildTable(data);
 				data.forEach(elem => {
-					if (elem.snomed.id == COVID.id)
+					if (elem.snomed.id == COVID_SNOMED.id && elem.statusId == HEALTH_CLINICAL_STATUS.ACTIVO)
 						this.viewCovidAlert = false;
 				});
 			}
@@ -109,7 +109,14 @@ export class DiagnosisSummaryComponent implements OnInit {
 						});
 						dialogRef.afterClosed().subscribe(
 							() => this.internmentStateService.getAlternativeDiagnosesGeneralState(this.internmentEpisodeId).subscribe(
-								data => this.tableModel = this.buildTable(data)
+								data => {
+									this.viewCovidAlert = true;
+									this.tableModel = this.buildTable(data);
+									data.forEach(elem => {
+										if (elem.snomed.id == COVID_SNOMED.id && elem.statusId == HEALTH_CLINICAL_STATUS.ACTIVO)
+											this.viewCovidAlert = false;
+									});
+								}
 							)
 						);
 					},
@@ -129,7 +136,7 @@ export class DiagnosisSummaryComponent implements OnInit {
 			diagnosis: [
 				{
 					presumptive: true,
-					snomed: { id: COVID.id, pt: COVID.pt, parentFsn: "", parentId: "" }
+					snomed: { id: COVID_SNOMED.id, pt: COVID_SNOMED.pt, parentFsn: "", parentId: "" }
 				}
 			],
 			inmunizations: [],

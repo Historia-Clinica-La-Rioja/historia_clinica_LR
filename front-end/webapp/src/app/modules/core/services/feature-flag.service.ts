@@ -38,6 +38,10 @@ const FEATURE_FLAGS = [
 	{
 		name: 'epicrisisRequired',
 		flavorMatch: [FLAVOR_HOSPITALES]
+	},
+	{
+		name: 'habilitarBotonCovidDiagnosticoPresuntivo',
+		flavorMatch: [FLAVOR_TANDIL]
 	}
 ];
 

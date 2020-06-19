@@ -379,6 +379,13 @@
 				"MEDICAL_DISCHARGE_ERROR":"No se pudo dar el alta médica del paciente",
 				"MEDICAL_DISCHARGE_SUCCESS":"El alta médica se guardó exitosamente"
 			}
+		},
+		"alerta-covid": {
+			"TITLE": "Diagnóstico presuntivo Covid",
+			"messages": {
+				"ERROR": "Error al guardar diagnóstico presuntivo de Covid",
+				"SUCCESS": "El diagnóstico presuntivo de Covid se guardó exitosamente"
+			}
 		}
 	}
 }

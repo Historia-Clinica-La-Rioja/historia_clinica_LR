@@ -11,9 +11,9 @@ import { newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 
 @Component({
-  selector: 'app-nota-evolucion-form',
-  templateUrl: './nota-evolucion-form.component.html',
-  styleUrls: ['./nota-evolucion-form.component.scss']
+	selector: 'app-nota-evolucion-form',
+	templateUrl: './nota-evolucion-form.component.html',
+	styleUrls: ['./nota-evolucion-form.component.scss']
 })
 export class NotaEvolucionFormComponent implements OnInit {
 
@@ -78,7 +78,7 @@ export class NotaEvolucionFormComponent implements OnInit {
 					effectiveTime: [newMoment()],
 				}),
 			}),
-			observations: this.formBuilder.group ({
+			observations: this.formBuilder.group({
 				currentIllnessNote: [null],
 				physicalExamNote: [null],
 				studiesSummaryNote: [null],

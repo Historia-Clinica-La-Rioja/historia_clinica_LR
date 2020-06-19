@@ -16,11 +16,11 @@ export function hasError(form: FormGroup, type: string, control: string): boolea
 	return form.get(control).hasError(type);
 }
 
-export function scrollIntoError(form: FormGroup,el: ElementRef) {
+export function scrollIntoError(form: FormGroup, el: ElementRef) {
 	for (const controlName of Object.keys(form.controls)) {
 		if (form.controls[controlName].invalid) {
-			const invalidControl = getInvalidElement(el, controlName,form);
-			invalidControl.scrollIntoView({behavior: 'smooth', block: 'center'});
+			const invalidControl = getInvalidElement(el, controlName, form);
+			invalidControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
 			break;
 		}
 	}
@@ -32,3 +32,5 @@ export function scrollIntoError(form: FormGroup,el: ElementRef) {
 		return el.nativeElement.querySelector('[formcontrolname="' + controlName + '"]');
 	}
 }
+
+export const COVID_SNOMED = { id: "186747009", pt: "infección por coronavirus" }
