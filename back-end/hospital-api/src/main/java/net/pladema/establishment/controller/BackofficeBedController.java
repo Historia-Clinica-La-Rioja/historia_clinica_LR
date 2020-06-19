@@ -15,11 +15,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import net.pladema.sgx.error.controller.dto.ApiErrorMessage;
+import net.pladema.sgx.error.controller.dto.ApiErrorMessageDto;
 import net.pladema.establishment.controller.constraints.validator.BackofficeBedValidator;
 import net.pladema.establishment.repository.BedRepository;
 import net.pladema.establishment.repository.entity.Bed;
-import net.pladema.internation.service.internment.InternmentEpisodeExternalService;
+import net.pladema.clinichistory.hospitalization.controller.externalservice.InternmentEpisodeExternalService;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
 
 @RestController
@@ -39,7 +39,7 @@ public class BackofficeBedController extends AbstractBackofficeController<Bed, I
 	public ResponseEntity<Object> handleValidationExceptions(ConstraintViolationException ex, WebRequest request) {
 		String sqlError = NestedExceptionUtils.getMostSpecificCause(ex).getLocalizedMessage();
 		String constraintCode = constraintTocode.getOrDefault(ex.getConstraintName(), "constraint-default");
-		ApiErrorMessage apiErrors = new ApiErrorMessage(constraintCode, sqlError);
+		ApiErrorMessageDto apiErrors = new ApiErrorMessageDto(constraintCode, sqlError);
 		return new ResponseEntity<>(apiErrors, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 	}
 

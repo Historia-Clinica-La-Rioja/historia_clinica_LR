@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AuthenticationService } from '../../services/authentication.service';
 import { catchError } from 'rxjs/operators';
-import { ApiErrorMessage } from '@api-rest/api-model';
+import { ApiErrorMessageDto } from '@api-rest/api-model';
 
 @Component({
 	selector: 'app-login',
@@ -10,7 +10,7 @@ import { ApiErrorMessage } from '@api-rest/api-model';
 	styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-	public apiError: ApiErrorMessage = null;
+	public apiError: ApiErrorMessageDto = null;
 	public form: FormGroup;
 	constructor(
 		private formBuilder: FormBuilder,
@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
 				this.form.value.username,
 				this.form.value.password,
 			).pipe(
-				catchError((err: ApiErrorMessage) => {
+				catchError((err: ApiErrorMessageDto) => {
 					this.apiError = err;
 					this.form.enable();
 					throw err;

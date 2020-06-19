@@ -1,6 +1,6 @@
 package net.pladema.staff.controller.service;
 
-import net.pladema.internation.controller.internment.dto.HealthCareProfessionalGroupDto;
+import net.pladema.clinichistory.hospitalization.controller.dto.HealthCareProfessionalGroupDto;
 
 public interface HealthcareProfessionalService {
 

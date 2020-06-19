@@ -11,7 +11,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
-import net.pladema.sgx.error.controller.dto.ApiErrorMessage;
+import net.pladema.sgx.error.controller.dto.ApiErrorMessageDto;
 import net.pladema.sgx.exceptions.BackofficeValidationException;
 import net.pladema.sgx.exceptions.NotFoundException;
 import net.pladema.sgx.exceptions.PermissionDeniedException;
@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
-import net.pladema.sgx.error.controller.dto.ApiError;
+import net.pladema.sgx.error.controller.dto.ApiErrorDto;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice
@@ -59,7 +59,7 @@ public class RestExceptionHandler {
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler({ ConstraintViolationException.class })
-	public ApiError handleValidationExceptions(ConstraintViolationException ex, WebRequest request) {
+	public ApiErrorDto handleValidationExceptions(ConstraintViolationException ex, WebRequest request) {
 		List<String> errors = new ArrayList<>();
 		for (ConstraintViolation<?> violation : ex.getConstraintViolations()){
 
@@ -68,7 +68,7 @@ public class RestExceptionHandler {
 			else
 				errors.add(violation.getPropertyPath() + ": " + violation.getMessage());
 		}
-		return new ApiError("Constraint violation", errors);
+		return new ApiErrorDto("Constraint violation", errors);
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -82,9 +82,9 @@ public class RestExceptionHandler {
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler({ BadCredentialsException.class })
-	public ResponseEntity<ApiErrorMessage> invalidCredentials(BadCredentialsException ex, Locale locale) {
+	public ResponseEntity<ApiErrorMessageDto> invalidCredentials(BadCredentialsException ex, Locale locale) {
 		LOG.warn(ex.getMessage(), ex);
-		return new ResponseEntity<>(new ApiErrorMessage(ex.getMessage(), "Nombre de usuario o clave inválidos"), HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(new ApiErrorMessageDto(ex.getMessage(), "Nombre de usuario o clave inválidos"), HttpStatus.BAD_REQUEST);
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -106,35 +106,35 @@ public class RestExceptionHandler {
 
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	@ExceptionHandler(NotFoundException.class)
-	public ResponseEntity<ApiErrorMessage> notFound(NotFoundException ex) {
+	public ResponseEntity<ApiErrorMessageDto> notFound(NotFoundException ex) {
 		LOG.info(ex.getMessage());
 		LOG.debug(ex.getMessage(), ex);
-		return new ResponseEntity<>(new ApiErrorMessage(ex.messageId, ex.getMessage()), HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(new ApiErrorMessageDto(ex.messageId, ex.getMessage()), HttpStatus.NOT_FOUND);
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(IllegalArgumentException.class)
-	public ApiErrorMessage handleIllegalArgumentExceptions(IllegalArgumentException ex, Locale locale) {
+	public ApiErrorMessageDto handleIllegalArgumentExceptions(IllegalArgumentException ex, Locale locale) {
 		return handleRuntimeException(ex, locale);
 	}
 	
 	@ResponseStatus(HttpStatus.FORBIDDEN)
 	@ExceptionHandler(PermissionDeniedException.class)
-	public ResponseEntity<ApiErrorMessage> permissionDenied(PermissionDeniedException ex) {
+	public ResponseEntity<ApiErrorMessageDto> permissionDenied(PermissionDeniedException ex) {
 		LOG.warn(ex.getMessage(), ex);
-		return new ResponseEntity<>(new ApiErrorMessage("forbidden", ex.getMessage()), HttpStatus.FORBIDDEN);
+		return new ResponseEntity<>(new ApiErrorMessageDto("forbidden", ex.getMessage()), HttpStatus.FORBIDDEN);
 	}
 	
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler({BackofficeValidationException.class})
-	public ApiErrorMessage handleBackofficeValidationException(BackofficeValidationException ex, Locale locale) {
+	public ApiErrorMessageDto handleBackofficeValidationException(BackofficeValidationException ex, Locale locale) {
 		return handleRuntimeException(ex, locale);
 	}
 
-	private ApiErrorMessage handleRuntimeException(RuntimeException ex, Locale locale) {
+	private ApiErrorMessageDto handleRuntimeException(RuntimeException ex, Locale locale) {
 		String errorMessage = messageSource.getMessage(ex.getMessage(), null, locale);
 		LOG.error(errorMessage, ex);
-		return new ApiErrorMessage(
+		return new ApiErrorMessageDto(
 				ex.getMessage(),
 				errorMessage
 		);

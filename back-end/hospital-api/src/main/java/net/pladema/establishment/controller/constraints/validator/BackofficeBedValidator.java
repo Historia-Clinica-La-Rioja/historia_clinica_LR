@@ -3,7 +3,7 @@ package net.pladema.establishment.controller.constraints.validator;
 import org.springframework.stereotype.Component;
 
 import net.pladema.establishment.repository.entity.Bed;
-import net.pladema.internation.service.internment.InternmentEpisodeExternalService;
+import net.pladema.clinichistory.hospitalization.controller.externalservice.InternmentEpisodeExternalService;
 import net.pladema.sgx.backoffice.rest.BackofficeEntityValidatorAdapter;
 import net.pladema.sgx.exceptions.BackofficeValidationException;
 

@@ -4,7 +4,7 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import { switchMap, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { ApiErrorMessage } from '@api-rest/api-model';
+import { ApiErrorMessageDto } from '@api-rest/api-model';
 
 @Component({
 	selector: 'app-password-reset',
@@ -63,7 +63,7 @@ export class PasswordResetComponent implements OnInit {
 						data
 					};
 				},
-				(error: ApiErrorMessage) => {
+				(error: ApiErrorMessageDto) => {
 					this.apiResponse = {
 						error
 					};

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 
-import net.pladema.sgx.error.controller.dto.ApiErrorMessage;
+import net.pladema.sgx.error.controller.dto.ApiErrorMessageDto;
 import net.pladema.establishment.repository.SectorRepository;
 import net.pladema.establishment.repository.entity.Sector;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
@@ -37,7 +37,7 @@ public class BackofficeSectorController extends AbstractBackofficeController<Sec
 		String sqlError = NestedExceptionUtils.getMostSpecificCause(ex).getLocalizedMessage();
 		//TODO: usar un ApiErrorMessage propio de backoffice
 		String constraintCode = constraintTocode.getOrDefault(ex.getConstraintName(), "constraint-default");
-		ApiErrorMessage apiErrors = new ApiErrorMessage(constraintCode, sqlError);
+		ApiErrorMessageDto apiErrors = new ApiErrorMessageDto(constraintCode, sqlError);
 		return new ResponseEntity<>(apiErrors, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 	}
 	

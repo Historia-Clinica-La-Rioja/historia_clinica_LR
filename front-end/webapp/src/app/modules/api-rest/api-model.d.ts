@@ -91,12 +91,12 @@ export interface AnthropometricDataDto extends Serializable {
     weight?: ClinicalObservationDto;
 }
 
-export interface ApiError {
+export interface ApiErrorDto {
     errors: string[];
     message: string;
 }
 
-export interface ApiErrorMessage {
+export interface ApiErrorMessageDto {
     code: string;
     text: string;
 }
@@ -452,15 +452,6 @@ export interface PatientSearchDto {
     idPatient: number;
     person: BMPersonDto;
     ranking: number;
-}
-
-export interface PatientSearchFilter {
-    birthDate: Date;
-    firstName: string;
-    genderId: number;
-    identificationNumber: string;
-    identificationTypeId: number;
-    lastName: string;
 }
 
 export interface PatientType extends Serializable {
