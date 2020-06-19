@@ -49,6 +49,13 @@ public class PatientServiceImpl implements PatientService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
+	public List<PatientSearch> searchPatientOptionalFilters(PatientSearchFilter searchFilter) {
+		return patientRepository.getAllByOptionalFilter(searchFilter.getFirstName(),searchFilter.getLastName(),
+				searchFilter.getGenderId(), searchFilter.getIdentificationTypeId(),searchFilter.getIdentificationNumber(), searchFilter.getBirthDate());
+	}
+
+	@Override
 	public Optional<Patient> getPatient(Integer patientId) {
 		LOG.debug("Input data -> {}", patientId);
 		Optional<Patient> result = patientRepository.findById(patientId);

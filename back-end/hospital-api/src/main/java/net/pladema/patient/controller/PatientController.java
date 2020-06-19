@@ -102,7 +102,20 @@ public class PatientController {
 
 		return ResponseEntity.ok(patientMapper.fromListPatientSearch(resultado));
 	}
-	
+
+	@GetMapping(value = "/optionalfilter")
+	public ResponseEntity<List<PatientSearchDto>> searchPatientOptionalFilters(@RequestParam String searchFilterStr) {
+		LOG.debug("Input data -> searchFilterStr {} ", searchFilterStr);
+		PatientSearchFilter searchFilter = null;
+		try {
+			searchFilter = jackson.readValue(searchFilterStr, PatientSearchFilter.class);
+		} catch (IOException e) {
+			LOG.error(String.format("Error mappeando filter: %s", searchFilterStr), e);
+		}
+		List<PatientSearch> resultado = patientService.searchPatientOptionalFilters(searchFilter);
+
+		return ResponseEntity.ok(patientMapper.fromListPatientSearch(resultado));
+	}
 
 	@PostMapping
 	@Transactional
