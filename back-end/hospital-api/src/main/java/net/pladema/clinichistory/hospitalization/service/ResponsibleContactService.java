@@ -1,9 +1,9 @@
 package net.pladema.clinichistory.hospitalization.service;
 
-import net.pladema.clinichistory.hospitalization.controller.dto.ResponsibleContactDto;
+import net.pladema.clinichistory.hospitalization.service.domain.ResponsibleContactBo;
 
 public interface ResponsibleContactService {
 
-    ResponsibleContactDto addResponsibleContact(ResponsibleContactDto contact, Integer internmentEpisodeId);
+    ResponsibleContactBo addResponsibleContact(ResponsibleContactBo contact, Integer internmentEpisodeId);
 
 }

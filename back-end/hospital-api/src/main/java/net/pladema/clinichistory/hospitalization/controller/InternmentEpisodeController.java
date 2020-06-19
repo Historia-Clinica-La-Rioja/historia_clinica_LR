@@ -1,24 +1,25 @@
 package net.pladema.clinichistory.hospitalization.controller;
 
 import io.swagger.annotations.Api;
-import net.pladema.clinichistory.hospitalization.controller.dto.PatientDischargeDto;
-import net.pladema.establishment.controller.service.BedExternalService;
-import net.pladema.featureflags.service.FeatureFlagsService;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentDischargeValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
 import net.pladema.clinichistory.hospitalization.controller.dto.InternmentEpisodeADto;
 import net.pladema.clinichistory.hospitalization.controller.dto.InternmentEpisodeDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.InternmentSummaryDto;
+import net.pladema.clinichistory.hospitalization.controller.dto.PatientDischargeDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.summary.InternmentEpisodeBMDto;
 import net.pladema.clinichistory.hospitalization.controller.mapper.InternmentEpisodeMapper;
 import net.pladema.clinichistory.hospitalization.controller.mapper.PatientDischargeMapper;
+import net.pladema.clinichistory.hospitalization.controller.mapper.ResponsibleContactMapper;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.InternmentEpisodeStatus;
-import net.pladema.clinichistory.hospitalization.service.patientDischarge.PatientDischargeService;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.ResponsibleContactService;
 import net.pladema.clinichistory.hospitalization.service.domain.InternmentSummaryBo;
 import net.pladema.clinichistory.hospitalization.service.domain.PatientDischargeBo;
+import net.pladema.clinichistory.hospitalization.service.patientDischarge.PatientDischargeService;
+import net.pladema.clinichistory.ips.repository.masterdata.entity.InternmentEpisodeStatus;
+import net.pladema.establishment.controller.service.BedExternalService;
+import net.pladema.featureflags.service.FeatureFlagsService;
 import net.pladema.sgx.exceptions.NotFoundException;
 import net.pladema.sgx.featureflags.AppFeature;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
@@ -59,12 +60,17 @@ public class InternmentEpisodeController {
 
 	private final PatientDischargeService patientDischargeService;
 
+	private final ResponsibleContactMapper responsibleContactMapper;
+
 	public InternmentEpisodeController(InternmentEpisodeService internmentEpisodeService,
 									   HealthcareProfessionalExternalService healthcareProfessionalExternalService,
-									   InternmentEpisodeMapper internmentEpisodeMapper, BedExternalService bedExternalService,
-									   PatientDischargeMapper patientDischargeMapper, ResponsibleContactService responsibleContactService,
+									   InternmentEpisodeMapper internmentEpisodeMapper,
+									   BedExternalService bedExternalService,
+									   PatientDischargeMapper patientDischargeMapper,
+									   ResponsibleContactService responsibleContactService,
 									   FeatureFlagsService featureFlagsService,
-									   PatientDischargeService patientDischargeService) {
+									   PatientDischargeService patientDischargeService,
+									   ResponsibleContactMapper responsibleContactMapper) {
 		this.internmentEpisodeService = internmentEpisodeService;
 		this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
 		this.internmentEpisodeMapper = internmentEpisodeMapper;
@@ -73,6 +79,7 @@ public class InternmentEpisodeController {
 		this.responsibleContactService = responsibleContactService;
 		this.featureFlagsService = featureFlagsService;
 		this.patientDischargeService = patientDischargeService;
+		this.responsibleContactMapper = responsibleContactMapper;
 	}
 
 	@InternmentValid
@@ -101,7 +108,7 @@ public class InternmentEpisodeController {
         bedExternalService.updateBedStatusOccupied(internmentEpisodeADto.getBedId());
         if (internmentEpisodeADto.getResponsibleDoctorId() != null)
         	healthcareProfessionalExternalService.addHealthcareProfessionalGroup(result.getId(), internmentEpisodeADto.getResponsibleDoctorId());
-		responsibleContactService.addResponsibleContact(internmentEpisodeADto.getResponsibleContact(), result.getId());
+		responsibleContactService.addResponsibleContact(responsibleContactMapper.toResponsibleContactBo(internmentEpisodeADto.getResponsibleContact()), result.getId());
         LOG.debug("Output -> {}", result);
         return  ResponseEntity.ok().body(result);
     }

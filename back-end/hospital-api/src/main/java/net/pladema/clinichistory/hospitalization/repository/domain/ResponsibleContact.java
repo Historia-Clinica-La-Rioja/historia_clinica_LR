@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.hospitalization.repository.domain;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -12,6 +13,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class ResponsibleContact implements Serializable {
 
     @Id
@@ -26,4 +28,11 @@ public class ResponsibleContact implements Serializable {
 
     @Column(name = "relationship", length = 100)
     private String relationship;
+
+    public ResponsibleContact(String fullName, String phoneNumber, String relationship){
+        this.fullName = fullName;
+        this.phoneNumber = phoneNumber;
+        this.relationship = relationship;
+    }
+
 }

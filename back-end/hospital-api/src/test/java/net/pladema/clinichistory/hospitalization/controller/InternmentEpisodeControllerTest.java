@@ -1,18 +1,19 @@
 package net.pladema.clinichistory.hospitalization.controller;
 
 import net.pladema.BaseControllerTest;
+import net.pladema.clinichistory.documents.repository.DocumentRepository;
 import net.pladema.clinichistory.hospitalization.controller.mapper.InternmentEpisodeMapper;
 import net.pladema.clinichistory.hospitalization.controller.mapper.PatientDischargeMapper;
+import net.pladema.clinichistory.hospitalization.controller.mapper.ResponsibleContactMapper;
 import net.pladema.clinichistory.hospitalization.controller.mocks.MocksInternmentPatient;
+import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
+import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;
+import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
+import net.pladema.clinichistory.hospitalization.service.ResponsibleContactService;
+import net.pladema.clinichistory.hospitalization.service.patientDischarge.PatientDischargeService;
 import net.pladema.establishment.controller.service.BedExternalService;
 import net.pladema.establishment.repository.InstitutionRepository;
 import net.pladema.featureflags.service.FeatureFlagsService;
-import net.pladema.clinichistory.documents.repository.DocumentRepository;
-import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;
-import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
-import net.pladema.clinichistory.hospitalization.service.patientDischarge.PatientDischargeService;
-import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
-import net.pladema.clinichistory.hospitalization.service.ResponsibleContactService;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.junit.Before;
 import org.junit.Test;
@@ -71,7 +72,11 @@ public class InternmentEpisodeControllerTest extends BaseControllerTest {
 
 	@MockBean
 	private PatientDischargeService patientDischargeService;
-	
+
+	@MockBean
+	private ResponsibleContactMapper responsibleContactMapper;
+
+
 	@Before
 	public void setup() {
 	}
