@@ -1,6 +1,6 @@
 package net.pladema.internation.service.internment.impl;
 
-import net.pladema.internation.repository.projections.InternmentMasterDataProjection;
+import net.pladema.sgx.masterdata.repository.MasterDataProjection;
 import net.pladema.internation.service.internment.InternmentMasterDataService;
 import net.pladema.sgx.masterdata.repository.MasterdataRepository;
 import org.slf4j.Logger;
@@ -21,7 +21,7 @@ public class InternmentMasterDataServiceImpl implements InternmentMasterDataServ
     }
 
     @Override
-    public <T> Collection<InternmentMasterDataProjection> findAll(Class<T> clazz, String...filterIds) {
+    public <T> Collection<MasterDataProjection> findAll(Class<T> clazz, String...filterIds) {
         LOG.debug("Input parameters -> {}", clazz);
         return masterdataRepository.findAllInternmentProjectedBy(clazz, filterIds);
     }

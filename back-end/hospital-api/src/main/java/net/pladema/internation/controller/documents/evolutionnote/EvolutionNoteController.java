@@ -20,7 +20,7 @@ import net.pladema.internation.service.documents.evolutionnote.UpdateEvolutionNo
 import net.pladema.internation.service.documents.evolutionnote.domain.EvolutionNoteBo;
 import net.pladema.internation.service.documents.evolutionnote.domain.evolutiondiagnosis.EvolutionDiagnosisBo;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
-import net.pladema.sgx.pdf.PdfService;
+import net.pladema.pdf.service.PdfService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;

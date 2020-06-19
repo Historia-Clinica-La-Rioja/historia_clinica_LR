@@ -1,6 +1,5 @@
 package net.pladema.sgx.masterdata.repository;
 
-import net.pladema.internation.repository.projections.InternmentMasterDataProjection;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +21,7 @@ public class MasterdataRepositoryImpl implements MasterdataRepository {
     @SuppressWarnings("unchecked")
     @Override
     @Transactional(readOnly = true)
-    public <T> Collection<InternmentMasterDataProjection> findAllInternmentProjectedBy(Class<T> clazz, String...filterIds) {
+    public <T> Collection<MasterDataProjection> findAllInternmentProjectedBy(Class<T> clazz, String...filterIds) {
 
         String sqlString = "SELECT p FROM " + clazz.getSimpleName() + " p ";
 

@@ -1,4 +1,4 @@
-package net.pladema.sgx.pdf;
+package net.pladema.pdf.service;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -89,7 +89,8 @@ public class PdfService {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             PdfWriter writer = PdfWriter.getInstance(document, os);
             document.open();
-            InputStream is = new ByteArrayInputStream(templateEngine.process(templateName, ctx).getBytes());
+            String templateNameWithFlavor = templateName+"-"+flavor;
+            InputStream is = new ByteArrayInputStream(templateEngine.process(templateNameWithFlavor, ctx).getBytes());
             XMLWorkerHelper.getInstance().parseXHtml(writer, document, is);
             document.close();
             writer.close();

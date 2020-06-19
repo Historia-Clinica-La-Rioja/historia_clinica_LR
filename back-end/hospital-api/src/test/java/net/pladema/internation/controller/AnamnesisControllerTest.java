@@ -22,7 +22,7 @@ import net.pladema.internation.service.documents.anamnesis.CreateAnamnesisServic
 import net.pladema.internation.service.documents.anamnesis.UpdateAnamnesisService;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
 import net.pladema.patient.controller.service.PatientExternalService;
-import net.pladema.sgx.pdf.PdfService;
+import net.pladema.pdf.service.PdfService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -14,7 +14,7 @@ import net.pladema.internation.service.documents.evolutionnote.domain.EvolutionN
 import net.pladema.internation.service.internment.InternmentEpisodeService;
 import net.pladema.internation.service.internment.maindiagnoses.MainDiagnosesService;
 import net.pladema.internation.service.internment.maindiagnoses.domain.MainDiagnosisBo;
-import net.pladema.sgx.pdf.PdfService;
+import net.pladema.pdf.service.PdfService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;

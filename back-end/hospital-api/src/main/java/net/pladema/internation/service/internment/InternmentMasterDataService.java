@@ -1,10 +1,10 @@
 package net.pladema.internation.service.internment;
 
-import net.pladema.internation.repository.projections.InternmentMasterDataProjection;
+import net.pladema.sgx.masterdata.repository.MasterDataProjection;
 
 import java.util.Collection;
 
 public interface InternmentMasterDataService {
 
-    <T> Collection<InternmentMasterDataProjection> findAll(Class<T> clazz, String...filterIds);
+    <T> Collection<MasterDataProjection> findAll(Class<T> clazz, String...filterIds);
 }

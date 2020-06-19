@@ -8,7 +8,7 @@ import net.pladema.internation.repository.masterdata.entity.DocumentType;
 import net.pladema.internation.service.documents.anamnesis.AnamnesisReportService;
 import net.pladema.internation.service.documents.anamnesis.domain.AnamnesisBo;
 import net.pladema.internation.service.internment.InternmentEpisodeService;
-import net.pladema.sgx.pdf.PdfService;
+import net.pladema.pdf.service.PdfService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;

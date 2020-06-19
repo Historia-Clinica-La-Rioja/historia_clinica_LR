@@ -1,4 +1,4 @@
-package net.pladema.sgx.pdf;
+package net.pladema.pdf.service;
 
 import net.pladema.internation.repository.masterdata.entity.DocumentType;
 import org.slf4j.Logger;
