@@ -29,7 +29,7 @@ public interface InternmentEpisodeService {
 
     LocalDate getEntryDate(Integer internmentEpisodeId);
 
-    boolean haveAnamnesisAndEvolutionNote(Integer internmentEpisodeId);
+    boolean canCreateEpicrisis(Integer internmentEpisodeId);
  
     PatientDischargeBo savePatientDischarge(PatientDischargeBo patientDischarge);
     

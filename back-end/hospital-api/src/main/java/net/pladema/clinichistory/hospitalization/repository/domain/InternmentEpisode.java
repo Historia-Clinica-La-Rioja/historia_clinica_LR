@@ -37,19 +37,19 @@ public class InternmentEpisode extends InternationAuditableEntity {
 	@Column(name = "bed_id", nullable = false)
 	private Integer bedId;
 
-	@Column(name = "clinical_specialty_id", length = 20, nullable = true)
+	@Column(name = "clinical_specialty_id", length = 20)
 	private Integer clinicalSpecialtyId;
 
 	@Column(name = "status_id", nullable = false)
 	private Short statusId;
 
-	@Column(name = "note_id", nullable = true)
+	@Column(name = "note_id")
 	private Long noteId;
 
-	@Column(name = "anamnesis_doc_id", nullable = true)
+	@Column(name = "anamnesis_doc_id")
 	private Long anamnesisDocId;
 
-	@Column(name = "epicrisis_doc_id", nullable = true)
+	@Column(name = "epicrisis_doc_id")
 	private Long epicrisisDocId;
 
 	@Column(name = "entry_date")
@@ -60,10 +60,6 @@ public class InternmentEpisode extends InternationAuditableEntity {
 
 	@Column(name = "institution_id")
 	private Integer institutionId;
-
-	public boolean hasEpicrisisDocument(){
-		return epicrisisDocId != null;
-	}
 
 	@Override
 	public boolean equals(Object o) {

@@ -138,6 +138,7 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             "FROM InternmentEpisode ie " +
             "JOIN Document da ON (da.id = ie.anamnesisDocId and da.statusId = '"+ DocumentStatus.FINAL + "') " +
             "WHERE ie.id = :internmentEpisodeId " +
+            "AND ie.epicrisisDocId IS NULL " +
             "AND EXISTS (" +
             "               SELECT d.id " +
             "               FROM EvolutionNoteDocument evnd " +
@@ -145,7 +146,7 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             "               WHERE evnd.pk.internmentEpisodeId = ie.id " +
             "               AND d.statusId = '"+ DocumentStatus.FINAL + "'" +
             "           )")
-    boolean haveAnamnesisAndEvolutionNote(@Param("internmentEpisodeId")  Integer internmentEpisodeId);
+    boolean canCreateEpicrisis(@Param("internmentEpisodeId")  Integer internmentEpisodeId);
 
     @Transactional(readOnly = true)
     @Query(" SELECT ie " +

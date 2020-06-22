@@ -3,7 +3,7 @@ package net.pladema.clinichistory.hospitalization.controller.documents.epicrisis
 import com.itextpdf.text.DocumentException;
 import io.swagger.annotations.Api;
 import net.pladema.clinichistory.hospitalization.controller.constraints.DocumentValid;
-import net.pladema.clinichistory.hospitalization.controller.constraints.CreateUpdateEpicrisisValid;
+import net.pladema.clinichistory.hospitalization.controller.constraints.CanCreateEpicrisis;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
 import net.pladema.clinichistory.hospitalization.controller.documents.epicrisis.dto.EpicrisisDto;
 import net.pladema.clinichistory.hospitalization.controller.documents.epicrisis.dto.EpicrisisGeneralStateDto;
@@ -77,7 +77,7 @@ public class EpicrisisController {
     @PostMapping
     @Transactional
     @InternmentValid
-    @CreateUpdateEpicrisisValid
+    @CanCreateEpicrisis
     public ResponseEntity<ResponseEpicrisisDto> createDocument(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
@@ -97,7 +97,6 @@ public class EpicrisisController {
 
     @PutMapping("/{epicrisisId}")
     @InternmentValid
-    @CreateUpdateEpicrisisValid
     @DocumentValid(isConfirmed = false, documentType = DocumentType.EPICRISIS)
     public ResponseEntity<ResponseEpicrisisDto> updateDocument(
             @PathVariable(name = "institutionId") Integer institutionId,

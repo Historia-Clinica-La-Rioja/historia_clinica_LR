@@ -114,9 +114,9 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 	}
 
 	@Override
-	public boolean haveAnamnesisAndEvolutionNote(Integer internmentEpisodeId) {
+	public boolean canCreateEpicrisis(Integer internmentEpisodeId) {
 		LOG.debug(INPUT_PARAMETERS_INTERNMENT_EPISODE, internmentEpisodeId);
-		boolean result = internmentEpisodeRepository.haveAnamnesisAndEvolutionNote(internmentEpisodeId);
+		boolean result = internmentEpisodeRepository.canCreateEpicrisis(internmentEpisodeId);
 		LOG.debug(LOGGING_OUTPUT, result);
 		return result;
 	}
