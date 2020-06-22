@@ -42,7 +42,7 @@
 				<mat-label>Sexo</mat-label>
 				<div>
 					<mat-radio-group name="gender" id="gender" formControlName="gender">
-						<mat-radio-button *ngFor="let gender of genderOptions" [value]="gender.id">
+						<mat-radio-button id="genderButton" *ngFor="let gender of genderOptions" [value]="gender.id">
 							{{gender.description}}
 						</mat-radio-button>
 					</mat-radio-group>
