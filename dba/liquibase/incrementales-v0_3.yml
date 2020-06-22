@@ -1,3 +1,57 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v0_2 
+- logicalFilePath: incrementales-v0_3
 
+- changeSet:   
+    id:  createView-v-institution-postgresql  
+    author:  saguero
+    dbms: postgresql
+    changes:  
+    -  createView: 
+        viewName:  v_institution 
+        fullDefinition:  false    
+        replaceIfExists:  true  
+        schemaName:  public  
+        selectQuery: |-
+            select	distinct ie.institution_id, ie.id as "internment_episode_id", ad.longitud, ad.latitud, diagnosis.covid_presumptive 					
+            from 	internment_episode ie 
+            join    institution i on ( ie.institution_id = i.id )
+            join    address ad on i.address_id = ad.id 
+            join    bed b on ie.bed_id = b.id
+            left join lateral( 	
+                select 	1 "covid_presumptive"
+                from 	document_health_condition dhc 
+                join document d on ( dhc.document_id = d.id)
+                join internment_episode ieSub on ( d.internment_episode_id = ieSub.id )
+                join health_condition hc on ( dhc.health_condition_id = hc.id )
+                where 	ieSub.institution_id = i.id
+                        and ieSub.id = ie.id
+                        and hc.sctid_code = '186747009'
+                        and hc.verification_status_id = '76104008'
+            ) as diagnosis on true
+            where 	ie.status_id = 1 
+                    and b."free" = false 
+
+- changeSet:   
+    id:  createView-v-institution-vital-sign  
+    author:  saguero  
+    changes:  
+    -  createView: 
+        viewName:  v_institution_vital_sign 
+        fullDefinition:  false    
+        replaceIfExists:  true  
+        schemaName:  public  
+        selectQuery: |-
+            select  row_number() over() as id, 
+                    ie.institution_id, 
+                    ie.id as "internment_episode_id", 
+                    ovs.effective_time,
+                    date(now()) - date(ovs.effective_time) as "load_days",
+                    ovs.sctid_code 
+            from	document doc
+            join internment_episode ie 
+            on ( doc.internment_episode_id = ie.id )
+            join document_vital_sign dvs 
+            on ( doc.id = dvs.document_id )
+            join observation_vital_sign ovs 
+            on ( dvs.observation_vital_sign_id = ovs.id )
+        
