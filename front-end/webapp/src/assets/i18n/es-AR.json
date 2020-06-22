@@ -20,7 +20,11 @@
 		"UPDATE": "Actualizar"
 	},
 	"forms": {
-		"REQUIRED": "El campo es requerido"
+		"REQUIRED": "El campo es requerido",
+		"MAX_LENGTH_ERROR": "Introduzca como máximo {{max}} caracteres",
+		"INVALID_DATE": "La fecha ingresada no es válida",
+		"REQUIRING_FIELD_FOR_SEARCH":"Debe ingresar al menos un campo para la búsqueda",
+		"SEARCH_RESULTS": "Resultados de la búsqueda"
 	},
 	"messages": {
 		"NO_DATA": "No hay información para mostrar"

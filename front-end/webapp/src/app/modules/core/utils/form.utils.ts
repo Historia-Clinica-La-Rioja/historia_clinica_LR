@@ -32,3 +32,7 @@ export function scrollIntoError(form: FormGroup, el: ElementRef) {
 		return el.nativeElement.querySelector('[formcontrolname="' + controlName + '"]');
 	}
 }
+
+export function atLeastOneValueInFormGroup(form: FormGroup): boolean {
+	return !Object.values(form.value).every(x => (x === null || x === ''));
+}

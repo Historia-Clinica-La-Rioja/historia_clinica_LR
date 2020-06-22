@@ -73,6 +73,7 @@ export function createTranslateLoader(http: HttpClient, publicService: PublicSer
 			{ prefix: './assets/i18n/institucion/', suffix: '.json' },
 			{ prefix: './assets/i18n/internacion/', suffix: '.json' },
 			{ prefix: './assets/i18n/pacientes/', suffix: '.json' },
+			{ prefix: './assets/i18n/ambulatoria/', suffix: '.json' },
 		]
 	);
 }
