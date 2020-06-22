@@ -23,7 +23,7 @@ public class EpicrisisDto implements Serializable {
     @Nullable
     private EpicrisisObservationsDto notes;
 
-    @Nullable
+    @NotNull
     private DiagnosisDto mainDiagnosis;
 
     @NotNull

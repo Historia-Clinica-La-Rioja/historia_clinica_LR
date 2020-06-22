@@ -3,16 +3,15 @@ package net.pladema.clinichistory.hospitalization.service.epicrisis.impl;
 import net.pladema.clinichistory.documents.repository.entity.Document;
 import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.service.NoteService;
+import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.CreateEpicrisisService;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.domain.EpicrisisBo;
-import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.ips.service.AllergyService;
 import net.pladema.clinichistory.ips.service.HealthConditionService;
 import net.pladema.clinichistory.ips.service.InmunizationService;
 import net.pladema.clinichistory.ips.service.MedicationService;
 import net.pladema.clinichistory.ips.service.domain.DocumentObservationsBo;
-import net.pladema.clinichistory.ips.service.domain.HealthConditionBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -64,8 +63,7 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
         loadNotes(document, Optional.ofNullable(epicrisis.getNotes()));
         document = documentService.save(document);
 
-        HealthConditionBo mainDiagnosis = healthConditionService.getMainDiagnosisGeneralState(internmentEpisodeId);
-        epicrisis.setMainDiagnosis(healthConditionService.loadMainDiagnosis(patientId, document.getId(), Optional.ofNullable(mainDiagnosis)));
+        epicrisis.setMainDiagnosis(healthConditionService.loadMainDiagnosis(patientId, document.getId(), Optional.of(epicrisis.getMainDiagnosis())));
         epicrisis.setDiagnosis(healthConditionService.loadDiagnosis(patientId, document.getId(), epicrisis.getDiagnosis()));
         epicrisis.setPersonalHistories(healthConditionService.loadPersonalHistories(patientId, document.getId(), epicrisis.getPersonalHistories()));
         epicrisis.setFamilyHistories(healthConditionService.loadFamilyHistories(patientId, document.getId(), epicrisis.getFamilyHistories()));
