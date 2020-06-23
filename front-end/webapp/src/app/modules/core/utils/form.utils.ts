@@ -32,5 +32,3 @@ export function scrollIntoError(form: FormGroup, el: ElementRef) {
 		return el.nativeElement.querySelector('[formcontrolname="' + controlName + '"]');
 	}
 }
-
-export const COVID_SNOMED = { id: "186747009", pt: "infección por coronavirus" }

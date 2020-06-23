@@ -10,7 +10,8 @@ import { HEALTH_CLINICAL_STATUS } from '../../constants/ids';
 import { Router } from '@angular/router';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { COVID_SNOMED } from '@core/utils/form.utils';
+
+export const COVID_SNOMED = { id: "186747009", pt: "infección por coronavirus" }
 
 @Component({
 	selector: 'app-diagnosis-summary',

@@ -7,7 +7,7 @@
 			</div>
 		</mat-card-title>
 		<ng-container *featureFlag="'habilitarBotonCovidDiagnosticoPresuntivo'">
-			<div *ngIf="covidAlert">
+			<div *ngIf="hasCovidAlert">
 				<button mat-icon-button (click)="covidAlertEvent.emit()">
 					<span class="material-icons">
 						pest_control
