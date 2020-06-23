@@ -5,6 +5,7 @@ import net.pladema.permissions.service.dto.RoleAssignment;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.List;
  * Implementa hasPermission que se puede acceder desde las anotaciones
  * de seguridad del estilo @PreAuthorize("hasPermission(....)").
  */
+@Component
 public class InstitutionPermissionEvaluator implements PermissionEvaluator {
     
 	@Override
