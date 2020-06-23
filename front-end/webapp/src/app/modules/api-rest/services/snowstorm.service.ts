@@ -17,7 +17,7 @@ export class SnowstormService {
 
 	private params = new HttpParams()
 		.set('termActive', 'true')
-		.set('preferredIn', `${PREFERRED_CONCEPT}%${ACCEPTABLE_CONCEPT}`)
+		// .set('preferredIn', `${PREFERRED_CONCEPT}%${ACCEPTABLE_CONCEPT}`) TODO: Adaptar preferredIn al nuevo ws de snowstorm
 		.set('limit', RESULTS_LIMIT);
 
 	private headers = new HttpHeaders().set('Accept-Language', 'es-AR;q=0.8,en-GB;q=0.6')
