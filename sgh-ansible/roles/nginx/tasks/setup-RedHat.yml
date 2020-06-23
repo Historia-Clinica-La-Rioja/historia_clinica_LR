@@ -1,0 +1,22 @@
+---
+- name: Make sure epel-release package is present
+  package:
+    name: epel-release
+    state: present
+
+- name: Make sure nginx package is present
+  package:
+    name: nginx
+    state: present
+
+- name: Start and enable Nginx
+  service:
+    daemon_reload: true
+    name: nginx
+    state: started
+    enabled: true
+  when: ansible_service_mgr == "systemd"
+
+- name: wait for nginx to start
+  wait_for: 
+    port: 80

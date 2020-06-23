@@ -1,0 +1,4 @@
+---
+  - hosts: frontservers
+    roles:
+      - role: nginx
