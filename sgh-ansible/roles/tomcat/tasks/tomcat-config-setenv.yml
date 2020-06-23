@@ -1,0 +1,30 @@
+---
+- name: Ensure setenv exists
+  file: 
+    state: touch
+    dest: "{{ CATALINA_HOME }}bin/setenv.sh" 
+- name: Add -Xms property to Tomcat, works like add or replace
+  lineinfile: 
+    state: present
+    dest: "{{ CATALINA_HOME }}bin/setenv.sh" 
+    #TODO: Arreglar esta expresion regular para que detecte la linea! seguramente falta escapar caracteres, se podria parchera usando wildcards
+    regexp: '^export CATALINA_OPTS="$CATALINA_OPTS -Xms'
+    line: 'export CATALINA_OPTS="$CATALINA_OPTS -Xms512m"'
+- name: Add -XX:MaxPermSize property to Tomcat, works like add or replace
+  lineinfile: 
+    state: present
+    dest: "{{ CATALINA_HOME }}bin/setenv.sh" 
+    regexp: '^export CATALINA_OPTS="$CATALINA_OPTS -XX:MaxPermSize'
+    line: 'export CATALINA_OPTS="$CATALINA_OPTS -XX:MaxPermSize=256m"'
+- name: Add -Xmx property to Tomcat, works like add or replace
+  lineinfile: 
+    state: present
+    dest: "{{ CATALINA_HOME }}bin/setenv.sh"
+    regexp: '^export CATALINA_OPTS="$CATALINA_OPTS -Xmx'
+    line: 'export CATALINA_OPTS="$CATALINA_OPTS -Xmx4g"'
+- name: Add -Xss property to Tomcat, works like add or replace
+  lineinfile: 
+    state: present
+    dest: "{{ CATALINA_HOME }}bin/setenv.sh"
+    regexp: '^export CATALINA_OPTS="$CATALINA_OPTS -Xss'
+    line: 'export CATALINA_OPTS="$CATALINA_OPTS -Xss512m"'
