@@ -34,5 +34,7 @@ services:
       dockerfile: pg.Dockerfile
     environment:
       POSTGRES_PASSWORD: Local123
+    ports:
+      - "5432:5432"
     container_name: postgres
     
