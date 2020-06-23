@@ -1,6 +1,5 @@
 package net.pladema.featureflags.service.impl;
 
-import java.util.EnumMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -20,8 +19,7 @@ public class FeatureFlagsServiceImpl implements FeatureFlagsService {
 
 	public FeatureFlagsServiceImpl(FlavorService flavorService) {
 		this.logger = LoggerFactory.getLogger(this.getClass());
-		this.flags = new EnumMap<>(AppFeature.class);
-		flavorService.getFeaturesState().forEach(flags::put);
+		this.flags = flavorService.getFeaturesState().getStates();
 	}
 
 	public boolean isOn(AppFeature feature) {
