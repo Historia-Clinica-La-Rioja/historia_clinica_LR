@@ -1,0 +1,12 @@
+---
+- name: Ensure psycopg2 is avalaible
+  package:
+    name: python3-psycopg2
+    state: present
+# Configure PostgreSQL.
+- import_tasks: users.yml
+- import_tasks: databases.yml
+
+- name: Pendiente
+  debug:
+    msg: "TODO: HACER LA MIGRACION"
