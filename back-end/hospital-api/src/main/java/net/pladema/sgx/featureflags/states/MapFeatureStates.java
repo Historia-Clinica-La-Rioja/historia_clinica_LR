@@ -1,9 +1,11 @@
-package net.pladema.sgx.featureflags;
+package net.pladema.sgx.featureflags.states;
 
 import java.util.EnumMap;
 import java.util.function.BiConsumer;
 
-public abstract class MapFeatureStates implements FlavoredFeatureStates {
+import net.pladema.sgx.featureflags.AppFeature;
+
+public abstract class MapFeatureStates implements InitialFeatureStates {
 	private final EnumMap<AppFeature, Boolean> map;
 
 	public MapFeatureStates() {

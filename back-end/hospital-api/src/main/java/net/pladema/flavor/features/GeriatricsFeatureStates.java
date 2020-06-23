@@ -3,9 +3,9 @@ package net.pladema.flavor.features;
 import java.util.EnumMap;
 
 import net.pladema.sgx.featureflags.AppFeature;
-import net.pladema.sgx.featureflags.MapFeatureStates;
+import net.pladema.sgx.featureflags.states.MapFeatureStates;
 
-public class GeriatricsFeatures extends MapFeatureStates {
+public class GeriatricsFeatureStates extends MapFeatureStates {
 
 	@Override
 	protected EnumMap<AppFeature, Boolean> initializeFeatures() {
