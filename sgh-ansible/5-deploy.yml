@@ -1,0 +1,11 @@
+---
+  - hosts: localhost
+    tasks:
+      - name : migrate
+        shell: ./migrate.sh
+  - hosts: frontservers
+    roles:
+      - role: sgh-front
+  - hosts: backservers
+    roles:
+      - role: sgh-back

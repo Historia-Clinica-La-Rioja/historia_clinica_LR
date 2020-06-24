@@ -2,11 +2,10 @@
   - hosts: databases
     roles:
          - role : database
-        #  - role : migrate
   - hosts: frontservers
     roles:
       - role: nginx
-      - role: sgh-front
+  - hosts: backservers
+    roles:
       - role: tomcat
-      - role: sgh-back
 
