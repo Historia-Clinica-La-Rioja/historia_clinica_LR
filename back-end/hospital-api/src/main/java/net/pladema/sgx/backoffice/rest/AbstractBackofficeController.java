@@ -34,6 +34,18 @@ public abstract class AbstractBackofficeController<E, I> {
     }
 
     public AbstractBackofficeController(
+            JpaRepository<E, I> repository,
+            BackofficePermissionValidator<E, I> permissionValidator,
+            BackofficeEntityValidator<E, I> entityValidator
+    ) {
+        this(
+                new BackofficeRepository<>(repository),
+                permissionValidator,
+                entityValidator
+        );
+    }
+
+    public AbstractBackofficeController(
             BackofficeStore<E, I> repository
     ) {
         this(
