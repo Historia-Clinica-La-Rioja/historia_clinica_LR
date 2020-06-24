@@ -5,50 +5,78 @@
 			<h3 [translate]="'internaciones.epicrisis.SUBTITLE'"></h3>
 		</section>
 
-		<section id="diagnosticos">
+		<section id="mainDiagnosis">
 			<h2 class="mat-h2" [translate]="'internaciones.epicrisis.diagnosticos.TITLE'"></h2>
+			<mat-card>
+				<mat-card-content>
+					<app-concepts-search *ngIf="!snomedConcept else diagnosisForm"
+										 [label]="'internaciones.anamnesis.diagnosticos.DIAGNOSIS'"
+										 (search)="openSearchDialog($event)">
+					</app-concepts-search>
+					<ng-template #diagnosisForm>
+						<form [formGroup]="formDiagnosis" (ngSubmit)="addToList()">
+							<mat-form-field appearance="outline">
+								<mat-label [translate]="'internaciones.anamnesis.diagnosticos.DIAGNOSIS'">
+								</mat-label>
+								<input matInput type="text" formControlName="snomed" name="snomed" readonly matTooltip="{{ snomedConcept.pt }}">
+								<button id="clear" mat-button matSuffix color="warn" mat-icon-button
+										(click)="resetForm()">
+									<mat-icon>close</mat-icon>
+								</button>
+							</mat-form-field>
+							<div align="end">
+								<button class="uppercase" mat-raised-button color="primary" type="submit">
+									<span [translate]="'internaciones.anamnesis.diagnosticos.ADD'"></span>
+								</button>
+							</div>
+						</form>
+					</ng-template>
+				</mat-card-content>
+			</mat-card>
+		</section>
 
-			<table mat-table [dataSource]="diagnosis.data" class="secondary">
-				<mat-radio-group formControlName="mainDiagnosis">
+		<section id="diagnosticos">
+						<table mat-table [dataSource]="diagnosticsEpicrisisService?.getTable().data" class="secondary">
+							<mat-radio-group formControlName="mainDiagnosis">
 
-				<ng-container matColumnDef="mainDiagnosis">
-					<th *matHeaderCellDef>Principal</th>
-					<td mat-cell *matCellDef="let row">
-						<mat-radio-button [value]="row"
-										  [disabled]="!isActive(row)"
-										  (change)="setConfirmed(row)">
-						</mat-radio-button>
-					</td>
-				</ng-container>
+								<ng-container matColumnDef="mainDiagnosis">
+									<th *matHeaderCellDef>Principal</th>
+									<td mat-cell *matCellDef="let row">
+										<mat-radio-button [value]="row"
+														  [disabled]="!diagnosticsEpicrisisService?.isSelectableAsMain(row)"
+														  (change)="diagnosticsEpicrisisService?.changeMainDiagnosis(row)">
+										</mat-radio-button>
+									</td>
+								</ng-container>
 
-				<ng-container *ngFor="let column of diagnosis.columns" [matColumnDef]="column.def">
-					<th *matHeaderCellDef>{{ column.header | translate }}</th>
-					<td mat-cell *matCellDef="let element"> {{ column.display(element) }} </td>
-				</ng-container>
+								<ng-container *ngFor="let column of diagnosticsEpicrisisService?.getTable().columns" [matColumnDef]="column.def">
+									<th *matHeaderCellDef>{{ column.header | translate }}</th>
+									<td mat-cell *matCellDef="let element"> {{ column.display(element) }} </td>
+								</ng-container>
 
-				<tr mat-header-row *matHeaderRowDef="diagnosis.displayedColumns"></tr>
-				<tr mat-row *matRowDef="let row; columns: diagnosis.displayedColumns;"></tr>
+								<tr mat-header-row *matHeaderRowDef="diagnosticsEpicrisisService?.getTable().displayedColumns"></tr>
+								<tr mat-row *matRowDef="let row; columns: diagnosticsEpicrisisService?.getTable().displayedColumns;"></tr>
 
-				<ng-container matColumnDef="select">
-					<th mat-header-cell class="actions" *matHeaderCellDef>
-						<mat-checkbox *ngIf="diagnosis.data.length !== 0"
-									  (change)="$event ? diagnosisMasterToggle() : null"
-									  [checked]="diagnosis.selection.hasValue() && isAllSelected(diagnosis.data, diagnosis.selection)"
-									  [indeterminate]="diagnosis.selection.hasValue() && !isAllSelected(diagnosis.data, diagnosis.selection)">
-						</mat-checkbox>
-					</th>
-					<td mat-cell class="actions" *matCellDef="let row">
-						<mat-checkbox (click)="$event.stopPropagation()"
-									  (change)="$event ? diagnosis.selection.toggle(row) : null"
-									  [checked]="diagnosis.selection.isSelected(row)"
-									  [disabled]="row.id === form.value.mainDiagnosis?.id">
+								<ng-container matColumnDef="select">
+									<th mat-header-cell class="actions" *matHeaderCellDef>
+										<mat-checkbox *ngIf="diagnosticsEpicrisisService?.getTable().data.length !== 0"
+													  (change)="$event ? diagnosticsEpicrisisService?.diagnosisMasterToggle() : null"
+													  [checked]="diagnosticsEpicrisisService?.selectionHasValue() && diagnosticsEpicrisisService?.isAllSelected()"
+													  [indeterminate]="diagnosticsEpicrisisService?.selectionHasValue() && !diagnosticsEpicrisisService?.isAllSelected()">
+										</mat-checkbox>
+									</th>
+									<td mat-cell class="actions" *matCellDef="let row">
+										<mat-checkbox (click)="$event.stopPropagation()"
+													  (change)="$event ? diagnosticsEpicrisisService?.toggle(row) : null"
+													  [checked]="diagnosticsEpicrisisService?.isSelected(row)"
+													  [disabled]="row.snomed.id === form.value.mainDiagnosis?.snomed.id">
 						</mat-checkbox>
 					</td>
 				</ng-container>
 				</mat-radio-group>
 
 			</table>
-			<app-no-data class="secondary" *ngIf="diagnosis.data.length === 0"></app-no-data>
+			<app-no-data class="secondary" *ngIf="diagnosticsEpicrisisService?.getTable().data.length === 0"></app-no-data>
 
 		</section>
 

@@ -3,13 +3,13 @@ import {
 	AllergyConditionDto,
 	DiagnosisDto,
 	EpicrisisDto,
-	HealthConditionDto,
 	HealthHistoryConditionDto,
 	InmunizationDto,
 	MasterDataInterface,
 	MedicationDto,
 	ResponseAnamnesisDto,
 	ResponseEpicrisisDto,
+	SnomedDto,
 } from '@api-rest/api-model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
@@ -23,6 +23,9 @@ import { ContextService } from '@core/services/context.service';
 import { TableCheckbox } from 'src/app/modules/material/model/table.model';
 import { TableService } from '@core/services/table.service';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
+import { SnomedSemanticSearch, SnomedService } from '../../services/snomed.service';
+import { SEMANTICS_CONFIG } from '../../constants/snomed-semantics';
+import { DiagnosisEpicrisisService } from '../../services/diagnosis-epicrisis.service';
 
 @Component({
 	selector: 'app-epicrisis-form',
@@ -31,6 +34,8 @@ import { InternmentStateService } from '@api-rest/services/internment-state.serv
 })
 export class EpicrisisFormComponent implements OnInit {
 
+	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
+
 	private internmentEpisodeId: number;
 	private patientId: number;
 	private healthClinicalStatus;
@@ -38,35 +43,15 @@ export class EpicrisisFormComponent implements OnInit {
 	isAllSelected = this.tableService.isAllSelected;
 	masterToggle = this.tableService.masterToggle;
 
-	internmentMainDiagnosis: DiagnosisDto;
-	alternativeDiagnostics: HealthConditionDto[];
+	diagnosticsEpicrisisService: DiagnosisEpicrisisService;
+
+	snomedConcept: SnomedDto;
 	verifications: MasterDataInterface<string>[];
 	anamnesis: ResponseAnamnesisDto;
 	form: FormGroup;
+	formDiagnosis: FormGroup;
 
 	medications: MedicationDto[] = [];
-	diagnosis: TableCheckbox<DiagnosisDto> = {
-		data: [],
-		columns: [
-			{
-				def: 'diagnosis',
-				header: 'internaciones.epicrisis.diagnosticos.table.columns.DIAGNOSIS',
-				display: ap => ap.snomed.pt
-			},
-			{
-				def: 'status',
-				header: 'internaciones.epicrisis.diagnosticos.table.columns.STATUS',
-				display: (row) => this.healthClinicalStatus?.find(status => status.id === row.statusId).description
-			},
-			{
-				def: 'verificacion',
-				header: 'internaciones.epicrisis.diagnosticos.table.columns.VERIFICATION',
-				display: (row) => this.verifications?.find(verification => verification.id === row.verificationId)?.description
-			},
-		],
-		displayedColumns: [],
-		selection: new SelectionModel<DiagnosisDto>(true, [])
-	};
 	personalHistories: TableCheckbox<HealthHistoryConditionDto> = {
 		data: [],
 		columns: [
@@ -132,9 +117,8 @@ export class EpicrisisFormComponent implements OnInit {
 		private readonly tableService: TableService,
 		private readonly contextService: ContextService,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
-		private readonly internmentStateService: InternmentStateService
-	) {
-		this.diagnosis.displayedColumns = (['mainDiagnosis']).concat(this.diagnosis.columns?.map(c => c.def)).concat(['select']);
+		private readonly internmentStateService: InternmentStateService,
+		private readonly snomedService: SnomedService) {
 		this.familyHistories.displayedColumns = this.familyHistories.columns?.map(c => c.def).concat(['select']);
 		this.personalHistories.displayedColumns = this.personalHistories.columns?.map(c => c.def).concat(['select']);
 		this.allergies.displayedColumns = this.allergies.columns?.map(c => c.def).concat(['select']);
@@ -147,11 +131,17 @@ export class EpicrisisFormComponent implements OnInit {
 			(params: ParamMap) => {
 				this.internmentEpisodeId = Number(params.get('idInternacion'));
 				this.patientId = Number(params.get('idPaciente'));
+				this.diagnosticsEpicrisisService = new DiagnosisEpicrisisService(this.internacionMasterDataService,
+					this.internmentStateService, this.tableService, this.internmentEpisodeId);
 			}
 		);
 
+		this.formDiagnosis = this.formBuilder.group({
+			snomed: [null, Validators.required]
+		});
+
 		this.form = this.formBuilder.group({
-			mainDiagnosis: [null],
+			mainDiagnosis: [null, Validators.required],
 			snomed: [null],
 			observations: this.formBuilder.group ({
 				evolutionNote: [null, Validators.required],
@@ -172,15 +162,12 @@ export class EpicrisisFormComponent implements OnInit {
 			this.verifications = healthVerification;
 		});
 
-		const alternativeDiagnostics$ = this.internmentStateService.getActiveAlternativeDiagnosesGeneralState(this.internmentEpisodeId);
-		alternativeDiagnostics$.subscribe(alternativeDiagnostics => this.alternativeDiagnostics = alternativeDiagnostics);
-
 		const epicrisis$ = this.epicrisisService.getInternmentGeneralState(this.internmentEpisodeId);
 		epicrisis$.subscribe(response => {
-			this.internmentMainDiagnosis = response.mainDiagnosis;
-			this.diagnosis.data = response.diagnosis ? [response.mainDiagnosis].concat(response.diagnosis) : [];
-			this.diagnosis.selection.toggle(response.mainDiagnosis);
+
 			this.form.controls.mainDiagnosis.setValue(response.mainDiagnosis);
+			this.diagnosticsEpicrisisService.setInternmentMainDiagnosis(response.mainDiagnosis);
+			this.diagnosticsEpicrisisService.initTable(response.diagnosis);
 
 			this.personalHistories.data = response.personalHistories ? response.personalHistories : [];
 			this.familyHistories.data = response.familyHistories ? response.familyHistories : [];
@@ -196,14 +183,13 @@ export class EpicrisisFormComponent implements OnInit {
 				confirmed: true,
 				notes: this.form.value.observations,
 				mainDiagnosis: this.form.value.mainDiagnosis,
-				diagnosis: this.getAlternativeDiagnostics(),
+				diagnosis: this.diagnosticsEpicrisisService.getSelectedAlternativeDiagnostics(),
 				familyHistories: this.familyHistories.selection.selected,
 				personalHistories: this.personalHistories.selection.selected,
 				medications: this.medications,
 				inmunizations: this.inmunizations.selection.selected,
 				allergies: this.allergies.selection.selected
 			};
-			console.log(epicrisis);
 			this.epicrisisService.createDocument(epicrisis, this.internmentEpisodeId)
 				.subscribe((epicrisisResponse: ResponseEpicrisisDto) => {
 					this.snackBarService.showSuccess('internaciones.epicrisis.messages.SUCCESS');
@@ -218,24 +204,38 @@ export class EpicrisisFormComponent implements OnInit {
 		window.history.back();
 	}
 
-	setConfirmed(diagnosis: DiagnosisDto): void {
-		this.diagnosis.selection.deselect(this.form.value.mainDiagnosis);
-		this.diagnosis.selection.select(diagnosis);
+	openSearchDialog(searchValue: string): void {
+		if (searchValue) {
+			const search: SnomedSemanticSearch = {
+				searchValue,
+				eclFilter: this.SEMANTICS_CONFIG.diagnosis
+			};
+			this.snomedService.openConceptsSearchDialog(search)
+				.subscribe((selectedConcept: SnomedDto) => this.setConcept(selectedConcept));
+		}
 	}
 
-	isActive(diagnosis: DiagnosisDto): boolean {
-		return (!!this.alternativeDiagnostics?.find(alternativeDiagnosis => alternativeDiagnosis.id === diagnosis.id)) ||
-			(diagnosis === this.internmentMainDiagnosis);
+	addToList(): void {
+		if (this.formDiagnosis.valid && this.snomedConcept) {
+			const newDiagnosis: DiagnosisDto = {
+				statusId: this.healthClinicalStatus.find(clinicalStatus => clinicalStatus.description === 'Activo')?.id,
+				verificationId: this.verifications.find(verification => verification.description === 'Confirmado')?.id,
+				snomed: this.snomedConcept
+			};
+			this.diagnosticsEpicrisisService.addMainDiagnosis(newDiagnosis, this.form.controls.mainDiagnosis);
+			this.resetForm();
+		}
 	}
 
-	diagnosisMasterToggle(): void {
-		this.tableService.masterToggle(this.diagnosis.data, this.diagnosis.selection);
-		this.diagnosis.selection.select(this.form.value.mainDiagnosis);
+	setConcept(selectedConcept: SnomedDto): void {
+		this.snomedConcept = selectedConcept;
+		let pt = selectedConcept ? selectedConcept.pt : '';
+		this.formDiagnosis.controls.snomed.setValue(pt);
 	}
 
-	private getAlternativeDiagnostics(): DiagnosisDto[] {
-		return this.diagnosis.selection.selected
-			.filter(diagnosis => diagnosis.id !== this.form.value.mainDiagnosis.id);
+	resetForm(): void {
+		delete this.snomedConcept;
+		this.formDiagnosis.reset();
 	}
 
 	private goToInternmentSummary(): void {
