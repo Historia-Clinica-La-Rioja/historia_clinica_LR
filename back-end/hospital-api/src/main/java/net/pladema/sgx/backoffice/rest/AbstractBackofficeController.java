@@ -19,7 +19,7 @@ import java.util.List;
 public abstract class AbstractBackofficeController<E, I> {
     protected final Logger logger;
     protected final BackofficeStore<E, I> store;
-    private final BackofficePermissionValidator<E, I> permissionValidator;
+    protected final BackofficePermissionValidator<E, I> permissionValidator;
     private final BackofficeEntityValidator<E, I> entityValidator;
 
     public AbstractBackofficeController(
