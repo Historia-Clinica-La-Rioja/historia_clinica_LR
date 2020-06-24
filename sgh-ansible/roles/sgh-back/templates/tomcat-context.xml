@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+    <Environment name="spring.config.additional-location" value="file:{{ SGH_HOME }}sgh.properties" type="java.lang.String"/>
+</Context>

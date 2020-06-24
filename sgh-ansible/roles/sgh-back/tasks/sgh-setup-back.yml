@@ -1,0 +1,51 @@
+---
+
+- name: Make sure sgh dir exists
+  file:
+    path: "{{ SGH_HOME }}"
+    state: directory
+    owner: www-data
+    group: www-data
+
+- name: copy properties for SGH
+  template: 
+    src: templates/sgh.properties.j2
+    dest: "{{SGH_HOME}}sgh.properties"
+    owner: tomcat
+    group: tomcat
+    mode: 0744
+  register: properties_updated
+
+- name: Ensure Tomcat is not running
+  service:
+    name: tomcat
+    state: stopped
+  ignore_errors: true
+
+- name: Set configuration for externalized properties
+  template: 
+    src: templates/tomcat-context.xml
+    dest: "{{CATALINA_HOME}}conf/Catalina/localhost/ROOT.xml"
+    owner: tomcat 
+    group: tomcat
+    mode: 0744
+
+- name: Copy SGH war
+  copy: 
+    src: "{{ BACK_END_WAR }}"
+    dest: "{{CATALINA_HOME}}webapps/ROOT.war" 
+    owner: tomcat
+    group: tomcat
+    mode: 0500
+  register: war_copied
+
+- name: Start and enable Tomcat
+  service:
+    name: tomcat
+    state: started
+    enabled: true
+  when: ansible_service_mgr == "systemd"
+
+- name: wait for Tomcat to start
+  wait_for: 
+    port: 8080
