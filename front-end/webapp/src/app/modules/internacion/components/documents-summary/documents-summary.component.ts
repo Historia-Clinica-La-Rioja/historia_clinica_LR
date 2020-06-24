@@ -3,7 +3,7 @@ import { DOCUMENTS, DOCUMENTS_SEARCH_FIELDS } from '../../constants/summaries';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Moment } from 'moment';
 import { DocumentSearchService } from '@api-rest/services/document-search.service';
-import { DocumentHistoricDto, DocumentSearchFilterDto, EDocumentSearch } from '@api-rest/api-model';
+import { DocumentHistoricDto, DocumentSearchFilterDto, EDocumentSearch, DocumentSearchDto } from '@api-rest/api-model';
 import { DateFormat, momentFormat, newMoment } from '@core/utils/moment.utils';
 
 @Component({
@@ -17,6 +17,7 @@ export class DocumentsSummaryComponent implements OnInit {
 
 	public searchFields: SearchField[] = DOCUMENTS_SEARCH_FIELDS;
 	public documentHistoric: DocumentHistoricDto;
+	public documentsToShow :  DocumentSearchDto[];
 	public readonly documentsSummary = DOCUMENTS;
 	public today: Moment = newMoment();
 	public form: FormGroup;
@@ -33,11 +34,15 @@ export class DocumentsSummaryComponent implements OnInit {
 		this.form = this.formBuilder.group({
 			text: [''],
 			date: [null],
-			field: ['ALL']
+			field: ['ALL'],
+			mainDiagnosisOnly: [false],
 		});
 
 		this.documentSearchService.getHistoric(this.internmentEpisodeId)
-			.subscribe(documents => this.documentHistoric = documents);
+			.subscribe(documents => {
+				this.documentHistoric = documents;
+				this.updateDocuments();
+			});
 	}
 
 	search(): void {
@@ -52,6 +57,7 @@ export class DocumentsSummaryComponent implements OnInit {
 			this.documentSearchService.getHistoric(this.internmentEpisodeId, searchFilter)
 				.subscribe(documents => {
 					this.documentHistoric = documents;
+					this.updateDocuments();
 					this.activeDocument = undefined;
 				});
 		}
@@ -64,6 +70,13 @@ export class DocumentsSummaryComponent implements OnInit {
 	setActive(document) {
 		this.activeDocument = document;
 	}
+
+	updateDocuments(){
+		this.documentsToShow = this.documentHistoric.documents.filter(document=>{
+			return this.form.value.mainDiagnosisOnly ? document.mainDiagnosis.length : true;
+		});
+	}
+
 }
 
 export interface SearchField {

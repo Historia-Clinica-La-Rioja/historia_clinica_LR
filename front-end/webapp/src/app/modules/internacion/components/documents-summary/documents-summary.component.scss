@@ -28,6 +28,13 @@ mat-selection-list {
 	text-align: center;
 }
 
+.main-diagnosis-toggle{
+	display: flex;
+	flex-direction: column;
+	margin: 7px;
+	align-items: center;
+}
+
 ::ng-deep .mat-line {
 	&:first-child {
 		font-weight: 500 !important;

@@ -38,13 +38,17 @@
 						</mat-option>
 					</mat-select>
 				</mat-form-field>
-
+				<div class="main-diagnosis-toggle">
+					<mat-label>Diagnóstico principal</mat-label>
+					<mat-slide-toggle formControlName="mainDiagnosisOnly" (change)="updateDocuments()">
+					</mat-slide-toggle>
+				</div>
 			</form>
 		</div>
 		<div class="documents" id="documents" fxLayout="row">
 			<mat-selection-list color="accent" [multiple]=false>
 				<mat-list-option (click)="setActive(document)"
-								 *ngFor="let document of documentHistoric?.documents">
+								 *ngFor="let document of documentsToShow">
 					<span id="main-diagnosis" mat-line class="capitalize-first-letter" *ngIf="document.mainDiagnosis">
 						{{document.mainDiagnosis}}
 					</span>
