@@ -1,5 +1,5 @@
 <app-summary-card [header]="vacunasSummary"
-				  [canEdit]="['ENFERMERO_ADULTO_MAYOR', 'ESPECIALISTA_MEDICO']"
+				  [canEdit]="['ENFERMERO_ADULTO_MAYOR', 'ESPECIALISTA_MEDICO', 'ENFERMERO']"
 				  [editable]="editable"
 				  (openInNew)="openDialog()">
 	<app-table [model]="tableModel" *ngIf="tableModel?.data.length > 0 else noInfo"></app-table>

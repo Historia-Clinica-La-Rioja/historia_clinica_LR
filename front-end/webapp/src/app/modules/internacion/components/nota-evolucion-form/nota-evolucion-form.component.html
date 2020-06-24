@@ -7,11 +7,11 @@
 		<section id="diagnosticos" *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD']">
 			<app-diagnosticos [(diagnosis)]="diagnosticos"></app-diagnosticos>
 		</section>
-		<section id="observations" *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD']">
+		<section id="observations" *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD','ENFERMERO']">
 			<h2 [translate]="'internaciones.anamnesis.observations.TITLE'"></h2>
 			<mat-card>
 				<mat-card-content formGroupName="observations">
-					<div>
+					<div *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD']">
 						<mat-label [translate]="'internaciones.anamnesis.observations.CURRENT_DISEASE'"></mat-label>
 						<mat-form-field [floatLabel]="'never'" appearance="outline">
 							<textarea matInput type="text" id="currentIllnessNote" name="currentIllnessNote"
@@ -19,7 +19,7 @@
 							</textarea>
 						</mat-form-field>
 					</div>
-					<div>
+					<div *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD']">
 						<mat-label [translate]="'internaciones.anamnesis.observations.PHYSICAL_EXAMINATION'">
 						</mat-label>
 						<mat-form-field [floatLabel]="'never'" appearance="outline">
@@ -28,7 +28,7 @@
 							</textarea>
 						</mat-form-field>
 					</div>
-					<div>
+					<div *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD']">
 						<mat-label [translate]="'internaciones.anamnesis.observations.STUDIES_PROCEDURES'"></mat-label>
 						<mat-form-field [floatLabel]="'never'" appearance="outline">
 							<textarea matInput type="text" id="studiesSummaryNote" name="studiesSummaryNote"
@@ -36,7 +36,7 @@
 							</textarea>
 						</mat-form-field>
 					</div>
-					<div>
+					<div *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD','ENFERMERO']">
 						<mat-label [translate]="'internaciones.anamnesis.observations.PATIENT_PROGRESS'"></mat-label>
 						<mat-form-field [floatLabel]="'never'" appearance="outline">
 							<textarea matInput type="text" id="evolutionNote" name="evolutionNote"
@@ -44,7 +44,7 @@
 							</textarea>
 						</mat-form-field>
 					</div>
-					<div>
+					<div *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD']">
 						<mat-label [translate]="'internaciones.anamnesis.observations.CLINICAL_IMPRESSION'"></mat-label>
 						<mat-form-field [floatLabel]="'never'" appearance="outline">
 							<textarea matInput type="text" id="clinicalImpressionNote" name="clinicalImpressionNote"
@@ -52,7 +52,7 @@
 							</textarea>
 						</mat-form-field>
 					</div>
-					<div>
+					<div *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD']">
 						<mat-label [translate]="'internaciones.anamnesis.observations.OTHERS'"></mat-label>
 						<mat-form-field [floatLabel]="'never'" appearance="outline">
 							<textarea matInput type="text" id="otherNote" name="otherNote" formControlName="otherNote">
@@ -175,7 +175,7 @@
 		<section id="alergias" *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR']">
 			<app-alergias [(allergies)]="allergies"></app-alergias>
 		</section>
-		<section id="vacunas" *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR']">
+		<section id="vacunas" *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO']">
 			<app-vacunas [(inmunizations)]="inmunizations"></app-vacunas>
 		</section>
 		<section id="buttons" class="form-buttons">
