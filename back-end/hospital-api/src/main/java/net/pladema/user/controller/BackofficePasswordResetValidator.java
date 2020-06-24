@@ -4,6 +4,8 @@ import net.pladema.sgx.backoffice.permissions.BackofficePermissionValidator;
 import net.pladema.sgx.exceptions.PermissionDeniedException;
 import net.pladema.user.repository.entity.PasswordResetToken;
 
+import java.util.List;
+
 public class BackofficePasswordResetValidator
 		implements BackofficePermissionValidator<PasswordResetToken, Long> {
 	private final BackofficeAuthoritiesValidator authoritiesValidator;
@@ -19,6 +21,11 @@ public class BackofficePasswordResetValidator
 		}
 		authoritiesValidator.assertLoggedUserOutrank(entity.getUserId());
  	}
+
+	@Override
+	public List<Long> filterByPermission(List<Long> ids) {
+		return ids;
+	}
 
 	@Override
 	public void assertGetOne(Long id) {

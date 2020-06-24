@@ -4,6 +4,7 @@ import net.pladema.sgx.exceptions.PermissionDeniedException;
 import net.pladema.sgx.backoffice.permissions.BackofficePermissionValidator;
 import org.springframework.http.HttpMethod;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -34,6 +35,12 @@ public class BackofficePermissionValidatorAdapter<E, I> implements BackofficePer
 	@Override
 	public void assertGetList(E entity) {
 		assertMethodAccepted(HttpMethod.GET);
+	}
+
+	@Override
+	public List<I> filterByPermission(List<I> ids) {
+		assertMethodAccepted(HttpMethod.GET);
+		return ids;
 	}
 
 	@Override

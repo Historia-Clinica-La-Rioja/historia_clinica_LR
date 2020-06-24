@@ -1,4 +1,4 @@
-package net.pladema.establishment.controller.constraints.validator;
+package net.pladema.establishment.controller.constraints.validator.entities;
 
 import org.springframework.stereotype.Component;
 

@@ -5,21 +5,13 @@ import net.pladema.sgx.backoffice.repository.BackofficeRepository;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
 import net.pladema.sgx.backoffice.rest.dto.BackofficeDeleteResponse;
 import net.pladema.sgx.backoffice.validation.BackofficeEntityValidator;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -102,6 +94,7 @@ public abstract class AbstractBackofficeController<E, I> {
     @GetMapping(params = "ids")
     public @ResponseBody
     Iterable<E> getMany(@RequestParam List<I> ids) {
+        ids = permissionValidator.filterByPermission(ids);
         return store.findAllById(ids);
     }
 
