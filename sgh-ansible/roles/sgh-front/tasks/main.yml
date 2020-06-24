@@ -1,0 +1,2 @@
+---
+- include_tasks: "sgh-setup-front.yml"
