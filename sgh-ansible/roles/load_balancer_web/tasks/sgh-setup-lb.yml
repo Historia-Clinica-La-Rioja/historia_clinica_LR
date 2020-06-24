@@ -1,0 +1,16 @@
+---
+
+- name: copy properties for SGH
+  template: 
+    src: templates/nginx.conf.j2
+    dest: "/etc/nginx/sites-enabled/default"
+    owner:  www-data
+    group: www-data
+    mode: 0644
+  register: properties_updated
+
+- name: Restart Nginx
+  service:
+    name: nginx
+    state: restarted
+  when: ansible_service_mgr == "systemd"

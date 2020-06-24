@@ -1,0 +1,15 @@
+---
+  - hosts: frontservers
+    tasks:
+      - name: Gather facts from webservers
+        setup:
+        when: host.ansible_default_ipv4 is not defined
+  - hosts: backservers
+    tasks:
+      - name: Gather facts from webservers
+        setup:
+        when: host.ansible_default_ipv4 is not defined
+  - hosts: web_load_balancers
+    roles:
+      - role: nginx
+      - role: load_balancer_web
