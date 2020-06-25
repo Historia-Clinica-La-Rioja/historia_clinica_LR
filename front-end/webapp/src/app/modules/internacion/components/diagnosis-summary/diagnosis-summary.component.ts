@@ -10,6 +10,7 @@ import { HEALTH_CLINICAL_STATUS } from '../../constants/ids';
 import { Router } from '@angular/router';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { EvolutionNotesListenerService } from '../../services/evolution-notes-listener.service';
 
 export const COVID_SNOMED = { id: "186747009", pt: "infección por coronavirus" }
 
@@ -36,19 +37,31 @@ export class DiagnosisSummaryComponent implements OnInit {
 		private evolutionNoteService: EvolutionNoteService,
 		private snackBarService: SnackBarService,
 		public dialog: MatDialog,
+		private evolutionNotesListenerService: EvolutionNotesListenerService,
 	) { }
 
 	ngOnInit(): void {
+		this.loadClinicalStatus();
+		this.loadVerifications();
+		this.loadDiagnosesGeneral();
+	}
+
+	private loadClinicalStatus(): void {
 		this.internacionMasterDataService.getHealthClinical().subscribe(healthClinical => {
 			this.clinicalStatus = healthClinical;
 		});
+	}
 
+	private loadVerifications(): void {
 		this.internacionMasterDataService.getHealthVerification().subscribe(healthVerification => {
 			this.verifications = healthVerification;
 		});
+	}
 
+	private loadDiagnosesGeneral(): void {
 		this.internmentStateService.getAlternativeDiagnosesGeneralState(this.internmentEpisodeId).subscribe(
 			data => {
+				this.viewCovidAlert = true;
 				this.tableModel = this.buildTable(data);
 				data.forEach(elem => {
 					if (elem.snomed.id == COVID_SNOMED.id && elem.statusId == HEALTH_CLINICAL_STATUS.ACTIVO)
@@ -109,16 +122,10 @@ export class DiagnosisSummaryComponent implements OnInit {
 							}
 						});
 						dialogRef.afterClosed().subscribe(
-							() => this.internmentStateService.getAlternativeDiagnosesGeneralState(this.internmentEpisodeId).subscribe(
-								data => {
-									this.viewCovidAlert = true;
-									this.tableModel = this.buildTable(data);
-									data.forEach(elem => {
-										if (elem.snomed.id == COVID_SNOMED.id && elem.statusId == HEALTH_CLINICAL_STATUS.ACTIVO)
-											this.viewCovidAlert = false;
-									});
-								}
-							)
+							() => {
+								this.loadDiagnosesGeneral();
+								this.evolutionNotesListenerService.loadEvolutionNotes();
+							}
 						);
 					},
 					hide: row => row.statusId !== HEALTH_CLINICAL_STATUS.ACTIVO
@@ -127,7 +134,6 @@ export class DiagnosisSummaryComponent implements OnInit {
 		}
 		return model;
 	}
-
 
 	generateDiagnosisCovid() {
 		const evolutionNote: EvolutionNoteDto = {
@@ -147,7 +153,10 @@ export class DiagnosisSummaryComponent implements OnInit {
 
 		this.evolutionNoteService.createDocument(evolutionNote, this.internmentEpisodeId).subscribe(
 			(evolutionNoteResponse: ResponseEvolutionNoteDto) => {
-				window.location.reload();
+				this.loadClinicalStatus();
+				this.loadVerifications();
+				this.loadDiagnosesGeneral();
+				this.evolutionNotesListenerService.loadEvolutionNotes();
 				this.snackBarService.showSuccess('internaciones.alerta-covid.messages.SUCCESS');
 			}, _ => this.snackBarService.showError('internaciones.alerta-covid.messages.ERROR'));
 	}

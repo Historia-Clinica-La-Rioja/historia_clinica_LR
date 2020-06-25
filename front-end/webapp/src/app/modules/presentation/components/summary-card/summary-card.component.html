@@ -9,9 +9,7 @@
 		<ng-container *featureFlag="'habilitarBotonCovidDiagnosticoPresuntivo'">
 			<div *ngIf="hasCovidAlert">
 				<button mat-icon-button (click)="covidAlertEvent.emit()">
-					<span class="material-icons">
-						pest_control
-					</span>
+					<mat-icon matListIcon fontSet="material-icons-outlined">pest_control</mat-icon>
 				</button>
 				<span [translate]="'internaciones.alerta-covid.TITLE'">  </span>
 			</div>

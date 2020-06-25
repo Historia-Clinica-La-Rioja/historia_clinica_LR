@@ -2,9 +2,9 @@ import { Component, Input, OnInit } from '@angular/core';
 import { DOCUMENTS, DOCUMENTS_SEARCH_FIELDS } from '../../constants/summaries';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Moment } from 'moment';
-import { DocumentSearchService } from '@api-rest/services/document-search.service';
 import { DocumentHistoricDto, DocumentSearchFilterDto, EDocumentSearch, DocumentSearchDto } from '@api-rest/api-model';
 import { DateFormat, momentFormat, newMoment } from '@core/utils/moment.utils';
+import { EvolutionNotesListenerService } from '../../services/evolution-notes-listener.service';
 
 @Component({
 	selector: 'app-documents-summary',
@@ -17,7 +17,7 @@ export class DocumentsSummaryComponent implements OnInit {
 
 	public searchFields: SearchField[] = DOCUMENTS_SEARCH_FIELDS;
 	public documentHistoric: DocumentHistoricDto;
-	public documentsToShow :  DocumentSearchDto[];
+	public documentsToShow: DocumentSearchDto[];
 	public readonly documentsSummary = DOCUMENTS;
 	public today: Moment = newMoment();
 	public form: FormGroup;
@@ -26,8 +26,14 @@ export class DocumentsSummaryComponent implements OnInit {
 
 	constructor(
 		private formBuilder: FormBuilder,
-		private documentSearchService: DocumentSearchService
+		private evolutionNotesListenerService: EvolutionNotesListenerService,
 	) {
+		evolutionNotesListenerService.history$
+			.subscribe(documents => {
+				this.documentHistoric = documents;
+				this.updateDocuments();
+				this.activeDocument = undefined;
+			});
 	}
 
 	ngOnInit(): void {
@@ -37,12 +43,7 @@ export class DocumentsSummaryComponent implements OnInit {
 			field: ['ALL'],
 			mainDiagnosisOnly: [false],
 		});
-
-		this.documentSearchService.getHistoric(this.internmentEpisodeId)
-			.subscribe(documents => {
-				this.documentHistoric = documents;
-				this.updateDocuments();
-			});
+		this.evolutionNotesListenerService.setInternmentEpisodeId(this.internmentEpisodeId);
 	}
 
 	search(): void {
@@ -53,13 +54,9 @@ export class DocumentsSummaryComponent implements OnInit {
 				: this.form.value.text,
 			searchType: this.form.value.field,
 		};
+
 		if (!isDate(searchFilter.searchType) || (isDate(searchFilter.searchType) && searchFilter.plainText)) {
-			this.documentSearchService.getHistoric(this.internmentEpisodeId, searchFilter)
-				.subscribe(documents => {
-					this.documentHistoric = documents;
-					this.updateDocuments();
-					this.activeDocument = undefined;
-				});
+			this.evolutionNotesListenerService.setSerchFilter(searchFilter);
 		}
 
 		function isDate(field): boolean {
@@ -71,8 +68,8 @@ export class DocumentsSummaryComponent implements OnInit {
 		this.activeDocument = document;
 	}
 
-	updateDocuments(){
-		this.documentsToShow = this.documentHistoric.documents.filter(document=>{
+	updateDocuments() {
+		this.documentsToShow = this.documentHistoric.documents.filter(document => {
 			return this.form.value.mainDiagnosisOnly ? document.mainDiagnosis.length : true;
 		});
 	}
