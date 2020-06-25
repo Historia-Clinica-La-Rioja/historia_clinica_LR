@@ -487,6 +487,7 @@ export interface ProvinceDto extends MasterdataDto<number> {
 }
 
 export interface PublicInfoDto {
+    features: AppFeature[];
     flavor: string;
 }
 
@@ -568,6 +569,12 @@ export interface VitalSignsReportDto extends Serializable {
     respiratoryRate?: ReportClinicalObservationDto;
     systolicBloodPressure?: ReportClinicalObservationDto;
     temperature?: ReportClinicalObservationDto;
+}
+
+export const enum AppFeature {
+    HABILITAR_ALTA_SIN_EPICRISIS = "HABILITAR_ALTA_SIN_EPICRISIS",
+    MAIN_DIAGNOSIS_REQUIRED = "MAIN_DIAGNOSIS_REQUIRED",
+    RESPONSIBLE_DOCTOR_REQUIRED = "RESPONSIBLE_DOCTOR_REQUIRED",
 }
 
 export const enum EDocumentSearch {

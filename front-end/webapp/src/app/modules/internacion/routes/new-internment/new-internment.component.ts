@@ -23,6 +23,10 @@ import {
 	PersonalInformationDto
 } from "@api-rest/api-model";
 
+import {
+	AppFeature,
+} from '@api-rest/api-model.d';
+
 import { PatientBasicData } from "@presentation/components/patient-card/patient-card.component";
 import { PersonalInformation } from "@presentation/components/personal-information/personal-information.component";
 import { PatientTypeData } from "@presentation/components/patient-type-logo/patient-type-logo.component";
@@ -112,7 +116,7 @@ export class NewInternmentComponent implements OnInit {
 			this.doctors = data;
 		});
 
-		this.featureFlagService.isOn('responsibleDoctorRequired').subscribe(isOn => {
+		this.featureFlagService.isActive(AppFeature.RESPONSIBLE_DOCTOR_REQUIRED).subscribe(isOn => {
 			if (!isOn) {
 				this.form.controls.doctorId.clearValidators();
 				this.form.controls.doctorId.reset();

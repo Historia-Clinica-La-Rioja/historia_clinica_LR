@@ -1,8 +1,12 @@
 package net.pladema.security.controller;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 import io.swagger.annotations.Api;
 import net.pladema.flavor.service.FlavorService;
 import net.pladema.security.controller.dto.PublicInfoDto;
+import net.pladema.sgx.featureflags.AppFeature;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +31,8 @@ public class PublicController {
 	public @ResponseBody
 	PublicInfoDto getInfo() {
 		return new PublicInfoDto(
-			flavor
+			flavor,
+			Arrays.stream(AppFeature.values()).filter(AppFeature::isActive).collect(Collectors.toSet())
 		);
 	}
 

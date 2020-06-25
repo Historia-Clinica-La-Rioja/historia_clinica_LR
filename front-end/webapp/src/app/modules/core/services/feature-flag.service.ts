@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PublicService } from '@api-rest/services/public.service';
 import { map } from 'rxjs/operators';
+import { AppFeature } from '@api-rest/api-model';
 
 const FLAVOR_TANDIL = 'tandil';
 const FLAVOR_CHACO = 'chaco';
@@ -21,14 +22,6 @@ const FEATURE_FLAGS = [
 	},
 	{
 		name: 'habilitarServicioRenaper',
-		flavorMatch: [FLAVOR_HOSPITALES]
-	},
-	{
-		name: 'habilitarAltaSinEpicrisis',
-		flavorMatch: [FLAVOR_TANDIL, FLAVOR_CHACO]
-	},
-	{
-		name: 'responsibleDoctorRequired',
 		flavorMatch: [FLAVOR_HOSPITALES]
 	},
 	{
@@ -58,7 +51,15 @@ export class FeatureFlagService {
 		private publicService: PublicService
 	) {}
 
+	public isActive(feature: AppFeature): Observable<boolean> {
+		return this.publicService.getInfo()
+			.pipe(
+				map(info => info.features.some(f => f === feature))
+			);
+	}
+
 	public isOn(ff: string): Observable<boolean> {
+		console.log('FF ' + ff);
 		return this.publicService.getInfo().pipe(map(data => {
 			const ffObject = this.getIfIsPresent(ff);
 			return ffObject && ffObject.flavorMatch.includes(data.flavor);

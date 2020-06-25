@@ -19,6 +19,10 @@ import {
 	PatientDischargeDto,
 } from '@api-rest/api-model';
 
+import {
+	AppFeature,
+} from '@api-rest/api-model.d';
+
 import { MapperService } from '@presentation/services/mapper.service';
 import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
@@ -87,7 +91,7 @@ export class PatientDischargeComponent implements OnInit {
 								});
 						});
 
-				this.featureFlagService.isOn('habilitarAltaSinEpicrisis')
+				this.featureFlagService.isActive(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS)
 					.subscribe(epicrisisNotRequired => {
 						if (!epicrisisNotRequired) {
 							this.setDischargeFormWithEpicrisisRequired();

@@ -20,6 +20,11 @@ import {
 	PatientDischargeDto,
 
 } from '@api-rest/api-model';
+
+import {
+	AppFeature,
+} from '@api-rest/api-model.d';
+
 import { InternacionService } from '@api-rest/services/internacion.service';
 import { InternmentEpisodeService } from '@api-rest/services/internment-episode.service';
 
@@ -73,7 +78,7 @@ export class InternacionPacienteComponent implements OnInit {
 
 						//La alta administrativa está disponible cuando existe el alta medica
 						//o el flag de alta sin epicrisis está activa
-						this.featureFlagService.isOn('habilitarAltaSinEpicrisis').subscribe(isOn => {
+						this.featureFlagService.isActive(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS).subscribe(isOn => {
 							this.showDischarge = isOn || (this.hasMedicalDischarge === true);
 						});
 
