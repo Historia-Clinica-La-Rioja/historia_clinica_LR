@@ -6,9 +6,9 @@
     owner: www-data
     group: www-data
 
-- name: Copy SGH Front end
-  copy: 
-    src: "{{ FRONT_END_PATH }}"
+- name: Unarchive SGH Front end
+  unarchive: 
+    src: "{{ FRONT_END_PATH }}front-end.tar.gz"
     dest: "{{ SGH_HOME }}"
     owner: www-data
     group: www-data
