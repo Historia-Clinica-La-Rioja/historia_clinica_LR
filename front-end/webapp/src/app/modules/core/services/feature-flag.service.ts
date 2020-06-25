@@ -42,7 +42,11 @@ const FEATURE_FLAGS = [
 	{
 		name: 'habilitarBotonCovidDiagnosticoPresuntivo',
 		flavorMatch: [FLAVOR_TANDIL]
-	}
+	},
+	{
+		name: 'habilitarToggleFiltroDiagnosticoPrincipal',
+		flavorMatch: [FLAVOR_HOSPITALES]
+	},
 ];
 
 @Injectable({

@@ -38,7 +38,7 @@
 						</mat-option>
 					</mat-select>
 				</mat-form-field>
-				<div class="main-diagnosis-toggle">
+				<div *featureFlag="'habilitarToggleFiltroDiagnosticoPrincipal'" class="main-diagnosis-toggle">
 					<mat-label>Diagnóstico principal</mat-label>
 					<mat-slide-toggle formControlName="mainDiagnosisOnly" (change)="updateDocuments()">
 					</mat-slide-toggle>
