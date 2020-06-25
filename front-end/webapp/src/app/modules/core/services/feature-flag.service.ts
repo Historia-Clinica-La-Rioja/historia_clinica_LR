@@ -59,7 +59,6 @@ export class FeatureFlagService {
 	}
 
 	public isOn(ff: string): Observable<boolean> {
-		console.log('FF ' + ff);
 		return this.publicService.getInfo().pipe(map(data => {
 			const ffObject = this.getIfIsPresent(ff);
 			return ffObject && ffObject.flavorMatch.includes(data.flavor);
