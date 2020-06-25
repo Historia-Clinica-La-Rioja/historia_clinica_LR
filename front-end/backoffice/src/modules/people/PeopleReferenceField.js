@@ -5,7 +5,7 @@ import {
     FunctionField,
 } from 'react-admin';
 
-const renderPeople = (record) => `${record.identificationNumber} ${record.lastName} ${record.firstName}`;
+const renderPeople = (record) => `${record.identificationNumber ? record.identificationNumber : "" } ${record.lastName ? record.lastName : ""} ${record.firstName ? record.firstName : ""}`;
 
 const PeopleReferenceField = (props) => (
     <ReferenceField reference="people" link="show" {...props} >
