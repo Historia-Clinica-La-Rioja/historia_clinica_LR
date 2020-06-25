@@ -55,7 +55,10 @@ public class BackofficeSectorValidator implements BackofficePermissionValidator<
 
 	@Override
 	public void assertGetOne(Integer id) {
-		hasPermissionByInstitution(id);
+		if (authoritiesValidator.hasRole(ERole.ROOT) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
+			return;
+		Integer institutionId = sectorRepository.getInstitutionId(id);
+		hasPermissionByInstitution(institutionId);
 	}
 
 	@Override
@@ -72,20 +75,19 @@ public class BackofficeSectorValidator implements BackofficePermissionValidator<
 
 	@Override
 	public void assertDelete(Integer id) {
-		hasPermissionByInstitution(id);
-	}
-
-	private void hasPermissionByInstitution(Integer id) {
 		if (authoritiesValidator.hasRole(ERole.ROOT) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
 			return;
 		Integer institutionId = sectorRepository.getInstitutionId(id);
+		hasPermissionByInstitution(institutionId);
+	}
+
+	private void hasPermissionByInstitution(Integer institutionId) {
 		if (institutionId == null)
-			return;
+			throw new PermissionDeniedException("No cuenta con suficientes privilegios");
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser"))
 			throw new PermissionDeniedException("No cuenta con suficientes privilegios");
 		if (!permissionEvaluator.hasPermission(authentication, institutionId, "ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE"))
 			throw new PermissionDeniedException("No cuenta con suficientes privilegios");
 	}
-
 }

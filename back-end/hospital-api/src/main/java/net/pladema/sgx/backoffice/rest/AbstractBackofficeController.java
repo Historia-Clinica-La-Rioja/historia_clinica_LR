@@ -13,6 +13,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -121,6 +122,7 @@ public abstract class AbstractBackofficeController<E, I> {
 
 
     @PostMapping
+    @Transactional
     public @ResponseBody
     E create(@Valid @RequestBody E entity) {
         logger.debug("CREATE {}", entity);
@@ -132,6 +134,7 @@ public abstract class AbstractBackofficeController<E, I> {
 
     @PutMapping("/{id}")
     @Modifying
+    @Transactional
     public @ResponseBody
     E update(@PathVariable("id") I id, @RequestBody E body) {
         logger.debug("UPDATE[id={}] {}", id, body);
@@ -141,6 +144,7 @@ public abstract class AbstractBackofficeController<E, I> {
     }
 
     @DeleteMapping("/{id}")
+    @Transactional
     public @ResponseBody
     BackofficeDeleteResponse<I> delete(@PathVariable("id") I id) {
         logger.debug("DELETE[id={}]", id);
@@ -152,6 +156,7 @@ public abstract class AbstractBackofficeController<E, I> {
     }
 
 	@DeleteMapping(params = "ids")
+    @Transactional
 	public @ResponseBody
 	BackofficeDeleteResponse<List<I>> deleteMany(@RequestParam List<I> ids) {
 		logger.debug("DELETE_MANY[ids={}]", ids);

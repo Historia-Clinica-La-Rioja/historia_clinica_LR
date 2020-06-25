@@ -93,7 +93,7 @@ public class BackofficeClinicalSpecialtySectorValidator implements BackofficePer
 
 	private void hasPermissionByInstitution(Integer institutionId) {
 		if (institutionId == null)
-			return;
+			throw new PermissionDeniedException("No cuenta con suficientes privilegios");
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser"))
 			throw new PermissionDeniedException("No cuenta con suficientes privilegios");

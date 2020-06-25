@@ -28,8 +28,8 @@ public class BackofficeBedValidator implements BackofficePermissionValidator<Bed
 
 	public BackofficeBedValidator(BedRepository repository,
 								  RoomRepository roomRepository,
-                                  BackofficeAuthoritiesValidator backofficeAuthoritiesValidator,
-                                  PermissionEvaluator permissionEvaluator) {
+								  BackofficeAuthoritiesValidator backofficeAuthoritiesValidator,
+								  PermissionEvaluator permissionEvaluator) {
 		this.repository = repository;
 		this.roomRepository = roomRepository;
 		this.authoritiesValidator = backofficeAuthoritiesValidator;
@@ -93,7 +93,7 @@ public class BackofficeBedValidator implements BackofficePermissionValidator<Bed
 
 	private void hasPermissionByInstitution(Integer institutionId) {
 		if (institutionId == null)
-			return;
+			throw new PermissionDeniedException("No cuenta con suficientes privilegios");
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser"))
 			throw new PermissionDeniedException("No cuenta con suficientes privilegios");

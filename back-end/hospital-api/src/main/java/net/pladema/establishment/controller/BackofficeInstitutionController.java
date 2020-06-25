@@ -8,6 +8,7 @@ import net.pladema.establishment.repository.entity.Institution;
 import net.pladema.sgx.backoffice.repository.BackofficeRepository;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
 import net.pladema.sgx.backoffice.rest.SingleAttributeBackofficeQueryAdapter;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -30,6 +31,7 @@ public class BackofficeInstitutionController extends AbstractBackofficeControlle
 	
 	@Override
 	@PostMapping
+	@Transactional
 	public @ResponseBody
 	Institution create(@Valid @RequestBody Institution entity) {
 		logger.debug("CREATE {}", entity);
