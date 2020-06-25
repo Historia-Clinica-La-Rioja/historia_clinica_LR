@@ -4,12 +4,20 @@ import {
     Datagrid,
     TextField,
     ReferenceField,
-    DeleteButton,
+    DeleteButton, Filter, ReferenceInput, SelectInput,
 } from 'react-admin';
 import SubReference from '../components/subreference';
 
+const ClinicalSpecialtySectorFilter = props =>(
+    <Filter {...props}>
+        <ReferenceInput source="sectorId" reference="sectors" alwaysOn allowEmpty={false}>
+            <SelectInput optionText="description" />
+        </ReferenceInput>
+    </Filter>
+);
+
 const ClinicalSpecialtySectorList = props => (
-    <List {...props} hasCreate={false} >
+    <List {...props} hasCreate={false} filters={<ClinicalSpecialtySectorFilter />}>
         <Datagrid rowClick="show">
             <TextField source="description"/>
             <ReferenceField source="sectorId" reference="sectors">

@@ -4,11 +4,19 @@ import {
     Datagrid,
     TextField,
     ReferenceField,
-    DateField,
+    DateField, Filter, ReferenceInput, SelectInput,
 } from 'react-admin';
 
+const RoomFilter = props =>(
+    <Filter {...props}>
+        <ReferenceInput label="Especialidad | Sector" source="id" reference="clinicalspecialtysectors" alwaysOn allowEmpty={false}>
+            <SelectInput optionText="description" />
+        </ReferenceInput>
+    </Filter>
+);
+
 const InstitutionList = props => (
-    <List {...props} hasCreate={false} >
+    <List {...props} hasCreate={false} filters={<RoomFilter/>}>
         <Datagrid rowClick="show">
             <TextField source="roomNumber"/>
             <TextField source="description" />
