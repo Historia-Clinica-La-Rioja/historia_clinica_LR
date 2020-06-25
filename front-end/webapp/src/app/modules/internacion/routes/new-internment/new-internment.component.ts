@@ -1,6 +1,17 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
+import { MatDialog } from "@angular/material/dialog";
+import { TranslateService } from '@ngx-translate/core';
+
+import { ConfirmDialogComponent } from "@core/dialogs/confirm-dialog/confirm-dialog.component";
+import { ContextService } from "@core/services/context.service";
+import { FeatureFlagService } from "@core/services/feature-flag.service";
+import { scrollIntoError } from "@core/utils/form.utils";
+
+import { PersonService } from "@api-rest/services/person.service";
+import { InternmentEpisodeService } from "@api-rest/services/internment-episode.service";
+import { PatientService } from "@api-rest/services/patient.service";
 import { InternacionMasterDataService } from "@api-rest/services/internacion-master-data.service";
 import { SectorService } from "@api-rest/services/sector.service";
 import { ClinicalSpecialtySectorService } from "@api-rest/services/clinical-specialty-sector.service";
@@ -11,20 +22,12 @@ import {
 	HealthcareProfessionalDto,
 	PersonalInformationDto
 } from "@api-rest/api-model";
-import { PatientService } from "@api-rest/services/patient.service";
+
 import { PatientBasicData } from "@presentation/components/patient-card/patient-card.component";
 import { PersonalInformation } from "@presentation/components/personal-information/personal-information.component";
 import { PatientTypeData } from "@presentation/components/patient-type-logo/patient-type-logo.component";
 import { MapperService } from "@presentation/services/mapper.service";
-import { PersonService } from "@api-rest/services/person.service";
-import { InternmentEpisodeService } from "@api-rest/services/internment-episode.service";
-import { scrollIntoError } from "@core/utils/form.utils";
-import { MatDialog } from "@angular/material/dialog";
-import { ConfirmDialogComponent } from "@core/dialogs/confirm-dialog/confirm-dialog.component";
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { ContextService } from "@core/services/context.service";
-import { FeatureFlagService } from "@core/services/feature-flag.service";
-import { TranslateService } from '@ngx-translate/core';
 
 const ROUTE_INTERNMENT = 'internaciones/internacion/';
 
@@ -49,23 +52,23 @@ export class NewInternmentComponent implements OnInit {
 	private readonly routePrefix;
 
 	constructor(private readonly formBuilder: FormBuilder,
-				private readonly el: ElementRef,
-				private readonly router: Router,
-				private readonly internacionMasterDataService: InternacionMasterDataService,
-				private readonly sector: SectorService,
-				private readonly clinicalSpecialtySectorService: ClinicalSpecialtySectorService,
-				private readonly room: RoomService,
-				private readonly healthcareProfessionalService: HealthcareProfessionalService,
-				private readonly patientService: PatientService,
-				private readonly personService: PersonService,
-				private readonly mapperService: MapperService,
-				private readonly route: ActivatedRoute,
-				private readonly internmentEpisodeService: InternmentEpisodeService,
-				public dialog: MatDialog,
-				public translator: TranslateService,
-				private readonly snackBarService: SnackBarService,
-				private readonly contextService: ContextService,
-				private readonly featureFlagService: FeatureFlagService) {
+		private readonly el: ElementRef,
+		private readonly router: Router,
+		private readonly internacionMasterDataService: InternacionMasterDataService,
+		private readonly sector: SectorService,
+		private readonly clinicalSpecialtySectorService: ClinicalSpecialtySectorService,
+		private readonly room: RoomService,
+		private readonly healthcareProfessionalService: HealthcareProfessionalService,
+		private readonly patientService: PatientService,
+		private readonly personService: PersonService,
+		private readonly mapperService: MapperService,
+		private readonly route: ActivatedRoute,
+		private readonly internmentEpisodeService: InternmentEpisodeService,
+		public dialog: MatDialog,
+		public translator: TranslateService,
+		private readonly snackBarService: SnackBarService,
+		private readonly contextService: ContextService,
+		private readonly featureFlagService: FeatureFlagService) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 	}
 
@@ -88,13 +91,13 @@ export class NewInternmentComponent implements OnInit {
 		this.form = this.formBuilder.group({
 			specialtyId: [null, [Validators.required]],
 			sectorId: [null, [Validators.required]],
-			serviceId: [{value: null, disabled: true}, [Validators.required]],
-			roomId: [{value: null, disabled: true}, [Validators.required]],
-			bedId: [{value: null, disabled: true}, [Validators.required]],
+			serviceId: [{ value: null, disabled: true }, [Validators.required]],
+			roomId: [{ value: null, disabled: true }, [Validators.required]],
+			bedId: [{ value: null, disabled: true }, [Validators.required]],
 			doctorId: [null, [Validators.required]],
-			contactName:[null],
-			contactPhoneNumber:[null],
-			contactRelationship:[null],
+			contactName: [null],
+			contactPhoneNumber: [null],
+			contactRelationship: [null],
 		});
 
 		this.internacionMasterDataService.getClinicalSpecialty().subscribe(data => {
@@ -115,7 +118,7 @@ export class NewInternmentComponent implements OnInit {
 				this.form.controls.doctorId.reset();
 			}
 		});
- 
+
 	}
 
 	setServices() {
@@ -176,11 +179,11 @@ export class NewInternmentComponent implements OnInit {
 			});
 
 			dialogRef.afterClosed().subscribe(result => {
-				if(result) {
+				if (result) {
 					const intenmentEpisodeReq = this.mapToPersonInternmentEpisodeRequest();
 					this.internmentEpisodeService.setNewInternmentEpisode(intenmentEpisodeReq)
 						.subscribe(data => {
-							if(data && data.id) {
+							if (data && data.id) {
 								const url = `${this.routePrefix}${ROUTE_INTERNMENT}${data.id}/paciente/${this.patientId}`;
 								this.router.navigate([url]);
 								this.snackBarService.showSuccess('internaciones.new-internment.messages.SUCCESS');
@@ -192,7 +195,7 @@ export class NewInternmentComponent implements OnInit {
 
 	}
 
-	private mapToPersonInternmentEpisodeRequest(){
+	private mapToPersonInternmentEpisodeRequest() {
 		var response = {
 			patientId: this.patientId,
 			bedId: this.form.controls.bedId.value,
@@ -200,18 +203,21 @@ export class NewInternmentComponent implements OnInit {
 			responsibleDoctorId: this.form.controls.doctorId.value,
 			responsibleContact: null
 		}
-		let fullname = this.form.controls.contactName.value;
-    	let phoneNumber = this.form.controls.contactPhoneNumber.value;
-    	let relationship = this.form.controls.contactRelationship.value
-		if (fullname || phoneNumber || relationship){
-            response.responsibleContact = {};
-            if (fullname)
-                response.responsibleContact.fullName = fullname;
-            if (phoneNumber)
-                response.responsibleContact.phoneNumber = phoneNumber;
-            if (relationship)
-                response.responsibleContact.relationship = relationship;
-        }
-        return response;
-    }
+		const fullname = this.form.controls.contactName.value;
+		const phoneNumber = this.form.controls.contactPhoneNumber.value;
+		const relationship = this.form.controls.contactRelationship.value
+		if (fullname || phoneNumber || relationship) {
+			response.responsibleContact = {};
+			if (fullname) {
+				response.responsibleContact.fullName = fullname;
+			}
+			if (phoneNumber) {
+				response.responsibleContact.phoneNumber = phoneNumber;
+			}
+			if (relationship) {
+				response.responsibleContact.relationship = relationship;
+			}
+		}
+		return response;
+	}
 }

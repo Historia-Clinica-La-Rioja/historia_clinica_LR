@@ -2,7 +2,7 @@
 
 ## Definición de FF
 
-Todos los FF están definidos en [net.pladema.sgx.featureflags.AppFeature](../hospital-api/src/main/java/net/pladema/sgx/featureflags/AppFeature.java).
+Todos los FF están definidos como enumerados en [net.pladema.sgx.featureflags.AppFeature](../hospital-api/src/main/java/net/pladema/sgx/featureflags/AppFeature.java).
 
 ## Estados de FF
 
@@ -17,7 +17,7 @@ app.feature.MAIN_DIAGNOSIS_REQUIRED=true
 app.feature.HABILITAR_ALTA_SIN_EPICRISIS=false 
 ```
 
-## Uso de FF
+## Uso de FF en el backend
 
 La implementación de FF se hizo usando [togglz](https://www.togglz.org/).
 
