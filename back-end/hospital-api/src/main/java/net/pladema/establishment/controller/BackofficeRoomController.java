@@ -1,6 +1,5 @@
 package net.pladema.establishment.controller;
 
-import net.pladema.sgx.backoffice.rest.dto.BackofficeDeleteResponse;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,12 +19,6 @@ public class BackofficeRoomController extends AbstractBackofficeController<Room,
 				repository,
 				new SingleAttributeBackofficeQueryAdapter<Room>("description")
 				));
-	}
-
-
-	@Override
-	public BackofficeDeleteResponse<Integer> delete(Integer id) {
-		return super.delete(id);
 	}
 
 }
