@@ -151,4 +151,9 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 		repository.changeStatusAccount(id, false);
 	}
 
+	@Override
+	public Example<BackofficeUserDto> buildExample(BackofficeUserDto entity) {
+		return Example.of(entity);
+	}
+
 }

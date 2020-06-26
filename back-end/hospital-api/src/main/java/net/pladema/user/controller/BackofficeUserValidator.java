@@ -4,9 +4,11 @@ package net.pladema.user.controller;
 import net.pladema.permissions.controller.dto.BackofficeUserRoleDto;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.sgx.backoffice.permissions.BackofficePermissionValidator;
+import net.pladema.sgx.backoffice.rest.ItemsAllowed;
 import net.pladema.sgx.exceptions.PermissionDeniedException;
 import net.pladema.user.controller.dto.BackofficeUserDto;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -64,5 +66,12 @@ public class BackofficeUserValidator
 			throw new PermissionDeniedException("Operación no permitida");
 		}
 		authoritiesValidator.assertLoggedUserOutrank(userId);
+	}
+
+	@Override
+	public ItemsAllowed itemsAllowedToList(BackofficeUserDto entity) {
+		if (authoritiesValidator.hasRole(ERole.ROOT) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
+			return new ItemsAllowed<>(true, new ArrayList<>());
+		return new ItemsAllowed<>(false, new ArrayList<>());
 	}
 }

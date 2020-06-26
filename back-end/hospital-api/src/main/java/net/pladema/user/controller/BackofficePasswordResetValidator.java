@@ -1,9 +1,12 @@
 package net.pladema.user.controller;
 
+import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.sgx.backoffice.permissions.BackofficePermissionValidator;
+import net.pladema.sgx.backoffice.rest.ItemsAllowed;
 import net.pladema.sgx.exceptions.PermissionDeniedException;
 import net.pladema.user.repository.entity.PasswordResetToken;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BackofficePasswordResetValidator
@@ -49,5 +52,12 @@ public class BackofficePasswordResetValidator
 	@Override
 	public void assertDelete(Long id) {
 		throw new PermissionDeniedException("Borrar código");
+	}
+
+	@Override
+	public ItemsAllowed itemsAllowedToList(PasswordResetToken entity) {
+		if (authoritiesValidator.hasRole(ERole.ROOT) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
+			return new ItemsAllowed<>(true, new ArrayList<>());
+		return new ItemsAllowed<>(false, new ArrayList<>());
 	}
 }

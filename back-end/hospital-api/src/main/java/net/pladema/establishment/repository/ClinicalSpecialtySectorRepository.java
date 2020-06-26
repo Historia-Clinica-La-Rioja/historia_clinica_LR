@@ -29,4 +29,15 @@ public interface ClinicalSpecialtySectorRepository extends JpaRepository<Clinica
 			"WHERE css.id = :id")
     Integer getInstitutionId(@Param("id") Integer id);
 
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT css.id " +
+			"FROM  ClinicalSpecialtySector css ")
+    List<Integer> getAllIds();
+
+	@Transactional(readOnly = true)
+	@Query(value = " SELECT css.id " +
+			"FROM  ClinicalSpecialtySector css " +
+			"INNER JOIN Sector s ON (css.sectorId = s.id) " +
+			"WHERE s.institutionId IN :institutionsIds")
+	List<Integer> getAllIdsByInstitutionsId(@Param("institutionsIds") List<Integer> institutionsIds);
 }

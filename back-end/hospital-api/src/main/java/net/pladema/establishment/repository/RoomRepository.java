@@ -36,4 +36,20 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
 			"INNER JOIN Sector s ON (s.id = css.sectorId) " +
 			"WHERE r.id = :id ")
     Integer getInstitutionId(@Param("id") Integer id);
+
+
+	@Transactional(readOnly = true)
+	@Query("SELECT r.id "+
+			"FROM Room AS r ")
+	List<Integer> getAllIds();
+
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT r.id " +
+			"FROM  Room r " +
+			"INNER JOIN ClinicalSpecialtySector css ON (css.id = r.clinicalSpecialtySectorId) " +
+			"INNER JOIN Sector s ON (s.id = css.sectorId) " +
+			"WHERE s.institutionId IN :institutionsIds ")
+	List<Integer> getAllIdsByInstitutionsId(@Param("institutionsIds") List<Integer> institutionsIds);
+
+
 }

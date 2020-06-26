@@ -48,4 +48,9 @@ public class BackofficeRepository<E, I> implements BackofficeStore<E, I>{
 	public void deleteById(I id) {
 		repository.deleteById(id);
 	}
+
+	@Override
+	public Example<E> buildExample(E entity) {
+		return queryAdapter.buildExample(entity);
+	}
 }

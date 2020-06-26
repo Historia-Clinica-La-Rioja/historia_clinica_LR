@@ -49,4 +49,17 @@ public interface BedRepository extends JpaRepository<Bed, Integer> {
 			"INNER JOIN Sector s ON (css.sectorId = s.id) " +
 			"WHERE b.id = :id ")
 	Integer getInstitutionId(@Param("id") Integer id);
+
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT b.id FROM Bed b")
+    List<Integer> getAllIds();
+
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT b.id " +
+			"FROM  Bed b " +
+			"INNER JOIN Room r ON (b.roomId = r.id) " +
+			"INNER JOIN ClinicalSpecialtySector css ON (r.clinicalSpecialtySectorId = css.id) " +
+			"INNER JOIN Sector s ON (css.sectorId = s.id) " +
+			"WHERE s.institutionId IN :institutionsIds")
+	List<Integer> getAllIdsByInstitutionsId(@Param("institutionsIds") List<Integer> institutionsIds);
 }

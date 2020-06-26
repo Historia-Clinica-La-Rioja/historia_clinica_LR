@@ -8,12 +8,13 @@ import net.pladema.sgx.backoffice.validation.BackofficeEntityValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -100,8 +101,11 @@ public abstract class AbstractBackofficeController<E, I> {
     public @ResponseBody
     Page<E> getList(Pageable pageable, E entity) {
         logger.debug("GET_LIST {}", entity);
-        permissionValidator.assertGetList(entity);
-        return store.findAll(entity, pageable);
+        ItemsAllowed itemsAllowed = permissionValidator.itemsAllowedToList(entity);
+        if (itemsAllowed.all)
+            return store.findAll(entity, pageable);
+        List<E> list = store.findAllById(itemsAllowed.ids);
+        return new PageImpl<>(list, pageable, list.size());
     }
 
     @GetMapping(params = "ids")
