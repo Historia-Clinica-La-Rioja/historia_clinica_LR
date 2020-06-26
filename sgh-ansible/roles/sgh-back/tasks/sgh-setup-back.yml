@@ -41,6 +41,7 @@
 
 - name: Start and enable Tomcat
   service:
+    daemon_reload: true
     name: tomcat
     state: started
     enabled: true
