@@ -553,6 +553,15 @@ export interface UserDto extends AbstractUserDto {
     id: number;
 }
 
+export interface VInstitutionDto {
+    lastDateVitalSign: Date;
+    latitud: number;
+    longitud: number;
+    patientCount: number;
+    patientWithCovidPresumtiveCount: number;
+    patientWithVitalSignCount: number;
+}
+
 export interface VitalSignDto extends Serializable {
     bloodOxygenSaturation?: EffectiveClinicalObservationDto;
     diastolicBloodPressure?: EffectiveClinicalObservationDto;
