@@ -1,19 +1,5 @@
 package net.pladema.patient.service.impl;
 
-import static net.pladema.patient.service.MathScore.calculateMatch;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import net.pladema.federar.services.FederarService;
 import net.pladema.federar.services.domain.LocalIdSearchResponse;
 import net.pladema.patient.controller.dto.PatientSearchFilter;
@@ -23,6 +9,19 @@ import net.pladema.patient.repository.entity.PatientType;
 import net.pladema.patient.service.PatientService;
 import net.pladema.patient.service.domain.PatientSearch;
 import net.pladema.person.repository.entity.Person;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static net.pladema.patient.service.MathScore.calculateMatch;
 
 @Service
 public class PatientServiceImpl implements PatientService {
@@ -51,8 +50,7 @@ public class PatientServiceImpl implements PatientService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<PatientSearch> searchPatientOptionalFilters(PatientSearchFilter searchFilter) {
-		return patientRepository.getAllByOptionalFilter(searchFilter.getFirstName(),searchFilter.getLastName(),
-				searchFilter.getGenderId(), searchFilter.getIdentificationTypeId(),searchFilter.getIdentificationNumber(), searchFilter.getBirthDate());
+		return patientRepository.getAllByOptionalFilter(searchFilter);
 	}
 
 	@Override

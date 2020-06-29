@@ -15,9 +15,13 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PatientSearchFilter {
 
-	private String lastName;
-	
+    private String lastName;
+
 	private String firstName;
+
+    private String middleNames;
+
+    private String otherLastNames;
 	
 	private Short genderId;
 
