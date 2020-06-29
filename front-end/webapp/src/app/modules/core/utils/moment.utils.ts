@@ -28,7 +28,9 @@ export const MAT_APP_DATE_FORMATS = {
 
 export const newMoment = (): Moment => moment.utc(Date.now());
 
-export const momentParseDate = (dateStr: string): Moment => moment.parseZone(dateStr);
+export const momentParseDate = (dateStr: string): Moment => momentParseDateTime(`${dateStr}T00:00:00.000-0300`);
+
+export const momentParseDateTime = (dateStr: string): Moment => moment.parseZone(dateStr);
 
 export const momentFormatDate = (date: Date, format?: DateFormat): string => moment.utc(date.getTime()).format(format);
 

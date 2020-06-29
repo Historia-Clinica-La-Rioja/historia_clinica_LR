@@ -4,7 +4,7 @@ import { SIGNOS_VITALES } from '../../constants/summaries';
 import { VitalSingCurrentPrevious } from 'src/app/modules/presentation/components/signo-vital-current-previous/signo-vital-current-previous.component';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { Last2VitalSignsDto, VitalSignDto } from '@api-rest/api-model';
-import { momentParseDate } from '@core/utils/moment.utils';
+import { momentParseDateTime } from '@core/utils/moment.utils';
 import { MatDialog } from '@angular/material/dialog';
 import { AddVitalSignsComponent } from '../../dialogs/add-vital-signs/add-vital-signs.component';
 
@@ -54,11 +54,11 @@ export class SignosVitalesSummaryComponent implements OnInit {
 					description: LABELS[key],
 					currentValue: {
 						value: Number(current[key]?.value),
-						effectiveTime: current[key]?.effectiveTime ? momentParseDate(current[key].effectiveTime) : undefined
+						effectiveTime: current[key]?.effectiveTime ? momentParseDateTime(current[key].effectiveTime) : undefined
 					},
 					previousValue: {
 						value: Number(previous[key]?.value),
-						effectiveTime: previous[key]?.effectiveTime ? momentParseDate(previous[key].effectiveTime) : undefined
+						effectiveTime: previous[key]?.effectiveTime ? momentParseDateTime(previous[key].effectiveTime) : undefined
 					}
 				}
 			));
