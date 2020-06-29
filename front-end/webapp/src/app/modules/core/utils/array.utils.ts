@@ -9,3 +9,9 @@ export const removeFrom = <T>(data: T[], index: number): T[] => {
 export const anyMatch = <T>(a1: T[], a2: T[]): boolean => {
 	return (a1.some(e1 => a2.some(e2 => e2 === e1)));
 };
+
+export const uniqueItems = <T>(data: T[]): T[] => {
+	return data.filter(function(elem, index, self) {
+			return index === self.indexOf(elem);
+		});
+}

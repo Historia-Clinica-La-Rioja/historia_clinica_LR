@@ -4,6 +4,7 @@ import { map } from 'rxjs/operators';
 import { RoleAssignment } from '@api-rest/api-model';
 import { Router } from '@angular/router';
 import { InstitutionService } from '../../../api-rest/services/institution.service';
+import { uniqueItems } from '@core/utils/array.utils';
 
 @Component({
 	selector: 'app-instituciones',
@@ -28,6 +29,10 @@ export class InstitucionesComponent implements OnInit {
 
 			const institutionIds = allIds.filter((x) => x >= 0);
 			institutionService.getInstitutions(institutionIds).subscribe(institutions => {
+				let uniqueIds = uniqueItems(allIds);
+				if (uniqueIds.length === 1)
+					this.ingresar({id: uniqueIds[0]});
+
 				this.backoffice = allIds.filter((x) => x === -1).length > 0;
 				this.institutions = institutions;
 			});
