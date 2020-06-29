@@ -24,6 +24,6 @@ public interface CityRepository extends JpaRepository<City, Integer> {
 
 	@Transactional(readOnly = true)
 	@Query("SELECT c FROM City as c " +
-			"WHERE c.departmentId = :departmentId AND c.active = true AND c.cityType != net.pladema.address.repository.entity.City.BARRIO ")
+			"WHERE c.departmentId = :departmentId AND c.active = true AND (c.cityType <> net.pladema.address.repository.entity.City.BARRIO or c.cityType is null) ")
 	<T> Collection<T> findByDepartment(@Param("departmentId") Short departmentId, Sort by, Class<T> clazz);
 }
