@@ -26,7 +26,7 @@ public class PatientSearchQuery {
     Short genderId;
     Short identificationTypeId;
     String identificationNumber;
-    //LocalDate birthDate;
+    LocalDate birthDate;
 
     private static final String MESSAGE = "No se han encontrado pacientes";
 
@@ -38,7 +38,7 @@ public class PatientSearchQuery {
         this.genderId = patientSearchFilter.getGenderId();
         this.identificationTypeId = patientSearchFilter.getIdentificationTypeId();
         this.identificationNumber = patientSearchFilter.getIdentificationNumber();
-        //this.birthDate
+        this.birthDate = patientSearchFilter.getBirthDate();
     }
 
     public QueryPart select() {
@@ -63,31 +63,38 @@ public class PatientSearchQuery {
     }
 
     public QueryPart where() {
-        QueryPart where = new QueryPart(" (UPPER(person.identificationNumber) LIKE '%"+identificationNumber+"%') \n");
+        List<String> whereString = new ArrayList<>();
         if (firstName != null) {
             firstName = (StringHelper.escapeSql(firstName)).toUpperCase();
-            where.concatPart(new QueryPart(" AND (UPPER(person.firstName) LIKE '%" + firstName + "%') \n"));
+            whereString.add(" (UPPER(person.firstName) LIKE '%" + firstName + "%') \n");
         }
         if (middleNames != null) {
             middleNames = (StringHelper.escapeSql(middleNames)).toUpperCase();
-            where.concatPart(new QueryPart(" AND (UPPER(person.middleNames) LIKE '%" + middleNames + "%') \n"));
+            whereString.add(" (UPPER(person.middleNames) LIKE '%" + middleNames + "%') \n");
         }
         if (lastName != null) {
             lastName = (StringHelper.escapeSql(lastName)).toUpperCase();
-            where.concatPart(new QueryPart(" AND (UPPER(person.lastName) LIKE '%" + lastName + "%') \n"));
+            whereString.add(" (UPPER(person.lastName) LIKE '%" + lastName + "%') \n");
         }
         if (otherLastNames != null) {
             otherLastNames = (StringHelper.escapeSql(otherLastNames)).toUpperCase();
-            where.concatPart(new QueryPart(" AND (UPPER(person.otherLastNames) LIKE '%" + otherLastNames + "%') \n"));
+            whereString.add(" (UPPER(person.otherLastNames) LIKE '%" + otherLastNames + "%') \n");
         }
         if (genderId != null) {
-            where.concatPart(new QueryPart(" AND person.genderId = '" + genderId + "' \n"));
+            whereString.add(" (person.genderId = '" + genderId + "') \n");
+        }
+        if (identificationNumber != null){
+            identificationNumber = (StringHelper.escapeSql(identificationNumber)).toUpperCase();
+            whereString.add(" (UPPER(person.identificationNumber) LIKE '%"+identificationNumber+"%') \n");
         }
         if (identificationTypeId != null) {
-            where.concatPart(new QueryPart(" AND person.identificationTypeId = '" + identificationTypeId + "' \n"));
+            whereString.add(" (person.identificationTypeId = '"+identificationTypeId+"') \n");
         }
-        //if(birthDate != null)
-        return where;
+        if(birthDate != null){
+            String birthDateString = (StringHelper.escapeSql(birthDate.toString())).toUpperCase();
+            whereString.add(" (person.birthDate = '"+birthDateString+"') \n");
+        }
+        return new QueryPart(String.join(" AND ", whereString));
     }
 
     public String noResultMessage(){
@@ -106,7 +113,7 @@ public class PatientSearchQuery {
                 );
         diagnosisByDocuments.forEach((id,v) -> {
             Object[] tuple = v.get(0);
-            result.add(new PatientSearch(mapPerson(tuple), id, (Boolean) tuple[10], (int)0)); //rating no se usa, seteo 0
+            result.add(new PatientSearch(mapPerson(tuple), id, (Boolean) tuple[10], 0)); //rating no se usa, seteo 0
         });
         return result;
     }
@@ -114,14 +121,14 @@ public class PatientSearchQuery {
     private Person mapPerson(Object[] tuple) {
         int index = 1;
         Integer id = (Integer) tuple[index++];
-        String firstName = (String) tuple[index++];
-        String middleNames = (String) tuple[index++];
-        String lastName = (String) tuple[index++];
-        String otherLastNames = (String) tuple[index++];
-        Short genderId = (Short) tuple[index++];
-        Short identificationTypeId = (Short) tuple[index++];
-        String identificationNumber = (String) tuple[index++];
-        LocalDate birthDate = (LocalDate) tuple[index++];
-        return new Person(id, firstName, middleNames, lastName, otherLastNames, identificationTypeId, identificationNumber, genderId, birthDate);
+        String firstNamePerson = (String) tuple[index++];
+        String middleNamesPerson = (String) tuple[index++];
+        String lastNamePerson = (String) tuple[index++];
+        String otherLastNamesPerson = (String) tuple[index++];
+        Short genderIdPerson = (Short) tuple[index++];
+        Short identificationTypeIdPerson = (Short) tuple[index++];
+        String identificationNumberPerson = (String) tuple[index++];
+        LocalDate birthDatePerson = (LocalDate) tuple[index];
+        return new Person(id, firstNamePerson, middleNamesPerson, lastNamePerson, otherLastNamesPerson, identificationTypeIdPerson, identificationNumberPerson, genderIdPerson, birthDatePerson);
     }
 }
