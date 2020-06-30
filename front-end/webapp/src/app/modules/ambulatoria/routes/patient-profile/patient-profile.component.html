@@ -1,0 +1,16 @@
+<app-content width="full">
+	<section>
+		<div class="profile-card">
+			<app-patient-card [patient]="patientBasicData">
+				<div header class="header">
+					<app-patient-type-logo [patientTypeData]="patientTypeData"></app-patient-type-logo>
+				</div>
+				<div content>
+					<app-personal-information [personalInformation]="personalInformation"></app-personal-information>
+				</div>
+			</app-patient-card>
+		</div>
+	</section>
+	<em *ngIf="!internmentEpisode?.id && internmentEpisode?.inProgress">El paciente se encuentra internado en otra
+		institución.</em>
+</app-content>

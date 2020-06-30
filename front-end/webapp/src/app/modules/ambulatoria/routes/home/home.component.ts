@@ -139,8 +139,8 @@ export class HomeComponent implements OnInit {
 						display: 'Ver',
 						matColor: 'primary',
 						do: (row) => {
-							const url =this.routePrefix + ROUTE_PROFILE + row.idPatient;
-							this.router.navigate([url]);
+							const url = this.routePrefix + 'ambulatoria/paciente/' + row.idPatient;
+							this.router.navigateByUrl(url);
 						}
 					}
 				},

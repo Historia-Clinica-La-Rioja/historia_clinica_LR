@@ -6,11 +6,12 @@ import { FormsModule } from '@angular/forms';
 import { CoreModule } from '@core/core.module';
 import { PacientesModule } from '../pacientes/pacientes.module';
 import { PresentationModule } from '@presentation/presentation.module';
+import { PatientProfileComponent } from './routes/patient-profile/patient-profile.component';
 
 
 
 @NgModule({
-  declarations: [HomeComponent],
+  declarations: [HomeComponent, PatientProfileComponent],
   imports: [
 	AmbulatoriaRoutingModule,
 	FormsModule,
