@@ -26,8 +26,18 @@
 						   name="height"
 						   formControlName="height"
 						   placeholder="Ej: 180"
-						   maxlength="3"
+						   type="number"
 						   matInput>
+					<mat-error
+							*ngIf="hasError(this.form, 'min', 'height')"
+							[translate]="'forms.MIN_ERROR'"
+							[translateParams]="{min: getError(this.form, 'min', 'height').min}">
+					</mat-error>
+					<mat-error
+							*ngIf="hasError(this.form, 'max', 'height')"
+							[translate]="'forms.MAX_ERROR'"
+							[translateParams]="{max: getError(this.form, 'max', 'height').max}">
+					</mat-error>
 				</mat-form-field>
 			</div>
 			<div>
@@ -37,8 +47,18 @@
 						   name="weight"
 						   formControlName="weight"
 						   placeholder="Ej: 70"
-						   maxlength="3"
+						   type="number"
 						   matInput>
+					<mat-error
+							*ngIf="hasError(this.form, 'min', 'weight')"
+							[translate]="'forms.MIN_ERROR'"
+							[translateParams]="{min: getError(this.form, 'min', 'weight').min}">
+					</mat-error>
+					<mat-error
+							*ngIf="hasError(this.form, 'max', 'weight')"
+							[translate]="'forms.MAX_ERROR'"
+							[translateParams]="{max: getError(this.form, 'max', 'weight').max}">
+					</mat-error>
 				</mat-form-field>
 			</div>
 		</form>

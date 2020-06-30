@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
 	AllergyConditionDto, AnamnesisDto, DiagnosisDto,
 	HealthHistoryConditionDto, InmunizationDto,
@@ -15,6 +15,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from '@core/services/context.service';
 import { newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
+import { getError, hasError } from '@core/utils/form.utils';
 
 @Component({
 	selector: 'app-anamnesis-form',
@@ -26,6 +27,9 @@ export class AnamnesisFormComponent implements OnInit {
 	private internmentEpisodeId: number;
 	private patientId: number;
 	anamnesisId: number;
+
+	getError = getError;
+	hasError = hasError;
 
 	mainDiagnosisError: string = '';
 	anamnesis: ResponseAnamnesisDto;
@@ -41,14 +45,14 @@ export class AnamnesisFormComponent implements OnInit {
 	medications: MedicationDto[] = [];
 
 	constructor(
-		private formBuilder: FormBuilder,
-		private internacionMasterDataService: InternacionMasterDataService,
-		private anamnesisService: AnamnesisService,
-		private anamnesisReportService: AnamnesisReportService,
-		private route: ActivatedRoute,
-		private router: Router,
-		private contextService: ContextService,
-		private snackBarService: SnackBarService
+		private readonly formBuilder: FormBuilder,
+		private readonly internacionMasterDataService: InternacionMasterDataService,
+		private readonly anamnesisService: AnamnesisService,
+		private readonly anamnesisReportService: AnamnesisReportService,
+		private readonly route: ActivatedRoute,
+		private readonly router: Router,
+		private readonly contextService: ContextService,
+		private readonly snackBarService: SnackBarService
 	) {
 	}
 
@@ -64,8 +68,8 @@ export class AnamnesisFormComponent implements OnInit {
 		this.form = this.formBuilder.group({
 			anthropometricData: this.formBuilder.group({
 				bloodType: [null],
-				height: [null],
-				weight: [null],
+				height: [null, [Validators.min(0), Validators.max(1000)]],
+				weight: [null, [Validators.min(0), Validators.max(1000)]]
 			}),
 			vitalSigns: this.formBuilder.group({
 				heartRate: this.formBuilder.group({

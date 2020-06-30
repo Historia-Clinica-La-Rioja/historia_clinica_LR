@@ -24,7 +24,9 @@
 		"MAX_LENGTH_ERROR": "Introduzca como máximo {{max}} caracteres",
 		"INVALID_DATE": "La fecha ingresada no es válida",
 		"REQUIRING_FIELD_FOR_SEARCH":"Debe ingresar al menos un campo para la búsqueda",
-		"SEARCH_RESULTS": "Resultados de la búsqueda"
+		"SEARCH_RESULTS": "Resultados de la búsqueda",
+		"MIN_ERROR": "El valor no puede ser menor que {{min}}",
+		"MAX_ERROR": "El valor no puede ser mayor que {{max}}"
 	},
 	"messages": {
 		"NO_DATA": "No hay información para mostrar"

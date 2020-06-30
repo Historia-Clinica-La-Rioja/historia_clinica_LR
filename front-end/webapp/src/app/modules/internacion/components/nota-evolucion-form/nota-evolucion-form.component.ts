@@ -1,14 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { MasterDataInterface, DiagnosisDto, AllergyConditionDto, InmunizationDto, EvolutionNoteDto, ResponseEvolutionNoteDto } from '@api-rest/api-model';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import {
+	MasterDataInterface,
+	DiagnosisDto,
+	AllergyConditionDto,
+	InmunizationDto,
+	EvolutionNoteDto,
+	ResponseEvolutionNoteDto
+} from '@api-rest/api-model';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
-import { EvolutionNoteReportService } from '@api-rest/services/evolution-note-report.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from '@core/services/context.service';
 import { newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
+import { getError, hasError } from '@core/utils/form.utils';
 
 @Component({
 	selector: 'app-nota-evolucion-form',
@@ -20,6 +27,9 @@ export class NotaEvolucionFormComponent implements OnInit {
 	private internmentEpisodeId: number;
 	private patientId: number;
 
+	getError = getError;
+	hasError = hasError;
+
 	form: FormGroup;
 
 	bloodTypes: MasterDataInterface<string>[];
@@ -28,13 +38,13 @@ export class NotaEvolucionFormComponent implements OnInit {
 	inmunizations: InmunizationDto[] = [];
 
 	constructor(
-		private formBuilder: FormBuilder,
-		private internacionMasterDataService: InternacionMasterDataService,
-		private evolutionNoteService: EvolutionNoteService,
-		private route: ActivatedRoute,
-		private contextService: ContextService,
-		private router: Router,
-		private snackBarService: SnackBarService
+		private readonly formBuilder: FormBuilder,
+		private readonly internacionMasterDataService: InternacionMasterDataService,
+		private readonly evolutionNoteService: EvolutionNoteService,
+		private readonly route: ActivatedRoute,
+		private readonly contextService: ContextService,
+		private readonly router: Router,
+		private readonly snackBarService: SnackBarService
 	) {
 	}
 
@@ -49,8 +59,8 @@ export class NotaEvolucionFormComponent implements OnInit {
 		this.form = this.formBuilder.group({
 			anthropometricData: this.formBuilder.group({
 				bloodType: [null],
-				height: [null],
-				weight: [null],
+				height: [null, [Validators.min(0), Validators.max(1000)]],
+				weight: [null, [Validators.min(0), Validators.max(1000)]]
 			}),
 			vitalSigns: this.formBuilder.group({
 				heartRate: this.formBuilder.group({

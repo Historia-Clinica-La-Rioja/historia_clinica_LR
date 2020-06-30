@@ -1,4 +1,4 @@
-import { FormGroup, FormArray } from "@angular/forms";
+import { FormGroup, FormArray, AbstractControl } from '@angular/forms';
 import { ElementRef } from '@angular/core';
 
 export const VALIDATIONS = {
@@ -8,12 +8,16 @@ export const VALIDATIONS = {
 		medicalCoverageAffiliateNumber: 150,
 		medicalCoverageName: 255
 	}
-}
+};
 
 export const DEFAULT_COUNTRY_ID = 14;
 
-export function hasError(form: FormGroup, type: string, control: string): boolean {
+export function hasError(form: AbstractControl, type: string, control: string): boolean {
 	return form.get(control).hasError(type);
+}
+
+export function getError(form: AbstractControl, type: string, control: string): any {
+	return form.get(control).getError(type);
 }
 
 export function scrollIntoError(form: FormGroup, el: ElementRef) {
@@ -26,7 +30,7 @@ export function scrollIntoError(form: FormGroup, el: ElementRef) {
 	}
 
 	function getInvalidElement(el: ElementRef, controlName: string, form: FormGroup) {
-		let formControl = form.controls[controlName] as FormArray;
+		const formControl = form.controls[controlName] as FormArray;
 		if (formControl.controls)
 			return el.nativeElement.querySelector('[formgroupname="' + controlName + '"]');
 		return el.nativeElement.querySelector('[formcontrolname="' + controlName + '"]');

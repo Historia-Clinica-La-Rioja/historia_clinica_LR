@@ -1,10 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AnthropometricDataDto, EvolutionNoteDto, MasterDataInterface } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { getError, hasError } from '@core/utils/form.utils';
 
 @Component({
 	selector: 'app-add-anthropometric',
@@ -12,6 +13,9 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 	styleUrls: ['./add-anthropometric.component.scss']
 })
 export class AddAnthropometricComponent implements OnInit {
+
+	getError = getError;
+	hasError = hasError;
 
 	form: FormGroup;
 	loading = false;
@@ -30,8 +34,8 @@ export class AddAnthropometricComponent implements OnInit {
 	ngOnInit(): void {
 		this.form = this.formBuilder.group({
 			bloodType: [null],
-			height: [null],
-			weight: [null],
+			height: [null, [Validators.min(0), Validators.max(1000)]],
+			weight: [null, [Validators.min(0), Validators.max(1000)]]
 		});
 
 		const bloodTypes$ = this.internacionMasterDataService.getBloodTypes();
