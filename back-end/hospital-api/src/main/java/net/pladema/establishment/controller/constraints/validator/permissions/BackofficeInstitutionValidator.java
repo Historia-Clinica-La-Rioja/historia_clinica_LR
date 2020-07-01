@@ -45,7 +45,7 @@ public class BackofficeInstitutionValidator implements BackofficePermissionValid
 	}
 
 	@Override
-	public List<Integer> filterByPermission(List<Integer> ids) {
+	public List<Integer> filterIdsByPermission(List<Integer> ids) {
 		if (authoritiesValidator.hasRole(ERole.ROOT) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
 			return ids;
 		return ids.stream().filter(id -> {
@@ -92,6 +92,16 @@ public class BackofficeInstitutionValidator implements BackofficePermissionValid
 		List<Integer> resultIds = entitiesByExample.stream().filter(css -> allowedInstitutions.contains(css.getId()))
 				.map(Institution::getId).collect(Collectors.toList());
 		return new ItemsAllowed<>(false, resultIds);
+	}
+
+	@Override
+	public ItemsAllowed itemsAllowedToList() {
+		if (authoritiesValidator.hasRole(ERole.ROOT) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
+			return new ItemsAllowed<>();
+		List<Integer> allowedInstitutions = authoritiesValidator.allowedInstitutionIds(Arrays.asList(ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE));
+		if (allowedInstitutions.isEmpty())
+			return new ItemsAllowed<>(false, Collections.emptyList());
+		return new ItemsAllowed<>(false, allowedInstitutions);
 	}
 
 	private void hasPermissionByInstitution(Integer institutionId) {

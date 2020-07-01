@@ -29,6 +29,11 @@ public class BackofficeRolesStore implements BackofficeStore<Role, Short> {
 	}
 
 	@Override
+	public List<Role> findAll() {
+		return toList(roleRepository.findAll());
+	}
+
+	@Override
 	public List<Role> findAllById(List<Short> ids) {
 		return toList(roleRepository.findAllById(ids));
 	}

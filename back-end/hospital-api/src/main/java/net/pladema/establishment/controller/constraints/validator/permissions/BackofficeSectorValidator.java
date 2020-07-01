@@ -45,7 +45,7 @@ public class BackofficeSectorValidator implements BackofficePermissionValidator<
 	}
 
 	@Override
-	public List<Integer> filterByPermission(List<Integer> ids) {
+	public List<Integer> filterIdsByPermission(List<Integer> ids) {
 		if (authoritiesValidator.hasRole(ERole.ROOT) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
 			return ids;
 		return ids.stream().filter(id -> {
@@ -90,6 +90,9 @@ public class BackofficeSectorValidator implements BackofficePermissionValidator<
 	public ItemsAllowed itemsAllowedToList(Sector entity) {
 		if (authoritiesValidator.hasRole(ERole.ROOT) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
 			return new ItemsAllowed<>();
+		if (entity.getInstitutionId() == null)
+			throw new PermissionDeniedException(NO_CUENTA_CON_SUFICIENTES_PRIVILEGIOS);
+
 		List<Integer> allowedInstitutions = authoritiesValidator.allowedInstitutionIds(Arrays.asList(ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE));
 		if (allowedInstitutions.isEmpty())
 			return new ItemsAllowed<>(false, Collections.emptyList());
@@ -98,6 +101,17 @@ public class BackofficeSectorValidator implements BackofficePermissionValidator<
 		List<Integer> idsAllowed = repository.getAllIdsByInstitutionsId(allowedInstitutions);
 		List<Integer> resultIds = entitiesByExample.stream().filter(css -> idsAllowed.contains(css.getId())).map(Sector::getId).collect(Collectors.toList());
 		return new ItemsAllowed<>(false, resultIds);
+	}
+
+	@Override
+	public ItemsAllowed itemsAllowedToList() {
+		if (authoritiesValidator.hasRole(ERole.ROOT) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
+			return new ItemsAllowed<>();
+		List<Integer> allowedInstitutions = authoritiesValidator.allowedInstitutionIds(Arrays.asList(ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE));
+		if (allowedInstitutions.isEmpty())
+			return new ItemsAllowed<>(false, Collections.emptyList());
+		List<Integer> idsAllowed = repository.getAllIdsByInstitutionsId(allowedInstitutions);
+		return new ItemsAllowed<>(false, idsAllowed);
 	}
 
 	private void hasPermissionByInstitution(Integer institutionId) {

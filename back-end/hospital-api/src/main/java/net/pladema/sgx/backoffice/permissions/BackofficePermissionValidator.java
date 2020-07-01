@@ -8,7 +8,7 @@ public interface BackofficePermissionValidator<E, I> {
 
 	void assertGetList(E entity);
 
-	List<I> filterByPermission(List<I> ids);
+	List<I> filterIdsByPermission(List<I> ids);
 
 	void assertGetOne(I id);
 
@@ -19,4 +19,6 @@ public interface BackofficePermissionValidator<E, I> {
 	void assertDelete(I id);
 
     ItemsAllowed itemsAllowedToList(E entity);
+
+	ItemsAllowed itemsAllowedToList();
 }

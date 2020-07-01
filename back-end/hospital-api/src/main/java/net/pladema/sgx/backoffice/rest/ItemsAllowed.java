@@ -18,4 +18,8 @@ public class ItemsAllowed <I>{
         this.all = true;
         this.ids = new ArrayList<>();
     }
+
+    public boolean isEmpty(){
+        return ids.isEmpty();
+    }
 }

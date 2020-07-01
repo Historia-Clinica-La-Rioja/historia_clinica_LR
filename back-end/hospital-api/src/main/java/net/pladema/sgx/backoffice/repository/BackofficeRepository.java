@@ -33,6 +33,11 @@ public class BackofficeRepository<E, I> implements BackofficeStore<E, I>{
 		return repository.findAll(example, pageable);
 	}
 
+	@Override
+	public List<E> findAll() {
+		return repository.findAll();
+	}
+
 	public List<E> findAllById(List<I> ids) {
 		return repository.findAllById(ids);
 	}

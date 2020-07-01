@@ -26,7 +26,7 @@ public class BackofficePasswordResetValidator
  	}
 
 	@Override
-	public List<Long> filterByPermission(List<Long> ids) {
+	public List<Long> filterIdsByPermission(List<Long> ids) {
 		return ids;
 	}
 
@@ -56,6 +56,13 @@ public class BackofficePasswordResetValidator
 
 	@Override
 	public ItemsAllowed itemsAllowedToList(PasswordResetToken entity) {
+		if (authoritiesValidator.hasRole(ERole.ROOT) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
+			return new ItemsAllowed<>(true, new ArrayList<>());
+		return new ItemsAllowed<>(false, new ArrayList<>());
+	}
+
+	@Override
+	public ItemsAllowed itemsAllowedToList() {
 		if (authoritiesValidator.hasRole(ERole.ROOT) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
 			return new ItemsAllowed<>(true, new ArrayList<>());
 		return new ItemsAllowed<>(false, new ArrayList<>());

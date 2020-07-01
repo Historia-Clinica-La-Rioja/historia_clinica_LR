@@ -31,6 +31,8 @@ import java.util.Optional;
 public interface BackofficeStore<E, I> {
 	Page<E> findAll(E example, Pageable pageable);
 
+	List<E> findAll();
+
 	List<E> findAllById(List<I> ids);
 
 	Optional<E> findById(I id);

@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractBackofficeController<E, I> {
@@ -101,7 +102,7 @@ public abstract class AbstractBackofficeController<E, I> {
     public @ResponseBody
     Page<E> getList(Pageable pageable, E entity) {
         logger.debug("GET_LIST {}", entity);
-        ItemsAllowed itemsAllowed = permissionValidator.itemsAllowedToList(entity);
+        ItemsAllowed<I> itemsAllowed = permissionValidator.itemsAllowedToList(entity);
         if (itemsAllowed.all)
             return store.findAll(entity, pageable);
         List<E> list = store.findAllById(itemsAllowed.ids);
@@ -111,8 +112,20 @@ public abstract class AbstractBackofficeController<E, I> {
     @GetMapping(params = "ids")
     public @ResponseBody
     Iterable<E> getMany(@RequestParam List<I> ids) {
-        ids = permissionValidator.filterByPermission(ids);
+        ids = permissionValidator.filterIdsByPermission(ids);
         return store.findAllById(ids);
+    }
+
+
+    @GetMapping(value="/elements")
+    public @ResponseBody
+    Iterable<E> getElements() {
+        ItemsAllowed<I> itemsAllowed = permissionValidator.itemsAllowedToList();
+        if (itemsAllowed.all)
+            return store.findAll();
+        if (itemsAllowed.isEmpty())
+            return new ArrayList<>();
+        return store.findAllById(itemsAllowed.ids);
     }
 
     @GetMapping("/{id}")

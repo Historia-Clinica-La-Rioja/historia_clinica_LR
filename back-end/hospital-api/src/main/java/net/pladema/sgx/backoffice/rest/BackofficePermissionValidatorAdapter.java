@@ -39,7 +39,7 @@ public class BackofficePermissionValidatorAdapter<E, I> implements BackofficePer
 	}
 
 	@Override
-	public List<I> filterByPermission(List<I> ids) {
+	public List<I> filterIdsByPermission(List<I> ids) {
 		assertMethodAccepted(HttpMethod.GET);
 		return ids;
 	}
@@ -66,6 +66,12 @@ public class BackofficePermissionValidatorAdapter<E, I> implements BackofficePer
 
 	@Override
 	public ItemsAllowed itemsAllowedToList(E entity) {
+		assertMethodAccepted(HttpMethod.GET);
+		return new ItemsAllowed<>(true, new ArrayList<>());
+	}
+
+	@Override
+	public ItemsAllowed itemsAllowedToList() {
 		assertMethodAccepted(HttpMethod.GET);
 		return new ItemsAllowed<>(true, new ArrayList<>());
 	}

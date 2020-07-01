@@ -26,7 +26,7 @@ public class BackofficeUserValidator
  	}
 
 	@Override
-	public List<Integer> filterByPermission(List<Integer> ids) {
+	public List<Integer> filterIdsByPermission(List<Integer> ids) {
 		return ids;
 	}
 
@@ -70,6 +70,13 @@ public class BackofficeUserValidator
 
 	@Override
 	public ItemsAllowed itemsAllowedToList(BackofficeUserDto entity) {
+		if (authoritiesValidator.hasRole(ERole.ROOT) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
+			return new ItemsAllowed<>(true, new ArrayList<>());
+		return new ItemsAllowed<>(false, new ArrayList<>());
+	}
+
+	@Override
+	public ItemsAllowed itemsAllowedToList() {
 		if (authoritiesValidator.hasRole(ERole.ROOT) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
 			return new ItemsAllowed<>(true, new ArrayList<>());
 		return new ItemsAllowed<>(false, new ArrayList<>());
