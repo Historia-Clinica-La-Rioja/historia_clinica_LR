@@ -3,6 +3,8 @@ import { Observable, of } from "rxjs";
 import { environment } from "@environments/environment";
 import { HttpClient } from "@angular/common/http";
 import { BMPersonDto, APatientDto, BMPatientDto, PatientSearchDto } from "@api-rest/api-model";
+import { DateFormat, momentFormat } from '@core/utils/moment.utils';
+import { Moment } from 'moment';
 
 const PATIENTS_DATA = [
 	{
@@ -84,9 +86,31 @@ export class PatientService {
 		return this.http.put<BMPatientDto>(url, datosPersonales);
 	}
 
-	searchPatientOptionalFilters(searchFilterStr: string): Observable<PatientSearchDto[]> {
+	searchPatientOptionalFilters(person: PersonInformationRequest): Observable<PatientSearchDto[]> {
+
+		this.mapToRequestParams(person);
 		let url = `${environment.apiBase}/patient/optionalfilter`;
-		return this.http.get<PatientSearchDto[]>(url, { params: { 'searchFilterStr': searchFilterStr } });
+		return this.http.get<PatientSearchDto[]>(url, { params: { 'searchFilterStr': JSON.stringify(person) } });
 	}
 
+	private mapToRequestParams(person: PersonInformationRequest) {
+		if (person.birthDate != null)
+		person.birthDate = momentFormat(person.birthDate as Moment,DateFormat.API_DATE);
+
+		for (const property of Object.keys(person) ) {
+			person[property] = person[property] === '' ? null : person[property];
+		}
+	}
+
+}
+
+export class PersonInformationRequest {
+	firstName?: string;
+	middleNames?: string;
+	lastName?: string;
+	otherLastNames?: string;
+	genderId?: number;
+	identificationNumber?: string;
+	identificationTypeId?: number;
+	birthDate?: string | Moment;
 }

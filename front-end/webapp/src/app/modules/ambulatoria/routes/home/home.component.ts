@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import {FormGroup, FormBuilder,Validators } from '@angular/forms';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { GenderDto, IdentificationTypeDto, PatientSearchDto } from '@api-rest/api-model';
-import { hasError, atLeastOneValueInFormGroup, VALIDATIONS } from '@core/utils/form.utils';
+import { hasError, atLeastOneValueInFormGroup, } from '@core/utils/form.utils';
 import { Moment } from 'moment';
 import * as moment from 'moment';
 import { TableModel, ActionDisplays } from '@presentation/components/table/table.component';
 import { momentFormatDate, DateFormat, momentFormat } from '@core/utils/moment.utils';
 import { Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
-import { PatientService } from '@api-rest/services/patient.service';
+import { PatientService, PersonInformationRequest } from '@api-rest/services/patient.service';
 import { PERSON } from '@core/constants/validation-constants';
 
 const ROUTE_PROFILE = 'pacientes/profile/';
@@ -90,9 +90,8 @@ export class HomeComponent implements OnInit {
 	if ((this.personalInformationForm.valid)){
 		this.formSubmitted = true;
 		this.requiringValues = false;
-		if (this.personalInformationForm.controls.birthDate.value != null)
-			this.personalInformationForm.controls.birthDate.setValue(momentFormat(this.personalInformationForm.controls.birthDate.value,DateFormat.API_DATE));
-		this.patientService.searchPatientOptionalFilters(JSON.stringify(this.personalInformationForm.value))
+		let personalInformationReq : PersonInformationRequest = this.personalInformationForm.value;
+		this.patientService.searchPatientOptionalFilters(personalInformationReq)
 			.subscribe( data =>
 					this.tableModel = this.buildTable(data));
 	}
