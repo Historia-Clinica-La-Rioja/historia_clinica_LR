@@ -5,16 +5,16 @@ import {
     TextField,
     ReferenceField,
     FunctionField,
-    BooleanField, Filter, ReferenceInput, SelectInput
+    BooleanField, Filter
 } from 'react-admin';
+
+import SgxSelectInput from '../../sgxSelectInput/SgxSelectInput';
 
 const renderRoom = room => `${room.roomNumber} - ${room.description}`;
 
 const BedFilter = props =>(
     <Filter {...props}>
-        <ReferenceInput source="roomId" reference="rooms" alwaysOn allowEmpty={false}>
-            <SelectInput optionText="description" />
-        </ReferenceInput>
+        <SgxSelectInput source="roomId" element="rooms" optionText="description" alwaysOn allowEmpty={false}/>
     </Filter>
 );
 

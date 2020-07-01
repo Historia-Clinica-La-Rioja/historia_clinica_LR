@@ -4,15 +4,16 @@ import {
     Datagrid,
     TextField,
     ReferenceField,
-    DeleteButton, Filter, ReferenceInput, SelectInput,
+    DeleteButton, Filter
 } from 'react-admin';
 import SubReference from '../components/subreference';
 
+
+import SgxSelectInput from '../../sgxSelectInput/SgxSelectInput';
+
 const ClinicalSpecialtySectorFilter = props =>(
     <Filter {...props}>
-        <ReferenceInput source="sectorId" reference="sectors" alwaysOn allowEmpty={false}>
-            <SelectInput optionText="description" />
-        </ReferenceInput>
+        <SgxSelectInput  source="sectorId" element="sectors" optionText="description" alwaysOn allowEmpty={false}/>
     </Filter>
 );
 

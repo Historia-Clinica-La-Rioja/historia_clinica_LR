@@ -4,16 +4,14 @@ import {
     Datagrid,
     ReferenceField,
     TextField,
-    Filter,
-    ReferenceInput,
-    SelectInput
+    Filter
 } from 'react-admin';
+
+import SgxSelectInput from '../../sgxSelectInput/SgxSelectInput';
 
 const SectorFilter = props =>(
     <Filter {...props}>
-        <ReferenceInput source="institutionId" reference="institutions" alwaysOn allowEmpty={false}>
-            <SelectInput optionText="name" />
-        </ReferenceInput>
+        <SgxSelectInput source="institutionId" element="institutions" optionText="name" alwaysOn allowEmpty={false}/>
     </Filter>
 );
 

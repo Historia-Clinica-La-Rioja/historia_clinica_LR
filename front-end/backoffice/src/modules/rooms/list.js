@@ -4,14 +4,15 @@ import {
     Datagrid,
     TextField,
     ReferenceField,
-    DateField, Filter, ReferenceInput, SelectInput,
+    DateField, Filter
 } from 'react-admin';
 
+import SgxSelectInput from '../../sgxSelectInput/SgxSelectInput';
+
 const RoomFilter = props =>(
+
     <Filter {...props}>
-        <ReferenceInput label="Especialidad | Sector" source="id" reference="clinicalspecialtysectors" alwaysOn allowEmpty={false}>
-            <SelectInput optionText="description" />
-        </ReferenceInput>
+        <SgxSelectInput label="Especialidad | Sector" source="clinicalSpecialtySectorId" element="clinicalspecialtysectors" optionText="description" alwaysOn allowEmpty={false}/>
     </Filter>
 );
 
