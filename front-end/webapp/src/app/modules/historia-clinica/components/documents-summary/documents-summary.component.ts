@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Moment } from 'moment';
 import { DocumentHistoricDto, DocumentSearchFilterDto, EDocumentSearch, DocumentSearchDto } from '@api-rest/api-model';
 import { DateFormat, momentFormat, newMoment } from '@core/utils/moment.utils';
-import { EvolutionNotesListenerService } from '../../services/evolution-notes-listener.service';
+import { EvolutionNotesListenerService } from '../../../internacion/services/evolution-notes-listener.service';
 
 @Component({
 	selector: 'app-documents-summary',

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ANTROPOMETRICOS } from '../../constants/summaries';
-import { DetailBox } from 'src/app/modules/presentation/components/detail-box/detail-box.component';
+import { DetailBox } from '@presentation/components/detail-box/detail-box.component';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { AnthropometricDataDto } from '@api-rest/api-model';
 import { MatDialog } from '@angular/material/dialog';

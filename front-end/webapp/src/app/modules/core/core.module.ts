@@ -8,7 +8,7 @@ import { TranslateModule } from "@ngx-translate/core";
 import { RECAPTCHA_SETTINGS, RecaptchaFormsModule, RecaptchaModule, RecaptchaSettings } from "ng-recaptcha";
 import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { RouterModule } from '@angular/router';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { HasRoleDirective } from './directives/has-role.directive';
 import { FeatureFlagDirective } from './directives/feature-flag.directive';
@@ -27,6 +27,7 @@ const globalSettings: RecaptchaSettings = { siteKey: '' }; // TODO completar cua
 		AppMaterialModule,
 		CommonModule,
 		HttpClientModule,
+		FormsModule,
 		ReactiveFormsModule,
 		RecaptchaModule,
 		RecaptchaFormsModule,
@@ -41,6 +42,7 @@ const globalSettings: RecaptchaSettings = { siteKey: '' }; // TODO completar cua
 		FeatureFlagDirective,
 		HasRoleDirective,
 		HttpClientModule,
+		FormsModule,
 		ReactiveFormsModule,
 		RecaptchaModule,
 		RecaptchaFormsModule,

@@ -28,7 +28,7 @@ import {
 import { InternacionService } from '@api-rest/services/internacion.service';
 import { InternmentEpisodeService } from '@api-rest/services/internment-episode.service';
 
-import { INTERNACION } from '../../constants/summaries';
+import { INTERNACION } from '../../../historia-clinica/constants/summaries';
 import { ROLES_FOR_EDIT_DIAGNOSIS } from '../../constants/permissions';
 
 @Component({

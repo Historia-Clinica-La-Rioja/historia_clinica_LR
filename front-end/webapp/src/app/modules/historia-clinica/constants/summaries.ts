@@ -1,4 +1,4 @@
-import { SummaryHeader } from '../../presentation/components/summary-card/summary-card.component';
+import { SummaryHeader } from '@presentation/components/summary-card/summary-card.component';
 import { SearchField } from '../components/documents-summary/documents-summary.component';
 import { EDocumentSearch } from '@api-rest/api-model';
 

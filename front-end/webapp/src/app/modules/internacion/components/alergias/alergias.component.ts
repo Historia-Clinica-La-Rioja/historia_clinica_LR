@@ -2,8 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AllergyConditionDto, SnomedDto } from '@api-rest/api-model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
-import { SEMANTICS_CONFIG } from '../../constants/snomed-semantics';
-import { SnomedSemanticSearch, SnomedService } from '../../services/snomed.service';
+import { SEMANTICS_CONFIG } from '../../../historia-clinica/constants/snomed-semantics';
+import { SnomedSemanticSearch, SnomedService } from '../../../historia-clinica/services/snomed.service';
 
 @Component({
 	selector: 'app-alergias',

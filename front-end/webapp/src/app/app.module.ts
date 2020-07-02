@@ -18,9 +18,8 @@ import { ApiRestModule } from '@api-rest/api-rest.module';
 import { CoreModule } from '@core/core.module';
 import { AppMaterialModule } from './modules/material/app.material.module';
 import { AuthModule } from './modules/auth/auth.module';
-import { PresentationModule } from './modules/presentation/presentation.module';
+import { PresentationModule } from '@presentation/presentation.module';
 import { FlavoredMultiTranslateHttpLoader } from '@core/utils/flavored-multi-translate-http-loader';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { PublicService } from '@api-rest/services/public.service';
 
 @NgModule({
@@ -30,7 +29,6 @@ import { PublicService } from '@api-rest/services/public.service';
 	imports: [
 		BrowserAnimationsModule,
 		BrowserModule,
-		FlexLayoutModule,
 		FormsModule,
 		HttpClientModule,
 		RouterModule,

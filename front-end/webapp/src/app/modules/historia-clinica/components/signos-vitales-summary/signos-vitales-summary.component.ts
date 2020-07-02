@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { SummaryHeader } from 'src/app/modules/presentation/components/summary-card/summary-card.component';
+import { SummaryHeader } from '@presentation/components/summary-card/summary-card.component';
 import { SIGNOS_VITALES } from '../../constants/summaries';
-import { VitalSingCurrentPrevious } from 'src/app/modules/presentation/components/signo-vital-current-previous/signo-vital-current-previous.component';
+import { VitalSingCurrentPrevious } from '@presentation/components/signo-vital-current-previous/signo-vital-current-previous.component';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { Last2VitalSignsDto, VitalSignDto } from '@api-rest/api-model';
 import { momentParseDateTime } from '@core/utils/moment.utils';

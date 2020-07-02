@@ -23,8 +23,8 @@ import { ContextService } from '@core/services/context.service';
 import { TableCheckbox } from 'src/app/modules/material/model/table.model';
 import { TableService } from '@core/services/table.service';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
-import { SnomedSemanticSearch, SnomedService } from '../../services/snomed.service';
-import { SEMANTICS_CONFIG } from '../../constants/snomed-semantics';
+import { SnomedSemanticSearch, SnomedService } from '../../../historia-clinica/services/snomed.service';
+import { SEMANTICS_CONFIG } from '../../../historia-clinica/constants/snomed-semantics';
 import { DiagnosisEpicrisisService } from '../../services/diagnosis-epicrisis.service';
 
 @Component({

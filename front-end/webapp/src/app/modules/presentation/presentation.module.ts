@@ -16,7 +16,7 @@ import { MainLayoutComponent } from './components/main-layout/main-layout.compon
 import { BarComponent } from './components/bar/bar.component';
 import { MenuComponent } from './components/menu/menu.component';
 import { FooterComponent } from './components/footer/footer.component';
-import { FlexModule } from '@angular/flex-layout';
+import { FlexLayoutModule, FlexModule } from '@angular/flex-layout';
 
 @NgModule({
 	declarations: [
@@ -41,6 +41,7 @@ import { FlexModule } from '@angular/flex-layout';
 		CommonModule,
 		CoreModule,
 		FlexModule,
+		FlexLayoutModule,
 	],
 	exports: [
 		BarComponent,
@@ -57,6 +58,8 @@ import { FlexModule } from '@angular/flex-layout';
 		PatientTypeLogoComponent,
 		MainLayoutComponent,
 		MenuComponent,
+		FlexModule,
+		FlexLayoutModule,
 	]
 })
 export class PresentationModule { }

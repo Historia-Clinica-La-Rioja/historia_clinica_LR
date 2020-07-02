@@ -6,8 +6,8 @@ import { Moment } from 'moment';
 import { DatePipe } from '@angular/common';
 import { DateFormat } from '@core/utils/moment.utils';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
-import { SEMANTICS_CONFIG } from '../../constants/snomed-semantics';
-import { SnomedSemanticSearch, SnomedService } from '../../services/snomed.service';
+import { SEMANTICS_CONFIG } from '../../../historia-clinica/constants/snomed-semantics';
+import { SnomedSemanticSearch, SnomedService } from '../../../historia-clinica/services/snomed.service';
 
 @Component({
 	selector: 'app-vacunas',
