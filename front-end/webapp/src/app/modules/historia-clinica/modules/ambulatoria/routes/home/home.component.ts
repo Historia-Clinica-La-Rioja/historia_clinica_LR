@@ -5,7 +5,7 @@ import { GenderDto, IdentificationTypeDto, PatientSearchDto } from '@api-rest/ap
 import { atLeastOneValueInFormGroup, hasError, } from '@core/utils/form.utils';
 import { Moment } from 'moment';
 import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
-import { DateFormat, momentFormatDate, newMoment } from '@core/utils/moment.utils';
+import { DateFormat, momentFormat, momentFormatDate, momentParseDate, momentParseDateTime, newMoment } from '@core/utils/moment.utils';
 import { Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
 import { PatientService, PersonInformationRequest } from '@api-rest/services/patient.service';
@@ -124,7 +124,7 @@ export class HomeComponent implements OnInit {
 				{
 					columnDef: 'birthDate',
 					header: 'F. Nac',
-					text: (row) => (row.person.birthDate === undefined) ? '' : momentFormatDate(new Date(row.person.birthDate), DateFormat.VIEW_DATE)
+					text: (row) => (row.person.birthDate === undefined) ? '' : momentFormat(momentParseDateTime(String(row.person.birthDate)), DateFormat.VIEW_DATE)
 				},
 				{
 				 	columnDef: 'gender',

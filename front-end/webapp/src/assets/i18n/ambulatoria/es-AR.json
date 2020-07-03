@@ -3,6 +3,15 @@
 		"home": {
 			"TITLE": "HCE Ambulatoria",
 			"SUBTITLE": "Complete los campos deseados"
+		},
+		"paciente": {
+			"TITLE": "HCE Ambulatoria",
+			"resumen": {
+				"TITLE": "Resumen"
+			},
+			"problemas": {
+				"TITLE": "Problemas"
+			}
 		}
 	}
 }

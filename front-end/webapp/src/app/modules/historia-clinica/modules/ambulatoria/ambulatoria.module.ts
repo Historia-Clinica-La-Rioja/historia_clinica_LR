@@ -8,17 +8,26 @@ import { PacientesModule } from '../../../pacientes/pacientes.module';
 import { PresentationModule } from '@presentation/presentation.module';
 import { PatientProfileComponent } from './routes/patient-profile/patient-profile.component';
 import { AmbulatoriaPacienteComponent } from './routes/ambulatoria-paciente/ambulatoria-paciente.component';
+import { ResumenComponent } from './routes/resumen/resumen.component';
+import { ProblemasComponent } from './routes/problemas/problemas.component';
 
 
 @NgModule({
-  declarations: [HomeComponent, PatientProfileComponent, AmbulatoriaPacienteComponent],
-  imports: [
-	AmbulatoriaRoutingModule,
-	FormsModule,
-	CommonModule,
-	CoreModule,
-	PacientesModule,
-	PresentationModule
-  ]
+	declarations: [
+		HomeComponent,
+		PatientProfileComponent,
+		AmbulatoriaPacienteComponent,
+		ResumenComponent,
+		ProblemasComponent
+	],
+	imports: [
+		AmbulatoriaRoutingModule,
+		FormsModule,
+		CommonModule,
+		CoreModule,
+		PacientesModule,
+		PresentationModule
+	]
 })
-export class AmbulatoriaModule { }
+export class AmbulatoriaModule {
+}
