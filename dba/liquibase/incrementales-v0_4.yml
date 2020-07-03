@@ -1,3 +1,123 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v0_2 
-
+    
+- changeSet:
+    id: outpatient_consultation-createTable
+    comment: Create table outpatient_consultation
+    author: lbergottini
+    changes: 
+    - createTable: 
+        tableName: outpatient_consultation
+        columns: 
+        - column:
+            autoIncrement: true
+            constraints:
+                primaryKey: true
+                primaryKeyName: PK_outpatient_consultation
+            name: id
+            type: int
+        - column:
+            constraints:
+                nullable: false
+            name: patient_id
+            type: int
+        - column:
+            constraints:
+                nullable: false
+            name: clinical_speciality_id 
+            type: int
+        - column:
+            constraints:
+                nullable: false
+            name: institution_id 
+            type: int         
+        - column:
+            constraints:
+                nullable: false
+            name: start_date 
+            type: date
+        - column:
+            constraints:
+                nullable: false
+            name: document_id  
+            type: bigint
+        - column:
+            constraints:
+                nullable: false
+            name: doctor_id  
+            type: int
+        - column:
+            constraints:
+                nullable: false
+            name: billable 
+            type: boolean  
+            defaultValue: ${boolean.false}            
+        - column:
+            constraints:
+                nullable: false
+            name: created_by
+            type: int
+            defaultValue: -1
+        - column:
+            constraints:
+                nullable: false
+            name: created_on
+            type: datetime
+            defaultValueDate: ${date.now} 
+        - column:
+            constraints:
+                nullable: false
+            name: updated_by
+            type: int
+            defaultValue: -1
+        - column:
+            constraints:
+                nullable: false
+            name: updated_on
+            type: datetime
+            defaultValueDate: ${date.now} 
+    - addForeignKeyConstraint:
+        baseColumnNames: patient_id
+        baseTableName: outpatient_consultation
+        constraintName: FK_outpatient_consultation_patient_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: patient
+        validate: true              
+    - addForeignKeyConstraint:
+        baseColumnNames: clinical_speciality_id
+        baseTableName: outpatient_consultation
+        constraintName: FK_outpatient_consultation_clinical_speciality_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: clinical_speciality
+        validate: true   
+    - addForeignKeyConstraint:
+        baseColumnNames: institution_id
+        baseTableName: outpatient_consultation
+        constraintName: FK_outpatient_consultation_institution_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: institution
+        validate: true 
+    - addForeignKeyConstraint:
+        baseColumnNames: document_id
+        baseTableName: outpatient_consultation
+        constraintName: FK_outpatient_consultation_document_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: document
+        validate: true
+    - addForeignKeyConstraint:
+        baseColumnNames: doctor_id
+        baseTableName: outpatient_consultation
+        constraintName: FK_outpatient_consultation_healthcare_professional_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: healthcare_professional
+        validate: true
