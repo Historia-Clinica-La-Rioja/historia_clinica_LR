@@ -22,7 +22,7 @@
 	<div>
 		<span>Domicilio</span>
 		<span *ngIf="addressPresent; else noInformation">
-			<span class="bold">{{personalInformation?.address | fullHouseAddress}}</span>
+			<span class="bold">{{address | fullHouseAddress}}</span>
 			<span *ngIf="personalInformation?.address?.city?.description"
 				class="bold">{{personalInformation?.address?.city?.description}}, {{personalInformation?.address?.province?.description}}</span>
 		</span>
