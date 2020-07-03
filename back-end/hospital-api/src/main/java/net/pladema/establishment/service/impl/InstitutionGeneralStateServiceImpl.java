@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -37,7 +36,6 @@ public class InstitutionGeneralStateServiceImpl implements InstitutionGeneralSta
         LOG.debug("Input parameters -> institutionId {}", institutionId);
 
         List<VInstitution> generalState =  vInstitutionRepository.getGeneralState(institutionId);
-        List<VInstitutionVitalSign> vitalSignGeneralState = vInstitutionVitalSignRepository.getGeneralState(institutionId);
         VInstitutionBo result = new VInstitutionBo();
 
         if(!generalState.isEmpty()){
@@ -55,20 +53,21 @@ public class InstitutionGeneralStateServiceImpl implements InstitutionGeneralSta
 
         //#Cantidad de adultos mayores con diagnostico presuntivo de Covid
         count = generalState.stream()
-                .filter(i -> i.getCovidPresumtive() != null)
+                .filter(VInstitution::isCovidPresumtive)
                 .count();
         result.setPatientWithCovidPresumtiveCount(count);
 
-        List<VInstitutionVitalSign> toBeChanged = vitalSignGeneralState.stream()
+        List<VInstitutionVitalSign> vitalSignGeneralState = vInstitutionVitalSignRepository.getGeneralState(institutionId);
+        List<VInstitutionVitalSign> vitalSignsValid = vitalSignGeneralState.stream()
                 .filter(i -> EVitalSign.isCodeVitalSign(i.getSctidCode()))
                 .collect(Collectors.toList());
 
         //#Cantidad de adultos mayores con signos vitales cargados en las últimas 24hh
-        count = toBeChanged.stream().filter(i -> i.getLoadDays() < 2).count();
+        count = vitalSignsValid.stream().filter(i -> i.getLoadDays() < 2).count();
         result.setPatientWithVitalSignCount(count);
 
         //#Fecha más lejana de carga de signo vital
-        Optional<VInstitutionVitalSign> minLoadVitalSign = toBeChanged.stream()
+        Optional<VInstitutionVitalSign> minLoadVitalSign = vitalSignsValid.stream()
                 .min(Comparator.comparing( VInstitutionVitalSign::getEffectiveTime ) );
         minLoadVitalSign.ifPresent(v ->
             result.setLastDateVitalSign(v.getEffectiveTime())
