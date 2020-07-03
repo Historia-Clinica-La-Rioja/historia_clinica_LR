@@ -1,6 +1,6 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v0_2 
-    
+- logicalFilePath: incrementales-v0_2 
+
 - changeSet:
     id: outpatient_consultation-createTable
     comment: Create table outpatient_consultation
@@ -92,7 +92,7 @@ databaseChangeLog:
         onDelete: NO ACTION
         onUpdate: NO ACTION
         referencedColumnNames: id
-        referencedTableName: clinical_speciality
+        referencedTableName: clinical_specialty
         validate: true   
     - addForeignKeyConstraint:
         baseColumnNames: institution_id
