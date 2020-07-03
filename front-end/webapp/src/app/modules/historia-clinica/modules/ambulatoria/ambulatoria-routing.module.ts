@@ -1,19 +1,24 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './routes/home/home.component';
 import { RoleGuard } from '@core/guards/RoleGuard';
 import { PatientProfileComponent } from './routes/patient-profile/patient-profile.component';
+import { AmbulatoriaPacienteComponent } from './routes/ambulatoria-paciente/ambulatoria-paciente.component';
 
 const routes: Routes = [
 	{
 		path: '',
 		children: [
 			{	path: '',
-				component: HomeComponent}
-			,
+				component: HomeComponent
+			},
 			{
-				path: 'paciente/:id',
+				path: 'paciente/:id/profile',
 				component: PatientProfileComponent
+			},
+			{
+				path: ':id/paciente/:id',
+				component: AmbulatoriaPacienteComponent
 			},
 		],
 		canActivate: [RoleGuard],

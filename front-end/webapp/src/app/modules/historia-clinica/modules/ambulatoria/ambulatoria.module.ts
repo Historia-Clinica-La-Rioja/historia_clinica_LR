@@ -7,11 +7,11 @@ import { CoreModule } from '@core/core.module';
 import { PacientesModule } from '../../../pacientes/pacientes.module';
 import { PresentationModule } from '@presentation/presentation.module';
 import { PatientProfileComponent } from './routes/patient-profile/patient-profile.component';
-
+import { AmbulatoriaPacienteComponent } from './routes/ambulatoria-paciente/ambulatoria-paciente.component';
 
 
 @NgModule({
-  declarations: [HomeComponent, PatientProfileComponent],
+  declarations: [HomeComponent, PatientProfileComponent, AmbulatoriaPacienteComponent],
   imports: [
 	AmbulatoriaRoutingModule,
 	FormsModule,

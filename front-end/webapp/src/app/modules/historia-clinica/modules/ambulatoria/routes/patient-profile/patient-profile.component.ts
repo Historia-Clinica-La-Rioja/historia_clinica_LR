@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { PersonalInformationDto, CompletePatientDto } from "@api-rest/api-model";
-import { PatientService } from "@api-rest/services/patient.service";
-import { MapperService } from "@presentation/services/mapper.service";
-import { ActivatedRoute, Router } from "@angular/router";
-import { PersonService } from "@api-rest/services/person.service";
+import { CompletePatientDto, InternmentEpisodeProcessDto, PersonalInformationDto } from '@api-rest/api-model';
+import { PatientService } from '@api-rest/services/patient.service';
+import { MapperService } from '@presentation/services/mapper.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { PersonService } from '@api-rest/services/person.service';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
 import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
 import { PatientTypeData } from '@presentation/components/patient-type-logo/patient-type-logo.component';
-import { ContextService } from "@core/services/context.service";
+import { ContextService } from '@core/services/context.service';
 import { InternmentPatientService } from '@api-rest/services/internment-patient.service';
 
 
@@ -25,20 +25,21 @@ export class PatientProfileComponent implements OnInit {
 	public codigoColor: string;
 	private patientId: number;
 	private readonly routePrefix;
-	public internmentEpisode;
+	public ambulatoriaId = 1; // todo reemplazar por el id verdadero
+	public internmentEpisode: InternmentEpisodeProcessDto;
 
-	constructor(private patientService: PatientService,
-		private mapperService: MapperService,
-		private route: ActivatedRoute,
-		private router: Router,
-		private personService: PersonService,
-		private contextService: ContextService,
-		private internmentPatientService: InternmentPatientService) {
-		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
+	constructor(
+		private readonly patientService: PatientService,
+		private readonly mapperService: MapperService,
+		private readonly route: ActivatedRoute,
+		private readonly router: Router,
+		private readonly personService: PersonService,
+		private readonly contextService: ContextService,
+		private readonly internmentPatientService: InternmentPatientService) {
+		this.routePrefix = `institucion/${this.contextService.institutionId}`;
 	}
 
 	ngOnInit(): void {
-
 		this.route.paramMap.subscribe(
 			(params) => {
 				this.patientId = Number(params.get('id'));
@@ -59,6 +60,10 @@ export class PatientProfileComponent implements OnInit {
 						}
 					});
 			});
+	}
 
+	goToAmbulatoria() {
+		const url = `${this.routePrefix}/ambulatoria/${this.ambulatoriaId}/paciente/${this.patientId}`;
+		this.router.navigateByUrl(url);
 	}
 }

@@ -1,5 +1,10 @@
 <app-content width="full">
 	<section>
+		<div>
+			<button *ngIf="!internmentEpisode?.inProgress" mat-raised-button color="primary" (click)="goToAmbulatoria()">
+				<span>Historia Clinica</span>
+			</button>
+		</div>
 		<div class="profile-card">
 			<app-patient-card [patient]="patientBasicData">
 				<div header class="header">

@@ -1,18 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import {FormGroup, FormBuilder,Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { GenderDto, IdentificationTypeDto, PatientSearchDto } from '@api-rest/api-model';
-import { hasError, atLeastOneValueInFormGroup, } from '@core/utils/form.utils';
+import { atLeastOneValueInFormGroup, hasError, } from '@core/utils/form.utils';
 import { Moment } from 'moment';
-import * as moment from 'moment';
-import { TableModel, ActionDisplays } from '@presentation/components/table/table.component';
-import { momentFormatDate, DateFormat, momentFormat } from '@core/utils/moment.utils';
+import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
+import { DateFormat, momentFormatDate, newMoment } from '@core/utils/moment.utils';
 import { Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
 import { PatientService, PersonInformationRequest } from '@api-rest/services/patient.service';
 import { PERSON } from '@core/constants/validation-constants';
 
-const ROUTE_PROFILE = 'pacientes/profile/';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -21,38 +19,40 @@ const ROUTE_PROFILE = 'pacientes/profile/';
 export class HomeComponent implements OnInit {
 
 
-  public personalInformationForm:FormGroup;
-  public genders:GenderDto[];
+  public personalInformationForm: FormGroup;
+  public genders: GenderDto[];
   public identificationTypeList: IdentificationTypeDto[];
   public hasError = hasError;
-  public today: Moment = moment();
+  public today: Moment = newMoment();
   public tableModel: TableModel<PatientSearchDto>;
   public formSubmitted: boolean;
-  public requiringValues:boolean;
+  public requiringValues: boolean;
   public readonly validations = PERSON;
 
   private readonly routePrefix;
   private genderTableView: string[] = [];
 
   constructor(
-	private formBuilder: FormBuilder,
-	private personMasterDataService: PersonMasterDataService,
-	private patientService: PatientService,
-	private router: Router,
-	private contextService: ContextService,
-  ) {this.routePrefix = 'institucion/' + this.contextService.institutionId + '/'; }
+	private readonly formBuilder: FormBuilder,
+	private readonly personMasterDataService: PersonMasterDataService,
+	private readonly patientService: PatientService,
+	private readonly router: Router,
+	private readonly contextService: ContextService,
+  ) {
+  	this.routePrefix = `institucion/${this.contextService.institutionId}/`;
+  }
 
   ngOnInit(): void {
 	  this.initPersonalInformationForm();
 	  this.setMasterData();
   }
 
-  private initPersonalInformationForm(){
+  private initPersonalInformationForm() {
 	this.personalInformationForm = this.formBuilder.group({
 			firstName: [null, Validators.maxLength(PERSON.MAX_LENGTH.firstName)],
 			middleNames: [null, Validators.maxLength(PERSON.MAX_LENGTH.middleNames)],
 			lastName: [null, Validators.maxLength(PERSON.MAX_LENGTH.lastName)],
-			otherLastNames:[null, Validators.maxLength(PERSON.MAX_LENGTH.otherLastNames)],
+			otherLastNames: [null, Validators.maxLength(PERSON.MAX_LENGTH.otherLastNames)],
 			genderId: [],
 			identificationNumber: [null, Validators.maxLength(PERSON.MAX_LENGTH.identificationNumber)],
 			identificationTypeId: [],
@@ -74,23 +74,23 @@ export class HomeComponent implements OnInit {
 	this.personMasterDataService.getGenders().subscribe(
 		genders => {
 			genders.forEach(gender => {
-				this.genderTableView[gender.id] = gender.description
+				this.genderTableView[gender.id] = gender.description;
 			});
 		});
   }
 
-  save(): void{
-	let atLeastOneValueSet: boolean = atLeastOneValueInFormGroup(this.personalInformationForm);
+  save(): void {
+	const atLeastOneValueSet: boolean = atLeastOneValueInFormGroup(this.personalInformationForm);
 	if (!atLeastOneValueSet) {
 		this.formSubmitted = false;
 		this.requiringValues = true;
-		return
+		return;
 	}
 
-	if ((this.personalInformationForm.valid)){
+	if ((this.personalInformationForm.valid)) {
 		this.formSubmitted = true;
 		this.requiringValues = false;
-		let personalInformationReq : PersonInformationRequest = this.personalInformationForm.value;
+		const personalInformationReq: PersonInformationRequest = this.personalInformationForm.value;
 		this.patientService.searchPatientOptionalFilters(personalInformationReq)
 			.subscribe( data =>
 					this.tableModel = this.buildTable(data));
@@ -99,7 +99,7 @@ export class HomeComponent implements OnInit {
   }
 
   private buildTable(data: PatientSearchDto[]): TableModel<any> {
-	let model: TableModel<any> = {
+	return {
 		columns: [
 			{
 					columnDef: 'patiendId',
@@ -124,7 +124,7 @@ export class HomeComponent implements OnInit {
 				{
 					columnDef: 'birthDate',
 					header: 'F. Nac',
-					text: (row) => (row.person.birthDate == undefined) ? "" : momentFormatDate(new Date(row.person.birthDate), DateFormat.VIEW_DATE)
+					text: (row) => (row.person.birthDate === undefined) ? '' : momentFormatDate(new Date(row.person.birthDate), DateFormat.VIEW_DATE)
 				},
 				{
 				 	columnDef: 'gender',
@@ -138,7 +138,7 @@ export class HomeComponent implements OnInit {
 						display: 'Ver',
 						matColor: 'primary',
 						do: (row) => {
-							const url = this.routePrefix + 'ambulatoria/paciente/' + row.idPatient;
+							const url = `${this.routePrefix}ambulatoria/paciente/${row.idPatient}/profile`;
 							this.router.navigateByUrl(url);
 						}
 					}
@@ -147,7 +147,6 @@ export class HomeComponent implements OnInit {
 		data,
 		enablePagination: true
 	};
-	return model;
   }
 
 }
