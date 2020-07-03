@@ -1,0 +1,50 @@
+.container {
+	display: flex;
+	flex-direction: column;
+	width: 80%;
+	min-width: 500px;
+
+	form {
+		mat-card.datos-antropometricos-card {
+			width: 50%;
+		}
+		mat-form-field {
+			width: 100%;
+		}
+		.form-buttons {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+			align-items: flex-end;
+			margin: 30px 0;
+			.buttons {
+				button {
+					margin: 10px 10px 0 0;
+				}
+			}
+			.sign-buttons {
+				display: flex;
+				flex-direction: column;
+				button {
+					margin-top: 10px;
+				}
+			}
+		}
+		.vital-signs {
+			.row-container {
+				display: flex;
+				flex-direction: row;
+				.field-container {
+					.mat-form-field {
+						width: 95%;
+						::ng-deep .mat-form-field-wrapper {
+							padding-bottom: 0;
+						}
+						margin-bottom: -5px;
+					}
+					margin-bottom: 10px;
+				}
+			}
+		}
+	}
+}

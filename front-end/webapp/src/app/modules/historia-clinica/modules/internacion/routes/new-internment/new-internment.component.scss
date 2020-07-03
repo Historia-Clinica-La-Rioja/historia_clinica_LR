@@ -1,0 +1,24 @@
+@import "../../../../../../../assets/styles/mixins";
+
+.section-container {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+
+	section{
+		width: 50%;
+	}
+}
+
+.form-row{
+	@include form-row;
+
+	.mat-form-field{
+		width: 100%;
+	}
+}
+
+.header{
+	display: flex;
+	justify-content: flex-end;
+}

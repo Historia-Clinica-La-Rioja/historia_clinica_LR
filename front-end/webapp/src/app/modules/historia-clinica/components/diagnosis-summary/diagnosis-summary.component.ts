@@ -6,11 +6,11 @@ import { InternacionMasterDataService } from '@api-rest/services/internacion-mas
 import { TableModel, ActionDisplays } from '@presentation/components/table/table.component';
 import { MatDialog } from '@angular/material/dialog';
 import { RemoveDiagnosisComponent } from '../../dialogs/remove-diagnosis/remove-diagnosis.component';
-import { HEALTH_CLINICAL_STATUS } from '../../../internacion/constants/ids';
+import { HEALTH_CLINICAL_STATUS } from '../../modules/internacion/constants/ids';
 import { Router } from '@angular/router';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { EvolutionNotesListenerService } from '../../../internacion/services/evolution-notes-listener.service';
+import { EvolutionNotesListenerService } from '../../modules/internacion/services/evolution-notes-listener.service';
 
 export const COVID_SNOMED = { id: "186747009", pt: "infección por coronavirus" }
 

@@ -16,11 +16,11 @@ const routes: Routes = [
 			},
 			{
 				path: 'internaciones',
-				loadChildren: () => import('../internacion/internaciones.module').then(m => m.InternacionesModule),
+				loadChildren: () => import('../historia-clinica/modules/internacion/internaciones.module').then(m => m.InternacionesModule),
 			},
 			{
 				path: 'ambulatoria',
-				loadChildren: () => import('../ambulatoria/ambulatoria.module').then(m => m.AmbulatoriaModule),
+				loadChildren: () => import('../historia-clinica/modules/ambulatoria/ambulatoria.module').then(m => m.AmbulatoriaModule),
 			},
 		]
 	}
