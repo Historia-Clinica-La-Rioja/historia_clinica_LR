@@ -233,3 +233,25 @@ databaseChangeLog:
     -  dropTable:  
             cascadeConstraints:  true  
             tableName:  condition_problem_type
+
+- changeSet:
+    id: addColumn-source_type_id-document
+    author: lbergottini
+    changes:
+    - addColumn:
+        tableName: document
+        columns:
+        - column:
+            name: source_type_id
+            type: smallint
+            
+- changeSet:  
+    id: update-source_type
+    author: lbergottini
+    changes:  
+    - update:  
+        columns:  
+        -  column:  
+            name: source_type_id
+            value: 0            
+        tableName: document
