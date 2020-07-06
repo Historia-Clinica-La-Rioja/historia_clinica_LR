@@ -1,6 +1,7 @@
 import { Component, OnDestroy, ChangeDetectorRef, Input } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { MenuItem } from '@core/core-model';
+import { AuthenticationService } from 'src/app/modules/auth/services/authentication.service';
 
 @Component({
 	selector: 'app-main-layout',
@@ -8,12 +9,14 @@ import { MenuItem } from '@core/core-model';
 	styleUrls: ['./main-layout.component.scss']
 })
 export class MainLayoutComponent implements OnDestroy {
-	opened: boolean = false;
+	opened = false;
 	mobileQuery: MediaQueryList;
 	private _mobileQueryListener: () => void;
 	private _menuItems: MenuItem[];
+	@Input('menuFooterItems') menuFooterItems: MenuFooter;
 
-	constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher) {
+	constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, private authenticationService: AuthenticationService, )
+	{
 		this.mobileQuery = media.matchMedia('(max-width: 600px)');
 		this._mobileQueryListener = () => changeDetectorRef.detectChanges();
 		this.mobileQuery.addListener(this._mobileQueryListener);
@@ -32,4 +35,26 @@ export class MainLayoutComponent implements OnDestroy {
 		this.mobileQuery.removeListener(this._mobileQueryListener);
 	}
 
+	logout(): void {
+		this.authenticationService.logout();
+	}
+}
+
+export class MenuFooter {
+	institution?: {
+		name: string;
+		address?: Address;
+	};
+	user: {
+		fullName?: string;
+		userName?: string;
+	};
+}
+
+export class Address {
+	street?: string;
+	number?: string;
+	apartment?: string;
+	floor?: string;
+	cityName?: string;
 }

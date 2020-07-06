@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RoleAssignment, InstitutionDto } from '@api-rest/api-model';
 
-import { AuthenticationService } from '../../../auth/services/authentication.service';
 import { LoggedUserService } from '../../../auth/services/logged-user.service';
 import { map, mergeMap } from 'rxjs/operators';
 import { InstitutionService } from '@api-rest/services/institution.service';
@@ -18,7 +17,6 @@ export class ProfileComponent implements OnInit {
 	constructor(
 		institutionService: InstitutionService,
 		loggedUserService: LoggedUserService,
-		private authenticationService: AuthenticationService,
 	) {
 		this.roleAssignments$ = loggedUserService.assignments$.pipe(
 			mergeMap((roleAssignments: RoleAssignment[]) =>
@@ -34,9 +32,5 @@ export class ProfileComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-	}
-
-	logout(): void {
-		this.authenticationService.logout();
 	}
 }

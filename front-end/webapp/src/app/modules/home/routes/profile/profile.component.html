@@ -15,14 +15,9 @@
 				</p>
 				<p matLine *ngIf="!roleAssignment.institution" [translate]="'auth.roles.LEVEL0'"></p>
 			</mat-list-item>
-			<mat-divider></mat-divider>
 		</mat-list>
 		<ng-template #loading>
 			<mat-progress-bar mode="indeterminate"></mat-progress-bar>
 		</ng-template>
-
-		<mat-card-actions align="end">
-			<button mat-flat-button color="warn" (click)="logout()">CERRAR SESIÓN</button>
-		</mat-card-actions>
 	</mat-card>
 </app-content>

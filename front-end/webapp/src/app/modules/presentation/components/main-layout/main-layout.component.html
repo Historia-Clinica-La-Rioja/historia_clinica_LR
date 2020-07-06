@@ -8,9 +8,22 @@
 	[style.marginTop.px]="mobileQuery.matches ? 57 : 0">
 		<mat-sidenav #sidenav [(opened)]="opened" [mode]="mobileQuery.matches ? 'over' : 'side'"
 			[fixedInViewport]="mobileQuery.matches" fixedTopGap="57">
-			<ng-content></ng-content>
+			<div class="custom-container">
 
-			<app-menu [menuItems]="menuItems"></app-menu>
+				<app-menu [menuItems]="menuItems"></app-menu>
+
+				<div class="informative-items">
+					<span *ngIf="menuFooterItems?.user?.fullName; else userName">{{menuFooterItems.user.fullName}}</span>
+					<ng-template #userName>{{menuFooterItems?.user?.userName}}</ng-template>
+					<span *ngIf="menuFooterItems?.institution?.name">{{menuFooterItems.institution.name}}</span>
+					<font color="grey" *ngIf="menuFooterItems?.institution?.address">{{menuFooterItems.institution.address | fullHouseAddress}} , {{menuFooterItems.institution.address.cityName}}</font>
+					<button mat-icon-button (click)="logout()">
+						<mat-icon>power_settings_new</mat-icon>
+						<span translate="auth.LOGOUT"></span>
+					</button>
+				</div>
+
+			</div>
 
 		</mat-sidenav>
 

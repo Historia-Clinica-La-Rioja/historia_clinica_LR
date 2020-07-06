@@ -30,6 +30,27 @@ app-bar {
 			flex-shrink: 0;
 		}
 	}
+
+	.custom-container  {
+		height: 100%;
+		display: flex ;
+		flex-direction: column ;
+		justify-content: space-between ;
+		.informative-items{
+			display: flex ;
+			flex-direction: column ;
+			text-align: center;
+			button{
+				width: auto;
+				color: red;
+				border-radius: 4px;
+			}
+		}
+	}
+}
+
+mat-sidenav {
+    max-width: 204px;
 }
 
 .layout-is-mobile {

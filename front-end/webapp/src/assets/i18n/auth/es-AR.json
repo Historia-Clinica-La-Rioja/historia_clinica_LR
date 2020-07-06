@@ -12,6 +12,7 @@
 				"SUBMIT": "INGRESAR"
 			}
 		},
+		"LOGOUT": "Cerrar Sesión",
 		"password-reset": {
 			"form": {
 				"TITLE": "Definir clave",
