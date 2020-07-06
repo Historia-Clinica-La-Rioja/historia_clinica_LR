@@ -7,6 +7,9 @@ import OauthLoginPage from './login/OauthLoginPage';
 import cities from './modules/cities';
 import departments from './modules/departments';
 import institutions from './modules/institutions';
+import InstitutionShow from './modules/institutions/show';
+import InstitutionList from './modules/institutions/list';
+import InstitutionEdit from './modules/institutions/edit';
 import addresses from './modules/addresses';
 import sectors from './modules/sectors';
 import clinicalspecialties from './modules/clinicalspecialties';
@@ -44,7 +47,7 @@ const App = () => {
         <Resource name="bedcategories" />,
         <Resource name="healthcareprofessionals" />,
         <Resource name="professionalspecialties" show={ProfessionalSpecialtyShow} />,
-        <Resource name="institutions" {...institutions} />,
+        <Resource name="institutions" show={InstitutionShow} list={InstitutionList} edit={InstitutionEdit}/>,
         <Resource name="addresses" {...addresses}/>,
         <Resource name="sectors" {...sectors}/>,      
         <Resource name="clinicalspecialtysectors" {...clinicalspecialtysectors}/>,
