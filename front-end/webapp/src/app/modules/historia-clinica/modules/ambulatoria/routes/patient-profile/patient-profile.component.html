@@ -1,8 +1,8 @@
 <app-content width="full">
 	<section>
 		<div>
-			<button *ngIf="!internmentEpisode?.inProgress" mat-raised-button color="primary" (click)="goToAmbulatoria()">
-				<span>Historia Clinica</span>
+			<button mat-raised-button color="primary" (click)="goToAmbulatoria()">
+				<span [translate]="'ambulatoria.paciente.profile.BUTTON_HISTORIA_CLINICA'"></span>
 			</button>
 		</div>
 		<div class="profile-card">
@@ -16,6 +16,7 @@
 			</app-patient-card>
 		</div>
 	</section>
-	<em *ngIf="!internmentEpisode?.id && internmentEpisode?.inProgress">El paciente se encuentra internado en otra
-		institución.</em>
+	<em *ngIf="!internmentEpisode?.id && internmentEpisode?.inProgress"
+	    [translate]="'ambulatoria.paciente.profile.WARNING_INTERNADO'">
+	</em>
 </app-content>

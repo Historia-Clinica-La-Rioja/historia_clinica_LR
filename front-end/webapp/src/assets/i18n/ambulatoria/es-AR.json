@@ -6,11 +6,19 @@
 		},
 		"paciente": {
 			"TITLE": "HCE Ambulatoria",
-			"resumen": {
-				"TITLE": "Resumen"
-			},
 			"problemas": {
-				"TITLE": "Problemas"
+				"TAB-LABEL": "Problemas",
+				"TITLE": "Problemas y evoluciones",
+				"ACTIVOS": "Problemas activos",
+				"CRONICOS": "Problemas crónicos",
+				"RESUELTOS": "Problemas resueltos"
+			},
+			"profile": {
+				"BUTTON_HISTORIA_CLINICA": "Historia Clínica",
+				"WARNING_INTERNADO": "El paciente se encuentra internado en otra institución."
+			},
+			"resumen": {
+				"TAB-LABEL": "Resumen"
 			}
 		}
 	}

@@ -75,3 +75,18 @@ export const DOCUMENTS_SEARCH_FIELDS: SearchField[] = [
 		label: 'internaciones.documents-summary.search-fields.ALL',
 	}
 ];
+
+export const PROBLEMAS_ACTIVOS: SummaryHeader = {
+	title: 'ambulatoria.paciente.problemas.ACTIVOS',
+	matIcon: 'error_outline'
+};
+
+export const PROBLEMAS_CRONICOS: SummaryHeader = {
+	title: 'ambulatoria.paciente.problemas.CRONICOS',
+	matIcon: 'report_problem'
+};
+
+export const PROBLEMAS_RESUELTOS: SummaryHeader = {
+	title: 'ambulatoria.paciente.problemas.RESUELTOS',
+	matIcon: 'check'
+};

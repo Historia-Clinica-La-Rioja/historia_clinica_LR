@@ -1,1 +1,15 @@
-<p>problemas works!</p>
+<section id="title">
+	<h2 class="page-title" [translate]="'ambulatoria.paciente.problemas.TITLE'"></h2>
+</section>
+<section id="problemas" fxLayout="row">
+	<app-summary-card [header]="cronicos"
+	                  [editable]="false">
+
+	</app-summary-card>
+	<app-summary-card [header]="activos"
+	                  [editable]="false">
+	</app-summary-card>
+	<app-summary-card [header]="resueltos"
+	                  [editable]="false">
+	</app-summary-card>
+</section>
