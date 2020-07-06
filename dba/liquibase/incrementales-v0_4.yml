@@ -121,3 +121,31 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: healthcare_professional
         validate: true
+        
+- changeSet:  
+    id:  renameColumn-outpatient_consultation  
+    author:  lbergottini 
+    changes:  
+    - renameColumn:  
+        columnDataType:  int  
+        newColumnName:  clinical_specialty_id  
+        oldColumnName:  clinical_speciality_id  
+        tableName:  outpatient_consultation
+        
+- changeSet:
+    id: rename_FK-outpatient_consultation
+    author: lbergottini
+    changes:
+    - dropForeignKeyConstraint:
+        baseTableName: outpatient_consultation
+        constraintName: FK_outpatient_consultation_clinical_speciality_id
+    - addForeignKeyConstraint:
+        baseColumnNames: clinical_specialty_id
+        baseTableName: outpatient_consultation
+        constraintName: FK_outpatient_consultation_clinical_specialty_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: clinical_specialty
+        validate: true  
+      
