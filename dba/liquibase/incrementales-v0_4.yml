@@ -284,4 +284,16 @@ databaseChangeLog:
     - dropForeignKeyConstraint:
         baseTableName: document
         constraintName: FK_document_internment_episode_id
-        
+
+- changeSet:  
+    id: internment_episode-addColumn-probable_discharge_date
+    author: edipietro
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: probable_discharge_date
+            type: datetime
+            constraints:
+                nullable: true
+        tableName: internment_episode
