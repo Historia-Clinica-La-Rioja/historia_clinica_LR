@@ -10,12 +10,15 @@ import institutions from './modules/institutions';
 import addresses from './modules/addresses';
 import sectors from './modules/sectors';
 import clinicalspecialties from './modules/clinicalspecialties';
+import ClinicalSpecialtyShow from './modules/clinicalspecialties/show';
 import clinicalspecialtysectors from './modules/clinicalspecialtysectors';
 import rooms from './modules/rooms'
 import beds from './modules/beds'
 import healthcareprofessionals from './modules/healthcareprofessionals'
 import professionalspecialties from './modules/professionalspecialties'
+import ProfessionalSpecialtyShow from './modules/professionalspecialties/show'
 import healthcareprofessionalspecialties from './modules/healthcareprofessionalspecialties'
+
 import people from './modules/people'
 import users from './modules/users';
 import passwordReset from './modules/password-reset';
@@ -33,11 +36,21 @@ const App = () => {
     const oauth = appInfoProvider.getInfo().oauthConfig.enabled;
 
     const resourcesAdminInstitucional = [
+        <Resource name="provinces" />,
+        <Resource name="cities" />,
+        <Resource name="departments" />,
+        <Resource name="educationtypes"/>,
+        <Resource name="internmentepisodes" />,
+        <Resource name="bedcategories" />,
+        <Resource name="healthcareprofessionals" />,
+        <Resource name="professionalspecialties" show={ProfessionalSpecialtyShow} />,
         <Resource name="institutions" {...institutions} />,
-        <Resource name="sectors" {...sectors}/>,
+        <Resource name="addresses" {...addresses}/>,
+        <Resource name="sectors" {...sectors}/>,      
         <Resource name="clinicalspecialtysectors" {...clinicalspecialtysectors}/>,
         <Resource name="rooms" {...rooms}/>,
         <Resource name="beds" {...beds}/>,
+        <Resource name="clinicalspecialties" show={ClinicalSpecialtyShow}/>,
     ];
 
     const resourcesAdminRoot = [
@@ -56,6 +69,12 @@ const App = () => {
         <Resource name="roles" />,
         <Resource name="internmentepisodes" />,
         <Resource name="healthcareprofessionalspecialties" {...healthcareprofessionalspecialties}/>,
+        <Resource name="institutions" {...institutions} />,
+        <Resource name="addresses" {...addresses}/>,
+        <Resource name="sectors" {...sectors}/>,      
+        <Resource name="clinicalspecialtysectors" {...clinicalspecialtysectors}/>,
+        <Resource name="rooms" {...rooms}/>,
+        <Resource name="beds" {...beds}/>,
     ];
 
     return <Admin title="Historia de salud integrada"
@@ -71,8 +90,7 @@ const App = () => {
                 {role: 'ROOT', institutionId: -1},
                 {role: 'ADMINISTRADOR', institutionId: -1}) ?
                 [
-                    resourcesAdminRoot,
-                    resourcesAdminInstitucional
+                    resourcesAdminRoot
                 ]
                 :
                 [
