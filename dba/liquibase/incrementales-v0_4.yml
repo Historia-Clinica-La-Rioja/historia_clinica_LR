@@ -149,3 +149,30 @@ databaseChangeLog:
         referencedTableName: clinical_specialty
         validate: true  
       
+- changeSet:
+    id: source_type-createTable
+    author: lbergottini
+    changes:
+        - createTable:
+            tableName: source_type
+            columns:
+            - column:
+                name: id
+                type: smallint
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_source_type
+            - column:
+                name: description
+                type: varchar(20)
+
+- changeSet:
+    id: source_type-data
+    comment: Carga de datos source_type
+    author: lbergottini
+    context: "!schema-only"
+    changes:
+        - sql:
+            sql: |-
+                INSERT INTO source_type VALUES (0, 'Internación');
+                INSERT INTO source_type VALUES (1, 'Ambulatoria');              
