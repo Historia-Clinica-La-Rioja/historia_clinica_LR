@@ -9,6 +9,7 @@ import net.pladema.clinichistory.ips.repository.masterdata.entity.ConditionVerif
 import net.pladema.clinichistory.mocks.DocumentsTestMocks;
 import net.pladema.clinichistory.mocks.HealthConditionTestMocks;
 import net.pladema.clinichistory.mocks.SnomedTestMocks;
+import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -98,7 +99,7 @@ public class HCEHealthConditionRepositoryTest extends BaseRepositoryTest {
 	}
 
 	private void createFirstDocument(Integer patientId){
-		Document document = DocumentsTestMocks.createDocument(1, AMBULATORIA);
+		Document document = DocumentsTestMocks.createDocument(1, AMBULATORIA, SourceType.INTERNACION);
 		document = save(document);
 
 		String familyCode = "familyCode";
@@ -127,7 +128,7 @@ public class HCEHealthConditionRepositoryTest extends BaseRepositoryTest {
 	}
 
 	private void createSecondDocument(Integer patientId){
-		Document document = DocumentsTestMocks.createDocument(1, AMBULATORIA);
+		Document document = DocumentsTestMocks.createDocument(1, AMBULATORIA, SourceType.INTERNACION);
 		document = save(document);
 
 		String diagnose2Code = "diagnose2";
@@ -147,7 +148,7 @@ public class HCEHealthConditionRepositoryTest extends BaseRepositoryTest {
 
 
 	private void createThirdDocument(Integer patientId){
-		Document document = DocumentsTestMocks.createDocument(1, AMBULATORIA);
+		Document document = DocumentsTestMocks.createDocument(1, AMBULATORIA, SourceType.INTERNACION);
 		document = save(document);
 
 		String familyCode2 = "familyCode2";

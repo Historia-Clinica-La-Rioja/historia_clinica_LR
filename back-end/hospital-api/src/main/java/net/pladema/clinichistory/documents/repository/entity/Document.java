@@ -59,10 +59,14 @@ public class Document extends InternationAuditableEntity {
 	@Column(name = "type_id", nullable = false)
 	private Short typeId;
 
-	public Document(Integer internmentEpisodeId, String statusId, Short typeId) {
+	@Column(name = "source_type_id", nullable = false)
+	private Short sourceTypeId;
+
+	public Document(Integer internmentEpisodeId, String statusId, Short typeId, Short sourceTypeId) {
 		this.internmentEpisodeId = internmentEpisodeId;
 		this.statusId = statusId;
 		this.typeId = typeId;
+		this.sourceTypeId = sourceTypeId;
 	}
 
 	public boolean isType(short type){

@@ -14,6 +14,7 @@ import net.pladema.clinichistory.ips.service.ClinicalObservationService;
 import net.pladema.clinichistory.ips.service.HealthConditionService;
 import net.pladema.clinichistory.ips.service.InmunizationService;
 import net.pladema.clinichistory.ips.service.domain.DocumentObservationsBo;
+import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -62,7 +63,7 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
     public EvolutionNoteBo createDocument(Integer internmentEpisodeId, Integer patientId, EvolutionNoteBo evolutionNote) {
         LOG.debug("Input parameters -> intermentEpisodeId {}, patientId {}, anamnesis {}", internmentEpisodeId, patientId, evolutionNote);
 
-        Document document = new Document(internmentEpisodeId, evolutionNote.getDocumentStatusId(), DocumentType.EVALUATION_NOTE);
+        Document document = new Document(internmentEpisodeId, evolutionNote.getDocumentStatusId(), DocumentType.EVALUATION_NOTE, SourceType.INTERNACION);
         loadNotes(document, Optional.ofNullable(evolutionNote.getNotes()));
         document = documentService.save(document);
 
@@ -85,7 +86,7 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
     public Long createEvolutionDiagnosis(Integer internmentEpisodeId, Integer patientId, EvolutionDiagnosisBo evolutionDiagnosis) {
         LOG.debug("Input parameters -> intermentEpisodeId {}, patientId {}, evolutionDiagnosis {}", internmentEpisodeId, patientId, evolutionDiagnosis);
 
-        Document doc = new Document(internmentEpisodeId, DocumentStatus.FINAL, DocumentType.EVALUATION_NOTE);
+        Document doc = new Document(internmentEpisodeId, DocumentStatus.FINAL, DocumentType.EVALUATION_NOTE, SourceType.INTERNACION);
         loadNotes(doc, Optional.ofNullable(evolutionDiagnosis.getNotes()));
         doc = documentService.save(doc);
         List<Integer> diagnoses = healthConditionService.copyDiagnoses(evolutionDiagnosis.getDiagnosesId());

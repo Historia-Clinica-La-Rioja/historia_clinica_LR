@@ -7,6 +7,7 @@ import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpi
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.InternmentEpisodeStatus;
 import net.pladema.clinichistory.mocks.DocumentsTestMocks;
+import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,10 +35,10 @@ public class InternmentEpisodeRepositoryTest extends BaseRepositoryTest {
 		InternmentEpisode internmentEpisode = createInternmentEpisode();
 		save(internmentEpisode);
 
-		Document anamnesis = DocumentsTestMocks.createDocument(internmentEpisode.getId(), DocumentType.ANAMNESIS);
+		Document anamnesis = DocumentsTestMocks.createDocument(internmentEpisode.getId(), DocumentType.ANAMNESIS, SourceType.INTERNACION);
 		anamnesis = save(anamnesis);
 
-		Document evolutionNote = DocumentsTestMocks.createDocument(internmentEpisode.getId(), DocumentType.EVALUATION_NOTE);
+		Document evolutionNote = DocumentsTestMocks.createDocument(internmentEpisode.getId(), DocumentType.EVALUATION_NOTE, SourceType.INTERNACION);
 		evolutionNote = save(evolutionNote);
 
 		save(new EvolutionNoteDocument(evolutionNote.getId(), internmentEpisode.getId()));
@@ -56,15 +57,15 @@ public class InternmentEpisodeRepositoryTest extends BaseRepositoryTest {
 		InternmentEpisode internmentEpisode = createInternmentEpisode();
 		save(internmentEpisode);
 
-		Document anamnesis = DocumentsTestMocks.createDocument(internmentEpisode.getId(), DocumentType.ANAMNESIS);
+		Document anamnesis = DocumentsTestMocks.createDocument(internmentEpisode.getId(), DocumentType.ANAMNESIS, SourceType.INTERNACION);
 		anamnesis = save(anamnesis);
 
-		Document evolutionNote = DocumentsTestMocks.createDocument(internmentEpisode.getId(), DocumentType.EVALUATION_NOTE);
+		Document evolutionNote = DocumentsTestMocks.createDocument(internmentEpisode.getId(), DocumentType.EVALUATION_NOTE, SourceType.INTERNACION);
 		evolutionNote = save(evolutionNote);
 
 		save(new EvolutionNoteDocument(evolutionNote.getId(), internmentEpisode.getId()));
 
-		Document epicrisis = DocumentsTestMocks.createDocument(internmentEpisode.getId(), DocumentType.EPICRISIS);
+		Document epicrisis = DocumentsTestMocks.createDocument(internmentEpisode.getId(), DocumentType.EPICRISIS, SourceType.INTERNACION);
 		epicrisis = save(epicrisis);
 
 		internmentEpisode.setAnamnesisDocId(anamnesis.getId());
@@ -74,9 +75,6 @@ public class InternmentEpisodeRepositoryTest extends BaseRepositoryTest {
 		assertFalse(internmentEpisodeRepository.canCreateEpicrisis(internmentEpisode.getId()));
 
 	}
-
-
-
 
 	private InternmentEpisode createInternmentEpisode() {
 		InternmentEpisode result = new InternmentEpisode();

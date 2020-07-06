@@ -12,6 +12,7 @@ import net.pladema.clinichistory.ips.service.HealthConditionService;
 import net.pladema.clinichistory.ips.service.InmunizationService;
 import net.pladema.clinichistory.ips.service.MedicationService;
 import net.pladema.clinichistory.ips.service.domain.DocumentObservationsBo;
+import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -59,7 +60,7 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
     public EpicrisisBo createDocument(Integer internmentEpisodeId, Integer patientId, EpicrisisBo epicrisis) {
         LOG.debug("Input parameters -> internmentEpisodeId {}, patientId {}, epicrisis {}", internmentEpisodeId, patientId, epicrisis);
 
-        Document document = new Document(internmentEpisodeId, epicrisis.getDocumentStatusId(), DocumentType.EPICRISIS);
+        Document document = new Document(internmentEpisodeId, epicrisis.getDocumentStatusId(), DocumentType.EPICRISIS, SourceType.INTERNACION);
         loadNotes(document, Optional.ofNullable(epicrisis.getNotes()));
         document = documentService.save(document);
 

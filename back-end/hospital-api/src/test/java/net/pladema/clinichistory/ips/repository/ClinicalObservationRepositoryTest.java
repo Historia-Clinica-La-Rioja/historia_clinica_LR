@@ -10,6 +10,7 @@ import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentStatus
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.ObservationStatus;
 import net.pladema.clinichistory.ips.service.domain.MapClinicalObservationVo;
+import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -147,6 +148,7 @@ public class ClinicalObservationRepositoryTest extends BaseRepositoryTest {
 		document.setInternmentEpisodeId(intermentEpisodeId);
 		document.setStatusId(status);
 		document.setTypeId(DocumentType.ANAMNESIS);
+		document.setSourceTypeId(SourceType.INTERNACION);
 		return document;
 	}
 }

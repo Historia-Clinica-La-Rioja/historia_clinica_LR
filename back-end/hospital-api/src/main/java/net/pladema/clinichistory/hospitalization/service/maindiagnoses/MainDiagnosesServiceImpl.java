@@ -12,6 +12,7 @@ import net.pladema.clinichistory.ips.service.HealthConditionService;
 import net.pladema.clinichistory.ips.service.domain.DiagnosisBo;
 import net.pladema.clinichistory.ips.service.domain.DocumentObservationsBo;
 import net.pladema.clinichistory.ips.service.domain.HealthConditionBo;
+import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -48,7 +49,7 @@ public class MainDiagnosesServiceImpl implements MainDiagnosesService {
     public Long createDocument(Integer internmentEpisodeId, Integer patientId, MainDiagnosisBo mainDiagnosisBo) {
         LOG.debug("Input parameters -> intermentEpisodeId {}, patientId {}, mainDiagnosisBo {}", internmentEpisodeId, patientId, mainDiagnosisBo);
 
-        Document document = new Document(internmentEpisodeId, DocumentStatus.FINAL, DocumentType.EVALUATION_NOTE);
+        Document document = new Document(internmentEpisodeId, DocumentStatus.FINAL, DocumentType.EVALUATION_NOTE, SourceType.INTERNACION);
         loadNotes(document, Optional.ofNullable(mainDiagnosisBo.getNotes()));
         document = documentService.save(document);
         Long result = document.getId();

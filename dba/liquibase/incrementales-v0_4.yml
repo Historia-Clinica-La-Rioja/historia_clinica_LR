@@ -255,3 +255,14 @@ databaseChangeLog:
             name: source_type_id
             value: 0            
         tableName: document
+        
+- changeSet:  
+    id: addNotNullConstraint-source_type
+    author: lbergottini
+    changes:  
+    -  addNotNullConstraint:  
+        columnDataType: smallint
+        columnName: source_type_id
+        constraintName:  NN_source_type_id   
+        tableName: document
+        validate:  true
