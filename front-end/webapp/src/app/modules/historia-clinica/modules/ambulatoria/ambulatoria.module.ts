@@ -8,8 +8,8 @@ import { PacientesModule } from '../../../pacientes/pacientes.module';
 import { PresentationModule } from '@presentation/presentation.module';
 import { PatientProfileComponent } from './routes/patient-profile/patient-profile.component';
 import { AmbulatoriaPacienteComponent } from './routes/ambulatoria-paciente/ambulatoria-paciente.component';
-import { ResumenComponent } from './routes/resumen/resumen.component';
-import { ProblemasComponent } from './routes/problemas/problemas.component';
+import { ResumenComponent } from './components/resumen/resumen.component';
+import { ProblemasComponent } from './components/problemas/problemas.component';
 
 
 @NgModule({
