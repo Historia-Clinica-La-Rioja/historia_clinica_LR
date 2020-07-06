@@ -1,11 +1,15 @@
 package net.pladema.address.controller.mapper;
 
 import net.pladema.address.controller.dto.AddressDto;
+import net.pladema.address.controller.service.domain.AddressBo;
 import net.pladema.address.repository.entity.Address;
 import net.pladema.person.repository.domain.PersonalInformation;
+import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+
+import java.util.List;
 
 @Mapper(uses = {CityMapper.class, ProvinceMapper.class})
 public interface AddressMapper {
@@ -27,4 +31,11 @@ public interface AddressMapper {
 
     @Named("toAddress")
     public AddressDto toAddressDto(Address address);
+
+    @Named("fromAdressBo")
+    public AddressDto fromAdressBo(AddressBo addressBo);
+
+    @Named("fromAdressBoList")
+    @IterableMapping(qualifiedByName = "fromAdressBo")
+    public List<AddressDto> fromAdressBoList(List<AddressBo> addressBoList);
 }

@@ -6,6 +6,7 @@ import net.pladema.establishment.repository.entity.Institution;
 
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
 public interface InstitutionMapper {
 
 	@Named("toInstitutionDto")
+	@Mapping(source = "institution.addressId", target = "institutionAddressDto.addressId")
 	InstitutionDto toInstitutionDto(Institution institution);
 
 	@Named("toListInstitutionDto")

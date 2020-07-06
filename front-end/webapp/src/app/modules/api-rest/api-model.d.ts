@@ -334,8 +334,18 @@ export interface InmunizationDto extends ClinicalTermDto {
     note: string;
 }
 
+export interface InstitutionAddressDto {
+    addressId: number;
+    apartment: string;
+    city: CityDto;
+    floor: string;
+    number: string;
+    street: string;
+}
+
 export interface InstitutionDto extends Serializable {
     id: number;
+    institutionAddressDto: InstitutionAddressDto;
     name: string;
     website: string;
 }

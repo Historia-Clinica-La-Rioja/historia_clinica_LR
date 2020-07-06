@@ -18,4 +18,6 @@ public class InstitutionDto implements Serializable {
 
 	private String website;
 
+	private InstitutionAddressDto institutionAddressDto;
+
 }

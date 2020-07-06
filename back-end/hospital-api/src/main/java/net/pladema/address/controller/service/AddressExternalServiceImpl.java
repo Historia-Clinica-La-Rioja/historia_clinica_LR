@@ -2,11 +2,14 @@ package net.pladema.address.controller.service;
 
 import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.address.controller.mapper.AddressMapper;
+import net.pladema.address.controller.service.domain.AddressBo;
 import net.pladema.address.repository.entity.Address;
 import net.pladema.address.service.AddressService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class AddressExternalServiceImpl implements AddressExternalService {
@@ -34,5 +37,11 @@ public class AddressExternalServiceImpl implements AddressExternalService {
         LOG.debug("Mapped fromAddress result -> {}", result);
         LOG.debug("Output -> {}", result);
         return result;
+    }
+
+    @Override
+    public List<AddressDto> getAddressesByIds(List<Integer> addressesIds) {
+        List<AddressBo> addressesBo = addressService.getAddressesByIds(addressesIds);
+        return addressMapper.fromAdressBoList(addressesBo);
     }
 }
