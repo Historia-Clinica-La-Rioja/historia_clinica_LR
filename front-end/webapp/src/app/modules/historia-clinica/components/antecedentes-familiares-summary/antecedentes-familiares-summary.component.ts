@@ -11,7 +11,7 @@ import { InternmentStateService } from '@api-rest/services/internment-state.serv
 })
 export class AntecedentesFamiliaresSummaryComponent implements OnInit {
 
-	@Input() internmentEpisodeId: number;
+	@Input() familyHistories: HealthHistoryConditionDto[];
 
 	public readonly antecedentesFamiliaresSummary = ANTECEDENTES_FAMILIARES;
 
@@ -23,9 +23,7 @@ export class AntecedentesFamiliaresSummaryComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.internmentStateService.getFamilyHistories(this.internmentEpisodeId).subscribe(
-			data => this.tableModel = this.buildTable(data)
-		);
+		this.buildTable(this.familyHistories)
 	}
 
 	private buildTable(data: HealthHistoryConditionDto[]): TableModel<HealthHistoryConditionDto> {

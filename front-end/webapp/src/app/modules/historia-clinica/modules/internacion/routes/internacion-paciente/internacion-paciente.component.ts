@@ -18,6 +18,8 @@ import {
 	EpicrisisSummaryDto,
 	EvaluationNoteSummaryDto,
 	PatientDischargeDto,
+	AllergyConditionDto,
+	HealthHistoryConditionDto,
 
 } from '@api-rest/api-model';
 
@@ -30,6 +32,7 @@ import { InternmentEpisodeService } from '@api-rest/services/internment-episode.
 
 import { INTERNACION } from '../../../../constants/summaries';
 import { ROLES_FOR_EDIT_DIAGNOSIS } from '../../constants/permissions';
+import { InternmentStateService } from '@api-rest/services/internment-state.service';
 
 @Component({
 	selector: 'app-internacion-paciente',
@@ -49,6 +52,8 @@ export class InternacionPacienteComponent implements OnInit {
 	public showDischarge: boolean;
 	public editDiagnosisSummary$: boolean;
 	public hasMedicalDischarge: boolean;
+	public alergies: AllergyConditionDto[];
+	public familyHistories: HealthHistoryConditionDto[];
 	constructor(
 		private patientService: PatientService,
 		private internmentService: InternacionService,
@@ -57,7 +62,8 @@ export class InternacionPacienteComponent implements OnInit {
 		private router: Router,
 		private featureFlagService: FeatureFlagService,
 		private readonly permissionService: PermissionsService,
-		private internmentEpisodeService: InternmentEpisodeService
+		private internmentEpisodeService: InternmentEpisodeService,
+		private readonly internmentStateService: InternmentStateService
 	) { }
 
 	ngOnInit(): void {
@@ -87,15 +93,15 @@ export class InternacionPacienteComponent implements OnInit {
 				);
 
 				this.internmentEpisodeService.getPatientDischarge(this.internmentEpisodeId)
-					.subscribe( (patientDischarge: PatientDischargeDto) => {
+					.subscribe((patientDischarge: PatientDischargeDto) => {
 						this.hasMedicalDischarge = patientDischarge.dischargeTypeId !== 0;
 					})
+				this.initSummaries();
 			}
 		);
 		this.permissionService.hasRole$(ROLES_FOR_EDIT_DIAGNOSIS).subscribe(
 			hasRole => this.editDiagnosisSummary$ = !hasRole
 		);
-
 	}
 
 	goToAnamnesis(): void {
@@ -119,6 +125,15 @@ export class InternacionPacienteComponent implements OnInit {
 
 	goToMedicalDischarge(): void {
 		this.router.navigate([`${this.router.url}/alta-medica`]);
+	}
+
+	initSummaries() {
+		this.internmentStateService.getAllergies(this.internmentEpisodeId).subscribe(
+			alergies => this.alergies = alergies
+		);
+		this.internmentStateService.getFamilyHistories(this.internmentEpisodeId).subscribe(
+			familyHistories => this.familyHistories = familyHistories
+		);
 	}
 
 }

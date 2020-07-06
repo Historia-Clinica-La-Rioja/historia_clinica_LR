@@ -14,6 +14,7 @@ import { AddAllergyComponent } from '../../dialogs/add-allergy/add-allergy.compo
 export class AlergiasSummaryComponent implements OnInit {
 
 	@Input() internmentEpisodeId: number;
+	@Input() alergies: AllergyConditionDto[];
 	@Input() editable = false;
 
 	public readonly alergiasSummary = ALERGIAS;
@@ -39,9 +40,7 @@ export class AlergiasSummaryComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.internmentStateService.getAllergies(this.internmentEpisodeId).subscribe(
-			data => this.tableModel = AlergiasSummaryComponent.buildTable(data)
-		);
+		AlergiasSummaryComponent.buildTable(this.alergies)
 	}
 
 	openDialog() {
