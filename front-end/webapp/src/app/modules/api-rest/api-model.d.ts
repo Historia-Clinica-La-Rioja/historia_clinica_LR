@@ -289,6 +289,16 @@ export interface GenderDto extends MasterdataDto<number> {
     id: number;
 }
 
+export interface HCEClinicalTermDto extends Serializable {
+    id?: number;
+    snomed: SnomedDto;
+    statusId?: string;
+}
+
+export interface HCEPersonalHistoryDto extends HCEClinicalTermDto {
+    startDate: string;
+}
+
 export interface HealthCareProfessionalGroupDto {
     healthcareProfessionalId: number;
     internmentEpisodeId: number;

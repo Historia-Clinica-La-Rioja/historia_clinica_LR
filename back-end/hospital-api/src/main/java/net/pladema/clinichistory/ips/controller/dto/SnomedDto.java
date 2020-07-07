@@ -1,9 +1,6 @@
 package net.pladema.clinichistory.ips.controller.dto;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotEmpty;
@@ -14,6 +11,7 @@ import java.io.Serializable;
 @Setter
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@NoArgsConstructor
 public class SnomedDto implements Serializable {
 
     @NotNull(message = "{value.mandatory}")
