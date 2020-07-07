@@ -30,7 +30,7 @@ import {
 import { InternacionService } from '@api-rest/services/internacion.service';
 import { InternmentEpisodeService } from '@api-rest/services/internment-episode.service';
 
-import { INTERNACION } from '../../../../constants/summaries';
+import { INTERNACION, ANTECEDENTES_FAMILIARES } from '../../../../constants/summaries';
 import { ROLES_FOR_EDIT_DIAGNOSIS } from '../../constants/permissions';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 
@@ -54,6 +54,7 @@ export class InternacionPacienteComponent implements OnInit {
 	public hasMedicalDischarge: boolean;
 	public alergies: AllergyConditionDto[];
 	public familyHistories: HealthHistoryConditionDto[];
+	public readonly familyHistoriesHeader = ANTECEDENTES_FAMILIARES;
 	constructor(
 		private patientService: PatientService,
 		private internmentService: InternacionService,

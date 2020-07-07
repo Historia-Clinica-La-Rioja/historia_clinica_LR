@@ -1,4 +1,4 @@
-<app-summary-card [header]="antecedentesFamiliaresSummary">
+<app-summary-card [header]="familyHistoriesHeader">
 	<app-table [model]="tableModel" *ngIf="tableModel?.data.length > 0 else noInfo"></app-table>
 	<ng-template #noInfo>
 		<app-no-data></app-no-data>

@@ -1,19 +1,18 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ANTECEDENTES_FAMILIARES } from '../../constants/summaries';
 import { TableModel } from '@presentation/components/table/table.component';
 import { HealthConditionDto, HealthHistoryConditionDto } from '@api-rest/api-model';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
+import { SummaryHeader } from '@presentation/components/summary-card/summary-card.component';
 
 @Component({
-  selector: 'app-antecedentes-familiares-summary',
-  templateUrl: './antecedentes-familiares-summary.component.html',
-  styleUrls: ['./antecedentes-familiares-summary.component.scss']
+	selector: 'app-antecedentes-familiares-summary',
+	templateUrl: './antecedentes-familiares-summary.component.html',
+	styleUrls: ['./antecedentes-familiares-summary.component.scss']
 })
 export class AntecedentesFamiliaresSummaryComponent implements OnInit {
 
 	@Input() familyHistories: HealthHistoryConditionDto[];
-
-	public readonly antecedentesFamiliaresSummary = ANTECEDENTES_FAMILIARES;
+	@Input() familyHistoriesHeader: SummaryHeader;
 
 	tableModel: TableModel<HealthConditionDto>;
 
