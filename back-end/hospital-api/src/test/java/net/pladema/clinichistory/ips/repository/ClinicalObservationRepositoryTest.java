@@ -143,9 +143,9 @@ public class ClinicalObservationRepositoryTest extends BaseRepositoryTest {
 		return observationVitalSign;
 	}
 
-	private Document createDocument(Integer intermentEpisodeId, String status) {
+	private Document createDocument(Integer sourceId, String status) {
 		Document document = new Document();
-		document.setInternmentEpisodeId(intermentEpisodeId);
+		document.setSourceId(sourceId);
 		document.setStatusId(status);
 		document.setTypeId(DocumentType.ANAMNESIS);
 		document.setSourceTypeId(SourceType.INTERNACION);

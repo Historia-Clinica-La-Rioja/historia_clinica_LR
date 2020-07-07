@@ -266,3 +266,22 @@ databaseChangeLog:
         constraintName:  NN_source_type_id   
         tableName: document
         validate:  true
+        
+- changeSet:
+    id: renameColumn-document-internment_episode_id
+    author: lbergottini
+    changes:
+    - renameColumn:
+        columnDataType: int
+        newColumnName: source_id
+        oldColumnName: internment_episode_id
+        tableName: document
+
+- changeSet:
+    id: dropFK-document-internment_episode_id
+    author: lbergottini
+    changes:
+    - dropForeignKeyConstraint:
+        baseTableName: document
+        constraintName: FK_document_internment_episode_id
+        

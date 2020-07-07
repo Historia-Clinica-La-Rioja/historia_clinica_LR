@@ -7,7 +7,7 @@ public class DocumentsTestMocks {
 
     public static Document createDocument(Integer internmentEpisodeId, Short type, Short sourceType) {
         Document result = new Document();
-        result.setInternmentEpisodeId(internmentEpisodeId);
+        result.setSourceId(internmentEpisodeId);
         result.setStatusId(DocumentStatus.FINAL);
         result.setTypeId(type);
         result.setSourceTypeId(sourceType);

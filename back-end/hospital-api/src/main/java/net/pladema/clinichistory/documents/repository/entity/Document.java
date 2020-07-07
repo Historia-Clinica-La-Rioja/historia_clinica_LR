@@ -29,8 +29,8 @@ public class Document extends InternationAuditableEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "internment_episode_id", nullable = false)
-	private Integer internmentEpisodeId;
+	@Column(name = "source_id", nullable = false)
+	private Integer sourceId;
 
 	@Column(name = "status_id", length = 20, nullable = false)
 	private String statusId;
@@ -62,8 +62,8 @@ public class Document extends InternationAuditableEntity {
 	@Column(name = "source_type_id", nullable = false)
 	private Short sourceTypeId;
 
-	public Document(Integer internmentEpisodeId, String statusId, Short typeId, Short sourceTypeId) {
-		this.internmentEpisodeId = internmentEpisodeId;
+	public Document(Integer sourceId, String statusId, Short typeId, Short sourceTypeId) {
+		this.sourceId = sourceId;
 		this.statusId = statusId;
 		this.typeId = typeId;
 		this.sourceTypeId = sourceTypeId;
@@ -83,12 +83,13 @@ public class Document extends InternationAuditableEntity {
 		if (o == null || getClass() != o.getClass()) return false;
 		Document document = (Document) o;
 		return id.equals(document.id) &&
-				internmentEpisodeId.equals(document.internmentEpisodeId) &&
+				sourceId.equals(document.sourceId) &&
+				sourceTypeId.equals(document.sourceTypeId) &&
 				typeId.equals(document.typeId);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, internmentEpisodeId, typeId);
+		return Objects.hash(id, sourceId, typeId, sourceTypeId);
 	}
 }

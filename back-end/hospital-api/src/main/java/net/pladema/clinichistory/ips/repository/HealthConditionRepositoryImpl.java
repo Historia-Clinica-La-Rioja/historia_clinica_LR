@@ -4,6 +4,7 @@ import net.pladema.clinichistory.ips.repository.generalstate.HealthConditionVo;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.ConditionVerificationStatus;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentStatus;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.Snomed;
+import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +35,8 @@ public class HealthConditionRepositoryImpl implements HealthConditionRepositoryC
                 "from document d " +
                 "join document_health_condition dhc on d.id = dhc.document_id " +
                 "join health_condition hc on dhc.health_condition_id = hc.id " +
-                "where internment_episode_id = :internmentEpisodeId " +
+                "where d.sourceId = :internmentEpisodeId " +
+                "and d.sourceTypeId = " + SourceType.INTERNACION+" "+
                 "and d.status_id = :statusId )" +
                 "select t.id as id, s.id as sctid, s.pt, status_id, t.main, verification_status_id, problem_id, " +
                 "start_date, n.id note_id, n.description as note " +

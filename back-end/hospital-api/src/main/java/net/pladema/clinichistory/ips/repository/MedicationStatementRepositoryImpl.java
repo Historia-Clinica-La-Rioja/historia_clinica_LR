@@ -4,6 +4,7 @@ import net.pladema.clinichistory.ips.repository.generalstate.MedicationVo;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentStatus;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.MedicationStatementStatus;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.Snomed;
+import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,7 +38,8 @@ public class MedicationStatementRepositoryImpl implements MedicationStatementRep
                 "from document d " +
                 "join document_medicamention_statement dms on d.id = dms.document_id " +
                 "join medication_statement ms on dms.medication_statement_id = ms.id " +
-                "where internment_episode_id = :internmentEpisodeId " +
+                "where d.sourceId = :internmentEpisodeId " +
+                "and d.sourceTypeId = " + SourceType.INTERNACION+" "+
                 "and d.status_id = :documentStatusId " +
                 ") " +
                 "select t.id as id, s.id as sctid, s.pt, status_id, n.id as note_id, n.description as note " +

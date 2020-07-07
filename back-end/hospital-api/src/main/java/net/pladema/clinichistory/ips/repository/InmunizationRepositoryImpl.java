@@ -4,6 +4,7 @@ import net.pladema.clinichistory.ips.repository.generalstate.InmunizationVo;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentStatus;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.InmunizationStatus;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.Snomed;
+import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -45,7 +46,8 @@ public class InmunizationRepositoryImpl implements InmunizationRepositoryCustom 
                 "from document d " +
                 "join document_inmunization di on (d.id = di.document_id) " +
                 "join inmunization i on (di.inmunization_id = i.id) " +
-                "where internment_episode_id = :internmentEpisodeId " +
+                "where d.sourceId = :internmentEpisodeId " +
+                "and d.sourceTypeId = " + SourceType.INTERNACION+" "+
                 "and d.status_id = :documentStatusId " +
                 ") " +
                 "select t.id as id, s.id as sctid, s.pt, t.status_id, t.administration_date, " +

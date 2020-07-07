@@ -3,6 +3,7 @@ package net.pladema.clinichistory.ips.repository;
 import net.pladema.clinichistory.ips.repository.generalstate.ClinicalObservationVo;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentStatus;
 import net.pladema.clinichistory.ips.service.domain.MapClinicalObservationVo;
+import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -41,7 +42,8 @@ public class ClinicalObservationRepositoryImpl implements ClinicalObservationRep
                 "    FROM document d " +
                 "    JOIN document_vital_sign dvs ON (d.id = dvs.document_id) " +
                 "    JOIN observation_vital_sign ovs ON (dvs.observation_vital_sign_id = ovs.id) " +
-                "    WHERE d.internment_episode_id = :internmentEpisodeId " +
+                "    WHERE source_id = :internmentEpisodeId " +
+                "          AND source_type_id = " + SourceType.INTERNACION+" "+
                 "          AND d.status_id = :statusId " +
                 " )UNION( " +
                 "   SELECT  ovs.id, " +
@@ -52,7 +54,8 @@ public class ClinicalObservationRepositoryImpl implements ClinicalObservationRep
                 "    FROM document d " +
                 "    JOIN document_lab dl ON (d.id = dl.document_id) " +
                 "    JOIN observation_lab ovs ON (dl.observation_lab_id = ovs.id) " +
-                "    WHERE d.internment_episode_id = :internmentEpisodeId " +
+                "    WHERE source_id = :internmentEpisodeId " +
+                "          AND source_type_id = " + SourceType.INTERNACION+" "+
                 "          AND d.status_id = :statusId " +
                 ")" +
                 "    ORDER BY effective_time DESC " );
