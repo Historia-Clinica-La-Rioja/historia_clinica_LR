@@ -10,6 +10,7 @@ import { PatientProfileComponent } from './routes/patient-profile/patient-profil
 import { AmbulatoriaPacienteComponent } from './routes/ambulatoria-paciente/ambulatoria-paciente.component';
 import { ResumenComponent } from './components/resumen/resumen.component';
 import { ProblemasComponent } from './components/problemas/problemas.component';
+import { HistoriaClinicaModule } from "../../historia-clinica.module";
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import { ProblemasComponent } from './components/problemas/problemas.component';
 		FormsModule,
 		CommonModule,
 		CoreModule,
+		HistoriaClinicaModule,
 		PacientesModule,
 		PresentationModule
 	]

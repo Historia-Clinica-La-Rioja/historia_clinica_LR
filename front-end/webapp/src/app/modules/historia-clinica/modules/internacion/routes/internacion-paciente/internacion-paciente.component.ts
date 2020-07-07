@@ -52,7 +52,7 @@ export class InternacionPacienteComponent implements OnInit {
 	public showDischarge: boolean;
 	public editDiagnosisSummary$: boolean;
 	public hasMedicalDischarge: boolean;
-	public alergies: AllergyConditionDto[];
+	public allergies: AllergyConditionDto[];
 	public familyHistories: HealthHistoryConditionDto[];
 	public readonly familyHistoriesHeader = ANTECEDENTES_FAMILIARES;
 	constructor(
@@ -130,7 +130,7 @@ export class InternacionPacienteComponent implements OnInit {
 
 	initSummaries() {
 		this.internmentStateService.getAllergies(this.internmentEpisodeId).subscribe(
-			alergies => this.alergies = alergies
+			allergies => this.allergies = allergies
 		);
 		this.internmentStateService.getFamilyHistories(this.internmentEpisodeId).subscribe(
 			familyHistories => this.familyHistories = familyHistories

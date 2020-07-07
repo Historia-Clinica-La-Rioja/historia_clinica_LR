@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { AllergyConditionDto, HealthConditionDto } from '@api-rest/api-model';
 import { TableModel } from '@presentation/components/table/table.component';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
@@ -11,10 +11,10 @@ import { AddAllergyComponent } from '../../dialogs/add-allergy/add-allergy.compo
 	templateUrl: './alergias-summary.component.html',
 	styleUrls: ['./alergias-summary.component.scss']
 })
-export class AlergiasSummaryComponent implements OnInit {
+export class AlergiasSummaryComponent implements OnChanges {
 
 	@Input() internmentEpisodeId: number;
-	@Input() alergies: AllergyConditionDto[];
+	@Input() allergies: AllergyConditionDto[];
 	@Input() editable = false;
 
 	public readonly alergiasSummary = ALERGIAS;
@@ -39,8 +39,8 @@ export class AlergiasSummaryComponent implements OnInit {
 	) {
 	}
 
-	ngOnInit(): void {
-		AlergiasSummaryComponent.buildTable(this.alergies)
+	ngOnChanges(): void {
+		this.tableModel = AlergiasSummaryComponent.buildTable(this.allergies)
 	}
 
 	openDialog() {
