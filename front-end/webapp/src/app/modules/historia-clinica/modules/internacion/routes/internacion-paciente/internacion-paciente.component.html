@@ -59,13 +59,13 @@
 					<ng-container
 						*hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD']">
 						<app-signos-vitales-summary [internmentEpisodeId]="internmentEpisodeId"
-							[editable]="epicrisisDoc?.confirmed">
+													[editable]="!epicrisisDoc?.confirmed">
 						</app-signos-vitales-summary>
 					</ng-container>
 					<ng-container
 						*hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD']">
 						<app-antropometricos-summary [internmentEpisodeId]="internmentEpisodeId"
-							[editable]="epicrisisDoc?.confirmed">
+													 [editable]="!epicrisisDoc?.confirmed">
 						</app-antropometricos-summary>
 					</ng-container>
 					<ng-container
@@ -106,7 +106,7 @@
 					<ng-container
 						*hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD']">
 						<app-alergias-summary [internmentEpisodeId]="internmentEpisodeId"
-							[editable]="epicrisisDoc?.confirmed" [allergies]="allergies">
+							[editable]="!epicrisisDoc?.confirmed" [allergies]="allergies">
 						</app-alergias-summary>
 					</ng-container>
 					<ng-container
@@ -116,7 +116,7 @@
 					<ng-container
 						*hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD']">
 						<app-vacunas-summary [internmentEpisodeId]="internmentEpisodeId"
-							[editable]="epicrisisDoc?.confirmed"></app-vacunas-summary>
+											 [editable]="!epicrisisDoc?.confirmed"></app-vacunas-summary>
 					</ng-container>
 				</div>
 			</div>
