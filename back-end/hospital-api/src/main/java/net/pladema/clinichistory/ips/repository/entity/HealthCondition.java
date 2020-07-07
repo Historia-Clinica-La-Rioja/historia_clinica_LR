@@ -41,17 +41,11 @@ public class HealthCondition extends InternationAuditableEntity  implements Clon
 	@Column(name = "verification_status_id", length = 20, nullable = false)
 	private String verificationStatusId;
 
-	@Column(name = "problem_type_id", length = 20, nullable = false)
-	private String problemTypeId;
-
 	@Column(name = "start_date")
 	private LocalDate startDate;
 
 	@Column(name = "inactivation_date")
 	private LocalDate inactivationDate;
-
-	@Column(name = "personal")
-	private Boolean personal;
 
 	@Column(name = "main", nullable = false)
 	private Boolean main = false;
@@ -92,8 +86,8 @@ public class HealthCondition extends InternationAuditableEntity  implements Clon
 		} catch (CloneNotSupportedException e) {
 			result = new HealthCondition(
 					this.getId(),this.getPatientId(), this.getSctidCode(),
-					this.getStatusId(), this.getVerificationStatusId(), this.getProblemTypeId(),
-					this.getStartDate(), this.getInactivationDate(), this.getPersonal(), this.getMain(),
+					this.getStatusId(), this.getVerificationStatusId(),
+					this.getStartDate(), this.getInactivationDate(), this.getMain(),
 					this.getNoteId(), this.getProblemId()
 			);
 		}

@@ -75,12 +75,6 @@ public class InternmentMasterdataController {
                 ConditionVerificationStatus.downState()));
     }
 
-    @GetMapping(value = "/health/problem")
-    public ResponseEntity<Collection<MasterDataProjection>> getHealthProblem(){
-        LOG.debug("{}", "All health condition problem type");
-        return ResponseEntity.ok().body(internmentMasterDataService.findAll(ConditionProblemType.class));
-    }
-
     @GetMapping(value = "/medication")
     public ResponseEntity<Collection<MasterDataProjection>> getHealthMedication(){
         LOG.debug("{}", "All medication statement status");

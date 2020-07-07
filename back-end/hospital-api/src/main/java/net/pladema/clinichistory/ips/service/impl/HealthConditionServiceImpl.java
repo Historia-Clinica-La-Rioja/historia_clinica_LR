@@ -1,20 +1,19 @@
 package net.pladema.clinichistory.ips.service.impl;
 
+import net.pladema.clinichistory.documents.service.DocumentService;
+import net.pladema.clinichistory.documents.service.NoteService;
 import net.pladema.clinichistory.ips.repository.HealthConditionRepository;
 import net.pladema.clinichistory.ips.repository.entity.HealthCondition;
 import net.pladema.clinichistory.ips.repository.generalstate.HealthConditionVo;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.ConditionClinicalStatus;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.ConditionProblemType;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.ConditionVerificationStatus;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.ProblemType;
+import net.pladema.clinichistory.ips.service.HealthConditionService;
+import net.pladema.clinichistory.ips.service.SnomedService;
 import net.pladema.clinichistory.ips.service.domain.DiagnosisBo;
 import net.pladema.clinichistory.ips.service.domain.GeneralHealthConditionBo;
 import net.pladema.clinichistory.ips.service.domain.HealthConditionBo;
 import net.pladema.clinichistory.ips.service.domain.HealthHistoryConditionBo;
-import net.pladema.clinichistory.documents.service.DocumentService;
-import net.pladema.clinichistory.documents.service.NoteService;
-import net.pladema.clinichistory.ips.service.HealthConditionService;
-import net.pladema.clinichistory.ips.service.SnomedService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -32,12 +31,14 @@ public class HealthConditionServiceImpl implements HealthConditionService {
 
     private static final Logger LOG = LoggerFactory.getLogger(HealthConditionServiceImpl.class);
 
-    private static final String LOGGING_HEALTH_CONDITION = "HealthCondition saved ->";
     private static final String LOGGING_INTERNMENT_EPISODE = "Input parameters -> internmentEpisodeId {}";
 
     private final HealthConditionRepository healthConditionRepository;
+
     private final SnomedService snomedService;
+
     private final DocumentService documentService;
+
     private final NoteService noteService;
 
     public HealthConditionServiceImpl(HealthConditionRepository healthConditionRepository,
@@ -50,15 +51,20 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         this.noteService = noteService;
     }
 
+    private HealthCondition save(HealthCondition healthCondition){
+        LOG.debug("Input parameters -> healthCondition {}", healthCondition);
+        healthCondition = healthConditionRepository.save(healthCondition);
+        LOG.debug(OUTPUT, healthCondition);
+        return healthCondition;
+    }
+
     @Override
     public HealthConditionBo loadMainDiagnosis(Integer patientId, Long documentId, Optional<HealthConditionBo> mainDiagnosis) {
         LOG.debug("Input parameters -> patientId {}, documentId {}, mainDiagnosis {}", documentId, patientId, mainDiagnosis);
         mainDiagnosis.ifPresent(md -> {
-            HealthCondition healthCondition = buildHealth(patientId, md, true);
-            healthCondition.setMain(true);
-            healthCondition = updateStatusAndVerification(healthCondition, md);
-            healthCondition = healthConditionRepository.save(healthCondition);
-            LOG.debug(LOGGING_HEALTH_CONDITION, healthCondition.getId());
+            HealthCondition healthCondition = buildMainDiagnoses(patientId, md);
+            healthCondition = save(healthCondition);
+
             md.setId(healthCondition.getId());
             md.setVerificationId(healthCondition.getVerificationStatusId());
             md.setStatusId(healthCondition.getStatusId());
@@ -70,16 +76,22 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         return result;
     }
 
+    private HealthCondition buildMainDiagnoses(Integer patientId, HealthConditionBo info) {
+        LOG.debug("Input parameters -> patientId {}, info {}", patientId, info);
+        HealthCondition healthCondition = buildBasicHealthCondition(patientId, info);
+        healthCondition.setProblemId(ProblemType.DIAGNOSTICO);
+        healthCondition.setMain(true);
+        healthCondition = updateStatusAndVerification(healthCondition, info);
+        LOG.debug(OUTPUT, healthCondition);
+        return healthCondition;
+    }
+
     @Override
     public List<DiagnosisBo> loadDiagnosis(Integer patientId, Long documentId, List<DiagnosisBo> diagnosis) {
         LOG.debug("Input parameters -> patientId {}, documentId {}, diagnosis {}", documentId, patientId, diagnosis);
         diagnosis.forEach(d -> {
-            HealthCondition healthCondition = buildHealth(patientId, d, true);
-            if (d.isPresumptive())
-                healthCondition.setVerificationStatusId(ConditionVerificationStatus.PRESUMPTIVE);
-            healthCondition = updateStatusAndVerification(healthCondition, d);
-            healthCondition = healthConditionRepository.save(healthCondition);
-            LOG.debug(LOGGING_HEALTH_CONDITION, healthCondition.getId());
+            HealthCondition healthCondition = buildDiagnoses(patientId, d);
+            healthCondition = save(healthCondition);
 
             d.setId(healthCondition.getId());
             d.setVerificationId(healthCondition.getVerificationStatusId());
@@ -90,6 +102,17 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         List<DiagnosisBo> result = diagnosis;
         LOG.debug(OUTPUT, result);
         return result;
+    }
+
+    private HealthCondition buildDiagnoses(Integer patientId, DiagnosisBo info) {
+        LOG.debug("Input parameters -> patientId {}, info {}", patientId, info);
+        HealthCondition healthCondition = buildBasicHealthCondition(patientId, info);
+        healthCondition.setProblemId(ProblemType.DIAGNOSTICO);
+        if (info.isPresumptive())
+            healthCondition.setVerificationStatusId(ConditionVerificationStatus.PRESUMPTIVE);
+        healthCondition = updateStatusAndVerification(healthCondition, info);
+        LOG.debug(OUTPUT, healthCondition);
+        return healthCondition;
     }
 
     private <T extends HealthConditionBo> HealthCondition updateStatusAndVerification(HealthCondition healthCondition, T newDiagnosis) {
@@ -108,9 +131,8 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     public List<HealthHistoryConditionBo> loadPersonalHistories(Integer patientId, Long documentId, List<HealthHistoryConditionBo> personalHistories) {
         LOG.debug("Input parameters -> patientId {}, documentId {}, personalHistories {}", documentId, patientId, personalHistories);
         personalHistories.forEach(ph -> {
-            HealthCondition healthCondition = buildHistoryHealth(patientId, ph, true);
-            healthCondition = healthConditionRepository.save(healthCondition);
-            LOG.debug(LOGGING_HEALTH_CONDITION, healthCondition.getId());
+            HealthCondition healthCondition = buildPersonalHistory(patientId, ph);
+            healthCondition = save(healthCondition);
 
             ph.setId(healthCondition.getId());
             ph.setVerificationId(healthCondition.getVerificationStatusId());
@@ -123,13 +145,23 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         return result;
     }
 
+    private HealthCondition buildPersonalHistory(Integer patientId, HealthHistoryConditionBo info) {
+        LOG.debug("Input parameters -> patientId {}, info {}", patientId, info);
+        HealthCondition healthCondition = buildBasicHealthCondition(patientId, info);
+        healthCondition.setProblemId(ProblemType.PROBLEMA);
+        LocalDate date = info.getDate() == null ? defaultDate() : info.getDate();
+        healthCondition.setStartDate(date);
+        healthCondition.setNoteId(noteService.createNote(info.getNote()));
+        LOG.debug(OUTPUT, healthCondition);
+        return healthCondition;
+    }
+
     @Override
     public List<HealthHistoryConditionBo> loadFamilyHistories(Integer patientId, Long documentId, List<HealthHistoryConditionBo> familyHistories) {
         LOG.debug("Input parameters -> patientId {}, documentId {}, familyHistories {}", documentId, patientId, familyHistories);
         familyHistories.forEach(ph -> {
-            HealthCondition healthCondition = buildHistoryHealth(patientId, ph, false);
+            HealthCondition healthCondition = buildFamilyHistory(patientId, ph);
             healthCondition = healthConditionRepository.save(healthCondition);
-            LOG.debug(LOGGING_HEALTH_CONDITION, healthCondition.getId());
 
             ph.setId(healthCondition.getId());
             ph.setVerificationId(healthCondition.getVerificationStatusId());
@@ -142,15 +174,13 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         return result;
     }
 
-    private <T extends HealthHistoryConditionBo> HealthCondition buildHistoryHealth(Integer patientId, T healthHistory, boolean personal) {
-        LOG.debug("Input parameters -> patientId {}, info {}, healthHistory {}", patientId, healthHistory, personal);
-        HealthCondition healthCondition = buildHealth(patientId, healthHistory, personal);
-        healthCondition.setProblemId(personal ? ProblemType.PROBLEMA : ProblemType.ANTECEDENTE);
-
-        LocalDate date = healthHistory.getDate() == null ? defaultDate() : healthHistory.getDate();
+    private HealthCondition buildFamilyHistory(Integer patientId, HealthHistoryConditionBo info) {
+        LOG.debug("Input parameters -> patientId {}, info {}", patientId, info);
+        HealthCondition healthCondition = buildBasicHealthCondition(patientId, info);
+        healthCondition.setProblemId(ProblemType.ANTECEDENTE);
+        LocalDate date = info.getDate() == null ? defaultDate() : info.getDate();
         healthCondition.setStartDate(date);
-
-        healthCondition.setNoteId(noteService.createNote(healthHistory.getNote()));
+        healthCondition.setNoteId(noteService.createNote(info.getNote()));
         LOG.debug(OUTPUT, healthCondition);
         return healthCondition;
     }
@@ -159,17 +189,15 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         return LocalDate.now();
     }
 
-    private <T extends HealthConditionBo> HealthCondition buildHealth(Integer patientId, T info, boolean personal) {
-        LOG.debug("Input parameters -> patientId {}, info {}, personal {}", patientId, info, personal);
+    private HealthCondition buildBasicHealthCondition(Integer patientId, HealthConditionBo info) {
+        LOG.debug("Input parameters -> patientId {}, info {}", patientId, info);
         String sctId = snomedService.createSnomedTerm(info.getSnomed());
         HealthCondition healthCondition = new HealthCondition();
         healthCondition.setPatientId(patientId);
         healthCondition.setSctidCode(sctId);
         healthCondition.setStatusId(ConditionClinicalStatus.ACTIVE);
-        healthCondition.setProblemTypeId(ConditionProblemType.PROBLEMA);
         healthCondition.setVerificationStatusId(info.getVerificationId());
-        healthCondition.setPersonal(personal);
-        healthCondition.setProblemId(ProblemType.DIAGNOSTICO);
+        healthCondition.setStartDate(defaultDate());
         LOG.debug(OUTPUT, healthCondition);
         return healthCondition;
     }

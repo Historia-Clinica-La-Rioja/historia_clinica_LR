@@ -1,6 +1,6 @@
 databaseChangeLog: 
 - logicalFilePath: incrementales-v0_4
-
+    
 - changeSet:
     id: outpatient_consultation-createTable
     comment: Create table outpatient_consultation
@@ -215,3 +215,21 @@ databaseChangeLog:
             ) as diagnosis on true
             where 	ie.status_id = 1 
                     and b."free" = false
+
+        
+- changeSet:  
+    id:  dropColumn-problem_type_id  
+    author:  etrapani 
+    changes:  
+    -  dropColumn:  
+            columnName: problem_type_id  
+            tableName:  health_condition
+
+
+- changeSet:  
+    id:  dropTable-condition_problem_type  
+    author:  etrapani  
+    changes:  
+    -  dropTable:  
+            cascadeConstraints:  true  
+            tableName:  condition_problem_type
