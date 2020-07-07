@@ -41,7 +41,7 @@ public class InmunizationRepositoryImpl implements InmunizationRepositoryCustom 
                 "i.note_id, " +
                 "i.administration_date, " +
                 "i.updated_on, " +
-                "row_number() over (partition by i.sctid_code order by i.updated_on desc) as rw " +
+                "row_number() over (partition by i.sctid_code, i.administration_date order by i.updated_on desc) as rw " +
                 "from document d " +
                 "join document_inmunization di on (d.id = di.document_id) " +
                 "join inmunization i on (di.inmunization_id = i.id) " +
