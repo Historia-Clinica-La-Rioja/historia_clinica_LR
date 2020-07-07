@@ -31,5 +31,6 @@ export interface InternmentEpisodeSummary {
 		fullName: string;
 		relationship: string;
 		phoneNumber: string;
-	}
+	};
+	probableDischargeDate: string;
 }

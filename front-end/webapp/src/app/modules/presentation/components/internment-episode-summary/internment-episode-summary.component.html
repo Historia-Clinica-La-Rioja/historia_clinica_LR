@@ -37,7 +37,12 @@
 		</div>
 		<div mat-line>
 			<span 	[translate]="'internaciones.internacion-paciente.card.ADMISSION'"
-					  [translateParams]="{ datetime: internmentEpisode?.admissionDatetime }">
+					[translateParams]="{ datetime: internmentEpisode?.admissionDatetime }">
+			</span>
+		</div>
+		<div mat-line>
+			<span 	[translate]="'internaciones.internacion-paciente.card.PROBABLE_DISCHARGE'"
+					[translateParams]="{ datetime: internmentEpisode?.probableDischargeDate }">
 			</span>
 		</div>
 	</mat-list-item>

@@ -4,7 +4,7 @@ import { BasicPatientDto, CompletePatientDto, InternmentSummaryDto, PatientType,
 import { PatientBasicData } from '../components/patient-card/patient-card.component';
 import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
 import { PatientTypeData } from '@presentation/components/patient-type-logo/patient-type-logo.component';
-import { DateFormat, momentParseDate } from '@core/utils/moment.utils';
+import { DateFormat, momentParseDate, momentParseDateTime } from '@core/utils/moment.utils';
 
 @Injectable({
 	providedIn: 'root'
@@ -20,13 +20,14 @@ export class MapperService {
 	}
 
 	private static _toInternmentEpisodeSummary(internmentSummary: InternmentSummaryDto): InternmentEpisodeSummary {
-		let internmentEpisodeSummary = {
+		const internmentEpisodeSummary = {
 			bedNumber: internmentSummary.bed.bedNumber,
 			roomNumber: internmentSummary.bed.room.roomNumber,
 			specialtyName: internmentSummary.specialty.name,
 			totalInternmentDays: internmentSummary.totalInternmentDays,
-			doctor : null,
+			doctor: null,
 			admissionDatetime: momentParseDate(String(internmentSummary.entryDate)).format(DateFormat.VIEW_DATE),
+			probableDischargeDate: internmentSummary.probableDischargeDate ? momentParseDateTime(String(internmentSummary.probableDischargeDate)).format(DateFormat.VIEW_DATE) : 'Sin fecha definida',
 			responsibleContact: null
 		};
 		if (internmentSummary.doctor) {
@@ -36,12 +37,12 @@ export class MapperService {
 				license: internmentSummary.doctor.licence
 			};
 		}
-		if(internmentSummary.responsibleContact){
+		if (internmentSummary.responsibleContact) {
 			internmentEpisodeSummary.responsibleContact = {
-				fullName:internmentSummary.responsibleContact?.fullName,
-				phoneNumber:internmentSummary.responsibleContact?.phoneNumber,
-				relationship:internmentSummary.responsibleContact?.relationship,
-			}
+				fullName: internmentSummary.responsibleContact?.fullName,
+				phoneNumber: internmentSummary.responsibleContact?.phoneNumber,
+				relationship: internmentSummary.responsibleContact?.relationship,
+			};
 		}
 		return internmentEpisodeSummary;
 	}
@@ -57,12 +58,12 @@ export class MapperService {
 	}
 
 	private static _toPersonalInformationData(patient: CompletePatientDto, person: PersonalInformationDto): PersonalInformation {
-		let personalInformation = {
+		const personalInformation = {
 			identificationNumber: person.identificationNumber,
 			identificationType: person.identificationType,
 			cuil: person.cuil,
 			address: person.address,
-			birthDate: person.birthDate ? momentParseDate(String(person.birthDate)).format(DateFormat.VIEW_DATE) : "",
+			birthDate: person.birthDate ? momentParseDate(String(person.birthDate)).format(DateFormat.VIEW_DATE) : '',
 			email: person.email,
 			phoneNumber: person.phoneNumber,
 			medicalCoverageName: patient.medicalCoverageName,

@@ -300,26 +300,27 @@
 				"ADD_EVAL_INGRESO": "Generar evaluación de ingreso",
 				"ADD_NOTA_EVOLUCION": "Agregar nota de evolución",
 				"ADMINISTRATIVE_DISCHARGE": "Alta administrativa",
-				"MEDICAL_DISCHARGE":"Alta médica"
+				"MEDICAL_DISCHARGE": "Alta médica"
 			},
 			"alergias-summary": {
 				"ADD": "Agregar alergia",
 				"save": {
 					"SUCCESS": "Una nueva alergia se guardó exitosamente",
-					"ERROR":  "Error al guardar nueva alergia"
+					"ERROR": "Error al guardar nueva alergia"
 				}
 			},
 			"anthropometric-summary": {
 				"ADD": "Agregar información antropométrica",
 				"save": {
 					"SUCCESS": "La información antropométrica se actualizó exitosamente",
-					"ERROR":  "Error al actualizar información antropométrica"
+					"ERROR": "Error al actualizar información antropométrica"
 				}
 			},
 			"card": {
 				"DAYS_INTERNED": "{{days}} días internado",
 				"ONE_DAY": "1 día internado",
-				"ADMISSION": "Ingreso: {{datetime}}"
+				"ADMISSION": "Ingreso: {{datetime}}",
+				"PROBABLE_DISCHARGE": "Fecha probable de alta: {{datetime}}"
 			},
 			"main-diagnosis": {
 				"TITLE": "Diagnóstico principal",
@@ -340,14 +341,14 @@
 				"REGISTRY_DATE": "Fecha de vacunación",
 				"save": {
 					"SUCCESS": "Una nueva vacuna se guardó exitosamente",
-					"ERROR":  "Error al guardar nueva vacuna"
+					"ERROR": "Error al guardar nueva vacuna"
 				}
 			},
 			"vital-signs-summary": {
 				"UPDATE": "Actualizar signos vitales",
 				"save": {
 					"SUCCESS": "Los signos vitales se actualizaron exitosamente",
-					"ERROR":  "Error al actualizar signos vitales"
+					"ERROR": "Error al actualizar signos vitales"
 				}
 			}
 		},
@@ -358,9 +359,9 @@
 			"SECTION_BED": "Asignación de cama",
 			"SECTION_CONTACT": "Contacto responsable",
 			"SECTION_DOCTOR": "Médico responsable",
-			"messages":{
-				"ERROR":"Error al crear una nueva internacion",
-				"SUCCESS":"La internación se guardó exitosamente"
+			"messages": {
+				"ERROR": "Error al crear una nueva internacion",
+				"SUCCESS": "La internación se guardó exitosamente"
 			}
 		},
 		"snomed-search": {
@@ -371,13 +372,13 @@
 		"discharge": {
 			"TITLE": "Alta Administrativa",
 			"MEDICAL_DISCHARGE": "Alta médica",
-			"DISCHARGE_DATE":"Fecha de egreso",
-			"DISCHARGE_TYPE":"Tipo de egreso",
-			"messages":{
-				"ERROR":"No se pudo dar el alta administrativa del paciente",
-				"SUCCESS":"El alta administrativa se guardó exitosamente",
-				"MEDICAL_DISCHARGE_ERROR":"No se pudo dar el alta médica del paciente",
-				"MEDICAL_DISCHARGE_SUCCESS":"El alta médica se guardó exitosamente"
+			"DISCHARGE_DATE": "Fecha de egreso",
+			"DISCHARGE_TYPE": "Tipo de egreso",
+			"messages": {
+				"ERROR": "No se pudo dar el alta administrativa del paciente",
+				"SUCCESS": "El alta administrativa se guardó exitosamente",
+				"MEDICAL_DISCHARGE_ERROR": "No se pudo dar el alta médica del paciente",
+				"MEDICAL_DISCHARGE_SUCCESS": "El alta médica se guardó exitosamente"
 			}
 		},
 		"alerta-covid": {
