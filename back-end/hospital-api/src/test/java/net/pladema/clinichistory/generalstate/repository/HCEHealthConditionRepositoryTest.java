@@ -67,6 +67,36 @@ public class HCEHealthConditionRepositoryTest extends BaseRepositoryTest {
 
 	}
 
+	@Test
+	public void test_hce_family_history_success() {
+		Integer patientId = 1;
+
+		createFirstDocument(patientId);
+		createSecondDocument(patientId);
+		createThirdDocument(patientId);
+
+		List<HCEHealthConditionVo> resultQuery = hCEHealthConditionRepository.getFamilyHistory(patientId);
+
+		assertThat(resultQuery)
+				.isNotNull()
+				.isNotEmpty()
+				.hasSize(2);
+
+		// El diagnostico principal queda inactivo por lo que se descarta
+		assertThat(resultQuery.stream().anyMatch(HCEHealthConditionVo::isMain))
+				.isFalse();
+
+		assertThat(resultQuery.stream().filter(HCEHealthConditionVo::isFamilyHistory))
+				.hasSize(2);
+
+		assertThat(resultQuery.stream().filter(HCEHealthConditionVo::isPersonalHistory))
+				.hasSize(0);
+
+		assertThat(resultQuery.stream().filter(HCEHealthConditionVo::isSecondaryDiagnosis))
+				.hasSize(0);
+
+	}
+
 	private void createFirstDocument(Integer patientId){
 		Document document = DocumentsTestMocks.createDocument(1, AMBULATORIA);
 		document = save(document);

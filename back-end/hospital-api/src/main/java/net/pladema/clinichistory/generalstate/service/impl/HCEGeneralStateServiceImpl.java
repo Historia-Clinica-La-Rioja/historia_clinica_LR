@@ -34,4 +34,13 @@ public class HCEGeneralStateServiceImpl implements HCEGeneralStateService {
         LOG.debug(LOGGING_OUTPUT, result);
         return result;
     }
+
+    @Override
+    public List<HCEPersonalHistoryBo> getFamilyHistory(Integer patientId) {
+        LOG.debug(LOGGING_INPUT, patientId);
+        List<HCEHealthConditionVo> resultQuery = hceHealthConditionRepository.getFamilyHistory(patientId);
+        List<HCEPersonalHistoryBo> result = resultQuery.stream().map(HCEPersonalHistoryBo::new).collect(Collectors.toList());
+        LOG.debug(LOGGING_OUTPUT, result);
+        return result;
+    }
 }

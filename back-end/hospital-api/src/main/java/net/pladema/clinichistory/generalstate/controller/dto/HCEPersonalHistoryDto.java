@@ -11,7 +11,7 @@ import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class HCEPersonalHistoryDto extends HCEClinicalTermDto{
+public class HCEPersonalHistoryDto extends HCEClinicalTermDto {
 
     @JsonFormat(pattern = JacksonDateFormatConfig.DATE_FORMAT)
     private String startDate;

@@ -49,4 +49,15 @@ public class HCEGeneralStateController {
         LOG.debug(LOGGING_OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }
+
+    @GetMapping("/familyHistory")
+    public ResponseEntity<List<HCEPersonalHistoryDto>> getFamilyHistory(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "patientId") Integer patientId) {
+        LOG.debug(LOGGING_INPUT, institutionId, patientId);
+        List<HCEPersonalHistoryBo> resultService = hceGeneralStateService.getFamilyHistory(patientId);
+        List<HCEPersonalHistoryDto> result = hceGeneralStateMapper.toListHCEPersonalHistoryDto(resultService);
+        LOG.debug(LOGGING_OUTPUT, result);
+        return ResponseEntity.ok().body(result);
+    }
 }
