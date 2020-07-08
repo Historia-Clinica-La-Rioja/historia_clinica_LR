@@ -46,8 +46,8 @@ public class InmunizationRepositoryImpl implements InmunizationRepositoryCustom 
                 "from document d " +
                 "join document_inmunization di on (d.id = di.document_id) " +
                 "join inmunization i on (di.inmunization_id = i.id) " +
-                "where d.sourceId = :internmentEpisodeId " +
-                "and d.sourceTypeId = " + SourceType.INTERNACION+" "+
+                "where d.source_id = :internmentEpisodeId " +
+                "and d.source_type_id = " + SourceType.INTERNACION+" "+
                 "and d.status_id = :documentStatusId " +
                 ") " +
                 "select t.id as id, s.id as sctid, s.pt, t.status_id, t.administration_date, " +

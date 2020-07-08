@@ -40,8 +40,8 @@ public class AllergyIntoleranceRepositoryImpl implements AllergyIntoleranceRepos
                 "from document d " +
                 "join document_allergy_intolerance dai on d.id = dai.document_id " +
                 "join allergy_intolerance ai on dai.allergy_intolerance_id = ai.id " +
-                "where d.sourceId = :internmentEpisodeId " +
-                "and d.sourceTypeId = " + SourceType.INTERNACION+" "+
+                "where d.source_id = :internmentEpisodeId " +
+                "and d.source_type_id = " + SourceType.INTERNACION+" "+
                 "and d.status_id = :documentStatusId " +
                 ") " +
                 "select t.id as id, s.id as sctid, s.pt, t.status_id, t.verification_status_id, t.category_id, t.start_date " +

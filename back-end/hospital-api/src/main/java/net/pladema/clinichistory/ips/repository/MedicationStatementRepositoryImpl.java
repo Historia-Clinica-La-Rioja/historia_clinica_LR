@@ -38,8 +38,8 @@ public class MedicationStatementRepositoryImpl implements MedicationStatementRep
                 "from document d " +
                 "join document_medicamention_statement dms on d.id = dms.document_id " +
                 "join medication_statement ms on dms.medication_statement_id = ms.id " +
-                "where d.sourceId = :internmentEpisodeId " +
-                "and d.sourceTypeId = " + SourceType.INTERNACION+" "+
+                "where d.source_id = :internmentEpisodeId " +
+                "and d.source_type_id = " + SourceType.INTERNACION+" "+
                 "and d.status_id = :documentStatusId " +
                 ") " +
                 "select t.id as id, s.id as sctid, s.pt, status_id, n.id as note_id, n.description as note " +
