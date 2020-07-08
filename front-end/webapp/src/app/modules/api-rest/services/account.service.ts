@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { PermissionsDto } from '@api-rest/api-model';
+import { PermissionsDto, UserDto } from '@api-rest/api-model';
 import { HttpClient } from '@angular/common/http';
 
 import { environment } from '@environments/environment';
@@ -15,6 +15,10 @@ export class AccountService {
 
 	public getPermissions(): Observable<PermissionsDto> {
 		return this.http.get<PermissionsDto>(`${environment.apiBase}/account/permissions`);
+	}
+
+	public getInfo(): Observable<UserDto> {
+		return this.http.get<UserDto>(`${environment.apiBase}/account/info`);
 	}
 
 }

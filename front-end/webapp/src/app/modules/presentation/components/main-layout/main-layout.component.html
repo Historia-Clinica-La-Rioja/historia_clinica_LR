@@ -15,8 +15,10 @@
 				<div class="informative-items">
 					<span *ngIf="menuFooterItems?.user?.fullName; else userName">{{menuFooterItems.user.fullName}}</span>
 					<ng-template #userName>{{menuFooterItems?.user?.userName}}</ng-template>
+					<mat-divider></mat-divider>
 					<span *ngIf="menuFooterItems?.institution?.name">{{menuFooterItems.institution.name}}</span>
 					<font color="grey" *ngIf="menuFooterItems?.institution?.address">{{menuFooterItems.institution.address | fullHouseAddress}} , {{menuFooterItems.institution.address.cityName}}</font>
+					<mat-divider *ngIf="menuFooterItems?.institution"></mat-divider>
 					<button mat-icon-button (click)="logout()">
 						<mat-icon>power_settings_new</mat-icon>
 						<span translate="auth.LOGOUT"></span>

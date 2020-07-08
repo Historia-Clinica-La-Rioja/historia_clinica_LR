@@ -9,7 +9,8 @@ import { SIDEBAR_MENU } from './constants/menu';
 import { PermissionsService } from '../core/services/permissions.service';
 import { MenuFooter } from '@presentation/components/main-layout/main-layout.component';
 import { InstitutionService } from '@api-rest/services/institution.service';
-import { InstitutionDto } from '@api-rest/api-model';
+import { InstitutionDto, UserDto } from '@api-rest/api-model';
+import { AccountService } from '@api-rest/services/account.service';
 
 @Component({
 	selector: 'app-institucion',
@@ -18,13 +19,14 @@ import { InstitutionDto } from '@api-rest/api-model';
 })
 export class InstitucionComponent implements OnInit {
 	menuItems$: Observable<MenuItem[]>;
-	menuFooterItems: MenuFooter;
+	menuFooterItems: MenuFooter = {user: {}, institution: null};
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
 		private contextService: ContextService,
 		private permissionsService: PermissionsService,
-		private institutionService: InstitutionService
+		private institutionService: InstitutionService,
+		private accountService: AccountService
 	) {
 
 	}
@@ -37,10 +39,14 @@ export class InstitucionComponent implements OnInit {
 			this.menuItems$ = this.permissionsService.filterItems$(SIDEBAR_MENU);
 			this.institutionService.getInstitutions(Array.of(institutionId))
 				.subscribe(institutionDto => {
-					this.menuFooterItems = { user: {userName: null},
-											institution: {name: institutionDto[0].name ,address: this.mapToAddress(institutionDto[0])}
-										};
+					this.menuFooterItems.institution = {name: institutionDto[0].name, address: this.mapToAddress(institutionDto[0])};
 				});
+			this.accountService.getInfo()
+				.subscribe( userInfo => {
+					this.menuFooterItems.user.userName = userInfo.email;
+					this.menuFooterItems.user.fullName = this.mapToFullName(userInfo);
+				}
+			);
 		});
 	}
 
@@ -51,7 +57,22 @@ export class InstitucionComponent implements OnInit {
 			floor: institutionDto.institutionAddressDto.floor,
 			apartment: institutionDto.institutionAddressDto.apartment,
 			cityName:  institutionDto.institutionAddressDto.city.description
+		};
+	}
+
+	private mapToFullName(userInfo: UserDto): string {
+		let fullName: string;
+		if (userInfo.personDto.firstName) {
+			fullName = userInfo.personDto.firstName;
 		}
+		if (userInfo.personDto.lastName) {
+			if (fullName) {
+				fullName += ' ' + userInfo.personDto.lastName;
+			} else {
+				fullName = userInfo.personDto.lastName;
+			}
+		}
+		return fullName;
 	}
 
 }

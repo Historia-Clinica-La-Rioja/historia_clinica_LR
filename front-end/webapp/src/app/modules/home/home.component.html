@@ -1,5 +1,5 @@
 <ng-container *ngIf="(menuItems$ | async) as menuItems; else loading">
-	<app-main-layout [menuItems]="menuItems"></app-main-layout>
+	<app-main-layout [menuItems]="menuItems" [menuFooterItems]="menuFooterItems"></app-main-layout>
 </ng-container>
 <ng-template #loading>
 	<mat-progress-bar mode="indeterminate"></mat-progress-bar>

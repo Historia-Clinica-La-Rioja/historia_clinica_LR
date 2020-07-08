@@ -571,6 +571,12 @@ export interface SnomedDto extends Serializable {
 export interface UserDto extends AbstractUserDto {
     email: string;
     id: number;
+    personDto?: UserPersonDto;
+}
+
+export interface UserPersonDto {
+    firstName: string;
+    lastName: string;
 }
 
 export interface VInstitutionDto {
