@@ -1,9 +1,11 @@
 package net.pladema.permissions.controller;
 
 import net.pladema.BaseControllerTest;
+import net.pladema.permissions.controller.mappers.UserInfoMapper;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.permissions.service.LoggedUserService;
 import net.pladema.permissions.service.dto.RoleAssignment;
+import net.pladema.person.controller.service.PersonExternalService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -27,6 +29,12 @@ public class LoggedUserControllerTest extends BaseControllerTest {
 
 	@MockBean
 	private LoggedUserService loggedUserService;
+
+	@MockBean
+	private PersonExternalService personExternalService;
+
+	@MockBean
+	private UserInfoMapper userInfoMapper;
 
 	@Test
 	@WithMockUser
