@@ -56,7 +56,8 @@ public class BackofficeClinicalSpecialtySectorValidator implements BackofficePer
 			return ids;
 		return ids.stream().filter(id -> {
 			try {
-				hasPermissionByInstitution(id);
+				Integer institutionId = repository.getInstitutionId(id);
+				hasPermissionByInstitution(institutionId);
 				return true;
 			} catch (Exception e) {
 				return false;
