@@ -48,7 +48,7 @@ export const ALERGIAS: SummaryHeader = {
 };
 
 export const VACUNAS: SummaryHeader = {
-	title: 'Vacunas suministradas',
+	title: 'Vacunas aplicadas',
 	matIcon: 'event_available'
 };
 

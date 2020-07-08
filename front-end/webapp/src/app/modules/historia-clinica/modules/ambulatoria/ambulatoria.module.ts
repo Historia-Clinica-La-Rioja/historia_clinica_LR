@@ -10,7 +10,8 @@ import { PatientProfileComponent } from './routes/patient-profile/patient-profil
 import { AmbulatoriaPacienteComponent } from './routes/ambulatoria-paciente/ambulatoria-paciente.component';
 import { ResumenComponent } from './components/resumen/resumen.component';
 import { ProblemasComponent } from './components/problemas/problemas.component';
-import { HistoriaClinicaModule } from "../../historia-clinica.module";
+import { VacunasComponent } from './components/vacunas/vacunas.component';
+import { HistoriaClinicaModule } from '../../historia-clinica.module';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { HistoriaClinicaModule } from "../../historia-clinica.module";
 		PatientProfileComponent,
 		AmbulatoriaPacienteComponent,
 		ResumenComponent,
-		ProblemasComponent
+		ProblemasComponent,
+		VacunasComponent
 	],
 	imports: [
 		AmbulatoriaRoutingModule,

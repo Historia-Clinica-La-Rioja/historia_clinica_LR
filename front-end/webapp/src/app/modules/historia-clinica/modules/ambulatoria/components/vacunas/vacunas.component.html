@@ -1,0 +1,20 @@
+<app-content width="full">
+	<div id="header" fxLayout="row" fxLayoutAlign="space-between center">
+		<div id="title">
+			<h2 [translate]="'ambulatoria.paciente.vacunas.TITLE'"></h2>
+		</div>
+		<div id="add_button" *ngIf="false">
+			<button mat-flat-button color="primary" (click)=goToAplicarVacuna()>
+				<span>{{'ambulatoria.paciente.vacunas.ADD' | translate | uppercase }}</span>
+			</button>
+		</div>
+	</div>
+
+	<div fxLayout="row">
+		<div fxFlex="50">
+			<app-vacunas-summary [internmentEpisodeId]="22"
+			                     [editable]="false">
+			</app-vacunas-summary>
+		</div>
+	</div>
+</app-content>

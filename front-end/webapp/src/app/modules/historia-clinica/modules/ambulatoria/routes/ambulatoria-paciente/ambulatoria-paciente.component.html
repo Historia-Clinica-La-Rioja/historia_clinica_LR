@@ -9,10 +9,19 @@
 				<mat-tab>
 					<ng-template mat-tab-label>
 						<mat-icon>content_paste</mat-icon>
-						<span>{{ 'ambulatoria.paciente.resumen.TAB-LABEL' | translate | uppercase }}</span>
+						<span>{{ 'ambulatoria.paciente.resumen.TAB_LABEL' | translate | uppercase }}</span>
 					</ng-template>
 					<ng-template matTabContent>
 						<app-resumen></app-resumen>
+					</ng-template>
+				</mat-tab>
+				<mat-tab>
+					<ng-template mat-tab-label>
+						<mat-icon>content_paste</mat-icon>
+						<span>{{ 'ambulatoria.paciente.vacunas.TAB_LABEL' | translate | uppercase }}</span>
+					</ng-template>
+					<ng-template matTabContent>
+						<app-vacunas></app-vacunas>
 					</ng-template>
 				</mat-tab>
 			</mat-tab-group>

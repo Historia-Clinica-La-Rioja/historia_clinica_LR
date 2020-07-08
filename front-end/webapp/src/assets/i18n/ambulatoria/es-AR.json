@@ -7,7 +7,7 @@
 		"paciente": {
 			"TITLE": "HCE Ambulatoria",
 			"problemas": {
-				"TAB-LABEL": "Problemas",
+				"TAB_LABEL": "Problemas",
 				"TITLE": "Problemas y evoluciones",
 				"ACTIVOS": "Problemas activos",
 				"CRONICOS": "Problemas crónicos",
@@ -20,6 +20,11 @@
 			"resumen": {
 				"TAB-LABEL": "Resumen",
 				"TITLE": "Resumen de historia clínica"
+			},
+			"vacunas": {
+				"TAB_LABEL": "Vacunas",
+				"TITLE": "Historial de vacunas",
+				"ADD": "Aplicar vacuna"
 			}
 		}
 	}
