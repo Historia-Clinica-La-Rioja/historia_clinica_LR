@@ -9,7 +9,7 @@ const FAMILY_H_DATA: any[] = [
 	{
 		date: "2020-07-08",
 		id: 31,
-		snomed: {id: "429961000", pt: "antecedente familiar de demencia"},
+		snomed: { id: "429961000", pt: "antecedente familiar de demencia" },
 		statusId: "55561003",
 		verificationId: "59156000",
 	}
@@ -20,14 +20,24 @@ const ALERGY_DATA: any[] = [
 		categoryId: '1',
 		date: 'string',
 		severity: 'string',
-		snomed: {id: "300910009", pt: "alergia a polen"}
+		snomed: { id: "300910009", pt: "alergia a polen" }
 	},
 	{
 		categoryId: '2',
 		date: 'string',
 		severity: 'string',
-		snomed: {id: "294238000", pt: "alergia a oro"}
+		snomed: { id: "294238000", pt: "alergia a oro" }
 	},
+];
+
+const PERSONAL_H_DATA: any[] = [
+	{
+		date: "2020-07-08",
+		id: 31,
+		snomed: { id: "429961000", pt: "antecedente familiar de demencia" },
+		statusId: "55561003",
+		verificationId: "59156000",
+	}
 ];
 
 @Injectable({
@@ -36,7 +46,7 @@ const ALERGY_DATA: any[] = [
 export class HceGeneralStateService {
 
 	constructor(private http: HttpClient,
-	            private contextService: ContextService) {
+		private contextService: ContextService) {
 	}
 
 	getAllergies(patientId: number): Observable<AllergyConditionDto[]> {
@@ -45,6 +55,10 @@ export class HceGeneralStateService {
 
 	getFamilyHistories(patientId: number): Observable<HealthHistoryConditionDto[]> {
 		return of(FAMILY_H_DATA);
+	}
+
+	getPersonalHistories(patientId: number): Observable<HealthHistoryConditionDto[]> {
+		return of(PERSONAL_H_DATA);
 	}
 
 }

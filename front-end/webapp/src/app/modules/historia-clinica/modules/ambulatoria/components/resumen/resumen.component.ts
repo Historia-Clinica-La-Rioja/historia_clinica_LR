@@ -16,6 +16,7 @@ export class ResumenComponent implements OnInit {
 	public patientId: number;
 	public familyHistories$: Observable<HealthHistoryConditionDto[]>;
 	public familyHistories: HealthHistoryConditionDto[];
+	public personalHistory$: Observable<HealthHistoryConditionDto[]>;
 	public readonly familyHistoriesHeader = ANTECEDENTES_FAMILIARES;
 
 	constructor(private hceGeneralStateService: HceGeneralStateService,
@@ -33,6 +34,7 @@ export class ResumenComponent implements OnInit {
 	initSummaries() {
 		this.allergies$ = this.hceGeneralStateService.getAllergies(this.patientId);
 		this.familyHistories$ = this.hceGeneralStateService.getFamilyHistories(this.patientId);
+		this.personalHistory$ = this.hceGeneralStateService.getPersonalHistories(this.patientId);
 	}
 
 }

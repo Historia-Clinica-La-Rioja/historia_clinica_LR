@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { ANTECEDENTES_PERSONALES } from '../../constants/summaries';
 import { TableModel } from '@presentation/components/table/table.component';
 import { HealthConditionDto, HealthHistoryConditionDto } from '@api-rest/api-model';
@@ -10,7 +10,7 @@ import { InternmentStateService } from '@api-rest/services/internment-state.serv
 	styleUrls: ['./antecedentes-personales-summary.component.scss']
 })
 export class AntecedentesPersonalesSummaryComponent implements OnChanges {
-	@Input() internmentEpisodeId: number;
+
 	@Input() personalHistory: HealthHistoryConditionDto[];
 
 	public readonly antecedentesPersonalesSummary = ANTECEDENTES_PERSONALES;
@@ -22,7 +22,7 @@ export class AntecedentesPersonalesSummaryComponent implements OnChanges {
 	) {
 	}
 
-	ngOnChanges(changes: SimpleChanges): void {
+	ngOnChanges(): void {
 		this.tableModel = this.buildTable(this.personalHistory);
 	}
 
