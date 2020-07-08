@@ -1,14 +1,8 @@
 package net.pladema.sgx.backoffice.permissions;
 
-import net.pladema.sgx.backoffice.rest.ItemsAllowed;
-
-import java.util.List;
-
 public interface BackofficePermissionValidator<E, I> {
 
 	void assertGetList(E entity);
-
-	List<I> filterIdsByPermission(List<I> ids);
 
 	void assertGetOne(I id);
 
@@ -17,8 +11,4 @@ public interface BackofficePermissionValidator<E, I> {
 	void assertUpdate(I id, E entity);
 
 	void assertDelete(I id);
-
-    ItemsAllowed itemsAllowedToList(E entity);
-
-	ItemsAllowed itemsAllowedToList();
 }

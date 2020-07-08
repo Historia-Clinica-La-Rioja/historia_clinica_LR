@@ -3,7 +3,6 @@ package net.pladema.user.controller;
 import net.pladema.permissions.repository.RoleRepository;
 import net.pladema.permissions.repository.entity.Role;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -29,11 +28,6 @@ public class BackofficeRolesStore implements BackofficeStore<Role, Short> {
 	}
 
 	@Override
-	public List<Role> findAll() {
-		return toList(roleRepository.findAll());
-	}
-
-	@Override
 	public List<Role> findAllById(List<Short> ids) {
 		return toList(roleRepository.findAllById(ids));
 	}
@@ -51,11 +45,6 @@ public class BackofficeRolesStore implements BackofficeStore<Role, Short> {
 	@Override
 	public void deleteById(Short id) {
 		// nothing to do
-	}
-
-	@Override
-	public Example<Role> buildExample(Role entity) {
-		return Example.of(entity);
 	}
 
 	private static List<Role> toList(Iterable<Role> roles) {

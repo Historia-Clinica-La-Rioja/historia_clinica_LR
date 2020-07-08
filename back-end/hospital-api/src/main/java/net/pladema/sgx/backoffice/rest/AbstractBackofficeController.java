@@ -5,24 +5,29 @@ import net.pladema.sgx.backoffice.repository.BackofficeRepository;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
 import net.pladema.sgx.backoffice.rest.dto.BackofficeDeleteResponse;
 import net.pladema.sgx.backoffice.validation.BackofficeEntityValidator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractBackofficeController<E, I> {
     protected final Logger logger;
     protected final BackofficeStore<E, I> store;
-    protected final BackofficePermissionValidator<E, I> permissionValidator;
+    private final BackofficePermissionValidator<E, I> permissionValidator;
     private final BackofficeEntityValidator<E, I> entityValidator;
 
     public AbstractBackofficeController(
@@ -34,18 +39,6 @@ public abstract class AbstractBackofficeController<E, I> {
         this.store = repository;
         this.permissionValidator = permissionValidator;
         this.entityValidator = entityValidator;
-    }
-
-    public AbstractBackofficeController(
-            JpaRepository<E, I> repository,
-            BackofficePermissionValidator<E, I> permissionValidator,
-            BackofficeEntityValidator<E, I> entityValidator
-    ) {
-        this(
-                new BackofficeRepository<>(repository),
-                permissionValidator,
-                entityValidator
-        );
     }
 
     public AbstractBackofficeController(
@@ -102,30 +95,14 @@ public abstract class AbstractBackofficeController<E, I> {
     public @ResponseBody
     Page<E> getList(Pageable pageable, E entity) {
         logger.debug("GET_LIST {}", entity);
-        ItemsAllowed<I> itemsAllowed = permissionValidator.itemsAllowedToList(entity);
-        if (itemsAllowed.all)
-            return store.findAll(entity, pageable);
-        List<E> list = store.findAllById(itemsAllowed.ids);
-        return new PageImpl<>(list, pageable, list.size());
+        permissionValidator.assertGetList(entity);
+        return store.findAll(entity, pageable);
     }
 
     @GetMapping(params = "ids")
     public @ResponseBody
     Iterable<E> getMany(@RequestParam List<I> ids) {
-        ids = permissionValidator.filterIdsByPermission(ids);
         return store.findAllById(ids);
-    }
-
-
-    @GetMapping(value="/elements")
-    public @ResponseBody
-    Iterable<E> getElements() {
-        ItemsAllowed<I> itemsAllowed = permissionValidator.itemsAllowedToList();
-        if (itemsAllowed.all)
-            return store.findAll();
-        if (itemsAllowed.isEmpty())
-            return new ArrayList<>();
-        return store.findAllById(itemsAllowed.ids);
     }
 
     @GetMapping("/{id}")
@@ -139,7 +116,6 @@ public abstract class AbstractBackofficeController<E, I> {
 
 
     @PostMapping
-    @Transactional
     public @ResponseBody
     E create(@Valid @RequestBody E entity) {
         logger.debug("CREATE {}", entity);
@@ -151,7 +127,6 @@ public abstract class AbstractBackofficeController<E, I> {
 
     @PutMapping("/{id}")
     @Modifying
-    @Transactional
     public @ResponseBody
     E update(@PathVariable("id") I id, @RequestBody E body) {
         logger.debug("UPDATE[id={}] {}", id, body);
@@ -161,7 +136,6 @@ public abstract class AbstractBackofficeController<E, I> {
     }
 
     @DeleteMapping("/{id}")
-    @Transactional
     public @ResponseBody
     BackofficeDeleteResponse<I> delete(@PathVariable("id") I id) {
         logger.debug("DELETE[id={}]", id);
@@ -173,7 +147,6 @@ public abstract class AbstractBackofficeController<E, I> {
     }
 
 	@DeleteMapping(params = "ids")
-    @Transactional
 	public @ResponseBody
 	BackofficeDeleteResponse<List<I>> deleteMany(@RequestParam List<I> ids) {
 		logger.debug("DELETE_MANY[ids={}]", ids);

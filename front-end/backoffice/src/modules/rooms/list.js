@@ -4,20 +4,11 @@ import {
     Datagrid,
     TextField,
     ReferenceField,
-    DateField, Filter
+    DateField,
 } from 'react-admin';
 
-import SgxSelectInput from '../../sgxSelectInput/SgxSelectInput';
-
-const RoomFilter = props =>(
-
-    <Filter {...props}>
-        <SgxSelectInput label="Especialidad | Sector" source="clinicalSpecialtySectorId" element="clinicalspecialtysectors" optionText="description" alwaysOn allowEmpty={false}/>
-    </Filter>
-);
-
 const InstitutionList = props => (
-    <List {...props} hasCreate={false} filters={<RoomFilter/>}>
+    <List {...props} hasCreate={false} >
         <Datagrid rowClick="show">
             <TextField source="roomNumber"/>
             <TextField source="description" />

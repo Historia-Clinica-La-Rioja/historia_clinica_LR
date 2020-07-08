@@ -1,10 +1,9 @@
 package net.pladema.establishment.controller;
 
-import net.pladema.establishment.controller.constraints.validator.permissions.BackofficeSectorValidator;
-import net.pladema.establishment.repository.SectorRepository;
-import net.pladema.establishment.repository.entity.Sector;
-import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
-import net.pladema.sgx.error.controller.dto.ApiErrorMessageDto;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.http.HttpHeaders;
@@ -16,9 +15,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import net.pladema.sgx.error.controller.dto.ApiErrorMessageDto;
+import net.pladema.establishment.repository.SectorRepository;
+import net.pladema.establishment.repository.entity.Sector;
+import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
 
 @RestController
 @RequestMapping("backoffice/sectors")
@@ -41,8 +41,8 @@ public class BackofficeSectorController extends AbstractBackofficeController<Sec
 		return new ResponseEntity<>(apiErrors, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 	}
 	
-	public BackofficeSectorController(SectorRepository repository, BackofficeSectorValidator sectorValidator) {
-		super(repository, sectorValidator);
+	public BackofficeSectorController(SectorRepository repository) {
+		super(repository);
 	}
 
 }

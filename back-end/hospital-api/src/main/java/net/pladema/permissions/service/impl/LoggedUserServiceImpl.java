@@ -25,6 +25,6 @@ public class LoggedUserServiceImpl implements LoggedUserService {
 
 	@Override
 	public List<RoleAssignment> getPermissionAssignment() {
-		return userRoleRepository.getRoleAssignments(getUserId());
+		return userRoleRepository.getRoleAssignments(this.getUserId());
 	}
 }
