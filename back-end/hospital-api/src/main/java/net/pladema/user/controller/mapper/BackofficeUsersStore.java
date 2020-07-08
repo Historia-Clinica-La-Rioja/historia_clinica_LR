@@ -60,6 +60,13 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 	}
 
 	@Override
+	public List<BackofficeUserDto> findAll() {
+		return repository.findAll().stream()
+				.map(userDtoMapper::toDto)
+				.collect(Collectors.toList());
+	}
+
+	@Override
 	public List<BackofficeUserDto> findAllById(List<Integer> ids) {
 		return repository.findAllById(ids).stream()
 				.map(userDtoMapper::toDto)
@@ -149,6 +156,11 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 	@Override
 	public void deleteById(Integer id) {
 		repository.changeStatusAccount(id, false);
+	}
+
+	@Override
+	public Example<BackofficeUserDto> buildExample(BackofficeUserDto entity) {
+		return Example.of(entity);
 	}
 
 }

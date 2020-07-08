@@ -14,26 +14,20 @@ import { uniqueItems } from '@core/utils/array.utils';
 export class InstitucionesComponent implements OnInit {
 	institutions: { id: number, name: string }[] = null;
 	backoffice: boolean;
-
 	constructor(
 		loggedUserService: LoggedUserService,
 		institutionService: InstitutionService,
 		private router: Router,
 	) {
-		loggedUserService.assignments$.pipe(
-			map(
-				(roleAssignments: RoleAssignment[]) =>
-					roleAssignments.map(roleAssignment => roleAssignment.institutionId)
-			),
-		).subscribe((allIds: number[]) => {
+		loggedUserService.assignments$.subscribe((allRoles: RoleAssignment[]) => {
+			const institutionIds = allRoles
+				.filter((ra) => ra.institutionId >= 0)
+				.map(r => r.institutionId);
 
-			const institutionIds = allIds.filter((x) => x >= 0);
+			this.backoffice = allRoles
+				.filter((ra) => ra.role === 'ROOT' || ra.role === 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE' ).length > 0;
+
 			institutionService.getInstitutions(institutionIds).subscribe(institutions => {
-				let uniqueIds = uniqueItems(allIds);
-				if (uniqueIds.length === 1)
-					this.ingresar({id: uniqueIds[0]});
-
-				this.backoffice = allIds.filter((x) => x === -1).length > 0;
 				this.institutions = institutions;
 			});
 		});

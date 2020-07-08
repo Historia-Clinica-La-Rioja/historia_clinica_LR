@@ -1,5 +1,8 @@
 package net.pladema.security.configuration;
 
+import net.pladema.permissions.repository.enums.ERole;
+import net.pladema.security.filters.AuthenticationTokenFilter;
+import net.pladema.sgx.actuator.configuration.ActuatorConfiguration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -10,10 +13,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import net.pladema.sgx.actuator.configuration.ActuatorConfiguration;
-import net.pladema.permissions.repository.enums.ERole;
-import net.pladema.security.filters.AuthenticationTokenFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -66,7 +65,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.antMatchers("/actuator/**").access(actuatorConfiguration.getAccessInfo())
 		.antMatchers(apiAuth + "/**").permitAll()
 		.antMatchers("/v2/**","/swagger-ui.html","/swagger-resources/**","/webjars/springfox-swagger-ui/**").permitAll()
-		.antMatchers(BACKOFFICE + "/**").hasAnyAuthority(ERole.ROOT.getValue(), ERole.ADMINISTRADOR.getValue())
+		.antMatchers(BACKOFFICE + "/**").hasAnyAuthority(
+				ERole.ROOT.getValue(),
+				ERole.ADMINISTRADOR.getValue(),
+				ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE.getValue())
 		.antMatchers(RECAPTCHA + "/**").permitAll()
 		.antMatchers("/oauth/**").permitAll()
 		.antMatchers(HttpMethod.GET,PUBLIC + "/**").permitAll()

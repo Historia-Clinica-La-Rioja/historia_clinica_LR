@@ -1,18 +1,17 @@
 package net.pladema.user.controller;
 
-import java.util.List;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-
 import net.pladema.permissions.RoleUtils;
 import net.pladema.permissions.repository.UserRoleRepository;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.permissions.service.LoggedUserService;
 import net.pladema.permissions.service.dto.RoleAssignment;
 import net.pladema.sgx.exceptions.PermissionDeniedException;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 @Service
 public final class BackofficeAuthoritiesValidator {
@@ -59,6 +58,13 @@ public final class BackofficeAuthoritiesValidator {
 	private static final List<String> toRoleName(List<RoleAssignment> assignments) {
 		return assignments.stream()
 				.map(assignment -> assignment.role.getValue())
+				.collect(Collectors.toList());
+	}
+
+	public List<Integer> allowedInstitutionIds(List<ERole> permissions) {
+		return loggedUserService.getPermissionAssignment().stream()
+				.filter(roleAssignment -> permissions.contains(roleAssignment.role))
+				.map(assignment -> assignment.institutionId)
 				.collect(Collectors.toList());
 	}
 }

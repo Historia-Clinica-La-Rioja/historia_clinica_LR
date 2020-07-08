@@ -1,11 +1,11 @@
 package net.pladema.permissions.service.dto;
 
-import java.io.Serializable;
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import net.pladema.permissions.repository.enums.ERole;
+
+import java.io.Serializable;
 
 @EqualsAndHashCode
 @Getter

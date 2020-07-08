@@ -4,7 +4,6 @@ import {
     TextInput,
     ReferenceInput,
     SelectInput,
-    AutocompleteInput,
     SimpleForm,
     required,
     BooleanInput,
@@ -13,20 +12,15 @@ import {
     Datagrid,
     Pagination
 } from 'react-admin';
+import SgxSelectInput from "../../sgxSelectInput/SgxSelectInput";
 
 const BedEdit = props => (
     <Edit {...props}>
         <SimpleForm redirect="show" >
             <TextInput source="bedNumber" validate={[required()]} />
-            <ReferenceInput
-                source="roomId"
-                reference="rooms"
-                sort={{ field: 'description', order: 'ASC' }}
-                validate={[required()]}
-                filterToQuery={searchText => ({description: searchText ? searchText : -1})}                
-            >
-                <AutocompleteInput optionText="description" optionValue="id"/>
-            </ReferenceInput>
+
+            <SgxSelectInput source="roomId" element="rooms" optionText="description" alwaysOn allowEmpty={false}/>
+
             <ReferenceInput
                 source="bedCategoryId"
                 reference="bedcategories"
@@ -35,6 +29,7 @@ const BedEdit = props => (
             >
                 <SelectInput optionText="description" optionValue="id"/>
             </ReferenceInput>
+
             <BooleanInput source="enabled" validate={[required()]} disabled={false} initialValue={true}/>
             <BooleanInput source="available" validate={[required()]} disabled={false} initialValue={true}/>
             <BooleanInput source="free" validate={[required()]} disabled={false} initialValue={true}/>

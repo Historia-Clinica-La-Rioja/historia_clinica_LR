@@ -51,6 +51,7 @@ public class RoleServiceImpl implements RoleService {
 			case ADMINISTRATIVO: return "Administrativo";
 			case ENFERMERO_ADULTO_MAYOR: return "Enfermero adulto mayor";
 			case ENFERMERO: return "Enfermero";
+			case ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE:  return "Administrador institucional";
 		}
 		throw new NotFoundException("role-not-exists", String.format("El rol %s no existe", eRole));
 	}

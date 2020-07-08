@@ -5,12 +5,21 @@ import {
     TextField,
     ReferenceField,
     FunctionField,
-    BooleanField
+    BooleanField, Filter
 } from 'react-admin';
 
+import SgxSelectInput from '../../sgxSelectInput/SgxSelectInput';
+
 const renderRoom = room => `${room.roomNumber} - ${room.description}`;
+
+const BedFilter = props =>(
+    <Filter {...props}>
+        <SgxSelectInput source="roomId" element="rooms" optionText="description" alwaysOn allowEmpty={false}/>
+    </Filter>
+);
+
 const BedList = props => (
-    <List {...props} hasCreate={false} >
+    <List {...props} hasCreate={false} filters={<BedFilter/>}>
         <Datagrid rowClick="show">
                 <TextField source="bedNumber" />
                 <ReferenceField source="roomId" reference="rooms">

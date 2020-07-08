@@ -1,4 +1,4 @@
-package net.pladema.establishment.controller.constraints.validator;
+package net.pladema.establishment.controller.constraints.validator.entities;
 
 import org.springframework.stereotype.Component;
 
@@ -8,11 +8,11 @@ import net.pladema.sgx.backoffice.rest.BackofficeEntityValidatorAdapter;
 import net.pladema.sgx.exceptions.BackofficeValidationException;
 
 @Component
-public class BackofficeBedValidator extends BackofficeEntityValidatorAdapter<Bed, Integer> {
+public class BackofficeBedEntityValidator extends BackofficeEntityValidatorAdapter<Bed, Integer> {
 	
 	InternmentEpisodeExternalService internmentEpisodeExternalService;
 	
-	public BackofficeBedValidator(InternmentEpisodeExternalService internmentEpisodeExternalService) {
+	public BackofficeBedEntityValidator(InternmentEpisodeExternalService internmentEpisodeExternalService) {
 		this.internmentEpisodeExternalService = internmentEpisodeExternalService;
 	}
 

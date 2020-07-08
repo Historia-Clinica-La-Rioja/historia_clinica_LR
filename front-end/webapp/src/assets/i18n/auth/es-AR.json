@@ -40,7 +40,8 @@
 				"PROFESIONAL_DE_SALUD": "Profesional de la salud",
 				"ADMINISTRATIVO": "Administrativo",
 				"ENFERMERO_ADULTO_MAYOR": "Enfermero adulto mayor",
-				"ENFERMERO": "Enfermero"
+				"ENFERMERO": "Enfermero",
+				"ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE":  "Administrador institucional"
 			}
 		}
 	}

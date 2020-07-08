@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,6 +50,7 @@ public class SampleData {
 		this.healthcareProfessionalRepository = healthcareProfessionalRepository;
 	}
 
+	@Transactional
 	public void populateDB() {
 		LOG.warn("Updating sample data");
 		addressRepository.saveAll(sampleProperties.getAddresses());
