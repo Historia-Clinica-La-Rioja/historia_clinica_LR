@@ -1,8 +1,6 @@
 import React from 'react';
 import {
     TextInput,
-    AutocompleteInput,
-    ReferenceInput,
     Edit,
     SimpleForm,
     required,
@@ -15,6 +13,7 @@ import {
 } from 'react-admin';
 import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
+import SgxSelectInput from "../../sgxSelectInput/SgxSelectInput";
 
 const RoomEdit = props => (
     <Edit {...props}>
@@ -23,14 +22,8 @@ const RoomEdit = props => (
             <TextInput source="description" validate={[required()]} />
             <TextInput source="type" validate={[required()]} />
             <DateInput source="dischargeDate" />
-            <ReferenceInput
-                source="clinicalSpecialtySectorId"
-                reference="clinicalspecialtysectors"
-                sort={{ field: 'description', order: 'ASC' }}
-                filterToQuery={searchText => ({description: searchText})}                
-            >
-                <AutocompleteInput optionText="description" optionValue="id"/>
-            </ReferenceInput>
+
+            <SgxSelectInput label="Especialidad | Sector" source="clinicalSpecialtySectorId" element="clinicalspecialtysectors" optionText="description" alwaysOn allowEmpty={false}/>
 
             <SectionTitle label="resources.rooms.fields.beds"/>
             <CreateRelatedButton
