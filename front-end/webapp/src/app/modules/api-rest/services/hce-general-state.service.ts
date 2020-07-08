@@ -1,7 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from "rxjs";
-import { AllergyConditionDto } from "@api-rest/api-model";
+import { AllergyConditionDto, HealthHistoryConditionDto } from "@api-rest/api-model";
 import { environment } from "@environments/environment";
+import { HttpClient } from "@angular/common/http";
+import { ContextService } from "@core/services/context.service";
+
+const FAMILY_H_DATA: any[] = [
+	{
+		date: "2020-07-08",
+		id: 31,
+		snomed: {id: "429961000", pt: "antecedente familiar de demencia"},
+		statusId: "55561003",
+		verificationId: "59156000",
+	}
+];
 
 const ALERGY_DATA: any[] = [
 	{
@@ -23,11 +35,16 @@ const ALERGY_DATA: any[] = [
 })
 export class HceGeneralStateService {
 
-	constructor() {
+	constructor(private http: HttpClient,
+	            private contextService: ContextService) {
 	}
 
 	getAllergies(patientId: number): Observable<AllergyConditionDto[]> {
 		return of(ALERGY_DATA);
+	}
+
+	getFamilyHistories(patientId: number): Observable<HealthHistoryConditionDto[]> {
+		return of(FAMILY_H_DATA);
 	}
 
 }
