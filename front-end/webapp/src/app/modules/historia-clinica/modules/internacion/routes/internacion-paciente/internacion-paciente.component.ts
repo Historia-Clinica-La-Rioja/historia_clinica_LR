@@ -20,6 +20,7 @@ import {
 	PatientDischargeDto,
 	AllergyConditionDto,
 	HealthHistoryConditionDto,
+	InmunizationDto,
 
 } from '@api-rest/api-model';
 
@@ -55,7 +56,10 @@ export class InternacionPacienteComponent implements OnInit {
 	public allergies$: Observable<AllergyConditionDto[]>;
 	public familyHistories$: Observable<HealthHistoryConditionDto[]>;
 	public personalHistory$: Observable<HealthHistoryConditionDto[]>;
+	public inmunizations$: Observable<InmunizationDto[]>;
+
 	public readonly familyHistoriesHeader = ANTECEDENTES_FAMILIARES;
+
 	constructor(
 		private patientService: PatientService,
 		private internmentService: InternacionService,
@@ -133,6 +137,7 @@ export class InternacionPacienteComponent implements OnInit {
 		this.allergies$ = this.internmentStateService.getAllergies(this.internmentEpisodeId);
 		this.familyHistories$ = this.internmentStateService.getFamilyHistories(this.internmentEpisodeId);
 		this.personalHistory$ = this.internmentStateService.getPersonalHistories(this.internmentEpisodeId);
+		this.inmunizations$ = this.internmentStateService.getInmunizations(this.internmentEpisodeId);
 	}
 
 }

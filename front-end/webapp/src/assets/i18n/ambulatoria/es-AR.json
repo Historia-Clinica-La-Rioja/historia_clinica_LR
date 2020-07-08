@@ -18,7 +18,7 @@
 				"WARNING_INTERNADO": "El paciente se encuentra internado en otra institución."
 			},
 			"resumen": {
-				"TAB-LABEL": "Resumen",
+				"TAB_LABEL": "Resumen",
 				"TITLE": "Resumen de historia clínica"
 			},
 			"vacunas": {

@@ -117,6 +117,7 @@
 					<ng-container
 						*hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD']">
 						<app-vacunas-summary [internmentEpisodeId]="internmentEpisodeId"
+						                     [inmunizations]="inmunizations$ | async"
 											 [editable]="!epicrisisDoc?.confirmed"></app-vacunas-summary>
 					</ng-container>
 				</div>

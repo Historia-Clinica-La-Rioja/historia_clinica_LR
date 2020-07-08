@@ -10,6 +10,7 @@ import { ERole } from '@api-rest/api-model';
 export class SummaryCardComponent implements OnInit {
 
 	@Input() header: SummaryHeader;
+	@Input() tooltip: string;
 	@Input() canEdit: ERole[] = [];
 	@Input() editable: boolean = false;
 	@Input() hasCovidAlert: boolean = false;

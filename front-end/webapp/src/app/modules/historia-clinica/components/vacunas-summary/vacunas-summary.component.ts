@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { VACUNAS } from '../../constants/summaries';
 import { TableModel } from '@presentation/components/table/table.component';
 import { InmunizationDto } from '@api-rest/api-model';
@@ -12,11 +12,11 @@ import { AddInmunizationComponent } from '../../dialogs/add-inmunization/add-inm
   templateUrl: './vacunas-summary.component.html',
   styleUrls: ['./vacunas-summary.component.scss']
 })
-export class VacunasSummaryComponent implements OnInit {
-
-	@Input() internmentEpisodeId: number;
+export class VacunasSummaryComponent implements OnChanges {
 
 	public readonly vacunasSummary = VACUNAS;
+	@Input() internmentEpisodeId: number;
+	@Input() inmunizations: InmunizationDto[];
 	@Input() editable = false;
 
 
@@ -28,10 +28,8 @@ export class VacunasSummaryComponent implements OnInit {
 	) {
 	}
 
-	ngOnInit(): void {
-		this.internmentStateService.getInmunizations(this.internmentEpisodeId).subscribe(
-			data => this.tableModel = this.buildTable(data)
-		);
+	ngOnChanges(changes: SimpleChanges) {
+		this.tableModel = this.buildTable(this.inmunizations);
 	}
 
 	openDialog() {
