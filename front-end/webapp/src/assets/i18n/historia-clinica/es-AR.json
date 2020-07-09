@@ -1,0 +1,18 @@
+{
+  "historia-clinica": {
+    "summary-card": {
+      "alergias": {
+        "TOOLTIP": "Agregar alergia"
+      },
+      "signos-vitales": {
+        "TOOLTIP": "Actualizar signos vitales"
+      },
+      "datos-antropometricos": {
+        "TOOLTIP": "Agregar información antropométrica"
+      },
+      "vacunas": {
+        "TOOLTIP": "Agregar vacuna"
+      }
+    }
+  }
+}

@@ -12,7 +12,6 @@ import { httpInterceptorProviders } from './http-interceptors';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { environment } from '@environments/environment';
-
 // Módulos nuestros que se cargan al inicio
 import { ApiRestModule } from '@api-rest/api-rest.module';
 import { CoreModule } from '@core/core.module';
@@ -72,6 +71,7 @@ export function createTranslateLoader(http: HttpClient, publicService: PublicSer
 			{ prefix: './assets/i18n/internacion/', suffix: '.json' },
 			{ prefix: './assets/i18n/pacientes/', suffix: '.json' },
 			{ prefix: './assets/i18n/ambulatoria/', suffix: '.json' },
+			{ prefix: './assets/i18n/historia-clinica/', suffix: '.json' },
 		]
 	);
 }
