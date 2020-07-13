@@ -1,0 +1,25 @@
+all:
+    children:
+        web_load_balancers:
+            hosts:
+                lbweb: 
+                    ansible_host: IP
+        backservers:
+            hosts:
+                nodo_a: 
+                    ansible_host: IP
+                nodo_b: 
+                    ansible_host: IP
+        frontservers:
+            hosts:
+                nodo_a:
+                nodo_b:
+        databases:
+            hosts:
+                localhost: 
+                    ansible_connection: local
+            vars:
+                database_su_name: toBeChanged
+                database_su_password: toBeChanged
+vars:
+    ansible_ssh_pipelining: true

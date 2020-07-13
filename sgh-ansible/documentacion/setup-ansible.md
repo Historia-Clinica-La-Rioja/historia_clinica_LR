@@ -24,6 +24,8 @@ pip3 install docker-py --upgrade
 pip3 install docker-pycreds
 ```
 
+Para el uso de Docker en Windows desactivar el soporte para WSL2.
+
 ## Configurar servidores
 
 En los VPS se puede configurar un usuario Ansible que no requiera clave para `sudo`.
