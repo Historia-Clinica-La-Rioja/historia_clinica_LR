@@ -83,7 +83,10 @@
 				<div fxLayout="column" fxFlex="50%" fxLayoutGap="20px">
 					<ng-container
 						*hasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO']">
-						<app-summary-card [header]="internacionSummary">
+						<app-summary-card [header]="internacionSummary"
+										  [canEdit]="['ESPECIALISTA_MEDICO']"
+				  						  [editable]=true
+				  						  (openInNew)="openDialog()">
 							<mat-card-content>
 								<app-internment-episode-summary [internmentEpisode]="internmentEpisodeSummary">
 								</app-internment-episode-summary>

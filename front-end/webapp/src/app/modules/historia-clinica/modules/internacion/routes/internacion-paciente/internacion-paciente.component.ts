@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
 
-import { FeatureFlagService } from "@core/services/feature-flag.service";
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PermissionsService } from '@core/services/permissions.service';
 
 import { InternmentEpisodeSummary } from '@presentation/components/internment-episode-summary/internment-episode-summary.component';
@@ -37,6 +38,9 @@ import { InternmentEpisodeService } from '@api-rest/services/internment-episode.
 import { INTERNACION, ANTECEDENTES_FAMILIARES } from '../../../../constants/summaries';
 import { ROLES_FOR_EDIT_DIAGNOSIS } from '../../constants/permissions';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
+import { ProbableDischargeDialogComponent } from '../../../../dialogs/probable-discharge-dialog/probable-discharge-dialog.component';
+import { momentParseDateTime } from '@core/utils/moment.utils';
+import { Moment } from 'moment';
 
 @Component({
 	selector: 'app-internacion-paciente',
@@ -51,6 +55,7 @@ export class InternacionPacienteComponent implements OnInit {
 	public anamnesisDoc: AnamnesisSummaryDto;
 	public epicrisisDoc: EpicrisisSummaryDto;
 	public lastEvolutionNoteDoc: EvaluationNoteSummaryDto;
+	public lastProbableDischargeDate: Moment;
 	public internmentEpisodeId: number;
 	public internmentEpisodeSummary$: Observable<InternmentEpisodeSummary>;
 	public showDischarge: boolean;
@@ -74,13 +79,14 @@ export class InternacionPacienteComponent implements OnInit {
 		private featureFlagService: FeatureFlagService,
 		private readonly permissionService: PermissionsService,
 		private internmentEpisodeService: InternmentEpisodeService,
-		private readonly internmentStateService: InternmentStateService
+		private readonly internmentStateService: InternmentStateService,
+		public dialog: MatDialog
 	) { }
 
 	ngOnInit(): void {
 		this.route.paramMap.subscribe(
 			(params) => {
-				let patientId = Number(params.get('idPaciente'));
+				const patientId = Number(params.get('idPaciente'));
 				this.internmentEpisodeId = Number(params.get('idInternacion'));
 
 				this.patient$ = this.patientService.getPatientBasicData<BasicPatientDto>(patientId).pipe(
@@ -92,7 +98,7 @@ export class InternacionPacienteComponent implements OnInit {
 						this.anamnesisDoc = internmentEpisode.documents?.anamnesis;
 						this.epicrisisDoc = internmentEpisode.documents?.epicrisis;
 						this.lastEvolutionNoteDoc = internmentEpisode.documents?.lastEvaluationNote;
-
+						this.lastProbableDischargeDate = internmentEpisode.probableDischargeDate ? momentParseDateTime(internmentEpisode.probableDischargeDate) : undefined;
 						//La alta administrativa está disponible cuando existe el alta medica
 						//o el flag de alta sin epicrisis está activa
 						this.featureFlagService.isActive(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS).subscribe(isOn => {
@@ -106,7 +112,7 @@ export class InternacionPacienteComponent implements OnInit {
 				this.internmentEpisodeService.getPatientDischarge(this.internmentEpisodeId)
 					.subscribe((patientDischarge: PatientDischargeDto) => {
 						this.hasMedicalDischarge = patientDischarge.dischargeTypeId !== 0;
-					})
+					});
 				this.initSummaries();
 			}
 		);
@@ -146,6 +152,26 @@ export class InternacionPacienteComponent implements OnInit {
 		this.medications$ = this.internmentStateService.getMedications(this.internmentEpisodeId);
 		this.vitalSigns$ = this.internmentStateService.getVitalSigns(this.internmentEpisodeId);
 		this.anthropometricData$ = this.internmentStateService.getAnthropometricData(this.internmentEpisodeId);
+	}
+
+	openDialog() {
+		const dialogRef = this.dialog.open(ProbableDischargeDialogComponent, {
+			disableClose: true,
+			width: '35%',
+			data: {
+				internmentEpisodeId: this.internmentEpisodeId,
+				lastProbableDischargeDate: this.lastProbableDischargeDate
+			}
+		});
+
+		dialogRef.afterClosed().subscribe(submitted => {
+				if (submitted) {
+					this.internmentEpisodeSummary$ = this.internmentService.getInternmentEpisodeSummary(this.internmentEpisodeId).pipe(
+						map((internmentEpisode: InternmentSummaryDto) => this.mapperService.toInternmentEpisodeSummary(internmentEpisode))
+					);
+				}
+			}
+		);
 	}
 
 }

@@ -22,6 +22,7 @@ import { ConceptsSearchDialogComponent } from './dialogs/concepts-search-dialog/
 import { EffectiveTimeComponent } from './components/effective-time/effective-time.component';
 import { EffectiveTimeDialogComponent } from './dialogs/effective-time-dialog/effective-time-dialog.component';
 import { RemoveDiagnosisComponent } from './dialogs/remove-diagnosis/remove-diagnosis.component';
+import { ProbableDischargeDialogComponent } from './dialogs/probable-discharge-dialog/probable-discharge-dialog.component';
 
 
 @NgModule({
@@ -44,7 +45,8 @@ import { RemoveDiagnosisComponent } from './dialogs/remove-diagnosis/remove-diag
 		MedicacionSummaryComponent,
 		RemoveDiagnosisComponent,
 		SignosVitalesSummaryComponent,
-		VacunasSummaryComponent
+		VacunasSummaryComponent,
+		ProbableDischargeDialogComponent
 	],
 	imports: [
 		ApiRestModule,

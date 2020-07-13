@@ -300,7 +300,8 @@
 				"ADD_EVAL_INGRESO": "Generar evaluación de ingreso",
 				"ADD_NOTA_EVOLUCION": "Agregar nota de evolución",
 				"ADMINISTRATIVE_DISCHARGE": "Alta administrativa",
-				"MEDICAL_DISCHARGE": "Alta médica"
+				"MEDICAL_DISCHARGE": "Alta médica",
+				"PROBABLE_DISCHARGE": "Alta probable"
 			},
 			"alergias-summary": {
 				"ADD": "Agregar alergia",
@@ -320,7 +321,13 @@
 				"DAYS_INTERNED": "{{days}} días internado",
 				"ONE_DAY": "1 día internado",
 				"ADMISSION": "Ingreso: {{datetime}}",
-				"PROBABLE_DISCHARGE": "Fecha probable de alta: {{datetime}}"
+				"PROBABLE_DISCHARGE": "Fecha probable de alta: {{datetime}}",
+				"probable_discharge_dialog": {
+					"TITLE": "Actualizar fecha de alta probable",
+					"PLACEHOLDER": "Fecha de alta probable",
+					"SUCCESS": "La fecha de alta probable se actualizó correctamente",
+					"ERROR": "Error al guardar nueva fecha de alta probable"
+				}
 			},
 			"main-diagnosis": {
 				"TITLE": "Diagnóstico principal",
