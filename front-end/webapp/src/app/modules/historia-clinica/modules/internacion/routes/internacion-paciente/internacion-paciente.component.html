@@ -64,7 +64,7 @@
 					</ng-container>
 					<ng-container
 						*hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD']">
-						<app-antropometricos-summary [internmentEpisodeId]="internmentEpisodeId"
+						<app-antropometricos-summary [internmentEpisodeId]="internmentEpisodeId" [anthropometricData$]="anthropometricData$"
 							[editable]="!epicrisisDoc?.confirmed">
 						</app-antropometricos-summary>
 					</ng-container>

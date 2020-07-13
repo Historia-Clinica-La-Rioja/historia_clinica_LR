@@ -1,19 +1,21 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { ANTROPOMETRICOS } from '../../constants/summaries';
 import { DetailBox } from '@presentation/components/detail-box/detail-box.component';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { AnthropometricDataDto } from '@api-rest/api-model';
 import { MatDialog } from '@angular/material/dialog';
 import { AddAnthropometricComponent } from '../../dialogs/add-anthropometric/add-anthropometric.component';
+import { Observable } from 'rxjs';
 
 @Component({
 	selector: 'app-antropometricos-summary',
 	templateUrl: './antropometricos-summary.component.html',
 	styleUrls: ['./antropometricos-summary.component.scss']
 })
-export class AntropometricosSummaryComponent implements OnInit {
+export class AntropometricosSummaryComponent implements OnChanges {
 
 	@Input() internmentEpisodeId: number;
+	@Input() anthropometricData$: Observable<AnthropometricDataDto>;
 	@Input() editable = false;
 
 	antropometricosSummary = ANTROPOMETRICOS;
@@ -32,12 +34,12 @@ export class AntropometricosSummaryComponent implements OnInit {
 		public dialog: MatDialog
 	) { }
 
-	ngOnInit(): void {
+	ngOnChanges(): void {
 		this.updateAnthropometricData();
 	}
 
 	private updateAnthropometricData() {
-		this.internmentStateService.getAnthropometricData(this.internmentEpisodeId).subscribe(
+		this.anthropometricData$.subscribe(
 			(anthropometricData: AnthropometricDataDto) => {
 				if (anthropometricData) {
 					this.details = [];
@@ -62,10 +64,10 @@ export class AntropometricosSummaryComponent implements OnInit {
 		});
 
 		dialogRef.afterClosed().subscribe(submitted => {
-				if (submitted) {
-					this.updateAnthropometricData();
-				}
+			if (submitted) {
+				this.updateAnthropometricData();
 			}
+		}
 		);
 	}
 }

@@ -23,6 +23,7 @@ import {
 	InmunizationDto,
 	MedicationDto,
 	Last2VitalSignsDto,
+	AnthropometricDataDto,
 
 } from '@api-rest/api-model';
 
@@ -61,6 +62,7 @@ export class InternacionPacienteComponent implements OnInit {
 	public inmunizations$: Observable<InmunizationDto[]>;
 	public medications$: Observable<MedicationDto[]>;
 	public vitalSigns$: Observable<Last2VitalSignsDto>;
+	public anthropometricData$: Observable<AnthropometricDataDto>;
 	public readonly familyHistoriesHeader = ANTECEDENTES_FAMILIARES;
 
 	constructor(
@@ -143,6 +145,7 @@ export class InternacionPacienteComponent implements OnInit {
 		this.inmunizations$ = this.internmentStateService.getInmunizations(this.internmentEpisodeId);
 		this.medications$ = this.internmentStateService.getMedications(this.internmentEpisodeId);
 		this.vitalSigns$ = this.internmentStateService.getVitalSigns(this.internmentEpisodeId);
+		this.anthropometricData$ = this.internmentStateService.getAnthropometricData(this.internmentEpisodeId);
 	}
 
 }
