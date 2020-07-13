@@ -297,3 +297,1322 @@ databaseChangeLog:
             constraints:
                 nullable: true
         tableName: internment_episode
+            
+### Manejo de fechas 
+- changeSet:
+    id: day_week-createTable
+    comment: Create table day_week
+    author: saguero
+    changes: 
+    - createTable: 
+        tableName: day_week
+        columns: 
+        - column:
+            autoIncrement: true
+            constraints:
+                primaryKey: true
+                primaryKeyName: PK_day_week
+            name: id
+            type: smallint
+        - column:
+            constraints:
+                nullable: false
+            name: description 
+            type: varchar(9)
+
+- changeSet:
+    id: day_week-data
+    comment: Carga de datos day_week
+    author: saguero
+    context: "!schema-only"
+    changes:
+        - sql:
+            sql: |-
+                INSERT INTO day_week VALUES (0, 'Domingo'); 
+                INSERT INTO day_week VALUES (1, 'Lunes');
+                INSERT INTO day_week VALUES (2, 'Martes');
+                INSERT INTO day_week VALUES (3, 'Miércoles');
+                INSERT INTO day_week VALUES (4, 'Jueves');  
+                INSERT INTO day_week VALUES (5, 'Viernes');
+                INSERT INTO day_week VALUES (6, 'Sábado'); 
+
+- changeSet:
+    id: date_type-createTable  
+    comment: Create table date_type
+    author: saguero
+    changes: 
+    - createTable: 
+        tableName: date_type
+        columns: 
+        - column:
+            constraints:
+                primaryKey: true
+                primaryKeyName: PK_date_type
+            name: date
+            type: date
+        - column:
+            constraints:
+                nullable: false
+            name: day
+            type: varchar(2)
+        - column:
+            constraints:
+                nullable: false
+            name: month 
+            type: varchar(2)
+        - column:
+            constraints:
+                nullable: false
+            name: year
+            type: smallint
+        - column:
+            constraints:
+                nullable: false
+            name: day_week_id
+            type: smallint
+    - addForeignKeyConstraint:
+        baseColumnNames: day_week_id
+        baseTableName: date_type
+        constraintName: FK_date_type_day_week_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: day_week
+        validate: true
+                
+- changeSet:
+    id: date_type-data
+    comment: Carga de datos date_type
+    author: saguero
+    context: "!schema-only"
+    changes:
+        - sql:
+            sql: |-
+                insert into date_type values ('2020-01-01','01','01', 2020, 3);
+                insert into date_type values ('2020-01-02','02','01', 2020, 4);
+                insert into date_type values ('2020-01-03','03','01', 2020, 5);
+                insert into date_type values ('2020-01-04','04','01', 2020, 6);
+                insert into date_type values ('2020-01-05','05','01', 2020, 0);
+                insert into date_type values ('2020-01-06','06','01', 2020, 1);
+                insert into date_type values ('2020-01-07','07','01', 2020, 2);
+                insert into date_type values ('2020-01-08','08','01', 2020, 3);
+                insert into date_type values ('2020-01-09','09','01', 2020, 4);
+                insert into date_type values ('2020-01-10','10','01', 2020, 5);
+                insert into date_type values ('2020-01-11','11','01', 2020, 6);
+                insert into date_type values ('2020-01-12','12','01', 2020, 0);
+                insert into date_type values ('2020-01-13','13','01', 2020, 1);
+                insert into date_type values ('2020-01-14','14','01', 2020, 2);
+                insert into date_type values ('2020-01-15','15','01', 2020, 3);
+                insert into date_type values ('2020-01-16','16','01', 2020, 4);
+                insert into date_type values ('2020-01-17','17','01', 2020, 5);
+                insert into date_type values ('2020-01-18','18','01', 2020, 6);
+                insert into date_type values ('2020-01-19','19','01', 2020, 0);
+                insert into date_type values ('2020-01-20','20','01', 2020, 1);
+                insert into date_type values ('2020-01-21','21','01', 2020, 2);
+                insert into date_type values ('2020-01-22','22','01', 2020, 3);
+                insert into date_type values ('2020-01-23','23','01', 2020, 4);
+                insert into date_type values ('2020-01-24','24','01', 2020, 5);
+                insert into date_type values ('2020-01-25','25','01', 2020, 6);
+                insert into date_type values ('2020-01-26','26','01', 2020, 0);
+                insert into date_type values ('2020-01-27','27','01', 2020, 1);
+                insert into date_type values ('2020-01-28','28','01', 2020, 2);
+                insert into date_type values ('2020-01-29','29','01', 2020, 3);
+                insert into date_type values ('2020-01-30','30','01', 2020, 4);
+                insert into date_type values ('2020-01-31','31','01', 2020, 5);
+                insert into date_type values ('2020-02-01','01','02', 2020, 6);
+                insert into date_type values ('2020-02-02','02','02', 2020, 0);
+                insert into date_type values ('2020-02-03','03','02', 2020, 1);
+                insert into date_type values ('2020-02-04','04','02', 2020, 2);
+                insert into date_type values ('2020-02-05','05','02', 2020, 3);
+                insert into date_type values ('2020-02-06','06','02', 2020, 4);
+                insert into date_type values ('2020-02-07','07','02', 2020, 5);
+                insert into date_type values ('2020-02-08','08','02', 2020, 6);
+                insert into date_type values ('2020-02-09','09','02', 2020, 0);
+                insert into date_type values ('2020-02-10','10','02', 2020, 1);
+                insert into date_type values ('2020-02-11','11','02', 2020, 2);
+                insert into date_type values ('2020-02-12','12','02', 2020, 3);
+                insert into date_type values ('2020-02-13','13','02', 2020, 4);
+                insert into date_type values ('2020-02-14','14','02', 2020, 5);
+                insert into date_type values ('2020-02-15','15','02', 2020, 6);
+                insert into date_type values ('2020-02-16','16','02', 2020, 0);
+                insert into date_type values ('2020-02-17','17','02', 2020, 1);
+                insert into date_type values ('2020-02-18','18','02', 2020, 2);
+                insert into date_type values ('2020-02-19','19','02', 2020, 3);
+                insert into date_type values ('2020-02-20','20','02', 2020, 4);
+                insert into date_type values ('2020-02-21','21','02', 2020, 5);
+                insert into date_type values ('2020-02-22','22','02', 2020, 6);
+                insert into date_type values ('2020-02-23','23','02', 2020, 0);
+                insert into date_type values ('2020-02-24','24','02', 2020, 1);
+                insert into date_type values ('2020-02-25','25','02', 2020, 2);
+                insert into date_type values ('2020-02-26','26','02', 2020, 3);
+                insert into date_type values ('2020-02-27','27','02', 2020, 4);
+                insert into date_type values ('2020-02-28','28','02', 2020, 5);
+                insert into date_type values ('2020-02-29','29','02', 2020, 6);
+                insert into date_type values ('2020-03-01','01','03', 2020, 0);
+                insert into date_type values ('2020-03-02','02','03', 2020, 1);
+                insert into date_type values ('2020-03-03','03','03', 2020, 2);
+                insert into date_type values ('2020-03-04','04','03', 2020, 3);
+                insert into date_type values ('2020-03-05','05','03', 2020, 4);
+                insert into date_type values ('2020-03-06','06','03', 2020, 5);
+                insert into date_type values ('2020-03-07','07','03', 2020, 6);
+                insert into date_type values ('2020-03-08','08','03', 2020, 0);
+                insert into date_type values ('2020-03-09','09','03', 2020, 1);
+                insert into date_type values ('2020-03-10','10','03', 2020, 2);
+                insert into date_type values ('2020-03-11','11','03', 2020, 3);
+                insert into date_type values ('2020-03-12','12','03', 2020, 4);
+                insert into date_type values ('2020-03-13','13','03', 2020, 5);
+                insert into date_type values ('2020-03-14','14','03', 2020, 6);
+                insert into date_type values ('2020-03-15','15','03', 2020, 0);
+                insert into date_type values ('2020-03-16','16','03', 2020, 1);
+                insert into date_type values ('2020-03-17','17','03', 2020, 2);
+                insert into date_type values ('2020-03-18','18','03', 2020, 3);
+                insert into date_type values ('2020-03-19','19','03', 2020, 4);
+                insert into date_type values ('2020-03-20','20','03', 2020, 5);
+                insert into date_type values ('2020-03-21','21','03', 2020, 6);
+                insert into date_type values ('2020-03-22','22','03', 2020, 0);
+                insert into date_type values ('2020-03-23','23','03', 2020, 1);
+                insert into date_type values ('2020-03-24','24','03', 2020, 2);
+                insert into date_type values ('2020-03-25','25','03', 2020, 3);
+                insert into date_type values ('2020-03-26','26','03', 2020, 4);
+                insert into date_type values ('2020-03-27','27','03', 2020, 5);
+                insert into date_type values ('2020-03-28','28','03', 2020, 6);
+                insert into date_type values ('2020-03-29','29','03', 2020, 0);
+                insert into date_type values ('2020-03-30','30','03', 2020, 1);
+                insert into date_type values ('2020-03-31','31','03', 2020, 2);
+                insert into date_type values ('2020-04-01','01','04', 2020, 3);
+                insert into date_type values ('2020-04-02','02','04', 2020, 4);
+                insert into date_type values ('2020-04-03','03','04', 2020, 5);
+                insert into date_type values ('2020-04-04','04','04', 2020, 6);
+                insert into date_type values ('2020-04-05','05','04', 2020, 0);
+                insert into date_type values ('2020-04-06','06','04', 2020, 1);
+                insert into date_type values ('2020-04-07','07','04', 2020, 2);
+                insert into date_type values ('2020-04-08','08','04', 2020, 3);
+                insert into date_type values ('2020-04-09','09','04', 2020, 4);
+                insert into date_type values ('2020-04-10','10','04', 2020, 5);
+                insert into date_type values ('2020-04-11','11','04', 2020, 6);
+                insert into date_type values ('2020-04-12','12','04', 2020, 0);
+                insert into date_type values ('2020-04-13','13','04', 2020, 1);
+                insert into date_type values ('2020-04-14','14','04', 2020, 2);
+                insert into date_type values ('2020-04-15','15','04', 2020, 3);
+                insert into date_type values ('2020-04-16','16','04', 2020, 4);
+                insert into date_type values ('2020-04-17','17','04', 2020, 5);
+                insert into date_type values ('2020-04-18','18','04', 2020, 6);
+                insert into date_type values ('2020-04-19','19','04', 2020, 0);
+                insert into date_type values ('2020-04-20','20','04', 2020, 1);
+                insert into date_type values ('2020-04-21','21','04', 2020, 2);
+                insert into date_type values ('2020-04-22','22','04', 2020, 3);
+                insert into date_type values ('2020-04-23','23','04', 2020, 4);
+                insert into date_type values ('2020-04-24','24','04', 2020, 5);
+                insert into date_type values ('2020-04-25','25','04', 2020, 6);
+                insert into date_type values ('2020-04-26','26','04', 2020, 0);
+                insert into date_type values ('2020-04-27','27','04', 2020, 1);
+                insert into date_type values ('2020-04-28','28','04', 2020, 2);
+                insert into date_type values ('2020-04-29','29','04', 2020, 3);
+                insert into date_type values ('2020-04-30','30','04', 2020, 4);
+                insert into date_type values ('2020-05-01','01','05', 2020, 5);
+                insert into date_type values ('2020-05-02','02','05', 2020, 6);
+                insert into date_type values ('2020-05-03','03','05', 2020, 0);
+                insert into date_type values ('2020-05-04','04','05', 2020, 1);
+                insert into date_type values ('2020-05-05','05','05', 2020, 2);
+                insert into date_type values ('2020-05-06','06','05', 2020, 3);
+                insert into date_type values ('2020-05-07','07','05', 2020, 4);
+                insert into date_type values ('2020-05-08','08','05', 2020, 5);
+                insert into date_type values ('2020-05-09','09','05', 2020, 6);
+                insert into date_type values ('2020-05-10','10','05', 2020, 0);
+                insert into date_type values ('2020-05-11','11','05', 2020, 1);
+                insert into date_type values ('2020-05-12','12','05', 2020, 2);
+                insert into date_type values ('2020-05-13','13','05', 2020, 3);
+                insert into date_type values ('2020-05-14','14','05', 2020, 4);
+                insert into date_type values ('2020-05-15','15','05', 2020, 5);
+                insert into date_type values ('2020-05-16','16','05', 2020, 6);
+                insert into date_type values ('2020-05-17','17','05', 2020, 0);
+                insert into date_type values ('2020-05-18','18','05', 2020, 1);
+                insert into date_type values ('2020-05-19','19','05', 2020, 2);
+                insert into date_type values ('2020-05-20','20','05', 2020, 3);
+                insert into date_type values ('2020-05-21','21','05', 2020, 4);
+                insert into date_type values ('2020-05-22','22','05', 2020, 5);
+                insert into date_type values ('2020-05-23','23','05', 2020, 6);
+                insert into date_type values ('2020-05-24','24','05', 2020, 0);
+                insert into date_type values ('2020-05-25','25','05', 2020, 1);
+                insert into date_type values ('2020-05-26','26','05', 2020, 2);
+                insert into date_type values ('2020-05-27','27','05', 2020, 3);
+                insert into date_type values ('2020-05-28','28','05', 2020, 4);
+                insert into date_type values ('2020-05-29','29','05', 2020, 5);
+                insert into date_type values ('2020-05-30','30','05', 2020, 6);
+                insert into date_type values ('2020-05-31','31','05', 2020, 0);
+                insert into date_type values ('2020-06-01','01','06', 2020, 1);
+                insert into date_type values ('2020-06-02','02','06', 2020, 2);
+                insert into date_type values ('2020-06-03','03','06', 2020, 3);
+                insert into date_type values ('2020-06-04','04','06', 2020, 4);
+                insert into date_type values ('2020-06-05','05','06', 2020, 5);
+                insert into date_type values ('2020-06-06','06','06', 2020, 6);
+                insert into date_type values ('2020-06-07','07','06', 2020, 0);
+                insert into date_type values ('2020-06-08','08','06', 2020, 1);
+                insert into date_type values ('2020-06-09','09','06', 2020, 2);
+                insert into date_type values ('2020-06-10','10','06', 2020, 3);
+                insert into date_type values ('2020-06-11','11','06', 2020, 4);
+                insert into date_type values ('2020-06-12','12','06', 2020, 5);
+                insert into date_type values ('2020-06-13','13','06', 2020, 6);
+                insert into date_type values ('2020-06-14','14','06', 2020, 0);
+                insert into date_type values ('2020-06-15','15','06', 2020, 1);
+                insert into date_type values ('2020-06-16','16','06', 2020, 2);
+                insert into date_type values ('2020-06-17','17','06', 2020, 3);
+                insert into date_type values ('2020-06-18','18','06', 2020, 4);
+                insert into date_type values ('2020-06-19','19','06', 2020, 5);
+                insert into date_type values ('2020-06-20','20','06', 2020, 6);
+                insert into date_type values ('2020-06-21','21','06', 2020, 0);
+                insert into date_type values ('2020-06-22','22','06', 2020, 1);
+                insert into date_type values ('2020-06-23','23','06', 2020, 2);
+                insert into date_type values ('2020-06-24','24','06', 2020, 3);
+                insert into date_type values ('2020-06-25','25','06', 2020, 4);
+                insert into date_type values ('2020-06-26','26','06', 2020, 5);
+                insert into date_type values ('2020-06-27','27','06', 2020, 6);
+                insert into date_type values ('2020-06-28','28','06', 2020, 0);
+                insert into date_type values ('2020-06-29','29','06', 2020, 1);
+                insert into date_type values ('2020-06-30','30','06', 2020, 2);
+                insert into date_type values ('2020-07-01','01','07', 2020, 3);
+                insert into date_type values ('2020-07-02','02','07', 2020, 4);
+                insert into date_type values ('2020-07-03','03','07', 2020, 5);
+                insert into date_type values ('2020-07-04','04','07', 2020, 6);
+                insert into date_type values ('2020-07-05','05','07', 2020, 0);
+                insert into date_type values ('2020-07-06','06','07', 2020, 1);
+                insert into date_type values ('2020-07-07','07','07', 2020, 2);
+                insert into date_type values ('2020-07-08','08','07', 2020, 3);
+                insert into date_type values ('2020-07-09','09','07', 2020, 4);
+                insert into date_type values ('2020-07-10','10','07', 2020, 5);
+                insert into date_type values ('2020-07-11','11','07', 2020, 6);
+                insert into date_type values ('2020-07-12','12','07', 2020, 0);
+                insert into date_type values ('2020-07-13','13','07', 2020, 1);
+                insert into date_type values ('2020-07-14','14','07', 2020, 2);
+                insert into date_type values ('2020-07-15','15','07', 2020, 3);
+                insert into date_type values ('2020-07-16','16','07', 2020, 4);
+                insert into date_type values ('2020-07-17','17','07', 2020, 5);
+                insert into date_type values ('2020-07-18','18','07', 2020, 6);
+                insert into date_type values ('2020-07-19','19','07', 2020, 0);
+                insert into date_type values ('2020-07-20','20','07', 2020, 1);
+                insert into date_type values ('2020-07-21','21','07', 2020, 2);
+                insert into date_type values ('2020-07-22','22','07', 2020, 3);
+                insert into date_type values ('2020-07-23','23','07', 2020, 4);
+                insert into date_type values ('2020-07-24','24','07', 2020, 5);
+                insert into date_type values ('2020-07-25','25','07', 2020, 6);
+                insert into date_type values ('2020-07-26','26','07', 2020, 0);
+                insert into date_type values ('2020-07-27','27','07', 2020, 1);
+                insert into date_type values ('2020-07-28','28','07', 2020, 2);
+                insert into date_type values ('2020-07-29','29','07', 2020, 3);
+                insert into date_type values ('2020-07-30','30','07', 2020, 4);
+                insert into date_type values ('2020-07-31','31','07', 2020, 5);
+                insert into date_type values ('2020-08-01','01','08', 2020, 6);
+                insert into date_type values ('2020-08-02','02','08', 2020, 0);
+                insert into date_type values ('2020-08-03','03','08', 2020, 1);
+                insert into date_type values ('2020-08-04','04','08', 2020, 2);
+                insert into date_type values ('2020-08-05','05','08', 2020, 3);
+                insert into date_type values ('2020-08-06','06','08', 2020, 4);
+                insert into date_type values ('2020-08-07','07','08', 2020, 5);
+                insert into date_type values ('2020-08-08','08','08', 2020, 6);
+                insert into date_type values ('2020-08-09','09','08', 2020, 0);
+                insert into date_type values ('2020-08-10','10','08', 2020, 1);
+                insert into date_type values ('2020-08-11','11','08', 2020, 2);
+                insert into date_type values ('2020-08-12','12','08', 2020, 3);
+                insert into date_type values ('2020-08-13','13','08', 2020, 4);
+                insert into date_type values ('2020-08-14','14','08', 2020, 5);
+                insert into date_type values ('2020-08-15','15','08', 2020, 6);
+                insert into date_type values ('2020-08-16','16','08', 2020, 0);
+                insert into date_type values ('2020-08-17','17','08', 2020, 1);
+                insert into date_type values ('2020-08-18','18','08', 2020, 2);
+                insert into date_type values ('2020-08-19','19','08', 2020, 3);
+                insert into date_type values ('2020-08-20','20','08', 2020, 4);
+                insert into date_type values ('2020-08-21','21','08', 2020, 5);
+                insert into date_type values ('2020-08-22','22','08', 2020, 6);
+                insert into date_type values ('2020-08-23','23','08', 2020, 0);
+                insert into date_type values ('2020-08-24','24','08', 2020, 1);
+                insert into date_type values ('2020-08-25','25','08', 2020, 2);
+                insert into date_type values ('2020-08-26','26','08', 2020, 3);
+                insert into date_type values ('2020-08-27','27','08', 2020, 4);
+                insert into date_type values ('2020-08-28','28','08', 2020, 5);
+                insert into date_type values ('2020-08-29','29','08', 2020, 6);
+                insert into date_type values ('2020-08-30','30','08', 2020, 0);
+                insert into date_type values ('2020-08-31','31','08', 2020, 1);
+                insert into date_type values ('2020-09-01','01','09', 2020, 2);
+                insert into date_type values ('2020-09-02','02','09', 2020, 3);
+                insert into date_type values ('2020-09-03','03','09', 2020, 4);
+                insert into date_type values ('2020-09-04','04','09', 2020, 5);
+                insert into date_type values ('2020-09-05','05','09', 2020, 6);
+                insert into date_type values ('2020-09-06','06','09', 2020, 0);
+                insert into date_type values ('2020-09-07','07','09', 2020, 1);
+                insert into date_type values ('2020-09-08','08','09', 2020, 2);
+                insert into date_type values ('2020-09-09','09','09', 2020, 3);
+                insert into date_type values ('2020-09-10','10','09', 2020, 4);
+                insert into date_type values ('2020-09-11','11','09', 2020, 5);
+                insert into date_type values ('2020-09-12','12','09', 2020, 6);
+                insert into date_type values ('2020-09-13','13','09', 2020, 0);
+                insert into date_type values ('2020-09-14','14','09', 2020, 1);
+                insert into date_type values ('2020-09-15','15','09', 2020, 2);
+                insert into date_type values ('2020-09-16','16','09', 2020, 3);
+                insert into date_type values ('2020-09-17','17','09', 2020, 4);
+                insert into date_type values ('2020-09-18','18','09', 2020, 5);
+                insert into date_type values ('2020-09-19','19','09', 2020, 6);
+                insert into date_type values ('2020-09-20','20','09', 2020, 0);
+                insert into date_type values ('2020-09-21','21','09', 2020, 1);
+                insert into date_type values ('2020-09-22','22','09', 2020, 2);
+                insert into date_type values ('2020-09-23','23','09', 2020, 3);
+                insert into date_type values ('2020-09-24','24','09', 2020, 4);
+                insert into date_type values ('2020-09-25','25','09', 2020, 5);
+                insert into date_type values ('2020-09-26','26','09', 2020, 6);
+                insert into date_type values ('2020-09-27','27','09', 2020, 0);
+                insert into date_type values ('2020-09-28','28','09', 2020, 1);
+                insert into date_type values ('2020-09-29','29','09', 2020, 2);
+                insert into date_type values ('2020-09-30','30','09', 2020, 3);
+                insert into date_type values ('2020-10-01','01','10', 2020, 4);
+                insert into date_type values ('2020-10-02','02','10', 2020, 5);
+                insert into date_type values ('2020-10-03','03','10', 2020, 6);
+                insert into date_type values ('2020-10-04','04','10', 2020, 0);
+                insert into date_type values ('2020-10-05','05','10', 2020, 1);
+                insert into date_type values ('2020-10-06','06','10', 2020, 2);
+                insert into date_type values ('2020-10-07','07','10', 2020, 3);
+                insert into date_type values ('2020-10-08','08','10', 2020, 4);
+                insert into date_type values ('2020-10-09','09','10', 2020, 5);
+                insert into date_type values ('2020-10-10','10','10', 2020, 6);
+                insert into date_type values ('2020-10-11','11','10', 2020, 0);
+                insert into date_type values ('2020-10-12','12','10', 2020, 1);
+                insert into date_type values ('2020-10-13','13','10', 2020, 2);
+                insert into date_type values ('2020-10-14','14','10', 2020, 3);
+                insert into date_type values ('2020-10-15','15','10', 2020, 4);
+                insert into date_type values ('2020-10-16','16','10', 2020, 5);
+                insert into date_type values ('2020-10-17','17','10', 2020, 6);
+                insert into date_type values ('2020-10-18','18','10', 2020, 0);
+                insert into date_type values ('2020-10-19','19','10', 2020, 1);
+                insert into date_type values ('2020-10-20','20','10', 2020, 2);
+                insert into date_type values ('2020-10-21','21','10', 2020, 3);
+                insert into date_type values ('2020-10-22','22','10', 2020, 4);
+                insert into date_type values ('2020-10-23','23','10', 2020, 5);
+                insert into date_type values ('2020-10-24','24','10', 2020, 6);
+                insert into date_type values ('2020-10-25','25','10', 2020, 0);
+                insert into date_type values ('2020-10-26','26','10', 2020, 1);
+                insert into date_type values ('2020-10-27','27','10', 2020, 2);
+                insert into date_type values ('2020-10-28','28','10', 2020, 3);
+                insert into date_type values ('2020-10-29','29','10', 2020, 4);
+                insert into date_type values ('2020-10-30','30','10', 2020, 5);
+                insert into date_type values ('2020-10-31','31','10', 2020, 6);
+                insert into date_type values ('2020-11-01','01','11', 2020, 0);
+                insert into date_type values ('2020-11-02','02','11', 2020, 1);
+                insert into date_type values ('2020-11-03','03','11', 2020, 2);
+                insert into date_type values ('2020-11-04','04','11', 2020, 3);
+                insert into date_type values ('2020-11-05','05','11', 2020, 4);
+                insert into date_type values ('2020-11-06','06','11', 2020, 5);
+                insert into date_type values ('2020-11-07','07','11', 2020, 6);
+                insert into date_type values ('2020-11-08','08','11', 2020, 0);
+                insert into date_type values ('2020-11-09','09','11', 2020, 1);
+                insert into date_type values ('2020-11-10','10','11', 2020, 2);
+                insert into date_type values ('2020-11-11','11','11', 2020, 3);
+                insert into date_type values ('2020-11-12','12','11', 2020, 4);
+                insert into date_type values ('2020-11-13','13','11', 2020, 5);
+                insert into date_type values ('2020-11-14','14','11', 2020, 6);
+                insert into date_type values ('2020-11-15','15','11', 2020, 0);
+                insert into date_type values ('2020-11-16','16','11', 2020, 1);
+                insert into date_type values ('2020-11-17','17','11', 2020, 2);
+                insert into date_type values ('2020-11-18','18','11', 2020, 3);
+                insert into date_type values ('2020-11-19','19','11', 2020, 4);
+                insert into date_type values ('2020-11-20','20','11', 2020, 5);
+                insert into date_type values ('2020-11-21','21','11', 2020, 6);
+                insert into date_type values ('2020-11-22','22','11', 2020, 0);
+                insert into date_type values ('2020-11-23','23','11', 2020, 1);
+                insert into date_type values ('2020-11-24','24','11', 2020, 2);
+                insert into date_type values ('2020-11-25','25','11', 2020, 3);
+                insert into date_type values ('2020-11-26','26','11', 2020, 4);
+                insert into date_type values ('2020-11-27','27','11', 2020, 5);
+                insert into date_type values ('2020-11-28','28','11', 2020, 6);
+                insert into date_type values ('2020-11-29','29','11', 2020, 0);
+                insert into date_type values ('2020-11-30','30','11', 2020, 1);
+                insert into date_type values ('2020-12-01','01','12', 2020, 2);
+                insert into date_type values ('2020-12-02','02','12', 2020, 3);
+                insert into date_type values ('2020-12-03','03','12', 2020, 4);
+                insert into date_type values ('2020-12-04','04','12', 2020, 5);
+                insert into date_type values ('2020-12-05','05','12', 2020, 6);
+                insert into date_type values ('2020-12-06','06','12', 2020, 0);
+                insert into date_type values ('2020-12-07','07','12', 2020, 1);
+                insert into date_type values ('2020-12-08','08','12', 2020, 2);
+                insert into date_type values ('2020-12-09','09','12', 2020, 3);
+                insert into date_type values ('2020-12-10','10','12', 2020, 4);
+                insert into date_type values ('2020-12-11','11','12', 2020, 5);
+                insert into date_type values ('2020-12-12','12','12', 2020, 6);
+                insert into date_type values ('2020-12-13','13','12', 2020, 0);
+                insert into date_type values ('2020-12-14','14','12', 2020, 1);
+                insert into date_type values ('2020-12-15','15','12', 2020, 2);
+                insert into date_type values ('2020-12-16','16','12', 2020, 3);
+                insert into date_type values ('2020-12-17','17','12', 2020, 4);
+                insert into date_type values ('2020-12-18','18','12', 2020, 5);
+                insert into date_type values ('2020-12-19','19','12', 2020, 6);
+                insert into date_type values ('2020-12-20','20','12', 2020, 0);
+                insert into date_type values ('2020-12-21','21','12', 2020, 1);
+                insert into date_type values ('2020-12-22','22','12', 2020, 2);
+                insert into date_type values ('2020-12-23','23','12', 2020, 3);
+                insert into date_type values ('2020-12-24','24','12', 2020, 4);
+                insert into date_type values ('2020-12-25','25','12', 2020, 5);
+                insert into date_type values ('2020-12-26','26','12', 2020, 6);
+                insert into date_type values ('2020-12-27','27','12', 2020, 0);
+                insert into date_type values ('2020-12-28','28','12', 2020, 1);
+                insert into date_type values ('2020-12-29','29','12', 2020, 2);
+                insert into date_type values ('2020-12-30','30','12', 2020, 3);
+                insert into date_type values ('2020-12-31','31','12', 2020, 4);
+                insert into date_type values ('2021-01-01','01','01', 2021, 5);
+                insert into date_type values ('2021-01-02','02','01', 2021, 6);
+                insert into date_type values ('2021-01-03','03','01', 2021, 0);
+                insert into date_type values ('2021-01-04','04','01', 2021, 1);
+                insert into date_type values ('2021-01-05','05','01', 2021, 2);
+                insert into date_type values ('2021-01-06','06','01', 2021, 3);
+                insert into date_type values ('2021-01-07','07','01', 2021, 4);
+                insert into date_type values ('2021-01-08','08','01', 2021, 5);
+                insert into date_type values ('2021-01-09','09','01', 2021, 6);
+                insert into date_type values ('2021-01-10','10','01', 2021, 0);
+                insert into date_type values ('2021-01-11','11','01', 2021, 1);
+                insert into date_type values ('2021-01-12','12','01', 2021, 2);
+                insert into date_type values ('2021-01-13','13','01', 2021, 3);
+                insert into date_type values ('2021-01-14','14','01', 2021, 4);
+                insert into date_type values ('2021-01-15','15','01', 2021, 5);
+                insert into date_type values ('2021-01-16','16','01', 2021, 6);
+                insert into date_type values ('2021-01-17','17','01', 2021, 0);
+                insert into date_type values ('2021-01-18','18','01', 2021, 1);
+                insert into date_type values ('2021-01-19','19','01', 2021, 2);
+                insert into date_type values ('2021-01-20','20','01', 2021, 3);
+                insert into date_type values ('2021-01-21','21','01', 2021, 4);
+                insert into date_type values ('2021-01-22','22','01', 2021, 5);
+                insert into date_type values ('2021-01-23','23','01', 2021, 6);
+                insert into date_type values ('2021-01-24','24','01', 2021, 0);
+                insert into date_type values ('2021-01-25','25','01', 2021, 1);
+                insert into date_type values ('2021-01-26','26','01', 2021, 2);
+                insert into date_type values ('2021-01-27','27','01', 2021, 3);
+                insert into date_type values ('2021-01-28','28','01', 2021, 4);
+                insert into date_type values ('2021-01-29','29','01', 2021, 5);
+                insert into date_type values ('2021-01-30','30','01', 2021, 6);
+                insert into date_type values ('2021-01-31','31','01', 2021, 0);
+                insert into date_type values ('2021-02-01','01','02', 2021, 1);
+                insert into date_type values ('2021-02-02','02','02', 2021, 2);
+                insert into date_type values ('2021-02-03','03','02', 2021, 3);
+                insert into date_type values ('2021-02-04','04','02', 2021, 4);
+                insert into date_type values ('2021-02-05','05','02', 2021, 5);
+                insert into date_type values ('2021-02-06','06','02', 2021, 6);
+                insert into date_type values ('2021-02-07','07','02', 2021, 0);
+                insert into date_type values ('2021-02-08','08','02', 2021, 1);
+                insert into date_type values ('2021-02-09','09','02', 2021, 2);
+                insert into date_type values ('2021-02-10','10','02', 2021, 3);
+                insert into date_type values ('2021-02-11','11','02', 2021, 4);
+                insert into date_type values ('2021-02-12','12','02', 2021, 5);
+                insert into date_type values ('2021-02-13','13','02', 2021, 6);
+                insert into date_type values ('2021-02-14','14','02', 2021, 0);
+                insert into date_type values ('2021-02-15','15','02', 2021, 1);
+                insert into date_type values ('2021-02-16','16','02', 2021, 2);
+                insert into date_type values ('2021-02-17','17','02', 2021, 3);
+                insert into date_type values ('2021-02-18','18','02', 2021, 4);
+                insert into date_type values ('2021-02-19','19','02', 2021, 5);
+                insert into date_type values ('2021-02-20','20','02', 2021, 6);
+                insert into date_type values ('2021-02-21','21','02', 2021, 0);
+                insert into date_type values ('2021-02-22','22','02', 2021, 1);
+                insert into date_type values ('2021-02-23','23','02', 2021, 2);
+                insert into date_type values ('2021-02-24','24','02', 2021, 3);
+                insert into date_type values ('2021-02-25','25','02', 2021, 4);
+                insert into date_type values ('2021-02-26','26','02', 2021, 5);
+                insert into date_type values ('2021-02-27','27','02', 2021, 6);
+                insert into date_type values ('2021-02-28','28','02', 2021, 0);
+                insert into date_type values ('2021-03-01','01','03', 2021, 1);
+                insert into date_type values ('2021-03-02','02','03', 2021, 2);
+                insert into date_type values ('2021-03-03','03','03', 2021, 3);
+                insert into date_type values ('2021-03-04','04','03', 2021, 4);
+                insert into date_type values ('2021-03-05','05','03', 2021, 5);
+                insert into date_type values ('2021-03-06','06','03', 2021, 6);
+                insert into date_type values ('2021-03-07','07','03', 2021, 0);
+                insert into date_type values ('2021-03-08','08','03', 2021, 1);
+                insert into date_type values ('2021-03-09','09','03', 2021, 2);
+                insert into date_type values ('2021-03-10','10','03', 2021, 3);
+                insert into date_type values ('2021-03-11','11','03', 2021, 4);
+                insert into date_type values ('2021-03-12','12','03', 2021, 5);
+                insert into date_type values ('2021-03-13','13','03', 2021, 6);
+                insert into date_type values ('2021-03-14','14','03', 2021, 0);
+                insert into date_type values ('2021-03-15','15','03', 2021, 1);
+                insert into date_type values ('2021-03-16','16','03', 2021, 2);
+                insert into date_type values ('2021-03-17','17','03', 2021, 3);
+                insert into date_type values ('2021-03-18','18','03', 2021, 4);
+                insert into date_type values ('2021-03-19','19','03', 2021, 5);
+                insert into date_type values ('2021-03-20','20','03', 2021, 6);
+                insert into date_type values ('2021-03-21','21','03', 2021, 0);
+                insert into date_type values ('2021-03-22','22','03', 2021, 1);
+                insert into date_type values ('2021-03-23','23','03', 2021, 2);
+                insert into date_type values ('2021-03-24','24','03', 2021, 3);
+                insert into date_type values ('2021-03-25','25','03', 2021, 4);
+                insert into date_type values ('2021-03-26','26','03', 2021, 5);
+                insert into date_type values ('2021-03-27','27','03', 2021, 6);
+                insert into date_type values ('2021-03-28','28','03', 2021, 0);
+                insert into date_type values ('2021-03-29','29','03', 2021, 1);
+                insert into date_type values ('2021-03-30','30','03', 2021, 2);
+                insert into date_type values ('2021-03-31','31','03', 2021, 3);
+                insert into date_type values ('2021-04-01','01','04', 2021, 4);
+                insert into date_type values ('2021-04-02','02','04', 2021, 5);
+                insert into date_type values ('2021-04-03','03','04', 2021, 6);
+                insert into date_type values ('2021-04-04','04','04', 2021, 0);
+                insert into date_type values ('2021-04-05','05','04', 2021, 1);
+                insert into date_type values ('2021-04-06','06','04', 2021, 2);
+                insert into date_type values ('2021-04-07','07','04', 2021, 3);
+                insert into date_type values ('2021-04-08','08','04', 2021, 4);
+                insert into date_type values ('2021-04-09','09','04', 2021, 5);
+                insert into date_type values ('2021-04-10','10','04', 2021, 6);
+                insert into date_type values ('2021-04-11','11','04', 2021, 0);
+                insert into date_type values ('2021-04-12','12','04', 2021, 1);
+                insert into date_type values ('2021-04-13','13','04', 2021, 2);
+                insert into date_type values ('2021-04-14','14','04', 2021, 3);
+                insert into date_type values ('2021-04-15','15','04', 2021, 4);
+                insert into date_type values ('2021-04-16','16','04', 2021, 5);
+                insert into date_type values ('2021-04-17','17','04', 2021, 6);
+                insert into date_type values ('2021-04-18','18','04', 2021, 0);
+                insert into date_type values ('2021-04-19','19','04', 2021, 1);
+                insert into date_type values ('2021-04-20','20','04', 2021, 2);
+                insert into date_type values ('2021-04-21','21','04', 2021, 3);
+                insert into date_type values ('2021-04-22','22','04', 2021, 4);
+                insert into date_type values ('2021-04-23','23','04', 2021, 5);
+                insert into date_type values ('2021-04-24','24','04', 2021, 6);
+                insert into date_type values ('2021-04-25','25','04', 2021, 0);
+                insert into date_type values ('2021-04-26','26','04', 2021, 1);
+                insert into date_type values ('2021-04-27','27','04', 2021, 2);
+                insert into date_type values ('2021-04-28','28','04', 2021, 3);
+                insert into date_type values ('2021-04-29','29','04', 2021, 4);
+                insert into date_type values ('2021-04-30','30','04', 2021, 5);
+                insert into date_type values ('2021-05-01','01','05', 2021, 6);
+                insert into date_type values ('2021-05-02','02','05', 2021, 0);
+                insert into date_type values ('2021-05-03','03','05', 2021, 1);
+                insert into date_type values ('2021-05-04','04','05', 2021, 2);
+                insert into date_type values ('2021-05-05','05','05', 2021, 3);
+                insert into date_type values ('2021-05-06','06','05', 2021, 4);
+                insert into date_type values ('2021-05-07','07','05', 2021, 5);
+                insert into date_type values ('2021-05-08','08','05', 2021, 6);
+                insert into date_type values ('2021-05-09','09','05', 2021, 0);
+                insert into date_type values ('2021-05-10','10','05', 2021, 1);
+                insert into date_type values ('2021-05-11','11','05', 2021, 2);
+                insert into date_type values ('2021-05-12','12','05', 2021, 3);
+                insert into date_type values ('2021-05-13','13','05', 2021, 4);
+                insert into date_type values ('2021-05-14','14','05', 2021, 5);
+                insert into date_type values ('2021-05-15','15','05', 2021, 6);
+                insert into date_type values ('2021-05-16','16','05', 2021, 0);
+                insert into date_type values ('2021-05-17','17','05', 2021, 1);
+                insert into date_type values ('2021-05-18','18','05', 2021, 2);
+                insert into date_type values ('2021-05-19','19','05', 2021, 3);
+                insert into date_type values ('2021-05-20','20','05', 2021, 4);
+                insert into date_type values ('2021-05-21','21','05', 2021, 5);
+                insert into date_type values ('2021-05-22','22','05', 2021, 6);
+                insert into date_type values ('2021-05-23','23','05', 2021, 0);
+                insert into date_type values ('2021-05-24','24','05', 2021, 1);
+                insert into date_type values ('2021-05-25','25','05', 2021, 2);
+                insert into date_type values ('2021-05-26','26','05', 2021, 3);
+                insert into date_type values ('2021-05-27','27','05', 2021, 4);
+                insert into date_type values ('2021-05-28','28','05', 2021, 5);
+                insert into date_type values ('2021-05-29','29','05', 2021, 6);
+                insert into date_type values ('2021-05-30','30','05', 2021, 0);
+                insert into date_type values ('2021-05-31','31','05', 2021, 1);
+                insert into date_type values ('2021-06-01','01','06', 2021, 2);
+                insert into date_type values ('2021-06-02','02','06', 2021, 3);
+                insert into date_type values ('2021-06-03','03','06', 2021, 4);
+                insert into date_type values ('2021-06-04','04','06', 2021, 5);
+                insert into date_type values ('2021-06-05','05','06', 2021, 6);
+                insert into date_type values ('2021-06-06','06','06', 2021, 0);
+                insert into date_type values ('2021-06-07','07','06', 2021, 1);
+                insert into date_type values ('2021-06-08','08','06', 2021, 2);
+                insert into date_type values ('2021-06-09','09','06', 2021, 3);
+                insert into date_type values ('2021-06-10','10','06', 2021, 4);
+                insert into date_type values ('2021-06-11','11','06', 2021, 5);
+                insert into date_type values ('2021-06-12','12','06', 2021, 6);
+                insert into date_type values ('2021-06-13','13','06', 2021, 0);
+                insert into date_type values ('2021-06-14','14','06', 2021, 1);
+                insert into date_type values ('2021-06-15','15','06', 2021, 2);
+                insert into date_type values ('2021-06-16','16','06', 2021, 3);
+                insert into date_type values ('2021-06-17','17','06', 2021, 4);
+                insert into date_type values ('2021-06-18','18','06', 2021, 5);
+                insert into date_type values ('2021-06-19','19','06', 2021, 6);
+                insert into date_type values ('2021-06-20','20','06', 2021, 0);
+                insert into date_type values ('2021-06-21','21','06', 2021, 1);
+                insert into date_type values ('2021-06-22','22','06', 2021, 2);
+                insert into date_type values ('2021-06-23','23','06', 2021, 3);
+                insert into date_type values ('2021-06-24','24','06', 2021, 4);
+                insert into date_type values ('2021-06-25','25','06', 2021, 5);
+                insert into date_type values ('2021-06-26','26','06', 2021, 6);
+                insert into date_type values ('2021-06-27','27','06', 2021, 0);
+                insert into date_type values ('2021-06-28','28','06', 2021, 1);
+                insert into date_type values ('2021-06-29','29','06', 2021, 2);
+                insert into date_type values ('2021-06-30','30','06', 2021, 3);
+                insert into date_type values ('2021-07-01','01','07', 2021, 4);
+                insert into date_type values ('2021-07-02','02','07', 2021, 5);
+                insert into date_type values ('2021-07-03','03','07', 2021, 6);
+                insert into date_type values ('2021-07-04','04','07', 2021, 0);
+                insert into date_type values ('2021-07-05','05','07', 2021, 1);
+                insert into date_type values ('2021-07-06','06','07', 2021, 2);
+                insert into date_type values ('2021-07-07','07','07', 2021, 3);
+                insert into date_type values ('2021-07-08','08','07', 2021, 4);
+                insert into date_type values ('2021-07-09','09','07', 2021, 5);
+                insert into date_type values ('2021-07-10','10','07', 2021, 6);
+                insert into date_type values ('2021-07-11','11','07', 2021, 0);
+                insert into date_type values ('2021-07-12','12','07', 2021, 1);
+                insert into date_type values ('2021-07-13','13','07', 2021, 2);
+                insert into date_type values ('2021-07-14','14','07', 2021, 3);
+                insert into date_type values ('2021-07-15','15','07', 2021, 4);
+                insert into date_type values ('2021-07-16','16','07', 2021, 5);
+                insert into date_type values ('2021-07-17','17','07', 2021, 6);
+                insert into date_type values ('2021-07-18','18','07', 2021, 0);
+                insert into date_type values ('2021-07-19','19','07', 2021, 1);
+                insert into date_type values ('2021-07-20','20','07', 2021, 2);
+                insert into date_type values ('2021-07-21','21','07', 2021, 3);
+                insert into date_type values ('2021-07-22','22','07', 2021, 4);
+                insert into date_type values ('2021-07-23','23','07', 2021, 5);
+                insert into date_type values ('2021-07-24','24','07', 2021, 6);
+                insert into date_type values ('2021-07-25','25','07', 2021, 0);
+                insert into date_type values ('2021-07-26','26','07', 2021, 1);
+                insert into date_type values ('2021-07-27','27','07', 2021, 2);
+                insert into date_type values ('2021-07-28','28','07', 2021, 3);
+                insert into date_type values ('2021-07-29','29','07', 2021, 4);
+                insert into date_type values ('2021-07-30','30','07', 2021, 5);
+                insert into date_type values ('2021-07-31','31','07', 2021, 6);
+                insert into date_type values ('2021-08-01','01','08', 2021, 0);
+                insert into date_type values ('2021-08-02','02','08', 2021, 1);
+                insert into date_type values ('2021-08-03','03','08', 2021, 2);
+                insert into date_type values ('2021-08-04','04','08', 2021, 3);
+                insert into date_type values ('2021-08-05','05','08', 2021, 4);
+                insert into date_type values ('2021-08-06','06','08', 2021, 5);
+                insert into date_type values ('2021-08-07','07','08', 2021, 6);
+                insert into date_type values ('2021-08-08','08','08', 2021, 0);
+                insert into date_type values ('2021-08-09','09','08', 2021, 1);
+                insert into date_type values ('2021-08-10','10','08', 2021, 2);
+                insert into date_type values ('2021-08-11','11','08', 2021, 3);
+                insert into date_type values ('2021-08-12','12','08', 2021, 4);
+                insert into date_type values ('2021-08-13','13','08', 2021, 5);
+                insert into date_type values ('2021-08-14','14','08', 2021, 6);
+                insert into date_type values ('2021-08-15','15','08', 2021, 0);
+                insert into date_type values ('2021-08-16','16','08', 2021, 1);
+                insert into date_type values ('2021-08-17','17','08', 2021, 2);
+                insert into date_type values ('2021-08-18','18','08', 2021, 3);
+                insert into date_type values ('2021-08-19','19','08', 2021, 4);
+                insert into date_type values ('2021-08-20','20','08', 2021, 5);
+                insert into date_type values ('2021-08-21','21','08', 2021, 6);
+                insert into date_type values ('2021-08-22','22','08', 2021, 0);
+                insert into date_type values ('2021-08-23','23','08', 2021, 1);
+                insert into date_type values ('2021-08-24','24','08', 2021, 2);
+                insert into date_type values ('2021-08-25','25','08', 2021, 3);
+                insert into date_type values ('2021-08-26','26','08', 2021, 4);
+                insert into date_type values ('2021-08-27','27','08', 2021, 5);
+                insert into date_type values ('2021-08-28','28','08', 2021, 6);
+                insert into date_type values ('2021-08-29','29','08', 2021, 0);
+                insert into date_type values ('2021-08-30','30','08', 2021, 1);
+                insert into date_type values ('2021-08-31','31','08', 2021, 2);
+                insert into date_type values ('2021-09-01','01','09', 2021, 3);
+                insert into date_type values ('2021-09-02','02','09', 2021, 4);
+                insert into date_type values ('2021-09-03','03','09', 2021, 5);
+                insert into date_type values ('2021-09-04','04','09', 2021, 6);
+                insert into date_type values ('2021-09-05','05','09', 2021, 0);
+                insert into date_type values ('2021-09-06','06','09', 2021, 1);
+                insert into date_type values ('2021-09-07','07','09', 2021, 2);
+                insert into date_type values ('2021-09-08','08','09', 2021, 3);
+                insert into date_type values ('2021-09-09','09','09', 2021, 4);
+                insert into date_type values ('2021-09-10','10','09', 2021, 5);
+                insert into date_type values ('2021-09-11','11','09', 2021, 6);
+                insert into date_type values ('2021-09-12','12','09', 2021, 0);
+                insert into date_type values ('2021-09-13','13','09', 2021, 1);
+                insert into date_type values ('2021-09-14','14','09', 2021, 2);
+                insert into date_type values ('2021-09-15','15','09', 2021, 3);
+                insert into date_type values ('2021-09-16','16','09', 2021, 4);
+                insert into date_type values ('2021-09-17','17','09', 2021, 5);
+                insert into date_type values ('2021-09-18','18','09', 2021, 6);
+                insert into date_type values ('2021-09-19','19','09', 2021, 0);
+                insert into date_type values ('2021-09-20','20','09', 2021, 1);
+                insert into date_type values ('2021-09-21','21','09', 2021, 2);
+                insert into date_type values ('2021-09-22','22','09', 2021, 3);
+                insert into date_type values ('2021-09-23','23','09', 2021, 4);
+                insert into date_type values ('2021-09-24','24','09', 2021, 5);
+                insert into date_type values ('2021-09-25','25','09', 2021, 6);
+                insert into date_type values ('2021-09-26','26','09', 2021, 0);
+                insert into date_type values ('2021-09-27','27','09', 2021, 1);
+                insert into date_type values ('2021-09-28','28','09', 2021, 2);
+                insert into date_type values ('2021-09-29','29','09', 2021, 3);
+                insert into date_type values ('2021-09-30','30','09', 2021, 4);
+                insert into date_type values ('2021-10-01','01','10', 2021, 5);
+                insert into date_type values ('2021-10-02','02','10', 2021, 6);
+                insert into date_type values ('2021-10-03','03','10', 2021, 0);
+                insert into date_type values ('2021-10-04','04','10', 2021, 1);
+                insert into date_type values ('2021-10-05','05','10', 2021, 2);
+                insert into date_type values ('2021-10-06','06','10', 2021, 3);
+                insert into date_type values ('2021-10-07','07','10', 2021, 4);
+                insert into date_type values ('2021-10-08','08','10', 2021, 5);
+                insert into date_type values ('2021-10-09','09','10', 2021, 6);
+                insert into date_type values ('2021-10-10','10','10', 2021, 0);
+                insert into date_type values ('2021-10-11','11','10', 2021, 1);
+                insert into date_type values ('2021-10-12','12','10', 2021, 2);
+                insert into date_type values ('2021-10-13','13','10', 2021, 3);
+                insert into date_type values ('2021-10-14','14','10', 2021, 4);
+                insert into date_type values ('2021-10-15','15','10', 2021, 5);
+                insert into date_type values ('2021-10-16','16','10', 2021, 6);
+                insert into date_type values ('2021-10-17','17','10', 2021, 0);
+                insert into date_type values ('2021-10-18','18','10', 2021, 1);
+                insert into date_type values ('2021-10-19','19','10', 2021, 2);
+                insert into date_type values ('2021-10-20','20','10', 2021, 3);
+                insert into date_type values ('2021-10-21','21','10', 2021, 4);
+                insert into date_type values ('2021-10-22','22','10', 2021, 5);
+                insert into date_type values ('2021-10-23','23','10', 2021, 6);
+                insert into date_type values ('2021-10-24','24','10', 2021, 0);
+                insert into date_type values ('2021-10-25','25','10', 2021, 1);
+                insert into date_type values ('2021-10-26','26','10', 2021, 2);
+                insert into date_type values ('2021-10-27','27','10', 2021, 3);
+                insert into date_type values ('2021-10-28','28','10', 2021, 4);
+                insert into date_type values ('2021-10-29','29','10', 2021, 5);
+                insert into date_type values ('2021-10-30','30','10', 2021, 6);
+                insert into date_type values ('2021-10-31','31','10', 2021, 0);
+                insert into date_type values ('2021-11-01','01','11', 2021, 1);
+                insert into date_type values ('2021-11-02','02','11', 2021, 2);
+                insert into date_type values ('2021-11-03','03','11', 2021, 3);
+                insert into date_type values ('2021-11-04','04','11', 2021, 4);
+                insert into date_type values ('2021-11-05','05','11', 2021, 5);
+                insert into date_type values ('2021-11-06','06','11', 2021, 6);
+                insert into date_type values ('2021-11-07','07','11', 2021, 0);
+                insert into date_type values ('2021-11-08','08','11', 2021, 1);
+                insert into date_type values ('2021-11-09','09','11', 2021, 2);
+                insert into date_type values ('2021-11-10','10','11', 2021, 3);
+                insert into date_type values ('2021-11-11','11','11', 2021, 4);
+                insert into date_type values ('2021-11-12','12','11', 2021, 5);
+                insert into date_type values ('2021-11-13','13','11', 2021, 6);
+                insert into date_type values ('2021-11-14','14','11', 2021, 0);
+                insert into date_type values ('2021-11-15','15','11', 2021, 1);
+                insert into date_type values ('2021-11-16','16','11', 2021, 2);
+                insert into date_type values ('2021-11-17','17','11', 2021, 3);
+                insert into date_type values ('2021-11-18','18','11', 2021, 4);
+                insert into date_type values ('2021-11-19','19','11', 2021, 5);
+                insert into date_type values ('2021-11-20','20','11', 2021, 6);
+                insert into date_type values ('2021-11-21','21','11', 2021, 0);
+                insert into date_type values ('2021-11-22','22','11', 2021, 1);
+                insert into date_type values ('2021-11-23','23','11', 2021, 2);
+                insert into date_type values ('2021-11-24','24','11', 2021, 3);
+                insert into date_type values ('2021-11-25','25','11', 2021, 4);
+                insert into date_type values ('2021-11-26','26','11', 2021, 5);
+                insert into date_type values ('2021-11-27','27','11', 2021, 6);
+                insert into date_type values ('2021-11-28','28','11', 2021, 0);
+                insert into date_type values ('2021-11-29','29','11', 2021, 1);
+                insert into date_type values ('2021-11-30','30','11', 2021, 2);
+                insert into date_type values ('2021-12-01','01','12', 2021, 3);
+                insert into date_type values ('2021-12-02','02','12', 2021, 4);
+                insert into date_type values ('2021-12-03','03','12', 2021, 5);
+                insert into date_type values ('2021-12-04','04','12', 2021, 6);
+                insert into date_type values ('2021-12-05','05','12', 2021, 0);
+                insert into date_type values ('2021-12-06','06','12', 2021, 1);
+                insert into date_type values ('2021-12-07','07','12', 2021, 2);
+                insert into date_type values ('2021-12-08','08','12', 2021, 3);
+                insert into date_type values ('2021-12-09','09','12', 2021, 4);
+                insert into date_type values ('2021-12-10','10','12', 2021, 5);
+                insert into date_type values ('2021-12-11','11','12', 2021, 6);
+                insert into date_type values ('2021-12-12','12','12', 2021, 0);
+                insert into date_type values ('2021-12-13','13','12', 2021, 1);
+                insert into date_type values ('2021-12-14','14','12', 2021, 2);
+                insert into date_type values ('2021-12-15','15','12', 2021, 3);
+                insert into date_type values ('2021-12-16','16','12', 2021, 4);
+                insert into date_type values ('2021-12-17','17','12', 2021, 5);
+                insert into date_type values ('2021-12-18','18','12', 2021, 6);
+                insert into date_type values ('2021-12-19','19','12', 2021, 0);
+                insert into date_type values ('2021-12-20','20','12', 2021, 1);
+                insert into date_type values ('2021-12-21','21','12', 2021, 2);
+                insert into date_type values ('2021-12-22','22','12', 2021, 3);
+                insert into date_type values ('2021-12-23','23','12', 2021, 4);
+                insert into date_type values ('2021-12-24','24','12', 2021, 5);
+                insert into date_type values ('2021-12-25','25','12', 2021, 6);
+                insert into date_type values ('2021-12-26','26','12', 2021, 0);
+                insert into date_type values ('2021-12-27','27','12', 2021, 1);
+                insert into date_type values ('2021-12-28','28','12', 2021, 2);
+                insert into date_type values ('2021-12-29','29','12', 2021, 3);
+                insert into date_type values ('2021-12-30','30','12', 2021, 4);
+                insert into date_type values ('2021-12-31','31','12', 2021, 5);
+
+### Configuración de Agendas y Asignación de turnos 
+### 1. Consultorios 
+- changeSet:
+    id: doctors_office-createTable
+    comment: Create table doctors_office
+    author: saguero
+    changes: 
+    - createTable: 
+        tableName: doctors_office
+        columns: 
+        - column:
+            autoIncrement: true
+            constraints:
+                primaryKey: true
+                primaryKeyName: PK_doctors_office
+            name: id
+            type: int
+        - column:
+            constraints:
+                nullable: false
+            name: institution_id
+            type: int
+        - column:
+            constraints:
+                nullable: false
+            name: clinical_specialty_sector_id
+            type: int
+        - column:
+            constraints:
+                nullable: false
+            name: description
+            type: varchar(255)
+        - column:
+            constraints:
+                nullable: false
+            name: opening_time  
+            type: time
+            defaultValue: '00:00:00'
+        - column:
+            constraints:
+                nullable: false
+            name: closing_time 
+            type: time
+            defaultValue: '24:00:00'
+    - addForeignKeyConstraint:
+        baseColumnNames: institution_id
+        baseTableName: doctors_office
+        constraintName: FK_doctors_office_institution_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: institution
+        validate: true   
+    - addForeignKeyConstraint:
+        baseColumnNames: clinical_specialty_sector_id
+        baseTableName: doctors_office
+        constraintName: FK_doctors_office_clinical_specialty_sector_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: clinical_specialty_sector
+        validate: true  
+
+### 2. Horarios de atención
+- changeSet:
+    id: opening_hours-createTable  
+    comment: Create table opening_hours
+    author: saguero
+    changes: 
+    - createTable: 
+        tableName: opening_hours
+        columns: 
+        - column:
+            autoIncrement: true
+            constraints:
+                primaryKey: true
+                primaryKeyName: PK_opening_hours
+            name: id
+            type: int
+        - column:
+            constraints:
+                nullable: false
+            name: day_week_id
+            type: smallint
+        - column:
+            constraints:
+                nullable: false
+            name: from
+            type: time
+        - column:
+            constraints:
+                nullable: false
+            name: to
+            type: time
+    - addForeignKeyConstraint:
+        baseColumnNames: day_week_id
+        baseTableName: opening_hours
+        constraintName: FK_opening_hours_day_week_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: day_week
+        validate: true
+
+### 3. Configuración de Agendas 
+- changeSet:
+    id: diary-createTable  
+    comment: Create table diary
+    author: saguero
+    changes: 
+    - createTable: 
+        tableName: diary
+        columns: 
+        - column:
+            autoIncrement: true
+            constraints:
+                primaryKey: true
+                primaryKeyName: PK_diary
+            name: id
+            type: int
+        - column:
+            constraints:
+                nullable: false
+            name: healthcare_professional_id
+            type: int
+        - column:
+            constraints:
+                nullable: false
+            name: doctors_office_id
+            type: int
+        - column:
+            constraints:
+                nullable: false
+            name: start_date
+            type: date         
+        - column:
+            constraints:
+                nullable: false
+            name: end_date
+            type: date
+        - column:
+            constraints:
+                nullable: false
+            name: shift_duration 
+            type: smallint
+        - column:
+            constraints:
+                nullable: false
+            name: automatic_renewal
+            type: boolean  
+            defaultValue: ${boolean.false}        
+        - column:
+            constraints:
+                nullable: false
+            name: days_before_renew
+            type: smallint
+            defaultValue: -1
+        - column:
+            constraints:
+                nullable: false
+            name: professional_asign_shift
+            type: boolean  
+            defaultValue: ${boolean.false}       
+        - column:
+            constraints:
+                nullable: false
+            name: include_holiday
+            type: boolean
+            defaultValue: ${boolean.false}  
+        - column:
+            constraints:
+                nullable: false
+            name: active
+            type: boolean
+            defaultValue: ${boolean.true} 
+        - column:
+            constraints:
+                nullable: false
+            name: created_by
+            type: int
+            defaultValue: -1
+        - column:
+            constraints:
+                nullable: false
+            name: created_on
+            type: datetime
+            defaultValueDate: ${date.now} 
+        - column:
+            constraints:
+                nullable: false
+            name: updated_by
+            type: int
+            defaultValue: -1
+        - column:
+            constraints:
+                nullable: false
+            name: updated_on
+            type: datetime
+            defaultValueDate: ${date.now} 
+    - addForeignKeyConstraint:
+        baseColumnNames: healthcare_professional_id
+        baseTableName: diary
+        constraintName: FK_diary_healthcare_professional_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: healthcare_professional
+        validate: true 
+    - addForeignKeyConstraint:
+        baseColumnNames: doctors_office_id
+        baseTableName: diary 
+        constraintName: FK_diary_doctors_office_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: doctors_office
+        validate: true             
+
+- changeSet:
+    id: medical_attention_type-createTable
+    comment: Create table medical_attention_type
+    author: saguero
+    changes: 
+    - createTable: 
+        tableName: medical_attention_type
+        columns: 
+        - column:
+            autoIncrement: true
+            constraints:
+                primaryKey: true
+                primaryKeyName: PK_medical_attention_type
+            name: id
+            type: smallint
+        - column:
+            constraints:
+                nullable: false
+            name: description 
+            type: varchar(10)
+
+- changeSet:
+    id: medical_attention_type-data
+    comment: Carga de datos medical_attention_type
+    author: saguero
+    context: "!schema-only"
+    changes:
+        - sql:
+            sql: |-
+                INSERT INTO medical_attention_type VALUES (1, 'Programada');
+                INSERT INTO medical_attention_type VALUES (2, 'Espontánea');          
+                
+- changeSet:
+    id: diary_opening_hours-createTable  
+    comment: Create table diary_opening_hours
+    author: saguero
+    changes: 
+    - createTable: 
+        tableName: diary_opening_hours
+        columns: 
+        - column:
+            constraints:
+                nullable: false
+            name: diary_id 
+            type: int
+        - column:
+            constraints:
+                nullable: false
+            name: opening_hours_id
+            type: int
+        - column:
+            constraints:
+                nullable: false
+            name: medical_attention_type_id
+            type: smallint 
+        - column:
+            constraints:
+                nullable: false
+            name: overturn_count
+            type: smallint 
+            defaultValue: 0
+    - addPrimaryKey:
+        clustered: true
+        columnNames: diary_id, opening_hours_id
+        constraintName: PK_diary_opening_hours
+        tableName: diary_opening_hours
+        validate: true
+    - addForeignKeyConstraint:
+        baseColumnNames: diary_id
+        baseTableName: diary_opening_hours
+        constraintName: FK_diary_opening_hours_diary_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: diary
+        validate: true
+    - addForeignKeyConstraint:
+        baseColumnNames: opening_hours_id
+        baseTableName: diary_opening_hours
+        constraintName: FK_diary_opening_hours_opening_hours_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: opening_hours
+        validate: true
+    - addForeignKeyConstraint:
+        baseColumnNames: medical_attention_type_id
+        baseTableName: diary_opening_hours
+        constraintName: FK_diary_opening_hours_medical_attention_type_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: medical_attention_type
+        validate: true
+
+### 4. Configuración de Turnos    
+- changeSet:
+    id: appointment_state-createTable  
+    comment: Create table appointment_state
+    author: saguero
+    changes: 
+    - createTable: 
+        tableName: appointment_state
+        columns: 
+        - column:
+            constraints:
+                primaryKey: true
+                primaryKeyName: PK_appointment_state
+            name: id
+            type: smallint
+        - column:
+            constraints:
+                nullable: false
+            name: description
+            type: varchar(10)                 
+
+- changeSet:
+    id: appointment_state-data
+    comment: Carga de datos appointment_state
+    author: saguero
+    context: "!schema-only"
+    changes:
+        - sql:
+            sql: |-
+                INSERT INTO appointment_state VALUES (1, 'Asignado'); 
+                INSERT INTO appointment_state VALUES (2, 'Confirmado');
+                INSERT INTO appointment_state VALUES (3, 'Ausente');
+                INSERT INTO appointment_state VALUES (4, 'Cancelado');
+
+- changeSet:
+    id: appointment-createTable  
+    comment: Create table appointment
+    author: saguero
+    changes: 
+    - createTable: 
+        tableName: appointment
+        columns: 
+        - column:
+            autoIncrement: true
+            constraints:
+                primaryKey: true
+                primaryKeyName: PK_appointment
+            name: id
+            type: int
+        - column:
+            constraints:
+                nullable: false
+            name: date_type_id
+            type: date 
+        - column:
+            constraints:
+                nullable: false
+            name: hour
+            type: time
+        - column:
+            constraints:
+                nullable: false
+            name: appointment_state_id
+            type: smallint
+        - column:
+            constraints:
+                nullable: false
+            name: patient_id
+            type: int 
+        - column:
+            constraints:
+                nullable: false
+            name: is_overturn
+            type: boolean
+            defaultValue: ${boolean.false}  
+        - column:
+            constraints:
+                nullable: false
+            name: created_by
+            type: int
+            defaultValue: -1
+        - column:
+            constraints:
+                nullable: false
+            name: created_on
+            type: datetime
+            defaultValueDate: ${date.now} 
+        - column:
+            constraints:
+                nullable: false
+            name: updated_by
+            type: int
+            defaultValue: -1
+        - column:
+            constraints:
+                nullable: false
+            name: updated_on
+            type: datetime
+            defaultValueDate: ${date.now}
+    - addForeignKeyConstraint:
+        baseColumnNames: date_type_id
+        baseTableName: appointment
+        constraintName: FK_appointment_date_type_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: date
+        referencedTableName: date_type
+        validate: true
+    - addForeignKeyConstraint:
+        baseColumnNames: appointment_state_id
+        baseTableName: appointment
+        constraintName: FK_appointment_appointment_state_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: appointment_state
+        validate: true
+    - addForeignKeyConstraint:
+        baseColumnNames: patient_id
+        baseTableName: appointment
+        constraintName: FK_appointment_patient_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: patient
+        validate: true
+
+- changeSet:
+    id: appointment_assn-createTable  
+    comment: Create table appointment_assn
+    author: saguero
+    changes: 
+    - createTable: 
+        tableName: appointment_assn
+        columns: 
+        - column:
+            constraints:
+                nullable: false
+            name: diary_id
+            type: int
+        - column:
+            constraints:
+                nullable: false
+            name: opening_hours_id
+            type: int
+        - column:
+            constraints:
+                nullable: false
+            name: appointment_id
+            type: int
+    - addPrimaryKey:
+        clustered: true
+        columnNames: diary_id, opening_hours_id, appointment_id
+        constraintName: PK_appointment_assn
+        tableName: appointment_assn
+        validate: true
+    - addForeignKeyConstraint:
+        baseColumnNames: diary_id
+        baseTableName: appointment_assn
+        constraintName: FK_appointment_assn_diary_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: diary
+        validate: true
+    - addForeignKeyConstraint:
+        baseColumnNames: opening_hours_id
+        baseTableName: appointment_assn
+        constraintName: FK_appointment_assn_opening_hours_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: opening_hours
+        validate: true
+    - addForeignKeyConstraint:
+        baseColumnNames: appointment_id
+        baseTableName: appointment_assn
+        constraintName: FK_appointment_assn_appointment_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: appointment
+        validate: true
