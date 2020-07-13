@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AllergyConditionDto, HealthHistoryConditionDto, MedicationDto } from "@api-rest/api-model";
+import { AllergyConditionDto, HealthHistoryConditionDto, MedicationDto, Last2VitalSignsDto } from "@api-rest/api-model";
 import { ActivatedRoute } from "@angular/router";
 import { Observable } from "rxjs";
 import { HceGeneralStateService } from "@api-rest/services/hce-general-state.service";
@@ -18,10 +18,11 @@ export class ResumenComponent implements OnInit {
 	public familyHistories: HealthHistoryConditionDto[];
 	public personalHistory$: Observable<HealthHistoryConditionDto[]>;
 	public medications$: Observable<MedicationDto[]>;
+	public vitalSigns$: Observable<Last2VitalSignsDto>;
 	public readonly familyHistoriesHeader = ANTECEDENTES_FAMILIARES;
 
 	constructor(private readonly hceGeneralStateService: HceGeneralStateService,
-				private route: ActivatedRoute) {
+		private route: ActivatedRoute) {
 	}
 
 	ngOnInit(): void {
@@ -37,6 +38,7 @@ export class ResumenComponent implements OnInit {
 		this.familyHistories$ = this.hceGeneralStateService.getFamilyHistories(this.patientId);
 		this.personalHistory$ = this.hceGeneralStateService.getPersonalHistories(this.patientId);
 		this.medications$ = this.hceGeneralStateService.getMedications(this.patientId);
+		this.vitalSigns$ = this.hceGeneralStateService.getVitalSigns(this.patientId);
 	}
 
 }

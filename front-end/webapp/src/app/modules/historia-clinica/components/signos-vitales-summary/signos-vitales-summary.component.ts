@@ -7,6 +7,7 @@ import { Last2VitalSignsDto, VitalSignDto } from '@api-rest/api-model';
 import { momentParseDateTime } from '@core/utils/moment.utils';
 import { MatDialog } from '@angular/material/dialog';
 import { AddVitalSignsComponent } from '../../dialogs/add-vital-signs/add-vital-signs.component';
+import { Observable } from 'rxjs';
 
 @Component({
 	selector: 'app-signos-vitales-summary',
@@ -17,6 +18,7 @@ export class SignosVitalesSummaryComponent implements OnInit {
 
 	@Input() internmentEpisodeId: number;
 	@Input() editable = false;
+	@Input() vitalSigns$: Observable<Last2VitalSignsDto>;
 
 	signosVitalesSummary: SummaryHeader = SIGNOS_VITALES;
 	signosVitales: VitalSingCurrentPrevious[] = [];
@@ -31,7 +33,7 @@ export class SignosVitalesSummaryComponent implements OnInit {
 	}
 
 	refreshVitalSigns(): void {
-		this.internmentStateService.getVitalSigns(this.internmentEpisodeId).subscribe(
+		this.vitalSigns$.subscribe(
 			this.initSignosVitales(), this.initSignosVitales()
 		);
 	}

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from "rxjs";
-import { AllergyConditionDto, HealthHistoryConditionDto, MedicationDto } from "@api-rest/api-model";
+import { AllergyConditionDto, HealthHistoryConditionDto, MedicationDto, Last2VitalSignsDto } from "@api-rest/api-model";
 import { environment } from "@environments/environment";
 import { HttpClient } from "@angular/common/http";
 import { ContextService } from "@core/services/context.service";
@@ -48,6 +48,8 @@ const MEDICATIONS: any[] = [
 	}
 ];
 
+const VACIO: any = {};
+
 @Injectable({
 	providedIn: 'root'
 })
@@ -71,6 +73,10 @@ export class HceGeneralStateService {
 
 	getMedications(patientId: number): Observable<MedicationDto[]> {
 		return of(MEDICATIONS);
+	}
+
+	getVitalSigns(patientId: number): Observable<Last2VitalSignsDto> {
+		return of(VACIO);
 	}
 
 }
