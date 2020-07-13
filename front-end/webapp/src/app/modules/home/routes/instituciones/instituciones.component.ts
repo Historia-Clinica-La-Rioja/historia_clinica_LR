@@ -14,6 +14,7 @@ import { uniqueItems } from '@core/utils/array.utils';
 export class InstitucionesComponent implements OnInit {
 	institutions: { id: number, name: string }[] = null;
 	backoffice: boolean;
+
 	constructor(
 		loggedUserService: LoggedUserService,
 		institutionService: InstitutionService,
@@ -21,13 +22,18 @@ export class InstitucionesComponent implements OnInit {
 	) {
 		loggedUserService.assignments$.subscribe((allRoles: RoleAssignment[]) => {
 			const institutionIds = allRoles
-				.filter((ra) => ra.institutionId >= 0)
+				.filter(r => r.institutionId >= 0)
 				.map(r => r.institutionId);
 
 			this.backoffice = allRoles
-				.filter((ra) => ra.role === 'ROOT' || ra.role === 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE' ).length > 0;
+				.filter((ra) => ra.role === 'ROOT' ||
+					ra.role === 'ADMINISTRADOR' ||
+					ra.role === 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE' ).length > 0;
 
 			institutionService.getInstitutions(institutionIds).subscribe(institutions => {
+				let uniqueIds = uniqueItems(institutionIds);
+				if (uniqueIds.length === 1 && allRoles.length === 1)
+					this.ingresar({id: uniqueIds[0]})
 				this.institutions = institutions;
 			});
 		});
