@@ -10,7 +10,7 @@ import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRep
 import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.ResponsibleContactService;
-import net.pladema.clinichistory.hospitalization.service.patientDischarge.PatientDischargeService;
+import net.pladema.clinichistory.hospitalization.service.patientdischarge.PatientDischargeService;
 import net.pladema.establishment.controller.service.BedExternalService;
 import net.pladema.establishment.repository.InstitutionRepository;
 import net.pladema.featureflags.service.FeatureFlagsService;

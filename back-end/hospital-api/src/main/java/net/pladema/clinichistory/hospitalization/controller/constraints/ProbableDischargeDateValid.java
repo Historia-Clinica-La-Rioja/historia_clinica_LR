@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ProbableDischargeDateValid {
 
-    String message() default "{patient.discharge.date}";
+    String message() default "{patient.discharge.date.before}";
 
     Class<?>[] groups() default {};
 

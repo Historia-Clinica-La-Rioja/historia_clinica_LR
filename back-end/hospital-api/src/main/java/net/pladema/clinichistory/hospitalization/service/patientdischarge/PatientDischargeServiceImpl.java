@@ -1,6 +1,5 @@
-package net.pladema.clinichistory.hospitalization.service.patientDischarge;
+package net.pladema.clinichistory.hospitalization.service.patientdischarge;
 
-import net.pladema.clinichistory.hospitalization.controller.mapper.PatientDischargeMapper;
 import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;
 import net.pladema.clinichistory.hospitalization.service.domain.PatientDischargeBo;
 import org.slf4j.Logger;
@@ -14,20 +13,18 @@ public class PatientDischargeServiceImpl implements PatientDischargeService {
 
     private static final Logger LOG = LoggerFactory.getLogger(PatientDischargeServiceImpl.class);
 
+    public static final String INPUT_PARAMETERS_INTERNMENT_EPISODE_ID = "Input parameters -> internmentEpisodeId {}";
     private static final String LOGGING_OUTPUT = "Output -> {}";
 
     private final PatientDischargeRepository patientDischargeRepository;
 
-    private final PatientDischargeMapper patientDischargeMapper;
-
-    public PatientDischargeServiceImpl(PatientDischargeRepository patientDischargeRepository, PatientDischargeMapper patientDischargeMapper) {
+    public PatientDischargeServiceImpl(PatientDischargeRepository patientDischargeRepository) {
         this.patientDischargeRepository = patientDischargeRepository;
-        this.patientDischargeMapper = patientDischargeMapper;
     }
 
     @Override
     public Optional<PatientDischargeBo> getPatientDischarge(Integer internmentEpisodeId) {
-        LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
+        LOG.debug(INPUT_PARAMETERS_INTERNMENT_EPISODE_ID, internmentEpisodeId);
         PatientDischargeBo patientBo = new PatientDischargeBo();
         patientDischargeRepository.findById(internmentEpisodeId).ifPresent(patient -> {
             patientBo.setInternmentEpisodeId(patient.getInternmentEpisodeId());
@@ -36,6 +33,14 @@ public class PatientDischargeServiceImpl implements PatientDischargeService {
             patientBo.setMedicalDischargeDate(patient.getMedicalDischargeDate());
         });
         Optional<PatientDischargeBo> result = Optional.of(patientBo);
+        LOG.debug(LOGGING_OUTPUT, result);
+        return result;
+    }
+
+    @Override
+    public boolean existsById(Integer internmentEpisodeId) {
+        LOG.debug(INPUT_PARAMETERS_INTERNMENT_EPISODE_ID, internmentEpisodeId);
+        boolean result = patientDischargeRepository.existsById(internmentEpisodeId);
         LOG.debug(LOGGING_OUTPUT, result);
         return result;
     }
