@@ -10,6 +10,7 @@ import net.pladema.clinichistory.ips.repository.masterdata.entity.InternmentEpis
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -60,6 +61,9 @@ public class InternmentEpisode extends InternationAuditableEntity {
 
 	@Column(name = "institution_id")
 	private Integer institutionId;
+
+	@Column(name = "probable_discharge_date")
+	private LocalDateTime probableDischargeDate;
 
 	@Override
 	public boolean equals(Object o) {

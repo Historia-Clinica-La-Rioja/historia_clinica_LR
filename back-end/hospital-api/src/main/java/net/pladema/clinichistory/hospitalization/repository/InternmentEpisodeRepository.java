@@ -32,7 +32,7 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             "r.id as roomId, r.roomNumber, " +
             "cs.id as clinicalSpecialtyId, cs.name as specialty, " +
             "hpg.pk.healthcareProfessionalId, hp.licenseNumber, p.firstName, p.lastName," +
-            "rc)" +
+            "rc, ie.probableDischargeDate)" +
             "FROM InternmentEpisode ie " +
             "JOIN Bed b ON (b.id = ie.bedId) " +
             "JOIN Room r ON (r.id = b.roomId) " +

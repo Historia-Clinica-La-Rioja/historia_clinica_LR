@@ -6,8 +6,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.hospitalization.repository.domain.ResponsibleContact;
+import org.apache.tomcat.jni.Local;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -37,12 +39,14 @@ public class InternmentSummaryVo {
 
     private ResponsibleContactVo responsibleContact;
 
+    private LocalDateTime probableDischargeDate;
+
     public InternmentSummaryVo(Integer id, LocalDate entryDate, Long anamnesisDocId, String anamnesisStatusId,
                                Long epicrisisDocId, String epicrisisStatusId,
                                Integer bedId, String bedNumber, Integer roomId, String roomNumber,
                                Integer clinicalSpecialtyId, String specialty,
                                Integer healthcareProfessionalId, String licenseNumber, String firstName, String lastName,
-                               ResponsibleContact responsibleContact) {
+                               ResponsibleContact responsibleContact, LocalDateTime probableDischargeDate) {
         this.id = id;
         this.documents = new DocumentsSummaryVo();
         this.documents.setAnamnesis(new AnamnesisSummaryVo(anamnesisDocId, anamnesisStatusId));
@@ -58,6 +62,7 @@ public class InternmentSummaryVo {
             this.doctor = new ResponsibleDoctorVo(healthcareProfessionalId, firstName, lastName, licenseNumber);
         if (responsibleContact != null)
             this.responsibleContact = new ResponsibleContactVo(responsibleContact);
+        this.probableDischargeDate = probableDischargeDate;
     }
 
 }

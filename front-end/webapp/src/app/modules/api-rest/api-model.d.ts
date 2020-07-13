@@ -407,6 +407,7 @@ export interface InternmentSummaryDto {
     documents: DocumentsSummaryDto;
     entryDate: Date;
     id: number;
+    probableDischargeDate: string;
     responsibleContact?: ResponsibleContactDto;
     specialty: ClinicalSpecialtyDto;
     totalInternmentDays: number;

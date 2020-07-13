@@ -7,8 +7,10 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.hospitalization.repository.domain.summary.InternmentSummaryVo;
 import net.pladema.clinichistory.hospitalization.service.summary.domain.ResponsibleDoctorBo;
+import org.apache.tomcat.jni.Local;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 
 @Getter
@@ -41,6 +43,8 @@ public class InternmentSummaryBo {
 
     private ResponsibleContactBo responsibleContact;
 
+    private LocalDateTime probableDischargeDate;
+
     public InternmentSummaryBo(InternmentSummaryVo internmentSummaryVo) {
         this.id = internmentSummaryVo.getId();
         this.documents = new DocumentsSummaryBo(internmentSummaryVo.getDocuments());
@@ -56,7 +60,7 @@ public class InternmentSummaryBo {
             this.doctor = new ResponsibleDoctorBo(internmentSummaryVo.getDoctor());
         if (internmentSummaryVo.getResponsibleContact() != null)
             this.responsibleContact = new ResponsibleContactBo(internmentSummaryVo.getResponsibleContact());
-
+        this.probableDischargeDate = internmentSummaryVo.getProbableDischargeDate();
     }
 
     private int totalInternmentDays(){

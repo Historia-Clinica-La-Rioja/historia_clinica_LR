@@ -9,11 +9,12 @@ import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpi
 import net.pladema.clinichistory.hospitalization.service.domain.BasicListedPatientBo;
 import net.pladema.clinichistory.hospitalization.service.domain.InternmentEpisodeBo;
 import net.pladema.clinichistory.hospitalization.service.domain.InternmentSummaryBo;
+import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import org.mapstruct.*;
 
 import java.util.List;
 
-@Mapper
+@Mapper(uses = {LocalDateMapper.class})
 public interface InternmentEpisodeMapper {
 
 

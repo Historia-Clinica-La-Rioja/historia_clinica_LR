@@ -1,12 +1,15 @@
 package net.pladema.clinichistory.hospitalization.controller.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 import net.pladema.clinichistory.hospitalization.controller.dto.summary.DocumentsSummaryDto;
 import net.pladema.establishment.controller.dto.BedDto;
+import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
 
 import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Getter
@@ -29,4 +32,8 @@ public class InternmentSummaryDto {
 
     @Nullable
     private ResponsibleContactDto responsibleContact;
+
+    @NotNull
+    @JsonFormat(pattern = JacksonDateFormatConfig.DATE_TIME_FORMAT)
+    private String probableDischargeDate;
 }
