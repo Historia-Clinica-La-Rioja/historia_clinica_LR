@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from "rxjs";
-import { AllergyConditionDto, HealthHistoryConditionDto, MedicationDto, Last2VitalSignsDto } from "@api-rest/api-model";
+import { AllergyConditionDto, HealthHistoryConditionDto, MedicationDto, Last2VitalSignsDto, AnthropometricDataDto } from "@api-rest/api-model";
 import { environment } from "@environments/environment";
 import { HttpClient } from "@angular/common/http";
 import { ContextService } from "@core/services/context.service";
@@ -50,6 +50,12 @@ const MEDICATIONS: any[] = [
 
 const VACIO: any = {};
 
+const ANTHROPOMETRIC_DATA: any = {
+	bloodType: { id: 3, value: "A−" },
+	height: { id: 5, value: "222" },
+	weight: { id: 4, value: "32" }
+};
+
 @Injectable({
 	providedIn: 'root'
 })
@@ -77,6 +83,10 @@ export class HceGeneralStateService {
 
 	getVitalSigns(patientId: number): Observable<Last2VitalSignsDto> {
 		return of(VACIO);
+	}
+
+	getAnthropometricData(patientId: number): Observable<AnthropometricDataDto> {
+		return of(ANTHROPOMETRIC_DATA);
 	}
 
 }
