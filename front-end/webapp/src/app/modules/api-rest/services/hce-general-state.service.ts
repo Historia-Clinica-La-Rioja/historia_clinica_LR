@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from "rxjs";
-import { AllergyConditionDto, HealthHistoryConditionDto } from "@api-rest/api-model";
+import { AllergyConditionDto, HealthHistoryConditionDto, MedicationDto } from "@api-rest/api-model";
 import { environment } from "@environments/environment";
 import { HttpClient } from "@angular/common/http";
 import { ContextService } from "@core/services/context.service";
 
+//todo borrar cuando esten los endpoints
 const FAMILY_H_DATA: any[] = [
 	{
 		date: "2020-07-08",
@@ -40,6 +41,13 @@ const PERSONAL_H_DATA: any[] = [
 	}
 ];
 
+const MEDICATIONS: any[] = [
+	{
+		snomed: { id: "429961000", pt: "antecedente familiar de demencia" },
+		statusId: "55561003",
+	}
+];
+
 @Injectable({
 	providedIn: 'root'
 })
@@ -59,6 +67,10 @@ export class HceGeneralStateService {
 
 	getPersonalHistories(patientId: number): Observable<HealthHistoryConditionDto[]> {
 		return of(PERSONAL_H_DATA);
+	}
+
+	getMedications(patientId: number): Observable<MedicationDto[]> {
+		return of(MEDICATIONS);
 	}
 
 }
