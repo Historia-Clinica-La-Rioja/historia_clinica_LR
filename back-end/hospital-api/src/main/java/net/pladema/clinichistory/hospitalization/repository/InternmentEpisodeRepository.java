@@ -155,4 +155,16 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
     Optional<InternmentEpisode> getInternmentEpisode(@Param("internmentEpisodeId")  Integer internmentEpisodeId, @Param("institutionId") Integer institutionId);
 
 	List<InternmentEpisode> findByBedId(Integer bedId);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE InternmentEpisode AS ie " +
+            "SET ie.probableDischargeDate = :probableDischargeDate, " +
+            "ie.updateable.updatedOn = :today, " +
+            "ie.updateable.updatedBy = :currentUser " +
+            "WHERE ie.id = :internmentEpisodeId")
+    void updateInternmentEpisodeProbableDischargeDate(@Param("internmentEpisodeId") Integer internmentEpisodeId,
+                                                      @Param("probableDischargeDate") LocalDateTime probableDischargeDate,
+                                                      @Param("currentUser") Integer currentUser,
+                                                      @Param("today") LocalDateTime today);
 }

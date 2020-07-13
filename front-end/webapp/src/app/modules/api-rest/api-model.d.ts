@@ -503,6 +503,10 @@ export interface PersonalInformationDto {
     phoneNumber: string;
 }
 
+export interface ProbableDischargeDateDto {
+    probableDischargeDate: string;
+}
+
 export interface ProvinceDto extends MasterdataDto<number> {
     id: number;
 }

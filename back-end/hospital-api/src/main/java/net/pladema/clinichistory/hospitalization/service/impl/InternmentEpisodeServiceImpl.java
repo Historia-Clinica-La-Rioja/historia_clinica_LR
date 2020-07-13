@@ -1,19 +1,20 @@
 package net.pladema.clinichistory.hospitalization.service.impl;
 
 import net.pladema.clinichistory.documents.repository.EvolutionNoteDocumentRepository;
-import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;
 import net.pladema.clinichistory.documents.repository.entity.EvolutionNoteDocument;
+import net.pladema.clinichistory.documents.service.DocumentService;
+import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
+import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.repository.domain.PatientDischarge;
-import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
 import net.pladema.clinichistory.hospitalization.repository.domain.summary.EvaluationNoteSummaryVo;
 import net.pladema.clinichistory.hospitalization.repository.domain.summary.InternmentSummaryVo;
-import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.domain.InternmentSummaryBo;
 import net.pladema.clinichistory.hospitalization.service.domain.PatientDischargeBo;
 import net.pladema.sgx.auditable.entity.Updateable;
 import net.pladema.sgx.exceptions.NotFoundException;
+import net.pladema.sgx.security.utils.UserInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -216,6 +217,15 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 		dates.add(entryDate);
 		return dates.stream().max(LocalDate::compareTo).get();
 	}
+
+	@Override
+	public LocalDateTime updateInternmentEpisodeProbableDischargeDate(Integer internmentEpisodeId, LocalDateTime probableDischargeDate) {
+		LOG.debug("Input parameters -> internmentEpisodeId {}, probableDischargeDate {}", internmentEpisodeId, probableDischargeDate);
+		Integer currentUser = UserInfo.getCurrentAuditor();
+		internmentEpisodeRepository.updateInternmentEpisodeProbableDischargeDate(internmentEpisodeId, probableDischargeDate, currentUser, LocalDateTime.now());
+		LOG.debug(LOGGING_OUTPUT, probableDischargeDate);
+		return probableDischargeDate;
+    }
 
 	private boolean anyActive(List<InternmentEpisode> episodes) {
 		return episodes.stream().anyMatch(InternmentEpisode::isActive);

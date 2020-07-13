@@ -14,6 +14,7 @@ import net.pladema.clinichistory.hospitalization.service.patientDischarge.Patien
 import net.pladema.establishment.controller.service.BedExternalService;
 import net.pladema.establishment.repository.InstitutionRepository;
 import net.pladema.featureflags.service.FeatureFlagsService;
+import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.junit.Before;
 import org.junit.Test;
@@ -76,6 +77,8 @@ public class InternmentEpisodeControllerTest extends BaseControllerTest {
 	@MockBean
 	private ResponsibleContactMapper responsibleContactMapper;
 
+	@MockBean
+	private LocalDateMapper localDateMapper;
 
 	@Before
 	public void setup() {

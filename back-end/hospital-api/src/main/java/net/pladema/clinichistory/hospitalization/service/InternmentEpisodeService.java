@@ -6,6 +6,7 @@ import net.pladema.clinichistory.hospitalization.service.domain.InternmentSummar
 import net.pladema.clinichistory.hospitalization.service.domain.PatientDischargeBo;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,4 +43,6 @@ public interface InternmentEpisodeService {
 	Boolean existsActiveForBedId(Integer bedId);
 
 	LocalDate getLastUpdateDateOfInternmentEpisode(Integer internmentEpisode);
+
+	LocalDateTime updateInternmentEpisodeProbableDischargeDate(Integer internmentEpisode, LocalDateTime probableDischargeDate);
 }
