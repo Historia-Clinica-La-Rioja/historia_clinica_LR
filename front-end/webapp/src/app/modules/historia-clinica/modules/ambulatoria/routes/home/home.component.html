@@ -104,9 +104,9 @@
 				</div>
 			</div>
 
-			<span [translate]="'pacientes.form.BIRTH_DATE'"></span>
 			<div>
 				<mat-form-field appearance="outline">
+					<mat-label [translate]="'pacientes.form.BIRTH_DATE'"></mat-label>
 					<input formControlName="birthDate" id="birthDate" matInput [max]="today"
 							[matDatepicker]="picker2">
 					<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>

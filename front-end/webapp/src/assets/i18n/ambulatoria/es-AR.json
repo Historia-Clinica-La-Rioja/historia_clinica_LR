@@ -23,8 +23,19 @@
 			},
 			"vacunas": {
 				"TAB_LABEL": "Vacunas",
-				"TITLE": "Historial de vacunas",
-				"ADD": "Aplicar vacuna"
+				"TITLE": "Historial de vacunación",
+				"ADD": "Aplicar vacuna",
+				"aplicar": {
+					"TITLE": "Aplicar vacuna",
+					"INMUNIZATION": "Vacuna",
+					"NOTE": "Evolución",
+					"SUBMIT": "Confirmar",
+					"ADMINISTRATION_DATE": "Fecha de vacunación",
+					"save": {
+						"SUCCESS": "La vacuna aplicada se guardó exitosamente",
+						"ERROR": "Error al guardar la vacuna aplicada"
+					}
+				}
 			}
 		}
 	}

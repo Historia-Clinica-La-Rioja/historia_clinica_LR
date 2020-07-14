@@ -1,0 +1,74 @@
+<div mat-dialog-title>
+	<div class="mat-h2" [translate]="'ambulatoria.paciente.vacunas.aplicar.TITLE'"></div>
+</div>
+
+<div class="spinner" *ngIf="loading else addInmunization">
+	<mat-spinner color="primary"></mat-spinner>
+</div>
+
+
+<ng-template #addInmunization>
+
+	<form [formGroup]="form" (ngSubmit)="save()">
+		<div mat-dialog-content>
+
+			<app-concepts-search *ngIf="!snomedConcept else vacunasForm"
+			                     [label]="'ambulatoria.paciente.vacunas.aplicar.INMUNIZATION'"
+			                     (search)="onSearch($event)">
+			</app-concepts-search>
+
+			<div class="spinner">
+				<mat-spinner diameter="70" color="primary" *ngIf="searching"></mat-spinner>
+			</div>
+
+			<app-table *ngIf="!searching && !snomedConcept" [model]="conceptsResultsTable"
+			           [mainStyle]="'secondary'"></app-table>
+
+			<ng-template #vacunasForm>
+				<div>
+					<div fxLayout="row" fxLayoutGap="2%">
+						<mat-form-field appearance="outline">
+							<mat-label [translate]="'ambulatoria.paciente.vacunas.aplicar.INMUNIZATION'">
+							</mat-label>
+							<input matInput type="text" formControlName="snomed" name="snomed" readonly
+							       matTooltip="{{ snomedConcept.pt }}">
+							<button id="clear" mat-button matSuffix color="warn" mat-icon-button
+							        (click)="resetForm()">
+								<mat-icon>close</mat-icon>
+							</button>
+						</mat-form-field>
+
+						<mat-form-field appearance="outline">
+							<mat-label [translate]="'ambulatoria.paciente.vacunas.aplicar.ADMINISTRATION_DATE'">
+							</mat-label>
+							<input matInput id="date" [matDatepicker]="myDatepicker" formControlName="date"
+							       [max]="this.today">
+							<mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
+							<mat-datepicker #myDatepicker startView="multi-year"
+							                (yearSelected)="chosenYearHandler($event)"
+							                (monthSelected)="chosenMonthHandler($event)">
+							</mat-datepicker>
+						</mat-form-field>
+					</div>
+
+					<mat-form-field [floatLabel]="'never'" appearance="outline">
+						<mat-label [translate]="'ambulatoria.paciente.vacunas.aplicar.NOTE'"></mat-label>
+						<textarea matInput type="text" id="note" name="note"
+						          formControlName="note"></textarea>
+					</mat-form-field>
+
+				</div>
+			</ng-template>
+		</div>
+
+		<mat-dialog-actions align="end">
+			<button mat-stroked-button color="primary" mat-dialog-close> {{ 'buttons.CANCEL' | translate | uppercase }}
+			</button>
+			<button type="submit" *ngIf="snomedConcept" mat-raised-button color="primary">
+				{{'ambulatoria.paciente.vacunas.aplicar.SUBMIT' | translate | uppercase}}
+			</button>
+		</mat-dialog-actions>
+	</form>
+
+</ng-template>
+

@@ -1,10 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { InmunizationDto, SnomedDto } from '@api-rest/api-model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import * as moment from 'moment';
 import { Moment } from 'moment';
 import { DatePipe } from '@angular/common';
-import { DateFormat } from '@core/utils/moment.utils';
+import { DateFormat, newMoment } from '@core/utils/moment.utils';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
 import { SEMANTICS_CONFIG } from '../../../../constants/snomed-semantics';
 import { SnomedSemanticSearch, SnomedService } from '../../../../services/snomed.service';
@@ -33,7 +32,7 @@ export class VacunasComponent implements OnInit {
 	snomedConcept: SnomedDto;
 
 	form: FormGroup;
-	today: Moment = moment();
+	today: Moment = newMoment();
 	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 
 	// Mat table
