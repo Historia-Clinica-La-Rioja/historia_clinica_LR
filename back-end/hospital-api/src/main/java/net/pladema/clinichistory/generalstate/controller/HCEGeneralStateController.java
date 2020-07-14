@@ -1,10 +1,15 @@
 package net.pladema.clinichistory.generalstate.controller;
 
 import io.swagger.annotations.Api;
+import net.pladema.clinichistory.generalstate.controller.dto.HCEAnthropometricDataDto;
+import net.pladema.clinichistory.generalstate.controller.dto.HCELast2VitalSignsDto;
 import net.pladema.clinichistory.generalstate.controller.dto.HCEPersonalHistoryDto;
 import net.pladema.clinichistory.generalstate.controller.mapper.HCEGeneralStateMapper;
+import net.pladema.clinichistory.generalstate.service.HCEClinicalObsGeneralStateService;
 import net.pladema.clinichistory.generalstate.service.HCEGeneralStateService;
+import net.pladema.clinichistory.generalstate.service.domain.HCEAnthropometricDataBo;
 import net.pladema.clinichistory.generalstate.service.domain.HCEPersonalHistoryBo;
+import net.pladema.clinichistory.generalstate.service.domain.Last2HCEVitalSignsBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -31,11 +36,15 @@ public class HCEGeneralStateController {
 
     private final HCEGeneralStateService hceGeneralStateService;
 
+    private final HCEClinicalObsGeneralStateService hceClinicalObsGeneralStateService;
+
     private final HCEGeneralStateMapper hceGeneralStateMapper;
 
     public HCEGeneralStateController(HCEGeneralStateService hceGeneralStateService,
+                                     HCEClinicalObsGeneralStateService hceClinicalObsGeneralStateService,
                                      HCEGeneralStateMapper hceGeneralStateMapper) {
         this.hceGeneralStateService = hceGeneralStateService;
+        this.hceClinicalObsGeneralStateService = hceClinicalObsGeneralStateService;
         this.hceGeneralStateMapper = hceGeneralStateMapper;
     }
 
@@ -57,6 +66,28 @@ public class HCEGeneralStateController {
         LOG.debug(LOGGING_INPUT, institutionId, patientId);
         List<HCEPersonalHistoryBo> resultService = hceGeneralStateService.getFamilyHistory(patientId);
         List<HCEPersonalHistoryDto> result = hceGeneralStateMapper.toListHCEPersonalHistoryDto(resultService);
+        LOG.debug(LOGGING_OUTPUT, result);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/vitalSigns")
+    public ResponseEntity<HCELast2VitalSignsDto> getVitalSigns(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "patientId") Integer patientId) {
+        LOG.debug(LOGGING_INPUT, institutionId, patientId);
+        Last2HCEVitalSignsBo resultService = hceClinicalObsGeneralStateService.getLast2VitalSignsGeneralState(patientId);
+        HCELast2VitalSignsDto result = hceGeneralStateMapper.toHCELast2VitalSignsDto(resultService);
+        LOG.debug(LOGGING_OUTPUT, result);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/anthropometricData")
+    public ResponseEntity<HCEAnthropometricDataDto> getAnthropometricData(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "patientId") Integer patientId) {
+        LOG.debug(LOGGING_INPUT, institutionId, patientId);
+        HCEAnthropometricDataBo resultService = hceClinicalObsGeneralStateService.getLastAnthropometricDataGeneralState(patientId);
+        HCEAnthropometricDataDto result = hceGeneralStateMapper.toHCEAnthropometricDataDto(resultService);
         LOG.debug(LOGGING_OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }

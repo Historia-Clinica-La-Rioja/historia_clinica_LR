@@ -289,14 +289,44 @@ export interface GenderDto extends MasterdataDto<number> {
     id: number;
 }
 
+export interface HCEAnthropometricDataDto extends Serializable {
+    bloodType?: HCEClinicalObservationDto;
+    bmi?: HCEClinicalObservationDto;
+    height?: HCEClinicalObservationDto;
+    weight?: HCEClinicalObservationDto;
+}
+
+export interface HCEClinicalObservationDto extends Serializable {
+    id?: number;
+    value: string;
+}
+
 export interface HCEClinicalTermDto extends Serializable {
     id?: number;
     snomed: SnomedDto;
     statusId?: string;
 }
 
+export interface HCEEffectiveClinicalObservationDto extends HCEClinicalObservationDto {
+    effectiveTime: string;
+}
+
+export interface HCELast2VitalSignsDto extends Serializable {
+    current: HCEVitalSignDto;
+    previous: HCEVitalSignDto;
+}
+
 export interface HCEPersonalHistoryDto extends HCEClinicalTermDto {
     startDate: string;
+}
+
+export interface HCEVitalSignDto extends Serializable {
+    bloodOxygenSaturation?: HCEEffectiveClinicalObservationDto;
+    diastolicBloodPressure?: HCEEffectiveClinicalObservationDto;
+    heartRate?: HCEEffectiveClinicalObservationDto;
+    respiratoryRate?: HCEEffectiveClinicalObservationDto;
+    systolicBloodPressure?: HCEEffectiveClinicalObservationDto;
+    temperature?: HCEEffectiveClinicalObservationDto;
 }
 
 export interface HealthCareProfessionalGroupDto {

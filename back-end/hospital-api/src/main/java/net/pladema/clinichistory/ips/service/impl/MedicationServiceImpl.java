@@ -2,7 +2,6 @@ package net.pladema.clinichistory.ips.service.impl;
 
 import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.service.NoteService;
-import net.pladema.clinichistory.hospitalization.repository.generalstate.HCHMedicationStatementRepository;
 import net.pladema.clinichistory.ips.repository.MedicationStatementRepository;
 import net.pladema.clinichistory.ips.repository.entity.MedicationStatement;
 import net.pladema.clinichistory.ips.service.MedicationService;

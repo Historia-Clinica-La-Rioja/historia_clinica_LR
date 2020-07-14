@@ -1,7 +1,6 @@
 package net.pladema.clinichistory.ips.service.impl;
 
 import net.pladema.clinichistory.documents.service.DocumentService;
-import net.pladema.clinichistory.hospitalization.repository.generalstate.HCHInmunizationRepository;
 import net.pladema.clinichistory.ips.repository.InmunizationRepository;
 import net.pladema.clinichistory.ips.repository.entity.Inmunization;
 import net.pladema.clinichistory.ips.service.InmunizationService;

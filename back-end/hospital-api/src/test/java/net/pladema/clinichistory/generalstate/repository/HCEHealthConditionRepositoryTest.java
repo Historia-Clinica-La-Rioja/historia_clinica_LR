@@ -6,6 +6,7 @@ import net.pladema.clinichistory.generalstate.repository.domain.HCEHealthConditi
 import net.pladema.clinichistory.ips.repository.entity.HealthCondition;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.ConditionClinicalStatus;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.ConditionVerificationStatus;
+import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentStatus;
 import net.pladema.clinichistory.mocks.DocumentsTestMocks;
 import net.pladema.clinichistory.mocks.HealthConditionTestMocks;
 import net.pladema.clinichistory.mocks.SnomedTestMocks;
@@ -99,7 +100,7 @@ public class HCEHealthConditionRepositoryTest extends BaseRepositoryTest {
 	}
 
 	private void createFirstDocument(Integer patientId){
-		Document document = DocumentsTestMocks.createDocument(1, AMBULATORIA, SourceType.INTERNACION);
+		Document document = DocumentsTestMocks.createDocument(1, AMBULATORIA, SourceType.INTERNACION, DocumentStatus.FINAL);
 		document = save(document);
 
 		String familyCode = "familyCode";
@@ -128,7 +129,7 @@ public class HCEHealthConditionRepositoryTest extends BaseRepositoryTest {
 	}
 
 	private void createSecondDocument(Integer patientId){
-		Document document = DocumentsTestMocks.createDocument(1, AMBULATORIA, SourceType.INTERNACION);
+		Document document = DocumentsTestMocks.createDocument(1, AMBULATORIA, SourceType.INTERNACION, DocumentStatus.FINAL);
 		document = save(document);
 
 		String diagnose2Code = "diagnose2";
@@ -148,7 +149,7 @@ public class HCEHealthConditionRepositoryTest extends BaseRepositoryTest {
 
 
 	private void createThirdDocument(Integer patientId){
-		Document document = DocumentsTestMocks.createDocument(1, AMBULATORIA, SourceType.INTERNACION);
+		Document document = DocumentsTestMocks.createDocument(1, AMBULATORIA, SourceType.INTERNACION, DocumentStatus.FINAL);
 		document = save(document);
 
 		String familyCode2 = "familyCode2";

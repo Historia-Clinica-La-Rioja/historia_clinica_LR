@@ -1,8 +1,6 @@
 package net.pladema.clinichistory.ips.service.impl;
 
 import net.pladema.clinichistory.documents.service.DocumentService;
-import net.pladema.clinichistory.hospitalization.repository.generalstate.HCHAllergyIntoleranceRepository;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.AllergyConditionMapper;
 import net.pladema.clinichistory.ips.repository.AllergyIntoleranceRepository;
 import net.pladema.clinichistory.ips.repository.entity.AllergyIntolerance;
 import net.pladema.clinichistory.ips.service.AllergyService;

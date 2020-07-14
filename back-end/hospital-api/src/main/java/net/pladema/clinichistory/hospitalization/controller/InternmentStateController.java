@@ -3,7 +3,7 @@ package net.pladema.clinichistory.hospitalization.controller;
 import io.swagger.annotations.Api;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
 import net.pladema.clinichistory.hospitalization.controller.dto.InternmentGeneralStateDto;
-import net.pladema.clinichistory.hospitalization.controller.dto.Last2VitalSignsDto;
+import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.Last2VitalSignsDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.internmentstate.DiagnosesGeneralStateDto;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.*;
 import net.pladema.clinichistory.hospitalization.controller.mapper.InternmentStateMapper;
