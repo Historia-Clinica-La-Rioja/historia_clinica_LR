@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ANTROPOMETRICOS } from '../../constants/summaries';
 import { DetailBox } from '@presentation/components/detail-box/detail-box.component';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
@@ -12,7 +12,7 @@ import { Observable } from 'rxjs';
 	templateUrl: './antropometricos-summary.component.html',
 	styleUrls: ['./antropometricos-summary.component.scss']
 })
-export class AntropometricosSummaryComponent implements OnChanges {
+export class AntropometricosSummaryComponent implements OnInit {
 
 	@Input() internmentEpisodeId: number;
 	@Input() anthropometricData$: Observable<AnthropometricDataDto>;
@@ -34,7 +34,7 @@ export class AntropometricosSummaryComponent implements OnChanges {
 		public dialog: MatDialog
 	) { }
 
-	ngOnChanges(): void {
+	ngOnInit(): void {
 		this.updateAnthropometricData();
 	}
 
