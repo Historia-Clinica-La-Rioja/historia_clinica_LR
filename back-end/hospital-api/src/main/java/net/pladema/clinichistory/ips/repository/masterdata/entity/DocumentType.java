@@ -24,6 +24,7 @@ public class DocumentType implements Serializable {
 	public static final short ANAMNESIS = (short)1;
 	public static final short EVALUATION_NOTE = (short)2;
 	public static final short EPICRISIS = (short)3;
+	public static final short OUTPATIENT = (short)4;
 
 	@Id
 	@Column(name = "id")

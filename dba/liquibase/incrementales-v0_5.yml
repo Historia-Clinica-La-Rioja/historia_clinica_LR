@@ -1,3 +1,12 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v0_5 
 
+- changeSet:
+    id: document_type-data
+    comment: Carga de datos document_type
+    author: lbergottini
+    context: "!schema-only"
+    changes:
+        - sql:
+            sql: |-
+                INSERT INTO document_type VALUES (4, 'Ambulatoria');
