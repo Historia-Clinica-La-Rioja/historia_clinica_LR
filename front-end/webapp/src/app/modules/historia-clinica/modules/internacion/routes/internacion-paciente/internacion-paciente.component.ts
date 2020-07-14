@@ -61,6 +61,7 @@ export class InternacionPacienteComponent implements OnInit {
 	public showDischarge: boolean;
 	public editDiagnosisSummary$: boolean;
 	public hasMedicalDischarge: boolean;
+	public canLoadProbableDischargeDate: boolean;	
 	public allergies$: Observable<AllergyConditionDto[]>;
 	public familyHistories$: Observable<HealthHistoryConditionDto[]>;
 	public personalHistory$: Observable<HealthHistoryConditionDto[]>;
@@ -113,6 +114,10 @@ export class InternacionPacienteComponent implements OnInit {
 					.subscribe((patientDischarge: PatientDischargeDto) => {
 						this.hasMedicalDischarge = patientDischarge.dischargeTypeId !== 0;
 					});
+
+				this.featureFlagService.isActive(AppFeature.HABILITAR_CARGA_FECHA_PROBABLE_ALTA).subscribe(isOn => {
+					this.canLoadProbableDischargeDate = isOn;
+				});	
 				this.initSummaries();
 			}
 		);

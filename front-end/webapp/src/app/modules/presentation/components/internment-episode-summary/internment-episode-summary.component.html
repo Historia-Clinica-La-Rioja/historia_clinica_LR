@@ -40,7 +40,7 @@
 					[translateParams]="{ datetime: internmentEpisode?.admissionDatetime }">
 			</span>
 		</div>
-		<div mat-line>
+		<div mat-line *ngIf="canLoadProbableDischargeDate">
 			<span 	[translate]="'internaciones.internacion-paciente.card.PROBABLE_DISCHARGE'"
 					[translateParams]="{ datetime: internmentEpisode?.probableDischargeDate }">
 			</span>

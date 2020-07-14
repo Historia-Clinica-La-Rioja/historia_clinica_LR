@@ -24,6 +24,7 @@ import net.pladema.sgx.featureflags.AppFeature;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -43,6 +44,7 @@ public class InternmentEpisodeController {
 	private static final Logger LOG = LoggerFactory.getLogger(InternmentEpisodeController.class);
 
 	public static final String INTERNMENT_NOT_FOUND = "internmentepisode.not.found";
+	public static final String OUTPUT = "Output -> {}";
 
 	private final InternmentEpisodeService internmentEpisodeService;
 
@@ -95,7 +97,7 @@ public class InternmentEpisodeController {
 		InternmentSummaryBo internmentSummaryBo = internmentEpisodeService.getIntermentSummary(internmentEpisodeId)
 				.orElse(new InternmentSummaryBo());
 		InternmentSummaryDto result = internmentEpisodeMapper.toInternmentSummaryDto(internmentSummaryBo);
-		LOG.debug("Output -> {}", result);
+		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}
 
@@ -105,6 +107,7 @@ public class InternmentEpisodeController {
     public ResponseEntity<InternmentEpisodeDto> addInternmentEpisode(
             @PathVariable(name = "institutionId") Integer institutionId,
             @Valid @RequestBody InternmentEpisodeADto internmentEpisodeADto) {
+		LOG.debug("Input parameters -> institutionId {}, internmentEpisodeADto {} ", institutionId, internmentEpisodeADto);
         InternmentEpisode internmentEpisodeToSave = internmentEpisodeMapper.toInternmentEpisode(internmentEpisodeADto);
         internmentEpisodeToSave = internmentEpisodeService.addInternmentEpisode(internmentEpisodeToSave, institutionId);
         InternmentEpisodeDto result = internmentEpisodeMapper.toInternmentEpisodeDto(internmentEpisodeToSave);
@@ -112,7 +115,7 @@ public class InternmentEpisodeController {
         if (internmentEpisodeADto.getResponsibleDoctorId() != null)
         	healthcareProfessionalExternalService.addHealthcareProfessionalGroup(result.getId(), internmentEpisodeADto.getResponsibleDoctorId());
 		responsibleContactService.addResponsibleContact(responsibleContactMapper.toResponsibleContactBo(internmentEpisodeADto.getResponsibleContact()), result.getId());
-        LOG.debug("Output -> {}", result);
+        LOG.debug(OUTPUT, result);
         return  ResponseEntity.ok().body(result);
     }
 
@@ -121,10 +124,13 @@ public class InternmentEpisodeController {
 	public ResponseEntity<PatientDischargeDto> medicalDischargeInternmentEpisode(
 			@InternmentDischargeValid @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
 			@RequestBody PatientDischargeDto patientDischargeDto) {
+		LOG.debug("Input parameters -> internmentEpisodeId {}, PatientDischargeDto {} ", internmentEpisodeId, patientDischargeDto);
 		PatientDischargeBo patientDischarge = patientDischargeMapper.toPatientDischargeBo(patientDischargeDto);
 		patientDischarge.setInternmentEpisodeId(internmentEpisodeId);
 		PatientDischargeBo patientDischageSaved = internmentEpisodeService.savePatientDischarge(patientDischarge);
-		return ResponseEntity.ok(patientDischargeMapper.toPatientDischargeDto(patientDischageSaved));
+		PatientDischargeDto result = patientDischargeMapper.toPatientDischargeDto(patientDischageSaved);
+		LOG.debug(OUTPUT, result);
+		return ResponseEntity.ok(result);
 	}
     
 	@Transactional
@@ -132,6 +138,7 @@ public class InternmentEpisodeController {
 	public ResponseEntity<PatientDischargeDto> dischargeInternmentEpisode(
 			@InternmentDischargeValid @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
 			@RequestBody PatientDischargeDto patientDischargeDto) {
+		LOG.debug("Input parameters -> internmentEpisodeId {}, PatientDischargeDto {} ", internmentEpisodeId, patientDischargeDto);
 		PatientDischargeBo patientDischarge = patientDischargeMapper.toPatientDischargeBo(patientDischargeDto);
 		InternmentSummaryBo internmentEpisodeSummary = internmentEpisodeService.getIntermentSummary(internmentEpisodeId)
 				.orElseThrow(() -> new NotFoundException("bad-episode-id", INTERNMENT_NOT_FOUND));
@@ -140,43 +147,57 @@ public class InternmentEpisodeController {
 		bedExternalService.freeBed(internmentEpisodeSummary.getBedId());
 		internmentEpisodeService.updateInternmentEpisodeSatus(internmentEpisodeId,
 				Short.valueOf(InternmentEpisodeStatus.INACTIVE));
-		return ResponseEntity.ok(patientDischargeMapper.toPatientDischargeDto(patientDischageSaved));
+		PatientDischargeDto result = patientDischargeMapper.toPatientDischargeDto(patientDischageSaved);
+		LOG.debug(OUTPUT, result);
+		return ResponseEntity.ok(result);
 	}
 
 	@GetMapping("/{internmentEpisodeId}/minDischargeDate")
 	public ResponseEntity<LocalDate> getMinDischargeDate(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
+		LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {} ", institutionId, internmentEpisodeId);
 		if (this.featureFlagsService.isOn(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS)) {
 			return ResponseEntity.ok(internmentEpisodeService.getLastUpdateDateOfInternmentEpisode(internmentEpisodeId));
 		}
 		PatientDischargeBo patientDischarge =  patientDischargeService.getPatientDischarge(internmentEpisodeId)
 				.orElseThrow(() -> new NotFoundException("bad-episode-id", INTERNMENT_NOT_FOUND));
-		LocalDate minDischargeDate = patientDischarge.getMedicalDischargeDate();
-		return ResponseEntity.ok(minDischargeDate);
+		LocalDate result = patientDischarge.getMedicalDischargeDate();
+		LOG.debug(OUTPUT, result);
+		return ResponseEntity.ok(result);
 	}
 
 	@GetMapping("/{internmentEpisodeId}")
 	public ResponseEntity<InternmentEpisodeBMDto> getInternmentEpisode(
-			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
-			@PathVariable(name = "institutionId") Integer institutionId) {
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
+		LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {} ", institutionId, internmentEpisodeId);
 		InternmentEpisode internmentEpisode = internmentEpisodeService.getInternmentEpisode(internmentEpisodeId,institutionId);
-		return ResponseEntity.ok(internmentEpisodeMapper.toInternmentEpisodeBMDto(internmentEpisode));
+		InternmentEpisodeBMDto result = internmentEpisodeMapper.toInternmentEpisodeBMDto(internmentEpisode);
+		LOG.debug(OUTPUT, result);
+		return ResponseEntity.ok(result);
 	}
 
 	@GetMapping("/{internmentEpisodeId}/patientdischarge")
 	public ResponseEntity<PatientDischargeDto> getPatientDischarge(
+			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
+		LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {} ", institutionId, internmentEpisodeId);
 		PatientDischargeBo pdbo =	patientDischargeService.getPatientDischarge(internmentEpisodeId)
 				.orElseThrow(() -> new NotFoundException("bad-episode-id", INTERNMENT_NOT_FOUND));
 		PatientDischargeDto result = patientDischargeMapper.toPatientDischargeDto(pdbo);
+		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);
 	}
 
 	@GetMapping("/{internmentEpisodeId}/lastupdatedate")
 	public ResponseEntity<LocalDate> getLastUpdateDateOfInternmentEpisode(
+			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
-		return ResponseEntity.ok(internmentEpisodeService.getLastUpdateDateOfInternmentEpisode(internmentEpisodeId));
+		LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {} ", institutionId, internmentEpisodeId);
+		LocalDate result = internmentEpisodeService.getLastUpdateDateOfInternmentEpisode(internmentEpisodeId);
+		LOG.debug(OUTPUT, result);
+		return ResponseEntity.ok(result);
 	}
 
 	@ProbableDischargeDateValid
@@ -188,8 +209,10 @@ public class InternmentEpisodeController {
 			@RequestBody ProbableDischargeDateDto probableDischargeDateDto) {
 		LOG.debug("Input parameters -> institutionId {}, intermentEpisodeId {} ", institutionId, internmentEpisodeId);
 		LocalDateTime probableDischargeDate = localDateMapper.fromStringToLocalDateTime(probableDischargeDateDto.getProbableDischargeDate());
+		if (!this.featureFlagsService.isOn(AppFeature.HABILITAR_CARGA_FECHA_PROBABLE_ALTA))
+			return new ResponseEntity<>(probableDischargeDate, HttpStatus.BAD_REQUEST);
 		LocalDateTime result = internmentEpisodeService.updateInternmentEpisodeProbableDischargeDate(internmentEpisodeId, probableDischargeDate);
-		LOG.debug("Output -> {}", result);
+		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);
 	}
 }

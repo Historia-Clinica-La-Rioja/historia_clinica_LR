@@ -8,6 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
 export class InternmentEpisodeSummaryComponent implements OnInit {
 
 	@Input() internmentEpisode: InternmentEpisodeSummary;
+	@Input() canLoadProbableDischargeDate: boolean;
 
 	constructor() { }
 

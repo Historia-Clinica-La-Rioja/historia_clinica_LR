@@ -13,7 +13,10 @@ public enum AppFeature implements Feature {
     MAIN_DIAGNOSIS_REQUIRED,
 
     @Label("Indica si el médico responsable de una internación es obligatorio")
-    RESPONSIBLE_DOCTOR_REQUIRED;
+    RESPONSIBLE_DOCTOR_REQUIRED,
+
+    @Label("Indica si es posible cargar la fecha probable de alta de una internación")
+    HABILITAR_CARGA_FECHA_PROBABLE_ALTA;
 
     public boolean isActive() {
         return FeatureContext.getFeatureManager().isActive(this);
