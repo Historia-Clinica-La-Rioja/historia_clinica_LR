@@ -11,10 +11,10 @@ import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeServic
 import net.pladema.clinichistory.hospitalization.service.anamnesis.AnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.CreateAnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.UpdateAnamnesisService;
-import net.pladema.clinichistory.ips.controller.constraints.validator.EffectiveVitalSignTimeValidator;
-import net.pladema.clinichistory.ips.controller.dto.DiagnosisDto;
-import net.pladema.clinichistory.ips.controller.dto.HealthConditionDto;
-import net.pladema.clinichistory.ips.controller.dto.SnomedDto;
+import net.pladema.clinichistory.hospitalization.controller.generalstate.constraint.validator.EffectiveVitalSignTimeValidator;
+import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.DiagnosisDto;
+import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.HealthConditionDto;
+import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentStatus;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
 import net.pladema.establishment.repository.InstitutionRepository;

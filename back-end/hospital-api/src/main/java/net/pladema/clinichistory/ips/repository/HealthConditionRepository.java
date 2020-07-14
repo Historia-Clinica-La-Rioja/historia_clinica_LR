@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-public interface HealthConditionRepository extends JpaRepository<HealthCondition, Integer>, HealthConditionRepositoryCustom {
+public interface HealthConditionRepository extends JpaRepository<HealthCondition, Integer> {
 
     @Transactional(readOnly = true)
     @Query("SELECT hc " +

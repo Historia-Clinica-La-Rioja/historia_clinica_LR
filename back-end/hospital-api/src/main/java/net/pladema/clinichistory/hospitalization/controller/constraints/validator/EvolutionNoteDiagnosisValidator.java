@@ -2,7 +2,7 @@ package net.pladema.clinichistory.hospitalization.controller.constraints.validat
 
 import net.pladema.clinichistory.hospitalization.controller.constraints.EvolutionNoteDiagnosisValid;
 import net.pladema.clinichistory.hospitalization.controller.documents.evolutionnote.dto.EvolutionNoteDto;
-import net.pladema.clinichistory.ips.service.HealthConditionService;
+import net.pladema.clinichistory.hospitalization.service.generalstate.HealthConditionGeneralStateService;
 import net.pladema.clinichistory.ips.service.domain.HealthConditionBo;
 
 import javax.validation.ConstraintValidator;
@@ -15,10 +15,10 @@ public class EvolutionNoteDiagnosisValidator implements ConstraintValidator<Evol
 
     private static final String DIAGNOSIS_PROPERTY = "evolutionNoteDto.diagnosis";
 
-    private final HealthConditionService healthConditionService;
+    private final HealthConditionGeneralStateService healthConditionGeneralStateService;
 
-    public EvolutionNoteDiagnosisValidator(HealthConditionService healthConditionService) {
-        this.healthConditionService = healthConditionService;
+    public EvolutionNoteDiagnosisValidator(HealthConditionGeneralStateService healthConditionGeneralStateService) {
+        this.healthConditionGeneralStateService = healthConditionGeneralStateService;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class EvolutionNoteDiagnosisValidator implements ConstraintValidator<Evol
         if (evolutionNoteDto.getDiagnosis() == null || evolutionNoteDto.getDiagnosis().isEmpty())
             return true;
 
-        HealthConditionBo mainDiagnosis = healthConditionService.getMainDiagnosisGeneralState(internmentEpisodeId);
+        HealthConditionBo mainDiagnosis = healthConditionGeneralStateService.getMainDiagnosisGeneralState(internmentEpisodeId);
         if (mainDiagnosis == null)
             return true;
         return evolutionNoteDto.getDiagnosis().stream().noneMatch(d -> d.getSnomed().getId().equals(mainDiagnosis.getSnomed().getId()));

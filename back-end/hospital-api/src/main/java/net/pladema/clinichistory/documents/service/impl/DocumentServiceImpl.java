@@ -3,7 +3,7 @@ package net.pladema.clinichistory.documents.service.impl;
 import net.pladema.clinichistory.documents.repository.*;
 import net.pladema.clinichistory.documents.repository.entity.*;
 import net.pladema.clinichistory.documents.service.DocumentService;
-import net.pladema.clinichistory.ips.repository.generalstate.*;
+import net.pladema.clinichistory.hospitalization.repository.generalstate.domain.*;
 import net.pladema.clinichistory.ips.service.domain.*;
 import net.pladema.sgx.auditable.entity.Updateable;
 import org.slf4j.Logger;

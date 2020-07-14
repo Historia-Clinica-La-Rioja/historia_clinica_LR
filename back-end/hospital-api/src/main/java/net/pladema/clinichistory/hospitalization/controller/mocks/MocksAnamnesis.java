@@ -1,10 +1,10 @@
 package net.pladema.clinichistory.hospitalization.controller.mocks;
 
 import net.pladema.clinichistory.hospitalization.controller.documents.anamnesis.dto.AnamnesisDto;
-import net.pladema.clinichistory.ips.controller.dto.AnthropometricDataDto;
-import net.pladema.clinichistory.ips.controller.dto.ClinicalObservationDto;
-import net.pladema.clinichistory.ips.controller.dto.EffectiveClinicalObservationDto;
-import net.pladema.clinichistory.ips.controller.dto.VitalSignDto;
+import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.AnthropometricDataDto;
+import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.ClinicalObservationDto;
+import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.EffectiveClinicalObservationDto;
+import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.VitalSignDto;
 
 
 public class MocksAnamnesis {

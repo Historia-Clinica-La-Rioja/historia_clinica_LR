@@ -7,6 +7,4 @@ import java.util.List;
 public interface InmunizationService {
 
     List<InmunizationBo> loadInmunization(Integer patientId, Long documentId, List<InmunizationBo> inmunizations);
-
-    List<InmunizationBo> getInmunizationsGeneralState(Integer internmentEpisodeId);
 }

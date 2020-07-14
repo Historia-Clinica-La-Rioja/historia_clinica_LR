@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.hospitalization.service.documents.anamnesis.impl;
 
-import net.pladema.clinichistory.ips.repository.generalstate.ClinicalObservationVo;
+import net.pladema.clinichistory.hospitalization.repository.generalstate.domain.ClinicalObservationVo;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.ObservationStatus;
 import net.pladema.clinichistory.ips.service.domain.MapClinicalObservationVo;
 import net.pladema.clinichistory.ips.service.domain.enums.EVitalSign;

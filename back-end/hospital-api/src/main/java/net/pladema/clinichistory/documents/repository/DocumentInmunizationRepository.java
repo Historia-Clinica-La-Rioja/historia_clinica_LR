@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.documents.repository;
 
-import net.pladema.clinichistory.ips.repository.generalstate.InmunizationVo;
+import net.pladema.clinichistory.hospitalization.repository.generalstate.domain.InmunizationVo;
 import net.pladema.clinichistory.documents.repository.entity.DocumentInmunization;
 import net.pladema.clinichistory.documents.repository.entity.DocumentInmunizationPK;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.InmunizationStatus;
@@ -17,7 +17,7 @@ public interface DocumentInmunizationRepository extends JpaRepository<DocumentIn
 
 
     @Transactional(readOnly = true)
-    @Query("SELECT NEW net.pladema.clinichistory.ips.repository.generalstate.InmunizationVo(" +
+    @Query("SELECT NEW net.pladema.clinichistory.hospitalization.repository.generalstate.domain.InmunizationVo(" +
             "i.id, s, i.statusId, i.administrationDate, " +
             "n.id as noteId, n.description as note) " +
             "FROM DocumentInmunization di " +
@@ -30,7 +30,7 @@ public interface DocumentInmunizationRepository extends JpaRepository<DocumentIn
 
 
     @Transactional(readOnly = true)
-    @Query("SELECT NEW net.pladema.clinichistory.ips.repository.generalstate.InmunizationVo(" +
+    @Query("SELECT NEW net.pladema.clinichistory.hospitalization.repository.generalstate.domain.InmunizationVo(" +
             "i.id, s, i.statusId, iss.description as status, i.administrationDate, " +
             "n.id as noteId, n.description as note) " +
             "FROM DocumentInmunization di " +

@@ -10,7 +10,7 @@ import net.pladema.clinichistory.hospitalization.controller.documents.evolutionn
 import net.pladema.clinichistory.hospitalization.controller.documents.evolutionnote.dto.ResponseEvolutionNoteDto;
 import net.pladema.clinichistory.hospitalization.controller.documents.evolutionnote.dto.evolutionDiagnosis.EvolutionDiagnosisDto;
 import net.pladema.clinichistory.hospitalization.controller.documents.evolutionnote.mapper.EvolutionNoteMapper;
-import net.pladema.clinichistory.ips.controller.constraints.EffectiveVitalSignTimeValid;
+import net.pladema.clinichistory.hospitalization.controller.generalstate.constraint.EffectiveVitalSignTimeValid;
 import net.pladema.clinichistory.documents.events.OnGenerateDocumentEvent;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.documents.service.InternmentDocument;

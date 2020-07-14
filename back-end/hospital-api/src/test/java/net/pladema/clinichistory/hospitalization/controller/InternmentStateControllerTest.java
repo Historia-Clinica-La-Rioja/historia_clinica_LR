@@ -5,7 +5,7 @@ import net.pladema.BaseControllerTest;
 import net.pladema.clinichistory.hospitalization.controller.mapper.InternmentStateMapper;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
 import net.pladema.clinichistory.hospitalization.service.InternmentStateService;
-import net.pladema.clinichistory.ips.service.*;
+import net.pladema.clinichistory.hospitalization.service.generalstate.*;
 import net.pladema.establishment.repository.InstitutionRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,19 +27,19 @@ public class InternmentStateControllerTest extends BaseControllerTest {
 	private InternmentStateService internmentStateService;
 
 	@MockBean
-	private HealthConditionService healthConditionService;
+	private HealthConditionGeneralStateService healthConditionGeneralStateService;
 
 	@MockBean
-	private MedicationService medicationService;
+	private MedicationGeneralStateService medicationGeneralStateService;
 
 	@MockBean
-	private AllergyService allergyService;
+	private AllergyGeneralStateService allergyGeneralStateServiceService;
 
 	@MockBean
-	private InmunizationService inmunizationService;
+	private InmunizationGeneralStateService inmunizationGeneralStateService;
 
 	@MockBean
-	private ClinicalObservationService clinicalObservationService;
+	private ClinicalObservationGeneralStateService clinicalObservationGeneralStateService;
 
 	@MockBean
 	private InternmentStateMapper internmentStateMapper;
@@ -49,6 +49,7 @@ public class InternmentStateControllerTest extends BaseControllerTest {
 
 	@MockBean
 	private InstitutionRepository institutionRepository;
+
 
 	@Before
 	public void setup() {

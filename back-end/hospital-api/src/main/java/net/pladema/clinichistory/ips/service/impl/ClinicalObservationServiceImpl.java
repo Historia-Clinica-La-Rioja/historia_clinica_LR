@@ -1,17 +1,14 @@
 package net.pladema.clinichistory.ips.service.impl;
 
-import net.pladema.clinichistory.ips.repository.ClinicalObservationRepository;
+import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.ips.repository.ObservationLabRepository;
 import net.pladema.clinichistory.ips.repository.ObservationVitalSignRepository;
 import net.pladema.clinichistory.ips.repository.entity.ObservationLab;
 import net.pladema.clinichistory.ips.repository.entity.ObservationVitalSign;
+import net.pladema.clinichistory.ips.service.ClinicalObservationService;
 import net.pladema.clinichistory.ips.service.domain.AnthropometricDataBo;
 import net.pladema.clinichistory.ips.service.domain.ClinicalObservationBo;
-import net.pladema.clinichistory.ips.service.domain.MapClinicalObservationVo;
 import net.pladema.clinichistory.ips.service.domain.VitalSignBo;
-import net.pladema.clinichistory.documents.service.DocumentService;
-import net.pladema.clinichistory.hospitalization.service.domain.Last2VitalSignsBo;
-import net.pladema.clinichistory.ips.service.ClinicalObservationService;
 import net.pladema.clinichistory.ips.service.domain.enums.EObservationLab;
 import net.pladema.clinichistory.ips.service.domain.enums.EVitalSign;
 import org.slf4j.Logger;
@@ -29,18 +26,14 @@ public class ClinicalObservationServiceImpl implements ClinicalObservationServic
 
     private final ObservationVitalSignRepository observationVitalSignRepository;
 
-    private final ClinicalObservationRepository clinicalObservationRepository;
-
     private final ObservationLabRepository observationLabRepository;
 
     private final DocumentService documentService;
 
     public ClinicalObservationServiceImpl(ObservationVitalSignRepository observationVitalSignRepository,
-                                          ClinicalObservationRepository clinicalObservationRepository,
                                           ObservationLabRepository observationLabRepository,
                                           DocumentService documentService) {
         this.observationVitalSignRepository = observationVitalSignRepository;
-        this.clinicalObservationRepository = clinicalObservationRepository;
         this.observationLabRepository = observationLabRepository;
         this.documentService = documentService;
     }
@@ -162,32 +155,6 @@ public class ClinicalObservationServiceImpl implements ClinicalObservationServic
     private ClinicalObservationBo createObservationFromLab(ObservationLab lab) {
         LOG.debug("Input parameters -> ObservationLab {}", lab);
         ClinicalObservationBo result = new ClinicalObservationBo(lab.getId(), lab.getValue(), lab.getEffectiveTime());
-        LOG.debug(OUTPUT, result);
-        return result;
-    }
-
-    @Override
-    public AnthropometricDataBo getLastAnthropometricDataGeneralState(Integer internmentEpisodeId) {
-        LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
-        MapClinicalObservationVo resultQuery = clinicalObservationRepository.getGeneralState(internmentEpisodeId);
-        AnthropometricDataBo result = resultQuery.getLastNAnthropometricData(0).orElse(null);
-        LOG.debug(OUTPUT, result);
-        return result;
-    }
-
-    @Override
-    public Last2VitalSignsBo getLast2VitalSignsGeneralState(Integer internmentEpisodeId) {
-        LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
-        MapClinicalObservationVo resultQuery = clinicalObservationRepository.getGeneralState(internmentEpisodeId);
-        Last2VitalSignsBo result = new Last2VitalSignsBo();
-        for (int i=0;i<2;i++){
-            if (i==0) {
-                resultQuery.getLastNVitalSigns(i).ifPresent(result::setCurrent);
-            }
-            if (i==1) {
-                resultQuery.getLastNVitalSigns(i).ifPresent(result::setPrevious);
-            }
-        }
         LOG.debug(OUTPUT, result);
         return result;
     }

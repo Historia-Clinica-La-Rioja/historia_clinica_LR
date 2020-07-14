@@ -1,8 +1,8 @@
 package net.pladema.clinichistory.hospitalization.controller.constraints.validator;
 
 import net.pladema.clinichistory.hospitalization.controller.constraints.HealthHistoryConditionValid;
-import net.pladema.clinichistory.ips.controller.dto.HealthHistoryConditionDto;
-import net.pladema.clinichistory.ips.controller.dto.SnomedDto;
+import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.HealthHistoryConditionDto;
+import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

@@ -2,7 +2,7 @@ package net.pladema.clinichistory.documents.repository;
 
 import net.pladema.clinichistory.documents.repository.entity.DocumentHealthCondition;
 import net.pladema.clinichistory.documents.repository.entity.DocumentHealthConditionPK;
-import net.pladema.clinichistory.ips.repository.generalstate.HealthConditionVo;
+import net.pladema.clinichistory.hospitalization.repository.generalstate.domain.HealthConditionVo;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.ConditionVerificationStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,7 +16,7 @@ import java.util.List;
 public interface DocumentHealthConditionRepository extends JpaRepository<DocumentHealthCondition, DocumentHealthConditionPK> {
 
     @Transactional(readOnly = true)
-    @Query("SELECT NEW net.pladema.clinichistory.ips.repository.generalstate.HealthConditionVo(" +
+    @Query("SELECT NEW net.pladema.clinichistory.hospitalization.repository.generalstate.domain.HealthConditionVo(" +
             "hc.id, s, hc.statusId, hc.main, hc.verificationStatusId, " +
             "hc.problemId, hc.startDate, " +
             "n.id as noteId, n.description as note) " +
@@ -29,7 +29,7 @@ public interface DocumentHealthConditionRepository extends JpaRepository<Documen
     List<HealthConditionVo> getHealthConditionFromDocument(@Param("documentId") Long documentId);
 
     @Transactional(readOnly = true)
-    @Query("SELECT NEW net.pladema.clinichistory.ips.repository.generalstate.HealthConditionVo(" +
+    @Query("SELECT NEW net.pladema.clinichistory.hospitalization.repository.generalstate.domain.HealthConditionVo(" +
             "hc.id, s, hc.statusId, ccs.description as status, hc.main, " +
             "hc.verificationStatusId, cvs.description as verification, " +
             "hc.problemId, hc.startDate, " +

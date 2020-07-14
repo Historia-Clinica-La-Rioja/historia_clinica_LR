@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.ips.service.domain;
 
 import lombok.Getter;
-import net.pladema.clinichistory.ips.repository.generalstate.ClinicalObservationVo;
+import net.pladema.clinichistory.hospitalization.repository.generalstate.domain.ClinicalObservationVo;
 import net.pladema.clinichistory.ips.service.domain.enums.EObservationLab;
 import net.pladema.clinichistory.ips.service.domain.enums.EVitalSign;
 import org.slf4j.Logger;

@@ -6,7 +6,7 @@ import lombok.ToString;
 import net.pladema.clinichistory.hospitalization.controller.constraints.DiagnosisValid;
 import net.pladema.clinichistory.hospitalization.controller.documents.DocumentDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.DocumentObservationsDto;
-import net.pladema.clinichistory.ips.controller.dto.*;
+import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.*;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;

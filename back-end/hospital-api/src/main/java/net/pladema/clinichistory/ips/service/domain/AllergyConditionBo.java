@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.ips.repository.generalstate.AllergyConditionVo;
+import net.pladema.clinichistory.hospitalization.repository.generalstate.domain.AllergyConditionVo;
 
 import java.time.LocalDate;
 

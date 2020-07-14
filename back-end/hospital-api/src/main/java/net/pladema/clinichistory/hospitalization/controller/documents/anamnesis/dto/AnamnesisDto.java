@@ -3,7 +3,7 @@ package net.pladema.clinichistory.hospitalization.controller.documents.anamnesis
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.ips.controller.dto.*;
+import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.*;
 import net.pladema.featureflags.controller.constraints.SGHNotNull;
 import net.pladema.clinichistory.hospitalization.controller.constraints.DiagnosisValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.HealthHistoryConditionValid;

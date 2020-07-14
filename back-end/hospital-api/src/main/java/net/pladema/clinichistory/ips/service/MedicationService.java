@@ -8,5 +8,4 @@ public interface MedicationService {
 
     List<MedicationBo> loadMedications(Integer patientId, Long documentId, List<MedicationBo> medications);
 
-    List<MedicationBo> getMedicationsGeneralState(Integer internmentEpisodeId);
 }

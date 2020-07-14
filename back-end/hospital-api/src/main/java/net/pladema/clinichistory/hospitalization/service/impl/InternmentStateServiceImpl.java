@@ -3,7 +3,7 @@ package net.pladema.clinichistory.hospitalization.service.impl;
 import net.pladema.clinichistory.hospitalization.service.InternmentStateService;
 import net.pladema.clinichistory.hospitalization.service.domain.InternmentGeneralState;
 import net.pladema.clinichistory.hospitalization.service.domain.Last2VitalSignsBo;
-import net.pladema.clinichistory.ips.service.*;
+import net.pladema.clinichistory.hospitalization.service.generalstate.*;
 import net.pladema.clinichistory.ips.service.domain.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,26 +21,26 @@ public class InternmentStateServiceImpl implements InternmentStateService {
     
     private static final String LOGGING_INTERNMENT_EPISODE_ID = "Input parameters -> internmentEpisodeId {}";
 
-    private final AllergyService allergyService;
+    private final AllergyGeneralStateService allergyGeneralStateService;
 
-    private final InmunizationService inmunizationService;
+    private final InmunizationGeneralStateService inmunizationGeneralStateService;
 
-    private final MedicationService medicationService;
+    private final MedicationGeneralStateService medicationGeneralStateService;
 
-    private final ClinicalObservationService clinicalObservationService;
+    private final ClinicalObservationGeneralStateService clinicalObservationGeneralStateService;
 
-    private final HealthConditionService healthConditionService;
+    private final HealthConditionGeneralStateService healthConditionGeneralStateService;
 
-    public InternmentStateServiceImpl(AllergyService allergyService,
-                                      InmunizationService inmunizationService,
-                                      MedicationService medicationService,
-                                      ClinicalObservationService clinicalObservationService,
-                                      HealthConditionService healthConditionService) {
-        this.allergyService = allergyService;
-        this.inmunizationService = inmunizationService;
-        this.medicationService = medicationService;
-        this.healthConditionService = healthConditionService;
-        this.clinicalObservationService = clinicalObservationService;
+    public InternmentStateServiceImpl(AllergyGeneralStateService allergyGeneralStateService,
+                                      InmunizationGeneralStateService inmunizationGeneralStateService,
+                                      MedicationGeneralStateService medicationGeneralStateService,
+                                      ClinicalObservationGeneralStateService clinicalObservationGeneralStateService,
+                                      HealthConditionGeneralStateService healthConditionGeneralStateService) {
+        this.allergyGeneralStateService = allergyGeneralStateService;
+        this.inmunizationGeneralStateService = inmunizationGeneralStateService;
+        this.medicationGeneralStateService = medicationGeneralStateService;
+        this.healthConditionGeneralStateService = healthConditionGeneralStateService;
+        this.clinicalObservationGeneralStateService = clinicalObservationGeneralStateService;
     }
 
     @Override
@@ -59,7 +59,7 @@ public class InternmentStateServiceImpl implements InternmentStateService {
 
     private void loadGeneralHealthCondition(Integer internmentEpisodeId, @NotNull InternmentGeneralState internmentGeneralState){
         LOG.debug(LOGGING_INTERNMENT_EPISODE_ID, internmentEpisodeId);
-        GeneralHealthConditionBo generalHealthCondition = healthConditionService.getGeneralState(internmentEpisodeId);
+        GeneralHealthConditionBo generalHealthCondition = healthConditionGeneralStateService.getGeneralState(internmentEpisodeId);
         internmentGeneralState.setMainDiagnosis(generalHealthCondition.getMainDiagnosis());
         internmentGeneralState.setDiagnosis(generalHealthCondition.getDiagnosis());
         internmentGeneralState.setPersonalHistories(generalHealthCondition.getPersonalHistories());
@@ -68,26 +68,26 @@ public class InternmentStateServiceImpl implements InternmentStateService {
 
     private List<MedicationBo> getMedicationsState(Integer internmentEpisodeId){
         LOG.debug(LOGGING_INTERNMENT_EPISODE_ID, internmentEpisodeId);
-        return medicationService.getMedicationsGeneralState(internmentEpisodeId);
+        return medicationGeneralStateService.getMedicationsGeneralState(internmentEpisodeId);
     }
 
     private List<InmunizationBo> getInmunizationsState(Integer internmentEpisodeId){
         LOG.debug(LOGGING_INTERNMENT_EPISODE_ID, internmentEpisodeId);
-        return inmunizationService.getInmunizationsGeneralState(internmentEpisodeId);
+        return inmunizationGeneralStateService.getInmunizationsGeneralState(internmentEpisodeId);
     }
 
     private List<AllergyConditionBo> getAllergiesState(Integer internmentEpisodeId){
         LOG.debug(LOGGING_INTERNMENT_EPISODE_ID, internmentEpisodeId);
-        return allergyService.getAllergiesGeneralState(internmentEpisodeId);
+        return allergyGeneralStateService.getAllergiesGeneralState(internmentEpisodeId);
     }
 
     private AnthropometricDataBo getAntropometricDataState(Integer internmentEpisodeId){
         LOG.debug(LOGGING_INTERNMENT_EPISODE_ID, internmentEpisodeId);
-        return clinicalObservationService.getLastAnthropometricDataGeneralState(internmentEpisodeId);
+        return clinicalObservationGeneralStateService.getLastAnthropometricDataGeneralState(internmentEpisodeId);
     }
 
     private Last2VitalSignsBo getVitalSignsState(Integer internmentEpisodeId){
         LOG.debug(LOGGING_INTERNMENT_EPISODE_ID, internmentEpisodeId);
-        return clinicalObservationService.getLast2VitalSignsGeneralState(internmentEpisodeId);
+        return clinicalObservationGeneralStateService.getLast2VitalSignsGeneralState(internmentEpisodeId);
     }
 }

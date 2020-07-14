@@ -1,19 +1,18 @@
 package net.pladema.clinichistory.ips.service.impl;
 
-import net.pladema.clinichistory.ips.repository.MedicationStatementRepository;
-import net.pladema.clinichistory.ips.repository.entity.MedicationStatement;
-import net.pladema.clinichistory.ips.repository.generalstate.MedicationVo;
-import net.pladema.clinichistory.ips.service.domain.MedicationBo;
 import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.service.NoteService;
+import net.pladema.clinichistory.hospitalization.repository.generalstate.HCHMedicationStatementRepository;
+import net.pladema.clinichistory.ips.repository.MedicationStatementRepository;
+import net.pladema.clinichistory.ips.repository.entity.MedicationStatement;
 import net.pladema.clinichistory.ips.service.MedicationService;
 import net.pladema.clinichistory.ips.service.SnomedService;
+import net.pladema.clinichistory.ips.service.domain.MedicationBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class MedicationServiceImpl implements MedicationService {
@@ -53,15 +52,6 @@ public class MedicationServiceImpl implements MedicationService {
             documentService.createDocumentMedication(documentId, medicationStatement.getId());
         });
         List<MedicationBo> result = medications;
-        LOG.debug(OUTPUT, result);
-        return result;
-    }
-
-    @Override
-    public List<MedicationBo> getMedicationsGeneralState(Integer internmentEpisodeId) {
-        LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
-        List<MedicationVo> resultQuery = medicationStatementRepository.findGeneralState(internmentEpisodeId);
-        List<MedicationBo> result = resultQuery.stream().map(MedicationBo::new).collect(Collectors.toList());
         LOG.debug(OUTPUT, result);
         return result;
     }

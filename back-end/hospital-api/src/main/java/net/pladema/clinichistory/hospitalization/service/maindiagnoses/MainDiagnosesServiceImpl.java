@@ -2,6 +2,7 @@ package net.pladema.clinichistory.hospitalization.service.maindiagnoses;
 
 import net.pladema.clinichistory.documents.repository.entity.Document;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
+import net.pladema.clinichistory.hospitalization.service.generalstate.HealthConditionGeneralStateService;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.ConditionVerificationStatus;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentStatus;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
@@ -35,14 +36,18 @@ public class MainDiagnosesServiceImpl implements MainDiagnosesService {
 
     private final HealthConditionService healthConditionService;
 
+    private final HealthConditionGeneralStateService healthConditionGeneralStateService;
+
     public MainDiagnosesServiceImpl(DocumentService documentService,
                                     InternmentEpisodeService internmentEpisodeService,
                                     NoteService noteService,
-                                    HealthConditionService healthConditionService) {
+                                    HealthConditionService healthConditionService,
+                                    HealthConditionGeneralStateService healthConditionGeneralStateService) {
         this.documentService = documentService;
         this.internmentEpisodeService = internmentEpisodeService;
         this.noteService = noteService;
         this.healthConditionService = healthConditionService;
+        this.healthConditionGeneralStateService = healthConditionGeneralStateService;
     }
 
     @Override
@@ -56,7 +61,7 @@ public class MainDiagnosesServiceImpl implements MainDiagnosesService {
 
         mainDiagnosisBo.getMainDiagnosis().setVerificationId(ConditionVerificationStatus.CONFIRMED); // main diagnosiss always confirmed
 
-        HealthConditionBo currentMainDiagnose = healthConditionService.getMainDiagnosisGeneralState(internmentEpisodeId);
+        HealthConditionBo currentMainDiagnose = healthConditionGeneralStateService.getMainDiagnosisGeneralState(internmentEpisodeId);
         if (!currentMainDiagnose.getSnomed().equals(mainDiagnosisBo.getMainDiagnosis().getSnomed()))
             downgradeToAlternativeDiagnose(patientId, document.getId(), currentMainDiagnose);
         healthConditionService.loadMainDiagnosis(patientId, result, Optional.ofNullable(mainDiagnosisBo.getMainDiagnosis()));

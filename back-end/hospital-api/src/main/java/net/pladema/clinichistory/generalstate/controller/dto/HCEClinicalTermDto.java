@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.generalstate.controller.dto;
 
 import lombok.*;
-import net.pladema.clinichistory.ips.controller.dto.SnomedDto;
+import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;

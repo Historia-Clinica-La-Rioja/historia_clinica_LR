@@ -1,18 +1,17 @@
 package net.pladema.clinichistory.ips.service.impl;
 
+import net.pladema.clinichistory.documents.service.DocumentService;
+import net.pladema.clinichistory.hospitalization.repository.generalstate.HCHInmunizationRepository;
 import net.pladema.clinichistory.ips.repository.InmunizationRepository;
 import net.pladema.clinichistory.ips.repository.entity.Inmunization;
-import net.pladema.clinichistory.ips.repository.generalstate.InmunizationVo;
-import net.pladema.clinichistory.ips.service.domain.InmunizationBo;
-import net.pladema.clinichistory.ips.service.SnomedService;
-import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.ips.service.InmunizationService;
+import net.pladema.clinichistory.ips.service.SnomedService;
+import net.pladema.clinichistory.ips.service.domain.InmunizationBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class InmunizationServiceImpl implements InmunizationService {
@@ -63,12 +62,4 @@ public class InmunizationServiceImpl implements InmunizationService {
         return inmunization;
     }
 
-    @Override
-    public List<InmunizationBo> getInmunizationsGeneralState(Integer internmentEpisodeId) {
-        LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
-        List<InmunizationVo> queryResult = inmunizationRepository.findGeneralState(internmentEpisodeId);
-        List<InmunizationBo> result = queryResult.stream().map(InmunizationBo::new).collect(Collectors.toList());
-        LOG.debug(OUTPUT, result);
-        return result;
-    }
 }

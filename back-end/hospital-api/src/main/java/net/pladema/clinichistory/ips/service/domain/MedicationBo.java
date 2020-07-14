@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.ips.repository.generalstate.MedicationVo;
+import net.pladema.clinichistory.hospitalization.repository.generalstate.domain.MedicationVo;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.MedicationStatementStatus;
 
 @Getter

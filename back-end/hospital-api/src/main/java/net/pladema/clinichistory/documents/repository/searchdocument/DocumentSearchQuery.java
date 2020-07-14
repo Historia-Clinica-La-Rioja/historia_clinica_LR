@@ -2,7 +2,7 @@ package net.pladema.clinichistory.documents.repository.searchdocument;
 
 import com.google.common.base.Strings;
 import lombok.NoArgsConstructor;
-import net.pladema.clinichistory.ips.repository.generalstate.DocumentObservationsVo;
+import net.pladema.clinichistory.hospitalization.repository.generalstate.domain.DocumentObservationsVo;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.ConditionVerificationStatus;
 import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
 import net.pladema.patient.service.StringHelper;

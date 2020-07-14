@@ -3,7 +3,7 @@ package net.pladema.clinichistory.ips.service.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.ips.repository.generalstate.HealthConditionVo;
+import net.pladema.clinichistory.hospitalization.repository.generalstate.domain.HealthConditionVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

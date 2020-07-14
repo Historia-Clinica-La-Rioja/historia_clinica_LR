@@ -16,6 +16,7 @@ public class InternmentValidator implements ConstraintValidator<InternmentValid,
     private static final String INSTITUTION_PROPERTY = "institutionId";
 
     private final InternmentEpisodeRepository internmentEpisodeRepository;
+
     private final InstitutionRepository institutionRepository;
 
     public InternmentValidator(InternmentEpisodeRepository internmentEpisodeRepository,

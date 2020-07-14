@@ -2,7 +2,7 @@ package net.pladema.clinichistory.documents.repository;
 
 import net.pladema.clinichistory.documents.repository.entity.DocumentAllergyIntolerance;
 import net.pladema.clinichistory.documents.repository.entity.DocumentAllergyIntolerancePK;
-import net.pladema.clinichistory.ips.repository.generalstate.AllergyConditionVo;
+import net.pladema.clinichistory.hospitalization.repository.generalstate.domain.AllergyConditionVo;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.AllergyIntoleranceVerificationStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,7 +16,7 @@ import java.util.List;
 public interface DocumentAllergyIntoleranceRepository extends JpaRepository<DocumentAllergyIntolerance, DocumentAllergyIntolerancePK> {
 
     @Transactional(readOnly = true)
-    @Query("SELECT NEW net.pladema.clinichistory.ips.repository.generalstate.AllergyConditionVo(" +
+    @Query("SELECT NEW net.pladema.clinichistory.hospitalization.repository.generalstate.domain.AllergyConditionVo(" +
             "ai.id, s, ai.statusId, ai.verificationStatusId, ai.categoryId," +
             "ai.startDate) " +
             "FROM DocumentAllergyIntolerance da " +
@@ -27,7 +27,7 @@ public interface DocumentAllergyIntoleranceRepository extends JpaRepository<Docu
     List<AllergyConditionVo> getAllergyIntoleranceStateFromDocument(@Param("documentId") Long documentId);
 
     @Transactional(readOnly = true)
-    @Query("SELECT NEW net.pladema.clinichistory.ips.repository.generalstate.AllergyConditionVo(" +
+    @Query("SELECT NEW net.pladema.clinichistory.hospitalization.repository.generalstate.domain.AllergyConditionVo(" +
             "ai.id, s, ai.statusId, aics.description as status, " +
             "ai.verificationStatusId, aivs.description as verification, " +
             "ai.categoryId, ai.startDate) " +

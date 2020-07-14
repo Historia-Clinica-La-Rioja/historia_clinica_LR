@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.hospitalization.controller.dto.internmentstate;
 
 import lombok.*;
-import net.pladema.clinichistory.ips.controller.dto.DiagnosisDto;
+import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.DiagnosisDto;
 
 @Getter
 @Setter

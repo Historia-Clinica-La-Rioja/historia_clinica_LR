@@ -2,16 +2,16 @@ package net.pladema.clinichistory.ips.service.impl;
 
 import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.service.NoteService;
+import net.pladema.clinichistory.hospitalization.repository.generalstate.HCHHealthConditionRepository;
+import net.pladema.clinichistory.hospitalization.repository.generalstate.domain.HealthConditionVo;
 import net.pladema.clinichistory.ips.repository.HealthConditionRepository;
 import net.pladema.clinichistory.ips.repository.entity.HealthCondition;
-import net.pladema.clinichistory.ips.repository.generalstate.HealthConditionVo;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.ConditionClinicalStatus;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.ConditionVerificationStatus;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.ProblemType;
 import net.pladema.clinichistory.ips.service.HealthConditionService;
 import net.pladema.clinichistory.ips.service.SnomedService;
 import net.pladema.clinichistory.ips.service.domain.DiagnosisBo;
-import net.pladema.clinichistory.ips.service.domain.GeneralHealthConditionBo;
 import net.pladema.clinichistory.ips.service.domain.HealthConditionBo;
 import net.pladema.clinichistory.ips.service.domain.HealthHistoryConditionBo;
 import org.slf4j.Logger;
@@ -35,6 +35,8 @@ public class HealthConditionServiceImpl implements HealthConditionService {
 
     private final HealthConditionRepository healthConditionRepository;
 
+    private final HCHHealthConditionRepository hchHealthConditionRepository;
+
     private final SnomedService snomedService;
 
     private final DocumentService documentService;
@@ -42,10 +44,12 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     private final NoteService noteService;
 
     public HealthConditionServiceImpl(HealthConditionRepository healthConditionRepository,
+                                      HCHHealthConditionRepository hchHealthConditionRepository,
                                       SnomedService snomedService,
                                       DocumentService documentService,
                                       NoteService noteService){
         this.healthConditionRepository = healthConditionRepository;
+        this.hchHealthConditionRepository = hchHealthConditionRepository;
         this.snomedService = snomedService;
         this.documentService = documentService;
         this.noteService = noteService;
@@ -203,80 +207,6 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     }
 
     @Override
-    public GeneralHealthConditionBo getGeneralState(Integer internmentEpisodeId) {
-        LOG.debug(LOGGING_INTERNMENT_EPISODE, internmentEpisodeId);
-        List<HealthConditionVo> data = getGeneralStateData(internmentEpisodeId);
-        GeneralHealthConditionBo result = new GeneralHealthConditionBo(data);
-        LOG.debug(OUTPUT, result);
-        return result;
-    }
-
-    @Override
-    public HealthConditionBo getMainDiagnosisGeneralState(Integer internmentEpisodeId) {
-        LOG.debug(LOGGING_INTERNMENT_EPISODE, internmentEpisodeId);
-        List<HealthConditionVo> data = getGeneralStateData(internmentEpisodeId);
-        GeneralHealthConditionBo generalHealthConditionBo = new GeneralHealthConditionBo(data);
-        HealthConditionBo result =  generalHealthConditionBo.getMainDiagnosis();
-        LOG.debug(OUTPUT, result);
-        return result;
-    }
-
-    @Override
-    public List<DiagnosisBo> getAlternativeDiagnosisGeneralState(Integer internmentEpisodeId) {
-        LOG.debug(LOGGING_INTERNMENT_EPISODE, internmentEpisodeId);
-        List<HealthConditionVo> data = getGeneralStateData(internmentEpisodeId);
-        GeneralHealthConditionBo generalHealthConditionBo = new GeneralHealthConditionBo(data);
-        List<DiagnosisBo> result =  generalHealthConditionBo.getDiagnosis();
-        LOG.debug(OUTPUT, result);
-        return result;
-    }
-
-    @Override
-    public List<DiagnosisBo> getActiveAlternativeDiagnosesGeneralState(Integer internmentEpisodeId) {
-        LOG.debug(LOGGING_INTERNMENT_EPISODE, internmentEpisodeId);
-        List<HealthConditionVo> data = getGeneralStateData(internmentEpisodeId);
-        GeneralHealthConditionBo generalHealthConditionBo = new GeneralHealthConditionBo(data);
-        List<DiagnosisBo> result =  generalHealthConditionBo.getDiagnosis().stream().filter(DiagnosisBo::isActive).collect(Collectors.toList());
-        LOG.debug(OUTPUT, result);
-        return result;
-    }
-
-    @Override
-    public List<HealthConditionBo> getDiagnosesGeneralState(Integer internmentEpisodeId) {
-        LOG.debug(LOGGING_INTERNMENT_EPISODE, internmentEpisodeId);
-        List<HealthConditionVo> data = getGeneralStateData(internmentEpisodeId);
-        GeneralHealthConditionBo generalHealthConditionBo = new GeneralHealthConditionBo(data);
-        List<HealthConditionBo> result =  new ArrayList<>();
-        HealthConditionBo mainDiagnosis =  generalHealthConditionBo.getMainDiagnosis();
-        if (mainDiagnosis != null)
-            result.add(mainDiagnosis);
-        result.addAll(generalHealthConditionBo.getDiagnosis());
-        LOG.debug(OUTPUT, result);
-        return result;
-    }
-
-
-    @Override
-    public List<HealthHistoryConditionBo> getPersonalHistoriesGeneralState(Integer internmentEpisodeId) {
-        LOG.debug(LOGGING_INTERNMENT_EPISODE, internmentEpisodeId);
-        List<HealthConditionVo> data = getGeneralStateData(internmentEpisodeId);
-        GeneralHealthConditionBo generalHealthConditionBo = new GeneralHealthConditionBo(data);
-        List<HealthHistoryConditionBo> result =  generalHealthConditionBo.getPersonalHistories();
-        LOG.debug(OUTPUT, result);
-        return result;
-    }
-
-    @Override
-    public List<HealthHistoryConditionBo> getFamilyHistoriesGeneralState(Integer internmentEpisodeId) {
-        LOG.debug(LOGGING_INTERNMENT_EPISODE, internmentEpisodeId);
-        List<HealthConditionVo> data = getGeneralStateData(internmentEpisodeId);
-        GeneralHealthConditionBo generalHealthConditionBo = new GeneralHealthConditionBo(data);
-        List<HealthHistoryConditionBo> result =  generalHealthConditionBo.getFamilyHistories();
-        LOG.debug(OUTPUT, result);
-        return result;
-    }
-
-    @Override
     public List<Integer> copyDiagnoses(List<Integer> diagnosesId) {
         LOG.debug("Input parameters -> diagnosesId {}", diagnosesId);
         List<HealthCondition> resultQuery = new ArrayList<>();
@@ -296,7 +226,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     }
 
     private List<HealthConditionVo> getGeneralStateData(Integer internmentEpisodeId) {
-        return healthConditionRepository.findGeneralState(internmentEpisodeId);
+        return hchHealthConditionRepository.findGeneralState(internmentEpisodeId);
     }
 
 

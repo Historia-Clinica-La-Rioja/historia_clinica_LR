@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.hospitalization.controller.dto.DocumentObservationsDto;
-import net.pladema.clinichistory.ips.controller.dto.HealthConditionDto;
+import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.HealthConditionDto;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;

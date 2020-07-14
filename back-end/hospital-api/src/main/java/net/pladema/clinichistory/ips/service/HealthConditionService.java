@@ -1,7 +1,6 @@
 package net.pladema.clinichistory.ips.service;
 
 import net.pladema.clinichistory.ips.service.domain.DiagnosisBo;
-import net.pladema.clinichistory.ips.service.domain.GeneralHealthConditionBo;
 import net.pladema.clinichistory.ips.service.domain.HealthConditionBo;
 import net.pladema.clinichistory.ips.service.domain.HealthHistoryConditionBo;
 
@@ -18,19 +17,5 @@ public interface HealthConditionService {
 
     List<HealthHistoryConditionBo> loadFamilyHistories(Integer patientId, Long documentId, List<HealthHistoryConditionBo> familyHistories);
 
-    GeneralHealthConditionBo getGeneralState(Integer internmentEpisodeId);
-
-    HealthConditionBo getMainDiagnosisGeneralState(Integer internmentEpisodeId);
-
-    List<DiagnosisBo> getAlternativeDiagnosisGeneralState(Integer internmentEpisodeId);
-
-    List<HealthConditionBo> getDiagnosesGeneralState(Integer internmentEpisodeId);
-
-    List<HealthHistoryConditionBo> getPersonalHistoriesGeneralState(Integer internmentEpisodeId);
-
-    List<HealthHistoryConditionBo> getFamilyHistoriesGeneralState(Integer internmentEpisodeId);
-
     List<Integer> copyDiagnoses(List<Integer> diagnosesId);
-
-    List<DiagnosisBo> getActiveAlternativeDiagnosesGeneralState(Integer internmentEpisodeId);
 }

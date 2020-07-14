@@ -5,12 +5,12 @@ import net.pladema.clinichistory.hospitalization.controller.constraints.Internme
 import net.pladema.clinichistory.hospitalization.controller.dto.InternmentGeneralStateDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.Last2VitalSignsDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.internmentstate.DiagnosesGeneralStateDto;
+import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.*;
 import net.pladema.clinichistory.hospitalization.controller.mapper.InternmentStateMapper;
 import net.pladema.clinichistory.hospitalization.service.InternmentStateService;
 import net.pladema.clinichistory.hospitalization.service.domain.InternmentGeneralState;
 import net.pladema.clinichistory.hospitalization.service.domain.Last2VitalSignsBo;
-import net.pladema.clinichistory.ips.controller.dto.*;
-import net.pladema.clinichistory.ips.service.*;
+import net.pladema.clinichistory.hospitalization.service.generalstate.*;
 import net.pladema.clinichistory.ips.service.domain.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,32 +38,32 @@ public class InternmentStateController {
 
     private final InternmentStateService internmentStateService;
 
-    private final HealthConditionService healthConditionService;
+    private final HealthConditionGeneralStateService healthConditionGeneralStateService;
 
-    private final MedicationService medicationService;
+    private final MedicationGeneralStateService medicationGeneralStateService;
 
-    private final AllergyService allergyService;
+    private final AllergyGeneralStateService allergyGeneralStateServiceService;
 
-    private final InmunizationService inmunizationService;
+    private final InmunizationGeneralStateService inmunizationGeneralStateService;
 
-    private final ClinicalObservationService clinicalObservationService;
+    private final ClinicalObservationGeneralStateService clinicalObservationGeneralStateService;
 
     private final InternmentStateMapper internmentStateMapper;
 
     public InternmentStateController(InternmentStateService internmentStateService,
-                                     HealthConditionService healthConditionService,
-                                     MedicationService medicationService,
-                                     AllergyService allergyService,
-                                     InmunizationService inmunizationService,
+                                     HealthConditionGeneralStateService healthConditionGeneralStateService,
+                                     MedicationGeneralStateService medicationGeneralStateService,
+                                     AllergyGeneralStateService allergyGeneralStateServiceService,
+                                     InmunizationGeneralStateService inmunizationGeneralStateService,
                                      InternmentStateMapper internmentStateMapper,
-                                     ClinicalObservationService clinicalObservationService) {
+                                     ClinicalObservationGeneralStateService clinicalObservationGeneralStateService) {
         this.internmentStateService = internmentStateService;
-        this.healthConditionService = healthConditionService;
-        this.medicationService = medicationService;
-        this.allergyService = allergyService;
-        this.inmunizationService = inmunizationService;
+        this.healthConditionGeneralStateService = healthConditionGeneralStateService;
+        this.medicationGeneralStateService = medicationGeneralStateService;
+        this.allergyGeneralStateServiceService = allergyGeneralStateServiceService;
+        this.inmunizationGeneralStateService = inmunizationGeneralStateService;
         this.internmentStateMapper = internmentStateMapper;
-        this.clinicalObservationService = clinicalObservationService;
+        this.clinicalObservationGeneralStateService = clinicalObservationGeneralStateService;
     }
 
     @InternmentValid
@@ -84,7 +84,7 @@ public class InternmentStateController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
         LOG.debug("Imput parameters -> institutionId {}, internmentEpisodeId {}", institutionId, internmentEpisodeId);
-        HealthConditionBo mainDiagnosis = healthConditionService.getMainDiagnosisGeneralState(internmentEpisodeId);
+        HealthConditionBo mainDiagnosis = healthConditionGeneralStateService.getMainDiagnosisGeneralState(internmentEpisodeId);
         HealthConditionDto result = internmentStateMapper.toHealthConditionDto(mainDiagnosis);
         LOG.debug(LOGGING_OUTPUT, result);
         return  ResponseEntity.ok().body(result);
@@ -96,7 +96,7 @@ public class InternmentStateController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
         LOG.debug(LOGGING_INSTITUTION_AND_INTERNMENT_EPISODE, institutionId, internmentEpisodeId);
-        List<DiagnosisBo> diagnosis = healthConditionService.getAlternativeDiagnosisGeneralState(internmentEpisodeId);
+        List<DiagnosisBo> diagnosis = healthConditionGeneralStateService.getAlternativeDiagnosisGeneralState(internmentEpisodeId);
         List<DiagnosisDto> result = internmentStateMapper.toListDiagnosisDto(diagnosis);
         LOG.debug(LOGGING_OUTPUT, result);
         return  ResponseEntity.ok().body(result);
@@ -108,7 +108,7 @@ public class InternmentStateController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
         LOG.debug(LOGGING_INSTITUTION_AND_INTERNMENT_EPISODE, institutionId, internmentEpisodeId);
-        List<DiagnosisBo> diagnosis = healthConditionService.getActiveAlternativeDiagnosesGeneralState(internmentEpisodeId);
+        List<DiagnosisBo> diagnosis = healthConditionGeneralStateService.getActiveAlternativeDiagnosesGeneralState(internmentEpisodeId);
         List<DiagnosisDto> result = internmentStateMapper.toListDiagnosisDto(diagnosis);
         LOG.debug(LOGGING_OUTPUT, result);
         return  ResponseEntity.ok().body(result);
@@ -120,7 +120,7 @@ public class InternmentStateController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
         LOG.debug(LOGGING_INSTITUTION_AND_INTERNMENT_EPISODE, institutionId, internmentEpisodeId);
-        List<HealthConditionBo> diagnoses = healthConditionService.getDiagnosesGeneralState(internmentEpisodeId);
+        List<HealthConditionBo> diagnoses = healthConditionGeneralStateService.getDiagnosesGeneralState(internmentEpisodeId);
         List<DiagnosesGeneralStateDto> result = internmentStateMapper.toListDiagnosesGeneralStateDto(diagnoses);
         LOG.debug(LOGGING_OUTPUT, result);
         return  ResponseEntity.ok().body(result);
@@ -132,7 +132,7 @@ public class InternmentStateController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
         LOG.debug(LOGGING_INSTITUTION_AND_INTERNMENT_EPISODE, institutionId, internmentEpisodeId);
-        List<HealthHistoryConditionBo> personalHistories = healthConditionService.getPersonalHistoriesGeneralState(internmentEpisodeId);
+        List<HealthHistoryConditionBo> personalHistories = healthConditionGeneralStateService.getPersonalHistoriesGeneralState(internmentEpisodeId);
         List<HealthHistoryConditionDto> result = internmentStateMapper.toListHealthHistoryConditionDto(personalHistories);
                 LOG.debug(LOGGING_OUTPUT, result);
         return  ResponseEntity.ok().body(result);
@@ -144,7 +144,7 @@ public class InternmentStateController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
         LOG.debug(LOGGING_INSTITUTION_AND_INTERNMENT_EPISODE, institutionId, internmentEpisodeId);
-        List<HealthHistoryConditionBo> familyHistories = healthConditionService.getFamilyHistoriesGeneralState(internmentEpisodeId);
+        List<HealthHistoryConditionBo> familyHistories = healthConditionGeneralStateService.getFamilyHistoriesGeneralState(internmentEpisodeId);
         List<HealthHistoryConditionDto> result = internmentStateMapper.toListHealthHistoryConditionDto(familyHistories);
                 LOG.debug(LOGGING_OUTPUT, result);
         return  ResponseEntity.ok().body(result);
@@ -156,7 +156,7 @@ public class InternmentStateController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
         LOG.debug(LOGGING_INSTITUTION_AND_INTERNMENT_EPISODE, institutionId, internmentEpisodeId);
-        List<MedicationBo> medicationBos = medicationService.getMedicationsGeneralState(internmentEpisodeId);
+        List<MedicationBo> medicationBos = medicationGeneralStateService.getMedicationsGeneralState(internmentEpisodeId);
         List<MedicationDto> result = internmentStateMapper.toListMedicationDto(medicationBos);
         LOG.debug(LOGGING_OUTPUT, result);
         return  ResponseEntity.ok().body(result);
@@ -168,7 +168,7 @@ public class InternmentStateController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
         LOG.debug(LOGGING_INSTITUTION_AND_INTERNMENT_EPISODE, institutionId, internmentEpisodeId);
-        AnthropometricDataBo anthropometricDatas = clinicalObservationService.getLastAnthropometricDataGeneralState(internmentEpisodeId);
+        AnthropometricDataBo anthropometricDatas = clinicalObservationGeneralStateService.getLastAnthropometricDataGeneralState(internmentEpisodeId);
         AnthropometricDataDto result = internmentStateMapper.toAnthropometricDataDto(anthropometricDatas);
         LOG.debug(LOGGING_OUTPUT, result);
         return  ResponseEntity.ok().body(result);
@@ -180,7 +180,7 @@ public class InternmentStateController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
         LOG.debug(LOGGING_INSTITUTION_AND_INTERNMENT_EPISODE, institutionId, internmentEpisodeId);
-        Last2VitalSignsBo vitalSignBos = clinicalObservationService.getLast2VitalSignsGeneralState(internmentEpisodeId);
+        Last2VitalSignsBo vitalSignBos = clinicalObservationGeneralStateService.getLast2VitalSignsGeneralState(internmentEpisodeId);
         Last2VitalSignsDto result = internmentStateMapper.toLast2VitalSignDto(vitalSignBos);
         LOG.debug(LOGGING_OUTPUT, result);
         return  ResponseEntity.ok().body(result);
@@ -192,7 +192,7 @@ public class InternmentStateController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
         LOG.debug(LOGGING_INSTITUTION_AND_INTERNMENT_EPISODE, institutionId, internmentEpisodeId);
-        List<InmunizationBo> inmunizationBos = inmunizationService.getInmunizationsGeneralState(internmentEpisodeId);
+        List<InmunizationBo> inmunizationBos = inmunizationGeneralStateService.getInmunizationsGeneralState(internmentEpisodeId);
         List<InmunizationDto> result = internmentStateMapper.toListInmunizationDto(inmunizationBos);
         LOG.debug(LOGGING_OUTPUT, result);
         return  ResponseEntity.ok().body(result);
@@ -204,7 +204,7 @@ public class InternmentStateController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
         LOG.debug(LOGGING_INSTITUTION_AND_INTERNMENT_EPISODE, institutionId, internmentEpisodeId);
-        List<AllergyConditionBo> allergyConditionBos = allergyService.getAllergiesGeneralState(internmentEpisodeId);
+        List<AllergyConditionBo> allergyConditionBos = allergyGeneralStateServiceService.getAllergiesGeneralState(internmentEpisodeId);
         List<AllergyConditionDto> result = internmentStateMapper.toListAllergyConditionDto(allergyConditionBos);
         LOG.debug(LOGGING_OUTPUT, result);
         return  ResponseEntity.ok().body(result);

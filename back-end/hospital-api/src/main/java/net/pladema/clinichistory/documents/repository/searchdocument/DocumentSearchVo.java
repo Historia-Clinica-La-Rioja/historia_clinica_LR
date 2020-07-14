@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.ips.repository.generalstate.DocumentObservationsVo;
+import net.pladema.clinichistory.hospitalization.repository.generalstate.domain.DocumentObservationsVo;
 import net.pladema.person.repository.domain.PersonNameVo;
 
 import java.time.LocalDate;

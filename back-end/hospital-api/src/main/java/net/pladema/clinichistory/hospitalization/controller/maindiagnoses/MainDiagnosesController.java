@@ -5,7 +5,7 @@ import io.swagger.annotations.Api;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
 import net.pladema.clinichistory.hospitalization.controller.documents.evolutionnote.constraints.EvolutionNoteValid;
 import net.pladema.clinichistory.hospitalization.controller.maindiagnoses.dto.MainDiagnosisDto;
-import net.pladema.clinichistory.ips.controller.mapper.HealthConditionMapper;
+import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.HealthConditionMapper;
 import net.pladema.clinichistory.documents.events.OnGenerateDocumentEvent;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.documents.service.InternmentDocument;

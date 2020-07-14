@@ -9,7 +9,7 @@ import net.pladema.clinichistory.hospitalization.controller.documents.anamnesis.
 import net.pladema.clinichistory.hospitalization.controller.documents.anamnesis.dto.AnamnesisDto;
 import net.pladema.clinichistory.hospitalization.controller.documents.anamnesis.dto.ResponseAnamnesisDto;
 import net.pladema.clinichistory.hospitalization.controller.documents.anamnesis.mapper.AnamnesisMapper;
-import net.pladema.clinichistory.ips.controller.constraints.EffectiveVitalSignTimeValid;
+import net.pladema.clinichistory.hospitalization.controller.generalstate.constraint.EffectiveVitalSignTimeValid;
 import net.pladema.clinichistory.documents.events.OnGenerateDocumentEvent;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.AnamnesisService;

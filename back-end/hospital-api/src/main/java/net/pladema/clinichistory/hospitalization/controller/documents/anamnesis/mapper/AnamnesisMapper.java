@@ -3,8 +3,8 @@ package net.pladema.clinichistory.hospitalization.controller.documents.anamnesis
 import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import net.pladema.clinichistory.hospitalization.controller.documents.anamnesis.dto.AnamnesisDto;
 import net.pladema.clinichistory.hospitalization.controller.documents.anamnesis.dto.ResponseAnamnesisDto;
-import net.pladema.clinichistory.ips.controller.mapper.AnthropometricDataMapper;
-import net.pladema.clinichistory.ips.controller.mapper.VitalSignMapper;
+import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.AnthropometricDataMapper;
+import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.VitalSignMapper;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.AnamnesisBo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
