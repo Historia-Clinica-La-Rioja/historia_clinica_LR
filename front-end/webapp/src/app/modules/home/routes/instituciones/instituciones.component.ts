@@ -1,10 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { LoggedUserService } from '../../../auth/services/logged-user.service';
-import { map } from 'rxjs/operators';
-import { RoleAssignment } from '@api-rest/api-model';
-import { Router } from '@angular/router';
-import { InstitutionService } from '../../../api-rest/services/institution.service';
-import { uniqueItems } from '@core/utils/array.utils';
+import {Component, OnInit} from '@angular/core';
+import {LoggedUserService} from '../../../auth/services/logged-user.service';
+import {RoleAssignment} from '@api-rest/api-model';
+import {Router} from '@angular/router';
+import {InstitutionService} from '@api-rest/services/institution.service';
+import {uniqueItems} from '@core/utils/array.utils';
 
 @Component({
 	selector: 'app-instituciones',
@@ -22,18 +21,21 @@ export class InstitucionesComponent implements OnInit {
 	) {
 		loggedUserService.assignments$.subscribe((allRoles: RoleAssignment[]) => {
 			const institutionIds = allRoles
-				.filter(r => r.institutionId >= 0)
+				.filter((ra) => ra.institutionId >= 0 && ra.role !== 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')
 				.map(r => r.institutionId);
 
-			this.backoffice = allRoles
-				.filter((ra) => ra.role === 'ROOT' ||
-					ra.role === 'ADMINISTRADOR' ||
-					ra.role === 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE' ).length > 0;
+			this.backoffice = this.hasAccessToBackoffice(allRoles);
 
 			institutionService.getInstitutions(institutionIds).subscribe(institutions => {
 				let uniqueIds = uniqueItems(institutionIds);
-				if (uniqueIds.length === 1 && allRoles.length === 1)
-					this.ingresar({id: uniqueIds[0]})
+
+				const webappAccess = this.hasAccessToWebapp(allRoles);
+
+				const onlyBackoffice = !webappAccess && this.backoffice;
+				const hasSingleIdWebapp = !this.backoffice && webappAccess && uniqueIds.length === 1;
+
+				if (hasSingleIdWebapp || onlyBackoffice)
+					this.ingresar({id: uniqueIds[0]}, this.backoffice)
 				this.institutions = institutions;
 			});
 		});
@@ -42,11 +44,25 @@ export class InstitucionesComponent implements OnInit {
 	ngOnInit(): void {
 	}
 
-	ingresar(institutionDto: { id: number }): void {
-		if (institutionDto.id === -1) {
+	ingresar(institutionDto: { id: number }, backoffice): void {
+		if (backoffice) {
 			window.location.href = '/backoffice/index.html';
 		} else {
 			this.router.navigate(['/institucion', institutionDto.id]);
 		}
+	}
+
+	hasAccessToBackoffice(allRoles: RoleAssignment[]){
+		return allRoles
+			.filter((ra) => ra.role === 'ROOT' ||
+				ra.role === 'ADMINISTRADOR' ||
+				ra.role === 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE' ).length > 0;
+	}
+
+	hasAccessToWebapp(allRoles: RoleAssignment[]){
+		return allRoles
+			.filter((ra) => ra.role !== 'ROOT' &&
+				ra.role !== 'ADMINISTRADOR' &&
+				ra.role !== 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE' ).length > 0;
 	}
 }

@@ -10,7 +10,7 @@
 					<span *ngSwitchCase="1">Tiene acceso a la siguiente institución:</span>
 					<span *ngSwitchDefault>Tiene acceso a las siguientes instituciones:</span>
 				</div>
-				<mat-list-item *ngFor="let institution of institutions" role="listitem" (click)="ingresar(institution)">
+				<mat-list-item *ngFor="let institution of institutions" role="listitem" (click)="ingresar(institution,false)">
 					<mat-icon color="primary" mat-list-icon fontSet="material-icons-outlined">verified_user</mat-icon>
 					<h3 matLine >{{institution.name}}</h3>
 				</mat-list-item>
@@ -26,7 +26,7 @@
 			<mat-card-title>Acceso de administrador</mat-card-title>
 		</mat-card-header>
 		<mat-action-list role="list">
-			<mat-list-item role="listitem" (click)="ingresar({id: -1})">
+			<mat-list-item role="listitem" (click)="ingresar({id: -1},true)">
 				<mat-icon color="primary" mat-list-icon fontSet="material-icons-outlined">verified_user</mat-icon>
 				<h3 matLine >Backoffice</h3>
 			</mat-list-item>
