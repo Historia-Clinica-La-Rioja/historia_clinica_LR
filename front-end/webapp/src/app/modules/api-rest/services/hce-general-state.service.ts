@@ -29,16 +29,6 @@ const ALERGY_DATA: any[] = [
 	},
 ];
 
-const PERSONAL_H_DATA: any[] = [
-	{
-		date: '2020-07-08',
-		id: 31,
-		snomed: { id: '429961000', pt: 'antecedente familiar de demencia' },
-		statusId: '55561003',
-		verificationId: '59156000',
-	}
-];
-
 const MEDICATIONS: any[] = [
 	{
 		snomed: { id: '429961000', pt: 'antecedente familiar de demencia' },
@@ -82,7 +72,8 @@ export class HceGeneralStateService {
 	}
 
 	getPersonalHistories(patientId: number): Observable<HealthHistoryConditionDto[]> {
-		return of(PERSONAL_H_DATA);
+		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/personalHistory`;
+		return this.http.get<HealthHistoryConditionDto[]>(url);
 	}
 
 	getMedications(patientId: number): Observable<MedicationDto[]> {
