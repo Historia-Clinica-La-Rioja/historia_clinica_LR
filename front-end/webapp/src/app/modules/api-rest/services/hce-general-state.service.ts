@@ -13,15 +13,6 @@ import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 
 // todo borrar cuando esten los endpoints
-const FAMILY_H_DATA: any[] = [
-	{
-		date: '2020-07-08',
-		id: 31,
-		snomed: { id: '429961000', pt: 'antecedente familiar de demencia' },
-		statusId: '55561003',
-		verificationId: '59156000',
-	}
-];
 
 const ALERGY_DATA: any[] = [
 	{
@@ -86,7 +77,8 @@ export class HceGeneralStateService {
 	}
 
 	getFamilyHistories(patientId: number): Observable<HealthHistoryConditionDto[]> {
-		return of(FAMILY_H_DATA);
+		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/familyHistory`;
+		return this.http.get<HealthHistoryConditionDto[]>(url);
 	}
 
 	getPersonalHistories(patientId: number): Observable<HealthHistoryConditionDto[]> {
