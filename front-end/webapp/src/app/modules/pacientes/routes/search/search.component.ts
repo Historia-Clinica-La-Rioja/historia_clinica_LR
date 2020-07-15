@@ -1,22 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { hasError, VALIDATIONS } from "@core/utils/form.utils";
-import { PATIENT_TYPE } from "@core/utils/patient.utils";
+import { hasError, VALIDATIONS } from '@core/utils/form.utils';
+import { PATIENT_TYPE } from '@core/utils/patient.utils';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Moment } from 'moment';
-import * as moment from 'moment';
-import { PatientSearchDto, GenderDto, IdentificationTypeDto } from '@api-rest/api-model';
+import { GenderDto, IdentificationTypeDto, PatientSearchDto } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
-import { TableModel, ActionDisplays } from 'src/app/modules/presentation/components/table/table.component';
-import { DateFormat, momentParseDate } from '@core/utils/moment.utils';
+import { ActionDisplays, TableModel } from 'src/app/modules/presentation/components/table/table.component';
+import { DateFormat, momentFormat, momentParseDate, momentParseDateTime, newMoment } from '@core/utils/moment.utils';
 import { PersonService } from '@api-rest/services/person.service';
 import { finalize } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { ViewPatientDetailComponent } from '../../component/view-patient-detail/view-patient-detail.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { ContextService } from "@core/services/context.service";
-import { FeatureFlagService } from "@core/services/feature-flag.service";
+import { ContextService } from '@core/services/context.service';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 const ROUTE_NEW = 'pacientes/new';
 const ROUTE_HOME = 'pacientes';
@@ -29,15 +28,15 @@ const RENAPER_FFLAG = 'habilitarServicioRenaper';
 })
 export class SearchComponent implements OnInit {
 
-	today: Moment = moment();
-	public formSearchSubmitted: boolean = false;
+	today: Moment = newMoment();
+	public formSearchSubmitted = false;
 	public formSearch: FormGroup;
 	public identifyTypeArray: IdentificationTypeDto[];
 	public identifyTypeViewPatientDetail = {};
 	public genderOptions: GenderDto[];
 	public genderOptionsViewTable = {};
-	public viewSearch: boolean = true;
-	public isLoading: boolean = true;
+	public viewSearch = true;
+	public isLoading = true;
 	public hasError = hasError;
 	public identificationTypeId;
 	public identificationNumber;
@@ -46,33 +45,34 @@ export class SearchComponent implements OnInit {
 	public searchPatient;
 	private readonly routePrefix;
 
-	constructor(private formBuilder: FormBuilder,
-	            private patientService: PatientService,
-	            private personService: PersonService,
-	            private router: Router,
-	            private route: ActivatedRoute,
-	            private personMasterDataService: PersonMasterDataService,
-	            private snackBarService: SnackBarService,
-	            public dialog: MatDialog,
-	            private contextService: ContextService,
-	            private featureFlagService: FeatureFlagService) {
+	constructor(
+		private formBuilder: FormBuilder,
+		private patientService: PatientService,
+		private personService: PersonService,
+		private router: Router,
+		private route: ActivatedRoute,
+		private personMasterDataService: PersonMasterDataService,
+		private snackBarService: SnackBarService,
+		public dialog: MatDialog,
+		private contextService: ContextService,
+		private featureFlagService: FeatureFlagService
+	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 
 	ngOnInit(): void {
 		this.route.queryParams.subscribe(params => {
-			this.identificationTypeId = params['identificationTypeId'];
-			this.identificationNumber = params['identificationNumber'];
-			this.genderId = params['genderId'];
+			this.identificationTypeId = params.identificationTypeId;
+			this.identificationNumber = params.identificationNumber;
+			this.genderId = params.genderId;
 
 			this.buildFormSearch(params);
 
 			this.featureFlagService.isOn(RENAPER_FFLAG)
 				.subscribe(result => {
-					if(result) {
+					if (result) {
 						this.callRenaperService();
-					}
-					else {
+					} else {
 						this.isLoading = false;
 					}
 				});
@@ -81,7 +81,7 @@ export class SearchComponent implements OnInit {
 				identificationTypes => {
 					this.identifyTypeArray = identificationTypes;
 					identificationTypes.forEach(identificationType => {
-						this.identifyTypeViewPatientDetail[identificationType.id] = identificationType.description
+						this.identifyTypeViewPatientDetail[identificationType.id] = identificationType.description;
 					});
 				});
 
@@ -89,7 +89,7 @@ export class SearchComponent implements OnInit {
 				genders => {
 					this.genderOptions = genders;
 					genders.forEach(gender => {
-						this.genderOptionsViewTable[gender.id] = gender.description
+						this.genderOptionsViewTable[gender.id] = gender.description;
 					});
 				});
 		});
@@ -121,7 +121,8 @@ export class SearchComponent implements OnInit {
 				{
 					columnDef: 'birthDate',
 					header: 'F. Nac',
-					text: (row) => momentParseDate(String(row.person.birthDate)).format(DateFormat.VIEW_DATE)
+					text: (row) => (row.person.birthDate === undefined) ? '' :
+						momentFormat(momentParseDateTime(String(row.person.birthDate)), DateFormat.VIEW_DATE)
 				},
 				{
 					columnDef: 'numberDni',
@@ -131,12 +132,12 @@ export class SearchComponent implements OnInit {
 				{
 					columnDef: 'state',
 					header: 'Estado',
-					text: (row) => (row.activo ? "Activo" : "Inactivo")
+					text: (row) => (row.activo ? 'Activo' : 'Inactivo')
 				},
 				{
 					columnDef: 'ranking',
 					header: 'Coincidencia',
-					text: (row) => row.ranking + " %"
+					text: (row) => row.ranking + ' %'
 				},
 				{
 					columnDef: 'action',
@@ -164,18 +165,18 @@ export class SearchComponent implements OnInit {
 				lastName: patient.person.lastName,
 				age: calculateAge(String(patient.person.birthDate)),
 				gender: this.genderOptionsViewTable[patient.person.genderId],
-				birthDate: momentParseDate(String(patient.person.birthDate)).format(DateFormat.VIEW_DATE),
+				birthDate: (patient.person.birthDate === undefined) ? '' :
+					momentFormat(momentParseDateTime(String(patient.person.birthDate)), DateFormat.VIEW_DATE),
 				identificationNumber: patient.person.identificationNumber,
 				identificationTypeId: this.identifyTypeViewPatientDetail[patient.person.identificationTypeId]
 			}
 		});
 
 		function calculateAge(birthDate: string): number {
-			const today: Moment = moment();
+			const today: Moment = newMoment();
 			const birth: Moment = momentParseDate(birthDate);
 
-			const diff = today.diff(birth, 'years');
-			return diff;
+			return today.diff(birth, 'years');
 		}
 	}
 
@@ -208,7 +209,7 @@ export class SearchComponent implements OnInit {
 	}
 
 	back() {
-		this.router.navigate([this.routePrefix + ROUTE_HOME])
+		this.router.navigate([this.routePrefix + ROUTE_HOME]);
 	}
 
 	submit() {
@@ -224,7 +225,7 @@ export class SearchComponent implements OnInit {
 				otherLastNames: this.formSearch.controls.otherLastNames.value,
 				middleNames: this.formSearch.controls.middleNames.value,
 				typeId: PATIENT_TYPE.PERMANENT_INVALID
-			}
+			};
 			this.goToNextState(this.searchPatient);
 		}
 	}
@@ -249,7 +250,7 @@ export class SearchComponent implements OnInit {
 	}
 
 	goToNewPatient() {
-		this.goToAddPatient(this.searchPatient)
+		this.goToAddPatient(this.searchPatient);
 	}
 
 	viewSearchComponent(): boolean {
@@ -261,26 +262,26 @@ export class SearchComponent implements OnInit {
 	}
 
 	private splitStringByFirstSpaceCharacter(string: String): any {
-		var spaceIndex: number = string.indexOf(' ');
+		const spaceIndex: number = string.indexOf(' ');
 		return (spaceIndex != -1) ?
 			{
 				firstSubstring: string.substr(0, spaceIndex),
 				secondSubstring: string.substr(spaceIndex + 1)
 			}
 			:
-			{firstSubstring: string}
+			{firstSubstring: string};
 	}
 
 	private mapToPerson(personData): any {
-		let splitedFirstName = this.splitStringByFirstSpaceCharacter(personData.firstName);
-		let splitedLastName = this.splitStringByFirstSpaceCharacter(personData.lastName);
+		const splitedFirstName = this.splitStringByFirstSpaceCharacter(personData.firstName);
+		const splitedLastName = this.splitStringByFirstSpaceCharacter(personData.lastName);
 		return {
 			firstName: splitedFirstName.firstSubstring,
 			middleNames: splitedFirstName.secondSubstring,
 			lastName: splitedLastName.firstSubstring,
 			otherLastNames: splitedLastName.secondSubstring,
 			birthDate: personData.birthDate
-		}
+		};
 	}
 
 	private callRenaperService(): void {
@@ -292,7 +293,7 @@ export class SearchComponent implements OnInit {
 			.subscribe(
 				personData => {
 					if (personData && Object.keys(personData).length !== 0) {
-						let personToAdd = this.mapToPerson(personData);
+						const personToAdd = this.mapToPerson(personData);
 						personToAdd.identificationTypeId = this.identificationTypeId;
 						personToAdd.identificationNumber = this.identificationNumber;
 						personToAdd.genderId = this.genderId;
@@ -300,7 +301,7 @@ export class SearchComponent implements OnInit {
 						this.goToNextState(personToAdd);
 					}
 				}, () => {
-					this.snackBarService.showError('pacientes.search.RENAPER_TIMEOUT')
+					this.snackBarService.showError('pacientes.search.RENAPER_TIMEOUT');
 				});
 	}
 
