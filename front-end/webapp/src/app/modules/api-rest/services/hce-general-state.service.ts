@@ -70,8 +70,6 @@ const INMUNIZATIONS_DATA: any[] = [
 	}
 ];
 
-const VACIO: any = {};
-
 @Injectable({
 	providedIn: 'root'
 })
@@ -104,7 +102,8 @@ export class HceGeneralStateService {
 	}
 
 	getVitalSigns(patientId: number): Observable<Last2VitalSignsDto> {
-		return of(VACIO);
+		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/vitalSigns`;
+		return this.http.get<Last2VitalSignsDto>(url);
 	}
 
 	getAnthropometricData(patientId: number): Observable<AnthropometricDataDto> {
