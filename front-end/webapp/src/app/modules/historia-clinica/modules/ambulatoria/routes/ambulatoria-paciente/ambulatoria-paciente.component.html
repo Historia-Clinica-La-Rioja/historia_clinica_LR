@@ -4,7 +4,7 @@
 	</section>
 
 	<div fxLayout="column" fxLayoutGap="20px">
-		<app-patient-card [patient]="mockedPatient">
+		<app-patient-card [patient]="patient$ | async">
 			<div horizontal-content>
 				<button mat-flat-button color="primary">
 					{{ 'ambulatoria.paciente.card.NUEVA_CONSULTA' | translate | uppercase }}
