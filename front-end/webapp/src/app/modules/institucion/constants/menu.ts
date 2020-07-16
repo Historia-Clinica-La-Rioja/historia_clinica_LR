@@ -38,6 +38,17 @@ export const SIDEBAR_MENU: MenuItem[] = [
 		],
 	},
 	{
+		text: 'app.menu.TURNOS',
+		icon: 'calendar_today',
+		url: './turnos',
+		permissions: [
+			ERole.ADMINISTRATIVO,
+			ERole.ESPECIALISTA_MEDICO,
+			ERole.PROFESIONAL_DE_SALUD,
+			ERole.ENFERMERO,
+		],
+	},
+	{
 		text: 'app.menu.PERFIL',
 		icon: 'account_circle',
 		url: '/home/profile',

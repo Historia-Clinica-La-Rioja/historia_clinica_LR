@@ -1,0 +1,11 @@
+{
+	"turnos": {
+		"home": {
+			"TITLE": "Gestión de turnos",
+			"NEW-AGENDA": "Nueva agenda"
+		},
+		"new-agenda": {
+			"TITLE": "Nueva agenda"
+		}
+	}
+}

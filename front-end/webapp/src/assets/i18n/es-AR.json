@@ -6,7 +6,8 @@
 			"INSTITUCIONES": "Instituciones",
 			"INTERNACION": "HCE Internación",
 			"PACIENTES": "Pacientes",
-			"PERFIL": "Mi cuenta"
+			"PERFIL": "Mi cuenta",
+			"TURNOS": "Gestión de turnos"
 		}
 	},
 	"buttons": {

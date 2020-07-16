@@ -22,6 +22,10 @@ const routes: Routes = [
 				path: 'ambulatoria',
 				loadChildren: () => import('../historia-clinica/modules/ambulatoria/ambulatoria.module').then(m => m.AmbulatoriaModule),
 			},
+			{
+				path: 'turnos',
+				loadChildren: () => import('../turnos/turnos.module').then(m => m.TurnosModule),
+			},
 		]
 	}
 ];

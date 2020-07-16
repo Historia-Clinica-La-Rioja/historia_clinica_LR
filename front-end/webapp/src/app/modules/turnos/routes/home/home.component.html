@@ -1,0 +1,12 @@
+<app-content width="full">
+	<section>
+		<h2 class="page-title" [translate]="'turnos.home.TITLE'"></h2>
+		<div fxLayout="row" fxLayout.xs="column" fxLayoutGap="20px">
+			<ng-container>
+				<button mat-flat-button color="primary" id="goToNewAgendaButton" (click)="goToNewAgenda()" fxFlexFill.xs>
+					<span class="uppercase" [translate]="'turnos.home.NEW-AGENDA'"></span>
+				</button>
+			</ng-container>
+		</div>
+	</section>
+</app-content>
