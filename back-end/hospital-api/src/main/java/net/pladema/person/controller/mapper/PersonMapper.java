@@ -25,23 +25,23 @@ import net.pladema.person.repository.entity.PersonExtended;
 @Mapper(uses = {AddressMapper.class, IdentificationTypeMapper.class, GenderMapper.class, LocalDateMapper.class, ProvinceMapper.class, DepartmentMapper.class})
 public interface PersonMapper {
 
-    public BMPersonDto fromPerson(Person person);
+    BMPersonDto fromPerson(Person person);
 
-    public Person fromPersonDto(APersonDto person);
+    Person fromPersonDto(APersonDto person);
 
-    public PersonExtended updatePersonExtended(APersonDto person, Integer addressId);
+    PersonExtended updatePersonExtended(APersonDto person, Integer addressId);
 
-    public PersonExtended updatePersonExtendedPatient(APatientDto patient, Integer addresId);
+    PersonExtended updatePersonExtendedPatient(APatientDto patient, Integer addresId);
     
-    public PersonExtended updatePersonExtendedPatient(@MappingTarget PersonExtended personExtendedToUpdate, APatientDto patient);
+    PersonExtended updatePersonExtendedPatient(@MappingTarget PersonExtended personExtendedToUpdate, APatientDto patient);
 
-    public AddressDto updatePersonAddress(APersonDto person);
+    AddressDto updatePersonAddress(APersonDto person);
 
-    public Person fromAPatientDto(APatientDto patient);
+    Person fromAPatientDto(APatientDto patient);
 
+    @Named("toBasicDataPersonDto")
     @Mapping(target = "id", source = "person.id")
     @Mapping(target = "gender", source = "gender", qualifiedByName = "fromGender")
-    @Named("toBasicDataPersonDto")
     BasicDataPersonDto basicDatafromPerson(Person person, Gender gender);
 
 

@@ -13,7 +13,11 @@ public class BasicDataPersonDto {
 
     private String firstName;
 
+    private String middleNames;
+
     private String lastName;
+
+    private String otherLastNames;
 
     private GenderDto gender;
 

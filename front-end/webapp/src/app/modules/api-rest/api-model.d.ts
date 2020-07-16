@@ -132,6 +132,8 @@ export interface BasicDataPersonDto {
     gender: GenderDto;
     id: number;
     lastName: string;
+    middleNames: string;
+    otherLastNames: string;
 }
 
 export interface BasicPatientDto {
