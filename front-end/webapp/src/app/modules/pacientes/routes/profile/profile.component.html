@@ -2,11 +2,11 @@
 	<section>
 		<div *hasRole="['ADMINISTRATIVO']">
 			<button *ngIf="internmentEpisode?.id" mat-raised-button color="primary" (click)="goInternmentEpisode()">
-				<span>Ver internación</span>
+				<span class="uppercase">Ver internación</span>
 			</button>
 			<button *ngIf="!internmentEpisode?.inProgress" mat-raised-button color="primary"
 				(click)="goNewInternment()">
-				<span>Iniciar internación</span>
+				<span class="uppercase">Iniciar internación</span>
 			</button>
 		</div>
 		<div class="profile-card">

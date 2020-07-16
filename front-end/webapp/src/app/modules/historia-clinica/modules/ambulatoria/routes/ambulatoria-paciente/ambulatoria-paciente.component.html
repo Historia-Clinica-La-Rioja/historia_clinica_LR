@@ -3,28 +3,38 @@
 		<h2 class="page-title" [translate]="'ambulatoria.paciente.TITLE'"></h2>
 	</section>
 
-	<mat-card class="mat-typography">
-		<mat-card-content>
-			<mat-tab-group>
-				<mat-tab>
-					<ng-template mat-tab-label>
-						<mat-icon>content_paste</mat-icon>
-						<span>{{ 'ambulatoria.paciente.resumen.TAB_LABEL' | translate | uppercase }}</span>
-					</ng-template>
-					<ng-template matTabContent>
-						<app-resumen></app-resumen>
-					</ng-template>
-				</mat-tab>
-				<mat-tab>
-					<ng-template mat-tab-label>
-						<mat-icon>content_paste</mat-icon>
-						<span>{{ 'ambulatoria.paciente.vacunas.TAB_LABEL' | translate | uppercase }}</span>
-					</ng-template>
-					<ng-template matTabContent>
-						<app-vacunas></app-vacunas>
-					</ng-template>
-				</mat-tab>
-			</mat-tab-group>
-		</mat-card-content>
-	</mat-card>
+	<div fxLayout="column" fxLayoutGap="20px">
+		<app-patient-card [patient]="mockedPatient">
+			<div horizontal-content>
+				<button mat-flat-button color="primary">
+					{{ 'ambulatoria.paciente.card.NUEVA_CONSULTA' | translate | uppercase }}
+				</button>
+			</div>
+		</app-patient-card>
+
+		<mat-card class="mat-typography">
+			<mat-card-content>
+				<mat-tab-group>
+					<mat-tab>
+						<ng-template mat-tab-label>
+							<mat-icon>content_paste</mat-icon>
+							<span>{{ 'ambulatoria.paciente.resumen.TAB_LABEL' | translate | uppercase }}</span>
+						</ng-template>
+						<ng-template matTabContent>
+							<app-resumen></app-resumen>
+						</ng-template>
+					</mat-tab>
+					<mat-tab>
+						<ng-template mat-tab-label>
+							<mat-icon>content_paste</mat-icon>
+							<span>{{ 'ambulatoria.paciente.vacunas.TAB_LABEL' | translate | uppercase }}</span>
+						</ng-template>
+						<ng-template matTabContent>
+							<app-vacunas></app-vacunas>
+						</ng-template>
+					</mat-tab>
+				</mat-tab-group>
+			</mat-card-content>
+		</mat-card>
+	</div>
 </app-content>

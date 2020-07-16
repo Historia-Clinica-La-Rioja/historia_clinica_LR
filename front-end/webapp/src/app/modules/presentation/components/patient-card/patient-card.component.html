@@ -1,16 +1,18 @@
 <mat-card>
 	<ng-content select="[header]"></ng-content>
-	<mat-card-header>
-		<div mat-card-avatar class="header-image"></div>
-		<mat-card-title>
-			<span class="capitalize">{{ patient?.firstName }} {{patient?.lastName}}</span>
-			<span class="uppercase">ID {{patient?.id}}</span>
-		</mat-card-title>
-		<mat-card-subtitle>
-			<span [translate]=viewGenderAge()>
-			</span>
-		</mat-card-subtitle>
-	</mat-card-header>
+	<div fxLayout="row" fxLayoutAlign="space-between">
+		<mat-card-header>
+			<div mat-card-avatar class="header-image"></div>
+			<mat-card-title>
+				<span class="capitalize">{{ patient?.firstName }} {{patient?.lastName}}</span>
+				<span class="uppercase">ID {{patient?.id}}</span>
+			</mat-card-title>
+			<mat-card-subtitle>
+				<span [translate]=viewGenderAge()></span>
+			</mat-card-subtitle>
+		</mat-card-header>
+		<ng-content select="[horizontal-content]"></ng-content>
+	</div>
 	<mat-card-content>
 		<ng-content select="[content]"></ng-content>
 	</mat-card-content>
