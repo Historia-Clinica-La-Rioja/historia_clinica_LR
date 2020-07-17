@@ -11,6 +11,10 @@
 					"NUEVA_CONSULTA": "Nueva consulta"
 				}
 			},
+			"nueva-consulta": {
+				"TITLE": "Nueva consulta",
+				"SUBTITLE": "Completa los siguientes datos."
+			},
 			"problemas": {
 				"TAB_LABEL": "Problemas",
 				"TITLE": "Problemas y evoluciones",

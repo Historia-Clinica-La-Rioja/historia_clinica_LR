@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BasicPatientDto } from '@api-rest/api-model';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
@@ -19,8 +19,9 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	constructor(
 		private readonly route: ActivatedRoute,
 		private readonly patientService: PatientService,
-		private readonly mapperService: MapperService
-	) {}
+		private readonly mapperService: MapperService,
+		private readonly router: Router,
+) {}
 
 	ngOnInit(): void {
 		this.route.paramMap.subscribe((params) => {
@@ -31,5 +32,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		});
 	}
 
-
+	goToNuevaConsulta() {
+		this.router.navigateByUrl(`${this.router.url}/nueva`);
+	}
 }

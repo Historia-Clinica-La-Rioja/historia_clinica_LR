@@ -4,6 +4,7 @@ import { HomeComponent } from './routes/home/home.component';
 import { RoleGuard } from '@core/guards/RoleGuard';
 import { PatientProfileComponent } from './routes/patient-profile/patient-profile.component';
 import { AmbulatoriaPacienteComponent } from './routes/ambulatoria-paciente/ambulatoria-paciente.component';
+import { NuevaConsultaComponent } from './routes/nueva-consulta/nueva-consulta.component';
 
 const routes: Routes = [
 	{
@@ -19,6 +20,10 @@ const routes: Routes = [
 			{
 				path: ':idAmbulatoria/paciente/:idPaciente',
 				component: AmbulatoriaPacienteComponent
+			},
+			{
+				path: ':idAmbulatoria/paciente/:idPaciente/nueva',
+				component: NuevaConsultaComponent
 			},
 		],
 		canActivate: [RoleGuard],

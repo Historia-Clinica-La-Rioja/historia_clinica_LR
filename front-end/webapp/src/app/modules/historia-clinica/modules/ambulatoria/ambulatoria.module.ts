@@ -14,6 +14,7 @@ import { VacunasComponent } from './components/vacunas/vacunas.component';
 import { HistoriaClinicaModule } from '../../historia-clinica.module';
 import { AplicarVacunaComponent } from './dialogs/aplicar-vacuna/aplicar-vacuna.component';
 import { AppMaterialModule } from '../../../material/app.material.module';
+import { NuevaConsultaComponent } from './routes/nueva-consulta/nueva-consulta.component';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { AppMaterialModule } from '../../../material/app.material.module';
 		ResumenComponent,
 		ProblemasComponent,
 		VacunasComponent,
-		AplicarVacunaComponent
+		AplicarVacunaComponent,
+		NuevaConsultaComponent
 	],
 	imports: [
 		AmbulatoriaRoutingModule,

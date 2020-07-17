@@ -6,7 +6,7 @@
 	<section id="content" fxLayout="column" fxLayoutGap="20px">
 		<app-patient-card [patient]="patient$ | async">
 			<div horizontal-content>
-				<button id="nueva_consulta" mat-flat-button color="primary">
+				<button id="nueva_consulta" mat-flat-button color="primary" (click)="goToNuevaConsulta()">
 					{{ 'ambulatoria.paciente.card.buttons.NUEVA_CONSULTA' | translate | uppercase }}
 				</button>
 			</div>
