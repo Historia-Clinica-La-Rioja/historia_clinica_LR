@@ -5,12 +5,10 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.ConditionClinicalStatus;
 
-import java.io.Serializable;
-
 @Getter
 @Setter
 @ToString
-public abstract class ClinicalTerm implements Serializable {
+public abstract class ClinicalTerm {
 
     private Integer id;
 

@@ -49,4 +49,13 @@ public class OutpatientConsultation extends InternationAuditableEntity {
 
     @Column(name = "billable", nullable = false)
     private Boolean billable;
+
+    public OutpatientConsultation(Integer institutionId, Integer patientId, Integer doctorId, boolean billable) {
+        super();
+        this.institutionId = institutionId;
+        this.patientId = patientId;
+        this.billable = billable;
+        this.startDate = LocalDate.now();
+        this.doctorId = doctorId;
+    }
 }

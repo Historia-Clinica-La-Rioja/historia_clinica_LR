@@ -3,6 +3,7 @@ package net.pladema.clinichistory.ips.service;
 import net.pladema.clinichistory.ips.service.domain.DiagnosisBo;
 import net.pladema.clinichistory.ips.service.domain.HealthConditionBo;
 import net.pladema.clinichistory.ips.service.domain.HealthHistoryConditionBo;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProblemBo;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,4 +19,6 @@ public interface HealthConditionService {
     List<HealthHistoryConditionBo> loadFamilyHistories(Integer patientId, Long documentId, List<HealthHistoryConditionBo> familyHistories);
 
     List<Integer> copyDiagnoses(List<Integer> diagnosesId);
+
+    List<ProblemBo> loadProblems(Integer patientId, Long documentId, List<ProblemBo> problems);
 }

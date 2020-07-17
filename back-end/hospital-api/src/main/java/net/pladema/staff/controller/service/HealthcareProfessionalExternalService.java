@@ -5,4 +5,6 @@ import net.pladema.clinichistory.hospitalization.controller.dto.HealthCareProfes
 public interface HealthcareProfessionalExternalService {
 
     HealthCareProfessionalGroupDto addHealthcareProfessionalGroup(Integer internmentEpisodeId, Integer healthcareProfessionalId);
+
+    Integer getProfessionalId(Integer userId);
 }

@@ -14,6 +14,7 @@ import net.pladema.clinichistory.ips.service.SnomedService;
 import net.pladema.clinichistory.ips.service.domain.DiagnosisBo;
 import net.pladema.clinichistory.ips.service.domain.HealthConditionBo;
 import net.pladema.clinichistory.ips.service.domain.HealthHistoryConditionBo;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProblemBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -223,6 +224,33 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         List<Integer> result = clonedHc.stream().map(HealthCondition::getId).collect(Collectors.toList());
         LOG.debug(OUTPUT, result);
         return result;
+    }
+
+    @Override
+    public List<ProblemBo> loadProblems(Integer patientId, Long documentId, List<ProblemBo> problems) {
+        LOG.debug("Input parameters -> patientId {}, documentId {}, problems {}", documentId, patientId, problems);
+        problems.forEach(ph -> {
+            HealthCondition healthCondition = buildProblem(patientId, ph);
+            healthCondition = save(healthCondition);
+
+            ph.setId(healthCondition.getId());
+            ph.setVerificationId(healthCondition.getVerificationStatusId());
+            ph.setStatusId(healthCondition.getStatusId());
+
+            documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
+        });
+        List<ProblemBo> result = problems;
+        LOG.debug(OUTPUT, result);
+        return result;
+    }
+
+    private HealthCondition buildProblem(Integer patientId, ProblemBo info) {
+        LOG.debug("Input parameters -> patientId {}, problem {}", patientId, info);
+        HealthCondition healthCondition = buildBasicHealthCondition(patientId, info);
+        healthCondition.setProblemId(info.isChronic() ? ProblemType.CHRONIC : ProblemType.PROBLEMA);
+        healthCondition.setStartDate(info.getStartDate());
+        LOG.debug(OUTPUT, healthCondition);
+        return healthCondition;
     }
 
     private List<HealthConditionVo> getGeneralStateData(Integer internmentEpisodeId) {

@@ -1,9 +1,8 @@
-package net.pladema.staff.controller.service;
+package net.pladema.staff.service;
 
-import net.pladema.clinichistory.hospitalization.controller.dto.HealthCareProfessionalGroupDto;
-import net.pladema.clinichistory.hospitalization.controller.mapper.HealthCareProfessionalGroupMapper;
 import net.pladema.clinichistory.hospitalization.repository.HealthcareProfessionalGroupRepository;
 import net.pladema.clinichistory.hospitalization.repository.domain.HealthcareProfessionalGroup;
+import net.pladema.staff.repository.HealthcareProfessionalRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -15,20 +14,28 @@ public class HealthcareProfessionalServiceImpl implements  HealthcareProfessiona
 
     private final HealthcareProfessionalGroupRepository healthcareProfessionalGroupRepository;
 
-    private final HealthCareProfessionalGroupMapper healthCareProfessionalGroupMapper;
+    private final HealthcareProfessionalRepository healthcareProfessionalRepository;
 
-    public HealthcareProfessionalServiceImpl(HealthcareProfessionalGroupRepository healthcareProfessionalGroupRepository, HealthCareProfessionalGroupMapper healthCareProfessionalGroupMapper) {
+    public HealthcareProfessionalServiceImpl(HealthcareProfessionalGroupRepository healthcareProfessionalGroupRepository,
+                                             HealthcareProfessionalRepository healthcareProfessionalRepository) {
         this.healthcareProfessionalGroupRepository = healthcareProfessionalGroupRepository;
-        this.healthCareProfessionalGroupMapper = healthCareProfessionalGroupMapper;
+        this.healthcareProfessionalRepository = healthcareProfessionalRepository;
     }
 
     @Override
-    public HealthCareProfessionalGroupDto addHealthcareProfessionalGroup(Integer internmentEpisodeId, Integer healthcareProfessionalId) {
+    public HealthcareProfessionalGroup addHealthcareProfessionalGroup(Integer internmentEpisodeId, Integer healthcareProfessionalId) {
         LOG.debug("Input parameters -> internmentEpisode {}, healthcareProfessionalId {}", internmentEpisodeId, healthcareProfessionalId);
         HealthcareProfessionalGroup healthcareProfessionalGroupToSave = new HealthcareProfessionalGroup(internmentEpisodeId, healthcareProfessionalId);
         healthcareProfessionalGroupToSave.setResponsible(true);
-        HealthcareProfessionalGroup saved = healthcareProfessionalGroupRepository.save(healthcareProfessionalGroupToSave);
-        HealthCareProfessionalGroupDto result = healthCareProfessionalGroupMapper.toHealthcareProfessionalGroupDto(saved);
+        HealthcareProfessionalGroup result = healthcareProfessionalGroupRepository.save(healthcareProfessionalGroupToSave);
+        LOG.debug("Output -> {}", result);
+        return result;
+    }
+
+    @Override
+    public Integer getProfessionalId(Integer userId) {
+        LOG.debug("Input parameters -> userId {}", userId);
+        Integer result = healthcareProfessionalRepository.getProfessionalId(userId);
         LOG.debug("Output -> {}", result);
         return result;
     }

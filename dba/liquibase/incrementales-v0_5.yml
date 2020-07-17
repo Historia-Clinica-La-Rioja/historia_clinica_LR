@@ -10,3 +10,24 @@ databaseChangeLog:
             - sql:
                 sql: |-
                     INSERT INTO document_type VALUES (4, 'Ambulatoria');
+
+    - changeSet:  
+        id:  dropNotNullConstraints-outpatient_consultation
+        author:  etrapani  
+        changes:  
+        -  dropNotNullConstraint:  
+            columnName:  document_id  
+            tableName:  outpatient_consultation
+        -  dropNotNullConstraint:  
+            columnName:  clinical_specialty_id  
+            tableName:  outpatient_consultation
+
+    - changeSet:
+        id: add-problem_type-data
+        comment: Agregar problemas crónicos
+        author: etrapani
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    INSERT INTO problem_type (id, description) VALUES('-55607006', 'Crónico');

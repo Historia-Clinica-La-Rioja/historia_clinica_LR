@@ -1,18 +1,19 @@
 package net.pladema.staff.repository;
 
-import java.util.List;
-
+import net.pladema.staff.repository.entity.HealthcareProfessional;
+import net.pladema.staff.service.domain.HealthcarePerson;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import net.pladema.staff.repository.entity.HealthcareProfessional;
-import net.pladema.staff.service.domain.HealthcarePerson;
+import java.util.List;
 
 @Repository
 public interface HealthcareProfessionalRepository extends JpaRepository<HealthcareProfessional, Integer> {
 
+	@Transactional(readOnly = true)
 	@Query(value = " SELECT new net.pladema.staff.service.domain.HealthcarePerson(hp.id, hp.licenseNumber, p)"
 			+ " FROM  HealthcareProfessional hp "
 			+ " INNER JOIN Person p ON hp.personId = p.id"
@@ -21,5 +22,12 @@ public interface HealthcareProfessionalRepository extends JpaRepository<Healthca
 			+ " WHERE ur.userRolePK.roleId = 3 " // Role 'Especialista Medico'
 			+ " AND ur.userRolePK.institutionId = :institutionId ")
 	List<HealthcarePerson> getAllDoctors(@Param("institutionId") Integer institutionId);
-	
+
+	@Transactional(readOnly = true)
+	@Query(value = " SELECT hp.id "
+			+ " FROM  HealthcareProfessional hp "
+			+ " INNER JOIN Person p ON (hp.personId = p.id) "
+			+ " INNER JOIN User u ON (u.personId = p.id) "
+			+ " WHERE u.id = :userId ")
+    Integer getProfessionalId(@Param("userId") Integer userId);
 }
