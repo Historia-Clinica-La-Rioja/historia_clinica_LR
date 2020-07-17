@@ -4,6 +4,7 @@ import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.service.NoteService;
 import net.pladema.clinichistory.ips.repository.MedicationStatementRepository;
 import net.pladema.clinichistory.ips.repository.entity.MedicationStatement;
+import net.pladema.clinichistory.ips.repository.masterdata.MedicamentStatmentStatusRepository;
 import net.pladema.clinichistory.ips.service.MedicationService;
 import net.pladema.clinichistory.ips.service.SnomedService;
 import net.pladema.clinichistory.ips.service.domain.MedicationBo;
@@ -22,6 +23,8 @@ public class MedicationServiceImpl implements MedicationService {
 
     private final MedicationStatementRepository medicationStatementRepository;
 
+    private final MedicamentStatmentStatusRepository medicamentStatementStatusRepository;
+
     private final DocumentService documentService;
 
     private final SnomedService snomedService;
@@ -29,10 +32,11 @@ public class MedicationServiceImpl implements MedicationService {
     private final NoteService noteService;
 
     public MedicationServiceImpl(MedicationStatementRepository medicationStatementRepository,
-                                 DocumentService documentService,
+                                 MedicamentStatmentStatusRepository medicamentStatementStatusRepository, DocumentService documentService,
                                  SnomedService snomedService,
                                  NoteService noteService){
         this.medicationStatementRepository = medicationStatementRepository;
+        this.medicamentStatementStatusRepository = medicamentStatementStatusRepository;
         this.documentService = documentService;
         this.snomedService = snomedService;
         this.noteService = noteService;
@@ -47,6 +51,7 @@ public class MedicationServiceImpl implements MedicationService {
 
             medication.setId(medicationStatement.getId());
             medication.setStatusId(medicationStatement.getStatusId());
+            medication.setStatus(getStatus(medication.getStatusId()));
 
             documentService.createDocumentMedication(documentId, medicationStatement.getId());
         });
@@ -67,6 +72,10 @@ public class MedicationServiceImpl implements MedicationService {
         LOG.debug("medicationStatement saved -> {}", medicationStatement.getId());
         LOG.debug(OUTPUT, medicationStatement);
         return medicationStatement;
+    }
+
+    private String getStatus(String id) {
+        return medicamentStatementStatusRepository.findById(id).get().getDescription();
     }
 
 }

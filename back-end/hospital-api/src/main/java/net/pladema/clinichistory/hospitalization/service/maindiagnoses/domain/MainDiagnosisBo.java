@@ -4,7 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.ips.service.domain.*;
-import net.pladema.clinichistory.documents.service.InternmentDocument;
+import net.pladema.clinichistory.documents.service.Document;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProblemBo;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -14,7 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class MainDiagnosisBo implements InternmentDocument {
+public class MainDiagnosisBo implements Document {
 
     private Long id;
 
@@ -35,6 +36,11 @@ public class MainDiagnosisBo implements InternmentDocument {
     @Override
     public List<DiagnosisBo> getDiagnosis() {
         return null;
+    }
+
+    @Override
+    public List<ProblemBo> getProblems() {
+        return Collections.emptyList();
     }
 
     @Override

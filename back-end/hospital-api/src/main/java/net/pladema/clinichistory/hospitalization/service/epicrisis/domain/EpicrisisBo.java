@@ -3,16 +3,18 @@ package net.pladema.clinichistory.hospitalization.service.epicrisis.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.documents.service.InternmentDocument;
+import net.pladema.clinichistory.documents.service.Document;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentStatus;
 import net.pladema.clinichistory.ips.service.domain.*;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProblemBo;
 
+import java.util.Collections;
 import java.util.List;
 
 @Getter
 @Setter
 @ToString
-public class EpicrisisBo implements InternmentDocument {
+public class EpicrisisBo implements Document {
 
     private Long id;
 
@@ -40,5 +42,10 @@ public class EpicrisisBo implements InternmentDocument {
 
     public String getDocumentStatusId(){
         return confirmed ? DocumentStatus.FINAL : DocumentStatus.DRAFT;
+    }
+
+    @Override
+    public List<ProblemBo> getProblems() {
+        return Collections.emptyList();
     }
 }

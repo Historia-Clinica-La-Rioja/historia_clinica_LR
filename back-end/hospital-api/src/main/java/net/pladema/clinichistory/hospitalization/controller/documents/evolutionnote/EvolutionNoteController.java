@@ -2,6 +2,8 @@ package net.pladema.clinichistory.hospitalization.controller.documents.evolution
 
 import com.itextpdf.text.DocumentException;
 import io.swagger.annotations.Api;
+import net.pladema.clinichistory.documents.events.OnGenerateInternmentDocumentEvent;
+import net.pladema.clinichistory.documents.service.Document;
 import net.pladema.clinichistory.hospitalization.controller.constraints.DocumentValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.EvolutionNoteDiagnosisValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
@@ -11,15 +13,15 @@ import net.pladema.clinichistory.hospitalization.controller.documents.evolutionn
 import net.pladema.clinichistory.hospitalization.controller.documents.evolutionnote.dto.evolutionDiagnosis.EvolutionDiagnosisDto;
 import net.pladema.clinichistory.hospitalization.controller.documents.evolutionnote.mapper.EvolutionNoteMapper;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.constraint.EffectiveVitalSignTimeValid;
-import net.pladema.clinichistory.documents.events.OnGenerateDocumentEvent;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
-import net.pladema.clinichistory.documents.service.InternmentDocument;
+import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.CreateEvolutionNoteService;
+import net.pladema.clinichistory.hospitalization.service.evolutionnote.EvolutionNoteReportService;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.EvolutionNoteService;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.UpdateEvolutionNoteService;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.evolutiondiagnosis.EvolutionDiagnosisBo;
-import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
+import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
+import net.pladema.clinichistory.ips.repository.masterdata.entity.EDocumentType;
 import net.pladema.pdf.service.PdfService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +56,8 @@ public class EvolutionNoteController {
 
     private final EvolutionNoteService evolutionNoteService;
 
+    private final EvolutionNoteReportService evolutionNoteReportService;
+
     private final EvolutionNoteMapper evolutionNoteMapper;
 
     private final PdfService pdfService;
@@ -62,12 +66,14 @@ public class EvolutionNoteController {
                                    CreateEvolutionNoteService createEvolutionNoteService,
                                    UpdateEvolutionNoteService updateEvolutionNoteService,
                                    EvolutionNoteService evolutionNoteService,
+                                   EvolutionNoteReportService evolutionNoteReportService,
                                    EvolutionNoteMapper evolutionNoteMapper,
                                    PdfService pdfService) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.createEvolutionNoteService = createEvolutionNoteService;
         this.updateEvolutionNoteService = updateEvolutionNoteService;
         this.evolutionNoteService = evolutionNoteService;
+        this.evolutionNoteReportService = evolutionNoteReportService;
         this.evolutionNoteMapper = evolutionNoteMapper;
         this.pdfService = pdfService;
     }
@@ -134,17 +140,17 @@ public class EvolutionNoteController {
         EvolutionDiagnosisBo evolutionNote = evolutionNoteMapper.fromEvolutionNoteDto(evolutionDiagnosisDto);
         Long documentId = createEvolutionNoteService.createEvolutionDiagnosis(internmentEpisodeId, patientId, evolutionNote);
 
-        EvolutionNoteBo evolutionNoteResult = evolutionNoteService.getDocument(documentId);
+        EvolutionNoteBo evolutionNoteResult = evolutionNoteReportService.getDocument(documentId);
         generateDocument(evolutionNoteResult, institutionId, internmentEpisodeId, patientId);
         Long result = evolutionNoteResult.getId();
         LOG.debug(OUTPUT, result);
         return  ResponseEntity.ok().body(result);
     }
 
-    private void generateDocument(InternmentDocument evolutionNote, Integer institutionId, Integer internmentEpisodeId,
-                                                                   Integer patientId) throws IOException, DocumentException {
-        OnGenerateDocumentEvent event = new OnGenerateDocumentEvent(evolutionNote, institutionId, internmentEpisodeId,
-                DocumentType.EVALUATION_NOTE, "evolutionnote", patientId);
+    private void generateDocument(Document evolutionNote, Integer institutionId, Integer internmentEpisodeId,
+                                  Integer patientId) throws IOException, DocumentException {
+        OnGenerateInternmentDocumentEvent event = new OnGenerateInternmentDocumentEvent(evolutionNote, institutionId, internmentEpisodeId,
+                EDocumentType.map(DocumentType.EVALUATION_NOTE), patientId);
         pdfService.loadDocument(event);
     }
 

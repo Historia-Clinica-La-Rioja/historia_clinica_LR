@@ -28,8 +28,11 @@ public class DocumentFile extends InternationAuditableEntity {
 	@Column(name = "id", nullable = false)
 	private Long id;
 
-	@Column(name = "internment_episode_id", nullable = false)
-	private Integer internmentEpisodeId;
+	@Column(name = "source_id", nullable = false)
+	private Integer sourceId;
+
+	@Column(name = "source_type_id", nullable = false)
+	private Short sourceTypeId;
 
 	@Column(name = "type_id", nullable = false)
 	private Short typeId;
@@ -43,10 +46,14 @@ public class DocumentFile extends InternationAuditableEntity {
 	@Column(name = "uuid_file", length = 36, nullable = false)
 	private String uuidfile;
 
-	public DocumentFile(Long documentId, Integer internmentEpisodeId, Short documentType,
+	@Column(name = "checksum", length = 512)
+	private String checksum;
+
+	public DocumentFile(Long documentId, Integer sourceId, Short sourceTypeId, Short documentType,
 						String filepath, String filename, String uuidFile){
 		this.id = documentId;
-		this.internmentEpisodeId = internmentEpisodeId;
+		this.sourceId = sourceId;
+		this.sourceTypeId = sourceTypeId;
 		this.typeId = documentType;
 		this.filepath = filepath;
 		this.filename = filename;

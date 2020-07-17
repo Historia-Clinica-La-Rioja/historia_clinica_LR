@@ -2,10 +2,10 @@ package net.pladema.clinichistory.ips.service.impl;
 
 import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.service.NoteService;
-import net.pladema.clinichistory.hospitalization.repository.generalstate.HCHHealthConditionRepository;
-import net.pladema.clinichistory.hospitalization.repository.generalstate.domain.HealthConditionVo;
 import net.pladema.clinichistory.ips.repository.HealthConditionRepository;
 import net.pladema.clinichistory.ips.repository.entity.HealthCondition;
+import net.pladema.clinichistory.ips.repository.masterdata.ConditionClinicalStatusRepository;
+import net.pladema.clinichistory.ips.repository.masterdata.ConditionVerificationStatusRepository;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.ConditionClinicalStatus;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.ConditionVerificationStatus;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.ProblemType;
@@ -32,11 +32,11 @@ public class HealthConditionServiceImpl implements HealthConditionService {
 
     private static final Logger LOG = LoggerFactory.getLogger(HealthConditionServiceImpl.class);
 
-    private static final String LOGGING_INTERNMENT_EPISODE = "Input parameters -> internmentEpisodeId {}";
-
     private final HealthConditionRepository healthConditionRepository;
 
-    private final HCHHealthConditionRepository hchHealthConditionRepository;
+    private final ConditionVerificationStatusRepository conditionVerificationStatusRepository;
+
+    private final ConditionClinicalStatusRepository conditionClinicalStatusRepository;
 
     private final SnomedService snomedService;
 
@@ -45,12 +45,13 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     private final NoteService noteService;
 
     public HealthConditionServiceImpl(HealthConditionRepository healthConditionRepository,
-                                      HCHHealthConditionRepository hchHealthConditionRepository,
-                                      SnomedService snomedService,
+                                      ConditionVerificationStatusRepository conditionVerificationStatusRepository,
+                                      ConditionClinicalStatusRepository conditionClinicalStatusRepository, SnomedService snomedService,
                                       DocumentService documentService,
                                       NoteService noteService){
         this.healthConditionRepository = healthConditionRepository;
-        this.hchHealthConditionRepository = hchHealthConditionRepository;
+        this.conditionVerificationStatusRepository = conditionVerificationStatusRepository;
+        this.conditionClinicalStatusRepository = conditionClinicalStatusRepository;
         this.snomedService = snomedService;
         this.documentService = documentService;
         this.noteService = noteService;
@@ -73,6 +74,8 @@ public class HealthConditionServiceImpl implements HealthConditionService {
             md.setId(healthCondition.getId());
             md.setVerificationId(healthCondition.getVerificationStatusId());
             md.setStatusId(healthCondition.getStatusId());
+            md.setVerification(getVerification(md.getVerificationId()));
+            md.setStatus(getStatus(md.getStatusId()));
 
             documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
         });
@@ -101,6 +104,8 @@ public class HealthConditionServiceImpl implements HealthConditionService {
             d.setId(healthCondition.getId());
             d.setVerificationId(healthCondition.getVerificationStatusId());
             d.setStatusId(healthCondition.getStatusId());
+            d.setVerification(getVerification(d.getVerificationId()));
+            d.setStatus(getStatus(d.getStatusId()));
 
             documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
         });
@@ -141,7 +146,9 @@ public class HealthConditionServiceImpl implements HealthConditionService {
 
             ph.setId(healthCondition.getId());
             ph.setVerificationId(healthCondition.getVerificationStatusId());
+            ph.setVerification(getVerification(ph.getVerificationId()));
             ph.setStatusId(healthCondition.getStatusId());
+            ph.setStatus(getStatus(ph.getStatusId()));
 
             documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
         });
@@ -170,7 +177,9 @@ public class HealthConditionServiceImpl implements HealthConditionService {
 
             ph.setId(healthCondition.getId());
             ph.setVerificationId(healthCondition.getVerificationStatusId());
+            ph.setVerification(getVerification(ph.getVerificationId()));
             ph.setStatusId(healthCondition.getStatusId());
+            ph.setStatus(getStatus(ph.getStatusId()));
 
             documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
         });
@@ -235,7 +244,9 @@ public class HealthConditionServiceImpl implements HealthConditionService {
 
             ph.setId(healthCondition.getId());
             ph.setVerificationId(healthCondition.getVerificationStatusId());
+            ph.setVerification(getVerification(ph.getVerificationId()));
             ph.setStatusId(healthCondition.getStatusId());
+            ph.setStatus(getStatus(ph.getStatusId()));
 
             documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
         });
@@ -253,9 +264,11 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         return healthCondition;
     }
 
-    private List<HealthConditionVo> getGeneralStateData(Integer internmentEpisodeId) {
-        return hchHealthConditionRepository.findGeneralState(internmentEpisodeId);
+    private String getVerification(String id) {
+        return conditionVerificationStatusRepository.findById(id).get().getDescription();
     }
 
-
+    private String getStatus(String id) {
+        return conditionClinicalStatusRepository.findById(id).get().getDescription();
+    }
 }

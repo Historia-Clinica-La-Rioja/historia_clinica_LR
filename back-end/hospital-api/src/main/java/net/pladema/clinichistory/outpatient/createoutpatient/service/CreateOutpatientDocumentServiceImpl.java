@@ -58,7 +58,6 @@ public class CreateOutpatientDocumentServiceImpl implements CreateOutpatientDocu
     @Override
     public OutpatientDocumentBo create(Integer outpatientId, Integer patientId,  OutpatientDocumentBo outpatient) {
         LOG.debug("Input parameters outpatientId {}, patientId {}, outpatient {}", outpatientId, outpatient);
-        OutpatientDocumentBo result = new OutpatientDocumentBo();
         Document doc = new Document(outpatientId, DocumentStatus.FINAL, DocumentType.OUTPATIENT, SourceType.AMBULATORIA);
         loadNotes(doc, Optional.ofNullable(outpatient.getEvolutionNote()));
         doc = documentService.save(doc);
@@ -72,9 +71,9 @@ public class CreateOutpatientDocumentServiceImpl implements CreateOutpatientDocu
         outpatient.setAnthropometricData(clinicalObservationService.loadAnthropometricData(patientId, doc.getId(), Optional.ofNullable(outpatient.getAnthropometricData())));
 
         updateOutpatientConsultationService.updateOutpatientDocId(outpatientId, doc.getId());
-        result.setId(doc.getId());
-        LOG.debug(OUTPUT, result);
-        return result;
+        outpatient.setId(doc.getId());
+        LOG.debug(OUTPUT, outpatient);
+        return outpatient;
     }
 
     private Document loadNotes(Document document, Optional<String> optNotes) {

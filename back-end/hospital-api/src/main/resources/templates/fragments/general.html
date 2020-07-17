@@ -72,6 +72,25 @@
         </div>
     </div>
 
+    <!-- Otros Diagnósticos/enfermedades -->
+    <div th:fragment="problems (message)">
+        <h3 th:text="${message}"></h3>
+        <div class="row" th:if="${#lists.isEmpty(problems)}">
+            <dl class="lista" >
+                <dd><p >Sin cambios registrados</p></dd>
+            </dl>
+        </div>
+        <div class="row" th:if="${not #lists.isEmpty(problems)}">
+            <dl th:each="problem,iter: ${problems}">
+                <dd><p  th:text="${'- ' + problem.snomed.pt}"></p></dd>
+                <dl>
+                    <dd><strong>Estado: </strong><label  th:text="${problem.status}"></label></dd>
+                    <dd><strong>Verificación: </strong><label  th:text="${problem.verification}"></label></dd>
+                </dl>
+            </dl>
+        </div>
+    </div>
+
     <!-- Datos Antropometricos -->
 
     <div th:fragment="antropometicData">
@@ -288,6 +307,20 @@
         </div>
     </div>
 
+    <div th:fragment="notes-outpatient">
+        <h3>Observaciones</h3>
+        <div class="row" th:if="${notes == null}">
+            <dl>
+                <dd><p>Sin cambios registrados</p></dd>
+            </dl>
+        </div>
+        <div class="row" th:if="${notes != null}">
+            <div class="col-12" th:if="${notes.otherNote}">
+                <strong class="center-padding">Evolución</strong>
+                <p class="center-padding" th:text="${notes.otherNote}"></p>
+            </div>
+        </div>
+    </div>
 </body>
 <footer class="footer-dark" th:fragment="footer" th:if="${author != null}">
     <div th:replace="fragments/author.html

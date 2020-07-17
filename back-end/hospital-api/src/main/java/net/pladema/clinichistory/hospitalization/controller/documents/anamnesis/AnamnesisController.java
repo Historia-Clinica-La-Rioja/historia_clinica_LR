@@ -2,6 +2,7 @@ package net.pladema.clinichistory.hospitalization.controller.documents.anamnesis
 
 import com.itextpdf.text.DocumentException;
 import io.swagger.annotations.Api;
+import net.pladema.clinichistory.documents.events.OnGenerateInternmentDocumentEvent;
 import net.pladema.clinichistory.hospitalization.controller.constraints.AnamnesisMainDiagnosisValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.DocumentValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
@@ -10,13 +11,13 @@ import net.pladema.clinichistory.hospitalization.controller.documents.anamnesis.
 import net.pladema.clinichistory.hospitalization.controller.documents.anamnesis.dto.ResponseAnamnesisDto;
 import net.pladema.clinichistory.hospitalization.controller.documents.anamnesis.mapper.AnamnesisMapper;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.constraint.EffectiveVitalSignTimeValid;
-import net.pladema.clinichistory.documents.events.OnGenerateDocumentEvent;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
+import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.AnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.CreateAnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.UpdateAnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.AnamnesisBo;
-import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
+import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
+import net.pladema.clinichistory.ips.repository.masterdata.entity.EDocumentType;
 import net.pladema.pdf.service.PdfService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -119,8 +120,8 @@ public class AnamnesisController {
 
     private void generateDocument(AnamnesisBo anamnesis, Integer institutionId, Integer internmentEpisodeId,
                                   Integer patientId) throws IOException, DocumentException {
-        OnGenerateDocumentEvent event = new OnGenerateDocumentEvent(anamnesis, institutionId, internmentEpisodeId,
-                DocumentType.ANAMNESIS, "anamnesis", patientId);
+        OnGenerateInternmentDocumentEvent event = new OnGenerateInternmentDocumentEvent(anamnesis, institutionId, internmentEpisodeId,
+                EDocumentType.map(DocumentType.ANAMNESIS), patientId);
         pdfService.loadDocument(event);
     }
 

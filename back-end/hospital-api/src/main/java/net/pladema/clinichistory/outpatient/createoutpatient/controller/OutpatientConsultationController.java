@@ -1,17 +1,11 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.controller;
 
-import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientDto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
 import com.itextpdf.text.DocumentException;
 import net.pladema.clinichistory.documents.events.OnGenerateDocumentEvent;
+import net.pladema.clinichistory.documents.events.OnGenerateOutpatientDocumentEvent;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
+import net.pladema.clinichistory.ips.repository.masterdata.entity.EDocumentType;
+import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.mapper.OutpatientConsultationMapper;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.CreateOutpatientConsultationService;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.CreateOutpatientDocumentService;
@@ -20,7 +14,14 @@ import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.Outp
 import net.pladema.pdf.service.PdfService;
 import net.pladema.sgx.security.utils.UserInfo;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import java.io.IOException;
 
 @RestController
@@ -73,8 +74,8 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 
     private void generateDocument(OutpatientDocumentBo outpatient, Integer institutionId, Integer outpatientId,
                                   Integer patientId) throws IOException, DocumentException {
-        OnGenerateDocumentEvent event = new OnGenerateDocumentEvent(outpatient, institutionId, outpatientId,
-                DocumentType.OUTPATIENT, "outpatient", patientId);
+        OnGenerateDocumentEvent event = new OnGenerateOutpatientDocumentEvent(outpatient, institutionId, outpatientId,
+                EDocumentType.map(DocumentType.OUTPATIENT), patientId);
         pdfService.loadDocument(event);
     }
 

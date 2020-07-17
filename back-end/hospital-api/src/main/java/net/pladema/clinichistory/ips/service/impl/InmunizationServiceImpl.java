@@ -3,6 +3,7 @@ package net.pladema.clinichistory.ips.service.impl;
 import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.ips.repository.InmunizationRepository;
 import net.pladema.clinichistory.ips.repository.entity.Inmunization;
+import net.pladema.clinichistory.ips.repository.masterdata.InmunizationStatusRepository;
 import net.pladema.clinichistory.ips.service.InmunizationService;
 import net.pladema.clinichistory.ips.service.SnomedService;
 import net.pladema.clinichistory.ips.service.domain.InmunizationBo;
@@ -21,32 +22,37 @@ public class InmunizationServiceImpl implements InmunizationService {
 
     private final InmunizationRepository inmunizationRepository;
 
+    private final InmunizationStatusRepository inmunizationStatusRepository;
+
     private final SnomedService snomedService;
 
     private final DocumentService documentService;
 
     public InmunizationServiceImpl(InmunizationRepository inmunizationRepository,
+                                   InmunizationStatusRepository inmunizationStatusRepository,
                                    SnomedService snomedService,
                                    DocumentService documentService){
         this.inmunizationRepository = inmunizationRepository;
+        this.inmunizationStatusRepository = inmunizationStatusRepository;
         this.snomedService = snomedService;
         this.documentService = documentService;
     }
 
     @Override
-    public List<InmunizationBo> loadInmunization(Integer patientId, Long documentId, List<InmunizationBo> inmunizations) {
-        LOG.debug("Input parameters -> {}", inmunizations);
-        inmunizations.stream().forEach(inmunizationBo -> {
-            String sctId = snomedService.createSnomedTerm(inmunizationBo.getSnomed());
-            Inmunization inmunization = saveInmunization(patientId, inmunizationBo, sctId);
+    public List<InmunizationBo> loadInmunization(Integer patientId, Long documentId, List<InmunizationBo> immunizations) {
+        LOG.debug("Input parameters -> patientId {}, documentId {}, immunizations {}", patientId, documentId, immunizations);
+        immunizations.stream().forEach(i -> {
+            String sctId = snomedService.createSnomedTerm(i.getSnomed());
+            Inmunization inmunization = saveInmunization(patientId, i, sctId);
 
-            inmunizationBo.setId(inmunization.getId());
-            inmunizationBo.setStatusId(inmunization.getStatusId());
-            inmunizationBo.setAdministrationDate(inmunization.getAdministrationDate());
+            i.setId(inmunization.getId());
+            i.setStatusId(inmunization.getStatusId());
+            i.setStatus(getStatus(i.getStatusId()));
+            i.setAdministrationDate(inmunization.getAdministrationDate());
 
             documentService.createInmunization(documentId, inmunization.getId());
         });
-        List<InmunizationBo> result = inmunizations;
+        List<InmunizationBo> result = immunizations;
         LOG.debug(OUTPUT, result);
         return result;
     }
@@ -59,6 +65,10 @@ public class InmunizationServiceImpl implements InmunizationService {
         LOG.debug("Inmunization saved -> {}", inmunization.getId());
         LOG.debug(OUTPUT, inmunization);
         return inmunization;
+    }
+
+    private String getStatus(String id) {
+        return inmunizationStatusRepository.findById(id).get().getDescription();
     }
 
 }

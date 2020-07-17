@@ -3,6 +3,9 @@ package net.pladema.clinichistory.ips.service.impl;
 import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.ips.repository.AllergyIntoleranceRepository;
 import net.pladema.clinichistory.ips.repository.entity.AllergyIntolerance;
+import net.pladema.clinichistory.ips.repository.masterdata.AllergyIntoleranceCategoryRepository;
+import net.pladema.clinichistory.ips.repository.masterdata.AllergyIntoleranceClinicalStatusRepository;
+import net.pladema.clinichistory.ips.repository.masterdata.AllergyIntoleranceVerificationStatusRepository;
 import net.pladema.clinichistory.ips.service.AllergyService;
 import net.pladema.clinichistory.ips.service.SnomedService;
 import net.pladema.clinichistory.ips.service.domain.AllergyConditionBo;
@@ -21,14 +24,26 @@ public class AllergyServiceImpl implements AllergyService {
 
     private final AllergyIntoleranceRepository allergyIntoleranceRepository;
 
+    private final AllergyIntoleranceClinicalStatusRepository allergyClinicalStatusRepository;
+
+    private final AllergyIntoleranceVerificationStatusRepository allergyVerificationStatusRepository;
+
+    private final AllergyIntoleranceCategoryRepository allergyCategoryRepository;
+
     private final DocumentService documentService;
 
     private final SnomedService snomedService;
 
     public AllergyServiceImpl(AllergyIntoleranceRepository allergyIntoleranceRepository,
+                              AllergyIntoleranceClinicalStatusRepository allergyClinicalStatusRepository,
+                              AllergyIntoleranceVerificationStatusRepository allergyVerificationStatusRepository,
+                              AllergyIntoleranceCategoryRepository allergyCategoryRepository,
                               DocumentService documentService,
                               SnomedService snomedService){
         this.allergyIntoleranceRepository = allergyIntoleranceRepository;
+        this.allergyClinicalStatusRepository = allergyClinicalStatusRepository;
+        this.allergyVerificationStatusRepository = allergyVerificationStatusRepository;
+        this.allergyCategoryRepository = allergyCategoryRepository;
         this.documentService = documentService;
         this.snomedService = snomedService;
     }
@@ -42,7 +57,9 @@ public class AllergyServiceImpl implements AllergyService {
 
             allergy.setId(allergyIntolerance.getId());
             allergy.setVerificationId(allergyIntolerance.getVerificationStatusId());
+            allergy.setVerification(getVerification(allergy.getVerificationId()));
             allergy.setStatusId(allergyIntolerance.getStatusId());
+            allergy.setStatus(getStatus(allergy.getStatusId()));
             allergy.setCategoryId(allergyIntolerance.getCategoryId());
             allergy.setDate(allergyIntolerance.getStartDate());
 
@@ -67,4 +84,15 @@ public class AllergyServiceImpl implements AllergyService {
         return allergyIntolerance;
     }
 
+    private String getVerification(String id) {
+        return allergyVerificationStatusRepository.findById(id).get().getDescription();
+    }
+
+    private String getStatus(String id) {
+        return allergyClinicalStatusRepository.findById(id).get().getDescription();
+    }
+
+    private String getCategory(String id) {
+        return allergyCategoryRepository.findById(id).get().getDescription();
+    }
 }

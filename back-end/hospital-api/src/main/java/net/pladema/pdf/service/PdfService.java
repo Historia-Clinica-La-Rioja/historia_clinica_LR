@@ -1,6 +1,5 @@
 package net.pladema.pdf.service;
 
-import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.tool.xml.XMLWorkerHelper;
@@ -13,7 +12,7 @@ import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.
 import net.pladema.clinichistory.documents.events.OnGenerateDocumentEvent;
 import net.pladema.clinichistory.documents.repository.DocumentFileRepository;
 import net.pladema.clinichistory.documents.repository.entity.DocumentFile;
-import net.pladema.clinichistory.documents.service.InternmentDocument;
+import net.pladema.clinichistory.documents.service.Document;
 import net.pladema.clinichistory.documents.service.ReportDocumentService;
 import net.pladema.patient.controller.service.PatientExternalService;
 import org.slf4j.Logger;
@@ -85,7 +84,7 @@ public class PdfService {
 
     private ByteArrayOutputStream writer(String templateName, Context ctx) throws IOException, DocumentException {
         try {
-            Document document = new Document();
+            com.itextpdf.text.Document document = new com.itextpdf.text.Document();
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             PdfWriter writer = PdfWriter.getInstance(document, os);
             document.open();
@@ -119,26 +118,27 @@ public class PdfService {
     public void loadDocument(OnGenerateDocumentEvent event) throws IOException, DocumentException {
         LOG.debug("Input parameters -> onGenerateDocumentEvent {}", event);
         if(event.getDocument().isConfirmed()) {
-            Context context = buildContext(event.getDocument(), event.getPatiendId());
+            Context context = buildContext(event.getDocument(), event.getPatientId());
             ByteArrayOutputStream writer = writer(event.getTemplateName(), context);
-            String path = streamFile.buildPath(event.getInstitutionId(), event.getInternmentEpisodeId(), event.getDocumentType());
-            String realFileName = streamFile.buildUUIDName();
-            String ficticiusFileName = streamFile.buildDownloadName(event.getDocument().getId(), event.getDocumentType());
+            String path = streamFile.buildPath(event.getRelativeDirectory());
+            String realFileName = event.getUuid();
+            String fictitiousFileName = streamFile.buildDownloadName(event.getDocument().getId(), event.getDocumentType());
 
             try {
                 boolean loaded = streamFile.loadFileInDirectory(path, writer);
                 if (loaded)
                     documentFileRepository.save(new DocumentFile(
                             event.getDocument().getId(),
-                            event.getInternmentEpisodeId(),
-                            event.getDocumentType(), path, ficticiusFileName, realFileName));
+                            event.getSourceId(),
+                            event.getSourceType(),
+                            event.getDocumentTypeId(), path, fictitiousFileName, realFileName));
             } catch (IOException ex) {
                 throw new IOException(ex);
             }
         }
     }
 
-    public <T extends InternmentDocument> Context buildContext(T document, Integer patientId){
+    public <T extends Document> Context buildContext(T document, Integer patientId){
         LOG.debug("Input parameters -> document {}", document);
 
         ResponsibleDoctorDto author = responsibleDoctorMapper.toResponsibleDoctorDto(
@@ -149,6 +149,7 @@ public class PdfService {
         ctx.setVariable("patient", patientExternalService.getBasicDataFromPatient(patientId));
         ctx.setVariable("mainDiagnosis", document.getMainDiagnosis());
         ctx.setVariable("diagnosis", document.getDiagnosis());
+        ctx.setVariable("problems", document.getProblems());
         ctx.setVariable("personalHistories", document.getPersonalHistories());
         ctx.setVariable("familyHistories", document.getFamilyHistories());
         ctx.setVariable("allergies", document.getAllergies());

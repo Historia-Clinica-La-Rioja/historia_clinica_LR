@@ -1,10 +1,11 @@
 package net.pladema.clinichistory.documents.service;
 
 import net.pladema.clinichistory.ips.service.domain.*;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProblemBo;
 
 import java.util.List;
 
-public interface InternmentDocument {
+public interface Document {
 
     Long getId();
 
@@ -13,6 +14,8 @@ public interface InternmentDocument {
     HealthConditionBo getMainDiagnosis();
 
     List<DiagnosisBo> getDiagnosis();
+
+    List<ProblemBo> getProblems();
 
     List<HealthHistoryConditionBo> getPersonalHistories();
 

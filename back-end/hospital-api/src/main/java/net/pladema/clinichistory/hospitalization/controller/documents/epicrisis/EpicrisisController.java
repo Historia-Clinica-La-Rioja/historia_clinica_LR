@@ -2,22 +2,23 @@ package net.pladema.clinichistory.hospitalization.controller.documents.epicrisis
 
 import com.itextpdf.text.DocumentException;
 import io.swagger.annotations.Api;
-import net.pladema.clinichistory.hospitalization.controller.constraints.DocumentValid;
+import net.pladema.clinichistory.documents.events.OnGenerateInternmentDocumentEvent;
 import net.pladema.clinichistory.hospitalization.controller.constraints.CanCreateEpicrisis;
+import net.pladema.clinichistory.hospitalization.controller.constraints.DocumentValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
 import net.pladema.clinichistory.hospitalization.controller.documents.epicrisis.dto.EpicrisisDto;
 import net.pladema.clinichistory.hospitalization.controller.documents.epicrisis.dto.EpicrisisGeneralStateDto;
 import net.pladema.clinichistory.hospitalization.controller.documents.epicrisis.dto.ResponseEpicrisisDto;
 import net.pladema.clinichistory.hospitalization.controller.documents.epicrisis.mapper.EpicrisisMapper;
-import net.pladema.clinichistory.documents.events.OnGenerateDocumentEvent;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
+import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
+import net.pladema.clinichistory.hospitalization.service.InternmentStateService;
+import net.pladema.clinichistory.hospitalization.service.domain.InternmentGeneralState;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.CreateEpicrisisService;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.EpicrisisService;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.UpdateEpicrisisService;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.domain.EpicrisisBo;
-import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
-import net.pladema.clinichistory.hospitalization.service.InternmentStateService;
-import net.pladema.clinichistory.hospitalization.service.domain.InternmentGeneralState;
+import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
+import net.pladema.clinichistory.ips.repository.masterdata.entity.EDocumentType;
 import net.pladema.pdf.service.PdfService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -117,8 +118,8 @@ public class EpicrisisController {
 
     private void generateDocument(EpicrisisBo epicrisis, Integer institutionId, Integer internmentEpisodeId,
                                   Integer patientId) throws IOException, DocumentException {
-        OnGenerateDocumentEvent event = new OnGenerateDocumentEvent(epicrisis, institutionId, internmentEpisodeId,
-                DocumentType.EPICRISIS, "epicrisis", patientId);
+        OnGenerateInternmentDocumentEvent event = new OnGenerateInternmentDocumentEvent(epicrisis, institutionId, internmentEpisodeId,
+                EDocumentType.map(DocumentType.EPICRISIS), patientId);
         pdfService.loadDocument(event);
     }
 

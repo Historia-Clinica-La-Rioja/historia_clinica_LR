@@ -4,10 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.pladema.clinichistory.documents.service.InternmentDocument;
+import net.pladema.clinichistory.documents.service.Document;
 import net.pladema.clinichistory.ips.service.domain.*;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -15,17 +14,17 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OutpatientDocumentBo implements InternmentDocument {
+public class OutpatientDocumentBo implements Document {
 
     private Long id;
 
-    private boolean confirmed;
+    private boolean confirmed = true;
 
     private String reasonId;
 
     private String evolutionNote;
 
-    private List<ProblemBo> problems = new ArrayList<>();
+    private List<ProblemBo> problems;
 
     private List<HealthHistoryConditionBo> familyHistories;
 
@@ -56,6 +55,10 @@ public class OutpatientDocumentBo implements InternmentDocument {
 
     @Override
     public DocumentObservationsBo getNotes() {
-        return null;
+        if (evolutionNote == null)
+            return null;
+        DocumentObservationsBo notes = new DocumentObservationsBo();
+        notes.setOtherNote(evolutionNote);
+        return notes;
     }
 }

@@ -31,3 +31,37 @@ databaseChangeLog:
             - sql:
                 sql: |-
                     INSERT INTO problem_type (id, description) VALUES('-55607006', 'Crónico');
+
+    - changeSet:
+        id: update data document_file
+        author: etrapani
+        changes:
+        - addColumn:
+            tableName: document_file
+            columns:
+            - column:
+                name: source_type_id
+                type: smallint
+            - column:
+                name: checksum
+                type: varchar(512)
+        - renameColumn:  
+                columnDataType:  int
+                newColumnName:  source_id
+                oldColumnName:  internment_episode_id  
+                tableName:  document_file
+        - update:  
+            columns:  
+            -  column:  
+                name: source_type_id
+                value: 0            
+            tableName: document_file
+        -  addNotNullConstraint:  
+            columnDataType: smallint
+            columnName: source_type_id
+            constraintName:  NN_source_type_id   
+            tableName: document_file
+            validate:  true
+        -  dropForeignKeyConstraint:  
+            baseTableName:  document_file  
+            constraintName:  FK_document_file_internment_episode_id
