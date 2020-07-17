@@ -3,6 +3,7 @@ import { ANTECEDENTES_PERSONALES } from '../../constants/summaries';
 import { TableModel } from '@presentation/components/table/table.component';
 import { HealthConditionDto, HealthHistoryConditionDto } from '@api-rest/api-model';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
+import { SummaryHeader } from '@presentation/components/summary-card/summary-card.component';
 
 @Component({
 	selector: 'app-antecedentes-personales-summary',
@@ -12,8 +13,7 @@ import { InternmentStateService } from '@api-rest/services/internment-state.serv
 export class AntecedentesPersonalesSummaryComponent implements OnChanges {
 
 	@Input() personalHistory: HealthHistoryConditionDto[];
-
-	public readonly antecedentesPersonalesSummary = ANTECEDENTES_PERSONALES;
+	@Input() personalHistoriesHeader: SummaryHeader;
 
 	tableModel: TableModel<HealthConditionDto>;
 

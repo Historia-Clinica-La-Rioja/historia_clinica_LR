@@ -35,7 +35,7 @@ import {
 import { InternacionService } from '@api-rest/services/internacion.service';
 import { InternmentEpisodeService } from '@api-rest/services/internment-episode.service';
 
-import { INTERNACION, ANTECEDENTES_FAMILIARES } from '../../../../constants/summaries';
+import { INTERNACION, ANTECEDENTES_FAMILIARES, ANTECEDENTES_PERSONALES } from '../../../../constants/summaries';
 import { ROLES_FOR_EDIT_DIAGNOSIS } from '../../constants/permissions';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { ProbableDischargeDialogComponent } from '../../../../dialogs/probable-discharge-dialog/probable-discharge-dialog.component';
@@ -61,7 +61,7 @@ export class InternacionPacienteComponent implements OnInit {
 	public showDischarge: boolean;
 	public editDiagnosisSummary$: boolean;
 	public hasMedicalDischarge: boolean;
-	public canLoadProbableDischargeDate: boolean;	
+	public canLoadProbableDischargeDate: boolean;
 	public allergies$: Observable<AllergyConditionDto[]>;
 	public familyHistories$: Observable<HealthHistoryConditionDto[]>;
 	public personalHistory$: Observable<HealthHistoryConditionDto[]>;
@@ -70,6 +70,7 @@ export class InternacionPacienteComponent implements OnInit {
 	public vitalSigns$: Observable<Last2VitalSignsDto>;
 	public anthropometricData$: Observable<AnthropometricDataDto>;
 	public readonly familyHistoriesHeader = ANTECEDENTES_FAMILIARES;
+	public readonly personalHistoriesHeader = ANTECEDENTES_PERSONALES;
 
 	constructor(
 		private patientService: PatientService,
@@ -117,7 +118,7 @@ export class InternacionPacienteComponent implements OnInit {
 
 				this.featureFlagService.isActive(AppFeature.HABILITAR_CARGA_FECHA_PROBABLE_ALTA).subscribe(isOn => {
 					this.canLoadProbableDischargeDate = isOn;
-				});	
+				});
 				this.initSummaries();
 			}
 		);
@@ -170,12 +171,12 @@ export class InternacionPacienteComponent implements OnInit {
 		});
 
 		dialogRef.afterClosed().subscribe(submitted => {
-				if (submitted) {
-					this.internmentEpisodeSummary$ = this.internmentService.getInternmentEpisodeSummary(this.internmentEpisodeId).pipe(
-						map((internmentEpisode: InternmentSummaryDto) => this.mapperService.toInternmentEpisodeSummary(internmentEpisode))
-					);
-				}
+			if (submitted) {
+				this.internmentEpisodeSummary$ = this.internmentService.getInternmentEpisodeSummary(this.internmentEpisodeId).pipe(
+					map((internmentEpisode: InternmentSummaryDto) => this.mapperService.toInternmentEpisodeSummary(internmentEpisode))
+				);
 			}
+		}
 		);
 	}
 

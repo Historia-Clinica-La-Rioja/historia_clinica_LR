@@ -64,13 +64,14 @@
 					</ng-container>
 					<ng-container
 						*hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD']">
-						<app-antropometricos-summary [internmentEpisodeId]="internmentEpisodeId" [anthropometricData$]="anthropometricData$"
-							[editable]="!epicrisisDoc?.confirmed">
+						<app-antropometricos-summary [internmentEpisodeId]="internmentEpisodeId"
+							[anthropometricData$]="anthropometricData$" [editable]="!epicrisisDoc?.confirmed">
 						</app-antropometricos-summary>
 					</ng-container>
 					<ng-container
 						*hasRole="['ESPECIALISTA_MEDICO','ENFERMERO','PROFESIONAL_DE_SALUD','ENFERMERO_ADULTO_MAYOR']">
-						<app-antecedentes-personales-summary [personalHistory]="personalHistory$ | async">
+						<app-antecedentes-personales-summary [personalHistory]="personalHistory$ | async"
+							[personalHistoriesHeader]="personalHistoriesHeader">
 						</app-antecedentes-personales-summary>
 					</ng-container>
 					<ng-container
@@ -83,12 +84,12 @@
 				<div fxLayout="column" fxFlex="50%" fxLayoutGap="20px">
 					<ng-container
 						*hasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO']">
-						<app-summary-card 	[header]="internacionSummary"
-										  	[canEdit]="['ESPECIALISTA_MEDICO']"
-				  						  	[editable]="!hasMedicalDischarge && canLoadProbableDischargeDate"
-											(openInNew)="openDialog()">
+						<app-summary-card [header]="internacionSummary" [canEdit]="['ESPECIALISTA_MEDICO']"
+							[editable]="!hasMedicalDischarge && canLoadProbableDischargeDate"
+							(openInNew)="openDialog()">
 							<mat-card-content>
-								<app-internment-episode-summary [internmentEpisode]="internmentEpisodeSummary" [canLoadProbableDischargeDate]="canLoadProbableDischargeDate">
+								<app-internment-episode-summary [internmentEpisode]="internmentEpisodeSummary"
+									[canLoadProbableDischargeDate]="canLoadProbableDischargeDate">
 								</app-internment-episode-summary>
 							</mat-card-content>
 						</app-summary-card>
