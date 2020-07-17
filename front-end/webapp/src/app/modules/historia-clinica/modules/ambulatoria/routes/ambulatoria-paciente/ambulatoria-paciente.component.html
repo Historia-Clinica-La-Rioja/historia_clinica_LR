@@ -3,19 +3,19 @@
 		<h2 class="page-title" [translate]="'ambulatoria.paciente.TITLE'"></h2>
 	</section>
 
-	<div fxLayout="column" fxLayoutGap="20px">
+	<section id="content" fxLayout="column" fxLayoutGap="20px">
 		<app-patient-card [patient]="patient$ | async">
 			<div horizontal-content>
-				<button mat-flat-button color="primary">
-					{{ 'ambulatoria.paciente.card.NUEVA_CONSULTA' | translate | uppercase }}
+				<button id="nueva_consulta" mat-flat-button color="primary">
+					{{ 'ambulatoria.paciente.card.buttons.NUEVA_CONSULTA' | translate | uppercase }}
 				</button>
 			</div>
 		</app-patient-card>
 
-		<mat-card class="mat-typography">
+		<mat-card id="tab_container" class="mat-typography">
 			<mat-card-content>
 				<mat-tab-group>
-					<mat-tab>
+					<mat-tab id="tab_resumen">
 						<ng-template mat-tab-label>
 							<mat-icon>content_paste</mat-icon>
 							<span>{{ 'ambulatoria.paciente.resumen.TAB_LABEL' | translate | uppercase }}</span>
@@ -24,7 +24,7 @@
 							<app-resumen></app-resumen>
 						</ng-template>
 					</mat-tab>
-					<mat-tab>
+					<mat-tab id="tab_vacunas">
 						<ng-template mat-tab-label>
 							<mat-icon>content_paste</mat-icon>
 							<span>{{ 'ambulatoria.paciente.vacunas.TAB_LABEL' | translate | uppercase }}</span>
@@ -36,5 +36,5 @@
 				</mat-tab-group>
 			</mat-card-content>
 		</mat-card>
-	</div>
+	</section>
 </app-content>

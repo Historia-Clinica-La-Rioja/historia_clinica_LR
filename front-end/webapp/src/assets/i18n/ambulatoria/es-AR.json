@@ -7,7 +7,9 @@
 		"paciente": {
 			"TITLE": "HCE Ambulatoria",
 			"card": {
-				"NUEVA_CONSULTA": "Nueva consulta"
+				"buttons": {
+					"NUEVA_CONSULTA": "Nueva consulta"
+				}
 			},
 			"problemas": {
 				"TAB_LABEL": "Problemas",

@@ -51,7 +51,9 @@ export class MapperService {
 		return {
 			id: patient.id,
 			firstName: patient.person.firstName,
+			middleNames: patient.person.middleNames,
 			lastName: patient.person.lastName,
+			otherLastNames: patient.person.otherLastNames,
 			gender: patient.person.gender.description,
 			age: patient.person.age
 		};
