@@ -13,6 +13,7 @@ import { ProblemasComponent } from './components/problemas/problemas.component';
 import { VacunasComponent } from './components/vacunas/vacunas.component';
 import { HistoriaClinicaModule } from '../../historia-clinica.module';
 import { AplicarVacunaComponent } from './routes/aplicar-vacuna/aplicar-vacuna.component';
+import { AppMaterialModule } from '../../../material/app.material.module';
 
 
 @NgModule({
@@ -27,9 +28,10 @@ import { AplicarVacunaComponent } from './routes/aplicar-vacuna/aplicar-vacuna.c
 	],
 	imports: [
 		AmbulatoriaRoutingModule,
-		FormsModule,
+		AppMaterialModule,
 		CommonModule,
 		CoreModule,
+		FormsModule,
 		HistoriaClinicaModule,
 		PacientesModule,
 		PresentationModule
