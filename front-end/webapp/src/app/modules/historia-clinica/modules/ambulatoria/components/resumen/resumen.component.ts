@@ -3,7 +3,7 @@ import { AllergyConditionDto, HealthHistoryConditionDto, MedicationDto, Last2Vit
 import { ActivatedRoute } from "@angular/router";
 import { Observable } from "rxjs";
 import { HceGeneralStateService } from "@api-rest/services/hce-general-state.service";
-import { ANTECEDENTES_FAMILIARES } from "../../../../constants/summaries";
+import { ANTECEDENTES_FAMILIARES, PROBLEMAS_ANTECEDENTES } from "../../../../constants/summaries";
 
 @Component({
 	selector: 'app-resumen',
@@ -21,6 +21,7 @@ export class ResumenComponent implements OnInit {
 	public vitalSigns$: Observable<Last2VitalSignsDto>;
 	public anthropometricData$: Observable<AnthropometricDataDto>;
 	public readonly familyHistoriesHeader = ANTECEDENTES_FAMILIARES;
+	public readonly personalProblemsHeader = PROBLEMAS_ANTECEDENTES;
 
 	constructor(private readonly hceGeneralStateService: HceGeneralStateService,
 		private route: ActivatedRoute) {
