@@ -4,7 +4,7 @@ import { InmunizationDto } from '@api-rest/api-model';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { AplicarVacunaComponent } from '../../routes/aplicar-vacuna/aplicar-vacuna.component';
+import { AplicarVacunaComponent } from '../../dialogs/aplicar-vacuna/aplicar-vacuna.component';
 
 @Component({
 	selector: 'app-vacunas',
