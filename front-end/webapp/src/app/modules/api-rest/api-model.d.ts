@@ -175,6 +175,17 @@ export interface CompletePatientDto extends BasicPatientDto {
     patientType: PatientType;
 }
 
+export interface CreateOutpatientDto {
+    allergies: OutpatientAllergyConditionDto[];
+    anthropometricData?: OutpatientAnthropometricDataDto;
+    evolutionNote?: string;
+    familyHistories: OutpatientFamilyHistoryDto[];
+    medications: OutpatientMedicationDto[];
+    problems: OutpatientProblemDto[];
+    reasonId: string;
+    vitalSigns?: OutpatientVitalSignDto;
+}
+
 export interface DepartmentDto extends MasterdataDto<number> {
     id: number;
 }
@@ -481,6 +492,63 @@ export interface MedicationDto extends ClinicalTermDto {
 export interface OauthConfigDto {
     enabled: boolean;
     loginUrl: string;
+}
+
+export interface OutpatientAllergyConditionDto {
+    categoryId: string;
+    severity: string;
+    snomed: SnomedDto;
+    startDate: string;
+    statusId?: string;
+    verificationId?: string;
+}
+
+export interface OutpatientAnthropometricDataDto extends Serializable {
+    bloodType?: ClinicalObservationDto;
+    bmi?: ClinicalObservationDto;
+    height?: ClinicalObservationDto;
+    weight?: ClinicalObservationDto;
+}
+
+export interface OutpatientFamilyHistoryDto {
+    snomed: SnomedDto;
+    startDate: string;
+    statusId?: string;
+    verificationId?: string;
+}
+
+export interface OutpatientInmunizationDto {
+    administrationDate: string;
+    id?: number;
+    note: string;
+    snomed: SnomedDto;
+    statusId?: string;
+}
+
+export interface OutpatientMedicationDto {
+    id?: number;
+    note: string;
+    snomed: SnomedDto;
+    statusId?: string;
+    suspended: boolean;
+}
+
+export interface OutpatientProblemDto {
+    chronic: boolean;
+    endDate?: string;
+    snomed: SnomedDto;
+    startDate: string;
+    statusId?: string;
+    verificationId?: string;
+}
+
+export interface OutpatientVitalSignDto extends Serializable {
+    bloodOxygenSaturation?: EffectiveClinicalObservationDto;
+    diastolicBloodPressure?: EffectiveClinicalObservationDto;
+    heartRate?: EffectiveClinicalObservationDto;
+    respiratoryRate?: EffectiveClinicalObservationDto;
+    systolicBloodPressure?: EffectiveClinicalObservationDto;
+    temperature?: EffectiveClinicalObservationDto;
 }
 
 export interface PasswordResetDto {

@@ -1,4 +1,4 @@
-package net.pladema.clinichistory.hospitalization.controller.generalstate.dto;
+package net.pladema.clinichistory.outpatient.createoutpatient.controller.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
-public class VitalSignDto implements Serializable {
+public class OutpatientVitalSignDto implements Serializable {
 
     @Valid
     @Nullable

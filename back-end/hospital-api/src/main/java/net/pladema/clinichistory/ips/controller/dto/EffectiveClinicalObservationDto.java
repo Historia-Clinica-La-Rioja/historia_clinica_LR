@@ -1,4 +1,4 @@
-package net.pladema.clinichistory.hospitalization.controller.generalstate.dto;
+package net.pladema.clinichistory.ips.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
