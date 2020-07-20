@@ -21,7 +21,7 @@ public class MasterdataRepositoryImpl implements MasterdataRepository {
     @SuppressWarnings("unchecked")
     @Override
     @Transactional(readOnly = true)
-    public <T> Collection<MasterDataProjection> findAllInternmentProjectedBy(Class<T> clazz, String...filterIds) {
+    public <T> Collection<MasterDataProjection> findAllProjectedBy(Class<T> clazz, String...filterIds) {
 
         String sqlString = "SELECT p FROM " + clazz.getSimpleName() + " p ";
 
