@@ -17,6 +17,18 @@
 				"motivo": {
 					"TITLE": "Motivo de consulta",
 					"MOTIVO": "motivo"
+				},
+				"problemas": {
+					"TITLE": "Problema",
+					"TABLE_TITLE": "Problemas registrados",
+					"CONCEPT_LABEL": "Problema",
+					"buttons": {
+						"ADD": "Agregar problema"
+					},
+					"CRONICO": "Crónico",
+					"DIAGNOSTICOS": "Diagnósticos",
+					"FECHA_INICIO": "Fecha inicio",
+					"FECHA_FIN": "Fecha fin"
 				}
 			},
 			"problemas": {

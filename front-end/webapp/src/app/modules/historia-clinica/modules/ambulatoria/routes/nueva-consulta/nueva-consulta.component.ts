@@ -3,6 +3,7 @@ import { HealthConditionDto, SnomedDto } from '@api-rest/api-model';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { SnomedSemanticSearch, SnomedService } from 'src/app/modules/historia-clinica/services/snomed.service';
 import { SEMANTICS_CONFIG } from 'src/app/modules/historia-clinica/constants/snomed-semantics';
+import { ProblemasNuevaConsultaService } from '../../services/problemas-nueva-consulta.service';
 
 @Component({
 	selector: 'app-nueva-consulta',
@@ -17,10 +18,14 @@ export class NuevaConsultaComponent implements OnInit {
 
 	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 
+	problemasNuevaConsultaService: ProblemasNuevaConsultaService;
+
 	constructor(
 		private readonly formBuilder: FormBuilder,
-		private snomedService: SnomedService
-	) { }
+		private readonly snomedService: SnomedService
+	) {
+		this.problemasNuevaConsultaService = new ProblemasNuevaConsultaService(formBuilder, snomedService);
+	}
 
 	ngOnInit(): void {
 		this.form = this.formBuilder.group({
