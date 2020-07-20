@@ -9,7 +9,7 @@ import net.pladema.clinichistory.hospitalization.service.epicrisis.domain.Epicri
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.ips.service.AllergyService;
 import net.pladema.clinichistory.ips.service.HealthConditionService;
-import net.pladema.clinichistory.ips.service.InmunizationService;
+import net.pladema.clinichistory.ips.service.ImmunizationService;
 import net.pladema.clinichistory.ips.service.MedicationService;
 import net.pladema.clinichistory.ips.service.domain.DocumentObservationsBo;
 import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
@@ -38,21 +38,21 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
 
     private final MedicationService medicationService;
 
-    private final InmunizationService inmunizationService;
+    private final ImmunizationService immunizationService;
 
     public CreateEpicrisisServiceImpl(DocumentService documentService,
                                       InternmentEpisodeService internmentEpisodeService,
                                       NoteService noteService,
                                       HealthConditionService healthConditionService,
                                       AllergyService allergyService,
-                                      InmunizationService inmunizationService,
+                                      ImmunizationService immunizationService,
                                       MedicationService medicationService) {
         this.documentService = documentService;
         this.internmentEpisodeService = internmentEpisodeService;
         this.noteService = noteService;
         this.healthConditionService = healthConditionService;
         this.allergyService = allergyService;
-        this.inmunizationService = inmunizationService;
+        this.immunizationService = immunizationService;
         this.medicationService = medicationService;
     }
 
@@ -69,7 +69,7 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
         epicrisis.setPersonalHistories(healthConditionService.loadPersonalHistories(patientId, document.getId(), epicrisis.getPersonalHistories()));
         epicrisis.setFamilyHistories(healthConditionService.loadFamilyHistories(patientId, document.getId(), epicrisis.getFamilyHistories()));
         epicrisis.setAllergies(allergyService.loadAllergies(patientId, document.getId(), epicrisis.getAllergies()));
-        epicrisis.setInmunizations(inmunizationService.loadInmunization(patientId, document.getId(), epicrisis.getInmunizations()));
+        epicrisis.setInmunizations(immunizationService.loadInmunization(patientId, document.getId(), epicrisis.getInmunizations()));
         epicrisis.setMedications(medicationService.loadMedications(patientId, document.getId(), epicrisis.getMedications()));
 
         internmentEpisodeService.updateEpicrisisDocumentId(internmentEpisodeId, document.getId());

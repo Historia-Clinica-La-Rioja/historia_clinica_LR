@@ -27,7 +27,7 @@ public class ReportDocumentServiceImpl implements ReportDocumentService {
 
     private final DocumentHealthConditionRepository documentHealthConditionRepository;
 
-    private final DocumentInmunizationRepository documentInmunizationRepository;
+    private final DocumentImmunizationRepository documentImmunizationRepository;
 
     private final DocumentVitalSignRepository documentVitalSignRepository;
 
@@ -39,14 +39,14 @@ public class ReportDocumentServiceImpl implements ReportDocumentService {
 
     public ReportDocumentServiceImpl(DocumentRepository documentRepository,
                                      DocumentHealthConditionRepository documentHealthConditionRepository,
-                                     DocumentInmunizationRepository documentInmunizationRepository,
+                                     DocumentImmunizationRepository documentImmunizationRepository,
                                      DocumentVitalSignRepository documentVitalSignRepository,
                                      DocumentLabRepository documentLabRepository,
                                      DocumentAllergyIntoleranceRepository documentAllergyIntoleranceRepository,
                                      DocumentMedicamentionStatementRepository documentMedicamentionStatementRepository) {
         this.documentRepository = documentRepository;
         this.documentHealthConditionRepository = documentHealthConditionRepository;
-        this.documentInmunizationRepository = documentInmunizationRepository;
+        this.documentImmunizationRepository = documentImmunizationRepository;
         this.documentVitalSignRepository = documentVitalSignRepository;
         this.documentLabRepository = documentLabRepository;
         this.documentAllergyIntoleranceRepository = documentAllergyIntoleranceRepository;
@@ -65,7 +65,7 @@ public class ReportDocumentServiceImpl implements ReportDocumentService {
     @Override
     public List<InmunizationBo> getReportInmunizationStateFromDocument(Long documentId) {
         LOG.debug(LOGGING_DOCUMENT_ID, documentId);
-        List<InmunizationVo> resultQuery = documentInmunizationRepository.getInmunizationStateFromDocumentToReport(documentId);
+        List<InmunizationVo> resultQuery = documentImmunizationRepository.getInmunizationStateFromDocumentToReport(documentId);
         List<InmunizationBo> result = resultQuery.stream().map(InmunizationBo::new).collect(Collectors.toList());
         LOG.debug(OUTPUT, result);
         return result;

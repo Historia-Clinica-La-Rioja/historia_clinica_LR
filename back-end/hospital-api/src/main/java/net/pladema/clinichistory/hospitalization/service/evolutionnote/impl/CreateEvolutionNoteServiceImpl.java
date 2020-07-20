@@ -12,7 +12,7 @@ import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeServic
 import net.pladema.clinichistory.ips.service.AllergyService;
 import net.pladema.clinichistory.ips.service.ClinicalObservationService;
 import net.pladema.clinichistory.ips.service.HealthConditionService;
-import net.pladema.clinichistory.ips.service.InmunizationService;
+import net.pladema.clinichistory.ips.service.ImmunizationService;
 import net.pladema.clinichistory.ips.service.domain.DocumentObservationsBo;
 import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
 import org.slf4j.Logger;
@@ -41,7 +41,7 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
 
     private final ClinicalObservationService clinicalObservationService;
 
-    private final InmunizationService inmunizationService;
+    private final ImmunizationService immunizationService;
 
     public CreateEvolutionNoteServiceImpl(DocumentService documentService,
                                           InternmentEpisodeService internmentEpisodeService,
@@ -49,14 +49,14 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
                                           HealthConditionService healthConditionService,
                                           AllergyService allergyService,
                                           ClinicalObservationService clinicalObservationService,
-                                          InmunizationService inmunizationService) {
+                                          ImmunizationService immunizationService) {
         this.documentService = documentService;
         this.internmentEpisodeService = internmentEpisodeService;
         this.noteService = noteService;
         this.healthConditionService = healthConditionService;
         this.allergyService = allergyService;
         this.clinicalObservationService = clinicalObservationService;
-        this.inmunizationService = inmunizationService;
+        this.immunizationService = immunizationService;
     }
 
     @Override
@@ -69,7 +69,7 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
 
         evolutionNote.setDiagnosis(healthConditionService.loadDiagnosis(patientId, document.getId(), evolutionNote.getDiagnosis()));
         evolutionNote.setAllergies(allergyService.loadAllergies(patientId, document.getId(), evolutionNote.getAllergies()));
-        evolutionNote.setInmunizations(inmunizationService.loadInmunization(patientId, document.getId(), evolutionNote.getInmunizations()));
+        evolutionNote.setInmunizations(immunizationService.loadInmunization(patientId, document.getId(), evolutionNote.getInmunizations()));
 
         evolutionNote.setVitalSigns(clinicalObservationService.loadVitalSigns(patientId, document.getId(), Optional.ofNullable(evolutionNote.getVitalSigns())));
         evolutionNote.setAnthropometricData(clinicalObservationService.loadAnthropometricData(patientId, document.getId(), Optional.ofNullable(evolutionNote.getAnthropometricData())));

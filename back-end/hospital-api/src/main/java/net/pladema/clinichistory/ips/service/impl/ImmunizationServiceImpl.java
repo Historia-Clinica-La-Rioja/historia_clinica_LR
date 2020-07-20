@@ -4,7 +4,8 @@ import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.ips.repository.InmunizationRepository;
 import net.pladema.clinichistory.ips.repository.entity.Inmunization;
 import net.pladema.clinichistory.ips.repository.masterdata.InmunizationStatusRepository;
-import net.pladema.clinichistory.ips.service.InmunizationService;
+import net.pladema.clinichistory.ips.repository.masterdata.entity.InmunizationStatus;
+import net.pladema.clinichistory.ips.service.ImmunizationService;
 import net.pladema.clinichistory.ips.service.SnomedService;
 import net.pladema.clinichistory.ips.service.domain.InmunizationBo;
 import org.slf4j.Logger;
@@ -14,9 +15,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class InmunizationServiceImpl implements InmunizationService {
+public class ImmunizationServiceImpl implements ImmunizationService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(InmunizationServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ImmunizationServiceImpl.class);
 
     public static final String OUTPUT = "Output -> {}";
 
@@ -28,7 +29,7 @@ public class InmunizationServiceImpl implements InmunizationService {
 
     private final DocumentService documentService;
 
-    public InmunizationServiceImpl(InmunizationRepository inmunizationRepository,
+    public ImmunizationServiceImpl(InmunizationRepository inmunizationRepository,
                                    InmunizationStatusRepository inmunizationStatusRepository,
                                    SnomedService snomedService,
                                    DocumentService documentService){
@@ -41,34 +42,34 @@ public class InmunizationServiceImpl implements InmunizationService {
     @Override
     public List<InmunizationBo> loadInmunization(Integer patientId, Long documentId, List<InmunizationBo> immunizations) {
         LOG.debug("Input parameters -> patientId {}, documentId {}, immunizations {}", patientId, documentId, immunizations);
-        immunizations.stream().forEach(i -> {
+        immunizations.forEach(i -> {
             String sctId = snomedService.createSnomedTerm(i.getSnomed());
-            Inmunization inmunization = saveInmunization(patientId, i, sctId);
+            Inmunization immunization = saveImmunization(patientId, i, sctId);
 
-            i.setId(inmunization.getId());
-            i.setStatusId(inmunization.getStatusId());
+            i.setId(immunization.getId());
+            i.setStatusId(immunization.getStatusId());
             i.setStatus(getStatus(i.getStatusId()));
-            i.setAdministrationDate(inmunization.getAdministrationDate());
+            i.setAdministrationDate(immunization.getAdministrationDate());
 
-            documentService.createInmunization(documentId, inmunization.getId());
+            documentService.createImmunization(documentId, immunization.getId());
         });
         List<InmunizationBo> result = immunizations;
         LOG.debug(OUTPUT, result);
         return result;
     }
 
-    private Inmunization saveInmunization(Integer patientId, InmunizationBo inmunizationBo, String sctId) {
-        LOG.debug("Input parameters -> patientId {}, inmunizationBo {}, sctId {}", patientId, inmunizationBo, sctId);
-        Inmunization inmunization = new Inmunization(patientId, sctId, inmunizationBo.getStatusId()
-                , inmunizationBo.getAdministrationDate());
-        inmunization = inmunizationRepository.save(inmunization);
-        LOG.debug("Inmunization saved -> {}", inmunization.getId());
-        LOG.debug(OUTPUT, inmunization);
-        return inmunization;
+    private Inmunization saveImmunization(Integer patientId, InmunizationBo immunizationBo, String sctId) {
+        LOG.debug("Input parameters -> patientId {}, immunizationBo {}, sctId {}", patientId, immunizationBo, sctId);
+        Inmunization immunization = new Inmunization(patientId, sctId, immunizationBo.getStatusId()
+                , immunizationBo.getAdministrationDate());
+        immunization = inmunizationRepository.save(immunization);
+        LOG.debug("Immunization saved -> {}", immunization.getId());
+        LOG.debug(OUTPUT, immunization);
+        return immunization;
     }
 
     private String getStatus(String id) {
-        return inmunizationStatusRepository.findById(id).get().getDescription();
+        return inmunizationStatusRepository.findById(id).map(InmunizationStatus::getDescription).orElse(null);
     }
 
 }

@@ -5,6 +5,7 @@ import net.pladema.clinichistory.documents.service.NoteService;
 import net.pladema.clinichistory.ips.repository.MedicationStatementRepository;
 import net.pladema.clinichistory.ips.repository.entity.MedicationStatement;
 import net.pladema.clinichistory.ips.repository.masterdata.MedicamentStatementStatusRepository;
+import net.pladema.clinichistory.ips.repository.masterdata.entity.MedicationStatementStatus;
 import net.pladema.clinichistory.ips.service.MedicationService;
 import net.pladema.clinichistory.ips.service.SnomedService;
 import net.pladema.clinichistory.ips.service.domain.MedicationBo;
@@ -75,7 +76,7 @@ public class MedicationServiceImpl implements MedicationService {
     }
 
     private String getStatus(String id) {
-        return medicamentStatementStatusRepository.findById(id).get().getDescription();
+        return medicamentStatementStatusRepository.findById(id).map(MedicationStatementStatus::getDescription).orElse(null);
     }
 
 }

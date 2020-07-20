@@ -26,6 +26,8 @@ public class OutpatientDocumentBo implements Document {
 
     private List<ProblemBo> problems;
 
+    private List<ProcedureBo> procedures;
+
     private List<HealthHistoryConditionBo> familyHistories;
 
     private List<MedicationBo> medications;

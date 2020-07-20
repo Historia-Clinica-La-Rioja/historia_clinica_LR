@@ -32,7 +32,10 @@ public class DocumentServiceImplTest {
 	private DocumentAllergyIntoleranceRepository documentAllergyIntoleranceRepository;
 
 	@MockBean
-	private DocumentInmunizationRepository documentInmunizationRepository;
+	private DocumentImmunizationRepository documentImmunizationRepository;
+
+	@MockBean
+	private DocumentProcedureRepository documentProcedureRepository;
 
 	@MockBean
 	private DocumentMedicamentionStatementRepository documentMedicamentionStatementRepository;
@@ -40,7 +43,7 @@ public class DocumentServiceImplTest {
 	@Before
 	public void setUp() {
 		documentServiceImpl = new DocumentServiceImpl(documentRepository, documentHealthConditionRepository,
-				documentInmunizationRepository, documentVitalSignRepository, documentLabRepository,
+                documentImmunizationRepository, documentProcedureRepository, documentVitalSignRepository, documentLabRepository,
 				documentAllergyIntoleranceRepository, documentMedicamentionStatementRepository);
 	}
 

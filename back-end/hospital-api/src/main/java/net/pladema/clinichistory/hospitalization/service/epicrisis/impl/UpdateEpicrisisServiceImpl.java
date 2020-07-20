@@ -37,7 +37,7 @@ public class UpdateEpicrisisServiceImpl implements UpdateEpicrisisService {
 
     private final ClinicalObservationService clinicalObservationService;
 
-    private final InmunizationService inmunizationService;
+    private final ImmunizationService immunizationService;
 
 
     public UpdateEpicrisisServiceImpl(DocumentService documentService,
@@ -47,7 +47,7 @@ public class UpdateEpicrisisServiceImpl implements UpdateEpicrisisService {
                                       AllergyService allergyService,
                                       MedicationService medicationService,
                                       ClinicalObservationService clinicalObservationService,
-                                      InmunizationService inmunizationService) {
+                                      ImmunizationService immunizationService) {
         this.documentService = documentService;
         this.internmentEpisodeService = internmentEpisodeService;
         this.noteService = noteService;
@@ -55,7 +55,7 @@ public class UpdateEpicrisisServiceImpl implements UpdateEpicrisisService {
         this.allergyService = allergyService;
         this.medicationService = medicationService;
         this.clinicalObservationService = clinicalObservationService;
-        this.inmunizationService = inmunizationService;
+        this.immunizationService = immunizationService;
     }
 
     @Override
@@ -73,7 +73,7 @@ public class UpdateEpicrisisServiceImpl implements UpdateEpicrisisService {
             epicrisis.setPersonalHistories(healthConditionService.loadPersonalHistories(patientId, doc.getId(), epicrisis.getPersonalHistories()));
             epicrisis.setFamilyHistories(healthConditionService.loadFamilyHistories(patientId, doc.getId(), epicrisis.getFamilyHistories()));
             epicrisis.setAllergies(allergyService.loadAllergies(patientId, doc.getId(), epicrisis.getAllergies()));
-            epicrisis.setInmunizations(inmunizationService.loadInmunization(patientId, doc.getId(), epicrisis.getInmunizations()));
+            epicrisis.setInmunizations(immunizationService.loadInmunization(patientId, doc.getId(), epicrisis.getInmunizations()));
             epicrisis.setMedications(medicationService.loadMedications(patientId, doc.getId(), epicrisis.getMedications()));
 
             epicrisis.setVitalSigns(clinicalObservationService.loadVitalSigns(patientId, doc.getId(), Optional.ofNullable(epicrisis.getVitalSigns())));

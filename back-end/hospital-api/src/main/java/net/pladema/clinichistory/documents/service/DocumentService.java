@@ -1,10 +1,8 @@
 package net.pladema.clinichistory.documents.service;
 
-import net.pladema.clinichistory.ips.service.domain.*;
 import net.pladema.clinichistory.documents.repository.entity.Document;
-import net.pladema.clinichistory.documents.repository.entity.DocumentInmunization;
-import net.pladema.clinichistory.documents.repository.entity.DocumentLab;
-import net.pladema.clinichistory.documents.repository.entity.DocumentVitalSign;
+import net.pladema.clinichistory.documents.repository.entity.*;
+import net.pladema.clinichistory.ips.service.domain.*;
 import net.pladema.sgx.auditable.entity.Updateable;
 
 import java.util.List;
@@ -16,17 +14,19 @@ public interface DocumentService {
 
     Document save(Document document);
 
-    void createDocumentHealthCondition(Long documentId, Integer healthConditionId);
+    DocumentHealthCondition createDocumentHealthCondition(Long documentId, Integer healthConditionId);
 
     DocumentVitalSign createDocumentVitalSign(Long documentId, Integer observationVitalSignId);
 
     DocumentLab createDocumentLab(Long documentId, Integer observationLabId);
 
-    void createDocumentAllergyIntolerance(Long documentId, Integer allergyIntoleranceId);
+    DocumentAllergyIntolerance createDocumentAllergyIntolerance(Long documentId, Integer allergyIntoleranceId);
 
-    DocumentInmunization createInmunization(Long documentId, Integer inmunizationId);
-    
-    void createDocumentMedication(Long documentId, Integer medicationStatementId);
+    DocumentInmunization createImmunization(Long documentId, Integer immunizationId);
+
+    DocumentMedicamentionStatement createDocumentMedication(Long documentId, Integer medicationStatementId);
+
+    DocumentProcedure createDocumentProcedure(Long documentId, Integer id);
 
     GeneralHealthConditionBo getHealthConditionFromDocument(Long documentId);
 

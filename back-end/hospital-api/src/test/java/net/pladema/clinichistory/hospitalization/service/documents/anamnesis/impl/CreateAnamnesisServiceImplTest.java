@@ -39,7 +39,7 @@ public class CreateAnamnesisServiceImplTest {
 	private ClinicalObservationService clinicalObservationService;
 
 	@MockBean
-	private InmunizationService inmunizationService;
+	private ImmunizationService immunizationService;
 
 	@MockBean
 	private MedicationService medicationService;
@@ -53,7 +53,7 @@ public class CreateAnamnesisServiceImplTest {
 				healthConditionService,
 				allergyService,
                 clinicalObservationService,
-				inmunizationService,
+                immunizationService,
 				medicationService);
 	}
 

@@ -6,6 +6,7 @@ import lombok.ToString;
 import net.pladema.clinichistory.ips.service.domain.*;
 import net.pladema.clinichistory.documents.service.Document;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProblemBo;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProcedureBo;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -35,11 +36,16 @@ public class MainDiagnosisBo implements Document {
 
     @Override
     public List<DiagnosisBo> getDiagnosis() {
-        return null;
+        return Collections.emptyList();
     }
 
     @Override
     public List<ProblemBo> getProblems() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<ProcedureBo> getProcedures() {
         return Collections.emptyList();
     }
 

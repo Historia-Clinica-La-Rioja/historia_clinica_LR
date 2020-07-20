@@ -29,7 +29,9 @@ public class DocumentServiceImpl implements DocumentService {
 
     private final DocumentHealthConditionRepository documentHealthConditionRepository;
 
-    private final DocumentInmunizationRepository documentInmunizationRepository;
+    private final DocumentImmunizationRepository documentImmunizationRepository;
+
+    private final DocumentProcedureRepository documentProcedureRepository;
 
     private final DocumentVitalSignRepository documentVitalSignRepository;
 
@@ -41,14 +43,16 @@ public class DocumentServiceImpl implements DocumentService {
 
     public DocumentServiceImpl(DocumentRepository documentRepository,
                                DocumentHealthConditionRepository documentHealthConditionRepository,
-                               DocumentInmunizationRepository documentInmunizationRepository,
+                               DocumentImmunizationRepository documentImmunizationRepository,
+                               DocumentProcedureRepository documentProcedureRepository,
                                DocumentVitalSignRepository documentVitalSignRepository,
                                DocumentLabRepository documentLabRepository,
                                DocumentAllergyIntoleranceRepository documentAllergyIntoleranceRepository,
                                DocumentMedicamentionStatementRepository documentMedicamentionStatementRepository) {
         this.documentRepository = documentRepository;
         this.documentHealthConditionRepository = documentHealthConditionRepository;
-        this.documentInmunizationRepository = documentInmunizationRepository;
+        this.documentImmunizationRepository = documentImmunizationRepository;
+        this.documentProcedureRepository = documentProcedureRepository;
         this.documentVitalSignRepository = documentVitalSignRepository;
         this.documentLabRepository = documentLabRepository;
         this.documentAllergyIntoleranceRepository = documentAllergyIntoleranceRepository;
@@ -72,10 +76,12 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public void createDocumentHealthCondition(Long documentId, Integer healthConditionId) {
+    public DocumentHealthCondition createDocumentHealthCondition(Long documentId, Integer healthConditionId) {
         LOG.debug("Input parameters -> documentId {}, healthConditionId {}", documentId, healthConditionId);
-        DocumentHealthCondition document = new DocumentHealthCondition(documentId, healthConditionId);
-        documentHealthConditionRepository.save(document);
+        DocumentHealthCondition result = new DocumentHealthCondition(documentId, healthConditionId);
+        result = documentHealthConditionRepository.save(result);
+        LOG.debug(OUTPUT, result);
+        return result;
     }
 
     @Override
@@ -97,26 +103,40 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public void createDocumentAllergyIntolerance(Long documentId, Integer allergyIntoleranceId) {
+    public DocumentAllergyIntolerance createDocumentAllergyIntolerance(Long documentId, Integer allergyIntoleranceId) {
         LOG.debug("Input parameters -> documentId {}, allergyIntoleranceId {}", documentId, allergyIntoleranceId);
-        DocumentAllergyIntolerance document = new DocumentAllergyIntolerance(documentId, allergyIntoleranceId);
-        documentAllergyIntoleranceRepository.save(document);
-    }
-
-    @Override
-    public DocumentInmunization createInmunization(Long documentId, Integer inmunizationId) {
-        LOG.debug("Input parameters -> documentId {}, inmunizationId {}", documentId, inmunizationId);
-        DocumentInmunization result = new DocumentInmunization(documentId, inmunizationId);
-        result = documentInmunizationRepository.save(result);
+        DocumentAllergyIntolerance result = new DocumentAllergyIntolerance(documentId, allergyIntoleranceId);
+        result = documentAllergyIntoleranceRepository.save(result);
         LOG.debug(OUTPUT, result);
         return result;
     }
 
     @Override
-    public void createDocumentMedication(Long documentId, Integer medicationStatementId) {
+    public DocumentInmunization createImmunization(Long documentId, Integer immunizationId) {
+        LOG.debug("Input parameters -> documentId {}, immunizationId {}", documentId, immunizationId);
+        DocumentInmunization result = new DocumentInmunization(documentId, immunizationId);
+        result = documentImmunizationRepository.save(result);
+        LOG.debug(OUTPUT, result);
+        return result;
+    }
+
+    @Override
+    public DocumentMedicamentionStatement createDocumentMedication(Long documentId, Integer medicationStatementId) {
         LOG.debug("Input parameters -> documentId {}, medicationStatementId {}", documentId, medicationStatementId);
-        DocumentMedicamentionStatement document = new DocumentMedicamentionStatement(documentId, medicationStatementId);
-        documentMedicamentionStatementRepository.save(document);
+        DocumentMedicamentionStatement result = new DocumentMedicamentionStatement(documentId, medicationStatementId);
+        result = documentMedicamentionStatementRepository.save(result);
+        LOG.debug(OUTPUT, result);
+        return result;
+    }
+
+    @Override
+    public DocumentProcedure createDocumentProcedure(Long documentId, Integer procedureId) {
+        LOG.debug("Input parameters -> documentId {}, procedureId {}", documentId, procedureId);
+        DocumentProcedure result = new DocumentProcedure(documentId, procedureId);
+        result = documentProcedureRepository.save(result);
+        LOG.debug(OUTPUT, result);
+        return result;
+
     }
 
     @Override
@@ -131,7 +151,7 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public List<InmunizationBo> getInmunizationStateFromDocument(Long documentId) {
         LOG.debug(LOGGING_DOCUMENT_ID, documentId);
-        List<InmunizationVo> resultQuery = documentInmunizationRepository.getInmunizationStateFromDocument(documentId);
+        List<InmunizationVo> resultQuery = documentImmunizationRepository.getInmunizationStateFromDocument(documentId);
         List<InmunizationBo> result = resultQuery.stream().map(InmunizationBo::new).collect(Collectors.toList());
         LOG.debug(OUTPUT, result);
         return result;

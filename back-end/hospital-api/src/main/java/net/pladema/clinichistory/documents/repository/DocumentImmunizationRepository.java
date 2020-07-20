@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-public interface DocumentInmunizationRepository extends JpaRepository<DocumentInmunization, DocumentInmunizationPK> {
+public interface DocumentImmunizationRepository extends JpaRepository<DocumentInmunization, DocumentInmunizationPK> {
 
 
     @Transactional(readOnly = true)

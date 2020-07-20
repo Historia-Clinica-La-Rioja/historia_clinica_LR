@@ -42,13 +42,13 @@ public class UpdateAnamnesisServiceImplTest {
 	private ClinicalObservationService clinicalObservationService;
 
 	@MockBean
-	private InmunizationService inmunizationService;
+	private ImmunizationService immunizationService;
 
 	@Before
 	public void setUp() {
 		updateAnamnesisServiceImpl = new UpdateAnamnesisServiceImpl(documentService, internmentEpisodeService,
 				noteService, healthConditionService, allergyService, medicationService, clinicalObservationService,
-				inmunizationService);
+                immunizationService);
 	}
 
 	@Test

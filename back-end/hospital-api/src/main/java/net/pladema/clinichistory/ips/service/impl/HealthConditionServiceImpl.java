@@ -31,6 +31,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     public static final String OUTPUT = "Output -> {}";
 
     private static final Logger LOG = LoggerFactory.getLogger(HealthConditionServiceImpl.class);
+    public static final String INPUT_PARAMETERS_PATIENT_ID_INFO = "Input parameters -> patientId {}, info {}";
 
     private final HealthConditionRepository healthConditionRepository;
 
@@ -85,11 +86,11 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     }
 
     private HealthCondition buildMainDiagnoses(Integer patientId, HealthConditionBo info) {
-        LOG.debug("Input parameters -> patientId {}, info {}", patientId, info);
+        LOG.debug(INPUT_PARAMETERS_PATIENT_ID_INFO, patientId, info);
         HealthCondition healthCondition = buildBasicHealthCondition(patientId, info);
         healthCondition.setProblemId(ProblemType.DIAGNOSTICO);
         healthCondition.setMain(true);
-        healthCondition = updateStatusAndVerification(healthCondition, info);
+        updateStatusAndVerification(healthCondition, info);
         LOG.debug(OUTPUT, healthCondition);
         return healthCondition;
     }
@@ -115,12 +116,12 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     }
 
     private HealthCondition buildDiagnoses(Integer patientId, DiagnosisBo info) {
-        LOG.debug("Input parameters -> patientId {}, info {}", patientId, info);
+        LOG.debug(INPUT_PARAMETERS_PATIENT_ID_INFO, patientId, info);
         HealthCondition healthCondition = buildBasicHealthCondition(patientId, info);
         healthCondition.setProblemId(ProblemType.DIAGNOSTICO);
         if (info.isPresumptive())
             healthCondition.setVerificationStatusId(ConditionVerificationStatus.PRESUMPTIVE);
-        healthCondition = updateStatusAndVerification(healthCondition, info);
+        updateStatusAndVerification(healthCondition, info);
         LOG.debug(OUTPUT, healthCondition);
         return healthCondition;
     }
@@ -158,7 +159,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     }
 
     private HealthCondition buildPersonalHistory(Integer patientId, HealthHistoryConditionBo info) {
-        LOG.debug("Input parameters -> patientId {}, info {}", patientId, info);
+        LOG.debug(INPUT_PARAMETERS_PATIENT_ID_INFO, patientId, info);
         HealthCondition healthCondition = buildBasicHealthCondition(patientId, info);
         healthCondition.setProblemId(ProblemType.PROBLEMA);
         LocalDate date = info.getDate() == null ? defaultDate() : info.getDate();
@@ -189,7 +190,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     }
 
     private HealthCondition buildFamilyHistory(Integer patientId, HealthHistoryConditionBo info) {
-        LOG.debug("Input parameters -> patientId {}, info {}", patientId, info);
+        LOG.debug(INPUT_PARAMETERS_PATIENT_ID_INFO, patientId, info);
         HealthCondition healthCondition = buildBasicHealthCondition(patientId, info);
         healthCondition.setProblemId(ProblemType.ANTECEDENTE);
         LocalDate date = info.getDate() == null ? defaultDate() : info.getDate();
@@ -204,7 +205,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     }
 
     private HealthCondition buildBasicHealthCondition(Integer patientId, HealthConditionBo info) {
-        LOG.debug("Input parameters -> patientId {}, info {}", patientId, info);
+        LOG.debug(INPUT_PARAMETERS_PATIENT_ID_INFO, patientId, info);
         String sctId = snomedService.createSnomedTerm(info.getSnomed());
         HealthCondition healthCondition = new HealthCondition();
         healthCondition.setPatientId(patientId);
@@ -265,10 +266,10 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     }
 
     private String getVerification(String id) {
-        return conditionVerificationStatusRepository.findById(id).get().getDescription();
+        return conditionVerificationStatusRepository.findById(id).map(ConditionVerificationStatus::getDescription).orElse(null);
     }
 
     private String getStatus(String id) {
-        return conditionClinicalStatusRepository.findById(id).get().getDescription();
+        return conditionClinicalStatusRepository.findById(id).map(ConditionClinicalStatus::getDescription).orElse(null);
     }
 }

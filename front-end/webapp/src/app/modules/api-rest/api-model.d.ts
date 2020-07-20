@@ -182,6 +182,7 @@ export interface CreateOutpatientDto {
     familyHistories: OutpatientFamilyHistoryDto[];
     medications: OutpatientMedicationDto[];
     problems: OutpatientProblemDto[];
+    procedures: OutpatientProcedureDto[];
     reasonId: string;
     vitalSigns?: OutpatientVitalSignDto;
 }
@@ -324,9 +325,20 @@ export interface HCEEffectiveClinicalObservationDto extends HCEClinicalObservati
     effectiveTime: string;
 }
 
+export interface HCEInmunizationDto extends Serializable {
+    administrationDate: string;
+    id?: number;
+    snomed: SnomedDto;
+    statusId?: string;
+}
+
 export interface HCELast2VitalSignsDto extends Serializable {
     current: HCEVitalSignDto;
     previous: HCEVitalSignDto;
+}
+
+export interface HCEMedicationDto extends ClinicalTermDto {
+    suspended: boolean;
 }
 
 export interface HCEPersonalHistoryDto extends HCEClinicalTermDto {
@@ -540,6 +552,10 @@ export interface OutpatientProblemDto {
     startDate: string;
     statusId?: string;
     verificationId?: string;
+}
+
+export interface OutpatientProcedureDto {
+    snomed: SnomedDto;
 }
 
 export interface OutpatientVitalSignDto extends Serializable {

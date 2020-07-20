@@ -37,7 +37,7 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
 
     private final ClinicalObservationService clinicalObservationService;
 
-    private final InmunizationService inmunizationService;
+    private final ImmunizationService immunizationService;
 
     public CreateAnamnesisServiceImpl(DocumentService documentService,
                                       InternmentEpisodeService internmentEpisodeService,
@@ -45,7 +45,7 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
                                       HealthConditionService healthConditionService,
                                       AllergyService allergyService,
                                       ClinicalObservationService clinicalObservationService,
-                                      InmunizationService inmunizationService,
+                                      ImmunizationService immunizationService,
                                       MedicationService medicationService) {
         this.documentService = documentService;
         this.internmentEpisodeService = internmentEpisodeService;
@@ -53,7 +53,7 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
         this.healthConditionService = healthConditionService;
         this.allergyService = allergyService;
         this.clinicalObservationService = clinicalObservationService;
-        this.inmunizationService = inmunizationService;
+        this.immunizationService = immunizationService;
         this.medicationService = medicationService;
     }
 
@@ -70,7 +70,7 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
         anamnesis.setPersonalHistories(healthConditionService.loadPersonalHistories(patientId, doc.getId(), anamnesis.getPersonalHistories()));
         anamnesis.setFamilyHistories(healthConditionService.loadFamilyHistories(patientId, doc.getId(), anamnesis.getFamilyHistories()));
         anamnesis.setAllergies(allergyService.loadAllergies(patientId, doc.getId(), anamnesis.getAllergies()));
-        anamnesis.setInmunizations(inmunizationService.loadInmunization(patientId, doc.getId(), anamnesis.getInmunizations()));
+        anamnesis.setInmunizations(immunizationService.loadInmunization(patientId, doc.getId(), anamnesis.getInmunizations()));
         anamnesis.setMedications(medicationService.loadMedications(patientId, doc.getId(), anamnesis.getMedications()));
 
         anamnesis.setVitalSigns(clinicalObservationService.loadVitalSigns(patientId, doc.getId(), Optional.ofNullable(anamnesis.getVitalSigns())));

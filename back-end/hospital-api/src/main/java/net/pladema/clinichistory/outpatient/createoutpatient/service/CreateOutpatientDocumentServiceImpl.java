@@ -5,10 +5,7 @@ import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.service.NoteService;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentStatus;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
-import net.pladema.clinichistory.ips.service.AllergyService;
-import net.pladema.clinichistory.ips.service.ClinicalObservationService;
-import net.pladema.clinichistory.ips.service.HealthConditionService;
-import net.pladema.clinichistory.ips.service.MedicationService;
+import net.pladema.clinichistory.ips.service.*;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientDocumentBo;
 import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
 import org.slf4j.Logger;
@@ -30,6 +27,8 @@ public class CreateOutpatientDocumentServiceImpl implements CreateOutpatientDocu
 
     private final HealthConditionService healthConditionService;
 
+    private final ProceduresService proceduresService;
+
     private final AllergyService allergyService;
 
     private final MedicationService medicationService;
@@ -41,13 +40,14 @@ public class CreateOutpatientDocumentServiceImpl implements CreateOutpatientDocu
     public CreateOutpatientDocumentServiceImpl(DocumentService documentService,
                                                UpdateOutpatientConsultationService updateOutpatientConsultationService,
                                                HealthConditionService healthConditionService,
-                                               AllergyService allergyService,
+                                               ProceduresService proceduresService, AllergyService allergyService,
                                                MedicationService medicationService,
                                                ClinicalObservationService clinicalObservationService,
                                                NoteService noteService) {
         this.documentService = documentService;
         this.updateOutpatientConsultationService = updateOutpatientConsultationService;
         this.healthConditionService = healthConditionService;
+        this.proceduresService = proceduresService;
         this.allergyService = allergyService;
         this.medicationService = medicationService;
         this.clinicalObservationService = clinicalObservationService;
@@ -57,12 +57,13 @@ public class CreateOutpatientDocumentServiceImpl implements CreateOutpatientDocu
 
     @Override
     public OutpatientDocumentBo create(Integer outpatientId, Integer patientId,  OutpatientDocumentBo outpatient) {
-        LOG.debug("Input parameters outpatientId {}, patientId {}, outpatient {}", outpatientId, outpatient);
+        LOG.debug("Input parameters outpatientId {}, patientId {}, outpatient {}", outpatientId, patientId, outpatient);
         Document doc = new Document(outpatientId, DocumentStatus.FINAL, DocumentType.OUTPATIENT, SourceType.AMBULATORIA);
         loadNotes(doc, Optional.ofNullable(outpatient.getEvolutionNote()));
         doc = documentService.save(doc);
 
         outpatient.setProblems(healthConditionService.loadProblems(patientId, doc.getId(), outpatient.getProblems()));
+        outpatient.setProcedures(proceduresService.loadProcedures(patientId, doc.getId(), outpatient.getProcedures()));
         outpatient.setFamilyHistories(healthConditionService.loadFamilyHistories(patientId, doc.getId(), outpatient.getFamilyHistories()));
         outpatient.setMedications(medicationService.loadMedications(patientId, doc.getId(), outpatient.getMedications()));
         outpatient.setAllergies(allergyService.loadAllergies(patientId, doc.getId(), outpatient.getAllergies()));

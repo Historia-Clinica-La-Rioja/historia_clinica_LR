@@ -3,7 +3,6 @@ package net.pladema.clinichistory.ips.service.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.ConditionClinicalStatus;
 
 @Getter
 @Setter
@@ -19,8 +18,6 @@ public abstract class ClinicalTerm {
     private String status;
 
 
-    public boolean isActive(){
-        return statusId.equals(ConditionClinicalStatus.ACTIVE);
-    }
+
 
 }
