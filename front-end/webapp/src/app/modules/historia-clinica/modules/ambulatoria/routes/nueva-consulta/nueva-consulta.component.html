@@ -5,4 +5,26 @@
 		<h3 id="page_subtitle" [translate]="'ambulatoria.paciente.nueva-consulta.SUBTITLE'"></h3>
 	</section>
 
+	<h2 class="mat-h2" [translate]="'ambulatoria.paciente.nueva-consulta.motivo.TITLE'"></h2>
+	<mat-card>
+		<mat-card-content>
+			<app-concepts-search *ngIf="!motivoConsulta else mainMotivoConsulta"
+				[label]="'ambulatoria.paciente.nueva-consulta.motivo.MOTIVO'" (search)="openSearchDialog($event)">
+			</app-concepts-search>
+			<ng-template #mainMotivoConsulta>
+				<form [formGroup]="form">
+					<mat-form-field appearance="outline">
+						<mat-label [translate]="'internaciones.anamnesis.diagnosticos.DIAGNOSIS'">
+						</mat-label>
+						<input id="motivo" matInput type="text" formControlName="snomed" name="snomed" readonly
+							matTooltip="{{ motivoConsulta.snomed.pt }}">
+						<button id="clear" mat-button matSuffix color="warn" mat-icon-button (click)="resetForm()">
+							<mat-icon>close</mat-icon>
+						</button>
+					</mat-form-field>
+				</form>
+			</ng-template>
+		</mat-card-content>
+	</mat-card>
+
 </app-content>

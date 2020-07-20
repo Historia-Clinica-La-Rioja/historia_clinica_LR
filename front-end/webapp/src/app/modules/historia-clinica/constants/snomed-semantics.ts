@@ -9,8 +9,8 @@ export enum SemanticsEnum {
     Substance = '105590001 |sustancia|',
     ABOFinding = '112143006 |ABO group phenotype (finding)|',
     Disorder = '64572001 |trastorno|',
-    ClinicalDrug = '|(fármaco de uso clínico)|', //TODO: no anda, investigar codigo 
-    MedicinalProduct = '763158003 |producto medicinal|'
+    ClinicalDrug = '|(fármaco de uso clínico)|', //TODO: no anda, investigar codigo
+	MedicinalProduct = '763158003 |producto medicinal|'
 }
 
 const OR = ' OR ';
@@ -28,5 +28,6 @@ export const SEMANTICS_CONFIG = {
     allergy: [CHILDREN_OF, SemanticsEnum.ClinicalFinding, OR, CHILDREN_OF, SemanticsEnum.Disorder, OR, CHILDREN_OF, SemanticsEnum.Situation].join(""),
     hospitalizationReason: [CHILDREN_OF, SemanticsEnum.ClinicalFinding, OR, SemanticsEnum.Event, OR, SemanticsEnum.Situation, OR, SemanticsEnum.SocialContext].join(""),
     vaccine: [CHILDREN_OF, SemanticsEnum.MedicinalProduct].join(""),
-    medicine: [CHILDREN_OF, SemanticsEnum.Drug].join("")
+	medicine: [CHILDREN_OF, SemanticsEnum.Drug].join(""),
+	consultationReason: [CHILDREN_OF, SemanticsEnum.ClinicalFinding].join("")
 }

@@ -13,7 +13,11 @@
 			},
 			"nueva-consulta": {
 				"TITLE": "Nueva consulta",
-				"SUBTITLE": "Completa los siguientes datos."
+				"SUBTITLE": "Completa los siguientes datos.",
+				"motivo": {
+					"TITLE": "Motivo de consulta",
+					"MOTIVO": "motivo"
+				}
 			},
 			"problemas": {
 				"TAB_LABEL": "Problemas",
