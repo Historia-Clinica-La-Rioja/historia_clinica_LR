@@ -1,10 +1,10 @@
 package net.pladema.clinichistory.generalstate.repository;
 
-import net.pladema.clinichistory.generalstate.repository.domain.HCEInmunizationHistoryVo;
+import net.pladema.clinichistory.generalstate.repository.domain.HCEInmunizationVo;
 
 import java.util.List;
 
 public interface HCEInmunizationRepository {
 
-    List<HCEInmunizationHistoryVo> getInmunizationHistory(Integer patientId);
+    List<HCEInmunizationVo> getInmunization(Integer patientId);
 }

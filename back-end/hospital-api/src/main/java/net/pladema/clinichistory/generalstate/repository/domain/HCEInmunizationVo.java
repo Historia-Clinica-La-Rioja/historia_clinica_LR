@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class HCEInmunizationHistoryVo extends HCEClinicalTermVo{
+public class HCEInmunizationVo extends HCEClinicalTermVo{
 
     private LocalDate administrationDate;
 
@@ -18,8 +18,8 @@ public class HCEInmunizationHistoryVo extends HCEClinicalTermVo{
 
     private Integer patientId;
 
-    public HCEInmunizationHistoryVo(Integer id, Snomed snomed, String statusId, LocalDate administrationDate,
-                                    LocalDate expirationDate, Integer patientId) {
+    public HCEInmunizationVo(Integer id, Snomed snomed, String statusId, LocalDate administrationDate,
+                             LocalDate expirationDate, Integer patientId) {
         super(id, snomed, statusId);
         this.administrationDate = administrationDate;
         this.expirationDate = expirationDate;

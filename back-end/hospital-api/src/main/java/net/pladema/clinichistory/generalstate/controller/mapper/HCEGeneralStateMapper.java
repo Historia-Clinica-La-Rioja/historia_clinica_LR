@@ -1,11 +1,7 @@
 package net.pladema.clinichistory.generalstate.controller.mapper;
 
-import net.pladema.clinichistory.generalstate.controller.dto.HCEAnthropometricDataDto;
-import net.pladema.clinichistory.generalstate.controller.dto.HCELast2VitalSignsDto;
-import net.pladema.clinichistory.generalstate.controller.dto.HCEPersonalHistoryDto;
-import net.pladema.clinichistory.generalstate.service.domain.HCEAnthropometricDataBo;
-import net.pladema.clinichistory.generalstate.service.domain.HCEPersonalHistoryBo;
-import net.pladema.clinichistory.generalstate.service.domain.Last2HCEVitalSignsBo;
+import net.pladema.clinichistory.generalstate.controller.dto.*;
+import net.pladema.clinichistory.generalstate.service.domain.*;
 import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
@@ -28,4 +24,18 @@ public interface HCEGeneralStateMapper {
 
     @Named("toHCEAnthropometricDataDto")
     HCEAnthropometricDataDto toHCEAnthropometricDataDto(HCEAnthropometricDataBo resultService);
+
+    @Named("toHCEMedicationDto")
+    HCEMedicationDto toHCEMedicationDto(HCEMedicationBo source);
+
+    @Named("toListHCEMedicationDto")
+    @IterableMapping(qualifiedByName = "toHCEMedicationDto")
+    List<HCEMedicationDto> toListHCEMedicationDto(List<HCEMedicationBo> sourceList);
+
+    @Named("toHCEInmunizationDto")
+    HCEInmunizationDto toHCEInmunizationDto(HCEInmunizationBo source);
+
+    @Named("toListHCEInmunizationDto")
+    @IterableMapping(qualifiedByName = "toHCEInmunizationDto")
+    List<HCEInmunizationDto> toListHCEInmunizationDto(List<HCEInmunizationBo> sourceList);
 }

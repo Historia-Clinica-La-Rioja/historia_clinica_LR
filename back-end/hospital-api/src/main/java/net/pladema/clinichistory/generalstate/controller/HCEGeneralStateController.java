@@ -1,19 +1,13 @@
 package net.pladema.clinichistory.generalstate.controller;
 
 import io.swagger.annotations.Api;
-import net.pladema.clinichistory.generalstate.controller.dto.HCEAnthropometricDataDto;
-import net.pladema.clinichistory.generalstate.controller.dto.HCEInmunizationDto;
-import net.pladema.clinichistory.generalstate.controller.dto.HCELast2VitalSignsDto;
-import net.pladema.clinichistory.generalstate.controller.dto.HCEPersonalHistoryDto;
+import net.pladema.clinichistory.generalstate.controller.dto.*;
 import net.pladema.clinichistory.generalstate.controller.mapper.HCEGeneralStateMapper;
-import net.pladema.clinichistory.generalstate.controller.mapper.HCEInmunizationMapper;
 import net.pladema.clinichistory.generalstate.service.HCEClinicalObsGeneralStateService;
 import net.pladema.clinichistory.generalstate.service.HCEGeneralStateService;
 import net.pladema.clinichistory.generalstate.service.HCEInmunizationService;
-import net.pladema.clinichistory.generalstate.service.domain.HCEAnthropometricDataBo;
-import net.pladema.clinichistory.generalstate.service.domain.HCEInmunizationBo;
-import net.pladema.clinichistory.generalstate.service.domain.HCEPersonalHistoryBo;
-import net.pladema.clinichistory.generalstate.service.domain.Last2HCEVitalSignsBo;
+import net.pladema.clinichistory.generalstate.service.HCEMedicationService;
+import net.pladema.clinichistory.generalstate.service.domain.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -46,16 +40,16 @@ public class HCEGeneralStateController {
 
     private final HCEInmunizationService hceInmunizationService;
 
-    private final HCEInmunizationMapper hceInmunizationMapper;
+    private final HCEMedicationService hceMedicationService;
 
     public HCEGeneralStateController(HCEGeneralStateService hceGeneralStateService,
                                      HCEClinicalObsGeneralStateService hceClinicalObsGeneralStateService,
-                                     HCEGeneralStateMapper hceGeneralStateMapper, HCEInmunizationService hceInmunizationService, HCEInmunizationMapper hceInmunizationMapper) {
+                                     HCEGeneralStateMapper hceGeneralStateMapper, HCEInmunizationService hceInmunizationService, HCEMedicationService hceMedicationService) {
         this.hceGeneralStateService = hceGeneralStateService;
         this.hceClinicalObsGeneralStateService = hceClinicalObsGeneralStateService;
         this.hceGeneralStateMapper = hceGeneralStateMapper;
         this.hceInmunizationService = hceInmunizationService;
-        this.hceInmunizationMapper = hceInmunizationMapper;
+        this.hceMedicationService = hceMedicationService;
     }
 
     @GetMapping("/personalHistory")
@@ -102,13 +96,24 @@ public class HCEGeneralStateController {
         return ResponseEntity.ok().body(result);
     }
 
-        @GetMapping("/inmunization")
-    public ResponseEntity<List<HCEInmunizationDto>> getInmunizationHistory(
+    @GetMapping("/inmunization")
+    public ResponseEntity<List<HCEInmunizationDto>> getInmunization(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId) {
         LOG.debug(LOGGING_INPUT, institutionId, patientId);
-        List<HCEInmunizationBo> resultService = hceInmunizationService.getInmunizationHistory(patientId);
-        List<HCEInmunizationDto> result = hceInmunizationMapper.toListHCEInmunizationDto(resultService);
+        List<HCEInmunizationBo> resultService = hceInmunizationService.getInmunization(patientId);
+        List<HCEInmunizationDto> result = hceGeneralStateMapper.toListHCEInmunizationDto(resultService);
+        LOG.debug(LOGGING_OUTPUT, result);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/medication")
+    public ResponseEntity<List<HCEMedicationDto>> getMedication(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "patientId") Integer patientId) {
+        LOG.debug(LOGGING_INPUT, institutionId, patientId);
+        List<HCEMedicationBo> resultService = hceMedicationService.getMedication(patientId);
+        List<HCEMedicationDto> result = hceGeneralStateMapper.toListHCEMedicationDto(resultService);
         LOG.debug(LOGGING_OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }

@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.generalstate.repository;
 
-import net.pladema.clinichistory.generalstate.repository.domain.HCEInmunizationHistoryVo;
+import net.pladema.clinichistory.generalstate.repository.domain.HCEInmunizationVo;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +27,7 @@ public class HCEInmunizationRepositoryImpl implements  HCEInmunizationRepository
     @SuppressWarnings("unchecked")
     @Override
     @Transactional(readOnly = true)
-    public List<HCEInmunizationHistoryVo> getInmunizationHistory(Integer patientId) {
+    public List<HCEInmunizationVo> getInmunization(Integer patientId) {
         LOG.debug("Input parameters patientId {}", patientId);
         String sqlString = "WITH t AS (" +
                 "   SELECT inm.id, sctid_code, inm.status_id, administration_date, expiration_date, inm.updated_on, " +
@@ -54,11 +54,11 @@ public class HCEInmunizationRepositoryImpl implements  HCEInmunizationRepository
                 .setParameter("documentType", DocumentType.OUTPATIENT)
                 .getResultList();
 
-        List<HCEInmunizationHistoryVo> result = new ArrayList<>();
+        List<HCEInmunizationVo> result = new ArrayList<>();
 
         queryResult.forEach(h ->
                 result.add(
-                        new HCEInmunizationHistoryVo(
+                        new HCEInmunizationVo(
                                 (Integer)h[0],
                                 new Snomed((String)h[1], (String)h[2], null, null),
                                 (String)h[3],

@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface HCEInmunizationService {
 
-    List<HCEInmunizationBo> getInmunizationHistory(Integer patientId);
+    List<HCEInmunizationBo> getInmunization(Integer patientId);
 }
