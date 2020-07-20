@@ -23,6 +23,7 @@ import { EffectiveTimeComponent } from './components/effective-time/effective-ti
 import { EffectiveTimeDialogComponent } from './dialogs/effective-time-dialog/effective-time-dialog.component';
 import { RemoveDiagnosisComponent } from './dialogs/remove-diagnosis/remove-diagnosis.component';
 import { ProbableDischargeDialogComponent } from './dialogs/probable-discharge-dialog/probable-discharge-dialog.component';
+import { DocumentSectionComponent } from '../presentation/components/document-section/document-section.component';
 
 
 @NgModule({
@@ -46,7 +47,8 @@ import { ProbableDischargeDialogComponent } from './dialogs/probable-discharge-d
 		RemoveDiagnosisComponent,
 		SignosVitalesSummaryComponent,
 		VacunasSummaryComponent,
-		ProbableDischargeDialogComponent
+		ProbableDischargeDialogComponent,
+		DocumentSectionComponent
 	],
 	imports: [
 		ApiRestModule,
@@ -67,7 +69,8 @@ import { ProbableDischargeDialogComponent } from './dialogs/probable-discharge-d
 		MainDiagnosisSummaryComponent,
 		MedicacionSummaryComponent,
 		SignosVitalesSummaryComponent,
-		VacunasSummaryComponent
+		VacunasSummaryComponent,
+		DocumentSectionComponent
 	]
 })
 export class HistoriaClinicaModule {

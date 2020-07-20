@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HealthConditionDto, SnomedDto } from '@api-rest/api-model';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { SnomedSemanticSearch, SnomedService } from 'src/app/modules/historia-clinica/services/snomed.service';
@@ -17,7 +17,8 @@ export class NuevaConsultaComponent implements OnInit {
 
 	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 
-	constructor(private readonly formBuilder: FormBuilder,
+	constructor(
+		private readonly formBuilder: FormBuilder,
 		private snomedService: SnomedService
 	) { }
 
