@@ -40,8 +40,8 @@ public class Diary extends InternationAuditableEntity {
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
-    @Column(name = "shift_duration", nullable = false)
-    private Short shiftDuration;
+    @Column(name = "appointment_duration", nullable = false)
+    private Short appointmentDuration;
 
     @Column(name = "automatic_renewal", columnDefinition = "boolean default false", nullable = false)
     private Boolean automaticRenewal;

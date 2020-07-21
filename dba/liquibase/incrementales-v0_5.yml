@@ -1559,4 +1559,15 @@ databaseChangeLog:
                 INSERT INTO procedures_status (id, description) VALUES('385654001', 'Detenido');           
                 INSERT INTO procedures_status (id, description) VALUES('255594003', 'Completado');        
                 INSERT INTO procedures_status (id, description) VALUES('723510000', 'Ingresado por error');   
-                INSERT INTO procedures_status (id, description) VALUES('261665006', 'Desconocido');   
+                INSERT INTO procedures_status (id, description) VALUES('261665006', 'Desconocido');  
+
+- changeSet:  
+    id:  renameColumn-diary-shift_duration 
+    comment: Rename column shift_duration to appointment_duration in diary table
+    author:  saguero  
+    changes:  
+    -  renameColumn:   
+        columnDataType:  smallint  
+        newColumnName:  appointment_duration  
+        oldColumnName:  shift_duration     
+        tableName:  diary                
