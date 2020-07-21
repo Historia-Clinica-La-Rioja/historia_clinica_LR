@@ -149,11 +149,13 @@ public class PdfService {
         ctx.setVariable("patient", patientExternalService.getBasicDataFromPatient(patientId));
         ctx.setVariable("mainDiagnosis", document.getMainDiagnosis());
         ctx.setVariable("diagnosis", document.getDiagnosis());
+        ctx.setVariable("reasons", document.getReasons());
+        ctx.setVariable("procedures", document.getProcedures());
         ctx.setVariable("problems", document.getProblems());
         ctx.setVariable("personalHistories", document.getPersonalHistories());
         ctx.setVariable("familyHistories", document.getFamilyHistories());
         ctx.setVariable("allergies", document.getAllergies());
-        ctx.setVariable("inmunizations", document.getImmunizations());
+        ctx.setVariable("immunizations", document.getImmunizations());
         ctx.setVariable("medications", document.getMedications());
         ctx.setVariable("anthropometricData", document.getAnthropometricData());
         ctx.setVariable("vitalSigns", vitalSignsReportDto);

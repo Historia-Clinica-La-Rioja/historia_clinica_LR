@@ -72,7 +72,43 @@
         </div>
     </div>
 
-    <!-- Otros Diagnósticos/enfermedades -->
+
+    <!-- Motivos -->
+    <div th:fragment="reasons (message)">
+        <h3 th:text="${message}"></h3>
+        <div class="row" th:if="${#lists.isEmpty(reasons)}">
+            <dl class="lista" >
+                <dd><p >Sin cambios registrados</p></dd>
+            </dl>
+        </div>
+        <div class="row" th:if="${not #lists.isEmpty(reasons)}">
+            <dl th:each="reason,iter: ${reasons}">
+                <dd><p  th:text="${'- ' + reason.snomed.pt}"></p></dd>
+            </dl>
+        </div>
+    </div>
+
+
+    <!-- Procedimientos -->
+    <div th:fragment="procedures (message)">
+        <h3 th:text="${message}"></h3>
+        <div class="row" th:if="${#lists.isEmpty(procedures)}">
+            <dl class="lista" >
+                <dd><p >Sin cambios registrados</p></dd>
+            </dl>
+        </div>
+        <div class="row" th:if="${not #lists.isEmpty(procedures)}">
+            <dl th:each="procedure,iter: ${procedures}">
+                <dd><p  th:text="${'- ' + procedure.snomed.pt}"></p></dd>
+                <dl>
+                    <dd><strong>Estado: </strong><label  th:text="${procedure.status}"></label></dd>
+                    <dd th:if="${procedure.performanceDate  != null}"><strong>Fecha de realización: </strong><label th:text="${procedure.performanceDate}"></label></dd>
+                </dl>
+            </dl>
+        </div>
+    </div>
+
+    <!-- Problems -->
     <div th:fragment="problems (message)">
         <h3 th:text="${message}"></h3>
         <div class="row" th:if="${#lists.isEmpty(problems)}">
@@ -86,6 +122,8 @@
                 <dl>
                     <dd><strong>Estado: </strong><label  th:text="${problem.status}"></label></dd>
                     <dd><strong>Verificación: </strong><label  th:text="${problem.verification}"></label></dd>
+                    <dd><strong>Fecha de inicio: </strong><label th:text="${problem.startDate}"></label></dd>
+                    <dd th:if="${problem.endDate  != null}"><strong>Fecha de fin: </strong><label th:text="${problem.endDate}"></label></dd>
                 </dl>
             </dl>
         </div>
