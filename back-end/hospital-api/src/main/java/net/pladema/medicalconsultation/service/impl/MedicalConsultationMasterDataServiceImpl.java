@@ -1,6 +1,6 @@
-package net.pladema.appointment.service.impl;
+package net.pladema.medicalconsultation.service.impl;
 
-import net.pladema.appointment.service.AppointmentMasterDataService;
+import net.pladema.medicalconsultation.service.MedicalConsultationMasterDataService;
 import net.pladema.sgx.masterdata.repository.MasterDataProjection;
 import net.pladema.sgx.masterdata.repository.MasterdataRepository;
 import org.slf4j.Logger;
@@ -10,13 +10,13 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 
 @Service
-public class AppointmentMasterDataServiceImpl implements AppointmentMasterDataService {
+public class MedicalConsultationMasterDataServiceImpl implements MedicalConsultationMasterDataService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AppointmentMasterDataServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MedicalConsultationMasterDataServiceImpl.class);
 
     private final MasterdataRepository masterdataRepository;
 
-    public AppointmentMasterDataServiceImpl(MasterdataRepository masterdataRepository) {
+    public MedicalConsultationMasterDataServiceImpl(MasterdataRepository masterdataRepository) {
         this.masterdataRepository = masterdataRepository;
     }
 

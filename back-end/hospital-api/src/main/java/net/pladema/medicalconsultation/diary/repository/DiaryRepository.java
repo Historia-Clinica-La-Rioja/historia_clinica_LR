@@ -1,6 +1,6 @@
-package net.pladema.appointment.repository;
+package net.pladema.medicalconsultation.diary.repository;
 
-import net.pladema.appointment.repository.entity.Diary;
+import net.pladema.medicalconsultation.diary.repository.entity.Diary;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

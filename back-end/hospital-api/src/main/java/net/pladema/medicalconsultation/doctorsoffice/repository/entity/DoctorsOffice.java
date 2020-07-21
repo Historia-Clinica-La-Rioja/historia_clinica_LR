@@ -1,4 +1,4 @@
-package net.pladema.appointment.repository.entity;
+package net.pladema.medicalconsultation.doctorsoffice.repository.entity;
 
 import lombok.Getter;
 import lombok.Setter;

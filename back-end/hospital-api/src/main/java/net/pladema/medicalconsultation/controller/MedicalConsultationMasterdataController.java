@@ -1,10 +1,9 @@
-package net.pladema.appointment.controller;
+package net.pladema.medicalconsultation.controller;
 
 import io.swagger.annotations.Api;
-import net.pladema.appointment.repository.entity.AppointmentState;
-import net.pladema.appointment.repository.entity.MedicalAttentionType;
-import net.pladema.appointment.service.AppointmentMasterDataService;
-import net.pladema.clinichistory.hospitalization.controller.InternmentMasterdataController;
+import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
+import net.pladema.medicalconsultation.repository.entity.MedicalAttentionType;
+import net.pladema.medicalconsultation.service.MedicalConsultationMasterDataService;
 import net.pladema.sgx.masterdata.repository.MasterDataProjection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,15 +15,15 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Collection;
 
 @RestController
-@RequestMapping("/institutions/{institutionId}/appointments/masterdata/")
-@Api(value = "Appointments Master Data", tags = { "Appointments Master Data" })
-public class AppointmentMasterdataController {
+@RequestMapping("/institutions/{institutionId}/medicalConsultations/masterdata/")
+@Api(value = "Appointments Master Data", tags = { "Medical Consultation Master Data" })
+public class MedicalConsultationMasterdataController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(InternmentMasterdataController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MedicalConsultationMasterdataController.class);
 
-    private AppointmentMasterDataService appointmentMasterDataService;
+    private MedicalConsultationMasterDataService appointmentMasterDataService;
 
-    public AppointmentMasterdataController(AppointmentMasterDataService appointmentMasterDataService){
+    public MedicalConsultationMasterdataController(MedicalConsultationMasterDataService appointmentMasterDataService){
         super();
         this.appointmentMasterDataService = appointmentMasterDataService;
     }
