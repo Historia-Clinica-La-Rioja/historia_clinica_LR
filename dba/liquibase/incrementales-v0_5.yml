@@ -1571,3 +1571,61 @@ databaseChangeLog:
         newColumnName:  appointment_duration  
         oldColumnName:  shift_duration     
         tableName:  diary                
+
+
+
+- changeSet:
+    id: reasons table
+    author: etrapani
+    changes: 
+    - createTable: 
+        tableName: reasons
+        columns: 
+        - column:
+            constraints:
+                primaryKey: true
+                primaryKeyName: PK_reasons
+            name: id
+            type: varchar(20)
+        - column:
+            constraints:
+                nullable: false
+            name: description
+            type: varchar(100)
+    - createTable: 
+        tableName: outpatient_consultation_reasons
+        columns: 
+        - column:
+            constraints:
+                nullable: false
+            name: reason_id
+            type: varchar(20)
+        - column:
+            constraints:
+                nullable: false
+            name: outpatient_consultation_id
+            type: int
+    - addPrimaryKey:
+        clustered: true
+        columnNames: reason_id, outpatient_consultation_id
+        constraintName: PK_outpatient_consultation_reasons
+        tableName: outpatient_consultation_reasons
+        validate: true
+    - addForeignKeyConstraint:
+        baseColumnNames: outpatient_consultation_id
+        baseTableName: outpatient_consultation_reasons
+        constraintName: FK_outpatient_consultation_reasons_outpatient_consultation_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: outpatient_consultation
+        validate: true 
+    - addForeignKeyConstraint:
+        baseColumnNames: reason_id
+        baseTableName: outpatient_consultation_reasons
+        constraintName: FK_outpatient_consultation_reasons_reason_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: reasons
+        validate: true 
