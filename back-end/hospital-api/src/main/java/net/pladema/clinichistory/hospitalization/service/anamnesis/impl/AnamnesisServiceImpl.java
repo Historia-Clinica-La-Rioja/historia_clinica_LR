@@ -43,7 +43,7 @@ public class AnamnesisServiceImpl implements AnamnesisService {
             result.setPersonalHistories(generalHealthConditionBo.getPersonalHistories());
 
             result.setMedications(documentService.getMedicationStateFromDocument(document.getId()));
-            result.setInmunizations(documentService.getInmunizationStateFromDocument(document.getId()));
+            result.setImmunizations(documentService.getInmunizationStateFromDocument(document.getId()));
             result.setAllergies(documentService.getAllergyIntoleranceStateFromDocument(document.getId()));
             result.setAnthropometricData(documentService.getAnthropometricDataStateFromDocument(document.getId()));
             result.setVitalSigns(documentService.getVitalSignStateFromDocument(document.getId()));

@@ -34,7 +34,7 @@ public class EpicrisisBo implements Document {
 
     private List<MedicationBo> medications;
 
-    private List<InmunizationBo> inmunizations;
+    private List<InmunizationBo> immunizations;
 
     private List<AllergyConditionBo> allergies;
 

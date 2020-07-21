@@ -5,14 +5,14 @@
     <th:block th:include="fragments/general.html :: headerfiles"></th:block>
 </head>
 <body>
-    <div th:replace="fragments/general.html :: header(title=Epicrisis, subtitle='Alta de internación')"></div>
-    <div th:replace="fragments/general.html :: personalData(patientType=Paciente)"></div>
+    <div th:replace="fragments/general.html :: header(title='Epicrisis', subtitle='Alta de internación')"></div>
+    <div th:replace="fragments/general.html :: personalData(patientType='Paciente')"></div>
     <div th:replace="fragments/general.html :: mainDiagnosis(message=document.pdf.maindiagnosis.title.minsal)"></div>
     <div th:replace="fragments/general.html :: diagnosis(message=document.pdf.diagnosis.title.chaco)"></div>
     <div th:replace="fragments/general.html :: personalHistory"></div>
     <div th:replace="fragments/general.html :: familyHistory"></div>
     <div th:replace="fragments/general.html :: allergies"></div>
-    <div th:replace="fragments/general.html :: inmunizations"></div>
+    <div th:replace="fragments/general.html :: immunizations"></div>
     <div th:replace="fragments/general.html :: medications(title='Medicación ambulatoria')"></div>
     <div th:replace="fragments/general.html :: notes-epicrisis"></div>
 </body>

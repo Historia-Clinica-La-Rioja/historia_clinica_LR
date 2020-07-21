@@ -71,7 +71,7 @@ public class MainDiagnosisBo implements Document {
     }
 
     @Override
-    public List<InmunizationBo> getInmunizations() {
+    public List<InmunizationBo> getImmunizations() {
         return Collections.emptyList();
     }
 

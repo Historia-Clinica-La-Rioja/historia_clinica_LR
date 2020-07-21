@@ -70,7 +70,7 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
         anamnesis.setPersonalHistories(healthConditionService.loadPersonalHistories(patientId, doc.getId(), anamnesis.getPersonalHistories()));
         anamnesis.setFamilyHistories(healthConditionService.loadFamilyHistories(patientId, doc.getId(), anamnesis.getFamilyHistories()));
         anamnesis.setAllergies(allergyService.loadAllergies(patientId, doc.getId(), anamnesis.getAllergies()));
-        anamnesis.setInmunizations(immunizationService.loadInmunization(patientId, doc.getId(), anamnesis.getInmunizations()));
+        anamnesis.setImmunizations(immunizationService.loadInmunization(patientId, doc.getId(), anamnesis.getImmunizations()));
         anamnesis.setMedications(medicationService.loadMedications(patientId, doc.getId(), anamnesis.getMedications()));
 
         anamnesis.setVitalSigns(clinicalObservationService.loadVitalSigns(patientId, doc.getId(), Optional.ofNullable(anamnesis.getVitalSigns())));

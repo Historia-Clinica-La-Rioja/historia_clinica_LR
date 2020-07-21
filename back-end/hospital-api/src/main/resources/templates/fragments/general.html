@@ -160,18 +160,18 @@
 
     <!-- Vacunas -->
 
-    <div th:fragment="inmunizations">
+    <div th:fragment="immunizations">
         <h3>Vacunas</h3>
-        <div class="row" th:if="${#lists.isEmpty(inmunizations)}">
+        <div class="row" th:if="${#lists.isEmpty(immunizations)}">
             <dl>
                 <dd><p>Sin cambios registrados</p></dd>
             </dl>
         </div>
-        <div class="row" th:if="${not #lists.isEmpty(inmunizations)}">
-            <dl th:each="inmunization,iter: ${inmunizations}">
-                <dd><p  th:text="${'- ' + inmunization.snomed.pt}"></p></dd>
+        <div class="row" th:if="${not #lists.isEmpty(immunizations)}">
+            <dl th:each="immunization,iter: ${immunizations}">
+                <dd><p  th:text="${'- ' + immunization.snomed.pt}"></p></dd>
                 <dl>
-                    <dd><strong>Fecha de administración: </strong><label th:text="${inmunization.administrationDate}"></label></dd>
+                    <dd><strong>Fecha de administración: </strong><label th:text="${immunization.administrationDate}"></label></dd>
                 </dl>
             </dl>
         </div>

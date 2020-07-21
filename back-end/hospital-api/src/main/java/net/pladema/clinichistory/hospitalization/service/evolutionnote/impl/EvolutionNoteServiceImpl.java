@@ -39,7 +39,7 @@ public class EvolutionNoteServiceImpl implements EvolutionNoteService {
             GeneralHealthConditionBo generalHealthConditionBo = documentService.getHealthConditionFromDocument(document.getId());
             result.setMainDiagnosis(generalHealthConditionBo.getMainDiagnosis());
             result.setDiagnosis(generalHealthConditionBo.getDiagnosis());
-            result.setInmunizations(documentService.getInmunizationStateFromDocument(document.getId()));
+            result.setImmunizations(documentService.getInmunizationStateFromDocument(document.getId()));
             result.setAllergies(documentService.getAllergyIntoleranceStateFromDocument(document.getId()));
             result.setAnthropometricData(documentService.getAnthropometricDataStateFromDocument(document.getId()));
             result.setVitalSigns(documentService.getVitalSignStateFromDocument(document.getId()));

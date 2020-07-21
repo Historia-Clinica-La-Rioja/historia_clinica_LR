@@ -28,7 +28,7 @@ public class EvolutionNoteBo implements Document {
 
     private List<DiagnosisBo> diagnosis;
 
-    private List<InmunizationBo> inmunizations;
+    private List<InmunizationBo> immunizations;
 
     private List<AllergyConditionBo> allergies;
 

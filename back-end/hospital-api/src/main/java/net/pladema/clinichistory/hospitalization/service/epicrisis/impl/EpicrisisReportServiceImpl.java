@@ -48,7 +48,7 @@ public class EpicrisisReportServiceImpl implements EpicrisisReportService {
             result.setPersonalHistories(generalHealthConditionBo.getPersonalHistories());
 
             result.setMedications(documentService.getMedicationStateFromDocument(document.getId()));
-            result.setInmunizations(reportDocumentService.getReportInmunizationStateFromDocument(document.getId()));
+            result.setImmunizations(reportDocumentService.getReportInmunizationStateFromDocument(document.getId()));
             result.setAllergies(reportDocumentService.getReportAllergyIntoleranceStateFromDocument(document.getId()));
             result.setAnthropometricData(reportDocumentService.getReportAnthropometricDataStateFromDocument(document.getId()));
             result.setVitalSigns(reportDocumentService.getReportVitalSignStateFromDocument(document.getId()));

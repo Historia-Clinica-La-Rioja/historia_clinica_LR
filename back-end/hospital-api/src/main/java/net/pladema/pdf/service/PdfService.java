@@ -153,7 +153,7 @@ public class PdfService {
         ctx.setVariable("personalHistories", document.getPersonalHistories());
         ctx.setVariable("familyHistories", document.getFamilyHistories());
         ctx.setVariable("allergies", document.getAllergies());
-        ctx.setVariable("inmunizations", document.getInmunizations());
+        ctx.setVariable("inmunizations", document.getImmunizations());
         ctx.setVariable("medications", document.getMedications());
         ctx.setVariable("anthropometricData", document.getAnthropometricData());
         ctx.setVariable("vitalSigns", vitalSignsReportDto);
