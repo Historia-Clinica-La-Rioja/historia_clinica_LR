@@ -29,13 +29,6 @@ const ALERGY_DATA: any[] = [
 	},
 ];
 
-const MEDICATIONS: any[] = [
-	{
-		snomed: { id: '429961000', pt: 'antecedente familiar de demencia' },
-		statusId: '55561003',
-	}
-];
-
 const INMUNIZATIONS_DATA: any[] = [
 	{
 		id: 14,
@@ -77,7 +70,8 @@ export class HceGeneralStateService {
 	}
 
 	getMedications(patientId: number): Observable<MedicationDto[]> {
-		return of(MEDICATIONS);
+		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/medication`;
+		return this.http.get<MedicationDto[]>(url);
 	}
 
 	getInmunizations(patientId: number): Observable<InmunizationDto[]> {

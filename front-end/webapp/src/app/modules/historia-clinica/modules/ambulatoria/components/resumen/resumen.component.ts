@@ -30,7 +30,7 @@ export class ResumenComponent implements OnInit {
 	ngOnInit(): void {
 		this.route.paramMap.subscribe(
 			(params) => {
-				this.patientId = Number(params.get('id'));
+				this.patientId = Number(params.get('idPaciente'));
 				this.initSummaries();
 			});
 	}
