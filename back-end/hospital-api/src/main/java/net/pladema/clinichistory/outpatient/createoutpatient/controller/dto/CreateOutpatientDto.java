@@ -15,11 +15,11 @@ import java.util.List;
 @NoArgsConstructor
 public class CreateOutpatientDto {
 
-    @NotNull
-    private String reasonId;
-
     @Nullable
     private String evolutionNote;
+
+    @NotNull
+    private List<@Valid OutpatientReasonDto> reasons = new ArrayList<>();
 
     @NotNull
     private List<@Valid OutpatientProblemDto> problems = new ArrayList<>();

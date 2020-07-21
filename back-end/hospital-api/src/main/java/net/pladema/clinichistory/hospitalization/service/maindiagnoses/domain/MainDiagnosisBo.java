@@ -7,6 +7,7 @@ import net.pladema.clinichistory.ips.service.domain.*;
 import net.pladema.clinichistory.documents.service.Document;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProblemBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProcedureBo;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ReasonBo;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -82,5 +83,10 @@ public class MainDiagnosisBo implements Document {
     @Override
     public AnthropometricDataBo getAnthropometricData() {
         return null;
+    }
+
+    @Override
+    public List<ReasonBo> getReasons() {
+        return Collections.emptyList();
     }
 }

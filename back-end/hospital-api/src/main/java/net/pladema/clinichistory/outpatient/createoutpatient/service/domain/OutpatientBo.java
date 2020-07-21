@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -29,4 +30,5 @@ public class OutpatientBo {
 
     private Boolean billable;
 
+    private List<ReasonBo> reasons;
 }

@@ -40,6 +40,8 @@ public class OutpatientDocumentBo implements Document {
 
     private VitalSignBo vitalSigns;
 
+    private List<ReasonBo> reasons;
+
     @Override
     public HealthConditionBo getMainDiagnosis() {
         return null;

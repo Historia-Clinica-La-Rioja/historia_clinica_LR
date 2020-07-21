@@ -8,6 +8,7 @@ import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentStatus
 import net.pladema.clinichistory.ips.service.domain.*;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProblemBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProcedureBo;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ReasonBo;
 
 import java.util.Collections;
 import java.util.List;
@@ -52,6 +53,11 @@ public class AnamnesisBo implements Document {
 
     @Override
     public List<ProcedureBo> getProcedures() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<ReasonBo> getReasons() {
         return Collections.emptyList();
     }
 }
