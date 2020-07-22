@@ -2,10 +2,13 @@
 	"turnos": {
 		"home": {
 			"TITLE": "Gestión de turnos",
-			"NEW-AGENDA": "Nueva agenda"
+			"buttons": {
+				"NEW_AGENDA": "Nueva agenda"
+			}
 		},
 		"new-agenda": {
-			"TITLE": "Nueva agenda"
+			"TITLE": "Nueva agenda",
+			"CONFIRM": "¿Desea confirmar la creación de esta nueva agenda?"
 		}
 	}
 }

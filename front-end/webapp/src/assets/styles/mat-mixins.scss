@@ -236,3 +236,10 @@ $default-color: 50;
 		}
 	}
 }
+
+@mixin mat-form-field-background-white {
+	::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline-start,
+	::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline-end {
+		background-color: #ffffff;
+	}
+}

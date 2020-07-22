@@ -5,6 +5,7 @@ import { TurnosRoutingModule } from './turnos-routing.module';
 import { HomeComponent } from './routes/home/home.component';
 import { CoreModule } from "@core/core.module";
 import { NewAgendaComponent } from './routes/new-agenda/new-agenda.component';
+import { PresentationModule } from "@presentation/presentation.module";
 
 
 @NgModule({
@@ -12,6 +13,7 @@ import { NewAgendaComponent } from './routes/new-agenda/new-agenda.component';
 	imports: [
 		CommonModule,
 		CoreModule,
+		PresentationModule,
 		TurnosRoutingModule
 	]
 })

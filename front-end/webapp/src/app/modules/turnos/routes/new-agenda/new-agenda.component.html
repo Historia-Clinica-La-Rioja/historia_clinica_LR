@@ -1,6 +1,169 @@
 <app-content width="full">
-	<section>
+	<section class="page">
 		<h2 class="page-title" [translate]="'turnos.new-agenda.TITLE'"></h2>
+		<br>
+		<form [formGroup]="form" (ngSubmit)="save()">
+			<section>
+				<div fxLayout="row">
+					<span [translate]="'Sector'"></span>
+				</div>
+				<div fxLayout="row">
+					<mat-form-field appearance="outline">
+						<mat-select id="sectorId"
+						            name="sectorId"
+						            formControlName="sectorId"
+						            placeholder="{{'pacientes.form.SELECT' | translate}}"
+						            (selectionChange)="setSpecialties()">
+							<mat-option *ngFor="let sector of sectors"
+							            [value]="sector.id">
+								{{sector.description}}
+							</mat-option>
+						</mat-select>
+						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+					</mat-form-field>
+				</div>
 
+				<div fxLayout="row">
+					<span [translate]="'Especialidad'"></span>
+				</div>
+				<div fxLayout="row">
+					<mat-form-field appearance="outline">
+						<mat-select id="specialtyId"
+						            name="specialtyId"
+						            formControlName="specialtyId"
+						            placeholder="{{'pacientes.form.SELECT' | translate}}"
+						            (selectionChange)="setDoctorOffices()">
+							<mat-option *ngFor="let speciality of specialties"
+							            [value]="speciality.id">
+								{{speciality.name}}
+							</mat-option>
+						</mat-select>
+						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+					</mat-form-field>
+				</div>
+
+				<div fxLayout="row">
+					<span [translate]="'Consultorio'"></span>
+				</div>
+				<div fxLayout="row">
+					<mat-form-field appearance="outline">
+						<mat-select id="doctorOfficeId"
+						            name="doctorOfficeId"
+						            formControlName="doctorOfficeId"
+						            placeholder="{{'pacientes.form.SELECT' | translate}}"
+						            (selectionChange)="setProfessionals()">
+							<mat-option *ngFor="let doctorOffice of doctorOffices"
+							            [value]="doctorOffice.id">
+								{{doctorOffice.description}}
+							</mat-option>
+						</mat-select>
+						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+					</mat-form-field>
+				</div>
+
+				<div fxLayout="row">
+					<span [translate]="'Profesional'"></span>
+				</div>
+				<div fxLayout="row">
+					<mat-form-field appearance="outline">
+						<mat-select id="professionalId"
+						            name="professionalId"
+						            formControlName="professionalId"
+						            placeholder="{{'pacientes.form.SELECT' | translate}}"
+						            (selectionChange)="enableAgendaDetails()">
+							<mat-option *ngFor="let professional of professionals"
+							            [value]="professional.id">
+								{{professional.person.firstName}} {{professional.person.lastName}}
+								{{professional.licenceNumber}}
+							</mat-option>
+						</mat-select>
+						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+					</mat-form-field>
+				</div>
+
+				<section>
+					<div fxLayout="row">
+						<mat-checkbox (change)="appointmentManagementChange()">
+							<span [translate]="'El profesional crea turnos'"></span>
+						</mat-checkbox>
+					</div>
+				</section>
+
+				<div class="datepicker-container" fxLayout="row" fxLayoutGap="20px" fxLayout.lt-md="column">
+					<div fxLayout="column">
+						<div fxLayout="row">
+							<span [translate]="'Fecha de inicio'"></span> *
+						</div>
+						<mat-form-field appearance="outline">
+							<input formControlName="initDate" id="initDate" matInput [matDatepicker]="initPicker"
+							       (dateChange)="initDateChange($event)">
+							<mat-datepicker-toggle matSuffix [for]="initPicker"></mat-datepicker-toggle>
+							<mat-datepicker #initPicker></mat-datepicker>
+						</mat-form-field>
+					</div>
+
+					<div fxLayout="column">
+						<div fxLayout="row">
+							<span [translate]="'Fecha de fin'"></span> *
+						</div>
+						<mat-form-field appearance="outline">
+							<input formControlName="endDate" id="endDate" matInput [matDatepicker]="endPicker"
+							       (dateChange)="endDateChange($event)">
+							<mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+							<mat-datepicker #endPicker></mat-datepicker>
+						</mat-form-field>
+					</div>
+				</div>
+
+				<section>
+					<div fxLayout="row">
+						<mat-checkbox (change)="autoRenewChange()">
+							<span [translate]="'Renovar automáticamente'"></span>
+						</mat-checkbox>
+					</div>
+				</section>
+				<section>
+					<div cfxLayout="row">
+						<mat-checkbox (change)="holidayWorkChange()">
+							<span [translate]="'Atiende dias feriados'"></span>
+						</mat-checkbox>
+					</div>
+				</section>
+
+				<div fxLayout="row">
+					<span [translate]="'Duración de la consulta'"></span>
+				</div>
+				<div fxLayout="row">
+					<mat-form-field appearance="outline">
+						<mat-select id="appointmentDurationId"
+						            name="appointmentDurationId"
+						            formControlName="appointmentDurationId"
+						            placeholder="{{'pacientes.form.SELECT' | translate}}">
+							<mat-option *ngFor="let appointmentDuration of appointmentDurations"
+							            [value]="appointmentDuration.id">
+								{{appointmentDuration.description}}
+							</mat-option>
+						</mat-select>
+						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+					</mat-form-field>
+				</div>
+
+			</section>
+
+			<section>
+				<h3 [translate]="'Dias y tipo de consulta'"></h3>
+				<div fxLayout="row">
+					<span [translate]="'Seleccione tipos de consulta para cada día'"></span>
+				</div>
+
+			</section>
+
+			<div align="end">
+				<button mat-flat-button color="primary">
+					<span [translate]="'buttons.CONFIRM'"></span>
+				</button>
+			</div>
+
+		</form>
 	</section>
 </app-content>
