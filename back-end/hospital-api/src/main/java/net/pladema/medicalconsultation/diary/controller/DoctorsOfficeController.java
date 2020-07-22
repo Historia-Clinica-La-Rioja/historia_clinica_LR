@@ -2,7 +2,6 @@ package net.pladema.medicalconsultation.diary.controller;
 
 import io.swagger.annotations.Api;
 import net.pladema.medicalconsultation.appointment.repository.DoctorsOfficeRepository;
-import net.pladema.appointment.repository.entity.DoctorsOffice;
 import net.pladema.medicalconsultation.doctorsoffice.repository.entity.DoctorsOffice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -19,6 +19,9 @@ export default {
             "enabled-available": "Solo las camas habilitadas pueden estar disponibles",
             "available-free": "Solo las camas disponibles pueden estar libres"
         },
+        "doctorsoffices": {
+            "closingBeforeOpening": "La hora de apertura no puede ser posterior a la hora de cierre"
+        },
         forbidden: 'No tiene los permisos necesarios',
         "sector-description-inst-unique": "Ya existe un sector con el mismo nombre en la institución"
     },
@@ -72,7 +75,7 @@ export default {
               clinicalSpecialtySectorId: 'Especialidad | Sector',
               institutionId: 'Institución'
           },
-          createRelated: 'Crear Consultorio'
+          createRelated: 'Crear Consultorio',
         },
         addresses: {
             name: 'Dirección |||| Direcciones',
