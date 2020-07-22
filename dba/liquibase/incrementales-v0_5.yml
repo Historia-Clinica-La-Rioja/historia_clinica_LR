@@ -1572,8 +1572,6 @@ databaseChangeLog:
         oldColumnName:  shift_duration     
         tableName:  diary                
 
-
-
 - changeSet:
     id: reasons table
     author: etrapani
@@ -1628,4 +1626,97 @@ databaseChangeLog:
         onUpdate: NO ACTION
         referencedColumnNames: id
         referencedTableName: reasons
+        validate: true 
+
+- changeSet:
+    id: historic_patient_bed_relocation-createTable
+    comment: Create table historic_patient_bed_relocation
+    author: gmurgolo
+    changes: 
+    - createTable: 
+        tableName: historic_patient_bed_relocation
+        columns: 
+        - column:
+            autoIncrement: true
+            constraints:
+                primaryKey: true
+                primaryKeyName: PK_historic_patient_bed_relocation
+            name: id
+            type: int
+        - column:
+            constraints:
+                nullable: false
+            name: origin_bed_id
+            type: int
+        - column:
+            constraints:
+                nullable: false
+            name: destination_bed_id 
+            type: int
+        - column:
+            constraints:
+                nullable: false
+            name: internment_episode_id 
+            type: int         
+        - column:
+            constraints:
+                nullable: false
+            name: relocation_date
+            type: datetime
+        - column:
+            constraints:
+                nullable: false
+            name: origin_bed_free
+            type: boolean
+            defaultValue: ${boolean.true}
+        - column:
+            constraints:
+                nullable: false
+            name: created_by
+            type: int
+            defaultValue: -1
+        - column:
+            constraints:
+                nullable: false
+            name: created_on
+            type: datetime
+            defaultValueDate: ${date.now} 
+        - column:
+            constraints:
+                nullable: false
+            name: updated_by
+            type: int
+            defaultValue: -1
+        - column:
+            constraints:
+                nullable: false
+            name: updated_on
+            type: datetime
+            defaultValueDate: ${date.now} 
+    - addForeignKeyConstraint:
+        baseColumnNames: origin_bed_id
+        baseTableName: historic_patient_bed_relocation
+        constraintName: FK_historic_patient_bed_relocation_origin_bed
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: bed
+        validate: true              
+    - addForeignKeyConstraint:
+        baseColumnNames: destination_bed_id
+        baseTableName: historic_patient_bed_relocation
+        constraintName: FK_historic_patient_bed_relocation_destination_bed
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: bed
+        validate: true   
+    - addForeignKeyConstraint:
+        baseColumnNames: internment_episode_id
+        baseTableName: historic_patient_bed_relocation
+        constraintName: FK_historic_patient_bed_relocation_internment_epiode
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: internment_episode
         validate: true 
