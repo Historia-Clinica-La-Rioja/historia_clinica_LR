@@ -1,7 +1,7 @@
 import React from 'react';
-import { Admin, Resource } from 'react-admin';
+import {Admin, Resource} from 'react-admin';
 
-import { Dashboard } from './dashboard';
+import {Dashboard} from './dashboard';
 import OauthLoginPage from './login/OauthLoginPage';
 
 import cities from './modules/cities';
@@ -21,6 +21,7 @@ import healthcareprofessionals from './modules/healthcareprofessionals'
 import professionalspecialties from './modules/professionalspecialties'
 import ProfessionalSpecialtyShow from './modules/professionalspecialties/show'
 import healthcareprofessionalspecialties from './modules/healthcareprofessionalspecialties'
+import doctorsoffices from './modules/doctorsoffices'
 
 import people from './modules/people'
 import users from './modules/users';
@@ -51,6 +52,7 @@ const App = () => {
         <Resource name="addresses" {...addresses}/>,
         <Resource name="sectors" {...sectors}/>,      
         <Resource name="clinicalspecialtysectors" {...clinicalspecialtysectors}/>,
+        <Resource name="doctorsoffices" {...doctorsoffices}/>,
         <Resource name="rooms" {...rooms}/>,
         <Resource name="beds" {...beds}/>,
         <Resource name="clinicalspecialties" show={ClinicalSpecialtyShow}/>,
@@ -76,6 +78,7 @@ const App = () => {
         <Resource name="addresses" {...addresses}/>,
         <Resource name="sectors" {...sectors}/>,      
         <Resource name="clinicalspecialtysectors" {...clinicalspecialtysectors}/>,
+        <Resource name="doctorsoffices" {...doctorsoffices}/>,
         <Resource name="rooms" {...rooms}/>,
         <Resource name="beds" {...beds}/>,
     ];

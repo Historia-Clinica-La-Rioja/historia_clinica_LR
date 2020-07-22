@@ -62,7 +62,18 @@ export default {
             fields: {
                 description: 'Nombre',
             },
-        }, 
+        },
+        doctorsoffices:{
+          name: 'Consultorio |||| Consultorios',
+          fields:{
+              description: 'Nombre',
+              openingTime: 'Horario de apertura',
+              closingTime: 'Horario de cierre',
+              clinicalSpecialtySectorId: 'Especialidad | Sector',
+              institutionId: 'Institución'
+          },
+          createRelated: 'Crear Consultorio'
+        },
         addresses: {
             name: 'Dirección |||| Direcciones',
             fields: {
@@ -109,6 +120,7 @@ export default {
                 sectorId: 'Sector',
                 clinicalSpecialtyId: 'Especialidad',
                 rooms: 'Habitaciones',
+                doctorsoffices: 'Consultorios',
             },
             createRelated: 'Crear Especialidad | Sector'
         }, 

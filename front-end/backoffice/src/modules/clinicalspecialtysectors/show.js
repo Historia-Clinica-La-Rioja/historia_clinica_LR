@@ -49,6 +49,34 @@ const ClinicalSpecialtySectorShow = props => (
                 </Datagrid>
             </ReferenceManyField>
 
+            <SectionTitle label="resources.clinicalspecialtysectors.fields.doctorsoffices"/>
+            <CreateRelatedButton
+                reference="doctorsoffices"
+                refFieldName="clinicalSpecialtySectorId"
+                label="resources.doctorsoffices.createRelated"
+            />
+            <ReferenceManyField
+                addLabel={false}
+                reference="doctorsoffices"
+                target="clinicalSpecialtySectorId"
+                sort={{ field: 'description', order: 'DESC' }}
+            >
+                <Datagrid rowClick="show">
+                    <TextField source="description"/>
+                    <TextField
+                        source="openingTime"
+                        label="resources.doctorsoffices.fields.openingTime"
+                        type="time"
+                    />
+                    <TextField
+                        source="closingTime"
+                        label="resources.doctorsoffices.fields.closingTime"
+                        type="time"
+                    />
+                    <EditButton />
+                </Datagrid>
+            </ReferenceManyField>
+
         </SimpleShowLayout>
     </Show>
 );
