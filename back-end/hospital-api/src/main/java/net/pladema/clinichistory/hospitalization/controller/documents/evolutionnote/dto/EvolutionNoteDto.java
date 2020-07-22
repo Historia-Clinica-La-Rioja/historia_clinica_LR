@@ -34,7 +34,7 @@ public class EvolutionNoteDto implements DocumentDto, Serializable {
     private List<@Valid DiagnosisDto> diagnosis = new ArrayList<>();
 
     @Nullable
-    private List<@Valid InmunizationDto> inmunizations = new ArrayList<>();
+    private List<@Valid ImmunizationDto> immunizations = new ArrayList<>();
 
     @Nullable
     private List<@Valid AllergyConditionDto> allergies = new ArrayList<>();

@@ -39,7 +39,7 @@ public class EpicrisisDto implements Serializable {
     private  List<@Valid MedicationDto> medications = new ArrayList<>();
 
     @NotNull
-    private List<@Valid InmunizationDto> inmunizations= new ArrayList<>();
+    private List<@Valid ImmunizationDto> immunizations= new ArrayList<>();
 
     @NotNull
     private List<@Valid AllergyConditionDto> allergies = new ArrayList<>();

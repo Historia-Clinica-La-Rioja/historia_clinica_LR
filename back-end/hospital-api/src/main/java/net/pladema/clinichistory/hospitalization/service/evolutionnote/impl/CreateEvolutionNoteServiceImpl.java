@@ -69,7 +69,7 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
 
         evolutionNote.setDiagnosis(healthConditionService.loadDiagnosis(patientId, document.getId(), evolutionNote.getDiagnosis()));
         evolutionNote.setAllergies(allergyService.loadAllergies(patientId, document.getId(), evolutionNote.getAllergies()));
-        evolutionNote.setImmunizations(immunizationService.loadInmunization(patientId, document.getId(), evolutionNote.getImmunizations()));
+        evolutionNote.setImmunizations(immunizationService.loadImmunization(patientId, document.getId(), evolutionNote.getImmunizations()));
 
         evolutionNote.setVitalSigns(clinicalObservationService.loadVitalSigns(patientId, document.getId(), Optional.ofNullable(evolutionNote.getVitalSigns())));
         evolutionNote.setAnthropometricData(clinicalObservationService.loadAnthropometricData(patientId, document.getId(), Optional.ofNullable(evolutionNote.getAnthropometricData())));

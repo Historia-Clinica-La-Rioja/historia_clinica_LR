@@ -29,7 +29,7 @@ public interface Document {
 
     List<AllergyConditionBo> getAllergies();
 
-    List<InmunizationBo> getImmunizations();
+    List<ImmunizationBo> getImmunizations();
 
     VitalSignBo getVitalSigns();
 

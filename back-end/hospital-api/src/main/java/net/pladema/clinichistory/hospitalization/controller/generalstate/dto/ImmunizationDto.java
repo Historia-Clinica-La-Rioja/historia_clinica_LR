@@ -11,7 +11,7 @@ import org.springframework.validation.annotation.Validated;
 @Setter
 @ToString
 @Validated
-public class InmunizationDto extends ClinicalTermDto {
+public class ImmunizationDto extends ClinicalTermDto {
 
     @JsonFormat(pattern = JacksonDateFormatConfig.DATE_FORMAT)
     private String administrationDate;

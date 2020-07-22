@@ -8,7 +8,7 @@ import {
 	DiagnosesGeneralStateDto,
 	HealthConditionDto,
 	HealthHistoryConditionDto,
-	InmunizationDto,
+	ImmunizationDto,
 	Last2VitalSignsDto,
 	MedicationDto
 } from '@api-rest/api-model';
@@ -75,8 +75,8 @@ export class InternmentStateService {
 		return this.http.get<AllergyConditionDto[]>(url);
 	}
 
-	getInmunizations(internmentId: number): Observable<InmunizationDto[]> {
-		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments-state/${internmentId}/general/inmunizations`;
-		return this.http.get<InmunizationDto[]>(url);
+	getImmunizations(internmentId: number): Observable<ImmunizationDto[]> {
+		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments-state/${internmentId}/general/immunizations`;
+		return this.http.get<ImmunizationDto[]>(url);
 	}
 }

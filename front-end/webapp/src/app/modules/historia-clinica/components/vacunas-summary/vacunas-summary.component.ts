@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { VACUNAS } from '../../constants/summaries';
 import { TableModel } from '@presentation/components/table/table.component';
-import { InmunizationDto } from '@api-rest/api-model';
+import { ImmunizationDto } from '@api-rest/api-model';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.utils';
 import { MatDialog } from '@angular/material/dialog';
@@ -16,11 +16,11 @@ export class VacunasSummaryComponent implements OnChanges {
 
 	public readonly vacunasSummary = VACUNAS;
 	@Input() internmentEpisodeId: number;
-	@Input() inmunizations: InmunizationDto[];
+	@Input() immunizations: ImmunizationDto[];
 	@Input() editable = false;
 
 
-	tableModel: TableModel<InmunizationDto>;
+	tableModel: TableModel<ImmunizationDto>;
 
 	constructor(
 		public dialog: MatDialog,
@@ -29,7 +29,7 @@ export class VacunasSummaryComponent implements OnChanges {
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
-		this.tableModel = this.buildTable(this.inmunizations);
+		this.tableModel = this.buildTable(this.immunizations);
 	}
 
 	openDialog() {
@@ -43,14 +43,14 @@ export class VacunasSummaryComponent implements OnChanges {
 
 		dialogRef.afterClosed().subscribe(submitted => {
 				if (submitted) {
-					this.internmentStateService.getInmunizations(this.internmentEpisodeId)
+					this.internmentStateService.getImmunizations(this.internmentEpisodeId)
 						.subscribe(data => this.tableModel = this.buildTable(data));
 				}
 			}
 		);
 	}
 
-	private buildTable(data: InmunizationDto[]): TableModel<InmunizationDto> {
+	private buildTable(data: ImmunizationDto[]): TableModel<ImmunizationDto> {
 		return {
 			columns: [
 				{

@@ -23,7 +23,7 @@ public class InternmentGeneralState implements Serializable {
 
     private List<MedicationBo> medications;
 
-    private List<InmunizationBo> inmunizations;
+    private List<ImmunizationBo> immunizations;
 
     private List<AllergyConditionBo> allergies;
 

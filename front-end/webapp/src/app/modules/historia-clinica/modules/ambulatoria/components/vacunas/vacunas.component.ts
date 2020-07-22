@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { InmunizationDto } from '@api-rest/api-model';
+import { ImmunizationDto } from '@api-rest/api-model';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -13,7 +13,7 @@ import { AplicarVacunaComponent } from '../../dialogs/aplicar-vacuna/aplicar-vac
 })
 export class VacunasComponent implements OnInit {
 
-	public inmunizations$: Observable<InmunizationDto[]>;
+	public immunizations$: Observable<ImmunizationDto[]>;
 	public patientId: number;
 
 	constructor(
@@ -27,7 +27,7 @@ export class VacunasComponent implements OnInit {
 		this.route.paramMap.subscribe(
 			(params) => {
 				this.patientId = Number(params.get('id'));
-				this.inmunizations$ = this.hceGeneralStateService.getInmunizations(this.patientId);
+				this.immunizations$ = this.hceGeneralStateService.getImmunizations(this.patientId);
 			});
 	}
 

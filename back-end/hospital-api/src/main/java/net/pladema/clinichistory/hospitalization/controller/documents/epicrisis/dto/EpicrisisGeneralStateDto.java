@@ -24,7 +24,7 @@ public class EpicrisisGeneralStateDto implements Serializable {
 
     private List<MedicationDto> medications = new ArrayList<>();
 
-    private List<InmunizationDto> inmunizations= new ArrayList<>();
+    private List<ImmunizationDto> immunizations= new ArrayList<>();
 
     private List<AllergyConditionDto> allergies = new ArrayList<>();
 

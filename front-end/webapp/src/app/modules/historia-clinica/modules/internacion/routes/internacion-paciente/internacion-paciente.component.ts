@@ -21,7 +21,7 @@ import {
 	PatientDischargeDto,
 	AllergyConditionDto,
 	HealthHistoryConditionDto,
-	InmunizationDto,
+	ImmunizationDto,
 	MedicationDto,
 	Last2VitalSignsDto,
 	AnthropometricDataDto,
@@ -65,7 +65,7 @@ export class InternacionPacienteComponent implements OnInit {
 	public allergies$: Observable<AllergyConditionDto[]>;
 	public familyHistories$: Observable<HealthHistoryConditionDto[]>;
 	public personalHistory$: Observable<HealthHistoryConditionDto[]>;
-	public inmunizations$: Observable<InmunizationDto[]>;
+	public immunizations$: Observable<ImmunizationDto[]>;
 	public medications$: Observable<MedicationDto[]>;
 	public vitalSigns$: Observable<Last2VitalSignsDto>;
 	public anthropometricData$: Observable<AnthropometricDataDto>;
@@ -154,7 +154,7 @@ export class InternacionPacienteComponent implements OnInit {
 		this.allergies$ = this.internmentStateService.getAllergies(this.internmentEpisodeId);
 		this.familyHistories$ = this.internmentStateService.getFamilyHistories(this.internmentEpisodeId);
 		this.personalHistory$ = this.internmentStateService.getPersonalHistories(this.internmentEpisodeId);
-		this.inmunizations$ = this.internmentStateService.getInmunizations(this.internmentEpisodeId);
+		this.immunizations$ = this.internmentStateService.getImmunizations(this.internmentEpisodeId);
 		this.medications$ = this.internmentStateService.getMedications(this.internmentEpisodeId);
 		this.vitalSigns$ = this.internmentStateService.getVitalSigns(this.internmentEpisodeId);
 		this.anthropometricData$ = this.internmentStateService.getAnthropometricData(this.internmentEpisodeId);

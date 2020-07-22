@@ -187,13 +187,13 @@ public class InternmentStateController {
     }
 
     @InternmentValid
-    @GetMapping("/{internmentEpisodeId}/general/inmunizations")
-    public ResponseEntity<List<InmunizationDto>> inmunizationsGeneralState(
+    @GetMapping("/{internmentEpisodeId}/general/immunizations")
+    public ResponseEntity<List<ImmunizationDto>> immunizationsGeneralState(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
         LOG.debug(LOGGING_INSTITUTION_AND_INTERNMENT_EPISODE, institutionId, internmentEpisodeId);
-        List<InmunizationBo> inmunizationBos = inmunizationGeneralStateService.getInmunizationsGeneralState(internmentEpisodeId);
-        List<InmunizationDto> result = internmentStateMapper.toListInmunizationDto(inmunizationBos);
+        List<ImmunizationBo> immunizationBos = inmunizationGeneralStateService.getInmunizationsGeneralState(internmentEpisodeId);
+        List<ImmunizationDto> result = internmentStateMapper.toListImmunizationDto(immunizationBos);
         LOG.debug(LOGGING_OUTPUT, result);
         return  ResponseEntity.ok().body(result);
     }

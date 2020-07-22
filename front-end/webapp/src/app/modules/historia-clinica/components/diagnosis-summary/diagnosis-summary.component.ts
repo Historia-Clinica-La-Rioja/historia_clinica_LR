@@ -146,7 +146,7 @@ export class DiagnosisSummaryComponent implements OnInit {
 					snomed: { id: COVID_SNOMED.id, pt: COVID_SNOMED.pt, parentFsn: "", parentId: "" }
 				}
 			],
-			inmunizations: [],
+			immunizations: [],
 			notes: undefined,
 			vitalSigns: undefined
 		};

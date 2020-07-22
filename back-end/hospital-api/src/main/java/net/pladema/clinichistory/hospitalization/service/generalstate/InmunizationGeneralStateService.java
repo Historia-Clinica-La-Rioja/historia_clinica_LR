@@ -1,10 +1,10 @@
 package net.pladema.clinichistory.hospitalization.service.generalstate;
 
-import net.pladema.clinichistory.ips.service.domain.InmunizationBo;
+import net.pladema.clinichistory.ips.service.domain.ImmunizationBo;
 
 import java.util.List;
 
 public interface InmunizationGeneralStateService {
 
-    List<InmunizationBo> getInmunizationsGeneralState(Integer internmentEpisodeId);
+    List<ImmunizationBo> getInmunizationsGeneralState(Integer internmentEpisodeId);
 }

@@ -73,7 +73,7 @@ public class UpdateEpicrisisServiceImpl implements UpdateEpicrisisService {
             epicrisis.setPersonalHistories(healthConditionService.loadPersonalHistories(patientId, doc.getId(), epicrisis.getPersonalHistories()));
             epicrisis.setFamilyHistories(healthConditionService.loadFamilyHistories(patientId, doc.getId(), epicrisis.getFamilyHistories()));
             epicrisis.setAllergies(allergyService.loadAllergies(patientId, doc.getId(), epicrisis.getAllergies()));
-            epicrisis.setImmunizations(immunizationService.loadInmunization(patientId, doc.getId(), epicrisis.getImmunizations()));
+            epicrisis.setImmunizations(immunizationService.loadImmunization(patientId, doc.getId(), epicrisis.getImmunizations()));
             epicrisis.setMedications(medicationService.loadMedications(patientId, doc.getId(), epicrisis.getMedications()));
 
             epicrisis.setVitalSigns(clinicalObservationService.loadVitalSigns(patientId, doc.getId(), Optional.ofNullable(epicrisis.getVitalSigns())));

@@ -16,7 +16,7 @@ import org.mapstruct.Named;
 import java.util.List;
 
 @Mapper(uses = {HealthConditionMapper.class, VitalSignMapper.class, AnthropometricDataMapper.class,
-        MedicationMapper.class, InmunizationMapper.class, AllergyConditionMapper.class})
+        MedicationMapper.class, ImmunizationMapper.class, AllergyConditionMapper.class})
 public interface InternmentStateMapper {
 
     @Named("toListDiagnosisDto")
@@ -35,9 +35,9 @@ public interface InternmentStateMapper {
     @IterableMapping(qualifiedByName = "toMedicationDto")
     List<MedicationDto> toListMedicationDto(List<MedicationBo> listMedicationBo);
 
-    @Named("toListInmunizationDto")
-    @IterableMapping(qualifiedByName = "toInmunizationDto")
-    List<InmunizationDto> toListInmunizationDto(List<InmunizationBo> inmunizationBos);
+    @Named("toListImmunizationDto")
+    @IterableMapping(qualifiedByName = "toImmunizationDto")
+    List<ImmunizationDto> toListImmunizationDto(List<ImmunizationBo> immunizationBos);
     
     @Named("toListAllergyConditionDto")
     @IterableMapping(qualifiedByName = "toAllergyConditionDto")

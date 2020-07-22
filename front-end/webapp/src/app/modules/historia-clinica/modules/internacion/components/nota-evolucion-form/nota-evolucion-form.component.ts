@@ -3,7 +3,7 @@ import {
 	MasterDataInterface,
 	DiagnosisDto,
 	AllergyConditionDto,
-	InmunizationDto,
+	ImmunizationDto,
 	EvolutionNoteDto,
 	ResponseEvolutionNoteDto
 } from '@api-rest/api-model';
@@ -35,7 +35,7 @@ export class NotaEvolucionFormComponent implements OnInit {
 	bloodTypes: MasterDataInterface<string>[];
 	diagnosticos: DiagnosisDto[] = [];
 	allergies: AllergyConditionDto[] = [];
-	inmunizations: InmunizationDto[] = [];
+	immunizations: ImmunizationDto[] = [];
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -135,7 +135,7 @@ export class NotaEvolucionFormComponent implements OnInit {
 				weight: getValue(formValues.anthropometricData.weight),
 			},
 			diagnosis: this.diagnosticos,
-			inmunizations: this.inmunizations,
+			immunizations: this.immunizations,
 			notes: isNull(formValues.observations) ? undefined : formValues.observations,
 			vitalSigns: isNull(formValues.vitalSigns) ? undefined : {
 				bloodOxygenSaturation: getEffectiveValue(formValues.vitalSigns.bloodOxygenSaturation),

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { InmunizationDto, SnomedDto } from '@api-rest/api-model';
+import { ImmunizationDto, SnomedDto } from '@api-rest/api-model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Moment } from 'moment';
 import { SEMANTICS_CONFIG } from '../../../../constants/snomed-semantics';
@@ -91,7 +91,7 @@ export class AplicarVacunaComponent implements OnInit {
 	save() {
 		if (this.form.valid && this.snomedConcept) {
 			this.loading = true;
-			const vacuna: InmunizationDto = {
+			const vacuna: ImmunizationDto = {
 				administrationDate: this.form.value.date ? this.form.value.date.format(DateFormat.API_DATE) : null,
 				note: this.form.value.note,
 				snomed: this.snomedConcept

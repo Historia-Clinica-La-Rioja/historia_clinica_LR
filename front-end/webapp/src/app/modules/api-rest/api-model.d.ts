@@ -74,7 +74,7 @@ export interface AnamnesisDto extends DocumentDto, Serializable {
     confirmed: boolean;
     diagnosis: DiagnosisDto[];
     familyHistories: HealthHistoryConditionDto[];
-    inmunizations: InmunizationDto[];
+    immunizations: ImmunizationDto[];
     mainDiagnosis: HealthConditionDto;
     medications: MedicationDto[];
     notes?: DocumentObservationsDto;
@@ -253,7 +253,7 @@ export interface EpicrisisDto extends Serializable {
     confirmed: boolean;
     diagnosis: DiagnosisDto[];
     familyHistories: HealthHistoryConditionDto[];
-    inmunizations: InmunizationDto[];
+    immunizations: ImmunizationDto[];
     mainDiagnosis: DiagnosisDto;
     medications: MedicationDto[];
     notes?: EpicrisisObservationsDto;
@@ -264,7 +264,7 @@ export interface EpicrisisGeneralStateDto extends Serializable {
     allergies: AllergyConditionDto[];
     diagnosis: DiagnosisDto[];
     familyHistories: HealthHistoryConditionDto[];
-    inmunizations: InmunizationDto[];
+    immunizations: ImmunizationDto[];
     mainDiagnosis: HealthConditionDto;
     medications: MedicationDto[];
     personalHistories: HealthHistoryConditionDto[];
@@ -294,13 +294,16 @@ export interface EvolutionNoteDto extends DocumentDto, Serializable {
     anthropometricData?: AnthropometricDataDto;
     confirmed: boolean;
     diagnosis?: DiagnosisDto[];
-    inmunizations?: InmunizationDto[];
+    immunizations?: ImmunizationDto[];
     mainDiagnosis?: HealthConditionDto;
     notes?: DocumentObservationsDto;
 }
 
 export interface GenderDto extends MasterdataDto<number> {
     id: number;
+}
+
+export interface HCEAllergyDto extends ClinicalTermDto {
 }
 
 export interface HCEAnthropometricDataDto extends Serializable {
@@ -384,7 +387,7 @@ export interface IdentificationTypeDto extends MasterdataDto<number> {
     id: number;
 }
 
-export interface InmunizationDto extends ClinicalTermDto {
+export interface ImmunizationDto extends ClinicalTermDto {
     administrationDate: string;
     note: string;
 }
@@ -439,7 +442,7 @@ export interface InternmentGeneralStateDto extends Serializable {
     anthropometricData: AnthropometricDataDto;
     diagnosis: DiagnosisDto[];
     familyHistories: HealthHistoryConditionDto[];
-    inmunizations: InmunizationDto[];
+    immunizations: ImmunizationDto[];
     medications: MedicationDto[];
     personalHistories: HealthHistoryConditionDto[];
     vitalSigns: Last2VitalSignsDto;

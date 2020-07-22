@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { InmunizationDto, SnomedDto } from '@api-rest/api-model';
+import { ImmunizationDto, SnomedDto } from '@api-rest/api-model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Moment } from 'moment';
 import { DatePipe } from '@angular/common';
@@ -15,18 +15,18 @@ import { SnomedSemanticSearch, SnomedService } from '../../../../services/snomed
 })
 export class VacunasComponent implements OnInit {
 
-	private inmunizationsValue: InmunizationDto[];
+	private immunizationsValue: ImmunizationDto[];
 
-	@Output() inmunizationsChange = new EventEmitter();
+	@Output() immunizationsChange = new EventEmitter();
 
 	@Input()
-	set inmunizations(inmunizations: InmunizationDto[]) {
-		this.inmunizationsValue = inmunizations;
-		this.inmunizationsChange.emit(this.inmunizationsValue);
+	set immunizations(immunizations: ImmunizationDto[]) {
+		this.immunizationsValue = immunizations;
+		this.immunizationsChange.emit(this.immunizationsValue);
 	}
 
-	get inmunizations(): InmunizationDto[] {
-		return this.inmunizationsValue;
+	get immunizations(): ImmunizationDto[] {
+		return this.immunizationsValue;
 	}
 
 	snomedConcept: SnomedDto;
@@ -87,7 +87,7 @@ export class VacunasComponent implements OnInit {
 
 	addToList() {
 		if (this.form.valid && this.snomedConcept) {
-			const vacuna: InmunizationDto = {
+			const vacuna: ImmunizationDto = {
 				administrationDate: this.form.value.date ? this.form.value.date.format(DateFormat.API_DATE) : null,
 				note: null,
 				snomed: this.snomedConcept
@@ -108,12 +108,12 @@ export class VacunasComponent implements OnInit {
 		this.form.reset();
 	}
 
-	add(vacuna: InmunizationDto): void {
-		this.inmunizations = pushTo<InmunizationDto>(this.inmunizations, vacuna);
+	add(vacuna: ImmunizationDto): void {
+		this.immunizations = pushTo<ImmunizationDto>(this.immunizations, vacuna);
 	}
 
 	remove(index: number): void {
-		this.inmunizations = removeFrom<InmunizationDto>(this.inmunizations, index);
+		this.immunizations = removeFrom<ImmunizationDto>(this.immunizations, index);
 	}
 
 	openSearchDialog(searchValue: string): void {

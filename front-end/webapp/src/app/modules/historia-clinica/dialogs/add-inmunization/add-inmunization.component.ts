@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { EvolutionNoteDto, InmunizationDto, SnomedDto } from '@api-rest/api-model';
+import { EvolutionNoteDto, ImmunizationDto, SnomedDto } from '@api-rest/api-model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -106,7 +106,7 @@ export class AddInmunizationComponent implements OnInit {
 	}
 
 	private buildEvolutionNote(): EvolutionNoteDto {
-		const inmunizationDto: InmunizationDto = {
+		const inmunizationDto: ImmunizationDto = {
 			administrationDate: this.form.value.date ? this.form.value.date.format(DateFormat.API_DATE) : null,
 			note: null,
 			snomed: this.snomedConcept
@@ -114,7 +114,7 @@ export class AddInmunizationComponent implements OnInit {
 
 		return {
 			confirmed: true,
-			inmunizations: [inmunizationDto]
+			immunizations: [inmunizationDto]
 		};
 
 	}

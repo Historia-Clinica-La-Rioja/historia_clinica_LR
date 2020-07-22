@@ -149,10 +149,10 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public List<InmunizationBo> getInmunizationStateFromDocument(Long documentId) {
+    public List<ImmunizationBo> getInmunizationStateFromDocument(Long documentId) {
         LOG.debug(LOGGING_DOCUMENT_ID, documentId);
         List<InmunizationVo> resultQuery = documentImmunizationRepository.getInmunizationStateFromDocument(documentId);
-        List<InmunizationBo> result = resultQuery.stream().map(InmunizationBo::new).collect(Collectors.toList());
+        List<ImmunizationBo> result = resultQuery.stream().map(ImmunizationBo::new).collect(Collectors.toList());
         LOG.debug(OUTPUT, result);
         return result;
     }

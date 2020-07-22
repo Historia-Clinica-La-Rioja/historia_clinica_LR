@@ -2,13 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
 	AllergyConditionDto, AnamnesisDto, DiagnosisDto,
-	HealthHistoryConditionDto, InmunizationDto,
+	HealthHistoryConditionDto, ImmunizationDto,
 	MasterDataInterface,
 	MedicationDto, ResponseAnamnesisDto, HealthConditionDto
 } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { AnamnesisService } from '@api-rest/services/anamnesis.service';
-import { AnamnesisReportService } from '@api-rest/services/anamnesis-report.service';
 import { forkJoin } from 'rxjs';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -41,14 +40,13 @@ export class AnamnesisFormComponent implements OnInit {
 	personalHistories: HealthHistoryConditionDto[] = [];
 	familyHistories: HealthHistoryConditionDto[] = [];
 	allergies: AllergyConditionDto[] = [];
-	inmunizations: InmunizationDto[] = [];
+	immunizations: ImmunizationDto[] = [];
 	medications: MedicationDto[] = [];
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly anamnesisService: AnamnesisService,
-		private readonly anamnesisReportService: AnamnesisReportService,
 		private readonly route: ActivatedRoute,
 		private readonly router: Router,
 		private readonly contextService: ContextService,
@@ -118,7 +116,7 @@ export class AnamnesisFormComponent implements OnInit {
 				this.allergies = anamnesis.allergies;
 				this.diagnosticos = anamnesis.diagnosis;
 				this.familyHistories = anamnesis.familyHistories;
-				this.inmunizations = anamnesis.inmunizations;
+				this.immunizations = anamnesis.immunizations;
 				this.medications = anamnesis.medications;
 				this.personalHistories = anamnesis.personalHistories;
 
@@ -209,7 +207,7 @@ export class AnamnesisFormComponent implements OnInit {
 			mainDiagnosis: this.mainDiagnosis,
 			diagnosis: this.diagnosticos,
 			familyHistories: this.familyHistories,
-			inmunizations: this.inmunizations,
+			immunizations: this.immunizations,
 			medications: this.medications,
 			notes: isNull(formValues.observations) ? undefined : formValues.observations,
 			personalHistories: this.personalHistories,

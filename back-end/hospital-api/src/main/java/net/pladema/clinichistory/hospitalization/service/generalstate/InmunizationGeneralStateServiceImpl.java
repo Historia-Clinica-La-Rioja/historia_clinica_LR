@@ -2,7 +2,7 @@ package net.pladema.clinichistory.hospitalization.service.generalstate;
 
 import net.pladema.clinichistory.hospitalization.repository.generalstate.HCHInmunizationRepository;
 import net.pladema.clinichistory.hospitalization.repository.generalstate.domain.InmunizationVo;
-import net.pladema.clinichistory.ips.service.domain.InmunizationBo;
+import net.pladema.clinichistory.ips.service.domain.ImmunizationBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -24,10 +24,10 @@ public class InmunizationGeneralStateServiceImpl implements InmunizationGeneralS
     }
 
     @Override
-    public List<InmunizationBo> getInmunizationsGeneralState(Integer internmentEpisodeId) {
+    public List<ImmunizationBo> getInmunizationsGeneralState(Integer internmentEpisodeId) {
         LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
         List<InmunizationVo> queryResult = hchInmunizationRepository.findGeneralState(internmentEpisodeId);
-        List<InmunizationBo> result = queryResult.stream().map(InmunizationBo::new).collect(Collectors.toList());
+        List<ImmunizationBo> result = queryResult.stream().map(ImmunizationBo::new).collect(Collectors.toList());
         LOG.debug(OUTPUT, result);
         return result;
     }

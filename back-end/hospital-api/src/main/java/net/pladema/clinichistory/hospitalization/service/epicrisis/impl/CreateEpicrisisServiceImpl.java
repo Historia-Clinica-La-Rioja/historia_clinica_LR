@@ -69,7 +69,7 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
         epicrisis.setPersonalHistories(healthConditionService.loadPersonalHistories(patientId, document.getId(), epicrisis.getPersonalHistories()));
         epicrisis.setFamilyHistories(healthConditionService.loadFamilyHistories(patientId, document.getId(), epicrisis.getFamilyHistories()));
         epicrisis.setAllergies(allergyService.loadAllergies(patientId, document.getId(), epicrisis.getAllergies()));
-        epicrisis.setImmunizations(immunizationService.loadInmunization(patientId, document.getId(), epicrisis.getImmunizations()));
+        epicrisis.setImmunizations(immunizationService.loadImmunization(patientId, document.getId(), epicrisis.getImmunizations()));
         epicrisis.setMedications(medicationService.loadMedications(patientId, document.getId(), epicrisis.getMedications()));
 
         internmentEpisodeService.updateEpicrisisDocumentId(internmentEpisodeId, document.getId());

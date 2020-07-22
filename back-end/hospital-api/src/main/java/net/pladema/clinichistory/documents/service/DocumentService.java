@@ -30,7 +30,7 @@ public interface DocumentService {
 
     GeneralHealthConditionBo getHealthConditionFromDocument(Long documentId);
 
-    List<InmunizationBo> getInmunizationStateFromDocument(Long documentId);
+    List<ImmunizationBo> getInmunizationStateFromDocument(Long documentId);
 
     List<AllergyConditionBo> getAllergyIntoleranceStateFromDocument(Long documentId);
 

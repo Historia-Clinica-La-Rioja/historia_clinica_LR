@@ -7,7 +7,7 @@ import net.pladema.clinichistory.ips.repository.masterdata.InmunizationStatusRep
 import net.pladema.clinichistory.ips.repository.masterdata.entity.InmunizationStatus;
 import net.pladema.clinichistory.ips.service.ImmunizationService;
 import net.pladema.clinichistory.ips.service.SnomedService;
-import net.pladema.clinichistory.ips.service.domain.InmunizationBo;
+import net.pladema.clinichistory.ips.service.domain.ImmunizationBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -40,7 +40,7 @@ public class ImmunizationServiceImpl implements ImmunizationService {
     }
 
     @Override
-    public List<InmunizationBo> loadInmunization(Integer patientId, Long documentId, List<InmunizationBo> immunizations) {
+    public List<ImmunizationBo> loadImmunization(Integer patientId, Long documentId, List<ImmunizationBo> immunizations) {
         LOG.debug("Input parameters -> patientId {}, documentId {}, immunizations {}", patientId, documentId, immunizations);
         immunizations.forEach(i -> {
             String sctId = snomedService.createSnomedTerm(i.getSnomed());
@@ -53,12 +53,12 @@ public class ImmunizationServiceImpl implements ImmunizationService {
 
             documentService.createImmunization(documentId, immunization.getId());
         });
-        List<InmunizationBo> result = immunizations;
+        List<ImmunizationBo> result = immunizations;
         LOG.debug(OUTPUT, result);
         return result;
     }
 
-    private Inmunization saveImmunization(Integer patientId, InmunizationBo immunizationBo, String sctId) {
+    private Inmunization saveImmunization(Integer patientId, ImmunizationBo immunizationBo, String sctId) {
         LOG.debug("Input parameters -> patientId {}, immunizationBo {}, sctId {}", patientId, immunizationBo, sctId);
         Inmunization immunization = new Inmunization(patientId, sctId, immunizationBo.getStatusId()
                 , immunizationBo.getAdministrationDate());

@@ -3,7 +3,7 @@ import { Observable, of } from 'rxjs';
 import {
 	AllergyConditionDto,
 	HealthHistoryConditionDto,
-	InmunizationDto,
+	ImmunizationDto,
 	MedicationDto,
 	Last2VitalSignsDto,
 	AnthropometricDataDto
@@ -74,7 +74,7 @@ export class HceGeneralStateService {
 		return this.http.get<MedicationDto[]>(url);
 	}
 
-	getInmunizations(patientId: number): Observable<InmunizationDto[]> {
+	getImmunizations(patientId: number): Observable<ImmunizationDto[]> {
 		return of(INMUNIZATIONS_DATA);
 	}
 

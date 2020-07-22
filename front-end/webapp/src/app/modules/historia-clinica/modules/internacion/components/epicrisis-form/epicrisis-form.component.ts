@@ -4,7 +4,7 @@ import {
 	DiagnosisDto,
 	EpicrisisDto,
 	HealthHistoryConditionDto,
-	InmunizationDto,
+	ImmunizationDto,
 	MasterDataInterface,
 	MedicationDto,
 	ResponseAnamnesisDto,
@@ -88,7 +88,7 @@ export class EpicrisisFormComponent implements OnInit {
 		displayedColumns: [],
 		selection: new SelectionModel<AllergyConditionDto>(true, [])
 	};
-	inmunizations: TableCheckbox<InmunizationDto> = {
+	immunizations: TableCheckbox<ImmunizationDto> = {
 		data: [],
 		columns: [
 			{
@@ -103,7 +103,7 @@ export class EpicrisisFormComponent implements OnInit {
 			},
 		],
 		displayedColumns: [],
-		selection: new SelectionModel<InmunizationDto>(true, [])
+		selection: new SelectionModel<ImmunizationDto>(true, [])
 	};
 
 	constructor(
@@ -122,7 +122,7 @@ export class EpicrisisFormComponent implements OnInit {
 		this.familyHistories.displayedColumns = this.familyHistories.columns?.map(c => c.def).concat(['select']);
 		this.personalHistories.displayedColumns = this.personalHistories.columns?.map(c => c.def).concat(['select']);
 		this.allergies.displayedColumns = this.allergies.columns?.map(c => c.def).concat(['select']);
-		this.inmunizations.displayedColumns = this.inmunizations.columns?.map(c => c.def).concat(['select']);
+		this.immunizations.displayedColumns = this.immunizations.columns?.map(c => c.def).concat(['select']);
 
 	}
 
@@ -172,7 +172,7 @@ export class EpicrisisFormComponent implements OnInit {
 			this.personalHistories.data = response.personalHistories ? response.personalHistories : [];
 			this.familyHistories.data = response.familyHistories ? response.familyHistories : [];
 			this.allergies.data = response.allergies ? response.allergies : [];
-			this.inmunizations.data = response.inmunizations ? response.inmunizations : [];
+			this.immunizations.data = response.immunizations ? response.immunizations : [];
 		});
 
 	}
@@ -187,7 +187,7 @@ export class EpicrisisFormComponent implements OnInit {
 				familyHistories: this.familyHistories.selection.selected,
 				personalHistories: this.personalHistories.selection.selected,
 				medications: this.medications,
-				inmunizations: this.inmunizations.selection.selected,
+				immunizations: this.immunizations.selection.selected,
 				allergies: this.allergies.selection.selected
 			};
 			this.epicrisisService.createDocument(epicrisis, this.internmentEpisodeId)

@@ -186,36 +186,36 @@
 			</app-medicacion>
 		</section>
 
-		<section id="inmunizations">
+		<section id="immunizations">
 			<h2 class="mat-h2" [translate]="'internaciones.epicrisis.vacunas.TITLE'"></h2>
-			<table mat-table [dataSource]="inmunizations.data" class="secondary">
+			<table mat-table [dataSource]="immunizations.data" class="secondary">
 
-				<ng-container *ngFor="let column of inmunizations.columns" [matColumnDef]="column.def">
+				<ng-container *ngFor="let column of immunizations.columns" [matColumnDef]="column.def">
 					<th *matHeaderCellDef>{{ column.header | translate }}</th>
 					<td mat-cell *matCellDef="let element"> {{ column.display(element) }} </td>
 				</ng-container>
 
-				<tr mat-header-row *matHeaderRowDef="inmunizations.displayedColumns"></tr>
-				<tr mat-row *matRowDef="let row; columns: inmunizations.displayedColumns;"></tr>
+				<tr mat-header-row *matHeaderRowDef="immunizations.displayedColumns"></tr>
+				<tr mat-row *matRowDef="let row; columns: immunizations.displayedColumns;"></tr>
 
 				<ng-container matColumnDef="select">
 					<th mat-header-cell class="actions" *matHeaderCellDef>
-						<mat-checkbox *ngIf="inmunizations.data.length !== 0"
-									  (change)="$event ? masterToggle(inmunizations.data, inmunizations.selection) : null"
-									  [checked]="inmunizations.selection.hasValue() && isAllSelected(inmunizations.data, inmunizations.selection)"
-									  [indeterminate]="inmunizations.selection.hasValue() && !isAllSelected(inmunizations.data, inmunizations.selection)">
+						<mat-checkbox *ngIf="immunizations.data.length !== 0"
+									  (change)="$event ? masterToggle(immunizations.data, immunizations.selection) : null"
+									  [checked]="immunizations.selection.hasValue() && isAllSelected(immunizations.data, immunizations.selection)"
+									  [indeterminate]="immunizations.selection.hasValue() && !isAllSelected(immunizations.data, immunizations.selection)">
 						</mat-checkbox>
 					</th>
 					<td mat-cell class="actions" *matCellDef="let row">
 						<mat-checkbox (click)="$event.stopPropagation()"
-									  (change)="$event ? inmunizations.selection.toggle(row) : null"
-									  [checked]="inmunizations.selection.isSelected(row)">
+									  (change)="$event ? immunizations.selection.toggle(row) : null"
+									  [checked]="immunizations.selection.isSelected(row)">
 						</mat-checkbox>
 					</td>
 				</ng-container>
 
 			</table>
-			<app-no-data class="secondary" *ngIf="inmunizations.data.length === 0"></app-no-data>
+			<app-no-data class="secondary" *ngIf="immunizations.data.length === 0"></app-no-data>
 
 		</section>
 

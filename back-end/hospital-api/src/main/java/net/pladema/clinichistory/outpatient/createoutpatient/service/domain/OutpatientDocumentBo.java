@@ -32,7 +32,7 @@ public class OutpatientDocumentBo implements Document {
 
     private List<MedicationBo> medications;
 
-    private List<InmunizationBo> immunizations;
+    private List<ImmunizationBo> immunizations;
 
     private List<AllergyConditionBo> allergies;
 

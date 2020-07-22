@@ -12,13 +12,13 @@ import java.time.LocalDate;
 @Setter
 @ToString
 @NoArgsConstructor
-public class InmunizationBo extends ClinicalTerm {
+public class ImmunizationBo extends ClinicalTerm {
 
     private LocalDate administrationDate;
 
     private String note;
 
-    public InmunizationBo(InmunizationVo inmunizationVo) {
+    public ImmunizationBo(InmunizationVo inmunizationVo) {
         super();
         setId(inmunizationVo.getId());
         setStatusId(inmunizationVo.getStatusId());

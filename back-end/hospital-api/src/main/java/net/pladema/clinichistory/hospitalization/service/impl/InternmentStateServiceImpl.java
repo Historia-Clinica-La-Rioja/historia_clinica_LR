@@ -51,8 +51,8 @@ public class InternmentStateServiceImpl implements InternmentStateService {
         internmentGeneralState.setMedications(getMedicationsState(internmentEpisodeId));
         internmentGeneralState.setAllergies(getAllergiesState(internmentEpisodeId));
         internmentGeneralState.setVitalSigns(getVitalSignsState(internmentEpisodeId));
-        internmentGeneralState.setAnthropometricData(getAntropometricDataState(internmentEpisodeId));
-        internmentGeneralState.setInmunizations(getInmunizationsState(internmentEpisodeId));
+        internmentGeneralState.setAnthropometricData(getAnthropometricDataState(internmentEpisodeId));
+        internmentGeneralState.setImmunizations(getImmunizationsState(internmentEpisodeId));
         LOG.debug(OUTPUT, internmentGeneralState);
         return internmentGeneralState;
     }
@@ -71,7 +71,7 @@ public class InternmentStateServiceImpl implements InternmentStateService {
         return medicationGeneralStateService.getMedicationsGeneralState(internmentEpisodeId);
     }
 
-    private List<InmunizationBo> getInmunizationsState(Integer internmentEpisodeId){
+    private List<ImmunizationBo> getImmunizationsState(Integer internmentEpisodeId){
         LOG.debug(LOGGING_INTERNMENT_EPISODE_ID, internmentEpisodeId);
         return inmunizationGeneralStateService.getInmunizationsGeneralState(internmentEpisodeId);
     }
@@ -81,7 +81,7 @@ public class InternmentStateServiceImpl implements InternmentStateService {
         return allergyGeneralStateService.getAllergiesGeneralState(internmentEpisodeId);
     }
 
-    private AnthropometricDataBo getAntropometricDataState(Integer internmentEpisodeId){
+    private AnthropometricDataBo getAnthropometricDataState(Integer internmentEpisodeId){
         LOG.debug(LOGGING_INTERNMENT_EPISODE_ID, internmentEpisodeId);
         return clinicalObservationGeneralStateService.getLastAnthropometricDataGeneralState(internmentEpisodeId);
     }

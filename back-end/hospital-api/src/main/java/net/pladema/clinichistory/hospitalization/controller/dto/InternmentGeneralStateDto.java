@@ -28,7 +28,7 @@ public class InternmentGeneralStateDto implements Serializable {
     private List<MedicationDto> medications = new ArrayList<>();
 
     @NotNull
-    private List<InmunizationDto> inmunizations= new ArrayList<>();
+    private List<ImmunizationDto> immunizations= new ArrayList<>();
 
     @NotNull
     private List<AllergyConditionDto> allergies = new ArrayList<>();
