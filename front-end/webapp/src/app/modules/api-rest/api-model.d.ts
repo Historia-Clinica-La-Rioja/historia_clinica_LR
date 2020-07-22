@@ -199,6 +199,13 @@ export interface DiagnosisDto extends HealthConditionDto {
     presumptive?: boolean;
 }
 
+export interface DoctorsOfficeDto {
+    closingTime: Date;
+    description: string;
+    id: number;
+    openingTime: Date;
+}
+
 export interface DocumentDto {
     vitalSigns?: VitalSignDto;
 }
