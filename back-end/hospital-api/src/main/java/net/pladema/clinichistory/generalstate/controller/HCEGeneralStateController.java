@@ -3,10 +3,7 @@ package net.pladema.clinichistory.generalstate.controller;
 import io.swagger.annotations.Api;
 import net.pladema.clinichistory.generalstate.controller.dto.*;
 import net.pladema.clinichistory.generalstate.controller.mapper.HCEGeneralStateMapper;
-import net.pladema.clinichistory.generalstate.service.HCEClinicalObsGeneralStateService;
-import net.pladema.clinichistory.generalstate.service.HCEGeneralStateService;
-import net.pladema.clinichistory.generalstate.service.HCEInmunizationService;
-import net.pladema.clinichistory.generalstate.service.HCEMedicationService;
+import net.pladema.clinichistory.generalstate.service.*;
 import net.pladema.clinichistory.generalstate.service.domain.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,14 +39,17 @@ public class HCEGeneralStateController {
 
     private final HCEMedicationService hceMedicationService;
 
+    private final HCEAllergyService hceAllergyService;
+
     public HCEGeneralStateController(HCEGeneralStateService hceGeneralStateService,
                                      HCEClinicalObsGeneralStateService hceClinicalObsGeneralStateService,
-                                     HCEGeneralStateMapper hceGeneralStateMapper, HCEInmunizationService hceInmunizationService, HCEMedicationService hceMedicationService) {
+                                     HCEGeneralStateMapper hceGeneralStateMapper, HCEInmunizationService hceInmunizationService, HCEMedicationService hceMedicationService, HCEAllergyService hceAllergyService) {
         this.hceGeneralStateService = hceGeneralStateService;
         this.hceClinicalObsGeneralStateService = hceClinicalObsGeneralStateService;
         this.hceGeneralStateMapper = hceGeneralStateMapper;
         this.hceInmunizationService = hceInmunizationService;
         this.hceMedicationService = hceMedicationService;
+        this.hceAllergyService = hceAllergyService;
     }
 
     @GetMapping("/personalHistory")
@@ -114,6 +114,17 @@ public class HCEGeneralStateController {
         LOG.debug(LOGGING_INPUT, institutionId, patientId);
         List<HCEMedicationBo> resultService = hceMedicationService.getMedication(patientId);
         List<HCEMedicationDto> result = hceGeneralStateMapper.toListHCEMedicationDto(resultService);
+        LOG.debug(LOGGING_OUTPUT, result);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/allergies")
+    public ResponseEntity<List<HCEAllergyDto>> getAllergies(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "patientId") Integer patientId) {
+        LOG.debug(LOGGING_INPUT, institutionId, patientId);
+        List<HCEAllergyBo> resultService = hceAllergyService.getAllergies(patientId);
+        List<HCEAllergyDto> result = hceGeneralStateMapper.toListHCEAllergyDto(resultService);
         LOG.debug(LOGGING_OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }

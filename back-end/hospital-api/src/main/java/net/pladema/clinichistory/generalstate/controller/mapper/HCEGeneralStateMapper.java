@@ -38,4 +38,11 @@ public interface HCEGeneralStateMapper {
     @Named("toListHCEInmunizationDto")
     @IterableMapping(qualifiedByName = "toHCEInmunizationDto")
     List<HCEInmunizationDto> toListHCEInmunizationDto(List<HCEInmunizationBo> sourceList);
+
+    @Named("toHCEAllergyDto")
+    HCEAllergyDto toHCEAllergyDto(HCEAllergyBo source);
+
+    @Named("toListHCEAllergyDto")
+    @IterableMapping(qualifiedByName = "toHCEAllergyDto")
+    List<HCEAllergyDto> toListHCEAllergyDto(List<HCEAllergyBo> sourceList);
 }
