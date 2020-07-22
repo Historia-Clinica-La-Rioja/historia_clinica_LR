@@ -19,16 +19,26 @@
 					"MOTIVO": "motivo"
 				},
 				"problemas": {
-					"TITLE": "Problema",
-					"TABLE_TITLE": "Problemas registrados",
-					"CONCEPT_LABEL": "Problema",
 					"buttons": {
 						"ADD": "Agregar problema"
 					},
+					"CONCEPT_LABEL": "Problema",
 					"CRONICO": "Crónico",
-					"DIAGNOSTICOS": "Diagnósticos",
+					"FECHA_FIN": "Fecha fin",
 					"FECHA_INICIO": "Fecha inicio",
-					"FECHA_FIN": "Fecha fin"
+					"PROBLEMA": "Problema",
+					"TABLE_TITLE": "Problemas registrados",
+					"TITLE": "Problemas"
+				},
+				"procedimientos": {
+					"buttons": {
+						"ADD": "Agregar procedimiento"
+					},
+					"FECHA": "Fecha",
+					"TABLE_TITLE": "Procedimientos registrados",
+					"TITLE": "Procedimientos",
+					"TIPO": "Tipo de procedimiento",
+					"PROCEDIMIENTO": "Procedimiento"
 				}
 			},
 			"problemas": {
