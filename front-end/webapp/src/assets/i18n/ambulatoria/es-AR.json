@@ -18,6 +18,15 @@
 					"TITLE": "Motivo de consulta",
 					"MOTIVO": "motivo"
 				},
+				"medicaciones": {
+					"CONCEPT_LABEL": "Medicación",
+					"DESCRIPCION": "Descripción",
+					"NOMBRE_MEDICACION": "Nombre de medicación",
+					"OBSERVACIONES": "Observaciones",
+					"SUSPENDIDO": "Suspendido",
+					"TABLE_TITLE": "Medicaciones registradas",
+					"TITLE": "Medicación"
+				},
 				"problemas": {
 					"buttons": {
 						"ADD": "Agregar problema"
@@ -28,7 +37,7 @@
 					"FECHA_INICIO": "Fecha inicio",
 					"PROBLEMA": "Problema",
 					"TABLE_TITLE": "Problemas registrados",
-					"TITLE": "Problemas"
+					"TITLE": "Problema"
 				},
 				"procedimientos": {
 					"buttons": {
@@ -36,7 +45,7 @@
 					},
 					"FECHA": "Fecha",
 					"TABLE_TITLE": "Procedimientos registrados",
-					"TITLE": "Procedimientos",
+					"TITLE": "Procedimiento",
 					"TIPO": "Tipo de procedimiento",
 					"PROCEDIMIENTO": "Procedimiento"
 				}
