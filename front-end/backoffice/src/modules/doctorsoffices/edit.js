@@ -1,14 +1,14 @@
 import React from 'react';
 import {
     TextInput,
-    Create,
+    Edit,
     SimpleForm,
     required,
 } from 'react-admin';
 import SgxSelectInput from "../../sgxSelectInput/SgxSelectInput";
 
 const DoctorsOfficeEdit = props => (
-    <Create {...props}>
+    <Edit {...props}>
         <SimpleForm redirect="show" >
             <TextInput source="description" validate={[required()]} />
             <TextInput
@@ -32,7 +32,7 @@ const DoctorsOfficeEdit = props => (
 
             <SgxSelectInput source="institutionId" element="institutions" optionText="name" alwaysOn allowEmpty={false}/>
         </SimpleForm>
-    </Create>
+    </Edit>
 );
 
 export default DoctorsOfficeEdit;
