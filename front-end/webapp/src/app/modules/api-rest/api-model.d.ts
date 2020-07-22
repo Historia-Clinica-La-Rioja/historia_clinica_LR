@@ -516,6 +516,12 @@ export interface OauthConfigDto {
     loginUrl: string;
 }
 
+export interface OccupationDto {
+    description: string;
+    id: number;
+    timeRanges: TimeRangeDto[];
+}
+
 export interface OutpatientAllergyConditionDto {
     categoryId: string;
     severity: string;
@@ -707,6 +713,11 @@ export interface SnomedDto extends Serializable {
     parentFsn: string;
     parentId: string;
     pt: string;
+}
+
+export interface TimeRangeDto {
+    from: Date;
+    to: Date;
 }
 
 export interface UserDto extends AbstractUserDto {

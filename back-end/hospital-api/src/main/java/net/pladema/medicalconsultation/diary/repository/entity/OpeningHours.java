@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.diary.repository.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -18,6 +19,7 @@ import java.time.LocalTime;
 @Getter
 @Setter
 @ToString
+@AllArgsConstructor
 public class OpeningHours implements Serializable {
 
     @Id
@@ -33,5 +35,11 @@ public class OpeningHours implements Serializable {
 
     @Column(name = "to", nullable = false)
     private LocalTime to;
+
+    public OpeningHours(Short dayWeekId, LocalTime from, LocalTime to){
+        this.dayWeekId = dayWeekId;
+        this.from = from;
+        this.to = to;
+    }
 
 }
