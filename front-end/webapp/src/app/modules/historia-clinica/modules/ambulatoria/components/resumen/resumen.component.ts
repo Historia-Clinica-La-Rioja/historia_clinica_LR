@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AllergyConditionDto, HealthHistoryConditionDto, MedicationDto, Last2VitalSignsDto, AnthropometricDataDto } from "@api-rest/api-model";
+import { HCEAllergyDto, HCEPersonalHistoryDto, HCEMedicationDto, HCELast2VitalSignsDto, HCEAnthropometricDataDto } from "@api-rest/api-model";
 import { ActivatedRoute } from "@angular/router";
 import { Observable } from "rxjs";
 import { HceGeneralStateService } from "@api-rest/services/hce-general-state.service";
@@ -12,14 +12,13 @@ import { ANTECEDENTES_FAMILIARES, PROBLEMAS_ANTECEDENTES } from "../../../../con
 })
 export class ResumenComponent implements OnInit {
 
-	public allergies$: Observable<AllergyConditionDto[]>;
+	public allergies$: Observable<HCEAllergyDto[]>;
 	public patientId: number;
-	public familyHistories$: Observable<HealthHistoryConditionDto[]>;
-	public familyHistories: HealthHistoryConditionDto[];
-	public personalHistory$: Observable<HealthHistoryConditionDto[]>;
-	public medications$: Observable<MedicationDto[]>;
-	public vitalSigns$: Observable<Last2VitalSignsDto>;
-	public anthropometricData$: Observable<AnthropometricDataDto>;
+	public familyHistories$: Observable<HCEPersonalHistoryDto[]>;
+	public personalHistory$: Observable<HCEPersonalHistoryDto[]>;
+	public medications$: Observable<HCEMedicationDto[]>;
+	public vitalSigns$: Observable<HCELast2VitalSignsDto>;
+	public anthropometricData$: Observable<HCEAnthropometricDataDto>;
 	public readonly familyHistoriesHeader = ANTECEDENTES_FAMILIARES;
 	public readonly personalProblemsHeader = PROBLEMAS_ANTECEDENTES;
 

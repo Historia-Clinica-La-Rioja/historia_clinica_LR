@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
-	AllergyConditionDto,
-	HealthHistoryConditionDto,
-	MedicationDto,
-	Last2VitalSignsDto,
-	AnthropometricDataDto,
-	HCEImmunizationDto
+	HCEImmunizationDto,
+	HCEMedicationDto,
+	HCELast2VitalSignsDto,
+	HCEAnthropometricDataDto,
+	HCEPersonalHistoryDto,
+	HCEAllergyDto
 } from '@api-rest/api-model';
 import { HttpClient } from '@angular/common/http';
 import { ContextService } from '@core/services/context.service';
@@ -23,24 +23,24 @@ export class HceGeneralStateService {
 	) {
 	}
 
-	getAllergies(patientId: number): Observable<AllergyConditionDto[]> {
+	getAllergies(patientId: number): Observable<HCEAllergyDto[]> {
 		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/allergies`;
-		return this.http.get<AllergyConditionDto[]>(url);
+		return this.http.get<HCEAllergyDto[]>(url);
 	}
 
-	getFamilyHistories(patientId: number): Observable<HealthHistoryConditionDto[]> {
-		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/familyHistory`;
-		return this.http.get<HealthHistoryConditionDto[]>(url);
+	getFamilyHistories(patientId: number): Observable<HCEPersonalHistoryDto[]> {
+		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/familyHistories`;
+		return this.http.get<HCEPersonalHistoryDto[]>(url);
 	}
 
-	getPersonalHistories(patientId: number): Observable<HealthHistoryConditionDto[]> {
-		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/personalHistory`;
-		return this.http.get<HealthHistoryConditionDto[]>(url);
+	getPersonalHistories(patientId: number): Observable<HCEPersonalHistoryDto[]> {
+		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/personalHistories`;
+		return this.http.get<HCEPersonalHistoryDto[]>(url);
 	}
 
-	getMedications(patientId: number): Observable<MedicationDto[]> {
-		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/medication`;
-		return this.http.get<MedicationDto[]>(url);
+	getMedications(patientId: number): Observable<HCEMedicationDto[]> {
+		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/medications`;
+		return this.http.get<HCEMedicationDto[]>(url);
 	}
 
 	getImmunizations(patientId: number): Observable<HCEImmunizationDto[]> {
@@ -48,14 +48,14 @@ export class HceGeneralStateService {
 		return this.http.get<HCEImmunizationDto[]>(url);
 	}
 
-	getVitalSigns(patientId: number): Observable<Last2VitalSignsDto> {
+	getVitalSigns(patientId: number): Observable<HCELast2VitalSignsDto> {
 		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/vitalSigns`;
-		return this.http.get<Last2VitalSignsDto>(url);
+		return this.http.get<HCELast2VitalSignsDto>(url);
 	}
 
-	getAnthropometricData(patientId: number): Observable<AnthropometricDataDto> {
+	getAnthropometricData(patientId: number): Observable<HCEAnthropometricDataDto> {
 		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/anthropometricData`;
-		return this.http.get<AnthropometricDataDto>(url);
+		return this.http.get<HCEAnthropometricDataDto>(url);
 	}
 
 }

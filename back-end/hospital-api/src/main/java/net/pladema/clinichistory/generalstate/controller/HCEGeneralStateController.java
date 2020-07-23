@@ -52,8 +52,8 @@ public class HCEGeneralStateController {
         this.hceAllergyService = hceAllergyService;
     }
 
-    @GetMapping("/personalHistory")
-    public ResponseEntity<List<HCEPersonalHistoryDto>> getPersonalHistory(
+    @GetMapping("/personalHistories")
+    public ResponseEntity<List<HCEPersonalHistoryDto>> getPersonalHistories(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId) {
         LOG.debug(LOGGING_INPUT, institutionId, patientId);
@@ -63,8 +63,8 @@ public class HCEGeneralStateController {
         return ResponseEntity.ok().body(result);
     }
 
-    @GetMapping("/familyHistory")
-    public ResponseEntity<List<HCEPersonalHistoryDto>> getFamilyHistory(
+    @GetMapping("/familyHistories")
+    public ResponseEntity<List<HCEPersonalHistoryDto>> getFamilyHistories(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId) {
         LOG.debug(LOGGING_INPUT, institutionId, patientId);
@@ -97,7 +97,7 @@ public class HCEGeneralStateController {
     }
 
     @GetMapping("/immunizations")
-    public ResponseEntity<List<HCEImmunizationDto>> getImmunization(
+    public ResponseEntity<List<HCEImmunizationDto>> getImmunizations(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId) {
         LOG.debug(LOGGING_INPUT, institutionId, patientId);
@@ -107,8 +107,8 @@ public class HCEGeneralStateController {
         return ResponseEntity.ok().body(result);
     }
 
-    @GetMapping("/medication")
-    public ResponseEntity<List<HCEMedicationDto>> getMedication(
+    @GetMapping("/medications")
+    public ResponseEntity<List<HCEMedicationDto>> getMedications(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId) {
         LOG.debug(LOGGING_INPUT, institutionId, patientId);
