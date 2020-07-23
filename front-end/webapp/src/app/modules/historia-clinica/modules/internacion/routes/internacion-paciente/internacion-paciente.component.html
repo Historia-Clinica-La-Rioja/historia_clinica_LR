@@ -30,6 +30,15 @@
 							</button>
 						</ng-container>
 					</ng-container>
+
+					<ng-container
+						*hasRole="['ADMINISTRATIVO']">
+						<button id="btnPaseCama" name="btnPaseCama" mat-flat-button color="primary" fxFlexFill.xs (click)="goToPaseCama()">
+							<span class="uppercase"
+								[translate]="'internaciones.internacion-paciente.actions.RELOCATE_PATIENT_BED'"></span>
+						</button>
+					</ng-container>
+
 				</ng-container>
 
 				<ng-container *featureFlag="'epicrisisRequired'">

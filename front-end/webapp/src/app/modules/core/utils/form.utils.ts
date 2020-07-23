@@ -1,5 +1,8 @@
-import { FormGroup, FormArray, AbstractControl } from '@angular/forms';
+import { FormGroup, FormArray, AbstractControl, FormControl, ValidationErrors, FormGroupDirective, NgForm } from '@angular/forms';
 import { ElementRef } from '@angular/core';
+import { Moment } from 'moment';
+import { newMoment, momentFormat, DateFormat } from './moment.utils';
+import { ErrorStateMatcher } from '@angular/material/core';
 
 export const VALIDATIONS = {
 	MAX_LENGTH: {
@@ -39,4 +42,18 @@ export function scrollIntoError(form: FormGroup, el: ElementRef) {
 
 export function atLeastOneValueInFormGroup(form: FormGroup): boolean {
 	return !Object.values(form.value).every(x => (x === null || x === ''));
+}
+
+export function futureTimeValidation(control: FormControl): ValidationErrors | null {
+	let time: string = control.value;
+	let today: Moment = newMoment();
+	// Este chequeo se hace para evitar que no tire el mensaje de error del pattern junto con este.
+	if (time.match('([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}')) {
+		if (time > momentFormat(today, DateFormat.HOUR_MINUTE)) {
+			return {
+				futureTime: true
+			}
+		}
+	}
+	return null;
 }

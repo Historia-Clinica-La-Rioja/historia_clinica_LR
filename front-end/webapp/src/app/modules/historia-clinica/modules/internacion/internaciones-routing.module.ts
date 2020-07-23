@@ -16,6 +16,7 @@ import { NotaEvolucionComponent } from './routes/nota-evolucion/nota-evolucion.c
 import { PatientDischargeComponent } from './routes/patient-discharge/patient-discharge.component';
 
 import { MedicalDischargeComponent } from './components/medical-discharge/medical-discharge.component';
+import { PatientBedRelocationComponent } from './routes/patient-bed-relocation/patient-bed-relocation.component';
 
 
 const routes: Routes = [
@@ -84,6 +85,12 @@ const routes: Routes = [
 		canActivate: [RoleGuard],
 		component: MedicalDischargeComponent,
 		data: { allowedRoles: [ERole.ESPECIALISTA_MEDICO] }
+	},
+	{
+		path: 'internacion/:idInternacion/paciente/:idPaciente/pase-cama',
+		canActivate: [RoleGuard],
+		component: PatientBedRelocationComponent,
+		data: { allowedRoles: [ERole.ADMINISTRATIVO] }
 	}
 ];
 

@@ -31,6 +31,7 @@ import { VacunasComponent } from './components/vacunas/vacunas.component';
 
 import { ApiRestModule } from '@api-rest/api-rest.module';
 import { HistoriaClinicaModule } from '../../historia-clinica.module';
+import { PatientBedRelocationComponent } from './routes/patient-bed-relocation/patient-bed-relocation.component';
 
 @NgModule({
 	declarations: [
@@ -55,6 +56,7 @@ import { HistoriaClinicaModule } from '../../historia-clinica.module';
 		NotaEvolucionFormComponent,
 		PatientDischargeComponent,
 		VacunasComponent,
+		PatientBedRelocationComponent,
 	],
 	imports: [
 

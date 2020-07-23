@@ -3,22 +3,8 @@ import { FormGroup, Validators, FormBuilder, FormControl, ValidationErrors } fro
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Moment } from 'moment';
 import { newMoment, momentFormat, DateFormat } from '@core/utils/moment.utils';
-import { hasError } from '@core/utils/form.utils';
+import { hasError, futureTimeValidation } from '@core/utils/form.utils';
 
-function futureTimeValidation(control: FormControl): ValidationErrors | null {
-	// TODO move to a different file for reuse
-	let time: string = control.value;
-	let today: Moment = newMoment();
-	// Este chequeo se hace para evitar que no tire el mensaje de error del pattern junto con este.
-	if (time.match('([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}')) {
-		if (time > momentFormat(today, DateFormat.HOUR_MINUTE)) {
-			return {
-				futureTime: true
-			}
-		}
-	}
-	return null;
-}
 @Component({
 	selector: 'app-effective-time-dialog',
 	templateUrl: './effective-time-dialog.component.html',

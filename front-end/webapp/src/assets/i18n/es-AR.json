@@ -18,7 +18,8 @@
 		"CONFIRM": "Confirmar",
 		"CLOSE": "Cerrar",
 		"SEARCH": "Buscar",
-		"UPDATE": "Actualizar"
+		"UPDATE": "Actualizar",
+		"GENERATE": "Generar"
 	},
 	"forms": {
 		"REQUIRED": "El campo es requerido",
