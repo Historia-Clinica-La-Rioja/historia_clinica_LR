@@ -5,7 +5,9 @@ import net.pladema.clinichistory.documents.events.OnGenerateDocumentEvent;
 import net.pladema.clinichistory.documents.events.OnGenerateOutpatientDocumentEvent;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.EDocumentType;
+import net.pladema.clinichistory.ips.service.domain.ImmunizationBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientDto;
+import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientImmunizationDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.mapper.OutpatientConsultationMapper;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.CreateOutpatientConsultationService;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.CreateOutpatientDocumentService;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -90,6 +93,31 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         OnGenerateDocumentEvent event = new OnGenerateOutpatientDocumentEvent(outpatient, institutionId, outpatientId,
                 EDocumentType.map(DocumentType.OUTPATIENT), patientId);
         pdfService.loadDocument(event);
+    }
+
+
+    @Override
+    @Transactional
+    public ResponseEntity<Boolean> gettingVaccine(
+            Integer institutionId,
+            Integer patientId,
+            OutpatientImmunizationDto vaccineDto) throws IOException, DocumentException {
+        LOG.debug("Input parameters -> institutionId {}, patientId {}, OutpatientImmunizationDto {}", institutionId, patientId, vaccineDto);
+        Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
+        OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, true);
+
+        ImmunizationBo immunizationBo = outpatientConsultationMapper.fromOutpatientImmunizationDto(vaccineDto);
+
+        OutpatientDocumentBo outpatient = new OutpatientDocumentBo();
+        outpatient.setEvolutionNote(vaccineDto.getNote());
+        vaccineDto.setNote(null); // La observación queda asociada al documento que se genera
+        outpatient.setImmunizations(Arrays.asList(immunizationBo));
+
+        outpatient = createOutpatientDocumentService.create(newOutPatient.getId(), patientId, outpatient);
+        generateDocument(outpatient, institutionId, newOutPatient.getId(), patientId);
+
+        LOG.debug(OUTPUT, true);
+        return  ResponseEntity.ok().body(true);
     }
 
 }

@@ -8,7 +8,6 @@ import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.Sno
 import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
 import org.springframework.validation.annotation.Validated;
 
-import javax.annotation.Nullable;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -16,20 +15,16 @@ import javax.validation.constraints.NotNull;
 @Setter
 @ToString
 @Validated
-public class OutpatientInmunizationDto {
-
-    @Nullable
-    private Integer id;
-
-    @Nullable
-    private String statusId;
+public class OutpatientImmunizationDto {
 
     @NotNull(message = "{value.mandatory}")
     @Valid
     private SnomedDto snomed;
 
     @JsonFormat(pattern = JacksonDateFormatConfig.DATE_FORMAT)
+    @NotNull(message = "{value.mandatory}")
     private String administrationDate;
 
+    @NotNull(message = "{value.mandatory}")
     private String note;
 }

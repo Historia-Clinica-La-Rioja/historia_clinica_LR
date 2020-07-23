@@ -1,6 +1,8 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.controller.mapper;
 
+import net.pladema.clinichistory.ips.service.domain.ImmunizationBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientDto;
+import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientImmunizationDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientReasonDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientDocumentBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ReasonBo;
@@ -19,6 +21,6 @@ public interface OutpatientConsultationMapper {
     @Named("fromListReasonDto")
     List<ReasonBo> fromListReasonDto(List<OutpatientReasonDto> reasons);
 
-    @Named("fromListReasonBo")
-    List<OutpatientReasonDto> fromListReasonBo(List<ReasonBo> reasons);
+    @Named("fromOutpatientImmunizationDto")
+    ImmunizationBo fromOutpatientImmunizationDto(OutpatientImmunizationDto vaccineDto);
 }

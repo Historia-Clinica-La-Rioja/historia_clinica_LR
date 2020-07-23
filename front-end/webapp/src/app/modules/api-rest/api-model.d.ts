@@ -532,12 +532,10 @@ export interface OutpatientFamilyHistoryDto {
     verificationId?: string;
 }
 
-export interface OutpatientInmunizationDto {
+export interface OutpatientImmunizationDto {
     administrationDate: string;
-    id?: number;
     note: string;
     snomed: SnomedDto;
-    statusId?: string;
 }
 
 export interface OutpatientMedicationDto {

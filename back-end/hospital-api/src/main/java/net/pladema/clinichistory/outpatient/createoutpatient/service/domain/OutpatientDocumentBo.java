@@ -7,6 +7,7 @@ import lombok.Setter;
 import net.pladema.clinichistory.documents.service.Document;
 import net.pladema.clinichistory.ips.service.domain.*;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,23 +25,23 @@ public class OutpatientDocumentBo implements Document {
 
     private String evolutionNote;
 
-    private List<ProblemBo> problems;
+    private List<ProblemBo> problems = new ArrayList<>();
 
-    private List<ProcedureBo> procedures;
+    private List<ProcedureBo> procedures = new ArrayList<>();
 
-    private List<HealthHistoryConditionBo> familyHistories;
+    private List<HealthHistoryConditionBo> familyHistories = new ArrayList<>();
 
-    private List<MedicationBo> medications;
+    private List<MedicationBo> medications = new ArrayList<>();
 
-    private List<ImmunizationBo> immunizations;
+    private List<ImmunizationBo> immunizations = new ArrayList<>();
 
-    private List<AllergyConditionBo> allergies;
+    private List<AllergyConditionBo> allergies = new ArrayList<>();
 
-    private AnthropometricDataBo anthropometricData;
+    private AnthropometricDataBo anthropometricData ;
 
     private VitalSignBo vitalSigns;
 
-    private List<ReasonBo> reasons;
+    private List<ReasonBo> reasons = new ArrayList<>();
 
     @Override
     public HealthConditionBo getMainDiagnosis() {

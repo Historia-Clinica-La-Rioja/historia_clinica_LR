@@ -3,6 +3,7 @@ package net.pladema.clinichistory.outpatient.createoutpatient.controller;
 import com.itextpdf.text.DocumentException;
 import io.swagger.annotations.Api;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientDto;
+import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientImmunizationDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,4 +20,10 @@ public interface OutpatientConsultationAPI {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId,
             @RequestBody @Valid CreateOutpatientDto createOutpatientDto) throws IOException, DocumentException;
+
+    @PostMapping("/gettingVaccine")
+    ResponseEntity<Boolean> gettingVaccine(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "patientId") Integer patientId,
+            @RequestBody @Valid OutpatientImmunizationDto vaccineDto) throws IOException, DocumentException;
 }
