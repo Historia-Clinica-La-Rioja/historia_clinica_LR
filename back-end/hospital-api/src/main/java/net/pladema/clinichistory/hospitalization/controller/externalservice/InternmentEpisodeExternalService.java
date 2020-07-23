@@ -4,4 +4,6 @@ public interface InternmentEpisodeExternalService {
 
 	Boolean existsActiveForBedId(Integer bedId);
 
+	Integer relocatePatientBed(Integer internmentEpisodeId, Integer destinationBedId);
+
 }

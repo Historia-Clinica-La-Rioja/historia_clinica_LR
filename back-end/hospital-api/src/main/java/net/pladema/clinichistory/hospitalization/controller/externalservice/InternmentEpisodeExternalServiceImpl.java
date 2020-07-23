@@ -9,8 +9,8 @@ import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeServic
 @Service
 public class InternmentEpisodeExternalServiceImpl implements InternmentEpisodeExternalService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(InternmentEpisodeExternalServiceImpl.class);
-	
+	private static final Logger LOG = LoggerFactory.getLogger(InternmentEpisodeExternalServiceImpl.class);
+
 	InternmentEpisodeService internmentEpisodeService;
 
 	public InternmentEpisodeExternalServiceImpl(InternmentEpisodeService internmentEpisodeService) {
@@ -20,11 +20,18 @@ public class InternmentEpisodeExternalServiceImpl implements InternmentEpisodeEx
 
 	@Override
 	public Boolean existsActiveForBedId(Integer bedId) {
-        LOG.debug("Input parameters -> bedId {}", bedId);
+		LOG.debug("Input parameters -> bedId {}", bedId);
 		Boolean ret = internmentEpisodeService.existsActiveForBedId(bedId);
 		LOG.debug("Output -> {}", ret);
 		return ret;
 	}
-	
+
+	@Override
+	public Integer relocatePatientBed(Integer internmentEpisodeId, Integer destinationBedId) {
+		LOG.debug("Input parameters -> destinationBedId {}", destinationBedId);
+		Integer oldBed = internmentEpisodeService.updateInternmentEpisodeBed(internmentEpisodeId, destinationBedId);
+		LOG.debug("Bed relocated");
+		return oldBed;
+	}
 
 }

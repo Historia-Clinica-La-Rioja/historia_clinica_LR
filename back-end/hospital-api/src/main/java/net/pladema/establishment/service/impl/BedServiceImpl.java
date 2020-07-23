@@ -1,42 +1,49 @@
 package net.pladema.establishment.service.impl;
 
-import net.pladema.establishment.controller.dto.BedDto;
-import net.pladema.establishment.controller.mapper.BedMapper;
-import net.pladema.establishment.repository.BedRepository;
-import net.pladema.establishment.repository.entity.Bed;
-import net.pladema.establishment.service.BedService;
+import java.util.List;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
- 
+import net.pladema.clinichistory.hospitalization.controller.externalservice.InternmentEpisodeExternalService;
+import net.pladema.establishment.repository.BedRepository;
+import net.pladema.establishment.repository.HistoricPatientBedRelocationRepository;
+import net.pladema.establishment.repository.entity.Bed;
+import net.pladema.establishment.repository.entity.HistoricPatientBedRelocation;
+import net.pladema.establishment.service.BedService;
+
 @Service
 public class BedServiceImpl implements BedService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(BedServiceImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(BedServiceImpl.class);
 
 	private static final boolean AVAILABLE = true;
 
-    private BedRepository bedRepository;
+	private BedRepository bedRepository;
 
-    private BedMapper bedMapper;
+	private HistoricPatientBedRelocationRepository historicPatientBedRelocationRepository;
 
-    public BedServiceImpl(BedRepository bedRepository, BedMapper bedMapper) {
-        this.bedRepository = bedRepository;
-        this.bedMapper = bedMapper;
-    }
+	private InternmentEpisodeExternalService internmentEpisodeExtService;
 
-    @Override
-    public BedDto updateBedStatusOccupied(Integer id) {
-        LOG.debug("Input parameters -> BedId {}", id);
-        Bed bedToUpdate = bedRepository.getOne(id);
-        bedToUpdate.setFree(false);
-        Bed saved = bedRepository.save(bedToUpdate);
-        BedDto result = bedMapper.toBedDto(saved);
-        LOG.debug("Output -> {}", result);
-        return result;
-    }
+	public BedServiceImpl(BedRepository bedRepository, HistoricPatientBedRelocationRepository historicPatientBedRelocationRepository,
+			InternmentEpisodeExternalService internmentEpisodeExtService) {
+		this.bedRepository = bedRepository;
+		this.historicPatientBedRelocationRepository = historicPatientBedRelocationRepository;
+		this.internmentEpisodeExtService = internmentEpisodeExtService;
+	}
+
+	@Override
+	public Bed updateBedStatusOccupied(Integer id) {
+		LOG.debug("Input parameters -> BedId {}", id);
+		Bed bedToUpdate = bedRepository.getOne(id);
+		bedToUpdate.setFree(false);
+		Bed result = bedRepository.save(bedToUpdate);
+		LOG.debug("Output -> {}", result);
+		return result;
+	}
 
 	@Override
 	public Optional<Bed> freeBed(Integer bedId) {
@@ -48,5 +55,40 @@ public class BedServiceImpl implements BedService {
 		});
 		return bedOpt;
 	}
-	
+
+	@Override
+	public List<Bed> getFreeBeds(Integer institutionId, Integer clinicalSpecialtyId) {
+		LOG.debug("BedService::getFreeBedsByClinicalSpecialty-> input parameters -> InstitucionId{} , BedId {}",
+				institutionId, clinicalSpecialtyId);
+		List<Bed> result = bedRepository.getFreeBedsByClinicalSpecialty(institutionId, clinicalSpecialtyId);
+		LOG.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
+	public HistoricPatientBedRelocation addPatientBedRelocation(HistoricPatientBedRelocation patientBedRelocation) {
+		LOG.debug("BedService::addPatientBedRelocation-> input parameters -> PatientBedRelocation{} ", patientBedRelocation);
+		if (patientBedRelocation.getOriginBedId() != null) {
+			internmentEpisodeExtService.relocatePatientBed(patientBedRelocation.getInternmentEpisodeId(),
+					patientBedRelocation.getDestinationBedId());
+			if (patientBedRelocation.isOriginBedFree()) {
+				freeBed(patientBedRelocation.getOriginBedId());
+			}
+		}
+		updateBedStatusOccupied(patientBedRelocation.getDestinationBedId());
+		HistoricPatientBedRelocation result = historicPatientBedRelocationRepository.save(patientBedRelocation);
+		LOG.debug("Output -> {}", result);
+
+		return result;
+	}
+
+	@Transactional(readOnly = true)
+	@Override
+	public Optional<HistoricPatientBedRelocation> getLastPatientBedRelocation(Integer internmentEpisodeId) {
+		LOG.debug("BedService::getLastPatientBedRelocation-> input parameters -> internmentEpisodeId{}", internmentEpisodeId);
+		Optional<HistoricPatientBedRelocation> result = historicPatientBedRelocationRepository.getAllByInternmentEpisode(internmentEpisodeId).findFirst();
+		LOG.debug("Output -> {}", result);
+		return result;
+	}
+
 }

@@ -1,13 +1,19 @@
 package net.pladema.establishment.service;
 
+import java.util.List;
 import java.util.Optional;
 
-import net.pladema.establishment.controller.dto.BedDto;
 import net.pladema.establishment.repository.entity.Bed;
+import net.pladema.establishment.repository.entity.HistoricPatientBedRelocation;
 public interface BedService {
 
-    BedDto updateBedStatusOccupied(Integer id);
+    Bed updateBedStatusOccupied(Integer id);
 
 	public Optional<Bed> freeBed(Integer bedId);
 	
+	public List<Bed> getFreeBeds(Integer institutionId, Integer clinicalSpecialtyId); 
+	
+	public HistoricPatientBedRelocation addPatientBedRelocation(HistoricPatientBedRelocation patientBedRelocation);
+	
+	public Optional<HistoricPatientBedRelocation> getLastPatientBedRelocation(Integer internmentEpisodeId);
 }

@@ -16,6 +16,7 @@ import net.pladema.establishment.controller.dto.BedDto;
 import net.pladema.establishment.controller.mapper.BedMapper;
 import net.pladema.establishment.repository.BedRepository;
 import net.pladema.establishment.repository.entity.Bed;
+import net.pladema.establishment.service.BedService;
 
 @RestController
 @Api(value = "Bed", tags = { "Bed" })
@@ -28,9 +29,12 @@ public class BedController {
 
 	private BedMapper bedMapper;
 
-	public BedController(BedRepository bedRepository, BedMapper bedMapper) {
+	private BedService bedService;
+
+	public BedController(BedRepository bedRepository, BedMapper bedMapper, BedService bedService) {
 		this.bedRepository = bedRepository;
 		this.bedMapper = bedMapper;
+		this.bedService = bedService;
 	}
 
 	@GetMapping()
@@ -38,6 +42,16 @@ public class BedController {
 	public ResponseEntity<List<BedDto>> getAll(@PathVariable(name = "institutionId") Integer institutionId) {
 		List<Bed> beds = bedRepository.getAllByInstitucion(institutionId);
 		LOG.debug("Get all Beds  => {}", beds);
+		return ResponseEntity.ok(bedMapper.toListBedDto(beds));
+	}
+
+	@GetMapping("/clinicalspecialty/{clinicalSpecialtyId}")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	public ResponseEntity<List<BedDto>> getFreeBedsByClinicalSpecialty(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "clinicalSpecialtyId") Integer clinicalSpecialtyId) {
+		List<Bed> beds = bedService.getFreeBeds(institutionId, clinicalSpecialtyId);
+		LOG.debug("Get free Beds by ClinicalSpecialty response=> {}", beds);
 		return ResponseEntity.ok(bedMapper.toListBedDto(beds));
 	}
 

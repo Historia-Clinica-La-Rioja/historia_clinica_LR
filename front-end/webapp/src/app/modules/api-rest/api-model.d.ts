@@ -579,6 +579,14 @@ export interface PasswordResetDto {
     token: string;
 }
 
+export interface PatientBedRelocationDto extends Serializable {
+    destinationBedId: number;
+    internmentEpisodeId: number;
+    originBedFree: boolean;
+    originBedId: number;
+    relocationDate: string;
+}
+
 export interface PatientDischargeDto {
     administrativeDischargeDate: Date;
     dischargeTypeId: number;
