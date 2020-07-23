@@ -141,6 +141,13 @@ export interface BasicPatientDto {
     person: BasicDataPersonDto;
 }
 
+export interface BasicPersonalDataDto {
+    firstName: string;
+    identificationNumber: string;
+    identificationTypeId: number;
+    lastName: string;
+}
+
 export interface BedDto extends Serializable {
     bedNumber: string;
     id: number;
@@ -647,6 +654,11 @@ export interface PersonalInformationDto {
 
 export interface ProbableDischargeDateDto {
     probableDischargeDate: string;
+}
+
+export interface ProfessionalDto extends BasicPersonalDataDto {
+    id: number;
+    licenceNumber: string;
 }
 
 export interface ProvinceDto extends MasterdataDto<number> {

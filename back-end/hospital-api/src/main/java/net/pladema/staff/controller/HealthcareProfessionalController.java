@@ -2,6 +2,9 @@ package net.pladema.staff.controller;
 
 import java.util.List;
 
+import net.pladema.staff.controller.dto.ProfessionalDto;
+import net.pladema.staff.service.HealthcareProfessionalService;
+import net.pladema.staff.service.domain.HealthcareProfessionalBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -25,14 +28,18 @@ public class HealthcareProfessionalController {
 	private static final Logger LOG = LoggerFactory.getLogger(HealthcareProfessionalController.class);
 
 	private HealthcareProfessionalRepository healthcareProfessionalRepository;
+
+	private HealthcareProfessionalService healthcareProfessionalService;
 	
 	private HealthcareProfessionalMapper healthcareProfessionalMapper;
 
 	
 	
 	public HealthcareProfessionalController(HealthcareProfessionalRepository healthcareProfessionalRepository,
-			HealthcareProfessionalMapper healthcareProfessionalMapper) {
+											HealthcareProfessionalService healthcareProfessionalService,
+											HealthcareProfessionalMapper healthcareProfessionalMapper) {
 		this.healthcareProfessionalRepository = healthcareProfessionalRepository;
+		this.healthcareProfessionalService = healthcareProfessionalService;
 		this.healthcareProfessionalMapper = healthcareProfessionalMapper;
 	}
 
@@ -43,6 +50,17 @@ public class HealthcareProfessionalController {
 		List<HealthcarePerson> doctors = healthcareProfessionalRepository.getAllDoctors(institutionId);
 		LOG.debug("Get all Doctors => {}", doctors);
 		return ResponseEntity.ok(healthcareProfessionalMapper.fromHealthcarePersonList(doctors));
+	}
+
+	@GetMapping
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	public ResponseEntity<List<ProfessionalDto>> getAll(
+			@PathVariable(name = "institutionId")  Integer institutionId){
+		List<HealthcareProfessionalBo> healthcareProfessionals = healthcareProfessionalService.getAll(institutionId);
+
+		LOG.debug("Get all Healthcare professional => {}", healthcareProfessionals);
+		return ResponseEntity.ok(healthcareProfessionalMapper.
+				fromProfessionalBoList(healthcareProfessionals));
 	}
 
 }
