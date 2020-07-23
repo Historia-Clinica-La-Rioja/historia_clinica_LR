@@ -20,7 +20,8 @@ export default {
             "available-free": "Solo las camas disponibles pueden estar libres"
         },
         "doctorsoffices": {
-            "closingBeforeOpening": "La hora de apertura no puede ser posterior a la hora de cierre"
+            "closingBeforeOpening": "La hora de apertura no puede ser posterior a la hora de cierre",
+            "matchingIds": "Esa Especialidad | Sector no pertenece a esa institución"
         },
         forbidden: 'No tiene los permisos necesarios',
         "sector-description-inst-unique": "Ya existe un sector con el mismo nombre en la institución"
