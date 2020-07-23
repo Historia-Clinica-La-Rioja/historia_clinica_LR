@@ -50,7 +50,7 @@ export class NewAgendaComponent implements OnInit {
 		this.form = this.formBuilder.group({
 			sectorId: [null, [Validators.required]],
 			specialtyId: [{value: null, disabled: true}, [Validators.required]],
-			doctorOfficeId: [{value: null, disabled: true}, [Validators.required]],
+			doctorOffice: [{value: null, disabled: true}, [Validators.required]],
 			professionalId: [{value: null, disabled: true}, [Validators.required]],
 			initDate: [{value: null, disabled: true}, [Validators.required]],
 			endDate: [{value: null, disabled: true}, [Validators.required]],
@@ -74,12 +74,12 @@ export class NewAgendaComponent implements OnInit {
 
 	setDoctorOffices(): void {
 		this.doctorsOfficeService.getDoctorsOffice().subscribe(data => this.doctorOffices = data);
-		this.enableFormControl('doctorOfficeId');
+		this.enableFormControl('doctorOffice');
 	}
 
 	setProfessionals(): void {
-		let sectorId: number = this.form.controls.sectorId.value;
-		this.healthcareProfessionalService.getAllDoctorsBySector(sectorId).subscribe(data => this.professionals = data);
+		//TODO para traer doctores por sector utilizar let sectorId: number = this.form.controls.sectorId.value;
+		this.healthcareProfessionalService.getAllDoctors().subscribe(data => this.professionals = data);
 		this.enableFormControl('professionalId');
 	}
 

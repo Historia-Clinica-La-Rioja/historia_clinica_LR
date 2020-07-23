@@ -47,13 +47,13 @@
 				</div>
 				<div fxLayout="row">
 					<mat-form-field appearance="outline">
-						<mat-select id="doctorOfficeId"
-						            name="doctorOfficeId"
-						            formControlName="doctorOfficeId"
+						<mat-select id="doctorOffice"
+						            name="doctorOffice"
+						            formControlName="doctorOffice"
 						            placeholder="{{'pacientes.form.SELECT' | translate}}"
 						            (selectionChange)="setProfessionals()">
 							<mat-option *ngFor="let doctorOffice of doctorOffices"
-							            [value]="doctorOffice.id">
+							            [value]="doctorOffice">
 								{{doctorOffice.description}}
 							</mat-option>
 						</mat-select>
