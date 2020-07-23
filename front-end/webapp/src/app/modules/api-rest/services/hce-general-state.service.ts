@@ -14,21 +14,6 @@ import { environment } from '@environments/environment';
 
 // todo borrar cuando esten los endpoints
 
-const ALERGY_DATA: any[] = [
-	{
-		categoryId: '1',
-		date: 'string',
-		severity: 'string',
-		snomed: { id: '300910009', pt: 'alergia a polen' }
-	},
-	{
-		categoryId: '2',
-		date: 'string',
-		severity: 'string',
-		snomed: { id: '294238000', pt: 'alergia a oro' }
-	},
-];
-
 const INMUNIZATIONS_DATA: any[] = [
 	{
 		id: 14,
@@ -56,7 +41,8 @@ export class HceGeneralStateService {
 	}
 
 	getAllergies(patientId: number): Observable<AllergyConditionDto[]> {
-		return of(ALERGY_DATA);
+		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/allergies`;
+		return this.http.get<AllergyConditionDto[]>(url);
 	}
 
 	getFamilyHistories(patientId: number): Observable<HealthHistoryConditionDto[]> {
