@@ -12,12 +12,14 @@ const DoctorsOfficeCreate = props => (
         <SimpleForm redirect="show" >
             <TextInput source="description" validate={[required()]} />
             <TextInput source="openingTime"
-                       label="resources.doctorsoffices.fields.closingTime"
+                       label="resources.doctorsoffices.fields.openingTime"
                        type="time"
+                       validate={[required()]}
             />
             <TextInput source="closingTime"
                        label="resources.doctorsoffices.fields.closingTime"
                        type="time"
+                       validate={[required()]}
             />
 
             <SgxSelectInput source="clinicalSpecialtySectorId"
