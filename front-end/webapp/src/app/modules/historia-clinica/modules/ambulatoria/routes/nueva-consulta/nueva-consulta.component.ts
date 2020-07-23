@@ -7,6 +7,7 @@ import { MedicacionesNuevaConsultaService } from '../../services/medicaciones-nu
 import { ProcedimientosNuevaConsultaService } from '../../services/procedimientos-nueva-consulta.service';
 import { DatosAntropometricosNuevaConsultaService } from '../../services/datos-antropometricos-nueva-consulta.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
+import { SignosVitalesNuevaConsultaService } from '../../services/signos-vitales-nueva-consulta.service';
 
 @Component({
 	selector: 'app-nueva-consulta',
@@ -20,6 +21,7 @@ export class NuevaConsultaComponent implements OnInit {
 	problemasNuevaConsultaService: ProblemasNuevaConsultaService;
 	procedimientoNuevaConsultaService: ProcedimientosNuevaConsultaService;
 	datosAntropometricosNuevaConsultaService: DatosAntropometricosNuevaConsultaService;
+	signosVitalesNuevaConsultaService: SignosVitalesNuevaConsultaService;
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -31,6 +33,7 @@ export class NuevaConsultaComponent implements OnInit {
 		this.problemasNuevaConsultaService = new ProblemasNuevaConsultaService(formBuilder, snomedService);
 		this.procedimientoNuevaConsultaService = new ProcedimientosNuevaConsultaService(formBuilder, snomedService);
 		this.datosAntropometricosNuevaConsultaService = new DatosAntropometricosNuevaConsultaService(formBuilder, internacionMasterDataService);
+		this.signosVitalesNuevaConsultaService = new SignosVitalesNuevaConsultaService(formBuilder);
 	}
 
 	ngOnInit(): void {

@@ -48,6 +48,15 @@
 					"TITLE": "Procedimiento",
 					"TIPO": "Tipo de procedimiento",
 					"PROCEDIMIENTO": "Procedimiento"
+				},
+				"signos-vitales": {
+					"TITLE": "Signos vitales",
+					"HEART_RATE": "Frecuencia cardíaca (/min)",
+					"RESPIRATORY_RATE": "Frecuencia respiratoria (/min)",
+					"TEMPERATURE": "Temperatura corporal",
+					"BLOOD_OXYGEN_SATURATION": "Saturación de oxigeno (%)",
+					"SYSTOLIC_BLOOD_PRESSURE": "Tensión sistólica (mm)",
+					"DIASTOLIC_BLOOD_PRESSURE": "Tensión diastólica (mm)"
 				}
 			},
 			"problemas": {

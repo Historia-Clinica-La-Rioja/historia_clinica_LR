@@ -226,4 +226,115 @@
 		</app-document-section>
 	</section>
 
+	<section id="signos-vitales" class="doc-section">
+		<app-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.signos-vitales.TITLE'">
+			<ng-container concept-form>
+				<form [formGroup]="signosVitalesNuevaConsultaService.getForm()">
+					<div fxLayout=row>
+						<div class="signos-vitales-field" formGroupName="heartRate">
+							<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.HEART_RATE'"></mat-label>
+							<mat-form-field [floatLabel]="'never'" appearance="outline">
+								<input id="heart_rate"
+									   name="heart_rate"
+									   formControlName="value"
+									   placeholder="00"
+									   type="number"
+									   matInput>
+							</mat-form-field>
+							<app-effective-time
+								[model]="signosVitalesNuevaConsultaService.getForm().value.heartRate.effectiveTime"
+								(onChange)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'heartRate')">
+							</app-effective-time>
+						</div>
+						<div class="signos-vitales-field" formGroupName="respiratoryRate">
+							<mat-label
+								[translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.RESPIRATORY_RATE'"></mat-label>
+							<mat-form-field [floatLabel]="'never'" appearance="outline">
+								<input id="respiratory_rate"
+									   name="respiratory_rate"
+									   formControlName="value"
+									   placeholder="00"
+									   type="number"
+									   matInput>
+							</mat-form-field>
+							<app-effective-time
+								[model]="signosVitalesNuevaConsultaService.getForm().value.respiratoryRate.effectiveTime"
+								(onChange)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'respiratoryRate')">
+							</app-effective-time>
+						</div>
+					</div>
+
+					<div fxLayout=row>
+						<div class="signos-vitales-field" formGroupName="temperature">
+							<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.TEMPERATURE'"></mat-label>
+							<mat-form-field [floatLabel]="'never'" appearance="outline">
+								<input id="temperature"
+									   name="temperature"
+									   formControlName="value"
+									   placeholder="00.0"
+									   type="number"
+									   matInput>
+							</mat-form-field>
+							<app-effective-time
+								[model]="signosVitalesNuevaConsultaService.getForm().value.temperature.effectiveTime"
+								(onChange)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'temperature')">
+							</app-effective-time>
+						</div>
+						<div class="signos-vitales-field" formGroupName="bloodOxygenSaturation">
+							<mat-label
+								[translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.BLOOD_OXYGEN_SATURATION'"></mat-label>
+							<mat-form-field [floatLabel]="'never'" appearance="outline">
+								<input id="blood_oxygen_saturation"
+									   name="blood_oxygen_saturation"
+									   formControlName="value"
+									   placeholder="00"
+									   type="number"
+									   matInput>
+							</mat-form-field>
+							<app-effective-time
+								[model]="signosVitalesNuevaConsultaService.getForm().value.bloodOxygenSaturation.effectiveTime"
+								(onChange)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'bloodOxygenSaturation')">
+							</app-effective-time>
+						</div>
+					</div>
+
+					<div fxLayout=row>
+						<div class="signos-vitales-field" formGroupName="systolicBloodPressure">
+							<mat-label
+								[translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.SYSTOLIC_BLOOD_PRESSURE'"></mat-label>
+							<mat-form-field [floatLabel]="'never'" appearance="outline">
+								<input id="systolic_blood_pressure"
+									   name="systolicBloodPressure"
+									   formControlName="value"
+									   placeholder="00"
+									   type="number"
+									   matInput>
+							</mat-form-field>
+							<app-effective-time
+								[model]="signosVitalesNuevaConsultaService.getForm().value.systolicBloodPressure.effectiveTime"
+								(onChange)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'systolicBloodPressure')">
+							</app-effective-time>
+						</div>
+						<div class="signos-vitales-field" formGroupName="diastolicBloodPressure">
+							<mat-label
+								[translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.DIASTOLIC_BLOOD_PRESSURE'"></mat-label>
+							<mat-form-field [floatLabel]="'never'" appearance="outline">
+								<input id="diastolic_blood_pressure"
+									   name="diastolicBloodPressure"
+									   formControlName="value"
+									   placeholder="00"
+									   type="number"
+									   matInput>
+							</mat-form-field>
+							<app-effective-time
+								[model]="signosVitalesNuevaConsultaService.getForm().value.diastolicBloodPressure.effectiveTime"
+								(onChange)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'diastolicBloodPressure')">
+							</app-effective-time>
+						</div>
+					</div>
+				</form>
+			</ng-container>
+		</app-document-section>
+	</section>
+
 </app-content>
