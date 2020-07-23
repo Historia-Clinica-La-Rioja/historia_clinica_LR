@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.generalstate.repository.domain.HCEInmunizationVo;
+import net.pladema.clinichistory.generalstate.repository.domain.HCEImmunizationVo;
 
 import java.time.LocalDate;
 
@@ -12,11 +12,11 @@ import java.time.LocalDate;
 @Setter
 @ToString
 @NoArgsConstructor
-public class HCEInmunizationBo extends  HCEClinicalTermBo{
+public class HCEImmunizationBo extends  HCEClinicalTermBo{
 
     private LocalDate administrationDate;
 
-    public HCEInmunizationBo(HCEInmunizationVo source){
+    public HCEImmunizationBo(HCEImmunizationVo source){
         super(source.getId(), source.getSnomed(), source.getStatusId(), source.getStatus(), source.getPatientId());
         this.administrationDate = source.getAdministrationDate();
     }

@@ -342,7 +342,7 @@ export interface HCEEffectiveClinicalObservationDto extends HCEClinicalObservati
     effectiveTime: string;
 }
 
-export interface HCEInmunizationDto extends Serializable {
+export interface HCEImmunizationDto extends Serializable {
     administrationDate: string;
     id?: number;
     snomed: SnomedDto;

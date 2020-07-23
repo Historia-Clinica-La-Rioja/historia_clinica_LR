@@ -1,33 +1,16 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import {
 	AllergyConditionDto,
 	HealthHistoryConditionDto,
-	ImmunizationDto,
 	MedicationDto,
 	Last2VitalSignsDto,
-	AnthropometricDataDto
+	AnthropometricDataDto,
+	HCEImmunizationDto
 } from '@api-rest/api-model';
 import { HttpClient } from '@angular/common/http';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
-
-// todo borrar cuando esten los endpoints
-
-const INMUNIZATIONS_DATA: any[] = [
-	{
-		id: 14,
-		snomed: { id: '41000221108', pt: 'vacuna hepatitis B' },
-		statusId: '255594003'
-	},
-
-	{
-		administrationDate: '2020-02-05',
-		id: 13,
-		snomed: { id: '991000221105', pt: 'vacuna cólera' },
-		statusId: '255594003'
-	}
-];
 
 @Injectable({
 	providedIn: 'root'
@@ -60,8 +43,9 @@ export class HceGeneralStateService {
 		return this.http.get<MedicationDto[]>(url);
 	}
 
-	getImmunizations(patientId: number): Observable<ImmunizationDto[]> {
-		return of(INMUNIZATIONS_DATA);
+	getImmunizations(patientId: number): Observable<HCEImmunizationDto[]> {
+		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/immunizations`;
+		return this.http.get<HCEImmunizationDto[]>(url);
 	}
 
 	getVitalSigns(patientId: number): Observable<Last2VitalSignsDto> {

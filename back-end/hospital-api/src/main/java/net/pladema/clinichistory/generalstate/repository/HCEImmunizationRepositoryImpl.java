@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.generalstate.repository;
 
-import net.pladema.clinichistory.generalstate.repository.domain.HCEInmunizationVo;
+import net.pladema.clinichistory.generalstate.repository.domain.HCEImmunizationVo;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,13 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class HCEInmunizationRepositoryImpl implements  HCEInmunizationRepository{
+public class HCEImmunizationRepositoryImpl implements HCEImmunizationRepository {
 
     private static final Logger LOG = LoggerFactory.getLogger(HCEHealthConditionRepositoryImpl.class);
 
     private final EntityManager entityManager;
 
-    public HCEInmunizationRepositoryImpl(EntityManager entityManager) {
+    public HCEImmunizationRepositoryImpl(EntityManager entityManager) {
         super();
         this.entityManager = entityManager;
     }
@@ -27,7 +27,7 @@ public class HCEInmunizationRepositoryImpl implements  HCEInmunizationRepository
     @SuppressWarnings("unchecked")
     @Override
     @Transactional(readOnly = true)
-    public List<HCEInmunizationVo> getInmunization(Integer patientId) {
+    public List<HCEImmunizationVo> getImmunization(Integer patientId) {
         LOG.debug("Input parameters patientId {}", patientId);
         String sqlString = "WITH t AS (" +
                 "   SELECT inm.id, sctid_code, inm.status_id, administration_date, expiration_date, inm.updated_on, " +
@@ -44,21 +44,21 @@ public class HCEInmunizationRepositoryImpl implements  HCEInmunizationRepository
                 "FROM t " +
                 "JOIN snomed s ON sctid_code = s.id " +
                 "WHERE rw = 1 " +
-                "AND status_id <> :inmunizationStatusId " +
+                "AND status_id <> :immunizationStatusId " +
                 "ORDER BY t.updated_on DESC";
 
         List<Object[]> queryResult = entityManager.createNativeQuery(sqlString)
                 .setParameter("docStatusId", DocumentStatus.FINAL)
-                .setParameter("inmunizationStatusId", InmunizationStatus.ERROR)
+                .setParameter("immunizationStatusId", InmunizationStatus.ERROR)
                 .setParameter("patientId", patientId)
                 .setParameter("documentType", DocumentType.OUTPATIENT)
                 .getResultList();
 
-        List<HCEInmunizationVo> result = new ArrayList<>();
+        List<HCEImmunizationVo> result = new ArrayList<>();
 
         queryResult.forEach(h ->
                 result.add(
-                        new HCEInmunizationVo(
+                        new HCEImmunizationVo(
                                 (Integer)h[0],
                                 new Snomed((String)h[1], (String)h[2], null, null),
                                 (String)h[3],

@@ -17,7 +17,7 @@ import java.io.Serializable;
 @Setter
 @ToString
 @Validated
-public class HCEInmunizationDto implements Serializable {
+public class HCEImmunizationDto implements Serializable {
 
     private static final long serialVersionUID = 6092032949244933507L;
 
