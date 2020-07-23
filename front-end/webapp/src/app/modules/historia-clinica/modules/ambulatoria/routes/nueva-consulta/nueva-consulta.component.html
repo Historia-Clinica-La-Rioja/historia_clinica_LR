@@ -7,39 +7,36 @@
 
 	<section id="motivo" class="doc-section">
 		<app-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.motivo.TITLE'">
-				<ng-container concept-form>
-					<app-concepts-search *ngIf="!motivoNuevaConsultaService.getMotivoConsulta() else mainMotivoConsulta"
-										 [label]="'ambulatoria.paciente.nueva-consulta.motivo.MOTIVO'"
-										 (search)="motivoNuevaConsultaService.openSearchDialog($event)">
-					</app-concepts-search>
+			<ng-container concept-form>
+				<app-concepts-search *ngIf="!motivoNuevaConsultaService.getMotivoConsulta() else mainMotivoConsulta"
+					[label]="'ambulatoria.paciente.nueva-consulta.motivo.MOTIVO'"
+					(search)="motivoNuevaConsultaService.openSearchDialog($event)">
+				</app-concepts-search>
 
-					<ng-template #mainMotivoConsulta>
-						<form [formGroup]="motivoNuevaConsultaService.getForm()">
-							<mat-form-field appearance="outline">
-								<mat-label [translate]="'internaciones.anamnesis.diagnosticos.DIAGNOSIS'">
-								</mat-label>
-								<input id="motivo-input" matInput type="text" formControlName="snomed" name="snomed"
-									   readonly
-									   matTooltip="{{motivoNuevaConsultaService.getMotivoConsulta().snomed.pt }}">
-								<button id="clear-motivo" mat-button matSuffix color="warn" mat-icon-button
-										(click)="motivoNuevaConsultaService.resetForm()">
-									<mat-icon>close</mat-icon>
-								</button>
-							</mat-form-field>
-						</form>
-					</ng-template>
+				<ng-template #mainMotivoConsulta>
+					<form [formGroup]="motivoNuevaConsultaService.getForm()">
+						<mat-form-field appearance="outline">
+							<mat-label [translate]="'internaciones.anamnesis.diagnosticos.DIAGNOSIS'">
+							</mat-label>
+							<input id="motivo-input" matInput type="text" formControlName="snomed" name="snomed"
+								readonly matTooltip="{{motivoNuevaConsultaService.getMotivoConsulta().snomed.pt }}">
+							<button id="clear-motivo" mat-button matSuffix color="warn" mat-icon-button
+								(click)="motivoNuevaConsultaService.resetForm()">
+								<mat-icon>close</mat-icon>
+							</button>
+						</mat-form-field>
+					</form>
+				</ng-template>
 			</ng-container>
 		</app-document-section>
 	</section>
 
 	<section id="problemas" class="doc-section">
 		<app-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.problemas.TITLE'"
-							  [tableTitle]="'ambulatoria.paciente.nueva-consulta.problemas.TABLE_TITLE'"
-							  [columns]="problemasNuevaConsultaService.getColumns()"
-							  [data]="problemasNuevaConsultaService.getData()">
+			[tableTitle]="'ambulatoria.paciente.nueva-consulta.problemas.TABLE_TITLE'"
+			[columns]="problemasNuevaConsultaService.getColumns()" [data]="problemasNuevaConsultaService.getData()">
 			<div concept-form>
-				<app-concepts-search
-					*ngIf="!problemasNuevaConsultaService.getSnomedConcept() else problemaForm"
+				<app-concepts-search *ngIf="!problemasNuevaConsultaService.getSnomedConcept() else problemaForm"
 					[label]="'ambulatoria.paciente.nueva-consulta.problemas.CONCEPT_LABEL'"
 					(search)="problemasNuevaConsultaService.openSearchDialog($event)">
 				</app-concepts-search>
@@ -47,15 +44,15 @@
 
 			<ng-template #problemaForm>
 				<form [formGroup]="problemasNuevaConsultaService.getForm()"
-					  (ngSubmit)="problemasNuevaConsultaService.addToList()">
+					(ngSubmit)="problemasNuevaConsultaService.addToList()">
 
 					<mat-form-field appearance="outline">
-						<mat-label
-							[translate]="'ambulatoria.paciente.nueva-consulta.problemas.CONCEPT_LABEL'"></mat-label>
+						<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.problemas.CONCEPT_LABEL'">
+						</mat-label>
 						<input id="snomed-input" matInput type="text" formControlName="snomed" name="snomed" readonly
-							   matTooltip="{{ problemasNuevaConsultaService.getSnomedConcept().pt }}">
+							matTooltip="{{ problemasNuevaConsultaService.getSnomedConcept().pt }}">
 						<button id="clear" mat-button matSuffix color="warn" mat-icon-button
-								(click)="problemasNuevaConsultaService.resetForm()">
+							(click)="problemasNuevaConsultaService.resetForm()">
 							<mat-icon>close</mat-icon>
 						</button>
 					</mat-form-field>
@@ -67,22 +64,19 @@
 					</div>
 
 					<mat-form-field appearance="outline">
-						<mat-label
-							[translate]="'ambulatoria.paciente.nueva-consulta.problemas.FECHA_INICIO'">
+						<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.problemas.FECHA_INICIO'">
 						</mat-label>
 						<input matInput id="fecha_inicio" [matDatepicker]="inicioDatePicker"
-							   formControlName="fechaInicio"
-							   [max]="problemasNuevaConsultaService.getFechaInicioMax()">
+							formControlName="fechaInicio" [max]="problemasNuevaConsultaService.getFechaInicioMax()">
 						<mat-datepicker-toggle matSuffix [for]="inicioDatePicker"></mat-datepicker-toggle>
 						<mat-datepicker #inicioDatePicker></mat-datepicker>
 					</mat-form-field>
 
 					<mat-form-field appearance="outline">
-						<mat-label
-							[translate]="'ambulatoria.paciente.nueva-consulta.problemas.FECHA_FIN'">
+						<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.problemas.FECHA_FIN'">
 						</mat-label>
 						<input matInput id="fecha_fin" [matDatepicker]="finDatePicker" formControlName="fechaFin"
-							   [min]="problemasNuevaConsultaService.getFechaFinMin()">
+							[min]="problemasNuevaConsultaService.getFechaFinMin()">
 						<mat-datepicker-toggle matSuffix [for]="finDatePicker"></mat-datepicker-toggle>
 						<mat-datepicker #finDatePicker></mat-datepicker>
 					</mat-form-field>
@@ -98,9 +92,42 @@
 		</app-document-section>
 	</section>
 
+	<section id="datos-antropometricos" class="doc-section">
+		<app-document-section [sectionTitle]="'internaciones.anamnesis.datos-antropometricos.TITLE'">
+			<ng-container concept-form>
+				<form [formGroup]="datosAntropometricosNuevaConsultaService.getForm()">
+					<div>
+						<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<mat-label [translate]="'internaciones.anamnesis.datos-antropometricos.BLOOD_TYPE'">
+							</mat-label>
+							<mat-select placeholder="B+" formControlName="bloodType" name="bloodTypeId">
+								<mat-option *ngFor="let bloodType of datosAntropometricosNuevaConsultaService?.getBloodTypes()" [value]="bloodType">
+										{{ bloodType.description }}
+									</mat-option>
+							</mat-select>
+						</mat-form-field>
+					</div>
+					<div>
+						<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<mat-label [translate]="'internaciones.anamnesis.datos-antropometricos.HEIGHT'"></mat-label>
+							<input id="height" name="height" formControlName="height" placeholder="Ej: 180"
+								type="number" matInput>
+						</mat-form-field>
+					</div>
+					<div>
+						<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<mat-label [translate]="'internaciones.anamnesis.datos-antropometricos.WEIGHT'"></mat-label>
+							<input id="weight" name="weight" formControlName="weight" placeholder="Ej: 70" type="number"
+								matInput>
+						</mat-form-field>
+					</div>
+				</form>
+			</ng-container>
+		</app-document-section>
+	</section>
+
 	<section id="procedimientos" class="doc-section">
-		<app-document-section
-			[sectionTitle]="'ambulatoria.paciente.nueva-consulta.procedimientos.TITLE'"
+		<app-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.procedimientos.TITLE'"
 			[tableTitle]="'ambulatoria.paciente.nueva-consulta.procedimientos.TABLE_TITLE'"
 			[columns]="procedimientoNuevaConsultaService.getColumns()"
 			[data]="procedimientoNuevaConsultaService.getData()">
@@ -113,32 +140,32 @@
 
 				<ng-template #procedimientoForm>
 					<form [formGroup]="procedimientoNuevaConsultaService.getForm()"
-						  (ngSubmit)="procedimientoNuevaConsultaService.addToList()">
+						(ngSubmit)="procedimientoNuevaConsultaService.addToList()">
 						<mat-form-field appearance="outline">
 							<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.procedimientos.TIPO'">
 							</mat-label>
 							<input id="procedimiento-input" matInput type="text" formControlName="snomed" name="snomed"
-								   readonly
-								   matTooltip="{{procedimientoNuevaConsultaService.getSnomedConcept().pt }}">
+								readonly matTooltip="{{procedimientoNuevaConsultaService.getSnomedConcept().pt }}">
 							<button id="clear-procedimiento" mat-button matSuffix color="warn" mat-icon-button
-									(click)="procedimientoNuevaConsultaService.resetForm()">
+								(click)="procedimientoNuevaConsultaService.resetForm()">
 								<mat-icon>close</mat-icon>
 							</button>
 						</mat-form-field>
 
 						<mat-form-field appearance="outline">
-							<mat-label
-								[translate]="'ambulatoria.paciente.nueva-consulta.procedimientos.FECHA'">
+							<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.procedimientos.FECHA'">
 							</mat-label>
 							<input matInput id="fecha_procedimiento" [matDatepicker]="datePicker"
-								   formControlName="fecha" [max]="procedimientoNuevaConsultaService.getFechaMax()">
+								formControlName="fecha" [max]="procedimientoNuevaConsultaService.getFechaMax()">
 							<mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
 							<mat-datepicker #datePicker></mat-datepicker>
 						</mat-form-field>
 
 						<div align="end">
-							<button id="submit_procedimiento" class="uppercase" mat-raised-button color="primary" type="submit">
-								<span [translate]="'ambulatoria.paciente.nueva-consulta.procedimientos.buttons.ADD'"></span>
+							<button id="submit_procedimiento" class="uppercase" mat-raised-button color="primary"
+								type="submit">
+								<span
+									[translate]="'ambulatoria.paciente.nueva-consulta.procedimientos.buttons.ADD'"></span>
 							</button>
 						</div>
 
