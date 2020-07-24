@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
+import net.pladema.clinichistory.outpatient.createoutpatient.controller.constraints.ProblemDates;
 import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
 
 import javax.annotation.Nullable;
@@ -14,6 +15,8 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @ToString
+@Valid
+@ProblemDates
 public class OutpatientProblemDto {
 
 
