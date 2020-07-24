@@ -29,7 +29,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
     @SuppressWarnings("unchecked")
     @Override
     @Transactional(readOnly = true)
-    public List<HCEHealthConditionVo> getPersonalHistory(Integer patientId) {
+    public List<HCEHealthConditionVo> getPersonalHistories(Integer patientId) {
         LOG.debug("Input parameters patientId {}", patientId);
         String sqlString = "WITH t AS (" +
                 "   SELECT hc.id, sctid_code, hc.status_id, hc.main, verification_status_id, problem_id, start_date, hc.note_id, hc.updated_on, hc.patient_id, " +
@@ -38,10 +38,9 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
                 "   JOIN document_health_condition dhc on d.id = dhc.document_id " +
                 "   JOIN health_condition hc on dhc.health_condition_id = hc.id " +
                 "   WHERE d.status_id = :docStatusId " +
-                "   AND d.type_id NOT IN :invalidDocumentTypes "+
+                "   AND d.type_id = :documentType "+
                 "   AND hc.patient_id = :patientId " +
-                "   AND hc.problem_id = :problemType " +
-                "   " +
+                "   AND hc.problem_id IN (:validProblemTypes) " +
                 ") " +
                 "SELECT t.id as id, s.id as sctid, s.pt, status_id, t.main, verification_status_id, problem_id," +
                 "start_date, patient_id " +
@@ -49,16 +48,14 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
                 "JOIN snomed s ON sctid_code = s.id " +
                 "WHERE rw = 1 " +
                 "AND NOT verification_status_id = :verificationId  " +
-                "AND status_id = :hcStatusId " +
                 "ORDER BY t.updated_on DESC";
 
         List<Object[]> queryResult = entityManager.createNativeQuery(sqlString)
                 .setParameter("docStatusId", DocumentStatus.FINAL)
                 .setParameter("verificationId", ConditionVerificationStatus.ERROR)
-                .setParameter("hcStatusId", ConditionClinicalStatus.ACTIVE)
                 .setParameter("patientId", patientId)
-                .setParameter("problemType", ProblemType.PROBLEMA)
-                .setParameter("invalidDocumentTypes", Arrays.asList(DocumentType.ANAMNESIS, DocumentType.EVALUATION_NOTE, DocumentType.EPICRISIS))
+                .setParameter("validProblemTypes", Arrays.asList(ProblemType.PROBLEMA, ProblemType.CHRONIC))
+                .setParameter("documentType", DocumentType.OUTPATIENT)
                 .getResultList();
 
         List<HCEHealthConditionVo> result = new ArrayList<>();
@@ -83,7 +80,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
     @SuppressWarnings("unchecked")
     @Override
     @Transactional(readOnly = true)
-    public List<HCEHealthConditionVo> getFamilyHistory(Integer patientId) {
+    public List<HCEHealthConditionVo> getFamilyHistories(Integer patientId) {
         LOG.debug("Input parameters patientId {}", patientId);
         String sqlString = "WITH t AS (" +
                 "   SELECT hc.id, sctid_code, hc.status_id, hc.main, verification_status_id, problem_id, start_date, hc.note_id, hc.updated_on, hc.patient_id, " +

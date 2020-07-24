@@ -27,18 +27,21 @@ public class HCEGeneralStateServiceImpl implements HCEGeneralStateService {
 
 
     @Override
-    public List<HCEPersonalHistoryBo> getPersonalHistory(Integer patientId) {
+    public List<HCEPersonalHistoryBo> getActivePersonalHistories(Integer patientId) {
         LOG.debug(LOGGING_INPUT, patientId);
-        List<HCEHealthConditionVo> resultQuery = hceHealthConditionRepository.getPersonalHistory(patientId);
-        List<HCEPersonalHistoryBo> result = resultQuery.stream().map(HCEPersonalHistoryBo::new).collect(Collectors.toList());
+        List<HCEHealthConditionVo> resultQuery = hceHealthConditionRepository.getPersonalHistories(patientId);
+        List<HCEPersonalHistoryBo> result = resultQuery.stream()
+                .map(HCEPersonalHistoryBo::new)
+                .filter(HCEPersonalHistoryBo::isActive)
+                .collect(Collectors.toList());
         LOG.debug(LOGGING_OUTPUT, result);
         return result;
     }
 
     @Override
-    public List<HCEPersonalHistoryBo> getFamilyHistory(Integer patientId) {
+    public List<HCEPersonalHistoryBo> getFamilyHistories(Integer patientId) {
         LOG.debug(LOGGING_INPUT, patientId);
-        List<HCEHealthConditionVo> resultQuery = hceHealthConditionRepository.getFamilyHistory(patientId);
+        List<HCEHealthConditionVo> resultQuery = hceHealthConditionRepository.getFamilyHistories(patientId);
         List<HCEPersonalHistoryBo> result = resultQuery.stream().map(HCEPersonalHistoryBo::new).collect(Collectors.toList());
         LOG.debug(LOGGING_OUTPUT, result);
         return result;

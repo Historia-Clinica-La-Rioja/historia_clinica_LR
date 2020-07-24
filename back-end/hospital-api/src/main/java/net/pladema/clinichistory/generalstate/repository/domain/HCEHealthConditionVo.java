@@ -1,6 +1,9 @@
 package net.pladema.clinichistory.generalstate.repository.domain;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.ConditionVerificationStatus;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.ProblemType;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.Snomed;
@@ -72,5 +75,4 @@ public class HCEHealthConditionVo extends HCEClinicalTermVo {
 		HCEHealthConditionVo other = (HCEHealthConditionVo) obj;
 		return Objects.equals(getId(), other.getId());
 	}
-
 }

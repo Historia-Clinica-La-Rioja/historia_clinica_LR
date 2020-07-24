@@ -47,12 +47,12 @@ public class HCEHealthConditionRepositoryTest extends BaseRepositoryTest {
 		createSecondDocument(patientId);
 		createThirdDocument(patientId);
 
-		List<HCEHealthConditionVo> resultQuery = hCEHealthConditionRepository.getPersonalHistory(patientId);
+		List<HCEHealthConditionVo> resultQuery = hCEHealthConditionRepository.getPersonalHistories(patientId);
 
 		assertThat(resultQuery)
 				.isNotNull()
 				.isNotEmpty()
-				.hasSize(2);
+				.hasSize(3);
 
 		// El diagnostico principal queda inactivo por lo que se descarta
 		assertThat(resultQuery.stream().anyMatch(HCEHealthConditionVo::isMain))
@@ -62,7 +62,7 @@ public class HCEHealthConditionRepositoryTest extends BaseRepositoryTest {
 				.hasSize(0);
 
 		assertThat(resultQuery.stream().filter(HCEHealthConditionVo::isPersonalHistory))
-				.hasSize(2);
+				.hasSize(3);
 
 		assertThat(resultQuery.stream().filter(HCEHealthConditionVo::isSecondaryDiagnosis))
 				.hasSize(0);
@@ -77,7 +77,7 @@ public class HCEHealthConditionRepositoryTest extends BaseRepositoryTest {
 		createSecondDocument(patientId);
 		createThirdDocument(patientId);
 
-		List<HCEHealthConditionVo> resultQuery = hCEHealthConditionRepository.getFamilyHistory(patientId);
+		List<HCEHealthConditionVo> resultQuery = hCEHealthConditionRepository.getFamilyHistories(patientId);
 
 		assertThat(resultQuery)
 				.isNotNull()

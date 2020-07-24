@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface HCEGeneralStateService {
 
-    List<HCEPersonalHistoryBo> getPersonalHistory(Integer patientId);
+    List<HCEPersonalHistoryBo> getActivePersonalHistories(Integer patientId);
 
-    List<HCEPersonalHistoryBo> getFamilyHistory(Integer patientId);
+    List<HCEPersonalHistoryBo> getFamilyHistories(Integer patientId);
 }
