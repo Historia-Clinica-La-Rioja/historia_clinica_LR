@@ -1,6 +1,6 @@
 package net.pladema.medicalconsultation.diary.controller.permissions;
 
-import net.pladema.medicalconsultation.appointment.repository.DoctorsOfficeRepository;
+import net.pladema.medicalconsultation.doctorsoffice.repository.DoctorsOfficeRepository;
 import net.pladema.medicalconsultation.doctorsoffice.repository.entity.DoctorsOffice;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.sgx.backoffice.permissions.BackofficePermissionValidator;

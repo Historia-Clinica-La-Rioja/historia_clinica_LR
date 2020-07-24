@@ -26,4 +26,22 @@ public interface DoctorsOfficeRepository extends JpaRepository<DoctorsOffice, In
     List<DoctorsOfficeVo> findAllBy(@Param("institutionId") Integer institutionId,
                                     @Param("sectorId") Integer sectorId,
                                     @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId);
+
+    @Transactional(readOnly = true)
+    @Query("SELECT d "+
+            "FROM DoctorsOffice AS d " +
+            "WHERE d.institutionId = :institutionId ")
+    List<DoctorsOffice> getDoctorOfficesByInstitution(@Param("institutionId") Integer institutionId);
+
+    @Transactional(readOnly = true)
+    @Query("SELECT d.institutionId "+
+            "FROM DoctorsOffice AS d " +
+            "WHERE d.id = :id ")
+    Integer getInstitutionId(@Param("id") Integer id);
+
+    @Transactional(readOnly = true)
+    @Query("SELECT d.id "+
+            "FROM DoctorsOffice AS d " +
+            "WHERE d.institutionId IN :institutionsIds ")
+    List<Integer> getAllIdsByInstitutionsId(@Param("institutionsIds") List<Integer> institutionsIds);
 }

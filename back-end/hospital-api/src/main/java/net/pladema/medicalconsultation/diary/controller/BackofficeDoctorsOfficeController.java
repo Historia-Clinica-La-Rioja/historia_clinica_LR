@@ -1,8 +1,8 @@
 package net.pladema.medicalconsultation.diary.controller;
 
-import net.pladema.medicalconsultation.appointment.repository.DoctorsOfficeRepository;
 import net.pladema.medicalconsultation.diary.controller.constraints.BackofficeDoctorsOfficeEntityValidator;
 import net.pladema.medicalconsultation.diary.controller.permissions.BackofficeDoctorsOfficeValidator;
+import net.pladema.medicalconsultation.doctorsoffice.repository.DoctorsOfficeRepository;
 import net.pladema.medicalconsultation.doctorsoffice.repository.entity.DoctorsOffice;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
 import org.springframework.web.bind.annotation.RequestMapping;
