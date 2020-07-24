@@ -1,13 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { ImmunizationDto, SnomedDto } from '@api-rest/api-model';
+import { Component, OnInit, Inject } from '@angular/core';
+import { SnomedDto, OutpatientImmunizationDto } from '@api-rest/api-model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Moment } from 'moment';
 import { SEMANTICS_CONFIG } from '../../../../constants/snomed-semantics';
 import { DateFormat, newMoment } from '@core/utils/moment.utils';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
 import { SnowstormService } from '@api-rest/services/snowstorm.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { HceImmunizationService } from '@api-rest/services/hce-immunization.service';
 
 @Component({
 	selector: 'app-aplicar-vacuna',
@@ -25,18 +26,20 @@ export class AplicarVacunaComponent implements OnInit {
 	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 
 	constructor(
+		@Inject(MAT_DIALOG_DATA) public data: { patientId: number },
 		public dialogRef: MatDialogRef<AplicarVacunaComponent>,
 		private readonly snowstormService: SnowstormService,
+		private readonly hceImmunizationService: HceImmunizationService,
 		private readonly snackBarService: SnackBarService,
-		private readonly formBuilder: FormBuilder
+		private readonly formBuilder: FormBuilder,
 	) {
 	}
 
 	ngOnInit(): void {
 		this.form = this.formBuilder.group({
-			date: [null],
+			date: [null, Validators.required],
 			snomed: [null, Validators.required],
-			note: [null]
+			note: [null, Validators.required]
 		});
 	}
 
@@ -91,14 +94,20 @@ export class AplicarVacunaComponent implements OnInit {
 	save() {
 		if (this.form.valid && this.snomedConcept) {
 			this.loading = true;
-			const vacuna: ImmunizationDto = {
+			const vacuna: OutpatientImmunizationDto = {
 				administrationDate: this.form.value.date ? this.form.value.date.format(DateFormat.API_DATE) : null,
 				note: this.form.value.note,
 				snomed: this.snomedConcept
 			};
-			this.loading = false;
-			this.dialogRef.close(vacuna);
-			this.snackBarService.showSuccess('ambulatoria.paciente.vacunas.aplicar.save.SUCCESS');
+			this.hceImmunizationService.gettingVaccine(vacuna, this.data.patientId)
+			.subscribe((response: boolean) => {
+				this.loading = false;
+				this.dialogRef.close(vacuna);
+				this.snackBarService.showSuccess('ambulatoria.paciente.vacunas.aplicar.save.SUCCESS');
+			}, _ => {
+				this.snackBarService.showError('ambulatoria.paciente.vacunas.aplicar.save.ERROR');
+				this.loading = false;
+			});
 		}
 	}
 

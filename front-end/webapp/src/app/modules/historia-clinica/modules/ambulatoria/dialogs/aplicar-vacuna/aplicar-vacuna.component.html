@@ -48,13 +48,15 @@
 							                (yearSelected)="chosenYearHandler($event)"
 							                (monthSelected)="chosenMonthHandler($event)">
 							</mat-datepicker>
+							<mat-error [translate]="'forms.REQUIRED'"></mat-error>
 						</mat-form-field>
 					</div>
 
 					<mat-form-field [floatLabel]="'never'" appearance="outline">
 						<mat-label [translate]="'ambulatoria.paciente.vacunas.aplicar.NOTE'"></mat-label>
 						<textarea matInput type="text" id="note" name="note"
-						          formControlName="note"></textarea>
+								  formControlName="note"></textarea>
+						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
 					</mat-form-field>
 
 				</div>

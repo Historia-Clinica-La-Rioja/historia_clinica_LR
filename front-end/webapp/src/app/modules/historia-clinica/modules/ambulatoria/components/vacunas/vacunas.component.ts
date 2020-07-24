@@ -26,7 +26,7 @@ export class VacunasComponent implements OnInit {
 	ngOnInit(): void {
 		this.route.paramMap.subscribe(
 			(params) => {
-				this.patientId = Number(params.get('id'));
+				this.patientId = Number(params.get('idPaciente'));
 				this.immunizations$ = this.hceGeneralStateService.getImmunizations(this.patientId);
 			});
 	}
@@ -36,6 +36,7 @@ export class VacunasComponent implements OnInit {
 			disableClose: true,
 			width: '45%',
 			data: {
+				patientId : this.patientId
 			}
 		});
 
