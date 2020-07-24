@@ -57,6 +57,25 @@
 					"BLOOD_OXYGEN_SATURATION": "Saturación de oxigeno (%)",
 					"SYSTOLIC_BLOOD_PRESSURE": "Tensión sistólica (mm)",
 					"DIASTOLIC_BLOOD_PRESSURE": "Tensión diastólica (mm)"
+				},
+				"antecedentes-familiares": {
+					"buttons": {
+						"ADD": "Agregar antecedentes familiares"
+					},
+					"table": {
+						"TITLE": "Antecedentes familiares seleccionados",
+						"columns": {
+							"ANTECEDENTE_FAMILIAR": "Antecedente familiar"
+						}
+					},
+					"TITLE": "Antecedentes familiares",
+					"ANTECEDENTES_FAMILIARES": "Antecedentes familiares"
+				},
+				"datos-antropometricos":{
+					"TITLE": "Datos antropométricos",
+					"BLOOD_TYPE": "Grupo y factor sanguíneo",
+					"HEIGHT": "Talla (cm)",
+					"WEIGHT": "Peso (kg)"
 				}
 			},
 			"problemas": {
