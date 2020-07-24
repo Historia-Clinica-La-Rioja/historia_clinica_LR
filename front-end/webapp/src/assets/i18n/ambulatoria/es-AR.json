@@ -68,16 +68,18 @@
 				},
 				"antecedentes-familiares": {
 					"buttons": {
-						"ADD": "Agregar antecedentes familiares"
+						"ADD": "Agregar antecedente familiar"
 					},
 					"table": {
 						"TITLE": "Antecedentes familiares seleccionados",
 						"columns": {
-							"ANTECEDENTE_FAMILIAR": "Antecedente familiar"
+							"ANTECEDENTE_FAMILIAR": "Antecedente familiar",
+							"FECHA": "Fecha de registro"
 						}
 					},
 					"TITLE": "Antecedentes familiares",
-					"ANTECEDENTES_FAMILIARES": "Antecedentes familiares"
+					"ANTECEDENTES_FAMILIARES": "Antecedentes familiares",
+					"FECHA": "Fecha de registro"
 				},
 				"datos-antropometricos":{
 					"TITLE": "Datos antropométricos",

@@ -1,15 +1,22 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SnomedService, SnomedSemanticSearch } from '../../../services/snomed.service';
+import { SnomedSemanticSearch, SnomedService } from '../../../services/snomed.service';
 import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
 import { SnomedDto } from '@api-rest/api-model';
 import { pushTo } from '@core/utils/array.utils';
 import { SEMANTICS_CONFIG } from '../../../constants/snomed-semantics';
+import { DateFormat, momentFormat, newMoment } from '@core/utils/moment.utils';
+import { Moment } from 'moment';
+
+export interface AntecedenteFamiliar {
+	snomed: SnomedDto;
+	fecha: Moment;
+}
 
 export class AntecedentesFamiliaresNuevaConsultaService {
 
 	private readonly columns: ColumnConfig[];
 	private form: FormGroup;
-	private data: any[];
+	private data: AntecedenteFamiliar[];
 	private snomedConcept: SnomedDto;
 	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 
@@ -18,7 +25,8 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 		private readonly snomedService: SnomedService) {
 
 		this.form = this.formBuilder.group({
-			snomed: [null, Validators.required]
+			snomed: [null, Validators.required],
+			fecha: [null, Validators.required]
 		});
 
 		this.columns = [
@@ -26,7 +34,12 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 				def: 'problemType',
 				header: 'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.table.columns.ANTECEDENTE_FAMILIAR',
 				text: af => af.snomed.pt
-			}
+			},
+			{
+				def: 'fecha',
+				header: 'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.table.columns.FECHA',
+				text: (row) => momentFormat(row.fecha, DateFormat.VIEW_DATE)
+			},
 		];
 
 		this.data = [];
@@ -37,7 +50,7 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 		return this.columns;
 	}
 
-	getData(): any[] {
+	getAntecedentesFamiliares(): AntecedenteFamiliar[] {
 		return this.data;
 	}
 
@@ -51,13 +64,17 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 		this.form.controls.snomed.setValue(pt);
 	}
 
-	add(antecedente: any): void {
+	add(antecedente: AntecedenteFamiliar): void {
 		this.data = pushTo<any>(this.data, antecedente);
 	}
 
 	addToList() {
 		if (this.form.valid && this.snomedConcept) {
-			this.add(this.form.value);
+			const antecedente: AntecedenteFamiliar = {
+				snomed: this.snomedConcept,
+				fecha: this.form.value.fecha
+			};
+			this.add(antecedente);
 			this.resetForm();
 		}
 	}
@@ -81,6 +98,10 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 			this.snomedService.openConceptsSearchDialog(search)
 				.subscribe((selectedConcept: SnomedDto) => this.setConcept(selectedConcept));
 		}
+	}
+
+	getMaxFecha(): Moment {
+		return newMoment();
 	}
 
 }

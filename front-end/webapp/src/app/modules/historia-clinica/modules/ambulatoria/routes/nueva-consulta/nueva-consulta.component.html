@@ -130,7 +130,7 @@
 		<app-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.TITLE'"
 			[tableTitle]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.table.TITLE'"
 			[columns]="antecedentesFamiliaresNuevaConsultaService.getColumns()"
-			[data]="antecedentesFamiliaresNuevaConsultaService.getData()">
+			[data]="antecedentesFamiliaresNuevaConsultaService.getAntecedentesFamiliares()">
 			<ng-container concept-form>
 				<app-concepts-search
 					*ngIf="!antecedentesFamiliaresNuevaConsultaService.getSnomedConcept() else procedimientoForm"
@@ -140,6 +140,7 @@
 				<ng-template #procedimientoForm>
 					<form [formGroup]="antecedentesFamiliaresNuevaConsultaService.getForm()"
 						(ngSubmit)="antecedentesFamiliaresNuevaConsultaService.addToList()">
+
 						<mat-form-field appearance="outline">
 							<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.ANTECEDENTES_FAMILIARES'">
 							</mat-label>
@@ -150,6 +151,16 @@
 								<mat-icon>close</mat-icon>
 							</button>
 						</mat-form-field>
+
+						<mat-form-field appearance="outline">
+							<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.FECHA'">
+							</mat-label>
+							<input matInput id="fecha_antecedente" [matDatepicker]="antecedenteDatePicker"
+								   formControlName="fecha" [max]="antecedentesFamiliaresNuevaConsultaService.getMaxFecha()">
+							<mat-datepicker-toggle matSuffix [for]="antecedenteDatePicker"></mat-datepicker-toggle>
+							<mat-datepicker #antecedenteDatePicker></mat-datepicker>
+						</mat-form-field>
+
 						<div align="end">
 							<button id="submit_antecedentes_familiares" class="uppercase" mat-raised-button color="primary"
 								type="submit">

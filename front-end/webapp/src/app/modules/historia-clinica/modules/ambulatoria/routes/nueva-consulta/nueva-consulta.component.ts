@@ -8,7 +8,10 @@ import { ProcedimientosNuevaConsultaService } from '../../services/procedimiento
 import { DatosAntropometricosNuevaConsultaService } from '../../services/datos-antropometricos-nueva-consulta.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { SignosVitalesNuevaConsultaService } from '../../services/signos-vitales-nueva-consulta.service';
-import { AntecedentesFamiliaresNuevaConsultaService } from '../../services/antecedentes-familiares-nueva-consulta.service';
+import {
+	AntecedenteFamiliar,
+	AntecedentesFamiliaresNuevaConsultaService
+} from '../../services/antecedentes-familiares-nueva-consulta.service';
 import { CreateOutpatientDto } from '@api-rest/api-model';
 import { DateFormat, momentFormat } from '@core/utils/moment.utils';
 import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
@@ -88,7 +91,12 @@ export class NuevaConsultaComponent implements OnInit {
 			allergies: [],
 			anthropometricData: this.datosAntropometricosNuevaConsultaService.getDatosAntropometricos(),
 			evolutionNote: this.formEvolucion.value?.evolucion,
-			familyHistories: [],
+			familyHistories: this.antecedentesFamiliaresNuevaConsultaService.getAntecedentesFamiliares().map((antecedente: AntecedenteFamiliar) => {
+				return {
+					snomed: antecedente.snomed,
+					startDate: antecedente.fecha ? momentFormat(antecedente.fecha, DateFormat.API_DATE)	: undefined
+				};
+			}),
 			medications: this.medicacionesNuevaConsultaService.getMedicaciones().map((medicacion: Medicacion) => {
 					return {
 						note: medicacion.observaciones,
