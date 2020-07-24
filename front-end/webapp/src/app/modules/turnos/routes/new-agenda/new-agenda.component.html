@@ -73,8 +73,8 @@
 						            (selectionChange)="enableAgendaDetails()">
 							<mat-option *ngFor="let professional of professionals"
 							            [value]="professional.id">
-								{{professional.person.firstName}} {{professional.person.lastName}}
-								{{professional.licenceNumber}}
+								{{professional.firstName}} {{professional.lastName}}
+								{{" - Nro. mat: "}} {{professional.licenceNumber}}
 							</mat-option>
 						</mat-select>
 						<mat-error [translate]="'forms.REQUIRED'"></mat-error>

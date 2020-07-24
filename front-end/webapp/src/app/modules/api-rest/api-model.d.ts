@@ -144,7 +144,6 @@ export interface BasicPatientDto {
 export interface BasicPersonalDataDto {
     firstName: string;
     identificationNumber: string;
-    identificationTypeId: number;
     lastName: string;
 }
 

@@ -79,7 +79,7 @@ export class NewAgendaComponent implements OnInit {
 
 	setProfessionals(): void {
 		//TODO para traer doctores por sector utilizar let sectorId: number = this.form.controls.sectorId.value;
-		this.healthcareProfessionalService.getAllDoctors().subscribe(data => this.professionals = data);
+		this.healthcareProfessionalService.getAll().subscribe(data => this.professionals = data);
 		this.enableFormControl('professionalId');
 	}
 
