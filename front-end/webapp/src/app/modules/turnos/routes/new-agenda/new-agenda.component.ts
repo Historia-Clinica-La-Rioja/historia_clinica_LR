@@ -73,7 +73,8 @@ export class NewAgendaComponent implements OnInit {
 	}
 
 	setDoctorOffices(): void {
-		this.doctorsOfficeService.getDoctorsOffice().subscribe(data => this.doctorOffices = data);
+		this.doctorsOfficeService.getAll(this.form.value.sectorId, this.form.value.specialtyId)
+			.subscribe(data => this.doctorOffices = data);
 		this.enableFormControl('doctorOffice');
 	}
 
