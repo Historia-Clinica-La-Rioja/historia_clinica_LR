@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.ips.service.domain.HealthConditionBo;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Getter
@@ -12,9 +13,10 @@ import java.time.LocalDate;
 @ToString
 public class ProblemBo extends HealthConditionBo {
 
+    @NotNull
     private LocalDate startDate;
 
     private LocalDate endDate;
 
-    private boolean chronic;
+    private boolean chronic = false;
 }

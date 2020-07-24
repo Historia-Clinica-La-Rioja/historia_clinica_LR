@@ -15,6 +15,7 @@ import net.pladema.clinichistory.ips.service.domain.DiagnosisBo;
 import net.pladema.clinichistory.ips.service.domain.HealthConditionBo;
 import net.pladema.clinichistory.ips.service.domain.HealthHistoryConditionBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProblemBo;
+import net.pladema.sgx.dates.configuration.DateTimeProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -45,17 +46,20 @@ public class HealthConditionServiceImpl implements HealthConditionService {
 
     private final NoteService noteService;
 
+    private final DateTimeProvider dateTimeProvider;
+
     public HealthConditionServiceImpl(HealthConditionRepository healthConditionRepository,
                                       ConditionVerificationStatusRepository conditionVerificationStatusRepository,
                                       ConditionClinicalStatusRepository conditionClinicalStatusRepository, SnomedService snomedService,
                                       DocumentService documentService,
-                                      NoteService noteService){
+                                      NoteService noteService, DateTimeProvider dateTimeProvider){
         this.healthConditionRepository = healthConditionRepository;
         this.conditionVerificationStatusRepository = conditionVerificationStatusRepository;
         this.conditionClinicalStatusRepository = conditionClinicalStatusRepository;
         this.snomedService = snomedService;
         this.documentService = documentService;
         this.noteService = noteService;
+        this.dateTimeProvider = dateTimeProvider;
     }
 
     private HealthCondition save(HealthCondition healthCondition){
@@ -130,10 +134,12 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         if (newDiagnosis.isError()) {
             healthCondition.setStatusId(ConditionClinicalStatus.INACTIVE);
             healthCondition.setVerificationStatusId(newDiagnosis.getVerificationId());
+            healthCondition.setInactivationDate(dateTimeProvider.nowDate());
         }
         if (newDiagnosis.isDiscarded()) {
             healthCondition.setStatusId(newDiagnosis.getStatusId());
             healthCondition.setVerificationStatusId(newDiagnosis.getVerificationId());
+            healthCondition.setInactivationDate(dateTimeProvider.nowDate());
         }
         return healthCondition;
     }
@@ -162,7 +168,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         LOG.debug(INPUT_PARAMETERS_PATIENT_ID_INFO, patientId, info);
         HealthCondition healthCondition = buildBasicHealthCondition(patientId, info);
         healthCondition.setProblemId(ProblemType.PROBLEMA);
-        LocalDate date = info.getDate() == null ? defaultDate() : info.getDate();
+        LocalDate date = info.getDate() == null ? dateTimeProvider.nowDate() : info.getDate();
         healthCondition.setStartDate(date);
         healthCondition.setNoteId(noteService.createNote(info.getNote()));
         LOG.debug(OUTPUT, healthCondition);
@@ -193,15 +199,11 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         LOG.debug(INPUT_PARAMETERS_PATIENT_ID_INFO, patientId, info);
         HealthCondition healthCondition = buildBasicHealthCondition(patientId, info);
         healthCondition.setProblemId(ProblemType.ANTECEDENTE);
-        LocalDate date = info.getDate() == null ? defaultDate() : info.getDate();
+        LocalDate date = info.getDate() == null ? dateTimeProvider.nowDate() : info.getDate();
         healthCondition.setStartDate(date);
         healthCondition.setNoteId(noteService.createNote(info.getNote()));
         LOG.debug(OUTPUT, healthCondition);
         return healthCondition;
-    }
-
-    private LocalDate defaultDate() {
-        return LocalDate.now();
     }
 
     private HealthCondition buildBasicHealthCondition(Integer patientId, HealthConditionBo info) {
@@ -212,7 +214,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         healthCondition.setSctidCode(sctId);
         healthCondition.setStatusId(ConditionClinicalStatus.ACTIVE);
         healthCondition.setVerificationStatusId(info.getVerificationId());
-        healthCondition.setStartDate(defaultDate());
+        healthCondition.setStartDate(dateTimeProvider.nowDate());
         LOG.debug(OUTPUT, healthCondition);
         return healthCondition;
     }
@@ -261,6 +263,10 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         HealthCondition healthCondition = buildBasicHealthCondition(patientId, info);
         healthCondition.setProblemId(info.isChronic() ? ProblemType.CHRONIC : ProblemType.PROBLEMA);
         healthCondition.setStartDate(info.getStartDate());
+        if (info.getEndDate() != null) {
+            healthCondition.setInactivationDate(info.getEndDate());
+            healthCondition.setStatusId(ConditionClinicalStatus.SOLVED);
+        }
         LOG.debug(OUTPUT, healthCondition);
         return healthCondition;
     }
