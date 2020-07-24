@@ -20,7 +20,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class ClinicalSpecialty implements Serializable {
+public class ClinicalSpecialty implements Serializable, Comparable<ClinicalSpecialty> {
 
 	private static final long serialVersionUID = -5082786259164464584L;
 	
@@ -35,5 +35,10 @@ public class ClinicalSpecialty implements Serializable {
 
 	@Column(name = "sctid_code", nullable = false, length = 15)
 	private String sctidCode;
+
+	@Override
+	public int compareTo(ClinicalSpecialty anotherClinicalSpecialty) {
+		return name.compareTo(anotherClinicalSpecialty.name);
+	}
 
 }

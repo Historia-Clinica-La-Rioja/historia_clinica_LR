@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/internments/masterdata")
@@ -117,11 +118,12 @@ public class InternmentMasterdataController {
         return ResponseEntity.ok().body(internmentMasterDataService.findAll(BloodType.class));
     }
     
-    @GetMapping(value = "/clinical/specialty")
-    public ResponseEntity<Collection<MasterDataProjection>> getClinicalSpecialty(){
-        LOG.debug("{}", "All internment clinical specialty");
-        return ResponseEntity.ok().body(internmentMasterDataService.findAll(ClinicalSpecialty.class));
-    }
+	@GetMapping(value = "/clinical/specialty")
+	public ResponseEntity<Collection<MasterDataProjection>> getClinicalSpecialty() {
+		LOG.debug("{}", "All internment clinical specialty");
+		return ResponseEntity.ok().body(internmentMasterDataService.findAll(ClinicalSpecialty.class).stream().sorted()
+				.collect(Collectors.toList()));
+	}
     
     @GetMapping(value = "/discharge/type")
     public ResponseEntity<Collection<MasterDataProjection>> getDischargeType(){
