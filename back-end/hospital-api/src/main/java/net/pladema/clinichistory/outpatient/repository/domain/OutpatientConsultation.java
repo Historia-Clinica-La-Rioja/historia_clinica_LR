@@ -44,7 +44,7 @@ public class OutpatientConsultation extends InternationAuditableEntity {
     @Column(name = "document_id", nullable = false)
     private Long documentId;
 
-    @Column(name = "doctor_id", nullable = false)
+    @Column(name = "doctor_id")
     private Integer doctorId;
 
     @Column(name = "billable", nullable = false)

@@ -1720,3 +1720,12 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: internment_episode
         validate: true 
+
+- changeSet:
+    id:  dropNotNullConstraint-outpatient_consultation_doctor_id  
+    author:  etrapani  
+    changes:  
+    -  dropNotNullConstraint:  
+        columnDataType:  int  
+        columnName:  doctor_id  
+        tableName:  outpatient_consultation
