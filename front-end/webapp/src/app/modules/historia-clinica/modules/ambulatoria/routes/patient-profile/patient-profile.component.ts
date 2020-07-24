@@ -22,10 +22,8 @@ export class PatientProfileComponent implements OnInit {
 	public personalInformation: PersonalInformation;
 	public patientTypeData: PatientTypeData;
 	public person: PersonalInformationDto;
-	public codigoColor: string;
 	private patientId: number;
 	private readonly routePrefix;
-	public ambulatoriaId = 1; // todo reemplazar por el id verdadero
 	public internmentEpisode: InternmentEpisodeProcessDto;
 
 	constructor(
@@ -42,7 +40,7 @@ export class PatientProfileComponent implements OnInit {
 	ngOnInit(): void {
 		this.route.paramMap.subscribe(
 			(params) => {
-				this.patientId = Number(params.get('id'));
+				this.patientId = Number(params.get('idPaciente'));
 				this.patientService.getPatientCompleteData<CompletePatientDto>(this.patientId)
 					.subscribe(completeData => {
 						this.patientTypeData = this.mapperService.toPatientTypeData(completeData.patientType);
@@ -63,7 +61,7 @@ export class PatientProfileComponent implements OnInit {
 	}
 
 	goToAmbulatoria() {
-		const url = `${this.routePrefix}/ambulatoria/${this.ambulatoriaId}/paciente/${this.patientId}`;
+		const url = `${this.routePrefix}/ambulatoria/paciente/${this.patientId}`;
 		this.router.navigateByUrl(url);
 	}
 }

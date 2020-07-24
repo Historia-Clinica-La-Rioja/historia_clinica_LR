@@ -12,7 +12,9 @@ import { AntecedentesFamiliaresNuevaConsultaService } from '../../services/antec
 import { CreateOutpatientDto } from '@api-rest/api-model';
 import { DateFormat, momentFormat } from '@core/utils/moment.utils';
 import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { ContextService } from '@core/services/context.service';
 
 @Component({
 	selector: 'app-nueva-consulta',
@@ -36,7 +38,10 @@ export class NuevaConsultaComponent implements OnInit {
 		private readonly snomedService: SnomedService,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly outpatientConsultationService: OutpatientConsultationService,
-		private readonly route: ActivatedRoute
+		private readonly route: ActivatedRoute,
+		private readonly router: Router,
+		private readonly contextService: ContextService,
+		private readonly snackBarService: SnackBarService
 	) {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, snomedService);
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, snomedService);
@@ -54,16 +59,24 @@ export class NuevaConsultaComponent implements OnInit {
 		});
 	}
 
+	private goToAmbulatoria(idPaciente: number) {
+		this.router.navigateByUrl(`institucion/${this.contextService.institutionId}/ambulatoria/paciente/${idPaciente}`);
+	}
+
 	save() {
 		this.route.paramMap.subscribe((params) => {
 			const idPaciente = Number(params.get('idPaciente'));
 
 			const nuevaConsulta: CreateOutpatientDto = this.buildCreateOutpatientDto();
-			console.log('resultado', nuevaConsulta);
 
 			this.outpatientConsultationService.createOutpatientConsultation(nuevaConsulta, idPaciente).subscribe(
-				response => console.log('success', response),
-				_ => console.log('error')
+				_ => {
+					this.snackBarService.showSuccess('ambulatoria.paciente.nueva-consulta.messages.SUCCESS');
+					this.goToAmbulatoria(idPaciente);
+				},
+				_ => {
+					this.snackBarService.showSuccess('ambulatoria.paciente.nueva-consulta.messages.ERROR');
+				}
 			);
 		});
 

@@ -14,15 +14,15 @@ const routes: Routes = [
 				component: HomeComponent
 			},
 			{
-				path: 'paciente/:id/profile',
+				path: 'paciente/:idPaciente/profile',
 				component: PatientProfileComponent
 			},
 			{
-				path: ':idAmbulatoria/paciente/:idPaciente',
+				path: 'paciente/:idPaciente',
 				component: AmbulatoriaPacienteComponent
 			},
 			{
-				path: ':idAmbulatoria/paciente/:idPaciente/nueva',
+				path: 'paciente/:idPaciente/nueva',
 				component: NuevaConsultaComponent
 			},
 		],
