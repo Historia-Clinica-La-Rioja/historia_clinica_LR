@@ -52,12 +52,15 @@ public class Inmunization extends InternationAuditableEntity {
 	@Column(name = "note_id")
 	private Long noteId;
 
-	public Inmunization(Integer patientId, String sctidCode, String statusId, LocalDate administrationDate) {
+	public Inmunization(Integer patientId, String sctidCode, String statusId, LocalDate administrationDate,
+						Integer institutionId, Long noteId) {
 		super();
 		this.patientId = patientId;
 		this.sctidCode = sctidCode;
 		if (statusId != null)
 			this.statusId = statusId;
+		this.noteId = noteId;
+		this.institutionId = institutionId;
 		this.administrationDate = administrationDate;
 	}
 

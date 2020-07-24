@@ -18,6 +18,8 @@ public class ImmunizationBo extends ClinicalTerm {
 
     private String note;
 
+    private Integer institutionId;
+
     public ImmunizationBo(InmunizationVo inmunizationVo) {
         super();
         setId(inmunizationVo.getId());

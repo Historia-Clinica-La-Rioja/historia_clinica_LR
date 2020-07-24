@@ -109,10 +109,10 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, true);
 
         ImmunizationBo immunizationBo = outpatientConsultationMapper.fromOutpatientImmunizationDto(vaccineDto);
+        immunizationBo.setInstitutionId(institutionId);
 
         OutpatientDocumentBo outpatient = new OutpatientDocumentBo();
-        outpatient.setEvolutionNote(vaccineDto.getNote());
-        vaccineDto.setNote(null); // La observación queda asociada al documento que se genera
+        outpatient.setEvolutionNote(vaccineDto.getNote()); // La observación también queda asociada al documento que se genera
         outpatient.setImmunizations(Arrays.asList(immunizationBo));
 
         outpatient = createOutpatientDocumentService.create(newOutPatient.getId(), patientId, outpatient);
