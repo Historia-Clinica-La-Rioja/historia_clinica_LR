@@ -1,15 +1,13 @@
 package net.pladema.clinichistory.hospitalization.repository.domain.summary;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.hospitalization.repository.domain.ResponsibleContact;
-import org.apache.tomcat.jni.Local;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -17,52 +15,57 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class InternmentSummaryVo {
 
-    private Integer id;
+	private Integer id;
 
-    private DocumentsSummaryVo documents;
+	private DocumentsSummaryVo documents;
 
-    private ResponsibleDoctorVo doctor;
+	private ResponsibleDoctorVo doctor;
 
-    private Integer bedId;
+	private Integer bedId;
 
-    private String bedNumber;
+	private String bedNumber;
 
-    private Integer roomId;
+	private Integer roomId;
 
-    private String roomNumber;
+	private String roomNumber;
 
-    private Integer clinicalSpecialtyId;
+	private String sectorDescription;
 
-    private String specialty;
+	private String sectorSpecialty;
 
-    private LocalDate entryDate;
+	private Integer clinicalSpecialtyId;
 
-    private ResponsibleContactVo responsibleContact;
+	private String specialty;
 
-    private LocalDateTime probableDischargeDate;
+	private LocalDate entryDate;
 
-    public InternmentSummaryVo(Integer id, LocalDate entryDate, Long anamnesisDocId, String anamnesisStatusId,
-                               Long epicrisisDocId, String epicrisisStatusId,
-                               Integer bedId, String bedNumber, Integer roomId, String roomNumber,
-                               Integer clinicalSpecialtyId, String specialty,
-                               Integer healthcareProfessionalId, String licenseNumber, String firstName, String lastName,
-                               ResponsibleContact responsibleContact, LocalDateTime probableDischargeDate) {
-        this.id = id;
-        this.documents = new DocumentsSummaryVo();
-        this.documents.setAnamnesis(new AnamnesisSummaryVo(anamnesisDocId, anamnesisStatusId));
-        this.documents.setEpicrisis(new EpicrisisSummaryVo(epicrisisDocId, epicrisisStatusId));
-        this.bedId = bedId;
-        this.bedNumber = bedNumber;
-        this.roomId = roomId;
-        this.roomNumber = roomNumber;
-        this.clinicalSpecialtyId = clinicalSpecialtyId;
-        this.specialty = specialty;
-        this.entryDate = entryDate;
-        if (healthcareProfessionalId != null)
-            this.doctor = new ResponsibleDoctorVo(healthcareProfessionalId, firstName, lastName, licenseNumber);
-        if (responsibleContact != null)
-            this.responsibleContact = new ResponsibleContactVo(responsibleContact);
-        this.probableDischargeDate = probableDischargeDate;
-    }
+	private ResponsibleContactVo responsibleContact;
+
+	private LocalDateTime probableDischargeDate;
+
+	public InternmentSummaryVo(Integer id, LocalDate entryDate, Long anamnesisDocId, String anamnesisStatusId,
+			Long epicrisisDocId, String epicrisisStatusId, Integer bedId, String bedNumber, Integer roomId,
+			String roomNumber, String sectorDescription, String sectorSpecialty, Integer clinicalSpecialtyId,
+			String specialty, Integer healthcareProfessionalId, String licenseNumber, String firstName, String lastName,
+			ResponsibleContact responsibleContact, LocalDateTime probableDischargeDate) {
+		this.id = id;
+		this.documents = new DocumentsSummaryVo();
+		this.documents.setAnamnesis(new AnamnesisSummaryVo(anamnesisDocId, anamnesisStatusId));
+		this.documents.setEpicrisis(new EpicrisisSummaryVo(epicrisisDocId, epicrisisStatusId));
+		this.bedId = bedId;
+		this.bedNumber = bedNumber;
+		this.roomId = roomId;
+		this.roomNumber = roomNumber;
+		this.sectorSpecialty = sectorSpecialty;
+		this.sectorDescription = sectorDescription;
+		this.clinicalSpecialtyId = clinicalSpecialtyId;
+		this.specialty = specialty;
+		this.entryDate = entryDate;
+		if (healthcareProfessionalId != null)
+			this.doctor = new ResponsibleDoctorVo(healthcareProfessionalId, firstName, lastName, licenseNumber);
+		if (responsibleContact != null)
+			this.responsibleContact = new ResponsibleContactVo(responsibleContact);
+		this.probableDischargeDate = probableDischargeDate;
+	}
 
 }

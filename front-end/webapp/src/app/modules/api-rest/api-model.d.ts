@@ -162,7 +162,7 @@ export interface ClinicalObservationDto extends Serializable {
     value: string;
 }
 
-export interface ClinicalSpecialtyDto {
+export interface ClinicalSpecialtyDto extends Serializable {
     id: number;
     name: string;
 }
@@ -714,6 +714,7 @@ export interface RoomDto extends Serializable {
 export interface SectorDto extends Serializable {
     description: string;
     id: number;
+    specialty: ClinicalSpecialtyDto;
 }
 
 export interface Serializable {

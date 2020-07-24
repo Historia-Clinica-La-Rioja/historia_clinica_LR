@@ -23,7 +23,9 @@ export class MapperService {
 		const internmentEpisodeSummary = {
 			bedNumber: internmentSummary.bed.bedNumber,
 			roomNumber: internmentSummary.bed.room.roomNumber,
-			specialtyName: internmentSummary.specialty.name,
+			sectorDescription: internmentSummary.bed.room.sector.description,
+			sectorSpecialtyName: internmentSummary.bed.room.sector.specialty.name,
+			episodeSpecialtyName: internmentSummary.specialty.name,
 			totalInternmentDays: internmentSummary.totalInternmentDays,
 			doctor: null,
 			admissionDatetime: momentParseDate(String(internmentSummary.entryDate)).format(DateFormat.VIEW_DATE),

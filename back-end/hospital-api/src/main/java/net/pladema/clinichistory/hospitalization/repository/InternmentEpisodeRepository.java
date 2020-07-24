@@ -1,12 +1,10 @@
 package net.pladema.clinichistory.hospitalization.repository;
 
-import net.pladema.clinichistory.hospitalization.repository.domain.processepisode.InternmentEpisodeProcessVo;
-import net.pladema.clinichistory.hospitalization.repository.domain.summary.InternmentSummaryVo;
-import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentStatus;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.InternmentEpisodeStatus;
-import net.pladema.clinichistory.hospitalization.service.domain.BasicListedPatientBo;
-import net.pladema.clinichistory.hospitalization.service.domain.InternmentEpisodeBo;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,10 +12,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
+import net.pladema.clinichistory.hospitalization.repository.domain.processepisode.InternmentEpisodeProcessVo;
+import net.pladema.clinichistory.hospitalization.repository.domain.summary.InternmentSummaryVo;
+import net.pladema.clinichistory.hospitalization.service.domain.BasicListedPatientBo;
+import net.pladema.clinichistory.hospitalization.service.domain.InternmentEpisodeBo;
+import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentStatus;
+import net.pladema.clinichistory.ips.repository.masterdata.entity.InternmentEpisodeStatus;
 
 @Repository
 public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpisode, Integer> {
@@ -29,20 +30,23 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             "ie.anamnesisDocId, da.statusId as anamnesisStatusId, " +
             "ie.epicrisisDocId, de.statusId as epicrisisStatusId, " +
             "b.id as bedId, b.bedNumber, " +
-            "r.id as roomId, r.roomNumber, " +
+            "r.id as roomId, r.roomNumber, sector.description, cssector.name, " +
             "cs.id as clinicalSpecialtyId, cs.name as specialty, " +
             "hpg.pk.healthcareProfessionalId, hp.licenseNumber, p.firstName, p.lastName," +
             "rc, ie.probableDischargeDate)" +
             "FROM InternmentEpisode ie " +
             "JOIN Bed b ON (b.id = ie.bedId) " +
             "JOIN Room r ON (r.id = b.roomId) " +
+            "JOIN ClinicalSpecialtySector css ON (css.id = r.clinicalSpecialtySectorId) " +
+            "JOIN Sector sector ON (sector.id = css.sectorId) " +
+            "JOIN ClinicalSpecialty cssector ON (cssector.id = css.clinicalSpecialtyId) " +
             "LEFT JOIN ClinicalSpecialty cs ON (cs.id = ie.clinicalSpecialtyId) " +
             "LEFT JOIN Document da ON (da.id = ie.anamnesisDocId) " +
             "LEFT JOIN Document de ON (de.id = ie.epicrisisDocId) " +
             "LEFT JOIN HealthcareProfessionalGroup hpg ON (hpg.pk.internmentEpisodeId = ie.id and hpg.responsible = true) " +
             "LEFT JOIN HealthcareProfessional hp ON (hpg.pk.healthcareProfessionalId = hp.id) " +
             "LEFT JOIN Person p ON (hp.personId = p.id) " +
-            "LEFT JOIN ResponsibleContact rc ON (ie.id = rc.internmentEpisodeId)" +
+            "LEFT JOIN ResponsibleContact rc ON (ie.id = rc.internmentEpisodeId) " +
             "WHERE ie.id = :internmentEpisodeId")
     Optional<InternmentSummaryVo> getSummary(@Param("internmentEpisodeId") Integer internmentEpisodeId);
 

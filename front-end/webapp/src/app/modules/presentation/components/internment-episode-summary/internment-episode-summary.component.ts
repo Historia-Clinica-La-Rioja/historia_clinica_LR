@@ -20,7 +20,9 @@ export class InternmentEpisodeSummaryComponent implements OnInit {
 export interface InternmentEpisodeSummary {
 	roomNumber: string;
 	bedNumber: string;
-	specialtyName: string;
+	sectorDescription: string;
+	sectorSpecialtyName: string;
+	episodeSpecialtyName: string;
 	doctor: {
 		firstName: string;
 		lastName: string;

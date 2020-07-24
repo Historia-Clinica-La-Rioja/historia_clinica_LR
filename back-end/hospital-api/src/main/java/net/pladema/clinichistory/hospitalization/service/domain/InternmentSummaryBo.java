@@ -1,17 +1,16 @@
 package net.pladema.clinichistory.hospitalization.service.domain;
 
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.hospitalization.repository.domain.summary.InternmentSummaryVo;
 import net.pladema.clinichistory.hospitalization.service.summary.domain.ResponsibleDoctorBo;
-import org.apache.tomcat.jni.Local;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Period;
 
 @Getter
 @Setter
@@ -32,6 +31,10 @@ public class InternmentSummaryBo {
     private Integer roomId;
 
     private String roomNumber;
+    
+    private String sectorDescription;
+    
+    private String sectorSpecialty;
 
     private Integer clinicalSpecialtyId;
 
@@ -52,6 +55,8 @@ public class InternmentSummaryBo {
         this.bedNumber = internmentSummaryVo.getBedNumber();
         this.roomId = internmentSummaryVo.getRoomId();
         this.roomNumber = internmentSummaryVo.getRoomNumber();
+        this.sectorDescription = internmentSummaryVo.getSectorDescription();
+        this.sectorSpecialty = internmentSummaryVo.getSectorSpecialty();
         this.clinicalSpecialtyId = internmentSummaryVo.getClinicalSpecialtyId();
         this.specialty = internmentSummaryVo.getSpecialty();
         this.entryDate = internmentSummaryVo.getEntryDate();
