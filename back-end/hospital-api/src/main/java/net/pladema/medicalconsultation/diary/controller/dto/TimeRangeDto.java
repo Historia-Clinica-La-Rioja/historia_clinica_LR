@@ -1,17 +1,23 @@
 package net.pladema.medicalconsultation.diary.controller.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
 
-import java.time.LocalTime;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
 @ToString
 public class TimeRangeDto {
 
-    private LocalTime from;
+    @NotNull
+    @JsonFormat(pattern = JacksonDateFormatConfig.TIME_FORMAT)
+    private String from;
 
-    private LocalTime to;
+    @NotNull
+    @JsonFormat(pattern = JacksonDateFormatConfig.TIME_FORMAT)
+    private String to;
 }

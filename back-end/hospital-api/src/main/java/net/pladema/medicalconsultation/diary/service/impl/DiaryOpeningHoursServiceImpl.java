@@ -1,14 +1,21 @@
 package net.pladema.medicalconsultation.diary.service.impl;
 
 import net.pladema.medicalconsultation.diary.repository.DiaryOpeningHoursRepository;
+import net.pladema.medicalconsultation.diary.repository.OpeningHoursRepository;
 import net.pladema.medicalconsultation.diary.repository.domain.OccupationVo;
+import net.pladema.medicalconsultation.diary.repository.entity.DiaryOpeningHours;
+import net.pladema.medicalconsultation.diary.repository.entity.DiaryOpeningHoursPK;
 import net.pladema.medicalconsultation.diary.repository.entity.OpeningHours;
+import net.pladema.medicalconsultation.diary.service.DiaryBoMapper;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.OccupationBo;
+import net.pladema.medicalconsultation.diary.service.domain.OpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.TimeRangeBo;
 import net.pladema.sgx.dates.repository.entity.EDayOfWeek;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotEmpty;
@@ -18,6 +25,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
@@ -29,9 +37,50 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
 
     private final DiaryOpeningHoursRepository diaryOpeningHoursRepository;
 
-    public DiaryOpeningHoursServiceImpl(DiaryOpeningHoursRepository diaryOpeningHoursRepository) {
+    private final OpeningHoursRepository openingHoursRepository;
+
+    private final DiaryBoMapper diaryBoMapper;
+
+    public DiaryOpeningHoursServiceImpl(DiaryOpeningHoursRepository diaryOpeningHoursRepository,
+                                        OpeningHoursRepository openingHoursRepository,
+                                        DiaryBoMapper diaryBoMapper) {
         super();
         this.diaryOpeningHoursRepository = diaryOpeningHoursRepository;
+        this.openingHoursRepository = openingHoursRepository;
+        this.diaryBoMapper = diaryBoMapper;
+    }
+
+    @Override
+    public void load(Integer diaryId, List<DiaryOpeningHoursBo> diaryOpeningHours) {
+        Sort sort = Sort.by("dayWeekId", "from");
+        List<OpeningHours> savedOpeningHours = openingHoursRepository.findAll(sort);
+
+        diaryOpeningHours.forEach(doh -> {
+            OpeningHoursBo openingHoursBo = doh.getOpeningHours();
+            OpeningHours newOpeningHours = diaryBoMapper.toOpeningHours(openingHoursBo);
+            Integer openingHoursId;
+
+            //Si los horarios de atención definidos para la agenda ya existen en la BBDD
+            // los registros son reutilizados. En caso contrario, son persistidos.
+            Optional<OpeningHours> existingOpeningHours = savedOpeningHours.stream()
+                    .filter(oh -> oh.equals(newOpeningHours)).findAny();
+            if(existingOpeningHours.isPresent())
+                openingHoursId = existingOpeningHours.get().getId();
+            else
+                openingHoursId = openingHoursRepository.save(newOpeningHours).getId();
+
+            openingHoursBo.setId(openingHoursId);
+            diaryOpeningHoursRepository.save(createDiaryOpeningHoursInstance(diaryId, openingHoursId, doh));
+
+        });
+    }
+
+    private DiaryOpeningHours createDiaryOpeningHoursInstance(Integer diaryId, Integer openingHoursId, DiaryOpeningHoursBo doh){
+        DiaryOpeningHours diaryOpeningHours = new DiaryOpeningHours();
+        diaryOpeningHours.setPk(new DiaryOpeningHoursPK(diaryId, openingHoursId));
+        diaryOpeningHours.setMedicalAttentionTypeId(doh.getMedicalAttentionTypeId());
+        diaryOpeningHours.setOverturnCount(doh.getOverturnCount());
+        return diaryOpeningHours;
     }
 
     @Override
@@ -102,7 +151,6 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
         }
         else
             validDaysWeek.addAll(EDayOfWeek.getAllIds());
-
         return validDaysWeek;
     }
 

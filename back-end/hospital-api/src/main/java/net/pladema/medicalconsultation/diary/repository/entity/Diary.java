@@ -44,18 +44,18 @@ public class Diary extends InternationAuditableEntity {
     private Short appointmentDuration;
 
     @Column(name = "automatic_renewal", columnDefinition = "boolean default false", nullable = false)
-    private Boolean automaticRenewal;
+    private Boolean automaticRenewal = false;
 
     @Column(name = "days_before_renew", columnDefinition = "smallint default 0", nullable = false)
-    private Short daysBeforeRenew;
+    private Short daysBeforeRenew = 0;
 
     @Column(name = "professional_asign_shift", columnDefinition = "boolean default false", nullable = false)
-    private Boolean professionalAsignShift;
+    private Boolean professionalAsignShift = false;
 
     @Column(name = "include_holiday", columnDefinition = "boolean default false", nullable = false)
-    private Boolean includeHoliday;
+    private Boolean includeHoliday = false;
 
     @Column(name = "active", columnDefinition = "boolean default true", nullable = false)
-    private Boolean active;
+    private Boolean active = true;
 
 }

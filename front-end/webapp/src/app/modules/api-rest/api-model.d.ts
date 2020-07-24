@@ -205,6 +205,28 @@ export interface DiagnosisDto extends HealthConditionDto {
     presumptive?: boolean;
 }
 
+export interface DiaryADto {
+    appointmentDuration: number;
+    automaticRenewal?: boolean;
+    diaryOpeningHours: DiaryOpeningHoursDto[];
+    doctorsOfficeId: number;
+    endDate: string;
+    healthcareProfessionalId: number;
+    includeHoliday?: boolean;
+    professionalAsignShift?: boolean;
+    startDate: string;
+}
+
+export interface DiaryDto extends DiaryADto {
+    id: number;
+}
+
+export interface DiaryOpeningHoursDto extends Overlapping<DiaryOpeningHoursDto> {
+    medicalAttentionTypeId: number;
+    openingHours: OpeningHoursDto;
+    overturnCount?: number;
+}
+
 export interface DoctorsOfficeDto {
     closingTime: string;
     description: string;
@@ -528,6 +550,11 @@ export interface OccupationDto {
     timeRanges: TimeRangeDto[];
 }
 
+export interface OpeningHoursDto extends TimeRangeDto {
+    dayWeekId: number;
+    id: number;
+}
+
 export interface OutpatientAllergyConditionDto {
     categoryId: string;
     severity: string;
@@ -589,6 +616,9 @@ export interface OutpatientVitalSignDto extends Serializable {
     respiratoryRate?: EffectiveClinicalObservationDto;
     systolicBloodPressure?: EffectiveClinicalObservationDto;
     temperature?: EffectiveClinicalObservationDto;
+}
+
+export interface Overlapping<T> {
 }
 
 export interface PasswordResetDto {
@@ -728,8 +758,8 @@ export interface SnomedDto extends Serializable {
 }
 
 export interface TimeRangeDto {
-    from: Date;
-    to: Date;
+    from: string;
+    to: string;
 }
 
 export interface UserDto extends AbstractUserDto {

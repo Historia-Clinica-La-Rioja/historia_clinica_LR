@@ -2,6 +2,7 @@ package net.pladema.medicalconsultation.diary.service.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.medicalconsultation.diary.repository.entity.OpeningHours;
@@ -11,6 +12,7 @@ import java.time.LocalTime;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 @AllArgsConstructor
 public class TimeRangeBo {
 
