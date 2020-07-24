@@ -1,13 +1,16 @@
-import { HealthConditionDto, SnomedDto } from '@api-rest/api-model';
+import { SnomedDto } from '@api-rest/api-model';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { SnomedSemanticSearch, SnomedService } from '../../../services/snomed.service';
 import { SEMANTICS_CONFIG } from '../../../constants/snomed-semantics';
 
+export interface MotivoConsulta {
+	snomed: SnomedDto;
+}
+
 export class MotivoNuevaConsultaService {
 
-	private motivoConsulta: HealthConditionDto;
+	private motivoConsulta: MotivoConsulta;
 	private form: FormGroup;
-	private motivoConsultaError: string = '';
 
 	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 
@@ -26,17 +29,12 @@ export class MotivoNuevaConsultaService {
 	}
 
 	setConcept(selectedConcept: SnomedDto): void {
-		let nuevoMotivoConsulta: HealthConditionDto;
 		if (selectedConcept) {
 			this.form.controls.snomed.setValue(selectedConcept.pt);
-			nuevoMotivoConsulta = {
-				id: null,
-				verificationId: null,
-				statusId: null,
+			this.motivoConsulta = {
 				snomed: selectedConcept
 			};
 		}
-		this.onChangeMotivoConsulta(nuevoMotivoConsulta);
 	}
 
 	openSearchDialog(searchValue: string): void {
@@ -50,18 +48,11 @@ export class MotivoNuevaConsultaService {
 		}
 	}
 
-	onChangeMotivoConsulta(motivoConsulta: HealthConditionDto) {
-		this.motivoConsulta = motivoConsulta;
-		if (motivoConsulta) {
-			delete this.motivoConsultaError;
-		}
-	}
-
 	getForm(): FormGroup {
 		return this.form;
 	}
 
-	getMotivoConsulta(): HealthConditionDto {
+	getMotivoConsulta(): MotivoConsulta {
 		return this.motivoConsulta;
 	}
 }

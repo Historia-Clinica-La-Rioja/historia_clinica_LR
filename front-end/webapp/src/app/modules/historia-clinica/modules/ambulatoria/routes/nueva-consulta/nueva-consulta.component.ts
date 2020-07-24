@@ -1,14 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { SnomedService } from 'src/app/modules/historia-clinica/services/snomed.service';
-import { ProblemasNuevaConsultaService } from '../../services/problemas-nueva-consulta.service';
+import { Problema, ProblemasNuevaConsultaService } from '../../services/problemas-nueva-consulta.service';
 import { MotivoNuevaConsultaService } from '../../services/motivo-nueva-consulta.service';
-import { MedicacionesNuevaConsultaService } from '../../services/medicaciones-nueva-consulta.service';
+import { Medicacion, MedicacionesNuevaConsultaService } from '../../services/medicaciones-nueva-consulta.service';
 import { ProcedimientosNuevaConsultaService } from '../../services/procedimientos-nueva-consulta.service';
 import { DatosAntropometricosNuevaConsultaService } from '../../services/datos-antropometricos-nueva-consulta.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { SignosVitalesNuevaConsultaService } from '../../services/signos-vitales-nueva-consulta.service';
 import { AntecedentesFamiliaresNuevaConsultaService } from '../../services/antecedentes-familiares-nueva-consulta.service';
+import { CreateOutpatientDto } from '@api-rest/api-model';
+import { DateFormat, momentFormat } from '@core/utils/moment.utils';
+import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
 	selector: 'app-nueva-consulta',
@@ -16,6 +20,8 @@ import { AntecedentesFamiliaresNuevaConsultaService } from '../../services/antec
 	styleUrls: ['./nueva-consulta.component.scss']
 })
 export class NuevaConsultaComponent implements OnInit {
+
+	formEvolucion: FormGroup;
 
 	motivoNuevaConsultaService: MotivoNuevaConsultaService;
 	medicacionesNuevaConsultaService: MedicacionesNuevaConsultaService;
@@ -28,21 +34,69 @@ export class NuevaConsultaComponent implements OnInit {
 	constructor(
 		private readonly formBuilder: FormBuilder,
 		private readonly snomedService: SnomedService,
-		private readonly internacionMasterDataService: InternacionMasterDataService
+		private readonly internacionMasterDataService: InternacionMasterDataService,
+		private readonly outpatientConsultationService: OutpatientConsultationService,
+		private readonly route: ActivatedRoute
 	) {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, snomedService);
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, snomedService);
 		this.problemasNuevaConsultaService = new ProblemasNuevaConsultaService(formBuilder, snomedService);
 		this.procedimientoNuevaConsultaService = new ProcedimientosNuevaConsultaService(formBuilder, snomedService);
-		this.datosAntropometricosNuevaConsultaService = new DatosAntropometricosNuevaConsultaService(formBuilder, internacionMasterDataService);
+		this.datosAntropometricosNuevaConsultaService =
+			new DatosAntropometricosNuevaConsultaService(formBuilder, internacionMasterDataService);
 		this.signosVitalesNuevaConsultaService = new SignosVitalesNuevaConsultaService(formBuilder);
 		this.antecedentesFamiliaresNuevaConsultaService = new AntecedentesFamiliaresNuevaConsultaService(formBuilder, snomedService);
 	}
 
 	ngOnInit(): void {
+		this.formEvolucion = this.formBuilder.group({
+			evolucion: [null]
+		});
 	}
 
 	save() {
+		this.route.paramMap.subscribe((params) => {
+			const idPaciente = Number(params.get('idPaciente'));
+
+			const nuevaConsulta: CreateOutpatientDto = this.buildCreateOutpatientDto();
+			console.log('resultado', nuevaConsulta);
+
+			this.outpatientConsultationService.createOutpatientConsultation(nuevaConsulta, idPaciente).subscribe(
+				response => console.log('success', response),
+				_ => console.log('error')
+			);
+		});
+
+
 	}
 
+	private buildCreateOutpatientDto(): CreateOutpatientDto {
+		return {
+			allergies: [],
+			anthropometricData: this.datosAntropometricosNuevaConsultaService.getDatosAntropometricos(),
+			evolutionNote: this.formEvolucion.value?.evolucion,
+			familyHistories: [],
+			medications: this.medicacionesNuevaConsultaService.getMedicaciones().map((medicacion: Medicacion) => {
+					return {
+						note: medicacion.observaciones,
+						snomed: medicacion.snomed,
+						suspended: medicacion.suspendido,
+					};
+				}
+			),
+			problems: this.problemasNuevaConsultaService.getProblemas().map(
+				(problema: Problema) => {
+					return {
+						chronic: problema.cronico,
+						endDate: problema.fechaFin ? momentFormat(problema.fechaFin, DateFormat.API_DATE) : undefined,
+						snomed: problema.snomed,
+						startDate: momentFormat(problema.fechaInicio, DateFormat.API_DATE)
+					};
+				}
+			),
+			procedures: this.procedimientoNuevaConsultaService.getProcedimientos(),
+			reasons: [this.motivoNuevaConsultaService.getMotivoConsulta()],
+			vitalSigns: this.signosVitalesNuevaConsultaService.getSignosVitales()
+		};
+	}
 }

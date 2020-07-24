@@ -1,6 +1,13 @@
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
-import { FormGroup, FormBuilder } from '@angular/forms';
-import { MasterDataInterface } from '@api-rest/api-model';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { ClinicalObservationDto, MasterDataInterface } from '@api-rest/api-model';
+
+export interface DatosAntropometricos {
+	bloodType?: ClinicalObservationDto;
+	bmi?: ClinicalObservationDto;
+	height?: ClinicalObservationDto;
+	weight?: ClinicalObservationDto;
+}
 
 export class DatosAntropometricosNuevaConsultaService {
 
@@ -12,11 +19,9 @@ export class DatosAntropometricosNuevaConsultaService {
 		private readonly internacionMasterDataService: InternacionMasterDataService
 	) {
 		this.form = this.formBuilder.group({
-
 			bloodType: [null],
 			height: [null],
 			weight: [null]
-
 		});
 		this.internacionMasterDataService.getBloodTypes().subscribe(bloodTypes => this.bloodTypes = bloodTypes);
 	}
@@ -29,4 +34,14 @@ export class DatosAntropometricosNuevaConsultaService {
 		return this.bloodTypes;
 	}
 
+	getDatosAntropometricos(): DatosAntropometricos {
+		return {
+			bloodType: this.form.value.bloodType ? {
+				id: this.form.value.bloodType.id,
+				value: this.form.value.bloodType.description
+			} : undefined,
+			height: this.form.value.height ? { value: this.form.value.height } : undefined,
+			weight: this.form.value.weight ? { value: this.form.value.weight } : undefined
+		};
+	}
 }

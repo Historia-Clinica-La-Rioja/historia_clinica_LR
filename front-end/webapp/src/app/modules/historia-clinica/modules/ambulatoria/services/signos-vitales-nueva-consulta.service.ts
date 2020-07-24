@@ -1,6 +1,18 @@
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
+import { EffectiveClinicalObservationDto } from '@api-rest/api-model';
+
+export interface SignosVitales {
+	bloodOxygenSaturation?: EffectiveClinicalObservationDto;
+	diastolicBloodPressure?: EffectiveClinicalObservationDto;
+	heartRate?: EffectiveClinicalObservationDto;
+	respiratoryRate?: EffectiveClinicalObservationDto;
+	systolicBloodPressure?: EffectiveClinicalObservationDto;
+	temperature?: EffectiveClinicalObservationDto;
+}
+
+
 
 export class SignosVitalesNuevaConsultaService {
 
@@ -43,6 +55,21 @@ export class SignosVitalesNuevaConsultaService {
 
 	getForm(): FormGroup {
 		return this.form;
+	}
+
+	getSignosVitales(): SignosVitales {
+		return {
+			bloodOxygenSaturation: this.getEffectiveClinicalObservationDto(this.form.value.bloodOxygenSaturation),
+			diastolicBloodPressure: this.getEffectiveClinicalObservationDto(this.form.value.diastolicBloodPressure),
+			heartRate: this.getEffectiveClinicalObservationDto(this.form.value.heartRate),
+			respiratoryRate: this.getEffectiveClinicalObservationDto(this.form.value.respiratoryRate),
+			systolicBloodPressure: this.getEffectiveClinicalObservationDto(this.form.value.systolicBloodPressure),
+			temperature: this.getEffectiveClinicalObservationDto(this.form.value.temperature)
+		};
+	}
+
+	private getEffectiveClinicalObservationDto(controlValue: any): EffectiveClinicalObservationDto {
+		return controlValue.value ? { value: controlValue.value, effectiveTime: controlValue.effectiveTime } : undefined;
 	}
 
 }

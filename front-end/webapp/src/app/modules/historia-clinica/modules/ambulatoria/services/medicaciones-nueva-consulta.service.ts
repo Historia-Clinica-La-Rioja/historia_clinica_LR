@@ -1,9 +1,15 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MedicationDto, SnomedDto } from '@api-rest/api-model';
+import { SnomedDto } from '@api-rest/api-model';
 import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
 import { SnomedSemanticSearch, SnomedService } from '../../../services/snomed.service';
 import { SEMANTICS_CONFIG } from '../../../constants/snomed-semantics';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
+
+export interface Medicacion {
+	snomed: SnomedDto;
+	observaciones?: string;
+	suspendido?: boolean;
+}
 
 export class MedicacionesNuevaConsultaService {
 
@@ -12,7 +18,7 @@ export class MedicacionesNuevaConsultaService {
 	private form: FormGroup;
 	private snomedConcept: SnomedDto;
 	private readonly columns: ColumnConfig[];
-	private data: any[];
+	private data: Medicacion[];
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -28,7 +34,7 @@ export class MedicacionesNuevaConsultaService {
 			{
 				def: 'medicacion',
 				header: 'ambulatoria.paciente.nueva-consulta.medicaciones.NOMBRE_MEDICACION',
-				text: v => v.snomed
+				text: v => v.snomed.pt
 			},
 			{
 				def: 'observaciones',
@@ -51,19 +57,24 @@ export class MedicacionesNuevaConsultaService {
 		this.form.reset();
 	}
 
-	add(medicacion: MedicationDto): void {
-		this.data = pushTo<MedicationDto>(this.data, medicacion);
+	add(medicacion: Medicacion): void {
+		this.data = pushTo<Medicacion>(this.data, medicacion);
 	}
 
 	addToList() {
 		if (this.form.valid && this.snomedConcept) {
-			this.add(this.form.value);
+			const nuevaMedicacion: Medicacion = {
+				snomed: this.snomedConcept,
+				observaciones: this.form.value.observaciones,
+				suspendido: this.form.value.suspendido
+			};
+			this.add(nuevaMedicacion);
 			this.resetForm();
 		}
 	}
 
 	remove(index: number): void {
-		this.data = removeFrom<MedicationDto>(this.data, index);
+		this.data = removeFrom<Medicacion>(this.data, index);
 	}
 
 	openSearchDialog(searchValue: string): void {
@@ -89,7 +100,7 @@ export class MedicacionesNuevaConsultaService {
 		return this.columns;
 	}
 
-	getData(): any[] {
+	getMedicaciones(): Medicacion[] {
 		return this.data;
 	}
 }

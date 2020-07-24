@@ -7,6 +7,11 @@ import { pushTo } from '@core/utils/array.utils';
 import { DateFormat, momentFormat, newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 
+export interface Procedimiento {
+	snomed: SnomedDto;
+	fecha?: Moment;
+}
+
 export class ProcedimientosNuevaConsultaService {
 
 	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
@@ -30,7 +35,7 @@ export class ProcedimientosNuevaConsultaService {
 			{
 				def: 'procedimiento',
 				header: 'ambulatoria.paciente.nueva-consulta.procedimientos.PROCEDIMIENTO',
-				text: (row) => row.snomed
+				text: (row) => row.snomed.pt
 			},
 			{
 				def: 'fecha',
@@ -49,13 +54,17 @@ export class ProcedimientosNuevaConsultaService {
 		this.form.controls.snomed.setValue(pt);
 	}
 
-	add(procedimiento: any): void {
-		this.data = pushTo<any>(this.data, procedimiento);
+	add(procedimiento: Procedimiento): void {
+		this.data = pushTo<Procedimiento>(this.data, procedimiento);
 	}
 
 	addToList() {
 		if (this.form.valid && this.snomedConcept) {
-			this.add(this.form.value);
+			const nuevoProcedimiento: Procedimiento = {
+				snomed: this.snomedConcept,
+				fecha: this.form.value.fecha
+			};
+			this.add(nuevoProcedimiento);
 			this.resetForm();
 		}
 	}
@@ -84,7 +93,7 @@ export class ProcedimientosNuevaConsultaService {
 		return this.columns;
 	}
 
-	getData(): any[] {
+	getProcedimientos(): Procedimiento[] {
 		return this.data;
 	}
 

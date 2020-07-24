@@ -7,6 +7,13 @@ import { pushTo } from '@core/utils/array.utils';
 import { DateFormat, momentFormat, newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 
+export interface Problema {
+	snomed: SnomedDto;
+	cronico?: boolean;
+	fechaInicio: Moment;
+	fechaFin?: Moment;
+}
+
 export class ProblemasNuevaConsultaService {
 
 	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
@@ -14,7 +21,7 @@ export class ProblemasNuevaConsultaService {
 	private form: FormGroup;
 	private snomedConcept: SnomedDto;
 	private readonly columns: ColumnConfig[];
-	private data: any[];
+	private data: Problema[];
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -31,7 +38,7 @@ export class ProblemasNuevaConsultaService {
 			{
 				def: 'diagnosticos',
 				header: 'ambulatoria.paciente.nueva-consulta.problemas.PROBLEMA',
-				text: (row) => row.snomed
+				text: (row) => row.snomed.pt
 			},
 			{
 				def: 'cronico',
@@ -60,13 +67,19 @@ export class ProblemasNuevaConsultaService {
 		this.form.controls.snomed.setValue(pt);
 	}
 
-	add(problema: any): void {
-		this.data = pushTo<any>(this.data, problema);
+	add(problema: Problema): void {
+		this.data = pushTo<Problema>(this.data, problema);
 	}
 
 	addToList() {
 		if (this.form.valid && this.snomedConcept) {
-			this.add(this.form.value);
+			const nuevoProblema: Problema = {
+				snomed: this.snomedConcept,
+				cronico: this.form.value.cronico,
+				fechaInicio: this.form.value.fechaInicio,
+				fechaFin: this.form.value.fechaFin
+			};
+			this.add(nuevoProblema);
 			this.resetForm();
 		}
 	}
@@ -107,7 +120,7 @@ export class ProblemasNuevaConsultaService {
 		return this.columns;
 	}
 
-	getData(): any[] {
+	getProblemas(): Problema[] {
 		return this.data;
 	}
 }

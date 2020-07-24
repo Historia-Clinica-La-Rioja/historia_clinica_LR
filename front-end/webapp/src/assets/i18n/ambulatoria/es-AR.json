@@ -14,6 +14,10 @@
 			"nueva-consulta": {
 				"TITLE": "Nueva consulta",
 				"SUBTITLE": "Completa los siguientes datos.",
+				"evolucion": {
+					"TITLE": "Evolucion",
+					"DESCRIPCION": "Descripcion"
+				},
 				"motivo": {
 					"TITLE": "Motivo de consulta",
 					"MOTIVO": "motivo"
