@@ -32,7 +32,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
@@ -154,12 +153,7 @@ public class PdfService {
         String algorithm = "SHA-256";
         try {
             MessageDigest md = MessageDigest.getInstance(algorithm);
-            try (InputStream is = Files.newInputStream(Paths.get(path));
-                 DigestInputStream dis = new DigestInputStream(is, md))
-            {
-                /* Read decorated stream (dis) to EOF as normal... */
-            }
-            byte[] sha256Hash = md.digest();
+            byte[] sha256Hash = md.digest(Files.readAllBytes(Paths.get(path)));
             result = Base64.getEncoder().encodeToString(sha256Hash);
         } catch (NoSuchAlgorithmException e) {
             LOG.error("Algorithm doesn't exist -> {} ",algorithm);
