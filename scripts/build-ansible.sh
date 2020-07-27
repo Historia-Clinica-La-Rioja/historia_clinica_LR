@@ -3,8 +3,8 @@ set -o errexit
 PROJECTDIR=$(dirname "$0")"/.."
 cd $PROJECTDIR
 
-# supone que ya se corrio build-pack creando un war
-# rm ci/docker/nginx-jar/*.jar || true
+./scripts/build-pack.sh
+mvn -f back-end/pom.xml -Pwar package -DskipTests
 
 mkdir -p sgh-ansible/dist
 ls back-end/hospital-api/target/*.war 
