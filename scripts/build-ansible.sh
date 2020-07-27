@@ -18,4 +18,6 @@ cp -r front-end/webapp/dist/sgh sgh-ansible/dist/webapp
 rm -r sgh-ansible/front-end/backoffice 2> /dev/null || true
 cp -r front-end/backoffice/build/ sgh-ansible/dist/backoffice
 
-tar -czf sgh-ansible/dist/front-end.tar.gz sgh-ansible/dist/webapp sgh-ansible/dist/backoffice
+cd sgh-ansible/dist
+tar -czf front-end.tar.gz webapp backoffice
+cd -
