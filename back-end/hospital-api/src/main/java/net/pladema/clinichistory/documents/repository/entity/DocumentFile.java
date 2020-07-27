@@ -50,7 +50,7 @@ public class DocumentFile extends InternationAuditableEntity {
 	private String checksum;
 
 	public DocumentFile(Long documentId, Integer sourceId, Short sourceTypeId, Short documentType,
-						String filepath, String filename, String uuidFile){
+						String filepath, String filename, String uuidFile, String checksum){
 		this.id = documentId;
 		this.sourceId = sourceId;
 		this.sourceTypeId = sourceTypeId;
@@ -58,6 +58,7 @@ public class DocumentFile extends InternationAuditableEntity {
 		this.filepath = filepath;
 		this.filename = filename;
 		this.uuidfile = uuidFile;
+		this.checksum = checksum;
 	}
 
 	@Override

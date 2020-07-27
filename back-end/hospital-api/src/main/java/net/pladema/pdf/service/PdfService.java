@@ -3,17 +3,16 @@ package net.pladema.pdf.service;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.tool.xml.XMLWorkerHelper;
-
-import net.pladema.flavor.service.FlavorService;
-import net.pladema.clinichistory.hospitalization.controller.dto.ResponsibleDoctorDto;
-import net.pladema.clinichistory.hospitalization.controller.mapper.ResponsibleDoctorMapper;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.VitalSignsReportDto;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.VitalSignMapper;
 import net.pladema.clinichistory.documents.events.OnGenerateDocumentEvent;
 import net.pladema.clinichistory.documents.repository.DocumentFileRepository;
 import net.pladema.clinichistory.documents.repository.entity.DocumentFile;
 import net.pladema.clinichistory.documents.service.Document;
 import net.pladema.clinichistory.documents.service.ReportDocumentService;
+import net.pladema.clinichistory.hospitalization.controller.dto.ResponsibleDoctorDto;
+import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.VitalSignsReportDto;
+import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.VitalSignMapper;
+import net.pladema.clinichistory.hospitalization.controller.mapper.ResponsibleDoctorMapper;
+import net.pladema.flavor.service.FlavorService;
 import net.pladema.patient.controller.service.PatientExternalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +26,16 @@ import org.springframework.stereotype.Component;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.Locale;
 
 @Component
@@ -126,16 +134,43 @@ public class PdfService {
 
             try {
                 boolean loaded = streamFile.loadFileInDirectory(path, writer);
+                String checksum = getHash(path);
+
                 if (loaded)
                     documentFileRepository.save(new DocumentFile(
                             event.getDocument().getId(),
                             event.getSourceId(),
                             event.getSourceType(),
-                            event.getDocumentTypeId(), path, fictitiousFileName, realFileName));
+                            event.getDocumentTypeId(), path, fictitiousFileName, realFileName, checksum));
             } catch (IOException ex) {
                 throw new IOException(ex);
             }
         }
+    }
+
+    private String getHash(String path) {
+        LOG.debug("Input parameters -> path {}", path);
+        String result;
+        String algorithm = "SHA-256";
+        try {
+            MessageDigest md = MessageDigest.getInstance(algorithm);
+            try (InputStream is = Files.newInputStream(Paths.get(path));
+                 DigestInputStream dis = new DigestInputStream(is, md))
+            {
+                /* Read decorated stream (dis) to EOF as normal... */
+            }
+            byte[] sha256Hash = md.digest();
+            result = Base64.getEncoder().encodeToString(sha256Hash);
+        } catch (NoSuchAlgorithmException e) {
+            LOG.error("Algorithm doesn't exist -> {} ",algorithm);
+            result = null;
+        }
+        catch (IOException e) {
+            LOG.error("Error with path file {} ", path, e);
+            result = null;
+        }
+        LOG.debug(OUTPUT, result);
+        return result;
     }
 
     public <T extends Document> Context buildContext(T document, Integer patientId){
