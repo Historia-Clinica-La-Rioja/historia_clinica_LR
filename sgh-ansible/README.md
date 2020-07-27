@@ -59,13 +59,13 @@ ansible-playbook -i hosts-deploy.yml 5-deploy.yml
 
 ## Adminsitrar el proceso SGH
 
-El proceso SGH se instala como servicio con `systemd`, lo que permite utilizar los siguientes comandos para manejarlo.
+El servidor SGH se instala como servicio de Tomcat y el mismo puede ser controlado con `systemd`, lo que permite utilizar los siguientes comandos para manejarlo.
 
 ```shel
 # iniciar, parar y ver el estado del servicio
-systemctl start sgh
-systemctl stop sgh
-systemctl status sgh
+systemctl start tomcat
+systemctl stop tomcat
+systemctl status tomcat
 # ver logs y seguir viendolos (follow)
-sudo journalctl -u sgh.service -f
+sudo journalctl -u tomcat.service -f
 ```
