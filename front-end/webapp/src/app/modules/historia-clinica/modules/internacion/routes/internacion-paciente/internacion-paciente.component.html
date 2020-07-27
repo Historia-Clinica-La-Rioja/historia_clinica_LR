@@ -31,9 +31,8 @@
 						</ng-container>
 					</ng-container>
 
-					<ng-container
-						*hasRole="['ADMINISTRATIVO']">
-						<button id="btnPaseCama" name="btnPaseCama" mat-flat-button color="primary" fxFlexFill.xs (click)="goToPaseCama()">
+					<ng-container *featureFlag="'habilitarPaseCama'">
+						<button *hasRole="['ADMINISTRATIVO']" id="btnPaseCama" name="btnPaseCama" mat-flat-button color="primary" fxFlexFill.xs (click)="goToPaseCama()">
 							<span class="uppercase"
 								[translate]="'internaciones.internacion-paciente.actions.RELOCATE_PATIENT_BED'"></span>
 						</button>

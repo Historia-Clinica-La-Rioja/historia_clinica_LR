@@ -40,6 +40,10 @@ const FEATURE_FLAGS = [
 		name: 'habilitarToggleFiltroDiagnosticoPrincipal',
 		flavorMatch: [FLAVOR_HOSPITALES]
 	},
+	{
+		name: 'habilitarPaseCama',
+		flavorMatch: [FLAVOR_HOSPITALES]
+	},
 ];
 
 @Injectable({
