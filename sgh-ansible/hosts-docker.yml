@@ -2,7 +2,6 @@ all:
     hosts:
         postgres_master: 
             ansible_host: postgres
-            database_port: 5432
             ansible_connection: docker
             database_su_name: postgres
             database_su_password: Local123
@@ -26,6 +25,7 @@ all:
                 postgres_master: 
     vars:
         ansible_ssh_pipelining: yes
+        database_port: 5432
         sgh_database_user_name: sgh_test
         sgh_database_user_password: sgh_test
         sgh_database_name: sgh_test

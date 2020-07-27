@@ -1,8 +1,12 @@
 ---
+  - hosts: postgres_master
+
   - hosts: localhost
     tasks:
       - name : migrate
-        shell: ./migrate.sh
+        shell: "./migrate.sh -Dliquibase.url=jdbc:postgresql://{{
+          hostvars['postgres_master'].ansible_default_ipv4.address
+          }}:{{database_port}}/{{sgh_database_name}} -Dliquibase.username={{sgh_database_user_name}} -Dliquibase.password={{sgh_database_user_password}}"
   - hosts: frontservers
     roles:
       - role: sgh-front

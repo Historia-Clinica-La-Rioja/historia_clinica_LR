@@ -6,7 +6,3 @@
 # Configure PostgreSQL.
 - import_tasks: users.yml
 - import_tasks: databases.yml
-
-- name: Pendiente
-  debug:
-    msg: "TODO: HACER LA MIGRACION"

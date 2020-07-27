@@ -1,4 +1,4 @@
 #!/bin/sh
 cd ..
 cd dba
-mvn -Dliquibase.propertyFile=../sgh-ansible/liquibase.properties liquibase:update
+mvn -Dliquibase.propertyFile=../sgh-ansible/liquibase.properties "$@" liquibase:update
