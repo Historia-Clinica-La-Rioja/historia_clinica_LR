@@ -18,6 +18,7 @@ import { OutpatientConsultationService } from '@api-rest/services/outpatient-con
 import { ActivatedRoute, Router } from '@angular/router';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from '@core/services/context.service';
+import { Alergia, AlergiasNuevaConsultaService } from '../../services/alergias-nueva-consulta.service';
 
 @Component({
 	selector: 'app-nueva-consulta',
@@ -35,6 +36,7 @@ export class NuevaConsultaComponent implements OnInit {
 	datosAntropometricosNuevaConsultaService: DatosAntropometricosNuevaConsultaService;
 	signosVitalesNuevaConsultaService: SignosVitalesNuevaConsultaService;
 	antecedentesFamiliaresNuevaConsultaService: AntecedentesFamiliaresNuevaConsultaService;
+	alergiasNuevaConsultaService: AlergiasNuevaConsultaService;
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -54,6 +56,7 @@ export class NuevaConsultaComponent implements OnInit {
 			new DatosAntropometricosNuevaConsultaService(formBuilder, internacionMasterDataService);
 		this.signosVitalesNuevaConsultaService = new SignosVitalesNuevaConsultaService(formBuilder);
 		this.antecedentesFamiliaresNuevaConsultaService = new AntecedentesFamiliaresNuevaConsultaService(formBuilder, snomedService);
+		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, snomedService);
 	}
 
 	ngOnInit(): void {
@@ -88,7 +91,16 @@ export class NuevaConsultaComponent implements OnInit {
 
 	private buildCreateOutpatientDto(): CreateOutpatientDto {
 		return {
-			allergies: [],
+			allergies: this.alergiasNuevaConsultaService.getAlergias().map((alergia: Alergia) => {
+				return {
+					categoryId: null,
+					severity: null,
+					snomed: alergia.snomed,
+					startDate: null,
+					statusId: null,
+					verificationId: null
+				};
+			}),
 			anthropometricData: this.datosAntropometricosNuevaConsultaService.getDatosAntropometricos(),
 			evolutionNote: this.formEvolucion.value?.evolucion,
 			familyHistories: this.antecedentesFamiliaresNuevaConsultaService.getAntecedentesFamiliares().map((antecedente: AntecedenteFamiliar) => {

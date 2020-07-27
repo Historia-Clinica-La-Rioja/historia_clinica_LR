@@ -86,6 +86,21 @@
 					"BLOOD_TYPE": "Grupo y factor sanguíneo",
 					"HEIGHT": "Talla (cm)",
 					"WEIGHT": "Peso (kg)"
+				},
+				"alergias": {
+					"TITLE": "Alergias",
+					"ADD": "Agregar alergia",
+					"ALLERGY": "Alergia",
+					"form": {
+						"REGISTRY_DATE": "Fecha registro"
+					},
+					"table": {
+						"TITLE": "Alergias registradas",
+						"columns": {
+							"ALLERGY": "Alergia",
+							"REGISTRY_DATE": "Fecha registro"
+						}
+					}
 				}
 			},
 			"problemas": {

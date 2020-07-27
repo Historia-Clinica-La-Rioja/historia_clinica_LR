@@ -133,11 +133,11 @@
 			[data]="antecedentesFamiliaresNuevaConsultaService.getAntecedentesFamiliares()">
 			<ng-container concept-form>
 				<app-concepts-search
-					*ngIf="!antecedentesFamiliaresNuevaConsultaService.getSnomedConcept() else procedimientoForm"
+					*ngIf="!antecedentesFamiliaresNuevaConsultaService.getSnomedConcept() else antecedentesPersonalesForm"
 					[label]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.ANTECEDENTES_FAMILIARES'"
 					(search)="antecedentesFamiliaresNuevaConsultaService.openSearchDialog($event)">
 				</app-concepts-search>
-				<ng-template #procedimientoForm>
+				<ng-template #antecedentesPersonalesForm>
 					<form [formGroup]="antecedentesFamiliaresNuevaConsultaService.getForm()"
 						(ngSubmit)="antecedentesFamiliaresNuevaConsultaService.addToList()">
 
@@ -380,6 +380,42 @@
 						</div>
 					</div>
 				</form>
+			</ng-container>
+		</app-document-section>
+	</section>
+
+	<section id="alergias" class="doc-section">
+		<app-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.alergias.TITLE'"
+			[tableTitle]="'ambulatoria.paciente.nueva-consulta.alergias.table.TITLE'"
+			[columns]="alergiasNuevaConsultaService.getColumns()"
+			[data]="alergiasNuevaConsultaService.getAlergias()">
+			<ng-container concept-form>
+				<app-concepts-search
+					*ngIf="!alergiasNuevaConsultaService.getSnomedConcept() else alergiasForm"
+					[label]="'ambulatoria.paciente.nueva-consulta.alergias.ALLERGY'"
+					(search)="alergiasNuevaConsultaService.openSearchDialog($event)">
+				</app-concepts-search>
+				<ng-template #alergiasForm>
+					<form [formGroup]="alergiasNuevaConsultaService.getForm()"
+						(ngSubmit)="alergiasNuevaConsultaService.addToList()">
+						<mat-form-field appearance="outline">
+							<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.alergias.ALLERGY'">
+							</mat-label>
+							<input id="alergias-input" matInput type="text" formControlName="snomed" name="snomed"
+								readonly matTooltip="{{alergiasNuevaConsultaService.getSnomedConcept().pt }}">
+							<button id="clear-alergias" mat-button matSuffix color="warn" mat-icon-button
+								(click)="alergiasNuevaConsultaService.resetForm()">
+								<mat-icon>close</mat-icon>
+							</button>
+						</mat-form-field>
+						<div align="end">
+							<button id="submit_alergias" class="uppercase" mat-raised-button color="primary"
+								type="submit">
+								<span class="uppercase" [translate]="'ambulatoria.paciente.nueva-consulta.alergias.ADD'"></span>
+							</button>
+						</div>
+					</form>
+				</ng-template>
 			</ng-container>
 		</app-document-section>
 	</section>
