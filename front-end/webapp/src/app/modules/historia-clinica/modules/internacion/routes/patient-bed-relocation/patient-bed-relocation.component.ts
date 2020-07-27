@@ -188,7 +188,7 @@ export class PatientBedRelocationComponent implements OnInit {
 
 	mapToPatientBedRelocationRequest(): PatientBedRelocationDto {
 		return {
-			originBedId: this.form.controls['originBedId'].value,
+			originBedId: this.internmentEpisode.bed.id,
 			destinationBedId: this.form.controls['destinationBedId'].value,
 			internmentEpisodeId: this.internmentId,
 			originBedFree: true,
