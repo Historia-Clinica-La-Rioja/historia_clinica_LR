@@ -6,18 +6,18 @@ import { environment } from '@environments/environment';
 import { ContextService } from '@core/services/context.service';
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
 export class MedicalConsultationMasterdataService {
 
-  constructor(
-	private http: HttpClient,
-	private contextService: ContextService,
-  ) { }
+	constructor(
+		private http: HttpClient,
+		private contextService: ContextService,
+	) { }
 
-  getMedicalAttention(): Observable<MasterDataInterface<number>[]> {
-	let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/masterdata/medicalAttention`;
-	return this.http.get<[]>(url);
-  }
+	getMedicalAttention(): Observable<MasterDataInterface<number>[]> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/masterdata/medicalAttention`;
+		return this.http.get<MasterDataInterface<number>[]>(url);
+	}
 
 }

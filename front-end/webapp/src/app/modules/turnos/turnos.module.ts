@@ -7,7 +7,8 @@ import { CoreModule } from "@core/core.module";
 import { NewAgendaComponent } from './routes/new-agenda/new-agenda.component';
 import { NewAttentionComponent } from './dialogs/new-attention/new-attention.component';
 import { PresentationModule } from '@presentation/presentation.module';
-import { CalendarModule } from 'angular-calendar';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
 
 @NgModule({
@@ -19,7 +20,7 @@ import { CalendarModule } from 'angular-calendar';
 		CoreModule,
 		PresentationModule,
 		TurnosRoutingModule,
-		CalendarModule
+		CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
 	]
 })
 export class TurnosModule {

@@ -137,7 +137,7 @@ private removeTempEvent(event: CalendarEvent): void {
 private setNewEvent(event: CalendarEvent, dialogInfo) {
 	delete event.meta.tmpEvent;
 	event.meta = dialogInfo;
-	event.title = `<strong>Atencion ${dialogInfo.medicalAttentionType.description} </strong> <br>`, //traducir en archivo traduccion
+	event.title = `<strong>Atencion ${dialogInfo.medicalAttentionType.description} </strong> <br>`,
 	event.color = dialogInfo.medicalAttentionType.description === MEDICAL_ATTENTION.SPONTANEOUS ?  colors.blue : colors.green;
 	event.title += dialogInfo.overTurnCount > 0 ? '<span>Atiende sobreturnos</span>' :  '<span>No atiende sobreturnos</span>';
 }

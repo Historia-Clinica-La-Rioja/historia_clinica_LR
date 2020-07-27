@@ -3,12 +3,12 @@
 </div>
 
 
-<form [formGroup]="form" (ngSubmit)="submit()" class="text">
+<form [formGroup]="form" (ngSubmit)="submit()">
 	<div fxLayout="column">
 		<div>
 			<mat-form-field appearance="outline">
 				<mat-label [translate]="'turnos.new-agenda.MEDICAL_ATTENTION_TYPE'"></mat-label>
-				<mat-select formControlName="medicalAttentionType" name="medicalAttentionType" id="medicalAttentionType"
+				<mat-select formControlName="medicalAttentionType" name="medical_attention_type" id="medical_attention_type"
 					(selectionChange)="onSelectionChanged()">
 					<mat-option *ngFor="let medicalAttentionType of medicalAttentionTypes"
 						[value]="medicalAttentionType">
@@ -33,10 +33,11 @@
 
 
 	<mat-dialog-actions align="end">
-		<button mat-stroked-button color="primary" mat-dialog-close (click)="closeDialog()">
+		<button id="cancel_button" name="cancel_button" mat-stroked-button color="primary" mat-dialog-close
+			(click)="closeDialog()">
 			<span [translate]="'buttons.CANCEL'"></span>
 		</button>
-		<button mat-raised-button color="primary">
+		<button id="confirm_button" name="confirm_button" mat-raised-button color="primary">
 			<span [translate]="'buttons.CONFIRM'"></span>
 		</button>
 	</mat-dialog-actions>
