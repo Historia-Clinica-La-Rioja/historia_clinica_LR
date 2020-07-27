@@ -18,7 +18,7 @@
 - name: copy properties for SGH
   template: 
     src: templates/nginx.conf.j2
-    dest: "/etc/nginx/sites-enabled/"
+    dest: "/etc/nginx/sites-enabled/sgh-front.conf"
     owner:  www-data
     group: www-data
     mode: 0644
