@@ -55,7 +55,7 @@
 						</section>
 						<section>
 							<h2 [translate]="'internaciones.bed-relocation.SECTION_DATE'"></h2>
-							<div fxLayout="row" fxLayoutGap="20px" *ngIf="minDate">
+							<div fxLayout="column" fxLayoutAlign="space-around start" fxLayoutGap="20px" *ngIf="minDate" class="form-row">
 								<mat-form-field appearance="outline">
 									<mat-label>Fecha</mat-label>
 									<input matInput id="relocationDate" [matDatepicker]="relocationDatePicker"
@@ -68,15 +68,13 @@
 								</mat-form-field>
 								<mat-form-field appearance="outline">
 									<mat-label>Hora</mat-label>
-									<input matInput id="relocationTime" type="text" formControlName="relocationTime"
-										pattern="([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}">
+									<input matInput id="relocationTime" type="text" formControlName="relocationTime">
 									<mat-error *ngIf="hasError(form, 'required', 'relocationTime')"
 										[translate]="'forms.REQUIRED'"></mat-error>
-									<mat-error *ngIf="hasError(form, 'pattern', 'relocationTime')">La hora debe cumplir
-										con el formato de 24 hs y tener dos digitos para la hora y los minutos respectivamente
-									</mat-error>
-									<mat-error *ngIf="hasError(form, 'futureTime', 'relocationTime')">La hora debe ser
-										anterior a la hora actual</mat-error>
+									<mat-error *ngIf="hasError(form, 'pattern', 'relocationTime')" [translate]="'forms.TIME_FORMAT'"></mat-error>
+									<mat-error *ngIf="hasError(form, 'futureTime', 'relocationTime')" [translate]="'forms.MAX_TIME_ERROR'"></mat-error>
+									<mat-error *ngIf="hasError(form, 'previousTime', 'relocationTime')" [translate]="'forms.MIN_TIME_ERROR'"
+										[translateParams]="{ minTime: minTimeStr }"></mat-error>
 								</mat-form-field>
 							</div>
 						</section>

@@ -28,7 +28,10 @@
 		"REQUIRING_FIELD_FOR_SEARCH":"Debe ingresar al menos un campo para la búsqueda",
 		"SEARCH_RESULTS": "Resultados de la búsqueda",
 		"MIN_ERROR": "El valor no puede ser menor que {{min}}",
-		"MAX_ERROR": "El valor no puede ser mayor que {{max}}"
+		"MAX_ERROR": "El valor no puede ser mayor que {{max}}",
+		"MIN_TIME_ERROR": "La hora debe ser posterior a la hora: {{minTime}}",
+		"MAX_TIME_ERROR": "La hora debe ser anterior a la hora actual",
+		"TIME_FORMAT":"La hora debe cumplir con el formato de 24 hs y tener dos digitos para la hora y los minutos respectivamente"
 	},
 	"messages": {
 		"NO_DATA": "No hay información para mostrar"
