@@ -1,10 +1,12 @@
 package net.pladema.medicalconsultation.doctorsoffice.controller.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
 
-import java.time.LocalTime;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -13,9 +15,12 @@ public class DoctorsOfficeDto {
 
     private Integer id;
 
+    @NotNull
     private String description;
 
-    private LocalTime openingTime;
+    @JsonFormat(pattern = JacksonDateFormatConfig.TIME_FORMAT)
+    private String openingTime;
 
-    private LocalTime closingTime;
+    @JsonFormat(pattern = JacksonDateFormatConfig.TIME_FORMAT)
+    private String closingTime;
 }

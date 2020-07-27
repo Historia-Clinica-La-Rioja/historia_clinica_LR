@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 public class JacksonDateFormatConfig {
  
     public static final String DATE_FORMAT = "yyyy-MM-dd";
+    public static final String TIME_FORMAT = "HH:mm:ss";
     public static final String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
     public static final String ZONE_ID = "America/Buenos_Aires";
 

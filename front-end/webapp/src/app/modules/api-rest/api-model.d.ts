@@ -206,10 +206,10 @@ export interface DiagnosisDto extends HealthConditionDto {
 }
 
 export interface DoctorsOfficeDto {
-    closingTime: Date;
+    closingTime: string;
     description: string;
     id: number;
-    openingTime: Date;
+    openingTime: string;
 }
 
 export interface DocumentDto {
