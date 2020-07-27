@@ -1,3 +1,5 @@
-spring.datasource.url=jdbc:postgresql://postgres:5432/sgh
-spring.datasource.username=sgh
-spring.datasource.password=sgh
+spring.datasource.url=jdbc:postgresql://{{
+                        hostvars['postgres_master'].ansible_default_ipv4.address
+                    }}:{{ database_port }}/{{ sgh_database_name }}
+spring.datasource.username={{ sgh_database_user_name }}
+spring.datasource.password={{ sgh_database_user_password }}

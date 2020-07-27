@@ -1,14 +1,14 @@
 ---
 # Users to ensure exist.
-database_user_password: sgh
-database_user_name: sgh
-database_name: sgh
+sgh_database_user_password: sgh
+sgh_database_user_name: sgh
+sgh_database_name: sgh
 database_host: localhost
 
 postgresql_users:
-  - name: "{{ database_user_name }}"
-    password: "{{ database_user_password }}"
-# - name: jdoe #required; the rest are optional
+  - name: "{{ sgh_database_user_name }}"
+    password: "{{ sgh_database_user_password }}"
+# - name: jdoe #required; the rest are optional}
 #   password: # defaults to not set
 #   encrypted: # defaults to not set
 #   priv: # defaults to not set
@@ -23,8 +23,8 @@ postgresql_users:
 
 # Databases to ensure exist.
 postgresql_databases:
-    - name: "{{ database_name }}"
-      owner: "{{ database_user_name }}"
+    - name: "{{ sgh_database_name }}"
+      owner: "{{ sgh_database_user_name }}"
 # - name: exampledb # required; the rest are optional
 #   lc_collate: # defaults to 'en_US.UTF-8'
 #   lc_ctype: # defaults to 'en_US.UTF-8'
