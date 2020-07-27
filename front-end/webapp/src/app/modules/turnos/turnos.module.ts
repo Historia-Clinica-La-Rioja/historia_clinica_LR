@@ -5,16 +5,21 @@ import { TurnosRoutingModule } from './turnos-routing.module';
 import { HomeComponent } from './routes/home/home.component';
 import { CoreModule } from "@core/core.module";
 import { NewAgendaComponent } from './routes/new-agenda/new-agenda.component';
-import { PresentationModule } from "@presentation/presentation.module";
+import { NewAttentionComponent } from './dialogs/new-attention/new-attention.component';
+import { PresentationModule } from '@presentation/presentation.module';
+import { CalendarModule } from 'angular-calendar';
 
 
 @NgModule({
-	declarations: [HomeComponent, NewAgendaComponent],
+	declarations: [HomeComponent,
+		 NewAgendaComponent,
+		 NewAttentionComponent],
 	imports: [
 		CommonModule,
 		CoreModule,
 		PresentationModule,
-		TurnosRoutingModule
+		TurnosRoutingModule,
+		CalendarModule
 	]
 })
 export class TurnosModule {

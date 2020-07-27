@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, Input, ChangeDetectorRef } from '@angular/core';
 import { SectorService } from "@api-rest/services/sector.service";
 import { ClinicalSpecialtySectorService } from "@api-rest/services/clinical-specialty-sector.service";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
@@ -11,6 +11,8 @@ import { HealthcareProfessionalService } from "@api-rest/services/healthcare-pro
 import { ContextService } from "@core/services/context.service";
 import { Router } from "@angular/router";
 import { APPOINTMENT_DURATIONS } from "../../constants/appointment";
+import { NewAgendaService } from '../../services/new-agenda.service';
+import { DAYS_OF_WEEK, CalendarEvent } from 'angular-calendar';
 
 const ROUTE_APPOINTMENT = 'turnos';
 
@@ -32,29 +34,37 @@ export class NewAgendaComponent implements OnInit {
 	public appointmentDurations;
 	private readonly routePrefix;
 
+	newAgendaService: NewAgendaService;
+	public weekStartsOn = DAYS_OF_WEEK.MONDAY;
+	public viewDate: Date = new Date();
+	public events: CalendarEvent[] = [];
+
 	constructor(private readonly formBuilder: FormBuilder,
-	            private readonly el: ElementRef,
-	            private readonly sectorService: SectorService,
-	            private readonly clinicalSpecialtySectorService: ClinicalSpecialtySectorService,
-	            private translator: TranslateService,
-	            private dialog: MatDialog,
-	            private doctorsOfficeService: DoctorsOfficeService,
-	            private healthcareProfessionalService: HealthcareProfessionalService,
-	            private readonly contextService: ContextService,
-	            private readonly router: Router) {
+		private readonly el: ElementRef,
+		private readonly sectorService: SectorService,
+		private readonly clinicalSpecialtySectorService: ClinicalSpecialtySectorService,
+		private translator: TranslateService,
+		private dialog: MatDialog,
+		private doctorsOfficeService: DoctorsOfficeService,
+		private healthcareProfessionalService: HealthcareProfessionalService,
+		private readonly contextService: ContextService,
+		private readonly router: Router,
+		private readonly cdr: ChangeDetectorRef
+	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
+		this.newAgendaService = new NewAgendaService(this.weekStartsOn, this.viewDate, this.events, this.dialog, this.cdr);
 	}
 
 	ngOnInit(): void {
 
 		this.form = this.formBuilder.group({
 			sectorId: [null, [Validators.required]],
-			specialtyId: [{value: null, disabled: true}, [Validators.required]],
-			doctorOffice: [{value: null, disabled: true}, [Validators.required]],
-			professionalId: [{value: null, disabled: true}, [Validators.required]],
-			initDate: [{value: null, disabled: true}, [Validators.required]],
-			endDate: [{value: null, disabled: true}, [Validators.required]],
-			appointmentDurationId: [{value: null, disabled: true}, [Validators.required]],
+			specialtyId: [{ value: null, disabled: true }, [Validators.required]],
+			doctorOffice: [{ value: null, disabled: true }, [Validators.required]],
+			professionalId: [{ value: null, disabled: true }, [Validators.required]],
+			initDate: [{ value: null, disabled: true }, [Validators.required]],
+			endDate: [{ value: null, disabled: true }, [Validators.required]],
+			appointmentDurationId: [{ value: null, disabled: true }, [Validators.required]],
 		});
 
 		this.sectorService.getAll().subscribe(data => {
@@ -138,11 +148,33 @@ export class NewAgendaComponent implements OnInit {
 			dialogRef.afterClosed().subscribe(result => {
 				if (result) {
 					//TODO llamar servicio para guardar agenda y redireccionar a turnos, confirmar con snackbar el resultado
+
+					const agendaDto = this.mapEventsToAgendaDto();
 					const url = `${this.routePrefix}${ROUTE_APPOINTMENT}`;
 					this.router.navigate([url]);
 				}
 			});
 		});
+	}
+
+	private mapEventsToAgendaDto(): any {
+		let mappedResults = [];
+		this.newAgendaService.getEvents().forEach( event => mappedResults = [...mappedResults, this.toDto(event)]);
+		return mappedResults;
+	}
+
+	private toDto(event: CalendarEvent): any {
+		return {
+			dayWeekId: event.start.getDay(),
+			from: event.start.toLocaleTimeString(),
+			to: event.end.toLocaleTimeString(),
+			medicalAttentionTypeId: event.meta.medicalAttentionType.id,
+			overturnCount: event.meta.overTurnCount
+		};
+	}
+
+	public setAppointmentDurationToAgendaService() {
+		this.newAgendaService.setAppointmentDuration(this.form.value.appointmentDurationId);
 	}
 
 }

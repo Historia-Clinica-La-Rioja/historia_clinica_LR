@@ -9,13 +9,9 @@
 				</div>
 				<div fxLayout="row">
 					<mat-form-field appearance="outline">
-						<mat-select id="sectorId"
-						            name="sectorId"
-						            formControlName="sectorId"
-						            placeholder="{{'pacientes.form.SELECT' | translate}}"
-						            (selectionChange)="setSpecialties()">
-							<mat-option *ngFor="let sector of sectors"
-							            [value]="sector.id">
+						<mat-select id="sectorId" name="sectorId" formControlName="sectorId"
+							placeholder="{{'pacientes.form.SELECT' | translate}}" (selectionChange)="setSpecialties()">
+							<mat-option *ngFor="let sector of sectors" [value]="sector.id">
 								{{sector.description}}
 							</mat-option>
 						</mat-select>
@@ -28,13 +24,10 @@
 				</div>
 				<div fxLayout="row">
 					<mat-form-field appearance="outline">
-						<mat-select id="specialtyId"
-						            name="specialtyId"
-						            formControlName="specialtyId"
-						            placeholder="{{'pacientes.form.SELECT' | translate}}"
-						            (selectionChange)="setDoctorOffices()">
-							<mat-option *ngFor="let speciality of specialties"
-							            [value]="speciality.id">
+						<mat-select id="specialtyId" name="specialtyId" formControlName="specialtyId"
+							placeholder="{{'pacientes.form.SELECT' | translate}}"
+							(selectionChange)="setDoctorOffices()">
+							<mat-option *ngFor="let speciality of specialties" [value]="speciality.id">
 								{{speciality.name}}
 							</mat-option>
 						</mat-select>
@@ -47,13 +40,10 @@
 				</div>
 				<div fxLayout="row">
 					<mat-form-field appearance="outline">
-						<mat-select id="doctorOffice"
-						            name="doctorOffice"
-						            formControlName="doctorOffice"
-						            placeholder="{{'pacientes.form.SELECT' | translate}}"
-						            (selectionChange)="setProfessionals()">
-							<mat-option *ngFor="let doctorOffice of doctorOffices"
-							            [value]="doctorOffice">
+						<mat-select id="doctorOffice" name="doctorOffice" formControlName="doctorOffice"
+							placeholder="{{'pacientes.form.SELECT' | translate}}"
+							(selectionChange)="setProfessionals()">
+							<mat-option *ngFor="let doctorOffice of doctorOffices" [value]="doctorOffice">
 								{{doctorOffice.description}}
 							</mat-option>
 						</mat-select>
@@ -96,7 +86,7 @@
 						</div>
 						<mat-form-field appearance="outline">
 							<input formControlName="initDate" id="initDate" matInput [matDatepicker]="initPicker"
-							       (dateChange)="initDateChange($event)">
+								(dateChange)="initDateChange($event)">
 							<mat-datepicker-toggle matSuffix [for]="initPicker"></mat-datepicker-toggle>
 							<mat-datepicker #initPicker></mat-datepicker>
 						</mat-form-field>
@@ -108,7 +98,7 @@
 						</div>
 						<mat-form-field appearance="outline">
 							<input formControlName="endDate" id="endDate" matInput [matDatepicker]="endPicker"
-							       (dateChange)="endDateChange($event)">
+								(dateChange)="endDateChange($event)">
 							<mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
 							<mat-datepicker #endPicker></mat-datepicker>
 						</mat-form-field>
@@ -135,12 +125,12 @@
 				</div>
 				<div fxLayout="row">
 					<mat-form-field appearance="outline">
-						<mat-select id="appointmentDurationId"
-						            name="appointmentDurationId"
-						            formControlName="appointmentDurationId"
-						            placeholder="{{'pacientes.form.SELECT' | translate}}">
+						<mat-select id="appointmentDurationId" name="appointmentDurationId"
+							formControlName="appointmentDurationId"
+							placeholder="{{'pacientes.form.SELECT' | translate}}"
+							(selectionChange)="setAppointmentDurationToAgendaService()">
 							<mat-option *ngFor="let appointmentDuration of appointmentDurations"
-							            [value]="appointmentDuration.id">
+								[value]="appointmentDuration.id">
 								{{appointmentDuration.description}}
 							</mat-option>
 						</mat-select>
@@ -150,19 +140,35 @@
 
 			</section>
 
-			<section>
+			<section *ngIf="form.valid">
 				<h3 [translate]="'Dias y tipo de consulta'"></h3>
 				<div fxLayout="row">
 					<span [translate]="'Seleccione tipos de consulta para cada día'"></span>
 				</div>
 
-			</section>
+				<ng-template #weekViewHourSegmentTemplate let-segment="segment" let-locale="locale"
+					let-segmentHeight="segmentHeight" let-isTimeLabel="isTimeLabel">
+					<div #segmentElement class="cal-hour-segment" [style.height.px]="segmentHeight"
+						[class.cal-hour-start]="segment.isStart" [class.cal-after-hour-start]="!segment.isStart"
+						[ngClass]="segment.cssClass" (mousedown)="newAgendaService.startDragToCreate(segment, segmentElement)">
+						<div class="cal-time" *ngIf="isTimeLabel">
+							{{ segment.date | calendarDate:'weekViewHour':locale }}
+						</div>
+					</div>
+				</ng-template>
 
-			<div align="end">
-				<button mat-flat-button color="primary">
-					<span [translate]="'buttons.CONFIRM'"></span>
-				</button>
-			</div>
+				<mwl-calendar-week-view [viewDate]="viewDate" [events]="newAgendaService.events"
+					[hourSegmentTemplate]="weekViewHourSegmentTemplate" [dayStartHour]="8" [dayEndHour]="16"
+					[hourSegments]="60 / form.value.appointmentDurationId" [weekStartsOn]="weekStartsOn">
+				</mwl-calendar-week-view>
+
+				<div align="end">
+					<button mat-flat-button color="primary" name="confirmAgenda" id="confirmAgenda">
+						<span [translate]="'buttons.CONFIRM'"></span>
+					</button>
+				</div>
+
+			</section>
 
 		</form>
 	</section>

@@ -20,6 +20,8 @@ import { AuthModule } from './modules/auth/auth.module';
 import { PresentationModule } from '@presentation/presentation.module';
 import { FlavoredMultiTranslateHttpLoader } from '@core/utils/flavored-multi-translate-http-loader';
 import { PublicService } from '@api-rest/services/public.service';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
 @NgModule({
 	declarations: [
@@ -50,6 +52,7 @@ import { PublicService } from '@api-rest/services/public.service';
 		// Module import order
 		// https://angular.io/guide/router#module-import-order
 		AppRoutingModule,
+		CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
 	],
 	providers: [
 		httpInterceptorProviders,
