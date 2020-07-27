@@ -6,6 +6,7 @@ import { SnomedSemanticSearch, SnomedService } from '../../../services/snomed.se
 import { pushTo } from '@core/utils/array.utils';
 import { DateFormat, momentFormat, newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
+import { hasError } from '@core/utils/form.utils';
 
 export interface Problema {
 	snomed: SnomedDto;
@@ -104,10 +105,6 @@ export class ProblemasNuevaConsultaService {
 		return newMoment();
 	}
 
-	getFechaFinMin(): Moment {
-		return this.form.value.fechaInicio ? this.form.value.fechaInicio : newMoment();
-	}
-
 	getForm(): FormGroup {
 		return this.form;
 	}
@@ -122,5 +119,21 @@ export class ProblemasNuevaConsultaService {
 
 	getProblemas(): Problema[] {
 		return this.data;
+	}
+
+	// custom validation was required because the [max] input of MatDatepicker
+	// adds the old error when the value is changed dynamically
+	checkValidFechaFin(): void {
+		this.form.controls.fechaFin.setErrors(null);
+		if (this.form.value.fechaFin) {
+			const newFechaFin: Moment = this.form.value.fechaFin;
+			if (newFechaFin.isBefore(this.form.value.fechaInicio)) {
+				this.form.controls.fechaFin.setErrors({min: true});
+			}
+		}
+	}
+
+	hasError(type: string, controlName: string): boolean {
+		return hasError(this.form, type, controlName);
 	}
 }
