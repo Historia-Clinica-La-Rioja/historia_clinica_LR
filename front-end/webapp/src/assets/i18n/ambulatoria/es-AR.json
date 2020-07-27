@@ -18,6 +18,9 @@
 					"TITLE": "Evolucion",
 					"DESCRIPCION": "Descripcion"
 				},
+				"errors": {
+					"MOTIVO_OBLIGATORIO": "Motivo de consulta obligatorio"
+				},
 				"motivo": {
 					"TITLE": "Motivo de consulta",
 					"MOTIVO": "motivo"

@@ -28,6 +28,7 @@ import { Alergia, AlergiasNuevaConsultaService } from '../../services/alergias-n
 export class NuevaConsultaComponent implements OnInit {
 
 	formEvolucion: FormGroup;
+	error: string;
 
 	motivoNuevaConsultaService: MotivoNuevaConsultaService;
 	medicacionesNuevaConsultaService: MedicacionesNuevaConsultaService;
@@ -63,30 +64,39 @@ export class NuevaConsultaComponent implements OnInit {
 		this.formEvolucion = this.formBuilder.group({
 			evolucion: [null]
 		});
+
+		// cuando implementemos mas errores podemos suscribirnos a los errores
+		// de cada seccion y escuchar cuando los corrigen
+		this.motivoNuevaConsultaService.error$.subscribe(error => {
+			this.error = error;
+		});
 	}
 
 	private goToAmbulatoria(idPaciente: number) {
 		this.router.navigateByUrl(`institucion/${this.contextService.institutionId}/ambulatoria/paciente/${idPaciente}`);
 	}
 
-	save() {
+	save(): void {
 		this.route.paramMap.subscribe((params) => {
 			const idPaciente = Number(params.get('idPaciente'));
 
 			const nuevaConsulta: CreateOutpatientDto = this.buildCreateOutpatientDto();
 
-			this.outpatientConsultationService.createOutpatientConsultation(nuevaConsulta, idPaciente).subscribe(
-				_ => {
-					this.snackBarService.showSuccess('ambulatoria.paciente.nueva-consulta.messages.SUCCESS');
-					this.goToAmbulatoria(idPaciente);
-				},
-				_ => {
-					this.snackBarService.showSuccess('ambulatoria.paciente.nueva-consulta.messages.ERROR');
-				}
-			);
+			if (nuevaConsulta.reasons?.length) {
+				this.outpatientConsultationService.createOutpatientConsultation(nuevaConsulta, idPaciente).subscribe(
+					_ => {
+						this.snackBarService.showSuccess('ambulatoria.paciente.nueva-consulta.messages.SUCCESS');
+						this.goToAmbulatoria(idPaciente);
+					},
+					_ => {
+						this.snackBarService.showError('ambulatoria.paciente.nueva-consulta.messages.ERROR');
+					}
+				);
+			} else {
+				this.snackBarService.showError('ambulatoria.paciente.nueva-consulta.messages.ERROR');
+				this.motivoNuevaConsultaService.setError('ambulatoria.paciente.nueva-consulta.errors.MOTIVO_OBLIGATORIO');
+			}
 		});
-
-
 	}
 
 	private buildCreateOutpatientDto(): CreateOutpatientDto {
@@ -128,7 +138,7 @@ export class NuevaConsultaComponent implements OnInit {
 				}
 			),
 			procedures: this.procedimientoNuevaConsultaService.getProcedimientos(),
-			reasons: [this.motivoNuevaConsultaService.getMotivoConsulta()],
+			reasons: this.motivoNuevaConsultaService.getMotivosConsulta(),
 			vitalSigns: this.signosVitalesNuevaConsultaService.getSignosVitales()
 		};
 	}

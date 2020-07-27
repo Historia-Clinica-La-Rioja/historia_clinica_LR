@@ -434,7 +434,13 @@
 		</app-document-section>
 	</section>
 
-	<section class="doc-section">
+	<section id="validations" class="doc-section" *ngIf="this.error">
+		<mat-card>
+			<mat-error class="mat-body-2">{{ error | translate }}</mat-error>
+		</mat-card>
+	</section>
+
+	<section id="buttons" class="doc-section">
 		<div align="end">
 			<button class="uppercase" mat-raised-button color="primary" (click)="save()">
 				<span [translate]="'buttons.CONFIRM'"></span>
