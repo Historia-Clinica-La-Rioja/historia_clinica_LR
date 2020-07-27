@@ -2,3 +2,5 @@
   - hosts: frontservers
     roles:
       - role: nginx
+        become: yes
+

@@ -12,4 +12,6 @@
   - hosts: web_load_balancers
     roles:
       - role: nginx
+        become: yes
       - role: load_balancer_web
+        become: yes

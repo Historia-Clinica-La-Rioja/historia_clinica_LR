@@ -1,11 +1,12 @@
 ---
   - hosts: databases
     roles:
-         - role : database
+      - role : database
   - hosts: frontservers
     roles:
       - role: nginx
+        become: yes
   - hosts: backservers
     roles:
       - role: tomcat
-
+        become: yes

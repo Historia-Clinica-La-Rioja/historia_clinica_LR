@@ -6,6 +6,8 @@
   - hosts: frontservers
     roles:
       - role: sgh-front
+        become: yes
   - hosts: backservers
     roles:
       - role: sgh-back
+        become: yes
