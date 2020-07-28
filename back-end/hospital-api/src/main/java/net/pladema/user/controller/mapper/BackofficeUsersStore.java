@@ -1,7 +1,6 @@
 package net.pladema.user.controller.mapper;
 
 
-import net.pladema.sgx.auditable.entity.Audit;
 import net.pladema.permissions.controller.dto.BackofficeUserRoleDto;
 import net.pladema.permissions.controller.mappers.UserRoleDtoMapper;
 import net.pladema.permissions.repository.UserRoleRepository;
@@ -12,11 +11,7 @@ import net.pladema.user.controller.dto.BackofficeUserDto;
 import net.pladema.user.controller.mappers.UserDtoMapper;
 import net.pladema.user.repository.UserRepository;
 import net.pladema.user.repository.entity.User;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -46,11 +41,15 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 	@Override
 	public Page<BackofficeUserDto> findAll(BackofficeUserDto user, Pageable pageable) {
 		User modelUser = userDtoMapper.toModel(user);
-		modelUser.setAudit(new Audit());
-		modelUser.setEnable(null);
+		/*modelUser.setAudit(new Audit());
+		modelUser.setEnable(null);*/
+
+		ExampleMatcher customExampleMatcher = ExampleMatcher.matchingAny()
+				.withMatcher("username", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+				.withIgnorePaths("audit", "enable");
 
 		return repository.findAll(
-				Example.of(modelUser),
+				Example.of(modelUser, customExampleMatcher),
 				PageRequest.of(
 						pageable.getPageNumber(),
 						pageable.getPageSize(),
