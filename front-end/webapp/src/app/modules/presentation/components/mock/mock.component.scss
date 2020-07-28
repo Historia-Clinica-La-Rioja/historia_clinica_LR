@@ -1,0 +1,28 @@
+.title {
+	padding: 0 5px;
+	text-align: center;
+	.base {
+		font-size: 0.8em;
+		color: #828282;
+	}
+	.last {
+		font-size: 1em;
+		color: black;
+	}
+}
+
+.loads {
+	mat-card {
+		margin: 10px;
+		mat-card-title {
+			font-size: 14px;
+		}
+		.roles {
+			color: #4F2780;
+		}
+		mat-card-content {
+			background-color: #e0e0e0;
+			color: #828282;
+		}
+	}
+}

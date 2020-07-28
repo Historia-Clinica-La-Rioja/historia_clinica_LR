@@ -1,7 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PatientCardComponent } from './components/patient-card/patient-card.component';
 import { CoreModule } from '@core/core.module';
+import { FlexLayoutModule, FlexModule } from '@angular/flex-layout';
+
+import { PatientCardComponent } from './components/patient-card/patient-card.component';
 import { SummaryCardComponent } from './components/summary-card/summary-card.component';
 import { InternmentEpisodeSummaryComponent } from './components/internment-episode-summary/internment-episode-summary.component';
 import { NoDataComponent } from './components/no-data/no-data.component';
@@ -16,7 +18,7 @@ import { MainLayoutComponent } from './components/main-layout/main-layout.compon
 import { BarComponent } from './components/bar/bar.component';
 import { MenuComponent } from './components/menu/menu.component';
 import { FooterComponent } from './components/footer/footer.component';
-import { FlexLayoutModule, FlexModule } from '@angular/flex-layout';
+import { MockComponent } from './components/mock/mock.component';
 
 @NgModule({
 	declarations: [
@@ -36,6 +38,7 @@ import { FlexLayoutModule, FlexModule } from '@angular/flex-layout';
 		MainLayoutComponent,
 		MenuComponent,
 		FooterComponent,
+		MockComponent,
 	],
 	imports: [
 		CommonModule,

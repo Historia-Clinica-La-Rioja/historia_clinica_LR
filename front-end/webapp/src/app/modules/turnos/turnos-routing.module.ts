@@ -5,6 +5,8 @@ import { NewAgendaComponent } from "./routes/new-agenda/new-agenda.component";
 import { ERole } from "@api-rest/api-model";
 import { RoleGuard } from "@core/guards/RoleGuard";
 
+import { mockRouters } from '@presentation/utils/mock-routers.utils';
+import { MOCKS_TURNOS } from './constants/mock-routers';
 
 const routes: Routes = [
 	{
@@ -22,7 +24,8 @@ const routes: Routes = [
 				canActivate: [RoleGuard],
 				data: { allowedRoles: [ERole.ADMINISTRATIVO] }
 			},
-		]
+			...mockRouters(MOCKS_TURNOS),
+		],
 	}
 ];
 
