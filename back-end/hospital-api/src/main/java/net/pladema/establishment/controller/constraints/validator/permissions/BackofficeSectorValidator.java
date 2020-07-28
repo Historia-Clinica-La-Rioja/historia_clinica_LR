@@ -91,8 +91,6 @@ public class BackofficeSectorValidator implements BackofficePermissionValidator<
 	public ItemsAllowed itemsAllowedToList(Sector entity) {
 		if (authoritiesValidator.hasRole(ERole.ROOT) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
 			return new ItemsAllowed<>();
-		if (entity.getInstitutionId() == null)
-			return new ItemsAllowed<>(false, Collections.emptyList());
 
 		List<Integer> allowedInstitutions = authoritiesValidator.allowedInstitutionIds(Arrays.asList(ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE));
 		if (allowedInstitutions.isEmpty())

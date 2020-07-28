@@ -11,7 +11,7 @@ import SgxSelectInput from '../../sgxSelectInput/SgxSelectInput';
 
 const DoctorsOfficeFilter = props =>(
     <Filter {...props}>
-        <SgxSelectInput source="institutionId" element="institutions" optionText="name" alwaysOn allowEmpty={false}/>
+        <SgxSelectInput source="institutionId" element="institutions" optionText="name" allowEmpty={false} />
     </Filter>
 );
 

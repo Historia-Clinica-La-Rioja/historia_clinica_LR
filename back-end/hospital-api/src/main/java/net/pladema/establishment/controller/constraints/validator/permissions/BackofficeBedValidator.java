@@ -101,8 +101,7 @@ public class BackofficeBedValidator implements BackofficePermissionValidator<Bed
 	public ItemsAllowed itemsAllowedToList(Bed entity) {
 		if (authoritiesValidator.hasRole(ERole.ROOT) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
 			return new ItemsAllowed<>();
-		if (entity.getRoomId() == null)
-			return new ItemsAllowed<>(false, Collections.emptyList());
+
 		List<Integer> allowedInstitutions = authoritiesValidator.allowedInstitutionIds(Arrays.asList(ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE));
 		if (allowedInstitutions.isEmpty())
 			return new ItemsAllowed<>(false, Collections.emptyList());

@@ -13,7 +13,7 @@ import SgxSelectInput from '../../sgxSelectInput/SgxSelectInput';
 
 const ClinicalSpecialtySectorFilter = props =>(
     <Filter {...props}>
-        <SgxSelectInput  source="sectorId" element="sectors" optionText="description" alwaysOn allowEmpty={false}/>
+        <SgxSelectInput  source="sectorId" element="sectors" optionText="description" allowEmpty={false} />
     </Filter>
 );
 

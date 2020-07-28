@@ -14,7 +14,7 @@ const renderRoom = room => `${room.roomNumber} - ${room.description}`;
 
 const BedFilter = props =>(
     <Filter {...props}>
-        <SgxSelectInput source="roomId" element="rooms" optionText="description" alwaysOn allowEmpty={false}/>
+        <SgxSelectInput source="roomId" element="rooms" optionText="description" allowEmpty={false} />
     </Filter>
 );
 
