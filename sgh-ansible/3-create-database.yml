@@ -1,0 +1,4 @@
+---
+  - hosts: databases
+    roles:
+      - role : database
