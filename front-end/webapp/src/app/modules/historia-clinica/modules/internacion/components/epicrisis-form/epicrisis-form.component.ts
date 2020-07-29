@@ -57,7 +57,7 @@ export class EpicrisisFormComponent implements OnInit {
 		columns: [
 			{
 				def: 'problemType',
-				header: 'internaciones.epicrisis.antecedentes-familiares.table.columns.FAMILY_HISTORY',
+				header: 'internaciones.epicrisis.antecedentes-personales.table.columns.PERSONAL_HISTORY',
 				display: af => af.snomed.pt
 			}
 		],
