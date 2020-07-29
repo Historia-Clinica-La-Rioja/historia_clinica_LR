@@ -13,6 +13,8 @@ import { Router } from "@angular/router";
 import { APPOINTMENT_DURATIONS } from "../../constants/appointment";
 import { NewAgendaService } from '../../services/new-agenda.service';
 import { DAYS_OF_WEEK, CalendarEvent } from 'angular-calendar';
+import { DoctorsOfficeDto } from '@api-rest/api-model';
+import * as moment from 'moment';
 
 const ROUTE_APPOINTMENT = 'turnos';
 
@@ -26,12 +28,17 @@ export class NewAgendaComponent implements OnInit {
 	public form: FormGroup;
 	public sectors;
 	public specialties;
-	public doctorOffices;
+	public doctorOffices: DoctorsOfficeDto[];
 	public professionals;
 	public appointmentManagement: boolean = false;
 	public autoRenew: boolean = false;
 	public holidayWork: boolean = false;
 	public appointmentDurations;
+	public openingTime: number;
+	public closingTime: number;
+
+	public readonly MINUTES_IN_HOUR = 60;
+
 	private readonly routePrefix;
 
 	newAgendaService: NewAgendaService;
@@ -75,7 +82,7 @@ export class NewAgendaComponent implements OnInit {
 	}
 
 	setSpecialties(): void {
-		let sectorId: number = this.form.controls.sectorId.value;
+		const sectorId: number = this.form.controls.sectorId.value;
 		this.clinicalSpecialtySectorService.getClinicalSpecialty(sectorId).subscribe(data => {
 			this.specialties = data;
 		});
@@ -84,7 +91,7 @@ export class NewAgendaComponent implements OnInit {
 
 	setDoctorOffices(): void {
 		this.doctorsOfficeService.getAll(this.form.value.sectorId, this.form.value.specialtyId)
-			.subscribe(data => this.doctorOffices = data);
+			.subscribe((data: DoctorsOfficeDto[]) => this.doctorOffices = data);
 		this.enableFormControl('doctorOffice');
 	}
 
@@ -92,7 +99,15 @@ export class NewAgendaComponent implements OnInit {
 		//TODO para traer doctores por sector utilizar let sectorId: number = this.form.controls.sectorId.value;
 		this.healthcareProfessionalService.getAll().subscribe(data => this.professionals = data);
 		this.enableFormControl('professionalId');
+		this.openingTime = getHours(this.form.value.doctorOffice.openingTime);
+		this.closingTime = getHours(this.form.value.doctorOffice.closingTime) - 1; // we don't want to include the declared hour
+
+		function getHours(time: string): number {
+			const hours = moment(time, 'HH:mm:ss');
+			return Number(hours.hours());
+		}
 	}
+
 
 	enableAgendaDetails(): void {
 		this.enableFormControl('initDate');

@@ -156,8 +156,8 @@
 				</ng-template>
 
 				<mwl-calendar-week-view [viewDate]="viewDate" [events]="newAgendaService.events"
-					[hourSegmentTemplate]="weekViewHourSegmentTemplate" [dayStartHour]="8" [dayEndHour]="16"
-					[hourSegments]="60 / form.value.appointmentDurationId" [weekStartsOn]="weekStartsOn">
+					[hourSegmentTemplate]="weekViewHourSegmentTemplate" [dayStartHour]="openingTime" [dayEndHour]="closingTime"
+					[hourSegments]="MINUTES_IN_HOUR / form.value.appointmentDurationId" [weekStartsOn]="weekStartsOn">
 				</mwl-calendar-week-view>
 
 				<div align="end">
