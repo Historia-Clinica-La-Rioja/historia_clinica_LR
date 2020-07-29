@@ -25,7 +25,7 @@
 - name: Set configuration for externalized properties
   template: 
     src: templates/tomcat-context.xml
-    dest: "{{CATALINA_HOME}}conf/Catalina/localhost/ROOT.xml"
+    dest: "{{CATALINA_HOME}}conf/Catalina/localhost/api.xml"
     owner: tomcat 
     group: tomcat
     mode: 0744
@@ -33,7 +33,7 @@
 - name: Copy SGH war
   copy: 
     src: "{{ BACK_END_WAR }}"
-    dest: "{{CATALINA_HOME}}webapps/ROOT.war" 
+    dest: "{{CATALINA_HOME}}webapps/api.war" 
     owner: tomcat
     group: tomcat
     mode: 0500
