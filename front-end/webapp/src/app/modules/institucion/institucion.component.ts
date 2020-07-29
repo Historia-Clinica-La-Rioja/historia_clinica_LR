@@ -11,6 +11,8 @@ import { MenuFooter } from '@presentation/components/main-layout/main-layout.com
 import { InstitutionService } from '@api-rest/services/institution.service';
 import { InstitutionDto, UserDto } from '@api-rest/api-model';
 import { AccountService } from '@api-rest/services/account.service';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-institucion',
@@ -26,7 +28,8 @@ export class InstitucionComponent implements OnInit {
 		private contextService: ContextService,
 		private permissionsService: PermissionsService,
 		private institutionService: InstitutionService,
-		private accountService: AccountService
+		private accountService: AccountService,
+		private featureFlagService: FeatureFlagService
 	) {
 
 	}
@@ -36,7 +39,9 @@ export class InstitucionComponent implements OnInit {
 			const institutionId = Number(params.get('id'));
 			this.contextService.setInstitutionId(institutionId);
 
-			this.menuItems$ = this.permissionsService.filterItems$(SIDEBAR_MENU);
+			this.menuItems$ = this.featureFlagService.filterItems$(SIDEBAR_MENU);
+			this.menuItems$ = this.menuItems$.pipe(switchMap(menu => this.permissionsService.filterItems$(menu)));
+
 			this.institutionService.getInstitutions(Array.of(institutionId))
 				.subscribe(institutionDto => {
 					this.menuFooterItems.institution = {name: institutionDto[0].name, address: this.mapToAddress(institutionDto[0])};

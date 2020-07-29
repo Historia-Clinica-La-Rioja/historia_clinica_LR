@@ -15,6 +15,8 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.MAIN_DIAGNOSIS_REQUIRED, true);
 		map.put(AppFeature.RESPONSIBLE_DOCTOR_REQUIRED, true);
 		map.put(AppFeature.HABILITAR_CARGA_FECHA_PROBABLE_ALTA, true);
+		map.put(AppFeature.HABILITAR_GESTION_DE_TURNOS, true);
+		map.put(AppFeature.HABILITAR_HISTORIA_CLINICA_AMBULATORIA, true);
 
 		return map;
 	}

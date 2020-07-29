@@ -1,5 +1,5 @@
 import { MenuItem } from '@core/core-model';
-import { ERole } from '@api-rest/api-model';
+import { AppFeature, ERole } from '@api-rest/api-model';
 
 export const SIDEBAR_MENU: MenuItem[] = [
 	{
@@ -25,6 +25,7 @@ export const SIDEBAR_MENU: MenuItem[] = [
 			ERole.PROFESIONAL_DE_SALUD,
 			ERole.ENFERMERO,
 		],
+		featureFlag: AppFeature.HABILITAR_HISTORIA_CLINICA_AMBULATORIA
 	},
 	{
 		text: 'app.menu.INTERNACION',
@@ -47,6 +48,7 @@ export const SIDEBAR_MENU: MenuItem[] = [
 			ERole.PROFESIONAL_DE_SALUD,
 			ERole.ENFERMERO,
 		],
+		featureFlag: AppFeature.HABILITAR_GESTION_DE_TURNOS
 	},
 	{
 		text: 'app.menu.PERFIL',

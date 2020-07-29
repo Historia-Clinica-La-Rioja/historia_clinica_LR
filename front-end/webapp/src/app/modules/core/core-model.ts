@@ -1,4 +1,4 @@
-import { ERole } from '@api-rest/api-model';
+import { AppFeature, ERole } from '@api-rest/api-model';
 
 export class MenuItem {
 	text: string;
@@ -6,4 +6,5 @@ export class MenuItem {
 	url: string;
 	permissions?: ERole[];
 	options?: any;
+	featureFlag?: AppFeature;
 }

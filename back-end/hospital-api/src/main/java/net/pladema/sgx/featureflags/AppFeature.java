@@ -16,7 +16,13 @@ public enum AppFeature implements Feature {
     RESPONSIBLE_DOCTOR_REQUIRED,
 
     @Label("Indica si es posible cargar la fecha probable de alta de una internación")
-    HABILITAR_CARGA_FECHA_PROBABLE_ALTA;
+    HABILITAR_CARGA_FECHA_PROBABLE_ALTA,
+
+    @Label("Indica si se debe habilitar la funcionalidad gestión de turnos")
+    HABILITAR_GESTION_DE_TURNOS,
+
+    @Label("Indica si se debe habilitar la funcionalidad historia clinica ambulatoria")
+    HABILITAR_HISTORIA_CLINICA_AMBULATORIA;
 
     public boolean isActive() {
         return FeatureContext.getFeatureManager().isActive(this);

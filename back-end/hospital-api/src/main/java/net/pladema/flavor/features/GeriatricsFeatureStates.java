@@ -15,6 +15,8 @@ public class GeriatricsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.MAIN_DIAGNOSIS_REQUIRED, false);
 		map.put(AppFeature.RESPONSIBLE_DOCTOR_REQUIRED, false);
 		map.put(AppFeature.HABILITAR_CARGA_FECHA_PROBABLE_ALTA, false);
+		map.put(AppFeature.HABILITAR_GESTION_DE_TURNOS, false);
+		map.put(AppFeature.HABILITAR_HISTORIA_CLINICA_AMBULATORIA, false);
 
 		return map;
 	}
