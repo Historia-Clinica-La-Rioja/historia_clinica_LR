@@ -50,6 +50,15 @@ export const SIDEBAR_MENU: MenuItem[] = [
 		featureFlag: AppFeature.HABILITAR_GESTION_DE_TURNOS
 	},
 	{
+		text: 'app.menu.CAMAS',
+		icon: 'single_bed',
+		url: './camas',
+		permissions: [
+			ERole.ADMINISTRATIVO,
+			ERole.ENFERMERO,
+		],
+	},
+	{
 		text: 'app.menu.PERFIL',
 		icon: 'account_circle',
 		url: '/home/profile',

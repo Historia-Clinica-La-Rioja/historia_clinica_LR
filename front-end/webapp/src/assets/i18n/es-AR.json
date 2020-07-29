@@ -7,7 +7,8 @@
 			"INTERNACION": "HCE Internación",
 			"PACIENTES": "Pacientes",
 			"PERFIL": "Mi cuenta",
-			"TURNOS": "Gestión de turnos"
+			"TURNOS": "Gestión de turnos",
+			"CAMAS": "Gestión de camas"
 		}
 	},
 	"buttons": {
@@ -26,13 +27,13 @@
 		"MAX_LENGTH_ERROR": "Introduzca como máximo {{max}} caracteres",
 		"MIN_LENGTH_ERROR": "Debe ingresar al menos {{minLength}} caracteres",
 		"INVALID_DATE": "La fecha ingresada no es válida",
-		"REQUIRING_FIELD_FOR_SEARCH":"Debe ingresar al menos un campo para la búsqueda",
+		"REQUIRING_FIELD_FOR_SEARCH": "Debe ingresar al menos un campo para la búsqueda",
 		"SEARCH_RESULTS": "Resultados de la búsqueda",
 		"MIN_ERROR": "El valor no puede ser menor que {{min}}",
 		"MAX_ERROR": "El valor no puede ser mayor que {{max}}",
 		"MIN_TIME_ERROR": "La hora debe ser posterior a la hora: {{minTime}}",
 		"MAX_TIME_ERROR": "La hora debe ser anterior a la hora actual",
-		"TIME_FORMAT":"La hora debe cumplir con el formato de 24 hs y tener dos digitos para la hora y los minutos respectivamente",
+		"TIME_FORMAT": "La hora debe cumplir con el formato de 24 hs y tener dos digitos para la hora y los minutos respectivamente",
 		"MAX_DATE_TODAY": "La fecha no puede ser posterior al día de hoy"
 	},
 	"messages": {

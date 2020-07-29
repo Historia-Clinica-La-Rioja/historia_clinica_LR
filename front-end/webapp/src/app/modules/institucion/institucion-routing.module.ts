@@ -26,6 +26,10 @@ const routes: Routes = [
 				path: 'turnos',
 				loadChildren: () => import('../turnos/turnos.module').then(m => m.TurnosModule),
 			},
+			{
+				path: 'camas',
+				loadChildren: () => import('../camas/camas.module').then(m => m.CamasModule),
+			},
 		]
 	}
 ];
