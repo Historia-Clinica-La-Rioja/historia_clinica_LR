@@ -128,4 +128,37 @@ public class HCEGeneralStateController {
         LOG.debug(LOGGING_OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }
+
+    @GetMapping("/chronic")
+    public ResponseEntity<List<HCEPersonalHistoryDto>> getChronicConditions(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "patientId") Integer patientId) {
+        LOG.debug(LOGGING_INPUT, institutionId, patientId);
+        List<HCEPersonalHistoryBo> resultService = hceGeneralStateService.getChronicConditions(patientId);
+        List<HCEPersonalHistoryDto> result = hceGeneralStateMapper.toListHCEPersonalHistoryDto(resultService);
+        LOG.debug(LOGGING_OUTPUT, result);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/activeProblems")
+    public ResponseEntity<List<HCEPersonalHistoryDto>> getActiveProblems(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "patientId") Integer patientId) {
+        LOG.debug(LOGGING_INPUT, institutionId, patientId);
+        List<HCEPersonalHistoryBo> resultService = hceGeneralStateService.getActiveProblems(patientId);
+        List<HCEPersonalHistoryDto> result = hceGeneralStateMapper.toListHCEPersonalHistoryDto(resultService);
+        LOG.debug(LOGGING_OUTPUT, result);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/solvedProblems")
+    public ResponseEntity<List<HCEPersonalHistoryDto>> getSolvedProblems(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "patientId") Integer patientId) {
+        LOG.debug(LOGGING_INPUT, institutionId, patientId);
+        List<HCEPersonalHistoryBo> resultService = hceGeneralStateService.getSolvedProblems(patientId);
+        List<HCEPersonalHistoryDto> result = hceGeneralStateMapper.toListHCEPersonalHistoryDto(resultService);
+        LOG.debug(LOGGING_OUTPUT, result);
+        return ResponseEntity.ok().body(result);
+    }
 }

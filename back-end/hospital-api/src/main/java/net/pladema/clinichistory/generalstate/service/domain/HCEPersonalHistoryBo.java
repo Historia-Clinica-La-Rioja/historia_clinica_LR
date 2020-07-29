@@ -5,6 +5,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.generalstate.repository.domain.HCEHealthConditionVo;
+import net.pladema.clinichistory.ips.repository.masterdata.entity.ConditionClinicalStatus;
+import net.pladema.clinichistory.ips.repository.masterdata.entity.ProblemType;
+import net.pladema.sgx.dates.configuration.LocalDateMapper;
 
 import java.time.LocalDate;
 
@@ -22,6 +25,8 @@ public class HCEPersonalHistoryBo extends HCEClinicalTermBo {
 
     private LocalDate startDate;
 
+    private LocalDate inactivationDate;
+
     private boolean main;
 
     public HCEPersonalHistoryBo(HCEHealthConditionVo source){
@@ -31,5 +36,17 @@ public class HCEPersonalHistoryBo extends HCEClinicalTermBo {
         this.problemId = source.getProblemId();
         this.startDate = source.getStartDate();
         this.main = source.isMain();
+    }
+
+    public boolean isChronic() {
+        return problemId.equals(ProblemType.CHRONIC);
+    }
+
+    public boolean isActiveProblem() {
+        return getStatusId().equals(ConditionClinicalStatus.ACTIVE);
+    }
+
+    public boolean isSolvedProblem() {
+        return getStatusId().equals(ConditionClinicalStatus.SOLVED);
     }
 }

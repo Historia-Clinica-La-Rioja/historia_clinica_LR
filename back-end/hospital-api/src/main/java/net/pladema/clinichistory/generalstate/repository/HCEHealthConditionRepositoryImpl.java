@@ -32,7 +32,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
     public List<HCEHealthConditionVo> getPersonalHistories(Integer patientId) {
         LOG.debug("Input parameters patientId {}", patientId);
         String sqlString = "WITH t AS (" +
-                "   SELECT hc.id, sctid_code, hc.status_id, hc.main, verification_status_id, problem_id, start_date, hc.note_id, hc.updated_on, hc.patient_id, " +
+                "   SELECT hc.id, sctid_code, hc.status_id, hc.main, verification_status_id, problem_id, start_date, inactivation_date, hc.note_id, hc.updated_on, hc.patient_id, " +
                 "   row_number() over (partition by sctid_code, problem_id order by hc.updated_on desc) as rw  " +
                 "   FROM document d " +
                 "   JOIN document_health_condition dhc on d.id = dhc.document_id " +
@@ -43,7 +43,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
                 "   AND hc.problem_id IN (:validProblemTypes) " +
                 ") " +
                 "SELECT t.id as id, s.id as sctid, s.pt, status_id, t.main, verification_status_id, problem_id," +
-                "start_date, patient_id " +
+                "start_date, inactivation_date, patient_id " +
                 "FROM t " +
                 "JOIN snomed s ON sctid_code = s.id " +
                 "WHERE rw = 1 " +
@@ -62,17 +62,16 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
 
         queryResult.forEach(h ->
                 result.add(
-                        new HCEHealthConditionVo(
-                                (Integer)h[0],
-                                new Snomed((String)h[1], (String)h[2], null, null),
-                                (String)h[3],
-                                (boolean)h[4],
-                                (String)h[5],
-                                (String)h[6],
-                                h[7] != null ? ((Date)h[7]).toLocalDate() : null,
-                                (Integer)h[8]
-                        )
-                )
+                    new HCEHealthConditionVo(
+                        (Integer)h[0],
+                        new Snomed((String)h[1], (String)h[2], null, null),
+                        (String)h[3],
+                        (boolean)h[4],
+                        (String)h[5],
+                        (String)h[6],
+                        h[7] != null ? ((Date)h[7]).toLocalDate() : null,
+                        h[8] != null ? ((Date)h[8]).toLocalDate() : null,
+                        (Integer) h[9]))
         );
         return result;
     }
@@ -117,16 +116,15 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
         queryResult.forEach(h ->
                 result.add(
                         new HCEHealthConditionVo(
-                                (Integer)h[0],
-                                new Snomed((String)h[1], (String)h[2], null, null),
-                                (String)h[3],
-                                (boolean)h[4],
-                                (String)h[5],
-                                (String)h[6],
-                                h[7] != null ? ((Date)h[7]).toLocalDate() : null,
-                                (Integer)h[8]
-                        )
-                )
+                            (Integer)h[0],
+                            new Snomed((String)h[1], (String)h[2], null, null),
+                            (String)h[3],
+                            (boolean)h[4],
+                            (String)h[5],
+                            (String)h[6],
+                            h[7] != null ? ((Date)h[7]).toLocalDate() : null,
+                            null,
+                            (Integer) h[8]))
         );
         return result;
     }

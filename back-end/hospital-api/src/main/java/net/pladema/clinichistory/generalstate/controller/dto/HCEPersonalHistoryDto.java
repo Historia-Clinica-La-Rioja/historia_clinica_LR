@@ -16,4 +16,6 @@ public class HCEPersonalHistoryDto extends HCEClinicalTermDto {
     @JsonFormat(pattern = JacksonDateFormatConfig.DATE_FORMAT)
     private String startDate;
 
+    @JsonFormat(pattern = JacksonDateFormatConfig.DATE_FORMAT)
+    private String inactivationDate;
 }

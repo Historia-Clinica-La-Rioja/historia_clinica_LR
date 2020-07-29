@@ -46,4 +46,31 @@ public class HCEGeneralStateServiceImpl implements HCEGeneralStateService {
         LOG.debug(LOGGING_OUTPUT, result);
         return result;
     }
+
+    @Override
+    public List<HCEPersonalHistoryBo> getChronicConditions(Integer patientId) {
+        LOG.debug(LOGGING_INPUT, patientId);
+        List<HCEHealthConditionVo> resultQuery = hceHealthConditionRepository.getPersonalHistories(patientId);
+        List<HCEPersonalHistoryBo> result = resultQuery.stream().map(HCEPersonalHistoryBo::new).filter(HCEPersonalHistoryBo::isChronic).collect(Collectors.toList());
+        LOG.debug(LOGGING_OUTPUT, result);
+        return result;
+    }
+
+    @Override
+    public List<HCEPersonalHistoryBo> getActiveProblems(Integer patientId) {
+        LOG.debug(LOGGING_INPUT, patientId);
+        List<HCEHealthConditionVo> resultQuery = hceHealthConditionRepository.getPersonalHistories(patientId);
+        List<HCEPersonalHistoryBo> result = resultQuery.stream().map(HCEPersonalHistoryBo::new).filter(hceph -> !hceph.isChronic()).filter(HCEPersonalHistoryBo::isActiveProblem).collect(Collectors.toList());
+        LOG.debug(LOGGING_OUTPUT, result);
+        return result;
+    }
+
+    @Override
+    public List<HCEPersonalHistoryBo> getSolvedProblems(Integer patientId) {
+        LOG.debug(LOGGING_INPUT, patientId);
+        List<HCEHealthConditionVo> resultQuery = hceHealthConditionRepository.getPersonalHistories(patientId);
+        List<HCEPersonalHistoryBo> result = resultQuery.stream().map(HCEPersonalHistoryBo::new).filter(hceph -> !hceph.isChronic()).filter(HCEPersonalHistoryBo::isSolvedProblem).collect(Collectors.toList());
+        LOG.debug(LOGGING_OUTPUT, result);
+        return result;
+    }
 }

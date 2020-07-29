@@ -25,17 +25,20 @@ public class HCEHealthConditionVo extends HCEClinicalTermVo {
 
     private LocalDate startDate;
 
+    private LocalDate inactivationDate;
+
     private boolean main;
 
     private Integer patientId;
 
     public HCEHealthConditionVo(Integer id, Snomed snomed, String statusId, boolean main, String verificationId,
-                                String problemId, LocalDate startDate, Integer patientId) {
+                                String problemId, LocalDate startDate, LocalDate inactivationDate, Integer patientId) {
         super(id, snomed, statusId);
         this.main = main;
         this.verificationId = verificationId;
         this.problemId = problemId;
         this.startDate = startDate;
+        this.inactivationDate = inactivationDate;
         this.patientId = patientId;
     }
 
@@ -58,7 +61,7 @@ public class HCEHealthConditionVo extends HCEClinicalTermVo {
     public boolean isSecondaryDiagnosis() {
         return problemId.equals(ProblemType.DIAGNOSTICO) && !main;
     }
-    
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(getId());

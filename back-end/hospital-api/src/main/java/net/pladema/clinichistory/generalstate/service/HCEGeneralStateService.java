@@ -9,4 +9,10 @@ public interface HCEGeneralStateService {
     List<HCEPersonalHistoryBo> getActivePersonalHistories(Integer patientId);
 
     List<HCEPersonalHistoryBo> getFamilyHistories(Integer patientId);
+
+    List<HCEPersonalHistoryBo> getChronicConditions(Integer patientId);
+
+    List<HCEPersonalHistoryBo> getActiveProblems(Integer patientId);
+
+    List<HCEPersonalHistoryBo> getSolvedProblems(Integer patientId);
 }
