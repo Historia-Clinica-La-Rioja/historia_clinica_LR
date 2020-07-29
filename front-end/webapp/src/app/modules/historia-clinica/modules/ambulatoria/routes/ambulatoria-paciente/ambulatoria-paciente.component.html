@@ -33,6 +33,15 @@
 							<app-vacunas></app-vacunas>
 						</ng-template>
 					</mat-tab>
+					<mat-tab id="tab_problemas">
+						<ng-template mat-tab-label>
+							<mat-icon>content_paste</mat-icon>
+							<span>{{ 'ambulatoria.paciente.problemas.TAB_LABEL' | translate | uppercase }}</span>
+						</ng-template>
+						<ng-template matTabContent>
+							<app-problemas></app-problemas>
+						</ng-template>
+					</mat-tab>
 				</mat-tab-group>
 			</mat-card-content>
 		</mat-card>
