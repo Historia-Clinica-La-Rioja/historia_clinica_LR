@@ -1,24 +1,25 @@
 all:
     hosts:
         postgres_master: 
-            ansible_host: IP
-            database_su_name: toBeChanged
-            database_su_password: toBeChanged
+            ansible_host: postgres
+            ansible_connection: docker
+            # ansible_host: IP
+            database_su_name: postgres
+            database_su_password: Local123
+        single_node:
+            ansible_host: nodo_a
+            ansible_connection: docker 
+            #ansible_host: IP
     children:
         web_load_balancers:
             hosts:
-                lbweb: 
-                    ansible_host: IP
+                single_node:
         backservers:
             hosts:
-                nodo_a: 
-                    ansible_host: IP
-                nodo_b: 
-                    ansible_host: IP
+                single_node:
         frontservers:
             hosts:
-                nodo_a:
-                nodo_b:
+                single_node:
         migrator:
             hosts:
                 maven: # debe poseer Maven instalado 
