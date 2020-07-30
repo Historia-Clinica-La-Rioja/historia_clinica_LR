@@ -19,6 +19,7 @@ import { BarComponent } from './components/bar/bar.component';
 import { MenuComponent } from './components/menu/menu.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { MockComponent } from './components/mock/mock.component';
+import { DayTimeRangePipe } from './pipes/day-time-range.pipe';
 
 @NgModule({
 	declarations: [
@@ -39,6 +40,7 @@ import { MockComponent } from './components/mock/mock.component';
 		MenuComponent,
 		FooterComponent,
 		MockComponent,
+		DayTimeRangePipe,
 	],
 	imports: [
 		CommonModule,
@@ -63,6 +65,7 @@ import { MockComponent } from './components/mock/mock.component';
 		MenuComponent,
 		FlexModule,
 		FlexLayoutModule,
+		DayTimeRangePipe
 	]
 })
 export class PresentationModule { }

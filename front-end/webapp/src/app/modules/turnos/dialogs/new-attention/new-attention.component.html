@@ -1,7 +1,7 @@
 <div mat-dialog-title>
 	<div class="mat-h2" translate="turnos.new-agenda.dialog.TITLE"></div>
 </div>
-
+<div>{{data.start | dayTimeRange: data.end }}</div>
 
 <form [formGroup]="form" (ngSubmit)="submit()">
 	<div fxLayout="column">

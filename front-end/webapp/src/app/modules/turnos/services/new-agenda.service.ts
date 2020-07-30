@@ -72,7 +72,12 @@ startDragToCreate(segment: WeekViewHourSegment, segmentElement: HTMLElement): vo
 	fromEvent(document, 'mousemove')
 		.pipe(
 			finalize(() => {
-				this.openConfirmDialogForEvent(dragToSelectEvent);
+				if (dragToSelectEvent.end) {
+					this.openConfirmDialogForEvent(dragToSelectEvent);
+				} else {
+					this.removeTempEvent(dragToSelectEvent);
+					this.refresh();
+				}
 			}),
 			takeUntil(fromEvent(document, 'mouseup'))
 		)
@@ -114,7 +119,13 @@ private limitNewEventsEnd(dragToSelectEvent: CalendarEvent, mouseMoveEvent: Mous
 
 
 openConfirmDialogForEvent(event: CalendarEvent): void {
-	const dialogRef = this.dialog.open(NewAttentionComponent);
+	const dialogRef = this.dialog.open(NewAttentionComponent,
+		{
+			data: {
+				start: event.start,
+				end: event.end
+			}
+		});
 	dialogRef.afterClosed().subscribe(dialogInfo => {
 		if (!dialogInfo) {
 			if (event.meta.tmpEvent) {

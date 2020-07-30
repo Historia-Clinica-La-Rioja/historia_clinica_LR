@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
@@ -20,6 +20,11 @@ import { AuthModule } from './modules/auth/auth.module';
 import { PresentationModule } from '@presentation/presentation.module';
 import { FlavoredMultiTranslateHttpLoader } from '@core/utils/flavored-multi-translate-http-loader';
 import { PublicService } from '@api-rest/services/public.service';
+
+import { registerLocaleData } from '@angular/common';
+import localeEsAr from '@angular/common/locales/es-AR';
+
+registerLocaleData(localeEsAr, 'es-AR');
 
 @NgModule({
 	declarations: [
@@ -54,6 +59,7 @@ import { PublicService } from '@api-rest/services/public.service';
 	providers: [
 		httpInterceptorProviders,
 		DatePipe,
+		{ provide: LOCALE_ID, useValue: 'es-AR' }
 	],
 	bootstrap: [AppComponent]
 })
