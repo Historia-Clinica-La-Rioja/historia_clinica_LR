@@ -30,7 +30,7 @@ const InstitutionShow = props => (
             <TextField source="email" />
             <TextField source="cuit" />
             <TextField source="sisaCode" />
-            <ReferenceField source="addressId" reference="addresses">
+            <ReferenceField source="addressId" reference="addresses" link={'show'}>
                 <TextField source="cityId"/>
             </ReferenceField>
             <ReferenceField label="Latitud" source="addressId" reference="addresses" link={false}>

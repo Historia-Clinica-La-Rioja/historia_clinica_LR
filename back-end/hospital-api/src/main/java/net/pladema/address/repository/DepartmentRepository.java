@@ -19,4 +19,8 @@ public interface DepartmentRepository extends JpaRepository<Department, Short> {
 	@Transactional(readOnly = true)
 	@Query("SELECT d FROM Department as d WHERE d.provinceId = :provinceId")
 	<T> Collection<T> findByProvince(@Param("provinceId") Short provinceId, Sort by, Class<T> clazz);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT d.provinceId FROM Department as d WHERE d.id = :departmentId")
+	Short findProvinceByDepartment(@Param("departmentId") Short departmentId);
 }

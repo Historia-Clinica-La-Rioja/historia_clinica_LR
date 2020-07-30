@@ -17,14 +17,17 @@ public class AddressVo {
 
     private String apartment;
 
+    private String postcode;
+
     private CityDto city;
 
-    public AddressVo (Integer addresId,String street, String number, String floor, String apartment,Integer cityId,String cityDescription){
-        this.id = addresId;
+    public AddressVo (Integer addressId,String street, String number, String floor, String apartment,String postcode, Integer cityId,String cityDescription){
+        this.id = addressId;
         this.street = street;
         this.number = number;
         this.floor = floor;
         this.apartment = apartment;
+        this.postcode = postcode;
         this.city = new CityDto();
         this.city.setId(cityId);
         this.city.setDescription(cityDescription);

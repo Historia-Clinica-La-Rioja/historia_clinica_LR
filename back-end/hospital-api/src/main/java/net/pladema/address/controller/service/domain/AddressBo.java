@@ -17,6 +17,8 @@ public class AddressBo {
 
     private String apartment;
 
+    private String postcode;
+
     private CityDto city;
 
     public AddressBo (AddressVo addressVo){
@@ -26,5 +28,6 @@ public class AddressBo {
         this.floor = addressVo.getFloor();
         this.apartment = addressVo.getApartment();
         this.city = addressVo.getCity();
+        this.postcode = addressVo.getPostcode();
     }
 }

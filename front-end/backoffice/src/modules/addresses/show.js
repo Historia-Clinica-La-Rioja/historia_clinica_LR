@@ -18,6 +18,12 @@ const AddressShow = props => (
             <ReferenceField source="cityId" reference="cities">
                 <TextField source="description" />
             </ReferenceField>
+            <ReferenceField source="departmentId" reference="departments">
+                <TextField source="description"/>
+            </ReferenceField>
+            <ReferenceField source="provinceId" reference="provinces">
+                <TextField source="description"/>
+            </ReferenceField>
             <TextField source="latitud" />
             <TextField source="longitud" />
         </SimpleShowLayout>

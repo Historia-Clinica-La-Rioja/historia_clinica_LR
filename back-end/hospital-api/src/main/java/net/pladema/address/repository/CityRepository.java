@@ -26,4 +26,8 @@ public interface CityRepository extends JpaRepository<City, Integer> {
 	@Query("SELECT c FROM City as c " +
 			"WHERE c.departmentId = :departmentId AND c.active = true AND (c.cityType <> net.pladema.address.repository.entity.City.BARRIO or c.cityType is null) ")
 	<T> Collection<T> findByDepartment(@Param("departmentId") Short departmentId, Sort by, Class<T> clazz);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT c.departmentId FROM City as c WHERE c.id = :cityId")
+	Short findDepartmentByCity(@Param("cityId") Integer cityId);
 }

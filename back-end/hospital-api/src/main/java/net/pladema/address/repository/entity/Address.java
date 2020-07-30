@@ -56,8 +56,6 @@ public class Address implements Serializable {
 		newAddress.setNumber("");
 		newAddress.setCityId(1);
 		newAddress.setPostcode("");
-        newAddress.setLatitud(10.3);
-        newAddress.setLongitud(14.3);
         return newAddress;
     }
 

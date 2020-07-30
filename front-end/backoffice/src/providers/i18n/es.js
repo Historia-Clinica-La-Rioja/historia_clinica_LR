@@ -87,6 +87,9 @@ export default {
                 apartment: 'Nro. dpto.',
                 quarter: 'Cuarto',
                 postcode: 'Código postal',
+                cityId: 'Ciudad',
+                departmentId: 'Departamento',
+                provinceId: 'Provincia',
             },
         }, 
         institutions: {

@@ -84,7 +84,7 @@ const AddressEdit = props => (
             <TextInput source="floor" />
             <TextInput source="apartment" />
             <TextInput source="quarter" />
-            <TextInput source="postCode" validate={[required()]} />
+            <TextInput source="postcode" validate={[required()]} />
             <NumberInput source="latitud" />
             <NumberInput source="longitud" />
 
