@@ -29,7 +29,7 @@ public class SecurityServiceImplTest {
 
 	@Before
 	public void setUp() {
-		securityServiceImpl = new SecurityServiceImpl(userAssignmentService);
+		securityServiceImpl = new SecurityServiceImpl("secret", userAssignmentService);
 	}
 
 	@Test

@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import net.pladema.permissions.service.UserAssignmentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import net.pladema.permissions.service.UserAssignmentService;
 import net.pladema.security.authorization.InstitutionGrantedAuthority;
 import net.pladema.security.service.SecurityService;
 import net.pladema.security.service.enums.ETokenType;
@@ -23,31 +23,32 @@ import net.pladema.security.service.enums.ETokenType;
 @Service
 public class SecurityServiceImpl implements SecurityService {
 
-	private static final Logger LOG = LoggerFactory.getLogger(SecurityServiceImpl.class);
 
 	private static final String TOKENTYPE = "tokentype";
 
 	private static final String JWT_INVALID = "jwt.invalid";
-	
-	@Value("${token.secret}")
-	private String secret;
 
-	private UserAssignmentService userAssignmentService;
+	private final Logger logger;
+	private final String secret;
+	private final UserAssignmentService userAssignmentService;
 	
-	public SecurityServiceImpl(UserAssignmentService userAssignmentService) {
+	public SecurityServiceImpl(
+			@Value("${token.secret}") String secret,
+			UserAssignmentService userAssignmentService) {
+		this.logger = LoggerFactory.getLogger(this.getClass());
+		this.secret = secret;
 		this.userAssignmentService = userAssignmentService;
 	}
 
 	@Override
 	public Optional<UsernamePasswordAuthenticationToken> getAppAuthentication(String authToken) {
-		Optional<Claims> optClaims = Optional.ofNullable(getClaimsFromToken(authToken));
-		if (optClaims.isPresent()) {
-			Claims claims = optClaims.get();
-			LOG.info("{}", claims);
-			return Optional.of(new UsernamePasswordAuthenticationToken(getUserId(claims), "", getAuthorities(claims)));
-		}
-		LOG.info("{}", "Empty claims");
-		return Optional.empty();
+		Optional<UsernamePasswordAuthenticationToken> userAuthToken = parseClaimsFromToken(authToken)
+				.map((Claims claims) -> {
+					logger.debug("Claims {}", claims);
+					return new UsernamePasswordAuthenticationToken(getUserId(claims), "", getAuthorities(claims));
+				});
+		logger.debug("Token {}", userAuthToken);
+		return userAuthToken;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -66,11 +67,10 @@ public class SecurityServiceImpl implements SecurityService {
 
 	@Override
 	public boolean validType(String token, ETokenType eTokenType) {
-		Claims claims = getClaimsFromToken(token);
-		if (claims.get(TOKENTYPE) == null)
-			return false;
-		String tokenType = (String) claims.get(TOKENTYPE);
-		return tokenType.equals(eTokenType.getUrl());
+		Object tokenType = parseClaimsFromToken(token)
+				.map(claims -> claims.get(TOKENTYPE))
+				.orElse(null);
+		return eTokenType.getUrl().equals(tokenType);
 	}
 
 	@Override
@@ -80,15 +80,22 @@ public class SecurityServiceImpl implements SecurityService {
 	}
 
 	protected Optional<Date> getExpirationDateFromToken(String token) {
-		Optional<Claims> optClaims = Optional.ofNullable(getClaimsFromToken(token));
-		if (optClaims.isPresent())
-			return Optional.ofNullable(optClaims.get().getExpiration());
-		return Optional.empty();
+		return parseClaimsFromToken(token).map(claims -> claims.getExpiration());
 	}
 
 	@Override
 	public Claims getClaimsFromToken(String token) {
 		return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+	}
+
+	protected Optional<Claims> parseClaimsFromToken(String token) {
+		try {
+			return Optional.ofNullable(Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody());
+		} catch (Exception e) {
+			logger.info(e.getMessage());
+			logger.debug(e.getMessage(), e);
+			return Optional.empty();
+		}
 	}
 
 	@Override
