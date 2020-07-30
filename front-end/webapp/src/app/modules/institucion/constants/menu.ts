@@ -46,7 +46,6 @@ export const SIDEBAR_MENU: MenuItem[] = [
 			ERole.ADMINISTRATIVO,
 			ERole.ESPECIALISTA_MEDICO,
 			ERole.PROFESIONAL_DE_SALUD,
-			ERole.ENFERMERO,
 		],
 		featureFlag: AppFeature.HABILITAR_GESTION_DE_TURNOS
 	},
