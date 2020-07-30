@@ -11,12 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import net.pladema.BaseRepositoryTest;
+import net.pladema.UnitRepository;
 import net.pladema.permissions.repository.entity.Permission;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest(showSql = false)
-public class PermissionRepositoryTest extends BaseRepositoryTest {
+public class PermissionRepositoryTest extends UnitRepository {
 
 	@Autowired
 	private PermissionRepository permissionRepository;

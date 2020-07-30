@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.generalstate.repository;
 
-import net.pladema.BaseRepositoryTest;
+import net.pladema.UnitRepository;
 import net.pladema.clinichistory.documents.repository.entity.Document;
 import net.pladema.clinichistory.generalstate.repository.domain.HCEMapClinicalObservationVo;
 import net.pladema.clinichistory.ips.repository.entity.ObservationLab;
@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest(showSql = false)
-public class HCEClinicalObservationRepositoryImplTest extends BaseRepositoryTest {
+public class HCEClinicalObservationRepositoryImplTest extends UnitRepository {
 
 	private HCEClinicalObservationRepositoryImpl hceClinicalObservationRepository;
 

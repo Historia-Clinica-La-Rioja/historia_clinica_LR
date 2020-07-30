@@ -1,9 +1,8 @@
 package net.pladema.clinichistory.hospitalization.controller.documents.anamnesis;
 
-import net.pladema.BaseControllerTest;
+import net.pladema.UnitController;
 import net.pladema.clinichistory.documents.repository.DocumentRepository;
 import net.pladema.clinichistory.documents.repository.entity.Document;
-import net.pladema.clinichistory.hospitalization.controller.documents.anamnesis.dto.AnamnesisDto;
 import net.pladema.clinichistory.hospitalization.controller.documents.anamnesis.mapper.AnamnesisMapper;
 import net.pladema.clinichistory.hospitalization.controller.mapper.ResponsibleDoctorMapper;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
@@ -12,9 +11,6 @@ import net.pladema.clinichistory.hospitalization.service.anamnesis.AnamnesisServ
 import net.pladema.clinichistory.hospitalization.service.anamnesis.CreateAnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.UpdateAnamnesisService;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.constraint.validator.EffectiveVitalSignTimeValidator;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.DiagnosisDto;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.HealthConditionDto;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentStatus;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
 import net.pladema.establishment.repository.InstitutionRepository;
@@ -35,7 +31,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.Collections;
+
 import java.util.Locale;
 import java.util.Optional;
 
@@ -48,7 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(AnamnesisController.class)
-public class AnamnesisControllerTest extends BaseControllerTest {
+public class AnamnesisControllerTest extends UnitController {
 
 	private static final Long DOCUMENTID = 1L;
 	private static final String POST = "/institutions/1/internments/1/anamnesis";
@@ -164,12 +160,6 @@ public class AnamnesisControllerTest extends BaseControllerTest {
 
 	@Test
 	@WithMockUser
-	public void test_createAnamnesisWithVitalSignInvalid(){
-		//to complete
-	}
-
-	@Test
-	@WithMockUser
 	public void test_getAnamnesisSuccess() throws Exception {
 		configContextDocumentValid();
 		this.mockMvc.perform(MockMvcRequestBuilders.get(GET))
@@ -240,12 +230,6 @@ public class AnamnesisControllerTest extends BaseControllerTest {
 				.andExpect(result -> assertTrue(result.getResolvedException() instanceof EntityNotFoundException));
 	}
 
-	@Test
-	@WithMockUser
-	public void test_updateAnamnesisWithVitalSignInvalid(){
-		//to complete
-	}
-
 	private void configContextInternmentValid(){
 		when(internmentEpisodeRepository.existsById(anyInt())).thenReturn(true);
 		when(institutionRepository.existsById(anyInt())).thenReturn(true);
@@ -265,7 +249,7 @@ public class AnamnesisControllerTest extends BaseControllerTest {
 		when(internmentEpisodeService.getPatient(any())).thenReturn(Optional.of(1));
 	}
 
-	private static Optional<Document> mockDocument(){
+	private static Optional<Document> mockDocument() {
 		Document mock = new Document();
 		mock.setId(DOCUMENTID);
 		mock.setTypeId(DocumentType.ANAMNESIS);
@@ -273,44 +257,79 @@ public class AnamnesisControllerTest extends BaseControllerTest {
 		return Optional.of(mock);
 	}
 
-	private String mockRequestBodyBasic() throws Exception {
-		return objectMapper.writeValueAsString(mockBasicAnamnesisDto());
+	private String mockRequestBodyBasic() {
+		return "{" +
+					"\"confirmed\":false," +
+					"\"notes\":null," +
+					"\"mainDiagnosis\":{" +
+						"\"id\":null," +
+						"\"statusId\":null," +
+						"\"snomed\":{" +
+							"\"id\":\"43275000\"," +
+							"\"pt\":\"Preferred Term\"," +
+							"\"parentId\":null," +
+							"\"parentFsn\":null" +
+						"}," +
+						"\"verificationId\":null" +
+					"}," +
+					"\"diagnosis\":[]," +
+					"\"personalHistories\":[]," +
+					"\"familyHistories\":[]," +
+					"\"medications\":[]," +
+					"\"immunizations\":[]," +
+					"\"allergies\":[]," +
+					"\"anthropometricData\":null," +
+					"\"vitalSigns\":null" +
+				"}";
 	}
 
-	private String mockEmptyAnamnesisDto() throws Exception {
-		return objectMapper.writeValueAsString(new AnamnesisDto());
+	private String mockEmptyAnamnesisDto() {
+		return "{" +
+					"\"confirmed\":false," +
+					"\"notes\":null," +
+					"\"mainDiagnosis\":null," +
+					"\"diagnosis\":[]," +
+					"\"personalHistories\":[]," +
+					"\"familyHistories\":[]," +
+					"\"medications\":[]," +
+					"\"immunizations\":[]," +
+					"\"allergies\":[]," +
+					"\"anthropometricData\":null," +
+					"\"vitalSigns\":null" +
+				"}";
 	}
 
-	private static AnamnesisDto mockBasicAnamnesisDto(){
-		AnamnesisDto mock = new AnamnesisDto();
-		mock.setMainDiagnosis(mockHealthConditionDto());
-		return mock;
+	private String mockAnamnesisDtoWithDiagnosis() {
+		return "{" +
+					"\"confirmed\":false," +
+					"\"notes\":null," +
+					"\"mainDiagnosis\":{" +
+						"\"id\":null," +
+						"\"statusId\":null," +
+						"\"snomed\":{\"id\":\"43275000\",\"pt\":\"Preferred Term\",\"parentId\":null,\"parentFsn\":null}," +
+						"\"verificationId\":null" +
+					"}," +
+					"\"diagnosis\":[" +
+						"{" +
+							"\"id\":null," +
+							"\"statusId\":null," +
+							"\"snomed\":{" +
+								"\"id\":\"43275000\",\"pt\":\"Preferred Term\",\"parentId\":null,\"parentFsn\":null" +
+							"}," +
+							"\"verificationId\":null," +
+							"\"presumptive\":false" +
+						"}" +
+					"]," +
+					"\"personalHistories\":[]," +
+					"\"familyHistories\":[]," +
+					"\"medications\":[]," +
+					"\"immunizations\":[]," +
+					"\"allergies\":[]," +
+					"\"anthropometricData\":null," +
+					"\"vitalSigns\":null" +
+				"}";
 	}
 
-	private String mockAnamnesisDtoWithDiagnosis() throws Exception {
-		AnamnesisDto mock = mockBasicAnamnesisDto();
-		mock.setDiagnosis(Collections.singletonList(mockDiagnosisDto()));
-		return objectMapper.writeValueAsString(mock);
-	}
-
-	private static HealthConditionDto mockHealthConditionDto(){
-		HealthConditionDto diagnosis = new HealthConditionDto();
-		diagnosis.setSnomed(mockSnomed());
-		return diagnosis;
-	}
-
-	private static DiagnosisDto mockDiagnosisDto(){
-		DiagnosisDto diagnosis = new DiagnosisDto();
-		diagnosis.setSnomed(mockSnomed());
-		return diagnosis;
-	}
-
-	private static SnomedDto mockSnomed(){
-		SnomedDto mock = new SnomedDto();
-		mock.setId(OTITIS);
-		mock.setPt("Preferred Term");
-		return mock;
-	}
 
 	private String buildMessageWithPath(String keyMessage, String path){
 		return path + ": " + buildMessage(keyMessage);

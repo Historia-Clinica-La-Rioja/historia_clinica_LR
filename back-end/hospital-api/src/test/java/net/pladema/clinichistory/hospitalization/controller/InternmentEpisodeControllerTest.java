@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.hospitalization.controller;
 
-import net.pladema.BaseControllerTest;
+import net.pladema.UnitController;
 import net.pladema.clinichistory.documents.repository.DocumentRepository;
 import net.pladema.clinichistory.hospitalization.controller.mapper.InternmentEpisodeMapper;
 import net.pladema.clinichistory.hospitalization.controller.mapper.PatientDischargeMapper;
@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(InternmentEpisodeController.class)
-public class InternmentEpisodeControllerTest extends BaseControllerTest {
+public class InternmentEpisodeControllerTest extends UnitController {
 
 	@MockBean
 	private InternmentEpisodeService internmentEpisodeService;

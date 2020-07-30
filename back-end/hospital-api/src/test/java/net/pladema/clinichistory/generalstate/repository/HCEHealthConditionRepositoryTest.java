@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.generalstate.repository;
 
-import net.pladema.BaseRepositoryTest;
+import net.pladema.UnitRepository;
 import net.pladema.clinichistory.documents.repository.entity.Document;
 import net.pladema.clinichistory.generalstate.repository.domain.HCEHealthConditionVo;
 import net.pladema.clinichistory.ips.repository.entity.HealthCondition;
@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest(showSql = false)
-public class HCEHealthConditionRepositoryTest extends BaseRepositoryTest {
+public class HCEHealthConditionRepositoryTest extends UnitRepository {
 
 	private final Short AMBULATORIA = 4;
 

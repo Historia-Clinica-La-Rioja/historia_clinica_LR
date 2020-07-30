@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.ips.repository;
 
-import net.pladema.BaseRepositoryTest;
+import net.pladema.UnitRepository;
 import net.pladema.clinichistory.ips.repository.entity.AllergyIntolerance;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest(showSql = false)
-public class AllergyIntoleranceRepositoryTest extends BaseRepositoryTest {
+public class AllergyIntoleranceRepositoryTest extends UnitRepository {
 
 	@Autowired
 	private AllergyIntoleranceRepository allergyIntoleranceRepository;

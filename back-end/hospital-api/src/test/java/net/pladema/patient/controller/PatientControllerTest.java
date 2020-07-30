@@ -16,7 +16,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import net.pladema.BaseControllerTest;
+import net.pladema.UnitController;
 import net.pladema.address.controller.service.AddressExternalService;
 import net.pladema.federar.services.FederarService;
 import net.pladema.patient.controller.mapper.PatientMapper;
@@ -27,7 +27,7 @@ import net.pladema.person.controller.service.PersonExternalService;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(PatientController.class)
-public class PatientControllerTest extends BaseControllerTest {
+public class PatientControllerTest extends UnitController {
 
 	@MockBean
 	private PatientService patientService;

@@ -13,13 +13,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import net.pladema.BaseControllerTest;
+import net.pladema.UnitController;
 import net.pladema.clinichistory.hospitalization.controller.mapper.InternmentEpisodeMapper;
 import net.pladema.clinichistory.hospitalization.service.InternmentPatientService;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(InternmentPatientController.class)
-public class InternmentPatientControllerTest extends BaseControllerTest {
+public class InternmentPatientControllerTest extends UnitController {
 
 	@MockBean
 	private InternmentPatientService internmentPatientService;

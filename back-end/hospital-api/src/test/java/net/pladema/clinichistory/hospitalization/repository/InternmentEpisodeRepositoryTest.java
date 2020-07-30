@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.hospitalization.repository;
 
-import net.pladema.BaseRepositoryTest;
+import net.pladema.UnitRepository;
 import net.pladema.clinichistory.documents.repository.entity.Document;
 import net.pladema.clinichistory.documents.repository.entity.EvolutionNoteDocument;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
@@ -21,7 +21,7 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest(showSql = false)
-public class InternmentEpisodeRepositoryTest extends BaseRepositoryTest {
+public class InternmentEpisodeRepositoryTest extends UnitRepository {
 
 	@Autowired
 	private InternmentEpisodeRepository internmentEpisodeRepository;

@@ -15,9 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import net.pladema.BaseControllerTest;
-import net.pladema.security.authentication.controller.AuthenticationController;
-import net.pladema.security.authentication.controller.dto.LoginDto;
+import net.pladema.UnitController;
 import net.pladema.security.authentication.controller.mapper.JWTokenMapper;
 import net.pladema.security.authentication.controller.mapper.LoginMapper;
 import net.pladema.security.authentication.service.AuthenticationService;
@@ -25,7 +23,7 @@ import net.pladema.user.service.UserService;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(AuthenticationController.class)
-public class AuthenticationControllerTest extends BaseControllerTest {
+public class AuthenticationControllerTest extends UnitController {
 
 	@Value("/auth")
 	protected String authURL;
@@ -51,7 +49,7 @@ public class AuthenticationControllerTest extends BaseControllerTest {
 	public void testCors() throws Exception {
 		
 		when(userService.isEnable(ArgumentMatchers.anyString())).thenReturn(true);
-		String body = objectMapper.writeValueAsString(new LoginDto("pepe@pepe.com", "password"));
+		String body = "{\"username\":\"pepe@pepe.com\",\"password\":\"password\"}";
 		mockMvc.perform(post(authURL).content(body).contentType(MediaType.APPLICATION_JSON)
 				.header("Access-Control-Request-Method", "GET")
 				.header("Origin", "http://www.someurl.com"))

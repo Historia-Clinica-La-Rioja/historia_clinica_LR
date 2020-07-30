@@ -1,6 +1,6 @@
 package net.pladema.permissions.controller;
 
-import net.pladema.BaseControllerTest;
+import net.pladema.UnitController;
 import net.pladema.permissions.controller.mappers.UserInfoMapper;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.permissions.service.LoggedUserService;
@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(LoggedUserController.class)
-public class LoggedUserControllerTest extends BaseControllerTest {
+public class LoggedUserControllerTest extends UnitController {
 
 	@MockBean
 	private LoggedUserService loggedUserService;

@@ -380,6 +380,7 @@ export interface HCEMedicationDto extends ClinicalTermDto {
 }
 
 export interface HCEPersonalHistoryDto extends HCEClinicalTermDto {
+    inactivationDate: string;
     startDate: string;
 }
 
