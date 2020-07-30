@@ -1,4 +1,4 @@
-package net.pladema.clinichistory.hospitalization.repository.listener;
+package net.pladema.sgx.auditable.entity;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -7,10 +7,10 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import java.time.LocalDateTime;
 
-public class InternationListener {
+public class SGXAuditListener {
 
 	@PrePersist
-	public void setCreatedOn(InternationAuditableEntity auditable) {
+	public void setCreatedOn(SGXAuditableEntity auditable) {
 		auditable.setCreatedOn(LocalDateTime.now());
 		auditable.setUpdatedOn(LocalDateTime.now());
 		auditable.setCreatedBy(getCurrentAuditor());
@@ -18,7 +18,7 @@ public class InternationListener {
 	}
 
 	@PreUpdate
-	public void setUpdatedOn(InternationAuditableEntity auditable) {
+	public void setUpdatedOn(SGXAuditableEntity auditable) {
 		auditable.setUpdatedOn(LocalDateTime.now());
 		auditable.setUpdatedBy(getCurrentAuditor());
 	}

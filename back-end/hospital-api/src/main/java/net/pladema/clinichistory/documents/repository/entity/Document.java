@@ -4,20 +4,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.hospitalization.repository.listener.InternationAuditableEntity;
-import net.pladema.clinichistory.hospitalization.repository.listener.InternationListener;
+import net.pladema.sgx.auditable.entity.SGXAuditableEntity;
+import net.pladema.sgx.auditable.entity.SGXAuditListener;
 
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
 @Table(name = "document")
-@EntityListeners(InternationListener.class)
+@EntityListeners(SGXAuditListener.class)
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
-public class Document extends InternationAuditableEntity {
+public class Document extends SGXAuditableEntity {
 
 	/**
 	 * 

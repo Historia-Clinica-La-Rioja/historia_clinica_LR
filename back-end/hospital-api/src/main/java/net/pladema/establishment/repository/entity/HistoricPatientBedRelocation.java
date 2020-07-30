@@ -14,16 +14,16 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.hospitalization.repository.listener.InternationAuditableEntity;
-import net.pladema.clinichistory.hospitalization.repository.listener.InternationListener;
+import net.pladema.sgx.auditable.entity.SGXAuditableEntity;
+import net.pladema.sgx.auditable.entity.SGXAuditListener;
 
 @Entity
 @Table(name = "historic_patient_bed_relocation")
-@EntityListeners(InternationListener.class)
+@EntityListeners(SGXAuditListener.class)
 @Getter
 @Setter
 @ToString
-public class HistoricPatientBedRelocation extends InternationAuditableEntity{
+public class HistoricPatientBedRelocation extends SGXAuditableEntity {
 	
 	/**
 	 * 

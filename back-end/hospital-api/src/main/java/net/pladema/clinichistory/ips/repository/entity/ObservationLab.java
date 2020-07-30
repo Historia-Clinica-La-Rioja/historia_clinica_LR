@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.hospitalization.repository.listener.InternationListener;
+import net.pladema.sgx.auditable.entity.SGXAuditListener;
 import net.pladema.clinichistory.ips.service.domain.enums.EObservationLab;
 
 import javax.persistence.Entity;
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "observation_lab")
-@EntityListeners(InternationListener.class)
+@EntityListeners(SGXAuditListener.class)
 @Getter
 @Setter
 @ToString

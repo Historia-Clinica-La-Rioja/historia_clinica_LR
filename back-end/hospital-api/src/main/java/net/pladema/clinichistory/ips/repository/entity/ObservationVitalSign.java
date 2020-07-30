@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.hospitalization.repository.listener.InternationListener;
+import net.pladema.sgx.auditable.entity.SGXAuditListener;
 import net.pladema.clinichistory.ips.service.domain.enums.EVitalSign;
 
 import javax.persistence.Column;
@@ -16,7 +16,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "observation_vital_sign")
-@EntityListeners(InternationListener.class)
+@EntityListeners(SGXAuditListener.class)
 @Getter
 @Setter
 @ToString

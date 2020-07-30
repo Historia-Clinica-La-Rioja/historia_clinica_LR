@@ -3,8 +3,8 @@ package net.pladema.medicalconsultation.appointment.repository.entity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.hospitalization.repository.listener.InternationAuditableEntity;
-import net.pladema.clinichistory.hospitalization.repository.listener.InternationListener;
+import net.pladema.sgx.auditable.entity.SGXAuditableEntity;
+import net.pladema.sgx.auditable.entity.SGXAuditListener;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,11 +18,11 @@ import java.time.LocalTime;
 
 @Entity
 @Table(name = "appointment")
-@EntityListeners(InternationListener.class)
+@EntityListeners(SGXAuditListener.class)
 @Getter
 @Setter
 @ToString
-public class Appointment extends InternationAuditableEntity {
+public class Appointment extends SGXAuditableEntity {
 
     @Id
     @Column(name = "id")

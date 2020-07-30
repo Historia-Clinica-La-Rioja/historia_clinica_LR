@@ -1,9 +1,7 @@
-package net.pladema.clinichistory.hospitalization.repository.listener;
+package net.pladema.sgx.auditable.entity;
 
 import net.pladema.sgx.auditable.CreationableEntity;
 import net.pladema.sgx.auditable.UpdateableEntity;
-import net.pladema.sgx.auditable.entity.Creationable;
-import net.pladema.sgx.auditable.entity.Updateable;
 
 import javax.persistence.Embedded;
 import javax.persistence.MappedSuperclass;
@@ -11,7 +9,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @MappedSuperclass
-public abstract class InternationAuditableEntity implements CreationableEntity<Integer>, UpdateableEntity<Integer>, Serializable {
+public abstract class SGXAuditableEntity implements CreationableEntity<Integer>, UpdateableEntity<Integer>, Serializable {
 	
 	/**
 	 * 

@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.ips.repository.entity;
 
 import lombok.*;
-import net.pladema.clinichistory.hospitalization.repository.listener.InternationAuditableEntity;
+import net.pladema.sgx.auditable.entity.SGXAuditableEntity;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.ObservationStatus;
 
 import javax.persistence.*;
@@ -14,7 +14,7 @@ import java.util.Objects;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class ClinicalObservation extends InternationAuditableEntity {
+public abstract class ClinicalObservation extends SGXAuditableEntity {
 
     @Id
     @Column(name = "id")

@@ -4,8 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.hospitalization.repository.listener.InternationAuditableEntity;
-import net.pladema.clinichistory.hospitalization.repository.listener.InternationListener;
+import net.pladema.sgx.auditable.entity.SGXAuditableEntity;
+import net.pladema.sgx.auditable.entity.SGXAuditListener;
 import net.pladema.clinichistory.hospitalization.service.domain.PatientDischargeBo;
 
 import javax.persistence.*;
@@ -13,12 +13,12 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "patient_discharge")
-@EntityListeners(InternationListener.class)
+@EntityListeners(SGXAuditListener.class)
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
-public class PatientDischarge extends InternationAuditableEntity {
+public class PatientDischarge extends SGXAuditableEntity {
 
 
 	/**

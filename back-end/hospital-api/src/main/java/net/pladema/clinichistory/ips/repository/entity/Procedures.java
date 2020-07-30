@@ -1,8 +1,8 @@
 package net.pladema.clinichistory.ips.repository.entity;
 
 import lombok.*;
-import net.pladema.clinichistory.hospitalization.repository.listener.InternationAuditableEntity;
-import net.pladema.clinichistory.hospitalization.repository.listener.InternationListener;
+import net.pladema.sgx.auditable.entity.SGXAuditableEntity;
+import net.pladema.sgx.auditable.entity.SGXAuditListener;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.ProceduresStatus;
 
 import javax.persistence.*;
@@ -10,12 +10,12 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "procedures")
-@EntityListeners(InternationListener.class)
+@EntityListeners(SGXAuditListener.class)
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
-public class Procedures extends InternationAuditableEntity {
+public class Procedures extends SGXAuditableEntity {
 
 	/**
 	 *

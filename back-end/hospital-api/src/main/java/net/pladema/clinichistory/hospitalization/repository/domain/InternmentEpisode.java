@@ -4,8 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.hospitalization.repository.listener.InternationAuditableEntity;
-import net.pladema.clinichistory.hospitalization.repository.listener.InternationListener;
+import net.pladema.sgx.auditable.entity.SGXAuditableEntity;
+import net.pladema.sgx.auditable.entity.SGXAuditListener;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.InternmentEpisodeStatus;
 
 import javax.persistence.*;
@@ -15,12 +15,12 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "internment_episode")
-@EntityListeners(InternationListener.class)
+@EntityListeners(SGXAuditListener.class)
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
-public class InternmentEpisode extends InternationAuditableEntity {
+public class InternmentEpisode extends SGXAuditableEntity {
 
 	/**
 	 * 
