@@ -1,0 +1,11 @@
+{
+    "gestion-camas": {
+        "home": {
+            "TITLE": "Gestión de camas",
+            "SUBTITLE": "Disponibilidad de camas"
+        },
+        "detail": {
+            "TITLE": "Detalle de cama"
+        }
+    }
+}

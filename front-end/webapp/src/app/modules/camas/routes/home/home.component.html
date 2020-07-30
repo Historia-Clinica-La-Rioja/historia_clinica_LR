@@ -1,1 +1,49 @@
-<p>home works!</p>
+<app-content width="full">
+    <section>
+        <h2 class="page-title" [translate]="'gestion-camas.home.TITLE'"></h2>
+        
+        <div fxLayout="column">
+
+            <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="space-between start">
+
+                <mat-card>
+                    <mat-card-content>
+                        <div fxLayout="row" fxLayoutGap="10px">
+                            <div id="filtros" class="panel-filtro">
+                                <h2 class="page-title" [translate]="'gestion-camas.home.SUBTITLE'"></h2>
+                                <app-filtros-camas></app-filtros-camas>
+                            </div>
+                                
+                            <section id="mapeo">
+                                <div fxLayout="column" *ngFor="let sector of allCamas">
+                                    <div id="title">
+                                        <h2>Sector {{sector.idSector}}</h2>
+                                    </div>
+                                    <div fxLayout="column" *ngFor="let especialidad of sector.especialidad">
+                                        <div id="title">
+                                            <h2>Especialidad {{especialidad.idEspecialidad}}</h2>
+                                        </div>
+                                        <div fxLayout="row wrap">
+                                            <div *ngFor="let cama of especialidad.camas">
+                                                <button mat-raised-button>
+                                                    Cama
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+
+                <section id="detail">
+                    <app-cama-detail></app-cama-detail>
+                </section>
+
+            </div>
+
+        </div>
+        
+    </section>
+</app-content>
