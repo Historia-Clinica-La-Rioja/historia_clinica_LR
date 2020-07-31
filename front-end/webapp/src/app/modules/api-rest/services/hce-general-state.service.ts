@@ -71,5 +71,6 @@ export class HceGeneralStateService {
 	getChronicConditions(patientId: number): Observable<HCEPersonalHistoryDto[]> {
 		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/chronic`;
 		return this.http.get<HCEPersonalHistoryDto[]>(url);
+	}
 
 }

@@ -15,10 +15,24 @@
 	</app-summary-card>
 	<app-summary-card [header]="cronicos"
 					  [editable]="false">
-					  <app-no-data></app-no-data>
+					  <mat-list id="lista-problemas-cronicos" *ngIf="chronicProblems?.length > 0 else noInfo">
+						<mat-list-item *ngFor="let problem of chronicProblems">
+							{{ problem.snomed.pt}} - {{problem.startDate }}
+						</mat-list-item>
+					  </mat-list>
+					  <ng-template #noInfo>
+						<app-no-data></app-no-data>
+					  </ng-template>
 	</app-summary-card>
 	<app-summary-card [header]="resueltos"
 					  [editable]="false">
-					  <app-no-data></app-no-data>
+					  <mat-list id="lista-problemas-resueltos" *ngIf="solvedProblems?.length > 0 else noInfo">
+						<mat-list-item *ngFor="let problem of solvedProblems">
+							{{ problem.snomed.pt}} - {{problem.startDate }}
+						</mat-list-item>
+					  </mat-list>
+					  <ng-template #noInfo>
+						<app-no-data></app-no-data>
+					  </ng-template>
 	</app-summary-card>
 </section>
