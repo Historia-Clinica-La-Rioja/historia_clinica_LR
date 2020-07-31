@@ -56,7 +56,8 @@
 				</div>
 				<div fxLayout="row">
 					<mat-form-field appearance="outline">
-						<mat-select id="professionalId" name="professionalId" formControlName="professionalId"
+						<mat-select id="healthcareProfessionalId" name="healthcareProfessionalId"
+							formControlName="healthcareProfessionalId"
 							placeholder="{{'pacientes.form.SELECT' | translate}}"
 							(selectionChange)="enableAgendaDetails()">
 							<mat-option *ngFor="let professional of professionals" [value]="professional.id">
@@ -81,8 +82,8 @@
 							<span [translate]="'Fecha de inicio'"></span> *
 						</div>
 						<mat-form-field appearance="outline">
-							<input formControlName="initDate" id="initDate" matInput [matDatepicker]="initPicker"
-								(dateChange)="initDateChange($event)">
+							<input formControlName="startDate" id="startDate" matInput [matDatepicker]="initPicker"
+								(dateChange)="startDateChange($event)">
 							<mat-datepicker-toggle matSuffix [for]="initPicker"></mat-datepicker-toggle>
 							<mat-datepicker #initPicker></mat-datepicker>
 						</mat-form-field>
@@ -121,9 +122,8 @@
 				</div>
 				<div fxLayout="row">
 					<mat-form-field appearance="outline">
-						<mat-select id="appointmentDurationId" name="appointmentDurationId"
-							formControlName="appointmentDurationId"
-							placeholder="{{'pacientes.form.SELECT' | translate}}"
+						<mat-select id="appointmentDuration" name="appointmentDuration"
+							formControlName="appointmentDuration" placeholder="{{'pacientes.form.SELECT' | translate}}"
 							(selectionChange)="setAppointmentDurationToAgendaService()">
 							<mat-option *ngFor="let appointmentDuration of appointmentDurations"
 								[value]="appointmentDuration.id">
@@ -167,7 +167,7 @@
 				<mwl-calendar-week-view [viewDate]="viewDate" [events]="newAgendaService.events"
 					[hourSegmentTemplate]="weekViewHourSegmentTemplate" [headerTemplate]="headerTemplate"
 					[dayStartHour]="openingTime" [dayEndHour]="closingTime"
-					[hourSegments]="MINUTES_IN_HOUR / form.value.appointmentDurationId" [weekStartsOn]="weekStartsOn">
+					[hourSegments]="MINUTES_IN_HOUR / form.value.appointmentDuration" [weekStartsOn]="weekStartsOn">
 				</mwl-calendar-week-view>
 
 				<div align="end">

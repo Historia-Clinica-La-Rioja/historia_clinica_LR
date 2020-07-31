@@ -29,7 +29,7 @@ export class NewAttentionComponent implements OnInit {
 			.subscribe(medicalAttentionTypes => this.medicalAttentionTypes = medicalAttentionTypes);
 
 		this.form = this.formBuilder.group({
-			overTurnCount: [null, Validators.min(0)],
+			overTurnCount: [Validators.min(0)],
 			medicalAttentionType: [null, Validators.required]
 		});
 

@@ -162,7 +162,7 @@ public setAppointmentDuration(duration: number) {
 	this.appointmentDuration = duration;
 }
 
-public getEvents() {
+public getEvents(): CalendarEvent[] {
 	return this.events;
 }
 

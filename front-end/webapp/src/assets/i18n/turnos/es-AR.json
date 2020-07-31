@@ -15,6 +15,9 @@
 			"MEDICAL_ATTENTION_TYPE" : "Tipo de atención",
 			"dialog": {
 				"TITLE":"Nueva atención"
+			},
+			"messages": {
+				"SUCCESS": "La agenda se guardó exitosamente"
 			}
 		}
 	}

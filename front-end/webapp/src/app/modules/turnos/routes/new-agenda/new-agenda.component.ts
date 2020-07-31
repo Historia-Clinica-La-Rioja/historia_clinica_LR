@@ -13,8 +13,11 @@ import { Router } from "@angular/router";
 import { APPOINTMENT_DURATIONS } from "../../constants/appointment";
 import { NewAgendaService } from '../../services/new-agenda.service';
 import { DAYS_OF_WEEK, CalendarEvent } from 'angular-calendar';
-import { DoctorsOfficeDto, HealthcareProfessionalDto, ProfessionalDto } from '@api-rest/api-model';
+import { DoctorsOfficeDto, DiaryADto, DiaryOpeningHoursDto, ProfessionalDto } from '@api-rest/api-model';
 import * as moment from 'moment';
+import { DiaryService } from '@api-rest/services/diary.service';
+import { momentFormat, DateFormat } from '@core/utils/moment.utils';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 const ROUTE_APPOINTMENT = 'turnos';
 
@@ -56,7 +59,9 @@ export class NewAgendaComponent implements OnInit {
 		private healthcareProfessionalService: HealthcareProfessionalService,
 		private readonly contextService: ContextService,
 		private readonly router: Router,
-		private readonly cdr: ChangeDetectorRef
+		private readonly cdr: ChangeDetectorRef,
+		private readonly diaryService: DiaryService,
+		private readonly snackBarService: SnackBarService,
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 		this.newAgendaService = new NewAgendaService(this.weekStartsOn, this.viewDate, this.events, this.dialog, this.cdr);
@@ -68,10 +73,10 @@ export class NewAgendaComponent implements OnInit {
 			sectorId: [null, [Validators.required]],
 			specialtyId: [{ value: null, disabled: true }, [Validators.required]],
 			doctorOffice: [{ value: null, disabled: true }, [Validators.required]],
-			professionalId: [{ value: null, disabled: true }, [Validators.required]],
-			initDate: [{ value: null, disabled: true }, [Validators.required]],
+			healthcareProfessionalId: [{ value: null, disabled: true }, [Validators.required]],
+			startDate: [{ value: null, disabled: true }, [Validators.required]],
 			endDate: [{ value: null, disabled: true }, [Validators.required]],
-			appointmentDurationId: [{ value: null, disabled: true }, [Validators.required]],
+			appointmentDuration: [{ value: null, disabled: true }, [Validators.required]],
 		});
 
 		this.sectorService.getAll().subscribe(data => {
@@ -98,7 +103,7 @@ export class NewAgendaComponent implements OnInit {
 	setProfessionals(): void {
 		//TODO para traer doctores por sector utilizar let sectorId: number = this.form.controls.sectorId.value;
 		this.healthcareProfessionalService.getAll().subscribe(data => this.professionals = data);
-		this.enableFormControl('professionalId');
+		this.enableFormControl('healthcareProfessionalId');
 		this.openingTime = getHours(this.form.value.doctorOffice.openingTime);
 		this.closingTime = getHours(this.form.value.doctorOffice.closingTime) - 1; // we don't want to include the declared hour
 
@@ -113,17 +118,17 @@ export class NewAgendaComponent implements OnInit {
 	}
 
 	enableAgendaDetails(): void {
-		this.enableFormControl('initDate');
-		this.enableFormControl('appointmentDurationId');
+		this.enableFormControl('startDate');
+		this.enableFormControl('appointmentDuration');
 	}
 
 	appointmentManagementChange(): void {
 		this.appointmentManagement = !this.appointmentManagement;
 	}
 
-	initDateChange(event): void {
+	startDateChange(event): void {
 		this.form.controls.endDate.enable();
-		//TODO set fecha minima del endDate a partir de initDate
+		//TODO set fecha minima del endDate a partir de startDate
 	}
 
 	private enableFormControl(controlName): void {
@@ -163,36 +168,63 @@ export class NewAgendaComponent implements OnInit {
 				}
 			});
 
-			dialogRef.afterClosed().subscribe(result => {
-				if (result) {
-					//TODO llamar servicio para guardar agenda y redireccionar a turnos, confirmar con snackbar el resultado
+			dialogRef.afterClosed().subscribe(confirmed => {
+				if (confirmed) {
+					const agenda: DiaryADto = this.mapEventsToAgendaDto();
+					this.diaryService.addDiary(agenda)
+						.subscribe((agendaId: number) => {
+							if (agendaId) {
+								this.snackBarService.showSuccess('turnos.new-agenda.messages.SUCCESS');
+								const url = `${this.routePrefix}${ROUTE_APPOINTMENT}`;
+								this.router.navigate([url]);
+							}
 
-					const agendaDto = this.mapEventsToAgendaDto();
-					const url = `${this.routePrefix}${ROUTE_APPOINTMENT}`;
-					this.router.navigate([url]);
+						});
 				}
 			});
 		});
 	}
 
-	private mapEventsToAgendaDto(): any {
-		let mappedResults = [];
-		this.newAgendaService.getEvents().forEach( event => mappedResults = [...mappedResults, this.toDto(event)]);
-		return mappedResults;
+	private mapEventsToAgendaDto(): DiaryADto {
+		let agenda: DiaryADto;
+		agenda = this.form.value;
+		agenda.doctorsOfficeId = this.form.value.doctorOffice.id;
+
+		agenda.startDate = momentFormat(this.form.value.startDate, DateFormat.API_DATE);
+		agenda.endDate = momentFormat(this.form.value.endDate, DateFormat.API_DATE);
+
+		agenda.automaticRenewal = this.autoRenew;
+		agenda.includeHoliday = this.holidayWork;
+		agenda.professionalAsignShift = this.appointmentManagement;
+
+		agenda.diaryOpeningHours = this.mapDiaryOpeningHours();
+
+		return agenda;
+
 	}
 
-	private toDto(event: CalendarEvent): any {
-		return {
-			dayWeekId: event.start.getDay(),
-			from: event.start.toLocaleTimeString(),
-			to: event.end.toLocaleTimeString(),
-			medicalAttentionTypeId: event.meta.medicalAttentionType.id,
-			overturnCount: event.meta.overTurnCount
-		};
+	private mapDiaryOpeningHours(): DiaryOpeningHoursDto[] {
+		const diaryOpeningHours: DiaryOpeningHoursDto[] = [];
+		this.newAgendaService.getEvents().
+			forEach(event => diaryOpeningHours.push(toDiaryOpeningHoursDto(event)));
+		return diaryOpeningHours;
+
+
+		function toDiaryOpeningHoursDto(event: CalendarEvent): DiaryOpeningHoursDto {
+			return {
+				openingHours: {
+					dayWeekId: event.start.getDay(),
+					from: event.start.toLocaleTimeString(),
+					to: event.end.toLocaleTimeString(),
+				},
+				medicalAttentionTypeId: event.meta.medicalAttentionType.id,
+				overturnCount: event.meta.overTurnCount
+			};
+		}
 	}
 
 	public setAppointmentDurationToAgendaService() {
-		this.newAgendaService.setAppointmentDuration(this.form.value.appointmentDurationId);
+		this.newAgendaService.setAppointmentDuration(this.form.value.appointmentDuration);
 	}
 
 }
