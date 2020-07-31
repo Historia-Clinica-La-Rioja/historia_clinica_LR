@@ -15,6 +15,7 @@ export class ProblemasComponent implements OnInit {
 	public readonly activos = PROBLEMAS_ACTIVOS;
 	public readonly resueltos = PROBLEMAS_RESUELTOS;
 	public activeProblems: HCEPersonalHistoryDto[];
+	public solvedProblems: HCEPersonalHistoryDto[];
 	private patientId: number;
 
 
@@ -31,6 +32,9 @@ export class ProblemasComponent implements OnInit {
 	ngOnInit(): void {
 		this.hceGeneralStateService.getActiveProblems(this.patientId).subscribe(activeProblems => {
 			this.activeProblems = activeProblems
+		});
+		this.hceGeneralStateService.getSolvedProblems(this.patientId).subscribe(solvedProblems => {
+			this.solvedProblems = solvedProblems
 		});
 	}
 
