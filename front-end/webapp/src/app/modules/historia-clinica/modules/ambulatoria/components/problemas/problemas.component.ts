@@ -16,6 +16,7 @@ export class ProblemasComponent implements OnInit {
 	public readonly resueltos = PROBLEMAS_RESUELTOS;
 	public activeProblems: HCEPersonalHistoryDto[];
 	public solvedProblems: HCEPersonalHistoryDto[];
+	public chronicProblems: HCEPersonalHistoryDto[];
 	private patientId: number;
 
 
@@ -35,6 +36,9 @@ export class ProblemasComponent implements OnInit {
 		});
 		this.hceGeneralStateService.getSolvedProblems(this.patientId).subscribe(solvedProblems => {
 			this.solvedProblems = solvedProblems
+		});
+		this.hceGeneralStateService.getChronicConditions(this.patientId).subscribe(chronicProblems => {
+			this.chronicProblems = chronicProblems
 		});
 	}
 
