@@ -30,7 +30,7 @@ public class DiaryServiceImpl implements DiaryService {
 
 
     @Override
-    public DiaryBo addDiary(DiaryBo diaryToSave) {
+    public Integer addDiary(DiaryBo diaryToSave) {
         LOG.debug("Input parameters -> diaryToSave {}", diaryToSave);
 
         Diary diary = createDiaryInstance(diaryToSave);
@@ -42,7 +42,7 @@ public class DiaryServiceImpl implements DiaryService {
 
         diaryToSave.setId(diaryId);
         LOG.debug("Diary saved -> {}", diaryToSave);
-        return diaryToSave;
+        return diaryId;
     }
 
     private Diary createDiaryInstance(DiaryBo diaryBo){

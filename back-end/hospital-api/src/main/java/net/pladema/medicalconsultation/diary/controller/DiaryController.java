@@ -4,7 +4,6 @@ import io.swagger.annotations.Api;
 import net.pladema.medicalconsultation.diary.controller.constraints.DiaryOpeningHoursValid;
 import net.pladema.medicalconsultation.diary.controller.constraints.DiaryPeriodValid;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryADto;
-import net.pladema.medicalconsultation.diary.controller.dto.DiaryDto;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryListDto;
 import net.pladema.medicalconsultation.diary.controller.mapper.DiaryMapper;
 import net.pladema.medicalconsultation.diary.controller.mock.DiaryMock;
@@ -51,13 +50,12 @@ public class DiaryController {
     @PostMapping
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
     @Transactional
-    public ResponseEntity<DiaryDto> addDiary(
+    public ResponseEntity<Integer> addDiary(
             @PathVariable(name = "institutionId") Integer institutionId,
             @RequestBody @Valid @DiaryPeriodValid @DiaryOpeningHoursValid DiaryADto diaryADto) {
         LOG.debug("Input parameters -> diaryADto {}", diaryADto);
         DiaryBo diaryToSave = diaryMapper.toDiaryBo(diaryADto);
-        diaryToSave = diaryService.addDiary(diaryToSave);
-        DiaryDto result = diaryMapper.toDiaryDto(diaryToSave);
+        Integer result = diaryService.addDiary(diaryToSave);
         LOG.debug(OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }

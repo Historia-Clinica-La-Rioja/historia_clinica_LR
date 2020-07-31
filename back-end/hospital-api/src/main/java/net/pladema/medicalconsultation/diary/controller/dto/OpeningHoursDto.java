@@ -13,8 +13,6 @@ import javax.validation.constraints.NotNull;
 @ToString
 public class OpeningHoursDto extends TimeRangeDto {
 
-    private Short id;
-
     @NotNull
     @Min(value = 0)
     @Max(value = 6)

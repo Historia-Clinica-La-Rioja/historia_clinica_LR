@@ -51,6 +51,7 @@ export interface AddressDto extends Serializable {
     apartment: string;
     city: CityDto;
     cityId: number;
+    departmentId: number;
     floor: string;
     id: number;
     latitud: number;
@@ -58,6 +59,7 @@ export interface AddressDto extends Serializable {
     number: string;
     postcode: string;
     province: ProvinceDto;
+    provinceId: number;
     quarter: string;
     street: string;
 }
@@ -590,7 +592,6 @@ export interface OccupationDto {
 
 export interface OpeningHoursDto extends TimeRangeDto {
     dayWeekId: number;
-    id: number;
 }
 
 export interface OutpatientAllergyConditionDto {

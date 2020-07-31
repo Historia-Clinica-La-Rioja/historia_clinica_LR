@@ -1,6 +1,7 @@
 package net.pladema.medicalconsultation.diary.controller.dto;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.medicalconsultation.functional.Overlapping;
@@ -12,6 +13,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class DiaryOpeningHoursDto implements Overlapping<DiaryOpeningHoursDto> {
 
     @NotNull

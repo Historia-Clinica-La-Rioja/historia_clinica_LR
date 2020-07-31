@@ -13,23 +13,22 @@ public class DiaryOpeningHoursMock {
         super();
     }
 
-    public static List<DiaryOpeningHoursDto> mockListDiaryOpeningHoursDto(List<Integer> ids){
+    public static List<DiaryOpeningHoursDto> mockListDiaryOpeningHoursDto(){
         return Arrays.asList(
-                mockDiaryOpeningHoursDto(66, (short) 1, "08:00", "12:00", (short) 5),
-                mockDiaryOpeningHoursDto(67, (short) 0, "14:00", "18:00", (short) 5));
+                mockDiaryOpeningHoursDto((short) 1, "08:00", "12:00", (short) 5),
+                mockDiaryOpeningHoursDto((short) 0, "14:00", "18:00", (short) 5));
     }
 
-    private static DiaryOpeningHoursDto mockDiaryOpeningHoursDto(Integer id, short medicalAttentionTypeId, String from, String to, Short overturnCount) {
+    private static DiaryOpeningHoursDto mockDiaryOpeningHoursDto(short medicalAttentionTypeId, String from, String to, Short overturnCount) {
         DiaryOpeningHoursDto result = new DiaryOpeningHoursDto();
         result.setMedicalAttentionTypeId(medicalAttentionTypeId);
-        result.setOpeningHours(mockOpeningHoursDto(id.shortValue(), from, to));
+        result.setOpeningHours(mockOpeningHoursDto(from, to));
         result.setOverturnCount(overturnCount);
         return result;
     }
 
-    private static OpeningHoursDto mockOpeningHoursDto(Short id, String from, String to) {
+    private static OpeningHoursDto mockOpeningHoursDto(String from, String to) {
         OpeningHoursDto result = new OpeningHoursDto();
-        result.setId(id);
         result.setDayWeekId((short)1);
         result.setFrom(from);
         result.setTo(to);

@@ -76,7 +76,7 @@ public class DiaryOpeningHoursController {
     public ResponseEntity<Collection<DiaryOpeningHoursDto>> getMany(@PathVariable(name = "institutionId") Integer institutionId,
                                                                     @RequestParam List<Integer> ids) {
         LOG.debug("Input parameters -> institutionId {}, ids {}", institutionId, ids);
-        Collection<DiaryOpeningHoursDto> result = DiaryOpeningHoursMock.mockListDiaryOpeningHoursDto(ids);
+        Collection<DiaryOpeningHoursDto> result = DiaryOpeningHoursMock.mockListDiaryOpeningHoursDto();
         LOG.debug(OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }

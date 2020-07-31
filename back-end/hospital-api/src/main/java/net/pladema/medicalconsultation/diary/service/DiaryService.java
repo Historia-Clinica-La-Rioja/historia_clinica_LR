@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface DiaryService {
 
-    DiaryBo addDiary(DiaryBo diaryToSave);
+    Integer addDiary(DiaryBo diaryToSave);
 
     List<Integer> getAllOverlappingDiary(Integer healthcareProfessionalId, Integer doctorsOfficeId,
                                          LocalDate newDiaryStart, LocalDate newDiaryEnd);
