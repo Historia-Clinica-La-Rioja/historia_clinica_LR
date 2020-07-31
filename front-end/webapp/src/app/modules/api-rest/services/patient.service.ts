@@ -102,6 +102,11 @@ export class PatientService {
 		}
 	}
 
+	getAppointmentPatientData<AppointmentPatientDto>(patientId: number): Observable<AppointmentPatientDto> {
+		let url = `${environment.apiBase}/patient/${patientId}/appointment-patient-data`;
+		return this.http.get<AppointmentPatientDto>(url);
+	}
+
 }
 
 export class PersonInformationRequest {

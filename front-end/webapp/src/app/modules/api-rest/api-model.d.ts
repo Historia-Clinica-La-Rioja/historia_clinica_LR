@@ -101,6 +101,21 @@ export interface ApiErrorMessageDto {
     text: string;
 }
 
+export interface AppointmentListDto {
+    date: string;
+    hour: string;
+    id: number;
+    overturn: boolean;
+    patient: AppointmentPatientDto;
+}
+
+export interface AppointmentPatientDto {
+    id: number;
+    medicalCoverageAffiliateNumber: string;
+    medicalCoverageName: string;
+    person: IBasicPersonalData;
+}
+
 export interface BMPatientDto extends APatientDto {
     id: number;
 }
@@ -141,10 +156,7 @@ export interface BasicPatientDto {
     person: BasicDataPersonDto;
 }
 
-export interface BasicPersonalDataDto {
-    firstName: string;
-    identificationNumber: string;
-    lastName: string;
+export interface BasicPersonalDataDto extends IBasicPersonalData {
 }
 
 export interface BedDto extends Serializable {
@@ -179,6 +191,15 @@ export interface CompletePatientDto extends BasicPatientDto {
     medicalCoverageName: string;
     pamiDoctor?: AAdditionalDoctorDto;
     patientType: PatientType;
+}
+
+export interface CreateAppointmentDto {
+    date: string;
+    diaryId: number;
+    hour: string;
+    openingHoursId: number;
+    overturn: boolean;
+    patientId: number;
 }
 
 export interface CreateOutpatientDto {
@@ -219,6 +240,16 @@ export interface DiaryADto {
 
 export interface DiaryDto extends DiaryADto {
     id: number;
+}
+
+export interface DiaryListDto {
+    appointmentDuration: number;
+    doctorsOfficeId: number;
+    endDate: string;
+    id: number;
+    includeHoliday: boolean;
+    professionalAssignShift: boolean;
+    startDate: string;
 }
 
 export interface DiaryOpeningHoursDto extends Overlapping<DiaryOpeningHoursDto> {
@@ -417,6 +448,12 @@ export interface HealthcareProfessionalDto {
     id: number;
     licenceNumber: string;
     person: PersonBasicDataResponseDto;
+}
+
+export interface IBasicPersonalData {
+    firstName: string;
+    identificationNumber: string;
+    lastName: string;
 }
 
 export interface IdentificationTypeDto extends MasterdataDto<number> {

@@ -3,9 +3,9 @@ export const MOCKS_TURNOS = [
 		path: 'solicitar',
 		loads: [
 			{
-				name: 'HealthcareProfessional.searchByName(nombre: string): ProfessionalDto[]', // dto ya existe
+				name: 'HealthcareProfessional.searchByName(name: string): ProfessionalDto[]', // dto ya existe
 				roles: 'Todo ADMINISTRATIVO sobre la institución',
-				path: '/api/institutions/{institutionId}/healthcareprofessional?nombre=...',
+				path: '/api/institutions/{institutionId}/healthcareprofessional/search-by-name?name=...',
 				method: 'GET',
 				fetch: [
 					{
@@ -29,9 +29,9 @@ export const MOCKS_TURNOS = [
 		path: 'solicitar/profesionalId',
 		loads: [
 			{
-				name: 'HealthcareProfessional.getOne(profesionalId: number): ProfessionalDto',
+				name: 'HealthcareProfessional.getOne(healthcareProfessionalId: number): ProfessionalDto',
 				roles: 'Todo ADMINISTRATIVO sobre la institución',
-				path: '/api/institutions/{institutionId}/healthcareprofessional/{healthcareprofessionalId}',
+				path: '/api/institutions/{institutionId}/healthcareprofessional/{healthcareProfessionalId}',
 				method: 'GET',
 				fetch: {
 					id: 66,
@@ -42,9 +42,9 @@ export const MOCKS_TURNOS = [
 				}				
 			},
 			{
-				name: 'DiaryController.getDiaries(healthcareprofessionalId: number): DiaryListDto[]',
+				name: 'Diary.getDiaries(healthcareProfessionalId: number): DiaryListDto[]',
 				roles: 'Todo ADMINISTRATIVO sobre la institución',
-				path: '/api/institutions/{institutionId}/medicalConsultations/diary?healthcareprofessionalId=...',
+				path: '/api/institutions/{institutionId}/medicalConsultations/diary?healthcareProfessionalId=...',
 				method: 'GET',
 				fetch: [{
 					id: 99,
@@ -52,7 +52,7 @@ export const MOCKS_TURNOS = [
 					endDate: '2020-08-31',
 					doctorsOfficeId: 5,
 					appointmentDuration: 5,
-					professionalAsignShift: true,
+					professionalAssignShift: true,
 					includeHoliday: false
 				}, {
 
@@ -61,7 +61,7 @@ export const MOCKS_TURNOS = [
 					endDate: '2020-08-31',
 					doctorsOfficeId: 5,
 					appointmentDuration: 8,
-					professionalAsignShift: false,
+					professionalAssignShift: false,
 					includeHoliday: true
 				}],
 			},
@@ -94,7 +94,7 @@ export const MOCKS_TURNOS = [
 				],
 			},
 			{
-				name: 'Appointments.getList(from: Date, to: Date): AppointmentListDto[]',
+				name: 'Appointments.getList(diaryIds: number): AppointmentListDto[]',
 				roles: 'Todo ADMINISTRATIVO sobre la institución',
 				path: '/api/institutions/{institutionId}/medicalConsultations/appointments?diaryIds=99,100',
 				method: 'GET',
@@ -107,7 +107,9 @@ export const MOCKS_TURNOS = [
 								firstName: 'María',
 								lastName: 'Gonzalez',
 								identificationNumber: '12345678', 
-							}
+							},
+							medicalCoverageName: 'OSDE',
+							medicalCoverageAffiliateNumber: '3213211'
 						},
 						date: '2020-07-13',
 						hour: '07:15',
@@ -121,7 +123,9 @@ export const MOCKS_TURNOS = [
 								firstName: 'Jorge',
 								lastName: 'Martines',
 								identificationNumber: '12345678', 
-							}
+							},
+							medicalCoverageName: 'OSDE',
+							medicalCoverageAffiliateNumber: '321344'
 						},
 						date: '2020-07-13',
 						hour: '07:30',
@@ -163,13 +167,13 @@ export const MOCKS_TURNOS = [
 		path: 'solicitar/profesionalId/nuevo-turno2',
 		loads: [
 			{
-				name: 'Patient.getAppointmentPatientData(id: number): AppointmentPatientDto[]',
+				name: 'Patient.getAppointmentPatientData(patientId: number): AppointmentPatientDto',
 				roles: 'Todo ADMINISTRATIVO sobre la institución',
-				path: '/api/patient/{id}/appointment-data',
+				path: '/api/patient/{patientId}/appointment-patient-data',
 				method: 'GET',
 				fetch: { 
 					id: 9,
-					person: {//BasicPersonalDataDto
+					person: {//BasicPersonalData interface
 						firstName: 'María',
 						lastName: 'Gonzalez',
 						identificationNumber: '12345678'				

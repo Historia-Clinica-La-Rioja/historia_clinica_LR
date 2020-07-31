@@ -1,14 +1,17 @@
 package net.pladema.medicalconsultation.diary.controller;
 
 import io.swagger.annotations.Api;
+import net.pladema.medicalconsultation.diary.controller.dto.DiaryOpeningHoursDto;
 import net.pladema.medicalconsultation.diary.controller.dto.OccupationDto;
 import net.pladema.medicalconsultation.diary.controller.mapper.DiaryMapper;
+import net.pladema.medicalconsultation.diary.controller.mock.DiaryOpeningHoursMock;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
 import net.pladema.medicalconsultation.diary.service.domain.OccupationBo;
 import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -63,6 +67,16 @@ public class DiaryOpeningHoursController {
         List<OccupationBo> occupationBos = diaryOpeningHoursService
                 .findAllWeeklyDoctorsOfficeOccupation(doctorsOfficeId, startDate, endDate);
         List<OccupationDto> result = diaryMapper.toListOccupationDto(occupationBos);
+        LOG.debug(OUTPUT, result);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping(params = "ids")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+    public ResponseEntity<Collection<DiaryOpeningHoursDto>> getMany(@PathVariable(name = "institutionId") Integer institutionId,
+                                                                    @RequestParam List<Integer> ids) {
+        LOG.debug("Input parameters -> institutionId {}, ids {}", institutionId, ids);
+        Collection<DiaryOpeningHoursDto> result = DiaryOpeningHoursMock.mockListDiaryOpeningHoursDto(ids);
         LOG.debug(OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }

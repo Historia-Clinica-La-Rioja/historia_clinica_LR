@@ -1,8 +1,10 @@
 package net.pladema.patient.controller.mocks;
 
+import net.pladema.patient.controller.dto.AppointmentPatientDto;
 import net.pladema.patient.controller.dto.BMPatientDto;
 import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.person.controller.mock.MocksPerson;
+import net.pladema.staff.controller.dto.BasicPersonalDataDto;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -42,6 +44,14 @@ public class MocksPatient {
         result.setLastName("Apellido " +id);
         result.setBirthDate(LocalDateTime.now());
         result.setGenderId((short) 1);
+        return result;
+    }
+
+    public static AppointmentPatientDto mockAppointmentPatientDto(Integer id) {
+        AppointmentPatientDto result =
+                new AppointmentPatientDto(9,
+                        new BasicPersonalDataDto("Maria", "Gonzalez", "12345678")
+                        , "OSDE",  "3213211");
         return result;
     }
 }

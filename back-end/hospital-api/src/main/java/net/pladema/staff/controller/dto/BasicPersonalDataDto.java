@@ -1,13 +1,14 @@
 package net.pladema.staff.controller.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+import net.pladema.person.controller.dto.IBasicPersonalData;
 
 @Getter
 @Setter
 @ToString
-public class BasicPersonalDataDto {
+@AllArgsConstructor
+@NoArgsConstructor
+public class BasicPersonalDataDto implements IBasicPersonalData {
 
     private String firstName;
 

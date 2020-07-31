@@ -1,14 +1,32 @@
 package net.pladema.patient.controller;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Consumer;
-
-import javax.persistence.EntityNotFoundException;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.annotations.Api;
+import net.pladema.address.controller.dto.AddressDto;
+import net.pladema.address.controller.service.AddressExternalService;
+import net.pladema.patient.controller.constraints.FilterValid;
+import net.pladema.patient.controller.dto.AAdditionalDoctorDto;
+import net.pladema.patient.controller.dto.APatientDto;
+import net.pladema.patient.controller.dto.AppointmentPatientDto;
+import net.pladema.patient.controller.dto.BasicPatientDto;
+import net.pladema.patient.controller.dto.CompletePatientDto;
+import net.pladema.patient.controller.dto.PatientSearchDto;
+import net.pladema.patient.controller.dto.PatientSearchFilter;
+import net.pladema.patient.controller.mapper.PatientMapper;
+import net.pladema.patient.controller.mocks.MocksPatient;
+import net.pladema.patient.repository.PatientTypeRepository;
+import net.pladema.patient.repository.entity.Patient;
+import net.pladema.patient.repository.entity.PatientType;
+import net.pladema.patient.service.AdditionalDoctorService;
+import net.pladema.patient.service.PatientService;
+import net.pladema.patient.service.domain.DoctorsBo;
+import net.pladema.patient.service.domain.PatientSearch;
+import net.pladema.person.controller.dto.BMPersonDto;
+import net.pladema.person.controller.dto.BasicDataPersonDto;
+import net.pladema.person.controller.mapper.PersonMapper;
+import net.pladema.person.controller.service.PersonExternalService;
+import net.pladema.person.repository.entity.PersonExtended;
+import net.pladema.sgx.exceptions.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -23,32 +41,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import io.swagger.annotations.Api;
-import net.pladema.address.controller.dto.AddressDto;
-import net.pladema.address.controller.service.AddressExternalService;
-import net.pladema.patient.controller.constraints.FilterValid;
-import net.pladema.patient.controller.dto.AAdditionalDoctorDto;
-import net.pladema.patient.controller.dto.APatientDto;
-import net.pladema.patient.controller.dto.BasicPatientDto;
-import net.pladema.patient.controller.dto.CompletePatientDto;
-import net.pladema.patient.controller.dto.PatientSearchDto;
-import net.pladema.patient.controller.dto.PatientSearchFilter;
-import net.pladema.patient.controller.mapper.PatientMapper;
-import net.pladema.patient.repository.PatientTypeRepository;
-import net.pladema.patient.repository.entity.Patient;
-import net.pladema.patient.repository.entity.PatientType;
-import net.pladema.patient.service.AdditionalDoctorService;
-import net.pladema.patient.service.PatientService;
-import net.pladema.patient.service.domain.DoctorsBo;
-import net.pladema.patient.service.domain.PatientSearch;
-import net.pladema.person.controller.dto.BMPersonDto;
-import net.pladema.person.controller.dto.BasicDataPersonDto;
-import net.pladema.person.controller.mapper.PersonMapper;
-import net.pladema.person.controller.service.PersonExternalService;
-import net.pladema.person.repository.entity.PersonExtended;
-import net.pladema.sgx.exceptions.NotFoundException;
+import javax.persistence.EntityNotFoundException;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 @RestController
 @RequestMapping("/patient")
@@ -206,5 +205,13 @@ public class PatientController {
 		additionalDoctorService.addAdditionalsDoctors(doctorsBo,createdPatient.getId());
 		LOG.debug(OUTPUT, createdPatient.getId());
 		return createdPatient;
+	}
+
+	@GetMapping("/{patientId}/appointment-patient-data")
+	public ResponseEntity<AppointmentPatientDto> getAppointmentPatientData(@PathVariable(name = "patientId") Integer patientId) {
+		LOG.debug("Input parameters -> patientId {}", patientId);
+		AppointmentPatientDto result = MocksPatient.mockAppointmentPatientDto(patientId);
+		LOG.debug(OUTPUT, result);
+		return ResponseEntity.ok().body(result);
 	}
 }

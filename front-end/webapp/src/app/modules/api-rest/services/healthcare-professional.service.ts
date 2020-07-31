@@ -50,4 +50,17 @@ export class HealthcareProfessionalService {
 	getAllDoctorsBySector(sectorId: number): Observable<any[]> {
 		return of(PROFESSIONALS);
 	}
+
+	searchByName(name: string): Observable<ProfessionalDto[]> {
+		let url = `${environment.apiBase}` + BASIC_URL_PREFIX + '/' + `${this.contextService.institutionId}` +
+			BASIC_URL_SUFIX + '/search-by-name';
+		return this.http.get<ProfessionalDto[]>(url, { params: { 'name': name } });
+	}
+
+	getOne(healthcareProfessionalId: number): Observable<ProfessionalDto> {
+		let url = `${environment.apiBase}` + BASIC_URL_PREFIX + '/' + `${this.contextService.institutionId}` +
+			BASIC_URL_SUFIX + '/' + healthcareProfessionalId;
+		return this.http.get<ProfessionalDto>(url);
+	}
+
 }
