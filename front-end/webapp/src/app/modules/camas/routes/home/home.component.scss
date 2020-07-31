@@ -1,10 +1,4 @@
-.section-width{
-    min-width: 50%;
-}
-
-.max-width{
-    max-width: 50%;
-}
+@import "../../../../../assets/styles/variables";
 
 .panel-filtro{
     min-width: 20%;
@@ -14,4 +8,15 @@
 
 .mat-card {
     padding: 0px;
+}
+
+.mat-raised-button{
+    color: white;
+    margin: 5px;
+    padding: 0 5px;
+    background-color: $error-color;
+}
+
+.free{
+    background-color: $success-color;
 }

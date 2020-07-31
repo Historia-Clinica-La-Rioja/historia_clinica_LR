@@ -13,20 +13,19 @@
                                 <h2 class="page-title" [translate]="'gestion-camas.home.SUBTITLE'"></h2>
                                 <app-filtros-camas></app-filtros-camas>
                             </div>
-                                
                             <section id="mapeo">
-                                <div fxLayout="column" *ngFor="let sector of allCamas">
+                                <div fxLayout="column" *ngFor="let sector of allBeds">
                                     <div id="title">
-                                        <h2>Sector {{sector.idSector}}</h2>
+                                        <h2>{{sector.sectorDescription}}</h2>
                                     </div>
-                                    <div fxLayout="column" *ngFor="let especialidad of sector.especialidad">
+                                    <div fxLayout="column" *ngFor="let specialty of sector.specialty">
                                         <div id="title">
-                                            <h2>Especialidad {{especialidad.idEspecialidad}}</h2>
+                                            <h2>{{specialty.specialtyName}}</h2>
                                         </div>
                                         <div fxLayout="row wrap">
-                                            <div *ngFor="let cama of especialidad.camas">
-                                                <button mat-raised-button>
-                                                    Cama
+                                            <div *ngFor="let bed of specialty.beds">
+                                                <button mat-raised-button [ngClass]="{'free': bed.free}">
+                                                    {{bed.bedNumber}}
                                                 </button>
                                             </div>
                                         </div>

@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { InternmentEpisodeSummary } from '../components/internment-episode-summary/internment-episode-summary.component';
-import { BasicPatientDto, CompletePatientDto, InternmentSummaryDto, PatientType, PersonalInformationDto } from '@api-rest/api-model';
+import { BasicPatientDto, CompletePatientDto, InternmentSummaryDto, PatientType, PersonalInformationDto, BedSummaryDto } from '@api-rest/api-model';
 import { PatientBasicData } from '../components/patient-card/patient-card.component';
 import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
 import { PatientTypeData } from '@presentation/components/patient-type-logo/patient-type-logo.component';
 import { DateFormat, momentParseDate, momentParseDateTime } from '@core/utils/moment.utils';
+import { BedManagment } from '../../camas/routes/home/home.component';
 
 @Injectable({
 	providedIn: 'root'
@@ -15,6 +16,7 @@ export class MapperService {
 	toPatientBasicData: (o: BasicPatientDto) => PatientBasicData = MapperService._toPatientBasicData;
 	toPersonalInformationData: (o1: CompletePatientDto, o2: PersonalInformationDto) => PersonalInformation = MapperService._toPersonalInformationData;
 	toPatientTypeData: (patientType: PatientType) => PatientTypeData = MapperService._toPatientTypeData;
+	toBedManagment: (bedSummary: BedSummaryDto[]) => BedManagment[] = MapperService._toBedManagment;
 
 	constructor() {
 	}
@@ -82,6 +84,53 @@ export class MapperService {
 			id: patientType.id,
 			description: patientType.description
 		};
+	}
+
+	private static _toBedManagment(bedSummary: BedSummaryDto[]): BedManagment[] {
+		const bedManagment: BedManagment[] = [];
+		bedSummary.forEach(summary => {
+			const sector = bedManagment.find(e => e.sectorId === summary.sector.id);
+
+			if (sector) {
+				const specialty = sector.specialty.find(e => e.specialtyId === summary.clinicalSpecialty.id);
+				if (specialty) {
+					const newBed = {
+						bedId: summary.bed.id,
+						bedNumber: summary.bed.bedNumber,
+						free: summary.bed.free
+					};
+					specialty.beds.push(newBed);
+				} else {
+					const newSpeciality = {
+						specialtyId: summary.clinicalSpecialty.id,
+						specialtyName: summary.clinicalSpecialty.name,
+						beds: [{
+							bedId: summary.bed.id,
+							bedNumber: summary.bed.bedNumber,
+							free: summary.bed.free
+						}]
+					};
+					sector.specialty.push(newSpeciality);
+				}
+			} else {
+				const newSector = {
+					sectorId: summary.sector.id,
+					sectorDescription: summary.sector.description,
+					specialty: [{
+						specialtyId: summary.clinicalSpecialty.id,
+						specialtyName: summary.clinicalSpecialty.name,
+						beds: [{
+							bedId: summary.bed.id,
+							bedNumber: summary.bed.bedNumber,
+							free: summary.bed.free
+						}]
+					}]
+				};
+				bedManagment.push(newSector);
+			}
+		});
+
+		return bedManagment;
 	}
 
 }
