@@ -8,6 +8,7 @@ import net.pladema.clinichistory.ips.repository.masterdata.entity.EDocumentType;
 import net.pladema.clinichistory.ips.service.domain.ImmunizationBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientImmunizationDto;
+import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientUpdateImmunizationDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.mapper.OutpatientConsultationMapper;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.CreateOutpatientConsultationService;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.CreateOutpatientDocumentService;
@@ -122,4 +123,27 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         return  ResponseEntity.ok().body(true);
     }
 
+    @Override
+    @Transactional
+    @PreAuthorize("hasPermission(#institutionId, 'ENFERMERO')")
+    public ResponseEntity<Boolean> updateImmunization(
+            Integer institutionId,
+            Integer patientId,
+            OutpatientUpdateImmunizationDto outpatientUpdateImmunization) throws IOException, DocumentException {
+        LOG.debug("Input parameters -> institutionId {}, patientId {}, OutpatientImmunizationDto {}", institutionId, patientId, outpatientUpdateImmunization);
+        Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
+        OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, false);
+
+        ImmunizationBo immunizationBo = outpatientConsultationMapper.fromOutpatientImmunizationDto(outpatientUpdateImmunization);
+        immunizationBo.setInstitutionId(institutionId);
+
+        OutpatientDocumentBo outpatient = new OutpatientDocumentBo();
+        outpatient.setImmunizations(Arrays.asList(immunizationBo));
+
+        outpatient = createOutpatientDocumentService.create(newOutPatient.getId(), patientId, outpatient);
+        generateDocument(outpatient, institutionId, newOutPatient.getId(), patientId);
+
+        LOG.debug(OUTPUT, true);
+        return  ResponseEntity.ok().body(true);
+    }
 }
