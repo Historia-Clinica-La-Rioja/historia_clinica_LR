@@ -4,6 +4,7 @@ import net.pladema.clinichistory.hospitalization.repository.HealthcareProfession
 import net.pladema.clinichistory.hospitalization.repository.domain.HealthcareProfessionalGroup;
 import net.pladema.staff.repository.HealthcareProfessionalRepository;
 import net.pladema.staff.repository.domain.HealthcareProfessionalVo;
+import net.pladema.staff.service.domain.HealthcarePersonBo;
 import net.pladema.staff.service.domain.HealthcareProfessionalBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,14 @@ public class HealthcareProfessionalServiceImpl implements  HealthcareProfessiona
     }
 
     @Override
+    public List<HealthcarePersonBo> getAllDoctorsByInstitution(Integer institutionId) {
+        LOG.debug("Input parameters -> institutionId {}", institutionId);
+        List<HealthcarePersonBo> result = healthcareProfessionalRepository.getAllDoctors(institutionId);
+        LOG.debug("Output -> {}", result);
+        return result;
+    }
+
+    @Override
     public List<HealthcareProfessionalBo> getAll(Integer institutionId) {
         LOG.debug("Input parameters -> institutionId {}", institutionId);
         List<HealthcareProfessionalVo> queryResults = healthcareProfessionalRepository
@@ -36,6 +45,7 @@ public class HealthcareProfessionalServiceImpl implements  HealthcareProfessiona
         queryResults.forEach(hcp ->
             result.add(new HealthcareProfessionalBo(hcp))
         );
+        LOG.debug("Output -> {}", result);
         return result;
     }
 

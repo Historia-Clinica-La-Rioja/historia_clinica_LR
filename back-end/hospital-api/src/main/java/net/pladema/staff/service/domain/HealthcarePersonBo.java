@@ -10,7 +10,7 @@ import net.pladema.person.repository.entity.Person;
 @Setter
 @AllArgsConstructor
 @ToString
-public class HealthcarePerson {
+public class HealthcarePersonBo {
 
 	private Integer id;
 	private String licenceNumber;
