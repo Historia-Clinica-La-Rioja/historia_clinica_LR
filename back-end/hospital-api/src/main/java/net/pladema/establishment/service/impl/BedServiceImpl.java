@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import net.pladema.clinichistory.hospitalization.controller.externalservice.InternmentEpisodeExternalService;
 import net.pladema.establishment.repository.BedRepository;
 import net.pladema.establishment.repository.HistoricPatientBedRelocationRepository;
+import net.pladema.establishment.repository.domain.BedInfoVo;
 import net.pladema.establishment.repository.entity.Bed;
 import net.pladema.establishment.repository.entity.HistoricPatientBedRelocation;
 import net.pladema.establishment.service.BedService;
@@ -87,6 +88,14 @@ public class BedServiceImpl implements BedService {
 	public Optional<HistoricPatientBedRelocation> getLastPatientBedRelocation(Integer internmentEpisodeId) {
 		LOG.debug("BedService::getLastPatientBedRelocation-> input parameters -> internmentEpisodeId{}", internmentEpisodeId);
 		Optional<HistoricPatientBedRelocation> result = historicPatientBedRelocationRepository.getAllByInternmentEpisode(internmentEpisodeId).findFirst();
+		LOG.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
+	public Optional<BedInfoVo> getBedInfo(Integer bedId) {
+		LOG.debug("input parameters -> bedId {}", bedId);
+		Optional<BedInfoVo> result = bedRepository.getBedInfo(bedId);
 		LOG.debug("Output -> {}", result);
 		return result;
 	}

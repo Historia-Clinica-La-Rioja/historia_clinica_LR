@@ -1,6 +1,7 @@
 package net.pladema.establishment.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,8 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
 import net.pladema.establishment.controller.dto.BedDto;
+import net.pladema.establishment.controller.dto.BedInfoDto;
 import net.pladema.establishment.controller.mapper.BedMapper;
 import net.pladema.establishment.repository.BedRepository;
+import net.pladema.establishment.repository.domain.BedInfoVo;
 import net.pladema.establishment.repository.entity.Bed;
 import net.pladema.establishment.service.BedService;
 
@@ -44,6 +47,16 @@ public class BedController {
 		LOG.debug("Get all Beds  => {}", beds);
 		return ResponseEntity.ok(bedMapper.toListBedDto(beds));
 	}
+	
+	@GetMapping("/{bedId}/info")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	public ResponseEntity<BedInfoDto> getBedInfo(@PathVariable(name = "institutionId") Integer institutionId, 
+			@PathVariable(name = "bedId") Integer bedId) {
+		Optional<BedInfoVo> bed = bedService.getBedInfo(bedId);
+		LOG.debug("Get Bed summary  => {}", bed);
+		return bed.isPresent() ? ResponseEntity.ok(bedMapper.toBedInfoDto(bed.get())) : 
+				ResponseEntity.noContent().build();
+	}
 
 	@GetMapping("/clinicalspecialty/{clinicalSpecialtyId}")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
@@ -54,5 +67,7 @@ public class BedController {
 		LOG.debug("Get free Beds by ClinicalSpecialty response=> {}", beds);
 		return ResponseEntity.ok(bedMapper.toListBedDto(beds));
 	}
+	
+	
 
 }

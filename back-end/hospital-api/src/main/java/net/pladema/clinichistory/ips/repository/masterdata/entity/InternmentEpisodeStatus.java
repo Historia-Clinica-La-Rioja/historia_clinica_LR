@@ -25,6 +25,7 @@ public class InternmentEpisodeStatus implements Serializable {
 	private static final long serialVersionUID = -3053291021636483828L;
 	public static final Short ACTIVE_ID = 1;
 	public static final Short INACTIVE_ID = 2;
+	public static final String ACTIVE = "1";
 	public static final String INACTIVE = "2";
 
 	@Id

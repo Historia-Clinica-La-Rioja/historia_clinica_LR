@@ -3,6 +3,7 @@ package net.pladema.establishment.service;
 import java.util.List;
 import java.util.Optional;
 
+import net.pladema.establishment.repository.domain.BedInfoVo;
 import net.pladema.establishment.repository.entity.Bed;
 import net.pladema.establishment.repository.entity.HistoricPatientBedRelocation;
 public interface BedService {
@@ -16,4 +17,6 @@ public interface BedService {
 	public HistoricPatientBedRelocation addPatientBedRelocation(HistoricPatientBedRelocation patientBedRelocation);
 	
 	public Optional<HistoricPatientBedRelocation> getLastPatientBedRelocation(Integer internmentEpisodeId);
+	
+	public Optional<BedInfoVo> getBedInfo(Integer bedId);
 }

@@ -141,17 +141,19 @@ export interface BackofficeUserRoleDto {
     userId: number;
 }
 
-export interface BasicDataPersonDto {
+export interface BasicDataPersonDto extends Serializable {
     age: number;
     firstName: string;
     gender: GenderDto;
     id: number;
+    identificationNumber: string;
+    identificationType: string;
     lastName: string;
     middleNames: string;
     otherLastNames: string;
 }
 
-export interface BasicPatientDto {
+export interface BasicPatientDto extends Serializable {
     id: number;
     person: BasicDataPersonDto;
 }
@@ -159,10 +161,22 @@ export interface BasicPatientDto {
 export interface BasicPersonalDataDto extends IBasicPersonalData {
 }
 
+export interface BedCategoryDto extends MasterdataDto<number> {
+    id: number;
+}
+
 export interface BedDto extends Serializable {
+    bedCategory: BedCategoryDto;
     bedNumber: string;
+    free: boolean;
     id: number;
     room: RoomDto;
+}
+
+export interface BedInfoDto extends Serializable {
+    bed: BedDto;
+    patient: BasicPatientDto;
+    probableDischargeDate: string;
 }
 
 export interface CityDto extends MasterdataDto<number> {

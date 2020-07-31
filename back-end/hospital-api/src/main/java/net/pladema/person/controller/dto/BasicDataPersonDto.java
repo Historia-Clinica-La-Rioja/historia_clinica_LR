@@ -1,5 +1,7 @@
 package net.pladema.person.controller.dto;
 
+import java.io.Serializable;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -7,9 +9,14 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class BasicDataPersonDto {
+public class BasicDataPersonDto implements Serializable {
 
-    private Integer id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -4171735891439867357L;
+
+	private Integer id;
 
     private String firstName;
 
@@ -19,6 +26,10 @@ public class BasicDataPersonDto {
 
     private String otherLastNames;
 
+    private String identificationType;
+    
+    private String identificationNumber;
+    
     private GenderDto gender;
 
     private Short age;
