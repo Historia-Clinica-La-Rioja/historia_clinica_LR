@@ -22,44 +22,61 @@ Prerequisitos:
 A grandes rasgos los pasos a realizar para la instalación son:
 0. Instalar Ansible y Maven en el host local
 1. Configurar un inventario con los VPS a utilizar indicando el grupo de cada uno. Se utiliza Debian 10 (Buster) para los VPS base. 
-Se proveen archivos de inventarios de template para un ambiente de alta disponibilidad (HA - High Availability) y otro para un único nodo, en ambos casos con una base de datos PostgreSQL 11+ externa y ya instalada.
-Se supone que la base de datos está ya instalada y configurada correctamente para aceptar conexiones remotas.
-   1.1 Copiar el template `hosts-template.yml` a un archivo llamado `hosts-deploy.yml`
-   1.2 Editar nombres y grupos de hosts o arquitectura según URL o dirección IP de cada uno. 
-
 2. Configurar variables necesarias
 3. Ejecutar los playbooks indicados
 
 ## Groups y host especiales
 
+Los playbooks estan desarrollados para funcionar sobre `Debian 10 Buster`.
 Existen los siguientes grupos que deben ser configurados en el inventory con las variables de cada uno:
 
 * `web_load_balancers`
 * `backservers`
 * `frontservers`
-* `databases` y nodo especial `postgres_master`
-   * El nodo especial `postgres_master` es el nodo de la base de datos
+* `databases`
+* nodo especial `postgres_master`
+   * El nodo especial `postgres_master` es el nodo de la base de datos, debe ser una BBDD ya existente
+   * este nodo debe poseer instalado soporte para el locale "en-us.UTF-8"
+   * este nodo debe permitir conexiones desde los nodos clientes, para eso en general es necesario editar estos dos archivos que suelen estar ubicados en `/var/lib/postgresql/data`
+      * `listen_adres='*'` en `postgres.conf` 
+      * `host all all all md5` en pb_hba.conf
    * database_su_name: nombre de usuario de sysadmin de la bbdd (usado solo para crear el usuario y bbdd de aplicacion)
    * database_su_password: clave del usuario anterior
-Si el paso automatizado de crear la base de datos prefiere realizarse externamente a estos playbooks, omitir el plabook `3-create-database.yml`
+
+
+Se proveen archivos de inventarios de template para un ambiente de alta disponibilidad (HA - High Availability) y otro para un único nodo, en ambos casos con una base de datos PostgreSQL 11+ externa y ya instalada.
+Se supone que la base de datos está ya instalada y configurada correctamente para aceptar conexiones remotas.
+   1.1 Copiar el template `hosts-template.yml` a un archivo llamado `hosts-deploy.yml`
+   1.2 Editar nombres y grupos de hosts o arquitectura según URL o dirección IP de cada uno. 
+
+En el nodo `localhost` es necesario tener Maven 3 instalado para realizar la migracion de la BBDD.
+Se prevee en una versión futura quitar este requerimiento.
 
 En los pasos siguientes se supone que el inventario está almacenado en `hosts-deploy.yml`.
 
-## Instalar solo webservers
+## Instalar todo
 
 ```
 ansible-playbook -i hosts-deploy.yml 1-frontservers.yml
 ansible-playbook -i hosts-deploy.yml 2-backservers.yml
-ansible-playbook -i hosts-deploy.yml 3-sghservers.yml
+ansible-playbook -i hosts-deploy.yml 3-create-database.yml
 ansible-playbook -i hosts-deploy.yml 4-lb_web.yml
 ansible-playbook -i hosts-deploy.yml 5-deploy.yml
 ```
 
-Los pasos 1 a 4 se realizan una unica vez. Con siguientes versiones solo es necesario ejecutar el paso 5.
+Los pasos 1 a 4 se realizan una unica vez. 
+Si el paso automatizado de crear la base de datos prefiere realizarse externamente a estos playbooks, omitir el plabook `3-create-database.yml`, de todas formas debe indicarse el `postgres_master` porque su IP es necesaria para configurar el backend.
+
+Con siguientes deploys solo es necesario ejecutar el paso 5.
 
 ```
 ansible-playbook -i hosts-deploy.yml 5-deploy.yml
 ```
+
+## Problemas conocidos y solución de errores
+
+* Se ha reportado que en los nodos de Load Balancer ha sido necesario  "sudo apt install policykit-1"
+
 
 ## Adminsitrar el proceso SGH
 
