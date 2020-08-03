@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ public class CreateOutpatientDto {
     private List<@Valid OutpatientReasonDto> reasons = new ArrayList<>();
 
     @NotNull
+    @NotEmpty(message = "{problem.not.empty}")
     private List<@Valid OutpatientProblemDto> problems = new ArrayList<>();
 
     @NotNull

@@ -7,6 +7,7 @@ import net.pladema.clinichistory.ips.controller.dto.ClinicalObservationDto;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Getter
@@ -19,11 +20,11 @@ public class OutpatientAnthropometricDataDto implements Serializable {
     private ClinicalObservationDto bloodType;
 
     @Valid
-    @Nullable
+    @NotNull(message = "{value.mandatory}")
     private ClinicalObservationDto height;
 
     @Valid
-    @Nullable
+    @NotNull(message = "{value.mandatory}")
     private ClinicalObservationDto weight;
 
     @Nullable
