@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.diary.repository;
 
+import net.pladema.medicalconsultation.diary.repository.domain.DiaryOpeningHoursVo;
 import net.pladema.medicalconsultation.diary.repository.domain.OccupationVo;
 import net.pladema.medicalconsultation.diary.repository.entity.DiaryOpeningHours;
 import net.pladema.medicalconsultation.diary.repository.entity.DiaryOpeningHoursPK;
@@ -26,4 +27,13 @@ public interface DiaryOpeningHoursRepository extends JpaRepository<DiaryOpeningH
     List<OccupationVo> findAllWeeklyDoctorsOfficeOcupation(@Param("doctorsOfficeId") Integer doctorsOfficeId,
                                                            @Param("startDate")LocalDate startDate,
                                                            @Param("endDate")LocalDate endDate);
+
+    @Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.DiaryOpeningHoursVo( " +
+            "d.id, oh, doh.medicalAttentionTypeId, doh.overturnCount) " +
+            "FROM DiaryOpeningHours AS doh " +
+            "JOIN Diary AS d ON ( doh.pk.diaryId = d.id ) " +
+            "JOIN OpeningHours AS oh ON ( doh.pk.openingHoursId = oh.id ) " +
+            "WHERE doh.pk.diaryId IN (:diaryIds) " +
+            "ORDER BY oh.dayWeekId, oh.from")
+    List<DiaryOpeningHoursVo> getDiariesOpeningHours(@Param("diaryIds") List<Integer> diaryIds);
 }

@@ -17,6 +17,10 @@ import java.io.Serializable;
 @ToString
 public class MedicalAttentionType implements Serializable {
 
+
+    public static final Short PROGRAMMED = 1;
+    public static final Short SPONTANEOUS = 2;
+
     @Id
     @Column(name = "id")
     private Short id;

@@ -1,6 +1,7 @@
 package net.pladema.medicalconsultation.diary.repository.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -15,6 +16,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class DiaryOpeningHours implements Serializable {
 
     @EmbeddedId
@@ -25,4 +27,10 @@ public class DiaryOpeningHours implements Serializable {
 
     @Column(name = "overturn_count", columnDefinition = "smallint default 0", nullable = false)
     private Short overturnCount;
+
+    public DiaryOpeningHours(Integer diaryId, Integer openingHoursId, Short medicalAttentionTypeId, Short overturnCount) {
+        this.pk = new DiaryOpeningHoursPK(diaryId, openingHoursId);
+        this.medicalAttentionTypeId = medicalAttentionTypeId;
+        this.overturnCount = overturnCount;
+    }
 }

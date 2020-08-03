@@ -15,13 +15,13 @@ export class DiaryOpeningHoursService {
 		private contextService: ContextService,
 	) { }
 
-	getMany(ids: number[]): Observable<DiaryOpeningHoursDto[]> {
-		if (!ids || ids.length === 0) {
+	getMany(diaryIds: number[]): Observable<DiaryOpeningHoursDto[]> {
+		if (!diaryIds || diaryIds.length === 0) {
 			return of([]);
 		}
 		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/diaryOpeningHours`;
 		return this.http.get<DiaryOpeningHoursDto[]>(url,{
-			params: { ids: `${ids.join(',')}` }
+			params: { diaryIds: `${diaryIds.join(',')}` }
 		});
 	}
 

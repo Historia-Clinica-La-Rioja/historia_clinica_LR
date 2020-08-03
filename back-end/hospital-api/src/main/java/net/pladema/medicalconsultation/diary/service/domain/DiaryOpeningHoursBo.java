@@ -9,6 +9,8 @@ import lombok.ToString;
 @ToString
 public class DiaryOpeningHoursBo {
 
+    private Integer diaryId;
+
     private OpeningHoursBo openingHours;
 
     private Short medicalAttentionTypeId;

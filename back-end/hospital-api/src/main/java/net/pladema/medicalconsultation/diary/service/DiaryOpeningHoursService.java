@@ -4,6 +4,7 @@ import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.OccupationBo;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 public interface DiaryOpeningHoursService {
@@ -12,4 +13,5 @@ public interface DiaryOpeningHoursService {
 
     List<OccupationBo> findAllWeeklyDoctorsOfficeOccupation(Integer doctorOfficeId, LocalDate startDate, LocalDate endDate);
 
+    Collection<DiaryOpeningHoursBo> getDiariesOpeningHours(List<Integer> diaryIds);
 }

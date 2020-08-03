@@ -20,4 +20,5 @@ public class OpeningHoursBo extends TimeRangeBo {
         super(openingHours.getFrom(), openingHours.getTo());
         this.dayWeekId = openingHours.getDayWeekId();
     }
+
 }

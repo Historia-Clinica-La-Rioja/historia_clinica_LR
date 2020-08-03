@@ -2,6 +2,7 @@ package net.pladema.medicalconsultation.diary.service.impl;
 
 import net.pladema.medicalconsultation.diary.repository.DiaryOpeningHoursRepository;
 import net.pladema.medicalconsultation.diary.repository.OpeningHoursRepository;
+import net.pladema.medicalconsultation.diary.repository.domain.DiaryOpeningHoursVo;
 import net.pladema.medicalconsultation.diary.repository.domain.OccupationVo;
 import net.pladema.medicalconsultation.diary.repository.entity.DiaryOpeningHours;
 import net.pladema.medicalconsultation.diary.repository.entity.DiaryOpeningHoursPK;
@@ -19,10 +20,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotEmpty;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +35,8 @@ import static java.util.stream.Collectors.toList;
 public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
 
     private static final Logger LOG = LoggerFactory.getLogger(DiaryOpeningHoursServiceImpl.class);
+
+    public static final String OUTPUT = "Output -> {}";
 
     private final DiaryOpeningHoursRepository diaryOpeningHoursRepository;
 
@@ -107,6 +110,29 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
                 .forEach( (dayWeekId,openingHours)->
                     result.add(mergeRangeTimeOfOpeningHours(dayWeekId, openingHours))
                 );
+        return result;
+    }
+
+    @Override
+    public Collection<DiaryOpeningHoursBo> getDiariesOpeningHours(List<Integer> diaryIds) {
+        LOG.debug("Input parameters -> diaryIds {} ", diaryIds);
+        Collection<DiaryOpeningHoursBo> result = new ArrayList();
+        if (!diaryIds.isEmpty()) {
+            List<DiaryOpeningHoursVo> resultQuery = diaryOpeningHoursRepository.getDiariesOpeningHours(diaryIds);
+            result = resultQuery.stream().map(this::createDiaryOpeningHoursBo).collect(Collectors.toList());
+        }
+        LOG.debug(OUTPUT, result);
+        return result;
+    }
+
+    private DiaryOpeningHoursBo createDiaryOpeningHoursBo(DiaryOpeningHoursVo diaryOpeningHoursVo) {
+        LOG.debug("Input parameters -> diaryOpeningHoursVo {} ", diaryOpeningHoursVo);
+        DiaryOpeningHoursBo result = new DiaryOpeningHoursBo();
+        result.setDiaryId(diaryOpeningHoursVo.getDiaryId());
+        result.setMedicalAttentionTypeId(diaryOpeningHoursVo.getMedicalAttentionTypeId());
+        result.setOverturnCount(diaryOpeningHoursVo.getOverturnCount());
+        result.setOpeningHours(new OpeningHoursBo(diaryOpeningHoursVo.getOpeningHours()));
+        LOG.debug(OUTPUT, result);
         return result;
     }
 

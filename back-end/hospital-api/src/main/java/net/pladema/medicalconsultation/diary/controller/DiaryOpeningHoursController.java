@@ -4,8 +4,8 @@ import io.swagger.annotations.Api;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryOpeningHoursDto;
 import net.pladema.medicalconsultation.diary.controller.dto.OccupationDto;
 import net.pladema.medicalconsultation.diary.controller.mapper.DiaryMapper;
-import net.pladema.medicalconsultation.diary.controller.mock.DiaryOpeningHoursMock;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.OccupationBo;
 import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import org.slf4j.Logger;
@@ -71,12 +71,13 @@ public class DiaryOpeningHoursController {
         return ResponseEntity.ok().body(result);
     }
 
-    @GetMapping(params = "ids")
+    @GetMapping(params = "diaryIds")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
     public ResponseEntity<Collection<DiaryOpeningHoursDto>> getMany(@PathVariable(name = "institutionId") Integer institutionId,
-                                                                    @RequestParam List<Integer> ids) {
-        LOG.debug("Input parameters -> institutionId {}, ids {}", institutionId, ids);
-        Collection<DiaryOpeningHoursDto> result = DiaryOpeningHoursMock.mockListDiaryOpeningHoursDto();
+                                                                    @RequestParam List<Integer> diaryIds) {
+        LOG.debug("Input parameters -> institutionId {}, diaryIds {}", institutionId, diaryIds);
+        Collection<DiaryOpeningHoursBo> resultService = diaryOpeningHoursService.getDiariesOpeningHours(diaryIds);
+        Collection<DiaryOpeningHoursDto> result = diaryMapper.toListDiaryOpeningHoursDto(resultService);
         LOG.debug(OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }

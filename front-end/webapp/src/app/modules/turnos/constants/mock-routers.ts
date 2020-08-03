@@ -66,7 +66,7 @@ export const MOCKS_TURNOS = [
 				}],
 			},
 			{
-				name: 'DiaryOpeningHours.getMany(diaryId: number[]): DiaryOpeningHoursDto[]',
+				name: 'DiaryOpeningHours.getMany(diaryIds: number[]): DiaryOpeningHoursDto[]',
 				roles: 'Todo ADMINISTRATIVO sobre la institución',
 				path: '/api/institutions/{institutionId}/medicalConsultations/diaryOpeningHours?diaryIds=99,100',
 				method: 'GET',

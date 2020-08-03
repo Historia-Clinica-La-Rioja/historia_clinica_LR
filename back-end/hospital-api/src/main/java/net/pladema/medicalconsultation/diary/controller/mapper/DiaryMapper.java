@@ -3,8 +3,10 @@ package net.pladema.medicalconsultation.diary.controller.mapper;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryADto;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryDto;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryListDto;
+import net.pladema.medicalconsultation.diary.controller.dto.DiaryOpeningHoursDto;
 import net.pladema.medicalconsultation.diary.controller.dto.OccupationDto;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.OccupationBo;
 import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import org.mapstruct.IterableMapping;
@@ -39,4 +41,7 @@ public interface DiaryMapper {
     @Named("toCollectionDiaryListDto")
     @IterableMapping(qualifiedByName = "toDiaryListDto")
     Collection<DiaryListDto> toCollectionDiaryListDto(Collection<DiaryBo> diaryBos);
+    
+    @Named("toListDiaryOpeningHoursDto")
+    Collection<DiaryOpeningHoursDto> toListDiaryOpeningHoursDto(Collection<DiaryOpeningHoursBo> resultService);
 }
