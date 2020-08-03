@@ -2,8 +2,10 @@
 	"turnos": {
 		"home": {
 			"TITLE": "Gestión de turnos",
-			"buttons": {
-				"NEW_AGENDA": "Nueva agenda"
+			"actions": {
+				"APPLY_FOR": "Solicitar",
+				"NEW_AGENDA": "Nueva agenda",
+				"SEARCH": "Buscar profesional"
 			}
 		},
 		"new-agenda": {

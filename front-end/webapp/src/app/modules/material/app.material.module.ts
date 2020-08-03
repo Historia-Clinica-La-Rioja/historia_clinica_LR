@@ -12,7 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatOptionModule, MatNativeDateModule, MAT_DATE_LOCALE, DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatNativeDateModule, MatOptionModule } from '@angular/material/core';
 import { MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -26,14 +26,16 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMomentDateModule, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MAT_APP_DATE_FORMATS } from '@core/utils/moment.utils';
 import { MatPaginatorIntlAR } from '@presentation/components/table/table.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @NgModule({
 	imports: [
+		MatAutocompleteModule,
 		MatButtonModule,
 		MatButtonModule,
 		MatCardModule,
@@ -70,6 +72,7 @@ import { MatPaginatorIntlAR } from '@presentation/components/table/table.compone
 		MatTooltipModule,
 	],
 	exports: [
+		MatAutocompleteModule,
 		MatButtonModule,
 		MatButtonModule,
 		MatCardModule,

@@ -1,16 +1,38 @@
 <app-content width="full">
-	<section>
-		<h2 class="page-title" [translate]="'turnos.home.TITLE'"></h2>
-		<div fxLayout="row" fxLayout.xs="column" fxLayoutGap="20px">
-			<ng-container *hasRole="['ADMINISTRATIVO']">
-				<button mat-flat-button color="primary" id="goToNewAgendaButton" (click)="goToNewAgenda()" fxFlexFill.xs>
-					<span class="uppercase" [translate]="'turnos.home.buttons.NEW_AGENDA'"></span>
-				</button>
 
-				<button mat-flat-button color="primary" routerLink="./solicitar" fxFlexFill.xs>
-					<span class="uppercase">Solicitar</span>
-				</button>
-			</ng-container>
+	<section id="header" fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between center">
+		<div>
+			<h2 id="title" class="page-title" [translate]="'turnos.home.TITLE'"></h2>
+		</div>
+
+		<div class="actions" fxLayout="row" fxLayoutGap="15px" fxLayout.xs="column" *hasRole="['ADMINISTRATIVO']">
+			<form fxFlex.gt-xs="55%" [formGroup]="form" (ngSubmit)="search()">
+				<mat-form-field appearance="outline" class="aligned-form-field">
+					<input type="text"
+						   placeholder="{{ 'turnos.home.actions.SEARCH' | translate }}"
+						   aria-label="Number"
+						   formControlName="profesional"
+						   matInput
+						   [matAutocomplete]="auto">
+					<mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+						<mat-option *ngFor="let option of profesionalesFiltered"
+									[value]="getFullNameLicence(option)"
+									(onSelectionChange)="select(option)">
+							<span class="mat-body">{{getFullName(option)}}</span>
+							<span class="mat-body-strong"> - {{option.licenceNumber}}</span>
+						</mat-option>
+					</mat-autocomplete>
+					<button mat-icon-button matSuffix>
+						<mat-icon>search</mat-icon>
+					</button>
+				</mat-form-field>
+			</form>
+			<button mat-flat-button color="primary" id="goToNewAgendaButton" (click)="goToNewAgenda()" fxFlexFill.xs>
+				<span class="uppercase" [translate]="'turnos.home.actions.NEW_AGENDA'"></span>
+			</button>
+			<button mat-flat-button color="primary" routerLink="./solicitar" fxFlexFill.xs>
+				<span class="uppercase" [translate]="'turnos.home.actions.APPLY_FOR'"></span>
+			</button>
 		</div>
 	</section>
 </app-content>
