@@ -1,7 +1,9 @@
 package net.pladema.establishment.repository;
 
+import static net.pladema.clinichistory.ips.repository.masterdata.entity.InternmentEpisodeStatus.ACTIVE;
+
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -10,8 +12,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.pladema.establishment.repository.domain.BedInfoVo;
+import net.pladema.establishment.repository.domain.BedSummaryVo;
 import net.pladema.establishment.repository.entity.Bed;
-import static net.pladema.clinichistory.ips.repository.masterdata.entity.InternmentEpisodeStatus.ACTIVE;
 
 @Repository
 public interface BedRepository extends JpaRepository<Bed, Integer> {
@@ -94,11 +96,28 @@ public interface BedRepository extends JpaRepository<Bed, Integer> {
 			+ " JOIN ClinicalSpecialtySector css ON r.clinicalSpecialtySectorId = css.id"
 			+ " JOIN Sector s ON css.sectorId = s.id "
 			+ " JOIN ClinicalSpecialty cs ON cs.id = css.clinicalSpecialtyId "
-			+ " LEFT JOIN InternmentEpisode ie ON b.id = ie.bedId "
+			+ " LEFT JOIN InternmentEpisode ie ON b.id = ie.bedId"
 			+ " LEFT JOIN Patient pat ON ie.patientId = pat.id "
 			+ " LEFT JOIN Person per ON pat.personId = per.id "
 			+ " LEFT JOIN IdentificationType it ON per.identificationTypeId = it.id "
-			+ " WHERE b.id =:bedId AND ie.statusId = " + ACTIVE)
-	Optional<BedInfoVo> getBedInfo(@Param("bedId") Integer bedId);
+			+ " WHERE b.id =:bedId AND "
+			+ " ( b.free = true OR (b.free = false AND ie.statusId = "+ ACTIVE + ") )")
+	Stream<BedInfoVo> getBedInfo(@Param("bedId") Integer bedId);
+	
+	@Transactional(readOnly = true)
+	@Query(value = " SELECT NEW net.pladema.establishment.repository.domain.BedSummaryVo( "
+			+ "  b, bc, s, cs, MAX(ie.probableDischargeDate) )"
+			+ " FROM Bed b "
+			+ " JOIN BedCategory bc ON b.bedCategoryId = bc.id "
+			+ " JOIN Room r ON b.roomId = r.id"
+			+ " JOIN ClinicalSpecialtySector css ON r.clinicalSpecialtySectorId = css.id"
+			+ " JOIN Sector s ON css.sectorId = s.id "
+			+ " JOIN ClinicalSpecialty cs ON cs.id = css.clinicalSpecialtyId "
+			+ " LEFT JOIN InternmentEpisode ie ON b.id = ie.bedId "
+			+ " WHERE s.institutionId =:institutionId AND (b.free=true OR ( b.free=false AND ie.statusId = " +ACTIVE+ ") )"
+			+ " GROUP BY b,bc,s,cs ")
+	List<BedSummaryVo> getAllBedsSummary(@Param("institutionId") Integer institutionId);
 
+
+	
 }

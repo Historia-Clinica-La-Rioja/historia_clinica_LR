@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.annotations.Api;
 import net.pladema.establishment.controller.dto.BedDto;
 import net.pladema.establishment.controller.dto.BedInfoDto;
+import net.pladema.establishment.controller.dto.BedSummaryDto;
 import net.pladema.establishment.controller.mapper.BedMapper;
 import net.pladema.establishment.repository.BedRepository;
 import net.pladema.establishment.repository.domain.BedInfoVo;
+import net.pladema.establishment.repository.domain.BedSummaryVo;
 import net.pladema.establishment.repository.entity.Bed;
 import net.pladema.establishment.service.BedService;
 
@@ -56,6 +58,14 @@ public class BedController {
 		LOG.debug("Get Bed summary  => {}", bed);
 		return bed.isPresent() ? ResponseEntity.ok(bedMapper.toBedInfoDto(bed.get())) : 
 				ResponseEntity.noContent().build();
+	}
+
+	@GetMapping("/summary-list")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	public ResponseEntity<List<BedSummaryDto>> getBedSummaryList(@PathVariable(name = "institutionId") Integer institutionId){ 
+		List<BedSummaryVo> beds = bedService.getBedSummary(institutionId);
+		LOG.debug("Get Bed summary  => {}", beds);
+		return ResponseEntity.ok(bedMapper.toListBedSummaryDto(beds)); 
 	}
 
 	@GetMapping("/clinicalspecialty/{clinicalSpecialtyId}")

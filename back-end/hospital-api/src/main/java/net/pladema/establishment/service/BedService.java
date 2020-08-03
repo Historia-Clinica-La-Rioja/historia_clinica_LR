@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import net.pladema.establishment.repository.domain.BedInfoVo;
+import net.pladema.establishment.repository.domain.BedSummaryVo;
 import net.pladema.establishment.repository.entity.Bed;
 import net.pladema.establishment.repository.entity.HistoricPatientBedRelocation;
 public interface BedService {
@@ -19,4 +20,7 @@ public interface BedService {
 	public Optional<HistoricPatientBedRelocation> getLastPatientBedRelocation(Integer internmentEpisodeId);
 	
 	public Optional<BedInfoVo> getBedInfo(Integer bedId);
+	
+	public List<BedSummaryVo> getBedSummary(Integer institutionId);
+
 }

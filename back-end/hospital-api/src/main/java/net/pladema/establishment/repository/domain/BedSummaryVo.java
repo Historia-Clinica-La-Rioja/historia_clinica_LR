@@ -8,15 +8,14 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.establishment.repository.entity.Bed;
 import net.pladema.establishment.repository.entity.BedCategory;
-import net.pladema.establishment.repository.entity.Room;
 import net.pladema.establishment.repository.entity.Sector;
-import net.pladema.patient.repository.domain.PatientVo;
-import net.pladema.person.repository.entity.Person;
+import net.pladema.staff.repository.domain.ClinicalSpecialtyVo;
+import net.pladema.staff.repository.entity.ClinicalSpecialty;
 
 @Getter
 @Setter
 @ToString
-public class BedInfoVo implements Serializable {
+public class BedSummaryVo implements Serializable {
 
 	/**
 	 * 
@@ -25,20 +24,16 @@ public class BedInfoVo implements Serializable {
 
 	private BedVo bed;
 	private BedCategoryVo bedCategory;
-	private RoomVo room;
 	private SectorVo sector;
-	private PatientVo patient;
+	private ClinicalSpecialtyVo clinicalSpecialty;
 	private LocalDateTime probableDischargeDate;
 
-	public BedInfoVo(Bed bed, BedCategory bedCategory, Room room, Sector sector, String specialty, Integer patientId,
-			Person person, String identificationType, LocalDateTime probableDischargeDate) {
+	public BedSummaryVo(Bed bed, BedCategory bedCategory, Sector sector, ClinicalSpecialty clinicalSpecialty,
+			LocalDateTime probableDischargeDate) {
 		this.bed = new BedVo(bed);
 		this.bedCategory = new BedCategoryVo(bedCategory);
-		this.room = new RoomVo(room);
 		this.sector = new SectorVo(sector);
-		this.sector.setSpecialtyName(specialty);
-		this.patient = Boolean.FALSE.equals(bed.getFree()) ? new PatientVo(patientId, person, identificationType)
-				: null;
+		this.clinicalSpecialty = new ClinicalSpecialtyVo(clinicalSpecialty);
 		this.probableDischargeDate = Boolean.FALSE.equals(bed.getFree()) ? probableDischargeDate : null;
 	}
 
