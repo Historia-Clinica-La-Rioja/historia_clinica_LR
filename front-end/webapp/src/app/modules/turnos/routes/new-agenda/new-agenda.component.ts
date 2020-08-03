@@ -13,7 +13,7 @@ import { Router } from "@angular/router";
 import { APPOINTMENT_DURATIONS } from "../../constants/appointment";
 import { NewAgendaService } from '../../services/new-agenda.service';
 import { DAYS_OF_WEEK, CalendarEvent } from 'angular-calendar';
-import { DoctorsOfficeDto } from '@api-rest/api-model';
+import { DoctorsOfficeDto, HealthcareProfessionalDto, ProfessionalDto } from '@api-rest/api-model';
 import * as moment from 'moment';
 
 const ROUTE_APPOINTMENT = 'turnos';
@@ -108,6 +108,9 @@ export class NewAgendaComponent implements OnInit {
 		}
 	}
 
+	getFullNameLicence(professional: ProfessionalDto): string {
+		return `${professional.lastName}, ${professional.firstName} - ${professional.licenceNumber}`;
+	}
 
 	enableAgendaDetails(): void {
 		this.enableFormControl('initDate');

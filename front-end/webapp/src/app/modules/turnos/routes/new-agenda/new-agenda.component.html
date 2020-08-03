@@ -60,8 +60,7 @@
 							placeholder="{{'pacientes.form.SELECT' | translate}}"
 							(selectionChange)="enableAgendaDetails()">
 							<mat-option *ngFor="let professional of professionals" [value]="professional.id">
-								{{professional.firstName}} {{professional.lastName}}
-								{{" - Nro. mat: "}} {{professional.licenceNumber}}
+								<span class="mat-body">{{getFullNameLicence(professional)}}</span>
 							</mat-option>
 						</mat-select>
 						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
