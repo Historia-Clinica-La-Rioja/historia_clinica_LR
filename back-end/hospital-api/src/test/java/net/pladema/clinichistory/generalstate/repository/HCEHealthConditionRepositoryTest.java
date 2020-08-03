@@ -62,7 +62,10 @@ public class HCEHealthConditionRepositoryTest extends UnitRepository {
 				.hasSize(0);
 
 		assertThat(resultQuery.stream().filter(HCEHealthConditionVo::isPersonalHistory))
-				.hasSize(3);
+				.hasSize(1);
+
+		assertThat(resultQuery.stream().filter(HCEHealthConditionVo::isChronic))
+				.hasSize(2);
 
 		assertThat(resultQuery.stream().filter(HCEHealthConditionVo::isSecondaryDiagnosis))
 				.hasSize(0);
@@ -100,7 +103,7 @@ public class HCEHealthConditionRepositoryTest extends UnitRepository {
 	}
 
 	private void createFirstDocument(Integer patientId){
-		Document document = DocumentsTestMocks.createDocument(1, AMBULATORIA, SourceType.INTERNACION, DocumentStatus.FINAL);
+		Document document = DocumentsTestMocks.createDocument(1, AMBULATORIA, SourceType.AMBULATORIA, DocumentStatus.FINAL);
 		document = save(document);
 
 		String familyCode = "familyCode";
@@ -129,7 +132,7 @@ public class HCEHealthConditionRepositoryTest extends UnitRepository {
 	}
 
 	private void createSecondDocument(Integer patientId){
-		Document document = DocumentsTestMocks.createDocument(1, AMBULATORIA, SourceType.INTERNACION, DocumentStatus.FINAL);
+		Document document = DocumentsTestMocks.createDocument(1, AMBULATORIA, SourceType.AMBULATORIA, DocumentStatus.FINAL);
 		document = save(document);
 
 		String diagnose2Code = "diagnose2";
@@ -149,7 +152,7 @@ public class HCEHealthConditionRepositoryTest extends UnitRepository {
 
 
 	private void createThirdDocument(Integer patientId){
-		Document document = DocumentsTestMocks.createDocument(1, AMBULATORIA, SourceType.INTERNACION, DocumentStatus.FINAL);
+		Document document = DocumentsTestMocks.createDocument(1, AMBULATORIA, SourceType.AMBULATORIA, DocumentStatus.FINAL);
 		document = save(document);
 
 		String familyCode2 = "familyCode2";
@@ -171,6 +174,14 @@ public class HCEHealthConditionRepositoryTest extends UnitRepository {
 		save(SnomedTestMocks.createSnomed(mainDiagnose1));
 		HealthCondition mainDiagnoses1 = HealthConditionTestMocks.createMainDiagnose(patientId,mainDiagnose1, ConditionClinicalStatus.INACTIVE);
 		save(HealthConditionTestMocks.createHealthConditionDocument(document.getId(), save(mainDiagnoses1).getId()));
+
+		String personalCode = "personal1";
+		HealthCondition personalHistory1 = HealthConditionTestMocks.createChronicPersonalHistory(patientId, personalCode, ConditionVerificationStatus.PRESUMPTIVE);
+		save(HealthConditionTestMocks.createHealthConditionDocument(document.getId(), save(personalHistory1).getId()));
+
+		String personalCode1 = "personal2";
+		HealthCondition personalHistory2 = HealthConditionTestMocks.createChronicPersonalHistory(patientId,personalCode1, ConditionVerificationStatus.CONFIRMED);
+		save(HealthConditionTestMocks.createHealthConditionDocument(document.getId(), save(personalHistory2).getId()));
 	}
 
 }

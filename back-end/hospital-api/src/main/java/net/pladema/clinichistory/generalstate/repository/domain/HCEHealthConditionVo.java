@@ -54,6 +54,10 @@ public class HCEHealthConditionVo extends HCEClinicalTermVo {
         return problemId.equals(ProblemType.ANTECEDENTE);
     }
 
+    public boolean isChronic() {
+        return problemId.equals(ProblemType.CHRONIC);
+    }
+
     public boolean isPresumptive() {
         return (verificationId != null && verificationId.equalsIgnoreCase(ConditionVerificationStatus.PRESUMPTIVE));
     }

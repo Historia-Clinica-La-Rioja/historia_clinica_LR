@@ -2,6 +2,7 @@ package net.pladema.clinichistory.mocks;
 
 import net.pladema.clinichistory.documents.repository.entity.DocumentHealthCondition;
 import net.pladema.clinichistory.ips.repository.entity.HealthCondition;
+import net.pladema.clinichistory.ips.repository.masterdata.entity.ConditionClinicalStatus;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.ConditionVerificationStatus;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.ProblemType;
 
@@ -26,6 +27,12 @@ public class HealthConditionTestMocks {
     public static HealthCondition createPersonalHistory(Integer patientId, String code, String statusId, String verificationId){
         HealthCondition result = createMinimumHealthCondition(patientId, code, statusId, verificationId);
         result.setProblemId(ProblemType.PROBLEMA);
+        return result;
+    }
+
+    public static HealthCondition createChronicPersonalHistory(Integer patientId, String code, String verificationId){
+        HealthCondition result = createMinimumHealthCondition(patientId, code, ConditionClinicalStatus.ACTIVE, verificationId);
+        result.setProblemId(ProblemType.CHRONIC);
         return result;
     }
 

@@ -33,7 +33,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
         LOG.debug("Input parameters patientId {}", patientId);
         String sqlString = "WITH t AS (" +
                 "   SELECT hc.id, sctid_code, hc.status_id, hc.main, verification_status_id, problem_id, start_date, inactivation_date, hc.note_id, hc.updated_on, hc.patient_id, " +
-                "   row_number() over (partition by sctid_code, problem_id order by hc.updated_on desc) as rw  " +
+                "   row_number() over (partition by sctid_code order by hc.updated_on desc) as rw  " +
                 "   FROM document d " +
                 "   JOIN document_health_condition dhc on d.id = dhc.document_id " +
                 "   JOIN health_condition hc on dhc.health_condition_id = hc.id " +
@@ -83,7 +83,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
         LOG.debug("Input parameters patientId {}", patientId);
         String sqlString = "WITH t AS (" +
                 "   SELECT hc.id, sctid_code, hc.status_id, hc.main, verification_status_id, problem_id, start_date, hc.note_id, hc.updated_on, hc.patient_id, " +
-                "   row_number() over (partition by sctid_code, problem_id order by hc.updated_on desc) as rw  " +
+                "   row_number() over (partition by sctid_code order by hc.updated_on desc) as rw  " +
                 "   FROM document d " +
                 "   JOIN document_health_condition dhc on d.id = dhc.document_id " +
                 "   JOIN health_condition hc on dhc.health_condition_id = hc.id " +
