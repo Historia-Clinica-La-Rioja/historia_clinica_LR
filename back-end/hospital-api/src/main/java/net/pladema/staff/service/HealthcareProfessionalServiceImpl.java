@@ -2,6 +2,7 @@ package net.pladema.staff.service;
 
 import net.pladema.clinichistory.hospitalization.repository.HealthcareProfessionalGroupRepository;
 import net.pladema.clinichistory.hospitalization.repository.domain.HealthcareProfessionalGroup;
+import net.pladema.sgx.exceptions.NotFoundException;
 import net.pladema.staff.repository.HealthcareProfessionalRepository;
 import net.pladema.staff.repository.domain.HealthcareProfessionalVo;
 import net.pladema.staff.service.domain.HealthcarePersonBo;
@@ -63,6 +64,15 @@ public class HealthcareProfessionalServiceImpl implements  HealthcareProfessiona
     public Integer getProfessionalId(Integer userId) {
         LOG.debug("Input parameters -> userId {}", userId);
         Integer result = healthcareProfessionalRepository.getProfessionalId(userId);
+        LOG.debug("Output -> {}", result);
+        return result;
+    }
+
+    @Override
+    public HealthcareProfessionalBo findProfessionalById(Integer id) {
+        LOG.debug("Input parameters -> id {}", id);
+        HealthcareProfessionalBo result = healthcareProfessionalRepository.findProfessionalById(id)
+                .map(HealthcareProfessionalBo::new).orElseThrow(() -> new NotFoundException("id", "Professional " + id + " does not exist"));
         LOG.debug("Output -> {}", result);
         return result;
     }

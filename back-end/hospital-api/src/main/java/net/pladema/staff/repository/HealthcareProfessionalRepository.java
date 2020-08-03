@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface HealthcareProfessionalRepository extends JpaRepository<HealthcareProfessional, Integer> {
@@ -42,4 +43,12 @@ public interface HealthcareProfessionalRepository extends JpaRepository<Healthca
 			+ " WHERE ur.userRolePK.institutionId = :institutionId "
 			+ " ORDER BY p.lastName, p.firstName")
     List<HealthcareProfessionalVo> findAllByInstitution(@Param("institutionId") Integer institutionId);
+
+	@Transactional(readOnly = true)
+	@Query(value = " SELECT DISTINCT new net.pladema.staff.repository.domain.HealthcareProfessionalVo("
+			+ " hp.id, hp.licenseNumber, p.firstName, p.lastName, p.identificationNumber)"
+			+ " FROM  HealthcareProfessional hp "
+			+ " INNER JOIN Person p ON (hp.personId = p.id)"
+			+ " WHERE hp.id = :id")
+	Optional<HealthcareProfessionalVo> findProfessionalById(@Param("id") Integer id);
 }

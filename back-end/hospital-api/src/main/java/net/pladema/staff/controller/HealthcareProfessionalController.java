@@ -24,9 +24,9 @@ public class HealthcareProfessionalController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(HealthcareProfessionalController.class);
 
-	private HealthcareProfessionalService healthcareProfessionalService;
+	private final HealthcareProfessionalService healthcareProfessionalService;
 	
-	private HealthcareProfessionalMapper healthcareProfessionalMapper;
+	private final HealthcareProfessionalMapper healthcareProfessionalMapper;
 
 	public HealthcareProfessionalController(HealthcareProfessionalService healthcareProfessionalService,
 											HealthcareProfessionalMapper healthcareProfessionalMapper) {
@@ -72,7 +72,8 @@ public class HealthcareProfessionalController {
 	public ResponseEntity<ProfessionalDto> getOne(@PathVariable(name = "institutionId")  Integer institutionId,
 												  @PathVariable(name = "healthcareProfessionalId") Integer healthcareProfessionalId){
 		LOG.debug("Input parameters -> institutionId {}, healthcareProfessionalId {}", institutionId, healthcareProfessionalId);
-		ProfessionalDto result = HealthcareProfessionalMock.mockProfessionalDto(healthcareProfessionalId);
+		HealthcareProfessionalBo resultService = healthcareProfessionalService.findProfessionalById(healthcareProfessionalId);
+		ProfessionalDto result = healthcareProfessionalMapper.fromProfessionalBo(resultService);
 		LOG.debug("Output", result);
 		return ResponseEntity.ok(result);
 	}

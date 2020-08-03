@@ -15,4 +15,6 @@ public interface HealthcareProfessionalService {
     HealthcareProfessionalGroup addHealthcareProfessionalGroup(Integer internmentEpisodeId, Integer healthcareProfessionalId);
 
     Integer getProfessionalId(Integer userId);
+
+    HealthcareProfessionalBo findProfessionalById(Integer healthcareProfessionalId);
 }
