@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.diary.repository;
 
+import net.pladema.medicalconsultation.diary.repository.domain.DiaryListVo;
 import net.pladema.medicalconsultation.diary.repository.entity.Diary;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -26,4 +27,13 @@ public interface DiaryRepository extends JpaRepository<Diary, Integer> {
                                           @Param("startDate") LocalDate newDiaryStart,
                                           @Param("endDate") LocalDate newDiaryEnd);
 
+
+    @Transactional(readOnly = true)
+    @Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.DiaryListVo( " +
+            "d.id, d.doctorsOfficeId, d.startDate, d.endDate, d.appointmentDuration, d.professionalAsignShift, " +
+            "d.includeHoliday)" +
+            "FROM Diary d " +
+            "WHERE d.healthcareProfessionalId = :hcpId " +
+            "AND d.active = true")
+    List<DiaryListVo> getActiveDiariesFromProfessional(@Param("hcpId") Integer healthcareProfessionalId);
 }

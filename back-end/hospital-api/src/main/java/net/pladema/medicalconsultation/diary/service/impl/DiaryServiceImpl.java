@@ -1,6 +1,7 @@
 package net.pladema.medicalconsultation.diary.service.impl;
 
 import net.pladema.medicalconsultation.diary.repository.DiaryRepository;
+import net.pladema.medicalconsultation.diary.repository.domain.DiaryListVo;
 import net.pladema.medicalconsultation.diary.repository.entity.Diary;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
 import net.pladema.medicalconsultation.diary.service.DiaryService;
@@ -10,7 +11,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DiaryServiceImpl implements DiaryService {
@@ -79,5 +82,28 @@ public class DiaryServiceImpl implements DiaryService {
         LOG.debug("Diary saved -> {}", diaryIds);
         return diaryIds;
 
+    }
+
+    @Override
+    public Collection<DiaryBo> getActiveDiariesFromProfessional(Integer healthcareProfessionalId) {
+        LOG.debug("Input parameters -> healthcareProfessionalId {}", healthcareProfessionalId);
+        List<DiaryListVo> diaries = diaryRepository.getActiveDiariesFromProfessional(healthcareProfessionalId);
+        List<DiaryBo> result = diaries.stream().map(this::createDiaryBoInstance).collect(Collectors.toList());
+        LOG.debug("Output -> {}", result);
+        return result;
+    }
+
+    private DiaryBo createDiaryBoInstance(DiaryListVo diaryListVo) {
+        LOG.debug("Input parameters -> diaryListVo {}", diaryListVo);
+        DiaryBo result = new DiaryBo();
+        result.setId(diaryListVo.getId());
+        result.setDoctorsOfficeId(diaryListVo.getDoctorsOfficeId());
+        result.setStartDate(diaryListVo.getStartDate());
+        result.setEndDate(diaryListVo.getEndDate());
+        result.setAppointmentDuration(diaryListVo.getAppointmentDuration());
+        result.setProfessionalAsignShift(diaryListVo.getProfessionalAssignShift());
+        result.setIncludeHoliday(diaryListVo.getIncludeHoliday());
+        LOG.debug("Output -> {}", result);
+        return result;
     }
 }

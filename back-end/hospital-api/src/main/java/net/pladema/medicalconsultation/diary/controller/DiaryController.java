@@ -6,7 +6,6 @@ import net.pladema.medicalconsultation.diary.controller.constraints.DiaryPeriodV
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryADto;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryListDto;
 import net.pladema.medicalconsultation.diary.controller.mapper.DiaryMapper;
-import net.pladema.medicalconsultation.diary.controller.mock.DiaryMock;
 import net.pladema.medicalconsultation.diary.service.DiaryService;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 import org.slf4j.Logger;
@@ -65,8 +64,9 @@ public class DiaryController {
     public ResponseEntity<Collection<DiaryListDto>> getDiaries(@PathVariable(name = "institutionId")  Integer institutionId,
                                                                @RequestParam(name = "healthcareProfessionalId") Integer healthcareProfessionalId){
         LOG.debug("Input parameters -> institutionId {}, healthcareProfessionalId {}", institutionId, healthcareProfessionalId);
-        Collection<DiaryListDto> result = DiaryMock.mockListDiaryListDto(healthcareProfessionalId);
-        LOG.debug("Output", result);
+        Collection<DiaryBo> diaryBos = diaryService.getActiveDiariesFromProfessional(healthcareProfessionalId);
+        Collection<DiaryListDto> result = diaryMapper.toCollectionDiaryListDto(diaryBos);
+        LOG.debug(OUTPUT, result);
         return ResponseEntity.ok(result);
     }
 }
