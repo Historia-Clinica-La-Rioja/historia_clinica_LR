@@ -94,11 +94,11 @@ export const MOCKS_TURNOS = [
 				],
 			},
 			{
-				name: 'Diary.get(diaryId: number): DiaryDto[]',
+				name: 'Diary.get(diaryId: number): DiaryDto',
 				roles: 'ADMINISTRADOR AGENDA',
 				path: '/api/institutions/{institutionId}/medicalConsultations/diary/{diaryId}',
 				method: 'GET',
-				fetch: [
+				fetch:
 					{
 						id: 99,
 						healthcareProfessionalId: 1,
@@ -130,7 +130,6 @@ export const MOCKS_TURNOS = [
 							},
 						]
 					}
-				]
 			},
 			{
 				name: 'Diary.update(diaryId: number, diaryADto: DiaryADto): void',

@@ -95,7 +95,7 @@
 						</div>
 						<mat-form-field appearance="outline">
 							<input formControlName="endDate" id="endDate" matInput [matDatepicker]="endPicker"
-								(dateChange)="getAllWeeklyDoctorsOfficeOcupation()">
+							       [min]="form.value.startDate" (dateChange)="getAllWeeklyDoctorsOfficeOcupation()">
 							<mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
 							<mat-datepicker #endPicker></mat-datepicker>
 						</mat-form-field>
