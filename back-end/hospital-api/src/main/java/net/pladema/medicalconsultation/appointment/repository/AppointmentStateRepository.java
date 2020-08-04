@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AppointmentStateRepository extends JpaRepository<AppointmentState, Short> {
+
 }

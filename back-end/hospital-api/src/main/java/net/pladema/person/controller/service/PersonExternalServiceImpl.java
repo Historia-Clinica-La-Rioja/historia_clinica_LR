@@ -1,11 +1,5 @@
 package net.pladema.person.controller.service;
 
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
 import net.pladema.patient.controller.dto.APatientDto;
 import net.pladema.person.controller.dto.BMPersonDto;
 import net.pladema.person.controller.dto.BasicDataPersonDto;
@@ -15,6 +9,12 @@ import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;
 import net.pladema.person.service.PersonMasterDataService;
 import net.pladema.person.service.PersonService;
+import net.pladema.staff.controller.dto.BasicPersonalDataDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class PersonExternalServiceImpl implements PersonExternalService {
@@ -85,6 +85,15 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 		Person person = personService.getPerson(personId);
 		Gender gender = personMasterDataService.getGender(person.getGenderId()).orElse(new Gender());
 		BasicDataPersonDto result = personMapper.basicDatafromPerson(person, gender);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public BasicPersonalDataDto getBasicPersonalDataDto(Integer personId) {
+		LOG.debug(ONE_INPUT_PARAMETER, personId);
+		Person person = personService.getPerson(personId);
+		BasicPersonalDataDto result = personMapper.basicPersonalDataDto(person);
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

@@ -1,10 +1,12 @@
 package net.pladema.patient.controller.service;
 
+import net.pladema.patient.controller.dto.AppointmentPatientDto;
 import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.service.PatientService;
 import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.controller.service.PersonExternalService;
+import net.pladema.staff.controller.dto.BasicPersonalDataDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -34,6 +36,19 @@ public class PatientExternalServiceImpl implements PatientExternalService {
                 .orElseThrow(() -> new EntityNotFoundException("patient.invalid"));
         BasicDataPersonDto personData = personExternalService.getBasicDataPerson(patient.getPersonId());
         BasicPatientDto result = new BasicPatientDto(patient.getId(), personData);
+        LOG.debug(OUTPUT, result);
+        return result;
+    }
+
+    @Override
+    public AppointmentPatientDto getAppointmentPatientDto(Integer patientId) {
+        LOG.debug("Input parameters -> patientId {}", patientId);
+        Patient patient = patientService.getPatient(patientId)
+                .orElseThrow(() -> new EntityNotFoundException("patient.invalid"));
+        BasicPersonalDataDto personData = personExternalService.getBasicPersonalDataDto(patient.getPersonId());
+        AppointmentPatientDto result = new AppointmentPatientDto(patient.getId(), personData,
+                patient.getMedicalCoverageName(),
+                patient.getMedicalCoverageAffiliateNumber());
         LOG.debug(OUTPUT, result);
         return result;
     }

@@ -1,25 +1,19 @@
 package net.pladema.medicalconsultation.appointment.controller.dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.ToString;
 import lombok.Value;
+import net.pladema.staff.controller.dto.BasicPersonalDataDto;
+
 
 @Value
 @Builder
 @ToString
 @AllArgsConstructor
-public class AppointmentListDto {
+public class AppointmentBasicPatientDto {
 
     private final Integer id;
 
-    private final AppointmentBasicPatientDto patient;
-
-    private final String date;
-
-    private final String hour;
-
-    private final boolean overturn;
-
+    private final BasicPersonalDataDto person;
 }

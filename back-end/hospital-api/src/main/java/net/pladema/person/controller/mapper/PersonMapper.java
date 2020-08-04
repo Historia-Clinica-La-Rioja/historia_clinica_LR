@@ -1,5 +1,6 @@
 package net.pladema.person.controller.mapper;
 
+import net.pladema.staff.controller.dto.BasicPersonalDataDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -48,7 +49,8 @@ public interface PersonMapper {
     @Mapping(target = "identificationType", source = "identificationType", qualifiedByName = "fromIdentificationType")
     @Mapping(target = "address", source="personalInformation", qualifiedByName = "toAddressComplete")
     PersonalInformationDto fromPersonalInformation(PersonalInformation personalInformation);
-    
+
+    //TODO: mejorar jerarquia DTO's mediante composicion
     @Mapping(target = "firstName", source = "person.firstName") 
     @Mapping(target = "middleNames", source = "person.middleNames")
     @Mapping(target = "lastName", source = "person.lastName")
@@ -75,6 +77,8 @@ public interface PersonMapper {
     @Mapping(target = "province", source = "province", qualifiedByName = "fromProvince")
     @Mapping(target = "department", source = "department", qualifiedByName = "fromDepartment")
     BMPersonDto fromCompletePersonVo(CompletePersonVo completePersonVo);
-    //TODO: mejorar jerarquia DTO's mediante composicion
+
+    @Named("basicPersonalDataDto")
+    BasicPersonalDataDto basicPersonalDataDto(Person person);
     
 }

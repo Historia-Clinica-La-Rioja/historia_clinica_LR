@@ -161,7 +161,7 @@ export const MOCKS_TURNOS = [
 						},
 						date: '2020-07-13',
 						hour: '07:15',
-						isOverTurn: false,
+						overturn: false,
 					},
 					{
 						id: 11,
@@ -174,7 +174,7 @@ export const MOCKS_TURNOS = [
 						},
 						date: '2020-07-13',
 						hour: '07:30',
-						isOverTurn: false,
+						overturn: false,
 					}
 				],
 			}

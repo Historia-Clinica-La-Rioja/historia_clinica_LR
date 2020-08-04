@@ -1,7 +1,10 @@
 package net.pladema.patient.controller.dto;
 
-import lombok.*;
-import net.pladema.person.controller.dto.IBasicPersonalData;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import net.pladema.staff.controller.dto.BasicPersonalDataDto;
 
 
 @Getter
@@ -12,7 +15,7 @@ public class AppointmentPatientDto {
 
     private Integer id;
 
-    private IBasicPersonalData person;
+    private BasicPersonalDataDto person;
 
     private String medicalCoverageName;
 

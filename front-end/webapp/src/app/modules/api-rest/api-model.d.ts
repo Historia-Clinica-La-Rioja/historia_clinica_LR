@@ -103,19 +103,24 @@ export interface ApiErrorMessageDto {
     text: string;
 }
 
+export interface AppointmentBasicPatientDto {
+    id: number;
+    person: BasicPersonalDataDto;
+}
+
 export interface AppointmentListDto {
     date: string;
     hour: string;
     id: number;
     overturn: boolean;
-    patient: AppointmentPatientDto;
+    patient: AppointmentBasicPatientDto;
 }
 
 export interface AppointmentPatientDto {
     id: number;
     medicalCoverageAffiliateNumber: string;
     medicalCoverageName: string;
-    person: IBasicPersonalData;
+    person: BasicPersonalDataDto;
 }
 
 export interface BMPatientDto extends APatientDto {
