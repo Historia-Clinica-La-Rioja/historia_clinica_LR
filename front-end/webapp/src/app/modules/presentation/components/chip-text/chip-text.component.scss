@@ -1,0 +1,15 @@
+@import 'src/assets/styles/variables.scss';
+
+
+mat-chip {
+
+	&.default {
+		background-color: $success-color;
+		color: white;
+	}	
+	&.error {
+		background-color: $error-color;
+		color: white;
+	}
+
+}

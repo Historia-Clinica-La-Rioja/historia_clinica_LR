@@ -1,17 +1,19 @@
 <app-content width="full">
     <section>
         <h2 class="page-title" [translate]="'gestion-camas.home.TITLE'"></h2>
-        
+
         <div fxLayout="column">
 
             <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="space-between start">
-
                 <mat-card>
                     <mat-card-content>
                         <div fxLayout="row" fxLayoutGap="10px">
                             <div id="filtros" class="panel-filtro">
                                 <h2 class="page-title" [translate]="'gestion-camas.home.SUBTITLE'"></h2>
                                 <app-filtros-camas></app-filtros-camas>
+                            </div>
+                            <div class="spinner" *ngIf="!allBeds">
+                                <mat-spinner color="primary"></mat-spinner>
                             </div>
                             <section id="mapeo">
                                 <div fxLayout="column" *ngFor="let sector of allBeds">
@@ -24,7 +26,7 @@
                                         </div>
                                         <div fxLayout="row wrap">
                                             <div *ngFor="let bed of specialty.beds">
-                                                <button mat-raised-button [ngClass]="{'free': bed.free}">
+                                                <button mat-raised-button [ngClass]="{'free': bed.free}" (click)="selectBed(bed.bedId)">
                                                     {{bed.bedNumber}}
                                                 </button>
                                             </div>
@@ -37,12 +39,11 @@
                 </mat-card>
 
                 <section id="detail">
-                    <app-cama-detail></app-cama-detail>
+                    <app-bed-detail [bedId]="selectedCama"></app-bed-detail>
                 </section>
-
             </div>
 
         </div>
-        
+
     </section>
 </app-content>

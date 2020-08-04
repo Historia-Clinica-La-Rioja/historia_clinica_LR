@@ -20,6 +20,7 @@ import { MenuComponent } from './components/menu/menu.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { MockComponent } from './components/mock/mock.component';
 import { DayTimeRangePipe } from './pipes/day-time-range.pipe';
+import { ChipTextComponent } from './components/chip-text/chip-text.component';
 
 @NgModule({
 	declarations: [
@@ -41,6 +42,7 @@ import { DayTimeRangePipe } from './pipes/day-time-range.pipe';
 		FooterComponent,
 		MockComponent,
 		DayTimeRangePipe,
+		ChipTextComponent,
 	],
 	imports: [
 		CommonModule,
@@ -65,7 +67,8 @@ import { DayTimeRangePipe } from './pipes/day-time-range.pipe';
 		MenuComponent,
 		FlexModule,
 		FlexLayoutModule,
-		DayTimeRangePipe
+		DayTimeRangePipe,
+		ChipTextComponent,
 	]
 })
 export class PresentationModule { }

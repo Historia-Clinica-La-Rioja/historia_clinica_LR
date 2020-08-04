@@ -5,7 +5,15 @@
             "SUBTITLE": "Disponibilidad de camas"
         },
         "detail": {
-            "TITLE": "Detalle de cama"
+            "TITLE": "Detalle de cama",
+            "BED_TITLE":"Cama {{bedNumber}}",
+            "NO_BED": "Seleccione una cama para ver el detalle",
+            "SPECIALTY": "Especialidad",
+            "SECTOR":"Sector",
+            "ROOM":"Habitación:",
+            "PATIENT": "Paciente:",
+            "PROBABLE_DISCHARGE_DATE": "Fecha probable alta: ",
+            "NO_DISCHARGE_DATE":"Sin información"
         }
     }
 }
