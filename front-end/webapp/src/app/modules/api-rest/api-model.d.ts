@@ -648,6 +648,11 @@ export interface OutpatientReasonDto {
     snomed: SnomedDto;
 }
 
+export interface OutpatientUpdateImmunizationDto {
+    administrationDate: string;
+    snomed: SnomedDto;
+}
+
 export interface OutpatientVitalSignDto extends Serializable {
     bloodOxygenSaturation?: EffectiveClinicalObservationDto;
     diastolicBloodPressure?: EffectiveClinicalObservationDto;
