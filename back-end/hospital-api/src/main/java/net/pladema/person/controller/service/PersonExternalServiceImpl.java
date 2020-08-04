@@ -50,7 +50,7 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 	@Override
 	public void addPersonExtended(APatientDto patient, Integer personId, Integer addressId) {
 		LOG.debug("Input parameters -> {}, {}, {}", patient, personId, addressId);
-		PersonExtended personExtendedToAdd = personMapper.updatePersonExtendedPatient(patient, addressId);
+		PersonExtended personExtendedToAdd = personMapper.toPersonExtended(patient, addressId);
 		LOG.debug("Mapped result updatePersonExtendedPatient -> {}", personExtendedToAdd);
 		personExtendedToAdd.setId(personId);
 		personExtendedToAdd.setAddressId(addressId);
@@ -84,7 +84,7 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 		LOG.debug(ONE_INPUT_PARAMETER, personId);
 		Person person = personService.getPerson(personId);
 		Gender gender = personMasterDataService.getGender(person.getGenderId()).orElse(new Gender());
-		BasicDataPersonDto result = personMapper.basicDatafromPerson(person, gender);
+		BasicDataPersonDto result = personMapper.basicDataFromPerson(person, gender);
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

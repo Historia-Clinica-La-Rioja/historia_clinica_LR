@@ -1,24 +1,26 @@
 package net.pladema.staff.controller.mapper;
 
-import java.util.List;
-
+import net.pladema.staff.controller.dto.HealthcareProfessionalDto;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 import net.pladema.staff.service.domain.HealthcarePersonBo;
 import net.pladema.staff.service.domain.HealthcareProfessionalBo;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
-import net.pladema.person.controller.mapper.PersonMapper;
-import net.pladema.staff.controller.dto.HealthcareProfessionalDto;
 import org.mapstruct.Named;
 
-@Mapper(uses = {PersonMapper.class})
+import java.util.List;
+
+@Mapper
 public interface HealthcareProfessionalMapper {
 
+
+	@Named("fromProfessionalBo")
 	@Mapping(target = "person", source = "person", qualifiedByName="toBasicDataPersonDto")
 	HealthcareProfessionalDto fromHealthcarePerson(HealthcarePersonBo healthcarePerson);
-	
+
+	@Named("fromHealthcarePersonList")
+	@IterableMapping(qualifiedByName = "fromProfessionalBo")
 	List<HealthcareProfessionalDto> fromHealthcarePersonList(List<HealthcarePersonBo> healthcarePersonList);
 
 	@Named("fromProfessionalBo")

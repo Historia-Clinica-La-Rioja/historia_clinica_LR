@@ -26,31 +26,41 @@ import net.pladema.person.repository.entity.PersonExtended;
 @Mapper(uses = {AddressMapper.class, IdentificationTypeMapper.class, GenderMapper.class, LocalDateMapper.class, ProvinceMapper.class, DepartmentMapper.class})
 public interface PersonMapper {
 
+
+    @Named("fromPerson")
     BMPersonDto fromPerson(Person person);
 
+    @Named("fromPersonDto")
     Person fromPersonDto(APersonDto person);
 
+    @Named("updatePersonExtended")
     PersonExtended updatePersonExtended(APersonDto person, Integer addressId);
 
-    PersonExtended updatePersonExtendedPatient(APatientDto patient, Integer addresId);
-    
+    @Named("updatePersonExtendedPatient")
+    PersonExtended toPersonExtended(APatientDto patient, Integer addresId);
+
+    @Named("updatePersonExtendedPatient")
     PersonExtended updatePersonExtendedPatient(@MappingTarget PersonExtended personExtendedToUpdate, APatientDto patient);
 
-    AddressDto updatePersonAddress(APersonDto person);
+    @Named("getAddressDto")
+    AddressDto getAddressDto(APersonDto person);
 
+    @Named("fromAPatientDto")
     Person fromAPatientDto(APatientDto patient);
 
     @Named("toBasicDataPersonDto")
     @Mapping(target = "id", source = "person.id")
     @Mapping(target = "gender", source = "gender", qualifiedByName = "fromGender")
-    BasicDataPersonDto basicDatafromPerson(Person person, Gender gender);
+    BasicDataPersonDto basicDataFromPerson(Person person, Gender gender);
 
 
+    @Named("fromPersonalInformation")
     @Mapping(target = "identificationType", source = "identificationType", qualifiedByName = "fromIdentificationType")
     @Mapping(target = "address", source="personalInformation", qualifiedByName = "toAddressComplete")
     PersonalInformationDto fromPersonalInformation(PersonalInformation personalInformation);
 
     //TODO: mejorar jerarquia DTO's mediante composicion
+    @Named("fromCompletePersonVo")
     @Mapping(target = "firstName", source = "person.firstName") 
     @Mapping(target = "middleNames", source = "person.middleNames")
     @Mapping(target = "lastName", source = "person.lastName")

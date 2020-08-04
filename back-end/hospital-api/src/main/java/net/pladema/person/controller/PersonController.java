@@ -62,7 +62,7 @@ public class PersonController {
         LOG.debug("Going to add person -> {}", personToAdd);
         Person createdPerson = personService.addPerson(personToAdd);
 
-        AddressDto addressToAdd = personMapper.updatePersonAddress(personDto);
+        AddressDto addressToAdd = personMapper.getAddressDto(personDto);
         LOG.debug("Going to add address -> {}", addressToAdd);
         addressToAdd = addressExternalService.addAddress(addressToAdd);
 
