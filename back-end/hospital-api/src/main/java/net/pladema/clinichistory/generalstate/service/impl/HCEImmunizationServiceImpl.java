@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +30,7 @@ public class HCEImmunizationServiceImpl implements HCEImmunizationService {
     public List<HCEImmunizationBo> getImmunization(Integer patientId) {
         LOG.debug(LOGGING_INPUT, patientId);
         List<HCEImmunizationVo> resultQuery = hceImmunizationRepository.getImmunization(patientId);
-        List<HCEImmunizationBo> result = resultQuery.stream().map(HCEImmunizationBo::new).collect(Collectors.toList());
+        List<HCEImmunizationBo> result = resultQuery.stream().map(HCEImmunizationBo::new).sorted(Comparator.comparing(HCEImmunizationBo::getAdministrationDate).reversed()).collect(Collectors.toList());
         LOG.debug(LOGGING_OUTPUT, result);
         return result;
     }
