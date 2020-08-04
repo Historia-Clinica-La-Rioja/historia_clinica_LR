@@ -7,18 +7,18 @@
             <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="space-between start">
                 <mat-card>
                     <mat-card-content>
-                        <div fxLayout="row" fxLayoutGap="10px">
+                        <div fxLayout="row">
                             <div id="filtros" class="panel-filtro">
                                 <h2 class="page-title" [translate]="'gestion-camas.home.SUBTITLE'"></h2>
+                                <mat-card-subtitle>
+                                    <span *ngIf="allBeds" id="bed_id">Resultado: {{bedsAmount}} camas</span>
+                                </mat-card-subtitle>
                                 <app-filtros-camas></app-filtros-camas>
                             </div>
-                            <div class="spinner" *ngIf="!allBeds">
-                                <mat-spinner color="primary"></mat-spinner>
-                            </div>
-                            <section id="mapeo">
+                            <section class="beds" id="mapeo" *ngIf="allBeds && allBeds.length">
                                 <div fxLayout="column" *ngFor="let sector of allBeds">
                                     <div id="title">
-                                        <h2>{{sector.sectorDescription}}</h2>
+                                        <h2 class="page-title">{{sector.sectorDescription}}</h2>
                                     </div>
                                     <div fxLayout="column" *ngFor="let specialty of sector.specialty">
                                         <div id="title">
@@ -26,19 +26,26 @@
                                         </div>
                                         <div fxLayout="row wrap">
                                             <div *ngFor="let bed of specialty.beds">
-                                                <button mat-raised-button [ngClass]="{'free': bed.free}" (click)="selectBed(bed.bedId)">
+                                                <button mat-raised-button [ngClass]="{'free': bed.free}"
+                                                    (click)="selectBed(bed.bedId)">
                                                     {{bed.bedNumber}}
                                                 </button>
                                             </div>
                                         </div>
                                     </div>
+                                    <mat-divider inset></mat-divider>
                                 </div>
+                            </section>
+                            <section class="beds" *ngIf="allBeds && !allBeds.length" fxLayout="column" fxLayoutAlign="space-around center" >
+                                <h2 [translate]="'gestion-camas.home.NO_FILTERED_BEDS'"></h2>
                             </section>
                         </div>
                     </mat-card-content>
                 </mat-card>
-
-                <section id="detail">
+                <div class="spinner" *ngIf="!allBeds">
+                    <mat-spinner color="primary"></mat-spinner>
+                </div>
+                <section id="detail" >
                     <app-bed-detail [bedId]="selectedCama"></app-bed-detail>
                 </section>
             </div>

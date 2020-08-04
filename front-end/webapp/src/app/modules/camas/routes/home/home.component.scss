@@ -10,6 +10,10 @@
     padding: 0px;
 }
 
+section.beds{
+    padding: 20px;
+}
+
 .mat-raised-button{
     color: white;
     margin: 5px;
@@ -19,4 +23,8 @@
 
 .free{
     background-color: $success-color;
+}
+
+.mat-card .mat-divider {
+    margin: 10px 0px 10px 0px;
 }

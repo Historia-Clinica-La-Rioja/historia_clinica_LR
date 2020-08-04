@@ -1,34 +1,43 @@
-import { Component, OnInit } from '@angular/core';
-import { BedService } from '@api-rest/services/bed.service';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import {BedSummaryDto} from '@api-rest/api-model';
 import { MapperService } from '@presentation/services/mapper.service';
-import {map} from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
+import { GestionCamaService } from './../../services/gestion-cama.service';
+import {Subscription} from 'rxjs';
 
 @Component({
 	selector: 'app-home',
 	templateUrl: './home.component.html',
 	styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
 
 	public selectedCama;
-	public allBeds;
+	public allBeds: BedManagment[];
+	public bedsAmount;
+
+	private managmentBed$: Subscription;
 
 	constructor(
-		private readonly bedService: BedService,
-		private readonly mapperService: MapperService
+		private mapperService: MapperService,
+		private gestionCamaService: GestionCamaService
   	) { }
 
 	ngOnInit(): void {
-		this.bedService.getBedsSummary().pipe(
-			map((bedsSummary: BedSummaryDto[]) => this.mapperService.toBedManagment(bedsSummary))
+		this.managmentBed$ = this.gestionCamaService.getBedManagment().pipe(
+			tap( bedsSummary => this.bedsAmount = bedsSummary ? bedsSummary.length : 0),
+			map((bedsSummary: BedSummaryDto[]) => bedsSummary ? this.mapperService.toBedManagment(bedsSummary) : null)
 		).subscribe(data => this.allBeds = data);
 	}
 
-	
-	selectBed(bedId){
+	selectBed(bedId) {
 		this.selectedCama = bedId;
 	}
+
+	ngOnDestroy(): void {
+		this.managmentBed$.unsubscribe();
+  	}
+
 }
 
 export class BedManagment {
