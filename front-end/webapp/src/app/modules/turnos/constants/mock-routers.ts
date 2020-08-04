@@ -13,7 +13,7 @@ export const MOCKS_TURNOS = [
 						licenceNumber: '19215/1',
 						firstName: 'Ricardo',
 						lastName: 'Gutierrez',
-						identificationNumber: '12345678', 
+						identificationNumber: '12345678',
 					}
 				],
 			}
@@ -38,8 +38,8 @@ export const MOCKS_TURNOS = [
 					licenceNumber: '19215/1',
 					firstName: 'Ricardo',
 					lastName: 'Gutierrez',
-					identificationNumber: '12345678', 
-				}				
+					identificationNumber: '12345678',
+				}
 			},
 			{
 				name: 'Diary.getDiaries(healthcareProfessionalId: number): DiaryListDto[]',
@@ -94,6 +94,57 @@ export const MOCKS_TURNOS = [
 				],
 			},
 			{
+				name: 'Diary.get(diaryId: number): DiaryDto[]',
+				roles: 'ADMINISTRADOR AGENDA',
+				path: '/api/institutions/{institutionId}/medicalConsultations/diary/{diaryId}',
+				method: 'GET',
+				fetch: [
+					{
+						id: 99,
+						healthcareProfessionalId: 1,
+						doctorsOfficeId: 5,
+						startDate: '2020-07-01',
+						endDate: '2020-08-31',
+						appointmentDuration: 5,
+						automaticRenewal: false,
+						professionalAssignShift: false,
+						includeHoliday: false,
+						diaryOpeningHours: [
+							{
+								openingHours: {
+									dayWeekId: 1, // lunes
+									from: '08:00',
+									to: '12:00'
+								},
+								overturnCount: 4,
+								medicalAttentionTypeId: 0, // programada
+							},
+							{
+								openingHours: {
+									dayWeekId: 1, // lunes
+									from: '14:00',
+									to: '18:00'
+								},
+								overturnCount: 0,
+								medicalAttentionTypeId: 1, // espontanea
+							},
+						]
+					}
+				]
+			},
+			{
+				name: 'Diary.update(diaryId: number, diaryADto: DiaryADto): void',
+				roles: 'ADMINISTRADOR AGENDA',
+				path: '/api/institutions/{institutionId}/medicalConsultations/diary/{diaryId}',
+				method: 'PUT'
+			},
+			{
+				name: 'Diary.delete(diaryId: number): void',
+				roles: 'ADMINISTRADOR AGENDA',
+				path: '/api/institutions/{institutionId}/medicalConsultations/diary/{diaryId}',
+				method: 'DELETE'
+			},
+			{
 				name: 'Appointments.getList(diaryIds: number): AppointmentListDto[]',
 				roles: 'Todo ADMINISTRATIVO sobre la institución',
 				path: '/api/institutions/{institutionId}/medicalConsultations/appointments?diaryIds=99,100',
@@ -101,15 +152,12 @@ export const MOCKS_TURNOS = [
 				fetch: [
 					{
 						id: 10,
-						patient: { 
+						patient: {
 							id: 9,
 							person: { //BasicPersonalDataDto
 								firstName: 'María',
-								lastName: 'Gonzalez',
-								identificationNumber: '12345678', 
-							},
-							medicalCoverageName: 'OSDE',
-							medicalCoverageAffiliateNumber: '3213211'
+								lastName: 'Gonzalez'
+							}
 						},
 						date: '2020-07-13',
 						hour: '07:15',
@@ -121,11 +169,8 @@ export const MOCKS_TURNOS = [
 							id: 25,
 							person: {//BasicPersonalDataDto
 								firstName: 'Jorge',
-								lastName: 'Martines',
-								identificationNumber: '12345678', 
-							},
-							medicalCoverageName: 'OSDE',
-							medicalCoverageAffiliateNumber: '321344'
+								lastName: 'Martines'
+							}
 						},
 						date: '2020-07-13',
 						hour: '07:30',
@@ -139,7 +184,43 @@ export const MOCKS_TURNOS = [
 				name: '[Modal] Nuevo turno en un horario',
 				navigate: './nuevo-turno',
 			},
+			{
+				name: '[Modal] Ver turno',
+				navigate: './ver-turno',
+			},
 		],
+	},
+	{
+		path: 'solicitar/profesionalId/ver-turno',
+		loads: [
+			{
+				name: 'Appointments.get(appointmentId: number): AppointmentDto',
+				roles: 'Todo ADMINISTRATIVO sobre la institución, ESPECIALISTA_MEDICO y PROFESIONAL_DE_SALUD',
+				path: '/api/patient/{patientId}/appointment-data/{appointmentId}',
+				method: 'GET',
+				fetch: {
+					date: '2020-07-13',
+					hour: '07:30',
+					appointmentStateId: 1,
+					isOverTurn: false,
+					patient: {
+						id: 9,
+						person: {
+							firstName: 'María',
+							lastName: 'Gonzalez',
+							identificationNumber: '12345678'
+						},
+						medicalCoverageName: 'OSDE',
+						medicalCoverageAffiliateNumber: '3213211'
+
+					}
+				},
+			},
+			{
+				name: 'Appointments.changeState(stateId: number): void',
+				comments: 'Pendiente'
+			}
+		]
 	},
 	{
 		path: 'solicitar/profesionalId/nuevo-turno',
@@ -167,23 +248,6 @@ export const MOCKS_TURNOS = [
 		path: 'solicitar/profesionalId/nuevo-turno2',
 		loads: [
 			{
-				name: 'Patient.getAppointmentPatientData(patientId: number): AppointmentPatientDto',
-				roles: 'Todo ADMINISTRATIVO sobre la institución',
-				path: '/api/patient/{patientId}/appointment-patient-data',
-				method: 'GET',
-				fetch: { 
-					id: 9,
-					person: {//BasicPersonalData interface
-						firstName: 'María',
-						lastName: 'Gonzalez',
-						identificationNumber: '12345678'				
-					},
-					medicalCoverageName: 'OSDE',
-					medicalCoverageAffiliateNumber: '3213211'
-				},
-			},
-
-			{
 				name: 'MedicalCoverage.list(): MedicalCoverageDto[]',
 				roles: 'Todo ADMINISTRATIVO sobre la institución',
 				path: '/api/medicalcoverage',
@@ -198,27 +262,45 @@ export const MOCKS_TURNOS = [
 						nombre: 'Osde'
 					},
 				],
-			}
-		],
-	},	
-	{
-		path: 'solicitar/profesionalId/nuevo-turno3',
-		loads: [
+				comments: 'Este endpoint esta pendiente de analisis, se requiere persistencia de obras sociales'
+			},
 			{
-				name: 'Appointments.create(appointmentDto: AppointmentDto): number',
+				name: 'Patient.getAppointmentPatientData(patientId: number): AppointmentPatientDto',
 				roles: 'Todo ADMINISTRATIVO sobre la institución',
+				path: '/api/patient/{patientId}/appointment-patient-data',
+				method: 'GET',
+				fetch: {
+					id: 9,
+					person: {//BasicPersonalData interface
+						firstName: 'María',
+						lastName: 'Gonzalez',
+						identificationNumber: '12345678'
+					},
+					medicalCoverageName: 'OSDE',
+					medicalCoverageAffiliateNumber: '3213211'
+				},
+			},
+			{
+				name: 'Appointments.create(createAppointmentDto: CreateAppointmentDto): number',
+				roles: 'Todo ADMINISTRATIVO sobre la institución. ESPECIALISTA_MEDICO y PROFESIONAL_DE_SALUD para el caso que puedan otorgar turnos',
 				path: '/api/institutions/{institutionId}/medicalConsultations/appointments',
 				method: 'POST',
-				fetch: { 
-					patientId: 9,
+				fetch: {
+					id: 2,
+					patient: {
+						id: 25,
+						person: {
+							firstName: 'Jorge',
+							lastName: 'Martinez'
+						}
+					},
+					date: '2020-07-13',
 					hour: '07:30',
-					isOverturn: true, // aca no sabemos si esperar en dos endpoints o dejar uno  y que valide según sea o no sobreturno
-					diaryId: 1,
-					openingHoursId: 1,
+					isOverTurn: false,
 				},
 			},
 		],
-	},
+	}
 ];
 
 
