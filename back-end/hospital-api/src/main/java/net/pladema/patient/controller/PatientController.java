@@ -13,7 +13,6 @@ import net.pladema.patient.controller.dto.CompletePatientDto;
 import net.pladema.patient.controller.dto.PatientSearchDto;
 import net.pladema.patient.controller.dto.PatientSearchFilter;
 import net.pladema.patient.controller.mapper.PatientMapper;
-import net.pladema.patient.controller.mocks.MocksPatient;
 import net.pladema.patient.repository.PatientTypeRepository;
 import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.repository.entity.PatientType;
@@ -27,6 +26,7 @@ import net.pladema.person.controller.mapper.PersonMapper;
 import net.pladema.person.controller.service.PersonExternalService;
 import net.pladema.person.repository.entity.PersonExtended;
 import net.pladema.sgx.exceptions.NotFoundException;
+import net.pladema.staff.controller.dto.BasicPersonalDataDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -210,7 +210,12 @@ public class PatientController {
 	@GetMapping("/{patientId}/appointment-patient-data")
 	public ResponseEntity<AppointmentPatientDto> getAppointmentPatientData(@PathVariable(name = "patientId") Integer patientId) {
 		LOG.debug("Input parameters -> patientId {}", patientId);
-		AppointmentPatientDto result = MocksPatient.mockAppointmentPatientDto(patientId);
+		Patient patient = patientService.getPatient(patientId)
+				.orElseThrow(() -> new EntityNotFoundException("patient.invalid"));
+		BasicPersonalDataDto personData = personExternalService.getBasicPersonalDataDto(patient.getPersonId());
+		AppointmentPatientDto result = new AppointmentPatientDto(patient.getId(), personData,
+				patient.getMedicalCoverageName(),
+				patient.getMedicalCoverageAffiliateNumber());
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}
