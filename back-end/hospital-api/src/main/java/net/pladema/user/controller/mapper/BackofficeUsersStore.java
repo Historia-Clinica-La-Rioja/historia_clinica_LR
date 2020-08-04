@@ -6,6 +6,7 @@ import net.pladema.permissions.controller.mappers.UserRoleDtoMapper;
 import net.pladema.permissions.repository.UserRoleRepository;
 import net.pladema.permissions.repository.entity.UserRole;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
+import net.pladema.sgx.exceptions.BackofficeValidationException;
 import net.pladema.sgx.exceptions.NotFoundException;
 import net.pladema.user.controller.dto.BackofficeUserDto;
 import net.pladema.user.controller.mappers.UserDtoMapper;
@@ -25,17 +26,20 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 	private final UserRoleRepository userRoleRepository;
 	private final UserDtoMapper userDtoMapper;
 	private final UserRoleDtoMapper userRoleDtoMapper;
+	private final UserRepository userRepository;
 
 
 	public BackofficeUsersStore(UserRepository repository,
 			UserRoleRepository userRoleRepository,
 			UserDtoMapper userDtoMapper,
-			UserRoleDtoMapper userRoleDtoMapper
+			UserRoleDtoMapper userRoleDtoMapper,
+			UserRepository userRepository
 			) {
 		this.repository = repository;
 		this.userRoleRepository = userRoleRepository;
 		this.userDtoMapper = userDtoMapper;
-		this.userRoleDtoMapper = userRoleDtoMapper;  
+		this.userRoleDtoMapper = userRoleDtoMapper;
+		this.userRepository = userRepository;
 	}
 
 	@Override
@@ -114,6 +118,7 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 	}
 
 	private BackofficeUserDto create(BackofficeUserDto dto) {
+		checkIfUserAlreadyExists(dto);
 		User modelUser = userDtoMapper.toModel(dto);
 		modelUser.setEnable(true);
 		BackofficeUserDto saved = userDtoMapper.toDto(repository.save(modelUser));
@@ -160,6 +165,12 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 	@Override
 	public Example<BackofficeUserDto> buildExample(BackofficeUserDto entity) {
 		return Example.of(entity);
+	}
+
+	private void checkIfUserAlreadyExists(BackofficeUserDto userDto){
+		if(userRepository.existsByPersonId(userDto.getPersonId()))
+			throw new BackofficeValidationException("user.exists");
+
 	}
 
 }

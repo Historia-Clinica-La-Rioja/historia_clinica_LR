@@ -45,4 +45,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 			+ "WHERE u.username = :username")
 	boolean existByUsername(@Param("username") String username);
 
+	@Query("SELECT (case when count(u.id)> 0 then true else false end) "
+			+ "FROM User u "
+			+ "WHERE u.personId = :personId")
+	boolean existsByPersonId(@Param("personId") Integer personId);
+
 }
