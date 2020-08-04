@@ -7,6 +7,7 @@ import { pushTo } from '@core/utils/array.utils';
 import { DateFormat, momentFormat, newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { hasError } from '@core/utils/form.utils';
+import { Subject, Observable } from 'rxjs';
 
 export interface Problema {
 	snomed: SnomedDto;
@@ -23,6 +24,8 @@ export class ProblemasNuevaConsultaService {
 	private snomedConcept: SnomedDto;
 	private readonly columns: ColumnConfig[];
 	private data: Problema[];
+	private errorSource = new Subject<string>();
+	private _error$: Observable<string>;
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -66,6 +69,7 @@ export class ProblemasNuevaConsultaService {
 		this.snomedConcept = selectedConcept;
 		const pt = selectedConcept ? selectedConcept.pt : '';
 		this.form.controls.snomed.setValue(pt);
+		this.errorSource.next();
 	}
 
 	add(problema: Problema): void {
@@ -135,5 +139,16 @@ export class ProblemasNuevaConsultaService {
 
 	hasError(type: string, controlName: string): boolean {
 		return hasError(this.form, type, controlName);
+	}
+
+	get error$(): Observable<string> {
+		if (!this._error$) {
+			this._error$ = this.errorSource.asObservable();
+		}
+		return this._error$;
+	}
+
+	setError(errorMsg: string): void {
+		this.errorSource.next(errorMsg);
 	}
 }

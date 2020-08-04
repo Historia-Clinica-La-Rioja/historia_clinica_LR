@@ -1,14 +1,15 @@
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { EffectiveClinicalObservationDto } from '@api-rest/api-model';
+import { Subject, Observable } from 'rxjs';
 
 export interface SignosVitales {
 	bloodOxygenSaturation?: EffectiveClinicalObservationDto;
-	diastolicBloodPressure?: EffectiveClinicalObservationDto;
+	diastolicBloodPressure: EffectiveClinicalObservationDto;
 	heartRate?: EffectiveClinicalObservationDto;
 	respiratoryRate?: EffectiveClinicalObservationDto;
-	systolicBloodPressure?: EffectiveClinicalObservationDto;
+	systolicBloodPressure: EffectiveClinicalObservationDto;
 	temperature?: EffectiveClinicalObservationDto;
 }
 
@@ -16,6 +17,10 @@ export interface SignosVitales {
 
 export class SignosVitalesNuevaConsultaService {
 
+	private systolicBloodPressureErrorSource = new Subject<string>();
+	private _systolicBloodPressureError$: Observable<string>;
+	private diastolicBloodPressureErrorSource = new Subject<string>();
+	private _diastolicBloodPressureError$: Observable<string>;
 	private form: FormGroup;
 
 	constructor(
@@ -47,6 +52,19 @@ export class SignosVitalesNuevaConsultaService {
 				effectiveTime: [newMoment()],
 			})
 		});
+		this.form.controls.systolicBloodPressure.valueChanges.subscribe(
+			dat => {
+				if (dat.value !== undefined) {
+					this.systolicBloodPressureErrorSource.next();
+				}
+		});
+		this.form.controls.diastolicBloodPressure.valueChanges.subscribe(
+			dat => {
+				if (dat.value !== undefined) {
+					this.diastolicBloodPressureErrorSource.next();
+				}
+		});
+
 	}
 
 	setVitalSignEffectiveTime(newEffectiveTime: Moment, formField: string): void {
@@ -72,4 +90,25 @@ export class SignosVitalesNuevaConsultaService {
 		return controlValue.value ? { value: controlValue.value, effectiveTime: controlValue.effectiveTime } : undefined;
 	}
 
+	get diastolicBloodPressureError$(): Observable<string> {
+		if (!this._diastolicBloodPressureError$) {
+			this._diastolicBloodPressureError$ = this.diastolicBloodPressureErrorSource.asObservable();
+		}
+		return this._diastolicBloodPressureError$;
+	}
+
+	get systolicBloodPressureError$(): Observable<string> {
+		if (!this._systolicBloodPressureError$) {
+			this._systolicBloodPressureError$ = this.systolicBloodPressureErrorSource.asObservable();
+		}
+		return this._systolicBloodPressureError$;
+	}
+
+	setSystolicBloodPressureError(errorMsg: string): void {
+		this.systolicBloodPressureErrorSource.next(errorMsg);
+	}
+
+	setDiastolicBloodPressureError(errorMsg: string): void {
+		this.diastolicBloodPressureErrorSource.next(errorMsg);
+	}
 }

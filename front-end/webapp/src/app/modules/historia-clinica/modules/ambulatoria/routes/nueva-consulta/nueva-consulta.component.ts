@@ -28,8 +28,7 @@ import { Alergia, AlergiasNuevaConsultaService } from '../../services/alergias-n
 export class NuevaConsultaComponent implements OnInit {
 
 	formEvolucion: FormGroup;
-	error: string;
-
+	errores: string[] = [];
 	motivoNuevaConsultaService: MotivoNuevaConsultaService;
 	medicacionesNuevaConsultaService: MedicacionesNuevaConsultaService;
 	problemasNuevaConsultaService: ProblemasNuevaConsultaService;
@@ -65,10 +64,23 @@ export class NuevaConsultaComponent implements OnInit {
 			evolucion: [null]
 		});
 
-		// cuando implementemos mas errores podemos suscribirnos a los errores
-		// de cada seccion y escuchar cuando los corrigen
-		this.motivoNuevaConsultaService.error$.subscribe(error => {
-			this.error = error;
+		this.motivoNuevaConsultaService.error$.subscribe(motivoError => {
+			this.errores[0]=motivoError;
+		});
+		this.problemasNuevaConsultaService.error$.subscribe(problemasError => {
+			this.errores[1]=problemasError;
+		});
+		this.datosAntropometricosNuevaConsultaService.heightError$.subscribe(tallaError => {
+			this.errores[2]=tallaError;
+		});
+		this.datosAntropometricosNuevaConsultaService.weightError$.subscribe(pesoError => {
+			this.errores[3]=pesoError;
+		});
+		this.signosVitalesNuevaConsultaService.systolicBloodPressureError$.subscribe(presionSistolicaError => {
+			this.errores[4]=presionSistolicaError;
+		});
+		this.signosVitalesNuevaConsultaService.diastolicBloodPressureError$.subscribe(presionDiastolicaError => {
+			this.errores[5]=presionDiastolicaError;
 		});
 	}
 
@@ -81,8 +93,10 @@ export class NuevaConsultaComponent implements OnInit {
 			const idPaciente = Number(params.get('idPaciente'));
 
 			const nuevaConsulta: CreateOutpatientDto = this.buildCreateOutpatientDto();
+			this.addErrorMessage(nuevaConsulta);
 
-			if (nuevaConsulta.reasons?.length) {
+			if (this.isValidConsultation()) {
+
 				this.outpatientConsultationService.createOutpatientConsultation(nuevaConsulta, idPaciente).subscribe(
 					_ => {
 						this.snackBarService.showSuccess('ambulatoria.paciente.nueva-consulta.messages.SUCCESS');
@@ -94,9 +108,36 @@ export class NuevaConsultaComponent implements OnInit {
 				);
 			} else {
 				this.snackBarService.showError('ambulatoria.paciente.nueva-consulta.messages.ERROR');
-				this.motivoNuevaConsultaService.setError('ambulatoria.paciente.nueva-consulta.errors.MOTIVO_OBLIGATORIO');
+
 			}
 		});
+	}
+
+	public isValidConsultation(): boolean {
+		return(this.errores.find( elem =>
+			elem !== undefined
+		)===undefined);
+	}
+
+	private addErrorMessage(consulta: CreateOutpatientDto): void {
+		if (!consulta.reasons?.length) {
+			this.motivoNuevaConsultaService.setError('ambulatoria.paciente.nueva-consulta.errors.MOTIVO_OBLIGATORIO');
+		}
+		if (!consulta.anthropometricData.height) {
+			this.datosAntropometricosNuevaConsultaService.setHeightError('ambulatoria.paciente.nueva-consulta.errors.TALLA_OBLIGATORIO');
+		}
+		if (!consulta.anthropometricData.weight) {
+			this.datosAntropometricosNuevaConsultaService.setWeightError('ambulatoria.paciente.nueva-consulta.errors.PESO_OBLIGATORIO');
+		}
+		if (!consulta.vitalSigns.diastolicBloodPressure ) {
+			this.signosVitalesNuevaConsultaService.setDiastolicBloodPressureError('ambulatoria.paciente.nueva-consulta.errors.TENSION_DIASTOLICA_OBLIGATORIO');
+		}
+		if (!consulta.vitalSigns.systolicBloodPressure) {
+			this.signosVitalesNuevaConsultaService.setSystolicBloodPressureError('ambulatoria.paciente.nueva-consulta.errors.TENSION_SISTOLICA_OBLIGATORIO');
+		}
+		if (!consulta.problems?.length) {
+			this.problemasNuevaConsultaService.setError('ambulatoria.paciente.nueva-consulta.errors.PROBLEMA_OBLIGATORIO');
+		}
 	}
 
 	private buildCreateOutpatientDto(): CreateOutpatientDto {
@@ -116,16 +157,16 @@ export class NuevaConsultaComponent implements OnInit {
 			familyHistories: this.antecedentesFamiliaresNuevaConsultaService.getAntecedentesFamiliares().map((antecedente: AntecedenteFamiliar) => {
 				return {
 					snomed: antecedente.snomed,
-					startDate: antecedente.fecha ? momentFormat(antecedente.fecha, DateFormat.API_DATE)	: undefined
+					startDate: antecedente.fecha ? momentFormat(antecedente.fecha, DateFormat.API_DATE) : undefined
 				};
 			}),
 			medications: this.medicacionesNuevaConsultaService.getMedicaciones().map((medicacion: Medicacion) => {
-					return {
-						note: medicacion.observaciones,
-						snomed: medicacion.snomed,
-						suspended: medicacion.suspendido,
-					};
-				}
+				return {
+					note: medicacion.observaciones,
+					snomed: medicacion.snomed,
+					suspended: medicacion.suspendido,
+				};
+			}
 			),
 			problems: this.problemasNuevaConsultaService.getProblemas().map(
 				(problema: Problema) => {
@@ -142,4 +183,5 @@ export class NuevaConsultaComponent implements OnInit {
 			vitalSigns: this.signosVitalesNuevaConsultaService.getSignosVitales()
 		};
 	}
+
 }

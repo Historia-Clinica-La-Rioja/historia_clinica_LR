@@ -446,9 +446,10 @@
 		</app-document-section>
 	</section>
 
-	<section id="validations" class="doc-section" *ngIf="this.error">
+	<section id="validations" class="doc-section"
+		*ngIf="!isValidConsultation()">
 		<mat-card>
-			<mat-error class="mat-body-2">{{ error | translate }}</mat-error>
+			<mat-error *ngFor="let error of errores" class="mat-body-2">{{ error | translate }}</mat-error>
 		</mat-card>
 	</section>
 

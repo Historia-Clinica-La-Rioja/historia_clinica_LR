@@ -616,8 +616,8 @@ export interface OutpatientAllergyConditionDto {
 export interface OutpatientAnthropometricDataDto extends Serializable {
     bloodType?: ClinicalObservationDto;
     bmi?: ClinicalObservationDto;
-    height?: ClinicalObservationDto;
-    weight?: ClinicalObservationDto;
+    height: ClinicalObservationDto;
+    weight: ClinicalObservationDto;
 }
 
 export interface OutpatientFamilyHistoryDto {
@@ -665,10 +665,10 @@ export interface OutpatientUpdateImmunizationDto {
 
 export interface OutpatientVitalSignDto extends Serializable {
     bloodOxygenSaturation?: EffectiveClinicalObservationDto;
-    diastolicBloodPressure?: EffectiveClinicalObservationDto;
+    diastolicBloodPressure: EffectiveClinicalObservationDto;
     heartRate?: EffectiveClinicalObservationDto;
     respiratoryRate?: EffectiveClinicalObservationDto;
-    systolicBloodPressure?: EffectiveClinicalObservationDto;
+    systolicBloodPressure: EffectiveClinicalObservationDto;
     temperature?: EffectiveClinicalObservationDto;
 }
 
@@ -879,4 +879,5 @@ export const enum ERole {
     ENFERMERO_ADULTO_MAYOR = "ENFERMERO_ADULTO_MAYOR",
     ENFERMERO = "ENFERMERO",
     ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE = "ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE",
+    ADMINISTRADOR_AGENDA = "ADMINISTRADOR_AGENDA",
 }

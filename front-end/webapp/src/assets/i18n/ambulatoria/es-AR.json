@@ -19,7 +19,12 @@
 					"DESCRIPCION": "Descripcion"
 				},
 				"errors": {
-					"MOTIVO_OBLIGATORIO": "Motivo de consulta obligatorio"
+					"MOTIVO_OBLIGATORIO": "Motivo de consulta obligatorio",
+					"TENSION_DIASTOLICA_OBLIGATORIO": "Tensión arterial diastólica obligatorio",
+					"TENSION_SISTOLICA_OBLIGATORIO": "Tensión arterial sistólica obligatorio",
+					"TALLA_OBLIGATORIO": "Talla obligatorio",
+					"PESO_OBLIGATORIO": "Peso obligatorio",
+					"PROBLEMA_OBLIGATORIO": "Problema de consulta obligatorio"
 				},
 				"motivo": {
 					"TITLE": "Motivo de consulta",
