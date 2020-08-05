@@ -12,7 +12,7 @@ import { ContextService } from '@core/services/context.service';
 import { Router } from '@angular/router';
 import { APPOINTMENT_DURATIONS } from '../../constants/appointment';
 import { NewAgendaService } from '../../services/new-agenda.service';
-import { momentFormat, DateFormat, momentParseDateTime } from '@core/utils/moment.utils';
+import { momentFormat, DateFormat, momentParseDateTime, momentFormatDate } from '@core/utils/moment.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Moment } from 'moment';
 import { DoctorsOfficeDto, ProfessionalDto, DiaryADto, DiaryOpeningHoursDto, OccupationDto, TimeRangeDto } from '@api-rest/api-model';
@@ -73,9 +73,9 @@ export class NewAgendaComponent implements OnInit {
 			specialtyId: [{ value: null, disabled: true }, [Validators.required]],
 			doctorOffice: [{ value: null, disabled: true }, [Validators.required]],
 			healthcareProfessionalId: [{ value: null, disabled: true }, [Validators.required]],
-			startDate: [{ value: null, disabled: true }, [Validators.required]],
-			endDate: [{ value: null, disabled: true }, [Validators.required]],
-			appointmentDuration: [{ value: null, disabled: true }, [Validators.required]],
+			startDate: [null, [Validators.required]],
+			endDate: [null, [Validators.required]],
+			appointmentDuration: [null, [Validators.required]],
 		});
 
 		this.sectorService.getAll().subscribe(data => {
@@ -125,11 +125,6 @@ export class NewAgendaComponent implements OnInit {
 
 	appointmentManagementChange(): void {
 		this.appointmentManagement = !this.appointmentManagement;
-	}
-
-	startDateChange(event): void {
-		this.form.controls.endDate.enable();
-		this.getAllWeeklyDoctorsOfficeOcupation();
 	}
 
 	private enableFormControl(controlName): void {
@@ -182,21 +177,21 @@ export class NewAgendaComponent implements OnInit {
 	}
 
 	private mapEventsToAgendaDto(): DiaryADto {
-		let agenda: DiaryADto;
-		agenda = this.form.value;
-		agenda.doctorsOfficeId = this.form.value.doctorOffice.id;
+		return {
 
-		agenda.startDate = momentFormat(this.form.value.startDate, DateFormat.API_DATE);
-		agenda.endDate = momentFormat(this.form.value.endDate, DateFormat.API_DATE);
+			appointmentDuration: this.form.value.appointmentDuration,
+			healthcareProfessionalId: this.form.value.healthcareProfessionalId,
+			doctorsOfficeId: this.form.value.doctorOffice.id,
 
-		agenda.automaticRenewal = this.autoRenew;
-		agenda.includeHoliday = this.holidayWork;
-		agenda.professionalAsignShift = this.appointmentManagement;
+			startDate: momentFormat(this.form.value.startDate, DateFormat.API_DATE),
+			endDate: momentFormat(this.form.value.endDate, DateFormat.API_DATE),
 
-		agenda.diaryOpeningHours = this.mapDiaryOpeningHours();
+			automaticRenewal: this.autoRenew,
+			includeHoliday: this.holidayWork,
+			professionalAsignShift: this.appointmentManagement,
 
-		return agenda;
-
+			diaryOpeningHours: this.mapDiaryOpeningHours()
+		};
 	}
 
 	private mapDiaryOpeningHours(): DiaryOpeningHoursDto[] {
@@ -211,8 +206,8 @@ export class NewAgendaComponent implements OnInit {
 			return {
 				openingHours: {
 					dayWeekId: event.start.getDay(),
-					from: event.start.toLocaleTimeString(),
-					to: event.end.toLocaleTimeString(),
+					from: momentFormatDate(event.start, DateFormat.HOUR_MINUTE),
+					to: momentFormatDate(event.end, DateFormat.HOUR_MINUTE),
 				},
 				medicalAttentionTypeId: event.meta.medicalAttentionType.id,
 				overturnCount: event.meta.overTurnCount
