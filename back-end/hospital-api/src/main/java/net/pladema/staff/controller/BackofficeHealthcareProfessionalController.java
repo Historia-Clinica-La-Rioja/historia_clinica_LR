@@ -1,5 +1,6 @@
 package net.pladema.staff.controller;
 
+import net.pladema.staff.controller.constraints.BackofficeHealthcareProfessionalEntityValidator;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,8 +13,9 @@ import net.pladema.staff.repository.entity.HealthcareProfessional;
 public class BackofficeHealthcareProfessionalController
 		extends AbstractBackofficeController<HealthcareProfessional, Integer> {
 
-	public BackofficeHealthcareProfessionalController(HealthcareProfessionalRepository repository) {
-		super(repository);
+	public BackofficeHealthcareProfessionalController(HealthcareProfessionalRepository repository,
+													  BackofficeHealthcareProfessionalEntityValidator healthcareProfessionalEntityValidator) {
+		super(repository, healthcareProfessionalEntityValidator);
 	}
 
 }

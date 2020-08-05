@@ -51,4 +51,9 @@ public interface HealthcareProfessionalRepository extends JpaRepository<Healthca
 			+ " INNER JOIN Person p ON (hp.personId = p.id)"
 			+ " WHERE hp.id = :id")
 	Optional<HealthcareProfessionalVo> findProfessionalById(@Param("id") Integer id);
+
+
+	@Transactional(readOnly = true)
+	@Query(value = " SELECT DISTINCT hp.id FROM HealthcareProfessional hp WHERE hp.personId = :personId")
+	Optional<Integer> findProfessionalByPersonId(@Param("personId") Integer personId);
 }
