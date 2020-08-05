@@ -1,13 +1,10 @@
 package net.pladema.medicalconsultation.diary.controller;
 
-import io.swagger.annotations.Api;
-import net.pladema.medicalconsultation.diary.controller.constraints.DiaryOpeningHoursValid;
-import net.pladema.medicalconsultation.diary.controller.constraints.DiaryPeriodValid;
-import net.pladema.medicalconsultation.diary.controller.dto.DiaryADto;
-import net.pladema.medicalconsultation.diary.controller.dto.DiaryListDto;
-import net.pladema.medicalconsultation.diary.controller.mapper.DiaryMapper;
-import net.pladema.medicalconsultation.diary.service.DiaryService;
-import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
+import java.util.Collection;
+import java.util.Optional;
+
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +19,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.util.Collection;
+import io.swagger.annotations.Api;
+import net.pladema.medicalconsultation.diary.controller.constraints.DiaryOpeningHoursValid;
+import net.pladema.medicalconsultation.diary.controller.constraints.DiaryPeriodValid;
+import net.pladema.medicalconsultation.diary.controller.dto.CompleteDiaryDto;
+import net.pladema.medicalconsultation.diary.controller.dto.DiaryADto;
+import net.pladema.medicalconsultation.diary.controller.dto.DiaryListDto;
+import net.pladema.medicalconsultation.diary.controller.mapper.DiaryMapper;
+import net.pladema.medicalconsultation.diary.service.DiaryService;
+import net.pladema.medicalconsultation.diary.service.domain.CompleteDiaryBo;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/medicalConsultations/diary")
@@ -45,6 +50,16 @@ public class DiaryController {
         this.diaryService = diaryService;
     }
 
+	@GetMapping("/{diaryId}")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	public ResponseEntity<CompleteDiaryDto> getDiary(@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "diaryId") Integer diaryId) {
+		LOG.debug("Input parameters -> institutionId {}, diaryId {}", institutionId, diaryId);
+		Optional<CompleteDiaryBo> diaryBo = diaryService.getDiary(diaryId);
+		CompleteDiaryDto result = diaryBo.map(diaryMapper::toCompleteDiaryDto).orElse(new CompleteDiaryDto());
+		LOG.debug(OUTPUT, result);
+		return ResponseEntity.ok(result);
+	}
 
     @PostMapping
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")

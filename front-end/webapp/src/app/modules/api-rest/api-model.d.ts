@@ -192,6 +192,11 @@ export interface ClinicalTermDto extends Serializable {
     statusId?: string;
 }
 
+export interface CompleteDiaryDto extends DiaryDto {
+    clinicalSpecialtyId: number;
+    sectorId: number;
+}
+
 export interface CompletePatientDto extends BasicPatientDto {
     generalPractitioner?: AAdditionalDoctorDto;
     medicalCoverageAffiliateNumber: string;

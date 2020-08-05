@@ -1,0 +1,28 @@
+package net.pladema.medicalconsultation.diary.service.domain;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@ToString
+public class CompleteDiaryBo extends DiaryBo {
+
+	private Integer sectorId;
+
+	private Integer clinicalSpecialtyId;
+
+	public CompleteDiaryBo(DiaryBo diaryBo) {
+		appointmentDuration = diaryBo.getAppointmentDuration();
+		id = diaryBo.getId();
+		doctorsOfficeId = diaryBo.getDoctorsOfficeId();
+		startDate = diaryBo.getStartDate();
+		endDate = diaryBo.getEndDate();
+		professionalAsignShift = diaryBo.getProfessionalAsignShift();
+		includeHoliday = diaryBo.getIncludeHoliday();
+	}
+
+}

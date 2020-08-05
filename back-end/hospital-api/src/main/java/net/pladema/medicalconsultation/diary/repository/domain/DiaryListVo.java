@@ -1,15 +1,19 @@
 package net.pladema.medicalconsultation.diary.repository.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.ToString;
-import lombok.Value;
-
 import java.time.LocalDate;
+
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 
 @ToString
 @AllArgsConstructor
-@Value
+@Getter
+@Setter
+@EqualsAndHashCode
 public class DiaryListVo {
 
     private final Integer id;

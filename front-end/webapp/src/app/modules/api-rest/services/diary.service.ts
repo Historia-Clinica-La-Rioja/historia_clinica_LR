@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ContextService } from '@core/services/context.service';
-import { DiaryADto } from '@api-rest/api-model';
+import { DiaryADto, CompleteDiaryDto } from '@api-rest/api-model';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
 
@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 export class DiaryService {
 
 	constructor(
-		private http: HttpClient,
+		private readonly http: HttpClient,
 		private readonly contextService: ContextService
 	) { }
 
@@ -19,5 +19,10 @@ export class DiaryService {
 	addDiary(agenda: DiaryADto): Observable<number> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/diary`;
 		return this.http.post<number>(url, agenda);
+	}
+
+	get(diaryId: number): Observable<CompleteDiaryDto> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/diary/${diaryId}`;
+		return this.http.get<CompleteDiaryDto>(url);
 	}
 }

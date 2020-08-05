@@ -207,7 +207,7 @@ export const MOCKS_TURNOS = [
 		path: 'solicitar/profesionalId/agenda/agendaId/editar',
 		loads: [
 			{
-				name: 'Diary.get(diaryId: number): DiaryDto',
+				name: 'Diary.get(diaryId: number): CompleteDiaryDto',
 				roles: 'ADMINISTRADOR AGENDA',
 				path: '/api/institutions/{institutionId}/medicalConsultations/diary/{diaryId}',
 				method: 'GET',

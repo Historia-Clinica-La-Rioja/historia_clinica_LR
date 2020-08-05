@@ -12,23 +12,23 @@ import java.util.List;
 @ToString
 public class DiaryBo {
 
-    private Integer id;
+    protected Integer id;
 
-    private Integer healthcareProfessionalId;
+    protected Integer healthcareProfessionalId;
 
-    private Integer doctorsOfficeId;
+    protected Integer doctorsOfficeId;
 
-    private LocalDate startDate;
+    protected LocalDate startDate;
 
-    private LocalDate endDate;
+    protected LocalDate endDate;
 
-    private Short appointmentDuration;
+    protected Short appointmentDuration;
 
-    private Boolean automaticRenewal = false;
+    protected Boolean automaticRenewal = false;
 
-    private Boolean professionalAsignShift = false;
+    protected Boolean professionalAsignShift = false;
 
-    private Boolean includeHoliday = false;
+    protected Boolean includeHoliday = false;
 
-    private List<DiaryOpeningHoursBo> diaryOpeningHours;
+    protected List<DiaryOpeningHoursBo> diaryOpeningHours;
 }
