@@ -94,50 +94,6 @@ export const MOCKS_TURNOS = [
 				],
 			},
 			{
-				name: 'Diary.get(diaryId: number): DiaryDto',
-				roles: 'ADMINISTRADOR AGENDA',
-				path: '/api/institutions/{institutionId}/medicalConsultations/diary/{diaryId}',
-				method: 'GET',
-				fetch:
-					{
-						id: 99,
-						healthcareProfessionalId: 1,
-						doctorsOfficeId: 5,
-						startDate: '2020-07-01',
-						endDate: '2020-08-31',
-						appointmentDuration: 5,
-						automaticRenewal: false,
-						professionalAssignShift: false,
-						includeHoliday: false,
-						diaryOpeningHours: [
-							{
-								openingHours: {
-									dayWeekId: 1, // lunes
-									from: '08:00',
-									to: '12:00'
-								},
-								overturnCount: 4,
-								medicalAttentionTypeId: 0, // programada
-							},
-							{
-								openingHours: {
-									dayWeekId: 1, // lunes
-									from: '14:00',
-									to: '18:00'
-								},
-								overturnCount: 0,
-								medicalAttentionTypeId: 1, // espontanea
-							},
-						]
-					}
-			},
-			{
-				name: 'Diary.update(diaryId: number, diaryADto: DiaryADto): void',
-				roles: 'ADMINISTRADOR AGENDA',
-				path: '/api/institutions/{institutionId}/medicalConsultations/diary/{diaryId}',
-				method: 'PUT'
-			},
-			{
 				name: 'Diary.delete(diaryId: number): void',
 				roles: 'ADMINISTRADOR AGENDA',
 				path: '/api/institutions/{institutionId}/medicalConsultations/diary/{diaryId}',
@@ -186,6 +142,10 @@ export const MOCKS_TURNOS = [
 			{
 				name: '[Modal] Ver turno',
 				navigate: './ver-turno',
+			},
+			{
+				name: 'Editar agenda',
+				navigate: './agenda/agendaId/editar',
 			},
 		],
 	},
@@ -242,6 +202,57 @@ export const MOCKS_TURNOS = [
 				navigate: '../nuevo-turno2',
 			},
 		],
+	},
+	{
+		path: 'solicitar/profesionalId/agenda/agendaId/editar',
+		loads: [
+			{
+				name: 'Diary.get(diaryId: number): DiaryDto',
+				roles: 'ADMINISTRADOR AGENDA',
+				path: '/api/institutions/{institutionId}/medicalConsultations/diary/{diaryId}',
+				method: 'GET',
+				fetch:
+					{
+						id: 99,
+						sectorId: 1,
+						clinicalSpecialtyId: 3,
+						healthcareProfessionalId: 1,
+						doctorsOfficeId: 5,
+						startDate: '2020-07-01',
+						endDate: '2020-08-31',
+						appointmentDuration: 5,
+						automaticRenewal: false,
+						professionalAssignShift: false,
+						includeHoliday: false,
+						diaryOpeningHours: [
+							{
+								openingHours: {
+									dayWeekId: 1, // lunes
+									from: '08:00',
+									to: '12:00'
+								},
+								overturnCount: 4,
+								medicalAttentionTypeId: 0, // programada
+							},
+							{
+								openingHours: {
+									dayWeekId: 1, // lunes
+									from: '14:00',
+									to: '18:00'
+								},
+								overturnCount: 0,
+								medicalAttentionTypeId: 1, // espontanea
+							},
+						]
+					}
+			},
+			{
+				name: 'Diary.update(diaryId: number, diaryADto: DiaryADto): void',
+				roles: 'ADMINISTRADOR AGENDA',
+				path: '/api/institutions/{institutionId}/medicalConsultations/diary/{diaryId}',
+				method: 'PUT'
+			}
+		]
 	},
 	{
 		path: 'solicitar/profesionalId/nuevo-turno2',
