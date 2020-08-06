@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -28,6 +29,7 @@ public interface DiaryOpeningHoursRepository extends JpaRepository<DiaryOpeningH
                                                            @Param("startDate")LocalDate startDate,
                                                            @Param("endDate")LocalDate endDate);
 
+    @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.DiaryOpeningHoursVo( " +
             "d.id, oh, doh.medicalAttentionTypeId, doh.overturnCount) " +
             "FROM DiaryOpeningHours AS doh " +
@@ -36,4 +38,17 @@ public interface DiaryOpeningHoursRepository extends JpaRepository<DiaryOpeningH
             "WHERE doh.pk.diaryId IN (:diaryIds) " +
             "ORDER BY oh.dayWeekId, oh.from")
     List<DiaryOpeningHoursVo> getDiariesOpeningHours(@Param("diaryIds") List<Integer> diaryIds);
+
+    @Transactional(readOnly = true)
+    @Query( "SELECT (case when count(doh) > 0 then true else false end) " +
+            "FROM DiaryOpeningHours AS doh " +
+            "WHERE doh.pk.diaryId = :diaryId " +
+            "AND doh.pk.openingHoursId = :openingHoursId " +
+            "AND doh.overturnCount > (SELECT COUNT(a.id) " +
+            "                           FROM Appointment AS a " +
+            "                           JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
+            "                           WHERE aa.pk.diaryId = :diaryId " +
+            "                           AND aa.pk.openingHoursId = :openingHoursId " +
+            "                           AND a.isOverturn = true )" )
+    boolean allowNewOverturn(Integer diaryId, Integer openingHoursId);
 }

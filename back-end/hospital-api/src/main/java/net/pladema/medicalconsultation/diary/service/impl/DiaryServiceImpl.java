@@ -1,17 +1,5 @@
 package net.pladema.medicalconsultation.diary.service.impl;
 
-import java.time.LocalDate;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
 import net.pladema.medicalconsultation.diary.repository.DiaryRepository;
 import net.pladema.medicalconsultation.diary.repository.domain.CompleteDiaryListVo;
 import net.pladema.medicalconsultation.diary.repository.domain.DiaryListVo;
@@ -21,6 +9,18 @@ import net.pladema.medicalconsultation.diary.service.DiaryService;
 import net.pladema.medicalconsultation.diary.service.domain.CompleteDiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
+import net.pladema.sgx.exceptions.NotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class DiaryServiceImpl implements DiaryService {
@@ -60,9 +60,9 @@ public class DiaryServiceImpl implements DiaryService {
 		diary.setStartDate(diaryBo.getStartDate());
 		diary.setEndDate(diaryBo.getEndDate());
 		diary.setAppointmentDuration(diaryBo.getAppointmentDuration());
-		diary.setAutomaticRenewal(diaryBo.getAutomaticRenewal());
-		diary.setProfessionalAsignShift(diaryBo.getProfessionalAsignShift());
-		diary.setIncludeHoliday(diaryBo.getIncludeHoliday());
+		diary.setAutomaticRenewal(diaryBo.isAutomaticRenewal());
+		diary.setProfessionalAsignShift(diaryBo.isProfessionalAssignShift());
+		diary.setIncludeHoliday(diaryBo.isIncludeHoliday());
 		diary.setActive(true);
 		return diary;
 	}
@@ -106,7 +106,7 @@ public class DiaryServiceImpl implements DiaryService {
 		result.setStartDate(diaryListVo.getStartDate());
 		result.setEndDate(diaryListVo.getEndDate());
 		result.setAppointmentDuration(diaryListVo.getAppointmentDuration());
-		result.setProfessionalAsignShift(diaryListVo.getProfessionalAssignShift());
+		result.setProfessionalAssignShift(diaryListVo.getProfessionalAssignShift());
 		result.setIncludeHoliday(diaryListVo.getIncludeHoliday());
 		LOG.debug("Output -> {}", result);
 		return result;
@@ -138,6 +138,29 @@ public class DiaryServiceImpl implements DiaryService {
 			completeDiary.setDiaryOpeningHours(diaryOpeningHours.stream().collect(Collectors.toList()));
 			return completeDiary;
 		};
+	}
+
+	@Override
+    public DiaryBo getDiaryById(Integer diaryId) {
+        LOG.debug("Input parameters -> diaryId {}", diaryId);
+        Diary resultQuery = diaryRepository.findById(diaryId).orElseThrow(() -> new NotFoundException("diaryId", "diaryId -> "+diaryId + " does not exist"));
+        DiaryBo result = createDiaryBoInstance(resultQuery);
+        LOG.debug("Output -> {}", result);
+        return result;
+    }
+
+	private DiaryBo createDiaryBoInstance(Diary diary) {
+		LOG.debug("Input parameters -> diary {}", diary);
+		DiaryBo result = new DiaryBo();
+		result.setId(diary.getId());
+		result.setDoctorsOfficeId(diary.getDoctorsOfficeId());
+		result.setStartDate(diary.getStartDate());
+		result.setEndDate(diary.getEndDate());
+		result.setAppointmentDuration(diary.getAppointmentDuration());
+		result.setProfessionalAssignShift(diary.getProfessionalAsignShift());
+				result.setIncludeHoliday(diary.getIncludeHoliday());
+		LOG.debug("Output -> {}", result);
+		return result;
 	}
 
 }

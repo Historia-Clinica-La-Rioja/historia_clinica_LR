@@ -38,7 +38,6 @@ public interface DiaryMapper {
     DiaryDto toDiaryDto(DiaryBo diaryBo);
 
     @Named("toDiaryListDto")
-    @Mapping(target = "professionalAssignShift", source = "professionalAsignShift")
     DiaryListDto toDiaryListDto(DiaryBo diaryBo);
 
     @Named("toCollectionDiaryListDto")

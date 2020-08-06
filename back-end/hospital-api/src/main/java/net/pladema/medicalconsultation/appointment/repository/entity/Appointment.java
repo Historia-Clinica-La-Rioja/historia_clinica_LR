@@ -1,8 +1,11 @@
 package net.pladema.medicalconsultation.appointment.repository.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.sgx.auditable.entity.SGXAuditableEntity;
 import net.pladema.sgx.auditable.entity.SGXAuditListener;
 
@@ -22,6 +25,8 @@ import java.time.LocalTime;
 @Getter
 @Setter
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class Appointment extends SGXAuditableEntity {
 
     @Id
@@ -44,4 +49,14 @@ public class Appointment extends SGXAuditableEntity {
     @Column(name = "patient_id", nullable = false)
     private Integer patientId;
 
+    public static Appointment newFromAppointmentBo(AppointmentBo appointmentBo) {
+        Appointment result = new Appointment();
+        result.setDateTypeId(appointmentBo.getDate());
+        result.setHour(appointmentBo.getHour());
+        result.setIsOverturn(appointmentBo.isOverturn());
+        result.setPatientId(appointmentBo.getPatientId());
+        result.setAppointmentStateId(AppointmentState.ASIGNADO);
+        return result;
+
+    }
 }

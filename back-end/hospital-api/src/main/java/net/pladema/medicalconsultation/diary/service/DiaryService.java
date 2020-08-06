@@ -1,5 +1,8 @@
 package net.pladema.medicalconsultation.diary.service;
 
+import net.pladema.medicalconsultation.diary.repository.entity.Diary;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
+
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
@@ -19,4 +22,5 @@ public interface DiaryService {
     
     Optional<CompleteDiaryBo> getDiary(Integer diaryId);
 
+    DiaryBo getDiaryById(Integer diaryId);
 }

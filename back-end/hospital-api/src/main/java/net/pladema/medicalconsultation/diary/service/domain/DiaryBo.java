@@ -24,11 +24,13 @@ public class DiaryBo {
 
     protected Short appointmentDuration;
 
-    protected Boolean automaticRenewal = false;
+    protected boolean automaticRenewal = false;
 
-    protected Boolean professionalAsignShift = false;
+    protected boolean professionalAssignShift = false;
 
-    protected Boolean includeHoliday = false;
+    protected boolean includeHoliday = false;
+
+    protected boolean active = true;
 
     protected List<DiaryOpeningHoursBo> diaryOpeningHours;
 }

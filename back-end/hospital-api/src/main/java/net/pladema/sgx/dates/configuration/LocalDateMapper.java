@@ -47,4 +47,16 @@ public interface LocalDateMapper {
 		return zonedDateTime.withZoneSameInstant(ZoneId.of(JacksonDateFormatConfig.ZONE_ID));
 	}
 
+	default LocalTime fromStringToLocalTime(String date) {
+		if (date == null)
+			return null;
+		return LocalTime.parse(date, DateTimeFormatter.ofPattern( JacksonDateFormatConfig.TIME_FORMAT));
+	}
+
+	default String fromLocalTimeToString(LocalTime time) {
+		if (time == null)
+			return null;
+		return time.format(DateTimeFormatter.ofPattern(JacksonDateFormatConfig.TIME_FORMAT));
+	}
+
 }

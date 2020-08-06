@@ -33,4 +33,8 @@ public class DiaryOpeningHours implements Serializable {
         this.medicalAttentionTypeId = medicalAttentionTypeId;
         this.overturnCount = overturnCount;
     }
+
+    public void plusOverTurnCount() {
+        this.overturnCount++;
+    }
 }

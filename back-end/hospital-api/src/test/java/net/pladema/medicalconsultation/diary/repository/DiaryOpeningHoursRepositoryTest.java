@@ -7,7 +7,6 @@ import net.pladema.medicalconsultation.diary.repository.entity.Diary;
 import net.pladema.medicalconsultation.diary.repository.entity.DiaryOpeningHours;
 import net.pladema.medicalconsultation.diary.repository.entity.OpeningHours;
 import net.pladema.medicalconsultation.repository.entity.MedicalAttentionType;
-import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +19,8 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest(showSql = false)
@@ -75,16 +76,15 @@ public class DiaryOpeningHoursRepositoryTest extends UnitRepository {
 		// Agenda 1
 		List<DiaryOpeningHoursVo> resultQuery = diaryOpeningHoursRepository.getDiariesOpeningHours(Arrays.asList(diary1.getId()));
 
-		Assertions.assertThat(resultQuery)
+		assertThat(resultQuery)
 				.isNotNull()
 				.isNotEmpty()
 				.hasSize(2);
 
 		resultQuery.stream().forEach(rq -> {
-			Assertions.assertThat(rq.getDiaryId())
+			assertThat(rq.getDiaryId())
 					.isNotNull()
 					.isEqualTo(diary1.getId());
 		});
 	}
-
 }

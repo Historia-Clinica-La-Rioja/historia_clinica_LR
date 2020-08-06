@@ -13,5 +13,9 @@ public class UnitRepository {
         entityManager.flush();
         return saved;
     }
+
+    protected void flush() {
+        entityManager.flush();
+    }
     
 }

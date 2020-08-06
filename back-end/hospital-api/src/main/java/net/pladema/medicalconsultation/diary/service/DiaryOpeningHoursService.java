@@ -14,4 +14,6 @@ public interface DiaryOpeningHoursService {
     List<OccupationBo> findAllWeeklyDoctorsOfficeOccupation(Integer doctorOfficeId, LocalDate startDate, LocalDate endDate);
 
     Collection<DiaryOpeningHoursBo> getDiariesOpeningHours(List<Integer> diaryIds);
+
+    boolean allowNewOverturn(Integer diaryId, Integer openingHoursId);
 }

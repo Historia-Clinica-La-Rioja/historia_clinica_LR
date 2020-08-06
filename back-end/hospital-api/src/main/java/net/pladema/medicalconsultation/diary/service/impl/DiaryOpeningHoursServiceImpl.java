@@ -210,4 +210,12 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
         dayOpeningHours.setTimeRanges(timeRanges);
         return dayOpeningHours;
     }
+
+    @Override
+    public boolean allowNewOverturn(Integer diaryId, Integer openingHoursId) {
+        LOG.debug("Input parameters -> diaryId {}, openingHoursId {}", diaryId, openingHoursId);
+        boolean result = diaryOpeningHoursRepository.allowNewOverturn(diaryId, openingHoursId);
+        LOG.debug(OUTPUT, result);
+        return result;
+    }
 }

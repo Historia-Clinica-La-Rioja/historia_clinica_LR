@@ -295,18 +295,16 @@ export const MOCKS_TURNOS = [
 				roles: 'Todo ADMINISTRATIVO sobre la institución. ESPECIALISTA_MEDICO y PROFESIONAL_DE_SALUD para el caso que puedan otorgar turnos',
 				path: '/api/institutions/{institutionId}/medicalConsultations/appointments',
 				method: 'POST',
-				fetch: {
-					id: 2,
-					patient: {
-						id: 25,
-						person: {
-							firstName: 'Jorge',
-							lastName: 'Martinez'
-						}
-					},
+				/* CreateAppointmentDto
+					diaryId: 99,
+					patientId: 9,
 					date: '2020-07-13',
 					hour: '07:30',
+					openingHoursId: 66,
 					isOverTurn: false,
+				*/
+				fetch: { // Response
+					id:43
 				},
 			},
 		],

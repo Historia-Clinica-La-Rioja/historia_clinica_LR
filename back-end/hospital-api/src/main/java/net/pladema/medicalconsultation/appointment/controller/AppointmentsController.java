@@ -1,10 +1,12 @@
 package net.pladema.medicalconsultation.appointment.controller;
 
 import io.swagger.annotations.Api;
+import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointment;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentListDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.CreateAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.mapper.AppointmentMapper;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
+import net.pladema.medicalconsultation.appointment.service.CreateAppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.patient.controller.dto.AppointmentPatientDto;
 import net.pladema.patient.controller.service.PatientExternalService;
@@ -25,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.constraints.NotEmpty;
 import java.util.Collection;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 @RestController
@@ -40,27 +41,35 @@ public class AppointmentsController {
 
     private final AppointmentService appointmentService;
 
+    private final CreateAppointmentService createAppointmentService;
+
     private final AppointmentMapper appointmentMapper;
 
     private final PatientExternalService patientExternalService;
 
-    public AppointmentsController(AppointmentService appointmentService, AppointmentMapper appointmentMapper,
+    public AppointmentsController(AppointmentService appointmentService,
+                                  CreateAppointmentService createAppointmentService,
+                                  AppointmentMapper appointmentMapper,
                                   PatientExternalService patientExternalService) {
         super();
         this.appointmentService = appointmentService;
+        this.createAppointmentService = createAppointmentService;
         this.appointmentMapper = appointmentMapper;
         this.patientExternalService = patientExternalService;
     }
 
     @Transactional
     @PostMapping
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
     public ResponseEntity<Integer> create(
             @PathVariable(name = "institutionId") Integer institutionId,
-            @RequestBody CreateAppointmentDto createAppointmentDto) {
+            @RequestBody
+            @ValidAppointment
+            CreateAppointmentDto createAppointmentDto) {
         LOG.debug("Input parameters -> institutionId {}, appointmentDto {}", institutionId, createAppointmentDto);
-        Random rand = new Random();
-        Integer result = rand.nextInt(1000) + 0;;
+        AppointmentBo newAppointmentBo = appointmentMapper.toAppointmentBo(createAppointmentDto);
+        newAppointmentBo = createAppointmentService.execute(newAppointmentBo);
+        Integer result = newAppointmentBo.getId();
         LOG.debug(OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }
