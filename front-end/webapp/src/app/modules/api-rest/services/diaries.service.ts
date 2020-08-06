@@ -22,5 +22,9 @@ export class DiariesService {
 		});
 	}
 
+	delete(diaryId: number): Observable<boolean> {
+		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/diary/${diaryId}`;
+		return this.http.delete<boolean>(url);
+	}
 
 }

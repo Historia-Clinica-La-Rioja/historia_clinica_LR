@@ -1,24 +1,5 @@
 package net.pladema.medicalconsultation.diary.controller;
 
-import java.util.Collection;
-import java.util.Optional;
-
-import javax.validation.Valid;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import io.swagger.annotations.Api;
 import net.pladema.medicalconsultation.diary.controller.constraints.DiaryOpeningHoursValid;
 import net.pladema.medicalconsultation.diary.controller.constraints.DiaryPeriodValid;
@@ -29,6 +10,24 @@ import net.pladema.medicalconsultation.diary.controller.mapper.DiaryMapper;
 import net.pladema.medicalconsultation.diary.service.DiaryService;
 import net.pladema.medicalconsultation.diary.service.domain.CompleteDiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
+import java.util.Collection;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/medicalConsultations/diary")
@@ -83,5 +82,14 @@ public class DiaryController {
         Collection<DiaryListDto> result = diaryMapper.toCollectionDiaryListDto(diaryBos);
         LOG.debug(OUTPUT, result);
         return ResponseEntity.ok(result);
+    }
+
+    @DeleteMapping("/{diaryId}")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+    public ResponseEntity<Boolean> delete(@PathVariable(name = "institutionId") Integer institutionId,
+                                                     @PathVariable(name = "diaryId") Integer diaryId) {
+        LOG.debug("Input parameters -> institutionId {}, diaryId {}", institutionId, diaryId);
+        LOG.debug(OUTPUT, Boolean.TRUE);
+        return ResponseEntity.ok(Boolean.TRUE);
     }
 }
