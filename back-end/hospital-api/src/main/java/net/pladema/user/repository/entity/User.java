@@ -41,7 +41,7 @@ public class User extends AuditableEntity {
 	@Column(name = "enable", nullable = false)
 	private Boolean enable = false;
 
-	@Column(name = "person_id")
+	@Column(name = "person_id", nullable = false, unique = true)
 	private Integer personId;
 	
 	@Column(name = "last_login")

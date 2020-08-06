@@ -50,3 +50,22 @@ databaseChangeLog:
             columnName:  clinical_specialty_id
             tableName:  healthcare_professional_specialty  
             validate:  true
+    - changeset:
+        id: update-user-admin
+        author: lmanterola
+        changes:
+            - sql:
+                sql: |-
+                    UPDATE users SET person_id = -1 WHERE person_id IS NULL;
+    
+    - changeset:
+        id: add-constraints-person_id-users
+        columns:
+            - column:
+                constraints:
+                    nullable: false
+                    unique: true
+                name: person_id
+                type: int
+                tableName: users
+

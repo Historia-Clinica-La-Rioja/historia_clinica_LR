@@ -18,6 +18,8 @@ import javax.annotation.PostConstruct;
 @Profile("!test")
 public class AdminConfig {
 
+	private static final int ADMIN_PERSON_ID = -1;
+
 	private static final Logger LOG = LoggerFactory.getLogger(AdminConfig.class);
 
 	@Value("${admin.mail}")
@@ -53,6 +55,7 @@ public class AdminConfig {
 
 	private User createAdminUser() {
 		User admin = new User();
+		admin.setPersonId(ADMIN_PERSON_ID);
 		admin.setUsername(adminMail);
 		User saved = userService.addUser(admin);
 		LOG.info("Admin created with id {}", saved.getId());

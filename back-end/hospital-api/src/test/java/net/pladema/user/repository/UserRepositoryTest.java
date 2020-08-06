@@ -31,6 +31,7 @@ public class UserRepositoryTest {
 	@Test
 	public void saveCreateTest() {
 		User user = UserBean.newUser("username@mail.com");
+		user.setPersonId(4);
 		User createdUser = userRepository.saveAndFlush(user);
 
 		assertThat(createdUser).isNotNull();
@@ -43,13 +44,13 @@ public class UserRepositoryTest {
 	@Test
 	public void saveUpdateTest() {
 		User user = UserBean.newUser("username@mail.com");
+		user.setPersonId(4);
 		User createdUser = userRepository.saveAndFlush(user);
 
 		assertThat(createdUser).isNotNull();
 
 		assertCreateAuditableEntity(createdUser);
 
-		createdUser.setPersonId(4);
 		User updatedUser = userRepository.saveAndFlush(createdUser);
 
 		assertThat(updatedUser).isNotNull();
@@ -61,6 +62,7 @@ public class UserRepositoryTest {
 	@Test
 	public void testFindByUsername_exists() {
 		User user = UserBean.newUser("username@mail.com");
+		user.setPersonId(4);
 		user = userRepository.saveAndFlush(user);
 
 		Optional<User> opUser = userRepository.findByUsername(user.getUsername());
