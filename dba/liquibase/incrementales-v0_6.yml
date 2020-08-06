@@ -69,3 +69,14 @@ databaseChangeLog:
                 type: int
                 tableName: users
 
+    - changeset:
+        id: add-constraints-person_id-healthcare_professional
+        author: lmanterola
+        columns:
+            - column:
+                constraints:
+                    unique: true
+                name: person_id
+                type: int
+                tableName: healthcare_professional
+

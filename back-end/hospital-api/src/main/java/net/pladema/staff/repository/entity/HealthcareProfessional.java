@@ -33,7 +33,7 @@ public class HealthcareProfessional implements Serializable {
 	@Column(name = "license_number", nullable = false, length = 512)
 	private String licenseNumber;
 
-	@Column(name = "person_id", nullable = false)
+	@Column(name = "person_id", nullable = false, unique = true)
 	private Integer personId;
 	
 	@Column(name = "is_medical_doctor", nullable = false)
