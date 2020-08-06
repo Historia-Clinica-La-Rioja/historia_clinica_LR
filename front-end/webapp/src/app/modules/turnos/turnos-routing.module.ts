@@ -19,7 +19,7 @@ const routes: Routes = [
 				data: { allowedRoles: [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ADMINISTRATIVO] }
 			},
 			{
-				path: 'new-agenda',
+				path: 'nueva-agenda',
 				component: NewAgendaComponent,
 				canActivate: [RoleGuard],
 				data: { allowedRoles: [ERole.ADMINISTRATIVO] }

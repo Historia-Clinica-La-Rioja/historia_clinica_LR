@@ -83,7 +83,7 @@ export class HomeComponent implements OnInit {
 	}
 
 	goToNewAgenda(): void {
-		this.router.navigate([`${this.router.url}/new-agenda/`]);
+		this.router.navigate([`${this.router.url}/nueva-agenda/`]);
 	}
 
 }
