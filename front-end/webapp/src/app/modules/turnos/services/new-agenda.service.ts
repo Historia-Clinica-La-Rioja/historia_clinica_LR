@@ -188,6 +188,10 @@ export class NewAgendaService {
 		this.appointmentDuration = duration;
 	}
 
+	public getAppointmentDuration(): number {
+		return this.appointmentDuration;
+	}
+
 
 	public getEvents(): CalendarEvent[] {
 		return this.events;

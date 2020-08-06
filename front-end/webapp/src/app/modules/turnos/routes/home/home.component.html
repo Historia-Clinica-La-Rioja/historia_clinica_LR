@@ -15,9 +15,9 @@
 						   matInput
 						   [matAutocomplete]="auto">
 					<mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-						<mat-option *ngFor="let profesional of profesionalesFiltered$ | async"
+						<mat-option *ngFor="let profesional of profesionalesFiltered"
 									[value]="getFullNameLicence(profesional)"
-									(onSelectionChange)="select(profesional)">
+									(onSelectionChange)="selectProfesional($event, profesional)">
 							<span class="mat-body">{{getFullName(profesional)}}</span>
 							<span class="mat-body-strong"> - {{profesional.licenceNumber}}</span>
 						</mat-option>
@@ -35,4 +35,7 @@
 			</button>
 		</div>
 	</section>
+
+	<router-outlet></router-outlet>
+
 </app-content>

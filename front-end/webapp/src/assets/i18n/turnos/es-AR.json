@@ -6,7 +6,8 @@
 				"APPLY_FOR": "Solicitar",
 				"NEW_AGENDA": "Nueva agenda",
 				"SEARCH": "Buscar profesional"
-			}
+			},
+			"SELECT_AGENDA": "Seleccione una agenda"
 		},
 		"new-agenda": {
 			"NEW_AGENDA": "Nueva agenda",

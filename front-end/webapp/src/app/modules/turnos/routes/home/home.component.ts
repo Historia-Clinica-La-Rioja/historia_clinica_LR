@@ -1,13 +1,16 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
-import { HealthcareProfessionalDto, ProfessionalDto } from '@api-rest/api-model';
-import { Observable } from 'rxjs';
+import { DiaryListDto, DiaryOpeningHoursDto, HealthcareProfessionalDto, ProfessionalDto } from '@api-rest/api-model';
 import { NewAgendaService } from '../../services/new-agenda.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Location } from '@angular/common';
+import { DiariesService } from '@api-rest/services/diaries.service';
+import { DiaryOpeningHoursService } from '@api-rest/services/diary-opening-hours.service';
+import { ContextService } from '@core/services/context.service';
+import { MatOptionSelectionChange } from '@angular/material/core';
 
 @Component({
 	selector: 'app-home',
@@ -18,9 +21,15 @@ export class HomeComponent implements OnInit {
 
 	form: FormGroup;
 	profesionales: HealthcareProfessionalDto[] = [];
-	profesionalesFiltered$: Observable<HealthcareProfessionalDto[]>;
+	profesionalesFiltered: HealthcareProfessionalDto[];
 	profesionalSelected: HealthcareProfessionalDto;
+	agendas: DiaryListDto[];
+	agendaSelected: DiaryListDto;
+	diaryOpeningHours: DiaryOpeningHoursDto[];
+	openingTime = 0;
+	closingTime = 23;
 	newAgendaService: NewAgendaService;
+	routePrefix: string;
 
 	constructor(
 		private readonly router: Router,
@@ -30,66 +39,58 @@ export class HomeComponent implements OnInit {
 		private readonly dialog: MatDialog,
 		private readonly location: Location,
 		private readonly route: ActivatedRoute,
+		private readonly diariesService: DiariesService,
+		private readonly diaryOpeningHoursService: DiaryOpeningHoursService,
+		private readonly contextService: ContextService,
 	) {
 		this.newAgendaService = new NewAgendaService(this.dialog, this.cdr);
+		this.routePrefix = `institucion/${this.contextService.institutionId}/turnos`;
+
 	}
 
 	ngOnInit(): void {
 		this.form = this.formBuilder.group({
-			profesional: [null, Validators.required]
+			profesional: [null, Validators.required],
 		});
 
-		this.route.paramMap
-			.subscribe((params: ParamMap) => {
-				const idProfesional = Number(params.get('idProfesional'));
-				if (idProfesional) {
-					this.healthCareProfessionalService.getOne(idProfesional)
-						.pipe(map(toHealthcareProfessionalDto))
-						.subscribe(profesional => {
-							if (profesional) {
-								this.profesionalSelected = profesional;
-								this.form.controls.profesional.setValue(this.getFullNameLicence(profesional));
-							}
-						});
-				}
-			});
-
-		this.newAgendaService.setAppointmentDuration(60); // todo reemplazar por obtenido del BE
+		this.route.firstChild?.params.subscribe(params => {
+			const idProfesional = Number(params.idProfesional);
+			if (idProfesional) {
+				this.healthCareProfessionalService.getOne(idProfesional)
+					.pipe(map(toHealthcareProfessionalDto))
+					.subscribe((profesional: HealthcareProfessionalDto) => {
+						if (profesional) {
+							this.form.controls.profesional.setValue(this.getFullNameLicence(profesional));
+							this.profesionalSelected = profesional;
+						}
+					});
+			}
+		});
 
 		this.healthCareProfessionalService.getAllDoctors().subscribe(doctors => {
 			this.profesionales = doctors;
 
-			this.profesionalesFiltered$ = this.form.controls.profesional.valueChanges.pipe(
-				startWith(''),
-				map(value => this._filter(value))
-			);
+			this.form.controls.profesional.valueChanges
+				.pipe(
+					startWith(''),
+					map(value => this._filter(value)))
+				.subscribe(profesionalesFiltered => {
+					this.profesionalesFiltered = profesionalesFiltered;
+					if (this.form.value.profesional && this.profesionalSelected &&
+						this.form.value.profesional !== this.getFullNameLicence(this.profesionalSelected)) {
+						delete this.profesionalSelected;
+					}
+				});
 		});
-
-		function toHealthcareProfessionalDto(profesional: ProfessionalDto): HealthcareProfessionalDto {
-			return profesional ? {
-				id: profesional.id,
-				licenceNumber: profesional.licenceNumber,
-				person: {
-					birthDate: null,
-					firstName: profesional.firstName,
-					lastName: profesional.lastName
-				}
-			} : null;
-		}
 	}
 
-
 	search(): void {
-		delete this.profesionalSelected;
 		if (this.form.valid) {
 			const result = this._getResult();
 			if (result) {
+				this.router.navigate([`profesional/${result.id}`], {relativeTo: this.route});
 				this.form.controls.profesional.setValue(this.getFullNameLicence(result));
-				console.log('result', result);
-				this.location.replaceState(`${this.router.url}/profesional/${result.id}`);
-				// todo load calendar
-			} else {
-				// todo show error no encontrado
+				this.profesionalSelected = result;
 			}
 		}
 	}
@@ -102,8 +103,14 @@ export class HomeComponent implements OnInit {
 		return `${this.getFullName(profesional)} - ${profesional.licenceNumber}`;
 	}
 
-	select(value): void {
-		this.profesionalSelected = value;
+	selectProfesional(event: MatOptionSelectionChange, profesional: HealthcareProfessionalDto): void {
+		if (event.isUserInput) {
+			this.profesionalSelected = profesional;
+		}
+	}
+
+	goToNewAgenda(): void {
+		this.router.navigate([`${this.routePrefix}/nueva-agenda/`]);
 	}
 
 	private _getResult(): HealthcareProfessionalDto {
@@ -122,8 +129,17 @@ export class HomeComponent implements OnInit {
 		});
 	}
 
-	goToNewAgenda(): void {
-		this.router.navigate([`${this.router.url}/nueva-agenda/`]);
-	}
-
 }
+
+function toHealthcareProfessionalDto(profesional: ProfessionalDto): HealthcareProfessionalDto {
+	return profesional ? {
+		id: profesional.id,
+		licenceNumber: profesional.licenceNumber,
+		person: {
+			birthDate: null,
+			firstName: profesional.firstName,
+			lastName: profesional.lastName
+		}
+	} : null;
+}
+

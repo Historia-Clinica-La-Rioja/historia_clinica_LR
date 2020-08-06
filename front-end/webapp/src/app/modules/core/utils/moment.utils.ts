@@ -1,5 +1,5 @@
-import { Moment } from 'moment'
 import * as moment from 'moment';
+import { Moment } from 'moment';
 
 moment.locale('es-AR');
 
@@ -12,7 +12,7 @@ export enum DateFormat {
 	YEAR_FULL = 'YYYY',
 	MONTH_FULL = 'MM',
 	HOUR_MINUTE = 'HH:mm',
-	HOUR_MINUTE_SECONDS = 'HH:mm:ss', 
+	HOUR_MINUTE_SECONDS = 'HH:mm:ss',
 }
 
 export const MAT_APP_DATE_FORMATS = {
@@ -34,6 +34,8 @@ export const dateToMoment = (date: Date): Moment => moment.utc(date);
 export const momentParseDate = (dateStr: string): Moment => momentParseDateTime(`${dateStr}T00:00:00.000-0300`);
 
 export const momentParseDateTime = (dateStr: string): Moment => moment.parseZone(dateStr);
+
+export const momentParseTime = (timeStr: string): Moment => moment(`${timeStr}-0300`, DateFormat.HOUR_MINUTE_SECONDS);
 
 export const momentFormatDate = (date: Date, format?: DateFormat): string => moment.utc(date.getTime()).format(format);
 

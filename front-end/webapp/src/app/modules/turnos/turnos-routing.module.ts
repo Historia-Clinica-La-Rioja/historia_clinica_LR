@@ -7,19 +7,31 @@ import { RoleGuard } from '@core/guards/RoleGuard';
 
 import { mockRouters } from '@presentation/utils/mock-routers.utils';
 import { MOCKS_TURNOS } from './constants/mock-routers';
+import { SelectAgendaComponent } from './routes/home/routes/select-agenda/select-agenda.component';
+import { AgendaComponent } from './routes/home/routes/select-agenda/routes/agenda/agenda.component';
 
 const routes: Routes = [
 	{
 		path: '',
 		children: [
-			...['', 'profesional/:idProfesional'].map(path => (
-				{
-					path,
-					component: HomeComponent,
-					canActivate: [RoleGuard],
-					data: {allowedRoles: [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ADMINISTRATIVO]}
-				})
-			),
+			{
+				path: '',
+				component: HomeComponent,
+				canActivate: [RoleGuard],
+				data: {allowedRoles: [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ADMINISTRATIVO]},
+				children: [
+					{
+						path: 'profesional/:idProfesional',
+						component: SelectAgendaComponent,
+						children: [
+							{
+								path: 'agenda/:idAgenda',
+								component: AgendaComponent
+							}
+						]
+					}
+				]
+			},
 			{
 				path: 'nueva-agenda',
 				component: NewAgendaComponent,
