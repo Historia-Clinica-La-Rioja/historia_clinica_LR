@@ -5,6 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { BedManagmentFilter } from '../components/filtros-camas/filtros-camas.component';
 import { momentParseDateTime } from '@core/utils/moment.utils';
+import { pushIfNotExists } from '@core/utils/array.utils';
 
 @Injectable({
   providedIn: 'root'
@@ -58,18 +59,25 @@ export class GestionCamaService {
 
 	private filterOptions(bedsSummary: BedSummaryDto[]) {
 		bedsSummary.forEach(bedSummary => {
-			if (this.sectors.map(s => s.sectorId).indexOf(bedSummary.sector.id) === -1) {
-				this.sectors.push({sectorId: bedSummary.sector.id, sectorDescription: bedSummary.sector.description});
-			}
 
-			if (this.specialities.map(s => s.specialityId).indexOf(bedSummary.clinicalSpecialty.id) === -1) {
-			this.specialities.push({specialityId: bedSummary.clinicalSpecialty.id, specialityDescription: bedSummary.clinicalSpecialty.name});
-			}
+			this.sectors = pushIfNotExists(this.sectors, {sectorId: bedSummary.sector.id, sectorDescription: bedSummary.sector.description}, this.compareSector);
 
-			if (this.categories.map(c => c.categoryId).indexOf(bedSummary.bedCategory.id) === -1) {
-				this.categories.push({categoryId: bedSummary.bedCategory.id, categoryDescription: bedSummary.bedCategory.description});
-			}
+			this.specialities = pushIfNotExists(this.specialities, {specialityId: bedSummary.clinicalSpecialty.id, specialityDescription: bedSummary.clinicalSpecialty.name}, this.compareSpeciality)
+
+			this.categories = pushIfNotExists(this.categories, {categoryId: bedSummary.bedCategory.id, categoryDescription: bedSummary.bedCategory.description}, this.compareCategory);
 		});
+	}
+
+	private compareSector(sector: Sector, sector2: Sector): boolean {
+		return sector.sectorId === sector2.sectorId;
+	}
+
+	private compareSpeciality(speciality: Speciality, speciality2: Speciality): boolean {
+		return speciality.specialityId === speciality2.specialityId;
+	}
+
+	private compareCategory(category: Category, category2: Category): boolean {
+		return category.categoryId === category2.categoryId;
 	}
 
 }

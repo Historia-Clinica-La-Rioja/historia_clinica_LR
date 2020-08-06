@@ -14,4 +14,15 @@ export const uniqueItems = <T>(data: T[]): T[] => {
 	return data.filter(function(elem, index, self) {
 			return index === self.indexOf(elem);
 		});
-}
+};
+
+export const containsObject = <T>(data: T[], obj: any, compareFunction: (obj1, obj2) => boolean): boolean => {
+	return data.some(e => compareFunction(e, obj));
+};
+
+export const pushIfNotExists = <T>(data: T[], obj: T, compareFunction: (obj1: T, obj2: T) => boolean): T[] => {
+	if (!containsObject(data, obj, compareFunction)) {
+		data.push(obj);
+	}
+	return data;
+};
