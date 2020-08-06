@@ -117,6 +117,7 @@ public class DiaryServiceImpl implements DiaryService {
 		CompleteDiaryBo result = new CompleteDiaryBo(createDiaryBoInstance(completeDiaryListVo));
 		result.setSectorId(completeDiaryListVo.getSectorId());
 		result.setClinicalSpecialtyId(completeDiaryListVo.getClinicalSpecialtyId());
+		result.setHealthcareProfessionalId(completeDiaryListVo.getHealthcareProfessionalId());
 		LOG.debug("Output -> {}", result);
 		return result;
 	}
