@@ -11,7 +11,7 @@ public interface DiaryOpeningHoursService {
 
     void load(Integer diaryId, List<DiaryOpeningHoursBo> diaryOpeningHours);
 
-    List<OccupationBo> findAllWeeklyDoctorsOfficeOccupation(Integer doctorOfficeId, LocalDate startDate, LocalDate endDate);
+    List<OccupationBo> findAllWeeklyDoctorsOfficeOccupation(Integer doctorOfficeId, LocalDate startDate, LocalDate endDate, Integer ignoreDiaryId);
 
     Collection<DiaryOpeningHoursBo> getDiariesOpeningHours(List<Integer> diaryIds);
 

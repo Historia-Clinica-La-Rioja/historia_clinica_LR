@@ -251,7 +251,29 @@ export const MOCKS_TURNOS = [
 				roles: 'ADMINISTRADOR AGENDA',
 				path: '/api/institutions/{institutionId}/medicalConsultations/diary/{diaryId}',
 				method: 'PUT'
-			}
+			},
+			{
+				name: 'DiaryOpeningHours.getAllWeeklyDoctorsOfficeOcupation(doctorsOfficeId: number, startDate: string, endDate: string, diaryId: number): DiaryDto',
+				roles: 'ADMINISTRADOR AGENDA',
+				path: '/api/institutions/{institutionId}/doctorsOffice/{doctorsOfficeId}',
+				method: 'GET',
+				fetch:
+					{
+						id: 1,
+						description: "Lunes",
+						timeRanges: [
+							{
+								from: '08:00',
+								to: '12:00'
+							},
+							{
+								from: '14:00',
+								to: '18:00'
+							},
+						]
+					},
+				comments: 'Este endpoint ya existia se adapto para el nuevo filtro'
+			},
 		]
 	},
 	{

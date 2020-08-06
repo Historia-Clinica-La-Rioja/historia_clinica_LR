@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
@@ -87,31 +88,44 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
     }
 
     @Override
-    public List<OccupationBo> findAllWeeklyDoctorsOfficeOccupation(Integer doctorOfficeId, LocalDate newDiarystart, LocalDate newDiaryEnd){
+    public List<OccupationBo> findAllWeeklyDoctorsOfficeOccupation(Integer doctorOfficeId,
+                                                                   LocalDate newDiaryStart,
+                                                                   LocalDate newDiaryEnd,
+                                                                   Integer ignoreDiaryId){
         LOG.debug("Input parameters -> doctorOfficeId {}, startDate {}, endDate {}",
-                doctorOfficeId, newDiarystart, newDiaryEnd);
+                doctorOfficeId, newDiaryStart, newDiaryEnd);
 
         List<OccupationVo> queryResults = diaryOpeningHoursRepository
-                .findAllWeeklyDoctorsOfficeOcupation(doctorOfficeId, newDiarystart, newDiaryEnd);
+                .findAllWeeklyDoctorsOfficeOccupation(doctorOfficeId, newDiaryStart, newDiaryEnd);
 
         //Se consideran únicamente los horarios de agendas alcanzados (según calendario)
         // para el rango de fecha newDiarystart y newDiaryEnd
         List<OpeningHours> validQueryResults = new ArrayList<>();
         queryResults.stream()
+                .filter(defineFilter(ignoreDiaryId))
                 .collect(Collectors.groupingBy(OccupationVo::getDiaryId))
                 .forEach( (diaryId,occupationTimeOfDiary)->
                         validQueryResults.addAll(
-                            getOnlyDiaryOverlappingDays(occupationTimeOfDiary, newDiarystart, newDiaryEnd))
-                    );
+                                getOnlyDiaryOverlappingDays(occupationTimeOfDiary, newDiaryStart, newDiaryEnd))
+                );
 
         List<OccupationBo> result = new ArrayList<>();
         validQueryResults.stream()
                 .collect(Collectors.groupingBy(OpeningHours::getDayWeekId))
                 .forEach( (dayWeekId,openingHours)->
-                    result.add(mergeRangeTimeOfOpeningHours(dayWeekId, openingHours))
+                        result.add(mergeRangeTimeOfOpeningHours(dayWeekId, openingHours))
                 );
         return result;
     }
+
+    private Predicate<OccupationVo> defineFilter(Integer ignoreDiaryId) {
+        LOG.debug("Input parameters -> ignoreDiaryId {}", ignoreDiaryId);
+        Predicate<OccupationVo> result = (ignoreDiaryId == null) ? (e) -> true : (e) -> !e.getDiaryId().equals(ignoreDiaryId);
+        LOG.debug(OUTPUT, result);
+        return result;
+    }
+
+
 
     @Override
     public Collection<DiaryOpeningHoursBo> getDiariesOpeningHours(List<Integer> diaryIds) {

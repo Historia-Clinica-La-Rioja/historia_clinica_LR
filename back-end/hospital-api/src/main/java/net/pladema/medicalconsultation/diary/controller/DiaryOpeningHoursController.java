@@ -10,6 +10,7 @@ import net.pladema.medicalconsultation.diary.service.domain.OccupationBo;
 import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.format.annotation.NumberFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,22 +51,25 @@ public class DiaryOpeningHoursController {
      * @param doctorsOfficeId consultorio en el cual iniciar una nueva agenda
      * @param startDateStr fecha de inicio de nueva agenda
      * @param endDateStr fecha de fin de nueva agenda
+     * @param diaryId id de la agenda a ignorar
      * @return lista con los días y rangos de horario en los cuales el consultorio {@code doctorsOfficeId}
      * se encuentra ocupado
      */
-    @GetMapping("/doctorsOffice/{doctorsOfficeId}")
-    public ResponseEntity<List<OccupationDto>> getAllWeeklyDoctorsOfficeOcupation(
+    @GetMapping(value = "/doctorsOffice/{doctorsOfficeId}")
+    public ResponseEntity<List<OccupationDto>> getAllWeeklyDoctorsOfficeOccupation(
+            @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "doctorsOfficeId") Integer doctorsOfficeId,
             @RequestParam(name = "startDate") String startDateStr,
-            @RequestParam(name = "endDate") String endDateStr) {
-        LOG.debug("Input parameters -> doctorsOfficeId {}, startDateStr {}, endDateStr {}",
-                doctorsOfficeId, startDateStr, endDateStr);
+            @RequestParam(name = "endDate") String endDateStr,
+            @RequestParam(name = "diaryId", required = false) @NumberFormat String diaryId) {
+        LOG.debug("Input parameters -> doctorsOfficeId {}, startDateStr {}, endDateStr {}, diaryId {}",
+                doctorsOfficeId, startDateStr, endDateStr, diaryId);
 
         LocalDate startDate = localDateMapper.fromStringToLocalDate(startDateStr);
         LocalDate endDate = localDateMapper.fromStringToLocalDate(endDateStr);
-
+        Integer diaryIdParam = (diaryId != null) ? Integer.parseInt(diaryId) : null;
         List<OccupationBo> occupationBos = diaryOpeningHoursService
-                .findAllWeeklyDoctorsOfficeOccupation(doctorsOfficeId, startDate, endDate);
+                .findAllWeeklyDoctorsOfficeOccupation(doctorsOfficeId, startDate, endDate, diaryIdParam);
         List<OccupationDto> result = diaryMapper.toListOccupationDto(occupationBos);
         LOG.debug(OUTPUT, result);
         return ResponseEntity.ok().body(result);

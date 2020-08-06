@@ -234,7 +234,7 @@ export class NewAgendaComponent implements OnInit {
 			mappedDays[day.day()] = day;
 		});
 
-		this.diaryOpeningHoursService.getAllWeeklyDoctorsOfficeOcupation(formValue.doctorOffice.id, startDate, endDate)
+		this.diaryOpeningHoursService.getAllWeeklyDoctorsOfficeOcupation(formValue.doctorOffice.id, null, startDate, endDate)
 			.pipe(
 				map((ocupations: OccupationDto[]): CalendarEvent[] => {
 					let doctorsOfficeEvents: CalendarEvent[] = [];

@@ -16,6 +16,7 @@ import java.util.List;
 @Repository
 public interface DiaryOpeningHoursRepository extends JpaRepository<DiaryOpeningHours, DiaryOpeningHoursPK> {
 
+    @Transactional(readOnly = true)
     @Query("select new net.pladema.medicalconsultation.diary.repository.domain.OccupationVo( " +
             "d.id, d.startDate, d.endDate, oh.dayWeekId, oh.from, oh.to) " +
             "from DiaryOpeningHours as doh " +
@@ -25,9 +26,9 @@ public interface DiaryOpeningHoursRepository extends JpaRepository<DiaryOpeningH
             "and d.startDate <= :endDate " +
             "and d.endDate >= :startDate " +
             "order by oh.dayWeekId, oh.from")
-    List<OccupationVo> findAllWeeklyDoctorsOfficeOcupation(@Param("doctorsOfficeId") Integer doctorsOfficeId,
-                                                           @Param("startDate")LocalDate startDate,
-                                                           @Param("endDate")LocalDate endDate);
+    List<OccupationVo> findAllWeeklyDoctorsOfficeOccupation(@Param("doctorsOfficeId") Integer doctorsOfficeId,
+                                                            @Param("startDate")LocalDate startDate,
+                                                            @Param("endDate")LocalDate endDate);
 
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.DiaryOpeningHoursVo( " +
