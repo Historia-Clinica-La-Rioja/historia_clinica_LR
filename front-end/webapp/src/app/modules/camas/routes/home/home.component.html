@@ -5,24 +5,24 @@
         <div fxLayout="column">
 
             <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="space-between start">
-                <mat-card>
+                <mat-card id="bed-managment-card">
                     <mat-card-content>
                         <div fxLayout="row">
                             <div id="filtros" class="panel-filtro">
                                 <h2 class="page-title" [translate]="'gestion-camas.home.SUBTITLE'"></h2>
                                 <mat-card-subtitle>
-                                    <span *ngIf="allBeds" id="bed_id">Resultado: {{bedsAmount}} camas</span>
+                                    <span *ngIf="bedManagmentList" id="bed_id">Resultado: {{bedsAmount}} camas</span>
                                 </mat-card-subtitle>
-                                <app-filtros-camas></app-filtros-camas>
+                                <app-bed-filters></app-bed-filters>
                             </div>
-                            <section class="beds" id="mapeo" *ngIf="allBeds && allBeds.length">
-                                <div fxLayout="column" *ngFor="let sector of allBeds">
+                            <section class="beds" id="mapeo" *ngIf="bedManagmentList && bedManagmentList.length">
+                                <div fxLayout="column" *ngFor="let sector of bedManagmentList">
                                     <div id="title">
                                         <h2 class="page-title">{{sector.sectorDescription}}</h2>
                                     </div>
-                                    <div fxLayout="column" *ngFor="let specialty of sector.specialty">
+                                    <div id="speciality-block" fxLayout="column" *ngFor="let specialty of sector.specialty">
                                         <div id="title">
-                                            <h2>{{specialty.specialtyName}}</h2>
+                                            <h2 id="speciality-title">{{specialty.specialtyName}}</h2>
                                         </div>
                                         <div fxLayout="row wrap">
                                             <div *ngFor="let bed of specialty.beds">
@@ -36,18 +36,16 @@
                                     <mat-divider inset></mat-divider>
                                 </div>
                             </section>
-                            <section class="beds" *ngIf="allBeds && !allBeds.length" fxLayout="column" fxLayoutAlign="space-around center" >
+                            <section class="beds" *ngIf="bedManagmentList && !bedManagmentList.length" fxLayout="column" fxLayoutAlign="space-around center">
                                 <h2 [translate]="'gestion-camas.home.NO_FILTERED_BEDS'"></h2>
                             </section>
                         </div>
                     </mat-card-content>
                 </mat-card>
-                <div class="spinner" *ngIf="!allBeds">
+                <div class="spinner" *ngIf="!bedManagmentList">
                     <mat-spinner color="primary"></mat-spinner>
                 </div>
-                <section id="detail" >
-                    <app-bed-detail [bedId]="selectedCama"></app-bed-detail>
-                </section>
+                <app-bed-detail [bedId]="selectedBed"></app-bed-detail>
             </div>
 
         </div>

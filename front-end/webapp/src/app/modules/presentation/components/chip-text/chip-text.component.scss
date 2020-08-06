@@ -6,6 +6,7 @@ mat-chip {
 	&.default {
 		background-color: $success-color;
 		color: white;
+		text-decoration: underline;
 	}	
 	&.error {
 		background-color: $error-color;

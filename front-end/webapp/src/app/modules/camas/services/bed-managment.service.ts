@@ -3,14 +3,12 @@ import { BedSummaryDto } from '@api-rest/api-model';
 import { BedService } from '@api-rest/services/bed.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { BedManagmentFilter } from '../components/filtros-camas/filtros-camas.component';
+import { BedManagmentFilter } from '../components/bed-filters/bed-filters.component';
 import { momentParseDateTime } from '@core/utils/moment.utils';
 import { pushIfNotExists } from '@core/utils/array.utils';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class GestionCamaService {
+@Injectable()
+export class BedManagmentService {
 
 	public sectors: Sector[] = [];
 	public specialities: Speciality[] = [];

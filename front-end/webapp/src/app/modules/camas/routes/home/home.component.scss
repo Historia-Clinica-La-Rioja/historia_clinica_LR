@@ -1,7 +1,7 @@
 @import "../../../../../assets/styles/variables";
 
 .panel-filtro{
-    min-width: 20%;
+    min-width: 30%;
     background-color: #f3efef8e;
     padding: 20px;
 }
@@ -10,8 +10,10 @@
     padding: 0px;
 }
 
-section.beds{
+section.beds {
+    width: 70%;
     padding: 20px;
+    margin-top: 0px;
 }
 
 .mat-raised-button{
@@ -23,8 +25,22 @@ section.beds{
 
 .free{
     background-color: $success-color;
+    text-decoration: underline;
 }
 
 .mat-card .mat-divider {
     margin: 10px 0px 10px 0px;
+}
+
+#bed-managment-card {
+    min-width: 60%;
+    width: 100%;
+}
+
+#speciality-title {
+    margin: 0px;
+}
+
+#speciality-block {
+    margin: 5px 0px 5px 0px;
 }

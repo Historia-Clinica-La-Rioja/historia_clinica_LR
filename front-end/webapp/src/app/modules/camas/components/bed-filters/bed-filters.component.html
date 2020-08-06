@@ -6,39 +6,39 @@
 
     <mat-form-field appearance="outline">
         <mat-label [translate]="'gestion-camas.filters.SECTOR'"></mat-label>
-        <mat-select formControlName="sectors" (selectionChange)="filterChange()" name="sector">
+        <mat-select formControlName="sector" (selectionChange)="filterChange()" name="sector">
             <mat-option *ngFor="let sector of sectors" [value]="sector.sectorId">
                 {{sector.sectorDescription | translate}}
             </mat-option>
         </mat-select>
-        <button id="clear-specialty" type="button" mat-button *ngIf="form.controls.sectors.value" matSuffix color="warn"
-            mat-icon-button (click)="clear(form.controls.sectors); $event.stopPropagation()">
+        <button id="clear-specialty" type="button" mat-button *ngIf="form.controls.sector.value" matSuffix color="warn"
+            mat-icon-button (click)="clear(form.controls.sector); $event.stopPropagation()">
             <mat-icon>close</mat-icon>
         </button>
     </mat-form-field>
 
     <mat-form-field appearance="outline">
         <mat-label [translate]="'gestion-camas.filters.SPECIALITY'"></mat-label>
-        <mat-select formControlName="specialities" (selectionChange)="filterChange()" name="speciality">
+        <mat-select formControlName="speciality" (selectionChange)="filterChange()" name="speciality">
             <mat-option *ngFor="let speciality of specialities" [value]="speciality.specialityId">
                 {{speciality.specialityDescription | translate}}
             </mat-option>
         </mat-select>
-        <button id="clear-specialty" type="button" mat-button *ngIf="form.controls.specialities.value" matSuffix
-            color="warn" mat-icon-button (click)="clear(form.controls.specialities); $event.stopPropagation()">
+        <button id="clear-specialty" type="button" mat-button *ngIf="form.controls.speciality.value" matSuffix
+            color="warn" mat-icon-button (click)="clear(form.controls.speciality); $event.stopPropagation()">
             <mat-icon>close</mat-icon>
         </button>
     </mat-form-field>
 
     <mat-form-field appearance="outline">
         <mat-label [translate]="'gestion-camas.filters.BED_CATEGORY'"></mat-label>
-        <mat-select formControlName="categories" (selectionChange)="filterChange()" name="category">
+        <mat-select formControlName="category" (selectionChange)="filterChange()" name="category">
             <mat-option *ngFor="let category of categories" [value]="category.categoryId">
                 {{category.categoryDescription | translate}}
             </mat-option>
         </mat-select>
-        <button id="clear-specialty" type="button" mat-button *ngIf="form.controls.categories.value" matSuffix color="warn"
-            mat-icon-button (click)="clear(form.controls.categories); $event.stopPropagation()">
+        <button id="clear-specialty" type="button" mat-button *ngIf="form.controls.category.value" matSuffix color="warn"
+            mat-icon-button (click)="clear(form.controls.category); $event.stopPropagation()">
             <mat-icon>close</mat-icon>
         </button>
     </mat-form-field>

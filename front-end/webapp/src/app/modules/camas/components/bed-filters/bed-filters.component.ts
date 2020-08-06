@@ -1,49 +1,49 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
-import { GestionCamaService, Sector, Speciality, Category } from '../../services/gestion-cama.service';
+import { BedManagmentService, Sector, Speciality, Category } from '../../services/bed-managment.service';
 import { momentFormat, DateFormat } from '@core/utils/moment.utils';
 
 @Component({
-  selector: 'app-filtros-camas',
-  templateUrl: './filtros-camas.component.html',
-  styleUrls: ['./filtros-camas.component.scss']
+  selector: 'app-bed-filters',
+  templateUrl: './bed-filters.component.html',
+  styleUrls: ['./bed-filters.component.scss']
 })
-export class FiltrosCamasComponent implements OnInit {
+export class BedFiltersComponent implements OnInit {
 
-	public form: FormGroup;
+  public form: FormGroup;
 	public sectors: Sector[] = [];
 	public specialities: Speciality[] = [];
 	public categories: Category[] = [];
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
-		private readonly gestionCamaService: GestionCamaService
-  	) { }
+		private readonly bedManagmentService: BedManagmentService
+  	) {	}
 
   	ngOnInit(): void {
 		this.form = this.formBuilder.group({
-			sectors: [''],
-			specialities: [''],
-			categories: [''],
-			probableDischargeDate: [''],
+			sector: [null],
+			speciality: [null],
+			category: [null],
+			probableDischargeDate: [null],
 			filled: [true]
 		});
 
-		const filterOptions = this.gestionCamaService.getFilterOptions();
+		const filterOptions = this.bedManagmentService.getFilterOptions();
 		this.sectors = filterOptions.sectors;
 		this.specialities = filterOptions.specialities;
 		this.categories = filterOptions.categories;
   	}
 
 	public filterChange() {
-		this.gestionCamaService.sendBedManagmentFilter(this.newBedManagmentFilter());
+		this.bedManagmentService.sendBedManagmentFilter(this.newBedManagmentFilter());
 	}
 
 	private newBedManagmentFilter() {
 		return {
-			sector: this.form.value.sectors ? this.form.value.sectors : null,
-			speciality:  this.form.value.specialities ? this.form.value.specialities : null,
-			category:  this.form.value.categories ? this.form.value.categories : null,
+			sector: this.form.value.sector,
+			speciality: this.form.value.speciality,
+			category: this.form.value.category,
 			probableDischargeDate: this.form.value.probableDischargeDate ? momentFormat(this.form.value.probableDischargeDate, DateFormat.API_DATE) : null,
 			filled: this.form.value.filled
 		};

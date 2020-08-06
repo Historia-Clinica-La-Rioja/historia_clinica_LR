@@ -3,15 +3,16 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CamasRoutingModule } from './camas-routing.module';
 import { HomeComponent } from './routes/home/home.component';
 import { CoreModule } from '@core/core.module';
-import { BedDetailComponent } from './components/cama-detail/bed-detail.component';
-import { FiltrosCamasComponent } from './components/filtros-camas/filtros-camas.component';
+import { BedDetailComponent } from './components/bed-detail/bed-detail.component';
 import { PresentationModule } from '../presentation/presentation.module';
+import { BedManagmentService } from './services/bed-managment.service';
+import { BedFiltersComponent } from './components/bed-filters/bed-filters.component';
 
 @NgModule({
 	declarations: [
 		HomeComponent,
 		BedDetailComponent,
-		FiltrosCamasComponent,
+		BedFiltersComponent,
 	],
 	imports: [
 		CoreModule,
@@ -19,7 +20,8 @@ import { PresentationModule } from '../presentation/presentation.module';
 		CamasRoutingModule,
 		ReactiveFormsModule,
 		PresentationModule
-	]
+	],
+	providers: [ BedManagmentService ]
 })
 export class CamasModule {
 }
