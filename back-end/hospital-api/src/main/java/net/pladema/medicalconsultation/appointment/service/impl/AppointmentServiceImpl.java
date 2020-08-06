@@ -12,6 +12,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
@@ -31,7 +32,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         LOG.debug("Input parameters -> diaryIds {}", diaryIds);
         Collection<AppointmentBo> result = new ArrayList<>();
         if (!diaryIds.isEmpty())
-            appointmentRepository.getAppointmentsByDiaries(diaryIds).stream().map(AppointmentBo::new);
+            result = appointmentRepository.getAppointmentsByDiaries(diaryIds).stream().map(AppointmentBo::new).collect(Collectors.toList());
         LOG.debug(OUTPUT, result);
         return result;
     }
