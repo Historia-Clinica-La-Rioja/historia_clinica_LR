@@ -155,7 +155,7 @@ export const MOCKS_TURNOS = [
 			{
 				name: 'Appointments.get(appointmentId: number): AppointmentDto',
 				roles: 'Todo ADMINISTRATIVO sobre la institución, ESPECIALISTA_MEDICO y PROFESIONAL_DE_SALUD',
-				path: '/api/patient/{patientId}/appointment-data/{appointmentId}',
+				path: '/api/institutions/{institutionId}/medicalConsultations/appointments/{appointmentId}',
 				method: 'GET',
 				fetch: {
 					date: '2020-07-13',
@@ -177,7 +177,10 @@ export const MOCKS_TURNOS = [
 			},
 			{
 				name: 'Appointments.changeState(stateId: number): void',
-				comments: 'Pendiente'
+				roles: 'Todo ADMINISTRATIVO sobre la institución, ESPECIALISTA_MEDICO y PROFESIONAL_DE_SALUD',
+				path: '/api/institutions/{institutionId}/medicalConsultations/appointments/{appointmentId}/change-state?stateId=3',
+				method: 'PUT',
+				comments: 'stateId via QueryParams'
 			}
 		]
 	},
