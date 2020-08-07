@@ -1,3 +1,22 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v0_6 
 
+    - changeSet:
+        id: update data healthcare_professional_specialty
+        author: etrapani
+        changes:
+        - addColumn:
+            tableName: healthcare_professional_specialty
+            columns:
+            - column:
+                name: clinical_specialty_id
+                type: int
+        - addForeignKeyConstraint:
+            baseColumnNames: clinical_specialty_id
+            baseTableName: healthcare_professional_specialty
+            constraintName: FK_healthcare_professional_specialty_clinical_specialty_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: clinical_specialty
+            validate: true
