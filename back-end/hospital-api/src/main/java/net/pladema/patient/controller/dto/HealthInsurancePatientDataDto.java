@@ -11,7 +11,7 @@ import net.pladema.staff.controller.dto.BasicPersonalDataDto;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class AppointmentPatientDto {
+public class HealthInsurancePatientDataDto {
 
     private Integer id;
 

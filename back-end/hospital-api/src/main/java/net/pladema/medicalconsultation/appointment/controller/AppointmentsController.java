@@ -8,7 +8,7 @@ import net.pladema.medicalconsultation.appointment.controller.mapper.Appointment
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.CreateAppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
-import net.pladema.patient.controller.dto.AppointmentPatientDto;
+import net.pladema.patient.controller.dto.HealthInsurancePatientDataDto;
 import net.pladema.patient.controller.service.PatientExternalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,8 +90,8 @@ public class AppointmentsController {
 
     private AppointmentListDto mapData(AppointmentBo appointmentBo) {
         LOG.debug("Input parameters -> appointmentBo {}", appointmentBo);
-        AppointmentPatientDto appointmentPatientDto = patientExternalService.getAppointmentPatientDto(appointmentBo.getPatientId());
-        AppointmentListDto result = appointmentMapper.toAppointmentListDto(appointmentBo, appointmentPatientDto);
+        HealthInsurancePatientDataDto healthInsurancePatientDataDto = patientExternalService.getHealthInsurancePatientData(appointmentBo.getPatientId());
+        AppointmentListDto result = appointmentMapper.toAppointmentListDto(appointmentBo, healthInsurancePatientDataDto);
         LOG.debug(OUTPUT, result);
         return result;
     }

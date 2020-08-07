@@ -116,13 +116,6 @@ export interface AppointmentListDto {
     patient: AppointmentBasicPatientDto;
 }
 
-export interface AppointmentPatientDto {
-    id: number;
-    medicalCoverageAffiliateNumber: string;
-    medicalCoverageName: string;
-    person: BasicPersonalDataDto;
-}
-
 export interface BMPatientDto extends APatientDto {
     id: number;
 }
@@ -454,6 +447,13 @@ export interface HealthHistoryConditionDto extends HealthConditionDto {
 export interface HealthInsuranceDto {
     acronym: string;
     rnos: number;
+}
+
+export interface HealthInsurancePatientDataDto {
+    id: number;
+    medicalCoverageAffiliateNumber: string;
+    medicalCoverageName: string;
+    person: BasicPersonalDataDto;
 }
 
 export interface HealthcareProfessionalDto {

@@ -1,6 +1,6 @@
 package net.pladema.patient.controller.service;
 
-import net.pladema.patient.controller.dto.AppointmentPatientDto;
+import net.pladema.patient.controller.dto.HealthInsurancePatientDataDto;
 import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.service.PatientService;
@@ -41,12 +41,12 @@ public class PatientExternalServiceImpl implements PatientExternalService {
     }
 
     @Override
-    public AppointmentPatientDto getAppointmentPatientDto(Integer patientId) {
+    public HealthInsurancePatientDataDto getHealthInsurancePatientData(Integer patientId) {
         LOG.debug("Input parameters -> patientId {}", patientId);
         Patient patient = patientService.getPatient(patientId)
                 .orElseThrow(() -> new EntityNotFoundException("patient.invalid"));
         BasicPersonalDataDto personData = personExternalService.getBasicPersonalDataDto(patient.getPersonId());
-        AppointmentPatientDto result = new AppointmentPatientDto(patient.getId(), personData,
+        HealthInsurancePatientDataDto result = new HealthInsurancePatientDataDto(patient.getId(), personData,
                 patient.getMedicalCoverageName(),
                 patient.getMedicalCoverageAffiliateNumber());
         LOG.debug(OUTPUT, result);

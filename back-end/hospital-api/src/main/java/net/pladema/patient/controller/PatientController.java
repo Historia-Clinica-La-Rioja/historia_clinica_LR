@@ -7,7 +7,7 @@ import net.pladema.address.controller.service.AddressExternalService;
 import net.pladema.patient.controller.constraints.FilterValid;
 import net.pladema.patient.controller.dto.AAdditionalDoctorDto;
 import net.pladema.patient.controller.dto.APatientDto;
-import net.pladema.patient.controller.dto.AppointmentPatientDto;
+import net.pladema.patient.controller.dto.HealthInsurancePatientDataDto;
 import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.dto.CompletePatientDto;
 import net.pladema.patient.controller.dto.PatientSearchDto;
@@ -208,12 +208,12 @@ public class PatientController {
 	}
 
 	@GetMapping("/{patientId}/appointment-patient-data")
-	public ResponseEntity<AppointmentPatientDto> getAppointmentPatientData(@PathVariable(name = "patientId") Integer patientId) {
+	public ResponseEntity<HealthInsurancePatientDataDto> getAppointmentPatientData(@PathVariable(name = "patientId") Integer patientId) {
 		LOG.debug("Input parameters -> patientId {}", patientId);
 		Patient patient = patientService.getPatient(patientId)
 				.orElseThrow(() -> new EntityNotFoundException("patient.invalid"));
 		BasicPersonalDataDto personData = personExternalService.getBasicPersonalDataDto(patient.getPersonId());
-		AppointmentPatientDto result = new AppointmentPatientDto(patient.getId(), personData,
+		HealthInsurancePatientDataDto result = new HealthInsurancePatientDataDto(patient.getId(), personData,
 				patient.getMedicalCoverageName(),
 				patient.getMedicalCoverageAffiliateNumber());
 		LOG.debug(OUTPUT, result);
