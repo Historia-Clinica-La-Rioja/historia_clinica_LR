@@ -29,9 +29,6 @@ public class HealthcareProfessionalSpecialty implements Serializable {
 	@EqualsAndHashCode.Include
 	private Integer id;
 	
-	@Column(name = "description", nullable = false, length = 255	)
-	private String description;
-	
 	@Column(name = "healthcare_professional_id", nullable = false)
 	private Integer healthcareProfessionalId;
 	
