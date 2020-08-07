@@ -19,7 +19,7 @@ const routes: Routes = [
 			},
 		],
 		canActivate: [RoleGuard],
-		data: { allowedRoles: [ERole.ADMINISTRATIVO] }
+		data: { allowedRoles: [ERole.ADMINISTRATIVO, ERole.ENFERMERO] }
 	}
 ];
 

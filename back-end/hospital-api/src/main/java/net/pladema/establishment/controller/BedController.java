@@ -51,7 +51,7 @@ public class BedController {
 	}
 	
 	@GetMapping("/{bedId}/info")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO')")
 	public ResponseEntity<BedInfoDto> getBedInfo(@PathVariable(name = "institutionId") Integer institutionId, 
 			@PathVariable(name = "bedId") Integer bedId) {
 		Optional<BedInfoVo> bed = bedService.getBedInfo(bedId);
@@ -61,7 +61,7 @@ public class BedController {
 	}
 
 	@GetMapping("/summary-list")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO')")
 	public ResponseEntity<List<BedSummaryDto>> getBedSummaryList(@PathVariable(name = "institutionId") Integer institutionId){ 
 		List<BedSummaryVo> beds = bedService.getBedSummary(institutionId);
 		LOG.debug("Get Bed summary  => {}", beds);
