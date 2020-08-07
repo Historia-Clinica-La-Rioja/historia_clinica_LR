@@ -13,4 +13,5 @@ public interface AppointmentService {
 
     boolean existAppointment(Integer diaryId, Integer openingHoursId, LocalDate date, LocalTime hour);
 
+    boolean updateState(Integer appointmentId, short appointmentStateId, Integer userId);
 }

@@ -61,7 +61,7 @@ public class DiaryOpeningHoursController {
             @PathVariable(name = "doctorsOfficeId") Integer doctorsOfficeId,
             @RequestParam(name = "startDate") String startDateStr,
             @RequestParam(name = "endDate") String endDateStr,
-            @RequestParam(name = "diaryId", required = false) @NumberFormat String diaryId) {
+            @RequestParam(name = "diaryId", required = false) String diaryId) {
         LOG.debug("Input parameters -> doctorsOfficeId {}, startDateStr {}, endDateStr {}, diaryId {}",
                 doctorsOfficeId, startDateStr, endDateStr, diaryId);
 

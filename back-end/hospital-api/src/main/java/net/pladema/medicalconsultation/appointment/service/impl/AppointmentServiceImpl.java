@@ -45,5 +45,13 @@ public class AppointmentServiceImpl implements AppointmentService {
         return result;
     }
 
+    @Override
+    public boolean updateState(Integer appointmentId, short appointmentStateId, Integer userId) {
+        LOG.debug("Input parameters -> appointmentId {}, appointmentStateId {}, userId {}", appointmentId, appointmentStateId, userId);
+        appointmentRepository.updateState(appointmentId, appointmentStateId, userId);
+        LOG.debug(OUTPUT, Boolean.TRUE);
+        return Boolean.TRUE;
+    }
+
 
 }

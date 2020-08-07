@@ -2,6 +2,7 @@ package net.pladema.medicalconsultation.appointment.controller;
 
 import io.swagger.annotations.Api;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointment;
+import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentState;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentListDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.CreateAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.mapper.AppointmentMapper;
@@ -10,6 +11,7 @@ import net.pladema.medicalconsultation.appointment.service.CreateAppointmentServ
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.patient.controller.dto.HealthInsurancePatientDataDto;
 import net.pladema.patient.controller.service.PatientExternalService;
+import net.pladema.sgx.security.utils.UserInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -94,5 +97,19 @@ public class AppointmentsController {
         AppointmentListDto result = appointmentMapper.toAppointmentListDto(appointmentBo, healthInsurancePatientDataDto);
         LOG.debug(OUTPUT, result);
         return result;
+    }
+
+
+    @Transactional
+    @PutMapping(value = "/{appointmentId}/change-state")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+    public ResponseEntity<Boolean> changeState(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "appointmentId") Integer appointmentId,
+            @ValidAppointmentState @RequestParam(name = "appointmentStateId") String appointmentStateId) {
+        LOG.debug("Input parameters -> institutionId {}, appointmentId {}, appointmentStateId {}", institutionId, appointmentId, appointmentStateId);
+        boolean result = appointmentService.updateState(appointmentId, Short.parseShort(appointmentStateId), UserInfo.getCurrentAuditor());
+        LOG.debug(OUTPUT, result);
+        return ResponseEntity.ok().body(result);
     }
 }

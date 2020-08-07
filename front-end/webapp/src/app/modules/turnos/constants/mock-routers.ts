@@ -176,9 +176,9 @@ export const MOCKS_TURNOS = [
 				},
 			},
 			{
-				name: 'Appointments.changeState(stateId: number): void',
+				name: 'Appointments.changeState(appointmentStateId: number): void',
 				roles: 'Todo ADMINISTRATIVO sobre la institución, ESPECIALISTA_MEDICO y PROFESIONAL_DE_SALUD',
-				path: '/api/institutions/{institutionId}/medicalConsultations/appointments/{appointmentId}/change-state?stateId=3',
+				path: '/api/institutions/{institutionId}/medicalConsultations/appointments/{appointmentId}/change-state?appointmentStateId=3',
 				method: 'PUT',
 				comments: 'stateId via QueryParams'
 			}
