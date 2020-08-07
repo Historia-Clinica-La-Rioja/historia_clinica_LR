@@ -28,3 +28,25 @@ databaseChangeLog:
         -  dropColumn:  
             columnName:  description
             tableName:  healthcare_professional_specialty  
+
+    - changeSet: 
+        id: healthcare_professional_specialty-update-nulls
+        comment: Set default null values to clinical_specialty_id
+        author: etrapani
+        context: "!schema-only"
+        changes: 
+            - sql: 
+                sql: |- 
+                    UPDATE healthcare_professional_specialty
+                    SET clinical_specialty_id = 91 
+                    WHERE clinical_specialty_id IS NULL;  
+
+    - changeSet:
+        id: addNotNullConstraint-healthcare_professional_specialty_clinical_specialty_id
+        author: etrapani
+        changes:
+        -  addNotNullConstraint:  
+            columnDataType:  int  
+            columnName:  clinical_specialty_id
+            tableName:  healthcare_professional_specialty  
+            validate:  true

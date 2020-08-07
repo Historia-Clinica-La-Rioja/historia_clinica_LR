@@ -35,7 +35,7 @@ public class HealthcareProfessionalSpecialty implements Serializable {
 	@Column(name = "professional_specialty_id", nullable = false)
 	private Integer professionalSpecialtyId;
 
-	@Column(name = "clinical_specialty_id")
+	@Column(name = "clinical_specialty_id", nullable = false)
 	private Integer clinicalSpecialtyId;
 	
 }
