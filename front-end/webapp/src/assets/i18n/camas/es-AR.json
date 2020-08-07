@@ -11,6 +11,7 @@
             "NO_BED": "Seleccione una cama para ver el detalle",
             "SPECIALTY": "Especialidad",
             "SECTOR": "Sector",
+            "CATEGORY": "Categoría",
             "ROOM": "Habitación:",
             "PATIENT": "Paciente:",
             "PROBABLE_DISCHARGE_DATE": "Fecha de alta probable: ",
