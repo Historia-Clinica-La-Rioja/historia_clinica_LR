@@ -4,7 +4,7 @@ import { BedService } from '@api-rest/services/bed.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { BedManagmentFilter } from '../components/bed-filters/bed-filters.component';
-import { momentParseDateTime } from '@core/utils/moment.utils';
+import { momentParseDateTime, momentParseDate } from '@core/utils/moment.utils';
 import { pushIfNotExists } from '@core/utils/array.utils';
 
 @Injectable()
@@ -42,7 +42,7 @@ export class BedManagmentService {
 		const result = bedManagmentCopy.filter(bedManagment => ((newFilter.sector ? bedManagment.sector.id === newFilter.sector : true)
 																		&& (newFilter.speciality ? bedManagment.clinicalSpecialty.id === newFilter.speciality : true)
 																		&& (newFilter.category ? bedManagment.bedCategory.id === newFilter.category : true)
-																		&& (newFilter.probableDischargeDate ? bedManagment.probableDischargeDate ? momentParseDateTime(bedManagment.probableDischargeDate).toDate() < momentParseDateTime(newFilter.probableDischargeDate).toDate() : false : true)
+																		&& (newFilter.probableDischargeDate ? bedManagment.probableDischargeDate ? momentParseDateTime(bedManagment.probableDischargeDate).toDate() <= momentParseDate(newFilter.probableDischargeDate).toDate() : false : true)
 																		&& (newFilter.filled ? true : bedManagment.bed.free)));
 		this.subject.next(result);
 	}
