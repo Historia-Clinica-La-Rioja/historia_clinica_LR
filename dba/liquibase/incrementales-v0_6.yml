@@ -20,3 +20,11 @@ databaseChangeLog:
             referencedColumnNames: id
             referencedTableName: clinical_specialty
             validate: true
+
+    - changeSet:
+        id: drop column healthcare_professional_specialty
+        author: etrapani
+        changes:
+        -  dropColumn:  
+            columnName:  description
+            tableName:  healthcare_professional_specialty  
