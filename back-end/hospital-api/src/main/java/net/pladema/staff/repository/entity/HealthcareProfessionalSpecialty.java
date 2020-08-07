@@ -1,6 +1,9 @@
 package net.pladema.staff.repository.entity;
 
-import java.io.Serializable;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,11 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "healthcare_professional_specialty")
@@ -38,5 +37,8 @@ public class HealthcareProfessionalSpecialty implements Serializable {
 	
 	@Column(name = "professional_specialty_id", nullable = false)
 	private Integer professionalSpecialtyId;
+
+	@Column(name = "clinical_specialty_id")
+	private Integer clinicalSpecialtyId;
 	
 }
