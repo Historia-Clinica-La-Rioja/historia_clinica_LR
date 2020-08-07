@@ -152,18 +152,19 @@ export default {
                 personId: 'Persona',
                 licenseNumber: 'Nro. Licencia',
                 isMedicalDoctor: 'Es médico?',
-                healthcareprofessionalspecialties: 'Profesional | Profesión'
+                healthcareprofessionalspecialties: 'Profesional | Especialidad'
             }
         }, 
         healthcareprofessionalspecialties: {
-            name: 'Profesional | Profesión',
+            name: 'Profesión | Especialidad',
             fields: {
                 healthcareProfessionalId: 'Profesional',
                 professionalSpecialtyId: 'Profesión',
+                clinicalSpecialtyId: 'Especialidad',
                 personId: 'Persona',
                 description: 'Descripción',
             },
-            createRelated: 'Crear Profesional | Profesión',
+            createRelated: 'Crear Profesión | Especialidad',
         }, 
         users: {
             name: 'Usuario |||| Usuarios',

@@ -13,7 +13,6 @@ import renderPerson from '../components/renderperson';
 const HealthcareProfessionalSpecialtyList = props => (
     <List {...props} hasCreate={false}>
         <Datagrid rowClick="show">
-            <TextField source="description"/>
             <ReferenceField source="healthcareProfessionalId" reference="healthcareprofessionals" link={false}>
                 <SubReference source="personId" reference="people" link={false}>
                     <FunctionField render={renderPerson}/>
@@ -21,6 +20,9 @@ const HealthcareProfessionalSpecialtyList = props => (
             </ReferenceField>
             <ReferenceField source="professionalSpecialtyId" reference="professionalspecialties">
                 <TextField source="description" />
+            </ReferenceField>
+            <ReferenceField source="clinicalSpecialtyId" reference="clinicalspecialties">
+                <TextField source="name" />
             </ReferenceField>
             <DeleteButton />
         </Datagrid>

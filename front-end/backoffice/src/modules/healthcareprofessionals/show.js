@@ -35,10 +35,14 @@ const HealthcareProfessionalShow = props => (
                 addLabel={false}
                 reference="healthcareprofessionalspecialties"
                 target="healthcareProfessionalId"
-                sort={{ field: 'description', order: 'DESC' }}
             >
                 <Datagrid rowClick="show">
-                    <TextField source="description" />
+                    <ReferenceField source="professionalSpecialtyId" reference="professionalspecialties" >
+                        <TextField source="description" />
+                    </ReferenceField>
+                    <ReferenceField source="clinicalSpecialtyId" reference="clinicalspecialties">
+                        <TextField source="name" />
+                    </ReferenceField>
                     <DeleteButton />
                 </Datagrid>
             </ReferenceManyField>

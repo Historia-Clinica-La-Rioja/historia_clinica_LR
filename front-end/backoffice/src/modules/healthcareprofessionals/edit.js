@@ -33,7 +33,6 @@ const HealthcareProfessionalEdit = props => (
                 addLabel={false}
                 reference="healthcareprofessionalspecialties"
                 target="healthcareProfessionalId"
-                sort={{ field: 'description', order: 'DESC' }}
             >
                 <Datagrid rowClick="show">
                     <TextField source="description" />

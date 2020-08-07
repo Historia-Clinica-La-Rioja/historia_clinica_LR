@@ -12,7 +12,6 @@ import renderPerson from '../components/renderperson';
 const HealthcareProfessionalSpecialtyShow = props => (
     <Show {...props}>
         <SimpleShowLayout>
-            <TextField source="description"/>
             <ReferenceField source="healthcareProfessionalId" reference="healthcareprofessionals" link={false} label="Persona">
                 <SubReference source="personId" reference="people" link={false}>
                     <FunctionField render={renderPerson} />
@@ -24,6 +23,9 @@ const HealthcareProfessionalSpecialtyShow = props => (
             </ReferenceField>
             <ReferenceField source="professionalSpecialtyId" reference="professionalspecialties" >
                 <TextField source="description" />
+            </ReferenceField>
+            <ReferenceField source="clinicalSpecialtyId" reference="clinicalspecialties">
+                <TextField source="name" />
             </ReferenceField>
         </SimpleShowLayout>
     </Show>
