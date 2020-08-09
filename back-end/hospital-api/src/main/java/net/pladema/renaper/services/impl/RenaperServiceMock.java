@@ -2,7 +2,7 @@ package net.pladema.renaper.services.impl;
 
 import net.pladema.renaper.services.RenaperService;
 import net.pladema.renaper.services.domain.PersonDataResponse;
-import net.pladema.renaper.services.domain.PersonMedicalCoverageResponse;
+import net.pladema.renaper.services.domain.PersonMedicalCoverageBo;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +18,7 @@ import java.util.Optional;
 public class RenaperServiceMock implements RenaperService{
 
 	@Override
-	public List<PersonMedicalCoverageResponse> getPersonMedicalCoverage(String nroDocumento, Short idSexo) {
+	public List<PersonMedicalCoverageBo> getPersonMedicalCoverage(String nroDocumento, Short idSexo) {
 		return Collections.emptyList();
 	}
 

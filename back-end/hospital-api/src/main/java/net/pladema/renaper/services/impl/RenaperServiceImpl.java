@@ -12,7 +12,7 @@ import net.pladema.renaper.configuration.RenaperRestTemplateAuth;
 import net.pladema.renaper.configuration.RenaperWSConfig;
 import net.pladema.renaper.services.RenaperService;
 import net.pladema.renaper.services.domain.PersonDataResponse;
-import net.pladema.renaper.services.domain.PersonMedicalCoverageResponse;
+import net.pladema.renaper.services.domain.PersonMedicalCoverageBo;
 import net.pladema.sgx.restclient.services.RestClient;
 
 @Service
@@ -30,9 +30,9 @@ public class RenaperServiceImpl extends RestClient implements RenaperService {
 	}
 
 	@Override
-	public List<PersonMedicalCoverageResponse> getPersonMedicalCoverage(String nroDocumento, Short idSexo) {
+	public List<PersonMedicalCoverageBo> getPersonMedicalCoverage(String nroDocumento, Short idSexo) {
 		String urlWithParams = renaperWSConfig.getUrlCobertura() + "?nroDocumento=" + nroDocumento + "&idSexo=" + idSexo; 
-		ResponseEntity<PersonMedicalCoverageResponse[]> response = exchangeGet(urlWithParams, PersonMedicalCoverageResponse[].class);
+		ResponseEntity<PersonMedicalCoverageBo[]> response = exchangeGet(urlWithParams, PersonMedicalCoverageBo[].class);
 		return Arrays.asList(response.getBody());
 	}
 

@@ -1,8 +1,12 @@
 package net.pladema.renaper.controller;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ForkJoinPool;
 
+import net.pladema.renaper.controller.dto.MedicalCoverageDto;
+import net.pladema.renaper.services.domain.PersonMedicalCoverageBo;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +30,8 @@ import net.pladema.renaper.services.domain.PersonDataResponse;
 public class RenaperController {
 
 	private static final String SEARCH_PERSON = "/searchPerson";
+	private static final String SEARCH_HEALTH_INSURANCE = "/search-health-insurance";
+
 
 	private static final Logger LOG = LoggerFactory.getLogger(RenaperController.class);
 
@@ -72,6 +78,24 @@ public class RenaperController {
 			deferredResult
 					.setErrorResult(ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(e.toString()));
 		});
+	}
+
+	@GetMapping(value = SEARCH_HEALTH_INSURANCE)
+	public DeferredResult<ResponseEntity<Collection<MedicalCoverageDto>>> getHealthInsurance(
+			@RequestParam(value = "identificationNumber") String identificationNumber,
+			@RequestParam(value = "genderId") Short genderId) {
+		LOG.debug("Input data -> identificationNumber: {} , genderId: {} ", identificationNumber, genderId);
+		DeferredResult<ResponseEntity<Collection<MedicalCoverageDto>>> deferredResult = new DeferredResult<>(requestTimeOut);
+		setCallbacks(deferredResult,SEARCH_HEALTH_INSURANCE);
+		ForkJoinPool.commonPool().submit(() -> {
+			List<PersonMedicalCoverageBo> medicalCoverageData = renaperService.getPersonMedicalCoverage(identificationNumber, genderId);
+			if (medicalCoverageData.isEmpty()) {
+				deferredResult.setResult(ResponseEntity.noContent().build());
+			}
+			Collection<MedicalCoverageDto> result = renaperMapper.fromPersonMedicalCoverageResponseList(medicalCoverageData);
+			deferredResult.setResult(ResponseEntity.ok().body(result));
+		});
+		return deferredResult;
 	}
 
 }

@@ -618,6 +618,13 @@ export interface MasterDataInterface<T> {
 export interface MasterdataDto<T> extends MasterDataInterface<T>, Serializable {
 }
 
+export interface MedicalCoverageDto {
+    acronym: string;
+    name: string;
+    rnos: string;
+    service: string;
+}
+
 export interface MedicationDto extends ClinicalTermDto {
     note: string;
     suspended: boolean;
