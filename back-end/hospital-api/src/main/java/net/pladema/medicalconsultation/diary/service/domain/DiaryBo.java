@@ -18,6 +18,8 @@ public class DiaryBo {
 
     protected Integer doctorsOfficeId;
 
+    protected String doctorsOfficeDescription;
+
     protected LocalDate startDate;
 
     protected LocalDate endDate;

@@ -1,18 +1,17 @@
 package net.pladema.medicalconsultation.diary.repository;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-
+import net.pladema.medicalconsultation.diary.repository.domain.CompleteDiaryListVo;
+import net.pladema.medicalconsultation.diary.repository.domain.DiaryListVo;
+import net.pladema.medicalconsultation.diary.repository.entity.Diary;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.pladema.medicalconsultation.diary.repository.domain.CompleteDiaryListVo;
-import net.pladema.medicalconsultation.diary.repository.domain.DiaryListVo;
-import net.pladema.medicalconsultation.diary.repository.entity.Diary;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface DiaryRepository extends JpaRepository<Diary, Integer> {
@@ -33,16 +32,17 @@ public interface DiaryRepository extends JpaRepository<Diary, Integer> {
 
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.DiaryListVo( " +
-            "d.id, d.doctorsOfficeId, d.startDate, d.endDate, d.appointmentDuration, d.professionalAsignShift, " +
+            "d.id, do.id, do.description, d.startDate, d.endDate, d.appointmentDuration, d.professionalAsignShift, " +
             "d.includeHoliday)" +
             "FROM Diary d " +
+            "JOIN DoctorsOffice AS do ON (do.id = d.doctorsOfficeId) " +
             "WHERE d.healthcareProfessionalId = :hcpId " +
             "AND d.active = true")
     List<DiaryListVo> getActiveDiariesFromProfessional(@Param("hcpId") Integer healthcareProfessionalId);
     
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.CompleteDiaryListVo( " +
-            "d.id, d.doctorsOfficeId, d.startDate, d.endDate, d.appointmentDuration, d.professionalAsignShift, " +
+            "d.id, d.doctorsOfficeId, do.description, d.startDate, d.endDate, d.appointmentDuration, d.professionalAsignShift, " +
             "d.includeHoliday, css.sectorId, css.clinicalSpecialtyId, d.healthcareProfessionalId) " +
             "FROM Diary d " +
             "JOIN DoctorsOffice do ON do.id = d.doctorsOfficeId " +

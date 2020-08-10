@@ -11,7 +11,7 @@ public class DiaryListDto {
 
     private Integer id;
 
-    private Integer doctorsOfficeId;
+    private String doctorsOfficeDescription;
 
     private String startDate;
 

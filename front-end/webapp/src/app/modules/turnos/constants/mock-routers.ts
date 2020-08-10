@@ -50,7 +50,7 @@ export const MOCKS_TURNOS = [
 					id: 99,
 					startDate: '2020-07-01',
 					endDate: '2020-08-31',
-					doctorsOfficeId: 5,
+					doctorsOfficeDescription: "Consultorio 1",
 					appointmentDuration: 5,
 					professionalAssignShift: true,
 					includeHoliday: false
@@ -59,7 +59,7 @@ export const MOCKS_TURNOS = [
 					id: 100,
 					startDate: '2020-07-01',
 					endDate: '2020-08-31',
-					doctorsOfficeId: 5,
+					doctorsOfficeDescription: "Consultorio 1",
 					appointmentDuration: 8,
 					professionalAssignShift: false,
 					includeHoliday: true

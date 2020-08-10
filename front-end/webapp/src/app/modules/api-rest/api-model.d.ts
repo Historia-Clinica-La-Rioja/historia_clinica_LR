@@ -271,7 +271,7 @@ export interface DiaryDto extends DiaryADto {
 
 export interface DiaryListDto {
     appointmentDuration: number;
-    doctorsOfficeId: number;
+    doctorsOfficeDescription: string;
     endDate: string;
     id: number;
     includeHoliday: boolean;

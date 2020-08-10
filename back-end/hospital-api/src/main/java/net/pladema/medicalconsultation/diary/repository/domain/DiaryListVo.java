@@ -1,12 +1,12 @@
 package net.pladema.medicalconsultation.diary.repository.domain;
 
-import java.time.LocalDate;
-
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.time.LocalDate;
 
 
 @ToString
@@ -19,6 +19,8 @@ public class DiaryListVo {
     private final Integer id;
 
     private final Integer doctorsOfficeId;
+
+    private final String doctorsOfficeDescription;
 
     private final LocalDate startDate;
 

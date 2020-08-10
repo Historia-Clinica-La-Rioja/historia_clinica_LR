@@ -1,8 +1,10 @@
 package net.pladema.medicalconsultation.diary.mocks;
 
 import net.pladema.medicalconsultation.diary.repository.entity.Diary;
+import net.pladema.medicalconsultation.doctorsoffice.repository.entity.DoctorsOffice;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class DiaryTestMocks {
 
@@ -21,6 +23,17 @@ public class DiaryTestMocks {
         result.setProfessionalAsignShift(professionalAssignShift);
         result.setIncludeHoliday(includeHoliday);
         result.setActive(active);
+        return result;
+    }
+
+    public static DoctorsOffice createDoctorsOffice(Integer institutionId, Integer clinicalSpecialtySectorId,
+                                                    String description, LocalTime openingTime, LocalTime closingTime) {
+        DoctorsOffice result = new DoctorsOffice();
+        result.setInstitutionId(institutionId);
+        result.setClinicalSpecialtySectorId(clinicalSpecialtySectorId);
+        result.setDescription(description);
+        result.setOpeningTime(openingTime);
+        result.setClosingTime(closingTime);
         return result;
     }
 
