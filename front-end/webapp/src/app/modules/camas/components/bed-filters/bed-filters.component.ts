@@ -35,11 +35,11 @@ export class BedFiltersComponent implements OnInit {
 		this.categories = filterOptions.categories;
   	}
 
-	public filterChange() {
-		this.bedManagmentService.sendBedManagmentFilter(this.newBedManagmentFilter());
+	public sendAllFiltersOnFilterChange() {
+		this.bedManagmentService.sendBedManagmentFilter(this.getBedManagmentFilter());
 	}
 
-	private newBedManagmentFilter() {
+	private getBedManagmentFilter(): BedManagmentFilter {
 		return {
 			sector: this.form.value.sector,
 			speciality: this.form.value.speciality,
@@ -49,9 +49,9 @@ export class BedFiltersComponent implements OnInit {
 		};
 	}
 
-	clear(control: AbstractControl) {
+	clear(control: AbstractControl): void {
 		control.reset();
-		this.filterChange();
+		this.sendAllFiltersOnFilterChange();
 	}
 
 }

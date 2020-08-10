@@ -39,12 +39,32 @@ export class BedManagmentService {
 
 	public sendBedManagmentFilter(newFilter: BedManagmentFilter) {
 		const bedManagmentCopy = [...this.originalBedManagment];
-		const result = bedManagmentCopy.filter(bedManagment => ((newFilter.sector ? bedManagment.sector.id === newFilter.sector : true)
-																		&& (newFilter.speciality ? bedManagment.clinicalSpecialty.id === newFilter.speciality : true)
-																		&& (newFilter.category ? bedManagment.bedCategory.id === newFilter.category : true)
-																		&& (newFilter.probableDischargeDate ? bedManagment.probableDischargeDate ? momentParseDateTime(bedManagment.probableDischargeDate).toDate() <= momentParseDate(newFilter.probableDischargeDate).toDate() : false : true)
-																		&& (newFilter.filled ? true : bedManagment.bed.free)));
+		const result = bedManagmentCopy.filter(bedManagment => (this.filterBySector(newFilter, bedManagment)
+																	&& this.filterBySpeciality(newFilter, bedManagment)
+																	&& this.filterByCategory(newFilter, bedManagment)
+																	&& this.filterByProbableDischargeDate(newFilter, bedManagment)
+																	&& this.filterByFreeBed(newFilter, bedManagment)));
 		this.subject.next(result);
+	}
+
+	private filterBySector(filter: BedManagmentFilter, bed: BedSummaryDto): boolean {
+		return (filter.sector ? bed.sector.id === filter.sector : true);
+	}
+
+	private filterBySpeciality(filter: BedManagmentFilter, bed: BedSummaryDto): boolean {
+		return (filter.speciality ? bed.clinicalSpecialty.id === filter.speciality : true);
+	}
+
+	private filterByCategory(filter: BedManagmentFilter, bed: BedSummaryDto): boolean {
+		return (filter.category ? bed.bedCategory.id === filter.category : true);
+	}
+
+	private filterByProbableDischargeDate(filter: BedManagmentFilter, bed: BedSummaryDto): boolean {
+		return (filter.probableDischargeDate ? bed.probableDischargeDate ? momentParseDateTime(bed.probableDischargeDate).isSameOrBefore(momentParseDate(filter.probableDischargeDate)) : false : true);
+	}
+
+	private filterByFreeBed(filter: BedManagmentFilter, bed: BedSummaryDto): boolean {
+		return (filter.filled ? true : bed.bed.free);
 	}
 
 	public getFilterOptions() {
@@ -55,7 +75,7 @@ export class BedManagmentService {
 		};
 	}
 
-	private filterOptions(bedsSummary: BedSummaryDto[]) {
+	private filterOptions(bedsSummary: BedSummaryDto[]): void {
 		bedsSummary.forEach(bedSummary => {
 
 			this.sectors = pushIfNotExists(this.sectors, {sectorId: bedSummary.sector.id, sectorDescription: bedSummary.sector.description}, this.compareSector);

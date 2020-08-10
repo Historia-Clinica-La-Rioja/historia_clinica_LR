@@ -15,7 +15,9 @@
             "ROOM": "Habitación:",
             "PATIENT": "Paciente:",
             "PROBABLE_DISCHARGE_DATE": "Fecha de alta probable: ",
-            "NO_DISCHARGE_DATE": "Sin información"
+            "NO_DISCHARGE_DATE": "Sin información",
+            "FREE": "Libre",
+            "NOT_FREE": "Ocupada"
         },
         "filters": {
             "FREE_BEDS": "Ver camas ocupadas",

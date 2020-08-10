@@ -26,9 +26,4 @@ export class BedDetailComponent implements OnInit, OnChanges {
 			this.bedService.getBedInfo(this.bedId).subscribe(bedInfo => this.bedInfo = bedInfo);
 		}
 	}
-
-	viewFreeBed() {
-		return this.bedInfo.bed.free ? 'Libre' : 'Ocupada';
-	}
-
 }

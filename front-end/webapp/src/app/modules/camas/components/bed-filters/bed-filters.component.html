@@ -1,12 +1,12 @@
 <form [formGroup]="form" fxLayout="column" fxLayoutGap="10px">
     <div fxLayout="row" fxLayoutAlign="space-between start">
         <mat-label [translate]="'gestion-camas.filters.FREE_BEDS'"></mat-label>
-        <mat-slide-toggle formControlName="filled" (change)="filterChange()"></mat-slide-toggle>
+        <mat-slide-toggle formControlName="filled" (change)="sendAllFiltersOnFilterChange()"></mat-slide-toggle>
     </div>
 
     <mat-form-field appearance="outline">
         <mat-label [translate]="'gestion-camas.filters.SECTOR'"></mat-label>
-        <mat-select formControlName="sector" (selectionChange)="filterChange()" name="sector">
+        <mat-select formControlName="sector" (selectionChange)="sendAllFiltersOnFilterChange()" name="sector">
             <mat-option *ngFor="let sector of sectors" [value]="sector.sectorId">
                 {{sector.sectorDescription | translate}}
             </mat-option>
@@ -19,7 +19,7 @@
 
     <mat-form-field appearance="outline">
         <mat-label [translate]="'gestion-camas.filters.SPECIALITY'"></mat-label>
-        <mat-select formControlName="speciality" (selectionChange)="filterChange()" name="speciality">
+        <mat-select formControlName="speciality" (selectionChange)="sendAllFiltersOnFilterChange()" name="speciality">
             <mat-option *ngFor="let speciality of specialities" [value]="speciality.specialityId">
                 {{speciality.specialityDescription | translate}}
             </mat-option>
@@ -32,7 +32,7 @@
 
     <mat-form-field appearance="outline">
         <mat-label [translate]="'gestion-camas.filters.BED_CATEGORY'"></mat-label>
-        <mat-select formControlName="category" (selectionChange)="filterChange()" name="category">
+        <mat-select formControlName="category" (selectionChange)="sendAllFiltersOnFilterChange()" name="category">
             <mat-option *ngFor="let category of categories" [value]="category.categoryId">
                 {{category.categoryDescription | translate}}
             </mat-option>
@@ -45,7 +45,7 @@
 
     <mat-form-field appearance="outline">
         <mat-label [translate]="'gestion-camas.filters.PROBABLE_DISCHARGE_DATE'"></mat-label>
-        <input matInput id="date" [matDatepicker]="myDatepicker" formControlName="probableDischargeDate" (dateChange)="filterChange()">
+        <input matInput id="date" [matDatepicker]="myDatepicker" formControlName="probableDischargeDate" (dateChange)="sendAllFiltersOnFilterChange()">
         <mat-icon id="clear-probable-discharge-date" *ngIf="form.controls.probableDischargeDate.value" matDatepickerToggleIcon 
             (click)="clear(form.controls.probableDischargeDate); $event.stopPropagation()" color="warn">close</mat-icon>
         <mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>

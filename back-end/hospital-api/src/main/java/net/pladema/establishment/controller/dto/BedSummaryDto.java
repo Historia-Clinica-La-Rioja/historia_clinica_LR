@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.hospitalization.controller.dto.ClinicalSpecialtyDto;
+import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
 
 @Getter
 @Setter
@@ -27,7 +28,7 @@ public class BedSummaryDto implements Serializable {
 	private ClinicalSpecialtyDto clinicalSpecialty;
 
 	@Nullable
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+	@JsonFormat(pattern = JacksonDateFormatConfig.DATE_TIME_FORMAT)
 	private String probableDischargeDate;
 
 }

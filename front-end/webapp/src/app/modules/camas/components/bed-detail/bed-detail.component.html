@@ -13,7 +13,11 @@
         <mat-list content *ngIf="bedInfo">
             <div fxLayout="row" fxLayoutAlign="space-between">
                 <h2 [translate]="'gestion-camas.detail.BED_TITLE'" [translateParams]="{ bedNumber: bedInfo.bed.bedNumber }"></h2>
-                <app-chip-text [error]="!bedInfo.bed.free" [text]="viewFreeBed()"></app-chip-text>
+                <mat-chip-list >
+	                <mat-chip class="default" id="error-text" [selectable]="false" [ngClass]="{'error': !bedInfo.bed.free}">
+                        {{ (bedInfo.bed.free ? 'gestion-camas.detail.FREE' : 'gestion-camas.detail.NOT_FREE') | translate}}
+                    </mat-chip>
+                </mat-chip-list>
             </div>
             <mat-list-item>
                 <div mat-line>

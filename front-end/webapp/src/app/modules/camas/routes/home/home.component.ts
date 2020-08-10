@@ -13,9 +13,9 @@ import { Subscription } from 'rxjs';
 })
 export class HomeComponent implements OnInit, OnDestroy {
 
-	public selectedBed;
+	public selectedBed: number;
 	public bedManagmentList: BedManagment[];
-	public bedsAmount;
+	public bedsAmount: number;
 
 	private managmentBed$: Subscription;
 
