@@ -69,7 +69,6 @@ export class ProblemasNuevaConsultaService {
 		this.snomedConcept = selectedConcept;
 		const pt = selectedConcept ? selectedConcept.pt : '';
 		this.form.controls.snomed.setValue(pt);
-		this.errorSource.next();
 	}
 
 	add(problema: Problema): void {
@@ -85,6 +84,7 @@ export class ProblemasNuevaConsultaService {
 				fechaFin: this.form.value.fechaFin
 			};
 			this.add(nuevoProblema);
+			this.errorSource.next();
 			this.resetForm();
 		}
 	}
