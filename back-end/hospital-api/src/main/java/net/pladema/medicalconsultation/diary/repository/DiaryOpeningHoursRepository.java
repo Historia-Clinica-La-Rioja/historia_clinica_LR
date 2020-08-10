@@ -51,5 +51,5 @@ public interface DiaryOpeningHoursRepository extends JpaRepository<DiaryOpeningH
             "                           WHERE aa.pk.diaryId = :diaryId " +
             "                           AND aa.pk.openingHoursId = :openingHoursId " +
             "                           AND a.isOverturn = true )" )
-    boolean allowNewOverturn(Integer diaryId, Integer openingHoursId);
+    boolean allowNewOverturn(@Param("diaryId") Integer diaryId, @Param("openingHoursId") Integer openingHoursId);
 }

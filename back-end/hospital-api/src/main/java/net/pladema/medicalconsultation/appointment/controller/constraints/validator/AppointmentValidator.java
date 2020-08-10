@@ -52,25 +52,11 @@ public class AppointmentValidator implements ConstraintValidator<ValidAppointmen
     @Override
     public boolean isValid(CreateAppointmentDto createAppointmentDto, ConstraintValidatorContext context) {
         LOG.debug("Input parameters -> createAppointmentDto {}", createAppointmentDto);
-        if (!hasProfessionalRole()) {
-            LOG.debug("{}", "The user is not a professional");
-            return true;
-        }
-
         boolean valid = true;
         DiaryBo diary = diaryService.getDiaryById(createAppointmentDto.getDiaryId());
 
         if (!diary.isActive()) {
             buildResponse(context, "{appointment.new.diary.inactive}");
-            valid = false;
-        }
-        if (diary.isProfessionalAssignShift()) {
-            buildResponse(context, "{appointment.new.professional.assign.not.allowed}");
-            valid = false;
-        }
-        Integer professionalId = healthcareProfessionalService.getProfessionalId(UserInfo.getCurrentAuditor());
-        if (!diary.getHealthcareProfessionalId().equals(professionalId)) {
-            buildResponse(context, "{appointment.new.professional.id.invalid}");
             valid = false;
         }
 
@@ -91,6 +77,16 @@ public class AppointmentValidator implements ConstraintValidator<ValidAppointmen
                 buildResponse(context, "{appointment.not.allow.new.overturn}");
                 valid = false;
             }
+        }
+
+        if (hasProfessionalRole() && !diary.isProfessionalAssignShift()) {
+            buildResponse(context, "{appointment.new.professional.assign.not.allowed}");
+            valid = false;
+        }
+        Integer professionalId = healthcareProfessionalService.getProfessionalId(UserInfo.getCurrentAuditor());
+        if (hasProfessionalRole() && !diary.getHealthcareProfessionalId().equals(professionalId)) {
+            buildResponse(context, "{appointment.new.professional.id.invalid}");
+            valid = false;
         }
 
         return valid;
