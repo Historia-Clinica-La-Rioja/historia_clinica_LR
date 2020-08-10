@@ -34,10 +34,11 @@ export class NewAgendaService {
 	private readonly weekStartsOn = DAYS_OF_WEEK.MONDAY;
 	private readonly viewDate: Date = new Date();
 	private events: CalendarEvent[] = [];
+	private closingtime: number;
 
 	constructor(
 		private readonly dialog: MatDialog,
-		private readonly cdr: ChangeDetectorRef
+		private readonly cdr: ChangeDetectorRef,
 	) {
 	}
 
@@ -117,8 +118,11 @@ export class NewAgendaService {
 			return;
 		}
 
-		const newEnd = addDays(addMinutes(segment.date, minutesDiff), daysDiff);
+		let newEnd = addDays(addMinutes(segment.date, minutesDiff), daysDiff);
 		const endOfView = endOfWeek(this.viewDate, { weekStartsOn: this.weekStartsOn });
+		if (newEnd.getHours() > this.closingtime) {
+			newEnd.setHours(this.closingtime + 1);
+		}
 		if (newEnd > segment.date && newEnd < endOfView) {
 			const eventAlreadySetAt = this.events.filter(event => event !== dragToSelectEvent)
 				.filter(event => event.start.getDay() === dragToSelectEvent.start.getDay())
@@ -204,5 +208,9 @@ export class NewAgendaService {
 	public setEvents(events: CalendarEvent[]): void {
 		this.events = this.events.concat(events);
 		this.refresh();
+	}
+
+	public setClosingTime(closingTimeHour: number) {
+		this.closingtime = closingTimeHour;
 	}
 }
