@@ -5,7 +5,6 @@ import { HomeComponent } from './routes/home/home.component';
 import { CoreModule } from '@core/core.module';
 import { BedDetailComponent } from './components/bed-detail/bed-detail.component';
 import { PresentationModule } from '../presentation/presentation.module';
-import { BedManagmentService } from './services/bed-managment.service';
 import { BedFiltersComponent } from './components/bed-filters/bed-filters.component';
 
 @NgModule({
@@ -20,8 +19,7 @@ import { BedFiltersComponent } from './components/bed-filters/bed-filters.compon
 		CamasRoutingModule,
 		ReactiveFormsModule,
 		PresentationModule
-	],
-	providers: [ BedManagmentService ]
+	]
 })
 export class CamasModule {
 }

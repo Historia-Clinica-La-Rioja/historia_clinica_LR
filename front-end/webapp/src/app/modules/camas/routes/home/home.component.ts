@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs';
 	selector: 'app-home',
 	templateUrl: './home.component.html',
 	styleUrls: ['./home.component.scss'],
+	providers: [ BedManagmentService ]
 })
 export class HomeComponent implements OnInit, OnDestroy {
 
