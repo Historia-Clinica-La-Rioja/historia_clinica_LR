@@ -30,7 +30,7 @@ public interface DocumentService {
 
     GeneralHealthConditionBo getHealthConditionFromDocument(Long documentId);
 
-    List<ImmunizationBo> getInmunizationStateFromDocument(Long documentId);
+    List<ImmunizationBo> getImmunizationStateFromDocument(Long documentId);
 
     List<AllergyConditionBo> getAllergyIntoleranceStateFromDocument(Long documentId);
 
@@ -40,13 +40,13 @@ public interface DocumentService {
 
     VitalSignBo getVitalSignStateFromDocument(Long documentId);
 
-    List<Updateable> getUpdatablesDocuments(Integer internmentEpisodeId);
+    List<Updateable> getUpdatableDocuments(Integer internmentEpisodeId);
 
     void deleteHealthConditionHistory(Long documentId);
 
     void deleteAllergiesHistory(Long documentId);
 
-    void deleteInmunizationsHistory(Long documentId);
+    void deleteImmunizationsHistory(Long documentId);
 
     void deleteMedicationsHistory(Long documentId);
 

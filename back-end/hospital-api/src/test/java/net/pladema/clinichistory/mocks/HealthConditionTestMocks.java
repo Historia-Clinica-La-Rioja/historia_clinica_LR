@@ -20,13 +20,13 @@ public class HealthConditionTestMocks {
 
     public static HealthCondition createFamilyHistory(Integer patientId, String code, String statusId, String verificationId){
         HealthCondition result = createMinimumHealthCondition(patientId, code, statusId, verificationId);
-        result.setProblemId(ProblemType.ANTECEDENTE);
+        result.setProblemId(ProblemType.HISTORY);
         return result;
     }
 
     public static HealthCondition createPersonalHistory(Integer patientId, String code, String statusId, String verificationId){
         HealthCondition result = createMinimumHealthCondition(patientId, code, statusId, verificationId);
-        result.setProblemId(ProblemType.PROBLEMA);
+        result.setProblemId(ProblemType.PROBLEM);
         return result;
     }
 
@@ -38,14 +38,14 @@ public class HealthConditionTestMocks {
 
     public static HealthCondition createMainDiagnose(Integer patientId, String code, String statusId){
         HealthCondition result = createMinimumHealthCondition(patientId, code, statusId, ConditionVerificationStatus.CONFIRMED);
-        result.setProblemId(ProblemType.DIAGNOSTICO);
+        result.setProblemId(ProblemType.DIAGNOSIS);
         result.setMain(true);
         return result;
     }
 
     public static HealthCondition createDiagnose(Integer patientId, String code, String statusId, String verificationId){
         HealthCondition result = createMinimumHealthCondition(patientId, code, statusId, verificationId);
-        result.setProblemId(ProblemType.DIAGNOSTICO);
+        result.setProblemId(ProblemType.DIAGNOSIS);
         result.setMain(false);
         return result;
     }

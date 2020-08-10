@@ -35,7 +35,6 @@ public class BackofficeSectorController extends AbstractBackofficeController<Sec
 	@ExceptionHandler({ ConstraintViolationException.class })
 	public ResponseEntity<Object> handleValidationExceptions(ConstraintViolationException ex, WebRequest request) {
 		String sqlError = NestedExceptionUtils.getMostSpecificCause(ex).getLocalizedMessage();
-		//TODO: usar un ApiErrorMessage propio de backoffice
 		String constraintCode = constraintTocode.getOrDefault(ex.getConstraintName(), "constraint-default");
 		ApiErrorMessageDto apiErrors = new ApiErrorMessageDto(constraintCode, sqlError);
 		return new ResponseEntity<>(apiErrors, new HttpHeaders(), HttpStatus.BAD_REQUEST);

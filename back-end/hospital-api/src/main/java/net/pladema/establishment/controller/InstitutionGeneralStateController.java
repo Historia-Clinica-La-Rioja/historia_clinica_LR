@@ -31,7 +31,6 @@ public class InstitutionGeneralStateController {
     }
 
     @GetMapping
-    //TODO: institution valid annotation(exists)
     public ResponseEntity<VInstitutionDto> getGeneralState(
             @PathVariable(name = "institutionId") Integer institutionId) {
         LOG.debug("Input parameters -> {}", institutionId);

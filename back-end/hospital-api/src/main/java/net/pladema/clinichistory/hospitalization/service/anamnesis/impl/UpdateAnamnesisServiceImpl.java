@@ -63,7 +63,6 @@ public class UpdateAnamnesisServiceImpl implements UpdateAnamnesisService {
         Optional<Document> optDoc = documentService.findById(anamnesis.getId());
         optDoc.ifPresent(doc -> {
             deleteDocumentData(anamnesis.getId());
-            //TODO anamnesisDocument.setStatusId();
             loadNotes(doc, Optional.ofNullable(anamnesis.getNotes()));
             doc = documentService.save(doc);
 
@@ -103,7 +102,7 @@ public class UpdateAnamnesisServiceImpl implements UpdateAnamnesisService {
         LOG.debug("Input parameters -> documentId {}", documentId);
         documentService.deleteHealthConditionHistory(documentId);
         documentService.deleteAllergiesHistory(documentId);
-        documentService.deleteInmunizationsHistory(documentId);
+        documentService.deleteImmunizationsHistory(documentId);
         documentService.deleteMedicationsHistory(documentId);
         documentService.deleteObservationsVitalSignsHistory(documentId);
         documentService.deleteObservationsLabHistory(documentId);

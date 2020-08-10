@@ -121,7 +121,6 @@ public class PdfService {
 
     @Async
     @EventListener
-    //TODO Add event listener condition like "#event.document.confirmed"
     public void loadDocument(OnGenerateDocumentEvent event) throws IOException, DocumentException {
         LOG.debug("Input parameters -> onGenerateDocumentEvent {}", event);
         if(event.getDocument().isConfirmed()) {

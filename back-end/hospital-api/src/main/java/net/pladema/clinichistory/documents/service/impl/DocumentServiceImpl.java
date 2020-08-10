@@ -149,7 +149,7 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public List<ImmunizationBo> getInmunizationStateFromDocument(Long documentId) {
+    public List<ImmunizationBo> getImmunizationStateFromDocument(Long documentId) {
         LOG.debug(LOGGING_DOCUMENT_ID, documentId);
         List<InmunizationVo> resultQuery = documentImmunizationRepository.getInmunizationStateFromDocument(documentId);
         List<ImmunizationBo> result = resultQuery.stream().map(ImmunizationBo::new).collect(Collectors.toList());
@@ -196,49 +196,43 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public List<Updateable> getUpdatablesDocuments(Integer internmentEpisodeId) {
+    public List<Updateable> getUpdatableDocuments(Integer internmentEpisodeId) {
         return documentRepository.getUpdatablesDocuments(internmentEpisodeId);
     }
 
     @Override
     public void deleteHealthConditionHistory(Long documentId) {
         LOG.debug(LOGGING_DOCUMENT_ID, documentId);
-        // TODO
         LOG.debug(LOGGING_DELETE_SUCCESS);
     }
 
     @Override
     public void deleteAllergiesHistory(Long documentId) {
         LOG.debug(LOGGING_DOCUMENT_ID, documentId);
-        // TODO
         LOG.debug(LOGGING_DELETE_SUCCESS);
     }
 
     @Override
-    public void deleteInmunizationsHistory(Long documentId) {
+    public void deleteImmunizationsHistory(Long documentId) {
         LOG.debug(LOGGING_DOCUMENT_ID, documentId);
-        // TODO
         LOG.debug(LOGGING_DELETE_SUCCESS);
     }
 
     @Override
     public void deleteMedicationsHistory(Long documentId) {
         LOG.debug(LOGGING_DOCUMENT_ID, documentId);
-        // TODO
         LOG.debug(LOGGING_DELETE_SUCCESS);
     }
 
     @Override
     public void deleteObservationsVitalSignsHistory(Long documentId) {
         LOG.debug(LOGGING_DOCUMENT_ID, documentId);
-        // TODO
         LOG.debug(LOGGING_DELETE_SUCCESS);
     }
 
     @Override
     public void deleteObservationsLabHistory(Long documentId) {
         LOG.debug(LOGGING_DOCUMENT_ID, documentId);
-        // TODO
         LOG.debug(LOGGING_DELETE_SUCCESS);
     }
 

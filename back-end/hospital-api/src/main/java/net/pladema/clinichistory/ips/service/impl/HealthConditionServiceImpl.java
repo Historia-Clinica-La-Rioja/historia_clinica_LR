@@ -92,7 +92,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     private HealthCondition buildMainDiagnoses(Integer patientId, HealthConditionBo info) {
         LOG.debug(INPUT_PARAMETERS_PATIENT_ID_INFO, patientId, info);
         HealthCondition healthCondition = buildBasicHealthCondition(patientId, info);
-        healthCondition.setProblemId(ProblemType.DIAGNOSTICO);
+        healthCondition.setProblemId(ProblemType.DIAGNOSIS);
         healthCondition.setMain(true);
         updateStatusAndVerification(healthCondition, info);
         LOG.debug(OUTPUT, healthCondition);
@@ -122,7 +122,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     private HealthCondition buildDiagnoses(Integer patientId, DiagnosisBo info) {
         LOG.debug(INPUT_PARAMETERS_PATIENT_ID_INFO, patientId, info);
         HealthCondition healthCondition = buildBasicHealthCondition(patientId, info);
-        healthCondition.setProblemId(ProblemType.DIAGNOSTICO);
+        healthCondition.setProblemId(ProblemType.DIAGNOSIS);
         if (info.isPresumptive())
             healthCondition.setVerificationStatusId(ConditionVerificationStatus.PRESUMPTIVE);
         updateStatusAndVerification(healthCondition, info);
@@ -167,7 +167,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     private HealthCondition buildPersonalHistory(Integer patientId, HealthHistoryConditionBo info) {
         LOG.debug(INPUT_PARAMETERS_PATIENT_ID_INFO, patientId, info);
         HealthCondition healthCondition = buildBasicHealthCondition(patientId, info);
-        healthCondition.setProblemId(ProblemType.PROBLEMA);
+        healthCondition.setProblemId(ProblemType.PROBLEM);
         LocalDate date = info.getDate() == null ? dateTimeProvider.nowDate() : info.getDate();
         healthCondition.setStartDate(date);
         healthCondition.setNoteId(noteService.createNote(info.getNote()));
@@ -198,7 +198,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     private HealthCondition buildFamilyHistory(Integer patientId, HealthHistoryConditionBo info) {
         LOG.debug(INPUT_PARAMETERS_PATIENT_ID_INFO, patientId, info);
         HealthCondition healthCondition = buildBasicHealthCondition(patientId, info);
-        healthCondition.setProblemId(ProblemType.ANTECEDENTE);
+        healthCondition.setProblemId(ProblemType.HISTORY);
         LocalDate date = info.getDate() == null ? dateTimeProvider.nowDate() : info.getDate();
         healthCondition.setStartDate(date);
         healthCondition.setNoteId(noteService.createNote(info.getNote()));
@@ -261,7 +261,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     private HealthCondition buildProblem(Integer patientId, ProblemBo info) {
         LOG.debug("Input parameters -> patientId {}, problem {}", patientId, info);
         HealthCondition healthCondition = buildBasicHealthCondition(patientId, info);
-        healthCondition.setProblemId(info.isChronic() ? ProblemType.CHRONIC : ProblemType.PROBLEMA);
+        healthCondition.setProblemId(info.isChronic() ? ProblemType.CHRONIC : ProblemType.PROBLEM);
         healthCondition.setStartDate(info.getStartDate());
         if (info.getEndDate() != null) {
             healthCondition.setInactivationDate(info.getEndDate());

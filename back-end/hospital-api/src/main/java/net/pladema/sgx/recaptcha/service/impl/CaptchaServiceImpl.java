@@ -39,7 +39,7 @@ public class CaptchaServiceImpl implements ICaptchaService {
     }
 
     @Override
-    public Boolean processResponse(String response, String frontUrl) { //TODO responder con msgs de error adecuado
+    public Boolean processResponse(String response, String frontUrl) {
         if(!responseSanityCheck(response))
             return false;
 

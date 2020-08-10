@@ -56,7 +56,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
                 .setParameter("docStatusId", DocumentStatus.FINAL)
                 .setParameter("verificationId", ConditionVerificationStatus.ERROR)
                 .setParameter("patientId", patientId)
-                .setParameter("validProblemTypes", Arrays.asList(ProblemType.PROBLEMA, ProblemType.CHRONIC))
+                .setParameter("validProblemTypes", Arrays.asList(ProblemType.PROBLEM, ProblemType.CHRONIC))
                 .setParameter("documentType", DocumentType.OUTPATIENT)
                 .getResultList();
 
@@ -109,7 +109,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
                 .setParameter("verificationId", ConditionVerificationStatus.ERROR)
                 .setParameter("hcStatusId", ConditionClinicalStatus.ACTIVE)
                 .setParameter("patientId", patientId)
-                .setParameter("problemType", ProblemType.ANTECEDENTE)
+                .setParameter("problemType", ProblemType.HISTORY)
                 .setParameter("invalidDocumentTypes", Arrays.asList(DocumentType.ANAMNESIS, DocumentType.EVALUATION_NOTE, DocumentType.EPICRISIS))
                 .getResultList();
 

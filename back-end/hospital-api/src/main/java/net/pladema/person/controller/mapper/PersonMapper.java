@@ -59,7 +59,6 @@ public interface PersonMapper {
     @Mapping(target = "address", source="personalInformation", qualifiedByName = "toAddressComplete")
     PersonalInformationDto fromPersonalInformation(PersonalInformation personalInformation);
 
-    //TODO: mejorar jerarquia DTO's mediante composicion
     @Named("fromCompletePersonVo")
     @Mapping(target = "firstName", source = "person.firstName") 
     @Mapping(target = "middleNames", source = "person.middleNames")

@@ -49,15 +49,15 @@ public class HealthConditionVo extends ClinicalTermVo {
     }
 
     public boolean isDiagnosis() {
-        return problemId.equals(ProblemType.DIAGNOSTICO);
+        return problemId.equals(ProblemType.DIAGNOSIS);
     }
 
     public boolean isPersonalHistory() {
-        return problemId.equals(ProblemType.PROBLEMA);
+        return problemId.equals(ProblemType.PROBLEM);
     }
 
     public boolean isFamilyHistory() {
-        return problemId.equals(ProblemType.ANTECEDENTE);
+        return problemId.equals(ProblemType.HISTORY);
     }
 
     public boolean isPresumptive() {
@@ -82,6 +82,6 @@ public class HealthConditionVo extends ClinicalTermVo {
 	}
 
     public boolean isSecondaryDiagnosis() {
-        return problemId.equals(ProblemType.DIAGNOSTICO) && !main;
+        return problemId.equals(ProblemType.DIAGNOSIS) && !main;
     }
 }

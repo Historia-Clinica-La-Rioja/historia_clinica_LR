@@ -25,7 +25,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
@@ -73,8 +79,6 @@ public class AnamnesisController {
     @AnamnesisValid
     @AnamnesisMainDiagnosisValid
     @EffectiveVitalSignTimeValid
-    //TODO validar que diagnosticos descatados solo tengan estado REMISSION o SOLVED
-    //TODO vaidar que diagnosticos ingresador por error solo tengan estado INACTIVE
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR')")
     public ResponseEntity<ResponseAnamnesisDto> createAnamnesis(
             @PathVariable(name = "institutionId") Integer institutionId,
@@ -100,7 +104,7 @@ public class AnamnesisController {
     @EffectiveVitalSignTimeValid
     @DocumentValid(isConfirmed = false, documentType = DocumentType.ANAMNESIS)
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR')")
-    public ResponseEntity<ResponseAnamnesisDto> updateAnamnesis(
+    private ResponseEntity<ResponseAnamnesisDto> updateAnamnesis(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
             @PathVariable(name = "anamnesisId") Long anamnesisId,
@@ -128,7 +132,6 @@ public class AnamnesisController {
     @GetMapping("/{anamnesisId}")
     @InternmentValid
     @DocumentValid(isConfirmed = false, documentType = DocumentType.ANAMNESIS)
-    //TODO validar que exista la anamnesis
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR')")
     public ResponseEntity<ResponseAnamnesisDto> getAnamnesis(
             @PathVariable(name = "institutionId") Integer institutionId,

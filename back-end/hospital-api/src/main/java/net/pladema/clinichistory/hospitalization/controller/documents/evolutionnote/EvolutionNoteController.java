@@ -84,8 +84,6 @@ public class EvolutionNoteController {
     @EvolutionNoteDiagnosisValid
     @EffectiveVitalSignTimeValid
     @EvolutionNoteValid
-    //TODO validar que diagnosticos descatados solo tengan estado REMISSION o SOLVED
-    //TODO vaidar que diagnosticos ingresador por error solo tengan estado INACTIVE
     public ResponseEntity<ResponseEvolutionNoteDto> createDocument(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
@@ -107,7 +105,7 @@ public class EvolutionNoteController {
     @EvolutionNoteDiagnosisValid
     @EffectiveVitalSignTimeValid
     @DocumentValid(isConfirmed = false, documentType = DocumentType.EVALUATION_NOTE)
-    public ResponseEntity<ResponseEvolutionNoteDto> updateDocument(
+    private ResponseEntity<ResponseEvolutionNoteDto> updateDocument(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
             @PathVariable(name = "evolutionNoteId") Long evolutionNoteId,

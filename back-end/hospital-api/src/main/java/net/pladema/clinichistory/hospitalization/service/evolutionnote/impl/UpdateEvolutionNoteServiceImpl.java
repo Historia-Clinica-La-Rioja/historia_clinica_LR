@@ -56,7 +56,6 @@ public class UpdateEvolutionNoteServiceImpl implements UpdateEvolutionNoteServic
         Optional<Document> optDoc = documentService.findById(evolutionNote.getId());
         optDoc.ifPresent(doc -> {
             deleteDocumentData(evolutionNote.getId());
-            //TODO anamnesisDocument.setStatusId();
             loadNotes(doc, Optional.ofNullable(evolutionNote.getNotes()));
             doc = documentService.save(doc);
 
@@ -92,7 +91,7 @@ public class UpdateEvolutionNoteServiceImpl implements UpdateEvolutionNoteServic
         LOG.debug("Input parameters -> documentId {}", documentId);
         documentService.deleteHealthConditionHistory(documentId);
         documentService.deleteAllergiesHistory(documentId);
-        documentService.deleteInmunizationsHistory(documentId);
+        documentService.deleteImmunizationsHistory(documentId);
         documentService.deleteMedicationsHistory(documentId);
         documentService.deleteObservationsVitalSignsHistory(documentId);
         documentService.deleteObservationsLabHistory(documentId);

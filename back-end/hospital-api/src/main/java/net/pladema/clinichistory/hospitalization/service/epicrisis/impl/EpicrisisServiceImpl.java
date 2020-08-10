@@ -41,7 +41,7 @@ public class EpicrisisServiceImpl implements EpicrisisService {
             result.setDiagnosis(generalHealthConditionBo.getDiagnosis());
             result.setFamilyHistories(generalHealthConditionBo.getFamilyHistories());
             result.setPersonalHistories(generalHealthConditionBo.getPersonalHistories());
-            result.setImmunizations(documentService.getInmunizationStateFromDocument(document.getId()));
+            result.setImmunizations(documentService.getImmunizationStateFromDocument(document.getId()));
             result.setAllergies(documentService.getAllergyIntoleranceStateFromDocument(document.getId()));
             result.setAnthropometricData(documentService.getAnthropometricDataStateFromDocument(document.getId()));
             result.setVitalSigns(documentService.getVitalSignStateFromDocument(document.getId()));

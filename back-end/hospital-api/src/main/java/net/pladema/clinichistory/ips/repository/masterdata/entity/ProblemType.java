@@ -19,10 +19,9 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class ProblemType implements Serializable {
 
-    public static final String DIAGNOSTICO = "439401001";
-    public static final String PROBLEMA = "55607006";
-    public static final String ANTECEDENTE = "57177007";
-    // TODO no se encontró un código para cronico, se decidio negar el problema para diferenciarlos
+    public static final String DIAGNOSIS = "439401001";
+    public static final String PROBLEM = "55607006";
+    public static final String HISTORY = "57177007";
     public static final String CHRONIC = "-55607006";
 
 

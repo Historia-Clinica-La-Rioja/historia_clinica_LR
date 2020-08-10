@@ -65,7 +65,6 @@ public class UpdateEpicrisisServiceImpl implements UpdateEpicrisisService {
         Optional<Document> optDoc = documentService.findById(epicrisis.getId());
         optDoc.ifPresent(doc -> {
             deleteDocumentData(epicrisis.getId());
-            //TODO anamnesisDocument.setStatusId();
             loadNotes(doc, Optional.ofNullable(epicrisis.getNotes()));
             doc = documentService.save(doc);
 
@@ -105,7 +104,7 @@ public class UpdateEpicrisisServiceImpl implements UpdateEpicrisisService {
         LOG.debug("Input parameters -> documentId {}", documentId);
         documentService.deleteHealthConditionHistory(documentId);
         documentService.deleteAllergiesHistory(documentId);
-        documentService.deleteInmunizationsHistory(documentId);
+        documentService.deleteImmunizationsHistory(documentId);
         documentService.deleteMedicationsHistory(documentId);
         documentService.deleteObservationsVitalSignsHistory(documentId);
         documentService.deleteObservationsLabHistory(documentId);

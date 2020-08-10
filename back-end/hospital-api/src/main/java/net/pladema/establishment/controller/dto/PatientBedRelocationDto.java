@@ -1,22 +1,18 @@
 package net.pladema.establishment.controller.dto;
 
-import java.io.Serializable;
-
-import javax.validation.constraints.NotNull;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 @Getter
 @Setter
 @ToString
 public class PatientBedRelocationDto implements Serializable {
-	/**
-	 * TODO Cuando escale cambiar Integer a BedDto las camas origen y destino
-	 */
+
 	private static final long serialVersionUID = 3940040590318704813L;
 
 	private Integer originBedId;
