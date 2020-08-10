@@ -37,7 +37,7 @@ public interface PersonMapper {
     PersonExtended updatePersonExtended(APersonDto person, Integer addressId);
 
     @Named("updatePersonExtendedPatient")
-    PersonExtended toPersonExtended(APatientDto patient, Integer addresId);
+    PersonExtended toPersonExtended(APatientDto patient, Integer addressId);
 
     @Named("updatePersonExtendedPatient")
     PersonExtended updatePersonExtendedPatient(@MappingTarget PersonExtended personExtendedToUpdate, APatientDto patient);

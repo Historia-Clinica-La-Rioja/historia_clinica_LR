@@ -12,16 +12,6 @@ public class MocksPerson {
         super();
     }
 
-    public static BasicDataPersonDto mockBasicPersonDto(int id) {
-        BasicDataPersonDto result = new BasicDataPersonDto();
-        result.setId(id);
-        result.setFirstName("Nombre " + id);
-        result.setLastName("Apellido " +id);
-        result.setGender(mockGenderDto(id));
-        result.setAge((short)50);
-        return result;
-    }
-
     public static PersonalInformationDto mockPersonalInformation(int id) {
         PersonalInformationDto result = new PersonalInformationDto();
         result.setId(id);

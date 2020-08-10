@@ -35,7 +35,6 @@ public final class BackofficeAuthoritiesValidator {
 			throw new PermissionDeniedException("Operación no permitida");
 		}
 
-		// validar que loggedUserId tiene mas rango que entityUserId
 		assertLoggedUserOutrank(entityUserClaims.apply(entityUserId));
 	}
 

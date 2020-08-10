@@ -1,13 +1,5 @@
 package net.pladema.establishment.service.impl;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import net.pladema.clinichistory.hospitalization.controller.externalservice.InternmentEpisodeExternalService;
 import net.pladema.establishment.repository.BedRepository;
 import net.pladema.establishment.repository.HistoricPatientBedRelocationRepository;
@@ -16,6 +8,13 @@ import net.pladema.establishment.repository.domain.BedSummaryVo;
 import net.pladema.establishment.repository.entity.Bed;
 import net.pladema.establishment.repository.entity.HistoricPatientBedRelocation;
 import net.pladema.establishment.service.BedService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BedServiceImpl implements BedService {
@@ -61,7 +60,7 @@ public class BedServiceImpl implements BedService {
 
 	@Override
 	public List<Bed> getFreeBeds(Integer institutionId, Integer clinicalSpecialtyId) {
-		LOG.debug("BedService::getFreeBedsByClinicalSpecialty-> input parameters -> InstitucionId{} , BedId {}",
+		LOG.debug("BedService::getFreeBedsByClinicalSpecialty-> input parameters -> institutionId {} , BedId {}",
 				institutionId, clinicalSpecialtyId);
 		List<Bed> result = bedRepository.getFreeBedsByClinicalSpecialty(institutionId, clinicalSpecialtyId);
 		LOG.debug(OUTPUT, result);

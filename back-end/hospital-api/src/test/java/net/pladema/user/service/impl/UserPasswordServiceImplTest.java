@@ -1,9 +1,7 @@
 package net.pladema.user.service.impl;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-
+import net.pladema.user.repository.UserPasswordRepository;
+import net.pladema.user.repository.entity.UserPassword;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,8 +9,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import net.pladema.user.repository.UserPasswordRepository;
-import net.pladema.user.repository.entity.UserPassword;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 public class UserPasswordServiceImplTest {
@@ -34,14 +33,14 @@ public class UserPasswordServiceImplTest {
 	@Test
 	public void createPassword_ok() {
 
-		String encriptedPassword = "PasswordEncriptada";
+		String encryptedPassword = "encryptedPassword";
 		
-		when(bCryptPasswordEncoder.encode(any())).thenReturn(encriptedPassword);
+		when(bCryptPasswordEncoder.encode(any())).thenReturn(encryptedPassword);
 		UserPassword response = userPasswordService.createPassword(USER_ID, "Password");
 
 		assertThat(response).isNotNull();
 
-		assertThat(response.getPassword()).isNotNull().isEqualTo(encriptedPassword);
+		assertThat(response.getPassword()).isNotNull().isEqualTo(encryptedPassword);
 
 	}
 }

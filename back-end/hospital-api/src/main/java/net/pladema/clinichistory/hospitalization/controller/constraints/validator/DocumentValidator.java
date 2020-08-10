@@ -49,7 +49,7 @@ public class DocumentValidator implements ConstraintValidator<DocumentValid, Obj
                 .addPropertyNode(properties.get(documentType))
                 .addConstraintViolation();
 
-        return document.isPresent() //existencia
+        return document.isPresent() 
                 && document.get().isType(documentType)
                 && document.get().hasStatus(statusId);
     }

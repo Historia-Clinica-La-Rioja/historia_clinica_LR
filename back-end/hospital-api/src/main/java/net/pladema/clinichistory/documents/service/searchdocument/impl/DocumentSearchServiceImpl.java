@@ -41,7 +41,7 @@ public class DocumentSearchServiceImpl implements DocumentSearchService {
                 case DIAGNOSIS:
                     structuredQuery = new DocumentDiagnosisSearchQuery(plainText);
                     break;
-                case CREATEDON:
+                case CREATED_ON:
                     structuredQuery = new DocumentCreatedOnSearchQuery(plainText);
                     break;
                 default:

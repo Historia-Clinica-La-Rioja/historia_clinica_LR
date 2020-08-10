@@ -36,7 +36,7 @@ public class InternmentStateControllerTest extends UnitController {
 	private AllergyGeneralStateService allergyGeneralStateServiceService;
 
 	@MockBean
-	private InmunizationGeneralStateService inmunizationGeneralStateService;
+	private ImmunizationGeneralStateService immunizationGeneralStateService;
 
 	@MockBean
 	private ClinicalObservationGeneralStateService clinicalObservationGeneralStateService;

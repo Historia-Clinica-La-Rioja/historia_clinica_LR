@@ -7,8 +7,8 @@
 <body>
 	<div th:replace="fragments/general.html :: header(title='Nota de evolución', subtitle='Internación')"></div>
 	<div th:replace="fragments/general.html :: personalData(patientType='Paciente')"></div>
-	<div th:replace="fragments/general.html :: mainDiagnosis(message=document.pdf.maindiagnosis.title.minsal)"></div>
-	<div th:replace="fragments/general.html :: diagnosis(message=document.pdf.diagnosis.title.minsal)"></div>
+	<div th:replace="fragments/general.html :: mainDiagnosis(message='Diagnóstico principal')"></div>
+	<div th:replace="fragments/general.html :: diagnosis(message='Diagnósticos')"></div>
 	<div th:replace="fragments/general.html :: antropometicData"></div>
 	<div th:replace="fragments/general.html :: allergies"></div>
 	<div th:replace="fragments/general.html :: immunizations"></div>

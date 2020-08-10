@@ -46,12 +46,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(AnamnesisController.class)
 public class AnamnesisControllerTest extends UnitController {
 
-	private static final Long DOCUMENTID = 1L;
+	private static final Long DOCUMENT_ID = 1L;
 	private static final String POST = "/institutions/1/internments/1/anamnesis";
-	private static final String PUT = "/institutions/1/internments/1/anamnesis/" + DOCUMENTID;
-	private static final String GET = "/institutions/1/internments/1/anamnesis/" + DOCUMENTID;
-
-	private static final String OTITIS = "43275000";
+	private static final String PUT = "/institutions/1/internments/1/anamnesis/" + DOCUMENT_ID;
+	private static final String GET = "/institutions/1/internments/1/anamnesis/" + DOCUMENT_ID;
 
 	@MockBean
 	private InternmentEpisodeService internmentEpisodeService;
@@ -242,7 +240,7 @@ public class AnamnesisControllerTest extends UnitController {
 
 	private void configContextDocumentValid(){
 		configContextInternmentValid();
-		when(documentRepository.findById(DOCUMENTID)).thenReturn(mockDocument());
+		when(documentRepository.findById(DOCUMENT_ID)).thenReturn(mockDocument());
 	}
 
 	private void configContextPatientExist(){
@@ -251,7 +249,7 @@ public class AnamnesisControllerTest extends UnitController {
 
 	private static Optional<Document> mockDocument() {
 		Document mock = new Document();
-		mock.setId(DOCUMENTID);
+		mock.setId(DOCUMENT_ID);
 		mock.setTypeId(DocumentType.ANAMNESIS);
 		mock.setStatusId(DocumentStatus.DRAFT);
 		return Optional.of(mock);

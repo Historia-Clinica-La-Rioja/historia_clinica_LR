@@ -23,7 +23,7 @@ public class InternmentStateServiceImpl implements InternmentStateService {
 
     private final AllergyGeneralStateService allergyGeneralStateService;
 
-    private final InmunizationGeneralStateService inmunizationGeneralStateService;
+    private final ImmunizationGeneralStateService immunizationGeneralStateService;
 
     private final MedicationGeneralStateService medicationGeneralStateService;
 
@@ -32,12 +32,12 @@ public class InternmentStateServiceImpl implements InternmentStateService {
     private final HealthConditionGeneralStateService healthConditionGeneralStateService;
 
     public InternmentStateServiceImpl(AllergyGeneralStateService allergyGeneralStateService,
-                                      InmunizationGeneralStateService inmunizationGeneralStateService,
+                                      ImmunizationGeneralStateService immunizationGeneralStateService,
                                       MedicationGeneralStateService medicationGeneralStateService,
                                       ClinicalObservationGeneralStateService clinicalObservationGeneralStateService,
                                       HealthConditionGeneralStateService healthConditionGeneralStateService) {
         this.allergyGeneralStateService = allergyGeneralStateService;
-        this.inmunizationGeneralStateService = inmunizationGeneralStateService;
+        this.immunizationGeneralStateService = immunizationGeneralStateService;
         this.medicationGeneralStateService = medicationGeneralStateService;
         this.healthConditionGeneralStateService = healthConditionGeneralStateService;
         this.clinicalObservationGeneralStateService = clinicalObservationGeneralStateService;
@@ -73,7 +73,7 @@ public class InternmentStateServiceImpl implements InternmentStateService {
 
     private List<ImmunizationBo> getImmunizationsState(Integer internmentEpisodeId){
         LOG.debug(LOGGING_INTERNMENT_EPISODE_ID, internmentEpisodeId);
-        return inmunizationGeneralStateService.getInmunizationsGeneralState(internmentEpisodeId);
+        return immunizationGeneralStateService.getImmunizationsGeneralState(internmentEpisodeId);
     }
 
     private List<AllergyConditionBo> getAllergiesState(Integer internmentEpisodeId){

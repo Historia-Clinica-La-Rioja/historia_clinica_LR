@@ -1,14 +1,13 @@
 package net.pladema.patient.service.impl;
 
-import java.util.Collection;
-
-import org.springframework.stereotype.Service;
-
 import net.pladema.patient.repository.AdditionalDoctorRepository;
 import net.pladema.patient.repository.entity.AdditionalDoctor;
 import net.pladema.patient.service.AdditionalDoctorService;
 import net.pladema.patient.service.domain.AdditionalDoctorBo;
 import net.pladema.patient.service.domain.DoctorsBo;
+import org.springframework.stereotype.Service;
+
+import java.util.Collection;
 
 @Service
 public class AdditionalDoctorServiceImpl implements AdditionalDoctorService {
@@ -29,7 +28,7 @@ public class AdditionalDoctorServiceImpl implements AdditionalDoctorService {
     }
 
     @Override
-    public DoctorsBo addAdditionalsDoctors(DoctorsBo doctorsBo,Integer patientId) {
+    public DoctorsBo addAdditionalDoctors(DoctorsBo doctorsBo, Integer patientId) {
         AdditionalDoctorBo generalPractitionerBo = doctorsBo.getGeneralPractitionerBo();
         AdditionalDoctorBo pamiDoctorBo = doctorsBo.getPamiDoctorBo();
         pamiDoctorBo.setPatientId(patientId);
@@ -40,7 +39,7 @@ public class AdditionalDoctorServiceImpl implements AdditionalDoctorService {
 	}
 
 	@Override
-	public DoctorsBo getAdditionalsDoctors(Integer patientId) {
+	public DoctorsBo getAdditionalDoctors(Integer patientId) {
 		Collection<AdditionalDoctor> doctors = additionalDoctorRepository.getAdditionalDoctors(patientId);
 		AdditionalDoctorBo generalPractitioner = doctors.stream().filter(AdditionalDoctor::isGeneralPractitioner)
 				.findFirst().map(AdditionalDoctorBo::new).orElse(null);

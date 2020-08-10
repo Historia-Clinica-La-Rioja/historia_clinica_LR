@@ -11,7 +11,7 @@ import java.util.Objects;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class InmunizationVo extends ClinicalTermVo{
+public class ImmunizationVo extends ClinicalTermVo{
 
     private LocalDate administrationDate;
 
@@ -19,15 +19,15 @@ public class InmunizationVo extends ClinicalTermVo{
 
     private String note;
 
-    public InmunizationVo(Integer id, Snomed snomed, String statusId, LocalDate administrationDate, Long noteId,
-                              String note) {
+    public ImmunizationVo(Integer id, Snomed snomed, String statusId, LocalDate administrationDate, Long noteId,
+						  String note) {
         super(id, snomed, statusId);
         this.administrationDate = administrationDate;
         this.noteId = noteId;
         this.note = note;
     }
 
-	public InmunizationVo(Integer id, Snomed snomed, String statusId, String status,
+	public ImmunizationVo(Integer id, Snomed snomed, String statusId, String status,
 						  LocalDate administrationDate, Long noteId, String note) {
 		this(id, snomed, statusId, administrationDate, noteId, note);
 		this.setStatus(status);
@@ -46,7 +46,7 @@ public class InmunizationVo extends ClinicalTermVo{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		InmunizationVo other = (InmunizationVo) obj;
+		ImmunizationVo other = (ImmunizationVo) obj;
 		return Objects.equals(noteId, other.getNoteId()) &&
 			   Objects.equals(note, other.getNote());
 	}

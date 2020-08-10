@@ -44,7 +44,7 @@ public class EvolutionNoteReportServiceImpl implements EvolutionNoteReportServic
             GeneralHealthConditionBo generalHealthConditionBo = reportDocumentService.getReportHealthConditionFromDocument(document.getId());
             result.setMainDiagnosis(generalHealthConditionBo.getMainDiagnosis());
             result.setDiagnosis(generalHealthConditionBo.getDiagnosis());
-            result.setImmunizations(reportDocumentService.getReportInmunizationStateFromDocument(document.getId()));
+            result.setImmunizations(reportDocumentService.getReportImmunizationStateFromDocument(document.getId()));
             result.setAllergies(reportDocumentService.getReportAllergyIntoleranceStateFromDocument(document.getId()));
             result.setAnthropometricData(reportDocumentService.getReportAnthropometricDataStateFromDocument(document.getId()));
             result.setVitalSigns(reportDocumentService.getReportVitalSignStateFromDocument(document.getId()));

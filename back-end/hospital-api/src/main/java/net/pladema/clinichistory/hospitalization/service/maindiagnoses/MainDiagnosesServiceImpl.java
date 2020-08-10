@@ -59,7 +59,7 @@ public class MainDiagnosesServiceImpl implements MainDiagnosesService {
         document = documentService.save(document);
         Long result = document.getId();
 
-        mainDiagnosisBo.getMainDiagnosis().setVerificationId(ConditionVerificationStatus.CONFIRMED); // main diagnosiss always confirmed
+        mainDiagnosisBo.getMainDiagnosis().setVerificationId(ConditionVerificationStatus.CONFIRMED); 
 
         HealthConditionBo currentMainDiagnose = healthConditionGeneralStateService.getMainDiagnosisGeneralState(internmentEpisodeId);
         if (!currentMainDiagnose.getSnomed().equals(mainDiagnosisBo.getMainDiagnosis().getSnomed()))

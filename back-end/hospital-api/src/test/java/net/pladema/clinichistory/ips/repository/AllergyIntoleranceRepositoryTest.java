@@ -24,7 +24,7 @@ public class AllergyIntoleranceRepositoryTest extends UnitRepository {
 
 	@Test
 	public void saveCreateTest() {
-		AllergyIntolerance allergy = createMinimunAllergyEntity();
+		AllergyIntolerance allergy = createMinimumAllergyEntity();
 
 		assertThat(allergy.getCreatedOn())
 				.isNull();
@@ -53,7 +53,7 @@ public class AllergyIntoleranceRepositoryTest extends UnitRepository {
 				.isNotNull();
 	}
 
-	private AllergyIntolerance createMinimunAllergyEntity() {
+	private AllergyIntolerance createMinimumAllergyEntity() {
 		AllergyIntolerance allergy = new AllergyIntolerance();
 		allergy.setPatientId(1);
 		allergy.setSctidCode("code");

@@ -15,7 +15,7 @@ import java.util.List;
 public interface AddressMapper {
 
     @Named("fromAddressDto")
-    public Address fromAddressDto(AddressDto addressDto);
+    Address fromAddressDto(AddressDto addressDto);
 
     @Named("toAddressComplete")
     @Mapping(target = "id", source = "address.id")
@@ -27,15 +27,15 @@ public interface AddressMapper {
     @Mapping(target = "postcode", source = "address.postcode")
     @Mapping(target = "city", source = "city", qualifiedByName = "fromCity")
     @Mapping(target = "province", source = "province", qualifiedByName = "fromProvince")
-    public AddressDto toAddressDtoComplete(PersonalInformation personalInformation);
+    AddressDto toAddressDtoComplete(PersonalInformation personalInformation);
 
     @Named("toAddress")
-    public AddressDto toAddressDto(Address address);
+    AddressDto toAddressDto(Address address);
 
-    @Named("fromAdressBo")
-    public AddressDto fromAdressBo(AddressBo addressBo);
+    @Named("fromAddressBo")
+    AddressDto fromAddressBo(AddressBo addressBo);
 
-    @Named("fromAdressBoList")
-    @IterableMapping(qualifiedByName = "fromAdressBo")
-    public List<AddressDto> fromAdressBoList(List<AddressBo> addressBoList);
+    @Named("fromAddressBoList")
+    @IterableMapping(qualifiedByName = "fromAddressBo")
+    List<AddressDto> fromAddressBoList(List<AddressBo> addressBoList);
 }

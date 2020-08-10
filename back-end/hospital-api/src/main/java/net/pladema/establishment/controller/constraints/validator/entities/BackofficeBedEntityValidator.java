@@ -16,10 +16,6 @@ public class BackofficeBedEntityValidator extends BackofficeEntityValidatorAdapt
 		this.internmentEpisodeExternalService = internmentEpisodeExternalService;
 	}
 
-	/**
-	 * Si la cama tiene un episodio de internación, no se puede
-	 * marcar como libre desde el backoffice.
-	 */
 	@Override
 	public void assertUpdate(Integer id, Bed entity) {
 		if (entity.getFree() && this.internmentEpisodeExternalService.existsActiveForBedId(id)) {

@@ -60,7 +60,7 @@ export class DocumentsSummaryComponent implements OnInit {
 		}
 
 		function isDate(field): boolean {
-			return field === 'CREATEDON';
+			return field === 'CREATED_ON';
 		}
 	}
 

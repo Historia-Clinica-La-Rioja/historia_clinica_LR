@@ -128,8 +128,8 @@ public class InternmentEpisodeController {
 		LOG.debug("Input parameters -> internmentEpisodeId {}, PatientDischargeDto {} ", internmentEpisodeId, patientDischargeDto);
 		PatientDischargeBo patientDischarge = patientDischargeMapper.toPatientDischargeBo(patientDischargeDto);
 		patientDischarge.setInternmentEpisodeId(internmentEpisodeId);
-		PatientDischargeBo patientDischageSaved = internmentEpisodeService.savePatientDischarge(patientDischarge);
-		PatientDischargeDto result = patientDischargeMapper.toPatientDischargeDto(patientDischageSaved);
+		PatientDischargeBo patientDischargeSaved = internmentEpisodeService.savePatientDischarge(patientDischarge);
+		PatientDischargeDto result = patientDischargeMapper.toPatientDischargeDto(patientDischargeSaved);
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);
 	}
@@ -184,9 +184,9 @@ public class InternmentEpisodeController {
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
 		LOG.debug(INPUT_PARAMETERS_INSTITUTION_ID_INTERNMENT_EPISODE_ID, institutionId, internmentEpisodeId);
-		PatientDischargeBo pdbo =	patientDischargeService.getPatientDischarge(internmentEpisodeId)
+		PatientDischargeBo patientDischargeBo =	patientDischargeService.getPatientDischarge(internmentEpisodeId)
 				.orElseThrow(() -> new NotFoundException("bad-episode-id", INTERNMENT_NOT_FOUND));
-		PatientDischargeDto result = patientDischargeMapper.toPatientDischargeDto(pdbo);
+		PatientDischargeDto result = patientDischargeMapper.toPatientDischargeDto(patientDischargeBo);
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);
 	}

@@ -67,7 +67,7 @@ export const DOCUMENTS_SEARCH_FIELDS: SearchField[] = [
 		label: 'internaciones.documents-summary.search-fields.DOCTOR',
 	},
 	{
-		field: EDocumentSearch.CREATEDON,
+		field: EDocumentSearch.CREATED_ON,
 		label: 'internaciones.documents-summary.search-fields.CREATEDON',
 	},
 	{

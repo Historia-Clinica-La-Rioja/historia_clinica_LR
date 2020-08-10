@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 @ToString
 public class HCEEffectiveClinicalObservationDto extends HCEClinicalObservationDto {
 
-    @NotNull(message = "{clinicalobservation.effetivetime.mandatory}")
+    @NotNull(message = "{clinical.observation.effective.time.mandatory}")
     @JsonFormat(pattern = JacksonDateFormatConfig.DATE_TIME_FORMAT)
     private String effectiveTime;
 

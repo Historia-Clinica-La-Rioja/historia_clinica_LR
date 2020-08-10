@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.hospitalization.repository.generalstate;
 
-import net.pladema.clinichistory.hospitalization.repository.generalstate.domain.InmunizationVo;
+import net.pladema.clinichistory.hospitalization.repository.generalstate.domain.ImmunizationVo;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentStatus;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.InmunizationStatus;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.Snomed;
@@ -17,22 +17,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class HCHInmunizationRepositoryImpl implements HCHInmunizationRepository {
+public class HCHImmunizationRepositoryImpl implements HCHImmunizationRepository {
 
-    private static final Logger LOG = LoggerFactory.getLogger(HCHInmunizationRepositoryImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HCHImmunizationRepositoryImpl.class);
 
     public static final String OUTPUT = "Output -> {}";
 
     private final EntityManager entityManager;
 
-    public HCHInmunizationRepositoryImpl(EntityManager entityManager){
+    public HCHImmunizationRepositoryImpl(EntityManager entityManager){
         this.entityManager = entityManager;
     }
 
     @SuppressWarnings("unchecked")
     @Override
     @Transactional(readOnly = true)
-    public List<InmunizationVo> findGeneralState(Integer internmentEpisodeId) {
+    public List<ImmunizationVo> findGeneralState(Integer internmentEpisodeId) {
 
         String sqlString = "with temporal as (" +
                 "select distinct " +
@@ -55,18 +55,18 @@ public class HCHInmunizationRepositoryImpl implements HCHInmunizationRepository 
                 "from temporal t " +
                 "left join note n on t.note_id = n.id " +
                 "join snomed s on t.sctid_code = s.id " +
-                "where rw = 1 and not status_id = :inmunizationStatusId " +
+                "where rw = 1 and not status_id = :immunizationStatusId " +
                 "order by t.updated_on";
 
         List<Object[]> queryResult = entityManager.createNativeQuery(sqlString)
                 .setParameter("internmentEpisodeId", internmentEpisodeId)
                 .setParameter("documentStatusId", DocumentStatus.FINAL)
-                .setParameter("inmunizationStatusId", InmunizationStatus.ERROR)
+                .setParameter("immunizationStatusId", InmunizationStatus.ERROR)
                 .getResultList();
-        List<InmunizationVo> result = new ArrayList<>();
+        List<ImmunizationVo> result = new ArrayList<>();
         queryResult.forEach(i -> {
             Date date = (Date) i[4];
-            result.add(new InmunizationVo(
+            result.add(new ImmunizationVo(
                     (Integer)i[0],
                     new Snomed((String)i[1], (String)i[2], null, null),
                     (String)i[3],

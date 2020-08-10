@@ -2,9 +2,9 @@ package net.pladema.clinichistory.ips.service.impl;
 
 import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.service.NoteService;
-import net.pladema.clinichistory.ips.repository.InmunizationRepository;
+import net.pladema.clinichistory.ips.repository.ImmunizationRepository;
 import net.pladema.clinichistory.ips.repository.entity.Inmunization;
-import net.pladema.clinichistory.ips.repository.masterdata.InmunizationStatusRepository;
+import net.pladema.clinichistory.ips.repository.masterdata.ImmunizationStatusRepository;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.InmunizationStatus;
 import net.pladema.clinichistory.ips.service.ImmunizationService;
 import net.pladema.clinichistory.ips.service.SnomedService;
@@ -24,9 +24,9 @@ public class ImmunizationServiceImpl implements ImmunizationService {
 
     public static final String OUTPUT = "Output -> {}";
 
-    private final InmunizationRepository inmunizationRepository;
+    private final ImmunizationRepository immunizationRepository;
 
-    private final InmunizationStatusRepository inmunizationStatusRepository;
+    private final ImmunizationStatusRepository immunizationStatusRepository;
 
     private final SnomedService snomedService;
 
@@ -34,13 +34,13 @@ public class ImmunizationServiceImpl implements ImmunizationService {
 
     private final NoteService noteService;
 
-    public ImmunizationServiceImpl(InmunizationRepository inmunizationRepository,
-                                   InmunizationStatusRepository inmunizationStatusRepository,
+    public ImmunizationServiceImpl(ImmunizationRepository immunizationRepository,
+                                   ImmunizationStatusRepository immunizationStatusRepository,
                                    SnomedService snomedService,
                                    DocumentService documentService,
                                    NoteService noteService){
-        this.inmunizationRepository = inmunizationRepository;
-        this.inmunizationStatusRepository = inmunizationStatusRepository;
+        this.immunizationRepository = immunizationRepository;
+        this.immunizationStatusRepository = immunizationStatusRepository;
         this.snomedService = snomedService;
         this.documentService = documentService;
         this.noteService = noteService;
@@ -75,14 +75,14 @@ public class ImmunizationServiceImpl implements ImmunizationService {
         LOG.debug("Input parameters -> patientId {}, immunizationBo {}, sctId {}, noteId {}", patientId, immunizationBo, sctId, noteId);
         Inmunization immunization = new Inmunization(patientId, sctId, immunizationBo.getStatusId()
                 , immunizationBo.getAdministrationDate(), immunizationBo.getInstitutionId(), noteId);
-        immunization = inmunizationRepository.save(immunization);
+        immunization = immunizationRepository.save(immunization);
         LOG.debug("Immunization saved -> {}", immunization.getId());
         LOG.debug(OUTPUT, immunization);
         return immunization;
     }
 
     private String getStatus(String id) {
-        return inmunizationStatusRepository.findById(id).map(InmunizationStatus::getDescription).orElse(null);
+        return immunizationStatusRepository.findById(id).map(InmunizationStatus::getDescription).orElse(null);
     }
 
 

@@ -96,9 +96,9 @@ public class ClinicalObservationServiceImpl implements ClinicalObservationServic
     }
 
     @Override
-    public AnthropometricDataBo loadAnthropometricData(Integer patientId, Long documentId, Optional<AnthropometricDataBo> optAnthropometricDatas) {
-        LOG.debug("Input parameters -> documentId {}, patientId {}, optAnthropometricDatas {}", documentId, patientId, optAnthropometricDatas);
-        optAnthropometricDatas.ifPresent(anthropometricData -> {
+    public AnthropometricDataBo loadAnthropometricData(Integer patientId, Long documentId, Optional<AnthropometricDataBo> optAnthropometricData) {
+        LOG.debug("Input parameters -> documentId {}, patientId {}, optAnthropometricData {}", documentId, patientId, optAnthropometricData);
+        optAnthropometricData.ifPresent(anthropometricData -> {
             if(mustSaveClinicalObservation(anthropometricData.getHeight())) {
                 ObservationVitalSign height = createObservationVitalSign(patientId, anthropometricData.getHeight(),
                         EVitalSign.HEIGHT);
@@ -120,8 +120,8 @@ public class ClinicalObservationServiceImpl implements ClinicalObservationServic
                 anthropometricData.setBloodType(createObservationFromLab(bloodType));
             }
         });
-        LOG.debug(OUTPUT, optAnthropometricDatas);
-        return optAnthropometricDatas.orElse(null);
+        LOG.debug(OUTPUT, optAnthropometricData);
+        return optAnthropometricData.orElse(null);
     }
 
     private boolean mustSaveClinicalObservation(ClinicalObservationBo co) {

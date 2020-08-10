@@ -9,13 +9,13 @@ import java.util.List;
 @Getter
 public enum EDayOfWeek {
 
-    DOMINGO(0, "domingo"),
-    LUNES(1, "lunes"),
-    MARTES(2, "martes"),
-    MIERCOLES(3, "miércoles"),
-    JUEVES(4, "jueves"),
-    VIERNES(5, "viernes"),
-    SABADO(6, "sábado");
+    SUNDAY(0, "domingo"),
+    MONDAY(1, "lunes"),
+    TUESDAY(2, "martes"),
+    WEDNESDAY(3, "miércoles"),
+    THURSDAY(4, "jueves"),
+    FRIDAY(5, "viernes"),
+    SATURDAY(6, "sábado");
 
     private Short id;
     private String description;

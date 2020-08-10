@@ -1,14 +1,5 @@
 package net.pladema.person.service.impl;
 
-import java.util.List;
-import java.util.Optional;
-
-import javax.persistence.EntityNotFoundException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
 import net.pladema.person.repository.PersonExtendedRepository;
 import net.pladema.person.repository.PersonRepository;
 import net.pladema.person.repository.domain.CompletePersonVo;
@@ -16,11 +7,19 @@ import net.pladema.person.repository.domain.PersonalInformation;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;
 import net.pladema.person.service.PersonService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import javax.persistence.EntityNotFoundException;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PersonServiceImpl implements PersonService {
 
     private static final Logger LOG = LoggerFactory.getLogger(PersonServiceImpl.class);
+    public static final String OUTPUT = "Output -> {}";
 
     private final PersonRepository personRepository;
 
@@ -72,7 +71,7 @@ public class PersonServiceImpl implements PersonService {
         LOG.debug("Input data -> identificationTypeId {}, identificationNumber {}, genderId {}", identificationTypeId,
                 identificationNumber, genderId);
         List<Integer> result = personRepository.findByDniAndGender(identificationTypeId, identificationNumber, genderId);
-        LOG.debug("Ids resultantes -> {}", result);
+        LOG.debug(OUTPUT, result);
         return result;
     }
 
@@ -80,7 +79,7 @@ public class PersonServiceImpl implements PersonService {
     public Optional<PersonalInformation> getPersonalInformation(Integer personId) {
         LOG.debug("Input parameters -> {}", personId);
         Optional<PersonalInformation> result = personRepository.getPersonalInformation(personId);
-        LOG.debug("Output -> {}", result);
+        LOG.debug(OUTPUT, result);
         return result;
     }
 
@@ -88,7 +87,7 @@ public class PersonServiceImpl implements PersonService {
 	public Optional<CompletePersonVo> getCompletePerson(Integer personId) {
 		LOG.debug("Input parameters -> {}", personId);
         Optional<CompletePersonVo> result = personRepository.getCompletePerson(personId);
-        LOG.debug("Output -> {}", result);
+        LOG.debug(OUTPUT, result);
         return result;
 	}
 

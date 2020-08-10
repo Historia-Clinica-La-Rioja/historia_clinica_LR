@@ -9,7 +9,7 @@ public interface ReportDocumentService {
 
     GeneralHealthConditionBo getReportHealthConditionFromDocument(Long documentId);
 
-    List<ImmunizationBo> getReportInmunizationStateFromDocument(Long documentId);
+    List<ImmunizationBo> getReportImmunizationStateFromDocument(Long documentId);
 
     List<AllergyConditionBo> getReportAllergyIntoleranceStateFromDocument(Long documentId);
 

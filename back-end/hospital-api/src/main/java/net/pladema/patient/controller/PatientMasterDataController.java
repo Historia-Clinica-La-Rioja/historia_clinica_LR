@@ -28,9 +28,9 @@ public class PatientMasterDataController {
 
 	@GetMapping(value = "/withoutIdentityReasons")
 	public ResponseEntity<List<IdentityVerificationStatus>> getIdentityVerificationStatus(){
-		List<IdentityVerificationStatus> resultado = identityVerificationStatusRepository.findAll();
-		LOG.debug("Get all identityVerificationStatus -> {} ", resultado);
-		return ResponseEntity.ok(resultado);
+		List<IdentityVerificationStatus> result = identityVerificationStatusRepository.findAll();
+		LOG.debug("Get all identityVerificationStatus -> {} ", result);
+		return ResponseEntity.ok(result);
 	}
 
 }

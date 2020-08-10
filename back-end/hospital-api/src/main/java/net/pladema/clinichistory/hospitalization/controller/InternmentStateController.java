@@ -44,7 +44,7 @@ public class InternmentStateController {
 
     private final AllergyGeneralStateService allergyGeneralStateServiceService;
 
-    private final InmunizationGeneralStateService inmunizationGeneralStateService;
+    private final ImmunizationGeneralStateService immunizationGeneralStateService;
 
     private final ClinicalObservationGeneralStateService clinicalObservationGeneralStateService;
 
@@ -54,14 +54,14 @@ public class InternmentStateController {
                                      HealthConditionGeneralStateService healthConditionGeneralStateService,
                                      MedicationGeneralStateService medicationGeneralStateService,
                                      AllergyGeneralStateService allergyGeneralStateServiceService,
-                                     InmunizationGeneralStateService inmunizationGeneralStateService,
+                                     ImmunizationGeneralStateService immunizationGeneralStateService,
                                      InternmentStateMapper internmentStateMapper,
                                      ClinicalObservationGeneralStateService clinicalObservationGeneralStateService) {
         this.internmentStateService = internmentStateService;
         this.healthConditionGeneralStateService = healthConditionGeneralStateService;
         this.medicationGeneralStateService = medicationGeneralStateService;
         this.allergyGeneralStateServiceService = allergyGeneralStateServiceService;
-        this.inmunizationGeneralStateService = inmunizationGeneralStateService;
+        this.immunizationGeneralStateService = immunizationGeneralStateService;
         this.internmentStateMapper = internmentStateMapper;
         this.clinicalObservationGeneralStateService = clinicalObservationGeneralStateService;
     }
@@ -83,7 +83,7 @@ public class InternmentStateController {
     public ResponseEntity<HealthConditionDto> mainDiagnosisGeneralState(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
-        LOG.debug("Imput parameters -> institutionId {}, internmentEpisodeId {}", institutionId, internmentEpisodeId);
+        LOG.debug(LOGGING_INSTITUTION_AND_INTERNMENT_EPISODE, institutionId, internmentEpisodeId);
         HealthConditionBo mainDiagnosis = healthConditionGeneralStateService.getMainDiagnosisGeneralState(internmentEpisodeId);
         HealthConditionDto result = internmentStateMapper.toHealthConditionDto(mainDiagnosis);
         LOG.debug(LOGGING_OUTPUT, result);
@@ -168,8 +168,8 @@ public class InternmentStateController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
         LOG.debug(LOGGING_INSTITUTION_AND_INTERNMENT_EPISODE, institutionId, internmentEpisodeId);
-        AnthropometricDataBo anthropometricDatas = clinicalObservationGeneralStateService.getLastAnthropometricDataGeneralState(internmentEpisodeId);
-        AnthropometricDataDto result = internmentStateMapper.toAnthropometricDataDto(anthropometricDatas);
+        AnthropometricDataBo anthropometricData = clinicalObservationGeneralStateService.getLastAnthropometricDataGeneralState(internmentEpisodeId);
+        AnthropometricDataDto result = internmentStateMapper.toAnthropometricDataDto(anthropometricData);
         LOG.debug(LOGGING_OUTPUT, result);
         return  ResponseEntity.ok().body(result);
     }
@@ -192,7 +192,7 @@ public class InternmentStateController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
         LOG.debug(LOGGING_INSTITUTION_AND_INTERNMENT_EPISODE, institutionId, internmentEpisodeId);
-        List<ImmunizationBo> immunizationBos = inmunizationGeneralStateService.getInmunizationsGeneralState(internmentEpisodeId);
+        List<ImmunizationBo> immunizationBos = immunizationGeneralStateService.getImmunizationsGeneralState(internmentEpisodeId);
         List<ImmunizationDto> result = internmentStateMapper.toListImmunizationDto(immunizationBos);
         LOG.debug(LOGGING_OUTPUT, result);
         return  ResponseEntity.ok().body(result);

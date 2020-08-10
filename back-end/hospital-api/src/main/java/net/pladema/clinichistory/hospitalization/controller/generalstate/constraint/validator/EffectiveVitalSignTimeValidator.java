@@ -95,14 +95,14 @@ public class EffectiveVitalSignTimeValidator implements ConstraintValidator<Effe
         LocalDateTime datetime = LocalDateTime.parse(effectiveClinicalObservationDto.getEffectiveTime(), DateTimeFormatter.ofPattern(JacksonDateFormatConfig.DATE_TIME_FORMAT));
         if (datetime.isAfter(LocalDateTime.now())) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("{clinicalobservation.effetivetime.future}")
+            context.buildConstraintViolationWithTemplate("{clinical.observation.effective.time.future}")
                     .addPropertyNode(property)
                     .addConstraintViolation();
             return false;
         }
         if (datetime.isBefore(entryDate.atStartOfDay())){
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("{clinicalobservation.effetivetime.before.entrydate}")
+            context.buildConstraintViolationWithTemplate("{clinical.observation.effective.time.before.entry.date}")
                     .addPropertyNode(property)
                     .addConstraintViolation();
             return false;

@@ -1,19 +1,18 @@
 package net.pladema.establishment.repository;
 
-import static net.pladema.clinichistory.ips.repository.masterdata.entity.InternmentEpisodeStatus.ACTIVE;
-
-import java.util.List;
-import java.util.stream.Stream;
-
+import net.pladema.establishment.repository.domain.BedInfoVo;
+import net.pladema.establishment.repository.domain.BedSummaryVo;
+import net.pladema.establishment.repository.entity.Bed;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.pladema.establishment.repository.domain.BedInfoVo;
-import net.pladema.establishment.repository.domain.BedSummaryVo;
-import net.pladema.establishment.repository.entity.Bed;
+import java.util.List;
+import java.util.stream.Stream;
+
+import static net.pladema.clinichistory.ips.repository.masterdata.entity.InternmentEpisodeStatus.ACTIVE;
 
 @Repository
 public interface BedRepository extends JpaRepository<Bed, Integer> {
@@ -24,7 +23,7 @@ public interface BedRepository extends JpaRepository<Bed, Integer> {
 			+ " JOIN Room r ON b.roomId = r.id"
 			+ " JOIN ClinicalSpecialtySector css ON r.clinicalSpecialtySectorId = css.id"
 			+ " JOIN Sector s ON css.sectorId = s.id " + " WHERE s.institutionId =:institutionId")
-	List<Bed> getAllByInstitucion(@Param("institutionId") Integer institutionId);
+	List<Bed> getAllByInstitution(@Param("institutionId") Integer institutionId);
 
 
 	@Transactional(readOnly = true)

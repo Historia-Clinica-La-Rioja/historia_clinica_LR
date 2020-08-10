@@ -18,14 +18,14 @@ public class HealthHistoryConditionValidator implements ConstraintValidator<Heal
     }
 
     @Override
-    public boolean isValid(List<HealthHistoryConditionDto> healthHistoryConditionDtos, ConstraintValidatorContext context) {
+    public boolean isValid(List<HealthHistoryConditionDto> healthHistoryConditionDtoList, ConstraintValidatorContext context) {
 
-        if (healthHistoryConditionDtos == null || healthHistoryConditionDtos.isEmpty())
+        if (healthHistoryConditionDtoList == null || healthHistoryConditionDtoList.isEmpty())
             return true;
 
         final Set<SnomedDto> set = new HashSet<>();
 
-        for (HealthHistoryConditionDto healthHistoryConditionDto : healthHistoryConditionDtos)
+        for (HealthHistoryConditionDto healthHistoryConditionDto : healthHistoryConditionDtoList)
             if (!set.add(healthHistoryConditionDto.getSnomed()))
                 return false;
         return true;

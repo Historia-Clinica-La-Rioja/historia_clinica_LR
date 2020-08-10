@@ -27,13 +27,13 @@ public class DiaryOpeningHoursValidator implements ConstraintValidator<DiaryOpen
     public boolean isValid(DiaryADto diaryADto, ConstraintValidatorContext context) {
         LOG.debug("Input parameters -> diaryADto {}", diaryADto);
 
-        Comparator<DiaryOpeningHoursDto> dayweekOrder = Comparator
+        Comparator<DiaryOpeningHoursDto> weekDayOrder = Comparator
                 .comparing(doh -> doh.getOpeningHours().getDayWeekId(), Short::compareTo);
         Comparator<DiaryOpeningHoursDto> timeOrder = Comparator
                 .comparing(doh -> doh.getOpeningHours().getFrom(), String::compareTo);
 
         List<DiaryOpeningHoursDto> openingHours = diaryADto.getDiaryOpeningHours();
-        openingHours.sort(dayweekOrder.thenComparing(timeOrder));
+        openingHours.sort(weekDayOrder.thenComparing(timeOrder));
 
         boolean overlap = false;
         int index = 0;

@@ -21,13 +21,13 @@ public class HCEAllergyBo extends HCEClinicalTermBo {
 
     private LocalDate startDate;
 
-    public HCEAllergyBo(HCEAllergyVo hceAllergieVo) {
+    public HCEAllergyBo(HCEAllergyVo hceAllergyVo) {
         super();
-        setId(hceAllergieVo.getId());
-        setStatusId(hceAllergieVo.getStatusId());
-        setSnomed(new SnomedBo(hceAllergieVo.getSnomed()));
-        setVerificationId(hceAllergieVo.getVerificationId());
-        setCategoryId(hceAllergieVo.getCategoryId());
-        setStartDate(hceAllergieVo.getStartDate());
+        setId(hceAllergyVo.getId());
+        setStatusId(hceAllergyVo.getStatusId());
+        setSnomed(new SnomedBo(hceAllergyVo.getSnomed()));
+        setVerificationId(hceAllergyVo.getVerificationId());
+        setCategoryId(hceAllergyVo.getCategoryId());
+        setStartDate(hceAllergyVo.getStartDate());
     }
 }

@@ -73,8 +73,8 @@ public class PatientServiceImpl implements PatientService {
 	@Async
 	public void federatePatient(Patient patient, Person person) {
 		LOG.debug("Going to federate Patient => {} /n with Person => {}", patient, person);
-		Optional<LocalIdSearchResponse> federarReponse = federarService.federatePatient(person, patient);
-		federarReponse.ifPresent(updatePatientPermanent(patient));
+		Optional<LocalIdSearchResponse> federarResponse = federarService.federatePatient(person, patient);
+		federarResponse.ifPresent(updatePatientPermanent(patient));
 	}
 
 	private Consumer<LocalIdSearchResponse> updatePatientPermanent(Patient patient) {
@@ -82,7 +82,7 @@ public class PatientServiceImpl implements PatientService {
 			patient.setNationalId(nationalId);
 			patient.setTypeId(PatientType.PERMANENT);
 			patientRepository.save(patient);
-			LOG.debug("Succesfuly federated patient with nationalId => {}", nationalId);
+			LOG.debug("Successful federated patient with nationalId => {}", nationalId);
 		});
 	}
 

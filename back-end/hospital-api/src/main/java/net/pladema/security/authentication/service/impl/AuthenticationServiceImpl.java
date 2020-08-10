@@ -50,7 +50,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			throw new BadCredentialsException("invalid.credentials");
 		}
 
-		logger.debug("Credenciales validas");
+		logger.debug("Valid credentials");
 		userService.updateLoginDate(user.getId());
 		return tokenService.generateToken(login);
 	}

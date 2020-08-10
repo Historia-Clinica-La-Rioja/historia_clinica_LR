@@ -45,7 +45,7 @@ public class BedController {
 	@GetMapping()
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
 	public ResponseEntity<List<BedDto>> getAll(@PathVariable(name = "institutionId") Integer institutionId) {
-		List<Bed> beds = bedRepository.getAllByInstitucion(institutionId);
+		List<Bed> beds = bedRepository.getAllByInstitution(institutionId);
 		LOG.debug("Get all Beds  => {}", beds);
 		return ResponseEntity.ok(bedMapper.toListBedDto(beds));
 	}

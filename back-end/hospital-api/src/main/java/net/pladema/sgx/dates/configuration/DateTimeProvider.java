@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
- * Clase creada para poder mockear en los test unitarios.
+ * Class to mock date in unit test
  */
 @Component
 public class DateTimeProvider {

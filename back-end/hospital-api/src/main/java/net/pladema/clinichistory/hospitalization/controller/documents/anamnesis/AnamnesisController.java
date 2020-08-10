@@ -104,7 +104,7 @@ public class AnamnesisController {
     @EffectiveVitalSignTimeValid
     @DocumentValid(isConfirmed = false, documentType = DocumentType.ANAMNESIS)
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR')")
-    private ResponseEntity<ResponseAnamnesisDto> updateAnamnesis(
+    public ResponseEntity<ResponseAnamnesisDto> updateAnamnesis(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
             @PathVariable(name = "anamnesisId") Long anamnesisId,

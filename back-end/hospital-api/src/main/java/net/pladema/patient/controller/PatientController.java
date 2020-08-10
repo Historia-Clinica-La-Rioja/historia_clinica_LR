@@ -179,7 +179,7 @@ public class PatientController {
 		LOG.debug(INPUT_PARAMETERS_PATIENT_ID, patientId);
 		Patient patient = patientService.getPatient(patientId)
 				.orElseThrow(() -> new EntityNotFoundException(PATIENT_INVALID));
-		DoctorsBo doctorsBo = additionalDoctorService.getAdditionalsDoctors(patientId);
+		DoctorsBo doctorsBo = additionalDoctorService.getAdditionalDoctors(patientId);
 		BasicDataPersonDto personData = personExternalService.getBasicDataPerson(patient.getPersonId());
 		PatientType patientType = patientTypeRepository.getOne(patient.getTypeId());
 		CompletePatientDto result = new CompletePatientDto(patient, patientType, personData,
@@ -204,7 +204,7 @@ public class PatientController {
 		addIds.accept(patientToAdd);
 		Patient createdPatient = patientService.addPatient(patientToAdd);
 		DoctorsBo doctorsBo = new DoctorsBo(patientDto.getGeneralPractitioner(),patientDto.getPamiDoctor());
-		additionalDoctorService.addAdditionalsDoctors(doctorsBo,createdPatient.getId());
+		additionalDoctorService.addAdditionalDoctors(doctorsBo,createdPatient.getId());
 		LOG.debug(OUTPUT, createdPatient.getId());
 		return createdPatient;
 	}

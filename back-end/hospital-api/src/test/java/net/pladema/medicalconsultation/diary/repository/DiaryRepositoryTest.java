@@ -40,7 +40,7 @@ public class DiaryRepositoryTest extends UnitRepository {
 		LocalTime closingTime = LocalTime.parse("12:00:32", timeFormatter);
 
 
-		DoctorsOffice doctorsOffice = save(DiaryTestMocks.createDoctorsOffice(1, 1, "DOCTORSOFFICE", openingTime, closingTime));
+		DoctorsOffice doctorsOffice = save(DiaryTestMocks.createDoctorsOffice(1, 1, "DOCTORS_OFFICE", openingTime, closingTime));
 
 		save(DiaryTestMocks.createDiary(1, doctorsOffice.getId(), LocalDate.parse(startDate, formatter),
 				LocalDate.parse(endDate, formatter), (short) 1, true, (short) 4, true, true, true));

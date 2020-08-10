@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface EffectiveVitalSignTimeValid {
 
-    String message() default "{clinicalobservation.effetivetime.mandatory}";
+    String message() default "{clinical.observation.effective.time.mandatory}";
 
     Class<?>[] groups() default {};
 

@@ -18,7 +18,7 @@ public interface DiaryOpeningHoursMapper {
 
     @Named("toListDiaryOpeningHoursBo")
     @IterableMapping(qualifiedByName = "toDiaryOpeningHoursBo")
-    List<DiaryOpeningHoursBo> toListDiaryOpeningHoursBo(List<DiaryOpeningHoursDto> diaryOpeningHoursDtos);
+    List<DiaryOpeningHoursBo> toListDiaryOpeningHoursBo(List<DiaryOpeningHoursDto> diaryOpeningHoursDto);
 
 
 }

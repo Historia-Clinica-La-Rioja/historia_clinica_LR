@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.hospitalization.repository.generalstate.domain.InmunizationVo;
+import net.pladema.clinichistory.hospitalization.repository.generalstate.domain.ImmunizationVo;
 
 import java.time.LocalDate;
 
@@ -20,13 +20,13 @@ public class ImmunizationBo extends ClinicalTerm {
 
     private Integer institutionId;
 
-    public ImmunizationBo(InmunizationVo inmunizationVo) {
+    public ImmunizationBo(ImmunizationVo immunizationVo) {
         super();
-        setId(inmunizationVo.getId());
-        setStatusId(inmunizationVo.getStatusId());
-        setStatus(inmunizationVo.getStatus());
-        setSnomed(new SnomedBo(inmunizationVo.getSnomed()));
-        setAdministrationDate(inmunizationVo.getAdministrationDate());
-        setNote(inmunizationVo.getNote());
+        setId(immunizationVo.getId());
+        setStatusId(immunizationVo.getStatusId());
+        setStatus(immunizationVo.getStatus());
+        setSnomed(new SnomedBo(immunizationVo.getSnomed()));
+        setAdministrationDate(immunizationVo.getAdministrationDate());
+        setNote(immunizationVo.getNote());
     }
 }

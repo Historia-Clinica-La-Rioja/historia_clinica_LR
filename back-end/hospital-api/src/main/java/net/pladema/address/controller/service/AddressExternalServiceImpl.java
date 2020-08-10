@@ -42,6 +42,6 @@ public class AddressExternalServiceImpl implements AddressExternalService {
     @Override
     public List<AddressDto> getAddressesByIds(List<Integer> addressesIds) {
         List<AddressBo> addressesBo = addressService.getAddressesByIds(addressesIds);
-        return addressMapper.fromAdressBoList(addressesBo);
+        return addressMapper.fromAddressBoList(addressesBo);
     }
 }

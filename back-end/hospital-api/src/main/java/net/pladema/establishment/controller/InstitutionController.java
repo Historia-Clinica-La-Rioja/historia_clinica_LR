@@ -36,22 +36,22 @@ public class InstitutionController {
 	@GetMapping(params = "ids")
 	public @ResponseBody
 	List<InstitutionDto> getMany(@RequestParam List<Integer> ids) {
-		List<Integer> idsConAcceso = ids;
+		List<Integer> allowedIds = ids;
 
-		List<Institution> institutions = repository.findAllById(idsConAcceso);
-		List<InstitutionDto> institutionDtos = mapper.toListInstitutionDto(institutions);
+		List<Institution> institutions = repository.findAllById(allowedIds);
+		List<InstitutionDto> institutionDtoList = mapper.toListInstitutionDto(institutions);
 
 		List<Integer> addressesIds = institutions.stream().map(Institution::getAddressId).collect(Collectors.toList());
 		List<AddressDto> addresses = addressExternalService.getAddressesByIds(addressesIds);
 
-		Map<Integer,InstitutionAddressDto> institutionAddressHashDtos=
+		Map<Integer,InstitutionAddressDto> institutionAddressHashDtoMap=
 				addresses.stream()
 						.map(InstitutionAddressDto::new)
 						.collect(Collectors.toMap(InstitutionAddressDto::getAddressId, item -> item));
 
 
-		institutionDtos.forEach(institutionDto -> institutionDto.setInstitutionAddressDto(institutionAddressHashDtos.get(institutionDto.getInstitutionAddressDto().getAddressId())));
-		return institutionDtos ;
+		institutionDtoList.forEach(institutionDto -> institutionDto.setInstitutionAddressDto(institutionAddressHashDtoMap.get(institutionDto.getInstitutionAddressDto().getAddressId())));
+		return institutionDtoList ;
 
 	}
 

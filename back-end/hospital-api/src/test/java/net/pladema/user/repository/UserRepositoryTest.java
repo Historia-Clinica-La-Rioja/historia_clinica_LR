@@ -1,11 +1,6 @@
 package net.pladema.user.repository;
 
-import static net.pladema.TestUtils.assertCreateAuditableEntity;
-import static net.pladema.TestUtils.assertUpdateAuditableEntity;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.Optional;
-
+import net.pladema.user.repository.entity.User;
 import net.pladema.user.repository.entity.UserBean;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import net.pladema.user.repository.entity.User;
+import java.util.Optional;
+
+import static net.pladema.TestUtils.assertCreateAuditableEntity;
+import static net.pladema.TestUtils.assertUpdateAuditableEntity;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest(showSql = false)
@@ -76,8 +75,8 @@ public class UserRepositoryTest {
 	}
 
 	@Test
-	public void testFindByUsername_notexists() {
-		Optional<User> opUser = userRepository.findByUsername("asdasdasd");
+	public void testFindByUsername_not_exists() {
+		Optional<User> opUser = userRepository.findByUsername("test");
 
 		assertThat(opUser).isNotNull();
 

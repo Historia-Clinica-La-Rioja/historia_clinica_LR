@@ -511,7 +511,7 @@ export interface ImmunizationDto extends ClinicalTermDto {
     note: string;
 }
 
-export interface InstitutionAddressDto {
+export interface InstitutionAddressDto extends Serializable {
     addressId: number;
     apartment: string;
     city: CityDto;
@@ -856,7 +856,7 @@ export interface UserDto extends AbstractUserDto {
     personDto?: UserPersonDto;
 }
 
-export interface UserPersonDto {
+export interface UserPersonDto extends Serializable {
     firstName: string;
     lastName: string;
 }
@@ -900,7 +900,7 @@ export const enum AppFeature {
 export const enum EDocumentSearch {
     DIAGNOSIS = "DIAGNOSIS",
     DOCTOR = "DOCTOR",
-    CREATEDON = "CREATEDON",
+    CREATED_ON = "CREATED_ON",
     ALL = "ALL",
 }
 

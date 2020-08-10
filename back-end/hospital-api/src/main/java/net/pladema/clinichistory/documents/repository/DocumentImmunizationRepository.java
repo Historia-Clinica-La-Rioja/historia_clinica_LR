@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.documents.repository;
 
-import net.pladema.clinichistory.hospitalization.repository.generalstate.domain.InmunizationVo;
+import net.pladema.clinichistory.hospitalization.repository.generalstate.domain.ImmunizationVo;
 import net.pladema.clinichistory.documents.repository.entity.DocumentInmunization;
 import net.pladema.clinichistory.documents.repository.entity.DocumentInmunizationPK;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.InmunizationStatus;
@@ -17,7 +17,7 @@ public interface DocumentImmunizationRepository extends JpaRepository<DocumentIn
 
 
     @Transactional(readOnly = true)
-    @Query("SELECT NEW net.pladema.clinichistory.hospitalization.repository.generalstate.domain.InmunizationVo(" +
+    @Query("SELECT NEW net.pladema.clinichistory.hospitalization.repository.generalstate.domain.ImmunizationVo(" +
             "i.id, s, i.statusId, i.administrationDate, " +
             "n.id as noteId, n.description as note) " +
             "FROM DocumentInmunization di " +
@@ -26,11 +26,11 @@ public interface DocumentImmunizationRepository extends JpaRepository<DocumentIn
             "LEFT JOIN Note n ON (n.id = i.noteId) " +
             "WHERE di.pk.documentId = :documentId " +
             "AND i.statusId NOT IN ('"+ InmunizationStatus.ERROR+"')")
-    List<InmunizationVo> getInmunizationStateFromDocument(@Param("documentId") Long documentId);
+    List<ImmunizationVo> getImmunizationStateFromDocument(@Param("documentId") Long documentId);
 
 
     @Transactional(readOnly = true)
-    @Query("SELECT NEW net.pladema.clinichistory.hospitalization.repository.generalstate.domain.InmunizationVo(" +
+    @Query("SELECT NEW net.pladema.clinichistory.hospitalization.repository.generalstate.domain.ImmunizationVo(" +
             "i.id, s, i.statusId, iss.description as status, i.administrationDate, " +
             "n.id as noteId, n.description as note) " +
             "FROM DocumentInmunization di " +
@@ -39,5 +39,5 @@ public interface DocumentImmunizationRepository extends JpaRepository<DocumentIn
             "JOIN InmunizationStatus iss ON (iss.id = i.statusId) " +
             "LEFT JOIN Note n ON (n.id = i.noteId) " +
             "WHERE di.pk.documentId = :documentId ")
-    List<InmunizationVo> getInmunizationStateFromDocumentToReport(@Param("documentId") Long documentId);
+    List<ImmunizationVo> getImmunizationStateFromDocumentToReport(@Param("documentId") Long documentId);
 }

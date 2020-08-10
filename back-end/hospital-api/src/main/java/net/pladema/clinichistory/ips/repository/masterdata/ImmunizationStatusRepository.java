@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface InmunizationStatusRepository extends JpaRepository<InmunizationStatus, String> {
+public interface ImmunizationStatusRepository extends JpaRepository<InmunizationStatus, String> {
 
 }

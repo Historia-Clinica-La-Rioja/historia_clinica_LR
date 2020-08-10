@@ -70,8 +70,8 @@ public class MapClinicalObservationVoTest {
 			ClinicalObservationVo diastolic = new ClinicalObservationVo(i+1, EVitalSign.DIASTOLIC_BLOOD_PRESSURE.getSctidCode(), status,"1", localDateTime.plusSeconds(i));
 			vitalSigns.add(diastolic);
 
-			ClinicalObservationVo sistolic = new ClinicalObservationVo(i+2, EVitalSign.SYSTOLIC_BLOOD_PRESSURE.getSctidCode(), status, "11123", localDateTime.plusSeconds(i));
-			vitalSigns.add(sistolic);
+			ClinicalObservationVo systolic = new ClinicalObservationVo(i+2, EVitalSign.SYSTOLIC_BLOOD_PRESSURE.getSctidCode(), status, "11123", localDateTime.plusSeconds(i));
+			vitalSigns.add(systolic);
 
 			ClinicalObservationVo temperature = new ClinicalObservationVo(i+3, EVitalSign.TEMPERATURE.getSctidCode(), status,"14", localDateTime.plusSeconds(i));
 			vitalSigns.add(temperature);

@@ -31,7 +31,7 @@ public class FilterValidator implements ConstraintValidator<FilterValid, String>
         try {
             searchFilter = jackson.readValue(searchFilterStr, PatientSearchFilter.class);
         } catch (IOException e) {
-            LOG.error(String.format("Error mappeando filter: %s", searchFilterStr), e);
+            LOG.error(String.format("Error mapping filter: %s", searchFilterStr), e);
         }
         return (searchFilter != null && searchFilter.getFirstName() != null && searchFilter.getLastName() != null
                 && searchFilter.getGenderId() != null && searchFilter.getIdentificationNumber() != null);

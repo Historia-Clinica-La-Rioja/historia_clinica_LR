@@ -63,9 +63,9 @@ public class ReportDocumentServiceImpl implements ReportDocumentService {
     }
 
     @Override
-    public List<ImmunizationBo> getReportInmunizationStateFromDocument(Long documentId) {
+    public List<ImmunizationBo> getReportImmunizationStateFromDocument(Long documentId) {
         LOG.debug(LOGGING_DOCUMENT_ID, documentId);
-        List<InmunizationVo> resultQuery = documentImmunizationRepository.getInmunizationStateFromDocumentToReport(documentId);
+        List<ImmunizationVo> resultQuery = documentImmunizationRepository.getImmunizationStateFromDocumentToReport(documentId);
         List<ImmunizationBo> result = resultQuery.stream().map(ImmunizationBo::new).collect(Collectors.toList());
         LOG.debug(OUTPUT, result);
         return result;

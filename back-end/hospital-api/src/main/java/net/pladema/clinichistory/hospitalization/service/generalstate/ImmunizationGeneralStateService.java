@@ -4,7 +4,7 @@ import net.pladema.clinichistory.ips.service.domain.ImmunizationBo;
 
 import java.util.List;
 
-public interface InmunizationGeneralStateService {
+public interface ImmunizationGeneralStateService {
 
-    List<ImmunizationBo> getInmunizationsGeneralState(Integer internmentEpisodeId);
+    List<ImmunizationBo> getImmunizationsGeneralState(Integer internmentEpisodeId);
 }
