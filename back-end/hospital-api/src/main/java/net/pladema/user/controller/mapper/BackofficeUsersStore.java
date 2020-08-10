@@ -5,9 +5,12 @@ import net.pladema.permissions.controller.dto.BackofficeUserRoleDto;
 import net.pladema.permissions.controller.mappers.UserRoleDtoMapper;
 import net.pladema.permissions.repository.UserRoleRepository;
 import net.pladema.permissions.repository.entity.UserRole;
+import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
 import net.pladema.sgx.exceptions.BackofficeValidationException;
 import net.pladema.sgx.exceptions.NotFoundException;
+import net.pladema.staff.repository.HealthcareProfessionalRepository;
+import net.pladema.staff.repository.entity.HealthcareProfessional;
 import net.pladema.user.controller.dto.BackofficeUserDto;
 import net.pladema.user.controller.mappers.UserDtoMapper;
 import net.pladema.user.repository.UserRepository;
@@ -27,26 +30,27 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 	private final UserDtoMapper userDtoMapper;
 	private final UserRoleDtoMapper userRoleDtoMapper;
 	private final UserRepository userRepository;
+	private final HealthcareProfessionalRepository healthcareProfessionalRepository;
 
 
 	public BackofficeUsersStore(UserRepository repository,
 			UserRoleRepository userRoleRepository,
 			UserDtoMapper userDtoMapper,
 			UserRoleDtoMapper userRoleDtoMapper,
-			UserRepository userRepository
+			UserRepository userRepository,
+			HealthcareProfessionalRepository healthcareProfessionalRepository
 			) {
 		this.repository = repository;
 		this.userRoleRepository = userRoleRepository;
 		this.userDtoMapper = userDtoMapper;
 		this.userRoleDtoMapper = userRoleDtoMapper;
 		this.userRepository = userRepository;
+		this.healthcareProfessionalRepository = healthcareProfessionalRepository;
 	}
 
 	@Override
 	public Page<BackofficeUserDto> findAll(BackofficeUserDto user, Pageable pageable) {
 		User modelUser = userDtoMapper.toModel(user);
-		/*modelUser.setAudit(new Audit());
-		modelUser.setEnable(null);*/
 
 		ExampleMatcher customExampleMatcher = ExampleMatcher.matchingAny()
 				.withMatcher("username", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
@@ -95,6 +99,7 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 
 	@Override
 	public BackofficeUserDto save(BackofficeUserDto dto) {
+		checkValidRoles(dto);
 		if (dto.getId() != null) {
 			return update(dto);
 		}
@@ -108,8 +113,6 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 				.map(userDtoMapper::toDto)
 				.orElseThrow(() -> new NotFoundException("user-not-found", String.format("El usuario %s no existe", dto.getId())));
 
-
-		//TODO: dto role ids are valid? we should validate before update
 		List<UserRole> userRoles = userRoleRepository.findByUserId(dto.getId());
 		userRoleRepository.deleteAll(roleToDelete(userRoles, toModel(dto.getRoles())));
 		userRoleRepository.saveAll(roleToAdd(dto.getId(), toModel(dto.getRoles()), userRoles));
@@ -117,14 +120,15 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 		return saved;
 	}
 
+
 	private BackofficeUserDto create(BackofficeUserDto dto) {
 		checkIfUserAlreadyExists(dto);
 		User modelUser = userDtoMapper.toModel(dto);
 		modelUser.setEnable(true);
+
 		BackofficeUserDto saved = userDtoMapper.toDto(repository.save(modelUser));
 
-		//TODO: dto role ids are valid? we should validate before update roleService.createUserRole(modelUser.getId(), ERole.PATIENT_USER);
-		userRoleRepository.saveAll(roleToAdd(dto.getId(), toModel(dto.getRoles()), new ArrayList<UserRole>()));
+		userRoleRepository.saveAll(roleToAdd(dto.getId(), toModel(dto.getRoles()), new ArrayList<>()));
 		
 		return saved;
 	}
@@ -168,9 +172,27 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 	}
 
 	private void checkIfUserAlreadyExists(BackofficeUserDto userDto){
-		if(userRepository.existsByPersonId(userDto.getPersonId()))
+		if(userRepository.existsByPersonId(userDto.getPersonId())) {
 			throw new BackofficeValidationException("user.exists");
-
+		}
 	}
 
+	private void checkValidRoles(BackofficeUserDto dto) {
+		if(!dto.getRoles().stream().allMatch(role -> isValidRole(role, dto.getPersonId())))
+			throw new BackofficeValidationException("role.requiresprofessional");
+	}
+
+	private boolean isValidRole(BackofficeUserRoleDto role, Integer personId) {
+		if(!isProfessional(role))
+			return true;
+		return healthcareProfessionalRepository.findProfessionalByPersonId(personId).isPresent();
+	}
+
+	private boolean isProfessional(BackofficeUserRoleDto role) {
+		Short roleId = role.getRoleId();
+		return ERole.ENFERMERO.getId().equals(roleId) ||
+			   ERole.ESPECIALISTA_MEDICO.getId().equals(roleId) ||
+			   ERole.ENFERMERO_ADULTO_MAYOR.getId().equals(roleId) ||
+			   ERole.PROFESIONAL_DE_SALUD.getId().equals(roleId);
+	}
 }

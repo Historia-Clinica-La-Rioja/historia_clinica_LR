@@ -26,6 +26,9 @@ export default {
         "healthcareprofessional":{
           "exists": "Esta persona ya está registrada como profesional en el sistema"
         },
+        "role":{
+          "requiresprofessional": "Alguno de los roles asignados requiere que el usuario sea un profesional"
+        },
         "user":{
             "exists": "Esta persona ya tiene un usuario en el sistema",
         },

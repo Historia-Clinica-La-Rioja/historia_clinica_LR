@@ -50,9 +50,11 @@ databaseChangeLog:
             columnName:  clinical_specialty_id
             tableName:  healthcare_professional_specialty  
             validate:  true
+
     - changeset:
         id: update-user-admin
         author: lmanterola
+        context: "!schema-only"
         changes:
             - sql:
                 sql: |-
@@ -60,6 +62,7 @@ databaseChangeLog:
     
     - changeset:
         id: add-constraints-person_id-users
+        author: lmanterola
         columns:
             - column:
                 constraints:

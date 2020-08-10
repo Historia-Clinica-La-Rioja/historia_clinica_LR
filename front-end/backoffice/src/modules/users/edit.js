@@ -19,7 +19,6 @@ import Aside from './Aside'
 import authProvider from '../../providers/authProvider';
 
 const validateInstitutionRequired = (values) => {
-    console.log(values);
     const errors = {};
     values.roles.forEach(function (roleAndInstitution) {
 
