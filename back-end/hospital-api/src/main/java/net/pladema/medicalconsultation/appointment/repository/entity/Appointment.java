@@ -65,6 +65,10 @@ public class Appointment extends SGXAuditableEntity {
         result.setIsOverturn(appointmentBo.isOverturn());
         result.setPatientId(appointmentBo.getPatientId());
         result.setAppointmentStateId(AppointmentState.ASSIGNED);
+        if(appointmentBo.getMedicalCoverageName() != null)
+            result.setMedicalCoverageName(appointmentBo.getMedicalCoverageName());
+        result.setMedicalCoverageAffiliateNumber(appointmentBo.getMedicalCoverageAffiliateNumber());
+        result.setHealthInsuranceId(appointmentBo.getHealthInsuranceId());
         return result;
 
     }

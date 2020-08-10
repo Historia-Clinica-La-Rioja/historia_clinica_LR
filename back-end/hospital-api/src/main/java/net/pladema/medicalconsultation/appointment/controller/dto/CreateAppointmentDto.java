@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
 @Getter
@@ -35,6 +36,17 @@ public class CreateAppointmentDto {
     @NotNull
     private boolean isOverturn = false;
 
+    @Nullable
+    private String medicalCoverageName;
+
+    @NotNull(message = "{value.mandatory}")
+    private String medicalCoverageAffiliateNumber;
+
+    @Nullable
+    private Integer healthInsuranceId;
 
 
+    public boolean hasMedicalCoverage() {
+        return medicalCoverageName != null || (healthInsuranceId != null && !healthInsuranceId.equals(-1));
+    }
 }

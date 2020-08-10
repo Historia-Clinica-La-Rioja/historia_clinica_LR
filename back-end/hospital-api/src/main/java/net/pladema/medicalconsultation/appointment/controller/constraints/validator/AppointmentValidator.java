@@ -54,6 +54,12 @@ public class AppointmentValidator implements ConstraintValidator<ValidAppointmen
     public boolean isValid(CreateAppointmentDto createAppointmentDto, ConstraintValidatorContext context) {
         LOG.debug("Input parameters -> createAppointmentDto {}", createAppointmentDto);
         boolean valid = true;
+
+        if(!createAppointmentDto.hasMedicalCoverage()){
+            buildResponse(context, "{appointment.new.without.medical.coverage}");
+            valid = false;
+        }
+
         DiaryBo diary = diaryService.getDiaryById(createAppointmentDto.getDiaryId());
 
         if (!diary.isActive()) {

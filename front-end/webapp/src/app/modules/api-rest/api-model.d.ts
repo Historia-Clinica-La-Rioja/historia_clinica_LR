@@ -223,7 +223,10 @@ export interface CompletePatientDto extends BasicPatientDto {
 export interface CreateAppointmentDto {
     date: string;
     diaryId: number;
+    healthInsuranceId?: number;
     hour: string;
+    medicalCoverageAffiliateNumber: string;
+    medicalCoverageName?: string;
     openingHoursId: number;
     overturn: boolean;
     patientId: number;
