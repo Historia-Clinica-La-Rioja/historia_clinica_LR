@@ -75,3 +75,18 @@ export class MinTimeValidator {
 		return null;
 	}
 }
+
+export function processErrors(errorResponse, showMessageCallback){
+	if (errorResponse?.text) {
+		showMessageCallback(errorResponse.text);
+	}
+	if (errorResponse?.errors) {
+		errorResponse.errors.forEach(error => {
+			showMessageCallback(extractErrorMessage(error));
+		});
+	}
+
+	function extractErrorMessage(error:string){
+		return error.split(':').pop()
+	}
+}
