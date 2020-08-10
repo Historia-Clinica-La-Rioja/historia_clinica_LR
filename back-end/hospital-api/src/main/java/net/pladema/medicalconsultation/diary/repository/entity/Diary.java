@@ -44,18 +44,18 @@ public class Diary extends SGXAuditableEntity {
     private Short appointmentDuration;
 
     @Column(name = "automatic_renewal", columnDefinition = "boolean default false", nullable = false)
-    private Boolean automaticRenewal = false;
+    private boolean automaticRenewal = false;
 
     @Column(name = "days_before_renew", columnDefinition = "smallint default 0", nullable = false)
     private Short daysBeforeRenew = 0;
 
     @Column(name = "professional_asign_shift", columnDefinition = "boolean default false", nullable = false)
-    private Boolean professionalAsignShift = false;
+    private boolean professionalAsignShift = false;
 
     @Column(name = "include_holiday", columnDefinition = "boolean default false", nullable = false)
-    private Boolean includeHoliday = false;
+    private boolean includeHoliday = false;
 
     @Column(name = "active", columnDefinition = "boolean default true", nullable = false)
-    private Boolean active = true;
+    private boolean active = true;
 
 }

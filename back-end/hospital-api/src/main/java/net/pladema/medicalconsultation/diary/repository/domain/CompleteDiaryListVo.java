@@ -4,8 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.time.LocalDate;
+import net.pladema.medicalconsultation.diary.repository.entity.Diary;
 
 @ToString
 @Getter
@@ -19,10 +18,9 @@ public class CompleteDiaryListVo extends DiaryListVo {
 	
 	private final Integer healthcareProfessionalId;
 
-	public CompleteDiaryListVo(Integer id, Integer doctorsOfficeId, String doctorsOfficeDescription, LocalDate startDate, LocalDate endDate,
-			Short appointmentDuration, Boolean professionalAssignShift, Boolean includeHoliday, Integer sectorId,
-			Integer clinicalSpecialtyId, Integer healthcareProfessionalId) {
-		super(id, doctorsOfficeId, doctorsOfficeDescription, startDate, endDate, appointmentDuration, professionalAssignShift, includeHoliday);
+	public CompleteDiaryListVo(Diary diary, String doctorsOfficeDescription, Integer sectorId,
+							   Integer clinicalSpecialtyId, Integer healthcareProfessionalId) {
+		super(diary, doctorsOfficeDescription);
 		this.sectorId = sectorId;
 		this.clinicalSpecialtyId = clinicalSpecialtyId;
 		this.healthcareProfessionalId = healthcareProfessionalId;

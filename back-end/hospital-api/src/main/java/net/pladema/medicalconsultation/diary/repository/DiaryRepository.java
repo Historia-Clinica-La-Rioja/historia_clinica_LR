@@ -45,9 +45,8 @@ public interface DiaryRepository extends JpaRepository<Diary, Integer> {
 
 
     @Transactional(readOnly = true)
-    @Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.DiaryListVo( " +
-            "d.id, do.id, do.description, d.startDate, d.endDate, d.appointmentDuration, d.professionalAsignShift, " +
-            "d.includeHoliday)" +
+    @Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.DiaryListVo(" +
+            "d, do.description) " +
             "FROM Diary d " +
             "JOIN DoctorsOffice AS do ON (do.id = d.doctorsOfficeId) " +
             "WHERE d.healthcareProfessionalId = :hcpId " +
@@ -56,8 +55,7 @@ public interface DiaryRepository extends JpaRepository<Diary, Integer> {
     
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.CompleteDiaryListVo( " +
-            "d.id, d.doctorsOfficeId, do.description, d.startDate, d.endDate, d.appointmentDuration, d.professionalAsignShift, " +
-            "d.includeHoliday, css.sectorId, css.clinicalSpecialtyId, d.healthcareProfessionalId) " +
+            "d, do.description, css.sectorId, css.clinicalSpecialtyId, d.healthcareProfessionalId) " +
             "FROM Diary d " +
             "JOIN DoctorsOffice do ON do.id = d.doctorsOfficeId " +
             "JOIN ClinicalSpecialtySector css ON css.id = do.clinicalSpecialtySectorId " +

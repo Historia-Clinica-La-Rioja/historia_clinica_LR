@@ -21,6 +21,7 @@ public class CompleteDiaryBo extends DiaryBo {
 		doctorsOfficeId = diaryBo.getDoctorsOfficeId();
 		startDate = diaryBo.getStartDate();
 		endDate = diaryBo.getEndDate();
+		automaticRenewal = diaryBo.isAutomaticRenewal();
 		professionalAssignShift = diaryBo.isProfessionalAssignShift();
 		includeHoliday = diaryBo.isIncludeHoliday();
 	}

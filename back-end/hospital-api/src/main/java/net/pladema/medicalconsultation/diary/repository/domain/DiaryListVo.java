@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.medicalconsultation.diary.repository.entity.Diary;
 
 import java.time.LocalDate;
 
@@ -28,8 +29,22 @@ public class DiaryListVo {
 
     private final Short appointmentDuration;
 
-    private final Boolean professionalAssignShift;
+    private final boolean automaticRenewal;
 
-    private final Boolean includeHoliday;
+    private final boolean professionalAssignShift;
+
+    private final boolean includeHoliday;
+
+    public DiaryListVo(Diary diary, String doctorsOfficeDescription) {
+        this.id = diary.getId();
+        this.doctorsOfficeId = diary.getDoctorsOfficeId();
+        this.doctorsOfficeDescription = doctorsOfficeDescription;
+        this.startDate = diary.getStartDate();
+        this.endDate = diary.getEndDate();
+        this.appointmentDuration = diary.getAppointmentDuration();
+        this.automaticRenewal = diary.isAutomaticRenewal();
+        this.professionalAssignShift = diary.isProfessionalAsignShift();
+        this.includeHoliday = diary.isIncludeHoliday();
+    }
 
 }

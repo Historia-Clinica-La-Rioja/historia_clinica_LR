@@ -173,8 +173,9 @@ public class DiaryServiceImpl implements DiaryService {
 		result.setStartDate(diaryListVo.getStartDate());
 		result.setEndDate(diaryListVo.getEndDate());
 		result.setAppointmentDuration(diaryListVo.getAppointmentDuration());
-		result.setProfessionalAssignShift(diaryListVo.getProfessionalAssignShift());
-		result.setIncludeHoliday(diaryListVo.getIncludeHoliday());
+		result.setAutomaticRenewal(diaryListVo.isAutomaticRenewal());
+		result.setProfessionalAssignShift(diaryListVo.isProfessionalAssignShift());
+		result.setIncludeHoliday(diaryListVo.isIncludeHoliday());
 		LOG.debug(OUTPUT, result);
 		return result;
 	}
@@ -225,8 +226,9 @@ public class DiaryServiceImpl implements DiaryService {
 		result.setStartDate(diary.getStartDate());
 		result.setEndDate(diary.getEndDate());
 		result.setAppointmentDuration(diary.getAppointmentDuration());
-		result.setProfessionalAssignShift(diary.getProfessionalAsignShift());
-		result.setIncludeHoliday(diary.getIncludeHoliday());
+		result.setAutomaticRenewal(diary.isAutomaticRenewal());
+		result.setProfessionalAssignShift(diary.isProfessionalAsignShift());
+		result.setIncludeHoliday(diary.isIncludeHoliday());
 		result.setHealthcareProfessionalId(diary.getHealthcareProfessionalId());
 		LOG.debug(OUTPUT, result);
 		return result;

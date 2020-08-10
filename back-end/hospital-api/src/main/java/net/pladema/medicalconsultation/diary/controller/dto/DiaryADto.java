@@ -35,13 +35,13 @@ public class DiaryADto {
     private Short appointmentDuration;
 
     @Nullable
-    private Boolean automaticRenewal = false;
+    private boolean automaticRenewal = false;
 
     @Nullable
-    private Boolean professionalAsignShift = false;
+    private boolean professionalAsignShift = false;
 
     @Nullable
-    private Boolean includeHoliday = false;
+    private boolean includeHoliday = false;
 
     @NotNull
     @NotEmpty
