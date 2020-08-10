@@ -417,8 +417,20 @@ export interface HCEClinicalTermDto extends Serializable {
     statusId?: string;
 }
 
+export interface HCEDiagnoseDto extends ClinicalTermDto {
+    main: boolean;
+}
+
 export interface HCEEffectiveClinicalObservationDto extends HCEClinicalObservationDto {
     effectiveTime: string;
+}
+
+export interface HCEHospitalizationHistoryDto {
+    alternativeDiagnoses: HCEDiagnoseDto[];
+    dischargeDate: string;
+    entryDate: string;
+    mainDiagnose: HCEDiagnoseDto;
+    sourceId: number;
 }
 
 export interface HCEImmunizationDto extends Serializable {

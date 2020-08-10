@@ -1,7 +1,9 @@
 package net.pladema.clinichistory.generalstate.repository;
 
 import net.pladema.clinichistory.generalstate.repository.domain.HCEHealthConditionVo;
+import net.pladema.clinichistory.generalstate.repository.domain.HCEHospitalizationVo;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.*;
+import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -125,6 +127,59 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
                             h[7] != null ? ((Date)h[7]).toLocalDate() : null,
                             null,
                             (Integer) h[8]))
+        );
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    @Transactional(readOnly = true)
+    public List<HCEHospitalizationVo> getHospitalizationHistory(Integer patientId) {
+        LOG.debug("Input parameters patientId {}", patientId);
+        String sqlString = "WITH t AS (" +
+                "   SELECT hc.id, sctid_code, hc.status_id, d.source_id, hc.main, verification_status_id, ie.entry_date, ie.discharge_date, hc.updated_on, hc.patient_id, " +
+                "   row_number() over (partition by sctid_code, source_id order by hc.updated_on desc) as rw  " +
+                "   FROM document d " +
+                "   JOIN document_health_condition dhc ON d.id = dhc.document_id " +
+                "   JOIN health_condition hc ON dhc.health_condition_id = hc.id " +
+                "   JOIN internment_episode ie ON ie.id = d.source_id " +
+                "   WHERE d.status_id = :docStatusId " +
+                "   AND d.source_type_id = :sourceType " +
+                "   AND d.type_id = :documentType "+
+                "   AND hc.patient_id = :patientId " +
+                "   AND hc.problem_id = :problemType " +
+                ") " +
+                "SELECT t.id as id, s.id as sctid, s.pt, status_id, t.main, source_id," +
+                "entry_date, discharge_date, patient_id " +
+                "FROM t " +
+                "JOIN snomed s ON sctid_code = s.id " +
+                "WHERE rw = 1 " +
+                "AND NOT verification_status_id = :verificationId  " +
+                "ORDER BY t.updated_on DESC";
+
+        List<Object[]> queryResult = entityManager.createNativeQuery(sqlString)
+                .setParameter("docStatusId", DocumentStatus.FINAL)
+                .setParameter("verificationId", ConditionVerificationStatus.ERROR)
+                .setParameter("sourceType", SourceType.HOSPITALIZATION)
+                .setParameter("patientId", patientId)
+                .setParameter("problemType", ProblemType.DIAGNOSTICO)
+                .setParameter("documentType", DocumentType.EPICRISIS)
+                .getResultList();
+
+        List<HCEHospitalizationVo> result = new ArrayList<>();
+
+        queryResult.forEach(h ->
+                result.add(
+                        new HCEHospitalizationVo(
+                                (Integer)h[0],
+                                new Snomed((String)h[1], (String)h[2], null, null),
+                                (String)h[3],
+                                (boolean)h[4],
+                                (Integer)h[5],
+                                h[6] != null ? ((Date)h[6]).toLocalDate() : null,
+                                h[7] != null ? ((Date)h[7]).toLocalDate() : null,
+                                (Integer) h[8]))
+
         );
         return result;
     }

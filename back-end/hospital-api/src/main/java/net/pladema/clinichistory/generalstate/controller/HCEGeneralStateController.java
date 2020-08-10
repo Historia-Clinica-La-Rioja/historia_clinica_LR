@@ -5,6 +5,7 @@ import net.pladema.clinichistory.generalstate.controller.dto.*;
 import net.pladema.clinichistory.generalstate.controller.mapper.HCEGeneralStateMapper;
 import net.pladema.clinichistory.generalstate.service.*;
 import net.pladema.clinichistory.generalstate.service.domain.*;
+import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/patient/{patientId}/hce/general-state")
@@ -41,15 +44,18 @@ public class HCEGeneralStateController {
 
     private final HCEAllergyService hceAllergyService;
 
+    private final LocalDateMapper localDateMapper;
+
     public HCEGeneralStateController(HCEGeneralStateService hceGeneralStateService,
                                      HCEClinicalObsGeneralStateService hceClinicalObsGeneralStateService,
-                                     HCEGeneralStateMapper hceGeneralStateMapper, HCEImmunizationService hceImmunizationService, HCEMedicationService hceMedicationService, HCEAllergyService hceAllergyService) {
+                                     HCEGeneralStateMapper hceGeneralStateMapper, HCEImmunizationService hceImmunizationService, HCEMedicationService hceMedicationService, HCEAllergyService hceAllergyService, LocalDateMapper localDateMapper) {
         this.hceGeneralStateService = hceGeneralStateService;
         this.hceClinicalObsGeneralStateService = hceClinicalObsGeneralStateService;
         this.hceGeneralStateMapper = hceGeneralStateMapper;
         this.hceImmunizationService = hceImmunizationService;
         this.hceMedicationService = hceMedicationService;
         this.hceAllergyService = hceAllergyService;
+        this.localDateMapper = localDateMapper;
     }
 
     @GetMapping("/personalHistories")
@@ -161,4 +167,31 @@ public class HCEGeneralStateController {
         LOG.debug(LOGGING_OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }
+
+    @GetMapping("/hospitalization")
+    public ResponseEntity<List<HCEHospitalizationHistoryDto>> getHospitalizationHistory(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "patientId") Integer patientId) {
+        LOG.debug(LOGGING_INPUT, institutionId, patientId);
+        List<HCEHospitalizationBo> resultService = hceGeneralStateService.getHospitalizationHistory(patientId);
+        List<HCEHospitalizationHistoryDto> result = groupHospitalizationsBySource(resultService);
+        LOG.debug(LOGGING_OUTPUT, result);
+        return ResponseEntity.ok().body(result);
+    }
+
+    private List<HCEHospitalizationHistoryDto> groupHospitalizationsBySource(List<HCEHospitalizationBo> hospitalizationList){
+            Map<Integer, List<HCEHospitalizationBo>> hospitalizationsBySource = hospitalizationList.stream()
+                    .collect(Collectors.groupingBy(h -> h.getSourceId()));
+            List<HCEHospitalizationHistoryDto> hospitalizationsGrouped = hospitalizationsBySource.entrySet().stream()
+                    .map(hg ->
+                            new HCEHospitalizationHistoryDto(hg.getKey(),
+                                    localDateMapper.fromLocalDateToString(hg.getValue().get(0).getEntryDate()),
+                                    localDateMapper.fromLocalDateToString(hg.getValue().get(0).getDischargeDate()),
+                                    hg.getValue().stream().filter(HCEHospitalizationBo::isMain).map(hceGeneralStateMapper::toHCEDiagnoseDto).collect(Collectors.toList()),
+                                    hg.getValue().stream().filter(hbo -> !hbo.isMain()).map(hceGeneralStateMapper::toHCEDiagnoseDto).collect(Collectors.toList())))
+                    .collect(Collectors.toList());
+            return hospitalizationsGrouped;
+    }
+
+
 }

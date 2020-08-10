@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.generalstate.service;
 
+import net.pladema.clinichistory.generalstate.service.domain.HCEHospitalizationBo;
 import net.pladema.clinichistory.generalstate.service.domain.HCEPersonalHistoryBo;
 
 import java.util.List;
@@ -15,4 +16,6 @@ public interface HCEGeneralStateService {
     List<HCEPersonalHistoryBo> getActiveProblems(Integer patientId);
 
     List<HCEPersonalHistoryBo> getSolvedProblems(Integer patientId);
+
+    List<HCEHospitalizationBo> getHospitalizationHistory(Integer patientId);
 }

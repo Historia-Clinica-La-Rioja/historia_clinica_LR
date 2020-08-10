@@ -45,4 +45,7 @@ public interface HCEGeneralStateMapper {
     @Named("toListHCEAllergyDto")
     @IterableMapping(qualifiedByName = "toHCEAllergyDto")
     List<HCEAllergyDto> toListHCEAllergyDto(List<HCEAllergyBo> sourceList);
+
+    @Named("toHCEDiagnoseDto")
+    HCEDiagnoseDto toHCEDiagnoseDto(HCEHospitalizationBo source);
 }

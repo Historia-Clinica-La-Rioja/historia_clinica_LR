@@ -2,7 +2,9 @@ package net.pladema.clinichistory.generalstate.service.impl;
 
 import net.pladema.clinichistory.generalstate.repository.HCEHealthConditionRepository;
 import net.pladema.clinichistory.generalstate.repository.domain.HCEHealthConditionVo;
+import net.pladema.clinichistory.generalstate.repository.domain.HCEHospitalizationVo;
 import net.pladema.clinichistory.generalstate.service.HCEGeneralStateService;
+import net.pladema.clinichistory.generalstate.service.domain.HCEHospitalizationBo;
 import net.pladema.clinichistory.generalstate.service.domain.HCEPersonalHistoryBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,6 +72,15 @@ public class HCEGeneralStateServiceImpl implements HCEGeneralStateService {
         LOG.debug(LOGGING_INPUT, patientId);
         List<HCEHealthConditionVo> resultQuery = hceHealthConditionRepository.getPersonalHistories(patientId);
         List<HCEPersonalHistoryBo> result = resultQuery.stream().map(HCEPersonalHistoryBo::new).filter(hceph -> !hceph.isChronic()).filter(HCEPersonalHistoryBo::isSolvedProblem).collect(Collectors.toList());
+        LOG.debug(LOGGING_OUTPUT, result);
+        return result;
+    }
+
+    @Override
+    public List<HCEHospitalizationBo> getHospitalizationHistory(Integer patientId) {
+        LOG.debug(LOGGING_INPUT, patientId);
+        List<HCEHospitalizationVo> resultQuery = hceHealthConditionRepository.getHospitalizationHistory(patientId);
+        List<HCEHospitalizationBo> result = resultQuery.stream().map(HCEHospitalizationBo::new).collect(Collectors.toList());
         LOG.debug(LOGGING_OUTPUT, result);
         return result;
     }
