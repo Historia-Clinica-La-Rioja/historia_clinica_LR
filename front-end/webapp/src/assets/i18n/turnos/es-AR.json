@@ -9,8 +9,10 @@
 			}
 		},
 		"new-agenda": {
-			"TITLE": "Nueva agenda",
-			"CONFIRM": "¿Desea confirmar la creación de esta nueva agenda?",
+			"NEW_AGENDA": "Nueva agenda",
+			"EDIT_AGENDA": "Editar agenda",
+			"CONFIRM_NEW_AGENDA": "¿Desea confirmar la creación de esta nueva agenda?",
+			"CONFIRM_EDIT_AGENDA": "¿Desea confirmar la edición de esta agenda?",
 			"OVERTURN_COUNT":" Cantidad de sobreturnos",
 			"MEDICAL_ATTENTION_TYPE" : "Tipo de atención",
 			"dialog": {

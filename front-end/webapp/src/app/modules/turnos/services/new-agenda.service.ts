@@ -60,6 +60,19 @@ export class NewAgendaService {
 		},
 	];
 
+	getActions(): CalendarEventAction[] {
+		return this.actions;
+	}
+
+	getMedicalAttentionTypeText(medicalAttentionTypeId: number): string {
+		const medicalAttentionType = medicalAttentionTypeId === 2 ? 'Espontánea' : 'Programada';
+		return `<strong>Atencion ${medicalAttentionType} </strong> <br>`;
+	}
+
+	getOverturnsText(overTurnCount: number): string {
+		return overTurnCount > 0 ? '<span>Atiende sobreturnos</span>' : '<span>No atiende sobreturnos</span>';
+	}
+
 	startDragToCreate(segment: WeekViewHourSegment, segmentElement: HTMLElement): void {
 		const dragToSelectEvent: CalendarEvent = {
 			id: this.events.length,
@@ -126,12 +139,14 @@ export class NewAgendaService {
 			{
 				data: {
 					start: event.start,
-					end: event.end
+					end: event.end,
+					overturnCount: event.meta.overturnCount,
+					medicalAttentionTypeId: event.meta.medicalAttentionType?.id
 				}
 			});
 		dialogRef.afterClosed().subscribe(dialogInfo => {
 			if (!dialogInfo) {
-				if (event.meta.tmpEvent) {
+				if (event.meta?.tmpEvent) {
 					this.removeTempEvent(event);
 				}
 			} else {
@@ -149,11 +164,15 @@ export class NewAgendaService {
 	}
 
 	private setNewEvent(event: CalendarEvent, dialogInfo) {
-		delete event.meta.tmpEvent;
+		delete event.meta?.tmpEvent;
 		event.meta = dialogInfo;
-		event.title = `<strong>Atencion ${dialogInfo.medicalAttentionType.description} </strong> <br>`,
-			event.color = dialogInfo.medicalAttentionType.description === MEDICAL_ATTENTION.SPONTANEOUS ? colors.blue : colors.green;
-		event.title += dialogInfo.overTurnCount > 0 ? '<span>Atiende sobreturnos</span>' : '<span>No atiende sobreturnos</span>';
+		event.title = this.getMedicalAttentionTypeText(dialogInfo.medicalAttentionType.id);
+		event.color = this.getMedicalAttentionColor(dialogInfo.medicalAttentionType.id);
+		event.title += this.getOverturnsText(dialogInfo.overTurnCount);
+	}
+
+	getMedicalAttentionColor(medicalAttentionTypeId: number): any {
+		return medicalAttentionTypeId === MEDICAL_ATTENTION.SPONTANEOUS_ID ? colors.blue : colors.green;
 	}
 
 	private refresh() {
@@ -183,7 +202,7 @@ export class NewAgendaService {
 	}
 
 	public setEvents(events: CalendarEvent[]): void {
-		this.events = events;
+		this.events = this.events.concat(events);
 		this.refresh();
 	}
 }

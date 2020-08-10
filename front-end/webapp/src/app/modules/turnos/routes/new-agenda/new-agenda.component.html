@@ -1,6 +1,6 @@
 <app-content width="full">
 	<section class="page">
-		<h2 class="page-title" [translate]="'turnos.new-agenda.TITLE'"></h2>
+		<h2 class="page-title" [translate]="editMode ? 'turnos.new-agenda.EDIT_AGENDA' : 'turnos.new-agenda.NEW_AGENDA' "></h2>
 		<br>
 		<form [formGroup]="form" (ngSubmit)="save()">
 			<section>
@@ -10,7 +10,7 @@
 				<div fxLayout="row">
 					<mat-form-field appearance="outline">
 						<mat-select id="sectorId" name="sectorId" formControlName="sectorId"
-							placeholder="{{'pacientes.form.SELECT' | translate}}" (selectionChange)="setSpecialties()">
+							placeholder="{{'pacientes.form.SELECT' | translate}}" (selectionChange)="setSpecialties(form.value.sectorId)">
 							<mat-option *ngFor="let sector of sectors" [value]="sector.id">
 								{{sector.description}}
 							</mat-option>
@@ -26,7 +26,7 @@
 					<mat-form-field appearance="outline">
 						<mat-select id="specialtyId" name="specialtyId" formControlName="specialtyId"
 							placeholder="{{'pacientes.form.SELECT' | translate}}"
-							(selectionChange)="setDoctorOffices()">
+							(selectionChange)="setDoctorOffices(form.value.sectorId, form.value.specialtyId)">
 							<mat-option *ngFor="let speciality of specialties" [value]="speciality.id">
 								{{speciality.name}}
 							</mat-option>
@@ -70,7 +70,7 @@
 
 				<section>
 					<div fxLayout="row">
-						<mat-checkbox (change)="appointmentManagementChange()">
+						<mat-checkbox (change)="appointmentManagementChange()" [checked]="appointmentManagement">
 							<span [translate]="'El profesional crea turnos'"></span>
 						</mat-checkbox>
 					</div>
@@ -83,7 +83,7 @@
 						</div>
 						<mat-form-field appearance="outline">
 							<input formControlName="startDate" id="startDate" matInput [matDatepicker]="initPicker"
-								(dateChange)="getAllWeeklyDoctorsOfficeOcupation()">
+								(dateChange)="setAllWeeklyDoctorsOfficeOcupation()">
 							<mat-datepicker-toggle matSuffix [for]="initPicker"></mat-datepicker-toggle>
 							<mat-datepicker #initPicker></mat-datepicker>
 						</mat-form-field>
@@ -95,7 +95,7 @@
 						</div>
 						<mat-form-field appearance="outline">
 							<input formControlName="endDate" id="endDate" matInput [matDatepicker]="endPicker"
-							       [min]="form.value.startDate" (dateChange)="getAllWeeklyDoctorsOfficeOcupation()">
+							       [min]="form.value.startDate" (dateChange)="setAllWeeklyDoctorsOfficeOcupation()">
 							<mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
 							<mat-datepicker #endPicker></mat-datepicker>
 						</mat-form-field>
@@ -104,14 +104,14 @@
 
 				<section>
 					<div fxLayout="row">
-						<mat-checkbox (change)="autoRenewChange()">
+						<mat-checkbox (change)="autoRenewChange()"  [checked]="autoRenew">
 							<span [translate]="'Renovar automáticamente'"></span>
 						</mat-checkbox>
 					</div>
 				</section>
 				<section>
 					<div cfxLayout="row">
-						<mat-checkbox (change)="holidayWorkChange()">
+						<mat-checkbox (change)="holidayWorkChange()" [checked]="holidayWork">
 							<span [translate]="'Atiende dias feriados'"></span>
 						</mat-checkbox>
 					</div>

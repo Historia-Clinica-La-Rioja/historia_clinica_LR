@@ -20,17 +20,21 @@ export class NewAttentionComponent implements OnInit {
 	constructor(public dialogRef: MatDialogRef<NewAttentionComponent>,
 		           private readonly formBuilder: FormBuilder,
 		           private readonly medicalConsultationMasterdataService: MedicalConsultationMasterdataService,
-		           @Inject(MAT_DIALOG_DATA) public data: {start: Date, end: Date}) { }
+		           @Inject(MAT_DIALOG_DATA) public data: {start: Date, end: Date, overturnCount?: number, medicalAttentionTypeId?: number }) { }
 
 
 	ngOnInit(): void {
 
 		this.medicalConsultationMasterdataService.getMedicalAttention()
-			.subscribe(medicalAttentionTypes => this.medicalAttentionTypes = medicalAttentionTypes);
+			.subscribe(medicalAttentionTypes => {
+				this.medicalAttentionTypes = medicalAttentionTypes;
+				const medicalAttentionTypeDefaultValue = medicalAttentionTypes.find(medicalAttentionType => medicalAttentionType.id === this.data.medicalAttentionTypeId);
+				this.form.controls.medicalAttentionType.setValue(medicalAttentionTypeDefaultValue);
+			});
 
 		this.form = this.formBuilder.group({
-			overTurnCount: [Validators.min(0)],
-			medicalAttentionType: [null, Validators.required]
+			overTurnCount: [this.data.overturnCount, Validators.min(0)],
+			medicalAttentionType: [Validators.required]
 		});
 
 	}

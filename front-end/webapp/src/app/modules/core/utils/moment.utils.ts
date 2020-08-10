@@ -37,3 +37,15 @@ export const momentParseDateTime = (dateStr: string): Moment => moment.parseZone
 export const momentFormatDate = (date: Date, format?: DateFormat): string => moment.utc(date.getTime()).format(format);
 
 export const momentFormat = (momentDate: Moment, format?: DateFormat): string => momentDate.local().format(format);
+
+export const currentWeek = (): Moment[] => {
+	const currentDate = moment();
+
+	const weekStart = currentDate.clone().startOf('isoWeek');
+	const days = [];
+
+	for (let i = 0; i <= 6; i++) {
+		days.push(moment(weekStart).add(i, 'days'));
+	}
+	return days;
+};
