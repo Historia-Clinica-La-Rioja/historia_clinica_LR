@@ -58,6 +58,8 @@ public class PatientController {
 	private static final Logger LOG = LoggerFactory.getLogger(PatientController.class);
 
 	public static final String OUTPUT = "Output -> {}";
+	public static final String PATIENT_INVALID = "patient.invalid";
+	public static final String INPUT_PARAMETERS_PATIENT_ID = "Input parameters -> patientId {}";
 
 	private final PatientService patientService;
 
@@ -161,10 +163,10 @@ public class PatientController {
 
 	@GetMapping("/{patientId}/basicdata")
 	public ResponseEntity<BasicPatientDto> getBasicDataPatient(@PathVariable(name = "patientId") Integer patientId) {
-		LOG.debug("Input parameters -> patientId {}", patientId);
+		LOG.debug(INPUT_PARAMETERS_PATIENT_ID, patientId);
 
 		Patient patient = patientService.getPatient(patientId)
-				.orElseThrow(() -> new EntityNotFoundException("patient.invalid"));
+				.orElseThrow(() -> new EntityNotFoundException(PATIENT_INVALID));
 		BasicDataPersonDto personData = personExternalService.getBasicDataPerson(patient.getPersonId());
 		BasicPatientDto result = new BasicPatientDto(patient.getId(), personData);
 		LOG.debug(OUTPUT, result);
@@ -174,9 +176,9 @@ public class PatientController {
 	@GetMapping("/{patientId}/completedata")
 	public ResponseEntity<CompletePatientDto> getCompleteDataPatient(
 			@PathVariable(name = "patientId") Integer patientId) {
-		LOG.debug("Input parameters -> patientId {}", patientId);
+		LOG.debug(INPUT_PARAMETERS_PATIENT_ID, patientId);
 		Patient patient = patientService.getPatient(patientId)
-				.orElseThrow(() -> new EntityNotFoundException("patient.invalid"));
+				.orElseThrow(() -> new EntityNotFoundException(PATIENT_INVALID));
 		DoctorsBo doctorsBo = additionalDoctorService.getAdditionalsDoctors(patientId);
 		BasicDataPersonDto personData = personExternalService.getBasicDataPerson(patient.getPersonId());
 		PatientType patientType = patientTypeRepository.getOne(patient.getTypeId());
@@ -192,7 +194,7 @@ public class PatientController {
 	private AddressDto persistPatientAddress(APatientDto patientDto, Optional<Integer> idAdress) {
 		AddressDto addressToAdd = patientMapper.updatePatientAddress(patientDto);
 		LOG.debug("Going to add address -> {}", addressToAdd);
-		idAdress.ifPresent(id->addressToAdd.setId(id));
+		idAdress.ifPresent(addressToAdd::setId);
 		return addressExternalService.addAddress(addressToAdd);
 	}
 
@@ -209,9 +211,9 @@ public class PatientController {
 
 	@GetMapping("/{patientId}/appointment-patient-data")
 	public ResponseEntity<HealthInsurancePatientDataDto> getAppointmentPatientData(@PathVariable(name = "patientId") Integer patientId) {
-		LOG.debug("Input parameters -> patientId {}", patientId);
+		LOG.debug(INPUT_PARAMETERS_PATIENT_ID, patientId);
 		Patient patient = patientService.getPatient(patientId)
-				.orElseThrow(() -> new EntityNotFoundException("patient.invalid"));
+				.orElseThrow(() -> new EntityNotFoundException(PATIENT_INVALID));
 		BasicPersonalDataDto personData = personExternalService.getBasicPersonalDataDto(patient.getPersonId());
 		HealthInsurancePatientDataDto result = new HealthInsurancePatientDataDto(patient.getId(), personData,
 				patient.getMedicalCoverageName(),

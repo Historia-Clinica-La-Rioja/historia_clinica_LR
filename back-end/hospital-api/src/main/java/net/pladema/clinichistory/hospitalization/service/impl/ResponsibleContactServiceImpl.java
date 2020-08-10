@@ -1,6 +1,5 @@
 package net.pladema.clinichistory.hospitalization.service.impl;
 
-import net.pladema.clinichistory.hospitalization.controller.mapper.ResponsibleContactMapper;
 import net.pladema.clinichistory.hospitalization.repository.ResponsibleContactRepository;
 import net.pladema.clinichistory.hospitalization.repository.domain.ResponsibleContact;
 import net.pladema.clinichistory.hospitalization.service.ResponsibleContactService;
@@ -16,11 +15,8 @@ public class ResponsibleContactServiceImpl implements ResponsibleContactService 
 
     private final ResponsibleContactRepository responsibleContactRepository;
 
-    private final ResponsibleContactMapper responsibleContactMapper;
-
-    public ResponsibleContactServiceImpl(ResponsibleContactRepository responsibleContactRepository, ResponsibleContactMapper responsibleContactMapper) {
+    public ResponsibleContactServiceImpl(ResponsibleContactRepository responsibleContactRepository) {
         this.responsibleContactRepository = responsibleContactRepository;
-        this.responsibleContactMapper = responsibleContactMapper;
     }
 
     @Override

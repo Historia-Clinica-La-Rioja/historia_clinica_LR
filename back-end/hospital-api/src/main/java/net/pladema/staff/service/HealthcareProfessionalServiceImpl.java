@@ -18,6 +18,7 @@ import java.util.List;
 public class HealthcareProfessionalServiceImpl implements  HealthcareProfessionalService {
 
     private static final Logger LOG = LoggerFactory.getLogger(HealthcareProfessionalServiceImpl.class);
+    public static final String OUTPUT = "Output -> {}";
 
     private final HealthcareProfessionalGroupRepository healthcareProfessionalGroupRepository;
 
@@ -33,7 +34,7 @@ public class HealthcareProfessionalServiceImpl implements  HealthcareProfessiona
     public List<HealthcarePersonBo> getAllDoctorsByInstitution(Integer institutionId) {
         LOG.debug("Input parameters -> institutionId {}", institutionId);
         List<HealthcarePersonBo> result = healthcareProfessionalRepository.getAllDoctors(institutionId);
-        LOG.debug("Output -> {}", result);
+        LOG.debug(OUTPUT, result);
         return result;
     }
 
@@ -46,7 +47,7 @@ public class HealthcareProfessionalServiceImpl implements  HealthcareProfessiona
         queryResults.forEach(hcp ->
             result.add(new HealthcareProfessionalBo(hcp))
         );
-        LOG.debug("Output -> {}", result);
+        LOG.debug(OUTPUT, result);
         return result;
     }
 
@@ -56,7 +57,7 @@ public class HealthcareProfessionalServiceImpl implements  HealthcareProfessiona
         HealthcareProfessionalGroup healthcareProfessionalGroupToSave = new HealthcareProfessionalGroup(internmentEpisodeId, healthcareProfessionalId);
         healthcareProfessionalGroupToSave.setResponsible(true);
         HealthcareProfessionalGroup result = healthcareProfessionalGroupRepository.save(healthcareProfessionalGroupToSave);
-        LOG.debug("Output -> {}", result);
+        LOG.debug(OUTPUT, result);
         return result;
     }
 
@@ -64,7 +65,7 @@ public class HealthcareProfessionalServiceImpl implements  HealthcareProfessiona
     public Integer getProfessionalId(Integer userId) {
         LOG.debug("Input parameters -> userId {}", userId);
         Integer result = healthcareProfessionalRepository.getProfessionalId(userId);
-        LOG.debug("Output -> {}", result);
+        LOG.debug(OUTPUT, result);
         return result;
     }
 
@@ -73,7 +74,7 @@ public class HealthcareProfessionalServiceImpl implements  HealthcareProfessiona
         LOG.debug("Input parameters -> id {}", id);
         HealthcareProfessionalBo result = healthcareProfessionalRepository.findProfessionalById(id)
                 .map(HealthcareProfessionalBo::new).orElseThrow(() -> new NotFoundException("id", "Professional " + id + " does not exist"));
-        LOG.debug("Output -> {}", result);
+        LOG.debug(OUTPUT, result);
         return result;
     }
 }

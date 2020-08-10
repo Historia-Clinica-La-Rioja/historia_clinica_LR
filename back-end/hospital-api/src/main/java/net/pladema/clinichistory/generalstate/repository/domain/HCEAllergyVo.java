@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.hospitalization.repository.generalstate.domain.AllergyConditionVo;
 import net.pladema.clinichistory.hospitalization.repository.generalstate.domain.ClinicalTermVo;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.Snomed;
 

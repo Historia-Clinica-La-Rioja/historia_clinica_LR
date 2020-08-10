@@ -12,6 +12,7 @@ import net.pladema.sgx.security.utils.UserInfo;
 import net.pladema.staff.service.HealthcareProfessionalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.validation.ConstraintValidator;
@@ -92,12 +93,12 @@ public class AppointmentValidator implements ConstraintValidator<ValidAppointmen
         return valid;
     }
 
-    private Boolean hasProfessionalRole() {
+    private boolean hasProfessionalRole() {
         return SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getAuthorities()
                 .stream()
-                .map(auth -> auth.getAuthority())
+                .map(GrantedAuthority::getAuthority)
                 .anyMatch(role -> Arrays.asList(ERole.PROFESIONAL_DE_SALUD.getValue(), ERole.ESPECIALISTA_MEDICO.getValue()).contains(role));
     }
 

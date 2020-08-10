@@ -39,7 +39,8 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 	private static final String INPUT_PARAMETERS = "Input parameters -> {}";
 	private static final String INTERNMENT_NOT_FOUND = "internmentepisode.not.found";
 	private static final String LOGGING_OUTPUT = "Output -> {}";
-	private static final short ACTIVO = 1;
+	private static final short ACTIVE = 1;
+	private static final String WRONG_ID_EPISODE = "wrong-id-episode";
 
 	private final InternmentEpisodeRepository internmentEpisodeRepository;
 
@@ -84,7 +85,7 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 	public InternmentEpisode addInternmentEpisode(InternmentEpisode internmentEpisode, Integer institutionId) {
 		LOG.debug("Input parameters -> internmentEpisode {}, institutionId {}", internmentEpisode, institutionId);
 		internmentEpisode.setInstitutionId(institutionId);
-		internmentEpisode.setStatusId(ACTIVO);
+		internmentEpisode.setStatusId(ACTIVE);
 		internmentEpisode.setEntryDate(LocalDate.now());
 		InternmentEpisode result = internmentEpisodeRepository.save(internmentEpisode);
 		LOG.debug(LOGGING_OUTPUT, result);
@@ -179,44 +180,55 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 	}
 
 	@Override
-	public void updateInternmentEpisodeSatus(Integer internmentEpisodeId, Short statusId) {
+	public void updateInternmentEpisodeStatus(Integer internmentEpisodeId, Short statusId) {
 		LOG.debug("Input parameters -> {}, {}", internmentEpisodeId, statusId);
 		InternmentEpisode internmentEpisode = internmentEpisodeRepository.findById(internmentEpisodeId)
-				.orElseThrow(() -> new NotFoundException("wrong-id-episode", INTERNMENT_NOT_FOUND));
+				.orElseThrow(() -> new NotFoundException(WRONG_ID_EPISODE, INTERNMENT_NOT_FOUND));
 		internmentEpisode.setStatusId(statusId);
 		internmentEpisodeRepository.save(internmentEpisode);
 	}
 	
 	@Override
 	public List<InternmentEpisode> findByBedId(Integer bedId) {
-		return internmentEpisodeRepository.findByBedId(bedId);
+		LOG.debug("Input parameters -> bedId {} ", bedId);
+		List<InternmentEpisode> result = internmentEpisodeRepository.findByBedId(bedId);
+		LOG.debug(LOGGING_OUTPUT, result);
+		return result;
 	}
 
 
 	@Override
 	public InternmentEpisode getInternmentEpisode(Integer internmentEpisodeId, Integer institutionId) {
+		LOG.debug("Input parameters -> internmentEpisodeId {}, institutionId {}", internmentEpisodeId, institutionId);
 		InternmentEpisode internmentEpisode = internmentEpisodeRepository.getInternmentEpisode(internmentEpisodeId,institutionId)
-				.orElseThrow(() -> new NotFoundException("wrong-id-episode", INTERNMENT_NOT_FOUND));
+				.orElseThrow(() -> new NotFoundException(WRONG_ID_EPISODE, INTERNMENT_NOT_FOUND));
+		LOG.debug(LOGGING_OUTPUT, internmentEpisode);
 		return internmentEpisode;
 	}
 	
 	@Override
-	public Boolean existsActiveForBedId(Integer bedId) {
+	public boolean existsActiveForBedId(Integer bedId) {
+		LOG.debug("Input parameters -> bedId {} ", bedId);
 		List<InternmentEpisode> episodes = this.findByBedId(bedId);
-		return episodes != null && !episodes.isEmpty() && anyActive(episodes);
+		boolean result = episodes != null && !episodes.isEmpty() && anyActive(episodes);
+		LOG.debug(LOGGING_OUTPUT, result);
+		return result;
 	}
 
 	@Override
 	public LocalDate getLastUpdateDateOfInternmentEpisode(Integer internmentEpisodeId) {
+		LOG.debug("Input parameters -> internmentEpisodeId {} ", internmentEpisodeId);
 		LocalDate entryDate = this.getEntryDate(internmentEpisodeId);
 		if (entryDate == null)
-			throw new NotFoundException("wrong-id-episode", INTERNMENT_NOT_FOUND);
+			throw new NotFoundException(WRONG_ID_EPISODE, INTERNMENT_NOT_FOUND);
 		List<Updateable> intermentDocuments = documentService.getUpdatableDocuments(internmentEpisodeId);
 		List<LocalDate> dates = intermentDocuments.stream()
 				.map( doc -> doc.getUpdatedOn().toLocalDate())
 				.collect(Collectors.toList());
 		dates.add(entryDate);
-		return dates.stream().max(LocalDate::compareTo).get();
+		LocalDate result = dates.stream().max(LocalDate::compareTo).get();
+		LOG.debug(LOGGING_OUTPUT, result);
+		return result;
 	}
 
 	@Override
@@ -229,7 +241,10 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
     }
 
 	private boolean anyActive(List<InternmentEpisode> episodes) {
-		return episodes.stream().anyMatch(InternmentEpisode::isActive);
+		LOG.debug("Input parameters -> episodes {}", episodes);
+		boolean result = episodes.stream().anyMatch(InternmentEpisode::isActive);
+		LOG.debug(LOGGING_OUTPUT, result);
+		return result;
 	}
 
 	@Override

@@ -21,7 +21,7 @@ public class UpdateOutpatientDocumentServiceImpl implements UpdateOutpatientCons
 
     @Override
     public boolean updateOutpatientDocId(Integer outpatientId, Long docId) {
-        LOG.debug("Input parameters outpatientId {}, docId", outpatientId, docId);
+        LOG.debug("Input parameters outpatientId {}, docId {}", outpatientId, docId);
         outpatientConsultationRepository.findById(outpatientId).ifPresent(ot -> {
                 ot.setDocumentId(docId);
                 outpatientConsultationRepository.save(ot);

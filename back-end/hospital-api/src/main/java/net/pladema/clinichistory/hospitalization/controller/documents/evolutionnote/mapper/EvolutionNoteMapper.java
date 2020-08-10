@@ -2,7 +2,7 @@ package net.pladema.clinichistory.hospitalization.controller.documents.evolution
 
 import net.pladema.clinichistory.hospitalization.controller.documents.evolutionnote.dto.EvolutionNoteDto;
 import net.pladema.clinichistory.hospitalization.controller.documents.evolutionnote.dto.ResponseEvolutionNoteDto;
-import net.pladema.clinichistory.hospitalization.controller.documents.evolutionnote.dto.evolutionDiagnosis.EvolutionDiagnosisDto;
+import net.pladema.clinichistory.hospitalization.controller.documents.evolutionnote.dto.evolutiondiagnosis.EvolutionDiagnosisDto;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.AnthropometricDataMapper;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.VitalSignMapper;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;

@@ -26,6 +26,7 @@ import java.util.stream.Stream;
 public class DiaryServiceImpl implements DiaryService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DiaryServiceImpl.class);
+	public static final String OUTPUT = "Output -> {}";
 
 	private final DiaryOpeningHoursService diaryOpeningHoursService;
 
@@ -94,7 +95,7 @@ public class DiaryServiceImpl implements DiaryService {
 		LOG.debug("Input parameters -> healthcareProfessionalId {}", healthcareProfessionalId);
 		List<DiaryListVo> diaries = diaryRepository.getActiveDiariesFromProfessional(healthcareProfessionalId);
 		List<DiaryBo> result = diaries.stream().map(this::createDiaryBoInstance).collect(Collectors.toList());
-		LOG.debug("Output -> {}", result);
+		LOG.debug(OUTPUT, result);
 		return result;
 	}
 
@@ -108,7 +109,7 @@ public class DiaryServiceImpl implements DiaryService {
 		result.setAppointmentDuration(diaryListVo.getAppointmentDuration());
 		result.setProfessionalAssignShift(diaryListVo.getProfessionalAssignShift());
 		result.setIncludeHoliday(diaryListVo.getIncludeHoliday());
-		LOG.debug("Output -> {}", result);
+		LOG.debug(OUTPUT, result);
 		return result;
 	}
 
@@ -118,7 +119,7 @@ public class DiaryServiceImpl implements DiaryService {
 		result.setSectorId(completeDiaryListVo.getSectorId());
 		result.setClinicalSpecialtyId(completeDiaryListVo.getClinicalSpecialtyId());
 		result.setHealthcareProfessionalId(completeDiaryListVo.getHealthcareProfessionalId());
-		LOG.debug("Output -> {}", result);
+		LOG.debug(OUTPUT, result);
 		return result;
 	}
 
@@ -127,12 +128,12 @@ public class DiaryServiceImpl implements DiaryService {
 		LOG.debug("Input parameters -> diaryId {}", diaryId);
 		Optional<CompleteDiaryBo> result = diaryRepository.getDiary(diaryId).map(this::createCompleteDiaryBoInstance)
 				.map(completeOpeningHours());
-		LOG.debug("Output -> {}", result);
+		LOG.debug(OUTPUT, result);
 		return result;
 	}
 
 	private Function<CompleteDiaryBo, CompleteDiaryBo> completeOpeningHours() {
-		return (completeDiary) -> {
+		return completeDiary -> {
 			Collection<DiaryOpeningHoursBo> diaryOpeningHours = diaryOpeningHoursService
 					.getDiariesOpeningHours(Stream.of(completeDiary.getId()).collect(Collectors.toList()));
 			completeDiary.setDiaryOpeningHours(diaryOpeningHours.stream().collect(Collectors.toList()));
@@ -145,7 +146,7 @@ public class DiaryServiceImpl implements DiaryService {
         LOG.debug("Input parameters -> diaryId {}", diaryId);
         Diary resultQuery = diaryRepository.findById(diaryId).orElseThrow(() -> new NotFoundException("diaryId", "diaryId -> "+diaryId + " does not exist"));
         DiaryBo result = createDiaryBoInstance(resultQuery);
-        LOG.debug("Output -> {}", result);
+        LOG.debug(OUTPUT, result);
         return result;
     }
 
@@ -159,7 +160,7 @@ public class DiaryServiceImpl implements DiaryService {
 		result.setAppointmentDuration(diary.getAppointmentDuration());
 		result.setProfessionalAssignShift(diary.getProfessionalAsignShift());
 				result.setIncludeHoliday(diary.getIncludeHoliday());
-		LOG.debug("Output -> {}", result);
+		LOG.debug(OUTPUT, result);
 		return result;
 	}
 

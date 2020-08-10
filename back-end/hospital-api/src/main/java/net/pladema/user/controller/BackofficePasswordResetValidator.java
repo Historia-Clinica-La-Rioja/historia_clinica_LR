@@ -37,10 +37,8 @@ public class BackofficePasswordResetValidator
 
 	@Override
 	public void assertCreate(PasswordResetToken entity) {
-		if (authoritiesValidator.isLoggedUserId(entity.getUserId())) {
-			// se puede cambiar el password a si mismo
+		if (authoritiesValidator.isLoggedUserId(entity.getUserId()))
 			return;
-		}
 		authoritiesValidator.assertLoggedUserOutrank(entity.getUserId());
 	}
 

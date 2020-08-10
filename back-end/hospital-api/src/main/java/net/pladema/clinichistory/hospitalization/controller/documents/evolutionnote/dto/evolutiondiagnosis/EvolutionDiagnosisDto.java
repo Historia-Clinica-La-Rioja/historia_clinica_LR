@@ -1,4 +1,4 @@
-package net.pladema.clinichistory.hospitalization.controller.documents.evolutionnote.dto.evolutionDiagnosis;
+package net.pladema.clinichistory.hospitalization.controller.documents.evolutionnote.dto.evolutiondiagnosis;
 
 import lombok.Getter;
 import lombok.Setter;

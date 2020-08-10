@@ -18,7 +18,7 @@ public interface BackofficePermissionValidator<E, I> {
 
 	void assertDelete(I id);
 
-    ItemsAllowed itemsAllowedToList(E entity);
+    ItemsAllowed<I> itemsAllowedToList(E entity);
 
-	ItemsAllowed itemsAllowedToList();
+	ItemsAllowed<I> itemsAllowedToList();
 }

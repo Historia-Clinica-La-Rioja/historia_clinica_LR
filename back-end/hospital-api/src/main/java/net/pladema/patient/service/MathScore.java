@@ -13,21 +13,21 @@ public class MathScore {
 
 	private enum SearchField {
 
-		LastName(0.2f),
-		FirstName(0.1f),
-		IdentificationType(0.1f),
-		IdentificationNumber(0.3f),
-		Gender(0.1f),
-		BirthDate(0.2f);
+		LAST_NAME(0.2f),
+		FIRST_NAME(0.1f),
+		IDENTIFICATION_TYPE(0.1f),
+		IDENTIFICATION_NUMBER(0.3f),
+		GENDER(0.1f),
+		BIRTH_DATE(0.2f);
 		
-		private final float coefficent;
+		private final float coefficient;
 		
-		SearchField(float coefficent){
-			this.coefficent = coefficent;
+		SearchField(float coefficient){
+			this.coefficient = coefficient;
 		}
 		
-		public float getCoefficent() {
-			return coefficent;
+		public float getCoefficient() {
+			return coefficient;
 		}
 	}
 	
@@ -44,15 +44,15 @@ public class MathScore {
 	private static Float sumPartialMatchCases(PatientSearchFilter searchFilter, Person personToMatch, Float partialResult) {
 		partialResult += assertNulls(personToMatch.getFirstName(),searchFilter.getFirstName()) ?
 				calculateMatchScore(soundex(searchFilter.getFirstName()), soundex(personToMatch.getFirstName()),
-				SearchField.FirstName.getCoefficent()) : 0;
+				SearchField.FIRST_NAME.getCoefficient()) : 0;
 		partialResult += assertNulls(personToMatch.getLastName(), searchFilter.getLastName()) ?
 				calculateMatchScore(soundex(searchFilter.getLastName()), soundex(personToMatch.getLastName()),
-				SearchField.LastName.getCoefficent()) : 0;
+				SearchField.LAST_NAME.getCoefficient()) : 0;
 		partialResult += assertNulls(personToMatch.getIdentificationNumber(), searchFilter.getIdentificationNumber()) ?
 				calculateMatchScore(searchFilter.getIdentificationNumber(), personToMatch.getIdentificationNumber(),
-				SearchField.IdentificationNumber.getCoefficent()) : 0;
+				SearchField.IDENTIFICATION_NUMBER.getCoefficient()) : 0;
 		partialResult += assertNulls(personToMatch.getBirthDate(), searchFilter.getBirthDate()) ?
-				calculateMatchScore(formatDate(searchFilter.getBirthDate()), formatDate(personToMatch.getBirthDate()), SearchField.BirthDate.getCoefficent()) : 0;
+				calculateMatchScore(formatDate(searchFilter.getBirthDate()), formatDate(personToMatch.getBirthDate()), SearchField.BIRTH_DATE.getCoefficient()) : 0;
 		return partialResult;
 	}
 
@@ -60,10 +60,10 @@ public class MathScore {
 			Float partialResult) {
 		partialResult += assertNulls(personToMatch.getIdentificationTypeId(), searchFilter.getIdentificationTypeId())
 				&& personToMatch.getIdentificationTypeId().equals(searchFilter.getIdentificationTypeId())
-				? SearchField.IdentificationType.getCoefficent()
+				? SearchField.IDENTIFICATION_TYPE.getCoefficient()
 				: 0;
 		partialResult += assertNulls(searchFilter.getGenderId(), personToMatch.getGenderId())
-				&& personToMatch.getGenderId().equals(searchFilter.getGenderId()) ? SearchField.Gender.getCoefficent()
+				&& personToMatch.getGenderId().equals(searchFilter.getGenderId()) ? SearchField.GENDER.getCoefficient()
 				: 0;
 		return partialResult;
 	}
@@ -72,8 +72,8 @@ public class MathScore {
 		return date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 	}
 	
-	private static boolean assertNulls(Object filterAtribute, Object atributeToMatchh) {
-		return filterAtribute != null && atributeToMatchh != null;
+	private static boolean assertNulls(Object filterAttribute, Object attributeToMatch) {
+		return filterAttribute != null && attributeToMatch != null;
 	}
 
 	public static float calculateMatchScore(String obtainedText, String searchedText, float coefficient) {

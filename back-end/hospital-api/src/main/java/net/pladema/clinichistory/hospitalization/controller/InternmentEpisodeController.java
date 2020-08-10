@@ -45,6 +45,7 @@ public class InternmentEpisodeController {
 
 	public static final String INTERNMENT_NOT_FOUND = "internmentepisode.not.found";
 	public static final String OUTPUT = "Output -> {}";
+	public static final String INPUT_PARAMETERS_INSTITUTION_ID_INTERNMENT_EPISODE_ID = "Input parameters -> institutionId {}, internmentEpisodeId {} ";
 
 	private final InternmentEpisodeService internmentEpisodeService;
 
@@ -143,11 +144,11 @@ public class InternmentEpisodeController {
 		InternmentSummaryBo internmentEpisodeSummary = internmentEpisodeService.getIntermentSummary(internmentEpisodeId)
 				.orElseThrow(() -> new NotFoundException("bad-episode-id", INTERNMENT_NOT_FOUND));
 		patientDischarge.setInternmentEpisodeId(internmentEpisodeId);
-		PatientDischargeBo patientDischageSaved = internmentEpisodeService.savePatientDischarge(patientDischarge);
+		PatientDischargeBo patientDischargeSaved = internmentEpisodeService.savePatientDischarge(patientDischarge);
 		bedExternalService.freeBed(internmentEpisodeSummary.getBedId());
-		internmentEpisodeService.updateInternmentEpisodeSatus(internmentEpisodeId,
+		internmentEpisodeService.updateInternmentEpisodeStatus(internmentEpisodeId,
 				Short.valueOf(InternmentEpisodeStatus.INACTIVE));
-		PatientDischargeDto result = patientDischargeMapper.toPatientDischargeDto(patientDischageSaved);
+		PatientDischargeDto result = patientDischargeMapper.toPatientDischargeDto(patientDischargeSaved);
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);
 	}
@@ -156,7 +157,7 @@ public class InternmentEpisodeController {
 	public ResponseEntity<LocalDate> getMinDischargeDate(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
-		LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {} ", institutionId, internmentEpisodeId);
+		LOG.debug(INPUT_PARAMETERS_INSTITUTION_ID_INTERNMENT_EPISODE_ID, institutionId, internmentEpisodeId);
 		if (this.featureFlagsService.isOn(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS)) {
 			return ResponseEntity.ok(internmentEpisodeService.getLastUpdateDateOfInternmentEpisode(internmentEpisodeId));
 		}
@@ -171,7 +172,7 @@ public class InternmentEpisodeController {
 	public ResponseEntity<InternmentEpisodeBMDto> getInternmentEpisode(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
-		LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {} ", institutionId, internmentEpisodeId);
+		LOG.debug(INPUT_PARAMETERS_INSTITUTION_ID_INTERNMENT_EPISODE_ID, institutionId, internmentEpisodeId);
 		InternmentEpisode internmentEpisode = internmentEpisodeService.getInternmentEpisode(internmentEpisodeId,institutionId);
 		InternmentEpisodeBMDto result = internmentEpisodeMapper.toInternmentEpisodeBMDto(internmentEpisode);
 		LOG.debug(OUTPUT, result);
@@ -182,7 +183,7 @@ public class InternmentEpisodeController {
 	public ResponseEntity<PatientDischargeDto> getPatientDischarge(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
-		LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {} ", institutionId, internmentEpisodeId);
+		LOG.debug(INPUT_PARAMETERS_INSTITUTION_ID_INTERNMENT_EPISODE_ID, institutionId, internmentEpisodeId);
 		PatientDischargeBo pdbo =	patientDischargeService.getPatientDischarge(internmentEpisodeId)
 				.orElseThrow(() -> new NotFoundException("bad-episode-id", INTERNMENT_NOT_FOUND));
 		PatientDischargeDto result = patientDischargeMapper.toPatientDischargeDto(pdbo);
@@ -194,7 +195,7 @@ public class InternmentEpisodeController {
 	public ResponseEntity<LocalDate> getLastUpdateDateOfInternmentEpisode(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
-		LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {} ", institutionId, internmentEpisodeId);
+		LOG.debug(INPUT_PARAMETERS_INSTITUTION_ID_INTERNMENT_EPISODE_ID, institutionId, internmentEpisodeId);
 		LocalDate result = internmentEpisodeService.getLastUpdateDateOfInternmentEpisode(internmentEpisodeId);
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);

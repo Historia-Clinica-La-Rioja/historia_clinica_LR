@@ -80,7 +80,7 @@ public class SecurityServiceImpl implements SecurityService {
 	}
 
 	protected Optional<Date> getExpirationDateFromToken(String token) {
-		return parseClaimsFromToken(token).map(claims -> claims.getExpiration());
+		return parseClaimsFromToken(token).map(Claims::getExpiration);
 	}
 
 	@Override

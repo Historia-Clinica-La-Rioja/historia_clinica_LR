@@ -2,7 +2,6 @@ package net.pladema.clinichistory.generalstate.repository;
 
 import net.pladema.clinichistory.generalstate.repository.domain.HCEHealthConditionVo;
 import net.pladema.clinichistory.generalstate.repository.domain.HCEHospitalizationVo;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 

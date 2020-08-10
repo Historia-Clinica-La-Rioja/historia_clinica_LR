@@ -20,6 +20,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
 
 
     private static final Logger LOG = LoggerFactory.getLogger(HCEHealthConditionRepositoryImpl.class);
+    public static final String INPUT_PARAMETERS_PATIENT_ID = "Input parameters patientId {}";
 
     private final EntityManager entityManager;
 
@@ -32,7 +33,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
     @Override
     @Transactional(readOnly = true)
     public List<HCEHealthConditionVo> getPersonalHistories(Integer patientId) {
-        LOG.debug("Input parameters patientId {}", patientId);
+        LOG.debug(INPUT_PARAMETERS_PATIENT_ID, patientId);
         String sqlString = "WITH t AS (" +
                 "   SELECT hc.id, sctid_code, hc.status_id, hc.main, verification_status_id, problem_id, start_date, inactivation_date, hc.note_id, hc.updated_on, hc.patient_id, " +
                 "   row_number() over (partition by sctid_code order by hc.updated_on desc) as rw  " +
@@ -82,7 +83,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
     @Override
     @Transactional(readOnly = true)
     public List<HCEHealthConditionVo> getFamilyHistories(Integer patientId) {
-        LOG.debug("Input parameters patientId {}", patientId);
+        LOG.debug(INPUT_PARAMETERS_PATIENT_ID, patientId);
         String sqlString = "WITH t AS (" +
                 "   SELECT hc.id, sctid_code, hc.status_id, hc.main, verification_status_id, problem_id, start_date, hc.note_id, hc.updated_on, hc.patient_id, " +
                 "   row_number() over (partition by sctid_code order by hc.updated_on desc) as rw  " +
@@ -135,7 +136,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
     @Override
     @Transactional(readOnly = true)
     public List<HCEHospitalizationVo> getHospitalizationHistory(Integer patientId) {
-        LOG.debug("Input parameters patientId {}", patientId);
+        LOG.debug(INPUT_PARAMETERS_PATIENT_ID, patientId);
         String sqlString = "WITH t AS (" +
                 "   SELECT hc.id, sctid_code, hc.status_id, d.source_id, hc.main, verification_status_id, ie.entry_date, ie.discharge_date, hc.updated_on, hc.patient_id, " +
                 "   row_number() over (partition by sctid_code, source_id order by hc.updated_on desc) as rw  " +
@@ -162,7 +163,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
                 .setParameter("verificationId", ConditionVerificationStatus.ERROR)
                 .setParameter("sourceType", SourceType.HOSPITALIZATION)
                 .setParameter("patientId", patientId)
-                .setParameter("problemType", ProblemType.DIAGNOSTICO)
+                .setParameter("problemType", ProblemType.DIAGNOSIS)
                 .setParameter("documentType", DocumentType.EPICRISIS)
                 .getResultList();
 

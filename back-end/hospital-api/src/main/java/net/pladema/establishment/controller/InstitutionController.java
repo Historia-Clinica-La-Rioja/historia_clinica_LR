@@ -41,12 +41,12 @@ public class InstitutionController {
 		List<Institution> institutions = repository.findAllById(idsConAcceso);
 		List<InstitutionDto> institutionDtos = mapper.toListInstitutionDto(institutions);
 
-		List<Integer> addressesIds = institutions.stream().map(institution -> institution.getAddressId()).collect(Collectors.toList());
+		List<Integer> addressesIds = institutions.stream().map(Institution::getAddressId).collect(Collectors.toList());
 		List<AddressDto> addresses = addressExternalService.getAddressesByIds(addressesIds);
 
 		Map<Integer,InstitutionAddressDto> institutionAddressHashDtos=
 				addresses.stream()
-						.map(addressDto -> new InstitutionAddressDto(addressDto))
+						.map(InstitutionAddressDto::new)
 						.collect(Collectors.toMap(InstitutionAddressDto::getAddressId, item -> item));
 
 

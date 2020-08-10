@@ -100,14 +100,14 @@ public class OauthServiceImpl implements OauthService {
 	}
 
 	private Optional<Person> createPerson(OauthUser oauthUser) {
-		List<Documento> documentos = oauthUser.getTiposDocumentoPersona();
-		if (!documentos.isEmpty()) {
+		List<Documento> documents = oauthUser.getTiposDocumentoPersona();
+		if (!documents.isEmpty()) {
 			Person p = new Person();
 			p.setFirstName(oauthUser.getNombres());
 			p.setLastName(oauthUser.getApellidos());
 			p.setIdentificationNumber(oauthUser.getTiposDocumentoPersona().get(0).getNumeroDocumento());
-			oauthUser.getIdentificationTypeId().ifPresent(id -> p.setIdentificationTypeId(id));
-			oauthUser.getGenderId().ifPresent(genderId -> p.setGenderId(genderId));
+			oauthUser.getIdentificationTypeId().ifPresent(p::setIdentificationTypeId);
+			oauthUser.getGenderId().ifPresent(p::setGenderId);
 			return Optional.of(p);
 		}
 		return Optional.empty();

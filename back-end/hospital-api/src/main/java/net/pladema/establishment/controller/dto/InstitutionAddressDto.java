@@ -6,10 +6,12 @@ import lombok.Setter;
 import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.address.controller.dto.CityDto;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @NoArgsConstructor
-public class InstitutionAddressDto {
+public class InstitutionAddressDto implements Serializable {
 
     private Integer addressId;
     private String street;

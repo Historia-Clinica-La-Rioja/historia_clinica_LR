@@ -15,7 +15,7 @@ import java.util.List;
 @Repository
 public class HCEImmunizationRepositoryImpl implements HCEImmunizationRepository {
 
-    private static final Logger LOG = LoggerFactory.getLogger(HCEHealthConditionRepositoryImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HCEImmunizationRepositoryImpl.class);
 
     private final EntityManager entityManager;
 

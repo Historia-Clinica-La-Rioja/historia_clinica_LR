@@ -7,7 +7,6 @@ import lombok.ToString;
 import net.pladema.clinichistory.generalstate.repository.domain.HCEHealthConditionVo;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.ConditionClinicalStatus;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.ProblemType;
-import net.pladema.sgx.dates.configuration.LocalDateMapper;
 
 import java.time.LocalDate;
 

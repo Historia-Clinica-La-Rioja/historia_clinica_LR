@@ -120,7 +120,7 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
 
     private Predicate<OccupationVo> defineFilter(Integer ignoreDiaryId) {
         LOG.debug("Input parameters -> ignoreDiaryId {}", ignoreDiaryId);
-        Predicate<OccupationVo> result = (ignoreDiaryId == null) ? (e) -> true : (e) -> !e.getDiaryId().equals(ignoreDiaryId);
+        Predicate<OccupationVo> result = (ignoreDiaryId == null) ? e -> true : e -> !e.getDiaryId().equals(ignoreDiaryId);
         LOG.debug(OUTPUT, result);
         return result;
     }
@@ -130,7 +130,7 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
     @Override
     public Collection<DiaryOpeningHoursBo> getDiariesOpeningHours(List<Integer> diaryIds) {
         LOG.debug("Input parameters -> diaryIds {} ", diaryIds);
-        Collection<DiaryOpeningHoursBo> result = new ArrayList();
+        Collection<DiaryOpeningHoursBo> result = new ArrayList<>();
         if (!diaryIds.isEmpty()) {
             List<DiaryOpeningHoursVo> resultQuery = diaryOpeningHoursRepository.getDiariesOpeningHours(diaryIds);
             result = resultQuery.stream().map(this::createDiaryOpeningHoursBo).collect(Collectors.toList());

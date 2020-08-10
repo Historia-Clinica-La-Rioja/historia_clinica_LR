@@ -1,14 +1,14 @@
 package net.pladema.clinichistory.hospitalization.service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
 import net.pladema.clinichistory.documents.repository.entity.EvolutionNoteDocument;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.domain.InternmentSummaryBo;
 import net.pladema.clinichistory.hospitalization.service.domain.PatientDischargeBo;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 public interface InternmentEpisodeService {
 
@@ -34,13 +34,13 @@ public interface InternmentEpisodeService {
  
     PatientDischargeBo savePatientDischarge(PatientDischargeBo patientDischarge);
     
-    void updateInternmentEpisodeSatus(Integer internmentEpisodeId, Short statusId);
+    void updateInternmentEpisodeStatus(Integer internmentEpisodeId, Short statusId);
 
     InternmentEpisode getInternmentEpisode(Integer internmentEpisodeId, Integer institutionId);
 
 	List<InternmentEpisode> findByBedId(Integer bedId);
 
-	Boolean existsActiveForBedId(Integer bedId);
+	boolean existsActiveForBedId(Integer bedId);
 
 	LocalDate getLastUpdateDateOfInternmentEpisode(Integer internmentEpisode);
 

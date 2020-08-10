@@ -32,7 +32,7 @@ public class CaptchaServiceImpl implements ICaptchaService {
     @Value("${RECAPTCHA_ENABLE:true}")
     private boolean recaptchaEnable;
 
-    private static Pattern RESPONSE_PATTERN = Pattern.compile("[A-Za-z0-9_-]+");
+    private static final Pattern RESPONSE_PATTERN = Pattern.compile("[A-Za-z0-9_-]+");
 
     public CaptchaServiceImpl(RestTemplateBuilder restTemplateBuilder){
         this.restTemplateBuilder = restTemplateBuilder;
@@ -47,19 +47,19 @@ public class CaptchaServiceImpl implements ICaptchaService {
         body.put("secret", secretKey);
         body.put("response", response);
         body.put("remoteip", getHostFront(frontUrl));
-        LOG.debug("Request body for recaptcha: {} " + body);
+        LOG.debug("Request body for recaptcha: {} ", body);
 
         ResponseEntity<Map> recaptchaResponseEntity = restTemplateBuilder.build()
                 .postForEntity(validatorUrl +
                                 "?secret={secret}&response={response}&remoteip={remoteip}",
                                 body, Map.class, body);
 
-        LOG.debug("Response from recaptcha: {} " + recaptchaResponseEntity);
+        LOG.debug("Response from recaptcha: {} ", recaptchaResponseEntity);
         Map<String, Object> responseBody = recaptchaResponseEntity.getBody();
 
-        boolean recaptchaSucess = (Boolean)responseBody.get("success");
-        if (!recaptchaSucess) {
-            LOG.debug("Captcha request failed", responseBody);
+        boolean recaptchaSuccess = (Boolean)responseBody.get("success");
+        if (!recaptchaSuccess) {
+            LOG.debug("Captcha request failed {}", responseBody);
             return false;
         }
         return true;

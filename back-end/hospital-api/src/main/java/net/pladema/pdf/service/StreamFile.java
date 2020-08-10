@@ -21,7 +21,7 @@ class StreamFile {
     private static final String PDF_EXTENSION = ".pdf";
 
     public StreamFile(){
-
+        super();
     }
 
     String buildPath(String relativeDocumentPath) {

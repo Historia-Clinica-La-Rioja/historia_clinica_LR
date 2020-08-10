@@ -23,6 +23,7 @@ public class BedServiceImpl implements BedService {
 	private static final Logger LOG = LoggerFactory.getLogger(BedServiceImpl.class);
 
 	private static final boolean AVAILABLE = true;
+	public static final String OUTPUT = "Output -> {}";
 
 	private BedRepository bedRepository;
 
@@ -43,7 +44,7 @@ public class BedServiceImpl implements BedService {
 		Bed bedToUpdate = bedRepository.getOne(id);
 		bedToUpdate.setFree(false);
 		Bed result = bedRepository.save(bedToUpdate);
-		LOG.debug("Output -> {}", result);
+		LOG.debug(OUTPUT, result);
 		return result;
 	}
 
@@ -63,7 +64,7 @@ public class BedServiceImpl implements BedService {
 		LOG.debug("BedService::getFreeBedsByClinicalSpecialty-> input parameters -> InstitucionId{} , BedId {}",
 				institutionId, clinicalSpecialtyId);
 		List<Bed> result = bedRepository.getFreeBedsByClinicalSpecialty(institutionId, clinicalSpecialtyId);
-		LOG.debug("Output -> {}", result);
+		LOG.debug(OUTPUT, result);
 		return result;
 	}
 
@@ -79,7 +80,7 @@ public class BedServiceImpl implements BedService {
 		}
 		updateBedStatusOccupied(patientBedRelocation.getDestinationBedId());
 		HistoricPatientBedRelocation result = historicPatientBedRelocationRepository.save(patientBedRelocation);
-		LOG.debug("Output -> {}", result);
+		LOG.debug(OUTPUT, result);
 
 		return result;
 	}
@@ -89,7 +90,7 @@ public class BedServiceImpl implements BedService {
 	public Optional<HistoricPatientBedRelocation> getLastPatientBedRelocation(Integer internmentEpisodeId) {
 		LOG.debug("BedService::getLastPatientBedRelocation-> input parameters -> internmentEpisodeId{}", internmentEpisodeId);
 		Optional<HistoricPatientBedRelocation> result = historicPatientBedRelocationRepository.getAllByInternmentEpisode(internmentEpisodeId).findFirst();
-		LOG.debug("Output -> {}", result);
+		LOG.debug(OUTPUT, result);
 		return result;
 	}
 
@@ -98,7 +99,7 @@ public class BedServiceImpl implements BedService {
 	public Optional<BedInfoVo> getBedInfo(Integer bedId) {
 		LOG.debug("input parameters -> bedId {}", bedId);
 		Optional<BedInfoVo> result = bedRepository.getBedInfo(bedId).findFirst();
-		LOG.debug("Output -> {}", result);
+		LOG.debug(OUTPUT, result);
 		return result;
 	}
 
@@ -106,7 +107,7 @@ public class BedServiceImpl implements BedService {
 	public List<BedSummaryVo> getBedSummary(Integer institutionId) {
 		LOG.debug("input parameters -> institutionId {}", institutionId);
 		List<BedSummaryVo> result = bedRepository.getAllBedsSummary(institutionId);
-		LOG.debug("Output -> {}", result);
+		LOG.debug(OUTPUT, result);
 		return result;
 	}
 

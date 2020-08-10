@@ -34,7 +34,7 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public List<AddressBo> getAddressesByIds(List<Integer> addressesIds) {
         List<AddressVo> addresses = addressRepository.findByIds(addressesIds);
-        return addresses.stream().map(address -> new AddressBo(address)).collect(Collectors.toList());
+        return addresses.stream().map(AddressBo::new).collect(Collectors.toList());
     }
 
 }

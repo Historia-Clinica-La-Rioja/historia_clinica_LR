@@ -15,7 +15,7 @@ public class OnGenerateOutpatientDocumentEvent extends OnGenerateDocumentEvent {
 
     @Getter(value = AccessLevel.NONE)
     @Setter(value = AccessLevel.NONE)
-    private final String RELATIVE_DIRECTORY = "/institution/{institutionId}/outpatient/{sourceId}/{documentType}/";
+    private final static String RELATIVE_DIRECTORY = "/institution/{institutionId}/outpatient/{sourceId}/{documentType}/";
 
     public OnGenerateOutpatientDocumentEvent(Document document, Integer institutionId, Integer sourceId,
                                              EDocumentType documentType, Integer patientId) {

@@ -37,7 +37,7 @@ public class ActuatorConfiguration {
         for (int i = 1; i < whiteList.size(); i++)
             access.append(" or hasIpAddress('").append(whiteList.get(i)).append("')");
         access.append(" )");
-        LOG.info("Actuator security list {}", access.toString());
+        LOG.info("Actuator security list {}", access);
         return access.toString();
     }
 }

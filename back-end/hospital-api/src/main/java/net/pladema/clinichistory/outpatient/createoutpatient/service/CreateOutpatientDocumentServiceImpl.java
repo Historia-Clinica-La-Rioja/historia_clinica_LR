@@ -83,9 +83,9 @@ public class CreateOutpatientDocumentServiceImpl implements CreateOutpatientDocu
 
     private Document loadNotes(Document document, Optional<String> optNotes) {
         LOG.debug("Input parameters -> document {}, notes {}", document, optNotes);
-        optNotes.ifPresent(notes -> {
-            document.setOtherNoteId(noteService.createNote(optNotes.get()));
-        });
+        optNotes.ifPresent(notes ->
+            document.setOtherNoteId(noteService.createNote(optNotes.get()))
+        );
         LOG.debug(OUTPUT, document);
         return document;
     }

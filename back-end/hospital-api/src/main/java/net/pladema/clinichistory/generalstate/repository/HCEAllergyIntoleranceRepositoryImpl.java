@@ -5,7 +5,6 @@ import net.pladema.clinichistory.ips.repository.masterdata.entity.AllergyIntoler
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentStatus;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.Snomed;
-import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 

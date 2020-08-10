@@ -23,6 +23,7 @@ import java.util.List;
 public class HealthcareProfessionalController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(HealthcareProfessionalController.class);
+	public static final String OUTPUT = "Output -> {}";
 
 	private final HealthcareProfessionalService healthcareProfessionalService;
 	
@@ -41,7 +42,7 @@ public class HealthcareProfessionalController {
 		List<HealthcarePersonBo> doctors = healthcareProfessionalService.getAllDoctorsByInstitution(institutionId);
 		LOG.debug("Get all Doctors => {}", doctors);
 		List<HealthcareProfessionalDto> result = healthcareProfessionalMapper.fromHealthcarePersonList(doctors);
-		LOG.debug("Output", result);
+		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);
 	}
 
@@ -53,7 +54,7 @@ public class HealthcareProfessionalController {
 		List<HealthcareProfessionalBo> healthcareProfessionals = healthcareProfessionalService.getAll(institutionId);
 		LOG.debug("Get all Healthcare professional => {}", healthcareProfessionals);
 		List<ProfessionalDto> result = healthcareProfessionalMapper.fromProfessionalBoList(healthcareProfessionals);
-		LOG.debug("Output", result);
+		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);
 	}
 
@@ -63,7 +64,7 @@ public class HealthcareProfessionalController {
 																	@RequestParam(name = "name") String name){
 		LOG.debug("Input parameters -> institutionId {}, name {}", institutionId, name);
 		Collection<ProfessionalDto> result = HealthcareProfessionalMock.mockListProfessionalDto(name);
-		LOG.debug("Output", result);
+		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);
 	}
 
@@ -74,7 +75,7 @@ public class HealthcareProfessionalController {
 		LOG.debug("Input parameters -> institutionId {}, healthcareProfessionalId {}", institutionId, healthcareProfessionalId);
 		HealthcareProfessionalBo resultService = healthcareProfessionalService.findProfessionalById(healthcareProfessionalId);
 		ProfessionalDto result = healthcareProfessionalMapper.fromProfessionalBo(resultService);
-		LOG.debug("Output", result);
+		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);
 	}
 

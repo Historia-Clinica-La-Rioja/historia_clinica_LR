@@ -1,6 +1,5 @@
 package net.pladema.medicalconsultation.doctorsoffice.service.impl;
 
-import net.pladema.clinichistory.hospitalization.service.impl.InternmentEpisodeServiceImpl;
 import net.pladema.medicalconsultation.doctorsoffice.repository.DoctorsOfficeRepository;
 import net.pladema.medicalconsultation.doctorsoffice.repository.domain.DoctorsOfficeVo;
 import net.pladema.medicalconsultation.doctorsoffice.service.DoctorsOfficeService;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class DoctorsOfficeServiceImpl implements DoctorsOfficeService {

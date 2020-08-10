@@ -35,7 +35,7 @@ public class LoggedUserServiceImpl implements LoggedUserService {
 
 	@Override
 	public UserBo getInfo() {
-		User user = userRepository.findById(this.getUserId()).get();
+		User user = userRepository.findById(this.getUserId()).orElse(new User());
 		return new UserBo(user);
 	}
 }

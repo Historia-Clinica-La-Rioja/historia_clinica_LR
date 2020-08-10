@@ -190,6 +190,7 @@ public class HCEGeneralStateController {
                                     hg.getValue().stream().filter(HCEHospitalizationBo::isMain).map(hceGeneralStateMapper::toHCEDiagnoseDto).collect(Collectors.toList()),
                                     hg.getValue().stream().filter(hbo -> !hbo.isMain()).map(hceGeneralStateMapper::toHCEDiagnoseDto).collect(Collectors.toList())))
                     .collect(Collectors.toList());
+            LOG.debug(LOGGING_OUTPUT, hospitalizationsGrouped);
             return hospitalizationsGrouped;
     }
 

@@ -11,7 +11,6 @@ import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.
 import net.pladema.clinichistory.hospitalization.controller.maindiagnoses.dto.MainDiagnosisDto;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.EvolutionNoteReportService;
-import net.pladema.clinichistory.hospitalization.service.evolutionnote.EvolutionNoteService;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;
 import net.pladema.clinichistory.hospitalization.service.maindiagnoses.MainDiagnosesService;
 import net.pladema.clinichistory.hospitalization.service.maindiagnoses.domain.MainDiagnosisBo;
@@ -24,7 +23,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
@@ -47,8 +50,6 @@ public class MainDiagnosesController {
 
     private final MainDiagnosesService mainDiagnosesService;
 
-    private final EvolutionNoteService evolutionNoteService;
-
     private final EvolutionNoteReportService evolutionNoteReportService;
 
     private final HealthConditionMapper healthConditionMapper;
@@ -57,13 +58,11 @@ public class MainDiagnosesController {
 
     public MainDiagnosesController(InternmentEpisodeService internmentEpisodeService,
                                    MainDiagnosesService mainDiagnosesService,
-                                   EvolutionNoteService evolutionNoteService,
                                    EvolutionNoteReportService evolutionNoteReportService,
                                    HealthConditionMapper healthConditionMapper,
                                    PdfService pdfService) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.mainDiagnosesService = mainDiagnosesService;
-        this.evolutionNoteService = evolutionNoteService;
         this.evolutionNoteReportService = evolutionNoteReportService;
         this.healthConditionMapper = healthConditionMapper;
         this.pdfService = pdfService;
