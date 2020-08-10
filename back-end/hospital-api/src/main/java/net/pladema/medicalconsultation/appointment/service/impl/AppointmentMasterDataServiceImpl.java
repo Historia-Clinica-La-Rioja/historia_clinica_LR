@@ -22,7 +22,7 @@ public class AppointmentMasterDataServiceImpl implements AppointmentMasterDataSe
     public boolean validAppointmentStateId(short appointmentStateId) {
         LOG.debug("Input parameters -> appointmentStateId {}", appointmentStateId);
         boolean result = appointmentRepository.existsById(appointmentStateId);
-        LOG.debug(OUTPUT, Boolean.TRUE);
-        return Boolean.TRUE;
+        LOG.debug(OUTPUT, result);
+        return result;
     }
 }
