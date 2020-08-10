@@ -36,10 +36,10 @@ public class InternmentEpisodeRepositoryTest extends UnitRepository {
 		InternmentEpisode internmentEpisode = createInternmentEpisode();
 		save(internmentEpisode);
 
-		Document anamnesis = DocumentsTestMocks.createDocument(internmentEpisode.getId(), DocumentType.ANAMNESIS, SourceType.INTERNACION, DocumentStatus.FINAL);
+		Document anamnesis = DocumentsTestMocks.createDocument(internmentEpisode.getId(), DocumentType.ANAMNESIS, SourceType.HOSPITALIZATION, DocumentStatus.FINAL);
 		anamnesis = save(anamnesis);
 
-		Document evolutionNote = DocumentsTestMocks.createDocument(internmentEpisode.getId(), DocumentType.EVALUATION_NOTE, SourceType.INTERNACION, DocumentStatus.FINAL);
+		Document evolutionNote = DocumentsTestMocks.createDocument(internmentEpisode.getId(), DocumentType.EVALUATION_NOTE, SourceType.HOSPITALIZATION, DocumentStatus.FINAL);
 		evolutionNote = save(evolutionNote);
 
 		save(new EvolutionNoteDocument(evolutionNote.getId(), internmentEpisode.getId()));
@@ -58,15 +58,15 @@ public class InternmentEpisodeRepositoryTest extends UnitRepository {
 		InternmentEpisode internmentEpisode = createInternmentEpisode();
 		save(internmentEpisode);
 
-		Document anamnesis = DocumentsTestMocks.createDocument(internmentEpisode.getId(), DocumentType.ANAMNESIS, SourceType.INTERNACION, DocumentStatus.FINAL);
+		Document anamnesis = DocumentsTestMocks.createDocument(internmentEpisode.getId(), DocumentType.ANAMNESIS, SourceType.HOSPITALIZATION, DocumentStatus.FINAL);
 		anamnesis = save(anamnesis);
 
-		Document evolutionNote = DocumentsTestMocks.createDocument(internmentEpisode.getId(), DocumentType.EVALUATION_NOTE, SourceType.INTERNACION, DocumentStatus.FINAL);
+		Document evolutionNote = DocumentsTestMocks.createDocument(internmentEpisode.getId(), DocumentType.EVALUATION_NOTE, SourceType.HOSPITALIZATION, DocumentStatus.FINAL);
 		evolutionNote = save(evolutionNote);
 
 		save(new EvolutionNoteDocument(evolutionNote.getId(), internmentEpisode.getId()));
 
-		Document epicrisis = DocumentsTestMocks.createDocument(internmentEpisode.getId(), DocumentType.EPICRISIS, SourceType.INTERNACION, DocumentStatus.FINAL);
+		Document epicrisis = DocumentsTestMocks.createDocument(internmentEpisode.getId(), DocumentType.EPICRISIS, SourceType.HOSPITALIZATION, DocumentStatus.FINAL);
 		epicrisis = save(epicrisis);
 
 		internmentEpisode.setAnamnesisDocId(anamnesis.getId());

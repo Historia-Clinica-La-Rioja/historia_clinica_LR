@@ -60,7 +60,7 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
     public EpicrisisBo createDocument(Integer internmentEpisodeId, Integer patientId, EpicrisisBo epicrisis) {
         LOG.debug("Input parameters -> internmentEpisodeId {}, patientId {}, epicrisis {}", internmentEpisodeId, patientId, epicrisis);
 
-        Document document = new Document(internmentEpisodeId, epicrisis.getDocumentStatusId(), DocumentType.EPICRISIS, SourceType.INTERNACION);
+        Document document = new Document(internmentEpisodeId, epicrisis.getDocumentStatusId(), DocumentType.EPICRISIS, SourceType.HOSPITALIZATION);
         loadNotes(document, Optional.ofNullable(epicrisis.getNotes()));
         document = documentService.save(document);
 

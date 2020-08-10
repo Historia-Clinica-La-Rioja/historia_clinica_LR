@@ -61,7 +61,7 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
     public AnamnesisBo createDocument(Integer intermentEpisodeId, Integer patientId, AnamnesisBo anamnesis) {
         LOG.debug("Input parameters -> intermentEpisodeId {}, patientId {}, anamnesis {}", intermentEpisodeId, patientId, anamnesis);
 
-        Document doc = new Document(intermentEpisodeId, anamnesis.getDocumentStatusId(), DocumentType.ANAMNESIS, SourceType.INTERNACION);
+        Document doc = new Document(intermentEpisodeId, anamnesis.getDocumentStatusId(), DocumentType.ANAMNESIS, SourceType.HOSPITALIZATION);
         loadNotes(doc, Optional.ofNullable(anamnesis.getNotes()));
         doc = documentService.save(doc);
 

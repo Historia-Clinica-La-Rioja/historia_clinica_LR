@@ -36,7 +36,7 @@ public class HCHHealthConditionRepositoryImpl implements HCHHealthConditionRepos
                 "join document_health_condition dhc on d.id = dhc.document_id " +
                 "join health_condition hc on dhc.health_condition_id = hc.id " +
                 "where d.source_id = :internmentEpisodeId " +
-                "and d.source_type_id = " + SourceType.INTERNACION+" "+
+                "and d.source_type_id = " + SourceType.HOSPITALIZATION +" "+
                 "and d.status_id = :statusId )" +
                 "select t.id as id, s.id as sctid, s.pt, status_id, t.main, verification_status_id, problem_id, " +
                 "start_date, n.id note_id, n.description as note " +

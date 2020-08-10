@@ -71,7 +71,7 @@ public class HCHClinicalObservationRepositoryImplTest extends UnitRepository {
 
 	private void createInternmentStates(Integer internmentEpisodeId, LocalDateTime dateTime){
 		String code1 = "code1";
-		Document firstDoc = save(DocumentsTestMocks.createDocument(internmentEpisodeId, DocumentType.ANAMNESIS, SourceType.INTERNACION, DocumentStatus.FINAL));
+		Document firstDoc = save(DocumentsTestMocks.createDocument(internmentEpisodeId, DocumentType.ANAMNESIS, SourceType.HOSPITALIZATION, DocumentStatus.FINAL));
 		ObservationVitalSign vitalSignFinal0 = save(ClinicalObservationTestMocks.createFinalObservationVitalSign(code1, dateTime.minusDays(8)));
 		ObservationVitalSign vitalSignFinal1 = save(ClinicalObservationTestMocks.createFinalObservationVitalSign(code1, dateTime.plusMinutes(2)));
 		ObservationVitalSign vitalSignError2 = save(ClinicalObservationTestMocks.createErrorObservationVitalSign(code1, dateTime.plusMinutes(5)));
@@ -81,12 +81,12 @@ public class HCHClinicalObservationRepositoryImplTest extends UnitRepository {
 
 
 		String code2 = "code2";
-		Document secondDoc = save(DocumentsTestMocks.createDocument(internmentEpisodeId, DocumentType.ANAMNESIS, SourceType.INTERNACION, DocumentStatus.FINAL));
+		Document secondDoc = save(DocumentsTestMocks.createDocument(internmentEpisodeId, DocumentType.ANAMNESIS, SourceType.HOSPITALIZATION, DocumentStatus.FINAL));
 		ObservationVitalSign vitalSignFinal3 = save(ClinicalObservationTestMocks.createFinalObservationVitalSign(code2, dateTime.plusMinutes(6)));
 		save(ClinicalObservationTestMocks.createDocumentVitalSign(secondDoc, vitalSignFinal3));
 
 		String code3 = "code3";
-		Document thirdDoc = save(DocumentsTestMocks.createDocument(internmentEpisodeId, DocumentType.ANAMNESIS, SourceType.INTERNACION, DocumentStatus.ERROR));
+		Document thirdDoc = save(DocumentsTestMocks.createDocument(internmentEpisodeId, DocumentType.ANAMNESIS, SourceType.HOSPITALIZATION, DocumentStatus.ERROR));
 		ObservationVitalSign vitalSignFinal4 = save(ClinicalObservationTestMocks.createFinalObservationVitalSign(code3, dateTime.plusMinutes(7)));
 		save(ClinicalObservationTestMocks.createDocumentVitalSign(thirdDoc, vitalSignFinal4));
 

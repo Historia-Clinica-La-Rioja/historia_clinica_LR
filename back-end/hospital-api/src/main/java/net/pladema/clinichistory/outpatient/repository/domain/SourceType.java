@@ -23,8 +23,8 @@ public class SourceType implements Serializable {
      */
     private static final long serialVersionUID = -596696291256492911L;
 
-    public static final short INTERNACION = (short)0;
-    public static final short AMBULATORIA = (short)1;
+    public static final short HOSPITALIZATION = (short)0;
+    public static final short OUTPATIENT = (short)1;
 
     @Id
     @Column(name = "id", nullable = false)

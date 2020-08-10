@@ -67,7 +67,7 @@ public class DocumentSearchQuery {
 
     public QueryPart where() {
         return new QueryPart("document.sourceId = :internmentEpisodeId \n" +
-                "and document.sourceTypeId = " + SourceType.INTERNACION+" \n"+
+                "and document.sourceTypeId = " + SourceType.HOSPITALIZATION +" \n"+
                 "and not hc.verificationStatusId = '" + ConditionVerificationStatus.ERROR +"' \n");
     }
 

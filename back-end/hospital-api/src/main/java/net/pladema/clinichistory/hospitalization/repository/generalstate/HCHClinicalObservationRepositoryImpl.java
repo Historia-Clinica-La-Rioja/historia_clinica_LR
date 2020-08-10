@@ -43,7 +43,7 @@ public class HCHClinicalObservationRepositoryImpl implements HCHClinicalObservat
                 "    JOIN document_vital_sign dvs ON (d.id = dvs.document_id) " +
                 "    JOIN observation_vital_sign ovs ON (dvs.observation_vital_sign_id = ovs.id) " +
                 "    WHERE source_id = :internmentEpisodeId " +
-                "          AND source_type_id = " + SourceType.INTERNACION+" "+
+                "          AND source_type_id = " + SourceType.HOSPITALIZATION +" "+
                 "          AND d.status_id = :statusId " +
                 " )UNION( " +
                 "   SELECT  ovs.id, " +
@@ -55,7 +55,7 @@ public class HCHClinicalObservationRepositoryImpl implements HCHClinicalObservat
                 "    JOIN document_lab dl ON (d.id = dl.document_id) " +
                 "    JOIN observation_lab ovs ON (dl.observation_lab_id = ovs.id) " +
                 "    WHERE source_id = :internmentEpisodeId " +
-                "          AND source_type_id = " + SourceType.INTERNACION+" "+
+                "          AND source_type_id = " + SourceType.HOSPITALIZATION +" "+
                 "          AND d.status_id = :statusId " +
                 ")" +
                 "    ORDER BY effective_time DESC " );

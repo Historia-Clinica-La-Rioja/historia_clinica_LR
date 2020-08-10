@@ -54,7 +54,7 @@ public class MainDiagnosesServiceImpl implements MainDiagnosesService {
     public Long createDocument(Integer internmentEpisodeId, Integer patientId, MainDiagnosisBo mainDiagnosisBo) {
         LOG.debug("Input parameters -> intermentEpisodeId {}, patientId {}, mainDiagnosisBo {}", internmentEpisodeId, patientId, mainDiagnosisBo);
 
-        Document document = new Document(internmentEpisodeId, DocumentStatus.FINAL, DocumentType.EVALUATION_NOTE, SourceType.INTERNACION);
+        Document document = new Document(internmentEpisodeId, DocumentStatus.FINAL, DocumentType.EVALUATION_NOTE, SourceType.HOSPITALIZATION);
         loadNotes(document, Optional.ofNullable(mainDiagnosisBo.getNotes()));
         document = documentService.save(document);
         Long result = document.getId();

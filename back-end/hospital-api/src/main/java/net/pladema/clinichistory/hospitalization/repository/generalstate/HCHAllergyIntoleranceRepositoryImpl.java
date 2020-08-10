@@ -41,7 +41,7 @@ public class HCHAllergyIntoleranceRepositoryImpl implements HCHAllergyIntoleranc
                 "join document_allergy_intolerance dai on d.id = dai.document_id " +
                 "join allergy_intolerance ai on dai.allergy_intolerance_id = ai.id " +
                 "where d.source_id = :internmentEpisodeId " +
-                "and d.source_type_id = " + SourceType.INTERNACION+" "+
+                "and d.source_type_id = " + SourceType.HOSPITALIZATION +" "+
                 "and d.status_id = :documentStatusId " +
                 ") " +
                 "select t.id as id, s.id as sctid, s.pt, t.status_id, t.verification_status_id, t.category_id, t.start_date " +

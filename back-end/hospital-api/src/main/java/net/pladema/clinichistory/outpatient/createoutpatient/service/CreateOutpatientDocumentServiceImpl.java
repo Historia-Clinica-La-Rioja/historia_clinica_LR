@@ -61,7 +61,7 @@ public class CreateOutpatientDocumentServiceImpl implements CreateOutpatientDocu
     @Override
     public OutpatientDocumentBo create(Integer outpatientId, Integer patientId,  OutpatientDocumentBo outpatient) {
         LOG.debug("Input parameters outpatientId {}, patientId {}, outpatient {}", outpatientId, patientId, outpatient);
-        Document doc = new Document(outpatientId, DocumentStatus.FINAL, DocumentType.OUTPATIENT, SourceType.AMBULATORIA);
+        Document doc = new Document(outpatientId, DocumentStatus.FINAL, DocumentType.OUTPATIENT, SourceType.OUTPATIENT);
         loadNotes(doc, Optional.ofNullable(outpatient.getEvolutionNote()));
         doc = documentService.save(doc);
 

@@ -34,7 +34,7 @@ public class OnGenerateOutpatientDocumentEvent extends OnGenerateDocumentEvent {
 
     @Override
     public Short getSourceType() {
-        return SourceType.AMBULATORIA;
+        return SourceType.OUTPATIENT;
     }
 }
 

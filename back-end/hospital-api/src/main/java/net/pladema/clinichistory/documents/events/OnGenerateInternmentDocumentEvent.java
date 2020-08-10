@@ -33,7 +33,7 @@ public class OnGenerateInternmentDocumentEvent extends OnGenerateDocumentEvent {
 
     @Override
     public Short getSourceType() {
-        return SourceType.INTERNACION;
+        return SourceType.HOSPITALIZATION;
     }
 }
 

@@ -33,13 +33,13 @@ public interface DocumentRepository extends JpaRepository<Document, Long>, Docum
             "join HealthcareProfessional hp on (hcg.pk.healthcareProfessionalId = hp.id) " +
             "join Person p on (hp.personId = p.id) " +
             "where d.id = :documentId " +
-            "and d.sourceTypeId = " + SourceType.INTERNACION+" "+
+            "and d.sourceTypeId = " + SourceType.HOSPITALIZATION +" "+
             "and hcg.responsible = true ")
     ResponsibleDoctorVo getResponsible(@Param("documentId") Long documentId);
 
     @Query(value = "SELECT d.updateable " +
             "FROM Document d " +
             "WHERE d.sourceId = :internmentEpisodeId " +
-            "and d.sourceTypeId = " + SourceType.INTERNACION)
+            "and d.sourceTypeId = " + SourceType.HOSPITALIZATION)
     List<Updateable> getUpdatablesDocuments(@Param("internmentEpisodeId") Integer internmentEpisodeId);
 }

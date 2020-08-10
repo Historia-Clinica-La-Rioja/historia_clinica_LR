@@ -103,7 +103,7 @@ public class HCEHealthConditionRepositoryTest extends UnitRepository {
 	}
 
 	private void createFirstDocument(Integer patientId){
-		Document document = DocumentsTestMocks.createDocument(1, AMBULATORIA, SourceType.AMBULATORIA, DocumentStatus.FINAL);
+		Document document = DocumentsTestMocks.createDocument(1, AMBULATORIA, SourceType.OUTPATIENT, DocumentStatus.FINAL);
 		document = save(document);
 
 		String familyCode = "familyCode";
@@ -132,7 +132,7 @@ public class HCEHealthConditionRepositoryTest extends UnitRepository {
 	}
 
 	private void createSecondDocument(Integer patientId){
-		Document document = DocumentsTestMocks.createDocument(1, AMBULATORIA, SourceType.AMBULATORIA, DocumentStatus.FINAL);
+		Document document = DocumentsTestMocks.createDocument(1, AMBULATORIA, SourceType.OUTPATIENT, DocumentStatus.FINAL);
 		document = save(document);
 
 		String diagnose2Code = "diagnose2";
@@ -152,7 +152,7 @@ public class HCEHealthConditionRepositoryTest extends UnitRepository {
 
 
 	private void createThirdDocument(Integer patientId){
-		Document document = DocumentsTestMocks.createDocument(1, AMBULATORIA, SourceType.AMBULATORIA, DocumentStatus.FINAL);
+		Document document = DocumentsTestMocks.createDocument(1, AMBULATORIA, SourceType.OUTPATIENT, DocumentStatus.FINAL);
 		document = save(document);
 
 		String familyCode2 = "familyCode2";
