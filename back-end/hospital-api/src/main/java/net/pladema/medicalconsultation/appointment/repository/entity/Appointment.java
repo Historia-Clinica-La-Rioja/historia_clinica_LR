@@ -55,7 +55,7 @@ public class Appointment extends SGXAuditableEntity {
         result.setHour(appointmentBo.getHour());
         result.setIsOverturn(appointmentBo.isOverturn());
         result.setPatientId(appointmentBo.getPatientId());
-        result.setAppointmentStateId(AppointmentState.ASIGNADO);
+        result.setAppointmentStateId(AppointmentState.ASSIGNED);
         return result;
 
     }

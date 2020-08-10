@@ -28,6 +28,20 @@ public interface DiaryRepository extends JpaRepository<Diary, Integer> {
                                           @Param("doId") Integer doctorsOfficeId,
                                           @Param("startDate") LocalDate newDiaryStart,
                                           @Param("endDate") LocalDate newDiaryEnd);
+    
+    @Transactional(readOnly = true)
+    @Query("select id " +
+            "from Diary " +
+            "where healthcareProfessionalId = :hcpId " +
+            "and doctorsOfficeId = :doId " +
+            "and startDate <= :endDate " +
+            "and endDate >= :startDate " +
+            "AND id != :excludeDiaryId ")
+    List<Integer> findAllOverlappingDiaryExcluding(@Param("hcpId") Integer healthcareProfessionalId,
+                                          @Param("doId") Integer doctorsOfficeId,
+                                          @Param("startDate") LocalDate newDiaryStart,
+                                          @Param("endDate") LocalDate newDiaryEnd, 
+                                          @Param("excludeDiaryId") Integer excludeDiaryId);
 
 
     @Transactional(readOnly = true)

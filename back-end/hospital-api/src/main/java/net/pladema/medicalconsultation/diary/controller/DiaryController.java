@@ -1,15 +1,10 @@
 package net.pladema.medicalconsultation.diary.controller;
 
-import io.swagger.annotations.Api;
-import net.pladema.medicalconsultation.diary.controller.constraints.DiaryOpeningHoursValid;
-import net.pladema.medicalconsultation.diary.controller.constraints.DiaryPeriodValid;
-import net.pladema.medicalconsultation.diary.controller.dto.CompleteDiaryDto;
-import net.pladema.medicalconsultation.diary.controller.dto.DiaryADto;
-import net.pladema.medicalconsultation.diary.controller.dto.DiaryListDto;
-import net.pladema.medicalconsultation.diary.controller.mapper.DiaryMapper;
-import net.pladema.medicalconsultation.diary.service.DiaryService;
-import net.pladema.medicalconsultation.diary.service.domain.CompleteDiaryBo;
-import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
+import java.util.Collection;
+import java.util.Optional;
+
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -20,14 +15,25 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.util.Collection;
-import java.util.Optional;
+import io.swagger.annotations.Api;
+import net.pladema.medicalconsultation.diary.controller.constraints.DiaryEmptyAppointmentsValid;
+import net.pladema.medicalconsultation.diary.controller.constraints.DiaryOpeningHoursValid;
+import net.pladema.medicalconsultation.diary.controller.constraints.ExistingDiaryPeriodValid;
+import net.pladema.medicalconsultation.diary.controller.constraints.NewDiaryPeriodValid;
+import net.pladema.medicalconsultation.diary.controller.dto.CompleteDiaryDto;
+import net.pladema.medicalconsultation.diary.controller.dto.DiaryADto;
+import net.pladema.medicalconsultation.diary.controller.dto.DiaryDto;
+import net.pladema.medicalconsultation.diary.controller.dto.DiaryListDto;
+import net.pladema.medicalconsultation.diary.controller.mapper.DiaryMapper;
+import net.pladema.medicalconsultation.diary.service.DiaryService;
+import net.pladema.medicalconsultation.diary.service.domain.CompleteDiaryBo;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/medicalConsultations/diary")
@@ -65,10 +71,25 @@ public class DiaryController {
     @Transactional
     public ResponseEntity<Integer> addDiary(
             @PathVariable(name = "institutionId") Integer institutionId,
-            @RequestBody @Valid @DiaryPeriodValid @DiaryOpeningHoursValid DiaryADto diaryADto) {
+            @RequestBody @Valid @NewDiaryPeriodValid @DiaryOpeningHoursValid DiaryADto diaryADto) {
         LOG.debug("Input parameters -> diaryADto {}", diaryADto);
         DiaryBo diaryToSave = diaryMapper.toDiaryBo(diaryADto);
         Integer result = diaryService.addDiary(diaryToSave);
+        LOG.debug(OUTPUT, result);
+        return ResponseEntity.ok().body(result);
+    }
+    
+    @PutMapping("/{diaryId}")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA')")
+    @Transactional
+    public ResponseEntity<Integer> updateDiary(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "diaryId") Integer diaryId,
+            @RequestBody @Valid @ExistingDiaryPeriodValid @DiaryOpeningHoursValid @DiaryEmptyAppointmentsValid  DiaryDto diaryADto) {
+        LOG.debug("Input parameters -> diaryADto {}", diaryADto);
+        DiaryBo diaryToUpdate = diaryMapper.toDiaryBo(diaryADto);
+        diaryToUpdate.setId(diaryId);
+        Integer result = diaryService.updateDiary(diaryToUpdate);
         LOG.debug(OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }

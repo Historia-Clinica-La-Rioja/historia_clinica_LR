@@ -10,14 +10,16 @@ import java.util.Optional;
 
 public interface DiaryService {
 
-    Integer addDiary(DiaryBo diaryToSave);
+	Integer addDiary(DiaryBo diaryToSave);
 
-    List<Integer> getAllOverlappingDiary(Integer healthcareProfessionalId, Integer doctorsOfficeId,
-                                         LocalDate newDiaryStart, LocalDate newDiaryEnd);
+	Integer updateDiary(DiaryBo diaryToSave);
 
-    Collection<DiaryBo> getActiveDiariesFromProfessional(Integer healthcareProfessionalId);
-    
-    Optional<CompleteDiaryBo> getDiary(Integer diaryId);
+	List<Integer> getAllOverlappingDiary(Integer healthcareProfessionalId, Integer doctorsOfficeId,
+			LocalDate newDiaryStart, LocalDate newDiaryEnd, Optional<Integer> excludeDiaryId);
 
-    DiaryBo getDiaryById(Integer diaryId);
+	Collection<DiaryBo> getActiveDiariesFromProfessional(Integer healthcareProfessionalId);
+
+	Optional<CompleteDiaryBo> getDiary(Integer diaryId);
+
+	DiaryBo getDiaryById(Integer diaryId);
 }

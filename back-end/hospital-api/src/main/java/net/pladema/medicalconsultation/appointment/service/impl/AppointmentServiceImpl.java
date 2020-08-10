@@ -20,24 +20,34 @@ public class AppointmentServiceImpl implements AppointmentService {
     public static final String OUTPUT = "Output -> {}";
     private static final Logger LOG = LoggerFactory.getLogger(AppointmentServiceImpl.class);
 
-    private final AppointmentRepository appointmentRepository;
+	private final AppointmentRepository appointmentRepository;
 
-    public AppointmentServiceImpl(AppointmentRepository appointmentRepository){
-        super();
-        this.appointmentRepository = appointmentRepository;
-    }
+	public AppointmentServiceImpl(AppointmentRepository appointmentRepository) {
+		super();
+		this.appointmentRepository = appointmentRepository;
+	}
 
-    @Override
-    public Collection<AppointmentBo> getAppointmentsByDiaries(List<Integer> diaryIds) {
-        LOG.debug("Input parameters -> diaryIds {}", diaryIds);
-        Collection<AppointmentBo> result = new ArrayList<>();
-        if (!diaryIds.isEmpty())
-            result = appointmentRepository.getAppointmentsByDiaries(diaryIds).stream().map(AppointmentBo::new).collect(Collectors.toList());
-        LOG.debug(OUTPUT, result);
-        return result;
-    }
+	@Override
+	public Collection<AppointmentBo> getAppointmentsByDiaries(List<Integer> diaryIds) {
+		LOG.debug("Input parameters -> diaryIds {}", diaryIds);
+		Collection<AppointmentBo> result = new ArrayList<>();
+		if (!diaryIds.isEmpty())
+			result = appointmentRepository.getAppointmentsByDiaries(diaryIds).stream().map(AppointmentBo::new)
+					.collect(Collectors.toList());
+		LOG.debug("Output -> {}", result);
+		return result;
+	}
 
-    @Override
+	@Override
+	public Collection<AppointmentBo> getFutureActiveAppointmentsByDiary(Integer diaryId) {
+		LOG.debug("Input parameters -> diaryId {}", diaryId);
+		Collection<AppointmentBo> result = appointmentRepository.getFutureActiveAppointmentsByDiary(diaryId).stream()
+				.map(AppointmentBo::new).collect(Collectors.toList());
+		LOG.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
     public boolean existAppointment(Integer diaryId, Integer openingHoursId, LocalDate date, LocalTime hour) {
         LOG.debug("Input parameters -> diaryId {}, openingHoursId {}, date {}, hour {}", diaryId, openingHoursId, date, hour);
         boolean result = appointmentRepository.existAppointment(diaryId, openingHoursId, date, hour);

@@ -3,6 +3,7 @@ package net.pladema.medicalconsultation.appointment.repository.entity;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -16,9 +17,15 @@ import java.io.Serializable;
 @Embeddable
 @EqualsAndHashCode
 @AllArgsConstructor
+@NoArgsConstructor
 public class AppointmentAssnPK implements Serializable {
 
-    @Column(name = "diary_id", nullable = false)
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -8256217775194750334L;
+
+	@Column(name = "diary_id", nullable = false)
     private Integer diaryId;
 
     @Column(name = "opening_hours_id", nullable = false)

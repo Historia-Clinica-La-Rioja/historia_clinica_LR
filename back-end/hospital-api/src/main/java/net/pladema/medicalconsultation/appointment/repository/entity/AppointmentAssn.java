@@ -18,11 +18,14 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class AppointmentAssn implements Serializable {
 
-    @EmbeddedId
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2516704317374146771L;
+	@EmbeddedId
     private AppointmentAssnPK pk;
 
     public AppointmentAssn(Integer diaryId, Integer openingHoursId, Integer appointmentId){
-        super();
         this.pk = new AppointmentAssnPK(diaryId, openingHoursId, appointmentId);
     }
 }

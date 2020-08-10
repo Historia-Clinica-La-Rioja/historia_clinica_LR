@@ -1,37 +1,41 @@
 package net.pladema.medicalconsultation.appointment.service.domain;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.ToString;
-import lombok.Value;
-import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo;
-import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Value
-@Builder
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo;
+import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
+
+@Getter
+@Setter
+@EqualsAndHashCode
 @ToString
 @AllArgsConstructor
+@NoArgsConstructor
 public class AppointmentBo {
 
-    private final Integer id;
+    private  Integer id;
 
-    private final Integer diaryId;
+    private  Integer diaryId;
 
-    private final Integer patientId;
+    private  Integer patientId;
 
-    private final LocalDate date;
+    private  LocalDate date;
 
-    private final LocalTime hour;
+    private  LocalTime hour;
 
-    private final Short appointmentStateId;
+    private  Short appointmentStateId;
 
-    private final boolean overturn;
+    private  boolean overturn;
 
-    private final Integer openingHoursId;
+    private Integer openingHoursId;
 
     public AppointmentBo(AppointmentDiaryVo appointmentDiaryVo) {
         super();

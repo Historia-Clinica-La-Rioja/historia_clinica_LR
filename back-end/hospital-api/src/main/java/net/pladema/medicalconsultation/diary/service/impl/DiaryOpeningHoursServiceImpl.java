@@ -1,5 +1,24 @@
 package net.pladema.medicalconsultation.diary.service.impl;
 
+import static java.util.stream.Collectors.toList;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import javax.validation.constraints.NotEmpty;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
 import net.pladema.medicalconsultation.diary.repository.DiaryOpeningHoursRepository;
 import net.pladema.medicalconsultation.diary.repository.OpeningHoursRepository;
 import net.pladema.medicalconsultation.diary.repository.domain.DiaryOpeningHoursVo;
@@ -14,23 +33,6 @@ import net.pladema.medicalconsultation.diary.service.domain.OccupationBo;
 import net.pladema.medicalconsultation.diary.service.domain.OpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.TimeRangeBo;
 import net.pladema.sgx.dates.repository.entity.EDayOfWeek;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
-
-import javax.validation.constraints.NotEmpty;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
@@ -79,6 +81,12 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
         });
     }
 
+	@Override
+	public void update(Integer diaryId, List<DiaryOpeningHoursBo> diaryOpeningHours) {
+		diaryOpeningHoursRepository.deleteAll(diaryId);
+		load(diaryId, diaryOpeningHours);
+	}
+    
     private DiaryOpeningHours createDiaryOpeningHoursInstance(Integer diaryId, Integer openingHoursId, DiaryOpeningHoursBo doh){
         DiaryOpeningHours diaryOpeningHours = new DiaryOpeningHours();
         diaryOpeningHours.setPk(new DiaryOpeningHoursPK(diaryId, openingHoursId));
@@ -232,4 +240,6 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
         LOG.debug(OUTPUT, result);
         return result;
     }
+
+
 }

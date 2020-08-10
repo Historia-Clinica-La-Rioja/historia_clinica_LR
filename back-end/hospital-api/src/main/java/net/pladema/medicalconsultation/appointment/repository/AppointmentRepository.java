@@ -2,6 +2,8 @@ package net.pladema.medicalconsultation.appointment.repository;
 
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo;
 import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
+import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -23,6 +25,13 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
             "WHERE aa.pk.diaryId IN (:diaryIds) ")
     List<AppointmentDiaryVo> getAppointmentsByDiaries(@Param("diaryIds") List<Integer> diaryIds);
 
+    @Transactional(readOnly = true)
+    @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo(aa.pk.diaryId, a)" +
+            "FROM Appointment AS a " +
+            "JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
+            "WHERE aa.pk.diaryId = :diaryId AND a.appointmentStateId != " + AppointmentState.CANCELLED_STR +
+            " AND a.dateTypeId >= CURRENT_DATE ")
+    List<AppointmentDiaryVo> getFutureActiveAppointmentsByDiary(@Param("diaryId") Integer diaryId);
 
     @Transactional(readOnly = true)
     @Query( "SELECT (case when count(a.id)> 0 then true else false end) " +

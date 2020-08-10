@@ -1,0 +1,18 @@
+package net.pladema.sgx.dates.utils;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+
+public class DateUtils {
+
+	private static final int WEEK_LENGTH = 7;
+
+	public static Short getWeekDay(LocalDate date) {
+		return (short) (date.getDayOfWeek().getValue() % WEEK_LENGTH);
+	}
+
+	public static boolean isBetween(LocalTime hour, LocalTime from, LocalTime to ) {
+		return hour.isAfter(from) && hour.isBefore(to);
+	}
+	
+}

@@ -17,10 +17,14 @@ import java.io.Serializable;
 @ToString
 public class AppointmentState implements Serializable {
 
-    public static final short ASIGNADO = 1;
-    public static final short CONFIRMADO = 2;
-    public static final short AUSENTE = 3;
-    public static final short CANCELADO = 4;
+	private static final long serialVersionUID = -6349210572359248285L;
+	
+	public static final short ASSIGNED = 1;
+    public static final short CONFIRMED = 2;
+    public static final short ABSENT = 3;
+    public static final short CANCELLED = 4;
+    
+    public static final String CANCELLED_STR = "4";
 
     @Id
     @Column(name = "id")
