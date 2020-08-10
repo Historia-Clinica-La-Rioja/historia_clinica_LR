@@ -1,6 +1,5 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v0_6 
-
+- logicalFilePath: incrementales-v0_6 
     - changeSet:
         id: update data healthcare_professional_specialty
         author: etrapani
@@ -83,3 +82,33 @@ databaseChangeLog:
                 type: int
                 tableName: healthcare_professional
 
+- changeSet:
+    id: add_column-data appointment
+    author: etrapani
+    changes:
+    - addColumn:
+        tableName: appointment
+        columns:
+        - column:
+            name: health_insurance_id
+            type: int
+        - column:
+            constraints:
+                nullable: false
+            name: medical_coverage_name
+            type: varchar(255)
+            defaultValue: 'Sumar'
+        - column:
+            constraints:
+                nullable: false
+            name: medical_coverage_affiliate_number
+            type: varchar(150) 
+    - addForeignKeyConstraint:
+        baseColumnNames: health_insurance_id
+        baseTableName: appointment
+        constraintName: FK_appointment_health_insurance_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: rnos
+        referencedTableName: health_insurance
+        validate: true
