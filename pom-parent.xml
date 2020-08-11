@@ -12,9 +12,9 @@
 
 	<properties>
 		<sonar.host.url>http://192.168.7.96:9000 </sonar.host.url>
-		<sonar.java.source>8</sonar.java.source>
+		<sonar.java.source>11</sonar.java.source>
 		<revision>0.6.0-SNAPSHOT</revision>
-		<java.version>1.8</java.version>
+		<java.version>11</java.version>
 		<node.version>v12.13.0</node.version>
 		<npm.version>6.12.0</npm.version>
 		<spring-boot.version>2.2.6.RELEASE</spring-boot.version>
