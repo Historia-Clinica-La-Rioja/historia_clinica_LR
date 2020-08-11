@@ -22,7 +22,10 @@ public enum AppFeature implements Feature {
     HABILITAR_GESTION_DE_TURNOS,
 
     @Label("Indica si se debe habilitar la funcionalidad historia clinica ambulatoria")
-    HABILITAR_HISTORIA_CLINICA_AMBULATORIA;
+    HABILITAR_HISTORIA_CLINICA_AMBULATORIA,
+
+    @Label("Indica si esta habilitada la funcionalidad para actualizar documentos de internación")
+    HABILITAR_UPDATE_DOCUMENTS;
 
     public boolean isActive() {
         return FeatureContext.getFeatureManager().isActive(this);

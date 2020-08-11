@@ -18,7 +18,10 @@ import net.pladema.clinichistory.hospitalization.service.anamnesis.UpdateAnamnes
 import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.AnamnesisBo;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.EDocumentType;
+import net.pladema.featureflags.service.FeatureFlagsService;
 import net.pladema.pdf.service.PdfService;
+import net.pladema.sgx.featureflags.AppFeature;
+import org.apache.http.MethodNotSupportedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -59,18 +62,21 @@ public class AnamnesisController {
 
     private final PdfService pdfService;
 
+    private final FeatureFlagsService featureFlagsService;
+
     public AnamnesisController(InternmentEpisodeService internmentEpisodeService,
                                CreateAnamnesisService createAnamnesisService,
                                UpdateAnamnesisService updateAnamnesisService,
                                AnamnesisService anamnesisService,
                                AnamnesisMapper anamnesisMapper,
-                               PdfService pdfService) {
+                               PdfService pdfService, FeatureFlagsService featureFlagsService) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.createAnamnesisService = createAnamnesisService;
         this.updateAnamnesisService = updateAnamnesisService;
         this.anamnesisService = anamnesisService;
         this.anamnesisMapper = anamnesisMapper;
         this.pdfService = pdfService;
+        this.featureFlagsService = featureFlagsService;
     }
 
     @PostMapping
@@ -108,9 +114,13 @@ public class AnamnesisController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
             @PathVariable(name = "anamnesisId") Long anamnesisId,
-            @Valid @RequestBody AnamnesisDto anamnesisDto) throws IOException, DocumentException  {
+            @Valid @RequestBody AnamnesisDto anamnesisDto) throws IOException, DocumentException, MethodNotSupportedException {
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, anamnesisId {}, ananmnesis {}",
                 institutionId, internmentEpisodeId, anamnesisId, anamnesisDto);
+
+        if (!this.featureFlagsService.isOn(AppFeature.HABILITAR_UPDATE_DOCUMENTS))
+            throw new MethodNotSupportedException("Funcionalidad no soportada por el momento");
+
         AnamnesisBo anamnesis = anamnesisMapper.fromAnamnesisDto(anamnesisDto);
         Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
                 .orElseThrow(() -> new EntityNotFoundException(INVALID_EPISODE));

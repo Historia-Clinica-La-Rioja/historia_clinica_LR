@@ -4,13 +4,13 @@ import net.pladema.UnitController;
 import net.pladema.clinichistory.documents.repository.DocumentRepository;
 import net.pladema.clinichistory.documents.repository.entity.Document;
 import net.pladema.clinichistory.hospitalization.controller.documents.anamnesis.mapper.AnamnesisMapper;
+import net.pladema.clinichistory.hospitalization.controller.generalstate.constraint.validator.EffectiveVitalSignTimeValidator;
 import net.pladema.clinichistory.hospitalization.controller.mapper.ResponsibleDoctorMapper;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.AnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.CreateAnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.UpdateAnamnesisService;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.constraint.validator.EffectiveVitalSignTimeValidator;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentStatus;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
 import net.pladema.establishment.repository.InstitutionRepository;
@@ -31,7 +31,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.persistence.EntityNotFoundException;
-
 import java.util.Locale;
 import java.util.Optional;
 
@@ -191,7 +190,7 @@ public class AnamnesisControllerTest extends UnitController {
 		this.mockMvc.perform(MockMvcRequestBuilders.put(PUT)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(mockRequestBodyBasic()))
-				.andExpect(status().isOk());
+				.andExpect(status().isNotImplemented());
 	}
 
 	@Test
@@ -224,8 +223,7 @@ public class AnamnesisControllerTest extends UnitController {
 		this.mockMvc.perform(MockMvcRequestBuilders.put(PUT)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(mockRequestBodyBasic()))
-				.andExpect(status().isBadRequest())
-				.andExpect(result -> assertTrue(result.getResolvedException() instanceof EntityNotFoundException));
+				.andExpect(status().isNotImplemented());
 	}
 
 	private void configContextInternmentValid(){

@@ -22,14 +22,23 @@ import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.Ev
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.evolutiondiagnosis.EvolutionDiagnosisBo;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.EDocumentType;
+import net.pladema.featureflags.service.FeatureFlagsService;
 import net.pladema.pdf.service.PdfService;
+import net.pladema.sgx.featureflags.AppFeature;
+import org.apache.http.MethodNotSupportedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
@@ -62,13 +71,15 @@ public class EvolutionNoteController {
 
     private final PdfService pdfService;
 
+    private final FeatureFlagsService featureFlagsService;
+
     public EvolutionNoteController(InternmentEpisodeService internmentEpisodeService,
                                    CreateEvolutionNoteService createEvolutionNoteService,
                                    UpdateEvolutionNoteService updateEvolutionNoteService,
                                    EvolutionNoteService evolutionNoteService,
                                    EvolutionNoteReportService evolutionNoteReportService,
                                    EvolutionNoteMapper evolutionNoteMapper,
-                                   PdfService pdfService) {
+                                   PdfService pdfService, FeatureFlagsService featureFlagsService) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.createEvolutionNoteService = createEvolutionNoteService;
         this.updateEvolutionNoteService = updateEvolutionNoteService;
@@ -76,6 +87,7 @@ public class EvolutionNoteController {
         this.evolutionNoteReportService = evolutionNoteReportService;
         this.evolutionNoteMapper = evolutionNoteMapper;
         this.pdfService = pdfService;
+        this.featureFlagsService = featureFlagsService;
     }
 
     @PostMapping
@@ -105,13 +117,16 @@ public class EvolutionNoteController {
     @EvolutionNoteDiagnosisValid
     @EffectiveVitalSignTimeValid
     @DocumentValid(isConfirmed = false, documentType = DocumentType.EVALUATION_NOTE)
-    private ResponseEntity<ResponseEvolutionNoteDto> updateDocument(
+    public ResponseEntity<ResponseEvolutionNoteDto> updateDocument(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
             @PathVariable(name = "evolutionNoteId") Long evolutionNoteId,
-            @Valid @RequestBody EvolutionNoteDto evolutionNoteDto) throws IOException, DocumentException{
+            @Valid @RequestBody EvolutionNoteDto evolutionNoteDto) throws IOException, DocumentException, MethodNotSupportedException {
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, evolutionNoteId {}, evolutionNote {}",
                 institutionId, internmentEpisodeId, evolutionNoteId, evolutionNoteDto);
+        if (!this.featureFlagsService.isOn(AppFeature.HABILITAR_UPDATE_DOCUMENTS))
+            throw new MethodNotSupportedException("Funcionalidad no soportada por el momento");
+
         EvolutionNoteBo evolutionNote = evolutionNoteMapper.fromEvolutionNoteDto(evolutionNoteDto);
         Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
                 .orElseThrow(() -> new EntityNotFoundException(INVALID_INTERNMENT_EPISODE));

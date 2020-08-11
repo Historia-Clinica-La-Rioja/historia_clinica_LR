@@ -19,14 +19,23 @@ import net.pladema.clinichistory.hospitalization.service.epicrisis.UpdateEpicris
 import net.pladema.clinichistory.hospitalization.service.epicrisis.domain.EpicrisisBo;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.EDocumentType;
+import net.pladema.featureflags.service.FeatureFlagsService;
 import net.pladema.pdf.service.PdfService;
+import net.pladema.sgx.featureflags.AppFeature;
+import org.apache.http.MethodNotSupportedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
@@ -59,13 +68,15 @@ public class EpicrisisController {
 
     private final PdfService pdfService;
 
+    private final FeatureFlagsService featureFlagsService;
+
     public EpicrisisController(InternmentEpisodeService internmentEpisodeService,
                                CreateEpicrisisService createEpicrisisService,
                                UpdateEpicrisisService updateEpicrisisService,
                                EpicrisisService epicrisisService,
                                EpicrisisMapper epicrisisMapper,
                                InternmentStateService internmentStateService,
-                               PdfService pdfService) {
+                               PdfService pdfService, FeatureFlagsService featureFlagsService) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.createEpicrisisService = createEpicrisisService;
         this.updateEpicrisisService = updateEpicrisisService;
@@ -73,6 +84,7 @@ public class EpicrisisController {
         this.epicrisisMapper = epicrisisMapper;
         this.internmentStateService = internmentStateService;
         this.pdfService = pdfService;
+        this.featureFlagsService = featureFlagsService;
     }
 
     @PostMapping
@@ -103,9 +115,13 @@ public class EpicrisisController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
             @PathVariable(name = "epicrisisId") Long epicrisisId,
-            @Valid @RequestBody EpicrisisDto epicrisisDto) throws IOException, DocumentException{
+            @Valid @RequestBody EpicrisisDto epicrisisDto) throws IOException, DocumentException, MethodNotSupportedException {
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, epicrisisId {}, epicrisisDto {}",
                 institutionId, internmentEpisodeId, epicrisisId, epicrisisDto);
+
+        if (!this.featureFlagsService.isOn(AppFeature.HABILITAR_UPDATE_DOCUMENTS))
+            throw new MethodNotSupportedException("Funcionalidad no soportada por el momento");
+
         EpicrisisBo epicrisis = epicrisisMapper.fromEpicrisisDto(epicrisisDto);
         Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
                 .orElseThrow(() -> new EntityNotFoundException(INVALID_EPISODE));

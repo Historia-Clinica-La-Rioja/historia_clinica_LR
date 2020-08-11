@@ -1,18 +1,5 @@
 package net.pladema.clinichistory.hospitalization.service.impl;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Service;
-
 import net.pladema.clinichistory.documents.repository.EvolutionNoteDocumentRepository;
 import net.pladema.clinichistory.documents.repository.entity.EvolutionNoteDocument;
 import net.pladema.clinichistory.documents.service.DocumentService;
@@ -28,6 +15,18 @@ import net.pladema.clinichistory.hospitalization.service.domain.PatientDischarge
 import net.pladema.sgx.auditable.entity.Updateable;
 import net.pladema.sgx.exceptions.NotFoundException;
 import net.pladema.sgx.security.utils.UserInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 @Service
 public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
@@ -226,7 +225,7 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 				.map( doc -> doc.getUpdatedOn().toLocalDate())
 				.collect(Collectors.toList());
 		dates.add(entryDate);
-		LocalDate result = dates.stream().max(LocalDate::compareTo).get();
+		LocalDate result = dates.stream().max(LocalDate::compareTo).orElse(entryDate);
 		LOG.debug(LOGGING_OUTPUT, result);
 		return result;
 	}
