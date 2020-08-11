@@ -12,6 +12,7 @@ export enum DateFormat {
 	YEAR_FULL = 'YYYY',
 	MONTH_FULL = 'MM',
 	HOUR_MINUTE = 'HH:mm',
+	HOUR_MINUTE_SECONDS = 'HH:mm:ss', 
 }
 
 export const MAT_APP_DATE_FORMATS = {

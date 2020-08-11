@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, ElementRef, OnInit } from '@angular/core'
 import { SectorService } from '@api-rest/services/sector.service';
 import { ClinicalSpecialtySectorService } from '@api-rest/services/clinical-specialty-sector.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { scrollIntoError } from '@core/utils/form.utils';
+import { scrollIntoError, processErrors } from '@core/utils/form.utils';
 import { ConfirmDialogComponent } from '@core/dialogs/confirm-dialog/confirm-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -12,15 +12,14 @@ import { ContextService } from '@core/services/context.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { APPOINTMENT_DURATIONS } from '../../constants/appointment';
 import { NewAgendaService } from '../../services/new-agenda.service';
-import { momentFormat, DateFormat, momentParseDateTime, momentFormatDate, momentParseDate, currentWeek } from '@core/utils/moment.utils';
+import { momentFormat, DateFormat, momentParseDate, currentWeek, dateToMoment } from '@core/utils/moment.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { Moment } from 'moment';
-import { DoctorsOfficeDto, ProfessionalDto, DiaryADto, DiaryOpeningHoursDto, OccupationDto, TimeRangeDto, DiaryDto, CompleteDiaryDto, OpeningHoursDto } from '@api-rest/api-model';
+import { DoctorsOfficeDto, ProfessionalDto, DiaryADto, DiaryOpeningHoursDto, OccupationDto, TimeRangeDto, DiaryDto, CompleteDiaryDto } from '@api-rest/api-model';
 import * as moment from 'moment';
 import { CalendarEvent } from 'angular-calendar';
 import { DiaryOpeningHoursService } from '@api-rest/services/diary-opening-hours.service';
 import { DiaryService } from '@api-rest/services/diary.service';
-import { map, filter } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 const ROUTE_APPOINTMENT = 'turnos';
 
@@ -32,6 +31,7 @@ const ROUTE_APPOINTMENT = 'turnos';
 export class NewAgendaComponent implements OnInit {
 
 	public form: FormGroup;
+	public errors : string[] = [];
 	public sectors;
 	public specialties;
 	public doctorOffices: DoctorsOfficeDto[];
@@ -64,6 +64,7 @@ export class NewAgendaComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private readonly diaryOpeningHoursService: DiaryOpeningHoursService,
 		private readonly route: ActivatedRoute,
+		
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 		this.newAgendaService = new NewAgendaService(this.dialog, this.cdr);
@@ -250,19 +251,36 @@ export class NewAgendaComponent implements OnInit {
 
 			dialogRef.afterClosed().subscribe(confirmed => {
 				if (confirmed) {
-					const agenda: DiaryADto = this.mapEventsToAgendaDto();
-					this.diaryService.addDiary(agenda)
-						.subscribe((agendaId: number) => {
-							if (agendaId) {
-								this.snackBarService.showSuccess('turnos.new-agenda.messages.SUCCESS');
-								const url = `${this.routePrefix}${ROUTE_APPOINTMENT}`;
-								this.router.navigate([url]);
-							}
-
-						});
+					this.errors = [];
+					if (this.editMode) {
+						const agendaEdit: DiaryDto = this.addAgendaId(this.mapEventsToAgendaDto());
+						this.diaryService.updateDiary(agendaEdit)
+							.subscribe((agendaId: number) => {
+								this.processSuccess(agendaId);
+							}, error => processErrors(error, (msg)=>this.errors.push(msg)));
+					} else {
+						const agenda: DiaryADto = this.mapEventsToAgendaDto();
+						this.diaryService.addDiary(agenda)
+							.subscribe((agendaId: number) => {
+								this.processSuccess(agendaId);
+							}, error => processErrors(error, (msg)=>this.errors.push(msg)));
+					}
 				}
 			});
 		});
+	}
+
+	private processSuccess(agendaId: number) {
+		if (agendaId) {
+			this.snackBarService.showSuccess('turnos.new-agenda.messages.SUCCESS');
+			const url = `${this.routePrefix}${ROUTE_APPOINTMENT}`;
+			this.router.navigate([url]);
+		}
+	}
+	
+	private addAgendaId(diary : any): DiaryDto {
+		diary.id = this.editingDiaryId;
+		return diary;
 	}
 
 	private mapEventsToAgendaDto(): DiaryADto {
@@ -295,8 +313,8 @@ export class NewAgendaComponent implements OnInit {
 			return {
 				openingHours: {
 					dayWeekId: event.start.getDay(),
-					from: momentFormatDate(event.start, DateFormat.HOUR_MINUTE),
-					to: momentFormatDate(event.end, DateFormat.HOUR_MINUTE),
+					from: momentFormat(dateToMoment(event.start), DateFormat.HOUR_MINUTE_SECONDS),
+					to: momentFormat(dateToMoment(event.end), DateFormat.HOUR_MINUTE_SECONDS),
 				},
 				medicalAttentionTypeId: event.meta.medicalAttentionType.id,
 				overturnCount: event.meta.overTurnCount

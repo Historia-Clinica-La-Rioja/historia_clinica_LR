@@ -164,22 +164,22 @@
 					</div>
 				</ng-template>
 
-				<mwl-calendar-week-view [viewDate]="newAgendaService.getViewDate()" [events]="newAgendaService.getEvents()"
-										[hourSegmentTemplate]="weekViewHourSegmentTemplate"
-										[headerTemplate]="headerTemplate"
-										[dayStartHour]="openingTime" [dayEndHour]="closingTime"
+				<mwl-calendar-week-view [viewDate]="newAgendaService.getViewDate()"
+					[events]="newAgendaService.getEvents()" [hourSegmentTemplate]="weekViewHourSegmentTemplate"
+					[headerTemplate]="headerTemplate" [dayStartHour]="openingTime" [dayEndHour]="closingTime"
 										[hourSegments]="newAgendaService.getMinutesInHour() / form.value.appointmentDuration"
 										[weekStartsOn]="newAgendaService.getWeekStartsOn()">
 				</mwl-calendar-week-view>
+			</section>
+			<mat-card *ngIf="errors.length">
+				<mat-error *ngFor="let error of errors" class="mat-body-2">{{error}}</mat-error>
+			</mat-card>
 
-				<div align="end">
+			<div *ngIf="form.valid" align="end">
 					<button mat-flat-button color="primary" name="confirmAgenda" id="confirmAgenda">
 						<span [translate]="'buttons.CONFIRM'"></span>
 					</button>
 				</div>
-
-			</section>
-
 		</form>
 	</section>
 </app-content>
