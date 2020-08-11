@@ -30,7 +30,14 @@ public class HCEImmunizationServiceImpl implements HCEImmunizationService {
     public List<HCEImmunizationBo> getImmunization(Integer patientId) {
         LOG.debug(LOGGING_INPUT, patientId);
         List<HCEImmunizationVo> resultQuery = hceImmunizationRepository.getImmunization(patientId);
-        List<HCEImmunizationBo> result = resultQuery.stream().map(HCEImmunizationBo::new).sorted(Comparator.comparing(HCEImmunizationBo::getAdministrationDate).reversed()).collect(Collectors.toList());
+        List<HCEImmunizationBo> result = resultQuery.stream()
+                .map(HCEImmunizationBo::new)
+                .sorted(
+                        Comparator.comparing(HCEImmunizationBo::getAdministrationDate,
+                                Comparator.nullsFirst(
+                                        Comparator.naturalOrder()))
+                                .reversed())
+                .collect(Collectors.toList());
         LOG.debug(LOGGING_OUTPUT, result);
         return result;
     }
