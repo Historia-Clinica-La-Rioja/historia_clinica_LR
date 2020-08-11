@@ -111,7 +111,7 @@ public class EpicrisisController {
     @PutMapping("/{epicrisisId}")
     @InternmentValid
     @DocumentValid(isConfirmed = false, documentType = DocumentType.EPICRISIS)
-    private ResponseEntity<ResponseEpicrisisDto> updateDocument(
+    public ResponseEntity<ResponseEpicrisisDto> updateDocument(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
             @PathVariable(name = "epicrisisId") Long epicrisisId,
