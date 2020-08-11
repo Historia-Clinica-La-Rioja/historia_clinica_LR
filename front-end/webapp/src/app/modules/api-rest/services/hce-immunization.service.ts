@@ -18,4 +18,9 @@ export class HceImmunizationService {
 		return this.http.post<boolean>(url, immunization);
 	}
 
+	updateImmunization(immunization: OutpatientImmunizationDto, patientId: number): Observable<boolean> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/outpatient/consultations/updateImmunization`;
+		return this.http.post<boolean>(url, immunization);
+	}
+
 }

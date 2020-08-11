@@ -1,19 +1,17 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { EvolutionNoteDto, ImmunizationDto, SnomedDto } from '@api-rest/api-model';
+import { Component, OnInit } from '@angular/core';
+import { SnomedDto } from '@api-rest/api-model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
-import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { MatDialogRef } from '@angular/material/dialog';
 import { SnowstormService } from '@api-rest/services/snowstorm.service';
 import { SEMANTICS_CONFIG } from '../../constants/snomed-semantics';
 import { DateFormat, newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 
 @Component({
-  selector: 'app-add-inmunization',
-  templateUrl: './add-inmunization.component.html',
-  styleUrls: ['./add-inmunization.component.scss']
+	selector: 'app-add-inmunization',
+	templateUrl: './add-inmunization.component.html',
+	styleUrls: ['./add-inmunization.component.scss']
 })
 export class AddInmunizationComponent implements OnInit {
 
@@ -27,11 +25,8 @@ export class AddInmunizationComponent implements OnInit {
 	conceptsResultsTable: TableModel<any>;
 
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public data: { internmentEpisodeId: number },
 		public dialogRef: MatDialogRef<AddInmunizationComponent>,
 		private readonly formBuilder: FormBuilder,
-		private readonly evolutionNoteService: EvolutionNoteService,
-		private readonly snackBarService: SnackBarService,
 		private readonly snowstormService: SnowstormService
 	) {
 	}
@@ -80,7 +75,7 @@ export class AddInmunizationComponent implements OnInit {
 	onSearch(searchValue: string): void {
 		if (searchValue) {
 			this.searching = true;
-			this.snowstormService.getSNOMEDConcepts({term: searchValue, ecl: this.SEMANTICS_CONFIG.vaccine})
+			this.snowstormService.getSNOMEDConcepts({ term: searchValue, ecl: this.SEMANTICS_CONFIG.vaccine })
 				.subscribe(
 					results => {
 						this.conceptsResultsTable = this.buildConceptsResultsTable(results);
@@ -93,30 +88,16 @@ export class AddInmunizationComponent implements OnInit {
 	submit(): void {
 		if (this.snomedConcept) {
 			this.loading = true;
-			const evolutionNote: EvolutionNoteDto = this.buildEvolutionNote();
-			this.evolutionNoteService.createDocument(evolutionNote, this.data.internmentEpisodeId).subscribe(_ => {
-					this.snackBarService.showSuccess('internaciones.internacion-paciente.vacunas-summary.save.SUCCESS');
-					this.dialogRef.close(true);
-				}, _ => {
-					this.snackBarService.showError('internaciones.internacion-paciente.vacunas-summary.save.ERROR');
-					this.loading = false;
-				}
-			);
+			const inmunization: Immunization = this.buildImmunization();
+			this.dialogRef.close(inmunization);
 		}
 	}
 
-	private buildEvolutionNote(): EvolutionNoteDto {
-		const inmunizationDto: ImmunizationDto = {
+	private buildImmunization(): Immunization {
+		return {
 			administrationDate: this.form.value.date ? this.form.value.date.format(DateFormat.API_DATE) : null,
-			note: null,
 			snomed: this.snomedConcept
 		};
-
-		return {
-			confirmed: true,
-			immunizations: [inmunizationDto]
-		};
-
 	}
 
 	private buildConceptsResultsTable(data: SnomedDto[]): TableModel<SnomedDto> {
@@ -142,4 +123,8 @@ export class AddInmunizationComponent implements OnInit {
 		};
 	}
 
+}
+export interface Immunization {
+	administrationDate: string;
+	snomed: SnomedDto;
 }

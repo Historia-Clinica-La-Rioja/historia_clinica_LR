@@ -1,10 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { HCEImmunizationDto } from '@api-rest/api-model';
+import { HCEImmunizationDto, OutpatientImmunizationDto } from '@api-rest/api-model';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { AplicarVacunaComponent } from '../../dialogs/aplicar-vacuna/aplicar-vacuna.component';
+import { AddInmunizationComponent, Immunization } from 'src/app/modules/historia-clinica/dialogs/add-inmunization/add-inmunization.component';
+import { TableModel } from '@presentation/components/table/table.component';
+import { momentFormat, momentParseDate, DateFormat } from '@core/utils/moment.utils';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { HceImmunizationService } from '@api-rest/services/hce-immunization.service';
+import { VACUNAS } from 'src/app/modules/historia-clinica/constants/summaries';
 
 @Component({
 	selector: 'app-vacunas',
@@ -13,13 +18,16 @@ import { AplicarVacunaComponent } from '../../dialogs/aplicar-vacuna/aplicar-vac
 })
 export class VacunasComponent implements OnInit {
 
-	public immunizations$: Observable<HCEImmunizationDto[]>;
-	public patientId: number;
+	private patientId: number;
+	public readonly vacunasSummary = VACUNAS;
+	public tableModel: TableModel<HCEImmunizationDto>;
 
 	constructor(
 		private readonly hceGeneralStateService: HceGeneralStateService,
 		private readonly route: ActivatedRoute,
 		public dialog: MatDialog,
+		private readonly snackBarService: SnackBarService,
+		private readonly hceImmunizationService: HceImmunizationService
 	) {
 	}
 
@@ -27,7 +35,9 @@ export class VacunasComponent implements OnInit {
 		this.route.paramMap.subscribe(
 			(params) => {
 				this.patientId = Number(params.get('idPaciente'));
-				this.immunizations$ = this.hceGeneralStateService.getImmunizations(this.patientId);
+				this.hceGeneralStateService.getImmunizations(this.patientId).subscribe(dataTable => {
+					this.tableModel = this.buildTable(dataTable)
+				});
 			});
 	}
 
@@ -36,16 +46,64 @@ export class VacunasComponent implements OnInit {
 			disableClose: true,
 			width: '45%',
 			data: {
-				patientId : this.patientId
+				patientId: this.patientId
 			}
 		});
 
 		dialogRef.afterClosed().subscribe(submitted => {
-				if (submitted) {
-					this.immunizations$ = this.hceGeneralStateService.getImmunizations(this.patientId);
-				}
+			if (submitted) {
+				this.hceGeneralStateService.getImmunizations(this.patientId).subscribe(dataTable => {
+					this.tableModel = this.buildTable(dataTable)
+				});
 			}
-		);
+		});
 	}
 
+	openDialog() {
+		const dialogRef = this.dialog.open(AddInmunizationComponent, {
+			disableClose: true,
+			width: '35%',
+		});
+
+		dialogRef.afterClosed().subscribe(submitted => {
+			if (submitted) {
+				this.hceImmunizationService.updateImmunization(this.buildApplyImmunization(submitted), this.patientId).subscribe(_ => {
+					this.hceGeneralStateService.getImmunizations(this.patientId).subscribe(dataTable => {
+						this.tableModel = this.buildTable(dataTable)
+					});
+					this.snackBarService.showSuccess('internaciones.internacion-paciente.vacunas-summary.save.SUCCESS');
+
+				}, _ => {
+					this.snackBarService.showError('internaciones.internacion-paciente.vacunas-summary.save.ERROR');
+
+				});
+			}
+		});
+	}
+
+	private buildApplyImmunization(immunization: Immunization): OutpatientImmunizationDto {
+		return {
+			administrationDate: immunization.administrationDate,
+			note: null,
+			snomed: immunization.snomed
+		};
+	}
+
+	private buildTable(data: HCEImmunizationDto[]): TableModel<HCEImmunizationDto> {
+		return {
+			columns: [
+				{
+					columnDef: 'vacuna',
+					header: 'Vacuna',
+					text: (row) => row.snomed.pt
+				},
+				{
+					columnDef: 'fecha',
+					header: 'Fecha de vacunación',
+					text: (row) => row.administrationDate ? momentFormat(momentParseDate(row.administrationDate), DateFormat.VIEW_DATE) : undefined
+				}
+			],
+			data
+		};
+	}
 }
