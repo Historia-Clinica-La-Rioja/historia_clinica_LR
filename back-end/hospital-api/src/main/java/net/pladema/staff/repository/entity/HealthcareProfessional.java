@@ -35,8 +35,5 @@ public class HealthcareProfessional implements Serializable {
 
 	@Column(name = "person_id", nullable = false, unique = true)
 	private Integer personId;
-	
-	@Column(name = "is_medical_doctor", nullable = false)
-	private Boolean isMedicalDoctor;	
 
 }

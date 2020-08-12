@@ -4,7 +4,6 @@ import {
     SimpleShowLayout,
     ReferenceField,
     TextField,
-    BooleanField,
     FunctionField,
     ReferenceManyField,
     Datagrid,
@@ -22,7 +21,6 @@ const HealthcareProfessionalShow = props => (
             <ReferenceField source="personId" reference="people">
                 <FunctionField render={renderPerson}/>
             </ReferenceField>
-            <BooleanField source="isMedicalDoctor" />
 
             <SectionTitle label="resources.healthcareprofessionals.fields.healthcareprofessionalspecialties"/>
             <CreateRelatedButton

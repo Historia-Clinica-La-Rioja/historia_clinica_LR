@@ -15,7 +15,6 @@ public class StaffTestMocks {
 
     public static HealthcareProfessional createMinimumProfessional(Integer personId, String licenceNumber) {
         HealthcareProfessional result = new HealthcareProfessional();
-        result.setIsMedicalDoctor(false);
         result.setPersonId(personId);
         result.setLicenseNumber(licenceNumber);
         return result;

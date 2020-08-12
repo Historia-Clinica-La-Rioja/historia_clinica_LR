@@ -2,7 +2,6 @@ import React from 'react';
 import {
     List,
     Datagrid,
-    BooleanField,
     TextField,
 } from 'react-admin';
 
@@ -13,7 +12,6 @@ const HealthcareProfessionalList = props => (
         <Datagrid rowClick="show">
             <TextField source="licenseNumber" />
             <PeopleReferenceField source="personId" />
-            <BooleanField source="isMedicalDoctor" />
         </Datagrid>
     </List>
 );

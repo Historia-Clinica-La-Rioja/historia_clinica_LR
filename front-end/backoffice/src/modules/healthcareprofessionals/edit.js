@@ -1,7 +1,6 @@
 import React from 'react';
 import {
     TextInput,
-    BooleanInput,
     Edit,
     SimpleForm,
     required,
@@ -20,7 +19,6 @@ const HealthcareProfessionalEdit = props => (
         <SimpleForm redirect="show" >
             <PeopleReferenceInput source="personId" validate={[required()]} />
             <TextInput source="licenseNumber" validate={[required()]} />
-            <BooleanInput source="isMedicalDoctor" />
 
             <SectionTitle label="resources.healthcareprofessionals.fields.healthcareprofessionalspecialties"/>
             <CreateRelatedButton

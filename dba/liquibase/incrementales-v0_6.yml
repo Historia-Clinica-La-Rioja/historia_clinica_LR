@@ -140,3 +140,12 @@ databaseChangeLog:
             name: deleted_on
             type: datetime
             defaultValueDate: ${date.now} 
+
+- changeSet:
+    id: drop column is_medical_doctor
+    author: lmanterola
+    changes:
+    -  dropColumn:  
+        columnName:  is_medical_doctor
+        tableName:  healthcare_professional
+        

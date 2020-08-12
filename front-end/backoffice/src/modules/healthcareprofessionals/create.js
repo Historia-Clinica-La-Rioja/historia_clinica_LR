@@ -1,7 +1,6 @@
 import React from 'react';
 import {
     TextInput,
-    BooleanInput,
     Create,
     SimpleForm,
     required
@@ -14,7 +13,6 @@ const HealthcareProfessionalCreate = props => (
         <SimpleForm redirect="show" >
             <PeopleReferenceInput source="personId" validate={[required()]} />
             <TextInput source="licenseNumber" validate={[required()]} />
-            <BooleanInput source="isMedicalDoctor" defaultValue={true}/>
         </SimpleForm>
     </Create>
 );
