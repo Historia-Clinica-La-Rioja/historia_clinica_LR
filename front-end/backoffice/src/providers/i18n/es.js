@@ -31,6 +31,7 @@ export default {
         },
         "user":{
             "exists": "Esta persona ya tiene un usuario en el sistema",
+            "hasrole": "El profesional que quiere eliminar tiene un rol asociado"
         },
         forbidden: 'No tiene los permisos necesarios',
         "sector-description-inst-unique": "Ya existe un sector con el mismo nombre en la institución"
