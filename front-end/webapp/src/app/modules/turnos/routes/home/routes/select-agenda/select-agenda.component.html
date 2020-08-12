@@ -1,17 +1,22 @@
 <section id="select-agenda" *ngIf="agendas?.length else noData">
-	<mat-form-field appearance="outline">
+	<mat-form-field fxFlex=30% appearance="outline">
 		<mat-label [translate]="'turnos.home.SELECT_AGENDA'"></mat-label>
 		<mat-select [(value)]="agendaSelected">
 			<mat-option *ngFor="let agenda of agendas"
 			            [value]="agenda" (onSelectionChange)="changeAgendaSelected($event, agenda)">
-				<span class="mat-body">{{agenda.id}}</span>
+				<span class="mat-body-strong">
+					{{agenda.doctorsOfficeDescription}}
+				</span>
+				<span class="mat-body">
+					{{agenda.startDate | viewDate }} - {{agenda.endDate | viewDate}}
+				</span>
 			</mat-option>
 		</mat-select>
 	</mat-form-field>
 </section>
 
 <ng-template #noData>
-	<section id="no-agenda" *ngIf="!agendas?.length">
+	<section id="no-agenda" *ngIf="agendas?.length === 0">
 		<app-no-data [message]="'El profesional no posee agenda activa'"></app-no-data>
 	</section>
 </ng-template>

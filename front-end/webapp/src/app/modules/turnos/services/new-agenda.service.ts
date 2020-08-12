@@ -209,8 +209,13 @@ export class NewAgendaService {
 		return MINUTES_IN_HOUR;
 	}
 
-	public setEvents(events: CalendarEvent[]): void {
+	public addEvents(events: CalendarEvent[]): void {
 		this.events = this.events.concat(events);
+		this.refresh();
+	}
+
+	public setEvents(events: CalendarEvent[]): void {
+		this.events = events;
 		this.refresh();
 	}
 

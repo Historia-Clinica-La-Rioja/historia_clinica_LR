@@ -9,7 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DoctorsOfficeService } from '@api-rest/services/doctors-office.service';
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
 import { ContextService } from '@core/services/context.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { APPOINTMENT_DURATIONS } from '../../constants/appointment';
 import { NewAgendaService } from '../../services/new-agenda.service';
 import { momentFormat, DateFormat, momentParseDate, currentWeek, dateToMoment } from '@core/utils/moment.utils';
@@ -64,7 +64,7 @@ export class NewAgendaComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private readonly diaryOpeningHoursService: DiaryOpeningHoursService,
 		private readonly route: ActivatedRoute,
-		
+
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 		this.newAgendaService = new NewAgendaService(this.dialog, this.cdr);
@@ -140,7 +140,7 @@ export class NewAgendaComponent implements OnInit {
 		const diaryOpeningHours: DiaryOpeningHoursDto[] = diary.diaryOpeningHours;
 		diaryOpeningHours.forEach((diaryOpeningHour: DiaryOpeningHoursDto) => {
 			const calendarEvent: CalendarEvent = this.toEditableCalendarEvents(diaryOpeningHour);
-			this.newAgendaService.setEvents([calendarEvent]);
+			this.newAgendaService.addEvents([calendarEvent]);
 		});
 	}
 
@@ -277,7 +277,7 @@ export class NewAgendaComponent implements OnInit {
 			this.router.navigate([url]);
 		}
 	}
-	
+
 	private addAgendaId(diary : any): DiaryDto {
 		diary.id = this.editingDiaryId;
 		return diary;
@@ -357,7 +357,7 @@ export class NewAgendaComponent implements OnInit {
 					return doctorsOfficeEvents;
 				})
 			).subscribe((doctorsOfficeEvents: CalendarEvent[]) => {
-				this.newAgendaService.setEvents(doctorsOfficeEvents);
+				this.newAgendaService.addEvents(doctorsOfficeEvents);
 			});
 	}
 }

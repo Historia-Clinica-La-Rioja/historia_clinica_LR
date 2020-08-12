@@ -169,7 +169,7 @@ public class DiaryServiceImpl implements DiaryService {
 		LOG.debug("Input parameters -> diaryListVo {}", diaryListVo);
 		DiaryBo result = new DiaryBo();
 		result.setId(diaryListVo.getId());
-		result.setDoctorsOfficeId(diaryListVo.getDoctorsOfficeId());
+		result.setDoctorsOfficeDescription(diaryListVo.getDoctorsOfficeDescription());
 		result.setStartDate(diaryListVo.getStartDate());
 		result.setEndDate(diaryListVo.getEndDate());
 		result.setAppointmentDuration(diaryListVo.getAppointmentDuration());
