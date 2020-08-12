@@ -18,25 +18,27 @@ public interface DiaryRepository extends JpaRepository<Diary, Integer> {
 
 
     @Transactional(readOnly = true)
-    @Query("select id " +
-            "from Diary " +
-            "where healthcareProfessionalId = :hcpId " +
-            "and doctorsOfficeId = :doId " +
-            "and startDate <= :endDate " +
-            "and endDate >= :startDate")
+    @Query("SELECT id " +
+            "FROM Diary " +
+            "WHERE healthcareProfessionalId = :hcpId " +
+            "AND doctorsOfficeId = :doId " +
+            "AND startDate <= :endDate " +
+            "AND endDate >= :startDate " +
+            "AND deleteable.deleted = false")
     List<Integer> findAllOverlappingDiary(@Param("hcpId") Integer healthcareProfessionalId,
                                           @Param("doId") Integer doctorsOfficeId,
                                           @Param("startDate") LocalDate newDiaryStart,
                                           @Param("endDate") LocalDate newDiaryEnd);
     
     @Transactional(readOnly = true)
-    @Query("select id " +
-            "from Diary " +
-            "where healthcareProfessionalId = :hcpId " +
-            "and doctorsOfficeId = :doId " +
-            "and startDate <= :endDate " +
-            "and endDate >= :startDate " +
-            "AND id != :excludeDiaryId ")
+    @Query("SELECT id " +
+            "FROM Diary " +
+            "WHERE healthcareProfessionalId = :hcpId " +
+            "AND doctorsOfficeId = :doId " +
+            "AND startDate <= :endDate " +
+            "AND endDate >= :startDate " +
+            "AND id != :excludeDiaryId " +
+            "AND deleteable.deleted = false")
     List<Integer> findAllOverlappingDiaryExcluding(@Param("hcpId") Integer healthcareProfessionalId,
                                           @Param("doId") Integer doctorsOfficeId,
                                           @Param("startDate") LocalDate newDiaryStart,
@@ -50,7 +52,8 @@ public interface DiaryRepository extends JpaRepository<Diary, Integer> {
             "FROM Diary d " +
             "JOIN DoctorsOffice AS do ON (do.id = d.doctorsOfficeId) " +
             "WHERE d.healthcareProfessionalId = :hcpId " +
-            "AND d.active = true")
+            "AND d.active = true "+
+            "AND d.deleteable.deleted = false")
     List<DiaryListVo> getActiveDiariesFromProfessional(@Param("hcpId") Integer healthcareProfessionalId);
     
     @Transactional(readOnly = true)
