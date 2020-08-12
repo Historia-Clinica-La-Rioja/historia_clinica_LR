@@ -20,7 +20,7 @@ En este documento se definen los requerimientos minimos para poder contribuir co
 
 ### Base de datos
 
-- [x] Debe cumplir con las convenciones definidas en [base de datos](back-end/README.md)
+- [x] Debe cumplir con las convenciones definidas en [base de datos](../dba/documentacion/convenciones.md)
 
 ### Código
 
