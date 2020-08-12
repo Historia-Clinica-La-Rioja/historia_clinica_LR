@@ -1,22 +1,5 @@
 package net.pladema.medicalconsultation.diary.service.impl;
 
-import static net.pladema.sgx.dates.utils.DateUtils.getWeekDay;
-import static net.pladema.sgx.dates.utils.DateUtils.isBetween;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
 import lombok.RequiredArgsConstructor;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.UpdateAppointmentOpeningHoursService;
@@ -32,6 +15,22 @@ import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.OverturnsLimitException;
 import net.pladema.sgx.exceptions.NotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static net.pladema.sgx.dates.utils.DateUtils.getWeekDay;
+import static net.pladema.sgx.dates.utils.DateUtils.isBetween;
 
 @Service
 @RequiredArgsConstructor 
@@ -169,6 +168,7 @@ public class DiaryServiceImpl implements DiaryService {
 		LOG.debug("Input parameters -> diaryListVo {}", diaryListVo);
 		DiaryBo result = new DiaryBo();
 		result.setId(diaryListVo.getId());
+		result.setDoctorsOfficeId(diaryListVo.getDoctorsOfficeId());
 		result.setDoctorsOfficeDescription(diaryListVo.getDoctorsOfficeDescription());
 		result.setStartDate(diaryListVo.getStartDate());
 		result.setEndDate(diaryListVo.getEndDate());

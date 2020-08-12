@@ -1,9 +1,6 @@
 package net.pladema.medicalconsultation.appointment.service.domain;
 
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -13,6 +10,9 @@ import lombok.ToString;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo;
 import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 @Getter
 @Setter
 @EqualsAndHashCode
@@ -21,27 +21,27 @@ import net.pladema.medicalconsultation.appointment.repository.entity.Appointment
 @NoArgsConstructor
 public class AppointmentBo {
 
-    private  Integer id;
+    private Integer id;
 
-    private  Integer diaryId;
+    private Integer diaryId;
 
-    private  Integer patientId;
+    private Integer patientId;
 
-    private  LocalDate date;
+    private LocalDate date;
 
-    private  LocalTime hour;
+    private LocalTime hour;
 
-    private  Short appointmentStateId;
+    private Short appointmentStateId;
 
-    private  boolean overturn;
+    private boolean overturn;
 
     private Integer openingHoursId;
 
-    String medicalCoverageName;
+    private String medicalCoverageName;
 
-    String medicalCoverageAffiliateNumber;
+    private String medicalCoverageAffiliateNumber;
 
-    Integer healthInsuranceId;
+    private Integer healthInsuranceId;
 
     public AppointmentBo(AppointmentDiaryVo appointmentDiaryVo) {
         super();

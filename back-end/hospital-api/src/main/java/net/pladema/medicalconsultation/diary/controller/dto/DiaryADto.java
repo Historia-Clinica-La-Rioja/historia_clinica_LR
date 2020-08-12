@@ -38,7 +38,7 @@ public class DiaryADto {
     private boolean automaticRenewal = false;
 
     @Nullable
-    private boolean professionalAsignShift = false;
+    private boolean professionalAssignShift = false;
 
     @Nullable
     private boolean includeHoliday = false;

@@ -264,7 +264,7 @@ export interface DiaryADto {
     endDate: string;
     healthcareProfessionalId: number;
     includeHoliday?: boolean;
-    professionalAsignShift?: boolean;
+    professionalAssignShift?: boolean;
     startDate: string;
 }
 

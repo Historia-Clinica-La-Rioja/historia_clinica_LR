@@ -131,7 +131,7 @@ export class NewAgendaComponent implements OnInit {
 		this.form.controls.appointmentDuration.setValue(diary.appointmentDuration);
 		this.newAgendaService.setAppointmentDuration(diary.appointmentDuration);
 
-		this.appointmentManagement = diary.professionalAsignShift;
+		this.appointmentManagement = diary.professionalAssignShift;
 		this.autoRenew = diary.automaticRenewal;
 		this.holidayWork = diary.includeHoliday;
 
@@ -295,7 +295,7 @@ export class NewAgendaComponent implements OnInit {
 
 			automaticRenewal: this.autoRenew,
 			includeHoliday: this.holidayWork,
-			professionalAsignShift: this.appointmentManagement,
+			professionalAssignShift: this.appointmentManagement,
 
 			diaryOpeningHours: this.mapDiaryOpeningHours()
 		};
