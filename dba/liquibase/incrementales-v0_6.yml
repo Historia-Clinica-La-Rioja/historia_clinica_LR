@@ -51,38 +51,6 @@ databaseChangeLog:
         tableName:  healthcare_professional_specialty  
         validate:  true
 
-- changeset:
-    id: update-user-admin
-    author: lmanterola
-    context: "!schema-only"
-    changes:
-        - sql:
-            sql: |-
-                UPDATE users SET person_id = -1 WHERE person_id IS NULL;
-
-- changeset:
-    id: add-constraints-person_id-users
-    author: lmanterola
-    columns:
-        - column:
-            constraints:
-                nullable: false
-                unique: true
-            name: person_id
-            type: int
-            tableName: users
-
-- changeset:
-    id: add-constraints-person_id-healthcare_professional
-    author: lmanterola
-    columns:
-        - column:
-            constraints:
-                unique: true
-            name: person_id
-            type: int
-            tableName: healthcare_professional
-
 - changeSet:
     id: add_column-data appointment
     author: etrapani
@@ -113,3 +81,37 @@ databaseChangeLog:
         referencedColumnNames: rnos
         referencedTableName: health_insurance
         validate: true
+
+
+- changeSet:
+    id: set-default-value-person_id-users
+    comment: Set default null values to users
+    author: lmanterola
+    context: "!schema-only"
+    changes:
+        - sql:
+            sql: |-
+                UPDATE users SET person_id = -1 WHERE person_id IS NULL;
+
+
+- changeSet:
+    id: add-constraints-person_id-users
+    author: lmanterola
+    changes:
+    -  addNotNullConstraint:  
+        columnDataType:  int  
+        columnName:  person_id
+        tableName:  users  
+        validate:  true
+
+
+- changeSet:
+    id: add-constraints-person_id-healthcare_professional
+    author: lmanterola
+    changes:
+    -  addNotNullConstraint:  
+        columnDataType:  int  
+        columnName:  person_id
+        tableName:  healthcare_professional 
+        validate:  true
+        
