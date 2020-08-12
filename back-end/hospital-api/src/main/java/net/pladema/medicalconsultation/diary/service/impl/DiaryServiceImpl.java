@@ -1,5 +1,26 @@
 package net.pladema.medicalconsultation.diary.service.impl;
 
+import static net.pladema.sgx.dates.utils.DateUtils.getWeekDay;
+import static net.pladema.sgx.dates.utils.DateUtils.isBetween;
+import static net.pladema.sgx.security.utils.UserInfo.getCurrentAuditor;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import javax.persistence.EntityNotFoundException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
 import lombok.RequiredArgsConstructor;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.UpdateAppointmentOpeningHoursService;
@@ -15,34 +36,19 @@ import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.OverturnsLimitException;
 import net.pladema.sgx.exceptions.NotFoundException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static net.pladema.sgx.dates.utils.DateUtils.getWeekDay;
-import static net.pladema.sgx.dates.utils.DateUtils.isBetween;
 
 @Service
-@RequiredArgsConstructor 
+@RequiredArgsConstructor
 public class DiaryServiceImpl implements DiaryService {
 
+	private static final String INPUT_DIARY_ID = "Input parameters -> diaryId {}";
 	private static final Logger LOG = LoggerFactory.getLogger(DiaryServiceImpl.class);
 	public static final String OUTPUT = "Output -> {}";
 
 	private final DiaryOpeningHoursService diaryOpeningHoursService;
 
 	private final AppointmentService appointmentService;
-	
+
 	private final UpdateAppointmentOpeningHoursService updateApmtOHService;
 
 	private final DiaryRepository diaryRepository;
@@ -86,12 +92,26 @@ public class DiaryServiceImpl implements DiaryService {
 	}
 
 	@Override
+	public Boolean deleteDiary(Integer diaryId) {
+		LOG.debug(INPUT_DIARY_ID, diaryId);
+		Diary diaryToDelete = diaryRepository.findById(diaryId)
+				.orElseThrow(() -> new EntityNotFoundException("diary.invalid.id"));
+		diaryToDelete.setDeleted(Boolean.TRUE);
+		diaryToDelete.setDeleteBy(getCurrentAuditor());
+		diaryToDelete.setDeletedOn(LocalDateTime.now());
+		diaryToDelete.setActive(false);
+		diaryRepository.save(diaryToDelete);
+		LOG.debug("Diary with diaryId {} DELETED", diaryId);
+		return Boolean.TRUE;
+	}
+
+	@Override
 	public Integer updateDiary(DiaryBo diaryToUpdate) {
 		LOG.debug("Input parameters -> diaryToUpdate {}", diaryToUpdate);
 		Diary savedDiary = diaryRepository.getOne(diaryToUpdate.getId());
 		HashMap<DiaryOpeningHoursBo, List<AppointmentBo>> apmtsByNewDOH = new HashMap<>();
 		diaryToUpdate.getDiaryOpeningHours().stream().forEach(doh -> apmtsByNewDOH.put(doh, new ArrayList<>()));
-		Collection<AppointmentBo> apmts =  appointmentService.getFutureActiveAppointmentsByDiary(diaryToUpdate.getId());
+		Collection<AppointmentBo> apmts = appointmentService.getFutureActiveAppointmentsByDiary(diaryToUpdate.getId());
 		adjustExistingAppointmentsOpeningHours(apmtsByNewDOH, apmts);
 		persistDiary(diaryToUpdate, mapDiaryBo(diaryToUpdate, savedDiary));
 		updatedExistingAppointments(diaryToUpdate, apmtsByNewDOH);
@@ -192,7 +212,7 @@ public class DiaryServiceImpl implements DiaryService {
 
 	@Override
 	public Optional<CompleteDiaryBo> getDiary(Integer diaryId) {
-		LOG.debug("Input parameters -> diaryId {}", diaryId);
+		LOG.debug(INPUT_DIARY_ID, diaryId);
 		Optional<CompleteDiaryBo> result = diaryRepository.getDiary(diaryId).map(this::createCompleteDiaryBoInstance)
 				.map(completeOpeningHours());
 		LOG.debug(OUTPUT, result);
@@ -210,7 +230,7 @@ public class DiaryServiceImpl implements DiaryService {
 
 	@Override
 	public DiaryBo getDiaryById(Integer diaryId) {
-		LOG.debug("Input parameters -> diaryId {}", diaryId);
+		LOG.debug(INPUT_DIARY_ID, diaryId);
 		Diary resultQuery = diaryRepository.findById(diaryId)
 				.orElseThrow(() -> new NotFoundException("diaryId", "diaryId -> " + diaryId + " does not exist"));
 		DiaryBo result = createDiaryBoInstance(resultQuery);

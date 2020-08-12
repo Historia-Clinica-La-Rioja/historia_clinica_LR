@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
+import net.pladema.medicalconsultation.diary.controller.constraints.DiaryDeleteableAppoinmentsValid;
 import net.pladema.medicalconsultation.diary.controller.constraints.DiaryEmptyAppointmentsValid;
 import net.pladema.medicalconsultation.diary.controller.constraints.DiaryOpeningHoursValid;
 import net.pladema.medicalconsultation.diary.controller.constraints.ExistingDiaryPeriodValid;
@@ -93,7 +94,7 @@ public class DiaryController {
         LOG.debug(OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }
-
+    
     @GetMapping
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
     public ResponseEntity<Collection<DiaryListDto>> getDiaries(@PathVariable(name = "institutionId")  Integer institutionId,
@@ -106,10 +107,11 @@ public class DiaryController {
     }
 
     @DeleteMapping("/{diaryId}")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA')")
     public ResponseEntity<Boolean> delete(@PathVariable(name = "institutionId") Integer institutionId,
-                                                     @PathVariable(name = "diaryId") Integer diaryId) {
+                                                     @PathVariable(name = "diaryId") @DiaryDeleteableAppoinmentsValid Integer diaryId) {
         LOG.debug("Input parameters -> institutionId {}, diaryId {}", institutionId, diaryId);
+        diaryService.deleteDiary(diaryId);
         LOG.debug(OUTPUT, Boolean.TRUE);
         return ResponseEntity.ok(Boolean.TRUE);
     }
