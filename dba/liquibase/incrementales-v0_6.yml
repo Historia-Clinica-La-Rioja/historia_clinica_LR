@@ -115,3 +115,28 @@ databaseChangeLog:
         tableName:  healthcare_professional 
         validate:  true
         
+- changeSet:       
+    id: add-diary-deleteable-audit
+    author: gmurgolo
+    changes:
+    - addColumn:
+        tableName: diary
+        columns:
+        - column:
+            constraints:
+                nullable: false
+            name: deleted
+            type: boolean
+            defaultValue: ${boolean.false}  
+        - column:
+            constraints:
+                nullable: true
+            name: deleted_by
+            type: int
+            defaultValue: -1
+        - column:
+            constraints:
+                nullable: true
+            name: deleted_on
+            type: datetime
+            defaultValueDate: ${date.now} 

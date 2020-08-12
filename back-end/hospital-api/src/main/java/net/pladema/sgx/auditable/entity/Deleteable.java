@@ -13,11 +13,19 @@ import java.time.LocalDateTime;
 @Setter
 public class Deleteable implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1845551268050864290L;
+
 	@Column(name = "deleted", nullable = false)
 	private Boolean deleted = false;
 
 	@Column(name = "deleted_on")
 	private LocalDateTime deletedOn;
+	
+	@Column(name = "deleted_by")
+	private Integer deletedBy;
 
 	public boolean isDeleted() {
 		return deleted;

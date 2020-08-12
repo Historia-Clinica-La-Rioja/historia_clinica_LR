@@ -13,4 +13,6 @@ public interface DeleteableEntity<I> {
     public void setDeletedOn(LocalDateTime dateTime);
 
     public boolean isDeleted();
+    
+    public void setDeleted(Boolean deleted);
 }

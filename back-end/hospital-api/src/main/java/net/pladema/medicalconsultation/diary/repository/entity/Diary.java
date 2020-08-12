@@ -1,19 +1,24 @@
 package net.pladema.medicalconsultation.diary.repository.entity;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import net.pladema.sgx.auditable.entity.SGXAuditableEntity;
-import net.pladema.sgx.auditable.entity.SGXAuditListener;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.time.LocalDate;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import net.pladema.sgx.auditable.DeleteableEntity;
+import net.pladema.sgx.auditable.entity.Deleteable;
+import net.pladema.sgx.auditable.entity.SGXAuditListener;
+import net.pladema.sgx.auditable.entity.SGXAuditableEntity;
 
 @Entity
 @Table(name = "diary")
@@ -21,9 +26,14 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @ToString
-public class Diary extends SGXAuditableEntity {
+public class Diary extends SGXAuditableEntity implements DeleteableEntity<Integer> {
 
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7771492167471325392L;
+
+	@Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -57,5 +67,52 @@ public class Diary extends SGXAuditableEntity {
 
     @Column(name = "active", columnDefinition = "boolean default true", nullable = false)
     private boolean active = true;
+    
+	@Embedded
+	private Deleteable deleteable = new Deleteable();
+
+	@Override
+	public Integer getDeleteBy() {
+		if (deleteable != null)
+			return deleteable.getDeletedBy();
+		return null;
+	}
+
+	@Override
+	public void setDeleteBy(Integer user) {
+		if (deleteable == null)
+			deleteable = new Deleteable();
+		deleteable.setDeletedBy(user);
+		
+	}
+
+	@Override
+	public LocalDateTime getDeletedOn() {
+		if (deleteable != null)
+			return deleteable.getDeletedOn();
+		return null;
+	}
+
+	@Override
+	public void setDeletedOn(LocalDateTime dateTime) {
+		if (deleteable == null)
+			deleteable = new Deleteable();
+		deleteable.setDeletedOn(dateTime);
+		
+	}
+
+	@Override
+	public boolean isDeleted() {
+		if (deleteable != null)
+			return deleteable.isDeleted();
+		return false;
+	}
+
+	@Override
+	public void setDeleted(Boolean deleted) {
+		if (deleteable == null)
+			deleteable = new Deleteable();
+		deleteable.setDeleted(deleted);
+	}
 
 }
