@@ -1,0 +1,341 @@
+### Convenciones de desarrollo
+
+Para el desarrollo de backend se van a definir un conjunto de conveciones a respetar con el fin de tener un estandar de código. Las mismas pueden ser editadas si la situación lo amerita
+
+### Lombok
+
+Se dispuso de la libreria [lombok](https://projectlombok.org/) que nos permite crear clases sin la necesidad de escribir todos sus getters, setters, etc. De esta manera nos ahorramos la escritura de código.  Para configurarlo se puede hacer uso de la siguiente [guia](https://www.baeldung.com/lombok-ide)
+
+#### Uso de entidades simples
+
+Se descarta el uso de los hibernate mappings (ManyToOne, OneToOne, OneToMany, etc). 
+
+La decisión de usar entidades con atributos simples (Boolean, Short, Integer, etc) y evitar tener entidades con objetos a otras entidades, se debe a cuestiones de performance y testing. 
+El mal uso de esta anotaciones puede impactar de manera negativa en la performance, mientras que genera complejidad en la generación de datos mockeados para los test unitarios.
+
+#### Nomeclatura de entidades
+
+Se deben respetar las siguientes formas de definir las entidades:
+
+1. **Primary key**: nombre **id** cuando es un atributo simple. Cuando es clave compuesta usar @Embbedable y ponerle nombre **pk** al atributo dentro de la entidad que represente la primary key.
+2. **Foreign key**: cualquier atributo que represente una foreign key debe tener el siguiente formato <nombre_entidad>_id. Donde nombre_entidad es el nombre al cuál hace referencia.
+3. **Nullable**: Aclarar cuando los atributos no son nullables.
+4. **Length strings**: Definir el largo de los strings.
+
+#### Fechas
+
+Dado que estamos usando Java 11 se definen usar los nuevos tipos de [fecha](https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html) dejando de lado Date, Calendar, JodaTime. Basicamente usar
+
+1. **LocalDateTime**: fechas con tiempo
+2. **LocalDate**: solo fechas
+3. **LocalTime**: solo horas
+
+
+#### Estructura del proyecto
+
+Se utiliza la combinación de paquetes por funcionalidad y por capas (formas de [estructura](http://www.javapractices.com/topic/TopicAction.do?Id=205)). El paquete principal debe responder a una division por funcionalidad, mientras que internamente se maneja por capas. Con esto queremos decir lo siguiente:
+
+
+* **net.pladema**.
+  * **feature1**
+    * **controller**: contiene las clases controller de los endpoints. Cada clase debería tener el manejo de un recurso especifico. No tener una superclase. Definirlas con **@RestController**
+      * **dto**:los DTO existen en esta capa y se generen como formato de salida
+      * **constraints**: validaciones sobre los parametros de entradas a cada endpoint ([springvalidation](https://www.baeldung.com/spring-boot-bean-validation))
+      * **mappers**: necesarios para mapear los outputs de los servicios a los outputs de la api. Ocultar estructura interna al cliente.
+      * **Servicios externos**: usados para comunicación entre paquetes de distinta funcionalidad. La idea es tener un control sobre en parte del código tenemos comunicación entre paquetes.
+    * **services**: Interfaces claras y concisas de servicios, tampoco super interfaces que hacen de todo. Muy importante su definición! evitar acoplamiento. 
+      * **impl**: Clases que implementen las interfaces. Mientras menos dependencías tengan la implementación mejor, más facil de testear y menos acople. Definirlas con **@Service**.
+      * **domain**: businessobjects usados en los servicios. Clases propias y necesarias para el servicio.
+    * **repositories**: Interfaces de los repositorios (extienden a jpa) o interfaces
+        custom. Definirlas como **@Repository**
+      * **entity**: entidades del módulo, claves compuestas, vistas. Definir con **@Entity**
+      * **projections**: proyecciones para respuestas de repositorios
+      * **domain**: value objects para respuestas de consultas en los repositorios
+      * **impl**: implementaciones de interfaces customs.
+  * **feature2**
+    * **controller**
+      * **dto**
+      * **...**
+    * **service**
+      * **impl**
+      * **...**
+    * **...**
+
+Se permite anidamientos de funcionalidad siempre y cuando haya una dependencia fuerte (una no existe sin la otra)
+
+
+*   **net.pladema.**
+    *   **feature1**
+        *   **controller**
+        *   **service**
+        *   **repositorios**
+        *   **subfeatures**
+            *   **feature1.1**: feature 2 no puede existire sin feature 1
+                *   **controller**
+                *   **service**
+                *   **repositories**
+                *   **subfeatures**
+            *   **feature1.2**
+            **...**
+            
+
+El feature debe ser reemplazado por un nombre representativo.
+
+####  Spring patterns DI
+
+Se define utilizar la inyección de dependencias mediante el uso de [Constructor injection](https://dzone.com/articles/spring-di-patterns-the-good-the-bad-and-the-ugly). 
+
+```java
+@Service
+public class PersonServiceImpl implements PersonService {
+
+	private static final Logger LOG = LoggerFactory.getLogger(PersonServiceImpl.class);
+
+	private final PersonRepository personRepository;
+
+	private final GeocodingService geocodingService;
+
+	private final PersonLocationRepository personLocationRepository;
+
+	public PersonServiceImpl(PersonRepository personRepository, PersonLocationRepository personLocationRepository,
+							 GeocodingService geocodingService) {
+		super();
+		this.personRepository = personRepository;
+		this.personLocationRepository = personLocationRepository;
+		this.geocodingService = geocodingService;
+	}
+}
+```
+
+#### Logging
+
+Hacer uso de los loggers para mostrar información, obligatoriamente uno de nivel debug por función. Los mismos nos ayudan a conocer ante una situación de error que esta sucediendo. Un ejemplo de uso es el siguiente:
+
+Primer linea de cada función creada.
+```java
+LOG.debug("Input parameters id {}, parameter2 {}", id, parameter2);
+```
+Con esto si se activa el modo debug podemos ver que esta pasando.
+
+Última linea de cada función
+```java
+LOG.debug("Output {}", objectOutput.toString());
+```
+
+Para saber que resultado genera.
+        
+Mostrar excepciones:
+
+```java
+LOG.error("Error-> {}", e); // e es de algún tipo de excepción.
+```
+
+#### Generales
+
+
+Respetar los patrones [SOLID](https://www.youtube.com/watch?v=2X50sKeBAcQ&t=68s), principalmente el de **Single responsability**. Este se centra en que cada función, interfaz, etc tenga una unica responsabilidad. Esto nos permite generar test unitarios con un scope alcanzable (testear una función que hace de todo es imposible e impractico). 
+
+Reducir el control de valores distinto de null. Reemplazar en lo posible con los [Optional](https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html) de java. Los repositorios pueden devolver Optionals de objetos. 
+
+
+
+#### Testing
+
+Realizar test unitarios principalmente en funcionalidad compleja que sea propensa a error.
+
+Es importante entender el concepto de que si una función en su código **llama a otro método**, ya sea de la misma clase o de otra, estas deben ser **Mockeadas** (simular su respuesta). Esto es así porque el test unitario se centra en evaluar **solamente** las lineas de código que contiene (sus bifurcaciones, sus for, los caminos posibles que puede tomar un thread dentro del código). 
+
+
+Si respetan los principios SOLID, la responsabilidad de la clase, sus dependencias, etc, van a facilitar el testing. Una clase con mucha responsabilidad y dependencias termina generando un test demasiado complejo de realizar y mantener.
+
+Ejemplos de testing,
+
+
+**Controllers**
+
+```java
+@RunWith(SpringRunner.class)
+@WebMvcTest(BackofficeHealthController.class)
+public class BackofficeHealthControllerTest extends BaseControllerTest {
+	@MockBean
+	private HealthRepository repository;
+
+	@MockBean
+	private HealthService healthService;
+
+	@Before
+	public void setup() {
+		HealthState healthState = HealthStateBean.newHealthState(5, 9);
+		healthState.setAudit(AuditBean.newAudit(4));
+
+		when(repository.findAll(
+			any(Example.class),
+			any(Pageable.class)
+		)).thenReturn(new PageImpl<>(
+			Arrays.asList(healthState)
+		));
+
+	}
+
+	@Test @WithMockUser
+	public void getList_datesWithTZ() throws Exception {
+		mockMvc.perform(get("/backoffice/healths"))
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.totalElements").value(1))
+				.andExpect(jsonPath("$.content").isArray())
+				.andExpect(jsonPath("$.content", hasSize(1)))
+				.andExpect(jsonPath("$.content[0].id").value(5))
+				.andExpect(jsonPath("$.content[0].severityId").value(9))
+				.andExpect(jsonPath("$.content[0].createdOn").value("2004-04-04T04:04:04.000Z"))
+				.andExpect(jsonPath("$.content[0].updatedOn").value("2004-04-04T04:04:04.000Z"));
+	}
+}
+```
+
+**Service**
+
+```java
+@RunWith(SpringRunner.class)
+public class RoleServiceImplTest {
+
+	@MockBean
+	private UserRoleRepository userLicenseRepository;
+
+	@MockBean
+	private RoleRepository licenseRepository;
+
+	private RoleServiceImpl licenseServiceImpl;
+
+	@Before
+	public void setUp() {
+		licenseServiceImpl = new RoleServiceImpl(userLicenseRepository, licenseRepository);
+	}
+
+	@Test(expected = EntityNotFoundException.class)
+	public void createUserLicense_notExistLicense() {
+		when(licenseRepository.findByDescription(any())).thenReturn(Optional.empty());
+
+		User user = createUser("username9@mail.com");
+		licenseServiceImpl.createUserRole(user.getId(), ERole.PATIENT_USER);
+	}
+
+	@Test
+	public void createUserLicence() {
+		Short roleId = 1;
+		Role role = new Role();
+		role.setId(roleId);
+		role.setDescription("PRUEBA");
+
+		User user = createUser("username9@mail.com");
+
+		when(licenseRepository.findById(roleId)).thenReturn(Optional.of(role));
+		when(userLicenseRepository.save(any())).thenReturn(new UserRole(user.getId(), role.getId()));
+
+		assertThat(licenseServiceImpl.createUserRole(user.getId(), roleId)).isNotNull();
+
+	}
+}
+```
+
+**Repositorio**
+```java
+@RunWith(SpringRunner.class)
+@DataJpaTest
+public class HealthRepositoryTest extends BaseRepositoryTest {
+
+	private final static Pageable UNPAGED = Pageable.unpaged();
+
+	@Autowired
+	private HealthRepository repository;
+
+	private BackofficeHealthQueryAdapter queryAdapter = new BackofficeHealthQueryAdapter();
+
+  @Before
+	public void setUp() throws Exception {
+		save(HealthStateBean.newHealthState(1, 1, HealthStateBean.BREATHMISSING));
+		save(HealthStateBean.newHealthState(2, 2, HealthStateBean.BREATHMISSING, HealthStateBean.FEVER));
+		save(HealthStateBean.newHealthState(3, 0));
+		save(HealthStateBean.newHealthState(4, 2, HealthStateBean.BREATHMISSING, HealthStateBean.FEVER, HealthStateBean.MUCUS));
+	}
+
+  @Test
+	public void findAll_byPersonId() {
+		HealthState healthState = new HealthState();
+		healthState.setId(3);
+
+		assertThat(queryByExample(healthState))
+				.isNotNull()
+				.hasSize(1)
+				.anySatisfy(healthStateData -> assertThat(healthStateData.getId()).isEqualTo(3));
+	}
+```
+
+Las clases que se utilizan para el test deben respetar las ubicaciones en los paquetes que tiene sus pares en el código. Y su nombre debe ser igual a la de su par finalizado con la palabra Test.
+
+### Manejo de errores
+
+Evitar en lo posible capturar errores y arrastrarlo a través de las clases. Si es necesario capturarlos internamente y darle un tratamiento. De no ser posible lo mejor es lanzar la excepción y que lo manejen capas más altas. 
+
+
+Generalmente, si hay errores de validación en la API, se lanzan y se manipulan utilizando lo comentado en el siguiente [post](https://www.baeldung.com/global-error-handler-in-a-spring-rest-api)
+
+
+### Diseño de API
+
+La API es una interfaz hacía el cliente y es importante definirla para que sea clara y cómoda de usar. Por eso es importante siempre coordinar con el frontend que necesita tener la API.
+
+Los controladores que se crean tiene que manejar un único recurso. Los recursos pueden tomar muchas formas, no necesitan ser explicitamente una entidad, una tabla, etc. Por ejemplo:
+
+Si tenemos la entidad persona esta puede ser un recurso el cuál es manejado por un controlador, pero a su vez se puede considerar un "sub-recurso" las personas con edad mayor a 50 años. De esta manera es valido crear un controlador que lo maneje.
+
+Si bien se puede manejar ambos recursos en un controlador, y quizás es conveniente en un principio hacerlo el problema que presenta a futuro es que si hay demasiados endpoints en ese controlador se genera una super clase. Esta super clase posiblemente contiene muchas dependencias y hace que este muy acoplada rompiendo un poco los principios SOLID y haciéndola difícil de testear. En resumen, tener claro cuál es el recurso es clave para poder tener un controller bien desacoplado y manejable.
+
+Cada controlador debería manejar los llamados básicos de una API: **GET, POST, PUT, PATCH, DELETE**; no es necesario que estén siempre todos. A su vez, es importante hacer usos de las **path variables** para tener un contexto claro en el cuál el recurso es manejado. No es costoso tener una URL larga si la misma te permite saber rápidamente que recurso y en que contexto estamos. Las path variables a su vez sirve como restricciones, dado que sus valores son obligatorios como parametros de entrada a los endpoints. Por ejemplo,
+
+
+El siguiente es un controllador que tiene una url larga pero intenta contextualizar los alumnos que pertenecen a una jurisdicción, en una unidad de servicio, para un ciclo lectivo determinado. 
+
+Finalmente se le definió un endpoint para obtener los datos personales de dichos alumnos. Este endpoint contiene todas las pathvariables de la URL haciendo que el contexto y "filtro" usado sea conciso.
+
+```java
+@RestController
+@RequestMapping("jur/{idJur}/us/{idUs}/ciclo/{cCiclo}/alumnos")
+@Validated
+public class AlumnosDatosPersonalesController {
+
+	private static final String VALID_OPERATION = "Valid operation";
+
+	private final Logger logger;
+
+	private final AlumnoDatosPersonalesService alumnoDatosPersonalesService;
+
+	public AlumnosDatosPersonalesController(AlumnoDatosPersonalesService alumnoDatosPersonalesService) {
+		super();
+		this.logger = LoggerFactory.getLogger(this.getClass());
+		this.alumnoDatosPersonalesService = alumnoDatosPersonalesService;
+	}
+
+	@SinideAudit(value = "Get datos asistencia toma", logBody = false)
+	@GetMapping
+	public ResponseEntity<List<AlumnosDatosPersonalesResponse>> getDatosPersonales(@PathVariable("idJur") Short idJur,
+			@PathVariable("idUs") Integer idUs, @PathVariable("cCiclo") Short cCiclo,
+			@RequestParam(name = "idAlumnos", required = false) Set<Integer> idAlumnos) {
+		logger.debug("{}", VALID_OPERATION);
+		List<AlumnosDatosPersonales> result = alumnoDatosPersonalesService.getDatosPersonales(idUs, cCiclo, idAlumnos);
+
+		List<AlumnosDatosPersonalesResponse> salida = result.stream()
+				.map(adp -> new AlumnosDatosPersonalesResponse(adp.getId(), adp.getNombre(), adp.getApellido(),
+						adp.getNroDocumento(), adp.getcTipoDocumento(), adp.getcSexo()))
+				.collect(Collectors.toList());
+		return ResponseEntity.ok(salida);
+	}
+
+}
+```
+
+
+
+### Conclusión
+
+Estas son un conjunto de convenciones que ayudan a tener un desarrollo más estructurado para todos. La idea es mejorar paso a paso e ir incorporando nuevas prácticas. 
