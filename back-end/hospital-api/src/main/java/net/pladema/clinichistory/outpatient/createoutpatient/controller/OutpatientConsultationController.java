@@ -125,7 +125,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 
     @Override
     @Transactional
-    @PreAuthorize("hasPermission(#institutionId, 'ENFERMERO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
     public ResponseEntity<Boolean> updateImmunization(
             Integer institutionId,
             Integer patientId,
