@@ -1,7 +1,9 @@
 package net.pladema.sgx.healthinsurance.controller;
 
 import io.swagger.annotations.Api;
+import net.pladema.renaper.controller.dto.MedicalCoverageDto;
 import net.pladema.renaper.services.domain.PersonMedicalCoverageBo;
+import net.pladema.sgx.healthinsurance.controller.mapper.HealthInsuranceMapper;
 import net.pladema.sgx.healthinsurance.service.HealthInsuranceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,15 +25,20 @@ public class HealthInsuranceController {
 
     private final HealthInsuranceService healthInsuranceService;
 
-    public HealthInsuranceController(HealthInsuranceService healthInsuranceService){
+    private final HealthInsuranceMapper healthInsuranceMapper;
+
+    public HealthInsuranceController(HealthInsuranceService healthInsuranceService,
+                                     HealthInsuranceMapper healthInsuranceMapper){
         super();
         this.healthInsuranceService = healthInsuranceService;
+        this.healthInsuranceMapper = healthInsuranceMapper;
     }
 
     @GetMapping
-    public ResponseEntity<Collection<PersonMedicalCoverageBo>> getAll(){
+    public ResponseEntity<Collection<MedicalCoverageDto>> getAll(){
         LOG.debug("{}", "All health insurance");
-        Collection<PersonMedicalCoverageBo> result = healthInsuranceService.getAll();
+        Collection<PersonMedicalCoverageBo> data = healthInsuranceService.getAll();
+        Collection<MedicalCoverageDto> result = healthInsuranceMapper.toMedicalCoverageDtoList(data);
         LOG.debug(OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }

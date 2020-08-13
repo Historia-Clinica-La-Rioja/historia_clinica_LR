@@ -481,11 +481,6 @@ export interface HealthHistoryConditionDto extends HealthConditionDto {
     note: string;
 }
 
-export interface HealthInsuranceDto {
-    acronym: string;
-    rnos: number;
-}
-
 export interface HealthInsurancePatientDataDto {
     id: number;
     medicalCoverageAffiliateNumber: string;
