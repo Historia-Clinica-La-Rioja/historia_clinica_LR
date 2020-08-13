@@ -17,7 +17,7 @@
 		<java.version>11</java.version>
 		<node.version>v12.13.0</node.version>
 		<npm.version>6.12.0</npm.version>
-		<spring-boot.version>2.2.6.RELEASE</spring-boot.version>
+		<spring-boot.version>2.3.0.RELEASE</spring-boot.version>
 		<mssql-jdbc.version>7.4.1.jre8</mssql-jdbc.version>
 		<postgresql.version>42.2.8</postgresql.version>
 	</properties>

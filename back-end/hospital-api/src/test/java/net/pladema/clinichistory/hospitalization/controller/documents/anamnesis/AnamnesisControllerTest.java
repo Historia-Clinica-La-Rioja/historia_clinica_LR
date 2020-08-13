@@ -140,7 +140,7 @@ public class AnamnesisControllerTest extends UnitController {
 				.content(mockAnamnesisDtoWithDiagnosis()))
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.errors")
-						.value(buildMessageWithPath("diagnosis.main.repeated", "createAnamnesis.anamnesisDto.diagnosis")));
+						.value(buildMessage("diagnosis.main.repeated")));
 	}
 
 	@Test
@@ -177,7 +177,7 @@ public class AnamnesisControllerTest extends UnitController {
 		this.mockMvc.perform(MockMvcRequestBuilders.get(GET))
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.errors")
-						.value(buildMessageWithPath("document.invalid", "getAnamnesis.anamnesisId")));
+						.value(buildMessage("document.invalid")));
 	}
 
 	@Test
@@ -210,7 +210,7 @@ public class AnamnesisControllerTest extends UnitController {
 				.content(mockRequestBodyBasic()))
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.errors")
-						.value(buildMessageWithPath("document.invalid", "updateAnamnesis.anamnesisId")));
+						.value(buildMessage("document.invalid")));
 	}
 
 	@Test
@@ -324,11 +324,6 @@ public class AnamnesisControllerTest extends UnitController {
 					"\"anthropometricData\":null," +
 					"\"vitalSigns\":null" +
 				"}";
-	}
-
-
-	private String buildMessageWithPath(String keyMessage, String path){
-		return path + ": " + buildMessage(keyMessage);
 	}
 
 	private String buildMessage(String keyMessage){
