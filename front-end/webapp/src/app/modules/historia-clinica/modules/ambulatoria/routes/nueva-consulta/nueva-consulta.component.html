@@ -6,25 +6,36 @@
 	</section>
 
 	<section id="motivo" class="doc-section">
-		<app-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.motivo.TITLE'">
+		<app-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.motivo.TITLE'"
+			[tableTitle]="'ambulatoria.paciente.nueva-consulta.motivo.table.TITLE'"
+			[columns]="motivoNuevaConsultaService.getColumns()"
+			[data]="motivoNuevaConsultaService.getMotivosConsulta()">
 			<ng-container concept-form>
-				<app-concepts-search *ngIf="!motivoNuevaConsultaService.getMotivoConsulta() else mainMotivoConsulta"
+				<app-concepts-search
+				    *ngIf="!motivoNuevaConsultaService.getSnomedConcept() else mainMotivoConsulta"
 					[label]="'ambulatoria.paciente.nueva-consulta.motivo.MOTIVO'"
 					(search)="motivoNuevaConsultaService.openSearchDialog($event)">
 				</app-concepts-search>
 
 				<ng-template #mainMotivoConsulta>
-					<form [formGroup]="motivoNuevaConsultaService.getForm()">
+					<form [formGroup]="motivoNuevaConsultaService.getForm()"
+						(ngSubmit)="motivoNuevaConsultaService.addToList()">
 						<mat-form-field appearance="outline">
 							<mat-label [translate]="'internaciones.anamnesis.diagnosticos.DIAGNOSIS'">
 							</mat-label>
 							<input id="motivo-input" matInput type="text" formControlName="snomed" name="snomed"
-								readonly matTooltip="{{motivoNuevaConsultaService.getMotivoConsulta().snomed.pt }}">
+								readonly matTooltip="{{motivoNuevaConsultaService.getSnomedConcept().pt }}">
 							<button id="clear-motivo" mat-button matSuffix color="warn" mat-icon-button
 								(click)="motivoNuevaConsultaService.resetForm()">
 								<mat-icon>close</mat-icon>
 							</button>
 						</mat-form-field>
+						<div align="end">
+							<button id="submit_motivos" class="uppercase" mat-raised-button color="primary"
+								type="submit">
+								<span class="uppercase" [translate]="'ambulatoria.paciente.nueva-consulta.motivo.ADD'"></span>
+							</button>
+						</div>
 					</form>
 				</ng-template>
 			</ng-container>

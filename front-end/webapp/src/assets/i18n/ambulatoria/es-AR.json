@@ -28,7 +28,14 @@
 				},
 				"motivo": {
 					"TITLE": "Motivo de consulta",
-					"MOTIVO": "motivo"
+					"MOTIVO": "motivo",
+					"ADD": "Agregar motivo",
+					"table": {
+						"TITLE": "Motivos registrados",
+						"columns": {
+							"MOTIVO": "Motivos"
+						}
+					}
 				},
 				"medicaciones": {
 					"CONCEPT_LABEL": "Medicación",
