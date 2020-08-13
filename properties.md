@@ -52,12 +52,12 @@ El módulo de back-end se configura mediante el uso de un archivo `.properties`,
 
 | Propiedad               | Parametro       | Valor por defecto       | Necesidad | Descripcion | Desde |
 | ----------------------- | ----------------| ----------------------- | --------- | ----------- | ----- |
-| spring.datasource.url |   |   | Obligatorio | Url de conexión a la base de datos | v0.2.0 |
-| spring.datasource.driver-class-name | |  | Obligatorio | Nombre de la clase que representa el driver de conexión a la base de datos | v0.2.0 |
-| spring.datasource.username | DATABASE_USER | | Obligatorio | Nombre de usuario utilizado para realizar la conexión a la base de datos | v0.2.0 |
-| spring.datasource.password | DATABASE_PASS | | Obligatorio | Contraseña utilizada para realizar la conexión a la base de datos | v0.2.0  |
+| spring.datasource.url |   |  jdbc:postgresql://localhost:5432}/hospitalDB | Obligatorio | Url de conexión a la base de datos | v0.2.0 |
+| spring.datasource.driver-class-name | | org.postgresql.Driver | Obligatorio | Nombre de la clase que representa el driver de conexión a la base de datos | v0.2.0 |
+| spring.datasource.username | DATABASE_USER | postgres | Obligatorio | Nombre de usuario utilizado para realizar la conexión a la base de datos | v0.2.0 |
+| spring.datasource.password | DATABASE_PASS | Local123 | Obligatorio | Contraseña utilizada para realizar la conexión a la base de datos | v0.2.0  |
 | spring.datasource.hikari.maximumPoolSize  | HICKARI_MAXIMUM_POOL_SIZE  |  4 | Opcional  |   | v0.2.0  |
-| spring.jpa.database-platform |  |  | Obligatorio | Nombre de la clase que representa el dialecto del motor de base de datos a utilizar  |  v0.2.0 |
+| spring.jpa.database-platform |  | org.hibernate.dialect.PostgreSQLDialect | Obligatorio | Nombre de la clase que representa el dialecto del motor de base de datos a utilizar  |  v0.2.0 |
 | spring.jpa.hibernate.ddl-auto |   | validate | Obligatorio | Acciones que realiza JPA al iniciar la aplicación. Valores posibles: none, validate, create, update, create-drop | v0.2.0 |
 
 ## Configuración de Mail

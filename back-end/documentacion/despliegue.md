@@ -45,40 +45,83 @@ Una vez generado se encuentra en la siguiente ubicación
 
 Para poder levantar el servicio se debe configurar las siguientes **variables de ambiente**
 
-### Variables de ambientes
+### Propiedades requeridas
 
-Son las variables requeridas para la ejecucion de los distintos microservicios. La misma permite configurar propiedades relevantes de cada microservicio.
+Las siguientes propiedades son obligatorias a configurar para poder levantar el ambiente productivo.
 
-#### Usuarios
+- [x] **spring.datasource.url**: La url y esquema de la base de datos. Ejemplo, jdbc:postgresql://localhost:5432/hospitalDB
+- [x] **spring.datasource.username**: El usuario para conectarse a la base.
+- [x] **spring.datasource.password**: La password asociada al usuario de conexión
+- [x] **internment.document.directory**: ubicación de los documentos generados por la aplicación.
+- [x] **token.secret**: La clave secreta de generación de token, usada para validar los tokens recibidos desde los request.
 
-##### Requeridos
-1. **ADMIN_MAIL**: Mail del admin para acceder a la aplicación
-2. **ADMIN_PASS**: Contraseña de acceso
-3. **API_DOMAIN**: Dominio de la aplicación
-4. **SERVER_PORT**: Puerto de la aplicaición 
-5. **DATABASE_IP_PORT**: Ip y puerto de la base de datos
-6. **DATABASE_SCHEMA**: Nombre de esquema
-7. **DATABASE_USER**: Usuario de acceso a la base de datos
-8. **DATABASE_PASS**: Contraseña de acceso a la base de datos
-9.  **LOGIN_PAGE**: URL de la pagina de login (Por ejemplo, https://www.google.com/)
+Todas estas propiedades pueden ser configuradas de diversas formas. 
 
-##### Opcionales
+#### Usando un archivo con propiedades externalizadas
 
-1. **TOKEN_SECRET**: Contraseña de encriptacion de JWT
-2. **TOKEN_EXPIRATION** (en minutos): Es el tiempo de duración el token. Por defecto es: **20**
-3. **VALIDTOKEN_EXPIRATION** (en minutos): Es el tiempo de duración el token. Por defecto es: **1440** (24horas)
-4. **SMTP_HOST**: Host del servidor smtp (Ejemplo, email-smtp.us-west-2.amazonaws.com)
-5. **SMTP_USERNAME**: Usuario de aws
-6. **SMTP_PASS**: Contraseña de aws
-7. **SMTP_EMAIL**: Email de envío
-8. **DEFAULT_LANGUAGE**: Definir el lenguaje que maneja por default el frontend(Default: es-AR)
-9. **OTHER_LANGUAGES**: Definir otros lenguajes que manipula el frontend(Default: en-US)
+Este archivo puede ser ubicado en cualquier parte del sistema, y lo que se necesita es que al momento de ejecutar la aplicación se tiene que pasar como argumento en el comando usado para arrancar el sistema.
+
+Ejemplo de archivo con propiedades externalizadas
+
+```properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/hospitalDB
+spring.datasource.username=postgres 
+spring.datasource.password=qkjsdo
+internment.document.directory=tmp
+token.secret=qiweK3la
+```
+
+
+
+#### Configurando variables de ambientes
+
+La otra opción disponible es configurar usando variables de ambiente. Esta opción puede ser util sí se usa docker-compose file donde podes declarar variables de ambiente. 
+
+Las variables de ambiente evitan tener que pasarlas como argumentos al momento de ejecutar la aplicación, pero tienen que controlar que en la terminal, consola o lugar donde ejecutan el comando las variables de ambientes esten configuradas (En linux usar el comando **echo $VARIABLE**, para ver su valor). 
+
+Las variables a configurar son:
+
+
+- [x] **DATABASE_IP_PORT**: La ip y puerto de la base de datos. Ejemplo, localhost:5432
+- [x] **DATABASE_SCHEMA**: el esquema de la base de datos. Ejemplo, hospitalDB
+- [x] **DATABASE_USER**: El usuario para conectarse a la base.
+- [x] **DATABASE_PASS**: La password asociada al usuario de conexión
+- [x] **DOCUMENT_ROOT_DIRECTORY**: ubicación de los documentos generados por la aplicación.
+- [x] **TOKEN_SECRET**: La clave secreta de generación de token, usada para validar los tokens recibidos desde los request.
+
+### Profiles
+
+Dado que el sistema hace uso de los profiles para determinar el contexto de la aplicación, es necesario configurarlo al momento de iniciar el entorno productivo. Los mismos se pueden activar agregandolo como argumento al llamado de la ejecución o usando el archivo de propiedades externalizadas.
+
+#### Propiedades externalizadas
+```properties
+spring.profiles.active=prod,tandil
+```
+
+#### Argumento en la ejecución
+```bash
+- java -jar **hospital-api-{version}**.jar --spring.profiles.active=prod,tandil
+```
+
 
 ### Ejecución
 
-Una vez configurada las variables de ambiente se puede ejecutar con el siguiente comando
+Una vez generado el archivo con propiedades externalizadas o configuradas las variables de ambiente se puede ejecutar algunos de los siguientes comandos según corresponda:
 
-- java -jar **hospital-api-{version}**.jar
+
+##### Propiedades externalizadas
+```bash
+- java -jar **hospital-api-{version}**.jar --spring.config.additional-location=file:/home/user/externalizadas.properties
+```
+
+
+##### Propiedades externalizadas con profiles
+```bash
+- java -jar **hospital-api-{version}**.jar --spring.config.additional-location=file:/home/user/externalizadas.properties --spring.profiles.active=prod,tandil
+```
+
+##### Variables de ambiente
+- java -jar **hospital-api-{version}**.jar --spring.profiles.active=prod,tandil
 
 
 ### Validación

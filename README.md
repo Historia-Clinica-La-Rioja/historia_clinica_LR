@@ -1,14 +1,18 @@
 # HospitalApp
 
-El proyecto está formado por un front-end en Angular que utiliza la API REST expuesta por un back-end en Java/Spring Boot que almacena la información en una base de datos SQLServer. 
+El proyecto está formado por los siguientes tres proyectos:
+
+1. front-end/backoffice: Single Page Application del panel de administración (backoffice) para manejo de los flujos básicos y creación de datos maestros. Implementada con ReactAdmin.
+2. front-end/webapp: Single Page Application que contiene la funcionalidad principal del sistema. Implementada en Angular 9.
+3. back-end/hospital-api: API REST de todo el sistema implementada con Spring Boot 2.3 y Java 11
 
 ## Ambiente de desarrollo
 
-Para levantar el ambiente de desarrollo se requiere tener una **base de datos** SQLServer que se puede crear siguiendo los pasos de [mas abajo](#bbdd).
+Para inicializar cada uno de los ambientes de desarrollo se requiere tener una **base de datos** PostgreSQL que se puede crear siguiendo los pasos de [mas abajo](#bbdd).
 
-El **backend** se puede levantar para desarrollo o solamente para dar soporte al desarrollo del frontend siguiendo los pasos del [back-end/README.md](back-end/README.md).
+El **backend** se puede iniciar para desarrollo o solamente para dar soporte al desarrollo del frontend siguiendo los pasos del [back-end/README.md](back-end/README.md).
 
-El frontend está formado por dos proyecto, una webapp y el backoffice. En cada caso puede levantar para desarrollo o solamente para dar soporte al desarrollo del backend siguiendo los pasos del [front-end/README.md](front-end/README.md).
+El frontend está formado por dos proyectos, una webapp y el backoffice. En cada caso, se puede iniciar para desarrollo o solamente para dar soporte al desarrollo del backend siguiendo los pasos del [front-end/README.md](front-end/README.md).
 
 
 ## Ambiente con docker-compose
