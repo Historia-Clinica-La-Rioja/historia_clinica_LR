@@ -646,6 +646,7 @@ export interface OccupationDto {
 
 export interface OpeningHoursDto extends TimeRangeDto {
     dayWeekId: number;
+    id?: number;
 }
 
 export interface OutpatientAllergyConditionDto {
