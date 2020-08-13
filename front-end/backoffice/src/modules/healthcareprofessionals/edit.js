@@ -7,7 +7,7 @@ import {
     ReferenceManyField,
     Datagrid,
     TextField,
-    DeleteButton,
+    DeleteButton, ReferenceField,
 } from 'react-admin';
 
 import PeopleReferenceInput from '../people/PeopleReferenceInput';
@@ -33,7 +33,12 @@ const HealthcareProfessionalEdit = props => (
                 target="healthcareProfessionalId"
             >
                 <Datagrid rowClick="show">
-                    <TextField source="description" />
+                    <ReferenceField source="professionalSpecialtyId" reference="professionalspecialties" >
+                        <TextField source="description" />
+                    </ReferenceField>
+                    <ReferenceField source="clinicalSpecialtyId" reference="clinicalspecialties">
+                        <TextField source="name" />
+                    </ReferenceField>
                     <DeleteButton />
                 </Datagrid>
             </ReferenceManyField>
