@@ -10,11 +10,38 @@
 		</div>
 	</ng-template>
 
-	<div class="spinner" *ngIf="loading else calendar">
-		<mat-spinner color="primary"></mat-spinner>
-	</div>
-
 	<ng-template #calendar>
+		<div fxLayout="row" fxLayoutAlign="space-between center">
+			<div fxLayout="row">
+				<button mat-raised-button
+						color="primary"
+						mwlCalendarPreviousView
+						[view]="'week'"
+						[(viewDate)]="viewDate"
+				>
+					Anterior
+				</button>
+				<button mat-stroked-button
+						color="primary"
+						mwlCalendarToday
+						[(viewDate)]="viewDate"
+				>
+					Hoy
+				</button>
+				<button mat-raised-button
+						color="primary"
+						mwlCalendarNextView
+						[view]="'week'"
+						[(viewDate)]="viewDate"
+				>
+					Próximo
+				</button>
+			</div>
+
+			<div>
+				<h2>{{ viewDate | calendarDate:('weekViewTitle'): undefined : newAgendaService.getWeekStartsOn() }}</h2>
+			</div>
+		</div>
 		<mwl-calendar-week-view [viewDate]="viewDate"
 								[events]="newAgendaService.getEvents()"
 								[dayStartHour]="dayStartHour" [dayEndHour]="dayEndHour"
@@ -23,4 +50,9 @@
 								[weekStartsOn]="newAgendaService.getWeekStartsOn()">
 		</mwl-calendar-week-view>
 	</ng-template>
+
+	<div class="spinner" *ngIf="loading else calendar">
+		<mat-spinner color="primary"></mat-spinner>
+	</div>
+
 </section>
