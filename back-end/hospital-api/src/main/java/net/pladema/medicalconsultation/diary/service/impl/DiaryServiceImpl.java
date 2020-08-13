@@ -3,6 +3,10 @@ package net.pladema.medicalconsultation.diary.service.impl;
 import static net.pladema.sgx.dates.utils.DateUtils.getWeekDay;
 import static net.pladema.sgx.dates.utils.DateUtils.isBetween;
 import static net.pladema.sgx.security.utils.UserInfo.getCurrentAuditor;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.counting;
+
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -10,9 +14,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.persistence.EntityNotFoundException;
@@ -122,7 +126,7 @@ public class DiaryServiceImpl implements DiaryService {
 	private void adjustExistingAppointmentsOpeningHours(HashMap<DiaryOpeningHoursBo, List<AppointmentBo>> apmtsByNewDOH,
 			Collection<AppointmentBo> apmts) {
 		apmtsByNewDOH.forEach((doh, apmtsList) -> {
-			apmtsList.addAll(apmts.stream().filter(apmt -> belong(apmt, doh)).collect(Collectors.toList()));
+			apmtsList.addAll(apmts.stream().filter(apmt -> belong(apmt, doh)).collect(toList()));
 			if (overturnsOutOfLimit(doh, apmtsList)) {
 				throw new OverturnsLimitException();
 			}
@@ -132,17 +136,19 @@ public class DiaryServiceImpl implements DiaryService {
 	private void updatedExistingAppointments(DiaryBo diaryToUpdate,
 			HashMap<DiaryOpeningHoursBo, List<AppointmentBo>> apmtsByNewDOH) {
 		Collection<DiaryOpeningHoursBo> dohSavedList = diaryOpeningHoursService
-				.getDiariesOpeningHours(Stream.of(diaryToUpdate.getId()).collect(Collectors.toList()));
+				.getDiariesOpeningHours(Stream.of(diaryToUpdate.getId()).collect(toList()));
 		apmtsByNewDOH.forEach((doh, apmts) -> dohSavedList.stream().filter(doh::equals).findAny().ifPresent(
 				savedDoh -> apmts.forEach(apmt -> apmt.setOpeningHoursId(savedDoh.getOpeningHours().getId()))));
 		List<AppointmentBo> apmtsToUpdate = apmtsByNewDOH.values().stream().flatMap(Collection::stream)
-				.collect(Collectors.toList());
+				.collect(toList());
 		apmtsToUpdate.stream().forEach(updateApmtOHService::execute);
 
 	}
 
 	private boolean overturnsOutOfLimit(DiaryOpeningHoursBo doh, List<AppointmentBo> apmtsList) {
-		return apmtsList.stream().filter(AppointmentBo::isOverturn).count() > doh.getOverturnCount().intValue();
+		Map<LocalDate, Long> overturnsByDate = apmtsList.stream().filter(AppointmentBo::isOverturn)
+				.collect(groupingBy(AppointmentBo::getDate, counting()));
+		return overturnsByDate.values().stream().anyMatch(overturns -> overturns > doh.getOverturnCount().intValue());
 	}
 
 	private boolean belong(AppointmentBo apmt, DiaryOpeningHoursBo doh) {
@@ -179,7 +185,7 @@ public class DiaryServiceImpl implements DiaryService {
 	public Collection<DiaryBo> getActiveDiariesFromProfessional(Integer healthcareProfessionalId) {
 		LOG.debug("Input parameters -> healthcareProfessionalId {}", healthcareProfessionalId);
 		List<DiaryListVo> diaries = diaryRepository.getActiveDiariesFromProfessional(healthcareProfessionalId);
-		List<DiaryBo> result = diaries.stream().map(this::createDiaryBoInstance).collect(Collectors.toList());
+		List<DiaryBo> result = diaries.stream().map(this::createDiaryBoInstance).collect(toList());
 		LOG.debug(OUTPUT, result);
 		return result;
 	}
@@ -222,8 +228,8 @@ public class DiaryServiceImpl implements DiaryService {
 	private Function<CompleteDiaryBo, CompleteDiaryBo> completeOpeningHours() {
 		return completeDiary -> {
 			Collection<DiaryOpeningHoursBo> diaryOpeningHours = diaryOpeningHoursService
-					.getDiariesOpeningHours(Stream.of(completeDiary.getId()).collect(Collectors.toList()));
-			completeDiary.setDiaryOpeningHours(diaryOpeningHours.stream().collect(Collectors.toList()));
+					.getDiariesOpeningHours(Stream.of(completeDiary.getId()).collect(toList()));
+			completeDiary.setDiaryOpeningHours(diaryOpeningHours.stream().collect(toList()));
 			return completeDiary;
 		};
 	}

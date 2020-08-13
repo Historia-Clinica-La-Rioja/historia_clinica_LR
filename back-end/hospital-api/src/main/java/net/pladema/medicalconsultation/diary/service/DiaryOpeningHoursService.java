@@ -17,5 +17,5 @@ public interface DiaryOpeningHoursService {
 
     Collection<DiaryOpeningHoursBo> getDiariesOpeningHours(List<Integer> diaryIds);
 
-    boolean allowNewOverturn(Integer diaryId, Integer openingHoursId);
+    boolean allowNewOverturn(Integer diaryId, Integer openingHoursId, LocalDate newApmtDate);
 }

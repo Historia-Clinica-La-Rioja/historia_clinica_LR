@@ -52,9 +52,11 @@ public interface DiaryOpeningHoursRepository extends JpaRepository<DiaryOpeningH
             "                           JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
             "                           WHERE aa.pk.diaryId = :diaryId " +
             "                           AND aa.pk.openingHoursId = :openingHoursId " +
-            "                           AND a.isOverturn = true )" )
-    boolean allowNewOverturn(@Param("diaryId") Integer diaryId, @Param("openingHoursId") Integer openingHoursId);
-    
+            "							AND a.dateTypeId = :newApmtDate"+
+            "                           AND a.isOverturn = true  )" )
+	boolean allowNewOverturn(@Param("diaryId") Integer diaryId, @Param("openingHoursId") Integer openingHoursId,
+			@Param("newApmtDate") LocalDate newApmtDate);
+
 	@Transactional
 	@Modifying
 	@Query("DELETE FROM DiaryOpeningHours doh WHERE doh.pk.diaryId = :diaryId ")

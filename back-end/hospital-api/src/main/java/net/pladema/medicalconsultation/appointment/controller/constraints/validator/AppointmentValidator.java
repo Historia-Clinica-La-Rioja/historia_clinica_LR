@@ -79,7 +79,7 @@ public class AppointmentValidator implements ConstraintValidator<ValidAppointmen
 
         if (createAppointmentDto.isOverturn() ) {
             boolean allowNewOverturn = diaryOpeningHoursService.allowNewOverturn(createAppointmentDto.getDiaryId(),
-                createAppointmentDto.getOpeningHoursId());
+                createAppointmentDto.getOpeningHoursId(), localDateMapper.fromStringToLocalDate(createAppointmentDto.getDate()));
             if (!allowNewOverturn) {
                 buildResponse(context, "{appointment.not.allow.new.overturn}");
                 valid = false;

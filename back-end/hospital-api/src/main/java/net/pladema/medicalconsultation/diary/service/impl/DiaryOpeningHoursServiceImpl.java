@@ -233,12 +233,12 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
         return dayOpeningHours;
     }
 
-    @Override
-    public boolean allowNewOverturn(Integer diaryId, Integer openingHoursId) {
-        LOG.debug("Input parameters -> diaryId {}, openingHoursId {}", diaryId, openingHoursId);
-        boolean result = diaryOpeningHoursRepository.allowNewOverturn(diaryId, openingHoursId);
-        LOG.debug(OUTPUT, result);
-        return result;
+	@Override
+	public boolean allowNewOverturn(Integer diaryId, Integer openingHoursId, LocalDate newApmtDate) {
+		LOG.debug("Input parameters -> diaryId {}, openingHoursId {}", diaryId, openingHoursId);
+		boolean result = diaryOpeningHoursRepository.allowNewOverturn(diaryId, openingHoursId, newApmtDate);
+		LOG.debug(OUTPUT, result);
+		return result;
     }
 
 
