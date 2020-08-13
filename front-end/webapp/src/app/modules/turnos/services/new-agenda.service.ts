@@ -222,4 +222,8 @@ export class NewAgendaService {
 	public setClosingTime(closingTimeHour: number) {
 		this.closingtime = closingTimeHour;
 	}
+
+	public deleteUneditableEvents(): void {
+		this.events = this.events.filter((event: CalendarEvent) => event.actions);
+	}
 }

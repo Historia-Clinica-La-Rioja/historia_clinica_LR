@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { ThemePalette } from '@angular/material/core';
 
 
 /**
@@ -18,11 +19,14 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 })
 export class ConfirmDialogComponent implements OnInit {
 
+	public okBottonColor: ThemePalette;
+
 	constructor(public dialogRef: MatDialogRef<ConfirmDialogComponent>,
-				@Inject(MAT_DIALOG_DATA) public data: any) {
+				@Inject(MAT_DIALOG_DATA) public data: {title: string, content: string, okButtonLabel: string, okBottonColor?: ThemePalette}) {
 	}
 
 	ngOnInit(): void {
+		this.okBottonColor = this.data.okBottonColor ? this.data.okBottonColor : 'primary';
 	}
 
 }

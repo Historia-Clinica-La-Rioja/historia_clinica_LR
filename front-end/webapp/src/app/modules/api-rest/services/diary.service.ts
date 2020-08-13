@@ -30,4 +30,9 @@ export class DiaryService {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/diary/${diaryId}`;
 		return this.http.get<CompleteDiaryDto>(url);
 	}
+
+	delete(diaryId: number): Observable<boolean> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/diary/${diaryId}`;
+		return this.http.delete<boolean>(url);
+	}
 }

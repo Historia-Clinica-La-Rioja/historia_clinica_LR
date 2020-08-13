@@ -22,6 +22,12 @@
 			"messages": {
 				"SUCCESS": "La agenda se guardó exitosamente"
 			}
+		},
+		"delete-agenda": {
+			"DELETE": "Eliminar agenda",
+			"messages": {
+				"SUCCESS": "La agenda se eliminó exitosamente"
+			}
 		}
 	}
 }

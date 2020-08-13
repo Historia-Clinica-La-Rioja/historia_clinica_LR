@@ -31,7 +31,7 @@ const ROUTE_APPOINTMENT = 'turnos';
 export class NewAgendaComponent implements OnInit {
 
 	public form: FormGroup;
-	public errors : string[] = [];
+	public errors: string[] = [];
 	public sectors;
 	public specialties;
 	public doctorOffices: DoctorsOfficeDto[];
@@ -257,13 +257,13 @@ export class NewAgendaComponent implements OnInit {
 						this.diaryService.updateDiary(agendaEdit)
 							.subscribe((agendaId: number) => {
 								this.processSuccess(agendaId);
-							}, error => processErrors(error, (msg)=>this.errors.push(msg)));
+							}, error => processErrors(error, (msg) => this.errors.push(msg)));
 					} else {
 						const agenda: DiaryADto = this.mapEventsToAgendaDto();
 						this.diaryService.addDiary(agenda)
 							.subscribe((agendaId: number) => {
 								this.processSuccess(agendaId);
-							}, error => processErrors(error, (msg)=>this.errors.push(msg)));
+							}, error => processErrors(error, (msg) => this.errors.push(msg)));
 					}
 				}
 			});
@@ -278,7 +278,7 @@ export class NewAgendaComponent implements OnInit {
 		}
 	}
 
-	private addAgendaId(diary : any): DiaryDto {
+	private addAgendaId(diary: any): DiaryDto {
 		diary.id = this.editingDiaryId;
 		return diary;
 	}
@@ -357,6 +357,7 @@ export class NewAgendaComponent implements OnInit {
 					return doctorsOfficeEvents;
 				})
 			).subscribe((doctorsOfficeEvents: CalendarEvent[]) => {
+				this.newAgendaService.deleteUneditableEvents();
 				this.newAgendaService.addEvents(doctorsOfficeEvents);
 			});
 	}

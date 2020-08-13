@@ -1,9 +1,9 @@
-<section id="select-agenda" *ngIf="agendas?.length else noData">
+<section id="select-agenda" *ngIf="agendas?.length else noData" fxLayout="row" fxLayoutAlign="space-between">
 	<mat-form-field fxFlex=30% appearance="outline">
 		<mat-label [translate]="'turnos.home.SELECT_AGENDA'"></mat-label>
 		<mat-select [(value)]="agendaSelected">
-			<mat-option *ngFor="let agenda of agendas"
-			            [value]="agenda" (onSelectionChange)="changeAgendaSelected($event, agenda)">
+			<mat-option *ngFor="let agenda of agendas" [value]="agenda"
+				(onSelectionChange)="changeAgendaSelected($event, agenda)">
 				<span class="mat-body-strong">
 					{{agenda.doctorsOfficeDescription}}
 				</span>
@@ -13,6 +13,16 @@
 			</mat-option>
 		</mat-select>
 	</mat-form-field>
+
+	<div *ngIf="agendaSelected">
+		<button edit mat-flat-button color="primary" id="edit_agenda" name="edit_agenda" (click)="goToEditAgenda()">
+			<mat-icon>edit</mat-icon>
+		</button>
+		<button edit mat-flat-button color="warn" id="delete_agenda" name="delete_agenda" (click)="deleteAgenda()">
+			<mat-icon>delete</mat-icon>
+		</button>
+	</div>
+
 </section>
 
 <ng-template #noData>

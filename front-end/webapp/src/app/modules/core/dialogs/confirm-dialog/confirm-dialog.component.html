@@ -1,8 +1,10 @@
-<h1 mat-dialog-title>{{ data.title }}</h1>
+<h1 mat-dialog-title>{{ data.title | translate}}</h1>
 <div mat-dialog-content>
-		<div innerHTML="{{ data.content }}"></div>
+	<div innerHTML="{{ data.content }}"></div>
 </div>
 <div mat-dialog-actions align="end">
-	<button mat-button [mat-dialog-close]=false>Cancelar</button>
-	<button mat-raised-button [mat-dialog-close]=true cdkFocusInitial color="primary">{{data.okButtonLabel}}</button>
+	<button mat-button [mat-dialog-close]=false class="uppercase" translate="buttons.CANCEL" id="cancel-button"
+		name="cancel-button"></button>
+	<button mat-raised-button [mat-dialog-close]=true cdkFocusInitial [color]='okBottonColor' class="uppercase"
+		id="okButton-button" name="okButton-button">{{data.okButtonLabel | translate}}</button>
 </div>
