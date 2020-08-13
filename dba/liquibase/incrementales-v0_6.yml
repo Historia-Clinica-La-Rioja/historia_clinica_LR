@@ -148,4 +148,11 @@ databaseChangeLog:
     -  dropColumn:  
         columnName:  is_medical_doctor
         tableName:  healthcare_professional
-        
+
+- changeSet:  
+    id:  dropNotNullConstraint-appointment-medical_coverage_name
+    author:  saguero  
+    changes:  
+    -  dropNotNullConstraint:  
+        columnName:  medical_coverage_name  
+        tableName:  appointment       

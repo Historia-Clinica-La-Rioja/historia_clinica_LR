@@ -52,8 +52,8 @@ public class Appointment extends SGXAuditableEntity {
     @Column(name = "health_insurance_id")
     private Integer healthInsuranceId;
 
-    @Column(name = "medical_coverage_name", length = 150, nullable = false)
-    private String medicalCoverageName = "Sumar";
+    @Column(name = "medical_coverage_name", length = 150)
+    private String medicalCoverageName;
 
     @Column(name = "medical_coverage_affiliate_number", nullable = false)
     private String medicalCoverageAffiliateNumber;
@@ -65,8 +65,12 @@ public class Appointment extends SGXAuditableEntity {
         result.setIsOverturn(appointmentBo.isOverturn());
         result.setPatientId(appointmentBo.getPatientId());
         result.setAppointmentStateId(AppointmentState.ASSIGNED);
-        if(appointmentBo.getMedicalCoverageName() != null)
-            result.setMedicalCoverageName(appointmentBo.getMedicalCoverageName());
+
+        String medicalCoverage = appointmentBo.getMedicalCoverageName();
+        if(medicalCoverage == null && appointmentBo.getHealthInsuranceId() == null )
+            medicalCoverage = "Sumar";
+        result.setMedicalCoverageName(medicalCoverage);
+
         result.setMedicalCoverageAffiliateNumber(appointmentBo.getMedicalCoverageAffiliateNumber());
         result.setHealthInsuranceId(appointmentBo.getHealthInsuranceId());
         return result;
