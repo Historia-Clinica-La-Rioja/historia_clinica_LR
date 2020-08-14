@@ -256,6 +256,15 @@ public class DiaryServiceImpl implements DiaryService {
 		result.setProfessionalAssignShift(diary.isProfessionalAsignShift());
 		result.setIncludeHoliday(diary.isIncludeHoliday());
 		result.setHealthcareProfessionalId(diary.getHealthcareProfessionalId());
+		result.setDeleted(diary.isDeleted());
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public Optional<DiaryBo> getDiaryByAppointment(Integer appointmentId) {
+		LOG.debug("Input parameters -> appointmentId {}", appointmentId);
+		Optional<DiaryBo> result = diaryRepository.getDiaryByAppointment(appointmentId).map(this::createDiaryBoInstance);
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

@@ -35,4 +35,7 @@ public class DiaryBo {
     protected boolean active = true;
 
     protected List<DiaryOpeningHoursBo> diaryOpeningHours;
+    
+    protected boolean deleted = false;
+    
 }

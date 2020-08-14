@@ -64,4 +64,11 @@ public interface DiaryRepository extends JpaRepository<Diary, Integer> {
             "JOIN ClinicalSpecialtySector css ON css.id = do.clinicalSpecialtySectorId " +
             "WHERE d.id = :diaryId ")
     Optional<CompleteDiaryListVo> getDiary(@Param("diaryId") Integer diaryId);
+    
+    @Transactional(readOnly = true)
+    @Query("SELECT d " +
+            "FROM Diary d " +
+            "JOIN AppointmentAssn aa ON aa.pk.diaryId = d.id " +
+            "WHERE aa.pk.appointmentId = :appointmentId ")
+    Optional<Diary> getDiaryByAppointment(@Param("appointmentId") Integer appointmentId);
 }

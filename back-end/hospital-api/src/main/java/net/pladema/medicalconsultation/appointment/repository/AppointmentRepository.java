@@ -22,7 +22,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
     @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo(aa.pk.diaryId, a)" +
             "FROM Appointment AS a " +
             "JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
-            "WHERE aa.pk.diaryId IN (:diaryIds) ")
+            "JOIN Diary d ON (d.id = aa.pk.diaryId )" +
+            "WHERE aa.pk.diaryId IN (:diaryIds) AND d.deleteable.deleted = false ")
     List<AppointmentDiaryVo> getAppointmentsByDiaries(@Param("diaryIds") List<Integer> diaryIds);
 
     @Transactional(readOnly = true)

@@ -66,6 +66,11 @@ public class AppointmentValidator implements ConstraintValidator<ValidAppointmen
             buildResponse(context, "{appointment.new.diary.inactive}");
             valid = false;
         }
+        
+        if (diary.isDeleted()) {
+            buildResponse(context, "{appointment.new.diary.deleted}");
+            valid = false;
+        }
 
         boolean existAppointment = appointmentService.existAppointment(createAppointmentDto.getDiaryId(),
                 createAppointmentDto.getOpeningHoursId(),

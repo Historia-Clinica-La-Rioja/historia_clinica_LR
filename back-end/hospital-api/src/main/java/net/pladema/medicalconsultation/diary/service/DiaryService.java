@@ -22,6 +22,8 @@ public interface DiaryService {
 	Collection<DiaryBo> getActiveDiariesFromProfessional(Integer healthcareProfessionalId);
 
 	Optional<CompleteDiaryBo> getDiary(Integer diaryId);
+	
+	Optional<DiaryBo> getDiaryByAppointment(Integer appointmentId);
 
 	DiaryBo getDiaryById(Integer diaryId);
 }

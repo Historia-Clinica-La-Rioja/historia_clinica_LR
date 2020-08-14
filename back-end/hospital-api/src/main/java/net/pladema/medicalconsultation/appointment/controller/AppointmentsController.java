@@ -1,17 +1,11 @@
 package net.pladema.medicalconsultation.appointment.controller;
 
-import io.swagger.annotations.Api;
-import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointment;
-import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentState;
-import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentListDto;
-import net.pladema.medicalconsultation.appointment.controller.dto.CreateAppointmentDto;
-import net.pladema.medicalconsultation.appointment.controller.mapper.AppointmentMapper;
-import net.pladema.medicalconsultation.appointment.service.AppointmentService;
-import net.pladema.medicalconsultation.appointment.service.CreateAppointmentService;
-import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
-import net.pladema.patient.controller.dto.HealthInsurancePatientDataDto;
-import net.pladema.patient.controller.service.PatientExternalService;
-import net.pladema.sgx.security.utils.UserInfo;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.validation.constraints.NotEmpty;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +21,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.constraints.NotEmpty;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
+import io.swagger.annotations.Api;
+import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointment;
+import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentDiary;
+import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentState;
+import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentListDto;
+import net.pladema.medicalconsultation.appointment.controller.dto.CreateAppointmentDto;
+import net.pladema.medicalconsultation.appointment.controller.mapper.AppointmentMapper;
+import net.pladema.medicalconsultation.appointment.service.AppointmentService;
+import net.pladema.medicalconsultation.appointment.service.CreateAppointmentService;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
+import net.pladema.patient.controller.dto.HealthInsurancePatientDataDto;
+import net.pladema.patient.controller.service.PatientExternalService;
+import net.pladema.sgx.security.utils.UserInfo;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/medicalConsultations/appointments")
@@ -105,7 +108,7 @@ public class AppointmentsController {
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
     public ResponseEntity<Boolean> changeState(
             @PathVariable(name = "institutionId") Integer institutionId,
-            @PathVariable(name = "appointmentId") Integer appointmentId,
+            @ValidAppointmentDiary @PathVariable(name = "appointmentId") Integer appointmentId,
             @ValidAppointmentState @RequestParam(name = "appointmentStateId") String appointmentStateId) {
         LOG.debug("Input parameters -> institutionId {}, appointmentId {}, appointmentStateId {}", institutionId, appointmentId, appointmentStateId);
         boolean result = appointmentService.updateState(appointmentId, Short.parseShort(appointmentStateId), UserInfo.getCurrentAuditor());
