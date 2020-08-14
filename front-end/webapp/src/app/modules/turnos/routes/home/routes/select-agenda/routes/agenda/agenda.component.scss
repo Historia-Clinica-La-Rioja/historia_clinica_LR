@@ -3,3 +3,14 @@
 div.spinner {
 	@include centered-spinner;
 }
+
+::ng-deep {
+	.cal-week-view .cal-day-columns .bg-green {
+		background-color: #C9E7CB !important;
+	}
+
+	.cal-week-view .cal-day-columns .bg-blue {
+		background-color: #92C3E2 !important;
+	}
+
+}
