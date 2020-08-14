@@ -19,15 +19,16 @@ import net.pladema.medicalconsultation.diary.repository.entity.DiaryOpeningHours
 public interface DiaryOpeningHoursRepository extends JpaRepository<DiaryOpeningHours, DiaryOpeningHoursPK> {
 
     @Transactional(readOnly = true)
-    @Query("select new net.pladema.medicalconsultation.diary.repository.domain.OccupationVo( " +
+    @Query("SELECT new net.pladema.medicalconsultation.diary.repository.domain.OccupationVo( " +
             "d.id, d.startDate, d.endDate, oh.dayWeekId, oh.from, oh.to) " +
-            "from DiaryOpeningHours as doh " +
-            "join Diary as d on ( doh.pk.diaryId = d.id ) " +
-            "join OpeningHours as oh on ( doh.pk.openingHoursId = oh.id ) " +
-            "where d.doctorsOfficeId = :doctorsOfficeId " +
-            "and d.startDate <= :endDate " +
-            "and d.endDate >= :startDate " +
-            "order by oh.dayWeekId, oh.from")
+            "FROM DiaryOpeningHours AS doh " +
+            "JOIN Diary AS d ON ( doh.pk.diaryId = d.id ) " +
+            "JOIN OpeningHours AS oh ON ( doh.pk.openingHoursId = oh.id ) " +
+            "WHERE d.doctorsOfficeId = :doctorsOfficeId " +
+            "AND d.startDate <= :endDate " +
+            "AND d.endDate >= :startDate " +
+            "AND d.deleteable.deleted = false " +
+            "ORDER BY oh.dayWeekId, oh.from")
     List<OccupationVo> findAllWeeklyDoctorsOfficeOccupation(@Param("doctorsOfficeId") Integer doctorsOfficeId,
                                                             @Param("startDate")LocalDate startDate,
                                                             @Param("endDate")LocalDate endDate);
@@ -39,6 +40,7 @@ public interface DiaryOpeningHoursRepository extends JpaRepository<DiaryOpeningH
             "JOIN Diary AS d ON ( doh.pk.diaryId = d.id ) " +
             "JOIN OpeningHours AS oh ON ( doh.pk.openingHoursId = oh.id ) " +
             "WHERE doh.pk.diaryId IN (:diaryIds) " +
+            "AND d.deleteable.deleted = false " +
             "ORDER BY oh.dayWeekId, oh.from")
     List<DiaryOpeningHoursVo> getDiariesOpeningHours(@Param("diaryIds") List<Integer> diaryIds);
 
