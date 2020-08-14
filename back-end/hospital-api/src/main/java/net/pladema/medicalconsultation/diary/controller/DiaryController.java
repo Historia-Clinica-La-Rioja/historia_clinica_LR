@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import net.pladema.medicalconsultation.diary.controller.constraints.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -22,11 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
-import net.pladema.medicalconsultation.diary.controller.constraints.DiaryDeleteableAppoinmentsValid;
-import net.pladema.medicalconsultation.diary.controller.constraints.DiaryEmptyAppointmentsValid;
-import net.pladema.medicalconsultation.diary.controller.constraints.DiaryOpeningHoursValid;
-import net.pladema.medicalconsultation.diary.controller.constraints.ExistingDiaryPeriodValid;
-import net.pladema.medicalconsultation.diary.controller.constraints.NewDiaryPeriodValid;
 import net.pladema.medicalconsultation.diary.controller.dto.CompleteDiaryDto;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryADto;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryDto;
@@ -59,7 +55,7 @@ public class DiaryController {
 	@GetMapping("/{diaryId}")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
 	public ResponseEntity<CompleteDiaryDto> getDiary(@PathVariable(name = "institutionId") Integer institutionId,
-			@PathVariable(name = "diaryId") Integer diaryId) {
+			@ValidDiary @PathVariable(name = "diaryId") Integer diaryId) {
 		LOG.debug("Input parameters -> institutionId {}, diaryId {}", institutionId, diaryId);
 		Optional<CompleteDiaryBo> diaryBo = diaryService.getDiary(diaryId);
 		CompleteDiaryDto result = diaryBo.map(diaryMapper::toCompleteDiaryDto).orElse(new CompleteDiaryDto());
@@ -85,7 +81,7 @@ public class DiaryController {
     @Transactional
     public ResponseEntity<Integer> updateDiary(
             @PathVariable(name = "institutionId") Integer institutionId,
-            @PathVariable(name = "diaryId") Integer diaryId,
+            @ValidDiary @PathVariable(name = "diaryId") Integer diaryId,
             @RequestBody @Valid @ExistingDiaryPeriodValid @DiaryOpeningHoursValid @DiaryEmptyAppointmentsValid  DiaryDto diaryADto) {
         LOG.debug("Input parameters -> diaryADto {}", diaryADto);
         DiaryBo diaryToUpdate = diaryMapper.toDiaryBo(diaryADto);
