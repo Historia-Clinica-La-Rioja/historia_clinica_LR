@@ -156,3 +156,13 @@ databaseChangeLog:
     -  dropNotNullConstraint:  
         columnName:  medical_coverage_name  
         tableName:  appointment       
+
+
+- changeSet:
+    id: healthcare_professional_specialty-unique-constraint
+    author: etrapani
+    changes:
+        - addUniqueConstraint:
+            tableName: healthcare_professional_specialty
+            columnNames: healthcare_professional_id, professional_specialty_id, clinical_specialty_id
+            constraintName: UQ_healthcare_professional_hp_id_ps_id_cs_id
