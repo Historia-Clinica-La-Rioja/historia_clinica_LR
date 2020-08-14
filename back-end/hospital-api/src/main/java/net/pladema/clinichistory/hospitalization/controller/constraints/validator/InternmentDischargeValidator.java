@@ -2,16 +2,17 @@ package net.pladema.clinichistory.hospitalization.controller.constraints.validat
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import javax.validation.constraintvalidation.SupportedValidationTarget;
-import javax.validation.constraintvalidation.ValidationTarget;
 
 import net.pladema.featureflags.service.FeatureFlagsService;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentDischargeValid;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
 import net.pladema.sgx.featureflags.AppFeature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@SupportedValidationTarget(ValidationTarget.PARAMETERS)
 public class InternmentDischargeValidator implements ConstraintValidator<InternmentDischargeValid, Integer> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(InternmentDischargeValidator.class);
 
     private static final String INTERNMENT_EPISODE_PROPERTY = "internmentEpisodeId";
 
@@ -34,15 +35,15 @@ public class InternmentDischargeValidator implements ConstraintValidator<Internm
      * Si está activo habilitarAltaSinEpicrisis, se ignora la validación.
      */
     @Override
-    public boolean isValid(Integer parameters, ConstraintValidatorContext context) {
-        Integer internmentEpisodeId = parameters;
+    public boolean isValid(Integer internmentEpisodeId, ConstraintValidatorContext context) {
+        LOG.debug("Going to Validate with InternmentDischargeValid");
         boolean valid = true;
-        
+
         if (!featureFlagService.isOn(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS)) {
-        	valid = internmentEpisodeRepository.haveEpicrisis(internmentEpisodeId);
+            valid = internmentEpisodeRepository.haveEpicrisis(internmentEpisodeId);
         }
         if (!valid) {
-        	setResponse(context, "{internmentdischarge.invalid}", INTERNMENT_EPISODE_PROPERTY);
+            setResponse(context, "{internmentdischarge.invalid}", INTERNMENT_EPISODE_PROPERTY);
         }
         return valid;
     }
