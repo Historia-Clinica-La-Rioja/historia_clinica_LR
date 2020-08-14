@@ -13,6 +13,7 @@ import { AppMaterialModule } from '../material/app.material.module';
 import { SelectAgendaComponent } from './routes/home/routes/select-agenda/select-agenda.component';
 import { AgendaComponent } from './routes/home/routes/select-agenda/routes/agenda/agenda.component';
 import { CustomDateFormatter } from './services/custom-date-formatter.service';
+import { NewAppointmentComponent } from './dialogs/new-appointment/new-appointment.component';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { CustomDateFormatter } from './services/custom-date-formatter.service';
 	 	NewAgendaComponent,
 	 	NewAttentionComponent,
 	 	SelectAgendaComponent,
-	 	AgendaComponent
+	 	AgendaComponent,
+	 	NewAppointmentComponent
 	],
 	imports: [
 		CommonModule,

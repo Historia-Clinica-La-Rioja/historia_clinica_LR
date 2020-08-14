@@ -8,6 +8,7 @@ import { DiaryOpeningHoursService } from '@api-rest/services/diary-opening-hours
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { DiaryService } from '@api-rest/services/diary.service';
 import { Moment } from 'moment';
+import { NewAppointmentComponent } from './../../../../../../dialogs/new-appointment/new-appointment.component';
 
 @Component({
 	selector: 'app-agenda',
@@ -117,6 +118,26 @@ export class AgendaComponent implements OnInit {
 				return momentStartDate.toDate();
 		}
 		return momentEndDate.toDate();
+	}
+
+	openDialog() {
+		const dialogRef = this.dialog.open(NewAppointmentComponent, {
+			disableClose: true,
+			width: '35%',
+			data: {
+				date: null,
+				diaryId: null,
+				hour: null,
+				openingHoursId: null
+			}
+		});
+
+		dialogRef.afterClosed().subscribe(submitted => {
+			if (submitted) {
+				
+			}
+		}
+		);
 	}
 
 }

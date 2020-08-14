@@ -1,0 +1,115 @@
+<div mat-dialog-title>
+	<div class="mat-h2" [translate]="'turnos.new-appointment.NEW_APPOINTMENT'"></div>
+</div>
+
+<div mat-dialog-content>
+
+	<mat-horizontal-stepper [linear]="true" #stepper labelPosition="bottom">
+		<mat-step [stepControl]="formSearch" label="{{'turnos.new-appointment.STEP_1' | translate}}">
+			<mat-card class="mat-typography">
+				<form [formGroup]="formSearch" (ngSubmit)="search()">
+					<mat-card-content>
+						<div>
+							<mat-form-field appearance="outline">
+								<mat-label>Tipo</mat-label>
+								<mat-select
+									formControlName="identifType">
+									<mat-option
+										id="identifType"
+										name="identifType"
+										*ngFor="let type of identifyTypeArray" [value]="type.id">
+										{{type.description}}
+									</mat-option>
+								</mat-select>
+							</mat-form-field>
+							<mat-form-field appearance="outline">
+								<mat-label>Nro de documento</mat-label>
+								<input matInput
+									type="text"
+									id="identifNumber"
+									name="identifNumber"
+									formControlName="identifNumber"
+									placeholder="Nro de documento">
+							</mat-form-field>
+						</div>
+						<div>
+							<mat-label>Sexo</mat-label>
+							<div>
+								<mat-radio-group name="gender" id="gender" formControlName="gender">
+									<mat-radio-button id="genderButton_{{gender.id}}" *ngFor="let gender of genderOptions" [value]="gender.id">
+										{{gender.description}}
+									</mat-radio-button>
+								</mat-radio-group>
+							</div>
+						</div>
+						<div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10px">
+							<button mat-flat-button mat-dialog-close color="primary" (click)="goCreatePatient()" *ngIf="showAddPatient">
+								<span [translate]="'turnos.new-appointment.BUTTON_ADD_PATIENT'"></span>
+							</button>
+							<button mat-flat-button color="primary" type="submit">
+								<span [translate]="'turnos.new-appointment.BUTTON_SEARCH'"></span>
+							</button>
+						</div>
+					</mat-card-content>
+				</form>
+			</mat-card>
+		</mat-step>
+
+		<mat-step [stepControl]="formMedicalCoverage" label="{{'turnos.new-appointment.STEP_2' | translate}}">
+			<mat-card class="mat-typography">
+				<mat-list>
+					<mat-list-item id="patient">
+						<mat-icon color="primary" mat-list-icon [inline]="true">person</mat-icon>
+						<div fxLayout="column">
+							<strong> {{patientAppointmentDto?.person.firstName}} {{patientAppointmentDto?.person.lastName}} - {{patientAppointmentDto?.person.identificationNumber}} </strong>
+						</div>
+					</mat-list-item>
+				</mat-list>
+
+				<form [formGroup]="formMedicalCoverage">
+					<div>
+						<mat-form-field appearance="outline">
+							<mat-label>Obra Social</mat-label>
+							<mat-select
+								formControlName="medicalCoverage">
+								<mat-option
+									id="medicalCoverage"
+									name="medicalCoverage"
+									*ngFor="let healthInsurance of healtInsuranceOptions" [value]="healthInsurance.rnos">
+									{{healthInsurance.name}}
+								</mat-option>
+							</mat-select>
+						</mat-form-field>
+						<mat-form-field appearance="outline">
+							<mat-label>Prepaga</mat-label>
+							<input matInput
+								type="text"
+								id="prepaid"
+								name="prepaid"
+								formControlName="prepaid"
+								placeholder="Prepaga">
+						</mat-form-field>
+						<mat-form-field appearance="outline">
+							<mat-label>Nro de afiliado</mat-label>
+							<input matInput
+								type="text"
+								id="affiliateNumber"
+								name="affiliateNumber"
+								formControlName="affiliateNumber"
+								placeholder="Nro de afiliado">
+						</mat-form-field>
+					</div>
+				</form>
+			</mat-card>
+		</mat-step>
+	</mat-horizontal-stepper>
+</div>
+
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10px">
+    <button mat-stroked-button color="primary" mat-dialog-close>
+		<span [translate]="'buttons.CANCEL'"></span>
+    </button>
+	<button mat-raised-button color="primary" *ngIf="showConfirmButton()" (click)="submit()">
+		<span [translate]="'buttons.CONFIRM'"></span>
+	</button>
+</mat-dialog-actions>
