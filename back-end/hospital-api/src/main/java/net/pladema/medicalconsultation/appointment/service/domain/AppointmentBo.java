@@ -43,6 +43,8 @@ public class AppointmentBo {
 
     private Integer healthInsuranceId;
 
+    private Short medicalAttentionTypeId;
+
     public AppointmentBo(AppointmentDiaryVo appointmentDiaryVo) {
         super();
         this.id = appointmentDiaryVo.getId();
@@ -53,9 +55,10 @@ public class AppointmentBo {
         this.appointmentStateId = appointmentDiaryVo.getAppointmentStateId();
         this.overturn = appointmentDiaryVo.isOverturn();
         this.openingHoursId = null;
-        this.medicalCoverageName = null;
-        this.medicalCoverageAffiliateNumber = null;
-        this.healthInsuranceId = null;
+        this.medicalCoverageName = appointmentDiaryVo.getMedicalCoverageName();
+        this.medicalCoverageAffiliateNumber = appointmentDiaryVo.getMedicalCoverageAffiliateNumber();
+        this.healthInsuranceId = appointmentDiaryVo.getHealthInsuranceId();
+        this.medicalAttentionTypeId = appointmentDiaryVo.getMedicalAttentionTypeId();
     }
 
     public static AppointmentBo newFromAppointment(Appointment appointment) {
@@ -69,6 +72,6 @@ public class AppointmentBo {
                 null,
                 appointment.getMedicalCoverageName(),
                 appointment.getMedicalCoverageAffiliateNumber(),
-                appointment.getHealthInsuranceId());
+                appointment.getHealthInsuranceId(), null);
     }
 }

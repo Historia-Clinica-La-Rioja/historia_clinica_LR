@@ -1,21 +1,5 @@
 package net.pladema.medicalconsultation.diary.controller.constraints.validator;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.when;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
-
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryDto;
@@ -23,6 +7,21 @@ import net.pladema.medicalconsultation.diary.controller.dto.DiaryOpeningHoursDto
 import net.pladema.medicalconsultation.diary.controller.dto.OpeningHoursDto;
 import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import net.pladema.sgx.validation.ValidationContextSetup;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 public class DiaryEmptyAppointmentsValidatorTest extends ValidationContextSetup {
@@ -51,7 +50,7 @@ public class DiaryEmptyAppointmentsValidatorTest extends ValidationContextSetup 
 	private void setupContextValid() {
 		LocalDate apbDate = LocalDate.parse("2020-08-12");
 		LocalTime apbHour = LocalTime.parse("11:15:00");
-		AppointmentBo apb1 = new AppointmentBo(1, 1, 1, apbDate, apbHour, (short) 1, false, 1,"OSDE","20210220",null);
+		AppointmentBo apb1 = new AppointmentBo(1, 1, 1, apbDate, apbHour, (short) 1, false, 1,"OSDE","20210220",null, (short) 1);
 		List<AppointmentBo> returnFutureAppmets = Stream.of(apb1).collect(Collectors.toList());
 		when(appointmentService.getFutureActiveAppointmentsByDiary(anyInt())).thenReturn(returnFutureAppmets);
 
@@ -60,7 +59,7 @@ public class DiaryEmptyAppointmentsValidatorTest extends ValidationContextSetup 
 	private void setupContextInvalid() {
 		LocalDate apbDate = LocalDate.parse("2020-08-12");
 		LocalTime apbHour = LocalTime.parse("13:15:00");
-		AppointmentBo apb1 = new AppointmentBo(1, 1, 1, apbDate, apbHour, (short) 1, false, 1, "OSDE", "20210220", null);
+		AppointmentBo apb1 = new AppointmentBo(1, 1, 1, apbDate, apbHour, (short) 1, false, 1, "OSDE", "20210220", null, (short) 2);
 		List<AppointmentBo> returnFutureAppmets = Stream.of(apb1).collect(Collectors.toList());
 		when(appointmentService.getFutureActiveAppointmentsByDiary(anyInt())).thenReturn(returnFutureAppmets);
 

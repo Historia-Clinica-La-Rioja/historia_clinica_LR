@@ -1,7 +1,7 @@
 package net.pladema.patient.controller.service;
 
-import net.pladema.patient.controller.dto.HealthInsurancePatientDataDto;
 import net.pladema.patient.controller.dto.BasicPatientDto;
+import net.pladema.patient.controller.dto.HealthInsurancePatientDataDto;
 import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.service.PatientService;
 import net.pladema.person.controller.dto.BasicDataPersonDto;

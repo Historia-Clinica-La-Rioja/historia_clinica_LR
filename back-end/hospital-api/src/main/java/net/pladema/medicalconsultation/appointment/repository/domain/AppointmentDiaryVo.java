@@ -18,6 +18,14 @@ public class AppointmentDiaryVo {
 
     private final Appointment appointment;
 
+    private final Short medicalAttentionTypeId;
+
+    public AppointmentDiaryVo(Integer diaryId, Appointment appointment) {
+        this.diaryId = diaryId;
+        this.appointment = appointment;
+        this.medicalAttentionTypeId = null;
+    }
+
     public Integer getId(){
         return appointment.getId();
     }
@@ -50,5 +58,23 @@ public class AppointmentDiaryVo {
         if (appointment == null)
             return false;
         return appointment.getIsOverturn();
+    }
+
+    public String getMedicalCoverageName(){
+        if (appointment == null)
+            return null;
+        return appointment.getMedicalCoverageName();
+    }
+
+    public String getMedicalCoverageAffiliateNumber(){
+        if (appointment == null)
+            return null;
+        return appointment.getMedicalCoverageAffiliateNumber();
+    }
+
+    public Integer getHealthInsuranceId(){
+        if (appointment == null)
+            return null;
+        return appointment.getHealthInsuranceId();
     }
 }

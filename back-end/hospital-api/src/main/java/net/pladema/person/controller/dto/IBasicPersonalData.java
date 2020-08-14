@@ -7,4 +7,6 @@ public interface IBasicPersonalData {
     String getLastName();
 
     String getIdentificationNumber();
+
+    String getPhoneNumber();
 }

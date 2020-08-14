@@ -110,8 +110,12 @@ export interface AppointmentBasicPatientDto {
 
 export interface AppointmentListDto {
     date: string;
+    healthInsuranceId: number;
     hour: string;
     id: number;
+    medicalAttentionTypeId: number;
+    medicalCoverageAffiliateNumber: string;
+    medicalCoverageName: string;
     overturn: boolean;
     patient: AppointmentBasicPatientDto;
 }
@@ -498,6 +502,7 @@ export interface IBasicPersonalData {
     firstName: string;
     identificationNumber: string;
     lastName: string;
+    phoneNumber: string;
 }
 
 export interface IdentificationTypeDto extends MasterdataDto<number> {

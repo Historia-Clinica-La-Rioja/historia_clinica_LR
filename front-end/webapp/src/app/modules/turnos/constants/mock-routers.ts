@@ -111,12 +111,18 @@ export const MOCKS_TURNOS = [
 							id: 9,
 							person: { //BasicPersonalDataDto
 								firstName: 'María',
-								lastName: 'Gonzalez'
+								lastName: 'Gonzalez',
+								identificationNumber: "43723912",
+								phoneNumber: "0113230213"
 							}
 						},
 						date: '2020-07-13',
 						hour: '07:15',
 						overturn: false,
+						healthInsuranceId: null,
+  						medicalCoverageName: "OSDE",
+						medicalCoverageAffiliateNumber: "2312/32",
+					    medicalAttentionTypeId: 1,
 					},
 					{
 						id: 11,
@@ -124,12 +130,18 @@ export const MOCKS_TURNOS = [
 							id: 25,
 							person: {//BasicPersonalDataDto
 								firstName: 'Jorge',
-								lastName: 'Martines'
+								lastName: 'Martines',
+								identificationNumber: "13723912",
+								phoneNumber: "011343430213"
 							}
 						},
 						date: '2020-07-13',
 						hour: '07:30',
 						overturn: false,
+						healthInsuranceId: 1,
+  						medicalCoverageName: null,
+						medicalCoverageAffiliateNumber: "2312/32",
+					    medicalAttentionTypeId: 2,
 					}
 				],
 			}

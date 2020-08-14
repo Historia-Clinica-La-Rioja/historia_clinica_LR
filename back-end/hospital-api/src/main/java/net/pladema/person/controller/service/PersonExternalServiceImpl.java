@@ -93,7 +93,9 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 	public BasicPersonalDataDto getBasicPersonalDataDto(Integer personId) {
 		LOG.debug(ONE_INPUT_PARAMETER, personId);
 		Person person = personService.getPerson(personId);
+		PersonExtended personExtended = personService.getPersonExtended(personId);
 		BasicPersonalDataDto result = personMapper.basicPersonalDataDto(person);
+		result.setPhoneNumber(personExtended.getPhoneNumber());
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

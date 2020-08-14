@@ -22,4 +22,13 @@ public class AppointmentListDto {
 
     private final boolean overturn;
 
+    private final Integer healthInsuranceId;
+
+    private final String medicalCoverageName;
+
+    private final String medicalCoverageAffiliateNumber;
+
+    private final Short medicalAttentionTypeId;
+
+
 }

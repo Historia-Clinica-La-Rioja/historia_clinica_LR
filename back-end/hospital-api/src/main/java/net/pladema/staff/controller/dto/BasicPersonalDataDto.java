@@ -15,4 +15,6 @@ public class BasicPersonalDataDto implements IBasicPersonalData {
     private String lastName;
 
     private String identificationNumber;
+
+    private String phoneNumber;
 }

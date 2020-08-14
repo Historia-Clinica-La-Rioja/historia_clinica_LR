@@ -21,7 +21,10 @@ public interface AppointmentMapper {
     @Mapping(target = "date", source = "appointmentBo.date")
     @Mapping(target = "hour", source = "appointmentBo.hour")
     @Mapping(target = "overturn", source = "appointmentBo.overturn")
+    @Mapping(target = "medicalCoverageName", source = "appointmentBo.medicalCoverageName")
+    @Mapping(target = "medicalCoverageAffiliateNumber", source = "appointmentBo.medicalCoverageAffiliateNumber")
     @Mapping(target = "patient", source = "patient", qualifiedByName = "toAppointmentBasicPatientDto")
+
     AppointmentListDto toAppointmentListDto(AppointmentBo appointmentBo, HealthInsurancePatientDataDto patient);
 
 
