@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from "rxjs";
 import { environment } from "@environments/environment";
 import { HttpClient } from "@angular/common/http";
-import { BMPersonDto, APatientDto, BMPatientDto, PatientSearchDto } from "@api-rest/api-model";
+import { BMPersonDto, APatientDto, BMPatientDto, PatientSearchDto, HealthInsurancePatientDataDto } from "@api-rest/api-model";
 import { DateFormat, momentFormat } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 
@@ -102,9 +102,9 @@ export class PatientService {
 		}
 	}
 
-	getAppointmentPatientData<AppointmentPatientDto>(patientId: number): Observable<AppointmentPatientDto> {
-		let url = `${environment.apiBase}/patient/${patientId}/appointment-patient-data`;
-		return this.http.get<AppointmentPatientDto>(url);
+	getAppointmentPatientData(patientId: number): Observable<HealthInsurancePatientDataDto> {
+		const url = `${environment.apiBase}/patient/${patientId}/appointment-patient-data`;
+		return this.http.get<HealthInsurancePatientDataDto>(url);
 	}
 
 }
