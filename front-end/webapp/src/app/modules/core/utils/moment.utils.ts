@@ -41,6 +41,15 @@ export const momentFormatDate = (date: Date, format?: DateFormat): string => mom
 
 export const momentFormat = (momentDate: Moment, format?: DateFormat): string => momentDate.local().format(format);
 
+export const buildFullDate = (time: string, date: Moment): Moment => {
+	const timeMoment: Moment = momentParseTime(time);
+	date.set({
+		hour: timeMoment.hour(),
+		minute: timeMoment.minute()
+	});
+	return date;
+};
+
 export const currentWeek = (): Moment[] => {
 	const currentDate = moment();
 

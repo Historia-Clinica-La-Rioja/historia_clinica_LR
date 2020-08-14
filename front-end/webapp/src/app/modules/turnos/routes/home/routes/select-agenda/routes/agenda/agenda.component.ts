@@ -1,20 +1,25 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { CompleteDiaryDto, DiaryOpeningHoursDto } from '@api-rest/api-model';
+import { AppointmentListDto, CompleteDiaryDto, DiaryOpeningHoursDto } from '@api-rest/api-model';
 import { CalendarWeekViewBeforeRenderEvent } from 'angular-calendar';
-import { momentParseDate, momentParseTime, newMoment } from '@core/utils/moment.utils';
+import { buildFullDate, DateFormat, dateToMoment, momentParseDate, momentParseTime, newMoment } from '@core/utils/moment.utils';
 import { NewAgendaService } from '../../../../../../services/new-agenda.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DiaryOpeningHoursService } from '@api-rest/services/diary-opening-hours.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { DiaryService } from '@api-rest/services/diary.service';
 import { Moment } from 'moment';
-import { NewAppointmentComponent } from './../../../../../../dialogs/new-appointment/new-appointment.component';
+import { NewAppointmentComponent } from '../../../../../../dialogs/new-appointment/new-appointment.component';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
-import { WeekViewHourSegment } from 'calendar-utils';
+import { CalendarEvent, WeekViewHourSegment } from 'calendar-utils';
+import { MEDICAL_ATTENTION } from '../../../../../../constants/descriptions';
 
 const AGENDA_PROGRAMADA_CLASS = 'bg-green';
 const AGENDA_ESPONTANEA_CLASS = 'bg-blue';
-
+const enum COLORES {
+	PROGRAMADA = '#7FC681',
+	ESPONTANEA = '#2687C5',
+	SOBRETURNO = '#E3A063'
+}
 
 @Component({
 	selector: 'app-agenda',
@@ -54,16 +59,16 @@ export class AgendaComponent implements OnInit {
 
 	loadCalendar(renderEvent: CalendarWeekViewBeforeRenderEvent) {
 		renderEvent.hourColumns.forEach((hourColumn) => {
-			const openingHours: DiaryOpeningHoursDto[] = getOpeningHoursFor(hourColumn.date, this.diaryOpeningHours);
+			const openingHours: DiaryOpeningHoursDto[] = this._getOpeningHoursFor(hourColumn.date);
 			if (openingHours.length) {
 				hourColumn.hours.forEach((hour) => {
 					hour.segments.forEach((segment) => {
 						openingHours.forEach(openingHour => {
 							const from: Moment = momentParseTime(openingHour.openingHours.from);
 							const to: Moment = momentParseTime(openingHour.openingHours.to);
-
 							if (isBetween(segment, from, to)) {
-								segment.cssClass = openingHour.medicalAttentionTypeId === 1 ? AGENDA_PROGRAMADA_CLASS : AGENDA_ESPONTANEA_CLASS;
+								segment.cssClass = openingHour.medicalAttentionTypeId === MEDICAL_ATTENTION.SPONTANEOUS_ID ?
+									AGENDA_ESPONTANEA_CLASS : AGENDA_PROGRAMADA_CLASS;
 							}
 						});
 					});
@@ -71,16 +76,23 @@ export class AgendaComponent implements OnInit {
 			}
 		});
 
-		function getOpeningHoursFor(date: Date, openingHours: DiaryOpeningHoursDto[]): DiaryOpeningHoursDto[] {
-			return openingHours.filter(oh => oh.openingHours.dayWeekId === date.getDay());
-		}
-
 		function isBetween(segment: WeekViewHourSegment, from: Moment, to: Moment) {
 			return ((segment.date.getHours() > from.hours()) ||
 				(segment.date.getHours() === from.hours() && segment.date.getMinutes() >= from.minutes()))
 				&& ((segment.date.getHours() < to.hours()) ||
 					(segment.date.getHours() === to.hours() && segment.date.getMinutes() < to.minutes()));
 		}
+	}
+
+	private _getOpeningHoursFor(date: Date): DiaryOpeningHoursDto[] {
+		const dateMoment = dateToMoment(date);
+		const start = momentParseDate(this.agenda.startDate);
+		const end = momentParseDate(this.agenda.endDate);
+
+		if (dateMoment.isBetween(start, end, 'date', '[]')) {
+			return this.diaryOpeningHours.filter(oh => oh.openingHours.dayWeekId === date.getDay());
+		}
+		return [];
 	}
 
 	public onClickedSegment(event) {
@@ -99,6 +111,21 @@ export class AgendaComponent implements OnInit {
 				this.diaryOpeningHours = openingHours;
 				this.setDayStartHourAndEndHour(openingHours);
 				this.loading = false;
+			});
+
+		this.loadAppointments();
+	}
+
+	private loadAppointments() {
+		this.appointmentsService.getList([this.agenda.id], this.agenda.startDate, this.agenda.endDate)
+			.subscribe((appointments: AppointmentListDto[]) => {
+				const appointmentsCalendarEvents: CalendarEvent[] = appointments
+					.map(appointment => {
+						const from = appointment.hour;
+						const to = momentParseTime(from).add(this.agenda.appointmentDuration, 'minutes').format(DateFormat.HOUR_MINUTE);
+						return toCalendarEvent(from, to, momentParseDate(appointment.date), appointment);
+					});
+				this.newAgendaService.setEvents(appointmentsCalendarEvents);
 			});
 	}
 
@@ -147,10 +174,30 @@ export class AgendaComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe(submitted => {
 			if (submitted) {
-
+				this.loadAppointments();
 			}
 		}
 		);
 	}
 
 }
+
+function toCalendarEvent(from: string, to: string, date: Moment, appointment: AppointmentListDto): CalendarEvent {
+	return {
+		start: buildFullDate(from, date).toDate(),
+		end: buildFullDate(to, date).toDate(),
+		title: `${from} ${appointment.patient.person.lastName} ${appointment.patient.person.firstName}`,
+		color: {
+			primary: getColor(),
+			secondary: getColor()
+		}
+	};
+
+	function getColor(): COLORES {
+		if (appointment.overturn) {
+			return COLORES.SOBRETURNO;
+		}
+		return appointment.medicalAttentionTypeId === MEDICAL_ATTENTION.SPONTANEOUS_ID ? COLORES.ESPONTANEA : COLORES.PROGRAMADA;
+	}
+}
+
