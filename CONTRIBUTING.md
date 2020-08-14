@@ -24,7 +24,7 @@ En este documento se definen los requerimientos minimos para poder contribuir co
 
 ### Código
 
-- [x] Debe cumplir con las convenciones definidas en [back-end](back-end/documentacion/../../../back-end/documentacion/Convenciones.md)
+- [x] Debe cumplir con las convenciones definidas en [back-end](back-end/documentacion/convenciones.md)
 - [x] Debe cumplir con las convenciones definidas en [front-end](front-end/README.md)
 
 ### Testing

@@ -30,6 +30,29 @@ Dado que estamos usando Java 11 se definen usar los nuevos tipos de [fecha](http
 2. **LocalDate**: solo fechas
 3. **LocalTime**: solo horas
 
+#### Base de datos
+
+La idea es tener siempre la mayor compatibilidad entre motores de base de datos. Por lo cuál se deberíá seguir la siguiente lógica al momento de generar consultas de base de datos:
+
+1. Usar las queries provista desde la interfaz de JPA
+2. Usar @Query con con el lenguaje JPQL.
+3. Usar queries nativas respetando el estandar SQL.
+4. Usar queries nativas con funcionalidad especifica del lenguaje debe ser la **última opción** y en caso de usarse se debe hacer lo siguiente:
+   1. Crear una interfaz de repositorio con el método particular
+   2. Crear la implementación especifica de la interfaz para el motor de PostgreSql **obligatoriamente**
+   3. En caso de usar otro motor entonces agregar su implementacion especifica.
+
+
+Todas las queries que hacen lectura de datos en la base debe tener la siguiente anotación 
+
+```java
+@Transactional(readOnly = true)
+
+```
+
+Perteneciente a la libreria de spring (no javax.transactional).
+
+
 
 #### Estructura del proyecto
 
@@ -335,6 +358,47 @@ public class AlumnosDatosPersonalesController {
 ```
 
 
+#### Data transfer objects (DTO)
+
+Representan los datos de salida y de entrada para la API del sistema, por lo cuál tienen que ser lo más minimalista posible.
+
+##### Typescript generator
+
+Para facilitar el trabajo y tener una visión más clara acerca de los objetos que retorna y espera la API, se agrego un plugin que se encarga de generar para Angular las interfaces correspondientes. 
+
+Este plugin se corre durante la etapa de generación de código de **maven** y lo que hace es sobreescribir el archivo [api-model.ts](api-../../front-end/webapp/src/app/modules/api-rest/api-model.d.ts). 
+
+```javascript
+/* tslint:disable */
+/* eslint-disable */
+
+export interface AAdditionalDoctorDto {
+    fullName: string;
+    generalPractitioner: boolean;
+    id?: number;
+    phoneNumber: string;
+}
+
+export interface APatientDto extends APersonDto {
+    comments: string;
+    generalPractitioner: AAdditionalDoctorDto;
+    identityVerificationStatusId: number;
+    medicalCoverageAffiliateNumber: string;
+    medicalCoverageName: string;
+    pamiDoctor: AAdditionalDoctorDto;
+    typeId: number;
+}
+```
+
+Esto nos agrega una validación adicional que permite saber si al cambiar un dto estamos impactando en alguna parte del frontend.
+
+Para que los DTOs puedan ser detectados por el plugin se deben encontrar bajo un paquete controller y tienen que finalizar la palabra Dto. Esto es configurable desde el [pom.xml](../hospital-api/pom.xml)
+
+```xml
+<classPatterns>
+	<pattern>net.pladema.**.controller.**Dto</pattern>
+</classPatterns>
+```
 
 ### Conclusión
 
