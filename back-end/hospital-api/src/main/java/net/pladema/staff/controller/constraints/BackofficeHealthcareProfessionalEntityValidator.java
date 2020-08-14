@@ -32,7 +32,11 @@ public class BackofficeHealthcareProfessionalEntityValidator extends BackofficeE
 
     @Override
     public void assertUpdate(Integer id, HealthcareProfessional entity) {
-        //nothing to do
+            HealthcareProfessional hp = getHealthcareProfessional(id);
+            if(!hp.getPersonId().equals(entity.getPersonId())) {
+                assertCreate(entity);
+                assertDelete(id);
+            }
     }
 
     @Override
@@ -44,15 +48,23 @@ public class BackofficeHealthcareProfessionalEntityValidator extends BackofficeE
 
     @Override
     public void assertDelete(Integer id){
-        Optional<HealthcareProfessional> healthcareProfessional = healthcareProfessionalRepository.findById(id);
-        if(healthcareProfessional.isPresent()) {
-            Optional<Integer> userId = userRepository.getUserIdByPersonId(healthcareProfessional.get().getPersonId());
-            List<RoleAssignment> rolesList = userRoleRepository.getRoleAssignments(userId.get());
-            if (userId.isPresent() && !rolesList.isEmpty()) {
-                if(rolesList.stream().anyMatch(ra -> isProfessionalRole(ra)))
-                     throw new BackofficeValidationException("user.hasrole");
-            }
+        HealthcareProfessional healthcareProfessional = getHealthcareProfessional(id);
+        userRepository.getUserIdByPersonId(healthcareProfessional
+                .getPersonId())
+                .ifPresent(this::checkRoles);
+    }
+
+    private void checkRoles(Integer userId){
+        List<RoleAssignment> rolesList = userRoleRepository.getRoleAssignments(userId);
+        if (rolesList.stream().anyMatch(this::isProfessionalRole)){
+            throw new BackofficeValidationException("user.hasrole");
         }
+    }
+
+    private HealthcareProfessional getHealthcareProfessional(Integer id){
+        return healthcareProfessionalRepository.findById(id).orElseThrow(
+                () -> new BackofficeValidationException("healthcareprofessional.exists")
+        );
     }
 
     private boolean isProfessionalRole(RoleAssignment role) {
