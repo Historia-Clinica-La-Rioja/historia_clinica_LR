@@ -75,7 +75,7 @@ public class DiaryOpeningHoursController {
     }
 
     @GetMapping(params = "diaryIds")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ADMINISTRADOR_AGENDA')")
     public ResponseEntity<Collection<DiaryOpeningHoursDto>> getMany(@PathVariable(name = "institutionId") Integer institutionId,
                                                                     @RequestParam List<Integer> diaryIds) {
         LOG.debug("Input parameters -> institutionId {}, diaryIds {}", institutionId, diaryIds);

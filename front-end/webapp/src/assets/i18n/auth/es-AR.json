@@ -41,7 +41,8 @@
 				"ADMINISTRATIVO": "Administrativo",
 				"ENFERMERO_ADULTO_MAYOR": "Enfermero adulto mayor",
 				"ENFERMERO": "Enfermero",
-				"ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE":  "Administrador institucional"
+				"ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE":  "Administrador institucional",
+				"ADMINISTRADOR_AGENDA": "Administrador de agenda"
 			}
 		}
 	}

@@ -18,7 +18,7 @@ const routes: Routes = [
 				path: '',
 				component: HomeComponent,
 				canActivate: [RoleGuard],
-				data: {allowedRoles: [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ADMINISTRATIVO]},
+				data: {allowedRoles: [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ADMINISTRATIVO, ERole.ADMINISTRADOR_AGENDA]},
 				children: [
 					{
 						path: 'profesional/:idProfesional',

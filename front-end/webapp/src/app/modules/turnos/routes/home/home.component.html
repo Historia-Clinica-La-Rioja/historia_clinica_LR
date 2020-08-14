@@ -5,7 +5,7 @@
 			<h2 id="title" class="page-title" [translate]="'turnos.home.TITLE'"></h2>
 		</div>
 
-		<div class="actions" fxLayout="row" fxLayoutGap="15px" fxLayout.xs="column" *hasRole="['ADMINISTRATIVO']">
+		<div class="actions" fxLayout="row" fxLayoutGap="15px" fxLayout.xs="column">
 			<form fxFlex.gt-xs="55%" [formGroup]="form" (ngSubmit)="search()">
 				<mat-form-field appearance="outline" class="aligned-form-field">
 					<input type="text"

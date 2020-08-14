@@ -15,10 +15,10 @@
 	</mat-form-field>
 
 	<div *ngIf="agendaSelected">
-		<button edit mat-flat-button color="primary" id="edit_agenda" name="edit_agenda" (click)="goToEditAgenda()">
+		<button mat-flat-button color="primary" *hasRole="['ADMINISTRADOR_AGENDA']" id="edit_agenda" name="edit_agenda" (click)="goToEditAgenda()">
 			<mat-icon>edit</mat-icon>
 		</button>
-		<button edit mat-flat-button color="warn" id="delete_agenda" name="delete_agenda" (click)="deleteAgenda()">
+		<button mat-flat-button color="warn" *hasRole="['ADMINISTRADOR_AGENDA']" id="delete_agenda" name="delete_agenda" (click)="deleteAgenda()">
 			<mat-icon>delete</mat-icon>
 		</button>
 	</div>
