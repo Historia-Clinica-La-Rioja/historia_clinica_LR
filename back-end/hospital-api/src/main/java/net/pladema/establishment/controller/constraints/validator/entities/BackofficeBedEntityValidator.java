@@ -18,8 +18,8 @@ public class BackofficeBedEntityValidator extends BackofficeEntityValidatorAdapt
 
 	@Override
 	public void assertUpdate(Integer id, Bed entity) {
-		if (entity.getFree() && this.internmentEpisodeExternalService.existsActiveForBedId(id)) {
-			throw new BackofficeValidationException("beds.existsInternmentEpisode");
+		if (Boolean.TRUE.equals(this.internmentEpisodeExternalService.existsActiveForBedId(id))) {
+			throw new BackofficeValidationException("beds.existsHospitalization");
 		}
 	}
 

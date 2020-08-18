@@ -15,7 +15,7 @@ export default {
             }
         },
         "beds": {
-            "existsInternmentEpisode": "La cama tiene un episodio de internación y no puede marcarse como libre",
+            "existsHospitalization": "La cama no puede ser editada porque tiene un episodio de internación asociado",
             "enabled-available": "Solo las camas habilitadas pueden estar disponibles",
             "available-free": "Solo las camas disponibles pueden estar libres"
         },
