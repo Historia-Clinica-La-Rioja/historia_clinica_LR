@@ -1,8 +1,10 @@
 package net.pladema.medicalconsultation.diary.repository;
 
-import java.time.LocalDate;
-import java.util.List;
-
+import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
+import net.pladema.medicalconsultation.diary.repository.domain.DiaryOpeningHoursVo;
+import net.pladema.medicalconsultation.diary.repository.domain.OccupationVo;
+import net.pladema.medicalconsultation.diary.repository.entity.DiaryOpeningHours;
+import net.pladema.medicalconsultation.diary.repository.entity.DiaryOpeningHoursPK;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,10 +12,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.pladema.medicalconsultation.diary.repository.domain.DiaryOpeningHoursVo;
-import net.pladema.medicalconsultation.diary.repository.domain.OccupationVo;
-import net.pladema.medicalconsultation.diary.repository.entity.DiaryOpeningHours;
-import net.pladema.medicalconsultation.diary.repository.entity.DiaryOpeningHoursPK;
+import java.time.LocalDate;
+import java.util.List;
 
 @Repository
 public interface DiaryOpeningHoursRepository extends JpaRepository<DiaryOpeningHours, DiaryOpeningHoursPK> {
@@ -55,7 +55,8 @@ public interface DiaryOpeningHoursRepository extends JpaRepository<DiaryOpeningH
             "                           WHERE aa.pk.diaryId = :diaryId " +
             "                           AND aa.pk.openingHoursId = :openingHoursId " +
             "							AND a.dateTypeId = :newApmtDate"+
-            "                           AND a.isOverturn = true  )" )
+            "                           AND a.isOverturn = true  " +
+            "                           AND NOT a.appointmentStateId = " + AppointmentState.CANCELLED_STR + ")" )
 	boolean allowNewOverturn(@Param("diaryId") Integer diaryId, @Param("openingHoursId") Integer openingHoursId,
 			@Param("newApmtDate") LocalDate newApmtDate);
 

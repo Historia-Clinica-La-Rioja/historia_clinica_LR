@@ -43,7 +43,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
             "WHERE aa.pk.diaryId = :diaryId " +
             "AND aa.pk.openingHoursId = :openingHoursId " +
             "AND a.dateTypeId = :date " +
-            "AND a.hour = :hour")
+            "AND a.hour = :hour " +
+            "AND NOT a.appointmentStateId = " + AppointmentState.CANCELLED_STR)
     boolean existAppointment(@Param("diaryId") Integer diaryId, @Param("openingHoursId") Integer openingHoursId,
                              @Param("date") LocalDate date, @Param("hour") LocalTime hour);
 
