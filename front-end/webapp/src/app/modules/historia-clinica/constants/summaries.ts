@@ -95,3 +95,8 @@ export const PROBLEMAS_ANTECEDENTES: SummaryHeader = {
 	title: 'Problemas/Antecedentes',
 	matIcon: 'error_outline'
 };
+
+export const PROBLEMAS_INTERNACION: SummaryHeader = {
+	title: 'ambulatoria.paciente.problemas.INTERNACION',
+	matIcon: 'check'
+};

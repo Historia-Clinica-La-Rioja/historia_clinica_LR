@@ -126,7 +126,8 @@
 				"TITLE": "Problemas y evoluciones",
 				"ACTIVOS": "Problemas activos",
 				"CRONICOS": "Problemas crónicos",
-				"RESUELTOS": "Problemas resueltos"
+				"RESUELTOS": "Problemas resueltos",
+				"INTERNACION": "Problemas de internación"
 			},
 			"profile": {
 				"BUTTON_HISTORIA_CLINICA": "Historia Clínica",

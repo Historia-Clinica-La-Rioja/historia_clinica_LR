@@ -6,51 +6,59 @@
 	<app-no-data></app-no-data>
 </ng-template>
 <section id="problemas" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
-		<div fxFlex="33%">
+		<div fxFlex="25%">
 			<app-summary-card [header]="activos" [editable]="false">
 				<mat-list id="lista-problemas-activos" *ngIf="(activeProblems$ | async )?.length > 0 else noInfo">
-					<div fxLayout="row" fxLayoutAlign="space-between center" *ngFor="let problem of (activeProblems$ | async)">
-						<mat-list-item>
-							<span class="left-align content mat-body">
-								{{ problem.snomed.pt}}
+						<mat-list-item fxLayout="row" fxLayoutAlign="space-between center" *ngFor="let problem of (activeProblems$ | async)">
+							<span mat-line class="capitalize-first-letter">
+								{{ problem.snomed.pt }}
 							</span>
-							<span class="right-align content mat-body">
+							<span mat-line class="mat-body">
 								{{problem.startDate }}
 							</span>
 						</mat-list-item>
-					</div>
 				</mat-list>
 			</app-summary-card>
 		</div>
-		<div fxFlex="33%">
+		<div fxFlex="25%">
 			<app-summary-card [header]="cronicos" [editable]="false">
 				<mat-list id="lista-problemas-cronicos" *ngIf="(chronicProblems$ | async)?.length > 0 else noInfo">
-					<div fxLayout="row" fxLayoutAlign="space-between center" *ngFor="let problem of (chronicProblems$ | async)">
-						<mat-list-item>
-							<span class="left-align content mat-body">
-								{{ problem.snomed.pt}}
-							</span>
-							<span class="right-align content mat-body">
-								{{problem.startDate }}
-							</span>
-						</mat-list-item>
-					</div>
+					<mat-list-item fxLayout="row" fxLayoutAlign="space-between center" *ngFor="let problem of (chronicProblems$ | async)">
+						<span mat-line class="capitalize-first-letter">
+							{{ problem.snomed.pt}}
+						</span>
+						<span mat-line class="mat-body">
+							{{problem.startDate }}
+						</span>
+					</mat-list-item>
 				</mat-list>
 			</app-summary-card>
 		</div>
-		<div fxFlex="33%">
+		<div fxFlex="25%">
 			<app-summary-card [header]="resueltos" [editable]="false">
 				<mat-list id="lista-problemas-resueltos" *ngIf="(solvedProblems$ | async)?.length > 0 else noInfo">
-					<div fxLayout="row" fxLayoutAlign="space-between center" *ngFor="let problem of (solvedProblems$ | async)">
-						<mat-list-item>
-							<span class="left-align content mat-body">
-								{{ problem.snomed.pt}}
-							</span>
-							<span class="right-align content mat-body">
-								{{problem.startDate }}
-							</span>
-						</mat-list-item>
-					</div>
+					<mat-list-item fxLayout="row" fxLayoutAlign="space-between center" *ngFor="let problem of (solvedProblems$ | async)">
+						<span mat-line class="capitalize-first-letter">
+							{{ problem.snomed.pt}}
+						</span>
+						<span mat-line class="mat-body">
+							{{problem.startDate }}
+						</span>
+					</mat-list-item>
+				</mat-list>
+			</app-summary-card>
+		</div>
+		<div fxFlex="25%">
+			<app-summary-card [header]="internacion" [editable]="false">
+				<mat-list id="lista-problemas-resueltos" *ngIf="(hospitalizationProblems$ | async)?.length > 0 else noInfo">
+					<mat-list-item fxLayout="row" fxLayoutAlign="space-between center" *ngFor="let problem of (hospitalizationProblems$ | async)">
+						<span mat-line class="capitalize-first-letter">
+							{{ problem.mainDiagnose.snomed.pt }}
+						</span>
+						<span mat-line class="mat-body">
+							{{ problem.entryDate }} - {{ problem.dischargeDate? problem.dischargeDate : "actualmente internado" }}
+						</span>
+					</mat-list-item>
 				</mat-list>
 			</app-summary-card>
 		</div>
