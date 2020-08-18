@@ -41,6 +41,14 @@
 				"APPOINTMENT_ERROR": "Error al confirmar el turno",
 				"APPOINTMENT_SUCCESS": "Turno confirmado"
 			}
+		},
+		"cancel": {
+			"TITLE":"Cancelar turno",
+			"CONFIRM":"¿Desea cancelar el turno seleccionado?",
+			"SUCCESS": "El turno fue cancelado exitosamente"
+		},
+		"overturns":{
+			"CREATE":"Crear sobreturno"
 		}
 	}
 }

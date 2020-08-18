@@ -27,7 +27,7 @@ export class AppointmentsService {
 		}
 		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments`;
 		return this.http.get<AppointmentListDto[]>(url,{
-			params: { 
+			params: {
 				diaryIds: `${diaryIds.join(',')}` ,
 				from: from,
 				to: to
@@ -42,7 +42,7 @@ export class AppointmentsService {
 		const url = `${environment.apiBase}/institutions/
 					${this.contextService.institutionId}/medicalConsultations/appointments/
 					${appointmentId}/change-state`;
-		return this.http.put<boolean>(url, {params : queryParams});
+		return this.http.put<boolean>(url, {}, {params : queryParams});
 	}
 
 }

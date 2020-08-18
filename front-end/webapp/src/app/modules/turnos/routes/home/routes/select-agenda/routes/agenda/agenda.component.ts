@@ -12,6 +12,7 @@ import { NewAppointmentComponent } from '../../../../../../dialogs/new-appointme
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { CalendarEvent, WeekViewHourSegment } from 'calendar-utils';
 import { MEDICAL_ATTENTION } from '../../../../../../constants/descriptions';
+import { AppointmentComponent } from '../../../../../../dialogs/appointment/appointment.component';
 
 const AGENDA_PROGRAMADA_CLASS = 'bg-green';
 const AGENDA_ESPONTANEA_CLASS = 'bg-blue';
@@ -50,11 +51,11 @@ export class AgendaComponent implements OnInit {
 	ngOnInit(): void {
 		this.loading = true;
 		this.route.paramMap.subscribe((params: ParamMap) => {
-				const idAgenda = Number(params.get('idAgenda'));
-				this.diaryService.get(idAgenda).subscribe(agenda => {
-					this.setAgenda(agenda);
-				});
+			const idAgenda = Number(params.get('idAgenda'));
+			this.diaryService.get(idAgenda).subscribe(agenda => {
+				this.setAgenda(agenda);
 			});
+		});
 	}
 
 	loadCalendar(renderEvent: CalendarWeekViewBeforeRenderEvent) {
@@ -176,7 +177,7 @@ export class AgendaComponent implements OnInit {
 			return new Date();
 		}
 		if (today.isBefore(momentStartDate)) {
-				return momentStartDate.toDate();
+			return momentStartDate.toDate();
 		}
 		return momentEndDate.toDate();
 	}
@@ -195,6 +196,18 @@ export class AgendaComponent implements OnInit {
 		return selectedOpeningHour?.openingHours.id;
 	}
 
+	viewAppointment({ event }: { event: CalendarEvent }): void {
+		const appointmentDialogRef = this.dialog.open(AppointmentComponent, {
+			data: event.meta
+		});
+
+		appointmentDialogRef.afterClosed().subscribe(data => {
+			if (data) {
+				this.loadAppointments();
+			}
+		});
+	}
+
 }
 
 function toCalendarEvent(from: string, to: string, date: Moment, appointment: AppointmentListDto): CalendarEvent {
@@ -205,6 +218,21 @@ function toCalendarEvent(from: string, to: string, date: Moment, appointment: Ap
 		color: {
 			primary: getColor(),
 			secondary: getColor()
+		},
+		meta: {
+			patient: {
+				id: appointment.patient.id,
+				fullName: appointment.patient.person.firstName + ' ' + appointment.patient.person.lastName,
+				identificationNumber: appointment.patient.person.identificationNumber,
+				phoneNumber: appointment.patient.person.phoneNumber,
+			},
+			appointmentId:appointment.id,
+			date: buildFullDate(appointment.hour, momentParseDate(appointment.date)),
+			medicalCoverage: {
+				name: appointment.medicalCoverageName,
+				affiliateNumber: appointment.medicalCoverageAffiliateNumber,
+			},
+
 		}
 	};
 

@@ -17,3 +17,5 @@ export const APPOINTMENT_DURATIONS = [
 		description: '60 minutos'
 	}
 ];
+
+export const CANCEL_STATE_ID = 4;

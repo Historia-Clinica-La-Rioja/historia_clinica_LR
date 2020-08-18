@@ -49,6 +49,7 @@
 								[hourSegments]="newAgendaService.getMinutesInHour() / newAgendaService.getAppointmentDuration()"
 								[weekStartsOn]="newAgendaService.getWeekStartsOn()"
 								(beforeViewRender)="loadCalendar($event)" (hourSegmentClicked)="onClickedSegment($event)"
+								(eventClicked)="viewAppointment($event)"
 		>
 		</mwl-calendar-week-view>
 	</ng-template>

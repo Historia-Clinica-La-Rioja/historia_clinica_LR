@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>{{ data.title | translate}}</h1>
 <div mat-dialog-content>
-	<div innerHTML="{{ data.content }}"></div>
+	<div innerHTML="{{ data.content | translate}}"></div>
 </div>
 <div mat-dialog-actions align="end">
 	<button mat-button [mat-dialog-close]=false class="uppercase" translate="buttons.CANCEL" id="cancel-button"

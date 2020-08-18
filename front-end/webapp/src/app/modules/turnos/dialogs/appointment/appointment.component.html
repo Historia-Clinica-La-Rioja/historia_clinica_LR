@@ -1,0 +1,40 @@
+<mat-list>
+	<mat-list-item id="patient">
+		<mat-icon fontSet="material-icons-outlined" color="primary" mat-list-icon [inline]="true">person</mat-icon>
+		<div fxLayout="column">
+			<strong> {{data.patient.fullName}} - {{data.patient.identificationNumber}} </strong>
+			<span class="patient-info"> Obra social: {{data.medicalCoverage?.name}} /
+				{{data.medicalCoverage.affiliateNumber}}</span>
+			<span class="patient-info">Teléfono: {{data.patient.phoneNumber}}</span>
+			<a [href]="'/institucion/' + institutionId + '/ambulatoria/paciente/' + data?.patient?.id">Ver historia
+				clínica</a>
+		</div>
+	</mat-list-item>
+</mat-list>
+<br>
+<span class="asing-appointment">Turno Asignado</span>
+<mat-list class="appointment-information">
+	<div>
+		<mat-list-item id="full-date">
+			<mat-icon fontSet="material-icons-outlined" color="primary" mat-list-icon [inline]="true">calendar_today
+			</mat-icon>
+			<strong> {{data.date | date:"fullDate" }}</strong>
+		</mat-list-item>
+		<mat-list-item id="hour">
+			<mat-icon fontSet="material-icons-outlined" color="primary" mat-list-icon [inline]="true">access_time
+			</mat-icon>
+			<strong> {{data.date | date:"HH:mm"}} hs</strong>
+		</mat-list-item>
+	</div>
+</mat-list>
+
+<div class="buttons">
+	<!--<button mat-flat-button color="primary" id="create-overturn" name="create-overturn" fxFlexFill.xs>
+		<span class="uppercase" [translate]="'turnos.overturns.CREATE'"></span>
+	</button>
+	-->
+	<button mat-flat-button color="warn" id="cancel-appointment" name="cancel-appointment" (click)="cancelAppointment()">
+		<span class="uppercase" [translate]="'turnos.cancel.TITLE'"></span>
+	</button>
+
+</div>
