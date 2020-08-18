@@ -53,5 +53,5 @@ Se encuentran 4 archivos de propiedades, uno para cada **Profile** :
 La forma de activar un **Profile** es mediante la propiedad `spring.profiles.active=` 
 > Ejemplo: `spring.profiles.active=dev` 
 
-Para el desarrollo se debe usar `dev` (se encuentra por defecto)
+Para el desarrollo se debe usar `dev`, el cuál requiere activación.
 
