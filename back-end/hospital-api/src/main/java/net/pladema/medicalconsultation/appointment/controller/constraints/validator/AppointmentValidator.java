@@ -6,18 +6,14 @@ import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
 import net.pladema.medicalconsultation.diary.service.DiaryService;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
-import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import net.pladema.sgx.security.utils.UserInfo;
 import net.pladema.staff.service.HealthcareProfessionalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.util.Arrays;
 
 public class AppointmentValidator implements ConstraintValidator<ValidAppointment, CreateAppointmentDto> {
 
@@ -91,26 +87,17 @@ public class AppointmentValidator implements ConstraintValidator<ValidAppointmen
             }
         }
 
-        if (hasProfessionalRole() && !diary.isProfessionalAssignShift()) {
+        if (UserInfo.hasProfessionalRole() && !diary.isProfessionalAssignShift()) {
             buildResponse(context, "{appointment.new.professional.assign.not.allowed}");
             valid = false;
         }
         Integer professionalId = healthcareProfessionalService.getProfessionalId(UserInfo.getCurrentAuditor());
-        if (hasProfessionalRole() && !diary.getHealthcareProfessionalId().equals(professionalId)) {
+        if (UserInfo.hasProfessionalRole() && !diary.getHealthcareProfessionalId().equals(professionalId)) {
             buildResponse(context, "{appointment.new.professional.id.invalid}");
             valid = false;
         }
 
         return valid;
-    }
-
-    private boolean hasProfessionalRole() {
-        return SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getAuthorities()
-                .stream()
-                .map(GrantedAuthority::getAuthority)
-                .anyMatch(role -> Arrays.asList(ERole.PROFESIONAL_DE_SALUD.getValue(), ERole.ESPECIALISTA_MEDICO.getValue()).contains(role));
     }
 
     private void buildResponse(ConstraintValidatorContext context, String message) {

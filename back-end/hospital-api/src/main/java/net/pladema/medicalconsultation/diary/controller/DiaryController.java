@@ -1,11 +1,21 @@
 package net.pladema.medicalconsultation.diary.controller;
 
-import java.util.Collection;
-import java.util.Optional;
-
-import javax.validation.Valid;
-
-import net.pladema.medicalconsultation.diary.controller.constraints.*;
+import io.swagger.annotations.Api;
+import net.pladema.medicalconsultation.diary.controller.constraints.DiaryDeleteableAppoinmentsValid;
+import net.pladema.medicalconsultation.diary.controller.constraints.DiaryEmptyAppointmentsValid;
+import net.pladema.medicalconsultation.diary.controller.constraints.DiaryOpeningHoursValid;
+import net.pladema.medicalconsultation.diary.controller.constraints.ExistingDiaryPeriodValid;
+import net.pladema.medicalconsultation.diary.controller.constraints.NewDiaryPeriodValid;
+import net.pladema.medicalconsultation.diary.controller.constraints.ValidDiary;
+import net.pladema.medicalconsultation.diary.controller.constraints.ValidDiaryProfessionalId;
+import net.pladema.medicalconsultation.diary.controller.dto.CompleteDiaryDto;
+import net.pladema.medicalconsultation.diary.controller.dto.DiaryADto;
+import net.pladema.medicalconsultation.diary.controller.dto.DiaryDto;
+import net.pladema.medicalconsultation.diary.controller.dto.DiaryListDto;
+import net.pladema.medicalconsultation.diary.controller.mapper.DiaryMapper;
+import net.pladema.medicalconsultation.diary.service.DiaryService;
+import net.pladema.medicalconsultation.diary.service.domain.CompleteDiaryBo;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -22,15 +32,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.annotations.Api;
-import net.pladema.medicalconsultation.diary.controller.dto.CompleteDiaryDto;
-import net.pladema.medicalconsultation.diary.controller.dto.DiaryADto;
-import net.pladema.medicalconsultation.diary.controller.dto.DiaryDto;
-import net.pladema.medicalconsultation.diary.controller.dto.DiaryListDto;
-import net.pladema.medicalconsultation.diary.controller.mapper.DiaryMapper;
-import net.pladema.medicalconsultation.diary.service.DiaryService;
-import net.pladema.medicalconsultation.diary.service.domain.CompleteDiaryBo;
-import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
+import javax.validation.Valid;
+import java.util.Collection;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/medicalConsultations/diary")
@@ -53,7 +57,7 @@ public class DiaryController {
     }
 
 	@GetMapping("/{diaryId}")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ADMINISTRADOR_AGENDA')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO, ADMINISTRADOR_AGENDA')")
 	public ResponseEntity<CompleteDiaryDto> getDiary(@PathVariable(name = "institutionId") Integer institutionId,
 			@ValidDiary @PathVariable(name = "diaryId") Integer diaryId) {
 		LOG.debug("Input parameters -> institutionId {}, diaryId {}", institutionId, diaryId);
@@ -64,7 +68,7 @@ public class DiaryController {
 	}
 
     @PostMapping
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA')")
     @Transactional
     public ResponseEntity<Integer> addDiary(
             @PathVariable(name = "institutionId") Integer institutionId,
@@ -77,7 +81,7 @@ public class DiaryController {
     }
     
     @PutMapping("/{diaryId}")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA')")
     @Transactional
     public ResponseEntity<Integer> updateDiary(
             @PathVariable(name = "institutionId") Integer institutionId,
@@ -92,8 +96,9 @@ public class DiaryController {
     }
     
     @GetMapping
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ADMINISTRADOR_AGENDA')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO, ADMINISTRADOR_AGENDA')")
     public ResponseEntity<Collection<DiaryListDto>> getDiaries(@PathVariable(name = "institutionId")  Integer institutionId,
+                                                               @ValidDiaryProfessionalId
                                                                @RequestParam(name = "healthcareProfessionalId") Integer healthcareProfessionalId){
         LOG.debug("Input parameters -> institutionId {}, healthcareProfessionalId {}", institutionId, healthcareProfessionalId);
         Collection<DiaryBo> diaryBos = diaryService.getActiveDiariesFromProfessional(healthcareProfessionalId);
@@ -103,7 +108,7 @@ public class DiaryController {
     }
 
     @DeleteMapping("/{diaryId}")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA')")
     public ResponseEntity<Boolean> delete(@PathVariable(name = "institutionId") Integer institutionId,
                                                      @PathVariable(name = "diaryId") @DiaryDeleteableAppoinmentsValid Integer diaryId) {
         LOG.debug("Input parameters -> institutionId {}, diaryId {}", institutionId, diaryId);
