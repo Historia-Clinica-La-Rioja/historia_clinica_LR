@@ -6,7 +6,8 @@ import {
 	HCELast2VitalSignsDto,
 	HCEAnthropometricDataDto,
 	HCEPersonalHistoryDto,
-	HCEAllergyDto
+	HCEAllergyDto,
+	HCEHospitalizationHistoryDto
 } from '@api-rest/api-model';
 import { HttpClient } from '@angular/common/http';
 import { ContextService } from '@core/services/context.service';
@@ -71,6 +72,11 @@ export class HceGeneralStateService {
 	getChronicConditions(patientId: number): Observable<HCEPersonalHistoryDto[]> {
 		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/chronic`;
 		return this.http.get<HCEPersonalHistoryDto[]>(url);
+	}
+
+	getHospitalizationHistory(patientId: number): Observable<HCEHospitalizationHistoryDto[]> {
+		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/hospitalization`;
+		return this.http.get<HCEHospitalizationHistoryDto[]>(url);
 	}
 
 }
