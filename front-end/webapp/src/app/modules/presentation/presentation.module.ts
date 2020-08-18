@@ -21,6 +21,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { MockComponent } from './components/mock/mock.component';
 import { DayTimeRangePipe } from './pipes/day-time-range.pipe';
 import { ViewDatePipe } from './pipes/view-date.pipe';
+import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 
 @NgModule({
 	declarations: [
@@ -43,6 +44,7 @@ import { ViewDatePipe } from './pipes/view-date.pipe';
 		MockComponent,
 		DayTimeRangePipe,
 		ViewDatePipe,
+		ViewHourMinutePipe,
 	],
 	imports: [
 		CommonModule,
@@ -69,6 +71,7 @@ import { ViewDatePipe } from './pipes/view-date.pipe';
 		FlexLayoutModule,
 		DayTimeRangePipe,
 		ViewDatePipe,
+		ViewHourMinutePipe,
 	]
 })
 export class PresentationModule { }

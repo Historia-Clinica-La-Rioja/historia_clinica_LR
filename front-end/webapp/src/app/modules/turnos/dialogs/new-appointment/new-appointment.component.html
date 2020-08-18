@@ -1,5 +1,6 @@
 <div mat-dialog-title>
-	<div class="mat-h2" [translate]="'turnos.new-appointment.NEW_APPOINTMENT'"></div>
+	<div class="mat-h2" [translate]="'turnos.new-appointment.NEW_APPOINTMENT'" [translateParams]="{ date: data.date | viewDate, hour: data.hour | viewHourMinute }">
+	</div>
 </div>
 
 <div mat-dialog-content>
