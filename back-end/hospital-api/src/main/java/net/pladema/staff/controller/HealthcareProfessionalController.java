@@ -4,7 +4,6 @@ import io.swagger.annotations.Api;
 import net.pladema.staff.controller.dto.HealthcareProfessionalDto;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 import net.pladema.staff.controller.mapper.HealthcareProfessionalMapper;
-import net.pladema.staff.controller.mocks.HealthcareProfessionalMock;
 import net.pladema.staff.service.HealthcareProfessionalService;
 import net.pladema.staff.service.domain.HealthcarePersonBo;
 import net.pladema.staff.service.domain.HealthcareProfessionalBo;
@@ -12,9 +11,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -58,18 +59,8 @@ public class HealthcareProfessionalController {
 		return ResponseEntity.ok(result);
 	}
 
-	@GetMapping("/search-by-name")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
-	public ResponseEntity<Collection<ProfessionalDto>> searchByName(@PathVariable(name = "institutionId")  Integer institutionId,
-																	@RequestParam(name = "name") String name){
-		LOG.debug("Input parameters -> institutionId {}, name {}", institutionId, name);
-		Collection<ProfessionalDto> result = HealthcareProfessionalMock.mockListProfessionalDto(name);
-		LOG.debug(OUTPUT, result);
-		return ResponseEntity.ok(result);
-	}
-
 	@GetMapping("/{healthcareProfessionalId}")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
 	public ResponseEntity<ProfessionalDto> getOne(@PathVariable(name = "institutionId")  Integer institutionId,
 												  @PathVariable(name = "healthcareProfessionalId") Integer healthcareProfessionalId){
 		LOG.debug("Input parameters -> institutionId {}, healthcareProfessionalId {}", institutionId, healthcareProfessionalId);
