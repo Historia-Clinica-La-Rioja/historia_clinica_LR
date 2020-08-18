@@ -5,12 +5,16 @@ div.spinner {
 }
 
 ::ng-deep {
-	.cal-week-view .cal-day-columns .bg-green {
-		background-color: #C9E7CB !important;
-	}
+	.cal-week-view .cal-day-columns {
+		.bg-green {
+			background-color: #C9E7CB !important;
+			cursor: pointer;
+		}
 
-	.cal-week-view .cal-day-columns .bg-blue {
-		background-color: #92C3E2 !important;
+		.bg-blue {
+			background-color: #92C3E2 !important;
+			cursor: pointer;
+		}
 	}
 
 	.cal-event-title {

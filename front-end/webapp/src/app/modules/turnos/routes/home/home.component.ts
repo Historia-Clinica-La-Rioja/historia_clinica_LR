@@ -3,8 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
-import { DiaryListDto, DiaryOpeningHoursDto, HealthcareProfessionalDto, ProfessionalDto } from '@api-rest/api-model';
-import { NewAgendaService } from '../../services/new-agenda.service';
+import { HealthcareProfessionalDto, ProfessionalDto } from '@api-rest/api-model';
 import { MatDialog } from '@angular/material/dialog';
 import { Location } from '@angular/common';
 import { DiariesService } from '@api-rest/services/diaries.service';
@@ -23,12 +22,6 @@ export class HomeComponent implements OnInit {
 	profesionales: HealthcareProfessionalDto[] = [];
 	profesionalesFiltered: HealthcareProfessionalDto[];
 	profesionalSelected: HealthcareProfessionalDto;
-	agendas: DiaryListDto[];
-	agendaSelected: DiaryListDto;
-	diaryOpeningHours: DiaryOpeningHoursDto[];
-	openingTime = 0;
-	closingTime = 23;
-	newAgendaService: NewAgendaService;
 	routePrefix: string;
 
 	constructor(
@@ -43,9 +36,7 @@ export class HomeComponent implements OnInit {
 		private readonly diaryOpeningHoursService: DiaryOpeningHoursService,
 		private readonly contextService: ContextService,
 	) {
-		this.newAgendaService = new NewAgendaService(this.dialog, this.cdr);
 		this.routePrefix = `institucion/${this.contextService.institutionId}/turnos`;
-
 	}
 
 	ngOnInit(): void {

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from '../turnos/routes/home/home.component';
+import { HomeComponent } from './routes/home/home.component';
 import { NewAgendaComponent } from './routes/new-agenda/new-agenda.component';
 import { ERole } from '@api-rest/api-model';
 import { RoleGuard } from '@core/guards/RoleGuard';
@@ -18,7 +18,15 @@ const routes: Routes = [
 				path: '',
 				component: HomeComponent,
 				canActivate: [RoleGuard],
-				data: {allowedRoles: [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ADMINISTRATIVO, ERole.ADMINISTRADOR_AGENDA]},
+				data: {
+					allowedRoles: [
+						ERole.ADMINISTRATIVO,
+						ERole.ADMINISTRADOR_AGENDA,
+						ERole.ENFERMERO,
+						ERole.ESPECIALISTA_MEDICO,
+						ERole.PROFESIONAL_DE_SALUD,
+					]
+				},
 				children: [
 					{
 						path: 'profesional/:idProfesional',
@@ -36,7 +44,7 @@ const routes: Routes = [
 				path: 'nueva-agenda',
 				component: NewAgendaComponent,
 				canActivate: [RoleGuard],
-				data: {allowedRoles: [ERole.ADMINISTRATIVO]}
+				data: {allowedRoles: [ERole.ADMINISTRADOR_AGENDA]}
 			},
 			{
 				path: 'profesional/:profesionalId/agenda/:agendaId/editar',
