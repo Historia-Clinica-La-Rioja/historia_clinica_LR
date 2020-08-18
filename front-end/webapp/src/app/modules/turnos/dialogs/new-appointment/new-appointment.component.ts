@@ -123,7 +123,7 @@ export class NewAppointmentComponent implements OnInit {
 
 		this.appointmentsService.create(newAppointment).subscribe(data => {
 			this.snackBarService.showSuccess('turnos.new-appointment.messages.APPOINTMENT_SUCCESS');
-			this.dialogRef.close();
+			this.dialogRef.close(true);
 		}, error => {
 			this.snackBarService.showError('turnos.new-appointment.messages.APPOINTMENT_ERROR');
 		});

@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AppointmentListDto, CompleteDiaryDto, DiaryOpeningHoursDto } from '@api-rest/api-model';
 import { CalendarWeekViewBeforeRenderEvent } from 'angular-calendar';
-import { buildFullDate, DateFormat, dateToMoment, momentParseDate, momentParseTime, newMoment } from '@core/utils/moment.utils';
+import { buildFullDate, DateFormat, dateToMoment, momentParseDate, momentParseTime, newMoment, dateToMomentTimeZone } from '@core/utils/moment.utils';
 import { NewAgendaService } from '../../../../../../services/new-agenda.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DiaryOpeningHoursService } from '@api-rest/services/diary-opening-hours.service';
@@ -96,6 +96,27 @@ export class AgendaComponent implements OnInit {
 	}
 
 	public onClickedSegment(event) {
+		if (this.getOpeningHoursId(event.date)) {
+
+			const clickedDate: Moment = dateToMomentTimeZone(event.date);
+
+			const dialogRef = this.dialog.open(NewAppointmentComponent, {
+				disableClose: true,
+				width: '35%',
+				data: {
+					date: clickedDate.format(DateFormat.API_DATE),
+					diaryId: this.agenda.id,
+					hour: clickedDate.format(DateFormat.HOUR_MINUTE_SECONDS),
+					openingHoursId: this.getOpeningHoursId(event.date)
+				}
+			});
+
+			dialogRef.afterClosed().subscribe(submitted => {
+				if (submitted) {
+					this.loadAppointments();
+				}
+			});
+		}
 	}
 
 	setAgenda(agenda: CompleteDiaryDto): void {
@@ -160,24 +181,18 @@ export class AgendaComponent implements OnInit {
 		return momentEndDate.toDate();
 	}
 
-	openDialog() {
-		const dialogRef = this.dialog.open(NewAppointmentComponent, {
-			disableClose: true,
-			width: '35%',
-			data: {
-				date: null,
-				diaryId: null,
-				hour: null,
-				openingHoursId: null
-			}
+	private getOpeningHoursId(date: Date): number {
+		const openingHoursSelectedDay = this._getOpeningHoursFor(date);
+
+		const selectedOpeningHour = openingHoursSelectedDay.find(oh => {
+			const hourFrom = momentParseTime(oh.openingHours.from);
+			const hourTo = momentParseTime(oh.openingHours.to);
+			const selectedHour = dateToMomentTimeZone(date).format(DateFormat.HOUR_MINUTE_SECONDS);
+
+			return momentParseTime(selectedHour).isBetween(hourFrom, hourTo, null, '[)');
 		});
 
-		dialogRef.afterClosed().subscribe(submitted => {
-			if (submitted) {
-				this.loadAppointments();
-			}
-		}
-		);
+		return selectedOpeningHour?.openingHours.id;
 	}
 
 }
