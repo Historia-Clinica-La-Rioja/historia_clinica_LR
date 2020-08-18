@@ -44,7 +44,6 @@ const routes: Routes = [
 				canActivate: [RoleGuard],
 				data: { allowedRoles: [ERole.ADMINISTRADOR_AGENDA] , editMode: true}
 			},
-			...mockRouters(MOCKS_TURNOS),
 		],
 	}
 ];

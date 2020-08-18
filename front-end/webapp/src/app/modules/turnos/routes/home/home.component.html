@@ -5,7 +5,7 @@
 			<h2 id="title" class="page-title" [translate]="'turnos.home.TITLE'"></h2>
 		</div>
 
-		<div class="actions" fxLayout="row" fxLayoutGap="15px" fxLayout.xs="column">
+		<div class="actions" fxLayout="row" fxLayoutGap="15px" fxLayout.xs="column" fxLayoutAlign="end none" >
 			<form fxFlex.gt-xs="55%" [formGroup]="form" (ngSubmit)="search()">
 				<mat-form-field appearance="outline" class="aligned-form-field">
 					<input type="text"
@@ -29,9 +29,6 @@
 			</form>
 			<button mat-flat-button color="primary" id="goToNewAgendaButton" (click)="goToNewAgenda()" fxFlexFill.xs>
 				<span class="uppercase" [translate]="'turnos.home.actions.NEW_AGENDA'"></span>
-			</button>
-			<button mat-flat-button color="primary" routerLink="./solicitar" fxFlexFill.xs>
-				<span class="uppercase" [translate]="'turnos.home.actions.APPLY_FOR'"></span>
 			</button>
 		</div>
 	</section>
