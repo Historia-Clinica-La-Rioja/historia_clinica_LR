@@ -6,7 +6,7 @@
 			<span class="patient-info"> Obra social: {{data.medicalCoverage?.name}} /
 				{{data.medicalCoverage.affiliateNumber}}</span>
 			<span class="patient-info">Teléfono: {{data.patient.phoneNumber}}</span>
-			<a [href]="'/institucion/' + institutionId + '/ambulatoria/paciente/' + data?.patient?.id">Ver historia
+			<a *hasRole="['ESPECIALISTA_MEDICO','PROFESIONAL_DE_SALUD']" [href]="'/institucion/' + institutionId + '/ambulatoria/paciente/' + data?.patient?.id">Ver historia
 				clínica</a>
 		</div>
 	</mat-list-item>
