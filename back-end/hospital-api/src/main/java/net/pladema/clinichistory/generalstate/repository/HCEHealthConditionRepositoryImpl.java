@@ -138,12 +138,13 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
     public List<HCEHospitalizationVo> getHospitalizationHistory(Integer patientId) {
         LOG.debug(INPUT_PARAMETERS_PATIENT_ID, patientId);
         String sqlString = "WITH t AS (" +
-                "   SELECT hc.id, sctid_code, hc.status_id, d.source_id, hc.main, verification_status_id, ie.entry_date, ie.discharge_date, hc.updated_on, hc.patient_id, " +
+                "   SELECT hc.id, sctid_code, hc.status_id, d.source_id, hc.main, verification_status_id, ie.entry_date, pd.administrative_discharge_date, hc.updated_on, hc.patient_id, " +
                 "   row_number() over (partition by sctid_code, source_id order by hc.updated_on desc) as rw  " +
                 "   FROM document d " +
                 "   JOIN document_health_condition dhc ON d.id = dhc.document_id " +
                 "   JOIN health_condition hc ON dhc.health_condition_id = hc.id " +
                 "   JOIN internment_episode ie ON ie.id = d.source_id " +
+                "   JOIN patient_discharge pd ON pd.internment_episode_id = ie.id " +
                 "   WHERE d.status_id = :docStatusId " +
                 "   AND d.source_type_id = :sourceType " +
                 "   AND d.type_id = :documentType "+
@@ -151,7 +152,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
                 "   AND hc.problem_id = :problemType " +
                 ") " +
                 "SELECT t.id as id, s.id as sctid, s.pt, status_id, t.main, source_id," +
-                "entry_date, discharge_date, patient_id " +
+                "entry_date, administrative_discharge_date, patient_id " +
                 "FROM t " +
                 "JOIN snomed s ON sctid_code = s.id " +
                 "WHERE rw = 1 " +
