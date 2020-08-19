@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import { SnomedDto } from '@api-rest/api-model';
 import { Observable } from 'rxjs';
 const CONCEPTS = 'concepts';
-const PREFERRED_CONCEPTS = ['900000000000509007','450828004','900000000000508004'];
+const PREFERRED_AND_ACEPTABLE_CONCEPTS = ['450828004'];
 const RESULTS_LIMIT = '20';
 
 @Injectable({
@@ -15,7 +15,7 @@ export class SnowstormService {
 
 	private params = new HttpParams()
 		.set('termActive', 'true')
-		.set('preferredIn', `${PREFERRED_CONCEPTS.join(",")}`)
+		.set('preferredOrAcceptableIn', `${PREFERRED_AND_ACEPTABLE_CONCEPTS.join(",")}`)
 		.set('limit', RESULTS_LIMIT);
 
 	private headers = new HttpHeaders().set('Accept-Language', 'es-AR;q=0.8,en-GB;q=0.6')
