@@ -34,7 +34,7 @@ export class NewAttentionComponent implements OnInit {
 
 		this.form = this.formBuilder.group({
 			overTurnCount: [this.data.overturnCount, Validators.min(0)],
-			medicalAttentionType: [Validators.required]
+			medicalAttentionType: [null, Validators.required]
 		});
 
 	}
