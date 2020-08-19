@@ -41,8 +41,8 @@ public class InstitutionGeneralStateServiceImpl implements InstitutionGeneralSta
         if(!generalState.isEmpty()){
             //#Georeferenciación
             VInstitution first = generalState.get(0);
-            result.setLatitud(first.getLatitud());
-            result.setLongitud(first.getLongitud());
+            result.setLatitude(first.getLatitude());
+            result.setLongitude(first.getLongitude());
         }
 
         //#Cantidad de adultos mayores alojados

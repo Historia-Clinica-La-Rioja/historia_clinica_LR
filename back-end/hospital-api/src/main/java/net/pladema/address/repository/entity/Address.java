@@ -45,10 +45,10 @@ public class Address implements Serializable {
     private String postcode;
 
     @Column(name = "latitud")
-    private Double latitud;
+    private Double latitude;
 
     @Column(name = "longitud")
-    private Double longitud;
+    private Double longitude;
     
     public static Address buildDummy() {
 		Address newAddress = new Address();

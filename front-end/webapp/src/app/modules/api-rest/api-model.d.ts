@@ -54,8 +54,8 @@ export interface AddressDto extends Serializable {
     departmentId: number;
     floor: string;
     id: number;
-    latitud: number;
-    longitud: number;
+    latitude: number;
+    longitude: number;
     number: string;
     postcode: string;
     province: ProvinceDto;
@@ -874,8 +874,8 @@ export interface UserPersonDto extends Serializable {
 
 export interface VInstitutionDto {
     lastDateVitalSign: Date;
-    latitud: number;
-    longitud: number;
+    latitude: number;
+    longitude: number;
     patientCount: number;
     patientWithCovidPresumtiveCount: number;
     patientWithVitalSignCount: number;

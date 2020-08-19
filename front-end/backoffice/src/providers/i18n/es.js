@@ -103,6 +103,8 @@ export default {
                 cityId: 'Ciudad',
                 departmentId: 'Departamento',
                 provinceId: 'Provincia',
+                latitude: 'Latitud',
+                longitude: 'Longitud',
             },
         }, 
         institutions: {

@@ -23,10 +23,10 @@ public class VInstitution {
     private VInstitutionPK pk;
 
     @Column(name = "latitud")
-    private Double latitud;
+    private Double latitude;
 
     @Column(name = "longitud")
-    private Double longitud;
+    private Double longitude;
 
     @Column(name = "covid_presumptive")
     private Boolean covidPresumtive;

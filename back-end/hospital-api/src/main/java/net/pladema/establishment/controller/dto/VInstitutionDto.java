@@ -11,9 +11,9 @@ import java.time.LocalDateTime;
 @ToString
 public class VInstitutionDto {
 
-    private Double latitud;
+    private Double latitude;
 
-    private Double longitud;
+    private Double longitude;
 
     //#cantidad adultos mayores internados
     private long patientCount = 0L;

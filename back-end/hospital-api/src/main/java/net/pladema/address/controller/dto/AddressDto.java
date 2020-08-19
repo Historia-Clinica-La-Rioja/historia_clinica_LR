@@ -39,8 +39,8 @@ public class AddressDto implements Serializable {
 
     private Short departmentId;
 
-    private Double latitud;
+    private Double latitude;
 
-    private Double longitud;
+    private Double longitude;
 
 }

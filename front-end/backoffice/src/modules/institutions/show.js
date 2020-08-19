@@ -13,7 +13,7 @@ import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
 
 const InstitutionShowActions = ({ data }) => {
-    return (!data || !data.id) ? <TopToolbar></TopToolbar> :
+    return (!data || !data.id) ? <TopToolbar/> :
         (
             <TopToolbar>
                 <EditButton basePath="/institutions" record={{ id: data.id }} />
@@ -34,10 +34,10 @@ const InstitutionShow = props => (
                 <TextField source="cityId"/>
             </ReferenceField>
             <ReferenceField label="Latitud" source="addressId" reference="addresses" link={false}>
-                <TextField  source="latitud" />
+                <TextField  source="latitude" />
             </ReferenceField>
             <ReferenceField label="Longitud" source="addressId" reference="addresses" link={false}>
-                <TextField  source="longitud" />
+                <TextField  source="longitude" />
             </ReferenceField>
             <SectionTitle label="resources.institutions.fields.sectors"/>
             <CreateRelatedButton

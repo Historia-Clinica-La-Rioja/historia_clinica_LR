@@ -24,8 +24,8 @@ const AddressShow = props => (
             <ReferenceField source="provinceId" reference="provinces">
                 <TextField source="description"/>
             </ReferenceField>
-            <TextField source="latitud" />
-            <TextField source="longitud" />
+            <TextField source="latitude" />
+            <TextField source="longitude" />
         </SimpleShowLayout>
     </Show>
 );
