@@ -30,7 +30,7 @@
 			}
 		},
 		"new-appointment": {
-			"NEW_APPOINTMENT": "Nuevo turno {{date}} {{hour}}",
+			"NEW_APPOINTMENT": "Nuevo turno",
 			"BUTTON_ADD_PATIENT": "Crear paciente",
 			"BUTTON_SEARCH": "Buscar",
 			"STEP_1": "Búsqueda de paciente",

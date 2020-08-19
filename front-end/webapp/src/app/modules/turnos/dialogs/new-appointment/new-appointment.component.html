@@ -1,6 +1,6 @@
-<div mat-dialog-title>
-	<div class="mat-h2" [translate]="'turnos.new-appointment.NEW_APPOINTMENT'" [translateParams]="{ date: data.date | viewDate, hour: data.hour | viewHourMinute }">
-	</div>
+<div mat-dialog-title fxLayout="row" fxLayoutGap="10px">
+	<div class="mat-h2" [translate]="'turnos.new-appointment.NEW_APPOINTMENT'"></div>
+	<div class="mat-h3" fxFlexAlign="end">{{data.date | viewDate}} {{data.hour | viewHourMinute}}</div>
 </div>
 
 <div mat-dialog-content>
@@ -10,7 +10,7 @@
 			<mat-card class="mat-typography">
 				<form [formGroup]="formSearch" (ngSubmit)="search()">
 					<mat-card-content>
-						<div>
+						<div fxLayout="row wrap" fxLayoutGap="10px">
 							<mat-form-field appearance="outline">
 								<mat-label>Tipo</mat-label>
 								<mat-select
@@ -44,9 +44,11 @@
 							</div>
 						</div>
 						<div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10px">
-							<button mat-flat-button mat-dialog-close color="primary" (click)="goCreatePatient()" *ngIf="showAddPatient">
-								<span [translate]="'turnos.new-appointment.BUTTON_ADD_PATIENT'"></span>
-							</button>
+							<ng-container *hasRole="['ADMINISTRATIVO']">
+								<button mat-flat-button mat-dialog-close color="primary" (click)="goCreatePatient()" *ngIf="showAddPatient">
+									<span [translate]="'turnos.new-appointment.BUTTON_ADD_PATIENT'"></span>
+								</button>
+							</ng-container>
 							<button mat-flat-button color="primary" type="submit">
 								<span [translate]="'turnos.new-appointment.BUTTON_SEARCH'"></span>
 							</button>
@@ -68,7 +70,7 @@
 				</mat-list>
 
 				<form [formGroup]="formMedicalCoverage">
-					<div>
+					<div fxLayout="row wrap" fxLayoutGap="10px">
 						<mat-form-field appearance="outline">
 							<mat-label>Obra Social</mat-label>
 							<mat-select
@@ -90,16 +92,16 @@
 								formControlName="prepaid"
 								placeholder="Prepaga">
 						</mat-form-field>
-						<mat-form-field appearance="outline">
-							<mat-label>Nro de afiliado</mat-label>
-							<input matInput
-								type="text"
-								id="affiliateNumber"
-								name="affiliateNumber"
-								formControlName="affiliateNumber"
-								placeholder="Nro de afiliado">
-						</mat-form-field>
 					</div>
+					<mat-form-field appearance="outline">
+						<mat-label>Nro de afiliado</mat-label>
+						<input matInput
+							type="text"
+							id="affiliateNumber"
+							name="affiliateNumber"
+							formControlName="affiliateNumber"
+							placeholder="Nro de afiliado">
+					</mat-form-field>
 				</form>
 			</mat-card>
 		</mat-step>

@@ -143,7 +143,7 @@ export class AgendaComponent implements OnInit {
 			.subscribe((appointments: AppointmentListDto[]) => {
 				const appointmentsCalendarEvents: CalendarEvent[] = appointments
 					.map(appointment => {
-						const from = appointment.hour;
+						const from = momentParseTime(appointment.hour).format(DateFormat.HOUR_MINUTE);
 						const to = momentParseTime(from).add(this.agenda.appointmentDuration, 'minutes').format(DateFormat.HOUR_MINUTE);
 						return toCalendarEvent(from, to, momentParseDate(appointment.date), appointment);
 					});
