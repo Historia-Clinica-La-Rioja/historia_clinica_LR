@@ -1,17 +1,13 @@
-package net.pladema.permissions.service;
+package net.pladema.permissions.controller.external;
 
 import net.pladema.permissions.repository.enums.ERole;
-import net.pladema.permissions.service.domain.UserBo;
 import net.pladema.permissions.service.dto.RoleAssignment;
 
 import java.util.List;
 
-public interface LoggedUserService {
-	Integer getUserId();
+public interface LoggedUserExternalService {
 
 	List<RoleAssignment> getPermissionAssignment();
-
-	UserBo getInfo();
 
 	boolean hasAnyRoleInstitution(Integer institutionId, List<ERole> role);
 }

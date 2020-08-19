@@ -65,11 +65,10 @@ public class AppointmentsController {
     @Transactional
     @PostMapping
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+    @ValidAppointment
     public ResponseEntity<Integer> create(
             @PathVariable(name = "institutionId") Integer institutionId,
-            @RequestBody
-            @ValidAppointment
-            CreateAppointmentDto createAppointmentDto) {
+            @RequestBody CreateAppointmentDto createAppointmentDto) {
         LOG.debug("Input parameters -> institutionId {}, appointmentDto {}", institutionId, createAppointmentDto);
         AppointmentBo newAppointmentBo = appointmentMapper.toAppointmentBo(createAppointmentDto);
         newAppointmentBo = createAppointmentService.execute(newAppointmentBo);

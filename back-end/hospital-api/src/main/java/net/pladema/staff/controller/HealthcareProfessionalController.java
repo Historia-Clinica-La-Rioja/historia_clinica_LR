@@ -1,6 +1,9 @@
 package net.pladema.staff.controller;
 
 import io.swagger.annotations.Api;
+import net.pladema.permissions.controller.external.LoggedUserExternalService;
+import net.pladema.permissions.repository.enums.ERole;
+import net.pladema.sgx.security.utils.UserInfo;
 import net.pladema.staff.controller.dto.HealthcareProfessionalDto;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 import net.pladema.staff.controller.mapper.HealthcareProfessionalMapper;
@@ -17,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/institution/{institutionId}/healthcareprofessional")
@@ -30,17 +35,27 @@ public class HealthcareProfessionalController {
 	
 	private final HealthcareProfessionalMapper healthcareProfessionalMapper;
 
+	private final LoggedUserExternalService loggedUserExternalService;
+
 	public HealthcareProfessionalController(HealthcareProfessionalService healthcareProfessionalService,
-											HealthcareProfessionalMapper healthcareProfessionalMapper) {
+											HealthcareProfessionalMapper healthcareProfessionalMapper,
+											LoggedUserExternalService loggedUserExternalService) {
 		this.healthcareProfessionalService = healthcareProfessionalService;
 		this.healthcareProfessionalMapper = healthcareProfessionalMapper;
+		this.loggedUserExternalService = loggedUserExternalService;
 	}
 
 
 	@GetMapping("/doctors")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ADMINISTRADOR_AGENDA')")
 	public ResponseEntity<List<HealthcareProfessionalDto>> getAllDoctors(@PathVariable(name = "institutionId")  Integer institutionId){
+		boolean isAdministrativeRole = loggedUserExternalService.hasAnyRoleInstitution(institutionId, List.of(ERole.ADMINISTRATIVO, ERole.ADMINISTRADOR_AGENDA));
 		List<HealthcarePersonBo> doctors = healthcareProfessionalService.getAllDoctorsByInstitution(institutionId);
+		if (!isAdministrativeRole) {
+			Integer healthcareProfessionalId = healthcareProfessionalService.getProfessionalId(UserInfo.getCurrentAuditor());
+			Predicate<HealthcarePersonBo> filterByProfessionalId = (hp) -> hp.getId().equals(healthcareProfessionalId);
+			doctors = doctors.stream().filter(filterByProfessionalId).collect(Collectors.toList());
+		}
 		LOG.debug("Get all Doctors => {}", doctors);
 		List<HealthcareProfessionalDto> result = healthcareProfessionalMapper.fromHealthcarePersonList(doctors);
 		LOG.debug(OUTPUT, result);

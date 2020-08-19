@@ -1,6 +1,7 @@
 package net.pladema.staff.controller;
 
 import net.pladema.UnitController;
+import net.pladema.permissions.controller.external.LoggedUserExternalService;
 import net.pladema.sgx.exceptions.NotFoundException;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 import net.pladema.staff.controller.mapper.HealthcareProfessionalMapper;
@@ -30,6 +31,9 @@ public class HealthcareProfessionalControllerTest extends UnitController {
 
 	@MockBean
 	private HealthcareProfessionalMapper healthcareProfessionalMapper;
+
+	@MockBean
+	private LoggedUserExternalService loggedUserExternalService;
 
 	@Autowired
 	private MessageSource messageSource;

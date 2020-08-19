@@ -2,6 +2,8 @@ package net.pladema.medicalconsultation.diary.controller.constraints.validator;
 
 import lombok.RequiredArgsConstructor;
 import net.pladema.medicalconsultation.diary.controller.constraints.ValidDiaryProfessionalId;
+import net.pladema.permissions.controller.external.LoggedUserExternalService;
+import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.sgx.security.utils.UserInfo;
 import net.pladema.staff.service.HealthcareProfessionalService;
 import org.slf4j.Logger;
@@ -9,13 +11,19 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import javax.validation.constraintvalidation.SupportedValidationTarget;
+import javax.validation.constraintvalidation.ValidationTarget;
+import java.util.List;
 
 @RequiredArgsConstructor
-public class DiaryProfessionalIdValidator implements ConstraintValidator<ValidDiaryProfessionalId,Integer> {
+@SupportedValidationTarget(ValidationTarget.PARAMETERS)
+public class DiaryProfessionalIdValidator implements ConstraintValidator<ValidDiaryProfessionalId, Object[]> {
 
     private static final Logger LOG = LoggerFactory.getLogger(DiaryProfessionalIdValidator.class);
 
     private final HealthcareProfessionalService healthcareProfessionalService;
+
+    private final LoggedUserExternalService loggedUserExternalService;
 
     @Override
     public void initialize(ValidDiaryProfessionalId constraintAnnotation) {
@@ -23,14 +31,24 @@ public class DiaryProfessionalIdValidator implements ConstraintValidator<ValidDi
     }
 
     @Override
-    public boolean isValid(Integer healthcareProfessionalId, ConstraintValidatorContext context) {
-        LOG.debug("Input parameters -> healthcareProfessionalId {}", healthcareProfessionalId);
+    public boolean isValid(Object[] parameters, ConstraintValidatorContext context) {
+        Integer institutionId = (Integer) parameters[0];
+        Integer healthcareProfessionalId = (Integer) parameters[1];
+        LOG.debug("Input parameters -> institutionId {}, healthcareProfessionalId {}", institutionId, healthcareProfessionalId);
         boolean valid = true;
 
-        Integer professionalId = healthcareProfessionalService.getProfessionalId(UserInfo.getCurrentAuditor());
+        boolean hasAdministrativeRole = loggedUserExternalService.hasAnyRoleInstitution(institutionId,
+                List.of(ERole.ADMINISTRADOR_AGENDA, ERole.ADMINISTRATIVO));
 
-        if (UserInfo.hasProfessionalRole() && !professionalId.equals(healthcareProfessionalId))
-            valid = false;
+        if (!hasAdministrativeRole) {
+            boolean hasProfessionalRole = loggedUserExternalService.hasAnyRoleInstitution(institutionId,
+                    List.of(ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO));
+
+            if (hasProfessionalRole) {
+                Integer professionalId = healthcareProfessionalService.getProfessionalId(UserInfo.getCurrentAuditor());
+                valid = professionalId.equals(healthcareProfessionalId);
+            }
+        }
         LOG.debug("Output -> {}", valid);
         return valid;
     }

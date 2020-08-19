@@ -6,6 +6,8 @@ import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
 import net.pladema.medicalconsultation.diary.service.DiaryService;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
+import net.pladema.permissions.controller.external.LoggedUserExternalService;
+import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import net.pladema.sgx.security.utils.UserInfo;
 import net.pladema.staff.service.HealthcareProfessionalService;
@@ -14,8 +16,13 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import javax.validation.constraintvalidation.SupportedValidationTarget;
+import javax.validation.constraintvalidation.ValidationTarget;
+import java.util.List;
 
-public class AppointmentValidator implements ConstraintValidator<ValidAppointment, CreateAppointmentDto> {
+
+@SupportedValidationTarget(ValidationTarget.PARAMETERS)
+public class AppointmentValidator implements ConstraintValidator<ValidAppointment, Object[]> {
 
     private static final Logger LOG = LoggerFactory.getLogger(AppointmentValidator.class);
 
@@ -29,16 +36,21 @@ public class AppointmentValidator implements ConstraintValidator<ValidAppointmen
 
     private final LocalDateMapper localDateMapper;
 
+    private final LoggedUserExternalService loggedUserExternalService;
+
     public AppointmentValidator(HealthcareProfessionalService healthcareProfessionalService,
                                 DiaryService diaryService,
-                                DiaryOpeningHoursService diaryOpeningHoursService, AppointmentService appointmentService,
-                                LocalDateMapper localDateMapper){
+                                DiaryOpeningHoursService diaryOpeningHoursService,
+                                AppointmentService appointmentService,
+                                LocalDateMapper localDateMapper,
+                                LoggedUserExternalService loggedUserExternalService){
         super();
         this.healthcareProfessionalService = healthcareProfessionalService;
         this.diaryService = diaryService;
         this.diaryOpeningHoursService = diaryOpeningHoursService;
         this.appointmentService = appointmentService;
         this.localDateMapper = localDateMapper;
+        this.loggedUserExternalService = loggedUserExternalService;
     }
 
     @Override
@@ -47,8 +59,10 @@ public class AppointmentValidator implements ConstraintValidator<ValidAppointmen
     }
 
     @Override
-    public boolean isValid(CreateAppointmentDto createAppointmentDto, ConstraintValidatorContext context) {
-        LOG.debug("Input parameters -> createAppointmentDto {}", createAppointmentDto);
+    public boolean isValid(Object[] parameters, ConstraintValidatorContext context) {
+        Integer institutionId = (Integer) parameters[0];
+        CreateAppointmentDto createAppointmentDto = (CreateAppointmentDto) parameters[1];
+        LOG.debug("Input parameters -> institutionId {}, createAppointmentDto {}", institutionId, createAppointmentDto);
         boolean valid = true;
 
         if(!createAppointmentDto.hasMedicalCoverage()){
@@ -87,16 +101,23 @@ public class AppointmentValidator implements ConstraintValidator<ValidAppointmen
             }
         }
 
-        if (UserInfo.hasProfessionalRole() && !diary.isProfessionalAssignShift()) {
-            buildResponse(context, "{appointment.new.professional.assign.not.allowed}");
-            valid = false;
-        }
-        Integer professionalId = healthcareProfessionalService.getProfessionalId(UserInfo.getCurrentAuditor());
-        if (UserInfo.hasProfessionalRole() && !diary.getHealthcareProfessionalId().equals(professionalId)) {
-            buildResponse(context, "{appointment.new.professional.id.invalid}");
-            valid = false;
-        }
+        boolean hasAdministrativeRole = loggedUserExternalService.hasAnyRoleInstitution(institutionId,
+                List.of(ERole.ADMINISTRADOR_AGENDA, ERole.ADMINISTRATIVO));
 
+        if (!hasAdministrativeRole) {
+            boolean hasProfessionalRole = loggedUserExternalService.hasAnyRoleInstitution(institutionId,
+                    List.of(ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO));
+
+            if (hasProfessionalRole && !diary.isProfessionalAssignShift()) {
+                buildResponse(context, "{appointment.new.professional.assign.not.allowed}");
+                valid = false;
+            }
+            Integer professionalId = healthcareProfessionalService.getProfessionalId(UserInfo.getCurrentAuditor());
+            if (hasProfessionalRole && !diary.getHealthcareProfessionalId().equals(professionalId)) {
+                buildResponse(context, "{appointment.new.professional.id.invalid}");
+                valid = false;
+            }
+        }
         return valid;
     }
 

@@ -17,4 +17,5 @@ public interface HealthcareProfessionalService {
     Integer getProfessionalId(Integer userId);
 
     HealthcareProfessionalBo findProfessionalById(Integer healthcareProfessionalId);
+
 }
