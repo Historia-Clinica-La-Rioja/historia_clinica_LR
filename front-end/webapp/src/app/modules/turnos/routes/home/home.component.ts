@@ -10,6 +10,7 @@ import { DiariesService } from '@api-rest/services/diaries.service';
 import { DiaryOpeningHoursService } from '@api-rest/services/diary-opening-hours.service';
 import { ContextService } from '@core/services/context.service';
 import { MatOptionSelectionChange } from '@angular/material/core';
+import { PermissionsService } from '@core/services/permissions.service';
 
 @Component({
 	selector: 'app-home',
@@ -35,6 +36,7 @@ export class HomeComponent implements OnInit {
 		private readonly diariesService: DiariesService,
 		private readonly diaryOpeningHoursService: DiaryOpeningHoursService,
 		private readonly contextService: ContextService,
+		private readonly permissionsService: PermissionsService
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/turnos`;
 	}
@@ -44,35 +46,46 @@ export class HomeComponent implements OnInit {
 			profesional: [null, Validators.required],
 		});
 
-		this.route.firstChild?.params.subscribe(params => {
-			const idProfesional = Number(params.idProfesional);
-			if (idProfesional) {
-				this.healthCareProfessionalService.getOne(idProfesional)
-					.pipe(map(toHealthcareProfessionalDto))
-					.subscribe((profesional: HealthcareProfessionalDto) => {
-						if (profesional) {
-							this.form.controls.profesional.setValue(this.getFullNameLicence(profesional));
-							this.profesionalSelected = profesional;
+		this.healthCareProfessionalService.getAllDoctors()
+			.subscribe(doctors => {
+
+				this.profesionales = doctors;
+				this.form.controls.profesional.valueChanges
+					.pipe(
+						startWith(''),
+						map(value => this._filter(value)))
+					.subscribe(profesionalesFiltered => {
+						this.profesionalesFiltered = profesionalesFiltered;
+						if (this.form.value.profesional && this.profesionalSelected &&
+							this.form.value.profesional !== this.getFullNameLicence(this.profesionalSelected)) {
+							delete this.profesionalSelected;
 						}
 					});
-			}
-		});
 
-		this.healthCareProfessionalService.getAllDoctors().subscribe(doctors => {
-			this.profesionales = doctors;
-
-			this.form.controls.profesional.valueChanges
-				.pipe(
-					startWith(''),
-					map(value => this._filter(value)))
-				.subscribe(profesionalesFiltered => {
-					this.profesionalesFiltered = profesionalesFiltered;
-					if (this.form.value.profesional && this.profesionalSelected &&
-						this.form.value.profesional !== this.getFullNameLicence(this.profesionalSelected)) {
-						delete this.profesionalSelected;
+				if (this.route.firstChild) {
+					this.route.firstChild.params.subscribe(params => {
+						const idProfesional = Number(params.idProfesional);
+						if (idProfesional) {
+							this.healthCareProfessionalService.getOne(idProfesional)
+								.pipe(map(toHealthcareProfessionalDto))
+								.subscribe((profesional: HealthcareProfessionalDto) => {
+									if (profesional) {
+										this.form.controls.profesional.setValue(this.getFullNameLicence(profesional));
+										this.profesionalSelected = profesional;
+									}
+								});
+						}
+					});
+				} else {
+					if (this.profesionales.length === 1) {
+						this.form.controls.profesional.setValue(this.getFullNameLicence(this.profesionales[0]));
+						this.profesionalSelected = this.profesionales[0];
+						this.search();
 					}
-				});
-		});
+				}
+
+			});
+
 	}
 
 	search(): void {
