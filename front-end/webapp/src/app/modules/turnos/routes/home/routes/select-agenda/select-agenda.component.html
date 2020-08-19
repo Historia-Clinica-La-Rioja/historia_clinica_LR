@@ -1,4 +1,4 @@
-<section id="select-agenda" *ngIf="agendas?.length else noData" fxLayout="row" fxLayoutAlign="space-between">
+<section id="select-agenda" *ngIf="agendas?.length" fxLayout="row" fxLayoutAlign="space-between">
 	<mat-form-field fxFlex=30% appearance="outline">
 		<mat-label [translate]="'turnos.home.SELECT_AGENDA'"></mat-label>
 		<mat-select [(value)]="agendaSelected">
@@ -25,10 +25,61 @@
 
 </section>
 
-<ng-template #noData>
+<section id="empty_calendar" *ngIf="!route.firstChild">
+	<ng-template #weekViewHourSegmentTemplate let-segment="segment" let-locale="locale"
+				 let-segmentHeight="segmentHeight" let-isTimeLabel="isTimeLabel">
+		<div #segmentElement class="cal-hour-segment" [style.height.px]="segmentHeight"
+			 [class.cal-hour-start]="segment.isStart" [class.cal-after-hour-start]="!segment.isStart"
+			 [ngClass]="segment.cssClass">
+			<div class="cal-time" *ngIf="isTimeLabel">
+				{{ segment.date | calendarDate:'weekViewHour':locale }}
+			</div>
+		</div>
+	</ng-template>
+
+	<div fxLayout="row" fxLayoutAlign="space-between center">
+		<div fxLayout="row">
+			<button mat-raised-button
+					color="primary"
+					mwlCalendarPreviousView
+					[view]="'week'"
+					[(viewDate)]="viewDate"
+			>
+				Anterior
+			</button>
+			<button mat-stroked-button
+					color="primary"
+					mwlCalendarToday
+					[(viewDate)]="viewDate"
+			>
+				Hoy
+			</button>
+			<button mat-raised-button
+					color="primary"
+					mwlCalendarNextView
+					[view]="'week'"
+					[(viewDate)]="viewDate"
+			>
+				Próximo
+			</button>
+		</div>
+
+		<div>
+			<h2>{{ viewDate | calendarDate:('weekViewTitle'): undefined : 1 }}</h2>
+		</div>
+	</div>
+	<mwl-calendar-week-view [viewDate]="viewDate"
+							[hourSegmentTemplate]="weekViewHourSegmentTemplate"
+							[hourSegments]="1"
+							[dayStartHour]="8" [dayEndHour]="18"
+	>
+	</mwl-calendar-week-view>
+</section>
+
+<ng-container *ngIf="!agendas?.length">
 	<section id="no-agenda" *ngIf="agendas?.length === 0">
 		<app-no-data [message]="'El profesional no posee agenda activa'"></app-no-data>
 	</section>
-</ng-template>
+</ng-container>
 
 <router-outlet></router-outlet>

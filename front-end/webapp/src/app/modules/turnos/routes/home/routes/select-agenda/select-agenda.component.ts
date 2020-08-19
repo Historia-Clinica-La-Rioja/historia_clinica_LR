@@ -18,6 +18,8 @@ import { ContextService } from '@core/services/context.service';
 })
 export class SelectAgendaComponent implements OnInit {
 
+	viewDate: Date = new Date();
+
 	agendaSelected: DiaryListDto;
 	agendas: DiaryListDto[];
 	idProfesional: number;
@@ -25,7 +27,7 @@ export class SelectAgendaComponent implements OnInit {
 	private readonly routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	constructor(
 		private readonly router: Router,
-		private readonly route: ActivatedRoute,
+		public readonly route: ActivatedRoute,
 		private readonly diaryOpeningHoursService: DiaryOpeningHoursService,
 		private readonly diariesService: DiariesService,
 		private readonly diaryService: DiaryService,

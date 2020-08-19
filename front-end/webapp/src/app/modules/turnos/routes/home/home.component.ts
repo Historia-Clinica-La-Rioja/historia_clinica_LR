@@ -10,7 +10,6 @@ import { DiariesService } from '@api-rest/services/diaries.service';
 import { DiaryOpeningHoursService } from '@api-rest/services/diary-opening-hours.service';
 import { ContextService } from '@core/services/context.service';
 import { MatOptionSelectionChange } from '@angular/material/core';
-import { PermissionsService } from '@core/services/permissions.service';
 
 @Component({
 	selector: 'app-home',
@@ -18,6 +17,8 @@ import { PermissionsService } from '@core/services/permissions.service';
 	styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
+
+	viewDate: Date = new Date();
 
 	form: FormGroup;
 	profesionales: HealthcareProfessionalDto[] = [];
@@ -32,11 +33,10 @@ export class HomeComponent implements OnInit {
 		private readonly cdr: ChangeDetectorRef,
 		private readonly dialog: MatDialog,
 		private readonly location: Location,
-		private readonly route: ActivatedRoute,
+		public readonly route: ActivatedRoute,
 		private readonly diariesService: DiariesService,
 		private readonly diaryOpeningHoursService: DiaryOpeningHoursService,
-		private readonly contextService: ContextService,
-		private readonly permissionsService: PermissionsService
+		private readonly contextService: ContextService
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/turnos`;
 	}
