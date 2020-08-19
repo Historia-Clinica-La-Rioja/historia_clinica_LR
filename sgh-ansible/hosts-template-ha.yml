@@ -32,3 +32,4 @@ all:
         sgh_database_user_name: sgh_test
         sgh_database_user_password: sgh_test
         sgh_database_name: sgh_test
+	token_secret: toBeChanged

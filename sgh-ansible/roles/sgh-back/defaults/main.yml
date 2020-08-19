@@ -2,3 +2,4 @@
 SGH_HOME: /sgh/
 BACK_END_WAR: ../../dist/api.war
 CATALINA_HOME: /usr/share/tomcat/
+document_root_directory: "{{ SGH_HOME }}documents/"

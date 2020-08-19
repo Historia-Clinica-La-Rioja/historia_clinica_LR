@@ -48,6 +48,7 @@ Se proveen archivos de inventarios de template para un ambiente de alta disponib
 Se supone que la base de datos está ya instalada y configurada correctamente para aceptar conexiones remotas.
    1.1 Copiar el template `hosts-template.yml` a un archivo llamado `hosts-deploy.yml`
    1.2 Editar nombres y grupos de hosts o arquitectura según URL o dirección IP de cada uno. 
+Para un correcto funcionamiento es requisito configurar la variable `token_secret`. 
 
 En el nodo `localhost` es necesario tener Maven 3 instalado para realizar la migracion de la BBDD.
 Se prevee en una versión futura quitar este requerimiento.
