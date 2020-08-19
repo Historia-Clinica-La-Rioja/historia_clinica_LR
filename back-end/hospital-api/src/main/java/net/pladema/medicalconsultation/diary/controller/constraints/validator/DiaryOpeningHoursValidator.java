@@ -1,19 +1,18 @@
 package net.pladema.medicalconsultation.diary.controller.constraints.validator;
 
-import net.pladema.medicalconsultation.diary.controller.constraints.DiaryOpeningHoursValid;
-import net.pladema.medicalconsultation.diary.controller.dto.DiaryADto;
-import net.pladema.medicalconsultation.diary.controller.dto.DiaryOpeningHoursDto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
-import javax.validation.constraintvalidation.SupportedValidationTarget;
-import javax.validation.constraintvalidation.ValidationTarget;
 import java.util.Comparator;
 import java.util.List;
 
-@SupportedValidationTarget(ValidationTarget.PARAMETERS)
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import net.pladema.medicalconsultation.diary.controller.constraints.DiaryOpeningHoursValid;
+import net.pladema.medicalconsultation.diary.controller.dto.DiaryADto;
+import net.pladema.medicalconsultation.diary.controller.dto.DiaryOpeningHoursDto;
+
 public class DiaryOpeningHoursValidator implements ConstraintValidator<DiaryOpeningHoursValid, DiaryADto> {
 
     private static final Logger LOG = LoggerFactory.getLogger(DiaryOpeningHoursValidator.class);
