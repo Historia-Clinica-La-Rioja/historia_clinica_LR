@@ -144,7 +144,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
                 "   JOIN document_health_condition dhc ON d.id = dhc.document_id " +
                 "   JOIN health_condition hc ON dhc.health_condition_id = hc.id " +
                 "   JOIN internment_episode ie ON ie.id = d.source_id " +
-                "   JOIN patient_discharge pd ON pd.internment_episode_id = ie.id " +
+                "   LEFT JOIN patient_discharge pd ON pd.internment_episode_id = ie.id " +
                 "   WHERE d.status_id = :docStatusId " +
                 "   AND d.source_type_id = :sourceType " +
                 "   AND d.type_id = :documentType "+
