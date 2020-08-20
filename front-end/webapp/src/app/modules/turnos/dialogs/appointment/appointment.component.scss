@@ -12,13 +12,6 @@
 	line-height: 14px;
   }
 
-  .buttons{
-	@include form-buttons;
-	display: flex;
-	padding-left: 52%;
-
-  }
-
   .patient-info{
 	  color: #545454;
 	  font-family: Roboto;

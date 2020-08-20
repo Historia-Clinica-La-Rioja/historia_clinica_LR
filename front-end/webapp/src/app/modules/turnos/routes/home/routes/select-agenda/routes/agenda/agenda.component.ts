@@ -1,7 +1,15 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AppointmentListDto, CompleteDiaryDto, DiaryOpeningHoursDto } from '@api-rest/api-model';
 import { CalendarWeekViewBeforeRenderEvent } from 'angular-calendar';
-import { buildFullDate, DateFormat, dateToMoment, momentParseDate, momentParseTime, newMoment, dateToMomentTimeZone } from '@core/utils/moment.utils';
+import {
+	buildFullDate,
+	DateFormat,
+	dateToMoment,
+	momentParseDate,
+	momentParseTime,
+	newMoment,
+	dateToMomentTimeZone
+} from '@core/utils/moment.utils';
 import { NewAgendaService } from '../../../../../../services/new-agenda.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DiaryOpeningHoursService } from '@api-rest/services/diary-opening-hours.service';
@@ -198,7 +206,8 @@ export class AgendaComponent implements OnInit {
 
 	viewAppointment({ event }: { event: CalendarEvent }): void {
 		const appointmentDialogRef = this.dialog.open(AppointmentComponent, {
-			data: event.meta
+			data: event.meta,
+			width: '25%',
 		});
 
 		appointmentDialogRef.afterClosed().subscribe(data => {
@@ -226,7 +235,7 @@ function toCalendarEvent(from: string, to: string, date: Moment, appointment: Ap
 				identificationNumber: appointment.patient.person.identificationNumber,
 				phoneNumber: appointment.patient.person.phoneNumber,
 			},
-			appointmentId:appointment.id,
+			appointmentId: appointment.id,
 			date: buildFullDate(appointment.hour, momentParseDate(appointment.date)),
 			medicalCoverage: {
 				name: appointment.medicalCoverageName,
