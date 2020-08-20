@@ -173,6 +173,7 @@ export class NewAgendaComponent implements OnInit {
 		this.form.get('specialtyId').disable();
 		this.form.get('doctorOffice').disable();
 		this.form.get('healthcareProfessionalId').disable();
+		this.form.get('appointmentDuration').disable();
 	}
 
 	setSpecialties(sectorId: number): void {
@@ -323,7 +324,7 @@ export class NewAgendaComponent implements OnInit {
 	}
 
 	public setAppointmentDurationToAgendaService() {
-		this.newAgendaService.setAppointmentDuration(this.form.value.appointmentDuration);
+		this.newAgendaService.setAppointmentDuration(this.form.getRawValue().appointmentDuration);
 	}
 
 	public setAllWeeklyDoctorsOfficeOcupation(): void {

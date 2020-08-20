@@ -124,7 +124,7 @@
 					<mat-form-field appearance="outline">
 						<mat-select id="appointmentDuration" name="appointmentDuration"
 							formControlName="appointmentDuration" placeholder="{{'pacientes.form.SELECT' | translate}}"
-							(selectionChange)="setAppointmentDurationToAgendaService()">
+							(selectionChange)="newAgendaService.setAppointmentDuration(form.getRawValue().appointmentDuration)">
 							<mat-option *ngFor="let appointmentDuration of appointmentDurations"
 								[value]="appointmentDuration.id">
 								{{appointmentDuration.description}}
@@ -167,7 +167,7 @@
 				<mwl-calendar-week-view [viewDate]="newAgendaService.getViewDate()"
 					[events]="newAgendaService.getEvents()" [hourSegmentTemplate]="weekViewHourSegmentTemplate"
 					[headerTemplate]="headerTemplate" [dayStartHour]="openingTime" [dayEndHour]="closingTime"
-										[hourSegments]="newAgendaService.getMinutesInHour() / form.value.appointmentDuration"
+										[hourSegments]="newAgendaService.getMinutesInHour() / form.getRawValue().appointmentDuration"
 										[weekStartsOn]="newAgendaService.getWeekStartsOn()">
 				</mwl-calendar-week-view>
 			</section>

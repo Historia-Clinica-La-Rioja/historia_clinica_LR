@@ -186,6 +186,8 @@ export class NewAgendaService {
 
 	public setAppointmentDuration(duration: number) {
 		this.appointmentDuration = duration;
+		this.events = this.events.filter(event => !event.actions); //We keep uneditable events
+		this.refresh();
 	}
 
 	public getAppointmentDuration(): number {
