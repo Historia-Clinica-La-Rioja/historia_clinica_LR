@@ -64,7 +64,7 @@ public class DiaryEmptyAppointmentsValidator implements ConstraintValidator<Diar
 	private boolean isValidAppointment(AppointmentBo appointment, OpeningHoursDto openingHours) {
 		LocalTime from = localDateMapper.fromStringToLocalTime(openingHours.getFrom());
 		LocalTime to = localDateMapper.fromStringToLocalTime(openingHours.getTo());
-		return appointment.getHour().isAfter(from) && appointment.getHour().isBefore(to);
+		return (appointment.getHour().equals(from) || appointment.getHour().isAfter(from)) && appointment.getHour().isBefore(to);
 	}
 
 	private void buildResponse(ConstraintValidatorContext context, String message) {
