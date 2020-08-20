@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Repository
@@ -65,4 +66,16 @@ public interface DiaryOpeningHoursRepository extends JpaRepository<DiaryOpeningH
 	@Query("DELETE FROM DiaryOpeningHours doh WHERE doh.pk.diaryId = :diaryId ")
 	void deleteAll(@Param("diaryId") Integer diaryId);
 
+
+
+    @Transactional(readOnly = true)
+    @Query( "SELECT (case when count(doh) > 0 then true else false end) " +
+            "FROM DiaryOpeningHours AS doh " +
+            "JOIN Diary AS d ON (d.id = doh.pk.diaryId) " +
+            "JOIN OpeningHours  AS oh ON (doh.pk.openingHoursId = oh.id) " +
+            "WHERE oh.dayWeekId = :dayWeekId " +
+            "AND d.doctorsOfficeId = :doctorsOfficeId " +
+            "AND ((:from > oh.from AND :from < oh.to ) OR (:to > oh.from AND :to < oh.to ) OR (:from <= oh.from AND :to >= oh.to))" )
+    boolean overlapWithOthers(@Param("doctorsOfficeId") Integer doctorsOfficeId, @Param("dayWeekId") Short dayWeekId,
+                              @Param("from") LocalTime from, @Param("to") LocalTime to);
 }

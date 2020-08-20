@@ -241,5 +241,16 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
 		return result;
     }
 
+    @Override
+    public boolean overlapWithOthers(Integer doctorsOfficeId, DiaryOpeningHoursBo diaryOpeningHoursBo) {
+        LOG.debug("Input parameters -> doctorsOfficeId {}, diaryOpeningHoursBo {}", doctorsOfficeId, diaryOpeningHoursBo);
+        boolean result = diaryOpeningHoursRepository.overlapWithOthers(doctorsOfficeId,
+                diaryOpeningHoursBo.getOpeningHours().getDayWeekId(),
+                diaryOpeningHoursBo.getOpeningHours().getFrom(),
+                diaryOpeningHoursBo.getOpeningHours().getTo());
+        LOG.debug(OUTPUT, result);
+        return result;
+    }
+
 
 }

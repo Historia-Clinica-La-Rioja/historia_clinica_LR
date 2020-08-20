@@ -45,4 +45,7 @@ public interface DiaryMapper {
     @Named("toCompleteDiaryDto")
     @Mapping(target = "diaryOpeningHours", source = "diaryOpeningHours", qualifiedByName = "toListDiaryOpeningHoursBo")
     CompleteDiaryDto toCompleteDiaryDto(CompleteDiaryBo completeDiaryBo);
+
+    @Named("toDiaryOpeningHoursBo")
+    DiaryOpeningHoursBo toDiaryOpeningHoursBo(DiaryOpeningHoursDto last);
 }
