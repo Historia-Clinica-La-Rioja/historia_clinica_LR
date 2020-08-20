@@ -47,8 +47,9 @@ public class HealthcareProfessionalController {
 
 
 	@GetMapping("/doctors")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ADMINISTRADOR_AGENDA')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ADMINISTRADOR_AGENDA, ENFERMERO')")
 	public ResponseEntity<List<HealthcareProfessionalDto>> getAllDoctors(@PathVariable(name = "institutionId")  Integer institutionId){
+		LOG.debug("Input parameters -> institutionId {}", institutionId);
 		boolean isAdministrativeRole = loggedUserExternalService.hasAnyRoleInstitution(institutionId, List.of(ERole.ADMINISTRATIVO, ERole.ADMINISTRADOR_AGENDA));
 		List<HealthcarePersonBo> doctors = healthcareProfessionalService.getAllDoctorsByInstitution(institutionId);
 		if (!isAdministrativeRole) {
@@ -63,11 +64,17 @@ public class HealthcareProfessionalController {
 	}
 
 	@GetMapping
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
 	public ResponseEntity<List<ProfessionalDto>> getAll(
 			@PathVariable(name = "institutionId")  Integer institutionId){
 		LOG.debug("Input parameters -> institutionId {}", institutionId);
+		boolean isAdministrativeRole = loggedUserExternalService.hasAnyRoleInstitution(institutionId, List.of(ERole.ADMINISTRATIVO, ERole.ADMINISTRADOR_AGENDA));
 		List<HealthcareProfessionalBo> healthcareProfessionals = healthcareProfessionalService.getAll(institutionId);
+		if (!isAdministrativeRole) {
+			Integer healthcareProfessionalId = healthcareProfessionalService.getProfessionalId(UserInfo.getCurrentAuditor());
+			Predicate<HealthcareProfessionalBo> filterByProfessionalId = (hp) -> hp.getId().equals(healthcareProfessionalId);
+			healthcareProfessionals = healthcareProfessionals.stream().filter(filterByProfessionalId).collect(Collectors.toList());
+		}
 		LOG.debug("Get all Healthcare professional => {}", healthcareProfessionals);
 		List<ProfessionalDto> result = healthcareProfessionalMapper.fromProfessionalBoList(healthcareProfessionals);
 		LOG.debug(OUTPUT, result);
@@ -75,7 +82,7 @@ public class HealthcareProfessionalController {
 	}
 
 	@GetMapping("/{healthcareProfessionalId}")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
 	public ResponseEntity<ProfessionalDto> getOne(@PathVariable(name = "institutionId")  Integer institutionId,
 												  @PathVariable(name = "healthcareProfessionalId") Integer healthcareProfessionalId){
 		LOG.debug("Input parameters -> institutionId {}, healthcareProfessionalId {}", institutionId, healthcareProfessionalId);

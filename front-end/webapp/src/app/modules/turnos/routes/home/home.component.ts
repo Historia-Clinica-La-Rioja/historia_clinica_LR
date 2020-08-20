@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
-import { HealthcareProfessionalDto, ProfessionalDto } from '@api-rest/api-model';
+import { ProfessionalDto } from '@api-rest/api-model';
 import { MatDialog } from '@angular/material/dialog';
 import { Location } from '@angular/common';
 import { DiariesService } from '@api-rest/services/diaries.service';
@@ -21,9 +21,9 @@ export class HomeComponent implements OnInit {
 	viewDate: Date = new Date();
 
 	form: FormGroup;
-	profesionales: HealthcareProfessionalDto[] = [];
-	profesionalesFiltered: HealthcareProfessionalDto[];
-	profesionalSelected: HealthcareProfessionalDto;
+	profesionales: ProfessionalDto[] = [];
+	profesionalesFiltered: ProfessionalDto[];
+	profesionalSelected: ProfessionalDto;
 	routePrefix: string;
 
 	constructor(
@@ -46,9 +46,8 @@ export class HomeComponent implements OnInit {
 			profesional: [null, Validators.required],
 		});
 
-		this.healthCareProfessionalService.getAllDoctors()
+		this.healthCareProfessionalService.getAll()
 			.subscribe(doctors => {
-
 				this.profesionales = doctors;
 				this.form.controls.profesional.valueChanges
 					.pipe(
@@ -67,8 +66,7 @@ export class HomeComponent implements OnInit {
 						const idProfesional = Number(params.idProfesional);
 						if (idProfesional) {
 							this.healthCareProfessionalService.getOne(idProfesional)
-								.pipe(map(toHealthcareProfessionalDto))
-								.subscribe((profesional: HealthcareProfessionalDto) => {
+								.subscribe((profesional: ProfessionalDto) => {
 									if (profesional) {
 										this.form.controls.profesional.setValue(this.getFullNameLicence(profesional));
 										this.profesionalSelected = profesional;
@@ -99,15 +97,15 @@ export class HomeComponent implements OnInit {
 		}
 	}
 
-	getFullName(profesional: HealthcareProfessionalDto): string {
-		return `${profesional.person.lastName}, ${profesional.person.firstName}`;
+	getFullName(profesional: ProfessionalDto): string {
+		return `${profesional.lastName}, ${profesional.firstName}`;
 	}
 
-	getFullNameLicence(profesional: HealthcareProfessionalDto): string {
+	getFullNameLicence(profesional: ProfessionalDto): string {
 		return `${this.getFullName(profesional)} - ${profesional.licenceNumber}`;
 	}
 
-	selectProfesional(event: MatOptionSelectionChange, profesional: HealthcareProfessionalDto): void {
+	selectProfesional(event: MatOptionSelectionChange, profesional: ProfessionalDto): void {
 		if (event.isUserInput) {
 			this.profesionalSelected = profesional;
 		}
@@ -117,7 +115,7 @@ export class HomeComponent implements OnInit {
 		this.router.navigate([`${this.routePrefix}/nueva-agenda/`]);
 	}
 
-	private _getResult(): HealthcareProfessionalDto {
+	private _getResult(): ProfessionalDto {
 		if (this.profesionalSelected) {
 			return this.profesionalSelected;
 		}
@@ -125,25 +123,13 @@ export class HomeComponent implements OnInit {
 		return results.length === 1 ? results[0] : null;
 	}
 
-	private _filter(value: string): HealthcareProfessionalDto[] {
+	private _filter(value: string): ProfessionalDto[] {
 		const filterValue = value?.toLowerCase();
-		return this.profesionales.filter((profesional: HealthcareProfessionalDto) => {
+		return this.profesionales.filter((profesional: ProfessionalDto) => {
 			const fullName = this.getFullNameLicence(profesional);
 			return fullName.toLowerCase().includes(filterValue);
 		});
 	}
 
-}
-
-function toHealthcareProfessionalDto(profesional: ProfessionalDto): HealthcareProfessionalDto {
-	return profesional ? {
-		id: profesional.id,
-		licenceNumber: profesional.licenceNumber,
-		person: {
-			birthDate: null,
-			firstName: profesional.firstName,
-			lastName: profesional.lastName
-		}
-	} : null;
 }
 
