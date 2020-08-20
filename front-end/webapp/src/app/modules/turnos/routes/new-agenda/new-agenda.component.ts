@@ -103,6 +103,7 @@ export class NewAgendaComponent implements OnInit {
 			this.sectors = data;
 		});
 
+		this.healthcareProfessionalService.getAll().subscribe(data => this.professionals = data);
 	}
 
 	private setValuesFromExistingAgenda(diary: CompleteDiaryDto): void {
@@ -182,14 +183,21 @@ export class NewAgendaComponent implements OnInit {
 		});
 	}
 
-	setDoctorOffices(sectorId: number, specialtyId: number): void {
-		this.doctorsOfficeService.getAll(sectorId, specialtyId)
-			.subscribe((data: DoctorsOfficeDto[]) => this.doctorOffices = data);
+	setSpecialtiesAndResetFollowingControls(sectorId: number): void {
+		this.clinicalSpecialtySectorService.getClinicalSpecialty(sectorId).subscribe(data => {
+			this.specialties = data;
+		});
+		this.form.get('specialtyId').reset();
+		this.form.get('doctorOffice').reset();
 	}
 
-	setProfessionals(): void {
-		//TODO para traer doctores por sector utilizar let sectorId: number = this.form.controls.sectorId.value;
-		this.healthcareProfessionalService.getAll().subscribe(data => this.professionals = data);
+	setDoctorOfficesAndResetFollowingControls(sectorId: number, specialtyId: number): void {
+		this.doctorsOfficeService.getAll(sectorId, specialtyId)
+			.subscribe((data: DoctorsOfficeDto[]) => this.doctorOffices = data);
+		this.form.get('doctorOffice').reset();
+	}
+
+	loadCalendar(): void {
 		this.setDoctorOfficeRangeTime();
 		this.setAllWeeklyDoctorsOfficeOcupation();
 	}
@@ -208,18 +216,8 @@ export class NewAgendaComponent implements OnInit {
 		return `${professional.lastName}, ${professional.firstName} - ${professional.licenceNumber}`;
 	}
 
-	enableAgendaDetails(): void {
-		this.enableFormControl('startDate');
-		this.enableFormControl('appointmentDuration');
-	}
-
 	appointmentManagementChange(): void {
 		this.appointmentManagement = !this.appointmentManagement;
-	}
-
-	private enableFormControl(controlName): void {
-		this.form.get(controlName).reset();
-		this.form.get(controlName).enable();
 	}
 
 	autoRenewChange(): void {

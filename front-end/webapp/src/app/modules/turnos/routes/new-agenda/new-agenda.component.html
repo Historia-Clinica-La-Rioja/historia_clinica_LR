@@ -10,7 +10,7 @@
 				<div fxLayout="row">
 					<mat-form-field appearance="outline">
 						<mat-select id="sectorId" name="sectorId" formControlName="sectorId"
-							placeholder="{{'pacientes.form.SELECT' | translate}}" (selectionChange)="setSpecialties(form.value.sectorId)">
+							placeholder="{{'pacientes.form.SELECT' | translate}}" (selectionChange)="setSpecialtiesAndResetFollowingControls(form.value.sectorId)">
 							<mat-option *ngFor="let sector of sectors" [value]="sector.id">
 								{{sector.description}}
 							</mat-option>
@@ -26,7 +26,7 @@
 					<mat-form-field appearance="outline">
 						<mat-select id="specialtyId" name="specialtyId" formControlName="specialtyId"
 							placeholder="{{'pacientes.form.SELECT' | translate}}"
-							(selectionChange)="setDoctorOffices(form.value.sectorId, form.value.specialtyId)">
+							(selectionChange)="setDoctorOfficesAndResetFollowingControls(form.value.sectorId, form.value.specialtyId)">
 							<mat-option *ngFor="let speciality of specialties" [value]="speciality.id">
 								{{speciality.name}}
 							</mat-option>
@@ -42,7 +42,7 @@
 					<mat-form-field appearance="outline">
 						<mat-select id="doctorOffice" name="doctorOffice" formControlName="doctorOffice"
 							placeholder="{{'pacientes.form.SELECT' | translate}}"
-							(selectionChange)="setProfessionals()">
+							(selectionChange)="loadCalendar()">
 							<mat-option *ngFor="let doctorOffice of doctorOffices" [value]="doctorOffice">
 								{{doctorOffice.description}}
 							</mat-option>
@@ -58,8 +58,7 @@
 					<mat-form-field appearance="outline">
 						<mat-select id="healthcareProfessionalId" name="healthcareProfessionalId"
 							formControlName="healthcareProfessionalId"
-							placeholder="{{'pacientes.form.SELECT' | translate}}"
-							(selectionChange)="enableAgendaDetails()">
+							placeholder="{{'pacientes.form.SELECT' | translate}}">
 							<mat-option *ngFor="let professional of professionals" [value]="professional.id">
 								<span class="mat-body">{{getFullNameLicence(professional)}}</span>
 							</mat-option>
