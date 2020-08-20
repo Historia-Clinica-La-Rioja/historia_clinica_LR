@@ -1,4 +1,4 @@
-import { FormGroup, FormArray, AbstractControl, FormControl, ValidationErrors} from '@angular/forms';
+import { FormGroup, FormArray, AbstractControl, FormControl, ValidationErrors } from '@angular/forms';
 import { ElementRef } from '@angular/core';
 import { Moment } from 'moment';
 import { newMoment, momentFormat, DateFormat } from './moment.utils';
@@ -57,12 +57,12 @@ export function futureTimeValidation(control: FormControl): ValidationErrors | n
 	return null;
 }
 
-function isValidTime(time:string){
+function isValidTime(time: string) {
 	return time.match('([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}');
 }
 export class MinTimeValidator {
-	constructor(private readonly minDateTime: Moment) {}
-  
+	constructor(private readonly minDateTime: Moment) { }
+
 	minTimeValidation(control: FormControl): ValidationErrors | null {
 		const time: string = control.value;
 		if (isValidTime(time)) {
@@ -76,7 +76,7 @@ export class MinTimeValidator {
 	}
 }
 
-export function processErrors(errorResponse, showMessageCallback){
+export function processErrors(errorResponse, showMessageCallback) {
 	if (errorResponse?.text) {
 		showMessageCallback(errorResponse.text);
 	}
@@ -86,7 +86,7 @@ export function processErrors(errorResponse, showMessageCallback){
 		});
 	}
 
-	function extractErrorMessage(error:string){
-		return error.split(':').pop()
+	function extractErrorMessage(error: string): string {
+		return error.split(':').pop();
 	}
 }

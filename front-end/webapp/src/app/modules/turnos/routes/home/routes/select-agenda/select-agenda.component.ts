@@ -11,6 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from '@core/services/context.service';
+import { processErrors } from '@core/utils/form.utils';
 @Component({
 	selector: 'app-select-agenda',
 	templateUrl: './select-agenda.component.html',
@@ -95,11 +96,7 @@ export class SelectAgendaComponent implements OnInit {
 							this.snackBarService.showSuccess('turnos.delete-agenda.messages.SUCCESS');
 							this.router.navigate([this.routePrefix + 'turnos']);
 						}
-					} , (msg)  => {
-						msg.errors.forEach(error => {
-							this.snackBarService.showError(error);
-						});
-					});
+					} , error => processErrors(error, (msg) => this.snackBarService.showError(msg)));
 			}
 		});
 	}
