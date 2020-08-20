@@ -7,4 +7,7 @@ import java.util.Collection;
 public interface HealthInsuranceService {
 
     Collection<PersonMedicalCoverageBo> getAll();
+    
+    public void addAll(Collection<PersonMedicalCoverageBo> newHealthInsurances);
+    
 }

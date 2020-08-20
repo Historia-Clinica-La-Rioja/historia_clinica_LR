@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ForkJoinPool;
 
-import net.pladema.renaper.controller.dto.MedicalCoverageDto;
-import net.pladema.renaper.services.domain.PersonMedicalCoverageBo;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,11 +17,16 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import io.swagger.annotations.Api;
+import lombok.RequiredArgsConstructor;
+import net.pladema.renaper.controller.dto.MedicalCoverageDto;
 import net.pladema.renaper.controller.dto.PersonBasicDataResponseDto;
 import net.pladema.renaper.controller.mapper.RenaperMapper;
 import net.pladema.renaper.services.RenaperService;
 import net.pladema.renaper.services.domain.PersonDataResponse;
+import net.pladema.renaper.services.domain.PersonMedicalCoverageBo;
+import net.pladema.sgx.healthinsurance.service.HealthInsuranceService;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/renaper")
 @Api(value = "Renaper", tags = { "Renaper" })
@@ -40,15 +43,12 @@ public class RenaperController {
 	private final RenaperService renaperService;
 
 	private final RenaperMapper renaperMapper;
+	
+	private final HealthInsuranceService healthInsuranceService;
 
 	@Value("${ws.renaper.request.timeout:10000}")
 	private long requestTimeOut;
 
-	public RenaperController(RenaperService renaperService, RenaperMapper renaperMapper) {
-		super();
-		this.renaperService = renaperService;
-		this.renaperMapper = renaperMapper;
-	}
 
 	@GetMapping(value = SEARCH_PERSON)
 	public DeferredResult<ResponseEntity<PersonBasicDataResponseDto>> getBasicPerson(
@@ -92,6 +92,7 @@ public class RenaperController {
 			if (medicalCoverageData.isEmpty()) {
 				deferredResult.setResult(ResponseEntity.noContent().build());
 			}
+			healthInsuranceService.addAll(medicalCoverageData);
 			Collection<MedicalCoverageDto> result = renaperMapper.fromPersonMedicalCoverageResponseList(medicalCoverageData);
 			deferredResult.setResult(ResponseEntity.ok().body(result));
 		});

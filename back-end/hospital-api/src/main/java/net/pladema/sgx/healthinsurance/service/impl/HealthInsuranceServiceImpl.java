@@ -36,4 +36,16 @@ public class HealthInsuranceServiceImpl implements HealthInsuranceService {
         LOG.debug(OUTPUT, result);
         return result;
     }
+    
+	@Override
+	public void addAll(Collection<PersonMedicalCoverageBo> newHealthInsurances) {
+		LOG.debug("Input-> newHealthInsurances {}", newHealthInsurances);
+		newHealthInsurances.stream().filter(hi -> !healthInsuranceRepository.existsById(Integer.valueOf(hi.getRnos())))
+				.forEach(hi -> {
+					healthInsuranceRepository
+							.save(new HealthInsurance(Integer.valueOf(hi.getRnos()), hi.getName(), hi.getAcronym()));
+					LOG.debug("HealthInsurance Added-> newHealthInsurance {}", hi);
+				});
+	}
+	
 }
