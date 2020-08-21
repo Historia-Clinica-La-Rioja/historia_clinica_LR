@@ -9,7 +9,7 @@
 					{{data.medicalCoverage.affiliateNumber}}</span>
 				<span class="patient-info">Teléfono: {{data.patient.phoneNumber}}</span>
 				<a *hasRole="['ESPECIALISTA_MEDICO','PROFESIONAL_DE_SALUD']"
-				   [href]="'/institucion/' + institutionId + '/ambulatoria/paciente/' + data?.patient?.id">Ver
+					[href]="'/institucion/' + institutionId + '/ambulatoria/paciente/' + data?.patient?.id">Ver
 					historia clínica</a>
 			</div>
 		</mat-list-item>
@@ -32,13 +32,14 @@
 	</mat-list>
 </div>
 
-<mat-dialog-actions align="end">
+<mat-dialog-actions *hasRole="['ADMINISTRATIVO', 'ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']"
+	align="end">
 	<!--<button mat-flat-button color="primary" id="create-overturn" name="create-overturn" fxFlexFill.xs>
 		<span class="uppercase" [translate]="'turnos.overturns.CREATE'"></span>
 	</button>
 	-->
 	<button mat-flat-button color="warn" id="cancel-appointment" name="cancel-appointment"
-			(click)="cancelAppointment()">
+		(click)="cancelAppointment()">
 		<span class="uppercase" [translate]="'turnos.cancel.TITLE'"></span>
 	</button>
 </mat-dialog-actions>

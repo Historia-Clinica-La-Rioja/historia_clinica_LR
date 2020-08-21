@@ -207,7 +207,6 @@ export class AgendaComponent implements OnInit {
 	viewAppointment({ event }: { event: CalendarEvent }): void {
 		const appointmentDialogRef = this.dialog.open(AppointmentComponent, {
 			data: event.meta,
-			width: '25%',
 		});
 
 		appointmentDialogRef.afterClosed().subscribe(data => {
