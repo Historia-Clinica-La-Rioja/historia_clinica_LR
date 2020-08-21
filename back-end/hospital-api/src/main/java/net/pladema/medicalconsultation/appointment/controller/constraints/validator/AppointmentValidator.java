@@ -1,9 +1,11 @@
 package net.pladema.medicalconsultation.appointment.controller.constraints.validator;
 
+import lombok.RequiredArgsConstructor;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointment;
 import net.pladema.medicalconsultation.appointment.controller.dto.CreateAppointmentDto;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
+import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursValidatorService;
 import net.pladema.medicalconsultation.diary.service.DiaryService;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 import net.pladema.permissions.controller.external.LoggedUserExternalService;
@@ -22,6 +24,7 @@ import java.util.List;
 
 
 @SupportedValidationTarget(ValidationTarget.PARAMETERS)
+@RequiredArgsConstructor
 public class AppointmentValidator implements ConstraintValidator<ValidAppointment, Object[]> {
 
     private static final Logger LOG = LoggerFactory.getLogger(AppointmentValidator.class);
@@ -30,28 +33,13 @@ public class AppointmentValidator implements ConstraintValidator<ValidAppointmen
 
     private final DiaryService diaryService;
 
-    private final DiaryOpeningHoursService diaryOpeningHoursService;
+    private final DiaryOpeningHoursValidatorService diaryOpeningHoursValidatorService;
 
     private final AppointmentService appointmentService;
 
     private final LocalDateMapper localDateMapper;
 
     private final LoggedUserExternalService loggedUserExternalService;
-
-    public AppointmentValidator(HealthcareProfessionalService healthcareProfessionalService,
-                                DiaryService diaryService,
-                                DiaryOpeningHoursService diaryOpeningHoursService,
-                                AppointmentService appointmentService,
-                                LocalDateMapper localDateMapper,
-                                LoggedUserExternalService loggedUserExternalService){
-        super();
-        this.healthcareProfessionalService = healthcareProfessionalService;
-        this.diaryService = diaryService;
-        this.diaryOpeningHoursService = diaryOpeningHoursService;
-        this.appointmentService = appointmentService;
-        this.localDateMapper = localDateMapper;
-        this.loggedUserExternalService = loggedUserExternalService;
-    }
 
     @Override
     public void initialize(ValidAppointment constraintAnnotation) {
@@ -93,7 +81,7 @@ public class AppointmentValidator implements ConstraintValidator<ValidAppointmen
         }
 
         if (createAppointmentDto.isOverturn() ) {
-            boolean allowNewOverturn = diaryOpeningHoursService.allowNewOverturn(createAppointmentDto.getDiaryId(),
+            boolean allowNewOverturn = diaryOpeningHoursValidatorService.allowNewOverturn(createAppointmentDto.getDiaryId(),
                 createAppointmentDto.getOpeningHoursId(), localDateMapper.fromStringToLocalDate(createAppointmentDto.getDate()));
             if (!allowNewOverturn) {
                 buildResponse(context, "{appointment.not.allow.new.overturn}");

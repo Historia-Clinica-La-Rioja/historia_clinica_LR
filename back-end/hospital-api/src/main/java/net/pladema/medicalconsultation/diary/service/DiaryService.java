@@ -16,14 +16,18 @@ public interface DiaryService {
 	
 	Boolean deleteDiary(Integer diaryId);
 
-	List<Integer> getAllOverlappingDiary(Integer healthcareProfessionalId, Integer doctorsOfficeId,
-			LocalDate newDiaryStart, LocalDate newDiaryEnd, Optional<Integer> excludeDiaryId);
+	List<Integer> getAllOverlappingDiaryByProfessional(Integer healthcareProfessionalId, Integer doctorsOfficeId,
+													   LocalDate newDiaryStart, LocalDate newDiaryEnd, Optional<Integer> excludeDiaryId);
 
-	Collection<DiaryBo> getActiveDiariesFromProfessional(Integer healthcareProfessionalId);
+    List<DiaryBo> getAllOverlappingDiary(Integer doctorsOfficeId,
+                                         LocalDate newDiaryStart, LocalDate newDiaryEnd, Optional<Integer> excludeDiaryId);
+
+    Collection<DiaryBo> getActiveDiariesFromProfessional(Integer healthcareProfessionalId);
 
 	Optional<CompleteDiaryBo> getDiary(Integer diaryId);
 	
 	Optional<DiaryBo> getDiaryByAppointment(Integer appointmentId);
 
 	DiaryBo getDiaryById(Integer diaryId);
+
 }

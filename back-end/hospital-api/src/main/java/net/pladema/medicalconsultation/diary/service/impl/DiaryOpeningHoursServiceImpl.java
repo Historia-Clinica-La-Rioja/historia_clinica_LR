@@ -4,16 +4,16 @@ import static java.util.stream.Collectors.toList;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
+import lombok.RequiredArgsConstructor;
+import net.pladema.medicalconsultation.diary.service.DiaryService;
+import net.pladema.medicalconsultation.diary.service.domain.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
@@ -28,13 +28,10 @@ import net.pladema.medicalconsultation.diary.repository.entity.DiaryOpeningHours
 import net.pladema.medicalconsultation.diary.repository.entity.OpeningHours;
 import net.pladema.medicalconsultation.diary.service.DiaryBoMapper;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
-import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
-import net.pladema.medicalconsultation.diary.service.domain.OccupationBo;
-import net.pladema.medicalconsultation.diary.service.domain.OpeningHoursBo;
-import net.pladema.medicalconsultation.diary.service.domain.TimeRangeBo;
 import net.pladema.sgx.dates.repository.entity.EDayOfWeek;
 
 @Service
+@RequiredArgsConstructor
 public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
 
     private static final Logger LOG = LoggerFactory.getLogger(DiaryOpeningHoursServiceImpl.class);
@@ -46,15 +43,6 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
     private final OpeningHoursRepository openingHoursRepository;
 
     private final DiaryBoMapper diaryBoMapper;
-
-    public DiaryOpeningHoursServiceImpl(DiaryOpeningHoursRepository diaryOpeningHoursRepository,
-                                        OpeningHoursRepository openingHoursRepository,
-                                        DiaryBoMapper diaryBoMapper) {
-        super();
-        this.diaryOpeningHoursRepository = diaryOpeningHoursRepository;
-        this.openingHoursRepository = openingHoursRepository;
-        this.diaryBoMapper = diaryBoMapper;
-    }
 
     @Override
     public void load(Integer diaryId, List<DiaryOpeningHoursBo> diaryOpeningHours) {
@@ -184,8 +172,9 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
      * @param rangeEnd2 fecha de fin para rango 2
      * @return lista con todos los identificadores de días de semana superpuestos entre dos rangos de fecha
      */
-    private List<Short> overlappingDays(LocalDate rangeStart1, LocalDate rangeEnd1,
-                                        LocalDate rangeStart2, LocalDate rangeEnd2){
+    @Override
+    public List<Short> overlappingDays(@NotNull LocalDate rangeStart1, @NotNull LocalDate rangeEnd1,
+                                        @NotNull LocalDate rangeStart2, @NotNull LocalDate rangeEnd2){
         List<Short> validDaysWeek = new ArrayList<>();
         LocalDate start = rangeStart1.isBefore(rangeStart2) ? rangeStart2 : rangeStart1;
         LocalDate end = rangeEnd1.isBefore(rangeStart2) ? rangeEnd1 : rangeEnd2;
@@ -232,25 +221,5 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
         dayOpeningHours.setTimeRanges(timeRanges);
         return dayOpeningHours;
     }
-
-	@Override
-	public boolean allowNewOverturn(Integer diaryId, Integer openingHoursId, LocalDate newApmtDate) {
-		LOG.debug("Input parameters -> diaryId {}, openingHoursId {}", diaryId, openingHoursId);
-		boolean result = diaryOpeningHoursRepository.allowNewOverturn(diaryId, openingHoursId, newApmtDate);
-		LOG.debug(OUTPUT, result);
-		return result;
-    }
-
-    @Override
-    public boolean overlapWithOthers(Integer doctorsOfficeId, DiaryOpeningHoursBo diaryOpeningHoursBo) {
-        LOG.debug("Input parameters -> doctorsOfficeId {}, diaryOpeningHoursBo {}", doctorsOfficeId, diaryOpeningHoursBo);
-        boolean result = diaryOpeningHoursRepository.overlapWithOthers(doctorsOfficeId,
-                diaryOpeningHoursBo.getOpeningHours().getDayWeekId(),
-                diaryOpeningHoursBo.getOpeningHours().getFrom(),
-                diaryOpeningHoursBo.getOpeningHours().getTo());
-        LOG.debug(OUTPUT, result);
-        return result;
-    }
-
 
 }

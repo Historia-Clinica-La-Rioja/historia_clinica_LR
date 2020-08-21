@@ -1,13 +1,7 @@
 package net.pladema.medicalconsultation.diary.controller;
 
 import io.swagger.annotations.Api;
-import net.pladema.medicalconsultation.diary.controller.constraints.DiaryDeleteableAppoinmentsValid;
-import net.pladema.medicalconsultation.diary.controller.constraints.DiaryEmptyAppointmentsValid;
-import net.pladema.medicalconsultation.diary.controller.constraints.DiaryOpeningHoursValid;
-import net.pladema.medicalconsultation.diary.controller.constraints.ExistingDiaryPeriodValid;
-import net.pladema.medicalconsultation.diary.controller.constraints.NewDiaryPeriodValid;
-import net.pladema.medicalconsultation.diary.controller.constraints.ValidDiary;
-import net.pladema.medicalconsultation.diary.controller.constraints.ValidDiaryProfessionalId;
+import net.pladema.medicalconsultation.diary.controller.constraints.*;
 import net.pladema.medicalconsultation.diary.controller.dto.CompleteDiaryDto;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryADto;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryDto;
@@ -86,7 +80,7 @@ public class DiaryController {
     public ResponseEntity<Integer> updateDiary(
             @PathVariable(name = "institutionId") Integer institutionId,
             @ValidDiary @PathVariable(name = "diaryId") Integer diaryId,
-            @RequestBody @Valid @ExistingDiaryPeriodValid @DiaryOpeningHoursValid @DiaryEmptyAppointmentsValid  DiaryDto diaryADto) {
+            @RequestBody @Valid @ExistingDiaryPeriodValid @EditDiaryOpeningHoursValid @DiaryEmptyAppointmentsValid  DiaryDto diaryADto) {
         LOG.debug("Input parameters -> diaryADto {}", diaryADto);
         DiaryBo diaryToUpdate = diaryMapper.toDiaryBo(diaryADto);
         diaryToUpdate.setId(diaryId);

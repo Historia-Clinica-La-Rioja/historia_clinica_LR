@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.medicalconsultation.diary.controller.dto.OpeningHoursDto;
 import net.pladema.medicalconsultation.diary.repository.entity.OpeningHours;
 
 @Getter
@@ -24,4 +25,10 @@ public class OpeningHoursBo extends TimeRangeBo {
         this.id = openingHours.getId();
     }
 
+    public boolean overlap(OpeningHoursBo other){
+        return dayWeekId.equals(other.getDayWeekId()) &&
+                getFrom().compareTo(other.getTo()) < 0 &&
+                getTo().compareTo(other.getFrom()) > 0;
+
+    }
 }

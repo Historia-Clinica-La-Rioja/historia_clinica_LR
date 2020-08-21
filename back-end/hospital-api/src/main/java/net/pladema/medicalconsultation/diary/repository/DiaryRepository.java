@@ -25,10 +25,10 @@ public interface DiaryRepository extends JpaRepository<Diary, Integer> {
             "AND startDate <= :endDate " +
             "AND endDate >= :startDate " +
             "AND deleteable.deleted = false")
-    List<Integer> findAllOverlappingDiary(@Param("hcpId") Integer healthcareProfessionalId,
-                                          @Param("doId") Integer doctorsOfficeId,
-                                          @Param("startDate") LocalDate newDiaryStart,
-                                          @Param("endDate") LocalDate newDiaryEnd);
+    List<Integer> findAllOverlappingDiaryByProfessional(@Param("hcpId") Integer healthcareProfessionalId,
+                                                        @Param("doId") Integer doctorsOfficeId,
+                                                        @Param("startDate") LocalDate newDiaryStart,
+                                                        @Param("endDate") LocalDate newDiaryEnd);
     
     @Transactional(readOnly = true)
     @Query("SELECT id " +
@@ -37,13 +37,38 @@ public interface DiaryRepository extends JpaRepository<Diary, Integer> {
             "AND doctorsOfficeId = :doId " +
             "AND startDate <= :endDate " +
             "AND endDate >= :startDate " +
-            "AND id != :excludeDiaryId " +
+            "AND id <> :excludeDiaryId " +
             "AND deleteable.deleted = false")
-    List<Integer> findAllOverlappingDiaryExcluding(@Param("hcpId") Integer healthcareProfessionalId,
-                                          @Param("doId") Integer doctorsOfficeId,
+    List<Integer> findAllOverlappingDiaryByProfessionalExcludingDiary(@Param("hcpId") Integer healthcareProfessionalId,
+                                                                      @Param("doId") Integer doctorsOfficeId,
+                                                                      @Param("startDate") LocalDate newDiaryStart,
+                                                                      @Param("endDate") LocalDate newDiaryEnd,
+                                                                      @Param("excludeDiaryId") Integer excludeDiaryId);
+
+
+    @Transactional(readOnly = true)
+    @Query("SELECT d " +
+            "FROM Diary AS d " +
+            "WHERE d.doctorsOfficeId = :doId " +
+            "AND d.startDate <= :endDate " +
+            "AND d.endDate >= :startDate " +
+            "AND d.deleteable.deleted = false")
+    List<Diary> findAllOverlappingDiary(@Param("doId") Integer doctorsOfficeId,
                                           @Param("startDate") LocalDate newDiaryStart,
-                                          @Param("endDate") LocalDate newDiaryEnd, 
-                                          @Param("excludeDiaryId") Integer excludeDiaryId);
+                                          @Param("endDate") LocalDate newDiaryEnd);
+
+    @Transactional(readOnly = true)
+    @Query("SELECT d " +
+            "FROM Diary AS d " +
+            "WHERE d.doctorsOfficeId = :doId " +
+            "AND d.startDate <= :endDate " +
+            "AND d.endDate >= :startDate " +
+            "AND d.id <> :excludeDiaryId " +
+            "AND d.deleteable.deleted = false")
+    List<Diary> findAllOverlappingDiaryExcludingDiary(@Param("doId") Integer doctorsOfficeId,
+                                                        @Param("startDate") LocalDate newDiaryStart,
+                                                        @Param("endDate") LocalDate newDiaryEnd,
+                                                        @Param("excludeDiaryId") Integer excludeDiaryId);
 
 
     @Transactional(readOnly = true)

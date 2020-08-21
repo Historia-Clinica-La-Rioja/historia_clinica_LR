@@ -64,7 +64,7 @@ public class AppointmentsController {
 
     @Transactional
     @PostMapping
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
     @ValidAppointment
     public ResponseEntity<Integer> create(
             @PathVariable(name = "institutionId") Integer institutionId,
@@ -78,7 +78,7 @@ public class AppointmentsController {
     }
 
     @GetMapping
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ADMINISTRADOR_AGENDA')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ADMINISTRADOR_AGENDA, ENFERMERO')")
     public ResponseEntity<Collection<AppointmentListDto>> getList(@PathVariable(name = "institutionId")  Integer institutionId,
                                                                   @RequestParam(name = "diaryIds") @NotEmpty List<Integer> diaryIds){
         LOG.debug("Input parameters -> institutionId {}, diaryIds {}", institutionId, diaryIds);
@@ -102,7 +102,7 @@ public class AppointmentsController {
 
     @Transactional
     @PutMapping(value = "/{appointmentId}/change-state")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
     public ResponseEntity<Boolean> changeState(
             @PathVariable(name = "institutionId") Integer institutionId,
             @ValidAppointmentDiary @PathVariable(name = "appointmentId") Integer appointmentId,

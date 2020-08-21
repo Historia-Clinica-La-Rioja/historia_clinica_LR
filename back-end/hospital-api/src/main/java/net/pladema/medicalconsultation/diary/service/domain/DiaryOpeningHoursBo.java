@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.medicalconsultation.diary.controller.dto.DiaryOpeningHoursDto;
 
 @Getter
 @Setter
@@ -18,4 +19,10 @@ public class DiaryOpeningHoursBo {
     private Short medicalAttentionTypeId;
 
     private Short overturnCount = 0;
+
+    public boolean overlap(DiaryOpeningHoursBo other) {
+        return !(this.medicalAttentionTypeId.equals(other.getMedicalAttentionTypeId())) &&
+                openingHours.overlap(other.getOpeningHours());
+
+    }
 }

@@ -3,6 +3,7 @@ package net.pladema.medicalconsultation.diary.service;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.OccupationBo;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
@@ -17,7 +18,6 @@ public interface DiaryOpeningHoursService {
 
     Collection<DiaryOpeningHoursBo> getDiariesOpeningHours(List<Integer> diaryIds);
 
-    boolean allowNewOverturn(Integer diaryId, Integer openingHoursId, LocalDate newApmtDate);
-
-    boolean overlapWithOthers(Integer doctorsOfficeId, DiaryOpeningHoursBo diaryOpeningHoursBo);
+    List<Short> overlappingDays(@NotNull LocalDate rangeStart1, @NotNull LocalDate rangeEnd1,
+                                @NotNull LocalDate rangeStart2, @NotNull LocalDate rangeEnd2);
 }

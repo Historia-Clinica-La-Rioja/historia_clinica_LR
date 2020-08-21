@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -55,11 +56,12 @@ public interface DiaryOpeningHoursRepository extends JpaRepository<DiaryOpeningH
             "                           JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
             "                           WHERE aa.pk.diaryId = :diaryId " +
             "                           AND aa.pk.openingHoursId = :openingHoursId " +
-            "							AND a.dateTypeId = :newApmtDate"+
+            "							AND a.dateTypeId = :newAppointmentDate"+
             "                           AND a.isOverturn = true  " +
             "                           AND NOT a.appointmentStateId = " + AppointmentState.CANCELLED_STR + ")" )
-	boolean allowNewOverturn(@Param("diaryId") Integer diaryId, @Param("openingHoursId") Integer openingHoursId,
-			@Param("newApmtDate") LocalDate newApmtDate);
+	boolean allowNewOverturn(@NotNull @Param("diaryId") Integer diaryId,
+                             @NotNull @Param("openingHoursId") Integer openingHoursId,
+                             @NotNull @Param("newAppointmentDate") LocalDate newAppointmentDate);
 
 	@Transactional
 	@Modifying
@@ -73,9 +75,12 @@ public interface DiaryOpeningHoursRepository extends JpaRepository<DiaryOpeningH
             "FROM DiaryOpeningHours AS doh " +
             "JOIN Diary AS d ON (d.id = doh.pk.diaryId) " +
             "JOIN OpeningHours  AS oh ON (doh.pk.openingHoursId = oh.id) " +
-            "WHERE oh.dayWeekId = :dayWeekId " +
+            "WHERE d.id = :diaryId " +
+            "AND oh.dayWeekId = :dayWeekId " +
             "AND d.doctorsOfficeId = :doctorsOfficeId " +
-            "AND ((:from > oh.from AND :from < oh.to ) OR (:to > oh.from AND :to < oh.to ) OR (:from <= oh.from AND :to >= oh.to))" )
-    boolean overlapWithOthers(@Param("doctorsOfficeId") Integer doctorsOfficeId, @Param("dayWeekId") Short dayWeekId,
-                              @Param("from") LocalTime from, @Param("to") LocalTime to);
+            "AND ((oh.from < :to) AND (oh.to > :from) )" )
+    boolean overlapDiaryOpeningHoursFromOtherDiary(@NotNull @Param("diaryId") Integer diaryId,
+                                                   @NotNull @Param("doctorsOfficeId") Integer doctorsOfficeId,
+                                                   @NotNull @Param("dayWeekId") Short dayWeekId,
+                                                   @NotNull @Param("from") LocalTime from, @Param("to") LocalTime to);
 }
