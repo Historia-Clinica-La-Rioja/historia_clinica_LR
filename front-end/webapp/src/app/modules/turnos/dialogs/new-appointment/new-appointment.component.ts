@@ -28,7 +28,7 @@ export class NewAppointmentComponent implements OnInit {
 	public formMedicalCoverage: FormGroup;
 	public identifyTypeArray: IdentificationTypeDto[];
 	public genderOptions: GenderDto[];
-	public healtInsuranceOptions: MedicalCoverageDto[];
+	public healtInsuranceOptions: MedicalCoverageDto[] = [];
 	public patientId: any;
 	public showAddPatient = false;
 	public editable = true;
@@ -40,16 +40,16 @@ export class NewAppointmentComponent implements OnInit {
 		@Inject(MAT_DIALOG_DATA) public data: {date: string, diaryId: number, hour: string, openingHoursId: number},
 		public dialogRef: MatDialogRef<NewAppointmentComponent>,
 		private readonly formBuilder: FormBuilder,
-		private personMasterDataService: PersonMasterDataService,
-		private patientService: PatientService,
-		private snackBarService: SnackBarService,
-		private router: Router,
-		private contextService: ContextService,
-		private renaperService: RenaperService,
-		private healthInsurance: HealthInsuranceService,
-		private appointmentsService: AppointmentsService,
+		private readonly personMasterDataService: PersonMasterDataService,
+		private readonly patientService: PatientService,
+		private readonly snackBarService: SnackBarService,
+		private readonly router: Router,
+		private readonly contextService: ContextService,
+		private readonly renaperService: RenaperService,
+		private readonly healthInsurance: HealthInsuranceService,
+		private readonly appointmentsService: AppointmentsService,
   	) {
-		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
+		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 	}
 
   	ngOnInit(): void {
@@ -89,15 +89,14 @@ export class NewAppointmentComponent implements OnInit {
 						this.patientService.getAppointmentPatientData(this.patientId).subscribe(appointmentPatientData => {
 							this.patientAppointmentDto = appointmentPatientData;
 						});
-						this.renaperService.getHealthInsurance({identificationNumber: this.formSearch.controls.identifNumber.value, genderId: this.formSearch.controls.gender.value}).subscribe(healthInsuranceData => {
+						this.renaperService.getHealthInsurance({ identificationNumber: this.formSearch.controls.identifNumber.value, genderId: this.formSearch.controls.gender.value })
+						.subscribe(healthInsuranceData => {
 							if (healthInsuranceData) {
 								this.healtInsuranceOptions = healthInsuranceData;
 							} else {
-								this.healthInsurance.getAll().subscribe(allHealthInsuranceData => {
-									this.healtInsuranceOptions = allHealthInsuranceData;
-								});
+								this.setAllHealthInsuranceOptions();
 							}
-						});
+						}, () => this.setAllHealthInsuranceOptions());
 						this.snackBarService.showSuccess('turnos.new-appointment.messages.SUCCESS');
 						this.stepper.next();
 					} else {
@@ -107,6 +106,12 @@ export class NewAppointmentComponent implements OnInit {
 				}
 			);
 		}
+	}
+
+	private setAllHealthInsuranceOptions() {
+		this.healthInsurance.getAll().subscribe(allHealthInsuranceData => {
+			this.healtInsuranceOptions = allHealthInsuranceData;
+		});
 	}
 
 	submit(): void {

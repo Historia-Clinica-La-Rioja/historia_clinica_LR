@@ -68,8 +68,10 @@
 						</div>
 					</mat-list-item>
 				</mat-list>
-
-				<form [formGroup]="formMedicalCoverage">
+				<div fxLayout="row" fxLayoutAlign="space-around center">
+					<mat-spinner *ngIf="!healtInsuranceOptions.length"></mat-spinner>
+				</div>
+				<form *ngIf="healtInsuranceOptions.length" [formGroup]="formMedicalCoverage">
 					<div fxLayout="row wrap" fxLayoutGap="10px">
 						<mat-form-field appearance="outline">
 							<mat-label>Obra Social</mat-label>
