@@ -63,16 +63,6 @@ const ClinicalSpecialtySectorShow = props => (
             >
                 <Datagrid rowClick="show">
                     <TextField source="description"/>
-                    <TextField
-                        source="openingTime"
-                        label="resources.doctorsoffices.fields.openingTime"
-                        type="time"
-                    />
-                    <TextField
-                        source="closingTime"
-                        label="resources.doctorsoffices.fields.closingTime"
-                        type="time"
-                    />
                     <EditButton />
                 </Datagrid>
             </ReferenceManyField>

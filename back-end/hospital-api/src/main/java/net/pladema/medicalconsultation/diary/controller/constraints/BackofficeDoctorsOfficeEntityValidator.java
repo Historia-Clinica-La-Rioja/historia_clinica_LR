@@ -23,13 +23,6 @@ public class BackofficeDoctorsOfficeEntityValidator extends BackofficeEntityVali
 	@Override
 	public void assertCreate(DoctorsOffice entity) {
 		checkMatchingIds(entity);
-		checkTimes(entity);
-	}
-
-	private void checkTimes(DoctorsOffice entity){
-		if (entity.getClosingTime().isBefore(entity.getOpeningTime())) {
-			throw new BackofficeValidationException("doctorsoffices.closingBeforeOpening");
-		}
 	}
 
 	private void checkMatchingIds(DoctorsOffice entity){

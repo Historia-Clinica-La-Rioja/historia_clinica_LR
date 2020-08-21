@@ -120,8 +120,10 @@ export class NewAgendaService {
 
 		let newEnd = addDays(addMinutes(segment.date, minutesDiff), daysDiff);
 		const endOfView = endOfWeek(this.viewDate, { weekStartsOn: this.weekStartsOn });
-		if (newEnd.getHours() > this.closingtime) {
-			newEnd.setHours(this.closingtime + 1);
+		if (newEnd.getDay() !== dragToSelectEvent.start.getDay() ) {
+			newEnd.setHours(0);
+			newEnd.setMinutes(0);
+			newEnd.setSeconds(0);
 		}
 		if (newEnd > segment.date && newEnd < endOfView) {
 			const eventAlreadySetAt = this.events.filter(event => event !== dragToSelectEvent)

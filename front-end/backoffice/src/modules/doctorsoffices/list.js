@@ -29,17 +29,6 @@ const DoctorsOfficeList = props => (
             <ReferenceField source="clinicalSpecialtySectorId" reference="clinicalspecialtysectors">
                 <TextField source="description"/>
             </ReferenceField>
-
-            <TextField
-                source="openingTime"
-                label="Horario de apertura"
-                type="time"
-            />
-            <TextField
-                source="closingTime"
-                label="Horario de cierre"
-                type="time"
-            />
         </Datagrid>
     </List>
 );
