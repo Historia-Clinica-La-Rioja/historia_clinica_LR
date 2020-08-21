@@ -110,8 +110,7 @@ export class AgendaComponent implements OnInit {
 			const clickedDate: Moment = dateToMomentTimeZone(event.date);
 
 			const dialogRef = this.dialog.open(NewAppointmentComponent, {
-				disableClose: true,
-				width: '35%',
+				width: '40%',
 				data: {
 					date: clickedDate.format(DateFormat.API_DATE),
 					diaryId: this.agenda.id,

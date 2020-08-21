@@ -7,7 +7,7 @@ import { PatientService } from '@api-rest/services/patient.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
-import { MatStepper } from '@angular/material/stepper';
+import { MatStepper, MatHorizontalStepper } from '@angular/material/stepper';
 import { RenaperService } from '@api-rest/services/renaper.service';
 import { HealthInsuranceService } from '@api-rest/services/health-insurance.service';
 import { AppointmentsService } from './../../../api-rest/services/appointments.service';
@@ -31,6 +31,7 @@ export class NewAppointmentComponent implements OnInit {
 	public healtInsuranceOptions: MedicalCoverageDto[];
 	public patientId: any;
 	public showAddPatient = false;
+	public editable = true;
 	public patientAppointmentDto: HealthInsurancePatientDataDto;
 
 	private readonly routePrefix;
@@ -142,6 +143,12 @@ export class NewAppointmentComponent implements OnInit {
 
 	showConfirmButton() {
 		return this.formMedicalCoverage.controls.affiliateNumber.valid && (this.formMedicalCoverage.controls.medicalCoverage.valid || this.formMedicalCoverage.controls.prepaid.valid);
+	}
+
+	disablePreviuosStep(stepperParam: MatHorizontalStepper) {
+		if (stepperParam.selectedIndex === 0) {
+			this.editable = false;
+		}
 	}
 
 	private isFormSearchValid() {
