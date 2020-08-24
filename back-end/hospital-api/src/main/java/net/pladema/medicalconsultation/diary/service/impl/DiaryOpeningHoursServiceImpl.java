@@ -198,7 +198,8 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
      */
     private OccupationBo mergeRangeTimeOfOpeningHours(Short dayWeekId, @NotEmpty List<OpeningHours> openingHours){
         Comparator<OpeningHours> ascendingOrder = Comparator
-                .comparing(OpeningHours::getFrom, LocalTime::compareTo);
+                .comparing(OpeningHours::getFrom, LocalTime::compareTo)
+                .thenComparing(OpeningHours::getTo, LocalTime::compareTo);
         openingHours = openingHours.stream().sorted(ascendingOrder).collect(toList());
 
         List<TimeRangeBo> timeRanges = new ArrayList<>();
@@ -210,9 +211,8 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
                 timeRanges.add(lastTimeRange);
                 lastTimeRange = new TimeRangeBo(current);
             }
-            else {
-                lastTimeRange.setTo(current.getTo());
-            }
+            else if (current.getTo().isAfter(lastTimeRange.getTo()))
+                    lastTimeRange.setTo(current.getTo());
         }
         timeRanges.add(lastTimeRange);
 
