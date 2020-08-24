@@ -2,32 +2,18 @@ package net.pladema.medicalconsultation.diary.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import net.pladema.medicalconsultation.diary.repository.DiaryOpeningHoursRepository;
-import net.pladema.medicalconsultation.diary.repository.OpeningHoursRepository;
-import net.pladema.medicalconsultation.diary.repository.domain.DiaryOpeningHoursVo;
-import net.pladema.medicalconsultation.diary.repository.domain.OccupationVo;
-import net.pladema.medicalconsultation.diary.repository.entity.DiaryOpeningHours;
-import net.pladema.medicalconsultation.diary.repository.entity.DiaryOpeningHoursPK;
-import net.pladema.medicalconsultation.diary.repository.entity.OpeningHours;
-import net.pladema.medicalconsultation.diary.service.DiaryBoMapper;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursValidatorService;
 import net.pladema.medicalconsultation.diary.service.DiaryService;
 import net.pladema.medicalconsultation.diary.service.domain.*;
-import net.pladema.sgx.dates.repository.entity.EDayOfWeek;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.*;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
@@ -53,7 +39,7 @@ public class DiaryOpeningHoursValidatorServiceImpl implements DiaryOpeningHoursV
 
     @Override
     public boolean overlapDiaryOpeningHours(@NotNull DiaryBo diaryBo, @NotNull List<DiaryOpeningHoursBo> openingHours) {
-        LOG.debug("Input parameters -> diaryBo {}, openingHours {} ", openingHours);
+        LOG.debug("Input parameters -> diaryBo {}, openingHours {} ", diaryBo, openingHours);
         boolean overlap = overlapBetweenDiaryOpeningHours(openingHours) ||
                overlapWithOthersDiaries(diaryBo, openingHours);
         LOG.debug(OUTPUT, overlap);
@@ -78,7 +64,7 @@ public class DiaryOpeningHoursValidatorServiceImpl implements DiaryOpeningHoursV
     }
 
     private boolean overlapWithOthersDiaries(@NotNull DiaryBo diaryBo, @NotNull  List<DiaryOpeningHoursBo> openingHours){
-        LOG.debug("Input parameters -> diaryBo {}, openingHours {}", openingHours);
+        LOG.debug("Input parameters -> diaryBo {}, openingHours {}", diaryBo, openingHours);
         List<DiaryBo> overlapDiaries = diaryService.getAllOverlappingDiary(diaryBo.getDoctorsOfficeId(), diaryBo.getStartDate(),
                 diaryBo.getEndDate(), Optional.ofNullable(diaryBo.getId()));
         boolean overlap = overlapDiaries.stream().anyMatch(od ->
