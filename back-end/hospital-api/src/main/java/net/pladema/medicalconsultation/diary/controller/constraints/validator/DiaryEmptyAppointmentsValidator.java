@@ -3,6 +3,7 @@ package net.pladema.medicalconsultation.diary.controller.constraints.validator;
 import static java.util.stream.Collectors.groupingBy;
 import static net.pladema.sgx.dates.utils.DateUtils.getWeekDay;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Collection;
 import java.util.HashMap;
@@ -44,6 +45,9 @@ public class DiaryEmptyAppointmentsValidator implements ConstraintValidator<Diar
 		LOG.debug("Input parameters -> diaryToUpdateId {}", diaryToUpdate);
 		Collection<AppointmentBo> appointments = appointmentService.getFutureActiveAppointmentsByDiary(diaryToUpdate.getId());
 
+		LocalDate from = localDateMapper.fromStringToLocalDate(diaryToUpdate.getStartDate());
+		LocalDate to = localDateMapper.fromStringToLocalDate(diaryToUpdate.getEndDate());
+
 		HashMap<Short, List<DiaryOpeningHoursDto>> appointmentsByWeekday = diaryToUpdate.getDiaryOpeningHours().stream()
 				.collect(groupingBy(doh -> doh.getOpeningHours().getDayWeekId(),
 						HashMap<Short, List<DiaryOpeningHoursDto>>::new, Collectors.toList()));
@@ -51,8 +55,11 @@ public class DiaryEmptyAppointmentsValidator implements ConstraintValidator<Diar
 		Optional<AppointmentBo> appointmentOutOfBounds = appointments.stream().filter(a -> {
 			List<DiaryOpeningHoursDto> newHours = appointmentsByWeekday.get(getWeekDay(a.getDate()));
 			return newHours == null
-					|| newHours.stream().noneMatch(newOH -> isValidAppointment(a, newOH.getOpeningHours()));
+					|| outOfDiaryBounds(from, to, a)
+					|| outOfOpeningHoursBounds(a, newHours);
 		}).findFirst();
+
+
 
 		if (appointmentOutOfBounds.isPresent()) {
 			buildResponse(context, "{diary.appointments.invalid}");
@@ -61,7 +68,15 @@ public class DiaryEmptyAppointmentsValidator implements ConstraintValidator<Diar
 		return true;
 	}
 
-	private boolean isValidAppointment(AppointmentBo appointment, OpeningHoursDto openingHours) {
+	private boolean outOfOpeningHoursBounds(AppointmentBo a, List<DiaryOpeningHoursDto> newHours) {
+		return newHours.stream().noneMatch(newOH -> fitsIn(a, newOH.getOpeningHours()));
+	}
+
+	private boolean outOfDiaryBounds(LocalDate from, LocalDate to, AppointmentBo a) {
+		return !(a.getDate().isAfter(from) && a.getDate().isBefore(to));
+	}
+
+	private boolean fitsIn(AppointmentBo appointment, OpeningHoursDto openingHours) {
 		LocalTime from = localDateMapper.fromStringToLocalTime(openingHours.getFrom());
 		LocalTime to = localDateMapper.fromStringToLocalTime(openingHours.getTo());
 		return (appointment.getHour().equals(from) || appointment.getHour().isAfter(from)) && appointment.getHour().isBefore(to);
