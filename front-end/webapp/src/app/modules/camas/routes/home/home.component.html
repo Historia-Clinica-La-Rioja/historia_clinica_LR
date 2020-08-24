@@ -5,44 +5,26 @@
         <div fxLayout="column">
 
             <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="space-between start">
-                <mat-card id="bed-managment-card">
+                <mat-card id="bed-management-card">
                     <mat-card-content>
                         <div fxLayout="row">
                             <div id="filtros" class="panel-filtro">
                                 <h2 class="page-title" [translate]="'gestion-camas.home.SUBTITLE'"></h2>
                                 <mat-card-subtitle>
-                                    <span *ngIf="bedManagmentList" id="bed_id">Resultado: {{bedsAmount}} camas</span>
+                                    <span *ngIf="bedManagementList" id="bed_id">Resultado: {{bedsAmount}} camas</span>
                                 </mat-card-subtitle>
                                 <app-bed-filters></app-bed-filters>
                             </div>
-                            <section class="beds" id="mapeo" *ngIf="bedManagmentList && bedManagmentList.length">
-                                <div fxLayout="column" *ngFor="let sector of bedManagmentList">
-                                    <div id="title">
-                                        <h2 class="page-title">{{sector.sectorDescription}}</h2>
-                                    </div>
-                                    <div id="speciality-block" fxLayout="column" *ngFor="let specialty of sector.specialty">
-                                        <div id="title">
-                                            <h2 id="speciality-title">{{specialty.specialtyName}}</h2>
-                                        </div>
-                                        <div fxLayout="row wrap">
-                                            <div *ngFor="let bed of specialty.beds">
-                                                <button mat-raised-button [ngClass]="{'free': bed.free}"
-                                                    (click)="selectBed(bed.bedId)">
-                                                    {{bed.bedNumber}}
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <mat-divider inset></mat-divider>
-                                </div>
+                            <section class="beds" id="mapeo" *ngIf="bedManagementList && bedManagementList.length">
+                                <app-bed-mapping [bedManagementList]="bedManagementList" (selectedBed)="onSelectBed($event)"></app-bed-mapping>
                             </section>
-                            <section class="beds" *ngIf="bedManagmentList && !bedManagmentList.length" fxLayout="column" fxLayoutAlign="space-around center">
+                            <section class="beds" *ngIf="bedManagementList && !bedManagementList.length" fxLayout="column" fxLayoutAlign="space-around center">
                                 <h2 [translate]="'gestion-camas.home.NO_FILTERED_BEDS'"></h2>
                             </section>
                         </div>
                     </mat-card-content>
                 </mat-card>
-                <div class="spinner" *ngIf="!bedManagmentList">
+                <div class="spinner" *ngIf="!bedManagementList">
                     <mat-spinner color="primary"></mat-spinner>
                 </div>
                 <app-bed-detail [bedId]="selectedBed"></app-bed-detail>

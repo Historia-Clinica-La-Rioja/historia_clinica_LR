@@ -5,7 +5,7 @@ import { PatientBasicData } from '../components/patient-card/patient-card.compon
 import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
 import { PatientTypeData } from '@presentation/components/patient-type-logo/patient-type-logo.component';
 import { DateFormat, momentParseDate, momentParseDateTime } from '@core/utils/moment.utils';
-import { BedManagment } from '../../camas/routes/home/home.component';
+import { BedManagement } from '../../camas/routes/home/home.component';
 
 @Injectable({
 	providedIn: 'root'
@@ -16,7 +16,7 @@ export class MapperService {
 	toPatientBasicData: (o: BasicPatientDto) => PatientBasicData = MapperService._toPatientBasicData;
 	toPersonalInformationData: (o1: CompletePatientDto, o2: PersonalInformationDto) => PersonalInformation = MapperService._toPersonalInformationData;
 	toPatientTypeData: (patientType: PatientType) => PatientTypeData = MapperService._toPatientTypeData;
-	toBedManagment: (bedSummary: BedSummaryDto[]) => BedManagment[] = MapperService._toBedManagment;
+	toBedManagement: (bedSummary: BedSummaryDto[]) => BedManagement[] = MapperService._toBedManagement;
 
 	constructor() {
 	}
@@ -86,10 +86,10 @@ export class MapperService {
 		};
 	}
 
-	private static _toBedManagment(bedSummary: BedSummaryDto[]): BedManagment[] {
-		const bedManagment: BedManagment[] = [];
+	private static _toBedManagement(bedSummary: BedSummaryDto[]): BedManagement[] {
+		const bedManagement: BedManagement[] = [];
 		bedSummary.forEach(summary => {
-			const sector = bedManagment.find(e => e.sectorId === summary.sector.id);
+			const sector = bedManagement.find(e => e.sectorId === summary.sector.id);
 
 			if (sector) {
 				const specialty = sector.specialty.find(e => e.specialtyId === summary.clinicalSpecialty.id);
@@ -126,11 +126,11 @@ export class MapperService {
 						}]
 					}]
 				};
-				bedManagment.push(newSector);
+				bedManagement.push(newSector);
 			}
 		});
 
-		return bedManagment;
+		return bedManagement;
 	}
 
 }

@@ -3,22 +3,20 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CamasRoutingModule } from './camas-routing.module';
 import { HomeComponent } from './routes/home/home.component';
 import { CoreModule } from '@core/core.module';
-import { BedDetailComponent } from './components/bed-detail/bed-detail.component';
 import { PresentationModule } from '../presentation/presentation.module';
-import { BedFiltersComponent } from './components/bed-filters/bed-filters.component';
+import { InstitucionModule } from '../institucion/institucion.module';
 
 @NgModule({
 	declarations: [
 		HomeComponent,
-		BedDetailComponent,
-		BedFiltersComponent,
 	],
 	imports: [
-		CoreModule,
+CoreModule,
 		FormsModule,
 		CamasRoutingModule,
 		ReactiveFormsModule,
-		PresentationModule
+		PresentationModule,
+		InstitucionModule
 	]
 })
 export class CamasModule {

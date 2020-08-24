@@ -1,0 +1,25 @@
+@import "../../../../../assets/styles/variables";
+
+.mat-raised-button{
+    color: white;
+    margin: 5px;
+    padding: 0 5px;
+    background-color: $error-color;
+}
+
+.free{
+    background-color: $success-color;
+    text-decoration: underline;
+}
+
+#mat-divider{
+    margin: 10px 0px 10px 0px;
+}
+
+#speciality-title {
+    margin: 0px;
+}
+
+#speciality-block {
+    margin: 5px 0px 5px 0px;
+}

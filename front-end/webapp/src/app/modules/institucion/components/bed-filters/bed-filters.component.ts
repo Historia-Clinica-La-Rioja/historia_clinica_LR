@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
-import { BedManagmentService, Sector, Speciality, Category } from '../../services/bed-managment.service';
+import { BedManagementService, Sector, Speciality, Category } from '../../services/bed-management.service';
 import { momentFormat, DateFormat } from '@core/utils/moment.utils';
 
 @Component({
@@ -10,14 +10,14 @@ import { momentFormat, DateFormat } from '@core/utils/moment.utils';
 })
 export class BedFiltersComponent implements OnInit {
 
-  public form: FormGroup;
+public form: FormGroup;
 	public sectors: Sector[] = [];
 	public specialities: Speciality[] = [];
 	public categories: Category[] = [];
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
-		private readonly bedManagmentService: BedManagmentService
+		private readonly bedManagementService: BedManagementService
   	) {	}
 
   	ngOnInit(): void {
@@ -29,17 +29,17 @@ export class BedFiltersComponent implements OnInit {
 			filled: [true]
 		});
 
-		const filterOptions = this.bedManagmentService.getFilterOptions();
+		const filterOptions = this.bedManagementService.getFilterOptions();
 		this.sectors = filterOptions.sectors;
 		this.specialities = filterOptions.specialities;
 		this.categories = filterOptions.categories;
   	}
 
 	public sendAllFiltersOnFilterChange() {
-		this.bedManagmentService.sendBedManagmentFilter(this.getBedManagmentFilter());
+		this.bedManagementService.sendBedManagementFilter(this.getBedManagementFilter());
 	}
 
-	private getBedManagmentFilter(): BedManagmentFilter {
+	private getBedManagementFilter(): BedManagementFilter {
 		return {
 			sector: this.form.value.sector,
 			speciality: this.form.value.speciality,
@@ -56,7 +56,7 @@ export class BedFiltersComponent implements OnInit {
 
 }
 
-export class BedManagmentFilter {
+export class BedManagementFilter {
 	sector: number;
 	speciality: number;
 	category: number;

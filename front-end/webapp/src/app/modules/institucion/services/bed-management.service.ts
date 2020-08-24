@@ -3,67 +3,67 @@ import { BedSummaryDto } from '@api-rest/api-model';
 import { BedService } from '@api-rest/services/bed.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { BedManagmentFilter } from '../components/bed-filters/bed-filters.component';
+import { BedManagementFilter } from '../components/bed-filters/bed-filters.component';
 import { momentParseDateTime, momentParseDate } from '@core/utils/moment.utils';
 import { pushIfNotExists } from '@core/utils/array.utils';
 
 @Injectable()
-export class BedManagmentService {
+export class BedManagementService {
 
 	public sectors: Sector[] = [];
 	public specialities: Speciality[] = [];
 	public categories: Category[] = [];
 
 	private subject = new BehaviorSubject<BedSummaryDto[]>(null);
-	private originalBedManagment: BedSummaryDto[] = [];
+	private originalBedManagement: BedSummaryDto[] = [];
 
 	constructor(
 		private bedService: BedService
   	) { }
 
-	public getBedManagment(): Observable<BedSummaryDto[]> {
-		if (!this.originalBedManagment.length) {
+	public getBedManagement(): Observable<BedSummaryDto[]> {
+		if (!this.originalBedManagement.length) {
 			this.bedService.getBedsSummary().pipe(
 				tap((bedsSummary: BedSummaryDto[]) => this.filterOptions(bedsSummary))
 			).subscribe(data => {
-				this.originalBedManagment = data;
-				this.sendBedManagment(this.originalBedManagment);
+				this.originalBedManagement = data;
+				this.sendBedManagement(this.originalBedManagement);
 			});
 		}
 		return this.subject.asObservable();
 	}
 
-	public sendBedManagment(bedManagment: BedSummaryDto[]) {
-		this.subject.next(bedManagment);
+	public sendBedManagement(bedManagement: BedSummaryDto[]) {
+		this.subject.next(bedManagement);
 	}
 
-	public sendBedManagmentFilter(newFilter: BedManagmentFilter) {
-		const bedManagmentCopy = [...this.originalBedManagment];
-		const result = bedManagmentCopy.filter(bedManagment => (this.filterBySector(newFilter, bedManagment)
-																	&& this.filterBySpeciality(newFilter, bedManagment)
-																	&& this.filterByCategory(newFilter, bedManagment)
-																	&& this.filterByProbableDischargeDate(newFilter, bedManagment)
-																	&& this.filterByFreeBed(newFilter, bedManagment)));
+	public sendBedManagementFilter(newFilter: BedManagementFilter) {
+		const bedManagementCopy = [...this.originalBedManagement];
+		const result = bedManagementCopy.filter(bedManagement => (this.filterBySector(newFilter, bedManagement)
+																	&& this.filterBySpeciality(newFilter, bedManagement)
+																	&& this.filterByCategory(newFilter, bedManagement)
+																	&& this.filterByProbableDischargeDate(newFilter, bedManagement)
+																	&& this.filterByFreeBed(newFilter, bedManagement)));
 		this.subject.next(result);
 	}
 
-	private filterBySector(filter: BedManagmentFilter, bed: BedSummaryDto): boolean {
+	private filterBySector(filter: BedManagementFilter, bed: BedSummaryDto): boolean {
 		return (filter.sector ? bed.sector.id === filter.sector : true);
 	}
 
-	private filterBySpeciality(filter: BedManagmentFilter, bed: BedSummaryDto): boolean {
+	private filterBySpeciality(filter: BedManagementFilter, bed: BedSummaryDto): boolean {
 		return (filter.speciality ? bed.clinicalSpecialty.id === filter.speciality : true);
 	}
 
-	private filterByCategory(filter: BedManagmentFilter, bed: BedSummaryDto): boolean {
+	private filterByCategory(filter: BedManagementFilter, bed: BedSummaryDto): boolean {
 		return (filter.category ? bed.bedCategory.id === filter.category : true);
 	}
 
-	private filterByProbableDischargeDate(filter: BedManagmentFilter, bed: BedSummaryDto): boolean {
+	private filterByProbableDischargeDate(filter: BedManagementFilter, bed: BedSummaryDto): boolean {
 		return (filter.probableDischargeDate ? bed.probableDischargeDate ? momentParseDateTime(bed.probableDischargeDate).isSameOrBefore(momentParseDate(filter.probableDischargeDate)) : false : true);
 	}
 
-	private filterByFreeBed(filter: BedManagmentFilter, bed: BedSummaryDto): boolean {
+	private filterByFreeBed(filter: BedManagementFilter, bed: BedSummaryDto): boolean {
 		return (filter.filled ? true : bed.bed.free);
 	}
 
