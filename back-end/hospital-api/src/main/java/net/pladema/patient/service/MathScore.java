@@ -1,9 +1,13 @@
 package net.pladema.patient.service;
 
-import static net.pladema.patient.service.StringHelper.*;
+import static net.pladema.patient.service.StringHelper.isNullOrWhiteSpace;
+import static net.pladema.patient.service.StringHelper.soundex;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import net.pladema.patient.controller.dto.PatientSearchFilter;
 import net.pladema.patient.service.domain.MatchCalculationException;
@@ -42,11 +46,16 @@ public class MathScore {
 	}
 	
 	private static Float sumPartialMatchCases(PatientSearchFilter searchFilter, Person personToMatch, Float partialResult) {
-		partialResult += assertNulls(personToMatch.getFirstName(),searchFilter.getFirstName()) ?
-				calculateMatchScore(soundex(searchFilter.getFirstName()), soundex(personToMatch.getFirstName()),
+		String filterNameComplete = buildCompleteName(searchFilter.getFirstName(), searchFilter.getMiddleNames());
+		String filterLastNameComplete = buildCompleteName(searchFilter.getLastName(), searchFilter.getOtherLastNames());
+		String personNameComplete = buildCompleteName(personToMatch.getFirstName(), personToMatch.getMiddleNames());
+		String personLastNameComplete = buildCompleteName(personToMatch.getLastName(), personToMatch.getOtherLastNames());
+
+		partialResult += hasContent(filterNameComplete, personNameComplete) ?
+				calculateMatchScore(soundex(filterNameComplete), soundex(personNameComplete),
 				SearchField.FIRST_NAME.getCoefficient()) : 0;
-		partialResult += assertNulls(personToMatch.getLastName(), searchFilter.getLastName()) ?
-				calculateMatchScore(soundex(searchFilter.getLastName()), soundex(personToMatch.getLastName()),
+		partialResult += hasContent(filterLastNameComplete, personLastNameComplete) ?
+				calculateMatchScore(soundex(filterLastNameComplete), soundex(personLastNameComplete),
 				SearchField.LAST_NAME.getCoefficient()) : 0;
 		partialResult += assertNulls(personToMatch.getIdentificationNumber(), searchFilter.getIdentificationNumber()) ?
 				calculateMatchScore(searchFilter.getIdentificationNumber(), personToMatch.getIdentificationNumber(),
@@ -56,6 +65,14 @@ public class MathScore {
 		return partialResult;
 	}
 
+	private static boolean hasContent(String filterNameComplete, String personNameComplete) {
+		return !filterNameComplete.isBlank() && !personNameComplete.isBlank();
+	}
+
+	private static String buildCompleteName(String ...names) {
+		return Arrays.asList(names).stream().filter(Objects::nonNull).collect(Collectors.joining(" "));
+	}
+	
 	private static float sumFullMatchCases(PatientSearchFilter searchFilter, Person personToMatch,
 			Float partialResult) {
 		partialResult += assertNulls(personToMatch.getIdentificationTypeId(), searchFilter.getIdentificationTypeId())
@@ -72,8 +89,8 @@ public class MathScore {
 		return date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 	}
 	
-	private static boolean assertNulls(Object filterAttribute, Object attributeToMatch) {
-		return filterAttribute != null && attributeToMatch != null;
+	private static boolean assertNulls(Object... filterAttributes) {
+		return Arrays.asList(filterAttributes).stream().noneMatch(Objects::isNull);
 	}
 
 	public static float calculateMatchScore(String obtainedText, String searchedText, float coefficient) {
