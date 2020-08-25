@@ -1,5 +1,15 @@
 # HospitalApp
 
+## Contribución
+
+Para el envío de propuestas, consultas técnicas o especificación funcional y responsable de la aprobación de las mismas, escribir al siguiente mail de contacto: historia_clinica@pladema.exa.unicen.edu.ar. 
+    
+Este código de Historia clínica, se encuentra  disponible en [gitlab-publico.pladema.net/historia-clinica/sgh](http://gitlab-publico.pladema.net/historia-clinica/sgh). 
+    
+Para subir aportes utilizar un fork y pedir un Merge Request a dicha URL.
+
+## Proyecto
+
 El proyecto está formado por los siguientes tres proyectos:
 
 1. front-end/backoffice: Single Page Application del panel de administración (backoffice) para manejo de los flujos básicos y creación de datos maestros. Implementada con ReactAdmin.
