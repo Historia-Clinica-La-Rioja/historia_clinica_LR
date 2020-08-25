@@ -27,77 +27,9 @@
 				</section>
 				<section>
 					<h2 [translate]="'internaciones.new-internment.SECTION_BED'"></h2>
-					<div class="form-row">
-						<span [translate]="'Sector'"></span>
-					</div>
-					<div class="form-row">
-						<mat-form-field appearance="outline">
-							<mat-select id="sectorId"
-							            name="sectorId"
-							            formControlName="sectorId"
-							            placeholder="{{'pacientes.form.SELECT' | translate}}"
-							            (selectionChange)="setServices()">
-								<mat-option *ngFor="let sector of sectors"
-								            [value]="sector.id">
-									{{sector.description}}
-								</mat-option>
-							</mat-select>
-							<mat-error [translate]="'pacientes.form.REQUIRED'"></mat-error>
-						</mat-form-field>
-					</div>
-					<div class="form-row">
-						<span [translate]="'Servicio'"></span>
-					</div>
-					<div class="form-row">
-						<mat-form-field appearance="outline">
-							<mat-select id="serviceId"
-							            name="serviceId"
-							            formControlName="serviceId"
-							            placeholder="{{'pacientes.form.SELECT' | translate}}"
-							            (selectionChange)="setRooms()">
-								<mat-option *ngFor="let service of services"
-								            [value]="service.id">
-									{{service.name}}
-								</mat-option>
-							</mat-select>
-							<mat-error [translate]="'pacientes.form.REQUIRED'"></mat-error>
-						</mat-form-field>
-					</div>
-					<div class="form-row">
-						<span [translate]="'N° de habitación'"></span>
-					</div>
-					<div class="form-row">
-						<mat-form-field appearance="outline">
-							<mat-select id="roomId"
-							            name="roomId"
-							            formControlName="roomId"
-							            placeholder="{{'pacientes.form.SELECT' | translate}}"
-							            (selectionChange)="setBeds()">
-								<mat-option *ngFor="let room of rooms"
-								            [value]="room.id">
-									{{room.roomNumber}}
-								</mat-option>
-							</mat-select>
-							<mat-error [translate]="'pacientes.form.REQUIRED'"></mat-error>
-						</mat-form-field>
-					</div>
-					<div class="form-row">
-						<span [translate]="'N° de cama'"></span>
-					</div>
-					<div class="form-row">
-						<mat-form-field appearance="outline">
-							<mat-select id="bedId"
-							            name="bedId"
-							            formControlName="bedId"
-							            placeholder="{{'pacientes.form.SELECT' | translate}}">
-								<mat-option *ngFor="let bed of beds"
-								            [value]="bed.id">
-									{{bed.bedNumber}}
-								</mat-option>
-							</mat-select>
-							<mat-error [translate]="'pacientes.form.REQUIRED'"></mat-error>
-						</mat-form-field>
-					</div>
+					<button mat-raised-button color="primary" (click)="openBedAssignmentDialog()">
+						<span [translate]="'internaciones.new-internment.BED_ASSIGNMENT_BUTTON'"></span>
+					</button>
 				</section>
 				<section>
 					<h2 [translate]="'internaciones.new-internment.SECTION_DOCTOR'"></h2>

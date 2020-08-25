@@ -1,7 +1,7 @@
 <section class="page">
     <mat-card id="bed_card">
         <mat-card-title>
-            <h2 class="page-title"  [translate]="'gestion-camas.detail.TITLE'"></h2>
+            <h2 class="mat-h2 page-title"  [translate]="'gestion-camas.detail.TITLE'"></h2>
         </mat-card-title>
         <section *ngIf="!bedInfo">
             <mat-card-content>
@@ -12,7 +12,7 @@
         </section>
         <mat-list content *ngIf="bedInfo">
             <div fxLayout="row" fxLayoutAlign="space-between">
-                <h2 [translate]="'gestion-camas.detail.BED_TITLE'" [translateParams]="{ bedNumber: bedInfo.bed.bedNumber }"></h2>
+                <h2 class="mat-h2" [translate]="'gestion-camas.detail.BED_TITLE'" [translateParams]="{ bedNumber: bedInfo.bed.bedNumber }"></h2>
                 <mat-chip-list >
 	                <mat-chip class="default" id="error-text" [selectable]="false" [ngClass]="{'error': !bedInfo.bed.free}">
                         {{ (bedInfo.bed.free ? 'gestion-camas.detail.FREE' : 'gestion-camas.detail.NOT_FREE') | translate}}

@@ -24,6 +24,8 @@ import { EffectiveTimeDialogComponent } from './dialogs/effective-time-dialog/ef
 import { RemoveDiagnosisComponent } from './dialogs/remove-diagnosis/remove-diagnosis.component';
 import { ProbableDischargeDialogComponent } from './dialogs/probable-discharge-dialog/probable-discharge-dialog.component';
 import { DocumentSectionComponent } from '../presentation/components/document-section/document-section.component';
+import { BedAssignmentComponent } from './dialogs/bed-assignment/bed-assignment.component';
+import { InstitucionModule } from '../institucion/institucion.module';
 
 
 @NgModule({
@@ -48,13 +50,15 @@ import { DocumentSectionComponent } from '../presentation/components/document-se
 		SignosVitalesSummaryComponent,
 		VacunasSummaryComponent,
 		ProbableDischargeDialogComponent,
-		DocumentSectionComponent
+		DocumentSectionComponent,
+		BedAssignmentComponent
 	],
 	imports: [
 		ApiRestModule,
 		CommonModule,
 		CoreModule,
 		PresentationModule,
+		InstitucionModule,
 	],
 	exports: [
 		AlergiasSummaryComponent,
