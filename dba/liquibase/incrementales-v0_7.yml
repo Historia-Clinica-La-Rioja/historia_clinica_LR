@@ -1,3 +1,80 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v0_7 
 
+    - changeSet:
+        id: historic_appointment-createTable  
+        comment: Create table historic_appointment
+        author: gmurgolo
+        changes: 
+        - createTable: 
+            tableName: historic_appointment_state
+            columns: 
+            - column:
+                name: appointment_id
+                type: int
+                constraints:
+                    nullable: false
+            - column:
+                name: appointment_state_id
+                type: smallint
+                constraints:
+                    nullable: false
+            - column:
+                constraints:
+                    nullable: true
+                name: reason
+                type: varchar(255)
+            - column:
+                constraints:
+                    nullable: false
+                name: changed_state_date
+                type: datetime
+                defaultValueDate: ${date.now} 
+            - column:
+                constraints:
+                    nullable: false
+                name: created_by
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: created_on
+                type: datetime
+                defaultValueDate: ${date.now} 
+            - column:
+                constraints:
+                    nullable: false
+                name: updated_by
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: updated_on
+                type: datetime
+                defaultValueDate: ${date.now}
+        - addPrimaryKey:
+            clustered: true
+            columnNames: appointment_id, changed_state_date
+            constraintName: PK_historic_appointment_state
+            tableName: historic_appointment_state
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: appointment_id
+            baseTableName: historic_appointment_state
+            constraintName: FK_historic_appointment_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: appointment
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: appointment_state_id
+            baseTableName: historic_appointment_state
+            constraintName: FK_historic_appointment_state_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: appointment_state
+            validate: true
