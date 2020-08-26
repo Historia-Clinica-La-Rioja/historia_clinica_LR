@@ -70,17 +70,19 @@ public class AppointmentValidator implements ConstraintValidator<ValidAppointmen
             valid = false;
         }
 
-        boolean existAppointment = appointmentService.existAppointment(createAppointmentDto.getDiaryId(),
-                createAppointmentDto.getOpeningHoursId(),
-                localDateMapper.fromStringToLocalDate(createAppointmentDto.getDate()),
-                localDateMapper.fromStringToLocalTime(createAppointmentDto.getHour()));
+        if (!createAppointmentDto.isOverturn()) {
+            boolean existAppointment = appointmentService.existAppointment(createAppointmentDto.getDiaryId(),
+                    createAppointmentDto.getOpeningHoursId(),
+                    localDateMapper.fromStringToLocalDate(createAppointmentDto.getDate()),
+                    localDateMapper.fromStringToLocalTime(createAppointmentDto.getHour()));
 
-        if (existAppointment) {
-            buildResponse(context, "{appointment.overlapping}");
-            valid = false;
+            if (existAppointment) {
+                buildResponse(context, "{appointment.overlapping}");
+                valid = false;
+            }
         }
 
-        if (createAppointmentDto.isOverturn() ) {
+        if (createAppointmentDto.isOverturn()) {
             boolean allowNewOverturn = diaryOpeningHoursValidatorService.allowNewOverturn(createAppointmentDto.getDiaryId(),
                 createAppointmentDto.getOpeningHoursId(), localDateMapper.fromStringToLocalDate(createAppointmentDto.getDate()));
             if (!allowNewOverturn) {
