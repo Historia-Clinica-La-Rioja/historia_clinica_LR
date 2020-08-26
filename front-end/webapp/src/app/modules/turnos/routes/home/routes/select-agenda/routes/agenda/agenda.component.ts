@@ -225,7 +225,7 @@ export class AgendaComponent implements OnInit {
 		return selectedOpeningHour?.openingHours.id;
 	}
 
-	viewAppointment({ event }: { event: CalendarEvent }): void {
+	viewAppointment(event: CalendarEvent): void {
 		const appointmentDialogRef = this.dialog.open(AppointmentComponent, {
 			data: event.meta,
 		});

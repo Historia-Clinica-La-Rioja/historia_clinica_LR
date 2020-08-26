@@ -1,35 +1,41 @@
 <div mat-dialog-content>
-	<mat-list>
-		<mat-list-item id="patient">
-			<mat-icon fontSet="material-icons-outlined" color="primary" mat-list-icon [inline]="true">person
-			</mat-icon>
-			<div fxLayout="column">
-				<strong> {{data.patient.fullName}} - {{data.patient.identificationNumber}} </strong>
-				<span class="patient-info"> Obra social: {{data.medicalCoverage?.name}} /
-					{{data.medicalCoverage.affiliateNumber}}</span>
-				<span class="patient-info">Teléfono: {{data.patient.phoneNumber}}</span>
-				<a *hasRole="['ESPECIALISTA_MEDICO','PROFESIONAL_DE_SALUD']"
-					[href]="'/institucion/' + institutionId + '/ambulatoria/paciente/' + data?.patient?.id">Ver
-					historia clínica</a>
-			</div>
-		</mat-list-item>
-	</mat-list>
-	<br>
-	<span class="asing-appointment">Turno Asignado</span>
-	<mat-list class="appointment-information">
-		<div>
-			<mat-list-item id="full-date">
+	<section id="personal-data" fxLayout="column">
+		<div fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
+			<mat-icon fontSet="material-icons-outlined" color="primary">person</mat-icon>
+			<span class="mat-body-strong"> {{data.patient.fullName}} - {{data.patient.identificationNumber}} </span>
+		</div>
+		<div fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
+			<mat-icon fontSet="material-icons-outlined" style="color: transparent">person</mat-icon>
+			<span class="mat-body patient-info"> Obra social: {{data.medicalCoverage?.name}} /
+				{{data.medicalCoverage.affiliateNumber}}</span>
+		</div>
+		<div fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
+			<mat-icon fontSet="material-icons-outlined" style="color: transparent">person</mat-icon>
+			<span class="mat-body patient-info">Teléfono: {{data.patient.phoneNumber}}</span>
+		</div>
+		<div fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
+			<mat-icon fontSet="material-icons-outlined" style="color: transparent">person</mat-icon>
+			<a class="mat-body" *hasRole="['ESPECIALISTA_MEDICO','PROFESIONAL_DE_SALUD']"
+			   [href]="'/institucion/' + institutionId + '/ambulatoria/paciente/' + data?.patient?.id">Ver
+				historia clínica</a>
+		</div>
+	</section>
+
+	<section id="appointment">
+		<span class="mat-body-strong">Turno Asignado</span>
+		<div fxLayout="column" fxLayoutGap="3px">
+			<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start center" id="full-date">
 				<mat-icon fontSet="material-icons-outlined" color="primary" mat-list-icon [inline]="true">calendar_today
 				</mat-icon>
-				<strong> {{data.date | date:"fullDate" }}</strong>
-			</mat-list-item>
-			<mat-list-item id="hour">
+				<span class="mat-body"> {{data.date | date:"fullDate" }}</span>
+			</div>
+			<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start center" id="hour">
 				<mat-icon fontSet="material-icons-outlined" color="primary" mat-list-icon [inline]="true">access_time
 				</mat-icon>
-				<strong> {{data.date | date:"HH:mm"}} hs</strong>
-			</mat-list-item>
+				<span class="mat-body"> {{data.date | date:"HH:mm"}} hs</span>
+			</div>
 		</div>
-	</mat-list>
+	</section>
 </div>
 
 <mat-dialog-actions *hasRole="['ADMINISTRATIVO', 'ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']"
