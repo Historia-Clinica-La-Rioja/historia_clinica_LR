@@ -36,6 +36,28 @@
 			</div>
 		</div>
 	</section>
+
+	<section id="state">
+		<span class="mat-body-strong">Estado de turno</span>
+		<div fxLayout="row" fxLayoutAlign="start center">
+			<button mat-icon-button>
+				<mat-icon color="primary">event_available</mat-icon>
+			</button>
+
+			<button mat-icon-button>
+				<mat-icon color="primary">meeting_room</mat-icon>
+			</button>
+
+			<button mat-icon-button>
+				<mat-icon svgIcon="person_cancel_outlined" color="primary"></mat-icon>
+			</button>
+
+			<button mat-icon-button>
+				<mat-icon svgIcon="person_check_outlined" color="primary"></mat-icon>
+			</button>
+
+		</div>
+	</section>
 </div>
 
 <mat-dialog-actions *hasRole="['ADMINISTRATIVO', 'ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']"

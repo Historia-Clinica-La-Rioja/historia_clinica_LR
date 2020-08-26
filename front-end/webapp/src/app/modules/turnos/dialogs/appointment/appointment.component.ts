@@ -16,15 +16,17 @@ import { ContextService } from '@core/services/context.service';
 export class AppointmentComponent implements OnInit {
 
 
-		public institutionId = this.contextService.institutionId;
+	public institutionId = this.contextService.institutionId;
 
-	constructor(@Inject(MAT_DIALOG_DATA) public data: PatientAppointmentInformation,
+	constructor(
+		@Inject(MAT_DIALOG_DATA) public data: PatientAppointmentInformation,
 		public dialogRef: MatDialogRef<NewAttentionComponent>,
 		private readonly dialog: MatDialog,
 		private appointmentService: AppointmentsService,
 		private snackBarService: SnackBarService,
 		private readonly router: Router,
-		private contextService: ContextService,) {
+	 	private contextService: ContextService
+	) {
 	}
 
 	ngOnInit(): void {
@@ -45,7 +47,8 @@ export class AppointmentComponent implements OnInit {
 					.subscribe(() => {
 						this.dialogRef.close('appointmentCanceled');
 						this.snackBarService.showSuccess('turnos.cancel.SUCCESS');
-					}, (error) => { });
+					}, (error) => {
+					});
 			}
 		});
 	}
@@ -63,5 +66,5 @@ export class PatientAppointmentInformation {
 	medicalCoverage: {
 		name: string,
 		affiliateNumber: string
-	}
+	};
 }
