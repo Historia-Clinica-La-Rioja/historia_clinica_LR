@@ -1,1 +1,8 @@
+::ng-deep .mat-list .mat-list-item .mat-line{
+	Word-wrap: break-Word;
+   white-space: pre-wrap;
+}
 
+::ng-deep  .mat-list .mat-list-item{
+	height:initial!important;
+}
