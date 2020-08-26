@@ -78,3 +78,14 @@ databaseChangeLog:
             referencedColumnNames: id
             referencedTableName: appointment_state
             validate: true
+
+                
+    - changeSet:
+        id: add-new-appointment-state
+        comment: Agregar nueva entrada en estados de turno
+        author: etrapani
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    INSERT INTO appointment_state (id, description) VALUES(5, 'Atendido');
