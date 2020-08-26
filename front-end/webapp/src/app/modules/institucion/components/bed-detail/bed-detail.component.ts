@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { BedService } from '@api-rest/services/bed.service';
 import { BedInfoDto } from '@api-rest/api-model';
 
@@ -10,6 +10,8 @@ import { BedInfoDto } from '@api-rest/api-model';
 export class BedDetailComponent implements OnInit, OnChanges {
 
   	@Input() bedId: number;
+	@Input() bedAssign?: boolean = false;
+	@Output() assignedBed?: EventEmitter<BedInfoDto> = new EventEmitter<BedInfoDto>();
 
 	bedInfo: BedInfoDto;
 
@@ -25,6 +27,10 @@ export class BedDetailComponent implements OnInit, OnChanges {
 		if (changes.bedId.currentValue) {
 			this.bedService.getBedInfo(this.bedId).subscribe(bedInfo => this.bedInfo = bedInfo);
 		}
+	}
+
+	assignBed() {
+		this.assignedBed.emit(this.bedInfo);
 	}
 
 }

@@ -28,7 +28,7 @@
             <div class="spinner" *ngIf="!bedManagementList">
                 <mat-spinner color="primary"></mat-spinner>
             </div>
-            <app-bed-detail [bedId]="selectedBed"></app-bed-detail>
+            <app-bed-detail [bedId]="selectedBed" [bedAssign]="true" (assignedBed)="onAssignedBed($event)"></app-bed-detail>
         </div>
 
     </div>

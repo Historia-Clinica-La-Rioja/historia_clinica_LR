@@ -155,7 +155,7 @@ export class NewInternmentComponent implements OnInit {
 		});
 
 		dialogRef.afterClosed().subscribe(result => {
-			
+			console.log(result);
 		});
 
 	}
