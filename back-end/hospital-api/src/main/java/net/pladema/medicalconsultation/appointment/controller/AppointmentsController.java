@@ -1,18 +1,11 @@
 package net.pladema.medicalconsultation.appointment.controller;
 
-import io.swagger.annotations.Api;
-import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointment;
-import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentDiary;
-import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentState;
-import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentListDto;
-import net.pladema.medicalconsultation.appointment.controller.dto.CreateAppointmentDto;
-import net.pladema.medicalconsultation.appointment.controller.mapper.AppointmentMapper;
-import net.pladema.medicalconsultation.appointment.service.AppointmentService;
-import net.pladema.medicalconsultation.appointment.service.CreateAppointmentService;
-import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
-import net.pladema.patient.controller.dto.HealthInsurancePatientDataDto;
-import net.pladema.patient.controller.service.PatientExternalService;
-import net.pladema.sgx.security.utils.UserInfo;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.validation.constraints.NotEmpty;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -28,10 +21,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.constraints.NotEmpty;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
+import io.swagger.annotations.Api;
+import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointment;
+import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentDiary;
+import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentState;
+import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentListDto;
+import net.pladema.medicalconsultation.appointment.controller.dto.CreateAppointmentDto;
+import net.pladema.medicalconsultation.appointment.controller.mapper.AppointmentMapper;
+import net.pladema.medicalconsultation.appointment.service.AppointmentService;
+import net.pladema.medicalconsultation.appointment.service.AppointmentValidatorService;
+import net.pladema.medicalconsultation.appointment.service.CreateAppointmentService;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
+import net.pladema.patient.controller.dto.HealthInsurancePatientDataDto;
+import net.pladema.patient.controller.service.PatientExternalService;
+import net.pladema.sgx.security.utils.UserInfo;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/medicalConsultations/appointments")
@@ -44,6 +47,8 @@ public class AppointmentsController {
     public static final String OUTPUT = "Output -> {}";
 
     private final AppointmentService appointmentService;
+    
+    private final AppointmentValidatorService appointmentValidatorService;
 
     private final CreateAppointmentService createAppointmentService;
 
@@ -52,11 +57,13 @@ public class AppointmentsController {
     private final PatientExternalService patientExternalService;
 
     public AppointmentsController(AppointmentService appointmentService,
+    							  AppointmentValidatorService appointmentValidatorService,
                                   CreateAppointmentService createAppointmentService,
                                   AppointmentMapper appointmentMapper,
                                   PatientExternalService patientExternalService) {
         super();
         this.appointmentService = appointmentService;
+        this.appointmentValidatorService = appointmentValidatorService;
         this.createAppointmentService = createAppointmentService;
         this.appointmentMapper = appointmentMapper;
         this.patientExternalService = patientExternalService;
@@ -106,10 +113,12 @@ public class AppointmentsController {
     public ResponseEntity<Boolean> changeState(
             @PathVariable(name = "institutionId") Integer institutionId,
             @ValidAppointmentDiary @PathVariable(name = "appointmentId") Integer appointmentId,
-            @ValidAppointmentState @RequestParam(name = "appointmentStateId") String appointmentStateId) {
-        LOG.debug("Input parameters -> institutionId {}, appointmentId {}, appointmentStateId {}", institutionId, appointmentId, appointmentStateId);
-        boolean result = appointmentService.updateState(appointmentId, Short.parseShort(appointmentStateId), UserInfo.getCurrentAuditor());
-        LOG.debug(OUTPUT, result);
-        return ResponseEntity.ok().body(result);
+            @ValidAppointmentState @RequestParam(name = "appointmentStateId") String appointmentStateId,
+            @RequestParam(name = "reason", required = false) String reason) {
+		LOG.debug("Input parameters -> institutionId {}, appointmentId {}, appointmentStateId {}", institutionId, appointmentId, appointmentStateId);
+		appointmentValidatorService.validateStateUpdate(appointmentId, Short.parseShort(appointmentStateId), reason);
+		boolean result = appointmentService.updateState(appointmentId, Short.parseShort(appointmentStateId), UserInfo.getCurrentAuditor(), reason);
+		LOG.debug(OUTPUT, result);
+		return ResponseEntity.ok().body(result);
     }
 }

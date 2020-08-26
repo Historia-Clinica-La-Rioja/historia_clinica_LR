@@ -10,6 +10,7 @@ import javax.mail.MessagingException;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import javax.validation.ValidationException;
 
 import org.apache.http.MethodNotSupportedException;
 import org.slf4j.Logger;
@@ -131,6 +132,14 @@ public class RestExceptionHandler {
 	@ExceptionHandler({BackofficeValidationException.class})
 	public ApiErrorMessageDto handleBackofficeValidationException(BackofficeValidationException ex, Locale locale) {
 		return handleRuntimeException(ex, locale);
+	}
+	
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ValidationException.class})
+	public ResponseEntity<ApiErrorMessageDto> handleValidationException(ValidationException ex, Locale locale) {
+		LOG.warn(ex.getMessage(), ex);
+		String errorMessage = messageSource.getMessage(ex.getMessage(), null, locale);
+		return new ResponseEntity<>(new ApiErrorMessageDto(ex.getMessage(), errorMessage), HttpStatus.BAD_REQUEST);
 	}
 	
 	@ResponseStatus(HttpStatus.BAD_REQUEST)

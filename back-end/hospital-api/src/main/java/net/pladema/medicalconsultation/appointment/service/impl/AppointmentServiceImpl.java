@@ -1,18 +1,21 @@
 package net.pladema.medicalconsultation.appointment.service.impl;
 
-import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
-import net.pladema.medicalconsultation.appointment.service.AppointmentService;
-import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
+import net.pladema.medicalconsultation.appointment.repository.HistoricAppointmentStateRepository;
+import net.pladema.medicalconsultation.appointment.repository.entity.HistoricAppointmentState;
+import net.pladema.medicalconsultation.appointment.service.AppointmentService;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
@@ -22,9 +25,12 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 	private final AppointmentRepository appointmentRepository;
 
-	public AppointmentServiceImpl(AppointmentRepository appointmentRepository) {
-		super();
+	private final HistoricAppointmentStateRepository historicAppointmentStateRepository;
+
+	public AppointmentServiceImpl(AppointmentRepository appointmentRepository,
+			HistoricAppointmentStateRepository historicAppointmentStateRepository) {
 		this.appointmentRepository = appointmentRepository;
+		this.historicAppointmentStateRepository = historicAppointmentStateRepository;
 	}
 
 	@Override
@@ -37,6 +43,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 		LOG.debug("Output -> {}", result);
 		return result;
 	}
+
 
 	@Override
 	public Collection<AppointmentBo> getFutureActiveAppointmentsByDiary(Integer diaryId) {
@@ -56,9 +63,10 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public boolean updateState(Integer appointmentId, short appointmentStateId, Integer userId) {
+    public boolean updateState(Integer appointmentId, short appointmentStateId, Integer userId, String reason) {
         LOG.debug("Input parameters -> appointmentId {}, appointmentStateId {}, userId {}", appointmentId, appointmentStateId, userId);
         appointmentRepository.updateState(appointmentId, appointmentStateId, userId);
+        historicAppointmentStateRepository.save(new HistoricAppointmentState(appointmentId, appointmentStateId, reason));
         LOG.debug(OUTPUT, Boolean.TRUE);
         return Boolean.TRUE;
     }
