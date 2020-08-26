@@ -1,11 +1,11 @@
-import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MapperService } from '@presentation/services/mapper.service';
 import { BedManagementService } from 'src/app/modules/institucion/services/bed-management.service';
 import { BedSummaryDto, BedInfoDto } from '@api-rest/api-model';
 import { BedManagement } from 'src/app/modules/camas/routes/home/home.component';
 import { tap, map } from 'rxjs/operators';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-bed-assignment',
@@ -22,7 +22,6 @@ export class BedAssignmentComponent implements OnInit, OnDestroy {
 	private ManagementBed$: Subscription;
 
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public data: {  },
 		public dialogRef: MatDialogRef<BedAssignmentComponent>,
 		private mapperService: MapperService,
 		private bedManagementService: BedManagementService

@@ -12,7 +12,7 @@
             "SPECIALTY": "Especialidad",
             "SECTOR": "Sector",
             "CATEGORY": "Categoría",
-            "ROOM": "Habitación:",
+            "ROOM": "Habitación",
             "PATIENT": "Paciente:",
             "PROBABLE_DISCHARGE_DATE": "Fecha de alta probable: ",
             "NO_DISCHARGE_DATE": "Sin información",

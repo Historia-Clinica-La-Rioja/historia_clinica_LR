@@ -90,7 +90,7 @@
         </mat-list>
 
         <div fxLayout="row" fxLayoutAlign="end">
-            <button mat-raised-button color="primary" (click)="assignBed()" *ngIf="bedAssign && bedInfo">
+            <button mat-raised-button color="primary" (click)="assignBed()" *ngIf="bedAssign && bedInfo && bedInfo.bed.free">
                 <span [translate]="'internaciones.new-internment.BED_ASSIGNMENT_BUTTON'"></span>
             </button>
         </div>

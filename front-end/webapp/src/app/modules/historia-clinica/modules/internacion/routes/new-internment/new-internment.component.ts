@@ -17,7 +17,8 @@ import { HealthcareProfessionalService } from '@api-rest/services/healthcare-pro
 import {
 	CompletePatientDto,
 	HealthcareProfessionalDto,
-	PersonalInformationDto
+	PersonalInformationDto,
+	BedInfoDto
 } from '@api-rest/api-model';
 
 import {
@@ -47,6 +48,7 @@ export class NewInternmentComponent implements OnInit {
 	public patientBasicData: PatientBasicData;
 	public personalInformation: PersonalInformation;
 	public patientTypeData: PatientTypeData;
+	public selectedBedInfo: BedInfoDto;
 	private readonly routePrefix;
 
 	constructor(
@@ -110,9 +112,12 @@ export class NewInternmentComponent implements OnInit {
 	}
 
 	save(): void {
-		if (this.form.valid) {
+		if (this.form.valid && this.selectedBedInfo) {
 			this.openDialog();
 		} else {
+			if (!this.selectedBedInfo) {
+				this.snackBarService.showError('internaciones.new-internment.messages.ERROR_BED_ASSIGNMENT');
+			}
 			scrollIntoError(this.form, this.el);
 		}
 	}
@@ -148,14 +153,13 @@ export class NewInternmentComponent implements OnInit {
 	openBedAssignmentDialog(): void {
 
 		const dialogRef = this.dialog.open(BedAssignmentComponent, {
-			width: '80%',
-			data: {
-				
-			}
+			width: '80%'
 		});
 
 		dialogRef.afterClosed().subscribe(result => {
-			console.log(result);
+			if (result) {
+				this.selectedBedInfo = result;
+			}
 		});
 
 	}
@@ -163,8 +167,7 @@ export class NewInternmentComponent implements OnInit {
 	private mapToPersonInternmentEpisodeRequest() {
 		const response = {
 			patientId: this.patientId,
-			//aca va el id de la cama al seleccionarla en el popup
-			bedId: null,
+			bedId: this.selectedBedInfo.bed.id,
 			clinicalSpecialtyId: this.form.controls.specialtyId.value,
 			responsibleDoctorId: this.form.controls.doctorId.value,
 			responsibleContact: null

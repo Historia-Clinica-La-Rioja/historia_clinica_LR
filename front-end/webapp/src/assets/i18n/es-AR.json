@@ -18,10 +18,11 @@
 		"CONTINUE": "Continuar",
 		"CONFIRM": "Confirmar",
 		"CLOSE": "Cerrar",
-		"DELETE":"Eliminar",
+		"DELETE": "Eliminar",
 		"SEARCH": "Buscar",
 		"UPDATE": "Actualizar",
-		"GENERATE": "Generar"
+		"GENERATE": "Generar",
+		"EDIT": "Editar"
 	},
 	"forms": {
 		"REQUIRED": "El campo es requerido",

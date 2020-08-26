@@ -27,9 +27,54 @@
 				</section>
 				<section>
 					<h2 [translate]="'internaciones.new-internment.SECTION_BED'"></h2>
-					<button mat-raised-button color="primary" (click)="openBedAssignmentDialog()">
-						<span [translate]="'internaciones.new-internment.BED_ASSIGNMENT_BUTTON'"></span>
-					</button>
+					<div class="bed-assignment">
+						<h4 class="page-title" *ngIf="!selectedBedInfo" [translate]="'internaciones.new-internment.BED_ASSIGNMENT'"></h4>
+						<mat-list content *ngIf="selectedBedInfo">
+							<mat-list-item>
+								<h2 [translate]="'gestion-camas.detail.BED_TITLE'" [translateParams]="{ bedNumber: selectedBedInfo.bed.bedNumber }"></h2>
+							</mat-list-item>
+							<mat-list-item>
+								<div fxLayout="column wrap">
+									<span class="mat-body-1" [translate]="'gestion-camas.detail.SECTOR'"></span>
+									<span class="mat-body-2">
+										{{selectedBedInfo.bed.room.sector.description}}
+									</span>
+								</div>
+							</mat-list-item>
+							<mat-list-item>
+								<div fxLayout="column wrap">
+									<span class="mat-body-1" [translate]="'gestion-camas.detail.SPECIALTY'"></span>
+									<span class="mat-body-2">
+										{{selectedBedInfo.bed.room.sector.specialty.name}}
+									</span>
+								</div>
+							</mat-list-item>
+							<mat-list-item>
+								<div fxLayout="column wrap">
+									<span class="mat-body-1" [translate]="'gestion-camas.detail.CATEGORY'"></span>
+									<span class="mat-body-2">
+										{{selectedBedInfo.bed.bedCategory.description}}
+									</span>
+								</div>
+							</mat-list-item>
+							<mat-list-item>
+								<div fxLayout="column wrap">
+									<span class="mat-body-1" [translate]="'gestion-camas.detail.ROOM'"></span>
+									<span class="mat-body-2">
+										{{selectedBedInfo.bed.room.description}}
+									</span>
+								</div>
+							</mat-list-item>
+						</mat-list>
+						<div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10px">
+							<button mat-raised-button color="primary" type="button" (click)="openBedAssignmentDialog()" *ngIf="selectedBedInfo">
+								{{'buttons.EDIT' | translate | uppercase }}
+							</button>
+							<button mat-raised-button color="primary" type="button" (click)="openBedAssignmentDialog()" *ngIf="!selectedBedInfo">
+								<span [translate]="'internaciones.new-internment.BED_ASSIGNMENT_BUTTON'"></span>
+							</button>
+						</div>
+					</div>
 				</section>
 				<section>
 					<h2 [translate]="'internaciones.new-internment.SECTION_DOCTOR'"></h2>

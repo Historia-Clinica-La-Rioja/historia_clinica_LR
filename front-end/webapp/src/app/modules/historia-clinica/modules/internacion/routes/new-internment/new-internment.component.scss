@@ -1,4 +1,5 @@
 @import "../../../../../../../assets/styles/mixins";
+@import "../../../../../../../assets/styles/mat-mixins";
 
 .section-container {
 	display: flex;
@@ -12,6 +13,7 @@
 
 .form-row{
 	@include form-row;
+	@include mat-form-field-background-white;
 
 	.mat-form-field{
 		width: 100%;
@@ -21,4 +23,10 @@
 .header{
 	display: flex;
 	justify-content: flex-end;
+}
+
+.bed-assignment {
+	background: #ffffffff;
+	padding: 15px;
+	margin-bottom: 10px;
 }

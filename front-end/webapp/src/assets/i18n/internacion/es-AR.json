@@ -377,9 +377,11 @@
 			"SECTION_BED": "Asignación de cama",
 			"SECTION_CONTACT": "Contacto responsable",
 			"SECTION_DOCTOR": "Médico responsable",
+			"BED_ASSIGNMENT": "Asigne una cama para la nueva internación",
 			"BED_ASSIGNMENT_BUTTON": "ASIGNAR CAMA",
 			"messages": {
 				"ERROR": "Error al crear una nueva internacion",
+				"ERROR_BED_ASSIGNMENT": "Asigne una cama para continuar",
 				"SUCCESS": "La internación se guardó exitosamente"
 			}
 		},
