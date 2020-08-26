@@ -3,9 +3,9 @@ package net.pladema.clinichistory.hospitalization.service.anamnesis.impl;
 import net.pladema.clinichistory.documents.repository.entity.Document;
 import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.service.NoteService;
+import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.CreateAnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.AnamnesisBo;
-import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.ips.service.*;
 import net.pladema.clinichistory.ips.service.domain.DocumentObservationsBo;
@@ -39,6 +39,8 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
 
     private final ImmunizationService immunizationService;
 
+    private final ProceduresService proceduresService;
+
     public CreateAnamnesisServiceImpl(DocumentService documentService,
                                       InternmentEpisodeService internmentEpisodeService,
                                       NoteService noteService,
@@ -46,6 +48,7 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
                                       AllergyService allergyService,
                                       ClinicalObservationService clinicalObservationService,
                                       ImmunizationService immunizationService,
+                                      ProceduresService proceduresService,
                                       MedicationService medicationService) {
         this.documentService = documentService;
         this.internmentEpisodeService = internmentEpisodeService;
@@ -54,6 +57,7 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
         this.allergyService = allergyService;
         this.clinicalObservationService = clinicalObservationService;
         this.immunizationService = immunizationService;
+        this.proceduresService = proceduresService;
         this.medicationService = medicationService;
     }
 
@@ -72,6 +76,7 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
         anamnesis.setAllergies(allergyService.loadAllergies(patientId, doc.getId(), anamnesis.getAllergies()));
         anamnesis.setImmunizations(immunizationService.loadImmunization(patientId, doc.getId(), anamnesis.getImmunizations()));
         anamnesis.setMedications(medicationService.loadMedications(patientId, doc.getId(), anamnesis.getMedications()));
+        anamnesis.setProcedures(proceduresService.loadProcedures(patientId, doc.getId(), anamnesis.getProcedures()));
 
         anamnesis.setVitalSigns(clinicalObservationService.loadVitalSigns(patientId, doc.getId(), Optional.ofNullable(anamnesis.getVitalSigns())));
         anamnesis.setAnthropometricData(clinicalObservationService.loadAnthropometricData(patientId, doc.getId(), Optional.ofNullable(anamnesis.getAnthropometricData())));

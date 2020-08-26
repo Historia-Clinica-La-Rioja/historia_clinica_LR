@@ -6,10 +6,13 @@ import lombok.ToString;
 import net.pladema.clinichistory.documents.service.Document;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentStatus;
 import net.pladema.clinichistory.ips.service.domain.*;
+import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientProcedureDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProblemBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProcedureBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ReasonBo;
 
+import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,6 +33,8 @@ public class AnamnesisBo implements Document {
 
     private List<HealthHistoryConditionBo> personalHistories;
 
+    private List<ProcedureBo> procedures;
+
     private List<HealthHistoryConditionBo> familyHistories;
 
     private List<MedicationBo> medications;
@@ -48,11 +53,6 @@ public class AnamnesisBo implements Document {
 
     @Override
     public List<ProblemBo> getProblems() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<ProcedureBo> getProcedures() {
         return Collections.emptyList();
     }
 

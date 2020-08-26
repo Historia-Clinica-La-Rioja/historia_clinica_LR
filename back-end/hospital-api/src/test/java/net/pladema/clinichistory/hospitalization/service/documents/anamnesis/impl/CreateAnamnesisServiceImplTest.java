@@ -44,6 +44,9 @@ public class CreateAnamnesisServiceImplTest {
 	@MockBean
 	private MedicationService medicationService;
 
+	@MockBean
+	private ProceduresService proceduresService;
+
 	@Before
 	public void setUp() {
 		createAnamnesisServiceImpl = new CreateAnamnesisServiceImpl(
@@ -54,6 +57,7 @@ public class CreateAnamnesisServiceImplTest {
 				allergyService,
                 clinicalObservationService,
                 immunizationService,
+				proceduresService,
 				medicationService);
 	}
 

@@ -81,6 +81,7 @@ export interface AnamnesisDto extends DocumentDto, Serializable {
     medications: MedicationDto[];
     notes?: DocumentObservationsDto;
     personalHistories: HealthHistoryConditionDto[];
+    procedures?: HospitalizationProcedureDto[];
 }
 
 export interface AnamnesisSummaryDto extends DocumentSummaryDto {
@@ -397,6 +398,7 @@ export interface EvolutionNoteDto extends DocumentDto, Serializable {
     immunizations?: ImmunizationDto[];
     mainDiagnosis?: HealthConditionDto;
     notes?: DocumentObservationsDto;
+    procedures?: HospitalizationProcedureDto[];
 }
 
 export interface GenderDto extends MasterdataDto<number> {
@@ -496,6 +498,10 @@ export interface HealthcareProfessionalDto {
     id: number;
     licenceNumber: string;
     person: PersonBasicDataResponseDto;
+}
+
+export interface HospitalizationProcedureDto {
+    snomed: SnomedDto;
 }
 
 export interface IBasicPersonalData {

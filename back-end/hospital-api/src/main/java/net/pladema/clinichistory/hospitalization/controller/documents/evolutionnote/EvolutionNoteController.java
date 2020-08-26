@@ -32,13 +32,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
@@ -96,7 +90,7 @@ public class EvolutionNoteController {
     @EvolutionNoteDiagnosisValid
     @EffectiveVitalSignTimeValid
     @EvolutionNoteValid
-    public ResponseEntity<ResponseEvolutionNoteDto> createDocument(
+    public ResponseEntity<Boolean> createDocument(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
             @RequestBody @Valid EvolutionNoteDto evolutionNoteDto) throws IOException, DocumentException{
@@ -107,9 +101,9 @@ public class EvolutionNoteController {
         EvolutionNoteBo evolutionNote = evolutionNoteMapper.fromEvolutionNoteDto(evolutionNoteDto);
         evolutionNote = createEvolutionNoteService.createDocument(internmentEpisodeId, patientId, evolutionNote);
         ResponseEvolutionNoteDto result = evolutionNoteMapper.fromEvolutionNote(evolutionNote);
-        LOG.debug(OUTPUT, result);
         generateDocument(evolutionNote, institutionId, internmentEpisodeId, patientId);
-        return  ResponseEntity.ok().body(result);
+        LOG.debug(OUTPUT, Boolean.TRUE);
+        return  ResponseEntity.ok().body(Boolean.TRUE);
     }
 
     @PutMapping("/{evolutionNoteId}")

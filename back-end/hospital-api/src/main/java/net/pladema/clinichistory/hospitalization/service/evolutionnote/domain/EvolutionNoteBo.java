@@ -32,6 +32,8 @@ public class EvolutionNoteBo implements Document {
 
     private List<AllergyConditionBo> allergies;
 
+    private List<ProcedureBo> procedures;
+
     private AnthropometricDataBo anthropometricData;
 
     private VitalSignBo vitalSigns;
@@ -43,11 +45,6 @@ public class EvolutionNoteBo implements Document {
 
     @Override
     public List<ProblemBo> getProblems() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<ProcedureBo> getProcedures() {
         return Collections.emptyList();
     }
 

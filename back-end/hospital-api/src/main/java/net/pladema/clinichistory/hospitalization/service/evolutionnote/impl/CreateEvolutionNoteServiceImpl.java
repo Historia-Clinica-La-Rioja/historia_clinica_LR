@@ -1,18 +1,15 @@
 package net.pladema.clinichistory.hospitalization.service.evolutionnote.impl;
 
-import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;
-import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.evolutiondiagnosis.EvolutionDiagnosisBo;
 import net.pladema.clinichistory.documents.repository.entity.Document;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentStatus;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.documents.service.DocumentService;
-import net.pladema.clinichistory.hospitalization.service.evolutionnote.CreateEvolutionNoteService;
 import net.pladema.clinichistory.documents.service.NoteService;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
-import net.pladema.clinichistory.ips.service.AllergyService;
-import net.pladema.clinichistory.ips.service.ClinicalObservationService;
-import net.pladema.clinichistory.ips.service.HealthConditionService;
-import net.pladema.clinichistory.ips.service.ImmunizationService;
+import net.pladema.clinichistory.hospitalization.service.evolutionnote.CreateEvolutionNoteService;
+import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;
+import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.evolutiondiagnosis.EvolutionDiagnosisBo;
+import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentStatus;
+import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
+import net.pladema.clinichistory.ips.service.*;
 import net.pladema.clinichistory.ips.service.domain.DocumentObservationsBo;
 import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
 import org.slf4j.Logger;
@@ -43,13 +40,15 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
 
     private final ImmunizationService immunizationService;
 
+    private final ProceduresService proceduresService;
+
     public CreateEvolutionNoteServiceImpl(DocumentService documentService,
                                           InternmentEpisodeService internmentEpisodeService,
                                           NoteService noteService,
                                           HealthConditionService healthConditionService,
                                           AllergyService allergyService,
                                           ClinicalObservationService clinicalObservationService,
-                                          ImmunizationService immunizationService) {
+                                          ImmunizationService immunizationService, ProceduresService proceduresService) {
         this.documentService = documentService;
         this.internmentEpisodeService = internmentEpisodeService;
         this.noteService = noteService;
@@ -57,6 +56,7 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
         this.allergyService = allergyService;
         this.clinicalObservationService = clinicalObservationService;
         this.immunizationService = immunizationService;
+        this.proceduresService = proceduresService;
     }
 
     @Override
@@ -70,6 +70,7 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
         evolutionNote.setDiagnosis(healthConditionService.loadDiagnosis(patientId, document.getId(), evolutionNote.getDiagnosis()));
         evolutionNote.setAllergies(allergyService.loadAllergies(patientId, document.getId(), evolutionNote.getAllergies()));
         evolutionNote.setImmunizations(immunizationService.loadImmunization(patientId, document.getId(), evolutionNote.getImmunizations()));
+        evolutionNote.setProcedures(proceduresService.loadProcedures(patientId, document.getId(), evolutionNote.getProcedures()));
 
         evolutionNote.setVitalSigns(clinicalObservationService.loadVitalSigns(patientId, document.getId(), Optional.ofNullable(evolutionNote.getVitalSigns())));
         evolutionNote.setAnthropometricData(clinicalObservationService.loadAnthropometricData(patientId, document.getId(), Optional.ofNullable(evolutionNote.getAnthropometricData())));
