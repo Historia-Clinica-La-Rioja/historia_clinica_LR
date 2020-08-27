@@ -59,8 +59,6 @@ public class DiaryEmptyAppointmentsValidator implements ConstraintValidator<Diar
 					|| outOfOpeningHoursBounds(a, newHours);
 		}).findFirst();
 
-
-
 		if (appointmentOutOfBounds.isPresent()) {
 			buildResponse(context, "{diary.appointments.invalid}");
 			return false;
@@ -69,7 +67,11 @@ public class DiaryEmptyAppointmentsValidator implements ConstraintValidator<Diar
 	}
 
 	private boolean outOfOpeningHoursBounds(AppointmentBo a, List<DiaryOpeningHoursDto> newHours) {
-		return newHours.stream().noneMatch(newOH -> fitsIn(a, newOH.getOpeningHours()));
+		return newHours.stream().noneMatch(newOH -> fitsIn(a, newOH.getOpeningHours()) && sameMedicalAttention(a, newOH));
+	}
+
+	private boolean sameMedicalAttention(AppointmentBo a, DiaryOpeningHoursDto newOH) {
+		return newOH.getMedicalAttentionTypeId().equals(a.getMedicalAttentionTypeId());
 	}
 
 	private boolean outOfDiaryBounds(LocalDate from, LocalDate to, AppointmentBo a) {
