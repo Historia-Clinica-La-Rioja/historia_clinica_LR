@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, OnChanges } from '@angular/core';
 import { FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
 import { BedManagementService, Sector, Speciality, Category } from '../../services/bed-management.service';
 import { momentFormat, DateFormat } from '@core/utils/moment.utils';
@@ -8,9 +8,11 @@ import { momentFormat, DateFormat } from '@core/utils/moment.utils';
   templateUrl: './bed-filters.component.html',
   styleUrls: ['./bed-filters.component.scss']
 })
-export class BedFiltersComponent implements OnInit {
+export class BedFiltersComponent implements OnInit, OnChanges {
 
-public form: FormGroup;
+  	@Input() filled?: boolean;
+
+	public form: FormGroup;
 	public sectors: Sector[] = [];
 	public specialities: Speciality[] = [];
 	public categories: Category[] = [];
@@ -34,6 +36,13 @@ public form: FormGroup;
 		this.specialities = filterOptions.specialities;
 		this.categories = filterOptions.categories;
   	}
+
+	ngOnChanges(changes: SimpleChanges) {
+		if (!changes.filled.firstChange && !changes.filled.currentValue) {
+			this.form.controls.filled.setValue(changes.filled.currentValue);
+			this.sendAllFiltersOnFilterChange();
+		}
+	}
 
 	public sendAllFiltersOnFilterChange() {
 		this.bedManagementService.sendBedManagementFilter(this.getBedManagementFilter());

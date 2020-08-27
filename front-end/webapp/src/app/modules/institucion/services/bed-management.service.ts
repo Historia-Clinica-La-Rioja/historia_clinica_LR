@@ -1,7 +1,7 @@
 import { tap } from 'rxjs/operators';
 import { BedSummaryDto } from '@api-rest/api-model';
 import { BedService } from '@api-rest/services/bed.service';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable, ReplaySubject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { BedManagementFilter } from '../components/bed-filters/bed-filters.component';
 import { momentParseDateTime, momentParseDate } from '@core/utils/moment.utils';
@@ -14,7 +14,7 @@ export class BedManagementService {
 	public specialities: Speciality[] = [];
 	public categories: Category[] = [];
 
-	private subject = new BehaviorSubject<BedSummaryDto[]>(null);
+	private subject = new ReplaySubject<BedSummaryDto[]>(1);
 	private originalBedManagement: BedSummaryDto[] = [];
 
 	constructor(

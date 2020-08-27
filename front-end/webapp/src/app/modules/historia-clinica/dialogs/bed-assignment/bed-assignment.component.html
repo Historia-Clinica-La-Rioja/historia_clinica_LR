@@ -14,7 +14,7 @@
                             <mat-card-subtitle>
                                 <span *ngIf="bedManagementList" id="bed_id">Resultado: {{bedsAmount}} camas</span>
                             </mat-card-subtitle>
-                            <app-bed-filters></app-bed-filters>
+                            <app-bed-filters [filled]="filled"></app-bed-filters>
                         </div>
                         <section class="beds" id="mapeo" *ngIf="bedManagementList && bedManagementList.length">
                             <app-bed-mapping [bedManagementList]="bedManagementList" (selectedBed)="onSelectBed($event)"></app-bed-mapping>

@@ -18,6 +18,7 @@ export class BedAssignmentComponent implements OnInit, OnDestroy {
   	public selectedBed: number;
 	public bedManagementList: BedManagement[];
 	public bedsAmount: number;
+	public filled: boolean;
 
 	private ManagementBed$: Subscription;
 
@@ -31,7 +32,10 @@ export class BedAssignmentComponent implements OnInit, OnDestroy {
 		this.ManagementBed$ = this.bedManagementService.getBedManagement().pipe(
 			tap(bedsSummary => this.bedsAmount = bedsSummary ? bedsSummary.length : 0),
 			map((bedsSummary: BedSummaryDto[]) => bedsSummary ? this.mapperService.toBedManagement(bedsSummary) : null)
-		).subscribe(data => this.bedManagementList = data);
+		).subscribe(data => {
+			this.bedManagementList = data;
+			this.filled = false;
+		});
 	}
 
 	onSelectBed(bedId: number): void {
