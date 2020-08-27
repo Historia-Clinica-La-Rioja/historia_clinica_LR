@@ -6,6 +6,7 @@ import net.pladema.clinichistory.documents.events.OnGenerateOutpatientDocumentEv
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.EDocumentType;
 import net.pladema.clinichistory.ips.service.domain.ImmunizationBo;
+import net.pladema.clinichistory.outpatient.createoutpatient.controller.constraints.HasAppointment;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientImmunizationDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientUpdateImmunizationDto;

@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.controller.constraints;
 
+import net.pladema.clinichistory.outpatient.createoutpatient.controller.constraints.validator.HasAppointmentValidator;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.constraints.validator.ProblemDatesValidator;
 
 import javax.validation.Constraint;
@@ -7,12 +8,12 @@ import javax.validation.Payload;
 import java.lang.annotation.*;
 
 @Documented
-@Constraint(validatedBy = ProblemDatesValidator.class)
-@Target({ElementType.ANNOTATION_TYPE, ElementType.TYPE})
+@Constraint(validatedBy = HasAppointmentValidator.class)
+@Target({ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ProblemDates {
+public @interface HasAppointment {
 
-    String message() default "{problem.dates.not.after}";
+    String message() default "{outpatient.appointment.valid}";
 
     Class<?>[] groups() default {};
 

@@ -1,5 +1,6 @@
-package net.pladema.clinichistory.outpatient.createoutpatient.controller.constraints;
+package net.pladema.clinichistory.outpatient.createoutpatient.controller.constraints.validator;
 
+import net.pladema.clinichistory.outpatient.createoutpatient.controller.constraints.ProblemDates;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientProblemDto;
 import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import org.slf4j.Logger;
