@@ -19,6 +19,47 @@ mat-icon {
 	font-size: 20px;
 }
 
+.appointment-actions {
+
+	margin-top: 10px;
+
+	button {
+		border: 1px solid #979797;
+		height: 48px;
+		width: 48px;
+	}
+
+	.mat-icon.mat-primary {
+		color: #979797;
+	}
+
+	mat-icon {
+		font-size: 25px;
+	}
+
+	.selected {
+		.mat-icon.mat-primary {
+			color: white;
+		}
+	}
+
+	.assigned {
+		background-color: #009B68;
+	}
+
+	.confirmed {
+		background-color: #FF5C00;
+	}
+
+	.absent {
+		background-color: #D34444;
+	}
+
+	.attended {
+		background-color: #2687C5;
+	}
+}
+
 section {
 	margin: 0;
 }

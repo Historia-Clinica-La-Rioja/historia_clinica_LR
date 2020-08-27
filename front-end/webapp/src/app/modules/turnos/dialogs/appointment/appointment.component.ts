@@ -15,6 +15,13 @@ import { ContextService } from '@core/services/context.service';
 })
 export class AppointmentComponent implements OnInit {
 
+	// todo mock borrar
+	turnos = [
+		true,
+		false,
+		false,
+		false
+	];
 
 	public institutionId = this.contextService.institutionId;
 

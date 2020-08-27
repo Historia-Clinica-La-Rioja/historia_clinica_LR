@@ -39,21 +39,22 @@
 
 	<section id="state">
 		<span class="mat-body-strong">Estado de turno</span>
-		<div fxLayout="row" fxLayoutAlign="start center">
-			<button mat-icon-button>
+		<div class="appointment-actions" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+
+			<button [ngClass]="{'selected assigned': turnos[0] }" (click)="turnos[0]=!turnos[0]" mat-stroked-button>
 				<mat-icon color="primary">event_available</mat-icon>
 			</button>
 
-			<button mat-icon-button>
+			<button [ngClass]="{'selected confirmed': turnos[1] }" (click)="turnos[1]=!turnos[1]" mat-stroked-button>
 				<mat-icon color="primary">meeting_room</mat-icon>
 			</button>
 
-			<button mat-icon-button>
-				<mat-icon svgIcon="person_cancel_outlined" color="primary"></mat-icon>
+			<button [ngClass]="{'selected absent': turnos[2] }" (click)="turnos[2]=!turnos[2]" mat-stroked-button>
+				<mat-icon color="primary" svgIcon="person_cancel_outlined"></mat-icon>
 			</button>
 
-			<button mat-icon-button>
-				<mat-icon svgIcon="person_check_outlined" color="primary"></mat-icon>
+			<button [ngClass]="{'selected attended': turnos[3] }" (click)="turnos[3]=!turnos[3]" mat-stroked-button>
+				<mat-icon color="primary" svgIcon="person_check_outlined"></mat-icon>
 			</button>
 
 		</div>
