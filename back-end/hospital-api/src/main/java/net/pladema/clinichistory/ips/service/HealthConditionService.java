@@ -21,4 +21,6 @@ public interface HealthConditionService {
     List<Integer> copyDiagnoses(List<Integer> diagnosesId);
 
     List<ProblemBo> loadProblems(Integer patientId, Long documentId, List<ProblemBo> problems);
+
+    HealthConditionBo getHealthCondition(Integer healthConditionId);
 }

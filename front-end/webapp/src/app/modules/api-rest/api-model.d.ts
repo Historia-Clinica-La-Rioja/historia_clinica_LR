@@ -489,6 +489,22 @@ export interface HealthConditionDto extends ClinicalTermDto {
     verificationId?: string;
 }
 
+export interface HealthConditionNewConsultationDto extends Serializable {
+    endDate: Date;
+    id: number;
+    inactivationDate: Date;
+    isChronic: boolean;
+    main: boolean;
+    noteId: number;
+    patientId: number;
+    problemId: string;
+    sctidCode: string;
+    snomed: SnomedDto;
+    startDate: Date;
+    statusId: string;
+    verificationStatusId: string;
+}
+
 export interface HealthHistoryConditionDto extends HealthConditionDto {
     date: string;
     note: string;

@@ -2,6 +2,7 @@ package net.pladema.clinichistory.ips.service.impl;
 
 import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.service.NoteService;
+import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.HealthConditionMapper;
 import net.pladema.clinichistory.ips.repository.HealthConditionRepository;
 import net.pladema.clinichistory.ips.repository.entity.HealthCondition;
 import net.pladema.clinichistory.ips.repository.masterdata.ConditionClinicalStatusRepository;
@@ -16,6 +17,7 @@ import net.pladema.clinichistory.ips.service.domain.HealthConditionBo;
 import net.pladema.clinichistory.ips.service.domain.HealthHistoryConditionBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProblemBo;
 import net.pladema.sgx.dates.configuration.DateTimeProvider;
+import net.pladema.sgx.exceptions.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -48,11 +50,13 @@ public class HealthConditionServiceImpl implements HealthConditionService {
 
     private final DateTimeProvider dateTimeProvider;
 
+    private final HealthConditionMapper healthConditionMapper;
+
     public HealthConditionServiceImpl(HealthConditionRepository healthConditionRepository,
                                       ConditionVerificationStatusRepository conditionVerificationStatusRepository,
                                       ConditionClinicalStatusRepository conditionClinicalStatusRepository, SnomedService snomedService,
                                       DocumentService documentService,
-                                      NoteService noteService, DateTimeProvider dateTimeProvider){
+                                      NoteService noteService, DateTimeProvider dateTimeProvider, HealthConditionMapper healthConditionMapper){
         this.healthConditionRepository = healthConditionRepository;
         this.conditionVerificationStatusRepository = conditionVerificationStatusRepository;
         this.conditionClinicalStatusRepository = conditionClinicalStatusRepository;
@@ -60,6 +64,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         this.documentService = documentService;
         this.noteService = noteService;
         this.dateTimeProvider = dateTimeProvider;
+        this.healthConditionMapper = healthConditionMapper;
     }
 
     private HealthCondition save(HealthCondition healthCondition){
@@ -277,5 +282,12 @@ public class HealthConditionServiceImpl implements HealthConditionService {
 
     private String getStatus(String id) {
         return conditionClinicalStatusRepository.findById(id).map(ConditionClinicalStatus::getDescription).orElse(null);
+    }
+
+    @Override
+    public HealthConditionBo getHealthCondition(Integer healthConditionId){
+        HealthCondition hc = this.healthConditionRepository.findById(healthConditionId)
+                .orElseThrow(()->new NotFoundException("healthcondition-not-found", "Healthcondition not found"));
+        return healthConditionMapper.toHealthConditionBo(hc);
     }
 }
