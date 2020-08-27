@@ -114,7 +114,8 @@ public interface BedRepository extends JpaRepository<Bed, Integer> {
 			+ " JOIN ClinicalSpecialty cs ON cs.id = css.clinicalSpecialtyId "
 			+ " LEFT JOIN InternmentEpisode ie ON b.id = ie.bedId "
 			+ " WHERE s.institutionId =:institutionId AND (b.free=true OR ( b.free=false AND ie.statusId = " +ACTIVE+ ") )"
-			+ " GROUP BY b,bc,s,cs ")
+			+ " GROUP BY b,bc,s,cs "
+			+ " ORDER BY s.id, cs.id ")
 	List<BedSummaryVo> getAllBedsSummary(@Param("institutionId") Integer institutionId);
 
 
