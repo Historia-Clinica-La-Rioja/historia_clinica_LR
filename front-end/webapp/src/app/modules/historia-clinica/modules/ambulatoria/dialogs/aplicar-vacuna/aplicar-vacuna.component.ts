@@ -9,6 +9,9 @@ import { ActionDisplays, TableModel } from '@presentation/components/table/table
 import { SnowstormService } from '@api-rest/services/snowstorm.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { HceImmunizationService } from '@api-rest/services/hce-immunization.service';
+import { MatDialog } from "@angular/material/dialog";
+import { TranslateService } from '@ngx-translate/core';
+import { ConfirmDialogComponent } from "@core/dialogs/confirm-dialog/confirm-dialog.component";
 
 @Component({
 	selector: 'app-aplicar-vacuna',
@@ -32,6 +35,8 @@ export class AplicarVacunaComponent implements OnInit {
 		private readonly hceImmunizationService: HceImmunizationService,
 		private readonly snackBarService: SnackBarService,
 		private readonly formBuilder: FormBuilder,
+		private readonly dialog: MatDialog,
+		private readonly translator: TranslateService
 	) {
 	}
 
@@ -92,21 +97,36 @@ export class AplicarVacunaComponent implements OnInit {
 	}
 
 	save() {
+
 		if (this.form.valid && this.snomedConcept) {
-			this.loading = true;
-			const vacuna: OutpatientImmunizationDto = {
-				administrationDate: this.form.value.date ? this.form.value.date.format(DateFormat.API_DATE) : null,
-				note: this.form.value.note,
-				snomed: this.snomedConcept
-			};
-			this.hceImmunizationService.gettingVaccine(vacuna, this.data.patientId)
-			.subscribe((response: boolean) => {
-				this.loading = false;
-				this.dialogRef.close(vacuna);
-				this.snackBarService.showSuccess('ambulatoria.paciente.vacunas.aplicar.save.SUCCESS');
-			}, _ => {
-				this.snackBarService.showError('ambulatoria.paciente.vacunas.aplicar.save.ERROR');
-				this.loading = false;
+			this.translator.get('ambulatoria.paciente.vacunas.aplicar.save.CHANGE_STATE').subscribe((res: string) => {
+				const finishAppointment = this.dialog.open(ConfirmDialogComponent, {
+					width: '450px',
+					data: {
+						title: 'Aplicar vacuna',
+						content: `${res}`,
+						okButtonLabel: 'Confirmar'
+					}
+				});
+
+				finishAppointment.afterClosed().subscribe(result => {
+						this.loading = true;
+						const vacuna: OutpatientImmunizationDto = {
+							administrationDate: this.form.value.date ? this.form.value.date.format(DateFormat.API_DATE) : null,
+							note: this.form.value.note,
+							snomed: this.snomedConcept
+						};
+						this.hceImmunizationService.gettingVaccine(vacuna, this.data.patientId, !result)
+						.subscribe((response: boolean) => {
+							this.loading = false;
+							this.dialogRef.close(vacuna);
+							this.snackBarService.showSuccess('ambulatoria.paciente.vacunas.aplicar.save.SUCCESS');
+						}, _ => {
+							this.snackBarService.showError('ambulatoria.paciente.vacunas.aplicar.save.ERROR');
+							this.loading = false;
+						});
+					
+				});
 			});
 		}
 	}

@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -27,6 +28,7 @@ public interface OutpatientConsultationAPI {
     ResponseEntity<Boolean> gettingVaccine(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") @HasAppointment Integer patientId,
+            @RequestParam(name = "finishAppointment") Boolean finishAppointment,
             @RequestBody @Valid OutpatientImmunizationDto vaccineDto) throws IOException, DocumentException;
 
     @PostMapping("/updateImmunization")

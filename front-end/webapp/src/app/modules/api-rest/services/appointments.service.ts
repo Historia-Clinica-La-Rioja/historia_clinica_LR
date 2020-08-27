@@ -54,4 +54,12 @@ export class AppointmentsService {
 		return this.http.get<AppointmentDto>(url);
 	}
 
+	hasConfirmedAppointment(patientId: number): Observable<boolean> {
+		let queryParams: HttpParams = new HttpParams();
+		queryParams = queryParams.append('patientId', JSON.stringify(patientId));
+
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/confirmed-appointment`;
+		return this.http.get<boolean>(url, {params : queryParams});
+	}
+
 }

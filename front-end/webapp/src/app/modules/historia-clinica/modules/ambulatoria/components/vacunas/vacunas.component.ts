@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { HCEImmunizationDto, OutpatientImmunizationDto } from '@api-rest/api-model';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { ActivatedRoute } from '@angular/router';
@@ -10,6 +10,7 @@ import { momentFormat, momentParseDate, DateFormat } from '@core/utils/moment.ut
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { HceImmunizationService } from '@api-rest/services/hce-immunization.service';
 import { VACUNAS } from 'src/app/modules/historia-clinica/constants/summaries';
+import { AppointmentsService } from '@api-rest/services/appointments.service';
 
 @Component({
 	selector: 'app-vacunas',
@@ -21,10 +22,12 @@ export class VacunasComponent implements OnInit {
 	private patientId: number;
 	public readonly vacunasSummary = VACUNAS;
 	public tableModel: TableModel<HCEImmunizationDto>;
+	@Input() hasConfirmedAppointment: boolean;
 
 	constructor(
 		private readonly hceGeneralStateService: HceGeneralStateService,
 		private readonly route: ActivatedRoute,
+		private readonly appointmentsService: AppointmentsService,
 		public dialog: MatDialog,
 		private readonly snackBarService: SnackBarService,
 		private readonly hceImmunizationService: HceImmunizationService
@@ -54,6 +57,9 @@ export class VacunasComponent implements OnInit {
 			if (submitted) {
 				this.hceGeneralStateService.getImmunizations(this.patientId).subscribe(dataTable => {
 					this.tableModel = this.buildTable(dataTable)
+				});
+				this.appointmentsService.hasConfirmedAppointment(this.patientId).subscribe(response => {
+					this.hasConfirmedAppointment = response;
 				});
 			}
 		});

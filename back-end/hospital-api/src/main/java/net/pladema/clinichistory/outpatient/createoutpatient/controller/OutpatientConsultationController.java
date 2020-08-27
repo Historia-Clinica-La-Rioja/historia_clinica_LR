@@ -110,6 +110,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
     public ResponseEntity<Boolean> gettingVaccine(
             Integer institutionId,
             Integer patientId,
+            Boolean finishAppointment,
             OutpatientImmunizationDto vaccineDto) throws IOException, DocumentException {
         LOG.debug("Input parameters -> institutionId {}, patientId {}, OutpatientImmunizationDto {}", institutionId, patientId, vaccineDto);
         Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
@@ -124,7 +125,8 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 
         outpatient = createOutpatientDocumentService.create(newOutPatient.getId(), patientId, outpatient);
 
-        appointmentExternalService.serveAppointment(patientId, doctorId);
+        if (finishAppointment)
+            appointmentExternalService.serveAppointment(patientId, doctorId);
         generateDocument(outpatient, institutionId, newOutPatient.getId(), patientId);
 
         LOG.debug(OUTPUT, true);

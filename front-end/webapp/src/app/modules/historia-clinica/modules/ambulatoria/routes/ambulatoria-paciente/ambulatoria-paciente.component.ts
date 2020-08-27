@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { PatientService } from '@api-rest/services/patient.service';
 import { MapperService } from '@presentation/services/mapper.service';
+import { AppointmentsService } from '@api-rest/services/appointments.service';
 
 @Component({
 	selector: 'app-ambulatoria-paciente',
@@ -15,9 +16,11 @@ import { MapperService } from '@presentation/services/mapper.service';
 export class AmbulatoriaPacienteComponent implements OnInit {
 
 	patient$: Observable<PatientBasicData>;
+	public hasConfirmedAppointment: boolean;
 
 	constructor(
 		private readonly route: ActivatedRoute,
+		private readonly appointmentsService: AppointmentsService,
 		private readonly patientService: PatientService,
 		private readonly mapperService: MapperService,
 		private readonly router: Router,
@@ -29,7 +32,12 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 			this.patient$ = this.patientService.getPatientBasicData<BasicPatientDto>(patientId).pipe(
 				map(patient => this.mapperService.toPatientBasicData(patient))
 			);
+			this.appointmentsService.hasConfirmedAppointment(patientId).subscribe(response => {
+				this.hasConfirmedAppointment = response;
+			});
 		});
+
+		
 	}
 
 	goToNuevaConsulta() {

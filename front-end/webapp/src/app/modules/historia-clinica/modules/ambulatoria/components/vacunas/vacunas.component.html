@@ -3,10 +3,12 @@
 		<div id="title">
 			<h2 [translate]="'ambulatoria.paciente.vacunas.TITLE'"></h2>
 		</div>
-		<div id="add_button" *hasRole="['ENFERMERO']">
-			<button mat-flat-button color="primary" (click)=goToAplicarVacuna()>
-				<span>{{'ambulatoria.paciente.vacunas.ADD' | translate | uppercase }}</span>
-			</button>
+		<div id="add_button" *hasRole="['ENFERMERO']" >
+			<ng-container *ngIf="hasConfirmedAppointment">
+				<button mat-flat-button color="primary" (click)=goToAplicarVacuna()>
+					<span>{{'ambulatoria.paciente.vacunas.ADD' | translate | uppercase }}</span>
+				</button>
+			</ng-container>
 		</div>
 	</div>
 
