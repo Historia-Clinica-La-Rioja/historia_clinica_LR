@@ -109,7 +109,13 @@ export interface AppointmentBasicPatientDto {
     person: BasicPersonalDataDto;
 }
 
+export interface AppointmentDto extends CreateAppointmentDto {
+    appointmentStateId: number;
+    stateChangeReason?: string;
+}
+
 export interface AppointmentListDto {
+    appointmentStateId: number;
     date: string;
     healthInsuranceId: number;
     hour: string;

@@ -29,6 +29,7 @@ public class AppointmentListDto {
     private final String medicalCoverageAffiliateNumber;
 
     private final Short medicalAttentionTypeId;
-
+    
+    private final Short appointmentStateId;
 
 }

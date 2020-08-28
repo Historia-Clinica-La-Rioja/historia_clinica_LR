@@ -1,6 +1,9 @@
 package net.pladema.medicalconsultation.appointment.service.domain;
 
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -8,10 +11,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo;
+import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo;
 import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -44,6 +45,8 @@ public class AppointmentBo {
     private Integer healthInsuranceId;
 
     private Short medicalAttentionTypeId;
+    
+    private String stateChangeReason;
 
     public AppointmentBo(AppointmentDiaryVo appointmentDiaryVo) {
         super();
@@ -60,6 +63,22 @@ public class AppointmentBo {
         this.healthInsuranceId = appointmentDiaryVo.getHealthInsuranceId();
         this.medicalAttentionTypeId = appointmentDiaryVo.getMedicalAttentionTypeId();
     }
+    
+    public AppointmentBo(AppointmentVo appointmentDiaryVo) {
+        super();
+        this.id = appointmentDiaryVo.getId();
+        this.patientId = appointmentDiaryVo.getPatientId();
+        this.date = appointmentDiaryVo.getDate();
+        this.hour = appointmentDiaryVo.getHour();
+        this.appointmentStateId = appointmentDiaryVo.getAppointmentStateId();
+        this.overturn = appointmentDiaryVo.isOverturn();
+        this.openingHoursId = null;
+        this.medicalCoverageName = appointmentDiaryVo.getMedicalCoverageName();
+        this.medicalCoverageAffiliateNumber = appointmentDiaryVo.getMedicalCoverageAffiliateNumber();
+        this.healthInsuranceId = appointmentDiaryVo.getHealthInsuranceId();
+        this.medicalAttentionTypeId = appointmentDiaryVo.getMedicalAttentionTypeId();
+        this.stateChangeReason = appointmentDiaryVo.getStateChangeReason();
+    }
 
     public static AppointmentBo newFromAppointment(Appointment appointment) {
         return new AppointmentBo(appointment.getId(),
@@ -72,6 +91,6 @@ public class AppointmentBo {
                 null,
                 appointment.getMedicalCoverageName(),
                 appointment.getMedicalCoverageAffiliateNumber(),
-                appointment.getHealthInsuranceId(), null);
+                appointment.getHealthInsuranceId(), null, null);
     }
 }

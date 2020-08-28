@@ -2,6 +2,7 @@ package net.pladema.medicalconsultation.appointment.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
+@EqualsAndHashCode
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor

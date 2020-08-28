@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -70,6 +71,14 @@ public class AppointmentServiceImpl implements AppointmentService {
         LOG.debug(OUTPUT, Boolean.TRUE);
         return Boolean.TRUE;
     }
+
+	@Override
+	public Optional<AppointmentBo> getAppointment(Integer appointmentId) {
+		LOG.debug("Input parameters -> appointmentId {}", appointmentId);
+		Optional<AppointmentBo>	result = appointmentRepository.getAppointment(appointmentId).map(AppointmentBo::new);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
 
 
 }

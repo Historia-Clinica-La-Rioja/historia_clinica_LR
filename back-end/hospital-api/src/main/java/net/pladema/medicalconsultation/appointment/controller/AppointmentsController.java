@@ -2,6 +2,7 @@ package net.pladema.medicalconsultation.appointment.controller;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotEmpty;
@@ -25,6 +26,7 @@ import io.swagger.annotations.Api;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointment;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentDiary;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentState;
+import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentListDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.CreateAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.mapper.AppointmentMapper;
@@ -83,6 +85,20 @@ public class AppointmentsController {
         LOG.debug(OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }
+
+	@GetMapping(value = "/{appointmentId}")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ADMINISTRADOR_AGENDA, ENFERMERO')")
+	public ResponseEntity<AppointmentDto> get(@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "appointmentId") Integer appointmentId) {
+		LOG.debug("Input parameters -> institutionId {}, appointmentId {}", institutionId, appointmentId);
+		Optional<AppointmentBo> resultService = appointmentService.getAppointment(appointmentId);
+		Optional<AppointmentDto> result = resultService.map(appointmentMapper::toAppointmentDto);
+		LOG.debug(OUTPUT, result);
+		if (!result.isPresent())
+			return ResponseEntity.noContent().build();
+		return ResponseEntity.ok(result.get());
+	}
+
 
     @GetMapping
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ADMINISTRADOR_AGENDA, ENFERMERO')")

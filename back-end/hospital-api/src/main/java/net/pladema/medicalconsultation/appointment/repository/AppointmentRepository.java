@@ -1,8 +1,9 @@
 package net.pladema.medicalconsultation.appointment.repository;
 
-import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo;
-import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
-import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -11,9 +12,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
+import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo;
+import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo;
+import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
+import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Integer> {
@@ -28,6 +30,18 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
             "AND NOT a.appointmentStateId = " + AppointmentState.CANCELLED_STR +
             "ORDER BY d.id,a.isOverturn")
     List<AppointmentDiaryVo> getAppointmentsByDiaries(@Param("diaryIds") List<Integer> diaryIds);
+    
+    @Transactional(readOnly = true)
+    @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo(a, doh.medicalAttentionTypeId, has.reason )" +
+            "FROM Appointment AS a " +
+            "JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
+            "JOIN HistoricAppointmentState AS has ON (a.id = has.pk.appointmentId) " +
+            "JOIN Diary d ON (d.id = aa.pk.diaryId )" +
+            "JOIN DiaryOpeningHours  AS doh ON (doh.pk.diaryId = d.id AND doh.pk.openingHoursId = aa.pk.openingHoursId) " +
+            "WHERE a.id = :appointmentId " +
+            "AND has.pk.changedStateDate = " +
+            "   ( SELECT MAX (subHas.pk.changedStateDate) FROM HistoricAppointmentState subHas WHERE subHas.pk.appointmentId = a.id) ")
+    Optional<AppointmentVo> getAppointment(@Param("appointmentId") Integer appointmentId);
 
     @Transactional(readOnly = true)
     @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo(aa.pk.diaryId, a)" +
