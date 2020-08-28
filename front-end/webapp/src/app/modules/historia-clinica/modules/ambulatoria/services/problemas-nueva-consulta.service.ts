@@ -20,7 +20,7 @@ export class ProblemasNuevaConsultaService {
 
 	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 
-	private form: FormGroup;
+	private readonly form: FormGroup;
 	private snomedConcept: SnomedDto;
 	private readonly columns: ColumnConfig[];
 	private data: Problema[];
@@ -89,6 +89,15 @@ export class ProblemasNuevaConsultaService {
 		}
 	}
 
+	addProblemToList(problema: Problema): void{
+		this.add(problema);
+		this.form.controls.cronico.setValue(problema.cronico);
+		this.form.controls.fechaInicio.setValue(problema.fechaInicio);
+		this.form.controls.fechaFin?.setValue(problema.fechaFin);
+		this.form.controls.snomed.setValue(problema.snomed.pt);
+		this.snomedConcept = problema.snomed;
+	}
+
 	resetForm(): void {
 		delete this.snomedConcept;
 		this.form.reset();
@@ -150,5 +159,14 @@ export class ProblemasNuevaConsultaService {
 
 	setError(errorMsg: string): void {
 		this.errorSource.next(errorMsg);
+	}
+
+	editProblem() {
+		//tg-1302
+		//in this case, there's one and only one health condition
+		this.getProblemas()[0].snomed.pt = this.form.controls.snomed.value;
+		this.getProblemas()[0].cronico = this.form.controls.cronico.value;
+		this.getProblemas()[0].fechaInicio = this.form.controls.fechaInicio.value;
+		this.getProblemas()[0].fechaFin = this.form.controls.fechaFin.value;
 	}
 }

@@ -8,17 +8,19 @@ import { ProcedimientosService } from '../../../../services/procedimientos.servi
 import { DatosAntropometricosNuevaConsultaService } from '../../services/datos-antropometricos-nueva-consulta.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { SignosVitalesNuevaConsultaService } from '../../services/signos-vitales-nueva-consulta.service';
+
 import {
 	AntecedenteFamiliar,
 	AntecedentesFamiliaresNuevaConsultaService
 } from '../../services/antecedentes-familiares-nueva-consulta.service';
-import { CreateOutpatientDto } from '@api-rest/api-model';
-import { DateFormat, momentFormat } from '@core/utils/moment.utils';
-import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { ContextService } from '@core/services/context.service';
-import { Alergia, AlergiasNuevaConsultaService } from '../../services/alergias-nueva-consulta.service';
+import {CreateOutpatientDto, HealthConditionNewConsultationDto} from '@api-rest/api-model';
+import {DateFormat, dateToMoment, momentFormat} from '@core/utils/moment.utils';
+import {OutpatientConsultationService} from '@api-rest/services/outpatient-consultation.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {SnackBarService} from '@presentation/services/snack-bar.service';
+import {ContextService} from '@core/services/context.service';
+import {Alergia, AlergiasNuevaConsultaService} from '../../services/alergias-nueva-consulta.service';
+import {HealthConditionService} from "@api-rest/services/healthcondition.service";
 
 @Component({
 	selector: 'app-nueva-consulta',
@@ -37,6 +39,7 @@ export class NuevaConsultaComponent implements OnInit {
 	signosVitalesNuevaConsultaService: SignosVitalesNuevaConsultaService;
 	antecedentesFamiliaresNuevaConsultaService: AntecedentesFamiliaresNuevaConsultaService;
 	alergiasNuevaConsultaService: AlergiasNuevaConsultaService;
+	readOnlyProblema: boolean = false;
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -46,7 +49,8 @@ export class NuevaConsultaComponent implements OnInit {
 		private readonly route: ActivatedRoute,
 		private readonly router: Router,
 		private readonly contextService: ContextService,
-		private readonly snackBarService: SnackBarService
+		private readonly snackBarService: SnackBarService,
+		private readonly healthConditionService: HealthConditionService,
 	) {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, snomedService);
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, snomedService);
@@ -60,6 +64,19 @@ export class NuevaConsultaComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+		this.route.data.subscribe( data => {
+				if(data.problemaReadOnly){
+					this.readOnlyProblema = true;
+					this.route.paramMap.subscribe( param => {
+						let hcId = Number(param.get('idProblema'));
+						this.healthConditionService.getHealthCondition(hcId).subscribe(p => {
+							console.log('problema',p);
+							this.problemasNuevaConsultaService.addProblemToList(NuevaConsultaComponent.buildProblema(p));
+						});
+					});
+				}
+		});
+
 		this.formEvolucion = this.formBuilder.group({
 			evolucion: [null]
 		});
@@ -84,8 +101,18 @@ export class NuevaConsultaComponent implements OnInit {
 		});
 	}
 
+	private static buildProblema(p: HealthConditionNewConsultationDto) {
+		const problema: Problema = {
+			snomed: p.snomed,
+			cronico: p.isChronic,
+			fechaInicio: dateToMoment(p.startDate),
+			fechaFin: dateToMoment(p.inactivationDate)
+		};
+		return problema;
+	}
+
 	private goToAmbulatoria(idPaciente: number) {
-		this.router.navigateByUrl(`institucion/${this.contextService.institutionId}/ambulatoria/paciente/${idPaciente}`);
+		this.router.navigateByUrl(`institucion/${this.contextService.institutionId}/ambulatoria/paciente/${idPaciente}`).then();
 	}
 
 	save(): void {

@@ -25,6 +25,11 @@ const routes: Routes = [
 				path: 'paciente/:idPaciente/nueva',
 				component: NuevaConsultaComponent
 			},
+			{
+				path: 'paciente/:idPaciente/nuevaDesdeProblema/:idProblema',
+				component: NuevaConsultaComponent,
+				data:{problemaReadOnly: true}
+			},
 		],
 		canActivate: [RoleGuard],
 		data: { allowedRoles: ['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO'] },

@@ -1,12 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { PROBLEMAS_ACTIVOS, PROBLEMAS_CRONICOS, PROBLEMAS_RESUELTOS, PROBLEMAS_INTERNACION } from '../../../../constants/summaries';
-import { HCEPersonalHistoryDto, HCEHospitalizationHistoryDto } from '@api-rest/api-model';
-import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
-import { ActivatedRoute } from '@angular/router';
-import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.utils';
-import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
-import { th } from 'date-fns/locale';
+import {Component, OnInit} from '@angular/core';
+import {
+	PROBLEMAS_ACTIVOS,
+	PROBLEMAS_CRONICOS,
+	PROBLEMAS_INTERNACION,
+	PROBLEMAS_RESUELTOS
+} from '../../../../constants/summaries';
+import {HCEHospitalizationHistoryDto, HCEPersonalHistoryDto} from '@api-rest/api-model';
+import {HceGeneralStateService} from '@api-rest/services/hce-general-state.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {DateFormat, momentFormat, momentParseDate} from '@core/utils/moment.utils';
+import {map} from 'rxjs/operators';
+import {Observable} from 'rxjs';
 
 @Component({
 	selector: 'app-problemas',
@@ -28,7 +32,8 @@ export class ProblemasComponent implements OnInit {
 
 	constructor(
 		private readonly hceGeneralStateService: HceGeneralStateService,
-		private route: ActivatedRoute
+		private route: ActivatedRoute,
+		private readonly router: Router
 	) {
 		this.route.paramMap.subscribe(
 			(params) => {
@@ -70,5 +75,9 @@ export class ProblemasComponent implements OnInit {
 				})
 			})
 		);
+	}
+
+	goToNuevaConsulta(problema: HCEPersonalHistoryDto){
+		this.router.navigateByUrl(`${this.router.url}/nuevaDesdeProblema/${problema.id}`).then();
 	}
 }

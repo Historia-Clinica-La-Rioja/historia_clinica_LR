@@ -490,7 +490,6 @@ export interface HealthConditionDto extends ClinicalTermDto {
 }
 
 export interface HealthConditionNewConsultationDto extends Serializable {
-    endDate: Date;
     id: number;
     inactivationDate: Date;
     isChronic: boolean;

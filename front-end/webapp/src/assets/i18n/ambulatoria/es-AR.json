@@ -14,6 +14,7 @@
 			"nueva-consulta": {
 				"TITLE": "Nueva consulta",
 				"SUBTITLE": "Completa los siguientes datos.",
+				"TITLE_MENU": "Consulta",
 				"evolucion": {
 					"TITLE": "Evolucion",
 					"DESCRIPCION": "Descripcion"
@@ -52,7 +53,8 @@
 				},
 				"problemas": {
 					"buttons": {
-						"ADD": "Agregar problema"
+						"ADD": "Agregar problema",
+						"SAVE": "Guardar cambios"
 					},
 					"CONCEPT_LABEL": "Problema",
 					"CRONICO": "Crónico",
