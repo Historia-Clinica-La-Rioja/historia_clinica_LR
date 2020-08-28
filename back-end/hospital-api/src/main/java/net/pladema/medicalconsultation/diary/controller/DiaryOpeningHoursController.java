@@ -55,6 +55,7 @@ public class DiaryOpeningHoursController {
      * se encuentra ocupado
      */
     @GetMapping(value = "/doctorsOffice/{doctorsOfficeId}")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO, ADMINISTRADOR_AGENDA')")
     public ResponseEntity<List<OccupationDto>> getAllWeeklyDoctorsOfficeOccupation(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "doctorsOfficeId") Integer doctorsOfficeId,
@@ -75,7 +76,7 @@ public class DiaryOpeningHoursController {
     }
 
     @GetMapping(params = "diaryIds")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ADMINISTRADOR_AGENDA')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO, ADMINISTRADOR_AGENDA')")
     public ResponseEntity<Collection<DiaryOpeningHoursDto>> getMany(@PathVariable(name = "institutionId") Integer institutionId,
                                                                     @RequestParam List<Integer> diaryIds) {
         LOG.debug("Input parameters -> institutionId {}, diaryIds {}", institutionId, diaryIds);
