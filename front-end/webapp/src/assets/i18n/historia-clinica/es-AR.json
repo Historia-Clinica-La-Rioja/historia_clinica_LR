@@ -12,7 +12,11 @@
       },
       "vacunas": {
         "TOOLTIP": "Agregar vacuna"
-      }
-    }
+	  }
+	},
+	"procedimientos": {
+		"FECHA": "Fecha",
+		"PROCEDIMIENTO": "Procedimiento"
+	}
   }
 }

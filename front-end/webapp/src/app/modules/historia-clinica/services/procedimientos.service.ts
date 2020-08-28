@@ -1,8 +1,8 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SnomedSemanticSearch, SnomedService } from '../../../services/snomed.service';
+import { SnomedSemanticSearch, SnomedService } from './snomed.service';
 import { SnomedDto } from '@api-rest/api-model';
 import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
-import { SEMANTICS_CONFIG } from '../../../constants/snomed-semantics';
+import { SEMANTICS_CONFIG } from '../constants/snomed-semantics';
 import { pushTo } from '@core/utils/array.utils';
 import { DateFormat, momentFormat, newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
@@ -12,7 +12,7 @@ export interface Procedimiento {
 	fecha?: Moment;
 }
 
-export class ProcedimientosNuevaConsultaService {
+export class ProcedimientosService {
 
 	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 
@@ -34,12 +34,12 @@ export class ProcedimientosNuevaConsultaService {
 		this.columns = [
 			{
 				def: 'procedimiento',
-				header: 'ambulatoria.paciente.nueva-consulta.procedimientos.PROCEDIMIENTO',
+				header: 'historia-clinica.procedimientos.PROCEDIMIENTO',
 				text: (row) => row.snomed.pt
 			},
 			{
 				def: 'fecha',
-				header: 'ambulatoria.paciente.nueva-consulta.procedimientos.FECHA',
+				header: 'historia-clinica.procedimientos.FECHA',
 				text: (row) => row.fecha ? momentFormat(row.fecha, DateFormat.VIEW_DATE) : ''
 			}
 

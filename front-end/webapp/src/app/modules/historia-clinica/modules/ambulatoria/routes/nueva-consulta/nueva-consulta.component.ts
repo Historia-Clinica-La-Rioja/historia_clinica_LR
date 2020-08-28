@@ -4,7 +4,7 @@ import { SnomedService } from 'src/app/modules/historia-clinica/services/snomed.
 import { Problema, ProblemasNuevaConsultaService } from '../../services/problemas-nueva-consulta.service';
 import { MotivoNuevaConsultaService } from '../../services/motivo-nueva-consulta.service';
 import { Medicacion, MedicacionesNuevaConsultaService } from '../../services/medicaciones-nueva-consulta.service';
-import { ProcedimientosNuevaConsultaService } from '../../services/procedimientos-nueva-consulta.service';
+import { ProcedimientosService } from '../../../../services/procedimientos.service';
 import { DatosAntropometricosNuevaConsultaService } from '../../services/datos-antropometricos-nueva-consulta.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { SignosVitalesNuevaConsultaService } from '../../services/signos-vitales-nueva-consulta.service';
@@ -32,7 +32,7 @@ export class NuevaConsultaComponent implements OnInit {
 	motivoNuevaConsultaService: MotivoNuevaConsultaService;
 	medicacionesNuevaConsultaService: MedicacionesNuevaConsultaService;
 	problemasNuevaConsultaService: ProblemasNuevaConsultaService;
-	procedimientoNuevaConsultaService: ProcedimientosNuevaConsultaService;
+	procedimientoNuevaConsultaService: ProcedimientosService;
 	datosAntropometricosNuevaConsultaService: DatosAntropometricosNuevaConsultaService;
 	signosVitalesNuevaConsultaService: SignosVitalesNuevaConsultaService;
 	antecedentesFamiliaresNuevaConsultaService: AntecedentesFamiliaresNuevaConsultaService;
@@ -51,7 +51,7 @@ export class NuevaConsultaComponent implements OnInit {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, snomedService);
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, snomedService);
 		this.problemasNuevaConsultaService = new ProblemasNuevaConsultaService(formBuilder, snomedService);
-		this.procedimientoNuevaConsultaService = new ProcedimientosNuevaConsultaService(formBuilder, snomedService);
+		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, snomedService);
 		this.datosAntropometricosNuevaConsultaService =
 			new DatosAntropometricosNuevaConsultaService(formBuilder, internacionMasterDataService);
 		this.signosVitalesNuevaConsultaService = new SignosVitalesNuevaConsultaService(formBuilder);
