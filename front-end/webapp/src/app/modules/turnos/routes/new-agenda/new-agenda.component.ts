@@ -49,7 +49,8 @@ export class NewAgendaComponent implements OnInit {
 	private mappedCurrentWeek = {};
 	newAgendaService: NewAgendaService;
 
-	constructor(private readonly formBuilder: FormBuilder,
+	constructor(
+		private readonly formBuilder: FormBuilder,
 		private readonly el: ElementRef,
 		private readonly sectorService: SectorService,
 		private readonly clinicalSpecialtySectorService: ClinicalSpecialtySectorService,
@@ -113,7 +114,7 @@ export class NewAgendaComponent implements OnInit {
 		this.doctorsOfficeService.getAll(diary.sectorId, diary.clinicalSpecialtyId)
 			.subscribe((doctorsOffice: DoctorsOfficeDto[]) => {
 				this.doctorOffices = doctorsOffice;
-				const office = doctorsOffice.find(office => office.id === diary.doctorsOfficeId);
+				const office = doctorsOffice.find(o => o.id === diary.doctorsOfficeId);
 				this.form.controls.doctorOffice.setValue(office);
 				this.setDoctorOfficeRangeTime();
 				this.setAllWeeklyDoctorsOfficeOcupation();
