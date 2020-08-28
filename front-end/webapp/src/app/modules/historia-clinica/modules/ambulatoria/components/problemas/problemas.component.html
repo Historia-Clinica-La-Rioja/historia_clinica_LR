@@ -43,6 +43,14 @@
 								<span mat-line class="mat-body">
 									{{problem.startDate }}
 								</span>
+								<button *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']" mat-icon-button [matMenuTriggerFor]="menu" >
+									<mat-icon>more_vert</mat-icon>
+								</button>
+								<mat-menu #menu="matMenu">
+									<button mat-menu-item (click)="goToNuevaConsulta(problem)">
+										<span [translate]="'ambulatoria.paciente.nueva-consulta.TITLE_MENU'"></span>
+									</button>
+								</mat-menu>
 							</mat-list-item>
 							<mat-divider></mat-divider>
 						</div>
@@ -60,9 +68,6 @@
 								<span mat-line class="mat-body">
 									{{problem.startDate }}
 								</span>
-								<button *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']" mat-icon-button [matMenuTriggerFor]="menu" >
-									<mat-icon>more_vert</mat-icon>
-								</button>
 								<mat-menu #menu="matMenu">
 									<button mat-menu-item (click)="goToNuevaConsulta(problem)">
 										<span [translate]="'ambulatoria.paciente.nueva-consulta.TITLE_MENU'"> </span>
