@@ -123,6 +123,16 @@
 				"CLINICAL_IMPRESSION": "Impresión clínica y plan",
 				"OTHERS": "Otras observaciones",
 				"DESCRIPTION": "Descripción"
+			},
+			"procedimientos": {
+				"buttons": {
+					"ADD": "Agregar procedimiento"
+				},
+				"FECHA": "Fecha",
+				"TABLE_TITLE": "Procedimientos registrados",
+				"TITLE": "Procedimiento",
+				"TIPO": "Tipo de procedimiento",
+				"PROCEDIMIENTO": "Procedimiento"
 			}
 		},
 		"epicrisis": {

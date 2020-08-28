@@ -15,6 +15,8 @@ import { ContextService } from '@core/services/context.service';
 import { newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { getError, hasError } from '@core/utils/form.utils';
+import { ProcedimientosService } from '../../../../services/procedimientos.service';
+import { SnomedService } from 'src/app/modules/historia-clinica/services/snomed.service';
 
 @Component({
 	selector: 'app-anamnesis-form',
@@ -42,6 +44,7 @@ export class AnamnesisFormComponent implements OnInit {
 	allergies: AllergyConditionDto[] = [];
 	immunizations: ImmunizationDto[] = [];
 	medications: MedicationDto[] = [];
+	procedimientosService: ProcedimientosService;
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -50,8 +53,10 @@ export class AnamnesisFormComponent implements OnInit {
 		private readonly route: ActivatedRoute,
 		private readonly router: Router,
 		private readonly contextService: ContextService,
-		private readonly snackBarService: SnackBarService
+		private readonly snackBarService: SnackBarService,
+		private readonly snomedService: SnomedService,
 	) {
+		this.procedimientosService = new ProcedimientosService(formBuilder, snomedService);
 	}
 
 	ngOnInit(): void {
@@ -218,7 +223,8 @@ export class AnamnesisFormComponent implements OnInit {
 				respiratoryRate: getEffectiveValue(formValues.vitalSigns.respiratoryRate),
 				systolicBloodPressure: getEffectiveValue(formValues.vitalSigns.systolicBloodPressure),
 				temperature: getEffectiveValue(formValues.vitalSigns.temperature)
-			}
+			},
+			procedures: isNull(this.procedimientosService.getProcedimientos()) ? undefined : this.procedimientosService.getProcedimientos()
 		};
 
 		function isNull(formGroupValues: any): boolean {

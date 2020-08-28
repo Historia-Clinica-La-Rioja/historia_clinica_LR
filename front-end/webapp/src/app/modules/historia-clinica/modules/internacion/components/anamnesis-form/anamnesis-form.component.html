@@ -3,7 +3,7 @@
 		<section id="title">
 			<h2 class="page-title" [translate]="'internaciones.anamnesis.TITLE'"></h2>
 			<h3 [translate]="'internaciones.anamnesis.SUBTITLE'"></h3>
-		</section>		
+		</section>
 		<ng-container *featureFlag="'mainDiagnosisRequired'">
 			<ng-container *hasRole="['ESPECIALISTA_MEDICO']">
 				<section id="diagnostico-principal">
@@ -14,6 +14,56 @@
 		<section id="diagnosticos">
 			<app-diagnosticos [(diagnosis)]="diagnosticos"></app-diagnosticos>
 		</section>
+
+		<section id="procedimientos" class="doc-section">
+			<app-document-section [sectionTitle]="'internaciones.anamnesis.procedimientos.TITLE'"
+				[tableTitle]="'internaciones.anamnesis.procedimientos.TABLE_TITLE'"
+				[columns]="procedimientosService.getColumns()"
+				[data]="procedimientosService.getProcedimientos()">
+				<ng-container concept-form>
+					<app-concepts-search
+						*ngIf="!procedimientosService.getSnomedConcept() else procedimientoForm"
+						[label]="'internaciones.anamnesis.procedimientos.PROCEDIMIENTO'"
+						(search)="procedimientosService.openSearchDialog($event)">
+					</app-concepts-search>
+
+					<ng-template #procedimientoForm>
+						<form [formGroup]="procedimientosService.getForm()"
+							(ngSubmit)="procedimientosService.addToList()">
+							<mat-form-field appearance="outline">
+								<mat-label [translate]="'internaciones.anamnesis.procedimientos.TIPO'">
+								</mat-label>
+								<input id="procedimiento-input" matInput type="text" formControlName="snomed" name="snomed"
+									readonly matTooltip="{{procedimientosService.getSnomedConcept().pt }}">
+								<button id="clear-procedimiento" mat-button matSuffix color="warn" mat-icon-button
+									(click)="procedimientosService.resetForm()">
+									<mat-icon>close</mat-icon>
+								</button>
+							</mat-form-field>
+
+							<mat-form-field appearance="outline">
+								<mat-label [translate]="'internaciones.anamnesis.procedimientos.FECHA'">
+								</mat-label>
+								<input matInput id="fecha_procedimiento" [matDatepicker]="datePicker"
+									formControlName="fecha" [max]="procedimientosService.getFechaMax()">
+								<mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+								<mat-datepicker #datePicker></mat-datepicker>
+							</mat-form-field>
+
+							<div align="end">
+								<button id="submit_procedimiento" class="uppercase" mat-raised-button color="primary"
+									type="submit">
+									<span
+										[translate]="'internaciones.anamnesis.procedimientos.buttons.ADD'"></span>
+								</button>
+							</div>
+
+						</form>
+					</ng-template>
+				</ng-container>
+			</app-document-section>
+		</section>
+
 		<section id="datos-antropometricos">
 			<h2 [translate]="'internaciones.anamnesis.datos-antropometricos.TITLE'"></h2>
 			<mat-card class="datos-antropometricos-card">
