@@ -64,20 +64,21 @@ public class AppointmentBo {
         this.medicalAttentionTypeId = appointmentDiaryVo.getMedicalAttentionTypeId();
     }
     
-    public AppointmentBo(AppointmentVo appointmentDiaryVo) {
+    public AppointmentBo(AppointmentVo appointmentVo) {
         super();
-        this.id = appointmentDiaryVo.getId();
-        this.patientId = appointmentDiaryVo.getPatientId();
-        this.date = appointmentDiaryVo.getDate();
-        this.hour = appointmentDiaryVo.getHour();
-        this.appointmentStateId = appointmentDiaryVo.getAppointmentStateId();
-        this.overturn = appointmentDiaryVo.isOverturn();
+        this.id = appointmentVo.getId();
+        this.patientId = appointmentVo.getPatientId();
+        this.date = appointmentVo.getDate();
+        this.hour = appointmentVo.getHour();
+        this.appointmentStateId = appointmentVo.getAppointmentStateId();
+        this.overturn = appointmentVo.isOverturn();
         this.openingHoursId = null;
-        this.medicalCoverageName = appointmentDiaryVo.getMedicalCoverageName();
-        this.medicalCoverageAffiliateNumber = appointmentDiaryVo.getMedicalCoverageAffiliateNumber();
-        this.healthInsuranceId = appointmentDiaryVo.getHealthInsuranceId();
-        this.medicalAttentionTypeId = appointmentDiaryVo.getMedicalAttentionTypeId();
-        this.stateChangeReason = appointmentDiaryVo.getStateChangeReason();
+        this.medicalCoverageName = appointmentVo.getMedicalCoverageName();
+        this.medicalCoverageAffiliateNumber = appointmentVo.getMedicalCoverageAffiliateNumber();
+        this.healthInsuranceId = appointmentVo.getHealthInsuranceId();
+        this.medicalAttentionTypeId = appointmentVo.getMedicalAttentionTypeId();
+        this.stateChangeReason = appointmentVo.getStateChangeReason();
+        this.diaryId = appointmentVo.getDiaryId();
     }
 
     public static AppointmentBo newFromAppointment(Appointment appointment) {

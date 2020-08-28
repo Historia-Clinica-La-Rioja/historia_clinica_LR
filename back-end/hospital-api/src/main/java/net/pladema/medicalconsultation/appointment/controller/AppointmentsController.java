@@ -132,7 +132,7 @@ public class AppointmentsController {
             @ValidAppointmentState @RequestParam(name = "appointmentStateId") String appointmentStateId,
             @RequestParam(name = "reason", required = false) String reason) {
 		LOG.debug("Input parameters -> institutionId {}, appointmentId {}, appointmentStateId {}", institutionId, appointmentId, appointmentStateId);
-		appointmentValidatorService.validateStateUpdate(appointmentId, Short.parseShort(appointmentStateId), reason);
+		appointmentValidatorService.validateStateUpdate(institutionId, appointmentId, Short.parseShort(appointmentStateId), reason);
 		boolean result = appointmentService.updateState(appointmentId, Short.parseShort(appointmentStateId), UserInfo.getCurrentAuditor(), reason);
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);

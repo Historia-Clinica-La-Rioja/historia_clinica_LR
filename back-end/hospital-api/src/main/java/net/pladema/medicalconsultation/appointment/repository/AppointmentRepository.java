@@ -32,15 +32,15 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
     List<AppointmentDiaryVo> getAppointmentsByDiaries(@Param("diaryIds") List<Integer> diaryIds);
     
     @Transactional(readOnly = true)
-    @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo(a, doh.medicalAttentionTypeId, has.reason )" +
+    @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo(aa.pk.diaryId, a, doh.medicalAttentionTypeId, has.reason )" +
             "FROM Appointment AS a " +
             "JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
-            "JOIN HistoricAppointmentState AS has ON (a.id = has.pk.appointmentId) " +
+            "LEFT JOIN HistoricAppointmentState AS has ON (a.id = has.pk.appointmentId) " +
             "JOIN Diary d ON (d.id = aa.pk.diaryId )" +
             "JOIN DiaryOpeningHours  AS doh ON (doh.pk.diaryId = d.id AND doh.pk.openingHoursId = aa.pk.openingHoursId) " +
             "WHERE a.id = :appointmentId " +
-            "AND has.pk.changedStateDate = " +
-            "   ( SELECT MAX (subHas.pk.changedStateDate) FROM HistoricAppointmentState subHas WHERE subHas.pk.appointmentId = a.id) ")
+            "AND ( has.pk.changedStateDate IS NULL OR has.pk.changedStateDate = " +
+            "   ( SELECT MAX (subHas.pk.changedStateDate) FROM HistoricAppointmentState subHas WHERE subHas.pk.appointmentId = a.id) ) ")
     Optional<AppointmentVo> getAppointment(@Param("appointmentId") Integer appointmentId);
 
     @Transactional(readOnly = true)

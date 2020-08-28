@@ -1,12 +1,12 @@
 package net.pladema.medicalconsultation.appointment.repository.domain;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 import lombok.AllArgsConstructor;
 import lombok.ToString;
 import lombok.Value;
 import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Value
 @ToString
@@ -18,17 +18,21 @@ public class AppointmentVo {
 	private final Short medicalAttentionTypeId;
 
 	private final String stateChangeReason;
+	
+    private final Integer diaryId;
 
 	public AppointmentVo(Appointment appointment) {
 		this.appointment = appointment;
 		this.medicalAttentionTypeId = null;
 		this.stateChangeReason = null;
+		this.diaryId = null;
 	}
 
-	public AppointmentVo(Appointment appointment, String stateChangeReason) {
+	public AppointmentVo(Integer diaryId, Appointment appointment, Short medicalAttentionTypeId, String stateChangeReason) {
 		this.appointment = appointment;
 		this.stateChangeReason = stateChangeReason;
-		this.medicalAttentionTypeId = null;
+		this.medicalAttentionTypeId = medicalAttentionTypeId;
+		this.diaryId = diaryId;
 	}
 
 	public Integer getId() {
@@ -40,7 +44,7 @@ public class AppointmentVo {
 			return null;
 		return appointment.getPatientId();
 	}
-
+	
 	public LocalDate getDate() {
 		if (appointment == null)
 			return null;
