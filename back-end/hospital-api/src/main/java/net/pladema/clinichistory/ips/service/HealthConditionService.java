@@ -2,6 +2,7 @@ package net.pladema.clinichistory.ips.service;
 
 import net.pladema.clinichistory.ips.service.domain.DiagnosisBo;
 import net.pladema.clinichistory.ips.service.domain.HealthConditionBo;
+import net.pladema.clinichistory.ips.service.domain.HealthConditionNewConsultationBo;
 import net.pladema.clinichistory.ips.service.domain.HealthHistoryConditionBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProblemBo;
 
@@ -22,5 +23,5 @@ public interface HealthConditionService {
 
     List<ProblemBo> loadProblems(Integer patientId, Long documentId, List<ProblemBo> problems);
 
-    HealthConditionBo getHealthCondition(Integer healthConditionId);
+    HealthConditionNewConsultationBo getHealthCondition(Integer healthConditionId);
 }

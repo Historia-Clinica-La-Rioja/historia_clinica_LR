@@ -25,8 +25,6 @@ public class HealthConditionNewConsultationDto implements Serializable {
 
     private LocalDate startDate;
 
-    private LocalDate endDate;
-
     private LocalDate inactivationDate;
 
     private Boolean main;

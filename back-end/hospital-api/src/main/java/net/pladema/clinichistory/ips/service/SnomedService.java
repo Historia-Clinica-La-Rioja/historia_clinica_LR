@@ -4,5 +4,7 @@ import net.pladema.clinichistory.ips.service.domain.SnomedBo;
 
 public interface SnomedService {
 
-    public String createSnomedTerm(SnomedBo snomedTerm);
+    String createSnomedTerm(SnomedBo snomedTerm);
+
+    SnomedBo getSnomed(String id);
 }

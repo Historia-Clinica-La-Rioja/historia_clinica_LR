@@ -3,7 +3,7 @@ package net.pladema.clinichistory.ips.controller;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.HealthConditionMapper;
 import net.pladema.clinichistory.ips.controller.dto.HealthConditionNewConsultationDto;
 import net.pladema.clinichistory.ips.service.HealthConditionService;
-import net.pladema.clinichistory.ips.service.domain.HealthConditionBo;
+import net.pladema.clinichistory.ips.service.domain.HealthConditionNewConsultationBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +35,7 @@ public class HealthConditionController {
     public ResponseEntity<HealthConditionNewConsultationDto> getHealthCondition(@PathVariable Integer healthConditionId){
         LOG.debug(INPUT, healthConditionId);
 
-        HealthConditionBo hcbo = healthConditionService.getHealthCondition(healthConditionId);
+        HealthConditionNewConsultationBo hcbo = healthConditionService.getHealthCondition(healthConditionId);
         HealthConditionNewConsultationDto result = healthConditionMapper.toHealthConditionNewConsultationDto(hcbo);
 
         LOG.debug(OUTPUT, result);

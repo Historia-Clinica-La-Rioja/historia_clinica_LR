@@ -5,6 +5,7 @@ import net.pladema.clinichistory.ips.repository.masterdata.entity.Snomed;
 import net.pladema.clinichistory.ips.service.domain.SnomedBo;
 import net.pladema.clinichistory.ips.service.SnomedService;
 import net.pladema.patient.service.StringHelper;
+import net.pladema.sgx.exceptions.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -41,6 +42,12 @@ public class SnomedServiceImpl implements SnomedService {
         if(snomed.getId() == null)
             throw new IllegalArgumentException("snomed.invalid");
         return snomed.getId();
+    }
+
+    @Override
+    public SnomedBo getSnomed(String id){
+        return new SnomedBo(snomedRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Snomed-not-found", "Snomed not found")));
     }
 
 }

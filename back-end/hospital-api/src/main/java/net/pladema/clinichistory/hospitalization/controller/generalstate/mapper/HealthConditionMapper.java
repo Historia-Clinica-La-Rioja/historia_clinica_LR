@@ -7,9 +7,9 @@ import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.Hea
 import net.pladema.clinichistory.hospitalization.controller.maindiagnoses.dto.MainDiagnosisDto;
 import net.pladema.clinichistory.hospitalization.service.maindiagnoses.domain.MainDiagnosisBo;
 import net.pladema.clinichistory.ips.controller.dto.HealthConditionNewConsultationDto;
-import net.pladema.clinichistory.ips.repository.entity.HealthCondition;
 import net.pladema.clinichistory.ips.service.domain.DiagnosisBo;
 import net.pladema.clinichistory.ips.service.domain.HealthConditionBo;
+import net.pladema.clinichistory.ips.service.domain.HealthConditionNewConsultationBo;
 import net.pladema.clinichistory.ips.service.domain.HealthHistoryConditionBo;
 import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import org.mapstruct.Mapper;
@@ -31,8 +31,6 @@ public interface HealthConditionMapper {
     MainDiagnosisBo fromMainDiagnoseDto(MainDiagnosisDto mainDiagnoses);
 
     @Name("toHealthConditionNewConsultationDto")
-    HealthConditionNewConsultationDto toHealthConditionNewConsultationDto(HealthConditionBo bo);
+    HealthConditionNewConsultationDto toHealthConditionNewConsultationDto(HealthConditionNewConsultationBo bo);
 
-    @Name("toHealthConditionBo")
-    HealthConditionBo toHealthConditionBo(HealthCondition hc);
 }

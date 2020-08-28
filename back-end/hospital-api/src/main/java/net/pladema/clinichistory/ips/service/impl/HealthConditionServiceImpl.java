@@ -14,6 +14,7 @@ import net.pladema.clinichistory.ips.service.HealthConditionService;
 import net.pladema.clinichistory.ips.service.SnomedService;
 import net.pladema.clinichistory.ips.service.domain.DiagnosisBo;
 import net.pladema.clinichistory.ips.service.domain.HealthConditionBo;
+import net.pladema.clinichistory.ips.service.domain.HealthConditionNewConsultationBo;
 import net.pladema.clinichistory.ips.service.domain.HealthHistoryConditionBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProblemBo;
 import net.pladema.sgx.dates.configuration.DateTimeProvider;
@@ -285,9 +286,13 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     }
 
     @Override
-    public HealthConditionBo getHealthCondition(Integer healthConditionId){
+    public HealthConditionNewConsultationBo getHealthCondition(Integer healthConditionId){
         HealthCondition hc = this.healthConditionRepository.findById(healthConditionId)
                 .orElseThrow(()->new NotFoundException("healthcondition-not-found", "Healthcondition not found"));
-        return healthConditionMapper.toHealthConditionBo(hc);
+
+        HealthConditionNewConsultationBo newConsultationBo = new HealthConditionNewConsultationBo(hc);
+        newConsultationBo.setSnomed(snomedService.getSnomed(hc.getSctidCode()));
+        //newConsultationBo.setIsChronic(ProblemType.CHRONIC.equals(hc.getProblemId()));
+        return newConsultationBo;
     }
 }
