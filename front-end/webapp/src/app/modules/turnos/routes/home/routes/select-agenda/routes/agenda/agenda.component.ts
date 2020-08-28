@@ -257,6 +257,7 @@ function toCalendarEvent(from: string, to: string, date: Moment, appointment: Ap
 			},
 			overturn: appointment.overturn,
 			appointmentId: appointment.id,
+			appointmentStateId: appointment.appointmentStateId,
 			date: buildFullDate(appointment.hour, momentParseDate(appointment.date)),
 			medicalCoverage: {
 				name: appointment.medicalCoverageName,

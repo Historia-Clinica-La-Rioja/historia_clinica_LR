@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { AppointmentListDto, CreateAppointmentDto } from '@api-rest/api-model';
+import { AppointmentDto, AppointmentListDto, CreateAppointmentDto } from '@api-rest/api-model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { environment } from '@environments/environment';
@@ -35,14 +35,23 @@ export class AppointmentsService {
 		});
 	}
 
-	changeState(appointmentId: number, appointmentStateId:number): Observable<boolean> {
+	changeState(appointmentId: number, appointmentStateId: number, reason?: string): Observable<boolean> {
 		let queryParams: HttpParams = new HttpParams();
 		queryParams = queryParams.append('appointmentStateId', JSON.stringify(appointmentStateId));
+
+		if (reason) {
+			queryParams = queryParams.append('reason', reason);
+		}
 
 		const url = `${environment.apiBase}/institutions/
 					${this.contextService.institutionId}/medicalConsultations/appointments/
 					${appointmentId}/change-state`;
 		return this.http.put<boolean>(url, {}, {params : queryParams});
+	}
+
+	get(appoinmentId: number): Observable<AppointmentDto> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/${appoinmentId}`;
+		return this.http.get<AppointmentDto>(url);
 	}
 
 }

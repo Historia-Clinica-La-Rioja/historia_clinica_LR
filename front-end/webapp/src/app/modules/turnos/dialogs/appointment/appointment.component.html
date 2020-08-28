@@ -1,70 +1,105 @@
-<div mat-dialog-content>
-	<section id="personal-data" fxLayout="column">
-		<div fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
-			<mat-icon fontSet="material-icons-outlined" color="primary">person</mat-icon>
-			<span class="mat-body-strong"> {{data.patient.fullName}} - {{data.patient.identificationNumber}} </span>
-		</div>
-		<div fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
-			<mat-icon fontSet="material-icons-outlined" style="color: transparent">person</mat-icon>
-			<span class="mat-body patient-info"> Obra social: {{data.medicalCoverage?.name}} /
-				{{data.medicalCoverage.affiliateNumber}}</span>
-		</div>
-		<div fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
-			<mat-icon fontSet="material-icons-outlined" style="color: transparent">person</mat-icon>
-			<span class="mat-body patient-info">Teléfono: {{data.patient.phoneNumber}}</span>
-		</div>
-		<div fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
-			<mat-icon fontSet="material-icons-outlined" style="color: transparent">person</mat-icon>
-			<a class="mat-body" *hasRole="['ESPECIALISTA_MEDICO','PROFESIONAL_DE_SALUD']"
-			   [href]="'/institucion/' + institutionId + '/ambulatoria/paciente/' + data?.patient?.id">Ver
-				historia clínica</a>
-		</div>
-	</section>
-
-	<section id="appointment">
-		<span class="mat-body-strong">Turno Asignado</span>
-		<div fxLayout="column" fxLayoutGap="3px">
-			<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start center" id="full-date">
-				<mat-icon fontSet="material-icons-outlined" color="primary" mat-list-icon [inline]="true">calendar_today
-				</mat-icon>
-				<span class="mat-body"> {{data.date | date:"fullDate" }}</span>
+<form [formGroup]="formMotivo" (ngSubmit)="saveAbsent()">
+	<div mat-dialog-content>
+		<section id="personal-data" fxLayout="column">
+			<div fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
+				<mat-icon fontSet="material-icons-outlined" color="primary">person</mat-icon>
+				<span class="mat-body-strong"> {{data.patient.fullName}} - {{data.patient.identificationNumber}} </span>
 			</div>
-			<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start center" id="hour">
-				<mat-icon fontSet="material-icons-outlined" color="primary" mat-list-icon [inline]="true">access_time
-				</mat-icon>
-				<span class="mat-body"> {{data.date | date:"HH:mm"}} hs</span>
+			<div fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
+				<mat-icon fontSet="material-icons-outlined" style="color: transparent">person</mat-icon>
+				<span class="mat-body patient-info"> Obra social: {{data.medicalCoverage?.name}} /
+					{{data.medicalCoverage.affiliateNumber}}</span>
 			</div>
-		</div>
-	</section>
+			<div fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
+				<mat-icon fontSet="material-icons-outlined" style="color: transparent">person</mat-icon>
+				<span class="mat-body patient-info">Teléfono: {{data.patient.phoneNumber}}</span>
+			</div>
+			<div fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
+				<mat-icon fontSet="material-icons-outlined" style="color: transparent">person</mat-icon>
+				<a class="mat-body" *hasRole="['ESPECIALISTA_MEDICO','PROFESIONAL_DE_SALUD']"
+				   [href]="'/institucion/' + institutionId + '/ambulatoria/paciente/' + data?.patient?.id">Ver
+					historia clínica</a>
+			</div>
+		</section>
 
-	<section id="state">
-		<span class="mat-body-strong">Estado de turno</span>
-		<div class="appointment-actions" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+		<section id="appointment">
+			<span class="mat-body-strong">Turno Asignado</span>
+			<div fxLayout="column" fxLayoutGap="3px">
+				<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start center" id="full-date">
+					<mat-icon fontSet="material-icons-outlined" color="primary" mat-list-icon [inline]="true">
+						calendar_today
+					</mat-icon>
+					<span class="mat-body"> {{data.date | date:"fullDate" }}</span>
+				</div>
+				<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start center" id="hour">
+					<mat-icon fontSet="material-icons-outlined" color="primary" mat-list-icon [inline]="true">
+						access_time
+					</mat-icon>
+					<span class="mat-body"> {{data.date | date:"HH:mm"}} hs</span>
+				</div>
+			</div>
+		</section>
 
-			<button [ngClass]="{'selected assigned': turnos[0] }" (click)="turnos[0]=!turnos[0]" mat-stroked-button>
-				<mat-icon color="primary">event_available</mat-icon>
-			</button>
+		<section id="state">
+			<span class="mat-body-strong">Estado de turno</span>
+			<div class="appointment-actions" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
 
-			<button [ngClass]="{'selected confirmed': turnos[1] }" (click)="turnos[1]=!turnos[1]" mat-stroked-button>
-				<mat-icon color="primary">meeting_room</mat-icon>
-			</button>
+				<button type="button" [ngClass]="{'selected assigned': estadoSelected === 1 }"
+						(click)="changeState(1)"
+						matTooltip="Asignado"
+						mat-stroked-button>
+					<mat-icon color="primary">event_available</mat-icon>
+				</button>
 
-			<button [ngClass]="{'selected absent': turnos[2] }" (click)="turnos[2]=!turnos[2]" mat-stroked-button>
-				<mat-icon color="primary" svgIcon="person_cancel_outlined"></mat-icon>
-			</button>
+				<button type="button" [ngClass]="{'selected confirmed': estadoSelected === 2 }"
+						(click)="changeState(2)"
+						matTooltip="Confirmado"
+						mat-stroked-button>
+					<mat-icon color="primary">meeting_room</mat-icon>
+				</button>
 
-			<button [ngClass]="{'selected attended': turnos[3] }" (click)="turnos[3]=!turnos[3]" mat-stroked-button>
-				<mat-icon color="primary" svgIcon="person_check_outlined"></mat-icon>
-			</button>
+				<button type="button" [ngClass]="{'selected absent': estadoSelected === 3 }"
+						matTooltip="Ausente"
+						(click)="setAbsent()"
+						mat-stroked-button>
+					<mat-icon color="primary" svgIcon="person_cancel_outlined"></mat-icon>
+				</button>
 
-		</div>
-	</section>
-</div>
+				<button type="button" [ngClass]="{'selected served': estadoSelected === 5 }"
+						matTooltip="Atendido"
+						(click)="changeState(5)"
+						mat-stroked-button>
+					<mat-icon color="primary" svgIcon="person_check_outlined"></mat-icon>
+				</button>
 
-<mat-dialog-actions *hasRole="['ADMINISTRATIVO', 'ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']"
-	align="end">
-	<button mat-flat-button color="warn" id="cancel-appointment" name="cancel-appointment"
-		(click)="cancelAppointment()">
-		<span class="uppercase" [translate]="'turnos.cancel.TITLE'"></span>
-	</button>
-</mat-dialog-actions>
+			</div>
+
+			<div style="margin-top: 10px" *ngIf="motivoRequired">
+				<mat-form-field [floatLabel]="'never'" appearance="outline">
+					<mat-label>Motivo</mat-label>
+					<textarea formControlName="motivo"
+							  placeholder="Describa el motivo"
+							  matInput
+							  type="text"
+							  id="motivo"
+					></textarea>
+					<mat-error>El motivo es requerido</mat-error>
+				</mat-form-field>
+			</div>
+		</section>
+	</div>
+
+	<mat-dialog-actions *hasRole="['ADMINISTRATIVO', 'ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']"
+						align="end">
+
+		<button type="button" *ngIf="isCancelable()" mat-flat-button color="warn" id="cancel-appointment"
+				name="cancel-appointment"
+				(click)="cancelAppointment()">
+			<span class="uppercase" [translate]="'turnos.cancel.TITLE'"></span>
+		</button>
+
+		<button type="submit" *ngIf="motivoRequired" mat-flat-button color="primary" id="save">
+			<span class="uppercase">Guardar</span>
+		</button>
+	</mat-dialog-actions>
+</form>
