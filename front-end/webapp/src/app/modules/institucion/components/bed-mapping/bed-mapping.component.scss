@@ -4,11 +4,11 @@
     color: white;
     margin: 5px;
     padding: 0 5px;
-    background-color: $error-color;
+    background-color: $occupied-bed;
 }
 
 .free{
-    background-color: $success-color;
+    background-color: $free-bed;
     text-decoration: underline;
 }
 

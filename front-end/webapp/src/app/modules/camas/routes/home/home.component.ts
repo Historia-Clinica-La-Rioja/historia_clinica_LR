@@ -17,7 +17,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 	public bedManagementList: BedManagement[];
 	public bedsAmount: number;
 
-	private ManagementBed$: Subscription;
+	private managementBed$: Subscription;
 
 	constructor(
 		private mapperService: MapperService,
@@ -25,7 +25,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   	) { }
 
 	ngOnInit(): void {
-		this.ManagementBed$ = this.bedManagementService.getBedManagement().pipe(
+		this.managementBed$ = this.bedManagementService.getBedManagement().pipe(
 			tap(bedsSummary => this.bedsAmount = bedsSummary ? bedsSummary.length : 0),
 			map((bedsSummary: BedSummaryDto[]) => bedsSummary ? this.mapperService.toBedManagement(bedsSummary) : null)
 		).subscribe(data => this.bedManagementList = data);
@@ -36,7 +36,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		this.ManagementBed$.unsubscribe();
+		this.managementBed$.unsubscribe();
   	}
 
 }

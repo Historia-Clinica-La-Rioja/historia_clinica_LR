@@ -156,9 +156,9 @@ export class NewInternmentComponent implements OnInit {
 			width: '80%'
 		});
 
-		dialogRef.afterClosed().subscribe(result => {
-			if (result) {
-				this.selectedBedInfo = result;
+		dialogRef.afterClosed().subscribe((bedInfo: BedInfoDto) => {
+			if (bedInfo) {
+				this.selectedBedInfo = bedInfo;
 			}
 		});
 
