@@ -333,6 +333,7 @@ export interface DocumentSearchDto extends Serializable {
     mainDiagnosis: string;
     message: string;
     notes: DocumentObservationsDto;
+    procedures: string[];
 }
 
 export interface DocumentSearchFilterDto {

@@ -23,6 +23,8 @@ public class DocumentSearchDto implements Serializable {
 
     private List<String> diagnosis;
 
+    private List<String> procedures;
+
     private ResponsibleDoctorDto creator;
 
     private LocalDate createdOn;

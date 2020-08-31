@@ -27,6 +27,8 @@ public class DocumentSearchBo {
 
     private List<String> diagnosis;
 
+    private List<String> procedures;
+
     private ResponsibleDoctorBo creator;
 
     private LocalDate createdOn;
@@ -37,6 +39,7 @@ public class DocumentSearchBo {
             this.notes = new DocumentObservationsBo(source.getNotes());
         this.mainDiagnosis = source.getMainDiagnosis();
         this.diagnosis = source.getDiagnosis();
+        this.procedures = source.getProcedures();
         this.creator = new ResponsibleDoctorBo(source.getCreator().getFirstName(), source.getCreator().getLastName());
         this.createdOn = source.getCreatedOn();
     }

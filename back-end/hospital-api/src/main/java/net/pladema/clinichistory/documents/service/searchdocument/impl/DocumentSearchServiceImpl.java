@@ -51,6 +51,7 @@ public class DocumentSearchServiceImpl implements DocumentSearchService {
         else
             structuredQuery = new DocumentSearchQuery();
         List<DocumentSearchVo> allDocuments = documentRepository.historicSearch(internmentEpisodeId, structuredQuery);
+        allDocuments = addProcedures(allDocuments);
 
         //No results Message
         String infoMessage = allDocuments.isEmpty() ? structuredQuery.noResultMessage() : Strings.EMPTY;
@@ -59,5 +60,12 @@ public class DocumentSearchServiceImpl implements DocumentSearchService {
         DocumentHistoricBo result = new DocumentHistoricBo(documentsBo, infoMessage);
         LOG.debug(OUTPUT, result);
         return result;
+    }
+
+    private List<DocumentSearchVo> addProcedures(List<DocumentSearchVo> documents){
+        for (DocumentSearchVo d : documents){
+            d.setProcedures(documentRepository.getProceduresByDocuments(d.getId()));
+        }
+        return documents;
     }
  }

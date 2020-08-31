@@ -42,4 +42,11 @@ public interface DocumentRepository extends JpaRepository<Document, Long>, Docum
             "WHERE d.sourceId = :internmentEpisodeId " +
             "and d.sourceTypeId = " + SourceType.HOSPITALIZATION)
     List<Updateable> getUpdatablesDocuments(@Param("internmentEpisodeId") Integer internmentEpisodeId);
+
+    @Query(value = "SELECT snomedPr.pt AS procedures " +
+            "FROM DocumentProcedure AS dp " +
+            "LEFT JOIN Procedure AS pr ON (pr.id = dp.pk.procedureId) " +
+            "JOIN Snomed AS snomedPr ON (pr.sctidCode = snomedPr.id) " +
+            "WHERE dp.pk.documentId = :documentId")
+    List<String> getProceduresByDocuments(@Param("documentId") Long documentId);
 }

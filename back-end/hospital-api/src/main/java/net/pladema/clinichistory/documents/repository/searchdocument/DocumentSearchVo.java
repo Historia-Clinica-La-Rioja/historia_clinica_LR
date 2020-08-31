@@ -28,6 +28,8 @@ public class DocumentSearchVo {
 
     private List<String> diagnosis = new ArrayList<>();
 
+    private List<String> procedures = new ArrayList<>();
+
     private String mainDiagnosis;
 
 
