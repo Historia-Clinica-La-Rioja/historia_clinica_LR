@@ -15,6 +15,7 @@ import { AgendaComponent } from './routes/home/routes/select-agenda/routes/agend
 import { CustomDateFormatter } from './services/custom-date-formatter.service';
 import { NewAppointmentComponent } from './dialogs/new-appointment/new-appointment.component';
 import { AppointmentComponent } from './dialogs/appointment/appointment.component';
+import { CancelAppointmentComponent } from './dialogs/cancel-appointment/cancel-appointment.component';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { AppointmentComponent } from './dialogs/appointment/appointment.componen
 	 	SelectAgendaComponent,
 	 	AgendaComponent,
 	 	NewAppointmentComponent,
-	 	AppointmentComponent
+	 	AppointmentComponent,
+	 	CancelAppointmentComponent
 	],
 	imports: [
 		CommonModule,
