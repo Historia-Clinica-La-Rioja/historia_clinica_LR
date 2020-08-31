@@ -17,6 +17,9 @@ import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appoint
 })
 export class AppointmentComponent implements OnInit {
 
+	public readonly appointmentStatesIds = APPOINTMENT_STATES_ID;
+	public getAppointmentState = getAppointmentState;
+
 	public appointment: AppointmentDto;
 	public formMotivo: FormGroup;
 	public estadoSelected: APPOINTMENT_STATES_ID;
@@ -52,7 +55,15 @@ export class AppointmentComponent implements OnInit {
 			});
 	}
 
-	cancelAppointment() {
+	changeState(newStateId: APPOINTMENT_STATES_ID): void {
+		if (newStateId !== this.estadoSelected && newStateId !== this.data.appointmentStateId) {
+			this.motivoRequired = false;
+			this.estadoSelected = newStateId;
+			this.submitNewState(newStateId);
+		}
+	}
+
+	cancelAppointment(): void {
 		const dialogRefCancelAppointment = this.dialog.open(CancelAppointmentComponent, {
 			data: this.data.appointmentId
 		});
@@ -61,26 +72,6 @@ export class AppointmentComponent implements OnInit {
 				this.dialogRef.close('statuschanged');
 			}
 		});
-	}
-
-	changeState(newStateId: APPOINTMENT_STATES_ID) {
-		if (newStateId !== this.estadoSelected && newStateId !== this.data.appointmentStateId) {
-			this.motivoRequired = false;
-			this.estadoSelected = newStateId;
-			this.submitNewState(newStateId);
-		}
-	}
-
-	private submitNewState(newStateId: APPOINTMENT_STATES_ID, motivo?: string) {
-		this.appointmentService.changeState(this.data.appointmentId, newStateId, motivo)
-			.subscribe(() => {
-				this.dialogRef.close('statuschanged');
-				this.snackBarService.showSuccess(`Estado de turno actualizado a ${getAppointmentState(newStateId).description} exitosamente`);
-			}, _ => {
-				this.estadoSelected = this.data.appointmentStateId;
-				this.snackBarService.showError(`Error al actualizar estado de turno
-				${getAppointmentState(this.data.appointmentStateId).description} a ${getAppointmentState(newStateId).description}`);
-			});
 	}
 
 	setAbsent(): void {
@@ -97,6 +88,18 @@ export class AppointmentComponent implements OnInit {
 	isCancelable(): boolean {
 		return this.data.appointmentStateId === APPOINTMENT_STATES_ID.ASSIGNED ||
 			this.data.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED;
+	}
+
+	private submitNewState(newStateId: APPOINTMENT_STATES_ID, motivo?: string): void {
+		this.appointmentService.changeState(this.data.appointmentId, newStateId, motivo)
+			.subscribe(() => {
+				this.dialogRef.close('statuschanged');
+				this.snackBarService.showSuccess(`Estado de turno actualizado a ${getAppointmentState(newStateId).description} exitosamente`);
+			}, _ => {
+				this.estadoSelected = this.data.appointmentStateId;
+				this.snackBarService.showError(`Error al actualizar estado de turno
+				${getAppointmentState(this.data.appointmentStateId).description} a ${getAppointmentState(newStateId).description}`);
+			});
 	}
 }
 

@@ -44,32 +44,35 @@
 			<span class="mat-body-strong">Estado de turno</span>
 			<div class="appointment-actions" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
 
-				<button type="button" [ngClass]="{'selected assigned': estadoSelected === 1 }"
-						(click)="changeState(1)"
-						matTooltip="Asignado"
+				<button type="button" [ngClass]="{'selected assigned': estadoSelected === appointmentStatesIds.ASSIGNED }"
+						(click)="changeState(appointmentStatesIds.ASSIGNED)"
 						mat-stroked-button>
-					<mat-icon color="primary">event_available</mat-icon>
+					<mat-icon matTooltip="{{getAppointmentState(appointmentStatesIds.ASSIGNED).description}}"
+							  color="primary">event_available</mat-icon>
 				</button>
 
-				<button type="button" [ngClass]="{'selected confirmed': estadoSelected === 2 }"
-						(click)="changeState(2)"
-						matTooltip="Confirmado"
+				<button type="button" [ngClass]="{'selected confirmed': estadoSelected === appointmentStatesIds.CONFIRMED }"
+						(click)="changeState(appointmentStatesIds.CONFIRMED)"
 						mat-stroked-button>
-					<mat-icon color="primary">meeting_room</mat-icon>
+					<mat-icon matTooltip="{{getAppointmentState(appointmentStatesIds.CONFIRMED).description}}"
+							  color="primary">meeting_room
+					</mat-icon>
 				</button>
 
-				<button type="button" [ngClass]="{'selected absent': estadoSelected === 3 }"
-						matTooltip="Ausente"
+				<button type="button" [ngClass]="{'selected absent': estadoSelected === appointmentStatesIds.ABSENT }"
 						(click)="setAbsent()"
 						mat-stroked-button>
-					<mat-icon color="primary" svgIcon="person_cancel_outlined"></mat-icon>
+					<mat-icon matTooltip="{{getAppointmentState(appointmentStatesIds.ABSENT).description}}"
+							  color="primary" svgIcon="person_cancel_outlined">
+					</mat-icon>
 				</button>
 
-				<button type="button" [ngClass]="{'selected served': estadoSelected === 5 }"
-						matTooltip="Atendido"
-						(click)="changeState(5)"
+				<button type="button" disabled [ngClass]="{'selected served': estadoSelected === appointmentStatesIds.SERVED }"
 						mat-stroked-button>
-					<mat-icon color="primary" svgIcon="person_check_outlined"></mat-icon>
+					<mat-icon
+						color="primary" svgIcon="person_check_outlined"
+						matTooltip="{{getAppointmentState(appointmentStatesIds.SERVED).description}}"
+					></mat-icon>
 				</button>
 
 			</div>
