@@ -1,20 +1,20 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { SnomedService } from 'src/app/modules/historia-clinica/services/snomed.service';
-import { Problema, ProblemasNuevaConsultaService } from '../../services/problemas-nueva-consulta.service';
-import { MotivoNuevaConsultaService } from '../../services/motivo-nueva-consulta.service';
-import { Medicacion, MedicacionesNuevaConsultaService } from '../../services/medicaciones-nueva-consulta.service';
-import { ProcedimientosService } from '../../../../services/procedimientos.service';
-import { DatosAntropometricosNuevaConsultaService } from '../../services/datos-antropometricos-nueva-consulta.service';
-import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
-import { SignosVitalesNuevaConsultaService } from '../../services/signos-vitales-nueva-consulta.service';
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {SnomedService} from 'src/app/modules/historia-clinica/services/snomed.service';
+import {Problema, ProblemasNuevaConsultaService} from '../../services/problemas-nueva-consulta.service';
+import {MotivoNuevaConsultaService} from '../../services/motivo-nueva-consulta.service';
+import {Medicacion, MedicacionesNuevaConsultaService} from '../../services/medicaciones-nueva-consulta.service';
+import {ProcedimientosService} from '../../../../services/procedimientos.service';
+import {DatosAntropometricosNuevaConsultaService} from '../../services/datos-antropometricos-nueva-consulta.service';
+import {InternacionMasterDataService} from '@api-rest/services/internacion-master-data.service';
+import {SignosVitalesNuevaConsultaService} from '../../services/signos-vitales-nueva-consulta.service';
 
 import {
 	AntecedenteFamiliar,
 	AntecedentesFamiliaresNuevaConsultaService
 } from '../../services/antecedentes-familiares-nueva-consulta.service';
 import {CreateOutpatientDto, HealthConditionNewConsultationDto} from '@api-rest/api-model';
-import {DateFormat, dateToMoment, momentFormat} from '@core/utils/moment.utils';
+import {DateFormat, dateToMomentTimeZone, momentFormat} from '@core/utils/moment.utils';
 import {OutpatientConsultationService} from '@api-rest/services/outpatient-consultation.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SnackBarService} from '@presentation/services/snack-bar.service';
@@ -70,7 +70,6 @@ export class NuevaConsultaComponent implements OnInit {
 					this.route.paramMap.subscribe( param => {
 						let hcId = Number(param.get('idProblema'));
 						this.healthConditionService.getHealthCondition(hcId).subscribe(p => {
-							console.log('problema',p);
 							this.problemasNuevaConsultaService.addProblemToList(NuevaConsultaComponent.buildProblema(p));
 						});
 					});
@@ -105,8 +104,8 @@ export class NuevaConsultaComponent implements OnInit {
 		const problema: Problema = {
 			snomed: p.snomed,
 			cronico: p.isChronic,
-			fechaInicio: dateToMoment(p.startDate),
-			fechaFin: dateToMoment(p.inactivationDate)
+			fechaInicio: dateToMomentTimeZone(p.startDate),
+			fechaFin: p.inactivationDate? dateToMomentTimeZone(p.inactivationDate) : undefined
 		};
 		return problema;
 	}
@@ -211,4 +210,8 @@ export class NuevaConsultaComponent implements OnInit {
 		};
 	}
 
+	editProblema() {
+		this.readOnlyProblema = false;
+		this.problemasNuevaConsultaService.editProblem();
+	}
 }

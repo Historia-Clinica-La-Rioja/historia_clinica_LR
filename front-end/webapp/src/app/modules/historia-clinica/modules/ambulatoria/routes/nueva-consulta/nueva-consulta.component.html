@@ -56,7 +56,7 @@
 			<ng-template #problemaForm>
 				<form [formGroup]="problemasNuevaConsultaService.getForm()"
 					(ngSubmit)="this.readOnlyProblema ?
-					 problemasNuevaConsultaService.editProblem(): problemasNuevaConsultaService.addToList()">
+					 this.editProblema(): problemasNuevaConsultaService.addToList()">
 
 					<mat-form-field appearance="outline">
 						<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.problemas.CONCEPT_LABEL'">

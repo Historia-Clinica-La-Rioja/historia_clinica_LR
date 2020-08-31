@@ -168,5 +168,6 @@ export class ProblemasNuevaConsultaService {
 		this.getProblemas()[0].cronico = this.form.controls.cronico.value;
 		this.getProblemas()[0].fechaInicio = this.form.controls.fechaInicio.value;
 		this.getProblemas()[0].fechaFin = this.form.controls.fechaFin.value;
+		this.resetForm();
 	}
 }
