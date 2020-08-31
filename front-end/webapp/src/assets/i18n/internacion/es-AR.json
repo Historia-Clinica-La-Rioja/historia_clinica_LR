@@ -417,6 +417,7 @@
 			"SECTION_ORIGIN": "Datos cama origen",
 			"SECTION_DESTINATION": "Datos cama destino",
 			"SECTION_DATE": "Fecha de pase",
+			"BED_ASSIGNMENT": "Asigne una nueva cama para esta internación",
 			"form": {
 				"DESTINATION_SPECIALTY": "Servicio/Especialidad destino",
 				"ORIGIN_BED": "N° de cama origen",

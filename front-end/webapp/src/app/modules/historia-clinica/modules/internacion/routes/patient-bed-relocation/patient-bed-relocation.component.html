@@ -18,39 +18,53 @@
 						</section>
 						<section>
 							<h2 [translate]="'internaciones.bed-relocation.SECTION_DESTINATION'"></h2>
-							<div class="form-row">
-								<span [translate]="'internaciones.bed-relocation.form.DESTINATION_SPECIALTY'"></span>
-							</div>
-							<div class="form-row">
-								<mat-form-field appearance="outline">
-									<mat-select id="destinationSpecialtyId" name="destinationSpecialtyId"
-										formControlName="destinationSpecialtyId"
-										placeholder="{{'pacientes.form.SELECT' | translate}}"
-										(selectionChange)="setBeds()">
-										<mat-option *ngFor="let specialty of specialties" [value]="specialty.id">
-											{{specialty.name}}
-										</mat-option>
-									</mat-select>
-									<mat-error [translate]="'pacientes.form.REQUIRED'"></mat-error>
-								</mat-form-field>
-							</div>
-							<div class="form-row">
-								<span [translate]="'internaciones.bed-relocation.form.DESTINATION_BED'"></span>
-							</div>
-							<div class="form-row">
-								<mat-form-field appearance="outline">
-									<mat-select id="destinationBedId" name="destinationBedId"
-										formControlName="destinationBedId"
-										placeholder="{{'pacientes.form.SELECT' | translate}}">
-										<mat-option *ngFor="let bed of beds" [value]="bed.id">
-											{{bed.bedNumber}}
-										</mat-option>
-									</mat-select>
-									<mat-error *ngIf="(beds && !beds.length)"
-										[translate]="'No hay camas libres para el Servicio/Especialidad seleccionada'">
-									</mat-error>
-									<mat-error [translate]="'pacientes.form.REQUIRED'"></mat-error>
-								</mat-form-field>
+							<div class="bed-assignment">
+								<h4 class="page-title" *ngIf="!selectedBedInfo" [translate]="'internaciones.bed-relocation.BED_ASSIGNMENT'"></h4>
+								<mat-list content *ngIf="selectedBedInfo">
+									<mat-list-item>
+										<h2 [translate]="'gestion-camas.detail.BED_TITLE'" [translateParams]="{ bedNumber: selectedBedInfo.bed.bedNumber }"></h2>
+									</mat-list-item>
+									<mat-list-item>
+										<div fxLayout="column wrap">
+											<span class="mat-body-1" [translate]="'gestion-camas.detail.SECTOR'"></span>
+											<span class="mat-body-2">
+												{{selectedBedInfo.bed.room.sector.description}}
+											</span>
+										</div>
+									</mat-list-item>
+									<mat-list-item>
+										<div fxLayout="column wrap">
+											<span class="mat-body-1" [translate]="'gestion-camas.detail.SPECIALTY'"></span>
+											<span class="mat-body-2">
+												{{selectedBedInfo.bed.room.sector.specialty.name}}
+											</span>
+										</div>
+									</mat-list-item>
+									<mat-list-item>
+										<div fxLayout="column wrap">
+											<span class="mat-body-1" [translate]="'gestion-camas.detail.CATEGORY'"></span>
+											<span class="mat-body-2">
+												{{selectedBedInfo.bed.bedCategory.description}}
+											</span>
+										</div>
+									</mat-list-item>
+									<mat-list-item>
+										<div fxLayout="column wrap">
+											<span class="mat-body-1" [translate]="'gestion-camas.detail.ROOM'"></span>
+											<span class="mat-body-2">
+												{{selectedBedInfo.bed.room.description}}
+											</span>
+										</div>
+									</mat-list-item>
+								</mat-list>
+								<div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10px">
+									<button mat-raised-button color="primary" type="button" (click)="openBedAssignmentDialog()" *ngIf="selectedBedInfo">
+										{{'buttons.EDIT' | translate | uppercase }}
+									</button>
+									<button mat-raised-button color="primary" type="button" (click)="openBedAssignmentDialog()" *ngIf="!selectedBedInfo">
+										<span [translate]="'internaciones.new-internment.BED_ASSIGNMENT_BUTTON'"></span>
+									</button>
+								</div>
 							</div>
 						</section>
 						<section>

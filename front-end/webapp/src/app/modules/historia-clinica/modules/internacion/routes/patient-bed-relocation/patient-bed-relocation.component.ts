@@ -1,15 +1,14 @@
-import { Component, OnInit, ElementRef } from "@angular/core";
-import { Observable } from "rxjs";
+import { Component, OnInit, ElementRef } from '@angular/core';
+import { Observable } from 'rxjs';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
 import { InternmentEpisodeSummary } from '@presentation/components/internment-episode-summary/internment-episode-summary.component';
 import { PatientService } from '@api-rest/services/patient.service';
 import { InternacionService } from '@api-rest/services/internacion.service';
 import { MapperService } from '@presentation/services/mapper.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BasicPatientDto, InternmentSummaryDto, CompletePatientDto, PersonalInformationDto, PatientBedRelocationDto } from '@api-rest/api-model';
+import { BasicPatientDto, InternmentSummaryDto, CompletePatientDto, PersonalInformationDto, PatientBedRelocationDto, BedInfoDto } from '@api-rest/api-model';
 import { map } from 'rxjs/operators';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -20,6 +19,7 @@ import { BedService } from '@api-rest/services/bed.service';
 import { newMoment, momentFormat, DateFormat, momentParseDateTime, momentParseDate, dateToMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { PersonService } from '@api-rest/services/person.service';
+import { BedAssignmentComponent } from 'src/app/modules/historia-clinica/dialogs/bed-assignment/bed-assignment.component';
 
 
 const ROUTE_INTERNMENT = 'internaciones/internacion/';
@@ -37,16 +37,15 @@ export class PatientBedRelocationComponent implements OnInit {
 	public minTimeStr;
 	public minDate;
 	public form: FormGroup;
-	public specialties;
-	public beds;
 	public patientId: number;
 	public today: Moment = newMoment();
 	public internmentEpisode: InternmentSummaryDto;
 	public patientTypeData;
 	public patientBasicData;
 	public personalInformation;
+	public selectedBedInfo: BedInfoDto;
 	private internmentId;
-	private minDateTimeValidator : MinTimeValidator;
+	private minDateTimeValidator: MinTimeValidator;
 	private readonly routePrefix;
 
 	constructor(
@@ -56,7 +55,6 @@ export class PatientBedRelocationComponent implements OnInit {
 		private readonly mapperService: MapperService,
 		private readonly el: ElementRef,
 		private readonly router: Router,
-		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly bed: BedService,
 		public dialog: MatDialog,
 		public translator: TranslateService,
@@ -94,34 +92,27 @@ export class PatientBedRelocationComponent implements OnInit {
 			});
 
 		this.form = this.formBuilder.group({
-			destinationSpecialtyId: [null, [Validators.required]],
-			destinationBedId: [{ value: null, disabled: true }, [Validators.required]],
 			relocationDate: [this.today, [Validators.required]],
 			relocationTime: [momentFormat(this.today, DateFormat.HOUR_MINUTE), [Validators.required, Validators.pattern(TIME_PATTERN), futureTimeValidation]],
-
 		});
 
-		this.form.controls['relocationDate'].valueChanges.subscribe(
+		this.form.controls.relocationDate.valueChanges.subscribe(
 			(selectedDate: Moment) => {
 				const selectedDateString = momentFormat(selectedDate, DateFormat.API_DATE);
 				const todayDateString = momentFormat(this.today, DateFormat.API_DATE);
 				const minDateString = momentFormat(this.minDate, DateFormat.API_DATE);
 				if (selectedDateString === todayDateString) {
-					this.form.controls['relocationTime'].setValidators([Validators.required, Validators.pattern(TIME_PATTERN), futureTimeValidation]);
-					this.form.controls['relocationTime'].updateValueAndValidity();
+					this.form.controls.relocationTime.setValidators([Validators.required, Validators.pattern(TIME_PATTERN), futureTimeValidation]);
+					this.form.controls.relocationTime.updateValueAndValidity();
 				} else if (selectedDateString === minDateString) {
-					this.form.controls['relocationTime'].setValidators([Validators.required, Validators.pattern(TIME_PATTERN), this.minDateTimeValidator.minTimeValidation.bind(this.minDateTimeValidator)]);
-					this.form.controls['relocationTime'].updateValueAndValidity();
+					this.form.controls.relocationTime.setValidators([Validators.required, Validators.pattern(TIME_PATTERN), this.minDateTimeValidator.minTimeValidation.bind(this.minDateTimeValidator)]);
+					this.form.controls.relocationTime.updateValueAndValidity();
 				} else {
-					this.form.controls['relocationTime'].setValidators([Validators.required, Validators.pattern(TIME_PATTERN)]);
-					this.form.controls['relocationTime'].updateValueAndValidity();
+					this.form.controls.relocationTime.setValidators([Validators.required, Validators.pattern(TIME_PATTERN)]);
+					this.form.controls.relocationTime.updateValueAndValidity();
 				}
 			}
 		);
-
-		this.internacionMasterDataService.getClinicalSpecialty().subscribe(data => {
-			this.specialties = data;
-		});
 
 		this.patientService.getPatientCompleteData<CompletePatientDto>(this.patientId)
 			.subscribe(completeData => {
@@ -135,27 +126,20 @@ export class PatientBedRelocationComponent implements OnInit {
 			});
 	}
 
-	setBeds() {
-		const bedCategoryId = this.form.controls.destinationSpecialtyId.value;
-		this.bed.getAllBedsByCategory(bedCategoryId).subscribe(data => {
-			this.beds = data;
-			this.form.controls.destinationBedId.markAsTouched();
-		});
-		this.form.controls.destinationBedId.reset();
-		this.form.controls.destinationBedId.enable();
-	}
-
 	save(): void {
-		if (this.form.valid) {
+		if (this.form.valid && this.selectedBedInfo) {
 			this.openDialog();
 		} else {
+			if (!this.selectedBedInfo) {
+				this.snackBarService.showError('internaciones.new-internment.messages.ERROR_BED_ASSIGNMENT');
+			}
 			scrollIntoError(this.form, this.el);
 		}
 	}
 
 	getRelocationDateTime(): any {
-		const newTime: string = this.form.controls['relocationTime'].value;
-		const newDatetime: Moment = this.form.controls['relocationDate'].value;
+		const newTime: string = this.form.controls.relocationTime.value;
+		const newDatetime: Moment = this.form.controls.relocationDate.value;
 		newDatetime.set({
 			hour: +newTime.substr(0, 2),
 			minute: +newTime.substr(3, 2),
@@ -193,14 +177,28 @@ export class PatientBedRelocationComponent implements OnInit {
 
 	}
 
+	openBedAssignmentDialog(): void {
+
+		const dialogRef = this.dialog.open(BedAssignmentComponent, {
+			width: '80%'
+		});
+
+		dialogRef.afterClosed().subscribe((bedInfo: BedInfoDto) => {
+			if (bedInfo) {
+				this.selectedBedInfo = bedInfo;
+			}
+		});
+
+	}
+
 	mapToPatientBedRelocationRequest(): PatientBedRelocationDto {
 		return {
 			originBedId: this.internmentEpisode.bed.id,
-			destinationBedId: this.form.controls['destinationBedId'].value,
+			destinationBedId: this.selectedBedInfo.bed.id,
 			internmentEpisodeId: this.internmentId,
 			originBedFree: true,
 			relocationDate: this.getRelocationDateTime(),
-		}
+		};
 	}
 
 }
