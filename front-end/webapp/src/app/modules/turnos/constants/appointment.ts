@@ -60,3 +60,5 @@ export interface AppointmentState {
 export function getAppointmentState(id: APPOINTMENT_STATES_ID): AppointmentState {
 	return APPOINTMENT_STATES.find(appointment => appointment.id === id);
 }
+
+export const MAX_LENGTH_MOTIVO: number = 255;

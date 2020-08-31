@@ -3,12 +3,13 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
 import { NewAttentionComponent } from '../new-attention/new-attention.component';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { APPOINTMENT_STATES_ID, getAppointmentState } from '../../constants/appointment';
+import { APPOINTMENT_STATES_ID, getAppointmentState, MAX_LENGTH_MOTIVO } from '../../constants/appointment';
 import { Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AppointmentDto } from '@api-rest/api-model';
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
+import { getError, hasError } from '@core/utils/form.utils';
 
 @Component({
 	selector: 'app-appointment',
@@ -19,6 +20,8 @@ export class AppointmentComponent implements OnInit {
 
 	public readonly appointmentStatesIds = APPOINTMENT_STATES_ID;
 	public getAppointmentState = getAppointmentState;
+	public getError = getError;
+	public hasError = hasError;
 
 	public appointment: AppointmentDto;
 	public formMotivo: FormGroup;
@@ -40,7 +43,7 @@ export class AppointmentComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.formMotivo = this.formBuilder.group({
-			motivo: ['', Validators.required]
+			motivo: ['', [Validators.required, Validators.maxLength(MAX_LENGTH_MOTIVO)]]
 		});
 
 		this.estadoSelected = this.data.appointmentStateId;

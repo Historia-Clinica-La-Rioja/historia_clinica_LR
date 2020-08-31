@@ -86,7 +86,15 @@
 							  type="text"
 							  id="motivo"
 					></textarea>
-					<mat-error>El motivo es requerido</mat-error>
+					<mat-error
+						*ngIf="hasError(formMotivo, 'required', 'motivo')"
+						[translate]="'forms.REQUIRED'">
+					</mat-error>
+					<mat-error
+						*ngIf="hasError(formMotivo, 'maxlength', 'motivo')"
+						[translate]="'forms.MAX_LENGTH_ERROR'"
+					   	[translateParams]="{max: getError(formMotivo, 'maxlength', 'motivo')?.requiredLength}">
+					</mat-error>
 				</mat-form-field>
 			</div>
 		</section>
