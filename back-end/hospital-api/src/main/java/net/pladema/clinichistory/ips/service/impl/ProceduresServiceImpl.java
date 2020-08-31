@@ -64,7 +64,7 @@ public class ProceduresServiceImpl implements ProceduresService {
         Procedure result = new Procedure(
                 patientId,
                 sctId,
-                procedureBo.getStatusId(), LocalDate.now());
+                procedureBo.getStatusId(), procedureBo.getFecha());
 
         result = proceduresRepository.save(result);
         LOG.debug("Procedure saved -> {}", result.getId());

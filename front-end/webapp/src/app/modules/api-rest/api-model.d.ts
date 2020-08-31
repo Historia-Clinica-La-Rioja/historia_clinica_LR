@@ -523,6 +523,7 @@ export interface HealthcareProfessionalDto {
 }
 
 export interface HospitalizationProcedureDto {
+    fecha?: string;
     snomed: SnomedDto;
 }
 
@@ -724,6 +725,7 @@ export interface OutpatientProblemDto {
 }
 
 export interface OutpatientProcedureDto {
+    fecha?: string;
     snomed: SnomedDto;
 }
 

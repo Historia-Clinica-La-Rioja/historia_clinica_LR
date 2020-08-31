@@ -12,6 +12,6 @@ import java.time.LocalDate;
 @ToString
 public class ProcedureBo extends ClinicalTerm {
 
-    private LocalDate performanceDate;
+    private LocalDate fecha;
 
 }

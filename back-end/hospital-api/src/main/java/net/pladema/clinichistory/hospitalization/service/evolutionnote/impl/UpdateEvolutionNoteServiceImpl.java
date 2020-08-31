@@ -5,10 +5,7 @@ import net.pladema.clinichistory.documents.repository.entity.Document;
 import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.UpdateEvolutionNoteService;
 import net.pladema.clinichistory.documents.service.NoteService;
-import net.pladema.clinichistory.ips.service.AllergyService;
-import net.pladema.clinichistory.ips.service.ClinicalObservationService;
-import net.pladema.clinichistory.ips.service.HealthConditionService;
-import net.pladema.clinichistory.ips.service.ImmunizationService;
+import net.pladema.clinichistory.ips.service.*;
 import net.pladema.clinichistory.ips.service.domain.DocumentObservationsBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,18 +32,21 @@ public class UpdateEvolutionNoteServiceImpl implements UpdateEvolutionNoteServic
 
     private final ImmunizationService immunizationService;
 
+    private final ProceduresService proceduresService;
+
     public UpdateEvolutionNoteServiceImpl(DocumentService documentService,
                                           NoteService noteService,
                                           HealthConditionService healthConditionService,
                                           AllergyService allergyService,
                                           ClinicalObservationService clinicalObservationService,
-                                          ImmunizationService immunizationService) {
+                                          ImmunizationService immunizationService, ProceduresService proceduresService) {
         this.documentService = documentService;
         this.noteService = noteService;
         this.healthConditionService = healthConditionService;
         this.allergyService = allergyService;
         this.clinicalObservationService = clinicalObservationService;
         this.immunizationService = immunizationService;
+        this.proceduresService = proceduresService;
     }
 
     @Override
@@ -62,6 +62,7 @@ public class UpdateEvolutionNoteServiceImpl implements UpdateEvolutionNoteServic
             evolutionNote.setDiagnosis(healthConditionService.loadDiagnosis(patientId, doc.getId(), evolutionNote.getDiagnosis()));
             evolutionNote.setAllergies(allergyService.loadAllergies(patientId, doc.getId(), evolutionNote.getAllergies()));
             evolutionNote.setImmunizations(immunizationService.loadImmunization(patientId, doc.getId(), evolutionNote.getImmunizations()));
+            evolutionNote.setProcedures(proceduresService.loadProcedures(patientId, doc.getId(), evolutionNote.getProcedures()));
 
             evolutionNote.setVitalSigns(clinicalObservationService.loadVitalSigns(patientId, doc.getId(), Optional.ofNullable(evolutionNote.getVitalSigns())));
             evolutionNote.setAnthropometricData(clinicalObservationService.loadAnthropometricData(patientId, doc.getId(), Optional.ofNullable(evolutionNote.getAnthropometricData())));
