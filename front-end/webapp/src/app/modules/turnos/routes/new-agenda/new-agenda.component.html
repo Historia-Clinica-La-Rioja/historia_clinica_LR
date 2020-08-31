@@ -82,7 +82,7 @@
 						</div>
 						<mat-form-field appearance="outline">
 							<input formControlName="startDate" id="startDate" matInput [matDatepicker]="initPicker"
-								(dateChange)="setAllWeeklyDoctorsOfficeOcupation()">
+								(dateChange)="setAllWeeklyDoctorsOfficeOcupation()" [min]="minDate">
 							<mat-datepicker-toggle matSuffix [for]="initPicker"></mat-datepicker-toggle>
 							<mat-datepicker #initPicker></mat-datepicker>
 						</mat-form-field>

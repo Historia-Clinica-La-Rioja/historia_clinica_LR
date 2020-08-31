@@ -30,20 +30,22 @@ const ROUTE_APPOINTMENT = 'turnos';
 })
 export class NewAgendaComponent implements OnInit {
 
-	public form: FormGroup;
-	public errors: string[] = [];
-	public sectors;
-	public specialties;
-	public doctorOffices: DoctorsOfficeDto[];
-	public professionals;
+	public appointmentDurations = APPOINTMENT_DURATIONS;
 	public appointmentManagement = false;
 	public autoRenew = false;
-	public holidayWork = false;
-	public appointmentDurations = APPOINTMENT_DURATIONS;
-	public openingTime: number;
 	public closingTime: number;
 	public defaultDoctorOffice: DoctorsOfficeDto;
+	public doctorOffices: DoctorsOfficeDto[];
 	public editMode = false;
+	public errors: string[] = [];
+	public form: FormGroup;
+	public holidayWork = false;
+	public minDate = new Date();
+	public openingTime: number;
+	public professionals;
+	public sectors;
+	public specialties;
+
 	private editingDiaryId = null;
 	private readonly routePrefix;
 	private mappedCurrentWeek = {};
@@ -90,6 +92,7 @@ export class NewAgendaComponent implements OnInit {
 		this.route.data.subscribe(data => {
 			if (data.editMode) {
 				this.editMode = true;
+				this.minDate = null;
 				this.route.paramMap.subscribe((params) => {
 					this.editingDiaryId = Number(params.get('agendaId'));
 					this.diaryService.get(this.editingDiaryId).subscribe((diary: CompleteDiaryDto) => {
