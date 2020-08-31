@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { DOCUMENTS, DOCUMENTS_SEARCH_FIELDS } from '../../constants/summaries';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Moment } from 'moment';
-import { DocumentHistoricDto, DocumentSearchFilterDto, EDocumentSearch, DocumentSearchDto } from '@api-rest/api-model';
+import { DocumentSearchFilterDto, EDocumentSearch, DocumentSearchDto, DocumentHistoricDto } from '@api-rest/api-model';
 import { DateFormat, momentFormat, newMoment } from '@core/utils/moment.utils';
 import { EvolutionNotesListenerService } from '../../modules/internacion/services/evolution-notes-listener.service';
 
@@ -16,12 +16,12 @@ export class DocumentsSummaryComponent implements OnInit {
 	@Input() internmentEpisodeId: number;
 
 	public searchFields: SearchField[] = DOCUMENTS_SEARCH_FIELDS;
-	public documentHistoric: DocumentHistoricDto;
 	public documentsToShow: DocumentSearchDto[];
 	public readonly documentsSummary = DOCUMENTS;
 	public today: Moment = newMoment();
 	public form: FormGroup;
 	public activeDocument;
+	public documentHistoric: DocumentHistoricDto;
 	public searchTriggered: boolean = false;
 
 	constructor(
@@ -72,6 +72,10 @@ export class DocumentsSummaryComponent implements OnInit {
 		this.documentsToShow = this.documentHistoric.documents.filter(document => {
 			return this.form.value.mainDiagnosisOnly ? document.mainDiagnosis.length : true;
 		});
+	}
+
+	viewEvolutionNote():boolean {
+		return (this.activeDocument?.notes || this.activeDocument?.procedures.length > 0);
 	}
 
 }

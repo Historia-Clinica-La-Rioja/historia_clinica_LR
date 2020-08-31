@@ -17,7 +17,10 @@ export class EvolutionNotesListenerService {
 	constructor(private documentSearchService: DocumentSearchService) { }
 
 	private loadHistoric(): void {
-		this.documentSearchService.getHistoric(this.internmentEpisodeId, this.searchFilter).subscribe(historicalData => this.subject.next(historicalData));
+		this.documentSearchService.getHistoric(this.internmentEpisodeId, this.searchFilter)
+		.subscribe(historicalData => {
+			this.subject.next(historicalData)
+		});
 	}
 
 	public setSerchFilter(searchFilter: DocumentSearchFilterDto) {

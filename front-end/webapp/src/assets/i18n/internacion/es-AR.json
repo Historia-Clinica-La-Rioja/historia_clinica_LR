@@ -132,7 +132,8 @@
 				"TABLE_TITLE": "Procedimientos registrados",
 				"TITLE": "Procedimiento",
 				"TIPO": "Tipo de procedimiento",
-				"PROCEDIMIENTO": "Procedimiento"
+				"PROCEDIMIENTO": "Procedimiento",
+				"PROCEDIMIENTOS": "Procedimientos"
 			}
 		},
 		"epicrisis": {

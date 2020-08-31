@@ -64,47 +64,59 @@
 
 				</mat-list-option>
 			</mat-selection-list>
-			<div *ngIf="activeDocument?.notes" class="content">
+			<div *ngIf="viewEvolutionNote()" class="content">
 
-				<section *ngIf="activeDocument.notes.currentIllnessNote">
+				<section *ngIf="activeDocument.notes?.currentIllnessNote">
 					<div class="mat-body" [translate]="'internaciones.anamnesis.observations.CURRENT_DISEASE'"></div>
 					<div class="mat-body-strong">{{activeDocument.notes.currentIllnessNote}}</div>
 				</section>
 
-				<section *ngIf="activeDocument.notes.physicalExamNote">
+				<section *ngIf="activeDocument.notes?.physicalExamNote">
 					<div class="mat-body"
 						 [translate]="'internaciones.anamnesis.observations.PHYSICAL_EXAMINATION'"></div>
 					<div class="mat-body-strong">{{activeDocument.notes.physicalExamNote}}</div>
 				</section>
 
-				<section *ngIf="activeDocument.notes.studiesSummaryNote">
+				<section *ngIf="activeDocument.notes?.studiesSummaryNote">
 					<div class="mat-body" [translate]="'internaciones.anamnesis.observations.STUDIES_PROCEDURES'"></div>
 					<div class="mat-body-strong">{{activeDocument.notes.studiesSummaryNote}}</div>
 				</section>
 
-				<section *ngIf="activeDocument.notes.evolutionNote">
+				<section *ngIf="activeDocument.notes?.evolutionNote">
 					<div class="mat-body" [translate]="'internaciones.anamnesis.observations.PATIENT_PROGRESS'"></div>
 					<div class="mat-body-strong">{{activeDocument.notes.evolutionNote}}</div>
 				</section>
 
-				<section *ngIf="activeDocument.notes.clinicalImpressionNote">
+				<section *ngIf="activeDocument.notes?.clinicalImpressionNote">
 					<div class="mat-body"
 						 [translate]="'internaciones.anamnesis.observations.CLINICAL_IMPRESSION'"></div>
 					<div class="mat-body-strong">{{activeDocument.notes.clinicalImpressionNote}}</div>
 				</section>
 
-				<section *ngIf="activeDocument.notes.indicationsNote">
+				<section *ngIf="activeDocument.notes?.indicationsNote">
 					<div class="mat-body" [translate]="'internaciones.epicrisis.observations.INDICATIONS_NOTE'"></div>
 					<div class="mat-body-strong">{{activeDocument.notes.indicationsNote}}</div>
 				</section>
 
-				<section *ngIf="activeDocument.notes.otherNote">
+				<section *ngIf="activeDocument.notes?.otherNote">
 					<div class="mat-body" [translate]="'internaciones.anamnesis.observations.OTHERS'"></div>
 					<div class="mat-body-strong">{{activeDocument.notes.otherNote}}</div>
 				</section>
+
+				<section *ngIf="activeDocument.procedures.length > 0">
+					<div class="mat-body" [translate]="'internaciones.anamnesis.procedimientos.PROCEDIMIENTOS'"></div>
+					<div *ngFor="let procedure of activeDocument.procedures">
+						<div *ngIf="procedure.performedDate" class="mat-body-strong">
+							{{procedure.procedure}} - {{procedure.performedDate | viewDate }}
+						</div>
+						<div *ngIf="!procedure.performedDate" class="mat-body-strong">
+							{{procedure.procedure}}
+						</div>
+					</div>
+				</section>
 			</div>
 
-			<div *ngIf="(activeDocument && !activeDocument.notes)" class="no-notes content mat-body-strong">
+			<div *ngIf="(activeDocument && !viewEvolutionNote() )" class="no-notes content mat-body-strong">
 				No hay observaciones para mostrar
 			</div>
 		</div>
