@@ -1,13 +1,10 @@
 package net.pladema.clinichistory.documents.service.searchdocument.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import net.pladema.clinichistory.documents.repository.searchdocument.DocumentSearchVo;
 import net.pladema.clinichistory.hospitalization.service.summary.domain.ResponsibleDoctorBo;
 import net.pladema.clinichistory.ips.service.domain.DocumentObservationsBo;
+import net.pladema.person.repository.domain.ProcedureReduced;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -27,7 +24,7 @@ public class DocumentSearchBo {
 
     private List<String> diagnosis;
 
-    private List<String> procedures;
+    private List<ProcedureReduced> procedures;
 
     private ResponsibleDoctorBo creator;
 

@@ -1,8 +1,9 @@
 package net.pladema.clinichistory.documents.repository;
 
-import net.pladema.clinichistory.hospitalization.repository.domain.summary.ResponsibleDoctorVo;
 import net.pladema.clinichistory.documents.repository.entity.Document;
+import net.pladema.clinichistory.hospitalization.repository.domain.summary.ResponsibleDoctorVo;
 import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
+import net.pladema.person.repository.domain.ProcedureReduced;
 import net.pladema.sgx.auditable.entity.Updateable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -43,10 +44,10 @@ public interface DocumentRepository extends JpaRepository<Document, Long>, Docum
             "and d.sourceTypeId = " + SourceType.HOSPITALIZATION)
     List<Updateable> getUpdatablesDocuments(@Param("internmentEpisodeId") Integer internmentEpisodeId);
 
-    @Query(value = "SELECT snomedPr.pt AS procedures " +
+    @Query(value = "SELECT new  net.pladema.person.repository.domain.ProcedureReduced(snomedPr.pt, pr.performedDate) " +
             "FROM DocumentProcedure AS dp " +
-            "LEFT JOIN Procedure AS pr ON (pr.id = dp.pk.procedureId) " +
+            "JOIN Procedure AS pr ON (pr.id = dp.pk.procedureId) " +
             "JOIN Snomed AS snomedPr ON (pr.sctidCode = snomedPr.id) " +
             "WHERE dp.pk.documentId = :documentId")
-    List<String> getProceduresByDocuments(@Param("documentId") Long documentId);
+    List<ProcedureReduced> getProceduresByDocuments(@Param("documentId") Long documentId);
 }

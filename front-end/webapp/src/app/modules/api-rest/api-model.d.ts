@@ -333,7 +333,7 @@ export interface DocumentSearchDto extends Serializable {
     mainDiagnosis: string;
     message: string;
     notes: DocumentObservationsDto;
-    procedures: string[];
+    procedures: ProcedureReduced[];
 }
 
 export interface DocumentSearchFilterDto {
@@ -795,6 +795,11 @@ export interface PersonalInformationDto {
 
 export interface ProbableDischargeDateDto {
     probableDischargeDate: string;
+}
+
+export interface ProcedureReduced {
+    performedDate: Date;
+    procedure: string;
 }
 
 export interface ProfessionalDto extends BasicPersonalDataDto {

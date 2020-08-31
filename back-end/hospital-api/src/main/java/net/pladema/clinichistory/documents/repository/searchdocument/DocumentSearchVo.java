@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.hospitalization.repository.generalstate.domain.DocumentObservationsVo;
 import net.pladema.person.repository.domain.PersonNameVo;
+import net.pladema.person.repository.domain.ProcedureReduced;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,7 +29,7 @@ public class DocumentSearchVo {
 
     private List<String> diagnosis = new ArrayList<>();
 
-    private List<String> procedures = new ArrayList<>();
+    private List<ProcedureReduced> procedures = new ArrayList<>();
 
     private String mainDiagnosis;
 

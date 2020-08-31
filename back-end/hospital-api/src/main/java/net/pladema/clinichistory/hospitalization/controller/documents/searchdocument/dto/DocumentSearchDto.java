@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.hospitalization.controller.dto.DocumentObservationsDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.ResponsibleDoctorDto;
+import net.pladema.person.repository.domain.ProcedureReduced;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -23,7 +24,7 @@ public class DocumentSearchDto implements Serializable {
 
     private List<String> diagnosis;
 
-    private List<String> procedures;
+    private List<ProcedureReduced> procedures;
 
     private ResponsibleDoctorDto creator;
 
