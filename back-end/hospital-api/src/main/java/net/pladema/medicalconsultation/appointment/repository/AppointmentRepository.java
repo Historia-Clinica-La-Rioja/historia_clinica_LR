@@ -44,9 +44,10 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
     Optional<AppointmentVo> getAppointment(@Param("appointmentId") Integer appointmentId);
 
     @Transactional(readOnly = true)
-    @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo(aa.pk.diaryId, a)" +
+    @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo(aa.pk.diaryId, a, doh.medicalAttentionTypeId) " +
             "FROM Appointment AS a " +
             "JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
+            "JOIN DiaryOpeningHours  AS doh ON (doh.pk.diaryId = aa.pk.diaryId AND doh.pk.openingHoursId = aa.pk.openingHoursId) " +
             "WHERE aa.pk.diaryId = :diaryId AND a.appointmentStateId <> " + AppointmentState.CANCELLED_STR +
             " AND a.dateTypeId >= CURRENT_DATE ")
     List<AppointmentDiaryVo> getFutureActiveAppointmentsByDiary(@Param("diaryId") Integer diaryId);

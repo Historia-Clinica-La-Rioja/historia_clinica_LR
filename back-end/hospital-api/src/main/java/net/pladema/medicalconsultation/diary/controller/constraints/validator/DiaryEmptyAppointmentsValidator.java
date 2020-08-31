@@ -75,7 +75,11 @@ public class DiaryEmptyAppointmentsValidator implements ConstraintValidator<Diar
 	}
 
 	private boolean outOfDiaryBounds(LocalDate from, LocalDate to, AppointmentBo a) {
-		return !(a.getDate().isAfter(from) && a.getDate().isBefore(to));
+		return !isBetween(from, to, a);
+	}
+
+	private boolean isBetween(LocalDate from, LocalDate to, AppointmentBo a) {
+		return a.getDate().compareTo(from)>=0 && a.getDate().compareTo(to)<=0;
 	}
 
 	private boolean fitsIn(AppointmentBo appointment, OpeningHoursDto openingHours) {
