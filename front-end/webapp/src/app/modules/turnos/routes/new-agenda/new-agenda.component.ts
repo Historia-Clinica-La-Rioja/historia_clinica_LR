@@ -92,10 +92,10 @@ export class NewAgendaComponent implements OnInit {
 		this.route.data.subscribe(data => {
 			if (data.editMode) {
 				this.editMode = true;
-				this.minDate = null;
 				this.route.paramMap.subscribe((params) => {
 					this.editingDiaryId = Number(params.get('agendaId'));
 					this.diaryService.get(this.editingDiaryId).subscribe((diary: CompleteDiaryDto) => {
+						this.minDate = momentParseDate(diary.startDate).toDate();
 						this.setValuesFromExistingAgenda(diary);
 						this.disableNotEditableControls();
 					});
