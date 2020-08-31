@@ -1,3 +1,5 @@
+![Historia Clinica](documentacion/images/HC-logo.png)
+
 # HospitalApp
 
 ## Contribución
@@ -9,6 +11,8 @@ Este código de Historia clínica, se encuentra  disponible en [gitlab-publico.p
 Para subir aportes utilizar un fork y pedir un Merge Request a dicha URL.
 
 ## Proyecto
+
+Sitio de demo: http://sgh.pladema.net/auth/login
 
 El proyecto está formado por los siguientes tres proyectos:
 
@@ -82,5 +86,11 @@ cp env.properties /tmp/app-local-test.properties
 # Ver el puerto en el que se mapeo con 
 docker ps
 ```
+
+## Licencia
+
+Apache 2.0
+
+Consulte el archivo de LICENCIA incluido para obtener más detalles.
 
 
