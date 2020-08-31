@@ -7,6 +7,8 @@ import { addDays, addMinutes, endOfWeek } from 'date-fns';
 import { MEDICAL_ATTENTION } from '../constants/descriptions';
 import { NewAttentionComponent } from '../dialogs/new-attention/new-attention.component';
 import { MatDialog } from '@angular/material/dialog';
+import { Moment } from 'moment';
+import { buildFullDate, dateToMoment } from '@core/utils/moment.utils';
 
 function floorToNearest(amount: number, precision: number) {
 	return Math.floor(amount / precision) * precision;
@@ -120,7 +122,7 @@ export class NewAgendaService {
 
 		let newEnd = addDays(addMinutes(segment.date, minutesDiff), daysDiff);
 		const endOfView = endOfWeek(this.viewDate, { weekStartsOn: this.weekStartsOn });
-		if (newEnd.getDay() !== dragToSelectEvent.start.getDay() ) {
+		if (newEnd.getDay() !== dragToSelectEvent.start.getDay()) {
 			newEnd.setHours(0);
 			newEnd.setMinutes(0);
 			newEnd.setSeconds(0);
@@ -229,5 +231,14 @@ export class NewAgendaService {
 
 	public deleteUneditableEvents(): void {
 		this.events = this.events.filter((event: CalendarEvent) => event.actions);
+	}
+
+	public getNumberOfOverturnsAssigned(day: Moment, from: string, to: string): number {
+
+		const openingHourStart = buildFullDate(from, day);
+		const openingHourEnd = buildFullDate(to, day);
+
+		return this.events.filter
+			(event => event.meta.overturn && dateToMoment(event.start).isBetween(openingHourStart, openingHourEnd, null, '[)')).length;
 	}
 }

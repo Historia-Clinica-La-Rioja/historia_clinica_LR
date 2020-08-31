@@ -1,5 +1,5 @@
 <div mat-dialog-title fxLayout="row" fxLayoutGap="10px">
-	<div class="mat-h2" [translate]="'turnos.new-appointment.NEW_APPOINTMENT'"></div>
+	<div class="mat-h2" [translate]= "data.overturnMode ? 'turnos.overturns.CREATE' : 'turnos.new-appointment.NEW_APPOINTMENT'" ></div>
 	<div class="mat-h3" fxFlexAlign="end">{{data.date | viewDate}} {{data.hour | viewHourMinute}}</div>
 </div>
 

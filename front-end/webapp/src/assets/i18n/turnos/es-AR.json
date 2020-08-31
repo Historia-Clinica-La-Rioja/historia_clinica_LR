@@ -48,7 +48,10 @@
 			"SUCCESS": "El turno fue cancelado exitosamente"
 		},
 		"overturns":{
-			"CREATE":"Crear sobreturno"
+			"CREATE":"Crear sobreturno",
+			"messages":{
+				"ERROR":"No es posible crear un sobreturno en este rango horario"
+			}
 		}
 	}
 }

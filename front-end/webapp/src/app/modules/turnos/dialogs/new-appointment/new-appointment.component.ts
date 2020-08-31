@@ -33,11 +33,12 @@ export class NewAppointmentComponent implements OnInit {
 	public showAddPatient = false;
 	public editable = true;
 	public patientAppointmentDto: HealthInsurancePatientDataDto;
+	public overturnMode = false;
 
 	private readonly routePrefix;
 
   	constructor(
-		@Inject(MAT_DIALOG_DATA) public data: {date: string, diaryId: number, hour: string, openingHoursId: number},
+		@Inject(MAT_DIALOG_DATA) public data: {date: string, diaryId: number, hour: string, openingHoursId: number, overturnMode: boolean},
 		public dialogRef: MatDialogRef<NewAppointmentComponent>,
 		private readonly formBuilder: FormBuilder,
 		private readonly personMasterDataService: PersonMasterDataService,
@@ -123,7 +124,7 @@ export class NewAppointmentComponent implements OnInit {
 			medicalCoverageAffiliateNumber: this.formMedicalCoverage.controls.affiliateNumber.value,
 			medicalCoverageName: this.formMedicalCoverage.controls.prepaid.value,
 			openingHoursId: this.data.openingHoursId,
-			overturn: false,
+			overturn: this.data.overturnMode,
 			patientId: this.patientId
 		};
 

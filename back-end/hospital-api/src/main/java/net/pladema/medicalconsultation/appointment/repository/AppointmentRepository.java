@@ -25,7 +25,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
             "JOIN Diary d ON (d.id = aa.pk.diaryId )" +
             "JOIN DiaryOpeningHours  AS doh ON (doh.pk.diaryId = d.id AND doh.pk.openingHoursId = aa.pk.openingHoursId) " +
             "WHERE aa.pk.diaryId IN (:diaryIds) AND d.deleteable.deleted = false " +
-            "AND NOT a.appointmentStateId = " + AppointmentState.CANCELLED_STR)
+            "AND NOT a.appointmentStateId = " + AppointmentState.CANCELLED_STR +
+            "ORDER BY d.id,a.isOverturn")
     List<AppointmentDiaryVo> getAppointmentsByDiaries(@Param("diaryIds") List<Integer> diaryIds);
 
     @Transactional(readOnly = true)

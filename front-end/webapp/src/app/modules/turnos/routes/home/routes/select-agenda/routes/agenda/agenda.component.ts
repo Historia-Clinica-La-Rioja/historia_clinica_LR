@@ -21,6 +21,7 @@ import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { CalendarEvent, WeekViewHourSegment } from 'calendar-utils';
 import { MEDICAL_ATTENTION } from '../../../../../../constants/descriptions';
 import { AppointmentComponent } from '../../../../../../dialogs/appointment/appointment.component';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 const AGENDA_PROGRAMADA_CLASS = 'bg-green';
 const AGENDA_ESPONTANEA_CLASS = 'bg-blue';
@@ -52,6 +53,7 @@ export class AgendaComponent implements OnInit {
 		private readonly diaryOpeningHoursService: DiaryOpeningHoursService,
 		private readonly diaryService: DiaryService,
 		private readonly route: ActivatedRoute,
+		private snackBarService: SnackBarService,
 	) {
 		this.newAgendaService = new NewAgendaService(this.dialog, this.cdr);
 	}
@@ -106,25 +108,45 @@ export class AgendaComponent implements OnInit {
 
 	public onClickedSegment(event) {
 		if (this.getOpeningHoursId(event.date)) {
-
 			const clickedDate: Moment = dateToMomentTimeZone(event.date);
-
-			const dialogRef = this.dialog.open(NewAppointmentComponent, {
-				width: '40%',
-				data: {
-					date: clickedDate.format(DateFormat.API_DATE),
-					diaryId: this.agenda.id,
-					hour: clickedDate.format(DateFormat.HOUR_MINUTE_SECONDS),
-					openingHoursId: this.getOpeningHoursId(event.date)
+			const openingHourId: number = this.getOpeningHoursId(event.date);
+			const addingOverturn = this.existTurnAt(event.date);
+			const diaryOpeningHourDto: DiaryOpeningHoursDto =
+				this.diaryOpeningHours.find(diaryOpeningHour => diaryOpeningHour.openingHours.id === openingHourId);
+			const allOverturnsAssigned = this.allOverturnsAssignedForDiaryOpeningHour(diaryOpeningHourDto, clickedDate);
+			if (addingOverturn && allOverturnsAssigned) {
+				if (diaryOpeningHourDto.medicalAttentionTypeId !== MEDICAL_ATTENTION.SPONTANEOUS_ID) {
+					this.snackBarService.showError('turnos.overturns.messages.ERROR');
 				}
-			});
+			} else {
+				const dialogRef = this.dialog.open(NewAppointmentComponent, {
+					width: '40%',
+					data: {
+						date: clickedDate.format(DateFormat.API_DATE),
+						diaryId: this.agenda.id,
+						hour: clickedDate.format(DateFormat.HOUR_MINUTE_SECONDS),
+						openingHoursId: openingHourId,
+						overturnMode: addingOverturn
+					}
+				});
 
-			dialogRef.afterClosed().subscribe(submitted => {
-				if (submitted) {
-					this.loadAppointments();
-				}
-			});
+				dialogRef.afterClosed().subscribe(submitted => {
+					if (submitted) {
+						this.loadAppointments();
+					}
+				});
+			}
 		}
+	}
+
+	private existTurnAt(date: Date): boolean {
+		return this.newAgendaService.getEvents().filter(appointment => appointment.start.getTime() === date.getTime()).length > 0;
+	}
+
+	private allOverturnsAssignedForDiaryOpeningHour(diaryOpeningHourDto: DiaryOpeningHoursDto, clickedDate: Moment): boolean {
+		const numberOfOverturnsAssigned: number =
+			this.newAgendaService.getNumberOfOverturnsAssigned(clickedDate, diaryOpeningHourDto.openingHours.from, diaryOpeningHourDto.openingHours.to);
+		return numberOfOverturnsAssigned === diaryOpeningHourDto.overturnCount;
 	}
 
 	setAgenda(agenda: CompleteDiaryDto): void {
@@ -233,6 +255,7 @@ function toCalendarEvent(from: string, to: string, date: Moment, appointment: Ap
 				identificationNumber: appointment.patient.person.identificationNumber,
 				phoneNumber: appointment.patient.person.phoneNumber,
 			},
+			overturn: appointment.overturn,
 			appointmentId: appointment.id,
 			date: buildFullDate(appointment.hour, momentParseDate(appointment.date)),
 			medicalCoverage: {

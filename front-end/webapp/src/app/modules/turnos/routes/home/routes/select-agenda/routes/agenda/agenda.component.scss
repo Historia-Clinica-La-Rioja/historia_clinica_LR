@@ -4,11 +4,15 @@ div.spinner {
 	@include centered-spinner;
 }
 
-::ng-deep {
+mwl-calendar-week-view::ng-deep {
 	.cal-week-view .cal-day-columns {
 		.bg-green {
 			background-color: #C9E7CB !important;
 			cursor: pointer;
+		}
+
+		.cal-events-container {
+			max-width: 80%;
 		}
 
 		.bg-blue {
@@ -20,5 +24,4 @@ div.spinner {
 	.cal-event-title {
 		color: black;
 	}
-
 }
