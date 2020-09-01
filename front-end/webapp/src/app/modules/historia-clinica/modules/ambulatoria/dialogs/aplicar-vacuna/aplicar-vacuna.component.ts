@@ -105,7 +105,8 @@ export class AplicarVacunaComponent implements OnInit {
 					data: {
 						title: 'Aplicar vacuna',
 						content: `${res}`,
-						okButtonLabel: 'Confirmar'
+						okButtonLabel: 'buttons.YES',
+						cancelButtonLabel: 'buttons.NO'
 					}
 				});
 
@@ -125,7 +126,7 @@ export class AplicarVacunaComponent implements OnInit {
 							this.snackBarService.showError('ambulatoria.paciente.vacunas.aplicar.save.ERROR');
 							this.loading = false;
 						});
-					
+
 				});
 			});
 		}

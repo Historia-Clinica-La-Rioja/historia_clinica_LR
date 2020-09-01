@@ -22,7 +22,9 @@
 		"SEARCH": "Buscar",
 		"UPDATE": "Actualizar",
 		"GENERATE": "Generar",
-		"EDIT": "Editar"
+		"EDIT": "Editar",
+		"NO": "No",
+		"YES": "Si"
 	},
 	"forms": {
 		"REQUIRED": "El campo es requerido",
