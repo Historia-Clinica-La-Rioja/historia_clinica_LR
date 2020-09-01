@@ -37,7 +37,7 @@ public class Procedure extends SGXAuditableEntity {
 	@Column(name = "status_id", length = 20, nullable = false)
 	private String statusId = ProceduresStatus.COMPLETE;
 
-	@Column(name = "performed_date", nullable = false)
+	@Column(name = "performed_date")
 	private LocalDate performedDate;
 
 	@Column(name = "note_id")

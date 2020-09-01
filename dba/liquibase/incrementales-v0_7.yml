@@ -89,3 +89,12 @@ databaseChangeLog:
             - sql:
                 sql: |-
                     INSERT INTO appointment_state (id, description) VALUES(5, 'Atendido');
+
+    - changeSet:  
+        id:  dropNotNullConstraint-procedure_performed_date  
+        author:  etrapani 
+        changes:  
+        -  dropNotNullConstraint:  
+            columnDataType:  date  
+            columnName:  performed_date   
+            tableName:  procedures
