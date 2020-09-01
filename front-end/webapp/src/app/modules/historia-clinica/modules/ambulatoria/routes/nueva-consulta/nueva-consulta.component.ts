@@ -211,7 +211,8 @@ export class NuevaConsultaComponent implements OnInit {
 	}
 
 	editProblema() {
-		this.readOnlyProblema = false;
-		this.problemasNuevaConsultaService.editProblem();
+		if(this.problemasNuevaConsultaService.editProblem()) {
+			this.readOnlyProblema = false;
+		}
 	}
 }
