@@ -4,12 +4,12 @@ import { SnomedDto } from '@api-rest/api-model';
 import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
 import { SEMANTICS_CONFIG } from '../constants/snomed-semantics';
 import { pushTo } from '@core/utils/array.utils';
-import { DateFormat, momentFormat, newMoment } from '@core/utils/moment.utils';
+import { DateFormat, momentFormat, newMoment, momentParseDate } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 
 export interface Procedimiento {
 	snomed: SnomedDto;
-	fecha?: Moment;
+	fecha?: string;
 }
 
 export class ProcedimientosService {
@@ -40,7 +40,7 @@ export class ProcedimientosService {
 			{
 				def: 'fecha',
 				header: 'historia-clinica.procedimientos.FECHA',
-				text: (row) => row.fecha ? momentFormat(row.fecha, DateFormat.VIEW_DATE) : ''
+				text: (row) => row.fecha ? momentFormat(momentParseDate(row.fecha), DateFormat.VIEW_DATE) : ''
 			}
 
 		];
@@ -62,7 +62,7 @@ export class ProcedimientosService {
 		if (this.form.valid && this.snomedConcept) {
 			const nuevoProcedimiento: Procedimiento = {
 				snomed: this.snomedConcept,
-				fecha: this.form.value.fecha
+				fecha: this.form.value.fecha? momentFormat(this.form.value.fecha, DateFormat.API_DATE) : undefined
 			};
 			this.add(nuevoProcedimiento);
 			this.resetForm();
