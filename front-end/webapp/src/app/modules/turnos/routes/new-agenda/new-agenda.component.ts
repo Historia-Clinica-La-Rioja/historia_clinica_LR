@@ -208,7 +208,7 @@ export class NewAgendaComponent implements OnInit {
 
 	private setDoctorOfficeRangeTime() {
 		this.openingTime = getHours(this.form.getRawValue().doctorOffice.openingTime);
-		this.closingTime = getHours(this.form.getRawValue().doctorOffice.closingTime);
+		this.closingTime = getHours(this.form.getRawValue().doctorOffice.closingTime) - 1 ;
 		this.newAgendaService.setClosingTime(this.closingTime);
 		function getHours(time: string): number {
 			const hours = moment(time, 'HH:mm:ss');
