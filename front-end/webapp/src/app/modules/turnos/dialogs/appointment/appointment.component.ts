@@ -18,19 +18,18 @@ import { getError, hasError } from '@core/utils/form.utils';
 })
 export class AppointmentComponent implements OnInit {
 
-	public readonly appointmentStatesIds = APPOINTMENT_STATES_ID;
-	public getAppointmentState = getAppointmentState;
-	public getError = getError;
-	public hasError = hasError;
+	readonly appointmentStatesIds = APPOINTMENT_STATES_ID;
+	getAppointmentState = getAppointmentState;
+	getError = getError;
+	hasError = hasError;
 
-	public appointment: AppointmentDto;
-	public formMotivo: FormGroup;
-	public estadoSelected: APPOINTMENT_STATES_ID;
-	public motivoRequired: boolean = false;
-	public institutionId = this.contextService.institutionId;
+	appointment: AppointmentDto;
+	estadoSelected: APPOINTMENT_STATES_ID;
+	formMotivo: FormGroup;
+	institutionId = this.contextService.institutionId;
 
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public data: PatientAppointmentInformation,
+		@Inject(MAT_DIALOG_DATA) public appointmentData: PatientAppointmentInformation,
 		public dialogRef: MatDialogRef<NewAttentionComponent>,
 		private readonly dialog: MatDialog,
 		private readonly appointmentService: AppointmentsService,
@@ -45,30 +44,36 @@ export class AppointmentComponent implements OnInit {
 		this.formMotivo = this.formBuilder.group({
 			motivo: ['', [Validators.required, Validators.maxLength(MAX_LENGTH_MOTIVO)]]
 		});
-
-		this.estadoSelected = this.data.appointmentStateId;
-
-		this.appointmentService.get(this.data.appointmentId)
+		this.appointmentService.get(this.appointmentData.appointmentId)
 			.subscribe(appointment => {
 				this.appointment = appointment;
+				this.estadoSelected = this.appointment?.appointmentStateId;
 				if (this.appointment.stateChangeReason) {
-					this.motivoRequired = true;
 					this.formMotivo.controls.motivo.setValue(this.appointment.stateChangeReason);
 				}
 			});
 	}
 
 	changeState(newStateId: APPOINTMENT_STATES_ID): void {
-		if (newStateId !== this.estadoSelected && newStateId !== this.data.appointmentStateId) {
-			this.motivoRequired = false;
-			this.estadoSelected = newStateId;
-			this.submitNewState(newStateId);
+		this.estadoSelected = newStateId;
+	}
+
+	onClickedState(newStateId: APPOINTMENT_STATES_ID): void {
+		if (this.estadoSelected !== newStateId) {
+			this.changeState(newStateId);
+			if (this.isANewState(newStateId) && !this.isMotivoRequired()) {
+				this.submitNewState(newStateId);
+			}
 		}
+	}
+
+	private isANewState(newStateId: APPOINTMENT_STATES_ID) {
+		return newStateId !== this.appointment?.appointmentStateId;
 	}
 
 	cancelAppointment(): void {
 		const dialogRefCancelAppointment = this.dialog.open(CancelAppointmentComponent, {
-			data: this.data.appointmentId
+			data: this.appointmentData.appointmentId
 		});
 		dialogRefCancelAppointment.afterClosed().subscribe(canceledAppointment => {
 			if (canceledAppointment) {
@@ -77,31 +82,32 @@ export class AppointmentComponent implements OnInit {
 		});
 	}
 
-	setAbsent(): void {
-		this.motivoRequired = true;
-		this.estadoSelected = APPOINTMENT_STATES_ID.ABSENT;
-	}
-
 	saveAbsent(): void {
 		if (this.formMotivo.valid) {
 			this.submitNewState(APPOINTMENT_STATES_ID.ABSENT, this.formMotivo.value.motivo);
 		}
 	}
 
+	isMotivoRequired(): boolean {
+		return this.estadoSelected === APPOINTMENT_STATES_ID.ABSENT;
+	}
+
 	isCancelable(): boolean {
-		return this.data.appointmentStateId === APPOINTMENT_STATES_ID.ASSIGNED ||
-			this.data.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED;
+		return (this.estadoSelected === APPOINTMENT_STATES_ID.ASSIGNED &&
+			this.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.ASSIGNED) ||
+			(this.estadoSelected  === APPOINTMENT_STATES_ID.CONFIRMED &&
+				this.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED);
 	}
 
 	private submitNewState(newStateId: APPOINTMENT_STATES_ID, motivo?: string): void {
-		this.appointmentService.changeState(this.data.appointmentId, newStateId, motivo)
+		this.appointmentService.changeState(this.appointmentData.appointmentId, newStateId, motivo)
 			.subscribe(() => {
 				this.dialogRef.close('statuschanged');
 				this.snackBarService.showSuccess(`Estado de turno actualizado a ${getAppointmentState(newStateId).description} exitosamente`);
 			}, _ => {
-				this.estadoSelected = this.data.appointmentStateId;
+				this.changeState(this.appointment?.appointmentStateId);
 				this.snackBarService.showError(`Error al actualizar estado de turno
-				${getAppointmentState(this.data.appointmentStateId).description} a ${getAppointmentState(newStateId).description}`);
+				${getAppointmentState(this.appointment?.appointmentStateId).description} a ${getAppointmentState(newStateId).description}`);
 			});
 	}
 }

@@ -3,21 +3,21 @@
 		<section id="personal-data" fxLayout="column">
 			<div fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
 				<mat-icon fontSet="material-icons-outlined" color="primary">person</mat-icon>
-				<span class="mat-body-strong"> {{data.patient.fullName}} - {{data.patient.identificationNumber}} </span>
+				<span class="mat-body-strong"> {{appointmentData.patient.fullName}} - {{appointmentData.patient.identificationNumber}} </span>
 			</div>
 			<div fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
 				<mat-icon fontSet="material-icons-outlined" style="color: transparent">person</mat-icon>
-				<span class="mat-body patient-info"> Obra social: {{data.medicalCoverage?.name}} /
-					{{data.medicalCoverage.affiliateNumber}}</span>
+				<span class="mat-body patient-info"> Obra social: {{appointmentData.medicalCoverage?.name}} /
+					{{appointmentData.medicalCoverage.affiliateNumber}}</span>
 			</div>
 			<div fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
 				<mat-icon fontSet="material-icons-outlined" style="color: transparent">person</mat-icon>
-				<span class="mat-body patient-info">Teléfono: {{data.patient.phoneNumber}}</span>
+				<span class="mat-body patient-info">Teléfono: {{appointmentData.patient.phoneNumber}}</span>
 			</div>
 			<div fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
 				<mat-icon fontSet="material-icons-outlined" style="color: transparent">person</mat-icon>
 				<a class="mat-body" *hasRole="['ESPECIALISTA_MEDICO','PROFESIONAL_DE_SALUD','ENFERMERO']"
-				   [href]="'/institucion/' + institutionId + '/ambulatoria/paciente/' + data?.patient?.id">Ver
+				   [href]="'/institucion/' + institutionId + '/ambulatoria/paciente/' + appointmentData?.patient?.id">Ver
 					historia clínica</a>
 			</div>
 		</section>
@@ -29,13 +29,13 @@
 					<mat-icon fontSet="material-icons-outlined" color="primary" mat-list-icon [inline]="true">
 						calendar_today
 					</mat-icon>
-					<span class="mat-body"> {{data.date | date:"fullDate" }}</span>
+					<span class="mat-body"> {{appointmentData.date | date:"fullDate" }}</span>
 				</div>
 				<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start center" id="hour">
 					<mat-icon fontSet="material-icons-outlined" color="primary" mat-list-icon [inline]="true">
 						access_time
 					</mat-icon>
-					<span class="mat-body"> {{data.date | date:"HH:mm"}} hs</span>
+					<span class="mat-body"> {{appointmentData.date | date:"HH:mm"}} hs</span>
 				</div>
 			</div>
 		</section>
@@ -45,14 +45,14 @@
 			<div class="appointment-actions" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
 
 				<button type="button" [ngClass]="{'selected assigned': estadoSelected === appointmentStatesIds.ASSIGNED }"
-						(click)="changeState(appointmentStatesIds.ASSIGNED)"
+						(click)="onClickedState(appointmentStatesIds.ASSIGNED)"
 						mat-stroked-button>
 					<mat-icon matTooltip="{{getAppointmentState(appointmentStatesIds.ASSIGNED).description}}"
 							  color="primary">event_available</mat-icon>
 				</button>
 
 				<button type="button" [ngClass]="{'selected confirmed': estadoSelected === appointmentStatesIds.CONFIRMED }"
-						(click)="changeState(appointmentStatesIds.CONFIRMED)"
+						(click)="onClickedState(appointmentStatesIds.CONFIRMED)"
 						mat-stroked-button>
 					<mat-icon matTooltip="{{getAppointmentState(appointmentStatesIds.CONFIRMED).description}}"
 							  color="primary">meeting_room
@@ -60,7 +60,7 @@
 				</button>
 
 				<button type="button" [ngClass]="{'selected absent': estadoSelected === appointmentStatesIds.ABSENT }"
-						(click)="setAbsent()"
+						(click)="onClickedState(appointmentStatesIds.ABSENT)"
 						mat-stroked-button>
 					<mat-icon matTooltip="{{getAppointmentState(appointmentStatesIds.ABSENT).description}}"
 							  color="primary" svgIcon="person_cancel_outlined">
@@ -77,7 +77,7 @@
 
 			</div>
 
-			<div style="margin-top: 10px" *ngIf="motivoRequired">
+			<div style="margin-top: 10px" *ngIf="isMotivoRequired()">
 				<mat-form-field [floatLabel]="'never'" appearance="outline">
 					<mat-label>Motivo</mat-label>
 					<textarea formControlName="motivo"
@@ -109,7 +109,7 @@
 			<span class="uppercase" [translate]="'turnos.cancel.TITLE'"></span>
 		</button>
 
-		<button type="submit" *ngIf="motivoRequired" mat-flat-button color="primary" id="save">
+		<button type="submit" *ngIf="isMotivoRequired()" mat-flat-button color="primary" id="save">
 			<span class="uppercase">Guardar</span>
 		</button>
 	</mat-dialog-actions>
