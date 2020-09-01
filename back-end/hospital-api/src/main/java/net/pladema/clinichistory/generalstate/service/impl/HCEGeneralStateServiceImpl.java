@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,7 +54,8 @@ public class HCEGeneralStateServiceImpl implements HCEGeneralStateService {
     public List<HCEPersonalHistoryBo> getChronicConditions(Integer patientId) {
         LOG.debug(LOGGING_INPUT, patientId);
         List<HCEHealthConditionVo> resultQuery = hceHealthConditionRepository.getPersonalHistories(patientId);
-        List<HCEPersonalHistoryBo> result = resultQuery.stream().map(HCEPersonalHistoryBo::new).filter(HCEPersonalHistoryBo::isChronic).collect(Collectors.toList());
+        List<HCEPersonalHistoryBo> result = resultQuery.stream().map(HCEPersonalHistoryBo::new).filter(HCEPersonalHistoryBo::isChronic)
+                .sorted(Comparator.comparing(HCEPersonalHistoryBo::getStartDate).reversed()).collect(Collectors.toList());
         LOG.debug(LOGGING_OUTPUT, result);
         return result;
     }
@@ -62,7 +64,8 @@ public class HCEGeneralStateServiceImpl implements HCEGeneralStateService {
     public List<HCEPersonalHistoryBo> getActiveProblems(Integer patientId) {
         LOG.debug(LOGGING_INPUT, patientId);
         List<HCEHealthConditionVo> resultQuery = hceHealthConditionRepository.getPersonalHistories(patientId);
-        List<HCEPersonalHistoryBo> result = resultQuery.stream().map(HCEPersonalHistoryBo::new).filter(hceph -> !hceph.isChronic()).filter(HCEPersonalHistoryBo::isActiveProblem).collect(Collectors.toList());
+        List<HCEPersonalHistoryBo> result = resultQuery.stream().map(HCEPersonalHistoryBo::new).filter(hceph -> !hceph.isChronic()).filter(HCEPersonalHistoryBo::isActiveProblem)
+                .sorted(Comparator.comparing(HCEPersonalHistoryBo::getStartDate).reversed()).collect(Collectors.toList());
         LOG.debug(LOGGING_OUTPUT, result);
         return result;
     }
@@ -71,7 +74,8 @@ public class HCEGeneralStateServiceImpl implements HCEGeneralStateService {
     public List<HCEPersonalHistoryBo> getSolvedProblems(Integer patientId) {
         LOG.debug(LOGGING_INPUT, patientId);
         List<HCEHealthConditionVo> resultQuery = hceHealthConditionRepository.getPersonalHistories(patientId);
-        List<HCEPersonalHistoryBo> result = resultQuery.stream().map(HCEPersonalHistoryBo::new).filter(hceph -> !hceph.isChronic()).filter(HCEPersonalHistoryBo::isSolvedProblem).collect(Collectors.toList());
+        List<HCEPersonalHistoryBo> result = resultQuery.stream().map(HCEPersonalHistoryBo::new).filter(hceph -> !hceph.isChronic()).filter(HCEPersonalHistoryBo::isSolvedProblem)
+                .sorted(Comparator.comparing(HCEPersonalHistoryBo::getStartDate).reversed()).collect(Collectors.toList());
         LOG.debug(LOGGING_OUTPUT, result);
         return result;
     }
