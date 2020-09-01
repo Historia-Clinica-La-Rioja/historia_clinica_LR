@@ -93,5 +93,13 @@ public class AppointmentServiceImpl implements AppointmentService {
 		return result;
 	}
 
+	@Override
+	public List<Integer> getAppointmentsId(Integer patientId, Integer healthcareProfessionalId) {
+		LOG.debug("Input parameters -> patientId {}, healthcareProfessionalId {}", patientId, healthcareProfessionalId);
+		List<Integer> result = appointmentRepository.getAppointmentsId(patientId, healthcareProfessionalId, dateTimeProvider.nowDate());
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
 
 }

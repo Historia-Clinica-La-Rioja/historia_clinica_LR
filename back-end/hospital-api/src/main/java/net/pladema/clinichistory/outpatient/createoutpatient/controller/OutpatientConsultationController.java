@@ -6,7 +6,6 @@ import net.pladema.clinichistory.documents.events.OnGenerateOutpatientDocumentEv
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.EDocumentType;
 import net.pladema.clinichistory.ips.service.domain.ImmunizationBo;
-import net.pladema.clinichistory.outpatient.createoutpatient.controller.constraints.HasAppointment;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientImmunizationDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientUpdateImmunizationDto;
@@ -17,6 +16,7 @@ import net.pladema.clinichistory.outpatient.createoutpatient.service.ReasonServi
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientDocumentBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ReasonBo;
+import net.pladema.medicalconsultation.appointment.controller.service.AppointmentExternalService;
 import net.pladema.pdf.service.PdfService;
 import net.pladema.sgx.security.utils.UserInfo;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalServiceImpl;
@@ -51,6 +51,8 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 
     private final OutpatientConsultationMapper outpatientConsultationMapper;
 
+    private final AppointmentExternalService appointmentExternalService;
+
     private final PdfService pdfService;
 
     public OutpatientConsultationController(CreateOutpatientConsultationService createOutpatientConsultationService,
@@ -58,12 +60,13 @@ public class OutpatientConsultationController implements OutpatientConsultationA
                                             ReasonService reasonService,
                                             HealthcareProfessionalExternalServiceImpl healthcareProfessionalExternalService,
                                             OutpatientConsultationMapper outpatientConsultationMapper,
-                                            PdfService pdfService) {
+                                            AppointmentExternalService appointmentExternalService, PdfService pdfService) {
         this.createOutpatientConsultationService = createOutpatientConsultationService;
         this.createOutpatientDocumentService = createOutpatientDocumentService;
         this.reasonService = reasonService;
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.outpatientConsultationMapper = outpatientConsultationMapper;
+        this.appointmentExternalService = appointmentExternalService;
         this.pdfService = pdfService;
     }
 
@@ -84,6 +87,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         OutpatientDocumentBo outpatient = outpatientConsultationMapper.fromCreateOutpatientDto(createOutpatientDto);
         outpatient = createOutpatientDocumentService.create(newOutPatient.getId(), patientId, outpatient);
 
+        appointmentExternalService.serveAppointment(patientId, doctorId);
         outpatient.setReasons(reasons);
         generateDocument(outpatient, institutionId, newOutPatient.getId(), patientId);
 
@@ -119,6 +123,8 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         outpatient.setImmunizations(Arrays.asList(immunizationBo));
 
         outpatient = createOutpatientDocumentService.create(newOutPatient.getId(), patientId, outpatient);
+
+        appointmentExternalService.serveAppointment(patientId, doctorId);
         generateDocument(outpatient, institutionId, newOutPatient.getId(), patientId);
 
         LOG.debug(OUTPUT, true);
