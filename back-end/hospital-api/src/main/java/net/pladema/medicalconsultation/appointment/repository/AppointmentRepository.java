@@ -74,4 +74,19 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
     void updateState(@Param("appointmentId") Integer appointmentId,
                      @Param("appointmentStateId") short appointmentStateId,
                      @Param("userId") Integer userId);
+
+    @Transactional(readOnly = true)
+    @Query( "SELECT DISTINCT a.id, a.hour " +
+            "FROM Appointment AS a " +
+            "JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
+            "JOIN Diary AS d ON (d.id = aa.pk.diaryId) " +
+            "WHERE a.patientId = :patientId " +
+            "AND d.healthcareProfessionalId = :healthProfessionalId " +
+            "AND a.dateTypeId = :appointmentDate " +
+            "AND a.appointmentStateId = " + AppointmentState.CONFIRMED + " " +
+            "ORDER BY a.hour ASC")
+    List<Integer> getAppointmentsId(@Param("patientId") Integer patientId,
+                                    @Param("healthProfessionalId")  Integer healthProfessionalId,
+                                    @Param("appointmentDate")  LocalDate appointmentDate);
+
 }

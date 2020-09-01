@@ -19,4 +19,6 @@ public interface AppointmentService {
     Collection<AppointmentBo> getFutureActiveAppointmentsByDiary(Integer diaryId);
 
     boolean updateState(Integer appointmentId, short appointmentStateId, Integer userId, String reason);
+
+    boolean hasConfirmedAppointment(Integer patientId, Integer healthProfessionalId);
 }

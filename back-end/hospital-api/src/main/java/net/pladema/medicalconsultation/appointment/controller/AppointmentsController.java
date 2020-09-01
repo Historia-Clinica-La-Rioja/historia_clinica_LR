@@ -7,6 +7,20 @@ import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotEmpty;
 
+import io.swagger.annotations.Api;
+import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointment;
+import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentDiary;
+import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentState;
+import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentListDto;
+import net.pladema.medicalconsultation.appointment.controller.dto.CreateAppointmentDto;
+import net.pladema.medicalconsultation.appointment.controller.mapper.AppointmentMapper;
+import net.pladema.medicalconsultation.appointment.service.AppointmentService;
+import net.pladema.medicalconsultation.appointment.service.CreateAppointmentService;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
+import net.pladema.patient.controller.dto.HealthInsurancePatientDataDto;
+import net.pladema.patient.controller.service.PatientExternalService;
+import net.pladema.sgx.security.utils.UserInfo;
+import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -21,22 +35,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import io.swagger.annotations.Api;
-import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointment;
-import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentDiary;
-import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentState;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentDto;
-import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentListDto;
-import net.pladema.medicalconsultation.appointment.controller.dto.CreateAppointmentDto;
-import net.pladema.medicalconsultation.appointment.controller.mapper.AppointmentMapper;
-import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.AppointmentValidatorService;
-import net.pladema.medicalconsultation.appointment.service.CreateAppointmentService;
-import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
-import net.pladema.patient.controller.dto.HealthInsurancePatientDataDto;
-import net.pladema.patient.controller.service.PatientExternalService;
-import net.pladema.sgx.security.utils.UserInfo;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/medicalConsultations/appointments")
@@ -58,17 +58,21 @@ public class AppointmentsController {
 
     private final PatientExternalService patientExternalService;
 
+    private final HealthcareProfessionalExternalService healthcareProfessionalExternalService;
+
     public AppointmentsController(AppointmentService appointmentService,
-    							  AppointmentValidatorService appointmentValidatorService,
+                                  AppointmentValidatorService appointmentValidatorService,
                                   CreateAppointmentService createAppointmentService,
                                   AppointmentMapper appointmentMapper,
-                                  PatientExternalService patientExternalService) {
+                                  PatientExternalService patientExternalService,
+                                  HealthcareProfessionalExternalService healthcareProfessionalExternalService) {
         super();
         this.appointmentService = appointmentService;
         this.appointmentValidatorService = appointmentValidatorService;
         this.createAppointmentService = createAppointmentService;
         this.appointmentMapper = appointmentMapper;
         this.patientExternalService = patientExternalService;
+        this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
     }
 
     @Transactional
@@ -136,5 +140,17 @@ public class AppointmentsController {
 		boolean result = appointmentService.updateState(appointmentId, Short.parseShort(appointmentStateId), UserInfo.getCurrentAuditor(), reason);
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
+    }
+
+
+    @GetMapping("/confirmed-appointment")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
+    public ResponseEntity<Boolean> hasConfirmedAppointment(@PathVariable(name = "institutionId")  Integer institutionId,
+                                                           @RequestParam(name = "patientId") Integer patientId){
+        LOG.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
+        Integer healthProfessionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
+        boolean result = appointmentService.hasConfirmedAppointment(patientId, healthProfessionalId);
+        LOG.debug(OUTPUT, result);
+        return ResponseEntity.ok(result);
     }
 }

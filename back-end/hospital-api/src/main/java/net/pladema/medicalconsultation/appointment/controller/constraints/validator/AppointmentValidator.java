@@ -21,6 +21,7 @@ import net.pladema.permissions.controller.external.LoggedUserExternalService;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import net.pladema.sgx.security.utils.UserInfo;
+import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import net.pladema.staff.service.HealthcareProfessionalService;
 
 
@@ -30,7 +31,7 @@ public class AppointmentValidator implements ConstraintValidator<ValidAppointmen
 
     private static final Logger LOG = LoggerFactory.getLogger(AppointmentValidator.class);
 
-    private final HealthcareProfessionalService healthcareProfessionalService;
+    private final HealthcareProfessionalExternalService healthcareProfessionalExternalService;
 
     private final DiaryService diaryService;
 
@@ -103,7 +104,7 @@ public class AppointmentValidator implements ConstraintValidator<ValidAppointmen
                 buildResponse(context, "{appointment.new.professional.assign.not.allowed}");
                 valid = false;
             }
-            Integer professionalId = healthcareProfessionalService.getProfessionalId(UserInfo.getCurrentAuditor());
+            Integer professionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
             if (hasProfessionalRole && !diary.getHealthcareProfessionalId().equals(professionalId)) {
                 buildResponse(context, "{appointment.new.professional.id.invalid}");
                 valid = false;

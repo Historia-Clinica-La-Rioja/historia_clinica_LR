@@ -5,6 +5,7 @@ import net.pladema.medicalconsultation.diary.controller.constraints.ValidDiaryPr
 import net.pladema.permissions.controller.external.LoggedUserExternalService;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.sgx.security.utils.UserInfo;
+import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import net.pladema.staff.service.HealthcareProfessionalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,7 @@ public class DiaryProfessionalIdValidator implements ConstraintValidator<ValidDi
 
     private static final Logger LOG = LoggerFactory.getLogger(DiaryProfessionalIdValidator.class);
 
-    private final HealthcareProfessionalService healthcareProfessionalService;
+    private final HealthcareProfessionalExternalService healthcareProfessionalExternalService;
 
     private final LoggedUserExternalService loggedUserExternalService;
 
@@ -45,7 +46,7 @@ public class DiaryProfessionalIdValidator implements ConstraintValidator<ValidDi
                     List.of(ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO));
 
             if (hasProfessionalRole) {
-                Integer professionalId = healthcareProfessionalService.getProfessionalId(UserInfo.getCurrentAuditor());
+                Integer professionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
                 valid = professionalId.equals(healthcareProfessionalId);
             }
         }
