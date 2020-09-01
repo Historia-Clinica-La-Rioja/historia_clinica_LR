@@ -1,5 +1,7 @@
 package net.pladema.medicalconsultation.appointment.controller.constraints.validator;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import javax.validation.ConstraintValidator;
@@ -29,7 +31,9 @@ import net.pladema.staff.service.HealthcareProfessionalService;
 @RequiredArgsConstructor
 public class AppointmentValidator implements ConstraintValidator<ValidAppointment, Object[]> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AppointmentValidator.class);
+    private static final int UTC_DIFFERENCE = 3;
+
+	private static final Logger LOG = LoggerFactory.getLogger(AppointmentValidator.class);
 
     private final HealthcareProfessionalExternalService healthcareProfessionalExternalService;
 
@@ -48,21 +52,55 @@ public class AppointmentValidator implements ConstraintValidator<ValidAppointmen
         // nothing to do
     }
 
-    @Override
-    public boolean isValid(Object[] parameters, ConstraintValidatorContext context) {
-        Integer institutionId = (Integer) parameters[0];
-        CreateAppointmentDto createAppointmentDto = (CreateAppointmentDto) parameters[1];
-        LOG.debug("Input parameters -> institutionId {}, createAppointmentDto {}", institutionId, createAppointmentDto);
-        boolean valid = true;
+	@Override
+	public boolean isValid(Object[] parameters, ConstraintValidatorContext context) {
+		Integer institutionId = (Integer) parameters[0];
+		CreateAppointmentDto createAppointmentDto = (CreateAppointmentDto) parameters[1];
+		LOG.debug("Input parameters -> institutionId {}, createAppointmentDto {}", institutionId, createAppointmentDto);
+		DiaryBo diary = diaryService.getDiaryById(createAppointmentDto.getDiaryId());
+		return validAppoinment(context, createAppointmentDto) 
+				&& validDiary(context, diary)
+				&& validRole(context, institutionId, diary);
+	}
 
+	private boolean validAppoinment(ConstraintValidatorContext context, CreateAppointmentDto createAppointmentDto) {
+		boolean valid = true;
+		
+		if(beforeNow(createAppointmentDto)){
+            buildResponse(context, "{appointment.new.beforeToday}");
+            valid = false;
+        }
+        
         if(!createAppointmentDto.hasMedicalCoverage()){
             buildResponse(context, "{appointment.new.without.medical.coverage}");
             valid = false;
         }
+        if (!createAppointmentDto.isOverturn()) {
+        	boolean existAppointment = appointmentService.existAppointment(createAppointmentDto.getDiaryId(),
+        			createAppointmentDto.getOpeningHoursId(),
+        			localDateMapper.fromStringToLocalDate(createAppointmentDto.getDate()),
+        			localDateMapper.fromStringToLocalTime(createAppointmentDto.getHour()));
+        	
+        	if (existAppointment) {
+        		buildResponse(context, "{appointment.overlapping}");
+        		valid = false;
+        	}
+        }
+        
+        if (createAppointmentDto.isOverturn()) {
+        	boolean allowNewOverturn = diaryOpeningHoursValidatorService.allowNewOverturn(createAppointmentDto.getDiaryId(),
+        			createAppointmentDto.getOpeningHoursId(), localDateMapper.fromStringToLocalDate(createAppointmentDto.getDate()));
+        	if (!allowNewOverturn) {
+        		buildResponse(context, "{appointment.not.allow.new.overturn}");
+        		valid = false;
+        	}
+        }
+        return valid;
+	}
 
-        DiaryBo diary = diaryService.getDiaryById(createAppointmentDto.getDiaryId());
-
-        if (!diary.isActive()) {
+	private boolean validDiary(ConstraintValidatorContext context, DiaryBo diary) {
+		boolean valid = true;
+		if (!diary.isActive()) {
             buildResponse(context, "{appointment.new.diary.inactive}");
             valid = false;
         }
@@ -71,29 +109,13 @@ public class AppointmentValidator implements ConstraintValidator<ValidAppointmen
             buildResponse(context, "{appointment.new.diary.deleted}");
             valid = false;
         }
+		return valid;
+	}
 
-        if (!createAppointmentDto.isOverturn()) {
-            boolean existAppointment = appointmentService.existAppointment(createAppointmentDto.getDiaryId(),
-                    createAppointmentDto.getOpeningHoursId(),
-                    localDateMapper.fromStringToLocalDate(createAppointmentDto.getDate()),
-                    localDateMapper.fromStringToLocalTime(createAppointmentDto.getHour()));
-
-            if (existAppointment) {
-                buildResponse(context, "{appointment.overlapping}");
-                valid = false;
-            }
-        }
-
-        if (createAppointmentDto.isOverturn()) {
-            boolean allowNewOverturn = diaryOpeningHoursValidatorService.allowNewOverturn(createAppointmentDto.getDiaryId(),
-                createAppointmentDto.getOpeningHoursId(), localDateMapper.fromStringToLocalDate(createAppointmentDto.getDate()));
-            if (!allowNewOverturn) {
-                buildResponse(context, "{appointment.not.allow.new.overturn}");
-                valid = false;
-            }
-        }
-
-        boolean hasAdministrativeRole = loggedUserExternalService.hasAnyRoleInstitution(institutionId,
+	private boolean validRole(ConstraintValidatorContext context, Integer institutionId,
+			DiaryBo diary) {
+		boolean valid = true;
+		boolean hasAdministrativeRole = loggedUserExternalService.hasAnyRoleInstitution(institutionId,
                 List.of(ERole.ADMINISTRADOR_AGENDA, ERole.ADMINISTRATIVO));
 
         if (!hasAdministrativeRole) {
@@ -110,8 +132,15 @@ public class AppointmentValidator implements ConstraintValidator<ValidAppointmen
                 valid = false;
             }
         }
-        return valid;
-    }
+		return valid;
+	}
+
+	private boolean beforeNow(CreateAppointmentDto createAppointmentDto) {
+		LocalDate apmtDate = localDateMapper.fromStringToLocalDate(createAppointmentDto.getDate());
+		LocalTime apmtTime = localDateMapper.fromStringToLocalTime(createAppointmentDto.getHour());
+		return apmtDate.isBefore(LocalDate.now())
+				|| (apmtDate.equals(LocalDate.now()) && apmtTime.isBefore(LocalTime.now().minusHours(UTC_DIFFERENCE)));
+	}
 
     private void buildResponse(ConstraintValidatorContext context, String message) {
         context.disableDefaultConstraintViolation();

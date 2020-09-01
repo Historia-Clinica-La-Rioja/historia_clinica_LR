@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { VALIDATIONS } from '@core/utils/form.utils';
+import { VALIDATIONS, processErrors } from '@core/utils/form.utils';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { PatientService } from '@api-rest/services/patient.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -132,7 +132,7 @@ export class NewAppointmentComponent implements OnInit {
 			this.snackBarService.showSuccess('turnos.new-appointment.messages.APPOINTMENT_SUCCESS');
 			this.dialogRef.close(true);
 		}, error => {
-			this.snackBarService.showError('turnos.new-appointment.messages.APPOINTMENT_ERROR');
+			processErrors(error, (msg)=>this.snackBarService.showError(msg));
 		});
 	}
 
