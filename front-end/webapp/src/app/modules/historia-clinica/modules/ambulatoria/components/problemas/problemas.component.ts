@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Input} from '@angular/core';
 import {
 	PROBLEMAS_ACTIVOS,
 	PROBLEMAS_CRONICOS,
@@ -28,6 +28,7 @@ export class ProblemasComponent implements OnInit {
 	public chronicProblems$: Observable<HCEPersonalHistoryDto[]>;
 	public hospitalizationProblems$: Observable<HCEHospitalizationHistoryDto[]>;
 	private patientId: number;
+	@Input() hasConfirmedAppointment: boolean;
 
 
 	constructor(
