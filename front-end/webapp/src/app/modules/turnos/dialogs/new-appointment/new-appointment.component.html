@@ -58,7 +58,7 @@
 			</mat-card>
 		</mat-step>
 
-		<mat-step [stepControl]="formMedicalCoverage" label="{{'turnos.new-appointment.STEP_2' | translate}}">
+		<mat-step [stepControl]="appointmentInfoForm" label="{{'turnos.new-appointment.STEP_2' | translate}}">
 			<mat-card class="mat-typography">
 				<mat-list>
 					<mat-list-item id="patient">
@@ -71,7 +71,7 @@
 				<div fxLayout="row" fxLayoutAlign="space-around center">
 					<mat-spinner *ngIf="!healtInsuranceOptions.length"></mat-spinner>
 				</div>
-				<form *ngIf="healtInsuranceOptions.length" [formGroup]="formMedicalCoverage">
+				<form *ngIf="healtInsuranceOptions.length" [formGroup]="appointmentInfoForm">
 					<div fxLayout="row wrap" fxLayoutGap="10px">
 						<mat-form-field appearance="outline">
 							<mat-label>Obra Social</mat-label>
@@ -95,15 +95,29 @@
 								placeholder="Prepaga">
 						</mat-form-field>
 					</div>
-					<mat-form-field appearance="outline">
-						<mat-label>Nro de afiliado</mat-label>
-						<input matInput
-							type="text"
-							id="affiliateNumber"
-							name="affiliateNumber"
-							formControlName="affiliateNumber"
-							placeholder="Nro de afiliado">
-					</mat-form-field>
+						<div fxLayout="row wrap" fxLayoutGap="10px">
+						<mat-form-field appearance="outline">
+							<mat-label>Nro de afiliado</mat-label>
+							<input matInput
+								type="text"
+								id="affiliateNumber"
+								name="affiliateNumber"
+								formControlName="affiliateNumber"
+								placeholder="Nro de afiliado">
+						</mat-form-field>
+						<mat-form-field appearance="outline">
+							<mat-label>Nro Telefónico</mat-label>
+							<input matInput
+								type="text"
+								id="phoneNumber"
+								name="phoneNumber"
+								formControlName="phoneNumber"
+								placeholder="Número Telefónico">
+							<mat-error *ngIf="hasError(appointmentInfoForm, 'maxlength', 'phoneNumber')"
+								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 20}">
+							</mat-error>
+						</mat-form-field>
+					</div>
 				</form>
 			</mat-card>
 		</mat-step>

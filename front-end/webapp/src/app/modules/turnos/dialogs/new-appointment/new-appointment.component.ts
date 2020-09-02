@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { VALIDATIONS, processErrors } from '@core/utils/form.utils';
+import { VALIDATIONS, processErrors,hasError } from '@core/utils/form.utils';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { PatientService } from '@api-rest/services/patient.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -25,7 +25,7 @@ export class NewAppointmentComponent implements OnInit {
 	@ViewChild('stepper', {static: false}) stepper: MatStepper;
 
 	public formSearch: FormGroup;
-	public formMedicalCoverage: FormGroup;
+	public appointmentInfoForm: FormGroup;
 	public identifyTypeArray: IdentificationTypeDto[];
 	public genderOptions: GenderDto[];
 	public healtInsuranceOptions: MedicalCoverageDto[] = [];
@@ -35,6 +35,7 @@ export class NewAppointmentComponent implements OnInit {
 	public patientAppointmentDto: HealthInsurancePatientDataDto;
 	public overturnMode = false;
 
+	public readonly hasError = hasError;
 	private readonly routePrefix;
 
   	constructor(
@@ -61,10 +62,11 @@ export class NewAppointmentComponent implements OnInit {
 			completed: [null, Validators.required]
 		});
 
-		this.formMedicalCoverage = this.formBuilder.group({
+		this.appointmentInfoForm = this.formBuilder.group({
 			medicalCoverage: [null],
 			prepaid: [null, Validators.maxLength(VALIDATIONS.MAX_LENGTH.medicalCoverageName)],
-			affiliateNumber: [null, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.medicalCoverageAffiliateNumber)]]
+			affiliateNumber: [null, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.medicalCoverageAffiliateNumber)]],
+			phoneNumber: [null, [Validators.required, Validators.maxLength(20)]]
 		});
 
 		this.personMasterDataService.getIdentificationTypes().subscribe(
@@ -119,14 +121,14 @@ export class NewAppointmentComponent implements OnInit {
 		const newAppointment: CreateAppointmentDto = {
 			date: this.data.date,
 			diaryId: this.data.diaryId,
-			healthInsuranceId: this.formMedicalCoverage.controls.medicalCoverage.value,
+			healthInsuranceId: this.appointmentInfoForm.controls.medicalCoverage.value,
 			hour: this.data.hour,
-			medicalCoverageAffiliateNumber: this.formMedicalCoverage.controls.affiliateNumber.value,
-			medicalCoverageName: this.formMedicalCoverage.controls.prepaid.value,
+			medicalCoverageAffiliateNumber: this.appointmentInfoForm.controls.affiliateNumber.value,
+			medicalCoverageName: this.appointmentInfoForm.controls.prepaid.value,
 			openingHoursId: this.data.openingHoursId,
 			overturn: this.data.overturnMode,
 			patientId: this.patientId,
-			phoneNumber: 'Sin Información'
+			phoneNumber: this.appointmentInfoForm.controls.phoneNumber.value
 		};
 
 		this.appointmentsService.create(newAppointment).subscribe(data => {
@@ -149,7 +151,7 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	showConfirmButton() {
-		return this.formMedicalCoverage.controls.affiliateNumber.valid && (this.formMedicalCoverage.controls.medicalCoverage.valid || this.formMedicalCoverage.controls.prepaid.valid);
+		return this.appointmentInfoForm.controls.affiliateNumber.valid && (this.appointmentInfoForm.controls.medicalCoverage.valid || this.appointmentInfoForm.controls.prepaid.valid) && this.appointmentInfoForm.controls.phoneNumber.valid;
 	}
 
 	disablePreviuosStep(stepperParam: MatHorizontalStepper) {
