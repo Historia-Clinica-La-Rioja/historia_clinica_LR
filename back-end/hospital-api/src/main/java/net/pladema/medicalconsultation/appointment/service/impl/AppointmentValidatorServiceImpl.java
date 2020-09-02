@@ -58,7 +58,7 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
 		validStates.put(ASSIGNED, Arrays.asList(CONFIRMED, CANCELLED));
 		validStates.put(CONFIRMED, Arrays.asList(ABSENT, CANCELLED));
 		validStates.put(ABSENT, Arrays.asList(CONFIRMED,ABSENT));
-		validStates.put(SERVED, Arrays.asList(CONFIRMED));
+		validStates.put(SERVED, Arrays.asList());
 		validStates.put(CANCELLED, Arrays.asList(CANCELLED));
 		statesWithReason = Arrays.asList(CANCELLED, ABSENT);
 	}
