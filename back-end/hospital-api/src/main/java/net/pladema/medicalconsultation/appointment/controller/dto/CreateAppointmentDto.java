@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
+import org.hibernate.validator.constraints.Length;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -49,6 +50,9 @@ public class CreateAppointmentDto {
     @Nullable
     private Integer healthInsuranceId;
 
+    @NotNull
+    @Length(max = 20, message = "{appointment.new.phoneNumber.invalid}")
+    private String phoneNumber;
 
     public boolean hasMedicalCoverage() {
         return medicalCoverageName != null || (healthInsuranceId != null && !healthInsuranceId.equals(-1));

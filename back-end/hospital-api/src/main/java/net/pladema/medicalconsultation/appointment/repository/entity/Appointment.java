@@ -76,6 +76,7 @@ public class Appointment extends SGXAuditableEntity {
 
         result.setMedicalCoverageAffiliateNumber(appointmentBo.getMedicalCoverageAffiliateNumber());
         result.setHealthInsuranceId(appointmentBo.getHealthInsuranceId());
+        result.setPhoneNumber(appointmentBo.getPhoneNumber());
         return result;
 
     }

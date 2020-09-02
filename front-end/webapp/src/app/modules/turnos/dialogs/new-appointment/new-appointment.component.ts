@@ -125,7 +125,8 @@ export class NewAppointmentComponent implements OnInit {
 			medicalCoverageName: this.formMedicalCoverage.controls.prepaid.value,
 			openingHoursId: this.data.openingHoursId,
 			overturn: this.data.overturnMode,
-			patientId: this.patientId
+			patientId: this.patientId,
+			phoneNumber: 'Sin Información'
 		};
 
 		this.appointmentsService.create(newAppointment).subscribe(data => {

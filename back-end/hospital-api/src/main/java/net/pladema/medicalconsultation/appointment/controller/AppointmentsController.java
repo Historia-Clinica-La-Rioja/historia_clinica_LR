@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 
 import io.swagger.annotations.Api;
@@ -81,7 +82,7 @@ public class AppointmentsController {
     @ValidAppointment
     public ResponseEntity<Integer> create(
             @PathVariable(name = "institutionId") Integer institutionId,
-            @RequestBody CreateAppointmentDto createAppointmentDto) {
+            @RequestBody @Valid CreateAppointmentDto createAppointmentDto) {
         LOG.debug("Input parameters -> institutionId {}, appointmentDto {}", institutionId, createAppointmentDto);
         AppointmentBo newAppointmentBo = appointmentMapper.toAppointmentBo(createAppointmentDto);
         newAppointmentBo = createAppointmentService.execute(newAppointmentBo);

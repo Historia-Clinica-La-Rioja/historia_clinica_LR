@@ -48,6 +48,8 @@ public class AppointmentBo {
     
     private String stateChangeReason;
 
+    private String phoneNumber;
+
     public AppointmentBo(AppointmentDiaryVo appointmentDiaryVo) {
         super();
         this.id = appointmentDiaryVo.getId();
@@ -92,6 +94,9 @@ public class AppointmentBo {
                 null,
                 appointment.getMedicalCoverageName(),
                 appointment.getMedicalCoverageAffiliateNumber(),
-                appointment.getHealthInsuranceId(), null, null);
+                appointment.getHealthInsuranceId(),
+                null,
+                null,
+                appointment.getPhoneNumber());
     }
 }
