@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -191,7 +192,8 @@ public class HCEGeneralStateController {
                                     hg.getValue().stream().filter(hbo -> !hbo.isMain()).map(hceGeneralStateMapper::toHCEDiagnoseDto).collect(Collectors.toList())))
                     .collect(Collectors.toList());
             LOG.debug(LOGGING_OUTPUT, hospitalizationsGrouped);
-            return hospitalizationsGrouped;
+            return hospitalizationsGrouped.stream().sorted(Comparator.comparing(HCEHospitalizationHistoryDto::getEntryDate).reversed()
+                    .thenComparing(HCEHospitalizationHistoryDto::getDischargeDate, Comparator.nullsFirst(Comparator.reverseOrder()))).collect(Collectors.toList());
     }
 
 
