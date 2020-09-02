@@ -58,6 +58,9 @@ public class Appointment extends SGXAuditableEntity {
     @Column(name = "medical_coverage_affiliate_number", nullable = false)
     private String medicalCoverageAffiliateNumber;
 
+    @Column(name = "phone_number", nullable = false, length = 20)
+    private String phoneNumber;
+
     public static Appointment newFromAppointmentBo(AppointmentBo appointmentBo) {
         Appointment result = new Appointment();
         result.setDateTypeId(appointmentBo.getDate());

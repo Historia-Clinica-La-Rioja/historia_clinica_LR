@@ -1,3 +1,16 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v1_1 
+    - logicalFilePath: incrementales-v1_1
 
+    - changeSet:  
+        id: appointment-addColumn-phone_number
+        author: jlardapide
+        changes:
+        - addColumn:
+            columns:
+            - column:
+                name: phone_number
+                type: varchar(20)
+                constraints:
+                    nullable: false
+                defaultValue: Sin información
+            tableName: appointment
