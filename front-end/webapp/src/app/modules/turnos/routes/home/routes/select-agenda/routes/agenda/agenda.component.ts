@@ -254,7 +254,6 @@ function toCalendarEvent(from: string, to: string, date: Moment, appointment: Ap
 				id: appointment.patient.id,
 				fullName: appointment.patient.person.firstName + ' ' + appointment.patient.person.lastName,
 				identificationNumber: appointment.patient.person.identificationNumber,
-				phoneNumber: appointment.patient.person.phoneNumber,
 			},
 			overturn: appointment.overturn,
 			appointmentId: appointment.id,
@@ -264,7 +263,7 @@ function toCalendarEvent(from: string, to: string, date: Moment, appointment: Ap
 				name: appointment.medicalCoverageName,
 				affiliateNumber: appointment.medicalCoverageAffiliateNumber,
 			},
-
+			phoneNumber: appointment.phoneNumber
 		}
 	};
 

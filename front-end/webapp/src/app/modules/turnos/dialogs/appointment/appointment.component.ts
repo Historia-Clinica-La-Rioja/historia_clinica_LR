@@ -117,7 +117,6 @@ export interface PatientAppointmentInformation {
 		id: number,
 		fullName: string
 		identificationNumber: string,
-		phoneNumber: number,
 	};
 	appointmentId: number;
 	appointmentStateId: number;
@@ -126,4 +125,5 @@ export interface PatientAppointmentInformation {
 		name: string,
 		affiliateNumber: string
 	};
+	phoneNumber: string;
 }

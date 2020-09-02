@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.appointment.controller.mapper;
 
+import net.pladema.patient.controller.dto.BasicPatientDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -16,7 +17,7 @@ import net.pladema.sgx.dates.configuration.LocalDateMapper;
 public interface AppointmentMapper {
 
     @Named("toAppointmentBasicPatientDto")
-    AppointmentBasicPatientDto toAppointmentBasicPatientDto(HealthInsurancePatientDataDto patient);
+    AppointmentBasicPatientDto toAppointmentBasicPatientDto(BasicPatientDto patient);
 
     @Named("toAppointmentListDto")
     @Mapping(target = "id", source = "appointmentBo.id")
@@ -27,7 +28,8 @@ public interface AppointmentMapper {
     @Mapping(target = "medicalCoverageName", source = "appointmentBo.medicalCoverageName")
     @Mapping(target = "medicalCoverageAffiliateNumber", source = "appointmentBo.medicalCoverageAffiliateNumber")
     @Mapping(target = "patient", source = "patient", qualifiedByName = "toAppointmentBasicPatientDto")
-    AppointmentListDto toAppointmentListDto(AppointmentBo appointmentBo, HealthInsurancePatientDataDto patient);
+    @Mapping(target = "phoneNumber", source = "appointmentBo.phoneNumber")
+    AppointmentListDto toAppointmentListDto(AppointmentBo appointmentBo, BasicPatientDto patient);
   
     @Named("toAppointmentDto")
     AppointmentDto toAppointmentDto(AppointmentBo appointmentBo);

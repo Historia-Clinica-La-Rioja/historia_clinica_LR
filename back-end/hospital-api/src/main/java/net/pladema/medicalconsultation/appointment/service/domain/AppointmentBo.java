@@ -64,6 +64,7 @@ public class AppointmentBo {
         this.medicalCoverageAffiliateNumber = appointmentDiaryVo.getMedicalCoverageAffiliateNumber();
         this.healthInsuranceId = appointmentDiaryVo.getHealthInsuranceId();
         this.medicalAttentionTypeId = appointmentDiaryVo.getMedicalAttentionTypeId();
+        this.phoneNumber = appointmentDiaryVo.getPhoneNumber();
     }
     
     public AppointmentBo(AppointmentVo appointmentVo) {

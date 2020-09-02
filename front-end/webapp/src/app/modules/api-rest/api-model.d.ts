@@ -125,6 +125,7 @@ export interface AppointmentListDto {
     medicalCoverageName: string;
     overturn: boolean;
     patient: AppointmentBasicPatientDto;
+    phoneNumber: string;
 }
 
 export interface BMPatientDto extends APatientDto {

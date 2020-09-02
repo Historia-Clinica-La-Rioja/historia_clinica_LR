@@ -32,4 +32,6 @@ public class AppointmentListDto {
     
     private final Short appointmentStateId;
 
+    private final String phoneNumber;
+
 }

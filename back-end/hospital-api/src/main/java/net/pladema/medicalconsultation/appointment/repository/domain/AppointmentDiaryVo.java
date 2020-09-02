@@ -77,4 +77,10 @@ public class AppointmentDiaryVo {
             return null;
         return appointment.getHealthInsuranceId();
     }
+
+    public String getPhoneNumber() {
+        if (appointment == null)
+            return null;
+        return appointment.getPhoneNumber();
+    }
 }
