@@ -1,4 +1,5 @@
 @import '../../../../../assets/styles/mixins';
+@import '../../../../../assets/styles/mat-mixins';
 
 .content {
 
@@ -19,12 +20,16 @@
 		margin-top: 25px;
 	}
 
+	@include mat-form-field-background-white
+
 }
-.table-container{
-	.new-patient-button{
+
+.table-container {
+	.new-patient-button {
 		@include form-buttons;
+
 		button {
 			margin-right: 0px;
-			}
+		}
 	}
 }

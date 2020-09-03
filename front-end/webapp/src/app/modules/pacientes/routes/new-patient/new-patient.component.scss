@@ -1,7 +1,13 @@
-@import "../../../../../assets/styles/mixins.scss";
+@import "../../../../../assets/styles/mixins";
+@import "../../../../../assets/styles/mat-mixins";
 
-.form-row{
-      @include form-row;
+form {
+
+	@include mat-form-field-background-white;
+
+	.form-row{
+		@include form-row;
+	}
 }
 
 mat-form-field{

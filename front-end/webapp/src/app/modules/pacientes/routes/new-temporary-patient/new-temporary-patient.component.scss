@@ -1,11 +1,18 @@
 @import '../../../../../assets/styles/mixins';
+@import '../../../../../assets/styles/mat-mixins';
+
+form {
+
+	@include mat-form-field-background-white;
+
+	.form-row {
+		@include form-row;
+	}
+
+}
 
 .mat-radio-button {
     @include form-radio-button;
-}
-
-.form-row {
-    @include form-row;
 }
 
 mat-form-field{
