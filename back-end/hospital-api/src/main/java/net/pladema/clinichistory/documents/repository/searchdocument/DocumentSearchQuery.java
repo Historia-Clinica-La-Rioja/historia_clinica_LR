@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import lombok.NoArgsConstructor;
 import net.pladema.clinichistory.hospitalization.repository.generalstate.domain.DocumentObservationsVo;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.ConditionVerificationStatus;
+import net.pladema.clinichistory.ips.repository.masterdata.entity.ProblemType;
 import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
 import net.pladema.patient.service.StringHelper;
 import net.pladema.sgx.repository.QueryPart;
@@ -68,6 +69,8 @@ public class DocumentSearchQuery {
     public QueryPart where() {
         return new QueryPart("document.sourceId = :internmentEpisodeId \n" +
                 "and document.sourceTypeId = " + SourceType.HOSPITALIZATION +" \n"+
+                "and not hc.problemId = '" + ProblemType.HISTORY +"' \n"+
+                "and not hc.problemId = '" + ProblemType.PROBLEM +"' \n"+
                 "and not hc.verificationStatusId = '" + ConditionVerificationStatus.ERROR +"' \n");
     }
 
