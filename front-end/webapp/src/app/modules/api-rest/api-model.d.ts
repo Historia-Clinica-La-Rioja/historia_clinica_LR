@@ -511,13 +511,6 @@ export interface HealthHistoryConditionDto extends HealthConditionDto {
     note: string;
 }
 
-export interface HealthInsurancePatientDataDto {
-    id: number;
-    medicalCoverageAffiliateNumber: string;
-    medicalCoverageName: string;
-    person: BasicPersonalDataDto;
-}
-
 export interface HealthcareProfessionalDto {
     id: number;
     licenceNumber: string;

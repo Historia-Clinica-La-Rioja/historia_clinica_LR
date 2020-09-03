@@ -10,7 +10,6 @@ import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentDto
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentListDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.CreateAppointmentDto;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
-import net.pladema.patient.controller.dto.HealthInsurancePatientDataDto;
 import net.pladema.sgx.dates.configuration.LocalDateMapper;
 
 @Mapper(uses = {LocalDateMapper.class})

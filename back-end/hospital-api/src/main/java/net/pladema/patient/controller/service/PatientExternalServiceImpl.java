@@ -1,12 +1,10 @@
 package net.pladema.patient.controller.service;
 
 import net.pladema.patient.controller.dto.BasicPatientDto;
-import net.pladema.patient.controller.dto.HealthInsurancePatientDataDto;
 import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.service.PatientService;
 import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.controller.service.PersonExternalService;
-import net.pladema.staff.controller.dto.BasicPersonalDataDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -40,16 +38,4 @@ public class PatientExternalServiceImpl implements PatientExternalService {
         return result;
     }
 
-    @Override
-    public HealthInsurancePatientDataDto getHealthInsurancePatientData(Integer patientId) {
-        LOG.debug("Input parameters -> patientId {}", patientId);
-        Patient patient = patientService.getPatient(patientId)
-                .orElseThrow(() -> new EntityNotFoundException("patient.invalid"));
-        BasicPersonalDataDto personData = personExternalService.getBasicPersonalDataDto(patient.getPersonId());
-        HealthInsurancePatientDataDto result = new HealthInsurancePatientDataDto(patient.getId(), personData,
-                patient.getMedicalCoverageName(),
-                patient.getMedicalCoverageAffiliateNumber());
-        LOG.debug(OUTPUT, result);
-        return result;
-    }
 }

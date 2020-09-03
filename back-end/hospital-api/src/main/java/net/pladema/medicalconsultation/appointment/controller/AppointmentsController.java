@@ -18,7 +18,7 @@ import net.pladema.medicalconsultation.appointment.controller.mapper.Appointment
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.CreateAppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
-import net.pladema.patient.controller.dto.HealthInsurancePatientDataDto;
+import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.sgx.security.utils.UserInfo;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
@@ -121,8 +121,8 @@ public class AppointmentsController {
 
     private AppointmentListDto mapData(AppointmentBo appointmentBo) {
         LOG.debug("Input parameters -> appointmentBo {}", appointmentBo);
-        HealthInsurancePatientDataDto healthInsurancePatientDataDto = patientExternalService.getHealthInsurancePatientData(appointmentBo.getPatientId());
-        AppointmentListDto result = appointmentMapper.toAppointmentListDto(appointmentBo, healthInsurancePatientDataDto);
+        BasicPatientDto basicPatientDto = patientExternalService.getBasicDataFromPatient(appointmentBo.getPatientId());
+        AppointmentListDto result = appointmentMapper.toAppointmentListDto(appointmentBo, basicPatientDto);
         LOG.debug(OUTPUT, result);
         return result;
     }

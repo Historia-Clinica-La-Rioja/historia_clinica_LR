@@ -11,7 +11,7 @@ import { MatStepper, MatHorizontalStepper } from '@angular/material/stepper';
 import { RenaperService } from '@api-rest/services/renaper.service';
 import { HealthInsuranceService } from '@api-rest/services/health-insurance.service';
 import { AppointmentsService } from './../../../api-rest/services/appointments.service';
-import { CreateAppointmentDto, MedicalCoverageDto, IdentificationTypeDto, GenderDto, HealthInsurancePatientDataDto } from '@api-rest/api-model';
+import { CreateAppointmentDto, MedicalCoverageDto, IdentificationTypeDto, GenderDto,BasicPersonalDataDto } from '@api-rest/api-model';
 
 const ROUTE_SEARCH = 'pacientes/search';
 
@@ -32,7 +32,7 @@ export class NewAppointmentComponent implements OnInit {
 	public patientId: any;
 	public showAddPatient = false;
 	public editable = true;
-	public patientAppointmentDto: HealthInsurancePatientDataDto;
+	public person: BasicPersonalDataDto;
 	public overturnMode = false;
 
 	public readonly hasError = hasError;
@@ -90,7 +90,7 @@ export class NewAppointmentComponent implements OnInit {
 						this.patientId = data[0];
 						this.formSearch.controls.completed.setValue(true);
 						this.patientService.getAppointmentPatientData(this.patientId).subscribe(appointmentPatientData => {
-							this.patientAppointmentDto = appointmentPatientData;
+							this.person = appointmentPatientData;
 						});
 						this.renaperService.getHealthInsurance({ identificationNumber: this.formSearch.controls.identifNumber.value, genderId: this.formSearch.controls.gender.value })
 						.subscribe(healthInsuranceData => {
