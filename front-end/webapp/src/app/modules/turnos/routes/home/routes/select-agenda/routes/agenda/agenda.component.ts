@@ -187,8 +187,9 @@ export class AgendaComponent implements OnInit {
 				this.dayStartHour = (from > 0) ? from - 1 : from;
 			}
 			const to = momentParseTime(oh.openingHours.to).hour();
-			if (this.dayEndHour===undefined || to > this.dayEndHour || to===0) {
-				this.dayEndHour = (to === 0) ? 22 : to - 1 ;
+			const toMinutes = momentParseTime(oh.openingHours.to).minutes();
+			if (this.dayEndHour===undefined || to >= this.dayEndHour) {
+				this.dayEndHour = (toMinutes > 0) ? to : to - 1 ;
 			}
 		});
 	}
