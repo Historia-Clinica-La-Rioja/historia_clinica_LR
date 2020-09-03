@@ -11,7 +11,7 @@ import { MatStepper, MatHorizontalStepper } from '@angular/material/stepper';
 import { RenaperService } from '@api-rest/services/renaper.service';
 import { HealthInsuranceService } from '@api-rest/services/health-insurance.service';
 import { AppointmentsService } from './../../../api-rest/services/appointments.service';
-import { CreateAppointmentDto, MedicalCoverageDto, IdentificationTypeDto, GenderDto,BasicPersonalDataDto } from '@api-rest/api-model';
+import { CreateAppointmentDto, MedicalCoverageDto, IdentificationTypeDto, GenderDto,BasicPersonalDataDto, BMPersonDto } from '@api-rest/api-model';
 
 const ROUTE_SEARCH = 'pacientes/search';
 
@@ -85,12 +85,13 @@ export class NewAppointmentComponent implements OnInit {
 			};
 
 			this.patientService.quickGetPatient(searchRequest).subscribe(
-				data => {
+				(data: number[]) => {
 					if (data.length) {
 						this.patientId = data[0];
 						this.formSearch.controls.completed.setValue(true);
-						this.patientService.getAppointmentPatientData(this.patientId).subscribe(appointmentPatientData => {
-							this.person = appointmentPatientData;
+						this.patientService.getBasicPersonalData(this.patientId).subscribe((basicPersonalData: BasicPersonalDataDto) => {
+							this.person = basicPersonalData;
+							this.appointmentInfoForm.controls.phoneNumber.setValue(basicPersonalData.phoneNumber);
 						});
 						this.renaperService.getHealthInsurance({ identificationNumber: this.formSearch.controls.identifNumber.value, genderId: this.formSearch.controls.gender.value })
 						.subscribe(healthInsuranceData => {

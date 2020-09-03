@@ -209,7 +209,7 @@ public class PatientController {
 	}
 
 	@GetMapping("/{patientId}/appointment-patient-data")
-	public ResponseEntity<BasicPersonalDataDto> getAppointmentPatientData(@PathVariable(name = "patientId") Integer patientId) {
+	public ResponseEntity<BasicPersonalDataDto> getBasicPersonalData(@PathVariable(name = "patientId") Integer patientId) {
 		LOG.debug(INPUT_PARAMETERS_PATIENT_ID, patientId);
 		Patient patient = patientService.getPatient(patientId)
 				.orElseThrow(() -> new EntityNotFoundException(PATIENT_INVALID));
