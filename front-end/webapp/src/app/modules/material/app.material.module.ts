@@ -32,6 +32,7 @@ import { MatMomentDateModule, MomentDateAdapter } from '@angular/material-moment
 import { MAT_APP_DATE_FORMATS } from '@core/utils/moment.utils';
 import { MatPaginatorIntlAR } from '@presentation/components/table/table.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @NgModule({
 	imports: [
@@ -74,7 +75,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 	exports: [
 		MatAutocompleteModule,
 		MatButtonModule,
-		MatButtonModule,
+		MatButtonToggleModule,
 		MatCardModule,
 		MatCheckboxModule,
 		MatChipsModule,

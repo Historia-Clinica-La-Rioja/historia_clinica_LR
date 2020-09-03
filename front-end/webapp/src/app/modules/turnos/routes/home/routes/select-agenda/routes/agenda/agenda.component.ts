@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AppointmentListDto, CompleteDiaryDto, DiaryOpeningHoursDto } from '@api-rest/api-model';
-import { CalendarWeekViewBeforeRenderEvent, DAYS_OF_WEEK } from 'angular-calendar';
+import { CalendarView, CalendarWeekViewBeforeRenderEvent, DAYS_OF_WEEK } from 'angular-calendar';
 import {
 	buildFullDate,
 	DateFormat,
@@ -38,12 +38,13 @@ const enum COLORES {
 })
 export class AgendaComponent implements OnInit {
 
+	readonly calendarViewEnum = CalendarView;
+	view: CalendarView = CalendarView.Week;
 	readonly MONDAY = DAYS_OF_WEEK.MONDAY;
 
 	hourSegments: number;
 	agenda: CompleteDiaryDto;
 	events: CalendarEvent[] = [];
-
 	viewDate: Date = new Date();
 	loading = false;
 	dayStartHour: number;
@@ -98,18 +99,7 @@ export class AgendaComponent implements OnInit {
 		}
 	}
 
-	private _getOpeningHoursFor(date: Date): DiaryOpeningHoursDto[] {
-		const dateMoment = dateToMoment(date);
-		const start = momentParseDate(this.agenda.startDate);
-		const end = momentParseDate(this.agenda.endDate);
-
-		if (dateMoment.isBetween(start, end, 'date', '[]')) {
-			return this.diaryOpeningHours.filter(oh => oh.openingHours.dayWeekId === date.getDay());
-		}
-		return [];
-	}
-
-	public onClickedSegment(event) {
+	onClickedSegment(event) {
 		if (this.getOpeningHoursId(event.date)) {
 			const clickedDate: Moment = dateToMomentTimeZone(event.date);
 			const openingHourId: number = this.getOpeningHoursId(event.date);
@@ -142,14 +132,16 @@ export class AgendaComponent implements OnInit {
 		}
 	}
 
-	private existsAppointmentAt(date: Date): boolean {
-		return this.events.filter(appointment => appointment.start.getTime() === date.getTime()).length > 0;
-	}
+	viewAppointment(event: CalendarEvent): void {
+		const appointmentDialogRef = this.dialog.open(AppointmentComponent, {
+			data: event.meta,
+		});
 
-	private allOverturnsAssignedForDiaryOpeningHour(diaryOpeningHourDto: DiaryOpeningHoursDto, clickedDate: Moment): boolean {
-		const numberOfOverturnsAssigned: number =
-			this.getNumberOfOverturnsAssigned(clickedDate, diaryOpeningHourDto.openingHours.from, diaryOpeningHourDto.openingHours.to);
-		return numberOfOverturnsAssigned === diaryOpeningHourDto.overturnCount;
+		appointmentDialogRef.afterClosed().subscribe(data => {
+			if (data) {
+				this.loadAppointments();
+			}
+		});
 	}
 
 	setAgenda(agenda: CompleteDiaryDto): void {
@@ -230,16 +222,14 @@ export class AgendaComponent implements OnInit {
 		return selectedOpeningHour?.openingHours.id;
 	}
 
-	viewAppointment(event: CalendarEvent): void {
-		const appointmentDialogRef = this.dialog.open(AppointmentComponent, {
-			data: event.meta,
-		});
+	private existsAppointmentAt(date: Date): boolean {
+		return this.events.filter(appointment => appointment.start.getTime() === date.getTime()).length > 0;
+	}
 
-		appointmentDialogRef.afterClosed().subscribe(data => {
-			if (data) {
-				this.loadAppointments();
-			}
-		});
+	private allOverturnsAssignedForDiaryOpeningHour(diaryOpeningHourDto: DiaryOpeningHoursDto, clickedDate: Moment): boolean {
+		const numberOfOverturnsAssigned: number =
+			this.getNumberOfOverturnsAssigned(clickedDate, diaryOpeningHourDto.openingHours.from, diaryOpeningHourDto.openingHours.to);
+		return numberOfOverturnsAssigned === diaryOpeningHourDto.overturnCount;
 	}
 
 	private getNumberOfOverturnsAssigned(day: Moment, from: string, to: string): number {
@@ -251,13 +241,24 @@ export class AgendaComponent implements OnInit {
 		(event => event.meta.overturn && dateToMoment(event.start).isBetween(openingHourStart, openingHourEnd, null, '[)')).length;
 	}
 
+	private _getOpeningHoursFor(date: Date): DiaryOpeningHoursDto[] {
+		const dateMoment = dateToMoment(date);
+		const start = momentParseDate(this.agenda.startDate);
+		const end = momentParseDate(this.agenda.endDate);
+
+		if (dateMoment.isBetween(start, end, 'date', '[]')) {
+			return this.diaryOpeningHours.filter(oh => oh.openingHours.dayWeekId === date.getDay());
+		}
+		return [];
+	}
+
 }
 
 function toCalendarEvent(from: string, to: string, date: Moment, appointment: AppointmentListDto): CalendarEvent {
 	return {
 		start: buildFullDate(from, date).toDate(),
 		end: buildFullDate(to, date).toDate(),
-		title: `${from} ${appointment.patient.person.lastName} ${appointment.patient.person.firstName}`,
+		title: `${momentParseTime(from).format(DateFormat.HOUR_MINUTE_12)} ${appointment.patient.person.lastName} ${appointment.patient.person.firstName}`,
 		color: {
 			primary: getColor(),
 			secondary: getColor()

@@ -1,3 +1,11 @@
 @import '../../../../../../../assets/styles/mat-mixins';
 
 @include mat-form-field-background-white;
+
+.actions {
+	button {
+		height: 42px;
+		width: 42px;
+	}
+}
+

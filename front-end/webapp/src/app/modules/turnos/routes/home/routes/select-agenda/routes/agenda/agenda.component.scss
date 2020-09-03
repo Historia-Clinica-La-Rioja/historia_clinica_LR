@@ -4,24 +4,69 @@ div.spinner {
 	@include centered-spinner;
 }
 
-mwl-calendar-week-view::ng-deep {
-	.cal-week-view .cal-day-columns {
-		.bg-green {
-			background-color: #C9E7CB !important;
-			cursor: pointer;
+.turnos {
+
+	background-color: white;
+
+	::ng-deep {
+		.cal-week-view .cal-day-columns {
+
+			.bg-green {
+				background-color: #C9E7CB !important;
+				cursor: pointer;
+			}
+
+			.bg-blue {
+				background-color: #92C3E2 !important;
+				cursor: pointer;
+			}
+
+			.cal-events-container {
+				max-width: 80%;
+			}
 		}
 
-		.cal-events-container {
-			max-width: 80%;
+		.cal-event-title {
+			color: black;
 		}
 
-		.bg-blue {
-			background-color: #92C3E2 !important;
-			cursor: pointer;
+
+		.toggle-view {
+				.mat-button-toggle-checked.mat-button-toggle-appearance-standard {
+					background-color: #0062CD;
+				}
+
+				.mat-button-toggle-appearance-standard {
+					background-color: #007AFF;
+					color: white;
+				}
 		}
+
+			.navigation.mat-button-toggle-appearance-standard {
+				background-color: #007AFF;
+				color: white;
+			}
+
+
+
+			.today.mat-button-toggle-appearance-standard {
+				background-color: white;
+				color: #747C85;
+			}
+
 	}
 
-	.cal-event-title {
-		color: black;
+}
+
+$border-color-calendar: #e1e1e1;
+
+.header {
+	padding: 15px;
+	border: {
+		width: 1px;
+		style: solid;
+		color: $border-color-calendar;
+		bottom: none;
 	}
 }
+

@@ -33,7 +33,9 @@
 		</div>
 	</section>
 
-	<section id="empty_calendar_home" *ngIf="!route.firstChild">
+	<router-outlet></router-outlet>
+
+	<section class="calendar" id="empty_calendar_home" *ngIf="!route.firstChild || !route.firstChild?.firstChild">
 		<ng-template #weekViewHourSegmentTemplate let-segment="segment" let-locale="locale"
 					 let-segmentHeight="segmentHeight" let-isTimeLabel="isTimeLabel">
 			<div #segmentElement class="cal-hour-segment" [style.height.px]="segmentHeight"
@@ -45,45 +47,64 @@
 			</div>
 		</ng-template>
 
-		<div fxLayout="row" fxLayoutAlign="space-between center">
-			<div fxLayout="row">
-				<button mat-raised-button
-						color="primary"
-						mwlCalendarPreviousView
-						[view]="'week'"
-						[(viewDate)]="viewDate"
+		<div class="header" id="header-calendar" fxLayout="row" fxLayoutAlign="space-between center">
+			<mat-button-toggle-group>
+				<mat-button-toggle class="navigation"
+								   mwlCalendarPreviousView
+								   [view]=view
+								   [(viewDate)]="viewDate"
 				>
 					Anterior
-				</button>
-				<button mat-stroked-button
-						color="primary"
-						mwlCalendarToday
-						[(viewDate)]="viewDate"
+				</mat-button-toggle>
+				<mat-button-toggle class="today"
+								   mwlCalendarToday
+								   [(viewDate)]="viewDate"
 				>
 					Hoy
-				</button>
-				<button mat-raised-button
-						color="primary"
-						mwlCalendarNextView
-						[view]="'week'"
-						[(viewDate)]="viewDate"
+				</mat-button-toggle>
+				<mat-button-toggle class="navigation"
+								   mwlCalendarNextView
+								   [view]=view
+								   [(viewDate)]="viewDate"
 				>
 					Próximo
-				</button>
+				</mat-button-toggle>
+			</mat-button-toggle-group>
+
+			<div>
+						<span
+							class="mat-h2">{{ viewDate | calendarDate:(view + 'ViewTitle'): undefined : MONDAY }}</span>
 			</div>
 
 			<div>
-				<h2>{{ viewDate | calendarDate:('weekViewTitle'): undefined : 1 }}</h2>
+				<mat-button-toggle-group class="toggle-view" [(value)]="view">
+					<mat-button-toggle value="{{calendarViewEnum.Week}}">Semana</mat-button-toggle>
+					<mat-button-toggle value="{{calendarViewEnum.Day}}">Día</mat-button-toggle>
+				</mat-button-toggle-group>
 			</div>
-		</div>
-		<mwl-calendar-week-view [viewDate]="viewDate"
-								[hourSegmentTemplate]="weekViewHourSegmentTemplate"
-								[dayStartHour]="8" [dayEndHour]="18"
-								[hourSegments]="1"
-		>
-		</mwl-calendar-week-view>
-	</section>
 
-	<router-outlet></router-outlet>
+		</div>
+
+		<div [ngSwitch]="view">
+
+			<mwl-calendar-week-view [viewDate]="viewDate"
+									*ngSwitchCase="'week'"
+									[hourSegmentTemplate]="weekViewHourSegmentTemplate"
+									[dayStartHour]="8" [dayEndHour]="18"
+									[hourSegments]="1"
+			>
+			</mwl-calendar-week-view>
+
+			<mwl-calendar-day-view class="title-black"
+								   *ngSwitchCase="'day'"
+								   [viewDate]="viewDate"
+								   [hourSegments]="1"
+								   [hourSegmentTemplate]="weekViewHourSegmentTemplate"
+								   [dayStartHour]="8" [dayEndHour]="18"
+			>
+			</mwl-calendar-day-view>
+
+		</div>
+	</section>
 
 </app-content>

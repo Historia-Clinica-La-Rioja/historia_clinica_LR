@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CalendarDateFormatter, DateFormatterParams } from 'angular-calendar';
-import { dateToMoment } from '@core/utils/moment.utils';
+import { DateFormat, dateToMoment, momentFormat } from '@core/utils/moment.utils';
 
 @Injectable()
 export class CustomDateFormatter extends CalendarDateFormatter {
@@ -17,6 +17,10 @@ export class CustomDateFormatter extends CalendarDateFormatter {
 		const end = dateToMoment(date).endOf('isoWeek').format('LL');
 
 		return `${start} - ${end}`;
+	}
+
+	public dayViewTitle({date, locale}: DateFormatterParams): string {
+		return momentFormat(dateToMoment(date), DateFormat.HUMAN)
 	}
 
 }

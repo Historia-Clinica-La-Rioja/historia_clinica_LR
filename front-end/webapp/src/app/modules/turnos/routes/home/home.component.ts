@@ -10,6 +10,7 @@ import { DiariesService } from '@api-rest/services/diaries.service';
 import { DiaryOpeningHoursService } from '@api-rest/services/diary-opening-hours.service';
 import { ContextService } from '@core/services/context.service';
 import { MatOptionSelectionChange } from '@angular/material/core';
+import { CalendarView, DAYS_OF_WEEK } from 'angular-calendar';
 
 @Component({
 	selector: 'app-home',
@@ -18,6 +19,9 @@ import { MatOptionSelectionChange } from '@angular/material/core';
 })
 export class HomeComponent implements OnInit {
 
+	readonly MONDAY = DAYS_OF_WEEK.MONDAY;
+	readonly calendarViewEnum = CalendarView;
+	view: CalendarView = CalendarView.Week;
 	viewDate: Date = new Date();
 
 	form: FormGroup;

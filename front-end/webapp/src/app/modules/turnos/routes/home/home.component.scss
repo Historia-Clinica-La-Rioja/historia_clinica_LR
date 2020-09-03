@@ -22,3 +22,44 @@ form {
 		}
 	}
 }
+
+.calendar {
+	background-color: white;
+
+	::ng-deep {
+		.toggle-view {
+			.mat-button-toggle-checked.mat-button-toggle-appearance-standard {
+				background-color: #0062CD;
+			}
+
+			.mat-button-toggle-appearance-standard {
+				background-color: #007AFF;
+				color: white;
+			}
+		}
+
+		.navigation.mat-button-toggle-appearance-standard {
+			background-color: #007AFF;
+			color: white;
+		}
+
+
+		.today.mat-button-toggle-appearance-standard {
+			background-color: white;
+			color: #747C85;
+		}
+
+	}
+
+	$border-color-calendar: #e1e1e1;
+
+	.header {
+		padding: 15px;
+		border: {
+			width: 1px;
+			style: solid;
+			color: $border-color-calendar;
+			bottom: none;
+		}
+	}
+}

@@ -12,6 +12,7 @@ export enum DateFormat {
 	YEAR_FULL = 'YYYY',
 	MONTH_FULL = 'MM',
 	HOUR_MINUTE = 'HH:mm',
+	HOUR_MINUTE_12 = 'hh:mm',
 	HOUR_MINUTE_SECONDS = 'HH:mm:ss',
 }
 
