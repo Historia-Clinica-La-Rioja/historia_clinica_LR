@@ -1,18 +1,23 @@
 @import "../../../../../../../assets/styles/mixins";
+@import "../../../../../../../assets/styles/mat-mixins";
 
-.mat-radio-button {
-    @include form-radio-button;
+form {
+
+	@include mat-form-field-background-white;
+
+	.form-row {
+		@include form-row;
+	}
+
+	.mat-radio-button {
+		@include form-radio-button;
+	}
+
+	mat-form-field {
+		margin-right: 20px;
+	}
 }
 
-.form-row{
-	@include form-row;
-}
-
-
-mat-form-field{
-    margin-right: 20px;
-}
-
-.text-danger{
-	color:red;
+.text-danger {
+	color: red;
 }
