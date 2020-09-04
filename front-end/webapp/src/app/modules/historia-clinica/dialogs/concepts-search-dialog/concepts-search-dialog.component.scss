@@ -4,6 +4,7 @@ div.spinner {
 	@include centered-spinner;
 }
 
-div.mat-h1::first-letter {
-	text-transform: uppercase;
+span.warning{
+	font-style: italic;
+	color: grey;
 }

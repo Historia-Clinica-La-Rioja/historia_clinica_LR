@@ -388,7 +388,9 @@
 		},
 		"snomed-search": {
 			"modal": {
-				"SUBTITLE": "Resultados de búsqueda para: "
+				"TITLE": "Búsqueda de conceptos",
+				"SUBTITLE": "Se encontraron {{resultsLength}} resultados en la búsqueda para: ",
+				"LIMIT_WARNING": "Si no se encuentra el resultado esperado, por favor refine la búsqueda"
 			}
 		},
 		"discharge": {

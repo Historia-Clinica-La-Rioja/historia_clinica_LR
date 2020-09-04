@@ -78,7 +78,7 @@ export class AddInmunizationComponent implements OnInit {
 			this.snowstormService.getSNOMEDConcepts({ term: searchValue, ecl: this.SEMANTICS_CONFIG.vaccine })
 				.subscribe(
 					results => {
-						this.conceptsResultsTable = this.buildConceptsResultsTable(results);
+						this.conceptsResultsTable = this.buildConceptsResultsTable(results.items);
 						this.searching = false;
 					}
 				);

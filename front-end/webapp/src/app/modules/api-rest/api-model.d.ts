@@ -886,6 +886,11 @@ export interface SnomedDto extends Serializable {
     pt: string;
 }
 
+export interface SnomedResponseDto extends Serializable {
+    items: SnomedDto[];
+    total: number;
+}
+
 export interface TimeRangeDto {
     from: string;
     to: string;

@@ -79,7 +79,7 @@ export class AddAllergyComponent implements OnInit {
 			this.snowstormService.getSNOMEDConcepts({term: searchValue, ecl: this.SEMANTICS_CONFIG.allergy})
 				.subscribe(
 					results => {
-						this.conceptsResultsTable = this.buildConceptsResultsTable(results);
+						this.conceptsResultsTable = this.buildConceptsResultsTable(results.items);
 						this.searching = false;
 					}
 				);

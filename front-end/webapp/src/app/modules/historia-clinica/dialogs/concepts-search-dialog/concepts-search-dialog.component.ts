@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
 import { SnomedDto } from '@api-rest/api-model';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { SnowstormService } from '@api-rest/services/snowstorm.service';
+import { SnowstormService, SNOMED_RESULTS_LIMIT } from '@api-rest/services/snowstorm.service';
 import { SnomedSemanticSearch } from '../../services/snomed.service';
 
 @Component({
@@ -13,6 +13,8 @@ import { SnomedSemanticSearch } from '../../services/snomed.service';
 export class ConceptsSearchDialogComponent implements OnInit {
 
 	conceptsResultsTable: TableModel<any>;
+	conceptsResultsLength: number;
+	readonly SNOMED_RESULTS_LIMIT : number = +SNOMED_RESULTS_LIMIT;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: SnomedSemanticSearch,
@@ -22,7 +24,10 @@ export class ConceptsSearchDialogComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.snowstormService.getSNOMEDConcepts({ term: this.data.searchValue, ecl: this.data.eclFilter }).subscribe(
-			results => this.conceptsResultsTable = this.buildConceptsResultsTable(results)
+			result => {
+				this.conceptsResultsTable = this.buildConceptsResultsTable(result.items);
+				this.conceptsResultsLength = result.total;
+			}
 		);
 	}
 
