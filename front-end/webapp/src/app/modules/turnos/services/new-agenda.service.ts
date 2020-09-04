@@ -7,8 +7,8 @@ import { addDays, addMinutes, endOfWeek } from 'date-fns';
 import { MEDICAL_ATTENTION } from '../constants/descriptions';
 import { NewAttentionComponent } from '../dialogs/new-attention/new-attention.component';
 import { MatDialog } from '@angular/material/dialog';
-import { Moment } from 'moment';
-import { buildFullDate, dateToMoment } from '@core/utils/moment.utils';
+
+import { MINUTES_IN_HOUR } from '../constants/appointment';
 
 function floorToNearest(amount: number, precision: number) {
 	return Math.floor(amount / precision) * precision;
@@ -17,8 +17,6 @@ function floorToNearest(amount: number, precision: number) {
 function ceilToNearest(amount: number, precision: number) {
 	return Math.ceil(amount / precision) * precision;
 }
-
-const MINUTES_IN_HOUR = 60;
 
 const colors: any = {
 	blue: {
@@ -233,14 +231,5 @@ export class NewAgendaService {
 
 	public deleteUneditableEvents(): void {
 		this.events = this.events.filter((event: CalendarEvent) => event.actions);
-	}
-
-	public getNumberOfOverturnsAssigned(day: Moment, from: string, to: string): number {
-
-		const openingHourStart = buildFullDate(from, day);
-		const openingHourEnd = buildFullDate(to, day);
-
-		return this.events.filter
-			(event => event.meta.overturn && dateToMoment(event.start).isBetween(openingHourStart, openingHourEnd, null, '[)')).length;
 	}
 }

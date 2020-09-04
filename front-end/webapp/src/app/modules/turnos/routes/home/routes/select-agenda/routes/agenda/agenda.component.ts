@@ -1,16 +1,15 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AppointmentListDto, CompleteDiaryDto, DiaryOpeningHoursDto } from '@api-rest/api-model';
-import { CalendarWeekViewBeforeRenderEvent } from 'angular-calendar';
+import { CalendarWeekViewBeforeRenderEvent, DAYS_OF_WEEK } from 'angular-calendar';
 import {
 	buildFullDate,
 	DateFormat,
 	dateToMoment,
+	dateToMomentTimeZone,
 	momentParseDate,
 	momentParseTime,
-	newMoment,
-	dateToMomentTimeZone
+	newMoment
 } from '@core/utils/moment.utils';
-import { NewAgendaService } from '../../../../../../services/new-agenda.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DiaryOpeningHoursService } from '@api-rest/services/diary-opening-hours.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
@@ -22,6 +21,7 @@ import { CalendarEvent, WeekViewHourSegment } from 'calendar-utils';
 import { MEDICAL_ATTENTION } from '../../../../../../constants/descriptions';
 import { AppointmentComponent } from '../../../../../../dialogs/appointment/appointment.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { MINUTES_IN_HOUR } from '../../../../../../constants/appointment';
 
 const AGENDA_PROGRAMADA_CLASS = 'bg-green';
 const AGENDA_ESPONTANEA_CLASS = 'bg-blue';
@@ -38,8 +38,12 @@ const enum COLORES {
 })
 export class AgendaComponent implements OnInit {
 
-	newAgendaService: NewAgendaService;
+	readonly MONDAY = DAYS_OF_WEEK.MONDAY;
+
+	hourSegments: number;
 	agenda: CompleteDiaryDto;
+	events: CalendarEvent[] = [];
+
 	viewDate: Date = new Date();
 	loading = false;
 	dayStartHour: number;
@@ -55,7 +59,6 @@ export class AgendaComponent implements OnInit {
 		private readonly route: ActivatedRoute,
 		private snackBarService: SnackBarService,
 	) {
-		this.newAgendaService = new NewAgendaService(this.dialog, this.cdr);
 	}
 
 	ngOnInit(): void {
@@ -110,7 +113,7 @@ export class AgendaComponent implements OnInit {
 		if (this.getOpeningHoursId(event.date)) {
 			const clickedDate: Moment = dateToMomentTimeZone(event.date);
 			const openingHourId: number = this.getOpeningHoursId(event.date);
-			const addingOverturn = this.existTurnAt(event.date);
+			const addingOverturn = this.existsAppointmentAt(event.date);
 			const diaryOpeningHourDto: DiaryOpeningHoursDto =
 				this.diaryOpeningHours.find(diaryOpeningHour => diaryOpeningHour.openingHours.id === openingHourId);
 			const allOverturnsAssigned = this.allOverturnsAssignedForDiaryOpeningHour(diaryOpeningHourDto, clickedDate);
@@ -139,13 +142,13 @@ export class AgendaComponent implements OnInit {
 		}
 	}
 
-	private existTurnAt(date: Date): boolean {
-		return this.newAgendaService.getEvents().filter(appointment => appointment.start.getTime() === date.getTime()).length > 0;
+	private existsAppointmentAt(date: Date): boolean {
+		return this.events.filter(appointment => appointment.start.getTime() === date.getTime()).length > 0;
 	}
 
 	private allOverturnsAssignedForDiaryOpeningHour(diaryOpeningHourDto: DiaryOpeningHoursDto, clickedDate: Moment): boolean {
 		const numberOfOverturnsAssigned: number =
-			this.newAgendaService.getNumberOfOverturnsAssigned(clickedDate, diaryOpeningHourDto.openingHours.from, diaryOpeningHourDto.openingHours.to);
+			this.getNumberOfOverturnsAssigned(clickedDate, diaryOpeningHourDto.openingHours.from, diaryOpeningHourDto.openingHours.to);
 		return numberOfOverturnsAssigned === diaryOpeningHourDto.overturnCount;
 	}
 
@@ -155,7 +158,7 @@ export class AgendaComponent implements OnInit {
 		delete this.dayStartHour;
 		this.agenda = agenda;
 		this.viewDate = this._getViewDate();
-		this.newAgendaService.setAppointmentDuration(this.agenda.appointmentDuration);
+		this.hourSegments = MINUTES_IN_HOUR / agenda.appointmentDuration;
 
 		this.diaryOpeningHoursService.getMany([this.agenda.id])
 			.subscribe((openingHours: DiaryOpeningHoursDto[]) => {
@@ -176,7 +179,8 @@ export class AgendaComponent implements OnInit {
 						const to = momentParseTime(from).add(this.agenda.appointmentDuration, 'minutes').format(DateFormat.HOUR_MINUTE);
 						return toCalendarEvent(from, to, momentParseDate(appointment.date), appointment);
 					});
-				this.newAgendaService.setEvents(appointmentsCalendarEvents);
+				this.events = appointmentsCalendarEvents;
+				this.cdr.detectChanges();
 			});
 	}
 
@@ -236,6 +240,15 @@ export class AgendaComponent implements OnInit {
 				this.loadAppointments();
 			}
 		});
+	}
+
+	private getNumberOfOverturnsAssigned(day: Moment, from: string, to: string): number {
+
+		const openingHourStart = buildFullDate(from, day);
+		const openingHourEnd = buildFullDate(to, day);
+
+		return this.events.filter
+		(event => event.meta.overturn && dateToMoment(event.start).isBetween(openingHourStart, openingHourEnd, null, '[)')).length;
 	}
 
 }

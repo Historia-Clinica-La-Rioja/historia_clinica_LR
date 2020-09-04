@@ -39,15 +39,15 @@
 			</div>
 
 			<div>
-				<h2>{{ viewDate | calendarDate:('weekViewTitle'): undefined : newAgendaService.getWeekStartsOn() }}</h2>
+				<h2>{{ viewDate | calendarDate:('weekViewTitle'): undefined : MONDAY }}</h2>
 			</div>
 		</div>
 		<mwl-calendar-week-view [viewDate]="viewDate"
-								[events]="newAgendaService.getEvents()"
+								[events]="events"
 								[dayStartHour]="dayStartHour" [dayEndHour]="dayEndHour"
 								[hourSegmentTemplate]="weekViewHourSegmentTemplate"
-								[hourSegments]="newAgendaService.getMinutesInHour() / newAgendaService.getAppointmentDuration()"
-								[weekStartsOn]="newAgendaService.getWeekStartsOn()"
+								[hourSegments]="hourSegments"
+								[weekStartsOn]="MONDAY"
 								(beforeViewRender)="loadCalendar($event)" (hourSegmentClicked)="onClickedSegment($event)"
 								(eventClicked)="viewAppointment($event.event)"
 		>

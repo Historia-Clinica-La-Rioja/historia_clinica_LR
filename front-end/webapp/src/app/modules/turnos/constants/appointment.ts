@@ -62,3 +62,6 @@ export function getAppointmentState(id: APPOINTMENT_STATES_ID): AppointmentState
 }
 
 export const MAX_LENGTH_MOTIVO: number = 255;
+
+export const MINUTES_IN_HOUR = 60;
+
