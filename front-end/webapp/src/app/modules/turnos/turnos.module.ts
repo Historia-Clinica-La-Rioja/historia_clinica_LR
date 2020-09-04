@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { TurnosRoutingModule } from './turnos-routing.module';
 import { HomeComponent } from './routes/home/home.component';
 import { CoreModule } from '@core/core.module';
-import { NewAgendaComponent } from './routes/new-agenda/new-agenda.component';
+import { AgendaSetupComponent } from './routes/agenda-setup/agenda-setup.component';
 import { NewAttentionComponent } from './dialogs/new-attention/new-attention.component';
 import { PresentationModule } from '@presentation/presentation.module';
 import { CalendarDateFormatter, CalendarModule, DateAdapter } from 'angular-calendar';
@@ -21,7 +21,7 @@ import { CancelAppointmentComponent } from './dialogs/cancel-appointment/cancel-
 @NgModule({
 	declarations: [
 		HomeComponent,
-	 	NewAgendaComponent,
+	 	AgendaSetupComponent,
 	 	NewAttentionComponent,
 	 	SelectAgendaComponent,
 	 	AgendaComponent,

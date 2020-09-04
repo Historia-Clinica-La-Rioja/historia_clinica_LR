@@ -9,7 +9,7 @@
 			},
 			"SELECT_AGENDA": "Seleccione una agenda"
 		},
-		"new-agenda": {
+		"agenda-setup": {
 			"NEW_AGENDA": "Nueva agenda",
 			"EDIT_AGENDA": "Editar agenda",
 			"CONFIRM_NEW_AGENDA": "¿Desea confirmar la creación de esta nueva agenda?",

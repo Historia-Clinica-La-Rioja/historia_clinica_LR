@@ -1,12 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './routes/home/home.component';
-import { NewAgendaComponent } from './routes/new-agenda/new-agenda.component';
+import { AgendaSetupComponent } from './routes/agenda-setup/agenda-setup.component';
 import { ERole } from '@api-rest/api-model';
 import { RoleGuard } from '@core/guards/RoleGuard';
-
-import { mockRouters } from '@presentation/utils/mock-routers.utils';
-import { MOCKS_TURNOS } from './constants/mock-routers';
 import { SelectAgendaComponent } from './routes/home/routes/select-agenda/select-agenda.component';
 import { AgendaComponent } from './routes/home/routes/select-agenda/routes/agenda/agenda.component';
 
@@ -42,13 +39,13 @@ const routes: Routes = [
 			},
 			{
 				path: 'nueva-agenda',
-				component: NewAgendaComponent,
+				component: AgendaSetupComponent,
 				canActivate: [RoleGuard],
 				data: {allowedRoles: [ERole.ADMINISTRADOR_AGENDA]}
 			},
 			{
 				path: 'profesional/:profesionalId/agenda/:agendaId/editar',
-				component: NewAgendaComponent,
+				component: AgendaSetupComponent,
 				canActivate: [RoleGuard],
 				data: { allowedRoles: [ERole.ADMINISTRADOR_AGENDA] , editMode: true}
 			},

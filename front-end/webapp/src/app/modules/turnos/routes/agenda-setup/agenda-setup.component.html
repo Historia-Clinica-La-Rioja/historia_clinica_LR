@@ -1,6 +1,6 @@
 <app-content width="full">
 	<section class="page">
-		<h2 class="page-title" [translate]="editMode ? 'turnos.new-agenda.EDIT_AGENDA' : 'turnos.new-agenda.NEW_AGENDA' "></h2>
+		<h2 class="page-title" [translate]="editMode ? 'turnos.agenda-setup.EDIT_AGENDA' : 'turnos.agenda-setup.NEW_AGENDA' "></h2>
 		<br>
 		<form [formGroup]="form" (ngSubmit)="save()">
 			<section>
@@ -119,7 +119,7 @@
 					<mat-form-field appearance="outline">
 						<mat-select id="appointmentDuration" name="appointmentDuration"
 							formControlName="appointmentDuration" placeholder="{{'pacientes.form.SELECT' | translate}}"
-							(selectionChange)="newAgendaService.setAppointmentDuration(form.getRawValue().appointmentDuration)">
+							(selectionChange)="agendaHorarioService.setAppointmentDuration(form.getRawValue().appointmentDuration)">
 							<mat-option *ngFor="let appointmentDuration of appointmentDurations"
 								[value]="appointmentDuration.id">
 								{{appointmentDuration.description}}
@@ -142,7 +142,7 @@
 					<div #segmentElement class="cal-hour-segment" [style.height.px]="segmentHeight"
 						[class.cal-hour-start]="segment.isStart" [class.cal-after-hour-start]="!segment.isStart"
 						[ngClass]="segment.cssClass"
-						(mousedown)="newAgendaService.startDragToCreate(segment, segmentElement)">
+						(mousedown)="agendaHorarioService.startDragToCreate(segment, segmentElement)">
 						<div class="cal-time" *ngIf="isTimeLabel">
 							{{ segment.date | calendarDate:'weekViewHour':locale }}
 						</div>
@@ -159,11 +159,11 @@
 					</div>
 				</ng-template>
 
-				<mwl-calendar-week-view [viewDate]="newAgendaService.getViewDate()"
-					[events]="newAgendaService.getEvents()" [hourSegmentTemplate]="weekViewHourSegmentTemplate"
-					[headerTemplate]="headerTemplate" [dayStartHour]="openingTime" [dayEndHour]="closingTime"
-										[hourSegments]="newAgendaService.getMinutesInHour() / form.getRawValue().appointmentDuration"
-										[weekStartsOn]="newAgendaService.getWeekStartsOn()">
+				<mwl-calendar-week-view [viewDate]="TODAY"
+										[events]="agendaHorarioService.getEvents()" [hourSegmentTemplate]="weekViewHourSegmentTemplate"
+										[headerTemplate]="headerTemplate" [dayStartHour]="openingTime" [dayEndHour]="closingTime"
+										[hourSegments]="hourSegments"
+										[weekStartsOn]="MONDAY">
 				</mwl-calendar-week-view>
 			</section>
 			<mat-card *ngIf="errors.length">

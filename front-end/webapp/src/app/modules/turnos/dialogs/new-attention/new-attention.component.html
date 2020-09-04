@@ -1,5 +1,5 @@
 <div mat-dialog-title>
-	<div class="mat-h2" translate="turnos.new-agenda.dialog.TITLE"></div>
+	<div class="mat-h2" translate="turnos.agenda-setup.dialog.TITLE"></div>
 </div>
 <div>{{data.start | dayTimeRange: data.end }}</div>
 
@@ -7,7 +7,7 @@
 	<div fxLayout="column">
 		<div>
 			<mat-form-field appearance="outline">
-				<mat-label [translate]="'turnos.new-agenda.MEDICAL_ATTENTION_TYPE'"></mat-label>
+				<mat-label [translate]="'turnos.agenda-setup.MEDICAL_ATTENTION_TYPE'"></mat-label>
 				<mat-select formControlName="medicalAttentionType" name="medical_attention_type" id="medical_attention_type"
 					(selectionChange)="onSelectionChanged()">
 					<mat-option *ngFor="let medicalAttentionType of medicalAttentionTypes"
@@ -22,7 +22,7 @@
 	</div>
 
 	<div fxLayout="column" *ngIf="form?.value?.medicalAttentionType?.description != SPONTANEOUS ">
-		<div translate="turnos.new-agenda.OVERTURN_COUNT"></div>
+		<div translate="turnos.agenda-setup.OVERTURN_COUNT"></div>
 		<div>
 			<mat-form-field floatLabel="never" appearance="outline">
 				<input id="overTurnCount" name="overTurnCount" formControlName="overTurnCount" matInput placeholder="0"

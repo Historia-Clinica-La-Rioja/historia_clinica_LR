@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, ElementRef, OnInit } from '@angular/core'
 import { SectorService } from '@api-rest/services/sector.service';
 import { ClinicalSpecialtySectorService } from '@api-rest/services/clinical-specialty-sector.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { scrollIntoError, processErrors } from '@core/utils/form.utils';
+import { processErrors, scrollIntoError } from '@core/utils/form.utils';
 import { ConfirmDialogComponent } from '@core/dialogs/confirm-dialog/confirm-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -10,46 +10,50 @@ import { DoctorsOfficeService } from '@api-rest/services/doctors-office.service'
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
 import { ContextService } from '@core/services/context.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { APPOINTMENT_DURATIONS } from '../../constants/appointment';
-import { NewAgendaService } from '../../services/new-agenda.service';
-import { momentFormat, DateFormat, momentParseDate, currentWeek, dateToMoment } from '@core/utils/moment.utils';
+import { APPOINTMENT_DURATIONS, MINUTES_IN_HOUR } from '../../constants/appointment';
+import { AgendaHorarioService } from '../../services/agenda-horario.service';
+import { currentWeek, DateFormat, momentFormat, momentParseDate, momentParseTime } from '@core/utils/moment.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { DoctorsOfficeDto, ProfessionalDto, DiaryADto, DiaryOpeningHoursDto, OccupationDto, TimeRangeDto, DiaryDto, CompleteDiaryDto } from '@api-rest/api-model';
-import * as moment from 'moment';
-import { CalendarEvent } from 'angular-calendar';
+import { CompleteDiaryDto, DiaryADto, DiaryDto, DoctorsOfficeDto, OccupationDto, ProfessionalDto } from '@api-rest/api-model';
+import { DAYS_OF_WEEK } from 'angular-calendar';
 import { DiaryOpeningHoursService } from '@api-rest/services/diary-opening-hours.service';
 import { DiaryService } from '@api-rest/services/diary.service';
-import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 const ROUTE_APPOINTMENT = 'turnos';
 
 @Component({
-	selector: 'app-new-agenda',
-	templateUrl: './new-agenda.component.html',
-	styleUrls: ['./new-agenda.component.scss']
+	selector: 'app-agenda-setup',
+	templateUrl: './agenda-setup.component.html',
+	styleUrls: ['./agenda-setup.component.scss']
 })
-export class NewAgendaComponent implements OnInit {
+export class AgendaSetupComponent implements OnInit {
 
-	public appointmentDurations = APPOINTMENT_DURATIONS;
-	public appointmentManagement = false;
-	public autoRenew = false;
-	public closingTime: number;
-	public defaultDoctorOffice: DoctorsOfficeDto;
-	public doctorOffices: DoctorsOfficeDto[];
-	public editMode = false;
-	public errors: string[] = [];
-	public form: FormGroup;
-	public holidayWork = false;
-	public minDate = new Date();
-	public openingTime: number;
-	public professionals;
-	public sectors;
-	public specialties;
+	readonly MONDAY = DAYS_OF_WEEK.MONDAY;
+	readonly TODAY: Date = new Date();
+
+	appointmentDurations = APPOINTMENT_DURATIONS;
+	appointmentManagement = false;
+	autoRenew = false;
+	closingTime: number;
+	defaultDoctorOffice: DoctorsOfficeDto;
+	doctorOffices: DoctorsOfficeDto[];
+	editMode = false;
+	errors: string[] = [];
+	form: FormGroup;
+	holidayWork = false;
+	hourSegments: number;
+	minDate = new Date();
+	openingTime: number;
+	professionals;
+	sectors;
+	specialties;
+	agendaHorarioService: AgendaHorarioService;
+
 
 	private editingDiaryId = null;
 	private readonly routePrefix;
 	private mappedCurrentWeek = {};
-	newAgendaService: NewAgendaService;
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -70,7 +74,7 @@ export class NewAgendaComponent implements OnInit {
 
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
-		this.newAgendaService = new NewAgendaService(this.dialog, this.cdr);
+		this.agendaHorarioService = new AgendaHorarioService(this.dialog, this.cdr, this.TODAY, this.MONDAY);
 	}
 
 	ngOnInit(): void {
@@ -88,6 +92,9 @@ export class NewAgendaComponent implements OnInit {
 			endDate: [null, [Validators.required]],
 			appointmentDuration: [null, [Validators.required]],
 		});
+
+		this.form.controls.appointmentDuration.valueChanges
+			.subscribe(newDuration => this.hourSegments = MINUTES_IN_HOUR / newDuration);
 
 		this.route.data.subscribe(data => {
 			if (data.editMode) {
@@ -134,7 +141,7 @@ export class NewAgendaComponent implements OnInit {
 		this.form.controls.startDate.setValue(momentParseDate(diary.startDate));
 		this.form.controls.endDate.setValue(momentParseDate(diary.endDate));
 		this.form.controls.appointmentDuration.setValue(diary.appointmentDuration);
-		this.newAgendaService.setAppointmentDuration(diary.appointmentDuration);
+		this.agendaHorarioService.setAppointmentDuration(diary.appointmentDuration);
 
 		this.appointmentManagement = diary.professionalAssignShift;
 		this.autoRenew = diary.automaticRenewal;
@@ -142,35 +149,7 @@ export class NewAgendaComponent implements OnInit {
 
 		this.setSpecialties(diary.sectorId);
 
-		const diaryOpeningHours: DiaryOpeningHoursDto[] = diary.diaryOpeningHours;
-		diaryOpeningHours.forEach((diaryOpeningHour: DiaryOpeningHoursDto) => {
-			const calendarEvent: CalendarEvent = this.toEditableCalendarEvents(diaryOpeningHour);
-			this.newAgendaService.addEvents([calendarEvent]);
-		});
-	}
-
-
-	private toEditableCalendarEvents(diaryOpeningHour: DiaryOpeningHoursDto): CalendarEvent {
-		return {
-			start: this.getFullDate(diaryOpeningHour.openingHours.dayWeekId, diaryOpeningHour.openingHours.from),
-			end: this.getFullDate(diaryOpeningHour.openingHours.dayWeekId, diaryOpeningHour.openingHours.to),
-			title: this.newAgendaService.getMedicalAttentionTypeText(diaryOpeningHour.medicalAttentionTypeId)
-				+ this.newAgendaService.getOverturnsText(diaryOpeningHour.overturnCount),
-			color: this.newAgendaService.getMedicalAttentionColor(diaryOpeningHour.medicalAttentionTypeId),
-			actions: this.newAgendaService.getActions(),
-			meta: {
-				medicalAttentionType: { id: diaryOpeningHour.medicalAttentionTypeId },
-				overturnCount: diaryOpeningHour.overturnCount
-			}
-		};
-	}
-
-	private getFullDate(dayNumber: number, time: string): Date {
-		let dayMoment = this.mappedCurrentWeek[dayNumber].clone();
-		const dayTime = moment(time, 'HH:mm:ss');
-		dayMoment = dayMoment.hour(dayTime.hours());
-		dayMoment = dayMoment.minute(dayTime.minutes());
-		return new Date(dayMoment);
+		this.agendaHorarioService.setDiaryOpeningHours(diary.diaryOpeningHours);
 	}
 
 	private disableNotEditableControls(): void {
@@ -209,9 +188,8 @@ export class NewAgendaComponent implements OnInit {
 	private setDoctorOfficeRangeTime() {
 		this.openingTime = getHours(this.form.getRawValue().doctorOffice.openingTime);
 		this.closingTime = getHours(this.form.getRawValue().doctorOffice.closingTime) - 1 ;
-		this.newAgendaService.setClosingTime(this.closingTime);
 		function getHours(time: string): number {
-			const hours = moment(time, 'HH:mm:ss');
+			const hours = momentParseTime(time);
 			return Number(hours.hours());
 		}
 	}
@@ -241,7 +219,7 @@ export class NewAgendaComponent implements OnInit {
 	}
 
 	openDialog(): void {
-		const confirmMessage = this.editMode ? 'turnos.new-agenda.CONFIRM_EDIT_AGENDA' : 'turnos.new-agenda.CONFIRM_NEW_AGENDA';
+		const confirmMessage = this.editMode ? 'turnos.agenda-setup.CONFIRM_EDIT_AGENDA' : 'turnos.agenda-setup.CONFIRM_NEW_AGENDA';
 		this.translator.get(confirmMessage).subscribe((res: string) => {
 			const dialogRef = this.dialog.open(ConfirmDialogComponent, {
 				width: '450px',
@@ -256,13 +234,13 @@ export class NewAgendaComponent implements OnInit {
 				if (confirmed) {
 					this.errors = [];
 					if (this.editMode) {
-						const agendaEdit: DiaryDto = this.addAgendaId(this.mapEventsToAgendaDto());
+						const agendaEdit: DiaryDto = this.addAgendaId(this.buildDiaryADto());
 						this.diaryService.updateDiary(agendaEdit)
 							.subscribe((agendaId: number) => {
 								this.processSuccess(agendaId);
 							}, error => processErrors(error, (msg) => this.errors.push(msg)));
 					} else {
-						const agenda: DiaryADto = this.mapEventsToAgendaDto();
+						const agenda: DiaryADto = this.buildDiaryADto();
 						this.diaryService.addDiary(agenda)
 							.subscribe((agendaId: number) => {
 								this.processSuccess(agendaId);
@@ -273,9 +251,24 @@ export class NewAgendaComponent implements OnInit {
 		});
 	}
 
+	setAllWeeklyDoctorsOfficeOcupation(): void {
+		const formValue = this.form.getRawValue();
+		if (!formValue.doctorOffice || !formValue.startDate || !formValue.endDate) {
+			return;
+		}
+
+		const startDate = momentFormat(formValue.startDate, DateFormat.API_DATE);
+		const endDate = momentFormat(formValue.endDate, DateFormat.API_DATE);
+
+		const ocupations$: Observable<OccupationDto[]> = this.diaryOpeningHoursService
+			.getAllWeeklyDoctorsOfficeOcupation(formValue.doctorOffice.id, this.editingDiaryId, startDate, endDate);
+
+		this.agendaHorarioService.setWeeklyDoctorsOfficeOcupation(ocupations$);
+	}
+
 	private processSuccess(agendaId: number) {
 		if (agendaId) {
-			this.snackBarService.showSuccess('turnos.new-agenda.messages.SUCCESS');
+			this.snackBarService.showSuccess('turnos.agenda-setup.messages.SUCCESS');
 			const url = `${this.routePrefix}${ROUTE_APPOINTMENT}`;
 			this.router.navigate([url]);
 		}
@@ -286,7 +279,7 @@ export class NewAgendaComponent implements OnInit {
 		return diary;
 	}
 
-	private mapEventsToAgendaDto(): DiaryADto {
+	private buildDiaryADto(): DiaryADto {
 		return {
 
 			appointmentDuration: this.form.getRawValue().appointmentDuration,
@@ -300,68 +293,7 @@ export class NewAgendaComponent implements OnInit {
 			includeHoliday: this.holidayWork,
 			professionalAssignShift: this.appointmentManagement,
 
-			diaryOpeningHours: this.mapDiaryOpeningHours()
+			diaryOpeningHours: this.agendaHorarioService.getDiaryOpeningHours()
 		};
-	}
-
-	private mapDiaryOpeningHours(): DiaryOpeningHoursDto[] {
-		const diaryOpeningHours: DiaryOpeningHoursDto[] = [];
-		this.newAgendaService.getEvents()
-			.filter(event => event.actions)
-			.forEach(event => diaryOpeningHours.push(toDiaryOpeningHoursDto(event)));
-		return diaryOpeningHours;
-
-
-		function toDiaryOpeningHoursDto(event: CalendarEvent): DiaryOpeningHoursDto {
-			return {
-				openingHours: {
-					dayWeekId: event.start.getDay(),
-					from: momentFormat(dateToMoment(event.start), DateFormat.HOUR_MINUTE_SECONDS),
-					to: momentFormat(dateToMoment(event.end), DateFormat.HOUR_MINUTE_SECONDS),
-				},
-				medicalAttentionTypeId: event.meta.medicalAttentionType.id,
-				overturnCount: event.meta.overTurnCount
-			};
-		}
-	}
-
-	public setAppointmentDurationToAgendaService() {
-		this.newAgendaService.setAppointmentDuration(this.form.getRawValue().appointmentDuration);
-	}
-
-	public setAllWeeklyDoctorsOfficeOcupation(): void {
-		const formValue = this.form.getRawValue();
-		if (!formValue.doctorOffice || !formValue.startDate || !formValue.endDate) {
-			return;
-		}
-
-		const startDate = momentFormat(formValue.startDate, DateFormat.API_DATE);
-		const endDate = momentFormat(formValue.endDate, DateFormat.API_DATE);
-
-		this.diaryOpeningHoursService.getAllWeeklyDoctorsOfficeOcupation(formValue.doctorOffice.id, this.editingDiaryId, startDate, endDate)
-			.pipe(
-				map((ocupations: OccupationDto[]): CalendarEvent[] => {
-					let doctorsOfficeEvents: CalendarEvent[] = [];
-					ocupations.forEach(ocupation => {
-						const events: CalendarEvent[] = ocupation.timeRanges
-							.map((timeRange: TimeRangeDto) => {
-								return {
-									start: this.getFullDate(ocupation.id, timeRange.from),
-									end: this.getFullDate(ocupation.id, timeRange.to),
-									title: 'Horario ocupado',
-									color: {
-										primary: '#C8C8C8',
-										secondary: '#C8C8C8'
-									}
-								};
-							});
-						doctorsOfficeEvents = doctorsOfficeEvents.concat(events);
-					});
-					return doctorsOfficeEvents;
-				})
-			).subscribe((doctorsOfficeEvents: CalendarEvent[]) => {
-				this.newAgendaService.deleteUneditableEvents();
-				this.newAgendaService.addEvents(doctorsOfficeEvents);
-			});
 	}
 }
