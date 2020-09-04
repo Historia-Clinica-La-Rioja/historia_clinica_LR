@@ -119,11 +119,13 @@ export class NewAgendaService {
 		if (daysDiff > 0) {
 			return;
 		}
-
-		let newEnd = addDays(addMinutes(segment.date, minutesDiff), daysDiff);
+		const newEnd = addDays(addMinutes(segment.date, minutesDiff), daysDiff);
+		if (newEnd.getDay() !== dragToSelectEvent.start.getDay()){
+			return;
+		}
 		const endOfView = endOfWeek(this.viewDate, { weekStartsOn: this.weekStartsOn });
-		if (newEnd.getDay() !== dragToSelectEvent.start.getDay()) {
-			newEnd.setHours(0);
+		if ( newEnd.getHours()>=23 ) {
+			newEnd.setHours(23);
 			newEnd.setMinutes(0);
 			newEnd.setSeconds(0);
 		}
