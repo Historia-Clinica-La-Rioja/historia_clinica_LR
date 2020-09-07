@@ -101,7 +101,7 @@
 					"ANTECEDENTES_FAMILIARES": "Antecedentes familiares",
 					"FECHA": "Fecha de registro"
 				},
-				"datos-antropometricos":{
+				"datos-antropometricos": {
 					"TITLE": "Datos antropométricos",
 					"BLOOD_TYPE": "Grupo y factor sanguíneo",
 					"HEIGHT": "Talla (cm)",
@@ -136,7 +136,9 @@
 				"CONFIRMACION_POPUP": "¿Está seguro de resolver el problema sin generar una nueva consulta ambulatoria?",
 				"BOTON_CONFIRMAR_POPUP": "Confirmar",
 				"SUCCESS_CONFIRMAR_POPUP": "El problema ha sido resuelto exitosamente",
-				"ERROR_CONFIRMAR_POPUP": "Ocurrió un error al resolver el problema"
+				"ERROR_CONFIRMAR_POPUP": "Ocurrió un error al resolver el problema",
+				"HISTORICAL_TITLE": "Histórico de evoluciones",
+				"NO_FILTERED_PROBLEMS": "No hay resultados para la búsqueda seleccionada"
 			},
 			"profile": {
 				"BUTTON_HISTORIA_CLINICA": "Historia Clínica",

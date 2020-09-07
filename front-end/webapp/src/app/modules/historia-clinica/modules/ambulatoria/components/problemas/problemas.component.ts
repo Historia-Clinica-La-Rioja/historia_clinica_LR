@@ -1,25 +1,27 @@
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import {
 	PROBLEMAS_ACTIVOS,
 	PROBLEMAS_CRONICOS,
 	PROBLEMAS_INTERNACION,
 	PROBLEMAS_RESUELTOS
 } from '../../../../constants/summaries';
-import {HCEHospitalizationHistoryDto, HCEPersonalHistoryDto} from '@api-rest/api-model';
-import {HceGeneralStateService} from '@api-rest/services/hce-general-state.service';
-import {ActivatedRoute, Router} from '@angular/router';
-import {DateFormat, momentFormat, momentParseDate} from '@core/utils/moment.utils';
-import {map} from 'rxjs/operators';
-import {Observable} from 'rxjs';
+import { HCEHospitalizationHistoryDto, HCEPersonalHistoryDto } from '@api-rest/api-model';
+import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.utils';
+import { map, tap } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
 import {MatDialog} from "@angular/material/dialog";
 import {SolveProblemComponent} from "../../../../dialogs/solve-problem/solve-problem.component";
+import { HistoricalProblemsService } from './../../services/historical-problems.service';
 
 @Component({
 	selector: 'app-problemas',
 	templateUrl: './problemas.component.html',
-	styleUrls: ['./problemas.component.scss']
+	styleUrls: ['./problemas.component.scss'],
+	providers: [ HistoricalProblemsService ]
 })
-export class ProblemasComponent implements OnInit {
+export class ProblemasComponent implements OnInit, OnDestroy {
 
 	public readonly cronicos = PROBLEMAS_CRONICOS;
 	public readonly activos = PROBLEMAS_ACTIVOS;
@@ -29,12 +31,16 @@ export class ProblemasComponent implements OnInit {
 	public solvedProblems$: Observable<HCEPersonalHistoryDto[]>;
 	public chronicProblems$: Observable<HCEPersonalHistoryDto[]>;
 	public hospitalizationProblems$: Observable<HCEHospitalizationHistoryDto[]>;
+	public historicalProblemsList;
+	public historicalProblemsAmount: number;
+	private historicalProblems$: Subscription;
 	private patientId: number;
 	@Input() hasConfirmedAppointment: boolean;
 
 
 	constructor(
 		private readonly hceGeneralStateService: HceGeneralStateService,
+		private historicalProblemsService: HistoricalProblemsService,
 		private route: ActivatedRoute,
 		private readonly router: Router,
 		public dialog: MatDialog
@@ -58,7 +64,7 @@ export class ProblemasComponent implements OnInit {
 				return problemas.map((problema: HCEPersonalHistoryDto) => {
 					problema.startDate = momentFormat(momentParseDate(problema.startDate), DateFormat.VIEW_DATE);
 					return problema;
-				})
+				});
 			})
 		);
 	}
@@ -69,7 +75,7 @@ export class ProblemasComponent implements OnInit {
 				return problemas.map((problema: HCEPersonalHistoryDto) => {
 					problema.startDate = momentFormat(momentParseDate(problema.startDate), DateFormat.VIEW_DATE);
 					return problema;
-				})
+				});
 			})
 		);
 	}
@@ -80,7 +86,7 @@ export class ProblemasComponent implements OnInit {
 				return problemas.map((problema: HCEPersonalHistoryDto) => {
 					problema.startDate = momentFormat(momentParseDate(problema.startDate), DateFormat.VIEW_DATE);
 					return problema;
-				})
+				});
 			})
 		);
 	}
@@ -92,12 +98,16 @@ export class ProblemasComponent implements OnInit {
 					problema.entryDate = momentFormat(momentParseDate(problema.entryDate), DateFormat.VIEW_DATE);
 					problema.dischargeDate = problema.dischargeDate? momentFormat(momentParseDate(problema.dischargeDate), DateFormat.VIEW_DATE) : undefined;
 					return problema;
-				})
+				});
 			})
 		);
+
+		this.historicalProblems$ = this.historicalProblemsService.getHistoricalProblems().pipe(
+			tap(historicalProblems => this.historicalProblemsAmount = historicalProblems ? historicalProblems.length : 0)
+		).subscribe(data => this.historicalProblemsList = data);
 	}
 
-	goToNuevaConsulta(problema: HCEPersonalHistoryDto){
+	goToNuevaConsulta(problema: HCEPersonalHistoryDto) {
 		this.router.navigateByUrl(`${this.router.url}/nuevaDesdeProblema/${problema.id}`).then();
 	}
 
@@ -114,4 +124,8 @@ export class ProblemasComponent implements OnInit {
 				this.loadActiveProblems()
 			}})
 	}
+	
+	ngOnDestroy(): void {
+		this.historicalProblems$.unsubscribe();
+  	}
 }

@@ -6,3 +6,24 @@
 ::ng-deep  .mat-list .mat-list-item{
 	height:initial!important;
 }
+
+.filter-panel{
+    min-width: 30%;
+    background-color: #f3efef8e;
+    padding: 20px;
+}
+
+.mat-card {
+    padding: 0px;
+}
+
+section.problems {
+    width: 70%;
+    padding: 20px;
+    margin-top: 0px;
+}
+
+#historical-problems-card {
+    min-width: 60%;
+    width: 100%;
+}
