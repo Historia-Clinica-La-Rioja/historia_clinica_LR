@@ -40,6 +40,9 @@ const FEATURE_FLAGS = [
 	{
 		name: 'habilitarPaseCama',
 		flavorMatch: [FLAVOR_HOSPITALES]
+	},	{
+		name: 'restringirDatosEditarPaciente',
+		flavorMatch: [FLAVOR_HOSPITALES]
 	},
 ];
 
