@@ -19,18 +19,19 @@ export class TableComponent implements OnInit {
 
 	@ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
 		this.dataSource.paginator = paginator;
-	 }
+	}
 
 
 	dataSource = new MatTableDataSource<any>([]);
 
 	columns: ColumnModel<any>[] = [];
 	displayedColumns: string[] = [];
-	filterEnabled: boolean = false;
-	paginationEnabled: boolean = false;
+	filterEnabled = false;
+	paginationEnabled = false;
+	pageSizeOptions: number[];
 
 	constructor(
-		private tableService: TableService
+		private readonly tableService: TableService
 	) { }
 
 	ngOnInit(): void {
@@ -41,7 +42,10 @@ export class TableComponent implements OnInit {
 	}
 
 	private setUpTable() {
+		this.pageSizeOptions=[];
 		if (this.model) {
+			const unrepeatedSizeOptions = [...new Set([...PAGE_SIZE_OPTIONS,this.model.data.length])];
+			this.pageSizeOptions= unrepeatedSizeOptions.filter(opt=>this.betweenLimits(opt));
 			this.columns = this.model.columns;
 			this.dataSource.data = this.model.data;
 			this.displayedColumns = this.columns?.map(c => c.columnDef);
@@ -52,16 +56,26 @@ export class TableComponent implements OnInit {
 
 			//pagination
 			this.paginationEnabled = this.model.enablePagination;
-			}
+		}
+		
 	}
-
-
+	
+	betweenLimits(opt:number): boolean {
+		return opt <= this.model.data.length && opt <= PAGE_MAX_SIZE;
+	}
+	
 	applyFilter(event: Event) {
 		const filterValue = (event.target as HTMLInputElement).value;
 		this.dataSource.filter = filterValue.trim().toLowerCase();
 	}
-
+	
+	
+	
 }
+
+
+const PAGE_SIZE_OPTIONS = [5,10,50];
+const PAGE_MAX_SIZE = 50;
 
 export enum TableStyles {
 	PRIMARY = 'primary',
@@ -119,3 +133,4 @@ export class MatPaginatorIntlAR extends MatPaginatorIntl {
 	};
 
 }
+

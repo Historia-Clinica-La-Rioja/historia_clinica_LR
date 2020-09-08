@@ -32,7 +32,7 @@
 	</table>
 	<mat-paginator *ngIf="(paginationEnabled) && (dataSource?.data?.length !== 0)"
 				   class="{{mainStyle}}"
-				   [pageSizeOptions]="[5, 10, 50]"
+				   [pageSizeOptions]="pageSizeOptions"
 				   showFirstLastButtons>
 	</mat-paginator>
 	<app-no-data class="{{mainStyle}}" *ngIf="dataSource?.data?.length === 0"></app-no-data>
