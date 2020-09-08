@@ -1,34 +1,30 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { BedSummaryDto } from '@api-rest/api-model';
-import { MapperService } from '@presentation/services/mapper.service';
-import { map, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
-import { BedManagementService } from 'src/app/modules/institucion/services/bed-management.service';
+import { BedManagementFacadeService } from 'src/app/modules/institucion/services/bed-management-facade.service';
 
 @Component({
 	selector: 'app-home',
 	templateUrl: './home.component.html',
 	styleUrls: ['./home.component.scss'],
-	providers: [ BedManagementService ]
+	providers: [ BedManagementFacadeService ]
 })
 export class HomeComponent implements OnInit, OnDestroy {
 
 	public selectedBed: number;
-	public bedManagementList: BedManagement[];
 	public bedsAmount: number;
+	public existBedManagementList = false;
 
 	private managementBed$: Subscription;
 
 	constructor(
-		private mapperService: MapperService,
-		private bedManagementService: BedManagementService
+		private bedManagementFacadeService: BedManagementFacadeService
   	) { }
 
 	ngOnInit(): void {
-		this.managementBed$ = this.bedManagementService.getBedManagement().pipe(
-			tap(bedsSummary => this.bedsAmount = bedsSummary ? bedsSummary.length : 0),
-			map((bedsSummary: BedSummaryDto[]) => bedsSummary ? this.mapperService.toBedManagement(bedsSummary) : null)
-		).subscribe(data => this.bedManagementList = data);
+		this.managementBed$ = this.bedManagementFacadeService.getBedManagement().pipe(
+			tap(bedsSummary => this.bedsAmount = bedsSummary ? bedsSummary.length : 0)
+		).subscribe(data => this.existBedManagementList = data ? true : false);
 	}
 
 	onSelectBed(bedId): void {

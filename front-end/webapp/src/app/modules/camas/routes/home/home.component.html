@@ -11,22 +11,22 @@
                             <div id="filters" class="filter-panel">
                                 <h2 class="page-title" [translate]="'gestion-camas.home.SUBTITLE'"></h2>
                                 <mat-card-subtitle>
-                                    <span *ngIf="bedManagementList" id="bed_id">Resultado: {{bedsAmount}} camas</span>
+                                    <span *ngIf="existBedManagementList" id="bed_id">Resultado: {{bedsAmount}} camas</span>
                                 </mat-card-subtitle>
                                 <app-bed-filters></app-bed-filters>
                             </div>
-                            <section class="beds" id="bed-mapping" *ngIf="bedManagementList && bedManagementList.length">
-                                <app-bed-mapping [bedManagementList]="bedManagementList" (selectedBed)="onSelectBed($event)"></app-bed-mapping>
+                            <div class="spinner" *ngIf="!existBedManagementList">
+                                <mat-spinner color="primary"></mat-spinner>
+                            </div>
+                            <section class="beds" id="bed-mapping" *ngIf="existBedManagementList && bedsAmount">
+                                <app-bed-mapping (selectedBed)="onSelectBed($event)"></app-bed-mapping>
                             </section>
-                            <section class="beds" *ngIf="bedManagementList && !bedManagementList.length" fxLayout="column" fxLayoutAlign="space-around center">
+                            <section class="beds" *ngIf="existBedManagementList && !bedsAmount" fxLayout="column" fxLayoutAlign="space-around center">
                                 <h2 [translate]="'gestion-camas.home.NO_FILTERED_BEDS'"></h2>
                             </section>
                         </div>
                     </mat-card-content>
                 </mat-card>
-                <div class="spinner" *ngIf="!bedManagementList">
-                    <mat-spinner color="primary"></mat-spinner>
-                </div>
                 <app-bed-detail [bedId]="selectedBed"></app-bed-detail>
             </div>
 

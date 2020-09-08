@@ -8,18 +8,24 @@ import { momentParseDateTime, momentParseDate } from '@core/utils/moment.utils';
 import { pushIfNotExists } from '@core/utils/array.utils';
 
 @Injectable()
-export class BedManagementService {
+export class BedManagementFacadeService {
 
-	public sectors: Sector[] = [];
+  	public sectors: Sector[] = [];
 	public specialities: Speciality[] = [];
 	public categories: Category[] = [];
 
-	private subject = new ReplaySubject<BedSummaryDto[]>(1);
+	private bedSummarySubject = new ReplaySubject<BedSummaryDto[]>(1);
+	private bedSummary$: Observable<BedSummaryDto[]>;
+	private bedManagementFilterSubject = new ReplaySubject<BedManagementFilter>(1);
+	private bedManagementFilter$: Observable<BedManagementFilter>;
 	private originalBedManagement: BedSummaryDto[] = [];
 
 	constructor(
 		private bedService: BedService
-  	) { }
+  	) {
+		this.bedSummary$ = this.bedSummarySubject.asObservable();
+		this.bedManagementFilter$ = this.bedManagementFilterSubject.asObservable();
+	}
 
 	public getBedManagement(): Observable<BedSummaryDto[]> {
 		if (!this.originalBedManagement.length) {
@@ -30,11 +36,15 @@ export class BedManagementService {
 				this.sendBedManagement(this.originalBedManagement);
 			});
 		}
-		return this.subject.asObservable();
+		return this.bedSummary$;
+	}
+
+	public getBedManagementFilter(): Observable<BedManagementFilter>{
+		return this.bedManagementFilter$;
 	}
 
 	public sendBedManagement(bedManagement: BedSummaryDto[]) {
-		this.subject.next(bedManagement);
+		this.bedSummarySubject.next(bedManagement);
 	}
 
 	public sendBedManagementFilter(newFilter: BedManagementFilter) {
@@ -44,7 +54,8 @@ export class BedManagementService {
 																	&& this.filterByCategory(newFilter, bedManagement)
 																	&& this.filterByProbableDischargeDate(newFilter, bedManagement)
 																	&& this.filterByFreeBed(newFilter, bedManagement)));
-		this.subject.next(result);
+		this.bedSummarySubject.next(result);
+		this.bedManagementFilterSubject.next(newFilter);
 	}
 
 	private filterBySector(filter: BedManagementFilter, bed: BedSummaryDto): boolean {
@@ -114,3 +125,4 @@ export class Category {
 	categoryId: number;
 	categoryDescription: string;
 }
+

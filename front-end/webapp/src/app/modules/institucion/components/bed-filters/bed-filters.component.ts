@@ -1,25 +1,26 @@
-import { Component, OnInit, Input, SimpleChanges, OnChanges } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
-import { BedManagementService, Sector, Speciality, Category } from '../../services/bed-management.service';
+import { BedManagementFacadeService, Sector, Speciality, Category } from '../../services/bed-management-facade.service';
 import { momentFormat, DateFormat } from '@core/utils/moment.utils';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-bed-filters',
   templateUrl: './bed-filters.component.html',
   styleUrls: ['./bed-filters.component.scss']
 })
-export class BedFiltersComponent implements OnInit, OnChanges {
-
-  	@Input() filled?: boolean;
+export class BedFiltersComponent implements OnInit, OnDestroy {
 
 	public form: FormGroup;
 	public sectors: Sector[] = [];
 	public specialities: Speciality[] = [];
 	public categories: Category[] = [];
 
+	private bedManagementFilter$: Subscription;
+
 	constructor(
 		private readonly formBuilder: FormBuilder,
-		private readonly bedManagementService: BedManagementService
+		private readonly bedManagementFacadeService: BedManagementFacadeService
   	) {	}
 
   	ngOnInit(): void {
@@ -31,21 +32,24 @@ export class BedFiltersComponent implements OnInit, OnChanges {
 			filled: [true]
 		});
 
-		const filterOptions = this.bedManagementService.getFilterOptions();
+		const filterOptions = this.bedManagementFacadeService.getFilterOptions();
 		this.sectors = filterOptions.sectors;
 		this.specialities = filterOptions.specialities;
 		this.categories = filterOptions.categories;
+
+		this.bedManagementFilter$ = this.bedManagementFacadeService.getBedManagementFilter().subscribe(
+			data => {
+				this.form.controls.sector.setValue(data.sector);
+				this.form.controls.speciality.setValue(data.speciality);
+				this.form.controls.category.setValue(data.category);
+				this.form.controls.probableDischargeDate.setValue(data.probableDischargeDate);
+				this.form.controls.filled.setValue(data.filled);
+			});
+
   	}
 
-	ngOnChanges(changes: SimpleChanges) {
-		if (!changes.filled.firstChange && !changes.filled.currentValue) {
-			this.form.controls.filled.setValue(changes.filled.currentValue);
-			this.sendAllFiltersOnFilterChange();
-		}
-	}
-
 	public sendAllFiltersOnFilterChange() {
-		this.bedManagementService.sendBedManagementFilter(this.getBedManagementFilter());
+		this.bedManagementFacadeService.sendBedManagementFilter(this.getBedManagementFilter());
 	}
 
 	private getBedManagementFilter(): BedManagementFilter {
@@ -62,6 +66,10 @@ export class BedFiltersComponent implements OnInit, OnChanges {
 		control.reset();
 		this.sendAllFiltersOnFilterChange();
 	}
+
+	ngOnDestroy(): void {
+		this.bedManagementFilter$.unsubscribe();
+  	}
 
 }
 

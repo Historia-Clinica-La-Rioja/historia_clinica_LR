@@ -1,40 +1,41 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { MapperService } from '@presentation/services/mapper.service';
-import { BedManagementService } from 'src/app/modules/institucion/services/bed-management.service';
-import { BedSummaryDto, BedInfoDto } from '@api-rest/api-model';
-import { BedManagement } from 'src/app/modules/camas/routes/home/home.component';
-import { tap, map } from 'rxjs/operators';
+import { BedManagementFacadeService } from 'src/app/modules/institucion/services/bed-management-facade.service';
+import { BedInfoDto } from '@api-rest/api-model';
+import { tap } from 'rxjs/operators';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-bed-assignment',
   templateUrl: './bed-assignment.component.html',
   styleUrls: ['./bed-assignment.component.scss'],
-  providers: [ BedManagementService ]
+  providers: [ BedManagementFacadeService ]
 })
 export class BedAssignmentComponent implements OnInit, OnDestroy {
 
   	public selectedBed: number;
-	public bedManagementList: BedManagement[];
+	public existBedManagementList = false;
 	public bedsAmount: number;
-	public filled: boolean;
 
-	private ManagementBed$: Subscription;
+	private managementBed$: Subscription;
 
 	constructor(
 		public dialogRef: MatDialogRef<BedAssignmentComponent>,
-		private mapperService: MapperService,
-		private bedManagementService: BedManagementService
+		private bedManagementFacadeService: BedManagementFacadeService
   	) { }
 
 	ngOnInit(): void {
-		this.ManagementBed$ = this.bedManagementService.getBedManagement().pipe(
-			tap(bedsSummary => this.bedsAmount = bedsSummary ? bedsSummary.length : 0),
-			map((bedsSummary: BedSummaryDto[]) => bedsSummary ? this.mapperService.toBedManagement(bedsSummary) : null)
+		this.managementBed$ = this.bedManagementFacadeService.getBedManagement().pipe(
+			tap(bedsSummary => this.bedsAmount = bedsSummary ? bedsSummary.length : 0)
 		).subscribe(data => {
-			this.bedManagementList = data;
-			this.filled = false;
+			this.existBedManagementList = data ? true : false;
+			this.bedManagementFacadeService.sendBedManagementFilter({
+				sector: null,
+				speciality: null,
+				category: null,
+				probableDischargeDate: null,
+				filled: false
+			});
 		});
 	}
 
@@ -47,7 +48,7 @@ export class BedAssignmentComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		this.ManagementBed$.unsubscribe();
+		this.managementBed$.unsubscribe();
   	}
 
 }
