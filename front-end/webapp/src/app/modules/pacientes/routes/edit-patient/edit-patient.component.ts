@@ -12,9 +12,12 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from "@core/services/context.service";
 import { PersonService } from '@api-rest/services/person.service';
 import { MapperService } from '@presentation/services/mapper.service';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { PATIENT_TYPE } from '@core/utils/patient.utils';
 
 const ROUTE_PROFILE = 'pacientes/profile/';
 const ROUTE_HOME_PATIENT = 'pacientes';
+const RESTRICT_EDIT_FFLAG = 'restringirDatosEditarPaciente';
 
 @Component({
 	selector: 'app-edit-patient',
@@ -50,7 +53,10 @@ export class EditPatientComponent implements OnInit {
 		private snackBarService: SnackBarService,
 		private contextService: ContextService,
 		private mapperService: MapperService,
-		private personService: PersonService) {
+		private personService: PersonService,
+		private featureFlagService: FeatureFlagService
+	)
+	{
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 
@@ -61,6 +67,7 @@ export class EditPatientComponent implements OnInit {
 				this.patientService.getPatientCompleteData<CompletePatientDto>(this.patientId)
 					.subscribe(completeData => {
 						this.completeDataPatient = completeData;
+						this.patientType = completeData.patientType.id;
 						this.personService.getCompletePerson<BMPersonDto>(completeData.person.id)
 							.subscribe(personInformationData => {
 								if (personInformationData.identificationTypeId)
@@ -107,12 +114,10 @@ export class EditPatientComponent implements OnInit {
 								this.form.setControl('generalPractitionerPhoneNumber', new FormControl(completeData.generalPractitioner?.phoneNumber));
 								this.form.setControl('pamiDoctor', new FormControl(completeData.pamiDoctor?.fullName));
 								this.form.setControl('pamiDoctorPhoneNumber', new FormControl(completeData.pamiDoctor?.phoneNumber));
-
-
+								this.restrictFormEdit();
 							});
-						this.patientType = completeData.patientType.id;
 					});
-				this.formBuil();
+				this.formBuild();
 			});
 
 		this.personMasterDataService.getGenders()
@@ -134,7 +139,7 @@ export class EditPatientComponent implements OnInit {
 
 	}
 
-	formBuil() {
+	formBuild() {
 		this.form = this.formBuilder.group({
 			firstName: [null, [Validators.required]],
 			middleNames: [null],
@@ -272,6 +277,30 @@ export class EditPatientComponent implements OnInit {
 	goBack(): void {
 		this.formSubmitted = false;
 		this.router.navigate([this.routePrefix + ROUTE_HOME_PATIENT]);
+	}
+
+	private disableFormField() {
+		this.form.controls.identificationNumber.disable();
+		this.form.controls.identificationTypeId.disable();
+		this.form.controls.genderId.disable();
+		this.form.controls.firstName.disable();
+		this.form.controls.middleNames.disable();
+		this.form.controls.lastName.disable();
+		this.form.controls.otherLastNames.disable();
+		this.form.controls.birthDate.disable();
+	}
+
+	private isLockablePatientType(): boolean {
+		return (this.patientType === PATIENT_TYPE.PERMANENT_INVALID || this.patientType === PATIENT_TYPE.VALID || this.patientType === PATIENT_TYPE.PERMANENT);
+	}
+
+	private restrictFormEdit():void {
+		this.featureFlagService.isOn(RESTRICT_EDIT_FFLAG)
+		.subscribe(result => {
+			if (result && this.isLockablePatientType()) {
+				this.disableFormField();
+			}
+		});
 	}
 
 }
