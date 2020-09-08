@@ -3,6 +3,7 @@
 			[routerLink]="menuItem.url"
 			routerLinkActive="active"
 			[routerLinkActiveOptions]="menuItem.options || {exact: false}"
+			[id]="menuItem.id"
 			*ngFor="let menuItem of menuItems">
 		<mat-icon matListIcon fontSet="material-icons-outlined">{{menuItem.icon}}</mat-icon>
 		<span [translate]=menuItem.text></span>

@@ -5,12 +5,14 @@ export const SIDEBAR_MENU: MenuItem[] = [
 	{
 		text: 'app.menu.INSTITUCIONES',
 		icon: 'home',
+		id: 'home',
 		url: '/home',
 		options: {exact: true},
 	},
 	{
 		text: 'app.menu.PACIENTES',
 		icon: 'person',
+		id: 'pacientes',
 		url: './pacientes',
 		permissions: [
 			ERole.ADMINISTRATIVO,
@@ -19,6 +21,7 @@ export const SIDEBAR_MENU: MenuItem[] = [
 	{
 		text: 'app.menu.AMBULATORIA',
 		icon: 'person_search',
+		id: 'ambulatoria',
 		url: './ambulatoria',
 		permissions: [
 			ERole.ESPECIALISTA_MEDICO,
@@ -30,6 +33,7 @@ export const SIDEBAR_MENU: MenuItem[] = [
 	{
 		text: 'app.menu.INTERNACION',
 		icon: 'assignment',
+		id: 'internaciones',
 		url: './internaciones',
 		permissions: [
 			ERole.ESPECIALISTA_MEDICO,
@@ -41,6 +45,7 @@ export const SIDEBAR_MENU: MenuItem[] = [
 	{
 		text: 'app.menu.TURNOS',
 		icon: 'calendar_today',
+		id: 'turnos',
 		url: './turnos',
 		permissions: [
 			ERole.ADMINISTRATIVO,
@@ -54,6 +59,7 @@ export const SIDEBAR_MENU: MenuItem[] = [
 	{
 		text: 'app.menu.CAMAS',
 		icon: 'single_bed',
+		id: 'camas',
 		url: './camas',
 		permissions: [
 			ERole.ADMINISTRATIVO,
@@ -63,6 +69,7 @@ export const SIDEBAR_MENU: MenuItem[] = [
 	{
 		text: 'app.menu.PERFIL',
 		icon: 'account_circle',
+		id: 'home_profile',
 		url: '/home/profile',
 	},
 
