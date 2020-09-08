@@ -10,10 +10,6 @@ const FLAVOR_CHACO = 'chaco';
 const FLAVOR_HOSPITALES = 'minsal';
 const FEATURE_FLAGS = [
 	{
-		name: 'habilitarEditarPaciente',
-		flavorMatch: [FLAVOR_TANDIL, FLAVOR_CHACO]
-	},
-	{
 		name: 'agregarContactoResponsable',
 		flavorMatch: [FLAVOR_TANDIL, FLAVOR_CHACO]
 	},

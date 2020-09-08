@@ -13,7 +13,7 @@
 			<app-patient-card [patient]="patientBasicData">
 				<div header class="header">
 					<app-patient-type-logo [patientTypeData]="patientTypeData"></app-patient-type-logo>
-					<ng-container *featureFlag="'habilitarEditarPaciente'">
+					<ng-container>
 						<button mat-icon-button color="primary" *hasRole="['ADMINISTRATIVO']" (click)="goToEditProfile()">
 							<mat-icon>edit</mat-icon>
 						</button>
