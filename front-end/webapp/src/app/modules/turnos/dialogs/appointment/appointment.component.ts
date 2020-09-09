@@ -27,7 +27,9 @@ export class AppointmentComponent implements OnInit {
 	estadoSelected: APPOINTMENT_STATES_ID;
 	formMotivo: FormGroup;
 	institutionId = this.contextService.institutionId;
-
+	phoneNumberEditMode = false;
+	phoneNumberForm: FormGroup;
+	phoneNumberText: string;
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public appointmentData: PatientAppointmentInformation,
 		public dialogRef: MatDialogRef<NewAttentionComponent>,
@@ -35,7 +37,7 @@ export class AppointmentComponent implements OnInit {
 		private readonly appointmentService: AppointmentsService,
 		private readonly snackBarService: SnackBarService,
 		private readonly router: Router,
-	 	private readonly contextService: ContextService,
+		private readonly contextService: ContextService,
 		private readonly formBuilder: FormBuilder,
 	) {
 	}
@@ -44,6 +46,10 @@ export class AppointmentComponent implements OnInit {
 		this.formMotivo = this.formBuilder.group({
 			motivo: ['', [Validators.required, Validators.maxLength(MAX_LENGTH_MOTIVO)]]
 		});
+		this.phoneNumberForm = this.formBuilder.group({
+			phoneNumber: [this.appointmentData.phoneNumber]
+		});
+		this.phoneNumberText = this.appointmentData.phoneNumber;
 		this.appointmentService.get(this.appointmentData.appointmentId)
 			.subscribe(appointment => {
 				this.appointment = appointment;
@@ -95,7 +101,7 @@ export class AppointmentComponent implements OnInit {
 	isCancelable(): boolean {
 		return (this.estadoSelected === APPOINTMENT_STATES_ID.ASSIGNED &&
 			this.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.ASSIGNED) ||
-			(this.estadoSelected  === APPOINTMENT_STATES_ID.CONFIRMED &&
+			(this.estadoSelected === APPOINTMENT_STATES_ID.CONFIRMED &&
 				this.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED);
 	}
 
@@ -109,6 +115,17 @@ export class AppointmentComponent implements OnInit {
 				this.snackBarService.showError(`Error al actualizar estado de turno
 				${getAppointmentState(this.appointment?.appointmentStateId).description} a ${getAppointmentState(newStateId).description}`);
 			});
+	}
+
+	updatePhoneNumber() {
+		this.phoneNumberEditMode = false;
+		this.appointmentService.updatePhoneNumber(this.appointmentData.appointmentId, this.phoneNumberForm.controls.phoneNumber.value)
+			.subscribe(() => {
+				this.snackBarService.showSuccess('El telefono se modificó correctamente');
+				this.phoneNumberText = this.phoneNumberForm.controls.phoneNumber.value;
+			}
+			, () => this.snackBarService.showError('Error')
+			);
 	}
 }
 

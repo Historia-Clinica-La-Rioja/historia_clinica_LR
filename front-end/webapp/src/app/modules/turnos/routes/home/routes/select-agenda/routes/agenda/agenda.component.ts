@@ -136,10 +136,8 @@ export class AgendaComponent implements OnInit {
 			data: event.meta,
 		});
 
-		appointmentDialogRef.afterClosed().subscribe(data => {
-			if (data) {
-				this.loadAppointments();
-			}
+		appointmentDialogRef.afterClosed().subscribe(() => {
+			this.loadAppointments();
 		});
 	}
 

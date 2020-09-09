@@ -13,6 +13,7 @@
 .patient-info {
 	color: #545454;
 	line-height: 17px;
+	max-height: 24px;
 }
 
 mat-icon {
@@ -66,4 +67,17 @@ mat-form-field {
 
 section {
 	margin: 0;
+}
+
+
+.hide-borders{
+	border-top-style: hidden;
+	border-left-style: hidden;
+	border-right-style: hidden;
+	outline: none;
+	margin-left: 3px;
+}
+
+.phone-text{
+	margin-left: 3px;
 }
