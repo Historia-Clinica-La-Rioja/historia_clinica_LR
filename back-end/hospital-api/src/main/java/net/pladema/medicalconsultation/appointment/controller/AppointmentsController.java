@@ -22,6 +22,7 @@ import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.sgx.security.utils.UserInfo;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
+import org.hibernate.validator.constraints.Length;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -153,5 +154,17 @@ public class AppointmentsController {
         boolean result = appointmentService.hasConfirmedAppointment(patientId, healthProfessionalId);
         LOG.debug(OUTPUT, result);
         return ResponseEntity.ok(result);
+    }
+
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
+    @PutMapping(value = "/{appointmentId}/update-phone-number")
+    public ResponseEntity<Boolean> updatePhoneNumber(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "appointmentId") Integer appointmentId,
+            @RequestParam @Length(max = 20,message = "{appointment.new.phoneNumber.invalid}") String phoneNumber) {
+        LOG.debug("Input parameters -> institutionId {},appointmentId {}, phoneNumber {}", institutionId, appointmentId, phoneNumber);
+        boolean result = appointmentService.updatePhoneNumber(appointmentId,phoneNumber,UserInfo.getCurrentAuditor());
+        LOG.debug(OUTPUT, result);
+        return ResponseEntity.ok().body(result);
     }
 }

@@ -89,4 +89,15 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
                                     @Param("healthProfessionalId")  Integer healthProfessionalId,
                                     @Param("appointmentDate")  LocalDate appointmentDate);
 
+
+    @Transactional
+    @Modifying
+    @Query( "UPDATE Appointment  AS a " +
+            "SET a.phoneNumber = :phoneNumber, " +
+            "a.updateable.updatedOn = CURRENT_TIMESTAMP, " +
+            "a.updateable.updatedBy = :userId " +
+            "WHERE a.id = :appointmentId ")
+    void updatePhoneNumber(@Param("appointmentId") Integer appointmentId,
+                           @Param("phoneNumber") String phoneNumber,
+                           @Param("userId") Integer userId);
 }

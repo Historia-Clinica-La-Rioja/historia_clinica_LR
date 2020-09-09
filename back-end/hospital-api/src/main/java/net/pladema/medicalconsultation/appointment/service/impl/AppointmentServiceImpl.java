@@ -101,5 +101,12 @@ public class AppointmentServiceImpl implements AppointmentService {
 		return result;
 	}
 
+	@Override
+	public boolean updatePhoneNumber(Integer appointmentId, String phoneNumber, Integer userId) {
+		appointmentRepository.updatePhoneNumber(appointmentId,phoneNumber,userId);
+		LOG.debug(OUTPUT, Boolean.TRUE);
+		return Boolean.TRUE;
+	}
+
 
 }
