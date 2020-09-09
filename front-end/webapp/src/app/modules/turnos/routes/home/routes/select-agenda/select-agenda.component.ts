@@ -94,9 +94,12 @@ export class SelectAgendaComponent implements OnInit {
 					.subscribe((deleted: boolean) => {
 						if (deleted) {
 							this.snackBarService.showSuccess('turnos.delete-agenda.messages.SUCCESS');
-							this.router.navigate([this.routePrefix + 'turnos']);
+							this.agendas = this.agendas.filter(agenda => agenda.id !== this.agendaSelected.id);
+							this.router.navigate(['../' + this.idProfesional], { relativeTo: this.route });
 						}
-					} , error => processErrors(error, (msg) => this.snackBarService.showError(msg)));
+					}, error => processErrors(error, (msg) => {
+						this.snackBarService.showError(msg);
+					}));
 			}
 		});
 	}
