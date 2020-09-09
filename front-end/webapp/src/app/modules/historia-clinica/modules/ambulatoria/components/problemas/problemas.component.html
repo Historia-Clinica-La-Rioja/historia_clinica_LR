@@ -18,16 +18,19 @@
 								<span mat-line class="mat-body">
 									{{problem.startDate }}
 								</span>
-								<ng-container *ngIf="hasConfirmedAppointment">									
+
 									<button *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']" mat-icon-button [matMenuTriggerFor]="menu" >
 										<mat-icon>more_vert</mat-icon>
 									</button>
 									<mat-menu #menu="matMenu">
-										<button mat-menu-item (click)="goToNuevaConsulta(problem)">
+										<button *ngIf="hasConfirmedAppointment" mat-menu-item (click)="goToNuevaConsulta(problem)">
 											<span [translate]="'ambulatoria.paciente.nueva-consulta.TITLE_MENU'"></span>
 										</button>
+										<button mat-menu-item (click)="solveProblemPopUp(problem)">
+											<span [translate]="'ambulatoria.paciente.problemas.END'"></span>
+										</button>
 									</mat-menu>
-								</ng-container>
+
 							</mat-list-item>
 							<mat-divider></mat-divider>
 						</div>
@@ -46,16 +49,18 @@
 									{{problem.startDate }}
 								</span>
 
-								<ng-container *ngIf="hasConfirmedAppointment">	
-									<button *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']" mat-icon-button [matMenuTriggerFor]="menu" >
-										<mat-icon>more_vert</mat-icon>
+								<button *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']" mat-icon-button [matMenuTriggerFor]="menu" >
+									<mat-icon>more_vert</mat-icon>
+								</button>
+								<mat-menu #menu="matMenu">
+									<button *ngIf="hasConfirmedAppointment" mat-menu-item (click)="goToNuevaConsulta(problem)">
+										<span [translate]="'ambulatoria.paciente.nueva-consulta.TITLE_MENU'"></span>
 									</button>
-									<mat-menu #menu="matMenu">
-										<button mat-menu-item (click)="goToNuevaConsulta(problem)">
-											<span [translate]="'ambulatoria.paciente.nueva-consulta.TITLE_MENU'"></span>
-										</button>
-									</mat-menu>
-								</ng-container>
+									<button mat-menu-item (click)="solveProblemPopUp(problem)">
+										<span [translate]="'ambulatoria.paciente.problemas.END'"></span>
+									</button>
+								</mat-menu>
+
 							</mat-list-item>
 							<mat-divider></mat-divider>
 						</div>
@@ -77,6 +82,9 @@
 									<mat-menu #menu="matMenu">
 										<button mat-menu-item (click)="goToNuevaConsulta(problem)">
 											<span [translate]="'ambulatoria.paciente.nueva-consulta.TITLE_MENU'"> </span>
+										</button>
+										<button mat-menu-item (click)="goToNuevaConsulta(problem)">
+											<span [translate]="'ambulatoria.paciente.problemas.END'"></span>
 										</button>
 									</mat-menu>
 								</ng-container>

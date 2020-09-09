@@ -1,0 +1,38 @@
+
+<form (ngSubmit)="solveProblem()">
+	<div mat-dialog-title>
+		<h4 [translate]="'ambulatoria.paciente.problemas.TITLE_POPUP_RESOLVER_PROBLEMA'"></h4>
+	</div>
+
+		<form [formGroup]="this.getForm()">
+			<div class="margin-checkbox" disabled>
+				<mat-checkbox id="cronico-checkbox" formControlName="cronico">
+					<span [translate]="'ambulatoria.paciente.nueva-consulta.problemas.CRONICO'"></span>
+				</mat-checkbox>
+			</div>
+
+			<mat-form-field disabled appearance="outline">
+				<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.problemas.FECHA_INICIO'"></mat-label>
+				<input matInput id="fecha_inicio" formControlName="fechaInicio" >
+				<mat-datepicker-toggle matSuffix [for]="finDatePicker"></mat-datepicker-toggle>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline">
+				<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.problemas.FECHA_FIN'"></mat-label>
+				<input matInput id="fecha_fin" formControlName="fechaFin" required>
+				<mat-datepicker-toggle matSuffix [for]="finDatePicker"></mat-datepicker-toggle>
+				<mat-datepicker #finDatePicker></mat-datepicker>
+			</mat-form-field>
+		</form>
+
+
+	<div mat-dialog-actions align="end">
+		<button mat-stroked-button color="primary" mat-dialog-close>
+			<span [translate]="'buttons.CANCEL'"></span>
+		</button>
+		<button mat-raised-button color="primary">
+			<span [translate]="'ambulatoria.paciente.problemas.CONFIRM_RESOLVER_PROBLEMA'"></span>
+		</button>
+	</div>
+</form>
+

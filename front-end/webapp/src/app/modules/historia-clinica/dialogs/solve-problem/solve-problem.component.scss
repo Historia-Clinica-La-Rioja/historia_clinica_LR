@@ -1,0 +1,21 @@
+@import '../../../../../assets/styles/mixins';
+
+div[mat-dialog-title] {
+	text-align: center;
+	div.icon {
+		margin: 30px 0;
+		mat-icon {
+			transform: scale(4);
+		}
+	}
+}
+section {
+	* {
+		width: 100%;
+	}
+	text-align: center;
+}
+
+div.spinner {
+	@include centered-spinner;
+}

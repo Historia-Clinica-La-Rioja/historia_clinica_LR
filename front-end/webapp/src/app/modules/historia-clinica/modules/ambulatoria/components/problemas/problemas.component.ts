@@ -1,4 +1,4 @@
-import {Component, OnInit, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {
 	PROBLEMAS_ACTIVOS,
 	PROBLEMAS_CRONICOS,
@@ -11,6 +11,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {DateFormat, momentFormat, momentParseDate} from '@core/utils/moment.utils';
 import {map} from 'rxjs/operators';
 import {Observable} from 'rxjs';
+import {MatDialog} from "@angular/material/dialog";
+import {SolveProblemComponent} from "../../../../dialogs/solve-problem/solve-problem.component";
 
 @Component({
 	selector: 'app-problemas',
@@ -34,7 +36,8 @@ export class ProblemasComponent implements OnInit {
 	constructor(
 		private readonly hceGeneralStateService: HceGeneralStateService,
 		private route: ActivatedRoute,
-		private readonly router: Router
+		private readonly router: Router,
+		public dialog: MatDialog
 	) {
 		this.route.paramMap.subscribe(
 			(params) => {
@@ -80,5 +83,14 @@ export class ProblemasComponent implements OnInit {
 
 	goToNuevaConsulta(problema: HCEPersonalHistoryDto){
 		this.router.navigateByUrl(`${this.router.url}/nuevaDesdeProblema/${problema.id}`).then();
+	}
+
+	solveProblemPopUp(problema: HCEPersonalHistoryDto){
+		this.dialog.open(SolveProblemComponent, {
+			data: {
+				problema,
+				patientId: this.patientId
+			}
+		});
 	}
 }

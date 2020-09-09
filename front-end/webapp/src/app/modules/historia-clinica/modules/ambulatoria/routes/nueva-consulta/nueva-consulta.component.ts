@@ -100,7 +100,7 @@ export class NuevaConsultaComponent implements OnInit {
 		});
 	}
 
-	private static buildProblema(p: HealthConditionNewConsultationDto) {
+	static buildProblema(p: HealthConditionNewConsultationDto) {
 		const problema: Problema = {
 			snomed: p.snomed,
 			cronico: p.isChronic,

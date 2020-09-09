@@ -1,13 +1,13 @@
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SnomedDto } from '@api-rest/api-model';
-import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
-import { SEMANTICS_CONFIG } from '../../../constants/snomed-semantics';
-import { SnomedSemanticSearch, SnomedService } from '../../../services/snomed.service';
-import { pushTo } from '@core/utils/array.utils';
-import { DateFormat, momentFormat, newMoment } from '@core/utils/moment.utils';
-import { Moment } from 'moment';
-import { hasError } from '@core/utils/form.utils';
-import { Subject, Observable } from 'rxjs';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {SnomedDto} from '@api-rest/api-model';
+import {ColumnConfig} from '@presentation/components/document-section/document-section.component';
+import {SEMANTICS_CONFIG} from '../../../constants/snomed-semantics';
+import {SnomedSemanticSearch, SnomedService} from '../../../services/snomed.service';
+import {pushTo} from '@core/utils/array.utils';
+import {DateFormat, momentFormat, newMoment} from '@core/utils/moment.utils';
+import {Moment} from 'moment';
+import {hasError} from '@core/utils/form.utils';
+import {Observable, Subject} from 'rxjs';
 
 export interface Problema {
 	snomed: SnomedDto;
@@ -119,6 +119,7 @@ export class ProblemasNuevaConsultaService {
 	}
 
 	getForm(): FormGroup {
+		console.log('FORM QUE ESTA BNIEN', this.form);
 		return this.form;
 	}
 

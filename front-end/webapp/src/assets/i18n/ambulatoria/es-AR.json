@@ -129,7 +129,14 @@
 				"ACTIVOS": "Problemas activos",
 				"CRONICOS": "Problemas crónicos",
 				"RESUELTOS": "Problemas resueltos",
-				"INTERNACION": "Problemas de internación"
+				"INTERNACION": "Problemas de internación",
+				"END": "Resolver",
+				"TITLE_POPUP_RESOLVER_PROBLEMA": "Resolver problema",
+				"CONFIRM_RESOLVER_PROBLEMA": "Resolver",
+				"CONFIRMACION_POPUP": "¿Está seguro de resolver el problema sin generar una nueva consulta ambulatoria?",
+				"BOTON_CONFIRMAR_POPUP": "Confirmar",
+				"SUCCESS_CONFIRMAR_POPUP": "El problema ha sido resuelto exitosamente",
+				"ERROR_CONFIRMAR_POPUP": "Ocurrió un error al resolver el problema"
 			},
 			"profile": {
 				"BUTTON_HISTORIA_CLINICA": "Historia Clínica",
