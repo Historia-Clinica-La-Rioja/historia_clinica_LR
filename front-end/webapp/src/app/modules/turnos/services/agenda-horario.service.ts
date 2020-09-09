@@ -76,8 +76,8 @@ export class AgendaHorarioService {
 		return `<strong>Atención ${medicalAttentionType} </strong> <br>`;
 	}
 
-	getOverturnsText(overTurnCount: number): string {
-		return overTurnCount > 0 ? '<span>Atiende sobreturnos</span>' : '<span>No atiende sobreturnos</span>';
+	getOverturnsText(overturnCount: number): string {
+		return overturnCount > 0 ? '<span>Atiende sobreturnos</span>' : '<span>No atiende sobreturnos</span>';
 	}
 
 	startDragToCreate(segment: WeekViewHourSegment, segmentElement: HTMLElement): void {
@@ -178,7 +178,7 @@ export class AgendaHorarioService {
 					to: momentFormat(dateToMoment(event.end), DateFormat.HOUR_MINUTE_SECONDS),
 				},
 				medicalAttentionTypeId: event.meta.medicalAttentionType.id,
-				overturnCount: event.meta.overTurnCount
+				overturnCount: event.meta.overturnCount
 			};
 		}
 	}
@@ -271,6 +271,6 @@ export class AgendaHorarioService {
 		event.meta = dialogInfo;
 		event.title = this.getMedicalAttentionTypeText(dialogInfo.medicalAttentionType.id);
 		event.color = this.getMedicalAttentionColor(dialogInfo.medicalAttentionType.id);
-		event.title += this.getOverturnsText(dialogInfo.overTurnCount);
+		event.title += this.getOverturnsText(dialogInfo.overturnCount);
 	}
 }

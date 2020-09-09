@@ -12,7 +12,7 @@ public class DateUtils {
 	}
 
 	public static boolean isBetween(LocalTime hour, LocalTime from, LocalTime to ) {
-		return hour.isAfter(from) && hour.isBefore(to);
+		return hour.compareTo(from)>=0 && hour.isBefore(to);
 	}
 	
 }

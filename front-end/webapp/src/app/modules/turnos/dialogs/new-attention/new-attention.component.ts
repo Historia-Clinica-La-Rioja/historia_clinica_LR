@@ -33,7 +33,7 @@ export class NewAttentionComponent implements OnInit {
 			});
 
 		this.form = this.formBuilder.group({
-			overTurnCount: [this.data.overturnCount, Validators.min(0)],
+			overturnCount: [this.data.overturnCount, Validators.min(0)],
 			medicalAttentionType: [null, Validators.required]
 		});
 
@@ -43,9 +43,9 @@ export class NewAttentionComponent implements OnInit {
 		const medicalAttentionType = this.form.controls.medicalAttentionType.value;
 
 		if (medicalAttentionType.description === MEDICAL_ATTENTION.SPONTANEOUS) {
-			this.form.controls.overTurnCount.disable();
+			this.form.controls.overturnCount.disable();
 		} else {
-			this.form.controls.overTurnCount.enable();
+			this.form.controls.overturnCount.enable();
 		}
 	}
 
