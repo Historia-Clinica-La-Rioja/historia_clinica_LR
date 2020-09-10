@@ -55,7 +55,6 @@ export class AgendaComponent implements OnInit {
 		private readonly appointmentsService: AppointmentsService,
 		private readonly cdr: ChangeDetectorRef,
 		private readonly dialog: MatDialog,
-		private readonly diaryOpeningHoursService: DiaryOpeningHoursService,
 		private readonly diaryService: DiaryService,
 		private readonly route: ActivatedRoute,
 		private snackBarService: SnackBarService,
@@ -152,12 +151,9 @@ export class AgendaComponent implements OnInit {
 		this.viewDate = this._getViewDate();
 		this.hourSegments = MINUTES_IN_HOUR / agenda.appointmentDuration;
 
-		this.diaryOpeningHoursService.getMany([this.agenda.id])
-			.subscribe((openingHours: DiaryOpeningHoursDto[]) => {
-				this.diaryOpeningHours = openingHours;
-				this.setDayStartHourAndEndHour(openingHours);
-				this.loading = false;
-			});
+		this.diaryOpeningHours = agenda.diaryOpeningHours;
+		this.setDayStartHourAndEndHour(agenda.diaryOpeningHours);
+		this.loading = false;
 
 		this.loadAppointments();
 	}
@@ -179,13 +175,13 @@ export class AgendaComponent implements OnInit {
 	private setDayStartHourAndEndHour(openingHours: DiaryOpeningHoursDto[]) {
 		openingHours.forEach(oh => {
 			const from = momentParseTime(oh.openingHours.from).hour();
-			if (this.dayStartHour===undefined || from < this.dayStartHour) {
+			if (this.dayStartHour === undefined || from < this.dayStartHour) {
 				this.dayStartHour = (from > 0) ? from - 1 : from;
 			}
 			const to = momentParseTime(oh.openingHours.to).hour();
 			const toMinutes = momentParseTime(oh.openingHours.to).minutes();
-			if (this.dayEndHour===undefined || to >= this.dayEndHour) {
-				this.dayEndHour = (toMinutes > 0) ? to : to - 1 ;
+			if (this.dayEndHour === undefined || to >= this.dayEndHour) {
+				this.dayEndHour = (toMinutes > 0) ? to : to - 1;
 			}
 		});
 	}
