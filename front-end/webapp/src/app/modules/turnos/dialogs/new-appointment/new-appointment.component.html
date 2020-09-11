@@ -5,8 +5,8 @@
 
 <div mat-dialog-content>
 
-	<mat-horizontal-stepper [linear]="true" #stepper labelPosition="bottom" (selectionChange)="disablePreviuosStep(stepper)">
-		<mat-step [stepControl]="formSearch" label="{{'turnos.new-appointment.STEP_1' | translate}}" [editable]="editable">
+	<mat-horizontal-stepper [linear]="true" #stepper labelPosition="bottom">
+		<mat-step [stepControl]="formSearch" label="{{'turnos.new-appointment.STEP_1' | translate}}">
 			<mat-card class="mat-typography">
 				<form [formGroup]="formSearch" (ngSubmit)="search()">
 					<mat-card-content>
@@ -58,7 +58,7 @@
 			</mat-card>
 		</mat-step>
 
-		<mat-step [stepControl]="appointmentInfoForm" label="{{'turnos.new-appointment.STEP_2' | translate}}">
+		<mat-step [stepControl]="appointmentInfoForm" label="{{'turnos.new-appointment.STEP_2' | translate}}" [editable]="false">
 			<mat-card class="mat-typography">
 				<mat-list>
 					<mat-list-item id="patient">
@@ -71,7 +71,7 @@
 				<div fxLayout="row" fxLayoutAlign="space-around center">
 					<mat-spinner *ngIf="!healtInsuranceOptions.length"></mat-spinner>
 				</div>
-				<form *ngIf="healtInsuranceOptions.length" [formGroup]="appointmentInfoForm">
+				<form *ngIf="healtInsuranceOptions.length" [formGroup]="appointmentInfoForm" class="appointmentInfoForm">
 					<div fxLayout="row wrap" fxLayoutGap="10px">
 						<mat-form-field appearance="outline">
 							<mat-label>Obra Social</mat-label>
@@ -119,6 +119,11 @@
 						</mat-form-field>
 					</div>
 				</form>
+				<div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10px">
+					<button mat-flat-button matStepperPrevious color="primary">
+						<span [translate]="'buttons.BACK'"></span>
+					</button>
+				</div>
 			</mat-card>
 		</mat-step>
 	</mat-horizontal-stepper>

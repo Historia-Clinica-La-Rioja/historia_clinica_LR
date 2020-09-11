@@ -12,3 +12,11 @@
 	}
 
 }
+::ng-deep .mat-horizontal-stepper-header{
+    pointer-events: none !important;
+}
+
+
+.appointmentInfoForm {
+	margin-left: 24px;
+}

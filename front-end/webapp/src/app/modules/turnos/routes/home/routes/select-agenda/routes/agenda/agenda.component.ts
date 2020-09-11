@@ -112,7 +112,7 @@ export class AgendaComponent implements OnInit {
 				}
 			} else {
 				const dialogRef = this.dialog.open(NewAppointmentComponent, {
-					width: '40%',
+					width: '28%',
 					data: {
 						date: clickedDate.format(DateFormat.API_DATE),
 						diaryId: this.agenda.id,

@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { VALIDATIONS, processErrors,hasError } from '@core/utils/form.utils';
+import { VALIDATIONS, processErrors, hasError } from '@core/utils/form.utils';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { PatientService } from '@api-rest/services/patient.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -11,18 +11,18 @@ import { MatStepper, MatHorizontalStepper } from '@angular/material/stepper';
 import { RenaperService } from '@api-rest/services/renaper.service';
 import { HealthInsuranceService } from '@api-rest/services/health-insurance.service';
 import { AppointmentsService } from './../../../api-rest/services/appointments.service';
-import { CreateAppointmentDto, MedicalCoverageDto, IdentificationTypeDto, GenderDto,BasicPersonalDataDto, BMPersonDto } from '@api-rest/api-model';
+import { CreateAppointmentDto, MedicalCoverageDto, IdentificationTypeDto, GenderDto, BasicPersonalDataDto } from '@api-rest/api-model';
 
 const ROUTE_SEARCH = 'pacientes/search';
 
 @Component({
-  selector: 'app-new-appointment',
-  templateUrl: './new-appointment.component.html',
-  styleUrls: ['./new-appointment.component.scss']
+	selector: 'app-new-appointment',
+	templateUrl: './new-appointment.component.html',
+	styleUrls: ['./new-appointment.component.scss']
 })
 export class NewAppointmentComponent implements OnInit {
 
-	@ViewChild('stepper', {static: false}) stepper: MatStepper;
+	@ViewChild('stepper', { static: false }) stepper: MatStepper;
 
 	public formSearch: FormGroup;
 	public appointmentInfoForm: FormGroup;
@@ -38,8 +38,8 @@ export class NewAppointmentComponent implements OnInit {
 	public readonly hasError = hasError;
 	private readonly routePrefix;
 
-  	constructor(
-		@Inject(MAT_DIALOG_DATA) public data: {date: string, diaryId: number, hour: string, openingHoursId: number, overturnMode: boolean},
+	constructor(
+		@Inject(MAT_DIALOG_DATA) public data: { date: string, diaryId: number, hour: string, openingHoursId: number, overturnMode: boolean },
 		public dialogRef: MatDialogRef<NewAppointmentComponent>,
 		private readonly formBuilder: FormBuilder,
 		private readonly personMasterDataService: PersonMasterDataService,
@@ -50,11 +50,11 @@ export class NewAppointmentComponent implements OnInit {
 		private readonly renaperService: RenaperService,
 		private readonly healthInsurance: HealthInsuranceService,
 		private readonly appointmentsService: AppointmentsService,
-  	) {
+	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 	}
 
-  	ngOnInit(): void {
+	ngOnInit(): void {
 		this.formSearch = this.formBuilder.group({
 			identifType: [null, Validators.required],
 			identifNumber: [null, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
@@ -74,7 +74,7 @@ export class NewAppointmentComponent implements OnInit {
 
 		this.personMasterDataService.getGenders().subscribe(
 			genders => { this.genderOptions = genders; });
-  	}
+	}
 
 	search(): void {
 		if (this.isFormSearchValid()) {
@@ -93,14 +93,15 @@ export class NewAppointmentComponent implements OnInit {
 							this.person = basicPersonalData;
 							this.appointmentInfoForm.controls.phoneNumber.setValue(basicPersonalData.phoneNumber);
 						});
-						this.renaperService.getHealthInsurance({ identificationNumber: this.formSearch.controls.identifNumber.value, genderId: this.formSearch.controls.gender.value })
-						.subscribe(healthInsuranceData => {
-							if (healthInsuranceData) {
-								this.healtInsuranceOptions = healthInsuranceData;
-							} else {
-								this.setAllHealthInsuranceOptions();
-							}
-						}, () => this.setAllHealthInsuranceOptions());
+						this.renaperService.getHealthInsurance(
+							{ identificationNumber: this.formSearch.controls.identifNumber.value, genderId: this.formSearch.controls.gender.value })
+							.subscribe(healthInsuranceData => {
+								if (healthInsuranceData) {
+									this.healtInsuranceOptions = healthInsuranceData;
+								} else {
+									this.setAllHealthInsuranceOptions();
+								}
+							}, () => this.setAllHealthInsuranceOptions());
 						this.snackBarService.showSuccess('turnos.new-appointment.messages.SUCCESS');
 						this.stepper.next();
 					} else {
@@ -136,19 +137,19 @@ export class NewAppointmentComponent implements OnInit {
 			this.snackBarService.showSuccess('turnos.new-appointment.messages.APPOINTMENT_SUCCESS');
 			this.dialogRef.close(true);
 		}, error => {
-			processErrors(error, (msg)=>this.snackBarService.showError(msg));
+			processErrors(error, (msg) => this.snackBarService.showError(msg));
 		});
 	}
 
 	goCreatePatient() {
 		this.router.navigate([this.routePrefix + ROUTE_SEARCH],
-		{
-			queryParams: {
-				identificationTypeId: this.formSearch.controls.identifType.value,
-				identificationNumber: this.formSearch.controls.identifNumber.value,
-				genderId: this.formSearch.controls.gender.value
-			}
-		});
+			{
+				queryParams: {
+					identificationTypeId: this.formSearch.controls.identifType.value,
+					identificationNumber: this.formSearch.controls.identifNumber.value,
+					genderId: this.formSearch.controls.gender.value
+				}
+			});
 	}
 
 	showConfirmButton() {
