@@ -104,6 +104,7 @@ export class NewAppointmentComponent implements OnInit {
 							}, () => this.setAllHealthInsuranceOptions());
 						this.snackBarService.showSuccess('turnos.new-appointment.messages.SUCCESS');
 						this.stepper.next();
+						this.appointmentInfoForm.reset();
 					} else {
 						this.snackBarService.showError('turnos.new-appointment.messages.ERROR');
 						this.showAddPatient = true;
