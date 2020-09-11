@@ -23,7 +23,19 @@ section.problems {
     margin-top: 0px;
 }
 
+.problem {
+    margin-bottom: 15px;
+}
+
 #historical-problems-card {
     min-width: 60%;
     width: 100%;
+}
+
+h3 {
+    margin: 0px;
+}
+
+div.problem-container {
+    max-width: 70%;
 }

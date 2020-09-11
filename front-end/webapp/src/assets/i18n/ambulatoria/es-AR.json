@@ -137,8 +137,20 @@
 				"BOTON_CONFIRMAR_POPUP": "Confirmar",
 				"SUCCESS_CONFIRMAR_POPUP": "El problema ha sido resuelto exitosamente",
 				"ERROR_CONFIRMAR_POPUP": "Ocurrió un error al resolver el problema",
-				"HISTORICAL_TITLE": "Histórico de evoluciones",
-				"NO_FILTERED_PROBLEMS": "No hay resultados para la búsqueda seleccionada"
+				"historical-problems": {
+					"NO_FILTERED_PROBLEMS": "No hay resultados para la búsqueda seleccionada",
+					"HISTORICAL_TITLE": "Histórico de evoluciones",
+					"REASONS": "Motivos",
+					"PROCEDURES": "Procedimientos",
+					"PROFESSIONAL": "Médico",
+					"EVOLUTION_NOTE": "Descripción/Resumen"
+				},
+				"historical-filters": {
+					"SPECIALITY": "Especialidad",
+					"PROFESSIONAL": "Médico",
+					"PROBLEM": "Problema",
+					"CONSULTATION_DATE": "Fecha de consulta"
+				}
 			},
 			"profile": {
 				"BUTTON_HISTORIA_CLINICA": "Historia Clínica",

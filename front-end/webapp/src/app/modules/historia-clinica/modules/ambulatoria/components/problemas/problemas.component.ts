@@ -31,7 +31,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	public solvedProblems$: Observable<HCEPersonalHistoryDto[]>;
 	public chronicProblems$: Observable<HCEPersonalHistoryDto[]>;
 	public hospitalizationProblems$: Observable<HCEHospitalizationHistoryDto[]>;
-	public historicalProblemsList;
+	public historicalProblemsList: HistoricalProblems[];
 	public historicalProblemsAmount: number;
 	private historicalProblems$: Subscription;
 	private patientId: number;
@@ -102,6 +102,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 			})
 		);
 
+		//hacer el mapper del dto a lo que uso yo en el front
 		this.historicalProblems$ = this.historicalProblemsService.getHistoricalProblems().pipe(
 			tap(historicalProblems => this.historicalProblemsAmount = historicalProblems ? historicalProblems.length : 0)
 		).subscribe(data => this.historicalProblemsList = data);
@@ -128,4 +129,23 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	ngOnDestroy(): void {
 		this.historicalProblems$.unsubscribe();
   	}
+}
+
+export class HistoricalProblems {
+	consultationDate: string;
+	consultationEvolutionNote: string;
+	consultationProfessionalName: string;
+	problemId: string;
+	problemPt: string;
+  	consultationReasons:
+	{
+		reasonId: string;
+		reasonPt: string;
+  	}[];
+	consultationProcedures:
+	{
+		procedureDate: string;
+		procedureId: string;
+		procedurePt: string;
+	}[];
 }

@@ -119,7 +119,7 @@
 			<mat-card-content>
 				<div fxLayout="row">
 					<div id="filters" class="filter-panel">
-						<h2 class="page-title" [translate]="'ambulatoria.paciente.problemas.HISTORICAL_TITLE'"></h2>
+						<h2 class="page-title" [translate]="'ambulatoria.paciente.problemas.historical-problems.HISTORICAL_TITLE'"></h2>
 						<mat-card-subtitle>
 							<span *ngIf="historicalProblemsList" id="historicalProblemsAmount"> {{historicalProblemsAmount}} resultados </span>
 						</mat-card-subtitle>
@@ -128,11 +128,53 @@
 					<div class="spinner" *ngIf="!historicalProblemsList">
 						<mat-spinner color="primary"></mat-spinner>
 					</div>
-					<section class="problems" id="bed-mapping" *ngIf="historicalProblemsList && historicalProblemsList.length">
+					<section class="problems" id="historical-problem-mapping" *ngIf="historicalProblemsList && historicalProblemsList.length">
+						<div class="problem" fxLayout="row" fxLayoutGap="15px" *ngFor="let historicalProblem of historicalProblemsList">
+							
+							<mat-icon mat-list-icon fontSet="material-icons-outlined" color="primary">assignment</mat-icon>
 
+							<div fxLayout="column" fxLayoutGap="15px">
+								<div fxLayout="row" fxLayoutGap="15px">								
+									<div fxLayout="column wrap" class="problem-container">
+										<h2 class="mat-h2 page-title primary capitalize-first-letter">{{historicalProblem.problemPt}}</h2>
+
+										<div *ngIf="historicalProblem.consultationReasons">
+											<div class="mat-body-strong" [translate]="'ambulatoria.paciente.problemas.historical-problems.REASONS'"></div>
+											<div *ngFor="let reason of historicalProblem.consultationReasons">
+												<div class="mat-body">{{reason.reasonPt}}</div>
+											</div>
+										</div>
+
+										<div *ngIf="historicalProblem.consultationProcedures">
+											<div class="mat-body-strong" [translate]="'ambulatoria.paciente.problemas.historical-problems.PROCEDURES'"></div>
+											<div *ngFor="let procedure of historicalProblem.consultationProcedures">
+												<div class="mat-body">{{procedure.procedurePt}}</div>
+											</div>
+										</div>
+									</div>
+
+									<div fxLayout="column" fxLayoutGap="10px">
+										<div>
+											{{historicalProblem.consultationDate}}
+										</div>
+										<div>
+											<h3 class="mat-h2 primary" [translate]="'ambulatoria.paciente.problemas.historical-problems.PROFESSIONAL'"></h3>
+											{{historicalProblem.consultationProfessionalName}}
+										</div>
+									</div>
+								</div>
+
+								<div>
+									<h3 class="mat-h2 primary" [translate]="'ambulatoria.paciente.problemas.historical-problems.EVOLUTION_NOTE'"></h3>
+									<div class="mat-body">{{historicalProblem.consultationEvolutionNote}}</div>
+								</div>
+
+								<mat-divider id="mat-divider" inset></mat-divider>
+							</div>
+						</div>
 					</section>
 					<section class="problems" *ngIf="historicalProblemsList && !historicalProblemsList.length" fxLayout="column" fxLayoutAlign="space-around center">
-						<h2 [translate]="'ambulatoria.paciente.problemas.NO_FILTERED_PROBLEMS'"></h2>
+						<h2 [translate]="'ambulatoria.paciente.problemas.historical-problems.NO_FILTERED_PROBLEMS'"></h2>
 					</section>
 				</div>
 			</mat-card-content>
