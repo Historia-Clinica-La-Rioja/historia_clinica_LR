@@ -2,7 +2,6 @@ package net.pladema.clinichistory.ips.service.impl;
 
 import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.service.NoteService;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.HealthConditionMapper;
 import net.pladema.clinichistory.ips.repository.HealthConditionRepository;
 import net.pladema.clinichistory.ips.repository.entity.HealthCondition;
 import net.pladema.clinichistory.ips.repository.masterdata.ConditionClinicalStatusRepository;
@@ -51,13 +50,12 @@ public class HealthConditionServiceImpl implements HealthConditionService {
 
     private final DateTimeProvider dateTimeProvider;
 
-    private final HealthConditionMapper healthConditionMapper;
 
     public HealthConditionServiceImpl(HealthConditionRepository healthConditionRepository,
                                       ConditionVerificationStatusRepository conditionVerificationStatusRepository,
                                       ConditionClinicalStatusRepository conditionClinicalStatusRepository, SnomedService snomedService,
                                       DocumentService documentService,
-                                      NoteService noteService, DateTimeProvider dateTimeProvider, HealthConditionMapper healthConditionMapper){
+                                      NoteService noteService, DateTimeProvider dateTimeProvider){
         this.healthConditionRepository = healthConditionRepository;
         this.conditionVerificationStatusRepository = conditionVerificationStatusRepository;
         this.conditionClinicalStatusRepository = conditionClinicalStatusRepository;
@@ -65,7 +63,6 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         this.documentService = documentService;
         this.noteService = noteService;
         this.dateTimeProvider = dateTimeProvider;
-        this.healthConditionMapper = healthConditionMapper;
     }
 
     private HealthCondition save(HealthCondition healthCondition){
@@ -120,9 +117,9 @@ public class HealthConditionServiceImpl implements HealthConditionService {
 
             documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
         });
-        List<DiagnosisBo> result = diagnosis;
-        LOG.debug(OUTPUT, result);
-        return result;
+
+        LOG.debug(OUTPUT, diagnosis);
+        return diagnosis;
     }
 
     private HealthCondition buildDiagnoses(Integer patientId, DiagnosisBo info) {
@@ -165,9 +162,8 @@ public class HealthConditionServiceImpl implements HealthConditionService {
 
             documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
         });
-        List<HealthHistoryConditionBo> result = personalHistories;
-        LOG.debug(OUTPUT, result);
-        return result;
+        LOG.debug(OUTPUT, personalHistories);
+        return personalHistories;
     }
 
     private HealthCondition buildPersonalHistory(Integer patientId, HealthHistoryConditionBo info) {
@@ -196,9 +192,9 @@ public class HealthConditionServiceImpl implements HealthConditionService {
 
             documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
         });
-        List<HealthHistoryConditionBo> result = familyHistories;
-        LOG.debug(OUTPUT, result);
-        return result;
+
+        LOG.debug(OUTPUT, familyHistories);
+        return familyHistories;
     }
 
     private HealthCondition buildFamilyHistory(Integer patientId, HealthHistoryConditionBo info) {
@@ -259,9 +255,9 @@ public class HealthConditionServiceImpl implements HealthConditionService {
 
             documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
         });
-        List<ProblemBo> result = problems;
-        LOG.debug(OUTPUT, result);
-        return result;
+
+        LOG.debug(OUTPUT, problems);
+        return problems;
     }
 
     private HealthCondition buildProblem(Integer patientId, ProblemBo info) {
@@ -292,7 +288,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
 
         HealthConditionNewConsultationBo newConsultationBo = new HealthConditionNewConsultationBo(hc);
         newConsultationBo.setSnomed(snomedService.getSnomed(hc.getSctidCode()));
-        //newConsultationBo.setIsChronic(ProblemType.CHRONIC.equals(hc.getProblemId()));
         return newConsultationBo;
     }
+
 }

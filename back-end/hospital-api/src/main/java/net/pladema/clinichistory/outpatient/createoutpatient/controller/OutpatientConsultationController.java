@@ -3,6 +3,7 @@ package net.pladema.clinichistory.outpatient.createoutpatient.controller;
 import com.itextpdf.text.DocumentException;
 import net.pladema.clinichistory.documents.events.OnGenerateDocumentEvent;
 import net.pladema.clinichistory.documents.events.OnGenerateOutpatientDocumentEvent;
+import net.pladema.clinichistory.ips.controller.dto.HealthConditionNewConsultationDto;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.EDocumentType;
 import net.pladema.clinichistory.ips.service.domain.ImmunizationBo;
@@ -29,6 +30,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -68,6 +70,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         this.outpatientConsultationMapper = outpatientConsultationMapper;
         this.appointmentExternalService = appointmentExternalService;
         this.pdfService = pdfService;
+
     }
 
     @Override
@@ -125,7 +128,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 
         outpatient = createOutpatientDocumentService.create(newOutPatient.getId(), patientId, outpatient);
 
-        if (finishAppointment)
+        if (Boolean.TRUE.equals(finishAppointment))
             appointmentExternalService.serveAppointment(patientId, doctorId);
         generateDocument(outpatient, institutionId, newOutPatient.getId(), patientId);
 
@@ -155,5 +158,22 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 
         LOG.debug(OUTPUT, true);
         return  ResponseEntity.ok().body(true);
+    }
+
+    @Override
+    public ResponseEntity<Boolean> solveHealthCondition(
+            Integer institutionId,
+            Integer patientId,
+            @Valid HealthConditionNewConsultationDto solvedProblemDto) throws IOException, DocumentException {
+        LOG.debug("Input parameters -> institutionId {}, patientId {}, HealthConditionNewConsultationDto {}", institutionId, patientId, solvedProblemDto);
+        Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
+        OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, false);
+
+        OutpatientDocumentBo outpatient = new OutpatientDocumentBo();
+        outpatient.setProblems(Arrays.asList(outpatientConsultationMapper.fromHealthConditionNewConsultationDto(solvedProblemDto)));
+        outpatient = createOutpatientDocumentService.create(newOutPatient.getId(), patientId, outpatient);
+        generateDocument(outpatient, institutionId, newOutPatient.getId(), patientId);
+
+        return ResponseEntity.ok().body(true);
     }
 }

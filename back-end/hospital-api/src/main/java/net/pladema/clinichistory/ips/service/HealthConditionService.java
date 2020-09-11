@@ -24,4 +24,5 @@ public interface HealthConditionService {
     List<ProblemBo> loadProblems(Integer patientId, Long documentId, List<ProblemBo> problems);
 
     HealthConditionNewConsultationBo getHealthCondition(Integer healthConditionId);
+
 }

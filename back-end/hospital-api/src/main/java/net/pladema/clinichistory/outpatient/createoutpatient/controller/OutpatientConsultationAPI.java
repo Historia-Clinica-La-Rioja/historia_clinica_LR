@@ -2,6 +2,7 @@ package net.pladema.clinichistory.outpatient.createoutpatient.controller;
 
 import com.itextpdf.text.DocumentException;
 import io.swagger.annotations.Api;
+import net.pladema.clinichistory.ips.controller.dto.HealthConditionNewConsultationDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.constraints.HasAppointment;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientImmunizationDto;
@@ -36,4 +37,10 @@ public interface OutpatientConsultationAPI {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId,
             @RequestBody @Valid OutpatientUpdateImmunizationDto vaccineDto) throws IOException, DocumentException;
+
+    @PostMapping("/solveProblem")
+    ResponseEntity<Boolean> solveHealthCondition(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "patientId") Integer patientId,
+            @RequestBody @Valid HealthConditionNewConsultationDto solvedProblemDto) throws IOException, DocumentException;
 }

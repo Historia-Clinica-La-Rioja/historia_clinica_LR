@@ -1,14 +1,17 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.controller.mapper;
 
+import net.pladema.clinichistory.ips.controller.dto.HealthConditionNewConsultationDto;
 import net.pladema.clinichistory.ips.service.domain.ImmunizationBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientImmunizationDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientReasonDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientUpdateImmunizationDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientDocumentBo;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProblemBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ReasonBo;
 import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 import java.util.List;
@@ -27,4 +30,9 @@ public interface OutpatientConsultationMapper {
 
     @Named("fromOutpatientUpdateImmunizationDto")
     ImmunizationBo fromOutpatientImmunizationDto(OutpatientUpdateImmunizationDto outpatientUpdateImmunization);
+
+    @Named("fromHealthConditionNewConsultationDto")
+    @Mapping(source = "inactivationDate", target = "endDate")
+    ProblemBo fromHealthConditionNewConsultationDto(HealthConditionNewConsultationDto healthConditionNewConsultationDto);
 }
+
