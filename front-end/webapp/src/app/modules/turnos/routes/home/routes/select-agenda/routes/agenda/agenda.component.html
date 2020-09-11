@@ -47,6 +47,7 @@
 											[events]="events"
 											[dayStartHour]="dayStartHour" [dayEndHour]="dayEndHour"
 											[hourSegmentTemplate]="hourSegmentTemplate"
+											[headerTemplate]="headerTemplate"
 											[hourSegments]="hourSegments"
 											[weekStartsOn]="MONDAY"
 											(beforeViewRender)="loadCalendar($event)"
@@ -82,6 +83,18 @@
 					 [ngClass]="segment.cssClass">
 					<div class="cal-time" *ngIf="isTimeLabel">
 						{{ segment.date | calendarDate:'weekViewHour':locale }}
+					</div>
+				</div>
+			</ng-template>
+
+			<ng-template #headerTemplate let-days="days" let-locale="locale">
+				<div class="cal-day-headers">
+					<div style="cursor: pointer" class="cal-header" (click)="goToDayViewOn(day.date)" *ngFor="let day of days">
+						<strong>
+							{{ day.date | calendarDate:'weekViewColumnHeader':locale | titlecase}}
+						</strong>
+						<br>
+						<span> {{ day.date | calendarDate: 'weekViewColumnSubHeader'}}</span>
 					</div>
 				</div>
 			</ng-template>

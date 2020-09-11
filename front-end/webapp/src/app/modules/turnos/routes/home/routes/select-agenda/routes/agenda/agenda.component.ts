@@ -158,6 +158,11 @@ export class AgendaComponent implements OnInit {
 		this.loadAppointments();
 	}
 
+	goToDayViewOn(date: Date) {
+		this.viewDate = date;
+		this.view = this.calendarViewEnum.Day;
+	}
+
 	private loadAppointments() {
 		this.appointmentsService.getList([this.agenda.id], this.agenda.startDate, this.agenda.endDate)
 			.subscribe((appointments: AppointmentListDto[]) => {
