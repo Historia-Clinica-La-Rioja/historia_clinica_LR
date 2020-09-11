@@ -90,7 +90,6 @@ public class AnamnesisController {
                 .orElseThrow(() -> new EntityNotFoundException(INVALID_EPISODE));
         AnamnesisBo anamnesis = anamnesisMapper.fromAnamnesisDto(anamnesisDto);
         anamnesis = createAnamnesisService.createDocument(internmentEpisodeId, patientId, anamnesis);
-        ResponseAnamnesisDto result = anamnesisMapper.fromAnamnesis(anamnesis);
         generateDocument(anamnesis, institutionId, internmentEpisodeId, patientId);
         LOG.debug(OUTPUT, Boolean.TRUE);
         return  ResponseEntity.ok().body(Boolean.TRUE);

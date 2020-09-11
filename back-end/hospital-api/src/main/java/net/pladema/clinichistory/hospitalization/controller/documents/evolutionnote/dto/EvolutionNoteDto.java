@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.hospitalization.controller.constraints.DiagnosisValid;
+import net.pladema.clinichistory.hospitalization.controller.constraints.ProceduresValid;
 import net.pladema.clinichistory.hospitalization.controller.documents.DocumentDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.DocumentObservationsDto;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.*;
@@ -40,6 +41,7 @@ public class EvolutionNoteDto implements DocumentDto, Serializable {
     private List<@Valid AllergyConditionDto> allergies = new ArrayList<>();
 
     @Nullable
+    @ProceduresValid
     private List<@Valid HospitalizationProcedureDto> procedures = new ArrayList<>();
 
     @Valid

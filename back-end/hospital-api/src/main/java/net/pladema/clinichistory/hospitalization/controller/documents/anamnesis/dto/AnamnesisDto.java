@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.hospitalization.controller.constraints.DiagnosisValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.HealthHistoryConditionValid;
+import net.pladema.clinichistory.hospitalization.controller.constraints.ProceduresValid;
 import net.pladema.clinichistory.hospitalization.controller.documents.DocumentDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.DocumentObservationsDto;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.*;
@@ -41,6 +42,7 @@ public class AnamnesisDto implements DocumentDto, Serializable {
     private List<@Valid HealthHistoryConditionDto> personalHistories = new ArrayList<>();
 
     @Nullable
+    @ProceduresValid
     private List<@Valid HospitalizationProcedureDto> procedures = new ArrayList<>();
 
     @NotNull

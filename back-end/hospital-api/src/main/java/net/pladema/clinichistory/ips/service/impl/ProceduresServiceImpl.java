@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -64,7 +63,7 @@ public class ProceduresServiceImpl implements ProceduresService {
         Procedure result = new Procedure(
                 patientId,
                 sctId,
-                procedureBo.getStatusId(), procedureBo.getFecha());
+                procedureBo.getStatusId(), procedureBo.getPerformedDate());
 
         result = proceduresRepository.save(result);
         LOG.debug("Procedure saved -> {}", result.getId());

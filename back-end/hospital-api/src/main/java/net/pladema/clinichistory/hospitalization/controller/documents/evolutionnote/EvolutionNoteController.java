@@ -100,7 +100,6 @@ public class EvolutionNoteController {
                 .orElseThrow(() -> new EntityNotFoundException(INVALID_INTERNMENT_EPISODE));
         EvolutionNoteBo evolutionNote = evolutionNoteMapper.fromEvolutionNoteDto(evolutionNoteDto);
         evolutionNote = createEvolutionNoteService.createDocument(internmentEpisodeId, patientId, evolutionNote);
-        ResponseEvolutionNoteDto result = evolutionNoteMapper.fromEvolutionNote(evolutionNote);
         generateDocument(evolutionNote, institutionId, internmentEpisodeId, patientId);
         LOG.debug(OUTPUT, Boolean.TRUE);
         return  ResponseEntity.ok().body(Boolean.TRUE);

@@ -102,7 +102,7 @@
                 <dd><p  th:text="${'- ' + procedure.snomed.pt}"></p></dd>
                 <dl>
                     <dd><strong>Estado: </strong><label  th:text="${procedure.status}"></label></dd>
-                    <dd th:if="${procedure.performanceDate  != null}"><strong>Fecha de realización: </strong><label th:text="${procedure.performanceDate}"></label></dd>
+                    <dd th:if="${procedure.performedDate  != null}"><strong>Fecha de realización: </strong><label th:text="${procedure.performedDate}"></label></dd>
                 </dl>
             </dl>
         </div>

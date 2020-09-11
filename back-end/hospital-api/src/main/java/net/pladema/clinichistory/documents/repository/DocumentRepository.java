@@ -44,7 +44,7 @@ public interface DocumentRepository extends JpaRepository<Document, Long>, Docum
             "and d.sourceTypeId = " + SourceType.HOSPITALIZATION)
     List<Updateable> getUpdatablesDocuments(@Param("internmentEpisodeId") Integer internmentEpisodeId);
 
-    @Query(value = "SELECT new  net.pladema.person.repository.domain.ProcedureReduced(snomedPr.pt, pr.performedDate) " +
+    @Query(value = "SELECT DISTINCT new  net.pladema.person.repository.domain.ProcedureReduced(snomedPr.pt, pr.performedDate) " +
             "FROM DocumentProcedure AS dp " +
             "JOIN Procedure AS pr ON (pr.id = dp.pk.procedureId) " +
             "JOIN Snomed AS snomedPr ON (pr.sctidCode = snomedPr.id) " +
