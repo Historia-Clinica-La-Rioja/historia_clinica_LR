@@ -103,4 +103,8 @@ export class SelectAgendaComponent implements OnInit {
 			}
 		});
 	}
+
+	goToNewAgenda(): void {
+		this.router.navigate([`${this.routePrefix}/turnos/nueva-agenda/`]);
+	}
 }

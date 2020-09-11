@@ -1,12 +1,12 @@
 <section id="select-agenda"
-		 *ngIf="agendas?.length"
-		 fxLayout="row" fxLayoutAlign="space-between center"
-		 fxLayout.xs="column" fxLayoutAlign.xs="space-between center">
+         *ngIf="agendas?.length"
+         fxLayout="row" fxLayoutAlign="space-between center"
+         fxLayout.xs="column" fxLayoutAlign.xs="space-between center">
 	<mat-form-field fxFlex.gt-xs="30%" appearance="outline">
 		<mat-label [translate]="'turnos.home.SELECT_AGENDA'"></mat-label>
 		<mat-select [(value)]="agendaSelected">
 			<mat-option *ngFor="let agenda of agendas" [value]="agenda"
-				(onSelectionChange)="changeAgendaSelected($event, agenda)">
+			            (onSelectionChange)="changeAgendaSelected($event, agenda)">
 				<span class="mat-body-strong">
 					{{agenda.doctorsOfficeDescription}}
 				</span>
@@ -18,10 +18,12 @@
 	</mat-form-field>
 
 	<div class="actions" *ngIf="agendaSelected" fxLayout="row" fxLayoutGap="3px">
-		<button mat-flat-button color="primary" *hasRole="['ADMINISTRADOR_AGENDA']" id="edit_agenda" name="edit_agenda" (click)="goToEditAgenda()">
+		<button mat-flat-button color="primary" *hasRole="['ADMINISTRADOR_AGENDA']" id="edit_agenda" name="edit_agenda"
+		        (click)="goToEditAgenda()">
 			<mat-icon>edit</mat-icon>
 		</button>
-		<button mat-flat-button color="warn" *hasRole="['ADMINISTRADOR_AGENDA']" id="delete_agenda" name="delete_agenda" (click)="deleteAgenda()">
+		<button mat-flat-button color="warn" *hasRole="['ADMINISTRADOR_AGENDA']" id="delete_agenda" name="delete_agenda"
+		        (click)="deleteAgenda()">
 			<mat-icon>delete</mat-icon>
 		</button>
 	</div>
@@ -29,8 +31,19 @@
 </section>
 
 <ng-container *ngIf="!agendas?.length">
-	<section id="no-agenda" *ngIf="agendas?.length === 0">
-		<app-no-data [message]="'El profesional no posee agenda activa'"></app-no-data>
+	<section id="no-agenda" *ngIf="agendas?.length === 0" class="no-agenda">
+		<mat-card>
+			<mat-card-header>
+				<mat-card-title [translate]="'turnos.home.NO_AGENDA_MSG_TITLE'"></mat-card-title>
+				<mat-card-subtitle [translate]="'turnos.home.NO_AGENDA_MSG_SUBTITLE'"></mat-card-subtitle>
+			</mat-card-header>
+			<mat-card-content>
+				<button mat-flat-button color="primary" id="goToNewAgendaButton" *hasRole="['ADMINISTRADOR_AGENDA']"
+				        (click)="goToNewAgenda()" fxFlexFill.xs>
+					<span class="uppercase" [translate]="'turnos.home.actions.CREATE_AGENDA'"></span>
+				</button>
+			</mat-card-content>
+		</mat-card>
 	</section>
 </ng-container>
 

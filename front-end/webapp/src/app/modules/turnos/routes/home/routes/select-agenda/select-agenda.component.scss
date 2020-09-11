@@ -9,3 +9,13 @@
 	}
 }
 
+.no-agenda {
+	.mat-card {
+		align-items: center;
+		display: flex;
+		flex-direction: column;
+		padding: 40px 0;
+		text-align: center;
+	}
+}
+
