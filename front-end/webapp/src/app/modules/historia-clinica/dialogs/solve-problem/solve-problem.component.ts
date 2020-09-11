@@ -9,6 +9,7 @@ import {ProblemasNuevaConsultaService} from "../../modules/ambulatoria/services/
 import {SnomedService} from "../../services/snomed.service";
 import {HEALTH_CLINICAL_STATUS} from "../../modules/internacion/constants/ids";
 import {OutpatientConsultationService} from "@api-rest/services/outpatient-consultation.service";
+import {Router} from "@angular/router";
 
 @Component({
 	selector: 'app-solve-problem',
@@ -24,6 +25,7 @@ export class SolveProblemComponent implements OnInit {
 	private problema: HealthConditionNewConsultationDto;
 	private dataDto:HCEPersonalHistoryDto;
 	private readonly patientId:number;
+	private readonly problemId:number;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) data,
@@ -32,12 +34,15 @@ export class SolveProblemComponent implements OnInit {
 		private readonly dialog: MatDialog,
 		private readonly healthConditionService: HealthConditionService,
 		private readonly snomedService: SnomedService,
-		private readonly outpatientConsultationService: OutpatientConsultationService
+		private readonly outpatientConsultationService: OutpatientConsultationService,
+		private readonly router: Router
 	) {
 		this.problemasNuevaConsultaService = new ProblemasNuevaConsultaService(formBuilder, snomedService);
 		this.dataDto = data.problema;
 		this.patientId = data.patientId;
+		this.problemId = this.dataDto.id;
 		this.form = this.formBuilder.group({
+			snomed: [null, Validators.required],
 			cronico: [null, Validators.required],
 			fechaInicio: [null, Validators.required],
 			fechaFin: [null]
@@ -47,20 +52,24 @@ export class SolveProblemComponent implements OnInit {
 	ngOnInit(): void {
 		this.healthConditionService.getHealthCondition(this.dataDto.id).subscribe(p => {
 			this.problema = p;
-			this.form.controls.cronico.setValue(p.isChronic);
-			this.form.controls.fechaInicio.setValue(new Date(p.startDate).toLocaleDateString());
-			const inactivationDate = p.inactivationDate;
-			if(inactivationDate) {
-				this.form.controls.fechaFin.setValue(new Date(p.inactivationDate).toLocaleDateString());
-			}
+			this.initializeFields(p);
 		});
 
 	}
 
+	initializeFields(p: HealthConditionNewConsultationDto){
+		this.form.controls.snomed.setValue(p.snomed.pt);
+		this.form.controls.cronico.setValue(p.isChronic);
+		this.form.controls.fechaInicio.setValue(new Date(p.startDate).toLocaleDateString());
+		const inactivationDate = p.inactivationDate;
+		if(inactivationDate) {
+			this.form.controls.fechaFin.setValue(new Date(p.inactivationDate).toLocaleDateString());
+		}
+	}
 
 	solveProblem() {
 		if(this.form.valid) {
-			const dialogRef = this.dialog.open(ConfirmDialogComponent,
+			const dialogRefConfirmation = this.dialog.open(ConfirmDialogComponent,
 				{
 					data: {
 						title: 'ambulatoria.paciente.problemas.TITLE_POPUP_RESOLVER_PROBLEMA',
@@ -69,18 +78,21 @@ export class SolveProblemComponent implements OnInit {
 					}
 				});
 
-			dialogRef.afterClosed().subscribe(confirmed => {
+			dialogRefConfirmation.afterClosed().subscribe(confirmed => {
 				if (confirmed) {
-					this.problema.inactivationDate = this.form.value.inactivationDate;
+					this.problema.inactivationDate = this.form.value.fechaFin.toDate();
 					this.problema.statusId = HEALTH_CLINICAL_STATUS.RESUELTO;
+					this.problema.id = this.problemId;
+
 					this.outpatientConsultationService.solveProblem(this.problema, this.patientId).subscribe(
 						_ => {
-							this.snackBarService.showSuccess('ambulatoria.paciente.problemas.SUCCESS_CONFIRMAR_POPUP')
+							this.snackBarService.showSuccess('ambulatoria.paciente.problemas.SUCCESS_CONFIRMAR_POPUP');
 						},
 						_ => {
 							this.snackBarService.showError('ambulatoria.paciente.problemas.ERROR_CONFIRMAR_POPUP')
 						}
 					);
+					this.dialog.closeAll();
 				}
 			});
 		}

@@ -16,6 +16,22 @@ section {
 	text-align: center;
 }
 
-div.spinner {
-	@include centered-spinner;
+.mat-form-field{
+	width: 100%;
+}
+
+.name{
+	text-transform: capitalize;
+}
+
+.checkbox{
+	alignment: left;
+}
+
+.mat-form-field--no-underline .mat-input-underline {
+	background-color: transparent;
+}
+
+.input-checkbox-solve-problem{
+	display: none;
 }

@@ -46,6 +46,13 @@ export class ProblemasComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+		this.loadActiveProblems();
+		this.loadChronicProblems();
+		this.loadHospitalizationProblems();
+		this.loadSolvedProblems();
+	}
+
+	loadActiveProblems(){
 		this.activeProblems$ = this.hceGeneralStateService.getActiveProblems(this.patientId).pipe(
 			map((problemas: HCEPersonalHistoryDto[]) => {
 				return problemas.map((problema: HCEPersonalHistoryDto) => {
@@ -54,6 +61,9 @@ export class ProblemasComponent implements OnInit {
 				})
 			})
 		);
+	}
+
+	loadSolvedProblems(){
 		this.solvedProblems$ = this.hceGeneralStateService.getSolvedProblems(this.patientId).pipe(
 			map((problemas: HCEPersonalHistoryDto[]) => {
 				return problemas.map((problema: HCEPersonalHistoryDto) => {
@@ -62,6 +72,9 @@ export class ProblemasComponent implements OnInit {
 				})
 			})
 		);
+	}
+
+	loadChronicProblems(){
 		this.chronicProblems$ = this.hceGeneralStateService.getChronicConditions(this.patientId).pipe(
 			map((problemas: HCEPersonalHistoryDto[]) => {
 				return problemas.map((problema: HCEPersonalHistoryDto) => {
@@ -70,6 +83,9 @@ export class ProblemasComponent implements OnInit {
 				})
 			})
 		);
+	}
+
+	loadHospitalizationProblems(){
 		this.hospitalizationProblems$ = this.hceGeneralStateService.getHospitalizationHistory(this.patientId).pipe(
 			map((problemas: HCEHospitalizationHistoryDto[]) => {
 				return problemas.map((problema: HCEHospitalizationHistoryDto) => {
@@ -91,6 +107,11 @@ export class ProblemasComponent implements OnInit {
 				problema,
 				patientId: this.patientId
 			}
-		});
+		}).afterClosed().subscribe(submit => {
+			if(!submit){
+				this.loadChronicProblems();
+				this.loadSolvedProblems();
+				this.loadActiveProblems()
+			}})
 	}
 }

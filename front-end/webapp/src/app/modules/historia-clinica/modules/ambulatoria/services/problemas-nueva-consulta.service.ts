@@ -119,7 +119,6 @@ export class ProblemasNuevaConsultaService {
 	}
 
 	getForm(): FormGroup {
-		console.log('FORM QUE ESTA BNIEN', this.form);
 		return this.form;
 	}
 
