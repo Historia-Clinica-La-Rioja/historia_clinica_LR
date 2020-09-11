@@ -9,7 +9,8 @@ import { ContextService } from '@core/services/context.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AppointmentDto } from '@api-rest/api-model';
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
-import { getError, hasError } from '@core/utils/form.utils';
+import { getError, hasError, processErrors } from '@core/utils/form.utils';
+import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
 
 @Component({
 	selector: 'app-appointment',
@@ -36,9 +37,9 @@ export class AppointmentComponent implements OnInit {
 		private readonly dialog: MatDialog,
 		private readonly appointmentService: AppointmentsService,
 		private readonly snackBarService: SnackBarService,
-		private readonly router: Router,
 		private readonly contextService: ContextService,
 		private readonly formBuilder: FormBuilder,
+		private readonly appointmentFacade: AppointmentsFacadeService
 	) {
 	}
 
@@ -106,7 +107,7 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	private submitNewState(newStateId: APPOINTMENT_STATES_ID, motivo?: string): void {
-		this.appointmentService.changeState(this.appointmentData.appointmentId, newStateId, motivo)
+		this.appointmentFacade.changeState(this.appointmentData.appointmentId, newStateId, motivo)
 			.subscribe(() => {
 				this.dialogRef.close('statuschanged');
 				this.snackBarService.showSuccess(`Estado de turno actualizado a ${getAppointmentState(newStateId).description} exitosamente`);
@@ -118,14 +119,14 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	updatePhoneNumber() {
-		this.phoneNumberEditMode = false;
-		this.appointmentService.updatePhoneNumber(this.appointmentData.appointmentId, this.phoneNumberForm.controls.phoneNumber.value)
-			.subscribe(() => {
-				this.snackBarService.showSuccess('El telefono se modificó correctamente');
+		this.appointmentFacade.updatePhoneNumber(this.appointmentData.appointmentId, this.phoneNumberForm.controls.phoneNumber.value).
+			subscribe(() => {
+				this.phoneNumberEditMode = false;
 				this.phoneNumberText = this.phoneNumberForm.controls.phoneNumber.value;
-			}
-			, () => this.snackBarService.showError('Error')
-			);
+				this.snackBarService.showSuccess('turnos.appointment.phoneNumber.SUCCESS');
+			},  error => {
+				processErrors(error, (msg) => this.snackBarService.showError(msg));
+			});
 	}
 }
 

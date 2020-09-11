@@ -52,6 +52,12 @@
 			"messages":{
 				"ERROR":"No es posible crear un sobreturno en este rango horario"
 			}
+		},
+		"appointment":{
+			"phoneNumber": {
+				"SUCCESS":"El teléfono se modificó correctamente"
+			}
+
 		}
 	}
 }

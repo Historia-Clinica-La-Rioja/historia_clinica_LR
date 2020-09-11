@@ -10,8 +10,8 @@ import { ContextService } from '@core/services/context.service';
 import { MatStepper, MatHorizontalStepper } from '@angular/material/stepper';
 import { RenaperService } from '@api-rest/services/renaper.service';
 import { HealthInsuranceService } from '@api-rest/services/health-insurance.service';
-import { AppointmentsService } from './../../../api-rest/services/appointments.service';
-import { CreateAppointmentDto, MedicalCoverageDto, IdentificationTypeDto, GenderDto, BasicPersonalDataDto } from '@api-rest/api-model';
+import { CreateAppointmentDto, MedicalCoverageDto, IdentificationTypeDto, GenderDto, BasicPersonalDataDto} from '@api-rest/api-model';
+import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
 
 const ROUTE_SEARCH = 'pacientes/search';
 
@@ -37,9 +37,9 @@ export class NewAppointmentComponent implements OnInit {
 
 	public readonly hasError = hasError;
 	private readonly routePrefix;
-
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public data: { date: string, diaryId: number, hour: string, openingHoursId: number, overturnMode: boolean },
+		@Inject(MAT_DIALOG_DATA) public data: {
+			date: string, diaryId: number, hour: string, openingHoursId: number, overturnMode: boolean},
 		public dialogRef: MatDialogRef<NewAppointmentComponent>,
 		private readonly formBuilder: FormBuilder,
 		private readonly personMasterDataService: PersonMasterDataService,
@@ -49,7 +49,7 @@ export class NewAppointmentComponent implements OnInit {
 		private readonly contextService: ContextService,
 		private readonly renaperService: RenaperService,
 		private readonly healthInsurance: HealthInsuranceService,
-		private readonly appointmentsService: AppointmentsService,
+		private readonly appointmentFacade: AppointmentsFacadeService
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 	}
@@ -133,7 +133,7 @@ export class NewAppointmentComponent implements OnInit {
 			phoneNumber: this.appointmentInfoForm.controls.phoneNumber.value
 		};
 
-		this.appointmentsService.create(newAppointment).subscribe(data => {
+		this.appointmentFacade.addAppointment(newAppointment).subscribe(data => {
 			this.snackBarService.showSuccess('turnos.new-appointment.messages.APPOINTMENT_SUCCESS');
 			this.dialogRef.close(true);
 		}, error => {
@@ -153,7 +153,9 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	showConfirmButton() {
-		return this.appointmentInfoForm.controls.affiliateNumber.valid && (this.appointmentInfoForm.controls.medicalCoverage.valid || this.appointmentInfoForm.controls.prepaid.valid) && this.appointmentInfoForm.controls.phoneNumber.valid;
+		return this.appointmentInfoForm.controls.affiliateNumber.valid
+			&& (this.appointmentInfoForm.controls.medicalCoverage.valid || this.appointmentInfoForm.controls.prepaid.valid)
+			&& this.appointmentInfoForm.controls.phoneNumber.valid;
 	}
 
 	disablePreviuosStep(stepperParam: MatHorizontalStepper) {
@@ -163,7 +165,9 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	private isFormSearchValid() {
-		return this.formSearch.controls.identifType.valid && this.formSearch.controls.identifNumber.valid && this.formSearch.controls.gender.valid;
+		return this.formSearch.controls.identifType.valid
+			&& this.formSearch.controls.identifNumber.valid
+			&& this.formSearch.controls.gender.valid;
 	}
 
 

@@ -16,20 +16,17 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import { DiaryService } from '@api-rest/services/diary.service';
 import { Moment } from 'moment';
 import { NewAppointmentComponent } from '../../../../../../dialogs/new-appointment/new-appointment.component';
-import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { CalendarEvent, WeekViewHourSegment } from 'calendar-utils';
 import { MEDICAL_ATTENTION } from '../../../../../../constants/descriptions';
 import { AppointmentComponent } from '../../../../../../dialogs/appointment/appointment.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { MINUTES_IN_HOUR } from '../../../../../../constants/appointment';
+import { AppointmentsFacadeService } from 'src/app/modules/turnos/services/appointments-facade.service';
+import { map, take } from 'rxjs/operators';
+import { Observable, forkJoin } from 'rxjs';
 
 const AGENDA_PROGRAMADA_CLASS = 'bg-green';
 const AGENDA_ESPONTANEA_CLASS = 'bg-blue';
-const enum COLORES {
-	PROGRAMADA = '#7FC681',
-	ESPONTANEA = '#2687C5',
-	SOBRETURNO = '#E3A063'
-}
 
 @Component({
 	selector: 'app-agenda',
@@ -44,7 +41,7 @@ export class AgendaComponent implements OnInit {
 
 	hourSegments: number;
 	agenda: CompleteDiaryDto;
-	events: CalendarEvent[] = [];
+
 	viewDate: Date = new Date();
 	loading = false;
 	dayStartHour: number;
@@ -52,12 +49,12 @@ export class AgendaComponent implements OnInit {
 	diaryOpeningHours: DiaryOpeningHoursDto[];
 
 	constructor(
-		private readonly appointmentsService: AppointmentsService,
 		private readonly cdr: ChangeDetectorRef,
 		private readonly dialog: MatDialog,
 		private readonly diaryService: DiaryService,
 		private readonly route: ActivatedRoute,
 		private snackBarService: SnackBarService,
+		public readonly appointmentFacade: AppointmentsFacadeService
 	) {
 	}
 
@@ -102,42 +99,36 @@ export class AgendaComponent implements OnInit {
 		if (this.getOpeningHoursId(event.date)) {
 			const clickedDate: Moment = dateToMomentTimeZone(event.date);
 			const openingHourId: number = this.getOpeningHoursId(event.date);
-			const addingOverturn = this.existsAppointmentAt(event.date);
 			const diaryOpeningHourDto: DiaryOpeningHoursDto =
 				this.diaryOpeningHours.find(diaryOpeningHour => diaryOpeningHour.openingHours.id === openingHourId);
-			const allOverturnsAssigned = this.allOverturnsAssignedForDiaryOpeningHour(diaryOpeningHourDto, clickedDate);
-			if (addingOverturn && allOverturnsAssigned) {
-				if (diaryOpeningHourDto.medicalAttentionTypeId !== MEDICAL_ATTENTION.SPONTANEOUS_ID) {
-					this.snackBarService.showError('turnos.overturns.messages.ERROR');
-				}
-			} else {
-				const dialogRef = this.dialog.open(NewAppointmentComponent, {
-					width: '28%',
-					data: {
-						date: clickedDate.format(DateFormat.API_DATE),
-						diaryId: this.agenda.id,
-						hour: clickedDate.format(DateFormat.HOUR_MINUTE_SECONDS),
-						openingHoursId: openingHourId,
-						overturnMode: addingOverturn
-					}
-				});
 
-				dialogRef.afterClosed().subscribe(submitted => {
-					if (submitted) {
-						this.loadAppointments();
+			forkJoin([
+				this.existsAppointmentAt(event.date).pipe(take(1)),
+				this.allOverturnsAssignedForDiaryOpeningHour(diaryOpeningHourDto, clickedDate).pipe(take(1))
+			]).subscribe(([addingOverturn, numberOfOverturnsAssigned]) => {
+				if (addingOverturn && (numberOfOverturnsAssigned === diaryOpeningHourDto.overturnCount)) {
+					if (diaryOpeningHourDto.medicalAttentionTypeId !== MEDICAL_ATTENTION.SPONTANEOUS_ID) {
+						this.snackBarService.showError('turnos.overturns.messages.ERROR');
 					}
-				});
-			}
+				} else {
+					const dialogRef = this.dialog.open(NewAppointmentComponent, {
+						width: '28%',
+						data: {
+							date: clickedDate.format(DateFormat.API_DATE),
+							diaryId: this.agenda.id,
+							hour: clickedDate.format(DateFormat.HOUR_MINUTE_SECONDS),
+							openingHoursId: openingHourId,
+							overturnMode: addingOverturn
+						}
+					});
+				}
+			});
 		}
 	}
 
 	viewAppointment(event: CalendarEvent): void {
 		const appointmentDialogRef = this.dialog.open(AppointmentComponent, {
 			data: event.meta,
-		});
-
-		appointmentDialogRef.afterClosed().subscribe(() => {
-			this.loadAppointments();
 		});
 	}
 
@@ -148,31 +139,17 @@ export class AgendaComponent implements OnInit {
 		this.agenda = agenda;
 		this.viewDate = this._getViewDate();
 		this.hourSegments = MINUTES_IN_HOUR / agenda.appointmentDuration;
+		this.appointmentFacade.setValues(agenda.id, agenda.startDate, agenda.endDate, agenda.appointmentDuration);
 
 		this.diaryOpeningHours = agenda.diaryOpeningHours;
 		this.setDayStartHourAndEndHour(agenda.diaryOpeningHours);
 		this.loading = false;
 
-		this.loadAppointments();
 	}
 
 	goToDayViewOn(date: Date) {
 		this.viewDate = date;
 		this.view = this.calendarViewEnum.Day;
-	}
-
-	private loadAppointments() {
-		this.appointmentsService.getList([this.agenda.id], this.agenda.startDate, this.agenda.endDate)
-			.subscribe((appointments: AppointmentListDto[]) => {
-				const appointmentsCalendarEvents: CalendarEvent[] = appointments
-					.map(appointment => {
-						const from = momentParseTime(appointment.hour).format(DateFormat.HOUR_MINUTE);
-						const to = momentParseTime(from).add(this.agenda.appointmentDuration, 'minutes').format(DateFormat.HOUR_MINUTE);
-						return toCalendarEvent(from, to, momentParseDate(appointment.date), appointment);
-					});
-				this.events = appointmentsCalendarEvents;
-				this.cdr.detectChanges();
-			});
 	}
 
 	private setDayStartHourAndEndHour(openingHours: DiaryOpeningHoursDto[]) {
@@ -221,23 +198,27 @@ export class AgendaComponent implements OnInit {
 		return selectedOpeningHour?.openingHours.id;
 	}
 
-	private existsAppointmentAt(date: Date): boolean {
-		return this.events.filter(appointment => appointment.start.getTime() === date.getTime()).length > 0;
+	private existsAppointmentAt(date: Date): Observable<boolean> {
+		return this.appointmentFacade.getAppointments().pipe(
+			map(array => {
+				return array.filter(appointment => appointment.start.getTime() === date.getTime()).length > 0;
+			})
+		);
 	}
 
-	private allOverturnsAssignedForDiaryOpeningHour(diaryOpeningHourDto: DiaryOpeningHoursDto, clickedDate: Moment): boolean {
-		const numberOfOverturnsAssigned: number =
-			this.getNumberOfOverturnsAssigned(clickedDate, diaryOpeningHourDto.openingHours.from, diaryOpeningHourDto.openingHours.to);
-		return numberOfOverturnsAssigned === diaryOpeningHourDto.overturnCount;
-	}
+	private allOverturnsAssignedForDiaryOpeningHour(diaryOpeningHourDto: DiaryOpeningHoursDto, clickedDate: Moment): Observable<number> {
 
-	private getNumberOfOverturnsAssigned(day: Moment, from: string, to: string): number {
+		const openingHourStart = buildFullDate(diaryOpeningHourDto.openingHours.from, clickedDate);
+		const openingHourEnd = buildFullDate(diaryOpeningHourDto.openingHours.to, clickedDate);
 
-		const openingHourStart = buildFullDate(from, day);
-		const openingHourEnd = buildFullDate(to, day);
+		return this.appointmentFacade.getAppointments().pipe(
+			map((array: CalendarEvent[]) =>
+				array.filter(event =>
+					event.meta.overturn && dateToMoment(event.start).isBetween(openingHourStart, openingHourEnd, null, '[)')
+				).length
+			)
+		);
 
-		return this.events.filter
-		(event => event.meta.overturn && dateToMoment(event.start).isBetween(openingHourStart, openingHourEnd, null, '[)')).length;
 	}
 
 	private _getOpeningHoursFor(date: Date): DiaryOpeningHoursDto[] {
@@ -251,40 +232,5 @@ export class AgendaComponent implements OnInit {
 		return [];
 	}
 
-}
-
-function toCalendarEvent(from: string, to: string, date: Moment, appointment: AppointmentListDto): CalendarEvent {
-	return {
-		start: buildFullDate(from, date).toDate(),
-		end: buildFullDate(to, date).toDate(),
-		title: `${momentParseTime(from).format(DateFormat.HOUR_MINUTE_12)} ${appointment.patient.person.lastName} ${appointment.patient.person.firstName}`,
-		color: {
-			primary: getColor(),
-			secondary: getColor()
-		},
-		meta: {
-			patient: {
-				id: appointment.patient.id,
-				fullName: appointment.patient.person.firstName + ' ' + appointment.patient.person.lastName,
-				identificationNumber: appointment.patient.person.identificationNumber,
-			},
-			overturn: appointment.overturn,
-			appointmentId: appointment.id,
-			appointmentStateId: appointment.appointmentStateId,
-			date: buildFullDate(appointment.hour, momentParseDate(appointment.date)),
-			medicalCoverage: {
-				name: appointment.medicalCoverageName,
-				affiliateNumber: appointment.medicalCoverageAffiliateNumber,
-			},
-			phoneNumber: appointment.phoneNumber
-		}
-	};
-
-	function getColor(): COLORES {
-		if (appointment.overturn) {
-			return COLORES.SOBRETURNO;
-		}
-		return appointment.medicalAttentionTypeId === MEDICAL_ATTENTION.SPONTANEOUS_ID ? COLORES.ESPONTANEA : COLORES.PROGRAMADA;
-	}
 }
 

@@ -81,3 +81,7 @@ section {
 .phone-text{
 	margin-left: 3px;
 }
+
+.mat-icon-button ::ng-deep .mat-button-focus-overlay {
+    display: none;
+}
