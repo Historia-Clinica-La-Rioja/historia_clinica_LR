@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { LoggedUserService } from '../../auth/services/logged-user.service';
 import { ContextService } from './context.service';
 import { ERole, RoleAssignment } from '@api-rest/api-model';
@@ -53,9 +53,9 @@ export class PermissionsService {
 			.map(assignment => assignment.role);
 	}
 
-	public hasRole$(allowedRoles: ERole[]): Observable<boolean> {
+	public hasContextAssignments$(assignments: ERole[]): Observable<boolean> {
 		return this.contextAssignments$().pipe(
-			map((userRoles: ERole[]) => anyMatch<ERole>(userRoles, allowedRoles))
+			map((userRoles: ERole[]) => anyMatch<ERole>(userRoles, assignments))
 		);
 	}
 }

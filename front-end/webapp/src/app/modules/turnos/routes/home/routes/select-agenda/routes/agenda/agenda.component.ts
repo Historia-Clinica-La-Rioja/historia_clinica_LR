@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { AppointmentListDto, CompleteDiaryDto, DiaryOpeningHoursDto } from '@api-rest/api-model';
+import { CompleteDiaryDto, DiaryOpeningHoursDto } from '@api-rest/api-model';
+import { ERole } from '@api-rest/api-model';
 import { CalendarView, CalendarWeekViewBeforeRenderEvent, DAYS_OF_WEEK } from 'angular-calendar';
 import {
 	buildFullDate,
@@ -11,7 +12,6 @@ import {
 	newMoment
 } from '@core/utils/moment.utils';
 import { MatDialog } from '@angular/material/dialog';
-import { DiaryOpeningHoursService } from '@api-rest/services/diary-opening-hours.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { DiaryService } from '@api-rest/services/diary.service';
 import { Moment } from 'moment';
@@ -23,8 +23,10 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { MINUTES_IN_HOUR } from '../../../../../../constants/appointment';
 import { AppointmentsFacadeService } from 'src/app/modules/turnos/services/appointments-facade.service';
 import { map, take } from 'rxjs/operators';
-import { Observable, forkJoin } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
+import { PermissionsService } from '@core/services/permissions.service';
 
+const ASIGNABLE_CLASS = 'cursor-pointer';
 const AGENDA_PROGRAMADA_CLASS = 'bg-green';
 const AGENDA_ESPONTANEA_CLASS = 'bg-blue';
 
@@ -48,13 +50,16 @@ export class AgendaComponent implements OnInit {
 	dayEndHour: number;
 	diaryOpeningHours: DiaryOpeningHoursDto[];
 
+	enableAppointmentScheduling: boolean = true;
+
 	constructor(
 		private readonly cdr: ChangeDetectorRef,
 		private readonly dialog: MatDialog,
 		private readonly diaryService: DiaryService,
 		private readonly route: ActivatedRoute,
 		private snackBarService: SnackBarService,
-		public readonly appointmentFacade: AppointmentsFacadeService
+		private readonly permissionsService: PermissionsService,
+		public readonly appointmentFacade: AppointmentsFacadeService,
 	) {
 	}
 
@@ -64,6 +69,7 @@ export class AgendaComponent implements OnInit {
 			const idAgenda = Number(params.get('idAgenda'));
 			this.diaryService.get(idAgenda).subscribe(agenda => {
 				this.setAgenda(agenda);
+				this.setProfessionalScheduleAppointments();
 			});
 		});
 	}
@@ -78,8 +84,7 @@ export class AgendaComponent implements OnInit {
 							const from: Moment = momentParseTime(openingHour.openingHours.from);
 							const to: Moment = momentParseTime(openingHour.openingHours.to);
 							if (isBetween(segment, from, to)) {
-								segment.cssClass = openingHour.medicalAttentionTypeId === MEDICAL_ATTENTION.SPONTANEOUS_ID ?
-									AGENDA_ESPONTANEA_CLASS : AGENDA_PROGRAMADA_CLASS;
+								segment.cssClass = this.getOpeningHoursCssClass(openingHour);
 							}
 						});
 					});
@@ -96,7 +101,7 @@ export class AgendaComponent implements OnInit {
 	}
 
 	onClickedSegment(event) {
-		if (this.getOpeningHoursId(event.date)) {
+		if (this.getOpeningHoursId(event.date) && this.enableAppointmentScheduling) {
 			const clickedDate: Moment = dateToMomentTimeZone(event.date);
 			const openingHourId: number = this.getOpeningHoursId(event.date);
 			const diaryOpeningHourDto: DiaryOpeningHoursDto =
@@ -111,7 +116,7 @@ export class AgendaComponent implements OnInit {
 						this.snackBarService.showError('turnos.overturns.messages.ERROR');
 					}
 				} else {
-					const dialogRef = this.dialog.open(NewAppointmentComponent, {
+					this.dialog.open(NewAppointmentComponent, {
 						width: '28%',
 						data: {
 							date: clickedDate.format(DateFormat.API_DATE),
@@ -127,7 +132,7 @@ export class AgendaComponent implements OnInit {
 	}
 
 	viewAppointment(event: CalendarEvent): void {
-		const appointmentDialogRef = this.dialog.open(AppointmentComponent, {
+		this.dialog.open(AppointmentComponent, {
 			data: event.meta,
 		});
 	}
@@ -230,6 +235,21 @@ export class AgendaComponent implements OnInit {
 			return this.diaryOpeningHours.filter(oh => oh.openingHours.dayWeekId === date.getDay());
 		}
 		return [];
+	}
+
+	private setProfessionalScheduleAppointments() {
+		if (!this.agenda.professionalAssignShift) {
+			this.permissionsService.hasContextAssignments$([ERole.ADMINISTRATIVO, ERole.ADMINISTRADOR_AGENDA])
+				.subscribe(hasAdministrativeRole => this.enableAppointmentScheduling = hasAdministrativeRole);
+		}
+	}
+
+	private getOpeningHoursCssClass(openingHour: DiaryOpeningHoursDto): string {
+		if (openingHour.medicalAttentionTypeId === MEDICAL_ATTENTION.SPONTANEOUS_ID) {
+			return this.enableAppointmentScheduling ? `${AGENDA_ESPONTANEA_CLASS} ${ASIGNABLE_CLASS}` : AGENDA_ESPONTANEA_CLASS;
+		} else {
+			return this.enableAppointmentScheduling ? `${AGENDA_PROGRAMADA_CLASS} ${ASIGNABLE_CLASS}` : AGENDA_PROGRAMADA_CLASS;
+		}
 	}
 
 }

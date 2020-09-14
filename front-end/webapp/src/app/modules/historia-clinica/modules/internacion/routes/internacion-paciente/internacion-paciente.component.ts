@@ -122,7 +122,7 @@ export class InternacionPacienteComponent implements OnInit {
 				this.initSummaries();
 			}
 		);
-		this.permissionService.hasRole$(ROLES_FOR_EDIT_DIAGNOSIS).subscribe(
+		this.permissionService.hasContextAssignments$(ROLES_FOR_EDIT_DIAGNOSIS).subscribe(
 			hasRole => this.editDiagnosisSummary$ = !hasRole
 		);
 	}

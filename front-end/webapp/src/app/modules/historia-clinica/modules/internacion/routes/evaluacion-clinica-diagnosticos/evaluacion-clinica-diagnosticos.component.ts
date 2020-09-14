@@ -113,7 +113,7 @@ export class EvaluacionClinicaDiagnosticosComponent implements OnInit {
 					map(diagnostics => diagnostics.filter(od => od.statusId === HEALTH_CLINICAL_STATUS.ACTIVO))
 				);
 				diagnosesGeneralState$.subscribe(diagnostics => {
-					this.permissionsService.hasRole$(ROLES_FOR_ACCESS_MAIN).subscribe(cantAccesMain => {
+					this.permissionsService.hasContextAssignments$(ROLES_FOR_ACCESS_MAIN).subscribe(cantAccesMain => {
 						diagnostics =  diagnostics.filter(diagnostic => cantAccesMain ? !diagnostic.main : true );
 						this.diagnostics.data = diagnostics;
 						this.diagnostics.selection.select(diagnostics.find(d => d.id === routedDiagnosisId));
