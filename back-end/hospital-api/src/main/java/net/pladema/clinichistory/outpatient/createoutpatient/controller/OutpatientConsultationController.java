@@ -8,14 +8,17 @@ import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.EDocumentType;
 import net.pladema.clinichistory.ips.service.domain.ImmunizationBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientDto;
+import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientEvolutionSummaryDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientImmunizationDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientUpdateImmunizationDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.mapper.OutpatientConsultationMapper;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.CreateOutpatientConsultationService;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.CreateOutpatientDocumentService;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.OutpatientSummaryService;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.ReasonService;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientDocumentBo;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientEvolutionSummaryBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ReasonBo;
 import net.pladema.medicalconsultation.appointment.controller.service.AppointmentExternalService;
 import net.pladema.pdf.service.PdfService;
@@ -29,6 +32,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -63,15 +68,17 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 
     @Value("${test.stress.disable.validation:false}")
     private boolean disableValidation;
+    
+    private final OutpatientSummaryService outpatientSummaryService;
 
     public OutpatientConsultationController(CreateOutpatientConsultationService createOutpatientConsultationService,
                                             CreateOutpatientDocumentService createOutpatientDocumentService,
                                             ReasonService reasonService,
                                             HealthcareProfessionalExternalServiceImpl healthcareProfessionalExternalService,
                                             OutpatientConsultationMapper outpatientConsultationMapper,
-                                            AppointmentExternalService appointmentExternalService,
-                                            DateTimeProvider dateTimeProvider,
-                                            PdfService pdfService) {
+                                            AppointmentExternalService appointmentExternalService, 
+                                            PdfService pdfService, 
+                                            OutpatientSummaryService outpatientSummaryService) {
         this.createOutpatientConsultationService = createOutpatientConsultationService;
         this.createOutpatientDocumentService = createOutpatientDocumentService;
         this.reasonService = reasonService;
@@ -80,7 +87,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         this.appointmentExternalService = appointmentExternalService;
         this.dateTimeProvider = dateTimeProvider;
         this.pdfService = pdfService;
-
+        this.outpatientSummaryService = outpatientSummaryService;
     }
 
     @Override
@@ -188,5 +195,15 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         generateDocument(outpatient, institutionId, newOutPatient.getId(), patientId);
 
         return ResponseEntity.ok().body(true);
+    }
+
+    @GetMapping("/summary-list")
+    public ResponseEntity<List<OutpatientEvolutionSummaryDto>> getEvolutionSummaryList(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "patientId") Integer patientId){
+        List<OutpatientEvolutionSummaryBo> evolutions = outpatientSummaryService.getSummary(institutionId, patientId);
+        List<OutpatientEvolutionSummaryDto> result = outpatientConsultationMapper.fromListOutpatientEvolutionSummaryBo(evolutions);
+        LOG.debug("Get  summary  => {}", result);
+        return ResponseEntity.ok(result);
     }
 }

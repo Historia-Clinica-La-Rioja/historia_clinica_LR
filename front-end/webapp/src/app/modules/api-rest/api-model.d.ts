@@ -689,6 +689,16 @@ export interface OutpatientAnthropometricDataDto extends Serializable {
     weight: ClinicalObservationDto;
 }
 
+export interface OutpatientEvolutionSummaryDto extends Serializable {
+    consultationID: number;
+    evolutionNote: string;
+    healthConditions: OutpatientSummaryHealthConditionDto[];
+    medic: HealthcareProfessionalDto;
+    procedures: OutpatientProcedureDto[];
+    reasons: OutpatientReasonDto[];
+    startDate: string;
+}
+
 export interface OutpatientFamilyHistoryDto {
     snomed: SnomedDto;
     startDate: string;
@@ -726,6 +736,13 @@ export interface OutpatientProcedureDto {
 
 export interface OutpatientReasonDto {
     snomed: SnomedDto;
+}
+
+export interface OutpatientSummaryHealthConditionDto extends ClinicalTermDto {
+    inactivationDate: string;
+    main: boolean;
+    problemId: string;
+    startDate: string;
 }
 
 export interface OutpatientUpdateImmunizationDto {

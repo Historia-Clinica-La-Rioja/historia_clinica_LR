@@ -1,5 +1,6 @@
 package net.pladema.staff.controller.mapper;
 
+import jdk.jfr.Name;
 import net.pladema.staff.controller.dto.HealthcareProfessionalDto;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 import net.pladema.staff.service.domain.HealthcarePersonBo;
@@ -29,4 +30,9 @@ public interface HealthcareProfessionalMapper {
 	@Named("fromProfessionalBoList")
 	@IterableMapping(qualifiedByName = "fromProfessionalBo")
 	List<ProfessionalDto> fromProfessionalBoList(List<HealthcareProfessionalBo> healthcareProfessionalBos);
+
+	@Name("fromHealthcareProfessionalBo")
+	@Mapping(target = "person.firstName", source = "firstName")
+	@Mapping(target = "person.lastName", source = "lastName")
+	HealthcareProfessionalDto fromHealthcareProfessionalBo(HealthcareProfessionalBo healthcareProfessionalBo);
 }
