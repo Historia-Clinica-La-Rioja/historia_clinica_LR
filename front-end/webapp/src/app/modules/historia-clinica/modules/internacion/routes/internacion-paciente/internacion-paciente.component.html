@@ -51,7 +51,7 @@
 				</ng-container>
 
 				<ng-container *ngIf="showDischarge">
-					<button mat-flat-button color="primary" *hasRole="['ADMINISTRATIVO']"
+					<button mat-flat-button id="administrative_discharge_button" color="primary" *hasRole="['ADMINISTRATIVO']"
 						(click)="goToAdministrativeDischarge()">
 						<span class="uppercase"
 							[translate]="'internaciones.internacion-paciente.actions.ADMINISTRATIVE_DISCHARGE'"></span>
@@ -92,7 +92,7 @@
 				<div fxLayout="column" fxFlex="50%" fxLayoutGap="20px">
 					<ng-container
 						*hasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO']">
-						<app-summary-card [header]="internacionSummary" [canEdit]="['ESPECIALISTA_MEDICO']"
+						<app-summary-card id="internment_summary_card" [header]="internacionSummary" [canEdit]="['ESPECIALISTA_MEDICO']"
 							[editable]="!hasMedicalDischarge && canLoadProbableDischargeDate"
 							(openInNew)="openDialog()">
 							<mat-card-content>

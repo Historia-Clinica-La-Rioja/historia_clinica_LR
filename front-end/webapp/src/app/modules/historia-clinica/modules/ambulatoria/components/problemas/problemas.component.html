@@ -8,7 +8,7 @@
 	</ng-template>
 	<section id="problemas" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
 			<div fxFlex="25%">
-				<app-summary-card [header]="activos" [editable]="false">
+				<app-summary-card id="active_problems" [header]="activos" [editable]="false">
 					<mat-list id="lista-problemas-activos" *ngIf="(activeProblems$ | async )?.length > 0 else noInfo">
 						<div fxLayout="row" *ngFor="let problem of (activeProblems$ | async)">
 							<mat-list-item>
@@ -35,7 +35,7 @@
 				</app-summary-card>
 			</div>
 			<div fxFlex="25%">
-				<app-summary-card [header]="cronicos" [editable]="false">
+				<app-summary-card id="chronic_problems" [header]="cronicos" [editable]="false">
 					<mat-list id="lista-problemas-cronicos" *ngIf="(chronicProblems$ | async)?.length > 0 else noInfo">
 						<div fxLayout="row" *ngFor="let problem of (chronicProblems$ | async)">
 							<mat-list-item>
@@ -63,7 +63,7 @@
 				</app-summary-card>
 			</div>
 			<div fxFlex="25%">
-				<app-summary-card [header]="resueltos" [editable]="false">
+				<app-summary-card id="solved_problems" [header]="resueltos" [editable]="false">
 					<mat-list id="lista-problemas-resueltos" *ngIf="(solvedProblems$ | async)?.length > 0 else noInfo">
 						<div fxLayout="row" *ngFor="let problem of (solvedProblems$ | async)">
 							<mat-list-item>
@@ -87,7 +87,7 @@
 				</app-summary-card>
 			</div>
 			<div fxFlex="25%">
-				<app-summary-card [header]="internacion" [editable]="false">
+				<app-summary-card id="hospitalization_problems" [header]="internacion" [editable]="false">
 					<mat-list id="lista-problemas-hospitalization" *ngIf="(hospitalizationProblems$ | async)?.length > 0 else noInfo">
 						<div fxLayout="row" *ngFor="let problem of (hospitalizationProblems$ | async)">
 							<mat-list-item>

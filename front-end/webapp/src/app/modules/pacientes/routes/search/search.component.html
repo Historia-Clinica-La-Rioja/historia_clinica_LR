@@ -137,7 +137,7 @@
 			<h3 class="mat-body-2" [translate]="'Se encontraron posibles coincidencias.'"></h3>
 			<app-table [model]="matchingPatient" [mainStyle]="'primary'"></app-table>
 			<div class="new-patient-button" align="end">
-				<button *hasRole="['ADMINISTRATIVO']" mat-raised-button color="primary" (click)="goToNewPatient()">
+				<button *hasRole="['ADMINISTRATIVO']" mat-raised-button id="new_patient_button" color="primary" (click)="goToNewPatient()">
 					<span [translate]="'pacientes.search.NEW_PATIENT'"></span>
 				</button>
 			</div>
