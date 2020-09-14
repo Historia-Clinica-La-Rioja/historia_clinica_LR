@@ -23,16 +23,16 @@ public class Address implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "street", length = 35, nullable = false)
+    @Column(name = "street", length = 70, nullable = false)
     private String street;
 
-    @Column(name = "number", length = 5, nullable = false)
+    @Column(name = "number", length = 20, nullable = false)
     private String number;
 
     @Column(name = "floor", length = 2)
     private String floor;
 
-    @Column(name = "apartment", length = 3)
+    @Column(name = "apartment", length = 8)
     private String apartment;
 
     @Column(name = "quarter", length = 30)

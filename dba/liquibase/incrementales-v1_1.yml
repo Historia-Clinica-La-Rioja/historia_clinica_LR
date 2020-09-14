@@ -14,3 +14,20 @@ databaseChangeLog:
                     nullable: false
                 defaultValue: Sin información
             tableName: appointment
+    
+    - changeSet:
+        id: update-length-fields-address
+        author: lmanterola
+        changes: 
+            - modifyDataType:
+                columnName:  number  
+                newDataType:  varchar(20)    
+                tableName:  address
+            - modifyDataType:
+                columnName:  street  
+                newDataType:  varchar(70)    
+                tableName:  address
+            - modifyDataType:
+                columnName:  apartment  
+                newDataType:  varchar(8)    
+                tableName:  address
