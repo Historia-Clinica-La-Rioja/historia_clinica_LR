@@ -54,6 +54,8 @@ Las siguientes propiedades son obligatorias a configurar para poder levantar el 
 - [x] **spring.datasource.password**: La password asociada al usuario de conexión
 - [x] **internment.document.directory**: ubicación de los documentos generados por la aplicación.
 - [x] **token.secret**: La clave secreta de generación de token, usada para validar los tokens recibidos desde los request.
+- [x] **admin.mail**: El username usado por el usuario admin
+- [x] **admin.password**: La password del usuario admin
 
 Todas estas propiedades pueden ser configuradas de diversas formas. 
 
@@ -66,9 +68,11 @@ Ejemplo de archivo con propiedades externalizadas
 ```properties
 spring.datasource.url=jdbc:postgresql://localhost:5432/hospitalDB
 spring.datasource.username=postgres 
-spring.datasource.password=qkjsdo
+spring.datasource.password=qweqweqweqwe
 internment.document.directory=tmp
-token.secret=qiweK3la
+token.secret=token_test
+admin.mail=admin@example.com
+admin.password=prueba
 ```
 
 
@@ -88,6 +92,16 @@ Las variables a configurar son:
 - [x] **DATABASE_PASS**: La password asociada al usuario de conexión
 - [x] **DOCUMENT_ROOT_DIRECTORY**: ubicación de los documentos generados por la aplicación.
 - [x] **TOKEN_SECRET**: La clave secreta de generación de token, usada para validar los tokens recibidos desde los request.
+- [x] **ADMIN_MAIL**: El username usado por el usuario admin
+- [x] **ADMIN_PASS**: La password del usuario admin
+
+
+#### Username y password del usuario admin
+
+El username y la password del usuario admin no podrá ser configurada a través de la aplicación. Al ser datos sensibles, la mismas son administradas solamente mediante propiedades externalizadas o variables de ambiente como se explicó previamente. 
+
+Para actualizar cualquiera de los dos datos del admin se debe configurar su respectiva propiedad y reiniciar el sistema.
+
 
 ### Profiles
 
