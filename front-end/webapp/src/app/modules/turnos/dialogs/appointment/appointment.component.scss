@@ -85,3 +85,11 @@ section {
 .mat-icon-button ::ng-deep .mat-button-focus-overlay {
     display: none;
 }
+
+.coverage-text {
+	display: inline-block;
+    max-width: 130px;
+    white-space: nowrap;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+}

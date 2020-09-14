@@ -1,8 +1,10 @@
 package net.pladema.sgx.healthinsurance.service.impl;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import net.pladema.sgx.exceptions.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
@@ -22,6 +24,10 @@ public class HealthInsuranceServiceImpl implements HealthInsuranceService {
 	private static final Logger LOG = LoggerFactory.getLogger(HealthInsuranceServiceImpl.class);
 
     private static final String OUTPUT = "output -> {}";
+
+    private static final String WRONG_RNOS = "wrong rnos";
+
+    private static final String HEALTH_INSURANCE_NOT_FOUND ="health-insurance.not.found";
 
     private final HealthInsuranceRepository healthInsuranceRepository;
 
@@ -51,7 +57,11 @@ public class HealthInsuranceServiceImpl implements HealthInsuranceService {
 					LOG.debug("HealthInsurance Added-> newHealthInsurance {}", hi);
 				});
 	}
-	
 
-	
+    @Override
+    public PersonMedicalCoverageBo get(Integer rnos) {
+        HealthInsurance healthInsuranceOptional = healthInsuranceRepository.findById(rnos).orElseThrow(() -> new NotFoundException(WRONG_RNOS, HEALTH_INSURANCE_NOT_FOUND));
+        PersonMedicalCoverageBo result = new PersonMedicalCoverageBo(healthInsuranceOptional);
+        return result;
+    }
 }

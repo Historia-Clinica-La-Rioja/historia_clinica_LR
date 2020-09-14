@@ -4,7 +4,6 @@ import { NewAttentionComponent } from '../new-attention/new-attention.component'
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { APPOINTMENT_STATES_ID, getAppointmentState, MAX_LENGTH_MOTIVO } from '../../constants/appointment';
-import { Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AppointmentDto } from '@api-rest/api-model';
@@ -31,6 +30,7 @@ export class AppointmentComponent implements OnInit {
 	phoneNumberEditMode = false;
 	phoneNumberForm: FormGroup;
 	phoneNumberText: string;
+	coverageText: string;
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public appointmentData: PatientAppointmentInformation,
 		public dialogRef: MatDialogRef<NewAttentionComponent>,
@@ -44,6 +44,13 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+
+		if (this.appointmentData.healthInsurance) {
+			this.coverageText = this.appointmentData.healthInsurance.acronym ? this.appointmentData.healthInsurance.acronym : this.appointmentData.healthInsurance.name;
+		} else {
+			this.coverageText = this.appointmentData.medicalCoverageName;
+		}
+
 		this.formMotivo = this.formBuilder.group({
 			motivo: ['', [Validators.required, Validators.maxLength(MAX_LENGTH_MOTIVO)]]
 		});
@@ -124,7 +131,7 @@ export class AppointmentComponent implements OnInit {
 				this.phoneNumberEditMode = false;
 				this.phoneNumberText = this.phoneNumberForm.controls.phoneNumber.value;
 				this.snackBarService.showSuccess('turnos.appointment.phoneNumber.SUCCESS');
-			},  error => {
+			}, error => {
 				processErrors(error, (msg) => this.snackBarService.showError(msg));
 			});
 	}
@@ -139,9 +146,11 @@ export interface PatientAppointmentInformation {
 	appointmentId: number;
 	appointmentStateId: number;
 	date: Date;
-	medicalCoverage: {
-		name: string,
-		affiliateNumber: string
-	};
 	phoneNumber: string;
+	healthInsurance?: {
+		name: string,
+		acronym?: string;
+	};
+	medicalCoverageName: string;
+	affiliateNumber: string;
 }

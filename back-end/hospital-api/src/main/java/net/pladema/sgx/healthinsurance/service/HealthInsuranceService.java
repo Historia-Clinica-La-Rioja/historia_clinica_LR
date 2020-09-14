@@ -9,5 +9,6 @@ public interface HealthInsuranceService {
     Collection<PersonMedicalCoverageBo> getAll();
     
     public void addAll(Collection<PersonMedicalCoverageBo> newHealthInsurances);
-    
+
+    PersonMedicalCoverageBo get(Integer rnos);
 }

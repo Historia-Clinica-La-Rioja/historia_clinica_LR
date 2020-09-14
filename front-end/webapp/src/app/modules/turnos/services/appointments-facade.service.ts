@@ -149,11 +149,10 @@ export function toCalendarEvent(from: string, to: string, date: Moment, appointm
 			appointmentId: appointment.id,
 			appointmentStateId: appointment.appointmentStateId,
 			date: buildFullDate(appointment.hour, momentParseDate(appointment.date)),
-			medicalCoverage: {
-				name: appointment.medicalCoverageName,
-				affiliateNumber: appointment.medicalCoverageAffiliateNumber,
-			},
-			phoneNumber: appointment.phoneNumber
+			phoneNumber: appointment.phoneNumber,
+			rnos: appointment.healthInsuranceId,
+			medicalCoverageName: appointment.medicalCoverageName,
+			affiliateNumber: appointment.medicalCoverageAffiliateNumber,
 		}
 	};
 }

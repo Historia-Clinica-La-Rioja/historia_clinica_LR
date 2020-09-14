@@ -8,8 +8,9 @@
 			</div>
 			<div fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
 				<mat-icon fontSet="material-icons-outlined" style="color: transparent">person</mat-icon>
-				<span class="mat-body patient-info"> Obra social: {{appointmentData.medicalCoverage?.name}} /
-					{{appointmentData.medicalCoverage.affiliateNumber}}</span>
+				<span class="mat-body patient-info"> Obra social:</span>
+				<span class="mat-body patient-info coverage-text" matTooltip="{{appointmentData.healthInsurance?.name}}">{{coverageText}} </span>
+				<span class="mat-body patient-info">/ {{appointmentData.affiliateNumber}}</span>
 			</div>
 			<div fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center" class="mat-body patient-info">
 				<mat-icon fontSet="material-icons-outlined" style="color: transparent">person</mat-icon>

@@ -12,4 +12,6 @@ public interface HealthInsuranceMapper {
 
     @Named("toMedicalCoverageDtoList")
     Collection<MedicalCoverageDto> toMedicalCoverageDtoList(Collection<PersonMedicalCoverageBo> data);
+
+    MedicalCoverageDto toMedicalCoverageDto (PersonMedicalCoverageBo data);
 }

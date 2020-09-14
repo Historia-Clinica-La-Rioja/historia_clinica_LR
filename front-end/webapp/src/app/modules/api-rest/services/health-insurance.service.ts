@@ -17,4 +17,9 @@ export class HealthInsuranceService {
 		const url = `${environment.apiBase}/health-insurance`;
 		return this.http.get<MedicalCoverageDto[]>(url);
 	}
+
+	get(rnos: number): Observable<MedicalCoverageDto> {
+		const url = `${environment.apiBase}/health-insurance/${rnos}`;
+		return this.http.get<MedicalCoverageDto>(url);
+	}
 }

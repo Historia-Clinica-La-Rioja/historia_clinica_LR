@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { CompleteDiaryDto, DiaryOpeningHoursDto } from '@api-rest/api-model';
+import { CompleteDiaryDto, DiaryOpeningHoursDto, MedicalCoverageDto} from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { CalendarView, CalendarWeekViewBeforeRenderEvent, DAYS_OF_WEEK } from 'angular-calendar';
 import {
@@ -25,6 +25,7 @@ import { AppointmentsFacadeService } from 'src/app/modules/turnos/services/appoi
 import { map, take } from 'rxjs/operators';
 import { forkJoin, Observable } from 'rxjs';
 import { PermissionsService } from '@core/services/permissions.service';
+import { HealthInsuranceService } from '@api-rest/services/health-insurance.service';
 
 const ASIGNABLE_CLASS = 'cursor-pointer';
 const AGENDA_PROGRAMADA_CLASS = 'bg-green';
@@ -60,6 +61,7 @@ export class AgendaComponent implements OnInit {
 		private snackBarService: SnackBarService,
 		private readonly permissionsService: PermissionsService,
 		public readonly appointmentFacade: AppointmentsFacadeService,
+		private readonly healthInsuranceService: HealthInsuranceService,
 	) {
 	}
 
@@ -131,9 +133,20 @@ export class AgendaComponent implements OnInit {
 	}
 
 	viewAppointment(event: CalendarEvent): void {
-		this.dialog.open(AppointmentComponent, {
-			data: event.meta,
-		});
+
+		if (event.meta.rnos) {
+			this.healthInsuranceService.get(event.meta.rnos)
+				.subscribe((medicalCoverageDto: MedicalCoverageDto) => {
+					event.meta.healthInsurance = medicalCoverageDto;
+					this.dialog.open(AppointmentComponent, {
+						data: event.meta
+					});
+				});
+		} else {
+			this.dialog.open(AppointmentComponent, {
+				data: event.meta,
+			});
+		}
 	}
 
 	setAgenda(agenda: CompleteDiaryDto): void {

@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -42,4 +43,14 @@ public class HealthInsuranceController {
         LOG.debug(OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }
+
+    @GetMapping("/{rnos}")
+    public ResponseEntity<MedicalCoverageDto> get(@PathVariable("rnos") Integer rnos){
+        LOG.debug("{}", "Get one healthInsurance");
+        PersonMedicalCoverageBo data = healthInsuranceService.get(rnos);
+        MedicalCoverageDto result = healthInsuranceMapper.toMedicalCoverageDto(data);
+        LOG.debug(OUTPUT, result);
+        return ResponseEntity.ok().body(result);
+    }
+
 }
