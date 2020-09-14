@@ -161,6 +161,8 @@ public class OutpatientConsultationController implements OutpatientConsultationA
     }
 
     @Override
+    @Transactional
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
     public ResponseEntity<Boolean> solveHealthCondition(
             Integer institutionId,
             Integer patientId,

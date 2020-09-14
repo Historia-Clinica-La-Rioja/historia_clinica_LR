@@ -17,8 +17,8 @@
 				</mat-form-field>
 
 				<mat-form-field appearance="outline" class="mat-form-field--no-underline">
-					<input class="input-checkbox-solve-problem" matInput placeholder="input" readonly>
-					<mat-checkbox id="cronico-checkbox" formControlName="cronico" class="checkbox" ng-readonly="true">
+					<input class="input-checkbox-solve-problem" matInput placeholder="input">
+					<mat-checkbox id="cronico-checkbox" formControlName="cronico" class="checkbox" (click)="$event.preventDefault()">
 							<span [translate]="'ambulatoria.paciente.nueva-consulta.problemas.CRONICO'"></span>
 					</mat-checkbox>
 				</mat-form-field>
@@ -31,14 +31,10 @@
 				<mat-form-field appearance="outline">
 					<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.problemas.FECHA_FIN'">	</mat-label>
 					<input matInput id="fecha_fin" [matDatepicker]="finDatePicker" formControlName="fechaFin"
-						   (dateChange)="problemasNuevaConsultaService.checkValidFechaFin()">
+						   (dateChange)="checkInactivationDate()">
 					<mat-datepicker-toggle matSuffix [for]="finDatePicker"></mat-datepicker-toggle>
 					<mat-datepicker #finDatePicker></mat-datepicker>
-					<mat-error
-						*ngIf="problemasNuevaConsultaService.hasError('required', 'fechaFin')"
-						[translate]="'forms.REQUIRED'">
-					</mat-error>
-					<mat-error *ngIf="problemasNuevaConsultaService.hasError('min', 'fechaFin')"
+					<mat-error *ngIf="this.hasError('min', 'fechaFin')"
 							   [translate]="'ambulatoria.paciente.nueva-consulta.problemas.errors.FECHA_FIN_MIN'">
 					</mat-error>
 				</mat-form-field>

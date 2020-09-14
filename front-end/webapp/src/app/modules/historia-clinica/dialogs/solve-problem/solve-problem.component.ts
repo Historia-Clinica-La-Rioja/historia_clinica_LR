@@ -9,7 +9,7 @@ import {ProblemasNuevaConsultaService} from "../../modules/ambulatoria/services/
 import {SnomedService} from "../../services/snomed.service";
 import {HEALTH_CLINICAL_STATUS} from "../../modules/internacion/constants/ids";
 import {OutpatientConsultationService} from "@api-rest/services/outpatient-consultation.service";
-import {Router} from "@angular/router";
+import {hasError} from '@core/utils/form.utils';
 
 @Component({
 	selector: 'app-solve-problem',
@@ -26,6 +26,7 @@ export class SolveProblemComponent implements OnInit {
 	private dataDto:HCEPersonalHistoryDto;
 	private readonly patientId:number;
 	private readonly problemId:number;
+	private readonly startDate: Date;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) data,
@@ -35,17 +36,17 @@ export class SolveProblemComponent implements OnInit {
 		private readonly healthConditionService: HealthConditionService,
 		private readonly snomedService: SnomedService,
 		private readonly outpatientConsultationService: OutpatientConsultationService,
-		private readonly router: Router
 	) {
 		this.problemasNuevaConsultaService = new ProblemasNuevaConsultaService(formBuilder, snomedService);
 		this.dataDto = data.problema;
 		this.patientId = data.patientId;
 		this.problemId = this.dataDto.id;
+		this.startDate = this.toFormatDate(this.dataDto.startDate);
 		this.form = this.formBuilder.group({
 			snomed: [null, Validators.required],
 			cronico: [null, Validators.required],
 			fechaInicio: [null, Validators.required],
-			fechaFin: [null]
+			fechaFin: [null, Validators.required]
 		});
 	}
 
@@ -60,11 +61,7 @@ export class SolveProblemComponent implements OnInit {
 	initializeFields(p: HealthConditionNewConsultationDto){
 		this.form.controls.snomed.setValue(p.snomed.pt);
 		this.form.controls.cronico.setValue(p.isChronic);
-		this.form.controls.fechaInicio.setValue(new Date(p.startDate).toLocaleDateString());
-		const inactivationDate = p.inactivationDate;
-		if(inactivationDate) {
-			this.form.controls.fechaFin.setValue(new Date(p.inactivationDate).toLocaleDateString());
-		}
+		this.form.controls.fechaInicio.setValue(new Date(p.startDate).toLocaleDateString('es-AR', {timeZone: 'UTC', year:'numeric', month:"2-digit", day:"2-digit"}));
 	}
 
 	solveProblem() {
@@ -100,5 +97,25 @@ export class SolveProblemComponent implements OnInit {
 
 	getForm(): FormGroup{
 		return this.form;
+	}
+
+	checkInactivationDate() {
+		const fechaFin = this.form.controls.fechaFin.value;
+
+		if(fechaFin){
+			const inactivationDate = fechaFin.toDate();
+			if(this.startDate > inactivationDate)
+				this.form.controls.fechaFin.setErrors({min:true});
+		}
+	}
+
+	hasError(type: string, controlName: string): boolean {
+		return hasError(this.form, type, controlName);
+	}
+
+
+	toFormatDate = (dateStr) => {
+		const [day, month, year] = dateStr.split("/")
+		return new Date(year, month - 1, day)
 	}
 }
