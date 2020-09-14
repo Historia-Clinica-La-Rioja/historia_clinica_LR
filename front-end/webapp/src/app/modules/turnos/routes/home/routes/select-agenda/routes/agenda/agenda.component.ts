@@ -69,7 +69,6 @@ export class AgendaComponent implements OnInit {
 			const idAgenda = Number(params.get('idAgenda'));
 			this.diaryService.get(idAgenda).subscribe(agenda => {
 				this.setAgenda(agenda);
-				this.setProfessionalScheduleAppointments();
 			});
 		});
 	}
@@ -142,6 +141,7 @@ export class AgendaComponent implements OnInit {
 		delete this.dayEndHour;
 		delete this.dayStartHour;
 		this.agenda = agenda;
+		this.setEnableAppointmentScheduling();
 		this.viewDate = this._getViewDate();
 		this.hourSegments = MINUTES_IN_HOUR / agenda.appointmentDuration;
 		this.appointmentFacade.setValues(agenda.id, agenda.startDate, agenda.endDate, agenda.appointmentDuration);
@@ -237,10 +237,14 @@ export class AgendaComponent implements OnInit {
 		return [];
 	}
 
-	private setProfessionalScheduleAppointments() {
-		if (!this.agenda.professionalAssignShift) {
+	private setEnableAppointmentScheduling(): void {
+		if (this.agenda.professionalAssignShift) {
+			this.enableAppointmentScheduling = true;
+		} else {
 			this.permissionsService.hasContextAssignments$([ERole.ADMINISTRATIVO, ERole.ADMINISTRADOR_AGENDA])
-				.subscribe(hasAdministrativeRole => this.enableAppointmentScheduling = hasAdministrativeRole);
+				.subscribe(hasAdministrativeRole => {
+					this.enableAppointmentScheduling = hasAdministrativeRole;
+				});
 		}
 	}
 
