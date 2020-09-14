@@ -32,7 +32,7 @@ public class OutpatientConsultation extends SGXAuditableEntity {
     @Column(name = "patient_id", nullable = false)
     private Integer patientId;
 
-    @Column(name = "clinical_specialty_id", nullable = false)
+    @Column(name = "clinical_specialty_id")
     private Integer clinicalSpecialtyId;
 
     @Column(name = "institution_id", nullable = false)
