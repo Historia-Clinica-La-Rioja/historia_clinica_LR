@@ -3,13 +3,13 @@ import { SnomedSemanticSearch, SnomedService } from './snomed.service';
 import { SnomedDto } from '@api-rest/api-model';
 import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
 import { SEMANTICS_CONFIG } from '../constants/snomed-semantics';
-import { pushTo } from '@core/utils/array.utils';
+import { pushTo, removeFrom } from '@core/utils/array.utils';
 import { DateFormat, momentFormat, newMoment, momentParseDate } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 
 export interface Procedimiento {
 	snomed: SnomedDto;
-	fecha?: string;
+	performedDate?: string;
 }
 
 export class ProcedimientosService {
@@ -28,7 +28,7 @@ export class ProcedimientosService {
 
 		this.form = this.formBuilder.group({
 			snomed: [null, Validators.required],
-			fecha: [null],
+			performedDate: [null],
 		});
 
 		this.columns = [
@@ -40,7 +40,7 @@ export class ProcedimientosService {
 			{
 				def: 'fecha',
 				header: 'historia-clinica.procedimientos.FECHA',
-				text: (row) => row.fecha ? momentFormat(momentParseDate(row.fecha), DateFormat.VIEW_DATE) : ''
+				text: (row) => row.performedDate ? momentFormat(momentParseDate(row.performedDate), DateFormat.VIEW_DATE) : ''
 			}
 
 		];
@@ -62,7 +62,7 @@ export class ProcedimientosService {
 		if (this.form.valid && this.snomedConcept) {
 			const nuevoProcedimiento: Procedimiento = {
 				snomed: this.snomedConcept,
-				fecha: this.form.value.fecha? momentFormat(this.form.value.fecha, DateFormat.API_DATE) : undefined
+				performedDate: this.form.value.performedDate? momentFormat(this.form.value.performedDate, DateFormat.API_DATE) : undefined
 			};
 			this.add(nuevoProcedimiento);
 			this.resetForm();
@@ -103,5 +103,9 @@ export class ProcedimientosService {
 
 	getFechaMax(): Moment {
 		return newMoment();
+	}
+
+	remove(index: number): void {
+		this.data = removeFrom<Procedimiento>(this.data, index);
 	}
 }

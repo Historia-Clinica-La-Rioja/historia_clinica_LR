@@ -261,7 +261,9 @@
 		<app-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.procedimientos.TITLE'"
 			[tableTitle]="'ambulatoria.paciente.nueva-consulta.procedimientos.TABLE_TITLE'"
 			[columns]="procedimientoNuevaConsultaService.getColumns()"
-			[data]="procedimientoNuevaConsultaService.getProcedimientos()">
+			[data]="procedimientoNuevaConsultaService.getProcedimientos()"
+			[addRemoveColumn]="true"
+			(removeColumn)="procedimientoNuevaConsultaService.remove($event)">
 			<ng-container concept-form>
 				<app-concepts-search
 					*ngIf="!procedimientoNuevaConsultaService.getSnomedConcept() else procedimientoForm"
@@ -287,7 +289,7 @@
 							<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.procedimientos.FECHA'">
 							</mat-label>
 							<input matInput id="fecha_procedimiento" [matDatepicker]="datePicker"
-								formControlName="fecha" [max]="procedimientoNuevaConsultaService.getFechaMax()">
+								formControlName="performedDate" [max]="procedimientoNuevaConsultaService.getFechaMax()">
 							<mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
 							<mat-datepicker #datePicker></mat-datepicker>
 						</mat-form-field>

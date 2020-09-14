@@ -11,7 +11,9 @@
 			<app-document-section [sectionTitle]="'internaciones.anamnesis.procedimientos.TITLE'"
 				[tableTitle]="'internaciones.anamnesis.procedimientos.TABLE_TITLE'"
 				[columns]="procedimientosService.getColumns()"
-				[data]="procedimientosService.getProcedimientos()">
+				[data]="procedimientosService.getProcedimientos()"
+				[addRemoveColumn]="true"
+				(removeColumn)="procedimientosService.remove($event)">
 				<ng-container concept-form>
 					<app-concepts-search
 						*ngIf="!procedimientosService.getSnomedConcept() else procedimientoForm"
@@ -37,7 +39,7 @@
 								<mat-label [translate]="'internaciones.anamnesis.procedimientos.FECHA'">
 								</mat-label>
 								<input matInput id="fecha_procedimiento" [matDatepicker]="datePicker"
-									formControlName="fecha" [max]="procedimientosService.getFechaMax()">
+									formControlName="performedDate" [max]="procedimientosService.getFechaMax()">
 								<mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
 								<mat-datepicker #datePicker></mat-datepicker>
 							</mat-form-field>
