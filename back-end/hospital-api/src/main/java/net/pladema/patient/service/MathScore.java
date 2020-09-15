@@ -17,21 +17,32 @@ public class MathScore {
 
 	private enum SearchField {
 
-		LAST_NAME(0.2f),
-		FIRST_NAME(0.1f),
-		IDENTIFICATION_TYPE(0.1f),
-		IDENTIFICATION_NUMBER(0.3f),
-		GENDER(0.1f),
-		BIRTH_DATE(0.2f);
+		LAST_NAME(0.22f, 0.13f, false),
+		FIRST_NAME(0.08f, 0.04f, false),
+		IDENTIFICATION_NUMBER(0.39f, 0.26f, true),
+		GENDER(0.05f, 0.05f, false),
+		BIRTH_DATE(0.26f, 0.17f, false);
 		
 		private final float coefficient;
+		private final float minimum;
+		private final boolean partial;
 		
-		SearchField(float coefficient){
+		SearchField(float coefficient, float minimum, boolean partial){
 			this.coefficient = coefficient;
+			this.minimum = minimum;
+			this.partial = partial;
 		}
 		
 		public float getCoefficient() {
 			return coefficient;
+		}
+
+		public float getMinimum() {
+			return minimum;
+		}
+
+		public boolean isPartial() {
+			return partial;
 		}
 	}
 	
@@ -53,15 +64,13 @@ public class MathScore {
 
 		partialResult += hasContent(filterNameComplete, personNameComplete) ?
 				calculateMatchScore(soundex(filterNameComplete), soundex(personNameComplete),
-				SearchField.FIRST_NAME.getCoefficient()) : 0;
+				SearchField.FIRST_NAME) : 0;
 		partialResult += hasContent(filterLastNameComplete, personLastNameComplete) ?
 				calculateMatchScore(soundex(filterLastNameComplete), soundex(personLastNameComplete),
-				SearchField.LAST_NAME.getCoefficient()) : 0;
+				SearchField.LAST_NAME) : 0;
 		partialResult += assertNulls(personToMatch.getIdentificationNumber(), searchFilter.getIdentificationNumber()) ?
 				calculateMatchScore(searchFilter.getIdentificationNumber(), personToMatch.getIdentificationNumber(),
-				SearchField.IDENTIFICATION_NUMBER.getCoefficient()) : 0;
-		partialResult += assertNulls(personToMatch.getBirthDate(), searchFilter.getBirthDate()) ?
-				calculateMatchScore(formatDate(searchFilter.getBirthDate()), formatDate(personToMatch.getBirthDate()), SearchField.BIRTH_DATE.getCoefficient()) : 0;
+				SearchField.IDENTIFICATION_NUMBER) : 0;
 		return partialResult;
 	}
 
@@ -75,13 +84,12 @@ public class MathScore {
 	
 	private static float sumFullMatchCases(PatientSearchFilter searchFilter, Person personToMatch,
 			Float partialResult) {
-		partialResult += assertNulls(personToMatch.getIdentificationTypeId(), searchFilter.getIdentificationTypeId())
-				&& personToMatch.getIdentificationTypeId().equals(searchFilter.getIdentificationTypeId())
-				? SearchField.IDENTIFICATION_TYPE.getCoefficient()
-				: 0;
 		partialResult += assertNulls(searchFilter.getGenderId(), personToMatch.getGenderId())
 				&& personToMatch.getGenderId().equals(searchFilter.getGenderId()) ? SearchField.GENDER.getCoefficient()
 				: 0;
+		partialResult += assertNulls(searchFilter.getBirthDate(), personToMatch.getBirthDate())
+				&& formatDate(personToMatch.getBirthDate()).equals(formatDate(searchFilter.getBirthDate())) ?
+						SearchField.BIRTH_DATE.getCoefficient() : 0;
 		return partialResult;
 	}
 
@@ -93,7 +101,7 @@ public class MathScore {
 		return Arrays.asList(filterAttributes).stream().noneMatch(Objects::isNull);
 	}
 
-	public static float calculateMatchScore(String obtainedText, String searchedText, float coefficient) {
+	public static float calculateMatchScore(String obtainedText, String searchedText, SearchField field) {
 		if (isNullOrWhiteSpace(obtainedText)) {
 			return 0;
 		}
@@ -101,21 +109,22 @@ public class MathScore {
 			return 0;
 		}
 
-		float ret = 0;
 		int strLen = obtainedText.length();
 		int distance = computeLevenshteinDistance(obtainedText, searchedText);
 
+		float coefficient = field.getCoefficient();
 		if (noMatch(strLen, distance))
 			return 0;
 
 		if (totalMatch(distance))
 			return coefficient;
 
-		if (partialMatch(strLen, distance)) {
-			ret = calculateMatchValue(coefficient, strLen, distance);
+		if(!field.isPartial())
+			return distance <= 2 ? field.getMinimum() : 0;
+		else {
+			float ret = calculateMatchValue(coefficient, strLen, distance);
+			return ret < field.getMinimum() ? 0 : ret;
 		}
-
-		return ret;
 	}
 
 	private static float calculateMatchValue(float coefficient, int strLen, int distance) {

@@ -28,7 +28,7 @@ public class PatientServiceImpl implements PatientService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(PatientServiceImpl.class);
 
-	private static final float THRESHOLD = 75.0f;
+	private static final float THRESHOLD = 60.0f;
 	private final PatientRepository patientRepository;
 
 	private final FederarService federarService;
