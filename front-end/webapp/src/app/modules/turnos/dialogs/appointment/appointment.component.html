@@ -24,7 +24,7 @@
 					</div>
 					<div *ngIf="phoneNumberEditMode" fxLayout="row" fxLayoutAlign="start center">
 						<form [formGroup]="phoneNumberForm" (submit)="updatePhoneNumber()">
-							<input class="hide-borders" formControlName="phoneNumber" value="{{phoneNumberText}}">
+							<input class="hide-borders" formControlName="phoneNumber" >
 							<button mat-icon-button style="color:green" >
 								<mat-icon matListIcon fontSet="material-icons-outlined">check_circle</mat-icon>
 							</button>

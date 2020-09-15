@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 import io.swagger.annotations.Api;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointment;
@@ -22,7 +23,6 @@ import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.sgx.security.utils.UserInfo;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
-import org.hibernate.validator.constraints.Length;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -161,7 +161,7 @@ public class AppointmentsController {
     public ResponseEntity<Boolean> updatePhoneNumber(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "appointmentId") Integer appointmentId,
-            @RequestParam @Length(max = 20,message = "{appointment.new.phoneNumber.invalid}") String phoneNumber) {
+            @RequestParam @Size(min = 1, max = 20, message = "{appointment.new.phoneNumber.invalid}") String phoneNumber) {
         LOG.debug("Input parameters -> institutionId {},appointmentId {}, phoneNumber {}", institutionId, appointmentId, phoneNumber);
         boolean result = appointmentService.updatePhoneNumber(appointmentId,phoneNumber,UserInfo.getCurrentAuditor());
         LOG.debug(OUTPUT, result);

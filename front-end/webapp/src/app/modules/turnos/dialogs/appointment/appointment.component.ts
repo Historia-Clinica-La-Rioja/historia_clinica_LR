@@ -128,12 +128,13 @@ export class AppointmentComponent implements OnInit {
 	updatePhoneNumber() {
 		this.appointmentFacade.updatePhoneNumber(this.appointmentData.appointmentId, this.phoneNumberForm.controls.phoneNumber.value).
 			subscribe(() => {
-				this.phoneNumberEditMode = false;
 				this.phoneNumberText = this.phoneNumberForm.controls.phoneNumber.value;
 				this.snackBarService.showSuccess('turnos.appointment.phoneNumber.SUCCESS');
 			}, error => {
 				processErrors(error, (msg) => this.snackBarService.showError(msg));
+				this.phoneNumberForm.controls.phoneNumber.setValue(this.appointmentData.phoneNumber);
 			});
+		this.phoneNumberEditMode = false;
 	}
 }
 
