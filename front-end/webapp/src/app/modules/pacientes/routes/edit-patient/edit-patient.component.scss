@@ -1,4 +1,15 @@
 @import "../../../../../assets/styles/mixins.scss";
+@import '../../../../../assets/styles/mat-mixins';
+
+.content {
+
+	.mat-radio-button {
+		@include form-radio-button;
+	}
+
+	@include mat-form-field-background-white
+
+}
 
 .form-row{
       @include form-row;
@@ -6,10 +17,6 @@
 
 mat-form-field{
     margin-right: 20px;
-}
-
-.mat-radio-button {
-    @include form-radio-button;
 }
 
 div.form-buttons {
