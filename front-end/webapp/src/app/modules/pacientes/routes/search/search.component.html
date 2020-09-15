@@ -10,41 +10,46 @@
 		</p>
 		<div class="content">
 			<form [formGroup]="formSearch" (ngSubmit)="submit()">
-				<br>
-				<mat-form-field appearance="outline">
-					<mat-label>
-						<span [translate]="'pacientes.form.IDENTIFICATION_TYPE'"></span>
-					</mat-label>
-					<mat-select
-						formControlName="identificationTypeId">
-						<mat-option
-							id="identifType"
-							name="identifType"
-							*ngFor="let type of identifyTypeArray" [value]="type.id">
-							{{type.description}}
-						</mat-option>
-					</mat-select>
-				</mat-form-field>
-				<mat-form-field appearance="outline">
-					<mat-label>
-						<span [translate]="'pacientes.form.IDENTIFICATION_NUMBER'"></span>
-					</mat-label>
-					<input id="identificationTypeId"
-						   formControlName="identificationNumber"
-					       placeholder="Sin puntos"
-						   matInput>
-					<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'identificationNumber')">
-						<span [translate]="'pacientes.form.REQUIRED'"></span>
-					</mat-error>
-					<mat-error *ngIf="hasError(formSearch, 'maxlength', 'identificationNumber')">
-						<span [translate]="'pacientes.form.MAX_CHARACTER'"></span>
-					</mat-error>
-				</mat-form-field>
-				<br>
+				<div class="form-row" id="id_identification">
+					<div>
+						<div>
+							<span [translate]="'pacientes.form.IDENTIFICATION_TYPE'"></span>
+						</div>
+						<mat-form-field appearance="outline">
+							<mat-select
+								formControlName="identificationTypeId">
+								<mat-option
+									id="identifType"
+									name="identifType"
+									*ngFor="let type of identifyTypeArray" [value]="type.id">
+									{{type.description}}
+								</mat-option>
+							</mat-select>
+						</mat-form-field>
+					</div>
+
+					<div>
+						<div>
+							<span [translate]="'pacientes.form.IDENTIFICATION_NUMBER'"></span>
+						</div>
+						<mat-form-field appearance="outline">
+							<input id="identificationTypeId"
+								   formControlName="identificationNumber"
+								   placeholder="Sin puntos"
+								   matInput>
+							<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'identificationNumber')">
+								<span [translate]="'pacientes.form.REQUIRED'"></span>
+							</mat-error>
+							<mat-error *ngIf="hasError(formSearch, 'maxlength', 'identificationNumber')">
+								<span [translate]="'pacientes.form.MAX_CHARACTER'"></span>
+							</mat-error>
+						</mat-form-field>
+					</div>
+				</div>
 				<mat-label>
 					<span [translate]="'pacientes.form.GENDER'"></span>
 				</mat-label>
-				<div class="">
+				<div>
 					<mat-radio-group name="genderId" id="genderId" formControlName="genderId">
 						<mat-radio-button id="genderButton_{{gender.id}}" *ngFor="let gender of genderOptions" [value]="gender.id">
 							{{gender.description}}
@@ -58,67 +63,63 @@
 				<div>
 					<span [translate]="'pacientes.form.FIRST_NAMES_TITLE'"></span>
 				</div>
-				<mat-form-field appearance="outline">
-					<mat-label>
-						<span [translate]="'pacientes.form.FIRST_NAME'"></span>
-					</mat-label>
-					<input id="firstName"
-							formControlName="firstName"
-							maxlength="20"
-							matInput>
-					<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'firstName')">
-						<span [translate]="'pacientes.form.REQUIRED'"></span>
-					</mat-error>
-				</mat-form-field>
-				<mat-form-field appearance="outline">
-					<mat-label>
-						<span [translate]="'pacientes.form.MIDDLE_NAMES'"></span>
-					</mat-label>
-					<input id="middleNames"
-							formControlName="middleNames"
-							maxlength="20"
-							matInput>
-				</mat-form-field>
-				<br>
+				<div class="form-row" id="id_names">
+					<mat-form-field appearance="outline">
+						<input  id="firstName"
+								formControlName="firstName"
+								maxlength="20"
+								placeholder="{{'pacientes.form.FIRST_NAME' | translate}}"
+								matInput>
+						<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'firstName')">
+							<span [translate]="'pacientes.form.REQUIRED'"></span>
+						</mat-error>
+					</mat-form-field>
+					<mat-form-field appearance="outline">
+						<input  id="middleNames"
+								formControlName="middleNames"
+								maxlength="20"
+								placeholder="{{'pacientes.form.MIDDLE_NAMES' | translate}}"
+								matInput>
+					</mat-form-field>
+				</div>
 				<div>
 					<span [translate]="'pacientes.form.LAST_NAME_TITLE'"></span>
 				</div>
-				<mat-form-field appearance="outline">
-					<mat-label>
-						<span [translate]="'pacientes.form.LAST_NAME'"></span>
-					</mat-label>
-					<input  id="lastName"
-							formControlName="lastName"
-							maxlength="20"
-							matInput>
-					<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'lastName')">
-						<span [translate]="'pacientes.form.REQUIRED'"></span>
-					</mat-error>
-				</mat-form-field>
-				<mat-form-field appearance="outline">
-					<mat-label>
-						<span [translate]="'pacientes.form.OTHER_LAST_NAMES'"></span>
-					</mat-label>
-					<input id="otherLastNames"
-							maxlength="20"
-							formControlName="otherLastNames"
-							matInput>
-				</mat-form-field>
-				<br>
-				<mat-form-field appearance="outline">
-					<mat-label>
-						<span [translate]="'pacientes.form.BIRTH_DATE'"></span>
-					</mat-label>
-					<input matInput id="birthDate"
-									formControlName="birthDate"
-									[matDatepicker]="picker"
-						   			[max]="today">
-					<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'birthDate')">
-						<span [translate]="'pacientes.form.REQUIRED'"></span>
-					</mat-error>
-					<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-					<mat-datepicker #picker></mat-datepicker>
-				</mat-form-field>
+				<div class="form-row" id="id_lastName">
+					<mat-form-field appearance="outline">
+						<input  id="lastName"
+								formControlName="lastName"
+								maxlength="20"
+								placeholder="{{'pacientes.form.LAST_NAME' | translate}}"
+								matInput>
+						<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'lastName')">
+							<span [translate]="'pacientes.form.REQUIRED'"></span>
+						</mat-error>
+					</mat-form-field>
+					<mat-form-field appearance="outline">
+						<input  id="otherLastNames"
+								maxlength="20"
+								formControlName="otherLastNames"
+								placeholder="{{'pacientes.form.MOTHERS_LAST_NAME' | translate}}"
+								matInput>
+					</mat-form-field>
+				</div>
+				<div>
+					<span [translate]="'pacientes.form.BIRTH_DATE'"></span>
+				</div>
+				<div>
+					<mat-form-field appearance="outline">
+						<input matInput id="birthDate"
+							   formControlName="birthDate"
+							   [matDatepicker]="picker"
+							   [max]="today">
+						<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'birthDate')">
+							<span [translate]="'pacientes.form.REQUIRED'"></span>
+						</mat-error>
+						<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+						<mat-datepicker #picker></mat-datepicker>
+					</mat-form-field>
+				</div>
 				<br>
 				<mat-action-row *hasRole="['ADMINISTRATIVO']">
 					<button mat-stroked-button (click)="back()">

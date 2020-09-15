@@ -20,8 +20,16 @@
 		margin-top: 25px;
 	}
 
+	.form-row {
+		@include form-row;
+	}
+
 	@include mat-form-field-background-white
 
+}
+
+mat-form-field{
+    margin-right: 20px;
 }
 
 .table-container {
