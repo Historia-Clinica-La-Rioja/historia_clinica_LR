@@ -95,7 +95,7 @@ public class DiaryController {
     public ResponseEntity<Collection<DiaryListDto>> getDiaries(@PathVariable(name = "institutionId")  Integer institutionId,
                                                                @RequestParam(name = "healthcareProfessionalId") Integer healthcareProfessionalId){
         LOG.debug("Input parameters -> institutionId {}, healthcareProfessionalId {}", institutionId, healthcareProfessionalId);
-        Collection<DiaryBo> diaryBos = diaryService.getActiveDiariesFromProfessional(healthcareProfessionalId);
+        Collection<DiaryBo> diaryBos = diaryService.getActiveDiariesFromProfessional(healthcareProfessionalId, institutionId);
         Collection<DiaryListDto> result = diaryMapper.toCollectionDiaryListDto(diaryBos);
         LOG.debug(OUTPUT, result);
         return ResponseEntity.ok(result);

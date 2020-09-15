@@ -200,9 +200,9 @@ public class DiaryServiceImpl implements DiaryService {
 	}
 
 	@Override
-	public Collection<DiaryBo> getActiveDiariesFromProfessional(Integer healthcareProfessionalId) {
+	public Collection<DiaryBo> getActiveDiariesFromProfessional(Integer healthcareProfessionalId, Integer institutionId) {
 		LOG.debug("Input parameters -> healthcareProfessionalId {}", healthcareProfessionalId);
-		List<DiaryListVo> diaries = diaryRepository.getActiveDiariesFromProfessional(healthcareProfessionalId);
+		List<DiaryListVo> diaries = diaryRepository.getActiveDiariesFromProfessional(healthcareProfessionalId,institutionId);
 		List<DiaryBo> result = diaries.stream().map(this::createDiaryBoInstance).collect(toList());
 		LOG.debug(OUTPUT, result);
 		return result;

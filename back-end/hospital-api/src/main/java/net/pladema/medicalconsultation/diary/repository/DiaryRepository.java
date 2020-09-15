@@ -77,9 +77,10 @@ public interface DiaryRepository extends JpaRepository<Diary, Integer> {
             "FROM Diary d " +
             "JOIN DoctorsOffice AS do ON (do.id = d.doctorsOfficeId) " +
             "WHERE d.healthcareProfessionalId = :hcpId " +
+            "AND do.institutionId = :instId " +
             "AND d.active = true "+
             "AND d.deleteable.deleted = false")
-    List<DiaryListVo> getActiveDiariesFromProfessional(@Param("hcpId") Integer healthcareProfessionalId);
+    List<DiaryListVo> getActiveDiariesFromProfessional(@Param("hcpId") Integer healthcareProfessionalId, @Param("instId") Integer institutionId);
     
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.CompleteDiaryListVo( " +
