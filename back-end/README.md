@@ -4,7 +4,7 @@ El proyecto esta desarrollado en Java en su versión 11.
 
 ### Requerimientos
 
-Se espera tener configurado una base de datos postgreSQL con la siguiente configuración inicial:
+Se espera tener configurado una base de datos postgreSQL con la siguiente configuración inicial (se puede seguír la guía explicada en el [README Raíz](README.md):
 
 * IP: localhost
 * puerto: 5432
@@ -12,13 +12,12 @@ Se espera tener configurado una base de datos postgreSQL con la siguiente config
 * password: Local123
 * esquema: hospitalDB
 
+Por defecto las propiedades de desarrollo ya se encuentran configuradas con los valores definidos para la base de datos. Si algún valor cambia, entonces se pueden configurar mediante [propiedades](../properties.md) externalizadas:
 
-Todos estos datos pueden ser configurados mediante [propiedades](../properties.md) externalizadas:
-
-* spring.datasource.url
-* spring.datasource.username
-* spring.datasource.password
-  
+* spring.datasource.url=jdbc:postgresql://**localhost:5432/hospitalDB**
+* spring.datasource.username=postgres
+* spring.datasource.password=Local123
+ 
 O haciendo uso de variables de ambientes
   
 * DATABASE_IP_PORT: ip y puerto de la base
@@ -26,6 +25,7 @@ O haciendo uso de variables de ambientes
 * DATABASE_USER: nombre de usuario
 * DATABASE_PASS: password del usuario
 
+**Aclaración**: Controlar que no haya espacios de más en los valores de las propiedades.
 
 ### Iniciar backend
 
@@ -55,3 +55,51 @@ La forma de activar un **Profile** es mediante la propiedad `spring.profiles.act
 
 Para el desarrollo se debe usar `dev`, el cuál requiere activación.
 
+
+### Desarrollo
+
+Al levantar el ambiente de desarrollo por primera vez se tiene un conjunto de usuarios creados en el application-dev.properties para testear los distintos roles de la aplicación.
+
+
+##### Administrativo
+
+* usuario: administrativo@example.com
+* contraseña: admin123
+
+##### Especialista medico
+
+* usuario: especialista@example.com
+* contraseña: admin123
+
+##### Profesional de la salud
+
+* usuario: profesionalsalud@example.com
+* contraseña: admin123
+
+
+##### Administrador institucional
+
+* usuario: administradorinstitucional@example.com
+* contraseña: admin123
+
+
+##### Administrador institucional
+
+* usuario: administradorinstitucional@example.com
+* contraseña: admin123
+
+
+##### Enfermero
+
+* usuario: enfermero@example.com
+* contraseña: admin123
+
+##### Administrador agenda
+
+* usuario: administradoragenda@example.com
+* contraseña: admin123
+
+
+#### Renaper y federar
+
+Estos servicios estan deshabilitados para el ambiente de desarrollo. Esto se debe a que no tenemos ambientes de pruebas de cada uno para poder usarlos localmente.
