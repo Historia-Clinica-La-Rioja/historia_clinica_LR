@@ -1,5 +1,11 @@
 @import '../../../../../../../../../assets/styles/mixins';
 
+$green-month-cell: #009B68;
+$blue-month-cell: #2687C5;
+$orange-month-cell: #FF5C00;
+$border-color-calendar: #e1e1e1;
+
+
 div.spinner {
 	@include centered-spinner;
 }
@@ -32,35 +38,46 @@ div.spinner {
 			color: black;
 		}
 
-
 		.toggle-view {
-				.mat-button-toggle-checked.mat-button-toggle-appearance-standard {
-					background-color: #0062CD;
-				}
+			.mat-button-toggle-checked.mat-button-toggle-appearance-standard {
+				background-color: #0062CD;
+			}
 
-				.mat-button-toggle-appearance-standard {
-					background-color: #007AFF;
-					color: white;
-				}
-		}
-
-			.navigation.mat-button-toggle-appearance-standard {
+			.mat-button-toggle-appearance-standard {
 				background-color: #007AFF;
 				color: white;
 			}
+		}
 
+		.navigation.mat-button-toggle-appearance-standard {
+			background-color: #007AFF;
+			color: white;
+		}
 
+		.today.mat-button-toggle-appearance-standard {
+			background-color: white;
+			color: #747C85;
+		}
 
-			.today.mat-button-toggle-appearance-standard {
-				background-color: white;
-				color: #747C85;
+		.cal-cell-row.cal-header {
+			border: {
+				left: {
+					width: 1px;
+					style: solid;
+					color: $border-color-calendar;
+				};
+				right: {
+					width: 1px;
+					style: solid;
+					color: $border-color-calendar;
+				};
+				bottom: none;
 			}
+		}
 
 	}
 
 }
-
-$border-color-calendar: #e1e1e1;
 
 .header {
 	padding: 15px;
@@ -69,6 +86,51 @@ $border-color-calendar: #e1e1e1;
 		style: solid;
 		color: $border-color-calendar;
 		bottom: none;
+	}
+}
+
+.turnos-cell {
+	padding: 5px;
+
+	font-size: 12px;
+	font-weight: 500;
+
+	.count-border {
+		border: 1px solid;
+		box-sizing: border-box;
+		border-radius: 3px;
+
+		max-height: 17px;
+		max-width: 24px;
+		padding: 9px 8px;
+	}
+
+	.espontanea {
+		color: $blue-month-cell;
+
+		div.count-border {
+			border-color: $blue-month-cell;
+		}
+	}
+
+	.programada-asignados {
+		color: $green-month-cell;
+	}
+
+	.programada-disponibles {
+		div.count-border {
+			background-color: $green-month-cell;
+			border-color: $green-month-cell;
+			color: white;
+		}
+
+		& > span {
+			color: $green-month-cell;
+		}
+	}
+
+	.no-disponibles {
+		color: $orange-month-cell;
 	}
 }
 

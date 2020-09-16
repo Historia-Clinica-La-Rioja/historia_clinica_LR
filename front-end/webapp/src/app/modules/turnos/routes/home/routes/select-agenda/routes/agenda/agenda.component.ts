@@ -39,7 +39,7 @@ const AGENDA_ESPONTANEA_CLASS = 'bg-blue';
 export class AgendaComponent implements OnInit {
 
 	readonly calendarViewEnum = CalendarView;
-	view: CalendarView = CalendarView.Week;
+	view: CalendarView = CalendarView.Month;
 	readonly MONDAY = DAYS_OF_WEEK.MONDAY;
 
 	hourSegments: number;

@@ -4,24 +4,22 @@
 
 <ng-template #calendar>
 	<section class="turnos" id="calendar">
-
-
 		<div class="header" id="header" fxLayout="row" fxLayoutAlign="space-between center">
 			<mat-button-toggle-group>
-				<mat-button-toggle class="navigation"
+				<mat-button-toggle id="previous" class="navigation"
 								   mwlCalendarPreviousView
 								   [view]=view
 								   [(viewDate)]="viewDate"
 				>
 					Anterior
 				</mat-button-toggle>
-				<mat-button-toggle class="today"
+				<mat-button-toggle id="today" class="today"
 								   mwlCalendarToday
 								   [(viewDate)]="viewDate"
 				>
 					Hoy
 				</mat-button-toggle>
-				<mat-button-toggle class="navigation"
+				<mat-button-toggle id="next" class="navigation"
 								   mwlCalendarNextView
 								   [view]=view
 								   [(viewDate)]="viewDate"
@@ -30,13 +28,15 @@
 				</mat-button-toggle>
 			</mat-button-toggle-group>
 
-			<div>
-						<span
-							class="mat-h2">{{ viewDate | calendarDate:(view + 'ViewTitle'): undefined : MONDAY }}</span>
+			<div id="view_date">
+				<span class="mat-h2">
+					{{ viewDate | calendarDate:(view + 'ViewTitle'): undefined : MONDAY }}
+				</span>
 			</div>
 
 			<div>
 				<mat-button-toggle-group class="toggle-view" [(value)]="view">
+					<mat-button-toggle value="{{calendarViewEnum.Month}}">Mes</mat-button-toggle>
 					<mat-button-toggle value="{{calendarViewEnum.Week}}">Semana</mat-button-toggle>
 					<mat-button-toggle value="{{calendarViewEnum.Day}}">Día</mat-button-toggle>
 				</mat-button-toggle-group>
@@ -46,8 +46,18 @@
 
 		<div [ngSwitch]="view">
 
+			<mwl-calendar-month-view class="title-black"
+									 *ngSwitchCase="calendarViewEnum.Month"
+									 [viewDate]="viewDate"
+									 [events]="appointmentFacade.getAppointments() | async"
+									 [weekStartsOn]="MONDAY"
+									 [cellTemplate]="customCellTemplate"
+									 (dayClicked)="goToDayViewOn($event.day.date)"
+			>
+			</mwl-calendar-month-view>
+
 			<mwl-calendar-week-view class="title-black"
-									*ngSwitchCase="'week'"
+									*ngSwitchCase="calendarViewEnum.Week"
 									[viewDate]="viewDate"
 									[events]="appointmentFacade.getAppointments() | async"
 									[dayStartHour]="dayStartHour" [dayEndHour]="dayEndHour"
@@ -62,7 +72,7 @@
 			</mwl-calendar-week-view>
 
 			<mwl-calendar-day-view class="title-black"
-								   *ngSwitchCase="'day'"
+								   *ngSwitchCase="calendarViewEnum.Day"
 								   [viewDate]="viewDate"
 								   [events]="appointmentFacade.getAppointments() | async"
 								   [hourSegments]="hourSegments"
@@ -96,6 +106,42 @@
 					</strong>
 					<br>
 					<span> {{ day.date | calendarDate: 'weekViewColumnSubHeader'}}</span>
+				</div>
+			</div>
+		</ng-template>
+
+		<ng-template #customCellTemplate let-day="day" let-locale="locale">
+			<div>
+				<span class="cal-day-number">
+					{{ day.date | calendarDate:'monthViewDayNumber':locale }}
+				</span>
+			</div>
+
+			<div class="turnos-cell">
+				<div fxLayout="column" fxLayoutGap="2px">
+
+					<div class="espontanea" fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
+						<div class="count-border" fxLayoutAlign="center center">
+							<span>10</span>
+						</div>
+						<span>Turnos asignados</span>
+					</div>
+
+					<div class="programada-asignados" fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
+						<div class="count-border" fxLayoutAlign="center center">
+							<span>15</span>
+						</div>
+						<span>Turnos asignados</span>
+					</div>
+
+					<div class="programada-disponibles" fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
+						<div class="count-border" fxLayoutAlign="center center">
+							<span>5</span>
+						</div>
+						<span>Turnos disponibles</span>
+					</div>
+
+					<div class="no-disponibles">No existen turnos disponibles</div>
 				</div>
 			</div>
 		</ng-template>
