@@ -12,12 +12,12 @@ import {
 
 import { useForm } from 'react-final-form';
 
-const Province = () => {
+const Province = (sourceId) => {
     const form = useForm();
 
     return (
-    <ReferenceInput 
-        source="provinceId"
+    <ReferenceInput
+        {...sourceId}
         reference="provinces" 
         perPage={100} //Así traemos todas las provincias de una
         sort={{ field: 'description', order: 'ASC' }}
@@ -39,7 +39,7 @@ const Department = ({ formData, ...rest }) => {
     return (
         <Fragment>
             <ReferenceInput
-                source="departmentId"
+                {...rest}
                 reference="departments"
                 filter={{ provinceId: formData ? formData.provinceId : '' }}
                 sort={{ field: 'description', order: 'ASC' }}
@@ -56,7 +56,7 @@ const Department = ({ formData, ...rest }) => {
 const City = ({ formData, ...rest }) => {
     if (!formData.departmentId) return null;
     return <ReferenceInput
-        source="cityId"
+        {...rest}
         reference="cities"
         filter={{ departmentId: formData.departmentId }}
         sort={{ field: 'description', order: 'ASC' }}
@@ -70,14 +70,14 @@ const AddressEdit = props => (
         <SimpleForm redirect="show" >
 
             {/*Province*/}
-            <Province />
+            <Province source="provinceId"/>
             {/*Department*/}
             <FormDataConsumer>
-                {formDataProps => ( <Department {...formDataProps} />)}
+                {formDataProps => ( <Department {...formDataProps} source="departmentId"/>)}
             </FormDataConsumer>
             {/*City*/}
             <FormDataConsumer>
-                {formDataProps => ( <City {...formDataProps} />)}
+                {formDataProps => ( <City {...formDataProps} source="cityId"/>)}
             </FormDataConsumer>
             <TextInput source="street" validate={[required()]} />
             <TextInput source="number" validate={[required()]} />
