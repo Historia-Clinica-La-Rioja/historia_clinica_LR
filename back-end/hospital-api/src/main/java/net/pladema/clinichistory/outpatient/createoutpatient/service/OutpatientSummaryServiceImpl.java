@@ -4,7 +4,7 @@ import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.Heal
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientEvolutionSummaryBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProcedureBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ReasonBo;
-import net.pladema.clinichistory.outpatient.repository.OutpatientConsultationRepository;
+import net.pladema.clinichistory.outpatient.repository.OutpatientConsultationSummaryRepository;
 import net.pladema.clinichistory.outpatient.repository.domain.HealthConditionSummaryVo;
 import net.pladema.clinichistory.outpatient.repository.domain.OutpatientEvolutionSummaryVo;
 import net.pladema.clinichistory.outpatient.repository.domain.ProcedureSummaryVo;
@@ -24,18 +24,19 @@ public class OutpatientSummaryServiceImpl implements OutpatientSummaryService{
 
     public static final String OUTPUT = "Output -> {}";
 
-    private final OutpatientConsultationRepository outpatientConsultationRepository;
+    private final OutpatientConsultationSummaryRepository outpatientConsultationSummaryRepository;
 
-    public OutpatientSummaryServiceImpl(OutpatientConsultationRepository outpatientConsultationRepository) {
-        this.outpatientConsultationRepository = outpatientConsultationRepository;
+    public OutpatientSummaryServiceImpl(OutpatientConsultationSummaryRepository outpatientConsultationSummaryRepository) {
+        this.outpatientConsultationSummaryRepository = outpatientConsultationSummaryRepository;
     }
 
     @Override
     public List<OutpatientEvolutionSummaryBo> getSummary(Integer institutionId, Integer patientId) {
-        List<OutpatientEvolutionSummaryVo> queryResult = outpatientConsultationRepository.getAllOutpatientEvolutionSummary(institutionId, patientId);
-        List<HealthConditionSummaryVo> healthcConditions = outpatientConsultationRepository.getHealthConditionsByPatient(patientId);
-        List<ReasonSummaryVo> reasons = outpatientConsultationRepository.getReasonsByPatient(patientId);
-        List<ProcedureSummaryVo> procedures = outpatientConsultationRepository.getProceduresByPatient(patientId);
+        List<OutpatientEvolutionSummaryVo> queryResult = outpatientConsultationSummaryRepository.getAllOutpatientEvolutionSummary(institutionId, patientId);
+        List<Integer> OutpatientConsultationIds = queryResult.stream().map(OutpatientEvolutionSummaryVo::getConsultationID).collect(Collectors.toList());
+        List<HealthConditionSummaryVo> healthcConditions = outpatientConsultationSummaryRepository.getHealthConditionsByPatient(patientId, OutpatientConsultationIds);
+        List<ReasonSummaryVo> reasons = outpatientConsultationSummaryRepository.getReasonsByPatient(patientId, OutpatientConsultationIds);
+        List<ProcedureSummaryVo> procedures = outpatientConsultationSummaryRepository.getProceduresByPatient(patientId, OutpatientConsultationIds);
         List<OutpatientEvolutionSummaryBo> result = new ArrayList<>();
         for(OutpatientEvolutionSummaryVo oes: queryResult){
             OutpatientEvolutionSummaryBo oesBo = new OutpatientEvolutionSummaryBo(oes);
