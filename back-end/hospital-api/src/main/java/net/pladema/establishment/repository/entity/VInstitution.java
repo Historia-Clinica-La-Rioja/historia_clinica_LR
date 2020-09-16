@@ -22,10 +22,10 @@ public class VInstitution {
     @EmbeddedId
     private VInstitutionPK pk;
 
-    @Column(name = "latitud")
+    @Column(name = "latitude")
     private Double latitude;
 
-    @Column(name = "longitud")
+    @Column(name = "longitude")
     private Double longitude;
 
     @Column(name = "covid_presumptive")
