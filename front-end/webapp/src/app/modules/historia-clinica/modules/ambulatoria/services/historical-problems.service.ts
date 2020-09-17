@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { ReplaySubject, Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { HistoricalProblemsFilter } from '../components/historical-problems-filters/historical-problems-filters.component';
 import { pushIfNotExists } from '@core/utils/array.utils';
-import { momentParseDateTime, momentParseDate } from '@core/utils/moment.utils';
-import {HceGeneralStateService} from '@api-rest/services/hce-general-state.service';
+import { momentParseDate } from '@core/utils/moment.utils';
+import { OutpatientEvolutionSummaryDto } from '@api-rest/api-model';
+import { OutpatientConsultationService } from './../../../../api-rest/services/outpatient-consultation.service';
+import { MapperService } from './../../../../presentation/services/mapper.service';
 
 @Injectable()
 export class HistoricalProblemsService {
@@ -13,52 +15,55 @@ export class HistoricalProblemsService {
   	public professionals: Professional[] = [];
 	public problems: Problem[] = [];
 
-	private subject = new ReplaySubject<any[]>(1);
-	private originalHistoricalProblems = [];
+	private subject = new ReplaySubject<HistoricalProblems[]>(1);
+	private historicalProblems$: Observable<HistoricalProblems[]>;
+	private originalHistoricalProblems: HistoricalProblems[] = [];
 
 	constructor(
-		private readonly hceGeneralStateService: HceGeneralStateService,
-  	) { }
+		private readonly outpatientConsultationService: OutpatientConsultationService,
+		private readonly mapperService: MapperService,
+  	) {
+		this.historicalProblems$ = this.subject.asObservable();
+	}
 
-	public getHistoricalProblems(): Observable<any[]> {
+	setPatientId(patientId: number): void {
 		if (!this.originalHistoricalProblems.length) {
-			/*this.hceGeneralStateService.getBedsSummary().pipe(
-				tap((bedsSummary: void[]) => this.filterOptions(bedsSummary))
+			this.outpatientConsultationService.getEvolutionSummaryList(patientId).pipe(
+				tap((outpatientEvolutionSummary: OutpatientEvolutionSummaryDto[]) => this.filterOptions(outpatientEvolutionSummary)),
+				map((outpatientEvolutionSummary: OutpatientEvolutionSummaryDto[]) => outpatientEvolutionSummary ? this.mapperService.toHistoricalProblems(outpatientEvolutionSummary) : null)
 			).subscribe(data => {
 				this.originalHistoricalProblems = data;
 				this.sendHistoricalProblems(this.originalHistoricalProblems);
-			});*/
+			});
 		}
-		return this.subject.asObservable();
 	}
 
-	public sendHistoricalProblems(bedManagement) {
-		this.subject.next(bedManagement);
+	public getHistoricalProblems(): Observable<HistoricalProblems[]> {
+		return this.historicalProblems$;
+	}
+
+	public sendHistoricalProblems(outpatientEvolutionSummary: HistoricalProblems[]) {
+		this.subject.next(outpatientEvolutionSummary);
 	}
 
 	public sendHistoricalProblemsFilter(newFilter: HistoricalProblemsFilter) {
 		const historichalProblemsCopy = [...this.originalHistoricalProblems];
-		const result = historichalProblemsCopy.filter(historicalProblem => (this.filterBySpeciality(newFilter, historicalProblem)
-																	&& this.filterByProfessional(newFilter, historicalProblem)
+		const result = historichalProblemsCopy.filter(historicalProblem => (this.filterByProfessional(newFilter, historicalProblem)
 																	&& this.filterByProblem(newFilter, historicalProblem)
 																	&& this.filterByConsultationDate(newFilter, historicalProblem)));
 		this.subject.next(result);
 	}
 
-	private filterBySpeciality(filter: HistoricalProblemsFilter, problem): boolean {
-		return (filter.speciality ? problem.clinicalSpecialty.id === filter.speciality : true);
+	private filterByProfessional(filter: HistoricalProblemsFilter, problem: HistoricalProblems): boolean {
+		return (filter.professional ? problem.consultationProfessionalId === filter.professional : true);
 	}
 
-	private filterByProfessional(filter: HistoricalProblemsFilter, problem): boolean {
-		return (filter.professional ? problem.professional.id === filter.professional : true);
+	private filterByProblem(filter: HistoricalProblemsFilter, problem: HistoricalProblems): boolean {
+		return (filter.problem ? Number(problem.problemId) === Number(filter.problem) : true);
 	}
 
-	private filterByProblem(filter: HistoricalProblemsFilter, problem): boolean {
-		return (filter.problem ? problem.problem.id === filter.problem : true);
-	}
-
-	private filterByConsultationDate(filter: HistoricalProblemsFilter, problem): boolean {
-		return (filter.consultationDate ? problem.consultationDate ? momentParseDateTime(problem.consultationDate).isSameOrBefore(momentParseDate(filter.consultationDate)) : false : true);
+	private filterByConsultationDate(filter: HistoricalProblemsFilter, problem: HistoricalProblems): boolean {
+		return (filter.consultationDate ? problem.consultationDate ? momentParseDate(problem.consultationDate).isSame(momentParseDate(filter.consultationDate)) : false : true);
 	}
 
 	public getFilterOptions() {
@@ -69,19 +74,16 @@ export class HistoricalProblemsService {
 		};
 	}
 
-	private filterOptions(bedsSummary): void {
-		bedsSummary.forEach(bedSummary => {
+	private filterOptions(outpatientEvolutionSummary: OutpatientEvolutionSummaryDto[]): void {
+		outpatientEvolutionSummary.forEach(outpatientEvolution => {
 
-			this.specialities = pushIfNotExists(this.specialities, {specialityId: bedSummary.clinicalSpecialty.id, specialityDescription: bedSummary.clinicalSpecialty.name}, this.compareSpeciality)
+			outpatientEvolution.healthConditions.forEach(oe => {
+				this.problems = pushIfNotExists(this.problems, {problemId: oe.snomed.id, problemDescription: oe.snomed.pt}, this.compareProblems);
+			});
 
-			this.professionals = pushIfNotExists(this.professionals, {professionalId: bedSummary.professional.id, professionalDescription: bedSummary.professional.description}, this.compareProfessional);
+			this.professionals = pushIfNotExists(this.professionals, {professionalId: outpatientEvolution.medic.id, professionalDescription: `${outpatientEvolution.medic.person.firstName} ${outpatientEvolution.medic.person.lastName}`} , this.compareProfessional);
 
-			this.problems = pushIfNotExists(this.problems, {problemId: bedSummary.problems.id, problemDescription: bedSummary.problems.description}, this.compareProblems);
 		});
-	}
-
-	private compareSpeciality(speciality: Speciality, speciality2: Speciality): boolean {
-		return speciality.specialityId === speciality2.specialityId;
 	}
 
 	private compareProfessional(professional: Professional, professional2: Professional): boolean {
@@ -105,6 +107,26 @@ export class Professional {
 }
 
 export class Problem {
-	problemId: number;
+	problemId: string;
 	problemDescription: string;
+}
+
+export class HistoricalProblems {
+	consultationDate: string;
+	consultationEvolutionNote: string;
+	consultationProfessionalId: number;
+	consultationProfessionalName: string;
+	problemId: string;
+	problemPt: string;
+  	consultationReasons:
+	{
+		reasonId: string;
+		reasonPt: string;
+  	}[];
+	consultationProcedures:
+	{
+		procedureDate: string;
+		procedureId: string;
+		procedurePt: string;
+	}[];
 }

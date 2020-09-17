@@ -57,6 +57,6 @@ export class HistoricalProblemsFiltersComponent implements OnInit {
 export class HistoricalProblemsFilter {
 	speciality: number;
 	professional: number;
-	problem: number;
+	problem: string;
 	consultationDate: string;
 }

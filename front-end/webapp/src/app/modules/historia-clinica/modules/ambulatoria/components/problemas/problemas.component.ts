@@ -13,7 +13,7 @@ import { map, tap } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import {MatDialog} from "@angular/material/dialog";
 import {SolveProblemComponent} from "../../../../dialogs/solve-problem/solve-problem.component";
-import { HistoricalProblemsService } from './../../services/historical-problems.service';
+import { HistoricalProblemsService, HistoricalProblems } from './../../services/historical-problems.service';
 
 @Component({
 	selector: 'app-problemas',
@@ -48,6 +48,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		this.route.paramMap.subscribe(
 			(params) => {
 				this.patientId = Number(params.get('idPaciente'));
+				historicalProblemsService.setPatientId(this.patientId);
 			});
 	}
 
@@ -102,7 +103,6 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 			})
 		);
 
-		//hacer el mapper del dto a lo que uso yo en el front
 		this.historicalProblems$ = this.historicalProblemsService.getHistoricalProblems().pipe(
 			tap(historicalProblems => this.historicalProblemsAmount = historicalProblems ? historicalProblems.length : 0)
 		).subscribe(data => this.historicalProblemsList = data);
@@ -129,23 +129,4 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	ngOnDestroy(): void {
 		this.historicalProblems$.unsubscribe();
   	}
-}
-
-export class HistoricalProblems {
-	consultationDate: string;
-	consultationEvolutionNote: string;
-	consultationProfessionalName: string;
-	problemId: string;
-	problemPt: string;
-  	consultationReasons:
-	{
-		reasonId: string;
-		reasonPt: string;
-  	}[];
-	consultationProcedures:
-	{
-		procedureDate: string;
-		procedureId: string;
-		procedurePt: string;
-	}[];
 }

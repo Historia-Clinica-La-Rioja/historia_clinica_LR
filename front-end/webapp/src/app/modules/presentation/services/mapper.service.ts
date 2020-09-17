@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { InternmentEpisodeSummary } from '../components/internment-episode-summary/internment-episode-summary.component';
-import { BasicPatientDto, CompletePatientDto, InternmentSummaryDto, PatientType, PersonalInformationDto, BedSummaryDto } from '@api-rest/api-model';
+import { BasicPatientDto, CompletePatientDto, InternmentSummaryDto, PatientType, PersonalInformationDto, BedSummaryDto, OutpatientEvolutionSummaryDto } from '@api-rest/api-model';
 import { PatientBasicData } from '../components/patient-card/patient-card.component';
 import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
 import { PatientTypeData } from '@presentation/components/patient-type-logo/patient-type-logo.component';
 import { DateFormat, momentParseDate, momentParseDateTime } from '@core/utils/moment.utils';
 import { BedManagement } from '../../camas/routes/home/home.component';
+import { HistoricalProblems } from '../../historia-clinica/modules/ambulatoria/services/historical-problems.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -17,6 +18,7 @@ export class MapperService {
 	toPersonalInformationData: (o1: CompletePatientDto, o2: PersonalInformationDto) => PersonalInformation = MapperService._toPersonalInformationData;
 	toPatientTypeData: (patientType: PatientType) => PatientTypeData = MapperService._toPatientTypeData;
 	toBedManagement: (bedSummary: BedSummaryDto[]) => BedManagement[] = MapperService._toBedManagement;
+	toHistoricalProblems: (outpatientEvolutionSummary: OutpatientEvolutionSummaryDto[]) => HistoricalProblems[] = MapperService._toHistoricalProblems;
 
 	constructor() {
 	}
@@ -131,6 +133,27 @@ export class MapperService {
 		});
 
 		return bedManagement;
+	}
+
+	private static _toHistoricalProblems(outpatientEvolutionSummary: OutpatientEvolutionSummaryDto[]): HistoricalProblems[] {
+
+		return outpatientEvolutionSummary.reduce((historicalProblemsList, currentOutpatientEvolutionSummary) => {
+
+			historicalProblemsList = [...historicalProblemsList, ...currentOutpatientEvolutionSummary.healthConditions.map(problem => ({
+					consultationDate: currentOutpatientEvolutionSummary.startDate,
+					consultationEvolutionNote: currentOutpatientEvolutionSummary.evolutionNote,
+					consultationProfessionalName: `${currentOutpatientEvolutionSummary.medic.person.firstName} ${currentOutpatientEvolutionSummary.medic.person.lastName}`,
+					consultationProfessionalId: currentOutpatientEvolutionSummary.medic.id,
+					problemId: problem.snomed.id,
+					problemPt: problem.snomed.pt,
+					consultationReasons: currentOutpatientEvolutionSummary.reasons.map(r => ({reasonId: r.snomed.id, reasonPt: r.snomed.pt})),
+					consultationProcedures: currentOutpatientEvolutionSummary.procedures.map(p => ({procedureDate: p.fecha, procedureId: p.snomed.id, procedurePt: p.snomed.pt}))
+				}))];
+			return historicalProblemsList;
+
+		}, []);
+
+
 	}
 
 }

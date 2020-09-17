@@ -133,22 +133,22 @@
 							
 							<mat-icon mat-list-icon fontSet="material-icons-outlined" color="primary">assignment</mat-icon>
 
-							<div fxLayout="column" fxLayoutGap="15px">
+							<div fxLayout="column" fxLayoutGap="15px" fxFlex="100%">
 								<div fxLayout="row" fxLayoutGap="15px">								
-									<div fxLayout="column wrap" class="problem-container">
+									<div fxLayout="column wrap" fxFlex="70%">
 										<h2 class="mat-h2 page-title primary capitalize-first-letter">{{historicalProblem.problemPt}}</h2>
 
 										<div *ngIf="historicalProblem.consultationReasons">
 											<div class="mat-body-strong" [translate]="'ambulatoria.paciente.problemas.historical-problems.REASONS'"></div>
 											<div *ngFor="let reason of historicalProblem.consultationReasons">
-												<div class="mat-body">{{reason.reasonPt}}</div>
+												<div class="mat-body capitalize-first-letter">{{reason.reasonPt}}</div>
 											</div>
 										</div>
 
 										<div *ngIf="historicalProblem.consultationProcedures">
 											<div class="mat-body-strong" [translate]="'ambulatoria.paciente.problemas.historical-problems.PROCEDURES'"></div>
 											<div *ngFor="let procedure of historicalProblem.consultationProcedures">
-												<div class="mat-body">{{procedure.procedurePt}}</div>
+												<div class="mat-body capitalize-first-letter">{{procedure.procedurePt}}</div>
 											</div>
 										</div>
 									</div>
@@ -166,7 +166,7 @@
 
 								<div>
 									<h3 class="mat-h2 primary" [translate]="'ambulatoria.paciente.problemas.historical-problems.EVOLUTION_NOTE'"></h3>
-									<div class="mat-body">{{historicalProblem.consultationEvolutionNote}}</div>
+									<div class="mat-body capitalize-first-letter">{{historicalProblem.consultationEvolutionNote}}</div>
 								</div>
 
 								<mat-divider id="mat-divider" inset></mat-divider>
