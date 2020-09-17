@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
 import { momentFormat, DateFormat } from '@core/utils/moment.utils';
+import {Subscription} from 'rxjs';
 import { HistoricalProblemsService, Speciality, Professional, Problem } from '../../services/historical-problems.service';
 
 @Component({
@@ -8,12 +9,14 @@ import { HistoricalProblemsService, Speciality, Professional, Problem } from '..
   templateUrl: './historical-problems-filters.component.html',
   styleUrls: ['./historical-problems-filters.component.scss']
 })
-export class HistoricalProblemsFiltersComponent implements OnInit {
+export class HistoricalProblemsFiltersComponent implements OnInit, OnDestroy {
 
   	public form: FormGroup;
 	public specialities: Speciality[] = [];
 	public professionals: Professional[] = [];
 	public problems: Problem[] = [];
+
+	private historicalProblemsFilter$: Subscription;
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -32,6 +35,14 @@ export class HistoricalProblemsFiltersComponent implements OnInit {
 		this.specialities = filterOptions.specialities;
 		this.professionals = filterOptions.professionals;
 		this.problems = filterOptions.problems;
+
+		this.historicalProblemsFilter$ = this.historicalProblemsService.getHistoricalProblemsFilter().subscribe(
+			data => {
+				this.form.controls.speciality.setValue(data.speciality);
+				this.form.controls.professional.setValue(data.professional);
+				this.form.controls.problem.setValue(data.problem);
+				this.form.controls.consultationDate.setValue(data.consultationDate);
+			});
   	}
 
 	public sendAllFiltersOnFilterChange() {
@@ -51,6 +62,10 @@ export class HistoricalProblemsFiltersComponent implements OnInit {
 		control.reset();
 		this.sendAllFiltersOnFilterChange();
 	}
+
+	ngOnDestroy(): void {
+		this.historicalProblemsFilter$.unsubscribe();
+  	}
 
 }
 

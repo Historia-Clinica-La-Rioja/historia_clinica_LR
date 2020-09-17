@@ -12,24 +12,25 @@
 					<mat-list id="lista-problemas-activos" *ngIf="(activeProblems$ | async )?.length > 0 else noInfo">
 						<div fxLayout="row" *ngFor="let problem of (activeProblems$ | async)">
 							<mat-list-item>
-								<span mat-line class="capitalize-first-letter">
-									{{ problem.snomed.pt }}
-								</span>
-								<span mat-line class="mat-body">
-									{{problem.startDate }}
-								</span>
-
-									<button *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']" mat-icon-button [matMenuTriggerFor]="menu" >
-										<mat-icon>more_vert</mat-icon>
+								<div (click)="onProblemClick(problem)" fxFlex="100%">
+									<span mat-line class="capitalize-first-letter">
+										{{ problem.snomed.pt }}
+									</span>
+									<span mat-line class="mat-body">
+										{{problem.startDate }}
+									</span>
+								</div>
+								<button *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']" mat-icon-button [matMenuTriggerFor]="menu" >
+									<mat-icon>more_vert</mat-icon>
+								</button>
+								<mat-menu #menu="matMenu">
+									<button *ngIf="hasConfirmedAppointment" mat-menu-item (click)="goToNuevaConsulta(problem)">
+										<span [translate]="'ambulatoria.paciente.nueva-consulta.TITLE_MENU'"></span>
 									</button>
-									<mat-menu #menu="matMenu">
-										<button *ngIf="hasConfirmedAppointment" mat-menu-item (click)="goToNuevaConsulta(problem)">
-											<span [translate]="'ambulatoria.paciente.nueva-consulta.TITLE_MENU'"></span>
-										</button>
-										<button mat-menu-item (click)="solveProblemPopUp(problem)">
-											<span [translate]="'ambulatoria.paciente.problemas.END'"></span>
-										</button>
-									</mat-menu>
+									<button mat-menu-item (click)="solveProblemPopUp(problem)">
+										<span [translate]="'ambulatoria.paciente.problemas.END'"></span>
+									</button>
+								</mat-menu>
 
 							</mat-list-item>
 							<mat-divider></mat-divider>
@@ -42,12 +43,14 @@
 					<mat-list id="lista-problemas-cronicos" *ngIf="(chronicProblems$ | async)?.length > 0 else noInfo">
 						<div fxLayout="row" *ngFor="let problem of (chronicProblems$ | async)">
 							<mat-list-item>
-								<span mat-line class="capitalize-first-letter">
-									{{ problem.snomed.pt}}
-								</span>
-								<span mat-line class="mat-body">
-									{{problem.startDate }}
-								</span>
+								<div (click)="onProblemClick(problem)" fxFlex="100%">
+									<span mat-line class="capitalize-first-letter">
+										{{ problem.snomed.pt}}
+									</span>
+									<span mat-line class="mat-body">
+										{{problem.startDate }}
+									</span>
+								</div>
 
 								<button *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']" mat-icon-button [matMenuTriggerFor]="menu" >
 									<mat-icon>more_vert</mat-icon>
@@ -72,12 +75,14 @@
 					<mat-list id="lista-problemas-resueltos" *ngIf="(solvedProblems$ | async)?.length > 0 else noInfo">
 						<div fxLayout="row" *ngFor="let problem of (solvedProblems$ | async)">
 							<mat-list-item>
-								<span mat-line class="capitalize-first-letter">
-									{{ problem.snomed.pt}}
-								</span>
-								<span mat-line class="mat-body">
-									{{problem.startDate }}
-								</span>
+								<div (click)="onProblemClick(problem)" fxFlex="100%">
+									<span mat-line class="capitalize-first-letter">
+										{{ problem.snomed.pt}}
+									</span>
+									<span mat-line class="mat-body">
+										{{problem.startDate }}
+									</span>
+								</div>
 								<ng-container *ngIf="hasConfirmedAppointment">
 									<mat-menu #menu="matMenu">
 										<button mat-menu-item (click)="goToNuevaConsulta(problem)">
@@ -125,9 +130,6 @@
 						</mat-card-subtitle>
 						<app-historical-problems-filters></app-historical-problems-filters>
 					</div>
-					<div class="spinner" *ngIf="!historicalProblemsList">
-						<mat-spinner color="primary"></mat-spinner>
-					</div>
 					<section class="problems" id="historical-problem-mapping" *ngIf="historicalProblemsList && historicalProblemsList.length">
 						<div class="problem" fxLayout="row" fxLayoutGap="15px" *ngFor="let historicalProblem of historicalProblemsList">
 							
@@ -173,6 +175,9 @@
 							</div>
 						</div>
 					</section>
+					<div class="spinner" *ngIf="!historicalProblemsList">
+						<mat-spinner color="primary"></mat-spinner>
+					</div>
 					<section class="problems" *ngIf="historicalProblemsList && !historicalProblemsList.length" fxLayout="column" fxLayoutAlign="space-around center">
 						<h2 [translate]="'ambulatoria.paciente.problemas.historical-problems.NO_FILTERED_PROBLEMS'"></h2>
 					</section>

@@ -147,7 +147,7 @@ export class MapperService {
 					problemId: problem.snomed.id,
 					problemPt: problem.snomed.pt,
 					consultationReasons: currentOutpatientEvolutionSummary.reasons.map(r => ({reasonId: r.snomed.id, reasonPt: r.snomed.pt})),
-					consultationProcedures: currentOutpatientEvolutionSummary.procedures.map(p => ({procedureDate: p.fecha, procedureId: p.snomed.id, procedurePt: p.snomed.pt}))
+					consultationProcedures: currentOutpatientEvolutionSummary.procedures.map(p => ({procedureDate: p.performedDate, procedureId: p.snomed.id, procedurePt: p.snomed.pt}))
 				}))];
 			return historicalProblemsList;
 

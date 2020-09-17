@@ -57,6 +57,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		this.loadChronicProblems();
 		this.loadHospitalizationProblems();
 		this.loadSolvedProblems();
+		this.loadHistoricalProblems();
 	}
 
 	loadActiveProblems(){
@@ -102,7 +103,9 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 				});
 			})
 		);
+	}
 
+	loadHistoricalProblems() {
 		this.historicalProblems$ = this.historicalProblemsService.getHistoricalProblems().pipe(
 			tap(historicalProblems => this.historicalProblemsAmount = historicalProblems ? historicalProblems.length : 0)
 		).subscribe(data => this.historicalProblemsList = data);
@@ -119,13 +122,22 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 				patientId: this.patientId
 			}
 		}).afterClosed().subscribe(submit => {
-			if(!submit){
+			if (!submit) {
 				this.loadChronicProblems();
 				this.loadSolvedProblems();
-				this.loadActiveProblems()
-			}})
+				this.loadActiveProblems();
+			}});
 	}
-	
+
+	onProblemClick(problem: HCEPersonalHistoryDto) {
+		this.historicalProblemsService.sendHistoricalProblemsFilter({
+			speciality: null,
+			professional: null,
+			problem: problem.snomed.id,
+			consultationDate: null
+		});
+	}
+
 	ngOnDestroy(): void {
 		this.historicalProblems$.unsubscribe();
   	}

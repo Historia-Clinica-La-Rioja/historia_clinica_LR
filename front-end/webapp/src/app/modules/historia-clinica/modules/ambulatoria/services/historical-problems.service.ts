@@ -15,22 +15,25 @@ export class HistoricalProblemsService {
   	public professionals: Professional[] = [];
 	public problems: Problem[] = [];
 
-	private subject = new ReplaySubject<HistoricalProblems[]>(1);
+	private historicalProblemsSubject = new ReplaySubject<HistoricalProblems[]>(1);
 	private historicalProblems$: Observable<HistoricalProblems[]>;
+	private historicalProblemsFilterSubject = new ReplaySubject<HistoricalProblemsFilter>(1);
+	private historicalProblemsFilter$: Observable<HistoricalProblemsFilter>;
 	private originalHistoricalProblems: HistoricalProblems[] = [];
 
 	constructor(
 		private readonly outpatientConsultationService: OutpatientConsultationService,
 		private readonly mapperService: MapperService,
   	) {
-		this.historicalProblems$ = this.subject.asObservable();
+		this.historicalProblems$ = this.historicalProblemsSubject.asObservable();
+		this.historicalProblemsFilter$ = this.historicalProblemsFilterSubject.asObservable();
 	}
 
 	setPatientId(patientId: number): void {
 		if (!this.originalHistoricalProblems.length) {
 			this.outpatientConsultationService.getEvolutionSummaryList(patientId).pipe(
 				tap((outpatientEvolutionSummary: OutpatientEvolutionSummaryDto[]) => this.filterOptions(outpatientEvolutionSummary)),
-				map((outpatientEvolutionSummary: OutpatientEvolutionSummaryDto[]) => outpatientEvolutionSummary ? this.mapperService.toHistoricalProblems(outpatientEvolutionSummary) : null)
+				map((outpatientEvolutionSummary: OutpatientEvolutionSummaryDto[]) => outpatientEvolutionSummary.length ? this.mapperService.toHistoricalProblems(outpatientEvolutionSummary) : null)
 			).subscribe(data => {
 				this.originalHistoricalProblems = data;
 				this.sendHistoricalProblems(this.originalHistoricalProblems);
@@ -42,16 +45,21 @@ export class HistoricalProblemsService {
 		return this.historicalProblems$;
 	}
 
-	public sendHistoricalProblems(outpatientEvolutionSummary: HistoricalProblems[]) {
-		this.subject.next(outpatientEvolutionSummary);
+	public getHistoricalProblemsFilter(): Observable<HistoricalProblemsFilter> {
+		return this.historicalProblemsFilter$;
 	}
 
-	public sendHistoricalProblemsFilter(newFilter: HistoricalProblemsFilter) {
+	public sendHistoricalProblems(outpatientEvolutionSummary: HistoricalProblems[]): void {
+		this.historicalProblemsSubject.next(outpatientEvolutionSummary);
+	}
+
+	public sendHistoricalProblemsFilter(newFilter: HistoricalProblemsFilter): void {
 		const historichalProblemsCopy = [...this.originalHistoricalProblems];
 		const result = historichalProblemsCopy.filter(historicalProblem => (this.filterByProfessional(newFilter, historicalProblem)
 																	&& this.filterByProblem(newFilter, historicalProblem)
 																	&& this.filterByConsultationDate(newFilter, historicalProblem)));
-		this.subject.next(result);
+		this.historicalProblemsSubject.next(result);
+		this.historicalProblemsFilterSubject.next(newFilter);
 	}
 
 	private filterByProfessional(filter: HistoricalProblemsFilter, problem: HistoricalProblems): boolean {
