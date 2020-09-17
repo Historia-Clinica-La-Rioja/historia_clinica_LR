@@ -53,14 +53,14 @@ export class NewPatientComponent implements OnInit {
 		this.route.queryParams
 			.subscribe(params => {
 				this.form = this.formBuilder.group({
-					firstName: [params.firstName, [Validators.required]],
-					middleNames: [params.middleNames],
-					lastName: [params.lastName, [Validators.required]],
-					otherLastNames: [params.otherLastNames],
+					firstName: [params.firstName? params.firstName: null, [Validators.required]],
+					middleNames: [params.middleNames? params.middleNames: null],
+					lastName: [params.lastName? params.lastName: null, [Validators.required]],
+					otherLastNames: [params.otherLastNames? params.otherLastNames: null],
 					genderId: [Number(params.genderId), [Validators.required]],
 					identificationNumber: [params.identificationNumber, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
 					identificationTypeId: [Number(params.identificationTypeId), [Validators.required]],
-					birthDate: [moment(params.birthDate), [Validators.required]],
+					birthDate: [params.birthDate? moment(params.birthDate): null, [Validators.required]],
 
 					//Person extended
 					cuil: [null, [Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)]],
@@ -129,16 +129,15 @@ export class NewPatientComponent implements OnInit {
 		}
 		if (params.firstName) {
 			this.form.controls.firstName.disable();
+			this.form.controls.middleNames.disable();
 		}
 		if (params.lastName) {
 			this.form.controls.lastName.disable();
+			this.form.controls.otherLastNames.disable();
 		}
 		if (params.birthDate) {
 			this.form.controls.birthDate.disable();
 		}
-		this.form.controls.middleNames.disable();
-		this.form.controls.otherLastNames.disable();
-
 	}
 
 	save(): void {

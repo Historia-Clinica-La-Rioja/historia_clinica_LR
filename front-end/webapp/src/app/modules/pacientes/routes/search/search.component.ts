@@ -250,7 +250,17 @@ export class SearchComponent implements OnInit {
 	}
 
 	goToNewPatient() {
-		this.goToAddPatient(this.searchPatient);
+		if (this.searchPatient)
+			this.goToAddPatient(this.searchPatient);
+		else {
+			let patient = {
+				identificationTypeId: this.identificationTypeId,
+				identificationNumber: this.identificationNumber,
+				genderId: this.genderId,
+				typeId: PATIENT_TYPE.PERMANENT_INVALID
+			}
+			this.goToAddPatient(patient);
+		}
 	}
 
 	viewSearchComponent(): boolean {
