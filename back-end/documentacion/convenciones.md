@@ -156,7 +156,7 @@ LOG.error("Error-> {}", e); // e es de algún tipo de excepción.
 #### Generales
 
 
-Respetar los patrones [SOLID](https://www.youtube.com/watch?v=2X50sKeBAcQ&t=68s), principalmente el de **Single responsability**. Este se centra en que cada función, interfaz, etc tenga una unica responsabilidad. Esto nos permite generar test unitarios con un scope alcanzable (testear una función que hace de todo es imposible e impractico). 
+Respetar los patrones [SOLID](https://www.youtube.com/watch?v=2X50sKeBAcQ&t=68s), principalmente el de **Single responsability**. Este se centra en que cada función, interfaz, etc tenga un solo mótivo por el cuál debe cambiar. Esto nos permite generar test unitarios con un scope alcanzable (testear una función que hace de todo es imposible e impractico). 
 
 Reducir el control de valores distinto de null. Reemplazar en lo posible con los [Optional](https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html) de java. Los repositorios pueden devolver Optionals de objetos. 
 
@@ -360,7 +360,7 @@ public class AlumnosDatosPersonalesController {
 
 #### Data transfer objects (DTO)
 
-Representan los datos de salida y de entrada para la API del sistema, por lo cuál tienen que ser lo más minimalista posible.
+Representan los datos de salida y de entrada para la API del sistema, por lo cuál tienen que ser lo más minimalista posible. 
 
 ##### Typescript generator
 
@@ -403,3 +403,15 @@ Para que los DTOs puedan ser detectados por el plugin se deben encontrar bajo un
 ### Conclusión
 
 Estas son un conjunto de convenciones que ayudan a tener un desarrollo más estructurado para todos. La idea es mejorar paso a paso e ir incorporando nuevas prácticas. 
+
+
+
+### Links utiles
+
+En esta sección se deja una lista de links utiles para aprender el uso de las tecnologías aplicadas en el backend
+
+
+* [Video](https://www.youtube.com/watch?v=RnxzMVD3QsE&ab_channel=SpringFrameworkGuru) explicativo de como hacer una api rest sencilla con spring boot
+* [Tutorial](https://www.baeldung.com/mapstruct) de [mapstruct](https://mapstruct.org/) libreria que usamos para mapear dtos a nuestros objetos del dominio.
+* [Tutorial](https://www.baeldung.com/intro-to-project-lombok) de [lombok](https://projectlombok.org/) libreria usada para reducir la escritura de código repetitivo. 
+* [Baeldung](https://www.baeldung.com/) una muy buena referencia para encontrar ejemplos de uso de las librerias de spring boot combinadas con otras. En el siguiente [link](https://www.baeldung.com/rest-with-spring-series) hay un resumén de un conjunto de tutoriales que pueden seguir sobre spring boot.
