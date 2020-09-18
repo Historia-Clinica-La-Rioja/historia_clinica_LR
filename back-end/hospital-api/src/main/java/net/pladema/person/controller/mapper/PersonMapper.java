@@ -1,6 +1,6 @@
 package net.pladema.person.controller.mapper;
 
-import net.pladema.staff.controller.dto.BasicPersonalDataDto;
+import net.pladema.person.controller.dto.BasicPersonalDataDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;

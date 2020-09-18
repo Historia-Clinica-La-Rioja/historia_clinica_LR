@@ -9,7 +9,7 @@ import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;
 import net.pladema.person.service.PersonMasterDataService;
 import net.pladema.person.service.PersonService;
-import net.pladema.staff.controller.dto.BasicPersonalDataDto;
+import net.pladema.person.controller.dto.BasicPersonalDataDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.ToString;
 import lombok.Value;
-import net.pladema.staff.controller.dto.BasicPersonalDataDto;
+import net.pladema.person.controller.dto.BasicPersonalDataDto;
 
 
 @Value

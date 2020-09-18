@@ -4,7 +4,7 @@ import net.pladema.patient.controller.dto.APatientDto;
 import net.pladema.person.controller.dto.BMPersonDto;
 import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.repository.entity.PersonExtended;
-import net.pladema.staff.controller.dto.BasicPersonalDataDto;
+import net.pladema.person.controller.dto.BasicPersonalDataDto;
 
 import java.util.List;
 

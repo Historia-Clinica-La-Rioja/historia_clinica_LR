@@ -9,9 +9,17 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
-public class ProfessionalDto extends BasicPersonalDataDto {
+public class ProfessionalDto {
 
     private Integer id;
 
     private String licenceNumber;
+
+    private String firstName;
+
+    private String lastName;
+
+    private String identificationNumber;
+
+    private String phoneNumber;
 }

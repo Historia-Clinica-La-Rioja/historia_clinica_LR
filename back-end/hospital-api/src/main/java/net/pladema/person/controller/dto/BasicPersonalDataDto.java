@@ -1,7 +1,6 @@
-package net.pladema.staff.controller.dto;
+package net.pladema.person.controller.dto;
 
 import lombok.*;
-import net.pladema.person.controller.dto.IBasicPersonalData;
 
 @Getter
 @Setter
@@ -17,4 +16,6 @@ public class BasicPersonalDataDto implements IBasicPersonalData {
     private String identificationNumber;
 
     private String phoneNumber;
+
+    private Short genderId;
 }
