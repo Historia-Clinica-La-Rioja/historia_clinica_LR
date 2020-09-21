@@ -313,7 +313,8 @@
 				"ADMINISTRATIVE_DISCHARGE": "Alta administrativa",
 				"MEDICAL_DISCHARGE": "Alta médica",
 				"PROBABLE_DISCHARGE": "Alta probable",
-				"RELOCATE_PATIENT_BED": "Generar pase de cama"
+				"RELOCATE_PATIENT_BED": "Generar pase de cama",
+				"EDIT_PATIENT": "Editar paciente"
 			},
 			"alergias-summary": {
 				"ADD": "Agregar alergia",

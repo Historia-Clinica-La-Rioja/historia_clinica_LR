@@ -41,6 +41,9 @@ import { InternmentStateService } from '@api-rest/services/internment-state.serv
 import { ProbableDischargeDialogComponent } from '../../../../dialogs/probable-discharge-dialog/probable-discharge-dialog.component';
 import { momentParseDateTime } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
+import { ContextService } from '@core/services/context.service';
+
+const ROUTE_EDIT_PATIENT = 'pacientes/edit';
 
 @Component({
 	selector: 'app-internacion-paciente',
@@ -71,6 +74,8 @@ export class InternacionPacienteComponent implements OnInit {
 	public anthropometricData$: Observable<AnthropometricDataDto>;
 	public readonly familyHistoriesHeader = ANTECEDENTES_FAMILIARES;
 	public readonly personalHistoriesHeader = ANTECEDENTES_PERSONALES;
+	private readonly routePrefix;
+	private patientId: number;
 
 	constructor(
 		private patientService: PatientService,
@@ -82,16 +87,18 @@ export class InternacionPacienteComponent implements OnInit {
 		private readonly permissionService: PermissionsService,
 		private internmentEpisodeService: InternmentEpisodeService,
 		private readonly internmentStateService: InternmentStateService,
-		public dialog: MatDialog
-	) { }
+		public dialog: MatDialog,
+		private contextService: ContextService ) {
+		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
+	}
 
 	ngOnInit(): void {
 		this.route.paramMap.subscribe(
 			(params) => {
-				const patientId = Number(params.get('idPaciente'));
+				this.patientId = Number(params.get('idPaciente'));
 				this.internmentEpisodeId = Number(params.get('idInternacion'));
 
-				this.patient$ = this.patientService.getPatientBasicData<BasicPatientDto>(patientId).pipe(
+				this.patient$ = this.patientService.getPatientBasicData<BasicPatientDto>(this.patientId).pipe(
 					map(patient => this.mapperService.toPatientBasicData(patient))
 				);
 
@@ -182,6 +189,15 @@ export class InternacionPacienteComponent implements OnInit {
 			}
 		}
 		);
+	}
+
+	goToEditPatient(): void {
+		let person = {
+			id: this.patientId ,
+		}
+		this.router.navigate([this.routePrefix + ROUTE_EDIT_PATIENT], {
+			queryParams: person
+		});
 	}
 
 }

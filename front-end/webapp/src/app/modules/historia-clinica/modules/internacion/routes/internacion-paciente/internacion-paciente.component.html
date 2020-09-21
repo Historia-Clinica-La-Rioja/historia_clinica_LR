@@ -57,6 +57,14 @@
 							[translate]="'internaciones.internacion-paciente.actions.ADMINISTRATIVE_DISCHARGE'"></span>
 					</button>
 				</ng-container>
+
+				<ng-container *featureFlag="'habilitarEdicionPacienteInternacion'">
+					<button *hasRole="['ADMINISTRATIVO']" id="btnPaseCama" name="btnPaseCama" mat-flat-button color="primary" fxFlexFill.xs
+						(click)="goToEditPatient()">
+						<span class="uppercase"
+							[translate]="'internaciones.internacion-paciente.actions.EDIT_PATIENT'"></span>
+					</button>
+				</ng-container>
 			</div>
 			<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
 				<div fxLayout="column" fxFlex="50%" fxLayoutGap="20px">
