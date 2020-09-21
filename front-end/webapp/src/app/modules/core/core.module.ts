@@ -13,7 +13,7 @@ import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.
 import { HasRoleDirective } from './directives/has-role.directive';
 import { FeatureFlagDirective } from './directives/feature-flag.directive';
 
-const globalSettings: RecaptchaSettings = { siteKey: '' }; // TODO completar cuando se implemente para esta aplicacion
+const globalSettings: RecaptchaSettings = { siteKey: '6Legz84ZAAAAAFSBqYVwf8gKX5bFrt71zVPY2Tdq' }; // TODO completar cuando se implemente para esta aplicacion
 
 @NgModule({
 	declarations: [

@@ -40,6 +40,16 @@
 					</div>
 				</div>
 
+				<app-form-input *ngIf="recaptchaEnable" fxLayout="row" fxLayoutAlign="center">
+					<div class="re-captcha-container">
+						<re-captcha formControlName="recaptchaReactive" (resolved)="reCaptchaResolved($event)">
+						</re-captcha>
+						<mat-error
+							*ngIf="!form.pristine && form.controls.recaptchaReactive.hasError('required')">
+							Verificación recaptcha requerida
+						</mat-error>
+					</div>
+				</app-form-input>
 			</mat-card-content>
 			<mat-card-actions align="end">
 				<button mat-raised-button color="primary" type="submit" [disabled]="!form.valid" translate="auth.login.form.SUBMIT"></button>
