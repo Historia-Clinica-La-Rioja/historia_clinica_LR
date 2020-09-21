@@ -11,7 +11,10 @@ public class TokenHolder {
 	}
 
 	public boolean isValid() {
-		return token != null && (System.currentTimeMillis() < this.tokenDueTimestamp );
+		if (this.validTime < 0) {
+			return true;
+		}
+		return token != null && (System.currentTimeMillis() < this.tokenDueTimestamp);
 	}
 
 	public String get() {
