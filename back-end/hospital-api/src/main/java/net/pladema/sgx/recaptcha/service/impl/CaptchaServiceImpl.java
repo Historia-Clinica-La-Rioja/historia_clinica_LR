@@ -1,5 +1,6 @@
 package net.pladema.sgx.recaptcha.service.impl;
 
+import net.pladema.sgx.exceptions.RecaptchaInvalid;
 import net.pladema.sgx.recaptcha.service.ICaptchaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,7 @@ public class CaptchaServiceImpl implements ICaptchaService {
     @Value("${google.recaptcha.validator.url}")
     private String validatorUrl;
 
-    @Value("${RECAPTCHA_SECRET_KEY:6LcVh-UUAAAAAIWVvwCNB3zLdNT7BSAnCZ0cZjwz}")
+    @Value("${RECAPTCHA_SECRET_KEY:6Legz84ZAAAAAPvReaZhco-A2R8NvlfS2vRfx136}")
     private String secretKey;
 
     @Value("${RECAPTCHA_ENABLE:true}")
@@ -39,6 +40,15 @@ public class CaptchaServiceImpl implements ICaptchaService {
     }
 
     @Override
+    public void validRecaptcha(String frontUrl, String recaptcha) {
+        if (isRecaptchaEnable()) {
+            Boolean captchaResponse = processResponse(recaptcha, frontUrl);
+            if (!captchaResponse) {
+                throw new RecaptchaInvalid();
+            }
+        }
+    }
+
     public Boolean processResponse(String response, String frontUrl) {
         if(!responseSanityCheck(response))
             return false;

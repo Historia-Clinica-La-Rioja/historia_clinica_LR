@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -18,8 +18,11 @@ export class AuthService {
 		private readonly http: HttpClient,
 	) { }
 
-	public login(loginDto: LoginDto): Observable<any> {
-		return this.http.post<JWTokenDto>(`${environment.apiBase}/auth`, loginDto)
+	public login(loginDto: LoginDto, recaptchaResponse): Observable<any> {
+		const httpHeaders = new HttpHeaders({
+			recaptcha: recaptchaResponse
+		});
+		return this.http.post<JWTokenDto>(`${environment.apiBase}/auth`, loginDto, {headers: httpHeaders})
 			.pipe(
 				map(tokenDto => localStorage.setItem(TOKEN_KEY, tokenDto.token))
 			);

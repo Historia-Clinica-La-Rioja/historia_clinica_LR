@@ -4,6 +4,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import net.pladema.sgx.recaptcha.service.ICaptchaService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,6 +41,9 @@ public class AuthenticationControllerTest extends UnitController {
 	@MockBean
 	private UserService userService;
 
+	@MockBean
+	private ICaptchaService iCaptchaService;
+
 	@Before
 	public void setup() {
 	}
@@ -52,7 +56,8 @@ public class AuthenticationControllerTest extends UnitController {
 		String body = "{\"username\":\"pepe@pepe.com\",\"password\":\"password\"}";
 		mockMvc.perform(post(authURL).content(body).contentType(MediaType.APPLICATION_JSON)
 				.header("Access-Control-Request-Method", "GET")
-				.header("Origin", "http://www.someurl.com"))
+				.header("Origin", "http://www.someurl.com")
+				.header("recaptcha", "somestring"))
 			.andExpect(status().isOk());
 	}
 	

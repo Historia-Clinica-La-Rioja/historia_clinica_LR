@@ -33,9 +33,9 @@ export class AuthenticationService {
 		this.router.navigate(['/home']);
 	}
 
-	public login(username: string, password: string): Observable<any> {
+	public login(username: string, password: string, recaptchaResponse: string): Observable<any> {
 		//console.log('auth/authentication login ' + username);
-		return this.authService.login({username, password}).pipe(
+		return this.authService.login({username, password}, recaptchaResponse).pipe(
 			switchMap(() => this.loggedUserService.load()),
 		);
 	}

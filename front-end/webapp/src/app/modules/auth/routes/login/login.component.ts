@@ -50,6 +50,7 @@ export class LoginComponent implements OnInit {
 			this.authenticationService.login(
 				this.form.value.username,
 				this.form.value.password,
+				this.recaptchaRes,
 			).pipe(
 				catchError((err: ApiErrorMessageDto) => {
 					this.apiError = err;
