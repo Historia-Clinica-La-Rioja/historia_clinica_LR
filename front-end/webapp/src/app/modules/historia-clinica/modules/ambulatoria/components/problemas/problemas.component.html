@@ -140,14 +140,14 @@
 									<div fxLayout="column wrap" fxFlex="70%">
 										<h2 class="mat-h2 page-title primary capitalize-first-letter">{{historicalProblem.problemPt}}</h2>
 
-										<div *ngIf="historicalProblem.consultationReasons">
+										<div *ngIf="historicalProblem.consultationReasons.length">
 											<div class="mat-body-strong" [translate]="'ambulatoria.paciente.problemas.historical-problems.REASONS'"></div>
 											<div *ngFor="let reason of historicalProblem.consultationReasons">
 												<div class="mat-body capitalize-first-letter">{{reason.reasonPt}}</div>
 											</div>
 										</div>
 
-										<div *ngIf="historicalProblem.consultationProcedures">
+										<div *ngIf="historicalProblem.consultationProcedures.length">
 											<div class="mat-body-strong" [translate]="'ambulatoria.paciente.problemas.historical-problems.PROCEDURES'"></div>
 											<div *ngFor="let procedure of historicalProblem.consultationProcedures">
 												<div class="mat-body capitalize-first-letter">{{procedure.procedurePt}}</div>
@@ -157,7 +157,7 @@
 
 									<div fxLayout="column" fxLayoutGap="10px">
 										<div>
-											{{historicalProblem.consultationDate}}
+											{{historicalProblem.consultationDate | date : 'dd/MM/yyyy'}}
 										</div>
 										<div>
 											<h3 class="mat-h2 primary" [translate]="'ambulatoria.paciente.problemas.historical-problems.PROFESSIONAL'"></h3>
@@ -166,7 +166,7 @@
 									</div>
 								</div>
 
-								<div>
+								<div *ngIf="historicalProblem.consultationEvolutionNote">
 									<h3 class="mat-h2 primary" [translate]="'ambulatoria.paciente.problemas.historical-problems.EVOLUTION_NOTE'"></h3>
 									<div class="mat-body capitalize-first-letter">{{historicalProblem.consultationEvolutionNote}}</div>
 								</div>
@@ -175,8 +175,8 @@
 							</div>
 						</div>
 					</section>
-					<div class="spinner" *ngIf="!historicalProblemsList">
-						<mat-spinner color="primary"></mat-spinner>
+					<div class="problems" *ngIf="!historicalProblemsList" fxLayout="column" fxLayoutAlign="space-around center" fxFlex="100%">
+						<h2 [translate]="'ambulatoria.paciente.problemas.historical-problems.NO_HISTORICAL'"></h2>
 					</div>
 					<section class="problems" *ngIf="historicalProblemsList && !historicalProblemsList.length" fxLayout="column" fxLayoutAlign="space-around center">
 						<h2 [translate]="'ambulatoria.paciente.problemas.historical-problems.NO_FILTERED_PROBLEMS'"></h2>

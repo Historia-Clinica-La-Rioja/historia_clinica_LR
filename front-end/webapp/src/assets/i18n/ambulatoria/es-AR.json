@@ -139,6 +139,7 @@
 				"ERROR_CONFIRMAR_POPUP": "Ocurrió un error al resolver el problema",
 				"historical-problems": {
 					"NO_FILTERED_PROBLEMS": "No hay resultados para la búsqueda seleccionada",
+					"NO_HISTORICAL": "No existe informacion para mostrar",
 					"HISTORICAL_TITLE": "Histórico de evoluciones",
 					"REASONS": "Motivos",
 					"PROCEDURES": "Procedimientos",

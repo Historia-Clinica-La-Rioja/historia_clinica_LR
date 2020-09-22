@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
-import { momentFormat, DateFormat } from '@core/utils/moment.utils';
-import {Subscription} from 'rxjs';
+import { momentFormat, DateFormat, momentParseDate } from '@core/utils/moment.utils';
+import { Subscription } from 'rxjs';
 import { HistoricalProblemsService, Speciality, Professional, Problem } from '../../services/historical-problems.service';
 
 @Component({
@@ -41,7 +41,7 @@ export class HistoricalProblemsFiltersComponent implements OnInit, OnDestroy {
 				this.form.controls.speciality.setValue(data.speciality);
 				this.form.controls.professional.setValue(data.professional);
 				this.form.controls.problem.setValue(data.problem);
-				this.form.controls.consultationDate.setValue(data.consultationDate);
+				this.form.controls.consultationDate.setValue(data.consultationDate ? momentParseDate(data.consultationDate) : null);
 			});
   	}
 
