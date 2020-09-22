@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.appointment.controller;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -13,12 +14,17 @@ import io.swagger.annotations.Api;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointment;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentDiary;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentState;
+import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentDailyAmountDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentListDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.CreateAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.mapper.AppointmentMapper;
+import net.pladema.medicalconsultation.appointment.service.AppointmentDailyAmountService;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.CreateAppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentDailyAmountBo;
+import net.pladema.medicalconsultation.diary.controller.dto.OccupationDto;
+import net.pladema.medicalconsultation.diary.service.domain.OccupationBo;
 import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.sgx.dates.configuration.DateTimeProvider;
@@ -52,6 +58,8 @@ public class AppointmentsController {
 
     public static final String OUTPUT = "Output -> {}";
 
+    private final AppointmentDailyAmountService appointmentDailyAmountService;
+
     private final AppointmentService appointmentService;
     
     private final AppointmentValidatorService appointmentValidatorService;
@@ -69,13 +77,15 @@ public class AppointmentsController {
     @Value("${test.stress.disable.validation:false}")
     private boolean disableValidation;
 
-    public AppointmentsController(AppointmentService appointmentService,
+    public AppointmentsController(AppointmentDailyAmountService appointmentDailyAmountService,
+                                  AppointmentService appointmentService,
                                   AppointmentValidatorService appointmentValidatorService,
                                   CreateAppointmentService createAppointmentService,
                                   AppointmentMapper appointmentMapper,
                                   PatientExternalService patientExternalService,
                                   HealthcareProfessionalExternalService healthcareProfessionalExternalService, DateTimeProvider dateTimeProvider) {
         super();
+        this.appointmentDailyAmountService = appointmentDailyAmountService;
         this.appointmentService = appointmentService;
         this.appointmentValidatorService = appointmentValidatorService;
         this.createAppointmentService = createAppointmentService;
@@ -175,4 +185,24 @@ public class AppointmentsController {
         LOG.debug(OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }
+
+    @GetMapping("/getDailyAmounts")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ADMINISTRADOR_AGENDA, ENFERMERO')")
+    public ResponseEntity<List<AppointmentDailyAmountDto>> getDailyAmounts(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @RequestParam(name = "diaryId") String diaryId) {
+        LOG.debug("Input parameters -> diaryId {}", diaryId);
+
+        Integer diaryIdParam = Integer.parseInt(diaryId);
+
+        Collection<AppointmentDailyAmountBo> resultService = appointmentDailyAmountService
+                .getDailyAmounts(diaryIdParam);
+        List<AppointmentDailyAmountDto> result = resultService.stream()
+                .parallel()
+                .map(appointmentMapper::toAppointmentDailyAmountDto)
+                .collect(Collectors.toList());
+        LOG.debug(OUTPUT, result);
+        return ResponseEntity.ok().body(result);
+    }
+
 }

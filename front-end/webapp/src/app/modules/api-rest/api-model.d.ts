@@ -110,6 +110,13 @@ export interface AppointmentBasicPatientDto {
     typeId: number;
 }
 
+export interface AppointmentDailyAmountDto {
+    date: string;
+    programmed: number;
+    programmedAvailable: number;
+    spontaneous: number;
+}
+
 export interface AppointmentDto extends CreateAppointmentDto {
     appointmentStateId: number;
     stateChangeReason?: string;

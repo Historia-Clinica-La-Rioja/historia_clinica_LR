@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { AppointmentDto, AppointmentListDto, CreateAppointmentDto } from '@api-rest/api-model';
+import { AppointmentDailyAmountDto, AppointmentDto, AppointmentListDto, CreateAppointmentDto } from '@api-rest/api-model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { environment } from '@environments/environment';
 import { ContextService } from '@core/services/context.service';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -70,6 +71,18 @@ export class AppointmentsService {
 					${this.contextService.institutionId}/medicalConsultations/appointments/
 					${appointmentId}/update-phone-number`;
 		return this.http.put<boolean>(url, {}, {params : queryParams});
+	}
+
+	getDailyAmounts(diaryId: number): Observable<AppointmentDailyAmountDto[]> {
+		let queryParams: HttpParams = new HttpParams();
+		queryParams = (diaryId) ? queryParams.append('diaryId', JSON.stringify(diaryId)) : queryParams;
+
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments
+		/getDailyAmounts`;
+		return this.http.get<AppointmentDailyAmountDto[]>(url,
+			{
+				params: queryParams
+			});
 	}
 
 }
