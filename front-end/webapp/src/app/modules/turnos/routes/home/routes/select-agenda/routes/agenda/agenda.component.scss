@@ -89,7 +89,7 @@ div.spinner {
 	}
 }
 
-.turnos-cell {
+.daily-amounts {
 	padding: 5px;
 
 	font-size: 12px;
@@ -131,6 +131,18 @@ div.spinner {
 
 	.no-disponibles {
 		color: $orange-month-cell;
+	}
+}
+
+::ng-deep {
+	.cal-month-view .cal-day-number.darker-color {
+		opacity: 1;
+		color: #282828;
+	}
+
+	.cal-month-view .cal-day-cell.cal-out-month .cal-day-number.darker-color {
+		opacity: 1;
+		color: #8C8C8C;
 	}
 }
 

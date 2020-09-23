@@ -113,12 +113,12 @@
 
 		<ng-template #customCellTemplate let-day="day" let-locale="locale">
 			<div>
-				<span class="cal-day-number">
+				<span class="cal-day-number darker-color">
 					{{ day.date | calendarDate:'monthViewDayNumber':locale }}
 				</span>
 			</div>
 
-			<div class="turnos-cell">
+			<div class="daily-amounts">
 				<div fxLayout="column" fxLayoutGap="2px">
 
 					<div *ngIf="day.meta?.amount?.spontaneous != undefined" class="espontanea"
