@@ -20,4 +20,11 @@ public interface HealthcareProfessionalSpecialtyRepository extends JpaRepository
     boolean existsValues(@Param("healthcareProfessionalId") Integer healthcareProfessionalId,
                          @Param("clinicalSpecialtyId")  Integer clinicalSpecialtyId,
                          @Param("professionalSpecialtyId")  Integer professionalSpecialtyId);
+
+    @Transactional(readOnly = true)
+    @Query( "SELECT (case when count(hps.id)= 1 then true else false end) " +
+            "FROM HealthcareProfessionalSpecialty AS hps " +
+            "WHERE hps.healthcareProfessionalId = :healthcareProfessionalId ")
+    boolean hasOnlyOneSpecialty(@Param("healthcareProfessionalId") Integer healthcareProfessionalId);
+
 }

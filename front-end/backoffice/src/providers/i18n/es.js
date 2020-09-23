@@ -27,7 +27,9 @@ export default {
           "exists": "Esta persona ya está registrada como profesional en el sistema"
         },
         "healthcare-professional":{
-            "specialty-profession-exists": "La profesión y especialidad ya se encuentra asignada"
+            "specialty-profession-exists": "La profesión y especialidad ya se encuentra asignada",
+            "only-one-specialty": "Esta especialidad no puede borrarse dado que es la única que posee el profesional",
+            "healthcare-professional.specialty-profession-not-exists": "La especialidad no existe"
         },
         "role":{
           "requiresprofessional": "Alguno de los roles asignados requiere que el usuario sea un profesional"
