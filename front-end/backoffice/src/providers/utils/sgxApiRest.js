@@ -7,11 +7,11 @@ const oauthInfo = 'oauth-info';
 class SgxApiRest {
     _permission$ = undefined;
 
-    auth(username, password) {
+    auth(username, password, raToken) {
         this.logout();
         const options = {
             method: 'POST',
-            headers: new Headers({ Accept: 'application/json' }),
+            headers: new Headers({ Accept: 'application/json',  recaptcha: raToken }),
             body: JSON.stringify({username, password})
         };
         return fetchUtils.fetchJson(`${apiUrl}/auth`, options)
@@ -61,6 +61,13 @@ class SgxApiRest {
 
     getInfo() {
         return JSON.parse(localStorage.getItem(oauthInfo));
+    }
+
+    isRecaptchaEnable(options = {}){
+        if (!options.headers) {
+            options.headers = new Headers({ Accept: 'application/json' });
+        }
+        return fetchUtils.fetchJson(apiUrl + '/recaptcha/is-enable', options);
     }
 
   }

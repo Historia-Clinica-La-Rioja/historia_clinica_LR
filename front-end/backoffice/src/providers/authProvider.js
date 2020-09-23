@@ -13,9 +13,9 @@ const rolesTable = {
 
 const authProvider = {
 
-    login: ({ username, password }) => {
+    login: ({ username, password, raToken }) => {
         return apiRest
-            .auth(username, password);
+            .auth(username, password, raToken);
     },
     logout: () => {
         apiRest.logout();

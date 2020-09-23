@@ -3,6 +3,7 @@ import {Admin, Resource} from 'react-admin';
 
 import {Dashboard} from './dashboard';
 import OauthLoginPage from './login/OauthLoginPage';
+import LoginPage from './login/LoginPage.js';
 
 import cities from './modules/cities';
 import departments from './modules/departments';
@@ -88,7 +89,7 @@ const App = () => {
                   dataProvider={dataProvider}
                   authProvider={authProvider}
                   i18nProvider={i18nProvider}
-                  loginPage={oauth ? OauthLoginPage : undefined}
+                  loginPage={oauth ? OauthLoginPage : LoginPage}
                   dashboard={Dashboard}
     >
         {
