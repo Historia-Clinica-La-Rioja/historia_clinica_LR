@@ -38,7 +38,8 @@ public class OutpatientConsultationSummaryRepositoryImpl implements OutpatientCo
                 + " WHERE oc.billable = TRUE "
                 + " AND oc.institutionId = :institutionId"
                 + " AND oc.patientId = :patientId"
-                + " AND doc.sourceTypeId = " + SourceType.OUTPATIENT;
+                + " AND doc.sourceTypeId = " + SourceType.OUTPATIENT
+                + " ORDER BY oc.startDate DESC";
 
         List<Object[]> queryResult = entityManager.createQuery(sqlString)
                 .setParameter("institutionId", institutionId)
