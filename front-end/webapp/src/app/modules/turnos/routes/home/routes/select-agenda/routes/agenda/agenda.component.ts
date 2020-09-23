@@ -1,13 +1,14 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { CompleteDiaryDto, DiaryOpeningHoursDto, MedicalCoverageDto} from '@api-rest/api-model';
+import { AppointmentDailyAmountDto, CompleteDiaryDto, DiaryOpeningHoursDto, MedicalCoverageDto } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
-import { CalendarView, CalendarWeekViewBeforeRenderEvent, DAYS_OF_WEEK } from 'angular-calendar';
+import { CalendarMonthViewBeforeRenderEvent, CalendarView, CalendarWeekViewBeforeRenderEvent, DAYS_OF_WEEK } from 'angular-calendar';
 import {
 	buildFullDate,
 	DateFormat,
 	dateToMoment,
 	dateToMomentTimeZone,
-	momentParseDate,
+	momentFormat,
+	momentParseDate, momentParseDateTime,
 	momentParseTime,
 	newMoment
 } from '@core/utils/moment.utils';
@@ -16,16 +17,17 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import { DiaryService } from '@api-rest/services/diary.service';
 import { Moment } from 'moment';
 import { NewAppointmentComponent } from '../../../../../../dialogs/new-appointment/new-appointment.component';
-import { CalendarEvent, WeekViewHourSegment } from 'calendar-utils';
+import { CalendarEvent, MonthViewDay, WeekViewHourSegment } from 'calendar-utils';
 import { MEDICAL_ATTENTION } from '../../../../../../constants/descriptions';
 import { AppointmentComponent } from '../../../../../../dialogs/appointment/appointment.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { MINUTES_IN_HOUR } from '../../../../../../constants/appointment';
 import { AppointmentsFacadeService } from 'src/app/modules/turnos/services/appointments-facade.service';
-import { map, take } from 'rxjs/operators';
+import { map, take, tap } from 'rxjs/operators';
 import { forkJoin, Observable } from 'rxjs';
 import { PermissionsService } from '@core/services/permissions.service';
 import { HealthInsuranceService } from '@api-rest/services/health-insurance.service';
+import { AppointmentsService } from '@api-rest/services/appointments.service';
 
 const ASIGNABLE_CLASS = 'cursor-pointer';
 const AGENDA_PROGRAMADA_CLASS = 'bg-green';
@@ -52,6 +54,9 @@ export class AgendaComponent implements OnInit {
 	diaryOpeningHours: DiaryOpeningHoursDto[];
 
 	enableAppointmentScheduling: boolean = true;
+	appointments: CalendarEvent[];
+	dailyAmounts: AppointmentDailyAmountDto[];
+	dailyAmounts$: Observable<AppointmentDailyAmountDto[]>;
 
 	constructor(
 		private readonly cdr: ChangeDetectorRef,
@@ -61,6 +66,7 @@ export class AgendaComponent implements OnInit {
 		private snackBarService: SnackBarService,
 		private readonly permissionsService: PermissionsService,
 		public readonly appointmentFacade: AppointmentsFacadeService,
+		private readonly appointmentsService: AppointmentsService,
 		private readonly healthInsuranceService: HealthInsuranceService,
 	) {
 	}
@@ -72,6 +78,10 @@ export class AgendaComponent implements OnInit {
 			this.diaryService.get(idAgenda).subscribe(agenda => {
 				this.setAgenda(agenda);
 			});
+			this.appointmentFacade.getAppointments().subscribe(appointments => {
+					this.appointments = appointments;
+					this.dailyAmounts$ = this.appointmentsService.getDailyAmounts(idAgenda);
+				});
 		});
 	}
 
@@ -99,6 +109,46 @@ export class AgendaComponent implements OnInit {
 				&& ((segment.date.getHours() < to.hours()) ||
 					(segment.date.getHours() === to.hours() && segment.date.getMinutes() < to.minutes()));
 		}
+	}
+
+	loadDailyAmounts(calendarMonthViewBeforeRenderEvent: CalendarMonthViewBeforeRenderEvent): void {
+		const daysCells: MonthViewDay[] = calendarMonthViewBeforeRenderEvent.body;
+		if (this.appointments) {
+			if (agendaOverlapsWithViewRange(this.agenda.startDate, this.agenda.endDate)) {
+				this.dailyAmounts$.subscribe(dailyAmounts => {
+					this.dailyAmounts = dailyAmounts;
+					this.setDailyAmounts(daysCells, dailyAmounts);
+				});
+			}
+		}
+
+		function agendaOverlapsWithViewRange(start: string, end: string): boolean {
+			const viewPeriod = calendarMonthViewBeforeRenderEvent.period;
+			const startAgenda = momentParseDate(start);
+			const endAgenda = momentParseDate(end);
+
+			const firstViewDay = dateToMomentTimeZone(viewPeriod.start);
+			const lastViewDay = dateToMomentTimeZone(viewPeriod.end);
+
+			return (startAgenda.isSameOrBefore(lastViewDay, 'days') ||
+				firstViewDay.isSameOrBefore(endAgenda, 'days'));
+		}
+
+	}
+
+	private setDailyAmounts(daysCells: MonthViewDay[], dailyAmounts: AppointmentDailyAmountDto[]) {
+			daysCells.forEach((cell: MonthViewDay) => {
+				cell.meta = {
+					amount: getAmount(cell.date)
+				};
+
+				function getAmount(date: Date): AppointmentDailyAmountDto {
+					return dailyAmounts
+						.find(amount => {
+							return dateToMoment(date).isSame(momentParseDate(amount.date), 'days');
+						});
+				}
+			});
 	}
 
 	onClickedSegment(event) {

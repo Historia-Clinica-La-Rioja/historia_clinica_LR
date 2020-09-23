@@ -49,9 +49,10 @@
 			<mwl-calendar-month-view class="title-black"
 									 *ngSwitchCase="calendarViewEnum.Month"
 									 [viewDate]="viewDate"
-									 [events]="appointmentFacade.getAppointments() | async"
+									 [events]="appointments"
 									 [weekStartsOn]="MONDAY"
 									 [cellTemplate]="customCellTemplate"
+									 (beforeViewRender)="loadDailyAmounts($event)"
 									 (dayClicked)="goToDayViewOn($event.day.date)"
 			>
 			</mwl-calendar-month-view>
@@ -59,7 +60,7 @@
 			<mwl-calendar-week-view class="title-black"
 									*ngSwitchCase="calendarViewEnum.Week"
 									[viewDate]="viewDate"
-									[events]="appointmentFacade.getAppointments() | async"
+									[events]="appointments"
 									[dayStartHour]="dayStartHour" [dayEndHour]="dayEndHour"
 									[hourSegmentTemplate]="hourSegmentTemplate"
 									[headerTemplate]="headerTemplate"
@@ -74,7 +75,7 @@
 			<mwl-calendar-day-view class="title-black"
 								   *ngSwitchCase="calendarViewEnum.Day"
 								   [viewDate]="viewDate"
-								   [events]="appointmentFacade.getAppointments() | async"
+								   [events]="appointments"
 								   [hourSegments]="hourSegments"
 								   [hourSegmentTemplate]="hourSegmentTemplate"
 								   [dayStartHour]="dayStartHour" [dayEndHour]="dayEndHour"
@@ -120,28 +121,31 @@
 			<div class="turnos-cell">
 				<div fxLayout="column" fxLayoutGap="2px">
 
-					<div class="espontanea" fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
+					<div *ngIf="day.meta?.amount?.spontaneous != undefined" class="espontanea"
+						 fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
 						<div class="count-border" fxLayoutAlign="center center">
-							<span>10</span>
+							<span>{{day.meta?.amount?.spontaneous}}</span>
 						</div>
 						<span>Turnos asignados</span>
 					</div>
 
-					<div class="programada-asignados" fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
+					<div *ngIf="day.meta?.amount?.programmed != undefined" class="programada-asignados"
+						 fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
 						<div class="count-border" fxLayoutAlign="center center">
-							<span>15</span>
+							<span>{{day.meta?.amount?.programmed}}</span>
 						</div>
 						<span>Turnos asignados</span>
 					</div>
 
-					<div class="programada-disponibles" fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
+					<div *ngIf="day.meta?.amount?.programmedAvailable" class="programada-disponibles"
+						 fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
 						<div class="count-border" fxLayoutAlign="center center">
-							<span>5</span>
+							<span>{{day.meta?.amount?.programmedAvailable}}</span>
 						</div>
 						<span>Turnos disponibles</span>
 					</div>
 
-					<div class="no-disponibles">No existen turnos disponibles</div>
+					<div *ngIf="day.meta?.amount?.programmedAvailable === 0" class="no-disponibles">No existen turnos disponibles</div>
 				</div>
 			</div>
 		</ng-template>
