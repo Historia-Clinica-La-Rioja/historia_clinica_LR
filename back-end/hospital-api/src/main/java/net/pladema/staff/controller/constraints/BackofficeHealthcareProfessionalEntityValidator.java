@@ -1,21 +1,20 @@
 package net.pladema.staff.controller.constraints;
 
-import net.pladema.permissions.controller.dto.BackofficeUserRoleDto;
 import net.pladema.permissions.repository.UserRoleRepository;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.permissions.service.dto.RoleAssignment;
-import net.pladema.staff.repository.HealthcareProfessionalRepository;
-import net.pladema.staff.repository.entity.HealthcareProfessional;
 import net.pladema.sgx.backoffice.rest.BackofficeEntityValidatorAdapter;
 import net.pladema.sgx.exceptions.BackofficeValidationException;
+import net.pladema.staff.controller.dto.BackofficeHealthcareProfessionalCompleteDto;
+import net.pladema.staff.repository.HealthcareProfessionalRepository;
+import net.pladema.staff.repository.entity.HealthcareProfessional;
 import net.pladema.user.repository.UserRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
-public class BackofficeHealthcareProfessionalEntityValidator extends BackofficeEntityValidatorAdapter<HealthcareProfessional, Integer> {
+public class BackofficeHealthcareProfessionalEntityValidator extends BackofficeEntityValidatorAdapter<BackofficeHealthcareProfessionalCompleteDto, Integer> {
 
     HealthcareProfessionalRepository healthcareProfessionalRepository;
     UserRoleRepository userRoleRepository;
@@ -31,7 +30,7 @@ public class BackofficeHealthcareProfessionalEntityValidator extends BackofficeE
     }
 
     @Override
-    public void assertUpdate(Integer id, HealthcareProfessional entity) {
+    public void assertUpdate(Integer id, BackofficeHealthcareProfessionalCompleteDto entity) {
             HealthcareProfessional hp = getHealthcareProfessional(id);
             if(!hp.getPersonId().equals(entity.getPersonId())) {
                 assertCreate(entity);
@@ -40,7 +39,7 @@ public class BackofficeHealthcareProfessionalEntityValidator extends BackofficeE
     }
 
     @Override
-    public void assertCreate(HealthcareProfessional entity) {
+    public void assertCreate(BackofficeHealthcareProfessionalCompleteDto entity) {
         if(healthcareProfessionalRepository.findProfessionalByPersonId(entity.getPersonId()).isPresent()){
             throw new BackofficeValidationException("healthcareprofessional.exists");
         }

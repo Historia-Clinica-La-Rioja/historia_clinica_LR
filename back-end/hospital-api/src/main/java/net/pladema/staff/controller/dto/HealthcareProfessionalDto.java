@@ -9,7 +9,7 @@ import net.pladema.renaper.controller.dto.PersonBasicDataResponseDto;
 public class HealthcareProfessionalDto {
 
 	private Integer id;
-	private String licenceNumber;
+	private String licenseNumber;
 	private PersonBasicDataResponseDto person;
 	
 }

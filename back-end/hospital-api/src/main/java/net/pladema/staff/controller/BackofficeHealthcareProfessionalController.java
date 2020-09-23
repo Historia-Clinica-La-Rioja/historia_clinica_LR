@@ -1,21 +1,23 @@
 package net.pladema.staff.controller;
 
+import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
+import net.pladema.sgx.backoffice.rest.BackofficePermissionValidatorAdapter;
 import net.pladema.staff.controller.constraints.BackofficeHealthcareProfessionalEntityValidator;
+import net.pladema.staff.controller.dto.BackofficeHealthcareProfessionalCompleteDto;
+import net.pladema.staff.controller.mapper.BackofficeHealthcareProfessionalStore;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
-import net.pladema.staff.repository.HealthcareProfessionalRepository;
-import net.pladema.staff.repository.entity.HealthcareProfessional;
 
 @RestController
 @RequestMapping("backoffice/healthcareprofessionals")
 public class BackofficeHealthcareProfessionalController
-		extends AbstractBackofficeController<HealthcareProfessional, Integer> {
+		extends AbstractBackofficeController<BackofficeHealthcareProfessionalCompleteDto, Integer> {
 
-	public BackofficeHealthcareProfessionalController(HealthcareProfessionalRepository repository,
+	public BackofficeHealthcareProfessionalController(BackofficeHealthcareProfessionalStore backofficeHealthcareProfessionalStore,
 													  BackofficeHealthcareProfessionalEntityValidator healthcareProfessionalEntityValidator) {
-		super(repository, healthcareProfessionalEntityValidator);
+		super(backofficeHealthcareProfessionalStore,
+				new BackofficePermissionValidatorAdapter<>(),
+				healthcareProfessionalEntityValidator);
 	}
 
 }

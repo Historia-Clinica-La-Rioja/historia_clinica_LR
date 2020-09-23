@@ -146,6 +146,14 @@ export interface BMPersonDto extends APersonDto {
     province: ProvinceDto;
 }
 
+export interface BackofficeHealthcareProfessionalCompleteDto {
+    clinicalSpecialtyId: number;
+    id: number;
+    licenseNumber: string;
+    personId: number;
+    professionalSpecialtyId: number;
+}
+
 export interface BackofficeUserDto {
     enable: boolean;
     id: number;
@@ -523,7 +531,7 @@ export interface HealthHistoryConditionDto extends HealthConditionDto {
 
 export interface HealthcareProfessionalDto {
     id: number;
-    licenceNumber: string;
+    licenseNumber: string;
     person: PersonBasicDataResponseDto;
 }
 

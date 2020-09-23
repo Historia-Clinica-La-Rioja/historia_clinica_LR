@@ -161,7 +161,9 @@ export default {
                 personId: 'Persona',
                 licenseNumber: 'Nro. Licencia',
                 isMedicalDoctor: 'Es médico?',
-                healthcareprofessionalspecialties: 'Profesional | Especialidad'
+                healthcareprofessionalspecialties: 'Profesional | Especialidad',
+                professionalSpecialtyId: 'Profesión',
+                clinicalSpecialtyId: 'Especialidad'
             }
         }, 
         healthcareprofessionalspecialties: {
