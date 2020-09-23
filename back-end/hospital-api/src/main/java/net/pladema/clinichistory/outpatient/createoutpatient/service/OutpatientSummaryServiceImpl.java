@@ -40,9 +40,9 @@ public class OutpatientSummaryServiceImpl implements OutpatientSummaryService{
         List<OutpatientEvolutionSummaryBo> result = new ArrayList<>();
         for(OutpatientEvolutionSummaryVo oes: queryResult){
             OutpatientEvolutionSummaryBo oesBo = new OutpatientEvolutionSummaryBo(oes);
-            oesBo.setHealthConditions(healthcConditions.stream().filter(h -> h.getConsultationID() == oes.getConsultationID()).map(HealthConditionSummaryBo::new).collect(Collectors.toList()));
-            oesBo.setReasons(reasons.stream().filter(r -> r.getConsultationID() == oes.getConsultationID()).map(ReasonBo::new).collect(Collectors.toList()));
-            oesBo.setProcedures(procedures.stream().filter(p -> p.getConsultationID() == oes.getConsultationID()).map(ProcedureBo::new).collect(Collectors.toList()));
+            oesBo.setHealthConditions(healthcConditions.stream().filter(h -> h.getConsultationID().equals(oes.getConsultationID())).map(HealthConditionSummaryBo::new).collect(Collectors.toList()));
+            oesBo.setReasons(reasons.stream().filter(r -> r.getConsultationID().equals(oes.getConsultationID())).map(ReasonBo::new).collect(Collectors.toList()));
+            oesBo.setProcedures(procedures.stream().filter(p -> p.getConsultationID().equals(oes.getConsultationID())).map(ProcedureBo::new).collect(Collectors.toList()));
             result.add(oesBo);
         }
         LOG.debug(OUTPUT, result);
