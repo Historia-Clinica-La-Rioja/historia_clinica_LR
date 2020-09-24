@@ -27,10 +27,10 @@ public class CaptchaServiceImpl implements ICaptchaService {
     @Value("${google.recaptcha.validator.url}")
     private String validatorUrl;
 
-    @Value("${RECAPTCHA_SECRET_KEY:6Legz84ZAAAAAPvReaZhco-A2R8NvlfS2vRfx136}")
+    @Value("${google.recaptcha.secret.key}")
     private String secretKey;
 
-    @Value("${RECAPTCHA_ENABLE:true}")
+    @Value("${google.recaptcha.enable}")
     private boolean recaptchaEnable;
 
     private static final Pattern RESPONSE_PATTERN = Pattern.compile("[A-Za-z0-9_-]+");
