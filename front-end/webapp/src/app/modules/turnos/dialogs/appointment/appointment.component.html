@@ -3,13 +3,24 @@
 		<section id="personal-data" fxLayout="column">
 			<div fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
 				<mat-icon fontSet="material-icons-outlined" color="primary">person</mat-icon>
-				<span class="mat-body-strong"> {{appointmentData.patient.fullName}} -
-					{{appointmentData.patient.identificationNumber}} </span>
+				<span class="mat-body-strong">ID del paciente: {{appointmentData.patient.id}}</span>
+				<span class="mat-body-strong" *ngIf="appointmentData?.patient.typeId === TEMPORARY_PATIENT"> - Temporal</span>
+				<span></span>
+			</div>
+			<div *ngIf="appointmentData.patient.fullName || appointmentData.patient.identificationNumber" fxLayout="row"
+				fxLayoutGap="3px" fxLayoutAlign="start center">
+				<mat-icon fontSet="material-icons-outlined" style="color: transparent">person</mat-icon>
+				<span class="mat-body patient-info">
+					<span *ngIf="appointmentData.patient.fullName">{{appointmentData.patient.fullName}} -</span>
+					<span
+						*ngIf="appointmentData.patient.identificationNumber">{{appointmentData.patient.identificationNumber}}</span>
+				</span>
 			</div>
 			<div fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
 				<mat-icon fontSet="material-icons-outlined" style="color: transparent">person</mat-icon>
 				<span class="mat-body patient-info"> Obra social:</span>
-				<span class="mat-body patient-info coverage-text" matTooltip="{{appointmentData.healthInsurance?.name}}">{{coverageText}} </span>
+				<span class="mat-body patient-info coverage-text"
+					matTooltip="{{appointmentData.healthInsurance?.name}}">{{coverageText}} </span>
 				<span class="mat-body patient-info">/ {{appointmentData.affiliateNumber}}</span>
 			</div>
 			<div fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center" class="mat-body patient-info">
@@ -24,8 +35,8 @@
 					</div>
 					<div *ngIf="phoneNumberEditMode" fxLayout="row" fxLayoutAlign="start center">
 						<form [formGroup]="phoneNumberForm" (submit)="updatePhoneNumber()">
-							<input class="hide-borders" formControlName="phoneNumber" >
-							<button mat-icon-button style="color:green" >
+							<input class="hide-borders" formControlName="phoneNumber">
+							<button mat-icon-button style="color:green">
 								<mat-icon matListIcon fontSet="material-icons-outlined">check_circle</mat-icon>
 							</button>
 						</form>

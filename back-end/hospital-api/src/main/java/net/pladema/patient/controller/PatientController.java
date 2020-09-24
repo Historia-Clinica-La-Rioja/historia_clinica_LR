@@ -162,7 +162,7 @@ public class PatientController {
 		Patient patient = patientService.getPatient(patientId)
 				.orElseThrow(() -> new EntityNotFoundException(PATIENT_INVALID));
 		BasicDataPersonDto personData = personExternalService.getBasicDataPerson(patient.getPersonId());
-		BasicPatientDto result = new BasicPatientDto(patient.getId(), personData);
+		BasicPatientDto result = new BasicPatientDto(patient.getId(), personData,patient.getTypeId());
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}

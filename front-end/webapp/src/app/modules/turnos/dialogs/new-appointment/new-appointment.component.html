@@ -32,23 +32,22 @@
 									formControlName="identifNumber"
 									placeholder="Nro de documento">
 							</mat-form-field>
-						</div>
-						<div>
-							<mat-label>Sexo</mat-label>
-							<div>
-								<mat-radio-group name="gender" id="gender" formControlName="gender">
-									<mat-radio-button id="genderButton_{{gender.id}}" *ngFor="let gender of genderOptions" [value]="gender.id">
-										{{gender.description}}
-									</mat-radio-button>
-								</mat-radio-group>
+							<div class="padding-bottom">
+								<mat-label>Sexo</mat-label>
+								<div>
+									<mat-radio-group name="gender" id="gender" formControlName="gender">
+										<mat-radio-button id="genderButton_{{gender.id}}" *ngFor="let gender of genderOptions" [value]="gender.id">
+											{{gender.description}}
+										</mat-radio-button>
+									</mat-radio-group>
+								</div>
 							</div>
-						</div>
-						<div>
-							<mat-form-field appearance="outline">
-								<mat-label>ID del paciente</mat-label>
-								<input matInput type="text" id="patientId" name="patientId" formControlName="patientId"
-									placeholder="ID del paciente">
-							</mat-form-field>
+							<div>
+								<mat-form-field appearance="outline">
+									<mat-label translate="turnos.new-appointment.PATIENT_ID"></mat-label>
+									<input matInput type="text" id="patientId" name="patientId" formControlName="patientId">
+								</mat-form-field>
+							</div>
 						</div>
 						<div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10px">
 							<ng-container *hasRole="['ADMINISTRATIVO']">
@@ -71,10 +70,13 @@
 					<mat-list-item id="patient">
 						<mat-icon color="primary" mat-list-icon [inline]="true">person</mat-icon>
 						<div fxLayout="column">
-							<strong *ngIf="isTemporaryPatient">Paciente Temporal</strong>
-							<span>ID del paciente: {{patientId}} </span>
-							<strong> {{person?.firstName}} {{person?.lastName}} - {{person?.identificationNumber}}
-							</strong>
+							<strong *ngIf="isTemporaryPatient" translate="turnos.new-appointment.TEMPORARY_PATIENT"></strong>
+							<span translate="turnos.new-appointment.PATIENT_ID">: {{patientId}} </span>
+							<div fxLayout="row">
+								<span *ngIf="person?.lastName">{{person?.lastName}}</span>
+								<span *ngIf="person?.firstName">, {{person?.firstName}}</span>
+								<span *ngIf="person?.identificationNumber"> - {{person?.identificationNumber}}</span>
+							</div>
 						</div>
 					</mat-list-item>
 				</mat-list>

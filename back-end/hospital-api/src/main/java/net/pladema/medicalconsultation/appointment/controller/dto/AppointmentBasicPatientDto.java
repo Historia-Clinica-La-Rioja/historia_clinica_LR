@@ -16,4 +16,6 @@ public class AppointmentBasicPatientDto {
     private final Integer id;
 
     private final BasicPersonalDataDto person;
+
+    private final Short typeId;
 }

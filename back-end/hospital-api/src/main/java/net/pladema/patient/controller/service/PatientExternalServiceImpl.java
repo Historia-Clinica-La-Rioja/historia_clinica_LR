@@ -33,7 +33,7 @@ public class PatientExternalServiceImpl implements PatientExternalService {
         Patient patient = patientService.getPatient(patientId)
                 .orElseThrow(() -> new EntityNotFoundException("patient.invalid"));
         BasicDataPersonDto personData = personExternalService.getBasicDataPerson(patient.getPersonId());
-        BasicPatientDto result = new BasicPatientDto(patient.getId(), personData);
+        BasicPatientDto result = new BasicPatientDto(patient.getId(), personData,patient.getTypeId());
         LOG.debug(OUTPUT, result);
         return result;
     }

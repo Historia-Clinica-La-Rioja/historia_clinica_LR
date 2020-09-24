@@ -11,6 +11,8 @@ import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appoint
 import { getError, hasError, processErrors } from '@core/utils/form.utils';
 import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
 
+const TEMPORARY_PATIENT = 3;
+
 @Component({
 	selector: 'app-appointment',
 	templateUrl: './appointment.component.html',
@@ -19,6 +21,7 @@ import { AppointmentsFacadeService } from '../../services/appointments-facade.se
 export class AppointmentComponent implements OnInit {
 
 	readonly appointmentStatesIds = APPOINTMENT_STATES_ID;
+	readonly TEMPORARY_PATIENT = TEMPORARY_PATIENT;
 	getAppointmentState = getAppointmentState;
 	getError = getError;
 	hasError = hasError;
@@ -141,8 +144,9 @@ export class AppointmentComponent implements OnInit {
 export interface PatientAppointmentInformation {
 	patient: {
 		id: number,
-		fullName: string
-		identificationNumber: string,
+		fullName?: string
+		identificationNumber?: string,
+		typeId: number;
 	};
 	appointmentId: number;
 	appointmentStateId: number;

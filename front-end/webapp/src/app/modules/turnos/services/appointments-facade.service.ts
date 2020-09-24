@@ -14,6 +14,7 @@ const enum COLORES {
 	ESPONTANEA = '#2687C5',
 	SOBRETURNO = '#E3A063'
 }
+const TEMPORARY_PATIENT = 3;
 
 @Injectable({
 	providedIn: 'root'
@@ -131,10 +132,16 @@ export class AppointmentsFacadeService {
 }
 
 export function toCalendarEvent(from: string, to: string, date: Moment, appointment: AppointmentListDto): CalendarEvent {
+	const fullName = [appointment.patient.person.lastName, appointment.patient.person.firstName].
+		filter(function (val) { return val; }).join(', ');
+
+	const title = appointment.patient.typeId === TEMPORARY_PATIENT ?
+		`${momentParseTime(from).format(DateFormat.HOUR_MINUTE_12)} Temporal` : `${momentParseTime(from).format(DateFormat.HOUR_MINUTE_12)}	 ${fullName}`;
+
 	return {
 		start: buildFullDate(from, date).toDate(),
 		end: buildFullDate(to, date).toDate(),
-		title: `${momentParseTime(from).format(DateFormat.HOUR_MINUTE_12)} ${appointment.patient.person.lastName} ${appointment.patient.person.firstName}`,
+		title,
 		color: {
 			primary: getColor(appointment.overturn, appointment.medicalAttentionTypeId),
 			secondary: getColor(appointment.overturn, appointment.medicalAttentionTypeId)
@@ -142,8 +149,9 @@ export function toCalendarEvent(from: string, to: string, date: Moment, appointm
 		meta: {
 			patient: {
 				id: appointment.patient.id,
-				fullName: appointment.patient.person.firstName + ' ' + appointment.patient.person.lastName,
+				fullName,
 				identificationNumber: appointment.patient.person.identificationNumber,
+				typeId: appointment.patient.typeId,
 			},
 			overturn: appointment.overturn,
 			appointmentId: appointment.id,

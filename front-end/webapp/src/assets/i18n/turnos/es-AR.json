@@ -38,6 +38,8 @@
 			"BUTTON_SEARCH": "Buscar",
 			"STEP_1": "Búsqueda de paciente",
 			"STEP_2": "Confirmar turno",
+			"TEMPORARY_PATIENT": "Paciente temporal",
+			"PATIENT_ID":"ID del paciente",
 			"messages": {
 				"ERROR": "Paciente no encontrado",
 				"SUCCESS": "Paciente encontrado",

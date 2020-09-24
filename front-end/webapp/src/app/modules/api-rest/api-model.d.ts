@@ -107,6 +107,7 @@ export interface ApiErrorMessageDto {
 export interface AppointmentBasicPatientDto {
     id: number;
     person: BasicPersonalDataDto;
+    typeId: number;
 }
 
 export interface AppointmentDto extends CreateAppointmentDto {
@@ -168,6 +169,7 @@ export interface BasicDataPersonDto extends Serializable {
 export interface BasicPatientDto extends Serializable {
     id: number;
     person: BasicDataPersonDto;
+    typeId: number;
 }
 
 export interface BasicPersonalDataDto extends IBasicPersonalData {
