@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
 import { momentFormat, DateFormat, momentParseDate } from '@core/utils/moment.utils';
 import { Subscription } from 'rxjs';
-import { HistoricalProblemsService, Speciality, Professional, Problem } from '../../services/historical-problems.service';
+import { HistoricalProblemsFacadeService, Speciality, Professional, Problem } from '../../services/historical-problems-facade.service';
 
 @Component({
   selector: 'app-historical-problems-filters',
@@ -20,7 +20,7 @@ export class HistoricalProblemsFiltersComponent implements OnInit, OnDestroy {
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
-		private readonly historicalProblemsService: HistoricalProblemsService
+		private readonly historicalProblemsFacadeService: HistoricalProblemsFacadeService
   	) {	}
 
   	ngOnInit(): void {
@@ -31,12 +31,12 @@ export class HistoricalProblemsFiltersComponent implements OnInit, OnDestroy {
 			consultationDate: [null]
 		});
 
-		const filterOptions = this.historicalProblemsService.getFilterOptions();
+		const filterOptions = this.historicalProblemsFacadeService.getFilterOptions();
 		this.specialities = filterOptions.specialities;
 		this.professionals = filterOptions.professionals;
 		this.problems = filterOptions.problems;
 
-		this.historicalProblemsFilter$ = this.historicalProblemsService.getHistoricalProblemsFilter().subscribe(
+		this.historicalProblemsFilter$ = this.historicalProblemsFacadeService.getHistoricalProblemsFilter().subscribe(
 			data => {
 				this.form.controls.speciality.setValue(data.speciality);
 				this.form.controls.professional.setValue(data.professional);
@@ -46,7 +46,7 @@ export class HistoricalProblemsFiltersComponent implements OnInit, OnDestroy {
   	}
 
 	public sendAllFiltersOnFilterChange() {
-		this.historicalProblemsService.sendHistoricalProblemsFilter(this.getHistoricalProblemsFilter());
+		this.historicalProblemsFacadeService.sendHistoricalProblemsFilter(this.getHistoricalProblemsFilter());
 	}
 
 	private getHistoricalProblemsFilter(): HistoricalProblemsFilter {

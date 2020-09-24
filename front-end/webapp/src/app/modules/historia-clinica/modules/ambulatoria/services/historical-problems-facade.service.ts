@@ -9,9 +9,9 @@ import { OutpatientConsultationService } from './../../../../api-rest/services/o
 import { MapperService } from './../../../../presentation/services/mapper.service';
 
 @Injectable()
-export class HistoricalProblemsService {
+export class HistoricalProblemsFacadeService {
 
-	public specialities: Speciality[] = [];
+  	public specialities: Speciality[] = [];
   	public professionals: Professional[] = [];
 	public problems: Problem[] = [];
 
@@ -138,3 +138,4 @@ export class HistoricalProblems {
 		procedurePt: string;
 	}[];
 }
+

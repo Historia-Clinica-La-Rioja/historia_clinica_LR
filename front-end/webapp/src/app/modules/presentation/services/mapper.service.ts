@@ -6,7 +6,7 @@ import { PersonalInformation } from '@presentation/components/personal-informati
 import { PatientTypeData } from '@presentation/components/patient-type-logo/patient-type-logo.component';
 import { DateFormat, momentParseDate, momentParseDateTime } from '@core/utils/moment.utils';
 import { BedManagement } from '../../camas/routes/home/home.component';
-import { HistoricalProblems } from '../../historia-clinica/modules/ambulatoria/services/historical-problems.service';
+import { HistoricalProblems } from '../../historia-clinica/modules/ambulatoria/services/historical-problems-facade.service';
 
 @Injectable({
 	providedIn: 'root'

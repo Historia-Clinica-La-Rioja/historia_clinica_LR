@@ -76,7 +76,8 @@ public class OutpatientConsultationController implements OutpatientConsultationA
                                             ReasonService reasonService,
                                             HealthcareProfessionalExternalServiceImpl healthcareProfessionalExternalService,
                                             OutpatientConsultationMapper outpatientConsultationMapper,
-                                            AppointmentExternalService appointmentExternalService, 
+                                            AppointmentExternalService appointmentExternalService,
+                                            DateTimeProvider dateTimeProvider,
                                             PdfService pdfService, 
                                             OutpatientSummaryService outpatientSummaryService) {
         this.createOutpatientConsultationService = createOutpatientConsultationService;

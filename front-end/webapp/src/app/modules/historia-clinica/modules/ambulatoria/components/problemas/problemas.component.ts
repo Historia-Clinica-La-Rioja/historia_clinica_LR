@@ -13,13 +13,13 @@ import { map, tap } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import {MatDialog} from "@angular/material/dialog";
 import {SolveProblemComponent} from "../../../../dialogs/solve-problem/solve-problem.component";
-import { HistoricalProblemsService, HistoricalProblems } from './../../services/historical-problems.service';
+import { HistoricalProblemsFacadeService, HistoricalProblems } from './../../services/historical-problems-facade.service';
 
 @Component({
 	selector: 'app-problemas',
 	templateUrl: './problemas.component.html',
 	styleUrls: ['./problemas.component.scss'],
-	providers: [ HistoricalProblemsService ]
+	providers: [ HistoricalProblemsFacadeService ]
 })
 export class ProblemasComponent implements OnInit, OnDestroy {
 
@@ -40,7 +40,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 
 	constructor(
 		private readonly hceGeneralStateService: HceGeneralStateService,
-		private historicalProblemsService: HistoricalProblemsService,
+		private historicalProblemsFacadeService: HistoricalProblemsFacadeService,
 		private route: ActivatedRoute,
 		private readonly router: Router,
 		public dialog: MatDialog
@@ -48,7 +48,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		this.route.paramMap.subscribe(
 			(params) => {
 				this.patientId = Number(params.get('idPaciente'));
-				historicalProblemsService.setPatientId(this.patientId);
+				historicalProblemsFacadeService.setPatientId(this.patientId);
 			});
 	}
 
@@ -106,7 +106,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	}
 
 	loadHistoricalProblems() {
-		this.historicalProblems$ = this.historicalProblemsService.getHistoricalProblems().pipe(
+		this.historicalProblems$ = this.historicalProblemsFacadeService.getHistoricalProblems().pipe(
 			tap(historicalProblems => this.historicalProblemsAmount = historicalProblems ? historicalProblems.length : 0)
 		).subscribe(data => this.historicalProblemsList = data);
 	}
@@ -130,7 +130,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	}
 
 	onProblemClick(problem: HCEPersonalHistoryDto) {
-		this.historicalProblemsService.sendHistoricalProblemsFilter({
+		this.historicalProblemsFacadeService.sendHistoricalProblemsFilter({
 			speciality: null,
 			professional: null,
 			problem: problem.snomed.id,
