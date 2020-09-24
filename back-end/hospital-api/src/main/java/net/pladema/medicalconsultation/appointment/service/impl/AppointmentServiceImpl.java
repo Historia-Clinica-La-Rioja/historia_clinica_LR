@@ -29,14 +29,11 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 	private final HistoricAppointmentStateRepository historicAppointmentStateRepository;
 
-	private final DateTimeProvider dateTimeProvider;
-
 	public AppointmentServiceImpl(AppointmentRepository appointmentRepository,
 								  HistoricAppointmentStateRepository historicAppointmentStateRepository,
 								  DateTimeProvider dateTimeProvider) {
 		this.appointmentRepository = appointmentRepository;
 		this.historicAppointmentStateRepository = historicAppointmentStateRepository;
-		this.dateTimeProvider = dateTimeProvider;
 	}
 
 	@Override
@@ -86,17 +83,17 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
-	public boolean hasConfirmedAppointment(Integer patientId, Integer healthProfessionalId) {
-		LOG.debug("Input parameters -> patientId {}, healthProfessionalId {}", patientId, healthProfessionalId);
-		boolean result = !(appointmentRepository.getAppointmentsId(patientId, healthProfessionalId, dateTimeProvider.nowDate()).isEmpty());
+	public boolean hasConfirmedAppointment(Integer patientId, Integer healthProfessionalId, LocalDate date) {
+		LOG.debug("Input parameters -> patientId {}, healthProfessionalId {}, date {} ", patientId, healthProfessionalId, date);
+		boolean result = !(appointmentRepository.getAppointmentsId(patientId, healthProfessionalId, date).isEmpty());
 		LOG.debug(OUTPUT, result);
 		return result;
 	}
 
 	@Override
-	public List<Integer> getAppointmentsId(Integer patientId, Integer healthcareProfessionalId) {
+	public List<Integer> getAppointmentsId(Integer patientId, Integer healthcareProfessionalId, LocalDate date) {
 		LOG.debug("Input parameters -> patientId {}, healthcareProfessionalId {}", patientId, healthcareProfessionalId);
-		List<Integer> result = appointmentRepository.getAppointmentsId(patientId, healthcareProfessionalId, dateTimeProvider.nowDate());
+		List<Integer> result = appointmentRepository.getAppointmentsId(patientId, healthcareProfessionalId, date);
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

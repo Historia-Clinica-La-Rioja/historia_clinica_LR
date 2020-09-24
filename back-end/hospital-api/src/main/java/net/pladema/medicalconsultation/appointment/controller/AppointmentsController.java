@@ -21,10 +21,12 @@ import net.pladema.medicalconsultation.appointment.service.CreateAppointmentServ
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.service.PatientExternalService;
+import net.pladema.sgx.dates.configuration.DateTimeProvider;
 import net.pladema.sgx.security.utils.UserInfo;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,12 +64,17 @@ public class AppointmentsController {
 
     private final HealthcareProfessionalExternalService healthcareProfessionalExternalService;
 
+    private final DateTimeProvider dateTimeProvider;
+
+    @Value("${test.stress.disable.validation:false}")
+    private boolean disableValidation;
+
     public AppointmentsController(AppointmentService appointmentService,
                                   AppointmentValidatorService appointmentValidatorService,
                                   CreateAppointmentService createAppointmentService,
                                   AppointmentMapper appointmentMapper,
                                   PatientExternalService patientExternalService,
-                                  HealthcareProfessionalExternalService healthcareProfessionalExternalService) {
+                                  HealthcareProfessionalExternalService healthcareProfessionalExternalService, DateTimeProvider dateTimeProvider) {
         super();
         this.appointmentService = appointmentService;
         this.appointmentValidatorService = appointmentValidatorService;
@@ -75,6 +82,7 @@ public class AppointmentsController {
         this.appointmentMapper = appointmentMapper;
         this.patientExternalService = patientExternalService;
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
+        this.dateTimeProvider = dateTimeProvider;
     }
 
     @Transactional
@@ -151,7 +159,7 @@ public class AppointmentsController {
                                                            @RequestParam(name = "patientId") Integer patientId){
         LOG.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
         Integer healthProfessionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
-        boolean result = appointmentService.hasConfirmedAppointment(patientId, healthProfessionalId);
+        boolean result = disableValidation ? true : appointmentService.hasConfirmedAppointment(patientId, healthProfessionalId, dateTimeProvider.nowDate());
         LOG.debug(OUTPUT, result);
         return ResponseEntity.ok(result);
     }

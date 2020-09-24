@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @Service
 public class AppointmentExternalServiceImpl implements AppointmentExternalService {
 
@@ -21,17 +23,17 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 	}
 
 	@Override
-	public boolean hasConfirmedAppointment(Integer patientId, Integer healthProfessionalId) {
-		LOG.debug("Input parameters -> patientId {}, healthProfessionalId {}", patientId, healthProfessionalId);
-		boolean result = appointmentService.hasConfirmedAppointment(patientId, healthProfessionalId);
+	public boolean hasConfirmedAppointment(Integer patientId, Integer healthProfessionalId, LocalDate date) {
+		LOG.debug("Input parameters -> patientId {}, healthProfessionalId {}, date {}", patientId, healthProfessionalId, date);
+		boolean result = appointmentService.hasConfirmedAppointment(patientId, healthProfessionalId, date);
 		LOG.debug(OUTPUT, result);
 		return result;
 	}
 
 	@Override
-	public void serveAppointment(Integer patientId, Integer healthcareProfessionalId) {
-		LOG.debug("Input parameters -> patientId {}, healthcareProfessionalId {}", patientId, healthcareProfessionalId);
-		Integer appointmentId = appointmentService.getAppointmentsId(patientId, healthcareProfessionalId).get(0);
+	public void serveAppointment(Integer patientId, Integer healthcareProfessionalId, LocalDate date) {
+		LOG.debug("Input parameters -> patientId {}, healthcareProfessionalId {}, date {}", patientId, healthcareProfessionalId, date);
+		Integer appointmentId = appointmentService.getAppointmentsId(patientId, healthcareProfessionalId, date).get(0);
 		appointmentService.updateState(appointmentId, AppointmentState.SERVED, UserInfo.getCurrentAuditor(), null);
 		LOG.debug(OUTPUT, Boolean.TRUE);
 	}

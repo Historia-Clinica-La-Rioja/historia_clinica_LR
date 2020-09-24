@@ -123,3 +123,12 @@ El módulo de back-end se configura mediante el uso de un archivo `.properties`,
 |oauth.redirectUri   |   | http://localhost:8080/oauth/chaco  | Opcional  |   |  v0.2.0 |
 |oauth.loginUrl   |   | http://stage.ventanillaunica.chaco.gov.ar  | Opcional  |    | v0.2.0  |
 |oauth.appLaunchUrl   |   | /frontpanel/aplicacion/59/launch  | Opcional  |   | v0.2.0  |
+
+
+## Pruebas de estrés
+
+Se crearon las siguientes propiedades para ser usado en las pruebas de estrés.
+
+| Propiedad               | Parametro       | Valor por defecto       | Necesidad | Descripcion | Desde |
+| ----------------------- | ----------------| ----------------------- | --------- | ----------- | ----- |
+|test.stress.disable.validation   |   | false  | Opcional  | Desactiva validaciones en el sistema para facilitar las pruebas  | v1.2.0   |

@@ -19,10 +19,12 @@ import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.Outp
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ReasonBo;
 import net.pladema.medicalconsultation.appointment.controller.service.AppointmentExternalService;
 import net.pladema.pdf.service.PdfService;
+import net.pladema.sgx.dates.configuration.DateTimeProvider;
 import net.pladema.sgx.security.utils.UserInfo;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,20 +57,28 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 
     private final AppointmentExternalService appointmentExternalService;
 
+    private final DateTimeProvider dateTimeProvider;
+
     private final PdfService pdfService;
+
+    @Value("${test.stress.disable.validation:false}")
+    private boolean disableValidation;
 
     public OutpatientConsultationController(CreateOutpatientConsultationService createOutpatientConsultationService,
                                             CreateOutpatientDocumentService createOutpatientDocumentService,
                                             ReasonService reasonService,
                                             HealthcareProfessionalExternalServiceImpl healthcareProfessionalExternalService,
                                             OutpatientConsultationMapper outpatientConsultationMapper,
-                                            AppointmentExternalService appointmentExternalService, PdfService pdfService) {
+                                            AppointmentExternalService appointmentExternalService,
+                                            DateTimeProvider dateTimeProvider,
+                                            PdfService pdfService) {
         this.createOutpatientConsultationService = createOutpatientConsultationService;
         this.createOutpatientDocumentService = createOutpatientDocumentService;
         this.reasonService = reasonService;
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.outpatientConsultationMapper = outpatientConsultationMapper;
         this.appointmentExternalService = appointmentExternalService;
+        this.dateTimeProvider = dateTimeProvider;
         this.pdfService = pdfService;
 
     }
@@ -90,7 +100,8 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         OutpatientDocumentBo outpatient = outpatientConsultationMapper.fromCreateOutpatientDto(createOutpatientDto);
         outpatient = createOutpatientDocumentService.create(newOutPatient.getId(), patientId, outpatient);
 
-        appointmentExternalService.serveAppointment(patientId, doctorId);
+        if (!disableValidation)
+            appointmentExternalService.serveAppointment(patientId, doctorId, dateTimeProvider.nowDate());
         outpatient.setReasons(reasons);
         generateDocument(outpatient, institutionId, newOutPatient.getId(), patientId);
 
@@ -128,8 +139,8 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 
         outpatient = createOutpatientDocumentService.create(newOutPatient.getId(), patientId, outpatient);
 
-        if (Boolean.TRUE.equals(finishAppointment))
-            appointmentExternalService.serveAppointment(patientId, doctorId);
+        if (Boolean.TRUE.equals(finishAppointment) && !disableValidation)
+            appointmentExternalService.serveAppointment(patientId, doctorId, dateTimeProvider.nowDate());
         generateDocument(outpatient, institutionId, newOutPatient.getId(), patientId);
 
         LOG.debug(OUTPUT, true);

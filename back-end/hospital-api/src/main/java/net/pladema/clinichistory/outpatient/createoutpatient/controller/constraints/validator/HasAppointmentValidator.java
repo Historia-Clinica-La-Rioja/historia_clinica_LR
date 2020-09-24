@@ -2,10 +2,12 @@ package net.pladema.clinichistory.outpatient.createoutpatient.controller.constra
 
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.constraints.HasAppointment;
 import net.pladema.medicalconsultation.appointment.controller.service.AppointmentExternalService;
+import net.pladema.sgx.dates.configuration.DateTimeProvider;
 import net.pladema.sgx.security.utils.UserInfo;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -18,10 +20,17 @@ public class HasAppointmentValidator implements ConstraintValidator<HasAppointme
 
     private final HealthcareProfessionalExternalService healthcareProfessionalExternalService;
 
+    private final DateTimeProvider dateTimeProvider;
+
+    @Value("${test.stress.disable.validation:false}")
+    private boolean disableValidation;
+
     public HasAppointmentValidator(AppointmentExternalService appointmentExternalService,
-                                   HealthcareProfessionalExternalService healthcareProfessionalExternalService) {
+                                   HealthcareProfessionalExternalService healthcareProfessionalExternalService,
+                                   DateTimeProvider dateTimeProvider) {
         this.appointmentExternalService = appointmentExternalService;
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
+        this.dateTimeProvider = dateTimeProvider;
     }
 
     @Override
@@ -33,7 +42,7 @@ public class HasAppointmentValidator implements ConstraintValidator<HasAppointme
     public boolean isValid(Integer patientId, ConstraintValidatorContext context) {
        LOG.debug("Input parameters -> patientId {}", patientId);
        Integer healthcareProfessionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
-       boolean result = appointmentExternalService.hasConfirmedAppointment(patientId, healthcareProfessionalId);
+       boolean result = disableValidation ? true : appointmentExternalService.hasConfirmedAppointment(patientId, healthcareProfessionalId, dateTimeProvider.nowDate());
        LOG.debug("OUTPUT -> {}", result);
        return result;
     }

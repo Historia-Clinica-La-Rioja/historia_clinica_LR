@@ -25,6 +25,7 @@ import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import net.pladema.sgx.security.utils.UserInfo;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import net.pladema.staff.service.HealthcareProfessionalService;
+import org.springframework.beans.factory.annotation.Value;
 
 
 @SupportedValidationTarget(ValidationTarget.PARAMETERS)
@@ -47,6 +48,9 @@ public class AppointmentValidator implements ConstraintValidator<ValidAppointmen
 
     private final LoggedUserExternalService loggedUserExternalService;
 
+	@Value("${test.stress.disable.validation:false}")
+	private boolean disableValidation;
+
     @Override
     public void initialize(ValidAppointment constraintAnnotation) {
         // nothing to do
@@ -66,7 +70,7 @@ public class AppointmentValidator implements ConstraintValidator<ValidAppointmen
 	private boolean validAppoinment(ConstraintValidatorContext context, CreateAppointmentDto createAppointmentDto) {
 		boolean valid = true;
 		
-		if(beforeNow(createAppointmentDto)){
+		if(beforeNow(createAppointmentDto) && !disableValidation){
             buildResponse(context, "{appointment.new.beforeToday}");
             valid = false;
         }
