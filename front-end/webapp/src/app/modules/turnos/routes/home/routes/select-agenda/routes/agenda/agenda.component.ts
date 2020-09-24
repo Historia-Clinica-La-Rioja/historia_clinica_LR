@@ -7,8 +7,7 @@ import {
 	DateFormat,
 	dateToMoment,
 	dateToMomentTimeZone,
-	momentFormat,
-	momentParseDate, momentParseDateTime,
+	momentParseDate,
 	momentParseTime,
 	newMoment
 } from '@core/utils/moment.utils';
@@ -24,7 +23,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { MINUTES_IN_HOUR } from '../../../../../../constants/appointment';
 import { AppointmentsFacadeService } from 'src/app/modules/turnos/services/appointments-facade.service';
 import { map, take, tap } from 'rxjs/operators';
-import { forkJoin, Observable } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 import { PermissionsService } from '@core/services/permissions.service';
 import { HealthInsuranceService } from '@api-rest/services/health-insurance.service';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
@@ -116,8 +115,11 @@ export class AgendaComponent implements OnInit {
 		if (this.appointments) {
 			if (agendaOverlapsWithViewRange(this.agenda.startDate, this.agenda.endDate)) {
 				this.dailyAmounts$.subscribe(dailyAmounts => {
-					this.dailyAmounts = dailyAmounts;
-					this.setDailyAmounts(daysCells, dailyAmounts);
+					if (dailyAmounts) {
+						this.dailyAmounts = dailyAmounts;
+						this.dailyAmounts$ = of(null);
+					}
+					this.setDailyAmounts(daysCells, this.dailyAmounts);
 				});
 			}
 		}
