@@ -43,6 +43,13 @@
 								</mat-radio-group>
 							</div>
 						</div>
+						<div>
+							<mat-form-field appearance="outline">
+								<mat-label>ID del paciente</mat-label>
+								<input matInput type="text" id="patientId" name="patientId" formControlName="patientId"
+									placeholder="ID del paciente">
+							</mat-form-field>
+						</div>
 						<div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10px">
 							<ng-container *hasRole="['ADMINISTRATIVO']">
 								<button mat-flat-button mat-dialog-close color="primary" (click)="goCreatePatient()" *ngIf="showAddPatient">
@@ -64,7 +71,10 @@
 					<mat-list-item id="patient">
 						<mat-icon color="primary" mat-list-icon [inline]="true">person</mat-icon>
 						<div fxLayout="column">
-							<strong> {{person?.firstName}} {{person?.lastName}} - {{person?.identificationNumber}} </strong>
+							<strong *ngIf="isTemporaryPatient">Paciente Temporal</strong>
+							<span>ID del paciente: {{patientId}} </span>
+							<strong> {{person?.firstName}} {{person?.lastName}} - {{person?.identificationNumber}}
+							</strong>
 						</div>
 					</mat-list-item>
 				</mat-list>
@@ -120,7 +130,7 @@
 					</div>
 				</form>
 				<div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10px">
-					<button mat-flat-button matStepperPrevious color="primary">
+					<button mat-flat-button matStepperPrevious color="primary" (click)="toFirstStep()">
 						<span [translate]="'buttons.BACK'"></span>
 					</button>
 				</div>

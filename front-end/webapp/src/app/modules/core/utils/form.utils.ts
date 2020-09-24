@@ -90,3 +90,8 @@ export function processErrors(errorResponse, showMessageCallback) {
 		return error.split(':').pop();
 	}
 }
+
+export function updateControlValidator(form: FormGroup, control: string, validations) {
+	form.controls[control].setValidators(validations);
+	form.controls[control].updateValueAndValidity();
+}

@@ -171,6 +171,7 @@ export interface BasicPatientDto extends Serializable {
 }
 
 export interface BasicPersonalDataDto extends IBasicPersonalData {
+    genderId: number;
 }
 
 export interface BedCategoryDto extends MasterdataDto<number> {
@@ -831,9 +832,13 @@ export interface ProcedureReduced {
     procedure: string;
 }
 
-export interface ProfessionalDto extends BasicPersonalDataDto {
+export interface ProfessionalDto {
+    firstName: string;
     id: number;
+    identificationNumber: string;
+    lastName: string;
     licenceNumber: string;
+    phoneNumber: string;
 }
 
 export interface ProvinceDto extends MasterdataDto<number> {
@@ -843,6 +848,11 @@ export interface ProvinceDto extends MasterdataDto<number> {
 export interface PublicInfoDto {
     features: AppFeature[];
     flavor: string;
+}
+
+export interface ReducedPatientDto {
+    patientTypeId: number;
+    personalDataDto: BasicPersonalDataDto;
 }
 
 export interface ReportClinicalObservationDto extends ClinicalObservationDto {
