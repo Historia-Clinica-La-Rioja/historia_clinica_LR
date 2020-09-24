@@ -13,12 +13,12 @@ import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
 @AllArgsConstructor
 public class AppointmentDailyAmountDto {
 
-    private final Integer spontaneous;
+    private Integer spontaneous;
 
-    private final Integer programmedAvailable;
+    private Integer programmedAvailable;
 
-    private final Integer programmed;
+    private Integer programmed;
 
     @JsonFormat(pattern = JacksonDateFormatConfig.DATE_FORMAT)
-    private final String date;
+    private String date;
 }

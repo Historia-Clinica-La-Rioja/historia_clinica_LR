@@ -22,7 +22,7 @@ import { AppointmentComponent } from '../../../../../../dialogs/appointment/appo
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { MINUTES_IN_HOUR } from '../../../../../../constants/appointment';
 import { AppointmentsFacadeService } from 'src/app/modules/turnos/services/appointments-facade.service';
-import { map, take, tap } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { forkJoin, Observable, of } from 'rxjs';
 import { PermissionsService } from '@core/services/permissions.service';
 import { HealthInsuranceService } from '@api-rest/services/health-insurance.service';
@@ -140,14 +140,17 @@ export class AgendaComponent implements OnInit {
 
 	private setDailyAmounts(daysCells: MonthViewDay[], dailyAmounts: AppointmentDailyAmountDto[]) {
 			daysCells.forEach((cell: MonthViewDay) => {
-				cell.meta = {
-					amount: getAmount(cell.date)
-				};
+				const amount = getAmount(cell.date);
+				if (amount) {
+					cell.meta = {
+						amount
+					};
+				}
 
 				function getAmount(date: Date): AppointmentDailyAmountDto {
 					return dailyAmounts
-						.find(amount => {
-							return dateToMoment(date).isSame(momentParseDate(amount.date), 'days');
+						.find(dailyAmount => {
+							return dateToMoment(date).isSame(momentParseDate(dailyAmount.date), 'days');
 						});
 				}
 			});

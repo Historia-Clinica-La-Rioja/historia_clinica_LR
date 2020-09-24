@@ -121,7 +121,7 @@
 			<div class="daily-amounts">
 				<div fxLayout="column" fxLayoutGap="2px">
 
-					<div *ngIf="day.meta?.amount?.spontaneous != undefined" class="espontanea"
+					<div *ngIf="day.meta?.amount?.spontaneous || day.meta?.amount?.spontaneous === 0" class="espontanea"
 						 fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
 						<div class="count-border" fxLayoutAlign="center center">
 							<span>{{day.meta?.amount?.spontaneous}}</span>
@@ -129,7 +129,7 @@
 						<span>Turnos asignados</span>
 					</div>
 
-					<div *ngIf="day.meta?.amount?.programmed != undefined" class="programada-asignados"
+					<div *ngIf="day.meta?.amount?.programmed || day.meta?.amount?.programmed === 0" class="programada-asignados"
 						 fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
 						<div class="count-border" fxLayoutAlign="center center">
 							<span>{{day.meta?.amount?.programmed}}</span>
