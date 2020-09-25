@@ -40,6 +40,7 @@ export class NuevaConsultaComponent implements OnInit {
 	antecedentesFamiliaresNuevaConsultaService: AntecedentesFamiliaresNuevaConsultaService;
 	alergiasNuevaConsultaService: AlergiasNuevaConsultaService;
 	readOnlyProblema: boolean = false;
+	apiErrors: string[] = [];
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -117,24 +118,24 @@ export class NuevaConsultaComponent implements OnInit {
 	save(): void {
 		this.route.paramMap.subscribe((params) => {
 			const idPaciente = Number(params.get('idPaciente'));
-
 			const nuevaConsulta: CreateOutpatientDto = this.buildCreateOutpatientDto();
+			this.apiErrors = [];
 			this.addErrorMessage(nuevaConsulta);
-
 			if (this.isValidConsultation()) {
-
 				this.outpatientConsultationService.createOutpatientConsultation(nuevaConsulta, idPaciente).subscribe(
 					_ => {
 						this.snackBarService.showSuccess('ambulatoria.paciente.nueva-consulta.messages.SUCCESS');
 						this.goToAmbulatoria(idPaciente);
 					},
-					_ => {
+					errors => {
+						Object.getOwnPropertyNames(errors).forEach(val => {
+							this.apiErrors.push(errors[val]);
+						  });
 						this.snackBarService.showError('ambulatoria.paciente.nueva-consulta.messages.ERROR');
 					}
 				);
 			} else {
 				this.snackBarService.showError('ambulatoria.paciente.nueva-consulta.messages.ERROR');
-
 			}
 		});
 	}

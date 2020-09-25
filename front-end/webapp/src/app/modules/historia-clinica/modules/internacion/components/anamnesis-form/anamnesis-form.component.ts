@@ -44,6 +44,7 @@ export class AnamnesisFormComponent implements OnInit {
 	allergies: AllergyConditionDto[] = [];
 	immunizations: ImmunizationDto[] = [];
 	medications: MedicationDto[] = [];
+	apiErrors: string[] = [];
 	procedimientosService: ProcedimientosService;
 
 	constructor(
@@ -168,7 +169,7 @@ export class AnamnesisFormComponent implements OnInit {
 	save(): void {
 		if (this.form.valid) {
 			const anamnesis: AnamnesisDto = this.buildAnamnesisDto();
-
+			this.apiErrors = [];
 			if (this.anamnesisId) {
 				this.anamnesisService.updateAnamnesis(this.anamnesisId, anamnesis, this.internmentEpisodeId)
 					.subscribe((anamnesisResponse: ResponseAnamnesisDto) => {
@@ -180,9 +181,8 @@ export class AnamnesisFormComponent implements OnInit {
 				.subscribe((anamnesisResponse: ResponseAnamnesisDto) => {
 						this.snackBarService.showSuccess('internaciones.anamnesis.messages.SUCCESS');
 						this.goToInternmentSummary();
-					}, errors => {
-						//TODO imlementar estrategia para mostrar error
-						this.mainDiagnosisError = errors.mainDiagnosis;
+					}, responseErrors => {
+						this.apiErrorsProcess(responseErrors);
 						this.snackBarService.showError('internaciones.anamnesis.messages.ERROR')
 					});
 				}
@@ -243,6 +243,21 @@ export class AnamnesisFormComponent implements OnInit {
 
 	setVitalSignEffectiveTime(newEffectiveTime: Moment, formField: string): void {
 		(<FormGroup>(<FormGroup>this.form.controls['vitalSigns']).controls[formField]).controls['effectiveTime'].setValue(newEffectiveTime);
+	}
+
+	private apiErrorsProcess(responseErrors): void {
+		this.mainDiagnosisError = responseErrors.mainDiagnosis;
+		Object.getOwnPropertyNames(responseErrors).forEach(val => {
+			if (val!=="mainDiagnosis" && val!=="message"){
+				let error = responseErrors[val];
+				if (Array.isArray(error)){
+					error.forEach(elementError =>
+						this.apiErrors.push(elementError)
+					);
+				}else
+				this.apiErrors.push(error);
+			}
+		});
 	}
 
 }

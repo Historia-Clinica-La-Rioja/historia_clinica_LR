@@ -256,6 +256,11 @@
 		<section id="vacunas" *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO']">
 			<app-vacunas [(immunizations)]="immunizations"></app-vacunas>
 		</section>
+		<section id="validations" *ngIf="apiErrors.length > 0">
+			<mat-card>
+				<mat-error class="mat-body-2" *ngFor="let error of apiErrors">{{ error }}</mat-error>
+			</mat-card>
+		</section>
 		<section id="buttons" class="form-buttons">
 			<button mat-stroked-button type="button" color="primary" (click)="back()">
 				<span class="uppercase" [translate]="'buttons.BACK'"></span>

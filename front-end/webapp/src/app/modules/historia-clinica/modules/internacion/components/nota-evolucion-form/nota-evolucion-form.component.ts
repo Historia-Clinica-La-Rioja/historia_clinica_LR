@@ -28,6 +28,7 @@ export class NotaEvolucionFormComponent implements OnInit {
 
 	private internmentEpisodeId: number;
 	private patientId: number;
+	apiErrors: string[] = [];
 
 	getError = getError;
 	hasError = hasError;
@@ -109,13 +110,18 @@ export class NotaEvolucionFormComponent implements OnInit {
 
 	save(): void {
 		if (this.form.valid) {
+			this.apiErrors = [];
 			const evolutionNote = this.buildEvolutionNoteDto();
-
-			this.evolutionNoteService.createDocument(evolutionNote, this.internmentEpisodeId).subscribe(
-				(evolutionNoteResponse: ResponseEvolutionNoteDto) => {
+			this.evolutionNoteService.createDocument(evolutionNote, this.internmentEpisodeId)
+			.subscribe(() => {
 					this.snackBarService.showSuccess('internaciones.nota-evolucion.messages.SUCCESS');
 					this.goToInternmentSummary();
-				}, _ => this.snackBarService.showError('internaciones.nota-evolucion.messages.ERROR'));
+				}, errors => {
+					Object.getOwnPropertyNames(errors).forEach(val => {
+						this.apiErrors.push(errors[val]);
+					  });
+					this.snackBarService.showError('internaciones.nota-evolucion.messages.ERROR');
+				});
 		} else {
 			this.snackBarService.showError('internaciones.nota-evolucion.messages.ERROR');
 		}
