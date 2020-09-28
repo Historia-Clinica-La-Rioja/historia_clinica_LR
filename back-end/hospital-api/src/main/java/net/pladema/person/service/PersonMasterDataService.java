@@ -13,4 +13,6 @@ public interface PersonMasterDataService {
     List<Gender> getGenders();
 
     List<IdentificationType> getIdentificationTypes();
+
+    Optional<IdentificationType> getIdentificationType(Short identificationTypeId);
 }

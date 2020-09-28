@@ -5,6 +5,7 @@ import net.pladema.person.controller.dto.BMPersonDto;
 import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.controller.mapper.PersonMapper;
 import net.pladema.person.repository.entity.Gender;
+import net.pladema.person.repository.entity.IdentificationType;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;
 import net.pladema.person.service.PersonMasterDataService;
@@ -84,7 +85,8 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 		LOG.debug(ONE_INPUT_PARAMETER, personId);
 		Person person = personService.getPerson(personId);
 		Gender gender = personMasterDataService.getGender(person.getGenderId()).orElse(new Gender());
-		BasicDataPersonDto result = personMapper.basicDataFromPerson(person, gender);
+		IdentificationType identificationType = personMasterDataService.getIdentificationType(person.getIdentificationTypeId()).orElse(new IdentificationType());
+		BasicDataPersonDto result = personMapper.basicDataFromPerson(person, gender, identificationType);
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

@@ -1,6 +1,7 @@
 package net.pladema.person.controller.mapper;
 
 import net.pladema.person.controller.dto.BasicPersonalDataDto;
+import net.pladema.person.repository.entity.IdentificationType;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -51,7 +52,8 @@ public interface PersonMapper {
     @Named("toBasicDataPersonDto")
     @Mapping(target = "id", source = "person.id")
     @Mapping(target = "gender", source = "gender", qualifiedByName = "fromGender")
-    BasicDataPersonDto basicDataFromPerson(Person person, Gender gender);
+    @Mapping(target = "identificationType", source = "identificationType.description")
+    BasicDataPersonDto basicDataFromPerson(Person person, Gender gender, IdentificationType identificationType);
 
 
     @Named("fromPersonalInformation")

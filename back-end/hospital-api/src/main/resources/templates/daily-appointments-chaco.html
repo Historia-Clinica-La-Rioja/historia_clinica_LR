@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head>
+
+    <th:block th:include="fragments/appointments.html :: headerfiles"></th:block>
+</head>
+<body>
+<div class="container">
+
+    <!--Report general information-->
+    <div th:replace="fragments/appointments.html :: reportHeader"></div>
+
+    <!--No appointments message-->
+    <div class="row" th:if="${#lists.isEmpty(attentionTypes)}">
+        <p th:replace="fragments/appointments.html :: noAppointmentsMessage"></p>
+    </div>
+
+
+    <div th:if="${not #lists.isEmpty(attentionTypes)}">
+        <div th:replace="fragments/appointments.html :: appointmentTypeList"> </div>
+    </div>
+
+</div>
+
+</body>
+<footer>
+</footer>
+</html>
+

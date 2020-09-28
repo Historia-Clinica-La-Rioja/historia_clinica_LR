@@ -22,4 +22,8 @@ public class ProfessionalDto {
     private String identificationNumber;
 
     private String phoneNumber;
+
+    public String getCompleteName(){
+        return String.format("%s %s", firstName, lastName);
+    }
 }

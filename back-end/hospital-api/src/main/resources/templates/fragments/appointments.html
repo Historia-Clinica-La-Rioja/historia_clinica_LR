@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head th:fragment="headerfiles">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Bootstrap core CSS -->
+    <!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"/>-->
+
+
+    <style>
+        h6 {
+            padding: 0px;
+            margin: 0px;
+        }
+		h4 {
+			padding-top:10px
+		}
+		table {
+		    font-size:9px;
+		    width: 700px;
+		}
+		th {
+		    background-color: #DDDDDD;
+		}
+		td {
+		    border-bottom: 1px;
+		    border-bottom-color: #DDDDDD;
+		}
+		.health-insurance-column {
+	        width: 150px;
+	    }
+	    .health-coverage-column {
+	        width: 150px;
+	    }
+	    .identification-column {
+	        width: 60px;
+	    }
+	    .patient-id-column {
+	        width: 50px;
+	    }
+	    .patient-id-cell {
+	        text-align: center;
+	    }
+	</style>
+</head>
+<body>
+
+    <!--General information header-->
+
+    <div th:fragment="reportHeader">
+        <h6 th:text="${'Nombre del profesional: ' + professionalName}"></h6>
+        <h6 th:text="${'Fecha consultada: ' + consultedDate}"></h6>
+        <h6 th:text="${'Fecha y horario de impersión: ' + actualDateTime}"></h6>
+    </div>
+
+    <!--Apointment tables:-->
+
+    <div th:fragment="appointmentTypeList">
+        <div th:each="attentionType,iter: ${attentionTypes}">
+
+            <!--Programmed Appointments-->
+
+            <div th:if="${attentionType.medicalAttentionTypeId == PROGRAMMED_ATTENTION_TYPE}">
+                    <div>
+                        <h4 th:text="${'Turnos programados (' + attentionType.openingHourFrom + ' a ' + attentionType.openingHourTo + ')'}"></h4>
+                    </div>
+                    <div class="ml-2 mr-2">
+                        <table class="table ">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col" class="hour-column">Hora </th>
+                                <th scope="col" class="patient-id-column">ID Paciente </th>
+                                <th scope="col" class="identification-column">Documento </th>
+                                <th scope="col" class="name-column">Nombres </th>
+                                <th scope="col" class="last-name-column">Apellidos </th>
+                                <th scope="col" class="health-insurance-column">Obra Social </th>
+                                <th scope="col" class="health-coverage-column">Prepaga</th>
+                                <th scope="col" class="affiliate-number-column">Nro. de Credencial </th>
+                                <th scope="col" class="appointment-state-column">Estado del turno </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="appointment,iter: ${attentionType.appointments}">
+                                <th scope="row" th:text="${appointment.hour}"></th>
+                                <td class="patient-id-cell" th:text="${appointment.patientId}"></td>
+                                <td th:text="${appointment.identificationType + ' ' + appointment.identificationNumber}"></td>
+                                <td th:text="${appointment.firstName + ' ' + appointment.middleNames}"></td>
+                                <td th:text="${appointment.lastName + ' ' + appointment.otherLastNames}"></td>
+                                <td th:text="${appointment.healthInsuranceName}"></td>
+                                <td th:text="${appointment.medicalCoverageName}"></td>
+                                <td th:text="${appointment.medicalCoverageAffiliateNumber}"></td>
+                                <td th:text="${appointment.appointmentState}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+            </div>
+
+
+            <!--Spontaneous Appointments-->
+
+            <div th:if="${attentionType.medicalAttentionTypeId == SPONTANEOUS_ATTENTION_TYPE}">
+                <div>
+                    <h4 th:text="${'Turnos espontáneos (' + attentionType.openingHourFrom + ' a ' + attentionType.openingHourTo + ')'}"></h4>
+                </div>
+                <div class="ml-2 mr-2">
+                    <table class="table ">
+                        <thead class="thead-light">
+                        <tr>
+                            <th scope="col" class="patient-id-column">ID Paciente </th>
+                            <th scope="col" class="identification-column">Documento </th>
+                            <th scope="col" class="name-column">Nombres </th>
+                            <th scope="col" class="last-name-column">Apellidos </th>
+                            <th scope="col" class="health-insurance-column">Obra Social </th>
+                            <th scope="col" class="health-coverage-column">Prepaga</th>
+                            <th scope="col" class="affiliate-number-column">Nro. de Credencial </th>
+                            <th scope="col" class="appointment-state-column">Estado del turno </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="appointment,iter: ${attentionType.appointments}">
+                            <td class="patient-id-cell" th:text="${appointment.patientId}"></td>
+                            <td th:text="${appointment.identificationType + ' ' + appointment.identificationNumber}"></td>
+                            <td th:text="${appointment.firstName + ' ' + appointment.middleNames}"></td>
+                            <td th:text="${appointment.lastName + ' ' + appointment.otherLastNames}"></td>
+                            <td th:text="${appointment.healthInsuranceName}"></td>
+                            <td th:text="${appointment.medicalCoverageName}"></td>
+                            <td th:text="${appointment.medicalCoverageAffiliateNumber}"></td>
+                            <td th:text="${appointment.appointmentState}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+
+    <!--No appointments message-->
+
+    <p th:fragment="noAppointmentsMessage"> No existen turnos asignados para la fecha consultada. </p>
+
+</body>
+<footer class="footer-dark" th:fragment="footer">
+
+</footer>
+</html>

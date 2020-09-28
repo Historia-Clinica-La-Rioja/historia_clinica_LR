@@ -47,4 +47,14 @@ public class PersonMasterDataServiceImpl implements PersonMasterDataService {
     public List<IdentificationType> getIdentificationTypes() {
         return identificationTypeRepository.findAll();
     }
+
+    @Override
+    public Optional<IdentificationType> getIdentificationType(Short identificationTypeId) {
+        LOG.debug("Input parameter -> {}", identificationTypeId);
+        Optional<IdentificationType> result = Optional.empty();
+        if (identificationTypeId != null)
+            result = identificationTypeRepository.findById(identificationTypeId);
+        LOG.debug("Output -> {}", result);
+        return result;
+    }
 }

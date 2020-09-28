@@ -1,6 +1,7 @@
 package net.pladema.medicalconsultation.appointment.repository.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -15,6 +16,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class AppointmentState implements Serializable {
 
 	private static final long serialVersionUID = -6349210572359248285L;
@@ -33,4 +35,9 @@ public class AppointmentState implements Serializable {
 
     @Column(name = "description", nullable = false, length = 10)
     private String description;
+
+    public AppointmentState(Short id, String description) {
+        this.id = id;
+        this.description = description;
+    }
 }
