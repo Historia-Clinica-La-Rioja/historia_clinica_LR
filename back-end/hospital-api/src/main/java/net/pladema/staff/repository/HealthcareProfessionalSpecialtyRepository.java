@@ -12,7 +12,7 @@ public interface HealthcareProfessionalSpecialtyRepository extends JpaRepository
 
 
     @Transactional(readOnly = true)
-    @Query( "SELECT (case when count(hps.id)> 0 then true else false end) " +
+    @Query( "SELECT (CASE WHEN COUNT(hps.id)> 0 THEN TRUE ELSE FALSE END) " +
             "FROM HealthcareProfessionalSpecialty AS hps " +
             "WHERE hps.healthcareProfessionalId = :healthcareProfessionalId " +
             "AND hps.clinicalSpecialtyId = :clinicalSpecialtyId " +
@@ -22,9 +22,17 @@ public interface HealthcareProfessionalSpecialtyRepository extends JpaRepository
                          @Param("professionalSpecialtyId")  Integer professionalSpecialtyId);
 
     @Transactional(readOnly = true)
-    @Query( "SELECT (case when count(hps.id)= 1 then true else false end) " +
+    @Query( "SELECT (CASE WHEN COUNT(hps.id) = 1 THEN TRUE ELSE FALSE END) " +
             "FROM HealthcareProfessionalSpecialty AS hps " +
             "WHERE hps.healthcareProfessionalId = :healthcareProfessionalId ")
     boolean hasOnlyOneSpecialty(@Param("healthcareProfessionalId") Integer healthcareProfessionalId);
 
+    @Transactional(readOnly = true)
+    @Query( "SELECT (CASE WHEN COUNT(d.healthcareProfessionalId) >= 1 THEN TRUE ELSE FALSE END)" +
+            "FROM Diary d " +
+            "JOIN DoctorsOffice doff ON d.doctorsOfficeId = doff.id " +
+            "JOIN ClinicalSpecialtySector css ON doff.clinicalSpecialtySectorId = css.id "+
+            "WHERE d.healthcareProfessionalId = :healthcareProfessionalId AND css.clinicalSpecialtyId = :clinicalSpecialtyId")
+    boolean hasHealthcareProfessionalSpecialtyAffected(@Param("healthcareProfessionalId") Integer healthcareProfessionalId,
+                                                    @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId);
 }

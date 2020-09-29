@@ -29,7 +29,8 @@ export default {
         "healthcare-professional":{
             "specialty-profession-exists": "La profesión y especialidad ya se encuentra asignada",
             "only-one-specialty": "Esta especialidad no puede borrarse dado que es la única que posee el profesional",
-            "healthcare-professional.specialty-profession-not-exists": "La especialidad no existe"
+            "healthcare-professional.specialty-profession-not-exists": "La especialidad no existe",
+            "healtcare-professional.affected-to-diary-agenda":"Esta especialidad y profesional están afectados a una agenda en curso"
         },
         "role":{
           "requiresprofessional": "Alguno de los roles asignados requiere que el usuario sea un profesional"
