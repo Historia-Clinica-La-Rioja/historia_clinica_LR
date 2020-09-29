@@ -61,4 +61,18 @@ databaseChangeLog:
                 where 	ie.status_id = 1 
                         and b."free" = false
 
+    - changeSet:
+        id: add-default-specialty-to-professionals
+        comment: Agregar profesión y especialidad por defecto a los profesionales creados sin ellas (Agente sanitario(5), Clínica médica(8))
+        author: lmanterola
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    INSERT INTO healthcare_professional_specialty(healthcare_professional_id, clinical_specialty_id, professional_specialty_id)
+                    SELECT hp.id, 8, 5
+                    FROM healthcare_professional hp
+                    LEFT JOIN healthcare_professional_specialty hps
+                    ON hps.healthcare_professional_id = hp.id
+                    WHERE hps.clinical_specialty_id IS NULL
         
