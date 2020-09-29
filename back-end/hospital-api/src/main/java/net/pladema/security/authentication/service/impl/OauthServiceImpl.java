@@ -90,7 +90,7 @@ public class OauthServiceImpl implements OauthService {
 			userService.updateLoginDate(optionalUser.get().getId());
 		}
 
-		JWToken token = tokenService.generateToken(new Login(oauthUser.getCuitCuil(), generatePassword(oauthUser)));
+		JWToken token = tokenService.generateToken(oauthUser.getCuitCuil());
 		logger.debug("RETURN token user -> {}", token.getToken());
 		return token;
 	}

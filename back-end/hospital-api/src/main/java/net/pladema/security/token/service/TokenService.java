@@ -5,7 +5,9 @@ import net.pladema.security.token.service.domain.Login;
 
 public interface TokenService {
 
-	JWToken generateToken(Login login);
+	JWToken generateToken(String username);
+
+	JWToken refreshTokens(String refreshToken);
 
 	String generateVerificationToken(Integer userId);
 

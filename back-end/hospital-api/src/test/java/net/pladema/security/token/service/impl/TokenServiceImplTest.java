@@ -47,7 +47,7 @@ public class TokenServiceImplTest {
 
 		when(userService.getUserId(any())).thenReturn(1);
 
-		JWToken token = mockTokenService.generateToken(login);
+		JWToken token = mockTokenService.generateToken(login.getUsername());
 		assertThat(token).isNotNull().hasFieldOrPropertyWithValue("token", TOKEN)
 				.hasFieldOrPropertyWithValue("refreshToken", TOKEN);
 

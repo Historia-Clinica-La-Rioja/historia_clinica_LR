@@ -52,7 +52,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 		logger.debug("Valid credentials");
 		userService.updateLoginDate(user.getId());
-		return tokenService.generateToken(login);
+		return tokenService.generateToken(login.getUsername());
 	}
+
+	@Override
+	public JWToken refreshToken(String refreshToken) {
+		return tokenService.refreshTokens(refreshToken);
+	}
+
 
 }

@@ -3,6 +3,7 @@ package net.pladema.security.token.service.impl;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Jwts;
@@ -41,27 +42,33 @@ public class TokenServiceImpl implements TokenService {
 	}
 
 	@Override
-	public JWToken generateToken(Login login) {
-		String username = login.getUsername();
-
-		String token = createNormalToken(username);
-		String refreshToken = createRefreshToken(username);
-
-		JWToken result = new JWToken();
-		result.setToken(token);
-		result.setRefreshToken(refreshToken);
-		return result;
+	public JWToken generateToken(String username) {
+		Integer userId = userService.getUserId(username);
+		return newToken(userId);
 	}
 
-	protected String createRefreshToken(String username) {
-		Integer userId = userService.getUserId(username);
+	@Override
+	public JWToken refreshTokens(String refreshToken) {
+		Integer userId = securityService.getUserId(refreshToken);
+
+		return newToken(userId);
+	}
+
+	private JWToken newToken(Integer userId) {
+		String token = createNormalToken(userId);
+		String refreshToken = createRefreshToken(userId);
+
+		return new JWToken(token, refreshToken);
+	}
+
+
+	protected String createRefreshToken(Integer userId) {
 		Date refreshTokenExpirationDate = generateExpirationDate(refreshTokenExpiration);
 		LocalClaims claims = new LocalClaims(ETokenType.REFRESH, userId);
 		return tokenToString(claims, refreshTokenExpirationDate);
 	}
 
-	protected String createNormalToken(String username) {
-		Integer userId = userService.getUserId(username);
+	protected String createNormalToken(Integer userId) {
 		Date tokenExpirationDate = generateExpirationDate(tokenExpiration);
 		LocalClaims claims = new LocalClaims(ETokenType.NORMAL, userId);
 		return tokenToString(claims, tokenExpirationDate);

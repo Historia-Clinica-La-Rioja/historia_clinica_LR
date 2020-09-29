@@ -7,4 +7,6 @@ public interface AuthenticationService {
 
 	JWToken login(Login login);
 
+	JWToken refreshToken(String refreshToken);
+
 }

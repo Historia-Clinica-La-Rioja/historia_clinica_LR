@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.annotations.Api;
 import net.pladema.security.authentication.controller.dto.JWTokenDto;
 import net.pladema.security.authentication.controller.dto.LoginDto;
+import net.pladema.security.authentication.controller.dto.RefreshTokenDto;
 import net.pladema.security.authentication.controller.mapper.JWTokenMapper;
 import net.pladema.security.authentication.controller.mapper.LoginMapper;
 import net.pladema.security.authentication.service.AuthenticationService;
@@ -60,6 +61,15 @@ public class AuthenticationController {
 		JWToken resultToken = authenticationService.login(loginMapper.mapLogin(loginDto));
 		LOG.debug("{}", "Generated token");
 		return ResponseEntity.ok().body(jWTokenMapper.mapNewToken(resultToken));
-	}	
+	}
+
+	@PostMapping(value = "/refresh")
+	public ResponseEntity<JWTokenDto> login(@Valid @RequestBody RefreshTokenDto refreshToken) {
+		LOG.debug("{}", "Login valid");
+		JWToken resultToken = authenticationService.refreshToken(refreshToken.refreshToken);
+		LOG.debug("{}", "Generated token");
+		return ResponseEntity.ok().body(jWTokenMapper.mapNewToken(resultToken));
+	}
+
 
 }

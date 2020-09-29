@@ -1007,6 +1007,10 @@ export interface ReducedPatientDto {
     personalDataDto: BasicPersonalDataDto;
 }
 
+export interface RefreshTokenDto {
+    refreshToken: string;
+}
+
 export interface ReportClinicalObservationDto extends ClinicalObservationDto {
     effectiveTime: Date;
 }

@@ -42,11 +42,6 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User getUser(Integer id) {
-		return userRepository.findById(id).orElseThrow(() -> new BadCredentialsException(INVALID_USERNAME));
-	}
-
-	@Override
 	public Integer getUserId(String username) {
 		return userRepository.getUserId(username).orElseThrow(() -> new BadCredentialsException(INVALID_USERNAME));
 	}
@@ -59,21 +54,6 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean isEnable(String username) {
 		return userRepository.isEnable(username);
-	}
-
-	@Override
-	public boolean isEnable(Integer id) {
-		return userRepository.isEnable(id);
-	}
-
-	@Override
-	public boolean existUser(String username) {
-		return userRepository.existByUsername(username);
-	}
-
-	@Override
-	public boolean existUser(Integer id) {
-		return userRepository.existsById(id);
 	}
 
 }
