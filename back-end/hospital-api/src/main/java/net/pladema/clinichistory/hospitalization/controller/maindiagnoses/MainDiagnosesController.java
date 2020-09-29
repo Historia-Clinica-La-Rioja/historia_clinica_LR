@@ -1,9 +1,9 @@
 package net.pladema.clinichistory.hospitalization.controller.maindiagnoses;
 
-import com.itextpdf.text.DocumentException;
 import io.swagger.annotations.Api;
 import net.pladema.clinichistory.documents.events.OnGenerateDocumentEvent;
 import net.pladema.clinichistory.documents.events.OnGenerateInternmentDocumentEvent;
+import net.pladema.clinichistory.documents.service.CreateDocumentFile;
 import net.pladema.clinichistory.documents.service.Document;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
 import net.pladema.clinichistory.hospitalization.controller.documents.evolutionnote.constraints.EvolutionNoteValid;
@@ -16,7 +16,8 @@ import net.pladema.clinichistory.hospitalization.service.maindiagnoses.MainDiagn
 import net.pladema.clinichistory.hospitalization.service.maindiagnoses.domain.MainDiagnosisBo;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.EDocumentType;
-import net.pladema.pdf.service.PdfService;
+import net.pladema.sgx.pdf.PDFDocumentException;
+import net.pladema.sgx.pdf.PdfService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -54,18 +55,18 @@ public class MainDiagnosesController {
 
     private final HealthConditionMapper healthConditionMapper;
 
-    private final PdfService pdfService;
+    private final CreateDocumentFile createDocumentFile;
 
     public MainDiagnosesController(InternmentEpisodeService internmentEpisodeService,
                                    MainDiagnosesService mainDiagnosesService,
                                    EvolutionNoteReportService evolutionNoteReportService,
                                    HealthConditionMapper healthConditionMapper,
-                                   PdfService pdfService) {
+                                   CreateDocumentFile createDocumentFile) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.mainDiagnosesService = mainDiagnosesService;
         this.evolutionNoteReportService = evolutionNoteReportService;
         this.healthConditionMapper = healthConditionMapper;
-        this.pdfService = pdfService;
+        this.createDocumentFile = createDocumentFile;
     }
 
     @PostMapping
@@ -75,7 +76,7 @@ public class MainDiagnosesController {
     public ResponseEntity<Long> addMainDiagnosis(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
-            @RequestBody @Valid MainDiagnosisDto mainDiagnosis) throws IOException, DocumentException{
+            @RequestBody @Valid MainDiagnosisDto mainDiagnosis) throws IOException, PDFDocumentException {
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, mainDiagnosis {}",
                 institutionId, internmentEpisodeId, mainDiagnosis);
         Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
@@ -92,13 +93,13 @@ public class MainDiagnosesController {
     }
 
     private void generateDocument(Document evolutionNote, Integer institutionId, Integer internmentEpisodeId,
-                                  Integer patientId) throws IOException, DocumentException {
+                                  Integer patientId) throws IOException, PDFDocumentException {
 
         LOG.debug("Input parameters -> evolutionNote {}, institutionId {}, internmentEpisodeId {} , patientId {}",
                 evolutionNote, institutionId, internmentEpisodeId, patientId);
         OnGenerateDocumentEvent event = new OnGenerateInternmentDocumentEvent(evolutionNote, institutionId, internmentEpisodeId,
                 EDocumentType.map(DocumentType.EVALUATION_NOTE), patientId);
-        pdfService.loadDocument(event);
+        createDocumentFile.execute(event);
     }
 
 

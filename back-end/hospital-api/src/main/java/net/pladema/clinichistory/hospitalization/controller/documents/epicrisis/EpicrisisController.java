@@ -1,8 +1,8 @@
 package net.pladema.clinichistory.hospitalization.controller.documents.epicrisis;
 
-import com.itextpdf.text.DocumentException;
 import io.swagger.annotations.Api;
 import net.pladema.clinichistory.documents.events.OnGenerateInternmentDocumentEvent;
+import net.pladema.clinichistory.documents.service.CreateDocumentFile;
 import net.pladema.clinichistory.hospitalization.controller.constraints.CanCreateEpicrisis;
 import net.pladema.clinichistory.hospitalization.controller.constraints.DocumentValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
@@ -20,8 +20,9 @@ import net.pladema.clinichistory.hospitalization.service.epicrisis.domain.Epicri
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.EDocumentType;
 import net.pladema.featureflags.service.FeatureFlagsService;
-import net.pladema.pdf.service.PdfService;
 import net.pladema.sgx.featureflags.AppFeature;
+import net.pladema.sgx.pdf.PDFDocumentException;
+
 import org.apache.http.MethodNotSupportedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,7 +67,7 @@ public class EpicrisisController {
 
     private final InternmentStateService internmentStateService;
 
-    private final PdfService pdfService;
+    private final CreateDocumentFile createDocumentFile;
 
     private final FeatureFlagsService featureFlagsService;
 
@@ -76,14 +77,15 @@ public class EpicrisisController {
                                EpicrisisService epicrisisService,
                                EpicrisisMapper epicrisisMapper,
                                InternmentStateService internmentStateService,
-                               PdfService pdfService, FeatureFlagsService featureFlagsService) {
+                               CreateDocumentFile createDocumentFile,
+                               FeatureFlagsService featureFlagsService) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.createEpicrisisService = createEpicrisisService;
         this.updateEpicrisisService = updateEpicrisisService;
         this.epicrisisService = epicrisisService;
         this.epicrisisMapper = epicrisisMapper;
         this.internmentStateService = internmentStateService;
-        this.pdfService = pdfService;
+        this.createDocumentFile = createDocumentFile;
         this.featureFlagsService = featureFlagsService;
     }
 
@@ -94,7 +96,7 @@ public class EpicrisisController {
     public ResponseEntity<ResponseEpicrisisDto> createDocument(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
-            @RequestBody @Valid EpicrisisDto epicrisisDto) throws IOException, DocumentException {
+            @RequestBody @Valid EpicrisisDto epicrisisDto) throws IOException, PDFDocumentException {
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, ananmnesis {}",
                 institutionId, internmentEpisodeId, epicrisisDto);
         Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
@@ -115,7 +117,7 @@ public class EpicrisisController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
             @PathVariable(name = "epicrisisId") Long epicrisisId,
-            @Valid @RequestBody EpicrisisDto epicrisisDto) throws IOException, DocumentException, MethodNotSupportedException {
+            @Valid @RequestBody EpicrisisDto epicrisisDto) throws IOException, PDFDocumentException, MethodNotSupportedException {
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, epicrisisId {}, epicrisisDto {}",
                 institutionId, internmentEpisodeId, epicrisisId, epicrisisDto);
 
@@ -133,10 +135,10 @@ public class EpicrisisController {
     }
 
     private void generateDocument(EpicrisisBo epicrisis, Integer institutionId, Integer internmentEpisodeId,
-                                  Integer patientId) throws IOException, DocumentException {
+                                  Integer patientId) throws IOException, PDFDocumentException {
         OnGenerateInternmentDocumentEvent event = new OnGenerateInternmentDocumentEvent(epicrisis, institutionId, internmentEpisodeId,
                 EDocumentType.map(DocumentType.EPICRISIS), patientId);
-        pdfService.loadDocument(event);
+        createDocumentFile.execute(event);
     }
 
     @GetMapping("/{epicrisisId}")

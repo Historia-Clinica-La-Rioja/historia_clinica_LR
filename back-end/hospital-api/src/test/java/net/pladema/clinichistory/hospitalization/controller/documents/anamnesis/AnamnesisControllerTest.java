@@ -3,6 +3,7 @@ package net.pladema.clinichistory.hospitalization.controller.documents.anamnesis
 import net.pladema.UnitController;
 import net.pladema.clinichistory.documents.repository.DocumentRepository;
 import net.pladema.clinichistory.documents.repository.entity.Document;
+import net.pladema.clinichistory.documents.service.CreateDocumentFile;
 import net.pladema.clinichistory.hospitalization.controller.documents.anamnesis.mapper.AnamnesisMapper;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.constraint.validator.EffectiveVitalSignTimeValidator;
 import net.pladema.clinichistory.hospitalization.controller.mapper.ResponsibleDoctorMapper;
@@ -17,7 +18,7 @@ import net.pladema.establishment.repository.InstitutionRepository;
 import net.pladema.featureflags.controller.constraints.validators.SGHNotNullValidator;
 import net.pladema.featureflags.service.FeatureFlagsService;
 import net.pladema.patient.controller.service.PatientExternalService;
-import net.pladema.pdf.service.PdfService;
+import net.pladema.sgx.pdf.PdfService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -69,7 +70,7 @@ public class AnamnesisControllerTest extends UnitController {
 	private PatientExternalService patientExternalService;
 
 	@MockBean
-	private PdfService pdfService;
+	private CreateDocumentFile createDocumentFile;
 
 	@MockBean
 	private ResponsibleDoctorMapper responsibleDoctorMapper;

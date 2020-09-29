@@ -1,8 +1,8 @@
 package net.pladema.clinichistory.hospitalization.controller.documents.anamnesis;
 
-import com.itextpdf.text.DocumentException;
 import io.swagger.annotations.Api;
 import net.pladema.clinichistory.documents.events.OnGenerateInternmentDocumentEvent;
+import net.pladema.clinichistory.documents.service.CreateDocumentFile;
 import net.pladema.clinichistory.hospitalization.controller.constraints.AnamnesisMainDiagnosisValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.DocumentValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
@@ -19,7 +19,8 @@ import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.Anamne
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.EDocumentType;
 import net.pladema.featureflags.service.FeatureFlagsService;
-import net.pladema.pdf.service.PdfService;
+import net.pladema.sgx.pdf.PDFDocumentException;
+
 import net.pladema.sgx.featureflags.AppFeature;
 import org.apache.http.MethodNotSupportedException;
 import org.slf4j.Logger;
@@ -54,7 +55,7 @@ public class AnamnesisController {
 
     private final AnamnesisMapper anamnesisMapper;
 
-    private final PdfService pdfService;
+    private final CreateDocumentFile createDocumentFile;
 
     private final FeatureFlagsService featureFlagsService;
 
@@ -63,13 +64,14 @@ public class AnamnesisController {
                                UpdateAnamnesisService updateAnamnesisService,
                                AnamnesisService anamnesisService,
                                AnamnesisMapper anamnesisMapper,
-                               PdfService pdfService, FeatureFlagsService featureFlagsService) {
+                               CreateDocumentFile createDocumentFile,
+                               FeatureFlagsService featureFlagsService) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.createAnamnesisService = createAnamnesisService;
         this.updateAnamnesisService = updateAnamnesisService;
         this.anamnesisService = anamnesisService;
         this.anamnesisMapper = anamnesisMapper;
-        this.pdfService = pdfService;
+        this.createDocumentFile = createDocumentFile;
         this.featureFlagsService = featureFlagsService;
     }
 
@@ -83,7 +85,7 @@ public class AnamnesisController {
     public ResponseEntity<Boolean> createAnamnesis(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
-            @RequestBody @Valid AnamnesisDto anamnesisDto) throws IOException, DocumentException {
+            @RequestBody @Valid AnamnesisDto anamnesisDto) throws IOException, PDFDocumentException {
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, ananmnesis {}",
                 institutionId, internmentEpisodeId, anamnesisDto);
         Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
@@ -107,7 +109,7 @@ public class AnamnesisController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
             @PathVariable(name = "anamnesisId") Long anamnesisId,
-            @Valid @RequestBody AnamnesisDto anamnesisDto) throws IOException, DocumentException, MethodNotSupportedException {
+            @Valid @RequestBody AnamnesisDto anamnesisDto) throws IOException, PDFDocumentException, MethodNotSupportedException {
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, anamnesisId {}, ananmnesis {}",
                 institutionId, internmentEpisodeId, anamnesisId, anamnesisDto);
 
@@ -126,10 +128,10 @@ public class AnamnesisController {
     }
 
     private void generateDocument(AnamnesisBo anamnesis, Integer institutionId, Integer internmentEpisodeId,
-                                  Integer patientId) throws IOException, DocumentException {
+                                  Integer patientId) throws IOException, PDFDocumentException {
         OnGenerateInternmentDocumentEvent event = new OnGenerateInternmentDocumentEvent(anamnesis, institutionId, internmentEpisodeId,
                 EDocumentType.map(DocumentType.ANAMNESIS), patientId);
-        pdfService.loadDocument(event);
+        createDocumentFile.execute(event);
     }
 
     @GetMapping("/{anamnesisId}")

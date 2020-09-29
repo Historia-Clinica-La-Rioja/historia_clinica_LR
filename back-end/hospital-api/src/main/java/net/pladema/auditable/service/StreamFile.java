@@ -1,4 +1,4 @@
-package net.pladema.pdf.service;
+package net.pladema.auditable.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

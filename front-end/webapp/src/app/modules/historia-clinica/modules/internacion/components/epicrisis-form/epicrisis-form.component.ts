@@ -14,7 +14,6 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { EpicrisisService } from '@api-rest/services/epicrisis.service';
-import { EpicrisisReportService } from '@api-rest/services/epicrisis-report.service';
 import { DatePipe } from '@angular/common';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -109,7 +108,6 @@ export class EpicrisisFormComponent implements OnInit {
 	constructor(
 		private readonly formBuilder: FormBuilder,
 		private readonly epicrisisService: EpicrisisService,
-		private readonly epicrisisReportService: EpicrisisReportService,
 		private readonly route: ActivatedRoute,
 		private readonly router: Router,
 		private readonly datePipe: DatePipe,

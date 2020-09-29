@@ -6,7 +6,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { HEALTH_VERIFICATIONS, HEALTH_CLINICAL_STATUS } from '../../modules/internacion/constants/ids';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
-import { EvolutionNoteReportService } from '@api-rest/services/evolution-note-report.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
@@ -30,7 +29,6 @@ export class RemoveDiagnosisComponent implements OnInit {
 		public dialogRef: MatDialogRef<ConceptsSearchDialogComponent>,
 		private internacionMasterDataService: InternacionMasterDataService,
 		private evolutionNoteService: EvolutionNoteService,
-		private evolutionNoteReportService: EvolutionNoteReportService,
 		private snackBarService: SnackBarService,
 		private formBuilder: FormBuilder,
 	) {
