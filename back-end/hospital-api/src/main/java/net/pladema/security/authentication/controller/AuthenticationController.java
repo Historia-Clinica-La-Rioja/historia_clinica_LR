@@ -52,7 +52,7 @@ public class AuthenticationController {
 	public ResponseEntity<JWTokenDto> login(
 			@Valid @RequestBody LoginDto loginDto,
 			@RequestHeader("Origin") String frontUrl,
-			@RequestHeader("recaptcha") String recaptcha) throws URISyntaxException {
+			@RequestHeader(value = "recaptcha", required = false) String recaptcha) throws URISyntaxException {
 		if(captchaService.isRecaptchaEnable()){
 			captchaService.validRecaptcha(frontUrl, recaptcha);
 		}

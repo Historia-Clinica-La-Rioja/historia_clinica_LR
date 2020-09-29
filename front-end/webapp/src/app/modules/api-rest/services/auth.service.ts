@@ -19,9 +19,12 @@ export class AuthService {
 	) { }
 
 	public login(loginDto: LoginDto, recaptchaResponse): Observable<any> {
-		const httpHeaders = new HttpHeaders({
-			recaptcha: recaptchaResponse
-		});
+		let httpHeaders;
+		if(recaptchaResponse) {
+			httpHeaders = new HttpHeaders({
+				recaptcha: recaptchaResponse
+			});
+		}
 		return this.http.post<JWTokenDto>(`${environment.apiBase}/auth`, loginDto, {headers: httpHeaders})
 			.pipe(
 				map(tokenDto => localStorage.setItem(TOKEN_KEY, tokenDto.token))

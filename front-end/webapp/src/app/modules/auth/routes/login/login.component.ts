@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
 			recaptchaReactive: []
 		});
 
-		this.recaptchaService.isRecaptchaEnable().subscribe(data => {
+		this.recaptchaService.isRecaptchaEnable().subscribe((data: boolean) => {
 			if(data) {
 				this.recaptchaEnable = data;
 				this.form.controls.recaptchaReactive.setValidators(Validators.required);
