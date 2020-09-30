@@ -83,7 +83,7 @@ El módulo de back-end se configura mediante el uso de un archivo `.properties`,
 |google.recaptcha.validator.url |   | https://www.google.com/recaptcha/api/siteverify | Obligatorio | Url de google para validar el recaptcha. No debería cambiar. https://www.google.com/recaptcha/api/siteverify | v0.2.0 |
 | google.recaptcha.enable  | RECAPTCHA_ENABLE  | true |   |   | v0.2.0  |
 
-## Integración con terceros (Renaper, Federar ... )
+## Integración con terceros (Renaper, Federar, Snowstorm ... )
 
 | Propiedad               | Parametro       | Valor por defecto       | Necesidad | Descripcion | Desde |
 | ----------------------- | ----------------| ----------------------- | --------- | ----------- | ----- |
@@ -108,6 +108,14 @@ El módulo de back-end se configura mediante el uso de un archivo `.properties`,
 | ws.federar.url.validateToken |   |  - | Obligatorio (si Federar esta activado) |  URL relativa del servicio para validar el token obtenido | v0.2.0  |
 | ws.federar.url.localIdSearch |   |  - | Obligatorio (si Federar esta activado) |  URL relativa del servicio para buscar por id paciente nacional  | v0.2.0  |
 | ws.federar.url.federate |   |  - | Obligatorio (si Federar esta activado) |  URL relativa del servicio para federar un paciente  | v0.2.0  |
+| ws.snowstorm.params.preferredOrAcceptableIn |   | 450828004 | No obligatorio |  Parametros para consulta a servicio Conceptos que indica que la descripción debe ser preferida o aceptable en al menos uno de estos parametros  | v1.2.0  |
+| ws.snowstorm.params.limit |   | 30 | No obligatorio |  Parametro para consulta a servicio Conceptos que indica limite de resultados  | v1.2.0  |
+| ws.snowstorm.params.termActive |   | true | No obligatorio |  Parametro para consulta a servicio Conceptos que indica si el termino a buscar debe estar activo  | v1.2.0  |
+| ws.snowstorm.auth.language |   | es-AR;q=0.8,en-GB;q=0.6 | No obligatorio |  Header que indica el lenguaje de los resultados  | v1.2.0  |
+| ws.snowstorm.url.concepts |   | /MAIN/concepts | No obligatorio |  URL relativa para consumir el servicio de Conceptos a buscar  | v1.2.0  |
+| ws.snowstorm.url.base |   | https://snowstorm.msal.gov.ar | No obligatorio |  URL base donde se van a consumir los servicios de Snowstorm  | v1.2.0  |
+| ws.snowstorm.appKey |   | - | Obligatorio(si Snowstorm lo requiere) |  Key de la aplicación utilizada para autorización de request  | v1.2.0  |
+| ws.snowstorm.appId |   | - | Obligatorio(si Snowstorm lo requiere) |  Id de la aplicación utilizada para autorización de request  | v1.2.0  |
 
 
 ## Propiedades específicas de flavors 
