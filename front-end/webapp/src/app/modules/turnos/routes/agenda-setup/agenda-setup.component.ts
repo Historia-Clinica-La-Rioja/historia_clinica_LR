@@ -1,24 +1,31 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit } from '@angular/core';
-import { SectorService } from '@api-rest/services/sector.service';
-import { ClinicalSpecialtySectorService } from '@api-rest/services/clinical-specialty-sector.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { processErrors, scrollIntoError } from '@core/utils/form.utils';
-import { ConfirmDialogComponent } from '@core/dialogs/confirm-dialog/confirm-dialog.component';
-import { TranslateService } from '@ngx-translate/core';
-import { MatDialog } from '@angular/material/dialog';
-import { DoctorsOfficeService } from '@api-rest/services/doctors-office.service';
-import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
-import { ContextService } from '@core/services/context.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { APPOINTMENT_DURATIONS, MINUTES_IN_HOUR } from '../../constants/appointment';
-import { AgendaHorarioService } from '../../services/agenda-horario.service';
-import { currentWeek, DateFormat, momentFormat, momentParseDate, momentParseTime } from '@core/utils/moment.utils';
-import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { CompleteDiaryDto, DiaryADto, DiaryDto, DoctorsOfficeDto, OccupationDto, ProfessionalDto } from '@api-rest/api-model';
-import { DAYS_OF_WEEK } from 'angular-calendar';
-import { DiaryOpeningHoursService } from '@api-rest/services/diary-opening-hours.service';
-import { DiaryService } from '@api-rest/services/diary.service';
-import { Observable } from 'rxjs';
+import {ChangeDetectorRef, Component, ElementRef, OnInit} from '@angular/core';
+import {SectorService} from '@api-rest/services/sector.service';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {processErrors, scrollIntoError} from '@core/utils/form.utils';
+import {ConfirmDialogComponent} from '@core/dialogs/confirm-dialog/confirm-dialog.component';
+import {TranslateService} from '@ngx-translate/core';
+import {MatDialog} from '@angular/material/dialog';
+import {DoctorsOfficeService} from '@api-rest/services/doctors-office.service';
+import {HealthcareProfessionalService} from '@api-rest/services/healthcare-professional.service';
+import {ContextService} from '@core/services/context.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {APPOINTMENT_DURATIONS, MINUTES_IN_HOUR} from '../../constants/appointment';
+import {AgendaHorarioService} from '../../services/agenda-horario.service';
+import {currentWeek, DateFormat, momentFormat, momentParseDate, momentParseTime} from '@core/utils/moment.utils';
+import {SnackBarService} from '@presentation/services/snack-bar.service';
+import {
+	CompleteDiaryDto,
+	DiaryADto,
+	DiaryDto,
+	DoctorsOfficeDto,
+	OccupationDto,
+	ProfessionalDto
+} from '@api-rest/api-model';
+import {DAYS_OF_WEEK} from 'angular-calendar';
+import {DiaryOpeningHoursService} from '@api-rest/services/diary-opening-hours.service';
+import {DiaryService} from '@api-rest/services/diary.service';
+import {Observable} from 'rxjs';
+import {ClinicalSpecialtyService} from "@api-rest/services/clinical-specialty.service";
 
 const ROUTE_APPOINTMENT = 'turnos';
 
@@ -59,7 +66,7 @@ export class AgendaSetupComponent implements OnInit {
 		private readonly formBuilder: FormBuilder,
 		private readonly el: ElementRef,
 		private readonly sectorService: SectorService,
-		private readonly clinicalSpecialtySectorService: ClinicalSpecialtySectorService,
+		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 		private translator: TranslateService,
 		private dialog: MatDialog,
 		private doctorsOfficeService: DoctorsOfficeService,
@@ -147,7 +154,7 @@ export class AgendaSetupComponent implements OnInit {
 		this.autoRenew = diary.automaticRenewal;
 		this.holidayWork = diary.includeHoliday;
 
-		this.setSpecialties(diary.sectorId);
+		this.setSpecialties(diary.healthcareProfessionalId);
 
 		this.agendaHorarioService.setDiaryOpeningHours(diary.diaryOpeningHours);
 	}
@@ -160,14 +167,14 @@ export class AgendaSetupComponent implements OnInit {
 		this.form.get('appointmentDuration').disable();
 	}
 
-	setSpecialties(sectorId: number): void {
-		this.clinicalSpecialtySectorService.getClinicalSpecialty(sectorId).subscribe(data => {
+	setSpecialties(professionalId: number): void {
+		this.clinicalSpecialtyService.getClinicalSpecialty(professionalId).subscribe(data => {
 			this.specialties = data;
 		});
 	}
 
-	setSpecialtiesAndResetFollowingControls(sectorId: number): void {
-		this.clinicalSpecialtySectorService.getClinicalSpecialty(sectorId).subscribe(data => {
+	setSpecialtiesAndResetFollowingControls(professionalId: number): void {
+		this.clinicalSpecialtyService.getClinicalSpecialty(professionalId).subscribe(data => {
 			this.specialties = data;
 		});
 		this.form.get('specialtyId').reset();

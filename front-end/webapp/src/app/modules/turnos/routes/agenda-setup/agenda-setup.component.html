@@ -10,7 +10,7 @@
 				<div fxLayout="row">
 					<mat-form-field appearance="outline">
 						<mat-select id="sectorId" name="sectorId" formControlName="sectorId"
-							placeholder="{{'pacientes.form.SELECT' | translate}}" (selectionChange)="setSpecialtiesAndResetFollowingControls(form.value.sectorId)">
+							placeholder="{{'pacientes.form.SELECT' | translate}}" >
 							<mat-option *ngFor="let sector of sectors" [value]="sector.id">
 								{{sector.description}}
 							</mat-option>
@@ -47,7 +47,7 @@
 								{{doctorOffice.description}}
 							</mat-option>
 						</mat-select>
-						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+						<mat-error [translate]="'No existen consultorios para esa especialidad'"></mat-error>
 					</mat-form-field>
 				</div>
 
@@ -58,7 +58,7 @@
 					<mat-form-field appearance="outline">
 						<mat-select id="healthcareProfessionalId" name="healthcareProfessionalId"
 							formControlName="healthcareProfessionalId"
-							placeholder="{{'pacientes.form.SELECT' | translate}}">
+							placeholder="{{'pacientes.form.SELECT' | translate}}" (selectionChange)="setSpecialtiesAndResetFollowingControls(form.value.healthcareProfessionalId)">
 							<mat-option *ngFor="let professional of professionals" [value]="professional.id">
 								<span class="mat-body">{{getFullNameLicence(professional)}}</span>
 							</mat-option>
