@@ -12,6 +12,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { HasRoleDirective } from './directives/has-role.directive';
 import { FeatureFlagDirective } from './directives/feature-flag.directive';
+import { DatePickerComponent } from './dialogs/date-picker/date-picker.component';
 
 const globalSettings: RecaptchaSettings = { siteKey: '6Legz84ZAAAAAFSBqYVwf8gKX5bFrt71zVPY2Tdq' }; // TODO completar cuando se implemente para esta aplicacion
 
@@ -22,6 +23,7 @@ const globalSettings: RecaptchaSettings = { siteKey: '6Legz84ZAAAAAFSBqYVwf8gKX5
 		ConfirmDialogComponent,
 		HasRoleDirective,
 		FeatureFlagDirective,
+		DatePickerComponent,
 	],
 	imports: [
 		AppMaterialModule,

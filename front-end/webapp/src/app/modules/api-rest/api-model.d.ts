@@ -136,6 +136,28 @@ export interface AppointmentListDto {
     phoneNumber: string;
 }
 
+export interface AttentionTypeReportDto {
+    appointments: AttentionTypeReportItemDto[];
+    medicalAttentionTypeId: number;
+    openingHourFrom: Date;
+    openingHourTo: Date;
+}
+
+export interface AttentionTypeReportItemDto {
+    appointmentState: string;
+    firstName: string;
+    healthInsuranceName: string;
+    hour: Date;
+    identificationNumber: string;
+    identificationType: string;
+    lastName: string;
+    medicalCoverageAffiliateNumber: string;
+    medicalCoverageName: string;
+    middleNames: string;
+    otherLastNames: string;
+    patientId: number;
+}
+
 export interface BMPatientDto extends APatientDto {
     id: number;
 }
@@ -850,6 +872,7 @@ export interface ProcedureReduced {
 }
 
 export interface ProfessionalDto {
+    completeName: string;
     firstName: string;
     id: number;
     identificationNumber: string;

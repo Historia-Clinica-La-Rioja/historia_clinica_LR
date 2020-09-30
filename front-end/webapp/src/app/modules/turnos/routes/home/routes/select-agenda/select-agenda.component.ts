@@ -12,6 +12,9 @@ import { DatePipe } from '@angular/common';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from '@core/services/context.service';
 import { processErrors } from '@core/utils/form.utils';
+import { DatePickerComponent } from '@core/dialogs/date-picker/date-picker.component';
+import { DateFormat, momentFormat } from '@core/utils/moment.utils';
+import { DailyAppointmentService } from '@api-rest/services/daily-appointment.service';
 @Component({
 	selector: 'app-select-agenda',
 	templateUrl: './select-agenda.component.html',
@@ -36,6 +39,7 @@ export class SelectAgendaComponent implements OnInit {
 		private readonly datePipe: DatePipe,
 		private snackBarService: SnackBarService,
 		private contextService: ContextService,
+		private readonly dailyAppointmentService: DailyAppointmentService,
 	) {
 	}
 
@@ -106,5 +110,25 @@ export class SelectAgendaComponent implements OnInit {
 
 	goToNewAgenda(): void {
 		this.router.navigate([`${this.routePrefix}/turnos/nueva-agenda/`]);
+	}
+
+	printAgenda(): void {
+		const dialogRef = this.dialog.open(DatePickerComponent, {
+			data: {
+				title: 'Imprimir agenda del día',
+				okButtonLabel: 'Imprimir',
+				cancelButtonLabel: 'cancelar',
+				minDate: this.agendaSelected.startDate,
+				maxDate: this.agendaSelected.endDate
+			}
+		});
+
+		dialogRef.afterClosed()
+			.subscribe(value => {
+				if (value) {
+					this.dailyAppointmentService.getDailyAppointmentsByDiaryIdAndDate(this.agendaSelected.id, momentFormat(value, DateFormat.API_DATE))
+						.subscribe();
+				}
+			});
 	}
 }

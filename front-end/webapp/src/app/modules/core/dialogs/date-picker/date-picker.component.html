@@ -1,0 +1,19 @@
+<h1 mat-dialog-title>{{ data.title | translate}}</h1>
+
+<form [formGroup]="form" (submit)="confirm()">
+	<mat-form-field appearance="outline">
+		<mat-label>Fecha</mat-label>
+		<input formControlName="date" id="date" matInput [matDatepicker]="picker2" [min]=data.minDate [max]=data.maxDate>
+		<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+		<mat-datepicker #picker2></mat-datepicker>
+		<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+	</mat-form-field>
+
+	<div mat-dialog-actions align="end">
+		<button mat-stroked-button [mat-dialog-close]=false class="uppercase" color='primary' id="cancel-button" name="cancel-button">
+			{{(data.cancelButtonLabel? data.cancelButtonLabel : 'buttons.CANCEL') | translate}}</button>
+		<button mat-raised-button [color]='okBottonColor' class="uppercase" type="submit"
+			id="okButton-button" name="okButton-button">
+			{{(data.okButtonLabel? data.okButtonLabel : 'buttons.CONFIRM' ) | translate}}</button>
+	</div>
+</form>

@@ -26,4 +26,18 @@ export class DownloadService {
 		);
 	}
 
+	downloadPdfWithRequestParams(url: string, fileName: string, params: any): Observable<any> {
+		const httpOptions = {
+			responseType  : 'arraybuffer' as 'json',
+			params
+		};
+		return this.http.get<any>(url, httpOptions).pipe(
+			tap((data: any) => {
+				const blobType = { type: 'application/pdf' };
+				const file = new Blob([data], blobType);
+				saveAs(file, fileName);
+			})
+		);
+	}
+
 }
