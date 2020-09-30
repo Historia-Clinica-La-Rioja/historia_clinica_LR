@@ -14,7 +14,7 @@ export class ConceptsSearchDialogComponent implements OnInit {
 
 	conceptsResultsTable: TableModel<any>;
 	conceptsResultsLength: number;
-	readonly SNOMED_RESULTS_LIMIT : number = +SNOMED_RESULTS_LIMIT;
+	readonly SNOMED_RESULTS_LIMIT: number = +SNOMED_RESULTS_LIMIT;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: SnomedSemanticSearch,

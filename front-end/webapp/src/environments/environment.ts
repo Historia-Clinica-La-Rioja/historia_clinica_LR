@@ -5,7 +5,6 @@
 export const environment = {
   production: false,
   apiBase: '/api',
-  snowstorm: '/MAIN',
 };
 
 /*
