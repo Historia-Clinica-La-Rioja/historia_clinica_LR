@@ -37,21 +37,14 @@ public class AttentionTypeReportItemDto {
         this.hour = appointment.getHour();
         this.patientId = appointment.getPatientId();
         this.firstName = person.getFirstName();
+        this.middleNames = person.getMiddleNames();
         this.lastName = person.getLastName();
+        this.otherLastNames = person.getOtherLastNames();
         this.identificationType = person.getIdentificationType();
         this.identificationNumber = person.getIdentificationNumber();
         this.healthInsuranceName = appointment.getHealthInsuranceName();
         this.medicalCoverageName = appointment.getMedicalCoverageName();
         this.medicalCoverageAffiliateNumber = appointment.getMedicalCoverageAffiliateNumber();
         this.appointmentState = appointment.getAppointmentState();
-        if (person.getOtherLastNames() != null)
-            this.otherLastNames = person.getOtherLastNames();
-        else
-            this.otherLastNames = "";
-        if (person.getMiddleNames() != null)
-            this.middleNames = person.getMiddleNames();
-        else
-            this.middleNames = "";
-
     }
 }

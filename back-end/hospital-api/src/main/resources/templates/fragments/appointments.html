@@ -85,8 +85,10 @@
                                 <th scope="row" th:text="${appointment.hour}"></th>
                                 <td class="patient-id-cell" th:text="${appointment.patientId}"></td>
                                 <td th:text="${appointment.identificationType + ' ' + appointment.identificationNumber}"></td>
-                                <td th:text="${appointment.firstName + ' ' + appointment.middleNames}"></td>
-                                <td th:text="${appointment.lastName + ' ' + appointment.otherLastNames}"></td>
+                                <td th:text="${#strings.defaultString(appointment.firstName, '')
+                                    + ' ' + #strings.defaultString(appointment.middleNames, '')}"></td> <!--using #strings.defaultString() to avoid showing null values-->
+                                <td th:text="${#strings.defaultString(appointment.lastName, '')
+                                    + ' ' + #strings.defaultString(appointment.otherLastNames, '')}"></td>
                                 <td th:text="${appointment.healthInsuranceName}"></td>
                                 <td th:text="${appointment.medicalCoverageName}"></td>
                                 <td th:text="${appointment.medicalCoverageAffiliateNumber}"></td>
@@ -122,8 +124,10 @@
                         <tr th:each="appointment,iter: ${attentionType.appointments}">
                             <td class="patient-id-cell" th:text="${appointment.patientId}"></td>
                             <td th:text="${appointment.identificationType + ' ' + appointment.identificationNumber}"></td>
-                            <td th:text="${appointment.firstName + ' ' + appointment.middleNames}"></td>
-                            <td th:text="${appointment.lastName + ' ' + appointment.otherLastNames}"></td>
+                            <td th:text="${#strings.defaultString(appointment.firstName, '')
+                                    + ' ' + #strings.defaultString(appointment.middleNames, '')}"></td> <!--using #strings.defaultString() to avoid showing null values-->
+                            <td th:text="${#strings.defaultString(appointment.lastName, '')
+                                    + ' ' + #strings.defaultString(appointment.otherLastNames, '')}"></td>
                             <td th:text="${appointment.healthInsuranceName}"></td>
                             <td th:text="${appointment.medicalCoverageName}"></td>
                             <td th:text="${appointment.medicalCoverageAffiliateNumber}"></td>
