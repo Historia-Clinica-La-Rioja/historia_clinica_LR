@@ -193,11 +193,14 @@ export interface BackofficeUserRoleDto {
 
 export interface BasicDataPersonDto extends Serializable {
     age: number;
+    birthDate: Date;
     firstName: string;
     gender: GenderDto;
+    genderId: number;
     id: number;
     identificationNumber: string;
     identificationType: string;
+    identificationTypeId: number;
     lastName: string;
     middleNames: string;
     otherLastNames: string;

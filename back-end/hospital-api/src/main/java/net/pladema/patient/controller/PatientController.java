@@ -5,6 +5,7 @@ import io.swagger.annotations.Api;
 import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.address.controller.service.AddressExternalService;
 import net.pladema.patient.controller.constraints.FilterValid;
+import net.pladema.patient.controller.constraints.PatientUpdateValid;
 import net.pladema.patient.controller.dto.*;
 import net.pladema.patient.controller.mapper.PatientMapper;
 import net.pladema.patient.repository.PatientTypeRepository;
@@ -130,6 +131,7 @@ public class PatientController {
 
 	@PutMapping(value = "/{patientId}")
 	@Transactional
+	@PatientUpdateValid
 	public ResponseEntity<Integer> updatePatient(@PathVariable(name = "patientId") Integer patientId,
 			@RequestBody APatientDto patientDto) throws URISyntaxException {
 		LOG.debug("Input data -> APatientDto {} ", patientDto);

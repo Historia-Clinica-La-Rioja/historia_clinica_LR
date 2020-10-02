@@ -1,6 +1,7 @@
 package net.pladema.person.controller.dto;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -26,6 +27,8 @@ public class BasicDataPersonDto implements Serializable {
 
     private String otherLastNames;
 
+    private Short identificationTypeId;
+
     private String identificationType;
     
     private String identificationNumber;
@@ -33,4 +36,10 @@ public class BasicDataPersonDto implements Serializable {
     private GenderDto gender;
 
     private Short age;
+
+    private LocalDate birthDate;
+
+    public Short getGenderId(){
+        return gender.getId();
+    }
 }
