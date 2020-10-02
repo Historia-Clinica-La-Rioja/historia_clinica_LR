@@ -51,7 +51,7 @@
     <div th:fragment="reportHeader">
         <h6 th:text="${'Nombre del profesional: ' + professionalName}"></h6>
         <h6 th:text="${'Fecha consultada: ' + consultedDate}"></h6>
-        <h6 th:text="${'Fecha y horario de impersión: ' + actualDateTime}"></h6>
+        <h6 th:text="${'Fecha y horario de impresión: ' + actualDateTime}"></h6>
     </div>
 
     <!--Apointment tables:-->
@@ -84,11 +84,13 @@
                                 <tr th:each="appointment,iter: ${attentionType.appointments}">
                                 <th scope="row" th:text="${appointment.hour}"></th>
                                 <td class="patient-id-cell" th:text="${appointment.patientId}"></td>
-                                <td th:text="${appointment.identificationType + ' ' + appointment.identificationNumber}"></td>
+                                <!--the next lines are using #strings.defaultString() to avoid showing null values-->
+                                <td th:text="${#strings.defaultString(appointment.identificationType, '')
+                                        + ' ' + #strings.defaultString(appointment.identificationNumber, '')}"></td>
                                 <td th:text="${#strings.defaultString(appointment.firstName, '')
-                                    + ' ' + #strings.defaultString(appointment.middleNames, '')}"></td> <!--using #strings.defaultString() to avoid showing null values-->
+                                        + ' ' + #strings.defaultString(appointment.middleNames, '')}"></td>
                                 <td th:text="${#strings.defaultString(appointment.lastName, '')
-                                    + ' ' + #strings.defaultString(appointment.otherLastNames, '')}"></td>
+                                        + ' ' + #strings.defaultString(appointment.otherLastNames, '')}"></td>
                                 <td th:text="${appointment.healthInsuranceName}"></td>
                                 <td th:text="${appointment.medicalCoverageName}"></td>
                                 <td th:text="${appointment.medicalCoverageAffiliateNumber}"></td>
@@ -123,9 +125,11 @@
                         <tbody>
                         <tr th:each="appointment,iter: ${attentionType.appointments}">
                             <td class="patient-id-cell" th:text="${appointment.patientId}"></td>
-                            <td th:text="${appointment.identificationType + ' ' + appointment.identificationNumber}"></td>
+                            <!--the next lines are using #strings.defaultString() to avoid showing null values-->
+                            <td th:text="${#strings.defaultString(appointment.identificationType, '')
+                                    + ' ' + #strings.defaultString(appointment.identificationNumber, '')}"></td>
                             <td th:text="${#strings.defaultString(appointment.firstName, '')
-                                    + ' ' + #strings.defaultString(appointment.middleNames, '')}"></td> <!--using #strings.defaultString() to avoid showing null values-->
+                                    + ' ' + #strings.defaultString(appointment.middleNames, '')}"></td>
                             <td th:text="${#strings.defaultString(appointment.lastName, '')
                                     + ' ' + #strings.defaultString(appointment.otherLastNames, '')}"></td>
                             <td th:text="${appointment.healthInsuranceName}"></td>
