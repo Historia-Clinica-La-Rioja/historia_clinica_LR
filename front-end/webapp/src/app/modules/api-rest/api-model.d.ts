@@ -299,6 +299,17 @@ export interface CreateOutpatientDto {
     vitalSigns?: OutpatientVitalSignDto;
 }
 
+export interface DateDto {
+    day: number;
+    month: number;
+    year: number;
+}
+
+export interface DateTimeDto {
+    date: DateDto;
+    time: TimeDto;
+}
+
 export interface DepartmentDto extends MasterdataDto<number> {
     id: number;
 }
@@ -975,6 +986,12 @@ export interface SnomedDto extends Serializable {
 export interface SnomedResponseDto extends Serializable {
     items: SnomedDto[];
     total: number;
+}
+
+export interface TimeDto {
+    hours: number;
+    minutes: number;
+    seconds?: number;
 }
 
 export interface TimeRangeDto {
