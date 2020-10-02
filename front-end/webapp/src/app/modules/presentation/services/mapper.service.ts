@@ -1,12 +1,22 @@
 import { Injectable } from '@angular/core';
 import { InternmentEpisodeSummary } from '../components/internment-episode-summary/internment-episode-summary.component';
-import { BasicPatientDto, CompletePatientDto, InternmentSummaryDto, PatientType, PersonalInformationDto, BedSummaryDto, OutpatientEvolutionSummaryDto } from '@api-rest/api-model';
+import {
+		BasicPatientDto,
+		CompletePatientDto,
+		InternmentSummaryDto,
+		PatientType,
+		PersonalInformationDto,
+		BedSummaryDto,
+		OutpatientEvolutionSummaryDto,
+		InternmentPatientDto,
+} from '@api-rest/api-model';
 import { PatientBasicData } from '../components/patient-card/patient-card.component';
 import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
 import { PatientTypeData } from '@presentation/components/patient-type-logo/patient-type-logo.component';
 import { DateFormat, momentParseDate, momentParseDateTime } from '@core/utils/moment.utils';
 import { BedManagement } from '../../camas/routes/home/home.component';
 import { HistoricalProblems } from '../../historia-clinica/modules/ambulatoria/services/historical-problems-facade.service';
+import { PatientTableData } from '../../pacientes/component/pacientes-table/pacientes-table.component';
 
 @Injectable({
 	providedIn: 'root'
@@ -17,6 +27,7 @@ export class MapperService {
 	toPatientBasicData: (o: BasicPatientDto) => PatientBasicData = MapperService._toPatientBasicData;
 	toPersonalInformationData: (o1: CompletePatientDto, o2: PersonalInformationDto) => PersonalInformation = MapperService._toPersonalInformationData;
 	toPatientTypeData: (patientType: PatientType) => PatientTypeData = MapperService._toPatientTypeData;
+	toPatientTableData: (patient: InternmentPatientDto) => PatientTableData = MapperService._toPatientTableData;
 	toBedManagement: (bedSummary: BedSummaryDto[]) => BedManagement[] = MapperService._toBedManagement;
 	toHistoricalProblems: (outpatientEvolutionSummary: OutpatientEvolutionSummaryDto[]) => HistoricalProblems[] = MapperService._toHistoricalProblems;
 
@@ -86,6 +97,20 @@ export class MapperService {
 			id: patientType.id,
 			description: patientType.description
 		};
+	}
+
+	private static _toPatientTableData(patient: InternmentPatientDto): PatientTableData {
+		return {
+			birthDate: patient.birthDate,
+			firstName: patient.firstName,
+			genderId: patient.genderId,
+			identificationNumber: patient.identificationNumber,
+			identificationTypeId: patient.identificationTypeId,
+			internmentId: patient.internmentId,
+			lastName: patient.lastName,
+			patientId: patient.patientId,
+			fullName: `${patient.firstName} ${patient.lastName}`
+		}
 	}
 
 	private static _toBedManagement(bedSummary: BedSummaryDto[]): BedManagement[] {

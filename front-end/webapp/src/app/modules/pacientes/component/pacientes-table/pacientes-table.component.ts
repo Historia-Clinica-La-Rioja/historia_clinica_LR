@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
-import { InternmentPatientDto } from '@api-rest/api-model';
 import { TableModel, ActionDisplays } from 'src/app/modules/presentation/components/table/table.component';
 import { Router } from '@angular/router';
 import { momentFormatDate, DateFormat } from '@core/utils/moment.utils';
-import { InternmentPatientService } from "@api-rest/services/internment-patient.service";
+import { InternmentPatientService } from '@api-rest/services/internment-patient.service';
 import { ContextService } from '@core/services/context.service';
+import { MapperService } from './../../../presentation/services/mapper.service';
 
 const ROUTE_INTERNMENT = 'internaciones/internacion/';
 
@@ -17,14 +17,17 @@ const ROUTE_INTERNMENT = 'internaciones/internacion/';
 export class PacientesTableComponent implements OnInit {
 
 	public displayedColumns: string[] = ['ID Paciente', 'Nro. Documento', 'Nombre', 'Apellido', 'F. Nac', 'Sexo', 'Action'];
-	public allPatient: TableModel<InternmentPatientDto>;
+	public allPatient: TableModel<PatientTableData>;
 	public genderOptions = {};
 	private readonly routePrefix;
 
-	constructor(private internmentPatientService: InternmentPatientService,
-				private personMasterDataService: PersonMasterDataService,
-				private contextService: ContextService,
-				private router: Router) {
+	constructor(
+		private mapperService: MapperService,
+		private internmentPatientService: InternmentPatientService,
+		private personMasterDataService: PersonMasterDataService,
+		private contextService: ContextService,
+		private router: Router
+	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 
@@ -32,16 +35,16 @@ export class PacientesTableComponent implements OnInit {
 		this.personMasterDataService.getGenders().subscribe(
 			genders => {
 				genders.forEach(gender => {
-					this.genderOptions[gender.id] = gender.description
+					this.genderOptions[gender.id] = gender.description;
 				});
 			});
 
 		this.internmentPatientService.getAllInternmentPatientsBasicData().subscribe(data => {
-			this.allPatient = this.buildTable(data);
-		})
+			this.allPatient = this.buildTable(data.map(patient => this.mapperService.toPatientTableData(patient)));
+		});
 	}
 
-	private buildTable(data: InternmentPatientDto[]): TableModel<InternmentPatientDto> {
+	private buildTable(data: PatientTableData[]): TableModel<PatientTableData> {
 		return {
 			columns: [
 				{
@@ -67,7 +70,7 @@ export class PacientesTableComponent implements OnInit {
 				{
 					columnDef: 'birthDate',
 					header: 'F. Nac',
-					text: (row) => (row.birthDate == undefined) ? "" : momentFormatDate(new Date(row.birthDate), DateFormat.VIEW_DATE)
+					text: (row) => (row.birthDate == undefined) ? '' : momentFormatDate(new Date(row.birthDate), DateFormat.VIEW_DATE)
 				},
 				{
 					columnDef: 'gender',
@@ -101,4 +104,16 @@ export class PacientesTableComponent implements OnInit {
 		const filterValue = (event.target as HTMLInputElement).value;
 	}
 
+}
+
+export interface PatientTableData {
+	birthDate: Date;
+	firstName: string;
+	genderId: number;
+	identificationNumber: string;
+	identificationTypeId: number;
+	internmentId: number;
+	lastName: string;
+	patientId: number;
+	fullName: string;
 }

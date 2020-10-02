@@ -42,10 +42,10 @@ export class TableComponent implements OnInit {
 	}
 
 	private setUpTable() {
-		this.pageSizeOptions=[];
+		this.pageSizeOptions = [];
 		if (this.model) {
-			const unrepeatedSizeOptions = [...new Set([...PAGE_SIZE_OPTIONS,this.model.data.length])];
-			this.pageSizeOptions= unrepeatedSizeOptions.filter(opt=>this.betweenLimits(opt));
+			const unrepeatedSizeOptions = [...new Set([...PAGE_SIZE_OPTIONS, this.model.data.length])];
+			this.pageSizeOptions = unrepeatedSizeOptions.filter(opt => this.betweenLimits(opt));
 			this.columns = this.model.columns;
 			this.dataSource.data = this.model.data;
 			this.displayedColumns = this.columns?.map(c => c.columnDef);
@@ -57,24 +57,21 @@ export class TableComponent implements OnInit {
 			//pagination
 			this.paginationEnabled = this.model.enablePagination;
 		}
-		
+
 	}
-	
-	betweenLimits(opt:number): boolean {
+
+	betweenLimits(opt: number): boolean {
 		return opt <= this.model.data.length && opt <= PAGE_MAX_SIZE;
 	}
-	
+
 	applyFilter(event: Event) {
 		const filterValue = (event.target as HTMLInputElement).value;
 		this.dataSource.filter = filterValue.trim().toLowerCase();
 	}
-	
-	
-	
 }
 
 
-const PAGE_SIZE_OPTIONS = [5,10,50];
+const PAGE_SIZE_OPTIONS = [5, 10, 50];
 const PAGE_MAX_SIZE = 50;
 
 export enum TableStyles {
@@ -87,7 +84,6 @@ export enum ActionDisplays {
 	ICON = 'icon',
 	BUTTON = 'button',
 }
-
 
 export type TableStyle = TableStyles.PRIMARY | TableStyles.SECONDARY | TableStyles.DEFAULT;
 export type ActionDisplay = ActionDisplays.BUTTON | ActionDisplays.ICON;
@@ -102,7 +98,7 @@ export interface ColumnModel<T> {
 		matColor?: ThemePalette,
 		do: (row: T) => void,
 		hide?: (row: T) => boolean
-	}
+	};
 }
 
 export interface TableModel<T> {
@@ -120,7 +116,7 @@ export class MatPaginatorIntlAR extends MatPaginatorIntl {
 	lastPageLabel = 'Última página';
 	firstPageLabel = 'Primera página';
 
-	getRangeLabel = function (page, pageSize, length) {
+	getRangeLabel = function(page, pageSize, length) {
 		if (length === 0 || pageSize === 0) {
 			return '0 de ' + length;
 		}
