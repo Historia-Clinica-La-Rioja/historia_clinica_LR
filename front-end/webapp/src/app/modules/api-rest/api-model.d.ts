@@ -823,6 +823,7 @@ export interface PatientDischargeDto {
 
 export interface PatientDto {
     firstName: string;
+    fullName: string;
     id: number;
     lastName: string;
 }

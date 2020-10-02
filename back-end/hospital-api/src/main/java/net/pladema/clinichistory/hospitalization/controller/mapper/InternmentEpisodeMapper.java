@@ -46,6 +46,7 @@ public interface InternmentEpisodeMapper {
     List<InternmentPatientDto> toListInternmentPatientDto(List<BasicListedPatientBo> basicListedPatientBos);
 
     @Named("toInternmentEpisodeDto")
+    @Mapping(target = "patient.fullName", expression = "java(patientBo.getFirstName() + \" \" + patientBo.getLastName())")
     InternmentEpisodeDto toInternmentEpisodeDto(InternmentEpisodeBo internmentEpisode);
 
     @Named("toListInternmentEpisodeDto")
