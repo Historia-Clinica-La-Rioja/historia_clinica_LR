@@ -138,10 +138,14 @@ export class ProblemasNuevaConsultaService {
 	// adds the old error when the value is changed dynamically
 	checkValidFechaFin(): void {
 		this.form.controls.fechaFin.setErrors(null);
+		let today = newMoment();
 		if (this.form.value.fechaFin) {
 			const newFechaFin: Moment = this.form.value.fechaFin;
 			if (newFechaFin.isBefore(this.form.value.fechaInicio)) {
 				this.form.controls.fechaFin.setErrors({min: true});
+			}
+			if (newFechaFin.isAfter(today)) {
+				this.form.controls.fechaFin.setErrors({max: true});
 			}
 		}
 	}

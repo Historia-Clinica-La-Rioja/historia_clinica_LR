@@ -14,7 +14,7 @@ import {
 	AntecedentesFamiliaresNuevaConsultaService
 } from '../../services/antecedentes-familiares-nueva-consulta.service';
 import {CreateOutpatientDto, HealthConditionNewConsultationDto} from '@api-rest/api-model';
-import {DateFormat, dateToMomentTimeZone, momentFormat} from '@core/utils/moment.utils';
+import {DateFormat, dateToMomentTimeZone, momentFormat, newMoment} from '@core/utils/moment.utils';
 import {OutpatientConsultationService} from '@api-rest/services/outpatient-consultation.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SnackBarService} from '@presentation/services/snack-bar.service';
@@ -41,6 +41,7 @@ export class NuevaConsultaComponent implements OnInit {
 	alergiasNuevaConsultaService: AlergiasNuevaConsultaService;
 	readOnlyProblema: boolean = false;
 	apiErrors: string[] = [];
+	public today = newMoment();
 
 	constructor(
 		private readonly formBuilder: FormBuilder,

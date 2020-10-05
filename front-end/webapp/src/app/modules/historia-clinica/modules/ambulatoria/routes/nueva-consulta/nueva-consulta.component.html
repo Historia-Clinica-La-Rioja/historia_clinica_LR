@@ -99,11 +99,14 @@
 						<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.problemas.FECHA_FIN'">
 						</mat-label>
 						<input matInput id="fecha_fin" [matDatepicker]="finDatePicker" formControlName="fechaFin"
-							   (dateChange)="problemasNuevaConsultaService.checkValidFechaFin()">
+						[max]="today" (dateChange)="problemasNuevaConsultaService.checkValidFechaFin()">
 						<mat-datepicker-toggle matSuffix [for]="finDatePicker"></mat-datepicker-toggle>
 						<mat-datepicker #finDatePicker></mat-datepicker>
 						<mat-error *ngIf="problemasNuevaConsultaService.hasError('min', 'fechaFin')"
 								   [translate]="'ambulatoria.paciente.nueva-consulta.problemas.errors.FECHA_FIN_MIN'">
+						</mat-error>
+						<mat-error *ngIf="problemasNuevaConsultaService.hasError('matDatepickerMax', 'fechaFin')"
+							[translate]="'forms.MAX_DATE_TODAY'">
 						</mat-error>
 					</mat-form-field>
 
