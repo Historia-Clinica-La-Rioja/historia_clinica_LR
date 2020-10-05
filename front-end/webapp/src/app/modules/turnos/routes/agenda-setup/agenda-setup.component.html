@@ -4,6 +4,31 @@
 		<br>
 		<form [formGroup]="form" (ngSubmit)="save()">
 			<section>
+
+				<div fxLayout="row">
+					<span [translate]="'Profesional'"></span>
+				</div>
+				<div fxLayout="row">
+					<mat-form-field appearance="outline">
+						<mat-select id="healthcareProfessionalId" name="healthcareProfessionalId"
+									formControlName="healthcareProfessionalId"
+									placeholder="{{'pacientes.form.SELECT' | translate}}" (selectionChange)="setSpecialtiesAndResetFollowingControls(form.value.healthcareProfessionalId)">
+							<mat-option *ngFor="let professional of professionals" [value]="professional.id">
+								<span class="mat-body">{{getFullNameLicence(professional)}}</span>
+							</mat-option>
+						</mat-select>
+						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+					</mat-form-field>
+				</div>
+
+				<section>
+					<div fxLayout="row">
+						<mat-checkbox (change)="appointmentManagementChange()" [checked]="appointmentManagement">
+							<span [translate]="'El profesional crea turnos'"></span>
+						</mat-checkbox>
+					</div>
+				</section>
+
 				<div fxLayout="row">
 					<span [translate]="'Sector'"></span>
 				</div>
@@ -50,30 +75,6 @@
 						<mat-error [translate]="'No existen consultorios para esa especialidad'"></mat-error>
 					</mat-form-field>
 				</div>
-
-				<div fxLayout="row">
-					<span [translate]="'Profesional'"></span>
-				</div>
-				<div fxLayout="row">
-					<mat-form-field appearance="outline">
-						<mat-select id="healthcareProfessionalId" name="healthcareProfessionalId"
-							formControlName="healthcareProfessionalId"
-							placeholder="{{'pacientes.form.SELECT' | translate}}" (selectionChange)="setSpecialtiesAndResetFollowingControls(form.value.healthcareProfessionalId)">
-							<mat-option *ngFor="let professional of professionals" [value]="professional.id">
-								<span class="mat-body">{{getFullNameLicence(professional)}}</span>
-							</mat-option>
-						</mat-select>
-						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
-					</mat-form-field>
-				</div>
-
-				<section>
-					<div fxLayout="row">
-						<mat-checkbox (change)="appointmentManagementChange()" [checked]="appointmentManagement">
-							<span [translate]="'El profesional crea turnos'"></span>
-						</mat-checkbox>
-					</div>
-				</section>
 
 				<div class="datepicker-container" fxLayout="row" fxLayoutGap="20px" fxLayout.lt-md="column">
 					<div fxLayout="column">
