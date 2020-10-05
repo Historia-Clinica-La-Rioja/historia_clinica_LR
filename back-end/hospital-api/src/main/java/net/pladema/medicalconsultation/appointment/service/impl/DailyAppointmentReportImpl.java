@@ -25,9 +25,9 @@ public class DailyAppointmentReportImpl implements DailyAppointmentReport {
     }
 
     @Override
-    public List<AttentionTypeReportBo> execute(Integer diaryId, LocalDate date) {
-        LOG.debug("Input parameters -> diaryId {}, date {}", diaryId, date);
-        List<DailyAppointmentVo> resultQuery = dailyAppointmentRepository.getDailyAppointmentsByDiaryIdAndDate(diaryId, date);
+    public List<AttentionTypeReportBo> execute(Integer institutionId, Integer diaryId, LocalDate date) {
+        LOG.debug("Input parameters -> institutionId {}, diaryId {}, date {}", institutionId, diaryId, date);
+        List<DailyAppointmentVo> resultQuery = dailyAppointmentRepository.getDailyAppointmentsByDiaryIdAndDate(institutionId, diaryId, date);
         List<AttentionTypeReportBo> classifiedResult = separateByMedicalAttentionTypeAndAttentionTypeHours(resultQuery);
         LOG.debug("Output -> {}", classifiedResult);
         return classifiedResult;

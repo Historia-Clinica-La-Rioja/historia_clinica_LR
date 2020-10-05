@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface DailyAppointmentRepository {
 
-    List<DailyAppointmentVo> getDailyAppointmentsByDiaryIdAndDate(Integer diaryId, LocalDate date);
+    List<DailyAppointmentVo> getDailyAppointmentsByDiaryIdAndDate(Integer institutionId, Integer diaryId, LocalDate date);
 
 }

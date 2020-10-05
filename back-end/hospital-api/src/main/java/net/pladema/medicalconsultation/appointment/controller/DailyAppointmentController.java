@@ -80,7 +80,7 @@ public class DailyAppointmentController {
         LOG.debug("Input parameters -> institutionId {}, diaryId {}, date {}", institutionId, diaryId, date);
         LocalDate consultedDate = localDateMapper.fromStringToLocalDate(date);
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of(JacksonDateFormatConfig.ZONE_ID));
-        List<AttentionTypeReportBo> dailyAppointments = dailyAppointmentReport.execute(diaryId, consultedDate);
+        List<AttentionTypeReportBo> dailyAppointments = dailyAppointmentReport.execute(institutionId, diaryId, consultedDate);
         List<AttentionTypeReportDto> attentionTypeReportDtos = createPatientAssociatedReportList(dailyAppointments);
         Integer healthCareProfessionalId = diaryService.getDiary(diaryId).map(DiaryBo::getHealthcareProfessionalId).orElse(null);
         ProfessionalDto professionalDto = healthcareProfessionalExternalService.findProfessionalById(healthCareProfessionalId);

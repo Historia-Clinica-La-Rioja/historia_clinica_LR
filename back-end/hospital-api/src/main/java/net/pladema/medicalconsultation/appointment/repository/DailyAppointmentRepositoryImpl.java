@@ -20,7 +20,7 @@ public class DailyAppointmentRepositoryImpl implements DailyAppointmentRepositor
 
     @Override
     @Transactional(readOnly = true)
-    public List<DailyAppointmentVo> getDailyAppointmentsByDiaryIdAndDate(Integer diaryId, LocalDate date) {
+    public List<DailyAppointmentVo> getDailyAppointmentsByDiaryIdAndDate(Integer institutionId, Integer diaryId, LocalDate date) {
 
         String sqlQuery =
                 "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.DailyAppointmentVo(a, hi, astate, oh.from, oh.to, doh.medicalAttentionTypeId) " +
@@ -29,16 +29,20 @@ public class DailyAppointmentRepositoryImpl implements DailyAppointmentRepositor
                 "LEFT JOIN HealthInsurance AS hi ON (a.healthInsuranceId = hi.rnos) " +
                 "JOIN AppointmentState AS astate ON (a.appointmentStateId = astate.id) " +
                 "JOIN OpeningHours AS oh ON (assn.pk.openingHoursId = oh.id) " +
+                "JOIN Diary AS d ON (assn.pk.diaryId = d.id) " +
+                "JOIN DoctorsOffice AS do ON (d.doctorsOfficeId = do.id) " +
                 "JOIN DiaryOpeningHours AS doh on ((doh.pk.diaryId = :diaryId) AND (doh.pk.openingHoursId = assn.pk.openingHoursId)) " +
                 "WHERE assn.pk.diaryId = :diaryId " +
                 "AND a.dateTypeId = :date " +
                 "AND NOT a.appointmentStateId = :appointmentStateId " +
+                "AND do.institutionId = :institutionId " +
                 "ORDER BY a.hour ASC ";
 
         List<DailyAppointmentVo> result = entityManager.createQuery(sqlQuery)
                 .setParameter("diaryId", diaryId)
                 .setParameter("date", date)
                 .setParameter("appointmentStateId", AppointmentState.CANCELLED)
+                .setParameter("institutionId", institutionId)
                 .getResultList();
 
         return result;

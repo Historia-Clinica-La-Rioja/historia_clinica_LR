@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface DailyAppointmentReport {
 
-    List<AttentionTypeReportBo> execute(Integer diaryId, LocalDate date);
+    List<AttentionTypeReportBo> execute(Integer institutionId, Integer diaryId, LocalDate date);
 
 }
