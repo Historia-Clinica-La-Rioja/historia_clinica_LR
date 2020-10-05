@@ -35,7 +35,8 @@
 				<div fxLayout="row">
 					<mat-form-field appearance="outline">
 						<mat-select id="sectorId" name="sectorId" formControlName="sectorId"
-							placeholder="{{'pacientes.form.SELECT' | translate}}" >
+							placeholder="{{'pacientes.form.SELECT' | translate}}"
+							(selectionChange)="setDoctorOfficesAndResetFollowingControls(form.value.sectorId, form.value.specialtyId)">
 							<mat-option *ngFor="let sector of sectors" [value]="sector.id">
 								{{sector.description}}
 							</mat-option>
