@@ -1,7 +1,9 @@
 package net.pladema.sgx.recaptcha.service.impl;
 
 import net.pladema.sgx.exceptions.RecaptchaInvalid;
+import net.pladema.sgx.recaptcha.controller.dto.RecaptchaPublicConfigDto;
 import net.pladema.sgx.recaptcha.service.ICaptchaService;
+import net.pladema.sgx.recaptcha.service.domain.RecaptchaPublicConfigBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +31,9 @@ public class CaptchaServiceImpl implements ICaptchaService {
 
     @Value("${google.recaptcha.secret.key}")
     private String secretKey;
+
+    @Value("${google.recaptcha.site.key}")
+    private String siteKey;
 
     @Value("${google.recaptcha.enable}")
     private boolean recaptchaEnable;
@@ -76,8 +81,14 @@ public class CaptchaServiceImpl implements ICaptchaService {
 
     }
 
+    @Override
     public boolean isRecaptchaEnable() {
         return recaptchaEnable;
+    }
+
+    @Override
+    public RecaptchaPublicConfigBo getPublicConfig() {
+        return new RecaptchaPublicConfigBo(this.siteKey, isRecaptchaEnable());
     }
 
     private boolean responseSanityCheck(String response) {

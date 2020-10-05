@@ -8,6 +8,8 @@ import net.pladema.flavor.service.FlavorService;
 import net.pladema.security.controller.dto.PublicInfoDto;
 import net.pladema.sgx.featureflags.AppFeature;
 
+import net.pladema.sgx.recaptcha.controller.dto.RecaptchaPublicConfigDto;
+import net.pladema.sgx.recaptcha.service.ICaptchaService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,11 +22,15 @@ public class PublicController {
 
 	private final String flavor;
 
+	private final ICaptchaService recaptchaService;
+
 	public PublicController(
-			FlavorService flavorService
+			FlavorService flavorService,
+			ICaptchaService recaptchaService
 	) {
 		super();
 		this.flavor = flavorService.getFlavor().toString();
+		this.recaptchaService = recaptchaService;
 	}
 
 	@GetMapping(value = "/info")
@@ -35,5 +41,13 @@ public class PublicController {
 			Arrays.stream(AppFeature.values()).filter(AppFeature::isActive).collect(Collectors.toSet())
 		);
 	}
+
+	@GetMapping(value = "/recaptcha")
+	public @ResponseBody
+	RecaptchaPublicConfigDto getRecaptchaPublicConfig() {
+		RecaptchaPublicConfigDto result = new RecaptchaPublicConfigDto(recaptchaService.getPublicConfig());
+		return result;
+	}
+
 
 }

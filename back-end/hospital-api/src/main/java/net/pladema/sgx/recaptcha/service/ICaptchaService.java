@@ -1,7 +1,12 @@
 package net.pladema.sgx.recaptcha.service;
 
+import net.pladema.sgx.recaptcha.service.domain.RecaptchaPublicConfigBo;
+
 public interface ICaptchaService {
 
-    public void validRecaptcha(String response, String frontUrl);
-    public boolean isRecaptchaEnable();
+    void validRecaptcha(String response, String frontUrl);
+
+    boolean isRecaptchaEnable();
+
+    RecaptchaPublicConfigBo getPublicConfig();
 }
