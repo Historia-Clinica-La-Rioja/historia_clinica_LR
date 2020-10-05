@@ -14,6 +14,7 @@ export enum DateFormat {
 	HOUR_MINUTE = 'HH:mm',
 	HOUR_MINUTE_12 = 'hh:mm',
 	HOUR_MINUTE_SECONDS = 'HH:mm:ss',
+	FILE_DATE = 'DD-MM-YYYY'
 }
 
 export const MAT_APP_DATE_FORMATS = {

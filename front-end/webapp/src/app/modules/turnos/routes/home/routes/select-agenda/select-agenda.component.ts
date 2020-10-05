@@ -126,7 +126,7 @@ export class SelectAgendaComponent implements OnInit {
 		dialogRef.afterClosed()
 			.subscribe(value => {
 				if (value) {
-					this.dailyAppointmentService.getDailyAppointmentsByDiaryIdAndDate(this.agendaSelected.id, momentFormat(value, DateFormat.API_DATE))
+					this.dailyAppointmentService.getDailyAppointmentsByDiaryIdAndDate(this.agendaSelected.id, value)
 						.subscribe();
 				}
 			});
