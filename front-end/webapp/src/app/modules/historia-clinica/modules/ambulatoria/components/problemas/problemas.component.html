@@ -122,13 +122,18 @@
 
 		<mat-card id="historical-problems-card">
 			<mat-card-content>
-				<div fxLayout="row">
+				<div fxLayout="row" fxLayout.xs="column">
 					<div id="filters" class="filter-panel">
 						<h2 class="page-title" [translate]="'ambulatoria.paciente.problemas.historical-problems.HISTORICAL_TITLE'"></h2>
-						<mat-card-subtitle>
-							<span *ngIf="historicalProblemsList" id="historicalProblemsAmount"> {{historicalProblemsAmount}} resultados </span>
-						</mat-card-subtitle>
-						<app-historical-problems-filters></app-historical-problems-filters>
+						<div fxLayout="row" fxLayoutAlign="space-between start">
+							<mat-card-subtitle>
+								<span *ngIf="historicalProblemsList" id="historicalProblemsAmount"> {{historicalProblemsAmount}} resultados </span>
+							</mat-card-subtitle>
+							<button mat-icon-button color="primary" fxShow="false" fxShow.xs="true" (click)="hideFilters()">
+								<mat-icon fontSet="material-icons-outlined">filter_list</mat-icon>
+							</button>
+						</div>
+						<app-historical-problems-filters fxShow="true" [fxShow.xs]="hideFilterPanel"></app-historical-problems-filters>
 					</div>
 					<section class="problems" id="historical-problem-mapping" *ngIf="historicalProblemsList && historicalProblemsList.length">
 						<div class="problem" fxLayout="row" fxLayoutGap="15px" *ngFor="let historicalProblem of historicalProblemsList">
@@ -136,7 +141,7 @@
 							<mat-icon mat-list-icon fontSet="material-icons-outlined" color="primary">assignment</mat-icon>
 
 							<div fxLayout="column" fxLayoutGap="15px" fxFlex="100%">
-								<div fxLayout="row" fxLayoutGap="15px">								
+								<div fxLayout="row" fxLayoutGap="15px" fxLayout.xs="column">								
 									<div fxLayout="column wrap" fxFlex="70%">
 										<h2 class="mat-h2 page-title primary capitalize-first-letter">{{historicalProblem.problemPt}}</h2>
 
@@ -157,6 +162,7 @@
 
 									<div fxLayout="column" fxLayoutGap="10px">
 										<div>
+											<h3 class="mat-h2 primary" [translate]="'ambulatoria.paciente.problemas.historical-problems.CONSULTATION_DATE'"></h3>
 											{{historicalProblem.consultationDate | date : 'dd/MM/yyyy'}}
 										</div>
 										<div>

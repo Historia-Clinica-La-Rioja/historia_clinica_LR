@@ -11,8 +11,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.utils';
 import { map, tap } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
-import {MatDialog} from "@angular/material/dialog";
-import {SolveProblemComponent} from "../../../../dialogs/solve-problem/solve-problem.component";
+import { MatDialog } from '@angular/material/dialog';
+import { SolveProblemComponent } from '../../../../dialogs/solve-problem/solve-problem.component';
 import { HistoricalProblemsFacadeService, HistoricalProblems } from './../../services/historical-problems-facade.service';
 
 @Component({
@@ -33,6 +33,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	public hospitalizationProblems$: Observable<HCEHospitalizationHistoryDto[]>;
 	public historicalProblemsList: HistoricalProblems[];
 	public historicalProblemsAmount: number;
+	public hideFilterPanel = false;
 	private historicalProblems$: Subscription;
 	private patientId: number;
 	@Input() hasConfirmedAppointment: boolean;
@@ -136,6 +137,10 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 			problem: problem.snomed.id,
 			consultationDate: null
 		});
+	}
+
+	hideFilters() {
+		this.hideFilterPanel = !this.hideFilterPanel;
 	}
 
 	ngOnDestroy(): void {

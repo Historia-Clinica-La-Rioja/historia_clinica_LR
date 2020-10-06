@@ -144,7 +144,8 @@
 					"REASONS": "Motivos",
 					"PROCEDURES": "Procedimientos",
 					"PROFESSIONAL": "Médico",
-					"EVOLUTION_NOTE": "Descripción/Resumen"
+					"EVOLUTION_NOTE": "Descripción/Resumen",
+					"CONSULTATION_DATE": "Fecha de consulta"
 				},
 				"historical-filters": {
 					"SPECIALITY": "Especialidad",
