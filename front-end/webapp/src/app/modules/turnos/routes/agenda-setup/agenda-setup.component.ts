@@ -182,8 +182,10 @@ export class AgendaSetupComponent implements OnInit {
 	}
 
 	setDoctorOfficesAndResetFollowingControls(sectorId: number, specialtyId: number): void {
-		this.doctorsOfficeService.getAll(sectorId, specialtyId)
-			.subscribe((data: DoctorsOfficeDto[]) => this.doctorOffices = data);
+		if(specialtyId){
+			this.doctorsOfficeService.getAll(sectorId, specialtyId)
+				.subscribe((data: DoctorsOfficeDto[]) => this.doctorOffices = data);
+		}
 		this.form.get('doctorOffice').reset();
 	}
 
