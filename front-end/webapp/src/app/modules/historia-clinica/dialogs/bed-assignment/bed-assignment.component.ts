@@ -25,17 +25,18 @@ export class BedAssignmentComponent implements OnInit, OnDestroy {
   	) { }
 
 	ngOnInit(): void {
+		this.bedManagementFacadeService.setInitialFilters({
+			sector: null,
+			speciality: null,
+			category: null,
+			probableDischargeDate: null,
+			filled: false
+		});
+
 		this.managementBed$ = this.bedManagementFacadeService.getBedManagement().pipe(
 			tap(bedsSummary => this.bedsAmount = bedsSummary ? bedsSummary.length : 0)
 		).subscribe(data => {
 			this.existBedManagementList = data ? true : false;
-			this.bedManagementFacadeService.sendBedManagementFilter({
-				sector: null,
-				speciality: null,
-				category: null,
-				probableDischargeDate: null,
-				filled: false
-			});
 		});
 	}
 

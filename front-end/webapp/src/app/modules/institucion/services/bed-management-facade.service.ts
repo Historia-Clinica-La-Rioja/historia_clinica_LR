@@ -19,6 +19,7 @@ export class BedManagementFacadeService {
 	private bedManagementFilterSubject = new ReplaySubject<BedManagementFilter>(1);
 	private bedManagementFilter$: Observable<BedManagementFilter>;
 	private originalBedManagement: BedSummaryDto[] = [];
+	private initialFilters: BedManagementFilter;
 
 	constructor(
 		private bedService: BedService
@@ -27,13 +28,18 @@ export class BedManagementFacadeService {
 		this.bedManagementFilter$ = this.bedManagementFilterSubject.asObservable();
 	}
 
+	public setInitialFilters(initialFilters: BedManagementFilter) {
+		this.initialFilters = initialFilters;
+		this.bedManagementFilterSubject.next(initialFilters);
+	}
+
 	public getBedManagement(): Observable<BedSummaryDto[]> {
 		if (!this.originalBedManagement.length) {
 			this.bedService.getBedsSummary().pipe(
 				tap((bedsSummary: BedSummaryDto[]) => this.filterOptions(bedsSummary))
 			).subscribe(data => {
 				this.originalBedManagement = data;
-				this.sendBedManagement(this.originalBedManagement);
+				this.initialFilters ? this.sendBedManagementFilter(this.initialFilters) : this.sendBedManagement(this.originalBedManagement);
 			});
 		}
 		return this.bedSummary$;
