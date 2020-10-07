@@ -8,6 +8,9 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
+import net.pladema.sgx.dates.controller.dto.DateDto;
+import net.pladema.sgx.dates.controller.dto.DateTimeDto;
+import net.pladema.sgx.dates.controller.dto.TimeDto;
 import org.mapstruct.Mapper;
 
 @Mapper
@@ -62,6 +65,49 @@ public interface LocalDateMapper {
 		if (time == null)
 			return null;
 		return time.format(DateTimeFormatter.ofPattern(JacksonDateFormatConfig.TIME_FORMAT));
+	}
+
+	default LocalTime fromTimeDtoToLocalTime(TimeDto timeDto) {
+		if (timeDto == null)
+			return null;
+		Integer seconds = timeDto.getSeconds() != null ? timeDto.getSeconds() : Integer.valueOf(0);
+		return LocalTime.of(timeDto.getHours(), timeDto.getMinutes(), seconds);
+	}
+
+	default LocalDate fromDateDtoToLocalDate(DateDto dateDto) {
+		if (dateDto == null)
+			return null;
+		return LocalDate.of(dateDto.getYear(), dateDto.getMonth(), dateDto.getDay());
+	}
+
+	default LocalDateTime fromDateTimeDtoToLocalDateTime(DateTimeDto dateTimeDto) {
+		if (dateTimeDto == null)
+			return null;
+
+		LocalTime time = fromTimeDtoToLocalTime(dateTimeDto.getTime());
+		LocalDate date = fromDateDtoToLocalDate(dateTimeDto.getDate());
+		return LocalDateTime.of(date, time);
+	}
+
+	default TimeDto fromLocalTimeToTimeDto(LocalTime time) {
+		if (time == null)
+			return null;
+		return new TimeDto(time.getHour(), time.getMinute(), time.getSecond());
+	}
+
+	default DateDto fromLocalDateToDateDto(LocalDate date) {
+		if (date == null)
+			return null;
+		return new DateDto(date.getYear(), date.getMonthValue(), date.getDayOfMonth());
+	}
+
+	default DateTimeDto fromLocalDateTimeToDateTimeDto(LocalDateTime localDateTime) {
+		if (localDateTime == null)
+			return null;
+
+		DateDto dateDto = fromLocalDateToDateDto(localDateTime.toLocalDate());
+		TimeDto timeDto = fromLocalTimeToTimeDto(localDateTime.toLocalTime());
+		return new DateTimeDto(dateDto, timeDto);
 	}
 
 }
