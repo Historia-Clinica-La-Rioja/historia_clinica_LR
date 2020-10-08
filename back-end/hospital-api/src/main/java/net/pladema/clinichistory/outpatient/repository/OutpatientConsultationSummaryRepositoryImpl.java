@@ -28,7 +28,7 @@ public class OutpatientConsultationSummaryRepositoryImpl implements OutpatientCo
     @SuppressWarnings("unchecked")
     @Transactional(readOnly = true)
     @Override
-    public List<OutpatientEvolutionSummaryVo> getAllOutpatientEvolutionSummary(Integer institutionId, Integer patientId) {
+    public List<OutpatientEvolutionSummaryVo> getAllOutpatientEvolutionSummary(Integer patientId) {
         String sqlString =" SELECT oc.id, oc.startDate, hp, p, n.description"
                 + " FROM OutpatientConsultation oc"
                 + " JOIN Document doc ON (doc.sourceId = oc.id)"
@@ -36,13 +36,11 @@ public class OutpatientConsultationSummaryRepositoryImpl implements OutpatientCo
                 + " JOIN HealthcareProfessional hp ON (hp.id = oc.doctorId)"
                 + " JOIN Person p ON (p.id = hp.personId)"
                 + " WHERE oc.billable = TRUE "
-                + " AND oc.institutionId = :institutionId"
                 + " AND oc.patientId = :patientId"
                 + " AND doc.sourceTypeId = " + SourceType.OUTPATIENT
                 + " ORDER BY oc.startDate DESC";
 
         List<Object[]> queryResult = entityManager.createQuery(sqlString)
-                .setParameter("institutionId", institutionId)
                 .setParameter("patientId", patientId)
                 .getResultList();
         List<OutpatientEvolutionSummaryVo> result = new ArrayList<>();

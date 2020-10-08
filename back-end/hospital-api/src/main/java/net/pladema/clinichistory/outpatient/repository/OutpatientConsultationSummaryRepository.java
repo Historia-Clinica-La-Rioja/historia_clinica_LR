@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface OutpatientConsultationSummaryRepository {
 
-    List<OutpatientEvolutionSummaryVo> getAllOutpatientEvolutionSummary(Integer institutionId, Integer patientId);
+    List<OutpatientEvolutionSummaryVo> getAllOutpatientEvolutionSummary(Integer patientId);
 
     List<HealthConditionSummaryVo> getHealthConditionsByPatient(Integer patientId, List<Integer> outpatientIds);
 

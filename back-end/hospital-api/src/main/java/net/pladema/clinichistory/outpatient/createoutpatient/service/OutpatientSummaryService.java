@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface OutpatientSummaryService {
 
-    List<OutpatientEvolutionSummaryBo> getSummary(Integer institutionId, Integer patientId);
+    List<OutpatientEvolutionSummaryBo> getSummary(Integer patientId);
 }

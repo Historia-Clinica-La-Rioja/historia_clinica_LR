@@ -31,8 +31,8 @@ public class OutpatientSummaryServiceImpl implements OutpatientSummaryService{
     }
 
     @Override
-    public List<OutpatientEvolutionSummaryBo> getSummary(Integer institutionId, Integer patientId) {
-        List<OutpatientEvolutionSummaryVo> queryResult = outpatientConsultationSummaryRepository.getAllOutpatientEvolutionSummary(institutionId, patientId);
+    public List<OutpatientEvolutionSummaryBo> getSummary(Integer patientId) {
+        List<OutpatientEvolutionSummaryVo> queryResult = outpatientConsultationSummaryRepository.getAllOutpatientEvolutionSummary(patientId);
         List<Integer> OutpatientConsultationIds = queryResult.stream().map(OutpatientEvolutionSummaryVo::getConsultationID).collect(Collectors.toList());
         List<HealthConditionSummaryVo> healthcConditions = outpatientConsultationSummaryRepository.getHealthConditionsByPatient(patientId, OutpatientConsultationIds);
         List<ReasonSummaryVo> reasons = outpatientConsultationSummaryRepository.getReasonsByPatient(patientId, OutpatientConsultationIds);

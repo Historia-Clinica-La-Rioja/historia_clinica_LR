@@ -204,7 +204,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
     public ResponseEntity<List<OutpatientEvolutionSummaryDto>> getEvolutionSummaryList(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId){
-        List<OutpatientEvolutionSummaryBo> evolutions = outpatientSummaryService.getSummary(institutionId, patientId);
+        List<OutpatientEvolutionSummaryBo> evolutions = outpatientSummaryService.getSummary(patientId);
         List<OutpatientEvolutionSummaryDto> result = outpatientConsultationMapper.fromListOutpatientEvolutionSummaryBo(evolutions);
         LOG.debug("Get  summary  => {}", result);
         return ResponseEntity.ok(result);
