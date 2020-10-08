@@ -10,8 +10,16 @@ import { ContextService } from '@core/services/context.service';
 import { MatStepper, MatHorizontalStepper } from '@angular/material/stepper';
 import { RenaperService } from '@api-rest/services/renaper.service';
 import { HealthInsuranceService } from '@api-rest/services/health-insurance.service';
-import { CreateAppointmentDto, MedicalCoverageDto, IdentificationTypeDto, GenderDto, BasicPersonalDataDto, ReducedPatientDto } from '@api-rest/api-model';
+import {
+	CreateAppointmentDto,
+	MedicalCoverageDto,
+	IdentificationTypeDto,
+	GenderDto,
+	BasicPersonalDataDto,
+	ReducedPatientDto
+} from '@api-rest/api-model';
 import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
+import { PersonIdentification } from '@presentation/pipes/person-identification.pipe';
 
 const ROUTE_SEARCH = 'pacientes/search';
 const TEMPORARY_PATIENT_ID = 3;
@@ -33,8 +41,7 @@ export class NewAppointmentComponent implements OnInit {
 	public patientId: any;
 	public showAddPatient = false;
 	public editable = true;
-	public person: BasicPersonalDataDto;
-	public overturnMode = false;
+	public person: PersonIdentification;
 	isTemporaryPatient = false;
 
 	public readonly hasError = hasError;
@@ -126,13 +133,21 @@ export class NewAppointmentComponent implements OnInit {
 		this.patientService.getBasicPersonalData(patientId)
 			.subscribe((reducedPatientDto: ReducedPatientDto) => {
 				this.patientFound();
-				this.person = reducedPatientDto.personalDataDto;
+				this.person = mapToPersonIdentification(reducedPatientDto.personalDataDto);
 				this.appointmentInfoForm.controls.phoneNumber.setValue(reducedPatientDto.personalDataDto.phoneNumber);
 				this.isTemporaryPatient = reducedPatientDto.patientTypeId === TEMPORARY_PATIENT_ID;
 				this.setHealthInsuranceoptions(reducedPatientDto);
 			}, _ => {
 				this.patientNotFound();
 			});
+
+		function mapToPersonIdentification(personalDataDto: BasicPersonalDataDto): PersonIdentification {
+			return {
+				firstName: personalDataDto.firstName,
+				lastName: personalDataDto.lastName,
+				identificationNumber: personalDataDto.identificationNumber
+			};
+		}
 	}
 
 	private patientFound() {
@@ -184,7 +199,7 @@ export class NewAppointmentComponent implements OnInit {
 			phoneNumber: this.appointmentInfoForm.controls.phoneNumber.value
 		};
 
-		this.appointmentFacade.addAppointment(newAppointment).subscribe(data => {
+		this.appointmentFacade.addAppointment(newAppointment).subscribe(_ => {
 			this.snackBarService.showSuccess('turnos.new-appointment.messages.APPOINTMENT_SUCCESS');
 			this.dialogRef.close(true);
 		}, error => {

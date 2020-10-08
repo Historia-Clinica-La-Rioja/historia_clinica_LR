@@ -22,6 +22,7 @@ import { MockComponent } from './components/mock/mock.component';
 import { DayTimeRangePipe } from './pipes/day-time-range.pipe';
 import { ViewDatePipe } from './pipes/view-date.pipe';
 import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
+import { PersonIdentificationPipe } from './pipes/person-identification.pipe';
 
 @NgModule({
 	declarations: [
@@ -45,6 +46,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		DayTimeRangePipe,
 		ViewDatePipe,
 		ViewHourMinutePipe,
+		PersonIdentificationPipe,
 	],
 	imports: [
 		CommonModule,
@@ -72,6 +74,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		DayTimeRangePipe,
 		ViewDatePipe,
 		ViewHourMinutePipe,
+		PersonIdentificationPipe
 	]
 })
 export class PresentationModule { }

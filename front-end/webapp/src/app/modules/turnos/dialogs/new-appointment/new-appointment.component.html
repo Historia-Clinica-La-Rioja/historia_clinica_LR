@@ -10,7 +10,7 @@
 			<mat-card class="mat-typography">
 				<form [formGroup]="formSearch" (ngSubmit)="search()">
 					<mat-card-content>
-						<div fxLayout="row wrap" fxLayoutGap="10px">
+						<div fxLayout="column">
 							<mat-form-field appearance="outline">
 								<mat-label>Tipo</mat-label>
 								<mat-select
@@ -42,12 +42,10 @@
 									</mat-radio-group>
 								</div>
 							</div>
-							<div>
-								<mat-form-field appearance="outline">
-									<mat-label translate="turnos.new-appointment.PATIENT_ID"></mat-label>
-									<input matInput type="text" id="patientId" name="patientId" formControlName="patientId">
-								</mat-form-field>
-							</div>
+							<mat-form-field appearance="outline">
+								<mat-label translate="turnos.new-appointment.PATIENT_ID"></mat-label>
+								<input matInput type="text" id="patientId" name="patientId" formControlName="patientId">
+							</mat-form-field>
 						</div>
 						<div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10px">
 							<ng-container *hasRole="['ADMINISTRATIVO']">
@@ -66,25 +64,23 @@
 
 		<mat-step [stepControl]="appointmentInfoForm" label="{{'turnos.new-appointment.STEP_2' | translate}}" [editable]="false">
 			<mat-card class="mat-typography">
-				<mat-list>
-					<mat-list-item id="patient">
+				<mat-list class="mat-form-field-wrapper">
+					<mat-list-item id="patient" class="patient-data-list">
 						<mat-icon color="primary" mat-list-icon [inline]="true">person</mat-icon>
 						<div fxLayout="column">
 							<strong *ngIf="isTemporaryPatient" translate="turnos.new-appointment.TEMPORARY_PATIENT"></strong>
 							<span translate="turnos.new-appointment.PATIENT_ID">: {{patientId}} </span>
-							<div fxLayout="row">
-								<span *ngIf="person?.lastName">{{person?.lastName}}</span>
-								<span *ngIf="person?.firstName">, {{person?.firstName}}</span>
-								<span *ngIf="person?.identificationNumber"> - {{person?.identificationNumber}}</span>
-							</div>
+							<span *ngIf="person">
+								{{person | personIdentification}}
+							</span>
 						</div>
 					</mat-list-item>
 				</mat-list>
 				<div fxLayout="row" fxLayoutAlign="space-around center">
 					<mat-spinner *ngIf="!healtInsuranceOptions.length"></mat-spinner>
 				</div>
-				<form *ngIf="healtInsuranceOptions.length" [formGroup]="appointmentInfoForm" class="appointmentInfoForm">
-					<div fxLayout="row wrap" fxLayoutGap="10px">
+				<form *ngIf="healtInsuranceOptions.length" [formGroup]="appointmentInfoForm">
+					<div fxLayout="column">
 						<mat-form-field appearance="outline">
 							<mat-label>Obra Social</mat-label>
 							<mat-select
@@ -107,7 +103,7 @@
 								placeholder="Prepaga">
 						</mat-form-field>
 					</div>
-						<div fxLayout="row wrap" fxLayoutGap="10px">
+					<div fxLayout="column">
 						<mat-form-field appearance="outline">
 							<mat-label>Nro de afiliado</mat-label>
 							<input matInput
@@ -131,7 +127,7 @@
 						</mat-form-field>
 					</div>
 				</form>
-				<div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10px">
+				<div fxLayout="row" fxLayoutAlign="end">
 					<button mat-flat-button matStepperPrevious color="primary" (click)="toFirstStep()">
 						<span [translate]="'buttons.BACK'"></span>
 					</button>

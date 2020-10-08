@@ -11,14 +11,19 @@
 		@include form-radio-button;
 	}
 
+	.mat-form-field {
+		width: 100%;
+	}
+
+	::ng-deep mat-list-item.patient-data-list {
+		.mat-list-item-content {
+			padding: 0;
+		}
+	}
+
 }
 ::ng-deep .mat-horizontal-stepper-header{
     pointer-events: none !important;
-}
-
-
-.appointmentInfoForm {
-	margin-left: 24px;
 }
 
 .padding-bottom{
