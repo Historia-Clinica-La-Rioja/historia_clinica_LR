@@ -894,6 +894,11 @@ export interface PublicInfoDto {
     flavor: string;
 }
 
+export interface RecaptchaPublicConfigDto {
+    enabled: boolean;
+    siteKey: string;
+}
+
 export interface ReducedPatientDto {
     patientTypeId: number;
     personalDataDto: BasicPersonalDataDto;
