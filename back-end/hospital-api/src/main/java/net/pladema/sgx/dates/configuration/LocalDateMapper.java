@@ -67,46 +67,46 @@ public interface LocalDateMapper {
 		return time.format(DateTimeFormatter.ofPattern(JacksonDateFormatConfig.TIME_FORMAT));
 	}
 
-	default LocalTime fromTimeDtoToLocalTime(TimeDto timeDto) {
+	default LocalTime fromTimeDto(TimeDto timeDto) {
 		if (timeDto == null)
 			return null;
 		Integer seconds = timeDto.getSeconds() != null ? timeDto.getSeconds() : Integer.valueOf(0);
 		return LocalTime.of(timeDto.getHours(), timeDto.getMinutes(), seconds);
 	}
 
-	default LocalDate fromDateDtoToLocalDate(DateDto dateDto) {
+	default LocalDate fromDateDto(DateDto dateDto) {
 		if (dateDto == null)
 			return null;
 		return LocalDate.of(dateDto.getYear(), dateDto.getMonth(), dateDto.getDay());
 	}
 
-	default LocalDateTime fromDateTimeDtoToLocalDateTime(DateTimeDto dateTimeDto) {
+	default LocalDateTime fromDateTimeDto(DateTimeDto dateTimeDto) {
 		if (dateTimeDto == null)
 			return null;
 
-		LocalTime time = fromTimeDtoToLocalTime(dateTimeDto.getTime());
-		LocalDate date = fromDateDtoToLocalDate(dateTimeDto.getDate());
+		LocalTime time = fromTimeDto(dateTimeDto.getTime());
+		LocalDate date = fromDateDto(dateTimeDto.getDate());
 		return LocalDateTime.of(date, time);
 	}
 
-	default TimeDto fromLocalTimeToTimeDto(LocalTime time) {
+	default TimeDto toTimeDto(LocalTime time) {
 		if (time == null)
 			return null;
 		return new TimeDto(time.getHour(), time.getMinute(), time.getSecond());
 	}
 
-	default DateDto fromLocalDateToDateDto(LocalDate date) {
+	default DateDto toDateDto(LocalDate date) {
 		if (date == null)
 			return null;
 		return new DateDto(date.getYear(), date.getMonthValue(), date.getDayOfMonth());
 	}
 
-	default DateTimeDto fromLocalDateTimeToDateTimeDto(LocalDateTime localDateTime) {
+	default DateTimeDto toDateTimeDto(LocalDateTime localDateTime) {
 		if (localDateTime == null)
 			return null;
 
-		DateDto dateDto = fromLocalDateToDateDto(localDateTime.toLocalDate());
-		TimeDto timeDto = fromLocalTimeToTimeDto(localDateTime.toLocalTime());
+		DateDto dateDto = toDateDto(localDateTime.toLocalDate());
+		TimeDto timeDto = toTimeDto(localDateTime.toLocalTime());
 		return new DateTimeDto(dateDto, timeDto);
 	}
 
