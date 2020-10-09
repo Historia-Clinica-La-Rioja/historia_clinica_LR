@@ -7,11 +7,17 @@
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"/>
-
+    <!--
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+              integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous"/>
+    -->
     <style>
 		h3 {
 			padding-top:10px
 		}
+        row {
+            padding-left: 50px
+        }
 	</style>
 </head>
 <body>
@@ -25,7 +31,7 @@
 
     <div th:fragment="personalData (patientType)">
         <h3 th:text="${patientType}"></h3>
-        <div class="row" th:if="${patient.person != null}">
+        <div th:if="${patient.person != null}">
             <strong>- ID: </strong><label  th:text="${patient.id}"></label><br/>
             <strong>- Nombre: </strong><label  th:text="${patient.person.firstName}"></label><br/>
             <strong>- Apellido: </strong><label th:text="${patient.person.lastName}"></label><br/>
@@ -37,12 +43,12 @@
     <!-- Diagnóstico principal -->
     <div th:fragment="mainDiagnosis (message)">
         <h3 th:text="${message}"></h3>
-        <div class="row" th:if="${mainDiagnosis == null}">
+        <div th:if="${mainDiagnosis == null}">
             <dl class="lista" >
                 <dd><p >Sin cambios registrados</p></dd>
             </dl>
         </div>
-        <div class="row" th:if="${mainDiagnosis != null}">
+        <div th:if="${mainDiagnosis != null}">
             <dl>
                 <dd><p  th:text="${'- ' + mainDiagnosis.snomed.pt}"></p></dd>
                 <dl>
@@ -56,12 +62,12 @@
     <!-- Otros Diagnósticos/enfermedades -->
     <div th:fragment="diagnosis (message)">
         <h3 th:text="${message}"></h3>
-        <div class="row" th:if="${#lists.isEmpty(diagnosis)}">
+        <div th:if="${#lists.isEmpty(diagnosis)}">
             <dl class="lista" >
                 <dd><p >Sin cambios registrados</p></dd>
             </dl>
         </div>
-        <div class="row" th:if="${not #lists.isEmpty(diagnosis)}">
+        <div th:if="${not #lists.isEmpty(diagnosis)}">
             <dl th:each="diagnose,iter: ${diagnosis}">
                 <dd><p  th:text="${'- ' + diagnose.snomed.pt}"></p></dd>
                 <dl>
@@ -76,12 +82,12 @@
     <!-- Motivos -->
     <div th:fragment="reasons (message)">
         <h3 th:text="${message}"></h3>
-        <div class="row" th:if="${#lists.isEmpty(reasons)}">
+        <div th:if="${#lists.isEmpty(reasons)}">
             <dl class="lista" >
                 <dd><p >Sin cambios registrados</p></dd>
             </dl>
         </div>
-        <div class="row" th:if="${not #lists.isEmpty(reasons)}">
+        <div th:if="${not #lists.isEmpty(reasons)}">
             <dl th:each="reason,iter: ${reasons}">
                 <dd><p  th:text="${'- ' + reason.snomed.pt}"></p></dd>
             </dl>
@@ -92,12 +98,12 @@
     <!-- Procedimientos -->
     <div th:fragment="procedures (message)">
         <h3 th:text="${message}"></h3>
-        <div class="row" th:if="${#lists.isEmpty(procedures)}">
+        <div th:if="${#lists.isEmpty(procedures)}">
             <dl class="lista" >
                 <dd><p >Sin cambios registrados</p></dd>
             </dl>
         </div>
-        <div class="row" th:if="${not #lists.isEmpty(procedures)}">
+        <div th:if="${not #lists.isEmpty(procedures)}">
             <dl th:each="procedure,iter: ${procedures}">
                 <dd><p  th:text="${'- ' + procedure.snomed.pt}"></p></dd>
                 <dl>
@@ -111,12 +117,12 @@
     <!-- Problems -->
     <div th:fragment="problems (message)">
         <h3 th:text="${message}"></h3>
-        <div class="row" th:if="${#lists.isEmpty(problems)}">
+        <div th:if="${#lists.isEmpty(problems)}">
             <dl class="lista" >
                 <dd><p >Sin cambios registrados</p></dd>
             </dl>
         </div>
-        <div class="row" th:if="${not #lists.isEmpty(problems)}">
+        <div th:if="${not #lists.isEmpty(problems)}">
             <dl th:each="problem,iter: ${problems}">
                 <dd><p  th:text="${'- ' + problem.snomed.pt}"></p></dd>
                 <dl>
@@ -133,12 +139,12 @@
 
     <div th:fragment="antropometicData">
     <h3>Datos antropométricos</h3>
-        <div class="row" th:if="${anthropometricData == null}">
+        <div th:if="${anthropometricData == null}">
             <dl>
                 <dd><p>Sin cambios registrados</p></dd>
             </dl>
         </div>
-        <div class="row " th:if="${anthropometricData  != null}">
+        <div th:if="${anthropometricData  != null}">
             - Factor sanguíneo: <strong><label  th:if="${anthropometricData.bloodType  != null}" th:text="${anthropometricData.bloodType.value}"></label></strong><br/>
             - Talla: <strong><label  th:if="${anthropometricData.height  != null}" th:text="${anthropometricData.height.value + 'cm'}"></label></strong><br/>
             - Peso: <strong><label  th:if="${anthropometricData.weight  != null}" th:text="${anthropometricData.weight.value + 'Kg'}"></label></strong><br/>
@@ -150,12 +156,12 @@
 
     <div th:fragment="personalHistory">
         <h3>Antecedentes personales</h3>
-        <div class="row" th:if="${#lists.isEmpty(personalHistories)}">
+        <div th:if="${#lists.isEmpty(personalHistories)}">
             <dl>
                 <dd><p >Sin cambios registrados</p></dd>
             </dl>
         </div>
-        <div class="row" th:if="${not #lists.isEmpty(personalHistories)}">
+        <div th:if="${not #lists.isEmpty(personalHistories)}">
             <dl th:each="personalHistory,iter: ${personalHistories}">
                 <dd><p  th:text="${'- ' + personalHistory.snomed.pt}"></p></dd>
             </dl>
@@ -166,10 +172,10 @@
 
     <div th:fragment="familyHistory">
         <h3>Antecedentes familiares</h3>
-        <div class="row" th:if="${#lists.isEmpty(familyHistories)}">
+        <div th:if="${#lists.isEmpty(familyHistories)}">
             <dd><p>Sin cambios registrados</p></dd>
         </div>
-        <div class="row" th:if="${not #lists.isEmpty(familyHistories)}" >
+        <div th:if="${not #lists.isEmpty(familyHistories)}" >
             <dl th:each="familyHistory,iter: ${familyHistories}">
                 <dd><p  th:text="${'- ' +familyHistory.snomed.pt}"></p></dd>
             </dl>
@@ -180,12 +186,12 @@
 
     <div th:fragment="allergies">
         <h3>Alergias</h3>
-        <div class="row" th:if="${#lists.isEmpty(allergies)}">
+        <div th:if="${#lists.isEmpty(allergies)}">
             <dl>
                 <dd><p >Sin cambios registrados</p></dd>
             </dl>
         </div>
-        <div class="row " th:if="${not #lists.isEmpty(allergies)}">
+        <div th:if="${not #lists.isEmpty(allergies)}">
             <dl class="lista" th:each="allergy,iter: ${allergies}">
                 <dd><p  th:text="${'- ' + allergy.snomed.pt}"></p></dd>
                 <dl>
@@ -200,16 +206,16 @@
 
     <div th:fragment="immunizations">
         <h3>Vacunas</h3>
-        <div class="row" th:if="${#lists.isEmpty(immunizations)}">
+        <div th:if="${#lists.isEmpty(immunizations)}">
             <dl>
                 <dd><p>Sin cambios registrados</p></dd>
             </dl>
         </div>
-        <div class="row" th:if="${not #lists.isEmpty(immunizations)}">
+        <div th:if="${not #lists.isEmpty(immunizations)}">
             <dl th:each="immunization,iter: ${immunizations}">
                 <dd><p  th:text="${'- ' + immunization.snomed.pt}"></p></dd>
                 <dl>
-                    <dd><strong>Fecha de administración: </strong><label th:text="${immunization.administrationDate}"></label></dd>
+                    <dd><strong th:if="${immunization.administrationDate != null}">Fecha de administración: </strong><label th:text="${immunization.administrationDate}"></label></dd>
                 </dl>
             </dl>
         </div>
@@ -219,12 +225,12 @@
 
     <div th:fragment="medications (title)">
         <h3 th:text="${title}"></h3>
-        <div class="row" th:if="${#lists.isEmpty(medications)}">
+        <div th:if="${#lists.isEmpty(medications)}">
             <dl>
                 <dd><p>Sin cambios registrados</p></dd>
             </dl>
         </div>
-        <div class="row" th:if="${not #lists.isEmpty(medications)}">
+        <div th:if="${not #lists.isEmpty(medications)}">
             <dl th:each="medication,iter: ${medications}">
                 <dd><p  th:text="${'- ' + medication.snomed.pt}"></p></dd>
                 <dl>
@@ -238,47 +244,47 @@
 
     <div th:fragment="vitalSigns">
         <h3 >Signos vitales</h3>
-        <div class="row" th:if="${vitalSigns  == null}">
+        <div  th:if="${vitalSigns  == null}">
             <dl>
                 <dd><p>Sin cambios registrados</p></dd>
             </dl>
         </div>
 
-        <div class="row " th:if="${vitalSigns != null}">
+        <div th:if="${vitalSigns != null}">
             - Frecuencía cardíaca:
-            <strong><label  th:if="${vitalSigns.heartRate  == null}">Sin cambios registrados</label></strong>
-            <strong><label  th:if="${vitalSigns.heartRate  != null}" th:text="${vitalSigns.heartRate.value + '/min'} "></label></strong>
-            &nbsp;&nbsp;&nbsp;&nbsp;<label th:if="${vitalSigns.heartRate != null}" >Fecha de medición: </label>
-            <strong><label  th:if="${vitalSigns.heartRate != null}" th:text="${#temporals.format(vitalSigns.heartRate.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></label></strong><br/>
+            <strong><span  th:if="${vitalSigns.heartRate  == null}">Sin cambios registrados</span></strong>
+            <strong><span  th:if="${vitalSigns.heartRate  != null}" th:text="${vitalSigns.heartRate.value + '/min'} "></span></strong>
+            &nbsp;<span th:if="${vitalSigns.heartRate != null}" >Fecha de medición: </span>
+            <strong><span th:if="${vitalSigns.heartRate != null}" th:text="${#temporals.format(vitalSigns.heartRate.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
 
             - Frecuencía respiratoria:
-            <strong><label  th:if="${vitalSigns.respiratoryRate  == null}">Sin cambios registrados</label></strong>
-            <strong><label  th:if="${vitalSigns.respiratoryRate != null}" th:text="${vitalSigns.respiratoryRate.value + '/min'}"></label></strong>
-            &nbsp;&nbsp;&nbsp;&nbsp;<label th:if="${vitalSigns.respiratoryRate != null}" >Fecha de medición: </label>
-            <strong><label  th:if="${vitalSigns.respiratoryRate != null}" th:text="${#temporals.format(vitalSigns.respiratoryRate.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></label></strong><br/>
+            <strong><span  th:if="${vitalSigns.respiratoryRate  == null}">Sin cambios registrados</span></strong>
+            <strong><span  th:if="${vitalSigns.respiratoryRate != null}" th:text="${vitalSigns.respiratoryRate.value + '/min'}"></span></strong>
+            &nbsp;<span th:if="${vitalSigns.respiratoryRate != null}" >Fecha de medición: </span>
+            <strong><span  th:if="${vitalSigns.respiratoryRate != null}" th:text="${#temporals.format(vitalSigns.respiratoryRate.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
 
             - Tensión arterial (Sistolica/Diastolica):
-            <strong><label  th:if="${(vitalSigns.systolicBloodPressure == null) &&  (vitalSigns.diastolicBloodPressure == null)}">Sin cambios registrados</label></strong>
+            <strong><span  th:if="${(vitalSigns.systolicBloodPressure == null) &&  (vitalSigns.diastolicBloodPressure == null)}">Sin cambios registrados</span></strong>
 
-            <strong><label  th:if="${(vitalSigns.systolicBloodPressure != null) &&  (vitalSigns.diastolicBloodPressure == null)}" th:text="${vitalSigns.systolicBloodPressure.value + '/- mm Hg'}"></label></strong>
-            <strong><label  th:if="${(vitalSigns.systolicBloodPressure == null) &&  (vitalSigns.diastolicBloodPressure != null)}" th:text="${'-/' + vitalSigns.diastolicBloodPressure.value + ' mm Hg'}"></label></strong>
-            <strong><label  th:if="${(vitalSigns.systolicBloodPressure != null) &&  (vitalSigns.diastolicBloodPressure != null)}" th:text="${vitalSigns.systolicBloodPressure.value + '/' + vitalSigns.diastolicBloodPressure.value + ' mm Hg'}"></label></strong>
+            <strong><span  th:if="${(vitalSigns.systolicBloodPressure != null) &&  (vitalSigns.diastolicBloodPressure == null)}" th:text="${vitalSigns.systolicBloodPressure.value + '/- mm Hg'}"></span></strong>
+            <strong><span  th:if="${(vitalSigns.systolicBloodPressure == null) &&  (vitalSigns.diastolicBloodPressure != null)}" th:text="${'-/' + vitalSigns.diastolicBloodPressure.value + ' mm Hg'}"></span></strong>
+            <strong><span  th:if="${(vitalSigns.systolicBloodPressure != null) &&  (vitalSigns.diastolicBloodPressure != null)}" th:text="${vitalSigns.systolicBloodPressure.value + '/' + vitalSigns.diastolicBloodPressure.value + ' mm Hg'}"></span></strong>
 
 
-            &nbsp;&nbsp;&nbsp;<label th:if="${(vitalSigns.systolicBloodPressure != null) ||  (vitalSigns.diastolicBloodPressure != null)}" >Fecha de medición: </label>
-            <strong><label  th:if="${(vitalSigns.systolicBloodPressure != null) ||  (vitalSigns.diastolicBloodPressure != null)}" th:text="${#temporals.format(vitalSigns.systolicBloodPressure.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></label></strong><br/>
+            &nbsp;<span th:if="${(vitalSigns.systolicBloodPressure != null) ||  (vitalSigns.diastolicBloodPressure != null)}" >Fecha de medición: </span>
+            <strong><span  th:if="${(vitalSigns.systolicBloodPressure != null) ||  (vitalSigns.diastolicBloodPressure != null)}" th:text="${#temporals.format(vitalSigns.systolicBloodPressure.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
 
             - Temperatura corporal:
-            <strong><label  th:if="${vitalSigns.temperature  == null}">Sin cambios registrados</label></strong>
-            <strong><label  th:if="${vitalSigns.temperature != null}" th:text="${vitalSigns.temperature.value  + '°C'}"></label></strong>
-            &nbsp;&nbsp;&nbsp;&nbsp;<label th:if="${vitalSigns.temperature != null}" >Fecha de medición: </label>
-            <strong><label  th:if="${vitalSigns.temperature != null}" th:text="${#temporals.format(vitalSigns.temperature.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></label></strong><br/>
+            <strong><span  th:if="${vitalSigns.temperature  == null}">Sin cambios registrados</span></strong>
+            <strong><span  th:if="${vitalSigns.temperature != null}" th:text="${vitalSigns.temperature.value  + '°C'}"></span></strong>
+            &nbsp;<span th:if="${vitalSigns.temperature != null}" >Fecha de medición: </span>
+            <strong><span  th:if="${vitalSigns.temperature != null}" th:text="${#temporals.format(vitalSigns.temperature.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
 
             - Saturación de oxígeno:
-            <strong><label  th:if="${vitalSigns.bloodOxygenSaturation  == null}">Sin cambios registrados</label></strong>
-            <strong><label  th:if="${vitalSigns.bloodOxygenSaturation != null}" th:text="${vitalSigns.bloodOxygenSaturation.value+ '%' + 'Hs'}"></label></strong>
-            &nbsp;&nbsp;&nbsp;&nbsp;<label th:if="${vitalSigns.bloodOxygenSaturation != null}" >Fecha de medición: </label>
-            <strong><label  th:if="${vitalSigns.bloodOxygenSaturation != null}" th:text="${#temporals.format(vitalSigns.bloodOxygenSaturation.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></label></strong><br/>
+            <strong><span  th:if="${vitalSigns.bloodOxygenSaturation  == null}">Sin cambios registrados</span></strong>
+            <strong><span  th:if="${vitalSigns.bloodOxygenSaturation != null}" th:text="${vitalSigns.bloodOxygenSaturation.value+ '%' + 'Hs'}"></span></strong>
+            &nbsp;<span th:if="${vitalSigns.bloodOxygenSaturation != null}" >Fecha de medición: </span>
+            <strong><span  th:if="${vitalSigns.bloodOxygenSaturation != null}" th:text="${#temporals.format(vitalSigns.bloodOxygenSaturation.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
         </div>
     </div>
 
@@ -286,12 +292,12 @@
 
     <div th:fragment="notes-base">
         <h3>Observaciones</h3>
-        <div class="row" th:if="${notes == null}">
+        <div th:if="${notes == null}">
             <dl>
                 <dd><p>Sin cambios registrados</p></dd>
             </dl>
         </div>
-        <div class="row" th:if="${notes != null}">
+        <div th:if="${notes != null}">
             <div class="col-12" th:if="${notes.currentIllnessNote}">
                 <strong class="center-padding">Enfermedad actual</strong>
                 <p class="center-padding" th:text="${notes.currentIllnessNote}"></p>
@@ -321,12 +327,12 @@
 
     <div th:fragment="notes-epicrisis">
         <h3>Observaciones</h3>
-        <div class="row" th:if="${notes == null}">
+        <div th:if="${notes == null}">
             <dl>
                 <dd><p>Sin cambios registrados</p></dd>
             </dl>
         </div>
-        <div class="row" th:if="${notes != null}">
+        <div th:if="${notes != null}">
             <div class="col-12" th:if="${notes.evolutionNote}">
                 <strong class="center-padding">Evolución</strong>
                 <p class="center-padding" th:text="${notes.evolutionNote}"></p>
@@ -352,12 +358,12 @@
 
     <div th:fragment="notes-outpatient">
         <h3>Observaciones</h3>
-        <div class="row" th:if="${notes == null}">
+        <div th:if="${notes == null}">
             <dl>
                 <dd><p>Sin cambios registrados</p></dd>
             </dl>
         </div>
-        <div class="row" th:if="${notes != null}">
+        <div th:if="${notes != null}">
             <div class="col-12" th:if="${notes.otherNote}">
                 <strong class="center-padding">Evolución</strong>
                 <p class="center-padding" th:text="${notes.otherNote}"></p>

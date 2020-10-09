@@ -1,23 +1,26 @@
 package net.pladema.sgx.pdf;
 
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.pdf.PdfWriter;
-import com.itextpdf.tool.xml.XMLWorkerHelper;
+import com.lowagie.text.DocumentException;
 import net.pladema.flavor.service.FlavorService;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.xhtmlrenderer.pdf.ITextRenderer;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Locale;
 import java.util.Map;
 import java.util.function.Function;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-import org.thymeleaf.context.Context;
-import org.thymeleaf.spring5.SpringTemplateEngine;
 
 @Component
 public class PdfService {
@@ -76,12 +79,16 @@ public class PdfService {
     }
 
     private static ByteArrayOutputStream writeAndGetOutput(InputStream is, ByteArrayOutputStream os)
-            throws DocumentException, IOException {
-        com.itextpdf.text.Document document = new com.itextpdf.text.Document();
-        PdfWriter writer = PdfWriter.getInstance(document, os);
-        document.open();
-        XMLWorkerHelper.getInstance().parseXHtml(writer, document, is);
-        document.close();
+            throws IOException, DocumentException {
+        String processedHtml = IOUtils.toString(is, StandardCharsets.UTF_8.name());
+        ITextRenderer renderer = new ITextRenderer();
+        renderer.setDocumentFromString(processedHtml, "");
+        renderer.layout();
+        renderer.createPDF(os, false);
+        renderer.finishPDF();
         return os;
     }
+
+
+
 }
