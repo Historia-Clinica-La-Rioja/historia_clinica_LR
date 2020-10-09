@@ -14,7 +14,6 @@ import { HasRoleDirective } from './directives/has-role.directive';
 import { FeatureFlagDirective } from './directives/feature-flag.directive';
 import { DatePickerComponent } from './dialogs/date-picker/date-picker.component';
 
-const globalSettings: RecaptchaSettings = { siteKey: '6Legz84ZAAAAAFSBqYVwf8gKX5bFrt71zVPY2Tdq' }; // TODO completar cuando se implemente para esta aplicacion
 
 @NgModule({
 	declarations: [
@@ -52,10 +51,7 @@ const globalSettings: RecaptchaSettings = { siteKey: '6Legz84ZAAAAAFSBqYVwf8gKX5
 		SidenavComponent,
 		TranslateModule,
 	],
-	providers: [{
-		provide: RECAPTCHA_SETTINGS,
-		useValue: globalSettings,
-	}]
+	providers: []
 })
 export class CoreModule {
 }

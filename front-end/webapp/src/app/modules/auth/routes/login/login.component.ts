@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AuthenticationService } from '../../services/authentication.service';
 import { catchError } from 'rxjs/operators';
-import { ApiErrorMessageDto } from '@api-rest/api-model';
+import { ApiErrorMessageDto, RecaptchaPublicConfigDto } from '@api-rest/api-model';
 import { RecaptchaService } from "@api-rest/services/recaptcha.service";
+import { PublicService } from "@api-rest/services/public.service";
 
 @Component({
 	selector: 'app-login',
@@ -15,11 +16,14 @@ export class LoginComponent implements OnInit {
 	public form: FormGroup;
 	public recaptchaRes: string;
 	public recaptchaEnable: boolean = false;
+	public recaptchaSiteKey: string = '';
 
 	constructor(
 		private formBuilder: FormBuilder,
 		private authenticationService: AuthenticationService,
-		private recaptchaService: RecaptchaService) { }
+		private recaptchaService: RecaptchaService,
+		private publicService: PublicService) {
+	}
 
 	ngOnInit(): void {
 
@@ -29,10 +33,13 @@ export class LoginComponent implements OnInit {
 			recaptchaReactive: []
 		});
 
-		this.recaptchaService.isRecaptchaEnable().subscribe((data: boolean) => {
-			if(data) {
-				this.recaptchaEnable = data;
-				this.form.controls.recaptchaReactive.setValidators(Validators.required);
+		this.publicService.getRecaptchaPublicConfig().subscribe((recaptchaPublicConfigDto: RecaptchaPublicConfigDto) => {
+			if(recaptchaPublicConfigDto) {
+				this.recaptchaEnable = recaptchaPublicConfigDto.enabled;
+				this.recaptchaSiteKey = recaptchaPublicConfigDto.siteKey;
+				if(this.recaptchaEnable){
+					this.form.controls.recaptchaReactive.setValidators(Validators.required);
+				}
 			}
 		});
 

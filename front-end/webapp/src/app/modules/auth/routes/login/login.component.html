@@ -42,10 +42,10 @@
 
 				<app-form-input *ngIf="recaptchaEnable" fxLayout="row" fxLayoutAlign="center">
 					<div class="re-captcha-container">
-						<re-captcha formControlName="recaptchaReactive" (resolved)="reCaptchaResolved($event)">
+						<re-captcha formControlName="recaptchaReactive" (resolved)="reCaptchaResolved($event)"
+						            [siteKey]="recaptchaSiteKey">
 						</re-captcha>
-						<mat-error
-							*ngIf="!form.pristine && form.controls.recaptchaReactive.hasError('required')">
+						<mat-error *ngIf="form.touched && hasError('required', 'recaptchaReactive')">
 							Verificación recaptcha requerida
 						</mat-error>
 					</div>
