@@ -116,7 +116,7 @@ export class NewAppointmentComponent implements OnInit {
 				genderId: formSearchValue.gender,
 			};
 
-			this.patientService.quickGetPatient(searchRequest).subscribe(
+			this.patientService.getPatientMinimal(searchRequest).subscribe(
 				(data: number[]) => {
 					if (data.length) {
 						this.patientId = data[0];

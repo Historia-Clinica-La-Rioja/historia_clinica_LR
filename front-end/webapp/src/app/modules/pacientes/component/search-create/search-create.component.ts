@@ -68,7 +68,7 @@ export class SearchCreateComponent implements OnInit {
 				identificationNumber: this.formSearch.controls.identifNumber.value,
 				genderId: this.formSearch.controls.gender.value,
 			}
-			this.patientService.quickGetPatient(searchRequest).subscribe(
+			this.patientService.getPatientMinimal(searchRequest).subscribe(
 				(data: number[]) => {
 					if (!data.length) {
 						this.router.navigate([this.routePrefix + ROUTE_SEARCH],

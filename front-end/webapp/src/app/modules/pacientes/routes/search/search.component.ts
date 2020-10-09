@@ -20,7 +20,7 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 const ROUTE_NEW = 'pacientes/new';
 const ROUTE_HOME = 'pacientes';
 const RENAPER_FFLAG = 'habilitarServicioRenaper';
-
+const DNI_ID = 1;
 @Component({
 	selector: 'app-search',
 	templateUrl: './search.component.html',
@@ -70,7 +70,7 @@ export class SearchComponent implements OnInit {
 
 			this.featureFlagService.isOn(RENAPER_FFLAG)
 				.subscribe(result => {
-					if (result) {
+					if (result && Number(this.identificationTypeId) === DNI_ID) {
 						this.callRenaperService();
 					} else {
 						this.isLoading = false;

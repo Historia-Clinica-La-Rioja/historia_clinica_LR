@@ -45,7 +45,7 @@ export class PatientService {
 	constructor(private http: HttpClient) {
 	}
 
-	quickGetPatient(params): Observable<number[]> {
+	getPatientMinimal(params): Observable<number[]> {
 		let url = `${environment.apiBase}/patient/minimalsearch`;
 		return this.http.get<number[]>(url, { params: params });
 	}
