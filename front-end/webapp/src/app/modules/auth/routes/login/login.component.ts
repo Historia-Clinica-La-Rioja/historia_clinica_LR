@@ -54,6 +54,7 @@ export class LoginComponent implements OnInit {
 			).pipe(
 				catchError((err: ApiErrorMessageDto) => {
 					this.apiError = err;
+					this.form.controls.recaptchaReactive.reset();
 					this.form.enable();
 					throw err;
 				}),
