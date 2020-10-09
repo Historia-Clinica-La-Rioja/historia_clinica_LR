@@ -67,8 +67,7 @@ export class VacunasComponent implements OnInit {
 
 	openDialog() {
 		const dialogRef = this.dialog.open(AddInmunizationComponent, {
-			disableClose: true,
-			width: '35%',
+			disableClose: true
 		});
 
 		dialogRef.afterClosed().subscribe(submitted => {
