@@ -73,6 +73,7 @@ const MyReCAPTCHA = props => {
 	//let recaptchaEnabled = false;
 	const [recaptchaEnabled, setRecaptchaEnabled] = useState(false);
 	const { onChange } = props;
+
 	useEffect(() => {
 		apiRest.isRecaptchaEnable({method: 'GET'})
 				.then(response => {
@@ -116,7 +117,6 @@ const LoginForm: FunctionComponent<Props> = props => {
 
 	const validate = (values: FormData) => {
 		const errors = {username: undefined, password: undefined};
-
 		if (!values.username) {
 			errors.username = translate('ra.validation.required');
 		}
@@ -186,14 +186,14 @@ const LoginForm: FunctionComponent<Props> = props => {
 									</div>
 								</div>
 
-								<MyReCAPTCHA onChange={onRecaptchaChange}/>
+								<MyReCAPTCHA label="myRecaptcha" onChange={onRecaptchaChange} />
 
 								<CardActions>
 									<Button
 											variant="contained"
 											type="submit"
 											color="primary"
-											disabled={loading}
+											disabled={ loading || !raToken }
 											className={classes.button}
 									>
 										{loading && (
