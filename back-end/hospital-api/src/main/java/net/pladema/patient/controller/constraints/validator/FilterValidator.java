@@ -33,7 +33,10 @@ public class FilterValidator implements ConstraintValidator<FilterValid, String>
         } catch (IOException e) {
             LOG.error(String.format("Error mapping filter: %s", searchFilterStr), e);
         }
-        return (searchFilter != null && searchFilter.getFirstName() != null && searchFilter.getLastName() != null
-                && searchFilter.getGenderId() != null && searchFilter.getIdentificationNumber() != null);
+        return (searchFilter != null &&
+                (   searchFilter.getFirstName() != null ||
+                    searchFilter.getLastName() != null ||
+                    searchFilter.getBirthDate() != null ||
+                    searchFilter.getIdentificationNumber() != null));
     }
 }
