@@ -2,15 +2,16 @@ package net.pladema.establishment.controller;
 
 import java.util.List;
 
+import net.pladema.staff.controller.dto.ProfessionalsByClinicalSpecialtyDto;
+import net.pladema.staff.controller.mapper.ClinicalSpecialtyMapper;
 import net.pladema.staff.repository.ClinicalSpecialtyRepository;
+import net.pladema.staff.service.HealthcareProfessionalSpecialtyService;
+import net.pladema.staff.service.domain.ProfessionalsByClinicalSpecialtyBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import io.swagger.annotations.Api;
 import net.pladema.staff.repository.entity.ClinicalSpecialty;
@@ -24,8 +25,17 @@ public class ClinicalSpecialtyController {
 
     private ClinicalSpecialtyRepository clinicalSpecialtyRepository;
 
-    public ClinicalSpecialtyController(ClinicalSpecialtyRepository clinicalSpecialtyRepository) {
+    private HealthcareProfessionalSpecialtyService healthcareProfessionalSpecialtyService;
+
+    private ClinicalSpecialtyMapper clinicalSpecialtyMapper;
+
+    public ClinicalSpecialtyController(
+            ClinicalSpecialtyRepository clinicalSpecialtyRepository,
+            HealthcareProfessionalSpecialtyService healthcareProfessionalSpecialtyService,
+            ClinicalSpecialtyMapper clinicalSpecialtyMapper) {
         this.clinicalSpecialtyRepository = clinicalSpecialtyRepository;
+        this.healthcareProfessionalSpecialtyService = healthcareProfessionalSpecialtyService;
+        this.clinicalSpecialtyMapper = clinicalSpecialtyMapper;
     }
 
     @GetMapping("/professional/{professionalId}")
@@ -39,5 +49,23 @@ public class ClinicalSpecialtyController {
                 clinicalSpecialties);
         return ResponseEntity.ok(clinicalSpecialties);
     }
+
+    @GetMapping(value = "/professional", params = "professionalsIds")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA')")
+    public ResponseEntity<List<ProfessionalsByClinicalSpecialtyDto>> getManyByProfessionals(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @RequestParam List<Integer> professionalsIds) {
+
+        List<ProfessionalsByClinicalSpecialtyBo> clinicalSpecialties =
+                this.healthcareProfessionalSpecialtyService.getProfessionalsByClinicalSpecialtyBo(professionalsIds);
+
+        List<ProfessionalsByClinicalSpecialtyDto> professionalsByClinicalSpecialtyDtos =
+                clinicalSpecialtyMapper.fromProfessionalsByClinicalSpecialtyBoList(clinicalSpecialties);
+
+        LOG.debug("Get all Clinical Specialty by Professionals {} and Institution {} => {}", professionalsIds, institutionId,
+                professionalsByClinicalSpecialtyDtos);
+        return ResponseEntity.ok(professionalsByClinicalSpecialtyDtos);
+    }
+
 }
 

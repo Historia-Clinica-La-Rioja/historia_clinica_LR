@@ -1,11 +1,14 @@
 package net.pladema.staff.repository;
 
+import net.pladema.staff.repository.domain.ProfessionalClinicalSpecialtyVo;
 import net.pladema.staff.repository.entity.HealthcareProfessionalSpecialty;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Repository
 public interface HealthcareProfessionalSpecialtyRepository extends JpaRepository<HealthcareProfessionalSpecialty, Integer> {
@@ -35,4 +38,13 @@ public interface HealthcareProfessionalSpecialtyRepository extends JpaRepository
             "WHERE d.healthcareProfessionalId = :healthcareProfessionalId AND css.clinicalSpecialtyId = :clinicalSpecialtyId")
     boolean hasHealthcareProfessionalSpecialtyAffected(@Param("healthcareProfessionalId") Integer healthcareProfessionalId,
                                                     @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId);
+
+    @Transactional(readOnly = true)
+    @Query(value = "SELECT NEW net.pladema.staff.repository.domain.ProfessionalClinicalSpecialtyVo" +
+            "(hps.healthcareProfessionalId, cs) " +
+            "FROM HealthcareProfessionalSpecialty hps "
+            + "INNER JOIN ClinicalSpecialty cs ON hps.clinicalSpecialtyId = cs.id "
+            + "WHERE hps.healthcareProfessionalId IN :professionalsIds")
+    List<ProfessionalClinicalSpecialtyVo> getAllByProfessionals(@Param("professionalsIds") List<Integer> professionalsIds);
+
 }
