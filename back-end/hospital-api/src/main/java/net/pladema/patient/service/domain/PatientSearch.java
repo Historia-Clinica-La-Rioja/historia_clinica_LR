@@ -3,11 +3,13 @@ package net.pladema.patient.service.domain;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import net.pladema.person.repository.entity.Person;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@ToString
 public class PatientSearch {
 
 	private Person person;

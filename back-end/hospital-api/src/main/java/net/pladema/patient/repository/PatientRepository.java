@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.stream.Stream;
 
 @Repository
-public interface PatientRepository extends JpaRepository<Patient, Integer>, PatientRepositoryCustom {
+public interface PatientRepository extends JpaRepository<Patient, Integer>, PatientRepositoryCustom, PatientRepositorySearch {
 
 	@Query(value = " SELECT new net.pladema.patient.service.domain.PatientSearch(person, patient.id, patientType.active, 0) " +
 			"	FROM Patient patient JOIN Person person ON patient.personId = person.id "

@@ -19,6 +19,16 @@ import static java.util.stream.Collectors.toList;
 @NoArgsConstructor
 public class PatientSearchQuery {
 
+    // WHERE options
+    public static final Integer AND_JOINING_OPERATOR = 1;
+    public static final Integer OR_JOINING_OPERATOR = 2;
+    public static final Integer LIKE_COMPARATOR = 3;
+    public static final Integer EQUAL_COMPARATOR = 4;
+
+    // WHERE clause formats
+    private static final String LIKE_FORMAT = " (UPPER(%s) LIKE '%%%s%%') \n"; //double '%' to escape the character
+    private static final String EQUAL_FORMAT = " (UPPER(%s) = '%s') \n";
+
     String firstName;
     String middleNames;
     String lastName;
@@ -62,30 +72,67 @@ public class PatientSearchQuery {
         );
     }
 
-    public QueryPart where() {
+    public QueryPart whereWithBasicAttributes(Integer joiningOperator, Integer clauseComparator) {
         List<String> whereString = new ArrayList<>();
+
+        String clauseFormat = getClauseFormat(clauseComparator);
+
         if (firstName != null) {
             firstName = (StringHelper.escapeSql(firstName)).toUpperCase();
-            whereString.add(" (UPPER(person.firstName) LIKE '%" + firstName + "%') \n");
-        }
-        if (middleNames != null) {
-            middleNames = (StringHelper.escapeSql(middleNames)).toUpperCase();
-            whereString.add(" (UPPER(person.middleNames) LIKE '%" + middleNames + "%') \n");
+            String clause = String.format(clauseFormat, "person.firstName", firstName);
+            whereString.add(clause);
         }
         if (lastName != null) {
             lastName = (StringHelper.escapeSql(lastName)).toUpperCase();
-            whereString.add(" (UPPER(person.lastName) LIKE '%" + lastName + "%') \n");
+            String clause = String.format(clauseFormat, "person.lastName", lastName);
+            whereString.add(clause);
+        }
+        if (identificationNumber != null){
+            identificationNumber = (StringHelper.escapeSql(identificationNumber)).toUpperCase();
+            String clause = String.format(clauseFormat, "person.identificationNumber", identificationNumber);
+            whereString.add(clause);
+        }
+        if(birthDate != null){
+            String birthDateString = (StringHelper.escapeSql(birthDate.toString())).toUpperCase();
+            whereString.add(" (person.birthDate = '"+birthDateString+"') \n");
+        }
+
+        String joiningOperatorString = getJoiningOperator(joiningOperator);
+        return new QueryPart(String.join(joiningOperatorString, whereString));
+    }
+
+    public QueryPart whereWithAllAttributes(Integer joiningOperator, Integer clauseComparator) {
+        List<String> whereString = new ArrayList<>();
+
+        String clauseFormat = getClauseFormat(clauseComparator);
+
+        if (firstName != null) {
+            firstName = (StringHelper.escapeSql(firstName)).toUpperCase();
+            String clause = String.format(clauseFormat, "person.firstName", firstName);
+            whereString.add(clause);
+        }
+        if (middleNames != null) {
+            middleNames = (StringHelper.escapeSql(middleNames)).toUpperCase();
+            String clause = String.format(clauseFormat, "person.middleNames", middleNames);
+            whereString.add(clause);
+        }
+        if (lastName != null) {
+            lastName = (StringHelper.escapeSql(lastName)).toUpperCase();
+            String clause = String.format(clauseFormat, "person.lastName", lastName);
+            whereString.add(clause);
         }
         if (otherLastNames != null) {
             otherLastNames = (StringHelper.escapeSql(otherLastNames)).toUpperCase();
-            whereString.add(" (UPPER(person.otherLastNames) LIKE '%" + otherLastNames + "%') \n");
+            String clause = String.format(clauseFormat, "person.otherLastNames", otherLastNames);
+            whereString.add(clause);
         }
         if (genderId != null) {
             whereString.add(" (person.genderId = '" + genderId + "') \n");
         }
         if (identificationNumber != null){
             identificationNumber = (StringHelper.escapeSql(identificationNumber)).toUpperCase();
-            whereString.add(" (UPPER(person.identificationNumber) LIKE '%"+identificationNumber+"%') \n");
+            String clause = String.format(clauseFormat, "person.identificationNumber", identificationNumber);
+            whereString.add(clause);
         }
         if (identificationTypeId != null) {
             whereString.add(" (person.identificationTypeId = '"+identificationTypeId+"') \n");
@@ -94,7 +141,25 @@ public class PatientSearchQuery {
             String birthDateString = (StringHelper.escapeSql(birthDate.toString())).toUpperCase();
             whereString.add(" (person.birthDate = '"+birthDateString+"') \n");
         }
-        return new QueryPart(String.join(" AND ", whereString));
+
+        String joiningOperatorString = getJoiningOperator(joiningOperator);
+        return new QueryPart(String.join(joiningOperatorString, whereString));
+    }
+
+    private String getClauseFormat(Integer clauseComparator) {
+        String clauseFormat;
+        if (clauseComparator.equals(EQUAL_COMPARATOR))
+            clauseFormat = EQUAL_FORMAT;
+        else
+            clauseFormat = LIKE_FORMAT;
+        return clauseFormat;
+    }
+
+    private String getJoiningOperator(Integer joiningOperator) {
+        if (joiningOperator.equals(OR_JOINING_OPERATOR))
+            return " OR ";
+        else
+            return " AND ";
     }
 
     public String noResultMessage(){
