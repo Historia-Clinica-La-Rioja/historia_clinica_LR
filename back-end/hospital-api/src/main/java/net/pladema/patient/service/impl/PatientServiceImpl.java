@@ -19,9 +19,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import static net.pladema.patient.service.MathScore.calculateMatch;
+import static net.pladema.patient.service.MathScore.*;
 
 @Service
 public class PatientServiceImpl implements PatientService {
@@ -41,10 +40,15 @@ public class PatientServiceImpl implements PatientService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<PatientSearch> searchPatient(PatientSearchFilter searchFilter) {
-		Stream<PatientSearch> allPatients = patientRepository.getAllByFilter(searchFilter.getFirstName(),
-				searchFilter.getLastName(), searchFilter.getIdentificationNumber(), searchFilter.getBirthDate());
-		return allPatients.peek(patient -> patient.setRanking(calculateMatch(searchFilter, patient.getPerson())))
-				.filter(patient -> patient.getRanking() > THRESHOLD).collect(Collectors.toList());
+		LOG.debug("Input parameter -> searchFilter {}", searchFilter);
+		List<PatientSearch> allPatients = patientRepository.getAllByFilter(searchFilter);
+		float scoreMultiplier = calculateScoreMultiplier(searchFilter);
+		List<PatientSearch> matchedPatients = allPatients.stream()
+				.peek(patient -> patient.setRanking(calculateMatchAdjustedToMultiplier(searchFilter, patient.getPerson(), scoreMultiplier)))
+				.filter(patient -> patient.getRanking() > THRESHOLD)
+				.collect(Collectors.toList());
+		LOG.debug("Output -> {}", matchedPatients);
+		return matchedPatients;
 	}
 
 	@Override

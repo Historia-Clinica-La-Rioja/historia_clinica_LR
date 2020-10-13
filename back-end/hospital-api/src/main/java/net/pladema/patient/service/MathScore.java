@@ -45,7 +45,32 @@ public class MathScore {
 			return partial;
 		}
 	}
-	
+
+	public static float calculateMatchWithProvidedAttributes(PatientSearchFilter searchFilter, Person personToMatch){
+		float multiplier = calculateScoreMultiplier(searchFilter);
+		return calculateMatchAdjustedToMultiplier(searchFilter, personToMatch, multiplier);
+	}
+
+	public static float calculateMatchAdjustedToMultiplier(PatientSearchFilter searchFilter, Person personToMatch, float multiplier){
+		float result = calculateMatch(searchFilter, personToMatch) * multiplier;
+		return Math.min(result, 100f); // the result may exceed 100 because of the previous multiplication, so it needs to be adjusted
+	}
+
+	public static float calculateScoreMultiplier(PatientSearchFilter searchFilter) {
+		float divider = 0f;
+		if ((searchFilter.getFirstName() != null) || (searchFilter.getMiddleNames() != null))
+			divider += SearchField.FIRST_NAME.getCoefficient();
+		if ((searchFilter.getLastName() != null) || (searchFilter.getOtherLastNames() != null))
+			divider += SearchField.LAST_NAME.getCoefficient();
+		if (searchFilter.getIdentificationNumber() != null)
+			divider += SearchField.IDENTIFICATION_NUMBER.getCoefficient();
+		if (searchFilter.getGenderId() != null)
+			divider += SearchField.GENDER.getCoefficient();
+		if (searchFilter.getBirthDate() != null)
+			divider += SearchField.BIRTH_DATE.getCoefficient();
+		return (divider != 0) ? (1 / divider) : 0;
+	}
+
 	public static float calculateMatch(PatientSearchFilter searchFilter, Person personToMatch){
 		Float partialResult = 0f;
 		partialResult = sumFullMatchCases(searchFilter, personToMatch, partialResult);
