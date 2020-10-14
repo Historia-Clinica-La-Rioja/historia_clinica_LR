@@ -1,14 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
-import { VALIDATIONS, hasError } from "@core/utils/form.utils";
+import { VALIDATIONS, hasError, updateForm } from "@core/utils/form.utils";
 import { PatientService } from "@api-rest/services/patient.service";
 import { PatientMasterDataService } from "@api-rest/services/patient-master-data.service";
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { ContextService } from "@core/services/context.service";
 
 const ROUTE_SEARCH = 'pacientes/search';
-const ROUTE_NEW = 'pacientes/temporary';
 const ROUTE_PROFILE = 'pacientes/profile/';
 
 @Component({
@@ -20,7 +19,6 @@ export class SearchCreateComponent implements OnInit {
 
 	public formSearch: FormGroup;
 	public formSearchSubmitted: boolean = false;
-	public formAdd: FormGroup;
 	public genderOptions;
 	public noIdentity = false;
 	public IdentityVerificationStatusArray;
@@ -29,11 +27,11 @@ export class SearchCreateComponent implements OnInit {
 	private readonly routePrefix;
 
 	constructor(private formBuilder: FormBuilder,
-				private router: Router,
-				private patientService: PatientService,
-				private patientMasterDataService: PatientMasterDataService,
-				private personMasterDataService: PersonMasterDataService,
-				private contextService: ContextService) {
+		private router: Router,
+		private patientService: PatientService,
+		private patientMasterDataService: PatientMasterDataService,
+		private personMasterDataService: PersonMasterDataService,
+		private contextService: ContextService) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 
@@ -42,18 +40,15 @@ export class SearchCreateComponent implements OnInit {
 			identifType: [null, Validators.required],
 			identifNumber: [null, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
 			gender: [null, Validators.required],
+			IdentityVerificationStatus: [null],
+			comments: [],
 		});
 
 		this.personMasterDataService.getIdentificationTypes().subscribe(
 			identificationTypes => { this.identifyTypeArray = identificationTypes; });
 
 		this.personMasterDataService.getGenders().subscribe(
-			genders => { this.genderOptions = genders;});
-
-		this.formAdd = this.formBuilder.group({
-			IdentityVerificationStatus: [null, Validators.required],
-			comments: [],
-		});
+			genders => { this.genderOptions = genders; });
 
 		this.patientMasterDataService.getIdentityVerificationStatus().subscribe(
 			data => { this.IdentityVerificationStatusArray = data });
@@ -68,43 +63,56 @@ export class SearchCreateComponent implements OnInit {
 				identificationNumber: this.formSearch.controls.identifNumber.value,
 				genderId: this.formSearch.controls.gender.value,
 			}
-			this.patientService.getPatientMinimal(searchRequest).subscribe(
-				(data: number[]) => {
-					if (!data.length) {
-						this.router.navigate([this.routePrefix + ROUTE_SEARCH],
-							{
-								queryParams: {
-									identificationTypeId: this.formSearch.controls.identifType.value,
-									identificationNumber: this.formSearch.controls.identifNumber.value,
-									genderId: this.formSearch.controls.gender.value
-								}
-							});
-					} else {
-						let id = data[0];
-						this.router.navigate([this.routePrefix + ROUTE_PROFILE + `${id}`]);
+
+			if (this.noIdentity) {
+				this.navigateToSearchPatient();
+			}
+			else{
+				this.patientService.getPatientMinimal(searchRequest).subscribe(
+					(data: number[]) => {
+						if (!data.length) {
+							this.navigateToSearchPatient();
+						} else {
+							let id = data[0];
+							this.router.navigate([this.routePrefix + ROUTE_PROFILE + `${id}`]);
+						}
 					}
-				}
-			);
+				);
+			}
 		}
 	}
 
-	add(): void {
-		if (this.formAdd.valid) {
-			this.router.navigate([this.routePrefix + ROUTE_NEW],
-				{
-					queryParams: {
-						identificationTypeId: this.formSearch.controls.identifType.value,
-						identificationNumber: this.formSearch.controls.identifNumber.value,
-						genderId: this.formSearch.controls.gender.value,
-						IdentityVerificationStatus: this.formAdd.controls.IdentityVerificationStatus.value,
-						comments: this.formAdd.controls.comments.value
-					}
-				});
-		}
+	private navigateToSearchPatient(): void {
+		this.router.navigate([this.routePrefix + ROUTE_SEARCH],
+			{
+				queryParams: {
+					identificationTypeId: this.formSearch.controls.identifType.value,
+					identificationNumber: this.formSearch.controls.identifNumber.value,
+					genderId: this.formSearch.controls.gender.value,
+					IdentityVerificationStatus: this.formSearch.controls.IdentityVerificationStatus.value,
+					comments: this.formSearch.controls.comments.value,
+					noIdentity: this.noIdentity
+				}
+			});
 	}
 
 	noIdentityChange() {
 		this.noIdentity = !this.noIdentity;
+		if (this.noIdentity) {
+			this.formSearch.controls.identifType.clearValidators();
+			this.formSearch.controls.identifNumber.clearValidators();
+			this.formSearch.controls.gender.clearValidators();
+			this.formSearch.controls.IdentityVerificationStatus.setValidators(Validators.required);
+			updateForm(this.formSearch);
+		}
+		else {
+			this.formSearch.controls.identifType.setValidators(Validators.required);
+			this.formSearch.controls.identifNumber.setValidators(Validators.required);
+			this.formSearch.controls.gender.setValidators(Validators.required);
+			this.formSearch.controls.IdentityVerificationStatus.clearValidators();
+			updateForm(this.formSearch);
+		}
 	}
+
 
 }
