@@ -93,6 +93,12 @@ Para la configuracion de ReCaptcha seguir los siguientes pasos:
 |google.recaptcha.validator.url |   | https://www.google.com/recaptcha/api/siteverify | Obligatorio | Url de google para validar el recaptcha. No debería cambiar. https://www.google.com/recaptcha/api/siteverify | v0.2.0 |
 |google.recaptcha.enable  | RECAPTCHA_ENABLE  | true | Obligatorio |  Flag para habilitar / deshabilitar la funcionalidad de recaptcha en la aplicación. | v0.2.0  |
 
+## Habilitación de nueva consulta
+
+| Propiedad               | Parametro       | Valor por defecto       | Necesidad | Descripcion | Desde |
+| ----------------------- | ----------------| ----------------------- | --------- | ----------- | ----- |
+| habilitar.boton.consulta | | false | tg-1910 | Es necesario que se defina una propiedad de configuración de aplicación que al estar en true haga que el botón Nueva consulta esté disponible siempre, aun cuando el paciente no tenga turnos. En este caso las validaciones de turnos no deberían considerarse.| v1.3.0
+
 ## Integración con terceros (Renaper, Federar, Snowstorm ... )
 
 | Propiedad               | Parametro       | Valor por defecto       | Necesidad | Descripcion | Desde |
