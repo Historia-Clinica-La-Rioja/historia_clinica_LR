@@ -5,16 +5,40 @@
 			<h2 id="title" class="page-title" [translate]="'turnos.home.TITLE'"></h2>
 		</div>
 
-		<div class="actions" fxLayout="row" fxLayoutGap="15px" fxLayout.xs="column" fxLayoutAlign="end none">
-			<form fxFlex.gt-xs="55%" [formGroup]="form" (ngSubmit)="search()">
-				<mat-form-field appearance="outline" class="aligned-form-field">
+		<div class="actions"
+			 fxFlex="70"
+			 fxLayout="row" fxLayoutGap="15px" fxLayout.xs="column" fxLayoutAlign="end none">
+			<form [formGroup]="form" (ngSubmit)="search()"
+				  fxFlex.gt-xs="65%"
+				  fxLayout.xs="column" fxLayoutAlign="end"  fxLayoutGap="15px">
+
+				<mat-form-field fxFlex.gt-xs="40" appearance="outline" class="aligned-form-field">
 					<input type="text"
-					       placeholder="{{ 'turnos.home.actions.SEARCH' | translate }}"
-					       aria-label="Number"
+						   placeholder="{{ 'turnos.home.SPECIALTY_SEARCH' | translate }}"
+						   formControlName="especialidad"
+						   matInput
+						   [matAutocomplete]="autoSpecialty">
+					<mat-autocomplete autoActiveFirstOption #autoSpecialty="matAutocomplete">
+						<mat-option *ngFor="let especialidad of especialidadesFiltered"
+									[value]="especialidad.clinicalSpecialty.name"
+									(onSelectionChange)="selectEspecialidad($event, especialidad)"
+						>
+							<span class="mat-body">{{ especialidad.clinicalSpecialty.name }}</span>
+						</mat-option>
+					</mat-autocomplete>
+					<button type="button" (click)="searchEspecialidad()" mat-icon-button matSuffix>
+						<mat-icon>search</mat-icon>
+					</button>
+
+				</mat-form-field>
+
+				<mat-form-field fxFlex.gt-xs="60" appearance="outline" class="aligned-form-field">
+					<input type="text"
+					       placeholder="{{ 'turnos.home.PROFESSIONAL_SEARCH' | translate }}"
 					       formControlName="profesional"
 					       matInput
-					       [matAutocomplete]="auto">
-					<mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+					       [matAutocomplete]="autoProfessional">
+					<mat-autocomplete autoActiveFirstOption #autoProfessional="matAutocomplete">
 						<mat-option *ngFor="let profesional of profesionalesFiltered"
 						            [value]="getFullNameLicence(profesional)"
 						            (onSelectionChange)="selectProfesional($event, profesional)">
@@ -27,6 +51,7 @@
 					</button>
 				</mat-form-field>
 			</form>
+
 			<button mat-flat-button color="primary" id="goToNewAgendaButton" *hasRole="['ADMINISTRADOR_AGENDA']" (click)="goToNewAgenda()"
 			        fxFlexFill.xs>
 				<span class="uppercase" [translate]="'turnos.home.actions.NEW_AGENDA'"></span>

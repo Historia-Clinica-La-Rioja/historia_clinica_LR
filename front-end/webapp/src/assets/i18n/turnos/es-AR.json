@@ -3,11 +3,11 @@
 		"home": {
 			"TITLE": "Gestión de turnos",
 			"actions": {
-				"APPLY_FOR": "Solicitar",
 				"CREATE_AGENDA": "Crear agenda",
-				"NEW_AGENDA": "Nueva agenda",
-				"SEARCH": "Buscar profesional"
+				"NEW_AGENDA": "Nueva agenda"
 			},
+			"PROFESSIONAL_SEARCH": "Profesional",
+			"SPECIALTY_SEARCH": "Especialidad",
 			"SELECT_AGENDA": "Seleccione una agenda",
 			"NO_AGENDA_MSG_TITLE": "El profesional no posee una agenda activa.",
 			"NO_AGENDA_MSG_SUBTITLE": "Creá una agenda para gestionar turnos."
