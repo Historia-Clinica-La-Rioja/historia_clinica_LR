@@ -1,19 +1,19 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {
 	PROBLEMAS_ACTIVOS,
 	PROBLEMAS_CRONICOS,
 	PROBLEMAS_INTERNACION,
 	PROBLEMAS_RESUELTOS
 } from '../../../../constants/summaries';
-import { HCEHospitalizationHistoryDto, HCEPersonalHistoryDto } from '@api-rest/api-model';
-import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.utils';
-import { map, tap } from 'rxjs/operators';
-import { Observable, Subscription } from 'rxjs';
-import { MatDialog } from '@angular/material/dialog';
-import { SolveProblemComponent } from '../../../../dialogs/solve-problem/solve-problem.component';
-import { HistoricalProblemsFacadeService, HistoricalProblems } from './../../services/historical-problems-facade.service';
+import {HCEHospitalizationHistoryDto, HCEPersonalHistoryDto} from '@api-rest/api-model';
+import {HceGeneralStateService} from '@api-rest/services/hce-general-state.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {DateFormat, momentFormat, momentParseDate} from '@core/utils/moment.utils';
+import {map, tap} from 'rxjs/operators';
+import {Observable, Subscription} from 'rxjs';
+import {MatDialog} from '@angular/material/dialog';
+import {SolveProblemComponent} from '../../../../dialogs/solve-problem/solve-problem.component';
+import {HistoricalProblems, HistoricalProblemsFacadeService} from '../../services/historical-problems-facade.service';
 
 @Component({
 	selector: 'app-problemas',
@@ -36,7 +36,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	public hideFilterPanel = false;
 	private historicalProblems$: Subscription;
 	private patientId: number;
-	@Input() hasConfirmedAppointment: boolean;
+	@Input() hasNewConsultationEnabled: boolean;
 
 
 	constructor(

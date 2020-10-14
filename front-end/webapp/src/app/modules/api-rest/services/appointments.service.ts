@@ -55,7 +55,7 @@ export class AppointmentsService {
 		return this.http.get<AppointmentDto>(url);
 	}
 
-	hasConfirmedAppointment(patientId: number): Observable<boolean> {
+	hasNewConsultationEnabled(patientId: number): Observable<boolean> {
 		let queryParams: HttpParams = new HttpParams();
 		queryParams = queryParams.append('patientId', JSON.stringify(patientId));
 

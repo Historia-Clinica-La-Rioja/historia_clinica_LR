@@ -24,7 +24,7 @@
 									<mat-icon>more_vert</mat-icon>
 								</button>
 								<mat-menu #menu="matMenu">
-									<button *ngIf="hasConfirmedAppointment" mat-menu-item (click)="goToNuevaConsulta(problem)">
+									<button *ngIf="hasNewConsultationEnabled" mat-menu-item (click)="goToNuevaConsulta(problem)">
 										<span [translate]="'ambulatoria.paciente.nueva-consulta.TITLE_MENU'"></span>
 									</button>
 									<button mat-menu-item (click)="solveProblemPopUp(problem)">
@@ -56,7 +56,7 @@
 									<mat-icon>more_vert</mat-icon>
 								</button>
 								<mat-menu #menu="matMenu">
-									<button *ngIf="hasConfirmedAppointment" mat-menu-item (click)="goToNuevaConsulta(problem)">
+									<button *ngIf="hasNewConsultationEnabled" mat-menu-item (click)="goToNuevaConsulta(problem)">
 										<span [translate]="'ambulatoria.paciente.nueva-consulta.TITLE_MENU'"></span>
 									</button>
 									<button mat-menu-item (click)="solveProblemPopUp(problem)">
@@ -83,7 +83,7 @@
 										{{problem.startDate }}
 									</span>
 								</div>
-								<ng-container *ngIf="hasConfirmedAppointment">
+								<ng-container *ngIf="hasNewConsultationEnabled">
 									<mat-menu #menu="matMenu">
 										<button mat-menu-item (click)="goToNuevaConsulta(problem)">
 											<span [translate]="'ambulatoria.paciente.nueva-consulta.TITLE_MENU'"> </span>
@@ -137,7 +137,7 @@
 					</div>
 					<section class="problems" id="historical-problem-mapping" *ngIf="historicalProblemsList && historicalProblemsList.length">
 						<div class="problem" fxLayout="row" fxLayoutGap="15px" *ngFor="let historicalProblem of historicalProblemsList">
-							
+
 							<mat-icon mat-list-icon fontSet="material-icons-outlined" color="primary">assignment</mat-icon>
 
 							<div fxLayout="column" fxLayoutGap="15px" fxFlex="100%">

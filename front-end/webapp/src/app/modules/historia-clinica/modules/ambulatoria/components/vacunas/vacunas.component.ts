@@ -58,7 +58,7 @@ export class VacunasComponent implements OnInit {
 				this.hceGeneralStateService.getImmunizations(this.patientId).subscribe(dataTable => {
 					this.tableModel = this.buildTable(dataTable)
 				});
-				this.appointmentsService.hasConfirmedAppointment(this.patientId).subscribe(response => {
+				this.appointmentsService.hasNewConsultationEnabled(this.patientId).subscribe(response => {
 					this.hasConfirmedAppointment = response;
 				});
 			}

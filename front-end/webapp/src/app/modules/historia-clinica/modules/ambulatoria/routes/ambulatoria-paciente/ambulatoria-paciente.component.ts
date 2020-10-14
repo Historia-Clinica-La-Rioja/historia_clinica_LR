@@ -16,7 +16,7 @@ import { AppointmentsService } from '@api-rest/services/appointments.service';
 export class AmbulatoriaPacienteComponent implements OnInit {
 
 	patient$: Observable<PatientBasicData>;
-	public hasConfirmedAppointment: boolean;
+	public hasNewConsultationEnabled: boolean;
 
 	constructor(
 		private readonly route: ActivatedRoute,
@@ -32,12 +32,12 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 			this.patient$ = this.patientService.getPatientBasicData<BasicPatientDto>(patientId).pipe(
 				map(patient => this.mapperService.toPatientBasicData(patient))
 			);
-			this.appointmentsService.hasConfirmedAppointment(patientId).subscribe(response => {
-				this.hasConfirmedAppointment = response;
+			this.appointmentsService.hasNewConsultationEnabled(patientId).subscribe(response => {
+				this.hasNewConsultationEnabled = response;
 			});
 		});
 
-		
+
 	}
 
 	goToNuevaConsulta() {

@@ -1,30 +1,20 @@
 package net.pladema.medicalconsultation.appointment.controller;
 
-import java.time.LocalDate;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
-
 import io.swagger.annotations.Api;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointment;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentDiary;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentState;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentDailyAmountDto;
+import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentListDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.CreateAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.mapper.AppointmentMapper;
 import net.pladema.medicalconsultation.appointment.service.AppointmentDailyAmountService;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
+import net.pladema.medicalconsultation.appointment.service.AppointmentValidatorService;
 import net.pladema.medicalconsultation.appointment.service.CreateAppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentDailyAmountBo;
-import net.pladema.medicalconsultation.diary.controller.dto.OccupationDto;
-import net.pladema.medicalconsultation.diary.service.domain.OccupationBo;
 import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.sgx.dates.configuration.DateTimeProvider;
@@ -37,16 +27,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentDto;
-import net.pladema.medicalconsultation.appointment.service.AppointmentValidatorService;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/medicalConsultations/appointments")
@@ -76,6 +65,9 @@ public class AppointmentsController {
 
     @Value("${test.stress.disable.validation:false}")
     private boolean disableValidation;
+
+    @Value("${habilitar.boton.consulta:false}")
+    private boolean enableNewConsultation;
 
     public AppointmentsController(AppointmentDailyAmountService appointmentDailyAmountService,
                                   AppointmentService appointmentService,
@@ -118,10 +110,8 @@ public class AppointmentsController {
 		Optional<AppointmentBo> resultService = appointmentService.getAppointment(appointmentId);
 		Optional<AppointmentDto> result = resultService.map(appointmentMapper::toAppointmentDto);
 		LOG.debug(OUTPUT, result);
-		if (!result.isPresent())
-			return ResponseEntity.noContent().build();
-		return ResponseEntity.ok(result.get());
-	}
+        return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
+    }
 
 
     @GetMapping
@@ -165,11 +155,11 @@ public class AppointmentsController {
 
     @GetMapping("/confirmed-appointment")
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
-    public ResponseEntity<Boolean> hasConfirmedAppointment(@PathVariable(name = "institutionId")  Integer institutionId,
+    public ResponseEntity<Boolean> hasNewConsultationEnabled(@PathVariable(name = "institutionId")  Integer institutionId,
                                                            @RequestParam(name = "patientId") Integer patientId){
         LOG.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
         Integer healthProfessionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
-        boolean result = disableValidation ? true : appointmentService.hasConfirmedAppointment(patientId, healthProfessionalId, dateTimeProvider.nowDate());
+        boolean result = disableValidation || enableNewConsultation || appointmentService.hasConfirmedAppointment(patientId, healthProfessionalId, dateTimeProvider.nowDate());
         LOG.debug(OUTPUT, result);
         return ResponseEntity.ok(result);
     }

@@ -6,7 +6,7 @@
 	<section id="content" fxLayout="column" fxLayoutGap="20px">
 		<app-patient-card [patient]="patient$ | async">
 			<div horizontal-content>
-				<ng-container *ngIf="hasConfirmedAppointment">
+				<ng-container *ngIf="hasNewConsultationEnabled">
 					<button *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']"
 							id="nueva_consulta"
 							mat-flat-button color="primary"
@@ -35,7 +35,7 @@
 							<span>{{ 'ambulatoria.paciente.vacunas.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>
 						<ng-template matTabContent>
-							<app-vacunas [hasConfirmedAppointment]="hasConfirmedAppointment"></app-vacunas>
+							<app-vacunas [hasConfirmedAppointment]="hasNewConsultationEnabled"></app-vacunas>
 						</ng-template>
 					</mat-tab>
 					<mat-tab id="tab_problemas">
@@ -44,7 +44,7 @@
 							<span>{{ 'ambulatoria.paciente.problemas.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>
 						<ng-template matTabContent>
-							<app-problemas [hasConfirmedAppointment]="hasConfirmedAppointment"></app-problemas>
+							<app-problemas [hasNewConsultationEnabled]="hasNewConsultationEnabled"></app-problemas>
 						</ng-template>
 					</mat-tab>
 				</mat-tab-group>
