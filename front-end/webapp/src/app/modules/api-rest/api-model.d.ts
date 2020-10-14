@@ -885,6 +885,11 @@ export interface ProfessionalDto {
     phoneNumber: string;
 }
 
+export interface ProfessionalsByClinicalSpecialtyDto {
+    clinicalSpecialty: ClinicalSpecialtyDto;
+    professionalsIds: number[];
+}
+
 export interface ProvinceDto extends MasterdataDto<number> {
     id: number;
 }
