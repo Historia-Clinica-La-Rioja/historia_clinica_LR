@@ -77,11 +77,21 @@ El módulo de back-end se configura mediante el uso de un archivo `.properties`,
 
 ## Configuración de reset de password y recaptcha 
 
+Para la configuracion de ReCaptcha seguir los siguientes pasos: 
+
+1. Ingresar a https://www.google.com/recaptcha/admin/ 
+2. Agregar un nuevo sitio eligiendo las opciones de *reCAPTCHA v2* y *Casilla No soy un robot*.
+3. Agregar el/los dominio/s necesarios.
+4. Copiar las site y secret key para utilizarlos en el archivo de configuracion del proyecto como se indica en el cuadro siguiente.
+  
+
+
 | Propiedad               | Parametro       | Valor por defecto       | Necesidad | Descripcion | Desde |
 | ----------------------- | ----------------| ----------------------- | --------- | ----------- | ----- |
-|google.recaptcha.secret.key | RECAPTCHA_SECRET_KEY | 6LcVh-UUAAAAAIWVvwCNB3zLdNT7BSAnCZ0cZjwz | Opcional | | v0.2.0 |
+|google.recaptcha.secret.key | RECAPTCHA_SECRET_KEY | Ninguno - Completar con secret key de la consola administrativa. | Obligatorio | Clave secreta correspondiente al de la consola administrativa. | v0.2.0 |
+|google.recaptcha.site.key | RECAPTCHA_PUBLIC_KEY | Ninguno - Completar con public key de la consola administrativa. | Obligatorio | Clave publica correspondiente al de la consola administrativa. | v0.2.0 |
 |google.recaptcha.validator.url |   | https://www.google.com/recaptcha/api/siteverify | Obligatorio | Url de google para validar el recaptcha. No debería cambiar. https://www.google.com/recaptcha/api/siteverify | v0.2.0 |
-| google.recaptcha.enable  | RECAPTCHA_ENABLE  | true |   |   | v0.2.0  |
+|google.recaptcha.enable  | RECAPTCHA_ENABLE  | true | Obligatorio |  Flag para habilitar / deshabilitar la funcionalidad de recaptcha en la aplicación. | v0.2.0  |
 
 ## Integración con terceros (Renaper, Federar, Snowstorm ... )
 
