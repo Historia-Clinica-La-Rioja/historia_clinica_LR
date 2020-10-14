@@ -60,36 +60,28 @@ const Input = ({
 );
 
 /**
- * recaptcha sitekey
- */
-const recaptchaSiteKey = '6Legz84ZAAAAAFSBqYVwf8gKX5bFrt71zVPY2Tdq';
-
-/**
  * renderiza el ReCaptcha.
  */
 const MyReCAPTCHA = props => {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(false);
-	//let recaptchaEnabled = false;
 	const [recaptchaEnabled, setRecaptchaEnabled] = useState(false);
-	const { onChange } = props;
+	const {onChange} = props;
+	const [recaptchaSiteKey, setRecaptchaSiteKey] = useState(undefined);
 
 	useEffect(() => {
-		apiRest.isRecaptchaEnable({method: 'GET'})
+		apiRest.getRecaptchaPublicConfig()
 				.then(response => {
-					setLoading(false);
-					const isRecaptchaEnabled = JSON.parse(response.body);
+					const isRecaptchaEnabled = response.enabled;
 					setRecaptchaEnabled(isRecaptchaEnabled);
-					if (!isRecaptchaEnabled){
+					setRecaptchaSiteKey(response.siteKey);
+					if (!isRecaptchaEnabled) {
 						onChange('notoken');
 					}
 				})
-				.catch(e => {
-					setError(e);
-				})
-				.finally(() => {
-					setLoading(false);
-				});
+				.catch(e => setError(e))
+				.finally(() => setLoading(false));
+
 	}, [onChange]);
 
 	if (loading) {
@@ -98,12 +90,10 @@ const MyReCAPTCHA = props => {
 	if (error) {
 		return <p>{JSON.stringify(error)}</p>;
 	}
-	if (recaptchaEnabled) {
+	if (recaptchaEnabled && recaptchaSiteKey) {
 		return <ReCAPTCHA sitekey={recaptchaSiteKey} {...props}/>;
 	}
-	else {
-		return '';
-	}
+	return '';
 };
 
 const LoginForm: FunctionComponent<Props> = props => {
@@ -186,14 +176,14 @@ const LoginForm: FunctionComponent<Props> = props => {
 									</div>
 								</div>
 
-								<MyReCAPTCHA label="myRecaptcha" onChange={onRecaptchaChange} />
+								<MyReCAPTCHA onChange={onRecaptchaChange}/>
 
 								<CardActions>
 									<Button
 											variant="contained"
 											type="submit"
 											color="primary"
-											disabled={ loading || !raToken }
+											disabled={loading || !raToken}
 											className={classes.button}
 									>
 										{loading && (

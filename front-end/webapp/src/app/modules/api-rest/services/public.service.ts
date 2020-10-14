@@ -43,7 +43,7 @@ export class PublicService {
 	}
 
 	public getRecaptchaPublicConfig(): Observable<RecaptchaPublicConfigDto> {
-		return this.http.get<RecaptchaPublicConfigDto>(`${environment.apiBase}` + BASIC_URL_PREFIX + '/recaptcha');
+		return this.http.get<RecaptchaPublicConfigDto>(`${environment.apiBase}${BASIC_URL_PREFIX}/recaptcha`);
 	}
 
 }

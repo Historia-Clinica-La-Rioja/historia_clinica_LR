@@ -70,6 +70,11 @@ class SgxApiRest {
         return fetchUtils.fetchJson(apiUrl + '/recaptcha/is-enable', options);
     }
 
+    getRecaptchaPublicConfig() {
+        return fetchUtils.fetchJson(apiUrl + '/public/recaptcha', { method: 'GET' })
+                .then(response => response.json);
+    }
+
   }
 
   export default new SgxApiRest();
