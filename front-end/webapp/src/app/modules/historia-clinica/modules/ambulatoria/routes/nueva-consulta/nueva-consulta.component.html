@@ -1,18 +1,19 @@
 <app-content width="full">
 
-	<section id="header">
+<div fxLayout="column" fxLayoutGap="20px" fxFlex="40%" fxFlex.lt-sm="100%">
+	<div id="header">
 		<h2 id="page-title" class="page-title" [translate]="'ambulatoria.paciente.nueva-consulta.TITLE'"></h2>
 		<h3 id="page_subtitle" [translate]="'ambulatoria.paciente.nueva-consulta.SUBTITLE'"></h3>
-	</section>
+	</div>
 
-	<section id="motivo" class="doc-section">
+	<div id="motivo">
 		<app-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.motivo.TITLE'"
 			[tableTitle]="'ambulatoria.paciente.nueva-consulta.motivo.table.TITLE'"
 			[columns]="motivoNuevaConsultaService.getColumns()"
 			[data]="motivoNuevaConsultaService.getMotivosConsulta()">
 			<ng-container concept-form>
 				<app-concepts-search
-				    *ngIf="!motivoNuevaConsultaService.getSnomedConcept() else mainMotivoConsulta"
+					*ngIf="!motivoNuevaConsultaService.getSnomedConcept() else mainMotivoConsulta"
 					[label]="'ambulatoria.paciente.nueva-consulta.motivo.MOTIVO'"
 					(search)="motivoNuevaConsultaService.openSearchDialog($event)">
 				</app-concepts-search>
@@ -40,9 +41,9 @@
 				</ng-template>
 			</ng-container>
 		</app-document-section>
-	</section>
+	</div>
 
-	<section id="problemas" class="doc-section">
+	<div id="problemas">
 		<app-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.problemas.TITLE'"
 			[tableTitle]="'ambulatoria.paciente.nueva-consulta.problemas.TABLE_TITLE'"
 			[columns]="problemasNuevaConsultaService.getColumns()" [data]="problemasNuevaConsultaService.getProblemas()">
@@ -56,7 +57,7 @@
 			<ng-template #problemaForm>
 				<form [formGroup]="problemasNuevaConsultaService.getForm()"
 					(ngSubmit)="this.readOnlyProblema ?
-					 this.editProblema(): problemasNuevaConsultaService.addToList()">
+						this.editProblema(): problemasNuevaConsultaService.addToList()">
 
 					<mat-form-field appearance="outline">
 						<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.problemas.CONCEPT_LABEL'">
@@ -64,7 +65,7 @@
 						<input id="snomed-input" matInput type="text" formControlName="snomed" name="snomed" readonly
 							matTooltip="{{ problemasNuevaConsultaService.getSnomedConcept().pt }}" *ngIf="!this.readOnlyProblema">
 						<input id="snomed-input-new-consultation" matInput type="text" formControlName="snomed" name="snomed" readonly
-							   *ngIf="this.readOnlyProblema">
+								*ngIf="this.readOnlyProblema">
 						<button id="clear" mat-button matSuffix color="warn" mat-icon-button
 							(click)="problemasNuevaConsultaService.resetForm()" *ngIf="!this.readOnlyProblema">
 							<mat-icon>close</mat-icon>
@@ -82,7 +83,7 @@
 						</mat-label>
 						<input matInput id="fecha_inicio" [matDatepicker]="inicioDatePicker"
 							formControlName="fechaInicio" [max]="problemasNuevaConsultaService.getFechaInicioMax()"
-							   (dateChange)="problemasNuevaConsultaService.checkValidFechaFin()">
+								(dateChange)="problemasNuevaConsultaService.checkValidFechaFin()">
 						<mat-datepicker-toggle matSuffix [for]="inicioDatePicker"></mat-datepicker-toggle>
 						<mat-datepicker #inicioDatePicker></mat-datepicker>
 						<mat-error
@@ -103,7 +104,7 @@
 						<mat-datepicker-toggle matSuffix [for]="finDatePicker"></mat-datepicker-toggle>
 						<mat-datepicker #finDatePicker></mat-datepicker>
 						<mat-error *ngIf="problemasNuevaConsultaService.hasError('min', 'fechaFin')"
-								   [translate]="'ambulatoria.paciente.nueva-consulta.problemas.errors.FECHA_FIN_MIN'">
+									[translate]="'ambulatoria.paciente.nueva-consulta.problemas.errors.FECHA_FIN_MIN'">
 						</mat-error>
 						<mat-error *ngIf="problemasNuevaConsultaService.hasError('matDatepickerMax', 'fechaFin')"
 							[translate]="'forms.MAX_DATE_TODAY'">
@@ -126,9 +127,9 @@
 				</form>
 			</ng-template>
 		</app-document-section>
-	</section>
+	</div>
 
-	<section id="datos-antropometricos" class="doc-section">
+	<div id="datos-antropometricos">
 		<app-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.TITLE'">
 			<ng-container concept-form>
 				<form [formGroup]="datosAntropometricosNuevaConsultaService.getForm()">
@@ -147,22 +148,22 @@
 						<mat-form-field [floatLabel]="'never'" appearance="outline">
 							<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.HEIGHT'"></mat-label>
 							<input id="height" name="height" formControlName="height" placeholder="Ej: 180"
-								   type="number" matInput>
+									type="number" matInput>
 						</mat-form-field>
 					</div>
 					<div>
 						<mat-form-field [floatLabel]="'never'" appearance="outline">
 							<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.WEIGHT'"></mat-label>
 							<input id="weight" name="weight" formControlName="weight" placeholder="Ej: 70" type="number"
-								   matInput>
+									matInput>
 						</mat-form-field>
 					</div>
 				</form>
 			</ng-container>
 		</app-document-section>
-	</section>
+	</div>
 
-	<section id="antecedentes-familiares" class="doc-section">
+	<div id="antecedentes-familiares">
 		<app-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.TITLE'"
 			[tableTitle]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.table.TITLE'"
 			[columns]="antecedentesFamiliaresNuevaConsultaService.getColumns()"
@@ -192,7 +193,7 @@
 							<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.FECHA'">
 							</mat-label>
 							<input matInput id="fecha_antecedente" [matDatepicker]="antecedenteDatePicker"
-								   formControlName="fecha" [max]="antecedentesFamiliaresNuevaConsultaService.getMaxFecha()">
+									formControlName="fecha" [max]="antecedentesFamiliaresNuevaConsultaService.getMaxFecha()">
 							<mat-datepicker-toggle matSuffix [for]="antecedenteDatePicker"></mat-datepicker-toggle>
 							<mat-datepicker #antecedenteDatePicker></mat-datepicker>
 						</mat-form-field>
@@ -207,9 +208,9 @@
 				</ng-template>
 			</ng-container>
 		</app-document-section>
-	</section>
+	</div>
 
-	<section id="medicaciones" class="doc-section">
+	<div id="medicaciones">
 		<app-document-section
 			[sectionTitle]="'ambulatoria.paciente.nueva-consulta.medicaciones.TITLE'"
 			[tableTitle]="'ambulatoria.paciente.nueva-consulta.medicaciones.TABLE_TITLE'"
@@ -225,12 +226,12 @@
 
 			<ng-template #medicacionForm>
 				<form [formGroup]="medicacionesNuevaConsultaService.getForm()"
-					  (ngSubmit)="medicacionesNuevaConsultaService.addToList()">
+						(ngSubmit)="medicacionesNuevaConsultaService.addToList()">
 					<mat-form-field appearance="outline">
 						<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.medicaciones.NOMBRE_MEDICACION'">
 						</mat-label>
 						<input matInput type="text" formControlName="snomed" name="snomed" readonly
-							   matTooltip="{{ medicacionesNuevaConsultaService.getSnomedConcept().pt }}">
+								matTooltip="{{ medicacionesNuevaConsultaService.getSnomedConcept().pt }}">
 						<button id="clear_medicacion" mat-button matSuffix color="warn" mat-icon-button
 								(click)="medicacionesNuevaConsultaService.resetForm()">
 							<mat-icon>close</mat-icon>
@@ -240,7 +241,7 @@
 					<mat-form-field appearance="outline">
 						<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.medicaciones.OBSERVACIONES'"></mat-label>
 						<textarea matInput type="text" id="observaciones" name="observaciones" formControlName="observaciones"
-								  placeholder="{{'ambulatoria.paciente.nueva-consulta.medicaciones.DESCRIPCION' | translate }}">
+									placeholder="{{'ambulatoria.paciente.nueva-consulta.medicaciones.DESCRIPCION' | translate }}">
 						</textarea>
 					</mat-form-field>
 
@@ -258,9 +259,9 @@
 				</form>
 			</ng-template>
 		</app-document-section>
-	</section>
+	</div>
 
-	<section id="procedimientos" class="doc-section">
+	<div id="procedimientos">
 		<app-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.procedimientos.TITLE'"
 			[tableTitle]="'ambulatoria.paciente.nueva-consulta.procedimientos.TABLE_TITLE'"
 			[columns]="procedimientoNuevaConsultaService.getColumns()"
@@ -309,22 +310,22 @@
 				</ng-template>
 			</ng-container>
 		</app-document-section>
-	</section>
+	</div>
 
-	<section id="signos-vitales" class="doc-section">
+	<div id="signos-vitales">
 		<app-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.signos-vitales.TITLE'">
 			<ng-container concept-form>
 				<form [formGroup]="signosVitalesNuevaConsultaService.getForm()">
-					<div fxLayout=row>
+					<div fxLayout=row fxLayout.lt-lg="column">
 						<div class="signos-vitales-field" formGroupName="heartRate">
 							<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.HEART_RATE'"></mat-label>
 							<mat-form-field [floatLabel]="'never'" appearance="outline">
 								<input id="heart_rate"
-									   name="heart_rate"
-									   formControlName="value"
-									   placeholder="00"
-									   type="number"
-									   matInput>
+										name="heart_rate"
+										formControlName="value"
+										placeholder="00"
+										type="number"
+										matInput>
 							</mat-form-field>
 							<app-effective-time
 								[model]="signosVitalesNuevaConsultaService.getForm().value.heartRate.effectiveTime"
@@ -336,11 +337,11 @@
 								[translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.RESPIRATORY_RATE'"></mat-label>
 							<mat-form-field [floatLabel]="'never'" appearance="outline">
 								<input id="respiratory_rate"
-									   name="respiratory_rate"
-									   formControlName="value"
-									   placeholder="00"
-									   type="number"
-									   matInput>
+										name="respiratory_rate"
+										formControlName="value"
+										placeholder="00"
+										type="number"
+										matInput>
 							</mat-form-field>
 							<app-effective-time
 								[model]="signosVitalesNuevaConsultaService.getForm().value.respiratoryRate.effectiveTime"
@@ -349,16 +350,16 @@
 						</div>
 					</div>
 
-					<div fxLayout=row>
+					<div fxLayout=row fxLayout.lt-lg="column">
 						<div class="signos-vitales-field" formGroupName="temperature">
 							<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.TEMPERATURE'"></mat-label>
 							<mat-form-field [floatLabel]="'never'" appearance="outline">
 								<input id="temperature"
-									   name="temperature"
-									   formControlName="value"
-									   placeholder="00.0"
-									   type="number"
-									   matInput>
+										name="temperature"
+										formControlName="value"
+										placeholder="00.0"
+										type="number"
+										matInput>
 							</mat-form-field>
 							<app-effective-time
 								[model]="signosVitalesNuevaConsultaService.getForm().value.temperature.effectiveTime"
@@ -370,11 +371,11 @@
 								[translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.BLOOD_OXYGEN_SATURATION'"></mat-label>
 							<mat-form-field [floatLabel]="'never'" appearance="outline">
 								<input id="blood_oxygen_saturation"
-									   name="blood_oxygen_saturation"
-									   formControlName="value"
-									   placeholder="00"
-									   type="number"
-									   matInput>
+										name="blood_oxygen_saturation"
+										formControlName="value"
+										placeholder="00"
+										type="number"
+										matInput>
 							</mat-form-field>
 							<app-effective-time
 								[model]="signosVitalesNuevaConsultaService.getForm().value.bloodOxygenSaturation.effectiveTime"
@@ -383,17 +384,17 @@
 						</div>
 					</div>
 
-					<div fxLayout=row>
+					<div fxLayout=row fxLayout.lt-lg="column">
 						<div class="signos-vitales-field" formGroupName="systolicBloodPressure">
 							<mat-label
 								[translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.SYSTOLIC_BLOOD_PRESSURE'"></mat-label>
 							<mat-form-field [floatLabel]="'never'" appearance="outline">
 								<input id="systolic_blood_pressure"
-									   name="systolicBloodPressure"
-									   formControlName="value"
-									   placeholder="00"
-									   type="number"
-									   matInput>
+										name="systolicBloodPressure"
+										formControlName="value"
+										placeholder="00"
+										type="number"
+										matInput>
 							</mat-form-field>
 							<app-effective-time
 								[model]="signosVitalesNuevaConsultaService.getForm().value.systolicBloodPressure.effectiveTime"
@@ -405,11 +406,11 @@
 								[translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.DIASTOLIC_BLOOD_PRESSURE'"></mat-label>
 							<mat-form-field [floatLabel]="'never'" appearance="outline">
 								<input id="diastolic_blood_pressure"
-									   name="diastolicBloodPressure"
-									   formControlName="value"
-									   placeholder="00"
-									   type="number"
-									   matInput>
+										name="diastolicBloodPressure"
+										formControlName="value"
+										placeholder="00"
+										type="number"
+										matInput>
 							</mat-form-field>
 							<app-effective-time
 								[model]="signosVitalesNuevaConsultaService.getForm().value.diastolicBloodPressure.effectiveTime"
@@ -420,9 +421,9 @@
 				</form>
 			</ng-container>
 		</app-document-section>
-	</section>
+	</div>
 
-	<section id="alergias" class="doc-section">
+	<div id="alergias">
 		<app-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.alergias.TITLE'"
 			[tableTitle]="'ambulatoria.paciente.nueva-consulta.alergias.table.TITLE'"
 			[columns]="alergiasNuevaConsultaService.getColumns()"
@@ -456,36 +457,37 @@
 				</ng-template>
 			</ng-container>
 		</app-document-section>
-	</section>
+	</div>
 
-	<section id="evolucion" class="doc-section">
+	<div id="evolucion">
 		<app-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.evolucion.TITLE'">
 			<ng-container concept-form>
 				<form [formGroup]="formEvolucion">
 					<mat-form-field appearance="outline">
 						<textarea matInput type="text" id="evolucion-input" name="evolucion" formControlName="evolucion"
-								  placeholder="{{'ambulatoria.paciente.nueva-consulta.evolucion.DESCRIPCION' | translate }}">
+									placeholder="{{'ambulatoria.paciente.nueva-consulta.evolucion.DESCRIPCION' | translate }}">
 						</textarea>
 					</mat-form-field>
 				</form>
 			</ng-container>
 		</app-document-section>
-	</section>
+	</div>
 
-	<section id="validations" class="doc-section"
+	<div id="validations"
 		*ngIf="!isValidConsultation() || apiErrors.length > 0">
 		<mat-card>
 			<mat-error *ngFor="let error of errores" class="mat-body-2">{{ error | translate }}</mat-error>
 			<mat-error class="mat-body-2" *ngFor="let error of apiErrors">{{ error }}</mat-error>
 		</mat-card>
-	</section>
+	</div>
 
-	<section id="buttons" class="doc-section">
+	<div id="buttons">
 		<div align="end">
 			<button class="uppercase" mat-raised-button color="primary" (click)="save()">
 				<span [translate]="'buttons.CONFIRM'"></span>
 			</button>
 		</div>
-	</section>
-
+	</div>
+</div>
 </app-content>
+	
