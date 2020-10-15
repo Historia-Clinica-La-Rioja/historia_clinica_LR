@@ -30,9 +30,6 @@ export class AppointmentComponent implements OnInit {
 	estadoSelected: APPOINTMENT_STATES_ID;
 	formMotivo: FormGroup;
 	institutionId = this.contextService.institutionId;
-	phoneNumberEditMode = false;
-	phoneNumberForm: FormGroup;
-	phoneNumberText: string;
 	coverageText: string;
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public appointmentData: PatientAppointmentInformation,
@@ -57,10 +54,6 @@ export class AppointmentComponent implements OnInit {
 		this.formMotivo = this.formBuilder.group({
 			motivo: ['', [Validators.required, Validators.maxLength(MAX_LENGTH_MOTIVO)]]
 		});
-		this.phoneNumberForm = this.formBuilder.group({
-			phoneNumber: [this.appointmentData.phoneNumber]
-		});
-		this.phoneNumberText = this.appointmentData.phoneNumber;
 		this.appointmentService.get(this.appointmentData.appointmentId)
 			.subscribe(appointment => {
 				this.appointment = appointment;
@@ -128,16 +121,13 @@ export class AppointmentComponent implements OnInit {
 			});
 	}
 
-	updatePhoneNumber() {
-		this.appointmentFacade.updatePhoneNumber(this.appointmentData.appointmentId, this.phoneNumberForm.controls.phoneNumber.value).
+	updatePhoneNumber(phoneNumber: string) {
+		this.appointmentFacade.updatePhoneNumber(this.appointmentData.appointmentId, phoneNumber).
 			subscribe(() => {
-				this.phoneNumberText = this.phoneNumberForm.controls.phoneNumber.value;
 				this.snackBarService.showSuccess('turnos.appointment.phoneNumber.SUCCESS');
 			}, error => {
 				processErrors(error, (msg) => this.snackBarService.showError(msg));
-				this.phoneNumberForm.controls.phoneNumber.setValue(this.appointmentData.phoneNumber);
 			});
-		this.phoneNumberEditMode = false;
 	}
 }
 

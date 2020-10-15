@@ -23,6 +23,7 @@ import { DayTimeRangePipe } from './pipes/day-time-range.pipe';
 import { ViewDatePipe } from './pipes/view-date.pipe';
 import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 import { PersonIdentificationPipe } from './pipes/person-identification.pipe';
+import { EditableFieldComponent } from './components/editable-field/editable-field.component';
 
 @NgModule({
 	declarations: [
@@ -47,6 +48,7 @@ import { PersonIdentificationPipe } from './pipes/person-identification.pipe';
 		ViewDatePipe,
 		ViewHourMinutePipe,
 		PersonIdentificationPipe,
+		EditableFieldComponent,
 	],
 	imports: [
 		CommonModule,
@@ -74,7 +76,8 @@ import { PersonIdentificationPipe } from './pipes/person-identification.pipe';
 		DayTimeRangePipe,
 		ViewDatePipe,
 		ViewHourMinutePipe,
-		PersonIdentificationPipe
+		PersonIdentificationPipe,
+		EditableFieldComponent
 	]
 })
 export class PresentationModule { }

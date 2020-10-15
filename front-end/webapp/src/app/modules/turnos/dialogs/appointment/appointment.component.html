@@ -25,23 +25,9 @@
 			</div>
 			<div fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center" class="mat-body patient-info">
 				<mat-icon fontSet="material-icons-outlined" style="color: transparent">person</mat-icon>
-				Teléfono:
-				<div>
-					<div *ngIf="!phoneNumberEditMode" fxLayout="row" fxLayoutAlign="start center">
-						<span class="phone-text">{{phoneNumberText}}</span>
-						<button mat-icon-button color="primary" (click)="phoneNumberEditMode = true">
-							<mat-icon>edit</mat-icon>
-						</button>
-					</div>
-					<div *ngIf="phoneNumberEditMode" fxLayout="row" fxLayoutAlign="start center">
-						<form [formGroup]="phoneNumberForm" (submit)="updatePhoneNumber()">
-							<input class="hide-borders" formControlName="phoneNumber">
-							<button mat-icon-button style="color:green">
-								<mat-icon matListIcon fontSet="material-icons-outlined">check_circle</mat-icon>
-							</button>
-						</form>
-					</div>
-				</div>
+				<app-editable-field [fieldName]="'turnos.appointment.phoneNumber.PHONE_NUMBER'"
+						[value]="appointmentData.phoneNumber"
+						(newValueEmitter)="updatePhoneNumber($event)"></app-editable-field>
 			</div>
 			<div fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
 				<mat-icon fontSet="material-icons-outlined" style="color: transparent">person</mat-icon>

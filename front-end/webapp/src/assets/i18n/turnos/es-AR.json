@@ -62,7 +62,8 @@
 		},
 		"appointment": {
 			"phoneNumber": {
-				"SUCCESS": "El teléfono se modificó correctamente"
+				"SUCCESS": "El teléfono se modificó correctamente",
+				"PHONE_NUMBER": "Teléfono"
 			}
 		}
 	}
