@@ -77,7 +77,7 @@ export class NewAppointmentComponent implements OnInit {
 			medicalCoverage: [null],
 			prepaid: [null, Validators.maxLength(VALIDATIONS.MAX_LENGTH.medicalCoverageName)],
 			affiliateNumber: [null, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.medicalCoverageAffiliateNumber)]],
-			phoneNumber: [null, [Validators.required, Validators.maxLength(20)]]
+			phoneNumber: [null, [Validators.maxLength(20)]]
 		});
 
 		this.personMasterDataService.getIdentificationTypes().subscribe(

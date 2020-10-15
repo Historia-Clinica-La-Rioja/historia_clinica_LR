@@ -285,7 +285,7 @@ export interface CreateAppointmentDto {
     openingHoursId: number;
     overturn: boolean;
     patientId: number;
-    phoneNumber: string;
+    phoneNumber?: string;
 }
 
 export interface CreateOutpatientDto {

@@ -50,7 +50,7 @@ public class CreateAppointmentDto {
     @Nullable
     private Integer healthInsuranceId;
 
-    @NotNull
+    @Nullable
     @Length(max = 20, message = "{appointment.new.phoneNumber.invalid}")
     private String phoneNumber;
 

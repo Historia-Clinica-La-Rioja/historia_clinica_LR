@@ -179,7 +179,7 @@ public class AppointmentsController {
     public ResponseEntity<Boolean> updatePhoneNumber(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "appointmentId") Integer appointmentId,
-            @RequestParam @Size(min = 1, max = 20, message = "{appointment.new.phoneNumber.invalid}") String phoneNumber) {
+            @RequestParam(required = false) @Size(max = 20, message = "{appointment.new.phoneNumber.invalid}") String phoneNumber) {
         LOG.debug("Input parameters -> institutionId {},appointmentId {}, phoneNumber {}", institutionId, appointmentId, phoneNumber);
         boolean result = appointmentService.updatePhoneNumber(appointmentId,phoneNumber,UserInfo.getCurrentAuditor());
         LOG.debug(OUTPUT, result);
