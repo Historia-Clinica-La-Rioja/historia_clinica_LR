@@ -18,6 +18,7 @@ import { ContextService } from '@core/services/context.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 const ROUTE_NEW = 'pacientes/new';
+const ROUTE_NEW_TEMPORARY = 'pacientes/temporary';
 const ROUTE_HOME = 'pacientes';
 const RENAPER_FFLAG = 'habilitarServicioRenaper';
 const DNI_ID = 1;
@@ -43,6 +44,7 @@ export class SearchComponent implements OnInit {
 	public genderId;
 	public matchingPatient: TableModel<PatientSearchDto>;
 	public searchPatient;
+	public noIdentity: boolean;
 	private readonly routePrefix;
 
 	constructor(
@@ -65,17 +67,23 @@ export class SearchComponent implements OnInit {
 			this.identificationTypeId = params.identificationTypeId;
 			this.identificationNumber = params.identificationNumber;
 			this.genderId = params.genderId;
+			this.noIdentity = params.noIdentity;
 
-			this.buildFormSearch(params);
-
-			this.featureFlagService.isOn(RENAPER_FFLAG)
-				.subscribe(result => {
-					if (result && Number(this.identificationTypeId) === DNI_ID) {
-						this.callRenaperService();
-					} else {
-						this.isLoading = false;
-					}
-				});
+			if (!params.noIdentity) {
+				this.buildFormSearchWithValidations(params);
+				this.featureFlagService.isOn(RENAPER_FFLAG)
+					.subscribe(result => {
+						if (result && Number(this.identificationTypeId) === DNI_ID) {
+							this.callRenaperService();
+						} else {
+							this.isLoading = false;
+						}
+					});
+			}
+			else {
+				this.buildFormSearchWithoutValidations(params);
+				this.isLoading = false;
+			}
 
 			this.personMasterDataService.getIdentificationTypes().subscribe(
 				identificationTypes => {
@@ -180,7 +188,7 @@ export class SearchComponent implements OnInit {
 		}
 	}
 
-	private buildFormSearch(params) {
+	private buildFormSearchWithValidations(params) {
 		this.formSearch = this.formBuilder.group({
 			identificationNumber: [params.identificationNumber, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
 			identificationTypeId: [Number(params.identificationTypeId), Validators.required],
@@ -190,6 +198,20 @@ export class SearchComponent implements OnInit {
 			otherLastNames: [params.otherLastNames],
 			genderId: [Number(params.genderId), Validators.required],
 			birthDate: [params.birthDate ? momentParseDate(params.birthDate) : undefined, Validators.required]
+		});
+		this.lockFormField(params);
+	}
+
+	private buildFormSearchWithoutValidations(params) {
+		this.formSearch = this.formBuilder.group({
+			identificationNumber: [params.identificationNumber, [Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
+			identificationTypeId: [Number(params.identificationTypeId)],
+			firstName: [params.firstName],
+			middleNames: [params.middleNames],
+			lastName: [params.lastName],
+			otherLastNames: [params.otherLastNames],
+			genderId: [Number(params.genderId)],
+			birthDate: [params.birthDate ? momentParseDate(params.birthDate) : undefined]
 		});
 		this.lockFormField(params);
 	}
@@ -218,10 +240,10 @@ export class SearchComponent implements OnInit {
 			this.searchPatient = {
 				firstName: this.formSearch.controls.firstName.value,
 				lastName: this.formSearch.controls.lastName.value,
-				genderId: this.formSearch.controls.genderId.value,
-				identificationTypeId: this.formSearch.controls.identificationTypeId.value,
+				genderId: this.formSearch.controls.genderId.value? this.formSearch.controls.genderId.value : null,
+				identificationTypeId: this.formSearch.controls.identificationTypeId.value? this.formSearch.controls.identificationTypeId.value : null,
 				identificationNumber: this.formSearch.controls.identificationNumber.value,
-				birthDate: this.formSearch.controls.birthDate.value.format(DateFormat.API_DATE),
+				birthDate: this.formSearch.controls.birthDate.value?.format(DateFormat.API_DATE),
 				otherLastNames: this.formSearch.controls.otherLastNames.value,
 				middleNames: this.formSearch.controls.middleNames.value,
 				typeId: PATIENT_TYPE.PERMANENT_INVALID
@@ -244,9 +266,16 @@ export class SearchComponent implements OnInit {
 	}
 
 	goToAddPatient(person) {
-		this.router.navigate([this.routePrefix + ROUTE_NEW], {
-			queryParams: person
-		});
+		if (this.noIdentity) {
+			this.router.navigate([this.routePrefix + ROUTE_NEW_TEMPORARY], {
+				queryParams: person
+			});
+		}
+		else {
+			this.router.navigate([this.routePrefix + ROUTE_NEW], {
+				queryParams: person
+			});
+		}
 	}
 
 	goToNewPatient() {
@@ -279,7 +308,7 @@ export class SearchComponent implements OnInit {
 				secondSubstring: string.substr(spaceIndex + 1)
 			}
 			:
-			{firstSubstring: string};
+			{ firstSubstring: string };
 	}
 
 	private mapToPerson(personData): any {
