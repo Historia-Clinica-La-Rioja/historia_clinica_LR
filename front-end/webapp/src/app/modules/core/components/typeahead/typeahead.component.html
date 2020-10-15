@@ -1,0 +1,20 @@
+<form [formGroup]="form" (ngSubmit)="search()">
+	<mat-form-field fxFlex=100% appearance="outline" class="typeahead-input">
+		<input type="text"
+			   placeholder="{{ placeholder | translate }}"
+			   formControlName="searchValue"
+			   matInput
+			   [matAutocomplete]="auto">
+		<mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+			<mat-option *ngFor="let option of optionsFiltered"
+						[value]="option.viewValue ? option.viewValue : option.compareValue"
+						(onSelectionChange)="select($event, option)"
+			>
+				<span class="mat-body">{{ option.viewValue ? option.viewValue : option.compareValue }}</span>
+			</mat-option>
+		</mat-autocomplete>
+		<button mat-icon-button matSuffix>
+			<mat-icon>search</mat-icon>
+		</button>
+	</mat-form-field>
+</form>

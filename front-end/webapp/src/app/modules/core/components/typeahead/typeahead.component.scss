@@ -1,0 +1,19 @@
+@import '../../../../../assets/styles/mat-mixins';
+
+form {
+	@include mat-form-field-background-white;
+
+	.typeahead-input {
+		::ng-deep .mat-form-field-wrapper {
+			padding-bottom: 0;
+			margin: 0;
+		}
+
+		font-size: 12px;
+
+		input {
+			font-size: 15px;
+		}
+	}
+}
+
