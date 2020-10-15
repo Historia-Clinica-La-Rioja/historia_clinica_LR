@@ -1,11 +1,11 @@
 <app-content width="full">
-	<section>
+	<section fxLayout="column" fxFlex="40%" fxFlex.lt-md="100%" fxLayoutGap="15px">
 		<div>
 			<button mat-raised-button color="primary" (click)="goToAmbulatoria()">
 				<span class="uppercase" [translate]="'ambulatoria.paciente.profile.BUTTON_HISTORIA_CLINICA'"></span>
 			</button>
 		</div>
-		<div class="profile-card">
+		<div>
 			<app-patient-card [patient]="patientBasicData">
 				<div header class="header">
 					<app-patient-type-logo [patientTypeData]="patientTypeData"></app-patient-type-logo>
@@ -15,8 +15,8 @@
 				</div>
 			</app-patient-card>
 		</div>
+		<em *ngIf="!internmentEpisode?.id && internmentEpisode?.inProgress"
+			[translate]="'ambulatoria.paciente.profile.WARNING_INTERNADO'">
+		</em>
 	</section>
-	<em *ngIf="!internmentEpisode?.id && internmentEpisode?.inProgress"
-	    [translate]="'ambulatoria.paciente.profile.WARNING_INTERNADO'">
-	</em>
 </app-content>
