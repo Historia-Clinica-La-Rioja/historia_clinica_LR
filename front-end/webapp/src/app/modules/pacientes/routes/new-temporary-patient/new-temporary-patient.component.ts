@@ -10,6 +10,7 @@ import { Moment } from 'moment';
 import * as moment from 'moment';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from "@core/services/context.service";
+import { momentParseDate } from '@core/utils/moment.utils';
 
 const TEMPORARY_PATIENT = 3;
 const ROUTE_HOME = 'pacientes';
@@ -57,14 +58,14 @@ export class NewTemporaryPatientComponent implements OnInit {
 				this.comments = params.comments;
 
 				this.form = this.formBuilder.group({
-					firstName: [],
-					middleNames: [],
-					lastName: [],
-					otherLastNames: [],
+					firstName: [params.firstName],
+					middleNames: [params.middleNames],
+					lastName: [params.lastName],
+					otherLastNames: [params.otherLastNames],
 					identificationTypeId: [Number(params.identificationTypeId)],
 					identificationNumber: [params.identificationNumber, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)],
 					genderId: [Number(params.genderId)],
-					birthDate: [],
+					birthDate: [params.birthDate ? momentParseDate(params.birthDate) : undefined],
 
 					//Person extended
 					cuil: [null, Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)],
@@ -97,6 +98,8 @@ export class NewTemporaryPatientComponent implements OnInit {
 					pamiDoctor:[],
 					pamiDoctorPhoneNumber:[]
 				});
+
+				this.lockFormField(params);
 			});
 
 		this.personMasterDataService.getGenders()
@@ -213,5 +216,34 @@ export class NewTemporaryPatientComponent implements OnInit {
 		this.router.navigate([this.routePrefix + ROUTE_HOME]);
 	}
 
+
+	private lockFormField(params) {
+
+		if (params.identificationNumber) {
+			this.form.controls.identificationNumber.disable();
+		}
+		if (params.identificationTypeId) {
+			this.form.controls.identificationTypeId.disable();
+		}
+		if (params.genderId) {
+			this.form.controls.genderId.disable();
+		}
+		if (params.firstName) {
+			this.form.controls.firstName.disable();
+		}
+		if (params.middleNames) {
+			this.form.controls.middleNames.disable();
+		}
+		if (params.lastName) {
+			this.form.controls.lastName.disable();
+		}
+		if (params.otherLastNames) {
+			this.form.controls.otherLastNames.disable();
+		}
+		if (params.birthDate) {
+			this.form.controls.birthDate.disable();
+		}
+
+	}
 
 }
