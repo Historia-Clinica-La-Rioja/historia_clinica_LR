@@ -1,10 +1,6 @@
 @import '../../../../../assets/styles/mat-mixins';
 
-form {
-
-	@include mat-form-field-background-white;
-
-}
+@include mat-form-field-background-white;
 
 .actions {
 	margin-bottom: 16px;
