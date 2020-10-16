@@ -25,15 +25,28 @@ public class PatientRepositorySearchImpl implements PatientRepositorySearch {
     @Override
     public List<PatientSearch> getAllByFilter(PatientSearchFilter searchFilter) {
         PatientSearchQuery patientSearchQuery = new PatientSearchQuery(searchFilter);
+        QueryPart queryPart = buildQuery(patientSearchQuery, searchFilter);
+        Query query = entityManager.createQuery(queryPart.toString());
+        queryPart.configParams(query);
+        return patientSearchQuery.construct(query.getResultList());
+    }
+
+    private QueryPart buildQuery(PatientSearchQuery patientSearchQuery, PatientSearchFilter searchFilter){
         QueryPart queryPart = new QueryPart(
                 "SELECT ")
                 .concatPart(patientSearchQuery.select())
                 .concat(" FROM ")
-                .concatPart(patientSearchQuery.from())
-                .concat("WHERE ")
+                .concatPart(patientSearchQuery.from());
+        if (hasBasicSearchAttributes(searchFilter))
+                queryPart.concat("WHERE ")
                 .concatPart(patientSearchQuery.whereWithBasicAttributes(OR_JOINING_OPERATOR, EQUAL_COMPARATOR));
-        Query query = entityManager.createQuery(queryPart.toString());
-        queryPart.configParams(query);
-        return patientSearchQuery.construct(query.getResultList());
+        return queryPart;
+    }
+
+    private boolean hasBasicSearchAttributes(PatientSearchFilter searchFilter) {
+        return (searchFilter.getFirstName() != null ||
+                searchFilter.getLastName() != null ||
+                searchFilter.getIdentificationNumber() != null ||
+                searchFilter.getBirthDate() != null);
     }
 }

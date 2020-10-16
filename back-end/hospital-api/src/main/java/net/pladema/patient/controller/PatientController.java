@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.address.controller.service.AddressExternalService;
-import net.pladema.patient.controller.constraints.FilterValid;
 import net.pladema.patient.controller.constraints.PatientUpdateValid;
 import net.pladema.patient.controller.dto.*;
 import net.pladema.patient.controller.mapper.PatientMapper;
@@ -86,7 +85,7 @@ public class PatientController {
 	}
 
 	@GetMapping(value = "/search")
-	public ResponseEntity<List<PatientSearchDto>> searchPatient(@RequestParam @FilterValid String searchFilterStr) {
+	public ResponseEntity<List<PatientSearchDto>> searchPatient(@RequestParam String searchFilterStr) {
 		LOG.debug("Input data -> searchFilterStr {} ", searchFilterStr);
 		PatientSearchFilter searchFilter = null;
 		try {
