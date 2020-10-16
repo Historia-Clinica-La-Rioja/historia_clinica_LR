@@ -15,6 +15,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -42,10 +43,10 @@ public class PatientServiceImpl implements PatientService {
 	public List<PatientSearch> searchPatient(PatientSearchFilter searchFilter) {
 		LOG.debug("Input parameter -> searchFilter {}", searchFilter);
 		List<PatientSearch> allPatients = patientRepository.getAllByFilter(searchFilter);
-		float scoreMultiplier = calculateScoreMultiplier(searchFilter);
 		List<PatientSearch> matchedPatients = allPatients.stream()
-				.peek(patient -> patient.setRanking(calculateMatchAdjustedToMultiplier(searchFilter, patient.getPerson(), scoreMultiplier)))
+				.peek(patient -> patient.setRanking(calculateMatch(searchFilter, patient.getPerson())))
 				.filter(patient -> patient.getRanking() > THRESHOLD)
+				.sorted(Comparator.comparing(PatientSearch::getRanking).reversed())
 				.collect(Collectors.toList());
 		LOG.debug("Output -> {}", matchedPatients);
 		return matchedPatients;
