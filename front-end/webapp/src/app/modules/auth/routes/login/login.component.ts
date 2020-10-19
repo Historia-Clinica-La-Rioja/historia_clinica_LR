@@ -5,6 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { ApiErrorMessageDto, RecaptchaPublicConfigDto } from '@api-rest/api-model';
 import { RecaptchaService } from "@api-rest/services/recaptcha.service";
 import { PublicService } from "@api-rest/services/public.service";
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
 	selector: 'app-login',
@@ -17,12 +18,14 @@ export class LoginComponent implements OnInit {
 	public recaptchaRes: string;
 	public recaptchaEnable: boolean = false;
 	public recaptchaSiteKey: string = '';
+	private returnUrl: string;
 
 	constructor(
 		private formBuilder: FormBuilder,
 		private authenticationService: AuthenticationService,
 		private recaptchaService: RecaptchaService,
-		private publicService: PublicService) {
+		private publicService: PublicService,
+		private route: ActivatedRoute) {
 	}
 
 	ngOnInit(): void {
@@ -42,6 +45,12 @@ export class LoginComponent implements OnInit {
 				}
 			}
 		});
+
+		this.route.queryParams.subscribe(params => {
+			if (params['returnUrl']) {
+				this.returnUrl = params['returnUrl'];
+			}
+		}); 
 
 	}
 
@@ -66,7 +75,7 @@ export class LoginComponent implements OnInit {
 					throw err;
 				}),
 			).subscribe(
-				() => this.authenticationService.goHome()
+				() => this.returnUrl ? this.authenticationService.go(this.returnUrl) : this.authenticationService.go()
 			);
 		}
 	}

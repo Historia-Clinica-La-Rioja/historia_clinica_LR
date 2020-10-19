@@ -24,7 +24,7 @@ export class OauthLoginComponent implements OnInit {
 		this.getOauthUrl(code).subscribe(value => {
 			this.isLoading = false;
 			localStorage.setItem('token', value.token);
-			this.authenticationService.goHome();
+			this.authenticationService.go();
 		});
 	}
 

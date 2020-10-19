@@ -22,15 +22,19 @@ export class AuthenticationService {
 		this.authService.logout();
 		this.loggedUserService.reset();
 		this.closeModals();
-		this.router.navigate(['/auth/login']);
+		this.router.navigate(['/auth/login'], {
+			queryParams: {
+				returnUrl: this.router.routerState.snapshot.url
+			}
+		});
 	}
 
 	public closeModals(){
 		this.dialogRef.closeAll();
 	}
 
-	public goHome() {
-		this.router.navigate(['/home']);
+	public go(url?: string) {
+		url ? this.router.navigateByUrl(url) : this.router.navigate(['/home']);
 	}
 
 	public login(username: string, password: string, recaptchaResponse: string): Observable<any> {
