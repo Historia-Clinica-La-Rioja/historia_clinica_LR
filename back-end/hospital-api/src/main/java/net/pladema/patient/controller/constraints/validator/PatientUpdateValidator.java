@@ -1,5 +1,6 @@
 package net.pladema.patient.controller.constraints.validator;
 
+import net.pladema.featureflags.service.FeatureFlagsService;
 import net.pladema.patient.controller.constraints.PatientUpdateValid;
 import net.pladema.patient.controller.dto.APatientDto;
 import net.pladema.patient.repository.entity.Patient;
@@ -8,6 +9,7 @@ import net.pladema.patient.service.PatientService;
 import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.controller.service.PersonExternalService;
 import net.pladema.sgx.exceptions.NotFoundException;
+import net.pladema.sgx.featureflags.AppFeature;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -23,9 +25,14 @@ public class PatientUpdateValidator implements ConstraintValidator<PatientUpdate
 
     private final PersonExternalService personExternalService;
 
-    public PatientUpdateValidator(PatientService patientService, PersonExternalService personExternalService){
+    private final FeatureFlagsService featureFlagsService;
+
+    public PatientUpdateValidator(PatientService patientService,
+                                  PersonExternalService personExternalService,
+                                  FeatureFlagsService featureFlagsService){
         this.patientService = patientService;
         this.personExternalService = personExternalService;
+        this.featureFlagsService = featureFlagsService;
     }
 
     @Override
@@ -35,10 +42,12 @@ public class PatientUpdateValidator implements ConstraintValidator<PatientUpdate
 
     @Override
     public boolean isValid(Object[] parameters, ConstraintValidatorContext context) {
+
         Integer patientId = (Integer) parameters[0];
         APatientDto newPatientData = (APatientDto) parameters[1];
 
         Optional<Patient> optPatient = patientService.getPatient(patientId);
+
         if (optPatient.isEmpty()){
             buildResponse(context, "{patient.invalid}");
             return false;
@@ -60,9 +69,9 @@ public class PatientUpdateValidator implements ConstraintValidator<PatientUpdate
 
     private boolean allPatientDataCanBeUpdated(Patient patient){
         Short patientType = patient.getTypeId();
-        return !patientType.equals(PatientType.VALIDATED) &&
+        return (!patientType.equals(PatientType.VALIDATED) &&
                 !patientType.equals(PatientType.PERMANENT) &&
-                !patientType.equals(PatientType.PERMANENT_NOT_VALIDATED);
+                !patientType.equals(PatientType.PERMANENT_NOT_VALIDATED)) || this.featureFlagsService.isOn(AppFeature.HABILITAR_EDITAR_PACIENTE_COMPLETO);
     }
 
     private boolean restrictedFieldsAreNotUpdated(BasicDataPersonDto actualPatientData, APatientDto newPatientData){

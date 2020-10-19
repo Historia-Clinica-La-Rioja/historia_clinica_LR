@@ -25,7 +25,10 @@ public enum AppFeature implements Feature {
     HABILITAR_HISTORIA_CLINICA_AMBULATORIA,
 
     @Label("Indica si esta habilitada la funcionalidad para actualizar documentos de internación")
-    HABILITAR_UPDATE_DOCUMENTS;
+    HABILITAR_UPDATE_DOCUMENTS,
+
+    @Label("Indica si esta habilitada la funcionalidad para editar un paciente")
+    HABILITAR_EDITAR_PACIENTE_COMPLETO;
 
     public boolean isActive() {
         return FeatureContext.getFeatureManager().isActive(this);
