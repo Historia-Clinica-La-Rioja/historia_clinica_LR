@@ -28,6 +28,5 @@ export class EditableFieldComponent implements OnInit {
 	updateFieldValue() {
 		this.newValueEmitter.emit(this.form.value.field);
 		this.editMode = false;
-		this.form.controls.field.setValue(this.value);
 	}
 }
