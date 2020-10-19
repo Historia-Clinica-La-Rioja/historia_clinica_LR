@@ -67,9 +67,8 @@ export class SearchComponent implements OnInit {
 			this.identificationTypeId = params.identificationTypeId;
 			this.identificationNumber = params.identificationNumber;
 			this.genderId = params.genderId;
-			this.noIdentity = params.noIdentity;
-
-			if (!params.noIdentity) {
+			this.noIdentity = params.noIdentity==="true"? true : false;
+			if (!this.noIdentity) {
 				this.buildFormSearchWithValidations(params);
 				this.featureFlagService.isOn(RENAPER_FFLAG)
 					.subscribe(result => {
