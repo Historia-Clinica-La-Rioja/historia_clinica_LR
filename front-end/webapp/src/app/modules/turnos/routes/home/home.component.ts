@@ -79,9 +79,11 @@ export class HomeComponent implements OnInit {
 		this.profesionalesTypeahead = profesionalesFilteredBy.map(d => this.toProfesionalTypeahead(d));
 	}
 
-	goToSelectAgenda(result: ProfessionalDto) {
+	navigate(result: ProfessionalDto) {
 		if (result) {
 			this.router.navigate([`profesional/${result.id}`], {relativeTo: this.route});
+		} else {
+			this.router.navigate([`${this.routePrefix}`]);
 		}
 	}
 

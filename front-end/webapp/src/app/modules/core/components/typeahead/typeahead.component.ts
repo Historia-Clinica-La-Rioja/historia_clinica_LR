@@ -33,29 +33,19 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 				map(value => this.filter(value)))
 			.subscribe(filtered => {
 				this.optionsFiltered = filtered;
-				if (inputValueDifferentThanSelected(this.form.value.searchValue, this.optionSelected)) {
-					delete this.optionSelected;
-				}
-
-				function inputValueDifferentThanSelected(value: string, optionSelected: TypeaheadOption<any>): boolean {
-					return value && optionSelected?.compareValue &&
-						value !== optionSelected.compareValue;
-				}
 			});
 	}
 
 	ngOnChanges(): void {
-
 		this.optionsFiltered = this.options;
 
 		if (this.initValue && this.options && !this.optionSelected) {
 			this.form.controls.searchValue.setValue(this.initValue.compareValue);
-			this.search();
+			this.optionSelected = this.initValue;
 		}
 
 		if (this.optionSelected && this.optionsNotIncludesSelected()) {
 			this.reset();
-			this.onSelectionChange.emit(null);
 		}
 	}
 
@@ -66,27 +56,14 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 		}
 	}
 
-	search(): void {
-		const result = this.getResult();
-		if (result) {
-			this.form.controls.searchValue.setValue(result.compareValue);
-			this.optionSelected = result;
-			this.onSelectionChange.emit(result.value);
-		} else {
-			this.form.controls.searchValue.reset();
-			this.optionSelected = null;
-			this.onSelectionChange.emit(null);
-		}
+	clear(): void {
+		this.reset();
 	}
 
 	private reset(): void {
 		this.optionSelected = null;
 		this.form.controls.searchValue.reset();
-	}
-
-	private getResult(): TypeaheadOption<any> {
-		const results = this.filter(this.form.value.searchValue);
-		return results.length === 1 ? results[0] : null;
+		this.onSelectionChange.emit(null);
 	}
 
 	private filter(value: string): TypeaheadOption<any>[] {

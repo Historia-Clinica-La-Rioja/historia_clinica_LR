@@ -1,4 +1,4 @@
-<form [formGroup]="form" (ngSubmit)="search()">
+<form [formGroup]="form">
 	<mat-form-field fxFlex=100% appearance="outline" class="typeahead-input">
 		<input type="text"
 			   placeholder="{{ placeholder | translate }}"
@@ -13,8 +13,10 @@
 				<span class="mat-body">{{ option.viewValue ? option.viewValue : option.compareValue }}</span>
 			</mat-option>
 		</mat-autocomplete>
-		<button mat-icon-button matSuffix>
-			<mat-icon>search</mat-icon>
+
+		<button *ngIf="form.value?.searchValue?.length" id="clear" type="button" mat-icon-button matSuffix (click)="clear()">
+			<mat-icon>close</mat-icon>
 		</button>
+
 	</mat-form-field>
 </form>
