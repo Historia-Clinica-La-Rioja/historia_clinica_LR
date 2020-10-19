@@ -127,6 +127,7 @@ const LoginForm: FunctionComponent<Props> = props => {
 				.catch(error => {
 					setLoading(false);
 					window.grecaptcha.reset();
+					setRaToken(undefined);
 					notify(
 							typeof error === 'string'
 									? error
