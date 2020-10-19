@@ -85,7 +85,7 @@ public class PatientUpdateValidator implements ConstraintValidator<PatientUpdate
     }
 
     private boolean genderIsNotUpdated(BasicDataPersonDto actualPatientData, APatientDto newPatientData){
-        return areEqual(actualPatientData.getGenderId(), newPatientData.getGenderId());
+        return areEqual(actualPatientData.getGender().getId(), newPatientData.getGenderId());
     }
 
     private boolean birthDateIsNotUpdated(BasicDataPersonDto actualPatientData, APatientDto newPatientData){

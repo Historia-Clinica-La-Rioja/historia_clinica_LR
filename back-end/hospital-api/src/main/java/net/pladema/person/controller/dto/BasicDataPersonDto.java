@@ -38,8 +38,4 @@ public class BasicDataPersonDto implements Serializable {
     private Short age;
 
     private LocalDate birthDate;
-
-    public Short getGenderId(){
-        return gender.getId();
-    }
 }
