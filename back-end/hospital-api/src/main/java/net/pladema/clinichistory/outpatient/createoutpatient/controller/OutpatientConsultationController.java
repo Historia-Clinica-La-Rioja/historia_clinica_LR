@@ -40,7 +40,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -109,7 +111,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         OutpatientDocumentBo outpatient = outpatientConsultationMapper.fromCreateOutpatientDto(createOutpatientDto);
         outpatient = createOutpatientDocumentService.create(newOutPatient.getId(), patientId, outpatient);
 
-        if (!disableValidation)
+        if (!disableValidation && appointmentExternalService.hasConfirmedAppointment(patientId,doctorId,dateTimeProvider.nowDate()))
             appointmentExternalService.serveAppointment(patientId, doctorId, dateTimeProvider.nowDate());
         outpatient.setReasons(reasons);
         generateDocument(outpatient, institutionId, newOutPatient.getId(), patientId);
@@ -144,11 +146,11 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 
         OutpatientDocumentBo outpatient = new OutpatientDocumentBo();
         outpatient.setEvolutionNote(vaccineDto.getNote());
-        outpatient.setImmunizations(Arrays.asList(immunizationBo));
+        outpatient.setImmunizations(Collections.singletonList(immunizationBo));
 
         outpatient = createOutpatientDocumentService.create(newOutPatient.getId(), patientId, outpatient);
 
-        if (Boolean.TRUE.equals(finishAppointment) && !disableValidation)
+        if (Boolean.TRUE.equals(finishAppointment) && !disableValidation && appointmentExternalService.hasConfirmedAppointment(patientId,doctorId,dateTimeProvider.nowDate()))
             appointmentExternalService.serveAppointment(patientId, doctorId, dateTimeProvider.nowDate());
         generateDocument(outpatient, institutionId, newOutPatient.getId(), patientId);
 
@@ -171,7 +173,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         immunizationBo.setInstitutionId(institutionId);
 
         OutpatientDocumentBo outpatient = new OutpatientDocumentBo();
-        outpatient.setImmunizations(Arrays.asList(immunizationBo));
+        outpatient.setImmunizations(Collections.singletonList(immunizationBo));
 
         outpatient = createOutpatientDocumentService.create(newOutPatient.getId(), patientId, outpatient);
         generateDocument(outpatient, institutionId, newOutPatient.getId(), patientId);
@@ -192,7 +194,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, false);
 
         OutpatientDocumentBo outpatient = new OutpatientDocumentBo();
-        outpatient.setProblems(Arrays.asList(outpatientConsultationMapper.fromHealthConditionNewConsultationDto(solvedProblemDto)));
+        outpatient.setProblems(Collections.singletonList(outpatientConsultationMapper.fromHealthConditionNewConsultationDto(solvedProblemDto)));
         outpatient = createOutpatientDocumentService.create(newOutPatient.getId(), patientId, outpatient);
         generateDocument(outpatient, institutionId, newOutPatient.getId(), patientId);
 

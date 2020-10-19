@@ -29,6 +29,7 @@ export class ClinicalSpecialtyService {
 
 		}
 		return of([]);
+	}
 
 	getAppointmentClinicalSpecialty(patientId): Observable<any>{
 		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/clinicalspecialty/patient/${patientId}`;

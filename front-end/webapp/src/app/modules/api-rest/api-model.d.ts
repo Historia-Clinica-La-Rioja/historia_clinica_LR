@@ -196,7 +196,6 @@ export interface BasicDataPersonDto extends Serializable {
     birthDate: Date;
     firstName: string;
     gender: GenderDto;
-    genderId: number;
     id: number;
     identificationNumber: string;
     identificationType: string;

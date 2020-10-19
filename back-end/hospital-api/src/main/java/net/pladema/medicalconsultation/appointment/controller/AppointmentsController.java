@@ -164,6 +164,15 @@ public class AppointmentsController {
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping("/consider-appointment")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
+    public ResponseEntity<Boolean> considerAppointment(@PathVariable(name = "institutionId")  Integer institutionId){
+        LOG.debug("Input parameters -> institutionId {}", institutionId);
+        boolean result = !disableValidation && !enableNewConsultation;
+        LOG.debug(OUTPUT, result);
+        return ResponseEntity.ok(result);
+    }
+
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
     @PutMapping(value = "/{appointmentId}/update-phone-number")
     public ResponseEntity<Boolean> updatePhoneNumber(

@@ -25,6 +25,10 @@ public class HasAppointmentValidator implements ConstraintValidator<HasAppointme
     @Value("${test.stress.disable.validation:false}")
     private boolean disableValidation;
 
+    @Value("${habilitar.boton.consulta:false}")
+    private boolean enableNewConsultation;
+
+
     public HasAppointmentValidator(AppointmentExternalService appointmentExternalService,
                                    HealthcareProfessionalExternalService healthcareProfessionalExternalService,
                                    DateTimeProvider dateTimeProvider) {
@@ -42,7 +46,7 @@ public class HasAppointmentValidator implements ConstraintValidator<HasAppointme
     public boolean isValid(Integer patientId, ConstraintValidatorContext context) {
        LOG.debug("Input parameters -> patientId {}", patientId);
        Integer healthcareProfessionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
-       boolean result = disableValidation ? true : appointmentExternalService.hasConfirmedAppointment(patientId, healthcareProfessionalId, dateTimeProvider.nowDate());
+       boolean result = disableValidation || enableNewConsultation || appointmentExternalService.hasConfirmedAppointment(patientId, healthcareProfessionalId, dateTimeProvider.nowDate());
        LOG.debug("OUTPUT -> {}", result);
        return result;
     }
