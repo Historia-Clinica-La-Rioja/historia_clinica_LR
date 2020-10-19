@@ -83,16 +83,6 @@
 										{{problem.startDate }}
 									</span>
 								</div>
-								<ng-container *ngIf="hasNewConsultationEnabled">
-									<mat-menu #menu="matMenu">
-										<button mat-menu-item (click)="goToNuevaConsulta(problem)">
-											<span [translate]="'ambulatoria.paciente.nueva-consulta.TITLE_MENU'"> </span>
-										</button>
-										<button mat-menu-item (click)="goToNuevaConsulta(problem)">
-											<span [translate]="'ambulatoria.paciente.problemas.END'"></span>
-										</button>
-									</mat-menu>
-								</ng-container>
 							</mat-list-item>
 							<mat-divider></mat-divider>
 						</div>

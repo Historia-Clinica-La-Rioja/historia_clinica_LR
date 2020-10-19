@@ -6,11 +6,26 @@
 		<h3 id="page_subtitle" [translate]="'ambulatoria.paciente.nueva-consulta.SUBTITLE'"></h3>
 	</div>
 
+	<div fxLayout="row">
+		<h2 [translate]="'Especialidad'"></h2>
+	</div>
+	<div fxLayout="row">
+		<mat-form-field appearance="outline">
+			<mat-select id="clinicalSpecialtyId" [ngModel]="defaultSpecialty" (selectionChange)="true" [disabled]="fixedSpecialty">
+				<mat-option *ngFor="let clinicalSpecialty of this.specialties" [value]="clinicalSpecialty">
+					<span class="mat-body">{{clinicalSpecialty.name}}</span>
+				</mat-option>
+			</mat-select>
+			<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+		</mat-form-field>
+	</div>
+
 	<div id="motivo">
 		<app-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.motivo.TITLE'"
 			[tableTitle]="'ambulatoria.paciente.nueva-consulta.motivo.table.TITLE'"
 			[columns]="motivoNuevaConsultaService.getColumns()"
 			[data]="motivoNuevaConsultaService.getMotivosConsulta()">
+
 			<ng-container concept-form>
 				<app-concepts-search
 					*ngIf="!motivoNuevaConsultaService.getSnomedConcept() else mainMotivoConsulta"
@@ -490,4 +505,3 @@
 	</div>
 </div>
 </app-content>
-	

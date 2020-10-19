@@ -63,6 +63,11 @@ export class AppointmentsService {
 		return this.http.get<boolean>(url, {params : queryParams});
 	}
 
+	considerAppointments(): Observable<boolean> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/consider-appointment`;
+		return this.http.get<boolean>(url);
+	}
+
 	updatePhoneNumber(appointmentId: number, phoneNumber: string ): Observable<boolean> {
 		let queryParams: HttpParams = new HttpParams();
 		queryParams = (phoneNumber) ? queryParams.append('phoneNumber', phoneNumber) : queryParams;

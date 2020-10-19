@@ -13,7 +13,7 @@ import {
 	AntecedenteFamiliar,
 	AntecedentesFamiliaresNuevaConsultaService
 } from '../../services/antecedentes-familiares-nueva-consulta.service';
-import {CreateOutpatientDto, HealthConditionNewConsultationDto} from '@api-rest/api-model';
+import {ClinicalSpecialtyDto, CreateOutpatientDto, HealthConditionNewConsultationDto} from '@api-rest/api-model';
 import {DateFormat, dateToMomentTimeZone, momentFormat, newMoment} from '@core/utils/moment.utils';
 import {OutpatientConsultationService} from '@api-rest/services/outpatient-consultation.service';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -21,6 +21,8 @@ import {SnackBarService} from '@presentation/services/snack-bar.service';
 import {ContextService} from '@core/services/context.service';
 import {Alergia, AlergiasNuevaConsultaService} from '../../services/alergias-nueva-consulta.service';
 import {HealthConditionService} from "@api-rest/services/healthcondition.service";
+import {ClinicalSpecialtyService} from "@api-rest/services/clinical-specialty.service";
+import {AppointmentsService} from "@api-rest/services/appointments.service";
 
 @Component({
 	selector: 'app-nueva-consulta',
@@ -42,6 +44,9 @@ export class NuevaConsultaComponent implements OnInit {
 	readOnlyProblema: boolean = false;
 	apiErrors: string[] = [];
 	public today = newMoment();
+	fixedSpecialty: boolean = true;
+	defaultSpecialty: ClinicalSpecialtyDto;
+	specialties: ClinicalSpecialtyDto[];
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -53,6 +58,8 @@ export class NuevaConsultaComponent implements OnInit {
 		private readonly contextService: ContextService,
 		private readonly snackBarService: SnackBarService,
 		private readonly healthConditionService: HealthConditionService,
+		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
+		private readonly appointmentsService: AppointmentsService,
 	) {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, snomedService);
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, snomedService);
@@ -65,7 +72,38 @@ export class NuevaConsultaComponent implements OnInit {
 		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, snomedService);
 	}
 
+	static buildProblema(p: HealthConditionNewConsultationDto) {
+		const problema: Problema = {
+			snomed: p.snomed,
+			cronico: p.isChronic,
+			fechaInicio: dateToMomentTimeZone(p.startDate),
+			fechaFin: p.inactivationDate? dateToMomentTimeZone(p.inactivationDate) : undefined
+		};
+		return problema;
+	}
+
 	ngOnInit(): void {
+		//tg-1910
+		this.appointmentsService.considerAppointments().subscribe(consider => {
+			if(consider){
+				this.route.paramMap.subscribe((params) => {
+					const idPaciente = Number(params.get('idPaciente'));
+					this.clinicalSpecialtyService.getAppointmentClinicalSpecialty(idPaciente).subscribe(specialty => {
+						this.specialties = [specialty];
+						this.defaultSpecialty = specialty;
+					});
+				});
+			}
+			else {
+				this.clinicalSpecialtyService.getLoggedInProfessionalClinicalSpecialties().subscribe( specialties => {
+					this.specialties = specialties;
+					this.fixedSpecialty = false;
+					this.defaultSpecialty = specialties[0];
+				});
+			}
+		});
+
+
 		this.route.data.subscribe( data => {
 				if(data.problemaReadOnly){
 					this.readOnlyProblema = true;
@@ -81,7 +119,6 @@ export class NuevaConsultaComponent implements OnInit {
 		this.formEvolucion = this.formBuilder.group({
 			evolucion: [null]
 		});
-
 		this.motivoNuevaConsultaService.error$.subscribe(motivoError => {
 			this.errores[0]=motivoError;
 		});
@@ -100,16 +137,6 @@ export class NuevaConsultaComponent implements OnInit {
 		this.signosVitalesNuevaConsultaService.diastolicBloodPressureError$.subscribe(presionDiastolicaError => {
 			this.errores[5]=presionDiastolicaError;
 		});
-	}
-
-	static buildProblema(p: HealthConditionNewConsultationDto) {
-		const problema: Problema = {
-			snomed: p.snomed,
-			cronico: p.isChronic,
-			fechaInicio: dateToMomentTimeZone(p.startDate),
-			fechaFin: p.inactivationDate? dateToMomentTimeZone(p.inactivationDate) : undefined
-		};
-		return problema;
 	}
 
 	private goToAmbulatoria(idPaciente: number) {
