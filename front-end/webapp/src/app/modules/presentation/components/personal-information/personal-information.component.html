@@ -1,25 +1,25 @@
 <ng-template #noInformation>
 	<span class="noInformation">Sin Información</span>
 </ng-template>
-<div class="form-row">
+<div fxLayout="row" class="form-row">
 	<mat-icon color="primary" fontSet="material-icons-outlined">assignment_ind</mat-icon>
 	<h3 class="primary bold">Información Personal</h3>
 </div>
-<div class="form-row">
-	<div>
+<div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between" class="form-row">
+	<div fxFlex="50%">
 		<span>Documento</span>
 		<span *ngIf="(personalInformation?.identificationType?.length || personalInformation?.identificationNumber?.length); else noInformation"
 			class="bold">{{personalInformation?.identificationType.description}} {{personalInformation?.identificationNumber}}
 		</span>
 	</div>
-	<div>
+	<div fxFlex="50%">
 		<span>CUIL/CUIT</span>
 		<span class="bold" *ngIf="personalInformation?.cuil; else noInformation">{{personalInformation?.cuil}}</span>
 	</div>
 </div>
 <mat-divider inset></mat-divider>
-<div class="form-row">
-	<div>
+<div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between" class="form-row">
+	<div fxFlex="50%">
 		<span>Domicilio</span>
 		<span *ngIf="addressPresent; else noInformation">
 			<span class="bold">{{address | fullHouseAddress}}</span>
@@ -27,31 +27,31 @@
 				class="bold">{{personalInformation?.address?.city?.description}}, {{personalInformation?.address?.province?.description}}</span>
 		</span>
 	</div>
-	<div>
+	<div fxFlex="50%">
 		<span>Fecha de Nacimiento</span>
 		<span *ngIf="personalInformation?.birthDate; else noInformation" class="bold">{{personalInformation?.birthDate}}</span>
 	</div>
 </div>
 <mat-divider inset></mat-divider>
-<div class="form-row">
-	<div>
+<div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between" class="form-row" style="word-break: break-all;">
+	<div fxFlex="50%">
 		<span>Email</span>
 		<span *ngIf="personalInformation?.email; else noInformation" class="bold">{{personalInformation?.email}}</span>
 	</div>
-	<div>
+	<div fxFlex="50%">
 		<span clas="bold">Nro de teléfono</span>
 		<span *ngIf="personalInformation?.phoneNumber; else noInformation" class="bold">{{personalInformation?.phoneNumber}}</span>
 	</div>
 </div>
 <mat-divider inset></mat-divider>
-<div class="form-row">
-	<div>
+<div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between" class="form-row">
+	<div fxFlex="50%">
 		<span>Cobertura</span>
 		<span *ngIf="personalInformation?.medicalCoverageName; else noInformation"
 			class="bold">{{personalInformation?.medicalCoverageName}}
 		</span>
 	</div>
-	<div>
+	<div fxFlex="50%">
 		<span>Nro de afiliado</span>
 		<span *ngIf="personalInformation?.medicalCoverageAffiliateNumber; else noInformation"
 			class="bold">{{personalInformation?.medicalCoverageAffiliateNumber}}

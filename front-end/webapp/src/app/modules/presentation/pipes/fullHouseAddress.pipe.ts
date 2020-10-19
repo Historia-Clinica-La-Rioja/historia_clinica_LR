@@ -10,7 +10,7 @@ export class FullHouseAddressPipe implements PipeTransform {
 	}
 
 	const street = address.street ? address.street : '';
-	const number = address.number ? ' Nro ' + address.number : '';
+	const number = address.number ? ' ' + address.number : '';
 	const floor = address.floor ? ' ' +  address.floor : '';
 	const apartment = address.apartment ? ' ' +  address.apartment : '';
 	return street + number + floor + apartment;
