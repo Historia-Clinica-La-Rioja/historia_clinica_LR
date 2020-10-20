@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angu
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
 import { MatOptionSelectionChange } from '@angular/material/core';
+import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 
 @Component({
 	selector: 'app-typeahead',
@@ -56,8 +57,10 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 		}
 	}
 
-	clear(): void {
+	clear(event, autocompleteTrigger: MatAutocompleteTrigger ): void {
 		this.reset();
+		event.stopPropagation();
+		autocompleteTrigger.openPanel();
 	}
 
 	private reset(): void {
