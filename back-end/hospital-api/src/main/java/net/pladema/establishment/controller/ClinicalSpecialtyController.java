@@ -62,7 +62,7 @@ public class ClinicalSpecialtyController {
     }
 
     @GetMapping(value = "/professional", params = "professionalsIds")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
     public ResponseEntity<List<ProfessionalsByClinicalSpecialtyDto>> getManyByProfessionals(
             @PathVariable(name = "institutionId") Integer institutionId,
             @RequestParam List<Integer> professionalsIds) {

@@ -52,31 +52,38 @@ export class HomeComponent implements OnInit {
 				this.especialidadesTypeaheadOptions$ = this.getEspecialidadesTypeaheadOptions$(doctors);
 
 				this.profesionales = doctors;
-				this.profesionalesTypeahead = doctors.map(d => this.toProfesionalTypeahead(d));
+				this.profesionalesTypeahead = doctors.map(d => this.toProfessionalTypeahead(d));
 
 				if (this.route.firstChild) {
-					this.route.firstChild.params.subscribe(params => {
-						const idProfesional = Number(params.idProfesional);
-						if (idProfesional) {
-							this.healthCareProfessionalService.getOne(idProfesional)
-								.subscribe((profesional: ProfessionalDto) => {
-									if (profesional) {
-										this.profesionalInitValue = {
-											compareValue: this.getFullNameLicence(profesional),
-											value: profesional
-										};
-									}
-								});
-						}
-					});
+					this.loadProfessionalSelected();
+				} else {
+					if (this.profesionales.length === 1) {
+						this.profesionalInitValue = this.toProfessionalTypeahead(this.profesionales[0]);
+						this.navigate(this.profesionales[0]);
+					}
 				}
 
 			});
 	}
 
+	private loadProfessionalSelected() {
+		this.route.firstChild.params.subscribe(params => {
+			const idProfesional = Number(params.idProfesional);
+			if (idProfesional) {
+				this.healthCareProfessionalService.getOne(idProfesional)
+					.subscribe((profesional: ProfessionalDto) => {
+						if (profesional) {
+							this.profesionalInitValue = this.toProfessionalTypeahead(profesional);
+						}
+					});
+			}
+		});
+	}
+
 	loadProfessionals(professionalsByClinicalSpecialtyDto: ProfessionalsByClinicalSpecialtyDto) {
+		this.profesionalInitValue = null;
 		const profesionalesFilteredBy = this.getProfesionalesFilteredBy(professionalsByClinicalSpecialtyDto);
-		this.profesionalesTypeahead = profesionalesFilteredBy.map(d => this.toProfesionalTypeahead(d));
+		this.profesionalesTypeahead = profesionalesFilteredBy.map(d => this.toProfessionalTypeahead(d));
 	}
 
 	navigate(result: ProfessionalDto) {
@@ -123,7 +130,7 @@ export class HomeComponent implements OnInit {
 		}
 	}
 
-	private toProfesionalTypeahead(professionalDto: ProfessionalDto): TypeaheadOption<ProfessionalDto> {
+	private toProfessionalTypeahead(professionalDto: ProfessionalDto): TypeaheadOption<ProfessionalDto> {
 		return {
 			compareValue: this.getFullNameLicence(professionalDto),
 			value: professionalDto
