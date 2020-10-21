@@ -9,4 +9,13 @@ databaseChangeLog:
             columnDataType: varchar
             columnName: phone_number
             tableName: appointment
+    
+    - changeSet:
+        id: update-reason-description-length
+        author: tmedina
+        changes:
+            - modifyDataType:
+                columnName:  description  
+                newDataType:  varchar(255)    
+                tableName:  reasons
 

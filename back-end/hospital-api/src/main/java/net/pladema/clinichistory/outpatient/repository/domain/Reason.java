@@ -26,7 +26,7 @@ public class Reason implements Serializable {
 	@Column(name = "id", length = 20)
 	private String id;
 
-	@Column(name = "description", nullable = false)
+	@Column(name = "description", length = 255, nullable = false)
 	private String description;
 
 }
