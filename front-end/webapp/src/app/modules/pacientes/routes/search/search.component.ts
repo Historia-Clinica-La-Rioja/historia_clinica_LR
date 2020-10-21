@@ -336,7 +336,7 @@ export class SearchComponent implements OnInit {
 						personToAdd.identificationNumber = this.identificationNumber;
 						personToAdd.genderId = this.genderId;
 						personToAdd.typeId = PATIENT_TYPE.VALID;
-						this.goToNextState(personToAdd);
+						this.goToAddPatient(personToAdd);
 					}
 				}, () => {
 					this.snackBarService.showError('pacientes.search.RENAPER_TIMEOUT');
