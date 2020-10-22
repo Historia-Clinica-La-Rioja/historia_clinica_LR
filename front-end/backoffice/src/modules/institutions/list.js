@@ -3,10 +3,19 @@ import {
     List,
     Datagrid,
     TextField,
+    Filter,
+    TextInput
 } from 'react-admin';
 
+const InstitutionFilter = (props) => (
+    <Filter {...props}>
+        <TextInput source="name" />
+        <TextInput source="sisaCode" />
+    </Filter>
+);
+
 const InstitutionList = props => (
-    <List {...props} bulkActionButtons={false}>
+    <List {...props} filters={<InstitutionFilter />} bulkActionButtons={false}>
         <Datagrid rowClick="show">
             <TextField source="name" />
             <TextField source="website" />
