@@ -2,7 +2,7 @@
 	<ng-content select="[header]"></ng-content>
 	<div id="layout_header" fxLayout="row" fxLayoutAlign="space-between" fxLayout.lt-sm="column">
 		<mat-card-header>
-			<div id="avatar" mat-card-avatar class="header-image"></div>
+			<img mat-card-md-image mat-card-avatar [src]="base64Image">
 			<mat-card-title>
 				<span id="title" class="capitalize">
 					{{ patient?.firstName }} {{patient?.middleNames}} {{patient?.lastName}} {{patient?.otherLastNames}}
