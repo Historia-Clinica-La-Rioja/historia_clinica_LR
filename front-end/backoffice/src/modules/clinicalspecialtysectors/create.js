@@ -7,11 +7,12 @@ import {
     SimpleForm,
     required
 } from 'react-admin';
+import SaveCancelToolbar from "../../modules/components/save-cancel-toolbar";
 
 const searchToFilter = searchText => ({name: searchText ? searchText : -1});
 const ClinicalSpecialtySectorCreate = props => (
     <Create {...props}>
-        <SimpleForm redirect="show" >
+        <SimpleForm redirect="show" toolbar={<SaveCancelToolbar />}>
             <TextInput source="description" validate={[required()]} />
 
             <ReferenceInput

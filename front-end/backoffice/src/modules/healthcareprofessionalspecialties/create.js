@@ -7,13 +7,14 @@ import {
     SimpleForm,
     required
 } from 'react-admin';
+import SaveCancelToolbar from "../../modules/components/save-cancel-toolbar";
 
 const searchToFilter = searchText => ({description: searchText ? searchText : -1});
 const searchSpecialtyToFilter = searchText => ({name: searchText ? searchText : -1});
 const renderSpecialty = (choice) => `${choice.description} - ${choice.descriptionProfessionRef}`;
 const HealthcareProfessionalSpecialtyCreate = props => (
     <Create {...props}>
-        <SimpleForm redirect="show" >
+        <SimpleForm redirect="show" toolbar={<SaveCancelToolbar />}>
             <ReferenceInput
                 source="healthcareProfessionalId"
                 reference="healthcareprofessionals"

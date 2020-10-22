@@ -9,10 +9,11 @@ import {
     required,
     BooleanInput,
 } from 'react-admin';
+import SaveCancelToolbar from "../../modules/components/save-cancel-toolbar";
 
 const BedCreate = props => (
     <Create {...props}>
-        <SimpleForm redirect="show" >
+        <SimpleForm redirect="show" toolbar={<SaveCancelToolbar />}>
             <TextInput source="bedNumber" validate={[required()]} />
             <ReferenceInput
                 source="roomId"

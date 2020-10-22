@@ -13,10 +13,11 @@ import {
 import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
 import SgxSelectInput from "../../sgxSelectInput/SgxSelectInput";
+import SaveCancelToolbar from "../../modules/components/save-cancel-toolbar";
 
 const SectorEdit = props => (
     <Edit {...props}>
-        <SimpleForm redirect="show" >
+        <SimpleForm redirect="show" toolbar={<SaveCancelToolbar />}>
             <TextInput source="description" validate={[required()]} />
 
             <SgxSelectInput source="institutionId" element="institutions" optionText="name" alwaysOn allowEmpty={false}/>

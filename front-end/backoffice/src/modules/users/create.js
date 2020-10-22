@@ -5,12 +5,12 @@ import {
     TextInput,
     required,
 } from 'react-admin';
-
 import PeopleReferenceInput from '../people/PeopleReferenceInput';
+import SaveCancelToolbar from "../../modules/components/save-cancel-toolbar";
 
 const UserCreate = props => (
     <Create {...props}>
-        <SimpleForm>
+        <SimpleForm toolbar={<SaveCancelToolbar />}>
             <PeopleReferenceInput source="personId" validate={[required()]} />
             <TextInput source="username" validate={[required()]}/>
         </SimpleForm>

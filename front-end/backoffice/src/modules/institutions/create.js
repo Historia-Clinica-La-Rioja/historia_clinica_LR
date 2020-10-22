@@ -5,12 +5,11 @@ import {
     SimpleForm,
     required
 } from 'react-admin';
-
-import OnlySaveToolbar from '../components/only-save-toolbar';
+import SaveCancelToolbar from "../../modules/components/save-cancel-toolbar";
 
 const InstitutionCreate = props => (
     <Create {...props}>
-        <SimpleForm redirect="show" toolbar={<OnlySaveToolbar />}>
+        <SimpleForm redirect="show" toolbar={<SaveCancelToolbar />}>
             <TextInput source="name" validate={[required()]} />
             <TextInput source="website" />
             <TextInput source="phone" validate={[required()]} />

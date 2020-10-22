@@ -7,10 +7,11 @@ import {
     SimpleForm,
     required
 } from 'react-admin';
+import SaveCancelToolbar from "../../modules/components/save-cancel-toolbar";
 
 const SectorCreate = props => (
     <Create {...props}>
-        <SimpleForm redirect="show" >
+        <SimpleForm redirect="show" toolbar={<SaveCancelToolbar />}>
             <TextInput source="description" validate={[required()]} />
             <ReferenceInput
                 source="institutionId"

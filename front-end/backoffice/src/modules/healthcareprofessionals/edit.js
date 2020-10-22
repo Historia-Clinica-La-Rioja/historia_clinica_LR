@@ -9,14 +9,14 @@ import {
     TextField,
     DeleteButton, ReferenceField,
 } from 'react-admin';
-
 import PeopleReferenceInput from '../people/PeopleReferenceInput';
 import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
+import SaveCancelToolbar from "../../modules/components/save-cancel-toolbar";
 
 const HealthcareProfessionalEdit = props => (
     <Edit {...props}>
-        <SimpleForm redirect="show" >
+        <SimpleForm redirect="show" toolbar={<SaveCancelToolbar />}>
             <PeopleReferenceInput source="personId" validate={[required()]} />
             <TextInput source="licenseNumber" validate={[required()]} />
 
