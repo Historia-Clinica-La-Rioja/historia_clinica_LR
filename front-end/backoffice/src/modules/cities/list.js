@@ -9,7 +9,6 @@ import {
 const CityList = props => (
     <List {...props} bulkActionButtons={false}>
         <Datagrid rowClick="show">
-            <TextField source="id" />
             <TextField source="description" />
             <ReferenceField source="departmentId" reference="departments" link={false}>
                 <TextField source="description" />

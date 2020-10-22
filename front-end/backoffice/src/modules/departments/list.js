@@ -8,7 +8,6 @@ import {
 const DepartmentList = props => (
     <List {...props} bulkActionButtons={false}>
         <Datagrid rowClick={null}>
-            <TextField source="id" />
             <TextField source="description" />
         </Datagrid>
     </List>
