@@ -33,8 +33,11 @@ public class ClinicalSpecialty implements Serializable, Comparable<ClinicalSpeci
 	@Column(name = "name", nullable = false, length = 100)
 	private String name;
 
-	@Column(name = "sctid_code", nullable = false, length = 15)
+	@Column(name = "sctid_code", nullable = false, length = 20)
 	private String sctidCode;
+
+	@Column(name = "clinical_specialty_type_id", nullable = false)
+	private Short clinicalSpecialtyTypeId;
 
 	@Override
 	public int compareTo(ClinicalSpecialty anotherClinicalSpecialty) {

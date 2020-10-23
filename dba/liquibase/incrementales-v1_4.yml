@@ -1,16 +1,263 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v1_4 
+- logicalFilePath: incrementales-v1_4 
 
-    - changeSet:
-        id: add-column-timezone-institucion
-        author: nayerdi
-        changes:
-            - addColumn:
-                tableName: institution
-                columns:
-                - column:
-                    name: timezone
-                    type: varchar(60)
-                    constraints:
-                        nullable: false
-                    defaultValue: "America/Argentina/Buenos_Aires"
+- changeSet:
+    id: add-column-timezone-institucion
+    author: nayerdi
+    changes:
+    - addColumn:
+        tableName: institution
+        columns:
+        - column:
+            name: timezone
+            type: varchar(60)
+            constraints:
+                nullable: false
+            defaultValue: "America/Argentina/Buenos_Aires"
+
+- changeSet:  
+    id:  createTable-clinical_specialty_type 
+    author: saguero  
+    changes:  
+    - createTable: 
+        tableName: clinical_specialty_type  
+        columns:  
+        - column: 
+            constraints:
+                primaryKey: true
+                primaryKeyName: PK_clinical_specialty_type
+            name:  id  
+            type:  smallint 
+        - column:
+            constraints:
+                nullable: false
+            name: name
+            type: varchar(30)
+            
+- changeSet: 
+    id: clinical_specialty_type-metadata
+    author: saguero
+    context: "!schema-only"
+    changes: 
+        - sql:
+            sql: |-
+                INSERT INTO clinical_specialty_type (id,name) VALUES (1,'Servicio'); 
+                INSERT INTO clinical_specialty_type (id,name) VALUES (2,'Especialidad'); 
+                
+- changeSet:
+    id: addColumn-clinical_specialty_type_id-clinical_specialty
+    author: saguero
+    changes:
+    - addColumn:
+        tableName: clinical_specialty
+        columns:
+        - column:
+            name: clinical_specialty_type_id
+            type: smallint
+    - update:  
+        columns:  
+        - column:  
+            name: clinical_specialty_type_id
+            value: 1            
+        tableName: clinical_specialty
+    - addNotNullConstraint:
+        columnDataType: short  
+        columnName: clinical_specialty_type_id  
+        constraintName: NN_clinical_specialty_type_id      
+        tableName: clinical_specialty  
+        validate:  true
+    - addForeignKeyConstraint:
+            baseColumnNames: clinical_specialty_type_id
+            baseTableName: clinical_specialty
+            constraintName: FK_clinical_specialty_clinical_specialty_type_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: clinical_specialty_type
+            validate: true
+
+- changeSet:  
+    id:  modifyDataType-clinical_specialty-sctid_code 
+    author:  saguero  
+    changes:  
+    -  modifyDataType:    
+        columnName: sctid_code  
+        newDataType: varchar(20) 
+        tableName: clinical_specialty
+
+
+- changeSet: 
+    id: clinical_specialty-metadata2
+    author: saguero
+    context: "!schema-only"
+    changes: 
+        - sql:
+            sql: |-
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Clínica médica', '320591000221104',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Medicina general y/o medicina de familia', '394814009',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Alergia e Inmunología', '394805004',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Cardiología', '394579002',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Angiología general y hemodinamia', '722414000',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Dermatología', '394582007',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Endocrinología', '394583002',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Farmacología clínica', '394600006',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Fisiatría (medicina física y rehabilitación)', '394602003',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Gastroenterología', '394584008',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Genética médica', '394580004',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Geriatría', '394811001',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Hematología', '394803006',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Infectología', '321221000221106',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Nefrología', '394589003',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Neumonología', '418112009',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Neurología', '394591006',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Nutrición', '321381000221103',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Oncología', '394593009',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Reumatología', '394810000',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Terapia intensiva', '419192003',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Cirugía general', '394609007',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Cirugía cardiovascular', '408463005',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Cirugía de cabeza y cuello', '320341000221104',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Cirugía de tórax (cirugía torácica)', '408456005',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Cirugía infantil (cirugía pediátrica)', '394539006',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Cirugía plástica y reparadora', '394611003',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Cirugía vascular periférica', '320381000221107',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Coloproctología', '320441000221109',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Ginecología', '394586005',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Neurocirugía', '394610002',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Obstetricia', '408470005',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Oftalmología', '394813003',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Ortopedia y traumatología', '394801008',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Otorrinolaringología', ' 322811000221107',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Tocoginecología', '321481000221109',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Urología', '394612005',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Pediatría', '394537008',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Cardiología infantil', '408459003',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Endocrinología infantil', '419610006',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Gastroenterología infantil', '418058008',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Hematología infantil', '418652005',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Infectología infantil', '321251000221100',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Nefrología infantil', '419365004',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Neonatología', '408445005',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Neumonología infantil', '419170002',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Neurología infantil', '394538003',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Oncología infantil', '418002000',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Reumatología infantil', '419472004',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Terapia intensiva infantil', '321451000221104',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Psiquiatría', '394587001',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Psiquiatría infanto juvenil', '394588006',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Anatomía patológica', '394595002',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Anestesiología', '394577000',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Diagnóstico por imágenes', '320501000221108',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Hemoterapia e inmunohematología', '394819004',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Medicina del deporte', ' 321351000221108',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Medicina del trabajo', '394821009',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Medicina legal', '722204007',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Medicina nuclear', '394649004',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Radioterapia o terapia radiante', '419815003',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Toxicología', '409967009',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Dermatología pediátrica', '23971000087106',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Emergentologia', '773568002',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Especialidad en anatomía patológica bucalmaxilofacial', ' 321161000221107',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Especialidad en cirugía y traumatología bucomaxilofacial', '408449004 ',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Especialidad de endodoncia', '408441001',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Especialidad de periodoncia', '408461007',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Especialidad de odontopediatría', '394607009',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Especialidad de ortodoncia y ortopedia maxilar', '394608004',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Especialización en diagnóstico por imágenes bucomaxilofacial', '322311000221102',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Especialidad en odontología legal', '321201000221104',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Especialidad en clínica estomatológica', '321181000221100',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Especialidad en prótesis dentobucomaxilar', '408460008',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Enfermería en salud del adulto', '321051000221106',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Enfermería en salud del anciano', '321071000221104',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Enfermería en salud materno infantil y del adolescente', '321151000221105',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Enfermería en salud mental y psiquiatría', '321191000221102',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Enfermería en la atención del paciente crítico: neonatal, pediátrico y adulto', '320901000221102',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Enfermería en cuidados paliativos', '320851000221109',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Electrofisiología cardíaca', '320651000221108',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Ortopedia y traumatología infantil', '322281000221104',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Hepatología', '408472002',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Hepatología pediátrica', '321231000221109',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Alergia e inmunología pediátrica', '321741000221107',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Cirugía cardiovascular pediátrica', '320311000221103',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Salud pública', '321421000221105',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Epidemiología', '321441000221101',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Auditoría de servicios de salud', '320171000221107',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Gestión de servicios de salud', ' 322701000221104',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Farmacia hospitalaria', '322441000221108',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Farmacia comunitaria', '322321000221107',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Esterilización', ' 321211000221101',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Farmacia industrial', '322661000221109',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Farmacia sanitaria y legal', '322671000221100',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Nutrición y análisis de los alimentos', '321701000221105',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Biofarmacia', '320161000221103',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Bioquímica clínica', '394596001',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Toxicología legal y forense', ' 321551000221103',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Bromatología', '321521000221109',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Biotecnología', '320271000221103',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Bioquímica del medio ambiente', '320191000221108',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Nutrición en bioquimica', '321631000221106',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Bioquímica industrial', '320211000221109',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Gestión de calidad en el laboratorio', '321571000221105',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Enfermeria en rehabilitación', '321011000221105',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Odontología (r)', '722163006',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Psicología (r)', '722162001',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Enfermería', '722165004',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Fonoaudiología (r)', '331141000221106',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Kinesiología (r)', '321341000221106',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Terapia ocupacional (r)', '321471000221106',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Enfermería en cuidados críticos', '320841000221107',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Salud mental (r)', '321401000221103',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Microbiología (r)', '394820005',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Inocuidad y seguridad de alimentos (r)', '322741000221102',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Control de calidad de medicamentos', '320471000221104',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Enfermeria general y familiar', '321261000221103',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Enfermeria UTI pediátrica', '321411000221100',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Enfermería UTI neonatal', '321771000221102',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Enfermería clinico quirúrgico', '320771000221108',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Enfermería UTI adultos', '321321000221102',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Enfermería en neonatología', '320961000221101',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Enfermería en salud familiar y comunitaria', '321111000221109',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Emergentología pediátrica', '320691000221100',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Enfermería comunitaria', '320781000221106',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Nutrición y alimentación clinica infantojuvenil', '321671000221109',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Nutrición y alimentación clinica del adulto', '321651000221102',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Enfermería en control de infecciones', '320821000221103',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Enfermería oncologica', '321281000221105',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Psicología comunitaria (r)', '322111000221100',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Kinesiologia en respiratorio de adultos (r)', '322781000221105',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Salud pública veterinaria (r)', '321431000221108',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Psicología clínica y comunitaria (r)', '322101000221103',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Neurocirugía pediátrica (r)', '321371000221101',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Trabajo social en salud (r)', '321491000221107',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Ingeniería clinica (r)', '321591000221106',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Cirugía oncológica', '419321007',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Bioquímica toxicológica', '320231000221101',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Bioquímica y nutrición', '320251000221105',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Citogenética', '394804000',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Enfermería pediátrica', '321301000221109',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Radiología (r)', '394914008',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Seguridad y eficacia de medicamentos (r)', '322161000221102',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Quemados pediátrico (r)', '322331000221105',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Hemato-oncología pediátrica', '23981000087108',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Medicina paliativa', '394806003',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Adolescencia', '320111000221101',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Anatomía patológica pediátrica', '320141000221102',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Obstetricia (r)', '408470005',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Otorrinolaringología pediátrica (r)', '322471000221103',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Interdisciplinaria de educación para la salud (r)', '321291000221108',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Musicoterapia (r)', '321361000221105',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Diagnóstico por imagenes pediátrico', '320541000221105',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Diagnóstico por imagenes pediátrico', '320541000221105',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Enfermería en perinatología', '320981000221108',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Interdisciplinaria en cuidados paliativos (r)', ' 321311000221107',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Interdisciplinaria en gerontología (r)', '322431000221101',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Investigación en salud (r)', '322711000221101',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Kinesiología en pediatría y neonatología (r)', '322251000221109',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Kinesiología en rehabilitación psicofísica (r)', ' 322751000221100',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Mastología (r)', '322231000221100',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Procuración y transplante de órganos y tejidos (r)', '408477008',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Psicología clínica infanto-juvenil (r)', '322071000221105',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Psicopedagogía (r)', '321391000221100',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Trauma (r)', '322051000221103',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Cirugía gastroenterológica', '320361000221100',2);
+                INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Psicología clínica', '722162001',2);
