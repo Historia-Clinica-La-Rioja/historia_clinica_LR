@@ -34,4 +34,13 @@ public class MasterdataRepositoryImpl implements MasterdataRepository {
         Query query = entityManager.createQuery(sqlString, clazz);
         return query.getResultList();
     }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    @Transactional(readOnly = true)
+    public <T> Collection<MasterDataProjection> findAllRestrictedBy(Class<T> clazz, String field, Short flag) {
+        String sqlString = "SELECT p FROM " + clazz.getSimpleName() + " p " + "WHERE " + field + "= " + flag;
+        Query query = entityManager.createQuery(sqlString, clazz);
+        return query.getResultList();
+    }
 }

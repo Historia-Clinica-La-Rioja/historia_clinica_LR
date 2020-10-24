@@ -24,4 +24,10 @@ public class InternmentMasterDataServiceImpl implements InternmentMasterDataServ
         LOG.debug("Input parameters -> {}", clazz);
         return masterdataRepository.findAllProjectedBy(clazz, filterIds);
     }
+
+    @Override
+    public <T> Collection<MasterDataProjection> findAllRestrictedBy(Class<T> clazz, String field, Short flag) {
+        LOG.debug("Input parameters -> {}", clazz);
+        return masterdataRepository.findAllRestrictedBy(clazz, field, flag);
+    }
 }

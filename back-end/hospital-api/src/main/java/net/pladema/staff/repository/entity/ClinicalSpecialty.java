@@ -44,4 +44,8 @@ public class ClinicalSpecialty implements Serializable, Comparable<ClinicalSpeci
 		return name.compareTo(anotherClinicalSpecialty.name);
 	}
 
+	public boolean withoutName(){
+		return (name == null || name.isBlank() ||name.equals("-1"));
+	}
+
 }

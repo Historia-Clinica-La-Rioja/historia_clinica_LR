@@ -6,6 +6,7 @@ import net.pladema.clinichistory.hospitalization.repository.domain.DischargeType
 import net.pladema.sgx.masterdata.repository.MasterDataProjection;
 import net.pladema.clinichistory.hospitalization.service.masterdata.InternmentMasterDataService;
 import net.pladema.staff.repository.entity.ClinicalSpecialty;
+import net.pladema.staff.repository.entity.ClinicalSpecialtyType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -121,7 +122,10 @@ public class InternmentMasterdataController {
 	@GetMapping(value = "/clinical/specialty")
 	public ResponseEntity<Collection<MasterDataProjection>> getClinicalSpecialty() {
 		LOG.debug("{}", "All internment clinical specialty");
-		return ResponseEntity.ok().body(internmentMasterDataService.findAll(ClinicalSpecialty.class).stream().sorted()
+		return ResponseEntity.ok()
+                .body(internmentMasterDataService.findAllRestrictedBy(
+                        ClinicalSpecialty.class, "clinicalSpecialtyTypeId", ClinicalSpecialtyType.Specialty)
+                .stream().sorted()
 				.collect(Collectors.toList()));
 	}
     
