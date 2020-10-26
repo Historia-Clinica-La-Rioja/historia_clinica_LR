@@ -11,6 +11,8 @@ import * as moment from 'moment';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from "@core/services/context.service";
 import { momentParseDate } from '@core/utils/moment.utils';
+import { MatDialog } from '@angular/material/dialog';
+import { MedicalCoverageComponent } from 'src/app/modules/core/dialogs/medical-coverage/medical-coverage.component';
 
 const TEMPORARY_PATIENT = 3;
 const ROUTE_HOME = 'pacientes';
@@ -46,7 +48,8 @@ export class NewTemporaryPatientComponent implements OnInit {
 				private addressMasterDataService: AddressMasterDataService,
 				private route: ActivatedRoute,
 				private snackBarService: SnackBarService,
-				private contextService: ContextService) {
+				private contextService: ContextService,
+				private dialog: MatDialog) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 
@@ -88,9 +91,6 @@ export class NewTemporaryPatientComponent implements OnInit {
 					addressProvinceId: [],
 					addressCountryId: [],
 					addressDepartmentId: {value: null, disabled: true},
-					//Patient
-					medicalCoverageName: [null, Validators.maxLength(VALIDATIONS.MAX_LENGTH.medicalCoverageName)],
-					medicalCoverageAffiliateNumber: [null, Validators.maxLength(VALIDATIONS.MAX_LENGTH.medicalCoverageAffiliateNumber)],
 
 					//doctors
 					generalPractitioner:[],
@@ -169,8 +169,6 @@ export class NewTemporaryPatientComponent implements OnInit {
 			typeId: TEMPORARY_PATIENT,
 			comments: this.comments,
 			identityVerificationStatusId: this.identityVerificationStatus,
-			medicalCoverageName: this.form.controls.medicalCoverageName.value,
-			medicalCoverageAffiliateNumber: this.form.controls.medicalCoverageAffiliateNumber.value,
 			//doctors
 			generalPractitioner: {
 				fullName: this.form.controls.generalPractitioner.value,
@@ -209,6 +207,21 @@ export class NewTemporaryPatientComponent implements OnInit {
 				this.cities = cities;
 			});
 		this.form.controls.addressCityId.enable();
+	}
+
+	openMedicalCoverageDialog(): void {
+		const dialogRef = this.dialog.open(MedicalCoverageComponent, {
+			data: {
+				genderId: this.form.getRawValue().genderId,
+				identificationNumber: this.form.getRawValue().identificationNumber,
+				identificationTypeId: this.form.getRawValue().identificationTypeId
+			}
+		});
+		dialogRef.afterClosed().subscribe(medicalCoverages => {
+			console.log(medicalCoverages)
+			//Formatear los valores que devuelve el dialogo para un dto de agregar la info a la N-N
+		});
+
 	}
 
 	goBack(): void {

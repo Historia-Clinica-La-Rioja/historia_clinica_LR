@@ -14,6 +14,8 @@ import { PersonService } from '@api-rest/services/person.service';
 import { MapperService } from '@presentation/services/mapper.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PATIENT_TYPE } from '@core/utils/patient.utils';
+import { MatDialog } from '@angular/material/dialog';
+import { MedicalCoverageComponent } from 'src/app/modules/core/dialogs/medical-coverage/medical-coverage.component';
 
 const ROUTE_PROFILE = 'pacientes/profile/';
 const ROUTE_HOME_PATIENT = 'pacientes';
@@ -54,7 +56,8 @@ export class EditPatientComponent implements OnInit {
 		private contextService: ContextService,
 		private mapperService: MapperService,
 		private personService: PersonService,
-		private featureFlagService: FeatureFlagService
+		private featureFlagService: FeatureFlagService,
+		private dialog: MatDialog
 	)
 	{
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
@@ -89,9 +92,6 @@ export class EditPatientComponent implements OnInit {
 								this.form.setControl('phoneNumber', new FormControl(personInformationData.phoneNumber));
 								this.form.setControl('religion', new FormControl(personInformationData.religion));
 								this.form.setControl('ethnic', new FormControl(personInformationData.ethnic));
-								//medical
-								this.form.setControl('medicalCoverageName', new FormControl(completeData.medicalCoverageName, Validators.maxLength(VALIDATIONS.MAX_LENGTH.medicalCoverageName)));
-								this.form.setControl('medicalCoverageAffiliateNumber', new FormControl(completeData.medicalCoverageAffiliateNumber, Validators.maxLength(VALIDATIONS.MAX_LENGTH.medicalCoverageAffiliateNumber)));
 								//address
 								this.form.setControl('addressCountryId', new FormControl(DEFAULT_COUNTRY_ID));
 								if (personInformationData.province !== undefined) {
@@ -173,10 +173,6 @@ export class EditPatientComponent implements OnInit {
 			addressCountryId: [],
 			addressDepartmentId: [],
 
-			//Patient
-			medicalCoverageName: [null, Validators.maxLength(VALIDATIONS.MAX_LENGTH.medicalCoverageName)],
-			medicalCoverageAffiliateNumber: [null, Validators.maxLength(VALIDATIONS.MAX_LENGTH.medicalCoverageAffiliateNumber)],
-
 			//doctors
 			generalPractitioner: [],
 			generalPractitionerPhoneNumber: [],
@@ -230,8 +226,6 @@ export class EditPatientComponent implements OnInit {
 			typeId: this.patientType,
 			comments: null,
 			identityVerificationStatusId: null,
-			medicalCoverageName: this.form.controls.medicalCoverageName.value,
-			medicalCoverageAffiliateNumber: this.form.controls.medicalCoverageAffiliateNumber.value,
 			//Doctors
 			generalPractitioner: {
 				id: this.completeDataPatient.generalPractitioner?.id,
@@ -272,6 +266,21 @@ export class EditPatientComponent implements OnInit {
 			.subscribe(cities => {
 				this.cities = cities;
 			});
+	}
+
+	openMedicalCoverageDialog(): void {
+		const dialogRef = this.dialog.open(MedicalCoverageComponent, {
+			data: {
+				genderId: this.form.getRawValue().genderId,
+				identificationNumber: this.form.getRawValue().identificationNumber,
+				identificationTypeId: this.form.getRawValue().identificationTypeId
+			}
+		});
+		dialogRef.afterClosed().subscribe(medicalCoverages => {
+			console.log(medicalCoverages)
+			//Formatear los valores que devuelve el dialogo para un dto de agregar la info a la N-N
+		});
+
 	}
 
 	goBack(): void {

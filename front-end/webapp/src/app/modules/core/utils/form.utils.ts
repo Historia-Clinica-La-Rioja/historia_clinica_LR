@@ -7,8 +7,6 @@ export const VALIDATIONS = {
 	MAX_LENGTH: {
 		identif_number: 11,
 		cuil: 11,
-		medicalCoverageAffiliateNumber: 150,
-		medicalCoverageName: 255
 	}
 };
 

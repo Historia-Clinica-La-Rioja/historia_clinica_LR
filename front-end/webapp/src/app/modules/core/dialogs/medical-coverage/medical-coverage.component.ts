@@ -39,9 +39,9 @@ export class MedicalCoverageComponent implements OnInit {
 		{
 			id: 2,
 			medicalCoverage: {
-				acronym: 'OSA', name: 'OBRA SOCIAL DE AERONAVEGANTES', rnos: '400800',
+				acronym: 'OSA', name: 'OBRA SOCIAL DE AERONAVEGANTES', rnos: '2',
 			},
-			affiliateNumber: '400800',
+			affiliateNumber: '789',
 			validDate: newMoment()
 		},
 

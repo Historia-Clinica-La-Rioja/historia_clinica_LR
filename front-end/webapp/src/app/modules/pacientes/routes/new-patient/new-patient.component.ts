@@ -8,9 +8,10 @@ import { PatientService } from '@api-rest/services/patient.service';
 import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID } from "@core/utils/form.utils";
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
-import { DateFormat } from '@core/utils/moment.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from "@core/services/context.service";
+import { MatDialog } from '@angular/material/dialog';
+import { MedicalCoverageComponent } from 'src/app/modules/core/dialogs/medical-coverage/medical-coverage.component';
 
 const ROUTE_SEARCH = 'pacientes/search';
 const ROUTE_PROFILE = 'pacientes/profile/';
@@ -46,7 +47,8 @@ export class NewPatientComponent implements OnInit {
 		private personMasterDataService: PersonMasterDataService,
 		private addressMasterDataService: AddressMasterDataService,
 		private snackBarService: SnackBarService,
-		private contextService: ContextService) {
+		private contextService: ContextService,
+		private dialog: MatDialog) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 
@@ -54,14 +56,14 @@ export class NewPatientComponent implements OnInit {
 		this.route.queryParams
 			.subscribe(params => {
 				this.form = this.formBuilder.group({
-					firstName: [params.firstName? params.firstName: null, [Validators.required]],
-					middleNames: [params.middleNames? params.middleNames: null],
-					lastName: [params.lastName? params.lastName: null, [Validators.required]],
-					otherLastNames: [params.otherLastNames? params.otherLastNames: null],
+					firstName: [params.firstName ? params.firstName : null, [Validators.required]],
+					middleNames: [params.middleNames ? params.middleNames : null],
+					lastName: [params.lastName ? params.lastName : null, [Validators.required]],
+					otherLastNames: [params.otherLastNames ? params.otherLastNames : null],
 					genderId: [Number(params.genderId), [Validators.required]],
 					identificationNumber: [params.identificationNumber, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
 					identificationTypeId: [Number(params.identificationTypeId), [Validators.required]],
-					birthDate: [params.birthDate? moment(params.birthDate): null, [Validators.required]],
+					birthDate: [params.birthDate ? moment(params.birthDate) : null, [Validators.required]],
 
 					//Person extended
 					cuil: [null, [Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)]],
@@ -85,15 +87,12 @@ export class NewPatientComponent implements OnInit {
 					addressProvinceId: [],
 					addressCountryId: [],
 					addressDepartmentId: { value: null, disabled: true },
-					//Patient
-					medicalCoverageName: [null, Validators.maxLength(VALIDATIONS.MAX_LENGTH.medicalCoverageName)],
-					medicalCoverageAffiliateNumber: [null, Validators.maxLength(VALIDATIONS.MAX_LENGTH.medicalCoverageAffiliateNumber)],
 
 					//doctors
-					generalPractitioner:[],
-					generalPractitionerPhoneNumber:[],
-					pamiDoctor:[],
-					pamiDoctorPhoneNumber:[]
+					generalPractitioner: [],
+					generalPractitionerPhoneNumber: [],
+					pamiDoctor: [],
+					pamiDoctorPhoneNumber: []
 				});
 				this.lockFormField(params);
 				this.patientType = params.typeId;
@@ -189,8 +188,6 @@ export class NewPatientComponent implements OnInit {
 			typeId: this.patientType,
 			comments: null,
 			identityVerificationStatusId: null,
-			medicalCoverageName: this.form.controls.medicalCoverageName.value,
-			medicalCoverageAffiliateNumber: this.form.controls.medicalCoverageAffiliateNumber.value,
 			//doctors
 			generalPractitioner: {
 				fullName: this.form.controls.generalPractitioner.value,
@@ -198,7 +195,7 @@ export class NewPatientComponent implements OnInit {
 				generalPractitioner: true
 			},
 			pamiDoctor: {
-				fullName:this.form.controls.pamiDoctor.value,
+				fullName: this.form.controls.pamiDoctor.value,
 				phoneNumber: this.form.controls.pamiDoctorPhoneNumber.value,
 				generalPractitioner: false
 
@@ -231,6 +228,21 @@ export class NewPatientComponent implements OnInit {
 				this.cities = cities;
 			});
 		this.form.controls.addressCityId.enable();
+	}
+
+	openMedicalCoverageDialog(): void {
+		const dialogRef = this.dialog.open(MedicalCoverageComponent, {
+			data: {
+				genderId: this.form.getRawValue().genderId,
+				identificationNumber: this.form.getRawValue().identificationNumber,
+				identificationTypeId: this.form.getRawValue().identificationTypeId
+			}
+		});
+		dialogRef.afterClosed().subscribe(medicalCoverages => {
+			console.log(medicalCoverages)
+			//Formatear los valores que devuelve el dialogo para un dto de agregar la info a la N-N
+		});
+
 	}
 
 	goBack(): void {
