@@ -17,30 +17,36 @@ import PeopleReferenceField from '../people/PeopleReferenceField';
 import Aside from './Aside'
 import authProvider from '../../providers/authProvider';
 
-const validateInstitutionRequired = (values) => {
-    const errors = {};
-    values.roles.forEach(function (roleAndInstitution) {
+const validateInstitutionRequired = (values, entity) => {
+    const errors = new Array(values.length);
+    values.forEach(function (roleAndInstitution, index) {
 
-        let isAdmin = roleAndInstitution && (authProvider.getRole(roleAndInstitution.roleId) === 'ROOT' ||
-                               authProvider.getRole(roleAndInstitution.roleId) === 'ADMINISTRADOR');
-        if(!isAdmin && roleAndInstitution && !roleAndInstitution.institutionId) {
-            errors.institutionId = ['La institucion es requerida'];
+        if(roleAndInstitution) {
+            let error = {};
+            let isAdmin = (authProvider.getRole(roleAndInstitution.roleId) === 'ROOT' ||
+                                   authProvider.getRole(roleAndInstitution.roleId) === 'ADMINISTRADOR');
+
+            if(!isAdmin && !roleAndInstitution.institutionId) {
+                error.institutionId = 'La institucion es requerida';
+            }
+
+            errors[index] = error;
         }
     });
 
-    return errors;
-}
+    return errors
+};
 
 const UserEdit = props => (
     <Edit {...props} 
         aside={<Aside />} 
     >
-        <SimpleForm toolbar={<SaveCancelToolbar />} validate={validateInstitutionRequired}>
+        <SimpleForm toolbar={<SaveCancelToolbar />}>
             <PeopleReferenceField source="personId" />
             <TextInput source="username" validate={[required()]}/>
             <BooleanInput source="enable" validate={[required()]}/>
             <DateField source="lastLogin" showTime locales="es-AR"/>
-            <ArrayInput source="roles" >
+            <ArrayInput source="roles" validate={validateInstitutionRequired}>
                 <SimpleFormIterator >
                     <ReferenceInput source="roleId" reference="roles" validate={[required()]}>
                         <SelectInput optionText="description" optionValue="id"/>
