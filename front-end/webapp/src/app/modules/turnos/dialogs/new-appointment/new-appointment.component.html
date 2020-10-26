@@ -68,50 +68,33 @@
 					<mat-list-item id="patient" class="patient-data-list">
 						<mat-icon color="primary" mat-list-icon [inline]="true">person</mat-icon>
 						<div fxLayout="column">
-							<strong *ngIf="isTemporaryPatient" translate="turnos.new-appointment.TEMPORARY_PATIENT"></strong>
+							<strong *ngIf="patient?.patientTypeId === TEMPORARY_PATIENT_ID" translate="turnos.new-appointment.TEMPORARY_PATIENT"></strong>
 							<span translate="turnos.new-appointment.PATIENT_ID">: {{patientId}} </span>
-							<span *ngIf="person">
-								{{person | personIdentification}}
+							<span *ngIf="patient">
+								{{ mapToPersonIdentification(patient.personalDataDto) | personIdentification}}
 							</span>
 						</div>
 					</mat-list-item>
 				</mat-list>
 				<div fxLayout="row" fxLayoutAlign="space-around center">
-					<mat-spinner *ngIf="!healtInsuranceOptions.length"></mat-spinner>
+					<mat-spinner *ngIf="!patientMedicalCoverages?.length"></mat-spinner>
 				</div>
-				<form *ngIf="healtInsuranceOptions.length" [formGroup]="appointmentInfoForm">
+				<button mat-stroked-button color="primary" (click)="openMedicalCoverageDialog()" class="update-medical-coverage">
+					<span [translate]="'Actualizar cobertura'"></span>
+				</button>
+				<form *ngIf="patientMedicalCoverages?.length" [formGroup]="appointmentInfoForm">
 					<div fxLayout="column">
 						<mat-form-field appearance="outline">
-							<mat-label>Obra Social</mat-label>
+							<mat-label>Cobertura Médica </mat-label>
 							<mat-select
-								formControlName="medicalCoverage">
+								formControlName="patientMedicalCoverageId">
 								<mat-option
 									id="medicalCoverage"
 									name="medicalCoverage"
-									*ngFor="let healthInsurance of healtInsuranceOptions" [value]="healthInsurance.rnos">
-									{{healthInsurance.name}}
+									*ngFor="let patientMedicalCoverage of patientMedicalCoverages" [value]="patientMedicalCoverage.id">
+									{{getFullHealthInsuranceText(patientMedicalCoverage.medicalCoverage)}}
 								</mat-option>
 							</mat-select>
-						</mat-form-field>
-						<mat-form-field appearance="outline">
-							<mat-label>Prepaga</mat-label>
-							<input matInput
-								type="text"
-								id="prepaid"
-								name="prepaid"
-								formControlName="prepaid"
-								placeholder="Prepaga">
-						</mat-form-field>
-					</div>
-					<div fxLayout="column">
-						<mat-form-field appearance="outline">
-							<mat-label>Nro de afiliado</mat-label>
-							<input matInput
-								type="text"
-								id="affiliateNumber"
-								name="affiliateNumber"
-								formControlName="affiliateNumber"
-								placeholder="Nro de afiliado">
 						</mat-form-field>
 						<mat-form-field appearance="outline">
 							<mat-label>Nro Telefónico</mat-label>

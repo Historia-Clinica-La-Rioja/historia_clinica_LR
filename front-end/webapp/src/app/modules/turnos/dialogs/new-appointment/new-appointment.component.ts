@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { VALIDATIONS, processErrors, hasError, updateControlValidator } from '@core/utils/form.utils';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
@@ -8,8 +8,6 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
 import { MatStepper, MatHorizontalStepper } from '@angular/material/stepper';
-import { RenaperService } from '@api-rest/services/renaper.service';
-import { HealthInsuranceService } from '@api-rest/services/health-insurance.service';
 import {
 	CreateAppointmentDto,
 	MedicalCoverageDto,
@@ -20,6 +18,8 @@ import {
 } from '@api-rest/api-model';
 import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
 import { PersonIdentification } from '@presentation/pipes/person-identification.pipe';
+import { MedicalCoverageComponent, PatientMedicalCoverage } from '../../../core/dialogs/medical-coverage/medical-coverage.component';
+import { newMoment } from '@core/utils/moment.utils';
 
 const ROUTE_SEARCH = 'pacientes/search';
 const TEMPORARY_PATIENT_ID = 3;
@@ -41,10 +41,10 @@ export class NewAppointmentComponent implements OnInit {
 	public patientId: any;
 	public showAddPatient = false;
 	public editable = true;
-	public person: PersonIdentification;
-	isTemporaryPatient = false;
-
+	patientMedicalCoverages: PatientMedicalCoverage[];
+	patient: ReducedPatientDto;
 	public readonly hasError = hasError;
+	readonly TEMPORARY_PATIENT_ID = TEMPORARY_PATIENT_ID;
 	private readonly routePrefix;
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
@@ -57,9 +57,8 @@ export class NewAppointmentComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private readonly router: Router,
 		private readonly contextService: ContextService,
-		private readonly renaperService: RenaperService,
-		private readonly healthInsurance: HealthInsuranceService,
-		private readonly appointmentFacade: AppointmentsFacadeService
+		private readonly appointmentFacade: AppointmentsFacadeService,
+		public dialog: MatDialog,
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 	}
@@ -74,9 +73,7 @@ export class NewAppointmentComponent implements OnInit {
 		});
 
 		this.appointmentInfoForm = this.formBuilder.group({
-			medicalCoverage: [null],
-			prepaid: [null, Validators.maxLength(VALIDATIONS.MAX_LENGTH.medicalCoverageName)],
-			affiliateNumber: [null, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.medicalCoverageAffiliateNumber)]],
+			patientMedicalCoverageId: [null, Validators.required],
 			phoneNumber: [null, [Validators.maxLength(20)]]
 		});
 
@@ -133,21 +130,21 @@ export class NewAppointmentComponent implements OnInit {
 		this.patientService.getBasicPersonalData(patientId)
 			.subscribe((reducedPatientDto: ReducedPatientDto) => {
 				this.patientFound();
-				this.person = mapToPersonIdentification(reducedPatientDto.personalDataDto);
+				this.patient = reducedPatientDto;
 				this.appointmentInfoForm.controls.phoneNumber.setValue(reducedPatientDto.personalDataDto.phoneNumber);
-				this.isTemporaryPatient = reducedPatientDto.patientTypeId === TEMPORARY_PATIENT_ID;
-				this.setHealthInsuranceoptions(reducedPatientDto);
+				this.setHealthInsuranceoptions();
 			}, _ => {
 				this.patientNotFound();
 			});
 
-		function mapToPersonIdentification(personalDataDto: BasicPersonalDataDto): PersonIdentification {
-			return {
-				firstName: personalDataDto.firstName,
-				lastName: personalDataDto.lastName,
-				identificationNumber: personalDataDto.identificationNumber
-			};
-		}
+	}
+
+	mapToPersonIdentification(personalDataDto: BasicPersonalDataDto): PersonIdentification {
+		return {
+			firstName: personalDataDto.firstName,
+			lastName: personalDataDto.lastName,
+			identificationNumber: personalDataDto.identificationNumber
+		};
 	}
 
 	private patientFound() {
@@ -161,41 +158,44 @@ export class NewAppointmentComponent implements OnInit {
 		this.showAddPatient = true;
 	}
 
-	private setHealthInsuranceoptions(reducedPatientDto: ReducedPatientDto) {
+	private setHealthInsuranceoptions() {
 
-		if (reducedPatientDto.patientTypeId === TEMPORARY_PATIENT_ID) {
-			this.setAllHealthInsuranceOptions();
-			return;
-		}
+		//Llamar al/los mismos endpoints que se llama desde adentro del dialog
+		this.patientMedicalCoverages = [
+			{
+				id: 1,
+				medicalCoverage: {
+					acronym: 'OSPEA', name: 'OBRA SOCIAL DEL PERSONAL DE DIRE', rnos: '1',
+				},
+				affiliateNumber: '100',
+				validDate: newMoment()
 
-		this.renaperService.getHealthInsurance(
-			{ identificationNumber: reducedPatientDto.personalDataDto.identificationNumber, genderId: reducedPatientDto.personalDataDto.genderId })
-			.subscribe(healthInsuranceData => {
-				if (healthInsuranceData) {
-					this.healtInsuranceOptions = healthInsuranceData;
-				} else {
-					this.setAllHealthInsuranceOptions();
-				}
-			}, () => this.setAllHealthInsuranceOptions());
+			},
+			{
+				id: 2,
+				medicalCoverage: {
+					acronym: 'OSA', name: 'OBRA SOCIAL DE AERONAVEGANTES', rnos: '400800',
+				},
+				affiliateNumber: '400800',
+				validDate: newMoment()
+			},
+
+		];
 	}
 
-	private setAllHealthInsuranceOptions() {
-		this.healthInsurance.getAll().subscribe(allHealthInsuranceData => {
-			this.healtInsuranceOptions = allHealthInsuranceData;
-		});
+	getFullHealthInsuranceText(medicalCoverage): string {
+		return [medicalCoverage.acronym, medicalCoverage.name].filter(Boolean).join(' - ');
 	}
 
 	submit(): void {
 		const newAppointment: CreateAppointmentDto = {
 			date: this.data.date,
 			diaryId: this.data.diaryId,
-			healthInsuranceId: this.appointmentInfoForm.controls.medicalCoverage.value,
 			hour: this.data.hour,
-			medicalCoverageAffiliateNumber: this.appointmentInfoForm.controls.affiliateNumber.value,
-			medicalCoverageName: this.appointmentInfoForm.controls.prepaid.value,
 			openingHoursId: this.data.openingHoursId,
 			overturn: this.data.overturnMode,
 			patientId: this.patientId,
+			patientMedicalCoverageId: this.appointmentInfoForm.value.patientMedicalCoverageId,
 			phoneNumber: this.appointmentInfoForm.controls.phoneNumber.value
 		};
 
@@ -218,10 +218,8 @@ export class NewAppointmentComponent implements OnInit {
 			});
 	}
 
-	showConfirmButton() {
-		return this.appointmentInfoForm.controls.affiliateNumber.valid
-			&& (this.appointmentInfoForm.controls.medicalCoverage.valid || this.appointmentInfoForm.controls.prepaid.valid)
-			&& this.appointmentInfoForm.controls.phoneNumber.valid;
+	showConfirmButton(): boolean {
+		return this.appointmentInfoForm.valid;
 	}
 
 	disablePreviuosStep(stepperParam: MatHorizontalStepper) {
@@ -240,5 +238,22 @@ export class NewAppointmentComponent implements OnInit {
 	toFirstStep() {
 		this.formSearch.controls.completed.reset();
 		this.appointmentInfoForm.reset();
+	}
+
+	openMedicalCoverageDialog(): void {
+		const dialogRef = this.dialog.open(MedicalCoverageComponent, {
+			data: {
+				genderId: this.patient.personalDataDto.genderId,
+				identificationNumber: this.patient.personalDataDto.identificationNumber,
+				identificationTypeId: 1 // Tiene que ser el tipo de la persona
+			}
+		});
+
+		dialogRef.afterClosed().subscribe(
+			values => {
+				this.patientMedicalCoverages = values.patientHealthInsurances.concat(values.patientPrivateHealthInsurances);
+				console.log(this.patientMedicalCoverages);
+			}
+		);
 	}
 }
