@@ -7,12 +7,16 @@ import net.pladema.clinichistory.documents.service.Document;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.EDocumentType;
 import org.springframework.context.ApplicationEvent;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 @Getter
 @Setter
 @ToString
 public abstract class OnGenerateDocumentEvent extends ApplicationEvent {
+
+    protected static final String PDF_EXTENSION = ".pdf";
 
     private Document document;
 
@@ -41,16 +45,29 @@ public abstract class OnGenerateDocumentEvent extends ApplicationEvent {
 
     public abstract Short getSourceType();
 
-    public String getTemplateName(){
+    public String getTemplateName() {
         return documentType.getTemplate();
     }
 
-    public String getDocumentType(){
+    public String getDocumentType() {
         return documentType.getValue();
     }
 
-    public Short getDocumentTypeId(){
+    public Short getDocumentTypeId() {
         return documentType.getId();
     }
+
+    public String buildDownloadName() {
+        String name = documentType + "_" + document.getId();
+        return buildDownloadName(name);
+    }
+
+    private String buildDownloadName(String name) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
+        String formattedDateTime = LocalDateTime.now().format(formatter);
+        name = name + "_" + formattedDateTime + ".pdf";
+        return name;
+    }
+
 }
 

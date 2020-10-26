@@ -1,4 +1,4 @@
-package net.pladema.auditable.service;
+package net.pladema.sgx.files;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,40 +7,24 @@ import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Component
-class StreamFile {
+public class StreamFile {
 
     private static final Logger LOG = LoggerFactory.getLogger(StreamFile.class);
 
     @Value("${internment.document.directory:temp}")
     private String rootDirectory;
 
-    private static final String PDF_EXTENSION = ".pdf";
-
     public StreamFile(){
         super();
     }
 
-    String buildPath(String relativeDocumentPath) {
-        return getRootDirectory() + relativeDocumentPath + PDF_EXTENSION;
+    public String buildPath(String relativeFilePath) {
+        return getRootDirectory() + relativeFilePath;
     }
 
-    String buildDownloadName(Long documentId, String documentType){
-        String name = documentType + "_" + documentId;
-        return buildDownloadName(name);
-    }
-
-    String buildDownloadName(String name){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
-        String formattedDateTime = LocalDateTime.now().format(formatter);
-        name = name + "_" + formattedDateTime + PDF_EXTENSION;
-        return name;
-    }
-
-    boolean loadFileInDirectory(String path, ByteArrayOutputStream byteArrayOutputStream) throws IOException {
+    public boolean saveFileInDirectory(String path, ByteArrayOutputStream byteArrayOutputStream) throws IOException {
         boolean fileCreated;
         boolean directoryCreated = true;
 

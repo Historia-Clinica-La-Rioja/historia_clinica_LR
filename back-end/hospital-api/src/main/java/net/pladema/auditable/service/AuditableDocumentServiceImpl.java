@@ -10,6 +10,7 @@ import java.util.Base64;
 import java.util.Map;
 import java.util.Optional;
 
+import net.pladema.sgx.files.StreamFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -20,9 +21,9 @@ import net.pladema.sgx.pdf.PDFDocumentException;
 import net.pladema.sgx.pdf.PdfService;
 
 @Component
-public class AuditableFileServiceImpl implements AuditableService {
+public class AuditableDocumentServiceImpl implements AuditableService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AuditableFileServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AuditableDocumentServiceImpl.class);
 
     public static final String OUTPUT = "Output -> {}";
 
@@ -32,7 +33,7 @@ public class AuditableFileServiceImpl implements AuditableService {
 
     private final AuditableContextBuilder auditableContextBuilder;
 
-    public AuditableFileServiceImpl(
+    public AuditableDocumentServiceImpl(
             StreamFile streamFile,
             PdfService pdfService,
             AuditableContextBuilder auditableContextBuilder
@@ -49,11 +50,11 @@ public class AuditableFileServiceImpl implements AuditableService {
 
         String path = streamFile.buildPath(event.getRelativeDirectory());
         String realFileName = event.getUuid();
-        String fictitiousFileName = streamFile.buildDownloadName(event.getDocument().getId(), event.getDocumentType());
+        String fictitiousFileName = event.buildDownloadName();
         String checksum = null;
         try {
             ByteArrayOutputStream output =  pdfService.writer(event.getTemplateName(), contextMap);
-            streamFile.loadFileInDirectory(path, output);
+            streamFile.saveFileInDirectory(path, output);
             checksum = getHash(path);
         } catch (IOException | PDFDocumentException e) {
             LOG.error("Save document file -> {}", event, e);

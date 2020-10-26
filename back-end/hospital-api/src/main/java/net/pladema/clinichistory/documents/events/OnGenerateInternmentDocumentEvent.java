@@ -28,7 +28,7 @@ public class OnGenerateInternmentDocumentEvent extends OnGenerateDocumentEvent {
                 .replace("{institutionId}", getInstitutionId().toString())
                 .replace("{sourceId}", getSourceId().toString())
                 .replace("{documentType}", getDocumentType()) +
-                getUuid();
+                getUuid() + PDF_EXTENSION;
     }
 
     @Override
