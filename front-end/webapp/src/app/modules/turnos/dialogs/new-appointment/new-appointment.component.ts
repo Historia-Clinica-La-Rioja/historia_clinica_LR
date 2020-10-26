@@ -245,7 +245,7 @@ export class NewAppointmentComponent implements OnInit {
 			data: {
 				genderId: this.patient.personalDataDto.genderId,
 				identificationNumber: this.patient.personalDataDto.identificationNumber,
-				identificationTypeId: 1 // Tiene que ser el tipo de la persona
+				identificationTypeId: this.patient.personalDataDto.identificationTypeId
 			}
 		});
 

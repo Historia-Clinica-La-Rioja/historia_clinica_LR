@@ -15,6 +15,8 @@ public class BasicPersonalDataDto implements IBasicPersonalData {
 
     private String identificationNumber;
 
+    private Short identificationTypeId;
+
     private String phoneNumber;
 
     private Short genderId;

@@ -9,4 +9,6 @@ public interface IBasicPersonalData {
     String getIdentificationNumber();
 
     String getPhoneNumber();
+
+    Short getIdentificationTypeId();
 }

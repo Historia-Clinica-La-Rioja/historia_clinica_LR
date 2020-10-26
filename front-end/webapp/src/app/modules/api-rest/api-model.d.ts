@@ -584,6 +584,7 @@ export interface HospitalizationProcedureDto {
 export interface IBasicPersonalData {
     firstName: string;
     identificationNumber: string;
+    identificationTypeId: number;
     lastName: string;
     phoneNumber: string;
 }
@@ -707,10 +708,10 @@ export interface MasterdataDto<T> extends MasterDataInterface<T>, Serializable {
 export interface MedicalCoverageDto {
     acronym: string;
     id: number;
+    dateQuery: string;
     name: string;
     rnos: string;
-	service: string;
-	dateQuery: string;
+    service: string;
 }
 
 export interface MedicationDto extends ClinicalTermDto {
