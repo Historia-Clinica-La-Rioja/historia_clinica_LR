@@ -102,11 +102,11 @@
 										{{ problem.entryDate }} - {{ problem.dischargeDate? problem.dischargeDate : "actualmente internado" }}
 									</span>
 								</div>
-								<button *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']" mat-icon-button [matMenuTriggerFor]="menu" >
+								<button *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO']" mat-icon-button [matMenuTriggerFor]="menu" >
 									<mat-icon>more_vert</mat-icon>
 								</button>
 								<mat-menu #menu="matMenu">
-									<button mat-menu-item (click)="accessHospitalizationEpisode(problem)">
+									<button mat-menu-item (click)="goToHospitalizationEpisode(problem)">
 										<span [translate]="'ambulatoria.paciente.problemas.ACCEDER'"></span>
 									</button>
 								</mat-menu>

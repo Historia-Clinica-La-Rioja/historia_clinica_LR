@@ -81,7 +81,6 @@ export class PatientService {
 	}
 
 	editPatient(datosPersonales: APatientDto, patientId: number): Observable<BMPatientDto> {
-		// cambiar a edit
 		let url = `${environment.apiBase}/patient/${patientId}`;
 		return this.http.put<BMPatientDto>(url, datosPersonales);
 	}

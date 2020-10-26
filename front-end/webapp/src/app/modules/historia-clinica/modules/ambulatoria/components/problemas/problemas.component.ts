@@ -14,6 +14,10 @@ import {Observable, Subscription} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
 import {SolveProblemComponent} from '../../../../dialogs/solve-problem/solve-problem.component';
 import {HistoricalProblems, HistoricalProblemsFacadeService} from '../../services/historical-problems-facade.service';
+import { ContextService } from '@core/services/context.service';
+
+const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
+const ROUTE_INTERNMENT_EPISODE_SUFIX = '/paciente/';
 
 @Component({
 	selector: 'app-problemas',
@@ -27,6 +31,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	public readonly activos = PROBLEMAS_ACTIVOS;
 	public readonly resueltos = PROBLEMAS_RESUELTOS;
 	public readonly internacion = PROBLEMAS_INTERNACION;
+	private readonly routePrefix;
 	public activeProblems$: Observable<HCEPersonalHistoryDto[]>;
 	public solvedProblems$: Observable<HCEPersonalHistoryDto[]>;
 	public chronicProblems$: Observable<HCEPersonalHistoryDto[]>;
@@ -44,13 +49,15 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		private historicalProblemsFacadeService: HistoricalProblemsFacadeService,
 		private route: ActivatedRoute,
 		private readonly router: Router,
-		public dialog: MatDialog
+		public dialog: MatDialog,
+		private contextService: ContextService,
 	) {
 		this.route.paramMap.subscribe(
 			(params) => {
 				this.patientId = Number(params.get('idPaciente'));
 				historicalProblemsFacadeService.setPatientId(this.patientId);
 			});
+		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 
 	ngOnInit(): void {
@@ -145,5 +152,10 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		this.historicalProblems$.unsubscribe();
-  	}
+	}
+
+	goToHospitalizationEpisode(problema: HCEHospitalizationHistoryDto) {
+		this.router.navigate([this.routePrefix + ROUTE_INTERNMENT_EPISODE_PREFIX + problema.sourceId + ROUTE_INTERNMENT_EPISODE_SUFIX + this.patientId]);
+	}
+
 }
