@@ -6,11 +6,11 @@ import {
     required,
 } from 'react-admin';
 import SgxSelectInput from "../../sgxSelectInput/SgxSelectInput";
-import SaveCancelToolbar from "../../modules/components/save-cancel-toolbar";
+import CustomToolbar from "../../modules/components/CustomToolbar";
 
 const DoctorsOfficeCreate = props => (
     <Create {...props}>
-        <SimpleForm redirect="show" toolbar={<SaveCancelToolbar />}>
+        <SimpleForm redirect="show" toolbar={<CustomToolbar />}>
             <TextInput source="description" validate={[required()]} />
             <SgxSelectInput source="clinicalSpecialtySectorId"
                             element="clinicalspecialtysectors"

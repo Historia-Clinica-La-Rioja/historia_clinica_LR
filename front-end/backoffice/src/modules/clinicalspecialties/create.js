@@ -5,11 +5,11 @@ import {
     SimpleForm,
     required
 } from 'react-admin';
-import SaveCancelToolbar from "../../modules/components/save-cancel-toolbar";
+import CustomToolbar from "../../modules/components/CustomToolbar";
 
 const ClinicalSpecialtyCreate = props => (
     <Create {...props}>
-        <SimpleForm redirect="show" toolbar={<SaveCancelToolbar />}>
+        <SimpleForm redirect="show" toolbar={<CustomToolbar record={'asdasdasd'} />}>
             <TextInput source="name" validate={[required()]} />
             <TextInput source="sctidCode" validate={[required()]} />
         </SimpleForm>

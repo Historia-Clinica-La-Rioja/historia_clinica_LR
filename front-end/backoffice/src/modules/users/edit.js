@@ -12,7 +12,7 @@ import {
     SelectInput,
     required,
 } from 'react-admin';
-import SaveCancelToolbar from "../../modules/components/save-cancel-toolbar";
+import CustomToolbar from "../../modules/components/CustomToolbar";
 import PeopleReferenceField from '../people/PeopleReferenceField';
 import Aside from './Aside'
 import authProvider from '../../providers/authProvider';
@@ -41,7 +41,7 @@ const UserEdit = props => (
     <Edit {...props} 
         aside={<Aside />} 
     >
-        <SimpleForm toolbar={<SaveCancelToolbar />}>
+        <SimpleForm toolbar={<CustomToolbar />}>
             <PeopleReferenceField source="personId" />
             <TextInput source="username" validate={[required()]}/>
             <BooleanInput source="enable" validate={[required()]}/>

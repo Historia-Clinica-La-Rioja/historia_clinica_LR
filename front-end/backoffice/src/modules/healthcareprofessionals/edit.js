@@ -12,11 +12,11 @@ import {
 import PeopleReferenceInput from '../people/PeopleReferenceInput';
 import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
-import SaveCancelToolbar from "../../modules/components/save-cancel-toolbar";
+import CustomToolbar from "../../modules/components/CustomToolbar";
 
 const HealthcareProfessionalEdit = props => (
     <Edit {...props}>
-        <SimpleForm redirect="show" toolbar={<SaveCancelToolbar />}>
+        <SimpleForm redirect="show" toolbar={<CustomToolbar isEdit={true}/>}>
             <PeopleReferenceInput source="personId" validate={[required()]} />
             <TextInput source="licenseNumber" validate={[required()]} />
 

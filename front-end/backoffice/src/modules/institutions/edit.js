@@ -11,11 +11,11 @@ import {
 } from 'react-admin';
 import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
-import SaveCancelToolbar from "../../modules/components/save-cancel-toolbar";
+import CustomToolbar from "../../modules/components/CustomToolbar";
 
 const InstitutionEdit = props => (
     <Edit {...props}>
-        <SimpleForm redirect="show" toolbar={<SaveCancelToolbar />}>
+        <SimpleForm redirect="show" toolbar={<CustomToolbar isEdit={true}/>}>
             <TextInput source="name" validate={[required()]} />
             <TextInput source="website" />
             <TextInput source="phone" validate={[required()]} />

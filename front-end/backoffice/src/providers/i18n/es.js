@@ -6,7 +6,12 @@ export default {
         dashboard: {
             title: 'Historia de salud integrada',
             subtitle: 'Bienvenido',
-        }
+        },
+        components: {
+            customtoolbar: {
+                backButton: 'Volver',
+            }
+        },
     },
     error: {
         "role-level": {

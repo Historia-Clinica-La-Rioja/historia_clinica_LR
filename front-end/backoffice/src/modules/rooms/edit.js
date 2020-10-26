@@ -14,11 +14,11 @@ import {
 import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
 import SgxSelectInput from "../../sgxSelectInput/SgxSelectInput";
-import SaveCancelToolbar from "../../modules/components/save-cancel-toolbar";
+import CustomToolbar from "../../modules/components/CustomToolbar";
 
 const RoomEdit = props => (
     <Edit {...props}>
-        <SimpleForm redirect="show" toolbar={<SaveCancelToolbar />}>
+        <SimpleForm redirect="show" toolbar={<CustomToolbar isEdit={true}/>}>
             <TextInput source="roomNumber" validate={[required()]} />
             <TextInput source="description" validate={[required()]} />
             <TextInput source="type" validate={[required()]} />

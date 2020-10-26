@@ -8,11 +8,11 @@ import {
     AutocompleteInput,
     required,
 } from 'react-admin';
-import SaveCancelToolbar from "../../modules/components/save-cancel-toolbar";
+import CustomToolbar from "../../modules/components/CustomToolbar";
 
 const RoomCreate = props => (
     <Create {...props}>
-        <SimpleForm redirect="show" toolbar={<SaveCancelToolbar />}>
+        <SimpleForm redirect="show" toolbar={<CustomToolbar />}>
             <TextInput source="roomNumber" validate={[required()]} />
             <TextInput source="description" validate={[required()]} />
             <TextInput source="type" validate={[required()]} />

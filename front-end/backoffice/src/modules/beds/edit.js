@@ -13,11 +13,11 @@ import {
     Pagination
 } from 'react-admin';
 import SgxSelectInput from "../../sgxSelectInput/SgxSelectInput";
-import SaveCancelToolbar from "../../modules/components/save-cancel-toolbar";
+import CustomToolbar from "../../modules/components/CustomToolbar";
 
 const BedEdit = props => (
     <Edit {...props}>
-        <SimpleForm redirect="show" toolbar={<SaveCancelToolbar />}>
+        <SimpleForm redirect="show" toolbar={<CustomToolbar isEdit={true}/>}>
             <TextInput source="bedNumber" validate={[required()]} />
 
             <SgxSelectInput source="roomId" element="rooms" optionText="description" alwaysOn allowEmpty={false}/>

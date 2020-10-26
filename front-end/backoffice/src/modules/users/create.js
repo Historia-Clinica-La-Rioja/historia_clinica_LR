@@ -6,11 +6,11 @@ import {
     required,
 } from 'react-admin';
 import PeopleReferenceInput from '../people/PeopleReferenceInput';
-import SaveCancelToolbar from "../../modules/components/save-cancel-toolbar";
+import CustomToolbar from "../../modules/components/CustomToolbar";
 
 const UserCreate = props => (
     <Create {...props}>
-        <SimpleForm toolbar={<SaveCancelToolbar />}>
+        <SimpleForm toolbar={<CustomToolbar />}>
             <PeopleReferenceInput source="personId" validate={[required()]} />
             <TextInput source="username" validate={[required()]}/>
         </SimpleForm>
