@@ -14,7 +14,8 @@ export enum DateFormat {
 	HOUR_MINUTE = 'HH:mm',
 	HOUR_MINUTE_12 = 'hh:mm',
 	HOUR_MINUTE_SECONDS = 'HH:mm:ss',
-	FILE_DATE = 'DD-MM-YYYY'
+	FILE_DATE = 'DD-MM-YYYY',
+	YEAR_MONTH = 'YYYYMM',
 }
 
 export const MAT_APP_DATE_FORMATS = {
@@ -44,6 +45,8 @@ export const momentParseTime = (timeStr: string): Moment => moment(`${timeStr}-0
 export const momentFormatDate = (date: Date, format?: DateFormat): string => moment.utc(date.getTime()).format(format);
 
 export const momentFormat = (momentDate: Moment, format?: DateFormat): string => momentDate.local().format(format);
+
+export const momentParse = (dateString: string, format: DateFormat): Moment => moment(dateString, format);
 
 export const buildFullDate = (time: string, date: Moment): Moment => {
 	const timeMoment: Moment = momentParseTime(time);

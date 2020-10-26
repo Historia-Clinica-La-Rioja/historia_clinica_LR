@@ -5,7 +5,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MedicalCoverageDto } from '@api-rest/api-model';
 import { HealthInsuranceService } from '@api-rest/services/health-insurance.service';
 import { RenaperService } from '@api-rest/services/renaper.service';
-import { DateFormat, momentFormat, newMoment } from '@core/utils/moment.utils';
+import { DateFormat, momentFormat, momentParse, newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { Observable, of } from 'rxjs';
 
@@ -39,11 +39,19 @@ export class MedicalCoverageComponent implements OnInit {
 		{
 			id: 2,
 			medicalCoverage: {
-				acronym: 'OSA', name: 'OBRA SOCIAL DE AERONAVEGANTES', rnos: '2',
+				acronym: 'OSA', name: 'OBRA SOCIAL DE AERONAVEGANTES', rnos: '100',
 			},
 			affiliateNumber: '789',
 			validDate: newMoment()
 		},
+		{
+			id: 3,
+			medicalCoverage: {
+				name: 'Programa Sumar Salta', rnos: '-44036',
+			},
+			affiliateNumber: '789',
+			validDate: newMoment()
+		}
 
 	]);
 	private patientPrivateHealthInsunracesFromService$: Observable<PatientMedicalCoverage[]> = of([
@@ -142,10 +150,10 @@ export class MedicalCoverageComponent implements OnInit {
 						healthInsurances.forEach(healthInsurance => {
 							const patientMedicalCoverage = this.patientHealthInsurances
 								.find(patientHealthInsurance => (patientHealthInsurance.medicalCoverage as HealthInsurance).rnos === healthInsurance.rnos);
-							if (patientMedicalCoverage) {
-								patientMedicalCoverage.validDate = newMoment() //'La fecha que te trae renaper';
-							} else {
+							if (!patientMedicalCoverage) {
 								this.patientHealthInsurances = this.patientHealthInsurances.concat(fromRenaperToPatientMedicalCoverage(healthInsurance));
+							} else if (healthInsurance.dateQuery) {
+								patientMedicalCoverage.validDate = momentParse(healthInsurance.dateQuery, DateFormat.YEAR_MONTH);
 							}
 						});
 					}
@@ -162,7 +170,7 @@ export class MedicalCoverageComponent implements OnInit {
 							id: null,
 							affiliateNumber: null,
 							medicalCoverage,
-							validDate: newMoment() // Hay que usar la fecha que en realidad viene de renaper
+							validDate: healthInsurance.dateQuery ? momentParse(healthInsurance.dateQuery, DateFormat.YEAR_MONTH) : newMoment()
 						};
 					}
 				}, error => this.loading = false);

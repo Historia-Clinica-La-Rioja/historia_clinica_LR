@@ -709,7 +709,8 @@ export interface MedicalCoverageDto {
     id: number;
     name: string;
     rnos: string;
-    service: string;
+	service: string;
+	dateQuery: string;
 }
 
 export interface MedicationDto extends ClinicalTermDto {
