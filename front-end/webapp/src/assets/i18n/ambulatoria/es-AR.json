@@ -137,6 +137,7 @@
 				"BOTON_CONFIRMAR_POPUP": "Confirmar",
 				"SUCCESS_CONFIRMAR_POPUP": "El problema ha sido resuelto exitosamente",
 				"ERROR_CONFIRMAR_POPUP": "Ocurrió un error al resolver el problema",
+				"ACCEDER": "Acceder a episodio",
 				"historical-problems": {
 					"NO_FILTERED_PROBLEMS": "No hay resultados para la búsqueda seleccionada",
 					"NO_HISTORICAL": "No existe informacion para mostrar",

@@ -94,12 +94,22 @@
 					<mat-list id="lista-problemas-hospitalization" *ngIf="(hospitalizationProblems$ | async)?.length > 0 else noInfo">
 						<div fxLayout="row" *ngFor="let problem of (hospitalizationProblems$ | async)">
 							<mat-list-item>
-								<span mat-line class="capitalize-first-letter">
-									{{ problem.mainDiagnose.snomed.pt }}
-								</span>
-								<span mat-line class="mat-body">
-									{{ problem.entryDate }} - {{ problem.dischargeDate? problem.dischargeDate : "actualmente internado" }}
-								</span>
+								<div>
+									<span mat-line class="capitalize-first-letter">
+										{{ problem.mainDiagnose.snomed.pt }}
+									</span>
+									<span mat-line class="mat-body">
+										{{ problem.entryDate }} - {{ problem.dischargeDate? problem.dischargeDate : "actualmente internado" }}
+									</span>
+								</div>
+								<button *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']" mat-icon-button [matMenuTriggerFor]="menu" >
+									<mat-icon>more_vert</mat-icon>
+								</button>
+								<mat-menu #menu="matMenu">
+									<button mat-menu-item (click)="accessHospitalizationEpisode(problem)">
+										<span [translate]="'ambulatoria.paciente.problemas.ACCEDER'"></span>
+									</button>
+								</mat-menu>
 							</mat-list-item>
 							<mat-divider></mat-divider>
 						</div>
@@ -131,7 +141,7 @@
 							<mat-icon mat-list-icon fontSet="material-icons-outlined" color="primary">assignment</mat-icon>
 
 							<div fxLayout="column" fxLayoutGap="15px" fxFlex="100%">
-								<div fxLayout="row" fxLayoutGap="15px" fxLayout.xs="column">								
+								<div fxLayout="row" fxLayoutGap="15px" fxLayout.xs="column">
 									<div fxLayout="column" fxFlex="70%">
 										<h2 class="mat-h2 page-title primary capitalize-first-letter">{{historicalProblem.problemPt}}</h2>
 
