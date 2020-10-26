@@ -33,6 +33,7 @@ public class BedSummaryVo implements Serializable {
 		this.bed = new BedVo(bed);
 		this.bedCategory = new BedCategoryVo(bedCategory);
 		this.sector = new SectorVo(sector);
+		clinicalSpecialty.fixSpecialtyType();
 		this.clinicalSpecialty = new ClinicalSpecialtyVo(clinicalSpecialty);
 		this.probableDischargeDate = Boolean.FALSE.equals(bed.getFree()) ? probableDischargeDate : null;
 	}

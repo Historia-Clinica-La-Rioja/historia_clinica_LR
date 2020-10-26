@@ -88,7 +88,7 @@ public interface BedRepository extends JpaRepository<Bed, Integer> {
 	
 	@Transactional(readOnly = true)
 	@Query(value = " SELECT NEW net.pladema.establishment.repository.domain.BedInfoVo( "
-			+ "  b, bc, r, s, cs.name, pat.id, per, it.description, ie.probableDischargeDate ) "
+			+ "  b, bc, r, s, cs, pat.id, per, it.description, ie.probableDischargeDate ) "
 			+ " FROM Bed b "
 			+ " JOIN BedCategory bc ON b.bedCategoryId = bc.id "
 			+ " JOIN Room r ON b.roomId = r.id"

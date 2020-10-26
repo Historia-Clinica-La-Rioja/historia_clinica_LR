@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BackofficeClinicalSpecialtyStore implements BackofficeStore<ClinicalSpecialty, Integer> {
@@ -56,13 +57,16 @@ public class BackofficeClinicalSpecialtyStore implements BackofficeStore<Clinica
     @Override
     public List<ClinicalSpecialty> findAllById(List<Integer> ids) {
         List<ClinicalSpecialty> specialties = repository.findAllById(ids);
+        specialties.forEach(ClinicalSpecialty::fixSpecialtyType);
         specialties.sort(Comparator.comparing(ClinicalSpecialty::getName, String::compareTo));
         return specialties;
     }
 
     @Override
     public Optional<ClinicalSpecialty> findById(Integer id) {
-        return repository.findById(id);
+        Optional<ClinicalSpecialty> clinicalSpecialty = repository.findById(id);
+        clinicalSpecialty.ifPresent(ClinicalSpecialty::fixSpecialtyType);
+        return clinicalSpecialty;
     }
 
     @Override

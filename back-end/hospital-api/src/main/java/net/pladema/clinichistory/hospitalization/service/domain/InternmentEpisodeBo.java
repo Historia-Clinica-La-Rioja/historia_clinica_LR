@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.hospitalization.service.summary.domain.ResponsibleDoctorBo;
+import net.pladema.staff.repository.entity.ClinicalSpecialty;
 
 import java.io.Serializable;
 
@@ -26,11 +27,12 @@ public class InternmentEpisodeBo implements Serializable {
 
     public InternmentEpisodeBo(Integer internmentEpisodeId, Integer patientId, String firstName, String lastName,
                                Integer bedId, String bedNumber, Integer roomId, String roomNumber,
-                               Integer clinicalSpecialtyId, String clinicalSpecialty, Integer sectorId, String sector){
+                               ClinicalSpecialty clinicalSpecialty, Integer sectorId, String sector){
         this.id = internmentEpisodeId;
         this.patient = new PatientBo(patientId, firstName, lastName);
         this.bed = new BedBo(bedId, bedNumber, new RoomBo(
                 roomId, roomNumber, new SectorBo(sectorId, sector)));
-        this.specialty = new ClinicalSpecialtyBo(clinicalSpecialtyId, clinicalSpecialty);
+        clinicalSpecialty.fixSpecialtyType();
+        this.specialty = new ClinicalSpecialtyBo(clinicalSpecialty.getId(), clinicalSpecialty.getName());
     }
 }

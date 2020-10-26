@@ -12,6 +12,7 @@ import net.pladema.establishment.repository.entity.Room;
 import net.pladema.establishment.repository.entity.Sector;
 import net.pladema.patient.repository.domain.PatientVo;
 import net.pladema.person.repository.entity.Person;
+import net.pladema.staff.repository.entity.ClinicalSpecialty;
 
 @Getter
 @Setter
@@ -30,13 +31,15 @@ public class BedInfoVo implements Serializable {
 	private PatientVo patient;
 	private LocalDateTime probableDischargeDate;
 
-	public BedInfoVo(Bed bed, BedCategory bedCategory, Room room, Sector sector, String specialty, Integer patientId,
-			Person person, String identificationType, LocalDateTime probableDischargeDate) {
+	public BedInfoVo(Bed bed, BedCategory bedCategory, Room room, Sector sector,
+					 ClinicalSpecialty specialty, Integer patientId, Person person,
+					 String identificationType, LocalDateTime probableDischargeDate) {
 		this.bed = new BedVo(bed);
 		this.bedCategory = new BedCategoryVo(bedCategory);
 		this.room = new RoomVo(room);
 		this.sector = new SectorVo(sector);
-		this.sector.setSpecialtyName(specialty);
+		specialty.fixSpecialtyType();
+		this.sector.setSpecialtyName(specialty.getName());
 		this.patient = Boolean.FALSE.equals(bed.getFree()) ? new PatientVo(patientId, person, identificationType)
 				: null;
 		this.probableDischargeDate = Boolean.FALSE.equals(bed.getFree()) ? probableDischargeDate : null;

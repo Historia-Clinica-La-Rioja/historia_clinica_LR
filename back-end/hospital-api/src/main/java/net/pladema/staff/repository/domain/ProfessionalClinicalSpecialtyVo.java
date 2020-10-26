@@ -16,6 +16,7 @@ public class ProfessionalClinicalSpecialtyVo {
 
     public ProfessionalClinicalSpecialtyVo(Integer professionalId, ClinicalSpecialty clinicalSpecialty) {
         this.professionalId = professionalId;
+        clinicalSpecialty.fixSpecialtyType();
         this.clinicalSpecialty = clinicalSpecialty;
     }
 }

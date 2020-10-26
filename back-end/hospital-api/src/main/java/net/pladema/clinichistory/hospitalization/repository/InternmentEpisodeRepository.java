@@ -30,8 +30,8 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             "ie.anamnesisDocId, da.statusId as anamnesisStatusId, " +
             "ie.epicrisisDocId, de.statusId as epicrisisStatusId, " +
             "b.id as bedId, b.bedNumber, " +
-            "r.id as roomId, r.roomNumber, sector.description, cssector.name, " +
-            "cs.id as clinicalSpecialtyId, cs.name as specialty, " +
+            "r.id as roomId, r.roomNumber, sector.description, cssector, " +
+            "cs as clinicalSpecialty, " +
             "hpg.pk.healthcareProfessionalId, hp.licenseNumber, p.firstName, p.lastName," +
             "rc, ie.probableDischargeDate)" +
             "FROM InternmentEpisode ie " +
@@ -93,7 +93,7 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             "pt.id as patientId, ps.firstName, ps.lastName, " +
             "b.id as bedId, b.bedNumber, " +
             "r.id as roomId, r.roomNumber, " +
-            "cs.id as clinicalSpecialtyId, cs.name, " +
+            "cs as clinicalSpecialtyId, " +
             "s.id as sectorId, s.description) " +
             "FROM InternmentEpisode ie " +
             "JOIN Patient pt ON (ie.patientId = pt.id) " +

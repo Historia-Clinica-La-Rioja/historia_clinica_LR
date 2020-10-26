@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.hospitalization.repository.domain.ResponsibleContact;
+import net.pladema.staff.repository.entity.ClinicalSpecialty;
 
 @Getter
 @Setter
@@ -45,8 +46,8 @@ public class InternmentSummaryVo {
 
 	public InternmentSummaryVo(Integer id, LocalDate entryDate, Long anamnesisDocId, String anamnesisStatusId,
 			Long epicrisisDocId, String epicrisisStatusId, Integer bedId, String bedNumber, Integer roomId,
-			String roomNumber, String sectorDescription, String sectorSpecialty, Integer clinicalSpecialtyId,
-			String specialty, Integer healthcareProfessionalId, String licenseNumber, String firstName, String lastName,
+			String roomNumber, String sectorDescription, ClinicalSpecialty sectorSpecialty, ClinicalSpecialty clinicalSpecialty,
+			Integer healthcareProfessionalId, String licenseNumber, String firstName, String lastName,
 			ResponsibleContact responsibleContact, LocalDateTime probableDischargeDate) {
 		this.id = id;
 		this.documents = new DocumentsSummaryVo();
@@ -56,10 +57,15 @@ public class InternmentSummaryVo {
 		this.bedNumber = bedNumber;
 		this.roomId = roomId;
 		this.roomNumber = roomNumber;
-		this.sectorSpecialty = sectorSpecialty;
 		this.sectorDescription = sectorDescription;
-		this.clinicalSpecialtyId = clinicalSpecialtyId;
-		this.specialty = specialty;
+
+		//Fix clinical specialty as speciality (not as service)
+		sectorSpecialty.fixSpecialtyType();
+		clinicalSpecialty.fixSpecialtyType();
+		this.sectorSpecialty = sectorSpecialty.getName();
+		this.clinicalSpecialtyId = clinicalSpecialty.getId();
+		this.specialty = clinicalSpecialty.getName();
+
 		this.entryDate = entryDate;
 		if (healthcareProfessionalId != null)
 			this.doctor = new ResponsibleDoctorVo(healthcareProfessionalId, firstName, lastName, licenseNumber);

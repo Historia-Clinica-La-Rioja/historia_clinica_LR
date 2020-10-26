@@ -56,6 +56,7 @@ public class ClinicalSpecialtyController {
             @PathVariable(name = "professionalId") Integer professionalId) {
         List<ClinicalSpecialty> clinicalSpecialties = clinicalSpecialtyRepository
                 .getAllByProfessional(professionalId);
+        clinicalSpecialties.forEach(ClinicalSpecialty::fixSpecialtyType);
         LOG.debug("Get all Clinical Specialty by Professional {} and Institution {} => {}", professionalId, institutionId,
                 clinicalSpecialties);
         return ResponseEntity.ok(clinicalSpecialties);
@@ -69,7 +70,6 @@ public class ClinicalSpecialtyController {
 
         List<ProfessionalsByClinicalSpecialtyBo> clinicalSpecialties =
                 this.healthcareProfessionalSpecialtyService.getProfessionalsByClinicalSpecialtyBo(professionalsIds);
-
         List<ProfessionalsByClinicalSpecialtyDto> professionalsByClinicalSpecialtyDtos =
                 clinicalSpecialtyMapper.fromProfessionalsByClinicalSpecialtyBoList(clinicalSpecialties);
 
@@ -88,6 +88,7 @@ public class ClinicalSpecialtyController {
         Integer appointmentId = appointmentService.getAppointmentsId(patientId, professionalId, dateTimeProvider.nowDate()).get(0);
         AppointmentBo appointment = appointmentService.getAppointment(appointmentId).orElse(new AppointmentBo());
         ClinicalSpecialty clinicalSpecialty = clinicalSpecialtyRepository.getClinicalSpecialtyByDiary(appointment.getDiaryId());
+        clinicalSpecialty.fixSpecialtyType();
         LOG.debug("Get all Clinical Specialty by Institution {} and Patient {} => {}", institutionId,
                 patientId, clinicalSpecialty);
         ClinicalSpecialtyDto result = new ClinicalSpecialtyDto();
@@ -103,6 +104,7 @@ public class ClinicalSpecialtyController {
         Integer professionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
         List<ClinicalSpecialty> clinicalSpecialties = clinicalSpecialtyRepository
                 .getAllByProfessional(professionalId);
+        clinicalSpecialties.forEach(ClinicalSpecialty::fixSpecialtyType);
         LOG.debug("Get all Clinical Specialty by Professional {} and Institution {} => {}", professionalId, institutionId,
                 clinicalSpecialties);
         return ResponseEntity.ok(clinicalSpecialties);

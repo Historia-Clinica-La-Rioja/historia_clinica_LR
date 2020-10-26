@@ -26,10 +26,8 @@ public class ClinicalSpecialtyVo implements Serializable {
 	private String name;
 
 	public ClinicalSpecialtyVo(ClinicalSpecialty clinicalSpecialty) {
-		if(clinicalSpecialty != null) {
-			this.id = clinicalSpecialty.getId();
-			this.name = clinicalSpecialty.getName();
-		}
+		this.id = clinicalSpecialty.getId();
+		this.name = clinicalSpecialty.getName();
 	}
 
 }

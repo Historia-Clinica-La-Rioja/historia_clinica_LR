@@ -35,6 +35,7 @@ public class ClinicalSpecialtySectorController {
 			@PathVariable(name = "sectorId") Integer sectorId) {
 		List<ClinicalSpecialty> clinicalSpecialties = clinicalSpecialtySectorRepository
 				.getAllBySectorAndInstitution(sectorId, institutionId);
+		clinicalSpecialties.forEach(ClinicalSpecialty::fixSpecialtyType);
 		LOG.debug("Get all Clinical Specialty by Sector {} and institution {} => {}", sectorId, institutionId,
 				clinicalSpecialties);
 		return ResponseEntity.ok(clinicalSpecialties);

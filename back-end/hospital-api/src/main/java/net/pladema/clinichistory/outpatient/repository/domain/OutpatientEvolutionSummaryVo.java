@@ -39,8 +39,10 @@ public class OutpatientEvolutionSummaryVo implements Serializable {
     public OutpatientEvolutionSummaryVo(Integer id, LocalDate startDate, ClinicalSpecialty clinicalSpecialty,
                                         HealthcareProfessional medic, Person person, String evolutionNote){
         this.consultationID = id;
-        if(clinicalSpecialty != null)
+        if(clinicalSpecialty != null) {
+            clinicalSpecialty.fixSpecialtyType();
             this.clinicalSpecialty = new ClinicalSpecialtyVo(clinicalSpecialty);
+        }
         this.startDate = startDate;
         this.medic = medic;
         this.person = person;
