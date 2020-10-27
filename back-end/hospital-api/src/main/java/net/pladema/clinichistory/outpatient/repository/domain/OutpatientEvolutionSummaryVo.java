@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.pladema.person.repository.entity.Person;
+import net.pladema.staff.repository.domain.ClinicalSpecialtyVo;
+import net.pladema.staff.repository.entity.ClinicalSpecialty;
 import net.pladema.staff.repository.entity.HealthcareProfessional;
 
 import java.io.Serializable;
@@ -17,6 +19,8 @@ import java.util.List;
 public class OutpatientEvolutionSummaryVo implements Serializable {
 
     private Integer consultationID;
+
+    private ClinicalSpecialtyVo clinicalSpecialty;
 
     private List<HealthConditionSummaryVo> healthConditions;
 
@@ -32,8 +36,11 @@ public class OutpatientEvolutionSummaryVo implements Serializable {
 
     private String evolutionNote;
 
-    public OutpatientEvolutionSummaryVo(Integer id, LocalDate startDate, HealthcareProfessional medic, Person person, String evolutionNote){
+    public OutpatientEvolutionSummaryVo(Integer id, LocalDate startDate, ClinicalSpecialty clinicalSpecialty,
+                                        HealthcareProfessional medic, Person person, String evolutionNote){
         this.consultationID = id;
+        if(clinicalSpecialty != null)
+            this.clinicalSpecialty = new ClinicalSpecialtyVo(clinicalSpecialty);
         this.startDate = startDate;
         this.medic = medic;
         this.person = person;

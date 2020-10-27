@@ -6,6 +6,7 @@ import net.pladema.clinichistory.ips.repository.masterdata.entity.ProblemType;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.Snomed;
 import net.pladema.clinichistory.outpatient.repository.domain.*;
 import net.pladema.person.repository.entity.Person;
+import net.pladema.staff.repository.entity.ClinicalSpecialty;
 import net.pladema.staff.repository.entity.HealthcareProfessional;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,8 +30,9 @@ public class OutpatientConsultationSummaryRepositoryImpl implements OutpatientCo
     @Transactional(readOnly = true)
     @Override
     public List<OutpatientEvolutionSummaryVo> getAllOutpatientEvolutionSummary(Integer patientId) {
-        String sqlString =" SELECT oc.id, oc.startDate, hp, p, n.description"
+        String sqlString =" SELECT oc.id, oc.startDate, cs, hp, p, n.description"
                 + " FROM OutpatientConsultation oc"
+                + " LEFT JOIN ClinicalSpecialty cs ON (oc.clinicalSpecialtyId = cs.id)"
                 + " JOIN Document doc ON (doc.sourceId = oc.id)"
                 + " LEFT JOIN Note n ON (n.id = doc.otherNoteId)"
                 + " JOIN HealthcareProfessional hp ON (hp.id = oc.doctorId)"
@@ -48,9 +50,10 @@ public class OutpatientConsultationSummaryRepositoryImpl implements OutpatientCo
                 result.add(new OutpatientEvolutionSummaryVo(
                         (Integer)a[0],
                         a[1] != null ? (LocalDate)a[1] : null,
-                        (HealthcareProfessional) a[2],
-                        (Person) a[3],
-                        (String)a[4]))
+                        (ClinicalSpecialty) a[2],
+                        (HealthcareProfessional) a[3],
+                        (Person) a[4],
+                        (String)a[5]))
         );
         return result;
     }
