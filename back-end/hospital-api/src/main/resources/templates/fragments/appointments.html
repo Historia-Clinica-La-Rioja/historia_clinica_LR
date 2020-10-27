@@ -19,6 +19,7 @@
 		table {
 		    font-size:9px;
 		    width: 700px;
+		    table-layout:fixed;
 		}
 		th {
 		    background-color: #DDDDDD;
@@ -26,18 +27,28 @@
 		td {
 		    border-bottom: 1px;
 		    border-bottom-color: #DDDDDD;
+		    word-wrap: break-word;
+		}
+		.hour-column {
+		    width: 23px;
 		}
 		.health-insurance-column {
-	        width: 150px;
+	        width: 130px;
 	    }
 	    .health-coverage-column {
-	        width: 150px;
+	        width: 130px;
+	    }
+	    .affiliate-number-column {
+	        width : 80px;
 	    }
 	    .identification-column {
 	        width: 60px;
 	    }
 	    .patient-id-column {
 	        width: 50px;
+	    }
+	    .appointment-state-column {
+	        width: 70px;
 	    }
 	    .patient-id-cell {
 	        text-align: center;
