@@ -4,14 +4,14 @@ import { map, tap } from 'rxjs/operators';
 import { HistoricalProblemsFilter } from '../components/historical-problems-filters/historical-problems-filters.component';
 import { pushIfNotExists } from '@core/utils/array.utils';
 import { momentParseDate } from '@core/utils/moment.utils';
-import { OutpatientEvolutionSummaryDto } from '@api-rest/api-model';
+import { ClinicalSpecialtyDto, OutpatientEvolutionSummaryDto } from '@api-rest/api-model';
 import { OutpatientConsultationService } from './../../../../api-rest/services/outpatient-consultation.service';
 import { MapperService } from './../../../../presentation/services/mapper.service';
 
 @Injectable()
 export class HistoricalProblemsFacadeService {
 
-  	public specialities: Speciality[] = [];
+  	public specialties: ClinicalSpecialtyDto[] = [];
   	public professionals: Professional[] = [];
 	public problems: Problem[] = [];
 
@@ -55,11 +55,16 @@ export class HistoricalProblemsFacadeService {
 
 	public sendHistoricalProblemsFilter(newFilter: HistoricalProblemsFilter): void {
 		const historichalProblemsCopy = [...this.originalHistoricalProblems];
-		const result = historichalProblemsCopy.filter(historicalProblem => (this.filterByProfessional(newFilter, historicalProblem)
+		const result = historichalProblemsCopy.filter(historicalProblem => (this.filterBySpecialty(newFilter, historicalProblem)
+																	&& this.filterByProfessional(newFilter, historicalProblem)
 																	&& this.filterByProblem(newFilter, historicalProblem)
 																	&& this.filterByConsultationDate(newFilter, historicalProblem)));
 		this.historicalProblemsSubject.next(result);
 		this.historicalProblemsFilterSubject.next(newFilter);
+	}
+
+	private filterBySpecialty(filter: HistoricalProblemsFilter, problem: HistoricalProblems): boolean {
+		return (filter.specialty ? problem.specialtyId === filter.specialty : true);
 	}
 
 	private filterByProfessional(filter: HistoricalProblemsFilter, problem: HistoricalProblems): boolean {
@@ -76,7 +81,7 @@ export class HistoricalProblemsFacadeService {
 
 	public getFilterOptions() {
 		return {
-			specialities: this.specialities,
+			specialties: this.specialties,
 			professionals: this.professionals,
 			problems: this.problems
 		};
@@ -84,6 +89,9 @@ export class HistoricalProblemsFacadeService {
 
 	private filterOptions(outpatientEvolutionSummary: OutpatientEvolutionSummaryDto[]): void {
 		outpatientEvolutionSummary.forEach(outpatientEvolution => {
+
+			if(outpatientEvolution.clinicalSpecialty)
+				this.specialties = pushIfNotExists(this.specialties, outpatientEvolution.clinicalSpecialty, this.compareSpecialty);
 
 			outpatientEvolution.healthConditions.forEach(oe => {
 				this.problems = pushIfNotExists(this.problems, {problemId: oe.snomed.id, problemDescription: oe.snomed.pt}, this.compareProblems);
@@ -94,6 +102,10 @@ export class HistoricalProblemsFacadeService {
 		});
 	}
 
+	private compareSpecialty(specialty: ClinicalSpecialtyDto, specialty2: ClinicalSpecialtyDto): boolean {
+		return specialty.id === specialty2.id;
+	}
+
 	private compareProfessional(professional: Professional, professional2: Professional): boolean {
 		return professional.professionalId === professional2.professionalId;
 	}
@@ -102,11 +114,6 @@ export class HistoricalProblemsFacadeService {
 		return problem.problemId === problem2.problemId;
 	}
 
-}
-
-export class Speciality {
-	specialityId: number;
-	specialityDescription: string;
 }
 
 export class Professional {
@@ -126,6 +133,7 @@ export class HistoricalProblems {
 	consultationProfessionalName: string;
 	problemId: string;
 	problemPt: string;
+	specialtyId: number;
   	consultationReasons:
 	{
 		reasonId: string;

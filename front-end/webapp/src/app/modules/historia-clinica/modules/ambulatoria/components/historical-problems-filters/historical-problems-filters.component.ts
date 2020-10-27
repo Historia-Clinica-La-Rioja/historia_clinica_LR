@@ -2,7 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
 import { momentFormat, DateFormat, momentParseDate } from '@core/utils/moment.utils';
 import { Subscription } from 'rxjs';
-import { HistoricalProblemsFacadeService, Speciality, Professional, Problem } from '../../services/historical-problems-facade.service';
+import { ClinicalSpecialtyDto } from '@api-rest/api-model';
+import { HistoricalProblemsFacadeService, Professional, Problem } from '../../services/historical-problems-facade.service';
 
 @Component({
   selector: 'app-historical-problems-filters',
@@ -12,7 +13,7 @@ import { HistoricalProblemsFacadeService, Speciality, Professional, Problem } fr
 export class HistoricalProblemsFiltersComponent implements OnInit, OnDestroy {
 
   	public form: FormGroup;
-	public specialities: Speciality[] = [];
+	public specialties: ClinicalSpecialtyDto[] = [];
 	public professionals: Professional[] = [];
 	public problems: Problem[] = [];
 
@@ -25,20 +26,20 @@ export class HistoricalProblemsFiltersComponent implements OnInit, OnDestroy {
 
   	ngOnInit(): void {
 		this.form = this.formBuilder.group({
-			speciality: [null],
+			specialty: [null],
 			professional: [null],
 			problem: [null],
 			consultationDate: [null]
 		});
 
 		const filterOptions = this.historicalProblemsFacadeService.getFilterOptions();
-		this.specialities = filterOptions.specialities;
+		this.specialties = filterOptions.specialties;
 		this.professionals = filterOptions.professionals;
 		this.problems = filterOptions.problems;
 
 		this.historicalProblemsFilter$ = this.historicalProblemsFacadeService.getHistoricalProblemsFilter().subscribe(
 			data => {
-				this.form.controls.speciality.setValue(data.speciality);
+				this.form.controls.specialty.setValue(data.specialty);
 				this.form.controls.professional.setValue(data.professional);
 				this.form.controls.problem.setValue(data.problem);
 				this.form.controls.consultationDate.setValue(data.consultationDate ? momentParseDate(data.consultationDate) : null);
@@ -51,7 +52,7 @@ export class HistoricalProblemsFiltersComponent implements OnInit, OnDestroy {
 
 	private getHistoricalProblemsFilter(): HistoricalProblemsFilter {
 		return {
-			speciality: this.form.value.speciality,
+			specialty: this.form.value.specialty,
 			professional: this.form.value.professional,
 			problem: this.form.value.problem,
 			consultationDate: this.form.value.consultationDate ? momentFormat(this.form.value.consultationDate, DateFormat.API_DATE) : null,
@@ -70,7 +71,7 @@ export class HistoricalProblemsFiltersComponent implements OnInit, OnDestroy {
 }
 
 export class HistoricalProblemsFilter {
-	speciality: number;
+	specialty: number;
 	professional: number;
 	problem: string;
 	consultationDate: string;

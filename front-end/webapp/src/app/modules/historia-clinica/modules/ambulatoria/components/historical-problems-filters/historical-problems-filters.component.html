@@ -2,13 +2,13 @@
 
     <mat-form-field appearance="outline">
         <mat-label [translate]="'ambulatoria.paciente.problemas.historical-filters.SPECIALITY'"></mat-label>
-        <mat-select formControlName="speciality" (selectionChange)="sendAllFiltersOnFilterChange()" name="speciality">
-            <mat-option *ngFor="let speciality of specialities" [value]="speciality.specialityId">
-                {{speciality.specialityDescription}}
+        <mat-select formControlName="specialty" (selectionChange)="sendAllFiltersOnFilterChange()" name="specialty">
+            <mat-option *ngFor="let specialty of specialties" [value]="specialty.id">
+                {{specialty.name}}
             </mat-option>
         </mat-select>
-        <button id="clear-specialty" type="button" mat-button *ngIf="form.controls.speciality.value" matSuffix
-            color="warn" mat-icon-button (click)="clear(form.controls.speciality); $event.stopPropagation()">
+        <button id="clear-specialty" type="button" mat-button *ngIf="form.controls.specialty.value" matSuffix
+            color="warn" mat-icon-button (click)="clear(form.controls.specialty); $event.stopPropagation()">
             <mat-icon>close</mat-icon>
         </button>
     </mat-form-field>

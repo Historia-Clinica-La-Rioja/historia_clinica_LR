@@ -139,7 +139,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 
 	onProblemClick(problem: HCEPersonalHistoryDto) {
 		this.historicalProblemsFacadeService.sendHistoricalProblemsFilter({
-			speciality: null,
+			specialty: null,
 			professional: null,
 			problem: problem.snomed.id,
 			consultationDate: null

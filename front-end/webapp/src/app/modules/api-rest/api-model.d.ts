@@ -732,6 +732,7 @@ export interface OutpatientAnthropometricDataDto extends Serializable {
 }
 
 export interface OutpatientEvolutionSummaryDto extends Serializable {
+    clinicalSpecialty: ClinicalSpecialtyDto;
     consultationID: number;
     evolutionNote: string;
     healthConditions: OutpatientSummaryHealthConditionDto[];
