@@ -11,15 +11,15 @@ import Button from '@material-ui/core/Button';
 //refFieldName: The field of the child entity that points
 //to the father. This field will be prefilled in the create form.
 //label: The button's label.
-const CreateRelatedButton = ({ record, reference, refFieldName, label}) => {
-    const newRecordValues = {[refFieldName]: record.id};
+const CreateRelatedButton = ({ customRecord, record, reference, refFieldName, label}) => {
+    const newRecordValues = record ? {[refFieldName]: record.id} : null;
     const translate = useTranslate();
     return (
         <Button
         component={Link}
         to={{
             pathname: `/${reference}/create`,
-            state: { record: newRecordValues },
+            state: { record: customRecord ? customRecord : newRecordValues },
         }}
         >{translate(label)}</Button>
     );

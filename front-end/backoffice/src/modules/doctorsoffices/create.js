@@ -16,14 +16,16 @@ const DoctorsOfficeCreate = props => (
                             element="clinicalspecialtysectors"
                             optionText="description"
                             alwaysOn
-                            allowEmpty={false}/>
+                            allowEmpty={false}
+                            options={{ disabled: true }}/>
 
             <SgxSelectInput source="institutionId"
                             element="institutions"
                             optionText="name"
                             alwaysOn
                             allowEmpty={false}
-                            validate={[required()]}/>
+                            validate={[required()]}
+                            options={{ disabled: true }}/>
 
         </SimpleForm>
     </Create>

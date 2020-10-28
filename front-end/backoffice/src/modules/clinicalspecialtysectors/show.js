@@ -8,10 +8,28 @@ import {
     Datagrid,
     DateField,
     EditButton,
+    useGetOne,
+    Loading
 } from 'react-admin';
 import SubReference from '../components/subreference';
 import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
+
+const CreateDoctorsOffice = ({ record }) => {
+    
+    const { data, loading } = useGetOne('sectors', record.sectorId);
+
+    if (loading) { 
+        return <Loading />; 
+    } else {
+        const customRecord = {clinicalSpecialtySectorId: record.id, institutionId: data.institutionId};
+        return (<CreateRelatedButton
+            customRecord={customRecord}
+            reference="doctorsoffices"
+            refFieldName="clinicalSpecialtySectorId"
+            label="resources.doctorsoffices.createRelated"/>)
+    }
+};
 
 const ClinicalSpecialtySectorShow = props => (
     <Show {...props}>
@@ -50,11 +68,7 @@ const ClinicalSpecialtySectorShow = props => (
             </ReferenceManyField>
 
             <SectionTitle label="resources.clinicalspecialtysectors.fields.doctorsoffices"/>
-            <CreateRelatedButton
-                reference="doctorsoffices"
-                refFieldName="clinicalSpecialtySectorId"
-                label="resources.doctorsoffices.createRelated"
-            />
+            <CreateDoctorsOffice />
             <ReferenceManyField
                 addLabel={false}
                 reference="doctorsoffices"
