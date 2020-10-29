@@ -5,6 +5,7 @@ import { RoleGuard } from '@core/guards/RoleGuard';
 import { PatientProfileComponent } from './routes/patient-profile/patient-profile.component';
 import { AmbulatoriaPacienteComponent } from './routes/ambulatoria-paciente/ambulatoria-paciente.component';
 import { NuevaConsultaComponent } from './routes/nueva-consulta/nueva-consulta.component';
+import { ERole } from '@api-rest/api-model';
 
 const routes: Routes = [
 	{
@@ -23,7 +24,9 @@ const routes: Routes = [
 			},
 			{
 				path: 'paciente/:idPaciente/nueva',
-				component: NuevaConsultaComponent
+				component: NuevaConsultaComponent,
+				canActivate: [RoleGuard],
+				data: {allowedRoles: [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD]},
 			},
 			{
 				path: 'paciente/:idPaciente/nuevaDesdeProblema/:idProblema',
@@ -32,7 +35,7 @@ const routes: Routes = [
 			},
 		],
 		canActivate: [RoleGuard],
-		data: { allowedRoles: ['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO'] },
+		data: { allowedRoles: [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO] },
 	},
 
 ];
