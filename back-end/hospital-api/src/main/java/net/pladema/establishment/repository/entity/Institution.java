@@ -11,6 +11,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
 
 @Entity
 @Table(name = "institution")
@@ -47,5 +48,8 @@ public class Institution {
 	
 	@Column(name = "sisa_code", nullable = false, length = 15)
 	private String sisaCode;
+
+	@Column(name = "timezone", nullable = false, length = 60)
+	private String timezone = JacksonDateFormatConfig.ZONE_ID;
 
 }

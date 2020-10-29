@@ -1,3 +1,16 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v1_4 
 
+    - changeSet:
+        id: add-column-timezone-institucion
+        author: nayerdi
+        changes:
+            - addColumn:
+                tableName: institution
+                columns:
+                - column:
+                    name: timezone
+                    type: varchar(60)
+                    constraints:
+                        nullable: false
+                    defaultValue: "America/Argentina/Buenos_Aires"
