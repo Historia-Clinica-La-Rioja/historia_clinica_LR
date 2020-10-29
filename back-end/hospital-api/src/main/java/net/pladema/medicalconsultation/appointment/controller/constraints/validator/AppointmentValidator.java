@@ -1,18 +1,7 @@
 package net.pladema.medicalconsultation.appointment.controller.constraints.validator;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
-
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
-import javax.validation.constraintvalidation.SupportedValidationTarget;
-import javax.validation.constraintvalidation.ValidationTarget;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import lombok.RequiredArgsConstructor;
+import net.pladema.establishment.controller.service.InstitutionExternalService;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointment;
 import net.pladema.medicalconsultation.appointment.controller.dto.CreateAppointmentDto;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
@@ -21,18 +10,25 @@ import net.pladema.medicalconsultation.diary.service.DiaryService;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 import net.pladema.permissions.controller.external.LoggedUserExternalService;
 import net.pladema.permissions.repository.enums.ERole;
+import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
 import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import net.pladema.sgx.security.utils.UserInfo;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
-import net.pladema.staff.service.HealthcareProfessionalService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
+import javax.validation.constraintvalidation.SupportedValidationTarget;
+import javax.validation.constraintvalidation.ValidationTarget;
+import java.time.*;
+import java.util.List;
 
 
 @SupportedValidationTarget(ValidationTarget.PARAMETERS)
 @RequiredArgsConstructor
 public class AppointmentValidator implements ConstraintValidator<ValidAppointment, Object[]> {
-
-    private static final int UTC_DIFFERENCE = 3;
 
 	private static final Logger LOG = LoggerFactory.getLogger(AppointmentValidator.class);
 
@@ -48,6 +44,8 @@ public class AppointmentValidator implements ConstraintValidator<ValidAppointmen
 
     private final LoggedUserExternalService loggedUserExternalService;
 
+    private final InstitutionExternalService institutionExternalService;
+
 	@Value("${test.stress.disable.validation:false}")
 	private boolean disableValidation;
 
@@ -61,16 +59,19 @@ public class AppointmentValidator implements ConstraintValidator<ValidAppointmen
 		Integer institutionId = (Integer) parameters[0];
 		CreateAppointmentDto createAppointmentDto = (CreateAppointmentDto) parameters[1];
 		LOG.debug("Input parameters -> institutionId {}, createAppointmentDto {}", institutionId, createAppointmentDto);
+
+		ZoneId timezone = institutionExternalService.getTimezone(institutionId);
+
 		DiaryBo diary = diaryService.getDiaryById(createAppointmentDto.getDiaryId());
-		return validAppoinment(context, createAppointmentDto) 
+		return validAppoinment(context, createAppointmentDto, timezone)
 				&& validDiary(context, diary)
 				&& validRole(context, institutionId, diary);
 	}
 
-	private boolean validAppoinment(ConstraintValidatorContext context, CreateAppointmentDto createAppointmentDto) {
+	private boolean validAppoinment(ConstraintValidatorContext context, CreateAppointmentDto createAppointmentDto, ZoneId timezone) {
 		boolean valid = true;
 		
-		if(beforeNow(createAppointmentDto) && !disableValidation){
+		if(beforeNow(createAppointmentDto, timezone) && !disableValidation){
             buildResponse(context, "{appointment.new.beforeToday}");
             valid = false;
         }
@@ -139,11 +140,17 @@ public class AppointmentValidator implements ConstraintValidator<ValidAppointmen
 		return valid;
 	}
 
-	private boolean beforeNow(CreateAppointmentDto createAppointmentDto) {
+	private boolean beforeNow(CreateAppointmentDto createAppointmentDto, ZoneId timezone) {
 		LocalDate apmtDate = localDateMapper.fromStringToLocalDate(createAppointmentDto.getDate());
 		LocalTime apmtTime = localDateMapper.fromStringToLocalTime(createAppointmentDto.getHour());
-		return apmtDate.isBefore(LocalDate.now())
-				|| (apmtDate.equals(LocalDate.now()) && apmtTime.isBefore(LocalTime.now().minusHours(UTC_DIFFERENCE)));
+
+		ZonedDateTime apmtDateTime = LocalDateTime.of(apmtDate, apmtTime)
+				.atZone(timezone);
+
+		ZonedDateTime nowInTimezone = LocalDateTime.now()
+				.atZone(ZoneId.of(JacksonDateFormatConfig.UTC_ZONE_ID))
+				.withZoneSameInstant(timezone);
+		return apmtDateTime.isBefore(nowInTimezone);
 	}
 
     private void buildResponse(ConstraintValidatorContext context, String message) {
