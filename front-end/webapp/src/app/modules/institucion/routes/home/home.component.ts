@@ -20,9 +20,11 @@ export class HomeComponent implements OnInit {
 	) { }
 
 	ngOnInit(): void {
-		this.institucion$ = this.institutionService.getInstitutions([this.contextService.institutionId]).pipe(
-			map(list => list && list.length ? list[0] : undefined),
-		);
+		this.contextService.institutionId$.subscribe(id => {
+			this.institucion$ = this.institutionService.getInstitutions([id]).pipe(
+				map(list => list && list.length ? list[0] : undefined),
+			);
+		});
 	}
 
 }

@@ -4,6 +4,7 @@ import {RoleAssignment} from '@api-rest/api-model';
 import {Router} from '@angular/router';
 import {InstitutionService} from '@api-rest/services/institution.service';
 import {uniqueItems} from '@core/utils/array.utils';
+import { ContextService } from './../../../core/services/context.service';
 
 @Component({
 	selector: 'app-instituciones',
@@ -17,6 +18,7 @@ export class InstitucionesComponent implements OnInit {
 	constructor(
 		loggedUserService: LoggedUserService,
 		institutionService: InstitutionService,
+		private contextService: ContextService,
 		private router: Router,
 	) {
 		loggedUserService.assignments$.subscribe((allRoles: RoleAssignment[]) => {

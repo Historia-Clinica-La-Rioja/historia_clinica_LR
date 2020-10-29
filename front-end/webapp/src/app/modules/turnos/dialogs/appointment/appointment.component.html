@@ -32,8 +32,8 @@
 			<div fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
 				<mat-icon fontSet="material-icons-outlined" style="color: transparent">person</mat-icon>
 				<a class="mat-body" *hasRole="['ESPECIALISTA_MEDICO','PROFESIONAL_DE_SALUD','ENFERMERO']"
-					[href]="'/institucion/' + institutionId + '/ambulatoria/paciente/' + appointmentData?.patient?.id">Ver
-					historia clínica</a>
+				[routerLink]="'/institucion/' + institutionId + '/ambulatoria/paciente/' + appointmentData?.patient?.id"
+				(click)="closeDialog()">Ver historia clínica</a>
 			</div>
 		</section>
 

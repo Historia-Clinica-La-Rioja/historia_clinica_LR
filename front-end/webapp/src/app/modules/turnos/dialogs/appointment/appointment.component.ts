@@ -87,7 +87,7 @@ export class AppointmentComponent implements OnInit {
 		});
 		dialogRefCancelAppointment.afterClosed().subscribe(canceledAppointment => {
 			if (canceledAppointment) {
-				this.dialogRef.close('statuschanged');
+				this.closeDialog('statuschanged');
 			}
 		});
 	}
@@ -112,7 +112,7 @@ export class AppointmentComponent implements OnInit {
 	private submitNewState(newStateId: APPOINTMENT_STATES_ID, motivo?: string): void {
 		this.appointmentFacade.changeState(this.appointmentData.appointmentId, newStateId, motivo)
 			.subscribe(() => {
-				this.dialogRef.close('statuschanged');
+				this.closeDialog('statuschanged');
 				this.snackBarService.showSuccess(`Estado de turno actualizado a ${getAppointmentState(newStateId).description} exitosamente`);
 			}, _ => {
 				this.changeState(this.appointment?.appointmentStateId);
@@ -128,6 +128,10 @@ export class AppointmentComponent implements OnInit {
 			}, error => {
 				processErrors(error, (msg) => this.snackBarService.showError(msg));
 			});
+	}
+
+	closeDialog(returnValue?: string) {
+		this.dialogRef.close(returnValue);
 	}
 }
 
