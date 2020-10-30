@@ -40,6 +40,21 @@
         </div>
     </div>
 
+    <!-- Especialidad clínica -->
+    <div th:fragment="clinicalSpecialty (message)">
+        <h3 th:text="${message}"></h3>
+        <div th:if="${clinicalSpecialty == null}">
+            <dl class="lista" >
+                <dd><p >Sin especialidad asociada</p></dd>
+            </dl>
+        </div>
+        <div th:if="${clinicalSpecialty != null}">
+            <dl>
+                <dd><p  th:text="${'- ' + clinicalSpecialty.name}"></p></dd>
+            </dl>
+        </div>
+    </div>
+
     <!-- Diagnóstico principal -->
     <div th:fragment="mainDiagnosis (message)">
         <h3 th:text="${message}"></h3>
