@@ -3,7 +3,9 @@ package net.pladema.establishment.controller;
 import net.pladema.establishment.controller.constraints.validator.permissions.BackofficeSectorValidator;
 import net.pladema.establishment.repository.SectorRepository;
 import net.pladema.establishment.repository.entity.Sector;
+import net.pladema.sgx.backoffice.repository.BackofficeRepository;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
+import net.pladema.sgx.backoffice.rest.SingleAttributeBackofficeQueryAdapter;
 import net.pladema.sgx.error.controller.dto.ApiErrorMessageDto;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.core.NestedExceptionUtils;
@@ -41,7 +43,10 @@ public class BackofficeSectorController extends AbstractBackofficeController<Sec
 	}
 	
 	public BackofficeSectorController(SectorRepository repository, BackofficeSectorValidator sectorValidator) {
-		super(repository, sectorValidator);
+		super(new BackofficeRepository<Sector, Integer>(
+				repository,
+				new SingleAttributeBackofficeQueryAdapter<Sector>("description")
+		), sectorValidator);
 	}
 
 }

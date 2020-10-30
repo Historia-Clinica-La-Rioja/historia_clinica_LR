@@ -7,7 +7,11 @@ import net.pladema.establishment.repository.InstitutionRepository;
 import net.pladema.establishment.repository.entity.Institution;
 import net.pladema.sgx.backoffice.repository.BackofficeRepository;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
+import net.pladema.sgx.backoffice.rest.BackofficeQueryAdapter;
 import net.pladema.sgx.backoffice.rest.SingleAttributeBackofficeQueryAdapter;
+import net.pladema.staff.repository.entity.ProfessionalSpecialty;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +29,18 @@ public class BackofficeInstitutionController extends AbstractBackofficeControlle
 		super(
 				new BackofficeRepository<>(
 						repository,
-						new SingleAttributeBackofficeQueryAdapter<>("name")), backofficeInstitutionValidator);
+						new BackofficeQueryAdapter<Institution>() {
+							@Override
+							public Example<Institution> buildExample(Institution entity) {
+								ExampleMatcher matcher = ExampleMatcher
+										.matching()
+										.withMatcher("name", x -> x.ignoreCase().contains())
+										.withMatcher("sisaCode", x -> x.ignoreCase().contains());
+								return Example.of(entity, matcher);
+							}
+						}
+				),
+						backofficeInstitutionValidator);
 		this.addressService = addressService;
 	}
 	

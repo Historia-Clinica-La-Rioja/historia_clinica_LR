@@ -28,8 +28,12 @@ public class BackofficeHealthcareProfessionalStore implements BackofficeStore<Ba
     @Override
     public Page<BackofficeHealthcareProfessionalCompleteDto> findAll(BackofficeHealthcareProfessionalCompleteDto example, Pageable pageable) {
         HealthcareProfessional hp = buildHealthcareProfessionalEntity(example);
+
+        ExampleMatcher customExampleMatcher = ExampleMatcher.matching().
+                withMatcher("licenseNumber", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
+
         return healthcareProfessionalRepository.findAll(
-                Example.of(hp),
+                Example.of(hp, customExampleMatcher),
                 PageRequest.of(
                         pageable.getPageNumber(),
                         pageable.getPageSize(),

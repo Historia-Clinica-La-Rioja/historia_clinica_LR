@@ -1,5 +1,9 @@
 package net.pladema.establishment.controller;
 
+import net.pladema.establishment.repository.entity.Institution;
+import net.pladema.sgx.backoffice.rest.BackofficeQueryAdapter;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,8 +22,17 @@ public class BackofficeRoomController extends AbstractBackofficeController<Room,
 		super(
 				new BackofficeRepository<>(
 				repository,
-				new SingleAttributeBackofficeQueryAdapter<>("description")
-				), backofficeRoomValidator);
+						new BackofficeQueryAdapter<Room>() {
+							@Override
+							public Example<Room> buildExample(Room entity) {
+								ExampleMatcher matcher = ExampleMatcher
+										.matching()
+										.withMatcher("description", x -> x.ignoreCase().contains())
+										.withMatcher("roomNumber", x -> x.ignoreCase().contains())
+										.withMatcher("type", x -> x.ignoreCase().contains());
+								return Example.of(entity, matcher);
+							}
+						}), backofficeRoomValidator);
 	}
 
 }

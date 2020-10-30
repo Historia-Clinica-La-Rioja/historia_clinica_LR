@@ -5,7 +5,9 @@ import net.pladema.establishment.controller.constraints.validator.entities.Backo
 import net.pladema.establishment.controller.constraints.validator.permissions.BackofficeBedValidator;
 import net.pladema.establishment.repository.BedRepository;
 import net.pladema.establishment.repository.entity.Bed;
+import net.pladema.sgx.backoffice.repository.BackofficeRepository;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
+import net.pladema.sgx.backoffice.rest.SingleAttributeBackofficeQueryAdapter;
 import net.pladema.sgx.error.controller.dto.ApiErrorMessageDto;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.core.NestedExceptionUtils;
@@ -46,9 +48,10 @@ public class BackofficeBedController extends AbstractBackofficeController<Bed, I
 	public BackofficeBedController(BedRepository repository,
 								   InternmentEpisodeExternalService internmentEpisodeExternalService,
 								   BackofficeBedValidator backofficeBedValidator) {
-		super( repository,
-				backofficeBedValidator,
-				new BackofficeBedEntityValidator(internmentEpisodeExternalService));
+		super(new BackofficeRepository<Bed, Integer>(
+						repository,
+						new SingleAttributeBackofficeQueryAdapter<Bed>("bedNumber")
+				), backofficeBedValidator, new BackofficeBedEntityValidator(internmentEpisodeExternalService));
 	}
 
 }

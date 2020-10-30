@@ -4,16 +4,15 @@ import net.pladema.medicalconsultation.diary.controller.constraints.BackofficeDo
 import net.pladema.medicalconsultation.diary.controller.permissions.BackofficeDoctorsOfficeValidator;
 import net.pladema.medicalconsultation.doctorsoffice.repository.DoctorsOfficeRepository;
 import net.pladema.medicalconsultation.doctorsoffice.repository.entity.DoctorsOffice;
+import net.pladema.sgx.backoffice.repository.BackofficeRepository;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
-import net.pladema.user.repository.entity.PasswordResetToken;
+import net.pladema.sgx.backoffice.rest.SingleAttributeBackofficeQueryAdapter;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("backoffice/doctorsoffices")
@@ -22,7 +21,10 @@ public class BackofficeDoctorsOfficeController extends AbstractBackofficeControl
     public BackofficeDoctorsOfficeController(DoctorsOfficeRepository repository,
                                              BackofficeDoctorsOfficeValidator doctorsOfficeValidator,
                                              BackofficeDoctorsOfficeEntityValidator doctorsOfficeEntityValidator) {
-        super(repository, doctorsOfficeValidator, doctorsOfficeEntityValidator);
+        super(new BackofficeRepository<DoctorsOffice, Integer>(
+                repository,
+                new SingleAttributeBackofficeQueryAdapter<DoctorsOffice>("description")
+        ), doctorsOfficeValidator, doctorsOfficeEntityValidator);
     }
 
 
