@@ -121,6 +121,11 @@ export class PatientService {
 		return this.http.get<PatientMedicalCoverageDto[]>(url);
 	}
 
+	addPatientMedicalCoverages(patientId: number, patientMedicalCoverageDto: PatientMedicalCoverageDto[]): Observable<number[]> {
+		const url = `${environment.apiBase}/patient/${patientId}/coverages`;
+		return this.http.post<number[]>(url, patientMedicalCoverageDto);
+	}
+
 }
 
 export class PersonInformationRequest {

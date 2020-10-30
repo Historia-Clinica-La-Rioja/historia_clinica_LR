@@ -2,12 +2,11 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MedicalCoverageDto } from '@api-rest/api-model';
+import { CoverageDtoUnion, HealthInsuranceDto, MedicalCoverageDto, PrivateHealthInsuranceDto } from '@api-rest/api-model';
 import { HealthInsuranceService } from '@api-rest/services/health-insurance.service';
 import { RenaperService } from '@api-rest/services/renaper.service';
 import { DateFormat, momentFormat, momentParse, newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
-import { Observable, of } from 'rxjs';
 
 const DNI_TYPE_ID = 1;
 @Component({
@@ -20,69 +19,11 @@ export class MedicalCoverageComponent implements OnInit {
 
 	healthInsuranceForm: FormGroup;
 	prepagaForm: FormGroup;
-	patientHealthInsurances: PatientMedicalCoverage[];
-	patientPrivateHealthInsurances: PatientMedicalCoverage[];
+	patientMedicalCoverages: PatientMedicalCoverage[];
 	healthInsuranceFilteredMasterData: MedicalCoverageDto[];
 
 	loading = true;
 
-	private patientHealthInsunracesFromService$: Observable<PatientMedicalCoverage[]> = of([
-		{
-			id: 1,
-			medicalCoverage: {
-				acronym: 'OSPEA', name: 'OBRA SOCIAL DEL PERSONAL DE DIRE', rnos: '1',
-			},
-			affiliateNumber: '100',
-			validDate: newMoment()
-
-		},
-		{
-			id: 2,
-			medicalCoverage: {
-				acronym: 'OSA', name: 'OBRA SOCIAL DE AERONAVEGANTES', rnos: '100',
-			},
-			affiliateNumber: '789',
-			validDate: newMoment()
-		},
-		{
-			id: 3,
-			medicalCoverage: {
-				name: 'Programa Sumar Salta', rnos: '-44036',
-			},
-			affiliateNumber: '789',
-			validDate: newMoment()
-		}
-
-	]);
-	private patientPrivateHealthInsunracesFromService$: Observable<PatientMedicalCoverage[]> = of([
-		{
-			id: 1,
-			medicalCoverage: {
-				name: 'PREPAGA 1',
-			},
-			affiliateNumber: '100',
-			validDate: newMoment()
-
-		},
-		{
-			id: 2,
-			medicalCoverage: {
-				name: 'PREPAGA 2',
-			},
-			affiliateNumber: '200',
-			validDate: newMoment()
-		},
-		{
-			id: 3,
-			medicalCoverage: {
-				name: 'PREPAGA 3',
-			},
-			affiliateNumber: '300',
-			validDate: newMoment()
-
-		}
-
-	]);
 	private healthInsuranceToAdd: HealthInsurance;
 	private healthInsuranceMasterData: MedicalCoverageDto[];
 	constructor(
@@ -94,17 +35,10 @@ export class MedicalCoverageComponent implements OnInit {
 			genderId: number;
 			identificationNumber: string;
 			identificationTypeId: number;
+			initValues: PatientMedicalCoverage[]
 		},
 	) {
-		this.patientHealthInsunracesFromService$.subscribe(
-			patientHealthInsurances => this.patientHealthInsurances = patientHealthInsurances
-		).unsubscribe();
-
-		this.patientPrivateHealthInsunracesFromService$.subscribe(
-			patientPrivateHealthInsurances =>
-				this.patientPrivateHealthInsurances = patientPrivateHealthInsurances
-		).unsubscribe();
-
+		this.patientMedicalCoverages = this.personInfo.initValues ? this.personInfo.initValues : [];
 	}
 
 
@@ -145,13 +79,11 @@ export class MedicalCoverageComponent implements OnInit {
 				({ genderId: this.personInfo.genderId, identificationNumber: this.personInfo.identificationNumber })
 				.subscribe((healthInsurances: MedicalCoverageDto[]) => {
 					if (healthInsurances) {
-						console.log('Resultados de renaper', healthInsurances);
-
 						healthInsurances.forEach(healthInsurance => {
-							const patientMedicalCoverage = this.patientHealthInsurances
+							const patientMedicalCoverage = this.patientMedicalCoverages
 								.find(patientHealthInsurance => (patientHealthInsurance.medicalCoverage as HealthInsurance).rnos === healthInsurance.rnos);
 							if (!patientMedicalCoverage) {
-								this.patientHealthInsurances = this.patientHealthInsurances.concat(fromRenaperToPatientMedicalCoverage(healthInsurance));
+								this.patientMedicalCoverages = this.patientMedicalCoverages.concat(this.fromRenaperToPatientMedicalCoverage(healthInsurance));
 							} else if (healthInsurance.dateQuery) {
 								patientMedicalCoverage.validDate = momentParse(healthInsurance.dateQuery, DateFormat.YEAR_MONTH);
 							}
@@ -159,20 +91,6 @@ export class MedicalCoverageComponent implements OnInit {
 					}
 					this.loading = false;
 
-					function fromRenaperToPatientMedicalCoverage(healthInsurance: MedicalCoverageDto): PatientMedicalCoverage {
-						const medicalCoverage = {
-							name: healthInsurance.name,
-							acronym: healthInsurance.acronym,
-							rnos: healthInsurance.rnos
-						};
-
-						return {
-							id: null,
-							affiliateNumber: null,
-							medicalCoverage,
-							validDate: healthInsurance.dateQuery ? momentParse(healthInsurance.dateQuery, DateFormat.YEAR_MONTH) : newMoment()
-						};
-					}
 				}, error => this.loading = false);
 		} else {
 			this.loading = false;
@@ -182,20 +100,10 @@ export class MedicalCoverageComponent implements OnInit {
 
 	selectHealthInsurance(event: MatOptionSelectionChange, healthInsurance: MedicalCoverageDto): void {
 		if (event.isUserInput) {
-			this.healthInsuranceToAdd = fromHealthInsuranceMasterDataToHealthInsurance(healthInsurance);
-		}
-
-		function fromHealthInsuranceMasterDataToHealthInsurance(renaperResponse: MedicalCoverageDto): HealthInsurance {
-			return {
-				name: renaperResponse.name,
-				acronym: renaperResponse.acronym,
-				rnos: renaperResponse.rnos
-			};
+			this.healthInsuranceToAdd = this.fromHealthInsuranceMasterDataToHealthInsurance(healthInsurance);
 		}
 	}
 
-
-	// ---------------Estaria bueno que sean parte de cada clase y que cada uno implemente el getTitleText() (o algo asi) a su manera-------
 	getFullHealthInsuranceText(healthInsurance: MedicalCoverageDto): string {
 		return [healthInsurance.acronym, healthInsurance.name].filter(Boolean).join(' - ');
 	}
@@ -218,7 +126,7 @@ export class MedicalCoverageComponent implements OnInit {
 	addHealthInsurance(): void {
 		if (this.healthInsuranceForm.valid) {
 			const toAdd = this.getHealthInsuranceToAdd();
-			this.patientHealthInsurances = this.patientHealthInsurances.concat(toAdd);
+			this.patientMedicalCoverages = this.patientMedicalCoverages.concat(toAdd);
 			this.healthInsuranceForm.reset();
 		}
 	}
@@ -226,24 +134,28 @@ export class MedicalCoverageComponent implements OnInit {
 	addPrivateHealthInsurance(): void {
 		if (this.prepagaForm.valid) {
 			const toAdd = this.getPrivateHealthInsuranceToAdd();
-			this.patientPrivateHealthInsurances = this.patientPrivateHealthInsurances.concat(toAdd);
+			this.patientMedicalCoverages = this.patientMedicalCoverages.concat(toAdd);
 			this.prepagaForm.reset();
 		}
 	}
 
 	save() {
 		this.dialogRef.close({
-			patientHealthInsurances: this.patientHealthInsurances,
-			patientPrivateHealthInsurances: this.patientPrivateHealthInsurances
+			patientMedicalCoverages: this.patientMedicalCoverages
 		});
 	}
 
-	private getPrivateHealthInsuranceToAdd(): PatientMedicalCoverage {
-		const medicalCoverage: PrivateHealthInsurance = {
-			name: this.prepagaForm.value.name,
-			plan: this.prepagaForm.value.plan
-		};
+	getPatientHealthInsurances(): PatientMedicalCoverage[] {
+		return this.patientMedicalCoverages.filter(s => s.medicalCoverage.type === 'HealthInsuranceDto');
+	}
 
+	getPatientPrivateHealthInsurances(): PatientMedicalCoverage[] {
+		return this.patientMedicalCoverages.filter(s => s.medicalCoverage.type === 'PrivateHealthInsuranceDto');
+	}
+
+	private getPrivateHealthInsuranceToAdd(): PatientMedicalCoverage {
+		const medicalCoverage = new PrivateHealthInsurance(this.prepagaForm.value.plan, null,
+			this.prepagaForm.value.name, 'PrivateHealthInsuranceDto');
 		let privateHealthInsuranceDetails;
 		if (this.prepagaForm.value.startDate || this.prepagaForm.value.endDate) {
 			privateHealthInsuranceDetails = {
@@ -253,7 +165,6 @@ export class MedicalCoverageComponent implements OnInit {
 		}
 
 		const toAdd: PatientMedicalCoverage = {
-			id: null, // Este valor se lo tiene que asignar la BD entonces hay que ver si hay que hacer un dto nuevo o que
 			medicalCoverage,
 			affiliateNumber: this.prepagaForm.value.affiliateNumber,
 			validDate: newMoment(),
@@ -264,35 +175,95 @@ export class MedicalCoverageComponent implements OnInit {
 
 	private getHealthInsuranceToAdd(): PatientMedicalCoverage {
 		const toAdd: PatientMedicalCoverage = {
-			id: null, // Este valor se lo tiene que asignar la BD entonces hay que ver si hay que hacer un dto nuevo o que
 			medicalCoverage: this.healthInsuranceToAdd,
 			affiliateNumber: this.healthInsuranceForm.value.affiliateNumber,
-			validDate: newMoment()
+			validDate: newMoment(),
 		};
 		return toAdd;
+	}
+
+	private fromHealthInsuranceMasterDataToHealthInsurance(renaperResponse: MedicalCoverageDto): HealthInsurance {
+		const healthInsuranceId = this.healthInsuranceFilteredMasterData
+			.filter((s: MedicalCoverageDto) => s.rnos === renaperResponse.rnos)
+			.map(s => s.id)[0];
+		return new HealthInsurance(renaperResponse.rnos, renaperResponse.acronym, healthInsuranceId, renaperResponse.name, 'HealthInsuranceDto');
+	}
+
+	private fromRenaperToPatientMedicalCoverage(healthInsurance: MedicalCoverageDto): PatientMedicalCoverage {
+		const healthInsuranceId = this.healthInsuranceFilteredMasterData
+			.filter((s: MedicalCoverageDto) => s.rnos === healthInsurance.rnos)
+			.map(s => s.id)[0];
+		const medicalCoverage = new HealthInsurance(healthInsurance.rnos, healthInsurance.acronym,
+			healthInsuranceId, healthInsurance.name, 'HealthInsuranceDto');
+		return {
+			affiliateNumber: null,
+			medicalCoverage,
+			validDate: healthInsurance.dateQuery ? momentParse(healthInsurance.dateQuery, DateFormat.YEAR_MONTH) : newMoment()
+		};
 	}
 }
 
 export interface PatientMedicalCoverage {
-	id: number; // Me sirve por si edito el campo de nro de afiliado
+	id?: number;
 	affiliateNumber: string;
 	validDate: Moment;
 	medicalCoverage: HealthInsurance | PrivateHealthInsurance;
 	privateHealthInsuranceDetails?: {
+		id?: number,
 		startDate?: Moment;
 		endDate?: Moment;
 	};
 }
-export interface MedicalCoverage {
-	//id: number;
+export abstract class MedicalCoverage {
+	id?: number;
 	name: string;
+	type: 'HealthInsuranceDto' | 'PrivateHealthInsuranceDto';
+
+	constructor(id, name, type) {
+		this.id = id;
+		this.name = name;
+		this.type = type;
+	}
+
+	abstract toMedicalCoverageDto(): CoverageDtoUnion;
 }
 
-export interface HealthInsurance extends MedicalCoverage {
+export class HealthInsurance extends MedicalCoverage {
 	rnos: string;
 	acronym?: string;
+
+	constructor(rnos: string, acronym: string, id, name, type) {
+		super(id, name, type);
+		this.rnos = rnos;
+		this.acronym = acronym;
+	}
+
+	public toMedicalCoverageDto(): HealthInsuranceDto {
+		return {
+			id: this.id,
+			acronym: this.acronym,
+			name: this.name,
+			rnos: Number(this.rnos),
+			type: 'HealthInsuranceDto',
+		};
+	}
 }
 
-export interface PrivateHealthInsurance extends MedicalCoverage {
+export class PrivateHealthInsurance extends MedicalCoverage {
 	plan?: string;
+
+	constructor(plan, id, name, type) {
+		super(id, name, type);
+		this.plan = plan;
+	}
+
+	toMedicalCoverageDto(): PrivateHealthInsuranceDto {
+		return {
+			id: this.id,
+			plan: this.plan,
+			name: this.name,
+			type: 'PrivateHealthInsuranceDto',
+
+		};
+	}
 }

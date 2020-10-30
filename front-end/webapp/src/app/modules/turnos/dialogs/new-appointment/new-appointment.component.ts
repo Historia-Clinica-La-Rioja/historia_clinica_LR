@@ -14,12 +14,14 @@ import {
 	IdentificationTypeDto,
 	GenderDto,
 	BasicPersonalDataDto,
-	ReducedPatientDto
+	ReducedPatientDto,
+	PatientMedicalCoverageDto,
 } from '@api-rest/api-model';
 import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
 import { PersonIdentification } from '@presentation/pipes/person-identification.pipe';
 import { MedicalCoverageComponent, PatientMedicalCoverage } from '../../../core/dialogs/medical-coverage/medical-coverage.component';
-import { newMoment } from '@core/utils/moment.utils';
+import { map } from 'rxjs/operators';
+import { MapperService } from '../../../core/services/mapper.service';
 
 const ROUTE_SEARCH = 'pacientes/search';
 const TEMPORARY_PATIENT_ID = 3;
@@ -59,6 +61,7 @@ export class NewAppointmentComponent implements OnInit {
 		private readonly contextService: ContextService,
 		private readonly appointmentFacade: AppointmentsFacadeService,
 		public dialog: MatDialog,
+		private readonly mapperService: MapperService
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 	}
@@ -132,7 +135,7 @@ export class NewAppointmentComponent implements OnInit {
 				this.patientFound();
 				this.patient = reducedPatientDto;
 				this.appointmentInfoForm.controls.phoneNumber.setValue(reducedPatientDto.personalDataDto.phoneNumber);
-				this.setHealthInsuranceoptions();
+				this.setMedicalCoverages();
 			}, _ => {
 				this.patientNotFound();
 			});
@@ -156,31 +159,6 @@ export class NewAppointmentComponent implements OnInit {
 	private patientNotFound() {
 		this.snackBarService.showError('turnos.new-appointment.messages.ERROR');
 		this.showAddPatient = true;
-	}
-
-	private setHealthInsuranceoptions() {
-
-		//Llamar al/los mismos endpoints que se llama desde adentro del dialog
-		this.patientMedicalCoverages = [
-			{
-				id: 1,
-				medicalCoverage: {
-					acronym: 'OSPEA', name: 'OBRA SOCIAL DEL PERSONAL DE DIRE', rnos: '1',
-				},
-				affiliateNumber: '100',
-				validDate: newMoment()
-
-			},
-			{
-				id: 2,
-				medicalCoverage: {
-					acronym: 'OSA', name: 'OBRA SOCIAL DE AERONAVEGANTES', rnos: '400800',
-				},
-				affiliateNumber: '400800',
-				validDate: newMoment()
-			},
-
-		];
 	}
 
 	getFullHealthInsuranceText(medicalCoverage): string {
@@ -245,15 +223,33 @@ export class NewAppointmentComponent implements OnInit {
 			data: {
 				genderId: this.patient.personalDataDto.genderId,
 				identificationNumber: this.patient.personalDataDto.identificationNumber,
-				identificationTypeId: this.patient.personalDataDto.identificationTypeId
+				identificationTypeId: this.patient.personalDataDto.identificationTypeId,
+				initValues: this.patientMedicalCoverages,
 			}
 		});
 
 		dialogRef.afterClosed().subscribe(
 			values => {
-				this.patientMedicalCoverages = values.patientHealthInsurances.concat(values.patientPrivateHealthInsurances);
-				console.log(this.patientMedicalCoverages);
+				if (values) {
+					const patientCoverages: PatientMedicalCoverageDto[] =
+						values.patientMedicalCoverages.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
+
+					this.patientService.addPatientMedicalCoverages(this.patientId, patientCoverages).subscribe( _ => {
+						this.setMedicalCoverages();
+					});
+				}
 			}
 		);
+	}
+
+	private setMedicalCoverages(): void {
+		this.patientService.getPatientMedicalCoverages(this.patientId)
+			.pipe(
+				map(
+					patientMedicalCoveragesDto =>
+						patientMedicalCoveragesDto.map(s => this.mapperService.toPatientMedicalCoverage(s))
+				)
+			)
+			.subscribe((patientMedicalCoverages: PatientMedicalCoverage[]) => this.patientMedicalCoverages = patientMedicalCoverages);
 	}
 }

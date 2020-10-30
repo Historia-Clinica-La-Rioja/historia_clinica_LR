@@ -3,7 +3,7 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Moment } from 'moment';
 import * as moment from 'moment';
-import { APatientDto, BMPatientDto, GenderDto, IdentificationTypeDto, PersonPhotoDto } from '@api-rest/api-model';
+import { APatientDto, BMPatientDto, GenderDto, IdentificationTypeDto, PatientMedicalCoverageDto, PersonPhotoDto } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID } from "@core/utils/form.utils";
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
@@ -11,7 +11,9 @@ import { AddressMasterDataService } from '@api-rest/services/address-master-data
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from "@core/services/context.service";
 import { MatDialog } from '@angular/material/dialog';
-import { MedicalCoverageComponent } from 'src/app/modules/core/dialogs/medical-coverage/medical-coverage.component';
+import { MedicalCoverageComponent, PatientMedicalCoverage } from 'src/app/modules/core/dialogs/medical-coverage/medical-coverage.component';
+import { DateFormat, momentFormat } from '@core/utils/moment.utils';
+import { MapperService } from '@core/services/mapper.service';
 
 const ROUTE_SEARCH = 'pacientes/search';
 const ROUTE_PROFILE = 'pacientes/profile/';
@@ -37,7 +39,8 @@ export class NewPatientComponent implements OnInit {
 	public identificationTypeList: IdentificationTypeDto[];
 	private readonly routePrefix;
 	public patientType;
-	public personPhoto : PersonPhotoDto;
+	public personPhoto: PersonPhotoDto;
+	patientMedicalCoveragesToAdd: PatientMedicalCoverage[];
 
 	constructor(private formBuilder: FormBuilder,
 		private router: Router,
@@ -48,7 +51,8 @@ export class NewPatientComponent implements OnInit {
 		private addressMasterDataService: AddressMasterDataService,
 		private snackBarService: SnackBarService,
 		private contextService: ContextService,
-		private dialog: MatDialog) {
+		private dialog: MatDialog,
+		private mapperService: MapperService) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 
@@ -149,6 +153,13 @@ export class NewPatientComponent implements OnInit {
 				.subscribe(patientId => {
 					if (this.personPhoto != null)
 						this.patientService.addPatientPhoto(patientId, this.personPhoto).subscribe();
+
+					if (this.patientMedicalCoveragesToAdd) {
+						const patientMedicalCoveragesDto: PatientMedicalCoverageDto[] =
+							this.patientMedicalCoveragesToAdd.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
+						this.patientService.addPatientMedicalCoverages
+							(patientId, patientMedicalCoveragesDto ).subscribe();
+					}
 					this.router.navigate([this.routePrefix + ROUTE_PROFILE + patientId]);
 					this.snackBarService.showSuccess('pacientes.new.messages.SUCCESS');
 				}, _ => this.snackBarService.showError('pacientes.new.messages.ERROR'));
@@ -235,12 +246,14 @@ export class NewPatientComponent implements OnInit {
 			data: {
 				genderId: this.form.getRawValue().genderId,
 				identificationNumber: this.form.getRawValue().identificationNumber,
-				identificationTypeId: this.form.getRawValue().identificationTypeId
+				identificationTypeId: this.form.getRawValue().identificationTypeId,
+				initValues: this.patientMedicalCoveragesToAdd
 			}
 		});
 		dialogRef.afterClosed().subscribe(medicalCoverages => {
-			console.log(medicalCoverages)
-			//Formatear los valores que devuelve el dialogo para un dto de agregar la info a la N-N
+			if (medicalCoverages) {
+				this.patientMedicalCoveragesToAdd = medicalCoverages.patientMedicalCoverages;
+			}
 		});
 
 	}
@@ -249,4 +262,5 @@ export class NewPatientComponent implements OnInit {
 		this.formSubmitted = false;
 		this.router.navigate([this.routePrefix + ROUTE_HOME_PATIENT]);
 	}
+
 }

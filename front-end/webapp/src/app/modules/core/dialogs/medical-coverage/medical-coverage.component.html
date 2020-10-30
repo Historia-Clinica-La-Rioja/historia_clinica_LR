@@ -8,7 +8,7 @@
 				<mat-spinner color="primary"></mat-spinner>
 			</div>
 			<ng-template #viewPatientHealthInsurances>
-				<mat-card *ngFor="let patientMedicalCoverage of patientHealthInsurances">
+				<mat-card *ngFor="let patientMedicalCoverage of getPatientHealthInsurances()">
 					<mat-card-content>
 						<div fxLayout="row" fxLayoutAlign="space-between">
 							<span
@@ -52,7 +52,7 @@
 	<mat-card fxLayout="column" fxLayoutGap="10px">
 		<strong>Prepagas activas</strong>
 		<div fxLayout="column" fxLayoutGap="10px">
-			<mat-card *ngFor="let patientPrivateHealthInsurance of patientPrivateHealthInsurances">
+			<mat-card *ngFor="let patientPrivateHealthInsurance of getPatientPrivateHealthInsurances()" >
 				<mat-card-content>
 					<div fxLayout="row" fxLayoutAlign="space-between">
 						<span>{{getPrivateHealthInsuranceText(patientPrivateHealthInsurance.medicalCoverage)}}</span>

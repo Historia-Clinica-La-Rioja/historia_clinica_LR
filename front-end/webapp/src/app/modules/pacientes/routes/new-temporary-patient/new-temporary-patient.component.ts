@@ -1,6 +1,6 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { APatientDto, BMPatientDto, GenderDto, IdentificationTypeDto } from '@api-rest/api-model';
+import { APatientDto, BMPatientDto, GenderDto, IdentificationTypeDto, PatientMedicalCoverageDto } from '@api-rest/api-model';
 import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID } from "@core/utils/form.utils";
 import { Router, ActivatedRoute } from '@angular/router';
 import { PatientService } from '@api-rest/services/patient.service';
@@ -10,9 +10,10 @@ import { Moment } from 'moment';
 import * as moment from 'moment';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from "@core/services/context.service";
-import { momentParseDate } from '@core/utils/moment.utils';
+import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.utils';
 import { MatDialog } from '@angular/material/dialog';
-import { MedicalCoverageComponent } from 'src/app/modules/core/dialogs/medical-coverage/medical-coverage.component';
+import { MedicalCoverageComponent, PatientMedicalCoverage } from 'src/app/modules/core/dialogs/medical-coverage/medical-coverage.component';
+import { MapperService } from '@core/services/mapper.service';
 
 const TEMPORARY_PATIENT = 3;
 const ROUTE_HOME = 'pacientes';
@@ -36,20 +37,23 @@ export class NewTemporaryPatientComponent implements OnInit {
 	public departments: any[];
 	public cities: any[];
 	public identificationTypeList: IdentificationTypeDto[];
+	patientMedicalCoveragesToAdd: PatientMedicalCoverage[];
+
 	private identityVerificationStatus;
 	private comments;
 	private readonly routePrefix;
 
 	constructor(private formBuilder: FormBuilder,
-				private router: Router,
-				private el: ElementRef,
-				private patientService: PatientService,
-				private personMasterDataService: PersonMasterDataService,
-				private addressMasterDataService: AddressMasterDataService,
-				private route: ActivatedRoute,
-				private snackBarService: SnackBarService,
-				private contextService: ContextService,
-				private dialog: MatDialog) {
+		private router: Router,
+		private el: ElementRef,
+		private patientService: PatientService,
+		private personMasterDataService: PersonMasterDataService,
+		private addressMasterDataService: AddressMasterDataService,
+		private route: ActivatedRoute,
+		private snackBarService: SnackBarService,
+		private contextService: ContextService,
+		private dialog: MatDialog,
+		private mapperService: MapperService) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 
@@ -85,18 +89,18 @@ export class NewTemporaryPatientComponent implements OnInit {
 					addressFloor: [],
 					addressApartment: [],
 					addressQuarter: [],
-					addressCityId: {value: null, disabled: true},
+					addressCityId: { value: null, disabled: true },
 					addressPostcode: [],
 
 					addressProvinceId: [],
 					addressCountryId: [],
-					addressDepartmentId: {value: null, disabled: true},
+					addressDepartmentId: { value: null, disabled: true },
 
 					//doctors
-					generalPractitioner:[],
-					generalPractitionerPhoneNumber:[],
-					pamiDoctor:[],
-					pamiDoctorPhoneNumber:[]
+					generalPractitioner: [],
+					generalPractitionerPhoneNumber: [],
+					pamiDoctor: [],
+					pamiDoctorPhoneNumber: []
 				});
 
 				this.lockFormField(params);
@@ -129,6 +133,12 @@ export class NewTemporaryPatientComponent implements OnInit {
 			let personRequest: APatientDto = this.mapToPersonRequest();
 			this.patientService.addPatient(personRequest)
 				.subscribe(patientId => {
+					if (this.patientMedicalCoveragesToAdd) {
+						const patientMedicalCoveragesDto: PatientMedicalCoverageDto[] =
+						this.patientMedicalCoveragesToAdd.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
+						this.patientService.addPatientMedicalCoverages
+							(patientId, patientMedicalCoveragesDto).subscribe();
+					}
 					this.router.navigate([this.routePrefix + ROUTE_PROFILE + patientId]);
 					this.snackBarService.showSuccess('pacientes.new.messages.SUCCESS');
 				}, _ => this.snackBarService.showError('pacientes.new.messages.ERROR'));
@@ -173,12 +183,12 @@ export class NewTemporaryPatientComponent implements OnInit {
 			generalPractitioner: {
 				fullName: this.form.controls.generalPractitioner.value,
 				phoneNumber: this.form.controls.generalPractitionerPhoneNumber.value,
-				generalPractitioner:true
+				generalPractitioner: true
 			},
 			pamiDoctor: {
-				fullName:this.form.controls.pamiDoctor.value,
+				fullName: this.form.controls.pamiDoctor.value,
 				phoneNumber: this.form.controls.pamiDoctorPhoneNumber.value,
-				generalPractitioner:false
+				generalPractitioner: false
 			}
 		};
 	}
@@ -214,12 +224,14 @@ export class NewTemporaryPatientComponent implements OnInit {
 			data: {
 				genderId: this.form.getRawValue().genderId,
 				identificationNumber: this.form.getRawValue().identificationNumber,
-				identificationTypeId: this.form.getRawValue().identificationTypeId
+				identificationTypeId: this.form.getRawValue().identificationTypeId,
+				initValues: this.patientMedicalCoveragesToAdd
 			}
 		});
 		dialogRef.afterClosed().subscribe(medicalCoverages => {
-			console.log(medicalCoverages)
-			//Formatear los valores que devuelve el dialogo para un dto de agregar la info a la N-N
+			if (medicalCoverages){
+				this.patientMedicalCoveragesToAdd = medicalCoverages.patientMedicalCoverages;
+			}
 		});
 
 	}

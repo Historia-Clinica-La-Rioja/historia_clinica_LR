@@ -3,7 +3,7 @@ import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms'
 import { Router, ActivatedRoute } from '@angular/router';
 import { Moment } from 'moment';
 import * as moment from 'moment';
-import { APatientDto, BMPatientDto, GenderDto, IdentificationTypeDto, CompletePatientDto, BMPersonDto } from '@api-rest/api-model';
+import { APatientDto, BMPatientDto, GenderDto, IdentificationTypeDto, CompletePatientDto, BMPersonDto, PatientMedicalCoverageDto, CoverageDtoUnion } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID } from "@core/utils/form.utils";
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
@@ -11,11 +11,14 @@ import { AddressMasterDataService } from '@api-rest/services/address-master-data
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from "@core/services/context.service";
 import { PersonService } from '@api-rest/services/person.service';
-import { MapperService } from '@presentation/services/mapper.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PATIENT_TYPE } from '@core/utils/patient.utils';
 import { MatDialog } from '@angular/material/dialog';
-import { MedicalCoverageComponent } from 'src/app/modules/core/dialogs/medical-coverage/medical-coverage.component';
+import { MedicalCoverageComponent, PatientMedicalCoverage, } from 'src/app/modules/core/dialogs/medical-coverage/medical-coverage.component';
+import { map } from 'rxjs/operators';
+import { DateFormat, momentFormat, momentParse, momentParseDate, newMoment } from '@core/utils/moment.utils';
+import { MapperService } from '../../../core/services/mapper.service';
+
 
 const ROUTE_PROFILE = 'pacientes/profile/';
 const ROUTE_HOME_PATIENT = 'pacientes';
@@ -45,6 +48,8 @@ export class EditPatientComponent implements OnInit {
 	public patientId: any;
 
 
+	private medicalCoveragesToSave: PatientMedicalCoverage[];
+
 	constructor(private formBuilder: FormBuilder,
 		private router: Router,
 		private el: ElementRef,
@@ -54,12 +59,11 @@ export class EditPatientComponent implements OnInit {
 		private addressMasterDataService: AddressMasterDataService,
 		private snackBarService: SnackBarService,
 		private contextService: ContextService,
-		private mapperService: MapperService,
 		private personService: PersonService,
 		private featureFlagService: FeatureFlagService,
-		private dialog: MatDialog
-	)
-	{
+		private dialog: MatDialog,
+		private readonly mapperService: MapperService,
+	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 
@@ -187,6 +191,12 @@ export class EditPatientComponent implements OnInit {
 			let personRequest: APatientDto = this.mapToPersonRequest();
 			this.patientService.editPatient(personRequest, this.patientId)
 				.subscribe(patientId => {
+					if (this.medicalCoveragesToSave) {
+						const patientMedicalCoveragesDto: PatientMedicalCoverageDto[] =
+							this.medicalCoveragesToSave.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
+						this.patientService.addPatientMedicalCoverages(this.patientId, patientMedicalCoveragesDto)
+							.subscribe();
+					}
 					this.router.navigate([this.routePrefix + ROUTE_PROFILE + patientId]);
 					this.snackBarService.showSuccess('pacientes.edit.messages.SUCCESS');
 				}, _ => this.snackBarService.showError('pacientes.edit.messages.ERROR'));
@@ -269,18 +279,31 @@ export class EditPatientComponent implements OnInit {
 	}
 
 	openMedicalCoverageDialog(): void {
-		const dialogRef = this.dialog.open(MedicalCoverageComponent, {
-			data: {
-				genderId: this.form.getRawValue().genderId,
-				identificationNumber: this.form.getRawValue().identificationNumber,
-				identificationTypeId: this.form.getRawValue().identificationTypeId
-			}
-		});
-		dialogRef.afterClosed().subscribe(medicalCoverages => {
-			console.log(medicalCoverages)
-			//Formatear los valores que devuelve el dialogo para un dto de agregar la info a la N-N
-		});
 
+		this.patientService.getPatientMedicalCoverages(this.patientId)
+			.pipe(
+				map(
+					patientMedicalCoveragesDto =>
+						patientMedicalCoveragesDto.map(s => this.mapperService.toPatientMedicalCoverage(s))
+				)
+			)
+			.subscribe((s: PatientMedicalCoverage[]) => {
+
+				const dialogRef = this.dialog.open(MedicalCoverageComponent, {
+					data: {
+						genderId: this.form.getRawValue().genderId,
+						identificationNumber: this.form.getRawValue().identificationNumber,
+						identificationTypeId: this.form.getRawValue().identificationTypeId,
+						initValues: s,
+					}
+				});
+				dialogRef.afterClosed().subscribe(medicalCoverages => {
+					if (medicalCoverages) {
+						this.medicalCoveragesToSave = medicalCoverages.patientMedicalCoverages;
+					}
+				});
+			}
+			);
 	}
 
 	goBack(): void {
@@ -303,13 +326,13 @@ export class EditPatientComponent implements OnInit {
 		return (this.patientType === PATIENT_TYPE.PERMANENT_INVALID || this.patientType === PATIENT_TYPE.VALID || this.patientType === PATIENT_TYPE.PERMANENT);
 	}
 
-	private restrictFormEdit():void {
+	private restrictFormEdit(): void {
 		this.featureFlagService.isOn(RESTRICT_EDIT_FFLAG)
-		.subscribe(result => {
-			if (result && this.isLockablePatientType()) {
-				this.disableFormField();
-			}
-		});
+			.subscribe(result => {
+				if (result && this.isLockablePatientType()) {
+					this.disableFormField();
+				}
+			});
 	}
 
 }

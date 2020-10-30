@@ -76,13 +76,10 @@
 						</div>
 					</mat-list-item>
 				</mat-list>
-				<div fxLayout="row" fxLayoutAlign="space-around center">
-					<mat-spinner *ngIf="!patientMedicalCoverages?.length"></mat-spinner>
-				</div>
 				<button mat-stroked-button color="primary" (click)="openMedicalCoverageDialog()" class="update-medical-coverage">
 					<span [translate]="'Actualizar cobertura'"></span>
 				</button>
-				<form *ngIf="patientMedicalCoverages?.length" [formGroup]="appointmentInfoForm">
+				<form [formGroup]="appointmentInfoForm">
 					<div fxLayout="column">
 						<mat-form-field appearance="outline">
 							<mat-label>Cobertura Médica </mat-label>
@@ -91,7 +88,7 @@
 								<mat-option
 									id="medicalCoverage"
 									name="medicalCoverage"
-									*ngFor="let patientMedicalCoverage of patientMedicalCoverages" [value]="patientMedicalCoverage.id">
+									*ngFor="let patientMedicalCoverage of patientMedicalCoverages" [value]="patientMedicalCoverage">
 									{{getFullHealthInsuranceText(patientMedicalCoverage.medicalCoverage)}}
 								</mat-option>
 							</mat-select>
