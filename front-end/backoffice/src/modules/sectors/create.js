@@ -9,9 +9,11 @@ import {
 } from 'react-admin';
 import CustomToolbar from "../../modules/components/CustomToolbar";
 
+const redirect = (basePath, id, data) => `/institutions/${data.institutionId}/show`;
+
 const SectorCreate = props => (
     <Create {...props}>
-        <SimpleForm redirect="show" toolbar={<CustomToolbar />}>
+        <SimpleForm redirect={redirect} toolbar={<CustomToolbar />}>
             <TextInput source="description" validate={[required()]} />
             <ReferenceInput
                 source="institutionId"

@@ -11,9 +11,11 @@ import {
 } from 'react-admin';
 import CustomToolbar from "../../modules/components/CustomToolbar";
 
+const redirect = (basePath, id, data) => `/rooms/${data.roomId}/show`;
+
 const BedCreate = props => (
     <Create {...props}>
-        <SimpleForm redirect="show" toolbar={<CustomToolbar />}>
+        <SimpleForm redirect={redirect} toolbar={<CustomToolbar />}>
             <TextInput source="bedNumber" validate={[required()]} />
             <ReferenceInput
                 source="roomId"

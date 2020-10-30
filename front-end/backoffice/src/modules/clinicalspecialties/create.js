@@ -9,7 +9,7 @@ import CustomToolbar from "../../modules/components/CustomToolbar";
 
 const ClinicalSpecialtyCreate = props => (
     <Create {...props}>
-        <SimpleForm redirect="show" toolbar={<CustomToolbar record={'asdasdasd'} />}>
+        <SimpleForm redirect="list" toolbar={<CustomToolbar />}>
             <TextInput source="name" validate={[required()]} />
             <TextInput source="sctidCode" validate={[required()]} />
         </SimpleForm>

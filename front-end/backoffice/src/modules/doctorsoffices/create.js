@@ -8,9 +8,11 @@ import {
 import SgxSelectInput from "../../sgxSelectInput/SgxSelectInput";
 import CustomToolbar from "../../modules/components/CustomToolbar";
 
+const redirect = (basePath, id, data) => `/clinicalspecialtysectors/${data.clinicalSpecialtySectorId}/show`;
+
 const DoctorsOfficeCreate = props => (
     <Create {...props}>
-        <SimpleForm redirect="show" toolbar={<CustomToolbar />}>
+        <SimpleForm redirect={redirect} toolbar={<CustomToolbar />}>
             <TextInput source="description" validate={[required()]} />
             <SgxSelectInput source="clinicalSpecialtySectorId"
                             element="clinicalspecialtysectors"

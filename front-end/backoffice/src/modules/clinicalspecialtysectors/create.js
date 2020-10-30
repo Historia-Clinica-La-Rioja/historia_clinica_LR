@@ -9,10 +9,12 @@ import {
 } from 'react-admin';
 import CustomToolbar from "../../modules/components/CustomToolbar";
 
+const redirect = (basePath, id, data) => `/sectors/${data.sectorId}/show`;
+
 const searchToFilter = searchText => ({name: searchText ? searchText : -1});
 const ClinicalSpecialtySectorCreate = props => (
     <Create {...props}>
-        <SimpleForm redirect="show" toolbar={<CustomToolbar />}>
+        <SimpleForm redirect={redirect} toolbar={<CustomToolbar />}>
             <TextInput source="description" validate={[required()]} />
 
             <ReferenceInput

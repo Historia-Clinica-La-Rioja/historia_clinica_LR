@@ -14,7 +14,7 @@ const searchSpecialtyToFilter = searchText => ({name: searchText ? searchText : 
 const renderSpecialty = (choice) => `${choice.description} - ${choice.descriptionProfessionRef}`;
 const HealthcareProfessionalSpecialtyCreate = props => (
     <Create {...props}>
-        <SimpleForm redirect="show" toolbar={<CustomToolbar />}>
+        <SimpleForm redirect="list" toolbar={<CustomToolbar />}>
             <ReferenceInput
                 source="healthcareProfessionalId"
                 reference="healthcareprofessionals"

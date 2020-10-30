@@ -11,7 +11,7 @@ import CustomToolbar from "../../modules/components/CustomToolbar";
 
 const ProfessionalSpecialtyCreate = props => (
     <Create {...props}>
-        <SimpleForm redirect="show" toolbar={<CustomToolbar />} >
+        <SimpleForm redirect="list" toolbar={<CustomToolbar />} >
             <TextInput source="description" validate={[required()]} />
             <TextInput source="descriptionProfessionRef" validate={[required()]} />
             <TextInput source="sctidCode" validate={[required()]} />

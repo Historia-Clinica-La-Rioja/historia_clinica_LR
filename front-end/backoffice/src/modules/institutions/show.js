@@ -8,6 +8,7 @@ import {
     EditButton,
     ReferenceManyField,
     Datagrid,
+    ListButton
 } from 'react-admin';
 import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
@@ -16,6 +17,7 @@ const InstitutionShowActions = ({ data }) => {
     return (!data || !data.id) ? <TopToolbar/> :
         (
             <TopToolbar>
+                <ListButton basePath="/institutions" label="Listar Instituciones"/>
                 <EditButton basePath="/institutions" record={{ id: data.id }} />
             </TopToolbar>
         )
