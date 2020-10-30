@@ -91,6 +91,7 @@ export class NuevaConsultaComponent implements OnInit {
 					this.clinicalSpecialtyService.getAppointmentClinicalSpecialty(idPaciente).subscribe(specialty => {
 						this.specialties = [specialty];
 						this.defaultSpecialty = specialty;
+						this.formEvolucion.get('clinicalSpecialty').setValue(this.defaultSpecialty);
 					});
 				});
 			}
@@ -99,6 +100,7 @@ export class NuevaConsultaComponent implements OnInit {
 					this.specialties = specialties;
 					this.fixedSpecialty = false;
 					this.defaultSpecialty = specialties[0];
+					this.formEvolucion.get('clinicalSpecialty').setValue(this.defaultSpecialty);
 				});
 			}
 		});
@@ -117,7 +119,8 @@ export class NuevaConsultaComponent implements OnInit {
 		});
 
 		this.formEvolucion = this.formBuilder.group({
-			evolucion: [null]
+			evolucion: [null],
+			clinicalSpecialty: []
 		});
 		this.motivoNuevaConsultaService.error$.subscribe(motivoError => {
 			this.errores[0]=motivoError;
@@ -247,7 +250,9 @@ export class NuevaConsultaComponent implements OnInit {
 			),
 			procedures: this.procedimientoNuevaConsultaService.getProcedimientos(),
 			reasons: this.motivoNuevaConsultaService.getMotivosConsulta(),
-			vitalSigns: this.signosVitalesNuevaConsultaService.getSignosVitales()
+			vitalSigns: this.signosVitalesNuevaConsultaService.getSignosVitales(),
+		    clinicalSpecialtyId: this.defaultSpecialty.id
+
 		};
 	}
 
@@ -255,5 +260,9 @@ export class NuevaConsultaComponent implements OnInit {
 		if(this.problemasNuevaConsultaService.editProblem()) {
 			this.readOnlyProblema = false;
 		}
+	}
+
+	setDefaultSpecialty(){
+		this.defaultSpecialty = this.formEvolucion.controls.clinicalSpecialty.value;
 	}
 }

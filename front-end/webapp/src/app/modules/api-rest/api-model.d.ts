@@ -290,6 +290,7 @@ export interface CreateAppointmentDto {
 export interface CreateOutpatientDto {
     allergies: OutpatientAllergyConditionDto[];
     anthropometricData?: OutpatientAnthropometricDataDto;
+    clinicalSpecialtyId?: number;
     evolutionNote?: string;
     familyHistories: OutpatientFamilyHistoryDto[];
     medications: OutpatientMedicationDto[];

@@ -9,9 +9,13 @@
 	<div fxLayout="row">
 		<h2 [translate]="'Especialidad'"></h2>
 	</div>
-	<div fxLayout="row">
+	<div fxLayout="row" [formGroup]="formEvolucion">
 		<mat-form-field appearance="outline">
-			<mat-select id="clinicalSpecialtyId" [ngModel]="defaultSpecialty" (selectionChange)="true" [disabled]="fixedSpecialty">
+			<mat-select id="clinicalSpecialtyId"
+						name="clinicalSpecialty"
+						formControlName="clinicalSpecialty"
+						(selectionChange)="setDefaultSpecialty()"
+						[attr.disabled]="fixedSpecialty">
 				<mat-option *ngFor="let clinicalSpecialty of this.specialties" [value]="clinicalSpecialty">
 					<span class="mat-body">{{clinicalSpecialty.name}}</span>
 				</mat-option>
