@@ -50,12 +50,13 @@ public class OutpatientConsultation extends SGXAuditableEntity {
     @Column(name = "billable", nullable = false)
     private Boolean billable;
 
-    public OutpatientConsultation(Integer institutionId, Integer patientId, Integer doctorId, boolean billable) {
+    public OutpatientConsultation(Integer institutionId, Integer patientId, Integer doctorId, boolean billable, Integer clinicalSpecialtyId) {
         super();
         this.institutionId = institutionId;
         this.patientId = patientId;
         this.billable = billable;
         this.startDate = LocalDate.now();
         this.doctorId = doctorId;
+        this.clinicalSpecialtyId = clinicalSpecialtyId;
     }
 }

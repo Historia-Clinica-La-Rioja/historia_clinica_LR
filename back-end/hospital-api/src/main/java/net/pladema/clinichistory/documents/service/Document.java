@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.documents.service;
 
+import net.pladema.clinichistory.hospitalization.service.domain.ClinicalSpecialtyBo;
 import net.pladema.clinichistory.ips.service.domain.*;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProblemBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProcedureBo;
@@ -38,4 +39,6 @@ public interface Document {
     DocumentObservationsBo getNotes();
 
     List<ReasonBo> getReasons();
+
+    ClinicalSpecialtyBo getClinicalSpecialty();
 }

@@ -22,9 +22,9 @@ public class CreateOutpatientConsultationServiceImpl implements CreateOutpatient
 
 
     @Override
-    public OutpatientBo create(Integer institutionId, Integer patientId, Integer doctorId, boolean billable) {
+    public OutpatientBo create(Integer institutionId, Integer patientId, Integer doctorId, boolean billable, Integer clinicalSpecialtyId) {
         LOG.debug("Input parameters institution {}, patientId {}, billable {}", institutionId, patientId, billable);
-        OutpatientConsultation newOC = new OutpatientConsultation(institutionId, patientId, doctorId, billable);
+        OutpatientConsultation newOC = new OutpatientConsultation(institutionId, patientId, doctorId, billable, clinicalSpecialtyId);
         newOC = outpatientConsultationRepository.save(newOC);
         OutpatientBo result = createOutpatientBo(newOC);
         LOG.debug(OUTPUT, result);

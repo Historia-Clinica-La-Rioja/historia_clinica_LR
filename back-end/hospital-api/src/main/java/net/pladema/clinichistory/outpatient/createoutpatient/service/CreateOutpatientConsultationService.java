@@ -4,5 +4,5 @@ import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.Outp
 
 public interface CreateOutpatientConsultationService {
 
-    OutpatientBo create(Integer institutionId, Integer patientId, Integer doctorId, boolean billable);
+    OutpatientBo create(Integer institutionId, Integer patientId, Integer doctorId, boolean billable, Integer clinicalSpecialtyId);
 }

@@ -1,5 +1,6 @@
 package net.pladema.staff.repository;
 
+import net.pladema.clinichistory.hospitalization.service.domain.ClinicalSpecialtyBo;
 import net.pladema.staff.repository.entity.ClinicalSpecialty;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -28,4 +29,10 @@ public interface ClinicalSpecialtyRepository extends JpaRepository<ClinicalSpeci
             "ON cs.id = css.clinicalSpecialtyId " +
             "WHERE d.id = :diaryId")
     ClinicalSpecialty getClinicalSpecialtyByDiary(@Param("diaryId") Integer diaryId);
+
+    @Transactional(readOnly = true)
+    @Query(value = " SELECT new net.pladema.clinichistory.hospitalization.service.domain.ClinicalSpecialtyBo(cs.id, cs.name) " +
+            "FROM ClinicalSpecialty cs " +
+            "WHERE cs.id = :clinicalSpecialtyId")
+    ClinicalSpecialtyBo findClinicalSpecialtyBoById(@Param("clinicalSpecialtyId") Integer clinicalSpecialtyId);
 }

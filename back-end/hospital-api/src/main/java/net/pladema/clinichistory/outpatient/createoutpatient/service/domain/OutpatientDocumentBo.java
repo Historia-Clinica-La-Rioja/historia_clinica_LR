@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.pladema.clinichistory.documents.service.Document;
+import net.pladema.clinichistory.hospitalization.service.domain.ClinicalSpecialtyBo;
 import net.pladema.clinichistory.ips.service.domain.*;
 
 import java.util.ArrayList;
@@ -42,6 +43,8 @@ public class OutpatientDocumentBo implements Document {
     private VitalSignBo vitalSigns;
 
     private List<ReasonBo> reasons = new ArrayList<>();
+
+    private ClinicalSpecialtyBo clinicalSpecialty;
 
     @Override
     public HealthConditionBo getMainDiagnosis() {

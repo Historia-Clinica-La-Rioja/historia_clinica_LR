@@ -48,6 +48,10 @@ public class CreateOutpatientDto {
     @Nullable
     private OutpatientVitalSignDto vitalSigns;
 
+    @Valid
+    @Nullable
+    private Integer clinicalSpecialtyId;
+
 
 
 }

@@ -21,11 +21,11 @@ import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.Outp
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientEvolutionSummaryBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ReasonBo;
 import net.pladema.medicalconsultation.appointment.controller.service.AppointmentExternalService;
-import net.pladema.sgx.pdf.PDFDocumentException;
-import net.pladema.sgx.pdf.PdfService;
 import net.pladema.sgx.dates.configuration.DateTimeProvider;
+import net.pladema.sgx.pdf.PDFDocumentException;
 import net.pladema.sgx.security.utils.UserInfo;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalServiceImpl;
+import net.pladema.staff.service.ClinicalSpecialtyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,8 +40,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -58,6 +56,8 @@ public class OutpatientConsultationController implements OutpatientConsultationA
     private final CreateOutpatientDocumentService createOutpatientDocumentService;
 
     private final ReasonService reasonService;
+
+    private final ClinicalSpecialtyService clinicalSpecialtyService;
 
     private final HealthcareProfessionalExternalServiceImpl healthcareProfessionalExternalService;
 
@@ -82,7 +82,8 @@ public class OutpatientConsultationController implements OutpatientConsultationA
                                             AppointmentExternalService appointmentExternalService,
                                             DateTimeProvider dateTimeProvider,
                                             CreateDocumentFile createDocumentFile,
-                                            OutpatientSummaryService outpatientSummaryService) {
+                                            OutpatientSummaryService outpatientSummaryService,
+                                            ClinicalSpecialtyService clinicalSpecialtyService) {
         this.createOutpatientConsultationService = createOutpatientConsultationService;
         this.createOutpatientDocumentService = createOutpatientDocumentService;
         this.reasonService = reasonService;
@@ -92,6 +93,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         this.dateTimeProvider = dateTimeProvider;
         this.createDocumentFile = createDocumentFile;
         this.outpatientSummaryService = outpatientSummaryService;
+        this.clinicalSpecialtyService = clinicalSpecialtyService;
     }
 
     @Override
@@ -102,13 +104,17 @@ public class OutpatientConsultationController implements OutpatientConsultationA
             CreateOutpatientDto createOutpatientDto) throws IOException, PDFDocumentException {
         LOG.debug("Input parameters -> institutionId {}, patientId {}, createOutpatientDto {}", institutionId, patientId, createOutpatientDto);
         Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
-        OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, true);
+        OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, true,
+                createOutpatientDto.getClinicalSpecialtyId());
 
         List<ReasonBo> reasons = outpatientConsultationMapper.fromListReasonDto(createOutpatientDto.getReasons());
         reasons = reasonService.addReasons(newOutPatient.getId(), reasons);
 
         OutpatientDocumentBo outpatient = outpatientConsultationMapper.fromCreateOutpatientDto(createOutpatientDto);
         outpatient = createOutpatientDocumentService.create(newOutPatient.getId(), patientId, outpatient);
+
+        outpatient.setClinicalSpecialty(clinicalSpecialtyService.getClinicalSpecialty(createOutpatientDto.getClinicalSpecialtyId())
+                .orElse(null));
 
         if (!disableValidation && appointmentExternalService.hasConfirmedAppointment(patientId,doctorId,dateTimeProvider.nowDate()))
             appointmentExternalService.serveAppointment(patientId, doctorId, dateTimeProvider.nowDate());
@@ -138,7 +144,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
             OutpatientImmunizationDto vaccineDto) throws IOException, PDFDocumentException {
         LOG.debug("Input parameters -> institutionId {}, patientId {}, OutpatientImmunizationDto {}", institutionId, patientId, vaccineDto);
         Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
-        OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, true);
+        OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, true, null);
 
         ImmunizationBo immunizationBo = outpatientConsultationMapper.fromOutpatientImmunizationDto(vaccineDto);
         immunizationBo.setInstitutionId(institutionId);
@@ -166,7 +172,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
             OutpatientUpdateImmunizationDto outpatientUpdateImmunization) throws IOException, PDFDocumentException {
         LOG.debug("Input parameters -> institutionId {}, patientId {}, OutpatientImmunizationDto {}", institutionId, patientId, outpatientUpdateImmunization);
         Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
-        OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, false);
+        OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, false, null);
 
         ImmunizationBo immunizationBo = outpatientConsultationMapper.fromOutpatientImmunizationDto(outpatientUpdateImmunization);
         immunizationBo.setInstitutionId(institutionId);
@@ -190,7 +196,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
             @Valid HealthConditionNewConsultationDto solvedProblemDto) throws IOException, PDFDocumentException {
         LOG.debug("Input parameters -> institutionId {}, patientId {}, HealthConditionNewConsultationDto {}", institutionId, patientId, solvedProblemDto);
         Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
-        OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, false);
+        OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, false, null);
 
         OutpatientDocumentBo outpatient = new OutpatientDocumentBo();
         outpatient.setProblems(Collections.singletonList(outpatientConsultationMapper.fromHealthConditionNewConsultationDto(solvedProblemDto)));

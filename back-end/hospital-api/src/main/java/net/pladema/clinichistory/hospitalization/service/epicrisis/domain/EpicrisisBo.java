@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.documents.service.Document;
+import net.pladema.clinichistory.hospitalization.service.domain.ClinicalSpecialtyBo;
 import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentStatus;
 import net.pladema.clinichistory.ips.service.domain.*;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProblemBo;
@@ -59,5 +60,10 @@ public class EpicrisisBo implements Document {
     @Override
     public List<ReasonBo> getReasons() {
         return Collections.emptyList();
+    }
+
+    @Override
+    public ClinicalSpecialtyBo getClinicalSpecialty() {
+        return null;
     }
 }

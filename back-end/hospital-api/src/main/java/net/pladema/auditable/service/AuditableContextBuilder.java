@@ -65,6 +65,7 @@ public class AuditableContextBuilder {
 		contextMap.put("vitalSigns", vitalSignMapper.toVitalSignsReportDto(document.getVitalSigns()));
 		contextMap.put("notes", document.getNotes());
 		contextMap.put("author", responsibleDoctorFromDocumentLoader.apply(document.getId()));
+		contextMap.put("clinicalSpecialty",document.getClinicalSpecialty());
 	}
 
 
