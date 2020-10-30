@@ -19,9 +19,9 @@ const BedFilter = props =>(
     <Filter {...props}>
         <TextInput source="bedNumber" />
         <SgxSelectInput source="roomId" element="rooms" optionText="description" allowEmpty={false} />
-        <BooleanInput label="Habilitada" source="enabled" />
-        <BooleanInput label="Disponible" source="available" />
-        <BooleanInput label="Libre" source="free" />
+        <BooleanInput label="Habilitada" source="enabled" defaultValue={true}/>
+        <BooleanInput label="Disponible" source="available" defaultValue={true}/>
+        <BooleanInput label="Libre" source="free" defaultValue={true}/>
     </Filter>
 );
 
