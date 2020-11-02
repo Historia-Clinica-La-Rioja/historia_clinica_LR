@@ -145,6 +145,10 @@ export class MedicalCoverageComponent implements OnInit {
 		});
 	}
 
+	close() {
+		this.dialogRef.close();
+	}
+
 	getPatientHealthInsurances(): PatientMedicalCoverage[] {
 		return this.patientMedicalCoverages.filter(s => s.medicalCoverage.type === 'HealthInsuranceDto');
 	}

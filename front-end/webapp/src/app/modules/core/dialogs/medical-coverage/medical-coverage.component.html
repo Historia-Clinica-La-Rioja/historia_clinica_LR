@@ -52,7 +52,7 @@
 	<mat-card fxLayout="column" fxLayoutGap="10px">
 		<strong>Prepagas activas</strong>
 		<div fxLayout="column" fxLayoutGap="10px">
-			<mat-card *ngFor="let patientPrivateHealthInsurance of getPatientPrivateHealthInsurances()" >
+			<mat-card *ngFor="let patientPrivateHealthInsurance of getPatientPrivateHealthInsurances()">
 				<mat-card-content>
 					<div fxLayout="row" fxLayoutAlign="space-between">
 						<span>{{getPrivateHealthInsuranceText(patientPrivateHealthInsurance.medicalCoverage)}}</span>
@@ -117,6 +117,9 @@
 
 </div>
 <div mat-dialog-actions align="end">
+	<button mat-stroked-button color="primary" [mat-dialog-close]=true class="uppercase"
+		id="cancel-button" name="cancel-button" (click)="close()">
+		Cancelar</button>
 	<button mat-flat-button color="primary" [mat-dialog-close]=true cdkFocusInitial class="uppercase"
 		id="okButton-button" name="okButton-button" (click)="save()">
 		Guardar</button>

@@ -234,9 +234,10 @@ export class NewAppointmentComponent implements OnInit {
 					const patientCoverages: PatientMedicalCoverageDto[] =
 						values.patientMedicalCoverages.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
 
-					this.patientService.addPatientMedicalCoverages(this.patientId, patientCoverages).subscribe( _ => {
+					this.patientService.addPatientMedicalCoverages(this.patientId, patientCoverages).subscribe(_ => {
 						this.setMedicalCoverages();
-					});
+						this.snackBarService.showSuccess('Las coberturas fueron actualizadas correctamente');
+					}), _ => this.snackBarService.showError('Ocurrió un error al actualizar las coberturas');
 				}
 			}
 		);
