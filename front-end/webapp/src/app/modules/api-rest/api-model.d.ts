@@ -853,6 +853,7 @@ export interface PersonBasicDataResponseDto extends Serializable {
     birthDate: string;
     firstName: string;
     lastName: string;
+    photo: string;
 }
 
 export interface PersonPhotoDto {

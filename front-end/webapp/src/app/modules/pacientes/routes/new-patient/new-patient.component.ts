@@ -3,7 +3,7 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Moment } from 'moment';
 import * as moment from 'moment';
-import { APatientDto, BMPatientDto, GenderDto, IdentificationTypeDto } from '@api-rest/api-model';
+import { APatientDto, BMPatientDto, GenderDto, IdentificationTypeDto, PersonPhotoDto } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID } from "@core/utils/form.utils";
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
@@ -36,6 +36,7 @@ export class NewPatientComponent implements OnInit {
 	public identificationTypeList: IdentificationTypeDto[];
 	private readonly routePrefix;
 	public patientType;
+	public personPhoto : PersonPhotoDto;
 
 	constructor(private formBuilder: FormBuilder,
 		private router: Router,
@@ -96,6 +97,7 @@ export class NewPatientComponent implements OnInit {
 				});
 				this.lockFormField(params);
 				this.patientType = params.typeId;
+				this.personPhoto = { imageData: params.photo? params.photo : null};
 			});
 
 		this.personMasterDataService.getGenders()
@@ -146,6 +148,8 @@ export class NewPatientComponent implements OnInit {
 			let personRequest: APatientDto = this.mapToPersonRequest();
 			this.patientService.addPatient(personRequest)
 				.subscribe(patientId => {
+					if (this.personPhoto != null)
+						this.patientService.addPatientPhoto(patientId, this.personPhoto).subscribe();
 					this.router.navigate([this.routePrefix + ROUTE_PROFILE + patientId]);
 					this.snackBarService.showSuccess('pacientes.new.messages.SUCCESS');
 				}, _ => this.snackBarService.showError('pacientes.new.messages.ERROR'));

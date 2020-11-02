@@ -21,4 +21,6 @@ public class PersonBasicDataResponseDto implements Serializable{
     private String lastName;
 
     private String birthDate;
+
+    private String photo;
 }

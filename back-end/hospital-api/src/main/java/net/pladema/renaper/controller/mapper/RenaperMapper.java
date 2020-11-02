@@ -19,6 +19,7 @@ public interface RenaperMapper {
     @Mapping(target = "firstName", source = "nombres")
     @Mapping(target = "lastName", source = "apellido")
     @Mapping(target = "birthDate", source = "fechaNacimiento")
+    @Mapping(target = "photo", source = "foto")
     public PersonBasicDataResponseDto fromPersonDataResponse(PersonDataResponse personDataResponse);
 
     @Named("fromPersonMedicalCoverageResponse")
