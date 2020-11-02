@@ -60,22 +60,10 @@ public class AppointmentDiaryVo {
         return appointment.getIsOverturn();
     }
 
-    public String getMedicalCoverageName(){
+    public Integer getPatientMedicalCoverageId(){
         if (appointment == null)
             return null;
-        return appointment.getMedicalCoverageName();
-    }
-
-    public String getMedicalCoverageAffiliateNumber(){
-        if (appointment == null)
-            return null;
-        return appointment.getMedicalCoverageAffiliateNumber();
-    }
-
-    public Integer getHealthInsuranceId(){
-        if (appointment == null)
-            return null;
-        return appointment.getHealthInsuranceId();
+        return appointment.getPatientMedicalCoverageId();
     }
 
     public String getPhoneNumber() {

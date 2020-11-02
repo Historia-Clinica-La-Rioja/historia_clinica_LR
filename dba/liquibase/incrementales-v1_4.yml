@@ -275,3 +275,238 @@ databaseChangeLog:
                     nullable: true
             tableName: person_extended
 
+
+- changeSet:
+    id: medical_coverage-createTable
+    author: lbergottini
+    comment: Create table medical_coverage
+    changes: 
+    - createTable: 
+        tableName: medical_coverage
+        columns: 
+            - column:
+                autoIncrement: true
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_medical_coverage
+                name: id
+                type: int
+            - column:
+                name: name
+                type: varchar
+                constraints:
+                    nullable: false
+                    
+- changeSet:
+    id: private_health_insurance-createTable  
+    comment: Create table private_health_insurance
+    author: jlardapide
+    changes: 
+    - createTable: 
+        tableName: private_health_insurance
+        columns: 
+        - column:
+            constraints:
+                primaryKey: true
+                primaryKeyName: PK_private_health_insurance
+                references: medical_coverage(id)
+                foreignKeyName: FK_medical_coverage
+                nullable: false
+            name: id
+            type: int
+        - column:
+            name: plan
+            type: varchar(10)
+
+- changeSet:
+    id: private_health_insurance_details-createTable
+    comment: Create table private_health_insurance_details
+    author: jlardapide
+    changes:
+        - createTable:
+            tableName: private_health_insurance_details
+            columns:
+                - column:
+                    name: id
+                    type: int
+                    autoIncrement: true
+                    constraints:
+                        primaryKey: true
+                        primaryKeyName: PK_private_health_insurance_details
+                - column:
+                    name: start_date
+                    type: date
+                - column:
+                    name: end_date
+                    type: date
+    
+- changeSet:
+    id: patient_medical_coverage-table
+    author: jlardapide
+    changes: 
+    - createTable: 
+        tableName: patient_medical_coverage
+        columns:
+        - column:
+                autoIncrement: true
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_patient_medical_coverage
+                name: id
+                type: int
+        - column:
+            constraints:
+                nullable: false
+                references: patient(id)
+                foreignKeyName: FK_patient_id
+            name: patient_id
+            type: int
+        - column:
+            constraints:
+                nullable: false
+                references: medical_coverage(id)
+                foreignKeyName: FK_medical_coverage_id
+            name: medical_coverage_id
+            type: int
+        - column:
+            constraints:
+                nullable: false
+            name: active
+            type: boolean
+        - column:
+            name: vigency_date
+            type: date
+        - column:
+            name: affiliate_number 
+            type: varchar(25)
+        - column:
+            name: private_health_insurance_details_id
+            constraints:
+                references: private_health_insurance_details(id)
+                foreignKeyName: FK_private_health_insurance_details
+            type: int
+
+- changeSet:
+    id: health_insurance-hierarchy
+    author: jlardapide
+    changes:
+        - createTable: 
+            tableName: health_insurance_v2
+            columns:
+            - column:
+                    constraints:
+                        primaryKey: true
+                        primaryKeyName: PK_health_insurance_v2
+                        references: medical_coverage(id)
+                        foreignKeyName: FK_medical_coverage
+                    name: id
+                    type: int      
+            - column:
+                constraints:
+                    unique: true
+                name: rnos
+                type: int
+            - column:
+                name: acronym
+                type: varchar(18)
+        - sql:
+            sql: |-                     
+                INSERT INTO medical_coverage(name)
+                        SELECT DISTINCT hi.name
+                        FROM health_insurance hi
+                ;
+
+                INSERT INTO health_insurance_v2(id,rnos,acronym)
+                    SELECT mc.id, hi.rnos, hi.acronym
+                    FROM health_insurance hi 
+                        JOIN medical_coverage mc on (mc.name = hi.name);     
+        - dropTable:
+            cascadeConstraints: true
+            tableName: health_insurance
+        - renameTable:
+            newTableName: health_insurance
+            oldTableName: health_insurance_v2
+
+- changeSet:
+    id: patient-medical_coverage-update
+    author: jlardapide
+    changes:
+        - addColumn:
+            tableName: appointment
+            columns:
+                - column:
+                    constraints:
+                        references: patient_medical_coverage(id)
+                        foreignKeyName: FK_patient_medical_coverage_id
+                    name: patient_medical_coverage_id
+                    type: int
+        - sql:
+            sql: |-
+                    with rows as (
+                    insert into medical_coverage(name)
+                    select distinct medical_coverage_name
+                    from (
+                        select p.medical_coverage_name
+                        from patient p
+                        where p.medical_coverage_name is not null 
+                        union
+                        select a.medical_coverage_name
+                        from appointment a 
+                        where a.medical_coverage_name is not null
+                    ) as naming
+                    returning id
+                    )
+                    insert into private_health_insurance(id)
+                    select id
+                    FROM rows 
+                    ;
+                    create temp table coverage as (
+                    select p.id, p.id as patient_id, phi.id as private_id, null as public_id,
+                    p.medical_coverage_affiliate_number, false as from_appointment
+                    from patient as p
+                    left join medical_coverage as mc on (p.medical_coverage_name = mc.name)
+                    left join private_health_insurance phi on (mc.id = phi.id)
+                    union
+                    select a.id, a.patient_id, phi.id as private_id, hi.id as public_id, a.medical_coverage_affiliate_number, true as from_appointment
+                    from appointment a
+                    left join medical_coverage as mc on (a.medical_coverage_name = mc.name)
+                    left join private_health_insurance phi on (mc.id = phi.id)
+                    left join health_insurance as hi on (a.health_insurance_id = hi.rnos)
+                    )
+                    ;
+                    insert into patient_medical_coverage (patient_id, medical_coverage_id, active, affiliate_number)
+                    select patient_id, private_id, true, medical_coverage_affiliate_number
+                    from coverage
+                    where private_id is not null
+                    union
+                    select patient_id, public_id, true, medical_coverage_affiliate_number
+                    from coverage
+                    where public_id is not null
+                    ;
+                    update appointment a
+                    set patient_medical_coverage_id = (
+                    select 	pmc.id as id
+                    from coverage as c 
+                    join patient_medical_coverage as pmc on (c.patient_id = pmc.patient_id and c.medical_coverage_affiliate_number = pmc.affiliate_number)
+                    where c.from_appointment is true and c.id = a.id
+                    order by medical_coverage_id desc
+                    limit 1
+                    );
+        - dropColumn:
+            columnName: medical_coverage_affiliate_number
+            tableName: patient
+        - dropColumn:
+            columnName: medical_coverage_name
+            tableName: patient
+        - dropColumn:
+            columnName: health_insurance_id
+            tableName: patient
+        - dropColumn:
+            columnName: health_insurance_id
+            tableName: appointment 
+        - dropColumn:
+            columnName: medical_coverage_affiliate_number
+            tableName: appointment
+        - dropColumn:
+            columnName: medical_coverage_name
+            tableName: appointment

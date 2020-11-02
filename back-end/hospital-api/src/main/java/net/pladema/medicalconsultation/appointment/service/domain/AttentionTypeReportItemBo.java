@@ -14,20 +14,14 @@ public class AttentionTypeReportItemBo {
 
     private final Integer patientId;
 
-    private final String healthInsuranceName;
-
-    private final String medicalCoverageName;
-
-    private final String medicalCoverageAffiliateNumber;
+    private final Integer patientMedicalCoverageId;
 
     private final String appointmentState;
 
     public AttentionTypeReportItemBo(DailyAppointmentVo dailyAppointmentVo){
         this.hour = dailyAppointmentVo.getHour();
         this.patientId = dailyAppointmentVo.getPatientId();
-        this.healthInsuranceName = dailyAppointmentVo.getHealthInsuranceName();
-        this.medicalCoverageName = dailyAppointmentVo.getMedicalCoverageName();
-        this.medicalCoverageAffiliateNumber = dailyAppointmentVo.getMedicalCoverageAffiliateNumber();
+        this.patientMedicalCoverageId = dailyAppointmentVo.getPatientMedicalCoverageId();
         this.appointmentState = dailyAppointmentVo.getAppointmentState();
     }
 }

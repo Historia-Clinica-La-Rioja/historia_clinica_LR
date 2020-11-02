@@ -25,11 +25,7 @@ public class AttentionTypeReportItemDto {
 
     private final String identificationNumber;
 
-    private final String healthInsuranceName;
-
-    private final String medicalCoverageName;
-
-    private final String medicalCoverageAffiliateNumber;
+    private final Integer patientMedicalCoverageId;
 
     private final String appointmentState;
 
@@ -42,9 +38,7 @@ public class AttentionTypeReportItemDto {
         this.otherLastNames = person.getOtherLastNames();
         this.identificationType = person.getIdentificationType();
         this.identificationNumber = person.getIdentificationNumber();
-        this.healthInsuranceName = appointment.getHealthInsuranceName();
-        this.medicalCoverageName = appointment.getMedicalCoverageName();
-        this.medicalCoverageAffiliateNumber = appointment.getMedicalCoverageAffiliateNumber();
+        this.patientMedicalCoverageId = appointment.getPatientMedicalCoverageId();
         this.appointmentState = appointment.getAppointmentState();
     }
 }

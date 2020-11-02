@@ -1,19 +1,20 @@
 package net.pladema.sgx.healthinsurance.service.impl;
 
-import java.util.Collection;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
+import net.pladema.patient.repository.domain.HealthInsuranceVo;
+import net.pladema.patient.repository.entity.MedicalCoverage;
+import net.pladema.person.repository.HealthInsuranceRepository;
+import net.pladema.person.repository.MedicalCoverageRepository;
+import net.pladema.person.repository.entity.HealthInsurance;
+import net.pladema.renaper.services.domain.PersonMedicalCoverageBo;
 import net.pladema.sgx.exceptions.NotFoundException;
+import net.pladema.sgx.healthinsurance.service.HealthInsuranceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import net.pladema.person.repository.HealthInsuranceRepository;
-import net.pladema.person.repository.entity.HealthInsurance;
-import net.pladema.renaper.services.domain.PersonMedicalCoverageBo;
-import net.pladema.sgx.healthinsurance.service.HealthInsuranceService;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 import static net.pladema.sgx.healthinsurance.service.impl.HealthInsuranceRnosGenerator.calculateRnos;
 
@@ -31,15 +32,17 @@ public class HealthInsuranceServiceImpl implements HealthInsuranceService {
 
     private final HealthInsuranceRepository healthInsuranceRepository;
 
-    public HealthInsuranceServiceImpl(HealthInsuranceRepository healthInsuranceRepository){
+    private final MedicalCoverageRepository medicalCoverageRepository;
+
+    public HealthInsuranceServiceImpl(HealthInsuranceRepository healthInsuranceRepository, MedicalCoverageRepository medicalCoverageRepository){
         super();
         this.healthInsuranceRepository = healthInsuranceRepository;
+        this.medicalCoverageRepository = medicalCoverageRepository;
     }
 
     @Override
     public Collection<PersonMedicalCoverageBo> getAll() {
-        Sort sort = Sort.by(Sort.Direction.ASC, "name");
-        Collection<HealthInsurance> medicalCoveragedata = healthInsuranceRepository.findAll(sort);
+        Collection<HealthInsuranceVo> medicalCoveragedata = healthInsuranceRepository.getAllWithNames(Sort.by(Sort.Direction.ASC, "name"));
         Collection<PersonMedicalCoverageBo> result = medicalCoveragedata.stream()
                 .map(PersonMedicalCoverageBo::new)
                 .collect(Collectors.toList());
@@ -52,15 +55,17 @@ public class HealthInsuranceServiceImpl implements HealthInsuranceService {
 		LOG.debug("Input-> newHealthInsurances {}", newHealthInsurances);
 		newHealthInsurances.stream().filter(hi -> !healthInsuranceRepository.existsById(calculateRnos(hi)))
 				.forEach(hi -> {
+				    MedicalCoverage saved = medicalCoverageRepository
+                            .save(new MedicalCoverage(hi.getName()));
 					healthInsuranceRepository
-							.save(new HealthInsurance(calculateRnos(hi), hi.getName(), hi.getAcronym()));
+							.save(new HealthInsurance(saved.getId(), saved.getName(), calculateRnos(hi), hi.getAcronym()));
 					LOG.debug("HealthInsurance Added-> newHealthInsurance {}", hi);
 				});
 	}
 
     @Override
     public PersonMedicalCoverageBo get(Integer rnos) {
-        HealthInsurance healthInsuranceOptional = healthInsuranceRepository.findById(rnos).orElseThrow(() -> new NotFoundException(WRONG_RNOS, HEALTH_INSURANCE_NOT_FOUND));
+        HealthInsuranceVo healthInsuranceOptional = healthInsuranceRepository.findByRnos(rnos).orElseThrow(() -> new NotFoundException(WRONG_RNOS, HEALTH_INSURANCE_NOT_FOUND));
         PersonMedicalCoverageBo result = new PersonMedicalCoverageBo(healthInsuranceOptional);
         return result;
     }

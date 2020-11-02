@@ -38,11 +38,7 @@ public class AppointmentBo {
 
     private Integer openingHoursId;
 
-    private String medicalCoverageName;
-
-    private String medicalCoverageAffiliateNumber;
-
-    private Integer healthInsuranceId;
+    private Integer patientMedicalCoverageId;
 
     private Short medicalAttentionTypeId;
     
@@ -60,9 +56,7 @@ public class AppointmentBo {
         this.appointmentStateId = appointmentDiaryVo.getAppointmentStateId();
         this.overturn = appointmentDiaryVo.isOverturn();
         this.openingHoursId = null;
-        this.medicalCoverageName = appointmentDiaryVo.getMedicalCoverageName();
-        this.medicalCoverageAffiliateNumber = appointmentDiaryVo.getMedicalCoverageAffiliateNumber();
-        this.healthInsuranceId = appointmentDiaryVo.getHealthInsuranceId();
+        this.patientMedicalCoverageId = appointmentDiaryVo.getPatientMedicalCoverageId();
         this.medicalAttentionTypeId = appointmentDiaryVo.getMedicalAttentionTypeId();
         this.phoneNumber = appointmentDiaryVo.getPhoneNumber();
     }
@@ -76,9 +70,7 @@ public class AppointmentBo {
         this.appointmentStateId = appointmentVo.getAppointmentStateId();
         this.overturn = appointmentVo.isOverturn();
         this.openingHoursId = null;
-        this.medicalCoverageName = appointmentVo.getMedicalCoverageName();
-        this.medicalCoverageAffiliateNumber = appointmentVo.getMedicalCoverageAffiliateNumber();
-        this.healthInsuranceId = appointmentVo.getHealthInsuranceId();
+        this.patientMedicalCoverageId = appointmentVo.getPatientMedicalCoverageId();
         this.medicalAttentionTypeId = appointmentVo.getMedicalAttentionTypeId();
         this.stateChangeReason = appointmentVo.getStateChangeReason();
         this.diaryId = appointmentVo.getDiaryId();
@@ -93,9 +85,7 @@ public class AppointmentBo {
                 appointment.getAppointmentStateId(),
                 appointment.getIsOverturn(),
                 null,
-                appointment.getMedicalCoverageName(),
-                appointment.getMedicalCoverageAffiliateNumber(),
-                appointment.getHealthInsuranceId(),
+                appointment.getPatientMedicalCoverageId(),
                 null,
                 null,
                 appointment.getPhoneNumber());

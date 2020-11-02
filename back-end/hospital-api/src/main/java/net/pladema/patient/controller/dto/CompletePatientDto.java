@@ -26,9 +26,6 @@ public class CompletePatientDto extends BasicPatientDto {
 
     public CompletePatientDto(Patient patient, PatientType patientType, BasicDataPersonDto personData) {
         super(patient.getId(),personData,patient.getTypeId());
-        this.medicalCoverageName = patient.getMedicalCoverageName();
-        this.medicalCoverageAffiliateNumber = patient.getMedicalCoverageAffiliateNumber();
-
         this.patientType = new PatientType();
         this.patientType.setId(patientType.getId());
         this.patientType.setDescription(patientType.getDescription());

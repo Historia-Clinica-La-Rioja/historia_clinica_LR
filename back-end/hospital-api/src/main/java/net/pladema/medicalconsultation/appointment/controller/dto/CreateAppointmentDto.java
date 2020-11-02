@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
 import org.hibernate.validator.constraints.Length;
 
@@ -41,20 +42,14 @@ public class CreateAppointmentDto {
     @NotNull
     private boolean isOverturn = false;
 
-    @Nullable
-    private String medicalCoverageName;
-
-    @NotNull(message = "{value.mandatory}")
-    private String medicalCoverageAffiliateNumber;
-
-    @Nullable
-    private Integer healthInsuranceId;
+    @NotNull
+    Integer patientMedicalCoverageId;
 
     @Nullable
     @Length(max = 20, message = "{appointment.new.phoneNumber.invalid}")
     private String phoneNumber;
 
     public boolean hasMedicalCoverage() {
-        return medicalCoverageName != null || (healthInsuranceId != null && !healthInsuranceId.equals(-1));
+        return patientMedicalCoverageId != null;
     }
 }

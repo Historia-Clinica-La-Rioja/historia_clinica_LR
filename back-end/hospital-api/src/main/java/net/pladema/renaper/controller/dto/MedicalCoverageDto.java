@@ -9,6 +9,8 @@ import lombok.Value;
 @ToString
 public class MedicalCoverageDto {
 
+    Integer id;
+
     String rnos;
 
     String name;

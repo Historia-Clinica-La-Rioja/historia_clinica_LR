@@ -7,34 +7,29 @@ import net.pladema.address.controller.service.AddressExternalService;
 import net.pladema.patient.controller.constraints.PatientUpdateValid;
 import net.pladema.patient.controller.dto.*;
 import net.pladema.patient.controller.mapper.PatientMapper;
+import net.pladema.patient.controller.mapper.PatientMedicalCoverageMapper;
 import net.pladema.patient.repository.PatientTypeRepository;
 import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.repository.entity.PatientType;
 import net.pladema.patient.service.AdditionalDoctorService;
 import net.pladema.patient.service.PatientService;
 import net.pladema.patient.service.domain.DoctorsBo;
+import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 import net.pladema.patient.service.domain.PatientSearch;
 import net.pladema.person.controller.dto.BMPersonDto;
 import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.controller.dto.PersonPhotoDto;
+import net.pladema.person.controller.dto.BasicPersonalDataDto;
 import net.pladema.person.controller.mapper.PersonMapper;
 import net.pladema.person.controller.service.PersonExternalService;
 import net.pladema.person.repository.entity.PersonExtended;
 import net.pladema.sgx.exceptions.NotFoundException;
-import net.pladema.person.controller.dto.BasicPersonalDataDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
@@ -68,13 +63,15 @@ public class PatientController {
 
 	private final PatientMapper patientMapper;
 
+	private final PatientMedicalCoverageMapper patientMedicalCoverageMapper;
+
 	private final PersonMapper personMapper;
 
 	private final ObjectMapper jackson;
 
 	public PatientController(PatientService patientService, PersonExternalService personExternalService,
-							 AddressExternalService addressExternalService, PatientMapper patientMapper, PersonMapper personMapper,
-							 ObjectMapper jackson, PatientTypeRepository patientTypeRepository,AdditionalDoctorService additionalDoctorService) {
+                             AddressExternalService addressExternalService, PatientMapper patientMapper, PersonMapper personMapper,
+                             ObjectMapper jackson, PatientTypeRepository patientTypeRepository, AdditionalDoctorService additionalDoctorService, PatientMedicalCoverageMapper patientMedicalCoverageMapper) {
 		this.patientService = patientService;
 		this.personExternalService = personExternalService;
 		this.addressExternalService = addressExternalService;
@@ -83,7 +80,8 @@ public class PatientController {
 		this.patientTypeRepository = patientTypeRepository;
 		this.personMapper = personMapper;
 		this.additionalDoctorService = additionalDoctorService;
-	}
+        this.patientMedicalCoverageMapper = patientMedicalCoverageMapper;
+    }
 
 	@GetMapping(value = "/search")
 	public ResponseEntity<List<PatientSearchDto>> searchPatient(@RequestParam String searchFilterStr) {
@@ -236,5 +234,46 @@ public class PatientController {
 		ReducedPatientDto result = new ReducedPatientDto(personData,patient.getTypeId());
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
+	}
+
+	@GetMapping(value = "/{patientId}/coverages")
+	public ResponseEntity<List<PatientMedicalCoverageDto>> getPatientMedicalCoverages(
+			@PathVariable(name = "patientId") Integer patientId) {
+		LOG.debug("Input data -> patientId {}", patientId);
+		List<PatientMedicalCoverageBo> serviceResult = patientService.getCoverages(patientId);
+		List<PatientMedicalCoverageDto> result = patientMedicalCoverageMapper.toListPatientMedicalCoverageDto(serviceResult);
+		LOG.debug("result -> {}", result);
+		return ResponseEntity.ok().body(result);
+	}
+
+	@GetMapping(value = "/healthInsurances")
+	public ResponseEntity<List<PatientMedicalCoverageDto>> getPatientHealthInsurances(
+			@RequestParam(value = "patientId", required = true) Integer patientId) {
+		LOG.debug("Input data -> patientId {}", patientId);
+		List<PatientMedicalCoverageBo> serviceResult = patientService.getHealthInsurances(patientId);
+		List<PatientMedicalCoverageDto> result = patientMedicalCoverageMapper.toListPatientMedicalCoverageDto(serviceResult);
+				LOG.debug("result -> {}", result);
+		return ResponseEntity.ok().body(result);
+	}
+
+    @GetMapping(value = "/privateHealthInsurances")
+	public ResponseEntity<List<PatientMedicalCoverageDto>> getPatientPrivateMedicalCoverages(
+            @RequestParam(value = "patientId", required = true) Integer patientId) {
+        LOG.debug("Input data -> patientId {}", patientId);
+		List<PatientMedicalCoverageBo> serviceResult = patientService.getPrivateHealthInsurances(patientId);
+		List<PatientMedicalCoverageDto> result = patientMedicalCoverageMapper.toListPatientMedicalCoverageDto(serviceResult);
+		LOG.debug("Ids results -> {}", result);
+		return ResponseEntity.ok().body(result);
+    }
+
+	@PostMapping("/{patientId}/coverages")
+	@Transactional
+	public ResponseEntity<List<Integer>> addPatientMedicalCoverages(
+			@PathVariable(name = "patientId") Integer patientId,
+			@RequestBody List<PatientMedicalCoverageDto> coverages) throws URISyntaxException {
+			LOG.debug("Input data -> coverages {} ", coverages);
+		List<Integer> result = patientService.saveCoverages(patientMedicalCoverageMapper.toListPatientMedicalCoverageBo(coverages), patientId);
+		LOG.debug("Ids results -> {}", result);
+		return ResponseEntity.created(new URI("")).body(result);
 	}
 }

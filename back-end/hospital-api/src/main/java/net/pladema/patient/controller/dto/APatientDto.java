@@ -18,12 +18,6 @@ public class APatientDto extends APersonDto{
     private String comments;
     
     private Short identityVerificationStatusId;
-    
-    @Length(max = 255)
-    private String medicalCoverageName;
-    
-    @Length(max = 150)
-    private String medicalCoverageAffiliateNumber;
 
     private AAdditionalDoctorDto generalPractitioner;
 

@@ -23,10 +23,9 @@ public class DailyAppointmentRepositoryImpl implements DailyAppointmentRepositor
     public List<DailyAppointmentVo> getDailyAppointmentsByDiaryIdAndDate(Integer institutionId, Integer diaryId, LocalDate date) {
 
         String sqlQuery =
-                "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.DailyAppointmentVo(a, hi, astate, oh.from, oh.to, doh.medicalAttentionTypeId) " +
+                "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.DailyAppointmentVo(a, astate, oh.from, oh.to, doh.medicalAttentionTypeId) " +
                 "FROM Appointment AS a " +
                 "JOIN AppointmentAssn AS assn ON (a.id = assn.pk.appointmentId) " +
-                "LEFT JOIN HealthInsurance AS hi ON (a.healthInsuranceId = hi.rnos) " +
                 "JOIN AppointmentState AS astate ON (a.appointmentStateId = astate.id) " +
                 "JOIN OpeningHours AS oh ON (assn.pk.openingHoursId = oh.id) " +
                 "JOIN Diary AS d ON (assn.pk.diaryId = d.id) " +

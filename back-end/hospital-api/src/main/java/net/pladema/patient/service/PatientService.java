@@ -1,12 +1,13 @@
 package net.pladema.patient.service;
 
-import java.util.List;
-import java.util.Optional;
-
 import net.pladema.patient.controller.dto.PatientSearchFilter;
 import net.pladema.patient.repository.entity.Patient;
+import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 import net.pladema.patient.service.domain.PatientSearch;
 import net.pladema.person.repository.entity.Person;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface PatientService {
 
@@ -18,6 +19,13 @@ public interface PatientService {
     
     Patient addPatient(Patient patientToSave);
     
-    void federatePatient(Patient patient, Person person); 
+    void federatePatient(Patient patient, Person person);
 
+    List<PatientMedicalCoverageBo> getCoverages(Integer patientId);
+
+    List<PatientMedicalCoverageBo> getHealthInsurances(Integer patientId);
+
+    List<PatientMedicalCoverageBo> getPrivateHealthInsurances(Integer patientId);
+
+    List<Integer> saveCoverages(List<PatientMedicalCoverageBo> coverages, Integer patientId);
 }

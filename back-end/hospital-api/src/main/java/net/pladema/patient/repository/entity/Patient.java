@@ -1,19 +1,9 @@
 package net.pladema.patient.repository.entity;
 
+import lombok.*;
+
+import javax.persistence.*;
 import java.io.Serializable;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 @Entity
 @Table(name = "patient")
@@ -51,15 +41,6 @@ public class Patient implements Serializable{
     
     @Column(name = "identity_verification_status_id")
     private Short identityVerificationStatusId;
-    
-    @Column( name = "medical_coverage_name", length = 255)
-    private String medicalCoverageName;
- 
-    @Column( name = "medical_coverage_affiliate_number", length = 150)
-    private String medicalCoverageAffiliateNumber;
-
-    @Column(name = "health_insurance_id")
-    private Integer healthInsuranceId;
     
     public boolean isValidated() {
     	return getTypeId().equals(PatientType.VALIDATED);
