@@ -8,7 +8,8 @@
 <div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between" class="form-row">
 	<div fxFlex="50%">
 		<span>Documento</span>
-		<span *ngIf="(personalInformation?.identificationType?.length || personalInformation?.identificationNumber?.length); else noInformation"
+		<span
+			*ngIf="(personalInformation?.identificationType?.length || personalInformation?.identificationNumber?.length); else noInformation"
 			class="bold">{{personalInformation?.identificationType.description}} {{personalInformation?.identificationNumber}}
 		</span>
 	</div>
@@ -24,7 +25,8 @@
 		<span *ngIf="addressPresent; else noInformation">
 			<span class="bold">{{address | fullHouseAddress}}</span>
 			<span *ngIf="personalInformation?.address?.city?.description"
-				class="bold">{{personalInformation?.address?.city?.description}}, {{personalInformation?.address?.province?.description}}</span>
+			      class="bold">{{personalInformation?.address?.city?.description}}
+				, {{personalInformation?.address?.province?.description}}</span>
 		</span>
 	</div>
 	<div fxFlex="50%">
@@ -45,16 +47,24 @@
 </div>
 <mat-divider inset></mat-divider>
 <div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between" class="form-row">
-	<div fxFlex="50%">
+	<div fxFlex="100%" fxLayout="column" fxLayoutAlign="space-around start" fxLayoutGap="10px">
 		<span>Cobertura</span>
-		<span *ngIf="personalInformation?.medicalCoverageName; else noInformation"
-			class="bold">{{personalInformation?.medicalCoverageName}}
-		</span>
-	</div>
-	<div fxFlex="50%">
-		<span>Nro de afiliado</span>
-		<span *ngIf="personalInformation?.medicalCoverageAffiliateNumber; else noInformation"
-			class="bold">{{personalInformation?.medicalCoverageAffiliateNumber}}
+		<span *ngFor="let patientMC of patientMedicalCoverage" fxFlex="100%" fxFlexFill>
+			<div fxLayout="column" fxLayoutAlign="space-around start">
+				<mat-expansion-panel fxFlexFill>
+					<mat-expansion-panel-header>
+						<mat-panel-title>
+							<div fxLayout="row">
+								<span class="bold">{{ patientMC.medicalCoverage?.acronym ?
+									patientMC.medicalCoverage?.acronym : patientMC.medicalCoverage?.name }}</span>
+								<span>&nbsp;{{ ' - ' + patientMC.affiliateNumber }}</span>
+							</div>
+						</mat-panel-title>
+                    </mat-expansion-panel-header>
+					<span *ngIf="patientMC.medicalCoverage && patientMC.medicalCoverage.acronym">
+						{{ patientMC.medicalCoverage?.acronym ? patientMC.medicalCoverage?.name : '' }}</span>
+				</mat-expansion-panel>
+			</div>
 		</span>
 	</div>
 </div>

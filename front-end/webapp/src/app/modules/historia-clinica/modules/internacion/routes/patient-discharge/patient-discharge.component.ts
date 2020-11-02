@@ -16,8 +16,7 @@ import { PersonService } from '@api-rest/services/person.service';
 import {
 	CompletePatientDto,
 	PersonalInformationDto,
-	PatientDischargeDto,
-	PersonPhotoDto,
+	PatientDischargeDto, PatientMedicalCoverageDto, PersonPhotoDto
 } from '@api-rest/api-model';
 
 import {
@@ -52,6 +51,7 @@ export class PatientDischargeComponent implements OnInit {
 	public dischargeWithoutEpicrisisDisabled: boolean;
 	private patientId: number;
 	private internmentId: number;
+	public patientMedicalCoverage: PatientMedicalCoverageDto[];
 
 	public hasError = hasError;
 
@@ -96,6 +96,8 @@ export class PatientDischargeComponent implements OnInit {
 				this.patientService.getPatientPhoto(this.patientId)
 						.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto;
 				});
+				this.patientService.getPatientMedicalCoverages(this.patientId)
+					.subscribe(patientMedicalCoverageDto => this.patientMedicalCoverage = patientMedicalCoverageDto);
 
 				this.featureFlagService.isActive(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS)
 					.subscribe(epicrisisNotRequired => {

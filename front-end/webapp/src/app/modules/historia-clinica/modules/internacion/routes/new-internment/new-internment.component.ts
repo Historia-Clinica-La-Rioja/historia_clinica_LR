@@ -18,8 +18,8 @@ import {
 	CompletePatientDto,
 	HealthcareProfessionalDto,
 	PersonalInformationDto,
-	BedInfoDto,
-	PersonPhotoDto
+	PersonPhotoDto,
+	BedInfoDto, PatientMedicalCoverageDto,
 } from '@api-rest/api-model';
 
 import {
@@ -48,6 +48,7 @@ export class NewInternmentComponent implements OnInit {
 	public patientId: number;
 	public patientBasicData: PatientBasicData;
 	public personalInformation: PersonalInformation;
+	public patientMedicalCoverage: PatientMedicalCoverageDto[];
 	public patientTypeData: PatientTypeData;
 	public personPhoto: PersonPhotoDto;
 	public selectedBedInfo: BedInfoDto;
@@ -88,6 +89,9 @@ export class NewInternmentComponent implements OnInit {
 				});
 			this.patientService.getPatientPhoto(this.patientId)
 				.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto;});
+
+			this.patientService.getPatientMedicalCoverages(this.patientId)
+				.subscribe(patientMedicalCoverageDto => this.patientMedicalCoverage = patientMedicalCoverageDto);
 		});
 
 		this.form = this.formBuilder.group({

@@ -11,7 +11,9 @@
 					<app-patient-type-logo [patientTypeData]="patientTypeData"></app-patient-type-logo>
 				</div>
 				<div content>
-					<app-personal-information [personalInformation]="personalInformation"></app-personal-information>
+					<app-personal-information [personalInformation]="personalInformation"
+					                          [patientMedicalCoverage]="patientMedicalCoverage">
+					</app-personal-information>
 				</div>
 			</app-patient-card>
 		</div>

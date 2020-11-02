@@ -6,7 +6,16 @@ import { PatientService } from '@api-rest/services/patient.service';
 import { InternacionService } from '@api-rest/services/internacion.service';
 import { MapperService } from '@presentation/services/mapper.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BasicPatientDto, InternmentSummaryDto, CompletePatientDto, PersonalInformationDto, PatientBedRelocationDto, BedInfoDto, PersonPhotoDto } from '@api-rest/api-model';
+import {
+	BasicPatientDto,
+	InternmentSummaryDto,
+	CompletePatientDto,
+	PersonalInformationDto,
+	PatientBedRelocationDto,
+	BedInfoDto,
+	PatientMedicalCoverageDto,
+	PersonPhotoDto
+} from '@api-rest/api-model';
 import { map } from 'rxjs/operators';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -44,6 +53,7 @@ export class PatientBedRelocationComponent implements OnInit {
 	public patientBasicData;
 	public personalInformation;
 	public personPhoto: PersonPhotoDto;
+	public patientMedicalCoverage: PatientMedicalCoverageDto[];
 	public selectedBedInfo: BedInfoDto;
 	private internmentId;
 	private minDateTimeValidator: MinTimeValidator;
@@ -129,6 +139,9 @@ export class PatientBedRelocationComponent implements OnInit {
 							this.mapperService.toPersonalInformationData(completeData, personInformationData);
 					});
 			});
+
+		this.patientService.getPatientMedicalCoverages(this.patientId)
+			.subscribe(patientMedicalCoverageDto => this.patientMedicalCoverage = patientMedicalCoverageDto);
 	}
 
 	save(): void {

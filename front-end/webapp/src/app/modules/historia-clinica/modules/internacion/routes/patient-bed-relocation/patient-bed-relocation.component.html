@@ -105,7 +105,8 @@
 				<div class="profile-card">
 					<app-patient-card *ngIf="personPhoto" [patient]="patientBasicData" [personPhoto]="personPhoto">
 						<div content>
-							<app-personal-information [personalInformation]="personalInformation">
+							<app-personal-information [personalInformation]="personalInformation"
+							                          [patientMedicalCoverage]="patientMedicalCoverage">
 							</app-personal-information>
 						</div>
 					</app-patient-card>

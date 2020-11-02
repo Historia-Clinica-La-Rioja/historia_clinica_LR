@@ -12,8 +12,6 @@ export interface APatientDto extends APersonDto {
     comments: string;
     generalPractitioner: AAdditionalDoctorDto;
     identityVerificationStatusId: number;
-    medicalCoverageAffiliateNumber: string;
-    medicalCoverageName: string;
     pamiDoctor: AAdditionalDoctorDto;
     typeId: number;
 }
@@ -146,16 +144,14 @@ export interface AttentionTypeReportDto {
 export interface AttentionTypeReportItemDto {
     appointmentState: string;
     firstName: string;
-    healthInsuranceName: string;
     hour: Date;
     identificationNumber: string;
     identificationType: string;
     lastName: string;
-    medicalCoverageAffiliateNumber: string;
-    medicalCoverageName: string;
     middleNames: string;
     otherLastNames: string;
     patientId: number;
+    patientMedicalCoverageId: number;
 }
 
 export interface BMPatientDto extends APatientDto {
@@ -274,16 +270,20 @@ export interface CompletePatientDto extends BasicPatientDto {
     patientType: PatientType;
 }
 
+export interface CoverageDto extends Serializable {
+    id: number;
+    name: string;
+    type: "HealthInsuranceDto" | "PrivateHealthInsuranceDto";
+}
+
 export interface CreateAppointmentDto {
     date: string;
     diaryId: number;
-    healthInsuranceId?: number;
     hour: string;
-    medicalCoverageAffiliateNumber: string;
-    medicalCoverageName?: string;
     openingHoursId: number;
     overturn: boolean;
     patientId: number;
+    patientMedicalCoverageId: number;
     phoneNumber?: string;
 }
 
@@ -564,6 +564,12 @@ export interface HealthHistoryConditionDto extends HealthConditionDto {
     note: string;
 }
 
+export interface HealthInsuranceDto extends CoverageDto {
+    acronym: string;
+    rnos: number;
+    type: "HealthInsuranceDto";
+}
+
 export interface HealthcareProfessionalDto {
     id: number;
     licenseNumber: string;
@@ -700,6 +706,7 @@ export interface MasterdataDto<T> extends MasterDataInterface<T>, Serializable {
 
 export interface MedicalCoverageDto {
     acronym: string;
+    id: number;
     name: string;
     rnos: string;
     service: string;
@@ -842,6 +849,14 @@ export interface PatientDto {
     lastName: string;
 }
 
+export interface PatientMedicalCoverageDto {
+    affiliateNumber?: string;
+    id?: number;
+    medicalCoverage: CoverageDtoUnion;
+    privateHealthInsuranceDetails?: PrivateHealthInsuranceDetailsDto;
+    vigencyDate?: string;
+}
+
 export interface PatientSearchDto {
     activo: boolean;
     idPatient: number;
@@ -880,6 +895,17 @@ export interface PersonalInformationDto {
     identificationNumber: string;
     identificationType: IdentificationTypeDto;
     phoneNumber: string;
+}
+
+export interface PrivateHealthInsuranceDetailsDto {
+    endDate: string;
+    id: number;
+    startDate: string;
+}
+
+export interface PrivateHealthInsuranceDto extends CoverageDto {
+    plan: string;
+    type: "PrivateHealthInsuranceDto";
 }
 
 export interface ProbableDischargeDateDto {
@@ -1036,6 +1062,8 @@ export interface VitalSignsReportDto extends Serializable {
     systolicBloodPressure?: ReportClinicalObservationDto;
     temperature?: ReportClinicalObservationDto;
 }
+
+export type CoverageDtoUnion = HealthInsuranceDto | PrivateHealthInsuranceDto;
 
 export const enum AppFeature {
     HABILITAR_ALTA_SIN_EPICRISIS = "HABILITAR_ALTA_SIN_EPICRISIS",

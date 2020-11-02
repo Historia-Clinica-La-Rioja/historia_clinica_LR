@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CompletePatientDto, PersonalInformationDto, PatientDischargeDto, PersonPhotoDto } from '@api-rest/api-model';
+import { CompletePatientDto, PersonalInformationDto, PatientDischargeDto, PatientMedicalCoverageDto, PersonPhotoDto } from '@api-rest/api-model';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { DateFormat } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
@@ -20,9 +20,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 const ROUTE_PROFILE = 'pacientes/profile/';
 
 @Component({
-  selector: 'app-medical-discharge',
-  templateUrl: './medical-discharge.component.html',
-  styleUrls: ['./medical-discharge.component.scss']
+	selector: 'app-medical-discharge',
+	templateUrl: './medical-discharge.component.html',
+	styleUrls: ['./medical-discharge.component.scss']
 })
 export class MedicalDischargeComponent implements OnInit {
 
@@ -32,6 +32,7 @@ export class MedicalDischargeComponent implements OnInit {
 	public patientBasicData: PatientBasicData;
 	public personalInformation: PersonalInformation;
 	public personPhoto: PersonPhotoDto;
+	public patientMedicalCoverage: PatientMedicalCoverageDto[];
 	public patientTypeData: PatientTypeData;
 	public dischargeTypes: {};
 	public formSubmited: boolean;
@@ -41,6 +42,7 @@ export class MedicalDischargeComponent implements OnInit {
 	private internmentId: number;
 
 	public hasError = hasError;
+
 	constructor(
 		private formBuilder: FormBuilder,
 		private readonly patientService: PatientService,
@@ -52,8 +54,9 @@ export class MedicalDischargeComponent implements OnInit {
 		private contextService: ContextService,
 		private route: ActivatedRoute,
 		private router: Router
-		) {
-			this.routePrefix = 'institucion/' + this.contextService.institutionId + '/'; }
+	) {
+		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
+	}
 
 	ngOnInit(): void {
 		this.internacionMasterDataService.getDischargeType()
@@ -65,9 +68,9 @@ export class MedicalDischargeComponent implements OnInit {
 		});
 		this.route.paramMap.subscribe(
 			(params) => {
-			this.patientId = Number(params.get('idPaciente'));
-			this.internmentId = Number(params.get('idInternacion'));
-			this.patientService.getPatientCompleteData<CompletePatientDto>(this.patientId)
+				this.patientId = Number(params.get('idPaciente'));
+				this.internmentId = Number(params.get('idInternacion'));
+				this.patientService.getPatientCompleteData<CompletePatientDto>(this.patientId)
 					.subscribe(completeData => {
 						this.patientTypeData = this.mapperService.toPatientTypeData(completeData.patientType);
 						this.patientBasicData = this.mapperService.toPatientBasicData(completeData);
@@ -77,14 +80,17 @@ export class MedicalDischargeComponent implements OnInit {
 									this.mapperService.toPersonalInformationData(completeData, personInformationData);
 							});
 					});
-			this.patientService.getPatientPhoto(this.patientId)
-				.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto;
-			});
+				this.patientService.getPatientPhoto(this.patientId)
+					.subscribe((personPhotoDto: PersonPhotoDto) => {
+						this.personPhoto = personPhotoDto;
+					});
+
+				this.patientService.getPatientMedicalCoverages(this.patientId)
+					.subscribe(patientMedicalCoverageDto => this.patientMedicalCoverage = patientMedicalCoverageDto);
 			}
 		);
 		this.intermentEpisodeService.getLastUpdateDateOfInternmentEpisode(this.internmentId)
-			.subscribe ( lastUpdateDate => this.minMedicalDischargeDate = lastUpdateDate);
-
+			.subscribe(lastUpdateDate => this.minMedicalDischargeDate = lastUpdateDate);
 
 
 	}
@@ -93,21 +99,21 @@ export class MedicalDischargeComponent implements OnInit {
 		this.formSubmited = true;
 		if (this.dischargeForm.valid) {
 			let request: PatientDischargeDto = this.dischargeForm.value;
-			request.medicalDischargeDate =this.dischargeForm.value.dischargeDate.format(DateFormat.API_DATE);
+			request.medicalDischargeDate = this.dischargeForm.value.dischargeDate.format(DateFormat.API_DATE);
 			this.route.paramMap.subscribe(
 				(params) => {
-					 this.intermentEpisodeService.medicalDischargeInternmentEpisode(request,this.internmentId)
-					 	.subscribe(response => {
+					this.intermentEpisodeService.medicalDischargeInternmentEpisode(request, this.internmentId)
+						.subscribe(response => {
 							this.snackBarService.showSuccess('internaciones.discharge.messages.MEDICAL_DISCHARGE_SUCCESS');
 							this.router.navigate([this.routePrefix + `internaciones/internacion/` + `${this.internmentId}` + `/paciente/` + `${this.patientId}`]);
-						 }, _ => this.snackBarService.showError('internaciones.discharge.messages.MEDICAL_DISCHARGE_ERROR'));
+						}, _ => this.snackBarService.showError('internaciones.discharge.messages.MEDICAL_DISCHARGE_ERROR'));
 				});
 		}
 	}
 
 	back(): void {
 		this.formSubmited = false;
-		this.router.navigate([this.routePrefix + 'internaciones/internacion/'+ this.internmentId + '/paciente/' + this.patientId]);
+		this.router.navigate([this.routePrefix + 'internaciones/internacion/' + this.internmentId + '/paciente/' + this.patientId]);
 	}
 
 }

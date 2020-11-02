@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { AddressDto, IdentificationTypeDto } from '@api-rest/api-model';
+import { AddressDto, IdentificationTypeDto, PatientMedicalCoverageDto } from '@api-rest/api-model';
 import { Address } from '@presentation/pipes/fullHouseAddress.pipe';
 
 @Component({
@@ -10,6 +10,7 @@ import { Address } from '@presentation/pipes/fullHouseAddress.pipe';
 export class PersonalInformationComponent implements OnInit {
 
 	@Input() personalInformation: PersonalInformation;
+	@Input() patientMedicalCoverage: PatientMedicalCoverageDto[];
 	public addressPresent: boolean = false;
 	public address: Address;
 	constructor() { }
