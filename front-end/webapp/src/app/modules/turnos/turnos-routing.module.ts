@@ -6,6 +6,7 @@ import { ERole } from '@api-rest/api-model';
 import { RoleGuard } from '@core/guards/RoleGuard';
 import { SelectAgendaComponent } from './routes/home/routes/select-agenda/select-agenda.component';
 import { AgendaComponent } from './routes/home/routes/select-agenda/routes/agenda/agenda.component';
+import { MedicalCoverageComponent } from '../core/dialogs/medical-coverage/medical-coverage.component';
 
 const routes: Routes = [
 	{
@@ -46,6 +47,12 @@ const routes: Routes = [
 			{
 				path: 'profesional/:profesionalId/agenda/:agendaId/editar',
 				component: AgendaSetupComponent,
+				canActivate: [RoleGuard],
+				data: { allowedRoles: [ERole.ADMINISTRADOR_AGENDA] , editMode: true}
+			},
+			{
+				path: 'a',
+				component: MedicalCoverageComponent,
 				canActivate: [RoleGuard],
 				data: { allowedRoles: [ERole.ADMINISTRADOR_AGENDA] , editMode: true}
 			},

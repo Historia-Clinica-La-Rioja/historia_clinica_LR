@@ -16,6 +16,7 @@ import { CustomDateFormatter } from './services/custom-date-formatter.service';
 import { NewAppointmentComponent } from './dialogs/new-appointment/new-appointment.component';
 import { AppointmentComponent } from './dialogs/appointment/appointment.component';
 import { CancelAppointmentComponent } from './dialogs/cancel-appointment/cancel-appointment.component';
+import { MedicalCoverageComponent } from '../core/dialogs/medical-coverage/medical-coverage.component';
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { CancelAppointmentComponent } from './dialogs/cancel-appointment/cancel-
 	 	AgendaComponent,
 	 	NewAppointmentComponent,
 	 	AppointmentComponent,
-	 	CancelAppointmentComponent
+	 	CancelAppointmentComponent,
+	 	MedicalCoverageComponent
 	],
 	imports: [
 		CommonModule,

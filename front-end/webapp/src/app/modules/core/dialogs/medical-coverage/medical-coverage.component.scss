@@ -1,0 +1,25 @@
+@import '../../../../../assets/styles/mixins.scss';
+
+.align-items{
+	align-items: none !important;
+}
+
+::ng-deep .mat-form-field-wrapper {
+	padding-bottom: 0;
+	margin: 0;
+}
+
+.form{
+	button {
+		margin-top: 4px;
+		height: 58px;
+	}
+}
+
+.valid-date{
+	margin-top: 7px;
+}
+
+.spinner {
+	@include centered-spinner;
+}
