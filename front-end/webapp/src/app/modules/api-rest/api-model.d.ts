@@ -855,6 +855,10 @@ export interface PersonBasicDataResponseDto extends Serializable {
     lastName: string;
 }
 
+export interface PersonPhotoDto {
+    imageData: string;
+}
+
 export interface PersonalInformationDto {
     address: AddressDto;
     birthDate: Date;
@@ -1023,6 +1027,7 @@ export const enum AppFeature {
     HABILITAR_GESTION_DE_TURNOS = "HABILITAR_GESTION_DE_TURNOS",
     HABILITAR_HISTORIA_CLINICA_AMBULATORIA = "HABILITAR_HISTORIA_CLINICA_AMBULATORIA",
     HABILITAR_UPDATE_DOCUMENTS = "HABILITAR_UPDATE_DOCUMENTS",
+    HABILITAR_EDITAR_PACIENTE_COMPLETO = "HABILITAR_EDITAR_PACIENTE_COMPLETO",
 }
 
 export const enum EDocumentSearch {

@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Component
@@ -42,6 +45,26 @@ public class StreamFile {
             return fileCreated;
         }
         return false;
+    }
+
+    public String readFileAsString(String path, Charset charset) throws IOException{
+        LOG.debug("Input parameter -> path {}", path);
+        String result = null;
+        ByteArrayInputStream is = reader(path);
+        int numberOfBytes = is.available();
+        byte[] bytes = new byte[numberOfBytes];
+        is.read(bytes, 0, numberOfBytes);
+        result = new String(bytes, charset);
+        LOG.debug("Output -> {}", result);
+        return result;
+    }
+
+    private ByteArrayInputStream reader(String path) throws IOException{
+        LOG.debug("Input parameters -> path {}", path);
+        Path filePath = Paths.get(path);
+        byte[] data = Files.readAllBytes(filePath);
+        LOG.debug("Output -> data {}", data);
+        return new ByteArrayInputStream(data);
     }
 
     private String getRootDirectory() {

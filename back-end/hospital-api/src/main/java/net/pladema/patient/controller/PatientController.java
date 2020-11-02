@@ -16,6 +16,7 @@ import net.pladema.patient.service.domain.DoctorsBo;
 import net.pladema.patient.service.domain.PatientSearch;
 import net.pladema.person.controller.dto.BMPersonDto;
 import net.pladema.person.controller.dto.BasicDataPersonDto;
+import net.pladema.person.controller.dto.PersonPhotoDto;
 import net.pladema.person.controller.mapper.PersonMapper;
 import net.pladema.person.controller.service.PersonExternalService;
 import net.pladema.person.repository.entity.PersonExtended;
@@ -73,7 +74,7 @@ public class PatientController {
 
 	public PatientController(PatientService patientService, PersonExternalService personExternalService,
 							 AddressExternalService addressExternalService, PatientMapper patientMapper, PersonMapper personMapper,
-							 ObjectMapper jackson, PatientTypeRepository patientTypeRepository,AdditionalDoctorService additionalDoctorService ) {
+							 ObjectMapper jackson, PatientTypeRepository patientTypeRepository,AdditionalDoctorService additionalDoctorService) {
 		this.patientService = patientService;
 		this.personExternalService = personExternalService;
 		this.addressExternalService = addressExternalService;
@@ -164,6 +165,28 @@ public class PatientController {
 				.orElseThrow(() -> new EntityNotFoundException(PATIENT_INVALID));
 		BasicDataPersonDto personData = personExternalService.getBasicDataPerson(patient.getPersonId());
 		BasicPatientDto result = new BasicPatientDto(patient.getId(), personData,patient.getTypeId());
+		LOG.debug(OUTPUT, result);
+		return ResponseEntity.ok().body(result);
+	}
+
+	@GetMapping("/{patientId}/photo")
+	public ResponseEntity<PersonPhotoDto> getPatientPhoto(@PathVariable(name = "patientId") Integer patientId) {
+		LOG.debug(INPUT_PARAMETERS_PATIENT_ID, patientId);
+		Patient patient = patientService.getPatient(patientId)
+				.orElseThrow(() -> new EntityNotFoundException(PATIENT_INVALID));
+		PersonPhotoDto personPhotoDto = personExternalService.getPersonPhoto(patient.getPersonId());
+		LOG.debug(OUTPUT, personPhotoDto);
+		return ResponseEntity.ok().body(personPhotoDto);
+	}
+
+	@PostMapping("/{patientId}/photo")
+	@Transactional
+	public ResponseEntity<Boolean> addPatientPhoto(@PathVariable(name = "patientId") Integer patientId,
+														   @RequestBody PersonPhotoDto personPhotoDto) {
+		LOG.debug(INPUT_PARAMETERS_PATIENT_ID, patientId);
+		Patient patient = patientService.getPatient(patientId)
+				.orElseThrow(() -> new EntityNotFoundException(PATIENT_INVALID));
+		boolean result = personExternalService.savePersonPhoto(patient.getPersonId(), personPhotoDto.getImageData());
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}

@@ -3,12 +3,14 @@ package net.pladema.person.controller.service;
 import net.pladema.patient.controller.dto.APatientDto;
 import net.pladema.person.controller.dto.BMPersonDto;
 import net.pladema.person.controller.dto.BasicDataPersonDto;
+import net.pladema.person.controller.dto.PersonPhotoDto;
 import net.pladema.person.controller.mapper.PersonMapper;
 import net.pladema.person.repository.entity.Gender;
 import net.pladema.person.repository.entity.IdentificationType;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;
 import net.pladema.person.service.PersonMasterDataService;
+import net.pladema.person.service.PersonPhotoService;
 import net.pladema.person.service.PersonService;
 import net.pladema.person.controller.dto.BasicPersonalDataDto;
 import org.slf4j.Logger;
@@ -30,14 +32,17 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 
 	private final PersonMasterDataService personMasterDataService;
 
+	private final PersonPhotoService personPhotoService;
+
 	private final PersonMapper personMapper;
 
 	public PersonExternalServiceImpl(PersonService personService, PersonMasterDataService personMasterDataService,
-			PersonMapper personMapper) {
+			PersonMapper personMapper, PersonPhotoService personPhotoService) {
 		super();
 		this.personService = personService;
 		this.personMasterDataService = personMasterDataService;
 		this.personMapper = personMapper;
+		this.personPhotoService = personPhotoService;
 		LOG.debug("{}", "created service");
 	}
 
@@ -115,6 +120,22 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 		personToUpdate = personService.addPerson(personToUpdate);
 		BMPersonDto result = personMapper.fromPerson(personToUpdate);
 		LOG.debug("Mapped result fromPerson -> {}", result);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public PersonPhotoDto getPersonPhoto(Integer personId) {
+		LOG.debug("Input parameter -> personId {}", personId);
+		PersonPhotoDto personPhotoDto = personPhotoService.get(personId);
+		LOG.debug(OUTPUT, personPhotoDto);
+		return personPhotoDto;
+	}
+
+	@Override
+	public boolean savePersonPhoto(Integer personId, String imageData) {
+		LOG.debug("Input parameters -> personId {}, imageData {}", personId, imageData);
+		boolean result = personPhotoService.save(personId, imageData);
 		LOG.debug(OUTPUT, result);
 		return result;
 	}
