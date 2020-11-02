@@ -43,7 +43,7 @@
 		</section>
 		<section>
 			<div class="profile-card">
-				<app-patient-card [patient]="patientBasicData">
+				<app-patient-card *ngIf="personPhoto" [patient]="patientBasicData" [personPhoto]="personPhoto">
 					<div header class="header">
 						<app-patient-type-logo [patientTypeData]="patientTypeData"></app-patient-type-logo>
 					</div>

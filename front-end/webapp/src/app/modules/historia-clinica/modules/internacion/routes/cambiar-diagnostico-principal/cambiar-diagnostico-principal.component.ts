@@ -1,4 +1,4 @@
-import { MainDiagnosisDto } from '@api-rest/api-model';
+import { MainDiagnosisDto, PersonPhotoDto } from '@api-rest/api-model';
 import { MainDiagnosesService } from '@api-rest/services/main-diagnoses.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { BasicPatientDto, InternmentSummaryDto, HealthConditionDto, SnomedDto } from '@api-rest/api-model';
@@ -39,6 +39,7 @@ export class CambiarDiagnosticoPrincipalComponent implements OnInit {
 	form: FormGroup;
 	currentMainDiagnosis: HealthConditionDto;
 	patient$: Observable<PatientBasicData>;
+	public personPhoto: PersonPhotoDto;
 	internmentEpisodeSummary$: Observable<InternmentEpisodeSummary>;
 	diagnostics$: Observable<HealthConditionDto[]>
 
@@ -67,6 +68,9 @@ export class CambiarDiagnosticoPrincipalComponent implements OnInit {
 				this.patient$ = this.patientService.getPatientBasicData<BasicPatientDto>(this.patientId).pipe(
 					map(patient => this.mapperService.toPatientBasicData(patient))
 				);
+
+				this.patientService.getPatientPhoto(this.patientId)
+					.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto;});
 
 				this.internmentEpisodeSummary$ = this.internmentService.getInternmentEpisodeSummary(this.internmentEpisodeId).pipe(
 					map((internmentEpisodeSummary: InternmentSummaryDto) => this.mapperService.toInternmentEpisodeSummary(internmentEpisodeSummary))

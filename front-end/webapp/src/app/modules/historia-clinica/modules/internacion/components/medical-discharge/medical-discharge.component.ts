@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CompletePatientDto, PersonalInformationDto, PatientDischargeDto } from '@api-rest/api-model';
+import { CompletePatientDto, PersonalInformationDto, PatientDischargeDto, PersonPhotoDto } from '@api-rest/api-model';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { DateFormat } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
@@ -31,6 +31,7 @@ export class MedicalDischargeComponent implements OnInit {
 	public minMedicalDischargeDate: Date;
 	public patientBasicData: PatientBasicData;
 	public personalInformation: PersonalInformation;
+	public personPhoto: PersonPhotoDto;
 	public patientTypeData: PatientTypeData;
 	public dischargeTypes: {};
 	public formSubmited: boolean;
@@ -55,7 +56,6 @@ export class MedicalDischargeComponent implements OnInit {
 			this.routePrefix = 'institucion/' + this.contextService.institutionId + '/'; }
 
 	ngOnInit(): void {
-
 		this.internacionMasterDataService.getDischargeType()
 			.subscribe(dischargeTypes => this.dischargeTypes = dischargeTypes);
 
@@ -77,6 +77,9 @@ export class MedicalDischargeComponent implements OnInit {
 									this.mapperService.toPersonalInformationData(completeData, personInformationData);
 							});
 					});
+			this.patientService.getPatientPhoto(this.patientId)
+				.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto;
+			});
 			}
 		);
 		this.intermentEpisodeService.getLastUpdateDateOfInternmentEpisode(this.internmentId)

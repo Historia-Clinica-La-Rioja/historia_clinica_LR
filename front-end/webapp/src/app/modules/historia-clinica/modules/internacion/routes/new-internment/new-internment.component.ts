@@ -18,7 +18,8 @@ import {
 	CompletePatientDto,
 	HealthcareProfessionalDto,
 	PersonalInformationDto,
-	BedInfoDto
+	BedInfoDto,
+	PersonPhotoDto
 } from '@api-rest/api-model';
 
 import {
@@ -48,6 +49,7 @@ export class NewInternmentComponent implements OnInit {
 	public patientBasicData: PatientBasicData;
 	public personalInformation: PersonalInformation;
 	public patientTypeData: PatientTypeData;
+	public personPhoto: PersonPhotoDto;
 	public selectedBedInfo: BedInfoDto;
 	private readonly routePrefix;
 
@@ -84,6 +86,8 @@ export class NewInternmentComponent implements OnInit {
 								this.mapperService.toPersonalInformationData(completeData, personInformationData);
 						});
 				});
+			this.patientService.getPatientPhoto(this.patientId)
+				.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto;});
 		});
 
 		this.form = this.formBuilder.group({

@@ -17,6 +17,7 @@ import {
 	CompletePatientDto,
 	PersonalInformationDto,
 	PatientDischargeDto,
+	PersonPhotoDto,
 } from '@api-rest/api-model';
 
 import {
@@ -43,6 +44,7 @@ export class PatientDischargeComponent implements OnInit {
 	public minDischargeDate: Date;
 	public patientBasicData: PatientBasicData;
 	public personalInformation: PersonalInformation;
+	public personPhoto: PersonPhotoDto;
 	public patientTypeData: PatientTypeData;
 	public dischargeTypes: {};
 	public formSubmited: boolean;
@@ -90,6 +92,10 @@ export class PatientDischargeComponent implements OnInit {
 										this.mapperService.toPersonalInformationData(completeData, personInformationData);
 								});
 						});
+
+				this.patientService.getPatientPhoto(this.patientId)
+						.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto;
+				});
 
 				this.featureFlagService.isActive(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS)
 					.subscribe(epicrisisNotRequired => {

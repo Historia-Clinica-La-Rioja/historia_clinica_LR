@@ -103,7 +103,7 @@
 			</section>
 			<section class="parent-section">
 				<div class="profile-card">
-					<app-patient-card [patient]="patientBasicData">
+					<app-patient-card *ngIf="personPhoto" [patient]="patientBasicData" [personPhoto]="personPhoto">
 						<div content>
 							<app-personal-information [personalInformation]="personalInformation">
 							</app-personal-information>

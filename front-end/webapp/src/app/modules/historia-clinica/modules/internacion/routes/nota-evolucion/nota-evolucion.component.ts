@@ -6,8 +6,9 @@ import { PatientService } from '@api-rest/services/patient.service';
 import { InternacionService } from '@api-rest/services/internacion.service';
 import { MapperService } from '@presentation/services/mapper.service';
 import { ActivatedRoute } from '@angular/router';
-import { BasicPatientDto, InternmentSummaryDto } from '@api-rest/api-model';
+import { BasicPatientDto, InternmentSummaryDto, PersonPhotoDto } from '@api-rest/api-model';
 import { map } from 'rxjs/operators';
+import { ContextService } from '@core/services/context.service';
 
 @Component({
 	selector: 'app-nota-evolucion',
@@ -17,6 +18,7 @@ import { map } from 'rxjs/operators';
 export class NotaEvolucionComponent implements OnInit {
 
 	public patient$: Observable<PatientBasicData>;
+	public personPhoto: PersonPhotoDto;
 	public internmentEpisodeSummary$: Observable<InternmentEpisodeSummary>;
 
 	constructor(
@@ -35,6 +37,10 @@ export class NotaEvolucionComponent implements OnInit {
 				this.patient$ = this.patientService.getPatientBasicData<BasicPatientDto>(patientId).pipe(
 					map(patient => this.mapperService.toPatientBasicData(patient))
 				);
+
+				this.patientService.getPatientPhoto(patientId)
+					.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto;
+				});
 
 				this.internmentEpisodeSummary$ = this.internmentService.getInternmentEpisodeSummary(internmentId).pipe(
 					map((internmentEpisodeSummary: InternmentSummaryDto) => this.mapperService.toInternmentEpisodeSummary(internmentEpisodeSummary))

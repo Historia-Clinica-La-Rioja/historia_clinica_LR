@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CompletePatientDto, InternmentEpisodeProcessDto, PersonalInformationDto } from '@api-rest/api-model';
+import { CompletePatientDto, InternmentEpisodeProcessDto, PersonalInformationDto, PersonPhotoDto } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { MapperService } from '@presentation/services/mapper.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -22,6 +22,7 @@ export class PatientProfileComponent implements OnInit {
 	public personalInformation: PersonalInformation;
 	public patientTypeData: PatientTypeData;
 	public person: PersonalInformationDto;
+	public personPhoto: PersonPhotoDto;
 	private patientId: number;
 	private readonly routePrefix;
 	public internmentEpisode: InternmentEpisodeProcessDto;
@@ -50,7 +51,11 @@ export class PatientProfileComponent implements OnInit {
 								this.personalInformation = this.mapperService.toPersonalInformationData(completeData, personInformationData);
 							});
 					});
-
+				
+				this.patientService.getPatientPhoto(this.patientId)
+					.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto;
+				});
+				
 				this.internmentPatientService.internmentEpisodeIdInProcess(this.patientId)
 					.subscribe(internmentEpisodeProcessDto => {
 						if (internmentEpisodeProcessDto) {

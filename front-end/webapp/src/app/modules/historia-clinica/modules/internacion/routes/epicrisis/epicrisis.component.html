@@ -2,7 +2,7 @@
 	<div class="container-row">
 		<app-epicrisis-form></app-epicrisis-form>
 		<section>
-			<app-patient-card [patient]="patient$ | async">
+			<app-patient-card *ngIf="personPhoto" [patient]="patient$ | async" [personPhoto]="personPhoto">
 				<app-internment-episode-summary [internmentEpisode]="internmentEpisodeSummary$ | async" content></app-internment-episode-summary>
 			</app-patient-card>
 		</section>

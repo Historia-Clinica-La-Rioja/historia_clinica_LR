@@ -6,7 +6,7 @@ import { PatientService } from '@api-rest/services/patient.service';
 import { InternacionService } from '@api-rest/services/internacion.service';
 import { MapperService } from '@presentation/services/mapper.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BasicPatientDto, InternmentSummaryDto, CompletePatientDto, PersonalInformationDto, PatientBedRelocationDto, BedInfoDto } from '@api-rest/api-model';
+import { BasicPatientDto, InternmentSummaryDto, CompletePatientDto, PersonalInformationDto, PatientBedRelocationDto, BedInfoDto, PersonPhotoDto } from '@api-rest/api-model';
 import { map } from 'rxjs/operators';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -43,6 +43,7 @@ export class PatientBedRelocationComponent implements OnInit {
 	public patientTypeData;
 	public patientBasicData;
 	public personalInformation;
+	public personPhoto: PersonPhotoDto;
 	public selectedBedInfo: BedInfoDto;
 	private internmentId;
 	private minDateTimeValidator: MinTimeValidator;
@@ -75,6 +76,10 @@ export class PatientBedRelocationComponent implements OnInit {
 				this.patient$ = this.patientService.getPatientBasicData<BasicPatientDto>(this.patientId).pipe(
 					map(patient => this.mapperService.toPatientBasicData(patient))
 				);
+
+				this.patientService.getPatientPhoto(this.patientId)
+					.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto;
+				});
 
 				this.internmentService.getInternmentEpisodeSummary(this.internmentId).subscribe(ies => {
 					this.internmentEpisode = ies;

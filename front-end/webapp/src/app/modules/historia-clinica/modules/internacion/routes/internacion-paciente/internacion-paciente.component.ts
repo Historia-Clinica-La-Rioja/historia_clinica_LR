@@ -25,6 +25,7 @@ import {
 	MedicationDto,
 	Last2VitalSignsDto,
 	AnthropometricDataDto,
+	PersonPhotoDto,
 
 } from '@api-rest/api-model';
 
@@ -53,7 +54,8 @@ const ROUTE_EDIT_PATIENT = 'pacientes/edit';
 export class InternacionPacienteComponent implements OnInit {
 
 	public patient$: Observable<PatientBasicData>;
-
+	
+	public personPhoto: PersonPhotoDto;
 	public internacionSummary = INTERNACION;
 	public anamnesisDoc: AnamnesisSummaryDto;
 	public epicrisisDoc: EpicrisisSummaryDto;
@@ -101,6 +103,9 @@ export class InternacionPacienteComponent implements OnInit {
 				this.patient$ = this.patientService.getPatientBasicData<BasicPatientDto>(this.patientId).pipe(
 					map(patient => this.mapperService.toPatientBasicData(patient))
 				);
+
+				this.patientService.getPatientPhoto(this.patientId)
+					.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto;});
 
 				this.internmentEpisodeSummary$ = this.internmentService.getInternmentEpisodeSummary(this.internmentEpisodeId).pipe(
 					tap((internmentEpisode: InternmentSummaryDto) => {

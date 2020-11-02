@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BasicPatientDto } from '@api-rest/api-model';
+import { BasicPatientDto, PersonPhotoDto } from '@api-rest/api-model';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { PatientService } from '@api-rest/services/patient.service';
 import { MapperService } from '@presentation/services/mapper.service';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
+import { ContextService } from '@core/services/context.service';
 
 @Component({
 	selector: 'app-ambulatoria-paciente',
@@ -16,6 +17,7 @@ import { AppointmentsService } from '@api-rest/services/appointments.service';
 export class AmbulatoriaPacienteComponent implements OnInit {
 
 	patient$: Observable<PatientBasicData>;
+	public personPhoto: PersonPhotoDto;
 	public hasNewConsultationEnabled: boolean;
 
 	constructor(
@@ -35,6 +37,8 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 			this.appointmentsService.hasNewConsultationEnabled(patientId).subscribe(response => {
 				this.hasNewConsultationEnabled = response;
 			});
+			this.patientService.getPatientPhoto(patientId)
+					.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto;});
 		});
 
 

@@ -20,6 +20,7 @@ import {
 	EvolutionDiagnosisDto,
 	InternmentSummaryDto,
 	MasterDataInterface,
+	PersonPhotoDto,
 } from '@api-rest/api-model';
 import { InternacionService } from '@api-rest/services/internacion.service';
 import { PatientService } from '@api-rest/services/patient.service';
@@ -45,6 +46,7 @@ export class EvaluacionClinicaDiagnosticosComponent implements OnInit {
 	verifications: MasterDataInterface<string>[];
 	form: FormGroup;
 	patient$: Observable<PatientBasicData>;
+	public personPhoto: PersonPhotoDto;
 	internmentEpisodeSummary$: Observable<InternmentEpisodeSummary>;
 	diagnostics: TableCheckbox<DiagnosesGeneralStateDto> = {
 		data: [],
@@ -104,6 +106,9 @@ export class EvaluacionClinicaDiagnosticosComponent implements OnInit {
 				this.patient$ = this.patientService.getPatientBasicData<BasicPatientDto>(this.patientId).pipe(
 					map(patient => this.mapperService.toPatientBasicData(patient))
 				);
+
+				this.patientService.getPatientPhoto(this.patientId)
+					.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto;});
 
 				this.internmentEpisodeSummary$ = this.internmentService.getInternmentEpisodeSummary(this.internmentEpisodeId).pipe(
 					map((internmentEpisodeSummary: InternmentSummaryDto) => this.mapperService.toInternmentEpisodeSummary(internmentEpisodeSummary))
