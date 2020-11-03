@@ -20,6 +20,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @Api(value = "ClinicalSpecialty", tags = { "Clinical Specialty" })
@@ -56,7 +57,10 @@ public class ClinicalSpecialtyController {
             @PathVariable(name = "professionalId") Integer professionalId) {
         List<ClinicalSpecialty> clinicalSpecialties = clinicalSpecialtyRepository
                 .getAllByProfessional(professionalId);
-        clinicalSpecialties.forEach(ClinicalSpecialty::fixSpecialtyType);
+        clinicalSpecialties = clinicalSpecialties.stream()
+                .filter(ClinicalSpecialty::isSpecialty)
+                .collect(Collectors.toList()
+                );
         LOG.debug("Get all Clinical Specialty by Professional {} and Institution {} => {}", professionalId, institutionId,
                 clinicalSpecialties);
         return ResponseEntity.ok(clinicalSpecialties);
