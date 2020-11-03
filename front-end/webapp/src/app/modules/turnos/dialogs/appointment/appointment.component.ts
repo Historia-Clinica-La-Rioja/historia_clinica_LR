@@ -6,10 +6,18 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { APPOINTMENT_STATES_ID, getAppointmentState, MAX_LENGTH_MOTIVO } from '../../constants/appointment';
 import { ContextService } from '@core/services/context.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AppointmentDto } from '@api-rest/api-model';
+import { AppointmentDto, PatientMedicalCoverageDto } from '@api-rest/api-model';
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
 import { getError, hasError, processErrors } from '@core/utils/form.utils';
 import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
+import { PatientService } from "@api-rest/services/patient.service";
+import { MapperService } from "@core/services/mapper.service";
+import {
+	determineIfIsHealthInsurance,
+	HealthInsurance,
+	PatientMedicalCoverage, PrivateHealthInsurance
+} from "@core/dialogs/medical-coverage/medical-coverage.component";
+import { map } from "rxjs/operators";
 
 const TEMPORARY_PATIENT = 3;
 
@@ -31,6 +39,8 @@ export class AppointmentComponent implements OnInit {
 	formMotivo: FormGroup;
 	institutionId = this.contextService.institutionId;
 	coverageText: string;
+	coverageData: PatientMedicalCoverage;
+
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public appointmentData: PatientAppointmentInformation,
 		public dialogRef: MatDialogRef<NewAttentionComponent>,
@@ -39,17 +49,13 @@ export class AppointmentComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private readonly contextService: ContextService,
 		private readonly formBuilder: FormBuilder,
-		private readonly appointmentFacade: AppointmentsFacadeService
+		private readonly appointmentFacade: AppointmentsFacadeService,
+		private readonly patientService: PatientService,
+		private readonly mapperService: MapperService,
 	) {
 	}
 
 	ngOnInit(): void {
-
-		if (this.appointmentData.healthInsurance) {
-			this.coverageText = this.appointmentData.healthInsurance.acronym ? this.appointmentData.healthInsurance.acronym : this.appointmentData.healthInsurance.name;
-		} else {
-			this.coverageText = this.appointmentData.medicalCoverageName;
-		}
 
 		this.formMotivo = this.formBuilder.group({
 			motivo: ['', [Validators.required, Validators.maxLength(MAX_LENGTH_MOTIVO)]]
@@ -61,6 +67,29 @@ export class AppointmentComponent implements OnInit {
 				if (this.appointment.stateChangeReason) {
 					this.formMotivo.controls.motivo.setValue(this.appointment.stateChangeReason);
 				}
+				this.patientService.getPatientMedicalCoverage(this.appointmentData.patient.id, this.appointment.patientMedicalCoverageId)
+					.pipe(
+						map(
+							s => this.mapperService.toPatientMedicalCoverage(s)
+						)
+					)
+					.subscribe(coverageData =>{
+						if (coverageData) {
+							let isHealthInsurance = determineIfIsHealthInsurance(coverageData.medicalCoverage);
+							this.coverageData = coverageData;
+							if(isHealthInsurance){
+								let healthInsurance: HealthInsurance;
+								healthInsurance = coverageData.medicalCoverage as HealthInsurance;
+								this.coverageText = healthInsurance.acronym ?
+									healthInsurance.acronym : healthInsurance.name;
+							}
+							else {
+								let privateHealthInsurance: PrivateHealthInsurance;
+								privateHealthInsurance = coverageData.medicalCoverage as PrivateHealthInsurance;
+								this.coverageText = privateHealthInsurance.name;
+							}
+						}
+				});
 			});
 	}
 

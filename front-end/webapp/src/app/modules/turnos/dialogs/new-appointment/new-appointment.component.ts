@@ -76,7 +76,7 @@ export class NewAppointmentComponent implements OnInit {
 		});
 
 		this.appointmentInfoForm = this.formBuilder.group({
-			patientMedicalCoverageId: [null, Validators.required],
+			patientMedicalCoverage: [null, Validators.required],
 			phoneNumber: [null, [Validators.maxLength(20)]]
 		});
 
@@ -173,7 +173,7 @@ export class NewAppointmentComponent implements OnInit {
 			openingHoursId: this.data.openingHoursId,
 			overturn: this.data.overturnMode,
 			patientId: this.patientId,
-			patientMedicalCoverageId: this.appointmentInfoForm.value.patientMedicalCoverageId,
+			patientMedicalCoverageId: this.appointmentInfoForm.value.patientMedicalCoverage.id,
 			phoneNumber: this.appointmentInfoForm.controls.phoneNumber.value
 		};
 
