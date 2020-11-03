@@ -8,8 +8,6 @@ import net.pladema.establishment.repository.entity.Institution;
 import net.pladema.sgx.backoffice.repository.BackofficeRepository;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
 import net.pladema.sgx.backoffice.rest.BackofficeQueryAdapter;
-import net.pladema.sgx.backoffice.rest.SingleAttributeBackofficeQueryAdapter;
-import net.pladema.staff.repository.entity.ProfessionalSpecialty;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.transaction.annotation.Transactional;

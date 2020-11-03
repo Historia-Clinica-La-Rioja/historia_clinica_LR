@@ -19,10 +19,10 @@ import SectionTitle from '../components/SectionTitle';
 const HealthcareProfessionalShowActions = ({ data }) => (
     <TopToolbar>
         <ListButton basePath="/healthcareprofessionals" label="Listar Profesionales"/>
-        <EditButton basePath="/healthcareprofessionals" record={{ id: data.id }} />
     </TopToolbar>
 );
 
+//<EditButton basePath="/healthcareprofessionals" record={{ id: data.id }} />
 const renderPerson = (choice) => `${choice.identificationNumber} ${choice.lastName} ${choice.firstName}`;
 const HealthcareProfessionalShow = props => (
     <Show actions={<HealthcareProfessionalShowActions />} {...props}>

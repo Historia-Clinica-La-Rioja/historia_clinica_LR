@@ -16,10 +16,9 @@ const PersonFilter = (props) => (
 );
 
 const UserList = props => (
-    <List {...props} filters={<PersonFilter />} bulkActionButtons={false}>
+    <List {...props} filter={{personId: -1}} filters={<PersonFilter />} bulkActionButtons={false}>
         <Datagrid rowClick="edit">
             <TextField source="username" />
-            <PeopleReferenceField source="personId" sortable={false}/>
             <BooleanField source="enable" />
             <DateField source="lastLogin" />
         </Datagrid>

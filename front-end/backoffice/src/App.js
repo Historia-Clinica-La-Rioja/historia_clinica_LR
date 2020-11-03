@@ -42,6 +42,7 @@ const App = () => {
 
     const resourcesAdminInstitucional = [
         <Resource name="provinces" />,
+        <Resource name="identificationTypes" />,
         <Resource name="cities" />,
         <Resource name="departments" />,
         <Resource name="educationtypes"/>,
@@ -60,6 +61,9 @@ const App = () => {
     ];
 
     const resourcesAdminRoot = [
+        <Resource name="person" {...person}/>,
+        <Resource name="identificationTypes" />,
+        <Resource name="genders" />,
         <Resource name="provinces" />,
         <Resource name="cities" {...cities} />,
         <Resource name="departments" {...departments} />,
@@ -70,7 +74,6 @@ const App = () => {
         <Resource name="healthcareprofessionals" {...healthcareprofessionals}/>,
         <Resource name="healthcareprofessionalspecialties" {...healthcareprofessionalspecialties}/>,
         <Resource name="educationtypes"/>,
-        <Resource name="person" {...person}/>,
         <Resource name="users" {...users}/>,
         <Resource name="password-reset" {...passwordReset}/>,
         <Resource name="roles" />,

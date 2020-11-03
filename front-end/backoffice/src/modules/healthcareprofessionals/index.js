@@ -5,7 +5,6 @@ import HealthcareProfessionalEdit from './edit';
 
 export default {
     show: HealthcareProfessionalShow,
-    list: HealthcareProfessionalList,
     create: HealthcareProfessionalCreate,
     edit: HealthcareProfessionalEdit,
 };

@@ -28,13 +28,13 @@ const BedFilter = props =>(
 const BedList = props => (
     <List {...props} hasCreate={false} filters={<BedFilter/>}>
         <Datagrid rowClick="show">
-                <TextField source="bedNumber" />
-                <ReferenceField source="roomId" reference="rooms">
-                    <FunctionField render={renderRoom} />
-                </ReferenceField>
-                <BooleanField source="enabled" />
-                <BooleanField source="available" />
-                <BooleanField source="free" />
+            <TextField source="bedNumber" />
+            <ReferenceField source="roomId" reference="rooms">
+                <FunctionField render={renderRoom} />
+            </ReferenceField>
+            <BooleanField source="enabled" />
+            <BooleanField source="available" />
+            <BooleanField source="free" />
         </Datagrid>
     </List>
 );

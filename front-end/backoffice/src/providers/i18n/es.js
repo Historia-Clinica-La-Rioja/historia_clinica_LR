@@ -204,7 +204,7 @@ export default {
             }
         },
         internmentepisodes: {
-            name: 'Episodio de internación ||| Episodios de internación',
+            name: 'Episodio de internación |||| Episodios de internación',
             fields: {
                 entryDate: 'Fecha de entrada'
             }
@@ -212,7 +212,12 @@ export default {
         person: {
             name: 'Persona |||| Personas',
             fields: {
-                firstName: 'Nombre'
+                firstName: 'Nombre',
+                lastName: 'Apellido',
+                genderId: 'Género',
+                identificationTypeId: 'Tipo de documento',
+                identificationNumber: 'Nº de documento',
+                birthDate: 'Fecha de nacimiento'
             }
         }
     },

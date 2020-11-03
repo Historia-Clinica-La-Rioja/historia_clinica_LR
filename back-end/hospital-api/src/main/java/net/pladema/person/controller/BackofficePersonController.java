@@ -24,7 +24,9 @@ public class BackofficePersonController extends AbstractBackofficeController<Per
 					public Example<Person> buildExample(Person entity) {
 						ExampleMatcher matcher = ExampleMatcher
 								.matching()
-								.withMatcher("identificationNumber", GenericPropertyMatcher::startsWith);
+								.withMatcher("identificationNumber", GenericPropertyMatcher::startsWith)
+								.withMatcher("firstName", x -> x.ignoreCase().contains())
+								.withMatcher("lastName", x -> x.ignoreCase().contains());
 						return Example.of(entity, matcher);
 					}
 				}
