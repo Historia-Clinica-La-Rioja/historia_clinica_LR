@@ -707,8 +707,8 @@ export interface MasterdataDto<T> extends MasterDataInterface<T>, Serializable {
 
 export interface MedicalCoverageDto {
     acronym: string;
-    id: number;
     dateQuery: string;
+    id: number;
     name: string;
     rnos: string;
     service: string;

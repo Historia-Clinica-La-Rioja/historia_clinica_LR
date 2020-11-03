@@ -111,6 +111,15 @@ public class PatientServiceImpl implements PatientService {
 	}
 
 	@Override
+	public PatientMedicalCoverageBo getCoverage(Integer patientMedicalCoverageId) {
+		LOG.debug("Input data -> {}", patientMedicalCoverageId);
+		PatientMedicalCoverageVo queryResult = patientRepository.getPatientCoverage(patientMedicalCoverageId);
+		PatientMedicalCoverageBo result = new PatientMedicalCoverageBo(queryResult);
+		LOG.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
 	public List<PatientMedicalCoverageBo> getHealthInsurances(Integer patientId) {
 		LOG.debug("Input data -> {}", patientId);
 		List<PatientMedicalCoverageVo> queryResult = patientRepository.getPatientHealthInsurances(patientId);

@@ -23,6 +23,8 @@ public interface PatientService {
 
     List<PatientMedicalCoverageBo> getCoverages(Integer patientId);
 
+    PatientMedicalCoverageBo getCoverage(Integer patientMedicalCoverageId);
+
     List<PatientMedicalCoverageBo> getHealthInsurances(Integer patientId);
 
     List<PatientMedicalCoverageBo> getPrivateHealthInsurances(Integer patientId);

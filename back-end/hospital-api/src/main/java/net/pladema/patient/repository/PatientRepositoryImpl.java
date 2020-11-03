@@ -44,7 +44,39 @@ public class PatientRepositoryImpl implements PatientRepositoryCustom {
         return patientSearchQuery.construct(query.getResultList());
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public PatientMedicalCoverageVo getPatientCoverage(Integer patientMedicalCoverageId) {
+        String sqlString = "SELECT pmc.id as pmcid, pmc.affiliate_number, pmc.vigency_date, mc.id, mc.name, hi.rnos, hi.acronym, phi.plan, phid.id as phid, phid.start_date, phid.end_date " +
+                "FROM patient_medical_coverage pmc " +
+                "JOIN medical_coverage mc ON (pmc.medical_coverage_id = mc.id) " +
+                "LEFT JOIN health_insurance hi ON (mc.id = hi.id) " +
+                "LEFT JOIN private_health_insurance phi ON (mc.id = phi.id) "+
+                "LEFT JOIN private_health_insurance_details phid ON (pmc.private_health_insurance_details_id = phid.id) "+
+                "WHERE pmc.active = true " +
+                "AND pmc.id = :patientMedicalCoverageId ";
 
+        List<Object[]> queryResult = entityManager.createNativeQuery(sqlString)
+                .setParameter("patientMedicalCoverageId", patientMedicalCoverageId)
+                .getResultList();
+        List<PatientMedicalCoverageVo> result = new ArrayList<>();
+        queryResult.forEach(h ->
+                result.add(
+                        new PatientMedicalCoverageVo(
+                                (Integer) h[0],
+                                (String) h[1],
+                                h[2] != null ? ((Date) h[2]).toLocalDate() : null,
+                                (Integer) h[3],
+                                (String) h[4],
+                                (Integer) h[5],
+                                (String) h[6],
+                                (String) h[7],
+                                (Integer) h[8],
+                                h[9] != null ? ((Date) h[9]).toLocalDate() : null,
+                                h[10] != null ? ((Date) h[10]).toLocalDate() : null))
+        );
+        return result.get(0);
+    }
 
     @Override
     @Transactional(readOnly = true)

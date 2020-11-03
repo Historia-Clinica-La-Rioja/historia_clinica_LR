@@ -246,9 +246,19 @@ public class PatientController {
 		return ResponseEntity.ok().body(result);
 	}
 
-	@GetMapping(value = "/healthInsurances")
+	@GetMapping(value = "/{patientMedicalCoverageId}/coverage")
+	public ResponseEntity<PatientMedicalCoverageDto> getPatientMedicalCoverage(
+			@PathVariable(value = "patientMedicalCoverageId", required = true) Integer patientMedicalCoverageId) {
+		LOG.debug("Input data -> patientMedicalCoverageId {}", patientMedicalCoverageId);
+		PatientMedicalCoverageBo serviceResult = patientService.getCoverage(patientMedicalCoverageId);
+		PatientMedicalCoverageDto result = patientMedicalCoverageMapper.toPatientMedicalCoverageDto(serviceResult);
+		LOG.debug("result -> {}", result);
+		return ResponseEntity.ok().body(result);
+	}
+
+	@GetMapping(value = "/{patientId}/healthInsurances")
 	public ResponseEntity<List<PatientMedicalCoverageDto>> getPatientHealthInsurances(
-			@RequestParam(value = "patientId", required = true) Integer patientId) {
+			@PathVariable(name = "patientId", required = true) Integer patientId) {
 		LOG.debug("Input data -> patientId {}", patientId);
 		List<PatientMedicalCoverageBo> serviceResult = patientService.getHealthInsurances(patientId);
 		List<PatientMedicalCoverageDto> result = patientMedicalCoverageMapper.toListPatientMedicalCoverageDto(serviceResult);
@@ -256,9 +266,9 @@ public class PatientController {
 		return ResponseEntity.ok().body(result);
 	}
 
-    @GetMapping(value = "/privateHealthInsurances")
+    @GetMapping(value = "/{patientId}/privateHealthInsurances")
 	public ResponseEntity<List<PatientMedicalCoverageDto>> getPatientPrivateMedicalCoverages(
-            @RequestParam(value = "patientId", required = true) Integer patientId) {
+			@PathVariable(name = "patientId") Integer patientId) {
         LOG.debug("Input data -> patientId {}", patientId);
 		List<PatientMedicalCoverageBo> serviceResult = patientService.getPrivateHealthInsurances(patientId);
 		List<PatientMedicalCoverageDto> result = patientMedicalCoverageMapper.toListPatientMedicalCoverageDto(serviceResult);
@@ -271,7 +281,7 @@ public class PatientController {
 	public ResponseEntity<List<Integer>> addPatientMedicalCoverages(
 			@PathVariable(name = "patientId") Integer patientId,
 			@RequestBody List<PatientMedicalCoverageDto> coverages) throws URISyntaxException {
-			LOG.debug("Input data -> coverages {} ", coverages);
+		LOG.debug("Input data -> coverages {} ", coverages);
 		List<Integer> result = patientService.saveCoverages(patientMedicalCoverageMapper.toListPatientMedicalCoverageBo(coverages), patientId);
 		LOG.debug("Ids results -> {}", result);
 		return ResponseEntity.created(new URI("")).body(result);

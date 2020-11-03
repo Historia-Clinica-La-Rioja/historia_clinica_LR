@@ -10,6 +10,8 @@ public interface PatientRepositoryCustom {
 
     List<PatientSearch> getAllByOptionalFilter(PatientSearchFilter searchFilter);
 
+    PatientMedicalCoverageVo getPatientCoverage(Integer patientMedicalCoverageId);
+
     List<PatientMedicalCoverageVo> getPatientCoverages(Integer patientId);
 
     List<PatientMedicalCoverageVo> getPatientHealthInsurances(Integer patientId);
