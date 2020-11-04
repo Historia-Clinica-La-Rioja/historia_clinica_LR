@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { hasError, VALIDATIONS } from '@core/utils/form.utils';
-import { PATIENT_TYPE } from '@core/utils/patient.utils';
+import { IDENTIFICATION_TYPE_IDS, PATIENT_TYPE } from '@core/utils/patient.utils';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Moment } from 'moment';
 import { GenderDto, IdentificationTypeDto, PatientSearchDto } from '@api-rest/api-model';
@@ -21,7 +21,7 @@ const ROUTE_NEW = 'pacientes/new';
 const ROUTE_NEW_TEMPORARY = 'pacientes/temporary';
 const ROUTE_HOME = 'pacientes';
 const RENAPER_FFLAG = 'habilitarServicioRenaper';
-const DNI_ID = 1;
+
 @Component({
 	selector: 'app-search',
 	templateUrl: './search.component.html',
@@ -72,7 +72,7 @@ export class SearchComponent implements OnInit {
 				this.buildFormSearchWithValidations(params);
 				this.featureFlagService.isOn(RENAPER_FFLAG)
 					.subscribe(result => {
-						if (result && Number(this.identificationTypeId) === DNI_ID) {
+						if (result && Number(this.identificationTypeId) === IDENTIFICATION_TYPE_IDS.DNI) {
 							this.callRenaperService();
 						} else {
 							this.isLoading = false;
@@ -189,7 +189,8 @@ export class SearchComponent implements OnInit {
 
 	private buildFormSearchWithValidations(params) {
 		this.formSearch = this.formBuilder.group({
-			identificationNumber: [params.identificationNumber, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
+			identificationNumber: [params.identificationNumber, this.identificationTypeId == IDENTIFICATION_TYPE_IDS.NO_POSEE? [] :
+				[Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
 			identificationTypeId: [Number(params.identificationTypeId), Validators.required],
 			firstName: [params.firstName, Validators.required],
 			middleNames: [params.middleNames],
@@ -265,7 +266,7 @@ export class SearchComponent implements OnInit {
 	}
 
 	goToAddPatient(person) {
-		if (this.noIdentity) {
+		if (this.noIdentity || this.identificationTypeId == IDENTIFICATION_TYPE_IDS.NO_POSEE) {
 			this.router.navigate([this.routePrefix + ROUTE_NEW_TEMPORARY], {
 				queryParams: person
 			});

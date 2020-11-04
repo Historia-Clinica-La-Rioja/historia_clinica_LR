@@ -6,6 +6,7 @@ import { PatientService } from "@api-rest/services/patient.service";
 import { PatientMasterDataService } from "@api-rest/services/patient-master-data.service";
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { ContextService } from "@core/services/context.service";
+import { IDENTIFICATION_TYPE_IDS } from '@core/utils/patient.utils';
 
 const ROUTE_SEARCH = 'pacientes/search';
 const ROUTE_PROFILE = 'pacientes/profile/';
@@ -107,12 +108,24 @@ export class SearchCreateComponent implements OnInit {
 		}
 		else {
 			this.formSearch.controls.identifType.setValidators(Validators.required);
-			this.formSearch.controls.identifNumber.setValidators(Validators.required);
 			this.formSearch.controls.gender.setValidators(Validators.required);
 			this.formSearch.controls.IdentityVerificationStatus.clearValidators();
+			if (this.formSearch.controls.identifType.value !== IDENTIFICATION_TYPE_IDS.NO_POSEE)
+				this.formSearch.controls.identifNumber.setValidators([Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]);
 			updateForm(this.formSearch);
 		}
 	}
 
+	onIdentifTypeChange() {
+		let identifTypeID = this.formSearch.controls.identifType.value;
+
+		if (identifTypeID === IDENTIFICATION_TYPE_IDS.NO_POSEE) {
+			this.formSearch.controls.identifNumber.clearValidators();
+			updateForm(this.formSearch);
+		} else {
+			this.formSearch.controls.identifNumber.setValidators([Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]);
+			updateForm(this.formSearch);
+		}
+	}
 
 }

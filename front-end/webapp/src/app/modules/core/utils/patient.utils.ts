@@ -7,3 +7,8 @@ export const PATIENT_TYPE = {
 	REJECTED: 6, //
 	PERMANENT_INVALID: 7 // Sin pasar por Federar
 }
+
+export const IDENTIFICATION_TYPE_IDS = {
+	DNI: 1,
+	NO_POSEE: 11
+}

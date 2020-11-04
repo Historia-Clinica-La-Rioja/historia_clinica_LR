@@ -9,7 +9,7 @@
 			<div>
 				<mat-form-field appearance="outline">
 					<mat-label>Tipo</mat-label>
-					<mat-select formControlName="identifType">
+					<mat-select formControlName="identifType" (openedChange)="onIdentifTypeChange()">
 						<mat-option id="identifType" name="identifType" *ngFor="let type of identifyTypeArray"
 							[value]="type.id">
 							{{type.description}}
