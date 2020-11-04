@@ -63,6 +63,7 @@ public class RenaperController {
 				deferredResult.setResult(ResponseEntity.noContent().build());
 			}
 			PersonBasicDataResponseDto result = renaperMapper.fromPersonDataResponse(personData.get());
+			LOG.debug("Output -> {}", result);
 			deferredResult.setResult(ResponseEntity.ok().body(result));
 		});
 		return deferredResult;

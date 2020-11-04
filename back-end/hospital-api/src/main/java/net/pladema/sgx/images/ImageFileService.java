@@ -50,20 +50,28 @@ public class ImageFileService {
             LOG.error("Cannot read image file at {}", path);
             e.printStackTrace();
         }
-        LOG.debug(OUTPUT, result);
+        LOG.debug(OUTPUT, imageDataToString(result));
         return result;
     }
 
     public boolean saveImage(String path, String imageData) {
-        LOG.debug("Input parameters -> path {}, imageData {}", path, imageData);
+        LOG.debug("Input parameters -> path {}, imageData {}", path, imageDataToString(imageData));
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         os.writeBytes(imageData.getBytes());
         try {
-            return streamFile.saveFileInDirectory(path, os);
+            boolean result = streamFile.saveFileInDirectory(path, os);
+            LOG.debug(OUTPUT, result);
+            return result;
         } catch (IOException e) {
             LOG.error("Cannot save image file at {}", path);
             e.printStackTrace();
             return false;
         }
+    }
+
+    private String imageDataToString(String imageData){
+        return "(" +
+                "exists imageData='" + (imageData != null) + '\'' +
+                ')';
     }
 }

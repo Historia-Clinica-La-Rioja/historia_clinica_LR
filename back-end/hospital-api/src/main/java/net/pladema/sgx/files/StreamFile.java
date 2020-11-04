@@ -55,7 +55,7 @@ public class StreamFile {
         byte[] bytes = new byte[numberOfBytes];
         is.read(bytes, 0, numberOfBytes);
         result = new String(bytes, charset);
-        LOG.debug("Output -> {}", result);
+        LOG.debug("Output -> {}", dataToString(result));
         return result;
     }
 
@@ -63,7 +63,7 @@ public class StreamFile {
         LOG.debug("Input parameters -> path {}", path);
         Path filePath = Paths.get(path);
         byte[] data = Files.readAllBytes(filePath);
-        LOG.debug("Output -> data {}", data);
+        LOG.debug("Output -> data {}", bytesToString(data));
         return new ByteArrayInputStream(data);
     }
 
@@ -74,4 +74,11 @@ public class StreamFile {
         return Paths.get(rootDirectory).toString();
     }
 
+    private String dataToString(String data){
+        return "(String length='" + (data.length()) + '\'' + ')';
+    }
+
+    private String bytesToString(byte[] data){
+        return "(Byte array length='" + (data.length) + '\'' + ')';
+    }
 }

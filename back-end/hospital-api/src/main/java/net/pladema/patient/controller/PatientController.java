@@ -183,7 +183,7 @@ public class PatientController {
 	@Transactional
 	public ResponseEntity<Boolean> addPatientPhoto(@PathVariable(name = "patientId") Integer patientId,
 														   @RequestBody PersonPhotoDto personPhotoDto) {
-		LOG.debug(INPUT_PARAMETERS_PATIENT_ID, patientId);
+		LOG.debug("Input parameters -> patientId {}, PersonPhotoDto {}", patientId, personPhotoDto);
 		Patient patient = patientService.getPatient(patientId)
 				.orElseThrow(() -> new EntityNotFoundException(PATIENT_INVALID));
 		boolean result = personExternalService.savePersonPhoto(patient.getPersonId(), personPhotoDto.getImageData());

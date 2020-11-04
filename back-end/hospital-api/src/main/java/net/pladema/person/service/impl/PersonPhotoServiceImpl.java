@@ -44,6 +44,10 @@ public class PersonPhotoServiceImpl implements PersonPhotoService {
     @Override
     public boolean save(Integer personId, String imageData) {
         LOG.debug("Input parameters -> personId {}, imageData {}", personId, imageData);
+        if (imageData == null) {
+            LOG.debug(OUTPUT, false);
+            return false;
+        }
         String newFileName = imageFileService.createFileName();
         String completePath = buildCompleteFilePath(personId,  newFileName);
         PersonExtended personExtended = getPersonExtended(personId);
