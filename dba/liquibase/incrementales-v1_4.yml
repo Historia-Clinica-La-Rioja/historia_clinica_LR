@@ -262,16 +262,16 @@ databaseChangeLog:
                 INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Cirugía gastroenterológica', '320361000221100',2);
                 INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Psicología clínica', '722162001',2);
                     
-    - changeSet:        
-        id: addColumn-person-photo-file-path
-        author: tmedina
-        changes:
-            - addColumn:
-                columns:
-                - column:
-                    name: photo_file_path
-                    type: varchar(200)
-                    constraints:
-                        nullable: true
-                tableName: person_extended
+- changeSet:        
+    id: addColumn-person-photo-file-path
+    author: tmedina
+    changes:
+        - addColumn:
+            columns:
+            - column:
+                name: photo_file_path
+                type: varchar(200)
+                constraints:
+                    nullable: true
+            tableName: person_extended
 
