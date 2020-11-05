@@ -3,6 +3,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
 import { Router } from '@angular/router';
 import { ContextService } from "@core/services/context.service";
+import {PersonPhotoDto} from '@api-rest/api-model';
+import {PatientService} from '@api-rest/services/patient.service';
 
 const ROUTE_PROFILE = 'pacientes/profile/';
 
@@ -13,17 +15,21 @@ const ROUTE_PROFILE = 'pacientes/profile/';
 })
 export class ViewPatientDetailComponent implements OnInit {
 
+	public personPhoto: PersonPhotoDto;
 
 	private readonly routePrefix;
 
 	constructor(public dialogRef: MatDialogRef<ViewPatientDetailComponent>,
 				@Inject(MAT_DIALOG_DATA) public patient: ViewPatientBasicData,
 				private router: Router,
-				private contextService: ContextService) {
+				private contextService: ContextService,
+				private patientService: PatientService) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 
 	ngOnInit() {
+		this.patientService.getPatientPhoto(this.patient.id)
+			.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto;});
 	}
 
 	back() {
