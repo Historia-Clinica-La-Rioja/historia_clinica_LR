@@ -2,8 +2,7 @@ package net.pladema.hl7.dataexchange.mock;
 
 import net.pladema.hl7.dataexchange.model.domain.BundleVo;
 import net.pladema.hl7.dataexchange.model.domain.PatientVo;
-import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
-import org.hl7.fhir.r4.model.Coding;
+import net.pladema.hl7.supporting.exchange.documents.profile.PatientSummaryDocument;
 
 import java.time.LocalDate;
 
@@ -23,10 +22,7 @@ public class MockBundle {
         patient.setMiddlenames("SILVANA");
         patient.setLastname("OJEDA");
         resource.setPatient(patient);
-        resource.setType(new Coding()
-                .setSystem(CodingSystem.LOINC)
-                .setCode("60591-5")
-                .setDisplay("Patient summary Document"));
+        resource.setType(PatientSummaryDocument.TYPE);
 
         resource.setHasDocuments(true);
         return resource;

@@ -1,6 +1,7 @@
 package net.pladema.hl7.supporting.exchange.documents.profile;
 
 import ca.uhn.fhir.rest.param.TokenParam;
+
 import net.pladema.hl7.dataexchange.model.adaptor.FhirParam;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
 import org.hl7.fhir.r4.model.Coding;
@@ -19,9 +20,15 @@ public class FhirDocument {
     
     private final ApplicationContext applicationContext;
 
+
     public FhirDocument(ApplicationContext applicationContext){
         super();
         this.applicationContext=applicationContext;
+    }
+
+    static {
+        //Add all fhir documents supported
+        supported.put(PatientSummaryDocument.TYPE, PatientSummaryDocument.class);
     }
 
     public Boolean isSupported(TokenParam type){
@@ -53,5 +60,4 @@ public class FhirDocument {
     public static String defaultStringType(){
         return FhirParam.getParam(CodingSystem.LOINC,"60591-5");
     }
-    
 }
