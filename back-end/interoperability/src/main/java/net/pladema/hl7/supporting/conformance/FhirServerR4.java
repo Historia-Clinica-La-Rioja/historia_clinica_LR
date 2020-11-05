@@ -7,6 +7,9 @@ import ca.uhn.fhir.rest.server.interceptor.ResponseHighlighterInterceptor;
 import ca.uhn.fhir.validation.IValidatorModule;
 import net.pladema.hl7.supporting.implementer.validating.ApiFhirInstanceValidator;
 import net.pladema.hl7.supporting.implementer.validating.ApiResponseValidatingInterceptor;
+import net.pladema.hl7.supporting.security.ServerAuthInterceptor;
+import net.pladema.hl7.supporting.security.ApiCorsInterceptor;
+import org.springframework.context.ApplicationContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,8 +17,11 @@ import javax.servlet.annotation.WebServlet;
 @WebServlet( urlPatterns = "/fhir/*", displayName = "Fhir Server")
 public class FhirServerR4 extends RestfulServer {
 
-    public FhirServerR4(){
+    private  final ApplicationContext applicationContext;
+
+    public FhirServerR4(ApplicationContext applicationContext){
         super();
+        this.applicationContext=applicationContext;
     }
 
     @Override
@@ -33,6 +39,8 @@ public class FhirServerR4 extends RestfulServer {
                 .registerValidatorModule(validatorModule);
 
         registerInterceptor(new ApiResponseValidatingInterceptor(validatorModule));
+        registerInterceptor(new ApiCorsInterceptor());
+        registerInterceptor(applicationContext.getBean(ServerAuthInterceptor.class));
         registerInterceptor(new ResponseHighlighterInterceptor());
     }
 }
