@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class BackofficeClinicalSpecialtyStore implements BackofficeStore<ClinicalSpecialty, Integer> {
@@ -33,12 +32,8 @@ public class BackofficeClinicalSpecialtyStore implements BackofficeStore<Clinica
         clinicalSpecialty.setClinicalSpecialtyTypeId(ClinicalSpecialtyType.Specialty);
         if(clinicalSpecialty.withoutName())
             clinicalSpecialty.setName(null);
-        ExampleMatcher matcher = ExampleMatcher
-                .matching()
-                .withIgnoreCase()
-                .withMatcher("name", ExampleMatcher.GenericPropertyMatcher::contains);
         return repository.findAll(
-                Example.of(clinicalSpecialty, matcher),
+                buildExample(clinicalSpecialty),
                 PageRequest.of(
                         pageable.getPageNumber(),
                         pageable.getPageSize(),
@@ -81,6 +76,11 @@ public class BackofficeClinicalSpecialtyStore implements BackofficeStore<Clinica
 
     @Override
     public Example<ClinicalSpecialty> buildExample(ClinicalSpecialty entity) {
-        return null;
+        ExampleMatcher matcher = ExampleMatcher
+                .matching()
+                .withIgnoreCase()
+                .withMatcher("name", ExampleMatcher.GenericPropertyMatcher::contains)
+                .withMatcher("sctidCode", ExampleMatcher.GenericPropertyMatcher::contains);
+        return Example.of(entity, matcher);
     }
 }
