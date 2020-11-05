@@ -106,6 +106,9 @@ export class SolveProblemComponent implements OnInit {
 			const inactivationDate = fechaFin.toDate();
 			if(this.startDate > inactivationDate)
 				this.form.controls.fechaFin.setErrors({min:true});
+			const actualDate = new Date();
+			if (inactivationDate > actualDate)
+				this.form.controls.fechaFin.setErrors({max: true});
 		}
 	}
 

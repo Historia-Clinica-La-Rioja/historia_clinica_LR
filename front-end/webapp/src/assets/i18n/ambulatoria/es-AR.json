@@ -59,7 +59,8 @@
 					"CONCEPT_LABEL": "Problema",
 					"CRONICO": "Crónico",
 					"errors": {
-						"FECHA_FIN_MIN": "La fecha de fin no puede ser anterior a la fecha de inicio"
+						"FECHA_FIN_MIN": "La fecha de fin no puede ser anterior a la fecha de inicio",
+						"FECHA_FIN_MAX": "La fecha de fin no puede ser posterior a la fecha actual"
 					},
 					"FECHA_FIN": "Fecha fin",
 					"FECHA_INICIO": "Fecha inicio",

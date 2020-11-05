@@ -37,6 +37,9 @@
 					<mat-error *ngIf="this.hasError('min', 'fechaFin')"
 							   [translate]="'ambulatoria.paciente.nueva-consulta.problemas.errors.FECHA_FIN_MIN'">
 					</mat-error>
+					<mat-error *ngIf="this.hasError('max', 'fechaFin')"
+							   [translate]="'ambulatoria.paciente.nueva-consulta.problemas.errors.FECHA_FIN_MAX'">
+					</mat-error>
 				</mat-form-field>
 
 				<div class="buttons-solve-problem">
