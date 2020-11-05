@@ -18,7 +18,8 @@
 	<inceptionYear>2020</inceptionYear>
 	<modules>
 		<module>hospital-api</module>
-	</modules>
+        <module>interoperability</module>
+    </modules>
 	<properties>
 	</properties>
 

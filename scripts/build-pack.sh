@@ -16,7 +16,7 @@ cd -
 
 
 cd back-end
-mvn -B -e dependency:go-offline -B
+mvn package -B -e dependency:go-offline -B
 mvn clean package
 cd -
 
