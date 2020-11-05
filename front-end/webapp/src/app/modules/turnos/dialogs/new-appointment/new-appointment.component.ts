@@ -161,8 +161,10 @@ export class NewAppointmentComponent implements OnInit {
 		this.showAddPatient = true;
 	}
 
-	getFullHealthInsuranceText(medicalCoverage): string {
-		return [medicalCoverage.acronym, medicalCoverage.name].filter(Boolean).join(' - ');
+	getFullMedicalCoverageText(patientMedicalCoverage): string {
+		const medicalCoverageText = [patientMedicalCoverage.medicalCoverage.acronym, patientMedicalCoverage.medicalCoverage.name]
+			.filter(Boolean).join(' - ');
+		return [medicalCoverageText, patientMedicalCoverage.affiliateNumber].filter(Boolean).join(' / ');
 	}
 
 	submit(): void {

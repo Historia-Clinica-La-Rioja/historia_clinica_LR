@@ -47,8 +47,7 @@ export class EditPatientComponent implements OnInit {
 	public completeDataPatient: CompletePatientDto;
 	public patientId: any;
 
-
-	private medicalCoveragesToSave: PatientMedicalCoverage[];
+	private medicalCoverages: PatientMedicalCoverage[];
 
 	constructor(private formBuilder: FormBuilder,
 		private router: Router,
@@ -122,6 +121,7 @@ export class EditPatientComponent implements OnInit {
 							});
 					});
 				this.formBuild();
+				this.setPatientMedicalCoverages();
 			});
 
 		this.personMasterDataService.getGenders()
@@ -191,9 +191,9 @@ export class EditPatientComponent implements OnInit {
 			let personRequest: APatientDto = this.mapToPersonRequest();
 			this.patientService.editPatient(personRequest, this.patientId)
 				.subscribe(patientId => {
-					if (this.medicalCoveragesToSave) {
+					if (this.medicalCoverages) {
 						const patientMedicalCoveragesDto: PatientMedicalCoverageDto[] =
-							this.medicalCoveragesToSave.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
+							this.medicalCoverages.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
 						this.patientService.addPatientMedicalCoverages(this.patientId, patientMedicalCoveragesDto)
 							.subscribe();
 					}
@@ -279,31 +279,19 @@ export class EditPatientComponent implements OnInit {
 	}
 
 	openMedicalCoverageDialog(): void {
-
-		this.patientService.getPatientMedicalCoverages(this.patientId)
-			.pipe(
-				map(
-					patientMedicalCoveragesDto =>
-						patientMedicalCoveragesDto.map(s => this.mapperService.toPatientMedicalCoverage(s))
-				)
-			)
-			.subscribe((s: PatientMedicalCoverage[]) => {
-
-				const dialogRef = this.dialog.open(MedicalCoverageComponent, {
-					data: {
-						genderId: this.form.getRawValue().genderId,
-						identificationNumber: this.form.getRawValue().identificationNumber,
-						identificationTypeId: this.form.getRawValue().identificationTypeId,
-						initValues: s,
-					}
-				});
-				dialogRef.afterClosed().subscribe(medicalCoverages => {
-					if (medicalCoverages) {
-						this.medicalCoveragesToSave = medicalCoverages.patientMedicalCoverages;
-					}
-				});
+		const dialogRef = this.dialog.open(MedicalCoverageComponent, {
+			data: {
+				genderId: this.form.getRawValue().genderId,
+				identificationNumber: this.form.getRawValue().identificationNumber,
+				identificationTypeId: this.form.getRawValue().identificationTypeId,
+				initValues: this.medicalCoverages,
 			}
-			);
+		});
+		dialogRef.afterClosed().subscribe(medicalCoverages => {
+			if (medicalCoverages) {
+				this.medicalCoverages = medicalCoverages.patientMedicalCoverages;
+			}
+		});
 	}
 
 	goBack(): void {
@@ -333,6 +321,17 @@ export class EditPatientComponent implements OnInit {
 					this.disableFormField();
 				}
 			});
+	}
+
+	private setPatientMedicalCoverages(): void {
+		this.patientService.getPatientMedicalCoverages(this.patientId)
+		.pipe(
+			map(
+				patientMedicalCoveragesDto =>
+					patientMedicalCoveragesDto.map(s => this.mapperService.toPatientMedicalCoverage(s))
+			)
+		)
+		.subscribe((s: PatientMedicalCoverage[]) => {this.medicalCoverages = s});
 	}
 
 }

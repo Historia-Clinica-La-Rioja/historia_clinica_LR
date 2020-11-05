@@ -89,7 +89,7 @@
 									id="medicalCoverage"
 									name="medicalCoverage"
 									*ngFor="let patientMedicalCoverage of patientMedicalCoverages" [value]="patientMedicalCoverage">
-									{{getFullHealthInsuranceText(patientMedicalCoverage.medicalCoverage)}}
+									{{getFullMedicalCoverageText(patientMedicalCoverage)}}
 								</mat-option>
 							</mat-select>
 						</mat-form-field>

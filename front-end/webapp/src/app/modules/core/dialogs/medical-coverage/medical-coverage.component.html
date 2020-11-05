@@ -3,9 +3,10 @@
 
 	<mat-card fxLayout="column" fxLayoutGap="10px">
 		<strong>Obra Sociales activas</strong>
-		<div fxLayout="column" fxLayoutGap="10px">
-			<div class="spinner" *ngIf="loading else viewPatientHealthInsurances">
+		<div fxLayout="column">
+			<div class="spinner" *ngIf="loading else viewPatientHealthInsurances" fxLayout="column" fxLayoutGap="25px">
 				<mat-spinner color="primary"></mat-spinner>
+				<span class="primary">Consultando cobertura</span>
 			</div>
 			<ng-template #viewPatientHealthInsurances>
 				<mat-card *ngFor="let patientMedicalCoverage of getPatientHealthInsurances()">
@@ -42,7 +43,7 @@
 					<input id="healthInsuranceAffiliateNumber" name="healthInsuranceAffiliateNumber"
 						formControlName="affiliateNumber" placeholder="{{'Nro de afiliado' | translate}}" matInput>
 				</mat-form-field>
-				<button mat-stroked-button color="primary" class="uppercase margin" id="add-health-insurance"
+				<button mat-stroked-button color="primary" class="uppercase margin" id="add-health-insurance" type="button"
 					(click)="addHealthInsurance()" name="add-health-insurance">Agregar Obra Social</button>
 			</form>
 		</div>
@@ -51,22 +52,28 @@
 
 	<mat-card fxLayout="column" fxLayoutGap="10px">
 		<strong>Prepagas activas</strong>
-		<div fxLayout="column" fxLayoutGap="10px">
-			<mat-card *ngFor="let patientPrivateHealthInsurance of getPatientPrivateHealthInsurances()">
-				<mat-card-content>
-					<div fxLayout="row" fxLayoutAlign="space-between">
-						<span>{{getPrivateHealthInsuranceText(patientPrivateHealthInsurance.medicalCoverage)}}</span>
-						<span class="capitalize-first-letter" >{{getDatesText(patientPrivateHealthInsurance)}}</span>
-					</div>
-					<div fxLayout="row" fxLayoutAlign="space-between">
-						<app-editable-field [fieldName]="'Nro de credencial'"
-							[value]="patientPrivateHealthInsurance.affiliateNumber"
-							(newValueEmitter)="patientPrivateHealthInsurance.affiliateNumber = $event">
-						</app-editable-field>
-						<div class="valid-date">{{patientPrivateHealthInsurance.validDate | date: 'dd/MM/yyyy'}}</div>
-					</div>
-				</mat-card-content>
-			</mat-card>
+		<div fxLayout="column">
+			<div class="spinner" *ngIf="loading else viewPatientPrivateHealthInsurances" fxLayout="column" fxLayoutGap="25px">
+				<mat-spinner color="primary"></mat-spinner>
+				<span class="primary">Consultando cobertura</span>
+			</div>
+			<ng-template #viewPatientPrivateHealthInsurances>
+				<mat-card *ngFor="let patientPrivateHealthInsurance of getPatientPrivateHealthInsurances()">
+					<mat-card-content>
+						<div fxLayout="row" fxLayoutAlign="space-between">
+							<span>{{getPrivateHealthInsuranceText(patientPrivateHealthInsurance.medicalCoverage)}}</span>
+							<span class="capitalize-first-letter" >{{getDatesText(patientPrivateHealthInsurance)}}</span>
+						</div>
+						<div fxLayout="row" fxLayoutAlign="space-between">
+							<app-editable-field [fieldName]="'Nro de credencial'"
+								[value]="patientPrivateHealthInsurance.affiliateNumber"
+								(newValueEmitter)="patientPrivateHealthInsurance.affiliateNumber = $event">
+							</app-editable-field>
+							<div class="valid-date">{{patientPrivateHealthInsurance.validDate | date: 'dd/MM/yyyy'}}</div>
+						</div>
+					</mat-card-content>
+				</mat-card>
+			</ng-template>
 		</div>
 
 		<div>
@@ -104,7 +111,7 @@
 						<input type="text" placeholder="{{ 'Ingresar Plan' | translate }}" aria-label="Number"
 							formControlName="plan" matInput>
 					</mat-form-field>
-					<button mat-stroked-button color="primary" class="uppercase margin" id="add-medical-coverage"
+					<button mat-stroked-button color="primary" class="uppercase margin" id="add-medical-coverage" type="button"
 						name="add-medical-coverage" (click)="addPrivateHealthInsurance()">Agregar Prepaga
 					</button>
 
