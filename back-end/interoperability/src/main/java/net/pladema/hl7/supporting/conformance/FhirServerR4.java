@@ -2,6 +2,7 @@ package net.pladema.hl7.supporting.conformance;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.api.EncodingEnum;
+import ca.uhn.fhir.rest.server.IResourceProvider;
 import ca.uhn.fhir.rest.server.RestfulServer;
 import ca.uhn.fhir.rest.server.interceptor.ResponseHighlighterInterceptor;
 import ca.uhn.fhir.validation.IValidatorModule;
@@ -13,6 +14,7 @@ import org.springframework.context.ApplicationContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import java.util.Map;
 
 @WebServlet( urlPatterns = "/fhir/*", displayName = "Fhir Server")
 public class FhirServerR4 extends RestfulServer {
@@ -31,6 +33,11 @@ public class FhirServerR4 extends RestfulServer {
         setFhirContext(context);
         this.setDefaultPrettyPrint( true );
         this.setDefaultResponseEncoding( EncodingEnum.JSON );
+
+        // Register resource providers
+        Map<String, IResourceProvider> providers = applicationContext.getBeansOfType(IResourceProvider.class);
+        if(!providers.isEmpty())
+            setResourceProviders(providers.values());
 
         //Create a FhirInstanceValidator and register it to validator
         IValidatorModule validatorModule = new ApiFhirInstanceValidator(getFhirContext());
