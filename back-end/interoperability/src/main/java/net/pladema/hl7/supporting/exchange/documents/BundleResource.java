@@ -11,10 +11,14 @@
 package net.pladema.hl7.supporting.exchange.documents;
 
 import ca.uhn.fhir.rest.param.TokenParam;
+
+import net.pladema.hl7.dataexchange.model.adaptor.FhirID;
+import net.pladema.hl7.dataexchange.mock.MockBundle;
+import net.pladema.hl7.dataexchange.model.domain.BundleVo;
+import net.pladema.hl7.supporting.exchange.restful.validator.DocumentReferenceValidation;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.IdType;
 import org.hl7.fhir.r4.model.Meta;
-import net.pladema.hl7.dataexchange.model.adaptor.FhirID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,21 +31,40 @@ import java.util.Date;
 @ConditionalOnProperty(value="ws.renaper.enabled", havingValue = "true")
 public class BundleResource {
 
+    private final DocumentReferenceResource documentReferenceResource;
+    private final DocumentReferenceValidation documentReferenceValidation;
+
     @Value("${app.default.language}")
     private String language;
 
     @Value("${ws.renaper.dominio}")
     private String dominio;
 
-
     @Autowired
-    public BundleResource() {
+    public BundleResource(DocumentReferenceResource documentReferenceResource,
+                          DocumentReferenceValidation documentReferenceValidation) {
         super();
+        this.documentReferenceResource = documentReferenceResource;
+        this.documentReferenceValidation=documentReferenceValidation;
     }
-    
+
     public Bundle getExistingDocumentsReferences (TokenParam subject,
                                                   TokenParam custodian, TokenParam type) {
-        return null;
+        //Input parameters required validation
+        return documentReferenceValidation.inputParameter(subject, custodian, type, dominio).orElseGet(
+                //returns a default value directly if the Optional is empty (the data of document is valid)
+                () -> {
+                    //TODO should be replaced by database real search
+                    BundleVo data = MockBundle.mockSearchDocument();
+                    //Data required validation
+                    return documentReferenceValidation.data(data, subject.getValue()).orElseGet(
+                            () -> { Bundle validDocument = empty();
+                                validDocument.addEntry(documentReferenceResource.fetchEntry(data));
+                                validDocument.setTotal(validDocument.getEntry().size());
+                                return validDocument;
+                            });
+                }
+        );
     }
 
     public Bundle assembleDocument(IdType id) {
