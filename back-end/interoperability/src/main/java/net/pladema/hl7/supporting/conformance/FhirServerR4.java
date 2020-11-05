@@ -1,6 +1,7 @@
 package net.pladema.hl7.supporting.conformance;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.narrative.CustomThymeleafNarrativeGenerator;
 import ca.uhn.fhir.rest.api.EncodingEnum;
 import ca.uhn.fhir.rest.server.IResourceProvider;
 import ca.uhn.fhir.rest.server.RestfulServer;
@@ -33,6 +34,10 @@ public class FhirServerR4 extends RestfulServer {
         setFhirContext(context);
         this.setDefaultPrettyPrint( true );
         this.setDefaultResponseEncoding( EncodingEnum.JSON );
+
+        //custom generate narratives
+        getFhirContext().setNarrativeGenerator(new CustomThymeleafNarrativeGenerator(
+                "classpath:narrative.properties"));
 
         // Register resource providers
         Map<String, IResourceProvider> providers = applicationContext.getBeansOfType(IResourceProvider.class);

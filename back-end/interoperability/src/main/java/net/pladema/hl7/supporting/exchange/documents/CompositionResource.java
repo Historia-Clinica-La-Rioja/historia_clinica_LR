@@ -10,6 +10,7 @@ package net.pladema.hl7.supporting.exchange.documents;
 import net.pladema.hl7.dataexchange.IResourceFhir;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirCode;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirID;
+import net.pladema.hl7.dataexchange.model.adaptor.FhirNarrative;
 import net.pladema.hl7.dataexchange.model.domain.CompositionVo;
 
 import org.hl7.fhir.r4.model.Bundle;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CompositionResource extends IResourceFhir {
@@ -73,16 +75,15 @@ public class CompositionResource extends IResourceFhir {
                                                           List<Bundle.BundleEntryComponent> entries){
         Composition.SectionComponent section = new Composition.SectionComponent()
                 .setCode(newCodeableConcept(system, code))
-                .setTitle(title);
-
+                .setTitle(title)
+                .setText(FhirNarrative.buildNarrative(entries
+                        .stream()
+                        .map(Bundle.BundleEntryComponent::getResource)
+                        .collect(Collectors.toList()))
+                );
         entries.forEach((entry) ->
             section.addEntry().setReference(entry.getFullUrl())
         );
-        //=====================Narrative=====================
-        /*Narrative humanText = new Narrative();
-        humanText.setStatus(Narrative.NarrativeStatus.GENERATED);
-        humanText.setDivAsString("");
-        section.setText(humanText);*/
         return section;
     }
 }

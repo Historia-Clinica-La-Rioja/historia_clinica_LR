@@ -1,0 +1,30 @@
+<div xmlns="http://www.w3.org/1999/xhtml">
+    <table>
+        <thead>
+        <tr>
+            <td>Descripción</td>
+            <td>Estado</td>
+            <td>Fecha</td>
+            <td>Protocolo/Serie</td>
+            <td>Organización</td>
+            <td>Ubicación</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td th:narrative="${resource.vaccineCode}"></td>
+            <td>
+                <th:block th:if="${not resource.statusElement.empty}" th:text="${resource.statusElement.value}"></th:block>
+            </td>
+            <td>
+                <th:block th:narrative="${resource.occurrenceDateTimeType}"></th:block>
+            </td>
+            <td>
+                <th:block th:if="${not #lists.isEmpty(resource.protocolApplied)}" th:text="${resource.protocolApplied[0].series}"></th:block>
+            </td>
+            <td th:text="${resource.location.reference}"></td>
+            <td th:text="${resource.location.reference}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>

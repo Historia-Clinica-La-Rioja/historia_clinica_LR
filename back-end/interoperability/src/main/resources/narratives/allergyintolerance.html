@@ -1,0 +1,28 @@
+<div xmlns="http://www.w3.org/1999/xhtml">
+    <table>
+        <thead>
+        <tr>
+            <td>Descripción</td>
+            <td>Tipo</td>
+            <td>Categoría</td>
+            <td>Criticalidad</td>
+            <td>Fecha</td>
+            <td>Reacción</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td th:narrative="${resource.code}"></td>
+            <td th:text="${resource.type}"></td>
+            <td>
+                <th:block th:if="${not resource.category.empty}" th:text="${resource.category[0]}"></th:block>
+            </td>
+            <td th:text="${resource.criticality}"></td>
+            <td th:narrative="${resource.onset}"></td>
+            <td>
+                <th:block th:if="${not resource.reaction.empty}" th:text="${resource.reaction[0].description}"></th:block>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

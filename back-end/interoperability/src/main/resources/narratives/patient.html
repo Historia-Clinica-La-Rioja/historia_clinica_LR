@@ -1,0 +1,31 @@
+<div>
+    <th:block th:unless="${#lists.isEmpty(resource.name)}">
+        <div th:narrative="${resource.name[0]}"></div>
+    </th:block>
+    <table>
+        <tbody>
+        <tr th:if="${not resource.identifier.empty}">
+            <td>Identificador</td>
+            <td th:narrative="${resource.identifier[0]}"></td>
+        </tr>
+        <tr th:if="${not resource.address.empty}">
+            <td>Dirección</td>
+            <td th:narrative="${resource.address[0]}"></td>
+        </tr>
+        <tr th:if="${not resource.birthDateElement.empty}">
+            <td>Fecha de nacimiento</td>
+            <td><span th:text="${#dates.format(resource.birthDateElement.value,'dd MMMM yyyy')}"></span></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!--
+        id: IPS-examples-Patient-01;
+        574687583;
+        active;
+        Martha DeLarosa ;
+        ph: +31788700800(HOME);
+        FEMALE;
+        birthDate: 01/05/1972</p>
+-->

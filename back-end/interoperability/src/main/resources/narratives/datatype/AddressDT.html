@@ -1,0 +1,6 @@
+<th:block th:each="line : ${resource.line}">
+    <span th:text="${line} + ' '"></span><br/>
+</th:block>
+<span th:if="${not resource.cityElement.empty}" th:text="${resource.city} + ' '"></span>
+<span th:if="${not resource.stateElement.empty}" th:text="${resource.state} + ' '"></span>
+<span th:if="${not resource.countryElement.empty}" th:text="${resource.country}+ ' '"></span>

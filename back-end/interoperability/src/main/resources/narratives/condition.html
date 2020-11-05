@@ -1,0 +1,26 @@
+<div xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/html">
+    <table>
+        <thead>
+        <tr>
+            <td>Problema</td>
+            <td>Estado</td>
+            <td>Verificación</td>
+            <td>Categoria</td>
+            <td>Severidad</td>
+            <td>Fecha Registro</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td th:narrative="${resource.code}"></td>
+            <td th:narrative="${resource.clinicalStatus}"></td>
+            <td th:narrative="${resource.verificationStatus}"></td>
+            <td>
+                <th:block th:if="${not #lists.isEmpty(resource.category)}" th:narrative="${resource.category[0]}"></th:block>
+            </td>
+            <td th:narrative="${resource.severity}"></td>
+            <td th:narrative="${resource.onset}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
