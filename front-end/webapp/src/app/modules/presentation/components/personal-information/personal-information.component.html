@@ -55,14 +55,21 @@
 					<mat-expansion-panel-header>
 						<mat-panel-title>
 							<div fxLayout="row">
-								<span class="bold">{{ patientMC.medicalCoverage?.acronym ?
+								<span class="bold medical-coverage-acronym-name">{{ patientMC.medicalCoverage?.acronym ?
 									patientMC.medicalCoverage?.acronym : patientMC.medicalCoverage?.name }}</span>
-								<span>&nbsp;{{ ' - ' + patientMC.affiliateNumber }}</span>
+								<span>&nbsp;{{ patientMC.affiliateNumber }}</span>
 							</div>
 						</mat-panel-title>
                     </mat-expansion-panel-header>
-					<span *ngIf="patientMC.medicalCoverage && patientMC.medicalCoverage.acronym">
-						{{ patientMC.medicalCoverage?.acronym ? patientMC.medicalCoverage?.name : '' }}</span>
+					<span>
+						{{ patientMC.medicalCoverage?.name}}
+					</span>
+					<span fxLayout="row">
+						<span>{{ 'Nro afiliado/credencial: ' }}&nbsp;</span>
+						<span *ngIf="patientMC.affiliateNumber; else noInformation">
+							{{ patientMC.affiliateNumber }}
+						</span>
+					</span>
 				</mat-expansion-panel>
 			</div>
 		</span>
