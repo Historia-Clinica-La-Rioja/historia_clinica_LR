@@ -1,6 +1,6 @@
-package net.pladema.clinichistory.hospitalization.controller.constraints.validator;
+package net.pladema.clinichistory.ips.controller.constraints.validator;
 
-import net.pladema.clinichistory.hospitalization.controller.constraints.AnthropometricDataValid;
+import net.pladema.clinichistory.ips.controller.constraints.AnthropometricDataValid;
 import net.pladema.clinichistory.ips.controller.dto.ClinicalObservationDto;
 
 import javax.validation.ConstraintValidator;
@@ -14,8 +14,8 @@ public class AnthropometricDataValidator implements ConstraintValidator<Anthropo
     @Override
     public boolean isValid(ClinicalObservationDto clinicalObservationDto, ConstraintValidatorContext context){
         if (clinicalObservationDto != null) {
-            int weightValue = Integer.parseInt(clinicalObservationDto.getValue());
-            return weightValue >= MIN_VALUE && weightValue <= MAX_VALUE;
+            int anthropometricValue = Integer.parseInt(clinicalObservationDto.getValue());
+            return anthropometricValue >= MIN_VALUE && anthropometricValue <= MAX_VALUE;
         }
         return true;
     }

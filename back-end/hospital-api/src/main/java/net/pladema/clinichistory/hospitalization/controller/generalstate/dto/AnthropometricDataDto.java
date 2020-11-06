@@ -3,7 +3,7 @@ package net.pladema.clinichistory.hospitalization.controller.generalstate.dto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.hospitalization.controller.constraints.AnthropometricDataValid;
+import net.pladema.clinichistory.ips.controller.constraints.AnthropometricDataValid;
 import net.pladema.clinichistory.ips.controller.dto.ClinicalObservationDto;
 
 import javax.annotation.Nullable;
@@ -21,12 +21,12 @@ public class AnthropometricDataDto implements Serializable {
 
     @Valid
     @Nullable
-    @AnthropometricDataValid
+    @AnthropometricDataValid(message = "{diagnosis.anthropometric.height.invalid}")
     private ClinicalObservationDto height;
 
     @Valid
     @Nullable
-    @AnthropometricDataValid
+    @AnthropometricDataValid(message = "{diagnosis.anthropometric.weight.invalid}")
     private ClinicalObservationDto weight;
 
     @Nullable

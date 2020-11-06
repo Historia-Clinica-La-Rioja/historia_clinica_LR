@@ -1,6 +1,6 @@
-package net.pladema.clinichistory.hospitalization.controller.constraints;
+package net.pladema.clinichistory.ips.controller.constraints;
 
-import net.pladema.clinichistory.hospitalization.controller.constraints.validator.AnthropometricDataValidator;
+import net.pladema.clinichistory.ips.controller.constraints.validator.AnthropometricDataValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
