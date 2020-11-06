@@ -53,7 +53,7 @@ public class DiaryRepositoryTest extends UnitRepository {
 		save(DiaryTestMocks.createDiary(2, 1, LocalDate.parse(startDate, formatter),
 				LocalDate.parse(endDate, formatter), (short) 1, true, (short) 4, true, true, true));
 
-		List<DiaryListVo> resultQuery = diaryRepository.getActiveDiariesFromProfessional(1,1);
+		List<DiaryListVo> resultQuery = diaryRepository.getActiveDiariesFromProfessional(1, 1);
 
 		Assertions.assertThat(resultQuery)
 				.isNotNull()

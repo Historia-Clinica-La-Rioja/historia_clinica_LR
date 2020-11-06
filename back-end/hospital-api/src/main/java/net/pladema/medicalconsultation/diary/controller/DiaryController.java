@@ -93,9 +93,10 @@ public class DiaryController {
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO, ADMINISTRADOR_AGENDA')")
     @ValidDiaryProfessionalId
     public ResponseEntity<Collection<DiaryListDto>> getDiaries(@PathVariable(name = "institutionId")  Integer institutionId,
-                                                               @RequestParam(name = "healthcareProfessionalId") Integer healthcareProfessionalId){
-        LOG.debug("Input parameters -> institutionId {}, healthcareProfessionalId {}", institutionId, healthcareProfessionalId);
-        Collection<DiaryBo> diaryBos = diaryService.getActiveDiariesFromProfessional(healthcareProfessionalId, institutionId);
+                                                               @RequestParam(name = "healthcareProfessionalId") Integer healthcareProfessionalId,
+                                                               @RequestParam(name = "specialtyId", required = false) Integer specialtyId){
+        LOG.debug("Input parameters -> institutionId {}, healthcareProfessionalId {}, specialtyId{}", institutionId, healthcareProfessionalId, specialtyId);
+        Collection<DiaryBo> diaryBos = diaryService.getActiveDiariesBy(healthcareProfessionalId, specialtyId, institutionId);
         Collection<DiaryListDto> result = diaryMapper.toCollectionDiaryListDto(diaryBos);
         LOG.debug(OUTPUT, result);
         return ResponseEntity.ok(result);

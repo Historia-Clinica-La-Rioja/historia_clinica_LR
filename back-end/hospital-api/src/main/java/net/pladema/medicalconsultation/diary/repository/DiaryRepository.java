@@ -70,7 +70,6 @@ public interface DiaryRepository extends JpaRepository<Diary, Integer> {
                                                         @Param("endDate") LocalDate newDiaryEnd,
                                                         @Param("excludeDiaryId") Integer excludeDiaryId);
 
-
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.DiaryListVo(" +
             "d, do.description) " +
@@ -81,6 +80,23 @@ public interface DiaryRepository extends JpaRepository<Diary, Integer> {
             "AND d.active = true "+
             "AND d.deleteable.deleted = false")
     List<DiaryListVo> getActiveDiariesFromProfessional(@Param("hcpId") Integer healthcareProfessionalId, @Param("instId") Integer institutionId);
+
+
+    @Transactional(readOnly = true)
+    @Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.DiaryListVo(" +
+            "d, do.description) " +
+            "FROM Diary d " +
+            "JOIN DoctorsOffice AS do ON (do.id = d.doctorsOfficeId) " +
+            "JOIN ClinicalSpecialtySector css ON css.id = do.clinicalSpecialtySectorId " +
+            "WHERE d.healthcareProfessionalId = :hcpId " +
+            "AND css.clinicalSpecialtyId = :specialtyId " +
+            "AND do.institutionId = :instId " +
+            "AND d.active = true "+
+            "AND d.deleteable.deleted = false")
+    List<DiaryListVo> getActiveDiariesFromProfessionalAndSpecialty(
+            @Param("hcpId") Integer healthcareProfessionalId,
+            @Param("specialtyId") Integer specialtyId,
+            @Param("instId") Integer institutionId);
     
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.CompleteDiaryListVo( " +

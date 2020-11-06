@@ -200,9 +200,15 @@ public class DiaryServiceImpl implements DiaryService {
 	}
 
 	@Override
-	public Collection<DiaryBo> getActiveDiariesFromProfessional(Integer healthcareProfessionalId, Integer institutionId) {
-		LOG.debug("Input parameters -> healthcareProfessionalId {}", healthcareProfessionalId);
-		List<DiaryListVo> diaries = diaryRepository.getActiveDiariesFromProfessional(healthcareProfessionalId,institutionId);
+	public Collection<DiaryBo> getActiveDiariesBy(Integer healthcareProfessionalId, Integer specialtyId, Integer institutionId) {
+		LOG.debug("Input parameters -> healthcareProfessionalId {}, specialtyId {}, institutionId {}", healthcareProfessionalId, specialtyId, institutionId);
+		List<DiaryListVo> diaries;
+
+		if (specialtyId == null)
+			diaries = diaryRepository.getActiveDiariesFromProfessional(healthcareProfessionalId, institutionId);
+		else
+			diaries = diaryRepository.getActiveDiariesFromProfessionalAndSpecialty(healthcareProfessionalId, specialtyId, institutionId);
+
 		List<DiaryBo> result = diaries.stream().map(this::createDiaryBoInstance).collect(toList());
 		LOG.debug(OUTPUT, result);
 		return result;
@@ -210,7 +216,7 @@ public class DiaryServiceImpl implements DiaryService {
 
 	private DiaryBo createDiaryBoInstance(DiaryListVo diaryListVo) {
 		LOG.debug("Input parameters -> diaryListVo {}", diaryListVo);
-		DiaryBo result = new DiaryBo();
+		DiaryBo result	 = new DiaryBo();
 		result.setId(diaryListVo.getId());
 		result.setDoctorsOfficeId(diaryListVo.getDoctorsOfficeId());
 		result.setDoctorsOfficeDescription(diaryListVo.getDoctorsOfficeDescription());
