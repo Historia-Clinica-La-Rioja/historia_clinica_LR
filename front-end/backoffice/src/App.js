@@ -24,7 +24,7 @@ import ProfessionalSpecialtyShow from './modules/professionalspecialties/show'
 import healthcareprofessionalspecialties from './modules/healthcareprofessionalspecialties'
 import doctorsoffices from './modules/doctorsoffices'
 
-import people from './modules/people'
+import person from './modules/person'
 import users from './modules/users';
 import passwordReset from './modules/password-reset';
 
@@ -70,7 +70,7 @@ const App = () => {
         <Resource name="healthcareprofessionals" {...healthcareprofessionals}/>,
         <Resource name="healthcareprofessionalspecialties" {...healthcareprofessionalspecialties}/>,
         <Resource name="educationtypes"/>,
-        <Resource name="people" {...people}/>,
+        <Resource name="person" {...person}/>,
         <Resource name="users" {...users}/>,
         <Resource name="password-reset" {...passwordReset}/>,
         <Resource name="roles" />,

@@ -9,7 +9,8 @@ import {
     TextField,
     DeleteButton, ReferenceField,
 } from 'react-admin';
-import PeopleReferenceInput from '../people/PeopleReferenceInput';
+
+import PersonReferenceInput from '../person/PersonReferenceInput';
 import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
 import CustomToolbar from "../../modules/components/CustomToolbar";
@@ -17,7 +18,7 @@ import CustomToolbar from "../../modules/components/CustomToolbar";
 const HealthcareProfessionalEdit = props => (
     <Edit {...props}>
         <SimpleForm redirect="show" toolbar={<CustomToolbar isEdit={true}/>}>
-            <PeopleReferenceInput source="personId" validate={[required()]} />
+            <PersonReferenceInput source="personId" validate={[required()]} />
             <TextInput source="licenseNumber" validate={[required()]} />
 
             <SectionTitle label="resources.healthcareprofessionals.fields.healthcareprofessionalspecialties"/>

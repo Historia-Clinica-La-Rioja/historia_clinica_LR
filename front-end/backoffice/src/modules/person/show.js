@@ -6,7 +6,7 @@ import {
 } from 'react-admin';
 
 
-const PeopleShow = props => (
+const PersonShow = props => (
     <Show {...props}>
         <SimpleShowLayout>
             <TextField source="firstName" />
@@ -15,4 +15,4 @@ const PeopleShow = props => (
     </Show>
 );
 
-export default PeopleShow;
+export default PersonShow;

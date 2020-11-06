@@ -1,15 +1,16 @@
 import React from 'react';
 import {AutocompleteInput, Create, ReferenceInput, required, SimpleForm, TextInput} from 'react-admin';
-import PeopleReferenceInput from '../people/PeopleReferenceInput';
-import CustomToolbar from "../../modules/components/CustomToolbar";
+
+import PersonReferenceInput from '../person/PersonReferenceInput';
+
 
 const searchToFilter = searchText => ({description: searchText ? searchText : -1});
 const searchSpecialtyToFilter = searchText => ({name: searchText ? searchText : -1});
 const renderSpecialty = (choice) => `${choice.description} - ${choice.descriptionProfessionRef}`;
 const HealthcareProfessionalCreate = props => (
     <Create {...props}>
-        <SimpleForm redirect="show" toolbar={<CustomToolbar />}>
-            <PeopleReferenceInput source="personId" validate={[required()]} />
+        <SimpleForm redirect="show" >
+            <PersonReferenceInput source="personId" validate={[required()]} />
 
             <TextInput source="licenseNumber" validate={[required()]} />
 

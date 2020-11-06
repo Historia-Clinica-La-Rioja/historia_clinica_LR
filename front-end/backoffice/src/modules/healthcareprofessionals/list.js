@@ -7,7 +7,7 @@ import {
     TextInput
 } from 'react-admin';
 
-import PeopleReferenceField from '../people/PeopleReferenceField';
+import PersonReferenceField from '../person/PersonReferenceField';
 
 const HealthcareProfessionalFilter = (props) => (
     <Filter {...props}>
@@ -19,7 +19,7 @@ const HealthcareProfessionalList = props => (
     <List {...props} filters={<HealthcareProfessionalFilter />}>
         <Datagrid rowClick="show">
             <TextField source="licenseNumber" />
-            <PeopleReferenceField source="personId" />
+            <PersonReferenceField source="personId" />
         </Datagrid>
     </List>
 );

@@ -209,8 +209,11 @@ export default {
                 entryDate: 'Fecha de entrada'
             }
         },
-        people: {
-            name: 'Persona ||| Personas'
+        person: {
+            name: 'Persona |||| Personas',
+            fields: {
+                firstName: 'Nombre'
+            }
         }
     },
 };

@@ -8,9 +8,9 @@ const renderPerson = (choice) => `${choice.identificationNumber} ${choice.lastNa
 //Así evitamos mostrar valores cuando el input está vacío
 const searchToFilter = searchText => ({identificationNumber: searchText ? searchText : -1});
 
-const PeopleReferenceInput = (props) => (
+const PersonReferenceInput = (props) => (
     <ReferenceInput
-        reference="people"
+        reference="person"
         sort={{ field: 'identificationNumber', order: 'ASC' }}
         filterToQuery={searchToFilter}
         {...props}
@@ -20,4 +20,4 @@ const PeopleReferenceInput = (props) => (
     </ReferenceInput>
 );
 
-export default PeopleReferenceInput;
+export default PersonReferenceInput;

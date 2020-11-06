@@ -9,8 +9,6 @@ import {
     TextInput,
 } from 'react-admin';
 
-import PeopleReferenceField from '../people/PeopleReferenceField';
-
 const PersonFilter = (props) => (
     <Filter {...props}>
         <TextInput source="username" />

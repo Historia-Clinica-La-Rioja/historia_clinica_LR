@@ -12,8 +12,9 @@ import {
     SelectInput,
     required,
 } from 'react-admin';
-import CustomToolbar from "../../modules/components/CustomToolbar";
-import PeopleReferenceField from '../people/PeopleReferenceField';
+
+import CustomToolbar from '../components/CustomToolbar';
+import PersonReferenceField from '../person/PersonReferenceField';
 import Aside from './Aside'
 import authProvider from '../../providers/authProvider';
 
@@ -42,7 +43,7 @@ const UserEdit = props => (
         aside={<Aside />} 
     >
         <SimpleForm toolbar={<CustomToolbar />}>
-            <PeopleReferenceField source="personId" />
+            <PersonReferenceField source="personId" />
             <TextInput source="username" validate={[required()]}/>
             <BooleanInput source="enable" validate={[required()]}/>
             <DateField source="lastLogin" showTime locales="es-AR"/>

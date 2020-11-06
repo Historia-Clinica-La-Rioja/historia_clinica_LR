@@ -13,7 +13,7 @@ import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
 import net.pladema.sgx.backoffice.rest.BackofficeQueryAdapter;
 
 @RestController
-@RequestMapping("backoffice/people")
+@RequestMapping("backoffice/person")
 public class BackofficePersonController extends AbstractBackofficeController<Person, Integer> {
 
 	public BackofficePersonController(PersonRepository repository) {

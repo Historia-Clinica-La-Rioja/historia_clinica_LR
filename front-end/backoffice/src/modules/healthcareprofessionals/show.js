@@ -28,7 +28,7 @@ const HealthcareProfessionalShow = props => (
     <Show actions={<HealthcareProfessionalShowActions />} {...props}>
         <SimpleShowLayout>
             <TextField source="licenseNumber" />
-            <ReferenceField source="personId" reference="people">
+            <ReferenceField source="personId" reference="person">
                 <FunctionField render={renderPerson}/>
             </ReferenceField>
 

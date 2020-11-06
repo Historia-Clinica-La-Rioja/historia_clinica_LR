@@ -24,7 +24,7 @@ const HealthcareProfessionalSpecialtyList = props => (
     <List {...props} hasCreate={false} filters={<HealthcareProfessionalSpecialtyFilter />}>
         <Datagrid rowClick="show">
             <ReferenceField source="healthcareProfessionalId" reference="healthcareprofessionals" link={false}>
-                <SubReference source="personId" reference="people" link={false}>
+                <SubReference source="personId" reference="person" link={false}>
                     <FunctionField render={renderPerson}/>
                 </SubReference>
             </ReferenceField>

@@ -5,13 +5,13 @@ import {
     TextInput,
     required,
 } from 'react-admin';
-import PeopleReferenceInput from '../people/PeopleReferenceInput';
-import CustomToolbar from "../../modules/components/CustomToolbar";
+
+import PersonReferenceInput from '../person/PersonReferenceInput';
 
 const UserCreate = props => (
     <Create {...props}>
-        <SimpleForm toolbar={<CustomToolbar />}>
-            <PeopleReferenceInput source="personId" validate={[required()]} />
+        <SimpleForm>
+            <PersonReferenceInput source="personId" validate={[required()]} />
             <TextInput source="username" validate={[required()]}/>
         </SimpleForm>
     </Create>
