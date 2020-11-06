@@ -1,17 +1,19 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { SnomedDto, OutpatientImmunizationDto } from '@api-rest/api-model';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Moment } from 'moment';
-import { SEMANTICS_CONFIG } from '../../../../constants/snomed-semantics';
-import { DateFormat, newMoment } from '@core/utils/moment.utils';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
-import { SnowstormService } from '@api-rest/services/snowstorm.service';
-import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { HceImmunizationService } from '@api-rest/services/hce-immunization.service';
-import { MatDialog } from "@angular/material/dialog";
-import { TranslateService } from '@ngx-translate/core';
-import { ConfirmDialogComponent } from "@core/dialogs/confirm-dialog/confirm-dialog.component";
+import {Component, Inject, OnInit} from '@angular/core';
+import {ClinicalSpecialtyDto, OutpatientImmunizationDto, SnomedDto} from '@api-rest/api-model';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Moment} from 'moment';
+import {SEMANTICS_CONFIG} from '../../../../constants/snomed-semantics';
+import {DateFormat, momentFormat, momentParseDate, newMoment} from '@core/utils/moment.utils';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {ActionDisplays, TableModel} from '@presentation/components/table/table.component';
+import {SnowstormService} from '@api-rest/services/snowstorm.service';
+import {SnackBarService} from '@presentation/services/snack-bar.service';
+import {HceImmunizationService} from '@api-rest/services/hce-immunization.service';
+import {TranslateService} from '@ngx-translate/core';
+import {ConfirmDialogComponent} from "@core/dialogs/confirm-dialog/confirm-dialog.component";
+import {AppointmentsService} from "@api-rest/services/appointments.service";
+import {ClinicalSpecialtyService} from "@api-rest/services/clinical-specialty.service";
+import {VACUNAS} from 'src/app/modules/historia-clinica/constants/summaries';
 
 @Component({
 	selector: 'app-aplicar-vacuna',
@@ -27,6 +29,12 @@ export class AplicarVacunaComponent implements OnInit {
 	searching = false;
 	conceptsResultsTable: TableModel<any>;
 	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
+	fixedSpecialty: boolean = true;
+	defaultSpecialty: ClinicalSpecialtyDto;
+	specialties: ClinicalSpecialtyDto[];
+	appliedVaccines: OutpatientImmunizationDto[];
+	public readonly vacunasSummary = VACUNAS;
+	public tableModel: TableModel<OutpatientImmunizationDto>;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: { patientId: number },
@@ -36,15 +44,43 @@ export class AplicarVacunaComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private readonly formBuilder: FormBuilder,
 		private readonly dialog: MatDialog,
-		private readonly translator: TranslateService
+		private readonly translator: TranslateService,
+		private readonly appointmentsService: AppointmentsService,
+		private readonly clinicalSpecialtyService: ClinicalSpecialtyService
 	) {
+		this.appliedVaccines = [];
 	}
 
 	ngOnInit(): void {
 		this.form = this.formBuilder.group({
 			date: [null, Validators.required],
 			snomed: [null, Validators.required],
-			note: [null, Validators.required]
+			note: [null, Validators.required],
+			clinicalSpecialty: []
+		});
+
+		this.appointmentsService.considerAppointments().subscribe(consider => {
+			if(consider)
+				this.setAppointmentSpecialty();
+			else
+				this.setLoggedProfessionalSpecialties();
+		});
+	}
+
+	setAppointmentSpecialty() {
+		this.clinicalSpecialtyService.getAppointmentClinicalSpecialty(this.data.patientId).subscribe(specialty => {
+			this.specialties = [specialty];
+			this.defaultSpecialty = specialty;
+			this.form.get('clinicalSpecialty').setValue(this.defaultSpecialty);
+		});
+	}
+
+	setLoggedProfessionalSpecialties() {
+		this.clinicalSpecialtyService.getLoggedInProfessionalClinicalSpecialties().subscribe( specialties => {
+			this.specialties = specialties;
+			this.fixedSpecialty = false;
+			this.defaultSpecialty = specialties[0];
+			this.form.get('clinicalSpecialty').setValue(this.defaultSpecialty);
 		});
 	}
 
@@ -92,43 +128,22 @@ export class AplicarVacunaComponent implements OnInit {
 
 	resetForm(): void {
 		delete this.snomedConcept;
-		this.form.reset();
 		delete this.conceptsResultsTable;
 	}
 
-	save() {
-
+	applyVaccine() {
 		if (this.form.valid && this.snomedConcept) {
-			this.translator.get('ambulatoria.paciente.vacunas.aplicar.save.CHANGE_STATE').subscribe((res: string) => {
-				const finishAppointment = this.dialog.open(ConfirmDialogComponent, {
-					width: '450px',
-					data: {
-						title: 'Aplicar vacuna',
-						content: `${res}`,
-						okButtonLabel: 'buttons.YES',
-						cancelButtonLabel: 'buttons.NO'
-					}
-				});
 
-				finishAppointment.afterClosed().subscribe(result => {
-						this.loading = true;
-						const vacuna: OutpatientImmunizationDto = {
-							administrationDate: this.form.value.date ? this.form.value.date.format(DateFormat.API_DATE) : null,
-							note: this.form.value.note,
-							snomed: this.snomedConcept
-						};
-						this.hceImmunizationService.gettingVaccine(vacuna, this.data.patientId, !result)
-						.subscribe((response: boolean) => {
-							this.loading = false;
-							this.dialogRef.close(vacuna);
-							this.snackBarService.showSuccess('ambulatoria.paciente.vacunas.aplicar.save.SUCCESS');
-						}, _ => {
-							this.snackBarService.showError('ambulatoria.paciente.vacunas.aplicar.save.ERROR');
-							this.loading = false;
-						});
+			const vacuna: OutpatientImmunizationDto = {
+				administrationDate: this.form.value.date ? this.form.value.date.format(DateFormat.API_DATE) : null,
+				note: this.form.value.note,
+				snomed: this.snomedConcept,
+				clinicalSpecialtyId: this.defaultSpecialty.id
+			};
 
-				});
-			});
+			this.appliedVaccines.push(vacuna);
+			this.resetForm();
+			this.tableModel = this.buildVaccinesTable(this.appliedVaccines);
 		}
 	}
 
@@ -152,4 +167,51 @@ export class AplicarVacunaComponent implements OnInit {
 		}
 	}
 
+	setDefaultSpecialty(){
+		this.defaultSpecialty = this.form.controls.clinicalSpecialty.value;
+	}
+
+	private buildVaccinesTable(data: OutpatientImmunizationDto[]): TableModel<OutpatientImmunizationDto> {
+		return {
+			columns: [
+				{
+					columnDef: 'vacuna',
+					header: 'Vacuna',
+					text: (row) => row.snomed.pt
+				},
+				{
+					columnDef: 'fecha',
+					header: 'Fecha de vacunación',
+					text: (row) => row.administrationDate ? momentFormat(momentParseDate(row.administrationDate), DateFormat.VIEW_DATE) : undefined
+				}
+			],
+			data
+		};
+	}
+
+	save() {
+
+			const finishAppointment = this.dialog.open(ConfirmDialogComponent, {
+				width: '450px',
+				data: {
+					title: 'Aplicar vacuna',
+					content: '¿Confirma la aplicación de las vacunas?',
+					okButtonLabel: 'buttons.YES',
+					cancelButtonLabel: 'buttons.NO'
+				}
+			});
+
+			finishAppointment.afterClosed().subscribe(() => {
+					this.loading = true;
+					this.hceImmunizationService.gettingVaccine(this.appliedVaccines, this.data.patientId)
+					.subscribe(() => {
+						this.loading = false;
+						this.dialogRef.close(this.appliedVaccines);
+						this.snackBarService.showSuccess('ambulatoria.paciente.vacunas.aplicar.save.SUCCESS');
+					}, _ => {
+						this.snackBarService.showError('ambulatoria.paciente.vacunas.aplicar.save.ERROR');
+						this.loading = false;
+					});
+			});
+	}
 }

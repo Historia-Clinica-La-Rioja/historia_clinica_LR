@@ -8,6 +8,7 @@ import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.Sno
 import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
 import org.springframework.validation.annotation.Validated;
 
+import javax.annotation.Nullable;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -27,4 +28,8 @@ public class OutpatientImmunizationDto {
 
     @NotNull(message = "{value.mandatory}")
     private String note;
+
+    @Valid
+    @Nullable
+    private Integer clinicalSpecialtyId;
 }

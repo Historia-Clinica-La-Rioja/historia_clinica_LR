@@ -2,6 +2,25 @@
 	<div class="mat-h2" [translate]="'ambulatoria.paciente.vacunas.aplicar.TITLE'"></div>
 </div>
 
+
+<div fxLayout="row">
+	<div class="mat-h4" [translate]="'Especialidad'"></div>
+</div>
+<div fxLayout="row" [formGroup]="form">
+	<mat-form-field appearance="outline">
+		<mat-select id="clinicalSpecialtyId"
+					name="clinicalSpecialty"
+					formControlName="clinicalSpecialty"
+					(selectionChange)="setDefaultSpecialty()"
+					[attr.disabled]="fixedSpecialty">
+			<mat-option *ngFor="let clinicalSpecialty of this.specialties" [value]="clinicalSpecialty">
+				<span class="mat-body">{{clinicalSpecialty.name}}</span>
+			</mat-option>
+		</mat-select>
+		<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+	</mat-form-field>
+</div>
+
 <div class="spinner" *ngIf="loading else addInmunization">
 	<mat-spinner color="primary"></mat-spinner>
 </div>
@@ -63,14 +82,29 @@
 			</ng-template>
 		</div>
 
+
+		<div *ngIf="tableModel?.data?.length > 0" fxLayout="row" fxLayoutGap="20px">
+			<div >
+				<app-summary-card [header]="vacunasSummary"
+								  [tooltip]="'historia-clinica.summary-card.vacunas.TOOLTIP'">
+					<app-table [model]="tableModel" ></app-table>
+				</app-summary-card>
+			</div>
+		</div>
+
 		<mat-dialog-actions align="end">
 			<button mat-stroked-button color="primary" mat-dialog-close> {{ 'buttons.CANCEL' | translate | uppercase }}
 			</button>
-			<button type="submit" *ngIf="snomedConcept" mat-raised-button color="primary">
-				{{'ambulatoria.paciente.vacunas.aplicar.SUBMIT' | translate | uppercase}}
+			<button (click)="applyVaccine()" *ngIf="snomedConcept" mat-raised-button color="primary">
+				{{'Aplicar vacuna' | translate | uppercase}}
+			</button>
+
+			<button type="submit" *ngIf="!snomedConcept" mat-raised-button color="primary">
+				{{'Confirmar vacunaciones' | translate | uppercase}}
 			</button>
 		</mat-dialog-actions>
 	</form>
+
 
 </ng-template>
 

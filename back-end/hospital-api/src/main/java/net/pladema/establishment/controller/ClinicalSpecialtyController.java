@@ -83,7 +83,7 @@ public class ClinicalSpecialtyController {
     }
     
     @GetMapping("/patient/{patientId}")
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
     public ResponseEntity<ClinicalSpecialtyDto> getAppointmentSpecialty(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId) {
@@ -102,7 +102,7 @@ public class ClinicalSpecialtyController {
     }
 
     @GetMapping("/loggedProfessionalClinicalSpecialty")
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
     public ResponseEntity<List<ClinicalSpecialty>> getLoggedInProfessionalClinicalSpecialties(
             @PathVariable(name = "institutionId") Integer institutionId) {
         Integer professionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());

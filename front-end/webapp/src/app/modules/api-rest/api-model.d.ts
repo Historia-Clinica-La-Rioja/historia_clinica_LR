@@ -772,6 +772,7 @@ export interface OutpatientFamilyHistoryDto {
 
 export interface OutpatientImmunizationDto {
     administrationDate: string;
+    clinicalSpecialtyId?: number;
     note: string;
     snomed: SnomedDto;
 }

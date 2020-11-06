@@ -42,6 +42,8 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RestController
 @Validated
@@ -140,27 +142,50 @@ public class OutpatientConsultationController implements OutpatientConsultationA
     public ResponseEntity<Boolean> gettingVaccine(
             Integer institutionId,
             Integer patientId,
-            Boolean finishAppointment,
-            OutpatientImmunizationDto vaccineDto) throws IOException, PDFDocumentException {
+            List<OutpatientImmunizationDto> vaccineDto) throws IOException, PDFDocumentException {
         LOG.debug("Input parameters -> institutionId {}, patientId {}, OutpatientImmunizationDto {}", institutionId, patientId, vaccineDto);
         Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
-        OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, true, null);
-
-        ImmunizationBo immunizationBo = outpatientConsultationMapper.fromOutpatientImmunizationDto(vaccineDto);
-        immunizationBo.setInstitutionId(institutionId);
+        Integer clinicalSpecialtyId = getClinicalSpecialtyId(vaccineDto);
+        OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, true, clinicalSpecialtyId);
 
         OutpatientDocumentBo outpatient = new OutpatientDocumentBo();
-        outpatient.setEvolutionNote(vaccineDto.getNote());
-        outpatient.setImmunizations(Collections.singletonList(immunizationBo));
+        outpatient.setEvolutionNote(extractNotes(vaccineDto));
+        outpatient.setImmunizations(extractImmunizations(vaccineDto,institutionId));
 
         outpatient = createOutpatientDocumentService.create(newOutPatient.getId(), patientId, outpatient);
+        outpatient.setClinicalSpecialty(clinicalSpecialtyService.getClinicalSpecialty(clinicalSpecialtyId)
+                .orElse(null));
 
-        if (Boolean.TRUE.equals(finishAppointment) && !disableValidation && appointmentExternalService.hasConfirmedAppointment(patientId,doctorId,dateTimeProvider.nowDate()))
+        if (!disableValidation && appointmentExternalService.hasConfirmedAppointment(patientId,doctorId,dateTimeProvider.nowDate()))
             appointmentExternalService.serveAppointment(patientId, doctorId, dateTimeProvider.nowDate());
         generateDocument(outpatient, institutionId, newOutPatient.getId(), patientId);
 
         LOG.debug(OUTPUT, true);
         return  ResponseEntity.ok().body(true);
+    }
+
+    private List<ImmunizationBo> extractImmunizations(List<OutpatientImmunizationDto> vaccineDto, Integer institutionId) {
+        List<ImmunizationBo> immunizationBos = vaccineDto.stream()
+                .map(outpatientConsultationMapper::fromOutpatientImmunizationDto)
+                .collect(Collectors.toList());
+
+        immunizationBos.forEach(immunizationBo -> immunizationBo.setInstitutionId(institutionId));
+
+        return immunizationBos;
+    }
+
+    private String extractNotes(List<OutpatientImmunizationDto> vaccineDto) {
+        return vaccineDto.stream()
+                .map(OutpatientImmunizationDto::getNote)
+                .collect(Collectors.toList()).get(0);
+    }
+
+    private Integer getClinicalSpecialtyId(List<OutpatientImmunizationDto> vaccineDto) {
+        return vaccineDto.stream()
+                .map(OutpatientImmunizationDto::getClinicalSpecialtyId)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse(null);
     }
 
     @Override

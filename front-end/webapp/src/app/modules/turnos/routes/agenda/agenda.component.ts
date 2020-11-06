@@ -306,7 +306,6 @@ export class AgendaComponent implements OnInit, OnDestroy {
 				).length
 			)
 		);
-
 	}
 
 	private _getOpeningHoursFor(date: Date): DiaryOpeningHoursDto[] {
