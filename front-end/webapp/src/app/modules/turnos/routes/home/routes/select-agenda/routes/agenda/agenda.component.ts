@@ -12,7 +12,7 @@ import {
 	newMoment
 } from '@core/utils/moment.utils';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { DiaryService } from '@api-rest/services/diary.service';
 import { Moment } from 'moment';
 import { NewAppointmentComponent } from '../../../../../../dialogs/new-appointment/new-appointment.component';
@@ -27,6 +27,8 @@ import { forkJoin, Observable, of } from 'rxjs';
 import { PermissionsService } from '@core/services/permissions.service';
 import { HealthInsuranceService } from '@api-rest/services/health-insurance.service';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
+import { AgendaFiltersService } from '../../../../../../services/agenda-filters.service';
+import { ContextService } from '@core/services/context.service';
 
 const ASIGNABLE_CLASS = 'cursor-pointer';
 const AGENDA_PROGRAMADA_CLASS = 'bg-green';
@@ -57,16 +59,21 @@ export class AgendaComponent implements OnInit {
 	dailyAmounts: AppointmentDailyAmountDto[];
 	dailyAmounts$: Observable<AppointmentDailyAmountDto[]>;
 
+	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
+
 	constructor(
 		private readonly cdr: ChangeDetectorRef,
 		private readonly dialog: MatDialog,
 		private readonly diaryService: DiaryService,
 		private readonly route: ActivatedRoute,
+		private readonly router: Router,
 		private snackBarService: SnackBarService,
 		private readonly permissionsService: PermissionsService,
 		public readonly appointmentFacade: AppointmentsFacadeService,
 		private readonly appointmentsService: AppointmentsService,
 		private readonly healthInsuranceService: HealthInsuranceService,
+		private readonly agendaFiltersService: AgendaFiltersService,
+		private readonly contextService: ContextService
 	) {
 	}
 
@@ -76,6 +83,10 @@ export class AgendaComponent implements OnInit {
 			const idAgenda = Number(params.get('idAgenda'));
 			this.diaryService.get(idAgenda).subscribe(agenda => {
 				this.setAgenda(agenda);
+				this.agendaFiltersService.setFilters(agenda.healthcareProfessionalId);
+			}, _ => {
+				this.snackBarService.showError('turnos.home.AGENDA_NOT_FOUND');
+				this.router.navigateByUrl(`${this.routePrefix}/turnos`);
 			});
 			this.appointmentFacade.getAppointments().subscribe(appointments => {
 					this.appointments = appointments;

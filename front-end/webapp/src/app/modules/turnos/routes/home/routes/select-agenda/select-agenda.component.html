@@ -38,7 +38,7 @@
 	<section id="no-agenda" *ngIf="agendas?.length === 0" class="no-agenda">
 		<mat-card>
 			<mat-card-header>
-				<mat-card-title [translate]="'turnos.home.NO_AGENDA_MSG_TITLE'"></mat-card-title>
+				<mat-card-title *ngIf="!idEspecialidad else noAgendaForProfessionalAndSpecialty" [translate]="'turnos.home.NO_AGENDA_MSG_TITLE'"></mat-card-title>
 				<mat-card-subtitle [translate]="'turnos.home.NO_AGENDA_MSG_SUBTITLE'"></mat-card-subtitle>
 			</mat-card-header>
 			<mat-card-content>
@@ -49,6 +49,10 @@
 			</mat-card-content>
 		</mat-card>
 	</section>
+
+	<ng-template #noAgendaForProfessionalAndSpecialty>
+		<mat-card-title [translate]="'turnos.home.NO_AGENDA_MSG_TITLE_FOR_SPECIALTY'"></mat-card-title>
+	</ng-template>
 </ng-container>
 
 <router-outlet></router-outlet>

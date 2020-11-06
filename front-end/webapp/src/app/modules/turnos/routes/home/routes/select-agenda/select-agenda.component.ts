@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DiaryListDto } from '@api-rest/api-model';
 import { MatOptionSelectionChange } from '@angular/material/core';
-import { ActivatedRoute, ParamMap, Params, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DiaryOpeningHoursService } from '@api-rest/services/diary-opening-hours.service';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { DiariesService } from '@api-rest/services/diaries.service';
 import { ConfirmDialogComponent } from '@core/dialogs/confirm-dialog/confirm-dialog.component';
 import { DiaryService } from '@api-rest/services/diary.service';
@@ -13,22 +13,28 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from '@core/services/context.service';
 import { processErrors } from '@core/utils/form.utils';
 import { DatePickerComponent } from '@core/dialogs/date-picker/date-picker.component';
-import { DateFormat, momentFormat } from '@core/utils/moment.utils';
 import { DailyAppointmentService } from '@api-rest/services/daily-appointment.service';
+import { AgendaFiltersService, AgendaFilters } from '../../../../services/agenda-filters.service';
+
 @Component({
 	selector: 'app-select-agenda',
 	templateUrl: './select-agenda.component.html',
 	styleUrls: ['./select-agenda.component.scss']
 })
-export class SelectAgendaComponent implements OnInit {
+export class SelectAgendaComponent implements OnInit, OnDestroy {
 
 	viewDate: Date = new Date();
 
 	agendaSelected: DiaryListDto;
 	agendas: DiaryListDto[];
-	idProfesional: number;
+	agendaFiltersSubscription: Subscription;
+	agendaIdSubscription: Subscription;
 
-	private readonly routePrefix = 'institucion/' + this.contextService.institutionId + '/';
+	idProfesional: number;
+	idEspecialidad: number;
+
+	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
+
 	constructor(
 		private readonly router: Router,
 		public readonly route: ActivatedRoute,
@@ -40,21 +46,34 @@ export class SelectAgendaComponent implements OnInit {
 		private snackBarService: SnackBarService,
 		private contextService: ContextService,
 		private readonly dailyAppointmentService: DailyAppointmentService,
+		private readonly agendaFiltersService: AgendaFiltersService
 	) {
 	}
 
 	ngOnInit(): void {
-		this.route.paramMap.subscribe((params: ParamMap) => {
-			this.idProfesional = Number(params.get('idProfesional'));
-			if (this.route.firstChild) {
-				this.route.firstChild.params.subscribe((paramsFirstChild: Params) => {
-					const idAgenda = Number(paramsFirstChild.idAgenda);
-					this.loadAgendas(idAgenda);
-				});
+		this.agendaFiltersSubscription = this.agendaFiltersService.getFilters().subscribe(filters => {
+			if (filters?.idProfesional) {
+				if (filtersChanged(this.idProfesional, this.idEspecialidad)) {
+					this.idProfesional = filters.idProfesional;
+					this.idEspecialidad = filters.idEspecialidad;
+
+					const agendaId = Number(this.route.firstChild?.snapshot.paramMap.get('idAgenda'));
+					this.loadAgendas(filters, agendaId);
+				}
 			} else {
-				this.loadAgendas();
+				delete this.idProfesional;
+				delete this.agendaSelected;
+				delete this.agendas;
+			}
+
+			function filtersChanged(currentIdProfesional, currentIdEspecialidad): boolean {
+				return filters.idProfesional !== currentIdProfesional || filters.idEspecialidad !== currentIdEspecialidad;
 			}
 		});
+	}
+
+	ngOnDestroy() {
+		this.agendaFiltersSubscription.unsubscribe();
 	}
 
 	changeAgendaSelected(event: MatOptionSelectionChange, agenda: DiaryListDto): void {
@@ -64,13 +83,16 @@ export class SelectAgendaComponent implements OnInit {
 		}
 	}
 
-	loadAgendas(idAgendaSelected?: number): void {
+	loadAgendas(filters: AgendaFilters, idAgendaSelected?: number): void {
 		delete this.agendas;
-		const diaries$: Observable<DiaryListDto[]> = this.diariesService.getDiaries(this.idProfesional);
+		const diaries$: Observable<DiaryListDto[]> = this.diariesService.getDiaries(filters.idProfesional, filters.idEspecialidad);
 		diaries$.subscribe(diaries => {
 			this.agendas = diaries;
 			if (idAgendaSelected) {
 				this.agendaSelected = this.agendas.find(agenda => agenda.id === idAgendaSelected);
+				if (!this.agendaSelected) {
+					this.router.navigate([`institucion/${this.contextService.institutionId}/turnos`]);
+				}
 			}
 		});
 	}
@@ -99,7 +121,7 @@ export class SelectAgendaComponent implements OnInit {
 						if (deleted) {
 							this.snackBarService.showSuccess('turnos.delete-agenda.messages.SUCCESS');
 							this.agendas = this.agendas.filter(agenda => agenda.id !== this.agendaSelected.id);
-							this.router.navigate(['../' + this.idProfesional], { relativeTo: this.route });
+							this.router.navigateByUrl(`${this.routePrefix}/turnos`);
 						}
 					}, error => processErrors(error, (msg) => {
 						this.snackBarService.showError(msg);

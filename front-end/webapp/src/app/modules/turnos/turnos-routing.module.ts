@@ -4,7 +4,6 @@ import { HomeComponent } from './routes/home/home.component';
 import { AgendaSetupComponent } from './routes/agenda-setup/agenda-setup.component';
 import { ERole } from '@api-rest/api-model';
 import { RoleGuard } from '@core/guards/RoleGuard';
-import { SelectAgendaComponent } from './routes/home/routes/select-agenda/select-agenda.component';
 import { AgendaComponent } from './routes/home/routes/select-agenda/routes/agenda/agenda.component';
 import { MedicalCoverageComponent } from '../core/dialogs/medical-coverage/medical-coverage.component';
 
@@ -27,14 +26,8 @@ const routes: Routes = [
 				},
 				children: [
 					{
-						path: 'profesional/:idProfesional',
-						component: SelectAgendaComponent,
-						children: [
-							{
-								path: 'agenda/:idAgenda',
-								component: AgendaComponent
-							}
-						]
+						path: 'agenda/:idAgenda',
+						component: AgendaComponent
 					}
 				]
 			},
@@ -45,7 +38,7 @@ const routes: Routes = [
 				data: {allowedRoles: [ERole.ADMINISTRADOR_AGENDA]}
 			},
 			{
-				path: 'profesional/:profesionalId/agenda/:agendaId/editar',
+				path: 'agenda/:agendaId/editar',
 				component: AgendaSetupComponent,
 				canActivate: [RoleGuard],
 				data: { allowedRoles: [ERole.ADMINISTRADOR_AGENDA] , editMode: true}

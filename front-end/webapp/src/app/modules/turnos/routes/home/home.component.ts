@@ -1,7 +1,7 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
 import { ProfessionalDto, ProfessionalsByClinicalSpecialtyDto } from '@api-rest/api-model';
 import { MatDialog } from '@angular/material/dialog';
@@ -11,14 +11,16 @@ import { DiaryOpeningHoursService } from '@api-rest/services/diary-opening-hours
 import { ContextService } from '@core/services/context.service';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { TypeaheadOption } from '@core/components/typeahead/typeahead.component';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { AgendaFiltersService } from '../../services/agenda-filters.service';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
 	selector: 'app-home',
 	templateUrl: './home.component.html',
 	styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
 
 	profesionalesTypeahead: TypeaheadOption<ProfessionalDto>[];
 	profesionalInitValue: TypeaheadOption<ProfessionalDto>;
@@ -28,6 +30,11 @@ export class HomeComponent implements OnInit {
 	especialidadesTypeaheadOptions$: Observable<TypeaheadOption<ProfessionalsByClinicalSpecialtyDto>[]>;
 
 	routePrefix: string;
+
+	idProfesional: number;
+	idEspecialidad: number;
+
+	agendaFiltersSubscription: Subscription;
 
 	constructor(
 		private readonly router: Router,
@@ -40,57 +47,73 @@ export class HomeComponent implements OnInit {
 		private readonly diariesService: DiariesService,
 		private readonly diaryOpeningHoursService: DiaryOpeningHoursService,
 		private readonly contextService: ContextService,
-		private readonly clinicalSpecialtyService: ClinicalSpecialtyService
+		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
+		private readonly agendaFiltersService: AgendaFiltersService,
+		private readonly snackBarService: SnackBarService
+
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/turnos`;
 	}
 
 	ngOnInit(): void {
+		this.healthCareProfessionalService.getAll().subscribe(doctors => {
+			this.especialidadesTypeaheadOptions$ = this.getEspecialidadesTypeaheadOptions$(doctors);
 
-		this.healthCareProfessionalService.getAll()
-			.subscribe(doctors => {
-				this.especialidadesTypeaheadOptions$ = this.getEspecialidadesTypeaheadOptions$(doctors);
+			this.profesionales = doctors;
+			this.profesionalesTypeahead = doctors.map(d => this.toProfessionalTypeahead(d));
 
-				this.profesionales = doctors;
-				this.profesionalesTypeahead = doctors.map(d => this.toProfessionalTypeahead(d));
-
-				if (this.route.firstChild) {
-					this.loadProfessionalSelected();
-				} else {
-					if (this.profesionales.length === 1) {
-						this.profesionalInitValue = this.toProfessionalTypeahead(this.profesionales[0]);
-						this.navigate(this.profesionales[0]);
-					}
-				}
-
-			});
-	}
-
-	private loadProfessionalSelected() {
-		this.route.firstChild.params.subscribe(params => {
-			const idProfesional = Number(params.idProfesional);
-			if (idProfesional) {
-				this.healthCareProfessionalService.getOne(idProfesional)
-					.subscribe((profesional: ProfessionalDto) => {
-						if (profesional) {
-							this.profesionalInitValue = this.toProfessionalTypeahead(profesional);
-						}
-					});
+			if ((this.profesionales.length === 1) && (!this.route.firstChild)) {
+				this.profesionalInitValue = this.toProfessionalTypeahead(this.profesionales[0]);
+				this.setProfesional(this.profesionales[0]);
 			}
+
+			this.agendaFiltersSubscription = this.agendaFiltersService.getFilters().subscribe(filters => {
+				if ((filters?.idProfesional) && (filters.idProfesional !== this.idProfesional)) {
+					this.loadProfessionalSelected(filters.idProfesional);
+				}
+			});
+
 		});
 	}
 
-	loadProfessionals(professionalsByClinicalSpecialtyDto: ProfessionalsByClinicalSpecialtyDto) {
-		this.profesionalInitValue = null;
-		const profesionalesFilteredBy = this.getProfesionalesFilteredBy(professionalsByClinicalSpecialtyDto);
-		this.profesionalesTypeahead = profesionalesFilteredBy.map(d => this.toProfessionalTypeahead(d));
+	ngOnDestroy() {
+		this.agendaFiltersSubscription.unsubscribe();
+		this.agendaFiltersService.setFilters(undefined, undefined);
 	}
 
-	navigate(result: ProfessionalDto) {
-		if (result) {
-			this.router.navigate([`profesional/${result.id}`], {relativeTo: this.route});
+	private loadProfessionalSelected(idProfesional: number) {
+		const profesional: ProfessionalDto = this.profesionales.find(p => p.id === idProfesional);
+		this.idProfesional = idProfesional;
+		if (profesional) {
+			this.profesionalInitValue = this.toProfessionalTypeahead(profesional);
 		} else {
-			this.router.navigate([`${this.routePrefix}`]);
+			this.snackBarService.showError('turnos.home.AGENDA_NOT_FOUND');
+			this.profesionalInitValue = undefined;
+			this.router.navigate([`institucion/${this.contextService.institutionId}`]);
+		}
+	}
+
+	setEspecialidad(professionalsByClinicalSpecialtyDto: ProfessionalsByClinicalSpecialtyDto) {
+		this.profesionalInitValue = null;
+		this.idEspecialidad = professionalsByClinicalSpecialtyDto?.clinicalSpecialty?.id;
+
+		const profesionalesFilteredBy = this.getProfesionalesFilteredBy(professionalsByClinicalSpecialtyDto);
+		this.profesionalesTypeahead = profesionalesFilteredBy.map(d => this.toProfessionalTypeahead(d));
+
+		if (!professionalsByClinicalSpecialtyDto || especialidadContainsProfesional(this.idProfesional)) {
+			this.agendaFiltersService.setFilters(this.idProfesional, this.idEspecialidad);
+		}
+
+		function especialidadContainsProfesional(idProfesional: number): boolean {
+			return professionalsByClinicalSpecialtyDto.professionalsIds.includes(idProfesional);
+		}
+	}
+
+	setProfesional(result: ProfessionalDto) {
+		this.idProfesional = result?.id;
+		this.agendaFiltersService.setFilters(this.idProfesional, this.idEspecialidad);
+		if (!result) {
+			this.router.navigateByUrl(this.routePrefix);
 		}
 	}
 

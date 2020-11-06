@@ -15,11 +15,17 @@ export class DiariesService {
 		private contextService: ContextService,
 	) { }
 
-	getDiaries(healthcareProfessionalId: number): Observable<DiaryListDto[]> {
-		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/diary`;
-		return this.http.get<DiaryListDto[]>(url, { 
-			params: { 'healthcareProfessionalId': JSON.stringify(healthcareProfessionalId) } 
-		});
+	getDiaries(healthcareProfessionalId: number, specialtyId?: number): Observable<DiaryListDto[]> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/diary`;
+		const params = specialtyId ?
+			{
+				healthcareProfessionalId: JSON.stringify(healthcareProfessionalId),
+				specialtyId: specialtyId ? JSON.stringify(specialtyId) : undefined
+			} :
+			{
+				healthcareProfessionalId: JSON.stringify(healthcareProfessionalId)
+			};
+		return this.http.get<DiaryListDto[]>(url, {params});
 	}
 
 	delete(diaryId: number): Observable<boolean> {

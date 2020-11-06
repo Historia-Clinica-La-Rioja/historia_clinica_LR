@@ -13,7 +13,7 @@
 					fxFlex.gt-xs="40"
 					[placeholder]="'turnos.home.SPECIALTY_SEARCH'"
 					[options]="especialidadesTypeaheadOptions$ | async"
-					(onSelectionChange)="loadProfessionals($event)"
+					(onSelectionChange)="setEspecialidad($event)"
 				>
 				</app-typeahead>
 
@@ -21,7 +21,7 @@
 					fxFlex.gt-xs="60"
 					[options]="profesionalesTypeahead" [placeholder]="'turnos.home.PROFESSIONAL_SEARCH'"
 					[initValue]="profesionalInitValue"
-					(onSelectionChange)="navigate($event)"
+					(onSelectionChange)="setProfesional($event)"
 				>
 				</app-typeahead>
 
@@ -34,6 +34,6 @@
 		</div>
 	</section>
 
-	<router-outlet></router-outlet>
+	<app-select-agenda></app-select-agenda>
 
 </app-content>

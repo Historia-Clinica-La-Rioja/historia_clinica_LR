@@ -10,7 +10,9 @@
 			"SPECIALTY_SEARCH": "Especialidad",
 			"SELECT_AGENDA": "Seleccione una agenda",
 			"NO_AGENDA_MSG_TITLE": "El profesional no posee una agenda activa.",
-			"NO_AGENDA_MSG_SUBTITLE": "Creá una agenda para gestionar turnos."
+			"NO_AGENDA_MSG_TITLE_FOR_SPECIALTY": "El profesional no posee una agenda activa para la especialidad seleccionada.",
+			"NO_AGENDA_MSG_SUBTITLE": "Creá una agenda para gestionar turnos.",
+			"AGENDA_NOT_FOUND": "Agenda no encontrada"
 		},
 		"agenda-setup": {
 			"NEW_AGENDA": "Nueva agenda",

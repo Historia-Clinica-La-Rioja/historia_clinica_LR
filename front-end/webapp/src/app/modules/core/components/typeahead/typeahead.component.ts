@@ -21,13 +21,12 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 	optionSelected: TypeaheadOption<any>;
 
 	constructor(private readonly formBuilder: FormBuilder) {
-	}
-
-	ngOnInit(): void {
 		this.form = this.formBuilder.group({
 			searchValue: [null]
 		});
+	}
 
+	ngOnInit(): void {
 		this.form.controls.searchValue.valueChanges
 			.pipe(
 				startWith(''),
