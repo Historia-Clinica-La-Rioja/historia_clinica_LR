@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { AppointmentDailyAmountDto, CompleteDiaryDto, DiaryOpeningHoursDto, MedicalCoverageDto } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { CalendarMonthViewBeforeRenderEvent, CalendarView, CalendarWeekViewBeforeRenderEvent, DAYS_OF_WEEK } from 'angular-calendar';
@@ -27,7 +27,7 @@ import { forkJoin, Observable, of } from 'rxjs';
 import { PermissionsService } from '@core/services/permissions.service';
 import { HealthInsuranceService } from '@api-rest/services/health-insurance.service';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
-import { AgendaFiltersService } from '../../services/agenda-filters.service';
+import { AgendaSearchService } from '../../services/agenda-search.service';
 import { ContextService } from '@core/services/context.service';
 
 const ASIGNABLE_CLASS = 'cursor-pointer';
@@ -39,7 +39,7 @@ const AGENDA_ESPONTANEA_CLASS = 'bg-blue';
 	templateUrl: './agenda.component.html',
 	styleUrls: ['./agenda.component.scss']
 })
-export class AgendaComponent implements OnInit {
+export class AgendaComponent implements OnInit, OnDestroy {
 
 	readonly calendarViewEnum = CalendarView;
 	view: CalendarView = CalendarView.Week;
@@ -72,7 +72,7 @@ export class AgendaComponent implements OnInit {
 		public readonly appointmentFacade: AppointmentsFacadeService,
 		private readonly appointmentsService: AppointmentsService,
 		private readonly healthInsuranceService: HealthInsuranceService,
-		private readonly agendaFiltersService: AgendaFiltersService,
+		private readonly agendaSearchService: AgendaSearchService,
 		private readonly contextService: ContextService
 	) {
 	}
@@ -83,7 +83,7 @@ export class AgendaComponent implements OnInit {
 			const idAgenda = Number(params.get('idAgenda'));
 			this.diaryService.get(idAgenda).subscribe(agenda => {
 				this.setAgenda(agenda);
-				this.agendaFiltersService.setFilters(agenda.healthcareProfessionalId);
+				this.agendaSearchService.setAgendaSelected(agenda);
 			}, _ => {
 				this.snackBarService.showError('turnos.home.AGENDA_NOT_FOUND');
 				this.router.navigateByUrl(`${this.routePrefix}/turnos`);
@@ -93,6 +93,10 @@ export class AgendaComponent implements OnInit {
 					this.dailyAmounts$ = this.appointmentsService.getDailyAmounts(idAgenda);
 				});
 		});
+	}
+
+	ngOnDestroy() {
+		this.agendaSearchService.setAgendaSelected(undefined);
 	}
 
 	loadCalendar(renderEvent: CalendarWeekViewBeforeRenderEvent) {

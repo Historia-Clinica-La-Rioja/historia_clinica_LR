@@ -14,7 +14,7 @@ import { ContextService } from '@core/services/context.service';
 import { processErrors } from '@core/utils/form.utils';
 import { DatePickerComponent } from '@core/dialogs/date-picker/date-picker.component';
 import { DailyAppointmentService } from '@api-rest/services/daily-appointment.service';
-import { AgendaFiltersService, AgendaFilters } from '../../services/agenda-filters.service';
+import { AgendaSearchService, AgendaFilters, AgendaOptionsData } from '../../services/agenda-search.service';
 
 @Component({
 	selector: 'app-select-agenda',
@@ -30,8 +30,7 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 	agendaFiltersSubscription: Subscription;
 	agendaIdSubscription: Subscription;
 
-	idProfesional: number;
-	idEspecialidad: number;
+	filters: AgendaFilters;
 
 	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
 
@@ -46,28 +45,16 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 		private snackBarService: SnackBarService,
 		private contextService: ContextService,
 		private readonly dailyAppointmentService: DailyAppointmentService,
-		private readonly agendaFiltersService: AgendaFiltersService
+		private readonly agendaSearchService: AgendaSearchService
 	) {
 	}
 
 	ngOnInit(): void {
-		this.agendaFiltersSubscription = this.agendaFiltersService.getFilters().subscribe(filters => {
-			if (filters?.idProfesional) {
-				if (filtersChanged(this.idProfesional, this.idEspecialidad)) {
-					this.idProfesional = filters.idProfesional;
-					this.idEspecialidad = filters.idEspecialidad;
 
-					const agendaId = Number(this.route.firstChild?.snapshot.paramMap.get('idAgenda'));
-					this.loadAgendas(filters, agendaId);
-				}
-			} else {
-				delete this.idProfesional;
-				delete this.agendaSelected;
-				delete this.agendas;
-			}
-
-			function filtersChanged(currentIdProfesional, currentIdEspecialidad): boolean {
-				return filters.idProfesional !== currentIdProfesional || filters.idEspecialidad !== currentIdEspecialidad;
+		this.agendaFiltersSubscription = this.agendaSearchService.getAgendas$().subscribe((data: AgendaOptionsData) => {
+			if (data) {
+				this.loadAgendas(data.agendas, data.idAgendaSelected);
+				this.filters = data.filteredBy;
 			}
 		});
 	}
@@ -83,18 +70,16 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	loadAgendas(filters: AgendaFilters, idAgendaSelected?: number): void {
+	loadAgendas(diaries, idAgendaSelected?): void {
 		delete this.agendas;
-		const diaries$: Observable<DiaryListDto[]> = this.diariesService.getDiaries(filters.idProfesional, filters.idEspecialidad);
-		diaries$.subscribe(diaries => {
-			this.agendas = diaries;
-			if (idAgendaSelected) {
-				this.agendaSelected = this.agendas.find(agenda => agenda.id === idAgendaSelected);
-				if (!this.agendaSelected) {
-					this.router.navigate([`institucion/${this.contextService.institutionId}/turnos`]);
-				}
+		delete this.agendaSelected;
+		this.agendas = diaries;
+		if (idAgendaSelected) {
+			this.agendaSelected = this.agendas.find(agenda => agenda.id === idAgendaSelected);
+			if (!this.agendaSelected) {
+				this.router.navigate([`institucion/${this.contextService.institutionId}/turnos`]);
 			}
-		});
+		}
 	}
 
 	goToEditAgenda(): void {

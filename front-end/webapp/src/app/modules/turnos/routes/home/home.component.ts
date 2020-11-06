@@ -12,7 +12,7 @@ import { ContextService } from '@core/services/context.service';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { TypeaheadOption } from '@core/components/typeahead/typeahead.component';
 import { Observable, Subscription } from 'rxjs';
-import { AgendaFiltersService } from '../../services/agenda-filters.service';
+import { AgendaSearchService } from '../../services/agenda-search.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
@@ -48,7 +48,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 		private readonly diaryOpeningHoursService: DiaryOpeningHoursService,
 		private readonly contextService: ContextService,
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
-		private readonly agendaFiltersService: AgendaFiltersService,
+		private readonly agendaSearchService: AgendaSearchService,
 		private readonly snackBarService: SnackBarService
 
 	) {
@@ -67,8 +67,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 				this.setProfesional(this.profesionales[0]);
 			}
 
-			this.agendaFiltersSubscription = this.agendaFiltersService.getFilters().subscribe(filters => {
-				if ((filters?.idProfesional) && (filters.idProfesional !== this.idProfesional)) {
+			this.agendaFiltersSubscription = this.agendaSearchService.getFilters$().subscribe(filters => {
+				if (filters?.idProfesional && filters?.idProfesional !== this.idProfesional) {
 					this.loadProfessionalSelected(filters.idProfesional);
 				}
 			});
@@ -77,8 +77,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy() {
+		this.agendaSearchService.clearAll();
 		this.agendaFiltersSubscription.unsubscribe();
-		this.agendaFiltersService.setFilters(undefined, undefined);
 	}
 
 	private loadProfessionalSelected(idProfesional: number) {
@@ -86,10 +86,11 @@ export class HomeComponent implements OnInit, OnDestroy {
 		this.idProfesional = idProfesional;
 		if (profesional) {
 			this.profesionalInitValue = this.toProfessionalTypeahead(profesional);
+			this.agendaSearchService.search(idProfesional);
 		} else {
 			this.snackBarService.showError('turnos.home.AGENDA_NOT_FOUND');
 			this.profesionalInitValue = undefined;
-			this.router.navigate([`institucion/${this.contextService.institutionId}`]);
+			this.router.navigate([`institucion/${this.contextService.institutionId}/turnos`]);
 		}
 	}
 
@@ -101,7 +102,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 		this.profesionalesTypeahead = profesionalesFilteredBy.map(d => this.toProfessionalTypeahead(d));
 
 		if (!professionalsByClinicalSpecialtyDto || especialidadContainsProfesional(this.idProfesional)) {
-			this.agendaFiltersService.setFilters(this.idProfesional, this.idEspecialidad);
+			this.agendaSearchService.search(this.idProfesional, this.idEspecialidad);
 		}
 
 		function especialidadContainsProfesional(idProfesional: number): boolean {
@@ -111,7 +112,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 	setProfesional(result: ProfessionalDto) {
 		this.idProfesional = result?.id;
-		this.agendaFiltersService.setFilters(this.idProfesional, this.idEspecialidad);
+		this.agendaSearchService.search(this.idProfesional, this.idEspecialidad);
 		if (!result) {
 			this.router.navigateByUrl(this.routePrefix);
 		}
