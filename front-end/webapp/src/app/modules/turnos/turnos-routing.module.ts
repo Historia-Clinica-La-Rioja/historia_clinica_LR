@@ -4,8 +4,9 @@ import { HomeComponent } from './routes/home/home.component';
 import { AgendaSetupComponent } from './routes/agenda-setup/agenda-setup.component';
 import { ERole } from '@api-rest/api-model';
 import { RoleGuard } from '@core/guards/RoleGuard';
-import { AgendaComponent } from './routes/home/routes/select-agenda/routes/agenda/agenda.component';
+import { AgendaComponent } from './routes/agenda/agenda.component';
 import { MedicalCoverageComponent } from '../core/dialogs/medical-coverage/medical-coverage.component';
+
 
 const routes: Routes = [
 	{

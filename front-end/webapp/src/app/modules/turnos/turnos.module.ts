@@ -10,13 +10,13 @@ import { PresentationModule } from '@presentation/presentation.module';
 import { CalendarDateFormatter, CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { AppMaterialModule } from '../material/app.material.module';
-import { SelectAgendaComponent } from './routes/home/routes/select-agenda/select-agenda.component';
-import { AgendaComponent } from './routes/home/routes/select-agenda/routes/agenda/agenda.component';
 import { CustomDateFormatter } from './services/custom-date-formatter.service';
 import { NewAppointmentComponent } from './dialogs/new-appointment/new-appointment.component';
 import { AppointmentComponent } from './dialogs/appointment/appointment.component';
 import { CancelAppointmentComponent } from './dialogs/cancel-appointment/cancel-appointment.component';
 import { MedicalCoverageComponent } from '../core/dialogs/medical-coverage/medical-coverage.component';
+import { SelectAgendaComponent } from './components/select-agenda/select-agenda.component';
+import { AgendaComponent } from './routes/agenda/agenda.component';
 
 
 @NgModule({

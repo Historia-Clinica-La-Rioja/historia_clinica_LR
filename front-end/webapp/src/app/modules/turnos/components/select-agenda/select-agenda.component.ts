@@ -14,7 +14,7 @@ import { ContextService } from '@core/services/context.service';
 import { processErrors } from '@core/utils/form.utils';
 import { DatePickerComponent } from '@core/dialogs/date-picker/date-picker.component';
 import { DailyAppointmentService } from '@api-rest/services/daily-appointment.service';
-import { AgendaFiltersService, AgendaFilters } from '../../../../services/agenda-filters.service';
+import { AgendaFiltersService, AgendaFilters } from '../../services/agenda-filters.service';
 
 @Component({
 	selector: 'app-select-agenda',
