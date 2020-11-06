@@ -1,5 +1,5 @@
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ClinicalObservationDto, MasterDataInterface } from '@api-rest/api-model';
 import { Observable, Subject } from 'rxjs';
 
@@ -25,8 +25,8 @@ export class DatosAntropometricosNuevaConsultaService {
 	) {
 		this.form = this.formBuilder.group({
 			bloodType: [null],
-			height: [null],
-			weight: [null]
+			height: [null, [Validators.min(0), Validators.max(1000)]],
+			weight: [null, [Validators.min(0), Validators.max(1000)]]
 		});
 		this.form.controls.height.valueChanges.subscribe(height => {
 			if (height !== undefined) {
@@ -55,8 +55,8 @@ export class DatosAntropometricosNuevaConsultaService {
 				id: this.form.value.bloodType.id,
 				value: this.form.value.bloodType.description
 			} : undefined,
-			height: this.form.value.height ? { value: this.form.value.height } : undefined,
-			weight: this.form.value.weight ? { value: this.form.value.weight } : undefined
+			height: (this.form.value.height || (this.form.value.height === 0) ) ? { value: this.form.value.height } : undefined,
+			weight: (this.form.value.weight || (this.form.value.weight === 0) ) ? { value: this.form.value.weight } : undefined
 		};
 	}
 

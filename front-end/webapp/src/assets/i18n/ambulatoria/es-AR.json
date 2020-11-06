@@ -24,7 +24,11 @@
 					"TENSION_DIASTOLICA_OBLIGATORIO": "Tensión arterial diastólica obligatorio",
 					"TENSION_SISTOLICA_OBLIGATORIO": "Tensión arterial sistólica obligatorio",
 					"TALLA_OBLIGATORIO": "Talla obligatorio",
+					"TALLA_MIN": "La talla mínima debe ser 0 cm",
+					"TALLA_MAX": "La talla máxima debe ser 1000 cm",
 					"PESO_OBLIGATORIO": "Peso obligatorio",
+					"PESO_MIN": "El peso mínimo debe ser 0 kg",
+					"PESO_MAX": "El peso máximo debe ser 1000 kg",
 					"PROBLEMA_OBLIGATORIO": "Problema de consulta obligatorio"
 				},
 				"motivo": {

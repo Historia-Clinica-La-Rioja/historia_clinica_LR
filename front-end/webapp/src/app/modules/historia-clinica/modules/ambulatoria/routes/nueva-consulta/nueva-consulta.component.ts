@@ -181,8 +181,20 @@ export class NuevaConsultaComponent implements OnInit {
 		if (!consulta.anthropometricData.height) {
 			this.datosAntropometricosNuevaConsultaService.setHeightError('ambulatoria.paciente.nueva-consulta.errors.TALLA_OBLIGATORIO');
 		}
+		else if (parseInt(consulta.anthropometricData.height.value) < 0) {
+			this.datosAntropometricosNuevaConsultaService.setHeightError('ambulatoria.paciente.nueva-consulta.errors.TALLA_MIN');
+		}
+		else if (parseInt(consulta.anthropometricData.height.value) > 1000) {
+			this.datosAntropometricosNuevaConsultaService.setHeightError('ambulatoria.paciente.nueva-consulta.errors.TALLA_MAX');
+		}
 		if (!consulta.anthropometricData.weight) {
 			this.datosAntropometricosNuevaConsultaService.setWeightError('ambulatoria.paciente.nueva-consulta.errors.PESO_OBLIGATORIO');
+		}
+		else if (parseInt(consulta.anthropometricData.weight.value) < 0) {
+			this.datosAntropometricosNuevaConsultaService.setWeightError('ambulatoria.paciente.nueva-consulta.errors.PESO_MIN');
+		}
+		else if (parseInt(consulta.anthropometricData.weight.value) > 1000) {
+			this.datosAntropometricosNuevaConsultaService.setWeightError('ambulatoria.paciente.nueva-consulta.errors.PESO_MAX');
 		}
 		if (!consulta.vitalSigns.diastolicBloodPressure ) {
 			this.signosVitalesNuevaConsultaService.setDiastolicBloodPressureError('ambulatoria.paciente.nueva-consulta.errors.TENSION_DIASTOLICA_OBLIGATORIO');
