@@ -50,12 +50,6 @@ const routes: Routes = [
 				canActivate: [RoleGuard],
 				data: { allowedRoles: [ERole.ADMINISTRADOR_AGENDA] , editMode: true}
 			},
-			{
-				path: 'a',
-				component: MedicalCoverageComponent,
-				canActivate: [RoleGuard],
-				data: { allowedRoles: [ERole.ADMINISTRADOR_AGENDA] , editMode: true}
-			},
 		],
 	}
 ];

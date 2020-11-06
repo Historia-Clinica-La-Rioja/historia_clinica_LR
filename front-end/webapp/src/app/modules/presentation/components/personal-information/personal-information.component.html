@@ -64,8 +64,8 @@
 					<span>
 						{{ patientMC.medicalCoverage?.name}}
 					</span>
-					<span fxLayout="row">
-						<span>{{ 'Nro afiliado/credencial: ' }}&nbsp;</span>
+					<span fxLayout="row" fxLayoutGap="10px">
+						<span>{{ 'Nro afiliado/credencial:' }}</span>
 						<span *ngIf="patientMC.affiliateNumber; else noInformation">
 							{{ patientMC.affiliateNumber }}
 						</span>
