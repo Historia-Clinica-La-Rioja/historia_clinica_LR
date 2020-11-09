@@ -177,6 +177,7 @@
 					"INMUNIZATION": "Vacuna",
 					"NOTE": "Evolución",
 					"SUBMIT": "Confirmar",
+					"SUBMIT_CONJUNTO_VACUNAS": "Confirmar vacunaciones",
 					"ADMINISTRATION_DATE": "Fecha de vacunación",
 					"save": {
 						"SUCCESS": "Las vacunas aplicadas se guardaron exitosamente",

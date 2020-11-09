@@ -73,7 +73,7 @@
 
 					<mat-form-field [floatLabel]="'never'" appearance="outline">
 						<mat-label [translate]="'ambulatoria.paciente.vacunas.aplicar.NOTE'"></mat-label>
-						<textarea matInput type="text" id="note" name="note"
+						<textarea maxlength="1024" matInput type="text" id="note" name="note"
 								  formControlName="note"></textarea>
 						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
 					</mat-form-field>
@@ -96,11 +96,11 @@
 			<button mat-stroked-button color="primary" mat-dialog-close> {{ 'buttons.CANCEL' | translate | uppercase }}
 			</button>
 			<button (click)="applyVaccine()" *ngIf="snomedConcept" mat-raised-button color="primary">
-				{{'Aplicar vacuna' | translate | uppercase}}
+				{{'ambulatoria.paciente.vacunas.aplicar.TITLE' | translate | uppercase}}
 			</button>
 
 			<button type="submit" *ngIf="this.appliedVaccines.length >= 1 && !snomedConcept" mat-raised-button color="primary">
-				{{'Confirmar vacunaciones' | translate | uppercase}}
+				{{'ambulatoria.paciente.vacunas.aplicar.SUBMIT_CONJUNTO_VACUNAS' | translate | uppercase}}
 			</button>
 		</mat-dialog-actions>
 	</form>
