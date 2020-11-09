@@ -10,6 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class PatientExternalServiceImpl implements PatientExternalService {
@@ -34,6 +37,29 @@ public class PatientExternalServiceImpl implements PatientExternalService {
                 .orElseThrow(() -> new EntityNotFoundException("patient.invalid"));
         BasicDataPersonDto personData = personExternalService.getBasicDataPerson(patient.getPersonId());
         BasicPatientDto result = new BasicPatientDto(patient.getId(), personData,patient.getTypeId());
+        LOG.debug(OUTPUT, result);
+        return result;
+    }
+
+    @Override
+    public Map<Integer, BasicPatientDto> getBasicDataFromPatientsId(Set<Integer> patientIds) {
+        LOG.debug("Input parameters -> patientIds {}", patientIds);
+        Map<Integer, Patient> patientsMap = patientService.getPatients(patientIds).parallelStream()
+                                .collect(Collectors.toMap(Patient::getId, patient -> patient));
+
+        Set<Integer> personIds = patientsMap.values().parallelStream()
+                                    .map(Patient::getPersonId)
+                                    .collect(Collectors.toSet());
+
+        Map<Integer, BasicDataPersonDto> personDatas = personExternalService.getBasicDataPerson(personIds).parallelStream()
+                                                .collect(Collectors.toMap(BasicDataPersonDto::getId, person -> person));
+
+
+        Map<Integer, BasicPatientDto> result = patientsMap.entrySet().parallelStream()
+                .collect(Collectors.toMap(
+                        p -> p.getKey(),
+                        p -> new BasicPatientDto(p.getKey(), personDatas.get(p.getValue().getPersonId()), p.getValue().getTypeId())
+                ));
         LOG.debug(OUTPUT, result);
         return result;
     }

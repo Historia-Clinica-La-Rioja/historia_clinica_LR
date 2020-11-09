@@ -1,10 +1,9 @@
 package net.pladema.medicalconsultation.appointment.repository;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
-import java.util.Optional;
-
+import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo;
+import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo;
+import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
+import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,16 +11,18 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo;
-import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo;
-import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
-import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Integer> {
 
     @Transactional(readOnly = true)
-    @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo(aa.pk.diaryId, a, doh.medicalAttentionTypeId)" +
+    @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo(" +
+            "aa.pk.diaryId, a.id, a.patientId, a.dateTypeId, a.hour, a.appointmentStateId, a.isOverturn, " +
+            "a.patientMedicalCoverageId, a.phoneNumber, doh.medicalAttentionTypeId)" +
             "FROM Appointment AS a " +
             "JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
             "JOIN Diary d ON (d.id = aa.pk.diaryId )" +
@@ -44,7 +45,9 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
     Optional<AppointmentVo> getAppointment(@Param("appointmentId") Integer appointmentId);
 
     @Transactional(readOnly = true)
-    @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo(aa.pk.diaryId, a, doh.medicalAttentionTypeId) " +
+    @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo(" +
+            "aa.pk.diaryId, a.id, a.patientId, a.dateTypeId, a.hour, a.appointmentStateId, a.isOverturn, " +
+            "a.patientMedicalCoverageId, a.phoneNumber, doh.medicalAttentionTypeId) " +
             "FROM Appointment AS a " +
             "JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
             "JOIN DiaryOpeningHours  AS doh ON (doh.pk.diaryId = aa.pk.diaryId AND doh.pk.openingHoursId = aa.pk.openingHoursId) " +

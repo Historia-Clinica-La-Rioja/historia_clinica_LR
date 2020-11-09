@@ -32,9 +32,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -120,18 +118,20 @@ public class AppointmentsController {
                                                                   @RequestParam(name = "diaryIds") @NotEmpty List<Integer> diaryIds){
         LOG.debug("Input parameters -> institutionId {}, diaryIds {}", institutionId, diaryIds);
         Collection<AppointmentBo> resultService = appointmentService.getAppointmentsByDiaries(diaryIds);
+        Set<Integer> patientsIds = resultService.stream().map(AppointmentBo::getPatientId).collect(Collectors.toSet());
+
+        var basicPatientDtoMap = patientExternalService.getBasicDataFromPatientsId(patientsIds);
         Collection<AppointmentListDto> result = resultService.stream()
                 .parallel()
-                .map(this::mapData)
+                .map(a -> mapData(a, basicPatientDtoMap))
                 .collect(Collectors.toList());
         LOG.debug(OUTPUT, result);
         return ResponseEntity.ok(result);
     }
 
-    private AppointmentListDto mapData(AppointmentBo appointmentBo) {
-        LOG.debug("Input parameters -> appointmentBo {}", appointmentBo);
-        BasicPatientDto basicPatientDto = patientExternalService.getBasicDataFromPatient(appointmentBo.getPatientId());
-        AppointmentListDto result = appointmentMapper.toAppointmentListDto(appointmentBo, basicPatientDto);
+    private AppointmentListDto mapData(AppointmentBo appointmentBo, Map<Integer, BasicPatientDto> patientData) {
+        LOG.debug("Input parameters -> appointmentBo {}, patientData {}", appointmentBo, patientData);
+        AppointmentListDto result = appointmentMapper.toAppointmentListDto(appointmentBo, patientData.get(appointmentBo.getPatientId()));
         LOG.debug(OUTPUT, result);
         return result;
     }

@@ -8,6 +8,7 @@ import net.pladema.person.repository.entity.Person;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface PatientService {
 
@@ -16,6 +17,8 @@ public interface PatientService {
     List<PatientSearch> searchPatientOptionalFilters(PatientSearchFilter searchFilter);
 
     Optional<Patient> getPatient(Integer patientId);
+
+    List<Patient> getPatients(Set<Integer> patients);
     
     Patient addPatient(Patient patientToSave);
     

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class PersonServiceImpl implements PersonService {
@@ -49,7 +50,15 @@ public class PersonServiceImpl implements PersonService {
         return result;
     }
 
-	@Override
+    @Override
+    public List<Person> getPeople(Set<Integer> personIds) {
+        LOG.debug("Going to get person -> {}", personIds);
+        List<Person> result = personRepository.findAllById(personIds);
+        LOG.debug("Person gotten-> {}", result);
+        return result;
+    }
+
+    @Override
 	public PersonExtended getPersonExtended(Integer personId) {
 		LOG.debug("Going to get PersonExtended -> {}", personId);
 		PersonExtended personExtFound = personExtendedRepository.findById(personId)

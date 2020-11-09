@@ -3,6 +3,7 @@ package net.pladema.person.controller.service;
 import net.pladema.patient.controller.dto.APatientDto;
 import net.pladema.person.controller.dto.BMPersonDto;
 import net.pladema.person.controller.dto.BasicDataPersonDto;
+import net.pladema.person.controller.dto.BasicPersonalDataDto;
 import net.pladema.person.controller.dto.PersonPhotoDto;
 import net.pladema.person.controller.mapper.PersonMapper;
 import net.pladema.person.repository.entity.Gender;
@@ -12,12 +13,13 @@ import net.pladema.person.repository.entity.PersonExtended;
 import net.pladema.person.service.PersonMasterDataService;
 import net.pladema.person.service.PersonPhotoService;
 import net.pladema.person.service.PersonService;
-import net.pladema.person.controller.dto.BasicPersonalDataDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class PersonExternalServiceImpl implements PersonExternalService {
@@ -91,6 +93,35 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 		Person person = personService.getPerson(personId);
 		Gender gender = personMasterDataService.getGender(person.getGenderId()).orElse(new Gender());
 		IdentificationType identificationType = personMasterDataService.getIdentificationType(person.getIdentificationTypeId()).orElse(new IdentificationType());
+		BasicDataPersonDto result = personMapper.basicDataFromPerson(person, gender, identificationType);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public List<BasicDataPersonDto> getBasicDataPerson(Set<Integer> personIds) {
+		LOG.debug(ONE_INPUT_PARAMETER, personIds);
+		List<Person> people = personService.getPeople(personIds);
+		List<Gender> genders = personMasterDataService.getGenders();
+		List<IdentificationType> identificationTypes = personMasterDataService.getIdentificationTypes();
+
+		List<BasicDataPersonDto> result = people.parallelStream()
+				.map(p -> mapToBasicDataDto(p, genders, identificationTypes))
+				.collect(Collectors.toList());
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	private BasicDataPersonDto mapToBasicDataDto(Person person, List<Gender> genders, List<IdentificationType> identificationTypes) {
+		LOG.debug("Input parameters -> person {}, genders {}, identificationTypes {} ", person, genders, identificationTypes);
+		Gender gender = genders.stream()
+				.filter(g -> g.getId().equals(person.getGenderId())).findAny()
+				.orElse(new Gender());
+
+		IdentificationType identificationType = identificationTypes.stream()
+				.filter(i -> i.getId().equals(person.getIdentificationTypeId())).findAny()
+				.orElse(new IdentificationType());
+
 		BasicDataPersonDto result = personMapper.basicDataFromPerson(person, gender, identificationType);
 		LOG.debug(OUTPUT, result);
 		return result;

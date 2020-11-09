@@ -1,74 +1,51 @@
 package net.pladema.medicalconsultation.appointment.repository.domain;
 
 
-import lombok.AllArgsConstructor;
 import lombok.ToString;
 import lombok.Value;
-import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Value
 @ToString
-@AllArgsConstructor
 public class AppointmentDiaryVo {
+
+    private final Integer id;
+
+    private final Integer patientId;
 
     private final Integer diaryId;
 
-    private final Appointment appointment;
+    private final LocalDate date;
+
+    private final LocalTime hour;
+
+    private final Short appointmentStateId;
+
+    private final boolean overturn;
+
+    private final Integer patientMedicalCoverageId;
 
     private final Short medicalAttentionTypeId;
 
-    public AppointmentDiaryVo(Integer diaryId, Appointment appointment) {
+    private final String phoneNumber;
+
+    public AppointmentDiaryVo(Integer diaryId, Integer id, Integer patientId,
+                              LocalDate date, LocalTime hour, Short appointmentStateId,
+                              boolean overturn, Integer patientMedicalCoverageId, String phoneNumber,
+                              Short medicalAttentionTypeId) {
         this.diaryId = diaryId;
-        this.appointment = appointment;
+        this.id = id;
+        this.patientId = patientId;
+        this.date = date;
+        this.hour = hour;
+        this.appointmentStateId = appointmentStateId;
+        this.overturn = overturn;
+        this.patientMedicalCoverageId = patientMedicalCoverageId;
+        this.phoneNumber = phoneNumber;
         this.medicalAttentionTypeId = null;
     }
 
-    public Integer getId(){
-        return appointment.getId();
-    }
 
-    public Integer getPatientId() {
-        if (appointment == null)
-            return null;
-        return appointment.getPatientId();
-    }
-
-    public LocalDate getDate() {
-        if (appointment == null)
-            return null;
-        return appointment.getDateTypeId();
-    }
-
-    public LocalTime getHour() {
-        if (appointment == null)
-            return null;
-        return appointment.getHour();
-    }
-
-    public Short getAppointmentStateId() {
-        if (appointment == null)
-            return null;
-        return appointment.getAppointmentStateId();
-    }
-
-    public boolean isOverturn() {
-        if (appointment == null)
-            return false;
-        return appointment.getIsOverturn();
-    }
-
-    public Integer getPatientMedicalCoverageId(){
-        if (appointment == null)
-            return null;
-        return appointment.getPatientMedicalCoverageId();
-    }
-
-    public String getPhoneNumber() {
-        if (appointment == null)
-            return null;
-        return appointment.getPhoneNumber();
-    }
 }

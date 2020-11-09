@@ -20,10 +20,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -81,6 +78,14 @@ public class PatientServiceImpl implements PatientService {
 	public Optional<Patient> getPatient(Integer patientId) {
 		LOG.debug("Input data -> {}", patientId);
 		Optional<Patient> result = patientRepository.findById(patientId);
+		LOG.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
+	public List<Patient> getPatients(Set<Integer> ids) {
+		LOG.debug("Input data -> {}", ids);
+		List<Patient> result = patientRepository.findAllById(ids);
 		LOG.debug("Output -> {}", result);
 		return result;
 	}
