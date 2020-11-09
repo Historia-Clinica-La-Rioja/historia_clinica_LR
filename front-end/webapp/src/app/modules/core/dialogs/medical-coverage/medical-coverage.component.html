@@ -27,7 +27,7 @@
 
 		<div>
 			<strong>Agregar nueva Obra Social</strong>
-			<form [formGroup]="healthInsuranceForm" fxLayout="row" fxLayoutAlign="space-between" class="form">
+			<form [formGroup]="healthInsuranceForm" fxLayoutGap="5px" class="form">
 				<mat-form-field appearance="outline">
 					<input type="text" placeholder="{{ 'Buscar obra social' | translate }}" aria-label="Number"
 						formControlName="healthInsurance" matInput [matAutocomplete]="auto">
@@ -78,8 +78,7 @@
 
 		<div>
 			<strong>Agregar nueva Prepaga</strong>
-			<form [formGroup]="prepagaForm" fxLayout="row" fxLayoutAlign="space-between start" class="form"
-				fxLayoutGap="5px">
+			<form [formGroup]="prepagaForm"  class="form" fxLayoutGap="5px">
 				<div fxLayout="column">
 					<mat-form-field appearance="outline">
 						<input type="text" placeholder="{{ 'Ingresar Prepaga' | translate }}" aria-label="Number"
@@ -114,7 +113,6 @@
 					<button mat-stroked-button color="primary" class="uppercase margin" id="add-medical-coverage" type="button"
 						name="add-medical-coverage" (click)="addPrivateHealthInsurance()">Agregar Prepaga
 					</button>
-
 				</div>
 
 			</form>

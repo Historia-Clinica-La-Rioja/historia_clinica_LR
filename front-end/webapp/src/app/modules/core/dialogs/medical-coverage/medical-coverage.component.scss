@@ -1,16 +1,15 @@
 @import '../../../../../assets/styles/mixins.scss';
 @import'../../../../../assets/styles/mat-mixins.scss';
 
-.align-items{
-	align-items: none !important;
-}
-
 ::ng-deep .mat-form-field-wrapper {
 	padding-bottom: 0;
 	margin: 0;
 }
 
 .form{
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+
 	button {
 		margin-top: 4px;
 		height: 58px;
@@ -18,7 +17,7 @@
 }
 
 .valid-date{
-	margin-top: 7px;
+	align-self: center;
 }
 
 .spinner {
