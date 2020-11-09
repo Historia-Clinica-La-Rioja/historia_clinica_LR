@@ -179,8 +179,8 @@
 					"SUBMIT": "Confirmar",
 					"ADMINISTRATION_DATE": "Fecha de vacunación",
 					"save": {
-						"SUCCESS": "La vacuna aplicada se guardó exitosamente",
-						"ERROR": "Error al guardar la vacuna aplicada",
+						"SUCCESS": "Las vacunas aplicadas se guardaron exitosamente",
+						"ERROR": "Error al guardar las vacunas aplicadas",
 						"CHANGE_STATE": "¿Desea aplicar más vacunas?"
 					}
 				}

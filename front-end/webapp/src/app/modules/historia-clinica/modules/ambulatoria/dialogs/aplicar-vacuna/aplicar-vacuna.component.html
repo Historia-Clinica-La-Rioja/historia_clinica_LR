@@ -99,7 +99,7 @@
 				{{'Aplicar vacuna' | translate | uppercase}}
 			</button>
 
-			<button type="submit" *ngIf="!snomedConcept" mat-raised-button color="primary">
+			<button type="submit" *ngIf="this.appliedVaccines.length >= 1 && !snomedConcept" mat-raised-button color="primary">
 				{{'Confirmar vacunaciones' | translate | uppercase}}
 			</button>
 		</mat-dialog-actions>

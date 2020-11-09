@@ -190,7 +190,7 @@ export class AplicarVacunaComponent implements OnInit {
 	}
 
 	save() {
-
+		if(this.appliedVaccines.length >= 1 ) {
 			const finishAppointment = this.dialog.open(ConfirmDialogComponent, {
 				width: '450px',
 				data: {
@@ -201,17 +201,20 @@ export class AplicarVacunaComponent implements OnInit {
 				}
 			});
 
-			finishAppointment.afterClosed().subscribe(() => {
+			finishAppointment.afterClosed().subscribe(accepted => {
+				if(accepted){
 					this.loading = true;
 					this.hceImmunizationService.gettingVaccine(this.appliedVaccines, this.data.patientId)
-					.subscribe(() => {
-						this.loading = false;
-						this.dialogRef.close(this.appliedVaccines);
-						this.snackBarService.showSuccess('ambulatoria.paciente.vacunas.aplicar.save.SUCCESS');
-					}, _ => {
-						this.snackBarService.showError('ambulatoria.paciente.vacunas.aplicar.save.ERROR');
-						this.loading = false;
-					});
+						.subscribe(() => {
+							this.loading = false;
+							this.dialogRef.close(this.appliedVaccines);
+							this.snackBarService.showSuccess('ambulatoria.paciente.vacunas.aplicar.save.SUCCESS');
+						}, _ => {
+							this.snackBarService.showError('ambulatoria.paciente.vacunas.aplicar.save.ERROR');
+							this.loading = false;
+						});
+					}
 			});
+		}
 	}
 }
