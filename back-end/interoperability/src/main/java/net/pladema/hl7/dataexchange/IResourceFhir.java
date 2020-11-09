@@ -2,6 +2,8 @@ package net.pladema.hl7.dataexchange;
 
 import net.pladema.hl7.dataexchange.model.adaptor.FhirAddress;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirCode;
+import net.pladema.hl7.supporting.exchange.database.FhirPersistentStore;
+
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.Address;
 import org.hl7.fhir.r4.model.Bundle;
@@ -29,8 +31,11 @@ public abstract class IResourceFhir {
     private static String dominio;
     private static String systemName;
 
-    public IResourceFhir(){
+    protected FhirPersistentStore store;
+
+    public IResourceFhir(FhirPersistentStore store){
         super();
+        this.store=store;
     }
 
     @Value("${ws.renaper.dominio}")
@@ -91,6 +96,7 @@ public abstract class IResourceFhir {
     public static Extension newExtension(String profile, FhirCode value){
         return new Extension().setUrl(profile).setValue(new CodeType(value.getTheCode()));
     }
+
     public static Meta newMeta(String... profiles) {
         Meta meta = new Meta();
         Arrays.stream(profiles).forEach(meta::addProfile);

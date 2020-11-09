@@ -3,11 +3,11 @@ package net.pladema.hl7.dataexchange.clinical;
 import net.pladema.hl7.dataexchange.IMultipleResourceFhir;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirDateMapper;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirID;
+import net.pladema.hl7.supporting.exchange.database.FhirPersistentStore;
 import net.pladema.hl7.supporting.terminology.coding.CodingCode;
 import net.pladema.hl7.supporting.terminology.coding.CodingProfile;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
 import net.pladema.hl7.dataexchange.model.domain.AllergyIntoleranceVo;
-import net.pladema.hl7.dataexchange.mock.MockAllergyIntolerance;
 import org.hl7.fhir.r4.model.AllergyIntolerance;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.ResourceType;
@@ -22,8 +22,8 @@ import java.util.List;
 public class AllergyIntoleranceResource extends IMultipleResourceFhir {
 
     @Autowired
-    public AllergyIntoleranceResource() {
-        super();
+    public AllergyIntoleranceResource(FhirPersistentStore store) {
+        super(store);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class AllergyIntoleranceResource extends IMultipleResourceFhir {
 
     @Override
     public List<AllergyIntolerance> fetch(String id, Reference[] references) {
-        List<AllergyIntoleranceVo> allergies = MockAllergyIntolerance.mock();
+        List<AllergyIntoleranceVo> allergies = store.findAllAllergies(id);
 
         if (allergies.isEmpty())
             return noInformationAvailable(references[0]);

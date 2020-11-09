@@ -13,6 +13,7 @@ import net.pladema.hl7.dataexchange.model.adaptor.FhirID;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirNarrative;
 import net.pladema.hl7.dataexchange.model.domain.CompositionVo;
 
+import net.pladema.hl7.supporting.exchange.database.FhirPersistentStore;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Composition;
 import org.hl7.fhir.r4.model.Reference;
@@ -27,8 +28,8 @@ import java.util.stream.Collectors;
 public class CompositionResource extends IResourceFhir {
 
     @Autowired
-    public CompositionResource(){
-        super();
+    public CompositionResource(FhirPersistentStore store){
+        super(store);
     }
 
     public static Composition metadatos(CompositionVo data, Reference[] references){

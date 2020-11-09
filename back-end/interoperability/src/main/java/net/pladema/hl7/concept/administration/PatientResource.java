@@ -1,7 +1,7 @@
 package net.pladema.hl7.concept.administration;
 
 import net.pladema.hl7.dataexchange.ISingleResourceFhir;
-import net.pladema.hl7.dataexchange.mock.MockPatient;
+import net.pladema.hl7.supporting.exchange.database.FhirPersistentStore;
 import net.pladema.hl7.supporting.terminology.coding.CodingProfile;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
 import net.pladema.hl7.dataexchange.model.domain.PatientVo;
@@ -21,8 +21,8 @@ import org.springframework.stereotype.Service;
 public class PatientResource extends ISingleResourceFhir {
 
     @Autowired
-    public PatientResource(){
-        super();
+    public PatientResource(FhirPersistentStore store){
+        super(store);
     }
 
     @Override
@@ -32,7 +32,7 @@ public class PatientResource extends ISingleResourceFhir {
 
     @Override
     public Patient fetch(String id, Reference[] references) {
-        PatientVo patient = MockPatient.mock();
+        PatientVo patient = store.getPatient(id);
 
         Patient resource = new Patient();
         resource.setId(id);

@@ -1,9 +1,9 @@
 package net.pladema.hl7.dataexchange.clinical;
 
 import net.pladema.hl7.dataexchange.IMultipleResourceFhir;
-import net.pladema.hl7.dataexchange.mock.MockCondition;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirDateMapper;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirID;
+import net.pladema.hl7.supporting.exchange.database.FhirPersistentStore;
 import net.pladema.hl7.supporting.terminology.coding.CodingProfile;
 import net.pladema.hl7.supporting.terminology.coding.CodingCode;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
@@ -23,8 +23,8 @@ import java.util.List;
 public class ConditionResource extends IMultipleResourceFhir {
 
     @Autowired
-    public ConditionResource(){
-        super();
+    public ConditionResource(FhirPersistentStore store){
+        super(store);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class ConditionResource extends IMultipleResourceFhir {
 
     @Override
     public List<Condition> fetch(String id, Reference[] references) {
-        List<ConditionVo> conditions = MockCondition.mock();
+        List<ConditionVo> conditions = store.findAllCondition(id);
 
         if(conditions.isEmpty())
             return noInformationAvailable(references[0]);

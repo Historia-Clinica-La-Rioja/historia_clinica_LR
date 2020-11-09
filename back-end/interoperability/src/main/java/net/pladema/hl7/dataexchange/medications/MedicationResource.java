@@ -1,6 +1,7 @@
 package net.pladema.hl7.dataexchange.medications;
 
 import net.pladema.hl7.dataexchange.IResourceFhir;
+import net.pladema.hl7.supporting.exchange.database.FhirPersistentStore;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
 import net.pladema.hl7.dataexchange.model.domain.MedicationVo;
 import org.hl7.fhir.r4.model.Medication;
@@ -16,8 +17,8 @@ import java.util.List;
 public class MedicationResource extends IResourceFhir {
 
     @Autowired
-    public MedicationResource() {
-        super();
+    public MedicationResource(FhirPersistentStore store){
+        super(store);
     }
 
     @Override

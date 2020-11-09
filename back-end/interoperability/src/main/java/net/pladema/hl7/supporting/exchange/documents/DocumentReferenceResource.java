@@ -3,6 +3,7 @@ package net.pladema.hl7.supporting.exchange.documents;
 import net.pladema.hl7.dataexchange.IResourceFhir;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirID;
 import net.pladema.hl7.dataexchange.model.domain.BundleVo;
+import net.pladema.hl7.supporting.exchange.database.FhirPersistentStore;
 import net.pladema.hl7.supporting.terminology.coding.CodingProfile;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
 import org.hl7.fhir.r4.model.Attachment;
@@ -19,8 +20,8 @@ import org.springframework.stereotype.Service;
 public class DocumentReferenceResource extends IResourceFhir {
 
     @Autowired
-    public DocumentReferenceResource(){
-        super();
+    public DocumentReferenceResource(FhirPersistentStore store){
+        super(store);
     }
 
     @Override
@@ -53,5 +54,9 @@ public class DocumentReferenceResource extends IResourceFhir {
 
     public Bundle.BundleEntryComponent fetchEntry(BundleVo bundle){
         return fetchEntry(fetch(bundle));
+    }
+
+    public BundleVo getData(String id){
+        return store.getDocumentReference(id);
     }
 }

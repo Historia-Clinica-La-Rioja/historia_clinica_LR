@@ -13,8 +13,8 @@ package net.pladema.hl7.supporting.exchange.documents;
 import ca.uhn.fhir.rest.param.TokenParam;
 import net.pladema.hl7.dataexchange.IResourceFhir;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirID;
-import net.pladema.hl7.dataexchange.mock.MockBundle;
 import net.pladema.hl7.dataexchange.model.domain.BundleVo;
+import net.pladema.hl7.supporting.exchange.database.FhirPersistentStore;
 import net.pladema.hl7.supporting.exchange.documents.profile.FhirDocument;
 import net.pladema.hl7.supporting.exchange.documents.profile.PatientSummaryDocument;
 import net.pladema.hl7.supporting.exchange.restful.validator.DocumentReferenceValidation;
@@ -46,10 +46,11 @@ public class BundleResource extends IResourceFhir {
     private String dominio;
 
     @Autowired
-    public BundleResource(DocumentReferenceResource documentReferenceResource,
+    public BundleResource(FhirPersistentStore store,
+                          DocumentReferenceResource documentReferenceResource,
                           DocumentReferenceValidation documentReferenceValidation,
                           FhirDocument fhirDocument) {
-        super();
+        super(store);
         this.documentReferenceResource = documentReferenceResource;
         this.documentReferenceValidation=documentReferenceValidation;
         this.fhirDocument=fhirDocument;
@@ -66,8 +67,7 @@ public class BundleResource extends IResourceFhir {
         return documentReferenceValidation.inputParameter(subject, custodian, type, dominio).orElseGet(
                 //returns a default value directly if the Optional is empty (the data of document is valid)
                 () -> {
-                    //TODO should be replaced by database real search
-                    BundleVo data = MockBundle.mockSearchDocument();
+                    BundleVo data = documentReferenceResource.getData(subject.getValue());
                     //Data required validation
                     return documentReferenceValidation.data(data, subject.getValue()).orElseGet(
                             () -> { Bundle validDocument = empty();

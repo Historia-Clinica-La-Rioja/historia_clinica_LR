@@ -2,6 +2,7 @@ package net.pladema.hl7.concept.administration;
 
 import net.pladema.hl7.dataexchange.ISingleResourceFhir;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirID;
+import net.pladema.hl7.supporting.exchange.database.FhirPersistentStore;
 import net.pladema.hl7.supporting.terminology.coding.CodingCode;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
 import org.apache.maven.model.Model;
@@ -20,8 +21,8 @@ import java.io.IOException;
 public class DeviceResource extends ISingleResourceFhir {
 
     @Autowired
-    public DeviceResource(){
-        super();
+    public DeviceResource(FhirPersistentStore store){
+        super(store);
     }
 
     @Override

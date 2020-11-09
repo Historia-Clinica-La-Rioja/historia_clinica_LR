@@ -3,11 +3,11 @@ package net.pladema.hl7.dataexchange.model.domain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.pladema.hl7.dataexchange.model.adaptor.Cast;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirCode;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirDateMapper;
 import net.pladema.hl7.foundation.lifecycle.ResourceStatus;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 
 @NoArgsConstructor
@@ -15,7 +15,17 @@ import java.time.LocalDate;
 @Setter
 public class ImmunizationVo {
 
-        private String id;
+    public ImmunizationVo(Object[] tuple){
+        int index=0;
+        setId(Cast.toString(tuple[index++]));
+        setImmunizationCode(Cast.toString(tuple[index++]));
+        setImmunizationTerm(Cast.toString(tuple[index++]));
+        setStatus(Cast.toString(tuple[index++]));
+        setAdministrationDate(Cast.toSqlDate(tuple[index++]), Cast.toSqlTimestamp(tuple[index]));
+        setExpirationDate(FhirDateMapper.toLocalDate(Cast.toSqlTimestamp(tuple[index])));
+    }
+
+    private String id;
 
     private String vaccineCode;
     private String vaccineTerm;

@@ -18,6 +18,7 @@ public class CodingCode {
                 "no-known-problems", "No known problems");
         public static final FhirCode CATEGORY = new FhirCode("75326-9", "Problem");
 
+        public static final String DIAGNOSIS = "439401001";
     }
 
     public static class Device {
@@ -39,5 +40,11 @@ public class CodingCode {
                 "no-known-medications", "No known medications");
 
         public static final FhirCode DOSE = new FhirCode("ordered", "ordered");
+    }
+
+    public static class DocumentReference {
+        public static final String FINAL_STATUS = "445665009";
+        public static final short OUTPATIENT_TYPE = (short)4;
+
     }
 }

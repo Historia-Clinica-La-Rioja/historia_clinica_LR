@@ -1,9 +1,9 @@
 package net.pladema.hl7.dataexchange.medications;
 
 import net.pladema.hl7.dataexchange.IMultipleResourceFhir;
-import net.pladema.hl7.dataexchange.mock.MockImmunization;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirDateMapper;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirID;
+import net.pladema.hl7.supporting.exchange.database.FhirPersistentStore;
 import net.pladema.hl7.supporting.terminology.coding.CodingCode;
 import net.pladema.hl7.supporting.terminology.coding.CodingProfile;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
@@ -23,8 +23,8 @@ import java.util.List;
 public class ImmunizationResource extends IMultipleResourceFhir {
 
     @Autowired
-    public ImmunizationResource(){
-        super();
+    public ImmunizationResource(FhirPersistentStore store){
+        super(store);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class ImmunizationResource extends IMultipleResourceFhir {
 
     @Override
     public List<Immunization> fetch(String id, Reference[] references){
-        List<ImmunizationVo> immunizations = MockImmunization.mock();
+        List<ImmunizationVo> immunizations = store.findAllImmunizations(id);
 
         if(immunizations.isEmpty())
             return noInformationAvailable();

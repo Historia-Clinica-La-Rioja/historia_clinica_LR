@@ -1,9 +1,9 @@
 package net.pladema.hl7.concept.administration;
 
 import net.pladema.hl7.dataexchange.ISingleResourceFhir;
+import net.pladema.hl7.supporting.exchange.database.FhirPersistentStore;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
 import net.pladema.hl7.dataexchange.model.domain.OrganizationVo;
-import net.pladema.hl7.dataexchange.mock.MockOrganization;
 import org.hl7.fhir.r4.model.ContactPoint;
 import org.hl7.fhir.r4.model.Organization;
 import org.hl7.fhir.r4.model.Reference;
@@ -15,8 +15,8 @@ import org.springframework.stereotype.Service;
 public class OrganizationResource extends ISingleResourceFhir {
 
     @Autowired
-    public OrganizationResource(){
-        super();
+    public OrganizationResource(FhirPersistentStore store){
+        super(store);
     }
 
     @Override
@@ -26,8 +26,7 @@ public class OrganizationResource extends ISingleResourceFhir {
 
     @Override
     public Organization fetch(String id, Reference[] references) {
-        //TODO should be replaced by database real search
-        OrganizationVo organization = MockOrganization.mock();
+        OrganizationVo organization = store.getOrganization(id);
 
         Organization resource = new Organization();
         resource.setId(organization.getId());

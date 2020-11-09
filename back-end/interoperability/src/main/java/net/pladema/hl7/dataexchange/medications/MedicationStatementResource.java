@@ -9,9 +9,9 @@
 package net.pladema.hl7.dataexchange.medications;
 
 import net.pladema.hl7.dataexchange.IMultipleResourceFhir;
-import net.pladema.hl7.dataexchange.mock.MockMedication;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirDateMapper;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirID;
+import net.pladema.hl7.supporting.exchange.database.FhirPersistentStore;
 import net.pladema.hl7.supporting.terminology.coding.CodingCode;
 import net.pladema.hl7.supporting.terminology.coding.CodingProfile;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
@@ -24,6 +24,7 @@ import org.hl7.fhir.r4.model.MedicationStatement;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.ResourceType;
 import org.hl7.fhir.r4.model.Timing;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -36,8 +37,10 @@ public class MedicationStatementResource extends IMultipleResourceFhir {
 
     private final MedicationResource medicationResource;
 
-    public MedicationStatementResource(MedicationResource medicationResource){
-        super();
+    @Autowired
+    public MedicationStatementResource(FhirPersistentStore store,
+                                       MedicationResource medicationResource){
+        super(store);
         this.medicationResource= medicationResource;
     }
 
@@ -52,7 +55,7 @@ public class MedicationStatementResource extends IMultipleResourceFhir {
     }
 
     public Map<MedicationStatement, Medication> fetchSingle(String id, Reference[] references){
-        List<MedicationVo> medications = MockMedication.mock();
+        List<MedicationVo> medications = store.findAllMedications(id);
 
         if(medications.isEmpty())
             return noInformationAvailable(references);

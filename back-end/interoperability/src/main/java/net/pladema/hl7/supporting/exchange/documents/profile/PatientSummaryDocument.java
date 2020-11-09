@@ -16,7 +16,6 @@ import net.pladema.hl7.dataexchange.clinical.AllergyIntoleranceResource;
 import net.pladema.hl7.dataexchange.clinical.ConditionResource;
 import net.pladema.hl7.dataexchange.medications.ImmunizationResource;
 import net.pladema.hl7.dataexchange.medications.MedicationStatementResource;
-import net.pladema.hl7.dataexchange.mock.MockComposition;
 import net.pladema.hl7.dataexchange.model.domain.CompositionVo;
 import net.pladema.hl7.supporting.exchange.documents.CompositionResource;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
@@ -26,12 +25,14 @@ import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.Composition;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.ResourceType;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Component
 public class PatientSummaryDocument extends IDocumentProfile {
 
     public static final Coding TYPE = new Coding()
@@ -97,7 +98,7 @@ public class PatientSummaryDocument extends IDocumentProfile {
                 .collect(Collectors.toList());
 
         //=======================Entries=======================
-        CompositionVo data = MockComposition.mockIPSAR();
+        CompositionVo data = new CompositionVo(TYPE);
         Bundle.BundleEntryComponent compositionEntry = CompositionResource.fetchEntry(
                 CompositionResource
                 .metadatos(data, new Reference[]{patientRef, deviceRef, organizationRef})

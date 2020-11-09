@@ -3,9 +3,6 @@ package net.pladema.hl7.dataexchange.model.adaptor;
 import lombok.Getter;
 import org.hl7.fhir.r4.model.Address;
 
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 @Getter
 public class FhirAddress {
 
@@ -21,6 +18,18 @@ public class FhirAddress {
     private String postcode;
     private String province;
     private String country;
+
+    public FhirAddress setAll(Object[] tuple){
+        int index=0;
+        setAddress(Cast.toString(tuple[index++]), Cast.toString(tuple[index++]),
+                Cast.toString(tuple[index++]), Cast.toString(tuple[index++])
+        )
+                .setPostcode(Cast.toString(tuple[index++]))
+                .setCity(Cast.toString(tuple[index++]))
+                .setProvince(Cast.toString(tuple[index++]))
+                .setCountry(Cast.toString(tuple[index]));
+        return this;
+    }
 
     public FhirAddress setAddress(String street, String number, String appartment, String floor){
         this.address = FhirString.joining(street, number, appartment, floor);

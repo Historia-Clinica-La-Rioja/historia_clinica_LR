@@ -2,6 +2,7 @@ package net.pladema.hl7.dataexchange.model.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.pladema.hl7.dataexchange.model.adaptor.Cast;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirAddress;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirString;
 import org.apache.commons.collections4.BidiMap;
@@ -22,6 +23,20 @@ public class PatientVo {
         GENDER = new DualHashBidiMap<>();
         GENDER.put((short)1, "female");
         GENDER.put((short)2, "male");
+    }
+
+    public PatientVo(Object[] tuple){
+        this();
+        int index = 0;
+        setFirstname(Cast.toString(tuple[index++]));
+        setMiddlenames(Cast.toString(tuple[index++]));
+        setLastname(Cast.toString(tuple[index++]));
+        setOtherLastName(Cast.toString(tuple[index++]), Cast.toString(tuple[index++]));
+        setIdentificationNumber(Cast.toString(tuple[index++]));
+        Short gender = Cast.toShort(tuple[index++]);
+        setGender(GENDER.getOrDefault(gender, null));
+        setBirthdate(Cast.toLocalDate(tuple[index++]));
+        setPhoneNumber(Cast.toString(tuple[index]));
     }
 
     private String identificationNumber;

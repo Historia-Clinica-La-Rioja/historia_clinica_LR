@@ -2,6 +2,7 @@ package net.pladema.hl7.dataexchange.model.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.pladema.hl7.dataexchange.model.adaptor.Cast;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirCode;
 import net.pladema.hl7.foundation.lifecycle.ResourceStatus;
 import org.apache.commons.collections4.BidiMap;
@@ -40,6 +41,16 @@ public class AllergyIntoleranceVo {
         CRITICALITY.put((short)1, "low");
         CRITICALITY.put((short)2, "high");
         CRITICALITY.put((short)3, "unable-to-assess");
+    }
+
+    public AllergyIntoleranceVo(Object[] tuple){
+        this();
+        int index=0;
+        setId(Cast.toString(tuple[index++]));
+        setSctidCode(Cast.toString(tuple[index++]));
+        setSctidTerm(Cast.toString(tuple[index++]));
+        setClinicalStatus(Cast.toString(tuple[index++]));
+        setVerificationStatus(Cast.toString(tuple[index]));
     }
 
     private String id;

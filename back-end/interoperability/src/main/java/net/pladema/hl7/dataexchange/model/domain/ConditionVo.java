@@ -2,6 +2,7 @@ package net.pladema.hl7.dataexchange.model.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.pladema.hl7.dataexchange.model.adaptor.Cast;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirCode;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirDateMapper;
 import net.pladema.hl7.foundation.lifecycle.ResourceStatus;
@@ -24,6 +25,18 @@ public class ConditionVo {
         SEVERITY.put("LA6752-5", "mild");
         SEVERITY.put("LA6751-7", "moderate");
         SEVERITY.put("LA6750-9", "severe");
+    }
+
+    public ConditionVo(Object[] tuple){
+        this();
+        int index=0;
+        setId(Cast.toString(tuple[index++]));
+        setSctidCode(Cast.toString(tuple[index++]));
+        setSctidTerm(Cast.toString(tuple[index++]));
+        setClinicalStatus(Cast.toString(tuple[index++]));
+        setVerificationStatus(Cast.toString(tuple[index++]));
+        setStartDate(FhirDateMapper.toLocalDate(Cast.toSqlDate(tuple[index++])));
+        setCreatedOn(FhirDateMapper.toLocalDateTime(Cast.toSqlTimestamp(tuple[index])));
     }
 
     private String id;
