@@ -124,10 +124,11 @@ export class MedicalCoverageComponent implements OnInit {
 	// -----------------------------------------------------------------------------------------------------------------------------
 
 	addHealthInsurance(): void {
-		if (this.healthInsuranceForm.valid) {
+		if (this.healthInsuranceToAdd && this.healthInsuranceForm.valid) {
 			const toAdd = this.getHealthInsuranceToAdd();
 			this.patientMedicalCoverages = this.patientMedicalCoverages.concat(toAdd);
 			this.healthInsuranceForm.reset();
+			this.healthInsuranceToAdd = null;
 		}
 	}
 
@@ -273,7 +274,7 @@ export class PrivateHealthInsurance extends MedicalCoverage {
 }
 
 export function determineIfIsHealthInsurance(toBeDetermined: HealthInsurance | PrivateHealthInsurance): toBeDetermined is HealthInsurance {
-	if((toBeDetermined as HealthInsurance).type){
+	if ((toBeDetermined as HealthInsurance).type) {
 		return true
 	}
 	return false // case PrivateHealthInsurance
