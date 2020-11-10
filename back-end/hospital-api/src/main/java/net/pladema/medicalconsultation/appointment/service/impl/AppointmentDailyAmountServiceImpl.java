@@ -8,6 +8,7 @@ import net.pladema.medicalconsultation.diary.service.DiaryService;
 import net.pladema.medicalconsultation.diary.service.domain.CompleteDiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 import net.pladema.medicalconsultation.repository.entity.MedicalAttentionType;
+import net.pladema.sgx.dates.utils.DateUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -60,7 +61,7 @@ public class AppointmentDailyAmountServiceImpl implements AppointmentDailyAmount
 
     private Collection<DiaryOpeningHoursBo> getOpeningHoursFor(LocalDate date, Collection<DiaryOpeningHoursBo> openingHours) {
         return openingHours.stream()
-                .filter(oh -> oh.getOpeningHours().getDayWeekId().intValue() == (date.getDayOfWeek().getValue()))
+                .filter(oh -> oh.getOpeningHours().getDayWeekId().equals(DateUtils.getWeekDay(date)))
                 .collect(Collectors.toList());
     }
 
