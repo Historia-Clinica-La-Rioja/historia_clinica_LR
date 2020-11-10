@@ -53,7 +53,7 @@ public class HealthInsuranceServiceImpl implements HealthInsuranceService {
 	@Override
 	public void addAll(Collection<PersonMedicalCoverageBo> newHealthInsurances) {
 		LOG.debug("Input-> newHealthInsurances {}", newHealthInsurances);
-		newHealthInsurances.stream().filter(hi -> !healthInsuranceRepository.existsById(calculateRnos(hi)))
+		newHealthInsurances.stream().filter(hi -> !healthInsuranceRepository.existsByRnos(calculateRnos(hi)))
 				.forEach(hi -> {
 				    MedicalCoverage saved = medicalCoverageRepository
                             .save(new MedicalCoverage(hi.getName()));

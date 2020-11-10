@@ -27,4 +27,8 @@ public interface HealthInsuranceRepository extends JpaRepository<HealthInsurance
             "JOIN HealthInsurance as hi ON (hi.id = mc.id) " +
             "WHERE hi.rnos = :rnos")
     public Optional<HealthInsuranceVo> findByRnos(@Param("rnos") Integer rnos);
+
+    @Transactional(readOnly = true)
+    @Query(value = "SELECT exists (select 1 from health_insurance where rnos = :rnos)", nativeQuery = true)
+    boolean existsByRnos(@Param("rnos") Integer rnos);
 }
