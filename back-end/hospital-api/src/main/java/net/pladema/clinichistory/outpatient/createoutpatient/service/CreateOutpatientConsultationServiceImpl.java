@@ -40,6 +40,7 @@ public class CreateOutpatientConsultationServiceImpl implements CreateOutpatient
         result.setDoctorId(source.getDoctorId());
         result.setInstitutionId(source.getInstitutionId());
         result.setStartDate(source.getStartDate());
+        result.setClinicalSpecialtyId(source.getClinicalSpecialtyId());
         LOG.debug(OUTPUT, result);
         return result;
     }
