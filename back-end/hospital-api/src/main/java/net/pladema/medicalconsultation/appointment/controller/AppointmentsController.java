@@ -125,14 +125,15 @@ public class AppointmentsController {
                 .parallel()
                 .map(a -> mapData(a, basicPatientDtoMap))
                 .collect(Collectors.toList());
-        LOG.debug(OUTPUT, result);
+        LOG.debug("Result size {}", result.size());
+        LOG.trace(OUTPUT, result);
         return ResponseEntity.ok(result);
     }
 
     private AppointmentListDto mapData(AppointmentBo appointmentBo, Map<Integer, BasicPatientDto> patientData) {
-        LOG.debug("Input parameters -> appointmentBo {}, patientData {}", appointmentBo, patientData);
         AppointmentListDto result = appointmentMapper.toAppointmentListDto(appointmentBo, patientData.get(appointmentBo.getPatientId()));
-        LOG.debug(OUTPUT, result);
+        LOG.debug("AppointmentListDto id result {}", result.getId());
+        LOG.trace(OUTPUT, result);
         return result;
     }
 

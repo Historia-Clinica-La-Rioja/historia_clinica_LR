@@ -1,6 +1,8 @@
 package net.pladema.medicalconsultation.appointment.service.impl;
 
 import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
+import net.pladema.medicalconsultation.appointment.repository.HistoricAppointmentStateRepository;
+import net.pladema.medicalconsultation.appointment.repository.entity.HistoricAppointmentState;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import org.slf4j.Logger;
@@ -14,9 +16,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import net.pladema.medicalconsultation.appointment.repository.HistoricAppointmentStateRepository;
-import net.pladema.medicalconsultation.appointment.repository.entity.HistoricAppointmentState;
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
@@ -41,7 +40,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 		if (!diaryIds.isEmpty())
 			result = appointmentRepository.getAppointmentsByDiaries(diaryIds).stream().map(AppointmentBo::new)
 					.collect(Collectors.toList());
-		LOG.debug(OUTPUT, result);
+		LOG.debug("Result size {}", result.size());
+		LOG.trace(OUTPUT, result);
 		return result;
 	}
 

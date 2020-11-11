@@ -43,7 +43,8 @@ public class PatientExternalServiceImpl implements PatientExternalService {
 
     @Override
     public Map<Integer, BasicPatientDto> getBasicDataFromPatientsId(Set<Integer> patientIds) {
-        LOG.debug("Input parameters -> patientIds {}", patientIds);
+        LOG.debug("Input parameters -> patientIds {}", patientIds.size());
+        LOG.trace("Input parameters -> patientIds {}", patientIds);
         Map<Integer, Patient> patientsMap = patientService.getPatients(patientIds).parallelStream()
                                 .collect(Collectors.toMap(Patient::getId, patient -> patient));
 
@@ -60,7 +61,8 @@ public class PatientExternalServiceImpl implements PatientExternalService {
                         p -> p.getKey(),
                         p -> new BasicPatientDto(p.getKey(), personDatas.get(p.getValue().getPersonId()), p.getValue().getTypeId())
                 ));
-        LOG.debug(OUTPUT, result);
+        LOG.debug("Result size {}", result.size());
+        LOG.trace(OUTPUT, result);
         return result;
     }
 

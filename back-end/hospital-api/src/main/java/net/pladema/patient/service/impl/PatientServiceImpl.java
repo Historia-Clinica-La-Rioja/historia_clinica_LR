@@ -29,9 +29,12 @@ import static net.pladema.patient.service.MathScore.calculateMatch;
 @Service
 public class PatientServiceImpl implements PatientService {
 
+
 	private static final Logger LOG = LoggerFactory.getLogger(PatientServiceImpl.class);
 
 	private static final float THRESHOLD = 60.0f;
+	private static final String OUTPUT = "Output -> {}";
+	private static final String INPUT_DATA = "Input data -> {}";
 
 	private final PatientRepository patientRepository;
 
@@ -64,7 +67,7 @@ public class PatientServiceImpl implements PatientService {
 				.filter(patient -> patient.getRanking() > THRESHOLD)
 				.sorted(Comparator.comparing(PatientSearch::getRanking).reversed())
 				.collect(Collectors.toList());
-		LOG.debug("Output -> {}", matchedPatients);
+		LOG.debug(OUTPUT, matchedPatients);
 		return matchedPatients;
 	}
 
@@ -76,17 +79,19 @@ public class PatientServiceImpl implements PatientService {
 
 	@Override
 	public Optional<Patient> getPatient(Integer patientId) {
-		LOG.debug("Input data -> {}", patientId);
+		LOG.debug(INPUT_DATA, patientId);
 		Optional<Patient> result = patientRepository.findById(patientId);
-		LOG.debug("Output -> {}", result);
+		LOG.debug(OUTPUT, result);
 		return result;
 	}
 
 	@Override
 	public List<Patient> getPatients(Set<Integer> ids) {
-		LOG.debug("Input data -> {}", ids);
+		LOG.debug(INPUT_DATA, ids.size());
+		LOG.trace(INPUT_DATA, ids);
 		List<Patient> result = patientRepository.findAllById(ids);
-		LOG.debug("Output -> {}", result);
+		LOG.debug("Result size {}", result.size());
+		LOG.trace(OUTPUT, result);
 		return result;
 	}
 
@@ -108,37 +113,37 @@ public class PatientServiceImpl implements PatientService {
 
 	@Override
 	public List<PatientMedicalCoverageBo> getCoverages(Integer patientId) {
-		LOG.debug("Input data -> {}", patientId);
+		LOG.debug(INPUT_DATA, patientId);
 		List<PatientMedicalCoverageVo> queryResult = patientRepository.getPatientCoverages(patientId);
 		List<PatientMedicalCoverageBo> result = queryResult.stream().map(PatientMedicalCoverageBo::new).collect(Collectors.toList());
-		LOG.debug("Output -> {}", result);
+		LOG.debug(OUTPUT, result);
 		return result;
 	}
 
 	@Override
 	public PatientMedicalCoverageBo getCoverage(Integer patientMedicalCoverageId) {
-		LOG.debug("Input data -> {}", patientMedicalCoverageId);
+		LOG.debug(INPUT_DATA, patientMedicalCoverageId);
 		PatientMedicalCoverageVo queryResult = patientRepository.getPatientCoverage(patientMedicalCoverageId);
 		PatientMedicalCoverageBo result = new PatientMedicalCoverageBo(queryResult);
-		LOG.debug("Output -> {}", result);
+		LOG.debug(OUTPUT, result);
 		return result;
 	}
 
 	@Override
 	public List<PatientMedicalCoverageBo> getHealthInsurances(Integer patientId) {
-		LOG.debug("Input data -> {}", patientId);
+		LOG.debug(INPUT_DATA, patientId);
 		List<PatientMedicalCoverageVo> queryResult = patientRepository.getPatientHealthInsurances(patientId);
 		List<PatientMedicalCoverageBo> result = queryResult.stream().map(PatientMedicalCoverageBo::new).collect(Collectors.toList());
-		LOG.debug("Output -> {}", result);
+		LOG.debug(OUTPUT, result);
 		return result;
 	}
 
 	@Override
 	public List<PatientMedicalCoverageBo> getPrivateHealthInsurances(Integer patientId) {
-		LOG.debug("Input data -> {}", patientId);
+		LOG.debug(INPUT_DATA, patientId);
 		List<PatientMedicalCoverageVo> queryResult = patientRepository.getPatientPrivateHealthInsurances(patientId);
 		List<PatientMedicalCoverageBo> result = queryResult.stream().map(PatientMedicalCoverageBo::new).collect(Collectors.toList());
-		LOG.debug("Output -> {}", result);
+		LOG.debug(OUTPUT, result);
 		return result;
 	}
 

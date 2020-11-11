@@ -52,7 +52,8 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public List<Person> getPeople(Set<Integer> personIds) {
-        LOG.debug("Going to get person -> {}", personIds);
+        LOG.debug("Going to get person -> {}", personIds.size());
+        LOG.trace("Going to get person -> {}", personIds);
         List<Person> result = personRepository.findAllById(personIds);
         LOG.debug("Person gotten-> {}", result);
         return result;
