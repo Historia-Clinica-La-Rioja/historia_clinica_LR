@@ -10,7 +10,6 @@ import {
     DeleteButton,
     TopToolbar,
     ListButton,
-    EditButton
 } from 'react-admin';
 
 import CreateRelatedButton from '../components/CreateRelatedButton';
