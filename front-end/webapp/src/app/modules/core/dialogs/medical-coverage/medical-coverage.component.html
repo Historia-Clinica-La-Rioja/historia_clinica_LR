@@ -2,7 +2,7 @@
 <div mat-dialog-content fxLayout="column" fxLayoutGap="10px">
 
 	<mat-card fxLayout="column" fxLayoutGap="10px">
-		<strong>Obra Sociales activas</strong>
+		<strong translate="medical-coverage.ACTIVES_HEALTH_INSURANCES"></strong>
 		<div fxLayout="column">
 			<div class="spinner" *ngIf="loading else viewPatientHealthInsurances" fxLayout="column" fxLayoutGap="25px">
 				<mat-spinner color="primary"></mat-spinner>
@@ -26,7 +26,7 @@
 		</div>
 
 		<div>
-			<strong>Agregar nueva Obra Social</strong>
+			<strong translate="medical-coverage.NEW_HEALTH_INSURANCES"></strong>
 			<form [formGroup]="healthInsuranceForm" fxLayoutGap="5px" class="form">
 				<mat-form-field appearance="outline">
 					<input type="text" placeholder="{{ 'Buscar obra social' | translate }}" aria-label="Number"
@@ -51,7 +51,7 @@
 
 
 	<mat-card fxLayout="column" fxLayoutGap="10px">
-		<strong>Prepagas activas</strong>
+		<strong translate="medical-coverage.ACTIVES_PRIVATE_HEALTH_INSURANCES"></strong>
 		<div fxLayout="column">
 			<div class="spinner" *ngIf="loading else viewPatientPrivateHealthInsurances" fxLayout="column" fxLayoutGap="25px">
 				<mat-spinner color="primary"></mat-spinner>
@@ -77,7 +77,7 @@
 		</div>
 
 		<div>
-			<strong>Agregar nueva Prepaga</strong>
+			<strong translate="medical-coverage.NEW_PRIVATE_HEALTH_INSURANCES"></strong>
 			<form [formGroup]="prepagaForm"  class="form" fxLayoutGap="5px">
 				<div fxLayout="column">
 					<mat-form-field appearance="outline">

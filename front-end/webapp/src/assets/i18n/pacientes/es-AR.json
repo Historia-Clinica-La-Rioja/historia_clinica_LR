@@ -28,8 +28,7 @@
 			"LAST_NAME": "Primer apellido",
 			"LAST_NAME_TITLE": "Apellidos",
 			"MAX_CHARACTER": "Introduzca como máximo 11 caracteres",
-			"MEDICAL_COVERAGE_NAME": "Cobertura Social - Prepaga",
-			"MEDICAL_COVERAGE_AFFILIATE_NUMBER": "Numero de afiliado",
+			"MEDICAL_COVERAGE":"Cobertura médica",
 			"MIDDLE_NAMES": "Otros nombres",
 			"MOTHERS_LAST_NAME": "Apellido materno",
 			"NAME_SELF_DETERMINATION": "Nombre autopercibido",
@@ -40,7 +39,8 @@
 			"RELIGION": "Religion",
 			"REQUIRED": "El campo es requerido",
 			"REQUIRED_GENDER": "Género requerido",
-			"SELECT": "Seleccionar"
+			"SELECT": "Seleccionar",
+			"UPDATE_MEDICAL_COVERAGE": "Actualizar cobertura"
 		},
 		"home": {
 			"TITLE": "Pacientes",
