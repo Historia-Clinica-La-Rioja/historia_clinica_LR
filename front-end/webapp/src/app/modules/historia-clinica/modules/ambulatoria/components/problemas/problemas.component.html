@@ -142,8 +142,12 @@
 
 							<div fxLayout="column" fxLayoutGap="15px" fxFlex="100%">
 								<div fxLayout="row" fxLayoutGap="15px" fxLayout.xs="column">
-									<div fxLayout="column" fxFlex.gt-xs="70%">
+									<div fxLayout="column" fxFlex.gt-xs="70%" fxLayoutGap="15px">
 										<h2 class="mat-h2 page-title primary capitalize-first-letter">{{historicalProblem.problemPt}}</h2>
+										<div *ngIf="historicalProblem.specialityPt">
+											<div class="mat-body-strong" [translate]="'ambulatoria.paciente.problemas.historical-problems.SPECIALITY'"></div>
+											<div class="mat-body capitalize-first-letter">{{historicalProblem.specialityPt}}</div>
+										</div>
 
 										<div *ngIf="historicalProblem.consultationReasons.length">
 											<div class="mat-body-strong" [translate]="'ambulatoria.paciente.problemas.historical-problems.REASONS'"></div>

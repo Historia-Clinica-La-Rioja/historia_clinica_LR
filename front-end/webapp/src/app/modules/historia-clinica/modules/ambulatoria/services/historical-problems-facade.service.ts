@@ -134,6 +134,7 @@ export class HistoricalProblems {
 	problemId: string;
 	problemPt: string;
 	specialtyId: number;
+	specialtyPt: string;
   	consultationReasons:
 	{
 		reasonId: string;

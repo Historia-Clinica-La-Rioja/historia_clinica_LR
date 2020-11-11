@@ -172,6 +172,7 @@ export class MapperService {
 					problemId: problem.snomed.id,
 					problemPt: problem.snomed.pt,
 					specialtyId: currentOutpatientEvolutionSummary.clinicalSpecialty?.id,
+					specialityPt: currentOutpatientEvolutionSummary.clinicalSpecialty?.name,
 					consultationReasons: currentOutpatientEvolutionSummary.reasons.map(r => ({reasonId: r.snomed.id, reasonPt: r.snomed.pt})),
 					consultationProcedures: currentOutpatientEvolutionSummary.procedures.map(p => ({procedureDate: p.performedDate, procedureId: p.snomed.id, procedurePt: p.snomed.pt}))
 				}))];
