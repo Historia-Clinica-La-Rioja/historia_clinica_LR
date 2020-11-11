@@ -1,36 +1,47 @@
 import React from 'react';
 import {
     Show,
-    SimpleShowLayout,
     TextField,
     ReferenceManyField,
     Datagrid,
     BooleanField,
     DateField,
+    TabbedShowLayout,
+    Tab,
 } from 'react-admin';
 
 const PersonShow = props => (
     <Show {...props}>
-        <SimpleShowLayout>
-            <TextField source="firstName" />
-            <TextField source="lastName" />
+        <TabbedShowLayout>
+            <Tab label="Informacion personal">
+                <TextField source="firstName" />
+                <TextField source="lastName" />
+                <TextField source="identificationNumber" />
+            </Tab>
+
+            <Tab label="Usuario">
+                <ReferenceManyField label={false} reference="users" target="personId">
+                    <Datagrid rowClick="edit">
+                        <TextField source="username" />
+                        <BooleanField source="enable" />
+                        <DateField source="lastLogin" />
+                    </Datagrid>
+                </ReferenceManyField>
+            </Tab>
             
-            <ReferenceManyField label="Usuario" reference="users" target="personId">
-                <Datagrid rowClick="edit">
+            <Tab label="Profesiones">
+                <ReferenceManyField label="Profesional" reference="healthcareprofessionals" target="personId">
+                    <Datagrid rowClick="edit">
+                        <TextField source="licenseNumber" />
+                    </Datagrid>
+                </ReferenceManyField>
+            </Tab>
 
-                    <TextField source="username" />
-                    <BooleanField source="enable" />
-                    <DateField source="lastLogin" />
-                </Datagrid>
-            </ReferenceManyField>
+            <Tab label="Especialidad">
 
-            <ReferenceManyField label="Profesional" reference="healthcareprofessionals" target="personId">
-                <Datagrid rowClick="edit">
-                    <TextField source="licenseNumber" />
-                </Datagrid>
-            </ReferenceManyField>
+            </Tab>
 
-        </SimpleShowLayout>
+        </TabbedShowLayout>
     </Show>
 );
 
