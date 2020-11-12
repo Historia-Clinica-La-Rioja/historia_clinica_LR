@@ -67,29 +67,31 @@ export class AppointmentComponent implements OnInit {
 				if (this.appointment.stateChangeReason) {
 					this.formMotivo.controls.motivo.setValue(this.appointment.stateChangeReason);
 				}
-				this.patientService.getPatientMedicalCoverage(this.appointmentData.patient.id, this.appointment.patientMedicalCoverageId)
-					.pipe(
-						map(
-							s => this.mapperService.toPatientMedicalCoverage(s)
+				if (this.appointment.patientMedicalCoverageId){
+					this.patientService.getPatientMedicalCoverage(this.appointmentData.patient.id, this.appointment.patientMedicalCoverageId)
+						.pipe(
+							map(
+								s => this.mapperService.toPatientMedicalCoverage(s)
+							)
 						)
-					)
-					.subscribe(coverageData =>{
-						if (coverageData) {
-							let isHealthInsurance = determineIfIsHealthInsurance(coverageData.medicalCoverage);
-							this.coverageData = coverageData;
-							if(isHealthInsurance){
-								let healthInsurance: HealthInsurance;
-								healthInsurance = coverageData.medicalCoverage as HealthInsurance;
-								this.coverageText = healthInsurance.acronym ?
-									healthInsurance.acronym : healthInsurance.name;
+						.subscribe(coverageData =>{
+							if (coverageData) {
+								let isHealthInsurance = determineIfIsHealthInsurance(coverageData.medicalCoverage);
+								this.coverageData = coverageData;
+								if(isHealthInsurance){
+									let healthInsurance: HealthInsurance;
+									healthInsurance = coverageData.medicalCoverage as HealthInsurance;
+									this.coverageText = healthInsurance.acronym ?
+										healthInsurance.acronym : healthInsurance.name;
+								}
+								else {
+									let privateHealthInsurance: PrivateHealthInsurance;
+									privateHealthInsurance = coverageData.medicalCoverage as PrivateHealthInsurance;
+									this.coverageText = privateHealthInsurance.name;
+								}
 							}
-							else {
-								let privateHealthInsurance: PrivateHealthInsurance;
-								privateHealthInsurance = coverageData.medicalCoverage as PrivateHealthInsurance;
-								this.coverageText = privateHealthInsurance.name;
-							}
-						}
-				});
+					});
+				}
 			});
 	}
 

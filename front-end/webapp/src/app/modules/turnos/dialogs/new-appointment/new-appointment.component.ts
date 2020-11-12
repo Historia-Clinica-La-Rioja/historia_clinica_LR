@@ -76,7 +76,7 @@ export class NewAppointmentComponent implements OnInit {
 		});
 
 		this.appointmentInfoForm = this.formBuilder.group({
-			patientMedicalCoverage: [null, Validators.required],
+			patientMedicalCoverage: [null],
 			phoneNumber: [null, [Validators.maxLength(20)]]
 		});
 
@@ -175,10 +175,9 @@ export class NewAppointmentComponent implements OnInit {
 			openingHoursId: this.data.openingHoursId,
 			overturn: this.data.overturnMode,
 			patientId: this.patientId,
-			patientMedicalCoverageId: this.appointmentInfoForm.value.patientMedicalCoverage.id,
+			patientMedicalCoverageId: this.appointmentInfoForm.value.patientMedicalCoverage?.id,
 			phoneNumber: this.appointmentInfoForm.controls.phoneNumber.value
 		};
-
 		this.appointmentFacade.addAppointment(newAppointment).subscribe(_ => {
 			this.snackBarService.showSuccess('turnos.new-appointment.messages.APPOINTMENT_SUCCESS');
 			this.dialogRef.close(true);
@@ -199,7 +198,7 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	showConfirmButton(): boolean {
-		return this.appointmentInfoForm.valid;
+		return this.formSearch.controls.completed.value && this.appointmentInfoForm.valid;
 	}
 
 	disablePreviuosStep(stepperParam: MatHorizontalStepper) {
