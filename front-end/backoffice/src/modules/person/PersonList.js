@@ -21,15 +21,15 @@ const PersonFilter = props =>(
 );
 
 export const PersonList = props => (
-    <List {...props} filters={<PersonFilter />}>
+    <List {...props} filters={<PersonFilter />} bulkActionButtons={false}>
         <Datagrid rowClick="show">
             <TextField source="firstName" />
             <TextField source="lastName" />
-            <ReferenceField source="identificationTypeId" reference="identificationTypes" link={false}>
+            <ReferenceField source="identificationTypeId" reference="identificationTypes" link={false} sortable={false}>
                 <TextField source="description" />
             </ReferenceField>
             <TextField source="identificationNumber" />
-            <ReferenceField source="genderId" reference="genders" link={false}>
+            <ReferenceField source="genderId" reference="genders" link={false} sortable={false}>
                 <TextField source="description" />
             </ReferenceField>
             <DateField source="birthDate" />

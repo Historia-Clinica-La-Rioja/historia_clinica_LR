@@ -172,7 +172,8 @@ export default {
                 healthcareprofessionalspecialties: 'Profesional | Especialidad',
                 professionalSpecialtyId: 'Profesión',
                 clinicalSpecialtyId: 'Especialidad'
-            }
+            },
+            createRelated: 'Crear Profesional',
         }, 
         healthcareprofessionalspecialties: {
             name: 'Profesión | Especialidad',
@@ -201,7 +202,8 @@ export default {
             action: {
                 reset: 'Visitar link',
                 newReset: 'Generar link',
-            }
+            },
+            createRelated: 'Crear Usuario',
         },
         internmentepisodes: {
             name: 'Episodio de internación |||| Episodios de internación',
@@ -218,7 +220,11 @@ export default {
                 identificationTypeId: 'Tipo de documento',
                 identificationNumber: 'Nº de documento',
                 birthDate: 'Fecha de nacimiento'
-            }
+            },
+            tabs: {
+                details: 'Datos personales',
+                users: 'Usuario'
+            },
         }
     },
 };

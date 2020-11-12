@@ -12,9 +12,11 @@ import CustomToolbar from "../../modules/components/CustomToolbar";
 const searchToFilter = searchText => ({description: searchText ? searchText : -1});
 const searchSpecialtyToFilter = searchText => ({name: searchText ? searchText : -1});
 const renderSpecialty = (choice) => `${choice.description} - ${choice.descriptionProfessionRef}`;
+const redirect = (basePath, id, data) => `/healthcareprofessionals/${data.healthcareProfessionalId}/edit`;
+
 const HealthcareProfessionalSpecialtyCreate = props => (
     <Create {...props}>
-        <SimpleForm redirect="list" toolbar={<CustomToolbar />}>
+        <SimpleForm redirect={redirect} toolbar={<CustomToolbar />}>
             <ReferenceInput
                 source="healthcareProfessionalId"
                 reference="healthcareprofessionals"
