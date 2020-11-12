@@ -1,6 +1,8 @@
 package net.pladema.patient.controller.service;
 
 import net.pladema.patient.controller.dto.BasicPatientDto;
+import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
+import net.pladema.patient.controller.mapper.PatientMedicalCoverageMapper;
 import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.service.PatientService;
 import net.pladema.person.controller.dto.BasicDataPersonDto;
@@ -25,9 +27,13 @@ public class PatientExternalServiceImpl implements PatientExternalService {
 
     private final PersonExternalService personExternalService;
 
-    public PatientExternalServiceImpl(PatientService patientService, PersonExternalService personExternalService) {
+    private final PatientMedicalCoverageMapper patientMedicalCoverageMapper;
+
+    public PatientExternalServiceImpl(PatientService patientService, PersonExternalService personExternalService,
+                                      PatientMedicalCoverageMapper patientMedicalCoverageMapper) {
         this.patientService = patientService;
         this.personExternalService = personExternalService;
+        this.patientMedicalCoverageMapper = patientMedicalCoverageMapper;
     }
 
     @Override
@@ -63,6 +69,14 @@ public class PatientExternalServiceImpl implements PatientExternalService {
                 ));
         LOG.debug("Result size {}", result.size());
         LOG.trace(OUTPUT, result);
+        return result;
+    }
+
+    @Override
+    public PatientMedicalCoverageDto getCoverage(Integer patientMedicalCoverageId) {
+        LOG.debug("Input parameter -> patientMedicalCoverageId {}", patientMedicalCoverageId);
+        PatientMedicalCoverageDto result = patientMedicalCoverageMapper.toPatientMedicalCoverageDto(patientService.getCoverage(patientMedicalCoverageId));
+        LOG.debug(OUTPUT, result);
         return result;
     }
 

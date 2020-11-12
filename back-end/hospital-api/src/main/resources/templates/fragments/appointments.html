@@ -32,11 +32,8 @@
 		.hour-column {
 		    width: 23px;
 		}
-		.health-insurance-column {
-	        width: 130px;
-	    }
 	    .health-coverage-column {
-	        width: 130px;
+	        width: 240px;
 	    }
 	    .affiliate-number-column {
 	        width : 80px;
@@ -85,8 +82,7 @@
                                 <th scope="col" class="identification-column">Documento </th>
                                 <th scope="col" class="name-column">Nombres </th>
                                 <th scope="col" class="last-name-column">Apellidos </th>
-                                <th scope="col" class="health-insurance-column">Obra Social </th>
-                                <th scope="col" class="health-coverage-column">Prepaga</th>
+                                <th scope="col" class="health-coverage-column">Cobertura médica</th>
                                 <th scope="col" class="affiliate-number-column">Nro. de Credencial </th>
                                 <th scope="col" class="appointment-state-column">Estado del turno </th>
                             </tr>
@@ -102,7 +98,6 @@
                                         + ' ' + #strings.defaultString(appointment.middleNames, '')}"></td>
                                 <td th:text="${#strings.defaultString(appointment.lastName, '')
                                         + ' ' + #strings.defaultString(appointment.otherLastNames, '')}"></td>
-                                <td th:text="${appointment.healthInsuranceName}"></td>
                                 <td th:text="${appointment.medicalCoverageName}"></td>
                                 <td th:text="${appointment.medicalCoverageAffiliateNumber}"></td>
                                 <td th:text="${appointment.appointmentState}"></td>
@@ -127,8 +122,7 @@
                             <th scope="col" class="identification-column">Documento </th>
                             <th scope="col" class="name-column">Nombres </th>
                             <th scope="col" class="last-name-column">Apellidos </th>
-                            <th scope="col" class="health-insurance-column">Obra Social </th>
-                            <th scope="col" class="health-coverage-column">Prepaga</th>
+                            <th scope="col" class="health-coverage-column">Cobertura médica</th>
                             <th scope="col" class="affiliate-number-column">Nro. de Credencial </th>
                             <th scope="col" class="appointment-state-column">Estado del turno </th>
                         </tr>
@@ -143,7 +137,6 @@
                                     + ' ' + #strings.defaultString(appointment.middleNames, '')}"></td>
                             <td th:text="${#strings.defaultString(appointment.lastName, '')
                                     + ' ' + #strings.defaultString(appointment.otherLastNames, '')}"></td>
-                            <td th:text="${appointment.healthInsuranceName}"></td>
                             <td th:text="${appointment.medicalCoverageName}"></td>
                             <td th:text="${appointment.medicalCoverageAffiliateNumber}"></td>
                             <td th:text="${appointment.appointmentState}"></td>

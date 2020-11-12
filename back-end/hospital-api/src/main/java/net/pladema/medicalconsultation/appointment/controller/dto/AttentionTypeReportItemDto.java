@@ -1,6 +1,7 @@
 package net.pladema.medicalconsultation.appointment.controller.dto;
 
 import lombok.Getter;
+import lombok.Setter;
 import net.pladema.medicalconsultation.appointment.service.domain.AttentionTypeReportItemBo;
 import net.pladema.person.controller.dto.BasicDataPersonDto;
 
@@ -27,6 +28,12 @@ public class AttentionTypeReportItemDto {
 
     private final Integer patientMedicalCoverageId;
 
+    @Setter
+    private String medicalCoverageName;
+
+    @Setter
+    private String medicalCoverageAffiliateNumber;
+
     private final String appointmentState;
 
     public AttentionTypeReportItemDto(AttentionTypeReportItemBo appointment, BasicDataPersonDto person){
@@ -40,5 +47,7 @@ public class AttentionTypeReportItemDto {
         this.identificationNumber = person.getIdentificationNumber();
         this.patientMedicalCoverageId = appointment.getPatientMedicalCoverageId();
         this.appointmentState = appointment.getAppointmentState();
+        this.medicalCoverageName = null;
+        this.medicalCoverageAffiliateNumber = null;
     }
 }

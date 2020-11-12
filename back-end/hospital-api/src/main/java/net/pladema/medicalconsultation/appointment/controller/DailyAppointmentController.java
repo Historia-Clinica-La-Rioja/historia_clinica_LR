@@ -9,6 +9,7 @@ import net.pladema.medicalconsultation.appointment.service.domain.AttentionTypeR
 import net.pladema.medicalconsultation.diary.service.DiaryService;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 import net.pladema.medicalconsultation.repository.entity.MedicalAttentionType;
+import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
@@ -137,6 +138,11 @@ public class DailyAppointmentController {
         LOG.debug("Input parameters -> attentionTypeReportItemBo {}", attentionTypeReportItemBo);
         BasicDataPersonDto personData = patientExternalService.getBasicDataFromPatient(attentionTypeReportItemBo.getPatientId()).getPerson();
         AttentionTypeReportItemDto newReportItem = new AttentionTypeReportItemDto(attentionTypeReportItemBo, personData);
+        if (attentionTypeReportItemBo.getPatientMedicalCoverageId() != null){
+            PatientMedicalCoverageDto patientMedicalCoverageDto = patientExternalService.getCoverage(attentionTypeReportItemBo.getPatientMedicalCoverageId());
+            newReportItem.setMedicalCoverageName(patientMedicalCoverageDto.getMedicalCoverage().getName());
+            newReportItem.setMedicalCoverageAffiliateNumber(patientMedicalCoverageDto.getAffiliateNumber());
+        }
         LOG.debug(OUTPUT, newReportItem);
         return newReportItem;
     }

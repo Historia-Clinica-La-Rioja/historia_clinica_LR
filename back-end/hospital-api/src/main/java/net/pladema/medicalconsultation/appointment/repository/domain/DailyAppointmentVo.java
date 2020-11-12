@@ -26,7 +26,6 @@ public class DailyAppointmentVo {
     private final Short medicalAttentionTypeId;
 
     public DailyAppointmentVo(Appointment appointment,
-                              //HealthInsurance healthInsurance,
                               AppointmentState appointmentState,
                               LocalTime openingHourFrom,
                               LocalTime openingHourTo,
