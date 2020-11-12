@@ -75,11 +75,6 @@ public class AppointmentValidator implements ConstraintValidator<ValidAppointmen
             buildResponse(context, "{appointment.new.beforeToday}");
             valid = false;
         }
-        
-        if(!createAppointmentDto.hasMedicalCoverage()){
-            buildResponse(context, "{appointment.new.without.medical.coverage}");
-            valid = false;
-        }
         if (!createAppointmentDto.isOverturn()) {
         	boolean existAppointment = appointmentService.existAppointment(createAppointmentDto.getDiaryId(),
         			createAppointmentDto.getOpeningHoursId(),

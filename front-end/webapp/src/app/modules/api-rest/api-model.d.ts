@@ -283,7 +283,7 @@ export interface CreateAppointmentDto {
     openingHoursId: number;
     overturn: boolean;
     patientId: number;
-    patientMedicalCoverageId: number;
+    patientMedicalCoverageId?: number;
     phoneNumber?: string;
 }
 

@@ -42,14 +42,10 @@ public class CreateAppointmentDto {
     @NotNull
     private boolean isOverturn = false;
 
-    @NotNull
+    @Nullable
     Integer patientMedicalCoverageId;
 
     @Nullable
     @Length(max = 20, message = "{appointment.new.phoneNumber.invalid}")
     private String phoneNumber;
-
-    public boolean hasMedicalCoverage() {
-        return patientMedicalCoverageId != null;
-    }
 }
