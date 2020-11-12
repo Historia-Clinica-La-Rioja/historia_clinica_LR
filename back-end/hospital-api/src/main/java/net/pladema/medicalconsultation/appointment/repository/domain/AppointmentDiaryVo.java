@@ -44,7 +44,7 @@ public class AppointmentDiaryVo {
         this.overturn = overturn;
         this.patientMedicalCoverageId = patientMedicalCoverageId;
         this.phoneNumber = phoneNumber;
-        this.medicalAttentionTypeId = null;
+        this.medicalAttentionTypeId = medicalAttentionTypeId;
     }
 
 
