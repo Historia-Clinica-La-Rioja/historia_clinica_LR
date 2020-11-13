@@ -35,27 +35,32 @@ export class MapperService {
 	}
 
 	private static _toPatientMedicalCoverage(s: PatientMedicalCoverageDto): PatientMedicalCoverage {
-		let privateHealthInsuranceDetails;
-		if (s.privateHealthInsuranceDetails.startDate
-			|| s.privateHealthInsuranceDetails.endDate) {
-			privateHealthInsuranceDetails = {
-				startDate: momentParseDate(s.privateHealthInsuranceDetails.startDate),
-				endDate: momentParseDate(s.privateHealthInsuranceDetails.endDate)
-			};
+
+		return {
+			id: s.id,
+			affiliateNumber: s.affiliateNumber,
+			validDate: s.vigencyDate ?
+				momentParse(s.vigencyDate, DateFormat.API_DATE) : newMoment(),
+			medicalCoverage: toMedicalCoverage(s.medicalCoverage),
+			privateHealthInsuranceDetails: mapDetails(),
 		}
+
 		// TODO ver la posibilidad de quitar ese if
 		function toMedicalCoverage(dto: CoverageDtoUnion): HealthInsurance | PrivateHealthInsurance {
 			return dto.type === 'HealthInsuranceDto' ? new HealthInsurance(dto.rnos.toString(), dto.acronym, dto.id, dto.name, dto.type)
 				: new PrivateHealthInsurance(dto.plan, dto.id, dto.name, dto.type);
 		}
 
-		return {
-			id: s.id,
-			affiliateNumber: s.affiliateNumber,
-			validDate: s.vigencyDate ?
-				momentParse(s.vigencyDate, DateFormat.API_DATE) : newMoment(), // La fecha es nulleable pero nunca la guardamos asi
-			medicalCoverage: toMedicalCoverage(s.medicalCoverage),
-			privateHealthInsuranceDetails
+		function mapDetails() {
+			let privateHealthInsuranceDetails;
+			if (s.privateHealthInsuranceDetails?.startDate
+				|| s.privateHealthInsuranceDetails?.endDate) {
+				privateHealthInsuranceDetails = {
+					startDate: s.privateHealthInsuranceDetails.startDate ? momentParseDate(s.privateHealthInsuranceDetails.startDate) : undefined,
+					endDate: s.privateHealthInsuranceDetails.endDate ? momentParseDate(s.privateHealthInsuranceDetails.endDate) : undefined,
+				};
+			}
+			return privateHealthInsuranceDetails;
 		}
 	}
 }
