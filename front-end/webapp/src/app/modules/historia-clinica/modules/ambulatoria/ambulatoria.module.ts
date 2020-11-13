@@ -17,6 +17,9 @@ import { AppMaterialModule } from '../../../material/app.material.module';
 import { NuevaConsultaComponent } from './routes/nueva-consulta/nueva-consulta.component';
 import {SolveProblemComponent} from "../../dialogs/solve-problem/solve-problem.component";
 import { HistoricalProblemsFiltersComponent } from './components/historical-problems-filters/historical-problems-filters.component';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { PortalModule } from '@angular/cdk/portal';
+import { NuevaConsultaDockPopupComponent } from './dialogs/nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
 
 
 @NgModule({
@@ -30,7 +33,8 @@ import { HistoricalProblemsFiltersComponent } from './components/historical-prob
 		AplicarVacunaComponent,
 		NuevaConsultaComponent,
 		SolveProblemComponent,
-		HistoricalProblemsFiltersComponent
+		HistoricalProblemsFiltersComponent,
+		NuevaConsultaDockPopupComponent
 	],
 	imports: [
 		AmbulatoriaRoutingModule,
@@ -40,7 +44,9 @@ import { HistoricalProblemsFiltersComponent } from './components/historical-prob
 		FormsModule,
 		HistoriaClinicaModule,
 		PacientesModule,
-		PresentationModule
+		PresentationModule,
+		OverlayModule,
+		PortalModule
 	]
 })
 export class AmbulatoriaModule {

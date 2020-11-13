@@ -1,0 +1,9 @@
+::ng-deep .cdk-overlay-pane {
+	app-nueva-consulta-dock-popup {
+		width: 100%;
+	}
+}
+
+::ng-deep .cdk-overlay-pane.overlay-class {
+	background-color: white;
+}

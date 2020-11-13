@@ -1,5 +1,6 @@
 @import 'mat-mixins';
 @import 'palettes';
+@import '~@angular/cdk/overlay-prebuilt.css';
 
 @include mat-core();
 

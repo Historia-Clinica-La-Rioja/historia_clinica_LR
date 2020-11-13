@@ -1,8 +1,7 @@
 import { ComponentRef, Injectable, Injector } from '@angular/core';
-import { ComponentPortal, PortalInjector } from '@angular/cdk/portal';
+import { ComponentPortal, ComponentType, PortalInjector } from '@angular/cdk/portal';
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
-import { DockPopupComponent } from '../components/dock-popup/dock-popup.component';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
 
 @Injectable({
@@ -18,19 +17,19 @@ export class DockPopupService {
 	) {
 	}
 
-	open(): DockPopupRef {
+	open(type: ComponentType<any>, data?: any): DockPopupRef {
 
 		const overlayRef = this.overlay.create(this.getOverlayConfig());
 		const dockPopupRef = new DockPopupRef(overlayRef);
-		const overlayComponent = this.attachDialogContainer(overlayRef, null, dockPopupRef);
+		const overlayComponent = this.attachDialogContainer(overlayRef, data, dockPopupRef, type);
 		return dockPopupRef;
 	}
 
-	private attachDialogContainer(overlayRef: OverlayRef, data: any, appOverlayRef: DockPopupRef) {
+	private attachDialogContainer(overlayRef: OverlayRef, data: any, appOverlayRef: DockPopupRef, type: ComponentType<any>) {
 		const injector = this.createInjector(data, appOverlayRef);
 
-		const containerPortal = new ComponentPortal(DockPopupComponent, null, injector);
-		const containerRef: ComponentRef<DockPopupComponent> = overlayRef.attach(containerPortal);
+		const containerPortal = new ComponentPortal(type, null, injector);
+		const containerRef: ComponentRef<any> = overlayRef.attach(containerPortal);
 
 		return containerRef.instance;
 	}
