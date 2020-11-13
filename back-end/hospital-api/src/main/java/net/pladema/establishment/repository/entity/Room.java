@@ -32,16 +32,16 @@ public class Room {
 	@Column(name = "room_number", nullable = false, unique = true)
 	private String roomNumber;
 	
-	@Column(name = "description", nullable = false, length = 255)
+	@Column(name = "description", nullable = false)
 	private String description;
 	
-	@Column(name = "type", nullable = false, length = 255)
+	@Column(name = "type", nullable = false)
 	private String type;
 	
 	@Column(name = "clinical_specialty_sector_id", nullable = false)
 	private Integer clinicalSpecialtySectorId;
 	
-	@Column(name = "discharge_date", nullable = true)
+	@Column(name = "discharge_date")
 	private LocalDate dischargeDate;
 
 	@Column(name = "sector_id", nullable = false)

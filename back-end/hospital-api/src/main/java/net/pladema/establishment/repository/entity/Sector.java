@@ -26,10 +26,27 @@ public class Sector {
 	@EqualsAndHashCode.Include
 	private Integer id;
 	
-	@Column(name = "description", nullable = false, length = 255)
+	@Column(name = "description", nullable = false)
 	private String description;
 	
 	@Column(name = "institution_id", nullable = false)
 	private Integer institutionId;
 
+	@Column(name = "sector_id")
+	private Integer sectorId;
+
+	@Column(name = "sector_type_id")
+	private Short sectorTypeId;
+
+	@Column(name = "sector_organization_id")
+	private Short sectorOrganizationId;
+
+	@Column(name = "age_group_id")
+	private Short ageGroupId;
+
+	@Column(name = "care_type_id")
+	private Short careTypeId;
+
+	@Column(name = "hospitalization_type_id")
+	private Short hospitalizationTypeId;
 }
