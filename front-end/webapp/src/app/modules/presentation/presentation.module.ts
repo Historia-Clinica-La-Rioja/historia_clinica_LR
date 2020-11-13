@@ -25,6 +25,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 import { PersonIdentificationPipe } from './pipes/person-identification.pipe';
 import { EditableFieldComponent } from './components/editable-field/editable-field.component';
 import { LogoComponent } from './components/logo/logo.component';
+import { DockPopupComponent } from '@presentation/components/dock-popup/dock-popup.component';
 
 @NgModule({
 	declarations: [
@@ -50,7 +51,8 @@ import { LogoComponent } from './components/logo/logo.component';
 		ViewHourMinutePipe,
 		PersonIdentificationPipe,
 		EditableFieldComponent,
-		LogoComponent,
+		DockPopupComponent,
+		LogoComponent
 	],
 	imports: [
 		CommonModule,
@@ -79,7 +81,11 @@ import { LogoComponent } from './components/logo/logo.component';
 		ViewDatePipe,
 		ViewHourMinutePipe,
 		PersonIdentificationPipe,
-		EditableFieldComponent
+		EditableFieldComponent,
+		DockPopupComponent
+	],
+	entryComponents: [
+		DockPopupComponent
 	]
 })
 export class PresentationModule { }

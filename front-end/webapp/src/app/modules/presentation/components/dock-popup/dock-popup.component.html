@@ -1,0 +1,14 @@
+<div fxLayout="column" style="background-color: white">
+	<div fxLayout="row" fxFlex="100%" class="header" (click)="toggle(); $event.stopPropagation()">
+		<button mat-icon-button (click)="toggle(); $event.stopPropagation()">
+			<mat-icon>minimize</mat-icon>
+		</button>
+		<button mat-icon-button (click)="close(); $event.stopPropagation()">
+			<mat-icon>close</mat-icon>
+		</button>
+	</div>
+
+	<div class="content" *ngIf="!overlayRef.isMinimized()">
+		<ng-content></ng-content>
+	</div>
+</div>

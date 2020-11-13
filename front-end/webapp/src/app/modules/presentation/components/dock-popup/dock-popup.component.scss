@@ -1,0 +1,19 @@
+::ng-deep .cdk-overlay-pane {
+	app-overlay-test {
+		width: 100%;
+	}
+}
+
+::ng-deep .cdk-overlay-pane.overlay-class {
+	background-color: white;
+}
+
+.header {
+	justify-content: flex-end;
+	background-color: gray;
+}
+
+.content {
+	max-height: 70vh;
+	padding: 10px;
+}
