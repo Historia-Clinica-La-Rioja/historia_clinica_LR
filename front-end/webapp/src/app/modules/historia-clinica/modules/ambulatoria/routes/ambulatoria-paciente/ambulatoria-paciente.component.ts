@@ -7,7 +7,8 @@ import { Observable } from 'rxjs';
 import { PatientService } from '@api-rest/services/patient.service';
 import { MapperService } from '@presentation/services/mapper.service';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
-import { ContextService } from '@core/services/context.service';
+import { DockPopupService } from '@presentation/services/dock-popup.service';
+import { NuevaConsultaDockPopupComponent } from '../../dialogs/nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
 
 @Component({
 	selector: 'app-ambulatoria-paciente',
@@ -26,7 +27,8 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		private readonly patientService: PatientService,
 		private readonly mapperService: MapperService,
 		private readonly router: Router,
-) {}
+		private readonly dockPopupService: DockPopupService
+	) {}
 
 	ngOnInit(): void {
 		this.route.paramMap.subscribe((params) => {
@@ -40,8 +42,10 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 			this.patientService.getPatientPhoto(patientId)
 					.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto;});
 		});
+	}
 
-
+	openNuevaConsulta(): void {
+		this.dockPopupService.open(NuevaConsultaDockPopupComponent);
 	}
 
 	goToNuevaConsulta() {

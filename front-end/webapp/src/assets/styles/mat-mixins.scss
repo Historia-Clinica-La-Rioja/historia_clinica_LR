@@ -7,6 +7,10 @@ $default-color: 50;
 	mat-sidenav-content {
 		background-color: $primary-bg;
 	}
+
+	.app-background-color {
+		background-color: $primary-bg;
+	}
 }
 
 @mixin mat-nav-list($theme) {

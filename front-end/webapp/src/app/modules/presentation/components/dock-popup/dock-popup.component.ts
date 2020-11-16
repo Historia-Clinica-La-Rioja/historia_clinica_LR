@@ -9,6 +9,7 @@ import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 export class DockPopupComponent implements OnInit {
 
 	@Input() dockPopupRef: DockPopupRef;
+	@Input() title: string;
 
 	constructor(
 	) {
