@@ -25,7 +25,7 @@ import {ClinicalSpecialtyService} from "@api-rest/services/clinical-specialty.se
 import {AppointmentsService} from "@api-rest/services/appointments.service";
 
 @Component({
-	selector: 'app-nueva-consulta',
+	selector: 'app-nueva-consulta-page',
 	templateUrl: './nueva-consulta.component.html',
 	styleUrls: ['./nueva-consulta.component.scss']
 })

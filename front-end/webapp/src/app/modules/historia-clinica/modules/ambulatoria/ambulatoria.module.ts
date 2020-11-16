@@ -14,7 +14,7 @@ import { VacunasComponent } from './components/vacunas/vacunas.component';
 import { HistoriaClinicaModule } from '../../historia-clinica.module';
 import { AplicarVacunaComponent } from './dialogs/aplicar-vacuna/aplicar-vacuna.component';
 import { AppMaterialModule } from '../../../material/app.material.module';
-import { NuevaConsultaComponent } from './routes/nueva-consulta/nueva-consulta.component';
+import { NuevaConsultaComponent as OldComponentNuevaConsulta } from './routes/nueva-consulta/nueva-consulta.component';
 import {SolveProblemComponent} from "../../dialogs/solve-problem/solve-problem.component";
 import { HistoricalProblemsFiltersComponent } from './components/historical-problems-filters/historical-problems-filters.component';
 import { OverlayModule } from '@angular/cdk/overlay';
@@ -31,7 +31,7 @@ import { NuevaConsultaDockPopupComponent } from './dialogs/nueva-consulta-dock-p
 		ProblemasComponent,
 		VacunasComponent,
 		AplicarVacunaComponent,
-		NuevaConsultaComponent,
+		OldComponentNuevaConsulta,
 		SolveProblemComponent,
 		HistoricalProblemsFiltersComponent,
 		NuevaConsultaDockPopupComponent

@@ -45,7 +45,8 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	}
 
 	openNuevaConsulta(): void {
-		this.dockPopupService.open(NuevaConsultaDockPopupComponent);
+		const idPaciente = this.route.snapshot.paramMap.get('idPaciente');
+		this.dockPopupService.open(NuevaConsultaDockPopupComponent, {idPaciente});
 	}
 
 	goToNuevaConsulta() {

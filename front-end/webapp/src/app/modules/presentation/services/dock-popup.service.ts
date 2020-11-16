@@ -56,7 +56,7 @@ export class DockPopupService {
 			scrollStrategy: this.overlay.scrollStrategies.noop(),
 			positionStrategy,
 			maxHeight: '70vh',
-			width: '35vw',
+			width: '30vw',
 			panelClass: 'overlay-class',
 		});
 
