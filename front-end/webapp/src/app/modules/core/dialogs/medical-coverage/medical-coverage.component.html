@@ -6,7 +6,7 @@
 		<div fxLayout="column">
 			<div class="spinner" *ngIf="loading else viewPatientHealthInsurances" fxLayout="column" fxLayoutGap="25px">
 				<mat-spinner color="primary"></mat-spinner>
-				<span class="primary">Consultando cobertura</span>
+				<span class="color-primary">Consultando cobertura</span>
 			</div>
 			<ng-template #viewPatientHealthInsurances>
 				<mat-card *ngFor="let patientMedicalCoverage of getPatientHealthInsurances()">
@@ -55,7 +55,7 @@
 		<div fxLayout="column">
 			<div class="spinner" *ngIf="loading else viewPatientPrivateHealthInsurances" fxLayout="column" fxLayoutGap="25px">
 				<mat-spinner color="primary"></mat-spinner>
-				<span class="primary">Consultando cobertura</span>
+				<span class="color-primary"class="color-primary">Consultando cobertura</span>
 			</div>
 			<ng-template #viewPatientPrivateHealthInsurances>
 				<mat-card *ngFor="let patientPrivateHealthInsurance of getPatientPrivateHealthInsurances()">

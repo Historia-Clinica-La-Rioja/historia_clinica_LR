@@ -277,8 +277,13 @@ $default-color: 50;
 
 @mixin mat-theme-color($theme) {
 
-	.primary{
-		$primary-palette: map-get($theme, primary);
+	$primary-palette: map-get($theme, primary);
+
+	.color-primary{
 		color: mat-color($primary-palette);
+	}
+
+	.background-color-primary {
+		background-color: mat-color($primary-palette);
 	}
 }
