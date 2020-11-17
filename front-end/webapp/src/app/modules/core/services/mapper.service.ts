@@ -31,6 +31,7 @@ export class MapperService {
 			privateHealthInsuranceDetails,
 			vigencyDate: momentFormat(s.validDate, DateFormat.API_DATE),
 			id: s.id,
+			active: s.active
 		}
 	}
 
@@ -43,6 +44,7 @@ export class MapperService {
 				momentParse(s.vigencyDate, DateFormat.API_DATE) : newMoment(),
 			medicalCoverage: toMedicalCoverage(s.medicalCoverage),
 			privateHealthInsuranceDetails: mapDetails(),
+			active: s.active,
 		}
 
 		// TODO ver la posibilidad de quitar ese if

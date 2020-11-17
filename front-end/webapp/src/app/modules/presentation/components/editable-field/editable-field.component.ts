@@ -11,7 +11,7 @@ export class EditableFieldComponent implements OnInit {
 	editMode = false;
 	form: FormGroup;
 
-	@Output() newValueEmitter: EventEmitter<string> = new EventEmitter<string>();
+	@Output() newValueEmitted: EventEmitter<string> = new EventEmitter<string>();
 	@Input() fieldName: string;
 	@Input() value: string;
 
@@ -26,7 +26,7 @@ export class EditableFieldComponent implements OnInit {
 	}
 
 	updateFieldValue() {
-		this.newValueEmitter.emit(this.form.value.field);
+		this.newValueEmitted.emit(this.form.value.field);
 		this.editMode = false;
 	}
 }

@@ -9,17 +9,20 @@
 				<span class="color-primary">Consultando cobertura</span>
 			</div>
 			<ng-template #viewPatientHealthInsurances>
-				<mat-card *ngFor="let patientMedicalCoverage of getPatientHealthInsurances()">
-					<mat-card-content>
-						<div fxLayout="row" fxLayoutAlign="space-between">
+				<mat-card *ngFor="let patientMedicalCoverage of getPatientHealthInsurances()" class="coverages">
+					<mat-card-content fxLayout="row" fxLayoutAlign="space-between start">
+						<div fxLayout="column" fxLayoutAlign="space-between">
 							<span
-								[translate]="getFullHealthInsuranceText(patientMedicalCoverage.medicalCoverage)"></span>
-							<span>{{patientMedicalCoverage.validDate | date: 'dd/MM/yyyy'}}</span>
+								class="medical-coverage-name">{{getFullHealthInsuranceText(patientMedicalCoverage.medicalCoverage)}}</span>
+							<app-editable-field [fieldName]="'Nro de afiliado'"
+								[value]="patientMedicalCoverage.affiliateNumber"
+								(newValueEmitted)="patientMedicalCoverage.affiliateNumber = $event">
+							</app-editable-field>
 						</div>
-						<app-editable-field [fieldName]="'Nro de afiliado'"
-							[value]="patientMedicalCoverage.affiliateNumber"
-							(newValueEmitter)="patientMedicalCoverage.affiliateNumber = $event">
-						</app-editable-field>
+						<div>Vig. {{patientMedicalCoverage.validDate | date: 'dd/MM/yyyy'}}</div>
+						<button mat-icon-button color="warn" (click)="patientMedicalCoverage.active = false">
+							<mat-icon>delete_outline</mat-icon>
+						</button>
 					</mat-card-content>
 				</mat-card>
 			</ng-template>
@@ -43,8 +46,9 @@
 					<input id="healthInsuranceAffiliateNumber" name="healthInsuranceAffiliateNumber"
 						formControlName="affiliateNumber" placeholder="{{'Nro de afiliado' | translate}}" matInput>
 				</mat-form-field>
-				<button mat-stroked-button color="primary" class="uppercase margin" id="add-health-insurance" type="button"
-					(click)="addHealthInsurance()" name="add-health-insurance">Agregar Obra Social</button>
+				<button mat-stroked-button color="primary" class="uppercase margin" id="add-health-insurance"
+					type="button" (click)="addHealthInsurance()" name="add-health-insurance"
+					translate="medical-coverage.ADD_HEALTH_INSURANCES"></button>
 			</form>
 		</div>
 	</mat-card>
@@ -53,23 +57,34 @@
 	<mat-card fxLayout="column" fxLayoutGap="10px">
 		<strong translate="medical-coverage.ACTIVES_PRIVATE_HEALTH_INSURANCES"></strong>
 		<div fxLayout="column">
-			<div class="spinner" *ngIf="loading else viewPatientPrivateHealthInsurances" fxLayout="column" fxLayoutGap="25px">
+			<div class="spinner" *ngIf="loading else viewPatientPrivateHealthInsurances" fxLayout="column"
+				fxLayoutGap="25px">
 				<mat-spinner color="primary"></mat-spinner>
 				<span class="color-primary"class="color-primary">Consultando cobertura</span>
 			</div>
 			<ng-template #viewPatientPrivateHealthInsurances>
-				<mat-card *ngFor="let patientPrivateHealthInsurance of getPatientPrivateHealthInsurances()">
-					<mat-card-content>
-						<div fxLayout="row" fxLayoutAlign="space-between">
-							<span>{{getPrivateHealthInsuranceText(patientPrivateHealthInsurance.medicalCoverage)}}</span>
-							<span class="capitalize-first-letter" >{{getDatesText(patientPrivateHealthInsurance)}}</span>
-						</div>
-						<div fxLayout="row" fxLayoutAlign="space-between">
+				<mat-card *ngFor="let patientPrivateHealthInsurance of getPatientPrivateHealthInsurances()"
+					class="coverages">
+					<mat-card-content fxLayout="row" fxLayoutAlign="space-between start">
+
+						<div fxLayout="column">
+							<span
+								class="medical-coverage-name">{{getPrivateHealthInsuranceText(patientPrivateHealthInsurance.medicalCoverage)}}</span>
 							<app-editable-field [fieldName]="'Nro de credencial'"
 								[value]="patientPrivateHealthInsurance.affiliateNumber"
-								(newValueEmitter)="patientPrivateHealthInsurance.affiliateNumber = $event">
+								(newValueEmitted)="patientPrivateHealthInsurance.affiliateNumber = $event">
 							</app-editable-field>
-							<div class="valid-date">{{patientPrivateHealthInsurance.validDate | date: 'dd/MM/yyyy'}}</div>
+						</div>
+						<div fxLayout="row">
+							<div fxLayout="column" fxLayoutAlign="space-between center">
+								<span>Vig. {{patientPrivateHealthInsurance.validDate | date: 'dd/MM/yyyy'}}</span>
+								<div class="capitalize-first-letter">
+									{{getDatesText(patientPrivateHealthInsurance)}}
+								</div>
+							</div>
+							<button mat-icon-button color="warn" (click)="patientPrivateHealthInsurance.active = false">
+								<mat-icon>delete_outline</mat-icon>
+							</button>
 						</div>
 					</mat-card-content>
 				</mat-card>
@@ -78,7 +93,7 @@
 
 		<div>
 			<strong translate="medical-coverage.NEW_PRIVATE_HEALTH_INSURANCES"></strong>
-			<form [formGroup]="prepagaForm"  class="form" fxLayoutGap="5px">
+			<form [formGroup]="prepagaForm" class="form" fxLayoutGap="5px">
 				<div fxLayout="column">
 					<mat-form-field appearance="outline">
 						<input type="text" placeholder="{{ 'Ingresar Prepaga' | translate }}" aria-label="Number"
@@ -110,9 +125,9 @@
 						<input type="text" placeholder="{{ 'Ingresar Plan' | translate }}" aria-label="Number"
 							formControlName="plan" matInput>
 					</mat-form-field>
-					<button mat-stroked-button color="primary" class="uppercase margin" id="add-medical-coverage" type="button"
-						name="add-medical-coverage" (click)="addPrivateHealthInsurance()">Agregar Prepaga
-					</button>
+					<button mat-stroked-button color="primary" class="uppercase margin" id="add-medical-coverage"
+						type="button" name="add-medical-coverage" (click)="addPrivateHealthInsurance()"
+						translate="medical-coverage.ADD_PRIVATE_HEALTH_INSURANCES"> </button>
 				</div>
 
 			</form>
@@ -122,8 +137,8 @@
 
 </div>
 <div mat-dialog-actions align="end">
-	<button mat-stroked-button color="primary" [mat-dialog-close]=true class="uppercase"
-		id="cancel-button" name="cancel-button" (click)="close()">
+	<button mat-stroked-button color="primary" [mat-dialog-close]=true class="uppercase" id="cancel-button"
+		name="cancel-button" (click)="close()">
 		Cancelar</button>
 	<button mat-flat-button color="primary" [mat-dialog-close]=true cdkFocusInitial class="uppercase"
 		id="okButton-button" name="okButton-button" (click)="save()">

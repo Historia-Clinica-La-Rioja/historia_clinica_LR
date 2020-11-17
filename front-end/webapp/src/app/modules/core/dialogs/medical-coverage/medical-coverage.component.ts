@@ -142,8 +142,12 @@ export class MedicalCoverageComponent implements OnInit {
 
 	save() {
 		this.dialogRef.close({
-			patientMedicalCoverages: this.patientMedicalCoverages
+			patientMedicalCoverages: this.patientMedicalCoverages.filter(pmc => pmc.id || isNewAndNotDeleted(pmc))
 		});
+
+		function isNewAndNotDeleted(pmc: PatientMedicalCoverage): boolean {
+			return !pmc.id && pmc.active;
+		}
 	}
 
 	close() {
@@ -151,11 +155,11 @@ export class MedicalCoverageComponent implements OnInit {
 	}
 
 	getPatientHealthInsurances(): PatientMedicalCoverage[] {
-		return this.patientMedicalCoverages.filter(s => s.medicalCoverage.type === 'HealthInsuranceDto');
+		return this.patientMedicalCoverages.filter(s => s.medicalCoverage.type === 'HealthInsuranceDto' && s.active);
 	}
 
 	getPatientPrivateHealthInsurances(): PatientMedicalCoverage[] {
-		return this.patientMedicalCoverages.filter(s => s.medicalCoverage.type === 'PrivateHealthInsuranceDto');
+		return this.patientMedicalCoverages.filter(s => s.medicalCoverage.type === 'PrivateHealthInsuranceDto' && s.active);
 	}
 
 	private getPrivateHealthInsuranceToAdd(): PatientMedicalCoverage {
@@ -174,6 +178,7 @@ export class MedicalCoverageComponent implements OnInit {
 			affiliateNumber: this.prepagaForm.value.affiliateNumber,
 			validDate: newMoment(),
 			privateHealthInsuranceDetails,
+			active: true
 		}
 		return toAdd;
 	}
@@ -183,6 +188,7 @@ export class MedicalCoverageComponent implements OnInit {
 			medicalCoverage: this.healthInsuranceToAdd,
 			affiliateNumber: this.healthInsuranceForm.value.affiliateNumber,
 			validDate: newMoment(),
+			active: true
 		};
 		return toAdd;
 	}
@@ -203,7 +209,8 @@ export class MedicalCoverageComponent implements OnInit {
 		return {
 			affiliateNumber: null,
 			medicalCoverage,
-			validDate: healthInsurance.dateQuery ? momentParse(healthInsurance.dateQuery, DateFormat.YEAR_MONTH) : newMoment()
+			validDate: healthInsurance.dateQuery ? momentParse(healthInsurance.dateQuery, DateFormat.YEAR_MONTH) : newMoment(),
+			active: true
 		};
 	}
 }
@@ -218,6 +225,7 @@ export interface PatientMedicalCoverage {
 		startDate?: Moment;
 		endDate?: Moment;
 	};
+	active: boolean;
 }
 export abstract class MedicalCoverage {
 	id?: number;
@@ -268,7 +276,6 @@ export class PrivateHealthInsurance extends MedicalCoverage {
 			plan: this.plan,
 			name: this.name,
 			type: 'PrivateHealthInsuranceDto',
-
 		};
 	}
 }

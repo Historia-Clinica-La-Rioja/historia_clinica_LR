@@ -27,7 +27,7 @@
 				<mat-icon fontSet="material-icons-outlined" style="color: transparent">person</mat-icon>
 				<app-editable-field [fieldName]="'turnos.appointment.phoneNumber.PHONE_NUMBER'"
 						[value]="appointmentData.phoneNumber"
-						(newValueEmitter)="updatePhoneNumber($event)"></app-editable-field>
+						(newValueEmitted)="updatePhoneNumber($event)"></app-editable-field>
 			</div>
 			<div fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
 				<mat-icon fontSet="material-icons-outlined" style="color: transparent">person</mat-icon>

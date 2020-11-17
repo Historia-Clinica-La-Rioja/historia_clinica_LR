@@ -860,7 +860,8 @@ export interface PatientMedicalCoverageDto {
     id?: number;
     medicalCoverage: CoverageDtoUnion;
     privateHealthInsuranceDetails?: PrivateHealthInsuranceDetailsDto;
-    vigencyDate?: string;
+	vigencyDate?: string;
+	active: boolean
 }
 
 export interface PatientSearchDto {
