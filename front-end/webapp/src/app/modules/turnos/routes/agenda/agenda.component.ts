@@ -23,7 +23,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { MINUTES_IN_HOUR } from '../../constants/appointment';
 import { AppointmentsFacadeService } from 'src/app/modules/turnos/services/appointments-facade.service';
 import { map, take } from 'rxjs/operators';
-import { forkJoin, Observable, of } from 'rxjs';
+import { forkJoin, Observable, of, Subscriber, Subscription } from 'rxjs';
 import { PermissionsService } from '@core/services/permissions.service';
 import { HealthInsuranceService } from '@api-rest/services/health-insurance.service';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
@@ -49,7 +49,7 @@ export class AgendaComponent implements OnInit, OnDestroy {
 	agenda: CompleteDiaryDto;
 
 	viewDate: Date = new Date();
-	loading = false;
+	loading = true;
 	dayStartHour: number;
 	dayEndHour: number;
 	diaryOpeningHours: DiaryOpeningHoursDto[];
@@ -58,6 +58,7 @@ export class AgendaComponent implements OnInit, OnDestroy {
 	appointments: CalendarEvent[];
 	dailyAmounts: AppointmentDailyAmountDto[];
 	dailyAmounts$: Observable<AppointmentDailyAmountDto[]>;
+	appointmentSubscription: Subscription;
 
 	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
 
@@ -78,8 +79,10 @@ export class AgendaComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-		this.loading = true;
 		this.route.paramMap.subscribe((params: ParamMap) => {
+			this.loading = true;
+			this.appointmentSubscription?.unsubscribe();
+			this.appointmentFacade.clear();
 			const idAgenda = Number(params.get('idAgenda'));
 			this.diaryService.get(idAgenda).subscribe(agenda => {
 				this.setAgenda(agenda);
@@ -88,9 +91,12 @@ export class AgendaComponent implements OnInit, OnDestroy {
 				this.snackBarService.showError('turnos.home.AGENDA_NOT_FOUND');
 				this.router.navigateByUrl(`${this.routePrefix}/turnos`);
 			});
-			this.appointmentFacade.getAppointments().subscribe(appointments => {
-					this.appointments = appointments;
-					this.dailyAmounts$ = this.appointmentsService.getDailyAmounts(idAgenda);
+			this.appointmentSubscription = this.appointmentFacade.getAppointments().subscribe(appointments => {
+					if (appointments){
+						this.appointments = appointments;
+						this.dailyAmounts$ = this.appointmentsService.getDailyAmounts(idAgenda);
+						this.loading = false;
+					}
 				});
 		});
 	}
@@ -220,18 +226,15 @@ export class AgendaComponent implements OnInit, OnDestroy {
 	}
 
 	setAgenda(agenda: CompleteDiaryDto): void {
-		this.loading = true;
 		delete this.dayEndHour;
 		delete this.dayStartHour;
 		this.agenda = agenda;
 		this.setEnableAppointmentScheduling();
 		this.viewDate = this._getViewDate();
 		this.hourSegments = MINUTES_IN_HOUR / agenda.appointmentDuration;
-		this.appointmentFacade.setValues(agenda.id, agenda.startDate, agenda.endDate, agenda.appointmentDuration);
-
+		this.appointmentFacade.setValues(agenda.id, agenda.appointmentDuration);
 		this.diaryOpeningHours = agenda.diaryOpeningHours;
 		this.setDayStartHourAndEndHour(agenda.diaryOpeningHours);
-		this.loading = false;
 
 	}
 

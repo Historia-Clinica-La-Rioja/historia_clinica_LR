@@ -37,17 +37,18 @@ export class AppointmentsFacadeService {
 		this.appointments$ = this.appointmenstEmitter.asObservable();
 	}
 
-	setValues(agendaId, startDate, endDate, appointmentDuration): void {
+	setValues(agendaId, appointmentDuration): void {
 		this.agendaId = agendaId;
-		this.startDate = startDate;
-		this.endDate = endDate;
 		this.appointmentDuration = appointmentDuration;
-
 		this.loadAppointments();
 	}
 
+	clear(): void {
+		this.appointmenstEmitter.next(undefined)
+	}
+
 	private loadAppointments(): void {
-		this.appointmentService.getList([this.agendaId], this.startDate, this.endDate)
+		this.appointmentService.getList([this.agendaId])
 			.subscribe((appointments: AppointmentListDto[]) => {
 				const appointmentsCalendarEvents: CalendarEvent[] = appointments
 					.map(appointment => {

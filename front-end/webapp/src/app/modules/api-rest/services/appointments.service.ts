@@ -22,16 +22,14 @@ export class AppointmentsService {
 		return this.http.post<number>(url, appointment);
 	}
 
-	getList(diaryIds: number[], from: string, to: string): Observable<AppointmentListDto[]> {
+	getList(diaryIds: number[]): Observable<AppointmentListDto[]> {
 		if (!diaryIds || diaryIds.length === 0) {
 			return of([]);
 		}
 		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments`;
 		return this.http.get<AppointmentListDto[]>(url,{
 			params: {
-				diaryIds: `${diaryIds.join(',')}` ,
-				from: from,
-				to: to
+				diaryIds: `${diaryIds.join(',')}`
 			}
 		});
 	}
