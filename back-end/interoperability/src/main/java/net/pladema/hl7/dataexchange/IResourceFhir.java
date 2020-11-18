@@ -4,6 +4,8 @@ import net.pladema.hl7.dataexchange.model.adaptor.FhirAddress;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirCode;
 import net.pladema.hl7.supporting.exchange.database.FhirPersistentStore;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.Address;
 import org.hl7.fhir.r4.model.Bundle;
@@ -18,6 +20,7 @@ import org.hl7.fhir.r4.model.Quantity;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.model.ResourceType;
+import org.hl7.fhir.r4.model.StringType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -62,6 +65,35 @@ public abstract class IResourceFhir {
         return new Bundle.BundleEntryComponent()
                 .setFullUrl(fullUrl(resource))
                 .setResource((Resource) resource);
+    }
+
+    public static String decodeCode(CodeableConcept codeableConcept){
+        if (codeableConcept != null && codeableConcept.hasCoding()) {
+            Coding coding = codeableConcept.getCoding().get(0);
+            if(coding.hasCode())
+                return coding.getCode();
+        }
+        return null;
+    }
+
+    public static Pair<String,String> decodeCoding(CodeableConcept codeableConcept){
+        if (codeableConcept != null && codeableConcept.hasCoding()) {
+            Coding coding = codeableConcept.getCoding().get(0);
+            if(coding.hasCode() && coding.hasDisplay())
+                return new ImmutablePair<>(coding.getCode(), coding.getDisplay());
+        }
+        return new ImmutablePair<>(null, null);
+    }
+
+    public static FhirAddress decodeAddress(Address address){
+        FhirAddress data = new FhirAddress(address.getUse());
+        StringType fullAddress = address.getLine().get(0);
+        data.setAddress(fullAddress.getValue())
+                .setCity(address.getCity())
+                .setProvince(address.getState())
+                .setCountry(address.getCountry())
+                .setPostcode(address.getPostalCode());
+        return data;
     }
 
     public static <R extends IBaseResource> String fullUrl(R resource){

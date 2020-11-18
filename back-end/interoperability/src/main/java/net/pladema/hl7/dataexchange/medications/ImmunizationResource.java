@@ -8,9 +8,11 @@ import net.pladema.hl7.supporting.terminology.coding.CodingCode;
 import net.pladema.hl7.supporting.terminology.coding.CodingProfile;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
 import net.pladema.hl7.dataexchange.model.domain.ImmunizationVo;
+import org.apache.commons.lang3.tuple.Pair;
 import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.Immunization;
 import org.hl7.fhir.r4.model.Reference;
+import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.model.ResourceType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -79,5 +81,40 @@ public class ImmunizationResource extends IMultipleResourceFhir {
         resource.setPrimarySource(immunization.isPrimarySource());
         resource.setLotNumber(immunization.getLoteNumber());
         resource.setExpirationDate(FhirDateMapper.toDate(immunization.getExpirationDate()));
+    }
+
+    public static ImmunizationVo encode(Resource baseResource){
+        ImmunizationVo data = new ImmunizationVo();
+        Immunization resource = (Immunization) baseResource;
+
+        data.setId(resource.getId());
+
+        if(resource.hasStatus())
+            data.setStatus(resource.getStatus().getDisplay());
+
+        if(resource.hasOccurrenceDateTimeType())
+            data.setAdministrationDate(FhirDateMapper.toLocalDate(resource.getOccurrenceDateTimeType().getValue()));
+
+        data.setExpirationDate(FhirDateMapper.toLocalDate(resource.getExpirationDate()));
+
+        if(resource.hasVaccineCode()){
+            Pair<String, String> coding = decodeCoding(resource.getVaccineCode());
+            data.setVaccineCode(coding.getKey());
+            data.setVaccineTerm(coding.getValue());
+        }
+
+        if(resource.hasProtocolApplied()){
+            Immunization.ImmunizationProtocolAppliedComponent protocol =
+                    resource.getProtocolApplied().get(0);
+            data.setSeries(protocol.getSeries());
+            data.setDoseNumber(protocol.getDoseNumberPositiveIntType().getValue());
+            data.setImmunizationCode(decodeCode(protocol.addTargetDisease()));
+        }
+
+        data.setPrimarySource(resource.getPrimarySource());
+        data.setLoteNumber(resource.getLotNumber());
+
+        return data;
+
     }
 }

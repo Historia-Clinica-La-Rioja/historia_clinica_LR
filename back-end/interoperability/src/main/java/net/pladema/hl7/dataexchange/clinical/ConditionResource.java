@@ -9,8 +9,10 @@ import net.pladema.hl7.supporting.terminology.coding.CodingCode;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
 import net.pladema.hl7.dataexchange.model.domain.ConditionVo;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.hl7.fhir.r4.model.Condition;
 import org.hl7.fhir.r4.model.Reference;
+import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.model.ResourceType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -71,5 +73,28 @@ public class ConditionResource extends IMultipleResourceFhir {
                 CodingProfile.DATA_ABSENT_REASON, CodingCode.ABSENT_REASON)
         );
         return Collections.singletonList(none);
+    }
+
+    public static ConditionVo encode(Resource baseResource){
+        ConditionVo data = new ConditionVo();
+        Condition resource = (Condition) baseResource;
+        data.setId(resource.getId());
+        if(resource.hasCode()) {
+            Pair<String, String> coding = decodeCoding(resource.getCode());
+            data.setSctidCode(coding.getKey());
+            data.setSctidTerm(coding.getValue());
+        }
+        if(resource.hasClinicalStatus())
+            data.setClinicalStatus(decodeCode(resource.getClinicalStatus()));
+        if(resource.hasVerificationStatus())
+            data.setVerificationStatus(decodeCode(resource.getVerificationStatus()));
+        if(resource.hasSeverity())
+            data.setSeverityCode(decodeCode(resource.getVerificationStatus()));
+
+        if(resource.hasRecordedDate())
+            data.setStartDate(FhirDateMapper.toLocalDate(resource.getRecordedDate()));
+        if(resource.hasOnsetDateTimeType())
+            data.setCreatedOn(FhirDateMapper.toLocalDateTime(resource.getOnsetDateTimeType().getValue()));
+        return data;
     }
 }

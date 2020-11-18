@@ -16,12 +16,14 @@ import net.pladema.hl7.supporting.terminology.coding.CodingCode;
 import net.pladema.hl7.supporting.terminology.coding.CodingProfile;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
 import net.pladema.hl7.dataexchange.model.domain.MedicationVo;
-
+import org.apache.commons.lang3.tuple.Pair;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Dosage;
 import org.hl7.fhir.r4.model.Medication;
 import org.hl7.fhir.r4.model.MedicationStatement;
+import org.hl7.fhir.r4.model.Quantity;
 import org.hl7.fhir.r4.model.Reference;
+import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.model.ResourceType;
 import org.hl7.fhir.r4.model.Timing;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,5 +119,50 @@ public class MedicationStatementResource extends IMultipleResourceFhir {
                 entries.add(fetchEntry(medication));
         });
         return entries;
+    }
+
+    public static MedicationVo encode(Resource baseResource, Resource baseResource2) {
+        MedicationVo data = new MedicationVo();
+        MedicationStatement resource = (MedicationStatement) baseResource;
+
+        //Medication-statement
+        data.setStatementId(resource.getId());
+        if(resource.hasDosage()) {
+            Dosage dosage = resource.getDosage().get(0);
+            if (dosage.hasRoute()) {
+                Pair<String,String> route = decodeCoding(dosage.getRoute());
+                data.setRouteCode(route.getKey());
+                data.setRouteTerm(route.getValue());
+            }
+            if (dosage.hasTiming()) {
+                Timing.TimingRepeatComponent repeat = dosage.getTiming().getRepeat();
+                data.setUnitTime(repeat.getPeriodUnit().getDisplay());
+            }
+            if (dosage.hasDoseAndRate()) {
+                Dosage.DosageDoseAndRateComponent doseAndRate = dosage.getDoseAndRate().get(0);
+                if(doseAndRate.hasDoseQuantity()) {
+                    Quantity quantity = doseAndRate.getDoseQuantity();
+                    data.setDoseQuantityCode(quantity.getCode());
+                    data.setDoseQuantityUnit(quantity.getUnit());
+                    data.setDoseQuantityValue(quantity.getValue());
+                }
+            }
+        }
+        if(resource.hasStatus())
+            data.setStatus(resource.getStatus().getDisplay());
+        if(resource.hasEffective())
+            data.setEffectiveTime(FhirDateMapper.toLocalDate(resource.getEffectiveDateTimeType().getValue()));
+
+        //Medication data
+        if(resource.hasMedicationReference()) {
+            Medication medication = (Medication) baseResource2;
+            MedicationResource.encode(data, medication);
+        }
+        else if(resource.hasMedicationCodeableConcept()){
+            Pair<String, String> coding = decodeCoding(resource.getMedicationCodeableConcept());
+            data.setSctidCode(coding.getKey());
+            data.setSctidTerm(coding.getValue());
+        }
+        return data;
     }
 }

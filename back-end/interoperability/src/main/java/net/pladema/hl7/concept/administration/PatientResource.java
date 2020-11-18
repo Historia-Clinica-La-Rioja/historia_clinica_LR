@@ -1,6 +1,7 @@
 package net.pladema.hl7.concept.administration;
 
 import net.pladema.hl7.dataexchange.ISingleResourceFhir;
+import net.pladema.hl7.dataexchange.model.adaptor.FhirDateMapper;
 import net.pladema.hl7.supporting.exchange.database.FhirPersistentStore;
 import net.pladema.hl7.supporting.terminology.coding.CodingProfile;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
@@ -11,11 +12,14 @@ import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.HumanName;
 import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Reference;
+import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.model.ResourceType;
 import org.hl7.fhir.r4.model.StringType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PatientResource extends ISingleResourceFhir {
@@ -76,5 +80,42 @@ public class PatientResource extends ISingleResourceFhir {
             birthdate.fromStringValue(patient.getBirthdate());
             resource.setBirthDateElement(birthdate);
         }
+    }
+
+    public static PatientVo encode(Resource baseResource){
+        PatientVo data = new PatientVo();
+        Patient resource = (Patient) baseResource;
+
+        data.setId(resource.getId());
+        if(resource.hasName()){
+            HumanName humanName = resource.getName().get(0);
+            List<StringType> names = humanName.getGiven();
+            try {
+                data.setFirstname(names.get(0).getValue());
+                data.setMiddlenames(names.get(1).getValue());
+            }
+            catch (ArrayIndexOutOfBoundsException  ex){
+                //nothing to do
+            }
+            data.setLastname(humanName.getFamily());
+            if(humanName.hasFamilyElement()) {
+                String otherLastNames = humanName.getFamilyElement().getExtension()
+                        .stream()
+                        .map(e -> e.getValue().toString())
+                        .filter(e -> !e.equals(data.getLastname()))
+                        .collect(Collectors.joining(" "));
+                if(!otherLastNames.isBlank())
+                    data.setOtherLastName(otherLastNames);
+            }
+        }
+        if(resource.hasGender())
+            data.setGender(resource.getGender().getDisplay());
+        if(resource.hasBirthDate())
+            data.setBirthdate(FhirDateMapper.toLocalDate(resource.getBirthDate()));
+        if(resource.hasTelecom())
+            data.setPhoneNumber(resource.getTelecom().get(0).getValue());
+        if(resource.hasAddress())
+            data.setFullAddress(decodeAddress(resource.getAddress().get(0)));
+        return data;
     }
 }

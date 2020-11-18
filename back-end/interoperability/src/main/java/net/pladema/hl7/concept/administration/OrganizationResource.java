@@ -4,6 +4,7 @@ import net.pladema.hl7.dataexchange.ISingleResourceFhir;
 import net.pladema.hl7.supporting.exchange.database.FhirPersistentStore;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
 import net.pladema.hl7.dataexchange.model.domain.OrganizationVo;
+import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.ContactPoint;
 import org.hl7.fhir.r4.model.Organization;
 import org.hl7.fhir.r4.model.Reference;
@@ -38,5 +39,17 @@ public class OrganizationResource extends ISingleResourceFhir {
             resource.addAddress(newAddress(organization.getFullAddress()));
         resource.setActive(true);
         return resource;
+    }
+
+    public static OrganizationVo encode(IBaseResource baseResource) {
+        OrganizationVo data = new OrganizationVo();
+        Organization resource = (Organization) baseResource;
+        data.setId(resource.getId());
+        data.setName(resource.getName());
+        if(resource.hasTelecom())
+            data.setPhoneNumber(resource.getTelecom().get(0).getValue());
+        if(resource.hasAddress())
+            data.setFullAddress(decodeAddress(resource.getAddress().get(0)));
+        return data;
     }
 }

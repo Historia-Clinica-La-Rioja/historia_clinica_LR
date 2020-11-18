@@ -8,8 +8,10 @@ import net.pladema.hl7.supporting.terminology.coding.CodingCode;
 import net.pladema.hl7.supporting.terminology.coding.CodingProfile;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
 import net.pladema.hl7.dataexchange.model.domain.AllergyIntoleranceVo;
+import org.apache.commons.lang3.tuple.Pair;
 import org.hl7.fhir.r4.model.AllergyIntolerance;
 import org.hl7.fhir.r4.model.Reference;
+import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.model.ResourceType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -78,5 +80,35 @@ public class AllergyIntoleranceResource extends IMultipleResourceFhir {
                 AllergyIntoleranceVo.defaultClinicalStatus())
         );
         return Collections.singletonList(none);
+    }
+
+    public static AllergyIntoleranceVo encode(Resource baseResource) {
+        AllergyIntoleranceVo data = new AllergyIntoleranceVo();
+        AllergyIntolerance resource = (AllergyIntolerance) baseResource;
+
+        data.setId(resource.getId());
+        if(resource.hasCategory()){
+            AllergyIntolerance.AllergyIntoleranceCategory category = resource
+                    .getCategory().get(0).getValue();
+            data.setCategories(Collections.singleton(category.getDisplay()));
+        }
+
+        if(resource.hasClinicalStatus())
+            data.setClinicalStatus(decodeCode(resource.getClinicalStatus()));
+        if(resource.hasVerificationStatus())
+            data.setVerificationStatus(decodeCode(resource.getVerificationStatus()));
+        if(resource.hasCriticality())
+            data.setCriticality(resource.getCriticality().getDisplay());
+
+        if(resource.hasCode()) {
+            Pair<String, String> coding = decodeCoding(resource.getCode());
+            data.setSctidCode(coding.getKey());
+            data.setSctidTerm(coding.getValue());
+        }
+        if(resource.hasType())
+            data.setType(resource.getType().getDisplay());
+        if(resource.hasOnsetDateTimeType())
+            data.setStartDate(FhirDateMapper.toLocalDate(resource.getOnsetDateTimeType().getValue()));
+        return data;
     }
 }

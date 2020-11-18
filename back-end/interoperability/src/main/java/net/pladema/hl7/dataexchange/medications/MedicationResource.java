@@ -1,11 +1,17 @@
 package net.pladema.hl7.dataexchange.medications;
 
 import net.pladema.hl7.dataexchange.IResourceFhir;
+
 import net.pladema.hl7.supporting.exchange.database.FhirPersistentStore;
+import net.pladema.hl7.dataexchange.model.domain.MedicationIngredientVo;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
 import net.pladema.hl7.dataexchange.model.domain.MedicationVo;
+import org.apache.commons.lang3.tuple.Pair;
+import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Medication;
+import org.hl7.fhir.r4.model.Quantity;
 import org.hl7.fhir.r4.model.Ratio;
+import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.model.ResourceType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,6 +51,52 @@ public class MedicationResource extends IResourceFhir {
                             .setNumerator(newQuantity(ingredient.getUnitMeasure(), ingredient.getUnitValue()))
                             .setDenominator(newQuantity(ingredient.getPresentationUnit(), ingredient.getPresentationValue()))))
         );
+        return ingredients;
+    }
+
+    public static void encode(MedicationVo data, Resource baseResource){
+        Medication resource = (Medication) baseResource;
+        data.setId(resource.getId());
+        if(resource.hasCode()){
+            Pair<String, String> coding = decodeCoding(resource.getCode());
+            data.setSctidCode(coding.getKey());
+            data.setSctidTerm(coding.getValue());
+        }
+        if(resource.hasForm()){
+            Pair<String, String> coding = decodeCoding(resource.getForm());
+            data.setFormCode(coding.getKey());
+            data.setFormTerm(coding.getValue());
+        }
+        if(resource.hasIngredient())
+            data.setIngredients(encodeIngredients(resource));
+
+    }
+
+    private static List<MedicationIngredientVo> encodeIngredients(Medication resource){
+        List<MedicationIngredientVo> ingredients = new ArrayList<>();
+        resource.getIngredient().forEach((ingredient)->{
+            MedicationIngredientVo ingredientData = new MedicationIngredientVo();
+
+            if(ingredient.hasItemCodeableConcept()) {
+                Pair<String, String> coding = decodeCoding((CodeableConcept) ingredient.getItem());
+                ingredientData.setSctidCode(coding.getKey());
+                ingredientData.setSctidTerm(coding.getValue());
+            }
+            if(ingredient.hasStrength()){
+                if(ingredient.getStrength().hasNumerator()){
+                    Quantity numerator = ingredient.getStrength().getNumerator();
+                    ingredientData.setUnitMeasure(numerator.getUnit());
+                    ingredientData.setUnitValue(numerator.getValue());
+                }
+                if(ingredient.getStrength().hasNumerator()){
+                    Quantity denominator = ingredient.getStrength().getDenominator();
+                    ingredientData.setPresentationUnit(denominator.getUnit());
+                    ingredientData.setPresentationValue(denominator.getValue());
+                }
+            }
+            ingredientData.setActive(ingredient.getIsActive());
+            ingredients.add(ingredientData);
+        });
         return ingredients;
     }
 
