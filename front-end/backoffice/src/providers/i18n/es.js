@@ -131,10 +131,17 @@ export default {
             fields: {
                 institutionId: 'Institución',
                 description: 'Nombre',
-                clinicalspecialtysectors: 'Especialidad | Sector'
+                clinicalspecialtysectors: 'Especialidad | Sector',
+                ageGroupId: 'Grupo de edad',
+                sectorTypeId: 'Tipo de sector',
+                sectorOrganizationId: 'Organización',
+                careTypeId: 'Tipo de cuidado',
+                hospitalizationTypeId: 'Permanencia',
+                parentSectorId: 'Sector padre'
             },
             createRelated: 'Crear Sector'
-        }, 
+        },
+
         clinicalspecialties: {
             name: 'Especialidad |||| Especialidades',
             fields: {

@@ -41,6 +41,11 @@ const App = () => {
     const oauth = appInfoProvider.getInfo().oauthConfig.enabled;
 
     const resourcesAdminInstitucional = [
+        <Resource name="sectortypes" />,
+        <Resource name="agegroups" />,
+        <Resource name="caretypes" />,
+        <Resource name="sectororganizations" />,
+        <Resource name="hospitalizationtypes" />,
         <Resource name="provinces" />,
         <Resource name="identificationTypes" />,
         <Resource name="cities" />,
@@ -64,6 +69,11 @@ const App = () => {
         <Resource name="person" {...person}/>,
         <Resource name="identificationTypes" />,
         <Resource name="genders" />,
+        <Resource name="sectortypes" />,
+        <Resource name="agegroups" />,
+        <Resource name="caretypes" />,
+        <Resource name="sectororganizations" />,
+        <Resource name="hospitalizationtypes" />,
         <Resource name="provinces" />,
         <Resource name="cities" {...cities} />,
         <Resource name="departments" {...departments} />,
