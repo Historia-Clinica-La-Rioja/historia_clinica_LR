@@ -1,11 +1,15 @@
 package net.pladema.hl7.supporting.conformance;
 
+import ca.uhn.fhir.rest.annotation.IdParam;
 import ca.uhn.fhir.rest.annotation.OptionalParam;
+import ca.uhn.fhir.rest.annotation.Read;
 import ca.uhn.fhir.rest.annotation.RequiredParam;
 import ca.uhn.fhir.rest.annotation.Search;
 import ca.uhn.fhir.rest.client.api.IRestfulClient;
 import ca.uhn.fhir.rest.param.ReferenceParam;
 import ca.uhn.fhir.rest.param.StringParam;
+import org.hl7.fhir.instance.model.api.IIdType;
+import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.DocumentReference;
 
 /**
@@ -30,4 +34,17 @@ public interface IFhirClient extends IRestfulClient {
             @RequiredParam(name = "subject:identifier") ReferenceParam subject,
             @RequiredParam(name = "custodian") StringParam custodian,
             @OptionalParam(name = "type") ReferenceParam type);
+
+    /**
+     * The "@Read" annotation indicates that this method supports the
+     * read operation. Read operations should return a single resource
+     * instance.
+     * @param theId
+     *    The read operation takes one parameter, which must be of type
+     *    IdType and must be annotated with the "@Read.IdParam" annotation.
+     * @return
+     *    Returns a resource matching this identifier, or null if none exists.
+     */
+    @Read
+    Bundle getResourceById(@IdParam IIdType theId);
 }

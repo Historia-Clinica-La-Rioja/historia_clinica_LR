@@ -13,6 +13,7 @@ import net.pladema.hl7.supporting.security.ClientAuthInterceptor;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.DocumentReference;
+import org.hl7.fhir.r4.model.IdType;
 import org.hl7.fhir.r4.model.Parameters;
 import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.StringType;
@@ -80,5 +81,9 @@ public class FhirClientR4 {
                 .useHttpGet()
                 .returnResourceType(Bundle.class)
                 .execute();
+    }
+
+    public Bundle getResourceById(IdType id){
+        return busClient.getResourceById(id);
     }
 }

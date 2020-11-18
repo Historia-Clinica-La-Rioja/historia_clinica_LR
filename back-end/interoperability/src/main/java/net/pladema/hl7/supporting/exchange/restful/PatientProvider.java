@@ -7,9 +7,12 @@ import net.pladema.hl7.dataexchange.model.adaptor.FhirParam;
 import net.pladema.hl7.dataexchange.model.domain.dto.IdentifierDto;
 import net.pladema.hl7.dataexchange.model.domain.dto.OrganizationDto;
 import net.pladema.hl7.supporting.conformance.FhirClientR4;
+import net.pladema.hl7.dataexchange.model.domain.PatientSummaryVo;
+import net.pladema.hl7.supporting.exchange.documents.BundleResource;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.DocumentReference;
+import org.hl7.fhir.r4.model.IdType;
 import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Organization;
 import org.hl7.fhir.r4.model.Patient;
@@ -33,13 +36,16 @@ import java.util.function.Predicate;
 public class PatientProvider {
 
     private final FhirClientR4 client;
+    private final BundleResource bundleResource;
 
     @Value("${ws.renaper.dominio}")
     private String dominio;
 
-    public PatientProvider(FhirClientR4 client){
+    public PatientProvider(FhirClientR4 client,
+                           BundleResource bundleResource){
         super();
         this.client=client;
+        this.bundleResource=bundleResource;
     }
 
     /**
@@ -91,5 +97,30 @@ public class PatientProvider {
             e.printStackTrace();
             return null;
         }
+    }
+
+    /**
+     *
+     * @param subject identificador local del paciente
+     * @param custodian dominio en el cuál se está buscando información del paciente
+     * @param type documento requerido
+     * @return resumen de historia clínica del paciente registrada en otro dominio
+     */
+    @GetMapping
+    public ResponseEntity<Object> findPatient(
+            @RequestParam(name = DocumentReference.SP_SUBJECT) String subject,
+            @RequestParam(name = DocumentReference.SP_CUSTODIAN) String custodian,
+            @RequestParam(name = DocumentReference.SP_TYPE, required = false) String type) {
+        DocumentReference document = getDocumentReference(subject, custodian, type);
+        if (hasHealthcareData(document)) {
+            DocumentReference.DocumentReferenceContentComponent content = document.getContent().get(0);
+            if (content.hasAttachment()) {
+                String url = content.getAttachment().getUrl();
+                return ResponseEntity.ok(bundleResource.encodeResourceToSummary(
+                        client.getResourceById(new IdType(url)))
+                );
+            }
+        }
+        return ResponseEntity.ok(PatientSummaryVo.empty());
     }
 }

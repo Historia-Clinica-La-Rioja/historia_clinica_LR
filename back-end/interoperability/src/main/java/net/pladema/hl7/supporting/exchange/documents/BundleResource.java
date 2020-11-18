@@ -11,10 +11,18 @@
 package net.pladema.hl7.supporting.exchange.documents;
 
 import ca.uhn.fhir.rest.param.TokenParam;
+
+import net.pladema.hl7.concept.administration.OrganizationResource;
+import net.pladema.hl7.concept.administration.PatientResource;
 import net.pladema.hl7.dataexchange.IResourceFhir;
+import net.pladema.hl7.dataexchange.clinical.AllergyIntoleranceResource;
+import net.pladema.hl7.dataexchange.clinical.ConditionResource;
+import net.pladema.hl7.dataexchange.medications.ImmunizationResource;
+import net.pladema.hl7.dataexchange.medications.MedicationStatementResource;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirID;
 import net.pladema.hl7.dataexchange.model.domain.BundleVo;
 import net.pladema.hl7.supporting.exchange.database.FhirPersistentStore;
+import net.pladema.hl7.dataexchange.model.domain.PatientSummaryVo;
 import net.pladema.hl7.supporting.exchange.documents.profile.FhirDocument;
 import net.pladema.hl7.supporting.exchange.documents.profile.PatientSummaryDocument;
 import net.pladema.hl7.supporting.exchange.restful.validator.DocumentReferenceValidation;
@@ -30,6 +38,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 @ConditionalOnProperty(value="ws.renaper.enabled", havingValue = "true")
@@ -104,5 +113,34 @@ public class BundleResource extends IResourceFhir {
         document.setType(Bundle.BundleType.SEARCHSET);
         document.setMeta(new Meta().setLastUpdated(new Date()));
         return document;
+    }
+
+    public PatientSummaryVo encodeResourceToSummary(Bundle resource) {
+        PatientSummaryVo summary = new PatientSummaryVo();
+        List<Bundle.BundleEntryComponent> entries = resource.getEntry();
+        entries.forEach((entry)-> {
+            switch(entry.getResource().getResourceType()){
+                case Patient:
+                    summary.setPatient(PatientResource.encode(entry.getResource()));
+                    break;
+                case Condition:
+                    summary.addCondition(ConditionResource.encode(entry.getResource()));
+                    break;
+                case MedicationStatement:
+                    summary.addMedication(MedicationStatementResource.encode(entry.getResource(), null));
+                    break;
+                case Immunization:
+                    summary.addImmunization(ImmunizationResource.encode(entry.getResource()));
+                    break;
+                case AllergyIntolerance:
+                    summary.addAllergy(AllergyIntoleranceResource.encode(entry.getResource()));
+                    break;
+                case Organization:
+                    summary.setOrganization(OrganizationResource.encode(entry.getResource()));
+                    break;
+                default:
+            }
+        });
+        return summary;
     }
 }
