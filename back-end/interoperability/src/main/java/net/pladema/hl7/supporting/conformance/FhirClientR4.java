@@ -6,6 +6,7 @@ import ca.uhn.fhir.parser.IParser;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 
+import net.pladema.hl7.supporting.security.ClientAuthInterceptor;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
@@ -39,6 +40,9 @@ public class FhirClientR4 {
 
         // Create the client
         this.busClient = context.newRestfulClient(IFhirClient.class, CodingSystem.SERVER.BUS);
+
+
+        busClient.registerInterceptor(webApplicationContext.getBean(ClientAuthInterceptor.class));
 
         testClient = context.newRestfulGenericClient(CodingSystem.SERVER.TESTAPP);
     }
