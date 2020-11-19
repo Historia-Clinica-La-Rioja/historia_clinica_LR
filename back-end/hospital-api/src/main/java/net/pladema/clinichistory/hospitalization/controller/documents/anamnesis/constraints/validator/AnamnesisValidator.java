@@ -2,6 +2,7 @@ package net.pladema.clinichistory.hospitalization.controller.documents.anamnesis
 
 import net.pladema.clinichistory.hospitalization.controller.documents.anamnesis.constraints.AnamnesisValid;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -14,6 +15,7 @@ public class AnamnesisValidator implements ConstraintValidator<AnamnesisValid, O
 
     private final InternmentEpisodeService internmentEpisodeService;
 
+    @Autowired
     public AnamnesisValidator(InternmentEpisodeService internmentEpisodeService) {
         this.internmentEpisodeService = internmentEpisodeService;
     }

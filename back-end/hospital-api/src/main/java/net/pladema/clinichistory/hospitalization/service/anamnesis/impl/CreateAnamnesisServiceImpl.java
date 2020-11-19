@@ -1,20 +1,24 @@
 package net.pladema.clinichistory.hospitalization.service.anamnesis.impl;
 
-import net.pladema.clinichistory.documents.repository.entity.Document;
-import net.pladema.clinichistory.documents.service.DocumentService;
-import net.pladema.clinichistory.documents.service.NoteService;
+import net.pladema.clinichistory.documents.events.OnGenerateInternmentDocumentEvent;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.EDocumentType;
+import net.pladema.clinichistory.documents.service.CreateDocumentFile;
+import net.pladema.clinichistory.documents.service.DocumentFactory;
+import net.pladema.clinichistory.hospitalization.controller.documents.anamnesis.constraints.AnamnesisValid;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.CreateAnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.AnamnesisBo;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
-import net.pladema.clinichistory.documents.service.ips.*;
-import net.pladema.clinichistory.documents.service.ips.domain.DocumentObservationsBo;
-import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
+import net.pladema.sgx.pdf.PDFDocumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import javax.persistence.EntityNotFoundException;
+import java.io.IOException;
+
+import static net.pladema.clinichistory.hospitalization.controller.documents.anamnesis.AnamnesisController.INVALID_EPISODE;
 
 @Service
 public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
@@ -23,83 +27,41 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
 
     public static final String OUTPUT = "Output -> {}";
 
-    private final DocumentService documentService;
+    private final DocumentFactory documentFactory;
 
     private final InternmentEpisodeService internmentEpisodeService;
 
-    private final NoteService noteService;
+    private final CreateDocumentFile createDocumentFile;
 
-    private final HealthConditionService healthConditionService;
-
-    private final AllergyService allergyService;
-
-    private final MedicationService medicationService;
-
-    private final ClinicalObservationService clinicalObservationService;
-
-    private final ImmunizationService immunizationService;
-
-    private final ProceduresService proceduresService;
-
-    public CreateAnamnesisServiceImpl(DocumentService documentService,
+    public CreateAnamnesisServiceImpl(DocumentFactory documentFactory,
                                       InternmentEpisodeService internmentEpisodeService,
-                                      NoteService noteService,
-                                      HealthConditionService healthConditionService,
-                                      AllergyService allergyService,
-                                      ClinicalObservationService clinicalObservationService,
-                                      ImmunizationService immunizationService,
-                                      ProceduresService proceduresService,
-                                      MedicationService medicationService) {
-        this.documentService = documentService;
+                                      CreateDocumentFile createDocumentFile) {
+        this.documentFactory = documentFactory;
         this.internmentEpisodeService = internmentEpisodeService;
-        this.noteService = noteService;
-        this.healthConditionService = healthConditionService;
-        this.allergyService = allergyService;
-        this.clinicalObservationService = clinicalObservationService;
-        this.immunizationService = immunizationService;
-        this.proceduresService = proceduresService;
-        this.medicationService = medicationService;
+        this.createDocumentFile = createDocumentFile;
     }
 
     @Override
-    public AnamnesisBo createDocument(Integer intermentEpisodeId, Integer patientId, AnamnesisBo anamnesis) {
-        LOG.debug("Input parameters -> intermentEpisodeId {}, patientId {}, anamnesis {}", intermentEpisodeId, patientId, anamnesis);
+    @Transactional
+    @AnamnesisValid
+    public AnamnesisBo createDocument(Integer institutionId, AnamnesisBo anamnesis)
+            throws IOException, PDFDocumentException {
+        LOG.debug("Input parameters -> anamnesis {}", anamnesis);
+        Integer patientId = internmentEpisodeService.getPatient(anamnesis.getEncounterId())
+                .orElseThrow(() -> new EntityNotFoundException(INVALID_EPISODE));
+        anamnesis.setPatientId(patientId);
 
-        Document doc = new Document(intermentEpisodeId, anamnesis.getDocumentStatusId(), DocumentType.ANAMNESIS, SourceType.HOSPITALIZATION);
-        loadNotes(doc, Optional.ofNullable(anamnesis.getNotes()));
-        doc = documentService.save(doc);
-
-        anamnesis.setMainDiagnosis(healthConditionService.loadMainDiagnosis(patientId, doc.getId(), Optional.ofNullable(anamnesis.getMainDiagnosis())));
-        anamnesis.setDiagnosis(healthConditionService.loadDiagnosis(patientId, doc.getId(), anamnesis.getDiagnosis()));
-        anamnesis.setPersonalHistories(healthConditionService.loadPersonalHistories(patientId, doc.getId(), anamnesis.getPersonalHistories()));
-        anamnesis.setFamilyHistories(healthConditionService.loadFamilyHistories(patientId, doc.getId(), anamnesis.getFamilyHistories()));
-        anamnesis.setAllergies(allergyService.loadAllergies(patientId, doc.getId(), anamnesis.getAllergies()));
-        anamnesis.setImmunizations(immunizationService.loadImmunization(patientId, doc.getId(), anamnesis.getImmunizations()));
-        anamnesis.setMedications(medicationService.loadMedications(patientId, doc.getId(), anamnesis.getMedications()));
-        anamnesis.setProcedures(proceduresService.loadProcedures(patientId, doc.getId(), anamnesis.getProcedures()));
-
-        anamnesis.setVitalSigns(clinicalObservationService.loadVitalSigns(patientId, doc.getId(), Optional.ofNullable(anamnesis.getVitalSigns())));
-        anamnesis.setAnthropometricData(clinicalObservationService.loadAnthropometricData(patientId, doc.getId(), Optional.ofNullable(anamnesis.getAnthropometricData())));
-
-        internmentEpisodeService.updateAnamnesisDocumentId(intermentEpisodeId, doc.getId());
-        anamnesis.setId(doc.getId());
-
+        documentFactory.run(anamnesis);
         LOG.debug(OUTPUT, anamnesis);
+        generateDocument(anamnesis, institutionId);
+
         return anamnesis;
     }
 
-    private Document loadNotes(Document document, Optional<DocumentObservationsBo> optNotes) {
-        LOG.debug("Input parameters -> anamnesisDocument {}, notes {}", document, optNotes);
-        optNotes.ifPresent(notes -> {
-            document.setCurrentIllnessNoteId(noteService.createNote(notes.getCurrentIllnessNote()));
-            document.setPhysicalExamNoteId(noteService.createNote(notes.getPhysicalExamNote()));
-            document.setStudiesSummaryNoteId(noteService.createNote(notes.getStudiesSummaryNote()));
-            document.setEvolutionNoteId(noteService.createNote(notes.getEvolutionNote()));
-            document.setClinicalImpressionNoteId(noteService.createNote(notes.getClinicalImpressionNote()));
-            document.setOtherNoteId(noteService.createNote(notes.getOtherNote()));
-        });
-        LOG.debug(OUTPUT, document);
-        return document;
+    private void generateDocument(AnamnesisBo anamnesis, Integer institutionId) throws IOException, PDFDocumentException {
+        OnGenerateInternmentDocumentEvent event = new OnGenerateInternmentDocumentEvent(anamnesis, institutionId, anamnesis.getEncounterId(),
+                EDocumentType.map(DocumentType.ANAMNESIS), anamnesis.getPatientId());
+        createDocumentFile.execute(event);
     }
 
 }

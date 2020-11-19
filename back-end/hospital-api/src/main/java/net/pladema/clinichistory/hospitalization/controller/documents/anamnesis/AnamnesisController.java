@@ -88,11 +88,10 @@ public class AnamnesisController {
             @RequestBody @Valid AnamnesisDto anamnesisDto) throws IOException, PDFDocumentException {
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, ananmnesis {}",
                 institutionId, internmentEpisodeId, anamnesisDto);
-        Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
-                .orElseThrow(() -> new EntityNotFoundException(INVALID_EPISODE));
         AnamnesisBo anamnesis = anamnesisMapper.fromAnamnesisDto(anamnesisDto);
-        anamnesis = createAnamnesisService.createDocument(internmentEpisodeId, patientId, anamnesis);
-        generateDocument(anamnesis, institutionId, internmentEpisodeId, patientId);
+        anamnesis.setEncounterId(internmentEpisodeId);
+        createAnamnesisService.createDocument(institutionId, anamnesis);
+
         LOG.debug(OUTPUT, Boolean.TRUE);
         return  ResponseEntity.ok().body(Boolean.TRUE);
     }
@@ -121,17 +120,9 @@ public class AnamnesisController {
                 .orElseThrow(() -> new EntityNotFoundException(INVALID_EPISODE));
         anamnesis = updateAnamnesisService.updateDocument(internmentEpisodeId, patientId, anamnesis);
         ResponseAnamnesisDto result = anamnesisMapper.fromAnamnesis(anamnesis);
-        generateDocument(anamnesis, institutionId, internmentEpisodeId, patientId);
         LOG.debug(OUTPUT, result);
 
         return  ResponseEntity.ok().body(result);
-    }
-
-    private void generateDocument(AnamnesisBo anamnesis, Integer institutionId, Integer internmentEpisodeId,
-                                  Integer patientId) throws IOException, PDFDocumentException {
-        OnGenerateInternmentDocumentEvent event = new OnGenerateInternmentDocumentEvent(anamnesis, institutionId, internmentEpisodeId,
-                EDocumentType.map(DocumentType.ANAMNESIS), patientId);
-        createDocumentFile.execute(event);
     }
 
     @GetMapping("/{anamnesisId}")

@@ -41,4 +41,14 @@ public interface Document {
     List<ReasonBo> getReasons();
 
     ClinicalSpecialtyBo getClinicalSpecialty();
+    
+    short getDocumentType();
+
+    Integer getEncounterId();
+
+    Short getDocumentSource();
+
+    String getDocumentStatusId();
+
+    Integer getPatientId();
 }

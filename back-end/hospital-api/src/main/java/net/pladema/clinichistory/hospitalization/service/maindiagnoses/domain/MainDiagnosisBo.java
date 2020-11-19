@@ -95,4 +95,28 @@ public class MainDiagnosisBo implements Document {
     public ClinicalSpecialtyBo getClinicalSpecialty() {
         return null;
     }
+    
+    public short getDocumentType() {
+        return 0;
+    }
+
+    @Override
+    public Integer getEncounterId() {
+        return null;
+    }
+
+    @Override
+    public Short getDocumentSource() {
+        return null;
+    }
+
+    @Override
+    public String getDocumentStatusId() {
+        return null;
+    }
+
+    @Override
+    public Integer getPatientId() {
+        return null;
+    }
 }

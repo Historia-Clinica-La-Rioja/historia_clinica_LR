@@ -69,4 +69,29 @@ public class OutpatientDocumentBo implements Document {
         notes.setOtherNote(evolutionNote);
         return notes;
     }
+
+    @Override
+    public short getDocumentType() {
+        return 0;
+    }
+
+    @Override
+    public Integer getEncounterId() {
+        return null;
+    }
+
+    @Override
+    public Short getDocumentSource() {
+        return null;
+    }
+
+    @Override
+    public String getDocumentStatusId() {
+        return null;
+    }
+
+    @Override
+    public Integer getPatientId() {
+        return null;
+    }
 }

@@ -3,6 +3,7 @@ package net.pladema.clinichistory.hospitalization.service.anamnesis.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.documents.service.Document;
 import net.pladema.clinichistory.hospitalization.service.domain.ClinicalSpecialtyBo;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentStatus;
@@ -10,6 +11,7 @@ import net.pladema.clinichistory.documents.service.ips.domain.*;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProblemBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProcedureBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ReasonBo;
+import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
 
 import java.util.Collections;
 import java.util.List;
@@ -20,6 +22,10 @@ import java.util.List;
 public class AnamnesisBo implements Document {
 
     private Long id;
+
+    private Integer patientId;
+
+    private Integer encounterId;
 
     private boolean confirmed;
 
@@ -62,5 +68,14 @@ public class AnamnesisBo implements Document {
     @Override
     public ClinicalSpecialtyBo getClinicalSpecialty() {
         return null;
+    }
+    
+    public short getDocumentType() {
+        return DocumentType.ANAMNESIS;
+    }
+
+    @Override
+    public Short getDocumentSource() {
+        return SourceType.HOSPITALIZATION;
     }
 }

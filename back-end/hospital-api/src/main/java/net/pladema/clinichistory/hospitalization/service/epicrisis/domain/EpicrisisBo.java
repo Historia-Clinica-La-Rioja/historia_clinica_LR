@@ -48,6 +48,11 @@ public class EpicrisisBo implements Document {
     }
 
     @Override
+    public Integer getPatientId() {
+        return null;
+    }
+
+    @Override
     public List<ProblemBo> getProblems() {
         return Collections.emptyList();
     }
@@ -64,6 +69,20 @@ public class EpicrisisBo implements Document {
 
     @Override
     public ClinicalSpecialtyBo getClinicalSpecialty() {
+        return null;
+    }
+
+    public short getDocumentType() {
+        return 0;
+    }
+
+    @Override
+    public Integer getEncounterId() {
+        return null;
+    }
+
+    @Override
+    public Short getDocumentSource() {
         return null;
     }
 }

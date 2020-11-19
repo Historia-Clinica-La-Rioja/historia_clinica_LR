@@ -43,6 +43,11 @@ public class EvolutionNoteBo implements Document {
         return confirmed ? DocumentStatus.FINAL : DocumentStatus.DRAFT;
     }
 
+    @Override
+    public Integer getPatientId() {
+        return null;
+    }
+
 
     @Override
     public List<ProblemBo> getProblems() {
@@ -70,7 +75,21 @@ public class EvolutionNoteBo implements Document {
     }
 
     @Override
-    public ClinicalSpecialtyBo getClinicalSpecialty() {
+    public ClinicalSpecialtyBo getClinicalSpecialty() {        
+        return null;
+    }
+    
+    public short getDocumentType() {
+        return 0;
+    }
+
+    @Override
+    public Integer getEncounterId() {
+        return null;
+    }
+
+    @Override
+    public Short getDocumentSource() {
         return null;
     }
 }
