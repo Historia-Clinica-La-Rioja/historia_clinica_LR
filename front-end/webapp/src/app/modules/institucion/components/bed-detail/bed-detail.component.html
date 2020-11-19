@@ -31,16 +31,6 @@
             </mat-list-item>
             <mat-list-item>
                 <div mat-line>
-                    <span class="mat-body-1" [translate]="'gestion-camas.detail.SPECIALTY'"></span>
-                </div>
-                <div mat-line>
-                    <span class="mat-body-2">
-                        {{bedInfo.bed.room.sector.specialty.name}}
-                    </span>
-                </div>
-            </mat-list-item>
-            <mat-list-item>
-                <div mat-line>
                     <span class="mat-body-1" [translate]="'gestion-camas.detail.CATEGORY'"></span>
                 </div>
                 <div mat-line>
@@ -71,7 +61,7 @@
                 </div>
                 <div mat-line>
                     <span *ngIf="bedInfo.patient.person.identificationType" class="mat-body-2">
-                        {{bedInfo.patient.person.identificationType}}: 
+                        {{bedInfo.patient.person.identificationType}}:
                     </span>
                     <span class="mat-body-2">
                         {{bedInfo.patient.person.identificationNumber}}

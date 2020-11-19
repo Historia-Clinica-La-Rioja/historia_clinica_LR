@@ -119,44 +119,36 @@ export class MapperService {
 			const sector = bedManagement.find(e => e.sectorId === summary.sector.id);
 
 			if (sector) {
-				const specialty = sector.specialty.find(e => e.specialtyId === summary.clinicalSpecialty.id);
-				if (specialty) {
-					const newBed = {
-						bedId: summary.bed.id,
-						bedNumber: summary.bed.bedNumber,
-						free: summary.bed.free
-					};
-					specialty.beds.push(newBed);
-				} else {
-					const newSpeciality = {
-						specialtyId: summary.clinicalSpecialty.id,
-						specialtyName: summary.clinicalSpecialty.name,
-						beds: [{
-							bedId: summary.bed.id,
-							bedNumber: summary.bed.bedNumber,
-							free: summary.bed.free
-						}]
-					};
-					sector.specialty.push(newSpeciality);
-				}
+				const newBed = {
+					bedId: summary.bed.id,
+					bedNumber: summary.bed.bedNumber,
+					free: summary.bed.free
+				};
+				sector.beds.push(newBed);
 			} else {
+				const clinicalSpecialties = [];
+				summary.sector.clinicalSpecialties.forEach(specialty => {
+					clinicalSpecialties.push({
+						specialtyId: specialty.id,
+						specialtyName: specialty.name,
+					});
+				});
 				const newSector = {
 					sectorId: summary.sector.id,
 					sectorDescription: summary.sector.description,
-					specialty: [{
-						specialtyId: summary.clinicalSpecialty.id,
-						specialtyName: summary.clinicalSpecialty.name,
-						beds: [{
-							bedId: summary.bed.id,
-							bedNumber: summary.bed.bedNumber,
-							free: summary.bed.free
-						}]
+					careType: summary.sector.careType,
+					organizationType: summary.sector.organizationType,
+					ageGroup: summary.sector.ageGroup,
+					specialties: clinicalSpecialties,
+					beds: [{
+						bedId: summary.bed.id,
+						bedNumber: summary.bed.bedNumber,
+						free: summary.bed.free
 					}]
 				};
 				bedManagement.push(newSector);
 			}
 		});
-
 		return bedManagement;
 	}
 

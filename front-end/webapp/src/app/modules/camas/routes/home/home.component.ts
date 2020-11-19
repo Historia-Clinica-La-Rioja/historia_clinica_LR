@@ -40,15 +40,18 @@ export class HomeComponent implements OnInit, OnDestroy {
 export class BedManagement {
 	sectorId: number;
 	sectorDescription: string;
-  	specialty:
+	careType: string;
+	organizationType: string;
+	ageGroup: string;
+  	specialties:
 	{
 		specialtyId: number;
 		specialtyName: string;
-		beds:
-			{
-				bedId: number;
-				bedNumber: string;
-				free: boolean;
-			}[];
   	}[];
+	beds:
+	{
+		bedId: number;
+		bedNumber: string;
+		free: boolean;
+	}[];
 }

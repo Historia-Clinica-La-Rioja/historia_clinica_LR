@@ -1,5 +1,5 @@
 import { tap } from 'rxjs/operators';
-import { BedSummaryDto } from '@api-rest/api-model';
+import { BedSummaryDto, SectorSummaryDto} from '@api-rest/api-model';
 import { BedService } from '@api-rest/services/bed.service';
 import { Observable, ReplaySubject } from 'rxjs';
 import { Injectable } from '@angular/core';
@@ -68,12 +68,12 @@ export class BedManagementFacadeService {
 		return (filter.sector ? bed.sector.id === filter.sector : true);
 	}
 
-	private filterBySpeciality(filter: BedManagementFilter, bed: BedSummaryDto): boolean {
-		return (filter.speciality ? bed.clinicalSpecialty.id === filter.speciality : true);
+	private filterBySpeciality(filter: BedManagementFilter, bedSummary: BedSummaryDto): boolean {
+		return (filter.speciality ? this.sectorHasSpecialty(bedSummary.sector, filter.speciality) : true);
 	}
 
-	private filterByCategory(filter: BedManagementFilter, bed: BedSummaryDto): boolean {
-		return (filter.category ? bed.bedCategory.id === filter.category : true);
+	private filterByCategory(filter: BedManagementFilter, bedSummary: BedSummaryDto): boolean {
+		return (filter.category ? bedSummary.bed.bedCategory.id === filter.category : true);
 	}
 
 	private filterByProbableDischargeDate(filter: BedManagementFilter, bed: BedSummaryDto): boolean {
@@ -95,11 +95,17 @@ export class BedManagementFacadeService {
 	private filterOptions(bedsSummary: BedSummaryDto[]): void {
 		bedsSummary.forEach(bedSummary => {
 
-			this.sectors = pushIfNotExists(this.sectors, {sectorId: bedSummary.sector.id, sectorDescription: bedSummary.sector.description}, this.compareSector);
+			this.sectors = pushIfNotExists(this.sectors,
+				{sectorId: bedSummary.sector.id, sectorDescription: bedSummary.sector.description}, this.compareSector);
 
-			this.specialities = pushIfNotExists(this.specialities, {specialityId: bedSummary.clinicalSpecialty.id, specialityDescription: bedSummary.clinicalSpecialty.name}, this.compareSpeciality)
+			bedSummary.sector.clinicalSpecialties.forEach(clinicalSpecialty => {
+				this.specialities = pushIfNotExists(this.specialities,
+					{specialityId: clinicalSpecialty.id, specialityDescription: clinicalSpecialty.name}, this.compareSpeciality);
+				}
+			);
 
-			this.categories = pushIfNotExists(this.categories, {categoryId: bedSummary.bedCategory.id, categoryDescription: bedSummary.bedCategory.description}, this.compareCategory);
+			this.categories = pushIfNotExists(this.categories,
+				{categoryId: bedSummary.bed.bedCategory.id, categoryDescription: bedSummary.bed.bedCategory.description}, this.compareCategory);
 		});
 	}
 
@@ -115,6 +121,9 @@ export class BedManagementFacadeService {
 		return category.categoryId === category2.categoryId;
 	}
 
+	private sectorHasSpecialty(sector: SectorSummaryDto, specialtyId: number): boolean {
+		return sector.clinicalSpecialties.some(clinicalSpecialty => clinicalSpecialty.id === specialtyId);
+	}
 }
 
 export class Sector {
