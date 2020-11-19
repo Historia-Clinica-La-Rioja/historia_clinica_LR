@@ -1,6 +1,8 @@
 <mat-toolbar [style.position]="position">
 	<mat-toolbar-row class="mat-elevation-z6">
 		<ng-content></ng-content>
-		<span class="title" [translate]="'app.TITLE'"></span>
+		<div class="">
+			<app-logo></app-logo>
+		</div>
 	</mat-toolbar-row>
 </mat-toolbar>

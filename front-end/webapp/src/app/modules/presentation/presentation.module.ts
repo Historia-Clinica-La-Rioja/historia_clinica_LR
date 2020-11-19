@@ -24,6 +24,7 @@ import { ViewDatePipe } from './pipes/view-date.pipe';
 import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 import { PersonIdentificationPipe } from './pipes/person-identification.pipe';
 import { EditableFieldComponent } from './components/editable-field/editable-field.component';
+import { LogoComponent } from './components/logo/logo.component';
 
 @NgModule({
 	declarations: [
@@ -49,6 +50,7 @@ import { EditableFieldComponent } from './components/editable-field/editable-fie
 		ViewHourMinutePipe,
 		PersonIdentificationPipe,
 		EditableFieldComponent,
+		LogoComponent,
 	],
 	imports: [
 		CommonModule,
