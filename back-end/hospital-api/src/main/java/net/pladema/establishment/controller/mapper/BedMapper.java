@@ -2,6 +2,8 @@ package net.pladema.establishment.controller.mapper;
 
 import java.util.List;
 
+import net.pladema.establishment.controller.dto.BedSummaryDto;
+import net.pladema.establishment.repository.domain.BedSummaryVo;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -9,10 +11,8 @@ import org.mapstruct.Named;
 
 import net.pladema.establishment.controller.dto.BedDto;
 import net.pladema.establishment.controller.dto.BedInfoDto;
-import net.pladema.establishment.controller.dto.BedSummaryDto;
 import net.pladema.establishment.controller.dto.PatientBedRelocationDto;
 import net.pladema.establishment.repository.domain.BedInfoVo;
-import net.pladema.establishment.repository.domain.BedSummaryVo;
 import net.pladema.establishment.repository.entity.Bed;
 import net.pladema.establishment.repository.entity.HistoricPatientBedRelocation;
 import net.pladema.sgx.dates.configuration.LocalDateMapper;
@@ -36,6 +36,8 @@ public interface BedMapper {
     BedInfoDto toBedInfoDto(BedInfoVo bedSummaryVo);
     
     @Named("toBedSummaryDto")
+    @Mapping(target = "bed.bedCategory", source = "bedCategory")
+    @Mapping(target = "bed", source = "bed")
     BedSummaryDto toBedSummaryDto(BedSummaryVo bedSummary);
     
     @Named("toListBedSummaryDto")

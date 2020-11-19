@@ -43,5 +43,8 @@ public class Room {
 	
 	@Column(name = "discharge_date", nullable = true)
 	private LocalDate dischargeDate;
+
+	@Column(name = "sector_id", nullable = false)
+	private Integer sectorId;
 	
 }

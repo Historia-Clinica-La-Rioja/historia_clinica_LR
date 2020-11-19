@@ -231,12 +231,10 @@ export interface BedInfoDto extends Serializable {
     probableDischargeDate: string;
 }
 
-export interface BedSummaryDto extends Serializable {
+export interface BedSummaryDto {
     bed: BedDto;
-    bedCategory: BedCategoryDto;
-    clinicalSpecialty: ClinicalSpecialtyDto;
     probableDischargeDate?: string;
-    sector: SectorDto;
+    sector: SectorSummaryDto;
 }
 
 export interface CityDto extends MasterdataDto<number> {
@@ -1004,6 +1002,20 @@ export interface SectorDto extends Serializable {
     description: string;
     id: number;
     specialty: ClinicalSpecialtyDto;
+}
+
+export interface SectorSummaryDto {
+    ageGroup: string;
+    ageGroupId: number;
+    careType: string;
+    careTypeId: number;
+    clinicalSpecialties: ClinicalSpecialtyDto[];
+    description: string;
+    id: number;
+    organizationType: string;
+    organizationTypeId: number;
+    sectorType: string;
+    sectorTypeId: number;
 }
 
 export interface Serializable {

@@ -1,7 +1,6 @@
 package net.pladema.establishment.repository;
 
 import net.pladema.establishment.repository.domain.BedInfoVo;
-import net.pladema.establishment.repository.domain.BedSummaryVo;
 import net.pladema.establishment.repository.entity.Bed;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -102,22 +101,5 @@ public interface BedRepository extends JpaRepository<Bed, Integer> {
 			+ " WHERE b.id =:bedId AND "
 			+ " ( b.free = true OR (b.free = false AND ie.statusId = "+ ACTIVE + ") )")
 	Stream<BedInfoVo> getBedInfo(@Param("bedId") Integer bedId);
-	
-	@Transactional(readOnly = true)
-	@Query(value = " SELECT NEW net.pladema.establishment.repository.domain.BedSummaryVo( "
-			+ "  b, bc, s, cs, MAX(ie.probableDischargeDate) )"
-			+ " FROM Bed b "
-			+ " JOIN BedCategory bc ON b.bedCategoryId = bc.id "
-			+ " JOIN Room r ON b.roomId = r.id"
-			+ " JOIN ClinicalSpecialtySector css ON r.clinicalSpecialtySectorId = css.id"
-			+ " JOIN Sector s ON css.sectorId = s.id "
-			+ " JOIN ClinicalSpecialty cs ON cs.id = css.clinicalSpecialtyId "
-			+ " LEFT JOIN InternmentEpisode ie ON b.id = ie.bedId "
-			+ " WHERE s.institutionId =:institutionId AND (b.free=true OR ( b.free=false AND ie.statusId = " +ACTIVE+ ") )"
-			+ " GROUP BY b,bc,s,cs "
-			+ " ORDER BY s.id, cs.id ")
-	List<BedSummaryVo> getAllBedsSummary(@Param("institutionId") Integer institutionId);
-
-
 	
 }

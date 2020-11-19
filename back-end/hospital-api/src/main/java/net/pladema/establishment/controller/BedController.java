@@ -3,6 +3,8 @@ package net.pladema.establishment.controller;
 import java.util.List;
 import java.util.Optional;
 
+import net.pladema.establishment.controller.dto.*;
+import net.pladema.establishment.repository.domain.BedSummaryVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -13,13 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
-import net.pladema.establishment.controller.dto.BedDto;
-import net.pladema.establishment.controller.dto.BedInfoDto;
-import net.pladema.establishment.controller.dto.BedSummaryDto;
 import net.pladema.establishment.controller.mapper.BedMapper;
 import net.pladema.establishment.repository.BedRepository;
 import net.pladema.establishment.repository.domain.BedInfoVo;
-import net.pladema.establishment.repository.domain.BedSummaryVo;
 import net.pladema.establishment.repository.entity.Bed;
 import net.pladema.establishment.service.BedService;
 
@@ -62,10 +60,12 @@ public class BedController {
 
 	@GetMapping("/summary-list")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO')")
-	public ResponseEntity<List<BedSummaryDto>> getBedSummaryList(@PathVariable(name = "institutionId") Integer institutionId){ 
+	public ResponseEntity<List<BedSummaryDto>> getNewBedSummaryDto(@PathVariable(name = "institutionId") Integer institutionId){
+		LOG.debug("Input parameter -> institutionId {}", institutionId);
 		List<BedSummaryVo> beds = bedService.getBedSummary(institutionId);
-		LOG.debug("Get Bed summary  => {}", beds);
-		return ResponseEntity.ok(bedMapper.toListBedSummaryDto(beds)); 
+		LOG.trace("Output -> {}", beds);
+		LOG.debug("Result size {}", beds.size());
+		return ResponseEntity.ok(bedMapper.toListBedSummaryDto(beds));
 	}
 
 	@GetMapping("/clinicalspecialty/{clinicalSpecialtyId}")

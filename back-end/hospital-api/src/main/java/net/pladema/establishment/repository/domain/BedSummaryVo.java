@@ -2,6 +2,7 @@ package net.pladema.establishment.repository.domain;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -24,18 +25,19 @@ public class BedSummaryVo implements Serializable {
 
 	private BedVo bed;
 	private BedCategoryVo bedCategory;
-	private SectorVo sector;
-	private ClinicalSpecialtyVo clinicalSpecialty;
+	private SectorSummaryVo sector;
 	private LocalDateTime probableDischargeDate;
 
-	public BedSummaryVo(Bed bed, BedCategory bedCategory, Sector sector, ClinicalSpecialty clinicalSpecialty,
+	public BedSummaryVo(Bed bed, BedCategory bedCategory, Sector sector,
 			LocalDateTime probableDischargeDate) {
 		this.bed = new BedVo(bed);
 		this.bedCategory = new BedCategoryVo(bedCategory);
-		this.sector = new SectorVo(sector);
-		clinicalSpecialty.fixSpecialtyType();
-		this.clinicalSpecialty = new ClinicalSpecialtyVo(clinicalSpecialty);
+		this.sector = new SectorSummaryVo(sector);
 		this.probableDischargeDate = Boolean.FALSE.equals(bed.getFree()) ? probableDischargeDate : null;
+	}
+
+	public void addSpecialty(ClinicalSpecialtyVo clinicalSpecialty) {
+		this.sector.addSpecialty(clinicalSpecialty);
 	}
 
 }

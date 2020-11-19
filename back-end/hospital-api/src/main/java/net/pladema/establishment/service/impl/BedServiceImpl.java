@@ -2,6 +2,7 @@ package net.pladema.establishment.service.impl;
 
 import net.pladema.clinichistory.hospitalization.controller.externalservice.InternmentEpisodeExternalService;
 import net.pladema.establishment.repository.BedRepository;
+import net.pladema.establishment.repository.BedSummaryRepository;
 import net.pladema.establishment.repository.HistoricPatientBedRelocationRepository;
 import net.pladema.establishment.repository.domain.BedInfoVo;
 import net.pladema.establishment.repository.domain.BedSummaryVo;
@@ -24,15 +25,18 @@ public class BedServiceImpl implements BedService {
 	private static final boolean AVAILABLE = true;
 	public static final String OUTPUT = "Output -> {}";
 
-	private BedRepository bedRepository;
+	private final BedRepository bedRepository;
 
-	private HistoricPatientBedRelocationRepository historicPatientBedRelocationRepository;
+	private final BedSummaryRepository bedSummaryRepository;
 
-	private InternmentEpisodeExternalService internmentEpisodeExtService;
+	private final HistoricPatientBedRelocationRepository historicPatientBedRelocationRepository;
+
+	private final InternmentEpisodeExternalService internmentEpisodeExtService;
 
 	public BedServiceImpl(BedRepository bedRepository, HistoricPatientBedRelocationRepository historicPatientBedRelocationRepository,
-			InternmentEpisodeExternalService internmentEpisodeExtService) {
+			InternmentEpisodeExternalService internmentEpisodeExtService, BedSummaryRepository bedSummaryRepository) {
 		this.bedRepository = bedRepository;
+		this.bedSummaryRepository = bedSummaryRepository;
 		this.historicPatientBedRelocationRepository = historicPatientBedRelocationRepository;
 		this.internmentEpisodeExtService = internmentEpisodeExtService;
 	}
@@ -105,8 +109,9 @@ public class BedServiceImpl implements BedService {
 	@Override
 	public List<BedSummaryVo> getBedSummary(Integer institutionId) {
 		LOG.debug("input parameters -> institutionId {}", institutionId);
-		List<BedSummaryVo> result = bedRepository.getAllBedsSummary(institutionId);
-		LOG.debug(OUTPUT, result);
+		List<BedSummaryVo> result = bedSummaryRepository.execute(institutionId);
+		LOG.trace(OUTPUT, result);
+		LOG.debug("Result size {}", result.size());
 		return result;
 	}
 
