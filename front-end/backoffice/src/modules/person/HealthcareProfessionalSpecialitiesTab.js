@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import {
     Loading,
+    TextField,
     useDataProvider,
     useTranslate,
     useGetOne,
@@ -19,10 +20,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import CreateRelatedButton from '../components/CreateRelatedButton';
 
 const useStyles = makeStyles({
-    link: {
-        textDecoration: 'none',
-        color: '#3f51b5'
-    },
     chip: {
         display: 'flex',
         flexWrap: 'wrap',
@@ -31,10 +28,8 @@ const useStyles = makeStyles({
 
 const HealthcareSpecialities = ({id, reference, source}) => {
     const { data, loading } = useGetOne(reference, id);
-    const ref = `#/${reference}/${id}/edit`;
-    const classes = useStyles();
 
-    return loading ? <Loading /> : <a className={classes.link} href={ref}>{data[source]}</a>;
+    return loading ? <Loading /> : <TextField record={data} source={source}/>;
 };
 
 const HealthcareProfessionalChip = ({healthcareProfessional}) => {
