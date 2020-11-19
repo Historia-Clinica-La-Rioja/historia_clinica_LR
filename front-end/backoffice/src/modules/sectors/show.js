@@ -6,7 +6,7 @@ import {
     TextField,
     ReferenceManyField,
     Datagrid,
-    DeleteButton
+    DeleteButton, DateField, EditButton
 } from 'react-admin';
 import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
@@ -38,6 +38,28 @@ const SectorShow = props => (
                     <DeleteButton />
                 </Datagrid>
             </ReferenceManyField>
+
+            <SectionTitle label="resources.clinicalspecialtysectors.fields.rooms"/>
+            <CreateRelatedButton
+                reference="rooms"
+                refFieldName="clinicalSpecialtySectorId"
+                label="resources.rooms.createRelated"
+            />
+            <ReferenceManyField
+                addLabel={false}
+                reference="rooms"
+                target="clinicalSpecialtySectorId"
+                sort={{ field: 'description', order: 'DESC' }}
+            >
+                <Datagrid rowClick="show">
+                    <TextField source="roomNumber" />
+                    <TextField source="description"/>
+                    <TextField source="type" />
+                    <DateField source="dischargeDate" />
+                    <EditButton />
+                </Datagrid>
+            </ReferenceManyField>
+
         </SimpleShowLayout>
     </Show>
 );
