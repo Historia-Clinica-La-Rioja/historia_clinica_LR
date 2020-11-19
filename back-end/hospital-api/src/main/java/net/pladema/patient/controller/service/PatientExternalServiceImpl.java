@@ -4,7 +4,9 @@ import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.controller.mapper.PatientMedicalCoverageMapper;
 import net.pladema.patient.repository.entity.Patient;
+import net.pladema.patient.service.PatientMedicalCoverageService;
 import net.pladema.patient.service.PatientService;
+import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.controller.service.PersonExternalService;
 import org.slf4j.Logger;
@@ -25,13 +27,16 @@ public class PatientExternalServiceImpl implements PatientExternalService {
 
     private final PatientService patientService;
 
+    private final PatientMedicalCoverageService patientMedicalCoverageService;
+
     private final PersonExternalService personExternalService;
 
     private final PatientMedicalCoverageMapper patientMedicalCoverageMapper;
 
-    public PatientExternalServiceImpl(PatientService patientService, PersonExternalService personExternalService,
+    public PatientExternalServiceImpl(PatientService patientService, PatientMedicalCoverageService patientMedicalCoverageService, PersonExternalService personExternalService,
                                       PatientMedicalCoverageMapper patientMedicalCoverageMapper) {
         this.patientService = patientService;
+        this.patientMedicalCoverageService = patientMedicalCoverageService;
         this.personExternalService = personExternalService;
         this.patientMedicalCoverageMapper = patientMedicalCoverageMapper;
     }
@@ -75,7 +80,8 @@ public class PatientExternalServiceImpl implements PatientExternalService {
     @Override
     public PatientMedicalCoverageDto getCoverage(Integer patientMedicalCoverageId) {
         LOG.debug("Input parameter -> patientMedicalCoverageId {}", patientMedicalCoverageId);
-        PatientMedicalCoverageDto result = patientMedicalCoverageMapper.toPatientMedicalCoverageDto(patientService.getCoverage(patientMedicalCoverageId));
+        PatientMedicalCoverageBo queryResult = patientMedicalCoverageService.getCoverage(patientMedicalCoverageId).orElse(new PatientMedicalCoverageBo());
+        PatientMedicalCoverageDto result = patientMedicalCoverageMapper.toPatientMedicalCoverageDto(queryResult);
         LOG.debug(OUTPUT, result);
         return result;
     }

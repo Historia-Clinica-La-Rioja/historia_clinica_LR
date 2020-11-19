@@ -23,14 +23,4 @@ public interface PatientService {
     Patient addPatient(Patient patientToSave);
     
     void federatePatient(Patient patient, Person person);
-
-    List<PatientMedicalCoverageBo> getCoverages(Integer patientId);
-
-    PatientMedicalCoverageBo getCoverage(Integer patientMedicalCoverageId);
-
-    List<PatientMedicalCoverageBo> getHealthInsurances(Integer patientId);
-
-    List<PatientMedicalCoverageBo> getPrivateHealthInsurances(Integer patientId);
-
-    List<Integer> saveCoverages(List<PatientMedicalCoverageBo> coverages, Integer patientId);
 }

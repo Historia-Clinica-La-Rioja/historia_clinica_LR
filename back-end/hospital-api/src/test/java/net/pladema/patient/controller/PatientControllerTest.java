@@ -51,9 +51,6 @@ public class PatientControllerTest extends UnitController {
 	private PersonMapper personMapper;
 
 	@MockBean
-	private PatientMedicalCoverageMapper patientMedicalCoverageMapper;
-
-	@MockBean
 	private AdditionalDoctorService additionalDoctorService;
 
 	@Before

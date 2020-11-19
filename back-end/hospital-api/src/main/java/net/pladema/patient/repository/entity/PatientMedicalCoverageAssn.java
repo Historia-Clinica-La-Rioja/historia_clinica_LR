@@ -35,7 +35,7 @@ public class PatientMedicalCoverageAssn implements Serializable {
     private Integer medicalCoverageId;
 
     @Column(name = "active", nullable = false)
-    private Boolean active = true;
+    private Boolean active;
 
     @Column(name = "vigency_date")
     private LocalDate vigencyDate;
@@ -52,6 +52,7 @@ public class PatientMedicalCoverageAssn implements Serializable {
         this.patientId = patientId;
         this.medicalCoverageId = coverageBo.getMedicalCoverage().getId();
         this.vigencyDate = coverageBo.getVigencyDate();
+        this.active = coverageBo.getActive();
         this.affiliateNumber = coverageBo.getAffiliateNumber();
         if (coverageBo.getPrivateHealthInsuranceDetails() != null)
             this.privateHealthInsuranceDetailsId = coverageBo.getPrivateHealthInsuranceDetails().getId();

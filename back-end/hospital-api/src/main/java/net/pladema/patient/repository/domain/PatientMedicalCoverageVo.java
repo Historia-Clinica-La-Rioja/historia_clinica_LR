@@ -18,15 +18,18 @@ public class PatientMedicalCoverageVo {
 
     private LocalDate vigencyDate;
 
+    private Boolean active;
+
     private MedicalCoverageVo medicalCoverage;
 
     private PrivateHealthInsuranceDetailsVo privateHealthInsuranceDetails;
 
-    public PatientMedicalCoverageVo(Integer id, String affiliateNumber, LocalDate vigencyDate, Integer medicalCoverageId, String name,
+    public PatientMedicalCoverageVo(Integer id, String affiliateNumber, LocalDate vigencyDate, Boolean active, Integer medicalCoverageId, String name,
                                     Integer rnos, String acronym, String plan, Integer privateHealthInsuranceDetailsId, LocalDate startDate, LocalDate endDate) {
         this.id = id;
         this.affiliateNumber = affiliateNumber;
         this.vigencyDate = vigencyDate;
+        this.active = active;
         if (rnos != null)
             this.medicalCoverage = new HealthInsuranceVo(medicalCoverageId, name, rnos, acronym);
         else{
@@ -35,17 +38,19 @@ public class PatientMedicalCoverageVo {
         }
     }
 
-       public PatientMedicalCoverageVo(Integer id, String affiliateNumber, LocalDate vigencyDate, Integer medicalCoverageId, String name, Integer rnos, String acronym){
+       public PatientMedicalCoverageVo(Integer id, String affiliateNumber, LocalDate vigencyDate, Boolean active, Integer medicalCoverageId, String name, Integer rnos, String acronym){
         this.id = id;
         this.affiliateNumber = affiliateNumber;
         this.vigencyDate = vigencyDate;
+        this.active = active;
         this.medicalCoverage = new HealthInsuranceVo(medicalCoverageId, name, rnos, acronym);
     }
 
-    public PatientMedicalCoverageVo(Integer id, String affiliateNumber, LocalDate vigencyDate, Integer medicalCoverageId, String name, Integer privateHealthInsuranceDetailsId, LocalDate startDate, LocalDate endDate, String plan){
+    public PatientMedicalCoverageVo(Integer id, String affiliateNumber, LocalDate vigencyDate, Boolean active, Integer medicalCoverageId, String name, Integer privateHealthInsuranceDetailsId, LocalDate startDate, LocalDate endDate, String plan){
         this.id = id;
         this.affiliateNumber = affiliateNumber;
         this.vigencyDate = vigencyDate;
+        this.active = active;
         this.medicalCoverage = new PrivateHealthInsuranceVo(medicalCoverageId, name, plan);
         this.privateHealthInsuranceDetails = new PrivateHealthInsuranceDetailsVo(privateHealthInsuranceDetailsId, startDate, endDate);
     }

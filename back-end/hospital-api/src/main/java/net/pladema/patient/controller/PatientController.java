@@ -7,19 +7,17 @@ import net.pladema.address.controller.service.AddressExternalService;
 import net.pladema.patient.controller.constraints.PatientUpdateValid;
 import net.pladema.patient.controller.dto.*;
 import net.pladema.patient.controller.mapper.PatientMapper;
-import net.pladema.patient.controller.mapper.PatientMedicalCoverageMapper;
 import net.pladema.patient.repository.PatientTypeRepository;
 import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.repository.entity.PatientType;
 import net.pladema.patient.service.AdditionalDoctorService;
 import net.pladema.patient.service.PatientService;
 import net.pladema.patient.service.domain.DoctorsBo;
-import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 import net.pladema.patient.service.domain.PatientSearch;
 import net.pladema.person.controller.dto.BMPersonDto;
 import net.pladema.person.controller.dto.BasicDataPersonDto;
-import net.pladema.person.controller.dto.PersonPhotoDto;
 import net.pladema.person.controller.dto.BasicPersonalDataDto;
+import net.pladema.person.controller.dto.PersonPhotoDto;
 import net.pladema.person.controller.mapper.PersonMapper;
 import net.pladema.person.controller.service.PersonExternalService;
 import net.pladema.person.repository.entity.PersonExtended;
@@ -41,7 +39,7 @@ import java.util.function.Consumer;
 
 @RestController
 @RequestMapping("/patient")
-@Api(value = "Patient", tags = { "Patient" })
+@Api(value = "Patient", tags = {"Patient"})
 @Validated
 public class PatientController {
 
@@ -63,15 +61,13 @@ public class PatientController {
 
 	private final PatientMapper patientMapper;
 
-	private final PatientMedicalCoverageMapper patientMedicalCoverageMapper;
-
 	private final PersonMapper personMapper;
 
 	private final ObjectMapper jackson;
 
 	public PatientController(PatientService patientService, PersonExternalService personExternalService,
-                             AddressExternalService addressExternalService, PatientMapper patientMapper, PersonMapper personMapper,
-                             ObjectMapper jackson, PatientTypeRepository patientTypeRepository, AdditionalDoctorService additionalDoctorService, PatientMedicalCoverageMapper patientMedicalCoverageMapper) {
+							 AddressExternalService addressExternalService, PatientMapper patientMapper, PersonMapper personMapper,
+							 ObjectMapper jackson, PatientTypeRepository patientTypeRepository, AdditionalDoctorService additionalDoctorService) {
 		this.patientService = patientService;
 		this.personExternalService = personExternalService;
 		this.addressExternalService = addressExternalService;
@@ -80,8 +76,7 @@ public class PatientController {
 		this.patientTypeRepository = patientTypeRepository;
 		this.personMapper = personMapper;
 		this.additionalDoctorService = additionalDoctorService;
-        this.patientMedicalCoverageMapper = patientMedicalCoverageMapper;
-    }
+	}
 
 	@GetMapping(value = "/search")
 	public ResponseEntity<List<PatientSearchDto>> searchPatient(@RequestParam String searchFilterStr) {
@@ -118,22 +113,22 @@ public class PatientController {
 		BMPersonDto createdPerson = personExternalService.addPerson(patientDto);
 		AddressDto addressToAdd = persistPatientAddress(patientDto, Optional.empty());
 		personExternalService.addPersonExtended(patientDto, createdPerson.getId(), addressToAdd.getId());
-		Patient createdPatient = persistPatientData(patientDto, createdPerson, patient->{});
+		Patient createdPatient = persistPatientData(patientDto, createdPerson, patient -> {
+		});
 		if (createdPatient.isValidated()) {
 			patientService.federatePatient(createdPatient, personMapper.fromPersonDto(createdPerson));
 		}
 		return ResponseEntity.created(new URI("")).body(createdPatient.getId());
 	}
 
-	
 
 	@PutMapping(value = "/{patientId}")
 	@Transactional
 	@PatientUpdateValid
 	public ResponseEntity<Integer> updatePatient(@PathVariable(name = "patientId") Integer patientId,
-			@RequestBody APatientDto patientDto) throws URISyntaxException {
+												 @RequestBody APatientDto patientDto) throws URISyntaxException {
 		LOG.debug("Input data -> APatientDto {} ", patientDto);
-		Patient patient = patientService.getPatient(patientId).orElseThrow(()->new NotFoundException("patient-not-found", "Patient not found"));
+		Patient patient = patientService.getPatient(patientId).orElseThrow(() -> new NotFoundException("patient-not-found", "Patient not found"));
 		BMPersonDto createdPerson = personExternalService.updatePerson(patientDto, patient.getPersonId());
 		PersonExtended personExtendedUpdated = personExternalService.updatePersonExtended(patientDto,
 				createdPerson.getId());
@@ -141,7 +136,7 @@ public class PatientController {
 		Patient createdPatient = persistPatientData(patientDto, createdPerson, (Patient pat) -> pat.setId(patientId));
 		return ResponseEntity.created(new URI("")).body(createdPatient.getId());
 	}
-	
+
 	@GetMapping(value = "/minimalsearch")
 	public ResponseEntity<List<Integer>> getPatientMinimal(
 			@RequestParam(value = "identificationTypeId", required = true) Short identificationTypeId,
@@ -162,7 +157,7 @@ public class PatientController {
 		Patient patient = patientService.getPatient(patientId)
 				.orElseThrow(() -> new EntityNotFoundException(PATIENT_INVALID));
 		BasicDataPersonDto personData = personExternalService.getBasicDataPerson(patient.getPersonId());
-		BasicPatientDto result = new BasicPatientDto(patient.getId(), personData,patient.getTypeId());
+		BasicPatientDto result = new BasicPatientDto(patient.getId(), personData, patient.getTypeId());
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}
@@ -180,7 +175,7 @@ public class PatientController {
 	@PostMapping("/{patientId}/photo")
 	@Transactional
 	public ResponseEntity<Boolean> addPatientPhoto(@PathVariable(name = "patientId") Integer patientId,
-														   @RequestBody PersonPhotoDto personPhotoDto) {
+												   @RequestBody PersonPhotoDto personPhotoDto) {
 		LOG.debug("Input parameters -> patientId {}, PersonPhotoDto {}", patientId, personPhotoDto);
 		Patient patient = patientService.getPatient(patientId)
 				.orElseThrow(() -> new EntityNotFoundException(PATIENT_INVALID));
@@ -206,7 +201,7 @@ public class PatientController {
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}
-	
+
 	private AddressDto persistPatientAddress(APatientDto patientDto, Optional<Integer> idAdress) {
 		AddressDto addressToAdd = patientMapper.updatePatientAddress(patientDto);
 		LOG.debug("Going to add address -> {}", addressToAdd);
@@ -219,8 +214,8 @@ public class PatientController {
 		patientToAdd.setPersonId(createdPerson.getId());
 		addIds.accept(patientToAdd);
 		Patient createdPatient = patientService.addPatient(patientToAdd);
-		DoctorsBo doctorsBo = new DoctorsBo(patientDto.getGeneralPractitioner(),patientDto.getPamiDoctor());
-		additionalDoctorService.addAdditionalDoctors(doctorsBo,createdPatient.getId());
+		DoctorsBo doctorsBo = new DoctorsBo(patientDto.getGeneralPractitioner(), patientDto.getPamiDoctor());
+		additionalDoctorService.addAdditionalDoctors(doctorsBo, createdPatient.getId());
 		LOG.debug(OUTPUT, createdPatient.getId());
 		return createdPatient;
 	}
@@ -231,59 +226,8 @@ public class PatientController {
 		Patient patient = patientService.getPatient(patientId)
 				.orElseThrow(() -> new EntityNotFoundException(PATIENT_INVALID));
 		BasicPersonalDataDto personData = personExternalService.getBasicPersonalDataDto(patient.getPersonId());
-		ReducedPatientDto result = new ReducedPatientDto(personData,patient.getTypeId());
+		ReducedPatientDto result = new ReducedPatientDto(personData, patient.getTypeId());
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
-	}
-
-	@GetMapping(value = "/{patientId}/coverages")
-	public ResponseEntity<List<PatientMedicalCoverageDto>> getPatientMedicalCoverages(
-			@PathVariable(name = "patientId") Integer patientId) {
-		LOG.debug("Input data -> patientId {}", patientId);
-		List<PatientMedicalCoverageBo> serviceResult = patientService.getCoverages(patientId);
-		List<PatientMedicalCoverageDto> result = patientMedicalCoverageMapper.toListPatientMedicalCoverageDto(serviceResult);
-		LOG.debug("result -> {}", result);
-		return ResponseEntity.ok().body(result);
-	}
-
-	@GetMapping(value = "/{patientMedicalCoverageId}/coverage")
-	public ResponseEntity<PatientMedicalCoverageDto> getPatientMedicalCoverage(
-			@PathVariable(value = "patientMedicalCoverageId", required = true) Integer patientMedicalCoverageId) {
-		LOG.debug("Input data -> patientMedicalCoverageId {}", patientMedicalCoverageId);
-		PatientMedicalCoverageBo serviceResult = patientService.getCoverage(patientMedicalCoverageId);
-		PatientMedicalCoverageDto result = patientMedicalCoverageMapper.toPatientMedicalCoverageDto(serviceResult);
-		LOG.debug("result -> {}", result);
-		return ResponseEntity.ok().body(result);
-	}
-
-	@GetMapping(value = "/{patientId}/healthInsurances")
-	public ResponseEntity<List<PatientMedicalCoverageDto>> getPatientHealthInsurances(
-			@PathVariable(name = "patientId", required = true) Integer patientId) {
-		LOG.debug("Input data -> patientId {}", patientId);
-		List<PatientMedicalCoverageBo> serviceResult = patientService.getHealthInsurances(patientId);
-		List<PatientMedicalCoverageDto> result = patientMedicalCoverageMapper.toListPatientMedicalCoverageDto(serviceResult);
-				LOG.debug("result -> {}", result);
-		return ResponseEntity.ok().body(result);
-	}
-
-    @GetMapping(value = "/{patientId}/privateHealthInsurances")
-	public ResponseEntity<List<PatientMedicalCoverageDto>> getPatientPrivateMedicalCoverages(
-			@PathVariable(name = "patientId") Integer patientId) {
-        LOG.debug("Input data -> patientId {}", patientId);
-		List<PatientMedicalCoverageBo> serviceResult = patientService.getPrivateHealthInsurances(patientId);
-		List<PatientMedicalCoverageDto> result = patientMedicalCoverageMapper.toListPatientMedicalCoverageDto(serviceResult);
-		LOG.debug("Ids results -> {}", result);
-		return ResponseEntity.ok().body(result);
-    }
-
-	@PostMapping("/{patientId}/coverages")
-	@Transactional
-	public ResponseEntity<List<Integer>> addPatientMedicalCoverages(
-			@PathVariable(name = "patientId") Integer patientId,
-			@RequestBody List<PatientMedicalCoverageDto> coverages) throws URISyntaxException {
-		LOG.debug("Input data -> coverages {} ", coverages);
-		List<Integer> result = patientService.saveCoverages(patientMedicalCoverageMapper.toListPatientMedicalCoverageBo(coverages), patientId);
-		LOG.debug("Ids results -> {}", result);
-		return ResponseEntity.created(new URI("")).body(result);
 	}
 }

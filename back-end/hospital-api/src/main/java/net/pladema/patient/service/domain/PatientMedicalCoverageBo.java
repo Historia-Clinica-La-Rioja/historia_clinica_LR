@@ -18,6 +18,8 @@ public class PatientMedicalCoverageBo {
 
     private LocalDate vigencyDate;
 
+    private Boolean active;
+
     private String affiliateNumber;
 
     private MedicalCoverageBo medicalCoverage;
@@ -27,6 +29,7 @@ public class PatientMedicalCoverageBo {
     public PatientMedicalCoverageBo(PatientMedicalCoverageVo patientMedicalCoverageVo) {
         this.id = patientMedicalCoverageVo.getId();
         this.vigencyDate = patientMedicalCoverageVo.getVigencyDate();
+        this.active = patientMedicalCoverageVo.getActive();
         this.affiliateNumber = patientMedicalCoverageVo.getAffiliateNumber();
         this.medicalCoverage = patientMedicalCoverageVo.getMedicalCoverage().newInstance();
         this.privateHealthInsuranceDetails = new PrivateHealthInsuranceDetailsBo(patientMedicalCoverageVo.getPrivateHealthInsuranceDetails());

@@ -6,11 +6,9 @@ import net.pladema.patient.controller.dto.PatientSearchFilter;
 import net.pladema.patient.repository.PatientMedicalCoverageRepository;
 import net.pladema.patient.repository.PatientRepository;
 import net.pladema.patient.repository.PrivateHealthInsuranceDetailsRepository;
-import net.pladema.patient.repository.domain.PatientMedicalCoverageVo;
-import net.pladema.patient.repository.entity.*;
+import net.pladema.patient.repository.entity.Patient;
+import net.pladema.patient.repository.entity.PatientType;
 import net.pladema.patient.service.PatientService;
-import net.pladema.patient.service.domain.MedicalCoverageBo;
-import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 import net.pladema.patient.service.domain.PatientSearch;
 import net.pladema.person.repository.MedicalCoverageRepository;
 import net.pladema.person.repository.entity.Person;
@@ -20,7 +18,10 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -38,12 +39,6 @@ public class PatientServiceImpl implements PatientService {
 
 	private final PatientRepository patientRepository;
 
-	private final PatientMedicalCoverageRepository patientMedicalCoverageRepository;
-
-	private final MedicalCoverageRepository medicalCoverageRepository;
-
-	private final PrivateHealthInsuranceDetailsRepository privateHealthInsuranceDetailsRepository;
-
 	private final FederarService federarService;
 
 	public PatientServiceImpl(PatientRepository patientRepository,
@@ -51,9 +46,6 @@ public class PatientServiceImpl implements PatientService {
 							  MedicalCoverageRepository medicalCoverageRepository,
 							  PrivateHealthInsuranceDetailsRepository privateHealthInsuranceDetailsRepository, FederarService federarService) {
 		this.patientRepository = patientRepository;
-		this.patientMedicalCoverageRepository = patientMedicalCoverageRepository;
-		this.medicalCoverageRepository = medicalCoverageRepository;
-		this.privateHealthInsuranceDetailsRepository = privateHealthInsuranceDetailsRepository;
 		this.federarService = federarService;
 	}
 
@@ -109,62 +101,6 @@ public class PatientServiceImpl implements PatientService {
 		LOG.debug("Going to federate Patient => {} /n with Person => {}", patient, person);
 		Optional<LocalIdSearchResponse> federarResponse = federarService.federatePatient(person, patient);
 		federarResponse.ifPresent(updatePatientPermanent(patient));
-	}
-
-	@Override
-	public List<PatientMedicalCoverageBo> getCoverages(Integer patientId) {
-		LOG.debug(INPUT_DATA, patientId);
-		List<PatientMedicalCoverageVo> queryResult = patientRepository.getPatientCoverages(patientId);
-		List<PatientMedicalCoverageBo> result = queryResult.stream().map(PatientMedicalCoverageBo::new).collect(Collectors.toList());
-		LOG.debug(OUTPUT, result);
-		return result;
-	}
-
-	@Override
-	public PatientMedicalCoverageBo getCoverage(Integer patientMedicalCoverageId) {
-		LOG.debug(INPUT_DATA, patientMedicalCoverageId);
-		PatientMedicalCoverageVo queryResult = patientRepository.getPatientCoverage(patientMedicalCoverageId);
-		PatientMedicalCoverageBo result = new PatientMedicalCoverageBo(queryResult);
-		LOG.debug(OUTPUT, result);
-		return result;
-	}
-
-	@Override
-	public List<PatientMedicalCoverageBo> getHealthInsurances(Integer patientId) {
-		LOG.debug(INPUT_DATA, patientId);
-		List<PatientMedicalCoverageVo> queryResult = patientRepository.getPatientHealthInsurances(patientId);
-		List<PatientMedicalCoverageBo> result = queryResult.stream().map(PatientMedicalCoverageBo::new).collect(Collectors.toList());
-		LOG.debug(OUTPUT, result);
-		return result;
-	}
-
-	@Override
-	public List<PatientMedicalCoverageBo> getPrivateHealthInsurances(Integer patientId) {
-		LOG.debug(INPUT_DATA, patientId);
-		List<PatientMedicalCoverageVo> queryResult = patientRepository.getPatientPrivateHealthInsurances(patientId);
-		List<PatientMedicalCoverageBo> result = queryResult.stream().map(PatientMedicalCoverageBo::new).collect(Collectors.toList());
-		LOG.debug(OUTPUT, result);
-		return result;
-	}
-
-	@Override
-	@Transactional
-	public List<Integer> saveCoverages(List<PatientMedicalCoverageBo> coverages,
-									   Integer patientId){
-		List<Integer> result = new ArrayList<>();
-		coverages.forEach((coverage)->{
-			MedicalCoverageBo medicalCoverage = coverage.getMedicalCoverage();
-			MedicalCoverage MedicalCoverageSaved = medicalCoverageRepository.save(medicalCoverage.mapToEntity());
-			coverage.getMedicalCoverage().setId(MedicalCoverageSaved.getId());
-			if (coverage.getPrivateHealthInsuranceDetails() != null){
-				PrivateHealthInsuranceDetails phidSaved = privateHealthInsuranceDetailsRepository.save(new PrivateHealthInsuranceDetails(coverage.getPrivateHealthInsuranceDetails()));
-				coverage.getPrivateHealthInsuranceDetails().setId(phidSaved.getId());
-			}
-			PatientMedicalCoverageAssn pmcToSave = new PatientMedicalCoverageAssn(coverage, patientId);
-			PatientMedicalCoverageAssn pmcSaved= patientMedicalCoverageRepository.save(pmcToSave);
-			result.add(pmcSaved.getId());
-		});
-		return result;
 	}
 
 	private Consumer<LocalIdSearchResponse> updatePatientPermanent(Patient patient) {

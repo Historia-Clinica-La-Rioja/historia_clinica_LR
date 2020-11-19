@@ -25,6 +25,8 @@ public class PatientMedicalCoverageDto {
     @JsonFormat(pattern = JacksonDateFormatConfig.DATE_FORMAT)
     String vigencyDate;
 
+    Boolean active;
+
     CoverageDto medicalCoverage;
 
     @Nullable
