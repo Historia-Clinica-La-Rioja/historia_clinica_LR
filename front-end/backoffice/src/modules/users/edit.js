@@ -18,6 +18,8 @@ import PersonReferenceField from '../person/PersonReferenceField';
 import Aside from './Aside'
 import authProvider from '../../providers/authProvider';
 
+const redirect = (basePath, id, data) => (data.personId !== -1) ? `/person/${data.personId}/show/1` : '/users';
+
 const validateInstitutionRequired = (values, entity) => {
     const errors = new Array(values.length);
     values.forEach(function (roleAndInstitution, index) {
@@ -42,7 +44,7 @@ const UserEdit = props => (
     <Edit {...props} 
         aside={<Aside />} 
     >
-        <SimpleForm toolbar={<CustomToolbar />}>
+        <SimpleForm redirect={redirect} toolbar={<CustomToolbar />}>
             <PersonReferenceField source="personId" />
             <TextInput source="username" validate={[required()]}/>
             <BooleanInput source="enable" validate={[required()]}/>
