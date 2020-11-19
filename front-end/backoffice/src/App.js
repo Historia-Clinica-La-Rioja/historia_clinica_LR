@@ -74,7 +74,6 @@ const App = () => {
         <Resource name="healthcareprofessionals" {...healthcareprofessionals}/>,
         <Resource name="healthcareprofessionalspecialties" {...healthcareprofessionalspecialties}/>,
         <Resource name="educationtypes"/>,
-        <Resource name="users" {...users}/>,
         <Resource name="password-reset" {...passwordReset}/>,
         <Resource name="roles" />,
         <Resource name="internmentepisodes" />,
@@ -85,6 +84,7 @@ const App = () => {
         <Resource name="doctorsoffices" {...doctorsoffices}/>,
         <Resource name="rooms" {...rooms}/>,
         <Resource name="beds" {...beds}/>,
+        <Resource name="users" {...users}/>,
     ];
 
     return <Admin title="Historia de salud integrada"

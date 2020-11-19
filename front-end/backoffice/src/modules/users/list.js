@@ -7,6 +7,7 @@ import {
     BooleanField, 
     Filter,
     TextInput,
+    TopToolbar
 } from 'react-admin';
 
 const PersonFilter = (props) => (
@@ -15,8 +16,14 @@ const PersonFilter = (props) => (
     </Filter>
 );
 
+const CustomTopToolbar = () => {
+    return (
+        <TopToolbar></TopToolbar>
+    );
+};
+
 const UserList = props => (
-    <List {...props} filter={{personId: -1}} filters={<PersonFilter />} bulkActionButtons={false}>
+    <List {...props} filter={{personId: -1}} actions={<CustomTopToolbar />} filters={<PersonFilter />} bulkActionButtons={false}>
         <Datagrid rowClick="edit">
             <TextField source="username" />
             <BooleanField source="enable" />

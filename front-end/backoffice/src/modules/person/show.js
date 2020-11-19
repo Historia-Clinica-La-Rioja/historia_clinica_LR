@@ -39,7 +39,9 @@ const PersonShow = props =>{
         <TabbedShowLayout>
             <Tab label="resources.person.tabs.details">
                 <TextField source="firstName" />
+                <TextField source="middleNames" />
                 <TextField source="lastName" />
+                <TextField source="otherLastNames" />
                 <ReferenceField source="identificationTypeId" reference="identificationTypes" link={false}>
                     <TextField source="description" />
                 </ReferenceField>
