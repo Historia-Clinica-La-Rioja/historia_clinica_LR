@@ -148,6 +148,8 @@ export interface AttentionTypeReportItemDto {
     identificationNumber: string;
     identificationType: string;
     lastName: string;
+    medicalCoverageAffiliateNumber: string;
+    medicalCoverageName: string;
     middleNames: string;
     otherLastNames: string;
     patientId: number;
