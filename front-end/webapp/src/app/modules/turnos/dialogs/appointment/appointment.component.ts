@@ -18,6 +18,7 @@ import {
 	PatientMedicalCoverage, PrivateHealthInsurance
 } from "@core/dialogs/medical-coverage/medical-coverage.component";
 import { map } from "rxjs/operators";
+import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 
 const TEMPORARY_PATIENT = 3;
 
@@ -50,8 +51,8 @@ export class AppointmentComponent implements OnInit {
 		private readonly contextService: ContextService,
 		private readonly formBuilder: FormBuilder,
 		private readonly appointmentFacade: AppointmentsFacadeService,
-		private readonly patientService: PatientService,
 		private readonly mapperService: MapperService,
+		private readonly patientMedicalCoverageService: PatientMedicalCoverageService
 	) {
 	}
 
@@ -68,7 +69,8 @@ export class AppointmentComponent implements OnInit {
 					this.formMotivo.controls.motivo.setValue(this.appointment.stateChangeReason);
 				}
 				if (this.appointment.patientMedicalCoverageId){
-					this.patientService.getPatientMedicalCoverage(this.appointmentData.patient.id, this.appointment.patientMedicalCoverageId)
+					this.patientMedicalCoverageService.
+						getPatientMedicalCoverage(this.appointment.patientMedicalCoverageId)
 						.pipe(
 							map(
 								s => this.mapperService.toPatientMedicalCoverage(s)

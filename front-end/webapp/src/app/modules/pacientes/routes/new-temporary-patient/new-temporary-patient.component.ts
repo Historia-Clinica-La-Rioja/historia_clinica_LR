@@ -14,6 +14,7 @@ import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.ut
 import { MatDialog } from '@angular/material/dialog';
 import { MedicalCoverageComponent, PatientMedicalCoverage } from 'src/app/modules/core/dialogs/medical-coverage/medical-coverage.component';
 import { MapperService } from '@core/services/mapper.service';
+import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 
 const TEMPORARY_PATIENT = 3;
 const ROUTE_HOME = 'pacientes';
@@ -53,7 +54,8 @@ export class NewTemporaryPatientComponent implements OnInit {
 		private snackBarService: SnackBarService,
 		private contextService: ContextService,
 		private dialog: MatDialog,
-		private mapperService: MapperService) {
+		private mapperService: MapperService,
+		private readonly patientMedicalCoverageService: PatientMedicalCoverageService) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 
@@ -136,7 +138,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 					if (this.patientMedicalCoveragesToAdd) {
 						const patientMedicalCoveragesDto: PatientMedicalCoverageDto[] =
 						this.patientMedicalCoveragesToAdd.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
-						this.patientService.addPatientMedicalCoverages
+						this.patientMedicalCoverageService.addPatientMedicalCoverages
 							(patientId, patientMedicalCoveragesDto).subscribe();
 					}
 					this.router.navigate([this.routePrefix + ROUTE_PROFILE + patientId]);

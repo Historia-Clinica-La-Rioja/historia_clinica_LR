@@ -32,6 +32,7 @@ import { PatientTypeData } from '@presentation/components/patient-type-logo/pati
 import { MapperService } from '@presentation/services/mapper.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { BedAssignmentComponent } from './../../../../dialogs/bed-assignment/bed-assignment.component';
+import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 
 const ROUTE_INTERNMENT = 'internaciones/internacion/';
 
@@ -69,7 +70,8 @@ export class NewInternmentComponent implements OnInit {
 		public translator: TranslateService,
 		private readonly snackBarService: SnackBarService,
 		private readonly contextService: ContextService,
-		private readonly featureFlagService: FeatureFlagService) {
+		private readonly featureFlagService: FeatureFlagService,
+		private readonly patientMedicalCoverageService: PatientMedicalCoverageService) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 	}
 
@@ -90,7 +92,7 @@ export class NewInternmentComponent implements OnInit {
 			this.patientService.getPatientPhoto(this.patientId)
 				.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto;});
 
-			this.patientService.getPatientMedicalCoverages(this.patientId)
+			this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this.patientId)
 				.subscribe(patientMedicalCoverageDto => this.patientMedicalCoverage = patientMedicalCoverageDto);
 		});
 

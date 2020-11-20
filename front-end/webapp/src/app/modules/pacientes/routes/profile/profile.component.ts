@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PersonalInformationDto, CompletePatientDto, PatientMedicalCoverageDto,PersonPhotoDto } from "@api-rest/api-model";
+import { PersonalInformationDto, CompletePatientDto, PatientMedicalCoverageDto, PersonPhotoDto } from "@api-rest/api-model";
 import { PatientService } from "@api-rest/services/patient.service";
 import { MapperService } from "../../../presentation/services/mapper.service";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -10,6 +10,7 @@ import { PatientTypeData } from '@presentation/components/patient-type-logo/pati
 import { ContextService } from "@core/services/context.service";
 import { InternmentPatientService } from '@api-rest/services/internment-patient.service';
 import { DateFormat } from '@core/utils/moment.utils';
+import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 
 const ROUTE_NEW_INTERNMENT = 'internaciones/internacion/new';
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
@@ -40,7 +41,8 @@ export class ProfileComponent implements OnInit {
 		private router: Router,
 		private personService: PersonService,
 		private contextService: ContextService,
-		private internmentPatientService: InternmentPatientService) {
+		private internmentPatientService: InternmentPatientService,
+		private readonly patientMedicalCoverageService: PatientMedicalCoverageService) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 
@@ -57,7 +59,7 @@ export class ProfileComponent implements OnInit {
 							.subscribe(personInformationData => {
 								this.personalInformation = this.mapperService.toPersonalInformationData(completeData, personInformationData);
 							});
-						this.patientService.getPatientMedicalCoverages(this.patientId)
+						this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this.patientId)
 							.subscribe(patientMedicalCoverageDto => this.patientMedicalCoverage = patientMedicalCoverageDto);
 					});
 
@@ -69,7 +71,7 @@ export class ProfileComponent implements OnInit {
 					});
 
 				this.patientService.getPatientPhoto(this.patientId)
-					.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto;});
+					.subscribe((personPhotoDto: PersonPhotoDto) => { this.personPhoto = personPhotoDto; });
 			});
 
 	}

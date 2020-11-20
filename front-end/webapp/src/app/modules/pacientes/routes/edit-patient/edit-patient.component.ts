@@ -18,6 +18,7 @@ import { MedicalCoverageComponent, PatientMedicalCoverage, } from 'src/app/modul
 import { map } from 'rxjs/operators';
 import { DateFormat, momentFormat, momentParse, momentParseDate, newMoment } from '@core/utils/moment.utils';
 import { MapperService } from '../../../core/services/mapper.service';
+import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 
 
 const ROUTE_PROFILE = 'pacientes/profile/';
@@ -62,6 +63,7 @@ export class EditPatientComponent implements OnInit {
 		private featureFlagService: FeatureFlagService,
 		private dialog: MatDialog,
 		private readonly mapperService: MapperService,
+		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
@@ -194,7 +196,7 @@ export class EditPatientComponent implements OnInit {
 					if (this.medicalCoverages) {
 						const patientMedicalCoveragesDto: PatientMedicalCoverageDto[] =
 							this.medicalCoverages.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
-						this.patientService.addPatientMedicalCoverages(this.patientId, patientMedicalCoveragesDto)
+						this.patientMedicalCoverageService.addPatientMedicalCoverages(this.patientId, patientMedicalCoveragesDto)
 							.subscribe();
 					}
 					this.router.navigate([this.routePrefix + ROUTE_PROFILE + patientId]);
@@ -324,14 +326,14 @@ export class EditPatientComponent implements OnInit {
 	}
 
 	private setPatientMedicalCoverages(): void {
-		this.patientService.getPatientMedicalCoverages(this.patientId)
-		.pipe(
-			map(
-				patientMedicalCoveragesDto =>
-					patientMedicalCoveragesDto.map(s => this.mapperService.toPatientMedicalCoverage(s))
+		this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this.patientId)
+			.pipe(
+				map(
+					patientMedicalCoveragesDto =>
+						patientMedicalCoveragesDto.map(s => this.mapperService.toPatientMedicalCoverage(s))
+				)
 			)
-		)
-		.subscribe((s: PatientMedicalCoverage[]) => {this.medicalCoverages = s});
+			.subscribe((s: PatientMedicalCoverage[]) => { this.medicalCoverages = s });
 	}
 
 }

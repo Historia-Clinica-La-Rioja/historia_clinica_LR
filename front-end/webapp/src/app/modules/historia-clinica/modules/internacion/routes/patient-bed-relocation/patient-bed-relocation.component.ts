@@ -29,6 +29,7 @@ import { newMoment, momentFormat, DateFormat, momentParseDateTime, momentParseDa
 import { Moment } from 'moment';
 import { PersonService } from '@api-rest/services/person.service';
 import { BedAssignmentComponent } from 'src/app/modules/historia-clinica/dialogs/bed-assignment/bed-assignment.component';
+import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 
 
 const ROUTE_INTERNMENT = 'internaciones/internacion/';
@@ -73,6 +74,8 @@ export class PatientBedRelocationComponent implements OnInit {
 		private readonly route: ActivatedRoute,
 		private readonly contextService: ContextService,
 		private readonly personService: PersonService,
+		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
+
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 	}
@@ -140,7 +143,7 @@ export class PatientBedRelocationComponent implements OnInit {
 					});
 			});
 
-		this.patientService.getPatientMedicalCoverages(this.patientId)
+		this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this.patientId)
 			.subscribe(patientMedicalCoverageDto => this.patientMedicalCoverage = patientMedicalCoverageDto);
 	}
 

@@ -28,6 +28,7 @@ import { PersonalInformation } from '@presentation/components/personal-informati
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
 import { PatientTypeData } from '@presentation/components/patient-type-logo/patient-type-logo.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 
 const ROUTE_PROFILE = 'pacientes/profile/';
 
@@ -67,6 +68,7 @@ export class PatientDischargeComponent implements OnInit {
 		private readonly route: ActivatedRoute,
 		private readonly router: Router,
 		private readonly featureFlagService: FeatureFlagService,
+		private readonly patientMedicalCoverageService: PatientMedicalCoverageService
 	) {
 			this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 	}
@@ -96,7 +98,7 @@ export class PatientDischargeComponent implements OnInit {
 				this.patientService.getPatientPhoto(this.patientId)
 						.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto;
 				});
-				this.patientService.getPatientMedicalCoverages(this.patientId)
+				this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this.patientId)
 					.subscribe(patientMedicalCoverageDto => this.patientMedicalCoverage = patientMedicalCoverageDto);
 
 				this.featureFlagService.isActive(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS)

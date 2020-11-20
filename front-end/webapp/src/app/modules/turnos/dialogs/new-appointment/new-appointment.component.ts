@@ -22,6 +22,7 @@ import { PersonIdentification } from '@presentation/pipes/person-identification.
 import { MedicalCoverageComponent, PatientMedicalCoverage } from '../../../core/dialogs/medical-coverage/medical-coverage.component';
 import { map } from 'rxjs/operators';
 import { MapperService } from '../../../core/services/mapper.service';
+import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 
 const ROUTE_SEARCH = 'pacientes/search';
 const TEMPORARY_PATIENT_ID = 3;
@@ -61,7 +62,8 @@ export class NewAppointmentComponent implements OnInit {
 		private readonly contextService: ContextService,
 		private readonly appointmentFacade: AppointmentsFacadeService,
 		public dialog: MatDialog,
-		private readonly mapperService: MapperService
+		private readonly mapperService: MapperService,
+		private readonly patientMedicalCoverageService: PatientMedicalCoverageService
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 	}
@@ -235,7 +237,7 @@ export class NewAppointmentComponent implements OnInit {
 					const patientCoverages: PatientMedicalCoverageDto[] =
 						values.patientMedicalCoverages.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
 
-					this.patientService.addPatientMedicalCoverages(this.patientId, patientCoverages).subscribe(_ => {
+					this.patientMedicalCoverageService.addPatientMedicalCoverages(this.patientId, patientCoverages).subscribe(_ => {
 						this.setMedicalCoverages();
 						this.snackBarService.showSuccess('Las coberturas fueron actualizadas correctamente');
 					}), _ => this.snackBarService.showError('Ocurrió un error al actualizar las coberturas');
@@ -245,7 +247,7 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	private setMedicalCoverages(): void {
-		this.patientService.getPatientMedicalCoverages(this.patientId)
+		this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this.patientId)
 			.pipe(
 				map(
 					patientMedicalCoveragesDto =>

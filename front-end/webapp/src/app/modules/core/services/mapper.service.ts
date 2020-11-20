@@ -32,7 +32,7 @@ export class MapperService {
 			vigencyDate: momentFormat(s.validDate, DateFormat.API_DATE),
 			id: s.id,
 			active: s.active
-		}
+		};
 	}
 
 	private static _toPatientMedicalCoverage(s: PatientMedicalCoverageDto): PatientMedicalCoverage {

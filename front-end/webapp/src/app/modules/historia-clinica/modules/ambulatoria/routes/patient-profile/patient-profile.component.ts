@@ -9,6 +9,7 @@ import { PersonalInformation } from '@presentation/components/personal-informati
 import { PatientTypeData } from '@presentation/components/patient-type-logo/patient-type-logo.component';
 import { ContextService } from '@core/services/context.service';
 import { InternmentPatientService } from '@api-rest/services/internment-patient.service';
+import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 
 
 @Component({
@@ -35,7 +36,8 @@ export class PatientProfileComponent implements OnInit {
 		private readonly router: Router,
 		private readonly personService: PersonService,
 		private readonly contextService: ContextService,
-		private readonly internmentPatientService: InternmentPatientService) {
+		private readonly internmentPatientService: InternmentPatientService,
+		private readonly patientMedicalCoverageService: PatientMedicalCoverageService) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}`;
 	}
 
@@ -58,7 +60,7 @@ export class PatientProfileComponent implements OnInit {
 				});
 
 
-				this.patientService.getPatientMedicalCoverages(this.patientId)
+				this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this.patientId)
 					.subscribe(patientMedicalCoverageDto => this.patientMedicalCoverage = patientMedicalCoverageDto);
 
 				this.internmentPatientService.internmentEpisodeIdInProcess(this.patientId)

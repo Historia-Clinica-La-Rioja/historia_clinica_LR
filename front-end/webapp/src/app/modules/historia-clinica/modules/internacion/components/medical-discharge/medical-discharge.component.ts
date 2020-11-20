@@ -16,6 +16,7 @@ import { InternmentEpisodeService } from '@api-rest/services/internment-episode.
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from '@core/services/context.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 
 const ROUTE_PROFILE = 'pacientes/profile/';
 
@@ -53,7 +54,8 @@ export class MedicalDischargeComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private contextService: ContextService,
 		private route: ActivatedRoute,
-		private router: Router
+		private router: Router,
+		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
@@ -85,7 +87,7 @@ export class MedicalDischargeComponent implements OnInit {
 						this.personPhoto = personPhotoDto;
 					});
 
-				this.patientService.getPatientMedicalCoverages(this.patientId)
+				this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this.patientId)
 					.subscribe(patientMedicalCoverageDto => this.patientMedicalCoverage = patientMedicalCoverageDto);
 			}
 		);

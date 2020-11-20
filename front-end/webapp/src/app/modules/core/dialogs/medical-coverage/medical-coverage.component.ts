@@ -201,7 +201,7 @@ export class MedicalCoverageComponent implements OnInit {
 	}
 
 	private fromRenaperToPatientMedicalCoverage(healthInsurance: MedicalCoverageDto): PatientMedicalCoverage {
-		const healthInsuranceId = this.healthInsuranceFilteredMasterData
+		const healthInsuranceId = this.healthInsuranceMasterData
 			.filter((s: MedicalCoverageDto) => s.rnos === healthInsurance.rnos)
 			.map(s => s.id)[0];
 		const medicalCoverage = new HealthInsurance(healthInsurance.rnos, healthInsurance.acronym,
