@@ -7,6 +7,7 @@ import { HealthInsuranceService } from '@api-rest/services/health-insurance.serv
 import { RenaperService } from '@api-rest/services/renaper.service';
 import { DateFormat, momentFormat, momentParse, newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
+import { combineLatest } from 'rxjs/internal/observable/combineLatest';
 
 const DNI_TYPE_ID = 1;
 @Component({
@@ -47,6 +48,28 @@ export class MedicalCoverageComponent implements OnInit {
 		this.healthInsuranceService.getAll().subscribe((values: MedicalCoverageDto[]) => {
 			this.healthInsuranceFilteredMasterData = values;
 			this.healthInsuranceMasterData = values;
+
+			if (this.personInfo.identificationTypeId === DNI_TYPE_ID) {
+				this.renaperService.getHealthInsurance
+					({ genderId: this.personInfo.genderId, identificationNumber: this.personInfo.identificationNumber })
+					.subscribe((healthInsurances: MedicalCoverageDto[]) => {
+						if (healthInsurances) {
+							healthInsurances.forEach(healthInsurance => {
+								const patientMedicalCoverage = this.patientMedicalCoverages
+									.find(patientHealthInsurance => (patientHealthInsurance.medicalCoverage as HealthInsurance).rnos === healthInsurance.rnos);
+								if (!patientMedicalCoverage) {
+									this.patientMedicalCoverages = this.patientMedicalCoverages.concat(this.fromRenaperToPatientMedicalCoverage(healthInsurance));
+								} else if (healthInsurance.dateQuery) {
+									patientMedicalCoverage.validDate = momentParse(healthInsurance.dateQuery, DateFormat.YEAR_MONTH);
+								}
+							});
+						}
+						this.loading = false;
+
+					}, _ => this.loading = false);
+			} else {
+				this.loading = false;
+			}
 		}
 		);
 
@@ -73,28 +96,6 @@ export class MedicalCoverageComponent implements OnInit {
 			}
 		});
 
-
-		if (this.personInfo.identificationTypeId === DNI_TYPE_ID) {
-			this.renaperService.getHealthInsurance
-				({ genderId: this.personInfo.genderId, identificationNumber: this.personInfo.identificationNumber })
-				.subscribe((healthInsurances: MedicalCoverageDto[]) => {
-					if (healthInsurances) {
-						healthInsurances.forEach(healthInsurance => {
-							const patientMedicalCoverage = this.patientMedicalCoverages
-								.find(patientHealthInsurance => (patientHealthInsurance.medicalCoverage as HealthInsurance).rnos === healthInsurance.rnos);
-							if (!patientMedicalCoverage) {
-								this.patientMedicalCoverages = this.patientMedicalCoverages.concat(this.fromRenaperToPatientMedicalCoverage(healthInsurance));
-							} else if (healthInsurance.dateQuery) {
-								patientMedicalCoverage.validDate = momentParse(healthInsurance.dateQuery, DateFormat.YEAR_MONTH);
-							}
-						});
-					}
-					this.loading = false;
-
-				}, error => this.loading = false);
-		} else {
-			this.loading = false;
-		}
 	}
 
 
