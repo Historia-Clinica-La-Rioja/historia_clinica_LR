@@ -130,7 +130,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			this.outpatientConsultationService.createOutpatientConsultation(nuevaConsulta, this.data.idPaciente).subscribe(
 				_ => {
 					this.snackBarService.showSuccess('ambulatoria.paciente.nueva-consulta.messages.SUCCESS');
-					this.dockPopupRef.close(true);
+					this.dockPopupRef.close(mapToFieldsToUpdate(nuevaConsulta));
 				},
 				errors => {
 					Object.getOwnPropertyNames(errors).forEach(val => {
@@ -141,6 +141,16 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			);
 		} else {
 			this.snackBarService.showError('ambulatoria.paciente.nueva-consulta.messages.ERROR');
+		}
+
+		function mapToFieldsToUpdate(nuevaConsultaDto: CreateOutpatientDto) {
+			return {
+				allergies: !!nuevaConsultaDto.allergies?.length,
+				familyHistories: !!nuevaConsultaDto.familyHistories?.length,
+				vitalSigns: !!nuevaConsultaDto.vitalSigns,
+				medications: !!nuevaConsultaDto.medications?.length,
+				anthropometricData: !!nuevaConsultaDto.anthropometricData,
+			};
 		}
 	}
 

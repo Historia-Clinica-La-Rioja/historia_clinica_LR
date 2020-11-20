@@ -10,6 +10,7 @@ import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { DockPopupService } from '@presentation/services/dock-popup.service';
 import { NuevaConsultaDockPopupComponent } from '../../dialogs/nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
+import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
 
 @Component({
 	selector: 'app-ambulatoria-paciente',
@@ -29,7 +30,8 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		private readonly patientService: PatientService,
 		private readonly mapperService: MapperService,
 		private readonly router: Router,
-		private readonly dockPopupService: DockPopupService
+		private readonly dockPopupService: DockPopupService,
+		private readonly ambulatoriaSummaryFacadeService: AmbulatoriaSummaryFacadeService
 	) {}
 
 	ngOnInit(): void {
@@ -50,10 +52,10 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		if (!this.dialogRef) {
 			const idPaciente = this.route.snapshot.paramMap.get('idPaciente');
 			this.dialogRef = this.dockPopupService.open(NuevaConsultaDockPopupComponent, {idPaciente});
-			this.dialogRef.afterClosed().subscribe(consultaSubmitted => {
+			this.dialogRef.afterClosed().subscribe(fieldsToUpdate => {
 				delete this.dialogRef;
-				if (consultaSubmitted) {
-					location.reload();
+				if (fieldsToUpdate) {
+					this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
 				}
 			});
 		}

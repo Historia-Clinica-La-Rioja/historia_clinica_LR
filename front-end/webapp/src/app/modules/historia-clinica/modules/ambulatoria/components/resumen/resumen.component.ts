@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { HCEAllergyDto, HCEPersonalHistoryDto, HCEMedicationDto, HCELast2VitalSignsDto, HCEAnthropometricDataDto } from "@api-rest/api-model";
 import { ActivatedRoute } from "@angular/router";
 import { Observable } from "rxjs";
 import { HceGeneralStateService } from "@api-rest/services/hce-general-state.service";
 import { ANTECEDENTES_FAMILIARES, PROBLEMAS_ANTECEDENTES } from "../../../../constants/summaries";
+import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
 
 @Component({
 	selector: 'app-resumen',
@@ -22,8 +23,11 @@ export class ResumenComponent implements OnInit {
 	public readonly familyHistoriesHeader = ANTECEDENTES_FAMILIARES;
 	public readonly personalProblemsHeader = PROBLEMAS_ANTECEDENTES;
 
-	constructor(private readonly hceGeneralStateService: HceGeneralStateService,
-		private route: ActivatedRoute) {
+	constructor(
+		private readonly hceGeneralStateService: HceGeneralStateService,
+		private route: ActivatedRoute,
+		private readonly ambulatoriaSummaryFacadeService: AmbulatoriaSummaryFacadeService
+		) {
 	}
 
 	ngOnInit(): void {
@@ -35,12 +39,14 @@ export class ResumenComponent implements OnInit {
 	}
 
 	initSummaries() {
-		this.allergies$ = this.hceGeneralStateService.getAllergies(this.patientId);
-		this.familyHistories$ = this.hceGeneralStateService.getFamilyHistories(this.patientId);
-		this.personalHistory$ = this.hceGeneralStateService.getPersonalHistories(this.patientId);
-		this.medications$ = this.hceGeneralStateService.getMedications(this.patientId);
-		this.vitalSigns$ = this.hceGeneralStateService.getVitalSigns(this.patientId);
-		this.anthropometricData$ = this.hceGeneralStateService.getAnthropometricData(this.patientId);
+		this.ambulatoriaSummaryFacadeService.setIdPaciente(this.patientId);
+
+		this.allergies$ = this.ambulatoriaSummaryFacadeService.allergies$;
+		this.familyHistories$ = this.ambulatoriaSummaryFacadeService.familyHistories$;
+		this.personalHistory$ = this.ambulatoriaSummaryFacadeService.personalHistories$;
+		this.medications$ = this.ambulatoriaSummaryFacadeService.medications$;
+		this.vitalSigns$ = this.ambulatoriaSummaryFacadeService.vitalSigns$;
+		this.anthropometricData$ = this.ambulatoriaSummaryFacadeService.anthropometricData$;
 	}
 
 }
