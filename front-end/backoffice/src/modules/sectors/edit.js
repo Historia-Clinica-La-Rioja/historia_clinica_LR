@@ -21,6 +21,7 @@ import SgxSelectInput from "../../sgxSelectInput/SgxSelectInput";
 import CustomToolbar from "../../modules/components/CustomToolbar";
 
 const INTERNACION = 2;
+const CUIDADOS_PROGRESIVOS = 2;
 
 const SectorType = (sourceId) => {
     return (
@@ -100,6 +101,17 @@ const Sector = (sourceId) => {
         </ReferenceInput>);
 };
 
+const validateCareType = (value, allValues) =>{
+    if (allValues.sectorOrganizationId &&
+        allValues.sectorOrganizationId === CUIDADOS_PROGRESIVOS &&
+        !allValues.careTypeId) {
+        return 'El tipo de cuidado es requerido para esta organización de sector';
+    }
+    return [];
+}
+
+const CareTypeValidations = [validateCareType];
+
 const SectorEdit = props => (
     <Edit {...props}>
         <SimpleForm redirect="show" toolbar={<CustomToolbar isEdit={true}/>}>
@@ -121,7 +133,7 @@ const SectorEdit = props => (
             </FormDataConsumer>
             {/*Care Type*/}
             <FormDataConsumer>
-                {formDataProps => ( <CareType {...formDataProps} source="careTypeId"/>)}
+                {formDataProps => ( <CareType {...formDataProps} source="careTypeId" validate={CareTypeValidations}/>)}
             </FormDataConsumer>
             {/*Hospitalization Type*/}
             <FormDataConsumer>
