@@ -3,25 +3,30 @@ import { ComponentPortal, ComponentType, PortalInjector } from '@angular/cdk/por
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class DockPopupService {
 
+	eventsSubscription: Subscription;
 	overlayRef: OverlayRef;
 
 	constructor(
 		private readonly overlay: Overlay,
-		private readonly injector: Injector
+		private readonly injector: Injector,
+		private readonly router: Router
 	) {
 	}
 
 	open(type: ComponentType<any>, data?: any): DockPopupRef {
-
 		const overlayRef = this.overlay.create(this.getOverlayConfig());
 		const dockPopupRef = new DockPopupRef(overlayRef);
 		const overlayComponent = this.attachDialogContainer(overlayRef, data, dockPopupRef, type);
+		this.eventsSubscription = this.router.events.pipe(take(1)).subscribe(_ => dockPopupRef.close());
 		return dockPopupRef;
 	}
 
