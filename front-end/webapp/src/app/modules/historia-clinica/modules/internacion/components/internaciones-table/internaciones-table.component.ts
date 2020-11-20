@@ -42,11 +42,6 @@ export class InternacionesTableComponent implements OnInit {
 					text: (row) => row.bed.room.sector.description
 				},
 				{
-					columnDef: 'specialityName',
-					header: 'Especialidad',
-					text: (row) => row.specialty.name
-				},
-				{
 					columnDef: 'roomNumber',
 					header: 'Nro. Habitación',
 					text: (row) => row.bed.room.roomNumber

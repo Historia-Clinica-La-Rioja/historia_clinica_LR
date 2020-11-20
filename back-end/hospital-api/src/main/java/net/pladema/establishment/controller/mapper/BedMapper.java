@@ -32,7 +32,6 @@ public interface BedMapper {
     @Mapping(target = "bed", source = "bed")
     @Mapping(target = "bed.room", source = "room")
     @Mapping(target = "bed.room.sector", source = "sector")
-    @Mapping(target = "bed.room.sector.specialty.name", source = "sector.specialtyName")
     BedInfoDto toBedInfoDto(BedInfoVo bedSummaryVo);
     
     @Named("toBedSummaryDto")

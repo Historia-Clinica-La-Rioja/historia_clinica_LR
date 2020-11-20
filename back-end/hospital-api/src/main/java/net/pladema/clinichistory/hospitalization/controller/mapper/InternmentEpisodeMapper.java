@@ -24,7 +24,6 @@ public interface InternmentEpisodeMapper {
     @Mapping(target = "bed.room.id", source = "bedId")
     @Mapping(target = "bed.room.roomNumber", source = "roomNumber")
     @Mapping(target = "bed.room.sector.description", source = "sectorDescription")
-    @Mapping(target = "bed.room.sector.specialty.name", source = "sectorSpecialty")
     @Mapping(target = "specialty.id", source = "clinicalSpecialtyId")
     @Mapping(target = "specialty.name", source = "specialty")
     InternmentSummaryDto toInternmentSummaryDto(InternmentSummaryBo internmentSummaryBo);

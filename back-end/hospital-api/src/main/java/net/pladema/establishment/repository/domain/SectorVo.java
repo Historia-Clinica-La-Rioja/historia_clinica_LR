@@ -19,9 +19,9 @@ public class SectorVo implements Serializable {
 	 */
 	private static final long serialVersionUID = 9168875811628523933L;
 	
-	Integer id;
-	String description;
-	String specialtyName;
+	private Integer id;
+
+	private String description;
 	
 	public SectorVo(Sector sector) {
 		id = sector.getId();

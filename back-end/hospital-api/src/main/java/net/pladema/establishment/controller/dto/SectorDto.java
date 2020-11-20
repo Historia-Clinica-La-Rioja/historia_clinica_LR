@@ -5,7 +5,6 @@ import java.io.Serializable;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.hospitalization.controller.dto.ClinicalSpecialtyDto;
 
 @Getter
 @Setter
@@ -21,6 +20,4 @@ public class SectorDto implements Serializable {
 	private Integer id;
 
     private String description;
-    
-    private ClinicalSpecialtyDto specialty;
 }

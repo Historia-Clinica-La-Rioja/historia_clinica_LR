@@ -39,7 +39,6 @@ export class MapperService {
 			bedNumber: internmentSummary.bed.bedNumber,
 			roomNumber: internmentSummary.bed.room.roomNumber,
 			sectorDescription: internmentSummary.bed.room.sector.description,
-			sectorSpecialtyName: internmentSummary.bed.room.sector.specialty.name,
 			episodeSpecialtyName: internmentSummary.specialty.name,
 			totalInternmentDays: internmentSummary.totalInternmentDays,
 			doctor: null,

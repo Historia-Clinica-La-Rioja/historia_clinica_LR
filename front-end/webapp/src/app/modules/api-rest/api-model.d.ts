@@ -1001,7 +1001,6 @@ export interface RoomDto extends Serializable {
 export interface SectorDto extends Serializable {
     description: string;
     id: number;
-    specialty: ClinicalSpecialtyDto;
 }
 
 export interface SectorSummaryDto {
