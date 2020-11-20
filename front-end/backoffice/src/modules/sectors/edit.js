@@ -72,7 +72,7 @@ const CareType = ({ formData, ...rest }) => {
             perPage={100}
             sort={{ field: 'description', order: 'ASC' }}
         >
-            <SelectInput optionText="description" optionValue="id" validate={[required()]} />
+            <SelectInput optionText="description" optionValue="id" />
         </ReferenceInput>);
 };
 
@@ -89,21 +89,21 @@ const HospitalizationType = ({ formData, ...rest }) => {
         </ReferenceInput>);
 };
 
-const Sector = (sourceId) => {
+const Sector = ({ formData, ...rest }) => {
     return (
         <ReferenceInput
-            {...sourceId}
+            {...rest}
             reference="sectors"
             perPage={100}
             sort={{ field: 'description', order: 'ASC' }}
+            filter={{institutionId: formData.institutionId}}
         >
             <SelectInput optionText="description" optionValue="id" />
         </ReferenceInput>);
 };
 
 const validateCareType = (value, allValues) =>{
-    if (allValues.sectorOrganizationId &&
-        allValues.sectorOrganizationId === CUIDADOS_PROGRESIVOS &&
+    if (allValues.sectorOrganizationId === CUIDADOS_PROGRESIVOS &&
         !allValues.careTypeId) {
         return 'El tipo de cuidado es requerido para esta organización de sector';
     }
@@ -119,8 +119,10 @@ const SectorEdit = props => (
 
             <SgxSelectInput source="institutionId" element="institutions" optionText="name" alwaysOn allowEmpty={false}/>
 
-            {/*Sector*/}
-            <Sector source="parentSectorId"/>
+            {/*Parent Sector*/}
+            <FormDataConsumer>
+                {formDataProps => (<Sector {...formDataProps} source="parentSectorId"/>)}
+            </FormDataConsumer>
             {/*Sector Type*/}
             <SectorType source="sectorTypeId"/>
             {/*Age Groups*/}
