@@ -130,7 +130,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			this.outpatientConsultationService.createOutpatientConsultation(nuevaConsulta, this.data.idPaciente).subscribe(
 				_ => {
 					this.snackBarService.showSuccess('ambulatoria.paciente.nueva-consulta.messages.SUCCESS');
-					this.dockPopupRef.close();
+					this.dockPopupRef.close(true);
 				},
 				errors => {
 					Object.getOwnPropertyNames(errors).forEach(val => {

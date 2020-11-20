@@ -50,8 +50,11 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		if (!this.dialogRef) {
 			const idPaciente = this.route.snapshot.paramMap.get('idPaciente');
 			this.dialogRef = this.dockPopupService.open(NuevaConsultaDockPopupComponent, {idPaciente});
-			this.dialogRef.afterClosed().subscribe(_ => {
+			this.dialogRef.afterClosed().subscribe(consultaSubmitted => {
 				delete this.dialogRef;
+				if (consultaSubmitted) {
+					location.reload();
+				}
 			});
 		}
 	}
