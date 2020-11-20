@@ -26,9 +26,12 @@ public class SectorSummaryVo {
 
     private List<ClinicalSpecialtyVo> clinicalSpecialties;
 
-    public SectorSummaryVo(Sector sector) {
+    public SectorSummaryVo(Sector sector, String careType, String sectorOrganization, String ageGroup) {
         this.id = sector.getId();
         this.description = sector.getDescription();
+        this.careType = careType;
+        this.organizationType = sectorOrganization;
+        this.ageGroup = ageGroup;
         this.clinicalSpecialties = new ArrayList<>();
     }
 
