@@ -159,8 +159,14 @@
 					"PROFESSIONAL": "Médico",
 					"PROBLEM": "Problema",
 					"CONSULTATION_DATE": "Fecha de consulta"
+				},
+				"nueva_opened_confirm_dialog": {
+					"TITLE": "Consulta desde problema",
+					"CONTENT": "Ya existe una nueva consulta abierta, de continuar se perderán los datos cargados",
+					"OK_BUTTON": "Continuar",
+					"CANCEL_BUTTON": "Cancelar"
 				}
-			},
+		},
 			"profile": {
 				"BUTTON_HISTORIA_CLINICA": "Historia Clínica",
 				"WARNING_INTERNADO": "El paciente se encuentra internado en otra institución."

@@ -17,6 +17,8 @@ import {HistoricalProblems, HistoricalProblemsFacadeService} from '../../service
 import { ContextService } from '@core/services/context.service';
 import { NuevaConsultaDockPopupComponent } from '../../dialogs/nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
 import { DockPopupService } from '@presentation/services/dock-popup.service';
+import { DockPopupRef } from '@presentation/services/dock-popup-ref';
+import { ConfirmDialogComponent } from '@core/dialogs/confirm-dialog/confirm-dialog.component';
 
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
 const ROUTE_INTERNMENT_EPISODE_SUFIX = '/paciente/';
@@ -28,6 +30,16 @@ const ROUTE_INTERNMENT_EPISODE_SUFIX = '/paciente/';
 	providers: [ HistoricalProblemsFacadeService ]
 })
 export class ProblemasComponent implements OnInit, OnDestroy {
+
+	@Input()
+	set nuevaConsultaRef(nuevaConsultaRef: DockPopupRef) {
+		this.nuevaConsultaAmbulatoriaRef = nuevaConsultaRef;
+		if (nuevaConsultaRef) {
+			this.nuevaConsultaFromProblemaRef?.close();
+			delete this.nuevaConsultaFromProblemaRef;
+		}
+	}
+	@Input() hasNewConsultationEnabled: boolean;
 
 	public readonly cronicos = PROBLEMAS_CRONICOS;
 	public readonly activos = PROBLEMAS_ACTIVOS;
@@ -43,8 +55,8 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	public hideFilterPanel = false;
 	private historicalProblems$: Subscription;
 	private patientId: number;
-	@Input() hasNewConsultationEnabled: boolean;
-
+	private nuevaConsultaAmbulatoriaRef: DockPopupRef;
+	private nuevaConsultaFromProblemaRef: DockPopupRef;
 
 	constructor(
 		private readonly hceGeneralStateService: HceGeneralStateService,
@@ -53,7 +65,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		private readonly router: Router,
 		public dialog: MatDialog,
 		private contextService: ContextService,
-		private dockPopupService: DockPopupService
+		private dockPopupService: DockPopupService,
 	) {
 		this.route.paramMap.subscribe(
 			(params) => {
@@ -123,9 +135,39 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	}
 
 	openNuevaConsulta(problema: HCEPersonalHistoryDto): void {
-		const idPaciente = this.route.snapshot.paramMap.get('idPaciente');
-		this.dockPopupService.open(NuevaConsultaDockPopupComponent, {idPaciente, idProblema: problema.id});
+		if (!this.nuevaConsultaFromProblemaRef) {
+			if (!this.nuevaConsultaAmbulatoriaRef) {
+				this.openDockPopup(problema.id);
+			} else {
+				const confirmDialog = this.dialog.open(ConfirmDialogComponent, {data: getConfirmDataDialog()});
+				confirmDialog.afterClosed().subscribe(confirmed => {
+					if (confirmed) {
+						this.openDockPopup(problema.id);
+						this.nuevaConsultaAmbulatoriaRef.close();
+					}
+				});
+			}
+		}
+
+		function getConfirmDataDialog() {
+			const keyPrefix = 'ambulatoria.paciente.problemas.nueva_opened_confirm_dialog';
+			return {
+				title: `${keyPrefix}.TITLE`,
+				content: `${keyPrefix}.CONTENT`,
+				okButtonLabel: `${keyPrefix}.OK_BUTTON`,
+				cancelButtonLabel: `${keyPrefix}.CANCEL_BUTTON`,
+			};
+		}
 	}
+
+	private openDockPopup(idProblema: number) {
+		const idPaciente = this.route.snapshot.paramMap.get('idPaciente');
+		this.nuevaConsultaFromProblemaRef =
+			this.dockPopupService.open(NuevaConsultaDockPopupComponent, {idPaciente, idProblema});
+		this.nuevaConsultaFromProblemaRef.afterClosed().subscribe(_ => delete this.nuevaConsultaFromProblemaRef);
+	}
+
+
 
 	solveProblemPopUp(problema: HCEPersonalHistoryDto){
 		this.dialog.open(SolveProblemComponent, {
