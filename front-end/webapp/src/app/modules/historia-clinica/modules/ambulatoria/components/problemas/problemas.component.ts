@@ -15,6 +15,8 @@ import {MatDialog} from '@angular/material/dialog';
 import {SolveProblemComponent} from '../../../../dialogs/solve-problem/solve-problem.component';
 import {HistoricalProblems, HistoricalProblemsFacadeService} from '../../services/historical-problems-facade.service';
 import { ContextService } from '@core/services/context.service';
+import { NuevaConsultaDockPopupComponent } from '../../dialogs/nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
+import { DockPopupService } from '@presentation/services/dock-popup.service';
 
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
 const ROUTE_INTERNMENT_EPISODE_SUFIX = '/paciente/';
@@ -51,6 +53,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		private readonly router: Router,
 		public dialog: MatDialog,
 		private contextService: ContextService,
+		private dockPopupService: DockPopupService
 	) {
 		this.route.paramMap.subscribe(
 			(params) => {
@@ -119,8 +122,9 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		).subscribe(data => this.historicalProblemsList = data);
 	}
 
-	goToNuevaConsulta(problema: HCEPersonalHistoryDto) {
-		this.router.navigateByUrl(`${this.router.url}/nuevaDesdeProblema/${problema.id}`).then();
+	openNuevaConsulta(problema: HCEPersonalHistoryDto): void {
+		const idPaciente = this.route.snapshot.paramMap.get('idPaciente');
+		this.dockPopupService.open(NuevaConsultaDockPopupComponent, {idPaciente, idProblema: problema.id});
 	}
 
 	solveProblemPopUp(problema: HCEPersonalHistoryDto){
