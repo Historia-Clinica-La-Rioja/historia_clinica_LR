@@ -1,16 +1,23 @@
 import { OverlayRef } from '@angular/cdk/overlay';
+import { Observable, Subject } from 'rxjs';
 
 export class DockPopupRef {
 
 	private minimized = false;
 	private openedHeight: number | string;
+	private afterClosedSubject: Subject<any> = new Subject<any>();
 
 	constructor(private overlayRef: OverlayRef) {
 		this.openedHeight = overlayRef.getConfig().height;
 	}
 
-	close(): void {
+	close(dockPopupResult?: any): void {
 		this.overlayRef.dispose();
+		this.afterClosedSubject.next(dockPopupResult);
+	}
+
+	afterClosed(): Observable<any> {
+		return this.afterClosedSubject.asObservable();
 	}
 
 	toggle(): void {

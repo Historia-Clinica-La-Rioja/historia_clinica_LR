@@ -9,6 +9,7 @@ import { MapperService } from '@presentation/services/mapper.service';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { DockPopupService } from '@presentation/services/dock-popup.service';
 import { NuevaConsultaDockPopupComponent } from '../../dialogs/nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
+import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 
 @Component({
 	selector: 'app-ambulatoria-paciente',
@@ -17,6 +18,7 @@ import { NuevaConsultaDockPopupComponent } from '../../dialogs/nueva-consulta-do
 })
 export class AmbulatoriaPacienteComponent implements OnInit {
 
+	dialogRef: DockPopupRef;
 	patient$: Observable<PatientBasicData>;
 	public personPhoto: PersonPhotoDto;
 	public hasNewConsultationEnabled: boolean;
@@ -45,7 +47,12 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	}
 
 	openNuevaConsulta(): void {
-		const idPaciente = this.route.snapshot.paramMap.get('idPaciente');
-		this.dockPopupService.open(NuevaConsultaDockPopupComponent, {idPaciente});
+		if (!this.dialogRef) {
+			const idPaciente = this.route.snapshot.paramMap.get('idPaciente');
+			this.dialogRef = this.dockPopupService.open(NuevaConsultaDockPopupComponent, {idPaciente});
+			this.dialogRef.afterClosed().subscribe(_ => {
+				delete this.dialogRef;
+			});
+		}
 	}
 }
