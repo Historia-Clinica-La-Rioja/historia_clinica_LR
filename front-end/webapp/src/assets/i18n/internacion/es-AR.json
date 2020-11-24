@@ -304,7 +304,7 @@
 			"TITLE": "Búsqueda de pacientes"
 		},
 		"internacion-paciente": {
-			"TITLE": "HCE Internación",
+			"TITLE": "Internación",
 			"confirmacion": "¿Está seguro que desea crear una nueva internación para el paciente con ID ",
 			"actions": {
 				"ADD_EPICRISIS": "Generar epicrisis",

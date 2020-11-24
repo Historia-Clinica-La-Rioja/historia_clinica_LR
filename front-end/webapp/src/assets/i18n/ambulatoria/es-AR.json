@@ -1,11 +1,11 @@
 {
 	"ambulatoria": {
 		"home": {
-			"TITLE": "HCE Ambulatoria",
+			"TITLE": "Historia Clínica",
 			"SUBTITLE": "Complete los campos deseados"
 		},
 		"paciente": {
-			"TITLE": "HCE Ambulatoria",
+			"TITLE": "Historia Clínica",
 			"card": {
 				"buttons": {
 					"NUEVA_CONSULTA": "Nueva consulta"
