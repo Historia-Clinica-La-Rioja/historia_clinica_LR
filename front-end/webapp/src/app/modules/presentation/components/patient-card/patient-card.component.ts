@@ -19,13 +19,13 @@ export class PatientCardComponent implements OnInit {
 				this.getBase64ImageFromURL(this.personPhoto.imageData).subscribe(base64data => {
 					// this is the image as dataUrl
 					this.decodedPhoto = 'data:image/jpg;base64,' + base64data;
-				}); 
+				});
 			}
 	}
 
 	public viewGenderAge() {
 		const gender = (this.patient?.gender) ? (this.patient.gender + ' · ') : '';
-		const age = (this.patient?.age) ? (this.patient.age + ' años') : '';
+		const age = (this.patient?.age) || (this.patient?.age === 0) ? (this.patient.age + ' años') : '';
 		return gender + age;
 	}
 
