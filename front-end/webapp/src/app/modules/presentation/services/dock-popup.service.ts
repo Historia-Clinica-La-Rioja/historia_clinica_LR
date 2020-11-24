@@ -62,7 +62,7 @@ export class DockPopupService {
 			positionStrategy,
 			maxHeight: '70vh',
 			width: '30vw',
-			panelClass: 'overlay-class',
+			panelClass: ['dock-popup-overlay', 'maximized'],
 		});
 
 		return overlayConfig;

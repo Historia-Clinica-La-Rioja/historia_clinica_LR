@@ -32,6 +32,8 @@ export class DockPopupRef {
 		this.overlayRef.updateSize({
 			height: this.openedHeight
 		});
+		this.overlayRef.addPanelClass('maximized');
+		this.overlayRef.removePanelClass('minimized');
 		this.minimized = false;
 	}
 
@@ -39,6 +41,8 @@ export class DockPopupRef {
 		this.overlayRef.updateSize({
 			height: '40px'
 		});
+		this.overlayRef.addPanelClass('minimized');
+		this.overlayRef.removePanelClass('maximized');
 		this.minimized = true;
 	}
 

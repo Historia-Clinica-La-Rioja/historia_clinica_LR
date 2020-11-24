@@ -1,3 +1,5 @@
+@import 'src/assets/styles/variables.scss';
+
 .action-bar {
 	max-height: 10vh;
 	padding: 0 2vw;
@@ -29,6 +31,20 @@
 		justify-content: flex-end;
 		margin-right: 2vw;
 		margin-bottom: 2vh;
+	}
+}
+
+@media (max-width: $mobile-popups) {
+	.dock-popup {
+		height: 100vh;
+	}
+	.content {
+		max-height: 100vh;
+		overflow-y: scroll;
+
+		.body {
+			max-height: 100vh;
+		}
 	}
 }
 

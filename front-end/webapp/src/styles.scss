@@ -40,5 +40,10 @@ section {
 @media (max-width: $mobile-popups) {
 	div.cdk-global-overlay-wrapper div.cdk-overlay-pane {
 		width: 100% !important;
+
+		&.dock-popup-overlay.maximized {
+			max-height: 100vh !important;
+			height: 100vh !important;
+		}
 	}
 }
