@@ -856,12 +856,12 @@ export interface PatientDto {
 }
 
 export interface PatientMedicalCoverageDto {
+    active: boolean;
     affiliateNumber?: string;
     id?: number;
     medicalCoverage: CoverageDtoUnion;
     privateHealthInsuranceDetails?: PrivateHealthInsuranceDetailsDto;
-	vigencyDate?: string;
-	active: boolean
+    vigencyDate?: string;
 }
 
 export interface PatientSearchDto {

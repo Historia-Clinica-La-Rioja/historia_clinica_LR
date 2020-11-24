@@ -1,6 +1,10 @@
 package net.pladema.patient.repository.domain;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import net.pladema.patient.repository.entity.PrivateHealthInsuranceDetails;
 
 import java.time.LocalDate;
 
@@ -20,5 +24,11 @@ public class PrivateHealthInsuranceDetailsVo {
         this.id = id;
         this.startDate = startDate;
         this.endDate = endDate;
+    }
+
+    public PrivateHealthInsuranceDetailsVo(PrivateHealthInsuranceDetails privateHealthInsuranceDetails){
+        this.id = privateHealthInsuranceDetails.getId();
+        this.startDate = privateHealthInsuranceDetails.getStartDate() != null ? privateHealthInsuranceDetails.getStartDate() : null;
+        this.endDate = privateHealthInsuranceDetails.getEndDate() != null ? privateHealthInsuranceDetails.getEndDate() : null;
     }
 }

@@ -2,6 +2,7 @@ package net.pladema.patient.repository.domain;
 
 
 import lombok.*;
+import net.pladema.patient.repository.entity.PrivateHealthInsuranceDetails;
 
 import java.time.LocalDate;
 
@@ -25,7 +26,7 @@ public class PatientMedicalCoverageVo {
     private PrivateHealthInsuranceDetailsVo privateHealthInsuranceDetails;
 
     public PatientMedicalCoverageVo(Integer id, String affiliateNumber, LocalDate vigencyDate, Boolean active, Integer medicalCoverageId, String name,
-                                    Integer rnos, String acronym, String plan, Integer privateHealthInsuranceDetailsId, LocalDate startDate, LocalDate endDate) {
+                                    Integer rnos, String acronym, String plan, PrivateHealthInsuranceDetails privateHealthInsuranceDetails) {
         this.id = id;
         this.affiliateNumber = affiliateNumber;
         this.vigencyDate = vigencyDate;
@@ -34,7 +35,8 @@ public class PatientMedicalCoverageVo {
             this.medicalCoverage = new HealthInsuranceVo(medicalCoverageId, name, rnos, acronym);
         else{
             this.medicalCoverage = new PrivateHealthInsuranceVo(medicalCoverageId, name, plan);
-            this.privateHealthInsuranceDetails = new PrivateHealthInsuranceDetailsVo(privateHealthInsuranceDetailsId, startDate, endDate);
+            if  (privateHealthInsuranceDetails != null)
+                this.privateHealthInsuranceDetails = new PrivateHealthInsuranceDetailsVo(privateHealthInsuranceDetails);
         }
     }
 
@@ -46,12 +48,12 @@ public class PatientMedicalCoverageVo {
         this.medicalCoverage = new HealthInsuranceVo(medicalCoverageId, name, rnos, acronym);
     }
 
-    public PatientMedicalCoverageVo(Integer id, String affiliateNumber, LocalDate vigencyDate, Boolean active, Integer medicalCoverageId, String name, Integer privateHealthInsuranceDetailsId, LocalDate startDate, LocalDate endDate, String plan){
+    public PatientMedicalCoverageVo(Integer id, String affiliateNumber, LocalDate vigencyDate, Boolean active, Integer medicalCoverageId, String name, PrivateHealthInsuranceDetails privateHealthInsuranceDetails, String plan){
         this.id = id;
         this.affiliateNumber = affiliateNumber;
         this.vigencyDate = vigencyDate;
         this.active = active;
         this.medicalCoverage = new PrivateHealthInsuranceVo(medicalCoverageId, name, plan);
-        this.privateHealthInsuranceDetails = new PrivateHealthInsuranceDetailsVo(privateHealthInsuranceDetailsId, startDate, endDate);
+        this.privateHealthInsuranceDetails = new PrivateHealthInsuranceDetailsVo(privateHealthInsuranceDetails.getId(), privateHealthInsuranceDetails.getStartDate(), privateHealthInsuranceDetails.getEndDate());
     }
 }

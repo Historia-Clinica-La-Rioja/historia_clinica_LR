@@ -15,8 +15,7 @@ public interface PatientMedicalCoverageRepository extends JpaRepository<PatientM
 
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT NEW net.pladema.patient.repository.domain.PatientMedicalCoverageVo(pmc.id as pmcid, pmc.affiliateNumber, " +
-			"pmc.vigencyDate, pmc.active, mc.id, mc.name, hi.rnos, hi.acronym, phi.plan, " +
-			"phid.id as phid, phid.startDate, phid.endDate) " +
+			"pmc.vigencyDate, pmc.active, mc.id, mc.name, hi.rnos, hi.acronym, phi.plan, phid as phid)"+
 			"FROM PatientMedicalCoverageAssn pmc " +
 			"JOIN MedicalCoverage mc ON (pmc.medicalCoverageId = mc.id) " +
 			"LEFT JOIN HealthInsurance hi ON (mc.id = hi.id) " +
