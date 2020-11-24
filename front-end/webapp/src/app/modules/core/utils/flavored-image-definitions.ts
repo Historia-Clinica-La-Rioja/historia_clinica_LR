@@ -36,6 +36,20 @@ export const FLAVORED_FOOTER_IMAGES: FlavoredImagesObj = {
 			location: 'assets/flavors/minsal/images/logos/unicen.png',
 			alt: 'unicen'
 		},
+	],	
+	pba: [
+		{
+			location: 'assets/flavors/pba/images/logos/ministerio-salud.png',
+			alt: 'ministerio-salud'
+		},
+		{
+			location: 'assets/flavors/pba/images/logos/pladema.png',
+			alt: 'pladema'
+		},
+		{
+			location: 'assets/flavors/pba/images/logos/unicen.png',
+			alt: 'unicen'
+		},
 	],
 	chaco: [
 		{
@@ -69,6 +83,12 @@ export const FLAVORED_LOGOS: FlavoredImagesObj = {
 		}
 	],
 	minsal: [
+		{
+			location: '',
+			alt: 'HSI'
+		}
+	],
+	pba: [
 		{
 			location: '',
 			alt: 'HSI'
