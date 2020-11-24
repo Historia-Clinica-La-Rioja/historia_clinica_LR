@@ -14,9 +14,10 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
 
 	@Transactional(readOnly = true)
 	@Query(value = " SELECT r FROM  Room r "
-			+ " INNER JOIN ClinicalSpecialtySector css ON css.id = r.clinicalSpecialtySectorId "
-			+ " INNER JOIN Sector s ON s.id = css.sectorId "
-			+ " WHERE css.sectorId = :sectorId AND css.clinicalSpecialtyId = :specialtyId "
+			+ " INNER JOIN Sector s ON s.id = r.sectorId "
+			+ " INNER JOIN ClinicalSpecialtySector css ON css.sectorId = r.sectorId "
+			+ " WHERE r.sectorId = :sectorId "
+			+ " AND css.clinicalSpecialtyId = :specialtyId "
 			+ " AND s.institutionId = :institutionId ")
 	List<Room> getAllBySectorAndInstitution(@Param("sectorId") Integer sectorId,
 			@Param("specialtyId") Integer specialtyId, @Param("institutionId") Integer institutionId);
@@ -24,16 +25,14 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
 
 	@Transactional(readOnly = true)
 	@Query(value = " SELECT r FROM  Room AS r "
-			+ " INNER JOIN ClinicalSpecialtySector css ON css.id = r.clinicalSpecialtySectorId "
-			+ " INNER JOIN Sector s ON s.id = css.sectorId "
+			+ " INNER JOIN Sector s ON s.id = r.sectorId "
 			+ " WHERE s.institutionId = :institutionId ")
 	List<Room> getAllByInstitution(@Param("institutionId") Integer institutionId);
 
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT s.institutionId " +
 			"FROM  Room r " +
-			"INNER JOIN ClinicalSpecialtySector css ON (css.id = r.clinicalSpecialtySectorId) " +
-			"INNER JOIN Sector s ON (s.id = css.sectorId) " +
+			"INNER JOIN Sector s ON (s.id = r.sectorId) " +
 			"WHERE r.id = :id ")
     Integer getInstitutionId(@Param("id") Integer id);
 
@@ -46,8 +45,7 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT r.id " +
 			"FROM  Room r " +
-			"INNER JOIN ClinicalSpecialtySector css ON (css.id = r.clinicalSpecialtySectorId) " +
-			"INNER JOIN Sector s ON (s.id = css.sectorId) " +
+			"INNER JOIN Sector s ON (s.id = r.sectorId) " +
 			"WHERE s.institutionId IN :institutionsIds ")
 	List<Integer> getAllIdsByInstitutionsId(@Param("institutionsIds") List<Integer> institutionsIds);
 

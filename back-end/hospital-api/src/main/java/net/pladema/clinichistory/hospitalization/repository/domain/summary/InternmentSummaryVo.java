@@ -51,7 +51,7 @@ public class InternmentSummaryVo {
 
 	public InternmentSummaryVo(Integer id, LocalDate entryDate, Long anamnesisDocId, String anamnesisStatusId,
 			Long epicrisisDocId, String epicrisisStatusId, Integer bedId, String bedNumber, Integer roomId,
-			String roomNumber, String sectorDescription, ClinicalSpecialty sectorSpecialty, ClinicalSpecialty clinicalSpecialty,
+			String roomNumber, String sectorDescription, ClinicalSpecialty clinicalSpecialty,
 			Integer healthcareProfessionalId, String licenseNumber, String firstName, String lastName,
 			ResponsibleContact responsibleContact, LocalDateTime probableDischargeDate, LocalDate dischargeDate, Short internmentStatusId) {
 		this.id = id;
@@ -65,9 +65,8 @@ public class InternmentSummaryVo {
 		this.sectorDescription = sectorDescription;
 
 		//Fix clinical specialty as speciality (not as service)
-		sectorSpecialty.fixSpecialtyType();
 		clinicalSpecialty.fixSpecialtyType();
-		this.sectorSpecialty = sectorSpecialty.getName();
+		this.sectorSpecialty = null;
 		this.clinicalSpecialtyId = clinicalSpecialty.getId();
 		this.specialty = clinicalSpecialty.getName();
 

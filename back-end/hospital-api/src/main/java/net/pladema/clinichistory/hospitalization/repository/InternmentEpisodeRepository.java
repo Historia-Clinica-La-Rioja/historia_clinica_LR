@@ -30,16 +30,14 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             "ie.anamnesisDocId, da.statusId as anamnesisStatusId, " +
             "ie.epicrisisDocId, de.statusId as epicrisisStatusId, " +
             "b.id as bedId, b.bedNumber, " +
-            "r.id as roomId, r.roomNumber, sector.description, cssector, " +
+            "r.id as roomId, r.roomNumber, sector.description, " +
             "cs as clinicalSpecialty, " +
             "hpg.pk.healthcareProfessionalId, hp.licenseNumber, p.firstName, p.lastName," +
             "rc, ie.probableDischargeDate, pd.administrativeDischargeDate, ie.statusId) " +
             "FROM InternmentEpisode ie " +
             "JOIN Bed b ON (b.id = ie.bedId) " +
             "JOIN Room r ON (r.id = b.roomId) " +
-            "JOIN ClinicalSpecialtySector css ON (css.id = r.clinicalSpecialtySectorId) " +
-            "JOIN Sector sector ON (sector.id = css.sectorId) " +
-            "JOIN ClinicalSpecialty cssector ON (cssector.id = css.clinicalSpecialtyId) " +
+            "JOIN Sector sector ON (sector.id = r.sectorId) " +
             "LEFT JOIN ClinicalSpecialty cs ON (cs.id = ie.clinicalSpecialtyId) " +
             "LEFT JOIN Document da ON (da.id = ie.anamnesisDocId) " +
             "LEFT JOIN Document de ON (de.id = ie.epicrisisDocId) " +
@@ -89,6 +87,13 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
     List<BasicListedPatientBo> findAllPatientsListedData(@Param("institutionId") Integer institutionId);
 
     @Transactional(readOnly = true)
+    @Query("SELECT (case when count(ie.id)> 0 then true else false end) " +
+            "FROM InternmentEpisode ie " +
+            "WHERE ie.id = :internmentEpisodeId " +
+            "AND ie.anamnesisDocId IS NOT NULL")
+    boolean haveAnamnesis(@Param("internmentEpisodeId") Integer internmentEpisodeId);
+
+    @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.clinichistory.hospitalization.service.domain.InternmentEpisodeBo(" +
             "ie.id as internmentEpisodeId, " +
             "pt.id as patientId, ps.firstName, ps.lastName, " +
@@ -101,22 +106,14 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             "JOIN Person ps ON (pt.personId = ps.id) " +
             "JOIN Bed b ON (ie.bedId = b.id) " +
             "JOIN Room r ON (b.roomId = r.id) " +
-            "JOIN ClinicalSpecialtySector css ON (r.clinicalSpecialtySectorId = css.id) " +
-            "JOIN ClinicalSpecialty cs ON (css.clinicalSpecialtyId = cs.id) " +
-            "JOIN Sector s ON (css.sectorId = s.id) " +
+            "JOIN Sector s ON (r.sectorId = s.id) " +
+            "JOIN ClinicalSpecialty cs ON (ie.clinicalSpecialtyId = cs.id) " +
             "WHERE ie.institutionId = :institutionId " +
             "AND NOT EXISTS (select pd.id " +
             "                FROM PatientDischarge pd" +
             "                WHERE pd.internmentEpisodeId = ie.id) " +
             " ORDER BY ps.firstName ASC, ps.lastName ASC")
     List<InternmentEpisodeBo> getAllInternmentPatient(@Param("institutionId") Integer institutionId);
-
-    @Transactional(readOnly = true)
-    @Query("SELECT (case when count(ie.id)> 0 then true else false end) " +
-            "FROM InternmentEpisode ie " +
-            "WHERE ie.id = :internmentEpisodeId " +
-            "AND ie.anamnesisDocId IS NOT NULL")
-    boolean haveAnamnesis(@Param("internmentEpisodeId") Integer internmentEpisodeId);
 
     @Transactional(readOnly = true)
     @Query("SELECT (case when count(ie.id)> 0 then true else false end) " +

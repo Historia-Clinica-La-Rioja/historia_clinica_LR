@@ -2,7 +2,9 @@ package net.pladema.establishment.controller.constraints.validator.permissions;
 
 import net.pladema.establishment.repository.ClinicalSpecialtySectorRepository;
 import net.pladema.establishment.repository.RoomRepository;
+import net.pladema.establishment.repository.SectorRepository;
 import net.pladema.establishment.repository.entity.Room;
+import net.pladema.establishment.repository.entity.Sector;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.sgx.backoffice.permissions.BackofficePermissionValidator;
 import net.pladema.sgx.backoffice.rest.ItemsAllowed;
@@ -25,18 +27,18 @@ public class BackofficeRoomValidator implements BackofficePermissionValidator<Ro
 	public static final String NO_CUENTA_CON_SUFICIENTES_PRIVILEGIOS = "No cuenta con suficientes privilegios";
 	private final RoomRepository repository;
 
-	private final ClinicalSpecialtySectorRepository clinicalSpecialtySectorRepository;
+	private final SectorRepository sectorRepository;
 
 	private final BackofficeAuthoritiesValidator authoritiesValidator;
 
 	private final PermissionEvaluator permissionEvaluator;
 
 	public BackofficeRoomValidator(RoomRepository repository,
-								   ClinicalSpecialtySectorRepository clinicalSpecialtySectorRepository,
+								   SectorRepository sectorRepository,
 								   BackofficeAuthoritiesValidator backofficeAuthoritiesValidator,
 								   PermissionEvaluator permissionEvaluator) {
 		this.repository = repository;
-		this.clinicalSpecialtySectorRepository = clinicalSpecialtySectorRepository;
+		this.sectorRepository = sectorRepository;
 		this.authoritiesValidator = backofficeAuthoritiesValidator;
 		this.permissionEvaluator = permissionEvaluator;
 	}
@@ -77,8 +79,7 @@ public class BackofficeRoomValidator implements BackofficePermissionValidator<Ro
 	public void assertCreate(Room entity) {
 		if (authoritiesValidator.hasRole(ERole.ROOT) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
 			return;
-		Integer institutionId = clinicalSpecialtySectorRepository.getInstitutionId(entity.getClinicalSpecialtySectorId());
-		hasPermissionByInstitution(institutionId);
+		hasPermissionByInstitution(sectorRepository.getInstitutionId(entity.getSectorId()));
 	}
 
 	@Override

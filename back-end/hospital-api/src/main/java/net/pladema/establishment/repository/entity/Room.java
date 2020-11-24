@@ -37,10 +37,7 @@ public class Room {
 	
 	@Column(name = "type", nullable = false)
 	private String type;
-	
-	@Column(name = "clinical_specialty_sector_id", nullable = false)
-	private Integer clinicalSpecialtySectorId;
-	
+
 	@Column(name = "discharge_date")
 	private LocalDate dischargeDate;
 
