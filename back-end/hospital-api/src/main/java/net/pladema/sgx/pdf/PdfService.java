@@ -39,7 +39,7 @@ public class PdfService {
     ) {
         super();
 
-        this.calculateTemplateNameWithFlavor = templateName -> String.format("%s-%s", templateName, flavorService.getFlavor().toString());
+        this.calculateTemplateNameWithFlavor = templateName -> String.format("flavors/%s/%s", flavorService.getFlavor().toString(), templateName);
         this.templateEngine = templateEngine;
 
     }

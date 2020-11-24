@@ -8,6 +8,7 @@ import { MenuItem } from '@core/core-model';
 const FLAVOR_TANDIL = 'tandil';
 const FLAVOR_CHACO = 'chaco';
 const FLAVOR_HOSPITALES = 'minsal';
+const FLAVOR_PBA = 'pba';
 const FEATURE_FLAGS = [
 	{
 		name: 'agregarContactoResponsable',
@@ -19,15 +20,15 @@ const FEATURE_FLAGS = [
 	},
 	{
 		name: 'habilitarServicioRenaper',
-		flavorMatch: [FLAVOR_HOSPITALES]
+		flavorMatch: [FLAVOR_HOSPITALES, FLAVOR_PBA]
 	},
 	{
 		name: 'mainDiagnosisRequired',
-		flavorMatch: [FLAVOR_HOSPITALES]
+		flavorMatch: [FLAVOR_HOSPITALES, FLAVOR_PBA]
 	},
 	{
 		name: 'epicrisisRequired',
-		flavorMatch: [FLAVOR_HOSPITALES]
+		flavorMatch: [FLAVOR_HOSPITALES, FLAVOR_PBA]
 	},
 	{
 		name: 'habilitarBotonCovidDiagnosticoPresuntivo',
@@ -35,19 +36,19 @@ const FEATURE_FLAGS = [
 	},
 	{
 		name: 'habilitarToggleFiltroDiagnosticoPrincipal',
-		flavorMatch: [FLAVOR_HOSPITALES]
+		flavorMatch: [FLAVOR_HOSPITALES, FLAVOR_PBA]
 	},
 	{
 		name: 'habilitarPaseCama',
-		flavorMatch: [FLAVOR_HOSPITALES]
+		flavorMatch: [FLAVOR_HOSPITALES, FLAVOR_PBA]
 	},
 	{
 		name: 'restringirDatosEditarPaciente',
-		flavorMatch: [FLAVOR_HOSPITALES]
+		flavorMatch: [FLAVOR_HOSPITALES, FLAVOR_PBA]
 	},
 	{
 		name: 'habilitarEdicionPacienteInternacion',
-		flavorMatch: [FLAVOR_HOSPITALES]
+		flavorMatch: [FLAVOR_HOSPITALES, FLAVOR_PBA]
 	},
 ];
 

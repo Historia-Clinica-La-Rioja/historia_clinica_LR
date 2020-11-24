@@ -286,8 +286,10 @@
             <strong><span  th:if="${(vitalSigns.systolicBloodPressure != null) &&  (vitalSigns.diastolicBloodPressure != null)}" th:text="${vitalSigns.systolicBloodPressure.value + '/' + vitalSigns.diastolicBloodPressure.value + ' mm Hg'}"></span></strong>
 
 
-            &nbsp;<span th:if="${(vitalSigns.systolicBloodPressure != null) ||  (vitalSigns.diastolicBloodPressure != null)}" >Fecha de medición: </span>
-            <strong><span  th:if="${(vitalSigns.systolicBloodPressure != null) ||  (vitalSigns.diastolicBloodPressure != null)}" th:text="${#temporals.format(vitalSigns.systolicBloodPressure.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
+            &nbsp;<span th:if="${(vitalSigns.systolicBloodPressure != null) || (vitalSigns.diastolicBloodPressure != null)}" >Fecha de medición: </span>
+            <strong><span  th:if="${(vitalSigns.systolicBloodPressure != null) &&  (vitalSigns.diastolicBloodPressure != null)}" th:text="${#temporals.format(vitalSigns.systolicBloodPressure.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong>
+            <strong><span  th:if="${(vitalSigns.systolicBloodPressure != null) &&  (vitalSigns.diastolicBloodPressure == null)}" th:text="${#temporals.format(vitalSigns.systolicBloodPressure.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong>
+            <strong><span  th:if="${(vitalSigns.systolicBloodPressure == null) &&  (vitalSigns.diastolicBloodPressure != null)}" th:text="${#temporals.format(vitalSigns.diastolicBloodPressure.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
 
             - Temperatura corporal:
             <strong><span  th:if="${vitalSigns.temperature  == null}">Sin cambios registrados</span></strong>

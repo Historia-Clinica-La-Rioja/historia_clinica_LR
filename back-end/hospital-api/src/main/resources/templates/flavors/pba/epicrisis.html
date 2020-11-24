@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head>
+    <th:block th:include="fragments/general.html :: headerfiles"></th:block>
+</head>
+<body>
+    <div th:replace="fragments/general.html :: header(title='Epicrisis', subtitle='Alta de internación')"></div>
+    <div th:replace="fragments/general.html :: personalData(patientType='Paciente')"></div>
+    <div th:replace="fragments/general.html :: mainDiagnosis(message='Diagnóstico principal')"></div>
+    <div th:replace="fragments/general.html :: diagnosis(message='Diagnósticos')"></div>
+    <div th:replace="fragments/general.html :: personalHistory"></div>
+    <div th:replace="fragments/general.html :: familyHistory"></div>
+    <div th:replace="fragments/general.html :: allergies"></div>
+    <div th:replace="fragments/general.html :: immunizations"></div>
+    <div th:replace="fragments/general.html :: medications(title='Medicación ambulatoria')"></div>
+    <div th:replace="fragments/general.html :: notes-epicrisis"></div>
+</body>
+<footer>
+    <div th:replace="fragments/general.html :: footer"></div>
+</footer>
+</html>
+<!-- en diagnostico principal dice: Sin información NO Sin cambios registrados -->
