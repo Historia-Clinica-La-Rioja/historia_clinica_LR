@@ -11,11 +11,14 @@ import { DockPopupService } from '@presentation/services/dock-popup.service';
 import { NuevaConsultaDockPopupComponent } from '../../dialogs/nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
+import { HistoricalProblemsFacadeService } from '../../services/historical-problems-facade.service';
 
 @Component({
 	selector: 'app-ambulatoria-paciente',
 	templateUrl: './ambulatoria-paciente.component.html',
-	styleUrls: ['./ambulatoria-paciente.component.scss']
+	styleUrls: ['./ambulatoria-paciente.component.scss'],
+	providers: [ HistoricalProblemsFacadeService, AmbulatoriaSummaryFacadeService ]
+
 })
 export class AmbulatoriaPacienteComponent implements OnInit {
 

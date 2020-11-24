@@ -31,14 +31,18 @@ export class HistoricalProblemsFacadeService {
 
 	setPatientId(patientId: number): void {
 		if (!this.originalHistoricalProblems.length) {
-			this.outpatientConsultationService.getEvolutionSummaryList(patientId).pipe(
-				tap((outpatientEvolutionSummary: OutpatientEvolutionSummaryDto[]) => this.filterOptions(outpatientEvolutionSummary)),
-				map((outpatientEvolutionSummary: OutpatientEvolutionSummaryDto[]) => outpatientEvolutionSummary.length ? this.mapperService.toHistoricalProblems(outpatientEvolutionSummary) : null)
-			).subscribe(data => {
-				this.originalHistoricalProblems = data;
-				this.sendHistoricalProblems(this.originalHistoricalProblems);
-			});
+			this.loadEvolutionSummaryList(patientId);
 		}
+	}
+
+	public loadEvolutionSummaryList(patientId: number) {
+		this.outpatientConsultationService.getEvolutionSummaryList(patientId).pipe(
+			tap((outpatientEvolutionSummary: OutpatientEvolutionSummaryDto[]) => this.filterOptions(outpatientEvolutionSummary)),
+			map((outpatientEvolutionSummary: OutpatientEvolutionSummaryDto[]) => outpatientEvolutionSummary.length ? this.mapperService.toHistoricalProblems(outpatientEvolutionSummary) : null)
+		).subscribe(data => {
+			this.originalHistoricalProblems = data;
+			this.sendHistoricalProblems(this.originalHistoricalProblems);
+		});
 	}
 
 	public getHistoricalProblems(): Observable<HistoricalProblems[]> {

@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { HistoricalProblemsFacadeService } from './historical-problems-facade.service';
 
-@Injectable({
-	providedIn: 'root'
-})
+@Injectable()
 export class AmbulatoriaSummaryFacadeService {
 
 	private idPaciente: number;
@@ -15,6 +14,8 @@ export class AmbulatoriaSummaryFacadeService {
 	private medicationsSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private vitalSignsSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private anthropometricDataSubject: Subject<any> = new BehaviorSubject<any>([]);
+	private activeProblemsSubject: Subject<any> = new BehaviorSubject<any>([]);
+	private chronicProblemsSubject: Subject<any> = new BehaviorSubject<any>([]);
 
 	public readonly allergies$ = this.allergiesSubject.asObservable();
 	public readonly familyHistories$ = this.familyHistoriesSubject.asObservable();
@@ -22,9 +23,13 @@ export class AmbulatoriaSummaryFacadeService {
 	public readonly medications$ = this.medicationsSubject.asObservable();
 	public readonly vitalSigns$ = this.vitalSignsSubject.asObservable();
 	public readonly anthropometricData$ = this.anthropometricDataSubject.asObservable();
+	public readonly activeProblems$ = this.activeProblemsSubject.asObservable();
+	public readonly chronicProblems$ = this.chronicProblemsSubject.asObservable();
 
 
-	constructor(private readonly hceGeneralStateService: HceGeneralStateService) {
+	constructor(
+		private readonly hceGeneralStateService: HceGeneralStateService,
+		private readonly historialProblemsFacadeService: HistoricalProblemsFacadeService) {
 	}
 
 	setIdPaciente(idPaciente: number) {
@@ -36,6 +41,7 @@ export class AmbulatoriaSummaryFacadeService {
 			vitalSigns: true,
 			medications: true,
 			anthropometricData: true,
+			problems: true
 		});
 	}
 
@@ -63,6 +69,14 @@ export class AmbulatoriaSummaryFacadeService {
 		if (fieldsToUpdate.anthropometricData) {
 			this.hceGeneralStateService.getAnthropometricData(this.idPaciente).subscribe(aD => this.anthropometricDataSubject.next(aD));
 		}
+
+		if (fieldsToUpdate.problems) {
+			this.hceGeneralStateService.getActiveProblems(this.idPaciente).subscribe(p => {
+				this.activeProblemsSubject.next(p);
+			});
+			this.hceGeneralStateService.getChronicConditions(this.idPaciente).subscribe(c => this.chronicProblemsSubject.next(c));
+			this.historialProblemsFacadeService.loadEvolutionSummaryList(this.idPaciente);
+		}
 	}
 }
 
@@ -74,6 +88,4 @@ export interface AmbulatoriaFields {
 	medications?: boolean;
 	anthropometricData?: boolean;
 	problems?: boolean;
-	procedures?: boolean;
-	reasons?: boolean;
 }

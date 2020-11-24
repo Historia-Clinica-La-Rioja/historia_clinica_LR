@@ -150,6 +150,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 				vitalSigns: !!nuevaConsultaDto.vitalSigns,
 				medications: !!nuevaConsultaDto.medications?.length,
 				anthropometricData: !!nuevaConsultaDto.anthropometricData,
+				problems: !!nuevaConsultaDto.problems.length
 			};
 		}
 	}

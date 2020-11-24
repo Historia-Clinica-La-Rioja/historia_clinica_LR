@@ -19,6 +19,7 @@ import { NuevaConsultaDockPopupComponent } from '../../dialogs/nueva-consulta-do
 import { DockPopupService } from '@presentation/services/dock-popup.service';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { ConfirmDialogComponent } from '@core/dialogs/confirm-dialog/confirm-dialog.component';
+import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
 
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
 const ROUTE_INTERNMENT_EPISODE_SUFIX = '/paciente/';
@@ -27,7 +28,6 @@ const ROUTE_INTERNMENT_EPISODE_SUFIX = '/paciente/';
 	selector: 'app-problemas',
 	templateUrl: './problemas.component.html',
 	styleUrls: ['./problemas.component.scss'],
-	providers: [ HistoricalProblemsFacadeService ]
 })
 export class ProblemasComponent implements OnInit, OnDestroy {
 
@@ -61,6 +61,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	constructor(
 		private readonly hceGeneralStateService: HceGeneralStateService,
 		private historicalProblemsFacadeService: HistoricalProblemsFacadeService,
+		private ambulatoriaSummaryFacadeService: AmbulatoriaSummaryFacadeService,
 		private route: ActivatedRoute,
 		private readonly router: Router,
 		public dialog: MatDialog,
@@ -84,36 +85,30 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	}
 
 	loadActiveProblems(){
-		this.activeProblems$ = this.hceGeneralStateService.getActiveProblems(this.patientId).pipe(
-			map((problemas: HCEPersonalHistoryDto[]) => {
-				return problemas.map((problema: HCEPersonalHistoryDto) => {
-					problema.startDate = momentFormat(momentParseDate(problema.startDate), DateFormat.VIEW_DATE);
-					return problema;
-				});
-			})
+		this.activeProblems$ = this.ambulatoriaSummaryFacadeService.activeProblems$.pipe(
+			map(this.formatProblemsDates)
 		);
 	}
 
 	loadSolvedProblems(){
 		this.solvedProblems$ = this.hceGeneralStateService.getSolvedProblems(this.patientId).pipe(
-			map((problemas: HCEPersonalHistoryDto[]) => {
-				return problemas.map((problema: HCEPersonalHistoryDto) => {
-					problema.startDate = momentFormat(momentParseDate(problema.startDate), DateFormat.VIEW_DATE);
-					return problema;
-				});
-			})
+			map(this.formatProblemsDates)
 		);
 	}
 
 	loadChronicProblems(){
-		this.chronicProblems$ = this.hceGeneralStateService.getChronicConditions(this.patientId).pipe(
-			map((problemas: HCEPersonalHistoryDto[]) => {
-				return problemas.map((problema: HCEPersonalHistoryDto) => {
-					problema.startDate = momentFormat(momentParseDate(problema.startDate), DateFormat.VIEW_DATE);
-					return problema;
-				});
-			})
+		this.chronicProblems$ = this.ambulatoriaSummaryFacadeService.chronicProblems$.pipe(
+			map(this.formatProblemsDates)
 		);
+	}
+
+	private formatProblemsDates(problemas: HCEPersonalHistoryDto[]) {
+		return problemas.map((problema: HCEPersonalHistoryDto) => {
+			return {
+				...problema,
+				startDate: momentFormat(momentParseDate(problema.startDate), DateFormat.VIEW_DATE)
+			};
+		});
 	}
 
 	loadHospitalizationProblems(){
