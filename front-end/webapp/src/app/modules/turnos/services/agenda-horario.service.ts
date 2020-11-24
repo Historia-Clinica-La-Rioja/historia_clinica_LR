@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DiaryOpeningHoursDto, OccupationDto, TimeRangeDto } from '@api-rest/api-model';
 import { buildFullDate, currentWeek, DateFormat, dateToMoment, momentFormat } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
+import { REMOVEATTENTION } from '@core/constants/validation-constants';
 
 function floorToNearest(amount: number, precision: number) {
 	return Math.floor(amount / precision) * precision;
@@ -50,27 +51,6 @@ export class AgendaHorarioService {
 
 	private appointmentDuration: number;
 
-	private actions: CalendarEventAction[] = [
-		{
-			label: '<span class="material-icons">delete</span>',
-			a11yLabel: 'Delete',
-			onClick: ({ event }: { event: CalendarEvent }): void => {
-				this.diaryOpeningHours = this.diaryOpeningHours.filter((iEvent) => iEvent !== event);
-			},
-		},
-		{
-			label: '<span class="material-icons">edit</span>',
-			a11yLabel: 'Edit',
-			onClick: ({ event }: { event: CalendarEvent }): void => {
-				this.openConfirmDialogForEvent(event);
-			},
-		},
-	];
-
-	getActions(): CalendarEventAction[] {
-		return this.actions;
-	}
-
 	getMedicalAttentionTypeText(medicalAttentionTypeId: number): string {
 		const medicalAttentionType = medicalAttentionTypeId === 2 ? 'Espontánea' : 'Programada';
 		return `<strong>Atención ${medicalAttentionType} </strong> <br>`;
@@ -88,7 +68,6 @@ export class AgendaHorarioService {
 			meta: {
 				tmpEvent: true,
 			},
-			actions: this.actions,
 		};
 
 		this.diaryOpeningHours = [...this.diaryOpeningHours, dragToSelectEvent];
@@ -119,6 +98,29 @@ export class AgendaHorarioService {
 					end: event.end,
 					overturnCount: event.meta.overturnCount,
 					medicalAttentionTypeId: event.meta.medicalAttentionType?.id
+				}
+			});
+		dialogRef.afterClosed().subscribe(dialogInfo => {
+			if (!dialogInfo) {
+				if (event.meta?.tmpEvent) {
+					this.removeTempEvent(event);
+				}
+			} else {
+				this.setNewEvent(event, dialogInfo);
+			}
+			this.refresh();
+		});
+	}
+
+	openEditDialogForEvent(event: CalendarEvent): void {
+		const dialogRef = this.dialog.open(NewAttentionComponent,
+			{
+				data: {
+					start: event.start,
+					end: event.end,
+					overturnCount: event.meta.overturnCount,
+					medicalAttentionTypeId: event.meta.medicalAttentionType?.id,
+					isEdit: true
 				}
 			});
 		dialogRef.afterClosed().subscribe(dialogInfo => {
@@ -183,6 +185,10 @@ export class AgendaHorarioService {
 		}
 	}
 
+	eventClicked({ event }: { event: CalendarEvent }): void {
+		this.openEditDialogForEvent(event);
+	}
+
 	private occupationsToCalendarEvents(occupations: OccupationDto[]): CalendarEvent[] {
 		let doctorsOfficeEvents: CalendarEvent[] = [];
 		occupations.forEach(ocupation => {
@@ -210,7 +216,6 @@ export class AgendaHorarioService {
 			title: this.getMedicalAttentionTypeText(diaryOpeningHour.medicalAttentionTypeId)
 				+ this.getOverturnsText(diaryOpeningHour.overturnCount),
 			color: this.getMedicalAttentionColor(diaryOpeningHour.medicalAttentionTypeId),
-			actions: this.getActions(),
 			meta: {
 				medicalAttentionType: { id: diaryOpeningHour.medicalAttentionTypeId },
 				overturnCount: diaryOpeningHour.overturnCount
@@ -267,10 +272,15 @@ export class AgendaHorarioService {
 	}
 
 	private setNewEvent(event: CalendarEvent, dialogInfo) {
-		delete event.meta?.tmpEvent;
-		event.meta = dialogInfo;
-		event.title = this.getMedicalAttentionTypeText(dialogInfo.medicalAttentionType.id);
-		event.color = this.getMedicalAttentionColor(dialogInfo.medicalAttentionType.id);
-		event.title += this.getOverturnsText(dialogInfo.overturnCount);
+		if (dialogInfo === REMOVEATTENTION) {
+			this.diaryOpeningHours = this.diaryOpeningHours.filter((iEvent) => iEvent !== event);
+		}else{
+			delete event.meta?.tmpEvent;
+			event.meta = dialogInfo;
+			event.title = this.getMedicalAttentionTypeText(dialogInfo.medicalAttentionType.id);
+			event.color = this.getMedicalAttentionColor(dialogInfo.medicalAttentionType.id);
+			event.title += this.getOverturnsText(dialogInfo.overturnCount);
+		}
 	}
+
 }

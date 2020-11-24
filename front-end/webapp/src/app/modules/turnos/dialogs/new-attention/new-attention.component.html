@@ -1,6 +1,19 @@
-<div mat-dialog-title>
+
+<div mat-dialog-title *ngIf="!data.isEdit else edit">
 	<div class="mat-h2" translate="turnos.agenda-setup.dialog.TITLE"></div>
 </div>
+<ng-template #edit>
+	<div align="end">
+		<button mat-icon-button color="warn" (click)="removeAttention()">
+			<mat-icon>delete_outline</mat-icon>
+		</button>
+	</div>
+
+	<div mat-dialog-title >
+		<div class="mat-h2" translate="turnos.agenda-setup.dialog.EDIT"></div>
+	</div>
+</ng-template>
+
 <div>{{data.start | dayTimeRange: data.end }}</div>
 
 <form [formGroup]="form" (ngSubmit)="submit()">

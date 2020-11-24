@@ -5,6 +5,7 @@ import { MasterDataInterface } from '../../../api-rest/api-model';
 import { MedicalConsultationMasterdataService } from '../../../api-rest/services/medical-consultation-masterdata.service';
 import { MEDICAL_ATTENTION } from '../../constants/descriptions';
 import * as moment from 'moment';
+import { REMOVEATTENTION } from '@core/constants/validation-constants';
 
 @Component({
 	selector: 'app-new-attention',
@@ -20,7 +21,7 @@ export class NewAttentionComponent implements OnInit {
 	constructor(public dialogRef: MatDialogRef<NewAttentionComponent>,
 		           private readonly formBuilder: FormBuilder,
 		           private readonly medicalConsultationMasterdataService: MedicalConsultationMasterdataService,
-		           @Inject(MAT_DIALOG_DATA) public data: {start: Date, end: Date, overturnCount?: number, medicalAttentionTypeId?: number }) { }
+		           @Inject(MAT_DIALOG_DATA) public data: {start: Date, end: Date, overturnCount?: number, medicalAttentionTypeId?: number, isEdit?: boolean }) { }
 
 
 	ngOnInit(): void {
@@ -57,6 +58,10 @@ export class NewAttentionComponent implements OnInit {
 
 	closeDialog() {
 		this.dialogRef.close();
+	}
+
+	removeAttention() {
+		this.dialogRef.close(REMOVEATTENTION);
 	}
 
 }

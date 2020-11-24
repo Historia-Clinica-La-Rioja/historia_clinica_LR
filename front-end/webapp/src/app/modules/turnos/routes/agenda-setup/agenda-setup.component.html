@@ -165,7 +165,8 @@
 										[events]="agendaHorarioService.getEvents()" [hourSegmentTemplate]="weekViewHourSegmentTemplate"
 										[headerTemplate]="headerTemplate" [dayStartHour]="openingTime" [dayEndHour]="closingTime"
 										[hourSegments]="hourSegments"
-										[weekStartsOn]="MONDAY">
+										[weekStartsOn]="MONDAY"
+										(eventClicked)="agendaHorarioService.eventClicked($event)">
 				</mwl-calendar-week-view>
 			</section>
 			<mat-card *ngIf="errors.length">

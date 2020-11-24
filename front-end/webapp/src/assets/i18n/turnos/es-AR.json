@@ -24,7 +24,8 @@
 			"SELECT_DAYS_TYPE": "Días y tipo de consulta",
 			"SELECT_DAYS_TYPE_SUBTITLE": "Seleccione tipos de consulta para cada día",
 			"dialog": {
-				"TITLE": "Nueva atención"
+				"TITLE": "Nueva atención",
+				"EDIT": "Editar atención"
 			},
 			"messages": {
 				"SUCCESS": "La agenda se guardó exitosamente"

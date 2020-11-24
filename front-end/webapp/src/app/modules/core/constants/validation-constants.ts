@@ -6,4 +6,6 @@ export const PERSON = {
 		lastName:20,
 		otherLastNames:20,
 	}
-}
+};
+
+export const REMOVEATTENTION = 'removeAttention';
