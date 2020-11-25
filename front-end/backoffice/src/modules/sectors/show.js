@@ -1,12 +1,14 @@
 import React from 'react';
 import {
+    Datagrid,
+    DateField,
+    DeleteButton,
+    EditButton,
+    ReferenceField,
+    ReferenceManyField,
     Show,
     SimpleShowLayout,
-    ReferenceField,
-    TextField,
-    ReferenceManyField,
-    Datagrid,
-    DeleteButton, DateField, EditButton
+    TextField
 } from 'react-admin';
 import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
@@ -42,13 +44,13 @@ const SectorShow = props => (
             <SectionTitle label="resources.clinicalspecialtysectors.fields.rooms"/>
             <CreateRelatedButton
                 reference="rooms"
-                refFieldName="clinicalSpecialtySectorId"
+                refFieldName="sectorId"
                 label="resources.rooms.createRelated"
             />
             <ReferenceManyField
                 addLabel={false}
                 reference="rooms"
-                target="clinicalSpecialtySectorId"
+                target="sectorId"
                 sort={{ field: 'description', order: 'DESC' }}
             >
                 <Datagrid rowClick="show">

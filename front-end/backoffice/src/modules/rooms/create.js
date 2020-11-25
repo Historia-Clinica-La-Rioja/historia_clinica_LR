@@ -1,16 +1,8 @@
 import React from 'react';
-import {
-    TextInput,
-    Create,
-    SimpleForm,
-    DateInput,
-    ReferenceInput,
-    AutocompleteInput,
-    required,
-} from 'react-admin';
+import {AutocompleteInput, Create, DateInput, ReferenceInput, required, SimpleForm, TextInput,} from 'react-admin';
 import CustomToolbar from "../../modules/components/CustomToolbar";
 
-const redirect = (basePath, id, data) => `/clinicalspecialtysectors/${data.clinicalSpecialtySectorId}/show`;
+const redirect = (basePath, id, data) => `/sectors/${data.sectorId}/show`;
 
 const RoomCreate = props => (
     <Create {...props}>
@@ -19,11 +11,12 @@ const RoomCreate = props => (
             <TextInput source="description" validate={[required()]} />
             <TextInput source="type" validate={[required()]} />
             <DateInput source="dischargeDate" />
+
             <ReferenceInput
-                source="clinicalSpecialtySectorId"
-                reference="clinicalspecialtysectors"
+                source="sectorId"
+                reference="sectors"
                 sort={{ field: 'description', order: 'ASC' }}
-                filterToQuery={searchText => ({description: searchText})}                
+                filterToQuery={searchText => ({description: searchText})}
             >
                 <AutocompleteInput optionText="description" optionValue="id" options={{ disabled: true }} />
             </ReferenceInput>

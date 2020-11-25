@@ -1,19 +1,20 @@
 import React from 'react';
 import {
-    TextInput,
-    Edit,
-    SimpleForm,
-    required,
-    DateInput,
-    TextField,
-    ReferenceField,
-    ReferenceManyField,
+    AutocompleteInput,
     Datagrid,
+    DateInput,
+    Edit,
     EditButton,
+    ReferenceField,
+    ReferenceInput,
+    ReferenceManyField,
+    required,
+    SimpleForm,
+    TextField,
+    TextInput,
 } from 'react-admin';
 import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
-import SgxSelectInput from "../../sgxSelectInput/SgxSelectInput";
 import CustomToolbar from "../../modules/components/CustomToolbar";
 
 const RoomEdit = props => (
@@ -24,7 +25,14 @@ const RoomEdit = props => (
             <TextInput source="type" validate={[required()]} />
             <DateInput source="dischargeDate" />
 
-            <SgxSelectInput label="Especialidad | Sector" source="clinicalSpecialtySectorId" element="clinicalspecialtysectors" optionText="description" alwaysOn allowEmpty={false}/>
+            <ReferenceInput
+                source="sectorId"
+                reference="sectors"
+                sort={{ field: 'description', order: 'ASC' }}
+                filterToQuery={searchText => ({description: searchText})}
+            >
+                <AutocompleteInput optionText="description" optionValue="id" options={{ disabled: true }} />
+            </ReferenceInput>
 
             <SectionTitle label="resources.rooms.fields.beds"/>
             <CreateRelatedButton

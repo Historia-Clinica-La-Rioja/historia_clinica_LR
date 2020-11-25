@@ -1,13 +1,13 @@
 import React from 'react';
 import {
+    Datagrid,
+    DateField,
+    EditButton,
+    ReferenceField,
+    ReferenceManyField,
     Show,
     SimpleShowLayout,
-    ReferenceField,
-    TextField,
-    DateField,
-    ReferenceManyField,
-    Datagrid,
-    EditButton
+    TextField
 } from 'react-admin';
 import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
@@ -19,7 +19,7 @@ const RoomShow = props => (
             <TextField source="description" />
             <TextField source="type" />
             <DateField source="dischargeDate" />
-            <ReferenceField source="clinicalSpecialtySectorId" reference="clinicalspecialtysectors" link="show">
+            <ReferenceField source="sectorId" reference="sectors" link="show">
                 <TextField source="description"/>
             </ReferenceField>
             <SectionTitle label="resources.rooms.fields.beds"/>
