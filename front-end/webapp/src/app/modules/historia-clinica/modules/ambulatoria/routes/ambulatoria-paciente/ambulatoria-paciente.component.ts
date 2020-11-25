@@ -61,6 +61,10 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 					this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
 				}
 			});
+		} else {
+			if (this.dialogRef.isMinimized()) {
+				this.dialogRef.maximize();
+			}
 		}
 	}
 }
