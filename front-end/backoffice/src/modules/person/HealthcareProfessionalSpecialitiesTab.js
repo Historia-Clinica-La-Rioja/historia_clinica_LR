@@ -58,11 +58,12 @@ const HealthcareProfessionalSpecialitiesTab = ({ record }) => {
             sort: { field: 'personId', order: 'DESC' },
             pagination: { page: 1, perPage: 10 }
         })
-            .then(({ data: healthcareProfessionalsData }) => {
+            .then((response) => {
+                const healthcareProfessionalsData = response ? response.data : undefined;
                 setHealthcareProfessionals(healthcareProfessionalsData);
                 setLoadingHealthcareProfessionals(false);
 
-                if(healthcareProfessionalsData.length) {
+                if (healthcareProfessionalsData && healthcareProfessionalsData.length) {
                     dataProvider.getManyReference('healthcareprofessionalspecialties', {
                         target: 'healthcareProfessionalId',
                         id: healthcareProfessionalsData[0].id,
@@ -87,13 +88,13 @@ const HealthcareProfessionalSpecialitiesTab = ({ record }) => {
 
     if (loadingHealthcareProfessionals || loadingHealthcareProfessionalSpecialities) return <Loading />;
     if (errorHealthcareProfessionals || errorHealthcareProfessionalSpecialities) return <span />;
-    if (!healthcareProfessionals.length) return (<CreateRelatedButton
+    if (healthcareProfessionals && !healthcareProfessionals.length) return (<CreateRelatedButton
                                                     record={record}
                                                     reference="healthcareprofessionals"
                                                     refFieldName="personId"
                                                     label="resources.healthcareprofessionals.createRelated" />);
 
-    if (!healthcareProfessionalSpecialities) return <span>Tiene profesional pero no tiene especialidades</span>;
+    if (!healthcareProfessionalSpecialities) return <Loading />;
 
     return (
             

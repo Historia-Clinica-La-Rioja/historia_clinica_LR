@@ -13,10 +13,12 @@ import {
 import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
 
+const redirect = (basePath, id, data) => `/person/${data.personId}/show/2`;
+
 const renderPerson = (choice) => `${choice.identificationNumber} ${choice.lastName} ${choice.firstName}`;
 const HealthcareProfessionalShow = props => (
     <Show {...props}>
-        <SimpleShowLayout>
+        <SimpleShowLayout redirect={redirect}>
             <TextField source="licenseNumber" />
             <ReferenceField source="personId" reference="person">
                 <FunctionField render={renderPerson}/>

@@ -63,6 +63,20 @@ public class BackofficeHealthcareProfessionalStore implements BackofficeStore<Ba
 
     @Override
     public BackofficeHealthcareProfessionalCompleteDto save(BackofficeHealthcareProfessionalCompleteDto dto) {
+        if (dto.getId() != null) {
+            return update(dto);
+        }
+        return create(dto);
+    }
+
+    private BackofficeHealthcareProfessionalCompleteDto update(BackofficeHealthcareProfessionalCompleteDto dto) {
+        HealthcareProfessional hp = buildHealthcareProfessionalEntity(dto);
+        hp.setId(dto.getId());
+        healthcareProfessionalRepository.save(hp);
+        return dto;
+    }
+
+    private BackofficeHealthcareProfessionalCompleteDto create(BackofficeHealthcareProfessionalCompleteDto dto) {
         HealthcareProfessional hp = healthcareProfessionalRepository.save(buildHealthcareProfessionalEntity(dto));
         dto.setId(hp.getId());
         healthcareProfessionalSpecialtyRepository.save(buildHealthcareProfessionalSpecialty(dto));
