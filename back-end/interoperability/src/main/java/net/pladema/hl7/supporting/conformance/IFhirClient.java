@@ -1,10 +1,33 @@
 package net.pladema.hl7.supporting.conformance;
 
+import ca.uhn.fhir.rest.annotation.OptionalParam;
+import ca.uhn.fhir.rest.annotation.RequiredParam;
+import ca.uhn.fhir.rest.annotation.Search;
 import ca.uhn.fhir.rest.client.api.IRestfulClient;
+import ca.uhn.fhir.rest.param.ReferenceParam;
+import ca.uhn.fhir.rest.param.StringParam;
+import org.hl7.fhir.r4.model.DocumentReference;
 
 /**
 * This is a simple client interface. It can have many methods for various searches
 */
 public interface IFhirClient extends IRestfulClient {
 
+     /**
+     * The "@Search" annotation indicates that this method supports the
+     * search operation. This operation takes three parameters which is the search criteria. It is
+     *  annotated with the "@Required" and @Optional annotation.
+     * @see <a href="https://www.hl7.org/fhir/search.html">info</a>
+     * @param subject the Patient resource that the report is about
+     * @param custodian represented custodian organization
+     * @param type document identifier
+     * @return
+     *    This method returns a list of DocumentReference. This list may contain multiple
+     *    matching resources, or it may also be empty.
+     */
+    @Search
+    DocumentReference getDocumentReference(
+            @RequiredParam(name = "subject:identifier") ReferenceParam subject,
+            @RequiredParam(name = "custodian") StringParam custodian,
+            @OptionalParam(name = "type") ReferenceParam type);
 }

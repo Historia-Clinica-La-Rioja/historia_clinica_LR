@@ -5,9 +5,17 @@ import ca.uhn.fhir.context.PerformanceOptionsEnum;
 import ca.uhn.fhir.parser.IParser;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
-
+import ca.uhn.fhir.rest.param.ReferenceParam;
+import ca.uhn.fhir.rest.param.StringParam;
+import ca.uhn.fhir.rest.server.exceptions.InvalidRequestException;
+import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import net.pladema.hl7.supporting.security.ClientAuthInterceptor;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
+import org.hl7.fhir.r4.model.Bundle;
+import org.hl7.fhir.r4.model.DocumentReference;
+import org.hl7.fhir.r4.model.Parameters;
+import org.hl7.fhir.r4.model.Patient;
+import org.hl7.fhir.r4.model.StringType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -41,9 +49,36 @@ public class FhirClientR4 {
         // Create the client
         this.busClient = context.newRestfulClient(IFhirClient.class, CodingSystem.SERVER.BUS);
 
-
         busClient.registerInterceptor(webApplicationContext.getBean(ClientAuthInterceptor.class));
 
         testClient = context.newRestfulGenericClient(CodingSystem.SERVER.TESTAPP);
+    }
+
+    public DocumentReference readDocumentReferences(ReferenceParam subject, StringParam custodian, ReferenceParam type) throws Exception {
+        // Invoke the server with method Read and the given ID
+        try {
+            return busClient.getDocumentReference(subject, custodian, type);
+        }
+        catch(ResourceNotFoundException ex){
+            return null;
+        }
+        catch(InvalidRequestException ex){
+            throw new Exception(ex.getMessage());
+        }
+    }
+
+    public Bundle operationPatientLocation(StringType id){
+        Parameters parameters = new Parameters();
+        parameters.addParameter(new Parameters.ParametersParameterComponent()
+                .setName(Patient.SP_IDENTIFIER)
+                .setValue(id));
+        return testClient
+                .operation()
+                .onType(Patient.class)
+                .named("patient-location")
+                .withParameters(parameters)
+                .useHttpGet()
+                .returnResourceType(Bundle.class)
+                .execute();
     }
 }
