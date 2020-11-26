@@ -1,5 +1,41 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v1_6 
+
+    - changeSet:
+        id: addColumn-sector_id-room
+        author: tmedina
+        changes:
+            - addColumn:
+                tableName: room
+                columns:
+                    - column:
+                        name: sector_id
+                        type: int
+            - addForeignKeyConstraint:
+                baseColumnNames: sector_id
+                baseTableName: room
+                constraintName: FK_room_sector_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: sector
+                validate: true
+
+    - changeSet:
+        id: update-sector_id-room
+        author: tmedina
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    UPDATE room r 
+                    SET sector_id = subquery.sector_id 
+                    FROM 
+                        (SELECT css.id as "clinical_specialty_sector_id", css.sector_id as "sector_id" 
+                        FROM room r 
+                        JOIN clinical_specialty_sector css ON (r.clinical_specialty_sector_id = css.id)) AS subquery 
+                    WHERE r.clinical_specialty_sector_id = subquery.clinical_specialty_sector_id; 
+
     - changeSet:
         id: drop-unused-discharge-date
         author: martinscooper
@@ -7,4 +43,4 @@ databaseChangeLog:
             - dropColumn: 
                 columnName: discharge_date
                 tableName: internment_episode
- 
+
