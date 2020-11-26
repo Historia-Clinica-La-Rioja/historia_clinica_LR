@@ -78,7 +78,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy() {
 		this.agendaSearchService.clearAll();
-		this.agendaFiltersSubscription.unsubscribe();
+		this.agendaFiltersSubscription?.unsubscribe();
 	}
 
 	private loadProfessionalSelected(idProfesional: number) {

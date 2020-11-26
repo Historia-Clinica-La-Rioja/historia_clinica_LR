@@ -6,22 +6,26 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { APPOINTMENT_STATES_ID, getAppointmentState, MAX_LENGTH_MOTIVO } from '../../constants/appointment';
 import { ContextService } from '@core/services/context.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AppointmentDto, PatientMedicalCoverageDto } from '@api-rest/api-model';
+import { AppointmentDto } from '@api-rest/api-model';
+import { ERole } from '@api-rest/api-model';
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
 import { getError, hasError, processErrors } from '@core/utils/form.utils';
 import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
-import { PatientService } from "@api-rest/services/patient.service";
 import { MapperService } from "@core/services/mapper.service";
 import {
 	determineIfIsHealthInsurance,
 	HealthInsurance,
 	PatientMedicalCoverage, PrivateHealthInsurance
 } from "@core/dialogs/medical-coverage/medical-coverage.component";
-import { map } from "rxjs/operators";
+import { map, take } from "rxjs/operators";
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
+import { PermissionsService } from '@core/services/permissions.service';
+import { Observable } from 'rxjs';
 
 const TEMPORARY_PATIENT = 3;
-
+const ROLES_TO_CHANGE_STATE: ERole[] = [ERole.ADMINISTRATIVO, ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO];
+const ROLES_TO_EDIT_PHONE_NUMBER: ERole[]
+	= [ERole.ADMINISTRATIVO, ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO];
 @Component({
 	selector: 'app-appointment',
 	templateUrl: './appointment.component.html',
@@ -41,6 +45,8 @@ export class AppointmentComponent implements OnInit {
 	institutionId = this.contextService.institutionId;
 	coverageText: string;
 	coverageData: PatientMedicalCoverage;
+	hasRoleToChangeState$: Observable<boolean>;
+	hasRoleToEditPhoneNumber$: Observable<boolean>;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public appointmentData: PatientAppointmentInformation,
@@ -52,7 +58,9 @@ export class AppointmentComponent implements OnInit {
 		private readonly formBuilder: FormBuilder,
 		private readonly appointmentFacade: AppointmentsFacadeService,
 		private readonly mapperService: MapperService,
-		private readonly patientMedicalCoverageService: PatientMedicalCoverageService
+		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
+		private readonly permissionsService: PermissionsService,
+
 	) {
 	}
 
@@ -68,7 +76,7 @@ export class AppointmentComponent implements OnInit {
 				if (this.appointment.stateChangeReason) {
 					this.formMotivo.controls.motivo.setValue(this.appointment.stateChangeReason);
 				}
-				if (this.appointment.patientMedicalCoverageId){
+				if (this.appointment.patientMedicalCoverageId) {
 					this.patientMedicalCoverageService.
 						getPatientMedicalCoverage(this.appointment.patientMedicalCoverageId)
 						.pipe(
@@ -76,25 +84,28 @@ export class AppointmentComponent implements OnInit {
 								s => this.mapperService.toPatientMedicalCoverage(s)
 							)
 						)
-						.subscribe(coverageData =>{
+						.subscribe(coverageData => {
 							if (coverageData) {
-								let isHealthInsurance = determineIfIsHealthInsurance(coverageData.medicalCoverage);
+								const isHealthInsurance = determineIfIsHealthInsurance(coverageData.medicalCoverage);
 								this.coverageData = coverageData;
-								if(isHealthInsurance){
+								if (isHealthInsurance) {
 									let healthInsurance: HealthInsurance;
 									healthInsurance = coverageData.medicalCoverage as HealthInsurance;
 									this.coverageText = healthInsurance.acronym ?
 										healthInsurance.acronym : healthInsurance.name;
-								}
-								else {
+								} else {
 									let privateHealthInsurance: PrivateHealthInsurance;
 									privateHealthInsurance = coverageData.medicalCoverage as PrivateHealthInsurance;
 									this.coverageText = privateHealthInsurance.name;
 								}
 							}
-					});
+						});
 				}
 			});
+
+		this.hasRoleToChangeState$ = this.permissionsService.hasContextAssignments$(ROLES_TO_CHANGE_STATE).pipe(take(1));
+
+		this.hasRoleToEditPhoneNumber$ = this.permissionsService.hasContextAssignments$(ROLES_TO_EDIT_PHONE_NUMBER).pipe(take(1));
 	}
 
 	changeState(newStateId: APPOINTMENT_STATES_ID): void {

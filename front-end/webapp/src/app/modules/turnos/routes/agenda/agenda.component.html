@@ -67,7 +67,7 @@
 									[hourSegments]="hourSegments"
 									[weekStartsOn]="MONDAY"
 									(beforeViewRender)="loadCalendar($event)"
-									(hourSegmentClicked)="onClickedSegment($event)"
+									(hourSegmentClicked)="hasRoleToCreate ? onClickedSegment($event) : null"
 									(eventClicked)="viewAppointment($event.event)"
 			>
 			</mwl-calendar-week-view>
@@ -80,7 +80,7 @@
 								   [hourSegmentTemplate]="hourSegmentTemplate"
 								   [dayStartHour]="dayStartHour" [dayEndHour]="dayEndHour"
 								   (beforeViewRender)="loadCalendar($event)"
-								   (hourSegmentClicked)="onClickedSegment($event)"
+								   (hourSegmentClicked)="hasRoleToCreate ? onClickedSegment($event) : null"
 								   (eventClicked)="viewAppointment($event.event)"
 			>
 			</mwl-calendar-day-view>

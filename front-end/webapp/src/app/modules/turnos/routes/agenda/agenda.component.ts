@@ -33,7 +33,7 @@ import { ContextService } from '@core/services/context.service';
 const ASIGNABLE_CLASS = 'cursor-pointer';
 const AGENDA_PROGRAMADA_CLASS = 'bg-green';
 const AGENDA_ESPONTANEA_CLASS = 'bg-blue';
-
+const ROLES_TO_CREATE: ERole[] = [ERole.ADMINISTRATIVO, ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO];
 @Component({
 	selector: 'app-agenda',
 	templateUrl: './agenda.component.html',
@@ -44,6 +44,7 @@ export class AgendaComponent implements OnInit, OnDestroy {
 	readonly calendarViewEnum = CalendarView;
 	view: CalendarView = CalendarView.Week;
 	readonly MONDAY = DAYS_OF_WEEK.MONDAY;
+	hasRoleToCreate: boolean;
 
 	hourSegments: number;
 	agenda: CompleteDiaryDto;
@@ -99,6 +100,8 @@ export class AgendaComponent implements OnInit, OnDestroy {
 					}
 				});
 		});
+
+		this.permissionsService.hasContextAssignments$(ROLES_TO_CREATE).subscribe(hasRole => this.hasRoleToCreate = hasRole);
 	}
 
 	ngOnDestroy() {
