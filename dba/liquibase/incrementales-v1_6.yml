@@ -36,11 +36,285 @@ databaseChangeLog:
                         JOIN clinical_specialty_sector css ON (r.clinical_specialty_sector_id = css.id)) AS subquery 
                     WHERE r.clinical_specialty_sector_id = subquery.clinical_specialty_sector_id; 
 
+    - changeSet:  
+        id:  createTable-sector_organization-metadata
+        author: lmanterola  
+        changes:  
+        - createTable: 
+            tableName: sector_organization  
+            columns:  
+            - column: 
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_sector_organization
+                name:  id  
+                type:  smallint 
+            - column:
+                constraints:
+                    nullable: false
+                name: description
+                type: varchar(255)
+                
+    - changeSet: 
+        id: sector_organization-metadata
+        author: lmanterola
+        context: "!schema-only"
+        changes: 
+            - sql:
+                sql: |-
+                    INSERT INTO sector_organization (id,description) VALUES (1,'Especialidades'); 
+                    INSERT INTO sector_organization (id,description) VALUES (2,'Cuidados progresivos');
+
+    - changeSet:  
+        id:  createTable-care_type-metadata
+        author: lmanterola  
+        changes:  
+        - createTable: 
+            tableName: care_type
+            columns:  
+            - column: 
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_care_type
+                name:  id  
+                type:  smallint 
+            - column:
+                constraints:
+                    nullable: false
+                name: description
+                type: varchar(255)
+                
+    - changeSet: 
+        id: care_type-metadata
+        author: lmanterola
+        context: "!schema-only"
+        changes: 
+            - sql:
+                sql: |-
+                    INSERT INTO care_type (id,description) VALUES (1,'Mínimos'); 
+                    INSERT INTO care_type (id,description) VALUES (2,'Intermedios');
+                    INSERT INTO care_type (id,description) VALUES (3,'Intensivos');
+
+    - changeSet:  
+        id:  createTable-age_group-metadata
+        author: lmanterola  
+        changes:  
+        - createTable: 
+            tableName: age_group
+            columns:  
+            - column: 
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_age_group
+                name:  id  
+                type:  smallint 
+            - column:
+                constraints:
+                    nullable: false
+                name: description
+                type: varchar(255)
+                
+    - changeSet: 
+        id: age_group-metadata
+        author: lmanterola
+        context: "!schema-only"
+        changes: 
+            - sql:
+                sql: |-
+                    INSERT INTO age_group (id,description) VALUES (1,'Adultos'); 
+                    INSERT INTO age_group (id,description) VALUES (2,'Pediátricos');
+                    INSERT INTO age_group (id,description) VALUES (3,'Neo'); 
+    
+    - changeSet:  
+        id:  createTable-hospitalization_type-metadata
+        author: lmanterola  
+        changes:  
+        - createTable: 
+            tableName: hospitalization_type
+            columns:  
+            - column: 
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_hospitalization_type
+                name:  id  
+                type:  smallint 
+            - column:
+                constraints:
+                    nullable: false
+                name: description
+                type: varchar(255)
+                
+    - changeSet: 
+        id: hospitalization_type-metadata
+        author: lmanterola
+        context: "!schema-only"
+        changes: 
+            - sql:
+                sql: |-
+                    INSERT INTO hospitalization_type (id,description) VALUES (1,'Crónico'); 
+                    INSERT INTO hospitalization_type (id,description) VALUES (2,'Agudo');
+
+    - changeSet:  
+        id:  createTable-sector_type-metadata
+        author: lmanterola  
+        changes:  
+        - createTable: 
+            tableName: sector_type
+            columns:  
+            - column: 
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_sector_type
+                name:  id  
+                type:  smallint 
+            - column:
+                constraints:
+                    nullable: false
+                name: description
+                type: varchar(255)
+                    
+    - changeSet: 
+        id: sector_type-metadata
+        author: lmanterola
+        context: "!schema-only"
+        changes: 
+            - sql:
+                sql: |-
+                    INSERT INTO sector_type (id,description) VALUES (1,'Ambulatorio'); 
+                    INSERT INTO sector_type (id,description) VALUES (2,'Internación');
+
+    - changeSet:
+        id: addColumn-sector_id-sector
+        author: lmanterola
+        changes:
+        - addColumn:
+            tableName: sector
+            columns:
+            - column:
+                name: sector_id
+                type: int
+
+        - addForeignKeyConstraint:
+                baseColumnNames: sector_id
+                baseTableName: sector
+                constraintName: FK_sector_sector_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: sector
+                validate: true
+
+    - changeSet:
+        id: addColumn-sector_type_id-sector
+        author: lmanterola
+        changes:
+        - addColumn:
+            tableName: sector
+            columns:
+            - column:
+                name: sector_type_id
+                type: smallint
+
+        - addForeignKeyConstraint:
+                baseColumnNames: sector_type_id
+                baseTableName: sector
+                constraintName: FK_sector_sector_type_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: sector_type
+                validate: true  
+
+
+    - changeSet:
+        id: addColumn-sector_organization_id-sector
+        author: lmanterola
+        changes:
+        - addColumn:
+            tableName: sector
+            columns:
+            - column:
+                name: sector_organization_id
+                type: smallint
+
+        - addForeignKeyConstraint:
+                baseColumnNames: sector_organization_id
+                baseTableName: sector
+                constraintName: FK_sector_sector_organization_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: sector_organization
+                validate: true
+                
+    - changeSet:
+        id: addColumn-age_group_id-sector
+        author: lmanterola
+        changes:
+        - addColumn:
+            tableName: sector
+            columns:
+            - column:
+                name: age_group_id
+                type: smallint
+
+        - addForeignKeyConstraint:
+                baseColumnNames: age_group_id
+                baseTableName: sector
+                constraintName: FK_sector_age_group_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: age_group
+                validate: true      
+
+    - changeSet:
+        id: addColumn-care_type_id-sector
+        author: lmanterola
+        changes:
+        - addColumn:
+            tableName: sector
+            columns:
+            - column:
+                name: care_type_id
+                type: smallint
+
+        - addForeignKeyConstraint:
+                baseColumnNames: care_type_id
+                baseTableName: sector
+                constraintName: FK_sector_care_type_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: care_type
+                validate: true         
+
+    - changeSet:
+        id: addColumn-hospitalization_type_id-sector
+        author: lmanterola
+        changes:
+        - addColumn:
+            tableName: sector
+            columns:
+            - column:
+                name: hospitalization_type_id
+                type: smallint
+
+        - addForeignKeyConstraint:
+                baseColumnNames: hospitalization_type_id
+                baseTableName: sector
+                constraintName: FK_sector_hospitalization_type_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: hospitalization_type
+                validate: true
+
     - changeSet:
         id: drop-unused-discharge-date
         author: martinscooper
         changes: 
             - dropColumn: 
                 columnName: discharge_date
-                tableName: internment_episode
+                tableName: internment_episode              
 
