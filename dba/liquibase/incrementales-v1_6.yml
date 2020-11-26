@@ -311,10 +311,21 @@ databaseChangeLog:
                 validate: true
 
     - changeSet:
+        id: dropNotNullConstraint-clinical_specialty_sector_id-room
+        author: lmanterola
+        changes:
+        - dropNotNullConstraint:
+            columnName: clinical_specialty_sector_id
+            columnDataType: int
+            tableName: room
+        
+    - changeSet:
         id: drop-unused-discharge-date
         author: martinscooper
         changes: 
-            - dropColumn: 
-                columnName: discharge_date
-                tableName: internment_episode              
+        - dropColumn: 
+            columnName: discharge_date
+            tableName: internment_episode              
+
+
 
