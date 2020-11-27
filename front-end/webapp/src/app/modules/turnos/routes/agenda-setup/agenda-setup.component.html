@@ -12,7 +12,7 @@
 					<mat-form-field appearance="outline">
 						<mat-select id="healthcareProfessionalId" name="healthcareProfessionalId"
 									formControlName="healthcareProfessionalId"
-									placeholder="{{'pacientes.form.SELECT' | translate}}" (selectionChange)="setSpecialtiesAndResetFollowingControls(form.value.healthcareProfessionalId)">
+									placeholder="{{'pacientes.form.SELECT' | translate}}">
 							<mat-option *ngFor="let professional of professionals" [value]="professional.id">
 								<span class="mat-body">{{getFullNameLicence(professional)}}</span>
 							</mat-option>
@@ -36,25 +36,9 @@
 					<mat-form-field appearance="outline">
 						<mat-select id="sectorId" name="sectorId" formControlName="sectorId"
 							placeholder="{{'pacientes.form.SELECT' | translate}}"
-							(selectionChange)="setDoctorOfficesAndResetFollowingControls(form.value.sectorId, form.value.specialtyId)">
+							(selectionChange)="setDoctorOfficesAndResetFollowingControls(form.value.sectorId)">
 							<mat-option *ngFor="let sector of sectors" [value]="sector.id">
 								{{sector.description}}
-							</mat-option>
-						</mat-select>
-						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
-					</mat-form-field>
-				</div>
-
-				<div fxLayout="row">
-					<span [translate]="'Especialidad'"></span>
-				</div>
-				<div fxLayout="row">
-					<mat-form-field appearance="outline">
-						<mat-select id="specialtyId" name="specialtyId" formControlName="specialtyId"
-							placeholder="{{'pacientes.form.SELECT' | translate}}"
-							(selectionChange)="setDoctorOfficesAndResetFollowingControls(form.value.sectorId, form.value.specialtyId)">
-							<mat-option *ngFor="let speciality of specialties" [value]="speciality.id">
-								{{speciality.name}}
 							</mat-option>
 						</mat-select>
 						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
@@ -73,7 +57,7 @@
 								{{doctorOffice.description}}
 							</mat-option>
 						</mat-select>
-						<mat-error [translate]="'No existen consultorios para esa especialidad'"></mat-error>
+						<mat-error [translate]="'No existen consultorios para este sector'"></mat-error>
 					</mat-form-field>
 				</div>
 

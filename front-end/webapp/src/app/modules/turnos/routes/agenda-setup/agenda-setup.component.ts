@@ -25,7 +25,6 @@ import {DAYS_OF_WEEK} from 'angular-calendar';
 import {DiaryOpeningHoursService} from '@api-rest/services/diary-opening-hours.service';
 import {DiaryService} from '@api-rest/services/diary.service';
 import {Observable} from 'rxjs';
-import {ClinicalSpecialtyService} from "@api-rest/services/clinical-specialty.service";
 
 const ROUTE_APPOINTMENT = 'turnos';
 
@@ -54,7 +53,6 @@ export class AgendaSetupComponent implements OnInit {
 	openingTime: number;
 	professionals;
 	sectors;
-	specialties;
 	agendaHorarioService: AgendaHorarioService;
 
 
@@ -66,7 +64,6 @@ export class AgendaSetupComponent implements OnInit {
 		private readonly formBuilder: FormBuilder,
 		private readonly el: ElementRef,
 		private readonly sectorService: SectorService,
-		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 		private translator: TranslateService,
 		private dialog: MatDialog,
 		private doctorsOfficeService: DoctorsOfficeService,
@@ -92,7 +89,6 @@ export class AgendaSetupComponent implements OnInit {
 
 		this.form = this.formBuilder.group({
 			sectorId: [null, [Validators.required]],
-			specialtyId: [null, [Validators.required]],
 			doctorOffice: [null, [Validators.required]],
 			healthcareProfessionalId: [null, [Validators.required]],
 			startDate: [null, [Validators.required]],
@@ -126,9 +122,8 @@ export class AgendaSetupComponent implements OnInit {
 
 	private setValuesFromExistingAgenda(diary: CompleteDiaryDto): void {
 		this.form.controls.sectorId.setValue(diary.sectorId);
-		this.form.controls.specialtyId.setValue(diary.clinicalSpecialtyId);
 
-		this.doctorsOfficeService.getAll(diary.sectorId, diary.clinicalSpecialtyId)
+		this.doctorsOfficeService.getAll(diary.sectorId)
 			.subscribe((doctorsOffice: DoctorsOfficeDto[]) => {
 				this.doctorOffices = doctorsOffice;
 				const office = doctorsOffice.find(o => o.id === diary.doctorsOfficeId);
@@ -154,38 +149,18 @@ export class AgendaSetupComponent implements OnInit {
 		this.autoRenew = diary.automaticRenewal;
 		this.holidayWork = diary.includeHoliday;
 
-		this.setSpecialties(diary.healthcareProfessionalId);
-
 		this.agendaHorarioService.setDiaryOpeningHours(diary.diaryOpeningHours);
 	}
 
 	private disableNotEditableControls(): void {
 		this.form.get('sectorId').disable();
-		this.form.get('specialtyId').disable();
 		this.form.get('doctorOffice').disable();
 		this.form.get('healthcareProfessionalId').disable();
 		this.form.get('appointmentDuration').disable();
 	}
 
-	setSpecialties(professionalId: number): void {
-		this.clinicalSpecialtyService.getClinicalSpecialty(professionalId).subscribe(data => {
-			this.specialties = data;
-		});
-	}
-
-	setSpecialtiesAndResetFollowingControls(professionalId: number): void {
-		this.clinicalSpecialtyService.getClinicalSpecialty(professionalId).subscribe(data => {
-			this.specialties = data;
-		});
-		this.form.get('specialtyId').reset();
-		this.form.get('doctorOffice').reset();
-	}
-
-	setDoctorOfficesAndResetFollowingControls(sectorId: number, specialtyId: number): void {
-		if(specialtyId){
-			this.doctorsOfficeService.getAll(sectorId, specialtyId)
-				.subscribe((data: DoctorsOfficeDto[]) => this.doctorOffices = data);
-		}
+	setDoctorOfficesAndResetFollowingControls(sectorId: number): void {
+		this.doctorsOfficeService.getAll(sectorId).subscribe((data: DoctorsOfficeDto[]) => this.doctorOffices = data);
 		this.form.get('doctorOffice').reset();
 	}
 

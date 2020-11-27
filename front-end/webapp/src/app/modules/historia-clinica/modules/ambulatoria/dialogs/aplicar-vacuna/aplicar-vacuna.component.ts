@@ -59,20 +59,7 @@ export class AplicarVacunaComponent implements OnInit {
 			clinicalSpecialty: []
 		});
 
-		this.appointmentsService.considerAppointments().subscribe(consider => {
-			if(consider)
-				this.setAppointmentSpecialty();
-			else
-				this.setLoggedProfessionalSpecialties();
-		});
-	}
-
-	setAppointmentSpecialty() {
-		this.clinicalSpecialtyService.getAppointmentClinicalSpecialty(this.data.patientId).subscribe(specialty => {
-			this.specialties = [specialty];
-			this.defaultSpecialty = specialty;
-			this.form.get('clinicalSpecialty').setValue(this.defaultSpecialty);
-		});
+		this.setLoggedProfessionalSpecialties();
 	}
 
 	setLoggedProfessionalSpecialties() {

@@ -26,11 +26,10 @@ public class DoctorsOfficeServiceImpl implements DoctorsOfficeService {
     }
 
     @Override
-    public List<DoctorsOfficeBo> getAllDoctorsOffice(Integer institutionId, Integer sectorId,
-                                                               Integer clinicalspecialtyId) {
-        LOG.debug("Input parameters -> institutionId {}, sectorId {}, clinicalspecialtyId {}",
-                institutionId, sectorId, clinicalspecialtyId);
-        List<DoctorsOfficeVo> resultQuery = doctorsOfficeRepository.findAllBy(institutionId, sectorId, clinicalspecialtyId);
+    public List<DoctorsOfficeBo> getAllDoctorsOffice(Integer institutionId, Integer sectorId) {
+        LOG.debug("Input parameters -> institutionId {}, sectorId {}",
+                institutionId, sectorId);
+        List<DoctorsOfficeVo> resultQuery = doctorsOfficeRepository.findAllBy(institutionId, sectorId);
         List<DoctorsOfficeBo> result = new ArrayList<>();
         resultQuery.forEach(doctorsOfficeVo -> result.add(new DoctorsOfficeBo(doctorsOfficeVo)));
         LOG.debug(LOGGING_OUTPUT, result);

@@ -34,15 +34,14 @@ public class DoctorsOfficeController {
         this.doctorsOfficeMapper = doctorsOfficeMapper;
     }
 
-    @GetMapping("/sector/{sectorId}/clinicalspecialty/{clinicalspecialtyId}")
+    @GetMapping("/sector/{sectorId}")
     public ResponseEntity<List<DoctorsOfficeDto>> getAll(
             @PathVariable(name = "institutionId") Integer institutionId,
-            @PathVariable(name = "sectorId") Integer sectorId,
-            @PathVariable(name = "clinicalspecialtyId") Integer clinicalspecialtyId) {
-        LOG.debug("Input parameters -> institutionId {}, sectorId {}, clinicalspecialtyId {}",
-                institutionId, sectorId, clinicalspecialtyId);
+            @PathVariable(name = "sectorId") Integer sectorId) {
+        LOG.debug("Input parameters -> institutionId {}, sectorId {}",
+                institutionId, sectorId);
         List<DoctorsOfficeBo> doctorsOfficeBos = doctorsOfficeService
-                .getAllDoctorsOffice(institutionId, sectorId, clinicalspecialtyId);
+                .getAllDoctorsOffice(institutionId, sectorId);
         List<DoctorsOfficeDto> result = doctorsOfficeMapper.toListDoctorsOfficeDto(doctorsOfficeBos);
         LOG.debug(OUTPUT, result);
         return ResponseEntity.ok().body(result);

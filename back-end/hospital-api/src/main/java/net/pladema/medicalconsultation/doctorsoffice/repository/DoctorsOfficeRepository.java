@@ -13,7 +13,6 @@ import java.util.List;
 @Repository
 public interface DoctorsOfficeRepository extends JpaRepository<DoctorsOffice, Integer> {
 
-
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.medicalconsultation.doctorsoffice.repository.domain.DoctorsOfficeVo(" +
             "do.id, do.description, do.openingTime, do.closingTime) " +
@@ -21,17 +20,9 @@ public interface DoctorsOfficeRepository extends JpaRepository<DoctorsOffice, In
             "JOIN ClinicalSpecialtySector css on ( do.clinicalSpecialtySectorId = css.id ) " +
             "WHERE do.institutionId = :institutionId " +
             "AND css.sectorId = :sectorId " +
-            "AND css.clinicalSpecialtyId = :clinicalSpecialtyId " +
             "ORDER BY do.description ASC ")
     List<DoctorsOfficeVo> findAllBy(@Param("institutionId") Integer institutionId,
-                                    @Param("sectorId") Integer sectorId,
-                                    @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId);
-
-    @Transactional(readOnly = true)
-    @Query("SELECT d "+
-            "FROM DoctorsOffice AS d " +
-            "WHERE d.institutionId = :institutionId ")
-    List<DoctorsOffice> getDoctorOfficesByInstitution(@Param("institutionId") Integer institutionId);
+                                    @Param("sectorId") Integer sectorId);
 
     @Transactional(readOnly = true)
     @Query("SELECT d.institutionId "+

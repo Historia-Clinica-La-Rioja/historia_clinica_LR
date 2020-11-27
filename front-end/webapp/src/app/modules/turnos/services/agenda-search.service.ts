@@ -21,7 +21,7 @@ export class AgendaSearchService {
 		return this.agendaFiltersSource.asObservable();
 	}
 
-	getAgendas$(): Observable<AgendaOptionsData> {
+	 getAgendas$(): Observable<AgendaOptionsData> {
 		return this.agendasSource.asObservable();
 	}
 
@@ -50,7 +50,7 @@ export class AgendaSearchService {
 	}
 
 	private updateDiaries(idProfesional: number, idEspecialidad: number): void {
-		this.diariesService.getDiaries(idProfesional, idEspecialidad).subscribe(agendas => {
+		this.diariesService.getDiaries(idProfesional, null).subscribe(agendas => {
 			this.agendasSource.next({
 				agendas,
 				idAgendaSelected: this.agendaSelected?.id,

@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface DoctorsOfficeService {
 
-    List<DoctorsOfficeBo> getAllDoctorsOffice(Integer institutionId, Integer sectorId, Integer clinicalspecialtyId);
+    List<DoctorsOfficeBo> getAllDoctorsOffice(Integer institutionId, Integer sectorId);
 }

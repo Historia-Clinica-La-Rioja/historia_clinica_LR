@@ -1,28 +1,27 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { DockPopupRef } from '@presentation/services/dock-popup-ref';
-import { SnomedService } from '../../../../services/snomed.service';
-import { OVERLAY_DATA } from '@presentation/presentation-model';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { MotivoNuevaConsultaService } from '../../services/motivo-nueva-consulta.service';
-import { Medicacion, MedicacionesNuevaConsultaService } from '../../services/medicaciones-nueva-consulta.service';
-import { Problema, ProblemasNuevaConsultaService } from '../../services/problemas-nueva-consulta.service';
-import { ProcedimientosService } from '../../../../services/procedimientos.service';
-import { DatosAntropometricosNuevaConsultaService } from '../../services/datos-antropometricos-nueva-consulta.service';
-import { SignosVitalesNuevaConsultaService } from '../../services/signos-vitales-nueva-consulta.service';
+import {Component, Inject, OnInit} from '@angular/core';
+import {DockPopupRef} from '@presentation/services/dock-popup-ref';
+import {SnomedService} from '../../../../services/snomed.service';
+import {OVERLAY_DATA} from '@presentation/presentation-model';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {MotivoNuevaConsultaService} from '../../services/motivo-nueva-consulta.service';
+import {Medicacion, MedicacionesNuevaConsultaService} from '../../services/medicaciones-nueva-consulta.service';
+import {Problema, ProblemasNuevaConsultaService} from '../../services/problemas-nueva-consulta.service';
+import {ProcedimientosService} from '../../../../services/procedimientos.service';
+import {DatosAntropometricosNuevaConsultaService} from '../../services/datos-antropometricos-nueva-consulta.service';
+import {SignosVitalesNuevaConsultaService} from '../../services/signos-vitales-nueva-consulta.service';
 import {
 	AntecedenteFamiliar,
 	AntecedentesFamiliaresNuevaConsultaService
 } from '../../services/antecedentes-familiares-nueva-consulta.service';
-import { Alergia, AlergiasNuevaConsultaService } from '../../services/alergias-nueva-consulta.service';
-import { DateFormat, dateToMomentTimeZone, momentFormat, newMoment } from '@core/utils/moment.utils';
-import { ClinicalSpecialtyDto, CreateOutpatientDto, HealthConditionNewConsultationDto } from '@api-rest/api-model';
-import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
-import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
-import { ContextService } from '@core/services/context.service';
-import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { HealthConditionService } from '@api-rest/services/healthcondition.service';
-import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
-import { AppointmentsService } from '@api-rest/services/appointments.service';
+import {Alergia, AlergiasNuevaConsultaService} from '../../services/alergias-nueva-consulta.service';
+import {DateFormat, dateToMomentTimeZone, momentFormat, newMoment} from '@core/utils/moment.utils';
+import {ClinicalSpecialtyDto, CreateOutpatientDto, HealthConditionNewConsultationDto} from '@api-rest/api-model';
+import {InternacionMasterDataService} from '@api-rest/services/internacion-master-data.service';
+import {OutpatientConsultationService} from '@api-rest/services/outpatient-consultation.service';
+import {ContextService} from '@core/services/context.service';
+import {SnackBarService} from '@presentation/services/snack-bar.service';
+import {HealthConditionService} from '@api-rest/services/healthcondition.service';
+import {ClinicalSpecialtyService} from '@api-rest/services/clinical-specialty.service';
 
 @Component({
 	selector: 'app-nueva-consulta-dock-popup',
@@ -59,7 +58,6 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private readonly healthConditionService: HealthConditionService,
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
-		private readonly appointmentsService: AppointmentsService,
 	) {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, snomedService);
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, snomedService);
@@ -72,24 +70,22 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, snomedService);
 	}
 
-	ngOnInit(): void {
-		this.appointmentsService.considerAppointments().subscribe(consider => {
-			if (consider) {
-				this.clinicalSpecialtyService.getAppointmentClinicalSpecialty(this.data.idPaciente).subscribe(specialty => {
-					this.specialties = [specialty];
-					this.defaultSpecialty = specialty;
-					this.formEvolucion.get('clinicalSpecialty').setValue(this.defaultSpecialty);
-				});
-			} else {
-				this.clinicalSpecialtyService.getLoggedInProfessionalClinicalSpecialties().subscribe( specialties => {
-					this.specialties = specialties;
-					this.fixedSpecialty = false;
-					this.defaultSpecialty = specialties[0];
-					this.formEvolucion.get('clinicalSpecialty').setValue(this.defaultSpecialty);
-				});
-			}
+	setProfessionalSpecialties(){
+		this.clinicalSpecialtyService.getLoggedInProfessionalClinicalSpecialties().subscribe( specialties => {
+			this.setSpecialtyFields(specialties, false)
 		});
+	}
 
+	setSpecialtyFields(specialtyArray, fixedSpecialty){
+		this.specialties = specialtyArray;
+		this.fixedSpecialty = fixedSpecialty;
+		this.defaultSpecialty = specialtyArray[0];
+		this.formEvolucion.get('clinicalSpecialty').setValue(this.defaultSpecialty);
+	}
+
+	ngOnInit(): void {
+
+		this.setProfessionalSpecialties();
 
 		if (this.data.idProblema) {
 			this.readOnlyProblema = true;
