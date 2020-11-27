@@ -59,6 +59,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 				delete this.dialogRef;
 				if (fieldsToUpdate) {
 					this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
+					this.hasNewConsultationEnabled = false;
 				}
 			});
 		} else {

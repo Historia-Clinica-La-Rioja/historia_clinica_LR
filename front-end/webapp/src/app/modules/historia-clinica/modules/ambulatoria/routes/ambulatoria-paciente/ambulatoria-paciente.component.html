@@ -44,7 +44,7 @@
 							<span>{{ 'ambulatoria.paciente.problemas.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>
 						<ng-template matTabContent>
-							<app-problemas [hasNewConsultationEnabled]="hasNewConsultationEnabled"
+							<app-problemas [(hasNewConsultationEnabled)]="hasNewConsultationEnabled"
 										   [nuevaConsultaRef]="dialogRef"></app-problemas>
 						</ng-template>
 					</mat-tab>

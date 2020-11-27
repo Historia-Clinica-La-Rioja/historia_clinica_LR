@@ -1,11 +1,11 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {
 	PROBLEMAS_ACTIVOS,
 	PROBLEMAS_CRONICOS,
 	PROBLEMAS_INTERNACION,
 	PROBLEMAS_RESUELTOS
 } from '../../../../constants/summaries';
-import {HCEHospitalizationHistoryDto, HCEPersonalHistoryDto} from '@api-rest/api-model';
+import { HCEHospitalizationHistoryDto, HCEPersonalHistoryDto } from '@api-rest/api-model';
 import {HceGeneralStateService} from '@api-rest/services/hce-general-state.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {DateFormat, momentFormat, momentParseDate} from '@core/utils/moment.utils';
@@ -39,7 +39,20 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 			delete this.nuevaConsultaFromProblemaRef;
 		}
 	}
-	@Input() hasNewConsultationEnabled: boolean;
+	private hasNewConsultationEnabledValue: boolean;
+
+	@Output() hasNewConsultationEnabledChange = new EventEmitter();
+
+	@Input()
+	set hasNewConsultationEnabled(hasNewConsultationEnabled: boolean) {
+		this.hasNewConsultationEnabledValue = hasNewConsultationEnabled;
+		this.hasNewConsultationEnabledChange.emit(this.hasNewConsultationEnabledValue);
+	}
+
+	get hasNewConsultationEnabled(): boolean {
+		return this.hasNewConsultationEnabledValue;
+	}
+
 
 	public readonly cronicos = PROBLEMAS_CRONICOS;
 	public readonly activos = PROBLEMAS_ACTIVOS;
@@ -159,7 +172,13 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		const idPaciente = this.route.snapshot.paramMap.get('idPaciente');
 		this.nuevaConsultaFromProblemaRef =
 			this.dockPopupService.open(NuevaConsultaDockPopupComponent, {idPaciente, idProblema});
-		this.nuevaConsultaFromProblemaRef.afterClosed().subscribe(_ => delete this.nuevaConsultaFromProblemaRef);
+		this.nuevaConsultaFromProblemaRef.afterClosed().subscribe(fieldsToUpdate => {
+			if (fieldsToUpdate) {
+				this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
+				this.hasNewConsultationEnabled = false;
+			}
+			delete this.nuevaConsultaFromProblemaRef;
+		});
 	}
 
 
