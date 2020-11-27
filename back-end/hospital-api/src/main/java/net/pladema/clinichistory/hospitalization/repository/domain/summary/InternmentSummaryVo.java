@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.hospitalization.repository.domain.ResponsibleContact;
+import net.pladema.clinichistory.ips.repository.masterdata.entity.InternmentEpisodeStatus;
 import net.pladema.staff.repository.entity.ClinicalSpecialty;
 
 @Getter
@@ -40,15 +41,19 @@ public class InternmentSummaryVo {
 
 	private LocalDate entryDate;
 
+	private LocalDate dischargeDate;
+
 	private ResponsibleContactVo responsibleContact;
 
 	private LocalDateTime probableDischargeDate;
+
+	private Boolean active;
 
 	public InternmentSummaryVo(Integer id, LocalDate entryDate, Long anamnesisDocId, String anamnesisStatusId,
 			Long epicrisisDocId, String epicrisisStatusId, Integer bedId, String bedNumber, Integer roomId,
 			String roomNumber, String sectorDescription, ClinicalSpecialty sectorSpecialty, ClinicalSpecialty clinicalSpecialty,
 			Integer healthcareProfessionalId, String licenseNumber, String firstName, String lastName,
-			ResponsibleContact responsibleContact, LocalDateTime probableDischargeDate) {
+			ResponsibleContact responsibleContact, LocalDateTime probableDischargeDate, LocalDate dischargeDate, Short internmentStatusId) {
 		this.id = id;
 		this.documents = new DocumentsSummaryVo();
 		this.documents.setAnamnesis(new AnamnesisSummaryVo(anamnesisDocId, anamnesisStatusId));
@@ -72,6 +77,12 @@ public class InternmentSummaryVo {
 		if (responsibleContact != null)
 			this.responsibleContact = new ResponsibleContactVo(responsibleContact);
 		this.probableDischargeDate = probableDischargeDate;
+		this.dischargeDate = dischargeDate;
+		this.active = this.isActive(internmentStatusId);
+	}
+
+	public Boolean isActive(Short internmentStatusId) {
+		return internmentStatusId.equals(InternmentEpisodeStatus.ACTIVE_ID);
 	}
 
 }

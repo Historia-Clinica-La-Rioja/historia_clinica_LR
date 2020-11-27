@@ -41,6 +41,8 @@ public class InternmentSummaryBo {
 
     private LocalDate entryDate;
 
+    private LocalDate dischargeDate;
+
     private int totalInternmentDays;
 
     private ResponsibleContactBo responsibleContact;
@@ -59,15 +61,21 @@ public class InternmentSummaryBo {
         this.clinicalSpecialtyId = internmentSummaryVo.getClinicalSpecialtyId();
         this.specialty = internmentSummaryVo.getSpecialty();
         this.entryDate = internmentSummaryVo.getEntryDate();
-        this.totalInternmentDays = totalInternmentDays();
         if (internmentSummaryVo.getDoctor() != null)
             this.doctor = new ResponsibleDoctorBo(internmentSummaryVo.getDoctor());
         if (internmentSummaryVo.getResponsibleContact() != null)
             this.responsibleContact = new ResponsibleContactBo(internmentSummaryVo.getResponsibleContact());
         this.probableDischargeDate = internmentSummaryVo.getProbableDischargeDate();
+        this.dischargeDate = internmentSummaryVo.getDischargeDate();
+        this.totalInternmentDays = totalInternmentDays(internmentSummaryVo.getActive());
     }
 
-    private int totalInternmentDays(){
-        return (int) ChronoUnit.DAYS.between(getEntryDate(), LocalDate.now());
+    private int totalInternmentDays(boolean active){
+        if (active) {
+            return (int) ChronoUnit.DAYS.between(getEntryDate(), LocalDate.now());
+        }
+        else {
+            return (int) ChronoUnit.DAYS.between(getEntryDate(), getDischargeDate());
+        }
     }
 }

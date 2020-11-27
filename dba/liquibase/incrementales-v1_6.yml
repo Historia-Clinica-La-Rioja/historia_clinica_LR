@@ -1,3 +1,8 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v1_6 
-
+    - changeSet:
+        id: drop-unused-discharge-date
+        author: martinscooper
+        - dropColumn: 
+            columnName: discharge_date
+            tableName: internment_episode 
