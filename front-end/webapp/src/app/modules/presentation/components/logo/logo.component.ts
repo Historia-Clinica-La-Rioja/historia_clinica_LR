@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FlavoredImagesService } from "@core/services/flavored-images.service";
 import { ImageSrc } from "@core/utils/flavored-image-definitions";
 
@@ -9,13 +9,19 @@ import { ImageSrc } from "@core/utils/flavored-image-definitions";
 })
 export class LogoComponent implements OnInit {
 
+	@Input() isSecondaryLogo: boolean = false;
 	public logos: ImageSrc[] = []
 
 	constructor(private flavoredImagesService: FlavoredImagesService) {
 	}
 
 	ngOnInit(): void {
-		this.flavoredImagesService.getLogos().subscribe(logos => this.logos = logos);
+		if(this.isSecondaryLogo) {
+			this.flavoredImagesService.getHeaderSecondaryLogos().subscribe(logos => this.logos = logos);
+		}
+		else {
+			this.flavoredImagesService.getLogos().subscribe(logos => this.logos = logos);
+		}
 	}
 
 }

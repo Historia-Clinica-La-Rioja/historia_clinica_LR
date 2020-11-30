@@ -36,7 +36,7 @@ export const FLAVORED_FOOTER_IMAGES: FlavoredImagesObj = {
 			location: 'assets/flavors/minsal/images/logos/unicen.png',
 			alt: 'unicen'
 		},
-	],	
+	],
 	pba: [
 		{
 			location: 'assets/flavors/pba/images/logos/ministerio-salud.png',
@@ -76,6 +76,33 @@ export const FLAVORED_FOOTER_IMAGES: FlavoredImagesObj = {
 };
 
 export const FLAVORED_LOGOS: FlavoredImagesObj = {
+	tandil: [
+		{
+			location: '',
+			alt: 'HSI'
+		}
+	],
+	minsal: [
+		{
+			location: '',
+			alt: 'HSI'
+		}
+	],
+	pba: [
+		{
+			location: '',
+			alt: 'HSI'
+		}
+	],
+	chaco: [
+		{
+			location: '',
+			alt: 'HSI'
+		}
+	],
+};
+
+export const FLAVORED_SECONDARY_LOGOS: FlavoredImagesObj = {
 	tandil: [
 		{
 			location: '',

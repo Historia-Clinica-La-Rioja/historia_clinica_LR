@@ -1,8 +1,9 @@
 <mat-toolbar [style.position]="position">
 	<mat-toolbar-row class="mat-elevation-z6">
 		<ng-content></ng-content>
-		<div class="">
+		<div class="logo-container">
 			<app-logo></app-logo>
+			<app-logo *featureFlag="'habilitarSecondaryHeaderLogo'" [isSecondaryLogo]="true"></app-logo>
 		</div>
 	</mat-toolbar-row>
 </mat-toolbar>
