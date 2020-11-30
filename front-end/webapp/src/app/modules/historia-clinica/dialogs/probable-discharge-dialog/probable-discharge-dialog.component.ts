@@ -32,7 +32,7 @@ export class ProbableDischargeDialogComponent implements OnInit {
   	}
 
   	chosenYearHandler(newDate: Moment) {
-		if (this.form.controls.probableDischargeDate.value !== null) {
+		if (this.form.controls.probableDischargeDate.value !== undefined) {
 			const ctrlDate: Moment = this.form.controls.probableDischargeDate.value;
 			ctrlDate.year(newDate.year());
 			this.form.controls.probableDischargeDate.setValue(ctrlDate);
@@ -42,13 +42,9 @@ export class ProbableDischargeDialogComponent implements OnInit {
 	}
 
 	chosenMonthHandler(newDate: Moment) {
-		if (this.form.controls.probableDischargeDate.value !== null) {
-			const ctrlDate: Moment = this.form.controls.probableDischargeDate.value;
-			ctrlDate.month(newDate.month());
-			this.form.controls.probableDischargeDate.setValue(ctrlDate);
-		} else {
-			this.form.controls.probableDischargeDate.setValue(newDate);
-		}
+		const ctrlDate: Moment = this.form.controls.probableDischargeDate.value;
+		ctrlDate.month(newDate.month());
+		this.form.controls.probableDischargeDate.setValue(ctrlDate);
 	}
 
 	submit(): void {
