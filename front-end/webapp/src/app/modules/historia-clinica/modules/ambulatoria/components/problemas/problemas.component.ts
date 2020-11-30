@@ -39,20 +39,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 			delete this.nuevaConsultaFromProblemaRef;
 		}
 	}
-	private hasNewConsultationEnabledValue: boolean;
-
-	@Output() hasNewConsultationEnabledChange = new EventEmitter();
-
-	@Input()
-	set hasNewConsultationEnabled(hasNewConsultationEnabled: boolean) {
-		this.hasNewConsultationEnabledValue = hasNewConsultationEnabled;
-		this.hasNewConsultationEnabledChange.emit(this.hasNewConsultationEnabledValue);
-	}
-
-	get hasNewConsultationEnabled(): boolean {
-		return this.hasNewConsultationEnabledValue;
-	}
-
+	public hasNewConsultationEnabled$: Observable<boolean>;
 
 	public readonly cronicos = PROBLEMAS_CRONICOS;
 	public readonly activos = PROBLEMAS_ACTIVOS;
@@ -90,6 +77,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
+		this.hasNewConsultationEnabled$ = this.ambulatoriaSummaryFacadeService.hasNewConsultationEnabled$;
 		this.loadActiveProblems();
 		this.loadChronicProblems();
 		this.loadHospitalizationProblems();
@@ -175,7 +163,6 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		this.nuevaConsultaFromProblemaRef.afterClosed().subscribe(fieldsToUpdate => {
 			if (fieldsToUpdate) {
 				this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
-				this.hasNewConsultationEnabled = false;
 			}
 			delete this.nuevaConsultaFromProblemaRef;
 		});

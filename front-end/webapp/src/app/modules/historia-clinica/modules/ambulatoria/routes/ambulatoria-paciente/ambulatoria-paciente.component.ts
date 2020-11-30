@@ -25,7 +25,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	dialogRef: DockPopupRef;
 	patient$: Observable<PatientBasicData>;
 	public personPhoto: PersonPhotoDto;
-	public hasNewConsultationEnabled: boolean;
+	public hasNewConsultationEnabled$: Observable<boolean>;
 
 	constructor(
 		private readonly route: ActivatedRoute,
@@ -43,9 +43,9 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 			this.patient$ = this.patientService.getPatientBasicData<BasicPatientDto>(patientId).pipe(
 				map(patient => this.mapperService.toPatientBasicData(patient))
 			);
-			this.appointmentsService.hasNewConsultationEnabled(patientId).subscribe(response => {
-				this.hasNewConsultationEnabled = response;
-			});
+
+			this.ambulatoriaSummaryFacadeService.setIdPaciente(patientId);
+			this.hasNewConsultationEnabled$ = this.ambulatoriaSummaryFacadeService.hasNewConsultationEnabled$;
 			this.patientService.getPatientPhoto(patientId)
 					.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto;});
 		});
@@ -53,13 +53,12 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 
 	openNuevaConsulta(): void {
 		if (!this.dialogRef) {
-			const idPaciente = this.route.snapshot.paramMap.get('idPaciente');
+			const idPaciente = Number(this.route.snapshot.paramMap.get('idPaciente'));
 			this.dialogRef = this.dockPopupService.open(NuevaConsultaDockPopupComponent, {idPaciente});
 			this.dialogRef.afterClosed().subscribe(fieldsToUpdate => {
 				delete this.dialogRef;
 				if (fieldsToUpdate) {
 					this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
-					this.hasNewConsultationEnabled = false;
 				}
 			});
 		} else {

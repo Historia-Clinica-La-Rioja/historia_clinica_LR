@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { HistoricalProblemsFacadeService } from './historical-problems-facade.service';
+import { AppointmentsService } from '@api-rest/services/appointments.service';
 
 @Injectable()
 export class AmbulatoriaSummaryFacadeService {
@@ -16,6 +17,7 @@ export class AmbulatoriaSummaryFacadeService {
 	private anthropometricDataSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private activeProblemsSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private chronicProblemsSubject: Subject<any> = new BehaviorSubject<any>([]);
+	private hasNewConsultationEnabledSubject: Subject<any> = new BehaviorSubject<boolean>(false);
 
 	public readonly allergies$ = this.allergiesSubject.asObservable();
 	public readonly familyHistories$ = this.familyHistoriesSubject.asObservable();
@@ -25,10 +27,12 @@ export class AmbulatoriaSummaryFacadeService {
 	public readonly anthropometricData$ = this.anthropometricDataSubject.asObservable();
 	public readonly activeProblems$ = this.activeProblemsSubject.asObservable();
 	public readonly chronicProblems$ = this.chronicProblemsSubject.asObservable();
+	public readonly hasNewConsultationEnabled$ = this.hasNewConsultationEnabledSubject.asObservable();
 
 
 	constructor(
 		private readonly hceGeneralStateService: HceGeneralStateService,
+		private readonly appointmentsService: AppointmentsService,
 		private readonly historialProblemsFacadeService: HistoricalProblemsFacadeService) {
 	}
 
@@ -77,6 +81,9 @@ export class AmbulatoriaSummaryFacadeService {
 			this.hceGeneralStateService.getChronicConditions(this.idPaciente).subscribe(c => this.chronicProblemsSubject.next(c));
 			this.historialProblemsFacadeService.loadEvolutionSummaryList(this.idPaciente);
 		}
+
+		this.appointmentsService.hasNewConsultationEnabled(this.idPaciente)
+			.subscribe(h => this.hasNewConsultationEnabledSubject.next(h));
 	}
 }
 

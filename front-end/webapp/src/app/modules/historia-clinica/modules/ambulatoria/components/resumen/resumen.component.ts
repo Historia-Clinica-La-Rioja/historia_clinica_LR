@@ -39,8 +39,6 @@ export class ResumenComponent implements OnInit {
 	}
 
 	initSummaries() {
-		this.ambulatoriaSummaryFacadeService.setIdPaciente(this.patientId);
-
 		this.allergies$ = this.ambulatoriaSummaryFacadeService.allergies$;
 		this.familyHistories$ = this.ambulatoriaSummaryFacadeService.familyHistories$;
 		this.personalHistory$ = this.ambulatoriaSummaryFacadeService.personalHistories$;

@@ -24,7 +24,7 @@
 									<mat-icon>more_vert</mat-icon>
 								</button>
 								<mat-menu #menu="matMenu">
-									<button *ngIf="hasNewConsultationEnabled" mat-menu-item (click)="openNuevaConsulta(problem)">
+									<button *ngIf="hasNewConsultationEnabled$ | async" mat-menu-item (click)="openNuevaConsulta(problem)">
 										<span [translate]="'ambulatoria.paciente.nueva-consulta.TITLE_MENU'"></span>
 									</button>
 									<button mat-menu-item (click)="solveProblemPopUp(problem)">
@@ -56,7 +56,8 @@
 									<mat-icon>more_vert</mat-icon>
 								</button>
 								<mat-menu #menu="matMenu">
-									<button *ngIf="hasNewConsultationEnabled" mat-menu-item (click)="openNuevaConsulta(problem)">
+									<button *ngIf="hasNewConsultationEnabled$ | async" mat-menu-item
+											(click)="openNuevaConsulta(problem)">
 										<span [translate]="'ambulatoria.paciente.nueva-consulta.TITLE_MENU'"></span>
 									</button>
 									<button mat-menu-item (click)="solveProblemPopUp(problem)">
