@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.ips.controller.constraints.AnthropometricDataValid;
-import net.pladema.clinichistory.ips.controller.dto.ClinicalObservationDto;
+import net.pladema.clinichistory.documents.controller.dto.ClinicalObservationDto;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;

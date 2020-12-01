@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.ips.service.domain.ClinicalTerm;
+import net.pladema.clinichistory.documents.service.ips.domain.ClinicalTerm;
 import net.pladema.clinichistory.outpatient.repository.domain.ProcedureSummaryVo;
 
 import java.time.LocalDate;

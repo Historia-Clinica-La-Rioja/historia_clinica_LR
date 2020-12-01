@@ -1,9 +1,9 @@
 package net.pladema.clinichistory.hospitalization.service.documents.anamnesis.impl;
 
-import net.pladema.clinichistory.hospitalization.repository.generalstate.domain.ClinicalObservationVo;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.ObservationStatus;
-import net.pladema.clinichistory.ips.service.domain.MapClinicalObservationVo;
-import net.pladema.clinichistory.ips.service.domain.enums.EVitalSign;
+import net.pladema.clinichistory.documents.repository.generalstate.domain.ClinicalObservationVo;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.ObservationStatus;
+import net.pladema.clinichistory.documents.service.ips.domain.MapClinicalObservationVo;
+import net.pladema.clinichistory.documents.service.ips.domain.enums.EVitalSign;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

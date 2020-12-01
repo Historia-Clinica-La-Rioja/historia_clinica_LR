@@ -7,10 +7,10 @@ import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeServic
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.CreateEvolutionNoteService;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.evolutiondiagnosis.EvolutionDiagnosisBo;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentStatus;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
-import net.pladema.clinichistory.ips.service.*;
-import net.pladema.clinichistory.ips.service.domain.DocumentObservationsBo;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentStatus;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
+import net.pladema.clinichistory.documents.service.ips.*;
+import net.pladema.clinichistory.documents.service.ips.domain.DocumentObservationsBo;
 import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,6 +65,7 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
 
         Document document = new Document(internmentEpisodeId, evolutionNote.getDocumentStatusId(), DocumentType.EVALUATION_NOTE, SourceType.HOSPITALIZATION);
         loadNotes(document, Optional.ofNullable(evolutionNote.getNotes()));
+
         document = documentService.save(document);
 
         evolutionNote.setDiagnosis(healthConditionService.loadDiagnosis(patientId, document.getId(), evolutionNote.getDiagnosis()));

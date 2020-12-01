@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.mocks;
 
-import net.pladema.clinichistory.ips.repository.masterdata.entity.Snomed;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.Snomed;
 
 public class SnomedTestMocks {
 

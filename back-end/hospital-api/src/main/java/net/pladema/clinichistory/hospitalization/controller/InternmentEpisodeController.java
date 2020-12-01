@@ -15,7 +15,7 @@ import net.pladema.clinichistory.hospitalization.service.ResponsibleContactServi
 import net.pladema.clinichistory.hospitalization.service.domain.InternmentSummaryBo;
 import net.pladema.clinichistory.hospitalization.service.domain.PatientDischargeBo;
 import net.pladema.clinichistory.hospitalization.service.patientdischarge.PatientDischargeService;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.InternmentEpisodeStatus;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.InternmentEpisodeStatus;
 import net.pladema.establishment.controller.service.BedExternalService;
 import net.pladema.featureflags.service.FeatureFlagsService;
 import net.pladema.sgx.dates.configuration.LocalDateMapper;

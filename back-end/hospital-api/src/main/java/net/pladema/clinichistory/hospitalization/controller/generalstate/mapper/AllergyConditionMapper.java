@@ -2,8 +2,8 @@ package net.pladema.clinichistory.hospitalization.controller.generalstate.mapper
 
 import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.AllergyConditionDto;
-import net.pladema.clinichistory.hospitalization.repository.generalstate.domain.AllergyConditionVo;
-import net.pladema.clinichistory.ips.service.domain.AllergyConditionBo;
+import net.pladema.clinichistory.documents.repository.generalstate.domain.AllergyConditionVo;
+import net.pladema.clinichistory.documents.service.ips.domain.AllergyConditionBo;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

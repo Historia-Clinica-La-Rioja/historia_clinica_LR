@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.hospitalization.controller.generalstate.constraint.validator;
 
-import net.pladema.clinichistory.ips.controller.dto.EffectiveClinicalObservationDto;
+import net.pladema.clinichistory.documents.controller.dto.EffectiveClinicalObservationDto;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.VitalSignDto;
 import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
 import net.pladema.clinichistory.hospitalization.controller.documents.DocumentDto;

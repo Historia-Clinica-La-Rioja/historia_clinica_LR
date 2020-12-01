@@ -2,12 +2,12 @@ package net.pladema.clinichistory.hospitalization.service.evolutionnote.impl;
 
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;
 import net.pladema.clinichistory.documents.repository.entity.Document;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentStatus;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentStatus;
 import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.EvolutionNoteService;
 import net.pladema.clinichistory.documents.service.NoteService;
-import net.pladema.clinichistory.ips.service.domain.DocumentObservationsBo;
-import net.pladema.clinichistory.ips.service.domain.GeneralHealthConditionBo;
+import net.pladema.clinichistory.documents.service.ips.domain.DocumentObservationsBo;
+import net.pladema.clinichistory.documents.service.ips.domain.GeneralHealthConditionBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -31,8 +31,9 @@ public class EvolutionNoteServiceImpl implements EvolutionNoteService {
     @Override
     public EvolutionNoteBo getDocument(Long documentId) {
         LOG.debug("Input parameters documentId {}", documentId);
-        EvolutionNoteBo result = new EvolutionNoteBo();
-        documentService.findById(documentId).ifPresent( document -> {
+
+        EvolutionNoteBo r = documentService.findById(documentId).map( document -> {
+            EvolutionNoteBo result = new EvolutionNoteBo();
             result.setId(document.getId());
             result.setConfirmed(document.getStatusId().equalsIgnoreCase(DocumentStatus.FINAL));
 
@@ -45,9 +46,10 @@ public class EvolutionNoteServiceImpl implements EvolutionNoteService {
             result.setVitalSigns(documentService.getVitalSignStateFromDocument(document.getId()));
             
             result.setNotes(loadNotes(document));
-        });
-        LOG.debug(OUTPUT, result);
-        return result;
+            return result;
+        }).orElse(new EvolutionNoteBo());
+        LOG.debug(OUTPUT, r);
+        return r;
     }
 
     private DocumentObservationsBo loadNotes(Document document) {

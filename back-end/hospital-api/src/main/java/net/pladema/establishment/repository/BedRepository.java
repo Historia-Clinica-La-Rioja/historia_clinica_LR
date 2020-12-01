@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static net.pladema.clinichistory.ips.repository.masterdata.entity.InternmentEpisodeStatus.ACTIVE;
+import static net.pladema.clinichistory.documents.repository.ips.masterdata.entity.InternmentEpisodeStatus.ACTIVE;
 
 @Repository
 public interface BedRepository extends JpaRepository<Bed, Integer> {

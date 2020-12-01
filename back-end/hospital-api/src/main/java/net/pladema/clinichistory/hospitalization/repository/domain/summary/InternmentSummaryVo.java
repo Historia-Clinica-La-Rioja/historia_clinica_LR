@@ -1,15 +1,15 @@
 package net.pladema.clinichistory.hospitalization.repository.domain.summary;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.InternmentEpisodeStatus;
 import net.pladema.clinichistory.hospitalization.repository.domain.ResponsibleContact;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.InternmentEpisodeStatus;
 import net.pladema.staff.repository.entity.ClinicalSpecialty;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter

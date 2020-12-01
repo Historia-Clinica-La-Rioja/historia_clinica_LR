@@ -2,10 +2,10 @@ package net.pladema.clinichistory.hospitalization.controller;
 
 
 import net.pladema.UnitController;
+import net.pladema.clinichistory.documents.service.generalstate.*;
 import net.pladema.clinichistory.hospitalization.controller.mapper.InternmentStateMapper;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
-import net.pladema.clinichistory.hospitalization.service.InternmentStateService;
-import net.pladema.clinichistory.hospitalization.service.generalstate.*;
+import net.pladema.clinichistory.documents.service.generalstate.EncounterGeneralStateBuilder;
 import net.pladema.establishment.repository.InstitutionRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class InternmentStateControllerTest extends UnitController {
 
 	@MockBean
-	private InternmentStateService internmentStateService;
+	private EncounterGeneralStateBuilder encounterGeneralStateBuilder;
 
 	@MockBean
 	private HealthConditionGeneralStateService healthConditionGeneralStateService;

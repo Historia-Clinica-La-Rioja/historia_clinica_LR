@@ -16,8 +16,8 @@ import net.pladema.clinichistory.hospitalization.service.anamnesis.AnamnesisServ
 import net.pladema.clinichistory.hospitalization.service.anamnesis.CreateAnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.UpdateAnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.AnamnesisBo;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.EDocumentType;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.EDocumentType;
 import net.pladema.featureflags.service.FeatureFlagsService;
 import net.pladema.sgx.pdf.PDFDocumentException;
 

@@ -1,9 +1,9 @@
 package net.pladema.clinichistory.outpatient.repository;
 
-import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentStatus;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.ProblemType;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.Snomed;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentStatus;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.ProblemType;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.Snomed;
 import net.pladema.clinichistory.outpatient.repository.domain.*;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.staff.repository.entity.ClinicalSpecialty;

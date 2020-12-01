@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.documents.service;
 
-import net.pladema.clinichistory.ips.service.domain.*;
+import net.pladema.clinichistory.documents.service.ips.domain.*;
 import net.pladema.clinichistory.hospitalization.service.summary.domain.ResponsibleDoctorBo;
 
 import java.util.List;

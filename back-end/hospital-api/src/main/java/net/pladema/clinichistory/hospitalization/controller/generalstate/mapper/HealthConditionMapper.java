@@ -6,11 +6,11 @@ import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.Dia
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.HealthHistoryConditionDto;
 import net.pladema.clinichistory.hospitalization.controller.maindiagnoses.dto.MainDiagnosisDto;
 import net.pladema.clinichistory.hospitalization.service.maindiagnoses.domain.MainDiagnosisBo;
-import net.pladema.clinichistory.ips.controller.dto.HealthConditionNewConsultationDto;
-import net.pladema.clinichistory.ips.service.domain.DiagnosisBo;
-import net.pladema.clinichistory.ips.service.domain.HealthConditionBo;
-import net.pladema.clinichistory.ips.service.domain.HealthConditionNewConsultationBo;
-import net.pladema.clinichistory.ips.service.domain.HealthHistoryConditionBo;
+import net.pladema.clinichistory.documents.controller.dto.HealthConditionNewConsultationDto;
+import net.pladema.clinichistory.documents.service.ips.domain.DiagnosisBo;
+import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionBo;
+import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionNewConsultationBo;
+import net.pladema.clinichistory.documents.service.ips.domain.HealthHistoryConditionBo;
 import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;

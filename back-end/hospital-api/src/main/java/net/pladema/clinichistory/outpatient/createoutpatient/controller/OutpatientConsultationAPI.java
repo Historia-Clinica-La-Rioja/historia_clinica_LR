@@ -2,19 +2,22 @@ package net.pladema.clinichistory.outpatient.createoutpatient.controller;
 
 
 import io.swagger.annotations.Api;
-import net.pladema.clinichistory.ips.controller.dto.HealthConditionNewConsultationDto;
+import java.io.IOException;
+
+import javax.validation.Valid;
+
+import net.pladema.clinichistory.documents.controller.dto.HealthConditionNewConsultationDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.constraints.HasAppointment;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientImmunizationDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientUpdateImmunizationDto;
-import net.pladema.sgx.pdf.PDFDocumentException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import javax.validation.Valid;
-import java.io.IOException;
+import net.pladema.sgx.pdf.PDFDocumentException;
+
 import java.util.List;
 
 @Api(value = "Outpatient consultations", tags = { "Outpatient consultations" })

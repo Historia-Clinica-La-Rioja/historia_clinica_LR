@@ -2,13 +2,13 @@ package net.pladema.clinichistory.hospitalization.service.evolutionnote.impl;
 
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;
 import net.pladema.clinichistory.documents.repository.entity.Document;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentStatus;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentStatus;
 import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.service.ReportDocumentService;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.EvolutionNoteReportService;
 import net.pladema.clinichistory.documents.service.NoteService;
-import net.pladema.clinichistory.ips.service.domain.DocumentObservationsBo;
-import net.pladema.clinichistory.ips.service.domain.GeneralHealthConditionBo;
+import net.pladema.clinichistory.documents.service.ips.domain.DocumentObservationsBo;
+import net.pladema.clinichistory.documents.service.ips.domain.GeneralHealthConditionBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

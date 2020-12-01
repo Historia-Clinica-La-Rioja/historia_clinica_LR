@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.hospitalization.controller;
 
 import io.swagger.annotations.Api;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.*;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.*;
 import net.pladema.clinichistory.hospitalization.repository.domain.DischargeType;
 import net.pladema.sgx.masterdata.repository.MasterDataProjection;
 import net.pladema.clinichistory.hospitalization.service.masterdata.InternmentMasterDataService;

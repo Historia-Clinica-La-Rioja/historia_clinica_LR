@@ -4,9 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.ips.service.domain.SnomedBo;
+import net.pladema.clinichistory.documents.service.ips.domain.SnomedBo;
 import net.pladema.clinichistory.outpatient.repository.domain.ReasonSummaryVo;
-
 import javax.validation.constraints.NotNull;
 
 @Getter

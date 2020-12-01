@@ -2,8 +2,8 @@ package net.pladema.clinichistory.hospitalization.controller.constraints.validat
 
 import net.pladema.clinichistory.hospitalization.controller.constraints.EvolutionNoteDiagnosisValid;
 import net.pladema.clinichistory.hospitalization.controller.documents.evolutionnote.dto.EvolutionNoteDto;
-import net.pladema.clinichistory.hospitalization.service.generalstate.HealthConditionGeneralStateService;
-import net.pladema.clinichistory.ips.service.domain.HealthConditionBo;
+import net.pladema.clinichistory.documents.service.generalstate.HealthConditionGeneralStateService;
+import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionBo;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

@@ -3,9 +3,9 @@ package net.pladema.clinichistory.mocks;
 import net.pladema.clinichistory.documents.repository.entity.Document;
 import net.pladema.clinichistory.documents.repository.entity.DocumentLab;
 import net.pladema.clinichistory.documents.repository.entity.DocumentVitalSign;
-import net.pladema.clinichistory.ips.repository.entity.ObservationLab;
-import net.pladema.clinichistory.ips.repository.entity.ObservationVitalSign;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.ObservationStatus;
+import net.pladema.clinichistory.documents.repository.ips.entity.ObservationLab;
+import net.pladema.clinichistory.documents.repository.ips.entity.ObservationVitalSign;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.ObservationStatus;
 
 import java.time.LocalDateTime;
 

@@ -3,8 +3,8 @@ package net.pladema.clinichistory.outpatient.createoutpatient.service.domain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.pladema.clinichistory.ips.service.domain.ClinicalTerm;
-import net.pladema.clinichistory.ips.service.domain.SnomedBo;
+import net.pladema.clinichistory.documents.service.ips.domain.ClinicalTerm;
+import net.pladema.clinichistory.documents.service.ips.domain.SnomedBo;
 import net.pladema.clinichistory.outpatient.repository.domain.HealthConditionSummaryVo;
 
 import java.time.LocalDate;

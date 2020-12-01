@@ -17,8 +17,8 @@ import net.pladema.clinichistory.hospitalization.repository.domain.processepisod
 import net.pladema.clinichistory.hospitalization.repository.domain.summary.InternmentSummaryVo;
 import net.pladema.clinichistory.hospitalization.service.domain.BasicListedPatientBo;
 import net.pladema.clinichistory.hospitalization.service.domain.InternmentEpisodeBo;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentStatus;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.InternmentEpisodeStatus;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentStatus;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.InternmentEpisodeStatus;
 
 @Repository
 public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpisode, Integer> {

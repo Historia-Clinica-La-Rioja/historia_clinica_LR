@@ -6,7 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.sgx.auditable.entity.SGXAuditableEntity;
 import net.pladema.sgx.auditable.entity.SGXAuditListener;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.InternmentEpisodeStatus;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.InternmentEpisodeStatus;
 
 import javax.persistence.*;
 import java.time.LocalDate;

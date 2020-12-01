@@ -3,7 +3,7 @@ package net.pladema.clinichistory.documents.service.searchdocument.domain;
 import lombok.*;
 import net.pladema.clinichistory.documents.repository.searchdocument.DocumentSearchVo;
 import net.pladema.clinichistory.hospitalization.service.summary.domain.ResponsibleDoctorBo;
-import net.pladema.clinichistory.ips.service.domain.DocumentObservationsBo;
+import net.pladema.clinichistory.documents.service.ips.domain.DocumentObservationsBo;
 import net.pladema.person.repository.domain.ProcedureReduced;
 
 import java.time.LocalDate;

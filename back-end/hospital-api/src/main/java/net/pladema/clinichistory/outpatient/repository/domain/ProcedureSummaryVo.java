@@ -4,9 +4,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.Snomed;
-import net.pladema.clinichistory.ips.service.domain.ClinicalTerm;
-import net.pladema.clinichistory.ips.service.domain.SnomedBo;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.Snomed;
+import net.pladema.clinichistory.documents.service.ips.domain.ClinicalTerm;
+import net.pladema.clinichistory.documents.service.ips.domain.SnomedBo;
 
 import java.time.LocalDate;
 

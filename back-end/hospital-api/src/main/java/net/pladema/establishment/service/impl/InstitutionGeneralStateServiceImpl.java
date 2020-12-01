@@ -1,6 +1,6 @@
 package net.pladema.establishment.service.impl;
 
-import net.pladema.clinichistory.ips.service.domain.enums.EVitalSign;
+import net.pladema.clinichistory.documents.service.ips.domain.enums.EVitalSign;
 import net.pladema.establishment.repository.VInstitutionRepository;
 import net.pladema.establishment.repository.VInstitutionVitalSignRepository;
 import net.pladema.establishment.repository.entity.VInstitution;

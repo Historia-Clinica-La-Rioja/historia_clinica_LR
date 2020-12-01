@@ -3,6 +3,7 @@ package net.pladema.clinichistory.hospitalization.controller.documents.epicrisis
 import io.swagger.annotations.Api;
 import net.pladema.clinichistory.documents.events.OnGenerateInternmentDocumentEvent;
 import net.pladema.clinichistory.documents.service.CreateDocumentFile;
+import net.pladema.clinichistory.documents.service.generalstate.EncounterGeneralState;
 import net.pladema.clinichistory.hospitalization.controller.constraints.CanCreateEpicrisis;
 import net.pladema.clinichistory.hospitalization.controller.constraints.DocumentValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
@@ -11,14 +12,13 @@ import net.pladema.clinichistory.hospitalization.controller.documents.epicrisis.
 import net.pladema.clinichistory.hospitalization.controller.documents.epicrisis.dto.ResponseEpicrisisDto;
 import net.pladema.clinichistory.hospitalization.controller.documents.epicrisis.mapper.EpicrisisMapper;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
-import net.pladema.clinichistory.hospitalization.service.InternmentStateService;
-import net.pladema.clinichistory.hospitalization.service.domain.InternmentGeneralState;
+import net.pladema.clinichistory.documents.service.generalstate.EncounterGeneralStateBuilder;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.CreateEpicrisisService;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.EpicrisisService;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.UpdateEpicrisisService;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.domain.EpicrisisBo;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.EDocumentType;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.EDocumentType;
 import net.pladema.featureflags.service.FeatureFlagsService;
 import net.pladema.sgx.featureflags.AppFeature;
 import net.pladema.sgx.pdf.PDFDocumentException;
@@ -65,29 +65,32 @@ public class EpicrisisController {
 
     private final EpicrisisMapper epicrisisMapper;
 
-    private final InternmentStateService internmentStateService;
+    private final EncounterGeneralStateBuilder encounterGeneralStateBuilder;
 
     private final CreateDocumentFile createDocumentFile;
 
     private final FeatureFlagsService featureFlagsService;
 
-    public EpicrisisController(InternmentEpisodeService internmentEpisodeService,
-                               CreateEpicrisisService createEpicrisisService,
-                               UpdateEpicrisisService updateEpicrisisService,
-                               EpicrisisService epicrisisService,
-                               EpicrisisMapper epicrisisMapper,
-                               InternmentStateService internmentStateService,
-                               CreateDocumentFile createDocumentFile,
-                               FeatureFlagsService featureFlagsService) {
+    public EpicrisisController(
+            InternmentEpisodeService internmentEpisodeService,
+            CreateEpicrisisService createEpicrisisService,
+            UpdateEpicrisisService updateEpicrisisService,
+            EpicrisisService epicrisisService,
+            EpicrisisMapper epicrisisMapper,
+            EncounterGeneralStateBuilder encounterGeneralStateBuilder,
+            CreateDocumentFile createDocumentFile,
+            FeatureFlagsService featureFlagsService
+    ) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.createEpicrisisService = createEpicrisisService;
         this.updateEpicrisisService = updateEpicrisisService;
         this.epicrisisService = epicrisisService;
         this.epicrisisMapper = epicrisisMapper;
-        this.internmentStateService = internmentStateService;
+        this.encounterGeneralStateBuilder = encounterGeneralStateBuilder;
         this.createDocumentFile = createDocumentFile;
         this.featureFlagsService = featureFlagsService;
     }
+
 
     @PostMapping
     @Transactional
@@ -162,7 +165,7 @@ public class EpicrisisController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}", institutionId, internmentEpisodeId);
-        InternmentGeneralState interment = internmentStateService.getInternmentGeneralState(internmentEpisodeId);
+        EncounterGeneralState interment = encounterGeneralStateBuilder.getInternmentGeneralState(internmentEpisodeId);
         EpicrisisGeneralStateDto result = epicrisisMapper.toEpicrisisGeneralStateDto(interment);
         LOG.debug(OUTPUT, result);
         return  ResponseEntity.ok().body(result);

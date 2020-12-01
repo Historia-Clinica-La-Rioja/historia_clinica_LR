@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.hospitalization.service.domain.ClinicalSpecialtyBo;
-import net.pladema.clinichistory.ips.service.domain.*;
+import net.pladema.clinichistory.documents.service.ips.domain.*;
 import net.pladema.clinichistory.documents.service.Document;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProblemBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProcedureBo;

@@ -4,15 +4,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import net.pladema.clinichistory.hospitalization.controller.dto.ResponsibleDoctorDto;
+import net.pladema.clinichistory.hospitalization.controller.mapper.ResponsibleDoctorMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import net.pladema.clinichistory.documents.service.Document;
 import net.pladema.clinichistory.documents.service.ReportDocumentService;
-import net.pladema.clinichistory.hospitalization.controller.dto.ResponsibleDoctorDto;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.VitalSignMapper;
-import net.pladema.clinichistory.hospitalization.controller.mapper.ResponsibleDoctorMapper;
 import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.service.PatientExternalService;
 

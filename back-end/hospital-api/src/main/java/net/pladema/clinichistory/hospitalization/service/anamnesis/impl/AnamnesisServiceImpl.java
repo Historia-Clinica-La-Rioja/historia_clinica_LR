@@ -2,12 +2,12 @@ package net.pladema.clinichistory.hospitalization.service.anamnesis.impl;
 
 import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.AnamnesisBo;
 import net.pladema.clinichistory.documents.repository.entity.Document;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentStatus;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentStatus;
 import net.pladema.clinichistory.documents.service.NoteService;
 import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.AnamnesisService;
-import net.pladema.clinichistory.ips.service.domain.DocumentObservationsBo;
-import net.pladema.clinichistory.ips.service.domain.GeneralHealthConditionBo;
+import net.pladema.clinichistory.documents.service.ips.domain.DocumentObservationsBo;
+import net.pladema.clinichistory.documents.service.ips.domain.GeneralHealthConditionBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

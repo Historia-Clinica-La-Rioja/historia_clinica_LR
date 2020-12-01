@@ -1,17 +1,16 @@
 package net.pladema.clinichistory.hospitalization.controller;
 
 import io.swagger.annotations.Api;
+import net.pladema.clinichistory.documents.service.generalstate.*;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
 import net.pladema.clinichistory.hospitalization.controller.dto.InternmentGeneralStateDto;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.Last2VitalSignsDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.internmentstate.DiagnosesGeneralStateDto;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.*;
 import net.pladema.clinichistory.hospitalization.controller.mapper.InternmentStateMapper;
-import net.pladema.clinichistory.hospitalization.service.InternmentStateService;
-import net.pladema.clinichistory.hospitalization.service.domain.InternmentGeneralState;
+import net.pladema.clinichistory.documents.service.generalstate.EncounterGeneralStateBuilder;
 import net.pladema.clinichistory.hospitalization.service.domain.Last2VitalSignsBo;
-import net.pladema.clinichistory.hospitalization.service.generalstate.*;
-import net.pladema.clinichistory.ips.service.domain.*;
+import net.pladema.clinichistory.documents.service.ips.domain.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +35,7 @@ public class InternmentStateController {
     private static final String LOGGING_OUTPUT = "Output -> {}";
     private static final String LOGGING_INSTITUTION_AND_INTERNMENT_EPISODE = "Input parameters -> institutionId {}, internmentEpisodeId {}";
 
-    private final InternmentStateService internmentStateService;
+    private final EncounterGeneralStateBuilder encounterGeneralStateBuilder;
 
     private final HealthConditionGeneralStateService healthConditionGeneralStateService;
 
@@ -50,14 +49,14 @@ public class InternmentStateController {
 
     private final InternmentStateMapper internmentStateMapper;
 
-    public InternmentStateController(InternmentStateService internmentStateService,
+    public InternmentStateController(EncounterGeneralStateBuilder encounterGeneralStateBuilder,
                                      HealthConditionGeneralStateService healthConditionGeneralStateService,
                                      MedicationGeneralStateService medicationGeneralStateService,
                                      AllergyGeneralStateService allergyGeneralStateServiceService,
                                      ImmunizationGeneralStateService immunizationGeneralStateService,
                                      InternmentStateMapper internmentStateMapper,
                                      ClinicalObservationGeneralStateService clinicalObservationGeneralStateService) {
-        this.internmentStateService = internmentStateService;
+        this.encounterGeneralStateBuilder = encounterGeneralStateBuilder;
         this.healthConditionGeneralStateService = healthConditionGeneralStateService;
         this.medicationGeneralStateService = medicationGeneralStateService;
         this.allergyGeneralStateServiceService = allergyGeneralStateServiceService;
@@ -72,7 +71,7 @@ public class InternmentStateController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
         LOG.debug(LOGGING_INSTITUTION_AND_INTERNMENT_EPISODE, institutionId, internmentEpisodeId);
-        InternmentGeneralState interment = internmentStateService.getInternmentGeneralState(internmentEpisodeId);
+        EncounterGeneralState interment = encounterGeneralStateBuilder.getInternmentGeneralState(internmentEpisodeId);
         InternmentGeneralStateDto result = internmentStateMapper.toInternmentGeneralStateDto(interment);
         LOG.debug(LOGGING_OUTPUT, result);
         return  ResponseEntity.ok().body(result);

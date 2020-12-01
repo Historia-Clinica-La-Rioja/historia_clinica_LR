@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.hospitalization.repository.domain.summary;
 
 import lombok.*;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentStatus;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentStatus;
 
 @Getter
 @Setter

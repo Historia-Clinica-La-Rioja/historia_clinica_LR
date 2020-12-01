@@ -5,8 +5,8 @@ import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.Las
 import net.pladema.clinichistory.hospitalization.controller.dto.internmentstate.DiagnosesGeneralStateDto;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.*;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.*;
-import net.pladema.clinichistory.ips.service.domain.*;
-import net.pladema.clinichistory.hospitalization.service.domain.InternmentGeneralState;
+import net.pladema.clinichistory.documents.service.ips.domain.*;
+import net.pladema.clinichistory.documents.service.generalstate.EncounterGeneralState;
 import net.pladema.clinichistory.hospitalization.service.domain.Last2VitalSignsBo;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
@@ -49,7 +49,7 @@ public interface InternmentStateMapper {
     @Mapping(target = "familyHistories", source = "familyHistories", qualifiedByName = "toListHealthHistoryConditionDto")
     @Mapping(target = "vitalSigns", source = "vitalSigns", qualifiedByName = "toListVitalSignDto")
     @Mapping(target = "medications", source = "medications", qualifiedByName = "toListMedicationDto")
-    InternmentGeneralStateDto toInternmentGeneralStateDto(InternmentGeneralState interment);
+    InternmentGeneralStateDto toInternmentGeneralStateDto(EncounterGeneralState interment);
 
     @Named("toAnthropometricDataDto")
     AnthropometricDataDto toAnthropometricDataDto(AnthropometricDataBo anthropometricData);

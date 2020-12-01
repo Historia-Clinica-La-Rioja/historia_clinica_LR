@@ -3,8 +3,8 @@ package net.pladema.clinichistory.hospitalization.controller.constraints.validat
 import net.pladema.clinichistory.hospitalization.controller.constraints.DocumentValid;
 import net.pladema.clinichistory.documents.repository.DocumentRepository;
 import net.pladema.clinichistory.documents.repository.entity.Document;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentStatus;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.DocumentType;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentStatus;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

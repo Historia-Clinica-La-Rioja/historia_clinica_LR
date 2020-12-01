@@ -2,7 +2,7 @@ package net.pladema.clinichistory.documents.service;
 
 import net.pladema.clinichistory.documents.repository.entity.Document;
 import net.pladema.clinichistory.documents.repository.entity.*;
-import net.pladema.clinichistory.ips.service.domain.*;
+import net.pladema.clinichistory.documents.service.ips.domain.*;
 import net.pladema.sgx.auditable.entity.Updateable;
 
 import java.util.List;

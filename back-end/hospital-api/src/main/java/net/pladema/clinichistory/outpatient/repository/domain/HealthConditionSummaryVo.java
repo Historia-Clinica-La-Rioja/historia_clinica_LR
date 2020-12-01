@@ -1,8 +1,8 @@
 package net.pladema.clinichistory.outpatient.repository.domain;
 
 import lombok.*;
-import net.pladema.clinichistory.hospitalization.repository.generalstate.domain.ClinicalTermVo;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.Snomed;
+import net.pladema.clinichistory.documents.repository.generalstate.domain.ClinicalTermVo;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.Snomed;
 
 import java.time.LocalDate;
 

@@ -1,10 +1,10 @@
 package net.pladema.clinichistory.mocks;
 
 import net.pladema.clinichistory.documents.repository.entity.DocumentHealthCondition;
-import net.pladema.clinichistory.ips.repository.entity.HealthCondition;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.ConditionClinicalStatus;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.ConditionVerificationStatus;
-import net.pladema.clinichistory.ips.repository.masterdata.entity.ProblemType;
+import net.pladema.clinichistory.documents.repository.ips.entity.HealthCondition;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.ConditionClinicalStatus;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.ConditionVerificationStatus;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.ProblemType;
 
 public class HealthConditionTestMocks {
 

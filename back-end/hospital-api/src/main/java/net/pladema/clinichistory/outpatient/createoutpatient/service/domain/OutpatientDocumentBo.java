@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.pladema.clinichistory.documents.service.Document;
 import net.pladema.clinichistory.hospitalization.service.domain.ClinicalSpecialtyBo;
-import net.pladema.clinichistory.ips.service.domain.*;
+import net.pladema.clinichistory.documents.service.ips.domain.*;
 
 import java.util.ArrayList;
 import java.util.Collections;

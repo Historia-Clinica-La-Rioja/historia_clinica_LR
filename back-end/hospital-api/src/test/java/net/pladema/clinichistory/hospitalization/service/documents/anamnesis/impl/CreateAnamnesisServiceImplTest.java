@@ -4,7 +4,7 @@ import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.service.NoteService;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.impl.CreateAnamnesisServiceImpl;
-import net.pladema.clinichistory.ips.service.*;
+import net.pladema.clinichistory.documents.service.ips.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
