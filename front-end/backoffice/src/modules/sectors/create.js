@@ -113,7 +113,7 @@ const SectorCreate = props => (
 
             {/*Parent Sector*/}
             <FormDataConsumer>
-                {formDataProps => ( <Sector {...formDataProps} source="parentSectorId" />)}
+                {formDataProps => ( <Sector {...formDataProps} source="sectorId" />)}
             </FormDataConsumer>
 
             {/*Sector Type*/}

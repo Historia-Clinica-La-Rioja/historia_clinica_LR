@@ -31,7 +31,7 @@ const SectorType = (sourceId) => {
             perPage={100}
             sort={{ field: 'description', order: 'ASC' }}
         >
-            <SelectInput optionText="description" optionValue="id" validate={[required()]} />
+            <SelectInput optionText="description" optionValue="id" />
         </ReferenceInput>);
 
 };
@@ -45,7 +45,7 @@ const AgeGroups = ({ formData, ...rest }) => {
         sort={{ field: 'description', order: 'ASC' }}
         perPage={10}
     >
-        <SelectInput optionText="description" optionValue="id" validate={[required()]} />
+        <SelectInput optionText="description" optionValue="id" />
     </ReferenceInput> );
 };
 
@@ -59,7 +59,7 @@ const SectorOrganization = ({ formData, ...rest }) => {
             perPage={100}
             sort={{ field: 'description', order: 'ASC' }}
         >
-            <SelectInput optionText="description" optionValue="id" validate={[required()]} />
+            <SelectInput optionText="description" optionValue="id" />
         </ReferenceInput>);
 };
 
@@ -85,7 +85,7 @@ const HospitalizationType = ({ formData, ...rest }) => {
             perPage={100}
             sort={{ field: 'description', order: 'ASC' }}
         >
-            <SelectInput optionText="description" optionValue="id" validate={[required()]} />
+            <SelectInput optionText="description" optionValue="id" />
         </ReferenceInput>);
 };
 
@@ -121,7 +121,7 @@ const SectorEdit = props => (
 
             {/*Parent Sector*/}
             <FormDataConsumer>
-                {formDataProps => (<Sector {...formDataProps} source="parentSectorId"/>)}
+                {formDataProps => (<Sector {...formDataProps} source="sectorId"/>)}
             </FormDataConsumer>
             {/*Sector Type*/}
             <SectorType source="sectorTypeId"/>
@@ -173,7 +173,7 @@ const SectorEdit = props => (
             <ReferenceManyField
                 addLabel={false}
                 reference="rooms"
-                target="clinicalSpecialtySectorId"
+                target="sectorId"
                 sort={{ field: 'description', order: 'DESC' }}
             >
                 <Datagrid rowClick="show">
