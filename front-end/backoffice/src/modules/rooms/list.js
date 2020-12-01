@@ -17,7 +17,7 @@ const RoomFilter = props =>(
         <TextInput source="roomNumber" />
         <TextInput source="description" />
         <TextInput source="type" />
-        <SgxSelectInput label="Especialidad | Sector" source="clinicalSpecialtySectorId" element="clinicalspecialtysectors" optionText="description" allowEmpty={false} />
+        <SgxSelectInput label="Sector" source="sectorId" element="sectors" optionText="description" allowEmpty={false} />
     </Filter>
 );
 
@@ -28,7 +28,7 @@ const InstitutionList = props => (
             <TextField source="description" />
             <TextField source="type" />
             <DateField source="dischargeDate" />
-            <ReferenceField source="clinicalSpecialtySectorId" reference="clinicalspecialtysectors">
+            <ReferenceField source="sectorId" reference="sectors">
                 <TextField source="description"/>
             </ReferenceField>
         </Datagrid>
