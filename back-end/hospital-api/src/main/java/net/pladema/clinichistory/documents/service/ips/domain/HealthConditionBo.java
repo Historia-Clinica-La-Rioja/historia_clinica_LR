@@ -6,6 +6,9 @@ import lombok.ToString;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.ConditionClinicalStatus;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.ConditionVerificationStatus;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 @Getter
 @Setter
 @ToString
@@ -16,6 +19,14 @@ public class HealthConditionBo extends ClinicalTerm {
     private String verification;
 
     private boolean main = false;
+
+    public HealthConditionBo() {
+        super();
+    }
+
+    public HealthConditionBo(@Valid @NotNull(message = "{value.mandatory}") SnomedBo snomed) {
+        super(snomed);
+    }
 
     public String getVerificationId(){
         if (verificationId == null)

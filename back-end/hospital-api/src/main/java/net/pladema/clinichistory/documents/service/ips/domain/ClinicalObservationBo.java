@@ -1,11 +1,11 @@
 package net.pladema.clinichistory.documents.service.ips.domain;
 
 import lombok.*;
-import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
 import net.pladema.clinichistory.documents.repository.generalstate.domain.ClinicalObservationVo;
+import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
+import net.pladema.sgx.exceptions.SelfValidating;
 
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -14,11 +14,11 @@ import java.time.format.DateTimeFormatter;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClinicalObservationBo implements Serializable {
+public class ClinicalObservationBo extends SelfValidating<ClinicalObservationBo> {
 
     private Integer id;
 
-    @NotNull
+    @NotNull(message = "{value.mandatory}")
     private String value;
 
     private LocalDateTime effectiveTime;

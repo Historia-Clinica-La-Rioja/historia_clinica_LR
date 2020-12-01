@@ -29,4 +29,8 @@ public class ImmunizationBo extends ClinicalTerm {
         setAdministrationDate(immunizationVo.getAdministrationDate());
         setNote(immunizationVo.getNote());
     }
+
+    public ImmunizationBo(SnomedBo snomedBo) {
+        super(snomedBo);
+    }
 }

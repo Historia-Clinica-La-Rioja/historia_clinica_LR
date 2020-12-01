@@ -14,4 +14,12 @@ public class HealthHistoryConditionBo extends HealthConditionBo {
     private LocalDate date;
 
     private String note;
+
+    public HealthHistoryConditionBo(SnomedBo snomed) {
+        super(snomed);
+    }
+
+    public HealthHistoryConditionBo() {
+        super();
+    }
 }

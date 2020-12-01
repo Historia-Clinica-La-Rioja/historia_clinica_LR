@@ -27,6 +27,10 @@ public class MedicationBo extends ClinicalTerm {
         suspended = super.getStatusId().equalsIgnoreCase(MedicationStatementStatus.SUSPENDED);
     }
 
+    public MedicationBo(SnomedBo snomedBo) {
+        super(snomedBo);
+    }
+
     @Override
     public String getStatusId(){
         return suspended ? MedicationStatementStatus.SUSPENDED : super.getStatusId();

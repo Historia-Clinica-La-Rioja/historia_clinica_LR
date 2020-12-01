@@ -1,8 +1,7 @@
 package net.pladema.clinichistory.hospitalization.controller.documents.anamnesis;
 
 import io.swagger.annotations.Api;
-import net.pladema.clinichistory.documents.events.OnGenerateInternmentDocumentEvent;
-import net.pladema.clinichistory.documents.service.CreateDocumentFile;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.hospitalization.controller.constraints.AnamnesisMainDiagnosisValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.DocumentValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
@@ -16,15 +15,16 @@ import net.pladema.clinichistory.hospitalization.service.anamnesis.AnamnesisServ
 import net.pladema.clinichistory.hospitalization.service.anamnesis.CreateAnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.UpdateAnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.AnamnesisBo;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.EDocumentType;
 import net.pladema.featureflags.service.FeatureFlagsService;
-import net.pladema.sgx.pdf.PDFDocumentException;
-
+import net.pladema.sgx.error.controller.dto.ApiErrorDto;
 import net.pladema.sgx.featureflags.AppFeature;
+import net.pladema.sgx.pdf.PDFDocumentException;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.MethodNotSupportedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.MessageSource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,8 +32,13 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/internments/{internmentEpisodeId}/anamnesis")
@@ -55,37 +60,33 @@ public class AnamnesisController {
 
     private final AnamnesisMapper anamnesisMapper;
 
-    private final CreateDocumentFile createDocumentFile;
-
     private final FeatureFlagsService featureFlagsService;
+
+    private final MessageSource messageSource;
 
     public AnamnesisController(InternmentEpisodeService internmentEpisodeService,
                                CreateAnamnesisService createAnamnesisService,
                                UpdateAnamnesisService updateAnamnesisService,
                                AnamnesisService anamnesisService,
                                AnamnesisMapper anamnesisMapper,
-                               CreateDocumentFile createDocumentFile,
-                               FeatureFlagsService featureFlagsService) {
+                               FeatureFlagsService featureFlagsService,
+                               MessageSource messageSource) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.createAnamnesisService = createAnamnesisService;
         this.updateAnamnesisService = updateAnamnesisService;
         this.anamnesisService = anamnesisService;
         this.anamnesisMapper = anamnesisMapper;
-        this.createDocumentFile = createDocumentFile;
         this.featureFlagsService = featureFlagsService;
+        this.messageSource = messageSource;
     }
 
     @PostMapping
     @Transactional
-    @InternmentValid
-    @AnamnesisValid
-    @AnamnesisMainDiagnosisValid
-    @EffectiveVitalSignTimeValid
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR')")
     public ResponseEntity<Boolean> createAnamnesis(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
-            @RequestBody @Valid AnamnesisDto anamnesisDto) throws IOException, PDFDocumentException {
+            @RequestBody AnamnesisDto anamnesisDto) throws IOException, PDFDocumentException {
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, ananmnesis {}",
                 institutionId, internmentEpisodeId, anamnesisDto);
         AnamnesisBo anamnesis = anamnesisMapper.fromAnamnesisDto(anamnesisDto);
@@ -108,7 +109,7 @@ public class AnamnesisController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
             @PathVariable(name = "anamnesisId") Long anamnesisId,
-            @Valid @RequestBody AnamnesisDto anamnesisDto) throws IOException, PDFDocumentException, MethodNotSupportedException {
+            @Valid @RequestBody AnamnesisDto anamnesisDto) throws MethodNotSupportedException {
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, anamnesisId {}, ananmnesis {}",
                 institutionId, internmentEpisodeId, anamnesisId, anamnesisDto);
 
@@ -140,4 +141,30 @@ public class AnamnesisController {
         LOG.debug(OUTPUT, result);
         return  ResponseEntity.ok().body(result);
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({ ConstraintViolationException.class })
+    public ApiErrorDto handleValidationExceptions(ConstraintViolationException ex, Locale locale) {
+        List<String> errors = new ArrayList<>();
+        if (ex.getConstraintViolations().isEmpty()) {
+            String msg = ex.getMessage();
+            try {
+                String property = msg.substring(0, msg.indexOf(":"));
+                msg = property + ": " + messageSource.getMessage(StringUtils.substringBetween(msg, "{", "}"), null, locale);
+            } catch (Exception e) {
+                LOG.error("No se tiene un mensaje para la siguiente clave -> {}", msg);
+            }
+            LOG.debug("Constraint validation error -> {}", msg);
+            return new ApiErrorDto("Constraint violation", List.of(msg));
+        }
+        for (ConstraintViolation<?> violation : ex.getConstraintViolations()){
+
+            if(violation.getPropertyPath().toString().contains("<cross-parameter>"))
+                errors.add(violation.getMessage());
+            else
+                errors.add(violation.getPropertyPath() + ": " + violation.getMessage());
+        }
+        return new ApiErrorDto("Constraint violation", errors);
+    }
+
 }

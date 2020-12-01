@@ -2,10 +2,11 @@ package net.pladema.clinichistory.documents.service.ips.domain;
 
 import lombok.*;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.Snomed;
+import net.pladema.sgx.exceptions.SelfValidating;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import java.util.Objects;
 
 @Getter
@@ -13,14 +14,16 @@ import java.util.Objects;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class SnomedBo implements Serializable {
+public class SnomedBo extends SelfValidating<SnomedBo> {
 
-    @NotNull
+    @NotNull(message = "{value.mandatory}")
     @NotEmpty
+    @Length(max = 20, message = "{snomed.id.max.value}")
     private String id;
 
-    @NotNull
+    @NotNull(message = "{value.mandatory}")
     @NotEmpty
+    @Length(max = 255, message = "{snomed.pt.max.value}")
     private String pt;
 
     private String parentId;
@@ -32,6 +35,13 @@ public class SnomedBo implements Serializable {
         this.pt = snomed.getPt();
         this.parentId = snomed.getParentId();
         this.parentFsn = snomed.getParentFsn();
+    }
+
+    public SnomedBo(String id, String pt) {
+        this.id = id;
+        this.pt = pt;
+        this.parentId = id;
+        this.parentFsn = pt;
     }
 
     @Override

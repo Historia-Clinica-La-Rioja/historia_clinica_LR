@@ -3,7 +3,8 @@ package net.pladema.clinichistory.hospitalization.controller.documents.anamnesis
 import net.pladema.UnitController;
 import net.pladema.clinichistory.documents.repository.DocumentRepository;
 import net.pladema.clinichistory.documents.repository.entity.Document;
-import net.pladema.clinichistory.documents.service.CreateDocumentFile;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentStatus;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.hospitalization.controller.documents.anamnesis.mapper.AnamnesisMapper;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.constraint.validator.EffectiveVitalSignTimeValidator;
 import net.pladema.clinichistory.hospitalization.controller.mapper.ResponsibleDoctorMapper;
@@ -12,13 +13,10 @@ import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeServic
 import net.pladema.clinichistory.hospitalization.service.anamnesis.AnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.CreateAnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.UpdateAnamnesisService;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentStatus;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
 import net.pladema.establishment.repository.InstitutionRepository;
 import net.pladema.featureflags.controller.constraints.validators.SGHNotNullValidator;
 import net.pladema.featureflags.service.FeatureFlagsService;
 import net.pladema.patient.controller.service.PatientExternalService;
-import net.pladema.sgx.pdf.PdfService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,11 +29,9 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.Locale;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
@@ -70,9 +66,6 @@ public class AnamnesisControllerTest extends UnitController {
 	private PatientExternalService patientExternalService;
 
 	@MockBean
-	private CreateDocumentFile createDocumentFile;
-
-	@MockBean
 	private ResponsibleDoctorMapper responsibleDoctorMapper;
 
 	@MockBean
@@ -102,58 +95,9 @@ public class AnamnesisControllerTest extends UnitController {
 
 	@Test
 	@WithMockUser
-	public void test_createAnamnesisSuccess() throws Exception {
-		configContextAnamnesisValid();
-		configContextPatientExist();
-		when(effectiveVitalSignTimeValidator.isValid(any(), any())).thenReturn(true);
-		when(sghNotNullValidator.isValid(any(), any())).thenReturn(true);
-		this.mockMvc.perform(MockMvcRequestBuilders.post(POST)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(mockRequestBodyBasic()))
-				.andExpect(status().isOk());
-	}
-
-	@Test
-	@WithMockUser
 	public void test_createAnamnesisFailed() throws Exception {
 		this.mockMvc.perform(MockMvcRequestBuilders.post(POST))
 				.andExpect(status().isBadRequest());
-	}
-
-	@Test
-	@WithMockUser
-	public void test_createAnamnesisWithoutMainDiagnosis() throws Exception {
-		configContextAnamnesisValid();
-		when(featureFlagsService.isOn(any())).thenReturn(true);
-		this.mockMvc.perform(MockMvcRequestBuilders.post(POST)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(mockEmptyAnamnesisDto()))
-				.andExpect(status().isBadRequest())
-				.andExpect(jsonPath("$.mainDiagnosis").value(buildMessage("diagnosis.mandatory")));
-	}
-
-	@Test
-	@WithMockUser
-	public void test_createAnamnesisWithMainDiagnosisInvalid() throws Exception {
-		configContextAnamnesisValid();
-		this.mockMvc.perform(MockMvcRequestBuilders.post(POST)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(mockAnamnesisDtoWithDiagnosis()))
-				.andExpect(status().isBadRequest())
-				.andExpect(jsonPath("$.errors")
-						.value(buildMessage("diagnosis.main.repeated")));
-	}
-
-	@Test
-	@WithMockUser
-	public void test_createAnamnesisWithoutPatient() throws Exception {
-		configContextAnamnesisValid();
-		when(sghNotNullValidator.isValid(any(), any())).thenReturn(true);
-		this.mockMvc.perform(MockMvcRequestBuilders.post(POST)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(mockRequestBodyBasic()))
-				.andExpect(status().isBadRequest())
-				.andExpect(result -> assertTrue(result.getResolvedException() instanceof EntityNotFoundException));
 	}
 
 	@Test
@@ -178,7 +122,7 @@ public class AnamnesisControllerTest extends UnitController {
 		this.mockMvc.perform(MockMvcRequestBuilders.get(GET))
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.errors")
-						.value(buildMessage("document.invalid")));
+						.value("Invalid document"));
 	}
 
 	@Test

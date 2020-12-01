@@ -2,6 +2,7 @@ package net.pladema.clinichistory.ips.controller.constraints.validator;
 
 import net.pladema.clinichistory.documents.controller.dto.ClinicalObservationDto;
 import net.pladema.clinichistory.ips.controller.constraints.AnthropometricDataValid;
+import net.pladema.clinichistory.documents.controller.dto.ClinicalObservationDto;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

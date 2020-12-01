@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.documents.service.ips.domain.ClinicalTerm;
+import net.pladema.clinichistory.documents.service.ips.domain.SnomedBo;
 import net.pladema.clinichistory.outpatient.repository.domain.ProcedureSummaryVo;
 
 import java.time.LocalDate;
@@ -22,4 +23,7 @@ public class ProcedureBo extends ClinicalTerm {
         this.performedDate = procedureSummaryVo.getPerformedDate();
     }
 
+    public ProcedureBo(SnomedBo snomed) {
+        super(snomed);
+    }
 }

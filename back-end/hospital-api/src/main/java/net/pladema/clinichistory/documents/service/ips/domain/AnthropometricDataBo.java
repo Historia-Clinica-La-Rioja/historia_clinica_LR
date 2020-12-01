@@ -3,18 +3,22 @@ package net.pladema.clinichistory.documents.service.ips.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.sgx.exceptions.SelfValidating;
 
-import java.io.Serializable;
+import javax.validation.Valid;
 
 @Getter
 @Setter
 @ToString
-public class AnthropometricDataBo implements Serializable {
+public class AnthropometricDataBo extends SelfValidating<AnthropometricDataBo> {
 
+    @Valid
     private ClinicalObservationBo bloodType;
 
+    @Valid
     private ClinicalObservationBo height;
 
+    @Valid
     private ClinicalObservationBo weight;
 
     public boolean hasValues(){
