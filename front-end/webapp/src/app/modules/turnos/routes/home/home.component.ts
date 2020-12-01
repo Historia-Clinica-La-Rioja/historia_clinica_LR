@@ -102,7 +102,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 		this.profesionalesTypeahead = profesionalesFilteredBy.map(d => this.toProfessionalTypeahead(d));
 
 		if (!professionalsByClinicalSpecialtyDto || especialidadContainsProfesional(this.idProfesional)) {
-			this.agendaSearchService.search(this.idProfesional, this.idEspecialidad);
+			this.agendaSearchService.search(this.idProfesional);
 		}
 
 		function especialidadContainsProfesional(idProfesional: number): boolean {
@@ -112,7 +112,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 	setProfesional(result: ProfessionalDto) {
 		this.idProfesional = result?.id;
-		this.agendaSearchService.search(this.idProfesional, this.idEspecialidad);
+		this.agendaSearchService.search(this.idProfesional);
 		if (!result) {
 			this.router.navigateByUrl(this.routePrefix);
 		}

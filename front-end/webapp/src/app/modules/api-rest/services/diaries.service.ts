@@ -15,16 +15,9 @@ export class DiariesService {
 		private contextService: ContextService,
 	) { }
 
-	getDiaries(healthcareProfessionalId: number, specialtyId?: number): Observable<DiaryListDto[]> {
+	getDiaries(healthcareProfessionalId: number): Observable<DiaryListDto[]> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/diary`;
-		const params = specialtyId ?
-			{
-				healthcareProfessionalId: JSON.stringify(healthcareProfessionalId),
-				specialtyId: specialtyId ? JSON.stringify(specialtyId) : undefined
-			} :
-			{
-				healthcareProfessionalId: JSON.stringify(healthcareProfessionalId)
-			};
+		const params = { healthcareProfessionalId: JSON.stringify(healthcareProfessionalId) };
 		return this.http.get<DiaryListDto[]>(url, {params});
 	}
 

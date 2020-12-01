@@ -25,9 +25,9 @@ export class AgendaSearchService {
 		return this.agendasSource.asObservable();
 	}
 
-	search(idProfesional: number, idEspecialidad?: number): void {
+	search(idProfesional: number): void {
 		if (idProfesional) {
-			this.updateDiaries(idProfesional, idEspecialidad);
+			this.updateDiaries(idProfesional);
 		} else {
 			this.clearSearch();
 		}
@@ -49,12 +49,12 @@ export class AgendaSearchService {
 		this.agendaSelected = undefined;
 	}
 
-	private updateDiaries(idProfesional: number, idEspecialidad: number): void {
-		this.diariesService.getDiaries(idProfesional, null).subscribe(agendas => {
+	private updateDiaries(idProfesional: number): void {
+		this.diariesService.getDiaries(idProfesional).subscribe(agendas => {
 			this.agendasSource.next({
 				agendas,
 				idAgendaSelected: this.agendaSelected?.id,
-				filteredBy: {idProfesional, idEspecialidad}
+				filteredBy: {idProfesional}
 			});
 		});
 	}
@@ -92,6 +92,5 @@ export interface AgendaOptionsData {
 }
 
 export interface AgendaFilters {
-	idEspecialidad?: number;
 	idProfesional: number;
 }
