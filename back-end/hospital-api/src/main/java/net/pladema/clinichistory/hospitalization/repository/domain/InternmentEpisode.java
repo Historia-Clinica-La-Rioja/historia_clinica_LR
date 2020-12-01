@@ -56,9 +56,6 @@ public class InternmentEpisode extends SGXAuditableEntity {
 	@Column(name = "entry_date")
 	private LocalDate entryDate;
 
-	@Column(name = "discharge_date")
-	private LocalDate dischargeDate;
-
 	@Column(name = "institution_id")
 	private Integer institutionId;
 

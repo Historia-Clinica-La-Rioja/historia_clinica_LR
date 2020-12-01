@@ -3,6 +3,8 @@ databaseChangeLog:
     - changeSet:
         id: drop-unused-discharge-date
         author: martinscooper
-        - dropColumn: 
-            columnName: discharge_date
-            tableName: internment_episode 
+        changes: 
+            - dropColumn: 
+                columnName: discharge_date
+                tableName: internment_episode
+ 
