@@ -166,7 +166,10 @@
 					"OK_BUTTON": "Continuar",
 					"CANCEL_BUTTON": "Cancelar"
 				}
-		},
+			},
+			"ordenes_prescripciones": {
+				"TAB_LABEL": "Ordenes"
+			},
 			"profile": {
 				"BUTTON_HISTORIA_CLINICA": "Historia Clínica",
 				"WARNING_INTERNADO": "El paciente se encuentra internado en otra institución."

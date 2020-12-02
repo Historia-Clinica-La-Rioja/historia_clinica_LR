@@ -17,6 +17,9 @@
 			</div>
 		</mat-card-subtitle>
 		<mat-card-content style="white-space: pre;">
+			{{load.body | json}}
+		</mat-card-content>
+		<mat-card-content style="white-space: pre;">
 			{{load.fetch | json}}
 		</mat-card-content>
 		<mat-card-footer>
