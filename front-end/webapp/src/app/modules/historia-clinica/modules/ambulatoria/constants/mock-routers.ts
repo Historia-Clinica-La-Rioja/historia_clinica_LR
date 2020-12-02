@@ -8,7 +8,7 @@ export const MOCKS_ORDERS = [
 				comments: 'medicationRequestId puede ser null porque no siempre el medicamento esta asociado a una receta',
 				path: '/api/institutions/{institutionId}/patient/{patientId}/medicamentRequests?status=active, medicationStatment=null, healthCondition=null, numberPage=0, sizePage=10',
 				method: 'GET',
-				fetch: [
+				body: [
 					{
 						totalElements: 200,
 						totalPage: 10,
@@ -121,7 +121,7 @@ export const MOCKS_ORDERS = [
 				roles: 'Todo ESPECIALISTA_MEDICO sobre la institución',
 				path: '/api/institutions/{institutionId}/patient/{patientId}/serviceRequests?status=null, serviceRequest=null, healthCondition=null, numberPage=0, sizePage=10',
 				method: 'GET',
-				fetch: [
+				body: [
 					{
 						totalElements: 200,
 						totalPage: 10,
@@ -154,7 +154,7 @@ export const MOCKS_ORDERS = [
 				comments: 'Falta definición de como cargar las indicaciones',
 				path: '/api/institutions/{institutionId}/patient/{patientId}/medicalIndications',
 				method: 'GET',
-				fetch: [
+				body: [
 					{
 						observations: 'Comer verduras',
 						statusId: '44444',
@@ -280,7 +280,7 @@ export const MOCKS_ORDERS = [
 				path: '/institutions/{institutionId}/patient/{patientId}/hce/general-state',
 				comments: 'Ya esta hecho',
 				method: 'GET',
-				fetch: [
+				body: [
 					{
 						id: 4, 
 						startDate: '2020-07-13',
@@ -327,7 +327,7 @@ export const MOCKS_ORDERS = [
 				path: '/institutions/{institutionId}/patient/{patientId}/hce/general-state',
 				comments: 'Ya esta hecho',
 				method: 'GET',
-				fetch: [
+				body: [
 					{
 						id: 4, 
 						startDate: '2020-07-13',
@@ -505,7 +505,7 @@ export const MOCKS_ORDERS = [
 				path: '/institutions/{institutionId}/patient/{patientId}/hce/general-state',
 				comments: 'Ya esta hecho',
 				method: 'GET',
-				fetch: [
+				body: [
 					{
 						id: 4, 
 						startDate: '2020-07-13',
@@ -552,7 +552,7 @@ export const MOCKS_ORDERS = [
 				path: '/institutions/{institutionId}/patient/{patientId}/hce/general-state',
 				comments: 'Ya esta hecho',
 				method: 'GET',
-				fetch: [
+				body: [
 					{
 						id: 4, 
 						startDate: '2020-07-13',
@@ -597,7 +597,7 @@ export const MOCKS_ORDERS = [
 				name: 'ServiceRequest.newServiceRequest(patientId: number): PatientServiceRequestListDto []', 
 				roles: 'Todo ESPECIALISTA_MEDICO sobre la institución',
 				comments: 'Los siguientes campos pueden ser nulos: observaciones, tiempo de administración, intervalo de administración',
-				path: '/api/institutions/{institutionId}/patient/{patientId}/medicamentRequests',
+				path: '/api/institutions/{institutionId}/patient/{patientId}/serviceRequests',
 				method: 'POST',
 				body: {
 					medicalCoverageId: 1,
@@ -648,7 +648,7 @@ export const MOCKS_ORDERS = [
 			{
 				name: 'ServiceRequest.completeRequest(patientId: number, serviceRequestId:number): CompleteRequestDto []', 
 				roles: 'Todo ESPECIALISTA_MEDICO sobre la institución',
-				path: '/api/institutions/{institutionId}/patient/{patientId}/serviceRequest/{serviceRequestId}',
+				path: '/api/institutions/{institutionId}/patient/{patientId}/serviceRequests/{serviceRequestId}',
 				method: 'PUT',
 				body: {
 					observation: "El paciente presenta la tiroide alta",
@@ -670,7 +670,7 @@ export const MOCKS_ORDERS = [
 				name: 'ServiceRequest.delete(patientId: number, serviceRequestId:number)', 
 				roles: 'Todo ESPECIALISTA_MEDICO sobre la institución',
 				comments: 'Borrado lógico cambiando el estado a ingresado por error',
-				path: '/api/institutions/{institutionId}/patient/{patientId}/serviceRequest/{serviceRequestId}',
+				path: '/api/institutions/{institutionId}/patient/{patientId}/serviceRequests/{serviceRequestId}',
 				method: 'DELETE',
 			}
 		],
@@ -688,23 +688,23 @@ export const MOCKS_ORDERS = [
 				name: 'ServiceRequest.get(patientId: number, serviceRequestId:number)', 
 				roles: 'Todo ESPECIALISTA_MEDICO sobre la institución',
 				comments: 'Borrado lógico cambiando el estado a ingresado por error',
-				path: '/api/institutions/{institutionId}/patient/{patientId}/serviceRequest/{serviceRequestId}',
+				path: '/api/institutions/{institutionId}/patient/{patientId}/serviceRequests/{serviceRequestId}',
 				method: 'GET',
+			    body: {	
+					snomed: {
+						id: '11111',
+						pt: 'Radiologia',
+					},					
+					healthConditionSnomed: {
+						id: '2222',
+						pt: 'ANGINAS'
+					},
+					statusId: "213123",
+					observation: "El paciente presenta la tiroide alta",
+					link: "http://www.google.com"
+				}
 			}
 		],
-		fetch: {	
-			snomed: {
-				id: '11111',
-				pt: 'Radiologia',
-			},					
-			healthConditionSnomed: {
-				id: '2222',
-				pt: 'ANGINAS'
-			},
-			statusId: "213123",
-			observation: "El paciente presenta la tiroide alta",
-			link: "http://www.google.com"
-		},
 		actions: [
 			{
 				name: 'Volver',
@@ -720,7 +720,7 @@ export const MOCKS_ORDERS = [
 				path: '/institutions/{institutionId}/patient/{patientId}/hce/general-state',
 				comments: 'Ya esta hecho',
 				method: 'GET',
-				fetch: [
+				body: [
 					{
 						id: 4, 
 						startDate: '2020-07-13',
@@ -757,7 +757,7 @@ export const MOCKS_ORDERS = [
 			{
 				name: 'MedicalIndication.new(patientId: number): MedicalIndicationDto', 
 				roles: 'Todo ESPECIALISTA_MEDICO sobre la institución',
-				path: '/api/institutions/{institutionId}/patient/{patientId}/medicamentRequests',
+				path: '/api/institutions/{institutionId}/patient/{patientId}/medicalIndications',
 				method: 'POST',
 				body: {
 					healthConditionSnomed: {
