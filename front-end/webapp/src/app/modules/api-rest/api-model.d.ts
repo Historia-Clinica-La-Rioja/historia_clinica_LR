@@ -274,6 +274,11 @@ export interface CompletePatientDto extends BasicPatientDto {
     patientType: PatientType;
 }
 
+export interface CompleteRequestDto {
+    link?: string;
+    observations?: string;
+}
+
 export interface CoverageDto extends Serializable {
     id: number;
     name: string;
@@ -325,6 +330,14 @@ export interface DiagnosesGeneralStateDto extends DiagnosisDto {
 
 export interface DiagnosisDto extends HealthConditionDto {
     presumptive?: boolean;
+}
+
+export interface DiagnosticReportDto {
+    healthCondition: SnomedDto;
+    link?: string;
+    observations?: string;
+    snomed: SnomedDto;
+    statusId: string;
 }
 
 export interface DiaryADto {
@@ -473,6 +486,10 @@ export interface EvolutionNoteDto extends DocumentDto, Serializable {
     mainDiagnosis?: HealthConditionDto;
     notes?: DocumentObservationsDto;
     procedures?: HospitalizationProcedureDto[];
+}
+
+export interface FileDto {
+    file: string;
 }
 
 export interface GenderDto extends MasterdataDto<number> {
@@ -747,6 +764,11 @@ export interface NewMedicationRequestDto extends Serializable {
     hasRecipe: boolean;
     medicalCoverageId: number;
     medications: MedicationInfoDto[];
+}
+
+export interface NewServiceRequestListDto extends Serializable {
+    medicalCoverageId: number;
+    studyDto: StudyDto[];
 }
 
 export interface OauthConfigDto {
@@ -1059,6 +1081,12 @@ export interface SnomedDto extends Serializable {
 export interface SnomedResponseDto extends Serializable {
     items: SnomedDto[];
     total: number;
+}
+
+export interface StudyDto extends Serializable {
+    healthConditionSnomed: SnomedDto;
+    observations?: string;
+    snomed: SnomedDto;
 }
 
 export interface TimeDto {

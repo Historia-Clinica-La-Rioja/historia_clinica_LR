@@ -104,9 +104,9 @@ export const MOCKS_ORDERS = [
 				]				
 			},
 			{
-				name: 'ServiceRequest.patientServiceRequestPage(patientId: number): Page<PatientServiceRequestListDto>', 
+				name: 'ServiceRequest.getList(patientId: number): DiagnosticReportDto[]',
 				roles: 'Todo ESPECIALISTA_MEDICO sobre la institución',
-				path: '/api/institutions/{institutionId}/patient/{patientId}/serviceRequests?status=null, serviceRequest=null, healthCondition=null, numberPage=0, sizePage=10',
+				path: '/api/institutions/{institutionId}/patient/{patientId}/serviceRequests?status=null, serviceRequest=null, healthCondition=null',
 				method: 'GET',
 				body: [
 					{
@@ -129,7 +129,7 @@ export const MOCKS_ORDERS = [
 									month: 5,
 									day: 14
 								},
-								observations: 'Hacerlo en ayuno'					
+								observations: 'Hacerlo en ayuno'
 							}
 						]
 					}
@@ -153,7 +153,7 @@ export const MOCKS_ORDERS = [
 							year: 2020,
 							month: 5,
 							day: 14
-						}				
+						}
 					}
 				],
 			}
@@ -217,8 +217,8 @@ export const MOCKS_ORDERS = [
 				roles: 'Cualquiera',
 				path: '/api/patientMedicalCoverage/{patientId}/coverages',
 				method: 'GET',
-				comments: 'Ya esta hecho devuelve una lista de PatientMedicalCoverageDto. Esto es necesario solamente para las nuevas medicaciones con receta. Las sin receta no necesitan cobertura medica' 
-			}			
+				comments: 'Ya esta hecho devuelve una lista de PatientMedicalCoverageDto. Esto es necesario solamente para las nuevas medicaciones con receta. Las sin receta no necesitan cobertura medica'
+			}
 		],
 		actions: [
 			{
@@ -241,8 +241,8 @@ export const MOCKS_ORDERS = [
 		path: 'paciente/:idPaciente/ordenes/volver-recetar',
 		loads: [
 			{
-				comments: 'Es igual al flujo de nueva receta excepto que ya tiene un listado de medicamentos predefinidos' 
-			}			
+				comments: 'Es igual al flujo de nueva receta excepto que ya tiene un listado de medicamentos predefinidos'
+			}
 		]
 	},{
 		path: 'paciente/:idPaciente/ordenes/descargar-receta',
@@ -252,7 +252,7 @@ export const MOCKS_ORDERS = [
 				roles: 'Todo ESPECIALISTA_MEDICO sobre la institución',
 				comments: 'Descarga el archivo pdf de la receta. Es el mismo endpoint que descarga la receta cuando se agrega una nueva',
 				path: '/api/institutions/{institutionId}/patient/{patientId}/medicamentRequests/{medicationRequestId}/downloadFile',
-				method: 'GET',				
+				method: 'GET',
 			}
 		],
 		actions: [
@@ -273,7 +273,7 @@ export const MOCKS_ORDERS = [
 				method: 'GET',
 				body: [
 					{
-						id: 4, 
+						id: 4,
 						startDate: '2020-07-13',
 						inactivationDate: '2020-07-13',
 						statusId: '12312',
@@ -283,7 +283,7 @@ export const MOCKS_ORDERS = [
 						},
 					},
 					{
-						id: 8, 
+						id: 8,
 						startDate: '2020-07-13',
 						inactivationDate: '2020-07-13',
 						statusId: '12312',
@@ -320,7 +320,7 @@ export const MOCKS_ORDERS = [
 				method: 'GET',
 				body: [
 					{
-						id: 4, 
+						id: 4,
 						startDate: '2020-07-13',
 						inactivationDate: '2020-07-13',
 						statusId: '12312',
@@ -330,7 +330,7 @@ export const MOCKS_ORDERS = [
 						},
 					},
 					{
-						id: 8, 
+						id: 8,
 						startDate: '2020-07-13',
 						inactivationDate: '2020-07-13',
 						statusId: '12312',
@@ -486,8 +486,8 @@ export const MOCKS_ORDERS = [
 				roles: 'Cualquiera',
 				path: '/api/patientMedicalCoverage/{patientId}/coverages',
 				method: 'GET',
-				comments: 'Ya esta hecho devuelve una lista de PatientMedicalCoverageDto. Esto es necesario solamente para las nuevas medicaciones con receta. Las sin receta no necesitan cobertura medica' 
-			}			
+				comments: 'Ya esta hecho devuelve una lista de PatientMedicalCoverageDto. Esto es necesario solamente para las nuevas medicaciones con receta. Las sin receta no necesitan cobertura medica'
+			}
 		],
 		actions: [
 			{
@@ -517,7 +517,7 @@ export const MOCKS_ORDERS = [
 				method: 'GET',
 				body: [
 					{
-						id: 4, 
+						id: 4,
 						startDate: '2020-07-13',
 						inactivationDate: '2020-07-13',
 						statusId: '12312',
@@ -527,7 +527,7 @@ export const MOCKS_ORDERS = [
 						},
 					},
 					{
-						id: 8, 
+						id: 8,
 						startDate: '2020-07-13',
 						inactivationDate: '2020-07-13',
 						statusId: '12312',
@@ -541,7 +541,7 @@ export const MOCKS_ORDERS = [
 			{
 				name: 'SnowstormController.getConcepts(term: String, ecl: String): HCEPersonalHistoryDto []',
 				roles: 'Cualquiera',
-				path: '/snowstorm/concepts?term=RADIOLOGIA&ecl=123123',			
+				path: '/snowstorm/concepts?term=RADIOLOGIA&ecl=123123',
 				method: 'GET',
 				comments: 'Ya esta hecho y devuelve la clase SnowstormSearchResponse. El campo ECL indica la categoría de termino que va a buscar (medicamentos, ordenes, diagnosticos, alergias)'
 			}
@@ -564,7 +564,7 @@ export const MOCKS_ORDERS = [
 				method: 'GET',
 				body: [
 					{
-						id: 4, 
+						id: 4,
 						startDate: '2020-07-13',
 						inactivationDate: '2020-07-13',
 						statusId: '12312',
@@ -574,7 +574,7 @@ export const MOCKS_ORDERS = [
 						},
 					},
 					{
-						id: 8, 
+						id: 8,
 						startDate: '2020-07-13',
 						inactivationDate: '2020-07-13',
 						statusId: '12312',
@@ -604,9 +604,9 @@ export const MOCKS_ORDERS = [
 		path: 'paciente/:idPaciente/ordenes/nueva-orden/confirmar-estudio',
 		loads: [
 			{
-				name: 'ServiceRequest.newServiceRequest(patientId: number): PatientServiceRequestListDto []', 
+				name: 'ServiceRequest.newServiceRequest(patientId: number): ServiceRequestListDto',
 				roles: 'Todo ESPECIALISTA_MEDICO sobre la institución',
-				comments: 'Los siguientes campos pueden ser nulos: observaciones, tiempo de administración, intervalo de administración',
+				comments: 'Los siguientes campos pueden ser nulos: observaciones',
 				path: '/api/institutions/{institutionId}/patient/{patientId}/serviceRequests',
 				method: 'POST',
 				body: {
@@ -616,12 +616,12 @@ export const MOCKS_ORDERS = [
 							snomed: {
 								id: '11111',
 								pt: 'Radiologia',
-							},					
+							},
 							healthConditionSnomed: {
 								id: '2222',
 								pt: 'ANGINAS'
 							},
-							observations: 'Tomarlo durante las mañanas en ayuno'					
+							observations: 'Tomarlo durante las mañanas en ayuno'
 						}
 					]
 				},
@@ -638,11 +638,11 @@ export const MOCKS_ORDERS = [
 		path: 'paciente/:idPaciente/ordenes/nueva-orden/confirmar-estudio/descargar-orden',
 		loads: [
 			{
-				name: 'ServiceRequest.downloadServiceRequest(patientId: number, serviceRequestId: number): File', 
+				name: 'ServiceRequest.download(patientId: number, serviceRequestId: number): File',
 				roles: 'Todo ESPECIALISTA_MEDICO sobre la institución',
 				comments: 'Descarga el archivo pdf de la receta',
 				path: '/api/institutions/{institutionId}/patient/{patientId}/serviceRequests/{serviceRequestId}/downloadFile',
-				method: 'GET',				
+				method: 'GET',
 			}
 		],
 		actions: [
@@ -656,7 +656,7 @@ export const MOCKS_ORDERS = [
 		path: 'paciente/:idPaciente/ordenes/completar-orden',
 		loads: [
 			{
-				name: 'ServiceRequest.completeRequest(patientId: number, serviceRequestId:number): CompleteRequestDto []', 
+				name: 'ServiceRequest.complete(patientId: number, serviceRequestId:number): CompleteRequestDto',
 				roles: 'Todo ESPECIALISTA_MEDICO sobre la institución',
 				path: '/api/institutions/{institutionId}/patient/{patientId}/serviceRequests/{serviceRequestId}',
 				method: 'PUT',
@@ -677,7 +677,7 @@ export const MOCKS_ORDERS = [
 		path: 'paciente/:idPaciente/ordenes/eliminar-orden',
 		loads: [
 			{
-				name: 'ServiceRequest.delete(patientId: number, serviceRequestId:number)', 
+				name: 'ServiceRequest.delete(patientId: number, serviceRequestId:number)',
 				roles: 'Todo ESPECIALISTA_MEDICO sobre la institución',
 				comments: 'Borrado lógico cambiando el estado a ingresado por error',
 				path: '/api/institutions/{institutionId}/patient/{patientId}/serviceRequests/{serviceRequestId}',
@@ -695,16 +695,16 @@ export const MOCKS_ORDERS = [
 		path: 'paciente/:idPaciente/ordenes/ver-orden',
 		loads: [
 			{
-				name: 'ServiceRequest.get(patientId: number, serviceRequestId:number)', 
+				name: 'ServiceRequest.get(patientId: number, serviceRequestId:number): DiagnosticReportDto',
 				roles: 'Todo ESPECIALISTA_MEDICO sobre la institución',
-				comments: 'Borrado lógico cambiando el estado a ingresado por error',
+				comments: '',
 				path: '/api/institutions/{institutionId}/patient/{patientId}/serviceRequests/{serviceRequestId}',
 				method: 'GET',
-			    body: {	
+			    fetch: {
 					snomed: {
 						id: '11111',
 						pt: 'Radiologia',
-					},					
+					},
 					healthConditionSnomed: {
 						id: '2222',
 						pt: 'ANGINAS'
@@ -732,7 +732,7 @@ export const MOCKS_ORDERS = [
 				method: 'GET',
 				body: [
 					{
-						id: 4, 
+						id: 4,
 						startDate: '2020-07-13',
 						inactivationDate: '2020-07-13',
 						statusId: '12312',
@@ -742,7 +742,7 @@ export const MOCKS_ORDERS = [
 						},
 					},
 					{
-						id: 8, 
+						id: 8,
 						startDate: '2020-07-13',
 						inactivationDate: '2020-07-13',
 						statusId: '12312',
@@ -765,7 +765,7 @@ export const MOCKS_ORDERS = [
 		path: 'paciente/:idPaciente/ordenes/nueva-indicacion/confirmar-indicacion',
 		loads: [
 			{
-				name: 'MedicalIndication.new(patientId: number): MedicalIndicationDto', 
+				name: 'MedicalIndication.new(patientId: number): MedicalIndicationDto',
 				roles: 'Todo ESPECIALISTA_MEDICO sobre la institución',
 				path: '/api/institutions/{institutionId}/patient/{patientId}/medicalIndications',
 				method: 'POST',
@@ -774,7 +774,7 @@ export const MOCKS_ORDERS = [
 						id: '2222',
 						pt: 'ANGINAS'
 					},
-					observations: 'Tomarlo durante las mañanas en ayuno'										
+					observations: 'Tomarlo durante las mañanas en ayuno'
 				},
 				fetch: 8, // id del service request creado
 			}
@@ -794,7 +794,7 @@ export const MOCKS_ORDERS = [
 		path: 'paciente/:idPaciente/ordenes/finalizar-indicacion',
 		loads: [
 			{
-				name: 'MedicalIndication.finish(patientId: number, medicalIndicationId:number)', 
+				name: 'MedicalIndication.finish(patientId: number, medicalIndicationId:number)',
 				roles: 'Todo ESPECIALISTA_MEDICO sobre la institución',
 				comments: 'Cargar la fecha fin',
 				path: '/api/institutions/{institutionId}/patient/{patientId}/medicalIndication/{medicalIndicationId}',
