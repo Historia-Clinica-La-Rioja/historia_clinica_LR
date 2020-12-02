@@ -1,18 +1,16 @@
 package net.pladema.clinichistory.documents.service;
 
-import java.io.IOException;
-
+import net.pladema.auditable.service.AuditableService;
+import net.pladema.clinichistory.documents.events.OnGenerateDocumentEvent;
+import net.pladema.clinichistory.documents.repository.DocumentFileRepository;
+import net.pladema.clinichistory.documents.repository.entity.DocumentFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import net.pladema.auditable.service.AuditableService;
-import net.pladema.clinichistory.documents.events.OnGenerateDocumentEvent;
-import net.pladema.clinichistory.documents.repository.DocumentFileRepository;
-import net.pladema.clinichistory.documents.repository.entity.DocumentFile;
-import net.pladema.sgx.pdf.PDFDocumentException;
+import java.io.IOException;
 
 @Service
 public class CreateDocumentFileImpl implements CreateDocumentFile {
@@ -35,7 +33,7 @@ public class CreateDocumentFileImpl implements CreateDocumentFile {
     @Async
     @EventListener
     @Override
-    public void execute(OnGenerateDocumentEvent event) throws IOException, PDFDocumentException {
+    public void execute(OnGenerateDocumentEvent event) throws IOException {
         LOG.debug("Input parameters -> onGenerateDocumentEvent {}", event);
         if(event.getDocument().isConfirmed()) {
             try {

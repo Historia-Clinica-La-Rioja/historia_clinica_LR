@@ -1,6 +1,5 @@
 package net.pladema.clinichistory.documents.core;
 
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.documents.service.Document;
 import net.pladema.clinichistory.documents.service.DocumentFactory;
 import net.pladema.clinichistory.documents.service.DocumentService;
@@ -8,8 +7,6 @@ import net.pladema.clinichistory.documents.service.NoteService;
 import net.pladema.clinichistory.documents.service.ips.*;
 import net.pladema.clinichistory.documents.service.ips.domain.DocumentObservationsBo;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
-import net.pladema.clinichistory.hospitalization.service.anamnesis.impl.CreateAnamnesisServiceImpl;
-import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -60,7 +57,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
     }
 
     @Override
-    public void run(Document anamnesis) {
+    public Long run(Document anamnesis) {
 
         net.pladema.clinichistory.documents.repository.entity.Document doc =
                 new net.pladema.clinichistory.documents.repository.entity.Document(
@@ -83,7 +80,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
         clinicalObservationService.loadAnthropometricData(patientId, doc.getId(), Optional.ofNullable(anamnesis.getAnthropometricData()));
 
         internmentEpisodeService.updateAnamnesisDocumentId(intermentEpisodeId, doc.getId());
-
+        return doc.getId();
     }
 
     private net.pladema.clinichistory.documents.repository.entity.Document loadNotes(net.pladema.clinichistory.documents.repository.entity.Document document, Optional<DocumentObservationsBo> optNotes) {

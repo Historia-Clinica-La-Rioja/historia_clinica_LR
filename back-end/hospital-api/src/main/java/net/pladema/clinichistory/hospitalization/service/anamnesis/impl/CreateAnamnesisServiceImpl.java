@@ -69,7 +69,8 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
         assertEffectiveVitalSignTimeValid(anamnesis, internmentEpisode.getEntryDate());
         assertAnthropometricData(anamnesis);
 
-        documentFactory.run(anamnesis);
+        
+        anamnesis.setId(documentFactory.run(anamnesis));
 
         LOG.debug(OUTPUT, anamnesis);
         generateDocument(anamnesis, institutionId);
