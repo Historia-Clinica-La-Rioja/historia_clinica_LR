@@ -329,3 +329,1005 @@ databaseChangeLog:
 
 
 
+    - changeSet:
+        id: medication_request_status-create-table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: medication_request_status
+            columns: 
+            - column:
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_medication_request_status
+                name: id
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: description
+                type: varchar(50)
+
+    - changeSet:
+        id: medication_request_status-data
+        comment: Carga de datos medication_request_status 
+        author: etrapani
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |- 
+                    INSERT INTO medication_request_status (id, description) VALUES('55561003', 'Activo');  
+                    INSERT INTO medication_request_status (id, description) VALUES('281341005', 'En espera');        
+                    INSERT INTO medication_request_status (id, description) VALUES('89925002', 'Cancelado');        
+                    INSERT INTO medication_request_status (id, description) VALUES('255609007', 'Borrador');                  
+                    INSERT INTO medication_request_status (id, description) VALUES('385654001', 'Detenido');           
+                    INSERT INTO medication_request_status (id, description) VALUES('255594003', 'Completado');        
+                    INSERT INTO medication_request_status (id, description) VALUES('723510000', 'Ingresado por error');   
+                    INSERT INTO medication_request_status (id, description) VALUES('261665006', 'Desconocido');     
+                    
+    - changeSet:
+        id: medication_request_category-create-table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: medication_request_category
+            columns: 
+            - column:
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_medication_request_category
+                name: id
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: description
+                type: varchar(50)     
+
+    - changeSet:
+        id: medication_request_category-data
+        comment: Carga de datos medication_request_category 
+        author: etrapani
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |- 
+                    INSERT INTO medication_request_category (id, description) VALUES('416800000', 'Paciente internado');  
+                    INSERT INTO medication_request_category (id, description) VALUES('373864002', 'Paciente ambulatorio');        
+                    INSERT INTO medication_request_category (id, description) VALUES('129274004', 'Alta hospitalaria');        
+                    INSERT INTO medication_request_category (id, description) VALUES('303119007', 'Persona en ambiente comunitario');   
+
+    - changeSet:
+        id: request_intent-create-table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: request_intent
+            columns: 
+            - column:
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_request_intent
+                name: id
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: description
+                type: varchar(50) 
+
+    - changeSet:
+        id: request_intent-data
+        comment: Carga de datos request_intent 
+        author: etrapani
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |- 
+                    INSERT INTO request_intent (id, description) VALUES('1', 'Propuesta');  
+                    INSERT INTO request_intent (id, description) VALUES('2', 'Plan');        
+                    INSERT INTO request_intent (id, description) VALUES('3', 'Orden');        
+                    INSERT INTO request_intent (id, description) VALUES('4', 'Orden original');                  
+                    INSERT INTO request_intent (id, description) VALUES('5', 'Orden copia');           
+                    INSERT INTO request_intent (id, description) VALUES('6', 'Orden para completar');        
+                    INSERT INTO request_intent (id, description) VALUES('7', 'Orden de ejemplo');   
+                    INSERT INTO request_intent (id, description) VALUES('8', 'Opción');   
+
+    - changeSet:
+        id: medication_request-create-table  
+        comment: Create table medication_request
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: medication_request
+            columns: 
+            - column:
+                autoIncrement: true
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_medication_request
+                name: id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: patient_id
+                type: int 
+            - column:
+                constraints:
+                    nullable: true
+                name: medical_coverage_id
+                type: int                
+            - column:
+                constraints:
+                    nullable: false
+                name: status_id
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: intent_id
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: category_id
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: doctor_id  
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: has_recipe               
+                type: boolean
+                defaultValue: ${boolean.false}
+            - column:
+                constraints:
+                    nullable: true
+                name: note_id
+                type: bigint 
+            - column:
+                constraints:
+                    nullable: false
+                name: institution_id 
+                type: int  
+            - column:
+                constraints:
+                    nullable: false
+                name: doc_id
+                type: bigint  
+            - column:
+                constraints:
+                    nullable: false
+                name: request_date
+                type: date
+                defaultValueDate: ${date.now}            
+            - column:
+                constraints:
+                    nullable: false
+                name: created_by
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: updated_by
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: created_on
+                type: datetime
+                defaultValueDate: ${date.now}
+            - column:
+                constraints:
+                    nullable: false
+                name: updated_on
+                type: datetime
+                defaultValueDate: ${date.now} 
+        - addForeignKeyConstraint:
+            baseColumnNames: patient_id
+            baseTableName: medication_request
+            constraintName: FK_medication_request_patient_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: patient
+            validate: true   
+        - addForeignKeyConstraint:
+            baseColumnNames: status_id
+            baseTableName: medication_request
+            constraintName: FK_medication_request_status_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: medication_request_status
+            validate: true   
+        - addForeignKeyConstraint:
+            baseColumnNames: category_id
+            baseTableName: medication_request
+            constraintName: FK_medication_request_category_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: medication_request_category
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: intent_id
+            baseTableName: medication_request
+            constraintName: FK_medication_request_intent_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: request_intent
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: medical_coverage_id
+            baseTableName: medication_request
+            constraintName: FK_medication_request_medical_coverage_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: medical_coverage
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: institution_id
+            baseTableName: medication_request
+            constraintName: FK_medication_request_institution_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: institution
+            validate: true   
+        - addForeignKeyConstraint:
+            baseColumnNames: doc_id
+            baseTableName: medication_request
+            constraintName: FK_medication_request_doc_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: document
+            validate: true       
+        - addForeignKeyConstraint:
+            baseColumnNames: note_id
+            baseTableName: medication_request
+            constraintName: FK_medication_request_note_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: note
+            validate: true 
+        - addForeignKeyConstraint:
+            baseColumnNames: doctor_id
+            baseTableName: medication_request
+            constraintName: FK_medication_request_healthcare_professional_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: healthcare_professional
+            validate: true
+
+    - changeSet:
+        id: service_request_status-create-table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: service_request_status
+            columns: 
+            - column:
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_service_request_status
+                name: id
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: description
+                type: varchar(50)
+
+    - changeSet:
+        id: service_request_status-data
+        comment: Carga de datos service_request_status 
+        author: etrapani
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |- 
+                    INSERT INTO service_request_status (id, description) VALUES('55561003', 'Activo');  
+                    INSERT INTO service_request_status (id, description) VALUES('281341005', 'En espera');       
+                    INSERT INTO service_request_status (id, description) VALUES('255609007', 'Borrador');            
+                    INSERT INTO service_request_status (id, description) VALUES('255594003', 'Completado');        
+                    INSERT INTO service_request_status (id, description) VALUES('723510000', 'Ingresado por error');   
+                    INSERT INTO service_request_status (id, description) VALUES('261665006', 'Desconocido');     
+                    
+    - changeSet:
+        id: service_request_category-create-table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: service_request_category
+            columns: 
+            - column:
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_service_request_category
+                name: id
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: description
+                type: varchar(50)     
+
+    - changeSet:
+        id: service_request_category-data
+        comment: Carga de datos service_request_category 
+        author: etrapani
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |- 
+                    INSERT INTO service_request_category (id, description) VALUES('108252007', 'Procedimiento de laboratorio');  
+                    INSERT INTO service_request_category (id, description) VALUES('363679005', 'Procedimiento de diagnóstico por imágenes');        
+                    INSERT INTO service_request_category (id, description) VALUES('409063005', 'Asesoramiento');
+                    INSERT INTO service_request_category (id, description) VALUES('409073007', 'Educación');
+                    INSERT INTO service_request_category (id, description) VALUES('387713003', 'Procedimiento quirúrgico');
+
+
+    - changeSet:
+        id: service_request-create-table  
+        comment: Create table service_request
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: service_request
+            columns: 
+            - column:
+                autoIncrement: true
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_service_request
+                name: id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: patient_id
+                type: int 
+            - column:
+                constraints:
+                    nullable: false
+                name: medical_coverage_id
+                type: int                
+            - column:
+                constraints:
+                    nullable: false
+                name: status_id
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: intent_id
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: category_id
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: doctor_id  
+                type: int
+            - column:
+                constraints:
+                    nullable: true
+                name: note_id
+                type: bigint 
+            - column:
+                constraints:
+                    nullable: false
+                name: institution_id 
+                type: int  
+            - column:
+                constraints:
+                    nullable: false
+                name: doc_id
+                type: bigint  
+            - column:
+                constraints:
+                    nullable: false
+                name: request_date
+                type: date
+                defaultValueDate: ${date.now}            
+            - column:
+                constraints:
+                    nullable: false
+                name: created_by
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: updated_by
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: created_on
+                type: datetime
+                defaultValueDate: ${date.now}
+            - column:
+                constraints:
+                    nullable: false
+                name: updated_on
+                type: datetime
+                defaultValueDate: ${date.now} 
+        - addForeignKeyConstraint:
+            baseColumnNames: patient_id
+            baseTableName: service_request
+            constraintName: FK_service_request_patient_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: patient
+            validate: true   
+        - addForeignKeyConstraint:
+            baseColumnNames: status_id
+            baseTableName: service_request
+            constraintName: FK_service_request_status_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: service_request_status
+            validate: true   
+        - addForeignKeyConstraint:
+            baseColumnNames: category_id
+            baseTableName: service_request
+            constraintName: FK_service_request_category_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: service_request_category
+            validate: true 
+        - addForeignKeyConstraint:
+            baseColumnNames: intent_id
+            baseTableName: service_request
+            constraintName: FK_service_request_intent_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: request_intent
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: medical_coverage_id
+            baseTableName: service_request
+            constraintName: FK_service_request_medical_coverage_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: medical_coverage
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: institution_id
+            baseTableName: service_request
+            constraintName: FK_service_request_institution_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: institution
+            validate: true   
+        - addForeignKeyConstraint:
+            baseColumnNames: doc_id
+            baseTableName: service_request
+            constraintName: FK_service_request_doc_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: document
+            validate: true       
+        - addForeignKeyConstraint:
+            baseColumnNames: note_id
+            baseTableName: service_request
+            constraintName: FK_service_request_note_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: note
+            validate: true 
+        - addForeignKeyConstraint:
+            baseColumnNames: doctor_id
+            baseTableName: service_request
+            constraintName: FK_service_request_healthcare_professional_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: healthcare_professional
+            validate: true
+
+    - changeSet:
+        id: source_type-data
+        comment: Actualizar datos source_type 
+        author: etrapani
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    INSERT INTO source_type VALUES (2, 'Receta');
+                    INSERT INTO source_type VALUES (3, 'Orden'); 
+
+    - changeSet:
+        id: document_type-data
+        comment: Actualizar datos document_type 
+        author: etrapani
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    INSERT INTO document_type VALUES (5, 'Receta');
+                    INSERT INTO document_type VALUES (6, 'Orden'); 
+
+
+    - changeSet:
+        id: medical_request-create-table  
+        comment: Create table medical_request
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: medical_request
+            columns: 
+            - column:
+                autoIncrement: true
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_medical_request
+                name: id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: patient_id
+                type: int 
+            - column:
+                constraints:
+                    nullable: false
+                name: doctor_id  
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: note_id
+                type: bigint 
+            - column:
+                constraints:
+                    nullable: false
+                name: institution_id 
+                type: int    
+            - column:
+                constraints:
+                    nullable: false
+                name: request_date
+                type: date
+                defaultValueDate: ${date.now}            
+            - column:
+                constraints:
+                    nullable: false
+                name: created_by
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: updated_by
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: created_on
+                type: datetime
+                defaultValueDate: ${date.now}
+            - column:
+                constraints:
+                    nullable: false
+                name: updated_on
+                type: datetime
+                defaultValueDate: ${date.now} 
+        - addForeignKeyConstraint:
+            baseColumnNames: patient_id
+            baseTableName: medical_request
+            constraintName: FK_medical_request_patient_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: patient
+            validate: true   
+        - addForeignKeyConstraint:
+            baseColumnNames: institution_id
+            baseTableName: medical_request
+            constraintName: FK_medical_request_institution_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: institution
+            validate: true      
+        - addForeignKeyConstraint:
+            baseColumnNames: note_id
+            baseTableName: medical_request
+            constraintName: FK_medical_request_note_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: note
+            validate: true 
+        - addForeignKeyConstraint:
+            baseColumnNames: doctor_id
+            baseTableName: medical_request
+            constraintName: FK_medical_request_healthcare_professional_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: healthcare_professional
+            validate: true
+  
+    - changeSet:
+        id: diagnostic_report_status table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: diagnostic_report_status
+            columns: 
+            - column:
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_diagnostic_report_status
+                name: id
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: description
+                type: varchar(100)                  
+
+
+    - changeSet:
+        id: diagnostic_report_status-data
+        comment: Carga de datos diagnostic_report_status 
+        author: etrapani
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |- 
+                    INSERT INTO diagnostic_report_status (id, description) VALUES('1', 'Registrado');  
+                    INSERT INTO diagnostic_report_status (id, description) VALUES('255609007', 'Parcial');        
+                    INSERT INTO diagnostic_report_status (id, description) VALUES('261782000', 'Final');
+                    INSERT INTO diagnostic_report_status (id, description) VALUES('33714007', 'Corregido');
+                    INSERT INTO diagnostic_report_status (id, description) VALUES('18403000', 'Agregado');
+                    INSERT INTO diagnostic_report_status (id, description) VALUES('89925002', 'Cancelado');
+                    INSERT INTO diagnostic_report_status (id, description) VALUES('723510000', 'Ingresado por error');
+
+    - changeSet:
+        id: diagnostic_report-create-table  
+        comment: Create table diagnostic_report
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: diagnostic_report
+            columns: 
+            - column:
+                autoIncrement: true
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_diagnostic_report
+                name: id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: patient_id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: sctid_code
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: status_id
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: health_condition_id 
+                type: int    
+            - column:
+                constraints:
+                    nullable: false
+                name: effective_time
+                type: datetime
+                defaultValueDate: ${date.now}
+            - column:
+                constraints:
+                    nullable: true
+                name: link
+                type: varchar(255) 
+            - column:
+                constraints:
+                    nullable: true
+                name: path_file
+                type: varchar(255)   
+            - column:
+                constraints:
+                    nullable: true
+                name: note_id
+                type: bigint          
+            - column:
+                constraints:
+                    nullable: false
+                name: created_by
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: updated_by
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: created_on
+                type: datetime
+                defaultValueDate: ${date.now}
+            - column:
+                constraints:
+                    nullable: false
+                name: updated_on
+                type: datetime
+                defaultValueDate: ${date.now} 
+        - addForeignKeyConstraint:
+            baseColumnNames: patient_id
+            baseTableName: diagnostic_report
+            constraintName: FK_diagnostic_report_patient_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: patient
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: status_id
+            baseTableName: diagnostic_report
+            constraintName: FK_diagnostic_report_status_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: diagnostic_report_status
+            validate: true    
+        - addForeignKeyConstraint:
+            baseColumnNames: health_condition_id
+            baseTableName: diagnostic_report
+            constraintName: FK_diagnostic_report_health_condition_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: health_condition
+            validate: true      
+        - addForeignKeyConstraint:
+            baseColumnNames: note_id
+            baseTableName: diagnostic_report
+            constraintName: FK_diagnostic_report_note_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: note
+            validate: true 
+        - addForeignKeyConstraint:
+            baseColumnNames: sctid_code
+            baseTableName: diagnostic_report
+            constraintName: FK_diagnostic_report_sctid_code
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: snomed
+            validate: true              
+
+
+
+    - changeSet:
+        id: document_diagnostic_report table
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: document_diagnostic_report
+            columns: 
+            - column:
+                constraints:
+                    nullable: false
+                name: diagnostic_report_id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: document_id
+                type: bigint
+        - addPrimaryKey:
+            clustered: true
+            columnNames: document_id, diagnostic_report_id
+            constraintName: PK_document_diagnostic_report
+            tableName: document_diagnostic_report
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: document_id
+            baseTableName: document_diagnostic_report
+            constraintName: FK_document_diagnostic_report_document_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: document
+            validate: true 
+        - addForeignKeyConstraint:
+            baseColumnNames: diagnostic_report_id
+            baseTableName: document_diagnostic_report
+            constraintName: FK_document_diagnostic_report_diagnostic_report_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: diagnostic_report
+            validate: true
+            
+
+    - changeSet:
+        id: quantity-create-table  
+        comment: Create table quantity
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: quantity
+            columns: 
+            - column:
+                autoIncrement: true
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_quantity
+                name: id
+                type: bigint
+            - column:
+                constraints:
+                    nullable: false
+                name: value
+                type: float
+            - column:
+                constraints:
+                    nullable: false
+                name: unit
+                type: varchar(20)
+
+    - changeSet:
+        id: dosage-create-table  
+        comment: Create table dosage
+        author: etrapani
+        changes: 
+        - createTable: 
+            tableName: dosage
+            columns: 
+            - column:
+                autoIncrement: true
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_dosage
+                name: id
+                type: int
+            - column:
+                constraints:
+                    nullable: true
+                name: sequence
+                type: int
+            - column:
+                constraints:
+                    nullable: true
+                name: count
+                type: int
+            - column:
+                constraints:
+                    nullable: true
+                name: duration
+                type: float
+            - column:
+                constraints:
+                    nullable: true
+                name: duration_unit
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: true
+                name: frequency
+                type: int   
+            - column:
+                constraints:
+                    nullable: true
+                name: period_unit
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: true
+                name: dose_quantity_id
+                type: bigint
+        - addForeignKeyConstraint:
+            baseColumnNames: dose_quantity_id
+            baseTableName: dosage
+            constraintName: FK_dosage_dose_quantity_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: quantity
+            validate: true  
+        
+
+    - changeSet:
+        id: medication_statement add new columns 
+        author: etrapani
+        changes:
+            - addColumn:
+                tableName: medication_statement
+                columns:
+                - column:
+                    constraints:
+                        nullable: true
+                    name: dosage_id
+                    type: int
+                - column:
+                    constraints:
+                        nullable: true
+                    name: health_condition_id
+                    type: int
+                - column:
+                    constraints:
+                        nullable: false
+                    name: chronic
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    constraints:
+                        nullable: true
+                    name: start_date
+                    type: date
+                - column:
+                    constraints:
+                        nullable: true
+                    name: end_date
+                    type: date
+                - column:
+                    constraints:
+                        nullable: true
+                    name: suspended_start_date
+                    type: date
+                - column:
+                    constraints:
+                        nullable: true
+                    name: suspended_end_date
+                    type: date
+            - addForeignKeyConstraint:
+                baseColumnNames: dosage_id
+                baseTableName: medication_statement
+                constraintName: FK_medication_statement_dosage_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: dosage
+                validate: true
+            - addForeignKeyConstraint:
+                baseColumnNames: health_condition_id
+                baseTableName: medication_statement
+                constraintName: FK_medication_statement_health_condition_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: health_condition
+                validate: true
