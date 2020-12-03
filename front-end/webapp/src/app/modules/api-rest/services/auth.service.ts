@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
-import { LoginDto, JWTokenDto, OauthConfigDto } from '@api-rest/api-model';
+import { LoginDto, JWTokenDto, OauthConfigDto, RefreshTokenDto } from '@api-rest/api-model';
 import { environment } from '@environments/environment';
 
 const TOKEN_KEY = 'token';
+const REFRESH_TOKEN_KEY = 'refreshtoken';
 
 @Injectable({
 	providedIn: 'root'
@@ -27,11 +28,21 @@ export class AuthService {
 		}
 		return this.http.post<JWTokenDto>(`${environment.apiBase}/auth`, loginDto, {headers: httpHeaders})
 			.pipe(
-				map(tokenDto => localStorage.setItem(TOKEN_KEY, tokenDto.token))
+				map(tokens => this.storeTokens(tokens))
 			);
 	}
 
-	public logout() {
+	tokenRefresh(refreshToken: string): Observable<string> {
+		const body: RefreshTokenDto = { refreshToken };
+		return this.http.post<JWTokenDto>(`${environment.apiBase}/auth/refresh`, body).pipe(
+			tap(tokens => this.storeTokens(tokens)),
+			map(tokens => tokens.token),
+		);
+	}
+
+
+
+	logout() {
 		localStorage.removeItem(TOKEN_KEY);
 	}
 
@@ -49,6 +60,11 @@ export class AuthService {
 
 	getOauthConfig(): Observable<OauthConfigDto> {
 		return this.http.get<OauthConfigDto>(`${environment.apiBase}/oauth/config`);
+	}
+
+	private storeTokens(tokens: JWTokenDto) {
+		localStorage.setItem(TOKEN_KEY, tokens.token);
+		localStorage.setItem(REFRESH_TOKEN_KEY, tokens.refreshToken);
 	}
 
 }
