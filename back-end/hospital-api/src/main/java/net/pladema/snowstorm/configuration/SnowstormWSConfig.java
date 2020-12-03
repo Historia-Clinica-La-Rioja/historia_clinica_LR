@@ -19,12 +19,16 @@ public class SnowstormWSConfig extends WSConfig {
 
     private static final long DEFAULT_TOKEN_EXPIRATION = -1l;
 
+    public static final String CIE10_REFERENCE_SET_ID = "447562003";
+
+    public static final String CIE10_LIMIT = "500";
+
     //Params
     @Value("#{'${ws.snowstorm.params.preferredOrAcceptableIn:450828004}'.split(',\\s*')}")
     private List<Long> preferredOrAcceptableIn;
 
     @Value("${ws.snowstorm.params.limit:30}")
-    private Integer limit;
+    private Integer conceptsLimit;
 
     @Value("${ws.snowstorm.params.termActive:true}")
     private Boolean termActive;
@@ -39,6 +43,9 @@ public class SnowstormWSConfig extends WSConfig {
     //URLS
     @Value("${ws.snowstorm.url.concepts:/MAIN/concepts}")
     private String conceptsUrl;
+
+    @Value("${ws.snowstorm.url.refsetMembers:/MAIN/members}")
+    private String refsetMembersUrl;
 
     private long tokenExpiration = DEFAULT_TOKEN_EXPIRATION;
 
