@@ -18,6 +18,10 @@ import javax.persistence.Table;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 
 public class SectorType {
+
+    public static final Short OUTPATIENT_ID = 1;
+    public static final Short INTERNMENT_ID = 2;
+
     @Id
     @Column(name = "id")
     @EqualsAndHashCode.Include

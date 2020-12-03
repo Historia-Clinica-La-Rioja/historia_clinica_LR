@@ -1,9 +1,11 @@
 package net.pladema.establishment.repository;
 
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.InternmentEpisodeStatus;
 import net.pladema.establishment.repository.domain.BedSummaryVo;
 import net.pladema.establishment.repository.entity.Bed;
 import net.pladema.establishment.repository.entity.BedCategory;
 import net.pladema.establishment.repository.entity.Sector;
+import net.pladema.establishment.repository.entity.SectorType;
 import net.pladema.staff.repository.domain.ClinicalSpecialtyVo;
 import net.pladema.staff.repository.entity.ClinicalSpecialty;
 import org.springframework.stereotype.Repository;
@@ -11,9 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
-import java.util.*;
-
-import net.pladema.clinichistory.ips.repository.masterdata.entity.InternmentEpisodeStatus;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class BedSummaryRepositoryImpl implements BedSummaryRepository{
@@ -34,17 +37,20 @@ public class BedSummaryRepositoryImpl implements BedSummaryRepository{
                 + " JOIN Room r ON b.roomId = r.id "
                 + " JOIN Sector s ON r.sectorId = s.id "
                 + " LEFT JOIN CareType ct ON s.careTypeId = ct.id "
-                + " JOIN SectorOrganization so ON s.sectorOrganizationId = so.id "
+                + " LEFT JOIN SectorOrganization so ON s.sectorOrganizationId = so.id "
                 + " LEFT JOIN AgeGroup ag ON s.ageGroupId = ag.id "
                 + " LEFT JOIN ClinicalSpecialtySector css ON s.id = css.sectorId "
                 + " LEFT JOIN ClinicalSpecialty cs ON css.clinicalSpecialtyId = cs.id "
                 + " LEFT JOIN InternmentEpisode ie ON b.id = ie.bedId "
-                + " WHERE s.institutionId = :institutionId AND (b.free=true OR ( b.free=false AND ie.statusId = :internmentEpisodeActiveStatus ) ) "
+                + " WHERE s.institutionId = :institutionId "
+                + " AND (s.sectorTypeId = :internmentSectorType OR s.sectorTypeId IS NULL) "
+                + " AND (b.free=true OR ( b.free=false AND ie.statusId = :internmentEpisodeActiveStatus ) ) "
                 + " GROUP BY b, bc, s, cs, so, ct, ag "
                 + " ORDER BY s.id, cs.id ";
 
         List<Object[]> result = entityManager.createQuery(sqlQuery)
                 .setParameter("institutionId", institutionId)
+                .setParameter("internmentSectorType", SectorType.INTERNMENT_ID)
                 .setParameter("internmentEpisodeActiveStatus", InternmentEpisodeStatus.ACTIVE_ID)
                 .getResultList();
 
