@@ -15,7 +15,8 @@
     "react-admin": "^3.5.0",
     "react-dom": "^16.13.1",
     "react-google-recaptcha": "^2.1.0",
-    "react-scripts": "3.4.1"
+    "react-scripts": "3.4.1",
+    "refresh-fetch": "^0.7.0"
   },
   "scripts": {
     "start": "react-scripts start",
