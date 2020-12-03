@@ -167,7 +167,7 @@ const SectorEdit = props => (
             <SectionTitle label="resources.clinicalspecialtysectors.fields.rooms"/>
             <CreateRelatedButton
                 reference="rooms"
-                refFieldName="clinicalSpecialtySectorId"
+                refFieldName="sectorId"
                 label="resources.rooms.createRelated"
             />
             <ReferenceManyField
