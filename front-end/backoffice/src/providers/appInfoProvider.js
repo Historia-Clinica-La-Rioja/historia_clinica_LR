@@ -1,11 +1,11 @@
-import apiRest from './utils/sgxApiRest';
+import { loadInfo, getInfo} from './utils/sgxApiInfo';
 
 const appInfoProvider = {
     loadInfo: () => {
-        return apiRest.loadInfo();
+        return loadInfo();
     },
     getInfo: () => {
-        return apiRest.getInfo();
+        return getInfo();
     },
 };
 

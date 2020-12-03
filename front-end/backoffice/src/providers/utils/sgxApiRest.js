@@ -1,78 +1,65 @@
-import { fetchUtils } from 'react-admin';
+import { setHeader, sgxFetchApi } from '../../libs/sgx/utils/sgxFetch';
 
 import SGXPermissions from './SGXPermissions';
 
-const apiUrl = '/api';
-const oauthInfo = 'oauth-info';
+const TOKEN_KEY_STORE = 'token';
+const TOKENREFRESH_KEY_STORE = 'refreshtoken';
+
+const retrieveToken = () => localStorage.getItem(TOKEN_KEY_STORE)
+const saveTokens = (token, refreshToken) => {
+    localStorage.setItem(TOKEN_KEY_STORE, token);
+    localStorage.setItem(TOKENREFRESH_KEY_STORE, refreshToken);
+}
+const clearTokens = () => {
+    localStorage.removeItem(TOKEN_KEY_STORE);
+    localStorage.removeItem(TOKENREFRESH_KEY_STORE);
+}
+
+const buildPostOptions = body => ({ method: 'POST', body: JSON.stringify(body) });
+
 class SgxApiRest {
     _permission$ = undefined;
 
-    auth(username, password, raToken) {
+    login(username, password, raToken) {
         this.logout();
-        const options = {
-            method: 'POST',
-            headers: new Headers({ Accept: 'application/json',  recaptcha: raToken }),
-            body: JSON.stringify({username, password})
-        };
-        return fetchUtils.fetchJson(`${apiUrl}/auth`, options)
-            .then(response => {
-                return response.json;
-            }).then(({ token }) => {
-                localStorage.setItem('token', token);
+
+        let options = buildPostOptions({ username, password });
+        options.headers = setHeader('recaptcha', raToken, options.headers);
+
+        return sgxFetchApi('/auth', options)
+            .then(({ token, refreshToken }) => {
+                saveTokens(token, refreshToken);
             });
+
     }
 
     get permission$() {
-        const isTokenStored = !!localStorage.getItem('token');
-        if (!isTokenStored) {
+        if (!this.isAuthenticated()) {
             return Promise.reject();
         }
         if (!this._permission$) {
             this._permission$ = this.fetch('/account/permissions')
-                .then(({json}) => {
+                .then((json) => {
                     return new SGXPermissions(json);
                 });
         }
         return this._permission$;
     }
 
+    isAuthenticated() {
+        const isTokenStored = !!retrieveToken();
+        return isTokenStored;
+    }
+
     fetch(url, options = {}) {
-        if (!options.headers) {
-            options.headers = new Headers({ Accept: 'application/json' });
-        }
-        const token = localStorage.getItem('token');
-        options.headers.set('X-Auth-Token', token);
-        return fetchUtils.fetchJson(apiUrl + url, options);
+        const token = retrieveToken();
+        options.headers = setHeader('X-Auth-Token', token, options.headers);
+        return sgxFetchApi(url, options);
     }
 
     logout() {
-        localStorage.removeItem('token');
+        clearTokens();
         this._permission$ = undefined;
-    }
-
-    loadInfo() {
-        return fetchUtils.fetchJson(`${apiUrl}/oauth/config`, { method: 'GET' })
-            .then(response => {
-                return response.json;
-            }).then((object) => {
-                localStorage.setItem(oauthInfo, JSON.stringify({oauthConfig:object}));
-            });
-    }
-
-    getInfo() {
-        return JSON.parse(localStorage.getItem(oauthInfo));
-    }
-
-    isRecaptchaEnable(options = {}){
-        if (!options.headers) {
-            options.headers = new Headers({ Accept: 'application/json' });
-        }
-        return fetchUtils.fetchJson(apiUrl + '/recaptcha/is-enable', options);
-    }
-
-    getRecaptchaPublicConfig() {
-        return fetchUtils.fetchJson(apiUrl + '/public/recaptcha', { method: 'GET' })
-                .then(response => response.json);
     }
 
   }

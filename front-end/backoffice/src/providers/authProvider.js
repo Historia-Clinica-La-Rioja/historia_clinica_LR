@@ -15,7 +15,7 @@ const authProvider = {
 
     login: ({ username, password, raToken }) => {
         return apiRest
-            .auth(username, password, raToken);
+            .login(username, password, raToken);
     },
     logout: () => {
         apiRest.logout();

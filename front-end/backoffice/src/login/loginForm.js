@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import {FunctionComponent} from 'react';
 import PropTypes from 'prop-types';
 import {Field, Form} from 'react-final-form';
@@ -10,7 +10,7 @@ import {makeStyles, Theme} from '@material-ui/core/styles';
 import {useTranslate, useLogin, useNotify, useSafeSetState} from 'ra-core';
 import ReCAPTCHA from 'react-google-recaptcha';
 import {Loading} from 'react-admin';
-import apiRest from '../providers/utils/sgxApiRest';
+import { getRecaptchaPublicConfig } from '../providers/utils/sgxApiInfo';
 import {useState, useEffect} from 'react';
 
 
@@ -70,7 +70,7 @@ const MyReCAPTCHA = props => {
 	const [recaptchaSiteKey, setRecaptchaSiteKey] = useState(undefined);
 
 	useEffect(() => {
-		apiRest.getRecaptchaPublicConfig()
+		getRecaptchaPublicConfig()
 				.then(response => {
 					const isRecaptchaEnabled = response.enabled;
 					setRecaptchaEnabled(isRecaptchaEnabled);

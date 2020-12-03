@@ -64,7 +64,7 @@ public class AuthenticationController {
 	}
 
 	@PostMapping(value = "/refresh")
-	public ResponseEntity<JWTokenDto> login(@Valid @RequestBody RefreshTokenDto refreshToken) {
+	public ResponseEntity<JWTokenDto> refreshToken(@Valid @RequestBody RefreshTokenDto refreshToken) {
 		LOG.debug("{}", "Login valid");
 		JWToken resultToken = authenticationService.refreshToken(refreshToken.refreshToken);
 		LOG.debug("{}", "Generated token");

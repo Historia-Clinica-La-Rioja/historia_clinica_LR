@@ -102,14 +102,13 @@ export default (apiUrl, mappers) => {
   };
 
   /**
-     * @param {Object} response HTTP response from fetch()
+     * @param {Object} json JSON response from fetch()
      * @param {String} type One of the constants appearing at the top if this file, e.g. 'UPDATE'
      * @param {String} resource Name of the resource to fetch, e.g. 'posts'
      * @param {Object} params The data request params, depending on the type
      * @returns {Object} Data response
      */
-  const convertHTTPResponse = (response, type, resource, params) => {
-    const { json } = response;
+  const convertHTTPResponse = (json, type, resource, params) => {
     switch (type) {
       case GET_LIST:
       case GET_MANY_REFERENCE:
@@ -139,7 +138,7 @@ export default (apiUrl, mappers) => {
     const { url, options } = convertDataRequestToHTTP(type, resource, params);
     return apiRest.fetch(url, options)
       .then(
-        response => convertHTTPResponse(response, type, resource, params),
+        jsonResponse => convertHTTPResponse(jsonResponse, type, resource, params),
         ({ status, statusText, body }) => {
           return Promise.reject(new HttpError(
             (body && body.code && `error.${body.code}`) || statusText,
