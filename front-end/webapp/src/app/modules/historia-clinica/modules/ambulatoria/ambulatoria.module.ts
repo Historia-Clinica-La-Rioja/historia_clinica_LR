@@ -20,6 +20,7 @@ import { HistoricalProblemsFiltersComponent } from './components/historical-prob
 import { OverlayModule } from '@angular/cdk/overlay';
 import { PortalModule } from '@angular/cdk/portal';
 import { NuevaConsultaDockPopupComponent } from './dialogs/nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
+import { OrdenesComponent } from './components/ordenes/ordenes.component';
 
 
 @NgModule({
@@ -34,7 +35,8 @@ import { NuevaConsultaDockPopupComponent } from './dialogs/nueva-consulta-dock-p
 		OldComponentNuevaConsulta,
 		SolveProblemComponent,
 		HistoricalProblemsFiltersComponent,
-		NuevaConsultaDockPopupComponent
+		NuevaConsultaDockPopupComponent,
+		OrdenesComponent
 	],
 	imports: [
 		AmbulatoriaRoutingModule,

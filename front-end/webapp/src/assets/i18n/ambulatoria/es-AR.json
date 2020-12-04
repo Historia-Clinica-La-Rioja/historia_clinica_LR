@@ -168,7 +168,11 @@
 				}
 			},
 			"ordenes_prescripciones": {
-				"TAB_LABEL": "Ordenes"
+				"TAB_LABEL": "Ordenes",
+				"TITLE": "Ordenes y prescripciones",
+				"MEDICACION": "Medicación",
+				"RECOMENDACIONES":"Recomendaciones generales",
+				"ESTUDIOS":"Estudios"
 			},
 			"profile": {
 				"BUTTON_HISTORIA_CLINICA": "Historia Clínica",

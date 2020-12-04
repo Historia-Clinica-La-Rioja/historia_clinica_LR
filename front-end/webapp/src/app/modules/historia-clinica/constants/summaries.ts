@@ -100,3 +100,18 @@ export const PROBLEMAS_INTERNACION: SummaryHeader = {
 	title: 'ambulatoria.paciente.problemas.INTERNACION',
 	matIcon: 'check'
 };
+
+export const ORDENES_MEDICACION: SummaryHeader = {
+	title: 'ambulatoria.paciente.ordenes_prescripciones.MEDICACION',
+	matIcon: 'event_available'
+};
+
+export const RECOMENDACIONES: SummaryHeader = {
+	title: 'ambulatoria.paciente.ordenes_prescripciones.RECOMENDACIONES',
+	matIcon: 'error_outline'
+};
+
+export const ESTUDIOS: SummaryHeader = {
+	title: 'ambulatoria.paciente.ordenes_prescripciones.ESTUDIOS',
+	matIcon: 'medical_services'
+};

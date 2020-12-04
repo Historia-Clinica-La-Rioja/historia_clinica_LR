@@ -1,0 +1,30 @@
+<app-content width="full">
+	<section>
+		<h2 [translate]="'ambulatoria.paciente.ordenes_prescripciones.TITLE'"></h2>
+		<div fxLayout="column" fxLayoutGap="20px">
+
+			<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
+
+				<div fxLayout="column" fxFlex="50%" fxLayoutGap="20px">
+					<app-summary-card id="medicacion" [header]="medicacion" [editable]="false">
+						<app-no-data></app-no-data>
+					</app-summary-card>
+				</div>
+				<div fxLayout="column" fxFlex="50%" fxLayoutGap="20px">
+					<app-summary-card id="estudios" [header]="estudios" [editable]="false">
+						<app-no-data></app-no-data>
+					</app-summary-card>
+				</div>
+			</div>
+
+			<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
+				<div fxLayout="column" fxFlex="50%" fxLayoutGap="20px">
+					<app-summary-card id="recomendaciones-generales" [header]="recomendaciones" [editable]="false">
+						<app-no-data></app-no-data>
+					</app-summary-card>
+				</div>
+			</div>
+		</div>
+	</section>
+
+</app-content>
