@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
 import net.pladema.medicalconsultation.diary.service.domain.OverturnsLimitException;
+import net.pladema.security.exceptions.JWTParseException;
 import net.pladema.sgx.error.controller.dto.ApiErrorDto;
 import net.pladema.sgx.error.controller.dto.ApiErrorMessageDto;
 import net.pladema.sgx.exceptions.BackofficeValidationException;
@@ -85,9 +86,9 @@ public class RestExceptionHandler {
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler({ BadCredentialsException.class })
-	public ResponseEntity<ApiErrorMessageDto> invalidCredentials(BadCredentialsException ex, Locale locale) {
+	public ApiErrorMessageDto invalidCredentials(BadCredentialsException ex) {
 		LOG.warn(ex.getMessage(), ex);
-		return new ResponseEntity<>(new ApiErrorMessageDto(ex.getMessage(), "Nombre de usuario o clave inválidos"), HttpStatus.BAD_REQUEST);
+		return new ApiErrorMessageDto(ex.getMessage(), "Nombre de usuario o clave inválidos");
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -109,10 +110,10 @@ public class RestExceptionHandler {
 
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	@ExceptionHandler(NotFoundException.class)
-	public ResponseEntity<ApiErrorMessageDto> notFound(NotFoundException ex) {
+	public ApiErrorMessageDto notFound(NotFoundException ex) {
 		LOG.info(ex.getMessage());
 		LOG.debug(ex.getMessage(), ex);
-		return new ResponseEntity<>(new ApiErrorMessageDto(ex.messageId, ex.getMessage()), HttpStatus.NOT_FOUND);
+		return new ApiErrorMessageDto(ex.messageId, ex.getMessage());
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -123,9 +124,9 @@ public class RestExceptionHandler {
 	
 	@ResponseStatus(HttpStatus.FORBIDDEN)
 	@ExceptionHandler(PermissionDeniedException.class)
-	public ResponseEntity<ApiErrorMessageDto> permissionDenied(PermissionDeniedException ex) {
+	public ApiErrorMessageDto permissionDenied(PermissionDeniedException ex) {
 		LOG.warn(ex.getMessage(), ex);
-		return new ResponseEntity<>(new ApiErrorMessageDto("forbidden", ex.getMessage()), HttpStatus.FORBIDDEN);
+		return new ApiErrorMessageDto("forbidden", ex.getMessage());
 	}
 	
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -146,6 +147,14 @@ public class RestExceptionHandler {
 	@ExceptionHandler({OverturnsLimitException.class})
 	public ApiErrorMessageDto handleOverturnsLimitException(OverturnsLimitException ex, Locale locale) {
 		return handleRuntimeException(ex, locale);
+	}
+
+	@ResponseStatus(HttpStatus.UNAUTHORIZED)
+	@ExceptionHandler({JWTParseException.class})
+	public ApiErrorMessageDto handleJWTParseException(JWTParseException ex) {
+		LOG.info(ex.getMessage());
+		LOG.debug(ex.getMessage(), ex);
+		return new ApiErrorMessageDto("token-invalid", "Token vencido o inválido");
 	}
 
 	@ResponseStatus(HttpStatus.NOT_IMPLEMENTED)

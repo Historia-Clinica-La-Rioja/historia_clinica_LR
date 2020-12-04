@@ -2,6 +2,7 @@ package net.pladema.security.service.impl;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -19,6 +20,7 @@ import net.pladema.permissions.service.UserAssignmentService;
 import net.pladema.security.authorization.InstitutionGrantedAuthority;
 import net.pladema.security.service.SecurityService;
 import net.pladema.security.service.enums.ETokenType;
+import net.pladema.security.utils.JWTUtils;
 
 @Service
 public class SecurityServiceImpl implements SecurityService {
@@ -83,8 +85,7 @@ public class SecurityServiceImpl implements SecurityService {
 		return parseClaimsFromToken(token).map(Claims::getExpiration);
 	}
 
-	@Override
-	public Claims getClaimsFromToken(String token) {
+	protected Claims getClaimsFromToken(String token) {
 		return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
 	}
 
@@ -100,18 +101,12 @@ public class SecurityServiceImpl implements SecurityService {
 
 	@Override
 	public Integer getUserId(String token) {
-		return getUserId(getClaimsFromToken(token));
+		return getUserId(JWTUtils.parse(token, secret));
 	}
 
-	protected Integer getUserId(Claims claims) {
+	protected Integer getUserId(Map<String, Object> claims) {
 		return (Integer) Optional.ofNullable(claims.get("userId"))
 				.orElseThrow(() -> new BadCredentialsException(JWT_INVALID));
-	}
-
-	@Override
-	public boolean validResetPassword(Integer userId, String verificationToken) {
-		Integer userIdVT = getUserId(verificationToken);
-		return userIdVT.equals(userId);
 	}
 
 }
