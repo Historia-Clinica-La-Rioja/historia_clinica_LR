@@ -122,7 +122,7 @@ public class AnamnesisControllerTest extends UnitController {
 		this.mockMvc.perform(MockMvcRequestBuilders.get(GET))
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.errors")
-						.value("Invalid document"));
+						.value(buildMessage("document.invalid")));
 	}
 
 	@Test
