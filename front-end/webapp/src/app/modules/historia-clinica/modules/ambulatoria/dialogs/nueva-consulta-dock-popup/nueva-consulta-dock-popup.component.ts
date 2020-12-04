@@ -142,11 +142,12 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		function mapToFieldsToUpdate(nuevaConsultaDto: CreateOutpatientDto) {
 			return {
 				allergies: !!nuevaConsultaDto.allergies?.length,
+				personalHistories: !!nuevaConsultaDto.problems?.length,
 				familyHistories: !!nuevaConsultaDto.familyHistories?.length,
 				vitalSigns: !!nuevaConsultaDto.vitalSigns,
 				medications: !!nuevaConsultaDto.medications?.length,
 				anthropometricData: !!nuevaConsultaDto.anthropometricData,
-				problems: !!nuevaConsultaDto.problems.length
+				problems: !!nuevaConsultaDto.problems?.length
 			};
 		}
 	}
