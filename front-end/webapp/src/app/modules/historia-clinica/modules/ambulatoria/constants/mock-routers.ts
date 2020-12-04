@@ -3,118 +3,105 @@ export const MOCKS_ORDERS = [
 		path: 'paciente/:idPaciente/ordenes',
 		loads: [
 			{
-				name: 'MedicamentRequest.patientMedicationPage(patientId: number): Page<PatientMedicamentRequestListDto>', 
+				name: 'MedicationRequest.medicationRequestList(patientId: number): MedicationInfoDto []', 
 				roles: 'Todo ESPECIALISTA_MEDICO sobre la institución',
 				comments: 'medicationRequestId puede ser null porque no siempre el medicamento esta asociado a una receta',
-				path: '/api/institutions/{institutionId}/patient/{patientId}/medicamentRequests?status=active, medicationStatment=null, healthCondition=null, numberPage=0, sizePage=10',
+				path: '/api/institutions/{institutionId}/patient/{patientId}/medication-requests?status=active, medicationStatment=null, healthCondition=null',
 				method: 'GET',
 				body: [
 					{
-						totalElements: 200,
-						totalPage: 10,
-						pageNumber: 1,
-						elements: [
-							{
-								snomed: {
-									id: '11111',
-									pt: 'IBUPROFENO comprimido 600mg',
-								},
-								statusId: '44444',
-								healthConditionSnomed: {
-									id: '2222',
-									pt: 'ANGINAS'
-								},
-								expired: true,
-								dosage: {
-									timing: {
-										frecuency: 4,
-										periodUnit: 'horas',
-										duration: 4,
-										durationUnit: 'días'
-									} 
-								},
-								startDate: {
-									year: 2020,
-									month: 5,
-									day: 14
-								},
-								chronic: false,	
-								observations: 'Tomarlo durante las mañanas en ayuno',
-								medicationRequestId: 1				
-							},
-							{
-								snomed: {
-									id: '11111',
-									pt: 'TAFIROL comprimido 1g',
-								},
-								statusId: '44444',
-								healthConditionSnomed: {
-									id: '2222',
-									pt: 'PAPERA'
-								},
-								expired: false,
-								dosage: {
-									timing: {
-										frecuency: 1,
-										periodUnit: 'hora'
-									} 
-								},
-								startDate: {
-									year: 2020,
-									month: 5,
-									day: 14
-								},
-								chronic: true,		
-								observations: 'Tomar antes de las comidas',
-								medicationRequestId: 1					
-							},
-							{
-								snomed: {
-									id: '11111',
-									pt: 'PARACETAMOL comprimido 1g',
-								},
-								statusId: '44444',
-								healthConditionSnomed: {
-									id: '2222',
-									pt: 'PAPERA'
-								},
-								expired: false,
-								startDate: {
-									year: 2020,
-									month: 5,
-									day: 14
-								},
-								chronic: true,
-								medicationRequestId: null										
-							},
-							{
-								snomed: {
-									id: '11111',
-									pt: 'BAYASPIRINA comprimido 1g',
-								},
-								statusId: '44444',
-								healthConditionSnomed: {
-									id: '2222',
-									pt: 'PAPERA'
-								},
-								expired: false,
-								dosage: {
-									timing: {
-										duration: '8',
-										durationUnit: 'días',
-									} 
-								},
-								startDate: {
-									year: 2020,
-									month: 5,
-									day: 14
-								},
-								chronic: true,
-								medicationRequestId: 2					
-							},
-						]
+						snomed: {
+							id: '11111',
+							pt: 'IBUPROFENO comprimido 600mg',
+						},
+						statusId: '44444',
+						healthCondition: {
+							id: '2222',
+							pt: 'ANGINAS'
+						},
+						expired: true,
+						dosage: {
+							frecuency: 4,
+							periodUnit: 'horas',
+							duration: 4,
+							durationUnit: 'días'
+						},
+						startDate: {
+							year: 2020,
+							month: 5,
+							day: 14
+						},
+						chronic: false,	
+						observations: 'Tomarlo durante las mañanas en ayuno',
+						medicationRequestId: 1				
+					},
+					{
+						snomed: {
+							id: '333',
+							pt: 'TAFIROL comprimido 1g',
+						},
+						statusId: '44444',
+						healthCondition: {
+							id: '2222',
+							pt: 'PAPERA'
+						},
+						expired: false,
+						dosage: {
+							frecuency: 1,
+							periodUnit: 'horas'
+						},
+						startDate: {
+							year: 2020,
+							month: 5,
+							day: 13
+						},
+						chronic: true,		
+						observations: 'Tomar antes de las comidas',
+						medicationRequestId: 1					
+					},
+					{
+						snomed: {
+							id: '123',
+							pt: 'PARACETAMOL comprimido 1g',
+						},
+						statusId: '44444',
+						healthCondition: {
+							id: '2222',
+							pt: 'PAPERA'
+						},
+						expired: false,
+						startDate: {
+							year: 2020,
+							month: 5,
+							day: 18
+						},
+						chronic: true,
+						medicationRequestId: null										
+					},
+					{
+						snomed: {
+							id: '777',
+							pt: 'BAYASPIRINA comprimido 1g',
+						},
+						statusId: '44444',
+						healthCondition: {
+							id: '2222',
+							pt: 'PAPERA'
+						},
+						expired: false,
+						dosage: {
+							duration: '8',
+							durationUnit: 'días',
+						},
+						startDate: {
+							year: 2020,
+							month: 11,
+							day: 17
+						},
+						chronic: true,
+						medicationRequestId: 2					
 					}
-				]
+				]				
 			},
 			{
 				name: 'ServiceRequest.patientServiceRequestPage(patientId: number): Page<PatientServiceRequestListDto>', 
@@ -149,7 +136,7 @@ export const MOCKS_ORDERS = [
 				],
 			},
 			{
-				name: 'MedicalIndications.patientMedicalIndicationsPage(patientId: number): PatientMedicalIndicationsListDto[]', 
+				name: 'MedicalIndications.patientMedicalIndicationsPage(patientId: number): MedicalIndicationsDto[]', 
 				roles: 'Todo ESPECIALISTA_MEDICO sobre la institución',
 				comments: 'Falta definición de como cargar las indicaciones',
 				path: '/api/institutions/{institutionId}/patient/{patientId}/medicalIndications',
@@ -183,6 +170,10 @@ export const MOCKS_ORDERS = [
 			{
 				name: 'Suspender',
 				navigate: './suspender-receta',
+			},
+			{
+				name: 'Reactivar',
+				navigate: './reactivar-receta',
 			},
 			{
 				name: 'Finalizar',
@@ -257,7 +248,7 @@ export const MOCKS_ORDERS = [
 		path: 'paciente/:idPaciente/ordenes/descargar-receta',
 		loads: [
 			{
-				name: 'MedicamentRequest.downloadMedicationRequest(patientId: number, medicationRequestId: number): File', 
+				name: 'MedicationRequest.downloadMedicationRequest(patientId: number, medicationRequestId: number): File', 
 				roles: 'Todo ESPECIALISTA_MEDICO sobre la institución',
 				comments: 'Descarga el archivo pdf de la receta. Es el mismo endpoint que descarga la receta cuando se agrega una nueva',
 				path: '/api/institutions/{institutionId}/patient/{patientId}/medicamentRequests/{medicationRequestId}/downloadFile',
@@ -369,10 +360,10 @@ export const MOCKS_ORDERS = [
 		path: 'paciente/:idPaciente/ordenes/nueva-receta/confirmar-receta',
 		loads: [
 			{
-				name: 'MedicamentRequest.newMedicationRequest(patientId: number): PatientMedicamentRequestListDto []', 
-				roles: 'Todo ESPECIALISTA_MEDICO sobre la institución',
+				name: 'MedicationRequest.create(patientId: number): NewMedicationRequestDto', 
+				roles: 'Todo ESPECIALISTA_MEDICO, PROFESIONAL DE LA SALUD sobre la institución',
 				comments: 'Los siguientes campos pueden ser nulos: observaciones, tiempo de administración, intervalo de administración',
-				path: '/api/institutions/{institutionId}/patient/{patientId}/medicamentRequests',
+				path: '/api/institutions/{institutionId}/patient/{patientId}/medication-requests',
 				method: 'POST',
 				body: {
 					hasRecipe: true,
@@ -383,17 +374,15 @@ export const MOCKS_ORDERS = [
 								id: '11111',
 								pt: 'IBUPROFENO comprimido 600mg',
 							},					
-							healthConditionSnomed: {
+							healthCondition: {
 								id: '2222',
 								pt: 'ANGINAS'
 							},
 							dosage: {
-								timing: {
-									frecuency: 4,
-									periodUnit: 'horas',
-									duration: 4,
-									durationUnit: 'días'
-								} 
+								frecuency: 4,
+								periodUnit: 'horas',
+								duration: 4,
+								durationUnit: 'días'
 							},	
 							observations: 'Tomarlo durante las mañanas en ayuno'					
 						}
@@ -412,10 +401,10 @@ export const MOCKS_ORDERS = [
 		path: 'paciente/:idPaciente/ordenes/nueva-receta/confirmar-receta/descargar-receta',
 		loads: [
 			{
-				name: 'MedicamentRequest.downloadMedicationRequest(patientId: number, medicationRequestId: number): File', 
+				name: 'MedicationRequest.downloadMedicationRequest(patientId: number, medicationRequestId: number): File', 
 				roles: 'Todo ESPECIALISTA_MEDICO sobre la institución',
 				comments: 'Descarga el archivo pdf de la receta',
-				path: '/api/institutions/{institutionId}/patient/{patientId}/medicamentRequests/{medicationRequestId}/downloadFile',
+				path: '/api/institutions/{institutionId}/patient/{patientId}/medication-requests/{medicationRequestId}/download',
 				method: 'GET',				
 			}
 		],
@@ -430,10 +419,10 @@ export const MOCKS_ORDERS = [
 		path: 'paciente/:idPaciente/ordenes/suspender-receta',
 		loads: [
 			{
-				name: 'MedicamentRequest.suspendMedication(patientId: number): suspendMedicationDto', 
-				roles: 'Todo ESPECIALISTA_MEDICO sobre la institución',
+				name: 'MedicationRequest.changeState(patientId: number): ChangeStateMedicationRequestDto', 
+				roles: 'Todo ESPECIALISTA_MEDICO, PROFESIONAL DE LA SALUD sobre la institución',
 				comments: 'No se puede suspender un medicamento que esta finalizado',
-				path: '/api/institutions/{institutionId}/patient/{patientId}/medicamentRequests/suspendMedication',
+				path: '/api/institutions/{institutionId}/patient/{patientId}/medication-requests/change-state',
 				method: 'PUT',
 				body: {
 					dayQuantity: 14,
@@ -449,12 +438,33 @@ export const MOCKS_ORDERS = [
 		]
 	},
 	{
+		path: 'paciente/:idPaciente/ordenes/reactivar-receta',
+		loads: [
+			{
+				name: 'MedicationRequest.changeState(patientId: number): ChangeStateMedicationRequestDto', 
+				roles: 'Todo ESPECIALISTA_MEDICO, PROFESIONAL DE LA SALUD sobre la institución',
+				comments: 'No se puede reactivar un medicamento que esta finalizado ni activo',
+				path: '/api/institutions/{institutionId}/patient/{patientId}/medication-requests/change-state',
+				method: 'PUT',
+				body: {
+					medicationIds: [1,2,3,4,5]
+				}
+			}
+		],
+		actions: [
+			{
+				name: 'Volver',
+				navigate: '../',
+			}
+		]
+	},
+	{
 		path: 'paciente/:idPaciente/ordenes/finalizar-receta',
 		loads: [
 			{
-				name: 'MedicamentRequest.finishMedication(patientId: number): finishMedicationDto', 
-				roles: 'Todo ESPECIALISTA_MEDICO sobre la institución',
-				path: '/api/institutions/{institutionId}/patient/{patientId}/medicamentRequests/finishMedication',
+				name: 'MedicationRequest.changeState(patientId: number): ChangeStateMedicationRequestDto', 
+				roles: 'Todo ESPECIALISTA_MEDICO, PROFESIONAL DE LA SALUD sobre la institución',
+				path: '/api/institutions/{institutionId}/patient/{patientId}/medication-requests/change-state',
 				method: 'PUT',
 				body: {
 					medicationIds: [1,2,3,4,5]

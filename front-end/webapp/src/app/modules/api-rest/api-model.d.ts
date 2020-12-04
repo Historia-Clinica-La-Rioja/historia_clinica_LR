@@ -237,6 +237,10 @@ export interface BedSummaryDto {
     sector: SectorSummaryDto;
 }
 
+export interface ChangeStateMedicationRequestDto extends Serializable {
+    medicationsIds: number[];
+}
+
 export interface CityDto extends MasterdataDto<number> {
     id: number;
 }
@@ -406,6 +410,13 @@ export interface DocumentsSummaryDto extends Serializable {
     anamnesis: AnamnesisSummaryDto;
     epicrisis: EpicrisisSummaryDto;
     lastEvaluationNote: EvaluationNoteSummaryDto;
+}
+
+export interface DosageDto extends Serializable {
+    duration: number;
+    durationUnit: string;
+    frequency: number;
+    periodUnit: string;
 }
 
 export interface EffectiveClinicalObservationDto extends ClinicalObservationDto {
@@ -718,6 +729,24 @@ export interface MedicalCoverageDto {
 export interface MedicationDto extends ClinicalTermDto {
     note: string;
     suspended: boolean;
+}
+
+export interface MedicationInfoDto extends Serializable {
+    chronic?: boolean;
+    dosage: DosageDto;
+    expired?: boolean;
+    healthCondition: SnomedDto;
+    medicationRequestId?: number;
+    observations?: string;
+    snomed: SnomedDto;
+    startDate: DateDto;
+    statusId?: string;
+}
+
+export interface NewMedicationRequestDto extends Serializable {
+    hasRecipe: boolean;
+    medicalCoverageId: number;
+    medications: MedicationInfoDto[];
 }
 
 export interface OauthConfigDto {

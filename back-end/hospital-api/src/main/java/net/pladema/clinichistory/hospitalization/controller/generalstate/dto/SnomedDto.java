@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.hospitalization.controller.generalstate.dto;
 
+import com.sun.istack.Nullable;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
@@ -25,9 +26,15 @@ public class SnomedDto implements Serializable {
     @Length(max = 255, message = "{snomed.pt.max.value}")
     private String pt;
 
+    @Nullable
     private String parentId;
 
+    @Nullable
     private String parentFsn;
 
-
+    public SnomedDto(@NotNull(message = "{value.mandatory}") @NotEmpty @Length(max = 20, message = "{snomed.id.max.value}") String id,
+                     @NotNull(message = "{value.mandatory}") @NotEmpty @Length(max = 255, message = "{snomed.pt.max.value}") String pt) {
+        this.id = id;
+        this.pt = pt;
+    }
 }
