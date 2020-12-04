@@ -44,7 +44,6 @@ public class DiaryADto {
     private boolean includeHoliday = false;
 
     @NotNull
-    @NotEmpty
     @Valid
     private List<DiaryOpeningHoursDto> diaryOpeningHours;
 }

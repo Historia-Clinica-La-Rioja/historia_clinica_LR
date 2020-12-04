@@ -26,6 +26,8 @@ public class EditDiaryOpeningHoursValidator implements ConstraintValidator<EditD
 
     private static final Logger LOG = LoggerFactory.getLogger(EditDiaryOpeningHoursValidator.class);
 
+    private static final String OUTPUT = "Output -> {}";
+
     private final DiaryOpeningHoursValidatorService diaryOpeningHoursValidatorService;
 
     private final DiaryMapper diaryMapper;
@@ -50,14 +52,24 @@ public class EditDiaryOpeningHoursValidator implements ConstraintValidator<EditD
         List<DiaryOpeningHoursBo> openingHours = diaryBo.getDiaryOpeningHours();
         openingHours.sort(weekDayOrder.thenComparing(timeOrder));
 
+        if (diaryBo.getDiaryOpeningHours().isEmpty()) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("{diary.attention.no-opening-hours}")
+                    .addConstraintViolation();
+            LOG.debug(OUTPUT, Boolean.FALSE);
+            return Boolean.FALSE;
+        }
+
         boolean overlap = diaryOpeningHoursValidatorService.overlapDiaryOpeningHours(diaryBo, openingHours);
 
-        if(overlap){
+        if (overlap) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate("{diary.attention.invalid.overlap}")
                     .addConstraintViolation();
+            LOG.debug(OUTPUT, Boolean.FALSE);
             return false;
         }
+        LOG.debug(OUTPUT, Boolean.TRUE);
         return true;
     }
 

@@ -3,25 +3,18 @@ package net.pladema.medicalconsultation.diary.controller.constraints.validator;
 import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 import lombok.RequiredArgsConstructor;
 import net.pladema.medicalconsultation.diary.controller.mapper.DiaryMapper;
-import net.pladema.medicalconsultation.diary.repository.entity.DiaryOpeningHours;
-import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursValidatorService;
-import net.pladema.medicalconsultation.diary.service.DiaryService;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import net.pladema.medicalconsultation.diary.controller.constraints.DiaryOpeningHoursValid;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryADto;
-import net.pladema.medicalconsultation.diary.controller.dto.DiaryOpeningHoursDto;
 
 @RequiredArgsConstructor
 public class DiaryOpeningHoursValidator implements ConstraintValidator<DiaryOpeningHoursValid, DiaryADto> {
@@ -52,14 +45,22 @@ public class DiaryOpeningHoursValidator implements ConstraintValidator<DiaryOpen
         List<DiaryOpeningHoursBo> openingHours = diaryBo.getDiaryOpeningHours();
         openingHours.sort(weekDayOrder.thenComparing(timeOrder));
 
-       boolean overlap = diaryOpeningHoursValidatorService.overlapDiaryOpeningHours(diaryBo, openingHours);
+        if (diaryBo.getDiaryOpeningHours().isEmpty()) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("{diary.attention.no-opening-hours}")
+                    .addConstraintViolation();
+            LOG.debug(OUTPUT, Boolean.FALSE);
+            return Boolean.FALSE;
+        }
 
-       if(overlap){
-           context.disableDefaultConstraintViolation();
-           context.buildConstraintViolationWithTemplate("{diary.attention.invalid.overlap}")
-                   .addConstraintViolation();
-           LOG.debug(OUTPUT, Boolean.FALSE);
-           return Boolean.FALSE;
+        boolean overlap = diaryOpeningHoursValidatorService.overlapDiaryOpeningHours(diaryBo, openingHours);
+
+        if (overlap) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("{diary.attention.invalid.overlap}")
+                    .addConstraintViolation();
+            LOG.debug(OUTPUT, Boolean.FALSE);
+            return Boolean.FALSE;
         }
         LOG.debug(OUTPUT, Boolean.TRUE);
         return Boolean.TRUE;

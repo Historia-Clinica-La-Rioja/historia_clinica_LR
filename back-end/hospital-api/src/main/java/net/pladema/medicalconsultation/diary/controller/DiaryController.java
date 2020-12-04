@@ -80,9 +80,9 @@ public class DiaryController {
     public ResponseEntity<Integer> updateDiary(
             @PathVariable(name = "institutionId") Integer institutionId,
             @ValidDiary @PathVariable(name = "diaryId") Integer diaryId,
-            @RequestBody @Valid @ExistingDiaryPeriodValid @EditDiaryOpeningHoursValid @DiaryEmptyAppointmentsValid  DiaryDto diaryADto) {
-        LOG.debug("Input parameters -> diaryADto {}", diaryADto);
-        DiaryBo diaryToUpdate = diaryMapper.toDiaryBo(diaryADto);
+            @RequestBody @Valid @ExistingDiaryPeriodValid @EditDiaryOpeningHoursValid @DiaryEmptyAppointmentsValid  DiaryDto diaryDto) {
+        LOG.debug("Input parameters -> diaryADto {}", diaryDto);
+        DiaryBo diaryToUpdate = diaryMapper.toDiaryBo(diaryDto);
         diaryToUpdate.setId(diaryId);
         Integer result = diaryService.updateDiary(diaryToUpdate);
         LOG.debug(OUTPUT, result);
