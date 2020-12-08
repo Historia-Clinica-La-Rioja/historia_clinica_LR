@@ -1,9 +1,10 @@
 import React from 'react';
 import {
-    Link,
     useTranslate,
 } from 'react-admin';
 import Button from '@material-ui/core/Button';
+
+import { Link } from 'react-router-dom';
 
 //Taken from examples/simple/../posts/show.js
 //This button takes the user to the create form of given resource.

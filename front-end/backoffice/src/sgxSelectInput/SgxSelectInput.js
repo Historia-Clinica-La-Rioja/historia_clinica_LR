@@ -13,15 +13,14 @@ const SgxSelectInput = ({ element, ...props})  =>{
     useEffect(() => {
         const url = `${backofficeUrl}/${element}/elements`;
         apiRest.fetch(url)
-            .then(response => {
-                const { json } = response;                 
+            .then(json => {     
                 setElements(json);
-            }, ({ status, statusText, body }) => {
+            }, ({ status }) => {
                 console.error(status);
             }
         );
     }, [element]);
-    return <SelectInput choices={elements} {...props}/>;
+    return elements.length ? <SelectInput choices={elements} {...props}/> : <span />;
 };
 
 
