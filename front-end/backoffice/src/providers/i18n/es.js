@@ -137,7 +137,7 @@ export default {
                 sectorOrganizationId: 'Organización',
                 careTypeId: 'Tipo de cuidado',
                 hospitalizationTypeId: 'Permanencia',
-                parentSectorId: 'Sector padre'
+                sectorId: 'Sector padre'
             },
             createRelated: 'Crear Sector'
         },

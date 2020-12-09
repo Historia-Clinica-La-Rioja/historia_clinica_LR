@@ -16,7 +16,6 @@ const CUIDADOS_PROGRESIVOS = 2;
 
 const redirect = (basePath, id, data) => `/institutions/${data.institutionId}/show`;
 
-
 const validateCareType = (value, allValues) =>{
     if (allValues.sectorOrganizationId === CUIDADOS_PROGRESIVOS &&
         !allValues.careTypeId) {
@@ -24,6 +23,7 @@ const validateCareType = (value, allValues) =>{
     }
     return [];
 }
+
 const CareTypeValidations = [validateCareType];
 
 const SectorType = (sourceId) => {
@@ -38,54 +38,13 @@ const SectorType = (sourceId) => {
 
 };
 
-
-const AgeGroups = ({ formData, ...rest }) => {
-    if (formData.sectorTypeId !== INTERNACION) return null;
-    return ( <ReferenceInput
-        {...rest}
-        reference="agegroups"
-        sort={{ field: 'description', order: 'ASC' }}
-    >
-        <SelectInput optionText="description" optionValue="id" />
-    </ReferenceInput> );
-};
-
-
-const SectorOrganization = ({ formData, ...rest }) => {
-    if (formData.sectorTypeId !== INTERNACION) return null;
-    return (
-        <ReferenceInput
-            {...rest}
-            reference="sectororganizations"
-            sort={{ field: 'description', order: 'ASC' }}
-        >
+const HospitalizationField = ({formData, ...rest}) => {
+    return formData.sectorTypeId !== INTERNACION ? null : (
+        <ReferenceInput {...rest} sort={{ field: 'description', order: 'ASC' }}>
             <SelectInput optionText="description" optionValue="id" />
-        </ReferenceInput>);
-};
-
-const CareType = ({ formData, ...rest }) => {
-    if (formData.sectorTypeId !== INTERNACION) return null;
-    return (
-        <ReferenceInput
-            {...rest}
-            reference="caretypes"
-            sort={{ field: 'description', order: 'ASC' }}
-        >
-            <SelectInput optionText="description" optionValue="id" />
-        </ReferenceInput>);
-};
-
-const HospitalizationType = ({ formData, ...rest }) => {
-    if (formData.sectorTypeId !== INTERNACION) return null;
-    return (
-        <ReferenceInput
-            {...rest}
-            reference="hospitalizationtypes"
-            sort={{ field: 'description', order: 'ASC' }}
-        >
-            <SelectInput optionText="description" optionValue="id" />
-        </ReferenceInput>);
-};
+        </ReferenceInput>
+    )
+}
 
 const Sector = ({ formData, ...rest }) => {
     return (
@@ -121,19 +80,19 @@ const SectorCreate = props => (
 
             {/*Age Groups*/}
             <FormDataConsumer>
-                {formDataProps => ( <AgeGroups {...formDataProps} source="ageGroupId"/>)}
+                {formDataProps => ( <HospitalizationField {...formDataProps} reference="agegroups" source="ageGroupId"/>)}
             </FormDataConsumer>
             {/*Sector Organizations*/}
             <FormDataConsumer>
-                {formDataProps => ( <SectorOrganization {...formDataProps} source="sectorOrganizationId"/>)}
+                {formDataProps => ( <HospitalizationField {...formDataProps} reference="sectororganizations" source="sectorOrganizationId"/>)}
             </FormDataConsumer>
             {/*Care Type*/}
             <FormDataConsumer>
-                {formDataProps => ( <CareType {...formDataProps} source="careTypeId" validate={CareTypeValidations}/>)}
+                {formDataProps => ( <HospitalizationField {...formDataProps} reference="caretypes" source="careTypeId" validate={CareTypeValidations}/>)}
             </FormDataConsumer>
             {/*Hospitalization Type*/}
             <FormDataConsumer>
-                {formDataProps => ( <HospitalizationType {...formDataProps} source="hospitalizationTypeId"/>)}
+                {formDataProps => ( <HospitalizationField {...formDataProps} reference="hospitalizationtypes" source="hospitalizationTypeId"/>)}
             </FormDataConsumer>
 
         </SimpleForm>

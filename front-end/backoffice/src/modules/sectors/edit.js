@@ -36,58 +36,13 @@ const SectorType = (sourceId) => {
 
 };
 
-
-const AgeGroups = ({ formData, ...rest }) => {
-    if (formData.sectorTypeId !== INTERNACION) return null;
-    return ( <ReferenceInput
-        {...rest}
-        reference="agegroups"
-        sort={{ field: 'description', order: 'ASC' }}
-        perPage={10}
-    >
-        <SelectInput optionText="description" optionValue="id" />
-    </ReferenceInput> );
-};
-
-
-const SectorOrganization = ({ formData, ...rest }) => {
-    if (formData.sectorTypeId !== INTERNACION) return null;
-    return (
-        <ReferenceInput
-            {...rest}
-            reference="sectororganizations"
-            perPage={100}
-            sort={{ field: 'description', order: 'ASC' }}
-        >
+const HospitalizationField = ({formData, ...rest}) => {
+    return formData.sectorTypeId !== INTERNACION ? null : (
+        <ReferenceInput {...rest} sort={{ field: 'description', order: 'ASC' }}>
             <SelectInput optionText="description" optionValue="id" />
-        </ReferenceInput>);
-};
-
-const CareType = ({ formData, ...rest }) => {
-    if (formData.sectorTypeId !== INTERNACION) return null;
-    return (
-        <ReferenceInput
-            {...rest}
-            reference="caretypes"
-            perPage={100}
-            sort={{ field: 'description', order: 'ASC' }}
-        >
-            <SelectInput optionText="description" optionValue="id" />
-        </ReferenceInput>);
-};
-
-const HospitalizationType = ({ formData, ...rest }) => {
-    if (formData.sectorTypeId !== INTERNACION) return null;
-    return (
-        <ReferenceInput
-            {...rest}
-            reference="hospitalizationtypes"
-            perPage={100}
-            sort={{ field: 'description', order: 'ASC' }}
-        >
-            <SelectInput optionText="description" optionValue="id" />
-        </ReferenceInput>);
-};
+        </ReferenceInput>
+    )
+}
 
 const Sector = ({ formData, ...rest }) => {
     return (
@@ -105,12 +60,12 @@ const Sector = ({ formData, ...rest }) => {
 const validateCareType = (value, allValues) =>{
     if (allValues.sectorOrganizationId === CUIDADOS_PROGRESIVOS &&
         !allValues.careTypeId) {
-        return 'El tipo de cuidado es requerido para esta organización de sector';
+        return ['El tipo de cuidado es requerido para esta organización de sector'];
     }
     return [];
 }
 
-const CareTypeValidations = [validateCareType];
+const CareTypeValidations = validateCareType;
 
 const SectorEdit = props => (
     <Edit {...props}>
@@ -127,19 +82,19 @@ const SectorEdit = props => (
             <SectorType source="sectorTypeId"/>
             {/*Age Groups*/}
             <FormDataConsumer>
-                {formDataProps => ( <AgeGroups {...formDataProps} source="ageGroupId"/>)}
+                {formDataProps => ( <HospitalizationField {...formDataProps} reference="agegroups" source="ageGroupId"/>)}
             </FormDataConsumer>
             {/*Sector Organizations*/}
-            <FormDataConsumer>
-                {formDataProps => ( <SectorOrganization {...formDataProps} source="sectorOrganizationId"/>)}
+            <FormDataConsumer >
+                {formDataProps => ( <HospitalizationField {...formDataProps} reference="sectororganizations" source="sectorOrganizationId" />)}
             </FormDataConsumer>
             {/*Care Type*/}
-            <FormDataConsumer>
-                {formDataProps => ( <CareType {...formDataProps} source="careTypeId" validate={CareTypeValidations}/>)}
+            <FormDataConsumer >
+                {formDataProps => ( <HospitalizationField {...formDataProps} reference="caretypes" source="careTypeId" validate={CareTypeValidations}/>)}
             </FormDataConsumer>
             {/*Hospitalization Type*/}
             <FormDataConsumer>
-                {formDataProps => ( <HospitalizationType {...formDataProps} source="hospitalizationTypeId"/>)}
+                {formDataProps => ( <HospitalizationField {...formDataProps} reference="hospitalizationtypes" source="hospitalizationTypeId"/>)}
             </FormDataConsumer>
 
             <SectionTitle label="resources.sectors.fields.clinicalspecialtysectors"/>
