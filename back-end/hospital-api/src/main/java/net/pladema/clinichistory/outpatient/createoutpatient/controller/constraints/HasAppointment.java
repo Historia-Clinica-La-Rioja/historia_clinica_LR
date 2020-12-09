@@ -1,7 +1,6 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.controller.constraints;
 
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.constraints.validator.HasAppointmentValidator;
-import net.pladema.clinichistory.outpatient.createoutpatient.controller.constraints.validator.ProblemDatesValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

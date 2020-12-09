@@ -1,7 +1,6 @@
 package net.pladema.sgx.recaptcha.service.impl;
 
 import net.pladema.sgx.exceptions.RecaptchaInvalid;
-import net.pladema.sgx.recaptcha.controller.dto.RecaptchaPublicConfigDto;
 import net.pladema.sgx.recaptcha.service.ICaptchaService;
 import net.pladema.sgx.recaptcha.service.domain.RecaptchaPublicConfigBo;
 import org.slf4j.Logger;

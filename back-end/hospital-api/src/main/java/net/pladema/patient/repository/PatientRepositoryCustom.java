@@ -1,7 +1,6 @@
 package net.pladema.patient.repository;
 
 import net.pladema.patient.controller.dto.PatientSearchFilter;
-import net.pladema.patient.repository.domain.PatientMedicalCoverageVo;
 import net.pladema.patient.service.domain.PatientSearch;
 
 import java.util.List;

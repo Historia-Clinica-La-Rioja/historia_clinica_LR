@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.medicalconsultation.diary.controller.dto.OpeningHoursDto;
 import net.pladema.medicalconsultation.diary.repository.entity.OpeningHours;
 
 @Getter

@@ -8,7 +8,6 @@ import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 

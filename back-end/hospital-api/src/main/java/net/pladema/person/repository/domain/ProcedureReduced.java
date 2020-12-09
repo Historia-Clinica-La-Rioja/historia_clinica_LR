@@ -3,7 +3,6 @@ package net.pladema.person.repository.domain;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.Objects;
 
 @Getter
 @Setter

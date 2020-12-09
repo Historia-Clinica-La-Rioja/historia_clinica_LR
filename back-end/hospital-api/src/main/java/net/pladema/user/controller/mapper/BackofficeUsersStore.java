@@ -10,7 +10,6 @@ import net.pladema.sgx.backoffice.repository.BackofficeStore;
 import net.pladema.sgx.exceptions.BackofficeValidationException;
 import net.pladema.sgx.exceptions.NotFoundException;
 import net.pladema.staff.repository.HealthcareProfessionalRepository;
-import net.pladema.staff.repository.entity.HealthcareProfessional;
 import net.pladema.user.controller.dto.BackofficeUserDto;
 import net.pladema.user.controller.mappers.UserDtoMapper;
 import net.pladema.user.repository.UserRepository;

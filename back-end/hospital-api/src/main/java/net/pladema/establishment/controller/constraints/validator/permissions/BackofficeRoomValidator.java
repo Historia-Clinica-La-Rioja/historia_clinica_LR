@@ -1,10 +1,8 @@
 package net.pladema.establishment.controller.constraints.validator.permissions;
 
-import net.pladema.establishment.repository.ClinicalSpecialtySectorRepository;
 import net.pladema.establishment.repository.RoomRepository;
 import net.pladema.establishment.repository.SectorRepository;
 import net.pladema.establishment.repository.entity.Room;
-import net.pladema.establishment.repository.entity.Sector;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.sgx.backoffice.permissions.BackofficePermissionValidator;
 import net.pladema.sgx.backoffice.rest.ItemsAllowed;

@@ -1,6 +1,5 @@
 package net.pladema.medicalconsultation.diary.controller.constraints;
 
-import net.pladema.medicalconsultation.diary.controller.constraints.validator.DiaryOpeningHoursValidator;
 import net.pladema.medicalconsultation.diary.controller.constraints.validator.EditDiaryOpeningHoursValidator;
 
 import javax.validation.Constraint;

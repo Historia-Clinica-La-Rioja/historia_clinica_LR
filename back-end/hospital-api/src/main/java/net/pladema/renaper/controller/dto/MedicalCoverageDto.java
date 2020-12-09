@@ -4,8 +4,6 @@ import lombok.Builder;
 import lombok.ToString;
 import lombok.Value;
 
-import java.time.LocalDate;
-
 @Value
 @Builder
 @ToString

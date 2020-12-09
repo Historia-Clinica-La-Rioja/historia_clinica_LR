@@ -1,17 +1,14 @@
 package net.pladema.patient.repository;
 
 import net.pladema.patient.controller.dto.PatientSearchFilter;
-import net.pladema.patient.repository.domain.PatientMedicalCoverageVo;
 import net.pladema.patient.service.domain.PatientSearch;
 import net.pladema.sgx.repository.QueryPart;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.sql.Date;
-import java.util.ArrayList;
+
 import java.util.List;
 
 import static net.pladema.patient.repository.PatientSearchQuery.AND_JOINING_OPERATOR;

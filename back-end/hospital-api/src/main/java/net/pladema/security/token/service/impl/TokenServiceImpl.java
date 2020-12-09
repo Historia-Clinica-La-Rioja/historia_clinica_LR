@@ -3,7 +3,6 @@ package net.pladema.security.token.service.impl;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Jwts;
@@ -13,7 +12,6 @@ import net.pladema.security.service.enums.ETokenType;
 import net.pladema.security.token.service.TokenService;
 import net.pladema.security.token.service.domain.JWToken;
 import net.pladema.security.token.service.domain.LocalClaims;
-import net.pladema.security.token.service.domain.Login;
 import net.pladema.user.service.UserService;
 
 @Component

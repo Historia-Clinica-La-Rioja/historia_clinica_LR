@@ -4,7 +4,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.medicalconsultation.diary.controller.dto.DiaryOpeningHoursDto;
 
 @Getter
 @Setter

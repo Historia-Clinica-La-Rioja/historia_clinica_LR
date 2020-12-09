@@ -1,6 +1,5 @@
 package net.pladema.clinichistory.documents.core.generalstate;
 
-import net.pladema.clinichistory.documents.service.generalstate.EncounterGeneralStateBuilder;
 import net.pladema.clinichistory.documents.service.generalstate.*;
 import net.pladema.clinichistory.hospitalization.service.domain.Last2VitalSignsBo;
 import net.pladema.clinichistory.documents.service.ips.domain.*;

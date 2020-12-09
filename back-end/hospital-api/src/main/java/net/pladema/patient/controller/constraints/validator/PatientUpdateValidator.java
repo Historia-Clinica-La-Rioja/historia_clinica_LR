@@ -8,7 +8,6 @@ import net.pladema.patient.repository.entity.PatientType;
 import net.pladema.patient.service.PatientService;
 import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.controller.service.PersonExternalService;
-import net.pladema.sgx.exceptions.NotFoundException;
 import net.pladema.sgx.featureflags.AppFeature;
 
 import javax.validation.ConstraintValidator;

@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
 import org.hibernate.validator.constraints.Length;
 

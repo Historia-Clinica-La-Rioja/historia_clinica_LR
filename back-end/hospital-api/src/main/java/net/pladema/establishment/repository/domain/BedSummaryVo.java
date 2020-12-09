@@ -2,7 +2,6 @@ package net.pladema.establishment.repository.domain;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +10,6 @@ import net.pladema.establishment.repository.entity.Bed;
 import net.pladema.establishment.repository.entity.BedCategory;
 import net.pladema.establishment.repository.entity.Sector;
 import net.pladema.staff.repository.domain.ClinicalSpecialtyVo;
-import net.pladema.staff.repository.entity.ClinicalSpecialty;
 
 @Getter
 @Setter

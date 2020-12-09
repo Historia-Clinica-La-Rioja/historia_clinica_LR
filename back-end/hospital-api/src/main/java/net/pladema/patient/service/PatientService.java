@@ -2,7 +2,6 @@ package net.pladema.patient.service;
 
 import net.pladema.patient.controller.dto.PatientSearchFilter;
 import net.pladema.patient.repository.entity.Patient;
-import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 import net.pladema.patient.service.domain.PatientSearch;
 import net.pladema.person.repository.entity.Person;
 

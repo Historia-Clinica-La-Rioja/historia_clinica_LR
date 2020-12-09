@@ -4,7 +4,6 @@ import net.pladema.UnitController;
 import net.pladema.address.controller.service.AddressExternalService;
 import net.pladema.federar.services.FederarService;
 import net.pladema.patient.controller.mapper.PatientMapper;
-import net.pladema.patient.controller.mapper.PatientMedicalCoverageMapper;
 import net.pladema.patient.repository.PatientTypeRepository;
 import net.pladema.patient.service.AdditionalDoctorService;
 import net.pladema.patient.service.PatientService;

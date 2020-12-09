@@ -6,7 +6,7 @@ import net.pladema.permissions.controller.external.LoggedUserExternalService;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.sgx.security.utils.UserInfo;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
-import net.pladema.staff.service.HealthcareProfessionalService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

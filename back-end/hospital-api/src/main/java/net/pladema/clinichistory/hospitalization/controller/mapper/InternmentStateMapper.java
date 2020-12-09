@@ -1,7 +1,6 @@
 package net.pladema.clinichistory.hospitalization.controller.mapper;
 
 import net.pladema.clinichistory.hospitalization.controller.dto.InternmentGeneralStateDto;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.Last2VitalSignsDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.internmentstate.DiagnosesGeneralStateDto;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.*;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.*;

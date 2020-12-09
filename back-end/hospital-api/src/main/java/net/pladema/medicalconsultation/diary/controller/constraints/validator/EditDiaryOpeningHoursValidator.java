@@ -1,13 +1,9 @@
 package net.pladema.medicalconsultation.diary.controller.constraints.validator;
 
 import lombok.RequiredArgsConstructor;
-import net.pladema.medicalconsultation.diary.controller.constraints.DiaryOpeningHoursValid;
 import net.pladema.medicalconsultation.diary.controller.constraints.EditDiaryOpeningHoursValid;
-import net.pladema.medicalconsultation.diary.controller.dto.DiaryADto;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryDto;
-import net.pladema.medicalconsultation.diary.controller.dto.DiaryOpeningHoursDto;
 import net.pladema.medicalconsultation.diary.controller.mapper.DiaryMapper;
-import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursValidatorService;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
@@ -19,7 +15,6 @@ import javax.validation.ConstraintValidatorContext;
 import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 public class EditDiaryOpeningHoursValidator implements ConstraintValidator<EditDiaryOpeningHoursValid, DiaryDto> {

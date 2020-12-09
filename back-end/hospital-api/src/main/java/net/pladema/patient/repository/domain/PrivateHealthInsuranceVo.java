@@ -1,7 +1,6 @@
 package net.pladema.patient.repository.domain;
 
 import lombok.*;
-import net.pladema.patient.service.domain.HealthInsuranceBo;
 import net.pladema.patient.service.domain.MedicalCoverageBo;
 import net.pladema.patient.service.domain.PrivateHealthInsuranceBo;
 
