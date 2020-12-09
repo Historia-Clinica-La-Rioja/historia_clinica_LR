@@ -4,11 +4,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.sgx.auditable.entity.SGXAuditableEntity;
-import net.pladema.sgx.auditable.entity.SGXAuditListener;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.MedicationStatementStatus;
+import net.pladema.sgx.auditable.entity.SGXAuditListener;
+import net.pladema.sgx.auditable.entity.SGXAuditableEntity;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
@@ -38,6 +39,24 @@ public class MedicationStatement extends SGXAuditableEntity {
 
 	@Column(name = "status_id", length = 20, nullable = false)
 	private String statusId = MedicationStatementStatus.ACTIVE;
+
+	@Column(name = "health_condition_id", nullable = true)
+	private Integer healthConditionId;
+
+	@Column(name = "chronic", nullable = false)
+	private Boolean chronic = false;
+
+	@Column(name = "start_date")
+	private LocalDate startDate;
+
+	@Column(name = "end_date")
+	private LocalDate endDate;
+
+	@Column(name = "suspended_start_date")
+	private LocalDate suspendedStartDate;
+
+	@Column(name = "suspended_end_date")
+	private LocalDate suspendedEndDate;
 
 	@Column(name = "note_id")
 	private Long noteId;
