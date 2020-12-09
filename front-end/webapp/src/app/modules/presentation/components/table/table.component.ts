@@ -16,7 +16,7 @@ export class TableComponent implements OnInit {
 
 	@Input() model: TableModel<any>;
 	@Input() mainStyle: TableStyle = TableStyles.DEFAULT;
-
+	@Input() showTableHeader = true;
 	@ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
 		this.dataSource.paginator = paginator;
 	}

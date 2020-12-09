@@ -26,8 +26,9 @@
 				</ng-template>
 			</td>
 		</ng-container>
-
-		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+		<div *ngIf="showTableHeader">
+			<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+		</div>
 		<tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 	</table>
 	<mat-paginator *ngIf="(paginationEnabled) && (dataSource?.data?.length !== 0)"
