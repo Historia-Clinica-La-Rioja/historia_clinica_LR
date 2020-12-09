@@ -3,12 +3,12 @@ export const MOCKS_ORDERS = [
 		path: 'paciente/:idPaciente/ordenes',
 		loads: [
 			{
-				name: 'MedicationRequest.medicationRequestList(patientId: number): MedicationInfoDto []', 
+				name: 'MedicationRequest.medicationRequestList(patientId: number, statusId: string, medicationStatement: string, healthCondition: string): MedicationInfoDto []', 
 				roles: 'Todo ESPECIALISTA_MEDICO sobre la institución',
 				comments: 'medicationRequestId puede ser null porque no siempre el medicamento esta asociado a una receta',
 				path: '/api/institutions/{institutionId}/patient/{patientId}/medication-requests?status=active, medicationStatment=null, healthCondition=null',
 				method: 'GET',
-				body: [
+				fetch: [
 					{
 						snomed: {
 							id: '11111',
@@ -108,7 +108,7 @@ export const MOCKS_ORDERS = [
 				roles: 'Todo ESPECIALISTA_MEDICO sobre la institución',
 				path: '/api/institutions/{institutionId}/patient/{patientId}/serviceRequests?status=null, serviceRequest=null, healthCondition=null',
 				method: 'GET',
-				body: [
+				fetch: [
 					{
 						totalElements: 200,
 						totalPage: 10,
@@ -136,12 +136,12 @@ export const MOCKS_ORDERS = [
 				],
 			},
 			{
-				name: 'MedicalIndications.patientMedicalIndicationsPage(patientId: number): MedicalIndicationsDto[]', 
+				name: 'MedicalRequests.medicalRequestsList(patientId: number): MedicalRequestsDto[]', 
 				roles: 'Todo ESPECIALISTA_MEDICO sobre la institución',
 				comments: 'Falta definición de como cargar las indicaciones',
-				path: '/api/institutions/{institutionId}/patient/{patientId}/medicalIndications',
+				path: '/api/institutions/{institutionId}/patient/{patientId}/medical-requests',
 				method: 'GET',
-				body: [
+				fetch: [
 					{
 						observations: 'Comer verduras',
 						statusId: '44444',
@@ -271,7 +271,7 @@ export const MOCKS_ORDERS = [
 				path: '/institutions/{institutionId}/patient/{patientId}/hce/general-state',
 				comments: 'Ya esta hecho',
 				method: 'GET',
-				body: [
+				fetch: [
 					{
 						id: 4,
 						startDate: '2020-07-13',
@@ -318,7 +318,7 @@ export const MOCKS_ORDERS = [
 				path: '/institutions/{institutionId}/patient/{patientId}/hce/general-state',
 				comments: 'Ya esta hecho',
 				method: 'GET',
-				body: [
+				fetch: [
 					{
 						id: 4,
 						startDate: '2020-07-13',
@@ -515,7 +515,7 @@ export const MOCKS_ORDERS = [
 				path: '/institutions/{institutionId}/patient/{patientId}/hce/general-state',
 				comments: 'Ya esta hecho',
 				method: 'GET',
-				body: [
+				fetch: [
 					{
 						id: 4,
 						startDate: '2020-07-13',
@@ -562,7 +562,7 @@ export const MOCKS_ORDERS = [
 				path: '/institutions/{institutionId}/patient/{patientId}/hce/general-state',
 				comments: 'Ya esta hecho',
 				method: 'GET',
-				body: [
+				fetch: [
 					{
 						id: 4,
 						startDate: '2020-07-13',
@@ -730,7 +730,7 @@ export const MOCKS_ORDERS = [
 				path: '/institutions/{institutionId}/patient/{patientId}/hce/general-state',
 				comments: 'Ya esta hecho',
 				method: 'GET',
-				body: [
+				fetch: [
 					{
 						id: 4,
 						startDate: '2020-07-13',
@@ -765,9 +765,9 @@ export const MOCKS_ORDERS = [
 		path: 'paciente/:idPaciente/ordenes/nueva-indicacion/confirmar-indicacion',
 		loads: [
 			{
-				name: 'MedicalIndication.new(patientId: number): MedicalIndicationDto',
+				name: 'MedicalRequests.new(patientId: number): MedicalRequestsDto', 
 				roles: 'Todo ESPECIALISTA_MEDICO sobre la institución',
-				path: '/api/institutions/{institutionId}/patient/{patientId}/medicalIndications',
+				path: '/api/institutions/{institutionId}/patient/{patientId}/medical-requests',
 				method: 'POST',
 				body: {
 					healthConditionSnomed: {
@@ -794,10 +794,10 @@ export const MOCKS_ORDERS = [
 		path: 'paciente/:idPaciente/ordenes/finalizar-indicacion',
 		loads: [
 			{
-				name: 'MedicalIndication.finish(patientId: number, medicalIndicationId:number)',
+				name: 'MedicalRequests.finish(patientId: number, medicalRequestId:number)', 
 				roles: 'Todo ESPECIALISTA_MEDICO sobre la institución',
 				comments: 'Cargar la fecha fin',
-				path: '/api/institutions/{institutionId}/patient/{patientId}/medicalIndication/{medicalIndicationId}',
+				path: '/api/institutions/{institutionId}/patient/{patientId}/medical-requests/{medicalRequestId}',
 				method: 'PUT',
 			}
 		],
