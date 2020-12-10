@@ -22,6 +22,6 @@ appInfoProvider.loadInfo().then(
     // unregister() to register() below. Note this comes with some pitfalls.
     // Learn more about service workers: https://bit.ly/CRA-PWA
     serviceWorker.unregister();
-  }, 
+  },
   _ => document.getElementById('loading').innerHTML = 'Verifique la conexión con el servidor'
 );

@@ -12,14 +12,10 @@ public interface UserService {
 	
 	Optional<User> getUser(String username);
 	
-	//User getUser(Integer id);
-	
 	Integer getUserId(String username);
 	
 	void updateLoginDate(Integer userId);
 	
 	boolean isEnable(String username);
-	
-	//boolean isEnable(Integer id);
 
 }

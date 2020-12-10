@@ -13,7 +13,7 @@ const SgxSelectInput = ({ element, ...props})  =>{
     useEffect(() => {
         const url = `${backofficeUrl}/${element}/elements`;
         apiRest.fetch(url)
-            .then(json => {     
+            .then(json => {
                 setElements(json);
             }, ({ status }) => {
                 console.error(status);

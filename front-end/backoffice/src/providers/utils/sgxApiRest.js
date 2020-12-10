@@ -49,8 +49,11 @@ class SgxApiRest {
     login(username, password, raToken) {
         this.logout();
 
-        let options = buildPostOptions({ username, password });
-        options.headers = setHeader('recaptcha', raToken, options.headers);
+        const headers = setHeader('recaptcha', raToken);
+        const options = {
+            ...buildPostOptions({ username, password }),
+            headers,
+        };
 
         return sgxFetchApi('/auth', options)
             .then(({ token, refreshToken }) => {
@@ -72,10 +75,7 @@ class SgxApiRest {
         return this._permission$;
     }
 
-    isAuthenticated() {
-        const isTokenStored = !!retrieveToken();
-        return isTokenStored;
-    }
+    isAuthenticated = () => Boolean(retrieveToken());
 
     fetch = configureRefreshFetch({
         fetch: fetchWithToken,
