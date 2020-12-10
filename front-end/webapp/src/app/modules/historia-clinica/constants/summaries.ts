@@ -106,7 +106,7 @@ export const ORDENES_MEDICACION: SummaryHeader = {
 	matIcon: 'event_available'
 };
 
-export const RECOMENDACIONES: SummaryHeader = {
+export const INDICACIONES: SummaryHeader = {
 	title: 'ambulatoria.paciente.ordenes_prescripciones.RECOMENDACIONES',
 	matIcon: 'error_outline'
 };

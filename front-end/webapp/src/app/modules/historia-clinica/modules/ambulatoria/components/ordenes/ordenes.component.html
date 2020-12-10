@@ -1,30 +1,29 @@
 <app-content width="full">
 	<section>
 		<h2 [translate]="'ambulatoria.paciente.ordenes_prescripciones.TITLE'"></h2>
-		<div fxLayout="column" fxLayoutGap="20px">
-
-			<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
-
-				<div fxLayout="column" fxFlex="50%" fxLayoutGap="20px">
-					<app-summary-card id="medicacion" [header]="medicacion" [editable]="false">
-						<app-no-data></app-no-data>
-					</app-summary-card>
-				</div>
-				<div fxLayout="column" fxFlex="50%" fxLayoutGap="20px">
-					<app-summary-card id="estudios" [header]="estudios" [editable]="false">
-						<app-no-data></app-no-data>
-					</app-summary-card>
-				</div>
+		<div fxLayout="row" fxLayoutGap="20px">
+			<div fxLayout="column" fxFlex="50%" fxLayout.lt-md="row" fxLayoutGap="20px" >
+				<app-summary-card id="medicacion"	[header]="medicacion"
+													[editable]="true"
+													[canEdit]="['ENFERMERO', 'ESPECIALISTA_MEDICO']"
+													(openInNew)="openDialogNewMedication()">
+					<app-no-data></app-no-data>
+				</app-summary-card>
 			</div>
-
-			<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
-				<div fxLayout="column" fxFlex="50%" fxLayoutGap="20px">
-					<app-summary-card id="recomendaciones-generales" [header]="recomendaciones" [editable]="false">
-						<app-no-data></app-no-data>
-					</app-summary-card>
-				</div>
+			<div fxLayout="column" fxFlex="50%" fxLayout.lt-md="row" fxLayoutGap="20px">
+				<app-summary-card id="estudios" [header]="estudios"
+												[editable]="true"
+												[canEdit]="['ENFERMERO', 'ESPECIALISTA_MEDICO']"
+												(openInNew)="openDialogNewstudies()">
+					<app-no-data></app-no-data>
+				</app-summary-card>
+				<app-summary-card id="indicaciones-generales" [header]="indicaciones"
+																 [editable]="true"
+																 [canEdit]="['ENFERMERO', 'ESPECIALISTA_MEDICO']"
+																 (openInNew)="openDialogNewRecommendations()">
+					<app-no-data></app-no-data>
+				</app-summary-card>
 			</div>
 		</div>
 	</section>
-
 </app-content>

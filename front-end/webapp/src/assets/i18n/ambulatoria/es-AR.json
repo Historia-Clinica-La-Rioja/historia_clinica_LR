@@ -168,8 +168,8 @@
 				}
 			},
 			"ordenes_prescripciones": {
-				"TAB_LABEL": "Ordenes",
-				"TITLE": "Ordenes y prescripciones",
+				"TAB_LABEL": "Órdenes",
+				"TITLE": "Órdenes y prescripciones",
 				"MEDICACION": "Medicación",
 				"RECOMENDACIONES":"Recomendaciones generales",
 				"ESTUDIOS":"Estudios"
