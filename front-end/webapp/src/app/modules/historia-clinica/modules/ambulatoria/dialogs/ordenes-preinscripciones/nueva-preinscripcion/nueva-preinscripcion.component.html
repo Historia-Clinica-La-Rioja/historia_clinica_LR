@@ -1,0 +1,16 @@
+<div fxLayout="row" fxLayoutAlign="space-between start">
+    <h1 mat-dialog-title>{{ data.titleLabel | translate}}</h1>
+    <button id="close-modal" mat-button color="warn" mat-icon-button aria-label="close" (click)="closeModal(false)">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<button mat-button color="primary" (click)="addPrescriptionItem()" fxFlexFill.xs>
+    <span class="uppercase">{{data.addLabel | translate}}</span>
+</button>
+
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="end start">
+    <button mat-flat-button color="primary" (click)="confirmPrescription()" fxFlexFill.xs>
+        <span class="uppercase">{{'buttons.CONFIRM' | translate}}</span>
+    </button>
+</mat-dialog-actions>

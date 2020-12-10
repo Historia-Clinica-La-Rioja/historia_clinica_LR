@@ -12,6 +12,9 @@ import { NuevaConsultaDockPopupComponent } from '../../dialogs/nueva-consulta-do
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
 import { HistoricalProblemsFacadeService } from '../../services/historical-problems-facade.service';
+import { MatDialog } from '@angular/material/dialog';
+import { NuevaPreinscripcionComponent } from '../../dialogs/ordenes-preinscripciones/nueva-preinscripcion/nueva-preinscripcion.component';
+import { ConfirmarPreinscripcionComponent } from '../../dialogs/ordenes-preinscripciones/confirmar-preinscripcion/confirmar-preinscripcion.component';
 
 @Component({
 	selector: 'app-ambulatoria-paciente',
@@ -27,6 +30,8 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	public personPhoto: PersonPhotoDto;
 	public hasNewConsultationEnabled$: Observable<boolean>;
 
+	private patientId: number;
+
 	constructor(
 		private readonly route: ActivatedRoute,
 		private readonly appointmentsService: AppointmentsService,
@@ -34,27 +39,28 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		private readonly mapperService: MapperService,
 		private readonly router: Router,
 		private readonly dockPopupService: DockPopupService,
-		private readonly ambulatoriaSummaryFacadeService: AmbulatoriaSummaryFacadeService
+		private readonly ambulatoriaSummaryFacadeService: AmbulatoriaSummaryFacadeService,
+		private readonly dialog: MatDialog,
 	) {}
 
 	ngOnInit(): void {
 		this.route.paramMap.subscribe((params) => {
-			const patientId = Number(params.get('idPaciente'));
-			this.patient$ = this.patientService.getPatientBasicData<BasicPatientDto>(patientId).pipe(
+			this.patientId = Number(params.get('idPaciente'));
+			this.patient$ = this.patientService.getPatientBasicData<BasicPatientDto>(this.patientId).pipe(
 				map(patient => this.mapperService.toPatientBasicData(patient))
 			);
 
-			this.ambulatoriaSummaryFacadeService.setIdPaciente(patientId);
+			this.ambulatoriaSummaryFacadeService.setIdPaciente(this.patientId);
 			this.hasNewConsultationEnabled$ = this.ambulatoriaSummaryFacadeService.hasNewConsultationEnabled$;
-			this.patientService.getPatientPhoto(patientId)
+			this.patientService.getPatientPhoto(this.patientId)
 					.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto;});
 		});
 	}
 
 	openNuevaConsulta(): void {
 		if (!this.dialogRef) {
-			const idPaciente = Number(this.route.snapshot.paramMap.get('idPaciente'));
-			this.dialogRef = this.dockPopupService.open(NuevaConsultaDockPopupComponent, {idPaciente});
+			this.patientId = Number(this.route.snapshot.paramMap.get('idPaciente'));
+			this.dialogRef = this.dockPopupService.open(NuevaConsultaDockPopupComponent, {idPaciente: this.patientId});
 			this.dialogRef.afterClosed().subscribe(fieldsToUpdate => {
 				delete this.dialogRef;
 				if (fieldsToUpdate) {
@@ -66,5 +72,36 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 				this.dialogRef.maximize();
 			}
 		}
+	}
+
+	openDialog(): void {
+		const newPrescriptionDialog = this.dialog.open(NuevaPreinscripcionComponent,
+			{
+				data: {
+					patientId: this.patientId,
+					titleLabel: 'Nueva medicación',
+					addLabel: 'Agregar Medicación',
+					hasMedicalCoverage: false,
+					prescriptionItemList: undefined,
+					childData: {
+						titleLabel: 'Agregar medicación',
+						searchSnomedLabel: 'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.MEDICATION',
+						showDosage: true,
+					}
+				}
+			});
+
+		newPrescriptionDialog.afterClosed().subscribe(data => {
+			if (data) {
+				const confirmPrescriptionDialog = this.dialog.open(ConfirmarPreinscripcionComponent,
+					{
+						disableClose: true,
+						data: {
+							titleLabel: 'Su medicación fue agregada correctamente',
+						}
+					});
+			}
+
+		})
 	}
 }

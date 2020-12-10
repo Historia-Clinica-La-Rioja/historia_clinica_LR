@@ -178,7 +178,18 @@
 				"TITLE": "Órdenes y prescripciones",
 				"MEDICACION": "Medicación",
 				"RECOMENDACIONES":"Recomendaciones generales",
-				"ESTUDIOS":"Estudios"
+				"ESTUDIOS":"Estudios",
+				"add_prescription_item_dialog": {
+					"MEDICATION": "Medicación",
+					"ASSOCIATED_PROBLEM": "Problema asociado",
+					"INTERVAL": "Intervalo",
+					"INTERVAL_DEFAULT_OPTION": "Diario",
+					"ADMINISTRATION_TIME": "Tiempo de administración",
+					"ADMINISTRATION_TIME_DEFAULT_OPTION": "Habitual",
+					"OBSERVATIONS": "Observaciones",
+					"INTERVAL_HOURS_REQUIRED": "Ingrese cantidad de horas",
+					"ADMINISTRATION_TIME_DAYS_REQUIRED": "Ingrese cantidad de días"
+				}
 			},
 			"profile": {
 				"BUTTON_HISTORIA_CLINICA": "Historia Clínica",

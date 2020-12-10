@@ -21,6 +21,9 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { PortalModule } from '@angular/cdk/portal';
 import { NuevaConsultaDockPopupComponent } from './dialogs/nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
 import { OrdenesComponent } from './components/ordenes/ordenes.component';
+import { NuevaPreinscripcionComponent } from './dialogs/ordenes-preinscripciones/nueva-preinscripcion/nueva-preinscripcion.component';
+import { ConfirmarPreinscripcionComponent } from './dialogs/ordenes-preinscripciones/confirmar-preinscripcion/confirmar-preinscripcion.component';
+import { AgregarPreinscripcionItemComponent } from './dialogs/ordenes-preinscripciones/agregar-preinscripcion-item/agregar-preinscripcion-item.component';
 
 
 @NgModule({
@@ -36,7 +39,10 @@ import { OrdenesComponent } from './components/ordenes/ordenes.component';
 		SolveProblemComponent,
 		HistoricalProblemsFiltersComponent,
 		NuevaConsultaDockPopupComponent,
-		OrdenesComponent
+		OrdenesComponent,
+		NuevaPreinscripcionComponent,
+		ConfirmarPreinscripcionComponent,
+		AgregarPreinscripcionItemComponent,
 	],
 	imports: [
 		AmbulatoriaRoutingModule,
@@ -48,7 +54,7 @@ import { OrdenesComponent } from './components/ordenes/ordenes.component';
 		PacientesModule,
 		PresentationModule,
 		OverlayModule,
-		PortalModule
+		PortalModule,
 	]
 })
 export class AmbulatoriaModule {
