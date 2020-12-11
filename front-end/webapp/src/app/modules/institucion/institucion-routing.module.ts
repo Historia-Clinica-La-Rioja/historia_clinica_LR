@@ -32,6 +32,10 @@ const routes: Routes = [
 				path: 'camas',
 				loadChildren: () => import('../camas/camas.module').then(m => m.CamasModule),
 			},
+			{
+				path: 'guardia',
+				loadChildren: () => import('../guardia/guardia.module').then(m => m.GuardiaModule),
+			},
 		],
 		canActivate: [RoleGuard],
 		data: { allowedRoles: [ERole.ADMINISTRADOR, ERole.ADMINISTRADOR_AGENDA, ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.ADMINISTRATIVO,

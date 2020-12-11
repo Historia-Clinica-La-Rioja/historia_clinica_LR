@@ -67,6 +67,18 @@ export const SIDEBAR_MENU: MenuItem[] = [
 		],
 	},
 	{
+		text: 'app.menu.GUARDIA',
+		icon: 'local_hospital',
+		id: 'guardia',
+		url: './guardia',
+		permissions: [
+			ERole.ADMINISTRATIVO,
+			ERole.ENFERMERO,
+			ERole.ESPECIALISTA_MEDICO,
+			ERole.PROFESIONAL_DE_SALUD,
+		],
+	},
+	{
 		text: 'app.menu.PERFIL',
 		icon: 'account_circle',
 		id: 'home_profile',
