@@ -77,6 +77,7 @@ export const SIDEBAR_MENU: MenuItem[] = [
 			ERole.ESPECIALISTA_MEDICO,
 			ERole.PROFESIONAL_DE_SALUD,
 		],
+		featureFlag: AppFeature.HABILITAR_MODULO_GUARDIA
 	},
 	{
 		text: 'app.menu.PERFIL',

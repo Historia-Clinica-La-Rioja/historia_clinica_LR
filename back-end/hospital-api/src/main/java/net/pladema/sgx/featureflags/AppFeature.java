@@ -28,7 +28,10 @@ public enum AppFeature implements Feature {
     HABILITAR_UPDATE_DOCUMENTS,
 
     @Label("Indica si esta habilitada la funcionalidad para editar un paciente")
-    HABILITAR_EDITAR_PACIENTE_COMPLETO;
+    HABILITAR_EDITAR_PACIENTE_COMPLETO,
+
+    @Label("Indica si esta habilitado el modulo de Guardia")
+    HABILITAR_MODULO_GUARDIA;
 
     public boolean isActive() {
         return FeatureContext.getFeatureManager().isActive(this);
