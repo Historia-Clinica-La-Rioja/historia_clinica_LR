@@ -1,10 +1,12 @@
 package net.pladema.establishment.controller.constraints.validator.permissions;
 
+import io.swagger.models.auth.In;
 import net.pladema.establishment.repository.SectorRepository;
 import net.pladema.establishment.repository.entity.Sector;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.sgx.backoffice.permissions.BackofficePermissionValidator;
 import net.pladema.sgx.backoffice.rest.ItemsAllowed;
+import net.pladema.sgx.exceptions.BackofficeValidationException;
 import net.pladema.sgx.exceptions.PermissionDeniedException;
 import net.pladema.user.controller.BackofficeAuthoritiesValidator;
 import org.springframework.data.domain.Example;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class BackofficeSectorValidator implements BackofficePermissionValidator<Sector, Integer> {
+	private static final Short CUIDADOS_PROGRESIVOS = 2;
 
 	public static final String NO_CUENTA_CON_SUFICIENTES_PRIVILEGIOS = "No cuenta con suficientes privilegios";
 	private final SectorRepository repository;
@@ -70,13 +73,28 @@ public class BackofficeSectorValidator implements BackofficePermissionValidator<
 	@Override
 	@PreAuthorize("hasPermission(#entity.institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE') || hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
 	public void assertCreate(Sector entity) {
-		// nothing to do
+		assertParentSector(entity, entity.getId());
+		assertCareType(entity);
 	}
 
 	@Override
 	@PreAuthorize("hasPermission(#entity.institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE') || hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
 	public void assertUpdate(Integer id, Sector entity) {
-		// nothing to do
+		assertParentSector(entity, id);
+		assertCareType(entity);
+	}
+
+	private void assertParentSector(Sector sector, Integer id){
+		if(sector.getSectorId() != null && sector.getSectorId().equals(id)){
+			throw new BackofficeValidationException("sector.parentOfItself");
+		}
+	}
+
+	private void assertCareType(Sector sector){
+		if(sector.getSectorOrganizationId() != null &&
+				sector.getSectorOrganizationId().equals(CUIDADOS_PROGRESIVOS) &&
+				sector.getCareTypeId() == null)
+			throw new BackofficeValidationException("sector.mandatoryCareType");
 	}
 
 	@Override

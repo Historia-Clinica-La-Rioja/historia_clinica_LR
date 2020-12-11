@@ -44,6 +44,10 @@ export default {
             "exists": "Esta persona ya tiene un usuario en el sistema",
             "hasrole": "El profesional que quiere eliminar tiene un rol asociado"
         },
+        "sector":{
+          "mandatoryCareType": "El tipo de cuidado es obligatorio para ese tipo de organización de sector",
+          "parentOfItself": "Un sector no puede ser padre de sí mismo"
+        },
         forbidden: 'No tiene los permisos necesarios',
         "sector-description-inst-unique": "Ya existe un sector con el mismo nombre en la institución"
     },

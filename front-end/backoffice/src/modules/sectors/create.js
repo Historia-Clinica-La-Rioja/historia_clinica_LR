@@ -12,19 +12,8 @@ import {
 import CustomToolbar from "../../modules/components/CustomToolbar";
 
 const INTERNACION = 2;
-const CUIDADOS_PROGRESIVOS = 2;
 
 const redirect = (basePath, id, data) => `/institutions/${data.institutionId}/show`;
-
-const validateCareType = (value, allValues) =>{
-    if (allValues.sectorOrganizationId === CUIDADOS_PROGRESIVOS &&
-        !allValues.careTypeId) {
-        return 'El tipo de cuidado es requerido para esta organización de sector';
-    }
-    return [];
-}
-
-const CareTypeValidations = [validateCareType];
 
 const SectorType = (sourceId) => {
     return (
@@ -88,7 +77,7 @@ const SectorCreate = props => (
             </FormDataConsumer>
             {/*Care Type*/}
             <FormDataConsumer>
-                {formDataProps => ( <HospitalizationField {...formDataProps} reference="caretypes" source="careTypeId" validate={CareTypeValidations}/>)}
+                {formDataProps => ( <HospitalizationField {...formDataProps} reference="caretypes" source="careTypeId" />)}
             </FormDataConsumer>
             {/*Hospitalization Type*/}
             <FormDataConsumer>

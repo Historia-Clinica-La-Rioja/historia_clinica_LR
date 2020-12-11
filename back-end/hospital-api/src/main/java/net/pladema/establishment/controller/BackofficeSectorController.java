@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -28,9 +26,7 @@ public class BackofficeSectorController extends AbstractBackofficeController<Sec
 
     private static final Map<String, String> constraintTocode;
     static {
-        Map<String, String> codesMap = new HashMap<>();
-        codesMap.put("uq_sector_description_institution_id", "sector-description-inst-unique");
-        constraintTocode = Collections.unmodifiableMap(codesMap);
+		constraintTocode = Map.of("uq_sector_description_institution_id", "sector-description-inst-unique");
     }
 	
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -43,10 +39,12 @@ public class BackofficeSectorController extends AbstractBackofficeController<Sec
 	}
 	
 	public BackofficeSectorController(SectorRepository repository, BackofficeSectorValidator sectorValidator) {
-		super(new BackofficeRepository<Sector, Integer>(
+		super(new BackofficeRepository<>(
 				repository,
-				new SingleAttributeBackofficeQueryAdapter<Sector>("description")
+				new SingleAttributeBackofficeQueryAdapter<>("description")
 		), sectorValidator);
 	}
+
+
 
 }
