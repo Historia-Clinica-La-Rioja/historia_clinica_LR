@@ -1,1 +1,15 @@
 <button mat-flat-button color="primary" (click)="goToMockup()">to mockups</button>
+
+<app-content width="full">
+	<section id="header" fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between center">
+		<div>
+			<h2 id="title" class="page-title" [translate]="'guardia.home.TITLE'"></h2>
+		</div>
+	</section>
+
+	<section id="body">
+		<app-filters-card [cardTitle]="'guardia.home.episodes.TITLE'">
+			<div results>List go here</div>
+		</app-filters-card>
+	</section>
+</app-content>
