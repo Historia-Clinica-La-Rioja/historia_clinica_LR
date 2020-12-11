@@ -743,6 +743,13 @@ export interface MedicalCoverageDto {
     service: string;
 }
 
+export interface MedicalRequestDto {
+    healthConditionSnomed: SnomedDto;
+    observations: string;
+    startDate: DateDto;
+    statusId: number;
+}
+
 export interface MedicationDto extends ClinicalTermDto {
     note: string;
     suspended: boolean;
@@ -758,6 +765,11 @@ export interface MedicationInfoDto extends Serializable {
     snomed: SnomedDto;
     startDate: DateDto;
     statusId?: string;
+}
+
+export interface NewMedicalRequestDto {
+    healthConditionSnomed: SnomedDto;
+    observations: string;
 }
 
 export interface NewMedicationRequestDto extends Serializable {
