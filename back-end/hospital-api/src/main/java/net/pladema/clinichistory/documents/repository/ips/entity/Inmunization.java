@@ -34,8 +34,11 @@ public class Inmunization extends SGXAuditableEntity {
 	@Column(name = "patient_id", nullable = false)
 	private Integer patientId;
 
-	@Column(name = "sctid_code", length = 20, nullable = false)
-	private String sctidCode;
+	@Column(name = "snomed_id", nullable = false)
+	private Integer snomedId;
+
+	@Column(name = "cie10_codes", length = 255, nullable = true)
+	private String cie10Codes;
 
 	@Column(name = "status_id", length = 20, nullable = false)
 	private String statusId = InmunizationStatus.COMPLETE;
@@ -52,11 +55,11 @@ public class Inmunization extends SGXAuditableEntity {
 	@Column(name = "note_id")
 	private Long noteId;
 
-	public Inmunization(Integer patientId, String sctidCode, String statusId, LocalDate administrationDate,
+	public Inmunization(Integer patientId, Integer snomedId, String statusId, LocalDate administrationDate,
 						Integer institutionId, Long noteId) {
 		super();
 		this.patientId = patientId;
-		this.sctidCode = sctidCode;
+		this.snomedId = snomedId;
 		if (statusId != null)
 			this.statusId = statusId;
 		this.noteId = noteId;
@@ -71,11 +74,11 @@ public class Inmunization extends SGXAuditableEntity {
 		Inmunization that = (Inmunization) o;
 		return id.equals(that.id) &&
 				patientId.equals(that.patientId) &&
-				sctidCode.equals(that.sctidCode);
+				snomedId.equals(that.snomedId);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, patientId, sctidCode);
+		return Objects.hash(id, patientId, snomedId);
 	}
 }

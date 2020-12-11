@@ -2,6 +2,9 @@ package net.pladema.snowstorm.controller;
 
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
+import net.pladema.patient.controller.dto.BasicPatientDto;
+import net.pladema.patient.controller.service.PatientExternalService;
+import net.pladema.snowstorm.services.CalculateCie10CodesService;
 import net.pladema.snowstorm.services.SnowstormService;
 import net.pladema.snowstorm.services.domain.SnowstormSearchResponse;
 import org.apache.http.HttpStatus;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 
+import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 
 @RequiredArgsConstructor
@@ -25,11 +29,17 @@ public class SnowstormController {
 
     private static final String CONCEPTS = "/concepts";
 
+    private static final String REFSET_MEMBERS = "/refset-members";
+
     private static final Logger LOG = LoggerFactory.getLogger(SnowstormController.class);
 
     private static final String TIMEOUT_MSG = "Timeout en WS Snowstorm";
 
     private final SnowstormService snowstormService;
+
+    private final CalculateCie10CodesService calculateCie10CodesService;
+
+    private final PatientExternalService patientExternalService;
 
     @Value("${ws.snowstorm.request.timeout:10000}")
     private long requestTimeOut;
@@ -50,6 +60,19 @@ public class SnowstormController {
             deferredResult.setResult(ResponseEntity.ok().body(snowstormSearchResponse));
         });
         return deferredResult;
+    }
+
+    @GetMapping(value = REFSET_MEMBERS)
+    public ResponseEntity<List<String>> getCie10Codes(
+            @RequestParam(value = "referencedComponentId", required = true) String referencedComponentId,
+            @RequestParam(value = "patientId", required = true) Integer patientId) {
+        LOG.debug("Input data -> referencedComponentId {}, patientId {}", referencedComponentId, patientId);
+
+        BasicPatientDto patient = patientExternalService.getBasicDataFromPatient(patientId);
+        List<String> cie10Codes = calculateCie10CodesService.execute(referencedComponentId, patient);
+
+        LOG.debug("Output -> {}", cie10Codes);
+        return ResponseEntity.ok(cie10Codes);
     }
 
     private <R> void setCallbacks(DeferredResult<ResponseEntity<R>> deferredResult, String serviceName) {

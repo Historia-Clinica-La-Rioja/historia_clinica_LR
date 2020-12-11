@@ -49,8 +49,9 @@ public class AllergyServiceImpl implements AllergyService {
     public List<AllergyConditionBo> loadAllergies(Integer patientId, Long documentId, List<AllergyConditionBo> allergies) {
         LOG.debug("Input parameters -> patientId {}, documentId {}, allergies {}", documentId, patientId, allergies);
         allergies.forEach(allergy -> {
-            String sctId = snomedService.createSnomedTerm(allergy.getSnomed());
-            AllergyIntolerance allergyIntolerance = saveAllergyIntolerance(patientId, allergy, sctId);
+            Integer snomedId = snomedService.getSnomedId(allergy.getSnomed())
+                    .orElseGet(() -> snomedService.createSnomedTerm(allergy.getSnomed()));
+            AllergyIntolerance allergyIntolerance = saveAllergyIntolerance(patientId, allergy, snomedId);
 
             allergy.setId(allergyIntolerance.getId());
             allergy.setVerificationId(allergyIntolerance.getVerificationStatusId());
@@ -67,10 +68,10 @@ public class AllergyServiceImpl implements AllergyService {
         return result;
     }
 
-    private AllergyIntolerance saveAllergyIntolerance(Integer patientId, AllergyConditionBo allergy, String sctId) {
-        LOG.debug("Input parameters -> patientId {}, allergy {}, sctId {}", patientId, allergy, sctId);
+    private AllergyIntolerance saveAllergyIntolerance(Integer patientId, AllergyConditionBo allergy, Integer snomedId) {
+        LOG.debug("Input parameters -> patientId {}, allergy {}, snomedId {}", patientId, allergy, snomedId);
         AllergyIntolerance allergyIntolerance = new AllergyIntolerance(patientId,
-                sctId,
+                snomedId,
                 allergy.getStatusId(),
                 allergy.getVerificationId(),
                 allergy.getCategoryId(),

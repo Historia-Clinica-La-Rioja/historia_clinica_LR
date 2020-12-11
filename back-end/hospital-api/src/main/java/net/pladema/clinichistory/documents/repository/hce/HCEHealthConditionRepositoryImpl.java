@@ -35,8 +35,8 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
     public List<HCEHealthConditionVo> getPersonalHistories(Integer patientId) {
         LOG.debug(INPUT_PARAMETERS_PATIENT_ID, patientId);
         String sqlString = "WITH t AS (" +
-                "   SELECT hc.id, sctid_code, hc.status_id, hc.main, verification_status_id, problem_id, start_date, inactivation_date, hc.note_id, hc.updated_on, hc.patient_id, " +
-                "   row_number() over (partition by sctid_code order by hc.updated_on desc) as rw  " +
+                "   SELECT hc.id, snomed_id, hc.status_id, hc.main, verification_status_id, problem_id, start_date, inactivation_date, hc.note_id, hc.updated_on, hc.patient_id, " +
+                "   row_number() over (partition by snomed_id order by hc.updated_on desc) as rw  " +
                 "   FROM document d " +
                 "   JOIN document_health_condition dhc on d.id = dhc.document_id " +
                 "   JOIN health_condition hc on dhc.health_condition_id = hc.id " +
@@ -45,10 +45,10 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
                 "   AND hc.patient_id = :patientId " +
                 "   AND hc.problem_id IN (:validProblemTypes) " +
                 ") " +
-                "SELECT t.id as id, s.id as sctid, s.pt, status_id, t.main, verification_status_id, problem_id," +
+                "SELECT t.id as id, s.sctid as sctid, s.pt, status_id, t.main, verification_status_id, problem_id," +
                 "start_date, inactivation_date, patient_id " +
                 "FROM t " +
-                "JOIN snomed s ON sctid_code = s.id " +
+                "JOIN snomed s ON snomed_id = s.id " +
                 "WHERE rw = 1 " +
                 "AND NOT verification_status_id = :verificationId  " +
                 "ORDER BY t.updated_on DESC";
@@ -85,8 +85,8 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
     public List<HCEHealthConditionVo> getFamilyHistories(Integer patientId) {
         LOG.debug(INPUT_PARAMETERS_PATIENT_ID, patientId);
         String sqlString = "WITH t AS (" +
-                "   SELECT hc.id, sctid_code, hc.status_id, hc.main, verification_status_id, problem_id, start_date, hc.note_id, hc.updated_on, hc.patient_id, " +
-                "   row_number() over (partition by sctid_code order by hc.updated_on desc) as rw  " +
+                "   SELECT hc.id, snomed_id, hc.status_id, hc.main, verification_status_id, problem_id, start_date, hc.note_id, hc.updated_on, hc.patient_id, " +
+                "   row_number() over (partition by snomed_id order by hc.updated_on desc) as rw  " +
                 "   FROM document d " +
                 "   JOIN document_health_condition dhc on d.id = dhc.document_id " +
                 "   JOIN health_condition hc on dhc.health_condition_id = hc.id " +
@@ -96,10 +96,10 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
                 "   AND hc.problem_id = :problemType " +
                 "   " +
                 ") " +
-                "SELECT t.id as id, s.id as sctid, s.pt, status_id, t.main, verification_status_id, problem_id," +
+                "SELECT t.id as id, s.sctid as sctid, s.pt, status_id, t.main, verification_status_id, problem_id," +
                 "start_date, patient_id " +
                 "FROM t " +
-                "JOIN snomed s ON sctid_code = s.id " +
+                "JOIN snomed s ON snomed_id = s.id " +
                 "WHERE rw = 1 " +
                 "AND NOT verification_status_id = :verificationId  " +
                 "AND status_id = :hcStatusId " +
@@ -138,8 +138,8 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
     public List<HCEHospitalizationVo> getHospitalizationHistory(Integer patientId) {
         LOG.debug(INPUT_PARAMETERS_PATIENT_ID, patientId);
         String sqlString = "WITH t AS (" +
-                "   SELECT hc.id, sctid_code, hc.status_id, d.source_id, hc.main, verification_status_id, ie.entry_date, pd.administrative_discharge_date, hc.updated_on, hc.patient_id, " +
-                "   row_number() over (partition by sctid_code, source_id order by hc.updated_on desc) as rw  " +
+                "   SELECT hc.id, snomed_id, hc.status_id, d.source_id, hc.main, verification_status_id, ie.entry_date, pd.administrative_discharge_date, hc.updated_on, hc.patient_id, " +
+                "   row_number() over (partition by snomed_id, source_id order by hc.updated_on desc) as rw  " +
                 "   FROM document d " +
                 "   JOIN document_health_condition dhc ON d.id = dhc.document_id " +
                 "   JOIN health_condition hc ON dhc.health_condition_id = hc.id " +
@@ -151,10 +151,10 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
                 "   AND hc.patient_id = :patientId " +
                 "   AND hc.problem_id = :problemType " +
                 ") " +
-                "SELECT t.id as id, s.id as sctid, s.pt, status_id, t.main, source_id," +
+                "SELECT t.id as id, s.sctid as sctid, s.pt, status_id, t.main, source_id," +
                 "entry_date, administrative_discharge_date, patient_id " +
                 "FROM t " +
-                "JOIN snomed s ON sctid_code = s.id " +
+                "JOIN snomed s ON snomed_id = s.id " +
                 "WHERE rw = 1 " +
                 "AND NOT verification_status_id = :verificationId  " +
                 "ORDER BY t.updated_on DESC";

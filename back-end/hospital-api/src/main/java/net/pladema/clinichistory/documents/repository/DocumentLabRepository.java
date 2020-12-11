@@ -17,9 +17,10 @@ public interface DocumentLabRepository extends JpaRepository<DocumentLab, Docume
 
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.clinichistory.documents.repository.generalstate.domain.ClinicalObservationVo(" +
-            "ol.id, ol.sctidCode, ol.statusId, ol.value, ol.effectiveTime) " +
+            "ol.id, s.sctid, ol.statusId, ol.value, ol.effectiveTime) " +
             "FROM DocumentLab dl " +
             "JOIN ObservationLab ol ON (dl.pk.observationLabId = ol.id) " +
+            "JOIN Snomed s ON (ol.snomedId = s.id) " +
             "WHERE dl.pk.documentId = :documentId " +
             "AND ol.statusId NOT IN ('"+ ObservationStatus.ERROR+"')")
     List<ClinicalObservationVo> getLabStateFromDocument(@Param("documentId") Long documentId);

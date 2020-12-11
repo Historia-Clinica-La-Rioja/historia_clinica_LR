@@ -50,14 +50,15 @@ public class ImmunizationServiceImpl implements ImmunizationService {
     public List<ImmunizationBo> loadImmunization(Integer patientId, Long documentId, List<ImmunizationBo> immunizations) {
         LOG.debug("Input parameters -> patientId {}, documentId {}, immunizations {}", patientId, documentId, immunizations);
         immunizations.forEach(i -> {
-            String sctId = snomedService.createSnomedTerm(i.getSnomed());
+            Integer snomedId = snomedService.getSnomedId(i.getSnomed())
+                    .orElseGet(() -> snomedService.createSnomedTerm(i.getSnomed()));
 
             AtomicReference<Long> noteId = new AtomicReference<>(null);
             Optional.ofNullable(i.getNote()).ifPresent(n ->
                 noteId.set(loadNote(n))
             );
 
-            Inmunization immunization = saveImmunization(patientId, i, sctId, noteId.get());
+            Inmunization immunization = saveImmunization(patientId, i, snomedId, noteId.get());
 
             i.setId(immunization.getId());
             i.setStatusId(immunization.getStatusId());
@@ -71,9 +72,9 @@ public class ImmunizationServiceImpl implements ImmunizationService {
         return result;
     }
 
-    private Inmunization saveImmunization(Integer patientId, ImmunizationBo immunizationBo, String sctId, Long noteId) {
-        LOG.debug("Input parameters -> patientId {}, immunizationBo {}, sctId {}, noteId {}", patientId, immunizationBo, sctId, noteId);
-        Inmunization immunization = new Inmunization(patientId, sctId, immunizationBo.getStatusId()
+    private Inmunization saveImmunization(Integer patientId, ImmunizationBo immunizationBo, Integer snomedId, Long noteId) {
+        LOG.debug("Input parameters -> patientId {}, immunizationBo {}, snomedId {}, noteId {}", patientId, immunizationBo, snomedId, noteId);
+        Inmunization immunization = new Inmunization(patientId, snomedId, immunizationBo.getStatusId()
                 , immunizationBo.getAdministrationDate(), immunizationBo.getInstitutionId(), noteId);
         immunization = immunizationRepository.save(immunization);
         LOG.debug("Immunization saved -> {}", immunization.getId());

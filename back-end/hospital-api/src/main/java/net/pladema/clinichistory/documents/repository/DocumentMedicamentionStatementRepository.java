@@ -22,7 +22,7 @@ public interface DocumentMedicamentionStatementRepository extends JpaRepository<
             "n.id as noteId, n.description as note) " +
             "FROM DocumentMedicamentionStatement dm " +
             "JOIN MedicationStatement ms ON (dm.pk.medicationStatementId = ms.id) " +
-            "JOIN Snomed s ON (s.id = ms.sctidCode) " +
+            "JOIN Snomed s ON (s.id = ms.snomedId) " +
             "LEFT JOIN Note n ON (n.id = ms.noteId) " +
             "WHERE dm.pk.documentId = :documentId " +
             "AND ms.statusId NOT IN ('"+ MedicationStatementStatus.ERROR+"')")
@@ -34,7 +34,7 @@ public interface DocumentMedicamentionStatementRepository extends JpaRepository<
             "n.id as noteId, n.description as note) " +
             "FROM DocumentMedicamentionStatement dm " +
             "JOIN MedicationStatement ms ON (dm.pk.medicationStatementId = ms.id) " +
-            "JOIN Snomed s ON (s.id = ms.sctidCode) " +
+            "JOIN Snomed s ON (s.id = ms.snomedId) " +
             "JOIN MedicationStatementStatus mss ON (mss.id = ms.statusId) " +
             "LEFT JOIN Note n ON (n.id = ms.noteId) " +
             "WHERE dm.pk.documentId = :documentId ")

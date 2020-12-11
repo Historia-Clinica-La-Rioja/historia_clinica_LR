@@ -33,8 +33,11 @@ public class MedicationStatement extends SGXAuditableEntity {
 	@Column(name = "patient_id", nullable = false)
 	private Integer patientId;
 
-	@Column(name = "sctid_code", length = 20, nullable = false)
-	private String sctidCode;
+	@Column(name = "snomed_id", nullable = false)
+	private Integer snomedId;
+
+	@Column(name = "cie10_codes", length = 255, nullable = true)
+	private String cie10Codes;
 
 	@Column(name = "status_id", length = 20, nullable = false)
 	private String statusId = MedicationStatementStatus.ACTIVE;
@@ -48,11 +51,11 @@ public class MedicationStatement extends SGXAuditableEntity {
 	@Column(name = "note_id")
 	private Long noteId;
 
-	public MedicationStatement(Integer patientId, String sctId, String statusId, Long noteId,
+	public MedicationStatement(Integer patientId, Integer snomedId, String statusId, Long noteId,
 							   Integer healthConditionId, Integer dosageId) {
 		super();
 		this.patientId = patientId;
-		this.sctidCode = sctId;
+		this.snomedId = snomedId;
 		if (statusId != null)
 			this.statusId = statusId;
 		this.noteId = noteId;

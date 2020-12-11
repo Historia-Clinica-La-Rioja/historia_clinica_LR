@@ -37,12 +37,12 @@ public class HCHImmunizationRepositoryImpl implements HCHImmunizationRepository 
         String sqlString = "with temporal as (" +
                 "select distinct " +
                 "i.id, " +
-                "i.sctid_code, " +
+                "i.snomed_id, " +
                 "i.status_id, " +
                 "i.note_id, " +
                 "i.administration_date, " +
                 "i.updated_on, " +
-                "row_number() over (partition by i.sctid_code, i.administration_date order by i.updated_on desc) as rw " +
+                "row_number() over (partition by i.snomed_id, i.administration_date order by i.updated_on desc) as rw " +
                 "from document d " +
                 "join document_inmunization di on (d.id = di.document_id) " +
                 "join inmunization i on (di.inmunization_id = i.id) " +
@@ -50,11 +50,11 @@ public class HCHImmunizationRepositoryImpl implements HCHImmunizationRepository 
                 "and d.source_type_id = " + SourceType.HOSPITALIZATION +" "+
                 "and d.status_id = :documentStatusId " +
                 ") " +
-                "select t.id as id, s.id as sctid, s.pt, t.status_id, t.administration_date, " +
+                "select t.id as id, s.sctid as sctid, s.pt, t.status_id, t.administration_date, " +
                 "n.id as note_id, n.description as note " +
                 "from temporal t " +
                 "left join note n on t.note_id = n.id " +
-                "join snomed s on t.sctid_code = s.id " +
+                "join snomed s on t.snomed_id = s.id " +
                 "where rw = 1 and not status_id = :immunizationStatusId " +
                 "order by t.updated_on";
 

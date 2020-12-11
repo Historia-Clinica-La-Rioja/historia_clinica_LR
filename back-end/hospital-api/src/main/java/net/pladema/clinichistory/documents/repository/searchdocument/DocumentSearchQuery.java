@@ -62,7 +62,7 @@ public class DocumentSearchQuery {
                 "left join Note indicationnote on (document.indicationsNoteId = indicationnote.id) \n" +
          //Diagnosis
                 "join HealthCondition as hc on (dhc.pk.healthConditionId = hc.id ) \n" +
-                "join Snomed as snomed on (hc.sctidCode = snomed.id ) \n"
+                "join Snomed as snomed on (hc.snomedId = snomed.id ) \n"
         );
     }
 

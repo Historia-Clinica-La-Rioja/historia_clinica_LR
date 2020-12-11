@@ -25,7 +25,7 @@ public class ReasonSummaryVo {
     }
 
     public String getId() {
-        return snomed.getId();
+        return snomed.getSctid();
     }
 
     public String getPt() {

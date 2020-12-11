@@ -44,8 +44,9 @@ public class ProceduresServiceImpl implements ProceduresService {
     public List<ProcedureBo> loadProcedures(Integer patientId, Long documentId, List<ProcedureBo> procedures) {
         LOG.debug("Input parameters -> patientId {}, documentId {}, procedures {}", documentId, patientId, procedures);
         procedures.forEach(p -> {
-            String sctId = snomedService.createSnomedTerm(p.getSnomed());
-            Procedure procedure = saveProcedure(patientId, p, sctId);
+            Integer snomedId = snomedService.getSnomedId(p.getSnomed())
+                    .orElseGet(() -> snomedService.createSnomedTerm(p.getSnomed()));;
+            Procedure procedure = saveProcedure(patientId, p, snomedId);
 
             p.setId(procedure.getId());
             p.setStatusId(procedure.getStatusId());
@@ -58,11 +59,11 @@ public class ProceduresServiceImpl implements ProceduresService {
         return result;
     }
 
-    private Procedure saveProcedure(Integer patientId, ProcedureBo procedureBo, String sctId) {
-        LOG.debug("Input parameters -> patientId {}, procedureBo {}, sctId {}", patientId, procedureBo, sctId);
+    private Procedure saveProcedure(Integer patientId, ProcedureBo procedureBo, Integer snomedId) {
+        LOG.debug("Input parameters -> patientId {}, procedureBo {}, snomedId {}", patientId, procedureBo, snomedId);
         Procedure result = new Procedure(
                 patientId,
-                sctId,
+                snomedId,
                 procedureBo.getStatusId(), procedureBo.getPerformedDate());
 
         result = proceduresRepository.save(result);

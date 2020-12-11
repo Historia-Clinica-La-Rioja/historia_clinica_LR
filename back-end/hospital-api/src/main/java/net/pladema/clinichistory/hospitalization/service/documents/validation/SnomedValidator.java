@@ -12,7 +12,7 @@ public class SnomedValidator {
     public boolean isValid(SnomedBo snomed) {
         LOG.debug("Input parameters -> snomed {}", snomed);
         Assert.notNull(snomed, "La terminología snomed es obligatoria");
-        Assert.notNull(snomed.getId(), "El código identificador de snomed es obligatorio");
+        Assert.notNull(snomed.getSctid(), "El código identificador de snomed es obligatorio");
         Assert.notNull(snomed.getPt(), "El termino preferido de snomed es obligatorio");
         return true;
     }

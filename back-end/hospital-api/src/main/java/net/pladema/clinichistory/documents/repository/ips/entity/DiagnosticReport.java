@@ -28,8 +28,11 @@ public class DiagnosticReport extends SGXAuditableEntity {
 	@Column(name = "patient_id", nullable = false)
 	private Integer patientId;
 
-	@Column(name = "sctid_code", length = 20, nullable = false)
-	private String sctidCode;
+	@Column(name = "snomed_id", nullable = false)
+	private Integer snomedId;
+
+	@Column(name = "cie10_codes", length = 255, nullable = true)
+	private String cie10Codes;
 
 	@Column(name = "status_id", length = 20, nullable = false)
 	private String statusId = DiagnosticReportStatus.REGISTERED;

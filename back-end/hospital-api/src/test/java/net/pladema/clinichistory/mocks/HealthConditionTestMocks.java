@@ -8,43 +8,43 @@ import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.Prob
 
 public class HealthConditionTestMocks {
 
-    private static HealthCondition createMinimumHealthCondition(Integer patientId, String code, String statusId, String verificationId) {
+    private static HealthCondition createMinimumHealthCondition(Integer patientId, Integer snomedId, String statusId, String verificationId) {
         HealthCondition result = new HealthCondition();
         result.setPatientId(patientId);
-        result.setSctidCode(code);
+        result.setSnomedId(snomedId);
         result.setStatusId(statusId);
         result.setVerificationStatusId(verificationId);
         result.setMain(false);
         return result;
     }
 
-    public static HealthCondition createFamilyHistory(Integer patientId, String code, String statusId, String verificationId){
-        HealthCondition result = createMinimumHealthCondition(patientId, code, statusId, verificationId);
+    public static HealthCondition createFamilyHistory(Integer patientId, Integer snomedId, String statusId, String verificationId){
+        HealthCondition result = createMinimumHealthCondition(patientId, snomedId, statusId, verificationId);
         result.setProblemId(ProblemType.HISTORY);
         return result;
     }
 
-    public static HealthCondition createPersonalHistory(Integer patientId, String code, String statusId, String verificationId){
-        HealthCondition result = createMinimumHealthCondition(patientId, code, statusId, verificationId);
+    public static HealthCondition createPersonalHistory(Integer patientId, Integer snomedId, String statusId, String verificationId){
+        HealthCondition result = createMinimumHealthCondition(patientId, snomedId, statusId, verificationId);
         result.setProblemId(ProblemType.PROBLEM);
         return result;
     }
 
-    public static HealthCondition createChronicPersonalHistory(Integer patientId, String code, String verificationId){
-        HealthCondition result = createMinimumHealthCondition(patientId, code, ConditionClinicalStatus.ACTIVE, verificationId);
+    public static HealthCondition createChronicPersonalHistory(Integer patientId, Integer snomedId, String verificationId){
+        HealthCondition result = createMinimumHealthCondition(patientId, snomedId, ConditionClinicalStatus.ACTIVE, verificationId);
         result.setProblemId(ProblemType.CHRONIC);
         return result;
     }
 
-    public static HealthCondition createMainDiagnose(Integer patientId, String code, String statusId){
-        HealthCondition result = createMinimumHealthCondition(patientId, code, statusId, ConditionVerificationStatus.CONFIRMED);
+    public static HealthCondition createMainDiagnose(Integer patientId, Integer snomedId, String statusId){
+        HealthCondition result = createMinimumHealthCondition(patientId, snomedId, statusId, ConditionVerificationStatus.CONFIRMED);
         result.setProblemId(ProblemType.DIAGNOSIS);
         result.setMain(true);
         return result;
     }
 
-    public static HealthCondition createDiagnose(Integer patientId, String code, String statusId, String verificationId){
-        HealthCondition result = createMinimumHealthCondition(patientId, code, statusId, verificationId);
+    public static HealthCondition createDiagnose(Integer patientId, Integer snomedId, String statusId, String verificationId){
+        HealthCondition result = createMinimumHealthCondition(patientId, snomedId, statusId, verificationId);
         result.setProblemId(ProblemType.DIAGNOSIS);
         result.setMain(false);
         return result;

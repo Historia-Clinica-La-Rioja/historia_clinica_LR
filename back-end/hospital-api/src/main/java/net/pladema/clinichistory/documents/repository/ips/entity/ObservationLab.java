@@ -28,8 +28,8 @@ public class ObservationLab extends ClinicalObservation {
 
 	private static final String LAB = "lab";
 
-	public ObservationLab(Integer patientId, String value, EObservationLab eObservationLab, LocalDateTime effectiveTime){
-		super(patientId, value, eObservationLab.getSctidCode(), LAB, effectiveTime);
+	public ObservationLab(Integer patientId, String value, Integer snomedId, LocalDateTime effectiveTime){
+		super(patientId, value, snomedId, LAB, effectiveTime);
 	}
 
 }

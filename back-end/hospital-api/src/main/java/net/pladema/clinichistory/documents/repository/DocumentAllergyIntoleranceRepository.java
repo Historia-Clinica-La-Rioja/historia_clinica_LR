@@ -21,7 +21,7 @@ public interface DocumentAllergyIntoleranceRepository extends JpaRepository<Docu
             "ai.startDate) " +
             "FROM DocumentAllergyIntolerance da " +
             "JOIN AllergyIntolerance ai ON (da.pk.allergyIntoleranceId = ai.id) " +
-            "JOIN Snomed s ON (s.id = ai.sctidCode) " +
+            "JOIN Snomed s ON (s.id = ai.snomedId) " +
             "WHERE da.pk.documentId = :documentId " +
             "AND ai.verificationStatusId NOT IN ('"+ AllergyIntoleranceVerificationStatus.ERROR+"')")
     List<AllergyConditionVo> getAllergyIntoleranceStateFromDocument(@Param("documentId") Long documentId);
@@ -33,7 +33,7 @@ public interface DocumentAllergyIntoleranceRepository extends JpaRepository<Docu
             "ai.categoryId, ai.startDate) " +
             "FROM DocumentAllergyIntolerance da " +
             "JOIN AllergyIntolerance ai ON (da.pk.allergyIntoleranceId = ai.id) " +
-            "JOIN Snomed s ON (s.id = ai.sctidCode) " +
+            "JOIN Snomed s ON (s.id = ai.snomedId) " +
             "JOIN AllergyIntoleranceClinicalStatus aics ON (aics.id = ai.statusId) " +
             "JOIN AllergyIntoleranceVerificationStatus aivs ON (aivs.id = ai.verificationStatusId) " +
             "WHERE da.pk.documentId = :documentId ")

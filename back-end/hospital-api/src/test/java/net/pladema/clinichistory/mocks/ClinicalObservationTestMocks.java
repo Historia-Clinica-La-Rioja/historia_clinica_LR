@@ -11,10 +11,10 @@ import java.time.LocalDateTime;
 
 public class ClinicalObservationTestMocks {
 
-    public static ObservationLab createObservationLab(String sctId, String error, LocalDateTime now) {
+    public static ObservationLab createObservationLab(Integer snomedId, String error, LocalDateTime now) {
         ObservationLab result = new ObservationLab();
         result.setPatientId(1);
-        result.setSctidCode(sctId);
+        result.setSnomedId(snomedId);
         result.setStatusId(error);
         result.setCategoryId("category");
         result.setValue("Lab Value");
@@ -22,10 +22,10 @@ public class ClinicalObservationTestMocks {
         return result;
     }
 
-    public static ObservationVitalSign createObservationVitalSign(String sctId, String error, LocalDateTime now) {
+    public static ObservationVitalSign createObservationVitalSign(Integer snomedId, String error, LocalDateTime now) {
         ObservationVitalSign observationVitalSign = new ObservationVitalSign();
         observationVitalSign.setPatientId(1);
-        observationVitalSign.setSctidCode(sctId);
+        observationVitalSign.setSnomedId(snomedId);
         observationVitalSign.setStatusId(error);
         observationVitalSign.setCategoryId("category");
         observationVitalSign.setValue("Vital sign Value");
@@ -37,13 +37,13 @@ public class ClinicalObservationTestMocks {
         return new DocumentVitalSign(doc.getId(), obs.getId());
     }
 
-    public static ObservationVitalSign createFinalObservationVitalSign(String sctId, LocalDateTime now) {
-        ObservationVitalSign observationVitalSign = createObservationVitalSign(sctId, ObservationStatus.FINAL, now);
+    public static ObservationVitalSign createFinalObservationVitalSign(Integer snomedId, LocalDateTime now) {
+        ObservationVitalSign observationVitalSign = createObservationVitalSign(snomedId, ObservationStatus.FINAL, now);
         return observationVitalSign;
     }
 
-    public static ObservationVitalSign createErrorObservationVitalSign(String sctId, LocalDateTime now) {
-        ObservationVitalSign observationVitalSign = createObservationVitalSign(sctId, ObservationStatus.ERROR, now);
+    public static ObservationVitalSign createErrorObservationVitalSign(Integer snomedId, LocalDateTime now) {
+        ObservationVitalSign observationVitalSign = createObservationVitalSign(snomedId, ObservationStatus.ERROR, now);
         return observationVitalSign;
     }
 
@@ -51,8 +51,8 @@ public class ClinicalObservationTestMocks {
         return new DocumentLab(doc.getId(), obs.getId());
     }
 
-    public static ObservationLab createFinalObservationLab(String sctId, LocalDateTime now) {
-        ObservationLab observationLab = createObservationLab(sctId, ObservationStatus.FINAL, now);
+    public static ObservationLab createFinalObservationLab(Integer snomedId, LocalDateTime now) {
+        ObservationLab observationLab = createObservationLab(snomedId, ObservationStatus.FINAL, now);
         return observationLab;
     }
 }

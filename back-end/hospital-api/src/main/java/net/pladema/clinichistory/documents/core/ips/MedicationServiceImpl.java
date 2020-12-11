@@ -56,8 +56,9 @@ public class MedicationServiceImpl implements MedicationService {
     public List<MedicationBo> loadMedications(Integer patientId, Long documentId, List<MedicationBo> medications) {
         LOG.debug("Input parameters -> patientId {}, documentId {}, medications {}", documentId, patientId, medications);
         medications.forEach(medication -> {
-            String sctId = snomedService.createSnomedTerm(medication.getSnomed());
-            MedicationStatement medicationStatement = saveMedicationStatement(patientId, medication, sctId);
+            Integer snomedId = snomedService.getSnomedId(medication.getSnomed())
+                    .orElseGet(() -> snomedService.createSnomedTerm(medication.getSnomed()));
+            MedicationStatement medicationStatement = saveMedicationStatement(patientId, medication, snomedId);
 
             medication.setId(medicationStatement.getId());
             medication.setStatusId(medicationStatement.getStatusId());
@@ -72,14 +73,13 @@ public class MedicationServiceImpl implements MedicationService {
 
 
 
-    private MedicationStatement saveMedicationStatement(Integer patientId, MedicationBo medicationBo, String sctId) {
-        LOG.debug("Input parameters -> patientId {}, medication {}, sctId {} ", patientId, medicationBo, sctId);
+    private MedicationStatement saveMedicationStatement(Integer patientId, MedicationBo medicationBo, Integer snomedId) {
+        LOG.debug("Input parameters -> patientId {}, medication {}, snomedId {}", patientId, medicationBo, snomedId);
 
         Dosage newDosage = createDosage(medicationBo.getDosage());
-
         MedicationStatement medicationStatement = new MedicationStatement(
                 patientId,
-                sctId,
+                snomedId,
                 medicationBo.getStatusId(),
                 noteService.createNote(medicationBo.getNote()),
                 medicationBo.getHealthCondition().getId(),

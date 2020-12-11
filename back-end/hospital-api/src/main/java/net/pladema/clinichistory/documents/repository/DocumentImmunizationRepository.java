@@ -22,7 +22,7 @@ public interface DocumentImmunizationRepository extends JpaRepository<DocumentIn
             "n.id as noteId, n.description as note) " +
             "FROM DocumentInmunization di " +
             "JOIN Inmunization i ON (di.pk.inmunizationId = i.id) " +
-            "JOIN Snomed s ON (s.id = i.sctidCode) " +
+            "JOIN Snomed s ON (s.id = i.snomedId) " +
             "LEFT JOIN Note n ON (n.id = i.noteId) " +
             "WHERE di.pk.documentId = :documentId " +
             "AND i.statusId NOT IN ('"+ InmunizationStatus.ERROR+"')")
@@ -35,7 +35,7 @@ public interface DocumentImmunizationRepository extends JpaRepository<DocumentIn
             "n.id as noteId, n.description as note) " +
             "FROM DocumentInmunization di " +
             "JOIN Inmunization i ON (di.pk.inmunizationId = i.id) " +
-            "JOIN Snomed s ON (s.id = i.sctidCode) " +
+            "JOIN Snomed s ON (s.id = i.snomedId) " +
             "JOIN InmunizationStatus iss ON (iss.id = i.statusId) " +
             "LEFT JOIN Note n ON (n.id = i.noteId) " +
             "WHERE di.pk.documentId = :documentId ")

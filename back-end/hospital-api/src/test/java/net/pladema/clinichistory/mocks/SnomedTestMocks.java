@@ -6,7 +6,7 @@ public class SnomedTestMocks {
 
     public static Snomed createSnomed(String id) {
         Snomed result = new Snomed();
-        result.setId(id);
+        result.setSctid(id);
         result.setParentId(id);
         result.setPt(id);
         result.setParentFsn(id);

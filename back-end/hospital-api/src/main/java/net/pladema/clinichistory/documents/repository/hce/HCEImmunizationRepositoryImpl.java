@@ -30,8 +30,8 @@ public class HCEImmunizationRepositoryImpl implements HCEImmunizationRepository 
     public List<HCEImmunizationVo> getImmunization(Integer patientId) {
         LOG.debug("Input parameters patientId {}", patientId);
         String sqlString = "WITH t AS (" +
-                "   SELECT inm.id, sctid_code, inm.status_id, administration_date, expiration_date, inm.updated_on, " +
-                "   row_number() over (partition by sctid_code, administration_date order by inm.updated_on desc) as rw  " +
+                "   SELECT inm.id, snomed_id, inm.status_id, administration_date, expiration_date, inm.updated_on, " +
+                "   row_number() over (partition by snomed_id, administration_date order by inm.updated_on desc) as rw  " +
                 "   FROM document d " +
                 "   JOIN document_inmunization di on d.id = di.document_id " +
                 "   JOIN inmunization inm on di.inmunization_id = inm.id " +
@@ -40,9 +40,9 @@ public class HCEImmunizationRepositoryImpl implements HCEImmunizationRepository 
                 "   AND inm.patient_id = :patientId " +
                 "   " +
                 ") " +
-                "SELECT t.id as id, s.id as sctid, s.pt, status_id, administration_date, expiration_date " +
+                "SELECT t.id as id, s.sctid as sctid, s.pt, status_id, administration_date, expiration_date " +
                 "FROM t " +
-                "JOIN snomed s ON sctid_code = s.id " +
+                "JOIN snomed s ON snomed_id = s.id " +
                 "WHERE rw = 1 " +
                 "AND status_id <> :immunizationStatusId " +
                 "ORDER BY t.updated_on DESC";

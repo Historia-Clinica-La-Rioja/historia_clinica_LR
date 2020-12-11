@@ -35,8 +35,11 @@ public class AllergyIntolerance extends SGXAuditableEntity {
 	@Column(name = "patient_id", nullable = false)
 	private Integer patientId;
 
-	@Column(name = "sctid_code", length = 20, nullable = false)
-	private String sctidCode;
+	@Column(name = "snomed_id", nullable = false)
+	private Integer snomedId;
+
+	@Column(name = "cie10_codes", length = 255, nullable = true)
+	private String cie10Codes;
 
 	@Column(name = "status_id", length = 20, nullable = false)
 	private String statusId = AllergyIntoleranceClinicalStatus.ACTIVE;
@@ -53,11 +56,11 @@ public class AllergyIntolerance extends SGXAuditableEntity {
 	@Column(name = "note_id")
 	private Long noteId;
 
-	public AllergyIntolerance(Integer patientId, String sctidCode, String statusId,
+	public AllergyIntolerance(Integer patientId, Integer snomedId, String statusId,
 							  String verificationId, String categoryId, LocalDate startDate){
 		super();
 		this.patientId = patientId;
-		this.sctidCode = sctidCode;
+		this.snomedId = snomedId;
 		if (statusId != null)
 			this.statusId = statusId;
 		if (verificationId != null)
@@ -73,12 +76,12 @@ public class AllergyIntolerance extends SGXAuditableEntity {
 		AllergyIntolerance that = (AllergyIntolerance) o;
 		return id.equals(that.id) &&
 				patientId.equals(that.patientId) &&
-				sctidCode.equals(that.sctidCode) &&
+				snomedId.equals(that.snomedId) &&
 				startDate.equals(that.startDate);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, patientId, sctidCode, startDate);
+		return Objects.hash(id, patientId, snomedId, startDate);
 	}
 }

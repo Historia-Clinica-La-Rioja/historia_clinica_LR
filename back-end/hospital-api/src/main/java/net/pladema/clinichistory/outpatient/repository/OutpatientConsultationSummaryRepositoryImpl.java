@@ -61,12 +61,12 @@ public class OutpatientConsultationSummaryRepositoryImpl implements OutpatientCo
     @SuppressWarnings("unchecked")
     @Override
     public List<HealthConditionSummaryVo> getHealthConditionsByPatient(Integer patientId, List<Integer> outpatientIds) {
-        String sqlString ="SELECT hc.id, s.id, s.pt, d.statusId, hc.startDate, hc.inactivationDate, hc.main, hc.problemId, oc.id"
+        String sqlString ="SELECT hc.id, s.sctid, s.pt, d.statusId, hc.startDate, hc.inactivationDate, hc.main, hc.problemId, oc.id"
                 +"  FROM OutpatientConsultation oc"
                 +"  JOIN Document d ON (d.sourceId = oc.id)"
                 +"  JOIN DocumentHealthCondition dhc ON (d.id = dhc.pk.documentId)"
                 +"  JOIN HealthCondition hc ON (dhc.pk.healthConditionId = hc.id)"
-                +"  JOIN Snomed s ON (s.id = hc.sctidCode)"
+                +"  JOIN Snomed s ON (s.id = hc.snomedId)"
                 +"  WHERE d.statusId = '" + DocumentStatus.FINAL + "'"
                 +"  AND d.sourceTypeId =" + SourceType.OUTPATIENT
                 +"  AND d.typeId = "+ DocumentType.OUTPATIENT
@@ -126,7 +126,7 @@ public class OutpatientConsultationSummaryRepositoryImpl implements OutpatientCo
                 +"  JOIN Document d ON (d.sourceId = oc.id)"
                 +"  JOIN DocumentProcedure dp ON (d.id = dp.pk.documentId)"
                 +"  JOIN Procedure p ON (dp.pk.procedureId = p.id)"
-                +"  JOIN Snomed s ON (p.sctidCode = s.id) "
+                +"  JOIN Snomed s ON (p.snomedId = s.id) "
                 +"  WHERE oc.patientId = :patientId"
                 +"  AND d.statusId = '" + DocumentStatus.FINAL + "'"
                 +"  AND d.typeId = "+ DocumentType.OUTPATIENT

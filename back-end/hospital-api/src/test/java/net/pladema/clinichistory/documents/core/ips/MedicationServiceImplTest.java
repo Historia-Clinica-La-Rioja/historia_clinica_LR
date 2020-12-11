@@ -75,7 +75,11 @@ public class MedicationServiceImplTest {
 
     @Test
     public void createDocument_complete_success() {
-        when(snomedService.createSnomedTerm(new SnomedBo("IBUPROFENO", "IBUPROFENO"))).thenReturn("IBUPROFENO");
+        BasicPatientDto patientDto = new BasicPatientDto();
+        patientDto.setId(1);
+
+        Integer snomedId = 1;
+        when(snomedService.createSnomedTerm(new SnomedBo("IBUPROFENO", "IBUPROFENO"))).thenReturn(snomedId);
         when(noteService.createNote(any())).thenReturn(null);
 
         when(documentService.createDocumentMedication(any(), any())).thenReturn(null);
@@ -83,7 +87,7 @@ public class MedicationServiceImplTest {
 
         MedicationBo medication = createMedicationBo("IBUPROFENO", 13,
                 createDosageBo(15d,8, false, EUnitsOfTimeBo.HOUR, LocalDate.of(2020,05,25)));
-        var result = medicationServiceImpl.loadMedications(1, 1l, List.of(medication));
+        var result = medicationServiceImpl.loadMedications(patientDto, 1l, List.of(medication));
         Assertions.assertThat(result.size())
                 .isEqualTo(1);
 
@@ -100,8 +104,8 @@ public class MedicationServiceImplTest {
         Assertions.assertThat(medicationStatement)
                 .isNotNull();
 
-        Assertions.assertThat(medicationStatement.getSctidCode())
-                .isEqualTo("IBUPROFENO");
+        Assertions.assertThat(medicationStatement.getSnomedId())
+                .isEqualTo(snomedId);
 
         Assertions.assertThat(medicationStatement.getStatusId())
                 .isEqualTo(MedicationStatementStatus.ACTIVE);
@@ -132,7 +136,11 @@ public class MedicationServiceImplTest {
 
     @Test
     public void createDocument_chronicMedication_success() {
-        when(snomedService.createSnomedTerm(new SnomedBo("IBUPROFENO", "IBUPROFENO"))).thenReturn("IBUPROFENO");
+        BasicPatientDto patientDto = new BasicPatientDto();
+        patientDto.setId(1);
+
+        Integer snomedId = 1;
+        when(snomedService.createSnomedTerm(new SnomedBo("IBUPROFENO", "IBUPROFENO"))).thenReturn(snomedId);
         when(noteService.createNote(any())).thenReturn(null);
 
         when(documentService.createDocumentMedication(any(), any())).thenReturn(null);
@@ -140,7 +148,7 @@ public class MedicationServiceImplTest {
 
         MedicationBo medication = createMedicationBo("IBUPROFENO", 13,
                 createDosageBo(15d,8, true, EUnitsOfTimeBo.HOUR, LocalDate.of(2020,05,25)));
-        var result = medicationServiceImpl.loadMedications(1, 1l, List.of(medication));
+        var result = medicationServiceImpl.loadMedications(patientDto, 1l, List.of(medication));
         Assertions.assertThat(result.size())
                 .isEqualTo(1);
 
@@ -157,8 +165,8 @@ public class MedicationServiceImplTest {
         Assertions.assertThat(medicationStatement)
                 .isNotNull();
 
-        Assertions.assertThat(medicationStatement.getSctidCode())
-                .isEqualTo("IBUPROFENO");
+        Assertions.assertThat(medicationStatement.getSnomedId())
+                .isEqualTo(snomedId);
 
         Assertions.assertThat(medicationStatement.getStatusId())
                 .isEqualTo(MedicationStatementStatus.ACTIVE);
@@ -188,14 +196,18 @@ public class MedicationServiceImplTest {
 
     @Test
     public void createDocument_usual_medication_success() {
-        when(snomedService.createSnomedTerm(new SnomedBo("IBUPROFENO", "IBUPROFENO"))).thenReturn("IBUPROFENO");
+        BasicPatientDto patientDto = new BasicPatientDto();
+        patientDto.setId(1);
+
+        Integer snomedId = 1;
+        when(snomedService.createSnomedTerm(new SnomedBo("IBUPROFENO", "IBUPROFENO"))).thenReturn(snomedId);
         when(noteService.createNote(any())).thenReturn(null);
 
         when(documentService.createDocumentMedication(any(), any())).thenReturn(null);
 
 
         MedicationBo medication = createMedicationBo("IBUPROFENO", null,null);
-        var result = medicationServiceImpl.loadMedications(1, 1l, List.of(medication));
+        var result = medicationServiceImpl.loadMedications(patientDto, 1l, List.of(medication));
         Assertions.assertThat(result.size())
                 .isEqualTo(1);
 
@@ -212,8 +224,8 @@ public class MedicationServiceImplTest {
         Assertions.assertThat(medicationStatement)
                 .isNotNull();
 
-        Assertions.assertThat(medicationStatement.getSctidCode())
-                .isEqualTo("IBUPROFENO");
+        Assertions.assertThat(medicationStatement.getSnomedId())
+                .isEqualTo(snomedId);
 
         Assertions.assertThat(medicationStatement.getStatusId())
                 .isEqualTo(MedicationStatementStatus.ACTIVE);

@@ -210,10 +210,11 @@ public class HealthConditionServiceImpl implements HealthConditionService {
 
     private HealthCondition buildBasicHealthCondition(Integer patientId, HealthConditionBo info) {
         LOG.debug(INPUT_PARAMETERS_PATIENT_ID_INFO, patientId, info);
-        String sctId = snomedService.createSnomedTerm(info.getSnomed());
+        Integer snomedId = snomedService.getSnomedId(info.getSnomed())
+                .orElseGet(() -> snomedService.createSnomedTerm(info.getSnomed()));
         HealthCondition healthCondition = new HealthCondition();
         healthCondition.setPatientId(patientId);
-        healthCondition.setSctidCode(sctId);
+        healthCondition.setSnomedId(snomedId);
         healthCondition.setStatusId(ConditionClinicalStatus.ACTIVE);
         healthCondition.setVerificationStatusId(info.getVerificationId());
         healthCondition.setStartDate(dateTimeProvider.nowDate());
@@ -287,7 +288,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
                 .orElseThrow(()->new NotFoundException("healthcondition-not-found", "Healthcondition not found"));
 
         HealthConditionNewConsultationBo newConsultationBo = new HealthConditionNewConsultationBo(hc);
-        newConsultationBo.setSnomed(snomedService.getSnomed(hc.getSctidCode()));
+        newConsultationBo.setSnomed(snomedService.getSnomed(hc.getSnomedId()));
         return newConsultationBo;
     }
 

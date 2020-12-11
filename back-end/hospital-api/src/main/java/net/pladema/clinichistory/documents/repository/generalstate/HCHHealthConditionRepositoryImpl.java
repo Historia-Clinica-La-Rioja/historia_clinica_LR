@@ -30,19 +30,19 @@ public class HCHHealthConditionRepositoryImpl implements HCHHealthConditionRepos
     public List<HealthConditionVo> findGeneralState(Integer internmentEpisodeId) {
 
         String sqlString = "with t as (" +
-                "select hc.id, sctid_code, hc.status_id, hc.main, verification_status_id, problem_id, start_date, hc.note_id, hc.updated_on, " +
-                "row_number() over (partition by sctid_code, problem_id order by hc.updated_on desc) as rw " +
+                "select hc.id, snomed_id, hc.status_id, hc.main, verification_status_id, problem_id, start_date, hc.note_id, hc.updated_on, " +
+                "row_number() over (partition by snomed_id, problem_id order by hc.updated_on desc) as rw " +
                 "from document d " +
                 "join document_health_condition dhc on d.id = dhc.document_id " +
                 "join health_condition hc on dhc.health_condition_id = hc.id " +
                 "where d.source_id = :internmentEpisodeId " +
                 "and d.source_type_id = " + SourceType.HOSPITALIZATION +" "+
                 "and d.status_id = :statusId )" +
-                "select t.id as id, s.id as sctid, s.pt, status_id, t.main, verification_status_id, problem_id, " +
+                "select t.id as id, s.sctid as sctid, s.pt, status_id, t.main, verification_status_id, problem_id, " +
                 "start_date, n.id note_id, n.description as note " +
                 "from t " +
                 "left join note n on note_id = n.id " +
-                "join snomed s on sctid_code = s.id " +
+                "join snomed s on snomed_id = s.id " +
                 "where rw = 1 and not verification_status_id = :verificationId " +
                 "order by t.updated_on desc";
 

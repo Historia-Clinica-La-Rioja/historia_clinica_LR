@@ -28,8 +28,8 @@ public class HCEMedicationStatementRepositoryImpl implements HCEMedicationStatem
 
         String sqlString = "with temporal as (" +
                 "SELECT DISTINCT " +
-                "ms.id, ms.sctid_code, ms.status_id, ms.updated_on, " +
-                "row_number() OVER (PARTITION by ms.sctid_code ORDER BY ms.updated_on desc) AS rw " +
+                "ms.id, ms.snomed_id, ms.status_id, ms.updated_on, " +
+                "row_number() OVER (PARTITION by ms.snomed_id ORDER BY ms.updated_on desc) AS rw " +
                 "FROM document d " +
                 "JOIN document_medicamention_statement dms ON d.id = dms.document_id " +
                 "JOIN medication_statement ms ON dms.medication_statement_id = ms.id " +
@@ -37,9 +37,9 @@ public class HCEMedicationStatementRepositoryImpl implements HCEMedicationStatem
                 "AND d.type_id = :documentType "+
                 "AND d.status_id = :documentStatusId " +
                 ") " +
-                "SELECT t.id AS id, s.id AS sctid, s.pt, status_id " +
+                "SELECT t.id AS id, s.sctid AS sctid, s.pt, status_id " +
                 "FROM temporal t " +
-                "JOIN snomed s ON t.sctid_code = s.id " +
+                "JOIN snomed s ON t.snomed_id = s.id " +
                 "WHERE rw = 1 AND NOT status_id = :medicationStatusId " +
                 "ORDER BY t.updated_on";
 

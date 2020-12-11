@@ -56,7 +56,7 @@ public class AllergyIntoleranceRepositoryTest extends UnitRepository {
 	private AllergyIntolerance createMinimumAllergyEntity() {
 		AllergyIntolerance allergy = new AllergyIntolerance();
 		allergy.setPatientId(1);
-		allergy.setSctidCode("code");
+		allergy.setSnomedId(1);
 		allergy.setStatusId("status");
 		allergy.setVerificationStatusId("verification");
 		allergy.setCategoryId("category");

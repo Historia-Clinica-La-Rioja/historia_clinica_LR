@@ -47,7 +47,7 @@ public interface DocumentRepository extends JpaRepository<Document, Long>, Docum
     @Query(value = "SELECT DISTINCT new  net.pladema.person.repository.domain.ProcedureReduced(snomedPr.pt, pr.performedDate) " +
             "FROM DocumentProcedure AS dp " +
             "JOIN Procedure AS pr ON (pr.id = dp.pk.procedureId) " +
-            "JOIN Snomed AS snomedPr ON (pr.sctidCode = snomedPr.id) " +
+            "JOIN Snomed AS snomedPr ON (pr.snomedId = snomedPr.id) " +
             "WHERE dp.pk.documentId = :documentId")
     List<ProcedureReduced> getProceduresByDocuments(@Param("documentId") Long documentId);
 }

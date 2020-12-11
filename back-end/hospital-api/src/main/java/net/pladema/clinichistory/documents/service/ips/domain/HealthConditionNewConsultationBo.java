@@ -15,7 +15,7 @@ public class HealthConditionNewConsultationBo extends ClinicalTerm{
 
     private Integer patientId;
 
-    private String sctidCode;
+    private Integer snomedId;
 
     private String verificationStatusId;
 
@@ -34,7 +34,7 @@ public class HealthConditionNewConsultationBo extends ClinicalTerm{
     public HealthConditionNewConsultationBo(HealthCondition hc) {
         super();
         this.patientId = hc.getPatientId();
-        this.sctidCode = hc.getSctidCode();
+        this.snomedId = hc.getSnomedId();
         this.verificationStatusId = hc.getVerificationStatusId();
         this.startDate = hc.getStartDate();
         this.inactivationDate = hc.getInactivationDate();

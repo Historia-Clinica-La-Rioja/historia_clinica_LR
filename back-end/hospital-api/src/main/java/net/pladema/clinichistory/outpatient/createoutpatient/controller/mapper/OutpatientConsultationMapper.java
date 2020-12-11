@@ -3,6 +3,7 @@ package net.pladema.clinichistory.outpatient.createoutpatient.controller.mapper;
 import net.pladema.clinichistory.documents.controller.dto.HealthConditionNewConsultationDto;
 import net.pladema.clinichistory.documents.service.ips.domain.ImmunizationBo;
 
+import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.SnomedMapper;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.*;
 
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientDocumentBo;
@@ -18,7 +19,7 @@ import org.mapstruct.Named;
 
 import java.util.List;
 
-@Mapper(uses = {LocalDateMapper.class, HealthcareProfessionalMapper.class})
+@Mapper(uses = {LocalDateMapper.class, HealthcareProfessionalMapper.class, SnomedMapper.class})
 public interface OutpatientConsultationMapper {
 
     @Named("fromCreateOutpatientDto")

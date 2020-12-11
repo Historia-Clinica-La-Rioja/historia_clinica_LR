@@ -18,9 +18,10 @@ public interface DocumentVitalSignRepository extends JpaRepository<DocumentVital
 
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.clinichistory.documents.repository.generalstate.domain.ClinicalObservationVo(" +
-            "ovs.id, ovs.sctidCode, ovs.statusId, ovs.value, ovs.effectiveTime) " +
+            "ovs.id, s.sctid, ovs.statusId, ovs.value, ovs.effectiveTime) " +
             "FROM DocumentVitalSign dvs " +
             "JOIN ObservationVitalSign ovs ON (dvs.pk.observationVitalSignId = ovs.id) " +
+            "JOIN Snomed s ON (ovs.snomedId = s.id) " +
             "WHERE dvs.pk.documentId = :documentId " +
             "AND ovs.statusId NOT IN ('"+ ObservationStatus.ERROR+"')")
     List<ClinicalObservationVo> getVitalSignStateFromDocument(@Param("documentId") Long documentId);

@@ -19,7 +19,7 @@ public class SnomedBo extends SelfValidating<SnomedBo> {
     @NotNull(message = "{value.mandatory}")
     @NotEmpty
     @Length(max = 20, message = "{snomed.id.max.value}")
-    private String id;
+    private String sctid;
 
     @NotNull(message = "{value.mandatory}")
     @NotEmpty
@@ -31,16 +31,16 @@ public class SnomedBo extends SelfValidating<SnomedBo> {
     private String parentFsn;
 
     public SnomedBo(Snomed snomed) {
-        this.id = snomed.getId();
+        this.sctid = snomed.getSctid();
         this.pt = snomed.getPt();
         this.parentId = snomed.getParentId();
         this.parentFsn = snomed.getParentFsn();
     }
 
-    public SnomedBo(String id, String pt) {
-        this.id = id;
+    public SnomedBo(String sctid, String pt) {
+        this.sctid = sctid;
         this.pt = pt;
-        this.parentId = id;
+        this.parentId = sctid;
         this.parentFsn = pt;
     }
 
@@ -49,11 +49,11 @@ public class SnomedBo extends SelfValidating<SnomedBo> {
         if (this == o) return true;
         if (!(o instanceof SnomedBo)) return false;
         SnomedBo snomedBo = (SnomedBo) o;
-        return Objects.equals(getId(), snomedBo.getId());
+        return Objects.equals(getSctid(), snomedBo.getSctid());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId());
+        return Objects.hash(getSctid());
     }
 }

@@ -22,7 +22,7 @@ public interface DocumentHealthConditionRepository extends JpaRepository<Documen
             "n.id as noteId, n.description as note) " +
             "FROM DocumentHealthCondition dh " +
             "JOIN HealthCondition hc ON (dh.pk.healthConditionId = hc.id) " +
-            "JOIN Snomed s ON (s.id = hc.sctidCode) " +
+            "JOIN Snomed s ON (s.id = hc.snomedId) " +
             "LEFT JOIN Note n ON (n.id = hc.noteId) " +
             "WHERE dh.pk.documentId = :documentId " +
             "AND NOT hc.verificationStatusId = ('" + ConditionVerificationStatus.ERROR + "')")
@@ -36,7 +36,7 @@ public interface DocumentHealthConditionRepository extends JpaRepository<Documen
             "n.id as noteId, n.description as note) " +
             "FROM DocumentHealthCondition dh " +
             "JOIN HealthCondition hc ON (dh.pk.healthConditionId = hc.id) " +
-            "JOIN Snomed s ON (s.id = hc.sctidCode) " +
+            "JOIN Snomed s ON (s.id = hc.snomedId) " +
             "JOIN ConditionClinicalStatus ccs ON (ccs.id = hc.statusId) " +
             "JOIN ConditionVerificationStatus cvs ON (cvs.id = hc.verificationStatusId) " +
             "LEFT JOIN Note n ON (n.id = hc.noteId) " +

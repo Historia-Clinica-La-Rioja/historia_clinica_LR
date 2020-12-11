@@ -15,7 +15,7 @@ import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 
-@Mapper(uses = {LocalDateMapper.class})
+@Mapper(uses = {LocalDateMapper.class, SnomedMapper.class})
 public interface HealthConditionMapper {
 
     @Named("toHealthHistoryConditionDto")

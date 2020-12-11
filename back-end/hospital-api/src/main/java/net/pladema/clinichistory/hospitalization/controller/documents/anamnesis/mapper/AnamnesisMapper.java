@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.hospitalization.controller.documents.anamnesis.mapper;
 
+import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.SnomedMapper;
 import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import net.pladema.clinichistory.hospitalization.controller.documents.anamnesis.dto.AnamnesisDto;
 import net.pladema.clinichistory.hospitalization.controller.documents.anamnesis.dto.ResponseAnamnesisDto;
@@ -10,7 +11,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-@Mapper(uses = {VitalSignMapper.class, AnthropometricDataMapper.class, LocalDateMapper.class})
+@Mapper(uses = {VitalSignMapper.class, AnthropometricDataMapper.class, LocalDateMapper.class, SnomedMapper.class})
 public interface AnamnesisMapper {
 
     @Named("fromAnamnesisDto")

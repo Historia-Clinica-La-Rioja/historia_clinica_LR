@@ -32,8 +32,11 @@ public class HealthCondition extends SGXAuditableEntity implements Cloneable{
 	@Column(name = "patient_id", nullable = false)
 	private Integer patientId;
 
-	@Column(name = "sctid_code", length = 20, nullable = false)
-	private String sctidCode;
+	@Column(name = "snomed_id", nullable = false)
+	private Integer snomedId;
+
+	@Column(name = "cie10_codes", length = 255, nullable = true)
+	private String cie10Codes;
 
 	@Column(name = "status_id", length = 20, nullable = false)
 	private String statusId;
@@ -69,13 +72,13 @@ public class HealthCondition extends SGXAuditableEntity implements Cloneable{
 		HealthCondition that = (HealthCondition) o;
 		return id.equals(that.id) &&
 				patientId.equals(that.patientId) &&
-				sctidCode.equals(that.sctidCode) &&
+				snomedId.equals(that.snomedId) &&
 				startDate.equals(that.startDate);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, patientId, sctidCode, startDate);
+		return Objects.hash(id, patientId, snomedId, startDate);
 	}
 
 	@Override
@@ -85,7 +88,8 @@ public class HealthCondition extends SGXAuditableEntity implements Cloneable{
 			result = (HealthCondition) super.clone();
 		} catch (CloneNotSupportedException e) {
 			result = new HealthCondition(
-					this.getId(),this.getPatientId(), this.getSctidCode(),
+					this.getId(),this.getPatientId(),
+					this.getSnomedId(), this.getCie10Codes(),
 					this.getStatusId(), this.getVerificationStatusId(),
 					this.getStartDate(), this.getInactivationDate(), this.getMain(),
 					this.getNoteId(), this.getProblemId()

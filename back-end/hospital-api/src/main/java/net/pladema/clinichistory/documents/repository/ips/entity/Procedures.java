@@ -31,8 +31,11 @@ public class Procedures extends SGXAuditableEntity {
 	@Column(name = "patient_id", nullable = false)
 	private Integer patientId;
 
-	@Column(name = "sctid_code", length = 20, nullable = false)
-	private String sctidCode;
+	@Column(name = "snomed_id", nullable = false)
+	private Integer snomedId;
+
+	@Column(name = "cie10_codes", length = 255, nullable = true)
+	private String cie10Codes;
 
 	@Column(name = "status_id", length = 20, nullable = false)
 	private String statusId = ProceduresStatus.COMPLETE;
@@ -43,10 +46,10 @@ public class Procedures extends SGXAuditableEntity {
 	@Column(name = "note_id")
 	private Long noteId;
 
-	public Procedures(Integer patientId, String sctId, String statusId, LocalDate performedDate, Long noteId) {
+	public Procedures(Integer patientId, Integer snomedId, String statusId, LocalDate performedDate, Long noteId) {
 		super();
 		this.patientId = patientId;
-		this.sctidCode = sctId;
+		this.snomedId = snomedId;
 		if (statusId != null)
 			this.statusId = statusId;
 		this.performedDate = performedDate;

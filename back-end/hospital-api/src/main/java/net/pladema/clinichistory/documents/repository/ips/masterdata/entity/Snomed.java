@@ -2,10 +2,7 @@ package net.pladema.clinichistory.documents.repository.ips.masterdata.entity;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
@@ -23,8 +20,12 @@ public class Snomed implements Serializable {
 	private static final long serialVersionUID = -3053291021636483828L;
 
 	@Id
-	@Column(name = "id", length = 20)
-	private String id;
+	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
+
+	@Column(name = "sctid", length = 20)
+	private String sctid;
 
 	@Column(name = "pt", nullable = false)
 	private String pt;
@@ -34,4 +35,11 @@ public class Snomed implements Serializable {
 
 	@Column(name = "parent_fsn", nullable = false)
 	private String parentFsn;
+
+	public Snomed(String sctid, String pt, String parentId, String parentFsn) {
+		this.sctid = sctid;
+		this.pt = pt;
+		this.parentId = parentId;
+		this.parentFsn = parentFsn;
+	}
 }

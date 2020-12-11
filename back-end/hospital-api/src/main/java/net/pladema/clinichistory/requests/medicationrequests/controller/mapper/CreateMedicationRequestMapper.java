@@ -55,7 +55,7 @@ public class CreateMedicationRequestMapper {
         if (snomed == null)
             return null;
         SnomedBo result = new SnomedBo();
-        result.setId(snomed.getId());
+        result.setSctid(snomed.getId());
         result.setPt(snomed.getPt());
         result.setParentFsn(snomed.getParentFsn());
         result.setParentId(snomed.getParentId());

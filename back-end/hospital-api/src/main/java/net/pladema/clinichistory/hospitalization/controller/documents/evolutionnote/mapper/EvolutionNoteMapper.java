@@ -4,6 +4,7 @@ import net.pladema.clinichistory.hospitalization.controller.documents.evolutionn
 import net.pladema.clinichistory.hospitalization.controller.documents.evolutionnote.dto.ResponseEvolutionNoteDto;
 import net.pladema.clinichistory.hospitalization.controller.documents.evolutionnote.dto.evolutiondiagnosis.EvolutionDiagnosisDto;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.AnthropometricDataMapper;
+import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.SnomedMapper;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.VitalSignMapper;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.evolutiondiagnosis.EvolutionDiagnosisBo;
@@ -12,7 +13,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-@Mapper(uses = {VitalSignMapper.class, AnthropometricDataMapper.class, LocalDateMapper.class})
+@Mapper(uses = {VitalSignMapper.class, AnthropometricDataMapper.class, LocalDateMapper.class, SnomedMapper.class})
 public interface EvolutionNoteMapper {
 
     @Named("fromEvolutionNoteDto")

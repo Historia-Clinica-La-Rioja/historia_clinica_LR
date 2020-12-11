@@ -6,6 +6,7 @@ import net.pladema.clinichistory.documents.repository.ips.ObservationVitalSignRe
 import net.pladema.clinichistory.documents.repository.ips.entity.ObservationLab;
 import net.pladema.clinichistory.documents.repository.ips.entity.ObservationVitalSign;
 import net.pladema.clinichistory.documents.service.ips.ClinicalObservationService;
+import net.pladema.clinichistory.documents.service.ips.SnomedService;
 import net.pladema.clinichistory.documents.service.ips.domain.AnthropometricDataBo;
 import net.pladema.clinichistory.documents.service.ips.domain.ClinicalObservationBo;
 import net.pladema.clinichistory.documents.service.ips.domain.VitalSignBo;
@@ -15,6 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -30,12 +33,16 @@ public class ClinicalObservationServiceImpl implements ClinicalObservationServic
 
     private final DocumentService documentService;
 
+    private final SnomedService snomedService;
+
     public ClinicalObservationServiceImpl(ObservationVitalSignRepository observationVitalSignRepository,
                                           ObservationLabRepository observationLabRepository,
-                                          DocumentService documentService) {
+                                          DocumentService documentService,
+                                          SnomedService snomedService) {
         this.observationVitalSignRepository = observationVitalSignRepository;
         this.observationLabRepository = observationLabRepository;
         this.documentService = documentService;
+        this.snomedService = snomedService;
     }
 
     @Override
@@ -130,20 +137,23 @@ public class ClinicalObservationServiceImpl implements ClinicalObservationServic
 
     private ObservationVitalSign createObservationVitalSign(Integer patientId, ClinicalObservationBo observation, EVitalSign eVitalSign) {
         LOG.debug("Input parameters -> patientId {}, ClinicalObservation {}, eVitalSign {}", patientId, observation, eVitalSign);
+        Integer observationSnomedId = snomedService.getLatestIdBySctid(eVitalSign.getSctidCode())
+                .orElseThrow(() -> new EntityNotFoundException("{snomed.not.found}"));
         ObservationVitalSign observationVitalSign = observationVitalSignRepository.save(
-                new ObservationVitalSign(patientId, observation.getValue(), eVitalSign, observation.getEffectiveTime()));
+                new ObservationVitalSign(patientId, observation.getValue(), observationSnomedId, eVitalSign, observation.getEffectiveTime()));
         LOG.debug(OUTPUT, observationVitalSign);
         return observationVitalSign;
     }
 
     private ObservationLab createObservationLab(Integer patientId, ClinicalObservationBo observation, EObservationLab eObservationLab) {
         LOG.debug("Input parameters -> patientId {}, ClinicalObservation {}, eLab {}", patientId, observation, eObservationLab);
+        Integer observationSnomedId = snomedService.getLatestIdBySctid(eObservationLab.getSctidCode())
+                .orElseThrow(() -> new EntityNotFoundException("{snomed.not.found}"));
         ObservationLab observationLab = observationLabRepository.save(
-                new ObservationLab(patientId, observation.getValue(), eObservationLab, observation.getEffectiveTime()));
+                new ObservationLab(patientId, observation.getValue(), observationSnomedId, observation.getEffectiveTime()));
         LOG.debug(OUTPUT, observationLab);
         return observationLab;
     }
-
 
     private ClinicalObservationBo createObservationFromVitalSign(ObservationVitalSign vitalSign) {
         LOG.debug("Input parameters -> VitalSign {}", vitalSign);

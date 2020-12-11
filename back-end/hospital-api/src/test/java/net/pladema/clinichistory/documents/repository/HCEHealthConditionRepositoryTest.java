@@ -9,6 +9,7 @@ import net.pladema.clinichistory.documents.repository.ips.entity.HealthCondition
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.ConditionClinicalStatus;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.ConditionVerificationStatus;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentStatus;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.Snomed;
 import net.pladema.clinichistory.mocks.DocumentsTestMocks;
 import net.pladema.clinichistory.mocks.HealthConditionTestMocks;
 import net.pladema.clinichistory.mocks.SnomedTestMocks;
@@ -45,9 +46,13 @@ public class HCEHealthConditionRepositoryTest extends UnitRepository {
 	public void test_hce_health_condition_success() {
 		Integer patientId = 1;
 
-		createFirstDocument(patientId);
+		Snomed personalSnomed1 = mockSnomed("personal1");
+		Snomed personalSnomed2 = mockSnomed("personal2");
+		Snomed mainDiagnose1 = mockSnomed("mainDiagnose1");
+
+		createFirstDocument(patientId, personalSnomed1, personalSnomed2, mainDiagnose1);
 		createSecondDocument(patientId);
-		createThirdDocument(patientId);
+		createThirdDocument(patientId, personalSnomed1, personalSnomed2, mainDiagnose1);
 
 		List<HCEHealthConditionVo> resultQuery = hCEHealthConditionRepository.getPersonalHistories(patientId);
 
@@ -78,9 +83,13 @@ public class HCEHealthConditionRepositoryTest extends UnitRepository {
 	public void test_hce_family_history_success() {
 		Integer patientId = 1;
 
-		createFirstDocument(patientId);
+		Snomed personalSnomed1 = mockSnomed("personal1");
+		Snomed personalSnomed2 = mockSnomed("personal2");
+		Snomed mainDiagnose1 = mockSnomed("mainDiagnose1");
+
+		createFirstDocument(patientId, personalSnomed1, personalSnomed2, mainDiagnose1);
 		createSecondDocument(patientId);
-		createThirdDocument(patientId);
+		createThirdDocument(patientId, personalSnomed1, personalSnomed2, mainDiagnose1);
 
 		List<HCEHealthConditionVo> resultQuery = hCEHealthConditionRepository.getFamilyHistories(patientId);
 
@@ -104,85 +113,74 @@ public class HCEHealthConditionRepositoryTest extends UnitRepository {
 
 	}
 
-	private void createFirstDocument(Integer patientId){
+	private void createFirstDocument(Integer patientId, Snomed personalSnomed1, Snomed personalSnomed2, Snomed mainDiagnose){
 		Document document = DocumentsTestMocks.createDocument(1, AMBULATORIA, SourceType.OUTPATIENT, DocumentStatus.FINAL);
 		document = save(document);
 
-		String familyCode = "familyCode";
-		save(SnomedTestMocks.createSnomed(familyCode));
-		HealthCondition familyhistory1 = HealthConditionTestMocks.createFamilyHistory(patientId,familyCode, ConditionClinicalStatus.ACTIVE, ConditionVerificationStatus.CONFIRMED);
+		Snomed familySnomed = mockSnomed("familyCode");
+		HealthCondition familyhistory1 = HealthConditionTestMocks.createFamilyHistory(patientId,familySnomed.getId(), ConditionClinicalStatus.ACTIVE, ConditionVerificationStatus.CONFIRMED);
 		save(HealthConditionTestMocks.createHealthConditionDocument(document.getId(), save(familyhistory1).getId()));
 
-		String personalCode = "personal1";
-		save(SnomedTestMocks.createSnomed(personalCode));
-		HealthCondition personalHistory1 = HealthConditionTestMocks.createPersonalHistory(patientId, personalCode, ConditionClinicalStatus.ACTIVE, ConditionVerificationStatus.PRESUMPTIVE);
+		HealthCondition personalHistory1 = HealthConditionTestMocks.createPersonalHistory(patientId, personalSnomed1.getId(), ConditionClinicalStatus.ACTIVE, ConditionVerificationStatus.PRESUMPTIVE);
 		save(HealthConditionTestMocks.createHealthConditionDocument(document.getId(), save(personalHistory1).getId()));
 
-		String personalCode1 = "personal2";
-		save(SnomedTestMocks.createSnomed(personalCode1));
-		HealthCondition personalHistory2 = HealthConditionTestMocks.createPersonalHistory(patientId,personalCode1, ConditionClinicalStatus.INACTIVE, ConditionVerificationStatus.CONFIRMED);
+		HealthCondition personalHistory2 = HealthConditionTestMocks.createPersonalHistory(patientId,personalSnomed2.getId(), ConditionClinicalStatus.INACTIVE, ConditionVerificationStatus.CONFIRMED);
 		save(HealthConditionTestMocks.createHealthConditionDocument(document.getId(), save(personalHistory2).getId()));
 
-		String diagnose1Code = "diagnose1";
-		save(SnomedTestMocks.createSnomed(diagnose1Code));
-		HealthCondition diagnose1 = HealthConditionTestMocks.createDiagnose(patientId,diagnose1Code, ConditionClinicalStatus.INACTIVE, ConditionVerificationStatus.PRESUMPTIVE);
+		Snomed diagnose1Snomed = mockSnomed("diagnose1");
+		HealthCondition diagnose1 = HealthConditionTestMocks.createDiagnose(patientId,diagnose1Snomed.getId(), ConditionClinicalStatus.INACTIVE, ConditionVerificationStatus.PRESUMPTIVE);
 		save(HealthConditionTestMocks.createHealthConditionDocument(document.getId(), save(diagnose1).getId()));
 
-		String mainDiagnosesCode = "mainDiagnose1";
-		HealthCondition mainDiagnoses = HealthConditionTestMocks.createMainDiagnose(patientId,mainDiagnosesCode, ConditionClinicalStatus.ACTIVE);
+		HealthCondition mainDiagnoses = HealthConditionTestMocks.createMainDiagnose(patientId,mainDiagnose.getId(), ConditionClinicalStatus.ACTIVE);
 		save(HealthConditionTestMocks.createHealthConditionDocument(document.getId(), save(mainDiagnoses).getId()));
+	}
+
+	private Snomed mockSnomed(String personal1) {
+		String personalCode = personal1;
+		return save(SnomedTestMocks.createSnomed(personalCode));
 	}
 
 	private void createSecondDocument(Integer patientId){
 		Document document = DocumentsTestMocks.createDocument(1, AMBULATORIA, SourceType.OUTPATIENT, DocumentStatus.FINAL);
 		document = save(document);
 
-		String diagnose2Code = "diagnose2";
-		save(SnomedTestMocks.createSnomed(diagnose2Code));
-		HealthCondition diagnose2 = HealthConditionTestMocks.createDiagnose(patientId,diagnose2Code, ConditionClinicalStatus.ACTIVE, ConditionVerificationStatus.PRESUMPTIVE);
+		Snomed diagnose2Snomed = mockSnomed("diagnose2");
+		HealthCondition diagnose2 = HealthConditionTestMocks.createDiagnose(patientId,diagnose2Snomed.getId(), ConditionClinicalStatus.ACTIVE, ConditionVerificationStatus.PRESUMPTIVE);
 		save(HealthConditionTestMocks.createHealthConditionDocument(document.getId(), save(diagnose2).getId()));
 
-		String diagnose3Code = "diagnose3";
-		save(SnomedTestMocks.createSnomed(diagnose3Code));
-		HealthCondition diagnose3 = HealthConditionTestMocks.createDiagnose(patientId,diagnose3Code, ConditionClinicalStatus.ACTIVE, ConditionVerificationStatus.PRESUMPTIVE);
+		Snomed diagnose3Snomed = mockSnomed("diagnose3");
+		HealthCondition diagnose3 = HealthConditionTestMocks.createDiagnose(patientId,diagnose3Snomed.getId(), ConditionClinicalStatus.ACTIVE, ConditionVerificationStatus.PRESUMPTIVE);
 		save(HealthConditionTestMocks.createHealthConditionDocument(document.getId(), save(diagnose3).getId()));
 
-		HealthCondition diagnose4 = HealthConditionTestMocks.createDiagnose(patientId,diagnose3Code, ConditionClinicalStatus.ACTIVE, ConditionVerificationStatus.CONFIRMED);
+		HealthCondition diagnose4 = HealthConditionTestMocks.createDiagnose(patientId,diagnose3Snomed.getId(), ConditionClinicalStatus.ACTIVE, ConditionVerificationStatus.CONFIRMED);
 		save(HealthConditionTestMocks.createHealthConditionDocument(document.getId(), save(diagnose4).getId()));
 
 	}
 
 
-	private void createThirdDocument(Integer patientId){
+	private void createThirdDocument(Integer patientId, Snomed personalSnomed1, Snomed personalSnomed2, Snomed mainDiagnose){
 		Document document = DocumentsTestMocks.createDocument(1, AMBULATORIA, SourceType.OUTPATIENT, DocumentStatus.FINAL);
 		document = save(document);
 
-		String familyCode2 = "familyCode2";
-		save(SnomedTestMocks.createSnomed(familyCode2));
-		HealthCondition familyhistory2 = HealthConditionTestMocks.createFamilyHistory(patientId,familyCode2, ConditionClinicalStatus.ACTIVE, ConditionVerificationStatus.CONFIRMED);
+		Snomed familySnomed2 = mockSnomed("familyCode2");
+		HealthCondition familyhistory2 = HealthConditionTestMocks.createFamilyHistory(patientId,familySnomed2.getId(), ConditionClinicalStatus.ACTIVE, ConditionVerificationStatus.CONFIRMED);
 		save(HealthConditionTestMocks.createHealthConditionDocument(document.getId(), save(familyhistory2).getId()));
 
-		String personal3Code = "personal3";
-		save(SnomedTestMocks.createSnomed(personal3Code));
-		HealthCondition personalHistory3 = HealthConditionTestMocks.createPersonalHistory(patientId,personal3Code, ConditionClinicalStatus.ACTIVE, ConditionVerificationStatus.CONFIRMED);
+		Snomed personal3Snomed = mockSnomed("personal3");
+		HealthCondition personalHistory3 = HealthConditionTestMocks.createPersonalHistory(patientId,personal3Snomed.getId(), ConditionClinicalStatus.ACTIVE, ConditionVerificationStatus.CONFIRMED);
 		save(HealthConditionTestMocks.createHealthConditionDocument(document.getId(), save(personalHistory3).getId()));
 
-		String diagnose4Code = "diagnose4";
-		save(SnomedTestMocks.createSnomed(diagnose4Code));
-		HealthCondition diagnose5 = HealthConditionTestMocks.createDiagnose(patientId,diagnose4Code, ConditionClinicalStatus.ACTIVE, ConditionVerificationStatus.ERROR);
+		Snomed diagnose4Snomed = mockSnomed("diagnose4");
+		HealthCondition diagnose5 = HealthConditionTestMocks.createDiagnose(patientId,diagnose4Snomed.getId(), ConditionClinicalStatus.ACTIVE, ConditionVerificationStatus.ERROR);
 		save(HealthConditionTestMocks.createHealthConditionDocument(document.getId(), save(diagnose5).getId()));
 
-		String mainDiagnose1 = "mainDiagnose1";
-		save(SnomedTestMocks.createSnomed(mainDiagnose1));
-		HealthCondition mainDiagnoses1 = HealthConditionTestMocks.createMainDiagnose(patientId,mainDiagnose1, ConditionClinicalStatus.INACTIVE);
+		HealthCondition mainDiagnoses1 = HealthConditionTestMocks.createMainDiagnose(patientId,mainDiagnose.getId(), ConditionClinicalStatus.INACTIVE);
 		save(HealthConditionTestMocks.createHealthConditionDocument(document.getId(), save(mainDiagnoses1).getId()));
 
-		String personalCode = "personal1";
-		HealthCondition personalHistory1 = HealthConditionTestMocks.createChronicPersonalHistory(patientId, personalCode, ConditionVerificationStatus.PRESUMPTIVE);
+		HealthCondition personalHistory1 = HealthConditionTestMocks.createChronicPersonalHistory(patientId, personalSnomed1.getId(), ConditionVerificationStatus.PRESUMPTIVE);
 		save(HealthConditionTestMocks.createHealthConditionDocument(document.getId(), save(personalHistory1).getId()));
 
-		String personalCode1 = "personal2";
-		HealthCondition personalHistory2 = HealthConditionTestMocks.createChronicPersonalHistory(patientId,personalCode1, ConditionVerificationStatus.CONFIRMED);
+		HealthCondition personalHistory2 = HealthConditionTestMocks.createChronicPersonalHistory(patientId,personalSnomed2.getId(), ConditionVerificationStatus.CONFIRMED);
 		save(HealthConditionTestMocks.createHealthConditionDocument(document.getId(), save(personalHistory2).getId()));
 	}
 

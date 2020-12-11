@@ -30,13 +30,13 @@ public class HCEAllergyIntoleranceRepositoryImpl implements HCEAllergyIntoleranc
         String sqlString = "with temporal as (" +
                 "SELECT DISTINCT " +
                 "ai.id, " +
-                "ai.sctid_code, " +
+                "ai.snomed_id, " +
                 "ai.status_id, " +
                 "ai.verification_status_id, " +
                 "ai.category_id, " +
                 "ai.start_date, " +
                 "ai.updated_on, " +
-                "row_number() over (partition by ai.sctid_code order by ai.updated_on desc) as rw " +
+                "row_number() over (partition by ai.snomed_id order by ai.updated_on desc) as rw " +
                 "FROM document d " +
                 "JOIN document_allergy_intolerance dai ON d.id = dai.document_id " +
                 "JOIN allergy_intolerance ai ON dai.allergy_intolerance_id = ai.id " +
@@ -44,9 +44,9 @@ public class HCEAllergyIntoleranceRepositoryImpl implements HCEAllergyIntoleranc
                 "AND d.status_id = :documentStatusId " +
                 "AND ai.patient_id = :patientId " +
                 ") " +
-                "SELECT t.id AS id, s.id AS sctid, s.pt, t.status_id, t.verification_status_id, t.category_id, t.start_date " +
+                "SELECT t.id AS id, s.sctid AS sctid, s.pt, t.status_id, t.verification_status_id, t.category_id, t.start_date " +
                 "FROM temporal t " +
-                "JOIN snomed s ON t.sctid_code = s.id " +
+                "JOIN snomed s ON t.snomed_id = s.id " +
                 "WHERE rw = 1 AND NOT status_id = :allergyIntoleranceStatus " +
                 "ORDER BY t.updated_on desc ";
 
