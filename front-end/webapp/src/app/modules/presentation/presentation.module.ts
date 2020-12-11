@@ -26,6 +26,7 @@ import { PersonIdentificationPipe } from './pipes/person-identification.pipe';
 import { EditableFieldComponent } from './components/editable-field/editable-field.component';
 import { LogoComponent } from './components/logo/logo.component';
 import { DockPopupComponent } from '@presentation/components/dock-popup/dock-popup.component';
+import { FiltersCardComponent } from './components/filters-card/filters-card.component';
 
 @NgModule({
 	declarations: [
@@ -52,7 +53,8 @@ import { DockPopupComponent } from '@presentation/components/dock-popup/dock-pop
 		PersonIdentificationPipe,
 		EditableFieldComponent,
 		DockPopupComponent,
-		LogoComponent
+		LogoComponent,
+		FiltersCardComponent
 	],
 	imports: [
 		CommonModule,
@@ -82,7 +84,8 @@ import { DockPopupComponent } from '@presentation/components/dock-popup/dock-pop
 		ViewHourMinutePipe,
 		PersonIdentificationPipe,
 		EditableFieldComponent,
-		DockPopupComponent
+		DockPopupComponent,
+		FiltersCardComponent
 	],
 	entryComponents: [
 		DockPopupComponent
