@@ -20,7 +20,60 @@ export const MOCKS_GUARDIA = [
 							person: {
 								firstName: 'Silvia',
 								lastName: 'Martinez',
-							}
+							},
+							typeId: 1
+						},
+						triage: {
+							id: 1,
+							description: 'Nivel 1',
+							color: '#fafafa',
+						},
+						type: {
+							id: 1,
+							description: 'Guardia adulto'
+						},
+						state: {
+							id: 1,
+							description: 'En atención'
+						},
+						doctorsOffice: {
+							id: 1,
+							description: 'Enfermeria',
+						},
+					},
+					{
+						id: 67,
+						creationDate: {
+							date: { day: 1, month: 3, year: 2020 },
+							time: { hour: 15, minute: 10 }
+						},
+						patient: {
+							id: 9,
+							typeId: 3
+						},
+						triage: {
+							id: 1,
+							description: 'Nivel 1',
+							color: '#fafafa',
+						},
+						type: {
+							id: 1,
+							description: 'Guardia adulto'
+						},
+						state: {
+							id: 1,
+							description: 'En atención'
+						},
+						doctorsOffice: {
+							id: 1,
+							description: 'Enfermeria',
+						},
+					},
+					{
+						id: 68,
+						creationDate: {
+							date: { day: 1, month: 3, year: 2020 },
+							time: { hour: 12, minute: 29 }
 						},
 						triage: {
 							id: 1,
