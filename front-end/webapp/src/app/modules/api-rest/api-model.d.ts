@@ -425,7 +425,7 @@ export interface DocumentsSummaryDto extends Serializable {
     lastEvaluationNote: EvaluationNoteSummaryDto;
 }
 
-export interface DosageDto extends Serializable {
+export interface DosageInfoDto extends Serializable {
     duration: number;
     durationUnit: string;
     frequency: number;
@@ -571,6 +571,11 @@ export interface HealthCareProfessionalGroupDto {
 
 export interface HealthConditionDto extends ClinicalTermDto {
     verificationId?: string;
+}
+
+export interface HealthConditionInfoDto extends Serializable {
+    id: number;
+    snomed: SnomedDto;
 }
 
 export interface HealthConditionNewConsultationDto extends Serializable {
@@ -756,26 +761,25 @@ export interface MedicationDto extends ClinicalTermDto {
 }
 
 export interface MedicationInfoDto extends Serializable {
-    chronic?: boolean;
-    dosage: DosageDto;
-    expired?: boolean;
-    healthCondition: SnomedDto;
-    medicationRequestId?: number;
-    observations?: string;
+    dosage: DosageInfoDto;
+    expired: boolean;
+    healthCondition: HealthConditionInfoDto;
+    observations: string;
     snomed: SnomedDto;
     startDate: DateDto;
-    statusId?: string;
+    statusId: string;
+}
+
+export interface NewDosageDto extends Serializable {
+    chronic: boolean;
+    diary: boolean;
+    duration: number;
+    frequency: number;
 }
 
 export interface NewMedicalRequestDto {
     healthConditionSnomed: SnomedDto;
     observations: string;
-}
-
-export interface NewMedicationRequestDto extends Serializable {
-    hasRecipe: boolean;
-    medicalCoverageId: number;
-    medications: MedicationInfoDto[];
 }
 
 export interface NewServiceRequestListDto extends Serializable {
@@ -963,6 +967,19 @@ export interface PersonalInformationDto {
     identificationNumber: string;
     identificationType: IdentificationTypeDto;
     phoneNumber: string;
+}
+
+export interface PrescriptionDto extends Serializable {
+    hasRecipe: boolean;
+    items: PrescriptionItemDto[];
+    medicalCoverageId: number;
+}
+
+export interface PrescriptionItemDto extends Serializable {
+    dosage?: NewDosageDto;
+    healthConditionId: number;
+    observations?: string;
+    snomed: SnomedDto;
 }
 
 export interface PrivateHealthInsuranceDetailsDto {

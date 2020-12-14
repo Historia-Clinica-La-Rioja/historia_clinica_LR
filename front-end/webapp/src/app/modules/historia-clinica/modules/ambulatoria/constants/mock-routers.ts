@@ -14,10 +14,13 @@ export const MOCKS_ORDERS = [
 							id: '11111',
 							pt: 'IBUPROFENO comprimido 600mg',
 						},
-						statusId: '44444',
+						statusId: '44444',					
 						healthCondition: {
-							id: '2222',
-							pt: 'ANGINAS'
+							id: 6,
+							snomed: {
+								id: '2222',
+								pt: 'ANGINAS'
+							}
 						},
 						expired: true,
 						dosage: {
@@ -31,7 +34,6 @@ export const MOCKS_ORDERS = [
 							month: 5,
 							day: 14
 						},
-						chronic: false,	
 						observations: 'Tomarlo durante las mañanas en ayuno',
 						medicationRequestId: 1				
 					},
@@ -40,10 +42,13 @@ export const MOCKS_ORDERS = [
 							id: '333',
 							pt: 'TAFIROL comprimido 1g',
 						},
-						statusId: '44444',
+						statusId: '44444',				
 						healthCondition: {
-							id: '2222',
-							pt: 'PAPERA'
+							id: 8,
+							snomed: {
+								id: '2222',
+								pt: 'PAPERA'
+							}
 						},
 						expired: false,
 						dosage: {
@@ -54,8 +59,7 @@ export const MOCKS_ORDERS = [
 							year: 2020,
 							month: 5,
 							day: 13
-						},
-						chronic: true,		
+						},	
 						observations: 'Tomar antes de las comidas',
 						medicationRequestId: 1					
 					},
@@ -64,10 +68,13 @@ export const MOCKS_ORDERS = [
 							id: '123',
 							pt: 'PARACETAMOL comprimido 1g',
 						},
-						statusId: '44444',
+						statusId: '44444',			
 						healthCondition: {
-							id: '2222',
-							pt: 'PAPERA'
+							id: 8,
+							snomed: {
+								id: '2222',
+								pt: 'PAPERA'
+							}
 						},
 						expired: false,
 						startDate: {
@@ -75,7 +82,6 @@ export const MOCKS_ORDERS = [
 							month: 5,
 							day: 18
 						},
-						chronic: true,
 						medicationRequestId: null										
 					},
 					{
@@ -83,10 +89,13 @@ export const MOCKS_ORDERS = [
 							id: '777',
 							pt: 'BAYASPIRINA comprimido 1g',
 						},
-						statusId: '44444',
+						statusId: '44444',			
 						healthCondition: {
-							id: '2222',
-							pt: 'PAPERA'
+							id: 8,
+							snomed: {
+								id: '2222',
+								pt: 'PAPERA'
+							}
 						},
 						expired: false,
 						dosage: {
@@ -98,7 +107,6 @@ export const MOCKS_ORDERS = [
 							month: 11,
 							day: 17
 						},
-						chronic: true,
 						medicationRequestId: 2					
 					}
 				]				
@@ -323,20 +331,26 @@ export const MOCKS_ORDERS = [
 						id: 4,
 						startDate: '2020-07-13',
 						inactivationDate: '2020-07-13',
-						statusId: '12312',
-						snomed: {
-							id: '2222',
-							pt: 'ANGINAS'
+						statusId: '12312',											
+						healthCondition: {
+							id: 6,
+							snomed: {
+								id: '2222',
+								pt: 'ANGINAS'
+							}
 						},
 					},
 					{
 						id: 8,
 						startDate: '2020-07-13',
 						inactivationDate: '2020-07-13',
-						statusId: '12312',
-						snomed: {
-							id: '2222',
-							pt: 'PAPERA'
+						statusId: '12312',											
+						healthCondition: {
+							id: 6,
+							snomed: {
+								id: '2222',
+								pt: 'ANGINAS'
+							}
 						},
 					},
 				]
@@ -360,7 +374,7 @@ export const MOCKS_ORDERS = [
 		path: 'paciente/:idPaciente/ordenes/nueva-receta/confirmar-receta',
 		loads: [
 			{
-				name: 'MedicationRequest.create(patientId: number): NewMedicationRequestDto', 
+				name: 'MedicationRequest.create(patientId: number): PrescriptionDto', 
 				roles: 'Todo ESPECIALISTA_MEDICO, PROFESIONAL DE LA SALUD sobre la institución',
 				comments: 'Los siguientes campos pueden ser nulos: observaciones, tiempo de administración, intervalo de administración',
 				path: '/api/institutions/{institutionId}/patient/{patientId}/medication-requests',
@@ -374,15 +388,12 @@ export const MOCKS_ORDERS = [
 								id: '11111',
 								pt: 'IBUPROFENO comprimido 600mg',
 							},					
-							healthCondition: {
-								id: '2222',
-								pt: 'ANGINAS'
-							},
+							healthConditionId: 6,
 							dosage: {
+								diary: false,
 								frecuency: 4,
-								periodUnit: 'horas',
+								chronic: false,
 								duration: 4,
-								durationUnit: 'días'
 							},	
 							observations: 'Tomarlo durante las mañanas en ayuno'					
 						}

@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @AllArgsConstructor
-public class DosageDto implements Serializable {
+public class DosageInfoDto implements Serializable {
 
     private Integer frequency;
 
@@ -18,4 +18,5 @@ public class DosageDto implements Serializable {
     private Integer duration;
 
     private String durationUnit;
+
 }

@@ -1,4 +1,4 @@
-package net.pladema.clinichistory.requests.medicationrequests.controller.dto;
+package net.pladema.clinichistory.requests.controller.dto;
 
 
 import com.sun.istack.Nullable;
@@ -13,7 +13,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class NewMedicationRequestDto implements Serializable {
+public class PrescriptionDto implements Serializable {
 
     @NotNull
     private boolean hasRecipe;
@@ -22,5 +22,5 @@ public class NewMedicationRequestDto implements Serializable {
     private Integer medicalCoverageId;
 
     @NotEmpty
-    private List<MedicationInfoDto> medications = new ArrayList();
+    private List<PrescriptionItemDto> items = new ArrayList();
 }
