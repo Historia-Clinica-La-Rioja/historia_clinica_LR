@@ -50,3 +50,14 @@ import { FeatureFlagService } from "@core/services/feature-flag.service";
 > Aclaración: hay que tener cuidado con el import ya que hay que incluir el .d porque los archivos de definiciones (*.d.ts) no pueden contener tipos como este `const enum`, ver:
 >   1. Bug reportado en Angular (cerrado): https://github.com/angular/angular-cli/issues/4874
 >   2. Bug reportado en TypeScript: https://github.com/microsoft/TypeScript/issues/17552
+
+
+#### Uso de FF mediante guards
+
+Para evaluar un ff desde un router es posible hacerlo mediante `FeatureFlagGuard` de la siguiente forma:
+
+```typescript 
+canActivate: [FeatureFlagGuard],
+data: {
+	featureFlag: AppFeature.CUSTOM_FLAG
+}
