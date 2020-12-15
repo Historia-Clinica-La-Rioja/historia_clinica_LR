@@ -1,7 +1,3 @@
-// import { 
-//     // detects the user’s browser locale
-//     resolveBrowserLocale,
-// } from 'react-admin';
 import polyglotI18nProvider from 'ra-i18n-polyglot';
 
 // translations
@@ -13,7 +9,7 @@ const messages = {
     es: spanishMessages,
 }
 
-const i18nProvider = polyglotI18nProvider(locale => 
+const i18nProvider = polyglotI18nProvider(locale =>
     messages[locale] ? messages[locale] : messages.es,
     'es'
 );

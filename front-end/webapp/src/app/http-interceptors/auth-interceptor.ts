@@ -27,7 +27,7 @@ export class AuthInterceptor implements HttpInterceptor {
 	private refreshTokenSubject: ReplaySubject<string>;
 
 	constructor(
-		private authenticationService: AuthenticationService,
+		private readonly authenticationService: AuthenticationService,
 	) { }
 
 	intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {

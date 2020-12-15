@@ -47,8 +47,7 @@ public class ImageFileService {
         try {
             result = streamFile.readFileAsString(path, ENCODING);
         } catch (IOException e) {
-            LOG.error("Cannot read image file at {}", path);
-            e.printStackTrace();
+            LOG.error("Cannot read image file at {}", path, e);
         }
         LOG.debug(OUTPUT, imageDataToString(result));
         return result;
@@ -63,8 +62,7 @@ public class ImageFileService {
             LOG.debug(OUTPUT, result);
             return result;
         } catch (IOException e) {
-            LOG.error("Cannot save image file at {}", path);
-            e.printStackTrace();
+            LOG.error("Cannot save image file at {}", path, e);
             return false;
         }
     }

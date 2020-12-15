@@ -44,6 +44,7 @@ export class AuthService {
 
 	logout() {
 		localStorage.removeItem(TOKEN_KEY);
+		localStorage.removeItem(REFRESH_TOKEN_KEY);
 	}
 
 	loginOauth(code: string): Observable<JWTokenDto> {

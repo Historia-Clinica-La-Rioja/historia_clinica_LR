@@ -11,7 +11,7 @@ const isTokenExpired = (token: string): boolean => {
 	const tokenExpirationDate = getTokenExpirationDate(token);
 	if (tokenExpirationDate === null) return false;
 	let actualDate = new Date().valueOf()/1000;
-	return !(tokenExpirationDate.valueOf() > actualDate);
+	return tokenExpirationDate.valueOf() <= actualDate;
 }
 
 export const canRefreshToken = (token: string): boolean => {

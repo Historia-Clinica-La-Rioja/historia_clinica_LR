@@ -10,7 +10,7 @@ import { environment } from '@environments/environment';
 export class AccountService {
 
 	constructor(
-		private http: HttpClient,
+		private readonly http: HttpClient,
 	) { }
 
 	public getPermissions(): Observable<PermissionsDto> {

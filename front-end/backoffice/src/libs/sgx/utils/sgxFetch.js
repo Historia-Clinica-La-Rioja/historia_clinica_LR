@@ -1,5 +1,5 @@
 /**
- * fetchUtils.fetchJson() function as HTTP client. 
+ * fetchUtils.fetchJson() function as HTTP client.
  * It’s similar to HTML5 fetch(), except it handles JSON decoding and HTTP error codes automatically.
  */
 import { fetchUtils } from 'react-admin';
