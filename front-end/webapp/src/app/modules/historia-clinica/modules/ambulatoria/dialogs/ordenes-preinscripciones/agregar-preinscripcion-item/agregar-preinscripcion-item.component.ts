@@ -68,7 +68,7 @@ export class AgregarPreinscripcionItemComponent implements OnInit {
 	onSearch(searchValue: string): void {
 		if (searchValue) {
 			this.searching = true;
-			this.snowstormService.getSNOMEDConcepts({term: searchValue, ecl: this.SEMANTICS_CONFIG.medicine})
+			this.snowstormService.getSNOMEDConcepts({term: searchValue, ecl: this.SEMANTICS_CONFIG[this.data.eclTerm]})
 				.subscribe(
 					results => {
 						this.conceptsResultsTable = this.buildConceptsResultsTable(results.items);
@@ -160,6 +160,7 @@ export class NewPrescriptionItemData {
 	titleLabel: string;
 	searchSnomedLabel: string;
 	showDosage: boolean;
+	eclTerm: string;
 }
 
 export class NewPrescriptionItem {

@@ -29,6 +29,7 @@ export class NuevaPreinscripcionComponent implements OnInit {
 				titleLabel: this.data.childData.titleLabel,
 				searchSnomedLabel: this.data.childData.searchSnomedLabel,
 				showDosage: this.data.childData.showDosage,
+				eclTerm: this.data.childData.eclTerm,
 			},
 			width: '35%',
 		});
@@ -56,5 +57,6 @@ export class NewPrescriptionData {
 		titleLabel: string;
 		searchSnomedLabel: string;
 		showDosage: boolean;
+		eclTerm: string;
 	}
 }
