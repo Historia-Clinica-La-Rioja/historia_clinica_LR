@@ -432,8 +432,19 @@ export interface DosageInfoDto extends Serializable {
     periodUnit: string;
 }
 
+export interface ECAdministrativeDto extends Serializable {
+}
+
 export interface EffectiveClinicalObservationDto extends ClinicalObservationDto {
     effectiveTime: string;
+}
+
+export interface EmergencyCareDto extends Serializable {
+    administrative: NewECAdministrativeDto;
+    triage: TriageDto;
+}
+
+export interface EmergencyCareListDto extends Serializable {
 }
 
 export interface EpicrisisDto extends Serializable {
@@ -777,6 +788,9 @@ export interface NewDosageDto extends Serializable {
     frequency?: number;
 }
 
+export interface NewECAdministrativeDto extends ECAdministrativeDto {
+}
+
 export interface NewMedicalRequestDto {
     healthConditionSnomed: SnomedDto;
     observations: string;
@@ -1048,6 +1062,10 @@ export interface ResponseAnamnesisDto extends AnamnesisDto {
     id: number;
 }
 
+export interface ResponseEmergencyCareDto extends ECAdministrativeDto {
+    id: number;
+}
+
 export interface ResponseEpicrisisDto extends EpicrisisDto {
     id: number;
 }
@@ -1131,6 +1149,33 @@ export interface TimeDto {
 export interface TimeRangeDto {
     from: string;
     to: string;
+}
+
+export interface TriageAdministrativeDto extends TriageDto {
+}
+
+export interface TriageAdultGynecologicalDto extends TriageNoAdministrativeDto {
+}
+
+export interface TriageCategoryDto extends Serializable {
+}
+
+export interface TriageDetailsDto extends Serializable {
+}
+
+export interface TriageDto extends Serializable {
+    categoryId: number;
+    doctorsOfficeId: number;
+}
+
+export interface TriageListDto extends Serializable {
+}
+
+export interface TriageNoAdministrativeDto extends TriageDto {
+    notes: string;
+}
+
+export interface TriagePediatricDto extends TriageNoAdministrativeDto {
 }
 
 export interface UserDto extends AbstractUserDto {
