@@ -9,7 +9,53 @@
 
 	<section id="body">
 		<app-filters-card [cardTitle]="'guardia.home.episodes.TITLE'">
-			<div results>List go here</div>
+			<div results fxLayout="column" fxLayoutGap="15px" class="results-container">
+				<mat-card *ngFor="let episode of episodes" class="episode-card">
+					<div fxLayout="row" fxFlexAlign="center" style="padding: 0 15px">
+
+						<div fxFlex="30%" fxLayout="row">
+							<mat-card-header>
+								<div id="avatar" mat-card-avatar class="header-image"></div>
+								<mat-card-title>
+									<div fxLayout="column">
+										<span class="mat-body-strong" *ngIf="episode.patient?.typeId !== 3 else temporal">
+											{{ episode.patient?.person?.firstName }} {{ episode.patient?.person?.lastName }}
+										</span>
+									</div>
+								</mat-card-title>
+								<mat-card-subtitle>
+									<span> ID Paciente {{ episode.patient?.id }}</span>
+								</mat-card-subtitle>
+							</mat-card-header>
+
+							<ng-template #temporal>
+								<span class="mat-body-strong">Paciente temporal</span>
+							</ng-template>
+						</div>
+
+						<div fxFlex="30%" fxLayout="column">
+							<span>{{ episode.triage.description }}</span>
+							<span>{{ episode.type.description }}</span>
+						</div>
+
+						<div fxFlex="30%" fxLayout="column">
+							<span *ngIf="episode.state.id === 2 else enAtencion">
+								{{ episode.state.description }}: {{ episode.waitingTime }} min</span>
+							<span> {{ episode.doctorsOffice.description }} </span>
+
+							<ng-template #enAtencion>
+								<span>{{ episode.state.description | uppercase }}</span>
+							</ng-template>
+						</div>
+
+						<div id="more_actions" fxLayout="row" fxLayoutAlign="flex-end" fxFlex="10%">
+							<button mat-icon-button>
+								<mat-icon>more_vert</mat-icon>
+							</button>
+						</div>
+					</div>
+				</mat-card>
+			</div>
 		</app-filters-card>
 	</section>
 </app-content>
