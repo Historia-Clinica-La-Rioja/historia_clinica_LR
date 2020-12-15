@@ -13,7 +13,7 @@ export const MOCKS_GUARDIA = [
 						id: 66,
 						creationDate: {
 							date: { day: 1, month: 1, year: 2020 },
-							time: { hour: 10, minute: 30 }
+							time: { hours: 10, minutes: 30 }
 						},
 						patient: {
 							id: 9,
@@ -45,7 +45,7 @@ export const MOCKS_GUARDIA = [
 						id: 67,
 						creationDate: {
 							date: { day: 1, month: 3, year: 2020 },
-							time: { hour: 15, minute: 10 }
+							time: { hours: 15, minutes: 10 }
 						},
 						patient: {
 							id: 9,
@@ -73,7 +73,7 @@ export const MOCKS_GUARDIA = [
 						id: 68,
 						creationDate: {
 							date: { day: 1, month: 3, year: 2020 },
-							time: { hour: 12, minute: 29 }
+							time: { hours: 12, minutes: 29 }
 						},
 						triage: {
 							id: 1,
@@ -85,8 +85,8 @@ export const MOCKS_GUARDIA = [
 							description: 'Guardia adulto'
 						},
 						state: {
-							id: 1,
-							description: 'En atención'
+							id: 2,
+							description: 'En espera'
 						},
 						doctorsOffice: {
 							id: 1,
@@ -255,7 +255,7 @@ export const MOCKS_GUARDIA = [
 					},
 					creationDate: {
 						date: { day: 1, month: 1, year: 2020 },
-						time: { hour: 10, minute: 30 }
+						time: { hours: 10, minutes: 30 }
 					},
 					reasons: [
 						{
@@ -274,7 +274,7 @@ export const MOCKS_GUARDIA = [
 						id: 1,
 						callDate: {
 							date: { day: 1, month: 1, year: 2020 },
-							time: { hour: 9, minute: 30 }
+							time: { hours: 9, minutes: 30 }
 						},
 						plateNumber: 'ABC 111',
 						firstName: 'Ricardo',
