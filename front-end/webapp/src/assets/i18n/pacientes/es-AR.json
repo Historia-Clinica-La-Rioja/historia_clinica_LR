@@ -77,6 +77,17 @@
 				"ERROR": "Error al editar un paciente",
 				"SUCCESS": "El paciente se editó exitosamente"
 			}
+		},
+		"patient_picker": {
+			"SEARCH_PATIENT": "Buscar Paciente",
+			"SELECT_PATIENT": "Seleccione un paciente",
+			"forms": {
+				"IDENTIF_TYPE": "Tipo",
+				"IDENTIFICATION_NUMBER": "Nro de documento",
+				"GENDER": "Sexo",
+				"PATIENT_ID": "ID Paciente"
+			},
+			"PATIENT_NOT_FOUND":"Paciente no encontrado"
 		}
 	}
 }

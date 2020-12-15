@@ -1,0 +1,48 @@
+app-patient-card ::ng-deep .mat-card-header .mat-card-title {
+	font-size: 14px;
+}
+
+app-patient-card ::ng-deep .mat-card-md-image {
+	width: 60px;
+    height: 60px;
+}
+
+app-patient-card ::ng-deep mat-card.mat-card {
+	min-height: 11px !important;
+}
+
+app-patient-card ::ng-deep .mat-card-subtitle {
+	font-size: 11px;
+}
+
+.tabs {
+	font-size: 14px;
+}
+
+.form-search {
+	width: 65%;
+	padding: 20px;
+}
+
+.gender {
+	padding-bottom: 20px;
+}
+
+.results {
+	width: 100%;
+	padding: 20px;
+	background-color: #f3efef8e;
+}
+
+.patient-cards {
+	width: 100%;
+	padding-top: 10px;
+}
+
+.patient-card {
+	width: 100%;
+}
+
+.genders {
+	padding-top: 8px;
+}

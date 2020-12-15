@@ -5,22 +5,22 @@ import { GenderDto, IdentificationTypeDto } from '@api-rest/api-model';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
 export class PersonMasterDataService {
 
-  constructor(
-    private http: HttpClient
-  ) { }
+	constructor(
+		private http: HttpClient
+	) { }
 
-  getGenders(): Observable<GenderDto[]>{
-		 let url = `${environment.apiBase}/person/masterdata/genders`;
-		 return this.http.get<GenderDto[]>(url);
-  }
+	getGenders(): Observable<GenderDto[]> {
+		let url = `${environment.apiBase}/person/masterdata/genders`;
+		return this.http.get<GenderDto[]>(url);
+	}
 
 
-	getIdentificationTypes(): Observable<IdentificationTypeDto[]>{
+	getIdentificationTypes(): Observable<IdentificationTypeDto[]> {
 		let url = `${environment.apiBase}/person/masterdata/identificationTypes`;
-    return this.http.get<IdentificationTypeDto[]>(url);
+		return this.http.get<IdentificationTypeDto[]>(url);
 	}
 }
