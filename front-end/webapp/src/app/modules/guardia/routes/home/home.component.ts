@@ -4,6 +4,7 @@ import { EmergencyCareEpisodeDto, EmergencyCareEpisodeService } from '@api-rest/
 import { DateTimeDto } from '@api-rest/api-model';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { differenceInHours, differenceInMinutes } from 'date-fns';
+import { EstadosEpisodio, Triages } from '../../constants/masterdata';
 
 @Component({
 	selector: 'app-home',
@@ -12,6 +13,9 @@ import { differenceInHours, differenceInMinutes } from 'date-fns';
 })
 export class HomeComponent implements OnInit {
 
+	readonly estadosEpisodio = EstadosEpisodio;
+	readonly triages = Triages;
+	readonly PACIENTE_TEMPORAL = 3;
 	episodes: any[];
 
 	constructor(
@@ -22,11 +26,11 @@ export class HomeComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.emergencyCareEpisodeService.getAll().subscribe(episodes => {
-
 			this.episodes = episodes.map(episode => {
 				return {
 					...episode,
-					waitingTime: this.calculateWaitingTime(episode.creationDate)
+					waitingTime: episode.state.id === this.estadosEpisodio.EN_ESPERA ?
+						this.calculateWaitingTime(episode.creationDate) : undefined
 				};
 			});
 		});
@@ -37,6 +41,10 @@ export class HomeComponent implements OnInit {
 		const creationDate = dateTimeDtoToDate(dateTime);
 		const now = new Date();
 		return differenceInMinutes(now, creationDate);
+	}
+
+	goToEpisode(id: number) {
+		console.log(id);
 	}
 
 	goToMockup(): void {

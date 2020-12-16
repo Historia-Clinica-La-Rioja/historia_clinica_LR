@@ -1,0 +1,14 @@
+export enum EstadosEpisodio {
+	EN_ATENCION = 1,
+	EN_ESPERA = 2,
+	FINALIZADO_POR_AUSENCIA = 3,
+	FINALIZADO_POR_ALTA = 4
+}
+
+export enum Triages {
+	ROJO_NIVEL_1 = 1,
+	NARANJA_NIVEL_2 = 2,
+	AMARILLO_NIVEL_3 = 3,
+	VERDE_NIVEL_4 = 4,
+	AZUL_NIVEL_5 = 5,
+}
