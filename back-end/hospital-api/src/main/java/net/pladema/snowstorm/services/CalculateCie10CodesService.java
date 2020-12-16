@@ -1,11 +1,9 @@
 package net.pladema.snowstorm.services;
 
-import net.pladema.patient.controller.dto.BasicPatientDto;
-
-import java.util.List;
+import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 
 public interface CalculateCie10CodesService {
 
-    List<String> execute(String snomedCode, BasicPatientDto patient);
+    String execute(String sctid, PatientInfoBo patient);
 
 }

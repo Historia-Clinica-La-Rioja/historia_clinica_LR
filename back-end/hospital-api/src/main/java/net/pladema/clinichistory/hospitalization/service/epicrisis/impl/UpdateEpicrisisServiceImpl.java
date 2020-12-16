@@ -3,11 +3,13 @@ package net.pladema.clinichistory.hospitalization.service.epicrisis.impl;
 import net.pladema.clinichistory.documents.repository.entity.Document;
 import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.service.NoteService;
+import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.UpdateEpicrisisService;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.domain.EpicrisisBo;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.documents.service.ips.*;
 import net.pladema.clinichistory.documents.service.ips.domain.DocumentObservationsBo;
+import net.pladema.patient.controller.dto.BasicPatientDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -59,8 +61,8 @@ public class UpdateEpicrisisServiceImpl implements UpdateEpicrisisService {
     }
 
     @Override
-    public EpicrisisBo updateDocument(Integer internmentEpisodeId, Integer patientId, EpicrisisBo epicrisis) {
-        LOG.debug("Input parameters -> intermentEpisodeId {}, patientId {}, epicrisis {}", internmentEpisodeId, patientId, epicrisis);
+    public EpicrisisBo updateDocument(Integer internmentEpisodeId, PatientInfoBo patientInfo, EpicrisisBo epicrisis) {
+        LOG.debug("Input parameters -> intermentEpisodeId {}, patientInfo {}, epicrisis {}", internmentEpisodeId, patientInfo, epicrisis);
 
         Optional<Document> optDoc = documentService.findById(epicrisis.getId());
         optDoc.ifPresent(doc -> {
@@ -68,15 +70,15 @@ public class UpdateEpicrisisServiceImpl implements UpdateEpicrisisService {
             loadNotes(doc, Optional.ofNullable(epicrisis.getNotes()));
             doc = documentService.save(doc);
 
-            epicrisis.setDiagnosis(healthConditionService.loadDiagnosis(patientId, doc.getId(), epicrisis.getDiagnosis()));
-            epicrisis.setPersonalHistories(healthConditionService.loadPersonalHistories(patientId, doc.getId(), epicrisis.getPersonalHistories()));
-            epicrisis.setFamilyHistories(healthConditionService.loadFamilyHistories(patientId, doc.getId(), epicrisis.getFamilyHistories()));
-            epicrisis.setAllergies(allergyService.loadAllergies(patientId, doc.getId(), epicrisis.getAllergies()));
-            epicrisis.setImmunizations(immunizationService.loadImmunization(patientId, doc.getId(), epicrisis.getImmunizations()));
-            epicrisis.setMedications(medicationService.loadMedications(patientId, doc.getId(), epicrisis.getMedications()));
+            epicrisis.setDiagnosis(healthConditionService.loadDiagnosis(patientInfo, doc.getId(), epicrisis.getDiagnosis()));
+            epicrisis.setPersonalHistories(healthConditionService.loadPersonalHistories(patientInfo, doc.getId(), epicrisis.getPersonalHistories()));
+            epicrisis.setFamilyHistories(healthConditionService.loadFamilyHistories(patientInfo, doc.getId(), epicrisis.getFamilyHistories()));
+            epicrisis.setAllergies(allergyService.loadAllergies(patientInfo, doc.getId(), epicrisis.getAllergies()));
+            epicrisis.setImmunizations(immunizationService.loadImmunization(patientInfo, doc.getId(), epicrisis.getImmunizations()));
+            epicrisis.setMedications(medicationService.loadMedications(patientInfo, doc.getId(), epicrisis.getMedications()));
 
-            epicrisis.setVitalSigns(clinicalObservationService.loadVitalSigns(patientId, doc.getId(), Optional.ofNullable(epicrisis.getVitalSigns())));
-            epicrisis.setAnthropometricData(clinicalObservationService.loadAnthropometricData(patientId, doc.getId(), Optional.ofNullable(epicrisis.getAnthropometricData())));
+            epicrisis.setVitalSigns(clinicalObservationService.loadVitalSigns(patientInfo, doc.getId(), Optional.ofNullable(epicrisis.getVitalSigns())));
+            epicrisis.setAnthropometricData(clinicalObservationService.loadAnthropometricData(patientInfo, doc.getId(), Optional.ofNullable(epicrisis.getAnthropometricData())));
 
             internmentEpisodeService.updateEpicrisisDocumentId(internmentEpisodeId, doc.getId());
             epicrisis.setId(doc.getId());

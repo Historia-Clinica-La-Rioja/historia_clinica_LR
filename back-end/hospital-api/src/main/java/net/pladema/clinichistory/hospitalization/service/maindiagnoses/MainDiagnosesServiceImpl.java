@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.hospitalization.service.maindiagnoses;
 
 import net.pladema.clinichistory.documents.repository.entity.Document;
+import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.documents.service.generalstate.HealthConditionGeneralStateService;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.ConditionVerificationStatus;
@@ -14,6 +15,7 @@ import net.pladema.clinichistory.documents.service.ips.domain.DiagnosisBo;
 import net.pladema.clinichistory.documents.service.ips.domain.DocumentObservationsBo;
 import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionBo;
 import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
+import net.pladema.patient.controller.dto.BasicPatientDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -51,8 +53,8 @@ public class MainDiagnosesServiceImpl implements MainDiagnosesService {
     }
 
     @Override
-    public Long createDocument(Integer internmentEpisodeId, Integer patientId, MainDiagnosisBo mainDiagnosisBo) {
-        LOG.debug("Input parameters -> intermentEpisodeId {}, patientId {}, mainDiagnosisBo {}", internmentEpisodeId, patientId, mainDiagnosisBo);
+    public Long createDocument(Integer internmentEpisodeId, PatientInfoBo patientInfo, MainDiagnosisBo mainDiagnosisBo) {
+        LOG.debug("Input parameters -> intermentEpisodeId {}, patientInfo {}, mainDiagnosisBo {}", internmentEpisodeId, patientInfo, mainDiagnosisBo);
 
         Document document = new Document(internmentEpisodeId, DocumentStatus.FINAL, DocumentType.EVALUATION_NOTE, SourceType.HOSPITALIZATION);
         loadNotes(document, Optional.ofNullable(mainDiagnosisBo.getNotes()));
@@ -63,8 +65,8 @@ public class MainDiagnosesServiceImpl implements MainDiagnosesService {
 
         HealthConditionBo currentMainDiagnose = healthConditionGeneralStateService.getMainDiagnosisGeneralState(internmentEpisodeId);
         if (!currentMainDiagnose.getSnomed().equals(mainDiagnosisBo.getMainDiagnosis().getSnomed()))
-            downgradeToAlternativeDiagnose(patientId, document.getId(), currentMainDiagnose);
-        healthConditionService.loadMainDiagnosis(patientId, result, Optional.ofNullable(mainDiagnosisBo.getMainDiagnosis()));
+            downgradeToAlternativeDiagnose(patientInfo, document.getId(), currentMainDiagnose);
+        healthConditionService.loadMainDiagnosis(patientInfo, result, Optional.ofNullable(mainDiagnosisBo.getMainDiagnosis()));
 
         internmentEpisodeService.addEvolutionNote(internmentEpisodeId, document.getId());
 
@@ -72,8 +74,8 @@ public class MainDiagnosesServiceImpl implements MainDiagnosesService {
         return result;
     }
 
-    private void downgradeToAlternativeDiagnose(Integer patientId, Long docId, HealthConditionBo currentMainDiagnose) {
-        LOG.debug("Input parameters -> patientId {}, docId {}, currentMainDiagnose {}", patientId, docId, currentMainDiagnose);
+    private void downgradeToAlternativeDiagnose(PatientInfoBo patientInfo, Long docId, HealthConditionBo currentMainDiagnose) {
+        LOG.debug("Input parameters -> patientInfo {}, docId {}, currentMainDiagnose {}", patientInfo, docId, currentMainDiagnose);
         DiagnosisBo diagnosisBo = new DiagnosisBo();
         diagnosisBo.setMain(false);
         diagnosisBo.setSnomed(currentMainDiagnose.getSnomed());
@@ -81,7 +83,7 @@ public class MainDiagnosesServiceImpl implements MainDiagnosesService {
         diagnosisBo.setStatusId(currentMainDiagnose.getStatusId());
         diagnosisBo.setVerification(currentMainDiagnose.getVerification());
         diagnosisBo.setVerificationId(currentMainDiagnose.getVerificationId());
-        healthConditionService.loadDiagnosis(patientId,docId, Arrays.asList(diagnosisBo));
+        healthConditionService.loadDiagnosis(patientInfo, docId, Arrays.asList(diagnosisBo));
     }
 
     private Document loadNotes(Document evolutionNote, Optional<DocumentObservationsBo> optNotes) {

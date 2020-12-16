@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.hospitalization.service.evolutionnote.impl;
 
+import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;
 import net.pladema.clinichistory.documents.repository.entity.Document;
 import net.pladema.clinichistory.documents.service.DocumentService;
@@ -7,6 +8,7 @@ import net.pladema.clinichistory.hospitalization.service.evolutionnote.UpdateEvo
 import net.pladema.clinichistory.documents.service.NoteService;
 import net.pladema.clinichistory.documents.service.ips.*;
 import net.pladema.clinichistory.documents.service.ips.domain.DocumentObservationsBo;
+import net.pladema.patient.controller.dto.BasicPatientDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -50,8 +52,8 @@ public class UpdateEvolutionNoteServiceImpl implements UpdateEvolutionNoteServic
     }
 
     @Override
-    public EvolutionNoteBo updateDocument(Integer internmentEpisodeId, Integer patientId, EvolutionNoteBo evolutionNote) {
-        LOG.debug("Input parameters -> intermentEpisodeId {}, patientId {}, evolutionNote {}", internmentEpisodeId, patientId, evolutionNote);
+    public EvolutionNoteBo updateDocument(Integer internmentEpisodeId, PatientInfoBo patientInfo, EvolutionNoteBo evolutionNote) {
+        LOG.debug("Input parameters -> intermentEpisodeId {}, patientInfo {}, evolutionNote {}", internmentEpisodeId, patientInfo, evolutionNote);
 
         Optional<Document> optDoc = documentService.findById(evolutionNote.getId());
         optDoc.ifPresent(doc -> {
@@ -59,13 +61,13 @@ public class UpdateEvolutionNoteServiceImpl implements UpdateEvolutionNoteServic
             loadNotes(doc, Optional.ofNullable(evolutionNote.getNotes()));
             doc = documentService.save(doc);
 
-            evolutionNote.setDiagnosis(healthConditionService.loadDiagnosis(patientId, doc.getId(), evolutionNote.getDiagnosis()));
-            evolutionNote.setAllergies(allergyService.loadAllergies(patientId, doc.getId(), evolutionNote.getAllergies()));
-            evolutionNote.setImmunizations(immunizationService.loadImmunization(patientId, doc.getId(), evolutionNote.getImmunizations()));
-            evolutionNote.setProcedures(proceduresService.loadProcedures(patientId, doc.getId(), evolutionNote.getProcedures()));
+            evolutionNote.setDiagnosis(healthConditionService.loadDiagnosis(patientInfo, doc.getId(), evolutionNote.getDiagnosis()));
+            evolutionNote.setAllergies(allergyService.loadAllergies(patientInfo, doc.getId(), evolutionNote.getAllergies()));
+            evolutionNote.setImmunizations(immunizationService.loadImmunization(patientInfo, doc.getId(), evolutionNote.getImmunizations()));
+            evolutionNote.setProcedures(proceduresService.loadProcedures(patientInfo, doc.getId(), evolutionNote.getProcedures()));
 
-            evolutionNote.setVitalSigns(clinicalObservationService.loadVitalSigns(patientId, doc.getId(), Optional.ofNullable(evolutionNote.getVitalSigns())));
-            evolutionNote.setAnthropometricData(clinicalObservationService.loadAnthropometricData(patientId, doc.getId(), Optional.ofNullable(evolutionNote.getAnthropometricData())));
+            evolutionNote.setVitalSigns(clinicalObservationService.loadVitalSigns(patientInfo, doc.getId(), Optional.ofNullable(evolutionNote.getVitalSigns())));
+            evolutionNote.setAnthropometricData(clinicalObservationService.loadAnthropometricData(patientInfo, doc.getId(), Optional.ofNullable(evolutionNote.getAnthropometricData())));
 
             evolutionNote.setId(doc.getId());
 

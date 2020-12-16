@@ -6,6 +6,7 @@ import net.pladema.clinichistory.documents.service.CreateDocumentFile;
 import net.pladema.clinichistory.documents.controller.dto.HealthConditionNewConsultationDto;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.EDocumentType;
+import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.domain.ImmunizationBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientEvolutionSummaryDto;
@@ -21,6 +22,9 @@ import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.Outp
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientEvolutionSummaryBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ReasonBo;
 import net.pladema.medicalconsultation.appointment.controller.service.AppointmentExternalService;
+import net.pladema.patient.controller.dto.BasicPatientDto;
+import net.pladema.patient.controller.service.PatientExternalService;
+import net.pladema.sgx.exceptions.NotFoundException;
 import net.pladema.sgx.pdf.PDFDocumentException;
 import net.pladema.sgx.dates.configuration.DateTimeProvider;
 import net.pladema.sgx.security.utils.UserInfo;
@@ -71,6 +75,8 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 
     private final CreateDocumentFile createDocumentFile;
 
+    private final PatientExternalService patientExternalService;
+
     @Value("${test.stress.disable.validation:false}")
     private boolean disableValidation;
     
@@ -85,7 +91,8 @@ public class OutpatientConsultationController implements OutpatientConsultationA
                                             DateTimeProvider dateTimeProvider,
                                             CreateDocumentFile createDocumentFile,
                                             OutpatientSummaryService outpatientSummaryService,
-                                            ClinicalSpecialtyService clinicalSpecialtyService) {
+                                            ClinicalSpecialtyService clinicalSpecialtyService,
+                                            PatientExternalService patientExternalService) {
         this.createOutpatientConsultationService = createOutpatientConsultationService;
         this.createOutpatientDocumentService = createOutpatientDocumentService;
         this.reasonService = reasonService;
@@ -96,6 +103,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         this.createDocumentFile = createDocumentFile;
         this.outpatientSummaryService = outpatientSummaryService;
         this.clinicalSpecialtyService = clinicalSpecialtyService;
+        this.patientExternalService = patientExternalService;
     }
 
     @Override
@@ -109,11 +117,13 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, true,
                 createOutpatientDto.getClinicalSpecialtyId());
 
+        BasicPatientDto patientDto = patientExternalService.getBasicDataFromPatient(patientId);
+        PatientInfoBo patientInfo = new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge());
         List<ReasonBo> reasons = outpatientConsultationMapper.fromListReasonDto(createOutpatientDto.getReasons());
         reasons = reasonService.addReasons(newOutPatient.getId(), reasons);
 
         OutpatientDocumentBo outpatient = outpatientConsultationMapper.fromCreateOutpatientDto(createOutpatientDto);
-        outpatient = createOutpatientDocumentService.create(newOutPatient.getId(), patientId, outpatient);
+        outpatient = createOutpatientDocumentService.create(newOutPatient.getId(), patientInfo, outpatient);
 
         outpatient.setClinicalSpecialty(clinicalSpecialtyService.getClinicalSpecialty(createOutpatientDto.getClinicalSpecialtyId())
                 .orElse(null));
@@ -148,11 +158,13 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         Integer clinicalSpecialtyId = getClinicalSpecialtyId(vaccineDto);
         OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, true, clinicalSpecialtyId);
 
+        BasicPatientDto patientDto = patientExternalService.getBasicDataFromPatient(patientId);
+        PatientInfoBo patientInfo = new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge());
         OutpatientDocumentBo outpatient = new OutpatientDocumentBo();
         outpatient.setEvolutionNote(extractNotes(vaccineDto));
         outpatient.setImmunizations(extractImmunizations(vaccineDto,institutionId));
 
-        outpatient = createOutpatientDocumentService.create(newOutPatient.getId(), patientId, outpatient);
+        outpatient = createOutpatientDocumentService.create(newOutPatient.getId(), patientInfo, outpatient);
         outpatient.setClinicalSpecialty(clinicalSpecialtyService.getClinicalSpecialty(clinicalSpecialtyId)
                 .orElse(null));
 
@@ -202,10 +214,12 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         ImmunizationBo immunizationBo = outpatientConsultationMapper.fromOutpatientImmunizationDto(outpatientUpdateImmunization);
         immunizationBo.setInstitutionId(institutionId);
 
+        BasicPatientDto patientDto = patientExternalService.getBasicDataFromPatient(patientId);
+        PatientInfoBo patientInfo = new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge());
         OutpatientDocumentBo outpatient = new OutpatientDocumentBo();
         outpatient.setImmunizations(Collections.singletonList(immunizationBo));
 
-        outpatient = createOutpatientDocumentService.create(newOutPatient.getId(), patientId, outpatient);
+        outpatient = createOutpatientDocumentService.create(newOutPatient.getId(), patientInfo, outpatient);
         generateDocument(outpatient, institutionId, newOutPatient.getId(), patientId);
 
         LOG.debug(OUTPUT, true);
@@ -223,9 +237,11 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
         OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, false, null);
 
+        BasicPatientDto patientDto = patientExternalService.getBasicDataFromPatient(patientId);
+        PatientInfoBo patientInfo = new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge());
         OutpatientDocumentBo outpatient = new OutpatientDocumentBo();
         outpatient.setProblems(Collections.singletonList(outpatientConsultationMapper.fromHealthConditionNewConsultationDto(solvedProblemDto)));
-        outpatient = createOutpatientDocumentService.create(newOutPatient.getId(), patientId, outpatient);
+        outpatient = createOutpatientDocumentService.create(newOutPatient.getId(), patientInfo, outpatient);
         generateDocument(outpatient, institutionId, newOutPatient.getId(), patientId);
 
         return ResponseEntity.ok().body(true);

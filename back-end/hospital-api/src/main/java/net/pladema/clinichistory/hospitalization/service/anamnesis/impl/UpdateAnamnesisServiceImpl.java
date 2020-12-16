@@ -3,11 +3,13 @@ package net.pladema.clinichistory.hospitalization.service.anamnesis.impl;
 import net.pladema.clinichistory.documents.repository.entity.Document;
 import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.service.NoteService;
+import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.UpdateAnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.AnamnesisBo;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.documents.service.ips.*;
 import net.pladema.clinichistory.documents.service.ips.domain.DocumentObservationsBo;
+import net.pladema.patient.controller.dto.BasicPatientDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -57,8 +59,8 @@ public class UpdateAnamnesisServiceImpl implements UpdateAnamnesisService {
     }
 
     @Override
-    public AnamnesisBo updateDocument(Integer internmentEpisodeId, Integer patientId, AnamnesisBo anamnesis) {
-        LOG.debug("Input parameters -> intermentEpisodeId {}, patientId {}, anamnesis {}", internmentEpisodeId, patientId, anamnesis);
+    public AnamnesisBo updateDocument(Integer internmentEpisodeId, PatientInfoBo patientInfo, AnamnesisBo anamnesis) {
+        LOG.debug("Input parameters -> intermentEpisodeId {}, patientInfo {}, anamnesis {}", internmentEpisodeId, patientInfo, anamnesis);
 
         Optional<Document> optDoc = documentService.findById(anamnesis.getId());
         optDoc.ifPresent(doc -> {
@@ -66,15 +68,15 @@ public class UpdateAnamnesisServiceImpl implements UpdateAnamnesisService {
             loadNotes(doc, Optional.ofNullable(anamnesis.getNotes()));
             doc = documentService.save(doc);
 
-            anamnesis.setDiagnosis(healthConditionService.loadDiagnosis(patientId, doc.getId(), anamnesis.getDiagnosis()));
-            anamnesis.setPersonalHistories(healthConditionService.loadPersonalHistories(patientId, doc.getId(), anamnesis.getPersonalHistories()));
-            anamnesis.setFamilyHistories(healthConditionService.loadFamilyHistories(patientId, doc.getId(), anamnesis.getFamilyHistories()));
-            anamnesis.setAllergies(allergyService.loadAllergies(patientId, doc.getId(), anamnesis.getAllergies()));
-            anamnesis.setImmunizations(immunizationService.loadImmunization(patientId, doc.getId(), anamnesis.getImmunizations()));
-            anamnesis.setMedications(medicationService.loadMedications(patientId, doc.getId(), anamnesis.getMedications()));
+            anamnesis.setDiagnosis(healthConditionService.loadDiagnosis(patientInfo, doc.getId(), anamnesis.getDiagnosis()));
+            anamnesis.setPersonalHistories(healthConditionService.loadPersonalHistories(patientInfo, doc.getId(), anamnesis.getPersonalHistories()));
+            anamnesis.setFamilyHistories(healthConditionService.loadFamilyHistories(patientInfo, doc.getId(), anamnesis.getFamilyHistories()));
+            anamnesis.setAllergies(allergyService.loadAllergies(patientInfo, doc.getId(), anamnesis.getAllergies()));
+            anamnesis.setImmunizations(immunizationService.loadImmunization(patientInfo, doc.getId(), anamnesis.getImmunizations()));
+            anamnesis.setMedications(medicationService.loadMedications(patientInfo, doc.getId(), anamnesis.getMedications()));
 
-            anamnesis.setVitalSigns(clinicalObservationService.loadVitalSigns(patientId, doc.getId(), Optional.ofNullable(anamnesis.getVitalSigns())));
-            anamnesis.setAnthropometricData(clinicalObservationService.loadAnthropometricData(patientId, doc.getId(), Optional.ofNullable(anamnesis.getAnthropometricData())));
+            anamnesis.setVitalSigns(clinicalObservationService.loadVitalSigns(patientInfo, doc.getId(), Optional.ofNullable(anamnesis.getVitalSigns())));
+            anamnesis.setAnthropometricData(clinicalObservationService.loadAnthropometricData(patientInfo, doc.getId(), Optional.ofNullable(anamnesis.getAnthropometricData())));
 
             internmentEpisodeService.updateAnamnesisDocumentId(internmentEpisodeId, doc.getId());
             anamnesis.setId(doc.getId());

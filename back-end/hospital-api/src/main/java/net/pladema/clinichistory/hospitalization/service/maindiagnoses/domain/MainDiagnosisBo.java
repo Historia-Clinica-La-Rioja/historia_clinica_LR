@@ -119,4 +119,5 @@ public class MainDiagnosisBo implements Document {
     public Integer getPatientId() {
         return null;
     }
+
 }

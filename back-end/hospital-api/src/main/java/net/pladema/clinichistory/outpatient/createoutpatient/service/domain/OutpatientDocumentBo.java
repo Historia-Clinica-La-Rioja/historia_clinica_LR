@@ -94,4 +94,5 @@ public class OutpatientDocumentBo implements Document {
     public Integer getPatientId() {
         return null;
     }
+
 }

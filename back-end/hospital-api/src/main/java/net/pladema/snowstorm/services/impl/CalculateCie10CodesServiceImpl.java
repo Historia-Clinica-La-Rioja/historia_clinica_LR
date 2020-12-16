@@ -1,11 +1,13 @@
 package net.pladema.snowstorm.services.impl;
 
+import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.snowstorm.services.Cie10RuleChecker;
 import net.pladema.snowstorm.services.CalculateCie10CodesService;
 import net.pladema.snowstorm.services.SnowstormService;
 import net.pladema.snowstorm.services.domain.SnowstormCie10ItemResponse;
 import net.pladema.snowstorm.services.domain.SnowstormCie10RefsetMembersResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,8 @@ public class CalculateCie10CodesServiceImpl implements CalculateCie10CodesServic
     private static final Logger LOG = LoggerFactory.getLogger(CalculateCie10CodesServiceImpl.class);
     public static final String OUTPUT = "Output -> {}";
 
+    private static final char CODE_DELIMITER = ',';
+
     private final SnowstormService snowstormService;
 
     public CalculateCie10CodesServiceImpl(SnowstormService snowstormService) {
@@ -29,15 +33,24 @@ public class CalculateCie10CodesServiceImpl implements CalculateCie10CodesServic
     }
 
     @Override
-    public List<String> execute(String snomedCode, BasicPatientDto patient) {
-        LOG.debug("Input parameters -> snomedCode {}, patient {}", snomedCode, patient);
-        SnowstormCie10RefsetMembersResponse cie10RefsetMembers = snowstormService.getCie10RefsetMembers(snomedCode);
-        List<String> cie10Codes = calculateCie10Codes(cie10RefsetMembers, patient);
+    public String execute(String sctid, PatientInfoBo patient) {
+        LOG.debug("Input parameters -> sctid {}, patient {}", sctid, patient);
+        SnowstormCie10RefsetMembersResponse cie10RefsetMembers = snowstormService.getCie10RefsetMembers(sctid);
+        List<String> cie10CodesList = calculateCie10Codes(cie10RefsetMembers, patient);
+        String cie10Codes = cie10CodesList.isEmpty() ? null : concatCodes(cie10CodesList);
         LOG.debug(OUTPUT, cie10Codes);
         return cie10Codes;
     }
 
-    private List<String> calculateCie10Codes(SnowstormCie10RefsetMembersResponse cie10Response, BasicPatientDto patient) {
+    private String concatCodes(List<String> cie10CodesList) {
+        LOG.debug("Input parameter -> cie10CodesList size = {}", cie10CodesList.size());
+        LOG.trace("Input parameter -> cie10CodesList {}", cie10CodesList);
+        String result = StringUtils.join(cie10CodesList, CODE_DELIMITER);
+        LOG.debug(OUTPUT, result);
+        return result;
+    }
+
+    private List<String> calculateCie10Codes(SnowstormCie10RefsetMembersResponse cie10Response, PatientInfoBo patient) {
         LOG.debug("Input parameters -> cie10Response {}, patient {}", cie10Response, patient);
         Map<String, List<SnowstormCie10ItemResponse>> groupedItems = groupByMapGroupSortedByPriority(cie10Response.getItems());
         List<String> result = groupedItems.values()
@@ -62,7 +75,7 @@ public class CalculateCie10CodesServiceImpl implements CalculateCie10CodesServic
         return result;
     }
 
-    private String processRules(List<SnowstormCie10ItemResponse> ruleGroup, BasicPatientDto patient) {
+    private String processRules(List<SnowstormCie10ItemResponse> ruleGroup, PatientInfoBo patient) {
         for (SnowstormCie10ItemResponse rule: ruleGroup){
             if (Cie10RuleChecker.check(rule.getAdditionalFields().getMapRule(), patient))
                 return rule.getAdditionalFields().getMapTarget();

@@ -2,8 +2,12 @@ package net.pladema.clinichistory.hospitalization.controller.documents.epicrisis
 
 import io.swagger.annotations.Api;
 import net.pladema.clinichistory.documents.events.OnGenerateInternmentDocumentEvent;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.EDocumentType;
 import net.pladema.clinichistory.documents.service.CreateDocumentFile;
+import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.generalstate.EncounterGeneralState;
+import net.pladema.clinichistory.documents.service.generalstate.EncounterGeneralStateBuilder;
 import net.pladema.clinichistory.hospitalization.controller.constraints.CanCreateEpicrisis;
 import net.pladema.clinichistory.hospitalization.controller.constraints.DocumentValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
@@ -12,17 +16,15 @@ import net.pladema.clinichistory.hospitalization.controller.documents.epicrisis.
 import net.pladema.clinichistory.hospitalization.controller.documents.epicrisis.dto.ResponseEpicrisisDto;
 import net.pladema.clinichistory.hospitalization.controller.documents.epicrisis.mapper.EpicrisisMapper;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
-import net.pladema.clinichistory.documents.service.generalstate.EncounterGeneralStateBuilder;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.CreateEpicrisisService;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.EpicrisisService;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.UpdateEpicrisisService;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.domain.EpicrisisBo;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.EDocumentType;
 import net.pladema.featureflags.service.FeatureFlagsService;
+import net.pladema.patient.controller.service.PatientExternalService;
+import net.pladema.sgx.exceptions.NotFoundException;
 import net.pladema.sgx.featureflags.AppFeature;
 import net.pladema.sgx.pdf.PDFDocumentException;
-
 import org.apache.http.MethodNotSupportedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,15 +32,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.io.IOException;
 
@@ -71,6 +66,8 @@ public class EpicrisisController {
 
     private final FeatureFlagsService featureFlagsService;
 
+    private final PatientExternalService patientExternalService;
+
     public EpicrisisController(
             InternmentEpisodeService internmentEpisodeService,
             CreateEpicrisisService createEpicrisisService,
@@ -79,7 +76,8 @@ public class EpicrisisController {
             EpicrisisMapper epicrisisMapper,
             EncounterGeneralStateBuilder encounterGeneralStateBuilder,
             CreateDocumentFile createDocumentFile,
-            FeatureFlagsService featureFlagsService
+            FeatureFlagsService featureFlagsService,
+            PatientExternalService patientExternalService
     ) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.createEpicrisisService = createEpicrisisService;
@@ -89,6 +87,7 @@ public class EpicrisisController {
         this.encounterGeneralStateBuilder = encounterGeneralStateBuilder;
         this.createDocumentFile = createDocumentFile;
         this.featureFlagsService = featureFlagsService;
+        this.patientExternalService = patientExternalService;
     }
 
 
@@ -102,13 +101,15 @@ public class EpicrisisController {
             @RequestBody @Valid EpicrisisDto epicrisisDto) throws IOException, PDFDocumentException {
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, ananmnesis {}",
                 institutionId, internmentEpisodeId, epicrisisDto);
-        Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
-                .orElseThrow(() -> new EntityNotFoundException(INVALID_EPISODE));
+        PatientInfoBo patientInfo = internmentEpisodeService.getPatient(internmentEpisodeId)
+                .map(patientExternalService::getBasicDataFromPatient)
+                .map(patientDto -> new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()))
+                .orElseThrow(() -> new NotFoundException("El paciente no existe", "El paciente no existe"));
         EpicrisisBo epicrisis = epicrisisMapper.fromEpicrisisDto(epicrisisDto);
-        epicrisis = createEpicrisisService.createDocument(internmentEpisodeId, patientId, epicrisis);
+        epicrisis = createEpicrisisService.createDocument(internmentEpisodeId, patientInfo, epicrisis);
         ResponseEpicrisisDto result = epicrisisMapper.fromEpicrisis(epicrisis);
         LOG.debug(OUTPUT, result);
-        generateDocument(epicrisis, institutionId, internmentEpisodeId, patientId);
+        generateDocument(epicrisis, institutionId, internmentEpisodeId, patientInfo.getId());
         return  ResponseEntity.ok().body(result);
     }
 
@@ -128,12 +129,14 @@ public class EpicrisisController {
             throw new MethodNotSupportedException("Funcionalidad no soportada por el momento");
 
         EpicrisisBo epicrisis = epicrisisMapper.fromEpicrisisDto(epicrisisDto);
-        Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
-                .orElseThrow(() -> new EntityNotFoundException(INVALID_EPISODE));
-        epicrisis = updateEpicrisisService.updateDocument(internmentEpisodeId, patientId, epicrisis);
+        PatientInfoBo patientInfo = internmentEpisodeService.getPatient(internmentEpisodeId)
+                .map(patientExternalService::getBasicDataFromPatient)
+                .map(patientDto -> new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()))
+                .orElseThrow(() -> new NotFoundException("El paciente no existe", "El paciente no existe"));
+        epicrisis = updateEpicrisisService.updateDocument(internmentEpisodeId, patientInfo, epicrisis);
         ResponseEpicrisisDto result = epicrisisMapper.fromEpicrisis(epicrisis);
         LOG.debug(OUTPUT, result);
-        generateDocument(epicrisis, institutionId, internmentEpisodeId, patientId);
+        generateDocument(epicrisis, institutionId, internmentEpisodeId, patientInfo.getId());
         return  ResponseEntity.ok().body(result);
     }
 

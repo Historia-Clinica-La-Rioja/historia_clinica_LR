@@ -45,13 +45,14 @@ public abstract class ClinicalObservation extends SGXAuditableEntity {
     @Column(name = "note_id")
     private Long noteId;
 
-    public ClinicalObservation(Integer patientId, String value, Integer snomedId, String categoryId,
+    public ClinicalObservation(Integer patientId, String value, Integer snomedId, String cie10Codes, String categoryId,
                                LocalDateTime effectiveTime) {
         super();
         this.patientId = patientId;
         this.categoryId = categoryId;
         this.value = value;
         this.snomedId = snomedId;
+        this.cie10Codes = cie10Codes;
         this.effectiveTime = effectiveTime;
     }
 

@@ -32,8 +32,9 @@ public class ObservationVitalSign extends ClinicalObservation {
 	@Column(name = "loinc_code", length = 20)
 	private String loincCode;
 
-	public ObservationVitalSign(Integer patientId, String value, Integer snomedId, EVitalSign evitalSign, LocalDateTime effectiveTime){
-		super(patientId, value, snomedId, VITAL_SIGN, effectiveTime);
+	public ObservationVitalSign(Integer patientId, String value, Integer snomedId,
+								String cie10Codes, EVitalSign evitalSign, LocalDateTime effectiveTime){
+		super(patientId, value, snomedId, cie10Codes, VITAL_SIGN, effectiveTime);
 		this.loincCode = evitalSign.getLoincCode();
 	}
 

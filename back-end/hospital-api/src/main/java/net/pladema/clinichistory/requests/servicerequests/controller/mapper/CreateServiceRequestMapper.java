@@ -1,9 +1,9 @@
 package net.pladema.clinichistory.requests.servicerequests.controller.mapper;
 
-import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
+import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
-import org.mapstruct.Mapper;
+import net.pladema.patient.controller.dto.BasicPatientDto;
 import org.mapstruct.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,11 +23,11 @@ public class CreateServiceRequestMapper {
     }
 
     @Named("parseTo")
-    public ServiceRequestBo parseTo(Integer doctorId, Integer patientId, String categoryId, Integer medicalCoverageId, List<PrescriptionItemDto> studies){
-        LOG.debug("parseTo -> doctorId {}, patientId {}, medicalCoverageId {}, studies {} ", doctorId, patientId, medicalCoverageId, studies);
+    public ServiceRequestBo parseTo(Integer doctorId, BasicPatientDto patientDto, String categoryId, Integer medicalCoverageId, List<PrescriptionItemDto> studies){
+        LOG.debug("parseTo -> doctorId {}, patientDto {}, medicalCoverageId {}, studies {} ", doctorId, patientDto, medicalCoverageId, studies);
         ServiceRequestBo result = new ServiceRequestBo();
         result.setCategoryId(categoryId);
-        result.setPatientId(patientId);
+        result.setPatientInfo(new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()));
         result.setMedicalCoverageId(medicalCoverageId);
         result.setDoctorId(doctorId);
         result.setDiagnosticReports(studyMapper.parseTo(studies));

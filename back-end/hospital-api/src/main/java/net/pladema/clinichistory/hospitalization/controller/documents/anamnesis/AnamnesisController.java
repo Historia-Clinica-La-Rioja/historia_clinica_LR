@@ -2,6 +2,7 @@ package net.pladema.clinichistory.hospitalization.controller.documents.anamnesis
 
 import io.swagger.annotations.Api;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
+import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.hospitalization.controller.constraints.AnamnesisMainDiagnosisValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.DocumentValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
@@ -16,7 +17,9 @@ import net.pladema.clinichistory.hospitalization.service.anamnesis.CreateAnamnes
 import net.pladema.clinichistory.hospitalization.service.anamnesis.UpdateAnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.AnamnesisBo;
 import net.pladema.featureflags.service.FeatureFlagsService;
+import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.sgx.error.controller.dto.ApiErrorDto;
+import net.pladema.sgx.exceptions.NotFoundException;
 import net.pladema.sgx.featureflags.AppFeature;
 import net.pladema.sgx.pdf.PDFDocumentException;
 import org.apache.commons.lang3.StringUtils;
@@ -31,7 +34,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityNotFoundException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
@@ -64,13 +66,16 @@ public class AnamnesisController {
 
     private final MessageSource messageSource;
 
+    private final PatientExternalService patientExternalService;
+
     public AnamnesisController(InternmentEpisodeService internmentEpisodeService,
                                CreateAnamnesisService createAnamnesisService,
                                UpdateAnamnesisService updateAnamnesisService,
                                AnamnesisService anamnesisService,
                                AnamnesisMapper anamnesisMapper,
                                FeatureFlagsService featureFlagsService,
-                               MessageSource messageSource) {
+                               MessageSource messageSource,
+                               PatientExternalService patientExternalService) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.createAnamnesisService = createAnamnesisService;
         this.updateAnamnesisService = updateAnamnesisService;
@@ -78,6 +83,7 @@ public class AnamnesisController {
         this.anamnesisMapper = anamnesisMapper;
         this.featureFlagsService = featureFlagsService;
         this.messageSource = messageSource;
+        this.patientExternalService = patientExternalService;
     }
 
     @PostMapping
@@ -91,6 +97,10 @@ public class AnamnesisController {
                 institutionId, internmentEpisodeId, anamnesisDto);
         AnamnesisBo anamnesis = anamnesisMapper.fromAnamnesisDto(anamnesisDto);
         anamnesis.setEncounterId(internmentEpisodeId);
+        internmentEpisodeService.getPatient(internmentEpisodeId)
+                .map(patientExternalService::getBasicDataFromPatient)
+                .map(patientDto -> new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()))
+                .ifPresentOrElse(anamnesis::setPatientInfo, () -> new NotFoundException("El paciente no existe", "El paciente no existe"));
         createAnamnesisService.createDocument(institutionId, anamnesis);
 
         LOG.debug(OUTPUT, Boolean.TRUE);
@@ -117,9 +127,11 @@ public class AnamnesisController {
             throw new MethodNotSupportedException("Funcionalidad no soportada por el momento");
 
         AnamnesisBo anamnesis = anamnesisMapper.fromAnamnesisDto(anamnesisDto);
-        Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
-                .orElseThrow(() -> new EntityNotFoundException(INVALID_EPISODE));
-        anamnesis = updateAnamnesisService.updateDocument(internmentEpisodeId, patientId, anamnesis);
+        PatientInfoBo patientInfo = internmentEpisodeService.getPatient(internmentEpisodeId)
+                .map(patientExternalService::getBasicDataFromPatient)
+                .map(patientDto -> new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()))
+                .orElseThrow(() -> new NotFoundException("El paciente no existe", "El paciente no existe"));
+        anamnesis = updateAnamnesisService.updateDocument(internmentEpisodeId, patientInfo, anamnesis);
         ResponseAnamnesisDto result = anamnesisMapper.fromAnamnesis(anamnesis);
         LOG.debug(OUTPUT, result);
 

@@ -8,9 +8,9 @@ import java.time.LocalDate;
 
 public class MedicationTestMocks {
 
-    public static MedicationStatement createMedicationStatement(Integer patientId, String code, String statusId,
+    public static MedicationStatement createMedicationStatement(Integer patientId, Integer code, String cie10Codes, String statusId,
                                                                  Long noteId, Integer healthConditionId, Integer dosageId) {
-        return new MedicationStatement(patientId, code, statusId, noteId, healthConditionId, dosageId);
+        return new MedicationStatement(patientId, code, cie10Codes, statusId, noteId, healthConditionId, dosageId);
     }
 
     public static Dosage createDosage(Double duration, String durationUnit, Integer frequency, String periodUnit, boolean chronic,

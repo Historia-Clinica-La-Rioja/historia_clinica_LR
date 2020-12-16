@@ -8,12 +8,14 @@ import net.pladema.clinichistory.documents.repository.ips.masterdata.MedicamentS
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.MedicationStatementStatus;
 import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.service.NoteService;
+import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.SnomedService;
 import net.pladema.clinichistory.documents.service.ips.domain.DosageBo;
 import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionBo;
 import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
 import net.pladema.clinichistory.documents.service.ips.domain.SnomedBo;
 import net.pladema.clinichistory.documents.service.ips.domain.enums.EUnitsOfTimeBo;
+import net.pladema.snowstorm.services.CalculateCie10CodesService;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,6 +54,9 @@ public class MedicationServiceImplTest {
     private SnomedService snomedService;
 
     @MockBean
+    private CalculateCie10CodesService calculateCie10CodesService;
+
+    @MockBean
     private NoteService noteService;
 
     @Before
@@ -62,21 +67,22 @@ public class MedicationServiceImplTest {
                 medicamentStatementStatusRepository,
                 documentService,
                 snomedService,
+                calculateCie10CodesService,
                 noteService
         );
     }
 
     @Test
     public void createDocument_withEmptyList() {
-        var result = medicationServiceImpl.loadMedications(1, 1l, Collections.emptyList());
+        var result = medicationServiceImpl.loadMedications(new PatientInfoBo(), 1l, Collections.emptyList());
         Assertions.assertThat(result.isEmpty())
                     .isTrue();
     }
 
     @Test
     public void createDocument_complete_success() {
-        BasicPatientDto patientDto = new BasicPatientDto();
-        patientDto.setId(1);
+        PatientInfoBo patientInfo = new PatientInfoBo();
+        patientInfo.setId(1);
 
         Integer snomedId = 1;
         when(snomedService.createSnomedTerm(new SnomedBo("IBUPROFENO", "IBUPROFENO"))).thenReturn(snomedId);
@@ -87,7 +93,7 @@ public class MedicationServiceImplTest {
 
         MedicationBo medication = createMedicationBo("IBUPROFENO", 13,
                 createDosageBo(15d,8, false, EUnitsOfTimeBo.HOUR, LocalDate.of(2020,05,25)));
-        var result = medicationServiceImpl.loadMedications(patientDto, 1l, List.of(medication));
+        var result = medicationServiceImpl.loadMedications(patientInfo, 1l, List.of(medication));
         Assertions.assertThat(result.size())
                 .isEqualTo(1);
 
@@ -136,8 +142,8 @@ public class MedicationServiceImplTest {
 
     @Test
     public void createDocument_chronicMedication_success() {
-        BasicPatientDto patientDto = new BasicPatientDto();
-        patientDto.setId(1);
+        PatientInfoBo patientInfo = new PatientInfoBo();
+        patientInfo.setId(1);
 
         Integer snomedId = 1;
         when(snomedService.createSnomedTerm(new SnomedBo("IBUPROFENO", "IBUPROFENO"))).thenReturn(snomedId);
@@ -148,7 +154,7 @@ public class MedicationServiceImplTest {
 
         MedicationBo medication = createMedicationBo("IBUPROFENO", 13,
                 createDosageBo(15d,8, true, EUnitsOfTimeBo.HOUR, LocalDate.of(2020,05,25)));
-        var result = medicationServiceImpl.loadMedications(patientDto, 1l, List.of(medication));
+        var result = medicationServiceImpl.loadMedications(patientInfo, 1l, List.of(medication));
         Assertions.assertThat(result.size())
                 .isEqualTo(1);
 
@@ -196,8 +202,8 @@ public class MedicationServiceImplTest {
 
     @Test
     public void createDocument_usual_medication_success() {
-        BasicPatientDto patientDto = new BasicPatientDto();
-        patientDto.setId(1);
+        PatientInfoBo patientInfo = new PatientInfoBo();
+        patientInfo.setId(1);
 
         Integer snomedId = 1;
         when(snomedService.createSnomedTerm(new SnomedBo("IBUPROFENO", "IBUPROFENO"))).thenReturn(snomedId);
@@ -207,7 +213,7 @@ public class MedicationServiceImplTest {
 
 
         MedicationBo medication = createMedicationBo("IBUPROFENO", null,null);
-        var result = medicationServiceImpl.loadMedications(patientDto, 1l, List.of(medication));
+        var result = medicationServiceImpl.loadMedications(patientInfo, 1l, List.of(medication));
         Assertions.assertThat(result.size())
                 .isEqualTo(1);
 

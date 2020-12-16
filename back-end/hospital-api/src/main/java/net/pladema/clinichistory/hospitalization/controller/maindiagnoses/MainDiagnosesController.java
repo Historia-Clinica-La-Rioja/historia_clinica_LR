@@ -5,6 +5,7 @@ import net.pladema.clinichistory.documents.events.OnGenerateDocumentEvent;
 import net.pladema.clinichistory.documents.events.OnGenerateInternmentDocumentEvent;
 import net.pladema.clinichistory.documents.service.CreateDocumentFile;
 import net.pladema.clinichistory.documents.service.Document;
+import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
 import net.pladema.clinichistory.hospitalization.controller.documents.evolutionnote.constraints.EvolutionNoteValid;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.HealthConditionMapper;
@@ -14,6 +15,9 @@ import net.pladema.clinichistory.hospitalization.service.evolutionnote.Evolution
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;
 import net.pladema.clinichistory.hospitalization.service.maindiagnoses.MainDiagnosesService;
 import net.pladema.clinichistory.hospitalization.service.maindiagnoses.domain.MainDiagnosisBo;
+import net.pladema.patient.controller.dto.BasicPatientDto;
+import net.pladema.patient.controller.service.PatientExternalService;
+import net.pladema.sgx.exceptions.NotFoundException;
 import net.pladema.sgx.pdf.PDFDocumentException;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.EDocumentType;
@@ -56,16 +60,20 @@ public class MainDiagnosesController {
 
     private final CreateDocumentFile createDocumentFile;
 
+    private final PatientExternalService patientExternalService;
+
     public MainDiagnosesController(InternmentEpisodeService internmentEpisodeService,
                                    MainDiagnosesService mainDiagnosesService,
                                    EvolutionNoteReportService evolutionNoteReportService,
                                    HealthConditionMapper healthConditionMapper,
-                                   CreateDocumentFile createDocumentFile) {
+                                   CreateDocumentFile createDocumentFile,
+                                   PatientExternalService patientExternalService) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.mainDiagnosesService = mainDiagnosesService;
         this.evolutionNoteReportService = evolutionNoteReportService;
         this.healthConditionMapper = healthConditionMapper;
         this.createDocumentFile = createDocumentFile;
+        this.patientExternalService = patientExternalService;
     }
 
     @PostMapping
@@ -78,14 +86,16 @@ public class MainDiagnosesController {
             @RequestBody @Valid MainDiagnosisDto mainDiagnosis) throws IOException, PDFDocumentException {
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, mainDiagnosis {}",
                 institutionId, internmentEpisodeId, mainDiagnosis);
-        Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
-                .orElseThrow(() -> new EntityNotFoundException(INVALID_INTERNMENT_EPISODE));
+        PatientInfoBo patientInfo = internmentEpisodeService.getPatient(internmentEpisodeId)
+                .map(patientExternalService::getBasicDataFromPatient)
+                .map(patientDto -> new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()))
+                .orElseThrow(() -> new NotFoundException("El paciente no existe", "El paciente no existe"));
 
         MainDiagnosisBo mainDiagnoseBo = healthConditionMapper.fromMainDiagnoseDto(mainDiagnosis);
-        Long documentId = mainDiagnosesService.createDocument(internmentEpisodeId, patientId, mainDiagnoseBo);
+        Long documentId = mainDiagnosesService.createDocument(internmentEpisodeId, patientInfo, mainDiagnoseBo);
 
         EvolutionNoteBo evolutionNoteResult = evolutionNoteReportService.getDocument(documentId);
-        generateDocument(evolutionNoteResult, institutionId, internmentEpisodeId, patientId);
+        generateDocument(evolutionNoteResult, institutionId, internmentEpisodeId, patientInfo.getId());
         Long result = evolutionNoteResult.getId();
         LOG.debug(OUTPUT, result);
         return  ResponseEntity.ok().body(result);

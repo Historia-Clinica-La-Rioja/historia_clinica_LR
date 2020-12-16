@@ -1,6 +1,8 @@
 package net.pladema.clinichistory.requests.servicerequests.service;
 
 import net.pladema.clinichistory.documents.service.DocumentFactory;
+import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
+import net.pladema.clinichistory.documents.service.ips.domain.SnomedBo;
 import net.pladema.clinichistory.requests.servicerequests.repository.ServiceRequestRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequestCategory;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportBo;
@@ -49,7 +51,7 @@ public class CreateServiceRequestServiceImplTest {
     @Test
     public void execute_withNullPatient(){
         ServiceRequestBo serviceRequestBo = validServiceRequest();
-        serviceRequestBo.setPatientId(null);
+        serviceRequestBo.setPatientInfo(new PatientInfoBo());
         Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
                 createServiceRequestServiceImpl.execute(1,serviceRequestBo)
         );
@@ -97,10 +99,11 @@ public class CreateServiceRequestServiceImplTest {
     @Test
     public void execute_withInvalidServiceRequest_HealthCondition_Snomed(){
         ServiceRequestBo serviceRequestBo = validServiceRequest();
+        SnomedBo snomed = new SnomedBo("1111", "Enfermedad 1");
         DiagnosticReportBo DiagnosticReportBoWithoutHealthConditionId = new DiagnosticReportBo(
                 null,
                 "jakek",
-                "1111");
+                snomed);
         serviceRequestBo.setDiagnosticReports(List.of(DiagnosticReportBoWithoutHealthConditionId));
         Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
                 createServiceRequestServiceImpl.execute(1, serviceRequestBo)
@@ -121,11 +124,14 @@ public class CreateServiceRequestServiceImplTest {
 
     private ServiceRequestBo validServiceRequest(){
 
-        DiagnosticReportBo diagnosticReportBo1 = new DiagnosticReportBo(1, "jakek", "1111");
-        DiagnosticReportBo diagnosticReportBo2 = new DiagnosticReportBo(2, "jakekX2", "2222");
+        SnomedBo snomed1 = new SnomedBo("1111", "Enfermedad 1");
+        SnomedBo snomed2 = new SnomedBo("2222", "Enfermedad 2");
+
+        DiagnosticReportBo diagnosticReportBo1 = new DiagnosticReportBo(1, "jakek", snomed1);
+        DiagnosticReportBo diagnosticReportBo2 = new DiagnosticReportBo(2, "jakekX2", snomed2);
 
         var serviceRequestBo = new ServiceRequestBo();
-        serviceRequestBo.setPatientId(1);
+        serviceRequestBo.setPatientInfo(new PatientInfoBo(1, (short) 1, (short) 1));
         serviceRequestBo.setCategoryId(ServiceRequestCategory.LABORATORY_PROCEDURE);
         serviceRequestBo.setEncounterId(1);
         serviceRequestBo.setDoctorId(1);

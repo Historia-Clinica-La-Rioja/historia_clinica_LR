@@ -9,6 +9,7 @@ import net.pladema.clinichistory.documents.repository.ips.masterdata.ConditionVe
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.ConditionClinicalStatus;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.ConditionVerificationStatus;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.ProblemType;
+import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.HealthConditionService;
 import net.pladema.clinichistory.documents.service.ips.SnomedService;
 import net.pladema.clinichistory.documents.service.ips.domain.DiagnosisBo;
@@ -16,8 +17,10 @@ import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionBo;
 import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionNewConsultationBo;
 import net.pladema.clinichistory.documents.service.ips.domain.HealthHistoryConditionBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProblemBo;
+import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.sgx.dates.configuration.DateTimeProvider;
 import net.pladema.sgx.exceptions.NotFoundException;
+import net.pladema.snowstorm.services.CalculateCie10CodesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -44,6 +47,8 @@ public class HealthConditionServiceImpl implements HealthConditionService {
 
     private final SnomedService snomedService;
 
+    private final CalculateCie10CodesService calculateCie10CodesService;
+
     private final DocumentService documentService;
 
     private final NoteService noteService;
@@ -53,13 +58,16 @@ public class HealthConditionServiceImpl implements HealthConditionService {
 
     public HealthConditionServiceImpl(HealthConditionRepository healthConditionRepository,
                                       ConditionVerificationStatusRepository conditionVerificationStatusRepository,
-                                      ConditionClinicalStatusRepository conditionClinicalStatusRepository, SnomedService snomedService,
+                                      ConditionClinicalStatusRepository conditionClinicalStatusRepository,
+                                      SnomedService snomedService,
+                                      CalculateCie10CodesService calculateCie10CodesService,
                                       DocumentService documentService,
                                       NoteService noteService, DateTimeProvider dateTimeProvider){
         this.healthConditionRepository = healthConditionRepository;
         this.conditionVerificationStatusRepository = conditionVerificationStatusRepository;
         this.conditionClinicalStatusRepository = conditionClinicalStatusRepository;
         this.snomedService = snomedService;
+        this.calculateCie10CodesService = calculateCie10CodesService;
         this.documentService = documentService;
         this.noteService = noteService;
         this.dateTimeProvider = dateTimeProvider;
@@ -73,10 +81,10 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     }
 
     @Override
-    public HealthConditionBo loadMainDiagnosis(Integer patientId, Long documentId, Optional<HealthConditionBo> mainDiagnosis) {
-        LOG.debug("Input parameters -> patientId {}, documentId {}, mainDiagnosis {}", documentId, patientId, mainDiagnosis);
+    public HealthConditionBo loadMainDiagnosis(PatientInfoBo patientInfo, Long documentId, Optional<HealthConditionBo> mainDiagnosis) {
+        LOG.debug("Input parameters -> patientInfo {}, documentId {}, mainDiagnosis {}", patientInfo, documentId, mainDiagnosis);
         mainDiagnosis.ifPresent(md -> {
-            HealthCondition healthCondition = buildMainDiagnoses(patientId, md);
+            HealthCondition healthCondition = buildMainDiagnoses(patientInfo, md);
             healthCondition = save(healthCondition);
 
             md.setId(healthCondition.getId());
@@ -92,9 +100,9 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         return result;
     }
 
-    private HealthCondition buildMainDiagnoses(Integer patientId, HealthConditionBo info) {
-        LOG.debug(INPUT_PARAMETERS_PATIENT_ID_INFO, patientId, info);
-        HealthCondition healthCondition = buildBasicHealthCondition(patientId, info);
+    private HealthCondition buildMainDiagnoses(PatientInfoBo patientInfo, HealthConditionBo info) {
+        LOG.debug("Input parameters -> patientInfo {}, info {}", patientInfo, info);
+        HealthCondition healthCondition = buildBasicHealthCondition(patientInfo, info);
         healthCondition.setProblemId(ProblemType.DIAGNOSIS);
         healthCondition.setMain(true);
         updateStatusAndVerification(healthCondition, info);
@@ -103,10 +111,10 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     }
 
     @Override
-    public List<DiagnosisBo> loadDiagnosis(Integer patientId, Long documentId, List<DiagnosisBo> diagnosis) {
-        LOG.debug("Input parameters -> patientId {}, documentId {}, diagnosis {}", documentId, patientId, diagnosis);
+    public List<DiagnosisBo> loadDiagnosis(PatientInfoBo patientInfo, Long documentId, List<DiagnosisBo> diagnosis) {
+        LOG.debug("Input parameters -> patientInfo {}, documentId {}, diagnosis {}", patientInfo, documentId, diagnosis);
         diagnosis.forEach(d -> {
-            HealthCondition healthCondition = buildDiagnoses(patientId, d);
+            HealthCondition healthCondition = buildDiagnoses(patientInfo, d);
             healthCondition = save(healthCondition);
 
             d.setId(healthCondition.getId());
@@ -122,9 +130,9 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         return diagnosis;
     }
 
-    private HealthCondition buildDiagnoses(Integer patientId, DiagnosisBo info) {
-        LOG.debug(INPUT_PARAMETERS_PATIENT_ID_INFO, patientId, info);
-        HealthCondition healthCondition = buildBasicHealthCondition(patientId, info);
+    private HealthCondition buildDiagnoses(PatientInfoBo patientInfo, DiagnosisBo info) {
+        LOG.debug("Input parameters -> patientInfo {}, info {}", patientInfo, info);
+        HealthCondition healthCondition = buildBasicHealthCondition(patientInfo, info);
         healthCondition.setProblemId(ProblemType.DIAGNOSIS);
         if (info.isPresumptive())
             healthCondition.setVerificationStatusId(ConditionVerificationStatus.PRESUMPTIVE);
@@ -148,10 +156,10 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     }
 
     @Override
-    public List<HealthHistoryConditionBo> loadPersonalHistories(Integer patientId, Long documentId, List<HealthHistoryConditionBo> personalHistories) {
-        LOG.debug("Input parameters -> patientId {}, documentId {}, personalHistories {}", documentId, patientId, personalHistories);
+    public List<HealthHistoryConditionBo> loadPersonalHistories(PatientInfoBo patientInfo, Long documentId, List<HealthHistoryConditionBo> personalHistories) {
+        LOG.debug("Input parameters -> patientInfo {}, documentId {}, personalHistories {}", patientInfo, documentId, personalHistories);
         personalHistories.forEach(ph -> {
-            HealthCondition healthCondition = buildPersonalHistory(patientId, ph);
+            HealthCondition healthCondition = buildPersonalHistory(patientInfo, ph);
             healthCondition = save(healthCondition);
 
             ph.setId(healthCondition.getId());
@@ -166,9 +174,9 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         return personalHistories;
     }
 
-    private HealthCondition buildPersonalHistory(Integer patientId, HealthHistoryConditionBo info) {
-        LOG.debug(INPUT_PARAMETERS_PATIENT_ID_INFO, patientId, info);
-        HealthCondition healthCondition = buildBasicHealthCondition(patientId, info);
+    private HealthCondition buildPersonalHistory(PatientInfoBo patientInfo, HealthHistoryConditionBo info) {
+        LOG.debug("Input parameters -> patientInfo {}, info {}", patientInfo, info);
+        HealthCondition healthCondition = buildBasicHealthCondition(patientInfo, info);
         healthCondition.setProblemId(ProblemType.PROBLEM);
         LocalDate date = info.getDate() == null ? dateTimeProvider.nowDate() : info.getDate();
         healthCondition.setStartDate(date);
@@ -178,10 +186,10 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     }
 
     @Override
-    public List<HealthHistoryConditionBo> loadFamilyHistories(Integer patientId, Long documentId, List<HealthHistoryConditionBo> familyHistories) {
-        LOG.debug("Input parameters -> patientId {}, documentId {}, familyHistories {}", documentId, patientId, familyHistories);
+    public List<HealthHistoryConditionBo> loadFamilyHistories(PatientInfoBo patientInfo, Long documentId, List<HealthHistoryConditionBo> familyHistories) {
+        LOG.debug("Input parameters -> patientInfo {}, documentId {}, familyHistories {}", patientInfo, documentId, familyHistories);
         familyHistories.forEach(ph -> {
-            HealthCondition healthCondition = buildFamilyHistory(patientId, ph);
+            HealthCondition healthCondition = buildFamilyHistory(patientInfo, ph);
             healthCondition = healthConditionRepository.save(healthCondition);
 
             ph.setId(healthCondition.getId());
@@ -197,9 +205,9 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         return familyHistories;
     }
 
-    private HealthCondition buildFamilyHistory(Integer patientId, HealthHistoryConditionBo info) {
-        LOG.debug(INPUT_PARAMETERS_PATIENT_ID_INFO, patientId, info);
-        HealthCondition healthCondition = buildBasicHealthCondition(patientId, info);
+    private HealthCondition buildFamilyHistory(PatientInfoBo patientInfo, HealthHistoryConditionBo info) {
+        LOG.debug("Input parameters -> patientInfo {}, info {}", patientInfo, info);
+        HealthCondition healthCondition = buildBasicHealthCondition(patientInfo, info);
         healthCondition.setProblemId(ProblemType.HISTORY);
         LocalDate date = info.getDate() == null ? dateTimeProvider.nowDate() : info.getDate();
         healthCondition.setStartDate(date);
@@ -208,13 +216,15 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         return healthCondition;
     }
 
-    private HealthCondition buildBasicHealthCondition(Integer patientId, HealthConditionBo info) {
-        LOG.debug(INPUT_PARAMETERS_PATIENT_ID_INFO, patientId, info);
+    private HealthCondition buildBasicHealthCondition(PatientInfoBo patientInfo, HealthConditionBo info) {
+        LOG.debug("Input parameters -> patientInfo {}, info {}", patientInfo, info);
         Integer snomedId = snomedService.getSnomedId(info.getSnomed())
                 .orElseGet(() -> snomedService.createSnomedTerm(info.getSnomed()));
+        String cie10Codes = calculateCie10CodesService.execute(info.getSnomed().getSctid(), patientInfo);
         HealthCondition healthCondition = new HealthCondition();
-        healthCondition.setPatientId(patientId);
+        healthCondition.setPatientId(patientInfo.getId());
         healthCondition.setSnomedId(snomedId);
+        healthCondition.setCie10Codes(cie10Codes);
         healthCondition.setStatusId(ConditionClinicalStatus.ACTIVE);
         healthCondition.setVerificationStatusId(info.getVerificationId());
         healthCondition.setStartDate(dateTimeProvider.nowDate());
@@ -242,10 +252,10 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     }
 
     @Override
-    public List<ProblemBo> loadProblems(Integer patientId, Long documentId, List<ProblemBo> problems) {
-        LOG.debug("Input parameters -> patientId {}, documentId {}, problems {}", documentId, patientId, problems);
+    public List<ProblemBo> loadProblems(PatientInfoBo patientInfo, Long documentId, List<ProblemBo> problems) {
+        LOG.debug("Input parameters -> patientInfo {}, documentId {}, problems {}", patientInfo, documentId, problems);
         problems.forEach(ph -> {
-            HealthCondition healthCondition = buildProblem(patientId, ph);
+            HealthCondition healthCondition = buildProblem(patientInfo, ph);
             healthCondition = save(healthCondition);
 
             ph.setId(healthCondition.getId());
@@ -261,9 +271,9 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         return problems;
     }
 
-    private HealthCondition buildProblem(Integer patientId, ProblemBo info) {
-        LOG.debug("Input parameters -> patientId {}, problem {}", patientId, info);
-        HealthCondition healthCondition = buildBasicHealthCondition(patientId, info);
+    private HealthCondition buildProblem(PatientInfoBo patientInfo, ProblemBo info) {
+        LOG.debug("Input parameters -> patientInfo {}, info {}", patientInfo, info);
+        HealthCondition healthCondition = buildBasicHealthCondition(patientInfo, info);
         healthCondition.setProblemId(info.isChronic() ? ProblemType.CHRONIC : ProblemType.PROBLEM);
         healthCondition.setStartDate(info.getStartDate());
         if (info.getEndDate() != null) {

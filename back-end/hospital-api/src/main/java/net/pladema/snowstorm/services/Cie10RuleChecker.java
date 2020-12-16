@@ -1,5 +1,6 @@
 package net.pladema.snowstorm.services;
 
+import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.person.repository.entity.Gender;
 
@@ -15,7 +16,7 @@ public class Cie10RuleChecker {
     private static final String TRUE = "TRUE";
     private static final String OTHERWISE_TRUE = "OTHERWISE TRUE";
 
-    public static boolean check(String rule, BasicPatientDto patient) {
+    public static boolean check(String rule, PatientInfoBo patient) {
         switch (rule) {
             case IF_FEMALE:
                 return evaluateGender(patient, Gender.FEMALE);
@@ -49,40 +50,40 @@ public class Cie10RuleChecker {
         }
     }
 
-    private static boolean evaluateGender(BasicPatientDto patient, short male) {
+    private static boolean evaluateGender(PatientInfoBo patient, short male) {
         return Short.valueOf(male).equals(getPatientGender(patient));
     }
 
-    private static boolean evaluateAgeOnsetGraterOrEqualAndLess(BasicPatientDto patient, int i, int j) {
+    private static boolean evaluateAgeOnsetGraterOrEqualAndLess(PatientInfoBo patient, int i, int j) {
         Short ageOnset = getPatientAgeOnset(patient);
         return ageOnset != null && (ageOnset >= i) && (ageOnset < j);
     }
 
-    private static boolean evaluateAgeOnsetLess(BasicPatientDto patient, int i) {
+    private static boolean evaluateAgeOnsetLess(PatientInfoBo patient, int i) {
         Short ageOnset = getPatientAgeOnset(patient);
         return ageOnset != null && (ageOnset < i);
     }
 
-    private static boolean evaluateCurrentAgeGreaterOrEqual(BasicPatientDto patient, int i) {
+    private static boolean evaluateCurrentAgeGreaterOrEqual(PatientInfoBo patient, int i) {
         Short age = getPatientAge(patient);
         return age != null && (age >= i);
     }
 
-    private static boolean evaluateCurrentAgeLessOrEqual(BasicPatientDto patient, int i) {
+    private static boolean evaluateCurrentAgeLessOrEqual(PatientInfoBo patient, int i) {
         Short age = getPatientAge(patient);
         return age != null && (age <= i);
     }
 
-    private static Short getPatientAgeOnset(BasicPatientDto patient) {
-        return patient.getPerson().getAge();
+    private static Short getPatientAgeOnset(PatientInfoBo patient) {
+        return patient.getAge();
     }
 
-    private static Short getPatientGender(BasicPatientDto patient) {
-        return patient.getPerson().getGender().getId();
+    private static Short getPatientGender(PatientInfoBo patient) {
+        return patient.getGenderId();
     }
 
-    private static Short getPatientAge(BasicPatientDto patient) {
-        return patient.getPerson().getAge();
+    private static Short getPatientAge(PatientInfoBo patient) {
+        return patient.getAge();
     }
 
 }

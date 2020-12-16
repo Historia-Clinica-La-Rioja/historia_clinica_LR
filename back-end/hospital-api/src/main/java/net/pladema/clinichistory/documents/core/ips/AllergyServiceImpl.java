@@ -7,9 +7,12 @@ import net.pladema.clinichistory.documents.repository.ips.masterdata.AllergyInto
 import net.pladema.clinichistory.documents.repository.ips.masterdata.AllergyIntoleranceVerificationStatusRepository;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.AllergyIntoleranceClinicalStatus;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.AllergyIntoleranceVerificationStatus;
+import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.AllergyService;
 import net.pladema.clinichistory.documents.service.ips.SnomedService;
 import net.pladema.clinichistory.documents.service.ips.domain.AllergyConditionBo;
+import net.pladema.patient.controller.dto.BasicPatientDto;
+import net.pladema.snowstorm.services.CalculateCie10CodesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -33,25 +36,30 @@ public class AllergyServiceImpl implements AllergyService {
 
     private final SnomedService snomedService;
 
+    private final CalculateCie10CodesService calculateCie10CodesService;
+
     public AllergyServiceImpl(AllergyIntoleranceRepository allergyIntoleranceRepository,
                               AllergyIntoleranceClinicalStatusRepository allergyClinicalStatusRepository,
                               AllergyIntoleranceVerificationStatusRepository allergyVerificationStatusRepository,
                               DocumentService documentService,
-                              SnomedService snomedService){
+                              SnomedService snomedService,
+                              CalculateCie10CodesService calculateCie10CodesService){
         this.allergyIntoleranceRepository = allergyIntoleranceRepository;
         this.allergyClinicalStatusRepository = allergyClinicalStatusRepository;
         this.allergyVerificationStatusRepository = allergyVerificationStatusRepository;
         this.documentService = documentService;
         this.snomedService = snomedService;
+        this.calculateCie10CodesService = calculateCie10CodesService;
     }
 
     @Override
-    public List<AllergyConditionBo> loadAllergies(Integer patientId, Long documentId, List<AllergyConditionBo> allergies) {
-        LOG.debug("Input parameters -> patientId {}, documentId {}, allergies {}", documentId, patientId, allergies);
+    public List<AllergyConditionBo> loadAllergies(PatientInfoBo patientInfo, Long documentId, List<AllergyConditionBo> allergies) {
+        LOG.debug("Input parameters -> patientInfo {}, documentId {}, allergies {}", patientInfo, documentId, allergies);
         allergies.forEach(allergy -> {
             Integer snomedId = snomedService.getSnomedId(allergy.getSnomed())
                     .orElseGet(() -> snomedService.createSnomedTerm(allergy.getSnomed()));
-            AllergyIntolerance allergyIntolerance = saveAllergyIntolerance(patientId, allergy, snomedId);
+            String cie10Codes = calculateCie10CodesService.execute(allergy.getSnomed().getSctid(), patientInfo);
+            AllergyIntolerance allergyIntolerance = saveAllergyIntolerance(patientInfo, allergy, snomedId, cie10Codes);
 
             allergy.setId(allergyIntolerance.getId());
             allergy.setVerificationId(allergyIntolerance.getVerificationStatusId());
@@ -68,10 +76,11 @@ public class AllergyServiceImpl implements AllergyService {
         return result;
     }
 
-    private AllergyIntolerance saveAllergyIntolerance(Integer patientId, AllergyConditionBo allergy, Integer snomedId) {
-        LOG.debug("Input parameters -> patientId {}, allergy {}, snomedId {}", patientId, allergy, snomedId);
-        AllergyIntolerance allergyIntolerance = new AllergyIntolerance(patientId,
+    private AllergyIntolerance saveAllergyIntolerance(PatientInfoBo patientInfo, AllergyConditionBo allergy, Integer snomedId, String cie10Codes) {
+        LOG.debug("Input parameters -> patientInfo {}, allergy {}, snomedId {}", patientInfo, allergy, snomedId);
+        AllergyIntolerance allergyIntolerance = new AllergyIntolerance(patientInfo.getId(),
                 snomedId,
+                cie10Codes,
                 allergy.getStatusId(),
                 allergy.getVerificationId(),
                 allergy.getCategoryId(),

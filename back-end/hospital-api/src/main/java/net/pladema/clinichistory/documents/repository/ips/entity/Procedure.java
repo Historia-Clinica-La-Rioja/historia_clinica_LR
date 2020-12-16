@@ -46,10 +46,11 @@ public class Procedure extends SGXAuditableEntity {
 	@Column(name = "note_id")
 	private Long noteId;
 
-	public Procedure(Integer patientId, Integer snomedId, String statusId, LocalDate performedDate) {
+	public Procedure(Integer patientId, Integer snomedId, String cie10Codes, String statusId, LocalDate performedDate) {
 		super();
 		this.patientId = patientId;
 		this.snomedId = snomedId;
+		this.cie10Codes = cie10Codes;
 		if (statusId != null)
 			this.statusId = statusId;
 		this.performedDate = performedDate;

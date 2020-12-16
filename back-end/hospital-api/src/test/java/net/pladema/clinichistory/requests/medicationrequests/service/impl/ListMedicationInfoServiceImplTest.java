@@ -58,10 +58,10 @@ public class ListMedicationInfoServiceImplTest extends UnitRepository {
         when(dateTimeProvider.nowDate()).thenReturn(LocalDate.of(2021,01,9));
 
         Integer patientId = 1;
-        String sctId_anginas = save(SnomedTestMocks.createSnomed("ANGINAS")).getId();
-        String sctId_papera = save(SnomedTestMocks.createSnomed("PAPERA")).getId();
-        String sctId_dolor = save(SnomedTestMocks.createSnomed("DOLOR")).getId();
-        String sctId_ibuprofeno = save(SnomedTestMocks.createSnomed("IBUPROFENO")).getId();
+        Integer sctId_anginas = save(SnomedTestMocks.createSnomed("ANGINAS")).getId();
+        Integer sctId_papera = save(SnomedTestMocks.createSnomed("PAPERA")).getId();
+        Integer sctId_dolor = save(SnomedTestMocks.createSnomed("DOLOR")).getId();
+        Integer sctId_ibuprofeno = save(SnomedTestMocks.createSnomed("IBUPROFENO")).getId();
 
         Integer mr1_id = save(new MedicationRequest(patientId, 1, "status", "intent", "category", 1, true)).getId();
         Integer mr2_id = save(new MedicationRequest(patientId, 1, "status", "intent", "category", 1, true)).getId();
@@ -90,35 +90,35 @@ public class ListMedicationInfoServiceImplTest extends UnitRepository {
 
         Integer dosageId = save(MedicationTestMocks.createDosage(7d,"d", 8, "h", false,
                 LocalDate.of(2020,12,16), LocalDate.of(2020,12,23), null, null)).getId();
-        Integer medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_ibuprofeno, MedicationStatementStatus.ACTIVE, null, angina_id, dosageId)).getId();
+        Integer medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_ibuprofeno, "", MedicationStatementStatus.ACTIVE, null, angina_id, dosageId)).getId();
         save(MedicationTestMocks.createDocumentMedicationStatement(recipe1_doc_id, medicationId));
 
 
-        medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_ibuprofeno, MedicationStatementStatus.ACTIVE, null, null,null)).getId();
+        medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_ibuprofeno, "", MedicationStatementStatus.ACTIVE, null, null,null)).getId();
         save(MedicationTestMocks.createDocumentMedicationStatement(outpatient2_doc_id, medicationId));
 
         dosageId = save(MedicationTestMocks.createDosage(7d,"d", 8, "h", false,
                 LocalDate.of(2020,12,16), LocalDate.of(2020,12,23), LocalDate.of(2020,12,18), LocalDate.of(2020,12,20))).getId();
-        medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_ibuprofeno, MedicationStatementStatus.ACTIVE, null, angina_id, dosageId)).getId();
+        medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_ibuprofeno, "", MedicationStatementStatus.ACTIVE, null, angina_id, dosageId)).getId();
         save(MedicationTestMocks.createDocumentMedicationStatement(recipe2_doc_id, medicationId));
 
 
         dosageId = save(MedicationTestMocks.createDosage(5d,"d", 8, "h", false,
                 LocalDate.of(2020,12,20), LocalDate.of(2020,12,25), null, null)).getId();
-        medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_ibuprofeno, MedicationStatementStatus.ACTIVE, null, papera_id, dosageId)).getId();
+        medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_ibuprofeno, "", MedicationStatementStatus.ACTIVE, null, papera_id, dosageId)).getId();
         save(MedicationTestMocks.createDocumentMedicationStatement(recipe3_doc_id, medicationId));
 
-        medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_ibuprofeno, MedicationStatementStatus.ACTIVE, null, null,null)).getId();
+        medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_ibuprofeno, "", MedicationStatementStatus.ACTIVE, null, null,null)).getId();
         save(MedicationTestMocks.createDocumentMedicationStatement(hospitalization2_doc_id, medicationId));
 
         dosageId = save(MedicationTestMocks.createDosage(9d,"d", 8, "h", false,
                 LocalDate.of(2020,12,21), LocalDate.of(2020,12,30), null, null)).getId();
-        medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_ibuprofeno, MedicationStatementStatus.ACTIVE, null, dolor_id, dosageId)).getId();
+        medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_ibuprofeno, "", MedicationStatementStatus.ACTIVE, null, dolor_id, dosageId)).getId();
         save(MedicationTestMocks.createDocumentMedicationStatement(recipe4_doc_id, medicationId));
 
         dosageId = save(MedicationTestMocks.createDosage(11d,"d", 8, "h", false,
                 LocalDate.of(2021,01,01), LocalDate.of(2021,01,11), null, null)).getId();
-        medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_ibuprofeno, MedicationStatementStatus.ACTIVE, null, angina_id, dosageId)).getId();
+        medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_ibuprofeno, "", MedicationStatementStatus.ACTIVE, null, angina_id, dosageId)).getId();
         save(MedicationTestMocks.createDocumentMedicationStatement(recipe5_doc_id, medicationId));
 
         MedicationFilterBo medicationFilterBo = new MedicationFilterBo(patientId, MedicationStatementStatus.ACTIVE, null, null);
@@ -158,10 +158,10 @@ public class ListMedicationInfoServiceImplTest extends UnitRepository {
         when(dateTimeProvider.nowDate()).thenReturn(LocalDate.of(2020,12,19));
         Integer patientId = 1;
 
-        String sctId_anginas = save(SnomedTestMocks.createSnomed("ANGINAS")).getId();
-        String sctId_papera = save(SnomedTestMocks.createSnomed("PAPERA")).getId();
-        String sctId_dolor = save(SnomedTestMocks.createSnomed("DOLOR")).getId();
-        String sctId_ibuprofeno = save(SnomedTestMocks.createSnomed("IBUPROFENO")).getId();
+        Integer sctId_anginas = save(SnomedTestMocks.createSnomed("ANGINAS")).getId();
+        Integer sctId_papera = save(SnomedTestMocks.createSnomed("PAPERA")).getId();
+        Integer sctId_dolor = save(SnomedTestMocks.createSnomed("DOLOR")).getId();
+        Integer sctId_ibuprofeno = save(SnomedTestMocks.createSnomed("IBUPROFENO")).getId();
 
         Integer mr1_id = save(new MedicationRequest(patientId, 1, "status", "intent", "category", 1, true)).getId();
         Integer mr2_id = save(new MedicationRequest(patientId, 1, "status", "intent", "category", 1, true)).getId();
@@ -188,30 +188,30 @@ public class ListMedicationInfoServiceImplTest extends UnitRepository {
 
         Integer dosageId = save(MedicationTestMocks.createDosage(7d,"d", 8, "h", false,
                 LocalDate.of(2020,12,16), LocalDate.of(2020,12,23), null, null)).getId();
-        Integer medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_ibuprofeno, MedicationStatementStatus.ACTIVE, null, angina_id, dosageId)).getId();
+        Integer medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_ibuprofeno, "", MedicationStatementStatus.ACTIVE, null, angina_id, dosageId)).getId();
         save(MedicationTestMocks.createDocumentMedicationStatement(recipe1_doc_id, medicationId));
 
 
-        medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_ibuprofeno, MedicationStatementStatus.ACTIVE, null, null,null)).getId();
+        medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_ibuprofeno, "", MedicationStatementStatus.ACTIVE, null, null,null)).getId();
         save(MedicationTestMocks.createDocumentMedicationStatement(outpatient2_doc_id, medicationId));
 
         dosageId = save(MedicationTestMocks.createDosage(7d,"d", 8, "h", false,
                 LocalDate.of(2020,12,16), LocalDate.of(2020,12,23), LocalDate.of(2020,12,18), LocalDate.of(2020,12,20))).getId();
-        medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_ibuprofeno, MedicationStatementStatus.SUSPENDED, null, angina_id, dosageId)).getId();
+        medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_ibuprofeno, "", MedicationStatementStatus.SUSPENDED, null, angina_id, dosageId)).getId();
         save(MedicationTestMocks.createDocumentMedicationStatement(recipe2_doc_id, medicationId));
 
 
         dosageId = save(MedicationTestMocks.createDosage(5d,"d", 8, "h", false,
                 LocalDate.of(2020,12,20), LocalDate.of(2020,12,25), null, null)).getId();
-        medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_ibuprofeno, MedicationStatementStatus.ACTIVE, null, papera_id, dosageId)).getId();
+        medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_ibuprofeno, "", MedicationStatementStatus.ACTIVE, null, papera_id, dosageId)).getId();
         save(MedicationTestMocks.createDocumentMedicationStatement(recipe3_doc_id, medicationId));
 
-        medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_ibuprofeno, MedicationStatementStatus.SUSPENDED, null, null,null)).getId();
+        medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_ibuprofeno, "", MedicationStatementStatus.SUSPENDED, null, null,null)).getId();
         save(MedicationTestMocks.createDocumentMedicationStatement(hospitalization2_doc_id, medicationId));
 
         dosageId = save(MedicationTestMocks.createDosage(9d,"d", 8, "h", false,
                 LocalDate.of(2020,12,21), LocalDate.of(2020,12,30), null, null)).getId();
-        medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_ibuprofeno, MedicationStatementStatus.ACTIVE, null, dolor_id, dosageId)).getId();
+        medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_ibuprofeno, "", MedicationStatementStatus.ACTIVE, null, dolor_id, dosageId)).getId();
         save(MedicationTestMocks.createDocumentMedicationStatement(recipe4_doc_id, medicationId));
 
         MedicationFilterBo medicationFilterBo = new MedicationFilterBo(patientId, MedicationStatementStatus.SUSPENDED, null, null);

@@ -62,19 +62,6 @@ public class SnowstormController {
         return deferredResult;
     }
 
-    @GetMapping(value = REFSET_MEMBERS)
-    public ResponseEntity<List<String>> getCie10Codes(
-            @RequestParam(value = "referencedComponentId", required = true) String referencedComponentId,
-            @RequestParam(value = "patientId", required = true) Integer patientId) {
-        LOG.debug("Input data -> referencedComponentId {}, patientId {}", referencedComponentId, patientId);
-
-        BasicPatientDto patient = patientExternalService.getBasicDataFromPatient(patientId);
-        List<String> cie10Codes = calculateCie10CodesService.execute(referencedComponentId, patient);
-
-        LOG.debug("Output -> {}", cie10Codes);
-        return ResponseEntity.ok(cie10Codes);
-    }
-
     private <R> void setCallbacks(DeferredResult<ResponseEntity<R>> deferredResult, String serviceName) {
         deferredResult.onTimeout(() -> {
             LOG.error("TimeOut en la invocación del servicio {}", serviceName);

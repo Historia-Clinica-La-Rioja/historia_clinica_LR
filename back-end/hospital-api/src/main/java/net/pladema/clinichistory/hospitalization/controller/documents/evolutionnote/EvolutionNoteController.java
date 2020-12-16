@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import net.pladema.clinichistory.documents.events.OnGenerateInternmentDocumentEvent;
 import net.pladema.clinichistory.documents.service.CreateDocumentFile;
 import net.pladema.clinichistory.documents.service.Document;
+import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.hospitalization.controller.constraints.DocumentValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.EvolutionNoteDiagnosisValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
@@ -23,6 +24,9 @@ import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.ev
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.EDocumentType;
 import net.pladema.featureflags.service.FeatureFlagsService;
+import net.pladema.patient.controller.dto.BasicPatientDto;
+import net.pladema.patient.controller.service.PatientExternalService;
+import net.pladema.sgx.exceptions.NotFoundException;
 import net.pladema.sgx.pdf.PDFDocumentException;
 
 import net.pladema.sgx.featureflags.AppFeature;
@@ -68,6 +72,8 @@ public class EvolutionNoteController {
 
     private final FeatureFlagsService featureFlagsService;
 
+    private final PatientExternalService patientExternalService;
+
     public EvolutionNoteController(InternmentEpisodeService internmentEpisodeService,
                                    CreateEvolutionNoteService createEvolutionNoteService,
                                    UpdateEvolutionNoteService updateEvolutionNoteService,
@@ -75,7 +81,8 @@ public class EvolutionNoteController {
                                    EvolutionNoteReportService evolutionNoteReportService,
                                    EvolutionNoteMapper evolutionNoteMapper,
                                    CreateDocumentFile createDocumentFile,
-                                   FeatureFlagsService featureFlagsService) {
+                                   FeatureFlagsService featureFlagsService,
+                                   PatientExternalService patientExternalService) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.createEvolutionNoteService = createEvolutionNoteService;
         this.updateEvolutionNoteService = updateEvolutionNoteService;
@@ -84,6 +91,7 @@ public class EvolutionNoteController {
         this.evolutionNoteMapper = evolutionNoteMapper;
         this.createDocumentFile = createDocumentFile;
         this.featureFlagsService = featureFlagsService;
+        this.patientExternalService = patientExternalService;
     }
 
     @PostMapping
@@ -98,11 +106,13 @@ public class EvolutionNoteController {
             @RequestBody @Valid EvolutionNoteDto evolutionNoteDto) throws IOException, PDFDocumentException {
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, evolutionNote {}",
                 institutionId, internmentEpisodeId, evolutionNoteDto);
-        Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
-                .orElseThrow(() -> new EntityNotFoundException(INVALID_INTERNMENT_EPISODE));
+        PatientInfoBo patientInfo = internmentEpisodeService.getPatient(internmentEpisodeId)
+                .map(patientExternalService::getBasicDataFromPatient)
+                .map(patientDto -> new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()))
+                .orElseThrow(() -> new NotFoundException("El paciente no existe", "El paciente no existe"));
         EvolutionNoteBo evolutionNote = evolutionNoteMapper.fromEvolutionNoteDto(evolutionNoteDto);
-        evolutionNote = createEvolutionNoteService.createDocument(internmentEpisodeId, patientId, evolutionNote);
-        generateDocument(evolutionNote, institutionId, internmentEpisodeId, patientId);
+        evolutionNote = createEvolutionNoteService.createDocument(internmentEpisodeId, patientInfo, evolutionNote);
+        generateDocument(evolutionNote, institutionId, internmentEpisodeId, patientInfo.getId());
         LOG.debug(OUTPUT, Boolean.TRUE);
         return  ResponseEntity.ok().body(Boolean.TRUE);
     }
@@ -123,12 +133,14 @@ public class EvolutionNoteController {
             throw new MethodNotSupportedException("Funcionalidad no soportada por el momento");
 
         EvolutionNoteBo evolutionNote = evolutionNoteMapper.fromEvolutionNoteDto(evolutionNoteDto);
-        Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
-                .orElseThrow(() -> new EntityNotFoundException(INVALID_INTERNMENT_EPISODE));
-        evolutionNote = updateEvolutionNoteService.updateDocument(internmentEpisodeId, patientId, evolutionNote);
+        PatientInfoBo patientInfo = internmentEpisodeService.getPatient(internmentEpisodeId)
+                .map(patientExternalService::getBasicDataFromPatient)
+                .map(patientDto -> new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()))
+                .orElseThrow(() -> new NotFoundException("El paciente no existe", "El paciente no existe"));
+        evolutionNote = updateEvolutionNoteService.updateDocument(internmentEpisodeId, patientInfo, evolutionNote);
         ResponseEvolutionNoteDto result = evolutionNoteMapper.fromEvolutionNote(evolutionNote);
         LOG.debug(OUTPUT, result);
-        generateDocument(evolutionNote, institutionId, internmentEpisodeId, patientId);
+        generateDocument(evolutionNote, institutionId, internmentEpisodeId, patientInfo.getId());
         return  ResponseEntity.ok().body(result);
     }
 

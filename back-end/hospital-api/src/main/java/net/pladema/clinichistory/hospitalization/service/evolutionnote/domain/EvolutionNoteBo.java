@@ -4,12 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.documents.service.Document;
+import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.hospitalization.service.domain.ClinicalSpecialtyBo;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentStatus;
 import net.pladema.clinichistory.documents.service.ips.domain.*;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProblemBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProcedureBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ReasonBo;
+import net.pladema.patient.controller.dto.BasicPatientDto;
 
 import java.util.Collections;
 import java.util.List;
@@ -39,46 +41,7 @@ public class EvolutionNoteBo implements Document {
 
     private VitalSignBo vitalSigns;
 
-    public String getDocumentStatusId(){
-        return confirmed ? DocumentStatus.FINAL : DocumentStatus.DRAFT;
-    }
-
     @Override
-    public Integer getPatientId() {
-        return null;
-    }
-
-
-    @Override
-    public List<ProblemBo> getProblems() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<HealthHistoryConditionBo> getPersonalHistories() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<HealthHistoryConditionBo> getFamilyHistories() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<MedicationBo> getMedications() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<ReasonBo> getReasons() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public ClinicalSpecialtyBo getClinicalSpecialty() {        
-        return null;
-    }
-    
     public short getDocumentType() {
         return 0;
     }
@@ -92,4 +55,14 @@ public class EvolutionNoteBo implements Document {
     public Short getDocumentSource() {
         return null;
     }
+
+    public String getDocumentStatusId(){
+        return confirmed ? DocumentStatus.FINAL : DocumentStatus.DRAFT;
+    }
+
+    @Override
+    public Integer getPatientId() {
+        return null;
+    }
+
 }

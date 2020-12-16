@@ -7,6 +7,7 @@ import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.Docu
 import net.pladema.clinichistory.documents.service.Document;
 import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
 import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
+import net.pladema.patient.controller.dto.BasicPatientDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,8 @@ import java.util.List;
 public class MedicationRequestBo implements Document {
 
     private Integer patientId;
+
+    private BasicPatientDto patientDto;
 
     private Integer medicalCoverageId;
 

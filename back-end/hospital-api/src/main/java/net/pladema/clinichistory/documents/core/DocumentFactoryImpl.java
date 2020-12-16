@@ -4,6 +4,7 @@ import net.pladema.clinichistory.documents.service.Document;
 import net.pladema.clinichistory.documents.service.DocumentFactory;
 import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.service.NoteService;
+import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.*;
 import net.pladema.clinichistory.documents.service.ips.domain.DocumentObservationsBo;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
@@ -69,23 +70,23 @@ public class DocumentFactoryImpl implements DocumentFactory {
         loadNotes(doc, Optional.ofNullable(document.getNotes()));
         doc = documentService.save(doc);
 
-        Integer patientId = document.getPatientId();
+        PatientInfoBo patientInfo = document.getPatientInfo();
         Integer intermentEpisodeId = document.getEncounterId();
-        healthConditionService.loadMainDiagnosis(patientId, doc.getId(), Optional.ofNullable(document.getMainDiagnosis()));
-        healthConditionService.loadDiagnosis(patientId, doc.getId(), document.getDiagnosis());
-        healthConditionService.loadPersonalHistories(patientId, doc.getId(), document.getPersonalHistories());
-        healthConditionService.loadFamilyHistories(patientId, doc.getId(), document.getFamilyHistories());
-        allergyService.loadAllergies(patientId, doc.getId(), document.getAllergies());
-        immunizationService.loadImmunization(patientId, doc.getId(), document.getImmunizations());
-        medicationService.loadMedications(patientId, doc.getId(), document.getMedications());
-        proceduresService.loadProcedures(patientId, doc.getId(), document.getProcedures());
+        healthConditionService.loadMainDiagnosis(patientInfo, doc.getId(), Optional.ofNullable(document.getMainDiagnosis()));
+        healthConditionService.loadDiagnosis(patientInfo, doc.getId(), document.getDiagnosis());
+        healthConditionService.loadPersonalHistories(patientInfo, doc.getId(), document.getPersonalHistories());
+        healthConditionService.loadFamilyHistories(patientInfo, doc.getId(), document.getFamilyHistories());
+        allergyService.loadAllergies(patientInfo, doc.getId(), document.getAllergies());
+        immunizationService.loadImmunization(patientInfo, doc.getId(), document.getImmunizations());
+        medicationService.loadMedications(patientInfo, doc.getId(), document.getMedications());
+        proceduresService.loadProcedures(patientInfo, doc.getId(), document.getProcedures());
 
-        clinicalObservationService.loadVitalSigns(patientId, doc.getId(), Optional.ofNullable(document.getVitalSigns()));
-        clinicalObservationService.loadAnthropometricData(patientId, doc.getId(), Optional.ofNullable(document.getAnthropometricData()));
+        clinicalObservationService.loadVitalSigns(patientInfo, doc.getId(), Optional.ofNullable(document.getVitalSigns()));
+        clinicalObservationService.loadAnthropometricData(patientInfo, doc.getId(), Optional.ofNullable(document.getAnthropometricData()));
 
         internmentEpisodeService.updateAnamnesisDocumentId(intermentEpisodeId, doc.getId());
 
-        diagnosticReportService.loadDiagnosticReport(doc.getId(), patientId, document.getDiagnosticReports());
+        diagnosticReportService.loadDiagnosticReport(doc.getId(), patientInfo, document.getDiagnosticReports());
 
         return doc.getId();
     }

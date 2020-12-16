@@ -3,6 +3,7 @@ package net.pladema.clinichistory.hospitalization.service.epicrisis.impl;
 import net.pladema.clinichistory.documents.repository.entity.Document;
 import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.service.NoteService;
+import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.CreateEpicrisisService;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.domain.EpicrisisBo;
@@ -57,20 +58,20 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
     }
 
     @Override
-    public EpicrisisBo createDocument(Integer internmentEpisodeId, Integer patientId, EpicrisisBo epicrisis) {
-        LOG.debug("Input parameters -> internmentEpisodeId {}, patientId {}, epicrisis {}", internmentEpisodeId, patientId, epicrisis);
+    public EpicrisisBo createDocument(Integer internmentEpisodeId, PatientInfoBo patientInfo, EpicrisisBo epicrisis) {
+        LOG.debug("Input parameters -> internmentEpisodeId {}, patientInfo {}, epicrisis {}", internmentEpisodeId, patientInfo, epicrisis);
 
         Document document = new Document(internmentEpisodeId, epicrisis.getDocumentStatusId(), DocumentType.EPICRISIS, SourceType.HOSPITALIZATION);
         loadNotes(document, Optional.ofNullable(epicrisis.getNotes()));
         document = documentService.save(document);
 
-        epicrisis.setMainDiagnosis(healthConditionService.loadMainDiagnosis(patientId, document.getId(), Optional.of(epicrisis.getMainDiagnosis())));
-        epicrisis.setDiagnosis(healthConditionService.loadDiagnosis(patientId, document.getId(), epicrisis.getDiagnosis()));
-        epicrisis.setPersonalHistories(healthConditionService.loadPersonalHistories(patientId, document.getId(), epicrisis.getPersonalHistories()));
-        epicrisis.setFamilyHistories(healthConditionService.loadFamilyHistories(patientId, document.getId(), epicrisis.getFamilyHistories()));
-        epicrisis.setAllergies(allergyService.loadAllergies(patientId, document.getId(), epicrisis.getAllergies()));
-        epicrisis.setImmunizations(immunizationService.loadImmunization(patientId, document.getId(), epicrisis.getImmunizations()));
-        epicrisis.setMedications(medicationService.loadMedications(patientId, document.getId(), epicrisis.getMedications()));
+        epicrisis.setMainDiagnosis(healthConditionService.loadMainDiagnosis(patientInfo, document.getId(), Optional.of(epicrisis.getMainDiagnosis())));
+        epicrisis.setDiagnosis(healthConditionService.loadDiagnosis(patientInfo, document.getId(), epicrisis.getDiagnosis()));
+        epicrisis.setPersonalHistories(healthConditionService.loadPersonalHistories(patientInfo, document.getId(), epicrisis.getPersonalHistories()));
+        epicrisis.setFamilyHistories(healthConditionService.loadFamilyHistories(patientInfo, document.getId(), epicrisis.getFamilyHistories()));
+        epicrisis.setAllergies(allergyService.loadAllergies(patientInfo, document.getId(), epicrisis.getAllergies()));
+        epicrisis.setImmunizations(immunizationService.loadImmunization(patientInfo, document.getId(), epicrisis.getImmunizations()));
+        epicrisis.setMedications(medicationService.loadMedications(patientInfo, document.getId(), epicrisis.getMedications()));
 
         internmentEpisodeService.updateEpicrisisDocumentId(internmentEpisodeId, document.getId());
         epicrisis.setId(document.getId());

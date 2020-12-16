@@ -5,9 +5,11 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.documents.service.Document;
+import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.domain.*;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProcedureBo;
 import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
+import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.sgx.exceptions.SelfValidating;
 
 import javax.validation.Valid;
@@ -22,6 +24,8 @@ public class AnamnesisBo extends SelfValidating<AnamnesisBo> implements Document
     private Long id;
 
     private Integer patientId;
+
+    private PatientInfoBo patientInfo;
 
     private Integer encounterId;
 

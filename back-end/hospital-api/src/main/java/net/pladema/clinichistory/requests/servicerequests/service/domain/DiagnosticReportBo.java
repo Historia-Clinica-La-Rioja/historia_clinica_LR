@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.pladema.clinichistory.documents.service.ips.domain.SnomedBo;
 
 @Getter
 @Setter
@@ -14,5 +15,5 @@ public class DiagnosticReportBo {
 
     private String observations;
 
-    private String sctidCode;
+    private SnomedBo snomed;
 }

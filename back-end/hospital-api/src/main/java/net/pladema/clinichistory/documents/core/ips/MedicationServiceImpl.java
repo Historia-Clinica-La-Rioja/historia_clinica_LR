@@ -8,11 +8,13 @@ import net.pladema.clinichistory.documents.repository.ips.masterdata.MedicamentS
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.MedicationStatementStatus;
 import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.service.NoteService;
+import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.MedicationService;
 import net.pladema.clinichistory.documents.service.ips.SnomedService;
 import net.pladema.clinichistory.documents.service.ips.domain.DosageBo;
 import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
 import net.pladema.clinichistory.documents.service.ips.domain.enums.EUnitsOfTimeBo;
+import net.pladema.snowstorm.services.CalculateCie10CodesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -36,6 +38,8 @@ public class MedicationServiceImpl implements MedicationService {
 
     private final SnomedService snomedService;
 
+    private final CalculateCie10CodesService calculateCie10CodesService;
+
     private final NoteService noteService;
 
     public MedicationServiceImpl(MedicationStatementRepository medicationStatementRepository,
@@ -43,22 +47,25 @@ public class MedicationServiceImpl implements MedicationService {
                                  MedicamentStatementStatusRepository medicamentStatementStatusRepository,
                                  DocumentService documentService,
                                  SnomedService snomedService,
+                                 CalculateCie10CodesService calculateCie10CodesService,
                                  NoteService noteService){
         this.medicationStatementRepository = medicationStatementRepository;
         this.dosageRepository = dosageRepository;
         this.medicamentStatementStatusRepository = medicamentStatementStatusRepository;
         this.documentService = documentService;
         this.snomedService = snomedService;
+        this.calculateCie10CodesService = calculateCie10CodesService;
         this.noteService = noteService;
     }
 
     @Override
-    public List<MedicationBo> loadMedications(Integer patientId, Long documentId, List<MedicationBo> medications) {
-        LOG.debug("Input parameters -> patientId {}, documentId {}, medications {}", documentId, patientId, medications);
+    public List<MedicationBo> loadMedications(PatientInfoBo patientInfo, Long documentId, List<MedicationBo> medications) {
+        LOG.debug("Input parameters -> patientInfo {}, documentId {}, medications {}", patientInfo, documentId, medications);
         medications.forEach(medication -> {
             Integer snomedId = snomedService.getSnomedId(medication.getSnomed())
                     .orElseGet(() -> snomedService.createSnomedTerm(medication.getSnomed()));
-            MedicationStatement medicationStatement = saveMedicationStatement(patientId, medication, snomedId);
+            String cie10Codes = calculateCie10CodesService.execute(medication.getSnomed().getSctid(), patientInfo);
+            MedicationStatement medicationStatement = saveMedicationStatement(patientInfo.getId(), medication, snomedId, cie10Codes);
 
             medication.setId(medicationStatement.getId());
             medication.setStatusId(medicationStatement.getStatusId());
@@ -73,13 +80,14 @@ public class MedicationServiceImpl implements MedicationService {
 
 
 
-    private MedicationStatement saveMedicationStatement(Integer patientId, MedicationBo medicationBo, Integer snomedId) {
-        LOG.debug("Input parameters -> patientId {}, medication {}, snomedId {}", patientId, medicationBo, snomedId);
+    private MedicationStatement saveMedicationStatement(Integer patientId, MedicationBo medicationBo, Integer snomedId, String cie10Codes) {
+        LOG.debug("Input parameters -> patientId {}, medication {}, snomedId {}, cie10Codes {}", patientId, medicationBo, snomedId, cie10Codes);
 
         Dosage newDosage = createDosage(medicationBo.getDosage());
         MedicationStatement medicationStatement = new MedicationStatement(
                 patientId,
                 snomedId,
+                cie10Codes,
                 medicationBo.getStatusId(),
                 noteService.createNote(medicationBo.getNote()),
                 medicationBo.getHealthCondition().getId(),

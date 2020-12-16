@@ -56,11 +56,12 @@ public class AllergyIntolerance extends SGXAuditableEntity {
 	@Column(name = "note_id")
 	private Long noteId;
 
-	public AllergyIntolerance(Integer patientId, Integer snomedId, String statusId,
+	public AllergyIntolerance(Integer patientId, Integer snomedId, String cie10Codes, String statusId,
 							  String verificationId, String categoryId, LocalDate startDate){
 		super();
 		this.patientId = patientId;
 		this.snomedId = snomedId;
+		this.cie10Codes = cie10Codes;
 		if (statusId != null)
 			this.statusId = statusId;
 		if (verificationId != null)

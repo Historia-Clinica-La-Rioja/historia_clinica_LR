@@ -5,6 +5,7 @@ import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.service.NoteService;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentStatus;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
+import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.*;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientDocumentBo;
 import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
@@ -59,21 +60,21 @@ public class CreateOutpatientDocumentServiceImpl implements CreateOutpatientDocu
 
 
     @Override
-    public OutpatientDocumentBo create(Integer outpatientId, Integer patientId,  OutpatientDocumentBo outpatient) {
-        LOG.debug("Input parameters outpatientId {}, patientId {}, outpatient {}", outpatientId, patientId, outpatient);
+    public OutpatientDocumentBo create(Integer outpatientId, PatientInfoBo patientInfo, OutpatientDocumentBo outpatient) {
+        LOG.debug("Input parameters -> outpatientId {}, patientInfo {}, outpatient {}", outpatientId, patientInfo, outpatient);
         Document doc = new Document(outpatientId, DocumentStatus.FINAL, DocumentType.OUTPATIENT, SourceType.OUTPATIENT);
         loadNotes(doc, Optional.ofNullable(outpatient.getEvolutionNote()));
         doc = documentService.save(doc);
 
-        outpatient.setProblems(healthConditionService.loadProblems(patientId, doc.getId(), outpatient.getProblems()));
-        outpatient.setProcedures(proceduresService.loadProcedures(patientId, doc.getId(), outpatient.getProcedures()));
-        outpatient.setFamilyHistories(healthConditionService.loadFamilyHistories(patientId, doc.getId(), outpatient.getFamilyHistories()));
-        outpatient.setMedications(medicationService.loadMedications(patientId, doc.getId(), outpatient.getMedications()));
-        outpatient.setAllergies(allergyService.loadAllergies(patientId, doc.getId(), outpatient.getAllergies()));
-        outpatient.setImmunizations(immunizationService.loadImmunization(patientId, doc.getId(), outpatient.getImmunizations()));
+        outpatient.setProblems(healthConditionService.loadProblems(patientInfo, doc.getId(), outpatient.getProblems()));
+        outpatient.setProcedures(proceduresService.loadProcedures(patientInfo, doc.getId(), outpatient.getProcedures()));
+        outpatient.setFamilyHistories(healthConditionService.loadFamilyHistories(patientInfo, doc.getId(), outpatient.getFamilyHistories()));
+        outpatient.setMedications(medicationService.loadMedications(patientInfo, doc.getId(), outpatient.getMedications()));
+        outpatient.setAllergies(allergyService.loadAllergies(patientInfo, doc.getId(), outpatient.getAllergies()));
+        outpatient.setImmunizations(immunizationService.loadImmunization(patientInfo, doc.getId(), outpatient.getImmunizations()));
 
-        outpatient.setVitalSigns(clinicalObservationService.loadVitalSigns(patientId, doc.getId(), Optional.ofNullable(outpatient.getVitalSigns())));
-        outpatient.setAnthropometricData(clinicalObservationService.loadAnthropometricData(patientId, doc.getId(), Optional.ofNullable(outpatient.getAnthropometricData())));
+        outpatient.setVitalSigns(clinicalObservationService.loadVitalSigns(patientInfo, doc.getId(), Optional.ofNullable(outpatient.getVitalSigns())));
+        outpatient.setAnthropometricData(clinicalObservationService.loadAnthropometricData(patientInfo, doc.getId(), Optional.ofNullable(outpatient.getAnthropometricData())));
 
         updateOutpatientConsultationService.updateOutpatientDocId(outpatientId, doc.getId());
         outpatient.setId(doc.getId());

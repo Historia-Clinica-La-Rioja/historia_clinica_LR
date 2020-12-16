@@ -55,11 +55,12 @@ public class Inmunization extends SGXAuditableEntity {
 	@Column(name = "note_id")
 	private Long noteId;
 
-	public Inmunization(Integer patientId, Integer snomedId, String statusId, LocalDate administrationDate,
+	public Inmunization(Integer patientId, Integer snomedId, String cie10Codes, String statusId, LocalDate administrationDate,
 						Integer institutionId, Long noteId) {
 		super();
 		this.patientId = patientId;
 		this.snomedId = snomedId;
+		this.cie10Codes = cie10Codes;
 		if (statusId != null)
 			this.statusId = statusId;
 		this.noteId = noteId;

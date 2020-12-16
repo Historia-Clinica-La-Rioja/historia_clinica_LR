@@ -43,7 +43,7 @@ public class SnomedDto implements Serializable {
         if (snomed == null)
             return null;
         SnomedDto result = new SnomedDto();
-        result.setId(snomed.getId());
+        result.setId(snomed.getSctid());
         result.setPt(snomed.getPt());
         return result;
     }

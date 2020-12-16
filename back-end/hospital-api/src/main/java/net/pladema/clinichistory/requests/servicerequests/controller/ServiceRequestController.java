@@ -8,6 +8,8 @@ import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.Sno
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.CreateServiceRequestMapper;
 import net.pladema.clinichistory.requests.servicerequests.service.CreateServiceRequestService;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
+import net.pladema.patient.controller.dto.BasicPatientDto;
+import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.sgx.security.utils.UserInfo;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.slf4j.Logger;
@@ -34,13 +36,16 @@ public class ServiceRequestController {
     private final HealthcareProfessionalExternalService healthcareProfessionalExternalService;
     private final CreateServiceRequestService createServiceRequestService;
     private final CreateServiceRequestMapper createServiceRequestMapper;
+    private final PatientExternalService patientExternalService;
 
     public ServiceRequestController(HealthcareProfessionalExternalService healthcareProfessionalExternalService,
                                     CreateServiceRequestService createServiceRequestService,
-                                    CreateServiceRequestMapper createServiceRequestMapper) {
+                                    CreateServiceRequestMapper createServiceRequestMapper,
+                                    PatientExternalService patientExternalService) {
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.createServiceRequestService = createServiceRequestService;
         this.createServiceRequestMapper = createServiceRequestMapper;
+        this.patientExternalService = patientExternalService;
     }
 
     @PostMapping
@@ -55,12 +60,14 @@ public class ServiceRequestController {
         Map<String, List<PrescriptionItemDto>> srGroupBy = serviceRequestListDto.getItems().stream()
                 .collect(Collectors.groupingBy(PrescriptionItemDto::getCategoryId));
 
+        BasicPatientDto patientDto = patientExternalService.getBasicDataFromPatient(patientId);
+
         ArrayList<Integer> result = new ArrayList<>();
 
         srGroupBy.forEach((categoryId, studyListDto) -> {
             ServiceRequestBo serviceRequestBo = createServiceRequestMapper.parseTo(
                     doctorId,
-                    patientId,
+                    patientDto,
                     categoryId,
                     serviceRequestListDto.getMedicalCoverageId(),
                     studyListDto);

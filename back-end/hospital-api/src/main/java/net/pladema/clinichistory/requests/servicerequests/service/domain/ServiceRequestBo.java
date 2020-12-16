@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.documents.service.Document;
+import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
 
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ServiceRequestBo implements Document {
 
-    private Integer patientId;
+    private PatientInfoBo patientInfo;
     private String categoryId;
     private Integer medicalCoverageId;
     private Integer encounterId;
@@ -33,4 +34,10 @@ public class ServiceRequestBo implements Document {
     public Short getDocumentSource() {
         return SourceType.ORDER;
     }
+
+    @Override
+    public Integer getPatientId() {
+        return patientInfo.getId();
+    }
+
 }
