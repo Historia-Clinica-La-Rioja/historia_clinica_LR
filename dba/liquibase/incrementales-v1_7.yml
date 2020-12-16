@@ -946,3 +946,108 @@ databaseChangeLog:
             - dropColumn:
                 columnName: doc_id
                 tableName: service_request
+    
+    - changeSet:
+        id: medication_statement-addColumn-cie10_codes
+        author: tmedina
+        changes:
+            - addColumn:
+                tableName: medication_statement
+                columns:
+                - column:
+                    name: cie10_codes
+                    type: varchar(255)
+                    constraints:
+                        nullable: true  
+
+    - changeSet:
+        id: inmunization-addColumn-cie10_codes
+        author: tmedina
+        changes:
+            - addColumn:
+                tableName: inmunization
+                columns:
+                - column:
+                    name: cie10_codes
+                    type: varchar(255)
+                    constraints:
+                        nullable: true  
+
+    - changeSet:
+        id: procedures-addColumn-cie10_codes
+        author: tmedina
+        changes:
+            - addColumn:
+                tableName: procedures
+                columns:
+                - column:
+                    name: cie10_codes
+                    type: varchar(255)
+                    constraints:
+                        nullable: true
+    
+    - changeSet:
+        id: health_condition-addColumn-cie10_codes
+        author: tmedina
+        changes:
+            - addColumn:
+                tableName: health_condition
+                columns:
+                - column:
+                    name: cie10_codes
+                    type: varchar(255)
+                    constraints:
+                        nullable: true  
+
+    - changeSet:
+        id: allergy_intolerance-addColumn-cie10_codes
+        author: tmedina
+        changes:
+            - addColumn:
+                tableName: allergy_intolerance
+                columns:
+                - column:
+                    name: cie10_codes
+                    type: varchar(255)
+                    constraints:
+                        nullable: true 
+
+    - changeSet:
+        id: observation_vital_sign-addColumn-cie10_codes
+        author: tmedina
+        changes:
+            - addColumn:
+                tableName: observation_vital_sign
+                columns:
+                - column:
+                    name: cie10_codes
+                    type: varchar(255)
+                    constraints:
+                        nullable: true   
+
+    - changeSet:
+        id: observation_lab-addColumn-cie10_codes
+        author: tmedina
+        changes:
+            - addColumn:
+                tableName: observation_lab
+                columns:
+                - column:
+                    name: cie10_codes
+                    type: varchar(255)
+                    constraints:
+                        nullable: true  
+    
+    - changeSet:
+        id: diagnostic_report-addColumn-cie10_codes
+        author: tmedina
+        changes:
+            - addColumn:
+                tableName: diagnostic_report
+                columns:
+                - column:
+                    name: cie10_codes
+                    type: varchar(255)
+                    constraints:
+                        nullable: true  
+
