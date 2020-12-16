@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
-import { EmergencyCareEpisodeDto, EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
+import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import { DateTimeDto } from '@api-rest/api-model';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
-import { differenceInHours, differenceInMinutes } from 'date-fns';
+import { differenceInMinutes } from 'date-fns';
 import { EstadosEpisodio, Triages } from '../../constants/masterdata';
 
 @Component({

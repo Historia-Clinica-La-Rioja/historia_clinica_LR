@@ -19,26 +19,27 @@
 							<mat-card-header>
 								<div id="avatar" mat-card-avatar class="header-image"></div>
 								<mat-card-title>
-									<div fxLayout="column">
-										<span *ngIf="!episode.patient else patientInfo">
-											Sin información
-										</span>
-									</div>
+									<span *ngIf="!episode.patient else patientInfo">
+										{{ 'guardia.home.episodes.episode.patient.NO_INFO'| translate }}
+									</span>
 								</mat-card-title>
 								<mat-card-subtitle *ngIf="episode.patient?.id">
-									<span class="mat-small"> ID Paciente {{ episode.patient?.id }}</span>
+									<span class="mat-small">
+										{{ 'guardia.home.episodes.episode.patient.ID'| translate }}
+										 {{ episode.patient?.id }}
+									</span>
 								</mat-card-subtitle>
 							</mat-card-header>
 
 
 							<ng-template #patientInfo>
-								<span *ngIf="episode.patient?.typeId !== PACIENTE_TEMPORAL else temporal">
+								<span *ngIf="(episode.patient?.typeId !== PACIENTE_TEMPORAL || episode.patient?.firstName || episode.patient?.lastName) else temporal">
 									{{ episode.patient?.person?.firstName }} {{ episode.patient?.person?.lastName }}
 								</span>
 							</ng-template>
 
 							<ng-template #temporal>
-								<span>Paciente temporal</span>
+								<span>{{ 'guardia.home.episodes.episode.patient.TEMPORAL'| translate }}</span>
 							</ng-template>
 						</div>
 
@@ -59,7 +60,7 @@
 							</ng-template>
 						</div>
 
-						<div id="actions" fxLayout="row" fxLayoutAlign="flex-end" fxFlex="5%">
+						<div id="actions" fxFlex="5%">
 							<button mat-icon-button>
 								<mat-icon>more_vert</mat-icon>
 							</button>

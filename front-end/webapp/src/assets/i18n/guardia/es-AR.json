@@ -1,10 +1,17 @@
 {
 	"guardia": {
 		"home": {
-			"TITLE": "Guardia de emergencia",
 			"episodes": {
+				"episode": {
+					"patient": {
+						"ID": "ID Paciente",
+						"NO_INFO": "Sin información",
+						"TEMPORAL": "Paciente temporal"
+					}
+				},
 				"TITLE": "Episodios de guardia"
-			}
+			},
+			"TITLE": "Guardia de emergencia"
 		}
 	}
 }
