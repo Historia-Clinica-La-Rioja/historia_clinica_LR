@@ -5,9 +5,54 @@
     </button>
 </div>
 
-<button mat-button color="primary" (click)="addPrescriptionItem()" fxFlexFill.xs>
-    <span class="uppercase">{{data.addLabel | translate}}</span>
-</button>
+<div mat-dialog-content>
+    <form [formGroup]="prescriptionForm" class="form">
+        <div fxLayout="column">
+            <mat-form-field appearance="outline">
+                <mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.SELECT_MEDICAL_COVERAGE' | translate}}</mat-label>
+                <mat-select formControlName="patientMedicalCoverage">
+                    <mat-option
+                        id="medicalCoverage"
+                        name="medicalCoverage"
+                        *ngFor="let patientMedicalCoverage of patientMedicalCoverages" [value]="patientMedicalCoverage">
+                        {{getFullMedicalCoverageText(patientMedicalCoverage)}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            
+            <div class="margin-checkbox" *ngIf="data.canRecipe">
+                <mat-checkbox formControlName="withRecipe">
+                    <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.WITHOUT_RECIPE'"></span>
+                </mat-checkbox>
+            </div>
+        </div>
+    </form>
+    
+    <div *ngFor="let prescriptionItem of prescriptionItems" class="item-container">
+        <div fxLayout="column" fxLayoutGap="10px" class="item-information">
+            <div fxLayout="row" fxLayoutAlign="space-between start">
+                <h3 fxFlex="80%" id="prescriptionItemName" class="mat-subheading-2 capitalize-first-letter">{{prescriptionItem.snomed.pt}}</h3>
+
+                <div fxFlex="20%" fxLayoutAlign="end start">
+                    <button mat-icon-button color="primary" (click)="openPrescriptionItemDialog(prescriptionItem)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" (click)="deletePrescriptionItem(prescriptionItem)">
+                        <mat-icon>delete_outline</mat-icon>
+                    </button>
+                </div>
+            </div>
+            <span class="mat-body-1">{{getDosage(prescriptionItem)}}</span>
+            <h3 class="mat-subheading-2 capitalize-first-letter color-primary">{{prescriptionItem.healthProblem.description}}</h3>
+            <span class="mat-body-1" *ngIf="prescriptionItem.observations">{{prescriptionItem.observations}}</span>
+        </div>
+        <mat-divider></mat-divider>
+    </div>
+
+    <button mat-stroked-button color="primary" (click)="openPrescriptionItemDialog()" fxFlexFill.xs>
+        <span class="uppercase">{{data.addLabel | translate}}</span>
+    </button>
+</div>
 
 <mat-dialog-actions fxLayout="row" fxLayoutAlign="end start">
     <button mat-flat-button color="primary" (click)="confirmPrescription()" fxFlexFill.xs>

@@ -197,7 +197,9 @@
 					"MEDICATION_TITLE": "Nueva medicación",
 					"ADD_MEDICATION_LABEL": "Agregar medicación",
 					"STUDY_TITLE": "Nueva orden",
-					"ADD_STUDY_LABEL": "Agregar estudio"
+					"ADD_STUDY_LABEL": "Agregar estudio",
+					"SELECT_MEDICAL_COVERAGE": "Seleccione cobertura médica",
+					"WITHOUT_RECIPE": "Sin receta"
 				},
 				"confirm_prescription_dialog": {
 					"MEDICATION_TITLE": "Su medicación fue agregada correctamente",

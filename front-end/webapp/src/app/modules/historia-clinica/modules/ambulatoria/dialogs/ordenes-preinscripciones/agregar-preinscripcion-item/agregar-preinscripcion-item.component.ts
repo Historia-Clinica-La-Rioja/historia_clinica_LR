@@ -20,7 +20,7 @@ export class AgregarPreinscripcionItemComponent implements OnInit {
 	snomedConcept: SnomedDto;
 	prescriptionItemForm: FormGroup;
 	conceptsResultsTable: TableModel<any>;
-	healthProblemOptions;
+	healthProblemOptions = [];
 	DEFAULT_RADIO_OPTION = 1;
 	OTHER_RADIO_OPTION = 0;
 	hasError = hasError;
@@ -45,19 +45,45 @@ export class AgregarPreinscripcionItemComponent implements OnInit {
 		this.hceGeneralStateService.getActiveProblems(this.data.patientId).subscribe((activeProblems: HCEPersonalHistoryDto[]) => {
 			this.healthProblemOptions = activeProblems.map(problem => {return {id: problem.id, description: problem.snomed.pt}});
 		});
+
+		if (this.data.item) {
+			const item = this.data.item;
+			this.prescriptionItemForm.controls.healthProblem.setValue(item.healthProblem.id);
+			this.prescriptionItemForm.controls.observations.setValue(item.observations);
+			item.isDailyInterval ? this.prescriptionItemForm.controls.interval.setValue(this.DEFAULT_RADIO_OPTION) : this.prescriptionItemForm.controls.intervalHours.setValue(item.intervalHours);
+			item.isChronicAdministrationTime ? this.prescriptionItemForm.controls.administrationTime.setValue(this.DEFAULT_RADIO_OPTION) : this.prescriptionItemForm.controls.administrationTimeDays.setValue(item.administrationTimeDays);
+
+			this.snomedConcept = {
+				id: item.snomed.id,
+				pt: item.snomed.pt,
+				parentFsn: null,
+    			parentId: null,
+			};
+			const pt = item.snomed ? item.snomed.pt : '';
+			this.prescriptionItemForm.controls.snomed.setValue(pt);
+		} 
 	}
 
 	dynamicInputNumberWidth(formControl: string) {
 		return this.prescriptionItemForm.controls[formControl].value ? this.prescriptionItemForm.controls[formControl].value.toString().length : this.MIN_INPUT_LENGTH;
 	}
 
-	addPreinscripcionItem() {
+	addPrescriptionItem() {
 		if(this.prescriptionItemForm.valid) {
 			let newItem: NewPrescriptionItem = {
-				snomed: this.snomedConcept.id,
-				healthProblem: this.prescriptionItemForm.controls.healthProblem.value,
-				interval: null,
-				administrationTime: null,
+				id: this.data.item ? this.data.item.id : null,
+				snomed: {
+					id: this.snomedConcept.id,
+					pt: this.snomedConcept.pt
+				},
+				healthProblem: {
+					id: this.prescriptionItemForm.controls.healthProblem.value,
+					description: this.healthProblemOptions.find(hp => hp.id === this.prescriptionItemForm.controls.healthProblem.value).description
+				},
+				isDailyInterval: this.prescriptionItemForm.controls.interval.value === this.DEFAULT_RADIO_OPTION,
+				isChronicAdministrationTime: this.prescriptionItemForm.controls.administrationTime.value === this.DEFAULT_RADIO_OPTION,
+				intervalHours: this.prescriptionItemForm.controls.interval.value === this.OTHER_RADIO_OPTION ? this.prescriptionItemForm.controls.intervalHours.value : null,
+				administrationTimeDays: this.prescriptionItemForm.controls.administrationTime.value === this.OTHER_RADIO_OPTION ? this.prescriptionItemForm.controls.administrationTimeDays.value : null,
 				observations: this.prescriptionItemForm.controls.observations.value
 			}
 
@@ -161,12 +187,22 @@ export class NewPrescriptionItemData {
 	searchSnomedLabel: string;
 	showDosage: boolean;
 	eclTerm: string;
+	item?: NewPrescriptionItem;
 }
 
 export class NewPrescriptionItem {
-	snomed: string;
-	healthProblem: number;
-	interval: string;
-	administrationTime: string;
+	id: number;
+	snomed: {
+		id: string;
+		pt: string;
+	};
+	healthProblem: {
+		id: number;
+		description: string;
+	};
+	isDailyInterval: boolean;
+	isChronicAdministrationTime: boolean;
+	intervalHours?: string;
+	administrationTimeDays?: string;
 	observations: string;
 }

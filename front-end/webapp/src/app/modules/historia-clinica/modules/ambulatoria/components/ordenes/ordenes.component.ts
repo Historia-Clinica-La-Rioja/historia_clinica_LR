@@ -31,7 +31,7 @@ export class OrdenesComponent implements OnInit {
 					patientId: this.patientId,
 					titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.MEDICATION_TITLE',
 					addLabel: 'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.ADD_MEDICATION_LABEL',
-					hasMedicalCoverage: false,
+					canRecipe: true,
 					prescriptionItemList: undefined,
 					childData: {
 						titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.MEDICATION_TITLE',
@@ -39,7 +39,8 @@ export class OrdenesComponent implements OnInit {
 						showDosage: true,
 						eclTerm: 'medicine',
 					}
-				}
+				},
+				width: '35%',
 			});
 
 		newMedicationDialog.afterClosed().subscribe(data => {
@@ -62,7 +63,7 @@ export class OrdenesComponent implements OnInit {
 					patientId: this.patientId,
 					titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.STUDY_TITLE',
 					addLabel: 'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.ADD_STUDY_LABEL',
-					hasMedicalCoverage: false,
+					canRecipe: false,
 					prescriptionItemList: undefined,
 					childData: {
 						titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.STUDY_TITLE',
@@ -70,7 +71,8 @@ export class OrdenesComponent implements OnInit {
 						showDosage: false,
 						eclTerm: 'procedure',
 					}
-				}
+				},
+				width: '35%',
 			});
 
 		newStudyDialog.afterClosed().subscribe(data => {

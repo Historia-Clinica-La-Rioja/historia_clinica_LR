@@ -19,7 +19,7 @@
 		[mainStyle]="'secondary'"></app-table>
 
 	<ng-template #PrescriptionItemForm>
-		<form [formGroup]="prescriptionItemForm" fxLayout="column" fxLayoutGap="15px" (ngSubmit)="addPreinscripcionItem()">
+		<form [formGroup]="prescriptionItemForm" fxLayout="column" fxLayoutGap="15px" (ngSubmit)="addPrescriptionItem()">
 			<mat-form-field appearance="outline">
 				<mat-label class="capitalize-first-letter">{{data.searchSnomedLabel | translate}}</mat-label>
 				<input matInput type="text" formControlName="snomed" name="snomed" readonly>
