@@ -22,6 +22,7 @@ import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.model.ResourceType;
 import org.hl7.fhir.r4.model.StringType;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -41,7 +42,7 @@ public abstract class IResourceFhir {
         this.store=store;
     }
 
-    @Value("${ws.renaper.dominio}")
+    @Value("${ws.renaper.dominio:}")
     public void setDominio(String dominio){
         IResourceFhir.dominio = dominio;
     }

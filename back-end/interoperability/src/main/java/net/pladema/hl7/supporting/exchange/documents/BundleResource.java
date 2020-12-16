@@ -51,7 +51,7 @@ public class BundleResource extends IResourceFhir {
     @Value("${app.default.language}")
     private String language;
 
-    @Value("${ws.renaper.dominio}")
+    @Value("${ws.renaper.dominio:}")
     private String dominio;
 
     @Autowired

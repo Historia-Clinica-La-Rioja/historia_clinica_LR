@@ -38,7 +38,7 @@ public class PatientProvider {
     private final FhirClientR4 client;
     private final BundleResource bundleResource;
 
-    @Value("${ws.renaper.dominio}")
+    @Value("${ws.renaper.dominio:}")
     private String dominio;
 
     public PatientProvider(FhirClientR4 client,
