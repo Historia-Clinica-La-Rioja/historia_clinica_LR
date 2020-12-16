@@ -35,7 +35,6 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -110,23 +109,6 @@ public class AnamnesisControllerTest extends UnitController {
 
 	@Test
 	@WithMockUser
-	public void test_getAnamnesisFailed() throws Exception {
-		this.mockMvc.perform(MockMvcRequestBuilders.get(GET))
-				.andExpect(status().isBadRequest());
-	}
-
-	@Test
-	@WithMockUser
-	public void test_getAnamnesisDocumentInvalid() throws Exception {
-		configContextInternmentValid();
-		this.mockMvc.perform(MockMvcRequestBuilders.get(GET))
-				.andExpect(status().isBadRequest())
-				.andExpect(jsonPath("$.errors")
-						.value(buildMessage("document.invalid")));
-	}
-
-	@Test
-	@WithMockUser
 	public void test_updateAnamnesisSuccess() throws Exception {
 		configContextDocumentValid();
 		configContextPatientExist();
@@ -145,18 +127,6 @@ public class AnamnesisControllerTest extends UnitController {
 				.andExpect(status().isBadRequest());
 	}
 
-	@Test
-	@WithMockUser
-	public void test_updateAnamnesisDocumentInvalid() throws Exception {
-		configContextInternmentValid();
-		when(sghNotNullValidator.isValid(any(), any())).thenReturn(true);
-		this.mockMvc.perform(MockMvcRequestBuilders.put(PUT)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(mockRequestBodyBasic()))
-				.andExpect(status().isBadRequest())
-				.andExpect(jsonPath("$.errors")
-						.value(buildMessage("document.invalid")));
-	}
 
 	@Test
 	@WithMockUser

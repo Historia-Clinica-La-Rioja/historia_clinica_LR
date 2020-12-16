@@ -116,6 +116,8 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
         if (featureFlagsService.isOn(AppFeature.MAIN_DIAGNOSIS_REQUIRED)
                 && anamnesis.getMainDiagnosis() == null)
             throw new ConstraintViolationException("Diagnóstico principal obligatorio", Collections.emptySet());
+        if (anamnesis.getMainDiagnosis() == null)
+            return;
         if (anamnesis.getAlternativeDiagnosis() == null)
             return;
         SnomedBo snomedMainDiagnosis = anamnesis.getMainDiagnosis().getSnomed();
