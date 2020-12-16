@@ -29,7 +29,7 @@ export class EmergencyCareEpisodeService {
 				triage: {
 					id: 1,
 					description: 'Nivel 1',
-					color: '#fafafa',
+					color: '#D34444',
 				},
 				type: {
 					id: 1,
@@ -51,13 +51,13 @@ export class EmergencyCareEpisodeService {
 					time: { hours: 15, minutes: 10 }
 				},
 				patient: {
-					id: 9,
+					id: 10,
 					typeId: 3
 				},
 				triage: {
-					id: 1,
-					description: 'Nivel 1',
-					color: '#fafafa',
+					id: 5,
+					description: 'Nivel 5',
+					color: '#2687C5',
 				},
 				type: {
 					id: 1,
@@ -79,9 +79,9 @@ export class EmergencyCareEpisodeService {
 					time: { hours: 12, minutes: 29 }
 				},
 				triage: {
-					id: 1,
-					description: 'Nivel 1',
-					color: '#fafafa',
+					id: 5,
+					description: 'Nivel 5',
+					color: '#2687C5',
 				},
 				type: {
 					id: 1,
@@ -95,7 +95,104 @@ export class EmergencyCareEpisodeService {
 					id: 1,
 					description: 'Enfermeria',
 				},
-			}]
+			},
+			{
+				id: 69,
+				creationDate: {
+					date: { day: 1, month: 3, year: 2020 },
+					time: { hours: 12, minutes: 29 }
+				},
+				triage: {
+					id: 1,
+					description: 'Nivel 1',
+					color: '#D34444',
+				},
+				type: {
+					id: 1,
+					description: 'Guardia adulto'
+				},
+				state: {
+					id: 2,
+					description: 'En espera'
+				},
+				doctorsOffice: {
+					id: 1,
+					description: 'Enfermeria',
+				},
+			},
+			{
+				id: 70,
+				creationDate: {
+					date: { day: 1, month: 3, year: 2020 },
+					time: { hours: 12, minutes: 29 }
+				},
+				triage: {
+					id: 2,
+					description: 'Nivel 2',
+					color: '#FF5C00',
+				},
+				type: {
+					id: 1,
+					description: 'Guardia adulto'
+				},
+				state: {
+					id: 2,
+					description: 'En espera'
+				},
+				doctorsOffice: {
+					id: 1,
+					description: 'Enfermeria',
+				},
+			},
+			{
+				id: 71,
+				creationDate: {
+					date: { day: 1, month: 3, year: 2020 },
+					time: { hours: 12, minutes: 29 }
+				},
+				triage: {
+					id: 3,
+					description: 'Nivel 3',
+					color: '#EDBE00',
+				},
+				type: {
+					id: 1,
+					description: 'Guardia adulto'
+				},
+				state: {
+					id: 2,
+					description: 'En espera'
+				},
+				doctorsOffice: {
+					id: 1,
+					description: 'Enfermeria',
+				},
+			},
+			{
+				id: 72,
+				creationDate: {
+					date: { day: 1, month: 3, year: 2020 },
+					time: { hours: 12, minutes: 29 }
+				},
+				triage: {
+					id: 4,
+					description: 'Nivel 4',
+					color: '#009B68',
+				},
+				type: {
+					id: 1,
+					description: 'Guardia adulto'
+				},
+				state: {
+					id: 2,
+					description: 'En espera'
+				},
+				doctorsOffice: {
+					id: 1,
+					description: 'Enfermeria',
+				},
+			}
+			]
 		);
 	}
 }
