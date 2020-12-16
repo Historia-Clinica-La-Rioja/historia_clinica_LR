@@ -31,9 +31,6 @@ public class MedicationRequest extends SGXAuditableEntity {
 	@Column(name = "institution_id", nullable = false)
 	private Integer institutionId;
 
-	@Column(name = "doc_id", nullable = false)
-	private Long docId;
-
 	@Column(name = "medical_coverage_id")
 	private Integer medicalCoverageId;
 
@@ -44,7 +41,7 @@ public class MedicationRequest extends SGXAuditableEntity {
 	private String intentId = RequestIntentStatus.ORDER;
 
 	@Column(name = "category_id", length = 20, nullable = false)
-	private String categoryId;
+	private String categoryId = MedicationRequestCategory.COMMUNITY;
 
 	@Column(name = "doctor_id", nullable = false)
 	private Integer doctorId;
@@ -53,7 +50,7 @@ public class MedicationRequest extends SGXAuditableEntity {
 	private Boolean hasRecipe = false;
 
 	@Column(name = "request_date")
-	private LocalDate requestDate;
+	private LocalDate requestDate = LocalDate.now();
 
 	@Column(name = "note_id")
 	private Long noteId;

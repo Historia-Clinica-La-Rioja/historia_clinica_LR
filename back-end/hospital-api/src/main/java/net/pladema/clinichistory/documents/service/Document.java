@@ -1,46 +1,84 @@
 package net.pladema.clinichistory.documents.service;
 
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentStatus;
 import net.pladema.clinichistory.hospitalization.service.domain.ClinicalSpecialtyBo;
 import net.pladema.clinichistory.documents.service.ips.domain.*;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProblemBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProcedureBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ReasonBo;
 
+import java.util.Collections;
 import java.util.List;
 
 public interface Document {
 
-    Long getId();
+    default Long getId() {
+        return null;
+    }
 
-    boolean isConfirmed();
+    default boolean isConfirmed() {
+        return true;
+    }
 
-    HealthConditionBo getMainDiagnosis();
+    default HealthConditionBo getMainDiagnosis() {
+        return null;
+    }
 
-    List<DiagnosisBo> getDiagnosis();
+    default List<DiagnosisBo> getDiagnosis() {
+        return Collections.emptyList();
+    }
 
-    List<ProblemBo> getProblems();
+    default List<ProblemBo> getProblems() {
+        return Collections.emptyList();
+    }
 
-    List<ProcedureBo> getProcedures();
+    default List<ProcedureBo> getProcedures() {
+        return Collections.emptyList();
+    }
 
-    List<HealthHistoryConditionBo> getPersonalHistories();
+    default List<HealthHistoryConditionBo> getPersonalHistories() {
+        return Collections.emptyList();
+    }
 
-    List<HealthHistoryConditionBo> getFamilyHistories();
+    default List<HealthHistoryConditionBo> getFamilyHistories() {
+        return Collections.emptyList();
+    }
 
-    List<MedicationBo> getMedications();
+    default List<MedicationBo> getMedications() {
+        return Collections.emptyList();
+    }
 
-    List<AllergyConditionBo> getAllergies();
+    default List<AllergyConditionBo> getAllergies() {
+        return Collections.emptyList();
+    }
 
-    List<ImmunizationBo> getImmunizations();
+    default List<ImmunizationBo> getImmunizations() {
+        return Collections.emptyList();
+    }
 
-    VitalSignBo getVitalSigns();
+    default VitalSignBo getVitalSigns() {
+        return null;
+    }
 
-    AnthropometricDataBo getAnthropometricData();
+    default List<ReasonBo> getReasons() {
+        return Collections.emptyList();
+    }
 
-    DocumentObservationsBo getNotes();
+    default AnthropometricDataBo getAnthropometricData() {
+        return null;
+    }
 
-    List<ReasonBo> getReasons();
+    default DocumentObservationsBo getNotes() {
+        return null;
+    }
 
-    ClinicalSpecialtyBo getClinicalSpecialty();
+    default ClinicalSpecialtyBo getClinicalSpecialty() {
+        return null;
+    }
+
+    default Integer getMedicalCoverageId() {
+        return null;
+    }
     
     short getDocumentType();
 
@@ -48,7 +86,11 @@ public interface Document {
 
     Short getDocumentSource();
 
-    String getDocumentStatusId();
+    default String getDocumentStatusId(){
+        return isConfirmed() ? DocumentStatus.FINAL : DocumentStatus.DRAFT;
+    }
 
     Integer getPatientId();
+
+
 }

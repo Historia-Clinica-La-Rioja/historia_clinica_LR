@@ -773,8 +773,8 @@ export interface MedicationInfoDto extends Serializable {
 export interface NewDosageDto extends Serializable {
     chronic: boolean;
     diary: boolean;
-    duration: number;
-    frequency: number;
+    duration?: number;
+    frequency?: number;
 }
 
 export interface NewMedicalRequestDto {

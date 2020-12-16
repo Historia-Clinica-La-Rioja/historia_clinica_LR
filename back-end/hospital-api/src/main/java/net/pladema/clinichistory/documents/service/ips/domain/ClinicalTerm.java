@@ -17,7 +17,7 @@ public abstract class ClinicalTerm extends SelfValidating<ClinicalTerm> {
 
     private Integer id;
 
-    private String statusId ;
+    private String statusId;
 
     @Valid
     @NotNull(message = "{value.mandatory}")

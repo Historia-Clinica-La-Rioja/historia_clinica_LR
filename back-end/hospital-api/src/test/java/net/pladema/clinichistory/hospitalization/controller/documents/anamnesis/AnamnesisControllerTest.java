@@ -20,16 +20,13 @@ import net.pladema.patient.controller.service.PatientExternalService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.Locale;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -84,9 +81,6 @@ public class AnamnesisControllerTest extends UnitController {
 
 	@MockBean
 	private FeatureFlagsService featureFlagsService;
-
-	@Autowired
-	private MessageSource messageSource;
 
 	@Before
 	public void setup() {
@@ -241,7 +235,4 @@ public class AnamnesisControllerTest extends UnitController {
 				"}";
 	}
 
-	private String buildMessage(String keyMessage){
-		return messageSource.getMessage(keyMessage, null, Locale.getDefault());
-	}
 }

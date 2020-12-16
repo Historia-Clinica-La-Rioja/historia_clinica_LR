@@ -28,8 +28,8 @@ public class DocumentType implements Serializable {
 	public static final short EVALUATION_NOTE = (short)2;
 	public static final short EPICRISIS = (short)3;
 	public static final short OUTPATIENT = (short)4;
-	public static final short RECIPE = (short)3;
-	public static final short ORDER = (short)4;
+	public static final short RECIPE = (short)5;
+	public static final short ORDER = (short)6;
 
 	@Id
 	@Column(name = "id")

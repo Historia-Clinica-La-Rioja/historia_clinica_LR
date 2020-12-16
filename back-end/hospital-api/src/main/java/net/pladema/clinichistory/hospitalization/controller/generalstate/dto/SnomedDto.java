@@ -16,13 +16,13 @@ import java.io.Serializable;
 public class SnomedDto implements Serializable {
 
     @NotNull(message = "{value.mandatory}")
-    @NotEmpty
+    @NotEmpty(message = "{value.mandatory}")
     @Length(max = 20, message = "{snomed.id.max.value}")
     @EqualsAndHashCode.Include
     private String id;
 
     @NotNull(message = "{value.mandatory}")
-    @NotEmpty
+    @NotEmpty(message = "{value.mandatory}")
     @Length(max = 255, message = "{snomed.pt.max.value}")
     private String pt;
 

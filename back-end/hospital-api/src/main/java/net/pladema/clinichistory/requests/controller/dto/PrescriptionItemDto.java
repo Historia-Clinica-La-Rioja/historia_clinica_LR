@@ -2,6 +2,7 @@ package net.pladema.clinichistory.requests.controller.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.NewDosageDto;
@@ -14,12 +15,14 @@ import java.io.Serializable;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class PrescriptionItemDto implements Serializable {
 
-    @NotNull
+    @Valid
+    @NotNull(message = "{value.mandatory}")
     private SnomedDto snomed;
 
-    @NotNull
+    @NotNull(message = "{value.mandatory}")
     private Integer healthConditionId;
 
     @Nullable
@@ -28,4 +31,5 @@ public class PrescriptionItemDto implements Serializable {
     @Valid
     @Nullable
     private NewDosageDto dosage;
+
 }

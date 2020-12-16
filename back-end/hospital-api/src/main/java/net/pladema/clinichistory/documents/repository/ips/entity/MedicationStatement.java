@@ -9,7 +9,6 @@ import net.pladema.sgx.auditable.entity.SGXAuditListener;
 import net.pladema.sgx.auditable.entity.SGXAuditableEntity;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
@@ -40,36 +39,26 @@ public class MedicationStatement extends SGXAuditableEntity {
 	@Column(name = "status_id", length = 20, nullable = false)
 	private String statusId = MedicationStatementStatus.ACTIVE;
 
-	@Column(name = "health_condition_id", nullable = true)
+	@Column(name = "health_condition_id")
 	private Integer healthConditionId;
 
-	@Column(name = "chronic", nullable = false)
-	private Boolean chronic = false;
-
-	@Column(name = "start_date")
-	private LocalDate startDate;
-
-	@Column(name = "end_date")
-	private LocalDate endDate;
-
-	@Column(name = "suspended_start_date")
-	private LocalDate suspendedStartDate;
-
-	@Column(name = "suspended_end_date")
-	private LocalDate suspendedEndDate;
+	@Column(name = "dosage_id")
+	private Integer dosageId;
 
 	@Column(name = "note_id")
 	private Long noteId;
 
-	public MedicationStatement(Integer patientId, String sctId, String statusId, Long noteId) {
+	public MedicationStatement(Integer patientId, String sctId, String statusId, Long noteId,
+							   Integer healthConditionId, Integer dosageId) {
 		super();
 		this.patientId = patientId;
 		this.sctidCode = sctId;
 		if (statusId != null)
 			this.statusId = statusId;
 		this.noteId = noteId;
+		this.healthConditionId = healthConditionId;
+		this.dosageId = dosageId;
 	}
-
 
 	@Override
 	public boolean equals(Object o) {

@@ -17,6 +17,10 @@ public class MedicationBo extends ClinicalTerm {
 
     private boolean suspended = false;
 
+    private DosageBo dosage;
+
+    private Integer healthConditionId;
+
     public MedicationBo(MedicationVo medicationVo) {
         super();
         setId(medicationVo.getId());
@@ -33,7 +37,8 @@ public class MedicationBo extends ClinicalTerm {
 
     @Override
     public String getStatusId(){
-        return suspended ? MedicationStatementStatus.SUSPENDED : super.getStatusId();
+        String statusId = super.getStatusId() != null ? super.getStatusId() : MedicationStatementStatus.ACTIVE;
+        return suspended ? MedicationStatementStatus.SUSPENDED : statusId;
     }
 
 }

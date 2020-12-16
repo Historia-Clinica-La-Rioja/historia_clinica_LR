@@ -1,3 +1,64 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v1_7 
 
+    - changeSet:
+        id: medication_request-drop-doc_id-column
+        author: etrapani
+        changes: 
+        - dropColumn: 
+            columnName: doc_id
+            tableName: medication_request 
+            
+    - changeSet:
+        id: medication_statement-drop-columns
+        author: etrapani
+        changes: 
+        - dropColumn:
+            columns:
+            - column:
+                name: chronic
+            - column:
+                name: start_date
+            - column:
+                name: end_date
+            - column:
+                name: suspended_start_date
+            - column:
+                name: suspended_end_date
+            tableName: medication_statement          
+
+    - changeSet:
+        id: dosage add new columns 
+        author: etrapani
+        changes:
+            - addColumn:
+                tableName: dosage
+                columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: chronic
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    constraints:
+                        nullable: false
+                    name: start_date
+                    type: date
+                    defaultValueDate: ${date.now} 
+                - column:
+                    constraints:
+                        nullable: true
+                    name: end_date
+                    type: date
+                - column:
+                    constraints:
+                        nullable: true
+                    name: suspended_start_date
+                    type: date
+                - column:
+                    constraints:
+                        nullable: true
+                    name: suspended_end_date
+                    type: date
+

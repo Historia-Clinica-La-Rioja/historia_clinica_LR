@@ -6,7 +6,13 @@ import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.DosageInfoDto;
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.HealthConditionInfoDto;
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.MedicationInfoDto;
+import net.pladema.clinichistory.requests.medicationrequests.controller.mapper.CreateMedicationRequestMapper;
+import net.pladema.clinichistory.requests.medicationrequests.service.CreateMedicationRequestService;
+import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationRequestBo;
 import net.pladema.sgx.dates.controller.dto.DateDto;
+import net.pladema.sgx.error.controller.dto.ApiErrorDto;
+import net.pladema.sgx.security.utils.UserInfo;
+import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
@@ -31,6 +37,21 @@ public class MedicationRequestController {
 
     private static final Logger LOG = LoggerFactory.getLogger(MedicationRequestController.class);
 
+    private final CreateMedicationRequestService createMedicationRequestService;
+
+    private final HealthcareProfessionalExternalService healthcareProfessionalExternalService;
+
+    private final CreateMedicationRequestMapper createMedicationRequestMapper;
+
+    public MedicationRequestController(CreateMedicationRequestService createMedicationRequestService,
+                                       HealthcareProfessionalExternalService healthcareProfessionalExternalService,
+                                       CreateMedicationRequestMapper createMedicationRequestMapper) {
+        this.createMedicationRequestService = createMedicationRequestService;
+        this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
+        this.createMedicationRequestMapper = createMedicationRequestMapper;
+    }
+
+
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
     @Transactional
@@ -39,15 +60,19 @@ public class MedicationRequestController {
                    @PathVariable(name = "patientId") Integer patientId,
                    @RequestBody @Valid PrescriptionDto medicationRequest) {
         LOG.debug("create -> institutionId {}, patientId {}, medicationRequest {}", institutionId, patientId, medicationRequest);
-        Integer result = 12;
+        Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
+        MedicationRequestBo medicationRequestBo = createMedicationRequestMapper.parseTo(doctorId, patientId, medicationRequest);
+        Integer result = createMedicationRequestService.execute(institutionId, medicationRequestBo);
         LOG.debug("create result -> {}", result);
         return result;
     }
 
+
+
     @PutMapping(value = "/suspend")
     @ResponseStatus(code = HttpStatus.OK)
     @Transactional
-    public void suspend(@PathVariable(name = "institutionId") Integer institutionId,
+    public void suspendMedication(@PathVariable(name = "institutionId") Integer institutionId,
                         @PathVariable(name = "patientId") Integer patientId,
                         @RequestParam(value = "dayQuantity") Short dayQuantity,
                         @RequestParam(value = "medicationsIds") List<Integer> medicationsIds) {
@@ -59,21 +84,21 @@ public class MedicationRequestController {
     @PutMapping(value = "/finalize")
     @ResponseStatus(code = HttpStatus.OK)
     @Transactional
-    public void finalize(@PathVariable(name = "institutionId") Integer institutionId,
+    public void finalizeMedication(@PathVariable(name = "institutionId") Integer institutionId,
                         @PathVariable(name = "patientId") Integer patientId,
                         @RequestParam(value = "medicationsIds") List<Integer> medicationsIds) {
         LOG.debug("change-state -> institutionId {}, patientId {}, medicationsIds {}", institutionId, patientId, medicationsIds);
-        LOG.debug("suspend success");
+        LOG.debug("finalize success");
     }
 
     @PutMapping(value = "/reactivate")
     @ResponseStatus(code = HttpStatus.OK)
     @Transactional
-    public void reactivate(@PathVariable(name = "institutionId") Integer institutionId,
+    public void reactivateMedication(@PathVariable(name = "institutionId") Integer institutionId,
                         @PathVariable(name = "patientId") Integer patientId,
                         @RequestParam(value = "medicationsIds") List<Integer> medicationsIds) {
         LOG.debug("change-state -> institutionId {}, patientId {}, medicationsIds {}", institutionId, patientId, medicationsIds);
-        LOG.debug("suspend success");
+        LOG.debug("reactivate success");
     }
 
 
@@ -109,4 +134,11 @@ public class MedicationRequestController {
                 .contentType(MediaType.APPLICATION_PDF).contentLength(os.size()).body(resource);
     }
 
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({ IllegalArgumentException.class })
+    public ApiErrorDto handleValidationExceptions(IllegalArgumentException ex) {
+        LOG.error("Constraint violation -> {}", ex.getMessage());
+        return new ApiErrorDto("Constraint violation", ex.getMessage());
+    }
 }
