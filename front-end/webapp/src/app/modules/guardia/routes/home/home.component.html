@@ -10,45 +10,56 @@
 	<section id="body">
 		<app-filters-card [cardTitle]="'guardia.home.episodes.TITLE'">
 			<div results fxLayout="column" fxLayoutGap="15px" class="results-container">
-				<mat-card *ngFor="let episode of episodes" class="episode-card">
+				<mat-card [ngClass]="{ 'en-atencion' : episode.state.id === estadosEpisodio.EN_ATENCION }"
+						  class="episode-card"
+						  (click)="goToEpisode(episode.id)" *ngFor="let episode of episodes">
 					<div fxLayout="row" fxFlexAlign="center" style="padding: 0 15px">
 
-						<div fxFlex="30%" fxLayout="row">
+						<div id="patient" fxFlex="40%" fxLayout="row">
 							<mat-card-header>
 								<div id="avatar" mat-card-avatar class="header-image"></div>
 								<mat-card-title>
 									<div fxLayout="column">
-										<span class="mat-body-strong" *ngIf="episode.patient?.typeId !== 3 else temporal">
-											{{ episode.patient?.person?.firstName }} {{ episode.patient?.person?.lastName }}
+										<span *ngIf="!episode.patient else patientInfo">
+											Sin información
 										</span>
 									</div>
 								</mat-card-title>
-								<mat-card-subtitle>
-									<span> ID Paciente {{ episode.patient?.id }}</span>
+								<mat-card-subtitle *ngIf="episode.patient?.id">
+									<span class="mat-small"> ID Paciente {{ episode.patient?.id }}</span>
 								</mat-card-subtitle>
 							</mat-card-header>
 
+
+							<ng-template #patientInfo>
+								<span *ngIf="episode.patient?.typeId !== PACIENTE_TEMPORAL else temporal">
+									{{ episode.patient?.person?.firstName }} {{ episode.patient?.person?.lastName }}
+								</span>
+							</ng-template>
+
 							<ng-template #temporal>
-								<span class="mat-body-strong">Paciente temporal</span>
+								<span>Paciente temporal</span>
 							</ng-template>
 						</div>
 
-						<div fxFlex="30%" fxLayout="column">
-							<span>{{ episode.triage.description }}</span>
-							<span>{{ episode.type.description }}</span>
+						<div id="triage" fxFlex="25%" fxLayout="column">
+							<div class="triage-chip"
+								 [ngStyle]="{'color':episode.triage.id === triages.AMARILLO_NIVEL_3 ? 'black' : 'white' }"
+								 [style.background-color]="episode.triage.color">{{ episode.triage.description }}</div>
+							<span class="mat-small">{{ episode.type.description }}</span>
 						</div>
 
-						<div fxFlex="30%" fxLayout="column">
-							<span *ngIf="episode.state.id === 2 else enAtencion">
+						<div id="status" fxFlex="30%" fxLayout="column">
+							<span *ngIf="episode.state.id === estadosEpisodio.EN_ESPERA else enAtencion">
 								{{ episode.state.description }}: {{ episode.waitingTime }} min</span>
-							<span> {{ episode.doctorsOffice.description }} </span>
+							<span class="mat-small"> {{ episode.doctorsOffice.description }} </span>
 
 							<ng-template #enAtencion>
-								<span>{{ episode.state.description | uppercase }}</span>
+								<span id="state">{{ episode.state.description | uppercase }}</span>
 							</ng-template>
 						</div>
 
-						<div id="more_actions" fxLayout="row" fxLayoutAlign="flex-end" fxFlex="10%">
+						<div id="actions" fxLayout="row" fxLayoutAlign="flex-end" fxFlex="5%">
 							<button mat-icon-button>
 								<mat-icon>more_vert</mat-icon>
 							</button>
