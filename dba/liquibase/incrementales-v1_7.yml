@@ -1051,3 +1051,771 @@ databaseChangeLog:
                     constraints:
                         nullable: true  
 
+    - changeSet:
+        id: rename-snomed-id-column
+        author: tmedina
+        changes:
+            - renameColumn:  
+                columnDataType: int  
+                newColumnName: sctid  
+                oldColumnName: id  
+                tableName:  snomed
+
+    - changeSet:
+        id: snomed-addColumn-id
+        author: tmedina
+        changes:
+            - addColumn:
+                tableName: snomed
+                columns:
+                - column:
+                    name: id
+                    type: int
+                    defaultValue: '-1'
+                    constraints:
+                        nullable: true
+    
+    - changeSet:
+        id: snomed-addAutoIncrement-id
+        author: tmedina
+        changes:
+            - addAutoIncrement:
+                columnDataType: int  
+                columnName: id  
+                generationType: ALWAYS  
+                incrementBy: 1  
+                startWith: 1 
+                tableName: snomed
+    
+    - changeSet:
+        id: snomed-update-autoincremental-value-id
+        author: tmedina
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    UPDATE snomed
+                    SET id = default; 
+
+    - changeSet:
+        id: snomed-addUniqueConstraint-id
+        author: tmedina
+        changes:
+            - addUniqueConstraint:
+                columnNames: id
+                constraintName: UQ_id
+                tableName: snomed
+
+    - changeSet:
+        id: inmunization-addColumn-snomed_id
+        author: tmedina
+        changes:
+            - addColumn:
+                tableName: inmunization
+                columns:
+                - column:
+                    name: snomed_id
+                    type: int
+                    defaultValue: '-1'
+                    constraints:
+                        nullable: false
+
+    - changeSet:
+        id: inmunization-updateReferenceValue-snomed_id
+        author: tmedina
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    UPDATE inmunization
+                    SET snomed_id = snomed.id
+                    FROM snomed 
+                    WHERE inmunization.sctid_code = snomed.sctid; 
+
+    - changeSet:
+        id: inmunization-addForeignKeyConstraint-snomed_id
+        author: tmedina
+        changes:
+            - addForeignKeyConstraint:
+                baseColumnNames: snomed_id
+                baseTableName: inmunization
+                constraintName: FK_inmunization_snomed_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: snomed
+                validate: true
+
+    - changeSet:
+        id: medication_statement-addColumn-snomed_id
+        author: tmedina
+        changes:
+            - addColumn:
+                tableName: medication_statement
+                columns:
+                - column:
+                    name: snomed_id
+                    type: int
+                    defaultValue: '-1'
+                    constraints:
+                        nullable: false
+
+    - changeSet:
+        id: medication_statement-updateReferenceValue-snomed_id
+        author: tmedina
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    UPDATE medication_statement
+                    SET snomed_id = snomed.id
+                    FROM snomed 
+                    WHERE medication_statement.sctid_code = snomed.sctid; 
+
+    - changeSet:
+        id: medication_statement-addForeignKeyConstraint-snomed_id
+        author: tmedina
+        changes:
+            - addForeignKeyConstraint:
+                baseColumnNames: snomed_id
+                baseTableName: medication_statement
+                constraintName: FK_medication_statement_snomed_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: snomed
+                validate: true
+    
+    - changeSet:
+        id: procedures-addColumn-snomed_id
+        author: tmedina
+        changes:
+            - addColumn:
+                tableName: procedures
+                columns:
+                - column:
+                    name: snomed_id
+                    type: int
+                    defaultValue: '-1'
+                    constraints:
+                        nullable: false
+
+    - changeSet:
+        id: procedures-updateReferenceValue-snomed_id
+        author: tmedina
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    UPDATE procedures
+                    SET snomed_id = snomed.id
+                    FROM snomed 
+                    WHERE procedures.sctid_code = snomed.sctid; 
+
+    - changeSet:
+        id: procedures-addForeignKeyConstraint-snomed_id
+        author: tmedina
+        changes:
+            - addForeignKeyConstraint:
+                baseColumnNames: snomed_id
+                baseTableName: procedures
+                constraintName: FK_procedures_snomed_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: snomed
+                validate: true
+    
+    - changeSet:
+        id: health_condition-addColumn-snomed_id
+        author: tmedina
+        changes:
+            - addColumn:
+                tableName: health_condition
+                columns:
+                - column:
+                    name: snomed_id
+                    type: int
+                    defaultValue: '-1'
+                    constraints:
+                        nullable: false
+        
+    - changeSet:
+        id: health_condition-updateReferenceValue-snomed_id
+        author: tmedina
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    UPDATE health_condition
+                    SET snomed_id = snomed.id
+                    FROM snomed 
+                    WHERE health_condition.sctid_code = snomed.sctid; 
+
+    - changeSet:
+        id: health_condition-addForeignKeyConstraint-snomed_id
+        author: tmedina
+        changes:
+            - addForeignKeyConstraint:
+                baseColumnNames: snomed_id
+                baseTableName: health_condition
+                constraintName: FK_health_condition_snomed_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: snomed
+                validate: true
+
+    - changeSet:
+        id: allergy_intolerance-addColumn-snomed_id
+        author: tmedina
+        changes:
+            - addColumn:
+                tableName: allergy_intolerance
+                columns:
+                - column:
+                    name: snomed_id
+                    type: int
+                    defaultValue: '-1'
+                    constraints:
+                        nullable: false
+
+    - changeSet:
+        id: allergy_intolerance-updateReferenceValue-snomed_id
+        author: tmedina
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    UPDATE allergy_intolerance
+                    SET snomed_id = snomed.id
+                    FROM snomed 
+                    WHERE allergy_intolerance.sctid_code = snomed.sctid; 
+
+    - changeSet:
+        id: allergy_intolerance-addForeignKeyConstraint-snomed_id
+        author: tmedina
+        changes:
+            - addForeignKeyConstraint:
+                baseColumnNames: snomed_id
+                baseTableName: allergy_intolerance
+                constraintName: FK_allergy_intolerance_snomed_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: snomed
+                validate: true
+
+    - changeSet:
+        id: observation_vital_sign-addColumn-snomed_id
+        author: tmedina
+        changes:
+            - addColumn:
+                tableName: observation_vital_sign
+                columns:
+                - column:
+                    name: snomed_id
+                    type: int
+                    defaultValue: '-1'
+                    constraints:
+                        nullable: false
+
+    - changeSet:
+        id: observation_vital_sign-updateReferenceValue-snomed_id
+        author: tmedina
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    UPDATE observation_vital_sign
+                    SET snomed_id = snomed.id
+                    FROM snomed 
+                    WHERE observation_vital_sign.sctid_code = snomed.sctid; 
+    
+    - changeSet:
+        id: observation_vital_sign-addForeignKeyConstraint-snomed_id
+        author: tmedina
+        changes:
+            - addForeignKeyConstraint:
+                baseColumnNames: snomed_id
+                baseTableName: observation_vital_sign
+                constraintName: FK_observation_vital_sign_snomed_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: snomed
+                validate: true
+
+    - changeSet:
+        id: observation_lab-addColumn-snomed_id
+        author: tmedina
+        changes:
+            - addColumn:
+                tableName: observation_lab
+                columns:
+                - column:
+                    name: snomed_id
+                    type: int
+                    defaultValue: '-1'
+                    constraints:
+                        nullable: false
+    
+    - changeSet:
+        id: observation_lab-updateReferenceValue-snomed_id
+        author: tmedina
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    UPDATE observation_lab
+                    SET snomed_id = snomed.id
+                    FROM snomed 
+                    WHERE observation_lab.sctid_code = snomed.sctid; 
+    
+    - changeSet:
+        id: observation_lab-addForeignKeyConstraint-snomed_id
+        author: tmedina
+        changes:
+            - addForeignKeyConstraint:
+                baseColumnNames: snomed_id
+                baseTableName: observation_lab
+                constraintName: FK_observation_lab_snomed_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: snomed
+                validate: true
+
+    - changeSet:
+        id: diagnostic_report-addColumn-snomed_id
+        author: tmedina
+        changes:
+            - addColumn:
+                tableName: diagnostic_report
+                columns:
+                - column:
+                    name: snomed_id
+                    type: int
+                    defaultValue: '-1'
+                    constraints:
+                        nullable: false
+    
+    - changeSet:
+        id: diagnostic_report-updateReferenceValue-snomed_id
+        author: tmedina
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    UPDATE diagnostic_report
+                    SET snomed_id = snomed.id
+                    FROM snomed 
+                    WHERE diagnostic_report.sctid_code = snomed.sctid; 
+    
+    - changeSet:
+        id: diagnostic_report-addForeignKeyConstraint-snomed_id
+        author: tmedina
+        changes:
+            - addForeignKeyConstraint:
+                baseColumnNames: snomed_id
+                baseTableName: diagnostic_report
+                constraintName: FK_diagnostic_report_snomed_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: snomed
+                validate: true
+
+    - changeSet:
+        id: body_temperature-addColumn-snomed_id
+        author: tmedina
+        changes:
+            - addColumn:
+                tableName: body_temperature
+                columns:
+                - column:
+                    name: snomed_id
+                    type: int
+                    defaultValue: '-1'
+                    constraints:
+                        nullable: false
+
+    - changeSet:
+        id: body_temperature-updateReferenceValue-snomed_id
+        author: tmedina
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    UPDATE body_temperature
+                    SET snomed_id = snomed.id
+                    FROM snomed 
+                    WHERE body_temperature.sctid_code = snomed.sctid; 
+
+    - changeSet:
+        id: body_temperature-addForeignKeyConstraint-snomed_id
+        author: tmedina
+        changes:
+            - addForeignKeyConstraint:
+                baseColumnNames: snomed_id
+                baseTableName: body_temperature
+                constraintName: FK_body_temperature_snomed_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: snomed
+                validate: true
+
+    - changeSet:
+        id: muscle_hypertonia-addColumn-snomed_id
+        author: tmedina
+        changes:
+            - addColumn:
+                tableName: muscle_hypertonia
+                columns:
+                - column:
+                    name: snomed_id
+                    type: int
+                    defaultValue: '-1'
+                    constraints:
+                        nullable: false
+
+    - changeSet:
+        id: muscle_hypertonia-updateReferenceValue-snomed_id
+        author: tmedina
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    UPDATE muscle_hypertonia
+                    SET snomed_id = snomed.id
+                    FROM snomed 
+                    WHERE muscle_hypertonia.sctid_code = snomed.sctid; 
+
+    - changeSet:
+        id: muscle_hypertonia-addForeignKeyConstraint-snomed_id
+        author: tmedina
+        changes:
+            - addForeignKeyConstraint:
+                baseColumnNames: snomed_id
+                baseTableName: muscle_hypertonia
+                constraintName: FK_muscle_hypertonia_snomed_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: snomed
+                validate: true
+
+    - changeSet:
+        id: respiratory_retraction-addColumn-snomed_id
+        author: tmedina
+        changes:
+            - addColumn:
+                tableName: respiratory_retraction
+                columns:
+                - column:
+                    name: snomed_id
+                    type: int
+                    defaultValue: '-1'
+                    constraints:
+                        nullable: false
+
+    - changeSet:
+        id: respiratory_retraction-updateReferenceValue-snomed_id
+        author: tmedina
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    UPDATE respiratory_retraction
+                    SET snomed_id = snomed.id
+                    FROM snomed 
+                    WHERE respiratory_retraction.sctid_code = snomed.sctid; 
+
+    - changeSet:
+        id: respiratory_retraction-addForeignKeyConstraint-snomed_id
+        author: tmedina
+        changes:
+            - addForeignKeyConstraint:
+                baseColumnNames: snomed_id
+                baseTableName: respiratory_retraction
+                constraintName: FK_respiratory_retraction_snomed_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: snomed
+                validate: true
+
+    - changeSet:
+        id: perfusion-addColumn-snomed_id
+        author: tmedina
+        changes:
+            - addColumn:
+                tableName: perfusion
+                columns:
+                - column:
+                    name: snomed_id
+                    type: int
+                    defaultValue: '-1'
+                    constraints:
+                        nullable: false
+
+    - changeSet:
+        id: perfusion-updateReferenceValue-snomed_id
+        author: tmedina
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    UPDATE perfusion
+                    SET snomed_id = snomed.id
+                    FROM snomed 
+                    WHERE perfusion.sctid_code = snomed.sctid; 
+
+    - changeSet:
+        id: perfusion-addForeignKeyConstraint-snomed_id
+        author: tmedina
+        changes:
+            - addForeignKeyConstraint:
+                baseColumnNames: snomed_id
+                baseTableName: perfusion
+                constraintName: FK_perfusion_snomed_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: snomed
+                validate: true
+
+    - changeSet:
+        id: inmunization-dropForeignKey-sctid_code
+        author: tmedina
+        changes:
+        - dropForeignKeyConstraint:
+            baseTableName: inmunization
+            constraintName: FK_inmunization_sctid_code
+
+    - changeSet:
+        id: inmunization-dropNotNullConstraint-sctid_code
+        author: tmedina
+        changes:
+        - dropNotNullConstraint:
+            columnDataType: varchar(20)
+            columnName: sctid_code
+            tableName: inmunization
+
+    - changeSet:
+        id: medication_statement-dropForeignKey-sctid_code
+        author: tmedina
+        changes:
+        - dropForeignKeyConstraint:
+            baseTableName: medication_statement
+            constraintName: FK_medication_statement_sctid_code
+
+    - changeSet:
+        id: medication_statement-dropNotNullConstraint-sctid_code
+        author: tmedina
+        changes:
+        - dropNotNullConstraint:
+            columnDataType: varchar(20)
+            columnName: sctid_code
+            tableName: medication_statement
+
+    - changeSet:
+        id: procedures-dropForeignKey-sctid_code
+        author: tmedina
+        changes:
+        - dropForeignKeyConstraint:
+            baseTableName: procedures
+            constraintName: FK_procedures_sctid_code
+
+    - changeSet:
+        id: procedures-dropNotNullConstraint-sctid_code
+        author: tmedina
+        changes:
+        - dropNotNullConstraint:
+            columnDataType: varchar(20)
+            columnName: sctid_code
+            tableName: procedures
+
+    - changeSet:
+        id: health_condition-dropForeignKey-sctid_code
+        author: tmedina
+        changes:
+        - dropForeignKeyConstraint:
+            baseTableName: health_condition
+            constraintName: FK_health_condition_sctid_code
+
+    - changeSet:
+        id: health_condition-dropNotNullConstraint-sctid_code
+        author: tmedina
+        changes:
+        - dropNotNullConstraint:
+            columnDataType: varchar(20)
+            columnName: sctid_code
+            tableName: health_condition
+    
+    - changeSet:
+        id: allergy_intolerance-dropForeignKey-sctid_code
+        author: tmedina
+        changes:
+        - dropForeignKeyConstraint:
+            baseTableName: allergy_intolerance
+            constraintName: FK_allergy_intolerance_sctid_code
+
+    - changeSet:
+        id: allergy_intolerance-dropNotNullConstraint-sctid_code
+        author: tmedina
+        changes:
+        - dropNotNullConstraint:
+            columnDataType: varchar(20)
+            columnName: sctid_code
+            tableName: allergy_intolerance
+    
+    - changeSet:
+        id: observation_vital_sign-dropForeignKey-sctid_code
+        author: tmedina
+        changes:
+        - dropForeignKeyConstraint:
+            baseTableName: observation_vital_sign
+            constraintName: FK_observation_vital_sign_sctid_code
+
+    - changeSet:
+        id: observation_vital_sign-dropNotNullConstraint-sctid_code
+        author: tmedina
+        changes:
+        - dropNotNullConstraint:
+            columnDataType: varchar(20)
+            columnName: sctid_code
+            tableName: observation_vital_sign
+
+    - changeSet:
+        id: observation_lab-dropForeignKey-sctid_code
+        author: tmedina
+        changes:
+        - dropForeignKeyConstraint:
+            baseTableName: observation_lab
+            constraintName: FK_observation_lab_sctid_code
+
+    - changeSet:
+        id: observation_lab-dropNotNullConstraint-sctid_code
+        author: tmedina
+        changes:
+        - dropNotNullConstraint:
+            columnDataType: varchar(20)
+            columnName: sctid_code
+            tableName: observation_lab
+
+    - changeSet:
+        id: diagnostic_report-dropForeignKey-sctid_code
+        author: tmedina
+        changes:
+        - dropForeignKeyConstraint:
+            baseTableName: diagnostic_report
+            constraintName: FK_diagnostic_report_sctid_code
+
+    - changeSet:
+        id: diagnostic_report-dropNotNullConstraint-sctid_code
+        author: tmedina
+        changes:
+        - dropNotNullConstraint:
+            columnDataType: varchar(20)
+            columnName: sctid_code
+            tableName: diagnostic_report
+
+    - changeSet:
+        id: body_temperature-dropForeignKey-sctid_code
+        author: tmedina
+        changes:
+        - dropForeignKeyConstraint:
+            baseTableName: body_temperature
+            constraintName: FK_body_temperature_sctid_code
+
+    - changeSet:
+        id: body_temperature-dropNotNullConstraint-sctid_code
+        author: tmedina
+        changes:
+        - dropNotNullConstraint:
+            columnDataType: varchar(20)
+            columnName: sctid_code
+            tableName: body_temperature
+
+    - changeSet:
+        id: muscle_hypertonia-dropForeignKey-sctid_code
+        author: tmedina
+        changes:
+        - dropForeignKeyConstraint:
+            baseTableName: muscle_hypertonia
+            constraintName: FK_muscle_hypertonia_sctid_code
+
+    - changeSet:
+        id: muscle_hypertonia-dropNotNullConstraint-sctid_code
+        author: tmedina
+        changes:
+        - dropNotNullConstraint:
+            columnDataType: varchar(20)
+            columnName: sctid_code
+            tableName: muscle_hypertonia
+
+    - changeSet:
+        id: respiratory_retraction-dropForeignKey-sctid_code
+        author: tmedina
+        changes:
+        - dropForeignKeyConstraint:
+            baseTableName: respiratory_retraction
+            constraintName: FK_respiratory_retraction_sctid_code
+
+    - changeSet:
+        id: respiratory_retraction-dropNotNullConstraint-sctid_code
+        author: tmedina
+        changes:
+        - dropNotNullConstraint:
+            columnDataType: varchar(20)
+            columnName: sctid_code
+            tableName: respiratory_retraction
+
+    - changeSet:
+        id: perfusion-dropForeignKey-sctid_code
+        author: tmedina
+        changes:
+        - dropForeignKeyConstraint:
+            baseTableName: perfusion
+            constraintName: FK_perfusion_sctid_code
+
+    - changeSet:
+        id: perfusion-dropNotNullConstraint-sctid_code
+        author: tmedina
+        changes:
+        - dropNotNullConstraint:
+            columnDataType: varchar(20)
+            columnName: sctid_code
+            tableName: perfusion
+
+    - changeSet:
+        id: snomed-dropPrimaryKey
+        author: tmedina
+        changes:
+        - dropPrimaryKey:
+            constraintName: PK_snomed
+            dropIndex: true
+            tableName: snomed
+            
+    - changeSet:
+        id: snomed-addPrimaryKey
+        author: tmedina
+        changes:
+        - addPrimaryKey:
+            columnNames: id
+            constraintName: PK_snomed
+            tableName: snomed
+            validate: true
+    
+    - changeSet:
+        id: snomed-addUniqueConstraint-sctid-pt
+        author: tmedina
+        changes:
+        - addUniqueConstraint:
+            columnNames: sctid, pt
+            constraintName: UQ_sctid_pt
+            tableName: snomed
+
+
