@@ -5,14 +5,14 @@ import { PatientMedicalCoverageService } from '@api-rest/services/patient-medica
 import { PatientMedicalCoverage } from '@core/dialogs/medical-coverage/medical-coverage.component';
 import { MapperService } from '@core/services/mapper.service';
 import { map } from 'rxjs/operators';
-import { AgregarPreinscripcionItemComponent, NewPrescriptionItem } from './../agregar-preinscripcion-item/agregar-preinscripcion-item.component';
+import { AgregarPrescripcionItemComponent, NewPrescriptionItem } from '../agregar-prescripcion-item/agregar-prescripcion-item.component';
 
 @Component({
-  selector: 'app-nueva-preinscripcion',
-  templateUrl: './nueva-preinscripcion.component.html',
-  styleUrls: ['./nueva-preinscripcion.component.scss']
+  selector: 'app-nueva-prescripcion',
+  templateUrl: './nueva-prescripcion.component.html',
+  styleUrls: ['./nueva-prescripcion.component.scss']
 })
-export class NuevaPreinscripcionComponent implements OnInit {
+export class NuevaPrescripcionComponent implements OnInit {
 
 	prescriptionItems: NewPrescriptionItem[];
 	patientMedicalCoverages: PatientMedicalCoverage[];
@@ -24,7 +24,7 @@ export class NuevaPreinscripcionComponent implements OnInit {
 		private readonly mapperService: MapperService,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private readonly dialog: MatDialog,
-		public dialogRef: MatDialogRef<NuevaPreinscripcionComponent>,
+		public dialogRef: MatDialogRef<NuevaPrescripcionComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: NewPrescriptionData) { }
 
 	ngOnInit(): void {
@@ -43,7 +43,7 @@ export class NuevaPreinscripcionComponent implements OnInit {
 	}
 
 	openPrescriptionItemDialog(item?: NewPrescriptionItem) {
-		const newPrescriptionItemDialog = this.dialog.open(AgregarPreinscripcionItemComponent,
+		const newPrescriptionItemDialog = this.dialog.open(AgregarPrescripcionItemComponent,
 		{
 			data: {
 				patientId: this.data.patientId,

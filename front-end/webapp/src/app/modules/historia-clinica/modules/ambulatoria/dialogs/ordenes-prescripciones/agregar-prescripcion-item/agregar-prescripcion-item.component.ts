@@ -9,11 +9,11 @@ import { SEMANTICS_CONFIG } from 'src/app/modules/historia-clinica/constants/sno
 import { hasError } from '@core/utils/form.utils';
 
 @Component({
-  selector: 'app-agregar-preinscripcion-item',
-  templateUrl: './agregar-preinscripcion-item.component.html',
-  styleUrls: ['./agregar-preinscripcion-item.component.scss']
+  selector: 'app-agregar-prescripcion-item',
+  templateUrl: './agregar-prescripcion-item.component.html',
+  styleUrls: ['./agregar-prescripcion-item.component.scss']
 })
-export class AgregarPreinscripcionItemComponent implements OnInit {
+export class AgregarPrescripcionItemComponent implements OnInit {
 
 	loading = false;
 	searching = false;
@@ -36,7 +36,7 @@ export class AgregarPreinscripcionItemComponent implements OnInit {
 		private readonly snowstormService: SnowstormService,
 		private readonly formBuilder: FormBuilder,
 		private readonly hceGeneralStateService: HceGeneralStateService,
-		public dialogRef: MatDialogRef<AgregarPreinscripcionItemComponent>,
+		public dialogRef: MatDialogRef<AgregarPrescripcionItemComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: NewPrescriptionItemData) { }
 
 	ngOnInit(): void {

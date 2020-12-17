@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ESTUDIOS, INDICACIONES, ORDENES_MEDICACION } from 'src/app/modules/historia-clinica/constants/summaries';
-import { ConfirmarPreinscripcionComponent } from '../../dialogs/ordenes-preinscripciones/confirmar-preinscripcion/confirmar-preinscripcion.component';
-import { NuevaPreinscripcionComponent } from '../../dialogs/ordenes-preinscripciones/nueva-preinscripcion/nueva-preinscripcion.component';
+import { ConfirmarPrescripcionComponent } from '../../dialogs/ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
+import { NuevaPrescripcionComponent } from '../../dialogs/ordenes-prescripciones/nueva-prescripcion/nueva-prescripcion.component';
 
 @Component({
 	selector: 'app-ordenes',
@@ -25,7 +25,7 @@ export class OrdenesComponent implements OnInit {
 	}
 
 	openDialogNewMedication() {
-		const newMedicationDialog = this.dialog.open(NuevaPreinscripcionComponent,
+		const newMedicationDialog = this.dialog.open(NuevaPrescripcionComponent,
 			{
 				data: {
 					patientId: this.patientId,
@@ -45,7 +45,7 @@ export class OrdenesComponent implements OnInit {
 
 		newMedicationDialog.afterClosed().subscribe(data => {
 			if (data) {
-				const confirmPrescriptionDialog = this.dialog.open(ConfirmarPreinscripcionComponent,
+				const confirmPrescriptionDialog = this.dialog.open(ConfirmarPrescripcionComponent,
 					{
 						disableClose: true,
 						data: {
@@ -57,7 +57,7 @@ export class OrdenesComponent implements OnInit {
 	}
 
 	openDialogNewStudy() {
-		const newStudyDialog = this.dialog.open(NuevaPreinscripcionComponent,
+		const newStudyDialog = this.dialog.open(NuevaPrescripcionComponent,
 			{
 				data: {
 					patientId: this.patientId,
@@ -77,7 +77,7 @@ export class OrdenesComponent implements OnInit {
 
 		newStudyDialog.afterClosed().subscribe(data => {
 			if (data) {
-				const confirmPrescriptionDialog = this.dialog.open(ConfirmarPreinscripcionComponent,
+				const confirmPrescriptionDialog = this.dialog.open(ConfirmarPrescripcionComponent,
 					{
 						disableClose: true,
 						data: {

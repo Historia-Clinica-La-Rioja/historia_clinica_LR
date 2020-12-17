@@ -21,9 +21,9 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { PortalModule } from '@angular/cdk/portal';
 import { NuevaConsultaDockPopupComponent } from './dialogs/nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
 import { OrdenesComponent } from './components/ordenes/ordenes.component';
-import { NuevaPreinscripcionComponent } from './dialogs/ordenes-preinscripciones/nueva-preinscripcion/nueva-preinscripcion.component';
-import { ConfirmarPreinscripcionComponent } from './dialogs/ordenes-preinscripciones/confirmar-preinscripcion/confirmar-preinscripcion.component';
-import { AgregarPreinscripcionItemComponent } from './dialogs/ordenes-preinscripciones/agregar-preinscripcion-item/agregar-preinscripcion-item.component';
+import { NuevaPrescripcionComponent } from './dialogs/ordenes-prescripciones/nueva-prescripcion/nueva-prescripcion.component';
+import { ConfirmarPrescripcionComponent } from './dialogs/ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
+import { AgregarPrescripcionItemComponent } from './dialogs/ordenes-prescripciones/agregar-prescripcion-item/agregar-prescripcion-item.component';
 
 
 @NgModule({
@@ -40,9 +40,9 @@ import { AgregarPreinscripcionItemComponent } from './dialogs/ordenes-preinscrip
 		HistoricalProblemsFiltersComponent,
 		NuevaConsultaDockPopupComponent,
 		OrdenesComponent,
-		NuevaPreinscripcionComponent,
-		ConfirmarPreinscripcionComponent,
-		AgregarPreinscripcionItemComponent,
+		NuevaPrescripcionComponent,
+		ConfirmarPrescripcionComponent,
+		AgregarPrescripcionItemComponent,
 	],
 	imports: [
 		AmbulatoriaRoutingModule,
