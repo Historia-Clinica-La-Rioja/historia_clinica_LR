@@ -61,4 +61,861 @@ databaseChangeLog:
                         nullable: true
                     name: suspended_end_date
                     type: date
+                    
+    - changeSet:
+        id: emergency_care_state-createTable
+        comment: Create table emergency_care_state
+        author: lbergottini
+        changes: 
+        - createTable: 
+            tableName: emergency_care_state
+            columns: 
+            - column:
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_emergency_care_state
+                name: id
+                type: smallint
+            - column:
+                constraints:
+                    nullable: false
+                name: description 
+                type: varchar(25)
+   
+    - changeSet:
+        id: emergency_care_type-createTable
+        comment: Create table emergency_care_type
+        author: lbergottini
+        changes: 
+        - createTable: 
+            tableName: emergency_care_type
+            columns: 
+            - column:
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_emergency_care_type
+                name: id
+                type: smallint
+            - column:
+                constraints:
+                    nullable: false
+                name: description 
+                type: varchar(30)
+   
+    - changeSet:
+        id: emergency_care_entrance_type-createTable
+        comment: Create table emergency_care_entrance_type
+        author: lbergottini
+        changes: 
+        - createTable: 
+            tableName: emergency_care_entrance_type
+            columns: 
+            - column:
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_emergency_care_entrance_type
+                name: id
+                type: smallint
+            - column:
+                constraints:
+                    nullable: false
+                name: description 
+                type: varchar(25)
+            
+    - changeSet:
+        id: police_intervention-createTable
+        comment: Create table police_intervention
+        author: lbergottini
+        changes: 
+        - createTable: 
+            tableName: police_intervention
+            columns: 
+            - column:
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_police_intervention
+                name: id
+                type: int
+            - column:
+                name: call_date
+                type: date
+            - column:
+                name: call_time
+                type: time
+            - column:
+                name: plate_number
+                type: varchar(15)
+            - column:
+                name: firstname
+                type: varchar(20)
+            - column:
+                name: lastname
+                type: varchar(20)
+   
+    - changeSet:
+        id: triage_category-createTable  
+        comment: Create table triage_category
+        author: lbergottini
+        changes: 
+        - createTable: 
+            tableName: triage_category
+            columns: 
+            - column:
+                name: id
+                type: smallint
+            - column:
+                constraints:
+                    nullable: false
+                name: name
+                type: varchar(10)
+            - column:
+                constraints:
+                    nullable: false
+                name: description
+                type: varchar(15)
+            - column:
+                constraints:
+                    nullable: false
+                name: color_name
+                type: varchar(10)
+            - column:
+                constraints:
+                    nullable: false
+                name: color_code
+                type: varchar(8)
+        - addPrimaryKey:
+            clustered: true
+            columnNames: id
+            constraintName: PK_triage_category
+            tableName: triage_category
+            validate: true
+   
+    - changeSet:
+        id: emergency_care_episode-createTable  
+        comment: Create table emergency_care_episode
+        author: lbergottini
+        changes: 
+        - createTable: 
+            tableName: emergency_care_episode
+            columns: 
+            - column:
+                name: id
+                type: int
+            - column:
+                name: patient_id
+                type: int
+            - column:
+                name: patient_medical_coverage_id
+                type: int
+            - column:
+                name: emergency_care_type_id
+                type: smallint
+            - column:
+                name: emergency_care_state_id
+                type: smallint
+            - column:
+                name: emergency_care_entrance_type_id
+                type: smallint
+            - column:
+                constraints:
+                    nullable: false
+                name: triage_category_id
+                type: smallint
+            - column:
+                name: doctors_office_id
+                type: int
+            - column:
+                name: ambulance_company_id
+                type: varchar(15)
+            - column:
+                name: police_intervention_id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: created_by
+                type: int
+            - column:
+                name: created_on
+                type: datetime
+                defaultValueDate: ${date.now} 
+            - column:
+                constraints:
+                    nullable: false
+                name: updated_by
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: updated_on
+                type: datetime
+                defaultValueDate: ${date.now}
+        - addPrimaryKey:
+            clustered: true
+            columnNames: id
+            constraintName: PK_emergency_care_episode
+            tableName: emergency_care_episode
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: patient_id
+            baseTableName: emergency_care_episode
+            constraintName: FK_emergency_patient_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: patient
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: patient_medical_coverage_id
+            baseTableName: emergency_care_episode
+            constraintName: FK_emergency_patient_medical_coverage_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: patient_medical_coverage
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: doctors_office_id
+            baseTableName: emergency_care_episode
+            constraintName: FK_emergency_doctors_office_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: doctors_office
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: emergency_care_type_id
+            baseTableName: emergency_care_episode
+            constraintName: FK_emergency_care_episode_emergency_care_type_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: emergency_care_type
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: emergency_care_state_id
+            baseTableName: emergency_care_episode
+            constraintName: FK_emergency_care_episode_emergency_care_state_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: emergency_care_state
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: emergency_care_entrance_type_id
+            baseTableName: emergency_care_episode
+            constraintName: FK_emergency_care_episode_emergency_care_entrance_type_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: emergency_care_entrance_type
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: triage_category_id
+            baseTableName: emergency_care_episode
+            constraintName: FK_emergency_care_episode_triage_category_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: triage_category
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: police_intervention_id
+            baseTableName: emergency_care_episode
+            constraintName: FK_emergency_care_episode_police_intervention_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: police_intervention
+            validate: true
+   
+    - changeSet:
+        id: historic_emergency_episode-createTable
+        comment: Create table historic_emergency_episode
+        author: lbergottini
+        changes: 
+        - createTable: 
+            tableName: historic_emergency_episode
+            columns: 
+            - column:
+                name: emergency_care_episode_id
+                type: int
+            - column:
+                name: change_state_date
+                type: datetime
+                defaultValueDate: ${date.now}
+            - column:
+                constraints:
+                    nullable: false
+                name: emergency_care_state_id
+                type: smallint
+            - column:
+                constraints:
+                    nullable: false
+                name: doctors_office_id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: created_by
+                type: int
+            - column:
+                name: created_on
+                type: datetime
+                defaultValueDate: ${date.now} 
+            - column:
+                constraints:
+                    nullable: false
+                name: updated_by
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: updated_on
+                type: datetime
+                defaultValueDate: ${date.now}
+        - addPrimaryKey:
+            clustered: true
+            columnNames: emergency_care_episode_id, change_state_date
+            constraintName: PK_historic_emergency_episode
+            tableName: historic_emergency_episode
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: doctors_office_id
+            baseTableName: historic_emergency_episode
+            constraintName: FK_historic_emergency_episode_doctors_office_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: doctors_office
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: emergency_care_episode_id
+            baseTableName: historic_emergency_episode
+            constraintName: FK_historic_emergency_episode_emergency_care_episode_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: emergency_care_episode
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: emergency_care_state_id
+            baseTableName: historic_emergency_episode
+            constraintName: FK_historic_emergency_episode_emergency_care_state_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: emergency_care_state
+            validate: true
+            
+    - changeSet:
+        id: emergency_care_episode_reason-createTable
+        comment: Create table emergency_care_episode_reason
+        author: lbergottini
+        changes: 
+        - createTable: 
+            tableName: emergency_care_episode_reason
+            columns: 
+            - column:
+                name: emergency_care_episode_id
+                type: int
+            - column:
+                name: reason_id
+                type: varchar(20)
+        - addPrimaryKey:
+            clustered: true
+            columnNames: emergency_care_episode_id, reason_id
+            constraintName: PK_emergency_care_episode_reason
+            tableName: emergency_care_episode_reason
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: emergency_care_episode_id
+            baseTableName: emergency_care_episode_reason
+            constraintName: FK_emergency_care_episode_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: emergency_care_episode
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: reason_id
+            baseTableName: emergency_care_episode_reason
+            constraintName: FK_emergency_care_episode_reasons
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: reasons
+            validate: true        
+            
+    - changeSet:
+        id: body_temperature-createTable
+        comment: Create table body_temperature
+        author: lbergottini
+        changes: 
+        - createTable: 
+            tableName: body_temperature
+            columns: 
+            - column:
+                autoIncrement: true
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_body_temperature
+                name: id
+                type: smallint
+            - column:
+                constraints:
+                    nullable: false
+                name: description 
+                type: varchar(15)
+            - column:
+                constraints:
+                    nullable: false
+                name: sctid_code
+                type: varchar(20)    
+        - addForeignKeyConstraint:
+                baseColumnNames: sctid_code
+                baseTableName: body_temperature
+                constraintName: FK_body_temperature_sctid_code
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: snomed
+                validate: true
 
+    - changeSet:
+        id: muscle_hypertonia-createTable
+        comment: Create table muscle_hypertonia
+        author: lbergottini
+        changes: 
+        - createTable: 
+            tableName: muscle_hypertonia
+            columns: 
+            - column:
+                autoIncrement: true
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_muscle_hypertonia
+                name: id
+                type: smallint
+            - column:
+                constraints:
+                    nullable: false
+                name: description 
+                type: varchar(15)
+            - column:
+                constraints:
+                    nullable: false
+                name: sctid_code
+                type: varchar(20)    
+        - addForeignKeyConstraint:
+                baseColumnNames: sctid_code
+                baseTableName: muscle_hypertonia
+                constraintName: FK_muscle_hypertonia_sctid_code
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: snomed
+                validate: true  
+
+    - changeSet:
+        id: respiratory_retraction-createTable
+        comment: Create table respiratory_retraction
+        author: lbergottini
+        changes: 
+        - createTable: 
+            tableName: respiratory_retraction
+            columns: 
+            - column:
+                autoIncrement: true
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_respiratory_retraction
+                name: id
+                type: smallint
+            - column:
+                constraints:
+                    nullable: false
+                name: description 
+                type: varchar(15)
+            - column:
+                constraints:
+                    nullable: false
+                name: sctid_code
+                type: varchar(20)    
+        - addForeignKeyConstraint:
+                baseColumnNames: sctid_code
+                baseTableName: respiratory_retraction
+                constraintName: FK_respiratory_retraction_sctid_code
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: snomed
+                validate: true  
+                
+    - changeSet:
+        id: perfusion-createTable
+        comment: Create table perfusion
+        author: lbergottini
+        changes: 
+        - createTable: 
+            tableName: perfusion
+            columns: 
+            - column:
+                autoIncrement: true
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_perfusion
+                name: id
+                type: smallint
+            - column:
+                constraints:
+                    nullable: false
+                name: description 
+                type: varchar(15)
+            - column:
+                constraints:
+                    nullable: false
+                name: sctid_code
+                type: varchar(20)    
+        - addForeignKeyConstraint:
+                baseColumnNames: sctid_code
+                baseTableName: perfusion
+                constraintName: FK_perfusion_sctid_code
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: snomed
+                validate: true  
+                               
+    - changeSet:
+        id: triage-createTable  
+        comment: Create table triage
+        author: lbergottini
+        changes: 
+        - createTable: 
+            tableName: triage
+            columns: 
+            - column:
+                name: id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: emergency_care_episode_id
+                type: int
+            - column:
+                name: notes
+                type: varchar(255)
+            - column:
+                constraints:
+                    nullable: false
+                name: triage_category_id
+                type: smallint
+            - column:
+                name: healthcare_professional_id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: created_by
+                type: int
+            - column:
+                name: created_on
+                type: datetime
+                defaultValueDate: ${date.now} 
+            - column:
+                constraints:
+                    nullable: false
+                name: updated_by
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: updated_on
+                type: datetime
+                defaultValueDate: ${date.now}
+        - addPrimaryKey:
+            clustered: true
+            columnNames: id
+            constraintName: PK_triage
+            tableName: triage
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: healthcare_professional_id
+            baseTableName: triage
+            constraintName: FK_triage_healthcare_professional_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: healthcare_professional
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: emergency_care_episode_id
+            baseTableName: triage
+            constraintName: FK_triage_emergency_care_episode_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: emergency_care_episode
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: triage_category_id
+            baseTableName: triage
+            constraintName: FK_triage_triage_category_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: triage_category
+            validate: true
+            
+
+    - changeSet:
+        id: triage_details-createTable  
+        comment: Create table triage_details
+        author: lbergottini
+        changes: 
+        - createTable: 
+            tableName: triage_details
+            columns: 
+            - column:
+                name: triage_id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: body_temperature_id
+                type: smallint
+            - column:
+                constraints:
+                    nullable: false
+                name: crying_excessive
+                type: boolean
+            - column:
+                constraints:
+                    nullable: false
+                name: muscle_hypertonia_id
+                type: smallint
+            - column:
+                constraints:
+                    nullable: false
+                name: respiratory_retraction_id
+                type: smallint
+            - column:
+                constraints:
+                    nullable: false
+                name: stridor
+                type: boolean
+            - column:
+                name: perfusion_id
+                type: smallint
+        - addPrimaryKey:
+            clustered: true
+            columnNames: triage_id
+            constraintName: PK_triage_details
+            tableName: triage_details
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: triage_id
+            baseTableName: triage_details
+            constraintName: FK_triage_details_triage_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: triage
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: body_temperature_id
+            baseTableName: triage_details
+            constraintName: FK_triage_details_body_temperature_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: body_temperature
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: muscle_hypertonia_id
+            baseTableName: triage_details
+            constraintName: FK_triage_details_muscle_hypertonia_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: muscle_hypertonia
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: respiratory_retraction_id
+            baseTableName: triage_details
+            constraintName: FK_triage_details_respiratory_retraction_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: respiratory_retraction
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: perfusion_id
+            baseTableName: triage_details
+            constraintName: FK_triage_details_perfusion_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: perfusion
+            validate: true
+            
+    - changeSet:
+        id: triage_vital_signs-createTable
+        comment: Create table triage_vital_signs
+        author: lbergottini
+        changes: 
+        - createTable: 
+            tableName: triage_vital_signs
+            columns: 
+            - column:
+                name: triage_id
+                type: int
+            - column:
+                name: observation_vital_sign_id
+                type: int
+        - addPrimaryKey:
+            clustered: true
+            columnNames: triage_id, observation_vital_sign_id
+            constraintName: PK_triage_vital_signs
+            tableName: triage_vital_signs
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: triage_id
+            baseTableName: triage_vital_signs
+            constraintName: FK_triage_vital_signs_triage_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: triage
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: observation_vital_sign_id
+            baseTableName: triage_vital_signs
+            constraintName: FK_triage_vital_signs_observation_vital_signs_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: observation_vital_sign
+            validate: true
+
+    - changeSet:
+        id: emergency_care_type-data
+        comment: Carga de datos emergency_care_type
+        author: lbergottini
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    INSERT INTO emergency_care_type VALUES (1, 'Adulto');
+                    INSERT INTO emergency_care_type VALUES (2, 'Pediatría');
+                    INSERT INTO emergency_care_type VALUES (3, 'Ginecológica y obstetricia');
+                    
+    - changeSet:
+        id: emergency_care_entrance_type-data
+        comment: Carga de datos emergency_care_entrance_type
+        author: lbergottini
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    INSERT INTO emergency_care_entrance_type VALUES (1, 'Caminando');
+                    INSERT INTO emergency_care_entrance_type VALUES (2, 'En silla de ruedas');
+                    INSERT INTO emergency_care_entrance_type VALUES (3, 'Ambulancia sin médico');            
+                    INSERT INTO emergency_care_entrance_type VALUES (4, 'Ambulancia con médico');
+                    
+    - changeSet:
+        id: emergency_care_state-data
+        comment: Carga de datos emergency_care_state
+        author: lbergottini
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    INSERT INTO emergency_care_state VALUES (1, 'En atención');
+                    INSERT INTO emergency_care_state VALUES (2, 'En espera');
+                    INSERT INTO emergency_care_state VALUES (3, 'Finalizado por ausencia');            
+                    INSERT INTO emergency_care_state VALUES (4, 'Finalizado por alta');
+                    
+    - changeSet:
+        id: snomed-data
+        comment: Carga de datos snomed
+        author: lbergottini
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    INSERT INTO snomed VALUES ('386661006', 'Fiebre','50177009', '');
+                    INSERT INTO snomed VALUES ('386689009', 'Hipotermia','846676008', 'Temperatura corporal por debajo del rango de referencia');
+                    INSERT INTO snomed VALUES ('17621005', 'Normal','', '');
+                    INSERT INTO snomed VALUES ('56731001', 'Hipertonía','', 'Tono muscular aumentado');
+                    INSERT INTO snomed VALUES ('398152000', 'Hipotonía','', 'Tono muscular disminuido'); 
+                    INSERT INTO snomed VALUES ('248567008', 'Intercostal','', 'Estiramiento de las costillas durante la respiración');
+                    INSERT INTO snomed VALUES ('60132005', 'Generalizado','', '');
+                    INSERT INTO snomed VALUES ('373067005', 'No','', '');
+                    INSERT INTO snomed VALUES ('18307000', 'Alterada','', '');
+                    
+                    
+    - changeSet:
+        id: body_temperature-data
+        comment: Carga de datos body_temperature
+        author: lbergottini
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    INSERT INTO body_temperature VALUES (1, 'Fiebre','386661006');
+                    INSERT INTO body_temperature VALUES (2, 'Hipotermia','386689009');
+                    INSERT INTO body_temperature VALUES (3, 'Normal','17621005');
+                    
+    - changeSet:
+        id: muscle_hypertonia-data
+        comment: Carga de datos muscle_hypertonia
+        author: lbergottini
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    INSERT INTO muscle_hypertonia VALUES (1, 'Hipertonía', '56731001');
+                    INSERT INTO muscle_hypertonia VALUES (2, 'Hipotonía','398152000');
+                    INSERT INTO muscle_hypertonia VALUES (3, 'Normal','17621005');
+                    
+    - changeSet:
+        id: respiratory_retraction-data
+        comment: Carga de datos respiratory_retraction
+        author: lbergottini
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    INSERT INTO respiratory_retraction VALUES (1, 'Intercostal', '248567008');
+                    INSERT INTO respiratory_retraction VALUES (2, 'Generalizado','60132005');
+                    INSERT INTO respiratory_retraction VALUES (3, 'No','373067005');
+                    
+    - changeSet:
+        id: perfusion-data
+        comment: Carga de datos perfusion
+        author: lbergottini
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    INSERT INTO perfusion VALUES (1, 'Normal','17621005');
+                    INSERT INTO perfusion VALUES (2, 'Alterada','18307000');
+                    
+    - changeSet:
+        id: triage_category-data
+        comment: Carga de datos triage_category
+        author: lbergottini
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    INSERT INTO triage_category VALUES (1, 'Nivel I','Resucitación', 'Rojo', '#D34444');
+                    INSERT INTO triage_category VALUES (2, 'Nivel II','Emergencia', 'Naranja', '#FF5C00');
+                    INSERT INTO triage_category VALUES (3, 'Nivel III','Urgencia', 'Amarillo', '#EDBE00');
+                    INSERT INTO triage_category VALUES (4, 'Nivel IV','Menos urgente', 'Verde', '#009B68');
+                    INSERT INTO triage_category VALUES (5, 'Nivel V','No urgente', 'Azul', '#2687C5');
