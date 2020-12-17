@@ -70,27 +70,27 @@ export class NotaEvolucionFormComponent implements OnInit {
 			}),
 			vitalSigns: this.formBuilder.group({
 				heartRate: this.formBuilder.group({
-					value: [null],
+					value: [null, Validators.min(0)],
 					effectiveTime: [newMoment()],
 				}),
 				respiratoryRate: this.formBuilder.group({
-					value: [null],
+					value: [null, Validators.min(0)],
 					effectiveTime: [newMoment()],
 				}),
 				temperature: this.formBuilder.group({
-					value: [null],
+					value: [null, Validators.min(0)],
 					effectiveTime: [newMoment()],
 				}),
 				bloodOxygenSaturation: this.formBuilder.group({
-					value: [null],
+					value: [null, Validators.min(0)],
 					effectiveTime: [newMoment()],
 				}),
 				systolicBloodPressure: this.formBuilder.group({
-					value: [null],
+					value: [null, Validators.min(0)],
 					effectiveTime: [newMoment()],
 				}),
 				diastolicBloodPressure: this.formBuilder.group({
-					value: [null],
+					value: [null, Validators.min(0)],
 					effectiveTime: [newMoment()],
 				}),
 			}),

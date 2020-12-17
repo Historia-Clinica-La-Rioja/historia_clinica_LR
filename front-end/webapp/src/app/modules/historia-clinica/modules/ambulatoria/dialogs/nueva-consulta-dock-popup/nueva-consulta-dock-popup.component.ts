@@ -110,11 +110,23 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.datosAntropometricosNuevaConsultaService.weightError$.subscribe(pesoError => {
 			this.errores[3] = pesoError;
 		});
+		this.signosVitalesNuevaConsultaService.heartRateError$.subscribe(frecuenciaCardiacaError => {
+			this.errores[4] = frecuenciaCardiacaError;
+		});
+		this.signosVitalesNuevaConsultaService.respiratoryRateError$.subscribe(frecuenciaRespiratoriaError => {
+			this.errores[5] = frecuenciaRespiratoriaError;
+		});
+		this.signosVitalesNuevaConsultaService.temperatureError$.subscribe(temperaturaCorporalError => {
+			this.errores[6] = temperaturaCorporalError;
+		});
+		this.signosVitalesNuevaConsultaService.bloodOxygenSaturationError$.subscribe(SaturacionOxigenoError => {
+			this.errores[7] = SaturacionOxigenoError;
+		});
 		this.signosVitalesNuevaConsultaService.systolicBloodPressureError$.subscribe(presionSistolicaError => {
-			this.errores[4] = presionSistolicaError;
+			this.errores[8] = presionSistolicaError;
 		});
 		this.signosVitalesNuevaConsultaService.diastolicBloodPressureError$.subscribe(presionDiastolicaError => {
-			this.errores[5] = presionDiastolicaError;
+			this.errores[9] = presionDiastolicaError;
 		});
 	}
 
@@ -176,12 +188,35 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		} else if (parseInt(consulta.anthropometricData.weight.value) > 1000) {
 			this.datosAntropometricosNuevaConsultaService.setWeightError('ambulatoria.paciente.nueva-consulta.errors.PESO_MAX');
 		}
+
+		if (parseInt(consulta.vitalSigns.heartRate?.value) < 0){
+			this.signosVitalesNuevaConsultaService.setHeartRateError('ambulatoria.paciente.nueva-consulta.errors.FRECUENCIA_CARDIACA_MIN');
+		}
+
+		if (parseInt(consulta.vitalSigns.respiratoryRate?.value) < 0){
+			this.signosVitalesNuevaConsultaService.setRespiratoryRateError('ambulatoria.paciente.nueva-consulta.errors.FRECUENCIA_RESPIRATORIA_MIN');
+		}
+
+		if (parseInt(consulta.vitalSigns.temperature?.value) < 0){
+			this.signosVitalesNuevaConsultaService.setTemperatureError('ambulatoria.paciente.nueva-consulta.errors.TEMPERATURA_CORPORAL_MIN');
+		}
+
+		if (parseInt(consulta.vitalSigns.bloodOxygenSaturation?.value) < 0){
+			this.signosVitalesNuevaConsultaService.setBloodOxygenSaturationError('ambulatoria.paciente.nueva-consulta.errors.SATURACION_OXIGENO_MIN');
+		}
+
 		if (!consulta.vitalSigns.diastolicBloodPressure ) {
 			this.signosVitalesNuevaConsultaService.setDiastolicBloodPressureError('ambulatoria.paciente.nueva-consulta.errors.TENSION_DIASTOLICA_OBLIGATORIO');
+		} else if (parseInt(consulta.vitalSigns.diastolicBloodPressure.value) < 0) {
+			this.signosVitalesNuevaConsultaService.setDiastolicBloodPressureError('ambulatoria.paciente.nueva-consulta.errors.TENSION_DIASTOLICA_MIN');
 		}
+
 		if (!consulta.vitalSigns.systolicBloodPressure) {
 			this.signosVitalesNuevaConsultaService.setSystolicBloodPressureError('ambulatoria.paciente.nueva-consulta.errors.TENSION_SISTOLICA_OBLIGATORIO');
+		} else if (parseInt(consulta.vitalSigns.systolicBloodPressure.value) < 0) {
+			this.signosVitalesNuevaConsultaService.setSystolicBloodPressureError('ambulatoria.paciente.nueva-consulta.errors.TENSION_SISTOLICA_MIN');
 		}
+
 		if (!consulta.problems?.length) {
 			this.problemasNuevaConsultaService.setError('ambulatoria.paciente.nueva-consulta.errors.PROBLEMA_OBLIGATORIO');
 		}

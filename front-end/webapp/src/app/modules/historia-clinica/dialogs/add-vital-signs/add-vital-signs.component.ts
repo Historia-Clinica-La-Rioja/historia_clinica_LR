@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -28,27 +28,27 @@ export class AddVitalSignsComponent implements OnInit {
 	ngOnInit(): void {
 		this.form = this.formBuilder.group({
 			heartRate: this.formBuilder.group({
-				value: [null],
+				value: [null, Validators.min(0)],
 				effectiveTime: [newMoment()],
 			}),
 			respiratoryRate: this.formBuilder.group({
-				value: [null],
+				value: [null, Validators.min(0)],
 				effectiveTime: [newMoment()],
 			}),
 			temperature: this.formBuilder.group({
-				value: [null],
+				value: [null, Validators.min(0)],
 				effectiveTime: [newMoment()],
 			}),
 			bloodOxygenSaturation: this.formBuilder.group({
-				value: [null],
+				value: [null, Validators.min(0)],
 				effectiveTime: [newMoment()],
 			}),
 			systolicBloodPressure: this.formBuilder.group({
-				value: [null],
+				value: [null, Validators.min(0)],
 				effectiveTime: [newMoment()],
 			}),
 			diastolicBloodPressure: this.formBuilder.group({
-				value: [null],
+				value: [null, Validators.min(0)],
 				effectiveTime: [newMoment()],
 			}),
 		});

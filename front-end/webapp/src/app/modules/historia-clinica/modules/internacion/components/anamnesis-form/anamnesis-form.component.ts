@@ -77,27 +77,27 @@ export class AnamnesisFormComponent implements OnInit {
 			}),
 			vitalSigns: this.formBuilder.group({
 				heartRate: this.formBuilder.group({
-					value: [null],
+					value: [null, Validators.min(0)],
 					effectiveTime: [newMoment()],
 				}),
 				respiratoryRate: this.formBuilder.group({
-					value: [null],
+					value: [null, Validators.min(0)],
 					effectiveTime: [newMoment()],
 				}),
 				temperature: this.formBuilder.group({
-					value: [null],
+					value: [null, Validators.min(0)],
 					effectiveTime: [newMoment()],
 				}),
 				bloodOxygenSaturation: this.formBuilder.group({
-					value: [null],
+					value: [null, Validators.min(0)],
 					effectiveTime: [newMoment()],
 				}),
 				systolicBloodPressure: this.formBuilder.group({
-					value: [null],
+					value: [null, Validators.min(0)],
 					effectiveTime: [newMoment()],
 				}),
 				diastolicBloodPressure: this.formBuilder.group({
-					value: [null],
+					value: [null, Validators.min(0)],
 					effectiveTime: [newMoment()],
 				}),
 			}),
@@ -168,6 +168,7 @@ export class AnamnesisFormComponent implements OnInit {
 
 	save(): void {
 		if (this.form.valid) {
+			console.warn('form valid')
 			const anamnesis: AnamnesisDto = this.buildAnamnesisDto();
 			this.apiErrors = [];
 			if (this.anamnesisId) {
