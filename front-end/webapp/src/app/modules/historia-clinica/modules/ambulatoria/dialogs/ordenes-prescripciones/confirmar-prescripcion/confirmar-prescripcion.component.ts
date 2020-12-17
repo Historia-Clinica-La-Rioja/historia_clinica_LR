@@ -36,6 +36,7 @@ export class ConfirmarPrescripcionComponent implements OnInit {
 
 export class ConfirmPrescriptionData {
 	titleLabel: string;
+	downloadButtonLabel: string;
 	successLabel: string;
 	errorLabel: string;
 	prescriptionRequest: Observable<number>;

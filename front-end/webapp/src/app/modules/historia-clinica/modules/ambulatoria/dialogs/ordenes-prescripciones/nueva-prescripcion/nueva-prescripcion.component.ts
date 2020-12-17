@@ -72,7 +72,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 	confirmPrescription(): void {
 		const newPrescription: PrescriptionDto = {
 			hasRecipe: this.isMedication ? this.prescriptionForm.controls.withRecipe.value : true,
-			medicalCoverageId: this.prescriptionForm.controls.patientMedicalCoverage.value.id,
+			medicalCoverageId: this.prescriptionForm.controls.patientMedicalCoverage.value?.id,
 			items: this.prescriptionItems.map(pi => {
 				return {
 					healthConditionId: pi.healthProblem.id,

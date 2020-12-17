@@ -203,7 +203,9 @@
 				},
 				"confirm_prescription_dialog": {
 					"MEDICATION_TITLE": "Su medicación fue agregada correctamente",
-					"STUDY_TITLE": "Su orden fue realizada correctamente"
+					"STUDY_TITLE": "Su orden fue realizada correctamente",
+					"DOWNLOAD_BUTTON_MEDICATION": "Descargar receta",
+					"DOWNLOAD_BUTTON_STUDY": "Descargar orden" 
 				},
 				"toast_messages": {
 					"POST_MEDICATION_SUCCESS": "Medicación agregada correctamente",

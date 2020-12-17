@@ -3,3 +3,12 @@
 div.spinner {
 	@include centered-spinner;
 }
+
+.icon {
+    font-size: 96px;
+    margin: 0;
+}
+
+.item-margin {
+    margin-bottom: 25px;
+}
