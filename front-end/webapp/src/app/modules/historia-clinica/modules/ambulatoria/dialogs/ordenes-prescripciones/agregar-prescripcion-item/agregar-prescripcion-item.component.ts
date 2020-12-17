@@ -47,20 +47,7 @@ export class AgregarPrescripcionItemComponent implements OnInit {
 		});
 
 		if (this.data.item) {
-			const item = this.data.item;
-			this.prescriptionItemForm.controls.healthProblem.setValue(item.healthProblem.id);
-			this.prescriptionItemForm.controls.observations.setValue(item.observations);
-			item.isDailyInterval ? this.prescriptionItemForm.controls.interval.setValue(this.DEFAULT_RADIO_OPTION) : this.prescriptionItemForm.controls.intervalHours.setValue(item.intervalHours);
-			item.isChronicAdministrationTime ? this.prescriptionItemForm.controls.administrationTime.setValue(this.DEFAULT_RADIO_OPTION) : this.prescriptionItemForm.controls.administrationTimeDays.setValue(item.administrationTimeDays);
-
-			this.snomedConcept = {
-				id: item.snomed.id,
-				pt: item.snomed.pt,
-				parentFsn: null,
-    			parentId: null,
-			};
-			const pt = item.snomed ? item.snomed.pt : '';
-			this.prescriptionItemForm.controls.snomed.setValue(pt);
+			this.setItemData(this.data.item);
 		} 
 	}
 
@@ -70,20 +57,18 @@ export class AgregarPrescripcionItemComponent implements OnInit {
 
 	addPrescriptionItem() {
 		if(this.prescriptionItemForm.valid) {
+			const {item, showDosage} = this.data;
 			let newItem: NewPrescriptionItem = {
-				id: this.data.item ? this.data.item.id : null,
-				snomed: {
-					id: this.snomedConcept.id,
-					pt: this.snomedConcept.pt
-				},
+				id: item ? item.id : null,
+				snomed: this.snomedConcept,
 				healthProblem: {
 					id: this.prescriptionItemForm.controls.healthProblem.value,
 					description: this.healthProblemOptions.find(hp => hp.id === this.prescriptionItemForm.controls.healthProblem.value).description
 				},
-				isDailyInterval: this.data.showDosage ? this.prescriptionItemForm.controls.interval.value === this.DEFAULT_RADIO_OPTION : null,
-				isChronicAdministrationTime: this.data.showDosage ? this.prescriptionItemForm.controls.administrationTime.value === this.DEFAULT_RADIO_OPTION : null,
-				intervalHours: this.data.showDosage ? this.prescriptionItemForm.controls.interval.value === this.OTHER_RADIO_OPTION ? this.prescriptionItemForm.controls.intervalHours.value : null : null,
-				administrationTimeDays: this.data.showDosage ? this.prescriptionItemForm.controls.administrationTime.value === this.OTHER_RADIO_OPTION ? this.prescriptionItemForm.controls.administrationTimeDays.value : null : null,
+				isDailyInterval: showDosage ? this.prescriptionItemForm.controls.interval.value === this.DEFAULT_RADIO_OPTION : null,
+				isChronicAdministrationTime: showDosage ? this.prescriptionItemForm.controls.administrationTime.value === this.DEFAULT_RADIO_OPTION : null,
+				intervalHours: showDosage ? this.prescriptionItemForm.controls.interval.value !== this.DEFAULT_RADIO_OPTION ? this.prescriptionItemForm.controls.intervalHours.value : null : null,
+				administrationTimeDays: showDosage ? this.prescriptionItemForm.controls.administrationTime.value !== this.DEFAULT_RADIO_OPTION ? this.prescriptionItemForm.controls.administrationTimeDays.value : null : null,
 				observations: this.prescriptionItemForm.controls.observations.value
 			}
 
@@ -118,6 +103,17 @@ export class AgregarPrescripcionItemComponent implements OnInit {
 		});
 	}
 
+	private setItemData(prescriptionItem: NewPrescriptionItem): void {
+		this.prescriptionItemForm.controls.healthProblem.setValue(prescriptionItem.healthProblem.id);
+		this.prescriptionItemForm.controls.observations.setValue(prescriptionItem.observations);
+		prescriptionItem.isDailyInterval ? this.prescriptionItemForm.controls.interval.setValue(this.DEFAULT_RADIO_OPTION) : this.prescriptionItemForm.controls.intervalHours.setValue(prescriptionItem.intervalHours);
+		prescriptionItem.isChronicAdministrationTime ? this.prescriptionItemForm.controls.administrationTime.setValue(this.DEFAULT_RADIO_OPTION) : this.prescriptionItemForm.controls.administrationTimeDays.setValue(prescriptionItem.administrationTimeDays);
+
+		this.snomedConcept = prescriptionItem.snomed;
+		const pt = prescriptionItem.snomed ? prescriptionItem.snomed.pt : '';
+		this.prescriptionItemForm.controls.snomed.setValue(pt);
+	}
+
 	private formConfiguration() {
 		this.prescriptionItemForm = this.formBuilder.group({
 			snomed: [null, Validators.required],
@@ -135,7 +131,7 @@ export class AgregarPrescripcionItemComponent implements OnInit {
 		}
 
 		this.prescriptionItemForm.controls.interval.valueChanges.subscribe((newValue) => {
-			if(newValue === this.OTHER_RADIO_OPTION) {
+			if(newValue !== this.DEFAULT_RADIO_OPTION) {
 				this.intervalHoursInput.nativeElement.focus();
 				this.prescriptionItemForm.controls.intervalHours.setValidators([Validators.required]);
 				this.prescriptionItemForm.controls.intervalHours.updateValueAndValidity();
@@ -146,7 +142,7 @@ export class AgregarPrescripcionItemComponent implements OnInit {
 		});
 
 		this.prescriptionItemForm.controls.administrationTime.valueChanges.subscribe((newValue) => {
-			if(newValue === this.OTHER_RADIO_OPTION) {
+			if(newValue !== this.DEFAULT_RADIO_OPTION) {
 				this.administrationTimeDaysInput.nativeElement.focus();
 				this.prescriptionItemForm.controls.administrationTimeDays.setValidators([Validators.required]);
 				this.prescriptionItemForm.controls.administrationTimeDays.updateValueAndValidity();
@@ -192,10 +188,7 @@ export class NewPrescriptionItemData {
 
 export class NewPrescriptionItem {
 	id: number;
-	snomed: {
-		id: string;
-		pt: string;
-	};
+	snomed: SnomedDto;
 	healthProblem: {
 		id: number;
 		description: string;

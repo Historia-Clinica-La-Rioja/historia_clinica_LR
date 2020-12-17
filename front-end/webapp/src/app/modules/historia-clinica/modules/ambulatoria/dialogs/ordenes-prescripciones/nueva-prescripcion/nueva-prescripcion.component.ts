@@ -7,6 +7,7 @@ import { MapperService } from '@core/services/mapper.service';
 import { map } from 'rxjs/operators';
 import { AgregarPrescripcionItemComponent, NewPrescriptionItem } from '../agregar-prescripcion-item/agregar-prescripcion-item.component';
 import { PrescriptionDto } from '@api-rest/api-model';
+import { PrescriptionTypes } from '../../../services/prescripciones.service';
 
 @Component({
   selector: 'app-nueva-prescripcion',
@@ -36,14 +37,13 @@ export class NuevaPrescripcionComponent implements OnInit {
 
 		this.prescriptionItems = this.data.prescriptionItemList ? this.data.prescriptionItemList : [];
 		this.setMedicalCoverages();
-
 	}
 
-	closeModal(newPrescription?: PrescriptionDto) {
+	closeModal(newPrescription?: PrescriptionDto): void {
 		this.dialogRef.close(newPrescription);
 	}
 
-	openPrescriptionItemDialog(item?: NewPrescriptionItem) {
+	openPrescriptionItemDialog(item?: NewPrescriptionItem): void {
 		const newPrescriptionItemDialog = this.dialog.open(AgregarPrescripcionItemComponent,
 		{
 			data: {
@@ -63,33 +63,21 @@ export class NuevaPrescripcionComponent implements OnInit {
 					prescriptionItem.id = ++this.itemCount;
 					this.prescriptionItems.push(prescriptionItem);
 				} else {
-					let editPrescriptionItem = this.prescriptionItems.find(pi => pi.id === prescriptionItem.id);
-					editPrescriptionItem.healthProblem = prescriptionItem.healthProblem;
-					editPrescriptionItem.administrationTimeDays = prescriptionItem.administrationTimeDays;
-					editPrescriptionItem.intervalHours = prescriptionItem.intervalHours;
-					editPrescriptionItem.isChronicAdministrationTime = prescriptionItem.isChronicAdministrationTime;
-					editPrescriptionItem.isDailyInterval = prescriptionItem.isDailyInterval;
-					editPrescriptionItem.observations = prescriptionItem.observations;
-					editPrescriptionItem.snomed = prescriptionItem.snomed;
+					this.editPrescriptionItem(prescriptionItem);
 				}
 			}
 		});
 	}
 
-	confirmPrescription() {
+	confirmPrescription(): void {
 		const newPrescription: PrescriptionDto = {
-			hasRecipe: this.data.canRecipe ? this.prescriptionForm.controls.withRecipe.value : true,
+			hasRecipe: this.isMedication ? this.prescriptionForm.controls.withRecipe.value : true,
 			medicalCoverageId: this.prescriptionForm.controls.patientMedicalCoverage.value.id,
 			items: this.prescriptionItems.map(pi => {
 				return {
 					healthConditionId: pi.healthProblem.id,
 					observations: pi.observations,
-					snomed: {
-						id: pi.snomed.id,
-						parentFsn: null,
-						parentId: null,
-						pt: pi.snomed.pt
-					},
+					snomed: pi.snomed,
 					dosage: {
 						chronic: pi.isChronicAdministrationTime,
 						diary: pi.isDailyInterval,
@@ -119,6 +107,22 @@ export class NuevaPrescripcionComponent implements OnInit {
 		return [medicalCoverageText, patientMedicalCoverage.affiliateNumber].filter(Boolean).join(' / ');
 	}
 
+	isMedication(): boolean {
+		return this.data.prescriptionType === PrescriptionTypes.MEDICATION;
+	}
+
+	private editPrescriptionItem(prescriptionItem: NewPrescriptionItem): void {
+		let editPrescriptionItem = this.prescriptionItems.find(pi => pi.id === prescriptionItem.id);
+
+		editPrescriptionItem.snomed = prescriptionItem.snomed;
+		editPrescriptionItem.healthProblem = prescriptionItem.healthProblem;
+		editPrescriptionItem.administrationTimeDays = prescriptionItem.administrationTimeDays;
+		editPrescriptionItem.isChronicAdministrationTime = prescriptionItem.isChronicAdministrationTime;
+		editPrescriptionItem.intervalHours = prescriptionItem.intervalHours;
+		editPrescriptionItem.isDailyInterval = prescriptionItem.isDailyInterval;
+		editPrescriptionItem.observations = prescriptionItem.observations;
+	}
+
 	private setMedicalCoverages(): void {
 		this.patientMedicalCoverageService.getActivePatientMedicalCoverages(Number(this.data.patientId))
 			.pipe(
@@ -136,8 +140,8 @@ export class NewPrescriptionData {
 	patientId: string;
 	titleLabel: string;
 	addLabel: string;
-	canRecipe: boolean;
-	prescriptionItemList: any[];
+	prescriptionType: PrescriptionTypes;
+	prescriptionItemList: NewPrescriptionItem[];
 	addPrescriptionItemDialogData: {
 		titleLabel: string;
 		searchSnomedLabel: string;

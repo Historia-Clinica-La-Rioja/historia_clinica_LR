@@ -20,7 +20,7 @@
                 </mat-select>
             </mat-form-field>
             
-            <div class="margin-checkbox" *ngIf="data.canRecipe">
+            <div class="margin-checkbox" *ngIf="isMedication()">
                 <mat-checkbox formControlName="withRecipe">
                     <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.WITHOUT_RECIPE'"></span>
                 </mat-checkbox>

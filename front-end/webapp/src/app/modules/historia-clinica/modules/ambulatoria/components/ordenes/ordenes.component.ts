@@ -36,7 +36,7 @@ export class OrdenesComponent implements OnInit {
 					patientId: this.patientId,
 					titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.MEDICATION_TITLE',
 					addLabel: 'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.ADD_MEDICATION_LABEL',
-					canRecipe: true,
+					prescriptionType: PrescriptionTypes.MEDICATION,
 					prescriptionItemList: undefined,
 					addPrescriptionItemDialogData: {
 						titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.MEDICATION_TITLE',
@@ -80,7 +80,7 @@ export class OrdenesComponent implements OnInit {
 					patientId: this.patientId,
 					titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.STUDY_TITLE',
 					addLabel: 'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.ADD_STUDY_LABEL',
-					canRecipe: false,
+					prescriptionType: PrescriptionTypes.STUDY,
 					prescriptionItemList: undefined,
 					addPrescriptionItemDialogData: {
 						titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.STUDY_TITLE',
