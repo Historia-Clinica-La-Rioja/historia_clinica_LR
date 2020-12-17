@@ -5,7 +5,11 @@
     </button>
 </div>
 
-<mat-dialog-actions fxLayout="row" fxLayoutAlign="end start">
+<div class="spinner" *ngIf="loading">
+	<mat-spinner color="primary"></mat-spinner>
+</div>
+
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="end start" *ngIf="!loading">
     <button mat-flat-button color="primary" (click)="downloadPrescription()" fxFlexFill.xs>
         <span class="uppercase">Descargar receta</span>
     </button>

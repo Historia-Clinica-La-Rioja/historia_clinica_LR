@@ -46,7 +46,7 @@
 							{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.INTERVAL_DEFAULT_OPTION' | translate}}
 						</mat-radio-button>
 						<mat-radio-button color="primary" [value]="OTHER_RADIO_OPTION">
-							Cada <input #intervalHoursInput [style.width.ch]="dynamicInputNumberWidth('intervalHours')" 
+							Cada <input #intervalHoursInput [style.width.ch]="getInputNumberWidth('intervalHours')" 
 									formControlName="intervalHours" type="tel" matInput> hs.
 							<mat-error *ngIf="hasError(prescriptionItemForm, 'required', 'intervalHours')">
 								<span translate="ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.INTERVAL_HOURS_REQUIRED"></span>
@@ -62,7 +62,7 @@
 							{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.ADMINISTRATION_TIME_DEFAULT_OPTION' | translate}}
 						</mat-radio-button>
 						<mat-radio-button color="primary" [value]="OTHER_RADIO_OPTION">
-							Durante <input #administrationTimeDaysInput [style.width.ch]="dynamicInputNumberWidth('administrationTimeDays')" 
+							Durante <input #administrationTimeDaysInput [style.width.ch]="getInputNumberWidth('administrationTimeDays')" 
 										formControlName="administrationTimeDays" type="tel" matInput> días.
 							<mat-error *ngIf="hasError(prescriptionItemForm, 'required', 'administrationTimeDays')">
 								<span translate="ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.ADMINISTRATION_TIME_DAYS_REQUIRED"></span>

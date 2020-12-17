@@ -6,6 +6,7 @@ import { PatientMedicalCoverage } from '@core/dialogs/medical-coverage/medical-c
 import { MapperService } from '@core/services/mapper.service';
 import { map } from 'rxjs/operators';
 import { AgregarPrescripcionItemComponent, NewPrescriptionItem } from '../agregar-prescripcion-item/agregar-prescripcion-item.component';
+import { PrescriptionDto } from '@api-rest/api-model';
 
 @Component({
   selector: 'app-nueva-prescripcion',
@@ -30,7 +31,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 	ngOnInit(): void {
 		this.prescriptionForm = this.formBuilder.group({
 			patientMedicalCoverage: [null],
-			withRecipe: [null],
+			withRecipe: [false],
 		});
 
 		this.prescriptionItems = this.data.prescriptionItemList ? this.data.prescriptionItemList : [];
@@ -38,8 +39,8 @@ export class NuevaPrescripcionComponent implements OnInit {
 
 	}
 
-	closeModal(withRecipe: boolean) {
-		this.dialogRef.close(withRecipe);
+	closeModal(newPrescription?: PrescriptionDto) {
+		this.dialogRef.close(newPrescription);
 	}
 
 	openPrescriptionItemDialog(item?: NewPrescriptionItem) {
@@ -47,10 +48,10 @@ export class NuevaPrescripcionComponent implements OnInit {
 		{
 			data: {
 				patientId: this.data.patientId,
-				titleLabel: this.data.childData.titleLabel,
-				searchSnomedLabel: this.data.childData.searchSnomedLabel,
-				showDosage: this.data.childData.showDosage,
-				eclTerm: this.data.childData.eclTerm,
+				titleLabel: this.data.addPrescriptionItemDialogData.titleLabel,
+				searchSnomedLabel: this.data.addPrescriptionItemDialogData.searchSnomedLabel,
+				showDosage: this.data.addPrescriptionItemDialogData.showDosage,
+				eclTerm: this.data.addPrescriptionItemDialogData.eclTerm,
 				item: item,
 			},
 			width: '35%',
@@ -76,7 +77,30 @@ export class NuevaPrescripcionComponent implements OnInit {
 	}
 
 	confirmPrescription() {
-		this.closeModal(true);
+		const newPrescription: PrescriptionDto = {
+			hasRecipe: this.data.canRecipe ? this.prescriptionForm.controls.withRecipe.value : true,
+			medicalCoverageId: this.prescriptionForm.controls.patientMedicalCoverage.value.id,
+			items: this.prescriptionItems.map(pi => {
+				return {
+					healthConditionId: pi.healthProblem.id,
+					observations: pi.observations,
+					snomed: {
+						id: pi.snomed.id,
+						parentFsn: null,
+						parentId: null,
+						pt: pi.snomed.pt
+					},
+					dosage: {
+						chronic: pi.isChronicAdministrationTime,
+						diary: pi.isDailyInterval,
+						duration: Number(pi.administrationTimeDays),
+						frequency: Number(pi.intervalHours)
+					}
+				}
+			})
+		}
+
+		this.closeModal(newPrescription);
 	}
 
 	deletePrescriptionItem(prescriptionItem: NewPrescriptionItem): void {
@@ -114,7 +138,7 @@ export class NewPrescriptionData {
 	addLabel: string;
 	canRecipe: boolean;
 	prescriptionItemList: any[];
-	childData: {
+	addPrescriptionItemDialogData: {
 		titleLabel: string;
 		searchSnomedLabel: string;
 		showDosage: boolean;

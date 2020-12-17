@@ -64,7 +64,7 @@ export class AgregarPrescripcionItemComponent implements OnInit {
 		} 
 	}
 
-	dynamicInputNumberWidth(formControl: string) {
+	getInputNumberWidth(formControl: string) {
 		return this.prescriptionItemForm.controls[formControl].value ? this.prescriptionItemForm.controls[formControl].value.toString().length : this.MIN_INPUT_LENGTH;
 	}
 
@@ -80,10 +80,10 @@ export class AgregarPrescripcionItemComponent implements OnInit {
 					id: this.prescriptionItemForm.controls.healthProblem.value,
 					description: this.healthProblemOptions.find(hp => hp.id === this.prescriptionItemForm.controls.healthProblem.value).description
 				},
-				isDailyInterval: this.prescriptionItemForm.controls.interval.value === this.DEFAULT_RADIO_OPTION,
-				isChronicAdministrationTime: this.prescriptionItemForm.controls.administrationTime.value === this.DEFAULT_RADIO_OPTION,
-				intervalHours: this.prescriptionItemForm.controls.interval.value === this.OTHER_RADIO_OPTION ? this.prescriptionItemForm.controls.intervalHours.value : null,
-				administrationTimeDays: this.prescriptionItemForm.controls.administrationTime.value === this.OTHER_RADIO_OPTION ? this.prescriptionItemForm.controls.administrationTimeDays.value : null,
+				isDailyInterval: this.data.showDosage ? this.prescriptionItemForm.controls.interval.value === this.DEFAULT_RADIO_OPTION : null,
+				isChronicAdministrationTime: this.data.showDosage ? this.prescriptionItemForm.controls.administrationTime.value === this.DEFAULT_RADIO_OPTION : null,
+				intervalHours: this.data.showDosage ? this.prescriptionItemForm.controls.interval.value === this.OTHER_RADIO_OPTION ? this.prescriptionItemForm.controls.intervalHours.value : null : null,
+				administrationTimeDays: this.data.showDosage ? this.prescriptionItemForm.controls.administrationTime.value === this.OTHER_RADIO_OPTION ? this.prescriptionItemForm.controls.administrationTimeDays.value : null : null,
 				observations: this.prescriptionItemForm.controls.observations.value
 			}
 

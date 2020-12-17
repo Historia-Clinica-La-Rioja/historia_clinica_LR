@@ -1,8 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { PrescriptionDto } from '@api-rest/api-model';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ESTUDIOS, INDICACIONES, ORDENES_MEDICACION } from 'src/app/modules/historia-clinica/constants/summaries';
 import { ConfirmarPrescripcionComponent } from '../../dialogs/ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
 import { NuevaPrescripcionComponent } from '../../dialogs/ordenes-prescripciones/nueva-prescripcion/nueva-prescripcion.component';
+import { PrescripcionesService, PrescriptionTypes } from '../../services/prescripciones.service';
 
 @Component({
 	selector: 'app-ordenes',
@@ -19,6 +22,8 @@ export class OrdenesComponent implements OnInit {
 
 	constructor(
 		private readonly dialog: MatDialog,
+		private prescripcionesService: PrescripcionesService,
+		private snackBarService: SnackBarService,
 	) { }
 
 	ngOnInit(): void {
@@ -33,7 +38,7 @@ export class OrdenesComponent implements OnInit {
 					addLabel: 'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.ADD_MEDICATION_LABEL',
 					canRecipe: true,
 					prescriptionItemList: undefined,
-					childData: {
+					addPrescriptionItemDialogData: {
 						titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.MEDICATION_TITLE',
 						searchSnomedLabel: 'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.MEDICATION',
 						showDosage: true,
@@ -43,16 +48,28 @@ export class OrdenesComponent implements OnInit {
 				width: '35%',
 			});
 
-		newMedicationDialog.afterClosed().subscribe(data => {
-			if (data) {
-				const confirmPrescriptionDialog = this.dialog.open(ConfirmarPrescripcionComponent,
-					{
-						disableClose: true,
-						data: {
-							titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.MEDICATION_TITLE',
-						}
-					});
+		newMedicationDialog.afterClosed().subscribe((newPrescription: PrescriptionDto) => {
+			if(newPrescription) {
+				const newMedicationRequest$ = this.prescripcionesService.createPrescription(PrescriptionTypes.MEDICATION, newPrescription, this.patientId);
+				if (!newPrescription.hasRecipe) {
+					const confirmPrescriptionDialog = this.dialog.open(ConfirmarPrescripcionComponent,
+						{
+							disableClose: true,
+							data: {
+								titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.MEDICATION_TITLE',
+								successLabel: 'ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_MEDICATION_SUCCESS',
+								errorLabel: 'ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_MEDICATION_ERROR',
+								prescriptionRequest: newMedicationRequest$,
+							},
+							width: '35%'
+						});
+				} else {
+					newMedicationRequest$.subscribe((newRecipe: number) => {
+						this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_MEDICATION_SUCCESS');
+					}, _ => {this.snackBarService.showError('ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_MEDICATION_ERROR')});
+				}
 			}
+
 		});
 	}
 
@@ -65,7 +82,7 @@ export class OrdenesComponent implements OnInit {
 					addLabel: 'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.ADD_STUDY_LABEL',
 					canRecipe: false,
 					prescriptionItemList: undefined,
-					childData: {
+					addPrescriptionItemDialogData: {
 						titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.STUDY_TITLE',
 						searchSnomedLabel: 'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.STUDY',
 						showDosage: false,
@@ -75,14 +92,19 @@ export class OrdenesComponent implements OnInit {
 				width: '35%',
 			});
 
-		newStudyDialog.afterClosed().subscribe(data => {
-			if (data) {
+		newStudyDialog.afterClosed().subscribe((newPrescription: PrescriptionDto) => {
+			if (newPrescription) {
+				const newServiceRequest$ = this.prescripcionesService.createPrescription(PrescriptionTypes.STUDY, newPrescription, this.patientId);
 				const confirmPrescriptionDialog = this.dialog.open(ConfirmarPrescripcionComponent,
 					{
 						disableClose: true,
 						data: {
 							titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.STUDY_TITLE',
-						}
+							successLabel: 'ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_STUDY_SUCCESS',
+							errorLabel: 'ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_STUDY_ERROR',
+							prescriptionRequest: newServiceRequest$,
+						},
+						width: '35%',
 					});
 			}
 		});

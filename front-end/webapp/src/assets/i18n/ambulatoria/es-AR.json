@@ -204,6 +204,12 @@
 				"confirm_prescription_dialog": {
 					"MEDICATION_TITLE": "Su medicación fue agregada correctamente",
 					"STUDY_TITLE": "Su orden fue realizada correctamente"
+				},
+				"toast_messages": {
+					"POST_MEDICATION_SUCCESS": "Medicación agregada correctamente",
+					"POST_MEDICATION_ERROR": "Error al agregar medicación",
+					"POST_STUDY_SUCCESS": "Órden creada correctamente",
+					"POST_STUDY_ERROR": "Error al crear órden"
 				}
 			},
 			"profile": {

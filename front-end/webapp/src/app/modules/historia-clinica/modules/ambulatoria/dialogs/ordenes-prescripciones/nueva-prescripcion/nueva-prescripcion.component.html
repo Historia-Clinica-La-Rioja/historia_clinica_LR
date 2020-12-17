@@ -1,6 +1,6 @@
 <div fxLayout="row" fxLayoutAlign="space-between start">
     <h1 mat-dialog-title>{{ data.titleLabel | translate}}</h1>
-    <button id="close-modal" mat-button color="warn" mat-icon-button aria-label="close" (click)="closeModal(false)">
+    <button id="close-modal" mat-button color="warn" mat-icon-button aria-label="close" (click)="closeModal()">
         <mat-icon>close</mat-icon>
     </button>
 </div>
@@ -42,7 +42,7 @@
                     </button>
                 </div>
             </div>
-            <span class="mat-body-1">{{getDosage(prescriptionItem)}}</span>
+            <span class="mat-body-1" *ngIf="data.addPrescriptionItemDialogData.showDosage">{{getDosage(prescriptionItem)}}</span>
             <h3 class="mat-subheading-2 capitalize-first-letter color-primary">{{prescriptionItem.healthProblem.description}}</h3>
             <span class="mat-body-1" *ngIf="prescriptionItem.observations">{{prescriptionItem.observations}}</span>
         </div>
