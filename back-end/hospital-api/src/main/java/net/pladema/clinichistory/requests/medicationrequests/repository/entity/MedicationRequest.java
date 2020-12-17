@@ -1,9 +1,6 @@
 package net.pladema.clinichistory.requests.medicationrequests.repository.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import net.pladema.clinichistory.requests.repository.entity.RequestIntentStatus;
 import net.pladema.sgx.auditable.entity.SGXAuditListener;
 import net.pladema.sgx.auditable.entity.SGXAuditableEntity;
@@ -56,6 +53,14 @@ public class MedicationRequest extends SGXAuditableEntity {
 	private Long noteId;
 
 
-
-
+	public MedicationRequest(Integer patientId, Integer institutionId, String statusId,
+							 String intentId, String categoryId, Integer doctorId, Boolean hasRecipe) {
+		this.patientId = patientId;
+		this.institutionId = institutionId;
+		this.statusId = statusId;
+		this.intentId = intentId;
+		this.categoryId = categoryId;
+		this.doctorId = doctorId;
+		this.hasRecipe = hasRecipe;
+	}
 }

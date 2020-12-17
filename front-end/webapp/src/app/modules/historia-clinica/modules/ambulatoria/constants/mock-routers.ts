@@ -22,12 +22,13 @@ export const MOCKS_ORDERS = [
 								pt: 'ANGINAS'
 							}
 						},
-						expired: true,
 						dosage: {
 							frecuency: 4,
 							periodUnit: 'horas',
 							duration: 4,
-							durationUnit: 'días'
+							durationUnit: 'días',
+							expired: false,
+							chronic: false
 						},
 						startDate: {
 							year: 2020,
@@ -50,10 +51,11 @@ export const MOCKS_ORDERS = [
 								pt: 'PAPERA'
 							}
 						},
-						expired: false,
 						dosage: {
 							frecuency: 1,
-							periodUnit: 'horas'
+							periodUnit: 'horas',
+							expired: false,
+							chronic: true
 						},
 						startDate: {
 							year: 2020,
@@ -73,10 +75,9 @@ export const MOCKS_ORDERS = [
 							id: 8,
 							snomed: {
 								id: '2222',
-								pt: 'PAPERA'
+								pt: 'PAPERA',
 							}
 						},
-						expired: false,
 						startDate: {
 							year: 2020,
 							month: 5,
@@ -97,10 +98,11 @@ export const MOCKS_ORDERS = [
 								pt: 'PAPERA'
 							}
 						},
-						expired: false,
 						dosage: {
 							duration: '8',
 							durationUnit: 'días',
+							expired: false,
+							chronic: false
 						},
 						startDate: {
 							year: 2020,

@@ -2,6 +2,7 @@ package net.pladema.clinichistory.hospitalization.controller.generalstate.dto;
 
 import com.sun.istack.Nullable;
 import lombok.*;
+import net.pladema.clinichistory.documents.service.ips.domain.SnomedBo;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotEmpty;
@@ -36,5 +37,14 @@ public class SnomedDto implements Serializable {
                      @NotNull(message = "{value.mandatory}") @NotEmpty @Length(max = 255, message = "{snomed.pt.max.value}") String pt) {
         this.id = id;
         this.pt = pt;
+    }
+
+    public static SnomedDto from(SnomedBo snomed) {
+        if (snomed == null)
+            return null;
+        SnomedDto result = new SnomedDto();
+        result.setId(snomed.getId());
+        result.setPt(snomed.getPt());
+        return result;
     }
 }

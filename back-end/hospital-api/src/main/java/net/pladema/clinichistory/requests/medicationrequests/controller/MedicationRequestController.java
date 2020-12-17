@@ -1,15 +1,16 @@
 package net.pladema.clinichistory.requests.medicationrequests.controller;
 
 import io.swagger.annotations.Api;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.MedicationStatementStatus;
+import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
-import net.pladema.clinichistory.requests.medicationrequests.controller.dto.DosageInfoDto;
-import net.pladema.clinichistory.requests.medicationrequests.controller.dto.HealthConditionInfoDto;
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.MedicationInfoDto;
+import net.pladema.clinichistory.requests.medicationrequests.controller.mapper.ListMedicationInfoMapper;
 import net.pladema.clinichistory.requests.medicationrequests.controller.mapper.CreateMedicationRequestMapper;
 import net.pladema.clinichistory.requests.medicationrequests.service.CreateMedicationRequestService;
+import net.pladema.clinichistory.requests.medicationrequests.service.ListMedicationInfoService;
+import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationFilterBo;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationRequestBo;
-import net.pladema.sgx.dates.controller.dto.DateDto;
 import net.pladema.sgx.error.controller.dto.ApiErrorDto;
 import net.pladema.sgx.security.utils.UserInfo;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
@@ -28,6 +29,7 @@ import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/patient/{patientId}/medication-requests")
@@ -43,12 +45,20 @@ public class MedicationRequestController {
 
     private final CreateMedicationRequestMapper createMedicationRequestMapper;
 
+    private final ListMedicationInfoService listMedicationInfoService;
+
+    private final ListMedicationInfoMapper listMedicationInfoMapper;
+
     public MedicationRequestController(CreateMedicationRequestService createMedicationRequestService,
                                        HealthcareProfessionalExternalService healthcareProfessionalExternalService,
-                                       CreateMedicationRequestMapper createMedicationRequestMapper) {
+                                       CreateMedicationRequestMapper createMedicationRequestMapper,
+                                       ListMedicationInfoService listMedicationInfoService,
+                                       ListMedicationInfoMapper listMedicationInfoMapper) {
         this.createMedicationRequestService = createMedicationRequestService;
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.createMedicationRequestMapper = createMedicationRequestMapper;
+        this.listMedicationInfoService = listMedicationInfoService;
+        this.listMedicationInfoMapper = listMedicationInfoMapper;
     }
 
 
@@ -107,15 +117,14 @@ public class MedicationRequestController {
     public @ResponseBody
     List<MedicationInfoDto> medicationRequestList(@PathVariable(name = "institutionId") Integer institutionId,
                                                   @PathVariable(name = "patientId") Integer patientId,
-                                                  @RequestParam(value = "statusId", defaultValue = "active") String statusId,
+                                                  @RequestParam(value = "statusId", defaultValue = MedicationStatementStatus.ACTIVE) String statusId,
                                                   @RequestParam(value = "medicationStatement", required = false) String medicationStatement,
                                                   @RequestParam(value = "healthCondition", required = false) String healthCondition) {
         LOG.debug("medicationRequestList -> institutionId {}, patientId {}, statusId {}, medicationStatement {}, healthCondition {}", institutionId, patientId, statusId, medicationStatement, healthCondition);
-        List<MedicationInfoDto> result = List.of(
-                new MedicationInfoDto(new SnomedDto("11111", "IBUPROFENO comprimido 600mg"), new HealthConditionInfoDto(6, new SnomedDto("222", "ANGINAS")), new DosageInfoDto(4, "horas", 4, "días"), "44444", true, new DateDto(2020, 5, 14),  "Tomarlo durante las mañanas en ayuno"),
-                new MedicationInfoDto(new SnomedDto("333", "TAFIROL comprimido 1g"), new HealthConditionInfoDto(8,new SnomedDto("2222", "PAPERA")),new DosageInfoDto(1, "horas", null, "horas"),"44444", false,    new DateDto(2020, 5, 13),  "Tomar antes de las comidas"),
-                new MedicationInfoDto(new SnomedDto("123", "PARACETAMOL comprimido 1g"), new HealthConditionInfoDto(8,new SnomedDto("2222", "PAPERA")), null, "44444", false,  new DateDto(2020, 5, 18), null),
-                new MedicationInfoDto(new SnomedDto("777", "BAYASPIRINA comprimido 1g"), new HealthConditionInfoDto(8,new SnomedDto("2222", "PAPERA")),new DosageInfoDto(null, null, 8, "días"),"44444", true,  new DateDto(2020, 5, 13), null));
+        List<MedicationBo> resultService = listMedicationInfoService.execute(new MedicationFilterBo(patientId, statusId, medicationStatement, healthCondition));
+        List<MedicationInfoDto> result = resultService.stream()
+                .map(listMedicationInfoMapper::parseTo)
+                .collect(Collectors.toList());
         LOG.debug("medicationRequestList result -> {}", result);
         return result;
     }

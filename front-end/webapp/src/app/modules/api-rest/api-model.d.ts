@@ -426,10 +426,13 @@ export interface DocumentsSummaryDto extends Serializable {
 }
 
 export interface DosageInfoDto extends Serializable {
+    chronic: boolean;
     duration: number;
-    durationUnit: string;
+    expired: boolean;
     frequency: number;
+    id: number;
     periodUnit: string;
+    startDate: DateDto;
 }
 
 export interface ECAdministrativeDto extends Serializable {
@@ -773,11 +776,12 @@ export interface MedicationDto extends ClinicalTermDto {
 
 export interface MedicationInfoDto extends Serializable {
     dosage: DosageInfoDto;
-    expired: boolean;
+    hasRecipe: boolean;
     healthCondition: HealthConditionInfoDto;
+    id: number;
+    medicationRequestId: number;
     observations: string;
     snomed: SnomedDto;
-    startDate: DateDto;
     statusId: string;
 }
 

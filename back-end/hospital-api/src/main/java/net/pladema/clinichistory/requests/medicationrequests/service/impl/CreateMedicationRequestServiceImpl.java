@@ -54,7 +54,8 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
         DosageValidator dosageValidator = new DosageValidator();
         medicationRequest.getMedications().forEach(md -> {
             snomedValidator.isValid(md.getSnomed());
-            Assert.notNull(md.getHealthConditionId(), "La medicación tiene que estar asociada a un problema");
+            Assert.notNull(md.getHealthCondition(), "La medicación tiene que estar asociada a un problema");
+            Assert.notNull(md.getHealthCondition().getId(), "La medicación tiene que estar asociada a un problema");
             dosageValidator.isValid(md.getDosage());
         });
     }

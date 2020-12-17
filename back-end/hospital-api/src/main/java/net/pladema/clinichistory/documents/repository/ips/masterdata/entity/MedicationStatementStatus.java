@@ -1,9 +1,6 @@
 package net.pladema.clinichistory.documents.repository.ips.masterdata.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,9 +14,9 @@ import java.io.Serializable;
 @Setter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 public class MedicationStatementStatus implements Serializable {
-
-	/**
+    /**
 	 * 
 	 */
 	private static final long serialVersionUID = -3053291021636483828L;
@@ -27,6 +24,7 @@ public class MedicationStatementStatus implements Serializable {
 	public static final String ERROR = "723510000";
 	public static final String ACTIVE = "55561003";
 	public static final String SUSPENDED = "385655000";
+	public static final String FINALIZE = "-55561003";
 
 
 	@Id

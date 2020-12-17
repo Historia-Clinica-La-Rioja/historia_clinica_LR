@@ -19,7 +19,11 @@ public class MedicationBo extends ClinicalTerm {
 
     private DosageBo dosage;
 
-    private Integer healthConditionId;
+    private HealthConditionBo healthCondition;
+
+    private Integer encounterId;
+
+    private boolean hasRecipe;
 
     public MedicationBo(MedicationVo medicationVo) {
         super();

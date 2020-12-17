@@ -82,7 +82,7 @@ public class MedicationServiceImpl implements MedicationService {
                 sctId,
                 medicationBo.getStatusId(),
                 noteService.createNote(medicationBo.getNote()),
-                medicationBo.getHealthConditionId(),
+                medicationBo.getHealthCondition().getId(),
                 newDosage != null ? newDosage.getId() : null);
 
         medicationStatement = medicationStatementRepository.save(medicationStatement);

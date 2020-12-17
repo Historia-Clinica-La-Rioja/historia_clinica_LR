@@ -2,6 +2,7 @@ package net.pladema.clinichistory.requests.medicationrequests.service.impl;
 
 import net.pladema.clinichistory.documents.service.DocumentFactory;
 import net.pladema.clinichistory.documents.service.ips.domain.DosageBo;
+import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionBo;
 import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
 import net.pladema.clinichistory.documents.service.ips.domain.SnomedBo;
 import net.pladema.clinichistory.documents.service.ips.domain.enums.EUnitsOfTimeBo;
@@ -115,7 +116,9 @@ public class CreateMedicationRequestServiceImplTest {
 		medicationRequest.setMedicalCoverageId(5);
 
 		MedicationBo medication = new MedicationBo();
-		medication.setHealthConditionId(1);
+		HealthConditionBo hc = new HealthConditionBo();
+		hc.setId(1);
+		medication.setHealthCondition(hc);
 		medication.setSnomed(new SnomedBo("12312", "ANGINA"));
 
 		DosageBo dosage = new DosageBo();
@@ -177,7 +180,7 @@ public class CreateMedicationRequestServiceImplTest {
 
 		MedicationBo medication = new MedicationBo();
 		medication.setSnomed(new SnomedBo("12314124", "IBUPROFENO 500 mg"));
-		medication.setHealthConditionId(null);
+		medication.setHealthCondition(null);
 		medicationRequest.setMedications(List.of(medication));
 		Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
 				createMedicationRequestService.execute(1, medicationRequest)
@@ -186,6 +189,18 @@ public class CreateMedicationRequestServiceImplTest {
 		String actualMessage = exception.getMessage();
 		Assertions.assertTrue(actualMessage.contains(expectedMessage));
 
+		medication = new MedicationBo();
+		medication.setSnomed(new SnomedBo("12314124", "IBUPROFENO 500 mg"));
+		HealthConditionBo hc = new HealthConditionBo();
+		hc.setId(null);
+		medication.setHealthCondition(hc);
+		medicationRequest.setMedications(List.of(medication));
+		exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
+				createMedicationRequestService.execute(1, medicationRequest)
+		);
+		expectedMessage = "La medicación tiene que estar asociada a un problema";
+		actualMessage = exception.getMessage();
+		Assertions.assertTrue(actualMessage.contains(expectedMessage));
 	}
 
 	@Test
@@ -214,7 +229,9 @@ public class CreateMedicationRequestServiceImplTest {
 	private MedicationBo createMedicationBo(String sctid, Integer healthConditionId, DosageBo dosage) {
 		MedicationBo result = new MedicationBo();
 		result.setSnomed(new SnomedBo(sctid, sctid));
-		result.setHealthConditionId(healthConditionId);
+		HealthConditionBo hc = new HealthConditionBo();
+		hc.setId(healthConditionId);
+		result.setHealthCondition(hc);
 		result.setDosage(dosage);
 		result.setNote("Probando");
 		return result;

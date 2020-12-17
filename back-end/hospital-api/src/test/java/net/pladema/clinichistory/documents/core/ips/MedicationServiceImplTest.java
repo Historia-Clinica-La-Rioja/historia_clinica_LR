@@ -10,6 +10,7 @@ import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.service.NoteService;
 import net.pladema.clinichistory.documents.service.ips.SnomedService;
 import net.pladema.clinichistory.documents.service.ips.domain.DosageBo;
+import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionBo;
 import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
 import net.pladema.clinichistory.documents.service.ips.domain.SnomedBo;
 import net.pladema.clinichistory.documents.service.ips.domain.enums.EUnitsOfTimeBo;
@@ -239,7 +240,10 @@ public class MedicationServiceImplTest {
                                             DosageBo dosage) {
         MedicationBo result = new MedicationBo();
         result.setSnomed(new SnomedBo(sctid, sctid));
-        result.setHealthConditionId(healthConditionId);
+
+        HealthConditionBo hc = new HealthConditionBo();
+        hc.setId(healthConditionId);
+        result.setHealthCondition(hc);
         result.setDosage(dosage);
         result.setNote("Probando");
         return result;

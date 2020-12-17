@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.requests.medicationrequests.controller.mapper;
 
 import net.pladema.clinichistory.documents.service.ips.domain.DosageBo;
+import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionBo;
 import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
 import net.pladema.clinichistory.documents.service.ips.domain.SnomedBo;
 import net.pladema.clinichistory.documents.service.ips.domain.enums.EUnitsOfTimeBo;
@@ -41,7 +42,9 @@ public class CreateMedicationRequestMapper {
         MedicationBo result = new MedicationBo();
         result.setSnomed(parseTo(pid.getSnomed()));
         result.setNote(pid.getObservations());
-        result.setHealthConditionId(pid.getHealthConditionId());
+        var healthCondition = new HealthConditionBo();
+        healthCondition.setId(pid.getHealthConditionId());
+        result.setHealthCondition(healthCondition);
         result.setDosage(parseTo(pid.getDosage()));
         LOG.debug(OUTPUT, result);
         return result;
