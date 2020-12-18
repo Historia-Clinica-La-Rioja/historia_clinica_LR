@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from '@angular/forms';
 import { AnthropometricDataDto, EvolutionNoteDto, MasterDataInterface } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -57,8 +57,12 @@ export class AddAnthropometricComponent implements OnInit {
 		}
 	}
 
+	formHasNoValues(formGroupValues: any): boolean {
+		return Object.values(formGroupValues).every(el => el === null);
+	}
+
 	private buildEvolutionNote(anthropometricDataForm: any): EvolutionNoteDto {
-		const anthropometricData: AnthropometricDataDto = isNull(anthropometricDataForm) ? undefined : {
+		const anthropometricData: AnthropometricDataDto = this.formHasNoValues(anthropometricDataForm) ? undefined : {
 			bloodType: anthropometricDataForm.bloodType ? {
 				id: anthropometricDataForm.bloodType.id,
 				value: anthropometricDataForm.bloodType.description
@@ -68,10 +72,6 @@ export class AddAnthropometricComponent implements OnInit {
 		};
 
 		return anthropometricData ? { confirmed: true, anthropometricData } : undefined;
-
-		function isNull(formGroupValues: any): boolean {
-			return Object.values(formGroupValues).every(el => el === null);
-		}
 
 		function getValue(controlValue: any) {
 			return controlValue ? {value: controlValue} : undefined;

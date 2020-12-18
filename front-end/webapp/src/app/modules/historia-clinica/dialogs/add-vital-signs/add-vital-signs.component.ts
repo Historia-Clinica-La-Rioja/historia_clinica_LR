@@ -55,7 +55,16 @@ export class AddVitalSignsComponent implements OnInit {
 	}
 
 	setVitalSignEffectiveTime(newEffectiveTime: Moment, formField: string): void {
-		(this.form.controls[formField] as FormGroup).controls['effectiveTime'].setValue(newEffectiveTime);
+		(this.form.controls[formField] as FormGroup).controls.effectiveTime.setValue(newEffectiveTime);
+	}
+
+	formHasNoValues(vitalSignsForm): boolean {
+		return ((vitalSignsForm.bloodOxygenSaturation.value === null)
+			 && (vitalSignsForm.diastolicBloodPressure.value === null)
+			 && (vitalSignsForm.heartRate.value === null)
+			 && (vitalSignsForm.respiratoryRate.value === null)
+			 && (vitalSignsForm.systolicBloodPressure.value === null)
+			 && (vitalSignsForm.temperature.value === null));
 	}
 
 	submit() {

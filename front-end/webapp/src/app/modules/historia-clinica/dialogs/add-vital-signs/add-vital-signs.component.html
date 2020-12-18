@@ -103,7 +103,7 @@
 	<mat-dialog-actions align="end">
 		<button mat-stroked-button color="primary" mat-dialog-close><span [translate]="'buttons.CANCEL'"></span>
 		</button>
-		<button *ngIf="this.form.valid" mat-raised-button color="primary" (click)="submit()">
+		<button *ngIf="this.form.valid && !formHasNoValues(this.form.value)" mat-raised-button color="primary" (click)="submit()">
 			<span [translate]="'buttons.UPDATE'"></span>
 		</button>
 	</mat-dialog-actions>
