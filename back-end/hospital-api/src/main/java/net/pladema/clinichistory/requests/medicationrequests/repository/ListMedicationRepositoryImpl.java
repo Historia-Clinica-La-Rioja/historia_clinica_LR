@@ -31,7 +31,7 @@ public class ListMedicationRepositoryImpl implements ListMedicationRepository {
 
         String sqlString = "with temporal as (" +
                 "SELECT DISTINCT " +
-                "ms.id, ms.sctid_code, ms.status_id, ms.health_condition_id, ms.note_id, ms.dosage_id, d.source_id, d.source_type_id, ms.updated_on, " +
+                "ms.id, ms.sctid_code, ms.status_id, ms.health_condition_id, ms.note_id, ms.dosage_id, d.source_id, d.source_type_id, d.created_by, ms.updated_on, " +
                 "row_number() OVER (PARTITION by ms.sctid_code, ms.health_condition_id ORDER BY ms.updated_on desc) AS rw " +
                 "FROM document d " +
                 "JOIN document_medicamention_statement dms ON d.id = dms.document_id " +
@@ -45,7 +45,7 @@ public class ListMedicationRepositoryImpl implements ListMedicationRepository {
                 ", h.id AS hid, h.sctid_id AS h_sctid, h.pt AS h_pt, n.description AS note " +
                 ", d.id AS d_id, d.duration AS duration, d.frequency, d.period_unit, d.chronic, d.start_date " +
                 ", d.suspended_start_date, d.suspended_end_date " +
-                ", mr.id AS mr_id, ISNULL(mr.has_recipe, false) " +
+                ", mr.id AS mr_id, ISNULL(mr.has_recipe, false), t.created_by AS user_id " +
                 "FROM temporal t " +
                 "JOIN snomed s ON (t.sctid_code = s.id) " +
                 "LEFT JOIN medication_request mr ON (mr.id = t.source_id AND t.source_type_id = "+ SourceType.RECIPE + ") " +

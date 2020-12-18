@@ -22,6 +22,8 @@ public class MedicationInfoDto implements Serializable {
 
     private DosageInfoDto dosage;
 
+    private DoctorInfoDto doctor;
+
     private String statusId;
 
     private String observations;
@@ -29,5 +31,4 @@ public class MedicationInfoDto implements Serializable {
     private Integer medicationRequestId;
 
     private boolean hasRecipe;
-
 }

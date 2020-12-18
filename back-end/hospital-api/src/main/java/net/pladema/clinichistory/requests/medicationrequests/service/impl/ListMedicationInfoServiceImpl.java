@@ -78,6 +78,8 @@ public class ListMedicationInfoServiceImpl implements ListMedicationInfoService 
         result.setEncounterId((Integer)row[17]);
         result.setHasRecipe(row[18] != null && (Boolean)row[18]);
         result.setSuspended(isSuspended(result.getStatusId(), result.getDosage()));
+
+        result.setUserId((Integer) row[19]);
         LOG.trace("OUTPUT -> {}", result);
         return result;
     }

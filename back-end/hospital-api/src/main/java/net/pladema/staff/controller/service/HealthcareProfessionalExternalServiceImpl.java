@@ -55,4 +55,14 @@ public class HealthcareProfessionalExternalServiceImpl implements HealthcareProf
         LOG.debug("Output -> {}", result);
         return result;
     }
+
+    @Override
+    public ProfessionalDto findProfessionalByUserId(Integer userId) {
+        LOG.debug("Input parameters -> userId {}", userId);
+        Integer professionalId = healthcareProfessionalService.getProfessionalId(userId);
+        HealthcareProfessionalBo healthcareProfessionalBo = healthcareProfessionalService.findProfessionalById(professionalId);
+        ProfessionalDto result = healthcareProfessionalMapper.fromProfessionalBo(healthcareProfessionalBo);
+        LOG.debug("Output -> {}", result);
+        return result;
+    }
 }

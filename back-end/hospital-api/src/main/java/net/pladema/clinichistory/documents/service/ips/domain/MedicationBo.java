@@ -25,6 +25,8 @@ public class MedicationBo extends ClinicalTerm {
 
     private boolean hasRecipe;
 
+    private Integer userId;
+
     public MedicationBo(MedicationVo medicationVo) {
         super();
         setId(medicationVo.getId());

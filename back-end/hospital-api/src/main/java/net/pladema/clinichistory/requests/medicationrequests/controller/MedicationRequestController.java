@@ -5,14 +5,15 @@ import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.Medi
 import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.MedicationInfoDto;
-import net.pladema.clinichistory.requests.medicationrequests.controller.mapper.ListMedicationInfoMapper;
 import net.pladema.clinichistory.requests.medicationrequests.controller.mapper.CreateMedicationRequestMapper;
+import net.pladema.clinichistory.requests.medicationrequests.controller.mapper.ListMedicationInfoMapper;
 import net.pladema.clinichistory.requests.medicationrequests.service.CreateMedicationRequestService;
 import net.pladema.clinichistory.requests.medicationrequests.service.ListMedicationInfoService;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationFilterBo;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationRequestBo;
 import net.pladema.sgx.error.controller.dto.ApiErrorDto;
 import net.pladema.sgx.security.utils.UserInfo;
+import net.pladema.staff.controller.dto.ProfessionalDto;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -123,7 +124,10 @@ public class MedicationRequestController {
         LOG.debug("medicationRequestList -> institutionId {}, patientId {}, statusId {}, medicationStatement {}, healthCondition {}", institutionId, patientId, statusId, medicationStatement, healthCondition);
         List<MedicationBo> resultService = listMedicationInfoService.execute(new MedicationFilterBo(patientId, statusId, medicationStatement, healthCondition));
         List<MedicationInfoDto> result = resultService.stream()
-                .map(listMedicationInfoMapper::parseTo)
+                .map(mid -> {
+                    ProfessionalDto professionalDto = healthcareProfessionalExternalService.findProfessionalByUserId(mid.getUserId());
+                    return listMedicationInfoMapper.parseTo(mid, professionalDto);
+                })
                 .collect(Collectors.toList());
         LOG.debug("medicationRequestList result -> {}", result);
         return result;
