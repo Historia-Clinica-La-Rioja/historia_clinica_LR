@@ -17,7 +17,9 @@
 
 						<div id="patient" fxFlex="40%" fxLayout="row">
 							<mat-card-header>
-								<div id="avatar" mat-card-avatar class="header-image"></div>
+								<img mat-card-avatar
+									 [src]="episode.patient?.person?.decodedPhoto$ | async"
+									 onerror="this.src='../../../../../assets/images/empty-profile.png'">
 								<mat-card-title>
 									<span *ngIf="!episode.patient else patientInfo">
 										{{ 'guardia.home.episodes.episode.patient.NO_INFO'| translate }}

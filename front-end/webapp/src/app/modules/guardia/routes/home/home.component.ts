@@ -5,6 +5,7 @@ import { DateTimeDto } from '@api-rest/api-model';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { differenceInMinutes } from 'date-fns';
 import { EstadosEpisodio, Triages } from '../../constants/masterdata';
+import { PatientPhotoService } from '@presentation/services/patient-photo.service';
 
 @Component({
 	selector: 'app-home',
@@ -20,21 +21,30 @@ export class HomeComponent implements OnInit {
 
 	constructor(
 		private router: Router,
-		private emergencyCareEpisodeService: EmergencyCareEpisodeService
+		private emergencyCareEpisodeService: EmergencyCareEpisodeService,
+		private patientPhotoService: PatientPhotoService
 		) {
 	}
 
 	ngOnInit(): void {
 		this.emergencyCareEpisodeService.getAll().subscribe(episodes => {
-			this.episodes = episodes.map(episode => {
-				return {
-					...episode,
-					waitingTime: episode.state.id === this.estadosEpisodio.EN_ESPERA ?
-						this.calculateWaitingTime(episode.creationDate) : undefined
-				};
-			});
+			this.episodes = episodes.map(episode => this.mapPhotoAndWaitingTime(episode));
 		});
+	}
 
+	private mapPhotoAndWaitingTime(episode: EmergencyCareEpisodeDto) {
+		return {
+			...episode,
+			waitingTime: episode.state.id === this.estadosEpisodio.EN_ESPERA ?
+				this.calculateWaitingTime(episode.creationDate) : undefined,
+			patient: episode.patient ? {
+				...episode.patient,
+				person: {
+					...episode.patient?.person,
+					decodedPhoto$: this.patientPhotoService.decodePhoto(episode.patient?.person?.photo)
+				}
+			} : undefined
+		};
 	}
 
 	private calculateWaitingTime(dateTime: DateTimeDto): number {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, Observer } from 'rxjs';
+import { Observable, Observer, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -11,9 +11,12 @@ export class PatientPhotoService {
 	}
 
 	decodePhoto(imageData: string): Observable<string> {
-		return this.getBase64ImageFromURL(imageData).pipe(map(base64data => {
-			return 'data:image/jpg;base64,' + base64data;
-		}));
+		if (imageData) {
+			return this.getBase64ImageFromURL(imageData).pipe(map(base64data => {
+				return 'data:image/jpg;base64,' + base64data;
+			}));
+		}
+		return of(undefined);
 	}
 
 	private getBase64ImageFromURL(url: string): Observable<string> {
