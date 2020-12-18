@@ -357,6 +357,55 @@ public class AlumnosDatosPersonalesController {
 }
 ```
 
+#### Datos maestros
+
+Los datos maestros hacen referencia a aquella información que es utilizada por el sistema para representar estados, tipos, categorías, etc. Esta información principalmente se puede representar de dos formas distintas: tabla en la base de datos o enumerados en el código.
+
+La primera representación consiste en una **tabla** que generalmente contiene una **clave** y una **descripción**. Algunas ventajas y desventajas de la misma son:
+
+###### Ventajas
+
+* Son dinamicas en su uso (se puede agregar en tiempo de ejecución nuevos valores, actualizar descripciones etc, siempre y cuando no requiera cambios en la lógica del backend)
+* Menos limitados en cuanto a cantidad de información
+  
+###### Desventajas
+
+* Generación extras de scripts sql tanto para su creación como para la generación de claves extranjeras.
+* Generación extras de código en java (Repositorios, entidades).
+* Nos obliga realizar consultas de base de datos cuando queremos chequear alguna lógica de negocio en el código.
+* El esquema de base de datos se vuelve más complejos al igual que las consultas.
+
+
+Por otra parte, la segunda representación consiste en hacer uso de los **enumerados** de java. Para este escenario las ventajas y desventajas serían:
+
+###### Ventajas
+
+* Más sencillo de implementar.
+* Menor cantidad de llamados a base de datos para validaciónes.
+* Facilmente accesible desde cualquier parte del código.
+* Reduce joins en consultas de base de datos (impacta en performance)
+  
+###### Desventajas
+
+* No se pueden cambiar en tiempo de ejecución.
+* Limitaciones en la cantidad de datos que puede almacenar el enumerado.
+  
+Es importante aclarar, que para el uso de enumerados si bien nos ahorra la generación de una tabla en la base no descarta la necesidad de generar una columna en la tabla que lo use. 
+
+La mejor opción de tipo de columna es usar el **varchar** que lo representa porque se puede saber facilmente en la tabla que valor tiene. Sin embargo, si el uso del tipo **varchar** impacta negativamente en la performance de la tabla (consultas sobre dicha columna, espacio que termina ocupando en la base en general), entonces se podria generar un id númerico a la clase enumerada para cada opción. 
+
+Por otra parte, es importante mencionar que los distintos motores de base de datos tienen representaciones especificas para los datos de tipo enúmerados. Hay que tener en cuenta las ventajas y desventajas (portabilidad del código) que puede tener utilizarlas. Algunos de estos tipos contiene restricciones que pueden generar bugs si no se usa correctamente. Por ejemplo, el uso del tipo **ORDINAL** requiere que se agregue siempre al final.
+
+#### Conclusión
+
+Teniendo en cuenta lo mencionado anteriormente, se procede a dejar algunas reglas a tener en cuenta a la hora de decidir si utilizar un tipo de representación u otra.
+
+1. Sí la información es abundante y puede cambiar dinamicamente en tiempo de ejecución entonces la mejor representación probablemente sea la **Tabla** (por el contrario enumerado)
+2. Sí la información es usada constantemente en código y un cambio en los posibles valores obligue a una nueva compilación entonces un **enumerado** resolvería el problema.
+
+
+Cuando no se tiene certeza del escenario siempre se puede empezar con un **enumerado** al menos que funcionalmente se requiera una tabla. El enumerado va a ahorrar tiempo al principio y no presenta dificultad a la hora de cambiar su representación por una tabla.
+
 
 #### Data transfer objects (DTO)
 
