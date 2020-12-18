@@ -3,8 +3,8 @@ package net.pladema.medicalconsultation.controller;
 import io.swagger.annotations.Api;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import net.pladema.medicalconsultation.repository.entity.MedicalAttentionType;
-import net.pladema.medicalconsultation.service.MedicalConsultationMasterDataService;
 import net.pladema.sgx.masterdata.repository.MasterDataProjection;
+import net.pladema.sgx.masterdata.service.MasterDataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -21,22 +21,22 @@ public class MedicalConsultationMasterdataController {
 
     private static final Logger LOG = LoggerFactory.getLogger(MedicalConsultationMasterdataController.class);
 
-    private MedicalConsultationMasterDataService appointmentMasterDataService;
+    private MasterDataService masterDataService;
 
-    public MedicalConsultationMasterdataController(MedicalConsultationMasterDataService appointmentMasterDataService){
+    public MedicalConsultationMasterdataController(MasterDataService masterDataService){
         super();
-        this.appointmentMasterDataService = appointmentMasterDataService;
+        this.masterDataService = masterDataService;
     }
 
     @GetMapping(value = "/medicalAttention")
     public ResponseEntity<Collection<MasterDataProjection>> getMedicalAttention(){
         LOG.debug("{}", "All medical attention type");
-        return ResponseEntity.ok().body(appointmentMasterDataService.findAll(MedicalAttentionType.class));
+        return ResponseEntity.ok().body(masterDataService.findAll(MedicalAttentionType.class));
     }
 
     @GetMapping(value = "/appointmentState")
     public ResponseEntity<Collection<MasterDataProjection>> getAppointmentState(){
         LOG.debug("{}", "All appointment state");
-        return ResponseEntity.ok().body(appointmentMasterDataService.findAll(AppointmentState.class));
+        return ResponseEntity.ok().body(masterDataService.findAll(AppointmentState.class));
     }
 }

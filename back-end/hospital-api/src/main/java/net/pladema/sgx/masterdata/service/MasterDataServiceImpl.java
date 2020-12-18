@@ -1,4 +1,4 @@
-package net.pladema.clinichistory.hospitalization.service.masterdata;
+package net.pladema.sgx.masterdata.service;
 
 import net.pladema.sgx.masterdata.repository.MasterDataProjection;
 import net.pladema.sgx.masterdata.repository.MasterdataRepository;
@@ -9,13 +9,13 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 
 @Service
-public class InternmentMasterDataServiceImpl implements InternmentMasterDataService {
+public class MasterDataServiceImpl implements MasterDataService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(InternmentMasterDataServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MasterDataServiceImpl.class);
 
     private final MasterdataRepository masterdataRepository;
 
-    public InternmentMasterDataServiceImpl(MasterdataRepository masterdataRepository) {
+    public MasterDataServiceImpl(MasterdataRepository masterdataRepository) {
         this.masterdataRepository = masterdataRepository;
     }
 
