@@ -332,7 +332,8 @@ export interface DiagnosisDto extends HealthConditionDto {
     presumptive?: boolean;
 }
 
-export interface DiagnosticReportDto {
+export interface DiagnosticReportInfoDto {
+    doctor: DoctorInfoDto;
     healthCondition: SnomedDto;
     link?: string;
     observations?: string;

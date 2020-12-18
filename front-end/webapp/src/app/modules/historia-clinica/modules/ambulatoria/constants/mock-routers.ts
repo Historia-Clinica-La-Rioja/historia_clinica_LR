@@ -116,7 +116,7 @@ export const MOCKS_ORDERS = [
 			{
 				name: 'ServiceRequest.getList(patientId: number): DiagnosticReportDto[]',
 				roles: 'Todo ESPECIALISTA_MEDICO sobre la institución',
-				path: '/api/institutions/{institutionId}/patient/{patientId}/serviceRequests?status=null, diagnosticReport=null, healthCondition=null',
+				path: '/api/institutions/{institutionId}/patient/{patientId}/serviceRequests?statusId=null, diagnosticReport=null, healthCondition=null',
 				method: 'GET',
 				fetch: [
 					{
