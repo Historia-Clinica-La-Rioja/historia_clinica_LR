@@ -13,17 +13,21 @@ import net.pladema.clinichistory.requests.medicationrequests.repository.ListMedi
 import net.pladema.clinichistory.requests.medicationrequests.repository.entity.MedicationRequest;
 import net.pladema.clinichistory.requests.medicationrequests.service.ListMedicationInfoService;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationFilterBo;
+import net.pladema.sgx.dates.configuration.DateTimeProvider;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.List;
+
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -33,13 +37,16 @@ public class ListMedicationInfoServiceImplTest extends UnitRepository {
 
     private ListMedicationRepository listMedicationRepository;
 
+    @MockBean
+    private DateTimeProvider dateTimeProvider;
+
     @Autowired
     private EntityManager entityManager;
 
     @Before
     public void setUp(){
         listMedicationRepository = new ListMedicationRepositoryImpl(entityManager);
-        listMedicationInfoService = new ListMedicationInfoServiceImpl(listMedicationRepository);
+        listMedicationInfoService = new ListMedicationInfoServiceImpl(listMedicationRepository, dateTimeProvider);
 
         save(new MedicationStatementStatus(MedicationStatementStatus.ACTIVE, "Activo"));
         save(new MedicationStatementStatus(MedicationStatementStatus.SUSPENDED, "Suspendido"));
@@ -47,6 +54,8 @@ public class ListMedicationInfoServiceImplTest extends UnitRepository {
 
     @Test
     public void execute_filterActive_success(){
+
+        when(dateTimeProvider.nowDate()).thenReturn(LocalDate.of(2021,01,9));
 
         Integer patientId = 1;
         String sctId_anginas = save(SnomedTestMocks.createSnomed("ANGINAS")).getId();
@@ -145,6 +154,8 @@ public class ListMedicationInfoServiceImplTest extends UnitRepository {
 
     @Test
     public void execute_FilterSuspended_success(){
+
+        when(dateTimeProvider.nowDate()).thenReturn(LocalDate.of(2020,12,19));
         Integer patientId = 1;
 
         String sctId_anginas = save(SnomedTestMocks.createSnomed("ANGINAS")).getId();

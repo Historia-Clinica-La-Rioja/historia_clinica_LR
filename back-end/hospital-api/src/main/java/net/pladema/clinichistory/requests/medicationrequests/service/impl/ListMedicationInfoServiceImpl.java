@@ -10,12 +10,12 @@ import net.pladema.clinichistory.requests.medicationrequests.repository.ListMedi
 import net.pladema.clinichistory.requests.medicationrequests.repository.domain.MedicationFilterVo;
 import net.pladema.clinichistory.requests.medicationrequests.service.ListMedicationInfoService;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationFilterBo;
+import net.pladema.sgx.dates.configuration.DateTimeProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,8 +26,11 @@ public class ListMedicationInfoServiceImpl implements ListMedicationInfoService 
 
     private final ListMedicationRepository listMedicationRepository;
 
-    public ListMedicationInfoServiceImpl(ListMedicationRepository listMedicationRepository) {
+    private final DateTimeProvider dateTimeProvider;
+
+    public ListMedicationInfoServiceImpl(ListMedicationRepository listMedicationRepository, DateTimeProvider dateTimeProvider) {
         this.listMedicationRepository = listMedicationRepository;
+        this.dateTimeProvider = dateTimeProvider;
     }
 
 
@@ -107,7 +110,7 @@ public class ListMedicationInfoServiceImpl implements ListMedicationInfoService 
             return false;
         if (dosage == null && MedicationStatementStatus.FINALIZE.equals(statusId))
             return true;
-        return dosage != null && dosage.getEndDate() != null && LocalDate.now().isBefore(dosage.getEndDate());
+        return dosage != null && dosage.getEndDate() != null && dateTimeProvider.nowDate().isBefore(dosage.getEndDate());
     }
 
     private boolean isSuspended(String statusId, DosageBo dosage) {
@@ -115,6 +118,6 @@ public class ListMedicationInfoServiceImpl implements ListMedicationInfoService 
             return false;
         if (dosage == null && MedicationStatementStatus.SUSPENDED.equals(statusId))
             return true;
-        return dosage != null && dosage.getSuspendedEndDate() != null && LocalDate.now().isBefore(dosage.getSuspendedEndDate());
+        return dosage != null && dosage.getSuspendedEndDate() != null &&  dateTimeProvider.nowDate().isBefore(dosage.getSuspendedEndDate());
     }
 }

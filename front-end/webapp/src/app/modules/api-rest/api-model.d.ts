@@ -372,6 +372,12 @@ export interface DiaryOpeningHoursDto extends Overlapping<DiaryOpeningHoursDto> 
     overturnCount?: number;
 }
 
+export interface DoctorInfoDto {
+    firstName: string;
+    id: number;
+    lastName: string;
+}
+
 export interface DoctorsOfficeDto {
     closingTime: string;
     description: string;
@@ -775,6 +781,7 @@ export interface MedicationDto extends ClinicalTermDto {
 }
 
 export interface MedicationInfoDto extends Serializable {
+    doctor: DoctorInfoDto;
     dosage: DosageInfoDto;
     hasRecipe: boolean;
     healthCondition: HealthConditionInfoDto;
