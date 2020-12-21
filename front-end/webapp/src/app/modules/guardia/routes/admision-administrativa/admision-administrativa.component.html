@@ -1,0 +1,155 @@
+<app-content width="full">
+	<h2 class="page-title" [translate]="'Nuevo episodio'"></h2>
+	<h3 [translate]="'Complete datos solicitados para continuar'"></h3>
+
+	<h2 [translate]="'Paciente'"></h2>
+
+	<button mat-stroked-button color="primary" *ngIf="!patientCardInfo" (click)="searchPatient()" class="uppercase">Buscar Paciente</button>
+	<form fxLayout="column" fxLayoutGap="10px" id="admisionForm" [formGroup]="form" (ngSubmit)="continue()" class="form">
+		<ng-container *ngIf="patientCardInfo">
+			<app-patient-card [patient]="patientCardInfo.basicData" [personPhoto]="patientCardInfo.photo">
+				<div horizontal-content style="align-self: center;">
+					<button mat-icon-button color="warn" (click)="clearSelectedPatient()">
+						<mat-icon>delete_outline</mat-icon>
+					</button>
+				</div>
+			</app-patient-card>
+			<mat-form-field appearance="outline">
+				<mat-label>Seleccione una cobertura</mat-label>
+				<mat-select formControlName="patientMedicalCoverageId" name="patientMedicalCoverageId">
+					<mat-option *ngFor="let patientMedicalCoverage of patientMedicalCoverages"
+						[value]="patientMedicalCoverage.id">
+						{{getFullMedicalCoverageText(patientMedicalCoverage)}}
+					</mat-option>
+				</mat-select>
+			</mat-form-field>
+ 			<button mat-stroked-button color="primary" (click)="openMedicalCoverageDialog()" class="uppercase"> Actualizar
+				Cobertura</button>
+		</ng-container>
+
+		<div id="motivos">
+			<app-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.motivo.TITLE'"
+								  [tableTitle]="'ambulatoria.paciente.nueva-consulta.motivo.table.TITLE'"
+								  [columns]="motivoNuevaConsultaService.getColumns()"
+								  [data]="motivoNuevaConsultaService.getMotivosConsulta()"
+								  [addRemoveColumn]="true"
+								  (removeColumn)="motivoNuevaConsultaService.remove($event)">
+
+				<ng-container concept-form>
+					<app-concepts-search
+						*ngIf="!motivoNuevaConsultaService.getSnomedConcept() else mainMotivoConsulta"
+						[label]="'ambulatoria.paciente.nueva-consulta.motivo.MOTIVO'"
+						(search)="motivoNuevaConsultaService.openSearchDialog($event)">
+					</app-concepts-search>
+
+					<ng-template #mainMotivoConsulta>
+						<form [formGroup]="motivoNuevaConsultaService.getForm()"
+							  (ngSubmit)="motivoNuevaConsultaService.addToList()">
+							<mat-form-field appearance="outline">
+								<mat-label [translate]="'internaciones.anamnesis.diagnosticos.DIAGNOSIS'">
+								</mat-label>
+								<input id="motivo-input" matInput type="text" formControlName="snomed" name="snomed"
+									   readonly matTooltip="{{motivoNuevaConsultaService.getSnomedConcept().pt }}">
+								<button id="clear-motivo" mat-button matSuffix color="warn" mat-icon-button
+										(click)="motivoNuevaConsultaService.resetForm()">
+									<mat-icon>close</mat-icon>
+								</button>
+							</mat-form-field>
+							<div align="end">
+								<button id="submit_motivos" class="uppercase" mat-raised-button color="primary"
+										type="submit">
+								<span class="uppercase"
+									  [translate]="'ambulatoria.paciente.nueva-consulta.motivo.ADD'"></span>
+								</button>
+							</div>
+						</form>
+					</ng-template>
+				</ng-container>
+			</app-document-section>
+		</div>
+
+
+		<mat-form-field appearance="outline">
+			<mat-select formControlName="emergencyCareTypeId" name="emergencyCareTypeId" id="emergencyCareTypeId"
+				placeholder="{{'Tipo de guardia' | translate}}">
+				<mat-option *ngFor="let emergencyCareType of (emergencyCareType$ | async )"
+					[value]="emergencyCareType.id">{{emergencyCareType.description}}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+
+		<mat-form-field appearance="outline">
+			<mat-select formControlName="emergencyCareEntranceTypeId" name="emergencyCareEntranceTypeId"
+				id="emergencyCareEntranceTypeId" placeholder="{{'Forma de ingreso' | translate}}">
+				<mat-option *ngFor="let emergencyCareEntranceType of (emergencyCareEntranceType$ | async )"
+					[value]="emergencyCareEntranceType.id">{{emergencyCareEntranceType.description}}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+
+		<mat-form-field appearance="outline">
+			<input formControlName="ambulanceCompanyId" placeholder="{{'ID Compañia ambulancia' | translate }}"
+				matInput>
+		</mat-form-field>
+
+
+		<h2 [translate]="'Intervención policial'"></h2>
+		<mat-radio-group name="policeIntervention" id="policeIntervention" (change)="onChange($event)">
+			<mat-radio-button id="policeIntervention" value='true'>
+				Si
+			</mat-radio-button>
+			<mat-radio-button id="withoutPoliceIntervention" value='false'>
+				No
+			</mat-radio-button>
+		</mat-radio-group>
+
+		<ng-container *ngIf="hasPoliceIntervention">
+			<span>Detalle del llamado</span>
+
+			<div fxLayout="row" fxLayoutGap="5px">
+				<mat-form-field appearance="outline">
+					<input formControlName="dateCall" id="dateCall" matInput [matDatepicker]="initPicker"
+						placeholder="Fecha">
+					<mat-datepicker-toggle matSuffix [for]="initPicker"></mat-datepicker-toggle>
+					<mat-datepicker #initPicker></mat-datepicker>
+				</mat-form-field>
+
+
+				<mat-form-field appearance="outline">
+					<input matInput id="time" type="text" formControlName="timeCall"
+						pattern="([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}" placeholder="Hora">
+					<mat-error *ngIf="hasError(form, 'pattern', 'timeCall')">La hora debe cumplir con el formato de 24
+						hs y tener dos digitos para la hora y los minutos respectivamente</mat-error>
+				</mat-form-field>
+			</div>
+
+			<span>Detalle del oficial policial</span>
+
+			<mat-form-field appearance="outline">
+				<input formControlName="plateNumber" placeholder="{{'Nro de placa' | translate }}" matInput>
+			</mat-form-field>
+			<div fxLayout="row" fxLayoutGap="5px">
+
+				<mat-form-field appearance="outline">
+					<input formControlName="firstName" placeholder="{{'Nombres' | translate }}" matInput>
+				</mat-form-field>
+				<mat-form-field appearance="outline">
+					<input formControlName="lastName" placeholder="{{'Apellidos' | translate }}" matInput>
+				</mat-form-field>
+			</div>
+		</ng-container>
+
+		<section id="actions" fxLayout="row" fxLayoutAlign="space-between">
+
+			<button mat-stroked-button color="primary" (click)="goBack()" class="uppercase">Volver</button>
+
+			<div fxLayoutGap="5px">
+				<button mat-raised-button color="primary" (click)="skip()" class="uppercase">Omitir</button>
+				<button mat-raised-button color="primary" (click)="skip()" class="uppercase">Continuar</button>
+			</div>
+
+		</section>
+
+	</form>
+
+</app-content>

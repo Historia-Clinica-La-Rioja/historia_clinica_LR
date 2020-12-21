@@ -3,20 +3,33 @@ import { CommonModule } from '@angular/common';
 
 import { GuardiaRoutingModule } from './guardia-routing.module';
 import { HomeComponent } from './routes/home/home.component';
+import { AdmisionAdministrativaComponent } from './routes/admision-administrativa/admision-administrativa.component';
 import { CoreModule } from '@core/core.module';
+import { InstitucionModule } from '../institucion/institucion.module';
 import { PresentationModule } from '@presentation/presentation.module';
 import { TriageComponent } from './component/triage/triage.component';
 import { AdministrativeTriageComponent } from './component/administrative-triage/administrative-triage.component';
 import { NewEpisodeAdminTriageComponent } from './routes/new-episode-admin-triage/new-episode-admin-triage.component';
 
+import { HistoriaClinicaModule } from '../historia-clinica/historia-clinica.module';
 
 @NgModule({
-	declarations: [HomeComponent, TriageComponent, AdministrativeTriageComponent, NewEpisodeAdminTriageComponent],
+	declarations: [
+		HomeComponent,
+		TriageComponent,
+		AdministrativeTriageComponent,
+		NewEpisodeAdminTriageComponent,
+		AdmisionAdministrativaComponent
+	],
 	imports: [
 		CommonModule,
 		GuardiaRoutingModule,
 		CoreModule,
-		PresentationModule
+		PresentationModule,
+		GuardiaRoutingModule,
+		InstitucionModule,
+		PresentationModule,
+		HistoriaClinicaModule, // TODO Quitar este modulo
 	]
 })
 export class GuardiaModule {

@@ -4,7 +4,7 @@ import { SnomedSemanticSearch, SnomedService } from '../../../services/snomed.se
 import { SEMANTICS_CONFIG } from '../../../constants/snomed-semantics';
 import { Observable, Subject } from 'rxjs';
 import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
-import { pushTo } from '@core/utils/array.utils';
+import { pushTo, removeFrom } from '@core/utils/array.utils';
 
 export interface MotivoConsulta {
 	snomed: SnomedDto;
@@ -100,5 +100,9 @@ export class MotivoNuevaConsultaService {
 
 	getSnomedConcept(): SnomedDto {
 		return this.snomedConcept;
+	}
+
+	remove(index: number): void {
+		this.motivoConsulta = removeFrom<MotivoConsulta>(this.motivoConsulta, index);
 	}
 }

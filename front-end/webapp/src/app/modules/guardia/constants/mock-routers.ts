@@ -264,7 +264,7 @@ export const MOCKS_GUARDIA = [
 					},
 					{
 						id: 3,
-						description: 'Ginecologico'
+						description: 'Ginecología y obstetricia'
 					}
 				]
 			},
@@ -632,8 +632,9 @@ export const MOCKS_GUARDIA = [
 							}],
 						typeId: 1,
 						entranceTypeId: 1,
+						ambulanceCompanyId: 1,
 						policeIntervention: {
-							dateCall: '20/10/2020',
+							dateCall: '20-10-2020',
 							timeCall: '10:30',
 							plateNumber: '91218',
 							firstName: 'Ricardo',

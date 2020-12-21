@@ -1,0 +1,32 @@
+@import '../../../../../assets/styles/mat-mixins';
+@import '../../../../../assets/styles/mixins';
+app-patient-card ::ng-deep .mat-card-header .mat-card-title {
+	font-size: 14px;
+}
+
+app-patient-card ::ng-deep .mat-card-md-image {
+	width: 60px;
+    height: 60px;
+}
+
+app-patient-card ::ng-deep mat-card.mat-card {
+	min-height: 11px !important;
+}
+
+app-patient-card ::ng-deep .mat-card-subtitle {
+	font-size: 11px;
+}
+
+.header{
+	display: flex;
+	justify-content: flex-end;
+}
+
+.form{
+	@include mat-form-field-background-white;
+	.mat-radio-button {
+		@include form-radio-button;
+	}
+	max-width: 35%;
+	padding-top: 10px;
+}

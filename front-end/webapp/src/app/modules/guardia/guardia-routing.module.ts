@@ -7,6 +7,7 @@ import { AppFeature, ERole } from "@api-rest/api-model";
 import { RoleGuard } from "@core/guards/RoleGuard";
 import { FeatureFlagGuard } from "@core/guards/FeatureFlagGuard";
 import { NewEpisodeAdminTriageComponent } from "./routes/new-episode-admin-triage/new-episode-admin-triage.component";
+import { AdmisionAdministrativaComponent } from './routes/admision-administrativa/admision-administrativa.component';
 
 
 const routes: Routes = [{
@@ -19,6 +20,10 @@ const routes: Routes = [{
 		{
 			path: 'nuevo-episodio/triage-administrativo',
 			component: NewEpisodeAdminTriageComponent
+		},
+		{
+			path: 'nuevo-episodio/administrativa',
+			component: AdmisionAdministrativaComponent
 		},
 		...mockRouters(MOCKS_GUARDIA)
 	],
