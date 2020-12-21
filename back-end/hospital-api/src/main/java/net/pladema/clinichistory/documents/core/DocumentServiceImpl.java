@@ -41,6 +41,8 @@ public class DocumentServiceImpl implements DocumentService {
 
     private final DocumentMedicamentionStatementRepository documentMedicamentionStatementRepository;
 
+    private final DocumentDiagnosticReportRepository documentDiagnosticReportRepository;
+
     public DocumentServiceImpl(DocumentRepository documentRepository,
                                DocumentHealthConditionRepository documentHealthConditionRepository,
                                DocumentImmunizationRepository documentImmunizationRepository,
@@ -48,7 +50,8 @@ public class DocumentServiceImpl implements DocumentService {
                                DocumentVitalSignRepository documentVitalSignRepository,
                                DocumentLabRepository documentLabRepository,
                                DocumentAllergyIntoleranceRepository documentAllergyIntoleranceRepository,
-                               DocumentMedicamentionStatementRepository documentMedicamentionStatementRepository) {
+                               DocumentMedicamentionStatementRepository documentMedicamentionStatementRepository,
+                               DocumentDiagnosticReportRepository documentDiagnosticReportRepository) {
         this.documentRepository = documentRepository;
         this.documentHealthConditionRepository = documentHealthConditionRepository;
         this.documentImmunizationRepository = documentImmunizationRepository;
@@ -57,6 +60,7 @@ public class DocumentServiceImpl implements DocumentService {
         this.documentLabRepository = documentLabRepository;
         this.documentAllergyIntoleranceRepository = documentAllergyIntoleranceRepository;
         this.documentMedicamentionStatementRepository = documentMedicamentionStatementRepository;
+        this.documentDiagnosticReportRepository = documentDiagnosticReportRepository;
     }
 
     @Override
@@ -137,6 +141,15 @@ public class DocumentServiceImpl implements DocumentService {
         LOG.debug(OUTPUT, result);
         return result;
 
+    }
+
+    @Override
+    public DocumentDiagnosticReport createDocumentDiagnosticReport(Long documentId, Integer diagnosticReportId) {
+        LOG.debug("Input parameters -> documentId {}, procedureId {}", documentId, diagnosticReportId);
+        DocumentDiagnosticReport result = new DocumentDiagnosticReport(documentId, diagnosticReportId);
+        result = documentDiagnosticReportRepository.save(result);
+        LOG.debug(OUTPUT, result);
+        return result;
     }
 
     @Override

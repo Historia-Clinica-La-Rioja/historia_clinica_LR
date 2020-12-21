@@ -14,7 +14,10 @@ import java.io.Serializable;
 public class StudyDto implements Serializable {
 
     private SnomedDto snomed;
-    private SnomedDto healthConditionSnomed;
+
+    private Integer healthConditionId;
+
+    private String diagosticReportCategoryId;
 
     @Nullable
     private String observations;

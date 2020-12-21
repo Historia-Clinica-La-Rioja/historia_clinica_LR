@@ -6,7 +6,7 @@ import net.pladema.clinichistory.documents.service.ips.domain.*;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProblemBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProcedureBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ReasonBo;
-
+import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportBo;
 import java.util.Collections;
 import java.util.List;
 
@@ -92,5 +92,8 @@ public interface Document {
 
     Integer getPatientId();
 
+    default List<DiagnosticReportBo> getDiagnosticReports(){
+        return Collections.emptyList();
+    };
 
 }

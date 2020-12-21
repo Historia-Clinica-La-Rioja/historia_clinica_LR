@@ -28,6 +28,8 @@ public interface DocumentService {
 
     DocumentProcedure createDocumentProcedure(Long documentId, Integer id);
 
+    DocumentDiagnosticReport createDocumentDiagnosticReport(Long documentId, Integer diagnosticReportId);
+
     GeneralHealthConditionBo getHealthConditionFromDocument(Long documentId);
 
     List<ImmunizationBo> getImmunizationStateFromDocument(Long documentId);

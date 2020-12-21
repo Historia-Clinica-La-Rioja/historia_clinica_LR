@@ -31,9 +31,6 @@ public class ServiceRequest extends SGXAuditableEntity {
 	@Column(name = "institution_id", nullable = false)
 	private Integer institutionId;
 
-	@Column(name = "doc_id", nullable = false)
-	private Long docId;
-
 	@Column(name = "medical_coverage_id")
 	private Integer medicalCoverageId;
 
@@ -50,12 +47,21 @@ public class ServiceRequest extends SGXAuditableEntity {
 	private Integer doctorId;
 
 	@Column(name = "request_date")
-	private LocalDate requestDate;
+	private LocalDate requestDate = LocalDate.now();
 
 	@Column(name = "note_id")
 	private Long noteId;
 
-
-
-
+	public ServiceRequest(Integer institutionId,
+						  Integer patientId,
+						  Integer doctorId,
+						  Integer medicalCoverageId,
+						  String categoryId){
+		super();
+		this.institutionId = institutionId;
+		this.patientId = patientId;
+		this.doctorId = doctorId;
+		this.medicalCoverageId = medicalCoverageId;
+		this.categoryId = categoryId;
+	}
 }

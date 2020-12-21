@@ -32,4 +32,7 @@ public class PrescriptionItemDto implements Serializable {
     @Nullable
     private NewDosageDto dosage;
 
+    @Nullable
+    private String categoryId;
+
 }

@@ -38,7 +38,7 @@ public class DiagnosticReport extends SGXAuditableEntity {
 	private Integer healthConditionId;
 
 	@Column(name = "effective_time", nullable = false)
-	private LocalDateTime effectiveTime;
+	private LocalDateTime effectiveTime = LocalDateTime.now();
 
 	@Column(name = "link", length = 255)
 	private String link;

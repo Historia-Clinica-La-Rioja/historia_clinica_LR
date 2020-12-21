@@ -938,3 +938,11 @@ databaseChangeLog:
                     INSERT INTO triage_category VALUES (3, 'Nivel III','Urgencia', 'Amarillo', '#EDBE00');
                     INSERT INTO triage_category VALUES (4, 'Nivel IV','Menos urgente', 'Verde', '#009B68');
                     INSERT INTO triage_category VALUES (5, 'Nivel V','No urgente', 'Azul', '#2687C5');
+
+    - changeSet:
+        id: drop-document-id-columns
+        author: martinscooper
+        changes:
+            - dropColumn:
+                columnName: doc_id
+                tableName: service_request

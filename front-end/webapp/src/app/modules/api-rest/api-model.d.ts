@@ -809,7 +809,7 @@ export interface NewMedicalRequestDto {
 
 export interface NewServiceRequestListDto extends Serializable {
     medicalCoverageId: number;
-    studyDto: StudyDto[];
+    studiesDto: StudyDto[];
 }
 
 export interface OauthConfigDto {
@@ -1001,6 +1001,7 @@ export interface PrescriptionDto extends Serializable {
 }
 
 export interface PrescriptionItemDto extends Serializable {
+    categoryId?: string;
     dosage?: NewDosageDto;
     healthConditionId: number;
     observations?: string;
@@ -1146,7 +1147,8 @@ export interface SnomedResponseDto extends Serializable {
 }
 
 export interface StudyDto extends Serializable {
-    healthConditionSnomed: SnomedDto;
+    diagosticReportCategoryId: string;
+    healthConditionId: number;
     observations?: string;
     snomed: SnomedDto;
 }

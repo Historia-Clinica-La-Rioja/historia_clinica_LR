@@ -1,18 +1,26 @@
 package net.pladema.clinichistory.requests.servicerequests.controller;
 
 import io.swagger.annotations.Api;
-import net.pladema.clinichistory.requests.servicerequests.controller.dto.DiagnosticReportDto;
-import net.pladema.clinichistory.requests.servicerequests.controller.dto.FileDto;
-import net.pladema.clinichistory.requests.servicerequests.controller.dto.NewServiceRequestListDto;
+import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
+import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
+import net.pladema.clinichistory.requests.servicerequests.controller.dto.*;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
-import net.pladema.clinichistory.requests.servicerequests.controller.dto.CompleteRequestDto;
+import net.pladema.clinichistory.requests.servicerequests.controller.mapper.CreateServiceRequestMapper;
+import net.pladema.clinichistory.requests.servicerequests.service.CreateServiceRequestService;
+import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
+import net.pladema.sgx.security.utils.UserInfo;
+import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @Api(value = "Service Request", tags = {"Service Request"})
@@ -23,20 +31,49 @@ public class ServiceRequestController {
     private static final String OUTPUT = "create result -> {}";
     private static final String COMMON_INPUT = "Input parameters -> institutionId {} patientId {}, serviceRequestId {}";
 
+    private final HealthcareProfessionalExternalService healthcareProfessionalExternalService;
+    private final CreateServiceRequestService createServiceRequestService;
+    private final CreateServiceRequestMapper createServiceRequestMapper;
+
+    public ServiceRequestController(HealthcareProfessionalExternalService healthcareProfessionalExternalService,
+                                    CreateServiceRequestService createServiceRequestService,
+                                    CreateServiceRequestMapper createServiceRequestMapper) {
+        this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
+        this.createServiceRequestService = createServiceRequestService;
+        this.createServiceRequestMapper = createServiceRequestMapper;
+    }
 
     @PostMapping
+    @ResponseStatus(code = HttpStatus.CREATED)
     @Transactional
-    public Integer newServiceRequest(@PathVariable(name = "institutionId") Integer institutionId,
-                                                     @PathVariable(name = "patientId") Integer patientId,
-                                                     @RequestBody NewServiceRequestListDto serviceRequestListDto
+    public List<Integer> create(@PathVariable(name = "institutionId") Integer institutionId,
+                                @PathVariable(name = "patientId") Integer patientId,
+                                @RequestBody @Valid PrescriptionDto serviceRequestListDto
     ) {
         LOG.debug("Input parameters -> institutionId {} patientId {}, ServiceRequestListDto {}", institutionId, patientId, serviceRequestListDto);
-        Integer result = 8;
+        Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
+        Map<String, List<PrescriptionItemDto>> srGroupBy = serviceRequestListDto.getItems().stream()
+                .collect(Collectors.groupingBy(PrescriptionItemDto::getCategoryId));
+
+        ArrayList<Integer> result = new ArrayList<>();
+
+        srGroupBy.forEach((categoryId, studyListDto) -> {
+            ServiceRequestBo serviceRequestBo = createServiceRequestMapper.parseTo(
+                    doctorId,
+                    patientId,
+                    categoryId,
+                    serviceRequestListDto.getMedicalCoverageId(),
+                    studyListDto);
+            Integer srId = createServiceRequestService.execute(institutionId, serviceRequestBo);
+            result.add(srId);
+        });
+
         LOG.debug(OUTPUT, result);
         return result;
     }
 
     @GetMapping("/{serviceRequestId}/download")
+    @ResponseStatus(code = HttpStatus.OK)
     public FileDto download(@PathVariable(name = "institutionId") Integer institutionId,
                             @PathVariable(name = "patientId") Integer patientId,
                             @PathVariable(name = "serviceRequestId") Integer serviceRequestId
@@ -73,6 +110,7 @@ public class ServiceRequestController {
     }
 
     @GetMapping("/{serviceRequestId}")
+    @ResponseStatus(code = HttpStatus.OK)
     public DiagnosticReportDto get(@PathVariable(name = "institutionId") Integer institutionId,
                                    @PathVariable(name = "patientId") Integer patientId,
                                    @PathVariable(name = "serviceRequestId") Integer serviceRequestId
@@ -115,16 +153,18 @@ public class ServiceRequestController {
 
         SnomedDto healthConditionSnomed = new SnomedDto();
         snomed.setId("'2222'");
-        snomed.setPt("'ANGINAS'");
+        snomed.setPt("'Anginas'");
 
 
-        DiagnosticReportDto drDto1 = new DiagnosticReportDto(snomed,
+        DiagnosticReportDto drDto1 = new DiagnosticReportDto(
+                snomed,
                 healthConditionSnomed,
                 "Todo bien",
                 "www.link.com",
                 "123");
 
-        DiagnosticReportDto drDto2 = new DiagnosticReportDto(snomed,
+        DiagnosticReportDto drDto2 = new DiagnosticReportDto(
+                snomed,
                 healthConditionSnomed,
                 "Todo mal",
                 "www.link2.com",

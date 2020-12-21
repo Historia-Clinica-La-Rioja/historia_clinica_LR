@@ -13,5 +13,5 @@ import java.util.List;
 @ToString
 public class NewServiceRequestListDto implements Serializable {
     private Integer medicalCoverageId;
-    private List<StudyDto> studyDto;
+    private List<StudyDto> studiesDto;
 }

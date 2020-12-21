@@ -36,6 +36,8 @@ public class DocumentFactoryImpl implements DocumentFactory {
 
     private final ProceduresService proceduresService;
 
+    private final DiagnosticReportService diagnosticReportService;
+
     public DocumentFactoryImpl(DocumentService documentService,
                                InternmentEpisodeService internmentEpisodeService,
                                NoteService noteService,
@@ -44,7 +46,8 @@ public class DocumentFactoryImpl implements DocumentFactory {
                                ClinicalObservationService clinicalObservationService,
                                ImmunizationService immunizationService,
                                ProceduresService proceduresService,
-                               MedicationService medicationService) {
+                               MedicationService medicationService,
+                               DiagnosticReportService diagnosticReportService) {
         this.documentService = documentService;
         this.internmentEpisodeService = internmentEpisodeService;
         this.noteService = noteService;
@@ -54,6 +57,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
         this.immunizationService = immunizationService;
         this.proceduresService = proceduresService;
         this.medicationService = medicationService;
+        this.diagnosticReportService = diagnosticReportService;
     }
 
     @Override
@@ -80,6 +84,9 @@ public class DocumentFactoryImpl implements DocumentFactory {
         clinicalObservationService.loadAnthropometricData(patientId, doc.getId(), Optional.ofNullable(document.getAnthropometricData()));
 
         internmentEpisodeService.updateAnamnesisDocumentId(intermentEpisodeId, doc.getId());
+
+        diagnosticReportService.loadDiagnosticReport(doc.getId(), patientId, document.getDiagnosticReports());
+
         return doc.getId();
     }
 
