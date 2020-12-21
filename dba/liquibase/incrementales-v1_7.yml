@@ -845,19 +845,38 @@ databaseChangeLog:
         comment: Carga de datos snomed
         author: lbergottini
         context: "!schema-only"
+        dbms: postgresql
         changes:
             - sql:
                 sql: |-
-                    INSERT INTO snomed VALUES ('386661006', 'Fiebre','50177009', '');
-                    INSERT INTO snomed VALUES ('386689009', 'Hipotermia','846676008', 'Temperatura corporal por debajo del rango de referencia');
-                    INSERT INTO snomed VALUES ('17621005', 'Normal','', '');
-                    INSERT INTO snomed VALUES ('56731001', 'Hipertonía','', 'Tono muscular aumentado');
-                    INSERT INTO snomed VALUES ('398152000', 'Hipotonía','', 'Tono muscular disminuido'); 
-                    INSERT INTO snomed VALUES ('248567008', 'Intercostal','', 'Estiramiento de las costillas durante la respiración');
-                    INSERT INTO snomed VALUES ('60132005', 'Generalizado','', '');
-                    INSERT INTO snomed VALUES ('373067005', 'No','', '');
-                    INSERT INTO snomed VALUES ('18307000', 'Alterada','', '');
-                    
+                    INSERT INTO snomed VALUES ('386661006', 'Fiebre','50177009', '') ON CONFLICT DO NOTHING;
+                    INSERT INTO snomed VALUES ('386689009', 'Hipotermia','846676008', 'Temperatura corporal por debajo del rango de referencia') ON CONFLICT DO NOTHING;
+                    INSERT INTO snomed VALUES ('17621005', 'Normal','', '') ON CONFLICT DO NOTHING;
+                    INSERT INTO snomed VALUES ('56731001', 'Hipertonía','', 'Tono muscular aumentado') ON CONFLICT DO NOTHING;
+                    INSERT INTO snomed VALUES ('398152000', 'Hipotonía','', 'Tono muscular disminuido') ON CONFLICT DO NOTHING; 
+                    INSERT INTO snomed VALUES ('248567008', 'Intercostal','', 'Estiramiento de las costillas durante la respiración') ON CONFLICT DO NOTHING;
+                    INSERT INTO snomed VALUES ('60132005', 'Generalizado','', '') ON CONFLICT DO NOTHING;
+                    INSERT INTO snomed VALUES ('373067005', 'No','', '') ON CONFLICT DO NOTHING;
+                    INSERT INTO snomed VALUES ('18307000', 'Alterada','', '') ON CONFLICT DO NOTHING;
+    
+    - changeSet:
+        id: snomed-data-sqlserver
+        comment: Carga de datos snomed
+        author: lbergottini
+        context: "!schema-only"
+        dbms: mssql, db2
+        changes:
+            - sql:
+                sql: |-
+                    INSERT INTO snomed SELECT '386661006', 'Fiebre','50177009', '' WHERE NOT EXISTS (SELECT 1 FROM snomed where id = '386661006');
+                    INSERT INTO snomed SELECT '386689009', 'Hipotermia','846676008', 'Temperatura corporal por debajo del rango de referencia' WHERE NOT EXISTS (SELECT 1 FROM snomed where id = '386689009');
+                    INSERT INTO snomed SELECT '17621005', 'Normal','', '' WHERE NOT EXISTS (SELECT 1 FROM snomed where id = '17621005');
+                    INSERT INTO snomed SELECT '56731001', 'Hipertonía','', 'Tono muscular aumentado' WHERE NOT EXISTS (SELECT 1 FROM snomed where id = '56731001');
+                    INSERT INTO snomed SELECT '398152000', 'Hipotonía','', 'Tono muscular disminuido' WHERE NOT EXISTS (SELECT 1 FROM snomed where id = '398152000'); 
+                    INSERT INTO snomed SELECT '248567008', 'Intercostal','', 'Estiramiento de las costillas durante la respiración' WHERE NOT EXISTS (SELECT 1 FROM snomed where id = '248567008');
+                    INSERT INTO snomed SELECT '60132005', 'Generalizado','', '' WHERE NOT EXISTS (SELECT 1 FROM snomed where id = '60132005');
+                    INSERT INTO snomed SELECT '373067005', 'No','', '' WHERE NOT EXISTS (SELECT 1 FROM snomed where id = '373067005');
+                    INSERT INTO snomed SELECT '18307000', 'Alterada','', '' WHERE NOT EXISTS (SELECT 1 FROM snomed where id = '18307000');
                     
     - changeSet:
         id: body_temperature-data
