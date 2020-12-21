@@ -3,15 +3,21 @@ package net.pladema.clinichistory.requests.servicerequests.controller;
 import io.swagger.annotations.Api;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
+import net.pladema.clinichistory.requests.medicationrequests.controller.dto.HealthConditionInfoDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.*;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.CreateServiceRequestMapper;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.StudyMapper;
+import net.pladema.clinichistory.requests.servicerequests.controller.mapper.ListDiagnosticReportInfoMapper;
 import net.pladema.clinichistory.requests.servicerequests.service.CreateServiceRequestService;
+import net.pladema.clinichistory.requests.servicerequests.service.ListDiagnosticReportInfoService;
+import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportBo;
+import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportFilterBo;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
 import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.sgx.security.utils.UserInfo;
+import net.pladema.staff.controller.dto.ProfessionalDto;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,15 +45,22 @@ public class ServiceRequestController {
     private final CreateServiceRequestMapper createServiceRequestMapper;
     private final PatientExternalService patientExternalService;
     private final StudyMapper studyMapper;
+    private final ListDiagnosticReportInfoService listDiagnosticReportInfoService;
+    private final ListDiagnosticReportInfoMapper listDiagnosticReportInfoMapper;
+
     public ServiceRequestController(HealthcareProfessionalExternalService healthcareProfessionalExternalService,
                                     CreateServiceRequestService createServiceRequestService,
                                     CreateServiceRequestMapper createServiceRequestMapper,
                                     PatientExternalService patientExternalService,
-                                    StudyMapper studyMapper) {
+                                    StudyMapper studyMapper,
+                                    ListDiagnosticReportInfoMapper listDiagnosticReportInfoMapper,
+                                    ListDiagnosticReportInfoService listDiagnosticReportInfoService) {
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.createServiceRequestService = createServiceRequestService;
         this.createServiceRequestMapper = createServiceRequestMapper;
         this.patientExternalService = patientExternalService;
+        this.listDiagnosticReportInfoService = listDiagnosticReportInfoService;
+        this.listDiagnosticReportInfoMapper = listDiagnosticReportInfoMapper;
         this.studyMapper = studyMapper;
     }
 
@@ -122,9 +135,9 @@ public class ServiceRequestController {
 
     @GetMapping("/{serviceRequestId}")
     @ResponseStatus(code = HttpStatus.OK)
-    public DiagnosticReportDto get(@PathVariable(name = "institutionId") Integer institutionId,
-                                   @PathVariable(name = "patientId") Integer patientId,
-                                   @PathVariable(name = "serviceRequestId") Integer serviceRequestId
+    public DiagnosticReportInfoDto get(@PathVariable(name = "institutionId") Integer institutionId,
+                                       @PathVariable(name = "patientId") Integer patientId,
+                                       @PathVariable(name = "serviceRequestId") Integer serviceRequestId
     ) {
         LOG.debug(COMMON_INPUT, institutionId, patientId, serviceRequestId);
         SnomedDto snomed = new SnomedDto();
@@ -134,10 +147,12 @@ public class ServiceRequestController {
         SnomedDto healthCondition = new SnomedDto();
         snomed.setSctid("'2222'");
         snomed.setPt("'ANGINAS'");
+        HealthConditionInfoDto healthConditionInfo = new HealthConditionInfoDto();
+        healthConditionInfo.setSnomed(healthCondition);
 
-        DiagnosticReportDto result = new DiagnosticReportDto();
+        DiagnosticReportInfoDto result = new DiagnosticReportInfoDto();
         result.setSnomed(snomed);
-        result.setHealthCondition(healthCondition);
+        result.setHealthCondition(healthConditionInfo);
         result.setObservations("El paciente presenta la tiroides alta");
         result.setLink("http://www.google.com");
         result.setStatusId("123123");
@@ -146,44 +161,32 @@ public class ServiceRequestController {
     }
 
     @GetMapping
-    public List<DiagnosticReportDto> getList(@PathVariable(name = "institutionId") Integer institutionId,
-                                             @PathVariable(name = "patientId") Integer patientId,
-                                             @RequestParam(value = "statusId") Integer statusId,
-                                             @RequestParam(value = "serviceRequest") String serviceRequest,
-                                             @RequestParam(value = "healthCondition") String healthCondition) {
+    public List<DiagnosticReportInfoDto> getList(@PathVariable(name = "institutionId") Integer institutionId,
+                                                 @PathVariable(name = "patientId") Integer patientId,
+                                                 @RequestParam(value = "status", required = false) String status,
+                                                 @RequestParam(value = "serviceRequest", required = false) String diagnosticReport,
+                                                 @RequestParam(value = "healthCondition", required = false) String healthCondition) {
         LOG.debug("Input parameters -> institutionId {} patientId {}, status {} serviceRequest {} healthCondition {}",
                 institutionId,
                 patientId,
-                statusId,
-                serviceRequest,
+                status,
+                diagnosticReport,
                 healthCondition);
 
-        SnomedDto snomed = new SnomedDto();
-        snomed.setSctid("11111");
-        snomed.setPt("Radiologia");
+        List<DiagnosticReportBo> resultService = listDiagnosticReportInfoService.execute(new DiagnosticReportFilterBo(
+                patientId,
+                status,
+                diagnosticReport,
+                healthCondition));
 
-        SnomedDto healthConditionSnomed = new SnomedDto();
-        snomed.setSctid("'2222'");
-        snomed.setPt("'Anginas'");
+        List<DiagnosticReportInfoDto> result = resultService.stream()
+                .map(diagnosticReportBo -> {
+                    ProfessionalDto professionalDto = healthcareProfessionalExternalService.findProfessionalByUserId(diagnosticReportBo.getUserId());
+                    return listDiagnosticReportInfoMapper.parseTo(diagnosticReportBo, professionalDto);
+                })
+                .collect(Collectors.toList());
 
-
-        DiagnosticReportDto drDto1 = new DiagnosticReportDto(
-                snomed,
-                healthConditionSnomed,
-                "Todo bien",
-                "www.link.com",
-                "123");
-
-        DiagnosticReportDto drDto2 = new DiagnosticReportDto(
-                snomed,
-                healthConditionSnomed,
-                "Todo mal",
-                "www.link2.com",
-                "193");
-
-        List<DiagnosticReportDto> result = List.of(drDto1, drDto2);
-
-        LOG.debug(OUTPUT, result);
+        LOG.trace(OUTPUT, result);
         return result;
     }
 

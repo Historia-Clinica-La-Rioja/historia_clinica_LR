@@ -22,7 +22,7 @@ public class DoctorInfoDto {
         DoctorInfoDto result = new DoctorInfoDto();
         result.setId(professionalDto.getId());
         result.setFirstName(professionalDto.getFirstName());
-        result.setLastName(result.getLastName());
+        result.setLastName(professionalDto.getLastName());
         return result;
     }
 }

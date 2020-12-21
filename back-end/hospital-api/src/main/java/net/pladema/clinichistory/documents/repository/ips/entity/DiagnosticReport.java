@@ -10,6 +10,7 @@ import net.pladema.sgx.auditable.entity.SGXAuditableEntity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "diagnostic_report")
@@ -52,4 +53,28 @@ public class DiagnosticReport extends SGXAuditableEntity {
 	@Column(name = "note_id")
 	private Long noteId;
 
+	public DiagnosticReport(Integer patientId, Integer snomedId, String cie10Codes,
+							Long noteId, Integer healthConditionId) {
+		super();
+		this.patientId = patientId;
+		this.snomedId = snomedId;
+		this.cie10Codes = cie10Codes;
+		this.noteId = noteId;
+		this.healthConditionId = healthConditionId;
+	}
+
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		DiagnosticReport that = (DiagnosticReport) o;
+		return id.equals(that.id) &&
+				patientId.equals(that.patientId);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, patientId);
+	}
 }

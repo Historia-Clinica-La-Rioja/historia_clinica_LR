@@ -6,8 +6,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class DiagnosticReportFilterVo {
-    Integer patientId;
-    Integer status;
-    String serviceRequest;
-    String healthCondition;
+    private final Integer patientId;
+    private final String status;
+    private final String serviceRequest;
+    private final String healthCondition;
 }

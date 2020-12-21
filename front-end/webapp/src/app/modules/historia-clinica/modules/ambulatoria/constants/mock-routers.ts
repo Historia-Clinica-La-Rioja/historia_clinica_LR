@@ -114,34 +114,44 @@ export const MOCKS_ORDERS = [
 				]
 			},
 			{
-				name: 'ServiceRequest.getList(patientId: number): DiagnosticReportDto[]',
+				name: 'ServiceRequest.getList(patientId: number): DiagnosticReportInfoDto[]',
 				roles: 'Todo ESPECIALISTA_MEDICO sobre la institución',
 				path: '/api/institutions/{institutionId}/patient/{patientId}/serviceRequests?statusId=null, diagnosticReport=null, healthCondition=null',
 				method: 'GET',
 				fetch: [
 					{
-						totalElements: 200,
-						totalPage: 10,
-						pageNumber: 1,
-						elements: [
-							{
-								snomed: {
-									id: '11111',
-									pt: 'Radiografía de torax',
-								},
-								statusId: '44444',
-								healthConditionSnomed: {
-									id: '2222',
-									pt: 'ANGINAS'
-								},
-								startDate: {
-									year: 2020,
-									month: 5,
-									day: 14
-								},
-								observations: 'Hacerlo en ayuno'
-							}
-						]
+						snomed: {
+							sctid: '11111',
+							pt: 'Radiografía de torax',
+						},
+						statusId: '44444',
+						healthCondition: {
+							sctid: '2223',
+							pt: 'ANGINAS'
+						},
+						observations: 'Hacerlo en ayuno',
+						doctor: {
+							"id": 1,
+							"firstName": "San",
+							"lastName": "Martin"
+						  }
+					},
+					{
+						snomed: {
+							sctid: '11112',
+							pt: 'Radiografía de rodilla',
+						},
+						statusId: '44444',
+						healthConditionSnomed: {
+							sctid: '2222',
+							pt: 'Dolor'
+						},
+						observations: 'Bien de costado (?',
+						doctor: {
+							"id": 1,
+							"firstName": "San",
+							"lastName": "Martin"
+						  }
 					}
 				],
 			},
@@ -247,14 +257,14 @@ export const MOCKS_ORDERS = [
 				navigate: './confirmar-receta',
 			}
 		]
-	},{
+	}, {
 		path: 'paciente/:idPaciente/ordenes/volver-recetar',
 		loads: [
 			{
 				comments: 'Es igual al flujo de nueva receta excepto que ya tiene un listado de medicamentos predefinidos'
 			}
 		]
-	},{
+	}, {
 		path: 'paciente/:idPaciente/ordenes/descargar-receta',
 		loads: [
 			{
@@ -410,7 +420,7 @@ export const MOCKS_ORDERS = [
 				navigate: './descargar-receta',
 			}
 		]
-	},{
+	}, {
 		path: 'paciente/:idPaciente/ordenes/nueva-receta/confirmar-receta/descargar-receta',
 		loads: [
 			{
@@ -439,7 +449,7 @@ export const MOCKS_ORDERS = [
 				method: 'PUT',
 				body: {
 					dayQuantity: 14,
-					medicationIds: [1,2,3,4,5]
+					medicationIds: [1, 2, 3, 4, 5]
 				}
 			}
 		],
@@ -460,7 +470,7 @@ export const MOCKS_ORDERS = [
 				path: '/api/institutions/{institutionId}/patient/{patientId}/medication-requests/change-state',
 				method: 'PUT',
 				body: {
-					medicationIds: [1,2,3,4,5]
+					medicationIds: [1, 2, 3, 4, 5]
 				}
 			}
 		],
@@ -480,7 +490,7 @@ export const MOCKS_ORDERS = [
 				path: '/api/institutions/{institutionId}/patient/{patientId}/medication-requests/change-state',
 				method: 'PUT',
 				body: {
-					medicationIds: [1,2,3,4,5]
+					medicationIds: [1, 2, 3, 4, 5]
 				}
 			}
 		],
@@ -519,7 +529,7 @@ export const MOCKS_ORDERS = [
 				navigate: './confirmar-estudio',
 			}
 		]
-	},{
+	}, {
 		path: 'paciente/:idPaciente/ordenes/nueva-orden/agregar-estudio',
 		loads: [
 			{
@@ -635,7 +645,7 @@ export const MOCKS_ORDERS = [
 						}
 					]
 				},
-				fetch: [1,5,7], // id de los service request creados
+				fetch: [1, 5, 7], // id de los service request creados
 			}
 		],
 		actions: [
@@ -644,7 +654,7 @@ export const MOCKS_ORDERS = [
 				navigate: './descargar-orden',
 			}
 		]
-	},{
+	}, {
 		path: 'paciente/:idPaciente/ordenes/nueva-orden/confirmar-estudio/descargar-orden',
 		loads: [
 			{
@@ -671,8 +681,8 @@ export const MOCKS_ORDERS = [
 				path: '/api/institutions/{institutionId}/patient/{patientId}/serviceRequests/{serviceRequestId}',
 				method: 'PUT',
 				body: {
-					observation: "El paciente presenta la tiroide alta",
-					link: "http://www.google.com"
+					observation: 'El paciente presenta la tiroide alta',
+					link: 'http://www.google.com'
 				}
 			}
 		],
@@ -705,12 +715,12 @@ export const MOCKS_ORDERS = [
 		path: 'paciente/:idPaciente/ordenes/ver-orden',
 		loads: [
 			{
-				name: 'ServiceRequest.get(patientId: number, serviceRequestId:number): DiagnosticReportDto',
+				name: 'ServiceRequest.get(patientId: number, serviceRequestId:number): DiagnosticReportInfoDto',
 				roles: 'Todo ESPECIALISTA_MEDICO sobre la institución',
 				comments: '',
 				path: '/api/institutions/{institutionId}/patient/{patientId}/serviceRequests/{serviceRequestId}',
 				method: 'GET',
-			    fetch: {
+				fetch: {
 					snomed: {
 						id: '11111',
 						pt: 'Radiologia',
@@ -719,9 +729,9 @@ export const MOCKS_ORDERS = [
 						id: '2222',
 						pt: 'ANGINAS'
 					},
-					statusId: "213123",
-					observation: "El paciente presenta la tiroide alta",
-					link: "http://www.google.com"
+					statusId: '213123',
+					observation: 'El paciente presenta la tiroide alta',
+					link: 'http://www.google.com'
 				}
 			}
 		],
@@ -731,7 +741,7 @@ export const MOCKS_ORDERS = [
 				navigate: '../',
 			}
 		]
-	},{
+	}, {
 		path: 'paciente/:idPaciente/ordenes/nueva-indicacion',
 		loads: [
 			{

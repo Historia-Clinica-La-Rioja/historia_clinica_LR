@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.requests.servicerequests.service;
 
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.Snomed;
 import net.pladema.clinichistory.documents.service.DocumentFactory;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.domain.SnomedBo;
@@ -39,7 +40,7 @@ public class CreateServiceRequestServiceImplTest {
 
     @Test
     public void execute_withNullInstitution(){
-        ServiceRequestBo serviceRequestBo = validServiceRequest();
+        ServiceRequestBo serviceRequestBo = getValidServiceRequest();
         Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
                 createServiceRequestServiceImpl.execute(null,serviceRequestBo)
         );
@@ -50,7 +51,7 @@ public class CreateServiceRequestServiceImplTest {
 
     @Test
     public void execute_withNullPatient(){
-        ServiceRequestBo serviceRequestBo = validServiceRequest();
+        ServiceRequestBo serviceRequestBo = getValidServiceRequest();
         serviceRequestBo.setPatientInfo(new PatientInfoBo());
         Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
                 createServiceRequestServiceImpl.execute(1,serviceRequestBo)
@@ -62,7 +63,7 @@ public class CreateServiceRequestServiceImplTest {
 
     @Test
     public void execute_withNullDoctorId(){
-        ServiceRequestBo serviceRequestBo = validServiceRequest();
+        ServiceRequestBo serviceRequestBo = getValidServiceRequest();
         serviceRequestBo.setDoctorId(null);
         Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
                 createServiceRequestServiceImpl.execute(1,serviceRequestBo)
@@ -74,7 +75,7 @@ public class CreateServiceRequestServiceImplTest {
 
     @Test
     public void execute_withEmptyDiagnosticReport(){
-        ServiceRequestBo serviceRequestBo = validServiceRequest();
+        ServiceRequestBo serviceRequestBo = getValidServiceRequest();
         serviceRequestBo.setDiagnosticReports(null);
         Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
                 createServiceRequestServiceImpl.execute(1,serviceRequestBo)
@@ -86,13 +87,12 @@ public class CreateServiceRequestServiceImplTest {
 
     @Test
     public void execute_withInvalidServiceRequest_HealthCondition_Snomed(){
-        ServiceRequestBo serviceRequestBo = validServiceRequest();
-        SnomedBo snomed = new SnomedBo("1111", "Enfermedad 1");
-        DiagnosticReportBo DiagnosticReportBoWithoutHealthConditionId = new DiagnosticReportBo(
-                null,
-                "jakek",
-                snomed);
-        serviceRequestBo.setDiagnosticReports(List.of(DiagnosticReportBoWithoutHealthConditionId));
+        ServiceRequestBo serviceRequestBo = getValidServiceRequest();
+        DiagnosticReportBo diagnosticReportBoWithoutHealthConditionId = new DiagnosticReportBo();
+        diagnosticReportBoWithoutHealthConditionId.setHealthConditionId(null);
+        diagnosticReportBoWithoutHealthConditionId.setObservations("jakek");
+        diagnosticReportBoWithoutHealthConditionId.setSnomed(getValidSnomed());
+        serviceRequestBo.setDiagnosticReports(List.of(diagnosticReportBoWithoutHealthConditionId));
         Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
                 createServiceRequestServiceImpl.execute(1, serviceRequestBo)
         );
@@ -103,20 +103,29 @@ public class CreateServiceRequestServiceImplTest {
 
     @Test
     public void execute_success() {
-        ServiceRequestBo serviceRequestBo = validServiceRequest();
+        ServiceRequestBo serviceRequestBo = getValidServiceRequest();
         Integer medicationRequestId = createServiceRequestServiceImpl.execute(1,serviceRequestBo);
         Assertions.assertEquals(1, serviceRequestRepository.count());
         Assertions.assertNotNull(medicationRequestId);
     }
 
 
-    private ServiceRequestBo validServiceRequest(){
+    private SnomedBo getValidSnomed(){
+        return new SnomedBo(
+                "703421000",
+                "temperatura (entidad observable)");
+    }
 
-        SnomedBo snomed1 = new SnomedBo("1111", "Enfermedad 1");
-        SnomedBo snomed2 = new SnomedBo("2222", "Enfermedad 2");
+    private ServiceRequestBo getValidServiceRequest(){
+        DiagnosticReportBo diagnosticReportBo1 = new DiagnosticReportBo();
+        diagnosticReportBo1.setHealthConditionId(1);
+        diagnosticReportBo1.setObservations("jakek");
+        diagnosticReportBo1.setSnomed(getValidSnomed());
 
-        DiagnosticReportBo diagnosticReportBo1 = new DiagnosticReportBo(1, "jakek", snomed1);
-        DiagnosticReportBo diagnosticReportBo2 = new DiagnosticReportBo(2, "jakekX2", snomed2);
+        DiagnosticReportBo diagnosticReportBo2 = new DiagnosticReportBo();
+        diagnosticReportBo2.setHealthConditionId(1);
+        diagnosticReportBo2.setObservations("jakek + fuerte");
+        diagnosticReportBo2.setSnomed(getValidSnomed());
 
         var serviceRequestBo = new ServiceRequestBo();
         serviceRequestBo.setPatientInfo(new PatientInfoBo(1, (short) 1, (short) 1));

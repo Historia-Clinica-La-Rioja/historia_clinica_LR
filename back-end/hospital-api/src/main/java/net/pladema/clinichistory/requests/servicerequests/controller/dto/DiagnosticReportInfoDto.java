@@ -2,6 +2,8 @@ package net.pladema.clinichistory.requests.servicerequests.controller.dto;
 
 import lombok.*;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
+import net.pladema.clinichistory.requests.medicationrequests.controller.dto.DoctorInfoDto;
+import net.pladema.clinichistory.requests.medicationrequests.controller.dto.HealthConditionInfoDto;
 
 import javax.annotation.Nullable;
 
@@ -10,9 +12,9 @@ import javax.annotation.Nullable;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class DiagnosticReportDto {
+public class DiagnosticReportInfoDto {
     private SnomedDto snomed;
-    private SnomedDto healthCondition;
+    private HealthConditionInfoDto healthCondition;
 
     @Nullable
     private String observations;
@@ -20,4 +22,6 @@ public class DiagnosticReportDto {
     @Nullable
     private String link;
     private String statusId;
+    private DoctorInfoDto doctor;
+
 }

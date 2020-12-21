@@ -5,7 +5,7 @@ import {environment} from '@environments/environment';
 import {Observable} from 'rxjs';
 import {
 	CompleteRequestDto,
-	DiagnosticReportDto,
+	DiagnosticReportInfoDto,
 	PrescriptionDto
 } from '@api-rest/api-model';
 
@@ -20,14 +20,14 @@ export class ServiceRequestService {
 	) {
 	}
 
-	getList(patientId: number, statusId: string, diagnosticReport: string, healthCondition: string): Observable<DiagnosticReportDto[]> {
+	getList(patientId: number, statusId: string, diagnosticReport: string, healthCondition: string): Observable<DiagnosticReportInfoDto[]> {
 		let queryParams: HttpParams = new HttpParams();
 		queryParams = queryParams.append('statusId', statusId);
 		queryParams = queryParams.append('diagnosticReport', diagnosticReport);
 		queryParams = queryParams.append('healthCondition', healthCondition);
 
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/`;
-		return this.http.get<DiagnosticReportDto[]>(url, {params: queryParams});
+		return this.http.get<DiagnosticReportInfoDto[]>(url, {params: queryParams});
 	}
 
 	create(patientId: number, prescriptionDto: PrescriptionDto): Observable<number[]> {
@@ -53,8 +53,8 @@ export class ServiceRequestService {
 		return this.http.delete<string>(url);
 	}
 
-	get(patientId: number, serviceRequestId: number): Observable<DiagnosticReportDto> {
+	get(patientId: number, serviceRequestId: number): Observable<DiagnosticReportInfoDto> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${serviceRequestId}`;
-		return this.http.get<DiagnosticReportDto>(url);
+		return this.http.get<DiagnosticReportInfoDto>(url);
 	}
 }
