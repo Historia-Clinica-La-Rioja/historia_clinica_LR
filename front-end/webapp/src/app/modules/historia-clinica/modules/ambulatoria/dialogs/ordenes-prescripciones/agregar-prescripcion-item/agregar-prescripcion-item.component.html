@@ -38,6 +38,15 @@
 				</mat-select>
 			</mat-form-field>
 
+			<mat-form-field appearance="outline" *ngIf="data.showStudyCategory">
+				<mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.STUDY_CATEGORY' | translate}}</mat-label>
+				<mat-select formControlName="studyCategory" name="studyCategory">
+					<mat-option *ngFor="let studyCategory of studyCategoryOptions" [value]="studyCategory.id">
+						{{studyCategory.description | translate}}
+					</mat-option>
+				</mat-select>
+			</mat-form-field>
+
 			<div class="mat-form-field-wrapper" fxLayout="column" fxLayout.gt-md="row" fxLayoutGap="50px" *ngIf="data.showDosage">
 				<div fxLayout="column" fxLayoutGap="10px">
 					<mat-label class="mat-subheading-2">{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.INTERVAL' | translate}}</mat-label>

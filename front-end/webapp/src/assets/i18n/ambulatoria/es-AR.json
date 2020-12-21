@@ -185,6 +185,7 @@
 					"STUDY": "Estudio",
 					"STUDY_TITLE": "Agregar estudio",
 					"ASSOCIATED_PROBLEM": "Problema asociado",
+					"STUDY_CATEGORY": "Categoría del estudio",
 					"INTERVAL": "Intervalo",
 					"INTERVAL_DEFAULT_OPTION": "Diario",
 					"ADMINISTRATION_TIME": "Tiempo de administración",

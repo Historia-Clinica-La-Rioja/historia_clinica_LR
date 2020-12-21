@@ -14,12 +14,12 @@ export class PrescripcionesService {
 		private serviceRequestService: ServiceRequestService,
 	) { }
 
-	createPrescription(prescriptionType: PrescriptionTypes, newPrescription: PrescriptionDto, patientId: number): Observable<number> {
+	createPrescription(prescriptionType: PrescriptionTypes, newPrescription: PrescriptionDto, patientId: number): Observable<any> {
 		switch(prescriptionType) {
 			case PrescriptionTypes.MEDICATION: 
 				return this.medicationRequestService.create(patientId, newPrescription)
 			case PrescriptionTypes.STUDY:
-				return this.serviceRequestService.newServiceRequest(patientId, null);
+				return this.serviceRequestService.create(patientId, newPrescription);
 		}
 
 	}

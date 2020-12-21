@@ -42,6 +42,7 @@ export class OrdenesComponent implements OnInit {
 						titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.MEDICATION_TITLE',
 						searchSnomedLabel: 'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.MEDICATION',
 						showDosage: true,
+						showStudyCategory: false,
 						eclTerm: 'medicine',
 					}
 				},
@@ -87,6 +88,7 @@ export class OrdenesComponent implements OnInit {
 						titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.STUDY_TITLE',
 						searchSnomedLabel: 'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.STUDY',
 						showDosage: false,
+						showStudyCategory: true,
 						eclTerm: 'procedure',
 					}
 				},

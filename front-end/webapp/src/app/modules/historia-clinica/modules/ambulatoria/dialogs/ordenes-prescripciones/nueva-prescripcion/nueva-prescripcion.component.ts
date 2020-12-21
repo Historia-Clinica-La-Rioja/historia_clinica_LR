@@ -51,6 +51,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 				titleLabel: this.data.addPrescriptionItemDialogData.titleLabel,
 				searchSnomedLabel: this.data.addPrescriptionItemDialogData.searchSnomedLabel,
 				showDosage: this.data.addPrescriptionItemDialogData.showDosage,
+				showStudyCategory: this.data.addPrescriptionItemDialogData.showStudyCategory,
 				eclTerm: this.data.addPrescriptionItemDialogData.eclTerm,
 				item: item,
 			},
@@ -78,6 +79,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 					healthConditionId: pi.healthProblem.id,
 					observations: pi.observations,
 					snomed: pi.snomed,
+					categoryId: pi.studyCategory.id,
 					dosage: {
 						chronic: pi.isChronicAdministrationTime,
 						diary: pi.isDailyInterval,
@@ -146,6 +148,7 @@ export class NewPrescriptionData {
 		titleLabel: string;
 		searchSnomedLabel: string;
 		showDosage: boolean;
+		showStudyCategory: boolean;
 		eclTerm: string;
 	}
 }

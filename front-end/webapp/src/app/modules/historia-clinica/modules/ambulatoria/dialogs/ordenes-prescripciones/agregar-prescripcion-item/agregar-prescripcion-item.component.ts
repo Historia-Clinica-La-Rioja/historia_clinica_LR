@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HCEPersonalHistoryDto, SnomedDto } from '@api-rest/api-model';
 import { SnowstormService } from '@api-rest/services/snowstorm.service';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
+import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
 import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
 import { SEMANTICS_CONFIG } from 'src/app/modules/historia-clinica/constants/snomed-semantics';
 import { hasError } from '@core/utils/form.utils';
@@ -21,6 +22,7 @@ export class AgregarPrescripcionItemComponent implements OnInit {
 	prescriptionItemForm: FormGroup;
 	conceptsResultsTable: TableModel<any>;
 	healthProblemOptions = [];
+	studyCategoryOptions = [];
 	DEFAULT_RADIO_OPTION = 1;
 	OTHER_RADIO_OPTION = 0;
 	hasError = hasError;
@@ -36,6 +38,7 @@ export class AgregarPrescripcionItemComponent implements OnInit {
 		private readonly snowstormService: SnowstormService,
 		private readonly formBuilder: FormBuilder,
 		private readonly hceGeneralStateService: HceGeneralStateService,
+		private readonly requestMasterDataService: RequestMasterDataService,
 		public dialogRef: MatDialogRef<AgregarPrescripcionItemComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: NewPrescriptionItemData) { }
 
@@ -44,6 +47,10 @@ export class AgregarPrescripcionItemComponent implements OnInit {
 	
 		this.hceGeneralStateService.getActiveProblems(this.data.patientId).subscribe((activeProblems: HCEPersonalHistoryDto[]) => {
 			this.healthProblemOptions = activeProblems.map(problem => {return {id: problem.id, description: problem.snomed.pt}});
+		});
+
+		this.requestMasterDataService.categories().subscribe(categories => {
+			this.studyCategoryOptions = categories;
 		});
 
 		if (this.data.item) {
@@ -57,13 +64,17 @@ export class AgregarPrescripcionItemComponent implements OnInit {
 
 	addPrescriptionItem() {
 		if(this.prescriptionItemForm.valid) {
-			const {item, showDosage} = this.data;
+			const {item, showDosage, showStudyCategory} = this.data;
 			let newItem: NewPrescriptionItem = {
 				id: item ? item.id : null,
 				snomed: this.snomedConcept,
 				healthProblem: {
 					id: this.prescriptionItemForm.controls.healthProblem.value,
 					description: this.healthProblemOptions.find(hp => hp.id === this.prescriptionItemForm.controls.healthProblem.value).description
+				},
+				studyCategory: {
+					id: showStudyCategory ? this.prescriptionItemForm.controls.studyCategory.value : null,
+					description: showStudyCategory ? this.studyCategoryOptions.find(sc => sc.id === this.prescriptionItemForm.controls.studyCategory.value).description : null
 				},
 				isDailyInterval: showDosage ? this.prescriptionItemForm.controls.interval.value === this.DEFAULT_RADIO_OPTION : null,
 				isChronicAdministrationTime: showDosage ? this.prescriptionItemForm.controls.administrationTime.value === this.DEFAULT_RADIO_OPTION : null,
@@ -123,6 +134,7 @@ export class AgregarPrescripcionItemComponent implements OnInit {
 			administrationTime: [this.DEFAULT_RADIO_OPTION],
 			administrationTimeDays: [null],
 			observations: [null],
+			studyCategory: [null],
 		});
 
 		if (this.data.showDosage) {
@@ -182,6 +194,7 @@ export class NewPrescriptionItemData {
 	titleLabel: string;
 	searchSnomedLabel: string;
 	showDosage: boolean;
+	showStudyCategory: boolean;
 	eclTerm: string;
 	item?: NewPrescriptionItem;
 }
@@ -193,6 +206,10 @@ export class NewPrescriptionItem {
 		id: number;
 		description: string;
 	};
+	studyCategory: {
+		id: string;
+		description: string;
+	}
 	isDailyInterval: boolean;
 	isChronicAdministrationTime: boolean;
 	intervalHours?: string;
