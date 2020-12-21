@@ -1,0 +1,11 @@
+<app-triage (onTriageCategoryIdChange)="setTriageCategoryId($event)"
+            (onDoctorsOfficeIdChange)="setDoctorsOfficeId($event)">
+</app-triage>
+<mat-action-row>
+	<button mat-stroked-button class="uppercase"  (click)="back()">
+		<span [translate]="cancelLabel"></span>
+	</button>
+	<button mat-raised-button class="uppercase" color="primary" matBadgeColor="accent" (click)="confirm()">
+		<span [translate]="confirmLabel"></span>
+	</button>
+</mat-action-row>

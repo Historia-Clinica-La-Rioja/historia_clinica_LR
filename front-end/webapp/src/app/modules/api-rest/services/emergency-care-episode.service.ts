@@ -1,13 +1,21 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { DateDto, DateTimeDto } from '@api-rest/api-model';
+import { environment } from "@environments/environment";
+import { HttpClient } from "@angular/common/http";
+import { ContextService } from "@core/services/context.service";
+
+
+const BASIC_URL_PREFIX = '/institutions';
+const BASIC_URL_SUFIX = '/emergency-care';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class EmergencyCareEpisodeService {
 
-	constructor() {
+	constructor(private http: HttpClient,
+	            private contextService: ContextService) {
 	}
 
 	getAll(): Observable<EmergencyCareEpisodeDto[]> {
@@ -209,6 +217,12 @@ export class EmergencyCareEpisodeService {
 			]
 		);
 	}
+
+	new(newEpisode: any): Observable<number> {
+		let url = `${environment.apiBase + BASIC_URL_PREFIX}/${this.contextService.institutionId +
+		BASIC_URL_SUFIX}/episodes`;
+		return of(1);
+	}
 }
 
 export interface EmergencyCareEpisodeDto {
@@ -241,3 +255,4 @@ export interface EmergencyCareEpisodeDto {
 		description: string,
 	};
 }
+
