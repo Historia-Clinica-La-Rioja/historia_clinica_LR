@@ -5,12 +5,12 @@ import { map } from 'rxjs/operators';
 @Injectable({
 	providedIn: 'root'
 })
-export class PatientPhotoService {
+export class ImageDecoderService {
 
 	constructor() {
 	}
 
-	decodePhoto(imageData: string): Observable<string> {
+	decode(imageData: string): Observable<string> {
 		if (imageData) {
 			return this.getBase64ImageFromURL(imageData).pipe(map(base64data => {
 				return 'data:image/jpg;base64,' + base64data;

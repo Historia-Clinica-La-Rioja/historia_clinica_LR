@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { PersonPhotoDto } from '@api-rest/api-model';
 import { Observable } from 'rxjs';
-import { PatientPhotoService } from '@presentation/services/patient-photo.service';
+import { ImageDecoderService } from '@presentation/services/image-decoder.service';
 
 @Component({
 	selector: 'app-patient-card',
@@ -14,11 +14,11 @@ export class PatientCardComponent implements OnInit {
 	@Input() personPhoto: PersonPhotoDto;
 	decodedPhoto$: Observable<string>;
 
-	constructor(private readonly patientPhotoService: PatientPhotoService) { }
+	constructor(private readonly imageDecoderService: ImageDecoderService) { }
 
 	ngOnInit(): void {
 		if (this.personPhoto.imageData) {
-				this.decodedPhoto$ = this.patientPhotoService.decodePhoto(this.personPhoto.imageData);
+				this.decodedPhoto$ = this.imageDecoderService.decode(this.personPhoto.imageData);
 		}
 	}
 

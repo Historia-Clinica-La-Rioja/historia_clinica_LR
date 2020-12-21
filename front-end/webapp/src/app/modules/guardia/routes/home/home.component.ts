@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
-import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
+import { EmergencyCareEpisodeDto, EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import { DateTimeDto } from '@api-rest/api-model';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { differenceInMinutes } from 'date-fns';
 import { EstadosEpisodio, Triages } from '../../constants/masterdata';
-import { PatientPhotoService } from '@presentation/services/patient-photo.service';
+import { ImageDecoderService } from '@presentation/services/image-decoder.service';
 
 @Component({
 	selector: 'app-home',
@@ -22,7 +22,7 @@ export class HomeComponent implements OnInit {
 	constructor(
 		private router: Router,
 		private emergencyCareEpisodeService: EmergencyCareEpisodeService,
-		private patientPhotoService: PatientPhotoService
+		private imageDecoderService: ImageDecoderService
 		) {
 	}
 
@@ -41,7 +41,7 @@ export class HomeComponent implements OnInit {
 				...episode.patient,
 				person: {
 					...episode.patient?.person,
-					decodedPhoto$: this.patientPhotoService.decodePhoto(episode.patient?.person?.photo)
+					decodedPhoto$: this.imageDecoderService.decode(episode.patient?.person?.photo)
 				}
 			} : undefined
 		};
