@@ -27,10 +27,12 @@ public class RequestMasterdataController {
         this.masterDataService = masterDataService;
     }
 
-    @GetMapping(value = "/request/categories")
-    public ResponseEntity<Collection<MasterDataProjection>> getAllergyCategory(){
+    @GetMapping(value = "/categories")
+    public ResponseEntity<Collection<MasterDataProjection>> categories(){
         LOG.debug("{}", "All allergy intolerance category");
-        return ResponseEntity.ok().body(masterDataService.findAll(ServiceRequestCategory.class));
+        Collection<MasterDataProjection> result = masterDataService.findAll(ServiceRequestCategory.class);
+        LOG.debug("OUTPUT -> {}", result);
+        return ResponseEntity.ok().body(result);
     }
     
     
