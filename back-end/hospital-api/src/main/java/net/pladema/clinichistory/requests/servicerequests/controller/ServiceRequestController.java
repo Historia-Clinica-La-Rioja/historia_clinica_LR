@@ -6,6 +6,7 @@ import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.*;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.CreateServiceRequestMapper;
+import net.pladema.clinichistory.requests.servicerequests.controller.mapper.StudyMapper;
 import net.pladema.clinichistory.requests.servicerequests.service.CreateServiceRequestService;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
 import net.pladema.patient.controller.dto.BasicPatientDto;
@@ -37,15 +38,17 @@ public class ServiceRequestController {
     private final CreateServiceRequestService createServiceRequestService;
     private final CreateServiceRequestMapper createServiceRequestMapper;
     private final PatientExternalService patientExternalService;
-
+    private final StudyMapper studyMapper;
     public ServiceRequestController(HealthcareProfessionalExternalService healthcareProfessionalExternalService,
                                     CreateServiceRequestService createServiceRequestService,
                                     CreateServiceRequestMapper createServiceRequestMapper,
-                                    PatientExternalService patientExternalService) {
+                                    PatientExternalService patientExternalService,
+                                    StudyMapper studyMapper) {
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.createServiceRequestService = createServiceRequestService;
         this.createServiceRequestMapper = createServiceRequestMapper;
         this.patientExternalService = patientExternalService;
+        this.studyMapper = studyMapper;
     }
 
     @PostMapping
@@ -66,6 +69,7 @@ public class ServiceRequestController {
 
         srGroupBy.forEach((categoryId, studyListDto) -> {
             ServiceRequestBo serviceRequestBo = createServiceRequestMapper.parseTo(
+                    studyMapper,
                     doctorId,
                     patientDto,
                     categoryId,

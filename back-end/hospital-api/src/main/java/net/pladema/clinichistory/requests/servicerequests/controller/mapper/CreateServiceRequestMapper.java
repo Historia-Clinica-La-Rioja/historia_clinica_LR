@@ -4,26 +4,22 @@ import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
 import net.pladema.patient.controller.dto.BasicPatientDto;
+import org.mapstruct.Mapper;
 import org.mapstruct.Named;
+import org.mapstruct.factory.Mappers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 
-@Component
+@Mapper
 public class CreateServiceRequestMapper {
     private static final Logger LOG = LoggerFactory.getLogger(CreateServiceRequestMapper.class);
     private static final String OUTPUT = "OUTPUT -> {}";
-    private final StudyMapper studyMapper;
-
-    public CreateServiceRequestMapper(StudyMapper studyMapper){
-        this.studyMapper = studyMapper;
-    }
 
     @Named("parseTo")
-    public ServiceRequestBo parseTo(Integer doctorId, BasicPatientDto patientDto, String categoryId, Integer medicalCoverageId, List<PrescriptionItemDto> studies){
+    public ServiceRequestBo parseTo(StudyMapper studyMapper, Integer doctorId, BasicPatientDto patientDto, String categoryId, Integer medicalCoverageId, List<PrescriptionItemDto> studies){
         LOG.debug("parseTo -> doctorId {}, patientDto {}, medicalCoverageId {}, studies {} ", doctorId, patientDto, medicalCoverageId, studies);
         ServiceRequestBo result = new ServiceRequestBo();
         result.setCategoryId(categoryId);

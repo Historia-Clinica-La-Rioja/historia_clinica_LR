@@ -73,18 +73,6 @@ public class CreateServiceRequestServiceImplTest {
     }
 
     @Test
-    public void execute_withNullMedicalCoverageId(){
-        ServiceRequestBo serviceRequestBo = validServiceRequest();
-        serviceRequestBo.setMedicalCoverageId(null);
-        Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-                createServiceRequestServiceImpl.execute(1,serviceRequestBo)
-        );
-        String expectedMessage = "El identificador de la cobertura médica es obligatorio";
-        String actualMessage = exception.getMessage();
-        Assertions.assertTrue(actualMessage.contains(expectedMessage));
-    }
-
-    @Test
     public void execute_withEmptyDiagnosticReport(){
         ServiceRequestBo serviceRequestBo = validServiceRequest();
         serviceRequestBo.setDiagnosticReports(null);

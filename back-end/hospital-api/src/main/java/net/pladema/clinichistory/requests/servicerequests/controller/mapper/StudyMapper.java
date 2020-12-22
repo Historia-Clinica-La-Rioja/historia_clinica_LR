@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.requests.servicerequests.controller.mapper;
 
+import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.SnomedMapper;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportBo;
 import org.mapstruct.IterableMapping;
@@ -8,10 +9,10 @@ import org.mapstruct.Named;
 
 import java.util.List;
 
-@Mapper()
+@Mapper(uses = {SnomedMapper.class})
 public interface StudyMapper {
-    @Named("parseTo")
-    @IterableMapping(qualifiedByName = "toStudyBo")
+    @Named("parseToList")
+    @IterableMapping(qualifiedByName = "parseTo")
     List<DiagnosticReportBo> parseTo(List<PrescriptionItemDto> studyDtoList);
 
     @Named("parseTo")

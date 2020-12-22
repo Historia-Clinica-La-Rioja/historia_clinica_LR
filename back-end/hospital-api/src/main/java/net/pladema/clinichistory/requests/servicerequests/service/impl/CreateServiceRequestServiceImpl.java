@@ -43,12 +43,12 @@ public class CreateServiceRequestServiceImpl implements CreateServiceRequestServ
         Assert.notNull(institutionId, "El identificador de la institución es obligatorio");
         Assert.notNull(serviceRequestBo.getPatientId(), "El paciente es obligatorio");
         Assert.notNull(serviceRequestBo.getDoctorId(), "El identificador del médico es obligatorio");
-        Assert.notNull(serviceRequestBo.getMedicalCoverageId(), "El identificador de la cobertura médica es obligatorio");
         Assert.notEmpty(serviceRequestBo.getDiagnosticReports(), "La orden tiene que tener asociada al menos un estudio");
+        SnomedValidator snomedValidator =  new SnomedValidator();
         serviceRequestBo.getDiagnosticReports().forEach(dr -> {
+            snomedValidator.isValid(dr.getSnomed());
             Assert.notNull(dr.getHealthConditionId(), "El estudio tiene que estar asociado a un problema");
         });
-
     }
 
     private ServiceRequest createServiceRequest(Integer institutionId, ServiceRequestBo serviceRequestBo) {
