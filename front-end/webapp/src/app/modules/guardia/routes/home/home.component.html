@@ -1,4 +1,5 @@
 <button mat-flat-button color="primary" (click)="goToMockup()">to mockups</button>
+
 <app-content width="full">
 	<section id="header" fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between center">
 		<div>
@@ -8,30 +9,32 @@
 
 	<section id="body">
 		<app-filters-card [cardTitle]="'guardia.home.episodes.TITLE'">
-			<div results fxLayout="column" fxLayout="column" fxLayoutGap="7px" fxLayoutAlign="end end">
+			<div results fxLayout="column" fxLayoutGap="15px" fxLayoutGap="7px" fxLayoutAlign="end end" fxFlexFill>
 
 				<div>
 					<button mat-raised-button color="primary" (click)="goToAdmisionAdministrativa()" class="uppercase"
-						translate="guardia.home.episodes.NEW_EPISODE"></button>
+							translate="guardia.home.episodes.NEW_EPISODE"></button>
 				</div>
 
-				<div fxFlexFill fxLayoutGap="15px" fxLayout="column">
+				<ng-container *ngIf="episodes?.length else noData">
 					<mat-card [ngClass]="{ 'en-atencion' : episode.state.id === estadosEpisodio.EN_ATENCION }"
-						class="episode-card" (click)="goToEpisode(episode.id)" *ngFor="let episode of episodes">
+							  class="episode-card"
+							  (click)="goToEpisode(episode.id)" *ngFor="let episode of episodes">
 						<div fxLayout="row" fxFlexAlign="center" style="padding: 0 15px">
 
 							<div id="patient" fxFlex="40%" fxLayout="row">
 								<mat-card-header>
-									<img mat-card-avatar [src]="episode.patient?.person?.decodedPhoto$ | async"
-										onerror="this.src='../../../../../assets/images/empty-profile.png'">
+									<img mat-card-avatar
+										 [src]="episode.patient?.person?.decodedPhoto$ | async"
+										 onerror="this.src='../../../../../assets/images/empty-profile.png'">
 									<mat-card-title>
 										<span *ngIf="!episode.patient else patientInfo">
-											{{ 'guardia.home.episodes.episode.patient.NO_INFO'| translate }}
+										{{ 'guardia.home.episodes.episode.patient.NO_INFO'| translate }}
 										</span>
 									</mat-card-title>
 									<mat-card-subtitle *ngIf="episode.patient?.id">
 										<span class="mat-small">
-											{{ 'guardia.home.episodes.episode.patient.ID'| translate }}
+										{{ 'guardia.home.episodes.episode.patient.ID'| translate }}
 											{{ episode.patient?.id }}
 										</span>
 									</mat-card-subtitle>
@@ -39,9 +42,8 @@
 
 
 								<ng-template #patientInfo>
-									<span
-										*ngIf="(episode.patient?.typeId !== PACIENTE_TEMPORAL || episode.patient?.firstName || episode.patient?.lastName) else temporal">
-										{{ episode.patient?.person?.firstName }} {{ episode.patient?.person?.lastName }}
+									<span *ngIf="(episode.patient?.typeId !== PACIENTE_TEMPORAL || episode.patient?.firstName || episode.patient?.lastName) else temporal">
+									{{ episode.patient?.person?.firstName }} {{ episode.patient?.person?.lastName }}
 									</span>
 								</ng-template>
 
@@ -52,15 +54,14 @@
 
 							<div id="triage" fxFlex="25%" fxLayout="column">
 								<div class="triage-chip"
-									[ngStyle]="{'color':episode.triage.id === triages.AMARILLO_NIVEL_3 ? 'black' : 'white' }"
-									[style.background-color]="episode.triage.color">{{ episode.triage.description }}
-								</div>
+									 [ngStyle]="{'color':episode.triage.id === triages.AMARILLO_NIVEL_3 ? 'black' : 'white' }"
+									 [style.background-color]="episode.triage.color">{{ episode.triage.description }}</div>
 								<span class="mat-small">{{ episode.type.description }}</span>
 							</div>
 
 							<div id="status" fxFlex="30%" fxLayout="column">
 								<span *ngIf="episode.state.id === estadosEpisodio.EN_ESPERA else enAtencion">
-									{{ episode.state.description }}: {{ episode.waitingTime }} min</span>
+								{{ episode.state.description }}: {{ episode.waitingTime }} min</span>
 								<span class="mat-small"> {{ episode.doctorsOffice.description }} </span>
 
 								<ng-template #enAtencion>
@@ -75,9 +76,14 @@
 							</div>
 						</div>
 					</mat-card>
-				</div>
-
+				</ng-container>
 			</div>
 		</app-filters-card>
 	</section>
 </app-content>
+
+<ng-template #noData>
+	<div id="no-data" fxLayout="column" fxLayoutAlign="center" fxFlexFill>
+		<h2 class="mat-h2" style="text-align: center" [translate]="'guardia.home.episodes.NO_DATA'"></h2>
+	</div>
+</ng-template>

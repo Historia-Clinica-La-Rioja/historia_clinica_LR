@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from "@angular/router";
+import { Router } from '@angular/router';
 import { EmergencyCareEpisodeDto, EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import { DateTimeDto } from '@api-rest/api-model';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
@@ -23,7 +23,7 @@ export class HomeComponent implements OnInit {
 		private router: Router,
 		private emergencyCareEpisodeService: EmergencyCareEpisodeService,
 		private imageDecoderService: ImageDecoderService
-		) {
+	) {
 	}
 
 	ngOnInit(): void {

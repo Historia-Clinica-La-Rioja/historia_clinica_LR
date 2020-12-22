@@ -6,6 +6,11 @@
 	cursor: pointer;
 	box-shadow: none;
 
+	.mat-card-header .mat-card-title {
+		margin-bottom: 8px;
+		font-size: 16px;
+	}
+
 	&.mat-card.en-atencion {
 		background-color: #EDF1F7;
 
@@ -23,11 +28,6 @@
 
 mat-card-subtitle {
 	margin-bottom: 0;
-}
-
-.mat-card-header .mat-card-title {
-	margin-bottom: 8px;
-	font-size: 16px;
 }
 
 .triage-chip {

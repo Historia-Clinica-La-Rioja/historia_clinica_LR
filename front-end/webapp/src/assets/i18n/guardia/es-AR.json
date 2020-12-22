@@ -1,19 +1,5 @@
 {
 	"guardia": {
-		"home": {
-			"episodes": {
-				"episode": {
-					"patient": {
-						"ID": "ID Paciente",
-						"NO_INFO": "Sin información",
-						"TEMPORAL": "Paciente temporal"
-					}
-				},
-				"TITLE": "Episodios de guardia",
-				"NEW_EPISODE": "Nuevo episodio"
-			},
-			"TITLE": "Guardia de emergencia"
-		},
 		"new-episode": {
 			"TITLE": "Nuevo episodio",
 			"SUB_TITLE": "Complete los datos para continuar",
@@ -21,7 +7,6 @@
 		},
 		"triage": {
 			"LEVEL": "Nivel de urgencia",
-			"ROOM": "Consultorio",
 			"TITLE": "Nuevo triage",
 			"CONFIRM": "Confirmar triage",
 			"ROOM": "Consultorio"
@@ -61,6 +46,21 @@
 					}
 				}
 			}
+		},
+		"home": {
+			"episodes": {
+				"episode": {
+					"patient": {
+						"ID": "ID Paciente",
+						"NO_INFO": "Sin información",
+						"TEMPORAL": "Paciente temporal"
+					}
+				},
+				"NEW_EPISODE": "Nuevo episodio",
+				"NO_DATA": "No existen episodios activos",
+				"TITLE": "Episodios de guardia"
+			},
+			"TITLE": "Guardia de emergencia"
 		}
 	}
 }
