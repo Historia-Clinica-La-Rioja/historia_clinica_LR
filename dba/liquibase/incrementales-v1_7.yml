@@ -1818,4 +1818,25 @@ databaseChangeLog:
             constraintName: UQ_sctid_pt
             tableName: snomed
 
+    - changeSet:
+        id: medical_request-addColumn-health_condition_id
+        author: tmedina
+        changes:
+            - addColumn:
+                tableName: medical_request
+                columns:
+                - column:
+                    name: health_condition_id
+                    type: int
+                    constraints:
+                        nullable: false  
+            - addForeignKeyConstraint:
+                baseColumnNames: health_condition_id
+                baseTableName: medical_request
+                constraintName: FK_medical_request_health_condition_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: health_condition
+                validate: true
 
