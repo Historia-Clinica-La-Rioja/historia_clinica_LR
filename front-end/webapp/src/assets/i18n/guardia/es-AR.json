@@ -9,7 +9,8 @@
 						"TEMPORAL": "Paciente temporal"
 					}
 				},
-				"TITLE": "Episodios de guardia"
+				"TITLE": "Episodios de guardia",
+				"NEW_EPISODE": "Nuevo Episodio"
 			},
 			"TITLE": "Guardia de emergencia"
 		},
