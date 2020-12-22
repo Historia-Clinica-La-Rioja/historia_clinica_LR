@@ -393,6 +393,7 @@
 					<classPatterns>
 						<pattern>net.pladema.**.controller.**Dto</pattern>
 						<pattern>net.pladema.**.masterdata.**Dto</pattern>
+						<pattern>net.pladema.hl7.**.dto.**Dto</pattern>
 					</classPatterns>
 					<outputKind>module</outputKind>
 					<outputFile>../../front-end/webapp/src/app/modules/api-rest/api-model.d.ts</outputFile>
