@@ -36,6 +36,8 @@ export class AdmisionAdministrativaComponent implements OnInit {
 	form: FormGroup;
 
 	motivoNuevaConsultaService: MotivoNuevaConsultaService; // sacarlo de historia clinica
+	readonly WITH_DOCTOR_IN_AMBULANCE = 3;
+	readonly WITHOUT_DOCTOR_IN_AMBULANCE = 4;
 
 	private selectedPatient;
 	constructor(
@@ -103,30 +105,30 @@ export class AdmisionAdministrativaComponent implements OnInit {
 
 	}
 
-	 	openMedicalCoverageDialog(): void {
-			const dialogRef = this.dialog.open(MedicalCoverageComponent, {
-				data: {
-					genderId: this.selectedPatient.genderId,
-					identificationNumber: this.selectedPatient.identificationNumber,
-					identificationTypeId: this.selectedPatient.identificationTypeId,
-					initValues: this.patientMedicalCoverages.map( s => this.mapperService.toPatientMedicalCoverage(s)),
-				}
-			});
+	openMedicalCoverageDialog(): void {
+		const dialogRef = this.dialog.open(MedicalCoverageComponent, {
+			data: {
+				genderId: this.selectedPatient.genderId,
+				identificationNumber: this.selectedPatient.identificationNumber,
+				identificationTypeId: this.selectedPatient.identificationTypeId,
+				initValues: this.patientMedicalCoverages.map(s => this.mapperService.toPatientMedicalCoverage(s)),
+			}
+		});
 
-			dialogRef.afterClosed().subscribe(values => {
-				if (values) {
-					const patientCoverages: PatientMedicalCoverageDto[] =
-						values.patientMedicalCoverages.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
+		dialogRef.afterClosed().subscribe(values => {
+			if (values) {
+				const patientCoverages: PatientMedicalCoverageDto[] =
+					values.patientMedicalCoverages.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
 
-					this.patientMedicalCoverageService.addPatientMedicalCoverages(this.selectedPatient.id, patientCoverages).subscribe(_ => {
-						this.snackBarService.showSuccess('Las coberturas fueron actualizadas correctamente');
-						this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this.selectedPatient.id).subscribe( updatedCoverages => {
-							this.patientMedicalCoverages = updatedCoverages;
-						});
-					}), _ => this.snackBarService.showError('Ocurrió un error al actualizar las coberturas');
-				}
-			});
-		}
+				this.patientMedicalCoverageService.addPatientMedicalCoverages(this.selectedPatient.id, patientCoverages).subscribe(_ => {
+					this.snackBarService.showSuccess('Las coberturas fueron actualizadas correctamente');
+					this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this.selectedPatient.id).subscribe(updatedCoverages => {
+						this.patientMedicalCoverages = updatedCoverages;
+					});
+				}), _ => this.snackBarService.showError('Ocurrió un error al actualizar las coberturas');
+			}
+		});
+	}
 
 	clearSelectedPatient(): void {
 		this.patientCardInfo = null;
@@ -173,5 +175,14 @@ export class AdmisionAdministrativaComponent implements OnInit {
 
 	goBack(): void {
 
+	}
+
+	setAmbulanceCompanyIdStatus(): void {
+		if (this.form.value.emergencyCareEntranceTypeId === this.WITH_DOCTOR_IN_AMBULANCE || this.form.value.emergencyCareEntranceTypeId === this.WITHOUT_DOCTOR_IN_AMBULANCE) {
+			this.form.controls.ambulanceCompanyId.enable();
+		}
+		else {
+			this.form.controls.ambulanceCompanyId.disable();
+		}
 	}
 }

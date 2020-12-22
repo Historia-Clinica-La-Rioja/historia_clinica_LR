@@ -4,8 +4,10 @@
 
 	<h2 [translate]="'Paciente'"></h2>
 
-	<button mat-stroked-button color="primary" *ngIf="!patientCardInfo" (click)="searchPatient()" class="uppercase">Buscar Paciente</button>
-	<form fxLayout="column" fxLayoutGap="10px" id="admisionForm" [formGroup]="form" (ngSubmit)="continue()" class="form">
+	<button mat-stroked-button color="primary" *ngIf="!patientCardInfo" (click)="searchPatient()"
+		class="uppercase">Buscar Paciente</button>
+	<form fxLayout="column" fxLayoutGap="10px" id="admisionForm" [formGroup]="form" (ngSubmit)="continue()"
+		class="form">
 		<ng-container *ngIf="patientCardInfo">
 			<app-patient-card [patient]="patientCardInfo.basicData" [personPhoto]="patientCardInfo.photo">
 				<div horizontal-content style="align-self: center;">
@@ -23,43 +25,42 @@
 					</mat-option>
 				</mat-select>
 			</mat-form-field>
- 			<button mat-stroked-button color="primary" (click)="openMedicalCoverageDialog()" class="uppercase"> Actualizar
+			<button mat-stroked-button color="primary" (click)="openMedicalCoverageDialog()" class="uppercase">
+				Actualizar
 				Cobertura</button>
 		</ng-container>
 
 		<div id="motivos">
 			<app-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.motivo.TITLE'"
-								  [tableTitle]="'ambulatoria.paciente.nueva-consulta.motivo.table.TITLE'"
-								  [columns]="motivoNuevaConsultaService.getColumns()"
-								  [data]="motivoNuevaConsultaService.getMotivosConsulta()"
-								  [addRemoveColumn]="true"
-								  (removeColumn)="motivoNuevaConsultaService.remove($event)">
+				[tableTitle]="'ambulatoria.paciente.nueva-consulta.motivo.table.TITLE'"
+				[columns]="motivoNuevaConsultaService.getColumns()"
+				[data]="motivoNuevaConsultaService.getMotivosConsulta()" [addRemoveColumn]="true"
+				(removeColumn)="motivoNuevaConsultaService.remove($event)">
 
 				<ng-container concept-form>
-					<app-concepts-search
-						*ngIf="!motivoNuevaConsultaService.getSnomedConcept() else mainMotivoConsulta"
+					<app-concepts-search *ngIf="!motivoNuevaConsultaService.getSnomedConcept() else mainMotivoConsulta"
 						[label]="'ambulatoria.paciente.nueva-consulta.motivo.MOTIVO'"
 						(search)="motivoNuevaConsultaService.openSearchDialog($event)">
 					</app-concepts-search>
 
 					<ng-template #mainMotivoConsulta>
 						<form [formGroup]="motivoNuevaConsultaService.getForm()"
-							  (ngSubmit)="motivoNuevaConsultaService.addToList()">
+							(ngSubmit)="motivoNuevaConsultaService.addToList()">
 							<mat-form-field appearance="outline">
 								<mat-label [translate]="'internaciones.anamnesis.diagnosticos.DIAGNOSIS'">
 								</mat-label>
 								<input id="motivo-input" matInput type="text" formControlName="snomed" name="snomed"
-									   readonly matTooltip="{{motivoNuevaConsultaService.getSnomedConcept().pt }}">
+									readonly matTooltip="{{motivoNuevaConsultaService.getSnomedConcept().pt }}">
 								<button id="clear-motivo" mat-button matSuffix color="warn" mat-icon-button
-										(click)="motivoNuevaConsultaService.resetForm()">
+									(click)="motivoNuevaConsultaService.resetForm()">
 									<mat-icon>close</mat-icon>
 								</button>
 							</mat-form-field>
 							<div align="end">
 								<button id="submit_motivos" class="uppercase" mat-raised-button color="primary"
-										type="submit">
-								<span class="uppercase"
-									  [translate]="'ambulatoria.paciente.nueva-consulta.motivo.ADD'"></span>
+									type="submit">
+									<span class="uppercase"
+										[translate]="'ambulatoria.paciente.nueva-consulta.motivo.ADD'"></span>
 								</button>
 							</div>
 						</form>
@@ -80,14 +81,15 @@
 
 		<mat-form-field appearance="outline">
 			<mat-select formControlName="emergencyCareEntranceTypeId" name="emergencyCareEntranceTypeId"
-				id="emergencyCareEntranceTypeId" placeholder="{{'Forma de ingreso' | translate}}">
+				id="emergencyCareEntranceTypeId" placeholder="{{'Forma de ingreso' | translate}}" (selectionChange)="setAmbulanceCompanyIdStatus()">
 				<mat-option *ngFor="let emergencyCareEntranceType of (emergencyCareEntranceType$ | async )"
 					[value]="emergencyCareEntranceType.id">{{emergencyCareEntranceType.description}}
 				</mat-option>
 			</mat-select>
 		</mat-form-field>
 
-		<mat-form-field appearance="outline">
+		<mat-form-field appearance="outline"
+			*ngIf="form.value.emergencyCareEntranceTypeId === WITH_DOCTOR_IN_AMBULANCE || form.value.emergencyCareEntranceTypeId === WITHOUT_DOCTOR_IN_AMBULANCE">
 			<input formControlName="ambulanceCompanyId" placeholder="{{'ID Compañia ambulancia' | translate }}"
 				matInput>
 		</mat-form-field>
