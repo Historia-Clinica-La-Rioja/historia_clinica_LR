@@ -12,16 +12,16 @@ import javax.persistence.Table;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "emergency_care_entrance_type")
+@Table(name = "emergency_care_state")
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
-public class EmergencyCareEntranceType implements Serializable {
+public class EmergencyCareState implements Serializable {
 		/**
 		 *
 		 */
-		private static final long serialVersionUID = 1344557556345002647L;
+		private static final long serialVersionUID = 288115248758489524L;
 
 		@Id
 		@Column(name = "id")
