@@ -804,7 +804,7 @@ export interface NewECAdministrativeDto extends ECAdministrativeDto {
 }
 
 export interface NewMedicalRequestDto {
-    healthConditionSnomed: SnomedDto;
+    healthConditionId: number;
     observations: string;
 }
 

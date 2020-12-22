@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.clinichistory.requests.medicalrequests.service.domain.MedicalRequestBo;
 import net.pladema.sgx.auditable.entity.SGXAuditListener;
 import net.pladema.sgx.auditable.entity.SGXAuditableEntity;
 
@@ -33,13 +34,23 @@ public class MedicalRequest extends SGXAuditableEntity {
 	@Column(name = "doctor_id", nullable = false)
 	private Integer doctorId;
 
+	@Column(name = "health_condition_id", nullable = false)
+	private Integer healthConditionId;
+
 	@Column(name = "request_date")
 	private LocalDate requestDate;
 
 	@Column(name = "note_id")
 	private Long noteId;
 
-
+	public MedicalRequest(Integer institutionId, MedicalRequestBo medicalRequestBo, Long noteId) {
+		this.patientId = medicalRequestBo.getPatientId();
+		this.institutionId = institutionId;
+		this.doctorId = medicalRequestBo.getDoctorId();
+		this.healthConditionId = medicalRequestBo.getHealthConditionId();
+		this.requestDate = medicalRequestBo.getRequestDate();
+		this.noteId = noteId;
+	}
 
 
 }

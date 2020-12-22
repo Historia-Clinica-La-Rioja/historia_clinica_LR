@@ -1,9 +1,15 @@
 package net.pladema.clinichistory.requests.medicalrequests.controller;
 
+import io.swagger.annotations.Api;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
 import net.pladema.clinichistory.requests.medicalrequests.controller.dto.MedicalRequestDto;
 import net.pladema.clinichistory.requests.medicalrequests.controller.dto.NewMedicalRequestDto;
+import net.pladema.clinichistory.requests.medicalrequests.controller.mapper.CreateMedicalRequestMapper;
+import net.pladema.clinichistory.requests.medicalrequests.service.CreateMedicalRequestService;
+import net.pladema.clinichistory.requests.medicalrequests.service.domain.MedicalRequestBo;
 import net.pladema.sgx.dates.controller.dto.DateDto;
+import net.pladema.sgx.security.utils.UserInfo;
+import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -15,8 +21,23 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/institutions/{institutionId}/patient/{patientId}/medical-requests")
+@Api(value = "Medical Request", tags = {"Medical Request"})
 public class MedicalRequestController {
     private static final Logger LOG = LoggerFactory.getLogger(MedicalRequestController.class);
+
+    private final HealthcareProfessionalExternalService healthcareProfessionalExternalService;
+
+    private final CreateMedicalRequestMapper createMedicalRequestMapper;
+
+    private final CreateMedicalRequestService createMedicalRequestService;
+
+    public MedicalRequestController(HealthcareProfessionalExternalService healthcareProfessionalExternalService,
+                                    CreateMedicalRequestMapper createMedicalRequestMapper,
+                                    CreateMedicalRequestService createMedicalRequestService) {
+        this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
+        this.createMedicalRequestMapper = createMedicalRequestMapper;
+        this.createMedicalRequestService = createMedicalRequestService;
+    }
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
@@ -26,7 +47,11 @@ public class MedicalRequestController {
                    @PathVariable(name = "patientId") Integer patientId,
                    @RequestBody @Valid NewMedicalRequestDto medicalRequest) {
         LOG.debug("create -> institutionId {}, patientId {}, medicalRequest {}", institutionId, patientId, medicalRequest);
-        Integer result = 12;
+        MedicalRequestBo medicalRequestBo = createMedicalRequestMapper.toMedicalRequestBo(medicalRequest);
+        Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
+        medicalRequestBo.setDoctorId(doctorId);
+        medicalRequestBo.setPatientId(patientId);
+        Integer result = createMedicalRequestService.execute(institutionId, medicalRequestBo);
         LOG.debug("create result -> {}", result);
         return result;
     }

@@ -4,16 +4,17 @@ import com.sun.istack.NotNull;
 import com.sun.istack.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class NewMedicalRequestDto {
 
     @NotNull
-    private SnomedDto healthConditionSnomed;
+    private Integer healthConditionId;
 
     @Nullable
     private String observations;
