@@ -76,6 +76,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 			lastName: [null],
 
 		});
+
 		this.emergencyCareType$ = this.emergencyCareMasterData.getType();
 		this.emergencyCareEntranceType$ = this.emergencyCareMasterData.getEntranceType();
 	}
