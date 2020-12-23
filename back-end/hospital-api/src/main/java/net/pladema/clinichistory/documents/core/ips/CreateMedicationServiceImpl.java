@@ -9,7 +9,7 @@ import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.Medi
 import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.service.NoteService;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
-import net.pladema.clinichistory.documents.service.ips.MedicationService;
+import net.pladema.clinichistory.documents.service.ips.CreateMedicationService;
 import net.pladema.clinichistory.documents.service.ips.SnomedService;
 import net.pladema.clinichistory.documents.service.ips.domain.DosageBo;
 import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
@@ -24,9 +24,9 @@ import org.springframework.util.Assert;
 import java.util.List;
 
 @Service
-public class MedicationServiceImpl implements MedicationService {
+public class CreateMedicationServiceImpl implements CreateMedicationService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MedicationServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CreateMedicationServiceImpl.class);
 
     public static final String OUTPUT = "Output -> {}";
 
@@ -44,7 +44,7 @@ public class MedicationServiceImpl implements MedicationService {
 
     private final NoteService noteService;
 
-    public MedicationServiceImpl(MedicationStatementRepository medicationStatementRepository,
+    public CreateMedicationServiceImpl(MedicationStatementRepository medicationStatementRepository,
                                  DosageRepository dosageRepository,
                                  MedicamentStatementStatusRepository medicamentStatementStatusRepository,
                                  DocumentService documentService,

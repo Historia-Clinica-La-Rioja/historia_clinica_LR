@@ -45,6 +45,8 @@ public class NoteServiceImpl implements NoteService {
     @Override
     public String getDescriptionById(Long noteId) {
         LOG.debug("Input parameters -> noteId {}", noteId);
+        if (noteId != null)
+            return null;
         Optional<Note> noteOptional = noteRepository.findById(noteId);
         String result = noteOptional.map(Note::getDescription).orElse(null);
         LOG.debug(OUTPUT, result);

@@ -43,4 +43,8 @@ public class DocumentMedicamentionStatement implements Serializable {
 	public int hashCode() {
 		return Objects.hash(pk);
 	}
+
+    public Long getDocumentId() {
+		return pk.getDocumentId();
+    }
 }

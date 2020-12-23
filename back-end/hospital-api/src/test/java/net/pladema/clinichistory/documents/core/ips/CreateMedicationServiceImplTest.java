@@ -34,9 +34,9 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class MedicationServiceImplTest {
+public class CreateMedicationServiceImplTest {
 
-    private MedicationServiceImpl medicationServiceImpl;
+    private CreateMedicationServiceImpl medicationServiceImpl;
 
     @Autowired
     private MedicationStatementRepository medicationStatementRepository;
@@ -61,7 +61,7 @@ public class MedicationServiceImplTest {
 
     @Before
     public void setUp() {
-        medicationServiceImpl = new MedicationServiceImpl(
+        medicationServiceImpl = new CreateMedicationServiceImpl(
                 medicationStatementRepository,
                 dosageRepository,
                 medicamentStatementStatusRepository,

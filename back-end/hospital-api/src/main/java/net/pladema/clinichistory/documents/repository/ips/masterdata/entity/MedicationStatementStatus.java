@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "medication_statement_status")
@@ -24,7 +25,8 @@ public class MedicationStatementStatus implements Serializable {
 	public static final String ERROR = "723510000";
 	public static final String ACTIVE = "55561003";
 	public static final String SUSPENDED = "385655000";
-	public static final String FINALIZE = "-55561003";
+	public static final String STOPPED = "6155003";
+	public static final List<String> STATES = List.of(ACTIVE, SUSPENDED, STOPPED, ERROR);
 
 
 	@Id

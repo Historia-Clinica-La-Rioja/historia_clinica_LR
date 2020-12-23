@@ -36,7 +36,7 @@ public class UpdateAnamnesisServiceImplTest {
 	private AllergyService allergyService;
 
 	@MockBean
-	private MedicationService medicationService;
+	private CreateMedicationService createMedicationService;
 
 	@MockBean
 	private ClinicalObservationService clinicalObservationService;
@@ -47,7 +47,7 @@ public class UpdateAnamnesisServiceImplTest {
 	@Before
 	public void setUp() {
 		updateAnamnesisServiceImpl = new UpdateAnamnesisServiceImpl(documentService, internmentEpisodeService,
-				noteService, healthConditionService, allergyService, medicationService, clinicalObservationService,
+				noteService, healthConditionService, allergyService, createMedicationService, clinicalObservationService,
                 immunizationService);
 	}
 

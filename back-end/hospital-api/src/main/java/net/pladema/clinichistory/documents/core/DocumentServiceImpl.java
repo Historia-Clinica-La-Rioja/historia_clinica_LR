@@ -214,6 +214,14 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
+    public DocumentMedicamentionStatement getDocumentFromMedication(Integer mid) {
+        LOG.debug("medicationId -> {}", mid);
+        DocumentMedicamentionStatement result = documentMedicamentionStatementRepository.findByMedicationId(mid);
+        LOG.debug(OUTPUT, result);
+        return result;
+    }
+
+    @Override
     public void deleteHealthConditionHistory(Long documentId) {
         LOG.debug(LOGGING_DOCUMENT_ID, documentId);
         LOG.debug(LOGGING_DELETE_SUCCESS);

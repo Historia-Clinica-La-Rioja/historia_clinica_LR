@@ -2,11 +2,13 @@ package net.pladema.clinichistory.requests.medicationrequests.controller;
 
 import io.swagger.annotations.Api;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.MedicationStatementStatus;
+import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.MedicationInfoDto;
 import net.pladema.clinichistory.requests.medicationrequests.controller.mapper.CreateMedicationRequestMapper;
 import net.pladema.clinichistory.requests.medicationrequests.controller.mapper.ListMedicationInfoMapper;
+import net.pladema.clinichistory.requests.medicationrequests.service.ChangeStateMedicationService;
 import net.pladema.clinichistory.requests.medicationrequests.service.CreateMedicationRequestService;
 import net.pladema.clinichistory.requests.medicationrequests.service.ListMedicationInfoService;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationFilterBo;
@@ -51,6 +53,8 @@ public class MedicationRequestController {
 
     private final ListMedicationInfoMapper listMedicationInfoMapper;
 
+    private final ChangeStateMedicationService  changeStateMedicationService;
+
     private final PatientExternalService patientExternalService;
 
     public MedicationRequestController(CreateMedicationRequestService createMedicationRequestService,
@@ -58,12 +62,14 @@ public class MedicationRequestController {
                                        CreateMedicationRequestMapper createMedicationRequestMapper,
                                        ListMedicationInfoService listMedicationInfoService,
                                        ListMedicationInfoMapper listMedicationInfoMapper,
+                                       ChangeStateMedicationService changeStateMedicationService, 
                                        PatientExternalService patientExternalService) {
         this.createMedicationRequestService = createMedicationRequestService;
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.createMedicationRequestMapper = createMedicationRequestMapper;
         this.listMedicationInfoService = listMedicationInfoService;
         this.listMedicationInfoMapper = listMedicationInfoMapper;
+        this.changeStateMedicationService = changeStateMedicationService;
         this.patientExternalService = patientExternalService;
     }
 
@@ -94,6 +100,9 @@ public class MedicationRequestController {
                         @RequestParam(value = "dayQuantity") Short dayQuantity,
                         @RequestParam(value = "medicationsIds") List<Integer> medicationsIds) {
         LOG.debug("change-state -> institutionId {}, patientId {}, dayQuantity {}, medicationsIds {}", institutionId, patientId, dayQuantity, medicationsIds);
+        var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
+        PatientInfoBo patientInfoBo = new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge());
+        changeStateMedicationService.execute(patientInfoBo, medicationsIds, MedicationStatementStatus.SUSPENDED, dayQuantity);
         LOG.debug("suspend success");
     }
 
@@ -105,6 +114,9 @@ public class MedicationRequestController {
                         @PathVariable(name = "patientId") Integer patientId,
                         @RequestParam(value = "medicationsIds") List<Integer> medicationsIds) {
         LOG.debug("change-state -> institutionId {}, patientId {}, medicationsIds {}", institutionId, patientId, medicationsIds);
+        var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
+        PatientInfoBo patientInfoBo = new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge());
+        changeStateMedicationService.execute(patientInfoBo, medicationsIds, MedicationStatementStatus.STOPPED, null);
         LOG.debug("finalize success");
     }
 
@@ -115,6 +127,9 @@ public class MedicationRequestController {
                         @PathVariable(name = "patientId") Integer patientId,
                         @RequestParam(value = "medicationsIds") List<Integer> medicationsIds) {
         LOG.debug("change-state -> institutionId {}, patientId {}, medicationsIds {}", institutionId, patientId, medicationsIds);
+        var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
+        PatientInfoBo patientInfoBo = new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge());
+        changeStateMedicationService.execute(patientInfoBo, medicationsIds, MedicationStatementStatus.ACTIVE, null);
         LOG.debug("reactivate success");
     }
 

@@ -32,7 +32,7 @@ public class CreateOutpatientDocumentServiceImpl implements CreateOutpatientDocu
 
     private final AllergyService allergyService;
 
-    private final MedicationService medicationService;
+    private final CreateMedicationService createMedicationService;
 
     private final ImmunizationService immunizationService;
 
@@ -44,7 +44,7 @@ public class CreateOutpatientDocumentServiceImpl implements CreateOutpatientDocu
                                                UpdateOutpatientConsultationService updateOutpatientConsultationService,
                                                HealthConditionService healthConditionService,
                                                ProceduresService proceduresService, AllergyService allergyService,
-                                               MedicationService medicationService,
+                                               CreateMedicationService createMedicationService,
                                                ImmunizationService immunizationService, ClinicalObservationService clinicalObservationService,
                                                NoteService noteService) {
         this.documentService = documentService;
@@ -52,7 +52,7 @@ public class CreateOutpatientDocumentServiceImpl implements CreateOutpatientDocu
         this.healthConditionService = healthConditionService;
         this.proceduresService = proceduresService;
         this.allergyService = allergyService;
-        this.medicationService = medicationService;
+        this.createMedicationService = createMedicationService;
         this.immunizationService = immunizationService;
         this.clinicalObservationService = clinicalObservationService;
         this.noteService = noteService;
@@ -69,7 +69,7 @@ public class CreateOutpatientDocumentServiceImpl implements CreateOutpatientDocu
         outpatient.setProblems(healthConditionService.loadProblems(patientInfo, doc.getId(), outpatient.getProblems()));
         outpatient.setProcedures(proceduresService.loadProcedures(patientInfo, doc.getId(), outpatient.getProcedures()));
         outpatient.setFamilyHistories(healthConditionService.loadFamilyHistories(patientInfo, doc.getId(), outpatient.getFamilyHistories()));
-        outpatient.setMedications(medicationService.execute(patientInfo, doc.getId(), outpatient.getMedications()));
+        outpatient.setMedications(createMedicationService.execute(patientInfo, doc.getId(), outpatient.getMedications()));
         outpatient.setAllergies(allergyService.loadAllergies(patientInfo, doc.getId(), outpatient.getAllergies()));
         outpatient.setImmunizations(immunizationService.loadImmunization(patientInfo, doc.getId(), outpatient.getImmunizations()));
 

@@ -3,6 +3,7 @@ package net.pladema.clinichistory.requests.medicationrequests.controller;
 import net.pladema.UnitController;
 import net.pladema.clinichistory.requests.medicationrequests.controller.mapper.CreateMedicationRequestMapper;
 import net.pladema.clinichistory.requests.medicationrequests.controller.mapper.ListMedicationInfoMapper;
+import net.pladema.clinichistory.requests.medicationrequests.service.ChangeStateMedicationService;
 import net.pladema.clinichistory.requests.medicationrequests.service.CreateMedicationRequestService;
 import net.pladema.clinichistory.requests.medicationrequests.service.ListMedicationInfoService;
 import net.pladema.patient.controller.service.PatientExternalService;
@@ -40,6 +41,9 @@ public class MedicationRequestControllerTest extends UnitController {
 
     @MockBean
     private ListMedicationInfoService listMedicationInfoService;
+
+    @MockBean
+    private ChangeStateMedicationService changeStateMedicationService;
 
     @MockBean
     private PatientExternalService patientExternalService;

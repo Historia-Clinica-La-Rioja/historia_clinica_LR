@@ -5,7 +5,7 @@ import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
 
 import java.util.List;
 
-public interface MedicationService {
+public interface CreateMedicationService {
 
     List<MedicationBo> execute(PatientInfoBo patientInfo, Long documentId, List<MedicationBo> medications);
 

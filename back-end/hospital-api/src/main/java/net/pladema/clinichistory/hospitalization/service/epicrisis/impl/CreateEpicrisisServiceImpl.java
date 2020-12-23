@@ -11,7 +11,7 @@ import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.Docu
 import net.pladema.clinichistory.documents.service.ips.AllergyService;
 import net.pladema.clinichistory.documents.service.ips.HealthConditionService;
 import net.pladema.clinichistory.documents.service.ips.ImmunizationService;
-import net.pladema.clinichistory.documents.service.ips.MedicationService;
+import net.pladema.clinichistory.documents.service.ips.CreateMedicationService;
 import net.pladema.clinichistory.documents.service.ips.domain.DocumentObservationsBo;
 import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
 import org.slf4j.Logger;
@@ -37,7 +37,7 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
 
     private final AllergyService allergyService;
 
-    private final MedicationService medicationService;
+    private final CreateMedicationService createMedicationService;
 
     private final ImmunizationService immunizationService;
 
@@ -47,14 +47,14 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
                                       HealthConditionService healthConditionService,
                                       AllergyService allergyService,
                                       ImmunizationService immunizationService,
-                                      MedicationService medicationService) {
+                                      CreateMedicationService createMedicationService) {
         this.documentService = documentService;
         this.internmentEpisodeService = internmentEpisodeService;
         this.noteService = noteService;
         this.healthConditionService = healthConditionService;
         this.allergyService = allergyService;
         this.immunizationService = immunizationService;
-        this.medicationService = medicationService;
+        this.createMedicationService = createMedicationService;
     }
 
     @Override
@@ -71,7 +71,7 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
         epicrisis.setFamilyHistories(healthConditionService.loadFamilyHistories(patientInfo, document.getId(), epicrisis.getFamilyHistories()));
         epicrisis.setAllergies(allergyService.loadAllergies(patientInfo, document.getId(), epicrisis.getAllergies()));
         epicrisis.setImmunizations(immunizationService.loadImmunization(patientInfo, document.getId(), epicrisis.getImmunizations()));
-        epicrisis.setMedications(medicationService.execute(patientInfo, document.getId(), epicrisis.getMedications()));
+        epicrisis.setMedications(createMedicationService.execute(patientInfo, document.getId(), epicrisis.getMedications()));
 
         internmentEpisodeService.updateEpicrisisDocumentId(internmentEpisodeId, document.getId());
         epicrisis.setId(document.getId());

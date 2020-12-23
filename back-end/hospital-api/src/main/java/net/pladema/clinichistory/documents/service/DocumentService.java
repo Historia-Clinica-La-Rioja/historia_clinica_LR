@@ -44,6 +44,8 @@ public interface DocumentService {
 
     List<Updateable> getUpdatableDocuments(Integer internmentEpisodeId);
 
+    DocumentMedicamentionStatement getDocumentFromMedication(Integer mid);
+
     void deleteHealthConditionHistory(Long documentId);
 
     void deleteAllergiesHistory(Long documentId);
@@ -55,6 +57,5 @@ public interface DocumentService {
     void deleteObservationsVitalSignsHistory(Long documentId);
 
     void deleteObservationsLabHistory(Long documentId);
-
 }
 

@@ -39,4 +39,10 @@ public interface DocumentMedicamentionStatementRepository extends JpaRepository<
             "LEFT JOIN Note n ON (n.id = ms.noteId) " +
             "WHERE dm.pk.documentId = :documentId ")
     List<MedicationVo> getMedicationStateFromDocumentToReport(@Param("documentId") Long documentId);
+
+    @Transactional(readOnly = true)
+    @Query("SELECT dm " +
+            "FROM DocumentMedicamentionStatement dm " +
+            "WHERE dm.pk.medicationStatementId = :mid ")
+    DocumentMedicamentionStatement findByMedicationId(@Param("mid")  Integer mid);
 }

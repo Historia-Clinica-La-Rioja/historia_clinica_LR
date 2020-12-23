@@ -90,8 +90,8 @@ public class ListMedicationInfoServiceImpl implements ListMedicationInfoService 
     private boolean byStatus(MedicationBo medicationBo, String filterStatusId) {
         if (MedicationStatementStatus.SUSPENDED.equals(filterStatusId))
             return isSuspended(medicationBo.getStatusId(), medicationBo.getDosage());
-        if (MedicationStatementStatus.FINALIZE.equals(filterStatusId))
-            return isFinalized(medicationBo.getStatusId(), medicationBo.getDosage());
+        if (MedicationStatementStatus.STOPPED.equals(filterStatusId))
+            return isStopped(medicationBo.getStatusId(), medicationBo.getDosage());
         if (MedicationStatementStatus.ACTIVE.equals(filterStatusId))
             return isActive(medicationBo.getStatusId(), medicationBo.getDosage());
         return false;
@@ -100,24 +100,24 @@ public class ListMedicationInfoServiceImpl implements ListMedicationInfoService 
     private boolean isActive(String statusId, DosageBo dosage) {
         if (MedicationStatementStatus.SUSPENDED.equals(statusId) && !isSuspended(statusId, dosage))
             return true;
-        if (MedicationStatementStatus.FINALIZE.equals(statusId) && !isFinalized(statusId, dosage))
+        if (MedicationStatementStatus.STOPPED.equals(statusId) && !isStopped(statusId, dosage))
             return true;
         return MedicationStatementStatus.ACTIVE.equals(statusId);
     }
 
-    private boolean isFinalized(String statusId, DosageBo dosage) {
-        if (dosage == null && !MedicationStatementStatus.FINALIZE.equals(statusId))
+    private boolean isStopped(String statusId, DosageBo dosage) {
+        if (dosage == null && !MedicationStatementStatus.STOPPED.equals(statusId))
             return false;
-        if (dosage == null && MedicationStatementStatus.FINALIZE.equals(statusId))
+        if (dosage == null)
             return true;
-        return dosage != null && dosage.getEndDate() != null && dateTimeProvider.nowDate().isBefore(dosage.getEndDate());
+        return dosage.getEndDate() != null && dateTimeProvider.nowDate().isAfter(dosage.getEndDate());
     }
 
     private boolean isSuspended(String statusId, DosageBo dosage) {
         if (dosage == null && !MedicationStatementStatus.SUSPENDED.equals(statusId))
             return false;
-        if (dosage == null && MedicationStatementStatus.SUSPENDED.equals(statusId))
+        if (dosage == null)
             return true;
-        return dosage != null && dosage.getSuspendedEndDate() != null &&  dateTimeProvider.nowDate().isBefore(dosage.getSuspendedEndDate());
+        return dosage.getSuspendedEndDate() != null &&  dateTimeProvider.nowDate().isBefore(dosage.getSuspendedEndDate());
     }
 }

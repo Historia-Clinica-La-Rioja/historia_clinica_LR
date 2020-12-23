@@ -8,5 +8,5 @@ public interface NoteService {
 
     void deleteAllNotes(List<Long> notesToDelete);
 
-    String getDescriptionById(Long clinicalImpressionNoteId);
+    String getDescriptionById(Long id);
 }

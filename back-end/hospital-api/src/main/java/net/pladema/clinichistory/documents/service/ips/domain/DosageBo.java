@@ -22,6 +22,8 @@ public class DosageBo {
 
     private LocalDate startDate;
 
+    private LocalDate endDate;
+
     private LocalDate suspendedStartDate;
 
     private LocalDate suspendedEndDate;
@@ -33,6 +35,8 @@ public class DosageBo {
     }
 
     public LocalDate getEndDate() {
+        if  (endDate != null)
+            return endDate;
         return startDate != null && duration != null ?
                 startDate.plusDays(duration.longValue()) : null;
     }

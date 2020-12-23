@@ -17,11 +17,11 @@ public abstract class ClinicalTerm extends SelfValidating<ClinicalTerm> {
 
     private Integer id;
 
-    private String statusId;
-
     @Valid
     @NotNull(message = "{value.mandatory}")
     private SnomedBo snomed;
+
+    private String statusId;
 
     private String status;
 
