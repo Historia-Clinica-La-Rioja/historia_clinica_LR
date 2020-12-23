@@ -6,6 +6,7 @@ import { PatientService } from '@api-rest/services/patient.service';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { VALIDATIONS } from '@core/utils/form.utils';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
+import { MapperService } from '@presentation/services/mapper.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { forkJoin, Observable } from 'rxjs';
 
@@ -33,6 +34,7 @@ export class SearchPatientComponent implements OnInit {
 		private readonly formBuilder: FormBuilder,
 		private readonly patientService: PatientService,
 		private readonly snackBarService: SnackBarService,
+		private readonly mapperService: MapperService
 	) { }
 
 	ngOnInit(): void {
@@ -95,7 +97,7 @@ export class SearchPatientComponent implements OnInit {
 		forkJoin([basicPatientDto$, photo$])
 			.subscribe(([basicPatientDto, photo]) => {
 				this.cardPatient = {
-					basicData: toPatientBasicData(basicPatientDto),
+					basicData: this.mapperService.toPatientBasicData(basicPatientDto),
 					photo
 				};
 
@@ -106,17 +108,6 @@ export class SearchPatientComponent implements OnInit {
 			}, _ => {
 				this.snackBarService.showError('pacientes.patient_picker.PATIENT_NOT_FOUND');
 			});
-
-
-		function toPatientBasicData(s: BasicPatientDto): PatientBasicData {
-			return {
-				id: patientId,
-				firstName: s.person.firstName,
-				lastName: s.person.lastName,
-				age: s.person.age,
-				gender: s.person.gender.description,
-			}
-		}
 	}
 }
 

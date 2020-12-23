@@ -10,7 +10,7 @@
 					}
 				},
 				"TITLE": "Episodios de guardia",
-				"NEW_EPISODE": "Nuevo Episodio"
+				"NEW_EPISODE": "Nuevo episodio"
 			},
 			"TITLE": "Guardia de emergencia"
 		},
@@ -22,6 +22,42 @@
 		"triage": {
 			"LEVEL": "Nivel de urgencia",
 			"ROOM": "Consultorio"
+		},
+		"administrative_admision": {
+			"TITLE": "Nuevo episodio",
+			"SUBTITLE": "Complete datos solicitados para continuar",
+			"PATIENT": "Paciente",
+			"SEARCH_PATIENT": "Buscar Paciente",
+			"SELECT_MEDICAL_COVERAGE": "Seleccione una cobertura",
+			"UPDATE_MEDICAL_COVERAGE": "Actualizar Cobertura",
+			"motivo": {
+				"TITLE": "Detalle del episodio",
+				"MOTIVO": "motivo",
+				"ADD": "Agregar motivo",
+				"table": {
+					"TITLE": "Motivos registrados",
+					"columns": {
+						"MOTIVO": "Motivos"
+					}
+				},
+				"DIAGNOSIS": "Diagnóstico"
+			},
+			"form": {
+				"EMERGENCY_CARE_TYPE": "Tipo de guardia",
+				"EMERGENCY_CARE_ENTRANCE_TYPE": "Forma de ingreso",
+				"AMBULANCE_COMPANY_ID": "ID Compañia ambulancia",
+				"police_intervention": {
+					"CALL_DETAIL": "Detalle del llamado",
+					"DATE":"Fecha",
+					"TIME": "Hora",
+					"police_officer": {
+						"TITLE": "Detalle del oficial policial",
+						"PLATE_NUMBER": "Nro de placa",
+						"NAME": "Nombre",
+						"LAST_NAME": "Apellido"
+					}
+				}
+			}
 		}
 	}
 }

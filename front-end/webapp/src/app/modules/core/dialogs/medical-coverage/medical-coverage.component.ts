@@ -56,7 +56,7 @@ export class MedicalCoverageComponent implements OnInit {
 						if (healthInsurances) {
 							healthInsurances.forEach(healthInsurance => {
 								const patientMedicalCoverage = this.patientMedicalCoverages
-									.find(patientHealthInsurance => (patientHealthInsurance.medicalCoverage as HealthInsurance).rnos == healthInsurance.rnos);
+									.find(patientHealthInsurance => (patientHealthInsurance.medicalCoverage as HealthInsurance).rnos === healthInsurance.rnos);
 								if (!patientMedicalCoverage) {
 									this.patientMedicalCoverages = this.patientMedicalCoverages.concat(this.fromRenaperToPatientMedicalCoverage(healthInsurance));
 								} else if (healthInsurance.dateQuery) {

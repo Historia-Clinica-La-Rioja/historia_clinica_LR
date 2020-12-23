@@ -6,7 +6,8 @@ import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-car
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { MedicalCoverageComponent, PatientMedicalCoverage } from '@core/dialogs/medical-coverage/medical-coverage.component';
 import { MapperService } from '@core/services/mapper.service';
-import { hasError } from '@core/utils/form.utils';
+import { MapperService as PatientMapperService} from '@presentation/services/mapper.service';
+import { hasError, TIME_PATTERN } from '@core/utils/form.utils';
 import { DateFormat, momentFormat } from '@core/utils/moment.utils';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -23,7 +24,7 @@ import { Patient, SearchPatientComponent } from 'src/app/modules/pacientes/compo
 export class AdmisionAdministrativaComponent implements OnInit {
 
 	hasError = hasError;
-
+	TIME_PATTERN = TIME_PATTERN;
 	patientCardInfo: {
 		photo: PersonPhotoDto,
 		basicData: PatientBasicData
@@ -46,6 +47,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 		private readonly emergencyCareMasterData: EmergencyCareMasterDataService,
 		private formBuilder: FormBuilder,
 		private readonly mapperService: MapperService,
+		private readonly patientMapperService: PatientMapperService,
 		private readonly snackBarService: SnackBarService,
 		private readonly snomedService: SnomedService,
 
@@ -56,15 +58,15 @@ export class AdmisionAdministrativaComponent implements OnInit {
 	ngOnInit(): void {
 
 		this.form = this.formBuilder.group({
-			patientMedicalCoverageId: [],
-			emergencyCareTypeId: [],
-			emergencyCareEntranceTypeId: [],
-			ambulanceCompanyId: [],
-			dateCall: [],
-			timeCall: [],
-			plateNumber: [],
-			firstName: [],
-			lastName: [],
+			patientMedicalCoverageId: [null],
+			emergencyCareTypeId: [null],
+			emergencyCareEntranceTypeId: [null],
+			ambulanceCompanyId: [null],
+			dateCall: [null],
+			timeCall: [null],
+			plateNumber: [null],
+			firstName: [null],
+			lastName: [null],
 
 		});
 
@@ -78,7 +80,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 		dialogRef.afterClosed()
 			.subscribe((data: Patient) => {
 				this.patientCardInfo = {
-					basicData: toPatientBasicData(data.basicData),
+					basicData: this.patientMapperService.toPatientBasicData(data.basicData),
 					photo: data.photo
 				}
 				this.selectedPatient = {
@@ -91,16 +93,6 @@ export class AdmisionAdministrativaComponent implements OnInit {
 				this.patientMedicalCoverageService.getActivePatientMedicalCoverages(data.basicData.id).subscribe(coverages => {
 					this.patientMedicalCoverages = coverages;
 				});
-
-				function toPatientBasicData(s: BasicPatientDto): PatientBasicData {
-					return {
-						id: s.id,
-						firstName: s.person.firstName,
-						lastName: s.person.lastName,
-						age: s.person.age,
-						gender: s.person.gender.description,
-					}
-				}
 			});
 
 	}
@@ -160,8 +152,6 @@ export class AdmisionAdministrativaComponent implements OnInit {
 				lastName: formValue.lastName
 			}
 		}
-
-		console.log(administrative);
 	}
 
 	onChange(mrChange): void {

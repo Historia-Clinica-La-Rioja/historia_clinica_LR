@@ -78,7 +78,7 @@
 				"SUCCESS": "El paciente se editó exitosamente"
 			}
 		},
-		"patient_picker": {
+		"search_patient": {
 			"SEARCH_PATIENT": "Buscar Paciente",
 			"SELECT_PATIENT": "Seleccione un paciente",
 			"forms": {
@@ -87,7 +87,9 @@
 				"GENDER": "Sexo",
 				"PATIENT_ID": "ID Paciente"
 			},
-			"PATIENT_NOT_FOUND":"Paciente no encontrado"
+			"PATIENT_NOT_FOUND":"Paciente no encontrado",
+			"PROVES_IDENTITY": "Acredita identidad",
+			"PATIENT_ID":"ID Paciente"
 		}
 	}
 }

@@ -15,7 +15,7 @@
 						translate="guardia.home.episodes.NEW_EPISODE"></button>
 				</div>
 
-				<div style="width: 100%;" fxLayoutGap="15px" fxLayout="column">
+				<div fxFlexFill fxLayoutGap="15px" fxLayout="column">
 					<mat-card [ngClass]="{ 'en-atencion' : episode.state.id === estadosEpisodio.EN_ATENCION }"
 						class="episode-card" (click)="goToEpisode(episode.id)" *ngFor="let episode of episodes">
 						<div fxLayout="row" fxFlexAlign="center" style="padding: 0 15px">

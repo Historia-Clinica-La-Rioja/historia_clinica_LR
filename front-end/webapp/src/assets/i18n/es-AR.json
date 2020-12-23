@@ -25,7 +25,8 @@
 		"GENERATE": "Generar",
 		"EDIT": "Editar",
 		"NO": "No",
-		"YES": "Si"
+		"YES": "Si",
+		"SKIP":"Omitir"
 	},
 	"forms": {
 		"REQUIRED": "El campo es requerido",

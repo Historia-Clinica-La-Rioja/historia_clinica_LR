@@ -1,14 +1,14 @@
 <div mat-dialog-title>
-	<span translate="pacientes.patient_picker.SEARCH_PATIENT"></span>
+	<span translate="pacientes.search_patient.SEARCH_PATIENT"></span>
 </div>
 
 <mat-tab-group class="tabs" (selectedTabChange)="clearResults()">
-	<mat-tab label="ACREDITA IDENTIDAD">
+	<mat-tab label="{{'pacientes.search_patient.PROVES_IDENTITY' | translate | uppercase}}" >
 		<div fxLayout="row">
 			<form [formGroup]="formSearch" (ngSubmit)="search()" class="form-search">
 				<div fxLayout="column">
 					<mat-form-field appearance="outline">
-						<mat-label translate="pacientes.patient_picker.forms.IDENTIF_TYPE"></mat-label>
+						<mat-label translate="pacientes.search_patient.forms.IDENTIF_TYPE"></mat-label>
 						<mat-select formControlName="identificationType">
 							<mat-option id="identificationType" name="identificationType"
 								*ngFor="let type of ( identificationTypes$ | async )" [value]="type.id">
@@ -18,13 +18,13 @@
 					</mat-form-field>
 
 					<mat-form-field appearance="outline">
-						<mat-label translate="pacientes.patient_picker.forms.IDENTIFICATION_NUMBER"></mat-label>
+						<mat-label translate="pacientes.search_patient.forms.IDENTIFICATION_NUMBER"></mat-label>
 						<input matInput type="text" id="identificationNumber" name="identificationNumber"
-							formControlName="identificationNumber" placeholder="{{'pacientes.patient_picker.IDENTIFICATION_NUMBER' | translate }}">
+							formControlName="identificationNumber" placeholder="{{'pacientes.search_patient.IDENTIFICATION_NUMBER' | translate }}">
 					</mat-form-field>
 
 					<div class="gender">
-						<span translate="pacientes.patient_picker.forms.GENDER"></span>
+						<span translate="pacientes.search_patient.forms.GENDER"></span>
 						<div class="genders">
 							<mat-radio-group fxLayoutGap="10px" name="gender" id="gender" formControlName="gender">
 								<mat-radio-button id="gender_button_{{gender.id}}"
@@ -43,7 +43,7 @@
 			</form>
 
 			<div class="results">
-				<span translate="pacientes.patient_picker.SELECT_PATIENT"></span>
+				<span translate="pacientes.search_patient.SELECT_PATIENT"></span>
 				<div *ngIf="cardPatient" class="patient-cards">
 					<app-patient-card [patient]="cardPatient.basicData" [personPhoto]="cardPatient.photo"
 						class="patient-card" (click)="selectPatient()">
@@ -53,12 +53,12 @@
 		</div>
 	</mat-tab>
 
-	<mat-tab label="ID PACIENTE">
+	<mat-tab label="{{'pacientes.search_patient.PATIENT_ID' | translate | uppercase}}" >
 		<div fxLayout="row">
 			<form [formGroup]="formSearchById" (ngSubmit)="searchById()" class="form-search">
 				<mat-form-field appearance="outline">
 					<input matInput type="number" id="patientId" name="patientId" formControlName="id"
-						placeholder="{{ 'pacientes.patient_picker.forms.PATIENT_ID' | translate}}">
+						placeholder="{{ 'pacientes.search_patient.forms.PATIENT_ID' | translate}}">
 				</mat-form-field>
 				<div dir="rtl">
 					<button mat-raised-button color="primary">
@@ -68,7 +68,7 @@
 			</form>
 
 			<div class="results">
-				<span translate="pacientes.patient_picker.SELECT_PATIENT"></span>
+				<span translate="pacientes.search_patient.SELECT_PATIENT"></span>
 				<div *ngIf="cardPatient" class="patient-cards">
 					<app-patient-card [patient]="cardPatient.basicData" [personPhoto]="cardPatient.photo"
 						class="patient-card" (click)="selectPatient()">

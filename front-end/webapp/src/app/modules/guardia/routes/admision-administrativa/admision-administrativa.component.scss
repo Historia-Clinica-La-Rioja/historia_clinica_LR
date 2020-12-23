@@ -17,11 +17,6 @@ app-patient-card ::ng-deep .mat-card-subtitle {
 	font-size: 11px;
 }
 
-.header{
-	display: flex;
-	justify-content: flex-end;
-}
-
 .form{
 	@include mat-form-field-background-white;
 	.mat-radio-button {
