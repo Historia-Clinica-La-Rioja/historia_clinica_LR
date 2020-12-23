@@ -1840,7 +1840,6 @@ databaseChangeLog:
                 referencedTableName: health_condition
                 validate: true
 
-
     - changeSet:
         id: dropNotNullConstraint-coverage_id
         comment: medical_coverage_id puede ser null en la tabla service_request
@@ -1849,3 +1848,12 @@ databaseChangeLog:
             - dropNotNullConstraint:
                 columnName: medical_coverage_id
                 tableName: service_request
+                
+    - changeSet:
+        id: drop-sctid_code-column
+        author: martinscooper
+        changes:
+            - dropColumn:
+                columnName: sctid_code
+                tableName: diagnostic_report
+    
