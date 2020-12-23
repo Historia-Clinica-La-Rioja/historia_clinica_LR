@@ -9,9 +9,10 @@
 
 	<section id="body">
 		<app-filters-card [cardTitle]="'guardia.home.episodes.TITLE'">
-			<div results fxLayout="column" fxLayoutGap="15px" fxLayoutGap="7px" fxLayoutAlign="end end" fxFlexFill>
 
-				<div>
+			<div results fxLayout="column" fxLayoutGap="15px" fxFlexFill>
+
+				<div class="new-episode" fxLayoutAlign="end end">
 					<button mat-raised-button color="primary" (click)="goToAdmisionAdministrativa()" class="uppercase"
 							translate="guardia.home.episodes.NEW_EPISODE"></button>
 				</div>
@@ -39,7 +40,6 @@
 										</span>
 									</mat-card-subtitle>
 								</mat-card-header>
-
 
 								<ng-template #patientInfo>
 									<span *ngIf="(episode.patient?.typeId !== PACIENTE_TEMPORAL || episode.patient?.firstName || episode.patient?.lastName) else temporal">
@@ -78,12 +78,13 @@
 					</mat-card>
 				</ng-container>
 			</div>
+
 		</app-filters-card>
 	</section>
 </app-content>
 
 <ng-template #noData>
-	<div id="no-data" fxLayout="column" fxLayoutAlign="center" fxFlexFill>
+	<div id="no-data" fxFlex="100%" fxLayout="column" fxLayoutAlign="center">
 		<h2 class="mat-h2" style="text-align: center" [translate]="'guardia.home.episodes.NO_DATA'"></h2>
 	</div>
 </ng-template>

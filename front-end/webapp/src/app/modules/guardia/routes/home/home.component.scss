@@ -17,8 +17,7 @@
 		#state {
 			color: #009B68;
 		}
-	}
-;
+	};
 }
 
 .header-image {
@@ -34,4 +33,9 @@ mat-card-subtitle {
 	width: fit-content;
 	padding: 1.5px 8px;
 	border-radius: 5px;
+}
+
+.new-episode-button {
+	width: 100%;
+	height: 36px;
 }
