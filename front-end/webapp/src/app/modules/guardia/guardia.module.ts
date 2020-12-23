@@ -13,6 +13,7 @@ import { NewEpisodeAdminTriageComponent } from './routes/new-episode-admin-triag
 import { AdministrativeTriageDialogComponent } from './dialogs/administrative-triage-dialog/administrative-triage-dialog.component';
 
 import { HistoriaClinicaModule } from '../historia-clinica/historia-clinica.module';
+import { NewEpisodeService } from './services/new-episode.service';
 
 @NgModule({
 	declarations: [
@@ -32,7 +33,8 @@ import { HistoriaClinicaModule } from '../historia-clinica/historia-clinica.modu
 		InstitucionModule,
 		PresentationModule,
 		HistoriaClinicaModule, // TODO Quitar este modulo
-	]
+	],
+	providers: [NewEpisodeService]
 })
 export class GuardiaModule {
 }

@@ -6,7 +6,7 @@ import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-car
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { MedicalCoverageComponent, PatientMedicalCoverage } from '@core/dialogs/medical-coverage/medical-coverage.component';
 import { MapperService } from '@core/services/mapper.service';
-import { MapperService as PatientMapperService} from '@presentation/services/mapper.service';
+import { MapperService as PatientMapperService } from '@presentation/services/mapper.service';
 import { hasError, TIME_PATTERN } from '@core/utils/form.utils';
 import { DateFormat, momentFormat } from '@core/utils/moment.utils';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
@@ -15,6 +15,10 @@ import { Observable } from 'rxjs';
 import { MotivoNuevaConsultaService } from 'src/app/modules/historia-clinica/modules/ambulatoria/services/motivo-nueva-consulta.service';
 import { SnomedService } from 'src/app/modules/historia-clinica/services/snomed.service';
 import { Patient, SearchPatientComponent } from 'src/app/modules/pacientes/component/search-patient/search-patient.component';
+import { NewEpisodeService } from '../../services/new-episode.service';
+import { Router } from '@angular/router';
+import { ContextService } from '@core/services/context.service';
+import { AdministrativeAdmisionDto } from '../new-episode-admin-triage/new-episode-admin-triage.component';
 
 @Component({
 	selector: 'app-admision-administrativa',
@@ -39,7 +43,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 	motivoNuevaConsultaService: MotivoNuevaConsultaService; // sacarlo de historia clinica
 	readonly WITH_DOCTOR_IN_AMBULANCE = 3;
 	readonly WITHOUT_DOCTOR_IN_AMBULANCE = 4;
-
+	private readonly routePrefix;
 	private selectedPatient;
 	constructor(
 		private readonly dialog: MatDialog,
@@ -50,9 +54,13 @@ export class AdmisionAdministrativaComponent implements OnInit {
 		private readonly patientMapperService: PatientMapperService,
 		private readonly snackBarService: SnackBarService,
 		private readonly snomedService: SnomedService,
+		private readonly newEpisodeService: NewEpisodeService,
+		private router: Router,
+		private readonly contextService: ContextService,
 
 	) {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, snomedService);
+		this.routePrefix = `institucion/${this.contextService.institutionId}/`
 	}
 
 	ngOnInit(): void {
@@ -69,7 +77,6 @@ export class AdmisionAdministrativaComponent implements OnInit {
 			lastName: [null],
 
 		});
-
 		this.emergencyCareType$ = this.emergencyCareMasterData.getType();
 		this.emergencyCareEntranceType$ = this.emergencyCareMasterData.getEntranceType();
 	}
@@ -135,12 +142,12 @@ export class AdmisionAdministrativaComponent implements OnInit {
 
 	continue(): void {
 		const formValue = this.form.value;
-		const administrative = {
+		const administrativeAdmisionDto: AdministrativeAdmisionDto = {
 			patient: {
 				id: this.selectedPatient?.id,
 				patientMedicalCoverageId: formValue.patientMedicalCoverageId,
 			},
-			reasons: this.motivoNuevaConsultaService.getMotivosConsulta(),
+			reasons: this.motivoNuevaConsultaService.getMotivosConsulta().map(s => s.snomed),
 			typeId: formValue.emergencyCareTypeId,
 			entranceTypeId: formValue.emergencyCareEntranceTypeId,
 			ambulanceCompanyId: formValue.ambulanceCompanyId,
@@ -152,19 +159,16 @@ export class AdmisionAdministrativaComponent implements OnInit {
 				lastName: formValue.lastName
 			}
 		}
+		this.goToAdministrativeTriage(administrativeAdmisionDto);
 	}
 
 	onChange(mrChange): void {
 		this.hasPoliceIntervention = eval(mrChange.value);
 	}
 
-
-	skip(): void {
-
-	}
-
 	goBack(): void {
-
+		const url = `${this.routePrefix}guardia`;
+		this.router.navigateByUrl(url);
 	}
 
 	setAmbulanceCompanyIdStatus(): void {
@@ -174,5 +178,11 @@ export class AdmisionAdministrativaComponent implements OnInit {
 		else {
 			this.form.controls.ambulanceCompanyId.disable();
 		}
+	}
+
+	goToAdministrativeTriage(administrativeAdmisionDto: AdministrativeAdmisionDto): void {
+		this.newEpisodeService.setAdministrativeAdmision(administrativeAdmisionDto);
+		const url = `${this.routePrefix}guardia/nuevo-episodio/triage-administrativo`;
+		this.router.navigateByUrl(url);
 	}
 }
