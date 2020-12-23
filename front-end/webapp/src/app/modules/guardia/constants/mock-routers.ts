@@ -4,9 +4,9 @@ export const MOCKS_GUARDIA = [
 		path: 'mock',
 		loads: [
 			{
-				name: 'EmergencyCareEpisode.getAll(): EmergencyCareDto[]',
+				name: 'EmergencyCareEpisode.getAll(): EmergencyCareListDto[]',
 				roles: 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD',
-				path: '/api/institutions/{institutionId}/emergency-care/episodes',
+				path: '/api/institution/{institutionId}/emergency-care/episodes',
 				method: 'GET',
 				fetch: [
 					{
@@ -241,15 +241,15 @@ export const MOCKS_GUARDIA = [
 		path: 'mock/nuevo-episodio/administrativa',
 		loads: [
 			{
-				name: 'PatientMedicalCoverage.getActivePatientMedicalCoverages(patientId: number): PatientMedicalCoverageDto[]',
+				name: 'PatientMedicalCoverage.getActivePatientMedicalCoverages(): PatientMedicalCoverageDto[]',
 				roles: 'Cualquiera sobre guardia',
-				path: '/api/institutions/{institutionId}/patientMedicalCoverage/{patientId}/coverages',
+				path: '/api/institution/{institutionId}/patientMedicalCoverage/{patientId}/coverages',
 				method: 'GET',
 				comments: 'Ya está hecho',
 				fetch: [1, 2, 3, 4, 5]
 			},
 			{
-				name: 'EmergencyCareMasterData.getType(): MasterDataInterface[]',
+				name: 'EmergencyCareMasterData.getType(): MasterDataProjection[]',
 				roles: 'Cualquiera sobre guardia',
 				path: '/api/emergency-care/masterdata/type',
 				method: 'GET',
@@ -269,7 +269,7 @@ export const MOCKS_GUARDIA = [
 				]
 			},
 			{
-				name: 'EmergencyCareMasterData.getEntranceType(): MasterDataInterface[]',
+				name: 'EmergencyCareMasterData.getEntranceType(): MasterDataProjection[]',
 				roles: 'Cualquiera sobre guardia',
 				path: '/api/emergency-care/masterdata/entranceType',
 				method: 'GET',
@@ -332,14 +332,14 @@ export const MOCKS_GUARDIA = [
 		path: 'mock/nuevo-episodio/administrativa/persona-picker',
 		loads: [
 			{
-				name: 'PatientController.getPatientMinimal(identificationTypeId: number, identificationNumber: string, genderId: number): Integer[]',
+				name: 'Patient.getPatientMinimal(identificationTypeId: number, identificationNumber: string, genderId: number): Integer[]',
 				comments: 'Ya está hecho',
 				roles: 'Cualquiera sobre guardia',
-				path: '/api/patient/minimalsearch',
+				path: '/api/patient/minimalsearch?identificationTypeId=1&identificationNumber=37014711&genderId=1',
 				method: 'GET',
 			},
 			{
-				name: 'PatientController.getBasicPersonalData(patientId: number): ReducedPatientDto',
+				name: 'PatientController.getBasicPersonalData(): ReducedPatientDto',
 				comments: 'Ya está hecho evaluar la posibilidad de cambiarle el nombre. Tener en cuenta que a futuro se van a necesitar mas ' +
 					'datos, por lo tanto quizas no es la mejor opcion cambiar el nombre y refactorizar. Pero puede quedar raro con este ' +
 					'nombre si nunca se cambia',
@@ -353,9 +353,9 @@ export const MOCKS_GUARDIA = [
 		path: 'mock/episodio/:id',
 		loads: [
 			{
-				name: 'EmergencyCareAdministrative.get(): EmergencyCareAdministrativeDto',
+				name: 'EmergencyCareEpisode.getAdministrative(): ResponseEmergencyCareDto',
 				roles: 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD',
-				path: '/api/institutions/{institutionId}/emergency-care/episodes/{episodeId}/administrative',
+				path: '/api/institution/{institutionId}/emergency-care/episodes/{episodeId}/administrative',
 				method: 'GET',
 				fetch: {
 					id: 1,
@@ -393,9 +393,9 @@ export const MOCKS_GUARDIA = [
 				},
 			},
 			{
-				name: 'EmergencyCareEpisodeState.get(): EmergencyCareAdministrativeDto',
+				name: 'EmergencyCareEpisode.getState(): MasterDataProjection',
 				roles: 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD',
-				path: '/api/institutions/{institutionId}/emergency-care/episodes/{episodeId}/state',
+				path: '/api/institution/{institutionId}/emergency-care/episodes/{episodeId}/state',
 				method: 'GET',
 				fetch: {
 					id: 2,
@@ -403,9 +403,9 @@ export const MOCKS_GUARDIA = [
 				}
 			},
 			{
-				name: 'Triage.getAll(): TriageDto[]',
+				name: 'Triage.getAll(): TriageListDto[]',
 				roles: 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD',
-				path: '/api/institutions/{institutionId}/emergency-care/episodes/{episodeId}/triage',
+				path: '/api/institution/{institutionId}/emergency-care/episodes/{episodeId}/triage',
 				method: 'GET',
 				fetch: [
 					{
@@ -543,7 +543,7 @@ export const MOCKS_GUARDIA = [
 		loads: [
 			{
 				name: 'TriageMasterData.getCategories(): TriageCategoryDto[]',
-				roles: 'Todos los que tienen permisos sobre guardia',
+				roles: '',
 				path: '/api/emergency-care/triage/masterdata/category',
 				method: 'GET',
 				fetch: [
@@ -591,9 +591,9 @@ export const MOCKS_GUARDIA = [
 				],
 			},
 			{
-				name: 'DoctorsOffice.getBySectorType(sectorTypeId: number): DoctorsOfficeDto[]',
+				name: 'DoctorsOffice.getBySectorType(): DoctorsOfficeDto[]',
 				roles: 'Todos los que tienen permisos sobre guardia',
-				path: '/api/institutions/{institutionId}/doctorsOffice/sectorType/:id',
+				path: '/api/institution/{institutionId}/doctorsOffice/sectorType/{id}',
 				method: 'GET',
 				fetch: [
 					{
@@ -611,9 +611,9 @@ export const MOCKS_GUARDIA = [
 				],
 			},
 			{
-				name: 'EmergencyCareEpisode.createAdministrative(): number',
+				name: 'EmergencyCareEpisode.createAdministrative(body: EmergencyCareDto): number',
 				roles: 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD',
-				path: '/api/institutions/{institutionId}/emergency-care/episodes',
+				path: '/api/institution/{institutionId}/emergency-care/episodes',
 				method: 'POST',
 				body: {
 					administrative: {
@@ -661,7 +661,7 @@ export const MOCKS_GUARDIA = [
 		loads: [
 			{
 				name: 'TriageMasterData.getCategories(): TriageCategoryDto[]',
-				roles: 'Todos los que tienen permisos sobre guardia',
+				roles: '',
 				path: '/api/emergency-care/triage/masterdata/category',
 				method: 'GET',
 				fetch: [
@@ -712,7 +712,7 @@ export const MOCKS_GUARDIA = [
 				name: 'DoctorsOffice.getBySectorType(): DoctorsOfficeDto[]',
 				comments: 'Ya existe',
 				roles: 'Todos los que tienen permisos sobre guardia',
-				path: '/api/institutions/{institutionId}/doctorsOffice/sectorType/:id',
+				path: '/api/institution/{institutionId}/doctorsOffice/sectorType/{id}',
 				method: 'GET',
 				fetch: [
 					{
@@ -730,9 +730,9 @@ export const MOCKS_GUARDIA = [
 				],
 			},
 			{
-				name: 'EmergencyCareEpisode.createAdult(): number',
+				name: 'EmergencyCareEpisode.createAdult(body: EmergencyCareDto): number',
 				roles: 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD',
-				path: '/api/institutions/{institutionId}/emergency-care/episodes/adult-gynecological',
+				path: '/api/institution/{institutionId}/emergency-care/episodes/adult-gynecological',
 				method: 'POST',
 				body: {
 					administrative: {
@@ -805,7 +805,7 @@ export const MOCKS_GUARDIA = [
 		loads: [
 			{
 				name: 'TriageMasterData.getCategories(): TriageCategoryDto[]',
-				roles: 'Todos los que tienen permisos sobre guardia',
+				roles: '',
 				path: '/api/emergency-care/triage/masterdata/category',
 				method: 'GET',
 				fetch: [
@@ -856,7 +856,7 @@ export const MOCKS_GUARDIA = [
 				name: 'DoctorsOffice.getBySectorType(): DoctorsOfficeDto[]',
 				comments: 'Ya existe',
 				roles: 'Todos los que tienen permisos sobre guardia',
-				path: '/api/institutions/{institutionId}/doctorsOffice/sectorType/:id',
+				path: '/api/institution/{institutionId}/doctorsOffice/sectorType/{id}',
 				method: 'GET',
 				fetch: [
 					{
@@ -874,8 +874,8 @@ export const MOCKS_GUARDIA = [
 				],
 			},
 			{
-				name: 'TriageMasterData.getBodyTemperature(): TriageDetailsMasterData[]', // todo analizar si es correcto el naming del dto
-				roles: 'Todos los que tienen permisos sobre guardia',
+				name: 'TriageMasterData.getBodyTemperature(): TriageDetailsDto[]', 
+				roles: '',
 				path: '/api/emergency-care/triage/masterdata/bodyTemperature',
 				method: 'GET',
 				fetch: [{
@@ -896,8 +896,8 @@ export const MOCKS_GUARDIA = [
 				comments: 'verificar sctid_code',
 			},
 			{
-				name: 'TriageMasterData.getMuscleHypertonia(): TriageDetailsMasterData[]',
-				roles: 'Todos los que tienen permisos sobre guardia',
+				name: 'TriageMasterData.getMuscleHypertonia(): TriageDetailsDto[]',
+				roles: '',
 				path: '/api/emergency-care/triage/masterdata/muscleHypertonia',
 				method: 'GET',
 				fetch: [
@@ -919,8 +919,8 @@ export const MOCKS_GUARDIA = [
 				]
 			},
 			{
-				name: 'TriageMasterData.getRespiratoryRetraction(): TriageDetailsMasterData[]',
-				roles: 'Todos los que tienen permisos sobre guardia',
+				name: 'TriageMasterData.getRespiratoryRetraction(): TriageDetailsDto[]',
+				roles: '',
 				path: '/api/emergency-care/triage/masterdata/respiratoryRetraction',
 				method: 'GET',
 				fetch: [
@@ -942,8 +942,8 @@ export const MOCKS_GUARDIA = [
 				]
 			},
 			{
-				name: 'TriageMasterData.getPerfusion(): TriageDetailsMasterData[]',
-				roles: 'Todos los que tienen permisos sobre guardia',
+				name: 'TriageMasterData.getPerfusion(): TriageDetailsDto[]',
+				roles: '',
 				path: '/api/emergency-care/triage/masterdata/perfusion',
 				method: 'GET',
 				fetch: [
@@ -960,9 +960,9 @@ export const MOCKS_GUARDIA = [
 				]
 			},
 			{
-				name: 'EmergencyCareEpisode.createPediatric(): number',
+				name: 'EmergencyCareEpisode.createPediatric(body: EmergencyCareDto): number',
 				roles: 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD',
-				path: '/api/institutions/{institutionId}/emergency-care/episodes/pediatric',
+				path: '/api/institution/{institutionId}/emergency-care/episodes/pediatric',
 				method: 'POST',
 				body: {
 					administrative: {
@@ -1032,9 +1032,9 @@ export const MOCKS_GUARDIA = [
 		path: 'mock/attention',
 		loads: [
 			{
-				name: 'DoctorsOffice.getBySectorType(sectorTypeId: number): DoctorsOfficeDto[]',
+				name: 'DoctorsOffice.getBySectorType(): DoctorsOfficeDto[]',
 				roles: 'Todos los que tienen permisos sobre guardia',
-				path: '/api/institutions/{institutionId}/doctorsOffice/sectorType/:id',
+				path: '/api/institution/{institutionId}/doctorsOffice/sectorType/{id}',
 				method: 'GET',
 				fetch: [
 					{
@@ -1052,9 +1052,9 @@ export const MOCKS_GUARDIA = [
 				],
 			},
 			{
-				name: 'EmergencyCareEpisodeState.changeState(emergencyCareEpisodeStateId: number, doctorsOfficeId: number): boolean',
+				name: 'EmergencyCareEpisode.changeState(emergencyCareEpisodeStateId: number, doctorsOfficeId: number): boolean',
 				roles: 'Todos los que tienen permisos sobre guardia',
-				path: '/api/institutions/{institutionId}/emergency-care/episodes/{episodeId}/state/change',
+				path: '/api/institution/{institutionId}/emergency-care/episodes/{episodeId}/state/change?emergencyCareStateId=1&doctorsOfficeId=1',
 				method: 'POST',
 				comments: 'Ambos campos son requeridos. Se pondra por defecto el ultimo consultorio en el que estuvo el paciente en el' +
 					' select, en caso de tenerlo'
@@ -1071,9 +1071,9 @@ export const MOCKS_GUARDIA = [
 		path: 'mock/finalizar-ausencia',
 		loads: [
 			{
-				name: 'EmergencyCareEpisodeState.changeState(emergencyCareEpisodeStateId: number): boolean',
+				name: 'EmergencyCareEpisode.changeState(emergencyCareEpisodeStateId: number): boolean',
 				roles: 'Todos los que tienen permisos sobre guardia',
-				path: '/api/institutions/{institutionId}/emergency-care/episodes/{episodeId}/state/change',
+				path: '/api/institution/{institutionId}/emergency-care/episodes/{episodeId}/state/change?emergencyCareEpisodeStateId=1',
 				method: 'POST'
 			},
 		],
@@ -1083,7 +1083,7 @@ export const MOCKS_GUARDIA = [
 		loads: [
 			{
 				name: 'TriageMasterData.getCategories(): TriageCategoryDto[]',
-				roles: 'Todos los que tienen permisos sobre guardia',
+				roles: '',
 				path: '/api/emergency-care/triage/masterdata/category',
 				method: 'GET',
 				fetch: [
@@ -1131,9 +1131,9 @@ export const MOCKS_GUARDIA = [
 				],
 			},
 			{
-				name: 'DoctorsOffice.getBySectorType(sectorTypeId: number): DoctorsOfficeDto[]',
+				name: 'DoctorsOffice.getBySectorType(): DoctorsOfficeDto[]',
 				roles: 'Todos los que tienen permisos sobre guardia',
-				path: '/api/institutions/{institutionId}/doctorsOffice/sectorType/:id',
+				path: '/api/institution/{institutionId}/doctorsOffice/sectorType/{id}',
 				method: 'GET',
 				fetch: [
 					{
@@ -1151,9 +1151,9 @@ export const MOCKS_GUARDIA = [
 				],
 			},
 			{
-				name: 'Triage.createAdministrative(): number',
+				name: 'Triage.createAdministrative(body: TriageAdministrativeDto): number',
 				roles: 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD',
-				path: '/api/institutions/{institutionId}/emergency-care/episodes/{episodeId}/triage',
+				path: '/api/institution/{institutionId}/emergency-care/episodes/{episodeId}/triage',
 				method: 'POST',
 				body: {
 						categoryId: 1,
@@ -1173,7 +1173,7 @@ export const MOCKS_GUARDIA = [
 		loads: [
 			{
 				name: 'TriageMasterData.getCategories(): TriageCategoryDto[]',
-				roles: 'Todos los que tienen permisos sobre guardia',
+				roles: '',
 				path: '/api/emergency-care/triage/masterdata/category',
 				method: 'GET',
 				fetch: [
@@ -1221,9 +1221,9 @@ export const MOCKS_GUARDIA = [
 				],
 			},
 			{
-				name: 'DoctorsOffice.getBySectorType(sectorTypeId: number): DoctorsOfficeDto[]',
+				name: 'DoctorsOffice.getBySectorType(): DoctorsOfficeDto[]',
 				roles: 'Todos los que tienen permisos sobre guardia',
-				path: '/api/institutions/{institutionId}/doctorsOffice/sectorType/:id',
+				path: '/api/institution/{institutionId}/doctorsOffice/sectorType/{id}',
 				method: 'GET',
 				fetch: [
 					{
@@ -1241,9 +1241,9 @@ export const MOCKS_GUARDIA = [
 				],
 			},
 			{
-				name: 'Triage.newAdultGynecological(): number',
+				name: 'Triage.newAdultGynecological(body: TriageAdultGynecologicalDto): number',
 				roles: 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD',
-				path: '/api/institutions/{institutionId}/emergency-care/episodes/{episodeId}/triage/adult-gynecological',
+				path: '/api/institution/{institutionId}/emergency-care/episodes/{episodeId}/triage/adult-gynecological',
 				method: 'POST',
 				body: {
 						categoryId: 1,
@@ -1290,7 +1290,7 @@ export const MOCKS_GUARDIA = [
 		loads: [
 			{
 				name: 'TriageMasterData.getCategories(): TriageCategoryDto[]',
-				roles: 'Todos los que tienen permisos sobre guardia',
+				roles: '',
 				path: '/api/emergency-care/triage/masterdata/category',
 				method: 'GET',
 				fetch: [
@@ -1341,7 +1341,7 @@ export const MOCKS_GUARDIA = [
 				name: 'DoctorsOffice.getBySectorType(): DoctorsOfficeDto[]',
 				comments: 'Ya existe',
 				roles: 'Todos los que tienen permisos sobre guardia',
-				path: '/api/institutions/{institutionId}/doctorsOffice/sectorType/:id',
+				path: '/api/institution/{institutionId}/doctorsOffice/sectorType/{id}',
 				method: 'GET',
 				fetch: [
 					{
@@ -1359,8 +1359,8 @@ export const MOCKS_GUARDIA = [
 				],
 			},
 			{
-				name: 'TriageMasterData.getBodyTemperature(): TriageDetailsMasterData[]', // todo analizar si es correcto el naming del dto
-				roles: 'Todos los que tienen permisos sobre guardia',
+				name: 'TriageMasterData.getBodyTemperature(): TriageDetailsDto[]', 
+				roles: '',
 				path: '/api/emergency-care/triage/masterdata/bodyTemperature',
 				method: 'GET',
 				fetch: [{
@@ -1381,8 +1381,8 @@ export const MOCKS_GUARDIA = [
 				comments: 'verificar sctid_code',
 			},
 			{
-				name: 'TriageMasterData.getMuscleHypertonia(): TriageDetailsMasterData[]',
-				roles: 'Todos los que tienen permisos sobre guardia',
+				name: 'TriageMasterData.getMuscleHypertonia(): TriageDetailsDto[]',
+				roles: '',
 				path: '/api/emergency-care/triage/masterdata/muscleHypertonia',
 				method: 'GET',
 				fetch: [
@@ -1404,8 +1404,8 @@ export const MOCKS_GUARDIA = [
 				]
 			},
 			{
-				name: 'TriageMasterData.getRespiratoryRetraction(): TriageDetailsMasterData[]',
-				roles: 'Todos los que tienen permisos sobre guardia',
+				name: 'TriageMasterData.getRespiratoryRetraction(): TriageDetailsDto[]',
+				roles: '',
 				path: '/api/emergency-care/triage/masterdata/respiratoryRetraction',
 				method: 'GET',
 				fetch: [
@@ -1427,8 +1427,8 @@ export const MOCKS_GUARDIA = [
 				]
 			},
 			{
-				name: 'TriageMasterData.getPerfusion(): TriageDetailsMasterData[]',
-				roles: 'Todos los que tienen permisos sobre guardia',
+				name: 'TriageMasterData.getPerfusion(): TriageDetailsDto[]',
+				roles: '',
 				path: '/api/emergency-care/triage/masterdata/perfusion',
 				method: 'GET',
 				fetch: [
@@ -1445,9 +1445,9 @@ export const MOCKS_GUARDIA = [
 				]
 			},
 			{
-				name: 'Triage.newPediatric(): number',
+				name: 'Triage.newPediatric(body: TriagePediatricDto): number',
 				roles: 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD',
-				path: '/api/institutions/{institutionId}/emergency-care/episodes/{episodeId}/triage/pediatric',
+				path: '/api/institution/{institutionId}/emergency-care/episodes/{episodeId}/triage/pediatric',
 				method: 'POST',
 				body:
 					{
@@ -1492,9 +1492,9 @@ export const MOCKS_GUARDIA = [
 		path: 'mock/episodio/:id/cancelar',
 		loads: [
 			{
-				name: 'DoctorsOffice.getBySectorType(sectorTypeId: number): DoctorsOfficeDto[]',
+				name: 'DoctorsOffice.getBySectorType(): DoctorsOfficeDto[]',
 				roles: 'Todos los que tienen permisos sobre guardia',
-				path: '/api/institutions/{institutionId}/doctorsOffice/sectorType/:id',
+				path: '/api/institution/{institutionId}/doctorsOffice/sectorType/{id}',
 				method: 'GET',
 				fetch: [
 					{
@@ -1512,9 +1512,9 @@ export const MOCKS_GUARDIA = [
 				],
 			},
 			{
-				name: 'EmergencyCareEpisodeState.changeState(emergencyCareEpisodeStateId: number, doctorsOfficeId: number): boolean',
+				name: 'EmergencyCareEpisode.changeState(emergencyCareEpisodeStateId: number, doctorsOfficeId: number): boolean',
 				roles: 'Todos los que tienen permisos sobre guardia',
-				path: '/api/institutions/{institutionId}/emergency-care/episodes/{episodeId}/state/change',
+				path: '/api/institution/{institutionId}/emergency-care/episodes/{episodeId}/state/change?emergencyCareEpisodeStateId=1&doctorsOfficeId=1',
 				method: 'POST',
 				comments: 'Ambos campos son requeridos. Se pondra por defecto el ultimo consultorio en el que estuvo el paciente en el' +
 					' select, en caso de tenerlo'
@@ -1531,9 +1531,9 @@ export const MOCKS_GUARDIA = [
 		path: 'mock/episodio/:id/alta-medica',
 		loads: [
 			{
-				name: 'EmergencyCareEpisodeState.changeState(emergencyCareEpisodeStateId: number): boolean',
+				name: 'EmergencyCareEpisode.changeState(emergencyCareEpisodeStateId: number): boolean',
 				roles: 'Todos los que tienen permisos sobre guardia',
-				path: '/api/institutions/{institutionId}/emergency-care/episodes/{episodeId}/state/change',
+				path: '/api/institution/{institutionId}/emergency-care/episodes/{episodeId}/state/change?emergencyCareEpisodeStateId=1',
 				method: 'POST',
 			},
 		],
@@ -1551,11 +1551,11 @@ export const MOCKS_GUARDIA = [
 				name: 'PatientController.getPatientMinimal(identificationTypeId: number, identificationNumber: string, genderId: number): Integer[]',
 				comments: 'Ya está hecho',
 				roles: 'Cualquiera sobre guardia',
-				path: '/api/patient/minimalsearch',
+				path: '/api/patient/minimalsearch?identificationTypeId=1&identificationNumber=37014711&genderId=1',
 				method: 'GET',
 			},
 			{
-				name: 'PatientController.getBasicPersonalData(patientId: number): ReducedPatientDto',
+				name: 'PatientController.getBasicPersonalData(): ReducedPatientDto',
 				comments: 'Ya está hecho evaluar la posibilidad de cambiarle el nombre. Tener en cuenta que a futuro se van a necesitar mas ' +
 					'datos, por lo tanto quizas no es la mejor opcion cambiar el nombre y refactorizar. Pero puede quedar raro con este ' +
 					'nombre si nunca se cambia',
@@ -1564,9 +1564,9 @@ export const MOCKS_GUARDIA = [
 				method: 'GET',
 			},
 			{
-				name: 'EmergencyCareAdministrative.setPatient(patientId: number): boolean',
+				name: 'EmergencyCareEpisode.setPatient(): boolean',
 				roles: 'Cualquiera sobre guardia',
-				path: '/api/institutions/{institutionId}/emergency-care/episodes/{episodeId}/administrative/patient',
+				path: '/api/institution/{institutionId}/emergency-care/episodes/{episodeId}/administrative/patient/{patientId}',
 				method: 'PUT',
 			}
 		]

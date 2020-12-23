@@ -26,35 +26,30 @@ public class TriageMasterDataController {
     }
 
     @GetMapping("/category")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
     public ResponseEntity<List<TriageCategoryDto>> getCategories() {
         LOG.debug("{}", "All triage categories");
         return ResponseEntity.ok().body(Collections.singletonList(new TriageCategoryDto()));
     }
 
     @GetMapping("/bodyTemperature")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
     public ResponseEntity<List<TriageDetailsDto>> getBodyTemperature() {
         LOG.debug("{}", "All body temperature");
         return ResponseEntity.ok().body(Collections.singletonList(new TriageDetailsDto()));
     }
 
     @GetMapping("/muscleHypertonia")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
     public ResponseEntity<List<TriageDetailsDto>> getMuscleHypertonia() {
         LOG.debug("{}", "All muscle hypertonia");
         return ResponseEntity.ok().body(Collections.singletonList(new TriageDetailsDto()));
     }
 
     @GetMapping("/respiratoryRetraction")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
     public ResponseEntity<List<TriageDetailsDto>> getRespiratoryRetraction() {
         LOG.debug("{}", "All muscle respiratory retraction");
         return ResponseEntity.ok().body(Collections.singletonList(new TriageDetailsDto()));
     }
 
     @GetMapping("/perfusion")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
     public ResponseEntity<List<TriageDetailsDto>> getPerfusion() {
         LOG.debug("{}", "All muscle respiratory retraction");
         return ResponseEntity.ok().body(Collections.singletonList(new TriageDetailsDto()));

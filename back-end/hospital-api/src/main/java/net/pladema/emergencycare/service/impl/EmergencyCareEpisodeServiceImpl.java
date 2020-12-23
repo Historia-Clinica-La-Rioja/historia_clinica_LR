@@ -68,4 +68,12 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
         //TODO implement method
         return true;
     }
+
+    @Override
+    public Boolean setPatient(Integer episodeId, Integer patientId) {
+        LOG.debug("Input parameters -> episodeId {}, patientId {}",
+                episodeId, patientId);
+        //TODO implement method
+        return true;
+    }
 }

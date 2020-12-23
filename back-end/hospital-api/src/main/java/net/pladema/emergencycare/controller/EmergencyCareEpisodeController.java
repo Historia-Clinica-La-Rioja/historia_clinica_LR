@@ -15,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -117,11 +118,25 @@ public class EmergencyCareEpisodeController {
     public ResponseEntity<Boolean> changeState(
             @PathVariable(name = "episodeId") Integer episodeId,
             @RequestParam(name = "emergencyCareStateId") Short emergencyCareStateId,
-            @RequestParam(name = "doctorsOfficeId") Integer doctorsOfficeId) {
+            @RequestParam(name = "doctorsOfficeId", defaultValue = "-1") Integer doctorsOfficeId) {
         LOG.debug("Change emergency care state -> episodeId {}, emergencyCareStateId {}, doctorsOfficeId {}",
                 episodeId, emergencyCareStateId, doctorsOfficeId);
         Boolean result = emergencyCareEpisodeService.changeState(episodeId, emergencyCareStateId, doctorsOfficeId);
         LOG.debug("Output -> {}", result);
         return ResponseEntity.ok().body(result);
     }
+
+    @Transactional
+    @PutMapping("/{episodeId}/administrative/patient/{patientId}")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+    public ResponseEntity<Boolean> setPatient(
+            @PathVariable(name = "episodeId") Integer episodeId,
+            @PathVariable(name = "patientId") Integer patientId) {
+        LOG.debug("Update patient of emergency care administrative episode -> episodeId {}, patientId {}",
+                episodeId, patientId);
+        Boolean result = emergencyCareEpisodeService.setPatient(episodeId, patientId);
+        LOG.debug("Output -> {}", result);
+        return ResponseEntity.ok().body(result);
+    }
+
 }

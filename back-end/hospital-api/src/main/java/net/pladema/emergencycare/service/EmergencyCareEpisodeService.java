@@ -20,4 +20,6 @@ public interface EmergencyCareEpisodeService {
     MasterDataProjection getState(Integer episodeId);
 
     Boolean changeState(Integer episodeId, Short emergencyCareStateId, Integer doctorsOfficeId);
+
+    Boolean setPatient(Integer episodeId, Integer patientId);
 }
