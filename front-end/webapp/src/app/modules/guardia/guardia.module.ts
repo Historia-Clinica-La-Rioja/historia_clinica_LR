@@ -7,9 +7,10 @@ import { AdmisionAdministrativaComponent } from './routes/admision-administrativ
 import { CoreModule } from '@core/core.module';
 import { InstitucionModule } from '../institucion/institucion.module';
 import { PresentationModule } from '@presentation/presentation.module';
-import { TriageComponent } from './component/triage/triage.component';
-import { AdministrativeTriageComponent } from './component/administrative-triage/administrative-triage.component';
+import { TriageComponent } from './components/triage/triage.component';
+import { AdministrativeTriageComponent } from './components/administrative-triage/administrative-triage.component';
 import { NewEpisodeAdminTriageComponent } from './routes/new-episode-admin-triage/new-episode-admin-triage.component';
+import { AdministrativeTriageDialogComponent } from './dialogs/administrative-triage-dialog/administrative-triage-dialog.component';
 
 import { HistoriaClinicaModule } from '../historia-clinica/historia-clinica.module';
 
@@ -19,7 +20,8 @@ import { HistoriaClinicaModule } from '../historia-clinica/historia-clinica.modu
 		TriageComponent,
 		AdministrativeTriageComponent,
 		NewEpisodeAdminTriageComponent,
-		AdmisionAdministrativaComponent
+		AdmisionAdministrativaComponent,
+		AdministrativeTriageDialogComponent
 	],
 	imports: [
 		CommonModule,

@@ -225,7 +225,7 @@ export const MOCKS_GUARDIA = [
 			},
 			{
 				name: '[Modal] Nuevo triage pediatrico',
-				navigate: './new-triage-pediatrico',
+				navigate: './new-triage-medico-pediatrico',
 			},
 			{
 				name: 'Atender',
@@ -296,7 +296,7 @@ export const MOCKS_GUARDIA = [
 		actions: [
 			{
 				name: 'Volver',
-				navigate: '../',
+				navigate: '../../',
 			},
 			{
 				name: '[Modal] Buscar paciente',
@@ -522,7 +522,7 @@ export const MOCKS_GUARDIA = [
 			},
 			{
 				name: '[Modal] Nuevo triage pediatrico',
-				navigate: '../../new-triage-pediatrico',
+				navigate: '../../new-triage-medico-pediatrico',
 			},
 			{
 				name: '[Modal] Buscar paciente',
@@ -611,7 +611,7 @@ export const MOCKS_GUARDIA = [
 				],
 			},
 			{
-				name: 'EmergencyCareEpisode.new(): number',
+				name: 'EmergencyCareEpisode.createAdministrative(): number',
 				roles: 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD',
 				path: '/api/institutions/{institutionId}/emergency-care/episodes',
 				method: 'POST',
@@ -730,7 +730,7 @@ export const MOCKS_GUARDIA = [
 				],
 			},
 			{
-				name: 'EmergencyCareEpisode.new(): number',
+				name: 'EmergencyCareEpisode.createAdult(): number',
 				roles: 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD',
 				path: '/api/institutions/{institutionId}/emergency-care/episodes/adult-gynecological',
 				method: 'POST',
@@ -960,7 +960,7 @@ export const MOCKS_GUARDIA = [
 				]
 			},
 			{
-				name: 'EmergencyCareEpisode.new(): number',
+				name: 'EmergencyCareEpisode.createPediatric(): number',
 				roles: 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD',
 				path: '/api/institutions/{institutionId}/emergency-care/episodes/pediatric',
 				method: 'POST',
@@ -1151,7 +1151,7 @@ export const MOCKS_GUARDIA = [
 				],
 			},
 			{
-				name: 'Triage.new(): number',
+				name: 'Triage.createAdministrative(): number',
 				roles: 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD',
 				path: '/api/institutions/{institutionId}/emergency-care/episodes/{episodeId}/triage',
 				method: 'POST',
@@ -1161,6 +1161,12 @@ export const MOCKS_GUARDIA = [
 				}
 			}
 		],
+		actions: [
+			{
+				name: 'Cancelar',
+				navigate: '../'
+			},
+		]
 	},
 	{
 		path: 'mock/new-triage-medico-adulto-ginecologico',
@@ -1272,6 +1278,12 @@ export const MOCKS_GUARDIA = [
 				},
 			}
 		],
+		actions: [
+			{
+				name: 'Cancelar',
+				navigate: '../'
+			},
+		]
 	},
 	{
 		path: 'mock/new-triage-medico-pediatrico',
@@ -1469,6 +1481,12 @@ export const MOCKS_GUARDIA = [
 					},
 			}
 		],
+		actions: [
+			{
+				name: 'Cancelar',
+				navigate: '../'
+			},
+		]
 	},
 	{
 		path: 'mock/episodio/:id/cancelar',

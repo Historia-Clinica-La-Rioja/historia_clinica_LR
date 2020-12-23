@@ -17,10 +17,13 @@
 		"new-episode": {
 			"TITLE": "Nuevo episodio",
 			"SUB_TITLE": "Complete los datos para continuar",
-			"ADM_TRIAGE": "Triage administrativo"
+			"ADM_TRIAGE": "Triage"
 		},
 		"triage": {
 			"LEVEL": "Nivel de urgencia",
+			"ROOM": "Consultorio",
+			"TITLE": "Nuevo triage",
+			"CONFIRM": "Confirmar triage",
 			"ROOM": "Consultorio"
 		},
 		"administrative_admision": {
