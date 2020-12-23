@@ -35,4 +35,14 @@ public class DoctorsOfficeServiceImpl implements DoctorsOfficeService {
         LOG.debug(LOGGING_OUTPUT, result);
         return result;
     }
+
+    @Override
+    public List<DoctorsOfficeBo> getDoctorsOfficeBySectorType(Integer institutionId, Short sectorTypeId) {
+        LOG.debug("Input parameters -> institutionId {}, sectorTypeId {}", institutionId, sectorTypeId);
+        List<DoctorsOfficeVo> resultQuery = doctorsOfficeRepository.findAllBySectorType(institutionId, sectorTypeId);
+        List<DoctorsOfficeBo> result = new ArrayList<>();
+        resultQuery.forEach(doctorsOfficeVo -> result.add(new DoctorsOfficeBo(doctorsOfficeVo)));
+        LOG.debug(LOGGING_OUTPUT, result);
+        return result;
+    }
 }

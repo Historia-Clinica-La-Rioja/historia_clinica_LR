@@ -8,6 +8,7 @@ import net.pladema.medicalconsultation.doctorsoffice.service.domain.DoctorsOffic
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +43,19 @@ public class DoctorsOfficeController {
                 institutionId, sectorId);
         List<DoctorsOfficeBo> doctorsOfficeBos = doctorsOfficeService
                 .getAllDoctorsOffice(institutionId, sectorId);
+        List<DoctorsOfficeDto> result = doctorsOfficeMapper.toListDoctorsOfficeDto(doctorsOfficeBos);
+        LOG.debug(OUTPUT, result);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/sectorType/{sectorTypeId}")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+    public ResponseEntity<List<DoctorsOfficeDto>> getBySectorType(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "sectorTypeId") Short sectorTypeId) {
+        LOG.debug("Input parameters -> institutionId {}, sectorTypeId {}", institutionId, sectorTypeId);
+        List<DoctorsOfficeBo> doctorsOfficeBos = doctorsOfficeService
+                .getDoctorsOfficeBySectorType(institutionId, sectorTypeId);
         List<DoctorsOfficeDto> result = doctorsOfficeMapper.toListDoctorsOfficeDto(doctorsOfficeBos);
         LOG.debug(OUTPUT, result);
         return ResponseEntity.ok().body(result);

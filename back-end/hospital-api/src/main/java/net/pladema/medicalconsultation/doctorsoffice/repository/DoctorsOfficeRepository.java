@@ -25,6 +25,18 @@ public interface DoctorsOfficeRepository extends JpaRepository<DoctorsOffice, In
                                     @Param("sectorId") Integer sectorId);
 
     @Transactional(readOnly = true)
+    @Query("SELECT NEW net.pladema.medicalconsultation.doctorsoffice.repository.domain.DoctorsOfficeVo(" +
+            "do.id, do.description, do.openingTime, do.closingTime) " +
+            "FROM DoctorsOffice do " +
+            "JOIN ClinicalSpecialtySector css on ( do.clinicalSpecialtySectorId = css.id ) " +
+            "JOIN Sector s on (css.sectorId = s.id) " +
+            "WHERE do.institutionId = :institutionId " +
+            "AND s.sectorTypeId = :sectorTypeId " +
+            "ORDER BY do.description ASC ")
+    List<DoctorsOfficeVo> findAllBySectorType(@Param("institutionId") Integer institutionId,
+                                    @Param("sectorTypeId") Short sectorTypeId);
+
+    @Transactional(readOnly = true)
     @Query("SELECT d.institutionId "+
             "FROM DoctorsOffice AS d " +
             "WHERE d.id = :id ")
