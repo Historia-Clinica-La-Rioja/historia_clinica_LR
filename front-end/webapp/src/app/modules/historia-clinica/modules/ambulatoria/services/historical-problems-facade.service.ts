@@ -98,7 +98,7 @@ export class HistoricalProblemsFacadeService {
 				this.specialties = pushIfNotExists(this.specialties, outpatientEvolution.clinicalSpecialty, this.compareSpecialty);
 
 			outpatientEvolution.healthConditions.forEach(oe => {
-				this.problems = pushIfNotExists(this.problems, {problemId: oe.snomed.id, problemDescription: oe.snomed.pt}, this.compareProblems);
+				this.problems = pushIfNotExists(this.problems, {problemId: oe.snomed.sctid, problemDescription: oe.snomed.pt}, this.compareProblems);
 			});
 
 			this.professionals = pushIfNotExists(this.professionals, {professionalId: outpatientEvolution.medic.id, professionalDescription: `${outpatientEvolution.medic.person.firstName} ${outpatientEvolution.medic.person.lastName}`} , this.compareProfessional);

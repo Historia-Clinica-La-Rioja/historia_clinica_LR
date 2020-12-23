@@ -160,12 +160,12 @@ export class MapperService {
 					consultationEvolutionNote: currentOutpatientEvolutionSummary.evolutionNote,
 					consultationProfessionalName: `${currentOutpatientEvolutionSummary.medic.person.firstName} ${currentOutpatientEvolutionSummary.medic.person.lastName}`,
 					consultationProfessionalId: currentOutpatientEvolutionSummary.medic.id,
-					problemId: problem.snomed.id,
+					problemId: problem.snomed.sctid,
 					problemPt: problem.snomed.pt,
 					specialtyId: currentOutpatientEvolutionSummary.clinicalSpecialty?.id,
 					specialityPt: currentOutpatientEvolutionSummary.clinicalSpecialty?.name,
-					consultationReasons: currentOutpatientEvolutionSummary.reasons.map(r => ({reasonId: r.snomed.id, reasonPt: r.snomed.pt})),
-					consultationProcedures: currentOutpatientEvolutionSummary.procedures.map(p => ({procedureDate: p.performedDate, procedureId: p.snomed.id, procedurePt: p.snomed.pt}))
+					consultationReasons: currentOutpatientEvolutionSummary.reasons.map(r => ({reasonId: r.snomed.sctid, reasonPt: r.snomed.pt})),
+					consultationProcedures: currentOutpatientEvolutionSummary.procedures.map(p => ({procedureDate: p.performedDate, procedureId: p.snomed.sctid, procedurePt: p.snomed.pt}))
 				}))];
 			return historicalProblemsList;
 

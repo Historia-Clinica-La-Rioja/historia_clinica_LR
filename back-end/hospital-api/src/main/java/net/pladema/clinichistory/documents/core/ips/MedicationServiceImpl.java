@@ -90,7 +90,7 @@ public class MedicationServiceImpl implements MedicationService {
                 cie10Codes,
                 medicationBo.getStatusId(),
                 noteService.createNote(medicationBo.getNote()),
-                medicationBo.getHealthCondition().getId(),
+                medicationBo.getHealthCondition() != null ? medicationBo.getHealthCondition().getId() : null,
                 newDosage != null ? newDosage.getId() : null);
 
         medicationStatement = medicationStatementRepository.save(medicationStatement);

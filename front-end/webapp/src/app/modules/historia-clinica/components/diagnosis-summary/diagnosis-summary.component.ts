@@ -12,7 +12,7 @@ import { EvolutionNoteService } from '@api-rest/services/evolution-note.service'
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { EvolutionNotesListenerService } from '../../modules/internacion/services/evolution-notes-listener.service';
 
-export const COVID_SNOMED = { id: "186747009", pt: "infección por coronavirus" }
+export const COVID_SNOMED = { sctid: "186747009", pt: "infección por coronavirus" }
 
 @Component({
 	selector: 'app-diagnosis-summary',
@@ -64,7 +64,7 @@ export class DiagnosisSummaryComponent implements OnInit {
 				this.viewCovidAlert = true;
 				this.tableModel = this.buildTable(data);
 				data.forEach(elem => {
-					if (elem.snomed.id == COVID_SNOMED.id && elem.statusId == HEALTH_CLINICAL_STATUS.ACTIVO)
+					if (elem.snomed.sctid == COVID_SNOMED.sctid && elem.statusId == HEALTH_CLINICAL_STATUS.ACTIVO)
 						this.viewCovidAlert = false;
 				});
 			}
@@ -143,7 +143,7 @@ export class DiagnosisSummaryComponent implements OnInit {
 			diagnosis: [
 				{
 					presumptive: true,
-					snomed: { id: COVID_SNOMED.id, pt: COVID_SNOMED.pt, parentFsn: "", parentId: "" }
+					snomed: { sctid: COVID_SNOMED.sctid, pt: COVID_SNOMED.pt, parentFsn: "", parentId: "" }
 				}
 			],
 			immunizations: [],

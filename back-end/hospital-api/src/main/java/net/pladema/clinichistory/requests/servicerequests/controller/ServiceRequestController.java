@@ -124,11 +124,11 @@ public class ServiceRequestController {
     ) {
         LOG.debug(COMMON_INPUT, institutionId, patientId, serviceRequestId);
         SnomedDto snomed = new SnomedDto();
-        snomed.setId("11111");
+        snomed.setSctid("11111");
         snomed.setPt("Radiologia");
 
         SnomedDto healthCondition = new SnomedDto();
-        snomed.setId("'2222'");
+        snomed.setSctid("'2222'");
         snomed.setPt("'ANGINAS'");
 
         DiagnosticReportDto result = new DiagnosticReportDto();
@@ -155,11 +155,11 @@ public class ServiceRequestController {
                 healthCondition);
 
         SnomedDto snomed = new SnomedDto();
-        snomed.setId("11111");
+        snomed.setSctid("11111");
         snomed.setPt("Radiologia");
 
         SnomedDto healthConditionSnomed = new SnomedDto();
-        snomed.setId("'2222'");
+        snomed.setSctid("'2222'");
         snomed.setPt("'Anginas'");
 
 

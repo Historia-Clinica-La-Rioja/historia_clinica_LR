@@ -40,6 +40,6 @@ public class EvolutionNoteDiagnosisValidator implements ConstraintValidator<Evol
         HealthConditionBo mainDiagnosis = healthConditionGeneralStateService.getMainDiagnosisGeneralState(internmentEpisodeId);
         if (mainDiagnosis == null)
             return true;
-        return evolutionNoteDto.getDiagnosis().stream().noneMatch(d -> d.getSnomed().getId().equals(mainDiagnosis.getSnomed().getSctid()));
+        return evolutionNoteDto.getDiagnosis().stream().noneMatch(d -> d.getSnomed().getSctid().equals(mainDiagnosis.getSnomed().getSctid()));
     }
 }

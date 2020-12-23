@@ -11,7 +11,6 @@ import org.mapstruct.Named;
 public interface VitalSignMapper {
 
     @Named("fromVitalSignDto")
-
     VitalSignBo fromVitalSignDto(VitalSignDto vitalSignDto);
 
     @Named("fromVitalSignBo")

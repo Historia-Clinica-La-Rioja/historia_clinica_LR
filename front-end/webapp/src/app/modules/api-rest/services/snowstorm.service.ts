@@ -21,7 +21,7 @@ export class SnowstormService {
 		return this.http.get<any>(url, { params }).pipe(map(results => {
 			const newItems = results.items.map((i: any): SnomedDto => {
 				return {
-					id: i.conceptId,
+					sctid: i.conceptId,
 					pt: i.pt.term,
 					// TODO no llegan las siguientes propiedades desde este endpoint de snowstorm
 					parentFsn: '',

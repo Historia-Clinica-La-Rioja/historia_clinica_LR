@@ -16,6 +16,8 @@ import java.util.Objects;
 @NoArgsConstructor
 public class SnomedBo extends SelfValidating<SnomedBo> {
 
+    private Integer id;
+
     @NotNull(message = "{value.mandatory}")
     @NotEmpty
     @Length(max = 20, message = "{snomed.id.max.value}")

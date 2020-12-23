@@ -128,7 +128,7 @@ public class MedicationRequestControllerTest extends UnitController {
                 "      },\n" +
                 "      \"observations\": \"string\",\n" +
                 "      \"snomed\": {\n" +
-                "        \"id\": \"string\",\n" +
+                "        \"sctid\": \"string\",\n" +
                 "        \"parentFsn\": \"string\",\n" +
                 "        \"parentId\": \"string\",\n" +
                 "        \"pt\": \"string\"\n" +

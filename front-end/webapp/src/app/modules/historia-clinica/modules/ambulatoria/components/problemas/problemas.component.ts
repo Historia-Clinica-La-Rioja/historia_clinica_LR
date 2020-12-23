@@ -188,7 +188,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		this.historicalProblemsFacadeService.sendHistoricalProblemsFilter({
 			specialty: null,
 			professional: null,
-			problem: problem.snomed.id,
+			problem: problem.snomed.sctid,
 			consultationDate: null
 		});
 	}

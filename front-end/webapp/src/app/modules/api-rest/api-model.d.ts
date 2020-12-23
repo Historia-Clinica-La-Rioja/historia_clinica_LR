@@ -1136,10 +1136,10 @@ export interface Serializable {
 }
 
 export interface SnomedDto extends Serializable {
-    id: string;
     parentFsn: string;
     parentId: string;
     pt: string;
+    sctid: string;
 }
 
 export interface SnomedResponseDto extends Serializable {

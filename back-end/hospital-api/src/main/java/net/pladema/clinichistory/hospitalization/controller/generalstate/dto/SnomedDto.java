@@ -20,7 +20,7 @@ public class SnomedDto implements Serializable {
     @NotEmpty(message = "{value.mandatory}")
     @Length(max = 20, message = "{snomed.id.max.value}")
     @EqualsAndHashCode.Include
-    private String id;
+    private String sctid;
 
     @NotNull(message = "{value.mandatory}")
     @NotEmpty(message = "{value.mandatory}")
@@ -33,9 +33,9 @@ public class SnomedDto implements Serializable {
     @Nullable
     private String parentFsn;
 
-    public SnomedDto(@NotNull(message = "{value.mandatory}") @NotEmpty @Length(max = 20, message = "{snomed.id.max.value}") String id,
+    public SnomedDto(@NotNull(message = "{value.mandatory}") @NotEmpty @Length(max = 20, message = "{snomed.id.max.value}") String sctid,
                      @NotNull(message = "{value.mandatory}") @NotEmpty @Length(max = 255, message = "{snomed.pt.max.value}") String pt) {
-        this.id = id;
+        this.sctid = sctid;
         this.pt = pt;
     }
 
@@ -43,7 +43,7 @@ public class SnomedDto implements Serializable {
         if (snomed == null)
             return null;
         SnomedDto result = new SnomedDto();
-        result.setId(snomed.getSctid());
+        result.setSctid(snomed.getSctid());
         result.setPt(snomed.getPt());
         return result;
     }

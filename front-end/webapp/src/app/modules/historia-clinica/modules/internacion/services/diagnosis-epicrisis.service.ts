@@ -20,14 +20,14 @@ export class DiagnosisEpicrisisService {
 			{
 				def: 'status',
 				header: 'internaciones.epicrisis.diagnosticos.table.columns.STATUS',
-				display: (row) => row.snomed.id === this.newMainDiagnosis.snomed.id ?
+				display: (row) => row.snomed.sctid === this.newMainDiagnosis.snomed.sctid ?
 					this.getClinicalStatusActivo()
 					: this.healthClinicalStatus?.find(status => status.id === row.statusId).description
 			},
 			{
 				def: 'verificacion',
 				header: 'internaciones.epicrisis.diagnosticos.table.columns.VERIFICATION',
-				display: (row) => row.snomed.id === this.newMainDiagnosis.snomed.id ?
+				display: (row) => row.snomed.sctid === this.newMainDiagnosis.snomed.sctid ?
 					this.getVerificationStatusConfirmado()
 					: this.verifications?.find(verification => verification.id === row.verificationId)?.description
 			},
@@ -110,7 +110,7 @@ export class DiagnosisEpicrisisService {
 
 	//diagnosis
 	public addMainDiagnosis(newDiagnosis: DiagnosisDto, mainDiagnosisFormControl): void {
-		const duplicatedDiagnosis = this.table.data.find(diagnosis => diagnosis.snomed.id === newDiagnosis.snomed.id);
+		const duplicatedDiagnosis = this.table.data.find(diagnosis => diagnosis.snomed.sctid === newDiagnosis.snomed.sctid);
 		if (duplicatedDiagnosis) {
 			this.changeMainDiagnosis(duplicatedDiagnosis, mainDiagnosisFormControl);
 		}
