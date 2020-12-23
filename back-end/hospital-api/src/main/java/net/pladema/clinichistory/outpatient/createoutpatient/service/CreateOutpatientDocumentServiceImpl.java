@@ -69,7 +69,7 @@ public class CreateOutpatientDocumentServiceImpl implements CreateOutpatientDocu
         outpatient.setProblems(healthConditionService.loadProblems(patientInfo, doc.getId(), outpatient.getProblems()));
         outpatient.setProcedures(proceduresService.loadProcedures(patientInfo, doc.getId(), outpatient.getProcedures()));
         outpatient.setFamilyHistories(healthConditionService.loadFamilyHistories(patientInfo, doc.getId(), outpatient.getFamilyHistories()));
-        outpatient.setMedications(medicationService.loadMedications(patientInfo, doc.getId(), outpatient.getMedications()));
+        outpatient.setMedications(medicationService.execute(patientInfo, doc.getId(), outpatient.getMedications()));
         outpatient.setAllergies(allergyService.loadAllergies(patientInfo, doc.getId(), outpatient.getAllergies()));
         outpatient.setImmunizations(immunizationService.loadImmunization(patientInfo, doc.getId(), outpatient.getImmunizations()));
 

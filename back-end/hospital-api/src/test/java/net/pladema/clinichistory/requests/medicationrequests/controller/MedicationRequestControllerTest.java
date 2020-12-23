@@ -5,6 +5,7 @@ import net.pladema.clinichistory.requests.medicationrequests.controller.mapper.C
 import net.pladema.clinichistory.requests.medicationrequests.controller.mapper.ListMedicationInfoMapper;
 import net.pladema.clinichistory.requests.medicationrequests.service.CreateMedicationRequestService;
 import net.pladema.clinichistory.requests.medicationrequests.service.ListMedicationInfoService;
+import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,6 +40,9 @@ public class MedicationRequestControllerTest extends UnitController {
 
     @MockBean
     private ListMedicationInfoService listMedicationInfoService;
+
+    @MockBean
+    private PatientExternalService patientExternalService;
 
     @Before
     public void setup() {

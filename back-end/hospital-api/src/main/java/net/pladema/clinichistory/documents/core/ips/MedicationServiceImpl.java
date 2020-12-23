@@ -14,10 +14,12 @@ import net.pladema.clinichistory.documents.service.ips.SnomedService;
 import net.pladema.clinichistory.documents.service.ips.domain.DosageBo;
 import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
 import net.pladema.clinichistory.documents.service.ips.domain.enums.EUnitsOfTimeBo;
+import net.pladema.clinichistory.hospitalization.service.documents.validation.PatientInfoValidator;
 import net.pladema.snowstorm.services.CalculateCie10CodesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.util.List;
 
@@ -59,8 +61,9 @@ public class MedicationServiceImpl implements MedicationService {
     }
 
     @Override
-    public List<MedicationBo> loadMedications(PatientInfoBo patientInfo, Long documentId, List<MedicationBo> medications) {
+    public List<MedicationBo> execute(PatientInfoBo patientInfo, Long documentId, List<MedicationBo> medications) {
         LOG.debug("Input parameters -> patientInfo {}, documentId {}, medications {}", patientInfo, documentId, medications);
+        assertRequiredFields(patientInfo, documentId);
         medications.forEach(medication -> {
             Integer snomedId = snomedService.getSnomedId(medication.getSnomed())
                     .orElseGet(() -> snomedService.createSnomedTerm(medication.getSnomed()));
@@ -82,7 +85,6 @@ public class MedicationServiceImpl implements MedicationService {
 
     private MedicationStatement saveMedicationStatement(Integer patientId, MedicationBo medicationBo, Integer snomedId, String cie10Codes) {
         LOG.debug("Input parameters -> patientId {}, medication {}, snomedId {}, cie10Codes {}", patientId, medicationBo, snomedId, cie10Codes);
-
         Dosage newDosage = createDosage(medicationBo.getDosage());
         MedicationStatement medicationStatement = new MedicationStatement(
                 patientId,
@@ -97,6 +99,13 @@ public class MedicationServiceImpl implements MedicationService {
         LOG.debug("medicationStatement saved -> {}", medicationStatement.getId());
         LOG.debug(OUTPUT, medicationStatement);
         return medicationStatement;
+    }
+
+    private void assertRequiredFields(PatientInfoBo patientInfo, Long documentId) {
+        LOG.debug("Input parameters -> patientInfo {}, documentId {}", patientInfo, documentId);
+        Assert.notNull(documentId, "El identificador de la institución es obligatorio");
+        PatientInfoValidator patientInfoValidator = new PatientInfoValidator();
+        patientInfoValidator.isValid(patientInfo);
     }
 
     private Dosage createDosage(DosageBo dosage) {

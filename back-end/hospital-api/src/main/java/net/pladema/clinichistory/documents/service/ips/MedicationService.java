@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface MedicationService {
 
-    List<MedicationBo> loadMedications(PatientInfoBo patientInfo, Long documentId, List<MedicationBo> medications);
+    List<MedicationBo> execute(PatientInfoBo patientInfo, Long documentId, List<MedicationBo> medications);
 
 }

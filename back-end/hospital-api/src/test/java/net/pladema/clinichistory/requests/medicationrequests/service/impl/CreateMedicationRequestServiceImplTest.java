@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.requests.medicationrequests.service.impl;
 
 import net.pladema.clinichistory.documents.service.DocumentFactory;
+import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.domain.DosageBo;
 import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionBo;
 import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
@@ -64,7 +65,7 @@ public class CreateMedicationRequestServiceImplTest {
 		Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
 				createMedicationRequestService.execute(1, medicationRequest)
 		);
-		String expectedMessage = "El paciente es obligatorio";
+		String expectedMessage = "La información del paciente es obligatoria";
 		String actualMessage = exception.getMessage();
 		Assertions.assertTrue(actualMessage.contains(expectedMessage));
 	}
@@ -72,7 +73,7 @@ public class CreateMedicationRequestServiceImplTest {
 	@Test
 	public void execute_withNullDoctorId(){
 		MedicationRequestBo medicationRequest = new MedicationRequestBo();
-		medicationRequest.setPatientId(1);
+		medicationRequest.setPatientInfo(new PatientInfoBo(1, (short)1, (short)29));
 		Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
 				createMedicationRequestService.execute(1, medicationRequest)
 		);
@@ -84,7 +85,7 @@ public class CreateMedicationRequestServiceImplTest {
 	@Test
 	public void execute_withNullMedicalCoverageId(){
 		MedicationRequestBo medicationRequest = new MedicationRequestBo();
-		medicationRequest.setPatientId(1);
+		medicationRequest.setPatientInfo(new PatientInfoBo(1, (short)1, (short)29));
 		medicationRequest.setDoctorId(1);
 		Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
 				createMedicationRequestService.execute(1, medicationRequest)
@@ -97,7 +98,7 @@ public class CreateMedicationRequestServiceImplTest {
 	@Test
 	public void execute_withEmptyMedications(){
 		MedicationRequestBo medicationRequest = new MedicationRequestBo();
-		medicationRequest.setPatientId(1);
+		medicationRequest.setPatientInfo(new PatientInfoBo(1, (short)1, (short)29));
 		medicationRequest.setDoctorId(1);
 		medicationRequest.setMedicalCoverageId(5);
 		Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
@@ -111,7 +112,7 @@ public class CreateMedicationRequestServiceImplTest {
 	@Test
 	public void execute_withInvalidMedication_startDate(){
 		MedicationRequestBo medicationRequest = new MedicationRequestBo();
-		medicationRequest.setPatientId(1);
+		medicationRequest.setPatientInfo(new PatientInfoBo(1, (short)1, (short)29));
 		medicationRequest.setDoctorId(1);
 		medicationRequest.setMedicalCoverageId(5);
 
@@ -137,7 +138,7 @@ public class CreateMedicationRequestServiceImplTest {
 	@Test
 	public void execute_withInvalidMedication_Snomed(){
 		MedicationRequestBo medicationRequest = new MedicationRequestBo();
-		medicationRequest.setPatientId(1);
+		medicationRequest.setPatientInfo(new PatientInfoBo(1, (short)1, (short)29));
 		medicationRequest.setDoctorId(1);
 		medicationRequest.setMedicalCoverageId(5);
 
@@ -174,7 +175,7 @@ public class CreateMedicationRequestServiceImplTest {
 	@Test
 	public void execute_withInvalidMedication_HealthCondition_Snomed(){
 		MedicationRequestBo medicationRequest = new MedicationRequestBo();
-		medicationRequest.setPatientId(1);
+		medicationRequest.setPatientInfo(new PatientInfoBo(1, (short)1, (short)29));
 		medicationRequest.setDoctorId(1);
 		medicationRequest.setMedicalCoverageId(5);
 
@@ -208,7 +209,7 @@ public class CreateMedicationRequestServiceImplTest {
 		Integer institutionId = 5;
 		MedicationRequestBo medicationRequest = new MedicationRequestBo();
 		medicationRequest.setDoctorId(1);
-		medicationRequest.setPatientId(4);
+		medicationRequest.setPatientInfo(new PatientInfoBo(4, (short)1, (short)29));
 		medicationRequest.setMedicalCoverageId(5);
 		medicationRequest.setMedications(List.of(createMedicationBo("IBUPROFENO 500", 13, createDosageBo(15d, 8, EUnitsOfTimeBo.HOUR))));
 		Integer medicationRequestId = createMedicationRequestService.execute(institutionId, medicationRequest);

@@ -4,12 +4,11 @@ import net.pladema.clinichistory.documents.repository.entity.Document;
 import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.service.NoteService;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
-import net.pladema.clinichistory.hospitalization.service.epicrisis.UpdateEpicrisisService;
-import net.pladema.clinichistory.hospitalization.service.epicrisis.domain.EpicrisisBo;
-import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.documents.service.ips.*;
 import net.pladema.clinichistory.documents.service.ips.domain.DocumentObservationsBo;
-import net.pladema.patient.controller.dto.BasicPatientDto;
+import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
+import net.pladema.clinichistory.hospitalization.service.epicrisis.UpdateEpicrisisService;
+import net.pladema.clinichistory.hospitalization.service.epicrisis.domain.EpicrisisBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -75,7 +74,7 @@ public class UpdateEpicrisisServiceImpl implements UpdateEpicrisisService {
             epicrisis.setFamilyHistories(healthConditionService.loadFamilyHistories(patientInfo, doc.getId(), epicrisis.getFamilyHistories()));
             epicrisis.setAllergies(allergyService.loadAllergies(patientInfo, doc.getId(), epicrisis.getAllergies()));
             epicrisis.setImmunizations(immunizationService.loadImmunization(patientInfo, doc.getId(), epicrisis.getImmunizations()));
-            epicrisis.setMedications(medicationService.loadMedications(patientInfo, doc.getId(), epicrisis.getMedications()));
+            epicrisis.setMedications(medicationService.execute(patientInfo, doc.getId(), epicrisis.getMedications()));
 
             epicrisis.setVitalSigns(clinicalObservationService.loadVitalSigns(patientInfo, doc.getId(), Optional.ofNullable(epicrisis.getVitalSigns())));
             epicrisis.setAnthropometricData(clinicalObservationService.loadAnthropometricData(patientInfo, doc.getId(), Optional.ofNullable(epicrisis.getAnthropometricData())));

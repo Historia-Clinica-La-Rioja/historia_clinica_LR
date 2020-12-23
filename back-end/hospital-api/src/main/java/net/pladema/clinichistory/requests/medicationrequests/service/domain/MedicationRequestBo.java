@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.documents.service.Document;
+import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
 import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
 import net.pladema.patient.controller.dto.BasicPatientDto;
@@ -16,7 +17,7 @@ import java.util.List;
 @Setter
 public class MedicationRequestBo implements Document {
 
-    private Integer patientId;
+    private PatientInfoBo patientInfo;
 
     private BasicPatientDto patientDto;
 
@@ -37,6 +38,13 @@ public class MedicationRequestBo implements Document {
     @Override
     public Short getDocumentSource() {
         return SourceType.RECIPE;
+    }
+
+    @Override
+    public Integer getPatientId() {
+        if (patientInfo == null)
+            return null;
+        return patientInfo.getId();
     }
 
 }

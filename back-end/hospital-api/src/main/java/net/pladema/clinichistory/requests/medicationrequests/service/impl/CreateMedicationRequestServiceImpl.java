@@ -2,6 +2,7 @@ package net.pladema.clinichistory.requests.medicationrequests.service.impl;
 
 import net.pladema.clinichistory.documents.service.DocumentFactory;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.DosageValidator;
+import net.pladema.clinichistory.hospitalization.service.documents.validation.PatientInfoValidator;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.SnomedValidator;
 import net.pladema.clinichistory.requests.medicationrequests.repository.MedicationRequestRepository;
 import net.pladema.clinichistory.requests.medicationrequests.repository.entity.MedicationRequest;
@@ -44,7 +45,8 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
     private void assertRequiredFields(Integer institutionId, MedicationRequestBo medicationRequest) {
         Assert.notNull(institutionId, "El identificador de la institución es obligatorio");
         Assert.notNull(medicationRequest, "La receta es obligatoria");
-        Assert.notNull(medicationRequest.getPatientId(), "El paciente es obligatorio");
+        PatientInfoValidator patientInfoValidator = new PatientInfoValidator();
+        patientInfoValidator.isValid(medicationRequest.getPatientInfo());
         Assert.notNull(medicationRequest.getDoctorId(), "El identificador del médico es obligatorio");
         if (medicationRequest.isHasRecipe())
             Assert.notNull(medicationRequest.getMedicalCoverageId(), "El identificador de la cobertura médica es obligatorio");

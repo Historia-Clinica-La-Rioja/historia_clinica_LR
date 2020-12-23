@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.requests.medicationrequests.controller.mapper;
 
+import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.domain.DosageBo;
 import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionBo;
 import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
@@ -10,6 +11,7 @@ import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.NewDosageDto;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationRequestBo;
+import net.pladema.patient.controller.dto.BasicPatientDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 import org.slf4j.Logger;
@@ -25,11 +27,11 @@ public class CreateMedicationRequestMapper {
     private static final String OUTPUT = "OUTPUT -> {}";
 
     @Named("parseTo")
-    public MedicationRequestBo parseTo(Integer doctorId, Integer patientId, PrescriptionDto medicationRequest) {
-        LOG.debug("parseTo -> doctorId {}, patientId {}, medicationRequest {} ", doctorId, patientId, medicationRequest);
+    public MedicationRequestBo parseTo(Integer doctorId, BasicPatientDto patientDto, PrescriptionDto medicationRequest) {
+        LOG.debug("parseTo -> doctorId {}, patientDto {}, medicationRequest {} ", doctorId, patientDto, medicationRequest);
         MedicationRequestBo result = new MedicationRequestBo();
         result.setDoctorId(doctorId);
-        result.setPatientId(patientId);
+        result.setPatientInfo(new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()));
         result.setHasRecipe(medicationRequest.isHasRecipe());
         result.setMedicalCoverageId(medicationRequest.getMedicalCoverageId());
         result.setMedications(medicationRequest.getItems().stream().map(this::parseTo).collect(Collectors.toList()));

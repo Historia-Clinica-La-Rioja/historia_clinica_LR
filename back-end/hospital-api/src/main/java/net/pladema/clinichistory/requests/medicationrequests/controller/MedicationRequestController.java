@@ -11,6 +11,7 @@ import net.pladema.clinichistory.requests.medicationrequests.service.CreateMedic
 import net.pladema.clinichistory.requests.medicationrequests.service.ListMedicationInfoService;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationFilterBo;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationRequestBo;
+import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.sgx.error.controller.dto.ApiErrorDto;
 import net.pladema.sgx.security.utils.UserInfo;
 import net.pladema.staff.controller.dto.ProfessionalDto;
@@ -50,16 +51,20 @@ public class MedicationRequestController {
 
     private final ListMedicationInfoMapper listMedicationInfoMapper;
 
+    private final PatientExternalService patientExternalService;
+
     public MedicationRequestController(CreateMedicationRequestService createMedicationRequestService,
                                        HealthcareProfessionalExternalService healthcareProfessionalExternalService,
                                        CreateMedicationRequestMapper createMedicationRequestMapper,
                                        ListMedicationInfoService listMedicationInfoService,
-                                       ListMedicationInfoMapper listMedicationInfoMapper) {
+                                       ListMedicationInfoMapper listMedicationInfoMapper,
+                                       PatientExternalService patientExternalService) {
         this.createMedicationRequestService = createMedicationRequestService;
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.createMedicationRequestMapper = createMedicationRequestMapper;
         this.listMedicationInfoService = listMedicationInfoService;
         this.listMedicationInfoMapper = listMedicationInfoMapper;
+        this.patientExternalService = patientExternalService;
     }
 
 
@@ -72,7 +77,8 @@ public class MedicationRequestController {
                    @RequestBody @Valid PrescriptionDto medicationRequest) {
         LOG.debug("create -> institutionId {}, patientId {}, medicationRequest {}", institutionId, patientId, medicationRequest);
         Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
-        MedicationRequestBo medicationRequestBo = createMedicationRequestMapper.parseTo(doctorId, patientId, medicationRequest);
+        var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
+        MedicationRequestBo medicationRequestBo = createMedicationRequestMapper.parseTo(doctorId, patientDto, medicationRequest);
         Integer result = createMedicationRequestService.execute(institutionId, medicationRequestBo);
         LOG.debug("create result -> {}", result);
         return result;

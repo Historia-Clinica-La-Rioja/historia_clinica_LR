@@ -4,12 +4,11 @@ import net.pladema.clinichistory.documents.repository.entity.Document;
 import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.service.NoteService;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
-import net.pladema.clinichistory.hospitalization.service.anamnesis.UpdateAnamnesisService;
-import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.AnamnesisBo;
-import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.documents.service.ips.*;
 import net.pladema.clinichistory.documents.service.ips.domain.DocumentObservationsBo;
-import net.pladema.patient.controller.dto.BasicPatientDto;
+import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
+import net.pladema.clinichistory.hospitalization.service.anamnesis.UpdateAnamnesisService;
+import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.AnamnesisBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -73,7 +72,7 @@ public class UpdateAnamnesisServiceImpl implements UpdateAnamnesisService {
             anamnesis.setFamilyHistories(healthConditionService.loadFamilyHistories(patientInfo, doc.getId(), anamnesis.getFamilyHistories()));
             anamnesis.setAllergies(allergyService.loadAllergies(patientInfo, doc.getId(), anamnesis.getAllergies()));
             anamnesis.setImmunizations(immunizationService.loadImmunization(patientInfo, doc.getId(), anamnesis.getImmunizations()));
-            anamnesis.setMedications(medicationService.loadMedications(patientInfo, doc.getId(), anamnesis.getMedications()));
+            anamnesis.setMedications(medicationService.execute(patientInfo, doc.getId(), anamnesis.getMedications()));
 
             anamnesis.setVitalSigns(clinicalObservationService.loadVitalSigns(patientInfo, doc.getId(), Optional.ofNullable(anamnesis.getVitalSigns())));
             anamnesis.setAnthropometricData(clinicalObservationService.loadAnthropometricData(patientInfo, doc.getId(), Optional.ofNullable(anamnesis.getAnthropometricData())));
