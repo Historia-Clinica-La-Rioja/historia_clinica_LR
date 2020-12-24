@@ -22,6 +22,7 @@ npm start
 ```
 
 > Mas comandos útiles para el desarrollo en [webapp/README.md](webapp/README.md).
+> Las características PWA no se pueden probar en modo desarrollo.
 
 ### Backoffice
 
@@ -43,3 +44,11 @@ npm start
 ### WebStorm 
 
 1. Settings -> Editor -> Code Style -> JavaScript -> Spaces -> Within ES6 Import/export braces
+
+## PWA
+
+Dado que levantar el proyecto en modo desarrollo (por ejemplo: `npm start`) no permite usar las características PWA, se ofrece un script y un contenedor Docker para poder realizar pruebas localmente.
+
+El script [scripts/pwa-local.sh](../scripts/pwa-local.sh) buildea la WebApp, levanta un contenedor Docker con nginx configurado para acceder al código buildeado y al backend en http://localhost:8080, y por último utiliza ngrok para obtener un acceso con https.
+
+> NOTA: no funciona de la misma manera en Windows, Linux o Mac así que algunos ajustes podrían ser necesarios.

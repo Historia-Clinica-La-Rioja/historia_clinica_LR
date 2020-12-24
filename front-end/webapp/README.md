@@ -23,6 +23,10 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 Run `npm run build:prod` to build the project. The build artifacts will be stored in the `dist/sgh` directory. Check [/scripts/build-pack.sh](../../scripts/build-pack.sh) in order to see how production built is made.
 
+### PWA
+
+Para testear la funcionalidad de la WebApp se requiere https, para ello se puede usar el script [/scripts/pwa-local.sh](../../scripts/pwa-local.sh).
+
 ## Running unit tests
 
 Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
