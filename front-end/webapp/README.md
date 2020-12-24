@@ -1,4 +1,4 @@
-#SGH | Front-End | WebApp
+# SGH | Front-End | WebApp
 
 Este proyecto fue generado y es mantenido usando [Angular CLI](https://github.com/angular/angular-cli) version 9.1.9.
 
@@ -12,19 +12,16 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 ### Nuevo módulo con ruteo
 > `ng generate module modules/backoffice --route backoffice --module app.module`
-
 ### Nuevo módulo sin ruteo
 > `ng generate module modules/api-rest --module app.module`
-
 ### Nuevo endpoint
 > `ng g s modules/api-rest/services/users`
-
 ### Nuevo componente ruteado
 > `ng g c modules/home/routes/institucion`
 
 ## Build
 
-Run `npm run build:prod` to build the project. The build artifacts will be stored in the `dist/` directory. Check [/scripts/build-pack.sh](../../scripts/build-pack.sh) in order to see how production built is made.
+Run `npm run build:prod` to build the project. The build artifacts will be stored in the `dist/sgh` directory. Check [/scripts/build-pack.sh](../../scripts/build-pack.sh) in order to see how production built is made.
 
 ## Running unit tests
 

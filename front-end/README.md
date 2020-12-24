@@ -6,7 +6,7 @@ El front-end del proyecto está compuesto por una WebApp y un Backoffice.
 
 Para el desarrollo de ambos proyectos se puede utilizar [Visual Studio Code](https://code.visualstudio.com/Download) o [WebStorm](https://www.jetbrains.com/webstorm/download/).
 
-Además ambos proyectos requieren tener instalado [npm](https://www.npmjs.com/get-npm).
+Además ambos proyectos requieren tener instalado [npm](https://www.npmjs.com/get-npm) en la versión definida en [../pom-parent.xml](../pom-parent.xml#L19).
 
 ### WebApp
 
