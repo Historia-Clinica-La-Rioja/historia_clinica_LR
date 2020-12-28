@@ -5,15 +5,15 @@ import { SnomedDto } from "@api-rest/api-model";
 export class NewEpisodeService {
 
 
-	private administrativeAdmision;
+	private administrativeAdmission: AdministrativeAdmissionDto;
 	constructor() { }
 
-	setAdministrativeAdmision(data: any): void {
-		this.administrativeAdmision = data;
+	setAdministrativeAdmission(data: AdministrativeAdmissionDto): void {
+		this.administrativeAdmission = data;
 	}
 
-	getAdministrativeAdmision(): any{
-		return this.administrativeAdmision;
+	getAdministrativeAdmission(): AdministrativeAdmissionDto{
+		return this.administrativeAdmission;
 	}
 }
 

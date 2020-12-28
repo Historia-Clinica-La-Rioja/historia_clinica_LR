@@ -16,7 +16,7 @@ const ROUTE_EMERGENCY_CARE = 'guardia/';
 export class NewEpisodeAdminTriageComponent implements OnInit {
 
 	private triage: TriageDto;
-	private administrativeAdmisionDto: AdministrativeAdmissionDto;
+	private administrativeAdmissionDto: AdministrativeAdmissionDto;
 	private emergencyCareDto: EmergencyCareDto = {
 		administrative: {},
 		triage: {
@@ -35,13 +35,13 @@ export class NewEpisodeAdminTriageComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.administrativeAdmisionDto = this.newEpisodeService.getAdministrativeAdmision();
+		this.administrativeAdmissionDto = this.newEpisodeService.getAdministrativeAdmission();
 	}
 
 	confirmEvent(triage: TriageDto): void {
 		this.triage = triage;
 		this.emergencyCareDto.triage = this.triage;
-		//TODO mapper administrativeAdmisionDto to emergencyCareDto
+		//TODO mapper administrativeAdmissionDto to emergencyCareDto
 		this.emergencyCareEpisodeService.createAdministrative(this.emergencyCareDto).subscribe(
 			emergencyCareId =>
 				this.router.navigate([this.routePrefix + ROUTE_EMERGENCY_CARE + '/episodio' +  emergencyCareId]),

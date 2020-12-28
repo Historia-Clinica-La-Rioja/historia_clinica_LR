@@ -158,7 +158,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 				lastName: formValue.lastName
 			}
 		}
-		this.goToAdministrativeTriage(administrativeAdmisionDto);
+		this.goToBasicTriage(administrativeAdmisionDto);
 	}
 
 	onChange(mrChange): void {
@@ -179,8 +179,8 @@ export class AdmisionAdministrativaComponent implements OnInit {
 		}
 	}
 
-	goToAdministrativeTriage(administrativeAdmisionDto: AdministrativeAdmissionDto): void {
-		this.newEpisodeService.setAdministrativeAdmision(administrativeAdmisionDto);
+	goToBasicTriage(administrativeAdmisionDto: AdministrativeAdmissionDto): void {
+		this.newEpisodeService.setAdministrativeAdmission(administrativeAdmisionDto);
 		const url = `${this.routePrefix}guardia/nuevo-episodio/triage-administrativo`;
 		this.router.navigateByUrl(url);
 	}
