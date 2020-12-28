@@ -69,10 +69,29 @@
 								</ng-template>
 							</div>
 
-							<div id="actions" fxFlex="5%">
-								<button mat-icon-button>
+							<div id="actions-container" fxFlex="5%">
+								<button id="actions" mat-icon-button
+										(click)="$event.stopPropagation()" [matMenuTriggerFor]="actions">
 									<mat-icon>more_vert</mat-icon>
 								</button>
+
+								<mat-menu #actions="matMenu">
+									<button id="nuevo-triage" mat-menu-item (click)="nuevoTriage()">
+										{{ 'guardia.home.episodes.episode.actions.NUEVO_TRIAGE' | translate }}
+									</button>
+
+									<button id="atender" mat-menu-item
+											*ngIf="episode.state.id === estadosEpisodio.EN_ESPERA"
+											(click)="atender()">
+										{{ 'guardia.home.episodes.episode.actions.ATENDER' | translate }}
+									</button>
+
+									<button id="finalizar-ausencia" mat-menu-item
+											*ngIf="episode.state.id === estadosEpisodio.EN_ESPERA"
+											(click)="finalizarPorAusencia()">
+										{{ 'guardia.home.episodes.episode.actions.FINALIZAR_AUSENCIA' | translate }}
+									</button>
+								</mat-menu>
 							</div>
 						</div>
 					</mat-card>

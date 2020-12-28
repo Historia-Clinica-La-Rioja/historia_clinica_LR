@@ -50,6 +50,11 @@
 		"home": {
 			"episodes": {
 				"episode": {
+					"actions": {
+						"ATENDER": "Atender",
+						"FINALIZAR_AUSENCIA": "Finalizar por ausencia",
+						"NUEVO_TRIAGE": "Nuevo triage"
+					},
 					"patient": {
 						"ID": "ID Paciente",
 						"NO_INFO": "Sin información",

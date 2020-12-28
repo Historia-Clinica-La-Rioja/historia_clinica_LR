@@ -65,4 +65,16 @@ export class HomeComponent implements OnInit {
 		this.router.navigate([`${this.router.url}/nuevo-episodio/administrativa`]);
 	}
 
+	atender(): void {
+		console.log('Atender');
+	}
+
+	finalizarPorAusencia(): void {
+		console.log('Finalizar por ausencia');
+	}
+
+	nuevoTriage(): void {
+		console.log('Nuevo triage');
+	}
+
 }
