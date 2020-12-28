@@ -115,7 +115,7 @@ public class BundleResource extends IResourceFhir {
     public PatientSummaryVo encodeResourceToSummary(Bundle resource) {
         PatientSummaryVo summary = new PatientSummaryVo();
         List<Bundle.BundleEntryComponent> entries = resource.getEntry();
-        entries.forEach((entry)-> {
+        entries.forEach(entry -> {
             switch(entry.getResource().getResourceType()){
                 case Patient:
                     summary.setPatient(PatientResource.encode(entry.getResource()));

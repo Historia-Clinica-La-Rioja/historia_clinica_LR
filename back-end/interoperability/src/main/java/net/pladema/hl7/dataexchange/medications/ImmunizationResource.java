@@ -79,7 +79,7 @@ public class ImmunizationResource extends IMultipleResourceFhir {
 
     private void addNonRequiredAttributes(Immunization resource, ImmunizationVo immunization){
         resource.setPrimarySource(immunization.isPrimarySource());
-        resource.setLotNumber(immunization.getLoteNumber());
+        resource.setLotNumber(immunization.getBatchNumber());
         resource.setExpirationDate(FhirDateMapper.toDate(immunization.getExpirationDate()));
     }
 
@@ -112,7 +112,7 @@ public class ImmunizationResource extends IMultipleResourceFhir {
         }
 
         data.setPrimarySource(resource.getPrimarySource());
-        data.setLoteNumber(resource.getLotNumber());
+        data.setBatchNumber(resource.getLotNumber());
 
         return data;
 

@@ -6,8 +6,8 @@ import io.swagger.annotations.Api;
 import net.pladema.hl7.dataexchange.IResourceFhir;
 import net.pladema.hl7.dataexchange.model.domain.dto.IdentifierDto;
 import net.pladema.hl7.dataexchange.model.domain.dto.OrganizationDto;
+import net.pladema.hl7.dataexchange.model.domain.dto.PatientSummaryDto;
 import net.pladema.hl7.supporting.conformance.FhirClientR4;
-import net.pladema.hl7.dataexchange.model.domain.PatientSummaryVo;
 import net.pladema.hl7.supporting.exchange.documents.BundleResource;
 import net.pladema.hl7.supporting.exchange.documents.profile.FhirDocument;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
@@ -56,7 +56,7 @@ public class PatientProvider {
             @RequestParam(name = Patient.SP_IDENTIFIER) String id) {
         List<OrganizationDto> result = new ArrayList<>();
         Bundle data = client.operationPatientLocation(new StringType(id));
-        data.getEntry().forEach((entry)-> {
+        data.getEntry().forEach(entry -> {
             Organization resource = ((Organization) entry.getResource());
             resource.getIdentifier()
                     .stream()
@@ -70,6 +70,14 @@ public class PatientProvider {
                 !hasHealthcareData(getDocumentReference(
                         FhirParam.getIdentifier(id), organization.getCustodian(), FhirDocument.defaultStringType())
         ));*/
+        OrganizationDto dto = new OrganizationDto();
+        dto.setId("ID");
+        IdentifierDto iddto = new IdentifierDto();
+        iddto.setSystem("sistema");
+        iddto.setValue("esta mal");
+        dto.setIdentifier(iddto);
+        dto.setName("NOMBRE");
+        result.add(dto);
         return ResponseEntity.ok(result);
     }
 
@@ -107,7 +115,7 @@ public class PatientProvider {
      * @return resumen de historia clínica del paciente registrada en otro dominio
      */
     @GetMapping
-    public ResponseEntity<Object> findPatient(
+    public ResponseEntity<PatientSummaryDto> findPatient(
             @RequestParam(name = DocumentReference.SP_SUBJECT) String subject,
             @RequestParam(name = DocumentReference.SP_CUSTODIAN) String custodian,
             @RequestParam(name = DocumentReference.SP_TYPE, required = false) String type) {
@@ -116,11 +124,11 @@ public class PatientProvider {
             DocumentReference.DocumentReferenceContentComponent content = document.getContent().get(0);
             if (content.hasAttachment()) {
                 String url = content.getAttachment().getUrl();
-                return ResponseEntity.ok(bundleResource.encodeResourceToSummary(
-                        client.getResourceById(new IdType(url)))
+                return ResponseEntity.ok(new PatientSummaryDto(bundleResource.encodeResourceToSummary(
+                        client.getResourceById(new IdType(url))))
                 );
             }
         }
-        return ResponseEntity.ok(PatientSummaryVo.empty());
+        return ResponseEntity.ok(PatientSummaryDto.emptyPatientSummary());
     }
 }

@@ -19,8 +19,8 @@ public class IdentifierDto implements Serializable {
     private String value;
 
     public IdentifierDto(Identifier identifier){
-        this.system=identifier.getSystem();
-        this.value=identifier.getValue();
+        this.system = identifier.getSystem();
+        this.value = identifier.getValue();
     }
 
     @Override

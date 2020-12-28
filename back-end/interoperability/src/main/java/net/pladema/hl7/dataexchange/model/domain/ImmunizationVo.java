@@ -43,7 +43,7 @@ public class ImmunizationVo {
 
     private Integer doseNumber;
     private boolean primarySource;
-    private String loteNumber;
+    private String batchNumber;
 
     public FhirCode get(){
         return new FhirCode(immunizationCode, immunizationTerm);
