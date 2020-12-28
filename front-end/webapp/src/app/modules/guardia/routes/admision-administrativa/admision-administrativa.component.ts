@@ -192,6 +192,13 @@ export class AdmisionAdministrativaComponent implements OnInit {
 
 	onChange(mrChange): void {
 		this.hasPoliceIntervention = eval(mrChange.value);
+		if (!this.hasPoliceIntervention) {
+			this.form.controls.dateCall.setValue(null);
+			this.form.controls.timeCall.setValue(null);
+			this.form.controls.plateNumber.setValue(null);
+			this.form.controls.firstName.setValue(null);
+			this.form.controls.lastName.setValue(null);
+		}
 	}
 
 	goBack(): void {
