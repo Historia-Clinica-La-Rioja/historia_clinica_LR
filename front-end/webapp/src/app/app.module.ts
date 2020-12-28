@@ -8,21 +8,22 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { DatePipe } from '@angular/common';
 
+import { registerLocaleData } from '@angular/common';
+import localeEsAr from '@angular/common/locales/es-AR';
+
 import { httpInterceptorProviders } from './http-interceptors';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { environment } from '@environments/environment';
 // Módulos nuestros que se cargan al inicio
-import { ApiRestModule } from '@api-rest/api-rest.module';
 import { CoreModule } from '@core/core.module';
+import { pwaInstallProviders } from '@core/services/pwa-install.service';
+import { FlavoredMultiTranslateHttpLoader } from '@core/utils/flavored-multi-translate-http-loader';
+import { ApiRestModule } from '@api-rest/api-rest.module';
+import { PublicService } from '@api-rest/services/public.service';
+import { PresentationModule } from '@presentation/presentation.module';
 import { AppMaterialModule } from './modules/material/app.material.module';
 import { AuthModule } from './modules/auth/auth.module';
-import { PresentationModule } from '@presentation/presentation.module';
-import { FlavoredMultiTranslateHttpLoader } from '@core/utils/flavored-multi-translate-http-loader';
-import { PublicService } from '@api-rest/services/public.service';
-
-import { registerLocaleData } from '@angular/common';
-import localeEsAr from '@angular/common/locales/es-AR';
+import { environment } from '@environments/environment';
 
 registerLocaleData(localeEsAr, 'es-AR');
 
@@ -58,8 +59,9 @@ registerLocaleData(localeEsAr, 'es-AR');
 	],
 	providers: [
 		httpInterceptorProviders,
+		pwaInstallProviders,
 		DatePipe,
-		{ provide: LOCALE_ID, useValue: 'es-AR' }
+		{ provide: LOCALE_ID, useValue: 'es-AR' },
 	],
 	bootstrap: [AppComponent]
 })

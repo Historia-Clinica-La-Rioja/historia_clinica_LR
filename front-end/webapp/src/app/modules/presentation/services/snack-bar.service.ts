@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { MessageSnackbarComponent } from '@presentation/components/message-snackbar/message-snackbar.component';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 const DEFAULT_DURATION = 5000;
 const DEFAULT_H_POSITION = 'right';
@@ -41,5 +43,13 @@ export class SnackBarService {
 			data: { message, icon: 'cancel' },
 			panelClass: 'error',
 		});
+	}
+
+	showAction<T>(message, action: {text: string, payload: T}, config?: ToastConfig): Observable<T> {
+		return this.snackBar.open(message, action.text, {
+			duration: config?.duration || DEFAULT_DURATION,
+			horizontalPosition: config?.horizontalPosition || DEFAULT_H_POSITION,
+			verticalPosition: config?.verticalPosition || DEFAULT_V_POSITION,
+		}).onAction().pipe(map(_ => action.payload));
 	}
 }
