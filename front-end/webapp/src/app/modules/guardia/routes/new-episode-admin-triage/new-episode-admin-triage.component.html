@@ -3,6 +3,8 @@
 		<h2 class="page-title" [translate]="'guardia.new-episode.TITLE'"></h2>
 		<h4 class="page-title" [translate]="'guardia.new-episode.SUB_TITLE'"></h4>
 		<h3 class="page-title" [translate]="'guardia.new-episode.ADM_TRIAGE'"></h3>
-		<app-administrative-triage (onConfirmEvent)="setTriage($event)"></app-administrative-triage>
+		<app-administrative-triage (onConfirm)="confirmEvent($event)"
+		                           (onCancel)="cancelEvent()"></app-administrative-triage>
+
 	</section>
 </app-content>

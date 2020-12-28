@@ -15,10 +15,9 @@ import { Observable } from 'rxjs';
 import { MotivoNuevaConsultaService } from 'src/app/modules/historia-clinica/modules/ambulatoria/services/motivo-nueva-consulta.service';
 import { SnomedService } from 'src/app/modules/historia-clinica/services/snomed.service';
 import { Patient, SearchPatientComponent } from 'src/app/modules/pacientes/component/search-patient/search-patient.component';
-import { NewEpisodeService } from '../../services/new-episode.service';
+import { AdministrativeAdmissionDto, NewEpisodeService } from '../../services/new-episode.service';
 import { Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
-import { AdministrativeAdmisionDto } from '../new-episode-admin-triage/new-episode-admin-triage.component';
 
 @Component({
 	selector: 'app-admision-administrativa',
@@ -142,7 +141,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 
 	continue(): void {
 		const formValue = this.form.value;
-		const administrativeAdmisionDto: AdministrativeAdmisionDto = {
+		const administrativeAdmisionDto: AdministrativeAdmissionDto = {
 			patient: {
 				id: this.selectedPatient?.id,
 				patientMedicalCoverageId: formValue.patientMedicalCoverageId,
@@ -180,7 +179,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 		}
 	}
 
-	goToAdministrativeTriage(administrativeAdmisionDto: AdministrativeAdmisionDto): void {
+	goToAdministrativeTriage(administrativeAdmisionDto: AdministrativeAdmissionDto): void {
 		this.newEpisodeService.setAdministrativeAdmision(administrativeAdmisionDto);
 		const url = `${this.routePrefix}guardia/nuevo-episodio/triage-administrativo`;
 		this.router.navigateByUrl(url);

@@ -1,6 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { SnomedDto, TriageDto } from "@api-rest/api-model";
-import { NewEpisodeService } from '../../services/new-episode.service';
+import { EmergencyCareDto, SnomedDto, TriageDto } from "@api-rest/api-model";
+import { AdministrativeAdmissionDto, NewEpisodeService } from '../../services/new-episode.service';
+import { EmergencyCareEpisodeService } from "@api-rest/services/emergency-care-episode.service";
+import { Router } from "@angular/router";
+import { SnackBarService } from "@presentation/services/snack-bar.service";
+import { ContextService } from "@core/services/context.service";
+
+const ROUTE_EMERGENCY_CARE = 'guardia/';
 
 @Component({
 	selector: 'app-new-episode-admin-triage',
@@ -10,35 +16,42 @@ import { NewEpisodeService } from '../../services/new-episode.service';
 export class NewEpisodeAdminTriageComponent implements OnInit {
 
 	private triage: TriageDto;
+	private administrativeAdmisionDto: AdministrativeAdmissionDto;
+	private emergencyCareDto: EmergencyCareDto = {
+		administrative: {},
+		triage: {
+			categoryId: -1,
+			doctorsOfficeId: -1
+		}
+	};
+	private readonly routePrefix;
 
-	constructor(
-		private readonly newEpisodeService: NewEpisodeService
-	) {
+	constructor(private readonly newEpisodeService: NewEpisodeService,
+	            private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService,
+	            private router: Router,
+	            private snackBarService: SnackBarService,
+	            private contextService: ContextService) {
+		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 
 	ngOnInit(): void {
+		this.administrativeAdmisionDto = this.newEpisodeService.getAdministrativeAdmision();
 	}
 
-	setTriage(triage: TriageDto): void {
+	confirmEvent(triage: TriageDto): void {
 		this.triage = triage;
+		this.emergencyCareDto.triage = this.triage;
+		//TODO mapper administrativeAdmisionDto to emergencyCareDto
+		this.emergencyCareEpisodeService.createAdministrative(this.emergencyCareDto).subscribe(
+			emergencyCareId =>
+				this.router.navigate([this.routePrefix + ROUTE_EMERGENCY_CARE + '/episodio' +  emergencyCareId]),
+			_ => this.snackBarService.showError('Ocurrio un error al intentar crear el episodio')
+		);
 	}
 
-}
-
-export class AdministrativeAdmisionDto {
-	patient: {
-		id: number;
-		patientMedicalCoverageId: number;
-	};
-	reasons: SnomedDto[];
-	typeId: number;
-	entranceTypeId: number;
-	ambulanceCompanyId: number;
-	policeIntervention: {
-		dateCall: string;
-		timeCall: string;
-		plateNumber: string;
-		firstName: string;
-		lastName: string;
+	cancelEvent(): void {
+		//TODO send parameters
+		this.router.navigate([this.routePrefix + ROUTE_EMERGENCY_CARE + '/nuevo-episodio/administrativa']);
 	}
+
 }
