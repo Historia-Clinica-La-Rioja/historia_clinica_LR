@@ -119,6 +119,7 @@ export class AgregarPrescripcionItemComponent implements OnInit {
 		this.prescriptionItemForm.controls.observations.setValue(prescriptionItem.observations);
 		prescriptionItem.isDailyInterval ? this.prescriptionItemForm.controls.interval.setValue(this.DEFAULT_RADIO_OPTION) : this.prescriptionItemForm.controls.intervalHours.setValue(prescriptionItem.intervalHours);
 		prescriptionItem.isChronicAdministrationTime ? this.prescriptionItemForm.controls.administrationTime.setValue(this.DEFAULT_RADIO_OPTION) : this.prescriptionItemForm.controls.administrationTimeDays.setValue(prescriptionItem.administrationTimeDays);
+		prescriptionItem.studyCategory.id ? this.prescriptionItemForm.controls.studyCategory.setValue(prescriptionItem.studyCategory.id) : null;
 
 		this.snomedConcept = prescriptionItem.snomed;
 		const pt = prescriptionItem.snomed ? prescriptionItem.snomed.pt : '';
@@ -140,6 +141,10 @@ export class AgregarPrescripcionItemComponent implements OnInit {
 		if (this.data.showDosage) {
 			this.prescriptionItemForm.controls.interval.setValidators([Validators.required]);
 			this.prescriptionItemForm.controls.administrationTime.setValidators([Validators.required]);
+		}
+
+		if (this.data.showStudyCategory) {
+			this.prescriptionItemForm.controls.studyCategory.setValidators([Validators.required]);
 		}
 
 		this.prescriptionItemForm.controls.interval.valueChanges.subscribe((newValue) => {

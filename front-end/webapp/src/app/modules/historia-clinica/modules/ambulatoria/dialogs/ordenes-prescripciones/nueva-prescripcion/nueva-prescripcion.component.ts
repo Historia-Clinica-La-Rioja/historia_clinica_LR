@@ -122,6 +122,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 		editPrescriptionItem.isChronicAdministrationTime = prescriptionItem.isChronicAdministrationTime;
 		editPrescriptionItem.intervalHours = prescriptionItem.intervalHours;
 		editPrescriptionItem.isDailyInterval = prescriptionItem.isDailyInterval;
+		editPrescriptionItem.studyCategory = prescriptionItem.studyCategory;
 		editPrescriptionItem.observations = prescriptionItem.observations;
 	}
 
