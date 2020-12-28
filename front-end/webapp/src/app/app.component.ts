@@ -8,6 +8,7 @@ import { PublicInfoDto } from '@api-rest/api-model';
 import { PublicService } from '@api-rest/services/public.service';
 import { MatIconRegistry } from '@angular/material/icon';
 import { PwaInstallService } from '@core/services/pwa-install.service';
+import { PwaUpdateService } from '@core/services/pwa-update.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 const DEFAULT_LANG = 'es-AR';
@@ -24,7 +25,8 @@ export class AppComponent {
 		translate: TranslateService,
 		titleService: Title,
 		publicService: PublicService,
-		pwaInstallProviders: PwaInstallService,
+		pwaInstallService: PwaInstallService,
+		pwaUpdateService: PwaUpdateService,
 		snackBarService: SnackBarService,
 		private matIconRegistry: MatIconRegistry,
 		private domSanitizer: DomSanitizer,
@@ -51,18 +53,21 @@ export class AppComponent {
 			this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/person_cancel_outlined.svg')
 		);
 		//
-		pwaInstallProviders.install$.pipe(
+		pwaInstallService.install$.pipe(
 			switchMap(
-				({event}) =>
-					snackBarService.showAction('Instalar aplicación', {text:'Ok', payload: event})
+				pwaInstallAction =>
+					snackBarService.showAction('Instalar aplicación', {text:'Ok', payload: pwaInstallAction})
 			),
-		).subscribe(event => {
-			event.prompt();
-			// Wait for the user to respond to the prompt
-			event.userChoice.then(
-				(choiceResult) => console.log(`User ${choiceResult?.outcome}`)
-			);
-		});
+		).subscribe(pwaInstallAction => pwaInstallAction.run());
+
+		pwaUpdateService.update$.pipe(
+			switchMap(
+				pwaUpdateAction =>
+					snackBarService.showAction('Nueva versión', {text:'Actualizar', payload: pwaUpdateAction})
+			),
+		).subscribe(pwaUpdateAction => pwaUpdateAction.run());
+
+		pwaUpdateService.checkForUpdate();
 	}
 
 }

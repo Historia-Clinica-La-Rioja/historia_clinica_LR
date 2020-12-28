@@ -9,3 +9,7 @@ export class MenuItem {
 	options?: any;
 	featureFlag?: AppFeature;
 }
+
+export interface PWAAction {
+	run(): void;
+}
