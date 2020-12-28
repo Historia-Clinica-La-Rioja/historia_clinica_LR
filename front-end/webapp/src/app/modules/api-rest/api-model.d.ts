@@ -1254,11 +1254,54 @@ export const enum AppFeature {
     HABILITAR_ORDENES_PRESCRIPCIONES = "HABILITAR_ORDENES_PRESCRIPCIONES",
 }
 
+export const enum EBodyTemperature {
+    FIEBRE = "FIEBRE",
+    HIPOTERMIA = "HIPOTERMIA",
+    NORMAL = "NORMAL",
+}
+
 export const enum EDocumentSearch {
     DIAGNOSIS = "DIAGNOSIS",
     DOCTOR = "DOCTOR",
     CREATED_ON = "CREATED_ON",
     ALL = "ALL",
+}
+
+export const enum EEmergencyCareEntrance {
+    CAMINANDO = "CAMINANDO",
+    SILLA = "SILLA",
+    CONMEDICO = "CONMEDICO",
+    SINMEDICO = "SINMEDICO",
+}
+
+export const enum EEmergencyCareState {
+    ATENCION = "ATENCION",
+    ESPERA = "ESPERA",
+    AUSENCIA = "AUSENCIA",
+    ALTA = "ALTA",
+}
+
+export const enum EEmergencyCareType {
+    ADULTO = "ADULTO",
+    PEDIATRIA = "PEDIATRIA",
+    GINECOLOGICA = "GINECOLOGICA",
+}
+
+export const enum EMuscleHypertonia {
+    HIPERTONIA = "HIPERTONIA",
+    HIPOTONIA = "HIPOTONIA",
+    NORMAL = "NORMAL",
+}
+
+export const enum EPerfusion {
+    NORMAL = "NORMAL",
+    ALTERADA = "ALTERADA",
+}
+
+export const enum ERespiratoryRetraction {
+    INTERCOSTAL = "INTERCOSTAL",
+    GENERALIZADO = "GENERALIZADO",
+    NO = "NO",
 }
 
 export const enum ERole {
