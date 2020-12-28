@@ -48,8 +48,6 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
         PatientInfoValidator patientInfoValidator = new PatientInfoValidator();
         patientInfoValidator.isValid(medicationRequest.getPatientInfo());
         Assert.notNull(medicationRequest.getDoctorId(), "El identificador del médico es obligatorio");
-        if (medicationRequest.isHasRecipe())
-            Assert.notNull(medicationRequest.getMedicalCoverageId(), "El identificador de la cobertura médica es obligatorio");
         Assert.notEmpty(medicationRequest.getMedications(), "La receta tiene que tener asociada al menos una medicación");
 
         SnomedValidator snomedValidator =  new SnomedValidator();

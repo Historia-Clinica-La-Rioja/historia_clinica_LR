@@ -29,7 +29,7 @@ public class MedicationRequestBo implements Document {
 
     private List<MedicationBo> medications = new ArrayList<>();
 
-    private boolean hasRecipe = true;
+    private boolean hasRecipe = false;
 
     public short getDocumentType() {
         return DocumentType.RECIPE;

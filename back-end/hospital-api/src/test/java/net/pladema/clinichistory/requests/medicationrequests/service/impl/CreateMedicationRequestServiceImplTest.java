@@ -83,19 +83,6 @@ public class CreateMedicationRequestServiceImplTest {
 	}
 
 	@Test
-	public void execute_withNullMedicalCoverageId(){
-		MedicationRequestBo medicationRequest = new MedicationRequestBo();
-		medicationRequest.setPatientInfo(new PatientInfoBo(1, (short)1, (short)29));
-		medicationRequest.setDoctorId(1);
-		Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-				createMedicationRequestService.execute(1, medicationRequest)
-		);
-		String expectedMessage = "El identificador de la cobertura médica es obligatorio";
-		String actualMessage = exception.getMessage();
-		Assertions.assertTrue(actualMessage.contains(expectedMessage));
-	}
-
-	@Test
 	public void execute_withEmptyMedications(){
 		MedicationRequestBo medicationRequest = new MedicationRequestBo();
 		medicationRequest.setPatientInfo(new PatientInfoBo(1, (short)1, (short)29));

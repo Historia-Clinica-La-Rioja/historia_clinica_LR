@@ -32,7 +32,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 	ngOnInit(): void {
 		this.prescriptionForm = this.formBuilder.group({
 			patientMedicalCoverage: [null],
-			withRecipe: [false],
+			withoutRecipe: [false],
 		});
 
 		this.prescriptionItems = this.data.prescriptionItemList ? this.data.prescriptionItemList : [];
@@ -72,7 +72,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 
 	confirmPrescription(): void {
 		const newPrescription: PrescriptionDto = {
-			hasRecipe: this.isMedication ? this.prescriptionForm.controls.withRecipe.value : true,
+			hasRecipe: this.isMedication ? !this.prescriptionForm.controls.withoutRecipe.value : true,
 			medicalCoverageId: this.prescriptionForm.controls.patientMedicalCoverage.value?.id,
 			items: this.prescriptionItems.map(pi => {
 				return {
