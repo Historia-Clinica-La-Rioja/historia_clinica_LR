@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { SnomedDto } from "@api-rest/api-model";
 
 @Injectable()
@@ -7,6 +7,10 @@ export class NewEpisodeService {
 
 	private administrativeAdmission: AdministrativeAdmissionDto;
 	constructor() { }
+
+	destroy(): void {
+		this.administrativeAdmission = undefined;
+	}
 
 	setAdministrativeAdmission(data: AdministrativeAdmissionDto): void {
 		this.administrativeAdmission = data;

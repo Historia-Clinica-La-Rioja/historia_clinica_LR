@@ -18,6 +18,7 @@ import { Patient, SearchPatientComponent } from 'src/app/modules/pacientes/compo
 import { AdministrativeAdmissionDto, NewEpisodeService } from '../../services/new-episode.service';
 import { Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
+import { PatientService } from "@api-rest/services/patient.service";
 
 @Component({
 	selector: 'app-admision-administrativa',
@@ -38,12 +39,14 @@ export class AdmisionAdministrativaComponent implements OnInit {
 	emergencyCareType$: Observable<MasterDataInterface<number>[]>;
 	hasPoliceIntervention = false;
 	form: FormGroup;
+	today: Date = new Date();
 
 	motivoNuevaConsultaService: MotivoNuevaConsultaService; // sacarlo de historia clinica
 	readonly WITH_DOCTOR_IN_AMBULANCE = 3;
 	readonly WITHOUT_DOCTOR_IN_AMBULANCE = 4;
 	private readonly routePrefix;
 	private selectedPatient;
+
 	constructor(
 		private readonly dialog: MatDialog,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
@@ -56,6 +59,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 		private readonly newEpisodeService: NewEpisodeService,
 		private router: Router,
 		private readonly contextService: ContextService,
+		private readonly patientService: PatientService
 
 	) {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, snomedService);
@@ -64,21 +68,53 @@ export class AdmisionAdministrativaComponent implements OnInit {
 
 	ngOnInit(): void {
 
+		let administrativeAdmissionDto = this.newEpisodeService.getAdministrativeAdmission();
+		if(administrativeAdmissionDto?.patient?.id) {
+			this.loadPatient(administrativeAdmissionDto.patient.id);
+		}
 		this.form = this.formBuilder.group({
-			patientMedicalCoverageId: [null],
-			emergencyCareTypeId: [null],
-			emergencyCareEntranceTypeId: [null],
-			ambulanceCompanyId: [null],
-			dateCall: [null],
-			timeCall: [null],
-			plateNumber: [null],
-			firstName: [null],
-			lastName: [null],
+			patientMedicalCoverageId: [administrativeAdmissionDto?.patient.patientMedicalCoverageId],
+			emergencyCareTypeId: [administrativeAdmissionDto?.typeId],
+			emergencyCareEntranceTypeId: [administrativeAdmissionDto?.entranceTypeId],
+			ambulanceCompanyId: [administrativeAdmissionDto?.ambulanceCompanyId],
+			dateCall: [administrativeAdmissionDto?.policeIntervention?.dateCall],
+			timeCall: [administrativeAdmissionDto?.policeIntervention?.timeCall],
+			plateNumber: [administrativeAdmissionDto?.policeIntervention?.plateNumber],
+			firstName: [administrativeAdmissionDto?.policeIntervention?.firstName],
+			lastName: [administrativeAdmissionDto?.policeIntervention?.lastName],
 
 		});
-
+		if(administrativeAdmissionDto?.policeIntervention){
+			this.hasPoliceIntervention = true;
+		}
 		this.emergencyCareType$ = this.emergencyCareMasterData.getType();
 		this.emergencyCareEntranceType$ = this.emergencyCareMasterData.getEntranceType();
+	}
+
+	loadPatient(patientId: number): void {
+		this.patientService.getPatientBasicData(patientId).subscribe((basicData: BasicPatientDto) => {
+			this.patientService.getPatientPhoto(patientId).subscribe((photo: PersonPhotoDto) => {
+				this.setPatientAndMedicalCoverages(basicData, photo);
+			})
+		});
+
+	}
+
+	setPatientAndMedicalCoverages(basicData: BasicPatientDto, photo: PersonPhotoDto): void {
+		this.patientCardInfo = {
+			basicData: this.patientMapperService.toPatientBasicData(basicData),
+			photo: photo
+		};
+		this.selectedPatient = {
+			id: basicData.id,
+			genderId: basicData.person.gender.id,
+			identificationNumber: basicData.person.identificationNumber,
+			identificationTypeId: basicData.person.identificationTypeId,
+			initValues: null
+		};
+		this.patientMedicalCoverageService.getActivePatientMedicalCoverages(basicData.id).subscribe(coverages => {
+			this.patientMedicalCoverages = coverages;
+		});
 	}
 
 	searchPatient(): void {
@@ -86,20 +122,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 
 		dialogRef.afterClosed()
 			.subscribe((data: Patient) => {
-				this.patientCardInfo = {
-					basicData: this.patientMapperService.toPatientBasicData(data.basicData),
-					photo: data.photo
-				}
-				this.selectedPatient = {
-					id: data.basicData.id,
-					genderId: data.basicData.person.gender.id,
-					identificationNumber: data.basicData.person.identificationNumber,
-					identificationTypeId: data.basicData.person.identificationTypeId,
-					initValues: null
-				}
-				this.patientMedicalCoverageService.getActivePatientMedicalCoverages(data.basicData.id).subscribe(coverages => {
-					this.patientMedicalCoverages = coverages;
-				});
+				this.setPatientAndMedicalCoverages(data.basicData, data.photo);
 			});
 
 	}
@@ -142,6 +165,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 
 	continue(): void {
 		const formValue = this.form.value;
+		const policeIntervention = this.hasPoliceIntervention ? toPoliceIntervention() : null;
 		const administrativeAdmisionDto: AdministrativeAdmissionDto = {
 			patient: {
 				id: this.selectedPatient?.id,
@@ -151,15 +175,19 @@ export class AdmisionAdministrativaComponent implements OnInit {
 			typeId: formValue.emergencyCareTypeId,
 			entranceTypeId: formValue.emergencyCareEntranceTypeId,
 			ambulanceCompanyId: formValue.ambulanceCompanyId,
-			policeIntervention: {
+			policeIntervention,
+		}
+		this.goToBasicTriage(administrativeAdmisionDto);
+
+		function toPoliceIntervention() {
+			return {
 				dateCall: formValue.dateCall ? momentFormat(formValue.dateCall, DateFormat.API_DATE) : null,
 				timeCall: formValue.timeCall,
 				plateNumber: formValue.plateNumber,
 				firstName: formValue.firstName,
 				lastName: formValue.lastName
-			}
+			};
 		}
-		this.goToBasicTriage(administrativeAdmisionDto);
 	}
 
 	onChange(mrChange): void {
@@ -167,6 +195,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 	}
 
 	goBack(): void {
+		this.newEpisodeService.destroy();
 		const url = `${this.routePrefix}guardia`;
 		this.router.navigateByUrl(url);
 	}
