@@ -1,9 +1,9 @@
 package net.pladema.emergencycare.controller;
 
 import io.swagger.annotations.Api;
-import net.pladema.emergencycare.repository.entity.EmergencyCareEntranceType;
-import net.pladema.emergencycare.repository.entity.EmergencyCareType;
 import net.pladema.emergencycare.service.EmergencyCareMasterDataService;
+import net.pladema.emergencycare.service.domain.enums.EEmergencyCareEntrance;
+import net.pladema.emergencycare.service.domain.enums.EEmergencyCareType;
 import net.pladema.sgx.masterdata.repository.MasterDataProjection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,14 +29,14 @@ public class EmergencyCareMasterDataController {
     }
 
     @GetMapping(value = "/type")
-    public ResponseEntity<Collection<MasterDataProjection>> getType() {
+    public ResponseEntity<Collection<EEmergencyCareType>> getType() {
         LOG.debug("{}", "All types");
-        return ResponseEntity.ok().body(emergencyCareMasterDataService.findAll(EmergencyCareType.class));
+        return ResponseEntity.ok().body(emergencyCareMasterDataService.findAllType());
     }
 
     @GetMapping(value = "/entranceType")
-    public ResponseEntity<Collection<MasterDataProjection>> getEntranceType() {
+    public ResponseEntity<Collection<EEmergencyCareEntrance>> getEntranceType() {
         LOG.debug("{}", "All entrance types");
-        return ResponseEntity.ok().body(emergencyCareMasterDataService.findAll(EmergencyCareEntranceType.class));
+        return ResponseEntity.ok().body(emergencyCareMasterDataService.findAllEntrance());
     }
 }

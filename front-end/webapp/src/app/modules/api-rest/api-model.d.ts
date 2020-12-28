@@ -1184,6 +1184,8 @@ export interface TriageColorDto extends Serializable {
 }
 
 export interface TriageDetailsDto extends Serializable {
+    description: string;
+    id: string;
 }
 
 export interface TriageDto extends Serializable {
