@@ -56,7 +56,7 @@
 </div>
 
 <mat-dialog-actions fxLayout="row" fxLayoutAlign="end start">
-    <button mat-flat-button color="primary" (click)="confirmPrescription()" fxFlexFill.xs>
+    <button mat-flat-button color="primary" *ngIf="prescriptionItems.length" (click)="confirmPrescription()" fxFlexFill.xs>
         <span class="uppercase">{{'buttons.CONFIRM' | translate}}</span>
     </button>
 </mat-dialog-actions>

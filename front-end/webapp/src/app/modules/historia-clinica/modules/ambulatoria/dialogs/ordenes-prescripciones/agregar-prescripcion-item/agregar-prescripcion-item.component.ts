@@ -117,9 +117,24 @@ export class AgregarPrescripcionItemComponent implements OnInit {
 	private setItemData(prescriptionItem: NewPrescriptionItem): void {
 		this.prescriptionItemForm.controls.healthProblem.setValue(prescriptionItem.healthProblem.id);
 		this.prescriptionItemForm.controls.observations.setValue(prescriptionItem.observations);
-		prescriptionItem.isDailyInterval ? this.prescriptionItemForm.controls.interval.setValue(this.DEFAULT_RADIO_OPTION) : this.prescriptionItemForm.controls.intervalHours.setValue(prescriptionItem.intervalHours);
-		prescriptionItem.isChronicAdministrationTime ? this.prescriptionItemForm.controls.administrationTime.setValue(this.DEFAULT_RADIO_OPTION) : this.prescriptionItemForm.controls.administrationTimeDays.setValue(prescriptionItem.administrationTimeDays);
-		prescriptionItem.studyCategory.id ? this.prescriptionItemForm.controls.studyCategory.setValue(prescriptionItem.studyCategory.id) : null;
+		
+		if (prescriptionItem.isDailyInterval){
+			this.prescriptionItemForm.controls.interval.setValue(this.DEFAULT_RADIO_OPTION);
+		} else {
+			this.prescriptionItemForm.controls.intervalHours.setValue(prescriptionItem.intervalHours);
+			this.prescriptionItemForm.controls.interval.setValue(this.OTHER_RADIO_OPTION);
+		}
+
+		if (prescriptionItem.isChronicAdministrationTime) {
+			this.prescriptionItemForm.controls.administrationTime.setValue(this.DEFAULT_RADIO_OPTION)
+		} else {
+			this.prescriptionItemForm.controls.administrationTimeDays.setValue(prescriptionItem.administrationTimeDays);
+			this.prescriptionItemForm.controls.administrationTime.setValue(this.OTHER_RADIO_OPTION);
+		}
+
+		if (prescriptionItem.studyCategory.id) {
+			this.prescriptionItemForm.controls.studyCategory.setValue(prescriptionItem.studyCategory.id);
+		}
 
 		this.snomedConcept = prescriptionItem.snomed;
 		const pt = prescriptionItem.snomed ? prescriptionItem.snomed.pt : '';
