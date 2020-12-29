@@ -67,7 +67,7 @@ export class SearchPatientComponent implements OnInit {
 					if (data.length) {
 						this.patientSearch(data[0]);
 					} else {
-						this.snackBarService.showError('pacientes.patient_picker.PATIENT_NOT_FOUND');
+						this.snackBarService.showError('pacientes.search_patient.PATIENT_NOT_FOUND');
 					}
 				}
 			);
@@ -106,7 +106,7 @@ export class SearchPatientComponent implements OnInit {
 					photo
 				};
 			}, _ => {
-				this.snackBarService.showError('pacientes.patient_picker.PATIENT_NOT_FOUND');
+				this.snackBarService.showError('pacientes.search_patient.PATIENT_NOT_FOUND');
 			});
 	}
 }

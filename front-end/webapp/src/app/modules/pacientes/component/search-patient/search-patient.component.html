@@ -20,7 +20,7 @@
 					<mat-form-field appearance="outline">
 						<mat-label translate="pacientes.search_patient.forms.IDENTIFICATION_NUMBER"></mat-label>
 						<input matInput type="text" id="identificationNumber" name="identificationNumber"
-							formControlName="identificationNumber" placeholder="{{'pacientes.search_patient.IDENTIFICATION_NUMBER' | translate }}">
+							formControlName="identificationNumber" placeholder="{{'pacientes.search_patient.forms.IDENTIFICATION_NUMBER' | translate }}">
 					</mat-form-field>
 
 					<div class="gender">
@@ -42,7 +42,7 @@
 				</div>
 			</form>
 
-			<div class="results">
+			<div class="results" fxFlex = 100%>
 				<span translate="pacientes.search_patient.SELECT_PATIENT"></span>
 				<div *ngIf="cardPatient" class="patient-cards">
 					<app-patient-card [patient]="cardPatient.basicData" [personPhoto]="cardPatient.photo"
@@ -67,7 +67,7 @@
 				</div>
 			</form>
 
-			<div class="results">
+			<div class="results" fxFlex = 100%>
 				<span translate="pacientes.search_patient.SELECT_PATIENT"></span>
 				<div *ngIf="cardPatient" class="patient-cards">
 					<app-patient-card [patient]="cardPatient.basicData" [personPhoto]="cardPatient.photo"

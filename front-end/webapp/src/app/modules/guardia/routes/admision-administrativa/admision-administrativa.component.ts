@@ -100,29 +100,14 @@ export class AdmisionAdministrativaComponent implements OnInit {
 
 	}
 
-	setPatientAndMedicalCoverages(basicData: BasicPatientDto, photo: PersonPhotoDto): void {
-		this.patientCardInfo = {
-			basicData: this.patientMapperService.toPatientBasicData(basicData),
-			photo: photo
-		};
-		this.selectedPatient = {
-			id: basicData.id,
-			genderId: basicData.person.gender.id,
-			identificationNumber: basicData.person.identificationNumber,
-			identificationTypeId: basicData.person.identificationTypeId,
-			initValues: null
-		};
-		this.patientMedicalCoverageService.getActivePatientMedicalCoverages(basicData.id).subscribe(coverages => {
-			this.patientMedicalCoverages = coverages;
-		});
-	}
-
 	searchPatient(): void {
 		const dialogRef = this.dialog.open(SearchPatientComponent);
 
 		dialogRef.afterClosed()
-			.subscribe((data: Patient) => {
-				this.setPatientAndMedicalCoverages(data.basicData, data.photo);
+			.subscribe((foundPatient: Patient) => {
+				if (foundPatient) {
+					this.setPatientAndMedicalCoverages(foundPatient.basicData, foundPatient.photo);
+				}
 			});
 
 	}
@@ -220,5 +205,21 @@ export class AdmisionAdministrativaComponent implements OnInit {
 		this.newEpisodeService.setAdministrativeAdmission(administrativeAdmisionDto);
 		const url = `${this.routePrefix}guardia/nuevo-episodio/triage-administrativo`;
 		this.router.navigateByUrl(url);
+	}
+
+	private setPatientAndMedicalCoverages(basicData: BasicPatientDto, photo: PersonPhotoDto): void {
+		this.patientCardInfo = {
+			basicData: this.patientMapperService.toPatientBasicData(basicData),
+			photo
+		};
+		this.selectedPatient = {
+			id: basicData.id,
+			genderId: basicData.person.gender.id,
+			identificationNumber: basicData.person.identificationNumber,
+			identificationTypeId: basicData.person.identificationTypeId,
+		};
+		this.patientMedicalCoverageService.getActivePatientMedicalCoverages(basicData.id).subscribe(coverages => {
+			this.patientMedicalCoverages = coverages;
+		});
 	}
 }
