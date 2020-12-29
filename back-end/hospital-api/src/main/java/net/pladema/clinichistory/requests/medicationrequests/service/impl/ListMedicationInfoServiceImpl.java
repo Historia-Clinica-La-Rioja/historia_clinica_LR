@@ -52,37 +52,38 @@ public class ListMedicationInfoServiceImpl implements ListMedicationInfoService 
         MedicationBo result = new MedicationBo();
         result.setId((Integer)row[0]);
 
-        result.setSnomed(new SnomedBo((String) row[1],(String) row[2]));
+        result.setSnomed(new SnomedBo((Integer) row[1], (String) row[2],(String) row[3]));
 
-        result.setStatusId((String) row[3]);
-        result.setStatus((String) row[4]);
+        result.setStatusId((String) row[4]);
+        result.setStatus((String) row[5]);
 
         HealthConditionBo healthConditionBo = new HealthConditionBo();
-        healthConditionBo.setId((Integer) row[5]);
-        healthConditionBo.setSnomed(new SnomedBo((String) row[6], (String) row[7]));
+        healthConditionBo.setId((Integer) row[6]);
+        healthConditionBo.setSnomed(new SnomedBo((Integer) row[7], (String) row[8], (String) row[9]));
         result.setHealthCondition(healthConditionBo);
 
 
-        result.setNote((String) row[8]);
+        result.setNote((String) row[10]);
 
-        if (row[9] != null) {
+        if (row[11] != null) {
             DosageBo d = new DosageBo();
-            d.setId((Integer) row[9]);
-            d.setDuration((Double) row[10]);
-            d.setFrequency((Integer) row[11]);
-            d.setPeriodUnit(row[12] != null ? EUnitsOfTimeBo.map((String) row[12]) : null);
-            d.setChronic((Boolean) row[13]);
-            d.setStartDate(row[14] != null ? ((Date) row[14]).toLocalDate() : null);
-            d.setSuspendedStartDate(row[15] != null ? ((Date) row[15]).toLocalDate() : null);
-            d.setSuspendedEndDate(row[15] != null ? ((Date) row[16]).toLocalDate() : null);
+            d.setId((Integer) row[11]);
+            d.setDuration((Double) row[12]);
+            d.setFrequency((Integer) row[13]);
+            d.setPeriodUnit(row[14] != null ? EUnitsOfTimeBo.map((String) row[14]) : null);
+            d.setChronic((Boolean) row[15]);
+            d.setStartDate(row[16] != null ? ((Date) row[16]).toLocalDate() : null);
+            d.setSuspendedStartDate(row[17] != null ? ((Date) row[17]).toLocalDate() : null);
+            d.setSuspendedEndDate(row[18] != null ? ((Date) row[18]).toLocalDate() : null);
             result.setDosage(d);
         }
 
-        result.setEncounterId((Integer)row[17]);
-        result.setHasRecipe(row[18] != null && (Boolean)row[18]);
+        result.setEncounterId((Integer)row[19]);
+        result.setHasRecipe(row[20] != null && (Boolean)row[20]);
         result.setSuspended(isSuspended(result.getStatusId(), result.getDosage()));
 
-        result.setUserId((Integer) row[19]);
+        result.setUserId((Integer) row[21]);
+
         LOG.trace("OUTPUT -> {}", result);
         return result;
     }

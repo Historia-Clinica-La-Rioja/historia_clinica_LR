@@ -40,19 +40,19 @@ public class ListMedicationRepositoryImpl implements ListMedicationRepository {
                 "AND d.type_id IN :documentType "+
                 "AND d.status_id = :documentStatusId " +
                 ") " +
-                "SELECT t.id AS id, s.sctid AS m_sctid, s.pt AS m_pt " +
+                "SELECT t.id AS id, s.id AS m_s_id, s.sctid AS m_sctid, s.pt AS m_pt " +
                 ", mss.id AS statusId, mss.description AS status " +
-                ", h.id AS hid, h.sctid_id AS h_sctid, h.pt AS h_pt, n.description AS note " +
+                ", h.id AS hid, h.s_id AS h_s_id, h.sctid_id AS h_sctid, h.pt AS h_pt, n.description AS note " +
                 ", d.id AS d_id, d.duration AS duration, d.frequency, d.period_unit, d.chronic, d.start_date " +
                 ", d.suspended_start_date, d.suspended_end_date " +
-                ", mr.id AS mr_id, ISNULL(mr.has_recipe, false), t.created_by AS user_id " +
+                ", mr.id AS mr_id, CASE WHEN mr.has_recipe IS NULL THEN false ELSE mr.has_recipe END, t.created_by AS user_id " +
                 "FROM temporal t " +
                 "JOIN snomed s ON (t.snomed_id = s.id) " +
                 "LEFT JOIN medication_request mr ON (mr.id = t.source_id AND t.source_type_id = "+ SourceType.RECIPE + ") " +
                 "LEFT JOIN medication_statement_status mss ON (mss.id = t.status_id)" +
                 "LEFT JOIN note n ON (t.note_id = n.id) " +
                 "LEFT JOIN dosage d ON (t.dosage_id = d.id) " +
-                "LEFT JOIN ( SELECT h1.id, s1.sctid as sctid_id, s1.pt " +
+                "LEFT JOIN ( SELECT h1.id, s1.id as s_id, s1.sctid as sctid_id, s1.pt " +
                 "            FROM health_condition h1 " +
                 "            JOIN snomed s1 ON (h1.snomed_id = s1.id) " +
                 "          ) AS h ON (h.id = t.health_condition_id) " +

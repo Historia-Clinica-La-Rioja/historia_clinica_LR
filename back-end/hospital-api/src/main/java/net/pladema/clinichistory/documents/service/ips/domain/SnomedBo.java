@@ -46,6 +46,14 @@ public class SnomedBo extends SelfValidating<SnomedBo> {
         this.parentFsn = pt;
     }
 
+    public SnomedBo(Integer id, String sctid, String pt) {
+        this.id = id;
+        this.sctid = sctid;
+        this.pt = pt;
+        this.parentId = sctid;
+        this.parentFsn = pt;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
