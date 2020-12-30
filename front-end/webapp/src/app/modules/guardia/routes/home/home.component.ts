@@ -6,6 +6,10 @@ import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { differenceInMinutes } from 'date-fns';
 import { EstadosEpisodio, Triages } from '../../constants/masterdata';
 import { ImageDecoderService } from '@presentation/services/image-decoder.service';
+import {EpisodeStateService} from '../../services/episode-state.service';
+import {SnackBarService} from '@presentation/services/snack-bar.service';
+
+const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions.messages';
 
 @Component({
 	selector: 'app-home',
@@ -22,7 +26,9 @@ export class HomeComponent implements OnInit {
 	constructor(
 		private router: Router,
 		private emergencyCareEpisodeService: EmergencyCareEpisodeService,
-		private imageDecoderService: ImageDecoderService
+		private imageDecoderService: ImageDecoderService,
+		private snackBarService: SnackBarService,
+		public readonly episodeStateService: EpisodeStateService
 	) {
 	}
 
@@ -65,12 +71,31 @@ export class HomeComponent implements OnInit {
 		this.router.navigate([`${this.router.url}/nuevo-episodio/administrativa`]);
 	}
 
-	atender(): void {
-		console.log('Atender');
+	atender(episodeId: number): void {
+		this.episodeStateService.atender(episodeId, null).subscribe(changed => {
+				if (changed) {
+					this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.ATENDER_SUCCESS`);
+					// redirect to episode
+				} else {
+					this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.ATENDER_ERROR`);
+				}
+			}, _ => this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.ATENDER_ERROR`)
+		);
 	}
 
-	finalizarPorAusencia(): void {
-		console.log('Finalizar por ausencia');
+	finalizar(episodeId: number): void {
+		this.episodeStateService.finalizarPorAusencia(episodeId).subscribe(changed => {
+				if (changed) {
+					this.snackBarService
+						.showSuccess(`${TRANSLATE_KEY_PREFIX}.FINALIZAR_AUSENCIA_SUCCESS`);
+					// redirect to episode
+				} else {
+					this.snackBarService
+						.showError(`${TRANSLATE_KEY_PREFIX}.FINALIZAR_AUSENCIA_ERROR`);
+				}
+			}, _ => this.snackBarService
+			.showError(`${TRANSLATE_KEY_PREFIX}.FINALIZAR_AUSENCIA_ERROR`)
+		);
 	}
 
 	nuevoTriage(): void {
