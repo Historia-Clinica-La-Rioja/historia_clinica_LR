@@ -3,7 +3,7 @@
 </div>
 
 <mat-tab-group class="tabs" (selectedTabChange)="clearResults()">
-	<mat-tab label="{{'pacientes.search_patient.PROVES_IDENTITY' | translate | uppercase}}" >
+	<mat-tab label="{{'pacientes.search_patient.PROVES_IDENTITY' | translate | uppercase}}">
 		<div fxLayout="row">
 			<form [formGroup]="formSearch" (ngSubmit)="search()" class="form-search">
 				<div fxLayout="column">
@@ -15,12 +15,19 @@
 								{{type.description}}
 							</mat-option>
 						</mat-select>
+						<mat-error *ngIf="hasError(formSearch, 'required', 'identificationType')">
+							<span translate="forms.REQUIRED"></span>
+						</mat-error>
 					</mat-form-field>
 
 					<mat-form-field appearance="outline">
 						<mat-label translate="pacientes.search_patient.forms.IDENTIFICATION_NUMBER"></mat-label>
 						<input matInput type="text" id="identificationNumber" name="identificationNumber"
-							formControlName="identificationNumber" placeholder="{{'pacientes.search_patient.forms.IDENTIFICATION_NUMBER' | translate }}">
+							formControlName="identificationNumber"
+							placeholder="{{'pacientes.search_patient.forms.IDENTIFICATION_NUMBER' | translate }}">
+							<mat-error *ngIf="hasError(formSearch, 'required', 'identificationNumber')">
+								<span translate="forms.REQUIRED"></span>
+							</mat-error>
 					</mat-form-field>
 
 					<div class="gender">
@@ -31,11 +38,16 @@
 									*ngFor="let gender of ( genders$ | async )" [value]="gender.id">
 									{{gender.description}}
 								</mat-radio-button>
+								<mat-error *ngIf=" isFormSubmitted && hasError(formSearch, 'required', 'gender') ">
+									<span translate="forms.REQUIRED"></span>
+								</mat-error>
 							</mat-radio-group>
 						</div>
 					</div>
 				</div>
-				<div dir="rtl">
+				<div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="5px">
+					<button mat-stroked-button color="primary" type="reset" (click)="clearResults()" class="uppercase"
+						translate="buttons.RESET"></button>
 					<button mat-raised-button color="primary">
 						<span class="uppercase" [translate]="'buttons.SEARCH'"></span>
 					</button>
@@ -53,14 +65,19 @@
 		</div>
 	</mat-tab>
 
-	<mat-tab label="{{'pacientes.search_patient.PATIENT_ID' | translate | uppercase}}" >
+	<mat-tab label="{{'pacientes.search_patient.PATIENT_ID' | translate | uppercase}}">
 		<div fxLayout="row">
 			<form [formGroup]="formSearchById" (ngSubmit)="searchById()" class="form-search">
 				<mat-form-field appearance="outline">
 					<input matInput type="number" id="patientId" name="patientId" formControlName="id"
 						placeholder="{{ 'pacientes.search_patient.forms.PATIENT_ID' | translate}}">
+						<mat-error *ngIf="hasError(formSearchById, 'required', 'id')">
+							<span translate="forms.REQUIRED"></span>
+						</mat-error>
 				</mat-form-field>
-				<div dir="rtl">
+				<div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="5px">
+					<button mat-stroked-button color="primary" type="reset" (click)="clearResults()" class="uppercase"
+						translate="buttons.RESET"></button>
 					<button mat-raised-button color="primary">
 						<span class="uppercase" [translate]="'buttons.SEARCH'"></span>
 					</button>

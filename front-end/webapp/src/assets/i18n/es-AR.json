@@ -26,7 +26,8 @@
 		"EDIT": "Editar",
 		"NO": "No",
 		"YES": "Si",
-		"SKIP":"Omitir"
+		"SKIP":"Omitir",
+		"RESET":"Restablecer"
 	},
 	"forms": {
 		"REQUIRED": "El campo es requerido",
