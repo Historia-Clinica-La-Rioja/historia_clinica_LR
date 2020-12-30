@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { PrescriptionDto } from '@api-rest/api-model';
+import { DiagnosticReportInfoDto, MedicationInfoDto, PrescriptionDto } from '@api-rest/api-model';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ESTUDIOS, INDICACIONES, ORDENES_MEDICACION } from 'src/app/modules/historia-clinica/constants/summaries';
 import { ConfirmarPrescripcionComponent } from '../../dialogs/ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
@@ -17,6 +17,8 @@ export class OrdenesComponent implements OnInit {
 	public readonly medicacion = ORDENES_MEDICACION;
 	public readonly estudios = ESTUDIOS;
 	public readonly indicaciones = INDICACIONES;
+    public medicationsInfo : MedicationInfoDto[];
+	public diagnosticReportsInfo : DiagnosticReportInfoDto[];
 
 	@Input('patientId') patientId: number;
 
@@ -27,6 +29,16 @@ export class OrdenesComponent implements OnInit {
 	) { }
 
 	ngOnInit(): void {
+		this.prescripcionesService.getPrescription(PrescriptionTypes.MEDICATION, this.patientId, null, null, null).subscribe(
+			response =>{
+				this.medicationsInfo = response;
+				console.log(response);
+			});
+		this.prescripcionesService.getPrescription(PrescriptionTypes.STUDY, this.patientId, null, null, null).subscribe(
+			response =>{
+				this.diagnosticReportsInfo = response;
+				console.log(response);
+			});
 	}
 
 	openDialogNewMedication() {

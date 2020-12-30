@@ -1,4 +1,7 @@
 <app-content width="full">
+	<ng-template #noInfo>
+		<app-no-data></app-no-data>
+	</ng-template>
 	<section>
 		<h2 [translate]="'ambulatoria.paciente.ordenes_prescripciones.TITLE'"></h2>
 		<div fxLayout="row" fxLayoutGap="20px">
@@ -7,7 +10,55 @@
 													[editable]="true"
 													[canEdit]="['ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']"
 													(openInNew)="openDialogNewMedication()">
-					<app-no-data></app-no-data>
+
+					<mat-list id="lista-medication" *ngIf="medicationsInfo?.length > 0 else noInfo">
+						<div fxLayout="row" *ngFor="let medicationInfo of medicationsInfo">
+							<mat-list-item >
+								<div fxFlex="100%">
+									<h3 mat-line class="primary bold">
+										Activo
+									</h3>
+									<span mat-line class="mat-body">
+										Receta #{{medicationInfo.id}}
+									</span>
+									<span mat-line class="mat-body-strong capitalize-first-letter">
+										{{medicationInfo.snomed.pt}}
+									</span>
+									<span mat-line class="mat-body capitalize-first-letter" *ngIf="medicationInfo.dosage?.frequency != undefined">
+										Cada {{medicationInfo.dosage.frequency}} hs
+									</span>
+									<span mat-line class="mat-body capitalize-first-letter" *ngIf="medicationInfo.dosage?.duration != undefined">
+										durante {{medicationInfo.dosage.duration}} días
+									</span>
+									<h4 mat-line class="primary bold">
+										{{medicationInfo.healthCondition.snomed.pt}}
+									</h4>
+									<span mat-line class="mat-body capitalize-first-letter">
+										Dr. {{medicationInfo.doctor.firstName }} {{medicationInfo.doctor.lastName }}
+									</span>
+								</div>
+
+								<button mat-icon-button [matMenuTriggerFor]="menu" >
+									<mat-icon>more_vert</mat-icon>
+								</button>
+								<mat-menu #menu="matMenu">
+									<button mat-menu-item >
+										<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.DOWNLOAD'"></span>
+									</button>
+									<button mat-menu-item >
+										<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.BACK'"></span>
+									</button>
+									<button mat-menu-item >
+										<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.SUSPEND'"></span>
+									</button>
+									<button mat-menu-item >
+										<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.FINALIZE'"></span>
+									</button>
+								</mat-menu>
+							</mat-list-item>
+							<mat-divider></mat-divider>
+						</div>
+					</mat-list>
 				</app-summary-card>
 			</div>
 			<div fxLayout="column" fxFlex="50%" fxLayout.lt-md="row" fxLayoutGap="20px">
@@ -15,7 +66,40 @@
 												[editable]="true"
 												[canEdit]="['ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']"
 												(openInNew)="openDialogNewStudy()">
-					<app-no-data></app-no-data>
+
+				<mat-list id="lista-studies" *ngIf="diagnosticReportsInfo?.length > 0 else noInfo">
+					<div fxLayout="row" *ngFor="let diagnosticReport of diagnosticReportsInfo">
+						<mat-list-item >
+							<div fxFlex="100%">
+								<h3 mat-line class="primary bold">
+									{{diagnosticReport.statusId}}
+								</h3>
+								<span mat-line class="mat-body-strong capitalize-first-letter">
+									{{diagnosticReport.snomed.pt}}
+								</span>
+								<h4 mat-line class="primary bold">
+									{{diagnosticReport.healthCondition.snomed.pt}}
+								</h4>
+								<span mat-line class="mat-body capitalize-first-letter">
+									Dr. {{diagnosticReport.doctor.firstName }} {{diagnosticReport.doctor.lastName }}
+								</span>
+							</div>
+
+							<button mat-icon-button [matMenuTriggerFor]="menu" >
+								<mat-icon>more_vert</mat-icon>
+							</button>
+							<mat-menu #menu="matMenu">
+								<button mat-menu-item >
+									<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.COMPLETE'"></span>
+								</button>
+								<button mat-menu-item >
+									<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.DELETE'"></span>
+								</button>
+							</mat-menu>
+						</mat-list-item>
+						<mat-divider></mat-divider>
+					</div>
+				</mat-list>
 				</app-summary-card>
 				<app-summary-card id="indicaciones-generales" [header]="indicaciones"
 																 [editable]="true"

@@ -14,7 +14,7 @@ export class MedicationRequestService {
 		private http: HttpClient,
 		private readonly contextService: ContextService
 	  ) { }
-	
+
 
 	create(patientId: number, newMedicationRequestDto: PrescriptionDto): Observable<number> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/medication-requests`;
@@ -45,7 +45,7 @@ export class MedicationRequestService {
 
 	medicationRequestList(patientId: number, statusId: string, medicationStatement: string, healthCondition: string): Observable<MedicationInfoDto[]> {
 		let queryParams: HttpParams = new HttpParams();
-		queryParams = queryParams.append('statusId', statusId);
+	//	queryParams = queryParams.append('statusId', statusId);
 		queryParams = queryParams.append('medicationStatement', medicationStatement);
 		queryParams = queryParams.append('healthCondition', healthCondition);
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/medication-requests`;
