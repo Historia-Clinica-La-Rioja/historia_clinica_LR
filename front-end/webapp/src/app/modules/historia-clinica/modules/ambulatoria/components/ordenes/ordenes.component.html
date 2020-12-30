@@ -15,8 +15,8 @@
 						<div fxLayout="row" *ngFor="let medicationInfo of medicationsInfo">
 							<mat-list-item >
 								<div fxFlex="100%">
-									<h3 mat-line class="primary bold">
-										Activo
+									<h3 mat-line class="primary bold" *ngIf="true">
+										Activa
 									</h3>
 									<span mat-line class="mat-body">
 										Receta #{{medicationInfo.id}}
@@ -71,8 +71,8 @@
 					<div fxLayout="row" *ngFor="let diagnosticReport of diagnosticReportsInfo">
 						<mat-list-item >
 							<div fxFlex="100%">
-								<h3 mat-line class="primary bold">
-									{{diagnosticReport.statusId}}
+								<h3 mat-line class="primary bold" *ngIf="true">
+									Completado
 								</h3>
 								<span mat-line class="mat-body-strong capitalize-first-letter">
 									{{diagnosticReport.snomed.pt}}

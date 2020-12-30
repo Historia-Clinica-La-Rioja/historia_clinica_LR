@@ -16,12 +16,20 @@ export class PrescripcionesService {
 
 	createPrescription(prescriptionType: PrescriptionTypes, newPrescription: PrescriptionDto, patientId: number): Observable<any> {
 		switch(prescriptionType) {
-			case PrescriptionTypes.MEDICATION: 
+			case PrescriptionTypes.MEDICATION:
 				return this.medicationRequestService.create(patientId, newPrescription)
 			case PrescriptionTypes.STUDY:
 				return this.serviceRequestService.create(patientId, newPrescription);
 		}
+	}
 
+	getPrescription(prescriptionType: PrescriptionTypes, patientId: number, statusId: string, medicationStatement: string, healthCondition: string, diagnosticReport?: string): Observable<any> {
+		switch(prescriptionType) {
+			case PrescriptionTypes.MEDICATION:
+				return this.medicationRequestService.medicationRequestList(patientId, statusId, medicationStatement, healthCondition);
+			case PrescriptionTypes.STUDY:
+				return this.serviceRequestService.getList(patientId, statusId, diagnosticReport, healthCondition);
+		}
 	}
 }
 

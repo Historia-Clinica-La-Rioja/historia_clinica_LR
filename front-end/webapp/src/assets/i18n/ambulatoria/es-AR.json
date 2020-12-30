@@ -206,13 +206,21 @@
 					"MEDICATION_TITLE": "Su medicación fue agregada correctamente",
 					"STUDY_TITLE": "Su orden fue realizada correctamente",
 					"DOWNLOAD_BUTTON_MEDICATION": "Descargar receta",
-					"DOWNLOAD_BUTTON_STUDY": "Descargar orden" 
+					"DOWNLOAD_BUTTON_STUDY": "Descargar orden"
 				},
 				"toast_messages": {
 					"POST_MEDICATION_SUCCESS": "Medicación agregada correctamente",
 					"POST_MEDICATION_ERROR": "Error al agregar medicación",
 					"POST_STUDY_SUCCESS": "Órden creada correctamente",
 					"POST_STUDY_ERROR": "Error al crear órden"
+				},
+				"menu_items": {
+					"DOWNLOAD": "Descargar receta",
+					"BACK": "Volver a receta",
+					"SUSPEND":"Suspender",
+					"FINALIZE":"Finalizar",
+					"COMPLETE":"Completar",
+					"DELETE":"Eliminar"
 				}
 			},
 			"profile": {
