@@ -12,6 +12,11 @@ public class CodingSystem {
         public static final String BUS="http://mhd.sisa.msal.gov.ar/fhir/";
     }
 
+    public static class DOMAIN {
+        public static final String RENAPER="DOMINIOSINAUTORIZACIONDEALTA";
+        public static final String TEST="http://www.msal.gov.ar";
+    }
+
     //Absent and Unknown Data - IPS
     public static final String NODATA = "http://hl7.org/fhir/uv/ips/CodeSystem/absent-unknown-uv-ips";
 

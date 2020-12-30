@@ -4,6 +4,7 @@ import net.pladema.hl7.dataexchange.model.adaptor.FhirAddress;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirCode;
 import net.pladema.hl7.supporting.exchange.database.FhirPersistentStore;
 
+import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.hl7.fhir.instance.model.api.IBaseResource;
@@ -44,7 +45,10 @@ public abstract class IResourceFhir {
 
     @Value("${ws.renaper.dominio:}")
     public void setDominio(String dominio){
-        IResourceFhir.dominio = dominio;
+        if(dominio.equals(CodingSystem.DOMAIN.RENAPER))
+            IResourceFhir.dominio = CodingSystem.DOMAIN.TEST;
+        else
+            IResourceFhir.dominio = dominio;
     }
 
     @Value("${system.name:Historia de Salud Integrada}")

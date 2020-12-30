@@ -3,12 +3,13 @@ package net.pladema.hl7.supporting.exchange.restful;
 import ca.uhn.fhir.rest.param.ReferenceParam;
 import ca.uhn.fhir.rest.param.StringParam;
 import io.swagger.annotations.Api;
-import net.pladema.hl7.dataexchange.model.adaptor.FhirParam;
+import net.pladema.hl7.dataexchange.IResourceFhir;
 import net.pladema.hl7.dataexchange.model.domain.dto.IdentifierDto;
 import net.pladema.hl7.dataexchange.model.domain.dto.OrganizationDto;
 import net.pladema.hl7.supporting.conformance.FhirClientR4;
 import net.pladema.hl7.dataexchange.model.domain.PatientSummaryVo;
 import net.pladema.hl7.supporting.exchange.documents.BundleResource;
+import net.pladema.hl7.supporting.exchange.documents.profile.FhirDocument;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.DocumentReference;
@@ -17,7 +18,6 @@ import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Organization;
 import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.StringType;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 @RestController
@@ -37,9 +38,6 @@ public class PatientProvider {
 
     private final FhirClientR4 client;
     private final BundleResource bundleResource;
-
-    @Value("${ws.renaper.dominio:}")
-    private String dominio;
 
     public PatientProvider(FhirClientR4 client,
                            BundleResource bundleResource){
@@ -54,7 +52,8 @@ public class PatientProvider {
      * @return lista de dominios para que el profesional seleccione una
      */
     @GetMapping(value = "/patient-location")
-    public ResponseEntity<List<OrganizationDto>> getPatientLocation(@RequestParam(name = Patient.SP_IDENTIFIER) String id) {
+    public ResponseEntity<List<OrganizationDto>> getPatientLocation(
+            @RequestParam(name = Patient.SP_IDENTIFIER) String id) {
         List<OrganizationDto> result = new ArrayList<>();
         Bundle data = client.operationPatientLocation(new StringType(id));
         data.getEntry().forEach((entry)-> {
@@ -77,7 +76,7 @@ public class PatientProvider {
     private Predicate<Identifier> filter() {
         return (Identifier i) -> i.getSystem().equals(CodingSystem.FEDERADOR) &&
                 !i.getValue().contains("dummy") &&
-                !i.getValue().equals(dominio);
+                !i.getValue().equals(IResourceFhir.getDominio());
     }
 
     private boolean hasHealthcareData(DocumentReference documentReference){
@@ -85,12 +84,13 @@ public class PatientProvider {
     }
 
     private DocumentReference getDocumentReference(String subject, String custodian, String type){
-        //ReferenceParam subjectParam = new ReferenceParam(dominio.concat("|").concat(subject));
 
         //build parameters appropriately
-        ReferenceParam subjectParam = FhirParam.newReferenceParam("https://www.hospitalitaliano.org.ar",subject);
+        ReferenceParam subjectParam = new ReferenceParam(subject);
         StringParam custodianParam = new StringParam(custodian);
-        ReferenceParam typeParam = new ReferenceParam(type);
+        ReferenceParam typeParam = new ReferenceParam(
+                Objects.requireNonNullElseGet(type, FhirDocument::defaultStringType));
+
         try {
             return client.readDocumentReferences(subjectParam, custodianParam, typeParam);
         } catch (Exception e) {

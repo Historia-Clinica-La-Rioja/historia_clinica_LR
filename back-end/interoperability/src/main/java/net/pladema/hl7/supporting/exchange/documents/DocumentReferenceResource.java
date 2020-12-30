@@ -45,7 +45,7 @@ public class DocumentReferenceResource extends IResourceFhir {
         DocumentReference.DocumentReferenceContentComponent content = new DocumentReference.DocumentReferenceContentComponent();
         content.setAttachment(new Attachment()
                 .setContentType("application/fhir+json")
-                .setUrl(url(resource).concat(bundle.getId()))
+                .setUrl(url(resource).concat("/").concat(bundle.getId()))
                 .setTitle(bundle.getPatient().getSummary())
         );
         resource.addContent(content);

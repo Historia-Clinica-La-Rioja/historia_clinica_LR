@@ -96,7 +96,7 @@ public class FhirPersistentStore {
                 " SELECT t.id as id, s.id as code, s.pt as term, status_id as clinical_status, " +
                 " verification_status_id, start_date, created_on" +
                 " FROM t " +
-                " JOIN snomed s ON sctid_code = s.id" +
+                " JOIN snomed s ON sctid_code = s.sctid" +
                 " WHERE rw = 1" +
                 " AND NOT verification_status_id = :statusId";
         List<Object[]> queryResult = entityManager
@@ -128,7 +128,7 @@ public class FhirPersistentStore {
                 ") " +
                 "SELECT t.id as id, s.id as sctid, s.pt, status_id, administration_date, created_on, expiration_date " +
                 "FROM t " +
-                "JOIN snomed s ON sctid_code = s.id " +
+                "JOIN snomed s ON sctid_code = s.sctid " +
                 "WHERE rw = 1 " +
                 "AND NOT status_id = :statusId " +
                 "ORDER BY t.updated_on DESC";
@@ -162,7 +162,7 @@ public class FhirPersistentStore {
                 " SELECT t.id AS id, s.id AS sctid, s.pt, t.status_id, t.verification_status_id, " +
                 " t.category_id, t.start_date " +
                 " FROM temporal t " +
-                " JOIN snomed s ON t.sctid_code = s.id " +
+                " JOIN snomed s ON t.sctid_code = s.sctid " +
                 " WHERE rw = 1 AND NOT status_id = :allergyIntoleranceStatus " +
                 " ORDER BY t.updated_on desc ";
 
@@ -194,7 +194,7 @@ public class FhirPersistentStore {
                 ") " +
                 "SELECT t.id AS id, s.id AS sctid, s.pt, status_id " +
                 "FROM temporal t " +
-                "JOIN snomed s ON t.sctid_code = s.id " +
+                "JOIN snomed s ON t.sctid_code = s.sctid " +
                 "WHERE rw = 1 AND NOT status_id = :statusId " +
                 "ORDER BY t.updated_on";
         List<Object[]> queryResult = entityManager.createNativeQuery(sqlString)

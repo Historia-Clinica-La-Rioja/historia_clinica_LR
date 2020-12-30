@@ -51,9 +51,6 @@ public class BundleResource extends IResourceFhir {
     @Value("${app.default.language}")
     private String language;
 
-    @Value("${ws.renaper.dominio:}")
-    private String dominio;
-
     @Autowired
     public BundleResource(FhirPersistentStore store,
                           DocumentReferenceResource documentReferenceResource,
@@ -73,7 +70,7 @@ public class BundleResource extends IResourceFhir {
     public Bundle getExistingDocumentsReferences (TokenParam subject,
                                                   TokenParam custodian, TokenParam type) {
         //Input parameters required validation
-        return documentReferenceValidation.inputParameter(subject, custodian, type, dominio).orElseGet(
+        return documentReferenceValidation.inputParameter(subject, custodian, type, getDominio()).orElseGet(
                 //returns a default value directly if the Optional is empty (the data of document is valid)
                 () -> {
                     BundleVo data = documentReferenceResource.getData(subject.getValue());

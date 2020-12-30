@@ -32,7 +32,7 @@ public class DocumentReferenceValidation implements IResponseOperationOutcome {
 
         //'custodian' parameter has to be the system domain
         if(!custodian.getSystem().equals(dominio))
-            badRequest("TokenParam[system="+subject.getSystem()+",value="+subject.getValue()+"] no esta federado para TokenParam[system=,value="+custodian.getValue());
+            badRequest("TokenParam[system="+subject.getSystem()+",value="+subject.getValue()+"] no esta federado para TokenParam[system=,value="+custodian.getSystem());
 
         //'type' parameter must have a loinc system
         if(!type.getSystem().equals(CodingSystem.LOINC))

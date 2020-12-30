@@ -47,7 +47,6 @@ public class CompositionResource extends IResourceFhir {
         //Organización a cargo
         resource.setCustodian(references[2]);
 
-        //resource.setIdentifier(newIdentifier(dominio, resource));
         resource.setStatus(Composition.CompositionStatus.FINAL);
         resource.setType(newCodeableConcept(data.getType()));
 
