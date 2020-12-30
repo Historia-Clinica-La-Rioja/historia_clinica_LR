@@ -14,6 +14,7 @@ import { AdministrativeTriageDialogComponent } from './dialogs/administrative-tr
 
 import { HistoriaClinicaModule } from '../historia-clinica/historia-clinica.module';
 import { NewEpisodeService } from './services/new-episode.service';
+import {EpisodeStateService} from './services/episode-state.service';
 
 @NgModule({
 	declarations: [
@@ -34,7 +35,10 @@ import { NewEpisodeService } from './services/new-episode.service';
 		PresentationModule,
 		HistoriaClinicaModule, // TODO Quitar este modulo
 	],
-	providers: [NewEpisodeService]
+	providers: [
+		NewEpisodeService,
+		EpisodeStateService
+	]
 })
 export class GuardiaModule {
 }
