@@ -1857,3 +1857,48 @@ databaseChangeLog:
                 columnName: sctid_code
                 tableName: diagnostic_report
     
+    - changeSet:  
+        id:  dropForeignKeyConstraint-FK_medication_request_medical_coverage_id  
+        author:  etrapani  
+        changes:  
+        -  dropForeignKeyConstraint:  
+            baseTableName:  medication_request  
+            constraintName:  FK_medication_request_medical_coverage_id
+
+    - changeSet:  
+        id:  addForeignKeyConstraint-FK_medication_request_medical_coverage_id  
+        author:  etrapani  
+        changes:  
+        - addForeignKeyConstraint:
+            baseColumnNames: medical_coverage_id
+            baseTableName: medication_request
+            constraintName: FK_medication_request_medical_coverage_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: patient_medical_coverage
+            validate: true
+    
+    - changeSet:  
+        id:  dropForeignKeyConstraint-FK_service_request_medical_coverage_id  
+        author:  etrapani  
+        changes:  
+        -  dropForeignKeyConstraint:  
+            baseTableName:  service_request  
+            constraintName:  FK_service_request_medical_coverage_id
+
+    - changeSet:  
+        id:  addForeignKeyConstraint-FK_service_request_medical_coverage_id  
+        author:  etrapani  
+        changes:  
+        - addForeignKeyConstraint:
+            baseColumnNames: medical_coverage_id
+            baseTableName: service_request
+            constraintName: FK_service_request_medical_coverage_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: patient_medical_coverage
+            validate: true
+
+
