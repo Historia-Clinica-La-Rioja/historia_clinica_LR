@@ -3,10 +3,12 @@ package net.pladema.emergencycare.triage.controller;
 import io.swagger.annotations.Api;
 import net.pladema.emergencycare.triage.controller.dto.TriageCategoryDto;
 import net.pladema.emergencycare.triage.controller.dto.TriageDetailsDto;
+import net.pladema.emergencycare.triage.controller.mapper.TriageMasterDataMapper;
+import net.pladema.emergencycare.triage.service.TriageMasterDataService;
+import net.pladema.emergencycare.triage.service.domain.TriageCategoryBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,14 +23,25 @@ public class TriageMasterDataController {
 
     private static final Logger LOG = LoggerFactory.getLogger(TriageMasterDataController.class);
 
-    public TriageMasterDataController(){
+    private final TriageMasterDataService triageMasterDataService;
+
+    private final TriageMasterDataMapper triageMasterDataMapper;
+
+    public TriageMasterDataController(TriageMasterDataService triageMasterDataService,
+                                      TriageMasterDataMapper triageMasterDataMapper){
         super();
+        this.triageMasterDataService = triageMasterDataService;
+        this.triageMasterDataMapper = triageMasterDataMapper;
     }
 
     @GetMapping("/category")
     public ResponseEntity<List<TriageCategoryDto>> getCategories() {
         LOG.debug("{}", "All triage categories");
-        return ResponseEntity.ok().body(Collections.singletonList(new TriageCategoryDto()));
+        List<TriageCategoryBo> triageCategoryBos = triageMasterDataService.getCategories();
+        List<TriageCategoryDto> result = triageMasterDataMapper.toTriageCategoryDtoList(triageCategoryBos);
+        LOG.debug("Output size = {}", result.size());
+        LOG.trace("Output -> {}", result);
+        return ResponseEntity.ok().body(result);
     }
 
     @GetMapping("/bodyTemperature")

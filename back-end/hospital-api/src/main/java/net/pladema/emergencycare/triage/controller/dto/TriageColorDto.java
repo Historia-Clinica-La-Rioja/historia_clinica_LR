@@ -2,23 +2,19 @@ package net.pladema.emergencycare.triage.controller.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.ToString;
+import lombok.Getter;
 import lombok.Value;
 
 import java.io.Serializable;
 
-@Value
 @Builder
-@ToString
+@Value
+@Getter
 @AllArgsConstructor
-public class TriageCategoryDto implements Serializable {
-
-    Short id;
+public class TriageColorDto implements Serializable {
 
     String name;
 
-    String description;
-
-    TriageColorDto color;
+    String code;
 
 }

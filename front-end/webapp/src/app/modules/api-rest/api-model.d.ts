@@ -1172,6 +1172,15 @@ export interface TriageAdultGynecologicalDto extends TriageNoAdministrativeDto {
 }
 
 export interface TriageCategoryDto extends Serializable {
+    color: TriageColorDto;
+    description: string;
+    id: number;
+    name: string;
+}
+
+export interface TriageColorDto extends Serializable {
+    code: string;
+    name: string;
 }
 
 export interface TriageDetailsDto extends Serializable {
