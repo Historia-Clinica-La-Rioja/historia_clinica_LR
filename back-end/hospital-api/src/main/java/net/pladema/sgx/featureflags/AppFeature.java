@@ -31,7 +31,10 @@ public enum AppFeature implements Feature {
     HABILITAR_EDITAR_PACIENTE_COMPLETO,
 
     @Label("Indica si esta habilitado el modulo de Guardia")
-    HABILITAR_MODULO_GUARDIA;
+    HABILITAR_MODULO_GUARDIA,
+
+    @Label("Indica si esta habilitado la pestaña de ordenes y preescripciones")
+    HABILITAR_ORDENES_PRESCRIPCIONES;
 
     public boolean isActive() {
         return FeatureContext.getFeatureManager().isActive(this);

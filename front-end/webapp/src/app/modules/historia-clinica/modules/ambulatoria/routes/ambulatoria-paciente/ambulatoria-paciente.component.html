@@ -47,13 +47,13 @@
 							<app-problemas [nuevaConsultaRef]="dialogRef"></app-problemas>
 						</ng-template>
 					</mat-tab>
-					<mat-tab id="tab_ordenes_prescripciones" *ngIf=false>
+					<mat-tab id="tab_ordenes_prescripciones" *ngIf="showOrders">
 						<ng-template mat-tab-label>
 							<mat-icon>content_paste</mat-icon>
 							<span>{{ 'ambulatoria.paciente.ordenes_prescripciones.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>
 						<ng-template matTabContent>
-							<button mat-flat-button color="primary" routerLink="./ordenes" fxFlexFill.xs>
+							<button mat-flat-button color="primary" routerLink="./ordenes" fxFlexFill.xs *ngIf=false>
 								<span class="uppercase">Ordenes</span>
 							</button>	
 							<app-ordenes [patientId]="patientId"></app-ordenes>

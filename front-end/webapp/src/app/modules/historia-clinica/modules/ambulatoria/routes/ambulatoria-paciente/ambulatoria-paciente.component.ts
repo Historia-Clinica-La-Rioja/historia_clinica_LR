@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
 import { ActivatedRoute } from '@angular/router';
-import { BasicPatientDto, PersonPhotoDto } from '@api-rest/api-model';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { PatientService } from '@api-rest/services/patient.service';
@@ -11,6 +10,11 @@ import { NuevaConsultaDockPopupComponent } from '../../dialogs/nueva-consulta-do
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
 import { HistoricalProblemsFacadeService } from '../../services/historical-problems-facade.service';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { PersonPhotoDto, BasicPatientDto } from "@api-rest/api-model";
+import {
+	AppFeature,
+} from '@api-rest/api-model';
 
 @Component({
 	selector: 'app-ambulatoria-paciente',
@@ -26,6 +30,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	patientId: number;
 	public personPhoto: PersonPhotoDto;
 	public hasNewConsultationEnabled$: Observable<boolean>;
+	public showOrders: boolean;
 
 
 	constructor(
@@ -34,6 +39,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		private readonly mapperService: MapperService,
 		private readonly dockPopupService: DockPopupService,
 		private readonly ambulatoriaSummaryFacadeService: AmbulatoriaSummaryFacadeService,
+		private readonly featureFlagService: FeatureFlagService
 	) {}
 
 	ngOnInit(): void {
@@ -43,10 +49,16 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 				map(patient => this.mapperService.toPatientBasicData(patient))
 			);
 
+			this.featureFlagService.isActive(AppFeature.HABILITAR_ORDENES_PRESCRIPCIONES).subscribe(isOn => {
+				this.showOrders = isOn;
+			});
+
 			this.ambulatoriaSummaryFacadeService.setIdPaciente(this.patientId);
 			this.hasNewConsultationEnabled$ = this.ambulatoriaSummaryFacadeService.hasNewConsultationEnabled$;
 			this.patientService.getPatientPhoto(this.patientId)
 					.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto;});
+
+
 		});
 	}
 
