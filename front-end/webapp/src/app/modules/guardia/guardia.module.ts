@@ -14,7 +14,8 @@ import { AdministrativeTriageDialogComponent } from './dialogs/administrative-tr
 
 import { HistoriaClinicaModule } from '../historia-clinica/historia-clinica.module';
 import { NewEpisodeService } from './services/new-episode.service';
-import {EpisodeStateService} from './services/episode-state.service';
+import { EpisodeStateService } from './services/episode-state.service';
+import { SelectConsultorioComponent } from './dialogs/select-consultorio/select-consultorio.component';
 
 @NgModule({
 	declarations: [
@@ -23,7 +24,8 @@ import {EpisodeStateService} from './services/episode-state.service';
 		AdministrativeTriageComponent,
 		NewEpisodeAdminTriageComponent,
 		AdmisionAdministrativaComponent,
-		AdministrativeTriageDialogComponent
+		AdministrativeTriageDialogComponent,
+		SelectConsultorioComponent
 	],
 	imports: [
 		CommonModule,

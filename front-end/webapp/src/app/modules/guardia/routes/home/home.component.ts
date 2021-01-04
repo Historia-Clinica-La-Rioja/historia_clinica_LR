@@ -1,13 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { EmergencyCareEpisodeDto, EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
+import {
+	EmergencyCareEpisodeDto,
+	EmergencyCareEpisodeService
+} from '@api-rest/services/emergency-care-episode.service';
 import { DateTimeDto } from '@api-rest/api-model';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { differenceInMinutes } from 'date-fns';
 import { EstadosEpisodio, Triages } from '../../constants/masterdata';
 import { ImageDecoderService } from '@presentation/services/image-decoder.service';
-import {EpisodeStateService} from '../../services/episode-state.service';
-import {SnackBarService} from '@presentation/services/snack-bar.service';
+import { EpisodeStateService } from '../../services/episode-state.service';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { MatDialog } from '@angular/material/dialog';
+import { SelectConsultorioComponent } from '../../dialogs/select-consultorio/select-consultorio.component';
 
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions.messages';
 
@@ -28,6 +33,7 @@ export class HomeComponent implements OnInit {
 		private emergencyCareEpisodeService: EmergencyCareEpisodeService,
 		private imageDecoderService: ImageDecoderService,
 		private snackBarService: SnackBarService,
+		private readonly dialog: MatDialog,
 		public readonly episodeStateService: EpisodeStateService
 	) {
 	}
@@ -72,15 +78,24 @@ export class HomeComponent implements OnInit {
 	}
 
 	atender(episodeId: number): void {
-		this.episodeStateService.atender(episodeId, null).subscribe(changed => {
-				if (changed) {
-					this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.ATENDER_SUCCESS`);
-					// redirect to episode
-				} else {
-					this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.ATENDER_ERROR`);
-				}
-			}, _ => this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.ATENDER_ERROR`)
-		);
+
+		const dialogRef = this.dialog.open(SelectConsultorioComponent, {
+			width: '25%',
+		});
+
+		dialogRef.afterClosed().subscribe(confirmed => {
+			if (confirmed) {
+				this.episodeStateService.atender(episodeId, null).subscribe(changed => {
+						if (changed) {
+							this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.ATENDER_SUCCESS`);
+							// redirect to episode
+						} else {
+							this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.ATENDER_ERROR`);
+						}
+					}, _ => this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.ATENDER_ERROR`)
+				);
+			}
+		});
 	}
 
 	finalizar(episodeId: number): void {

@@ -61,6 +61,10 @@
 							"FINALIZAR_AUSENCIA_ERROR": "Error al finalizar por ausencia el episodio"
 						}
 					},
+					"select-consultorio-dialog": {
+						"ATENDER": "Atender",
+						"CONSULTORIO": "Consultorio"
+					},
 					"patient": {
 						"ID": "ID Paciente",
 						"NO_INFO": "Sin información",

@@ -12,3 +12,5 @@ export enum Triages {
 	VERDE_NIVEL_4 = 4,
 	AZUL_NIVEL_5 = 5,
 }
+
+export const SECTOR_AMBULATORIO = 1;
