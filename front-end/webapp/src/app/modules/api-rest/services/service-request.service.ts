@@ -41,8 +41,12 @@ export class ServiceRequestService {
 	}
 
 
-	complete(patientId: number, serviceRequestId: number, completeRequestDto: CompleteRequestDto): Observable<string> {
-		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${serviceRequestId}`;
+	complete(patientId: number, diagnosticReportId: number, completeRequestDto: CompleteRequestDto, file: File): Observable<string> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${diagnosticReportId}`;
+		const data = new FormData();
+		data.append('file', )
+		dar
+
 		return this.http.put<string>(url, completeRequestDto);
 	}
 

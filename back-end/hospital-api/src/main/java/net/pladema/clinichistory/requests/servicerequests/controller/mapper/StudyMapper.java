@@ -13,7 +13,7 @@ import java.util.List;
 public interface StudyMapper {
     @Named("parseToList")
     @IterableMapping(qualifiedByName = "parseTo")
-    List<DiagnosticReportBo> parseTo(List<PrescriptionItemDto> studyDtoList);
+    List<DiagnosticReportBo> parseToList(List<PrescriptionItemDto> studyDtoList);
 
     @Named("parseTo")
     DiagnosticReportBo parseTo(PrescriptionItemDto studyDto);

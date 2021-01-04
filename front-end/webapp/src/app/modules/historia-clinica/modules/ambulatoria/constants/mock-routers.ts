@@ -680,9 +680,9 @@ export const MOCKS_ORDERS = [
 		path: 'paciente/:idPaciente/ordenes/completar-orden',
 		loads: [
 			{
-				name: 'ServiceRequest.complete(patientId: number, serviceRequestId:number): CompleteRequestDto',
+				name: 'ServiceRequest.complete(patientId: number, diagnosticReportId:number, file: File)',
 				roles: 'Todo ESPECIALISTA_MEDICO sobre la institución',
-				path: '/api/institutions/{institutionId}/patient/{patientId}/serviceRequests/{serviceRequestId}',
+				path: '/api/institutions/{institutionId}/patient/{patientId}/serviceRequests/{diagnosticReportId}',
 				method: 'PUT',
 				body: {
 					observation: 'El paciente presenta la tiroide alta',

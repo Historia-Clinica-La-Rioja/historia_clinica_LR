@@ -65,7 +65,11 @@ public class DiagnosticReportServiceImpl implements DiagnosticReportService {
                 diagnosticReport.setStatusId(diagnosticReportBo.getStatusId());
             }
 
+<<<<<<< HEAD
             result.add(diagnosticReportRepository.save(diagnosticReport));
+=======
+            diagnosticReportRepository.save(diagnosticReport);
+>>>>>>> 66168fef... tg-2693 [BE] Implementar completar un estudio
             documentService.createDocumentDiagnosticReport(documentId, diagnosticReport.getId());
         });
         LOG.trace(OUTPUT, result);

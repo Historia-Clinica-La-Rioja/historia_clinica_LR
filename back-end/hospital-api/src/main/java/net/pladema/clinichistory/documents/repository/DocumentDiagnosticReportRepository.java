@@ -16,6 +16,5 @@ public interface DocumentDiagnosticReportRepository extends JpaRepository<Docume
     @Query("SELECT ddr " +
             "FROM DocumentDiagnosticReport ddr " +
             "WHERE ddr.pk.diagnosticReportId = :drid ")
-    DocumentDiagnosticReport findByDiagnosticReportId(@Param("drid") Integer drid);
-
+    DocumentDiagnosticReport findByDiagnosticReportId(@Param("drid")  Integer drid);
 }

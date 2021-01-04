@@ -17,6 +17,9 @@ public class DiagnosticReportBo extends ClinicalTerm {
     private Integer healthConditionId;
     private String observations;
     private Long noteId;
+    private String link;
+    private String filePath;
+
     private HealthConditionBo healthCondition;
     private Integer encounterId;
     private Integer userId;
