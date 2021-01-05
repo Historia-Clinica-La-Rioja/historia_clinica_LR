@@ -142,22 +142,24 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit {
 		this.prescriptionItemForm.controls.healthProblem.setValue(prescriptionItem.healthProblem.id);
 		this.prescriptionItemForm.controls.observations.setValue(prescriptionItem.observations);
 		
-		if (prescriptionItem.isDailyInterval){
-			this.prescriptionItemForm.controls.interval.setValue(this.DEFAULT_RADIO_OPTION);
-		} else {
-			this.prescriptionItemForm.controls.interval.setValue(this.OTHER_RADIO_OPTION);
-			this.prescriptionItemForm.controls.intervalHours.setValue(prescriptionItem.intervalHours);
-			this.prescriptionItemForm.controls.intervalHours.setValidators([Validators.required]);
-			this.prescriptionItemForm.controls.intervalHours.updateValueAndValidity();
-		}
-
-		if (prescriptionItem.isChronicAdministrationTime) {
-			this.prescriptionItemForm.controls.administrationTime.setValue(this.DEFAULT_RADIO_OPTION)
-		} else {
-			this.prescriptionItemForm.controls.administrationTime.setValue(this.OTHER_RADIO_OPTION);
-			this.prescriptionItemForm.controls.administrationTimeDays.setValue(prescriptionItem.administrationTimeDays);
-			this.prescriptionItemForm.controls.administrationTimeDays.setValidators([Validators.required]);
-			this.prescriptionItemForm.controls.administrationTimeDays.updateValueAndValidity();
+		if (this.data.showDosage) {
+			if (prescriptionItem.isDailyInterval){
+				this.prescriptionItemForm.controls.interval.setValue(this.DEFAULT_RADIO_OPTION);
+			} else {
+				this.prescriptionItemForm.controls.interval.setValue(this.OTHER_RADIO_OPTION);
+				this.prescriptionItemForm.controls.intervalHours.setValue(prescriptionItem.intervalHours);
+				this.prescriptionItemForm.controls.intervalHours.setValidators([Validators.required]);
+				this.prescriptionItemForm.controls.intervalHours.updateValueAndValidity();
+			}
+	
+			if (prescriptionItem.isChronicAdministrationTime) {
+				this.prescriptionItemForm.controls.administrationTime.setValue(this.DEFAULT_RADIO_OPTION)
+			} else {
+				this.prescriptionItemForm.controls.administrationTime.setValue(this.OTHER_RADIO_OPTION);
+				this.prescriptionItemForm.controls.administrationTimeDays.setValue(prescriptionItem.administrationTimeDays);
+				this.prescriptionItemForm.controls.administrationTimeDays.setValidators([Validators.required]);
+				this.prescriptionItemForm.controls.administrationTimeDays.updateValueAndValidity();
+			}
 		}
 
 		if (prescriptionItem.studyCategory.id) {
