@@ -359,6 +359,7 @@ export const MOCKS_GUARDIA = [
 				method: 'GET',
 				fetch: {
 					id: 1,
+					patientId: 7,
 					emergencyCareType: {
 						id: 1,
 						description: 'Guardia adultos'

@@ -1,0 +1,96 @@
+<app-content width="full">
+
+	<h1 translate="guardia.episode.TITLE"></h1>
+
+	<div fxLayoutGap="10px">
+
+		<div fxFlex="55" fxLayout="column" fxLayoutGap="10px">
+			<mat-card class="grid">
+
+				<div fxLayout="column" fxLayoutGap="1px">
+					<span style="color: #A8A8A8;" translate="guardia.episode.administrative.EPISODE"></span>
+					<div fxLayout="row" fxLayoutGap="3px" class="title">
+						<span>ID {{episodeId}}</span>
+						<div *ngIf="responseEmergencyCare.emergencyCareType" fxLayoutGap="3px">
+							<label>•</label>
+							<span>{{responseEmergencyCare.emergencyCareType.description}}</span>
+						</div>
+					</div>
+				</div>
+
+				<div fxLayout="column" fxLayoutGap="1px">
+					<span style="color: #A8A8A8;" translate="guardia.episode.administrative.REASONS"></span>
+					<div *ngIf="responseEmergencyCare.reasons else noInfo">
+						<div *ngFor="let reason of responseEmergencyCare.reasons">
+							<span>{{reason.description}}</span>
+						</div>
+					</div>
+				</div>
+
+				<div fxLayout="column" fxLayoutGap="1px">
+					<span style="color: #A8A8A8;" translate="guardia.episode.administrative.ENTRANCE"></span>
+					<div fxLayout="row" fxLayoutGap="3px" class="title">
+						<span>{{responseEmergencyCare.entrance?.type?.description}}</span>
+						<div *ngIf="responseEmergencyCare.entrance?.ambulanceCompanyId" fxLayoutGap="3px">
+							<label>•</label>
+							<span>ID {{responseEmergencyCare.entrance?.ambulanceCompanyId}}</span>
+						</div>
+					</div>
+					<div fxLayout="row" fxLayoutGap="3px" class="subtitle">
+						<span>{{responseEmergencyCare.creationDate.date.day}}/{{responseEmergencyCare.creationDate.date.month}}/{{responseEmergencyCare.creationDate.date.year}}</span>
+						<label>-</label>
+						<span>{{responseEmergencyCare.creationDate.time.hours}}:{{responseEmergencyCare.creationDate.time.minutes}}
+							Hs</span>
+					</div>
+				</div>
+
+				<div fxLayout="column" fxLayoutGap="1px">
+					<span style="color: #A8A8A8;" translate="guardia.episode.administrative.POLICE_INTERVENTION"></span>
+					<div *ngIf="responseEmergencyCare.policeIntervention else noInfo">
+						<div fxLayout="row" fxLayoutGap="3px" class="title">
+							<span
+								*ngIf="responseEmergencyCare.policeIntervention.firstName || responseEmergencyCare.policeIntervention.lastName">Oficial
+								{{responseEmergencyCare.policeIntervention.firstName}}
+								{{responseEmergencyCare.policeIntervention.lastName}}</span>
+
+							<div *ngIf="responseEmergencyCare.policeIntervention.plateNumber" fxLayoutGap="3px">
+								<label
+									*ngIf="responseEmergencyCare.policeIntervention.firstName || responseEmergencyCare.policeIntervention.lastName">•</label>
+								<span>Mat. Nº {{responseEmergencyCare.policeIntervention.plateNumber}}</span>
+							</div>
+						</div>
+						<div fxLayout="row" fxLayoutGap="3px" class="subtitle">
+							<span
+								*ngIf="responseEmergencyCare.policeIntervention.callDate?.date">{{responseEmergencyCare.policeIntervention.callDate.date.day}}/{{responseEmergencyCare.policeIntervention.callDate.date.month}}/{{responseEmergencyCare.policeIntervention.callDate.date.year}}
+							</span>
+							<div *ngIf="responseEmergencyCare.policeIntervention.callDate?.time" fxLayoutGap="3px">
+								<label *ngIf="responseEmergencyCare.policeIntervention.callDate.date">-</label>
+								<span>{{responseEmergencyCare.policeIntervention.callDate.time.hours}}:{{responseEmergencyCare.policeIntervention.callDate.time.minutes}}
+									Hs</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</mat-card>
+
+			<mat-card id="last-triage-card">
+			</mat-card>
+		</div>
+
+		<div>
+			<app-patient-card [patient]="patientBasicData" [personPhoto]="personPhoto$ | async">
+				<div content>
+					<app-personal-information [personalInformation]="personalInformation"
+						[patientMedicalCoverage]="patientMedicalCoverage">
+					</app-personal-information>
+				</div>
+			</app-patient-card>
+		</div>
+	</div>
+
+</app-content>
+
+<ng-template #noInfo>
+	<span translate="guardia.NO_INFO"></span>
+</ng-template>

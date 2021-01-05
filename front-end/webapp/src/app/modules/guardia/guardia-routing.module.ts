@@ -8,6 +8,7 @@ import { RoleGuard } from "@core/guards/RoleGuard";
 import { FeatureFlagGuard } from "@core/guards/FeatureFlagGuard";
 import { NewEpisodeAdminTriageComponent } from "./routes/new-episode-admin-triage/new-episode-admin-triage.component";
 import { AdmisionAdministrativaComponent } from './routes/admision-administrativa/admision-administrativa.component';
+import { EpisodeDetailsComponent } from './routes/episode-details/episode-details.component';
 
 
 const routes: Routes = [{
@@ -24,6 +25,10 @@ const routes: Routes = [{
 		{
 			path: 'nuevo-episodio/administrativa',
 			component: AdmisionAdministrativaComponent
+		},
+		{
+			path: 'episodio/:id',
+			component: EpisodeDetailsComponent
 		},
 		...mockRouters(MOCKS_GUARDIA)
 	],

@@ -16,6 +16,7 @@ import { HistoriaClinicaModule } from '../historia-clinica/historia-clinica.modu
 import { NewEpisodeService } from './services/new-episode.service';
 import { EpisodeStateService } from './services/episode-state.service';
 import { SelectConsultorioComponent } from './dialogs/select-consultorio/select-consultorio.component';
+import { EpisodeDetailsComponent } from './routes/episode-details/episode-details.component';
 
 @NgModule({
 	declarations: [
@@ -25,7 +26,8 @@ import { SelectConsultorioComponent } from './dialogs/select-consultorio/select-
 		NewEpisodeAdminTriageComponent,
 		AdmisionAdministrativaComponent,
 		AdministrativeTriageDialogComponent,
-		SelectConsultorioComponent
+		SelectConsultorioComponent,
+		EpisodeDetailsComponent,
 	],
 	imports: [
 		CommonModule,

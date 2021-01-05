@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { PersonPhotoDto } from '@api-rest/api-model';
 import { Observable } from 'rxjs';
 import { ImageDecoderService } from '@presentation/services/image-decoder.service';
@@ -8,20 +8,19 @@ import { ImageDecoderService } from '@presentation/services/image-decoder.servic
 	templateUrl: './patient-card.component.html',
 	styleUrls: ['./patient-card.component.scss']
 })
-export class PatientCardComponent implements OnInit {
+export class PatientCardComponent {
 
 	@Input() patient: PatientBasicData;
-	@Input() personPhoto: PersonPhotoDto;
+	@Input() set personPhoto(personPhotoDto: PersonPhotoDto) {
+		if (personPhotoDto?.imageData) {
+			this.decodedPhoto$ = this.imageDecoderService.decode(personPhotoDto.imageData);
+		}
+	}
 	@Input() size = 'default';
 	decodedPhoto$: Observable<string>;
 
 	constructor(private readonly imageDecoderService: ImageDecoderService) { }
 
-	ngOnInit(): void {
-		if (this.personPhoto.imageData) {
-				this.decodedPhoto$ = this.imageDecoderService.decode(this.personPhoto.imageData);
-		}
-	}
 
 	public viewGenderAge() {
 		const gender = (this.patient?.gender) ? (this.patient.gender + ' · ') : '';

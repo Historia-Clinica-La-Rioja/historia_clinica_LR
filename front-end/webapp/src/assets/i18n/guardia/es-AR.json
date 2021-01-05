@@ -79,6 +79,16 @@
 				"TITLE": "Episodios de guardia"
 			},
 			"TITLE": "Guardia de emergencia"
-		}
+		},
+		"episode": {
+			"TITLE": "Episodio de guardia",
+			"administrative": {
+				"EPISODE": "Episodio",
+				"REASONS": "Motivos de consulta",
+				"ENTRANCE": "Ingreso",
+				"POLICE_INTERVENTION": "Intervención policial"
+			}
+		},
+		"NO_INFO":"Sin información"
 	}
 }
