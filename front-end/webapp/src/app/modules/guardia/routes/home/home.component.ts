@@ -67,7 +67,7 @@ export class HomeComponent implements OnInit {
 	}
 
 	goToEpisode(id: number) {
-		console.log(id);
+		this.router.navigate([`${this.router.url}/episodio/${id}`]);
 	}
 
 	goToMockup(): void {
@@ -89,7 +89,7 @@ export class HomeComponent implements OnInit {
 				this.episodeStateService.atender(episodeId, null).subscribe(changed => {
 						if (changed) {
 							this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.atender.SUCCESS`);
-							// redirect to episode
+							this.goToEpisode(episodeId);
 						} else {
 							this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`);
 						}
@@ -113,7 +113,6 @@ export class HomeComponent implements OnInit {
 						if (changed) {
 							this.snackBarService
 								.showSuccess(`${TRANSLATE_KEY_PREFIX}.finalizar_ausencia.SUCCESS`);
-							// redirect to episode
 						} else {
 							this.snackBarService
 								.showError(`${TRANSLATE_KEY_PREFIX}.finalizar_ausencia.ERROR`);
