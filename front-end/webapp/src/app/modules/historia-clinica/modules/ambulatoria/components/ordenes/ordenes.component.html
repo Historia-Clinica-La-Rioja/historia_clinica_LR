@@ -5,7 +5,7 @@
 			<div fxLayout="column" fxFlex="50%" fxLayout.lt-md="row" fxLayoutGap="20px" >
 				<app-summary-card id="medicacion"	[header]="medicacion"
 													[editable]="true"
-													[canEdit]="['ENFERMERO', 'ESPECIALISTA_MEDICO']"
+													[canEdit]="['ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']"
 													(openInNew)="openDialogNewMedication()">
 					<app-no-data></app-no-data>
 				</app-summary-card>
@@ -13,13 +13,13 @@
 			<div fxLayout="column" fxFlex="50%" fxLayout.lt-md="row" fxLayoutGap="20px">
 				<app-summary-card id="estudios" [header]="estudios"
 												[editable]="true"
-												[canEdit]="['ENFERMERO', 'ESPECIALISTA_MEDICO']"
+												[canEdit]="['ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']"
 												(openInNew)="openDialogNewStudy()">
 					<app-no-data></app-no-data>
 				</app-summary-card>
 				<app-summary-card id="indicaciones-generales" [header]="indicaciones"
 																 [editable]="true"
-																 [canEdit]="['ENFERMERO', 'ESPECIALISTA_MEDICO']"
+																 [canEdit]="['ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']"
 																 (openInNew)="openDialogNewRecommendation()">
 					<app-no-data></app-no-data>
 				</app-summary-card>
