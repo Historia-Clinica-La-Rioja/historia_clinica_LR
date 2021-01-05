@@ -24,21 +24,32 @@
 									<span mat-line class="mat-body-strong capitalize-first-letter">
 										{{medicationInfo.snomed.pt}}
 									</span>
-									<span mat-line class="mat-body capitalize-first-letter" *ngIf="medicationInfo.dosage?.frequency != undefined">
-										Cada {{medicationInfo.dosage.frequency}} hs
+									<span mat-line class="mat-body capitalize-first-letter" *ngIf="medicationInfo.dosage?.periodUnit == 'h'">
+										Una aplicación cada {{medicationInfo.dosage.frequency}} hs
+									</span>
+									<span mat-line class="mat-body capitalize-first-letter" *ngIf="medicationInfo.dosage?.periodUnit == 'd'">
+										Una aplicación por día
 									</span>
 									<span mat-line class="mat-body capitalize-first-letter" *ngIf="medicationInfo.dosage?.duration != undefined">
-										durante {{medicationInfo.dosage.duration}} días
+										Durante {{medicationInfo.dosage.duration}} días
 									</span>
-									<h4 mat-line class="primary bold">
+									<span mat-line class="mat-body capitalize-first-letter" *ngIf="medicationInfo.dosage?.chronic">
+										Uso crónico
+									</span>
+									<h4 mat-line class="primary bold capitalize-first-letter">
 										{{medicationInfo.healthCondition.snomed.pt}}
 									</h4>
 									<span mat-line class="mat-body capitalize-first-letter">
 										Dr. {{medicationInfo.doctor.firstName }} {{medicationInfo.doctor.lastName }}
 									</span>
+									<mat-card-subtitle>
+										<span mat-line class="mat-body capitalize-first-letter">
+											Hace {{medicationInfo.totalDays }} días
+										</span>
+									</mat-card-subtitle>
 								</div>
 
-								<button mat-icon-button [matMenuTriggerFor]="menu" >
+								<button mat-icon-button [matMenuTriggerFor]="menu" *ngIf="false">
 									<mat-icon>more_vert</mat-icon>
 								</button>
 								<mat-menu #menu="matMenu">
@@ -85,7 +96,7 @@
 								</span>
 							</div>
 
-							<button mat-icon-button [matMenuTriggerFor]="menu" >
+							<button mat-icon-button [matMenuTriggerFor]="menu" *ngIf="false">
 								<mat-icon>more_vert</mat-icon>
 							</button>
 							<mat-menu #menu="matMenu">
