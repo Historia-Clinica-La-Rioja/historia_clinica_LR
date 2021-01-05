@@ -782,6 +782,7 @@ export interface MedicationDto extends ClinicalTermDto {
 }
 
 export interface MedicationInfoDto extends Serializable {
+    createdOn: DateDto;
     doctor: DoctorInfoDto;
     dosage: DosageInfoDto;
     hasRecipe: boolean;
@@ -791,6 +792,7 @@ export interface MedicationInfoDto extends Serializable {
     observations: string;
     snomed: SnomedDto;
     statusId: string;
+    totalDays: number;
 }
 
 export interface NewDosageDto extends Serializable {
@@ -1257,9 +1259,6 @@ export const enum AppFeature {
 }
 
 export const enum EBodyTemperature {
-    FIEBRE = "FIEBRE",
-    HIPOTERMIA = "HIPOTERMIA",
-    NORMAL = "NORMAL",
 }
 
 export const enum EDocumentSearch {
@@ -1270,10 +1269,6 @@ export const enum EDocumentSearch {
 }
 
 export const enum EEmergencyCareEntrance {
-    CAMINANDO = "CAMINANDO",
-    SILLA = "SILLA",
-    CONMEDICO = "CONMEDICO",
-    SINMEDICO = "SINMEDICO",
 }
 
 export const enum EEmergencyCareState {
@@ -1284,26 +1279,15 @@ export const enum EEmergencyCareState {
 }
 
 export const enum EEmergencyCareType {
-    ADULTO = "ADULTO",
-    PEDIATRIA = "PEDIATRIA",
-    GINECOLOGICA = "GINECOLOGICA",
 }
 
 export const enum EMuscleHypertonia {
-    HIPERTONIA = "HIPERTONIA",
-    HIPOTONIA = "HIPOTONIA",
-    NORMAL = "NORMAL",
 }
 
 export const enum EPerfusion {
-    NORMAL = "NORMAL",
-    ALTERADA = "ALTERADA",
 }
 
 export const enum ERespiratoryRetraction {
-    INTERCOSTAL = "INTERCOSTAL",
-    GENERALIZADO = "GENERALIZADO",
-    NO = "NO",
 }
 
 export const enum ERole {

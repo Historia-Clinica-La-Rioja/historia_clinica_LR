@@ -3,13 +3,18 @@ package net.pladema.clinichistory.requests.medicationrequests.controller.mapper;
 import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.DoctorInfoDto;
+import net.pladema.clinichistory.requests.medicationrequests.controller.dto.DosageInfoDto;
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.HealthConditionInfoDto;
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.MedicationInfoDto;
+import net.pladema.sgx.dates.controller.dto.DateDto;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 @Mapper
 public class ListMedicationInfoMapper {
@@ -28,8 +33,19 @@ public class ListMedicationInfoMapper {
         result.setHasRecipe(medicationBo.isHasRecipe());
         result.setObservations(medicationBo.getNote());
         result.setDoctor(DoctorInfoDto.from(professionalDto));
+        result.setDosage(DosageInfoDto.from(medicationBo.getDosage()));
+        result.setCreatedOn(new DateDto(medicationBo.getCreatedOn().getYear(),
+                medicationBo.getCreatedOn().getMonthValue(),
+                medicationBo.getCreatedOn().getDayOfMonth()));
+        result.setTotalDays(calculateTotalDays(medicationBo.getDosage() != null ? medicationBo.getDosage().getStartDate() : null, medicationBo.getCreatedOn()));
         LOG.trace("parseTo result -> {} ", result);
         return result;
+    }
+
+    private int calculateTotalDays(LocalDate dosageStartDate, LocalDate medicationStartDate){
+        if (dosageStartDate != null)
+            return (int) ChronoUnit.DAYS.between(dosageStartDate, LocalDate.now());
+        return (int) ChronoUnit.DAYS.between(medicationStartDate, LocalDate.now());
     }
 
 }

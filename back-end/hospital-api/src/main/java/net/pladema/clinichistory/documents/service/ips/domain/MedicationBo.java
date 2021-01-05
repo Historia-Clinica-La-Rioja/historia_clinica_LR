@@ -7,6 +7,8 @@ import lombok.ToString;
 import net.pladema.clinichistory.documents.repository.generalstate.domain.MedicationVo;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.MedicationStatementStatus;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @ToString
@@ -26,6 +28,8 @@ public class MedicationBo extends ClinicalTerm {
     private boolean hasRecipe;
 
     private Integer userId;
+
+    private LocalDate createdOn;
 
     public MedicationBo(MedicationVo medicationVo) {
         super();

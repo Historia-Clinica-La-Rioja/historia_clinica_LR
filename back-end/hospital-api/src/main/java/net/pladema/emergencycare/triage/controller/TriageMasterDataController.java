@@ -12,7 +12,6 @@ import net.pladema.emergencycare.triage.service.domain.enums.EBodyTemperature;
 import net.pladema.emergencycare.triage.service.domain.enums.EMuscleHypertonia;
 import net.pladema.emergencycare.triage.service.domain.enums.EPerfusion;
 import net.pladema.emergencycare.triage.service.domain.enums.ERespiratoryRetraction;
-import org.elasticsearch.common.collect.HppcMaps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;

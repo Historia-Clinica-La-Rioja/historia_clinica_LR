@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
+import net.pladema.sgx.dates.controller.dto.DateDto;
 
 import java.io.Serializable;
 
@@ -31,4 +32,8 @@ public class MedicationInfoDto implements Serializable {
     private Integer medicationRequestId;
 
     private boolean hasRecipe;
+
+    private DateDto createdOn;
+
+    private int totalDays;
 }

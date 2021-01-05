@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -83,10 +84,11 @@ public class ListMedicationInfoServiceImpl implements ListMedicationInfoService 
         result.setSuspended(isSuspended(result.getStatusId(), result.getDosage()));
 
         result.setUserId((Integer) row[21]);
-
+        result.setCreatedOn(row[22] != null ? ((Timestamp) row[22]).toLocalDateTime().toLocalDate() : null);
         LOG.trace("OUTPUT -> {}", result);
         return result;
     }
+
 
     private boolean byStatus(MedicationBo medicationBo, String filterStatusId) {
         if (MedicationStatementStatus.SUSPENDED.equals(filterStatusId))

@@ -135,6 +135,7 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
         LOG.debug("Input parameters -> medication {}, dosage {}, note {}, statusId {}, duration {}", medication, dosage, note, newStatusId, duration);
         MedicationBo result = new MedicationBo();
 
+
         var hc = new HealthConditionBo();
         hc.setId(medication.getHealthConditionId());
         result.setHealthCondition(hc);
