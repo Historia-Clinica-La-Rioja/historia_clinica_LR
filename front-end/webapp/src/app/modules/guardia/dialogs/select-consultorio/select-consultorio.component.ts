@@ -13,7 +13,7 @@ import { SECTOR_AMBULATORIO } from '../../constants/masterdata';
 })
 export class SelectConsultorioComponent implements OnInit {
 
-	doctorsOffices$: Observable<DoctorsOfficeDto[]>;
+	consultorios$: Observable<DoctorsOfficeDto[]>;
 	form: FormGroup;
 
 	constructor(
@@ -28,7 +28,7 @@ export class SelectConsultorioComponent implements OnInit {
 			consultorio: [null, Validators.required]
 		});
 
-		this.doctorsOffices$ = this.doctorsOfficeService.getBySectorType(SECTOR_AMBULATORIO);
+		this.consultorios$ = this.doctorsOfficeService.getBySectorType(SECTOR_AMBULATORIO);
 	}
 
 	submit(): void {

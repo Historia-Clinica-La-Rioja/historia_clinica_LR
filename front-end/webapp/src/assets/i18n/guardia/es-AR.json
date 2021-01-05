@@ -53,8 +53,8 @@
 					"actions": {
 						"atender": {
 							"TITLE": "Atender",
-							"SUCCESS": "Estado de episodio actualizado a en atención exitosamente",
-							"ERROR": "Error al actualizar estado de episodio a en atención"
+							"SUCCESS": "Estado de episodio actualizado a En atención exitosamente",
+							"ERROR": "Error al actualizar estado de episodio a En atención"
 						},
 						"finalizar_ausencia": {
 							"TITLE": "Finalizar por ausencia",
