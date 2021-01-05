@@ -32,12 +32,10 @@ export class OrdenesComponent implements OnInit {
 		this.prescripcionesService.getPrescription(PrescriptionTypes.MEDICATION, this.patientId, null, null, null).subscribe(
 			response =>{
 				this.medicationsInfo = response;
-				console.log(response);
 			});
 		this.prescripcionesService.getPrescription(PrescriptionTypes.STUDY, this.patientId, null, null, null).subscribe(
 			response =>{
 				this.diagnosticReportsInfo = response;
-				console.log(response);
 			});
 	}
 

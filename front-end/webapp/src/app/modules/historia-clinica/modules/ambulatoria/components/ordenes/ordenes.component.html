@@ -43,7 +43,13 @@
 										Dr. {{medicationInfo.doctor.firstName }} {{medicationInfo.doctor.lastName }}
 									</span>
 									<mat-card-subtitle>
-										<span mat-line class="mat-body capitalize-first-letter">
+										<span mat-line class="mat-body capitalize-first-letter" *ngIf="medicationInfo.totalDays == 0">
+											Desde hoy
+										</span>
+										<span mat-line class="mat-body capitalize-first-letter" *ngIf="medicationInfo.totalDays == 1">
+											Hace 1 día
+										</span>
+										<span mat-line class="mat-body capitalize-first-letter" *ngIf="medicationInfo.totalDays > 1">
 											Hace {{medicationInfo.totalDays }} días
 										</span>
 									</mat-card-subtitle>
@@ -85,6 +91,9 @@
 								<h3 mat-line class="primary bold" *ngIf="true">
 									Completado
 								</h3>
+								<span mat-line class="mat-body">
+									Orden #{{diagnosticReport.serviceRequestId}}
+								</span>
 								<span mat-line class="mat-body-strong capitalize-first-letter">
 									{{diagnosticReport.snomed.pt}}
 								</span>
@@ -94,6 +103,17 @@
 								<span mat-line class="mat-body capitalize-first-letter">
 									Dr. {{diagnosticReport.doctor.firstName }} {{diagnosticReport.doctor.lastName }}
 								</span>
+								<mat-card-subtitle>
+									<span mat-line class="mat-body capitalize-first-letter" *ngIf="diagnosticReport.totalDays  == 0">
+										Desde hoy
+									</span>
+									<span mat-line class="mat-body capitalize-first-letter" *ngIf="diagnosticReport.totalDays  == 1">
+										Hace 1 día
+									</span>
+									<span mat-line class="mat-body capitalize-first-letter" *ngIf="diagnosticReport.totalDays  > 1">
+										Hace {{diagnosticReport.totalDays }} días
+									</span>
+								</mat-card-subtitle>
 							</div>
 
 							<button mat-icon-button [matMenuTriggerFor]="menu" *ngIf="false">
