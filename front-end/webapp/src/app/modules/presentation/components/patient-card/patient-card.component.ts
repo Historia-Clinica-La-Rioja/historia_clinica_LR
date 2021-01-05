@@ -12,6 +12,7 @@ export class PatientCardComponent implements OnInit {
 
 	@Input() patient: PatientBasicData;
 	@Input() personPhoto: PersonPhotoDto;
+	@Input() size = 'default';
 	decodedPhoto$: Observable<string>;
 
 	constructor(private readonly imageDecoderService: ImageDecoderService) { }

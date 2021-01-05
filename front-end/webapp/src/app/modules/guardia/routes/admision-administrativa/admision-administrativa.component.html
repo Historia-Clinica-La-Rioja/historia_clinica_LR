@@ -9,7 +9,7 @@
 	<form fxLayout="column" fxLayoutGap="10px" id="admisionForm" [formGroup]="form" (ngSubmit)="continue()"
 		class="form">
 		<ng-container *ngIf="patientCardInfo">
-			<app-patient-card [patient]="patientCardInfo.basicData" [personPhoto]="patientCardInfo.photo">
+			<app-patient-card [patient]="patientCardInfo.basicData" [personPhoto]="patientCardInfo.photo" size="small">
 				<div horizontal-content fxFlexAlign="center">
 					<button mat-icon-button color="warn" (click)="clearSelectedPatient()">
 						<mat-icon>delete_outline</mat-icon>

@@ -1,7 +1,12 @@
 @import "../../../../../assets/styles/variables";
 
+.default {
+	mat-card.mat-card{
+		min-height: 120px;
+	}
+}
+
 mat-card.mat-card {
-	min-height: 120px;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -28,3 +33,24 @@ mat-card-title {
 mat-card-subtitle {
 	margin-bottom: 0;
 }
+
+
+.small {
+	.mat-card-header .mat-card-title {
+		font-size: 14px;
+	}
+
+	.mat-card-md-image {
+		width: 60px;
+		height: 60px;
+	}
+
+	mat-card.mat-card {
+		min-height: 11px !important;
+	}
+
+	.mat-card-subtitle {
+		font-size: 11px;
+	}
+}
+

@@ -25,9 +25,9 @@
 						<input matInput type="text" id="identificationNumber" name="identificationNumber"
 							formControlName="identificationNumber"
 							placeholder="{{'pacientes.search_patient.forms.IDENTIFICATION_NUMBER' | translate }}">
-							<mat-error *ngIf="hasError(formSearch, 'required', 'identificationNumber')">
-								<span translate="forms.REQUIRED"></span>
-							</mat-error>
+						<mat-error *ngIf="hasError(formSearch, 'required', 'identificationNumber')">
+							<span translate="forms.REQUIRED"></span>
+						</mat-error>
 					</mat-form-field>
 
 					<div class="gender">
@@ -54,11 +54,11 @@
 				</div>
 			</form>
 
-			<div class="results" fxFlex = 100%>
+			<div class="results" fxFlex=100%>
 				<span translate="pacientes.search_patient.SELECT_PATIENT"></span>
 				<div *ngIf="cardPatient" class="patient-cards">
-					<app-patient-card [patient]="cardPatient.basicData" [personPhoto]="cardPatient.photo"
-						class="patient-card" (click)="selectPatient()">
+					<app-patient-card [patient]="cardPatient.basicData" [personPhoto]="cardPatient.photo" size="small"
+						(click)="selectPatient()">
 					</app-patient-card>
 				</div>
 			</div>
@@ -71,9 +71,9 @@
 				<mat-form-field appearance="outline">
 					<input matInput type="number" id="patientId" name="patientId" formControlName="id"
 						placeholder="{{ 'pacientes.search_patient.forms.PATIENT_ID' | translate}}">
-						<mat-error *ngIf="hasError(formSearchById, 'required', 'id')">
-							<span translate="forms.REQUIRED"></span>
-						</mat-error>
+					<mat-error *ngIf="hasError(formSearchById, 'required', 'id')">
+						<span translate="forms.REQUIRED"></span>
+					</mat-error>
 				</mat-form-field>
 				<div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="5px">
 					<button mat-stroked-button color="primary" type="reset" (click)="clearResults()" class="uppercase"
@@ -84,11 +84,11 @@
 				</div>
 			</form>
 
-			<div class="results" fxFlex = 100%>
+			<div class="results" fxFlex=100%>
 				<span translate="pacientes.search_patient.SELECT_PATIENT"></span>
 				<div *ngIf="cardPatient" class="patient-cards">
-					<app-patient-card [patient]="cardPatient.basicData" [personPhoto]="cardPatient.photo"
-						class="patient-card" (click)="selectPatient()">
+					<app-patient-card [patient]="cardPatient.basicData" [personPhoto]="cardPatient.photo" size="small"
+						(click)="selectPatient()">
 					</app-patient-card>
 				</div>
 			</div>
