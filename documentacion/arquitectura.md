@@ -3,7 +3,7 @@
 El proyecto de hospitales se centro en realizar un sistema web que permite a los usuarios poder llevar a cabo las distintas tareas diarias que se presentan en su trabajo. A partir de las distintas reuniones que se tuvieron con el cliente se llego a establecer la siguiente arquitectura.
 
 
-![Arquitectura general](Arquitectura.png)
+![Arquitectura general](images/Arquitectura.png)
 
 
 Como se puede apreciar en la imagen, el sistema tiene dos grandes componentes que lo conforman. La parte de frontend y la de backend.
