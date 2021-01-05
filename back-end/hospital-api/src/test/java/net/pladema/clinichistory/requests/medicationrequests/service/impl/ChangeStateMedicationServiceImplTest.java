@@ -8,6 +8,7 @@ import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.service.NoteService;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.CreateMedicationService;
+import net.pladema.clinichistory.documents.service.ips.SnomedService;
 import net.pladema.clinichistory.mocks.MedicationTestMocks;
 import net.pladema.clinichistory.requests.medicationrequests.service.ChangeStateMedicationService;
 import net.pladema.sgx.dates.configuration.DateTimeProvider;
@@ -41,6 +42,8 @@ public class ChangeStateMedicationServiceImplTest extends UnitRepository {
     @MockBean
     private DocumentService documentService;
 
+    @MockBean
+    private SnomedService snomedService;
 
     @MockBean
     private CreateMedicationService createMedicationService;
@@ -54,7 +57,7 @@ public class ChangeStateMedicationServiceImplTest extends UnitRepository {
     @Before
     public void setUp() {
         changeStateMedicationService = new ChangeStateMedicationServiceImpl(medicationStatementRepository,
-                createMedicationService, dosageRepository, documentService, noteService, dateTimeProvider);
+                createMedicationService, dosageRepository, documentService, noteService, snomedService, dateTimeProvider);
     }
 
     @Test
@@ -204,7 +207,7 @@ public class ChangeStateMedicationServiceImplTest extends UnitRepository {
 
         when(dateTimeProvider.nowDate()).thenReturn(LocalDate.of(2020, 12, 20));
         dosageId = save(MedicationTestMocks.createDosage(7d, "d", 8, "h", false,
-                LocalDate.of(2020, 12, 16), LocalDate.of(2020, 12, 23), LocalDate.of(2020, 12, 18), LocalDate.of(2020, 12, 20))).getId();
+                LocalDate.of(2020, 12, 16), LocalDate.of(2020, 12, 23), LocalDate.of(2020, 12, 18), LocalDate.of(2020, 12, 19))).getId();
         Integer medication4Id = save(MedicationTestMocks.createMedicationStatement(patientId, ibuprofenoId, "", MedicationStatementStatus.SUSPENDED, null, 9, dosageId)).getId();
 
         exception = Assertions.assertThrows(IllegalArgumentException.class, () ->

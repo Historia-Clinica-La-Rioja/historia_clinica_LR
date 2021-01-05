@@ -43,7 +43,7 @@ public class ListMedicationRepositoryImpl implements ListMedicationRepository {
                 "SELECT t.id AS id, s.id AS m_s_id, s.sctid AS m_sctid, s.pt AS m_pt " +
                 ", mss.id AS statusId, mss.description AS status " +
                 ", h.id AS hid, h.s_id AS h_s_id, h.sctid_id AS h_sctid, h.pt AS h_pt, n.description AS note " +
-                ", d.id AS d_id, d.duration AS duration, d.frequency, d.period_unit, d.chronic, d.start_date " +
+                ", d.id AS d_id, d.duration AS duration, d.frequency, d.period_unit, d.chronic, d.start_date, d.end_date " +
                 ", d.suspended_start_date, d.suspended_end_date " +
                 ", mr.id AS mr_id, CASE WHEN mr.has_recipe IS NULL THEN false ELSE mr.has_recipe END, t.created_by AS user_id " +
                 ", t.created_on AS m_created_on " +

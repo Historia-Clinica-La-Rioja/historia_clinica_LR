@@ -9,6 +9,7 @@ import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.service.NoteService;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.CreateMedicationService;
+import net.pladema.clinichistory.documents.service.ips.SnomedService;
 import net.pladema.clinichistory.documents.service.ips.domain.DosageBo;
 import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionBo;
 import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
@@ -41,6 +42,8 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
 
     private final MedicationStatementRepository medicationStatementRepository;
 
+    private final SnomedService snomedService;
+
     private final DateTimeProvider dateTimeProvider;
 
     public ChangeStateMedicationServiceImpl(MedicationStatementRepository medicationStatementRepository,
@@ -48,12 +51,13 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
                                             DosageRepository dosageRepository,
                                             DocumentService documentService,
                                             NoteService noteService,
-                                            DateTimeProvider dateTimeProvider) {
+                                            SnomedService snomedService, DateTimeProvider dateTimeProvider) {
         this.medicationStatementRepository = medicationStatementRepository;
         this.createMedicationService = createMedicationService;
         this.dosageRepository = dosageRepository;
         this.documentService = documentService;
         this.noteService = noteService;
+        this.snomedService = snomedService;
         this.dateTimeProvider = dateTimeProvider;
     }
 
@@ -119,7 +123,7 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
             return false;
         if (dosage == null)
             return true;
-        return dosage.getSuspendedEndDate() != null &&  dateTimeProvider.nowDate().isBefore(dosage.getSuspendedEndDate());
+        return dosage.getSuspendedEndDate() != null &&  !dateTimeProvider.nowDate().isAfter(dosage.getSuspendedEndDate());
 
     }
 
@@ -128,7 +132,7 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
             return false;
         if (dosage == null)
             return true;
-        return dosage.getEndDate() != null && dateTimeProvider.nowDate().isAfter(dosage.getEndDate());
+        return dosage.getEndDate() != null && !dateTimeProvider.nowDate().isBefore(dosage.getEndDate());
     }
 
     private MedicationBo updateMedication(MedicationStatement medication, Dosage dosage, String note, String newStatusId, Short duration) {
@@ -144,6 +148,8 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
         result.setNote(note);
 
         result.setDosage(createDosage(dosage, newStatusId, duration));
+
+        result.setSnomed(snomedService.getSnomed(medication.getSnomedId()));
         LOG.debug("Result {}", result);
         return result;
     }

@@ -74,17 +74,18 @@ public class ListMedicationInfoServiceImpl implements ListMedicationInfoService 
             d.setPeriodUnit(row[14] != null ? EUnitsOfTimeBo.map((String) row[14]) : null);
             d.setChronic((Boolean) row[15]);
             d.setStartDate(row[16] != null ? ((Date) row[16]).toLocalDate() : null);
-            d.setSuspendedStartDate(row[17] != null ? ((Date) row[17]).toLocalDate() : null);
-            d.setSuspendedEndDate(row[18] != null ? ((Date) row[18]).toLocalDate() : null);
+            d.setEndDate(row[17] != null ? ((Date) row[17]).toLocalDate() : null);
+            d.setSuspendedStartDate(row[18] != null ? ((Date) row[18]).toLocalDate() : null);
+            d.setSuspendedEndDate(row[19] != null ? ((Date) row[19]).toLocalDate() : null);
             result.setDosage(d);
         }
 
-        result.setEncounterId((Integer)row[19]);
-        result.setHasRecipe(row[20] != null && (Boolean)row[20]);
+        result.setEncounterId((Integer)row[20]);
+        result.setHasRecipe(row[21] != null && (Boolean)row[21]);
         result.setSuspended(isSuspended(result.getStatusId(), result.getDosage()));
 
-        result.setUserId((Integer) row[21]);
-        result.setCreatedOn(row[22] != null ? ((Timestamp) row[22]).toLocalDateTime().toLocalDate() : null);
+        result.setUserId((Integer) row[22]);
+        result.setCreatedOn(row[23] != null ? ((Timestamp) row[23]).toLocalDateTime().toLocalDate() : null);
         LOG.trace("OUTPUT -> {}", result);
         return result;
     }
@@ -113,7 +114,7 @@ public class ListMedicationInfoServiceImpl implements ListMedicationInfoService 
             return false;
         if (dosage == null)
             return true;
-        return dosage.getEndDate() != null && dateTimeProvider.nowDate().isAfter(dosage.getEndDate());
+        return dosage.getEndDate() != null && !dateTimeProvider.nowDate().isBefore(dosage.getEndDate());
     }
 
     private boolean isSuspended(String statusId, DosageBo dosage) {
@@ -121,6 +122,6 @@ public class ListMedicationInfoServiceImpl implements ListMedicationInfoService 
             return false;
         if (dosage == null)
             return true;
-        return dosage.getSuspendedEndDate() != null &&  dateTimeProvider.nowDate().isBefore(dosage.getSuspendedEndDate());
+        return dosage.getSuspendedEndDate() != null &&  !dateTimeProvider.nowDate().isAfter(dosage.getSuspendedEndDate());
     }
 }
