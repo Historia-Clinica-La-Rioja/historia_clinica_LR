@@ -143,7 +143,8 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
         result.setNote(note);
 
         result.setDosage(createDosage(dosage, newStatusId, duration));
-        return null;
+        LOG.debug("Result {}", result);
+        return result;
     }
 
     private DosageBo createDosage(Dosage dosage, String newStatusId, Short duration) {
