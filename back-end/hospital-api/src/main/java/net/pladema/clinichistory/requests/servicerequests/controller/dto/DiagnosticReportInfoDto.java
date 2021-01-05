@@ -26,4 +26,5 @@ public class DiagnosticReportInfoDto {
     private String statusId;
     private DoctorInfoDto doctor;
     private Integer serviceRequestId;
+    private long totalDays;
 }

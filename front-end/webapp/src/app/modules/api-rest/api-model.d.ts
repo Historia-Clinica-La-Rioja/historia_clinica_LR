@@ -340,6 +340,7 @@ export interface DiagnosticReportInfoDto {
     serviceRequestId: number;
     snomed: SnomedDto;
     statusId: string;
+    totalDays: number;
 }
 
 export interface DiaryADto {

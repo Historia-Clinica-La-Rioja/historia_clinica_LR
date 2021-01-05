@@ -26,7 +26,7 @@ public class ListDiagnosticReportRepositoryImpl implements ListDiagnosticReportR
 
         String sqlString = "with temporal as (" +
                 "SELECT DISTINCT " +
-                "dr.id, dr.snomed_id, dr.status_id, dr.health_condition_id, dr.note_id, d.source_id, d.created_by, dr.updated_on, " +
+                "dr.id, dr.snomed_id, dr.status_id, dr.health_condition_id, dr.note_id, dr.effective_time, d.source_id, d.created_by, dr.updated_on, " +
                 "row_number() OVER (PARTITION by dr.snomed_id, dr.health_condition_id ORDER BY dr.updated_on desc) AS rw " +
                 "FROM document d " +
                 "JOIN document_diagnostic_report ddr ON d.id = ddr.document_id " +
@@ -38,7 +38,8 @@ public class ListDiagnosticReportRepositoryImpl implements ListDiagnosticReportR
                 "SELECT t.id AS id, s.id AS d_id, s.pt AS m_pt " +
                 ", drs.id AS statusId, drs.description AS status " +
                 ", h.id AS hid, h.s_id AS h_id, h.pt AS h_pt, n.description AS note " +
-                ", t.source_id AS sr_id, t.created_by AS user_id, s.sctid AS d_sctid, h.sctid AS h_sctid " +
+                ", t.source_id AS sr_id, t.created_by AS user_id, s.sctid AS d_sctid, " +
+                "h.sctid AS h_sctid, t.effective_time " +
                 "FROM temporal t " +
                 "JOIN snomed s ON (t.snomed_id = s.id) " +
                 "JOIN diagnostic_report_status drs ON (drs.id = t.status_id) " +

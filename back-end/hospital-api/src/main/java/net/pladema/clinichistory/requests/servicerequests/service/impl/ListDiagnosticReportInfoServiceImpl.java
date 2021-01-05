@@ -16,6 +16,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,6 +68,7 @@ public class ListDiagnosticReportInfoServiceImpl implements ListDiagnosticReport
         result.setEncounterId((Integer) row[9]);
 
         result.setUserId((Integer) row[10]);
+        result.setEffectiveTime(row[13] != null ? ((Timestamp) row[13]).toLocalDateTime() : null);
         LOG.trace("OUTPUT -> {}", result);
         return result;
     }
