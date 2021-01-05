@@ -1,0 +1,72 @@
+<div fxLayout="column">
+	<app-triage (onTriageCategoryIdChange)="setTriageCategoryId($event)"
+	            (onDoctorsOfficeIdChange)="setDoctorsOfficeId($event)">
+	</app-triage>
+
+	<form [formGroup]="pediatricForm" fxLayout="column" fxFlex="grow shrink initial">
+		<h3 class="page-title" [translate]="'guardia.triage.EVALUATION'"></h3>
+		<div fxLayout="row">
+			<mat-form-field class="example-full-width">
+				<textarea matInput placeholder="Descripción" name="evaluation"></textarea>
+			</mat-form-field>
+		</div>
+
+		<h3 class="page-title" [translate]="'guardia.triage.APPEARANCE'"></h3>
+		<mat-form-field appearance="outline" fxLayout="row">
+			<mat-label [translate]="'guardia.triage.TEMPERATURE'"></mat-label>
+			<mat-select formControlName="bodyTemperatureId">
+				<mat-option id="bodyTemperatureId"
+				            *ngFor="let bodyTemperature of bodyTemperatures" [value]="bodyTemperature.id">
+					{{bodyTemperature.description}}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+		<div fxLayout="column">
+			<mat-label [translate]="'guardia.triage.CRYING_EXCESSIVE'"></mat-label>
+			<mat-radio-group name="cryingExcesive" id="cryingExcesive" formControlName="cryingExcesive" fxLayoutGap="20px">
+				<mat-radio-button id="withCryingExcesive" value='true'>
+					Si
+				</mat-radio-button>
+				<mat-radio-button id="withoutCryingExcesive" value='false'>
+					No
+				</mat-radio-button>
+			</mat-radio-group>
+		</div>
+		<mat-form-field appearance="outline" fxLayout="row">
+			<mat-label [translate]="'guardia.triage.MUSCLE_HYPERTONIA'"></mat-label>
+			<mat-select formControlName="triageCategoryId">
+				<mat-option id="triageCategoryId"
+				            *ngFor="let muscleHypertonya of muscleHypertonyaOptions" [value]="muscleHypertonya.id">
+					{{muscleHypertonya.description}}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+
+		<h3 class="page-title" [translate]="'guardia.triage.BREATH'"></h3>
+		<mat-form-field appearance="outline" fxLayout="row">
+			<mat-label [translate]="'guardia.triage.RESPIRATORY_RATE'"></mat-label>
+			<input matInput type="text" id="respiratoryRate" name="respiratoryRate"
+			       formControlName="respiratoryRate"
+			       placeholder="{{'pacientes.search_patient.forms.RESPIRATORY_RATE' | translate }}">
+		</mat-form-field>
+		<mat-form-field appearance="outline" fxLayout="row">
+			<mat-label [translate]="'guardia.triage.RESPIRATORY_RETRACTION'"></mat-label>
+			<mat-select formControlName="respiratoryRetractionId">
+				<mat-option id="respiratoryRetractionId"
+				            *ngFor="let respiratoryRetraction of respiratoryRetractionOptions"
+				            [value]="respiratoryRetraction.id">
+					{{respiratoryRetraction.description}}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+	</form>
+
+	<mat-action-row>
+		<button mat-stroked-button class="uppercase" (click)="back()">
+			<span [translate]="cancelLabel"></span>
+		</button>
+		<button mat-raised-button class="uppercase" color="primary" matBadgeColor="accent" (click)="confirm()">
+			<span [translate]="confirmLabel"></span>
+		</button>
+	</mat-action-row>
+</div>

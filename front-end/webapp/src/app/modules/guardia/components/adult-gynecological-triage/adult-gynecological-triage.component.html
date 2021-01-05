@@ -1,0 +1,69 @@
+<div fxLayout="column">
+	<app-triage (onTriageCategoryIdChange)="setTriageCategoryId($event)"
+	            (onDoctorsOfficeIdChange)="setDoctorsOfficeId($event)">
+	</app-triage>
+
+	<h3 class="page-title" [translate]="'guardia.triage.VITAL_SIGNS'"></h3>
+	<form [formGroup]="adultGynecologicalForm" fxLayout="column" fxFlex="grow shrink initial">
+		<div fxLayout="row" fxLayoutGap="20px">
+			<mat-form-field appearance="outline">
+				<mat-label [translate]="'guardia.triage.HEART_RATE'"></mat-label>
+				<input matInput type="text" id="heartRate" name="heartRate"
+				       formControlName="heartRate"
+				       placeholder="{{'pacientes.search_patient.forms.HEART_RATE' | translate }}">
+			</mat-form-field>
+			<mat-form-field appearance="outline">
+				<mat-label [translate]="'guardia.triage.RESPIRATORY_RATE'"></mat-label>
+				<input matInput type="text" id="respiratoryRate" name="respiratoryRate"
+				       formControlName="respiratoryRate"
+				       placeholder="{{'pacientes.search_patient.forms.RESPIRATORY_RATE' | translate }}">
+			</mat-form-field>
+		</div>
+		<div fxLayout="row" fxLayoutGap="20px">
+			<mat-form-field appearance="outline">
+				<mat-label [translate]="'guardia.triage.TEMPERATURE'"></mat-label>
+				<input matInput type="text" id="temperature" name="temperature"
+				       formControlName="temperature"
+				       placeholder="{{'pacientes.search_patient.forms.TEMPERATURE' | translate }}">
+			</mat-form-field>
+			<mat-form-field appearance="outline">
+				<mat-label [translate]="'guardia.triage.OXIGEN_SATURATION'"></mat-label>
+				<input matInput type="text" id="bloodOxygenSaturation" name="bloodOxygenSaturation"
+				       formControlName="bloodOxygenSaturation"
+				       placeholder="{{'pacientes.search_patient.forms.OXIGEN_SATURATION' | translate }}">
+			</mat-form-field>
+		</div>
+		<div fxLayout="row" fxLayoutGap="20px">
+			<mat-form-field appearance="outline">
+				<mat-label [translate]="'guardia.triage.SYSTOLIC_BLOOD'"></mat-label>
+				<input matInput type="text" id="systolicBloodPressure" name="systolicBloodPressure"
+				       formControlName="systolicBloodPressure"
+				       placeholder="{{'pacientes.search_patient.forms.SYSTOLIC_BLOOD' | translate }}">
+			</mat-form-field>
+			<mat-form-field appearance="outline">
+				<mat-label [translate]="'guardia.triage.DIASTOLIC_BLOOD'"></mat-label>
+				<input matInput type="text" id="diastolicBloodPressure" name="diastolicBloodPressure"
+				       formControlName="diastolicBloodPressure"
+				       placeholder="{{'pacientes.search_patient.forms.DIASTOLIC_BLOOD' | translate }}">
+			</mat-form-field>
+		</div>
+
+		<h3 class="page-title" [translate]="'guardia.triage.EVALUATION'"></h3>
+		<div fxLayout="row">
+			<mat-form-field class="example-full-width">
+				<textarea matInput placeholder="Descripción" name="evaluation"></textarea>
+			</mat-form-field>
+		</div>
+
+	</form>
+
+	<mat-action-row>
+		<button mat-stroked-button class="uppercase" (click)="back()">
+			<span [translate]="cancelLabel"></span>
+		</button>
+		<button mat-raised-button class="uppercase" color="primary" matBadgeColor="accent" (click)="confirm()">
+			<span [translate]="confirmLabel"></span>
+		</button>
+	</mat-action-row>
+
+</div>

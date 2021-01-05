@@ -17,6 +17,10 @@ import { NewEpisodeService } from './services/new-episode.service';
 import { EpisodeStateService } from './services/episode-state.service';
 import { SelectConsultorioComponent } from './dialogs/select-consultorio/select-consultorio.component';
 import { EpisodeDetailsComponent } from './routes/episode-details/episode-details.component';
+import { AdultGynecologicalTriageComponent } from './components/adult-gynecological-triage/adult-gynecological-triage.component';
+import { NewEpisodeAdultGynecologicalTriageComponent } from './routes/new-episode-adult-gynecological-triage/new-episode-adult-gynecological-triage.component';
+import { PediatricTriageComponent } from './components/pediatric-triage/pediatric-triage.component';
+import { NewEpisodePediatricTriageComponent } from './routes/new-episode-pediatric-triage/new-episode-pediatric-triage.component';
 
 @NgModule({
 	declarations: [
@@ -26,6 +30,10 @@ import { EpisodeDetailsComponent } from './routes/episode-details/episode-detail
 		NewEpisodeAdminTriageComponent,
 		AdmisionAdministrativaComponent,
 		AdministrativeTriageDialogComponent,
+		AdultGynecologicalTriageComponent,
+		NewEpisodeAdultGynecologicalTriageComponent,
+		PediatricTriageComponent,
+		NewEpisodePediatricTriageComponent,
 		SelectConsultorioComponent,
 		EpisodeDetailsComponent,
 	],

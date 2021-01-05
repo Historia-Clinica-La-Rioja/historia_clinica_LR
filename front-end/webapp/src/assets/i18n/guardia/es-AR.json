@@ -6,10 +6,23 @@
 			"ADM_TRIAGE": "Triage"
 		},
 		"triage": {
-			"LEVEL": "Nivel de urgencia",
-			"TITLE": "Nuevo triage",
+			"APPEARANCE": "Apariencia",
+			"BREATH": "Respiración",
 			"CONFIRM": "Confirmar triage",
-			"ROOM": "Consultorio"
+			"CRYING_EXCESSIVE": "Llanto sin consuelo",
+			"DIASTOLIC_BLOOD": "Tensión arterial diastólica",
+			"EVALUATION": "Evaluación",
+			"HEART_RATE": "Frecuencia cardíaca",
+			"LEVEL": "Nivel de urgencia",
+			"MUSCLE_HYPERTONIA": "Tono muscular",
+			"OXIGEN_SATURATION": "Saturación de oxígeno (%)",
+			"RESPIRATORY_RATE": "Frecuencia respiratoria",
+			"RESPIRATORY_RETRACTION": "Respiración con tiraje",
+			"ROOM": "Consultorio",
+			"SYSTOLIC_BLOOD": "Tensión arterial sistólica",
+			"VITAL_SIGNS": "Signos vitales",
+			"TEMPERATURE": "Temperatura",
+			"TITLE": "Nuevo triage"
 		},
 		"administrative_admision": {
 			"TITLE": "Nuevo episodio",
