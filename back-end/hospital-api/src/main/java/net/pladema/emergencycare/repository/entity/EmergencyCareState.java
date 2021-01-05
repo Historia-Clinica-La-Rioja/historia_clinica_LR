@@ -23,6 +23,11 @@ public class EmergencyCareState implements Serializable {
 		 */
 		private static final long serialVersionUID = 288115248758489524L;
 
+		public static final short EN_ATENCION = 1;
+		public static final short EN_ESPERA = 2;
+		public static final short FINALIZADO_POR_AUSENCIA = 3;
+		public static final short FINALIZADO_POR_ALTA = 4;
+
 		@Id
 		@Column(name = "id")
 		private Short id;

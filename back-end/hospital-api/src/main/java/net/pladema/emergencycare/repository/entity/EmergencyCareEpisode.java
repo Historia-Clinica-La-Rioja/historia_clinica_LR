@@ -44,7 +44,7 @@ public class EmergencyCareEpisode extends SGXAuditableEntity {
 	private Short emergencyCareStateId;
 
 	@Column(name = "emergency_care_entrance_type_id")
-	private Short emergency_care_entrance_type_id;
+	private Short emergencyCareEntranceTypeId;
 
 	@Column(name = "triage_category_id", nullable = false)
 	private Short triageCategoryId;
@@ -57,6 +57,5 @@ public class EmergencyCareEpisode extends SGXAuditableEntity {
 
 	@Column(name = "police_intervention_id")
 	private Integer policeInterventionId;
-
 }
 

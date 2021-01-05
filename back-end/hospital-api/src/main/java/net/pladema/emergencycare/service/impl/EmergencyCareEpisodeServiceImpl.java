@@ -1,5 +1,7 @@
 package net.pladema.emergencycare.service.impl;
 
+import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
+import net.pladema.emergencycare.repository.domain.EmergencyCareVo;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
 import net.pladema.sgx.masterdata.repository.MasterDataProjection;
@@ -7,23 +9,33 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeService {
 
     private static final Logger LOG = LoggerFactory.getLogger(EmergencyCareEpisodeServiceImpl.class);
 
-    public EmergencyCareEpisodeServiceImpl(){
+    public static final String OUTPUT = "Output -> {}";
+
+    private final EmergencyCareEpisodeRepository emergencyCareEpisodeRepository;
+
+    public EmergencyCareEpisodeServiceImpl(EmergencyCareEpisodeRepository emergencyCareEpisodeRepository){
         super();
+        this.emergencyCareEpisodeRepository = emergencyCareEpisodeRepository;
     }
 
     @Override
     public List<EmergencyCareBo> getAll(Integer institutionId) {
         LOG.debug("Input parameters -> institutionId {}", institutionId);
-        //TODO implement method
-        return new ArrayList<>();
+        List<EmergencyCareVo> resultQuery = emergencyCareEpisodeRepository.getAll(institutionId);
+        List<EmergencyCareBo> result = resultQuery.stream().map(EmergencyCareBo::new)
+                .sorted(Comparator.comparing(EmergencyCareBo::getEmergencyCareState).thenComparing(EmergencyCareBo::getTriageCategoryId).thenComparing(EmergencyCareBo::getCreatedOn))
+                        .collect(Collectors.toList());
+        LOG.debug(OUTPUT, result);
+        return result;
     }
 
     @Override

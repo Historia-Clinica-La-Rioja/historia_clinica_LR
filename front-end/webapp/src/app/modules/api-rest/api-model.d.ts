@@ -447,6 +447,12 @@ export interface DosageInfoDto extends Serializable {
 export interface ECAdministrativeDto extends Serializable {
 }
 
+export interface EEmergencyCareState {
+}
+
+export interface EEmergencyCareType {
+}
+
 export interface EffectiveClinicalObservationDto extends ClinicalObservationDto {
     effectiveTime: string;
 }
@@ -457,6 +463,15 @@ export interface EmergencyCareDto extends Serializable {
 }
 
 export interface EmergencyCareListDto extends Serializable {
+    doctorsOffice: number;
+    doctorsOfficeDescription: string;
+    emergencyCareState: EEmergencyCareState;
+    emergencyCareType: EEmergencyCareType;
+    firstname: string;
+    id: number;
+    lastname: string;
+    patientId: number;
+    triageCategoryId: number;
 }
 
 export interface EpicrisisDto extends Serializable {

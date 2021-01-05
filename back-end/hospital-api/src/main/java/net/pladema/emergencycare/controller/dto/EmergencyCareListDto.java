@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.ToString;
 import lombok.Value;
+import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
+import net.pladema.emergencycare.service.domain.enums.EEmergencyCareType;
 
 import java.io.Serializable;
 
@@ -13,5 +15,21 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class EmergencyCareListDto implements Serializable {
 
-    //TODO add specific attributes
+	private Integer id;
+
+	private String firstname;
+
+	private String lastname;
+
+	private Integer patientId;
+
+	private Short triageCategoryId;
+
+	private EEmergencyCareType emergencyCareType;
+
+	private EEmergencyCareState emergencyCareState;
+
+	private Integer doctorsOffice;
+
+	private String doctorsOfficeDescription;
 }
