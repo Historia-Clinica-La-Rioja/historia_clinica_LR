@@ -1,17 +1,14 @@
 package net.pladema.emergencycare.triage.service.domain.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import net.pladema.sgx.enums.MDSerializer;
-import net.pladema.sgx.enums.MasterDataEnum;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@JsonSerialize(using = MDSerializer.class)
-public enum EMuscleHypertonia implements MasterDataEnum {
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
+public enum EMuscleHypertonia {
 
     HIPERTONIA(1, "Hipertonía"),
     HIPOTONIA(2, "Hipotonía"),
@@ -29,12 +26,11 @@ public enum EMuscleHypertonia implements MasterDataEnum {
     public static List<EMuscleHypertonia> getAll(){
         return Stream.of(EMuscleHypertonia.values()).collect(Collectors.toList());
     }
-    @JsonValue
+
     public Short getId() {
         return id;
     }
 
-    @JsonValue
     public String getDescription() {
         return description;
     }

@@ -392,7 +392,6 @@
 					<mapEnum>asEnum</mapEnum>
 					<classPatterns>
 						<pattern>net.pladema.**.controller.**Dto</pattern>
-						<pattern>net.pladema.**.service.domain.enums.**</pattern>
 					</classPatterns>
 					<outputKind>module</outputKind>
 					<outputFile>../../front-end/webapp/src/app/modules/api-rest/api-model.d.ts</outputFile>

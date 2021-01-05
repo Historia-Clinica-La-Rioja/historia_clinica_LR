@@ -1,17 +1,14 @@
 package net.pladema.emergencycare.service.domain.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import net.pladema.sgx.enums.MDSerializer;
-import net.pladema.sgx.enums.MasterDataEnum;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@JsonSerialize(using = MDSerializer.class)
-public enum EEmergencyCareEntrance implements MasterDataEnum {
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
+public enum EEmergencyCareEntrance {
 
     CAMINANDO(1, "Caminando"),
     SILLA(2, "En silla de ruedas"),
@@ -31,12 +28,10 @@ public enum EEmergencyCareEntrance implements MasterDataEnum {
         return Stream.of(EEmergencyCareEntrance.values()).collect(Collectors.toList());
     }
 
-    @JsonValue
     public Short getId() {
         return id;
     }
 
-    @JsonValue
     public String getDescription() {
         return description;
     }

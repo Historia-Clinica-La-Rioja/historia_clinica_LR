@@ -1260,36 +1260,11 @@ export const enum AppFeature {
     HABILITAR_ORDENES_PRESCRIPCIONES = "HABILITAR_ORDENES_PRESCRIPCIONES",
 }
 
-export const enum EBodyTemperature {
-}
-
 export const enum EDocumentSearch {
     DIAGNOSIS = "DIAGNOSIS",
     DOCTOR = "DOCTOR",
     CREATED_ON = "CREATED_ON",
     ALL = "ALL",
-}
-
-export const enum EEmergencyCareEntrance {
-}
-
-export const enum EEmergencyCareState {
-    ATENCION = "ATENCION",
-    ESPERA = "ESPERA",
-    AUSENCIA = "AUSENCIA",
-    ALTA = "ALTA",
-}
-
-export const enum EEmergencyCareType {
-}
-
-export const enum EMuscleHypertonia {
-}
-
-export const enum EPerfusion {
-}
-
-export const enum ERespiratoryRetraction {
 }
 
 export const enum ERole {

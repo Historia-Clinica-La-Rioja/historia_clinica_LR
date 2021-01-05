@@ -1,12 +1,13 @@
 package net.pladema.emergencycare.service.domain.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum EEmergencyCareState {
 
     ATENCION(1, "En atención"),
@@ -23,16 +24,14 @@ public enum EEmergencyCareState {
     }
 
     @JsonCreator
-    public static Collection<EEmergencyCareEntrance> getAll(){
-        return Stream.of(EEmergencyCareEntrance.values()).collect(Collectors.toList());
+    public static Collection<EEmergencyCareState> getAll(){
+        return Stream.of(EEmergencyCareState.values()).collect(Collectors.toList());
     }
 
-    @JsonValue
     public Short getId() {
         return id;
     }
 
-    @JsonValue
     public String getDescription() {
         return description;
     }
