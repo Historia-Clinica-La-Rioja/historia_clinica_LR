@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HCEPersonalHistoryDto, SnomedDto } from '@api-rest/api-model';
@@ -14,7 +14,7 @@ import { hasError } from '@core/utils/form.utils';
   templateUrl: './agregar-prescripcion-item.component.html',
   styleUrls: ['./agregar-prescripcion-item.component.scss']
 })
-export class AgregarPrescripcionItemComponent implements OnInit {
+export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit {
 
 	loading = false;
 	searching = false;
@@ -41,21 +41,45 @@ export class AgregarPrescripcionItemComponent implements OnInit {
 		private readonly requestMasterDataService: RequestMasterDataService,
 		public dialogRef: MatDialogRef<AgregarPrescripcionItemComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: NewPrescriptionItemData) { }
-
+		
 	ngOnInit(): void {
 		this.formConfiguration();
-	
+		
 		this.hceGeneralStateService.getActiveProblems(this.data.patientId).subscribe((activeProblems: HCEPersonalHistoryDto[]) => {
 			this.healthProblemOptions = activeProblems.map(problem => {return {id: problem.id, description: problem.snomed.pt}});
 		});
-
+		
 		this.requestMasterDataService.categories().subscribe(categories => {
 			this.studyCategoryOptions = categories;
 		});
-
+		
 		if (this.data.item) {
 			this.setItemData(this.data.item);
 		} 
+	}
+
+	ngAfterViewInit(): void {
+		this.prescriptionItemForm.controls.interval.valueChanges.subscribe((newValue) => {
+			if(newValue !== this.DEFAULT_RADIO_OPTION) {
+				this.intervalHoursInput.nativeElement.focus();
+				this.prescriptionItemForm.controls.intervalHours.setValidators([Validators.required]);
+				this.prescriptionItemForm.controls.intervalHours.updateValueAndValidity();
+			} else {
+				this.prescriptionItemForm.controls.intervalHours.clearValidators();
+				this.prescriptionItemForm.controls.intervalHours.updateValueAndValidity();
+			}
+		});
+
+		this.prescriptionItemForm.controls.administrationTime.valueChanges.subscribe((newValue) => {
+			if(newValue !== this.DEFAULT_RADIO_OPTION) {
+				this.administrationTimeDaysInput.nativeElement.focus();
+				this.prescriptionItemForm.controls.administrationTimeDays.setValidators([Validators.required]);
+				this.prescriptionItemForm.controls.administrationTimeDays.updateValueAndValidity();
+			} else {
+				this.prescriptionItemForm.controls.administrationTimeDays.clearValidators();
+				this.prescriptionItemForm.controls.administrationTimeDays.updateValueAndValidity();
+			}
+		});
 	}
 
 	getInputNumberWidth(formControl: string) {
@@ -121,15 +145,19 @@ export class AgregarPrescripcionItemComponent implements OnInit {
 		if (prescriptionItem.isDailyInterval){
 			this.prescriptionItemForm.controls.interval.setValue(this.DEFAULT_RADIO_OPTION);
 		} else {
-			this.prescriptionItemForm.controls.intervalHours.setValue(prescriptionItem.intervalHours);
 			this.prescriptionItemForm.controls.interval.setValue(this.OTHER_RADIO_OPTION);
+			this.prescriptionItemForm.controls.intervalHours.setValue(prescriptionItem.intervalHours);
+			this.prescriptionItemForm.controls.intervalHours.setValidators([Validators.required]);
+			this.prescriptionItemForm.controls.intervalHours.updateValueAndValidity();
 		}
 
 		if (prescriptionItem.isChronicAdministrationTime) {
 			this.prescriptionItemForm.controls.administrationTime.setValue(this.DEFAULT_RADIO_OPTION)
 		} else {
-			this.prescriptionItemForm.controls.administrationTimeDays.setValue(prescriptionItem.administrationTimeDays);
 			this.prescriptionItemForm.controls.administrationTime.setValue(this.OTHER_RADIO_OPTION);
+			this.prescriptionItemForm.controls.administrationTimeDays.setValue(prescriptionItem.administrationTimeDays);
+			this.prescriptionItemForm.controls.administrationTimeDays.setValidators([Validators.required]);
+			this.prescriptionItemForm.controls.administrationTimeDays.updateValueAndValidity();
 		}
 
 		if (prescriptionItem.studyCategory.id) {
@@ -161,28 +189,6 @@ export class AgregarPrescripcionItemComponent implements OnInit {
 		if (this.data.showStudyCategory) {
 			this.prescriptionItemForm.controls.studyCategory.setValidators([Validators.required]);
 		}
-
-		this.prescriptionItemForm.controls.interval.valueChanges.subscribe((newValue) => {
-			if(newValue !== this.DEFAULT_RADIO_OPTION) {
-				this.intervalHoursInput.nativeElement.focus();
-				this.prescriptionItemForm.controls.intervalHours.setValidators([Validators.required]);
-				this.prescriptionItemForm.controls.intervalHours.updateValueAndValidity();
-			} else {
-				this.prescriptionItemForm.controls.intervalHours.clearValidators();
-				this.prescriptionItemForm.controls.intervalHours.updateValueAndValidity();
-			}
-		});
-
-		this.prescriptionItemForm.controls.administrationTime.valueChanges.subscribe((newValue) => {
-			if(newValue !== this.DEFAULT_RADIO_OPTION) {
-				this.administrationTimeDaysInput.nativeElement.focus();
-				this.prescriptionItemForm.controls.administrationTimeDays.setValidators([Validators.required]);
-				this.prescriptionItemForm.controls.administrationTimeDays.updateValueAndValidity();
-			} else {
-				this.prescriptionItemForm.controls.administrationTimeDays.clearValidators();
-				this.prescriptionItemForm.controls.administrationTimeDays.updateValueAndValidity();
-			}
-		});
 	}
 
 	private buildConceptsResultsTable(data: SnomedDto[]): TableModel<SnomedDto> {
