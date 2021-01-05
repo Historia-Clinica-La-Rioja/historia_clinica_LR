@@ -1901,4 +1901,13 @@ databaseChangeLog:
             referencedTableName: patient_medical_coverage
             validate: true
 
-
+    - changeSet:
+        id: addNotNullConstraint-emergency_care_episode
+        author: lbergottini
+        changes:
+        -  addNotNullConstraint:
+            columnDataType: int
+            columnName:  doctors_office_id
+            constraintName: NN_doctors_office_id
+            tableName:  emergency_care_episode
+            validate:  true
