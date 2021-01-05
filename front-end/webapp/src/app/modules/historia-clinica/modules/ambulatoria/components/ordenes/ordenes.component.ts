@@ -52,7 +52,7 @@ export class OrdenesComponent implements OnInit {
 		newMedicationDialog.afterClosed().subscribe((newPrescription: PrescriptionDto) => {
 			if(newPrescription) {
 				const newMedicationRequest$ = this.prescripcionesService.createPrescription(PrescriptionTypes.MEDICATION, newPrescription, this.patientId);
-				if (!newPrescription.hasRecipe) {
+				if (newPrescription.hasRecipe) {
 					const confirmPrescriptionDialog = this.dialog.open(ConfirmarPrescripcionComponent,
 						{
 							disableClose: true,
