@@ -83,13 +83,13 @@
 									<button id="atender" mat-menu-item
 											*ngIf="episode.state.id === estadosEpisodio.EN_ESPERA"
 											(click)="atender(episode.id)">
-										{{ 'guardia.home.episodes.episode.actions.ATENDER' | translate }}
+										{{ 'guardia.home.episodes.episode.actions.atender.TITLE' | translate }}
 									</button>
 
 									<button id="finalizar-ausencia" mat-menu-item
 											*ngIf="episode.state.id === estadosEpisodio.EN_ESPERA"
 											(click)="finalizar(episode.id)">
-										{{ 'guardia.home.episodes.episode.actions.FINALIZAR_AUSENCIA' | translate }}
+										{{ 'guardia.home.episodes.episode.actions.finalizar_ausencia.TITLE' | translate }}
 									</button>
 								</mat-menu>
 							</div>

@@ -51,17 +51,20 @@
 			"episodes": {
 				"episode": {
 					"actions": {
-						"ATENDER": "Atender",
-						"FINALIZAR_AUSENCIA": "Finalizar por ausencia",
-						"NUEVO_TRIAGE": "Nuevo triage",
-						"messages": {
-							"ATENDER_SUCCESS": "Estado de episodio actualizado a en atención exitosamente",
-							"ATENDER_ERROR": "Error al actualizar estado de episodio a en atención",
-							"FINALIZAR_AUSENCIA_SUCCESS": "Episodio finalizado por ausencia exitosamente",
-							"FINALIZAR_AUSENCIA_ERROR": "Error al finalizar por ausencia el episodio"
-						}
+						"atender": {
+							"TITLE": "Atender",
+							"SUCCESS": "Estado de episodio actualizado a en atención exitosamente",
+							"ERROR": "Error al actualizar estado de episodio a en atención"
+						},
+						"finalizar_ausencia": {
+							"TITLE": "Finalizar por ausencia",
+							"CONFIRM": "¿Está seguro que desea finalizar por ausencia el episodio?",
+							"SUCCESS":  "Episodio finalizado por ausencia exitosamente",
+							"ERROR": "Error al finalizar por ausencia el episodio"
+						},
+						"NUEVO_TRIAGE": "Nuevo triage"
 					},
-					"select-consultorio-dialog": {
+					"select_consultorio": {
 						"ATENDER": "Atender",
 						"CONSULTORIO": "Consultorio"
 					},

@@ -1,11 +1,11 @@
 <div mat-dialog-title>
-	{{ 'guardia.home.episodes.episode.select-consultorio-dialog.ATENDER' | translate }}
+	{{ 'guardia.home.episodes.episode.select_consultorio.ATENDER' | translate }}
 </div>
 
 <form [formGroup]="form" (ngSubmit)="submit()">
 	<div mat-dialog-content>
 		<mat-form-field style="width: 100%" appearance="outline">
-			<mat-label [translate]="'guardia.home.episodes.episode.select-consultorio-dialog.CONSULTORIO'"></mat-label>
+			<mat-label [translate]="'guardia.home.episodes.episode.select_consultorio.CONSULTORIO'"></mat-label>
 			<mat-select formControlName="consultorio">
 				<mat-option id="consultorio_{{doctorsOffice.id}}"
 							*ngFor="let doctorsOffice of doctorsOffices$ | async"

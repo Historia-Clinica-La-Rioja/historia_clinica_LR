@@ -13,8 +13,9 @@ import { EpisodeStateService } from '../../services/episode-state.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SelectConsultorioComponent } from '../../dialogs/select-consultorio/select-consultorio.component';
+import { ConfirmDialogComponent } from '@core/dialogs/confirm-dialog/confirm-dialog.component';
 
-const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions.messages';
+const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 
 @Component({
 	selector: 'app-home',
@@ -87,30 +88,41 @@ export class HomeComponent implements OnInit {
 			if (confirmed) {
 				this.episodeStateService.atender(episodeId, null).subscribe(changed => {
 						if (changed) {
-							this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.ATENDER_SUCCESS`);
+							this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.atender.SUCCESS`);
 							// redirect to episode
 						} else {
-							this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.ATENDER_ERROR`);
+							this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`);
 						}
-					}, _ => this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.ATENDER_ERROR`)
+					}, _ => this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`)
 				);
 			}
 		});
 	}
 
 	finalizar(episodeId: number): void {
-		this.episodeStateService.finalizarPorAusencia(episodeId).subscribe(changed => {
-				if (changed) {
-					this.snackBarService
-						.showSuccess(`${TRANSLATE_KEY_PREFIX}.FINALIZAR_AUSENCIA_SUCCESS`);
-					// redirect to episode
-				} else {
-					this.snackBarService
-						.showError(`${TRANSLATE_KEY_PREFIX}.FINALIZAR_AUSENCIA_ERROR`);
-				}
-			}, _ => this.snackBarService
-			.showError(`${TRANSLATE_KEY_PREFIX}.FINALIZAR_AUSENCIA_ERROR`)
-		);
+		const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+			data: {
+				title: 'guardia.home.episodes.episode.actions.finalizar_ausencia.TITLE',
+				content: 'guardia.home.episodes.episode.actions.finalizar_ausencia.CONFIRM'
+			}
+		});
+
+		dialogRef.afterClosed().subscribe(confirmed => {
+			if (confirmed) {
+				this.episodeStateService.finalizarPorAusencia(episodeId).subscribe(changed => {
+						if (changed) {
+							this.snackBarService
+								.showSuccess(`${TRANSLATE_KEY_PREFIX}.finalizar_ausencia.SUCCESS`);
+							// redirect to episode
+						} else {
+							this.snackBarService
+								.showError(`${TRANSLATE_KEY_PREFIX}.finalizar_ausencia.ERROR`);
+						}
+					}, _ => this.snackBarService
+						.showError(`${TRANSLATE_KEY_PREFIX}.finalizar_ausencia.ERROR`)
+				);
+			}
+		});
 	}
 
 	nuevoTriage(): void {
