@@ -25,6 +25,8 @@ public class ListDiagnosticReportInfoMapper {
         result.setObservations(diagnosticReportBo.getObservations());
         result.setStatusId(diagnosticReportBo.getStatusId());
         result.setDoctor(DoctorInfoDto.from(professionalDto));
+        result.setServiceRequestId(diagnosticReportBo.getEncounterId());
+
         LOG.debug("Output: {}", result);
         return result;
     }

@@ -134,7 +134,9 @@ export const MOCKS_ORDERS = [
 							"id": 1,
 							"firstName": "San",
 							"lastName": "Martin"
-						  }
+						  },
+						serviceRequestId: 1,
+						daysSinceEffectiveTime: 10
 					},
 					{
 						snomed: {
@@ -151,7 +153,9 @@ export const MOCKS_ORDERS = [
 							"id": 1,
 							"firstName": "San",
 							"lastName": "Martin"
-						  }
+						},
+						serviceRequestId: 5,
+						daysSinceEffectiveTime: 3
 					}
 				],
 			},

@@ -6,6 +6,8 @@ import net.pladema.clinichistory.requests.medicationrequests.controller.dto.Doct
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.HealthConditionInfoDto;
 
 import javax.annotation.Nullable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -23,5 +25,5 @@ public class DiagnosticReportInfoDto {
     private String link;
     private String statusId;
     private DoctorInfoDto doctor;
-
+    private Integer serviceRequestId;
 }

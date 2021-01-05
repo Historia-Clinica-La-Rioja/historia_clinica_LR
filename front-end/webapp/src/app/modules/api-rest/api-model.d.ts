@@ -337,6 +337,7 @@ export interface DiagnosticReportInfoDto {
     healthCondition: HealthConditionInfoDto;
     link?: string;
     observations?: string;
+    serviceRequestId: number;
     snomed: SnomedDto;
     statusId: string;
 }
