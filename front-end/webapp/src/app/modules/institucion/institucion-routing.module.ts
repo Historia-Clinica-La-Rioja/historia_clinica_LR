@@ -34,7 +34,7 @@ const routes: Routes = [
 			},
 			{
 				path: 'guardia',
-				loadChildren: () => import('../guardia/guardia.module').then(m => m.GuardiaModule),
+				loadChildren: () => import('../historia-clinica/modules/guardia/guardia.module').then(m => m.GuardiaModule),
 			},
 		],
 		canActivate: [RoleGuard],
