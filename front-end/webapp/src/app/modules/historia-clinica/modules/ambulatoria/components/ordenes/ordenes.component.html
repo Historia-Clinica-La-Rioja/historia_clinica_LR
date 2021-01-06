@@ -18,9 +18,14 @@
 									<h3 mat-line class="primary bold" *ngIf="true">
 										Activa
 									</h3>
-									<span mat-line class="mat-body">
-										Receta #{{medicationInfo.id}}
+									<span mat-line class="mat-body" *ngIf="medicationInfo.hasRecipe else NoRecipe">
+										Receta #{{medicationInfo.medicationRequestId}}
 									</span>
+									<ng-template #NoRecipe>
+										<span mat-line class="mat-body"
+											[translate]="'ambulatoria.paciente.ordenes_prescripciones.SIN_RECETA'">
+										</span>
+									</ng-template>
 									<span mat-line class="mat-body-strong capitalize-first-letter">
 										{{medicationInfo.snomed.pt}}
 									</span>

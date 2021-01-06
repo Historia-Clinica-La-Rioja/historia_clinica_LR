@@ -179,6 +179,7 @@
 				"MEDICACION": "Medicación",
 				"RECOMENDACIONES":"Recomendaciones generales",
 				"ESTUDIOS":"Estudios",
+				"SIN_RECETA":"Sin receta",
 				"add_prescription_item_dialog": {
 					"MEDICATION": "Medicación",
 					"MEDICATION_TITLE": "Agregar medicación",
