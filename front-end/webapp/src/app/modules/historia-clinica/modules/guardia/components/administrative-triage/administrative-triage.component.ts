@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { TriageDto } from "@api-rest/api-model";
+import { TriageAdministrativeDto, TriageDto } from "@api-rest/api-model";
 
 @Component({
 	selector: 'app-administrative-triage',
@@ -30,10 +30,10 @@ export class AdministrativeTriageComponent implements OnInit {
 	}
 
 	confirm(): void {
-		const triage: TriageDto = {
+		const triage: TriageAdministrativeDto = {
 				categoryId: this.triageCategoryId,
 				doctorsOfficeId: this.doctorsOfficeId
-			};
+		};
 		this.onConfirm.emit(triage);
 	}
 

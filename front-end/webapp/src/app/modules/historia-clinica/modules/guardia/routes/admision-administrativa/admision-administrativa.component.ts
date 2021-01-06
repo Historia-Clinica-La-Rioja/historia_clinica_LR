@@ -1,24 +1,30 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { BasicPatientDto, MasterDataInterface, PatientMedicalCoverageDto, PersonPhotoDto } from '@api-rest/api-model';
+import {
+	BasicPatientDto,
+	MasterDataInterface,
+	NewECAdministrativeDto,
+	PatientMedicalCoverageDto,
+	PersonPhotoDto, PoliceInterventionDto
+} from '@api-rest/api-model';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
-import { MedicalCoverageComponent, PatientMedicalCoverage } from '@core/dialogs/medical-coverage/medical-coverage.component';
+import { MedicalCoverageComponent } from '@core/dialogs/medical-coverage/medical-coverage.component';
 import { MapperService } from '@core/services/mapper.service';
 import { MapperService as PatientMapperService } from '@presentation/services/mapper.service';
 import { hasError, TIME_PATTERN } from '@core/utils/form.utils';
-import { DateFormat, momentFormat } from '@core/utils/moment.utils';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Observable } from 'rxjs';
 import { MotivoNuevaConsultaService } from 'src/app/modules/historia-clinica/modules/ambulatoria/services/motivo-nueva-consulta.service';
 import { SnomedService } from 'src/app/modules/historia-clinica/services/snomed.service';
 import { Patient, SearchPatientComponent } from 'src/app/modules/pacientes/component/search-patient/search-patient.component';
-import { AdministrativeAdmissionDto, NewEpisodeService } from '../../services/new-episode.service';
+import { NewEpisodeService } from '../../services/new-episode.service';
 import { Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
 import { PatientService } from "@api-rest/services/patient.service";
+import { dateToDateDto, dateToTimeDto } from "@api-rest/mapper/date-dto.mapper";
 
 @Component({
 	selector: 'app-admision-administrativa',
@@ -150,8 +156,8 @@ export class AdmisionAdministrativaComponent implements OnInit {
 
 	continue(): void {
 		const formValue = this.form.value;
-		const policeIntervention = this.hasPoliceIntervention ? toPoliceIntervention() : null;
-		const administrativeAdmisionDto: AdministrativeAdmissionDto = {
+		const policeIntervention: PoliceInterventionDto = this.hasPoliceIntervention ? this.toPoliceIntervention(formValue) : null;
+		const newECAdministrativeDto: NewECAdministrativeDto = {
 			patient: {
 				id: this.selectedPatient?.id,
 				patientMedicalCoverageId: formValue.patientMedicalCoverageId,
@@ -162,17 +168,8 @@ export class AdmisionAdministrativaComponent implements OnInit {
 			ambulanceCompanyId: formValue.ambulanceCompanyId,
 			policeIntervention,
 		}
-		this.goToBasicTriage(administrativeAdmisionDto);
+		this.goToBasicTriage(newECAdministrativeDto);
 
-		function toPoliceIntervention() {
-			return {
-				dateCall: formValue.dateCall ? momentFormat(formValue.dateCall, DateFormat.API_DATE) : null,
-				timeCall: formValue.timeCall,
-				plateNumber: formValue.plateNumber,
-				firstName: formValue.firstName,
-				lastName: formValue.lastName
-			};
-		}
 	}
 
 	onChange(mrChange): void {
@@ -201,7 +198,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 		}
 	}
 
-	goToBasicTriage(administrativeAdmisionDto: AdministrativeAdmissionDto): void {
+	goToBasicTriage(administrativeAdmisionDto: NewECAdministrativeDto): void {
 		this.newEpisodeService.setAdministrativeAdmission(administrativeAdmisionDto);
 		const url = `${this.routePrefix}guardia/nuevo-episodio/triage-administrativo`;
 		this.router.navigateByUrl(url);
@@ -222,4 +219,30 @@ export class AdmisionAdministrativaComponent implements OnInit {
 			this.patientMedicalCoverages = coverages;
 		});
 	}
+
+	private toPoliceIntervention(formValue): PoliceInterventionDto {
+
+		return {
+			dateCall: formValue.dateCall ? dateToDateDto(formValue.dateCall.toDate()) : undefined,
+			timeCall: formValue.timeCall ? dateToTimeDto(getDateWithTime(getTimeArray(formValue.timeCall))) : undefined,
+			plateNumber: formValue.plateNumber,
+			firstName: formValue.firstName,
+			lastName: formValue.lastName
+		};
+
+		/**
+		 * eg. 12:00
+		 */
+		function getTimeArray(timeString): string[] {
+			return  timeString.split(':');
+		}
+
+		function getDateWithTime(time: string[]): Date {
+			let date = new Date();
+			date.setHours(Number(time[0]), Number(time[1]));
+			return date;
+		}
+	}
+
+
 }

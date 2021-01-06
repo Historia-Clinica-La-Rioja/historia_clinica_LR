@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { ContextService } from "@core/services/context.service";
-import { TriageAdministrativeDto, TriageDto } from "@api-rest/api-model";
+import { TriageAdministrativeDto } from "@api-rest/api-model";
 import { environment } from "@environments/environment";
 import { Observable } from "rxjs";
 
