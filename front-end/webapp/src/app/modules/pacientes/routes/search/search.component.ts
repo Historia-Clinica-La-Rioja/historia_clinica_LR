@@ -67,7 +67,7 @@ export class SearchComponent implements OnInit {
 			this.identificationTypeId = params.identificationTypeId;
 			this.identificationNumber = params.identificationNumber;
 			this.genderId = params.genderId;
-			this.noIdentity = params.noIdentity==="true"? true : false;
+			this.noIdentity = params.noIdentity === 'true';
 			if (!this.noIdentity) {
 				this.buildFormSearchWithValidations(params);
 				this.featureFlagService.isOn(RENAPER_FFLAG)
@@ -164,7 +164,7 @@ export class SearchComponent implements OnInit {
 	}
 
 	openDialog(patient: PatientSearchDto): void {
-		const dialogRef = this.dialog.open(ViewPatientDetailComponent, {
+		this.dialog.open(ViewPatientDetailComponent, {
 			width: '450px',
 			data: {
 				id: patient.idPatient,
@@ -181,7 +181,7 @@ export class SearchComponent implements OnInit {
 
 		function calculateAge(birthDate: string): number {
 			const today: Moment = newMoment();
-			const birth: Moment = momentParseDate(birthDate);
+			const birth: Moment = momentParseDateTime(birthDate);
 
 			return today.diff(birth, 'years');
 		}
@@ -189,7 +189,7 @@ export class SearchComponent implements OnInit {
 
 	private buildFormSearchWithValidations(params) {
 		this.formSearch = this.formBuilder.group({
-			identificationNumber: [params.identificationNumber, this.identificationTypeId == IDENTIFICATION_TYPE_IDS.NO_POSEE? [] :
+			identificationNumber: [params.identificationNumber, this.identificationTypeId == IDENTIFICATION_TYPE_IDS.NO_POSEE ? [] :
 				[Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
 			identificationTypeId: [Number(params.identificationTypeId), Validators.required],
 			firstName: [params.firstName, Validators.required],
@@ -240,8 +240,8 @@ export class SearchComponent implements OnInit {
 			this.searchPatient = {
 				firstName: this.formSearch.controls.firstName.value,
 				lastName: this.formSearch.controls.lastName.value,
-				genderId: this.formSearch.controls.genderId.value? this.formSearch.controls.genderId.value : null,
-				identificationTypeId: this.formSearch.controls.identificationTypeId.value? this.formSearch.controls.identificationTypeId.value : null,
+				genderId: this.formSearch.controls.genderId.value ? this.formSearch.controls.genderId.value : null,
+				identificationTypeId: this.formSearch.controls.identificationTypeId.value ? this.formSearch.controls.identificationTypeId.value : null,
 				identificationNumber: this.formSearch.controls.identificationNumber.value,
 				birthDate: this.formSearch.controls.birthDate.value?.format(DateFormat.API_DATE),
 				otherLastNames: this.formSearch.controls.otherLastNames.value,
@@ -270,8 +270,7 @@ export class SearchComponent implements OnInit {
 			this.router.navigate([this.routePrefix + ROUTE_NEW_TEMPORARY], {
 				queryParams: person
 			});
-		}
-		else {
+		} else {
 			this.router.navigate([this.routePrefix + ROUTE_NEW], {
 				queryParams: person
 			});
@@ -282,12 +281,12 @@ export class SearchComponent implements OnInit {
 		if (this.searchPatient)
 			this.goToAddPatient(this.searchPatient);
 		else {
-			let patient = {
+			const patient = {
 				identificationTypeId: this.identificationTypeId,
 				identificationNumber: this.identificationNumber,
 				genderId: this.genderId,
 				typeId: PATIENT_TYPE.PERMANENT_INVALID
-			}
+			};
 			this.goToAddPatient(patient);
 		}
 	}
