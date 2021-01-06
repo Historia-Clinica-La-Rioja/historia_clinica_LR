@@ -1,6 +1,8 @@
 package net.pladema.clinichistory.requests.controller.dto;
 
 import io.swagger.annotations.Api;
+import net.pladema.clinichistory.requests.service.domain.EDiagnosticReportStatus;
+import net.pladema.clinichistory.requests.service.domain.EMedicationStatus;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequestCategory;
 import net.pladema.sgx.masterdata.repository.MasterDataProjection;
 import net.pladema.sgx.masterdata.service.MasterDataService;
@@ -29,11 +31,25 @@ public class RequestMasterdataController {
 
     @GetMapping(value = "/categories")
     public ResponseEntity<Collection<MasterDataProjection>> categories(){
-        LOG.debug("{}", "All allergy intolerance category");
+        LOG.debug("{}", "All request categories");
         Collection<MasterDataProjection> result = masterDataService.findAll(ServiceRequestCategory.class);
         LOG.debug("OUTPUT -> {}", result);
         return ResponseEntity.ok().body(result);
     }
-    
-    
+
+    @GetMapping(value = "/medication-status")
+    public ResponseEntity<Collection<EMedicationStatus>> medicationStatusFromEnum(){
+        LOG.debug("{}", "All allergy intolerance category");
+        Collection<EMedicationStatus> result = EMedicationStatus.getAll();
+        LOG.debug("OUTPUT -> {}", result);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping(value = "/diagnostic-report-status")
+    public ResponseEntity<Collection<EDiagnosticReportStatus>> diagnosticReportStatus(){
+        LOG.debug("{}", "All allergy intolerance category");
+        Collection<EDiagnosticReportStatus> result = EDiagnosticReportStatus.getAll();
+        LOG.debug("OUTPUT -> {}", result);
+        return ResponseEntity.ok().body(result);
+    }
 }
