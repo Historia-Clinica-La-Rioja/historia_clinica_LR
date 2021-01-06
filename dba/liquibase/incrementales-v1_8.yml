@@ -1,3 +1,39 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v1_8 
 
+    - changeSet:
+        id: addAutoIncrement-triage
+        author: tmedina
+        changes:
+            - addAutoIncrement:
+                columnDataType: int  
+                columnName: id  
+                generationType: ALWAYS  
+                incrementBy: 1  
+                startWith: 1 
+                tableName: triage
+
+    - changeSet:
+        id: addAutoIncrement-emergency_care_episode
+        author: tmedina
+        changes:
+            - addAutoIncrement:
+                columnDataType: int  
+                columnName: id  
+                generationType: ALWAYS  
+                incrementBy: 1  
+                startWith: 1 
+                tableName: emergency_care_episode
+
+    - changeSet:
+        id: addAutoIncrement-police_intervention
+        author: tmedina
+        changes:
+            - addAutoIncrement:
+                columnDataType: int  
+                columnName: id  
+                generationType: ALWAYS  
+                incrementBy: 1  
+                startWith: 1 
+                tableName: police_intervention
+

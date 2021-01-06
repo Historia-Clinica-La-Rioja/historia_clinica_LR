@@ -4,14 +4,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.emergencycare.triage.service.domain.TriageBo;
 import net.pladema.sgx.auditable.entity.SGXAuditListener;
 import net.pladema.sgx.auditable.entity.SGXAuditableEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "triage")
@@ -28,6 +25,7 @@ public class Triage  extends SGXAuditableEntity {
 
 	@Id
 	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
 	@Column(name = "emergency_care_episode_id", nullable = false)
@@ -41,4 +39,10 @@ public class Triage  extends SGXAuditableEntity {
 
 	@Column(name = "healthcare_professional_id")
 	private Integer healthcareProfessionalId;
+
+	public Triage(TriageBo triageBo) {
+		this.id = triageBo.getId();
+		this.emergencyCareEpisodeId = triageBo.getEmergencyCareEpisodeId();
+		this.triageCategoryId = triageBo.getCategoryId();
+	}
 }

@@ -62,6 +62,16 @@ export interface AddressDto extends Serializable {
     street: string;
 }
 
+export interface AdministrativeEmergencyCareDto extends Serializable {
+    administrative: NewECAdministrativeDto;
+    triage: TriageAdministrativeDto;
+}
+
+export interface AdultGynecologicalEmergencyCareDto extends Serializable {
+    administrative: NewECAdministrativeDto;
+    triage: TriageAdultGynecologicalDto;
+}
+
 export interface AllergyConditionDto extends HealthConditionDto {
     categoryId: string;
     date: string;
@@ -448,6 +458,10 @@ export interface DosageInfoDto extends Serializable {
 }
 
 export interface ECAdministrativeDto extends Serializable {
+    entranceTypeId: number;
+    policeIntervention: PoliceInterventionDto;
+    reasons: SnomedDto[];
+    typeId: number;
 }
 
 export interface EEmergencyCareState {
@@ -460,11 +474,6 @@ export interface EffectiveClinicalObservationDto extends ClinicalObservationDto 
     effectiveTime: string;
 }
 
-export interface EmergencyCareDto extends Serializable {
-    administrative: NewECAdministrativeDto;
-    triage: TriageDto;
-}
-
 export interface EmergencyCareListDto extends Serializable {
     doctorsOffice: number;
     doctorsOfficeDescription: string;
@@ -475,6 +484,11 @@ export interface EmergencyCareListDto extends Serializable {
     lastname: string;
     patientId: number;
     triageCategoryId: number;
+}
+
+export interface EmergencyCarePatientDto extends Serializable {
+    id: number;
+    patientMedicalCoverageId: number;
 }
 
 export interface EpicrisisDto extends Serializable {
@@ -823,6 +837,8 @@ export interface NewDosageDto extends Serializable {
 }
 
 export interface NewECAdministrativeDto extends ECAdministrativeDto {
+    ambulanceCompanyId: string;
+    patient: EmergencyCarePatientDto;
 }
 
 export interface NewMedicalRequestDto {
@@ -991,6 +1007,11 @@ export interface PatientType extends Serializable {
     id: number;
 }
 
+export interface PediatricEmergencyCareDto extends Serializable {
+    administrative: NewECAdministrativeDto;
+    triage: TriagePediatricDto;
+}
+
 export interface PermissionsDto {
     roleAssignments: RoleAssignment[];
 }
@@ -1015,6 +1036,14 @@ export interface PersonalInformationDto {
     identificationNumber: string;
     identificationType: IdentificationTypeDto;
     phoneNumber: string;
+}
+
+export interface PoliceInterventionDto extends Serializable {
+    dateCall: DateDto;
+    firstName: string;
+    lastName: string;
+    plateNumber: string;
+    timeCall: TimeDto;
 }
 
 export interface PrescriptionDto extends Serializable {

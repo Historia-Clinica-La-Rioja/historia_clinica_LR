@@ -4,14 +4,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.emergencycare.service.domain.EmergencyCareBo;
+import net.pladema.emergencycare.triage.service.domain.TriageBo;
 import net.pladema.sgx.auditable.entity.SGXAuditListener;
 import net.pladema.sgx.auditable.entity.SGXAuditableEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "emergency_care_episode")
@@ -29,6 +27,7 @@ public class EmergencyCareEpisode extends SGXAuditableEntity {
 
 	@Id
 	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
 	@Column(name = "patient_id")
@@ -57,5 +56,20 @@ public class EmergencyCareEpisode extends SGXAuditableEntity {
 
 	@Column(name = "police_intervention_id")
 	private Integer policeInterventionId;
+
+	public EmergencyCareEpisode(EmergencyCareBo emergencyCareBo,
+								TriageBo triageBo,
+								Integer policeInterventionId) {
+		this.patientId = emergencyCareBo.getPatientId();
+		this.patientMedicalCoverageId = emergencyCareBo.getPatientMedicalCoverageId();
+		this.emergencyCareTypeId = emergencyCareBo.getEmergencyCareTypeId();
+		this.emergencyCareStateId = emergencyCareBo.getEmergencyCareStateId();
+		this.emergencyCareEntranceTypeId = emergencyCareBo.getEmergencyCareEntranceId();
+		this.triageCategoryId = triageBo.getCategoryId();
+		this.doctorsOfficeId = triageBo.getDoctorsOfficeId();
+		this.ambulanceCompanyId = emergencyCareBo.getAmbulanceCompanyId();
+		this.policeInterventionId = policeInterventionId;
+	}
+
 }
 

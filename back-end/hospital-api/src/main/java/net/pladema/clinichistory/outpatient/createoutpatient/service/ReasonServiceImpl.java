@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class ReasonServiceImpl implements ReasonService{
@@ -37,6 +38,17 @@ public class ReasonServiceImpl implements ReasonService{
                 .forEach(r -> saveOutPatientReason(r, outpatientId));
         LOG.debug(OUTPUT, reasons);
         return reasons;
+    }
+
+    @Override
+    public List<String> addReasons(List<ReasonBo> reasons) {
+        LOG.debug("Input parameters -> reasons {}", reasons);
+        List<String> result = reasons.stream()
+                .map(this::saveReason)
+                .map(ReasonBo::getId)
+                .collect(Collectors.toList());
+        LOG.debug(OUTPUT, result);
+        return result;
     }
 
     private OutpatientConsultationReasons saveOutPatientReason(ReasonBo reasonBo, Integer outpatientId) {

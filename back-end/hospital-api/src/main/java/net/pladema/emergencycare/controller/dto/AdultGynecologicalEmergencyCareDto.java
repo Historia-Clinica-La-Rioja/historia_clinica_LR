@@ -2,10 +2,11 @@ package net.pladema.emergencycare.controller.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.Value;
-import net.pladema.emergencycare.triage.controller.dto.TriageDto;
 import net.pladema.emergencycare.controller.dto.administrative.NewECAdministrativeDto;
+import net.pladema.emergencycare.triage.controller.dto.TriageAdultGynecologicalDto;
 
 import java.io.Serializable;
 
@@ -13,9 +14,11 @@ import java.io.Serializable;
 @Builder
 @ToString
 @AllArgsConstructor
-public class EmergencyCareDto implements Serializable {
+@NoArgsConstructor(force = true)
+public class AdultGynecologicalEmergencyCareDto implements Serializable {
 
     NewECAdministrativeDto administrative;
 
-    TriageDto triage;
+    TriageAdultGynecologicalDto triage;
+
 }

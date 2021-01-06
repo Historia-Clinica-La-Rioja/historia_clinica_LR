@@ -1,5 +1,7 @@
 package net.pladema.emergencycare.triage.service.impl;
 
+import net.pladema.emergencycare.triage.repository.TriageRepository;
+import net.pladema.emergencycare.triage.repository.entity.Triage;
 import net.pladema.emergencycare.triage.service.TriageService;
 import net.pladema.emergencycare.triage.service.domain.TriageBo;
 import org.slf4j.Logger;
@@ -13,8 +15,11 @@ public class TriageServiceImpl implements TriageService {
 
     private static final Logger LOG = LoggerFactory.getLogger(TriageServiceImpl.class);
 
-    public TriageServiceImpl(){
+    private final TriageRepository triageRepository;
+
+    public TriageServiceImpl(TriageRepository triageRepository){
         super();
+        this.triageRepository = triageRepository;
     }
 
     @Override
@@ -24,9 +29,12 @@ public class TriageServiceImpl implements TriageService {
     }
 
     @Override
-    public TriageBo createAdministrative(TriageBo triage) {
-        //TODO implement method
-        return null;
+    public TriageBo createAdministrative(TriageBo triageBo) {
+        LOG.debug("Input parameters -> triageBo {}", triageBo);
+        Triage triage = triageRepository.save(new Triage(triageBo));
+        triageBo.setId(triage.getId());
+        LOG.debug("Output -> {}", triageBo);
+        return triageBo;
     }
 
     @Override

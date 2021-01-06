@@ -1,8 +1,11 @@
 package net.pladema.emergencycare.controller;
 
 import io.swagger.annotations.Api;
+import net.pladema.clinichistory.outpatient.createoutpatient.controller.service.ReasonExternalService;
+import net.pladema.emergencycare.controller.dto.AdministrativeEmergencyCareDto;
+import net.pladema.emergencycare.controller.dto.AdultGynecologicalEmergencyCareDto;
 import net.pladema.emergencycare.controller.dto.EmergencyCareListDto;
-import net.pladema.emergencycare.controller.dto.EmergencyCareDto;
+import net.pladema.emergencycare.controller.dto.PediatricEmergencyCareDto;
 import net.pladema.emergencycare.controller.dto.administrative.ResponseEmergencyCareDto;
 import net.pladema.emergencycare.controller.mapper.EmergencyCareMapper;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
@@ -12,18 +15,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/institution/{institutionId}/emergency-care/episodes")
@@ -36,11 +33,15 @@ public class EmergencyCareEpisodeController {
 
     private final EmergencyCareMapper emergencyCareMapper;
 
+    private final ReasonExternalService reasonExternalService;
+
     public EmergencyCareEpisodeController(EmergencyCareEpisodeService emergencyCareEpisodeService,
-                                          EmergencyCareMapper emergencyCareMapper){
+                                          EmergencyCareMapper emergencyCareMapper,
+                                          ReasonExternalService reasonExternalService){
         super();
         this.emergencyCareEpisodeService = emergencyCareEpisodeService;
         this.emergencyCareMapper=emergencyCareMapper;
+        this.reasonExternalService = reasonExternalService;
     }
 
     @GetMapping
@@ -57,21 +58,37 @@ public class EmergencyCareEpisodeController {
     @Transactional
     @PostMapping
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
-    public ResponseEntity<Integer> createAdministrative(@RequestBody EmergencyCareDto body) {
+    public ResponseEntity<Integer> createAdministrative(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @RequestBody AdministrativeEmergencyCareDto body) {
         LOG.debug("Add emergency care administrative episode => {}", body);
-        EmergencyCareBo newEmergencyCare = emergencyCareMapper.toEmergencyCareBo(body);
+        EmergencyCareBo newEmergencyCare = emergencyCareMapper.administrativeEmergencyCareDtoToEmergencyCareBo(body);
+        setEpisodeAttributes(body, newEmergencyCare);
+        List<String> reasonIds = (body.getAdministrative() != null && body.getAdministrative().getReasons() != null) ?
+                    reasonExternalService.addReasons(body.getAdministrative().getReasons()) : new ArrayList<>();
+        newEmergencyCare.setReasonIds(reasonIds);
         newEmergencyCare = emergencyCareEpisodeService.createAdministrative(newEmergencyCare);
         Integer result = newEmergencyCare.getId();
         LOG.debug("Output -> {}", result);
         return ResponseEntity.ok().body(result);
     }
 
+    private void setEpisodeAttributes(AdministrativeEmergencyCareDto body, EmergencyCareBo newEmergencyCare) {
+        LOG.debug("Input parameters -> body {}, newEmergencyCare {}", body, newEmergencyCare);
+        if (body.getAdministrative() == null)
+            return;
+        if (body.getAdministrative().getTypeId() != null)
+            newEmergencyCare.setEmergencyCareTypeById(body.getAdministrative().getTypeId());
+        if (body.getAdministrative().getEntranceTypeId() != null)
+            newEmergencyCare.setEmergencyEntranceById(body.getAdministrative().getEntranceTypeId());
+    }
+
     @Transactional
     @PostMapping("/adult-gynecological")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
-    public ResponseEntity<Integer> createAdult(@RequestBody EmergencyCareDto body) {
+    public ResponseEntity<Integer> createAdult(@RequestBody AdultGynecologicalEmergencyCareDto body) {
         LOG.debug("Add emergency care adult-gynecological episode => {}", body);
-        EmergencyCareBo newEmergencyCare = emergencyCareMapper.toEmergencyCareBo(body);
+        EmergencyCareBo newEmergencyCare = emergencyCareMapper.adultGynecologicalEmergencyCareDtoToEmergencyCareBo(body);
         newEmergencyCare = emergencyCareEpisodeService.createAdult(newEmergencyCare);
         Integer result = newEmergencyCare.getId();
         LOG.debug("Output -> {}", result);
@@ -81,9 +98,9 @@ public class EmergencyCareEpisodeController {
     @Transactional
     @PostMapping("/pediatric")
     @PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
-    public ResponseEntity<Integer> createPediatric(@RequestBody EmergencyCareDto body) {
+    public ResponseEntity<Integer> createPediatric(@RequestBody PediatricEmergencyCareDto body) {
         LOG.debug("Add emergency care pediatric episode => {}", body);
-        EmergencyCareBo newEmergencyCare = emergencyCareMapper.toEmergencyCareBo(body);
+        EmergencyCareBo newEmergencyCare = emergencyCareMapper.pediatricEmergencyCareDtoToEmergencyCareBo(body);
         newEmergencyCare = emergencyCareEpisodeService.createPediatric(newEmergencyCare);
         Integer result = newEmergencyCare.getId();
         LOG.debug("Output -> {}", result);

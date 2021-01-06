@@ -17,5 +17,10 @@ public class TriageBo {
 
     private Integer id;
 
-    //TODO add specific attributes
+    private Integer emergencyCareEpisodeId;
+
+    private Short categoryId;
+
+    private Integer doctorsOfficeId;
+
 }
