@@ -46,6 +46,8 @@ public interface DocumentService {
 
     DocumentMedicamentionStatement getDocumentFromMedication(Integer mid);
 
+    DocumentDiagnosticReport getDocumentFromDiagnosticReport(Integer drid);
+
     void deleteHealthConditionHistory(Long documentId);
 
     void deleteAllergiesHistory(Long documentId);

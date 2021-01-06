@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.requests.servicerequests.controller;
 
 import io.swagger.annotations.Api;
+import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.HealthConditionInfoDto;
@@ -10,6 +11,7 @@ import net.pladema.clinichistory.requests.servicerequests.controller.mapper.Crea
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.StudyMapper;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.ListDiagnosticReportInfoMapper;
 import net.pladema.clinichistory.requests.servicerequests.service.CreateServiceRequestService;
+import net.pladema.clinichistory.requests.servicerequests.service.DeleteDiagnosticReportService;
 import net.pladema.clinichistory.requests.servicerequests.service.ListDiagnosticReportInfoService;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportBo;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportFilterBo;
@@ -38,7 +40,7 @@ public class ServiceRequestController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ServiceRequestController.class);
     private static final String OUTPUT = "create result -> {}";
-    private static final String COMMON_INPUT = "Input parameters -> institutionId {} patientId {}, serviceRequestId {}";
+    private static final String COMMON_INPUT = "Input parameters -> institutionId {} patientId {}, diagnosticReportId {}";
 
     private final HealthcareProfessionalExternalService healthcareProfessionalExternalService;
     private final CreateServiceRequestService createServiceRequestService;
@@ -47,6 +49,7 @@ public class ServiceRequestController {
     private final StudyMapper studyMapper;
     private final ListDiagnosticReportInfoService listDiagnosticReportInfoService;
     private final ListDiagnosticReportInfoMapper listDiagnosticReportInfoMapper;
+    private final DeleteDiagnosticReportService deleteDiagnosticReportService;
 
     public ServiceRequestController(HealthcareProfessionalExternalService healthcareProfessionalExternalService,
                                     CreateServiceRequestService createServiceRequestService,
@@ -54,7 +57,8 @@ public class ServiceRequestController {
                                     PatientExternalService patientExternalService,
                                     StudyMapper studyMapper,
                                     ListDiagnosticReportInfoMapper listDiagnosticReportInfoMapper,
-                                    ListDiagnosticReportInfoService listDiagnosticReportInfoService) {
+                                    ListDiagnosticReportInfoService listDiagnosticReportInfoService,
+                                    DeleteDiagnosticReportService deleteDiagnosticReportService) {
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.createServiceRequestService = createServiceRequestService;
         this.createServiceRequestMapper = createServiceRequestMapper;
@@ -62,6 +66,7 @@ public class ServiceRequestController {
         this.listDiagnosticReportInfoService = listDiagnosticReportInfoService;
         this.listDiagnosticReportInfoMapper = listDiagnosticReportInfoMapper;
         this.studyMapper = studyMapper;
+        this.deleteDiagnosticReportService = deleteDiagnosticReportService;
     }
 
     @PostMapping
@@ -123,14 +128,17 @@ public class ServiceRequestController {
                 completeRequestDto);
     }
 
-    @DeleteMapping("/{serviceRequestId}")
+    @DeleteMapping("/{diagnosticReportId}")
     @Transactional
     @ResponseStatus(code = HttpStatus.OK)
     public void delete(@PathVariable(name = "institutionId") Integer institutionId,
                        @PathVariable(name = "patientId") Integer patientId,
-                       @PathVariable(name = "serviceRequestId") Integer serviceRequestId
+                       @PathVariable(name = "diagnosticReportId") Integer diagnosticReportId
     ) {
-        LOG.debug(COMMON_INPUT, institutionId, patientId, serviceRequestId);
+        LOG.debug(COMMON_INPUT, institutionId, patientId, diagnosticReportId);
+        var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
+        PatientInfoBo patientInfoBo = new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge());
+        deleteDiagnosticReportService.execute(patientInfoBo, diagnosticReportId);
     }
 
     @GetMapping("/{serviceRequestId}")

@@ -701,10 +701,10 @@ export const MOCKS_ORDERS = [
 		path: 'paciente/:idPaciente/ordenes/eliminar-orden',
 		loads: [
 			{
-				name: 'ServiceRequest.delete(patientId: number, serviceRequestId:number)',
+				name: 'ServiceRequest.delete(patientId: number, diagnosticReportId:number)',
 				roles: 'Todo ESPECIALISTA_MEDICO sobre la institución',
 				comments: 'Borrado lógico cambiando el estado a ingresado por error',
-				path: '/api/institutions/{institutionId}/patient/{patientId}/serviceRequests/{serviceRequestId}',
+				path: '/api/institutions/{institutionId}/patient/{patientId}/serviceRequests/{diagnosticReportId}',
 				method: 'DELETE',
 			}
 		],

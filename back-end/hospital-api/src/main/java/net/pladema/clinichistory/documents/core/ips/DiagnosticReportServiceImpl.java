@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,7 +33,7 @@ public class DiagnosticReportServiceImpl implements DiagnosticReportService {
                                        DocumentService documentService,
                                        NoteService noteService,
                                        SnomedService snomedService,
-                                       CalculateCie10CodesService calculateCie10CodesService){
+                                       CalculateCie10CodesService calculateCie10CodesService) {
         this.diagnosticReportRepository = diagnosticReportRepository;
         this.documentService = documentService;
         this.noteService = noteService;
@@ -40,8 +41,9 @@ public class DiagnosticReportServiceImpl implements DiagnosticReportService {
         this.calculateCie10CodesService = calculateCie10CodesService;
     }
 
-    public List<DiagnosticReportBo> loadDiagnosticReport(Long documentId, PatientInfoBo patientInfo, List<DiagnosticReportBo> diagnosticReportBos) {
+    public List<DiagnosticReport> loadDiagnosticReport(Long documentId, PatientInfoBo patientInfo, List<DiagnosticReportBo> diagnosticReportBos) {
         LOG.debug("Input parameters -> documentId {}, patientInfo {}, studyBo {}", documentId, patientInfo, diagnosticReportBos);
+        List<DiagnosticReport> result = new ArrayList<>();
         diagnosticReportBos.forEach(diagnosticReportBo -> {
             Integer snomedId = snomedService.getSnomedId(diagnosticReportBo.getSnomed())
                     .orElseGet(() -> snomedService.createSnomedTerm(diagnosticReportBo.getSnomed()));
@@ -54,13 +56,19 @@ public class DiagnosticReportServiceImpl implements DiagnosticReportService {
             diagnosticReport.setCie10Codes(cie10Codes);
             diagnosticReport.setHealthConditionId(diagnosticReportBo.getHealthConditionId());
 
-            diagnosticReport.setNoteId(noteService.createNote(diagnosticReportBo.getObservations()));
+            diagnosticReport.setNoteId(diagnosticReportBo.getNoteId() != null ?
+                    diagnosticReportBo.getNoteId()
+                    :
+                    noteService.createNote(diagnosticReportBo.getObservations()));
 
-            diagnosticReportRepository.save(diagnosticReport);
+            if (diagnosticReportBo.getStatusId() != null) {
+                diagnosticReport.setStatusId(diagnosticReportBo.getStatusId());
+            }
+
+            result.add(diagnosticReportRepository.save(diagnosticReport));
             documentService.createDocumentDiagnosticReport(documentId, diagnosticReport.getId());
         });
-        List<DiagnosticReportBo> result = diagnosticReportBos;
-        LOG.debug(OUTPUT, result);
+        LOG.trace(OUTPUT, result);
         return result;
     }
 }

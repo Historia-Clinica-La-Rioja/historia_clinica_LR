@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class DocumentServiceImpl implements DocumentService {
+public class  DocumentServiceImpl implements DocumentService {
 
     public static final String OUTPUT = "Output -> {}";
 
@@ -220,6 +220,15 @@ public class DocumentServiceImpl implements DocumentService {
         LOG.debug(OUTPUT, result);
         return result;
     }
+
+    @Override
+    public DocumentDiagnosticReport getDocumentFromDiagnosticReport(Integer drid) {
+        LOG.debug("DiagnosticReportId -> {}", drid);
+        DocumentDiagnosticReport result = documentDiagnosticReportRepository.findByDiagnosticReportId(drid);
+        LOG.debug(OUTPUT, result);
+        return result;
+    }
+
 
     @Override
     public void deleteHealthConditionHistory(Long documentId) {

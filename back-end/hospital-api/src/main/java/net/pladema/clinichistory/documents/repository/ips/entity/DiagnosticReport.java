@@ -63,6 +63,17 @@ public class DiagnosticReport extends SGXAuditableEntity {
 		this.healthConditionId = healthConditionId;
 	}
 
+	public DiagnosticReport(Integer patientId, Integer snomedId, String cie10Codes,
+							Long noteId, Integer healthConditionId, String statusId) {
+		super();
+		this.patientId = patientId;
+		this.snomedId = snomedId;
+		this.cie10Codes = cie10Codes;
+		this.noteId = noteId;
+		this.healthConditionId = healthConditionId;
+		if (statusId!=null) {this.statusId = statusId;}
+	}
+
 
 	@Override
 	public boolean equals(Object o) {

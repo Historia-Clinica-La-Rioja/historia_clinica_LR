@@ -7,7 +7,6 @@ import lombok.Setter;
 import net.pladema.clinichistory.documents.service.ips.domain.ClinicalTerm;
 import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionBo;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -17,7 +16,7 @@ import java.time.LocalDateTime;
 public class DiagnosticReportBo extends ClinicalTerm {
     private Integer healthConditionId;
     private String observations;
-
+    private Long noteId;
     private HealthConditionBo healthCondition;
     private Integer encounterId;
     private Integer userId;
