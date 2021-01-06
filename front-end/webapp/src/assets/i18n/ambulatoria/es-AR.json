@@ -217,11 +217,12 @@
 				},
 				"menu_items": {
 					"DOWNLOAD": "Descargar receta",
-					"BACK": "Volver a receta",
+					"BACK": "Volver a recetar",
 					"SUSPEND":"Suspender",
 					"FINALIZE":"Finalizar",
 					"COMPLETE":"Completar",
-					"DELETE":"Eliminar"
+					"DELETE":"Eliminar",
+					"REACTIVATE": "Reactivar"
 				}
 			},
 			"profile": {
