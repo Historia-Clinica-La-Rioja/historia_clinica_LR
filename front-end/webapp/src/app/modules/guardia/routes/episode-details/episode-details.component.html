@@ -84,6 +84,9 @@
 					<app-personal-information [personalInformation]="personalInformation"
 						[patientMedicalCoverage]="patientMedicalCoverage">
 					</app-personal-information>
+
+					<button *ngIf="!responseEmergencyCare.patientId" mat-raised-button color="primary"
+						(click)="searchPatient()" class="uppercase" translate="Buscar Paciente"></button>
 				</div>
 			</app-patient-card>
 		</div>

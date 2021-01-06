@@ -227,7 +227,7 @@ export class EmergencyCareEpisodeService {
 	getAdministrative(): Observable<ResponseEmergencyCareDto> {
 		return of({
 			id: 1,
-			patientId: 4794,
+			patientId: null,
 			emergencyCareType: {
 				id: 1,
 				description: 'Guardia adultos'

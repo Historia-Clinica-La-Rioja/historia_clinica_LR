@@ -87,6 +87,9 @@
 				"REASONS": "Motivos de consulta",
 				"ENTRANCE": "Ingreso",
 				"POLICE_INTERVENTION": "Intervención policial"
+			},
+			"search_patient": {
+				"CONFIRM": "Confirmar Paciente"
 			}
 		},
 		"NO_INFO":"Sin información"
