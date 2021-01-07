@@ -1,7 +1,6 @@
 package net.pladema.snowstorm.services;
 
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
-import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.person.repository.entity.Gender;
 
 public class Cie10RuleChecker {
@@ -11,6 +10,7 @@ public class Cie10RuleChecker {
     private static final String IF_CURRENT_AGE_LESS_OR_EQUAL_15_YEARS = "IFA 424144002 | Current chronological age (observable entity) | <= 15.0 years";
     private static final String IF_CURRENT_AGE_LESS_OR_EQUAL_18_YEARS = "IFA 424144002 | Current chronological age (observable entity) | <= 18.0 years";
     private static final String IF_CURRENT_AGE_GREATER_OR_EQUAL_65_YEARS = "IFA 424144002 | Current chronological age (observable entity) | >= 65.0 years";
+    private static final String IF_AGE_ONSET_LESS_OR_EQUAL_15_YEARS = "IFA 445518008 | Age at onset of clinical finding (observable entity) | <= 15.0 years";
     private static final String IF_AGE_ONSET_LESS_19_YEARS = "IFA 445518008 | Age at onset of clinical finding (observable entity) | < 19.0 years";
     private static final String IF_AGE_ONSET_GREATER_OR_EQUAL_12_AND_LESS_19_YEARS = "IFA 445518008 | Age at onset of clinical finding (observable entity) | >= 12.0 years AND IFA 445518008 | Age at onset of clinical finding (observable entity) | < 19.0 years";
     private static final String TRUE = "TRUE";
@@ -33,6 +33,9 @@ public class Cie10RuleChecker {
             case IF_CURRENT_AGE_GREATER_OR_EQUAL_65_YEARS:
                 return evaluateCurrentAgeGreaterOrEqual(patient, 65);
 
+            case IF_AGE_ONSET_LESS_OR_EQUAL_15_YEARS:
+                return evaluateAgeOnsetLessOrEqual(patient, 15);
+
             case IF_AGE_ONSET_LESS_19_YEARS:
                 return evaluateAgeOnsetLess(patient, 19);
 
@@ -46,7 +49,7 @@ public class Cie10RuleChecker {
                 return true;
 
             default:
-                return true;
+                return false;
         }
     }
 
@@ -62,6 +65,11 @@ public class Cie10RuleChecker {
     private static boolean evaluateAgeOnsetLess(PatientInfoBo patient, int i) {
         Short ageOnset = getPatientAgeOnset(patient);
         return ageOnset != null && (ageOnset < i);
+    }
+
+    private static boolean evaluateAgeOnsetLessOrEqual(PatientInfoBo patient, int i) {
+        Short ageOnset = getPatientAgeOnset(patient);
+        return ageOnset != null && (ageOnset <= i);
     }
 
     private static boolean evaluateCurrentAgeGreaterOrEqual(PatientInfoBo patient, int i) {
