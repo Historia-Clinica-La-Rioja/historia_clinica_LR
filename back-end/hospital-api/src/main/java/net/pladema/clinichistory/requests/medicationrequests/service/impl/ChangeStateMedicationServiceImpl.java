@@ -6,7 +6,6 @@ import net.pladema.clinichistory.documents.repository.ips.entity.Dosage;
 import net.pladema.clinichistory.documents.repository.ips.entity.MedicationStatement;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.MedicationStatementStatus;
 import net.pladema.clinichistory.documents.service.DocumentService;
-import net.pladema.clinichistory.documents.service.NoteService;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.CreateMedicationService;
 import net.pladema.clinichistory.documents.service.ips.SnomedService;
@@ -127,7 +126,7 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
             return false;
         if (dosage == null)
             return true;
-        return dosage.getEndDate() != null && !dateTimeProvider.nowDate().isBefore(dosage.getEndDate());
+        return dosage.getEndDate() != null && dateTimeProvider.nowDate().isAfter(dosage.getEndDate());
     }
 
     private MedicationBo updateMedication(MedicationStatement medication, Dosage dosage, String newStatusId, Short duration) {
@@ -163,8 +162,10 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
             result.setSuspendedEndDate(suspendedEndDate);
         }
 
-        if (MedicationStatementStatus.STOPPED.equals(newStatusId))
+        if (MedicationStatementStatus.STOPPED.equals(newStatusId)) {
             result.setEndDate(dateTimeProvider.nowDate());
+            result.setChronic(false);
+        }
 
         if (MedicationStatementStatus.ACTIVE.equals(newStatusId)) {
             result.setSuspendedStartDate(null);

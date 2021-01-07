@@ -238,6 +238,7 @@ export interface BedSummaryDto {
 }
 
 export interface ChangeStateMedicationRequestDto extends Serializable {
+    dayQuantity?: number;
     medicationsIds: number[];
 }
 

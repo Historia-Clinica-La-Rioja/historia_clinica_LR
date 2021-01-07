@@ -5,6 +5,7 @@ import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.Medi
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
+import net.pladema.clinichistory.requests.medicationrequests.controller.dto.ChangeStateMedicationRequestDto;
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.MedicationInfoDto;
 import net.pladema.clinichistory.requests.medicationrequests.controller.mapper.CreateMedicationRequestMapper;
 import net.pladema.clinichistory.requests.medicationrequests.controller.mapper.ListMedicationInfoMapper;
@@ -96,13 +97,12 @@ public class MedicationRequestController {
     @ResponseStatus(code = HttpStatus.OK)
     @Transactional
     public void suspendMedication(@PathVariable(name = "institutionId") Integer institutionId,
-                        @PathVariable(name = "patientId") Integer patientId,
-                        @RequestParam(value = "dayQuantity") Short dayQuantity,
-                        @RequestParam(value = "medicationsIds") List<Integer> medicationsIds) {
-        LOG.debug("change-state -> institutionId {}, patientId {}, dayQuantity {}, medicationsIds {}", institutionId, patientId, dayQuantity, medicationsIds);
+                                  @PathVariable(name = "patientId") Integer patientId,
+                                  @RequestBody ChangeStateMedicationRequestDto changeStateRequest) {
+        LOG.debug("change-state -> institutionId {}, patientId {}, changeStateRequest {}", institutionId, patientId, changeStateRequest);
         var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
         PatientInfoBo patientInfoBo = new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge());
-        changeStateMedicationService.execute(patientInfoBo, medicationsIds, MedicationStatementStatus.SUSPENDED, dayQuantity);
+        changeStateMedicationService.execute(patientInfoBo, changeStateRequest.getMedicationsIds(), MedicationStatementStatus.SUSPENDED, changeStateRequest.getDayQuantity());
         LOG.debug("suspend success");
     }
 
@@ -112,11 +112,11 @@ public class MedicationRequestController {
     @Transactional
     public void finalizeMedication(@PathVariable(name = "institutionId") Integer institutionId,
                         @PathVariable(name = "patientId") Integer patientId,
-                        @RequestParam(value = "medicationsIds") List<Integer> medicationsIds) {
-        LOG.debug("change-state -> institutionId {}, patientId {}, medicationsIds {}", institutionId, patientId, medicationsIds);
+                        @RequestBody ChangeStateMedicationRequestDto changeStateRequest) {
+        LOG.debug("change-state -> institutionId {}, patientId {}, changeStateRequest {}", institutionId, patientId, changeStateRequest);
         var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
         PatientInfoBo patientInfoBo = new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge());
-        changeStateMedicationService.execute(patientInfoBo, medicationsIds, MedicationStatementStatus.STOPPED, null);
+        changeStateMedicationService.execute(patientInfoBo, changeStateRequest.getMedicationsIds(), MedicationStatementStatus.STOPPED, null);
         LOG.debug("finalize success");
     }
 
@@ -124,12 +124,12 @@ public class MedicationRequestController {
     @ResponseStatus(code = HttpStatus.OK)
     @Transactional
     public void reactivateMedication(@PathVariable(name = "institutionId") Integer institutionId,
-                        @PathVariable(name = "patientId") Integer patientId,
-                        @RequestParam(value = "medicationsIds") List<Integer> medicationsIds) {
-        LOG.debug("change-state -> institutionId {}, patientId {}, medicationsIds {}", institutionId, patientId, medicationsIds);
+                                     @PathVariable(name = "patientId") Integer patientId,
+                                     @RequestBody ChangeStateMedicationRequestDto changeStateRequest) {
+        LOG.debug("change-state -> institutionId {}, patientId {}, changeStateRequest {}", institutionId, patientId, changeStateRequest);
         var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
         PatientInfoBo patientInfoBo = new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge());
-        changeStateMedicationService.execute(patientInfoBo, medicationsIds, MedicationStatementStatus.ACTIVE, null);
+        changeStateMedicationService.execute(patientInfoBo, changeStateRequest.getMedicationsIds(), MedicationStatementStatus.ACTIVE, null);
         LOG.debug("reactivate success");
     }
 

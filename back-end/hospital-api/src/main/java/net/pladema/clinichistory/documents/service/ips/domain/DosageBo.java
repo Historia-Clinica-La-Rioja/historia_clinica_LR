@@ -35,6 +35,8 @@ public class DosageBo {
     }
 
     public LocalDate getEndDate() {
+        if (chronic)
+            return null;
         if  (endDate != null)
             return endDate;
         return startDate != null && duration != null ?

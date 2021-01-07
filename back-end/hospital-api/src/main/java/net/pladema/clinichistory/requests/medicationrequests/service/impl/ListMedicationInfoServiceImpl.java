@@ -114,7 +114,7 @@ public class ListMedicationInfoServiceImpl implements ListMedicationInfoService 
             return false;
         if (dosage == null)
             return true;
-        return dosage.getEndDate() != null && !dateTimeProvider.nowDate().isBefore(dosage.getEndDate());
+        return dosage.getEndDate() != null && !dateTimeProvider.nowDate().isAfter(dosage.getEndDate());
     }
 
     private boolean isSuspended(String statusId, DosageBo dosage) {
