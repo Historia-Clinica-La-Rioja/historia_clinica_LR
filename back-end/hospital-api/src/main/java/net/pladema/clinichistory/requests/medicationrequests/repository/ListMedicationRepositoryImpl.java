@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.util.List;
 
 @Repository
@@ -58,13 +59,17 @@ public class ListMedicationRepositoryImpl implements ListMedicationRepository {
                 "            JOIN snomed s1 ON (h1.snomed_id = s1.id) " +
                 "          ) AS h ON (h.id = t.health_condition_id) " +
                 "WHERE rw = 1 " +
+                (filter.getMedicationStatement() != null ? "AND UPPER(s.pt) LIKE :medication " : "") +
                 "ORDER BY t.updated_on";
+        Query query = entityManager.createNativeQuery(sqlString);
 
-        List<Object[]> result = entityManager.createNativeQuery(sqlString)
-                .setParameter("documentStatusId", DocumentStatus.FINAL)
-                .setParameter("patientId", filter.getPatientId())
-                .setParameter("documentType", List.of(DocumentType.RECIPE, DocumentType.OUTPATIENT, DocumentType.EPICRISIS))
-                .getResultList();
+        query.setParameter("documentStatusId", DocumentStatus.FINAL)
+             .setParameter("patientId", filter.getPatientId())
+             .setParameter("documentType", List.of(DocumentType.RECIPE, DocumentType.OUTPATIENT, DocumentType.EPICRISIS));
+
+        if (filter.getMedicationStatement() != null)
+            query.setParameter("medication", "%"+filter.getMedicationStatement().toUpperCase()+"%");
+        List<Object[]> result = query.getResultList();
         return result;
     }
 }
