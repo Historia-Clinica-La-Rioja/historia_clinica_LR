@@ -63,10 +63,10 @@
 									<div fxLayout="column">
 										<div>
 											<span mat-line class="mat-body capitalize-first-letter element-light-color" *ngIf="medicationInfo.dosage?.periodUnit == 'h'">
-												Una aplicación cada {{medicationInfo.dosage.frequency}} hs 
+												Una aplicación cada {{medicationInfo.dosage.frequency}} hs
 											</span>
-											<span mat-line class="mat-body capitalize-first-letter element-light-color" *ngIf="medicationInfo.dosage?.periodUnit == 'd'">
-												Una aplicación por día 
+											<span mat-line class="mat-body capitalize-first-letter element-light-color" *ngIf="medicationInfo.dosage?.periodUnit == 'd'"
+												[translate]="'ambulatoria.paciente.ordenes_prescripciones.APLICACION_DIARIA'">
 											</span>
 										</div>
 
@@ -74,8 +74,8 @@
 											<span mat-line class="mat-body capitalize-first-letter element-light-color" *ngIf="medicationInfo.dosage?.duration != undefined">
 												Durante {{medicationInfo.dosage.duration}} días
 											</span>
-											<span mat-line class="mat-body capitalize-first-letter element-light-color" *ngIf="medicationInfo.dosage?.chronic">
-												Uso crónico
+											<span mat-line class="mat-body capitalize-first-letter element-light-color" *ngIf="medicationInfo.dosage?.chronic"
+												[translate]="'ambulatoria.paciente.ordenes_prescripciones.USO_CRONICO'">
 											</span>
 										</div>
 									</div>
@@ -90,11 +90,11 @@
 										<span mat-line class="mat-body capitalize-first-letter element-light-color">
 											{{medicationInfo.doctor.firstName }} {{medicationInfo.doctor.lastName }}
 										</span>
-										<span mat-line class="mat-body capitalize-first-letter element-light-color" *ngIf="medicationInfo.totalDays == 0">
-											Desde hoy
+										<span mat-line class="mat-body capitalize-first-letter element-light-color" *ngIf="medicationInfo.totalDays == 0"
+											[translate]="'ambulatoria.paciente.ordenes_prescripciones.DESDE_HOY'">
 										</span>
-										<span mat-line class="mat-body capitalize-first-letter element-light-color" *ngIf="medicationInfo.totalDays == 1">
-											Hace 1 día
+										<span mat-line class="mat-body capitalize-first-letter element-light-color" *ngIf="medicationInfo.totalDays == 1"
+											[translate]="'ambulatoria.paciente.ordenes_prescripciones.UN_DIA'">
 										</span>
 										<span mat-line class="mat-body capitalize-first-letter element-light-color" *ngIf="medicationInfo.totalDays > 1">
 											Hace {{medicationInfo.totalDays }} días
@@ -118,45 +118,57 @@
 					<div fxLayout="row" *ngFor="let diagnosticReport of diagnosticReportsInfo">
 						<mat-list-item >
 							<div fxFlex="100%">
-								<h3 mat-line class="primary bold" *ngIf="true">
-									Completado
-								</h3>
-								<span mat-line class="mat-body">
-									Orden #{{diagnosticReport.serviceRequestId}}
-								</span>
-								<span mat-line class="mat-body-strong capitalize-first-letter">
-									{{diagnosticReport.snomed.pt}}
-								</span>
-								<h4 mat-line class="primary bold">
-									{{diagnosticReport.healthCondition.snomed.pt}}
-								</h4>
-								<span mat-line class="mat-body capitalize-first-letter">
-									Dr. {{diagnosticReport.doctor.firstName }} {{diagnosticReport.doctor.lastName }}
-								</span>
-								<mat-card-subtitle>
-									<span mat-line class="mat-body capitalize-first-letter" *ngIf="diagnosticReport.totalDays == 0">
-										Desde hoy
+
+								<div fxLayout="row" fxLayoutAlign="space-between start">
+									<h3 mat-line class="primary bold element-margin" *ngIf="true">
+										Completado
+									</h3>
+									<div>
+										<button mat-icon-button [matMenuTriggerFor]="menu" >
+											<mat-icon>more_vert</mat-icon>
+										</button>
+										<mat-menu #menu="matMenu">
+											<button mat-menu-item >
+												<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.COMPLETE'"></span>
+											</button>
+											<button mat-menu-item >
+												<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.DELETE'"></span>
+											</button>
+										</mat-menu>
+									</div>
+								</div>
+
+								<div class="element-margin" fxLayout="column-reverse" fxLayout.gt-sm="row" fxLayoutAlign="space-between start">
+									<span class="mat-subheading-2 capitalize-first-letter" style="margin: 0" fxFlex="70%">
+										{{diagnosticReport.snomed.pt}}
 									</span>
-									<span mat-line class="mat-body capitalize-first-letter" *ngIf="diagnosticReport.totalDays == 1">
-										Hace 1 día
+									<span mat-line class="mat-body">
+										Orden #{{diagnosticReport.serviceRequestId}}
 									</span>
-									<span mat-line class="mat-body capitalize-first-letter" *ngIf="diagnosticReport.totalDays > 1">
+								</div>
+
+								<div class="element-margin">
+									<h3 mat-line class="primary bold capitalize-first-letter">
+										{{diagnosticReport.healthCondition.snomed.pt}}
+									</h3>
+								</div>
+
+								<div fxLayout="column" fxLayout.gt-sm="row" fxLayoutAlign="space-between start">
+									<span mat-line class="mat-body capitalize-first-letter element-light-color">
+										{{diagnosticReport.doctor.firstName }} {{diagnosticReport.doctor.lastName }}
+									</span>
+									<span mat-line class="mat-body capitalize-first-letter element-light-color" *ngIf="diagnosticReport.totalDays == 0"
+										[translate]="'ambulatoria.paciente.ordenes_prescripciones.DESDE_HOY'">
+									</span>
+									<span mat-line class="mat-body capitalize-first-letter element-light-color" *ngIf="diagnosticReport.totalDays == 1"
+										[translate]="'ambulatoria.paciente.ordenes_prescripciones.UN_DIA'">
+									</span>
+									<span mat-line class="mat-body capitalize-first-letter element-light-color" *ngIf="diagnosticReport.totalDays > 1">
 										Hace {{diagnosticReport.totalDays }} días
 									</span>
-								</mat-card-subtitle>
-							</div>
+								</div>
 
-							<button mat-icon-button [matMenuTriggerFor]="menu" *ngIf="true">
-								<mat-icon>more_vert</mat-icon>
-							</button>
-							<mat-menu #menu="matMenu">
-								<button mat-menu-item >
-									<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.COMPLETE'"></span>
-								</button>
-								<button mat-menu-item >
-									<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.DELETE'"></span>
-								</button>
-							</mat-menu>
+							</div>
 						</mat-list-item>
 						<mat-divider></mat-divider>
 					</div>

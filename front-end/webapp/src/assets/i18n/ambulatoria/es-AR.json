@@ -180,6 +180,10 @@
 				"RECOMENDACIONES":"Recomendaciones generales",
 				"ESTUDIOS":"Estudios",
 				"SIN_RECETA":"Sin receta",
+				"DESDE_HOY":"Desde hoy",
+				"UN_DIA":"Hace 1 día",
+				"APLICACION_DIARIA":"Una aplicación por día",
+				"USO_CRONICO":"Uso crónico",
 				"add_prescription_item_dialog": {
 					"MEDICATION": "Medicación",
 					"MEDICATION_TITLE": "Agregar medicación",
