@@ -29,10 +29,18 @@ export class OrdenesComponent implements OnInit {
 	) { }
 
 	ngOnInit(): void {
+		this.getMedication();
+		this.getStudy();
+	}
+
+	private getMedication(): void {
 		this.prescripcionesService.getPrescription(PrescriptionTypes.MEDICATION, this.patientId, null, null, null).subscribe(
 			response =>{
 				this.medicationsInfo = response;
 			});
+	}
+
+	private getStudy(): void {
 		this.prescripcionesService.getPrescription(PrescriptionTypes.STUDY, this.patientId, null, null, null).subscribe(
 			response =>{
 				this.diagnosticReportsInfo = response;
@@ -75,13 +83,18 @@ export class OrdenesComponent implements OnInit {
 							},
 							width: '35%'
 						});
+					confirmPrescriptionDialog.afterClosed().subscribe( (hasError:Boolean) => {
+						if (!hasError) {
+							this.getMedication();
+						}
+					});
 				} else {
 					newMedicationRequest$.subscribe((newRecipe: number) => {
 						this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_MEDICATION_SUCCESS');
+						this.getMedication();
 					}, _ => {this.snackBarService.showError('ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_MEDICATION_ERROR')});
 				}
 			}
-
 		});
 	}
 
@@ -120,6 +133,11 @@ export class OrdenesComponent implements OnInit {
 						},
 						width: '35%',
 					});
+				confirmPrescriptionDialog.afterClosed().subscribe( (hasError:Boolean) => {
+					if (!hasError) {
+						this.getStudy();
+					}
+				});
 			}
 		});
 	}

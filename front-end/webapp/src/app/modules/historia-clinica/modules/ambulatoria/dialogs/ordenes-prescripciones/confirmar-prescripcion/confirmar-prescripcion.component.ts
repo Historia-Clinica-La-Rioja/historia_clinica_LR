@@ -11,6 +11,7 @@ import { Observable } from 'rxjs';
 export class ConfirmarPrescripcionComponent implements OnInit {
 
 	loading = true;
+	hasError: boolean;
 
 	constructor(
 		private snackBarService: SnackBarService,
@@ -21,15 +22,17 @@ export class ConfirmarPrescripcionComponent implements OnInit {
 		this.data.prescriptionRequest.subscribe((newRecipe: number) => {
 			this.snackBarService.showSuccess(this.data.successLabel);
 			this.loading = false;
-		}, _ => {this.snackBarService.showError(this.data.errorLabel)})
+			this.hasError = false;
+		}, _ => {this.snackBarService.showError(this.data.errorLabel);
+				 this.hasError = true;})
 	}
 
 	downloadPrescription() {
-		this.dialogRef.close();
+		this.dialogRef.close(this.hasError);
 	}
 
 	closeModal() {
-		this.dialogRef.close();
+		this.dialogRef.close(this.hasError);
 	}
 
 }
