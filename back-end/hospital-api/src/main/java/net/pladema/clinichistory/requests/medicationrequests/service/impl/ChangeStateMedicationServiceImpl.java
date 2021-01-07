@@ -38,8 +38,6 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
 
     private final DosageRepository dosageRepository;
 
-    private final NoteService noteService;
-
     private final MedicationStatementRepository medicationStatementRepository;
 
     private final SnomedService snomedService;
@@ -50,13 +48,11 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
                                             CreateMedicationService createMedicationService,
                                             DosageRepository dosageRepository,
                                             DocumentService documentService,
-                                            NoteService noteService,
                                             SnomedService snomedService, DateTimeProvider dateTimeProvider) {
         this.medicationStatementRepository = medicationStatementRepository;
         this.createMedicationService = createMedicationService;
         this.dosageRepository = dosageRepository;
         this.documentService = documentService;
-        this.noteService = noteService;
         this.snomedService = snomedService;
         this.dateTimeProvider = dateTimeProvider;
     }
@@ -73,8 +69,7 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
                 var dosage = medication.getDosageId() != null ? dosageRepository.findById(medication.getDosageId()).get() : null;
                 assertChangeState(newStatusId, duration, medication, dosage);
 
-                var note = noteService.getDescriptionById(medication.getNoteId());
-                MedicationBo newMedication = updateMedication(medication, dosage, note, newStatusId, duration);
+                MedicationBo newMedication = updateMedication(medication, dosage, newStatusId, duration);
 
                 var documentMedication = documentService.getDocumentFromMedication(mid);
                 createMedicationService.execute(patient, documentMedication.getDocumentId(), List.of(newMedication));
@@ -135,8 +130,8 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
         return dosage.getEndDate() != null && !dateTimeProvider.nowDate().isBefore(dosage.getEndDate());
     }
 
-    private MedicationBo updateMedication(MedicationStatement medication, Dosage dosage, String note, String newStatusId, Short duration) {
-        LOG.debug("Input parameters -> medication {}, dosage {}, note {}, statusId {}, duration {}", medication, dosage, note, newStatusId, duration);
+    private MedicationBo updateMedication(MedicationStatement medication, Dosage dosage, String newStatusId, Short duration) {
+        LOG.debug("Input parameters -> medication {}, dosage {}, statusId {}, duration {}", medication, dosage, newStatusId, duration);
         MedicationBo result = new MedicationBo();
 
 
@@ -145,7 +140,7 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
         result.setHealthCondition(hc);
 
         result.setStatusId(newStatusId);
-        result.setNote(note);
+        result.setNoteId(medication.getNoteId());
 
         result.setDosage(createDosage(dosage, newStatusId, duration));
 

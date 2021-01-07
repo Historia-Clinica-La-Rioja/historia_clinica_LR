@@ -5,7 +5,6 @@ import net.pladema.clinichistory.documents.repository.ips.DosageRepository;
 import net.pladema.clinichistory.documents.repository.ips.MedicationStatementRepository;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.MedicationStatementStatus;
 import net.pladema.clinichistory.documents.service.DocumentService;
-import net.pladema.clinichistory.documents.service.NoteService;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.CreateMedicationService;
 import net.pladema.clinichistory.documents.service.ips.SnomedService;
@@ -49,15 +48,12 @@ public class ChangeStateMedicationServiceImplTest extends UnitRepository {
     private CreateMedicationService createMedicationService;
 
     @MockBean
-    private NoteService noteService;
-
-    @MockBean
     private DateTimeProvider dateTimeProvider;
 
     @Before
     public void setUp() {
         changeStateMedicationService = new ChangeStateMedicationServiceImpl(medicationStatementRepository,
-                createMedicationService, dosageRepository, documentService, noteService, snomedService, dateTimeProvider);
+                createMedicationService, dosageRepository, documentService, snomedService, dateTimeProvider);
     }
 
     @Test

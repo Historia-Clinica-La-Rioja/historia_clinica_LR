@@ -15,6 +15,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class MedicationBo extends ClinicalTerm {
 
+    private Long noteId;
+
     private String note;
 
     private boolean suspended = false;

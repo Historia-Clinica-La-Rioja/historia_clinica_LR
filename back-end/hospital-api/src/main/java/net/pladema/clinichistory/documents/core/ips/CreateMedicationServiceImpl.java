@@ -91,7 +91,7 @@ public class CreateMedicationServiceImpl implements CreateMedicationService {
                 snomedId,
                 cie10Codes,
                 medicationBo.getStatusId(),
-                noteService.createNote(medicationBo.getNote()),
+                medicationBo.getNoteId() != null ? medicationBo.getNoteId()  : noteService.createNote(medicationBo.getNote()),
                 medicationBo.getHealthCondition() != null ? medicationBo.getHealthCondition().getId() : null,
                 newDosage != null ? newDosage.getId() : null);
 
