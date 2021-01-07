@@ -18,7 +18,7 @@
 
 									<div fxLayout="row" fxLayoutAlign="space-between start">
 										<h3 mat-line class="primary bold element-margin">
-											Activa
+											{{renderStatusDescription(medicationInfo.statusId)}}
 										</h3>
 
 										<div>
@@ -26,20 +26,17 @@
 												<mat-icon>more_vert</mat-icon>
 											</button>
 											<mat-menu #menu="matMenu">
-												<button mat-menu-item >
+												<button mat-menu-item (click)="downloadRecipe(medicationInfo.id)">
 													<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.DOWNLOAD'"></span>
 												</button>
-												<button mat-menu-item >
-													<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.BACK'"></span>
+												<button mat-menu-item (click)="openDialogNewMedication(medicationInfo)">
+													<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.RE_PRESCRIBE'"></span>
 												</button>
-												<button mat-menu-item >
+												<button mat-menu-item *ngIf="medicationInfo.statusId === medicationStatus.ACTIVE">
 													<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.SUSPEND'"></span>
 												</button>
-												<button mat-menu-item >
+												<button mat-menu-item *ngIf="medicationInfo.statusId !== medicationStatus.STOPPED" (click)="changeMedicationStatus(medicationStatusChange.FINALIZE, [medicationInfo.id])">
 													<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.FINALIZE'"></span>
-												</button>
-												<button mat-menu-item >
-													<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.REACTIVATE'"></span>
 												</button>
 											</mat-menu>
 										</div>
@@ -50,11 +47,11 @@
 											{{medicationInfo.snomed.pt}}
 										</span>
 
-										<span mat-line class="mat-body" *ngIf="medicationInfo.hasRecipe else NoRecipe">
+										<span mat-line class="mat-body element-light-color" *ngIf="medicationInfo.hasRecipe else NoRecipe">
 											Receta #{{medicationInfo.medicationRequestId}}
 										</span>
 										<ng-template #NoRecipe>
-											<span mat-line class="mat-body"
+											<span mat-line class="mat-body element-light-color"
 												[translate]="'ambulatoria.paciente.ordenes_prescripciones.SIN_RECETA'">
 											</span>
 										</ng-template>
@@ -148,7 +145,7 @@
 									<span class="mat-subheading-2 capitalize-first-letter" style="margin: 0" fxFlex="70%">
 										{{diagnosticReport.snomed.pt}}
 									</span>
-									<span mat-line class="mat-body">
+									<span mat-line class="mat-body element-light-color">
 										Orden #{{diagnosticReport.serviceRequestId}}
 									</span>
 								</div>

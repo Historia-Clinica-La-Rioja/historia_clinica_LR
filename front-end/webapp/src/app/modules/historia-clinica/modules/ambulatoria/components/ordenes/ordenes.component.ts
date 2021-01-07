@@ -7,6 +7,7 @@ import { STUDY_STATUS } from '../../constants/orders-constant';
 import { ConfirmarPrescripcionComponent } from '../../dialogs/ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
 import { NuevaPrescripcionComponent } from '../../dialogs/ordenes-prescripciones/nueva-prescripcion/nueva-prescripcion.component';
 import { PrescripcionesService, PrescriptionTypes } from '../../services/prescripciones.service';
+import { MedicationStatus, MedicationStatusChange } from '../../constants/prescripciones-masterdata';
 
 @Component({
 	selector: 'app-ordenes',
@@ -19,8 +20,11 @@ export class OrdenesComponent implements OnInit {
 	public readonly estudios = ESTUDIOS;
 	public readonly indicaciones = INDICACIONES;
 	public readonly STUDY_STATUS = STUDY_STATUS;
+	public readonly medicationStatus = MedicationStatus;
+	public readonly medicationStatusChange = MedicationStatusChange;
     public medicationsInfo : MedicationInfoDto[];
 	public diagnosticReportsInfo : DiagnosticReportInfoDto[];
+	public selectedMedicationList: MedicationInfoDto[];
 
 	@Input('patientId') patientId: number;
 
@@ -37,19 +41,21 @@ export class OrdenesComponent implements OnInit {
 
 	private getMedication(): void {
 		this.prescripcionesService.getPrescription(PrescriptionTypes.MEDICATION, this.patientId, null, null, null).subscribe(
-			response =>{
+			response => {
 				this.medicationsInfo = response;
 			});
 	}
 
 	private getStudy(): void {
 		this.prescripcionesService.getPrescription(PrescriptionTypes.STUDY, this.patientId, null, null, null).subscribe(
-			response =>{
+			response => {
 				this.diagnosticReportsInfo = response;
 			});
 	}
 
-	openDialogNewMedication() {
+	openDialogNewMedication(medication?: MedicationInfoDto) {
+		const medicationList = medication ? [medication] : this.selectedMedicationList;
+
 		const newMedicationDialog = this.dialog.open(NuevaPrescripcionComponent,
 			{
 				data: {
@@ -57,7 +63,7 @@ export class OrdenesComponent implements OnInit {
 					titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.MEDICATION_TITLE',
 					addLabel: 'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.ADD_MEDICATION_LABEL',
 					prescriptionType: PrescriptionTypes.MEDICATION,
-					prescriptionItemList: undefined,
+					prescriptionItemList: medicationList && medicationList.map(m => this.prescripcionesService.toNewPrescriptionItem(PrescriptionTypes.MEDICATION, m)),
 					addPrescriptionItemDialogData: {
 						titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.MEDICATION_TITLE',
 						searchSnomedLabel: 'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.MEDICATION',
@@ -147,6 +153,29 @@ export class OrdenesComponent implements OnInit {
 	openDialogNewRecommendation() {
 	//TODO completar con pop-up nueva recomendacion
 	console.log("Nueva recomendacion");
+	}
+
+	changeMedicationStatus(statusChange: string, medicationsIds: number[]) {
+		this.prescripcionesService.changeMedicationStatus(statusChange, this.patientId, medicationsIds).subscribe(() => {
+			this.snackBarService.showSuccess('La medicacion cambio de estado correctamente')
+		}, _ => {this.snackBarService.showError('La medicacion no puede cambiarse a este estado')});
+	}
+
+	downloadRecipe(medicationId: number) {
+		this.prescripcionesService.downloadRecipe(this.patientId, medicationId).subscribe(() => {
+			this.snackBarService.showSuccess('La receta se descargo correctamente')
+		})
+	}
+
+	renderStatusDescription(statusId: string): string {
+		switch (statusId) {
+			case this.medicationStatus.ACTIVE: 
+				return 'Activa';
+			case this.medicationStatus.STOPPED:
+				return 'Finalizada';
+			case this.medicationStatus.SUSPENDED:
+				return 'Suspendida';
+		}
 	}
 
 }

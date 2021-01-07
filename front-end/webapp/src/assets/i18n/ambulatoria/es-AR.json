@@ -224,7 +224,7 @@
 				},
 				"menu_items": {
 					"DOWNLOAD": "Descargar receta",
-					"BACK": "Volver a recetar",
+					"RE_PRESCRIBE": "Volver a recetar",
 					"SUSPEND":"Suspender",
 					"FINALIZE":"Finalizar",
 					"COMPLETE":"Completar",

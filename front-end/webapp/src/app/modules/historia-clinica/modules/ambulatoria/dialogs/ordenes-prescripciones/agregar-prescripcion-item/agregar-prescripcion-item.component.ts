@@ -168,7 +168,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit {
 			}
 		}
 
-		if (prescriptionItem.studyCategory.id) {
+		if (prescriptionItem.studyCategory?.id) {
 			this.prescriptionItemForm.controls.studyCategory.setValue(prescriptionItem.studyCategory.id);
 		}
 
