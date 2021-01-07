@@ -44,4 +44,8 @@ public class DosageInfoDto implements Serializable {
         result.setExpired(dosage.isExpired());
         return result;
     }
+
+    public boolean isDailyInterval() {
+        return "d".equals(periodUnit);
+    }
 }

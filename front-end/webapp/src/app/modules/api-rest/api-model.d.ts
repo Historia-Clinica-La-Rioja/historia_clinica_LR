@@ -436,6 +436,7 @@ export interface DocumentsSummaryDto extends Serializable {
 
 export interface DosageInfoDto extends Serializable {
     chronic: boolean;
+    dailyInterval: boolean;
     duration: number;
     expired: boolean;
     frequency: number;
