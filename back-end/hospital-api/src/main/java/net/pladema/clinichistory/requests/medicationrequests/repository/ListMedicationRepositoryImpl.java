@@ -60,6 +60,7 @@ public class ListMedicationRepositoryImpl implements ListMedicationRepository {
                 "          ) AS h ON (h.id = t.health_condition_id) " +
                 "WHERE rw = 1 " +
                 (filter.getMedicationStatement() != null ? "AND UPPER(s.pt) LIKE :medication " : "") +
+                (filter.getHealthCondition() != null ? "AND UPPER(h.pt) LIKE :healthCondition " : "") +
                 "ORDER BY t.updated_on";
         Query query = entityManager.createNativeQuery(sqlString);
 
@@ -69,6 +70,10 @@ public class ListMedicationRepositoryImpl implements ListMedicationRepository {
 
         if (filter.getMedicationStatement() != null)
             query.setParameter("medication", "%"+filter.getMedicationStatement().toUpperCase()+"%");
+
+        if (filter.getHealthCondition() != null)
+            query.setParameter("healthCondition", "%"+filter.getHealthCondition().toUpperCase()+"%");
+
         List<Object[]> result = query.getResultList();
         return result;
     }
