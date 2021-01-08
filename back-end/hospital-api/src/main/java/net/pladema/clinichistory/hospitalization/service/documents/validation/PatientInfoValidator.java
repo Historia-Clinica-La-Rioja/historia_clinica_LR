@@ -13,9 +13,6 @@ public class PatientInfoValidator {
         LOG.debug("Input parameters -> patient {}", patient);
         Assert.notNull(patient, "La información del paciente es obligatoria");
         Assert.notNull(patient.getId(), "El código identificador del paciente es obligatorio");
-        Assert.notNull(patient.getAge(), "La edad del paciente es obligatoria");
-        var genderValidator = new GenderValidator();
-        genderValidator.isValid(patient.getGenderId());
         return true;
     }
 

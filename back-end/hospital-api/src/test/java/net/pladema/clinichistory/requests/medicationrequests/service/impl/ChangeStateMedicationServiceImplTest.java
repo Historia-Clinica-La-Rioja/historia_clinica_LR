@@ -71,20 +71,6 @@ public class ChangeStateMedicationServiceImplTest extends UnitRepository {
         expectedMessage = "El código identificador del paciente es obligatorio";
         actualMessage = exception.getMessage();
         Assertions.assertTrue(actualMessage.contains(expectedMessage));
-
-        exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-                changeStateMedicationService.execute(new PatientInfoBo(1, null,  (short)4), Collections.emptyList(), MedicationStatementStatus.ACTIVE, (short) 2)
-        );
-        expectedMessage = "El genero del paciente es obligatorio";
-        actualMessage = exception.getMessage();
-        Assertions.assertTrue(actualMessage.contains(expectedMessage));
-
-        exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-                changeStateMedicationService.execute(new PatientInfoBo(1, (short)4, (short)4), Collections.emptyList(), MedicationStatementStatus.ACTIVE, (short) 2)
-        );
-        expectedMessage = "El genero es invalido";
-        actualMessage = exception.getMessage();
-        Assertions.assertTrue(actualMessage.contains(expectedMessage));
     }
 
     @Test

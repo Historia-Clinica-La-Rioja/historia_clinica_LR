@@ -14,7 +14,6 @@ import net.pladema.clinichistory.documents.service.ips.SnomedService;
 import net.pladema.clinichistory.documents.service.ips.domain.DosageBo;
 import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
 import net.pladema.clinichistory.documents.service.ips.domain.enums.EUnitsOfTimeBo;
-import net.pladema.clinichistory.hospitalization.service.documents.validation.PatientInfoValidator;
 import net.pladema.snowstorm.services.CalculateCie10CodesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +62,7 @@ public class CreateMedicationServiceImpl implements CreateMedicationService {
     @Override
     public List<MedicationBo> execute(PatientInfoBo patientInfo, Long documentId, List<MedicationBo> medications) {
         LOG.debug("Input parameters -> patientInfo {}, documentId {}, medications {}", patientInfo, documentId, medications);
-        assertRequiredFields(patientInfo, documentId);
+        assertRequiredFields(documentId);
         medications.forEach(medication -> {
             Integer snomedId = snomedService.getSnomedId(medication.getSnomed())
                     .orElseGet(() -> snomedService.createSnomedTerm(medication.getSnomed()));
@@ -101,11 +100,9 @@ public class CreateMedicationServiceImpl implements CreateMedicationService {
         return medicationStatement;
     }
 
-    private void assertRequiredFields(PatientInfoBo patientInfo, Long documentId) {
-        LOG.debug("Input parameters -> patientInfo {}, documentId {}", patientInfo, documentId);
+    private void assertRequiredFields(Long documentId) {
+        LOG.debug("Input parameters -> documentId {}", documentId);
         Assert.notNull(documentId, "El identificador de la institución es obligatorio");
-        PatientInfoValidator patientInfoValidator = new PatientInfoValidator();
-        patientInfoValidator.isValid(patientInfo);
     }
 
     private Dosage createDosage(DosageBo dosage) {
