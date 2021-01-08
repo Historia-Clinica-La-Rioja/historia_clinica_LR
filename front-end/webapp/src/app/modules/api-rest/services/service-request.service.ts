@@ -22,10 +22,9 @@ export class ServiceRequestService {
 
 	getList(patientId: number, statusId: string, diagnosticReport: string, healthCondition: string): Observable<DiagnosticReportInfoDto[]> {
 		let queryParams: HttpParams = new HttpParams();
-		queryParams = queryParams.append('statusId', statusId);
-		queryParams = queryParams.append('diagnosticReport', diagnosticReport);
-		queryParams = queryParams.append('healthCondition', healthCondition);
-
+		statusId ? queryParams = queryParams.append('statusId', statusId) : queryParams
+		diagnosticReport ? queryParams = queryParams.append('diagnosticReport', diagnosticReport) : queryParams
+		healthCondition ? queryParams = queryParams.append('healthCondition', healthCondition) : queryParams
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/`;
 		return this.http.get<DiagnosticReportInfoDto[]>(url, {params: queryParams});
 	}

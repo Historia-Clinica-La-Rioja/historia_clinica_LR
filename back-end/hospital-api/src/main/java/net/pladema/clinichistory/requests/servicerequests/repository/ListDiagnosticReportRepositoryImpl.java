@@ -51,7 +51,7 @@ public class ListDiagnosticReportRepositoryImpl implements ListDiagnosticReportR
                 "            JOIN snomed s1 ON (h1.snomed_id = s1.id) " +
                 "          ) AS h ON (h.id = t.health_condition_id) " +
                 "WHERE rw = 1 " +
-                "AND t.status_id <> "+ DiagnosticReportStatus.ERROR + " "+
+                "AND NOT t.status_id = :invalidStatus "+
                 (filter.getStatus() != null ? "AND UPPER(t.status_id) LIKE :statusId " : "") +
                 (filter.getDiagnosticReport() != null ? "AND UPPER(s.pt) LIKE :diagnosticReport " : "") +
                 (filter.getHealthCondition() != null ? "AND UPPER(h.pt) LIKE :healthCondition " : "") +
@@ -61,7 +61,8 @@ public class ListDiagnosticReportRepositoryImpl implements ListDiagnosticReportR
         Query query = entityManager.createNativeQuery(sqlString);
         query.setParameter("documentStatusId", DocumentStatus.FINAL)
                 .setParameter("patientId", filter.getPatientId())
-                .setParameter("documentType", DocumentType.ORDER);
+                .setParameter("documentType", DocumentType.ORDER)
+                .setParameter("invalidStatus", DiagnosticReportStatus.ERROR);
 
         if (filter.getStatus() != null)
             query.setParameter("statusId", "%"+filter.getStatus().toUpperCase()+"%");

@@ -53,12 +53,10 @@ export class MedicationRequestService {
 
 	medicationRequestList(patientId: number, statusId: string, medicationStatement: string, healthCondition: string): Observable<MedicationInfoDto[]> {
 		let queryParams: HttpParams = new HttpParams();
-		if (statusId)
-			queryParams = queryParams.append('statusId', statusId);
-		if (medicationStatement)
-			queryParams = queryParams.append('medicationStatement', medicationStatement);
-		if (healthCondition)
-			queryParams = queryParams.append('healthCondition', healthCondition);
+		statusId ? queryParams = queryParams.append('statusId', statusId) : queryParams
+		medicationStatement ? queryParams = queryParams.append('medicationStatement', medicationStatement) : queryParams
+		healthCondition ? queryParams = queryParams.append('healthCondition', healthCondition) : queryParams
+
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/medication-requests`;
 		return this.http.get<MedicationInfoDto[]>(url, {params : queryParams});
 	}
