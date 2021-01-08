@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DiagnosticReportInfoDto, MedicationInfoDto, PrescriptionDto } from '@api-rest/api-model';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ESTUDIOS, INDICACIONES, ORDENES_MEDICACION } from 'src/app/modules/historia-clinica/constants/summaries';
+import { STUDY_STATUS } from '../../constants/orders-constant';
 import { ConfirmarPrescripcionComponent } from '../../dialogs/ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
 import { NuevaPrescripcionComponent } from '../../dialogs/ordenes-prescripciones/nueva-prescripcion/nueva-prescripcion.component';
 import { PrescripcionesService, PrescriptionTypes } from '../../services/prescripciones.service';
@@ -17,6 +18,7 @@ export class OrdenesComponent implements OnInit {
 	public readonly medicacion = ORDENES_MEDICACION;
 	public readonly estudios = ESTUDIOS;
 	public readonly indicaciones = INDICACIONES;
+	public readonly STUDY_STATUS = STUDY_STATUS;
     public medicationsInfo : MedicationInfoDto[];
 	public diagnosticReportsInfo : DiagnosticReportInfoDto[];
 

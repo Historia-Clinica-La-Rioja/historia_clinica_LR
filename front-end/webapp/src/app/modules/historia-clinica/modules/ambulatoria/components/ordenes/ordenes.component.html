@@ -120,8 +120,14 @@
 							<div fxFlex="100%">
 
 								<div fxLayout="row" fxLayoutAlign="space-between start">
-									<h3 mat-line class="primary bold element-margin" *ngIf="true">
-										Completado
+									<h3 mat-line class="primary bold element-margin" *ngIf="diagnosticReport.statusId == STUDY_STATUS.REGISTERED.id">
+										{{STUDY_STATUS.REGISTERED.description}}
+									</h3>
+									<h3 mat-line class="primary bold element-margin" *ngIf="diagnosticReport.statusId == STUDY_STATUS.FINAL.id">
+										{{STUDY_STATUS.FINAL.description}}
+									</h3>
+									<h3 mat-line class="primary bold element-margin" *ngIf="diagnosticReport.statusId == STUDY_STATUS.ERROR.id">
+										{{STUDY_STATUS.ERROR.description}}
 									</h3>
 									<div>
 										<button mat-icon-button [matMenuTriggerFor]="menu" >
