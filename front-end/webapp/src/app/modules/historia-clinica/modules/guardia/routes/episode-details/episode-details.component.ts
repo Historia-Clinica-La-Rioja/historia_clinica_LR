@@ -10,6 +10,9 @@ import { ConfirmDialogComponent } from '@core/dialogs/confirm-dialog/confirm-dia
 import { MapperService } from '@presentation/services/mapper.service';
 import { Observable } from 'rxjs';
 import { SearchPatientComponent } from 'src/app/modules/pacientes/component/search-patient/search-patient.component';
+import { TriageService } from '@api-rest/services/triage.service';
+import { Triage } from '../../components/triage-details/triage-details.component';
+import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 
 @Component({
 	selector: 'app-episode-details',
@@ -25,6 +28,8 @@ export class EpisodeDetailsComponent implements OnInit {
 	episodeId: number;
 	responseEmergencyCare: ResponseEmergencyCareDto;
 
+	triage: Triage;
+
 	constructor(
 		private readonly route: ActivatedRoute,
 		private readonly patientService: PatientService,
@@ -34,6 +39,7 @@ export class EpisodeDetailsComponent implements OnInit {
 		//No se puede hacer un llamado y que traiga todo de una? En un monton de lados debemos estar haciendo esto...
 		private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService,
 		private readonly dialog: MatDialog,
+		private readonly triageService: TriageService
 
 	) { }
 
@@ -50,6 +56,10 @@ export class EpisodeDetailsComponent implements OnInit {
 							this.loadPatient(responseEmergencyCare.patientId);
 						}
 					});
+
+				this.triageService.getAll(this.episodeId).subscribe((triageDto: any[]) => {
+					this.triage = this.mapTriageDtoToTriage(triageDto[0]);
+				});
 			});
 
 	}
@@ -94,5 +104,58 @@ export class EpisodeDetailsComponent implements OnInit {
 
 		this.personPhoto$ = this.patientService.getPatientPhoto(patientId);
 	}
+
+	private mapTriageDtoToTriage(triageDto: any): Triage {
+		return {
+			creationDate: new Date(), // todo agregar dato real
+			category: {
+				id: triageDto.category.id,
+				name: triageDto.category.name,
+				colorHex: triageDto.category.color.code
+			},
+			professional: {
+				firstName: triageDto.professional.firstName,
+				lastName: triageDto.professional.lastName
+			},
+			doctorsOfficeDescription: triageDto.doctorsOffice?.description,
+			vitalSigns: triageDto.vitalSigns ? mapVitalSigns(triageDto.vitalSigns) : undefined,
+			appearance: {
+				bodyTemperatureDescription: triageDto.appearance?.bodyTemperature?.description,
+				cryingExcessive: triageDto.appearance?.cryingExcessive,
+				muscleHypertoniaDescription: triageDto.appearance?.muscleHypertonia?.description
+			}
+		};
+
+		function mapVitalSigns(vitalSigns) {
+			return {
+				bloodOxygenSaturation: {
+					value: vitalSigns.bloodOxygenSaturation.value,
+					effectiveTime: dateDtoToDate(vitalSigns.bloodOxygenSaturation.effectiveTime)
+				},
+				diastolicBloodPressure: {
+					value: vitalSigns.diastolicBloodPressure.value,
+					effectiveTime: dateDtoToDate(vitalSigns.diastolicBloodPressure.effectiveTime)
+				},
+				heartRate: {
+					value: vitalSigns.heartRate.value,
+					effectiveTime: dateDtoToDate(vitalSigns.heartRate.effectiveTime)
+				},
+				respiratoryRate: {
+					value: vitalSigns.respiratoryRate.value,
+					effectiveTime: dateDtoToDate(vitalSigns.respiratoryRate.effectiveTime)
+				},
+				systolicBloodPressure: {
+					value: vitalSigns.systolicBloodPressure.value,
+					effectiveTime: dateDtoToDate(vitalSigns.systolicBloodPressure.effectiveTime)
+				},
+				temperature: {
+					value: vitalSigns.temperature.value,
+					effectiveTime: dateDtoToDate(vitalSigns.temperature.effectiveTime)
+				}
+			};
+		}
+
+	}
+
 
 }
