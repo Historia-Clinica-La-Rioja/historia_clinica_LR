@@ -12,6 +12,7 @@ import net.pladema.clinichistory.requests.medicationrequests.controller.mapper.L
 import net.pladema.clinichistory.requests.medicationrequests.service.ChangeStateMedicationService;
 import net.pladema.clinichistory.requests.medicationrequests.service.CreateMedicationRequestService;
 import net.pladema.clinichistory.requests.medicationrequests.service.ListMedicationInfoService;
+import net.pladema.clinichistory.requests.medicationrequests.service.domain.ChangeStateMedicationRequestBo;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationFilterBo;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationRequestBo;
 import net.pladema.patient.controller.service.PatientExternalService;
@@ -43,6 +44,7 @@ import java.util.stream.Collectors;
 public class MedicationRequestController {
 
     private static final Logger LOG = LoggerFactory.getLogger(MedicationRequestController.class);
+    public static final String CHANGE_STATE_REQUEST = "change-state -> institutionId {}, patientId {}, changeStateRequest {}";
 
     private final CreateMedicationRequestService createMedicationRequestService;
 
@@ -99,10 +101,10 @@ public class MedicationRequestController {
     public void suspendMedication(@PathVariable(name = "institutionId") Integer institutionId,
                                   @PathVariable(name = "patientId") Integer patientId,
                                   @RequestBody ChangeStateMedicationRequestDto changeStateRequest) {
-        LOG.debug("change-state -> institutionId {}, patientId {}, changeStateRequest {}", institutionId, patientId, changeStateRequest);
+        LOG.debug(CHANGE_STATE_REQUEST, institutionId, patientId, changeStateRequest);
         var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
         PatientInfoBo patientInfoBo = new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge());
-        changeStateMedicationService.execute(patientInfoBo, changeStateRequest.getMedicationsIds(), MedicationStatementStatus.SUSPENDED, changeStateRequest.getDayQuantity());
+        changeStateMedicationService.execute(patientInfoBo, new ChangeStateMedicationRequestBo(MedicationStatementStatus.SUSPENDED, changeStateRequest.getDayQuantity(), changeStateRequest.getObservations(), changeStateRequest.getMedicationsIds()));
         LOG.debug("suspend success");
     }
 
@@ -113,10 +115,10 @@ public class MedicationRequestController {
     public void finalizeMedication(@PathVariable(name = "institutionId") Integer institutionId,
                         @PathVariable(name = "patientId") Integer patientId,
                         @RequestBody ChangeStateMedicationRequestDto changeStateRequest) {
-        LOG.debug("change-state -> institutionId {}, patientId {}, changeStateRequest {}", institutionId, patientId, changeStateRequest);
+        LOG.debug(CHANGE_STATE_REQUEST, institutionId, patientId, changeStateRequest);
         var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
         PatientInfoBo patientInfoBo = new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge());
-        changeStateMedicationService.execute(patientInfoBo, changeStateRequest.getMedicationsIds(), MedicationStatementStatus.STOPPED, null);
+        changeStateMedicationService.execute(patientInfoBo, new ChangeStateMedicationRequestBo(MedicationStatementStatus.STOPPED, null, null, changeStateRequest.getMedicationsIds()));
         LOG.debug("finalize success");
     }
 
@@ -126,10 +128,10 @@ public class MedicationRequestController {
     public void reactivateMedication(@PathVariable(name = "institutionId") Integer institutionId,
                                      @PathVariable(name = "patientId") Integer patientId,
                                      @RequestBody ChangeStateMedicationRequestDto changeStateRequest) {
-        LOG.debug("change-state -> institutionId {}, patientId {}, changeStateRequest {}", institutionId, patientId, changeStateRequest);
+        LOG.debug(CHANGE_STATE_REQUEST, institutionId, patientId, changeStateRequest);
         var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
         PatientInfoBo patientInfoBo = new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge());
-        changeStateMedicationService.execute(patientInfoBo, changeStateRequest.getMedicationsIds(), MedicationStatementStatus.ACTIVE, null);
+        changeStateMedicationService.execute(patientInfoBo, new ChangeStateMedicationRequestBo(MedicationStatementStatus.ACTIVE, null, null, changeStateRequest.getMedicationsIds()));
         LOG.debug("reactivate success");
     }
 

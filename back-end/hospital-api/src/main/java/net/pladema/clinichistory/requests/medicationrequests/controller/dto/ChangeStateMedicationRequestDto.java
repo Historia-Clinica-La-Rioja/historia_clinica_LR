@@ -16,6 +16,9 @@ public class ChangeStateMedicationRequestDto implements Serializable {
     @Nullable
     private Short dayQuantity;
 
+    @Nullable
+    private String observations;
+
     @NotEmpty
     private List<Integer> medicationsIds = new ArrayList();
 }

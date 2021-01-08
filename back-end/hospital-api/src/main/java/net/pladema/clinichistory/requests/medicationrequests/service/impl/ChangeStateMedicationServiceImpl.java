@@ -7,6 +7,7 @@ import net.pladema.clinichistory.documents.repository.ips.entity.Dosage;
 import net.pladema.clinichistory.documents.repository.ips.entity.MedicationStatement;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.MedicationStatementStatus;
 import net.pladema.clinichistory.documents.service.DocumentService;
+import net.pladema.clinichistory.documents.service.NoteService;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.CreateMedicationService;
 import net.pladema.clinichistory.documents.service.ips.SnomedService;
@@ -17,6 +18,7 @@ import net.pladema.clinichistory.documents.service.ips.domain.enums.EUnitsOfTime
 import net.pladema.clinichistory.hospitalization.service.documents.validation.MedicationStatementValidator;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.PatientInfoValidator;
 import net.pladema.clinichistory.requests.medicationrequests.service.ChangeStateMedicationService;
+import net.pladema.clinichistory.requests.medicationrequests.service.domain.ChangeStateMedicationRequestBo;
 import net.pladema.sgx.dates.configuration.DateTimeProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,14 +45,18 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
     private final SnomedService snomedService;
 
     private final MedicationCalculateStatus medicationCalculateStatus;
+    
+    private final NoteService noteService;
 
     private final DateTimeProvider dateTimeProvider;
+    
     public ChangeStateMedicationServiceImpl(MedicationStatementRepository medicationStatementRepository,
                                             CreateMedicationService createMedicationService,
                                             DosageRepository dosageRepository,
                                             DocumentService documentService,
                                             SnomedService snomedService,
                                             MedicationCalculateStatus medicationCalculateStatus,
+                                            NoteService noteService,
                                             DateTimeProvider dateTimeProvider) {
         this.medicationStatementRepository = medicationStatementRepository;
         this.createMedicationService = createMedicationService;
@@ -58,22 +64,25 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
         this.documentService = documentService;
         this.snomedService = snomedService;
         this.medicationCalculateStatus = medicationCalculateStatus;
+        this.noteService = noteService;
         this.dateTimeProvider = dateTimeProvider;
     }
 
 
     @Override
     @Transactional
-    public void execute(PatientInfoBo patient, List<Integer> medicationsIds, String newStatusId, Short duration) {
-        LOG.debug("Input parameters -> patient {}, medicationsIds {}, newStatusId {}, duration {}", patient, medicationsIds, newStatusId, duration);
+    public void execute(PatientInfoBo patient, ChangeStateMedicationRequestBo changeStateMedicationRequestBo) {
+        LOG.debug("Input parameters -> patient {}, changeStateMedicationRequestBo {}", patient, changeStateMedicationRequestBo);
+        String newStatusId = changeStateMedicationRequestBo.getStatusId();
+        Short duration = changeStateMedicationRequestBo.getDayQuantity();
         assertRequiredFields(patient, newStatusId);
-        
-        medicationsIds.forEach(mid ->
+
+        changeStateMedicationRequestBo.getMedicationsIds().forEach(mid ->
             medicationStatementRepository.findById(mid).ifPresent(medication -> {
                 var dosage = parseTo(medication.getDosageId() != null ? dosageRepository.findById(medication.getDosageId()).orElse(null) : null);
                 assertChangeState(newStatusId, duration, medication, dosage);
 
-                MedicationBo newMedication = updateMedication(medication, dosage, newStatusId, duration);
+                MedicationBo newMedication = updateMedication(medication, dosage, newStatusId, duration, changeStateMedicationRequestBo.getObservations());
 
                 var documentMedication = documentService.getDocumentFromMedication(mid);
                 createMedicationService.execute(patient, documentMedication.getDocumentId(), List.of(newMedication));
@@ -127,8 +136,8 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
         return result;
     }
 
-    private MedicationBo updateMedication(MedicationStatement medication, DosageBo dosage, String newStatusId, Short duration) {
-        LOG.debug("Input parameters -> medication {}, dosage {}, statusId {}, duration {}", medication, dosage, newStatusId, duration);
+    private MedicationBo updateMedication(MedicationStatement medication, DosageBo dosage, String newStatusId, Short duration, String observations) {
+        LOG.debug("Input parameters -> medication {}, dosage {}, statusId {}, duration {}, observations {}", medication, dosage, newStatusId, duration, observations);
         MedicationBo result = new MedicationBo();
 
 
@@ -137,7 +146,7 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
         result.setHealthCondition(hc);
 
         result.setStatusId(newStatusId);
-        result.setNoteId(medication.getNoteId());
+        result.setNoteId(observations != null ? noteService.createNote(observations) : medication.getNoteId());
 
         result.setDosage(create(dosage, newStatusId, duration));
 
