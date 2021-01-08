@@ -21,6 +21,7 @@ import { AdultGynecologicalTriageComponent } from './components/adult-gynecologi
 import { NewEpisodeAdultGynecologicalTriageComponent } from './routes/new-episode-adult-gynecological-triage/new-episode-adult-gynecological-triage.component';
 import { PediatricTriageComponent } from './components/pediatric-triage/pediatric-triage.component';
 import { NewEpisodePediatricTriageComponent } from './routes/new-episode-pediatric-triage/new-episode-pediatric-triage.component';
+import { TriageDetailsComponent } from './components/triage-details/triage-details.component';
 
 @NgModule({
 	declarations: [
@@ -36,6 +37,7 @@ import { NewEpisodePediatricTriageComponent } from './routes/new-episode-pediatr
 		NewEpisodePediatricTriageComponent,
 		SelectConsultorioComponent,
 		EpisodeDetailsComponent,
+		TriageDetailsComponent,
 	],
 	imports: [
 		CommonModule,
