@@ -37,7 +37,7 @@ public class ListMedicationInfoMapper {
         result.setCreatedOn(new DateDto(medicationBo.getCreatedOn().getYear(),
                 medicationBo.getCreatedOn().getMonthValue(),
                 medicationBo.getCreatedOn().getDayOfMonth()));
-        result.setTotalDays(calculateTotalDays(medicationBo.getDosage() != null ? medicationBo.getDosage().getStartDate() : null, medicationBo.getCreatedOn()));
+        result.setTotalDays(calculateTotalDays(medicationBo.getDosage().getStartDate(), medicationBo.getCreatedOn()));
         LOG.trace("parseTo result -> {} ", result);
         return result;
     }

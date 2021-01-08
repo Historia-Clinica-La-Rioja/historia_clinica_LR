@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.requests.medicationrequests.service.impl;
 
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.MedicationStatementStatus;
+import net.pladema.clinichistory.documents.core.ips.MedicationCalculateStatus;
 import net.pladema.clinichistory.documents.service.ips.domain.DosageBo;
 import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionBo;
 import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
@@ -10,7 +11,6 @@ import net.pladema.clinichistory.requests.medicationrequests.repository.ListMedi
 import net.pladema.clinichistory.requests.medicationrequests.repository.domain.MedicationFilterVo;
 import net.pladema.clinichistory.requests.medicationrequests.service.ListMedicationInfoService;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationFilterBo;
-import net.pladema.sgx.dates.configuration.DateTimeProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -27,11 +27,12 @@ public class ListMedicationInfoServiceImpl implements ListMedicationInfoService 
 
     private final ListMedicationRepository listMedicationRepository;
 
-    private final DateTimeProvider dateTimeProvider;
+    private final MedicationCalculateStatus medicationCalculateStatus;
 
-    public ListMedicationInfoServiceImpl(ListMedicationRepository listMedicationRepository, DateTimeProvider dateTimeProvider) {
+    public ListMedicationInfoServiceImpl(ListMedicationRepository listMedicationRepository,
+                                         MedicationCalculateStatus medicationCalculateStatus) {
         this.listMedicationRepository = listMedicationRepository;
-        this.dateTimeProvider = dateTimeProvider;
+        this.medicationCalculateStatus = medicationCalculateStatus;
     }
 
 
@@ -66,8 +67,8 @@ public class ListMedicationInfoServiceImpl implements ListMedicationInfoService 
 
         result.setNote((String) row[10]);
 
+        DosageBo d = new DosageBo();
         if (row[11] != null) {
-            DosageBo d = new DosageBo();
             d.setId((Integer) row[11]);
             d.setDuration((Double) row[12]);
             d.setFrequency((Integer) row[13]);
@@ -77,12 +78,12 @@ public class ListMedicationInfoServiceImpl implements ListMedicationInfoService 
             d.setEndDate(row[17] != null ? ((Date) row[17]).toLocalDate() : null);
             d.setSuspendedStartDate(row[18] != null ? ((Date) row[18]).toLocalDate() : null);
             d.setSuspendedEndDate(row[19] != null ? ((Date) row[19]).toLocalDate() : null);
-            result.setDosage(d);
-        }
 
+        }
+        result.setDosage(d);
         result.setEncounterId((Integer)row[20]);
         result.setHasRecipe(row[21] != null && (Boolean)row[21]);
-        result.setSuspended(isSuspended(result.getStatusId(), result.getDosage()));
+        result.setSuspended(MedicationStatementStatus.SUSPENDED.equals(medicationCalculateStatus.execute(result.getStatusId(), result.getDosage())));
 
         result.setUserId((Integer) row[22]);
         result.setCreatedOn(row[23] != null ? ((Timestamp) row[23]).toLocalDateTime().toLocalDate() : null);
@@ -93,35 +94,11 @@ public class ListMedicationInfoServiceImpl implements ListMedicationInfoService 
 
     private boolean byStatus(MedicationBo medicationBo, String filterStatusId) {
         if (MedicationStatementStatus.SUSPENDED.equals(filterStatusId))
-            return isSuspended(medicationBo.getStatusId(), medicationBo.getDosage());
+            return MedicationStatementStatus.SUSPENDED.equals(medicationCalculateStatus.execute(medicationBo.getStatusId(), medicationBo.getDosage()));
         if (MedicationStatementStatus.STOPPED.equals(filterStatusId))
-            return isStopped(medicationBo.getStatusId(), medicationBo.getDosage());
+            return MedicationStatementStatus.STOPPED.equals(medicationCalculateStatus.execute(medicationBo.getStatusId(), medicationBo.getDosage()));
         if (MedicationStatementStatus.ACTIVE.equals(filterStatusId))
-            return isActive(medicationBo.getStatusId(), medicationBo.getDosage());
+            return MedicationStatementStatus.ACTIVE.equals(medicationCalculateStatus.execute(medicationBo.getStatusId(), medicationBo.getDosage()));
         return false;
-    }
-
-    private boolean isActive(String statusId, DosageBo dosage) {
-        if (MedicationStatementStatus.SUSPENDED.equals(statusId) && !isSuspended(statusId, dosage))
-            return true;
-        if (MedicationStatementStatus.STOPPED.equals(statusId) && !isStopped(statusId, dosage))
-            return true;
-        return MedicationStatementStatus.ACTIVE.equals(statusId);
-    }
-
-    private boolean isStopped(String statusId, DosageBo dosage) {
-        if (dosage == null && !MedicationStatementStatus.STOPPED.equals(statusId))
-            return false;
-        if (dosage == null)
-            return true;
-        return dosage.getEndDate() != null && !dateTimeProvider.nowDate().isAfter(dosage.getEndDate());
-    }
-
-    private boolean isSuspended(String statusId, DosageBo dosage) {
-        if (dosage == null && !MedicationStatementStatus.SUSPENDED.equals(statusId))
-            return false;
-        if (dosage == null)
-            return true;
-        return dosage.getSuspendedEndDate() != null &&  !dateTimeProvider.nowDate().isAfter(dosage.getSuspendedEndDate());
     }
 }

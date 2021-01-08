@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.documents.core.hce;
 
+import net.pladema.clinichistory.documents.core.ips.MedicationCalculateStatus;
 import net.pladema.clinichistory.documents.repository.hce.HCEMedicationStatementRepository;
 import net.pladema.clinichistory.documents.repository.hce.domain.HCEMedicationVo;
 import net.pladema.clinichistory.documents.service.hce.HCEMedicationService;
@@ -21,15 +22,22 @@ public class HCEMedicationServiceImpl implements HCEMedicationService {
 
     private final HCEMedicationStatementRepository hceMedicationStatementRepository;
 
-    public HCEMedicationServiceImpl(HCEMedicationStatementRepository hceMedicationStatementRepository) {
+    private final MedicationCalculateStatus medicationCalculateStatus;
+
+    public HCEMedicationServiceImpl(HCEMedicationStatementRepository hceMedicationStatementRepository,
+                                    MedicationCalculateStatus medicationCalculateStatus) {
         this.hceMedicationStatementRepository = hceMedicationStatementRepository;
+        this.medicationCalculateStatus = medicationCalculateStatus;
     }
 
     @Override
     public List<HCEMedicationBo> getMedication(Integer patientId) {
         LOG.debug(LOGGING_INPUT, patientId);
         List<HCEMedicationVo> resultQuery = hceMedicationStatementRepository.getMedication(patientId);
-        List<HCEMedicationBo> result = resultQuery.stream().map(HCEMedicationBo::new).collect(Collectors.toList());
+        List<HCEMedicationBo> result = resultQuery.stream()
+                .map(HCEMedicationBo::new)
+                .collect(Collectors.toList());
+        result.forEach((hceMedicationBo -> hceMedicationBo.setStatus(medicationCalculateStatus.execute(hceMedicationBo.getStatusId(), hceMedicationBo.getDosage()))));
         LOG.debug(LOGGING_OUTPUT, result);
         return result;
     }

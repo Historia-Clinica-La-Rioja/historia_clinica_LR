@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.requests.medicationrequests.service.impl;
 
 import net.pladema.UnitRepository;
+import net.pladema.clinichistory.documents.core.ips.MedicationCalculateStatus;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.*;
 import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
 import net.pladema.clinichistory.mocks.DocumentsTestMocks;
@@ -35,18 +36,18 @@ public class ListMedicationInfoServiceImplTest extends UnitRepository {
 
     private ListMedicationInfoService listMedicationInfoService;
 
-    private ListMedicationRepository listMedicationRepository;
-
     @MockBean
     private DateTimeProvider dateTimeProvider;
 
     @Autowired
     private EntityManager entityManager;
 
+
     @Before
     public void setUp(){
-        listMedicationRepository = new ListMedicationRepositoryImpl(entityManager);
-        listMedicationInfoService = new ListMedicationInfoServiceImpl(listMedicationRepository, dateTimeProvider);
+        MedicationCalculateStatus medicationCalculateStatus = new MedicationCalculateStatus(dateTimeProvider);
+        ListMedicationRepository listMedicationRepository = new ListMedicationRepositoryImpl(entityManager);
+        listMedicationInfoService = new ListMedicationInfoServiceImpl(listMedicationRepository, medicationCalculateStatus);
 
         save(new MedicationStatementStatus(MedicationStatementStatus.ACTIVE, "Activo"));
         save(new MedicationStatementStatus(MedicationStatementStatus.SUSPENDED, "Suspendido"));

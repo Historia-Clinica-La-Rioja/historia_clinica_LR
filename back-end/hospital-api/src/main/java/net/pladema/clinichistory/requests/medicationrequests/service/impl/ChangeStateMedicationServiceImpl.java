@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.requests.medicationrequests.service.impl;
 
+import net.pladema.clinichistory.documents.core.ips.MedicationCalculateStatus;
 import net.pladema.clinichistory.documents.repository.ips.DosageRepository;
 import net.pladema.clinichistory.documents.repository.ips.MedicationStatementRepository;
 import net.pladema.clinichistory.documents.repository.ips.entity.Dosage;
@@ -41,18 +42,22 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
 
     private final SnomedService snomedService;
 
-    private final DateTimeProvider dateTimeProvider;
+    private final MedicationCalculateStatus medicationCalculateStatus;
 
+    private final DateTimeProvider dateTimeProvider;
     public ChangeStateMedicationServiceImpl(MedicationStatementRepository medicationStatementRepository,
                                             CreateMedicationService createMedicationService,
                                             DosageRepository dosageRepository,
                                             DocumentService documentService,
-                                            SnomedService snomedService, DateTimeProvider dateTimeProvider) {
+                                            SnomedService snomedService,
+                                            MedicationCalculateStatus medicationCalculateStatus,
+                                            DateTimeProvider dateTimeProvider) {
         this.medicationStatementRepository = medicationStatementRepository;
         this.createMedicationService = createMedicationService;
         this.dosageRepository = dosageRepository;
         this.documentService = documentService;
         this.snomedService = snomedService;
+        this.medicationCalculateStatus = medicationCalculateStatus;
         this.dateTimeProvider = dateTimeProvider;
     }
 
@@ -63,17 +68,17 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
         LOG.debug("Input parameters -> patient {}, medicationsIds {}, newStatusId {}, duration {}", patient, medicationsIds, newStatusId, duration);
         assertRequiredFields(patient, newStatusId);
         
-        medicationsIds.forEach(mid -> {
+        medicationsIds.forEach(mid ->
             medicationStatementRepository.findById(mid).ifPresent(medication -> {
-                var dosage = medication.getDosageId() != null ? dosageRepository.findById(medication.getDosageId()).get() : null;
+                var dosage = parseTo(medication.getDosageId() != null ? dosageRepository.findById(medication.getDosageId()).orElse(null) : null);
                 assertChangeState(newStatusId, duration, medication, dosage);
 
                 MedicationBo newMedication = updateMedication(medication, dosage, newStatusId, duration);
 
                 var documentMedication = documentService.getDocumentFromMedication(mid);
                 createMedicationService.execute(patient, documentMedication.getDocumentId(), List.of(newMedication));
-            });
-        });
+            })
+        );
     }
     private void assertRequiredFields(PatientInfoBo patient, String newStatusId) {
         LOG.debug("Input parameters -> patient {}, newStatusId {}", patient, newStatusId);
@@ -84,52 +89,45 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
         medicationStatusValidator.isValid(newStatusId);
     }
 
-    private void assertChangeState(String newStatusId, Short duration, MedicationStatement medication, Dosage dosage) {
+    private void assertChangeState(String newStatusId, Short duration, MedicationStatement medication, DosageBo dosage) {
         LOG.debug("Input parameters -> newStatusId {}, duration {}, medication {}, dosage {}", newStatusId, duration, medication, dosage);
+        final String LA_MEDICACIÓN_CON_ID = "La medicación con id ";
         Integer id = medication.getId();
         String currentStatusId = medication.getStatusId();
         if (MedicationStatementStatus.SUSPENDED.equals(newStatusId)){
             Assert.notNull(duration, "La cantidad de dias de suspensión es obligatoria");
-            Assert.isTrue(!isStopped(dosage, currentStatusId), "La medicación con id "+ id + " no se puede suspender porque ya esta finalizada");
-            Assert.isTrue(!isSuspended(dosage, currentStatusId), "La medicación con id "+ id + " no se puede suspender porque ya esta suspendida");
+            Assert.isTrue(!MedicationStatementStatus.STOPPED.equals(medicationCalculateStatus.execute(currentStatusId, dosage)), LA_MEDICACIÓN_CON_ID + id + " no se puede suspender porque ya esta finalizada");
+            Assert.isTrue(!MedicationStatementStatus.SUSPENDED.equals(medicationCalculateStatus.execute(currentStatusId, dosage)), LA_MEDICACIÓN_CON_ID+ id + " no se puede suspender porque ya esta suspendida");
         }
 
         if (MedicationStatementStatus.STOPPED.equals(newStatusId)){
-            Assert.isTrue(!isStopped(dosage, currentStatusId), "La medicación con id "+ id + " no se puede finalizar porque ya esta finalizada");
+            Assert.isTrue(!MedicationStatementStatus.STOPPED.equals(medicationCalculateStatus.execute(currentStatusId, dosage)), LA_MEDICACIÓN_CON_ID+ id + " no se puede finalizar porque ya esta finalizada");
         }
 
         if (MedicationStatementStatus.ACTIVE.equals(newStatusId)) {
-            Assert.isTrue(!isActive(dosage, currentStatusId), "La medicación con id "+ id + " no se puede activar porque ya esta activa");
-            Assert.isTrue(!isStopped(dosage, currentStatusId), "La medicación con id "+ id + " no se puede activar porque ya esta finalizada");
+            Assert.isTrue(!MedicationStatementStatus.ACTIVE.equals(medicationCalculateStatus.execute(currentStatusId, dosage)), LA_MEDICACIÓN_CON_ID+ id + " no se puede activar porque ya esta activa");
+            Assert.isTrue(!MedicationStatementStatus.STOPPED.equals(medicationCalculateStatus.execute(currentStatusId, dosage)), LA_MEDICACIÓN_CON_ID+ id + " no se puede activar porque ya esta finalizada");
         }
     }
 
-    private boolean isActive(Dosage dosage, String statusId) {
-        if (MedicationStatementStatus.SUSPENDED.equals(statusId) && !isSuspended(dosage, statusId))
-            return true;
-        if (MedicationStatementStatus.STOPPED.equals(statusId) && !isStopped(dosage, statusId))
-            return true;
-        return MedicationStatementStatus.ACTIVE.equals(statusId);
-    }
-
-    private boolean isSuspended(Dosage dosage, String statusId) {
-        if (dosage == null && !MedicationStatementStatus.SUSPENDED.equals(statusId))
-            return false;
+    private DosageBo parseTo(Dosage dosage) {
+        LOG.debug("Input parameters -> dosage {}", dosage);
+        DosageBo result = new DosageBo();
         if (dosage == null)
-            return true;
-        return dosage.getSuspendedEndDate() != null &&  !dateTimeProvider.nowDate().isAfter(dosage.getSuspendedEndDate());
-
+            return result;
+        result.setId(dosage.getId());
+        result.setDuration(dosage.getDuration());
+        result.setStartDate(dosage.getStartDate());
+        result.setEndDate(dosage.getEndDate());
+        result.setChronic(dosage.getChronic() != null && dosage.getChronic());
+        result.setFrequency(dosage.getFrequency());
+        result.setPeriodUnit(EUnitsOfTimeBo.map(dosage.getPeriodUnit()));
+        result.setSuspendedStartDate(dosage.getSuspendedStartDate());
+        result.setSuspendedEndDate(dosage.getSuspendedEndDate());
+        return result;
     }
 
-    private boolean isStopped(Dosage dosage, String statusId) {
-        if (dosage == null && !MedicationStatementStatus.STOPPED.equals(statusId))
-            return false;
-        if (dosage == null)
-            return true;
-        return dosage.getEndDate() != null && dateTimeProvider.nowDate().isAfter(dosage.getEndDate());
-    }
-
-    private MedicationBo updateMedication(MedicationStatement medication, Dosage dosage, String newStatusId, Short duration) {
+    private MedicationBo updateMedication(MedicationStatement medication, DosageBo dosage, String newStatusId, Short duration) {
         LOG.debug("Input parameters -> medication {}, dosage {}, statusId {}, duration {}", medication, dosage, newStatusId, duration);
         MedicationBo result = new MedicationBo();
 
@@ -141,21 +139,21 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
         result.setStatusId(newStatusId);
         result.setNoteId(medication.getNoteId());
 
-        result.setDosage(createDosage(dosage, newStatusId, duration));
+        result.setDosage(create(dosage, newStatusId, duration));
 
         result.setSnomed(snomedService.getSnomed(medication.getSnomedId()));
         LOG.debug("Result {}", result);
         return result;
     }
 
-    private DosageBo createDosage(Dosage dosage, String newStatusId, Short duration) {
+    private DosageBo create(DosageBo dosage, String newStatusId, Short duration) {
         LOG.debug("Input parameters -> dosage {}, statusId {}, duration {}", dosage, newStatusId, duration);
         DosageBo result = new DosageBo();
-        result.setDuration(dosage != null ? dosage.getDuration() : null);
-        result.setStartDate(dosage != null ? dosage.getStartDate() : dateTimeProvider.nowDate());
-        result.setChronic(dosage != null && dosage.getChronic());
-        result.setFrequency(dosage != null ? dosage.getFrequency() : null);
-        result.setPeriodUnit(dosage != null ? EUnitsOfTimeBo.map(dosage.getPeriodUnit()) : EUnitsOfTimeBo.HOUR);
+        result.setDuration(dosage.getDuration());
+        result.setStartDate(dosage.getStartDate() != null ? dosage.getStartDate() : dateTimeProvider.nowDate());
+        result.setChronic(dosage.isChronic());
+        result.setFrequency(dosage.getFrequency());
+        result.setPeriodUnit(dosage.getPeriodUnit() != null ? EUnitsOfTimeBo.map(dosage.getPeriodUnit()) : EUnitsOfTimeBo.HOUR);
         if (MedicationStatementStatus.SUSPENDED.equals(newStatusId)){
             result.setSuspendedStartDate(dateTimeProvider.nowDate());
             LocalDate suspendedEndDate = result.getSuspendedStartDate().plusDays(duration.longValue());
@@ -164,17 +162,16 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
 
         if (MedicationStatementStatus.STOPPED.equals(newStatusId)) {
             result.setEndDate(dateTimeProvider.nowDate());
+            result.setSuspendedStartDate(null);
+            result.setSuspendedEndDate(null);
             result.setChronic(false);
         }
 
         if (MedicationStatementStatus.ACTIVE.equals(newStatusId)) {
             result.setSuspendedStartDate(null);
             result.setSuspendedEndDate(null);
-            result.setEndDate(null);
         }
 
         return result;
     }
 }
-
-

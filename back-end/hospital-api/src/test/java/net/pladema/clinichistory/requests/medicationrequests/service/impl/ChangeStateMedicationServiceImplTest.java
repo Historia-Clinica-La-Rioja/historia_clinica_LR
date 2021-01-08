@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.requests.medicationrequests.service.impl;
 
 import net.pladema.UnitRepository;
+import net.pladema.clinichistory.documents.core.ips.MedicationCalculateStatus;
 import net.pladema.clinichistory.documents.repository.ips.DosageRepository;
 import net.pladema.clinichistory.documents.repository.ips.MedicationStatementRepository;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.MedicationStatementStatus;
@@ -52,8 +53,9 @@ public class ChangeStateMedicationServiceImplTest extends UnitRepository {
 
     @Before
     public void setUp() {
+        MedicationCalculateStatus medicationCalculateStatus = new MedicationCalculateStatus(dateTimeProvider);
         changeStateMedicationService = new ChangeStateMedicationServiceImpl(medicationStatementRepository,
-                createMedicationService, dosageRepository, documentService, snomedService, dateTimeProvider);
+                createMedicationService, dosageRepository, documentService, snomedService, medicationCalculateStatus, dateTimeProvider);
     }
 
     @Test
@@ -234,6 +236,7 @@ public class ChangeStateMedicationServiceImplTest extends UnitRepository {
     public void test_execute_success(){
         PatientInfoBo patient = new PatientInfoBo(1, (short) 1, (short) 18);
         changeStateMedicationService.execute(patient, Collections.emptyList(), MedicationStatementStatus.ACTIVE, (short) 2);
+        Assertions.assertTrue(true);
     }
 
 }

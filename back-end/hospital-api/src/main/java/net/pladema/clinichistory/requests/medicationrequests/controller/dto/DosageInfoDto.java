@@ -30,7 +30,7 @@ public class DosageInfoDto implements Serializable {
     private boolean chronic = false;
 
     public static DosageInfoDto from(DosageBo dosage) {
-        if (dosage == null)
+        if (dosage.getId() == null)
             return null;
         DosageInfoDto result = new DosageInfoDto();
         result.setId(dosage.getId());
