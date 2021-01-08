@@ -106,6 +106,14 @@
 				"ENTRANCE": "Ingreso",
 				"POLICE_INTERVENTION": "Intervención policial"
 			},
+			"triage": {
+				"ultimo": {
+					"TITLE": "Último triage",
+					"NIVEL": "Nivel de urgencia",
+					"PROFESIONAL": "Profesional",
+					"UBICACION": "Ubicación"
+				}
+			},
 			"search_patient": {
 				"CONFIRM": "Confirmar Paciente"
 			}

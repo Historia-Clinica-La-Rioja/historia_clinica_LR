@@ -1,1 +1,27 @@
-<p>triage-details works!</p>
+<div fxLayout="column" fxLayoutGap="16px">
+	<section fxLayout="row" fxLayoutAlign="space-between center">
+		<h2 style="margin: 0">{{ 'guardia.episode.triage.ultimo.TITLE' | translate }}</h2>
+		<span>{{ triage.creationDate | date: 'dd/MM/yy - HH:mm' }} hs</span>
+	</section>
+
+	<section fxLayout="row" fxLayoutGap="50px">
+		<div class="info" fxLayout="column" fxLayoutGap="5px" fxLayoutAlign="space-between">
+			<span>{{ 'guardia.episode.triage.ultimo.NIVEL' | translate }}</span>
+			<div class="triage-chip"
+				 [ngStyle]="{'color':triage.category.id === triages.AMARILLO_NIVEL_3 ? 'black' : 'white' }"
+				 [style.background-color]="triage.category.colorHex">{{ triage.category.name }}
+			</div>
+		</div>
+
+		<div class="info" fxLayout="column" fxLayoutGap="6px" fxLayoutAlign="space-between">
+			<span>{{ 'guardia.episode.triage.ultimo.PROFESIONAL' | translate }}</span>
+			<div class="padding-to-align-chip">{{ triage.professional.firstName }} {{ triage.professional.lastName }}</div>
+		</div>
+
+		<div *ngIf="triage.doctorsOfficeDescription" class="info"
+			 fxLayout="column" fxLayoutGap="6px" fxLayoutAlign="space-between">
+			<span>{{ 'guardia.episode.triage.ultimo.UBICACION' | translate }}</span>
+			<div class="padding-to-align-chip">{{ triage.doctorsOfficeDescription }}</div>
+		</div>
+	</section>
+</div>

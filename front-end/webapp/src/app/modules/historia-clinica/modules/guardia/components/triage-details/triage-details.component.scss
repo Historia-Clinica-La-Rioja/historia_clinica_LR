@@ -1,0 +1,24 @@
+section {
+	margin: 0;
+}
+
+.info {
+	& > span:first-child {
+		font-size: 12px;
+		line-height: 14px;
+	}
+
+	& > span:last-child {
+		line-height: 16px;
+	}
+}
+
+.triage-chip {
+	width: fit-content;
+	padding: 1.5px 8px;
+	border-radius: 5px;
+}
+
+.padding-to-align-chip {
+	padding: 1.5px 0;
+}

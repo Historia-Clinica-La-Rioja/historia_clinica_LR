@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Triages } from '../../constants/masterdata';
 
 @Component({
 	selector: 'app-triage-details',
@@ -9,6 +10,8 @@ import { Component, Input, OnInit } from '@angular/core';
 export class TriageDetailsComponent implements OnInit {
 
 	@Input() triage: Triage;
+
+	readonly triages = Triages;
 
 	constructor() {
 	}
@@ -21,6 +24,7 @@ export class TriageDetailsComponent implements OnInit {
 export interface Triage {
 	creationDate: Date;
 	category: {
+		id: number;
 		name: string;
 		colorHex: string;
 	};
