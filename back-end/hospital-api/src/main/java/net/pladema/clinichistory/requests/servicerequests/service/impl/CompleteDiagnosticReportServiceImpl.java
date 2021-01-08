@@ -27,43 +27,34 @@ import java.util.List;
 public class CompleteDiagnosticReportServiceImpl implements CompleteDiagnosticReportService {
 
     private final DiagnosticReportRepository diagnosticReportRepository;
-    private final NoteService noteService;
     private final DocumentService documentService;
     private final DiagnosticReportService diagnosticReportService;
     private final SnomedService snomedService;
-    private final FileService fileService;
-    private static final String RELATIVE_DIRECTORY = "/patient/{patiendId}/diagnostic-reports/{studyId}";
 
     private static final Logger LOG = LoggerFactory.getLogger(CompleteDiagnosticReportServiceImpl.class);
     private final String OUTPUT = "Output -> {}";
 
-    public CompleteDiagnosticReportServiceImpl(DiagnosticReportRepository diagnosticReportRepository,
-                                               NoteService noteService,
-                                               DocumentService documentService,
-                                               DiagnosticReportService diagnosticReportService, SnomedService snomedService, FileService fileService){
+    public CompleteDiagnosticReportServiceImpl(DiagnosticReportRepository diagnosticReportRepository, DocumentService documentService,
+                                               DiagnosticReportService diagnosticReportService, SnomedService snomedService){
         this.diagnosticReportRepository = diagnosticReportRepository;
-        this.noteService = noteService;
         this.documentService = documentService;
         this.diagnosticReportService = diagnosticReportService;
         this.snomedService = snomedService;
-        this.fileService = fileService;
     }
 
     @Override
-    public void run(PatientInfoBo patient, Integer diagnosticReportId, CompleteDiagnosticReportBo completeDiagnosticReportBo, MultipartFile file) {
-        diagnosticReportRepository.findById(diagnosticReportId).ifPresent(dr -> {
+    public Integer run(PatientInfoBo patient, Integer diagnosticReportId, CompleteDiagnosticReportBo completeDiagnosticReportBo) {
+        LOG.debug("input -> patient {}, diagnosticReportId {}, completeDiagnosticReportBo {}", patient, diagnosticReportId, completeDiagnosticReportBo);
+        Integer result = diagnosticReportRepository.findById(diagnosticReportId).stream().mapToInt(dr -> {
             assertRequiredFields(patient);
             assertCompleteDiagnosticReport(dr);
-            String extension = FilenameUtils.getExtension(file.getOriginalFilename());
-            String newFileName = fileService.createFileName(extension);
-            String completePath = buildCompleteFilePath(patient.getId(), newFileName);
-            completeDiagnosticReportBo.setFilePath(completePath);
-            fileService.saveFile(completePath, file);
 
             DiagnosticReportBo diagnosticReportBo = getCompletedDiagnosticReport(dr, completeDiagnosticReportBo);
             var documentDiagnosticReport = documentService.getDocumentFromDiagnosticReport(diagnosticReportId);
-            diagnosticReportService.loadDiagnosticReport(documentDiagnosticReport.getDocumentId(), patient, List.of(diagnosticReportBo));
-        });
+            return diagnosticReportService.loadDiagnosticReport(documentDiagnosticReport.getDocumentId(), patient, List.of(diagnosticReportBo)).get(0);
+        }).findFirst().orElse(-1);
+        LOG.debug(OUTPUT, result);
+        return result;
     }
 
     private DiagnosticReportBo getCompletedDiagnosticReport(DiagnosticReport diagnosticReport, CompleteDiagnosticReportBo completeDiagnosticReportBo) {
@@ -75,17 +66,6 @@ public class CompleteDiagnosticReportServiceImpl implements CompleteDiagnosticRe
         result.setObservations(completeDiagnosticReportBo.getObservations());
         result.setLink(completeDiagnosticReportBo.getLink());
         result.setSnomed(snomedService.getSnomed(diagnosticReport.getSnomedId()));
-        result.setFilePath(completeDiagnosticReportBo.getFilePath());
-        return result;
-    }
-
-    private String buildCompleteFilePath(Integer patientId, String relativeFilePath){
-        LOG.debug("Input parameters -> patientId {}, relativeFilePath {}", patientId, relativeFilePath);
-        String partialPath = RELATIVE_DIRECTORY
-                .replace("{patiendId}", patientId.toString())
-                .concat(relativeFilePath);
-        String result = fileService.buildPath(partialPath);
-        LOG.debug(OUTPUT, result);
         return result;
     }
 
@@ -96,6 +76,7 @@ public class CompleteDiagnosticReportServiceImpl implements CompleteDiagnosticRe
     }
 
     private void assertCompleteDiagnosticReport(DiagnosticReport dr){
-        Assert.isTrue(!dr.getStatusId().equals(DiagnosticReportStatus.FINAL), "El estudio con id "+ dr.getId() + " no se puede completar porque ya esta completar");
+        Assert.isTrue(!dr.getStatusId().equals(DiagnosticReportStatus.FINAL), "El estudio con id "+ dr.getId() + " no se puede completar porque ya ha sido completado");
+        Assert.isTrue(!dr.getStatusId().equals(DiagnosticReportStatus.CANCELLED), "El estudio con id "+ dr.getId() + " no se puede completar porque ha sido cancelado");
     }
 }

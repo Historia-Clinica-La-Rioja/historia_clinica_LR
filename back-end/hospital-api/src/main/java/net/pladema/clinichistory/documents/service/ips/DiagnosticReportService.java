@@ -7,5 +7,5 @@ import net.pladema.clinichistory.requests.servicerequests.service.domain.Diagnos
 import java.util.List;
 
 public interface DiagnosticReportService {
-    List<DiagnosticReport> loadDiagnosticReport(Long documentId, PatientInfoBo patientInfo, List<DiagnosticReportBo> studyBos);
+    List<Integer> loadDiagnosticReport(Long documentId, PatientInfoBo patientInfo, List<DiagnosticReportBo> studyBos);
 }

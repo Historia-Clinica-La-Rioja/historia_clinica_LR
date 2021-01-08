@@ -1,20 +1,18 @@
 package net.pladema.clinichistory.requests.servicerequests.service.domain;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+
 import javax.annotation.Nullable;
 
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class CompleteDiagnosticReportBo {
     @Nullable
     private String observations;
 
     @Nullable
     private String link;
-
-    @Nullable
-    private String filePath;
 }

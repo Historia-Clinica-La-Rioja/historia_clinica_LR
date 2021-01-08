@@ -47,9 +47,6 @@ public class DiagnosticReport extends SGXAuditableEntity {
 	@Column(name = "link", length = 255)
 	private String link;
 
-	@Column(name = "path_file", length = 255)
-	private String pathFile;
-
 	@Column(name = "note_id")
 	private Long noteId;
 

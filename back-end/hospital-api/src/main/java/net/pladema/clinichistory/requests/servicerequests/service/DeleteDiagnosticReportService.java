@@ -4,5 +4,5 @@ import net.pladema.clinichistory.documents.repository.ips.entity.DiagnosticRepor
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 
 public interface DeleteDiagnosticReportService {
-    DiagnosticReport execute(PatientInfoBo patient, Integer diagnosticReportId);
+    Integer execute(PatientInfoBo patient, Integer diagnosticReportId);
 }

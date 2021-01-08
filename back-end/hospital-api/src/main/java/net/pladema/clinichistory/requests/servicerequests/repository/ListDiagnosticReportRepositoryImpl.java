@@ -3,7 +3,7 @@ package net.pladema.clinichistory.requests.servicerequests.repository;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DiagnosticReportStatus;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentStatus;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
-import net.pladema.clinichistory.requests.servicerequests.repository.entity.DiagnosticReportFilterVo;
+import net.pladema.clinichistory.requests.servicerequests.repository.domain.DiagnosticReportFilterVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;

@@ -30,7 +30,7 @@ public class FileService {
     }
 
     public String createFileName(String extension){
-        String result = UUID.randomUUID().toString() + extension;
+        String result = UUID.randomUUID().toString() + '.' + extension;
         LOG.debug(OUTPUT, result);
         return result;
     }

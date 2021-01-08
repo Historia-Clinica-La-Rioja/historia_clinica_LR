@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,4 +16,7 @@ public class CompleteRequestDto {
 
     @Nullable
     private String link;
+
+    @Nullable
+    private List<Integer> fileIds;
 }

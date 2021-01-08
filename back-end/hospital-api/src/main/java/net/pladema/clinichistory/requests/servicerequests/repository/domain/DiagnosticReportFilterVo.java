@@ -1,4 +1,4 @@
-package net.pladema.clinichistory.requests.servicerequests.repository.entity;
+package net.pladema.clinichistory.requests.servicerequests.repository.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

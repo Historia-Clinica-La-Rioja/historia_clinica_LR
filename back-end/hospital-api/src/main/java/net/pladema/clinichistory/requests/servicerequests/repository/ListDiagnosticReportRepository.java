@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.requests.servicerequests.repository;
 
 
-import net.pladema.clinichistory.requests.servicerequests.repository.entity.DiagnosticReportFilterVo;
+import net.pladema.clinichistory.requests.servicerequests.repository.domain.DiagnosticReportFilterVo;
 
 import java.util.List;
 

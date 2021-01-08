@@ -277,6 +277,7 @@ export interface CompletePatientDto extends BasicPatientDto {
 }
 
 export interface CompleteRequestDto {
+    fileIds?: number[];
     link?: string;
     observations?: string;
 }

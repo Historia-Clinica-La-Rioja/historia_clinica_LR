@@ -3,7 +3,7 @@ package net.pladema.clinichistory.requests.servicerequests.service.impl;
 import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionBo;
 import net.pladema.clinichistory.documents.service.ips.domain.SnomedBo;
 import net.pladema.clinichistory.requests.servicerequests.repository.ListDiagnosticReportRepository;
-import net.pladema.clinichistory.requests.servicerequests.repository.entity.DiagnosticReportFilterVo;
+import net.pladema.clinichistory.requests.servicerequests.repository.domain.DiagnosticReportFilterVo;
 import net.pladema.clinichistory.requests.servicerequests.service.ListDiagnosticReportInfoService;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportBo;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportFilterBo;

@@ -44,7 +44,7 @@ public class DeleteDiagnosticReportServiceImpl implements DeleteDiagnosticReport
         this.snomedService = snomedService;
     }
     @Override
-    public DiagnosticReport execute(PatientInfoBo patient, Integer diagnosticReportId) {
+    public Integer execute(PatientInfoBo patient, Integer diagnosticReportId) {
         LOG.debug("Input: patient: {}, diagnosticReportId: {}", patient, diagnosticReportId);
         Optional<DiagnosticReport> drOpt = diagnosticReportRepository.findById(diagnosticReportId);
         if (drOpt.isPresent()){
@@ -54,7 +54,7 @@ public class DeleteDiagnosticReportServiceImpl implements DeleteDiagnosticReport
 
             DiagnosticReportBo diagnosticReportBo = getCancelledDiagnosticReport(dr);
             var documentDiagnosticReport = documentService.getDocumentFromDiagnosticReport(diagnosticReportId);
-            DiagnosticReport result = diagnosticReportService.loadDiagnosticReport(documentDiagnosticReport.getDocumentId(), patient, List.of(diagnosticReportBo)).get(0);
+            Integer result = diagnosticReportService.loadDiagnosticReport(documentDiagnosticReport.getDocumentId(), patient, List.of(diagnosticReportBo)).get(0);
             LOG.trace(OUTPUT, result);
             return result;
         }

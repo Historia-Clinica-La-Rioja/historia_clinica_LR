@@ -41,38 +41,44 @@ public class DiagnosticReportServiceImpl implements DiagnosticReportService {
         this.calculateCie10CodesService = calculateCie10CodesService;
     }
 
-    public List<DiagnosticReport> loadDiagnosticReport(Long documentId, PatientInfoBo patientInfo, List<DiagnosticReportBo> diagnosticReportBos) {
+    public List<Integer> loadDiagnosticReport(Long documentId, PatientInfoBo patientInfo, List<DiagnosticReportBo> diagnosticReportBos) {
         LOG.debug("Input parameters -> documentId {}, patientInfo {}, studyBo {}", documentId, patientInfo, diagnosticReportBos);
-        List<DiagnosticReport> result = new ArrayList<>();
+        List<Integer> result = new ArrayList<>();
         diagnosticReportBos.forEach(diagnosticReportBo -> {
-            Integer snomedId = snomedService.getSnomedId(diagnosticReportBo.getSnomed())
-                    .orElseGet(() -> snomedService.createSnomedTerm(diagnosticReportBo.getSnomed()));
-            String cie10Codes = calculateCie10CodesService.execute(diagnosticReportBo.getSnomed().getSctid(), patientInfo);
-
-            DiagnosticReport diagnosticReport = new DiagnosticReport();
-            diagnosticReport.setPatientId(patientInfo.getId());
-
-            diagnosticReport.setSnomedId(snomedId);
-            diagnosticReport.setCie10Codes(cie10Codes);
-            diagnosticReport.setHealthConditionId(diagnosticReportBo.getHealthConditionId());
-
-            diagnosticReport.setNoteId(diagnosticReportBo.getNoteId() != null ?
-                    diagnosticReportBo.getNoteId()
-                    :
-                    noteService.createNote(diagnosticReportBo.getObservations()));
-
-            if (diagnosticReportBo.getStatusId() != null) {
-                diagnosticReport.setStatusId(diagnosticReportBo.getStatusId());
-            }
-
-<<<<<<< HEAD
-            result.add(diagnosticReportRepository.save(diagnosticReport));
-=======
+            DiagnosticReport diagnosticReport = getNewDiagnosticReport(patientInfo, diagnosticReportBo);
+            result.add(diagnosticReportRepository.save(diagnosticReport).getId());
             diagnosticReportRepository.save(diagnosticReport);
->>>>>>> 66168fef... tg-2693 [BE] Implementar completar un estudio
             documentService.createDocumentDiagnosticReport(documentId, diagnosticReport.getId());
         });
         LOG.trace(OUTPUT, result);
         return result;
     }
+
+    private DiagnosticReport getNewDiagnosticReport(PatientInfoBo patientInfo, DiagnosticReportBo diagnosticReportBo) {
+        DiagnosticReport result = new DiagnosticReport();
+
+        Integer snomedId = snomedService.getSnomedId(diagnosticReportBo.getSnomed())
+                .orElseGet(() -> snomedService.createSnomedTerm(diagnosticReportBo.getSnomed()));
+        String cie10Codes = calculateCie10CodesService.execute(diagnosticReportBo.getSnomed().getSctid(), patientInfo);
+
+        result.setPatientId(patientInfo.getId());
+
+        result.setSnomedId(snomedId);
+        result.setCie10Codes(cie10Codes);
+        result.setHealthConditionId(diagnosticReportBo.getHealthConditionId());
+
+        result.setNoteId(diagnosticReportBo.getNoteId() != null ?
+                diagnosticReportBo.getNoteId()
+                :
+                noteService.createNote(diagnosticReportBo.getObservations()));
+
+        result.setLink(diagnosticReportBo.getLink());
+
+        if (diagnosticReportBo.getStatusId() != null) {
+            result.setStatusId(diagnosticReportBo.getStatusId());
+        }
+        LOG.debug(OUTPUT, result);
+        return result;
+    }
+
 }

@@ -11,10 +11,7 @@ import net.pladema.clinichistory.requests.servicerequests.controller.mapper.Comp
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.CreateServiceRequestMapper;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.StudyMapper;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.ListDiagnosticReportInfoMapper;
-import net.pladema.clinichistory.requests.servicerequests.service.CompleteDiagnosticReportService;
-import net.pladema.clinichistory.requests.servicerequests.service.CreateServiceRequestService;
-import net.pladema.clinichistory.requests.servicerequests.service.DeleteDiagnosticReportService;
-import net.pladema.clinichistory.requests.servicerequests.service.ListDiagnosticReportInfoService;
+import net.pladema.clinichistory.requests.servicerequests.service.*;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportBo;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportFilterBo;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
@@ -26,6 +23,7 @@ import net.pladema.staff.controller.service.HealthcareProfessionalExternalServic
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -52,8 +50,11 @@ public class ServiceRequestController {
     private final StudyMapper studyMapper;
     private final ListDiagnosticReportInfoService listDiagnosticReportInfoService;
     private final ListDiagnosticReportInfoMapper listDiagnosticReportInfoMapper;
+    private final DeleteDiagnosticReportService deleteDiagnosticReportService;
     private final CompleteDiagnosticReportService completeDiagnosticReportService;
     private final CompleteDiagnosticReportMapper completeDiagnosticReportMapper;
+    private final UploadDiagnosticReportCompletedFileService uploadDiagnosticReportCompletedFileService;
+    private final UpdateDiagnosticReportFileService updateDiagnosticReportFileService;
 
     public ServiceRequestController(HealthcareProfessionalExternalService healthcareProfessionalExternalService,
                                     CreateServiceRequestService createServiceRequestService,
@@ -62,8 +63,10 @@ public class ServiceRequestController {
                                     StudyMapper studyMapper,
                                     ListDiagnosticReportInfoMapper listDiagnosticReportInfoMapper,
                                     ListDiagnosticReportInfoService listDiagnosticReportInfoService,
-                                    CompleteDiagnosticReportService completeDiagnosticReportService,
-                                    CompleteDiagnosticReportMapper completeDiagnosticReportMapper) {
+                                    DeleteDiagnosticReportService deleteDiagnosticReportService, CompleteDiagnosticReportService completeDiagnosticReportService,
+                                    CompleteDiagnosticReportMapper completeDiagnosticReportMapper,
+                                    UploadDiagnosticReportCompletedFileService uploadDiagnosticReportCompletedFileService,
+                                    UpdateDiagnosticReportFileService updateDiagnosticReportFileService) {
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.createServiceRequestService = createServiceRequestService;
         this.createServiceRequestMapper = createServiceRequestMapper;
@@ -71,8 +74,11 @@ public class ServiceRequestController {
         this.listDiagnosticReportInfoService = listDiagnosticReportInfoService;
         this.listDiagnosticReportInfoMapper = listDiagnosticReportInfoMapper;
         this.studyMapper = studyMapper;
+        this.deleteDiagnosticReportService = deleteDiagnosticReportService;
         this.completeDiagnosticReportService = completeDiagnosticReportService;
         this.completeDiagnosticReportMapper = completeDiagnosticReportMapper;
+        this.uploadDiagnosticReportCompletedFileService = uploadDiagnosticReportCompletedFileService;
+        this.updateDiagnosticReportFileService = updateDiagnosticReportFileService;
     }
 
     @PostMapping
@@ -120,14 +126,13 @@ public class ServiceRequestController {
         return result;
     }
 
-    @PutMapping("/{diagnosticReportId}")
+    @PutMapping("/{diagnosticReportId}/complete")
     @Transactional
     @ResponseStatus(code = HttpStatus.OK)
     public void complete(@PathVariable(name = "institutionId") Integer institutionId,
                          @PathVariable(name = "patientId") Integer patientId,
                          @PathVariable(name = "diagnosticReportId") Integer diagnosticReportId,
-                         @RequestPart() CompleteRequestDto completeRequestDto,
-                         @RequestPart(value = "file", required = false) MultipartFile file) {
+                         @RequestBody() CompleteRequestDto completeRequestDto) {
         LOG.debug("Input parameters ->  {} institutionIdpatientId {}, diagnosticReportId {}, completeRequestDto {}",
                 institutionId,
                 patientId,
@@ -135,10 +140,29 @@ public class ServiceRequestController {
                 completeRequestDto);
         var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
         PatientInfoBo patientInfoBo = new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge());
-        completeDiagnosticReportService.run(patientInfoBo, diagnosticReportId, completeDiagnosticReportMapper.parseTo(completeRequestDto), file);
+        Integer result = completeDiagnosticReportService.run(patientInfoBo, diagnosticReportId, completeDiagnosticReportMapper.parseTo(completeRequestDto));
+        updateDiagnosticReportFileService.run(result, completeRequestDto.getFileIds());
+        LOG.debug(OUTPUT, result);
     }
 
-    @DeleteMapping("/{diagnosticReportId}")
+    @PostMapping(value = "/{diagnosticReportId}/uploadFile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Transactional
+    @ResponseStatus(code = HttpStatus.OK)
+    public List<Integer> uploadFile(@PathVariable(name = "institutionId") Integer institutionId,
+                         @PathVariable(name = "patientId") Integer patientId,
+                         @PathVariable(name = "diagnosticReportId") Integer diagnosticReportId,
+                         @RequestPart("files") MultipartFile[] files) {
+        LOG.debug("Input parameters ->  {} institutionIdpatientId {}, diagnosticReportId {}",
+                institutionId,
+                patientId,
+                diagnosticReportId);
+        var result = uploadDiagnosticReportCompletedFileService.execute(files, diagnosticReportId, patientId);
+        LOG.debug(OUTPUT, result);
+        return result;
+    }
+
+
+    @DeleteMapping("/{serviceRequestId}")
     @Transactional
     @ResponseStatus(code = HttpStatus.OK)
     public void delete(@PathVariable(name = "institutionId") Integer institutionId,
