@@ -6,11 +6,11 @@
 </div>
 
 <div mat-dialog-content>
-	<app-concepts-search *ngIf="!snomedConcept else PrescriptionItemForm" 
+	<app-concepts-search *ngIf="!snomedConcept else PrescriptionItemForm"
 						[label]="data.searchSnomedLabel"
 						(search)="onSearch($event)">
 	</app-concepts-search>
-	
+
 	<div class="spinner">
 		<mat-spinner diameter="70" color="primary" *ngIf="searching"></mat-spinner>
 	</div>
@@ -55,15 +55,15 @@
 							{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.INTERVAL_DEFAULT_OPTION' | translate}}
 						</mat-radio-button>
 						<mat-radio-button color="primary" [value]="OTHER_RADIO_OPTION">
-							Cada <input #intervalHoursInput [style.width.ch]="getInputNumberWidth('intervalHours')" 
-									formControlName="intervalHours" type="tel" matInput> hs.
+							Cada <input #intervalHoursInput [style.width.ch]="getInputNumberWidth('intervalHours')"
+									formControlName="intervalHours" type="number" matInput> hs.
 							<mat-error *ngIf="hasError(prescriptionItemForm, 'required', 'intervalHours')">
 								<span translate="ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.INTERVAL_HOURS_REQUIRED"></span>
 							</mat-error>
 						</mat-radio-button>
 					</mat-radio-group>
 				</div>
-	
+
 				<div fxLayout="column" fxLayoutGap="10px">
 					<mat-label class="mat-subheading-2">{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.ADMINISTRATION_TIME' | translate}}</mat-label>
 					<mat-radio-group formControlName="administrationTime" fxLayout="column" fxLayoutGap="10px">
@@ -71,8 +71,8 @@
 							{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.ADMINISTRATION_TIME_DEFAULT_OPTION' | translate}}
 						</mat-radio-button>
 						<mat-radio-button color="primary" [value]="OTHER_RADIO_OPTION">
-							Durante <input #administrationTimeDaysInput [style.width.ch]="getInputNumberWidth('administrationTimeDays')" 
-										formControlName="administrationTimeDays" type="tel" matInput> días.
+							Durante <input #administrationTimeDaysInput [style.width.ch]="getInputNumberWidth('administrationTimeDays')"
+										formControlName="administrationTimeDays" type="number" matInput> días.
 							<mat-error *ngIf="hasError(prescriptionItemForm, 'required', 'administrationTimeDays')">
 								<span translate="ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.ADMINISTRATION_TIME_DAYS_REQUIRED"></span>
 							</mat-error>
