@@ -1,11 +1,7 @@
 package net.pladema.clinichistory.requests.servicerequests.service.impl;
 
-import net.pladema.clinichistory.documents.service.ips.domain.DosageBo;
 import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionBo;
-import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
 import net.pladema.clinichistory.documents.service.ips.domain.SnomedBo;
-import net.pladema.clinichistory.documents.service.ips.domain.enums.EUnitsOfTimeBo;
-import net.pladema.clinichistory.requests.medicationrequests.service.impl.ListMedicationInfoServiceImpl;
 import net.pladema.clinichistory.requests.servicerequests.repository.ListDiagnosticReportRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.DiagnosticReportFilterVo;
 import net.pladema.clinichistory.requests.servicerequests.service.ListDiagnosticReportInfoService;
@@ -15,10 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,7 +30,7 @@ public class ListDiagnosticReportInfoServiceImpl implements ListDiagnosticReport
         DiagnosticReportFilterVo filterVo = new DiagnosticReportFilterVo(
                 filter.getPatientId(),
                 filter.getStatus(),
-                filter.getServiceRequest(),
+                filter.getDiagnosticReport(),
                 filter.getHealthCondition()
         );
         List<DiagnosticReportBo> result = listDiagnosticReportRepository.execute(filterVo).stream()

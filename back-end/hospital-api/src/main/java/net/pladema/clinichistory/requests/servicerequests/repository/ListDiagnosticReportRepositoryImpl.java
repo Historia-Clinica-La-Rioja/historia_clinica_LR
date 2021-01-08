@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.requests.servicerequests.repository;
 
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DiagnosticReportStatus;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentStatus;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.DiagnosticReportFilterVo;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.util.List;
 
 @Repository
@@ -49,13 +51,28 @@ public class ListDiagnosticReportRepositoryImpl implements ListDiagnosticReportR
                 "            JOIN snomed s1 ON (h1.snomed_id = s1.id) " +
                 "          ) AS h ON (h.id = t.health_condition_id) " +
                 "WHERE rw = 1 " +
+                "AND t.status_id <> "+ DiagnosticReportStatus.ERROR + " "+
+                (filter.getStatus() != null ? "AND UPPER(t.status_id) LIKE :statusId " : "") +
+                (filter.getDiagnosticReport() != null ? "AND UPPER(s.pt) LIKE :diagnosticReport " : "") +
+                (filter.getHealthCondition() != null ? "AND UPPER(h.pt) LIKE :healthCondition " : "") +
                 "ORDER BY t.updated_on";
 
-        List<Object[]> result = entityManager.createNativeQuery(sqlString)
-                .setParameter("documentStatusId", DocumentStatus.FINAL)
+
+        Query query = entityManager.createNativeQuery(sqlString);
+        query.setParameter("documentStatusId", DocumentStatus.FINAL)
                 .setParameter("patientId", filter.getPatientId())
-                .setParameter("documentType", DocumentType.ORDER)
-                .getResultList();
+                .setParameter("documentType", DocumentType.ORDER);
+
+        if (filter.getStatus() != null)
+            query.setParameter("statusId", "%"+filter.getStatus().toUpperCase()+"%");
+
+        if (filter.getDiagnosticReport() != null)
+            query.setParameter("diagnosticReport", "%"+filter.getDiagnosticReport().toUpperCase()+"%");
+
+        if (filter.getHealthCondition() != null)
+            query.setParameter("healthCondition", "%"+filter.getHealthCondition().toUpperCase()+"%");
+
+        List<Object[]> result = query.getResultList();
         return result;
     }
 }

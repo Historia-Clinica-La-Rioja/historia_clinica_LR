@@ -172,9 +172,9 @@ public class ServiceRequestController {
     public List<DiagnosticReportInfoDto> getList(@PathVariable(name = "institutionId") Integer institutionId,
                                                  @PathVariable(name = "patientId") Integer patientId,
                                                  @RequestParam(value = "status", required = false) String status,
-                                                 @RequestParam(value = "serviceRequest", required = false) String diagnosticReport,
+                                                 @RequestParam(value = "diagnosticReport", required = false) String diagnosticReport,
                                                  @RequestParam(value = "healthCondition", required = false) String healthCondition) {
-        LOG.debug("Input parameters -> institutionId {} patientId {}, status {} serviceRequest {} healthCondition {}",
+        LOG.debug("Input parameters -> institutionId {} patientId {}, status {}, diagnosticReport {}, healthCondition {}",
                 institutionId,
                 patientId,
                 status,

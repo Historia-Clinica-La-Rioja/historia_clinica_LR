@@ -11,10 +11,8 @@ import java.util.stream.Stream;
 public enum EDiagnosticReportStatus {
 
     REGISTERED("1", "Activo"),
-    FINAL("261782000", "Completado"),
-    STOPPED("6155003", "Finalizado"),
-    ERROR("723510000", "Eliminado");
-
+    FINAL("261782000", "Completado");
+    
     private final String id;
     private final String description;
 
