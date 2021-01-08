@@ -76,3 +76,64 @@ databaseChangeLog:
                 columnDataType: int
                 columnName: doctors_office_id
                 tableName: emergency_care_episode
+                
+    - changeSet:  
+        id:  createTable-DiagnosticReportFile
+        author: martinscooper  
+        changes:  
+        - createTable: 
+            tableName: diagnostic_report_file  
+            columns:  
+            - column: 
+                autoIncrement: true
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_diagnostic_report_file 
+                name:  id  
+                type:  int 
+            - column:
+                constraints:
+                    nullable: false
+                name: path
+                type: varchar
+            - column:
+                constraints:
+                    nullable: false
+                name: content_type
+                type: varchar
+            - column:
+                constraints:
+                    nullable: false
+                name: size
+                type: int8 
+            - column:
+                name: diagnostic_report_id
+                type: int
+                constraints:
+                    nullable: true
+                    references: diagnostic_report(id)
+                    foreignKeyName: FK_diagnostic_report 
+            - column:
+                    constraints:
+                        nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: updated_by
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: created_on
+                type: datetime
+                defaultValueDate: ${date.now}
+            - column:
+                constraints:
+                    nullable: false
+                name: updated_on
+                type: datetime
+                defaultValueDate: ${date.now} 
