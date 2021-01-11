@@ -411,6 +411,10 @@ export const MOCKS_GUARDIA = [
 				fetch: [
 					{
 						id: 1,
+						creationDate: {
+							date: { day: 11, month: 1, year: 2021 },
+							time: { hours: 10, minutes: 30 }
+						},
 						category: {
 							id: 1,
 							name: 'Nivel I',
@@ -432,6 +436,10 @@ export const MOCKS_GUARDIA = [
 					},
 					{
 						id: 2,
+						creationDate: {
+							date: { day: 11, month: 1, year: 2021 },
+							time: { hours: 9, minutes: 30 }
+						},
 						category: {
 							id: 1,
 							name: 'Nivel I',
@@ -451,12 +459,48 @@ export const MOCKS_GUARDIA = [
 							description: 'Sala N'
 						},
 						vitalSigns: {
-							bloodOxygenSaturation: { value: 9, effectiveTime: '2020-11-21T12:00:12.000Z' },
-							diastolicBloodPressure: { value: 12, effectiveTime: '2020-11-21T12:00:12.000Z' },
-							heartRate: { value: 18, effectiveTime: '2020-11-21T12:00:12.000Z' },
-							respiratoryRate: {value: 3, effectiveTime: '2020-11-21T12:00:12.000Z' },
-							systolicBloodPressure: { value: 1, effectiveTime: '2020-11-21T12:00:12.000Z' },
-							temperature: { value: 10, effectiveTime: '2020-11-21T12:00:12.000Z' }
+							bloodOxygenSaturation: {
+								value: 9,
+								effectiveTime: {
+									date: {day: 21, month: 11, year: 2020},
+									time: {hours: 12, minutes: 0, seconds: 0}
+								}
+							},
+							diastolicBloodPressure: {
+								value: 12,
+								effectiveTime: {
+									date: {day: 21, month: 11, year: 2020},
+									time: {hours: 12, minutes: 0, seconds: 0}
+								}
+							},
+							heartRate: {
+								value: 18,
+								effectiveTime: {
+									date: {day: 21, month: 11, year: 2020},
+									time: {hours: 12, minutes: 0, seconds: 0}
+								}
+							},
+							respiratoryRate: {
+								value: 3,
+								effectiveTime: {
+									date: {day: 21, month: 11, year: 2020},
+									time: {hours: 12, minutes: 0, seconds: 0}
+								}
+							},
+							systolicBloodPressure: {
+								value: 1,
+								effectiveTime: {
+									date: {day: 21, month: 11, year: 2020},
+									time: {hours: 12, minutes: 0, seconds: 0}
+								}
+							},
+							temperature: {
+								value: 10,
+								effectiveTime: {
+									date: {day: 21, month: 11, year: 2020},
+									time: {hours: 12, minutes: 0, seconds: 0}
+								}
+							}
 						},
 						notes: 'El paciente muestra signos de mejora'
 					}
