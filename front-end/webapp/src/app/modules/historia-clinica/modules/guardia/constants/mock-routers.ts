@@ -810,27 +810,45 @@ export const MOCKS_GUARDIA = [
 						notes: 'triage',
 						vitalSigns: {
 							bloodOxygenSaturation: {
-								effectiveTime: '2020-11-21T12:00:12.000Z',
+								effectiveTime: {   // DateTimeDto
+									date: { day: 21, month: 11, year: 2020},
+									time: { hour: 12, minutes: 0, seconds: 12},
+								},
 								value: 10
 							},
 							diastolicBloodPressure: {
-								effectiveTime: '2020-11-21T12:00:12.000Z',
+								effectiveTime: {   // DateTimeDto
+									date: { day: 21, month: 11, year: 2020},
+									time: { hour: 12, minutes: 0, seconds: 12},
+								},
 								value: 10
 							},
 							heartRate: {
-								effectiveTime: '2020-11-21T12:00:12.000Z',
+								effectiveTime: {   // DateTimeDto
+									date: { day: 21, month: 11, year: 2020},
+									time: { hour: 12, minutes: 0, seconds: 12},
+								},
 								value: 10
 							},
 							respiratoryRate: {
-								effectiveTime: '2020-11-21T12:00:12.000Z',
+								effectiveTime: {   // DateTimeDto
+									date: { day: 21, month: 11, year: 2020},
+									time: { hour: 12, minutes: 0, seconds: 12},
+								},
 								value: 10
 							},
 							systolicBloodPressure: {
-								effectiveTime: '2020-11-21T12:00:12.000Z',
+								effectiveTime: {   // DateTimeDto
+									date: { day: 21, month: 11, year: 2020},
+									time: { hour: 12, minutes: 0, seconds: 12},
+								},
 								value: 10
 							},
 							temperature: {
-								effectiveTime: '2020-11-21T12:00:12.000Z',
+								effectiveTime: {   // DateTimeDto
+									date: { day: 21, month: 11, year: 2020},
+									time: { hour: 12, minutes: 0, seconds: 12},
+								},
 								value: 10
 							}
 						}
@@ -919,7 +937,7 @@ export const MOCKS_GUARDIA = [
 				],
 			},
 			{
-				name: 'TriageMasterData.getBodyTemperature(): TriageDetailsDto[]', 
+				name: 'TriageMasterData.getBodyTemperature(): TriageDetailsDto[]',
 				roles: '',
 				path: '/api/emergency-care/triage/masterdata/bodyTemperature',
 				method: 'GET',
@@ -1047,18 +1065,27 @@ export const MOCKS_GUARDIA = [
 							respiratoryRetractionId: 1,
 							stridor: true,
 							respiratoryRate: {
-								effectiveTime: '2020-11-21T12:00:12.000Z',
+								effectiveTime: {   // DateTimeDto
+									date: { day: 21, month: 11, year: 2020},
+									time: { hour: 12, minutes: 0, seconds: 12},
+								},
 								value: 10
 							},
 							bloodOxygenSaturation: {
-								effectiveTime: '2020-11-21T12:00:12.000Z',
+								effectiveTime: {   // DateTimeDto
+									date: { day: 21, month: 11, year: 2020},
+									time: { hour: 12, minutes: 0, seconds: 12},
+								},
 								value: 10
 							}
 						},
 						circulation: {
 							perfusionId: 1,
 							heartRate: {
-								effectiveTime: '2020-11-21T12:00:12.000Z',
+								effectiveTime: {   // DateTimeDto
+									date: { day: 21, month: 11, year: 2020},
+									time: { hour: 12, minutes: 0, seconds: 12},
+								},
 								value: 10
 							}
 						}
@@ -1296,27 +1323,45 @@ export const MOCKS_GUARDIA = [
 						notes: 'triage',
 						vitalSigns: {
 							bloodOxygenSaturation: {
-								effectiveTime: '2020-11-21T12:00:12.000Z',
+								effectiveTime: {   // DateTimeDto
+									date: { day: 21, month: 11, year: 2020},
+									time: { hour: 12, minutes: 0, seconds: 12},
+								},
 								value: 10
 							},
 							diastolicBloodPressure: {
-								effectiveTime: '2020-11-21T12:00:12.000Z',
+								effectiveTime: {   // DateTimeDto
+									date: { day: 21, month: 11, year: 2020},
+									time: { hour: 12, minutes: 0, seconds: 12},
+								},
 								value: 10
 							},
 							heartRate: {
-								effectiveTime: '2020-11-21T12:00:12.000Z',
+								effectiveTime: {   // DateTimeDto
+									date: { day: 21, month: 11, year: 2020},
+									time: { hour: 12, minutes: 0, seconds: 12},
+								},
 								value: 10
 							},
 							respiratoryRate: {
-								effectiveTime: '2020-11-21T12:00:12.000Z',
+								effectiveTime: {   // DateTimeDto
+									date: { day: 21, month: 11, year: 2020},
+									time: { hour: 12, minutes: 0, seconds: 12},
+								},
 								value: 10
 							},
 							systolicBloodPressure: {
-								effectiveTime: '2020-11-21T12:00:12.000Z',
+								effectiveTime: {   // DateTimeDto
+									date: { day: 21, month: 11, year: 2020},
+									time: { hour: 12, minutes: 0, seconds: 12},
+								},
 								value: 10
 							},
 							temperature: {
-								effectiveTime: '2020-11-21T12:00:12.000Z',
+								effectiveTime: {   // DateTimeDto
+									date: { day: 21, month: 11, year: 2020},
+									time: { hour: 12, minutes: 0, seconds: 12},
+								},
 								value: 10
 							}
 						}
@@ -1404,7 +1449,7 @@ export const MOCKS_GUARDIA = [
 				],
 			},
 			{
-				name: 'TriageMasterData.getBodyTemperature(): TriageDetailsDto[]', 
+				name: 'TriageMasterData.getBodyTemperature(): TriageDetailsDto[]',
 				roles: '',
 				path: '/api/emergency-care/triage/masterdata/bodyTemperature',
 				method: 'GET',
@@ -1508,18 +1553,27 @@ export const MOCKS_GUARDIA = [
 							respiratoryRetractionId: 1,
 							stridor: true,
 							respiratoryRate: {
-								effectiveTime: '2020-11-21T12:00:12.000Z',
+								effectiveTime: {   // DateTimeDto
+									date: { day: 21, month: 11, year: 2020},
+									time: { hour: 12, minutes: 0, seconds: 12},
+								},
 								value: 10
 							},
 							bloodOxygenSaturation: {
-								effectiveTime: '2020-11-21T12:00:12.000Z',
+								effectiveTime: {   // DateTimeDto
+									date: { day: 21, month: 11, year: 2020},
+									time: { hour: 12, minutes: 0, seconds: 12},
+								},
 								value: 10
 							}
 						},
 						circulation: {
 							perfusionId: 1,
 							heartRate: {
-								effectiveTime: '2020-11-21T12:00:12.000Z',
+								effectiveTime: {   // DateTimeDto
+									date: { day: 21, month: 11, year: 2020},
+									time: { hour: 12, minutes: 0, seconds: 12},
+								},
 								value: 10
 							}
 						}
