@@ -8,6 +8,7 @@ import {
 	DiagnosticReportInfoDto,
 	PrescriptionDto
 } from '@api-rest/api-model';
+import {flatMap, map} from 'rxjs/operators';
 
 @Injectable({
 	providedIn: 'root'
@@ -41,13 +42,17 @@ export class ServiceRequestService {
 	}
 
 
-	complete(patientId: number, diagnosticReportId: number, completeRequestDto: CompleteRequestDto, file: File): Observable<string> {
-		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${diagnosticReportId}`;
-		const data = new FormData();
-		data.append('file', )
-		dar
-
-		return this.http.put<string>(url, completeRequestDto);
+	complete(patientId: number, diagnosticReportId: number, completeRequestDto: CompleteRequestDto, files: File[]): Observable<void> {
+		const commonUrl = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${diagnosticReportId}`;
+		const uploadFileUrl = commonUrl + '/uploadFile';
+		const completeUrl = commonUrl + '/complete';
+		const filesFormdata = new FormData();
+		files.forEach(file => filesFormdata.append('files', file));
+		return this.http.post<number[]>(uploadFileUrl, filesFormdata).pipe(
+			flatMap(fileIds => {
+				completeRequestDto.fileIds = fileIds;
+				return this.http.put<void>(completeUrl, completeRequestDto);
+			}));
 	}
 
 
