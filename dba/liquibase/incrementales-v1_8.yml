@@ -37,3 +37,42 @@ databaseChangeLog:
                 startWith: 1 
                 tableName: police_intervention
 
+    - changeSet:
+        id: addColumn-institution_id-emergency_care_episode
+        author: tmedina
+        comment: Add column institution_id to emergency_care_episode table
+        changes:
+            - addColumn:
+                tableName: emergency_care_episode
+                columns:
+                - column:
+                    name: institution_id
+                    type: int
+                    defaultValue: '-1'
+                    constraints:
+                        nullable: false
+
+    - changeSet:
+        id: emergency_care_episode-addForeignKeyConstraint-institution_id
+        author: tmedina
+        comment: Add foreign key constraint for column institution_id in emergency_care_episode to institution table
+        changes:
+            - addForeignKeyConstraint:
+                baseColumnNames: institution_id
+                baseTableName: emergency_care_episode
+                constraintName: FK_emergency_care_episode_institution_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: institution
+                validate: true
+
+    - changeSet:
+        id: emergency_care_episode-dropNotNullConstraint-doctors_office_id
+        author: tmedina
+        comment: Drop not null constraint in doctors_office_id column in emergency_care_episode table
+        changes:
+            - dropNotNullConstraint:
+                columnDataType: int
+                columnName: doctors_office_id
+                tableName: emergency_care_episode

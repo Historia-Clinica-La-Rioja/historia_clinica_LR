@@ -48,6 +48,9 @@ public class EmergencyCareEpisode extends SGXAuditableEntity {
 	@Column(name = "triage_category_id", nullable = false)
 	private Short triageCategoryId;
 
+	@Column(name = "institution_id", nullable = false)
+	private Integer institutionId;
+
 	@Column(name = "doctors_office_id")
 	private Integer doctorsOfficeId;
 
@@ -67,6 +70,7 @@ public class EmergencyCareEpisode extends SGXAuditableEntity {
 		this.emergencyCareEntranceTypeId = emergencyCareBo.getEmergencyCareEntranceId();
 		this.triageCategoryId = triageBo.getCategoryId();
 		this.doctorsOfficeId = triageBo.getDoctorsOfficeId();
+		this.institutionId = emergencyCareBo.getInstitutionId();
 		this.ambulanceCompanyId = emergencyCareBo.getAmbulanceCompanyId();
 		this.policeInterventionId = policeInterventionId;
 	}

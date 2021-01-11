@@ -63,6 +63,7 @@ public class EmergencyCareEpisodeController {
             @RequestBody AdministrativeEmergencyCareDto body) {
         LOG.debug("Add emergency care administrative episode => {}", body);
         EmergencyCareBo newEmergencyCare = emergencyCareMapper.administrativeEmergencyCareDtoToEmergencyCareBo(body);
+        newEmergencyCare.setInstitutionId(institutionId);
         setEpisodeAttributes(body, newEmergencyCare);
         List<String> reasonIds = (body.getAdministrative() != null && body.getAdministrative().getReasons() != null) ?
                     reasonExternalService.addReasons(body.getAdministrative().getReasons()) : new ArrayList<>();

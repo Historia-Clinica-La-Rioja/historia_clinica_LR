@@ -27,6 +27,8 @@ public class EmergencyCareBo {
 
     private Integer patientId;
 
+    private Integer institutionId;
+
     private Short triageCategoryId;
 
     private EEmergencyCareType emergencyCareType;
@@ -67,6 +69,7 @@ public class EmergencyCareBo {
     public EmergencyCareBo(EmergencyCareEpisode emergencyCareEpisode) {
         this.id = emergencyCareEpisode.getId();
         this.patientId = emergencyCareEpisode.getPatientId();
+        this.institutionId = emergencyCareEpisode.getInstitutionId();
         this.patientMedicalCoverageId = emergencyCareEpisode.getPatientMedicalCoverageId();
         this.emergencyCareType = (emergencyCareEpisode.getEmergencyCareTypeId() != null) ?
                 EEmergencyCareType.getById(emergencyCareEpisode.getEmergencyCareTypeId()) : null;
