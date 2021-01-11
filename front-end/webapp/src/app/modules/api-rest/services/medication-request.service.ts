@@ -22,7 +22,7 @@ export class MedicationRequestService {
 		return this.http.post<number>(url, newMedicationRequestDto);
 	}
 
-	suspend(patientId: number, dayQuantity: number, medicationsIds: number[]): Observable<void> {
+	suspend(patientId: number, dayQuantity: number, observations: string, medicationsIds: number[]): Observable<void> {
 		if (!medicationsIds || medicationsIds.length === 0) {
 			return of();
 		}
@@ -30,7 +30,8 @@ export class MedicationRequestService {
 		return this.http.put<void>(url, 
 			{
 				medicationsIds: medicationsIds,
-				dayQuantity: dayQuantity
+				dayQuantity: dayQuantity,
+				observations: observations,
 			}
 		);
 	}

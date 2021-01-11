@@ -1,0 +1,89 @@
+<div fxLayout="row" fxLayoutAlign="space-between start">
+    <h1 mat-dialog-title>{{'ambulatoria.paciente.ordenes_prescripciones.suspend_medication_dialog.SUSPEND_TITLE' | translate}}</h1>
+    <button id="close-modal" mat-button color="warn" mat-icon-button aria-label="close" (click)="closeModal()">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<div fxLayout="column">
+
+        <div class="element-margin">
+            <h3 class="mat-subheading-2 capitalize-first-letter" style="margin: 0">
+                {{medication.snomed.pt}}
+            </h3>
+        </div>
+
+        <div fxLayout="column">
+            <div>
+                <span class="mat-body capitalize-first-letter element-light-color" *ngIf="medication.dosage?.periodUnit == 'h'">
+                    Una aplicación cada {{medication.dosage.frequency}} hs
+                </span>
+                <span class="mat-body capitalize-first-letter element-light-color" *ngIf="medication.dosage?.periodUnit == 'd'"
+                    [translate]="'ambulatoria.paciente.ordenes_prescripciones.APLICACION_DIARIA'">
+                </span>
+            </div>
+
+            <div>
+                <span class="mat-body capitalize-first-letter element-light-color" *ngIf="medication.dosage?.duration != undefined">
+                    Durante {{medication.dosage.duration}} días
+                </span>
+                <span class="mat-body capitalize-first-letter element-light-color" *ngIf="medication.dosage?.chronic"
+                    [translate]="'ambulatoria.paciente.ordenes_prescripciones.USO_CRONICO'">
+                </span>
+            </div>
+        </div>
+
+        <div class="element-margin">
+            <h3 class="primary mat-subheading-2 capitalize-first-letter">
+                {{medication.healthCondition.snomed.pt}}
+            </h3>
+        </div>
+
+        <div style="margin-bottom: 30px;" fxLayout="column" fxLayout.gt-sm="row" fxLayoutAlign="space-between start">
+            <span class="mat-body capitalize-first-letter element-light-color">
+                {{medication.doctor.firstName }} {{medication.doctor.lastName }}
+            </span>
+            <span class="mat-body capitalize-first-letter element-light-color" *ngIf="medication.totalDays == 0"
+                [translate]="'ambulatoria.paciente.ordenes_prescripciones.DESDE_HOY'">
+            </span>
+            <span class="mat-body capitalize-first-letter element-light-color" *ngIf="medication.totalDays == 1"
+                [translate]="'ambulatoria.paciente.ordenes_prescripciones.UN_DIA'">
+            </span>
+            <span class="mat-body capitalize-first-letter element-light-color" *ngIf="medication.totalDays > 1">
+                Hace {{medication.totalDays }} días
+            </span>
+        </div>
+
+    <mat-divider></mat-divider>
+
+    <form [formGroup]="suspendMedicationForm" fxLayout="column" fxLayoutGap="15px" style="margin-top: 30px;" (ngSubmit)="suspendMedication()">
+
+        <mat-form-field appearance="outline">
+            <input id="dayQuantityInput"
+                    name="dayQuantity"
+                    formControlName="dayQuantity"
+                    placeholder="{{'ambulatoria.paciente.ordenes_prescripciones.suspend_medication_dialog.INPUT_DAY_QUANTITY' | translate }}"
+                    type="number"
+                    matInput>
+            <mat-hint>
+                <span translate="ambulatoria.paciente.ordenes_prescripciones.suspend_medication_dialog.INPUT_DAY_QUANTITY_HINT"></span>
+            </mat-hint>
+            <mat-error *ngIf="hasError(suspendMedicationForm, 'required', 'dayQuantity')">
+                <span translate="ambulatoria.paciente.ordenes_prescripciones.suspend_medication_dialog.INPUT_DAY_QUANTITY_REQUIRED"></span>
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <textarea matInput type="text" id="observations" name="observations"
+                      formControlName="observations"
+                      placeholder="{{'ambulatoria.paciente.ordenes_prescripciones.suspend_medication_dialog.INPUT_OBSERVATIONS' | translate }}">
+            </textarea>
+        </mat-form-field>
+
+        <div fxLayout="row" fxLayoutAlign="end start">
+            <button mat-flat-button color="primary" type="submit" fxFlexFill.xs>
+                <span class="uppercase">{{'ambulatoria.paciente.ordenes_prescripciones.suspend_medication_dialog.SUSPEND_BUTTON' | translate}}</span>
+            </button>
+        </div>
+    </form>
+</div>

@@ -34,12 +34,14 @@ export class PrescripcionesService {
 		}
 	}
 
-	changeMedicationStatus(statusChange: string, patientId: number, medicationsIds: number[]): Observable<number> {
+	changeMedicationStatus(statusChange: string, patientId: number, medicationsIds: number[], dayQuantity?: number, observations?: string): Observable<void> {
 		switch(statusChange) {
 			case MedicationStatusChange.FINALIZE:
 				return this.medicationRequestService.finalize(patientId, medicationsIds);
 			case MedicationStatusChange.REACTIVATE:
 				return this.medicationRequestService.reactivate(patientId, medicationsIds);
+			case MedicationStatusChange.SUSPEND: 
+				return this.medicationRequestService.suspend(patientId, dayQuantity, observations, medicationsIds);
 		}
 	}
 

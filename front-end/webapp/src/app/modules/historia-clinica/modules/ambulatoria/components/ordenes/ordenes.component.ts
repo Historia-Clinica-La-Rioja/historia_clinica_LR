@@ -8,6 +8,7 @@ import { ConfirmarPrescripcionComponent } from '../../dialogs/ordenes-prescripci
 import { NuevaPrescripcionComponent } from '../../dialogs/ordenes-prescripciones/nueva-prescripcion/nueva-prescripcion.component';
 import { PrescripcionesService, PrescriptionTypes } from '../../services/prescripciones.service';
 import { MedicationStatus, MedicationStatusChange } from '../../constants/prescripciones-masterdata';
+import { SuspenderMedicacionComponent } from '../../dialogs/ordenes-prescripciones/suspender-medicacion/suspender-medicacion.component';
 
 @Component({
 	selector: 'app-ordenes',
@@ -91,7 +92,8 @@ export class OrdenesComponent implements OnInit {
 							},
 							width: '35%'
 						});
-					confirmPrescriptionDialog.afterClosed().subscribe( (hasError:Boolean) => {
+
+					confirmPrescriptionDialog.afterClosed().subscribe((hasError: boolean) => {
 						if (!hasError) {
 							this.getMedication();
 						}
@@ -141,7 +143,8 @@ export class OrdenesComponent implements OnInit {
 						},
 						width: '35%',
 					});
-				confirmPrescriptionDialog.afterClosed().subscribe( (hasError:Boolean) => {
+
+				confirmPrescriptionDialog.afterClosed().subscribe( (hasError: boolean) => {
 					if (!hasError) {
 						this.getStudy();
 					}
@@ -151,14 +154,28 @@ export class OrdenesComponent implements OnInit {
 	}
 
 	openDialogNewRecommendation() {
-	//TODO completar con pop-up nueva recomendacion
-	console.log("Nueva recomendacion");
+		//TODO completar con pop-up nueva recomendacion
+		console.log("Nueva recomendacion");
+	}
+
+	openSuspendMedicationDialog(medication: MedicationInfoDto) {
+		const newSuspendMedicationDialog = this.dialog.open(SuspenderMedicacionComponent, {
+			data: {
+				medication: medication,
+				patientId: this.patientId,
+			},
+			width: '35%',
+		});
+
+		newSuspendMedicationDialog.afterClosed().subscribe(() => {
+
+		});
 	}
 
 	changeMedicationStatus(statusChange: string, medicationsIds: number[]) {
 		this.prescripcionesService.changeMedicationStatus(statusChange, this.patientId, medicationsIds).subscribe(() => {
-			this.snackBarService.showSuccess('La medicacion cambio de estado correctamente')
-		}, _ => {this.snackBarService.showError('La medicacion no puede cambiarse a este estado')});
+			this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.MEDICATION_CHANGE_SUCCESS')
+		}, _ => {this.snackBarService.showError('ambulatoria.paciente.ordenes_prescripciones.toast_messages.MEDICATION_CHANGE_ERROR')});
 	}
 
 	downloadRecipe(medicationId: number) {
