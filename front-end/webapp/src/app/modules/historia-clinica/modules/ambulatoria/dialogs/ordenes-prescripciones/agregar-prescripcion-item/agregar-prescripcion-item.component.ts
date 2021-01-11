@@ -41,21 +41,27 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit {
 		private readonly requestMasterDataService: RequestMasterDataService,
 		public dialogRef: MatDialogRef<AgregarPrescripcionItemComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: NewPrescriptionItemData) { }
-		
+
 	ngOnInit(): void {
 		this.formConfiguration();
-		
+
 		this.hceGeneralStateService.getActiveProblems(this.data.patientId).subscribe((activeProblems: HCEPersonalHistoryDto[]) => {
-			this.healthProblemOptions = activeProblems.map(problem => {return {id: problem.id, description: problem.snomed.pt}});
+			let activeProblemsList = activeProblems.map(problem => {return {id: problem.id, description: problem.snomed.pt}});
+
+			this.hceGeneralStateService.getChronicConditions(this.data.patientId).subscribe((chronicProblems: HCEPersonalHistoryDto[]) => {
+				let chronicProblemsList = chronicProblems.map(problem => {return {id: problem.id, description: problem.snomed.pt}});
+				this.healthProblemOptions = activeProblemsList.concat(chronicProblemsList);
+			});
+
 		});
-		
+
 		this.requestMasterDataService.categories().subscribe(categories => {
 			this.studyCategoryOptions = categories;
 		});
-		
+
 		if (this.data.item) {
 			this.setItemData(this.data.item);
-		} 
+		}
 	}
 
 	ngAfterViewInit(): void {
@@ -141,7 +147,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit {
 	private setItemData(prescriptionItem: NewPrescriptionItem): void {
 		this.prescriptionItemForm.controls.healthProblem.setValue(prescriptionItem.healthProblem.id);
 		this.prescriptionItemForm.controls.observations.setValue(prescriptionItem.observations);
-		
+
 		if (this.data.showDosage) {
 			if (prescriptionItem.isDailyInterval){
 				this.prescriptionItemForm.controls.interval.setValue(this.DEFAULT_RADIO_OPTION);
@@ -151,7 +157,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit {
 				this.prescriptionItemForm.controls.intervalHours.setValidators([Validators.required]);
 				this.prescriptionItemForm.controls.intervalHours.updateValueAndValidity();
 			}
-	
+
 			if (prescriptionItem.isChronicAdministrationTime) {
 				this.prescriptionItemForm.controls.administrationTime.setValue(this.DEFAULT_RADIO_OPTION)
 			} else {
