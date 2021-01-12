@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from "@angular/forms";
-import { TriageDto } from "@api-rest/api-model";
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { MasterDataDto, TriageDto } from '@api-rest/api-model';
+import { TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
+import { Observable } from 'rxjs';
 
 @Component({
 	selector: 'app-pediatric-triage',
@@ -16,11 +18,13 @@ export class PediatricTriageComponent implements OnInit {
 	private triageCategoryId: number;
 	private doctorsOfficeId: number;
 	pediatricForm: FormGroup;
-	bodyTemperatures: any[];
-	muscleHypertonyaOptions: any[];
-	respiratoryRetractionOptions: any[];
+	bodyTemperatures$: Observable<MasterDataDto[]>;
+	muscleHypertonyaOptions$: Observable<MasterDataDto[]>;
+	perfusionOptions$: Observable<MasterDataDto[]>;
+	respiratoryRetractionOptions$: Observable<MasterDataDto[]>;
 
-	constructor(private formBuilder: FormBuilder) {
+	constructor(private formBuilder: FormBuilder,
+	            private readonly triageMasterDataService: TriageMasterDataService) {
 	}
 
 	ngOnInit(): void {
@@ -31,7 +35,15 @@ export class PediatricTriageComponent implements OnInit {
 			triageCategoryId: [null],
 			respiratoryRate: [null],
 			respiratoryRetractionId: [null],
+			stridor: [null],
+			bloodOxygenSaturation: [null],
+			perfusionId: [null],
+			heartRate: [null]
 		});
+		this.bodyTemperatures$ = this.triageMasterDataService.getBodyTemperature();
+		this.muscleHypertonyaOptions$ = this.triageMasterDataService.getMuscleHypertonia();
+		this.perfusionOptions$ = this.triageMasterDataService.getPerfusion();
+		this.respiratoryRetractionOptions$ = this.triageMasterDataService.getRespiratoryRetraction();
 	}
 
 	setTriageCategoryId(triageCategoryId: number): void {

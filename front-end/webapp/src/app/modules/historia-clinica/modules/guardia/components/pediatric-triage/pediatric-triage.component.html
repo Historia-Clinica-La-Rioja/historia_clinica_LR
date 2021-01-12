@@ -16,7 +16,7 @@
 			<mat-label [translate]="'guardia.triage.TEMPERATURE'"></mat-label>
 			<mat-select formControlName="bodyTemperatureId">
 				<mat-option id="bodyTemperatureId"
-				            *ngFor="let bodyTemperature of bodyTemperatures" [value]="bodyTemperature.id">
+				            *ngFor="let bodyTemperature of (bodyTemperatures$ | async )" [value]="bodyTemperature.id">
 					{{bodyTemperature.description}}
 				</mat-option>
 			</mat-select>
@@ -36,7 +36,7 @@
 			<mat-label [translate]="'guardia.triage.MUSCLE_HYPERTONIA'"></mat-label>
 			<mat-select formControlName="triageCategoryId">
 				<mat-option id="triageCategoryId"
-				            *ngFor="let muscleHypertonya of muscleHypertonyaOptions" [value]="muscleHypertonya.id">
+				            *ngFor="let muscleHypertonya of (muscleHypertonyaOptions$ | async)" [value]="muscleHypertonya.id">
 					{{muscleHypertonya.description}}
 				</mat-option>
 			</mat-select>
@@ -53,11 +53,44 @@
 			<mat-label [translate]="'guardia.triage.RESPIRATORY_RETRACTION'"></mat-label>
 			<mat-select formControlName="respiratoryRetractionId">
 				<mat-option id="respiratoryRetractionId"
-				            *ngFor="let respiratoryRetraction of respiratoryRetractionOptions"
+				            *ngFor="let respiratoryRetraction of (respiratoryRetractionOptions$ | async)"
 				            [value]="respiratoryRetraction.id">
 					{{respiratoryRetraction.description}}
 				</mat-option>
 			</mat-select>
+		</mat-form-field>
+		<div fxLayout="column">
+			<mat-label [translate]="'guardia.triage.STRIDOR'"></mat-label>
+			<mat-radio-group name="stridor" id="stridor" formControlName="stridor" fxLayoutGap="20px">
+				<mat-radio-button id="withStridor" value='true'>
+					Si
+				</mat-radio-button>
+				<mat-radio-button id="withoutStridor" value='false'>
+					No
+				</mat-radio-button>
+			</mat-radio-group>
+		</div>
+		<mat-form-field appearance="outline" fxLayout="row">
+			<mat-label [translate]="'guardia.triage.OXYGEN_SATURATION'"></mat-label>
+			<input id="bloodOxygenSaturation" name="bloodOxygenSaturation" formControlName="bloodOxygenSaturation"
+			       placeholder="00" type="number" matInput>
+		</mat-form-field>
+		<h3 class="page-title" [translate]="'guardia.triage.CIRCULATION'"></h3>
+		<mat-form-field appearance="outline" fxLayout="row">
+			<mat-label [translate]="'guardia.triage.PERFUSION'"></mat-label>
+			<mat-select formControlName="perfusionId">
+				<mat-option id="perfusionId"
+				            *ngFor="let perfusion of (perfusionOptions$ | async)"
+				            [value]="perfusion.id">
+					{{perfusion.description}}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+		<mat-form-field appearance="outline" fxLayout="row">
+			<mat-label [translate]="'guardia.triage.HEART_RATE'"></mat-label>
+			<input matInput type="text" id="heartRate" name="heartRate"
+			       formControlName="heartRate"
+			       placeholder="{{'guardia.triage.HEART_RATE' | translate }}">
 		</mat-form-field>
 	</form>
 

@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { environment } from "@environments/environment";
 import { Observable, of } from "rxjs";
+import { MasterDataDto } from "@api-rest/api-model";
+import { HttpClient } from "@angular/common/http";
 
 const TRIAGE_CATEGORIES = [
 	{
@@ -52,12 +54,32 @@ const BASIC_URL_PREFIX = '/emergency-care/triage/masterdata';
 })
 export class TriageMasterDataService {
 
-	constructor() {
+	constructor(private readonly http: HttpClient) {
 	}
 
 	getCategories(): Observable<TriageCategoryDto[]> {
 		let url = `${environment.apiBase + BASIC_URL_PREFIX}/category`;
 		return of(TRIAGE_CATEGORIES);
+	}
+
+	getBodyTemperature(): Observable<MasterDataDto[]> {
+		let url = `${environment.apiBase + BASIC_URL_PREFIX}/bodyTemperature`;
+		return this.http.get<MasterDataDto[]>(url);
+	}
+
+	getMuscleHypertonia(): Observable<MasterDataDto[]> {
+		let url = `${environment.apiBase + BASIC_URL_PREFIX}/muscleHypertonia`;
+		return this.http.get<MasterDataDto[]>(url);
+	}
+
+	getRespiratoryRetraction(): Observable<MasterDataDto[]> {
+		let url = `${environment.apiBase + BASIC_URL_PREFIX}/respiratoryRetraction`;
+		return this.http.get<MasterDataDto[]>(url);
+	}
+
+	getPerfusion(): Observable<MasterDataDto[]> {
+		let url = `${environment.apiBase + BASIC_URL_PREFIX}/perfusion`;
+		return this.http.get<MasterDataDto[]>(url);
 	}
 }
 
