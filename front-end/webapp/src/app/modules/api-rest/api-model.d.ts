@@ -42,6 +42,9 @@ export interface APersonDto {
     street: string;
 }
 
+export interface AbstractMasterdataDto<T> extends MasterDataInterface<T>, Serializable {
+}
+
 export interface AbstractUserDto extends Serializable {
 }
 
@@ -213,7 +216,7 @@ export interface BasicPersonalDataDto extends IBasicPersonalData {
     genderId: number;
 }
 
-export interface BedCategoryDto extends MasterdataDto<number> {
+export interface BedCategoryDto extends AbstractMasterdataDto<number> {
     id: number;
 }
 
@@ -243,7 +246,7 @@ export interface ChangeStateMedicationRequestDto extends Serializable {
     observations?: string;
 }
 
-export interface CityDto extends MasterdataDto<number> {
+export interface CityDto extends AbstractMasterdataDto<number> {
     id: number;
 }
 
@@ -323,7 +326,7 @@ export interface DateTimeDto {
     time: TimeDto;
 }
 
-export interface DepartmentDto extends MasterdataDto<number> {
+export interface DepartmentDto extends AbstractMasterdataDto<number> {
     id: number;
 }
 
@@ -555,7 +558,7 @@ export interface FileDto {
     file: string;
 }
 
-export interface GenderDto extends MasterdataDto<number> {
+export interface GenderDto extends AbstractMasterdataDto<number> {
     id: number;
 }
 
@@ -686,7 +689,7 @@ export interface IBasicPersonalData {
     phoneNumber: string;
 }
 
-export interface IdentificationTypeDto extends MasterdataDto<number> {
+export interface IdentificationTypeDto extends AbstractMasterdataDto<number> {
     id: number;
 }
 
@@ -797,9 +800,6 @@ export interface MainDiagnosisDto extends Serializable {
 export interface MasterDataInterface<T> {
     description: string;
     id: T;
-}
-
-export interface MasterdataDto<T> extends MasterDataInterface<T>, Serializable {
 }
 
 export interface MedicalCoverageDto {
@@ -1096,7 +1096,7 @@ export interface ProfessionalsByClinicalSpecialtyDto {
     professionalsIds: number[];
 }
 
-export interface ProvinceDto extends MasterdataDto<number> {
+export interface ProvinceDto extends AbstractMasterdataDto<number> {
     id: number;
 }
 

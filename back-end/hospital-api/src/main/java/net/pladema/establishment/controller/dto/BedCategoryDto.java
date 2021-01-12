@@ -3,12 +3,12 @@ package net.pladema.establishment.controller.dto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.sgx.masterdata.dto.MasterdataDto;
+import net.pladema.sgx.masterdata.dto.AbstractMasterdataDto;
 
 @Getter
 @Setter
 @ToString
-public class BedCategoryDto extends MasterdataDto<Integer>{
+public class BedCategoryDto extends AbstractMasterdataDto<Integer> {
 
     /**
 	 * 

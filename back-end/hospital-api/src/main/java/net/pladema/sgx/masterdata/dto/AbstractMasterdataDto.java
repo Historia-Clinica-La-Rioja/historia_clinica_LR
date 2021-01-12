@@ -5,7 +5,7 @@ import lombok.ToString;
 import java.io.Serializable;
 
 @ToString
-public abstract class MasterdataDto <T extends Serializable> implements MasterDataInterface <T>, Serializable {
+public abstract class AbstractMasterdataDto<T extends Serializable> implements MasterDataInterface <T>, Serializable {
 
     private T id;
 
