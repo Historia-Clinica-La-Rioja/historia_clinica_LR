@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Repository
 public interface DiagnosticReportFileRepository extends JpaRepository<DiagnosticReportFile, Integer> {
@@ -15,4 +18,10 @@ public interface DiagnosticReportFileRepository extends JpaRepository<Diagnostic
             "SET drf.diagnosticReportId = :drId " +
             "WHERE drf.id IN :fileIds ")
     void updateDiagnosticReportFile(@Param("drId") Integer diagnosticReportId, @Param("fileIds") List<Integer> fileIds);
+
+    @Transactional(readOnly = true)
+    @Query("SELECT drf.path " +
+            "FROM DiagnosticReportFile drf " +
+            "WHERE drf.diagnosticReportId IS NULL ")
+    List<String> getDanglingFiles();
 }
