@@ -16,10 +16,14 @@
                         name="medicalCoverage"
                         *ngFor="let patientMedicalCoverage of patientMedicalCoverages" [value]="patientMedicalCoverage">
                         {{getFullMedicalCoverageText(patientMedicalCoverage)}}
-                    </mat-option>
+					</mat-option>
+					<mat-divider></mat-divider>
+					<mat-option (click)="openMedicalCoverageDialog()">
+						<span class="color-primary" [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.UPDATE_COVERAGE'"></span>
+					</mat-option>
                 </mat-select>
-            </mat-form-field>
-            
+			</mat-form-field>
+
             <div class="margin-checkbox" *ngIf="isMedication()">
                 <mat-checkbox formControlName="withoutRecipe">
                     <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.WITHOUT_RECIPE'"></span>
@@ -27,7 +31,7 @@
             </div>
         </div>
     </form>
-    
+
     <div *ngFor="let prescriptionItem of prescriptionItems" class="item-container">
         <div fxLayout="column" fxLayoutGap="10px" class="item-information">
             <div fxLayout="row" fxLayoutAlign="space-between start">

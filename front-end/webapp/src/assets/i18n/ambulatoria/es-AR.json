@@ -205,7 +205,8 @@
 					"STUDY_TITLE": "Nueva orden",
 					"ADD_STUDY_LABEL": "Agregar estudio",
 					"SELECT_MEDICAL_COVERAGE": "Seleccione cobertura médica",
-					"WITHOUT_RECIPE": "Sin receta"
+					"WITHOUT_RECIPE": "Sin receta",
+					"UPDATE_COVERAGE": "Actualizar cobertura"
 				},
 				"confirm_prescription_dialog": {
 					"MEDICATION_TITLE": "Su medicación fue agregada correctamente",
@@ -217,7 +218,9 @@
 					"POST_MEDICATION_SUCCESS": "Medicación agregada correctamente",
 					"POST_MEDICATION_ERROR": "Error al agregar medicación",
 					"POST_STUDY_SUCCESS": "Órden creada correctamente",
-					"POST_STUDY_ERROR": "Error al crear órden"
+					"POST_STUDY_ERROR": "Error al crear órden",
+					"POST_UPDATE_COVERAGE_SUCCESS": "Las coberturas fueron actualizadas correctamente",
+					"POST_UPDATE_COVERAGE_ERROR": "Ocurrió un error al actualizar las coberturas"
 				},
 				"menu_items": {
 					"DOWNLOAD": "Descargar receta",

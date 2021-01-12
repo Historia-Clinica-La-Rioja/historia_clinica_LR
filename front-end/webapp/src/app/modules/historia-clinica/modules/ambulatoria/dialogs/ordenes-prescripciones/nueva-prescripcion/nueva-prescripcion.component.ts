@@ -2,12 +2,14 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
-import { PatientMedicalCoverage } from '@core/dialogs/medical-coverage/medical-coverage.component';
+import { MedicalCoverageComponent, PatientMedicalCoverage } from '@core/dialogs/medical-coverage/medical-coverage.component';
 import { MapperService } from '@core/services/mapper.service';
 import { map } from 'rxjs/operators';
 import { AgregarPrescripcionItemComponent, NewPrescriptionItem } from '../agregar-prescripcion-item/agregar-prescripcion-item.component';
-import { PrescriptionDto } from '@api-rest/api-model';
+import { BasicPatientDto, PatientMedicalCoverageDto, PrescriptionDto } from '@api-rest/api-model';
 import { PrescriptionTypes } from '../../../services/prescripciones.service';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { PatientService } from '@api-rest/services/patient.service';
 
 @Component({
   selector: 'app-nueva-prescripcion',
@@ -20,12 +22,15 @@ export class NuevaPrescripcionComponent implements OnInit {
 	patientMedicalCoverages: PatientMedicalCoverage[];
 	prescriptionForm: FormGroup;
 	itemCount = 0;
+	private patientData: BasicPatientDto;
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
 		private readonly mapperService: MapperService,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private readonly dialog: MatDialog,
+		private readonly snackBarService: SnackBarService,
+		private readonly patientService: PatientService,
 		public dialogRef: MatDialogRef<NuevaPrescripcionComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: NewPrescriptionData) { }
 
@@ -34,9 +39,11 @@ export class NuevaPrescripcionComponent implements OnInit {
 			patientMedicalCoverage: [null],
 			withoutRecipe: [false],
 		});
-
 		this.prescriptionItems = this.data.prescriptionItemList ? this.data.prescriptionItemList : [];
 		this.setMedicalCoverages();
+		this.patientService.getPatientBasicData(Number(this.data.patientId)).subscribe((basicData: BasicPatientDto) => {
+			this.patientData = basicData;
+		});
 	}
 
 	closeModal(newPrescription?: PrescriptionDto): void {
@@ -135,6 +142,31 @@ export class NuevaPrescripcionComponent implements OnInit {
 				)
 			)
 			.subscribe((patientMedicalCoverages: PatientMedicalCoverage[]) => this.patientMedicalCoverages = patientMedicalCoverages);
+	}
+
+	openMedicalCoverageDialog(): void {
+		const dialogRef = this.dialog.open(MedicalCoverageComponent, {
+			data: {
+				genderId: this.patientData.person.gender.id,
+				identificationNumber: this.patientData.person.identificationNumber,
+				identificationTypeId: this.patientData.person.identificationTypeId,
+				initValues: this.patientMedicalCoverages,
+			}
+		});
+
+		dialogRef.afterClosed().subscribe(
+			values => {
+				if (values) {
+					const patientCoverages: PatientMedicalCoverageDto[] =
+						values.patientMedicalCoverages.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
+
+					this.patientMedicalCoverageService.addPatientMedicalCoverages(Number(this.data.patientId), patientCoverages).subscribe(_ => {
+						this.setMedicalCoverages();
+						this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_UPDATE_COVERAGE_SUCCESS');
+					}), _ => this.snackBarService.showError('ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_UPDATE_COVERAGE_ERROR');
+				}
+			}
+		);
 	}
 
 }
