@@ -14,7 +14,7 @@ import { PrescripcionesService } from '../../../services/prescripciones.service'
 })
 export class SuspenderMedicacionComponent implements OnInit {
 
-	medication: MedicationInfoDto;
+	medications: MedicationInfoDto[];
 	suspendMedicationForm: FormGroup;
 	hasError = hasError;
 	
@@ -26,13 +26,13 @@ export class SuspenderMedicacionComponent implements OnInit {
 		private readonly formBuilder: FormBuilder,
 		public dialogRef: MatDialogRef<SuspenderMedicacionComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: {
-			medication: MedicationInfoDto, 
+			medications: MedicationInfoDto[], 
 			patientId: number,
 		}
 	) { }
 
 	ngOnInit(): void {
-		this.medication = this.data.medication;
+		this.medications = this.data.medications;
 
 		this.suspendMedicationForm = this.formBuilder.group({
 			dayQuantity: [null, Validators.required],
@@ -45,7 +45,7 @@ export class SuspenderMedicacionComponent implements OnInit {
 	}
 
 	suspendMedication() {
-		this.prescripcionesService.changeMedicationStatus(this.medicationStatusChange.SUSPEND, this.data.patientId, [this.data.medication.id], 
+		this.prescripcionesService.changeMedicationStatus(this.medicationStatusChange.SUSPEND, this.data.patientId, this.medications.map(m => m.id), 
 			this.suspendMedicationForm.controls.dayQuantity.value, this.suspendMedicationForm.controls.observations.value
 			).subscribe(() => {
 				this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.MEDICATION_CHANGE_SUCCESS');

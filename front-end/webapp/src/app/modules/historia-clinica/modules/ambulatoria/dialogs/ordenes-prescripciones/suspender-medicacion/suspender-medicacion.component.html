@@ -7,6 +7,7 @@
 
 <div fxLayout="column">
 
+    <div *ngFor="let medication of medications">
         <div class="element-margin">
             <h3 class="mat-subheading-2 capitalize-first-letter" style="margin: 0">
                 {{medication.snomed.pt}}
@@ -53,6 +54,7 @@
                 Hace {{medication.totalDays }} días
             </span>
         </div>
+    </div>
 
     <mat-divider></mat-divider>
 
