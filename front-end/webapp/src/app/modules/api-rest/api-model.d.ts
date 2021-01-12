@@ -62,16 +62,6 @@ export interface AddressDto extends Serializable {
     street: string;
 }
 
-export interface AdministrativeEmergencyCareDto extends Serializable {
-    administrative: NewECAdministrativeDto;
-    triage: TriageAdministrativeDto;
-}
-
-export interface AdultGynecologicalEmergencyCareDto extends Serializable {
-    administrative: NewECAdministrativeDto;
-    triage: TriageAdultGynecologicalDto;
-}
-
 export interface AllergyConditionDto extends HealthConditionDto {
     categoryId: string;
     date: string;
@@ -458,10 +448,18 @@ export interface DosageInfoDto extends Serializable {
 }
 
 export interface ECAdministrativeDto extends Serializable {
-    entranceTypeId: number;
-    policeIntervention: PoliceInterventionDto;
-    reasons: SnomedDto[];
-    typeId: number;
+    administrative: NewEmergencyCareDto;
+    triage: TriageAdministrativeDto;
+}
+
+export interface ECAdultGynecologicalDto extends Serializable {
+    administrative: NewEmergencyCareDto;
+    triage: TriageAdultGynecologicalDto;
+}
+
+export interface ECPediatricDto extends Serializable {
+    administrative: NewEmergencyCareDto;
+    triage: TriagePediatricDto;
 }
 
 export interface EEmergencyCareState {
@@ -472,6 +470,13 @@ export interface EEmergencyCareType {
 
 export interface EffectiveClinicalObservationDto extends ClinicalObservationDto {
     effectiveTime: string;
+}
+
+export interface EmergencyCareDto extends Serializable {
+    entranceTypeId: number;
+    policeIntervention: PoliceInterventionDto;
+    reasons: SnomedDto[];
+    typeId: number;
 }
 
 export interface EmergencyCareListDto extends Serializable {
@@ -836,7 +841,7 @@ export interface NewDosageDto extends Serializable {
     frequency?: number;
 }
 
-export interface NewECAdministrativeDto extends ECAdministrativeDto {
+export interface NewEmergencyCareDto extends EmergencyCareDto {
     ambulanceCompanyId: string;
     patient: EmergencyCarePatientDto;
 }
@@ -1007,11 +1012,6 @@ export interface PatientType extends Serializable {
     id: number;
 }
 
-export interface PediatricEmergencyCareDto extends Serializable {
-    administrative: NewECAdministrativeDto;
-    triage: TriagePediatricDto;
-}
-
 export interface PermissionsDto {
     roleAssignments: RoleAssignment[];
 }
@@ -1126,7 +1126,7 @@ export interface ResponseAnamnesisDto extends AnamnesisDto {
     id: number;
 }
 
-export interface ResponseEmergencyCareDto extends ECAdministrativeDto {
+export interface ResponseEmergencyCareDto extends EmergencyCareDto {
     id: number;
 }
 

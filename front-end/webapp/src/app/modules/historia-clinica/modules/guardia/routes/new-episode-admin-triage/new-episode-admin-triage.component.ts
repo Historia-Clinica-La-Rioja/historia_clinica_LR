@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AdministrativeEmergencyCareDto, TriageAdministrativeDto } from "@api-rest/api-model";
+import { ECAdministrativeDto, TriageAdministrativeDto } from "@api-rest/api-model";
 import { NewEpisodeService } from '../../services/new-episode.service';
 import { EmergencyCareEpisodeService } from "@api-rest/services/emergency-care-episode.service";
 import { Router } from "@angular/router";
@@ -16,7 +16,7 @@ const ROUTE_EMERGENCY_CARE = 'guardia/';
 export class NewEpisodeAdminTriageComponent implements OnInit {
 
 	private triage: TriageAdministrativeDto;
-	private emergencyCareDto = {} as AdministrativeEmergencyCareDto;
+	private emergencyCareDto = {} as ECAdministrativeDto;
 	private readonly routePrefix;
 
 	constructor(private readonly newEpisodeService: NewEpisodeService,

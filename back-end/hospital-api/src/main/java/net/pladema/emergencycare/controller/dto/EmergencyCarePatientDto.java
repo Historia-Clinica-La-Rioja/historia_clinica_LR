@@ -1,4 +1,4 @@
-package net.pladema.emergencycare.controller.dto.administrative;
+package net.pladema.emergencycare.controller.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

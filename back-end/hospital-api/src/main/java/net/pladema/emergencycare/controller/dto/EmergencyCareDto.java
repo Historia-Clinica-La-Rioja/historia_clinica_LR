@@ -1,4 +1,4 @@
-package net.pladema.emergencycare.controller.dto.administrative;
+package net.pladema.emergencycare.controller.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import java.util.List;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
-public abstract class ECAdministrativeDto implements Serializable {
+public abstract class EmergencyCareDto implements Serializable {
 
     private final List<SnomedDto> reasons;
 

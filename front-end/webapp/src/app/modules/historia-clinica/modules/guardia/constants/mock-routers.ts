@@ -656,7 +656,7 @@ export const MOCKS_GUARDIA = [
 				],
 			},
 			{
-				name: 'EmergencyCareEpisode.createAdministrative(body: EmergencyCareDto): number',
+				name: 'EmergencyCareEpisode.createAdministrative(body: ECAdministrativeDto): number',
 				roles: 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD',
 				path: '/api/institution/{institutionId}/emergency-care/episodes',
 				method: 'POST',
@@ -775,7 +775,7 @@ export const MOCKS_GUARDIA = [
 				],
 			},
 			{
-				name: 'EmergencyCareEpisode.createAdult(body: EmergencyCareDto): number',
+				name: 'EmergencyCareEpisode.createAdult(body: ECAdultGynecologicalDto): number',
 				roles: 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD',
 				path: '/api/institution/{institutionId}/emergency-care/episodes/adult-gynecological',
 				method: 'POST',
@@ -1023,7 +1023,7 @@ export const MOCKS_GUARDIA = [
 				]
 			},
 			{
-				name: 'EmergencyCareEpisode.createPediatric(body: EmergencyCareDto): number',
+				name: 'EmergencyCareEpisode.createPediatric(body: ECPediatricDto): number',
 				roles: 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD',
 				path: '/api/institution/{institutionId}/emergency-care/episodes/pediatric',
 				method: 'POST',

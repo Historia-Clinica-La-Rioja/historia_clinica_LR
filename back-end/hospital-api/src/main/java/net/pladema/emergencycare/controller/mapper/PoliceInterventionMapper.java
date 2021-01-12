@@ -1,6 +1,6 @@
 package net.pladema.emergencycare.controller.mapper;
 
-import net.pladema.emergencycare.controller.dto.administrative.PoliceInterventionDto;
+import net.pladema.emergencycare.controller.dto.PoliceInterventionDto;
 import net.pladema.emergencycare.service.domain.PoliceInterventionBo;
 import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import org.mapstruct.Mapper;

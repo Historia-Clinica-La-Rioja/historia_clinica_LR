@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import {
 	BasicPatientDto,
 	MasterDataInterface,
-	NewECAdministrativeDto,
+	NewEmergencyCareDto,
 	PatientMedicalCoverageDto,
 	PersonPhotoDto, PoliceInterventionDto
 } from '@api-rest/api-model';
@@ -157,7 +157,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 	continue(): void {
 		const formValue = this.form.value;
 		const policeIntervention: PoliceInterventionDto = this.hasPoliceIntervention ? this.toPoliceIntervention(formValue) : null;
-		const newECAdministrativeDto: NewECAdministrativeDto = {
+		const newEmergencyCareDto: NewEmergencyCareDto = {
 			patient: {
 				id: this.selectedPatient?.id,
 				patientMedicalCoverageId: formValue.patientMedicalCoverageId,
@@ -168,7 +168,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 			ambulanceCompanyId: formValue.ambulanceCompanyId,
 			policeIntervention,
 		}
-		this.goToBasicTriage(newECAdministrativeDto);
+		this.goToBasicTriage(newEmergencyCareDto);
 
 	}
 
@@ -198,7 +198,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 		}
 	}
 
-	goToBasicTriage(administrativeAdmisionDto: NewECAdministrativeDto): void {
+	goToBasicTriage(administrativeAdmisionDto: NewEmergencyCareDto): void {
 		this.newEpisodeService.setAdministrativeAdmission(administrativeAdmisionDto);
 		const url = `${this.routePrefix}guardia/nuevo-episodio/triage-administrativo`;
 		this.router.navigateByUrl(url);

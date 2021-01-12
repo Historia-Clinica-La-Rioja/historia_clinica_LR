@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { AdministrativeEmergencyCareDto, DateTimeDto } from '@api-rest/api-model';
+import { ECAdministrativeDto, DateTimeDto } from '@api-rest/api-model';
 import { environment } from "@environments/environment";
 import { HttpClient } from "@angular/common/http";
 import { ContextService } from "@core/services/context.service";
@@ -218,7 +218,7 @@ export class EmergencyCareEpisodeService {
 		);
 	}
 
-	createAdministrative(newEpisode: AdministrativeEmergencyCareDto): Observable<number> {
+	createAdministrative(newEpisode: ECAdministrativeDto): Observable<number> {
 		let url = `${environment.apiBase + BASIC_URL_PREFIX}/${this.contextService.institutionId +
 			BASIC_URL_SUFIX}/episodes`;
 		return this.http.post<number>(url, newEpisode);

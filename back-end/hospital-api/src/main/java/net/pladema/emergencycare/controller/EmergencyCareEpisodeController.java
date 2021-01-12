@@ -2,11 +2,11 @@ package net.pladema.emergencycare.controller;
 
 import io.swagger.annotations.Api;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.service.ReasonExternalService;
-import net.pladema.emergencycare.controller.dto.AdministrativeEmergencyCareDto;
-import net.pladema.emergencycare.controller.dto.AdultGynecologicalEmergencyCareDto;
+import net.pladema.emergencycare.controller.dto.ECAdministrativeDto;
+import net.pladema.emergencycare.controller.dto.ECAdultGynecologicalDto;
 import net.pladema.emergencycare.controller.dto.EmergencyCareListDto;
-import net.pladema.emergencycare.controller.dto.PediatricEmergencyCareDto;
-import net.pladema.emergencycare.controller.dto.administrative.ResponseEmergencyCareDto;
+import net.pladema.emergencycare.controller.dto.ECPediatricDto;
+import net.pladema.emergencycare.controller.dto.ResponseEmergencyCareDto;
 import net.pladema.emergencycare.controller.mapper.EmergencyCareMapper;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
@@ -60,11 +60,10 @@ public class EmergencyCareEpisodeController {
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
     public ResponseEntity<Integer> createAdministrative(
             @PathVariable(name = "institutionId") Integer institutionId,
-            @RequestBody AdministrativeEmergencyCareDto body) {
+            @RequestBody ECAdministrativeDto body) {
         LOG.debug("Add emergency care administrative episode => {}", body);
         EmergencyCareBo newEmergencyCare = emergencyCareMapper.administrativeEmergencyCareDtoToEmergencyCareBo(body);
         newEmergencyCare.setInstitutionId(institutionId);
-        setEpisodeAttributes(body, newEmergencyCare);
         List<String> reasonIds = (body.getAdministrative() != null && body.getAdministrative().getReasons() != null) ?
                     reasonExternalService.addReasons(body.getAdministrative().getReasons()) : new ArrayList<>();
         newEmergencyCare.setReasonIds(reasonIds);
@@ -74,20 +73,10 @@ public class EmergencyCareEpisodeController {
         return ResponseEntity.ok().body(result);
     }
 
-    private void setEpisodeAttributes(AdministrativeEmergencyCareDto body, EmergencyCareBo newEmergencyCare) {
-        LOG.debug("Input parameters -> body {}, newEmergencyCare {}", body, newEmergencyCare);
-        if (body.getAdministrative() == null)
-            return;
-        if (body.getAdministrative().getTypeId() != null)
-            newEmergencyCare.setEmergencyCareTypeById(body.getAdministrative().getTypeId());
-        if (body.getAdministrative().getEntranceTypeId() != null)
-            newEmergencyCare.setEmergencyEntranceById(body.getAdministrative().getEntranceTypeId());
-    }
-
     @Transactional
     @PostMapping("/adult-gynecological")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
-    public ResponseEntity<Integer> createAdult(@RequestBody AdultGynecologicalEmergencyCareDto body) {
+    public ResponseEntity<Integer> createAdult(@RequestBody ECAdultGynecologicalDto body) {
         LOG.debug("Add emergency care adult-gynecological episode => {}", body);
         EmergencyCareBo newEmergencyCare = emergencyCareMapper.adultGynecologicalEmergencyCareDtoToEmergencyCareBo(body);
         newEmergencyCare = emergencyCareEpisodeService.createAdult(newEmergencyCare);
@@ -99,7 +88,7 @@ public class EmergencyCareEpisodeController {
     @Transactional
     @PostMapping("/pediatric")
     @PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
-    public ResponseEntity<Integer> createPediatric(@RequestBody PediatricEmergencyCareDto body) {
+    public ResponseEntity<Integer> createPediatric(@RequestBody ECPediatricDto body) {
         LOG.debug("Add emergency care pediatric episode => {}", body);
         EmergencyCareBo newEmergencyCare = emergencyCareMapper.pediatricEmergencyCareDtoToEmergencyCareBo(body);
         newEmergencyCare = emergencyCareEpisodeService.createPediatric(newEmergencyCare);

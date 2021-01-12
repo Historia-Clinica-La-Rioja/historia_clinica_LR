@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { NewECAdministrativeDto } from "@api-rest/api-model";
+import { NewEmergencyCareDto } from "@api-rest/api-model";
 
 @Injectable()
 export class NewEpisodeService {
 
-	private administrativeAdmission: NewECAdministrativeDto;
+	private administrativeAdmission: NewEmergencyCareDto;
 
 	constructor() { }
 
@@ -12,11 +12,11 @@ export class NewEpisodeService {
 		this.administrativeAdmission = undefined;
 	}
 
-	setAdministrativeAdmission(data: NewECAdministrativeDto): void {
+	setAdministrativeAdmission(data: NewEmergencyCareDto): void {
 		this.administrativeAdmission = data;
 	}
 
-	getAdministrativeAdmission(): NewECAdministrativeDto{
+	getAdministrativeAdmission(): NewEmergencyCareDto{
 		return this.administrativeAdmission;
 	}
 }

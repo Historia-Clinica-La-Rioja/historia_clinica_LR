@@ -1,4 +1,4 @@
-package net.pladema.emergencycare.controller.dto.administrative;
+package net.pladema.emergencycare.controller.dto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @ToString
-public class ResponseEmergencyCareDto extends ECAdministrativeDto {
+public class ResponseEmergencyCareDto extends EmergencyCareDto {
 
     Integer id;
 
