@@ -25,6 +25,9 @@ import { NuevaPrescripcionComponent } from './dialogs/ordenes-prescripciones/nue
 import { ConfirmarPrescripcionComponent } from './dialogs/ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
 import { AgregarPrescripcionItemComponent } from './dialogs/ordenes-prescripciones/agregar-prescripcion-item/agregar-prescripcion-item.component';
 import { SuspenderMedicacionComponent } from './dialogs/ordenes-prescripciones/suspender-medicacion/suspender-medicacion.component';
+import { CardMedicacionesComponent } from './components/ordenes/card-medicaciones/card-medicaciones.component';
+import { CardEstudiosComponent } from './components/ordenes/card-estudios/card-estudios.component';
+import { CardIndicacionesComponent } from './components/ordenes/card-indicaciones/card-indicaciones.component';
 
 
 @NgModule({
@@ -45,6 +48,9 @@ import { SuspenderMedicacionComponent } from './dialogs/ordenes-prescripciones/s
 		ConfirmarPrescripcionComponent,
 		AgregarPrescripcionItemComponent,
 		SuspenderMedicacionComponent,
+		CardMedicacionesComponent,
+		CardEstudiosComponent,
+		CardIndicacionesComponent,
 	],
 	imports: [
 		AmbulatoriaRoutingModule,
