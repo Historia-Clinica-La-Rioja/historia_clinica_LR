@@ -8,8 +8,8 @@ import { TriageAdministrativeDto, TriageDto } from "@api-rest/api-model";
 })
 export class AdministrativeTriageComponent implements OnInit {
 
-	@Input('confirmLabel') confirmLabel: string = 'Confirmar episodio';
-	@Input('cancelLabel') cancelLabel: string = 'Volver';
+	@Input() confirmLabel = 'Confirmar episodio';
+	@Input() cancelLabel = 'Volver';
 	@Output() onConfirm = new EventEmitter();
 	@Output() onCancel = new EventEmitter();
 	private triageCategoryId: number;

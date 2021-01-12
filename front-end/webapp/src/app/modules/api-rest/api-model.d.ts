@@ -1220,6 +1220,32 @@ export interface TriageAdministrativeDto extends TriageDto {
 }
 
 export interface TriageAdultGynecologicalDto extends TriageNoAdministrativeDto {
+	vitalSigns?: {
+		bloodOxygenSaturation?: {
+			effectiveTime: DateTimeDto,
+			value: number,
+		},
+		diastolicBloodPressure?: {
+			effectiveTime: DateTimeDto,
+			value: number,
+		},
+		heartRate?: {
+			effectiveTime: DateTimeDto,
+			value: number,
+		},
+		respiratoryRate?: {
+			effectiveTime: DateTimeDto,
+			value: number,
+		},
+		systolicBloodPressure?: {
+			effectiveTime: DateTimeDto,
+			value: number,
+		},
+		temperature?: {
+			effectiveTime: DateTimeDto,
+			value: number,
+		},
+	};
 }
 
 export interface TriageCategoryDto extends Serializable {

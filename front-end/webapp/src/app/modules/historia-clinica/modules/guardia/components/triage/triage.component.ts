@@ -6,8 +6,8 @@ import { TriageCategoryDto, TriageMasterDataService } from "@api-rest/services/t
 import { MatOptionSelectionChange } from "@angular/material/core";
 import { Observable } from "rxjs";
 
-const SECTOR_TYPE_ID_AMBULATORY = 1;
-const TRIAGE_LEVEL_V_ID = 5;
+const SECTOR_TYPE_ID_AMBULATORY = 1; // TODO mover al archivo de constantes a agregar
+const TRIAGE_LEVEL_V_ID = 5; // TODO mover al archivo de constantes a agregar
 
 @Component({
 	selector: 'app-triage',

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TriageDto } from "@api-rest/api-model";
+import { TriageAdultGynecologicalDto } from '@api-rest/api-model';
 
 @Component({
 	selector: 'app-new-episode-adult-gynecological-triage',
@@ -14,7 +14,7 @@ export class NewEpisodeAdultGynecologicalTriageComponent implements OnInit {
 	ngOnInit(): void {
 	}
 
-	confirmEvent(triage: TriageDto): void {
+	confirmEvent(triage: TriageAdultGynecologicalDto): void {
 
 	}
 

@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { TriageDto } from "@api-rest/api-model";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { TriageAdultGynecologicalDto } from '@api-rest/api-model';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { dateToDateTimeDto } from '@api-rest/mapper/date-dto.mapper';
 
 @Component({
 	selector: 'app-adult-gynecological-triage',
@@ -9,8 +10,8 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 })
 export class AdultGynecologicalTriageComponent implements OnInit {
 
-	@Input('confirmLabel') confirmLabel: string = 'Confirmar episodio';
-	@Input('cancelLabel') cancelLabel: string = 'Volver';
+	@Input() confirmLabel = 'Confirmar episodio';
+	@Input() cancelLabel = 'Volver';
 	@Output() onConfirm = new EventEmitter();
 	@Output() onCancel = new EventEmitter();
 	private triageCategoryId: number;
@@ -42,11 +43,29 @@ export class AdultGynecologicalTriageComponent implements OnInit {
 
 
 	confirm(): void {
-		const triage: TriageDto = {
+
+		const formValue = this.adultGynecologicalForm.value;
+
+		const triage: TriageAdultGynecologicalDto = {
 			categoryId: this.triageCategoryId,
-			doctorsOfficeId: this.doctorsOfficeId
+			doctorsOfficeId: this.doctorsOfficeId,
+			notes: formValue.evaluation,
+			vitalSigns: toVitalSigns(this.adultGynecologicalForm)
 		};
 		this.onConfirm.emit(triage);
+
+		function toVitalSigns(form: FormGroup): any {
+			const vitalSigns = {};
+			Object.keys(form.controls).forEach((key: string) => {
+				if (formValue[key]) {
+					vitalSigns[key] = {
+						effectiveTime: dateToDateTimeDto(new Date()),
+						value: formValue[key]
+					};
+				}
+			});
+			return Object.keys(vitalSigns).keys.length !== 0  ? vitalSigns : undefined;
+		}
 	}
 
 	back(): void {
