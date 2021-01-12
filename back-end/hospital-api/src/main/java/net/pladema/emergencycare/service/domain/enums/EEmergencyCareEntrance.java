@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import net.pladema.sgx.exceptions.NotFoundException;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -25,7 +25,7 @@ public enum EEmergencyCareEntrance {
     }
 
     @JsonCreator
-    public static Collection<EEmergencyCareEntrance> getAll(){
+    public static List<EEmergencyCareEntrance> getAll(){
         return Stream.of(EEmergencyCareEntrance.values()).collect(Collectors.toList());
     }
 

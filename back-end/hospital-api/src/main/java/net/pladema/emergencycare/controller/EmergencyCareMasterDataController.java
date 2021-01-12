@@ -2,9 +2,8 @@ package net.pladema.emergencycare.controller;
 
 import io.swagger.annotations.Api;
 import net.pladema.emergencycare.service.EmergencyCareMasterDataService;
-import net.pladema.emergencycare.service.domain.enums.EEmergencyCareEntrance;
-import net.pladema.emergencycare.service.domain.enums.EEmergencyCareType;
-import net.pladema.sgx.masterdata.repository.MasterDataProjection;
+import net.pladema.sgx.masterdata.dto.MasterDataDto;
+import net.pladema.sgx.masterdata.service.domain.EnumWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -23,20 +22,24 @@ public class EmergencyCareMasterDataController {
 
     private final EmergencyCareMasterDataService emergencyCareMasterDataService;
 
-    public EmergencyCareMasterDataController(EmergencyCareMasterDataService emergencyCareMasterDataService){
+    private final EnumWriter enumWriter;
+
+    public EmergencyCareMasterDataController(EmergencyCareMasterDataService emergencyCareMasterDataService,
+                                             EnumWriter enumWriter){
         super();
         this.emergencyCareMasterDataService=emergencyCareMasterDataService;
+        this.enumWriter=enumWriter;
     }
 
     @GetMapping(value = "/type")
-    public ResponseEntity<Collection<EEmergencyCareType>> getType() {
+    public ResponseEntity<Collection<MasterDataDto>> getType() {
         LOG.debug("{}", "All types");
-        return ResponseEntity.ok().body(emergencyCareMasterDataService.findAllType());
+        return ResponseEntity.ok().body(enumWriter.write(emergencyCareMasterDataService.findAllType()));
     }
 
     @GetMapping(value = "/entranceType")
-    public ResponseEntity<Collection<EEmergencyCareEntrance>> getEntranceType() {
+    public ResponseEntity<Collection<MasterDataDto>> getEntranceType() {
         LOG.debug("{}", "All entrance types");
-        return ResponseEntity.ok().body(emergencyCareMasterDataService.findAllEntrance());
+        return ResponseEntity.ok().body(enumWriter.write(emergencyCareMasterDataService.findAllEntrance()));
     }
 }

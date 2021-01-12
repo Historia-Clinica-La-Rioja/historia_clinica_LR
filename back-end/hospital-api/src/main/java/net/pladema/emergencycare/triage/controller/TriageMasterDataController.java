@@ -1,10 +1,7 @@
 package net.pladema.emergencycare.triage.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import net.pladema.emergencycare.triage.controller.dto.TriageCategoryDto;
-import net.pladema.emergencycare.triage.controller.dto.TriageDetailsDto;
 import net.pladema.emergencycare.triage.controller.mapper.TriageMasterDataMapper;
 import net.pladema.emergencycare.triage.service.TriageMasterDataService;
 import net.pladema.emergencycare.triage.service.domain.TriageCategoryBo;
@@ -12,6 +9,8 @@ import net.pladema.emergencycare.triage.service.domain.enums.EBodyTemperature;
 import net.pladema.emergencycare.triage.service.domain.enums.EMuscleHypertonia;
 import net.pladema.emergencycare.triage.service.domain.enums.EPerfusion;
 import net.pladema.emergencycare.triage.service.domain.enums.ERespiratoryRetraction;
+import net.pladema.sgx.masterdata.dto.MasterDataDto;
+import net.pladema.sgx.masterdata.service.domain.EnumWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -33,11 +31,11 @@ public class TriageMasterDataController {
 
     private final TriageMasterDataMapper triageMasterDataMapper;
 
-    private final ObjectMapper jackson;
+    private final EnumWriter jackson;
 
     public TriageMasterDataController(TriageMasterDataService triageMasterDataService,
                                       TriageMasterDataMapper triageMasterDataMapper,
-                                      ObjectMapper jackson){
+                                      EnumWriter jackson){
         super();
         this.triageMasterDataService = triageMasterDataService;
         this.triageMasterDataMapper = triageMasterDataMapper;
@@ -55,42 +53,30 @@ public class TriageMasterDataController {
     }
 
     @GetMapping("/bodyTemperature")
-    public ResponseEntity<List<TriageDetailsDto>> getBodyTemperature() {
+    public ResponseEntity<List<MasterDataDto>> getBodyTemperature() {
         LOG.debug("{}", "All body temperature");
         List<EBodyTemperature> data = triageMasterDataService.getBodyTemperature();
-        return ResponseEntity.ok().body(get(data));
+        return ResponseEntity.ok().body(jackson.write(data));
     }
 
     @GetMapping("/muscleHypertonia")
-    public ResponseEntity<List<TriageDetailsDto>> getMuscleHypertonia() {
+    public ResponseEntity<List<MasterDataDto>> getMuscleHypertonia() {
         LOG.debug("{}", "All muscle hypertonia");
         List<EMuscleHypertonia> data = triageMasterDataService.getMuscleHypertonia();
-        return ResponseEntity.ok().body(get(data));
+        return ResponseEntity.ok().body(jackson.write(data));
     }
 
     @GetMapping("/respiratoryRetraction")
-    public ResponseEntity<List<TriageDetailsDto>> getRespiratoryRetraction() {
+    public ResponseEntity<List<MasterDataDto>> getRespiratoryRetraction() {
         LOG.debug("{}", "All muscle respiratory retraction");
         List<ERespiratoryRetraction> data = triageMasterDataService.getRespiratoryRetraction();
-        return ResponseEntity.ok().body(get(data));
+        return ResponseEntity.ok().body(jackson.write(data));
     }
 
     @GetMapping("/perfusion")
-    public ResponseEntity<List<TriageDetailsDto>> getPerfusion() {
+    public ResponseEntity<List<MasterDataDto>> getPerfusion() {
         LOG.debug("{}", "All muscle respiratory retraction");
         List<EPerfusion> data = triageMasterDataService.getPerfusion();
-        return ResponseEntity.ok().body(get(data));
-    }
-
-    private List<TriageDetailsDto> get(List<? extends Enum> list){
-        List<TriageDetailsDto> result = new ArrayList<>();
-        list.forEach(e -> {
-            try {
-                result.add(jackson.readValue(jackson.writeValueAsString(e), TriageDetailsDto.class));
-            } catch (JsonProcessingException jsonProcessingException) {
-                jsonProcessingException.printStackTrace();
-            }
-        });
-        return result;
+        return ResponseEntity.ok().body(jackson.write(data));
     }
 }

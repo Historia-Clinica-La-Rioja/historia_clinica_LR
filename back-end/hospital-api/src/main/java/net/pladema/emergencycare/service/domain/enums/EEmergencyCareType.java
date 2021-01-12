@@ -2,10 +2,9 @@ package net.pladema.emergencycare.service.domain.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonValue;
 import net.pladema.sgx.exceptions.NotFoundException;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -25,7 +24,7 @@ public enum EEmergencyCareType {
     }
 
     @JsonCreator
-    public static Collection<EEmergencyCareType> getAll(){
+    public static List<EEmergencyCareType> getAll(){
         return Stream.of(EEmergencyCareType.values()).collect(Collectors.toList());
     }
 
@@ -37,7 +36,6 @@ public enum EEmergencyCareType {
         throw new NotFoundException("emergencyCareType-not-exists", String.format("El valor %s es inválido", id));
     }
 
-    @JsonValue
     public Short getId() {
         return id;
     }
