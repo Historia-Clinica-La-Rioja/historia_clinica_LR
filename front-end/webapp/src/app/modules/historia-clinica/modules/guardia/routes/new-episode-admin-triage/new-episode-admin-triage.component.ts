@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ECAdministrativeDto, TriageAdministrativeDto } from "@api-rest/api-model";
 import { NewEpisodeService } from '../../services/new-episode.service';
 import { EmergencyCareEpisodeService } from "@api-rest/services/emergency-care-episode.service";
@@ -20,19 +20,19 @@ export class NewEpisodeAdminTriageComponent implements OnInit {
 	private readonly routePrefix;
 
 	constructor(private readonly newEpisodeService: NewEpisodeService,
-	            private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService,
-	            private router: Router,
-	            private snackBarService: SnackBarService,
-	            private contextService: ContextService) {
+		private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService,
+		private router: Router,
+		private snackBarService: SnackBarService,
+		private contextService: ContextService) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 
-	ngOnInit(): void {}
+	ngOnInit(): void { }
 
 	confirmEvent(triage: TriageAdministrativeDto): void {
 		this.triage = triage;
 		this.emergencyCareDto.triage = this.triage;
-		this.emergencyCareDto.administrative = this.newEpisodeService.getAdministrativeAdmission();
+		this.emergencyCareDto.administrative = this.newEpisodeService.getAdministrativeAdmissionDto();
 		this.emergencyCareEpisodeService.createAdministrative(this.emergencyCareDto).subscribe(
 			emergencyCareId =>
 				this.router.navigate([this.routePrefix + ROUTE_EMERGENCY_CARE + '/episodio/' + emergencyCareId]),
@@ -41,8 +41,7 @@ export class NewEpisodeAdminTriageComponent implements OnInit {
 	}
 
 	cancelEvent(): void {
-		//TODO send parameters
-		this.router.navigate([this.routePrefix + ROUTE_EMERGENCY_CARE + '/nuevo-episodio/administrativa']);
+		this.router.navigate([this.routePrefix + ROUTE_EMERGENCY_CARE + '/nuevo-episodio/administrativa'], { state: { commingBack: true } });
 	}
 
 }

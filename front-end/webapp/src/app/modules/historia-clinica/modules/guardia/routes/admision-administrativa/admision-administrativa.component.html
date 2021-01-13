@@ -98,7 +98,7 @@
 
 		<h2 [translate]="'Intervención policial'"></h2>
 		<mat-radio-group name="policeIntervention" id="policeInterventionRadio" (change)="onChange($event)">
-			<mat-radio-button id="policeIntervention" value='true'>
+			<mat-radio-button id="policeIntervention" value='true' [checked]="hasPoliceIntervention">
 				Si
 			</mat-radio-button>
 			<mat-radio-button id="withoutPoliceIntervention" value='false'>

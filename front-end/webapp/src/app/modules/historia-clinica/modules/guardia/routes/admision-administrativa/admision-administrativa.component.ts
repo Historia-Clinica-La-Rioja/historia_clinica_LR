@@ -3,10 +3,11 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import {
 	BasicPatientDto,
+	DateDto,
 	MasterDataInterface,
 	NewEmergencyCareDto,
 	PatientMedicalCoverageDto,
-	PersonPhotoDto, PoliceInterventionDto
+	PersonPhotoDto, PoliceInterventionDto, TimeDto
 } from '@api-rest/api-model';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
@@ -20,11 +21,13 @@ import { Observable } from 'rxjs';
 import { MotivoNuevaConsultaService } from 'src/app/modules/historia-clinica/modules/ambulatoria/services/motivo-nueva-consulta.service';
 import { SnomedService } from 'src/app/modules/historia-clinica/services/snomed.service';
 import { Patient, SearchPatientComponent } from 'src/app/modules/pacientes/component/search-patient/search-patient.component';
-import { NewEpisodeService } from '../../services/new-episode.service';
+import { AdministrativeAdmission, NewEpisodeService } from '../../services/new-episode.service';
 import { Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
 import { PatientService } from "@api-rest/services/patient.service";
-import { dateToDateDto, dateToTimeDto } from "@api-rest/mapper/date-dto.mapper";
+import { dateDtoToDate, dateToDateDto, dateToTimeDto } from "@api-rest/mapper/date-dto.mapper";
+import { Moment } from 'moment';
+import { dateToMoment } from '@core/utils/moment.utils';
 
 @Component({
 	selector: 'app-admision-administrativa',
@@ -47,7 +50,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 	form: FormGroup;
 	today: Date = new Date();
 
-	motivoNuevaConsultaService: MotivoNuevaConsultaService; // sacarlo de historia clinica
+	motivoNuevaConsultaService: MotivoNuevaConsultaService;
 	readonly WITH_DOCTOR_IN_AMBULANCE = 3;
 	readonly WITHOUT_DOCTOR_IN_AMBULANCE = 4;
 	private readonly routePrefix;
@@ -74,35 +77,42 @@ export class AdmisionAdministrativaComponent implements OnInit {
 
 	ngOnInit(): void {
 
-		let administrativeAdmissionDto = this.newEpisodeService.getAdministrativeAdmission();
-		if(administrativeAdmissionDto?.patient?.id) {
-			this.loadPatient(administrativeAdmissionDto.patient.id);
-		}
-		this.form = this.formBuilder.group({
-			patientMedicalCoverageId: [administrativeAdmissionDto?.patient.patientMedicalCoverageId],
-			emergencyCareTypeId: [administrativeAdmissionDto?.typeId],
-			emergencyCareEntranceTypeId: [administrativeAdmissionDto?.entranceTypeId],
-			ambulanceCompanyId: [administrativeAdmissionDto?.ambulanceCompanyId],
-			dateCall: [administrativeAdmissionDto?.policeIntervention?.dateCall],
-			timeCall: [administrativeAdmissionDto?.policeIntervention?.timeCall],
-			plateNumber: [administrativeAdmissionDto?.policeIntervention?.plateNumber],
-			firstName: [administrativeAdmissionDto?.policeIntervention?.firstName],
-			lastName: [administrativeAdmissionDto?.policeIntervention?.lastName],
-
-		});
-		if(administrativeAdmissionDto?.policeIntervention){
-			this.hasPoliceIntervention = true;
-		}
 		this.emergencyCareType$ = this.emergencyCareMasterData.getType();
 		this.emergencyCareEntranceType$ = this.emergencyCareMasterData.getEntranceType();
-	}
 
-	loadPatient(patientId: number): void {
-		this.patientService.getPatientBasicData(patientId).subscribe((basicData: BasicPatientDto) => {
-			this.patientService.getPatientPhoto(patientId).subscribe((photo: PersonPhotoDto) => {
-				this.setPatientAndMedicalCoverages(basicData, photo);
-			})
+		this.form = this.formBuilder.group({
+			patientMedicalCoverageId: [null],
+			emergencyCareTypeId: [null],
+			emergencyCareEntranceTypeId: [null],
+			ambulanceCompanyId: [null],
+			dateCall: [null],
+			timeCall: [null],
+			plateNumber: [null],
+			firstName: [null],
+			lastName: [null],
+			reasons: [null],
+			patientId: [null]
 		});
+
+		if (window.history.state.commingBack) {
+
+			const administrativeAdmission: AdministrativeAdmission = this.newEpisodeService.getAdministrativeAdmission();
+			if (!administrativeAdmission) {
+				return;
+			}
+			this.form.setValue(administrativeAdmission);
+
+			this.hasPoliceIntervention = this.newEpisodeService.hasPoliceIntervention();
+
+			if (administrativeAdmission?.patientId) {
+				this.loadPatient(administrativeAdmission.patientId);
+			}
+
+			this.form.value.reasons.forEach(reason => this.motivoNuevaConsultaService.add(reason));
+
+		} else {
+			this.newEpisodeService.destroy();
+		}
 
 	}
 
@@ -155,20 +165,16 @@ export class AdmisionAdministrativaComponent implements OnInit {
 	}
 
 	continue(): void {
-		const formValue = this.form.value;
-		const policeIntervention: PoliceInterventionDto = this.hasPoliceIntervention ? this.toPoliceIntervention(formValue) : null;
-		const newEmergencyCareDto: NewEmergencyCareDto = {
-			patient: {
-				id: this.selectedPatient?.id,
-				patientMedicalCoverageId: formValue.patientMedicalCoverageId,
-			},
-			reasons: this.motivoNuevaConsultaService.getMotivosConsulta().map(s => s.snomed),
-			typeId: formValue.emergencyCareTypeId,
-			entranceTypeId: formValue.emergencyCareEntranceTypeId,
-			ambulanceCompanyId: formValue.ambulanceCompanyId,
-			policeIntervention,
+		this.form.controls.reasons.setValue(this.motivoNuevaConsultaService.getMotivosConsulta());
+
+		if (this.selectedPatient) {
+			this.form.controls.patientId.setValue(this.selectedPatient.id);
 		}
-		this.goToBasicTriage(newEmergencyCareDto);
+
+		const formValue: AdministrativeAdmission = this.form.value;
+		if (this.form.valid) {
+			this.goToBasicTriage(formValue);
+		}
 
 	}
 
@@ -198,8 +204,8 @@ export class AdmisionAdministrativaComponent implements OnInit {
 		}
 	}
 
-	goToBasicTriage(administrativeAdmisionDto: NewEmergencyCareDto): void {
-		this.newEpisodeService.setAdministrativeAdmission(administrativeAdmisionDto);
+	goToBasicTriage(administrativeAdmission: AdministrativeAdmission): void {
+		this.newEpisodeService.setAdministrativeAdmission(administrativeAdmission);
 		const url = `${this.routePrefix}guardia/nuevo-episodio/triage-administrativo`;
 		this.router.navigateByUrl(url);
 	}
@@ -220,29 +226,12 @@ export class AdmisionAdministrativaComponent implements OnInit {
 		});
 	}
 
-	private toPoliceIntervention(formValue): PoliceInterventionDto {
+	private loadPatient(patientId: number): void {
+		this.patientService.getPatientBasicData(patientId).subscribe((basicData: BasicPatientDto) => {
+			this.patientService.getPatientPhoto(patientId).subscribe((photo: PersonPhotoDto) => {
+				this.setPatientAndMedicalCoverages(basicData, photo);
+			})
+		});
 
-		return {
-			dateCall: formValue.dateCall ? dateToDateDto(formValue.dateCall.toDate()) : undefined,
-			timeCall: formValue.timeCall ? dateToTimeDto(getDateWithTime(getTimeArray(formValue.timeCall))) : undefined,
-			plateNumber: formValue.plateNumber,
-			firstName: formValue.firstName,
-			lastName: formValue.lastName
-		};
-
-		/**
-		 * eg. 12:00
-		 */
-		function getTimeArray(timeString): string[] {
-			return  timeString.split(':');
-		}
-
-		function getDateWithTime(time: string[]): Date {
-			let date = new Date();
-			date.setHours(Number(time[0]), Number(time[1]));
-			return date;
-		}
 	}
-
-
 }
