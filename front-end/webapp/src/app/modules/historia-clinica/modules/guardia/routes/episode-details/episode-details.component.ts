@@ -2,7 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { CompletePatientDto, PersonalInformationDto, PersonPhotoDto } from '@api-rest/api-model';
-import { EmergencyCareEpisodeService, ResponseEmergencyCareDto } from '@api-rest/services/emergency-care-episode.service';
+import {
+	EmergencyCareEpisodeService,
+	ResponseEmergencyCareDto
+} from '@api-rest/services/emergency-care-episode.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PatientService } from '@api-rest/services/patient.service';
 import { PersonService } from '@api-rest/services/person.service';
@@ -12,7 +15,8 @@ import { Observable } from 'rxjs';
 import { SearchPatientComponent } from 'src/app/modules/pacientes/component/search-patient/search-patient.component';
 import { TriageService } from '@api-rest/services/triage.service';
 import { Triage } from '../../components/triage-details/triage-details.component';
-import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { GuardiaMapperService } from '../../services/guardia-mapper.service';
+import { map } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-episode-details',
@@ -39,7 +43,8 @@ export class EpisodeDetailsComponent implements OnInit {
 		//No se puede hacer un llamado y que traiga todo de una? En un monton de lados debemos estar haciendo esto...
 		private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService,
 		private readonly dialog: MatDialog,
-		private readonly triageService: TriageService
+		private readonly triageService: TriageService,
+		private readonly guardiaMapperService: GuardiaMapperService
 
 	) { }
 
@@ -57,9 +62,9 @@ export class EpisodeDetailsComponent implements OnInit {
 						}
 					});
 
-				this.triageService.getAll(this.episodeId).subscribe((triageDto: any[]) => {
-					this.triage = this.mapTriageDtoToTriage(triageDto[0]);
-				});
+				this.triageService.getAll(this.episodeId)
+					.pipe(map((triages: any[]) => triages.map(this.guardiaMapperService.triageDtoToTriage)))
+					.subscribe((triages: Triage[]) => this.triage = triages[0]);
 			});
 
 	}
@@ -104,58 +109,5 @@ export class EpisodeDetailsComponent implements OnInit {
 
 		this.personPhoto$ = this.patientService.getPatientPhoto(patientId);
 	}
-
-	private mapTriageDtoToTriage(triageDto: any): Triage {
-		return {
-			creationDate: new Date(), // todo agregar dato real
-			category: {
-				id: triageDto.category.id,
-				name: triageDto.category.name,
-				colorHex: triageDto.category.color.code
-			},
-			professional: {
-				firstName: triageDto.professional.firstName,
-				lastName: triageDto.professional.lastName
-			},
-			doctorsOfficeDescription: triageDto.doctorsOffice?.description,
-			vitalSigns: triageDto.vitalSigns ? mapVitalSigns(triageDto.vitalSigns) : undefined,
-			appearance: {
-				bodyTemperatureDescription: triageDto.appearance?.bodyTemperature?.description,
-				cryingExcessive: triageDto.appearance?.cryingExcessive,
-				muscleHypertoniaDescription: triageDto.appearance?.muscleHypertonia?.description
-			}
-		};
-
-		function mapVitalSigns(vitalSigns) {
-			return {
-				bloodOxygenSaturation: {
-					value: vitalSigns.bloodOxygenSaturation.value,
-					effectiveTime: dateDtoToDate(vitalSigns.bloodOxygenSaturation.effectiveTime)
-				},
-				diastolicBloodPressure: {
-					value: vitalSigns.diastolicBloodPressure.value,
-					effectiveTime: dateDtoToDate(vitalSigns.diastolicBloodPressure.effectiveTime)
-				},
-				heartRate: {
-					value: vitalSigns.heartRate.value,
-					effectiveTime: dateDtoToDate(vitalSigns.heartRate.effectiveTime)
-				},
-				respiratoryRate: {
-					value: vitalSigns.respiratoryRate.value,
-					effectiveTime: dateDtoToDate(vitalSigns.respiratoryRate.effectiveTime)
-				},
-				systolicBloodPressure: {
-					value: vitalSigns.systolicBloodPressure.value,
-					effectiveTime: dateDtoToDate(vitalSigns.systolicBloodPressure.effectiveTime)
-				},
-				temperature: {
-					value: vitalSigns.temperature.value,
-					effectiveTime: dateDtoToDate(vitalSigns.temperature.effectiveTime)
-				}
-			};
-		}
-
-	}
-
 
 }

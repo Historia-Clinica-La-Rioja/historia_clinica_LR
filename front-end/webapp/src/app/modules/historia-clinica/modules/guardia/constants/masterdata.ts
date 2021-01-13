@@ -13,4 +13,10 @@ export enum Triages {
 	AZUL_NIVEL_5 = 5,
 }
 
+export enum EmergencyCareTypes {
+	ADULTO = 1,
+	PEDIATRIA = 2,
+	GINECOLOGIA = 3
+}
+
 export const SECTOR_AMBULATORIO = 1;
