@@ -111,7 +111,19 @@
 					"TITLE": "Último triage",
 					"NIVEL": "Nivel de urgencia",
 					"PROFESIONAL": "Profesional",
-					"UBICACION": "Ubicación"
+					"UBICACION": "Ubicación",
+					"APARIENCIA_RESPIRACION_CIRCULACION": "Apariencia, respiración y circulación",
+					"LLANTO_SIN_CONSUELO": "Llanto sin consuelo",
+					"TONO_MUSCULAR": "Tono muscular",
+					"RESPIRACION_TIRAJE": "Respiración con tiraje",
+					"RESPIRACION_ESTRIDOR": "Respiración con estridor",
+					"PERFUSION": "Perfusión",
+					"EVALUACION": "Evaluación",
+					"SI": "Si",
+					"NO": "No",
+					"NO_INFO": "Sin información"
+
+
 				}
 			},
 			"search_patient": {

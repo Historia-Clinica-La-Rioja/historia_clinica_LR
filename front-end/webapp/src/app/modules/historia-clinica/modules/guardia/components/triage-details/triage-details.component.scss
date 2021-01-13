@@ -5,11 +5,13 @@ section {
 .info {
 	& > span:first-child {
 		font-size: 12px;
+		font-weight: normal;
 		line-height: 14px;
 	}
 
 	& > span:last-child {
-		line-height: 16px;
+		font-weight: 500;
+		line-height: 20px;
 	}
 }
 
@@ -21,4 +23,8 @@ section {
 
 .padding-to-align-chip {
 	padding: 1.5px 0;
+}
+
+.subtitle-weight {
+	font-weight: 500;
 }

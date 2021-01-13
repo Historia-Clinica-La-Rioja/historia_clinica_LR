@@ -21,12 +21,12 @@
 		<div class="flex-row">
 			<span class="mat-caption">Anterior</span>
 			<div class="flex-row">
-				<mat-icon *ngIf="vitalSign.previousValue.effectiveTime" inline color="accent"
+				<mat-icon *ngIf="vitalSign.previousValue?.effectiveTime" inline color="accent"
 					matTooltip="{{ vitalSign.previousValue.effectiveTime | date: 'dd/MM/yy - HH:mm' }} hs">
 					access_time
 				</mat-icon>
 				<span class="mat-body-1">
-					{{ vitalSign.previousValue.value || '-' }}
+					{{ vitalSign.previousValue?.value || '-' }}
 				</span>
 			</div>
 		</div>

@@ -21,10 +21,10 @@ export interface VitalSingCurrentPrevious {
 	description: string;
 	currentValue?: {
 		value: number,
-		effectiveTime: Moment,
+		effectiveTime: Moment | Date,
 	};
 	previousValue?: {
 		value: number,
-		effectiveTime: Moment,
+		effectiveTime: Moment | Date,
 	};
 }
