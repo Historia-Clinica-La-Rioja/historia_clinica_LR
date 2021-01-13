@@ -15,6 +15,9 @@ import { PersonPhotoDto, BasicPatientDto } from "@api-rest/api-model";
 import {
 	AppFeature,
 } from '@api-rest/api-model';
+import { MatTabChangeEvent } from '@angular/material/tabs';
+
+const RESUMEN_INDEX = 0;
 
 @Component({
 	selector: 'app-ambulatoria-paciente',
@@ -76,6 +79,23 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 			if (this.dialogRef.isMinimized()) {
 				this.dialogRef.maximize();
 			}
+		}
+	}
+
+	onTabChanged(event: MatTabChangeEvent)
+	{
+		// TODO Utilizar este método para actualizar componentes asociados a Tabs
+
+		if (event.index == RESUMEN_INDEX){
+			this.ambulatoriaSummaryFacadeService.setFieldsToUpdate({
+				allergies: false,
+				familyHistories: false,
+				personalHistories: false,
+				vitalSigns: false,
+				medications: true,
+				anthropometricData: false,
+				problems: false
+			});
 		}
 	}
 }

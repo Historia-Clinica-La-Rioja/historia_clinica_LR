@@ -19,7 +19,7 @@
 
 		<mat-card id="tab_container" class="mat-typography">
 			<mat-card-content>
-				<mat-tab-group>
+				<mat-tab-group (selectedTabChange)="onTabChanged($event)">
 					<mat-tab id="tab_resumen">
 						<ng-template mat-tab-label>
 							<mat-icon>content_paste</mat-icon>
@@ -55,7 +55,7 @@
 						<ng-template matTabContent>
 							<button mat-flat-button color="primary" routerLink="./ordenes" fxFlexFill.xs *ngIf=false>
 								<span class="uppercase">Ordenes</span>
-							</button>	
+							</button>
 							<app-ordenes [patientId]="patientId"></app-ordenes>
 						</ng-template>
 					</mat-tab>
