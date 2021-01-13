@@ -5,7 +5,9 @@ import net.pladema.person.controller.dto.BMPersonDto;
 import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.controller.dto.BasicPersonalDataDto;
 import net.pladema.person.controller.dto.PersonPhotoDto;
+import net.pladema.person.controller.dto.PersonalInformationDto;
 import net.pladema.person.controller.mapper.PersonMapper;
+import net.pladema.person.repository.domain.PersonalInformation;
 import net.pladema.person.repository.entity.Gender;
 import net.pladema.person.repository.entity.IdentificationType;
 import net.pladema.person.repository.entity.Person;
@@ -83,6 +85,15 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 			Short genderId) {
 		List<Integer> result = personService.getPersonByDniAndGender(identificationTypeId, identificationNumber,
 				genderId);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public PersonalInformationDto getPersonalInformation(Integer personId) {
+		LOG.debug(ONE_INPUT_PARAMETER, personId);
+		PersonalInformation serviceResult = personService.getPersonalInformation(personId).orElse(null);
+		PersonalInformationDto result = personMapper.fromPersonalInformation(serviceResult);
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

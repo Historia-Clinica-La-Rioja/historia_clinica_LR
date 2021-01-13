@@ -13,15 +13,9 @@ import java.util.List;
 @NoArgsConstructor(force = true)
 public class NewEmergencyCareDto extends EmergencyCareDto {
 
-    private final EmergencyCarePatientDto patient;
-
-    private final String ambulanceCompanyId;
-
     @Builder(builderMethodName = "newAdministrativeBuilder")
-    public NewEmergencyCareDto(EmergencyCarePatientDto patient, List<SnomedDto> reasons, Short typeId,
-                               Short entranceTypeId, PoliceInterventionDto policeIntervention, String ambulanceCompanyId){
-        super(reasons, typeId, entranceTypeId, policeIntervention);
-        this.patient = patient;
-        this.ambulanceCompanyId = ambulanceCompanyId;
+    public NewEmergencyCareDto(List<SnomedDto> reasons, Short typeId,
+                               Short entranceTypeId, PoliceInterventionDto policeIntervention, String ambulanceCompanyId, EmergencyCarePatientDto patient){
+        super(reasons, typeId, entranceTypeId, policeIntervention, ambulanceCompanyId, patient);
     }
 }

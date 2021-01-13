@@ -1,6 +1,11 @@
 package net.pladema.emergencycare.service.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import net.pladema.emergencycare.repository.domain.EmergencyCareVo;
 import net.pladema.emergencycare.repository.entity.EmergencyCareEpisode;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareEntrance;
@@ -59,10 +64,15 @@ public class EmergencyCareBo {
         this.lastname = emergencyCareVo.getLastname();
         this.patientId = emergencyCareVo.getPatientId();
         this.triageCategoryId = emergencyCareVo.getTriageCategoryId();
-        this.emergencyCareType = EEmergencyCareType.getById(emergencyCareVo.getEmergencyCareType());
-        this.emergencyCareState = EEmergencyCareState.getById(emergencyCareVo.getEmergencyCareState());
-        this.doctorsOffice = emergencyCareVo.getDoctorsOffice();
+        this.institutionId = emergencyCareVo.getInstitutionId();
+        this.emergencyCareType = EEmergencyCareType.getById(emergencyCareVo.getEmergencyCareTypeId());
+        this.emergencyCareState = EEmergencyCareState.getById(emergencyCareVo.getEmergencyCareStateId());
+        this.emergencyCareEntrance = EEmergencyCareEntrance.getById(emergencyCareVo.getEmergencyCareEntranceTypeId());
+        this.doctorsOffice = emergencyCareVo.getDoctorsOfficeId();
         this.doctorsOfficeDescription = emergencyCareVo.getDoctorsOfficeDescription();
+        this.ambulanceCompanyId = emergencyCareVo.getAmbulanceCompanyId();
+        if (emergencyCareVo.getPoliceInterventionId()!= null)
+            this.policeIntervention.setId(emergencyCareVo.getPoliceInterventionId());
         this.createdOn = emergencyCareVo.getCreatedOn();
     }
 
@@ -71,10 +81,10 @@ public class EmergencyCareBo {
         this.patientId = emergencyCareEpisode.getPatientId();
         this.institutionId = emergencyCareEpisode.getInstitutionId();
         this.patientMedicalCoverageId = emergencyCareEpisode.getPatientMedicalCoverageId();
-        this.emergencyCareType = (emergencyCareEpisode.getEmergencyCareTypeId() != null) ?
-                EEmergencyCareType.getById(emergencyCareEpisode.getEmergencyCareTypeId()) : null;
         this.emergencyCareEntrance = ((emergencyCareEpisode.getEmergencyCareEntranceTypeId()) != null) ?
                 EEmergencyCareEntrance.getById(emergencyCareEpisode.getEmergencyCareEntranceTypeId()) : null;
+        this.emergencyCareType = (emergencyCareEpisode.getEmergencyCareTypeId() != null) ?
+                EEmergencyCareType.getById(emergencyCareEpisode.getEmergencyCareTypeId()) : null;
         this.emergencyCareState = (emergencyCareEpisode.getEmergencyCareStateId() != null) ?
                 EEmergencyCareState.getById(emergencyCareEpisode.getEmergencyCareStateId()) : null;
         this.ambulanceCompanyId = emergencyCareEpisode.getAmbulanceCompanyId();

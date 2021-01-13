@@ -474,7 +474,9 @@ export interface EffectiveClinicalObservationDto extends ClinicalObservationDto 
 }
 
 export interface EmergencyCareDto extends Serializable {
+    ambulanceCompanyId: string;
     entranceTypeId: number;
+    patient: EmergencyCarePatientDto;
     policeIntervention: PoliceInterventionDto;
     reasons: SnomedDto[];
     typeId: number;
@@ -843,8 +845,6 @@ export interface NewDosageDto extends Serializable {
 }
 
 export interface NewEmergencyCareDto extends EmergencyCareDto {
-    ambulanceCompanyId: string;
-    patient: EmergencyCarePatientDto;
 }
 
 export interface NewMedicalRequestDto {
@@ -1128,6 +1128,8 @@ export interface ResponseAnamnesisDto extends AnamnesisDto {
 }
 
 export interface ResponseEmergencyCareDto extends EmergencyCareDto {
+    createdOn: Date;
+    emergencyCareStateId: number;
     id: number;
 }
 

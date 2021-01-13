@@ -4,18 +4,27 @@ import io.swagger.annotations.Api;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.service.ReasonExternalService;
 import net.pladema.emergencycare.controller.dto.ECAdministrativeDto;
 import net.pladema.emergencycare.controller.dto.ECAdultGynecologicalDto;
-import net.pladema.emergencycare.controller.dto.EmergencyCareListDto;
 import net.pladema.emergencycare.controller.dto.ECPediatricDto;
+import net.pladema.emergencycare.controller.dto.EmergencyCareListDto;
 import net.pladema.emergencycare.controller.dto.ResponseEmergencyCareDto;
 import net.pladema.emergencycare.controller.mapper.EmergencyCareMapper;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
+import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
+import net.pladema.person.controller.service.PersonExternalService;
 import net.pladema.sgx.masterdata.repository.MasterDataProjection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -24,7 +33,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/institution/{institutionId}/emergency-care/episodes")
-@Api(value = "Emergency care Episodes", tags = { "Emergency care Episodes" })
+@Api(value = "Emergency care Episodes", tags = {"Emergency care Episodes"})
 public class EmergencyCareEpisodeController {
 
     private static final Logger LOG = LoggerFactory.getLogger(EmergencyCareEpisodeController.class);
@@ -35,13 +44,19 @@ public class EmergencyCareEpisodeController {
 
     private final ReasonExternalService reasonExternalService;
 
+    private final PersonExternalService personExternalService;
+
+    private final PatientExternalMedicalCoverageService patientExternalMedicalCoverageService;
+
     public EmergencyCareEpisodeController(EmergencyCareEpisodeService emergencyCareEpisodeService,
                                           EmergencyCareMapper emergencyCareMapper,
-                                          ReasonExternalService reasonExternalService){
+                                          ReasonExternalService reasonExternalService, PersonExternalService personExternalService, PatientExternalMedicalCoverageService patientExternalMedicalCoverageService){
         super();
         this.emergencyCareEpisodeService = emergencyCareEpisodeService;
         this.emergencyCareMapper=emergencyCareMapper;
         this.reasonExternalService = reasonExternalService;
+        this.personExternalService = personExternalService;
+        this.patientExternalMedicalCoverageService = patientExternalMedicalCoverageService;
     }
 
     @GetMapping
@@ -99,15 +114,15 @@ public class EmergencyCareEpisodeController {
 
     @GetMapping("/{episodeId}/administrative")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
-    public ResponseEntity<ResponseEmergencyCareDto> getAdministrative(
-            @PathVariable(name = "institutionId") Integer institutionId,
-            @PathVariable(name = "episodeId") Integer episodeId) {
-        LOG.debug("Input parameters -> institutionId {}, episodeId {}", institutionId, episodeId);
-        EmergencyCareBo episode = emergencyCareEpisodeService.get(episodeId);
-        ResponseEmergencyCareDto result = emergencyCareMapper.toResponseEmergencyCareDto(episode);
-        LOG.debug("Output -> {}", result);
-        return ResponseEntity.ok().body(result);
-    }
+	public ResponseEntity<ResponseEmergencyCareDto> getAdministrative(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "episodeId") Integer episodeId) {
+		LOG.debug("Input parameters -> institutionId {}, episodeId {}", institutionId, episodeId);
+		EmergencyCareBo episode = emergencyCareEpisodeService.get(episodeId, institutionId);
+		ResponseEmergencyCareDto result = emergencyCareMapper.toResponseEmergencyCareDto(episode);
+		LOG.debug("Output -> {}", result);
+		return ResponseEntity.ok().body(result);
+	}
 
     @GetMapping("/{episodeId}/state")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
@@ -145,5 +160,4 @@ public class EmergencyCareEpisodeController {
         LOG.debug("Output -> {}", result);
         return ResponseEntity.ok().body(result);
     }
-
 }

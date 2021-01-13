@@ -5,6 +5,7 @@ import net.pladema.person.controller.dto.BMPersonDto;
 import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.controller.dto.BasicPersonalDataDto;
 import net.pladema.person.controller.dto.PersonPhotoDto;
+import net.pladema.person.controller.dto.PersonalInformationDto;
 import net.pladema.person.repository.entity.PersonExtended;
 
 import java.util.List;
@@ -21,6 +22,8 @@ public interface PersonExternalService {
     PersonExtended updatePersonExtended(APatientDto patient, Integer personId);
     
     List<Integer> getPersonByDniAndGender(Short identificationTypeId, String identificationNumber, Short genderId);
+
+    PersonalInformationDto getPersonalInformation(Integer personId);
 
     BasicDataPersonDto getBasicDataPerson(Integer personId);
 

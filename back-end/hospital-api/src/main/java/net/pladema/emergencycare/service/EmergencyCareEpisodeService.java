@@ -5,11 +5,11 @@ import net.pladema.sgx.masterdata.repository.MasterDataProjection;
 
 import java.util.List;
 
-public interface EmergencyCareEpisodeService {
+public interface  EmergencyCareEpisodeService {
 
     List<EmergencyCareBo> getAll(Integer institutionId);
 
-    EmergencyCareBo get(Integer episodeId);
+    EmergencyCareBo get(Integer episodeId, Integer institutionId);
 
     EmergencyCareBo createAdministrative(EmergencyCareBo newEmergencyCare);
 
