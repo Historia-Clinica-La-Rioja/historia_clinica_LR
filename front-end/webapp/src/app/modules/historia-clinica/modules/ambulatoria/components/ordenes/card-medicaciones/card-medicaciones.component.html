@@ -4,15 +4,15 @@
 <app-summary-card id="medicacion"	[header]="medicacion"
                                     [editable]="true"
                                     [canEdit]="['ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']"
-                                    (openInNew)="openDialogNewMedication()">
+                                    (openInNew)="openDialogNewMedication(true)">
 
-    <div class="header-filters" fxLayout="row" fxLayoutGap="15px">
+    <div *ngIf="medicationsInfo?.length" class="header-filters" fxLayout="row" fxLayoutGap="15px">
         <div class="checkbox-div-header" fxFlex="5%">
             <mat-checkbox (change)="selectAllMedication($event.checked)"></mat-checkbox>
         </div>
 
         <div fxFlex="95%">
-            <button mat-button class="element-light-color" (click)="openDialogNewMedication()">
+            <button mat-button class="element-light-color" (click)="openDialogNewMedication(false)">
                 <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.RE_PRESCRIBE'"></span>
             </button>
             <button mat-button class="element-light-color" *ngIf="checkMedicationStatus(medicationStatus.ACTIVE)" (click)="openSuspendMedicationDialog()">
@@ -48,7 +48,7 @@
                                             <button mat-menu-item (click)="downloadRecipe(medicationInfo.id)">
                                                 <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.DOWNLOAD'"></span>
                                             </button>
-                                            <button mat-menu-item (click)="openDialogNewMedication(medicationInfo)">
+                                            <button mat-menu-item (click)="openDialogNewMedication(false, medicationInfo)">
                                                 <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.RE_PRESCRIBE'"></span>
                                             </button>
                                             <button mat-menu-item *ngIf="medicationInfo.statusId === medicationStatus.ACTIVE" (click)="openSuspendMedicationDialog(medicationInfo)">

@@ -53,60 +53,58 @@ export class CardMedicacionesComponent implements OnInit {
 			});
 	}
 
-	openDialogNewMedication(medication?: MedicationInfoDto) {
-		const medicationList = this.getMedicationList(medication);
+	openDialogNewMedication(isNewMedication: boolean, medication?: MedicationInfoDto) {
+		const medicationList = isNewMedication ? null : this.getMedicationList(medication);
 
-		if (medicationList) {
-			const newMedicationDialog = this.dialog.open(NuevaPrescripcionComponent,
-				{
-					data: {
-						patientId: this.patientId,
-						titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.MEDICATION_TITLE',
-						addLabel: 'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.ADD_MEDICATION_LABEL',
-						prescriptionType: PrescriptionTypes.MEDICATION,
-						prescriptionItemList: medicationList && medicationList.map(m => this.prescripcionesService.toNewPrescriptionItem(PrescriptionTypes.MEDICATION, m)),
-						addPrescriptionItemDialogData: {
-							titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.MEDICATION_TITLE',
-							searchSnomedLabel: 'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.MEDICATION',
-							showDosage: true,
-							showStudyCategory: false,
-							eclTerm: 'medicine',
-						}
-					},
-					width: '35%',
-				});
-	
-			newMedicationDialog.afterClosed().subscribe((newPrescription: PrescriptionDto) => {
-				if(newPrescription) {
-					const newMedicationRequest$ = this.prescripcionesService.createPrescription(PrescriptionTypes.MEDICATION, newPrescription, this.patientId);
-					if (newPrescription.hasRecipe) {
-						const confirmPrescriptionDialog = this.dialog.open(ConfirmarPrescripcionComponent,
-							{
-								disableClose: true,
-								data: {
-									titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.MEDICATION_TITLE',
-									downloadButtonLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.DOWNLOAD_BUTTON_MEDICATION',
-									successLabel: 'ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_MEDICATION_SUCCESS',
-									errorLabel: 'ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_MEDICATION_ERROR',
-									prescriptionRequest: newMedicationRequest$,
-								},
-								width: '35%'
-							});
-	
-						confirmPrescriptionDialog.afterClosed().subscribe((hasError: boolean) => {
-							if (!hasError) {
-								this.getMedication();
-							}
-						});
-					} else {
-						newMedicationRequest$.subscribe((newRecipe: number) => {
-							this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_MEDICATION_SUCCESS');
-							this.getMedication();
-						}, _ => {this.snackBarService.showError('ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_MEDICATION_ERROR')});
+		const newMedicationDialog = this.dialog.open(NuevaPrescripcionComponent,
+			{
+				data: {
+					patientId: this.patientId,
+					titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.MEDICATION_TITLE',
+					addLabel: 'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.ADD_MEDICATION_LABEL',
+					prescriptionType: PrescriptionTypes.MEDICATION,
+					prescriptionItemList: medicationList && medicationList.map(m => this.prescripcionesService.toNewPrescriptionItem(PrescriptionTypes.MEDICATION, m)),
+					addPrescriptionItemDialogData: {
+						titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.MEDICATION_TITLE',
+						searchSnomedLabel: 'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.MEDICATION',
+						showDosage: true,
+						showStudyCategory: false,
+						eclTerm: 'medicine',
 					}
-				}
+				},
+				width: '35%',
 			});
-		}
+
+		newMedicationDialog.afterClosed().subscribe((newPrescription: PrescriptionDto) => {
+			if(newPrescription) {
+				const newMedicationRequest$ = this.prescripcionesService.createPrescription(PrescriptionTypes.MEDICATION, newPrescription, this.patientId);
+				if (newPrescription.hasRecipe) {
+					const confirmPrescriptionDialog = this.dialog.open(ConfirmarPrescripcionComponent,
+						{
+							disableClose: true,
+							data: {
+								titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.MEDICATION_TITLE',
+								downloadButtonLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.DOWNLOAD_BUTTON_MEDICATION',
+								successLabel: 'ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_MEDICATION_SUCCESS',
+								errorLabel: 'ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_MEDICATION_ERROR',
+								prescriptionRequest: newMedicationRequest$,
+							},
+							width: '35%'
+						});
+
+					confirmPrescriptionDialog.afterClosed().subscribe((hasError: boolean) => {
+						if (!hasError) {
+							this.getMedication();
+						}
+					});
+				} else {
+					newMedicationRequest$.subscribe((newRecipe: number) => {
+						this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_MEDICATION_SUCCESS');
+						this.getMedication();
+					}, _ => {this.snackBarService.showError('ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_MEDICATION_ERROR')});
+				}
+			}
+		});
 	}
 
 	openSuspendMedicationDialog(medication?: MedicationInfoDto) {
