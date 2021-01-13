@@ -2,9 +2,9 @@
 
 	<h1 translate="guardia.episode.TITLE"></h1>
 
-	<div fxLayoutGap="10px">
+	<div fxLayoutGap="24px">
 
-		<div fxFlex="55" fxLayout="column" fxLayoutGap="10px">
+		<div fxFlex="70" fxLayout="column" fxLayoutGap="30px">
 			<mat-card class="grid">
 
 				<div fxLayout="column" fxLayoutGap="1px">
@@ -79,7 +79,7 @@
 			</mat-card>
 		</div>
 
-		<div>
+		<div fxFlex="30%">
 			<app-patient-card [patient]="patientBasicData" [personPhoto]="personPhoto$ | async">
 				<div content>
 					<app-personal-information [personalInformation]="personalInformation"
