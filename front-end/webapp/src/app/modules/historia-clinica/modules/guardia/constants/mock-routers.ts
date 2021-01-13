@@ -421,7 +421,7 @@ export const MOCKS_GUARDIA = [
 							description: 'Resucitación',
 							color: {
 								name: 'Rojo',
-								code: '##FF0000'
+								code: '#FF0000'
 							}
 						},
 						professional: {
@@ -446,7 +446,7 @@ export const MOCKS_GUARDIA = [
 							description: 'Resucitación',
 							color: {
 								name: 'Rojo',
-								code: '##FF0000'
+								code: '#FF0000'
 							}
 						},
 						professional: {
@@ -503,8 +503,83 @@ export const MOCKS_GUARDIA = [
 							}
 						},
 						notes: 'El paciente muestra signos de mejora'
+					},
+					{
+						id: 3,
+						creationDate: {
+							date: {day: 11, month: 1, year: 2021},
+							time: {hours: 10, minutes: 30}
+						},
+						category: {
+							id: 1,
+							name: 'Nivel I',
+							description: 'Resucitación',
+							color: {
+								name: 'Rojo',
+								code: '#FF0000'
+							}
+						},
+						professional: {
+							id: 1,
+							firstName: 'Lucas',
+							lastName: 'Bergottini'
+						},
+						doctorsOffice: {
+							id: 1,
+							description: 'Sala N'
+						},
+						appearance: {
+							bodyTemperature: {
+								id: 1,
+								description: 'Fiebre'
+							},
+							muscleHypertonia: {
+								id: 1,
+								description: 'Hipertonía'
+							},
+							cryingExcessive: undefined
+						},
+						breathing: {
+							respiratoryRetraction: {
+								id: 1,
+								description: 'Intercostal',
+							},
+							stridor: undefined,
+							respiratoryRate: {
+								value: 10,
+								effectiveTime: {   // DateTimeDto
+									date: { day: 21, month: 11, year: 2020},
+									time: { hours: 12, minutes: 0, seconds: 12},
+								}
+							},
+							bloodOxygenSaturation: {
+								value: 10,
+								effectiveTime: {   // DateTimeDto
+									date: { day: 21, month: 11, year: 2020},
+									time: { hours: 12, minutes: 0, seconds: 12},
+								}
+							}
+						},
+						circulation: {
+							perfusion: {
+								id: 1,
+								description: 'Normal'
+							},
+							heartRate: {
+								value: 10,
+								effectiveTime: {   // DateTimeDto
+									date: { day: 21, month: 11, year: 2020},
+									time: { hours: 12, minutes: 0, seconds: 12},
+								}
+							}
+						},
+						notes: 'El paciente se encuentra tranquilo'
 					}
 				],
+				comments: 'En el listado se muestra uno de tipo adulto con id 1, uno de tipo ginecologico con id 2 ' +
+					'y con id 3 uno de tipo pediatrico. Si bien no es un escenario real que esten los 3 mezclados ' +
+					'en una misma lista, se hizo para poder mostrar el cuerpo de los tres tipos de triage contenidos' +
+					' en el mismo dto'
 			},
 			{
 				name: 'PersonController.getPersonalInformation(): PersonalInformationDto',
