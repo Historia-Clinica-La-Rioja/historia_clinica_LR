@@ -1,13 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import {
 	BasicPatientDto,
-	DateDto,
 	MasterDataInterface,
-	NewEmergencyCareDto,
 	PatientMedicalCoverageDto,
-	PersonPhotoDto, PoliceInterventionDto, TimeDto
+	PersonPhotoDto,
 } from '@api-rest/api-model';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
@@ -24,11 +22,8 @@ import { Patient, SearchPatientComponent } from 'src/app/modules/pacientes/compo
 import { AdministrativeAdmission, NewEpisodeService } from '../../services/new-episode.service';
 import { Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
-import { PatientService } from "@api-rest/services/patient.service";
-import { dateDtoToDate, dateToDateDto, dateToTimeDto } from "@api-rest/mapper/date-dto.mapper";
-import { Moment } from 'moment';
-import { dateToMoment } from '@core/utils/moment.utils';
-
+import { PatientService } from '@api-rest/services/patient.service';
+import { AMBULANCE, PERSON, POLICE_OFFICER } from '@core/constants/validation-constants';
 @Component({
 	selector: 'app-admision-administrativa',
 	templateUrl: './admision-administrativa.component.html',
@@ -41,7 +36,11 @@ export class AdmisionAdministrativaComponent implements OnInit {
 	patientCardInfo: {
 		photo: PersonPhotoDto,
 		basicData: PatientBasicData
-	}
+	};
+
+	readonly POLICE_OFFICER = POLICE_OFFICER;
+	readonly PERSON = PERSON;
+	readonly AMBULANCE = AMBULANCE;
 
 	patientMedicalCoverages: PatientMedicalCoverageDto[];
 	emergencyCareEntranceType$: Observable<MasterDataInterface<number>[]>;
@@ -72,7 +71,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 
 	) {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, snomedService);
-		this.routePrefix = `institucion/${this.contextService.institutionId}/`
+		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 	}
 
 	ngOnInit(): void {
@@ -84,12 +83,12 @@ export class AdmisionAdministrativaComponent implements OnInit {
 			patientMedicalCoverageId: [null],
 			emergencyCareTypeId: [null],
 			emergencyCareEntranceTypeId: [null],
-			ambulanceCompanyId: [null],
+			ambulanceCompanyId: [null, Validators.maxLength(AMBULANCE.COMPANY_ID.max_length)],
 			dateCall: [null],
 			timeCall: [null],
-			plateNumber: [null],
-			firstName: [null],
-			lastName: [null],
+			plateNumber: [null, Validators.maxLength(POLICE_OFFICER.PLATE_NUMBER.max_length)],
+			firstName: [null, Validators.maxLength(PERSON.MAX_LENGTH.firstName)],
+			lastName: [null, Validators.maxLength(PERSON.MAX_LENGTH.firstName)],
 			reasons: [null],
 			patientId: [null]
 		});
@@ -198,8 +197,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 	setAmbulanceCompanyIdStatus(): void {
 		if (this.form.value.emergencyCareEntranceTypeId === this.WITH_DOCTOR_IN_AMBULANCE || this.form.value.emergencyCareEntranceTypeId === this.WITHOUT_DOCTOR_IN_AMBULANCE) {
 			this.form.controls.ambulanceCompanyId.enable();
-		}
-		else {
+		} else {
 			this.form.controls.ambulanceCompanyId.disable();
 		}
 	}
@@ -230,7 +228,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 		this.patientService.getPatientBasicData(patientId).subscribe((basicData: BasicPatientDto) => {
 			this.patientService.getPatientPhoto(patientId).subscribe((photo: PersonPhotoDto) => {
 				this.setPatientAndMedicalCoverages(basicData, photo);
-			})
+			});
 		});
 
 	}
