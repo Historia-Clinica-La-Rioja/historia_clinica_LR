@@ -225,12 +225,13 @@
 				"toast_messages": {
 					"POST_MEDICATION_SUCCESS": "Medicación agregada correctamente",
 					"POST_MEDICATION_ERROR": "Error al agregar medicación",
-					"POST_STUDY_SUCCESS": "Órden creada correctamente",
+					"POST_STUDY_SUCCESS": "Orden creada correctamente",
 					"POST_STUDY_ERROR": "Error al crear órden",
 					"POST_UPDATE_COVERAGE_SUCCESS": "Las coberturas fueron actualizadas correctamente",
 					"POST_UPDATE_COVERAGE_ERROR": "Ocurrió un error al actualizar las coberturas",
 					"MEDICATION_CHANGE_SUCCESS": "La medicación cambio de estado correctamente",
-					"MEDICATION_CHANGE_ERROR": "La medicación no puede cambiarse a este estado"
+					"MEDICATION_CHANGE_ERROR": "La medicación no puede cambiarse a este estado",
+					"DOWNLOAD_RECIPE_SUCCESS": "La receta se descargó correctamente"
 				},
 				"menu_items": {
 					"DOWNLOAD": "Descargar receta",

@@ -137,7 +137,7 @@ export class CardMedicacionesComponent implements OnInit {
 
 	downloadRecipe(medicationId: number) {
 		this.prescripcionesService.downloadRecipe(this.patientId, medicationId).subscribe(() => {
-			this.snackBarService.showSuccess('La receta se descargo correctamente')
+			this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.DOWNLOAD_RECIPE_SUCCESS')
 		});
 	}
 
