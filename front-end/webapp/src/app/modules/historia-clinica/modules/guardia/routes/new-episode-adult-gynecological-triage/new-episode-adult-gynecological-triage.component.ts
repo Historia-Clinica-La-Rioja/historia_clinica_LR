@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TriageAdultGynecologicalDto } from '@api-rest/api-model';
+import { TriageAdultGynecologicalDto } from "../../services/new-episode.service";
 
 @Component({
 	selector: 'app-new-episode-adult-gynecological-triage',

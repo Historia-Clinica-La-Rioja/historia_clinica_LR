@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { NewEmergencyCareDto } from "@api-rest/api-model";
+import { DateTimeDto, NewEmergencyCareDto, TriageNoAdministrativeDto } from "@api-rest/api-model";
 
 @Injectable()
 export class NewEpisodeService {
@@ -21,3 +21,34 @@ export class NewEpisodeService {
 	}
 }
 
+export interface TriageAdultGynecologicalDto {
+	categoryId: number;
+	doctorsOfficeId: number;
+	notes: string;
+	vitalSigns?: {
+		bloodOxygenSaturation?: {
+			effectiveTime: DateTimeDto,
+			value: number,
+		},
+		diastolicBloodPressure?: {
+			effectiveTime: DateTimeDto,
+			value: number,
+		},
+		heartRate?: {
+			effectiveTime: DateTimeDto,
+			value: number,
+		},
+		respiratoryRate?: {
+			effectiveTime: DateTimeDto,
+			value: number,
+		},
+		systolicBloodPressure?: {
+			effectiveTime: DateTimeDto,
+			value: number,
+		},
+		temperature?: {
+			effectiveTime: DateTimeDto,
+			value: number,
+		},
+	};
+}

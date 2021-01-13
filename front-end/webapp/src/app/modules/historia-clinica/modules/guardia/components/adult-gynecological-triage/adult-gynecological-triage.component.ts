@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { TriageAdultGynecologicalDto } from '@api-rest/api-model';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { dateToDateTimeDto } from '@api-rest/mapper/date-dto.mapper';
+import { TriageAdultGynecologicalDto } from "../../services/new-episode.service";
 
 @Component({
 	selector: 'app-adult-gynecological-triage',
