@@ -56,6 +56,10 @@ export class EpisodeDetailsComponent implements OnInit {
 				this.emergencyCareEpisodeService.getAdministrative()
 					.subscribe((responseEmergencyCare: ResponseEmergencyCareDto) => {
 						this.responseEmergencyCare = responseEmergencyCare;
+						this.triage = {
+							...this.triage,
+							emergencyCareType: this.responseEmergencyCare.emergencyCareType?.id
+						};
 
 						if (responseEmergencyCare.patientId) {
 							this.loadPatient(responseEmergencyCare.patientId);
@@ -64,7 +68,7 @@ export class EpisodeDetailsComponent implements OnInit {
 
 				this.triageService.getAll(this.episodeId)
 					.pipe(map((triages: any[]) => triages.map(this.guardiaMapperService.triageDtoToTriage)))
-					.subscribe((triages: Triage[]) => this.triage = triages[0]);
+					.subscribe((triages: Triage[]) => this.triage = {...this.triage, ...triages[0]});
 			});
 
 	}

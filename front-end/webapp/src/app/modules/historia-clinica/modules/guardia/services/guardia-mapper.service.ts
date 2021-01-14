@@ -15,7 +15,6 @@ export class GuardiaMapperService {
 
 	private static _mapTriageDtoToTriage(triageDto: any): Triage {
 		return {
-			emergencyCareType: EmergencyCareTypes.PEDIATRIA,
 			creationDate: dateTimeDtoToDate(triageDto.creationDate),
 			category: {
 				id: triageDto.category.id,
