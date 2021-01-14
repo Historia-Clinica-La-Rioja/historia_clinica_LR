@@ -8,8 +8,8 @@
 				<span class="mat-caption">Último resultado</span>
 			</div>
 			<div class="current-value">
-				<mat-icon *ngIf="vitalSign.currentValue.effectiveTime" inline color="accent"
-					matTooltip="{{ vitalSign.currentValue.effectiveTime | date: 'dd/MM/yy - HH:mm' }} hs">
+				<mat-icon *ngIf="vitalSign.currentValue?.effectiveTime" inline color="accent"
+					matTooltip="{{ vitalSign.currentValue?.effectiveTime | date: 'dd/MM/yy - HH:mm' }} hs">
 					access_time
 				</mat-icon>
 				<span class="value">

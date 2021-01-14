@@ -13,7 +13,11 @@ export class TriageDetailsComponent implements OnInit {
 	@Input('triage')
 	set triageData(triage: Triage) {
 		this.triage = triage;
-		this.vitalSignsCurrent = this.mapToVitalSignCurrentPrevious(triage);
+		this.vitalSignsCurrent = includesVitalSigns() ? this.mapToVitalSignCurrentPrevious(triage) : undefined;
+
+		function includesVitalSigns(): boolean {
+			return !!triage.emergencyCareType;
+		}
 	}
 
 	readonly triages = Triages;
@@ -30,9 +34,13 @@ export class TriageDetailsComponent implements OnInit {
 
 	private mapToVitalSignCurrentPrevious(triage: Triage): VitalSingCurrentPrevious[] {
 		const vitalSignsCurrent: VitalSingCurrentPrevious[] = [];
-
-		if (containsVitalSigns()) {
-			const LABELS = {
+		const LABELS = triage.emergencyCareType === EmergencyCareTypes.PEDIATRIA ?
+			{
+				respiratoryRate: 'Frecuencia respiratoria',
+				bloodOxygenSaturation: 'Saturación de oxígeno',
+				heartRate: 'Frecuencia cardíaca',
+			} :
+			{
 				systolicBloodPressure: 'Tensión arterial sistólica',
 				diastolicBloodPressure: 'Tensión arterial diastólica',
 				heartRate: 'Frecuencia cardíaca',
@@ -41,33 +49,25 @@ export class TriageDetailsComponent implements OnInit {
 				bloodOxygenSaturation: 'Saturación de oxígeno',
 			};
 
-			Object.keys(LABELS).forEach(key => {
+		Object.keys(LABELS).forEach(key => {
 				const vitalSign = getVitalSign(key);
-				if (vitalSign) {
-					vitalSignsCurrent.push({
-						description: LABELS[key],
-						currentValue: {
-							value: vitalSign.value,
-							effectiveTime: vitalSign.effectiveTime
-						}
-					});
-				}
-				}
-			);
-		}
+				vitalSignsCurrent.push({
+					description: LABELS[key],
+					currentValue: {
+						value: vitalSign?.value || undefined,
+						effectiveTime: vitalSign?.effectiveTime || undefined
+					}
+				});
+			}
+		);
 
 		return vitalSignsCurrent;
-
-		function containsVitalSigns(): boolean {
-			return !!(triage.vitalSigns || triage.breathing?.respiratoryRate || triage.breathing?.bloodOxygenSaturation
-				|| triage.circulation?.heartRate);
-		}
 
 		function getVitalSign(key): { value: number, effectiveTime: Date } {
 			if (triage.vitalSigns && triage.vitalSigns[key]) {
 				return triage.vitalSigns[key];
 			}
-			if (triage.breathing && key === 'respiratoryRate' || key === 'bloodOxygenSaturation') {
+			if (triage.breathing && (key === 'respiratoryRate' || key === 'bloodOxygenSaturation')) {
 				return triage.breathing[key];
 			}
 			if (triage.circulation && key === 'heartRate') {

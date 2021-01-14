@@ -30,65 +30,68 @@
 		</div>
 	</section>
 
-	<section id="pediatric" *ngIf="triage.emergencyCareType === emergencyCareTypes.PEDIATRIA"
-			 fxLayout="column" fxLayoutGap="16px">
-		<h3 class="subtitle-weight">{{ 'guardia.episode.triage.ultimo.APARIENCIA_RESPIRACION_CIRCULACION' | translate }}</h3>
-		<div gdColumns="repeat(3, 1fr)" gdGap="20px">
-			<div id="temperatura" class="info" fxLayout="column" fxLayoutGap="5px" fxLayoutAlign="space-between">
-				<span>{{ 'guardia.episode.triage.ultimo.TEMPERATURA' | translate }}</span>
-				<span *ngIf="triage.appearance.bodyTemperatureDescription else noInfo">
+	<section id="body" fxLayout="column" fxLayoutGap="16px">
+		<div id="pediatric" *ngIf="triage.emergencyCareType === emergencyCareTypes.PEDIATRIA">
+			<h3 class="subtitle-weight">{{ 'guardia.episode.triage.ultimo.APARIENCIA_RESPIRACION_CIRCULACION' | translate }}</h3>
+			<div gdColumns="repeat(3, 1fr)" gdGap="20px">
+				<div id="temperatura" class="info" fxLayout="column" fxLayoutGap="5px" fxLayoutAlign="space-between">
+					<span>{{ 'guardia.episode.triage.ultimo.TEMPERATURA' | translate }}</span>
+					<span *ngIf="triage.appearance?.bodyTemperatureDescription else noInfo">
 					{{ triage.appearance.bodyTemperatureDescription }}
 				</span>
-			</div>
+				</div>
 
-			<div id="llanto" class="info" fxLayout="column" fxLayoutGap="5px" fxLayoutAlign="space-between">
-				<span>{{ 'guardia.episode.triage.ultimo.LLANTO_SIN_CONSUELO' | translate }}</span>
-				<span *ngIf="(triage.appearance?.cryingExcessive === undefined) else crying_present">
+				<div id="llanto" class="info" fxLayout="column" fxLayoutGap="5px" fxLayoutAlign="space-between">
+					<span>{{ 'guardia.episode.triage.ultimo.LLANTO_SIN_CONSUELO' | translate }}</span>
+					<span *ngIf="(triage.appearance?.cryingExcessive === undefined) else crying_present">
 					{{ 'guardia.NO_INFO' | translate }}
 				</span>
-				<ng-template #crying_present>
-					<span *ngIf="triage.appearance.cryingExcessive else no">
+					<ng-template #crying_present>
+					<span *ngIf="triage.appearance?.cryingExcessive else no">
 						{{ 'guardia.episode.triage.ultimo.SI' | translate }}
 					</span>
-				</ng-template>
-			</div>
+					</ng-template>
+				</div>
 
-			<div id="tono_muscular" class="info" fxLayout="column" fxLayoutGap="5px" fxLayoutAlign="space-between">
-				<span>{{ 'guardia.episode.triage.ultimo.TONO_MUSCULAR' | translate }}</span>
-				<span *ngIf="triage.appearance.muscleHypertoniaDescription else noInfo">
+				<div id="tono_muscular" class="info" fxLayout="column" fxLayoutGap="5px" fxLayoutAlign="space-between">
+					<span>{{ 'guardia.episode.triage.ultimo.TONO_MUSCULAR' | translate }}</span>
+					<span *ngIf="triage.appearance?.muscleHypertoniaDescription else noInfo">
 					{{ triage.appearance.muscleHypertoniaDescription }}
 				</span>
-			</div>
+				</div>
 
-			<div id="respiracion_tiraje" class="info" fxLayout="column" fxLayoutGap="5px" fxLayoutAlign="space-between">
-				<span>{{ 'guardia.episode.triage.ultimo.RESPIRACION_TIRAJE' | translate }}</span>
-				<span *ngIf="triage.breathing.respiratoryRetractionDescription else noInfo">
+				<div id="respiracion_tiraje" class="info" fxLayout="column" fxLayoutGap="5px"
+					 fxLayoutAlign="space-between">
+					<span>{{ 'guardia.episode.triage.ultimo.RESPIRACION_TIRAJE' | translate }}</span>
+					<span *ngIf="triage.breathing?.respiratoryRetractionDescription else noInfo">
 					{{ triage.breathing.respiratoryRetractionDescription }}
 				</span>
-			</div>
+				</div>
 
-			<div id="respiracion_estridor" class="info" fxLayout="column" fxLayoutGap="5px" fxLayoutAlign="space-between">
-				<span>{{ 'guardia.episode.triage.ultimo.RESPIRACION_ESTRIDOR' | translate }}</span>
-				<span *ngIf="(triage.breathing?.stridor === undefined) else stridorPresent">
+				<div id="respiracion_estridor" class="info" fxLayout="column" fxLayoutGap="5px"
+					 fxLayoutAlign="space-between">
+					<span>{{ 'guardia.episode.triage.ultimo.RESPIRACION_ESTRIDOR' | translate }}</span>
+					<span *ngIf="(triage.breathing?.stridor === undefined) else stridorPresent">
 					{{ 'guardia.NO_INFO' | translate }}
 				</span>
-				<ng-template #stridorPresent>
-					<span *ngIf="triage.breathing.stridor else no">
+					<ng-template #stridorPresent>
+					<span *ngIf="triage.breathing?.stridor else no">
 						{{ 'guardia.episode.triage.ultimo.SI' | translate }}
 					</span>
-				</ng-template>
+					</ng-template>
 
-			</div>
+				</div>
 
-			<div id="perfusion" class="info" fxLayout="column" fxLayoutGap="5px" fxLayoutAlign="space-between">
-				<span>{{ 'guardia.episode.triage.ultimo.PERFUSION' | translate }}</span>
-				<span *ngIf="triage.circulation.perfusionDescription else noInfo">
+				<div id="perfusion" class="info" fxLayout="column" fxLayoutGap="5px" fxLayoutAlign="space-between">
+					<span>{{ 'guardia.episode.triage.ultimo.PERFUSION' | translate }}</span>
+					<span *ngIf="triage.circulation?.perfusionDescription else noInfo">
 					{{ triage.circulation.perfusionDescription }}
 				</span>
+				</div>
 			</div>
 		</div>
 
-		<div fxLayout="row wrap" *ngIf="vitalSignsCurrent">
+		<div fxLayout="row wrap" *ngIf="vitalSignsCurrent?.length">
 			<app-signo-vital-current-previous
 					*ngFor="let vitalSign of vitalSignsCurrent"
 					[data]="vitalSign">

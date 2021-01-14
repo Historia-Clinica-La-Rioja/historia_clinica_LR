@@ -22,10 +22,7 @@ export class GuardiaMapperService {
 				name: triageDto.category.name,
 				colorHex: triageDto.category.color.code
 			},
-			professional: {
-				firstName: triageDto.professional.firstName,
-				lastName: triageDto.professional.lastName
-			},
+			professional: triageDto.professional,
 			doctorsOfficeDescription: triageDto.doctorsOffice?.description,
 			vitalSigns: mapVitalSigns(triageDto.vitalSigns),
 			appearance: mapAppearance(triageDto.appearance),
@@ -81,30 +78,30 @@ export class GuardiaMapperService {
 				return undefined;
 			}
 			return {
-				bloodOxygenSaturation: {
+				bloodOxygenSaturation: vitalSigns.bloodOxygenSaturation ? {
 					value: vitalSigns.bloodOxygenSaturation.value,
 					effectiveTime: dateTimeDtoToDate(vitalSigns.bloodOxygenSaturation.effectiveTime)
-				},
-				diastolicBloodPressure: {
+				} : undefined,
+				diastolicBloodPressure: vitalSigns.diastolicBloodPressure ? {
 					value: vitalSigns.diastolicBloodPressure.value,
 					effectiveTime: dateTimeDtoToDate(vitalSigns.diastolicBloodPressure.effectiveTime)
-				},
-				heartRate: {
+				} : undefined,
+				heartRate: vitalSigns.heartRate ? {
 					value: vitalSigns.heartRate.value,
 					effectiveTime: dateTimeDtoToDate(vitalSigns.heartRate.effectiveTime)
-				},
-				respiratoryRate: {
+				} : undefined,
+				respiratoryRate: vitalSigns.respiratoryRate ? {
 					value: vitalSigns.respiratoryRate.value,
 					effectiveTime: dateTimeDtoToDate(vitalSigns.respiratoryRate.effectiveTime)
-				},
-				systolicBloodPressure: {
+				} : undefined,
+				systolicBloodPressure: vitalSigns.systolicBloodPressure ? {
 					value: vitalSigns.systolicBloodPressure.value,
 					effectiveTime: dateTimeDtoToDate(vitalSigns.systolicBloodPressure.effectiveTime)
-				},
-				temperature: {
+				} : undefined,
+				temperature: vitalSigns.temperature ? {
 					value: vitalSigns.temperature.value,
 					effectiveTime: dateTimeDtoToDate(vitalSigns.temperature.effectiveTime)
-				}
+				} : undefined
 			};
 		}
 
