@@ -23,7 +23,9 @@
 			<div *ngIf="triage.doctorsOfficeDescription" class="info"
 				 fxLayout="column" fxLayoutGap="6px" fxLayoutAlign="space-between">
 				<span>{{ 'guardia.episode.triage.ultimo.UBICACION' | translate }}</span>
-				<span class="padding-to-align-chip">{{ triage.doctorsOfficeDescription }}</span>
+				<span *ngIf="triage.doctorsOfficeDescription else noInfo" class="padding-to-align-chip">
+					{{ triage.doctorsOfficeDescription }}
+				</span>
 			</div>
 		</div>
 	</section>
@@ -33,8 +35,10 @@
 		<h3 class="subtitle-weight">{{ 'guardia.episode.triage.ultimo.APARIENCIA_RESPIRACION_CIRCULACION' | translate }}</h3>
 		<div gdColumns="repeat(3, 1fr)" gdGap="20px">
 			<div id="temperatura" class="info" fxLayout="column" fxLayoutGap="5px" fxLayoutAlign="space-between">
-				<span>Temperatura</span>
-				<span>{{ triage.appearance.bodyTemperatureDescription }}</span>
+				<span>{{ 'guardia.episode.triage.ultimo.TEMPERATURA' | translate }}</span>
+				<span *ngIf="triage.appearance.bodyTemperatureDescription else noInfo">
+					{{ triage.appearance.bodyTemperatureDescription }}
+				</span>
 			</div>
 
 			<div id="llanto" class="info" fxLayout="column" fxLayoutGap="5px" fxLayoutAlign="space-between">
@@ -54,12 +58,16 @@
 
 			<div id="tono_muscular" class="info" fxLayout="column" fxLayoutGap="5px" fxLayoutAlign="space-between">
 				<span>{{ 'guardia.episode.triage.ultimo.TONO_MUSCULAR' | translate }}</span>
-				<span>{{ triage.appearance.muscleHypertoniaDescription }}</span>
+				<span *ngIf="triage.appearance.muscleHypertoniaDescription else noInfo">
+					{{ triage.appearance.muscleHypertoniaDescription }}
+				</span>
 			</div>
 
 			<div id="respiracion_tiraje" class="info" fxLayout="column" fxLayoutGap="5px" fxLayoutAlign="space-between">
 				<span>{{ 'guardia.episode.triage.ultimo.RESPIRACION_TIRAJE' | translate }}</span>
-				<span>{{ triage.breathing.respiratoryRetractionDescription }}</span>
+				<span *ngIf="triage.breathing.respiratoryRetractionDescription else noInfo">
+					{{ triage.breathing.respiratoryRetractionDescription }}
+				</span>
 			</div>
 
 			<div id="respiracion_estridor" class="info" fxLayout="column" fxLayoutGap="5px" fxLayoutAlign="space-between">
@@ -80,7 +88,9 @@
 
 			<div id="perfusion" class="info" fxLayout="column" fxLayoutGap="5px" fxLayoutAlign="space-between">
 				<span>{{ 'guardia.episode.triage.ultimo.PERFUSION' | translate }}</span>
-				<span>{{ triage.circulation.perfusionDescription }}</span>
+				<span *ngIf="triage.circulation.perfusionDescription else noInfo">
+					{{ triage.circulation.perfusionDescription }}
+				</span>
 			</div>
 		</div>
 
@@ -101,3 +111,7 @@
 		</span>
 	</section>
 </div>
+
+<ng-template #noInfo>
+	<span>{{ 'guardia.episode.triage.ultimo.NO_INFO' | translate }}</span>
+</ng-template>
