@@ -21,10 +21,6 @@ export class PwaUpdateService {
 		this.updateSubject = new ReplaySubject<PWAAction>(1);
 		this.update$ = this.updateSubject.asObservable();
 
-		if (!environment.production) {
-			console.log('No se verificará si hay nueva versión');
-			return;
-		}
 		// Allow the app to stabilize first, before starting polling for updates with `interval()`.
 		const appIsStable$ = appRef.isStable.pipe(first(isStable => isStable === true));
 		// const everySixHours$ = interval(6 * 60 * 60 * 1000);
@@ -45,7 +41,11 @@ export class PwaUpdateService {
 	}
 
 	checkForUpdate() {
-		this.updates.checkForUpdate();
+		if (this.updates.isEnabled) {
+			this.updates.checkForUpdate();
+		} else {
+			console.warn('Service Worker not enabled')
+		}
 	}
 
 }

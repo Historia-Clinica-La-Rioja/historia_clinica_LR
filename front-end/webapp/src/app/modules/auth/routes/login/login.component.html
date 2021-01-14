@@ -9,7 +9,7 @@
 			<mat-card-content>
 				<app-form-input label="auth.login.form.USERNAME_LABEL">
 					<mat-form-field [floatLabel]="'never'" appearance="outline">
-						<input formControlName="username"
+						<input formControlName="username" autocomplete="username"
 							type="text"
 							placeholder="{{'auth.login.form.USERNAME_PLACEHOLDER' | translate }}"
 							matInput
@@ -21,7 +21,7 @@
 				</app-form-input>
 				<app-form-input label="auth.login.form.PASSWORD_LABEL">
 					<mat-form-field [floatLabel]="'never'" appearance="outline">
-						<input formControlName="password"
+						<input formControlName="password" autocomplete="current-password"
 							type="password"
 							placeholder="{{'auth.login.form.PASSWORD_PLACEHOLDER' | translate }}"
 							matInput
