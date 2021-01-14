@@ -40,14 +40,17 @@ public class DiagnosticReportDanglingFilesServiceImplTest extends UnitRepository
     }
 
     public List<DiagnosticReportFile> populateDiagnosticReportFileRepository() {
-        DiagnosticReportFile drf1 = new DiagnosticReportFile("path1", "text/plain", 124142L);
+        DiagnosticReportFile drf1 = new DiagnosticReportFile("path", "text/plain", 124142L, "file1.txt");
+        DiagnosticReportFile drf2 = new DiagnosticReportFile("path", "text/pdf", 4125, "file2.pdf");
+        DiagnosticReportFile drf3 = new DiagnosticReportFile("path", "image/jpg", 999L, "file3.jpg");
+
         drf1.setDiagnosticReportId(1);
-        DiagnosticReportFile drf2 = new DiagnosticReportFile("path2", "text/pdf", 4125);
         drf2.setDiagnosticReportId(1);
-        DiagnosticReportFile drf3 = new DiagnosticReportFile("path3", "image/jpg", 999L);
+
         save(drf1);
         save(drf2);
         save(drf3);
+
         return List.of(drf1, drf2, drf3);
     }
 }

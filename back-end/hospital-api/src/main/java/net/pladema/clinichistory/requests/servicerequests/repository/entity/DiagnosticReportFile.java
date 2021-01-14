@@ -37,10 +37,14 @@ public class DiagnosticReportFile extends SGXAuditableEntity {
     @Column(name="diagnostic_report_id")
     private Integer diagnosticReportId;
 
-    public DiagnosticReportFile(String path, String contentType, long size){
+    @Column(name="name", nullable = false)
+    private String name;
+
+    public DiagnosticReportFile(String path, String contentType, long size, String name){
         super();
         this.path = path;
         this.contentType = contentType;
         this.size = size;
+        this.name = name;
     }
 }

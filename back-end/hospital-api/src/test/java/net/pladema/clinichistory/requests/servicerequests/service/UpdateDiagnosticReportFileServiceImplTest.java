@@ -48,9 +48,9 @@ public class UpdateDiagnosticReportFileServiceImplTest extends UnitRepository {
     }
 
     public List<Integer> populateDiagnosticReportFileRepository() {
-        DiagnosticReportFile drf1 = new DiagnosticReportFile("path", "text/plain", 124142L);
-        DiagnosticReportFile drf2 = new DiagnosticReportFile("path", "text/pdf", 4125);
-        DiagnosticReportFile drf3 = new DiagnosticReportFile("path", "image/jpg", 999L);
+        DiagnosticReportFile drf1 = new DiagnosticReportFile("path", "text/plain", 124142L, "file1.txt");
+        DiagnosticReportFile drf2 = new DiagnosticReportFile("path", "text/pdf", 4125, "file2.pdf");
+        DiagnosticReportFile drf3 = new DiagnosticReportFile("path", "image/jpg", 999L, "file3.jpg");
         Integer id1 = save(drf1).getId();
         Integer id2 = save(drf2).getId();
         Integer id3 = save(drf3).getId();

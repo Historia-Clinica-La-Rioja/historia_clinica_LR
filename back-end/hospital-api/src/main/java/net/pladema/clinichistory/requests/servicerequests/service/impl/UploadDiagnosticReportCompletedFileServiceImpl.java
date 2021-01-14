@@ -33,11 +33,11 @@ public class UploadDiagnosticReportCompletedFileServiceImpl  implements UploadDi
     @Override
     public List<Integer> execute(MultipartFile[] files, Integer diagnosticReportId, Integer patientId) {
         List<Integer> result = Arrays.stream(files).mapToInt(file -> {
-            String extension = FilenameUtils.getExtension(file.getOriginalFilename());
-            String newFileName = fileService.createFileName(extension);
-            String completePath = buildCompleteFilePath(patientId, newFileName, diagnosticReportId);
+            String newFileName = fileService.createFileName(FilenameUtils.getExtension(file.getOriginalFilename()));
+            String partialPath = buildPartialPath(patientId, newFileName, diagnosticReportId);
+            String completePath = buildCompleteFilePath(partialPath);
             fileService.saveFile(completePath, file);
-            return saveDiagnosticReportFileMetadata(completePath, file);
+            return saveDiagnosticReportFileMetadata(partialPath, file);
         })
                 .boxed()
                 .collect(Collectors.toList());
@@ -47,18 +47,28 @@ public class UploadDiagnosticReportCompletedFileServiceImpl  implements UploadDi
     }
 
     private Integer saveDiagnosticReportFileMetadata(String completePath, MultipartFile file) {
-        DiagnosticReportFile diagnosticReportFile = new DiagnosticReportFile(completePath, file.getContentType(), file.getSize());
+        DiagnosticReportFile diagnosticReportFile = new DiagnosticReportFile(
+                completePath,
+                file.getContentType(),
+                file.getSize(),
+                file.getOriginalFilename());
         Integer result = diagnosticReportFileRepository.save(diagnosticReportFile).getId();
         LOG.debug(OUTPUT, result);
         return result;
     }
 
-    private String buildCompleteFilePath(Integer patientId, String relativeFilePath, Integer studyId){
+    private String buildPartialPath(Integer patientId, String relativeFilePath, Integer studyId){
         LOG.debug("Input parameters -> patientId {}, relativeFilePath {}", patientId, relativeFilePath);
-        String partialPath = RELATIVE_DIRECTORY
+        String result = RELATIVE_DIRECTORY
                 .replace("{patiendId}", patientId.toString())
                 .replace("{studyId}", studyId.toString())
                 .concat(relativeFilePath);
+        LOG.debug(OUTPUT, result);
+        return result;
+    }
+
+    private String buildCompleteFilePath(String partialPath){
+        LOG.debug("Input parameters -> partialPath {}", partialPath);
         String result = fileService.buildPath(partialPath);
         LOG.debug(OUTPUT, result);
         return result;

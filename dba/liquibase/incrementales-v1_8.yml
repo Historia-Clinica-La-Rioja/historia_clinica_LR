@@ -137,3 +137,24 @@ databaseChangeLog:
                 name: updated_on
                 type: datetime
                 defaultValueDate: ${date.now} 
+    
+    - changeSet:
+        id: add-filename-diagnostic_report_file
+        author: martinscooper
+        changes:
+            addColumn:
+                tableName: diagnostic_report_file
+                columns:
+                - column:
+                    name: name
+                    type: varchar
+                    constraints: 
+                        nullable: false
+    
+    - changeSet:
+        id: drop-column-path_file-diagnostic_report
+        author: martinscooper
+        changes:
+            dropColumn:
+                tableName: diagnostic_report
+                columnName: path_file
