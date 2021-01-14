@@ -350,6 +350,10 @@ export interface DiagnosticReportInfoDto {
     totalDays: number;
 }
 
+export interface DiagnosticReportInfoWithFilesDto extends DiagnosticReportInfoDto {
+    files: FileDto[];
+}
+
 export interface DiaryADto {
     appointmentDuration: number;
     automaticRenewal?: boolean;
@@ -558,7 +562,8 @@ export interface EvolutionNoteDto extends DocumentDto, Serializable {
 }
 
 export interface FileDto {
-    file: string;
+    fileId: string;
+    fileName: string;
 }
 
 export interface GenderDto extends AbstractMasterdataDto<number> {

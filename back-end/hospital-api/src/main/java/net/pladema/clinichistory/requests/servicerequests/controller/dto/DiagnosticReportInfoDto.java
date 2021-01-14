@@ -28,4 +28,15 @@ public class DiagnosticReportInfoDto {
     private DoctorInfoDto doctor;
     private Integer serviceRequestId;
     private long totalDays;
+
+    public DiagnosticReportInfoDto( DiagnosticReportInfoDto diagnosticReportInfoDto) {
+        this.snomed = diagnosticReportInfoDto.getSnomed();
+        this.healthCondition = diagnosticReportInfoDto.getHealthCondition();
+        this.observations = diagnosticReportInfoDto.getObservations();
+        this.link = diagnosticReportInfoDto.getLink();
+        this.statusId = diagnosticReportInfoDto.getStatusId();
+        this.doctor = diagnosticReportInfoDto.getDoctor();
+        this.serviceRequestId = diagnosticReportInfoDto.getServiceRequestId();
+        this.totalDays = diagnosticReportInfoDto.totalDays;
+    }
 }

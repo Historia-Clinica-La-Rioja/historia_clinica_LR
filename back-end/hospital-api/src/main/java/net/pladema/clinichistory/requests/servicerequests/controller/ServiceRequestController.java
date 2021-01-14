@@ -4,13 +4,8 @@ import io.swagger.annotations.Api;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
-import net.pladema.clinichistory.requests.medicationrequests.controller.dto.HealthConditionInfoDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.*;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
-import net.pladema.clinichistory.requests.servicerequests.controller.mapper.CompleteDiagnosticReportMapper;
-import net.pladema.clinichistory.requests.servicerequests.controller.mapper.CreateServiceRequestMapper;
-import net.pladema.clinichistory.requests.servicerequests.controller.mapper.StudyMapper;
-import net.pladema.clinichistory.requests.servicerequests.controller.mapper.ListDiagnosticReportInfoMapper;
+import net.pladema.clinichistory.requests.servicerequests.controller.mapper.*;
 import net.pladema.clinichistory.requests.servicerequests.service.*;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportBo;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportFilterBo;
@@ -49,36 +44,40 @@ public class ServiceRequestController {
     private final PatientExternalService patientExternalService;
     private final StudyMapper studyMapper;
     private final ListDiagnosticReportInfoService listDiagnosticReportInfoService;
-    private final ListDiagnosticReportInfoMapper listDiagnosticReportInfoMapper;
+    private final DiagnosticReportInfoMapper diagnosticReportInfoMapper;
     private final DeleteDiagnosticReportService deleteDiagnosticReportService;
     private final CompleteDiagnosticReportService completeDiagnosticReportService;
     private final CompleteDiagnosticReportMapper completeDiagnosticReportMapper;
     private final UploadDiagnosticReportCompletedFileService uploadDiagnosticReportCompletedFileService;
     private final UpdateDiagnosticReportFileService updateDiagnosticReportFileService;
+    private final DiagnosticReportInfoService diagnosticReportInfoService;
+    private final FileMapper fileMapper;
 
     public ServiceRequestController(HealthcareProfessionalExternalService healthcareProfessionalExternalService,
                                     CreateServiceRequestService createServiceRequestService,
                                     CreateServiceRequestMapper createServiceRequestMapper,
                                     PatientExternalService patientExternalService,
                                     StudyMapper studyMapper,
-                                    ListDiagnosticReportInfoMapper listDiagnosticReportInfoMapper,
+                                    DiagnosticReportInfoMapper diagnosticReportInfoMapper,
                                     ListDiagnosticReportInfoService listDiagnosticReportInfoService,
                                     DeleteDiagnosticReportService deleteDiagnosticReportService, CompleteDiagnosticReportService completeDiagnosticReportService,
                                     CompleteDiagnosticReportMapper completeDiagnosticReportMapper,
                                     UploadDiagnosticReportCompletedFileService uploadDiagnosticReportCompletedFileService,
-                                    UpdateDiagnosticReportFileService updateDiagnosticReportFileService) {
+                                    UpdateDiagnosticReportFileService updateDiagnosticReportFileService, DiagnosticReportInfoService diagnosticReportInfoService, FileMapper fileMapper) {
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.createServiceRequestService = createServiceRequestService;
         this.createServiceRequestMapper = createServiceRequestMapper;
         this.patientExternalService = patientExternalService;
         this.listDiagnosticReportInfoService = listDiagnosticReportInfoService;
-        this.listDiagnosticReportInfoMapper = listDiagnosticReportInfoMapper;
+        this.diagnosticReportInfoMapper = diagnosticReportInfoMapper;
         this.studyMapper = studyMapper;
         this.deleteDiagnosticReportService = deleteDiagnosticReportService;
         this.completeDiagnosticReportService = completeDiagnosticReportService;
         this.completeDiagnosticReportMapper = completeDiagnosticReportMapper;
         this.uploadDiagnosticReportCompletedFileService = uploadDiagnosticReportCompletedFileService;
         this.updateDiagnosticReportFileService = updateDiagnosticReportFileService;
+        this.diagnosticReportInfoService = diagnosticReportInfoService;
+        this.fileMapper = fileMapper;
     }
 
     @PostMapping
@@ -121,7 +120,7 @@ public class ServiceRequestController {
     ) {
         LOG.debug(COMMON_INPUT, institutionId, patientId, serviceRequestId);
         FileDto result = new FileDto();
-        result.setFile("file");
+        //result.setFile("file");
         LOG.debug(OUTPUT, result);
         return result;
     }
@@ -149,9 +148,9 @@ public class ServiceRequestController {
     @Transactional
     @ResponseStatus(code = HttpStatus.OK)
     public List<Integer> uploadFile(@PathVariable(name = "institutionId") Integer institutionId,
-                         @PathVariable(name = "patientId") Integer patientId,
-                         @PathVariable(name = "diagnosticReportId") Integer diagnosticReportId,
-                         @RequestPart("files") MultipartFile[] files) {
+                                    @PathVariable(name = "patientId") Integer patientId,
+                                    @PathVariable(name = "diagnosticReportId") Integer diagnosticReportId,
+                                    @RequestPart("files") MultipartFile[] files) {
         LOG.debug("Input parameters ->  {} institutionIdpatientId {}, diagnosticReportId {}",
                 institutionId,
                 patientId,
@@ -162,7 +161,7 @@ public class ServiceRequestController {
     }
 
 
-    @DeleteMapping("/{serviceRequestId}")
+    @DeleteMapping("/{diagnosticReportId}")
     @Transactional
     @ResponseStatus(code = HttpStatus.OK)
     public void delete(@PathVariable(name = "institutionId") Integer institutionId,
@@ -175,29 +174,21 @@ public class ServiceRequestController {
         deleteDiagnosticReportService.execute(patientInfoBo, diagnosticReportId);
     }
 
-    @GetMapping("/{serviceRequestId}")
+    @GetMapping("/{diagnosticReportId}")
     @ResponseStatus(code = HttpStatus.OK)
-    public DiagnosticReportInfoDto get(@PathVariable(name = "institutionId") Integer institutionId,
+    public DiagnosticReportInfoWithFilesDto get(@PathVariable(name = "institutionId") Integer institutionId,
                                        @PathVariable(name = "patientId") Integer patientId,
-                                       @PathVariable(name = "serviceRequestId") Integer serviceRequestId
+                                       @PathVariable(name = "diagnosticReportId") Integer diagnosticReportId
     ) {
-        LOG.debug(COMMON_INPUT, institutionId, patientId, serviceRequestId);
-        SnomedDto snomed = new SnomedDto();
-        snomed.setSctid("11111");
-        snomed.setPt("Radiologia");
+        LOG.debug(COMMON_INPUT, institutionId, patientId, diagnosticReportId);
 
-        SnomedDto healthCondition = new SnomedDto();
-        snomed.setSctid("'2222'");
-        snomed.setPt("'ANGINAS'");
-        HealthConditionInfoDto healthConditionInfo = new HealthConditionInfoDto();
-        healthConditionInfo.setSnomed(healthCondition);
 
-        DiagnosticReportInfoDto result = new DiagnosticReportInfoDto();
-        result.setSnomed(snomed);
-        result.setHealthCondition(healthConditionInfo);
-        result.setObservations("El paciente presenta la tiroides alta");
-        result.setLink("http://www.google.com");
-        result.setStatusId("123123");
+        DiagnosticReportBo resultService = diagnosticReportInfoService.run(diagnosticReportId);
+        ProfessionalDto professionalDto = healthcareProfessionalExternalService.findProfessionalByUserId(resultService.getUserId());
+        DiagnosticReportInfoDto driDto = diagnosticReportInfoMapper.parseTo(resultService, professionalDto);
+        DiagnosticReportInfoWithFilesDto result = new DiagnosticReportInfoWithFilesDto(
+                driDto,
+                fileMapper.parseToList(resultService.getFiles()));
         LOG.debug(OUTPUT, result);
         return result;
     }
@@ -224,7 +215,7 @@ public class ServiceRequestController {
         List<DiagnosticReportInfoDto> result = resultService.stream()
                 .map(diagnosticReportBo -> {
                     ProfessionalDto professionalDto = healthcareProfessionalExternalService.findProfessionalByUserId(diagnosticReportBo.getUserId());
-                    return listDiagnosticReportInfoMapper.parseTo(diagnosticReportBo, professionalDto);
+                    return diagnosticReportInfoMapper.parseTo(diagnosticReportBo, professionalDto);
                 })
                 .collect(Collectors.toList());
 

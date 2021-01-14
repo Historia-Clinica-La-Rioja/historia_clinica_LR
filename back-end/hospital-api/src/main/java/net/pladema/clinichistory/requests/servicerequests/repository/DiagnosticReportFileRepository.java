@@ -1,6 +1,8 @@
 package net.pladema.clinichistory.requests.servicerequests.repository;
 
+import net.pladema.clinichistory.requests.servicerequests.repository.domain.FileVo;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.DiagnosticReportFile;
+import net.pladema.clinichistory.requests.servicerequests.service.domain.FileBo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -24,4 +26,10 @@ public interface DiagnosticReportFileRepository extends JpaRepository<Diagnostic
             "FROM DiagnosticReportFile drf " +
             "WHERE drf.diagnosticReportId IS NULL ")
     List<String> getDanglingFiles();
+
+    @Transactional
+    @Query("SELECT NEW net.pladema.clinichistory.requests.servicerequests.repository.domain.FileVo(drf.id, drf.name) " +
+            "FROM DiagnosticReportFile drf " +
+            "WHERE drf.diagnosticReportId = :drId ")
+    List<FileVo> getFilesByDiagnosticReport(@Param("drId") Integer drId);
 }

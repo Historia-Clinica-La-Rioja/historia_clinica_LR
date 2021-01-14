@@ -19,7 +19,9 @@ import java.util.stream.Collectors;
 public class ListDiagnosticReportInfoServiceImpl implements ListDiagnosticReportInfoService {
 
     ListDiagnosticReportRepository listDiagnosticReportRepository;
+
     private static final Logger LOG = LoggerFactory.getLogger(ListDiagnosticReportInfoServiceImpl.class);
+    private static final String OUTPUT = "create result -> {}";
 
     public ListDiagnosticReportInfoServiceImpl(ListDiagnosticReportRepository listDiagnosticReportRepository) {
         this.listDiagnosticReportRepository = listDiagnosticReportRepository;
@@ -34,13 +36,13 @@ public class ListDiagnosticReportInfoServiceImpl implements ListDiagnosticReport
                 filter.getHealthCondition()
         );
         List<DiagnosticReportBo> result = listDiagnosticReportRepository.execute(filterVo).stream()
-                .map(this::createMedicationBo)
+                .map(this::createDiagnosticReportBo)
                 .collect(Collectors.toList());
         LOG.trace("OUTPUT List -> {}", result);
         return result;
     }
 
-    private DiagnosticReportBo createMedicationBo(Object[] row) {
+    private DiagnosticReportBo createDiagnosticReportBo(Object[] row) {
         LOG.debug("Input parameters -> row {}", row);
         DiagnosticReportBo result = new DiagnosticReportBo();
         result.setId((Integer) row[0]);
@@ -62,7 +64,7 @@ public class ListDiagnosticReportInfoServiceImpl implements ListDiagnosticReport
 
         result.setUserId((Integer) row[10]);
         result.setEffectiveTime(row[13] != null ? ((Timestamp) row[13]).toLocalDateTime() : null);
-        LOG.trace("OUTPUT -> {}", result);
+        LOG.trace(OUTPUT, result);
         return result;
     }
 }

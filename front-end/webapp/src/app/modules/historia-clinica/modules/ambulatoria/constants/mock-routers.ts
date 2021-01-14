@@ -136,7 +136,7 @@ export const MOCKS_ORDERS = [
 							"lastName": "Martin"
 						  },
 						serviceRequestId: 1,
-						daysSinceEffectiveTime: 10
+						totalDays: 10
 					},
 					{
 						snomed: {
@@ -155,7 +155,7 @@ export const MOCKS_ORDERS = [
 							"lastName": "Martin"
 						},
 						serviceRequestId: 5,
-						daysSinceEffectiveTime: 3
+						totalDays: 3
 					}
 				],
 			},
@@ -662,10 +662,10 @@ export const MOCKS_ORDERS = [
 		path: 'paciente/:idPaciente/ordenes/nueva-orden/confirmar-estudio/descargar-orden',
 		loads: [
 			{
-				name: 'ServiceRequest.download(patientId: number, serviceRequestId: number): File',
+				name: 'ServiceRequest.download(patientId: number, diagnosticReportId: number): File',
 				roles: 'Todo ESPECIALISTA_MEDICO sobre la institución',
 				comments: 'Descarga el archivo pdf de la receta',
-				path: '/api/institutions/{institutionId}/patient/{patientId}/serviceRequests/{serviceRequestId}/downloadFile',
+				path: '/api/institutions/{institutionId}/patient/{patientId}/serviceRequests/{diagnosticReportId}/downloadFile',
 				method: 'GET',
 			}
 		],
@@ -680,13 +680,23 @@ export const MOCKS_ORDERS = [
 		path: 'paciente/:idPaciente/ordenes/completar-orden',
 		loads: [
 			{
-				name: 'ServiceRequest.complete(patientId: number, diagnosticReportId:number, file: File)',
+				name: 'ServiceRequest.uploadFile(patientId: number, files: File[]): number[]',
 				roles: 'Todo ESPECIALISTA_MEDICO sobre la institución',
-				path: '/api/institutions/{institutionId}/patient/{patientId}/serviceRequests/{diagnosticReportId}',
+				path: '/api/institutions/{institutionId}/patient/{patientId}/serviceRequests/{diagnosticReportId}/uploadFile',
+				method: 'POST',
+				body: {
+					multipartfile: ''
+				}
+			},
+			{
+				name: 'ServiceRequest.complete(patientId: number, diagnosticReportId: number, CompleteRequestDto): Integer',
+				roles: 'Todo ESPECIALISTA_MEDICO sobre la institución',
+				path: '/api/institutions/{institutionId}/patient/{patientId}/serviceRequests/{diagnosticReportId}/complete',
 				method: 'PUT',
 				body: {
 					observation: 'El paciente presenta la tiroide alta',
-					link: 'http://www.google.com'
+					link: 'http://www.google.com',
+					fileIds: [1,2,3]
 				}
 			}
 		],
@@ -719,10 +729,10 @@ export const MOCKS_ORDERS = [
 		path: 'paciente/:idPaciente/ordenes/ver-orden',
 		loads: [
 			{
-				name: 'ServiceRequest.get(patientId: number, serviceRequestId:number): DiagnosticReportInfoDto',
+				name: 'ServiceRequest.get(patientId: number, diagnosticReportId:number): DiagnosticReportInfoDtoWithFiles',
 				roles: 'Todo ESPECIALISTA_MEDICO sobre la institución',
 				comments: '',
-				path: '/api/institutions/{institutionId}/patient/{patientId}/serviceRequests/{serviceRequestId}',
+				path: '/api/institutions/{institutionId}/patient/{patientId}/serviceRequests/{diagnosticReportId}',
 				method: 'GET',
 				fetch: {
 					snomed: {
@@ -733,9 +743,26 @@ export const MOCKS_ORDERS = [
 						id: '2222',
 						pt: 'ANGINAS'
 					},
+					doctor: {
+						"id": 1,
+						"firstName": "San",
+						"lastName": "Martin"
+					  },
+					serviceRequestId: 1,
 					statusId: '213123',
 					observation: 'El paciente presenta la tiroide alta',
-					link: 'http://www.google.com'
+					link: 'http://www.google.com',
+					totalDays: 10,
+					files: [
+					{
+						id: 1,
+						name: 'radiografia.txt'
+					},
+					{
+						id: 2,
+						name: 'analisis_de_radiografia.txt'
+					}
+					]
 				}
 			}
 		],

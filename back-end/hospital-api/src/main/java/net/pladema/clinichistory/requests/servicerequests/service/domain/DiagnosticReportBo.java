@@ -8,6 +8,7 @@ import net.pladema.clinichistory.documents.service.ips.domain.ClinicalTerm;
 import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionBo;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,10 +19,11 @@ public class DiagnosticReportBo extends ClinicalTerm {
     private String observations;
     private Long noteId;
     private String link;
-    private String filePath;
 
     private HealthConditionBo healthCondition;
     private Integer encounterId;
     private Integer userId;
     private LocalDateTime effectiveTime;
+
+    private List<FileBo> files;
 }

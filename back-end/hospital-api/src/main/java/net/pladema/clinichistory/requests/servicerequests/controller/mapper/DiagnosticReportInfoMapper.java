@@ -16,9 +16,9 @@ import java.time.LocalDateTime;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 @Component
-public class ListDiagnosticReportInfoMapper {
+public class DiagnosticReportInfoMapper {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ListDiagnosticReportInfoMapper.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DiagnosticReportInfoMapper.class);
 
     @Named("parseTo")
     public DiagnosticReportInfoDto parseTo(DiagnosticReportBo diagnosticReportBo, ProfessionalDto professionalDto){
