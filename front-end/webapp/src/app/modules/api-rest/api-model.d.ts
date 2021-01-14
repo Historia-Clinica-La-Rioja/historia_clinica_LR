@@ -797,6 +797,10 @@ export interface MainDiagnosisDto extends Serializable {
     notes: DocumentObservationsDto;
 }
 
+export interface MasterDataDto extends AbstractMasterdataDto<number> {
+    id: number;
+}
+
 export interface MasterDataInterface<T> {
     description: string;
     id: T;
