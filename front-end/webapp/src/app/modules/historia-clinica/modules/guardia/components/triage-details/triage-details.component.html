@@ -30,7 +30,7 @@
 		</div>
 	</section>
 
-	<section id="body" fxLayout="column" fxLayoutGap="16px">
+	<section *ngIf="triage.emergencyCareType" id="body" fxLayout="column" fxLayoutGap="16px">
 		<div id="pediatric" *ngIf="triage.emergencyCareType === emergencyCareTypes.PEDIATRIA">
 			<h3 class="subtitle-weight">{{ 'guardia.episode.triage.ultimo.APARIENCIA_RESPIRACION_CIRCULACION' | translate }}</h3>
 			<div gdColumns="repeat(3, 1fr)" gdGap="20px">
@@ -91,19 +91,25 @@
 			</div>
 		</div>
 
-		<div fxLayout="row wrap" *ngIf="vitalSignsCurrent?.length">
-			<app-signo-vital-current-previous
-					*ngFor="let vitalSign of vitalSignsCurrent"
-					[data]="vitalSign">
-			</app-signo-vital-current-previous>
+		<div id="vital-signs" *ngIf="vitalSignsCurrent?.length">
+			<h3 *ngIf="triage.emergencyCareType === emergencyCareTypes.ADULTO ||
+					triage.emergencyCareType === emergencyCareTypes.GINECOLOGIA"
+				class="subtitle-weight">{{ 'guardia.episode.triage.ultimo.SIGNOS_VITALES' | translate }}
+			</h3>
+			<div fxLayout="row wrap">
+				<app-signo-vital-current-previous
+						*ngFor="let vitalSign of vitalSignsCurrent"
+						[data]="vitalSign">
+				</app-signo-vital-current-previous>
+			</div>
 		</div>
 	</section>
 
-	<section *ngIf="triage.notes">
+	<section *ngIf="triage.emergencyCareType">
 		<h3 class="subtitle-weight" style="margin-bottom: 0">
 			{{ 'guardia.episode.triage.ultimo.EVALUACION' | translate }}
 		</h3>
-		<span>
+		<span *ngIf="triage.notes else noInfo">
 			{{ triage.notes }}
 		</span>
 	</section>
