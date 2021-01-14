@@ -86,7 +86,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 					healthConditionId: pi.healthProblem.id,
 					observations: pi.observations,
 					snomed: pi.snomed,
-					categoryId: pi.studyCategory.id,
+					categoryId: pi.studyCategory?.id,
 					dosage: {
 						chronic: pi.isChronicAdministrationTime,
 						diary: pi.isDailyInterval,
