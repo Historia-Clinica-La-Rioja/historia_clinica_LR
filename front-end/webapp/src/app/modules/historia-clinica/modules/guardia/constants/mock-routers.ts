@@ -812,42 +812,42 @@ export const MOCKS_GUARDIA = [
 							bloodOxygenSaturation: {
 								effectiveTime: {   // DateTimeDto
 									date: { day: 21, month: 11, year: 2020},
-									time: { hour: 12, minutes: 0, seconds: 12},
+									time: { hours: 12, minutes: 0, seconds: 12},
 								},
 								value: 10
 							},
 							diastolicBloodPressure: {
 								effectiveTime: {   // DateTimeDto
 									date: { day: 21, month: 11, year: 2020},
-									time: { hour: 12, minutes: 0, seconds: 12},
+									time: { hours: 12, minutes: 0, seconds: 12},
 								},
 								value: 10
 							},
 							heartRate: {
 								effectiveTime: {   // DateTimeDto
 									date: { day: 21, month: 11, year: 2020},
-									time: { hour: 12, minutes: 0, seconds: 12},
+									time: { hours: 12, minutes: 0, seconds: 12},
 								},
 								value: 10
 							},
 							respiratoryRate: {
 								effectiveTime: {   // DateTimeDto
 									date: { day: 21, month: 11, year: 2020},
-									time: { hour: 12, minutes: 0, seconds: 12},
+									time: { hours: 12, minutes: 0, seconds: 12},
 								},
 								value: 10
 							},
 							systolicBloodPressure: {
 								effectiveTime: {   // DateTimeDto
 									date: { day: 21, month: 11, year: 2020},
-									time: { hour: 12, minutes: 0, seconds: 12},
+									time: { hours: 12, minutes: 0, seconds: 12},
 								},
 								value: 10
 							},
 							temperature: {
 								effectiveTime: {   // DateTimeDto
 									date: { day: 21, month: 11, year: 2020},
-									time: { hour: 12, minutes: 0, seconds: 12},
+									time: { hours: 12, minutes: 0, seconds: 12},
 								},
 								value: 10
 							}
@@ -1045,8 +1045,8 @@ export const MOCKS_GUARDIA = [
 						typeId: 2,
 						entranceTypeId: 1,
 						policeIntervention: {
-							dateCall: '20/10/2020',
-							timeCall: '10:30',
+							dateCall: { day: 14, month: 1, year: 2021}, // DateDto
+							timeCall: { hours: 12, minutes: 0, seconds: 0}, // TimeDto
 							plateNumber: '91218',
 							firstName: 'Ricardo',
 							lastName: 'Gutierrez'
@@ -1058,7 +1058,7 @@ export const MOCKS_GUARDIA = [
 						notes: 'triage',
 						appearance: {
 							bodyTemperatureId: 1,
-							crying_excessive: true,
+							cryingExcessive: true,
 							muscleHypertoniaId: 1,
 						},
 						breathing: {
@@ -1067,14 +1067,14 @@ export const MOCKS_GUARDIA = [
 							respiratoryRate: {
 								effectiveTime: {   // DateTimeDto
 									date: { day: 21, month: 11, year: 2020},
-									time: { hour: 12, minutes: 0, seconds: 12},
+									time: { hours: 12, minutes: 0, seconds: 12},
 								},
 								value: 10
 							},
 							bloodOxygenSaturation: {
 								effectiveTime: {   // DateTimeDto
 									date: { day: 21, month: 11, year: 2020},
-									time: { hour: 12, minutes: 0, seconds: 12},
+									time: { hours: 12, minutes: 0, seconds: 12},
 								},
 								value: 10
 							}
@@ -1084,7 +1084,7 @@ export const MOCKS_GUARDIA = [
 							heartRate: {
 								effectiveTime: {   // DateTimeDto
 									date: { day: 21, month: 11, year: 2020},
-									time: { hour: 12, minutes: 0, seconds: 12},
+									time: { hours: 12, minutes: 0, seconds: 12},
 								},
 								value: 10
 							}
@@ -1325,42 +1325,42 @@ export const MOCKS_GUARDIA = [
 							bloodOxygenSaturation: {
 								effectiveTime: {   // DateTimeDto
 									date: { day: 21, month: 11, year: 2020},
-									time: { hour: 12, minutes: 0, seconds: 12},
+									time: { hours: 12, minutes: 0, seconds: 12},
 								},
 								value: 10
 							},
 							diastolicBloodPressure: {
 								effectiveTime: {   // DateTimeDto
 									date: { day: 21, month: 11, year: 2020},
-									time: { hour: 12, minutes: 0, seconds: 12},
+									time: { hours: 12, minutes: 0, seconds: 12},
 								},
 								value: 10
 							},
 							heartRate: {
 								effectiveTime: {   // DateTimeDto
 									date: { day: 21, month: 11, year: 2020},
-									time: { hour: 12, minutes: 0, seconds: 12},
+									time: { hours: 12, minutes: 0, seconds: 12},
 								},
 								value: 10
 							},
 							respiratoryRate: {
 								effectiveTime: {   // DateTimeDto
 									date: { day: 21, month: 11, year: 2020},
-									time: { hour: 12, minutes: 0, seconds: 12},
+									time: { hours: 12, minutes: 0, seconds: 12},
 								},
 								value: 10
 							},
 							systolicBloodPressure: {
 								effectiveTime: {   // DateTimeDto
 									date: { day: 21, month: 11, year: 2020},
-									time: { hour: 12, minutes: 0, seconds: 12},
+									time: { hours: 12, minutes: 0, seconds: 12},
 								},
 								value: 10
 							},
 							temperature: {
 								effectiveTime: {   // DateTimeDto
 									date: { day: 21, month: 11, year: 2020},
-									time: { hour: 12, minutes: 0, seconds: 12},
+									time: { hours: 12, minutes: 0, seconds: 12},
 								},
 								value: 10
 							}
@@ -1546,7 +1546,7 @@ export const MOCKS_GUARDIA = [
 						notes: 'triage',
 						appearance: {
 							bodyTemperatureId: 1,
-							crying_excessive: true,
+							cryingExcessive: true,
 							muscleHypertoniaId: 1,
 						},
 						breathing: {
@@ -1555,14 +1555,14 @@ export const MOCKS_GUARDIA = [
 							respiratoryRate: {
 								effectiveTime: {   // DateTimeDto
 									date: { day: 21, month: 11, year: 2020},
-									time: { hour: 12, minutes: 0, seconds: 12},
+									time: { hours: 12, minutes: 0, seconds: 12},
 								},
 								value: 10
 							},
 							bloodOxygenSaturation: {
 								effectiveTime: {   // DateTimeDto
 									date: { day: 21, month: 11, year: 2020},
-									time: { hour: 12, minutes: 0, seconds: 12},
+									time: { hours: 12, minutes: 0, seconds: 12},
 								},
 								value: 10
 							}
@@ -1572,7 +1572,7 @@ export const MOCKS_GUARDIA = [
 							heartRate: {
 								effectiveTime: {   // DateTimeDto
 									date: { day: 21, month: 11, year: 2020},
-									time: { hour: 12, minutes: 0, seconds: 12},
+									time: { hours: 12, minutes: 0, seconds: 12},
 								},
 								value: 10
 							}
