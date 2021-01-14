@@ -43,16 +43,13 @@
 
 			<div id="llanto" class="info" fxLayout="column" fxLayoutGap="5px" fxLayoutAlign="space-between">
 				<span>{{ 'guardia.episode.triage.ultimo.LLANTO_SIN_CONSUELO' | translate }}</span>
-				<span *ngIf="(triage.appearance?.cryingExcessive == undefined) else crying_present">
-					{{ 'guardia.episode.triage.ultimo.NO_INFO' | translate }}
+				<span *ngIf="(triage.appearance?.cryingExcessive === undefined) else crying_present">
+					{{ 'guardia.NO_INFO' | translate }}
 				</span>
 				<ng-template #crying_present>
-				<span *ngIf="triage.appearance.cryingExcessive else no">
-					{{ 'guardia.episode.triage.ultimo.SI' | translate }}
-				</span>
-					<ng-template #no>
-						<span>{{ 'guardia.episode.triage.ultimo.NO' | translate }}</span>
-					</ng-template>
+					<span *ngIf="triage.appearance.cryingExcessive else no">
+						{{ 'guardia.episode.triage.ultimo.SI' | translate }}
+					</span>
 				</ng-template>
 			</div>
 
@@ -72,16 +69,13 @@
 
 			<div id="respiracion_estridor" class="info" fxLayout="column" fxLayoutGap="5px" fxLayoutAlign="space-between">
 				<span>{{ 'guardia.episode.triage.ultimo.RESPIRACION_ESTRIDOR' | translate }}</span>
-				<span *ngIf="(triage.breathing?.stridor == undefined) else stridor_present">
-					{{ 'guardia.episode.triage.ultimo.NO_INFO' | translate }}
+				<span *ngIf="(triage.breathing?.stridor === undefined) else stridorPresent">
+					{{ 'guardia.NO_INFO' | translate }}
 				</span>
-				<ng-template #stridor_present>
-				<span *ngIf="triage.breathing.stridor else no">
-					{{ 'guardia.episode.triage.ultimo.SI' | translate }}
-				</span>
-					<ng-template #no>
-						<span>{{ 'guardia.episode.triage.ultimo.NO' | translate }}</span>
-					</ng-template>
+				<ng-template #stridorPresent>
+					<span *ngIf="triage.breathing.stridor else no">
+						{{ 'guardia.episode.triage.ultimo.SI' | translate }}
+					</span>
 				</ng-template>
 
 			</div>
@@ -113,5 +107,9 @@
 </div>
 
 <ng-template #noInfo>
-	<span>{{ 'guardia.episode.triage.ultimo.NO_INFO' | translate }}</span>
+	<span>{{ 'guardia.NO_INFO' | translate }}</span>
+</ng-template>
+
+<ng-template #no>
+	<span>{{ 'guardia.episode.triage.ultimo.NO' | translate }}</span>
 </ng-template>

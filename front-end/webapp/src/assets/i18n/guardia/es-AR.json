@@ -121,10 +121,7 @@
 					"PERFUSION": "Perfusión",
 					"EVALUACION": "Evaluación",
 					"SI": "Si",
-					"NO": "No",
-					"NO_INFO": "Sin información"
-
-
+					"NO": "No"
 				}
 			},
 			"search_patient": {

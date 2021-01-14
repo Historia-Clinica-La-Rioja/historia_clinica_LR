@@ -30,7 +30,8 @@ export class TriageDetailsComponent implements OnInit {
 
 	private mapToVitalSignCurrentPrevious(triage: Triage): VitalSingCurrentPrevious[] {
 		const vitalSignsCurrent: VitalSingCurrentPrevious[] = [];
-		if (triage.vitalSigns || triage.breathing || triage.circulation) {
+
+		if (containsVitalSigns()) {
 			const LABELS = {
 				systolicBloodPressure: 'Tensión arterial sistólica',
 				diastolicBloodPressure: 'Tensión arterial diastólica',
@@ -46,8 +47,8 @@ export class TriageDetailsComponent implements OnInit {
 					vitalSignsCurrent.push({
 						description: LABELS[key],
 						currentValue: {
-							value: Number(getVitalSign(key)?.value),
-							effectiveTime: getVitalSign(key)?.effectiveTime
+							value: vitalSign.value,
+							effectiveTime: vitalSign.effectiveTime
 						}
 					});
 				}
@@ -57,7 +58,12 @@ export class TriageDetailsComponent implements OnInit {
 
 		return vitalSignsCurrent;
 
-		function getVitalSign(key) {
+		function containsVitalSigns(): boolean {
+			return !!(triage.vitalSigns || triage.breathing?.respiratoryRate || triage.breathing?.bloodOxygenSaturation
+				|| triage.circulation?.heartRate);
+		}
+
+		function getVitalSign(key): { value: number, effectiveTime: Date } {
 			if (triage.vitalSigns && triage.vitalSigns[key]) {
 				return triage.vitalSigns[key];
 			}
