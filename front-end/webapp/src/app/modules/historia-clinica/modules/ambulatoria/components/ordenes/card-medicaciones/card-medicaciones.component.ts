@@ -120,7 +120,7 @@ export class CardMedicacionesComponent implements OnInit {
 			});
 	
 			newSuspendMedicationDialog.afterClosed().subscribe(() => {
-	
+				this.getMedication();
 			});
 		}
 	}
@@ -130,7 +130,8 @@ export class CardMedicacionesComponent implements OnInit {
 
 		if (medicationList) {
 			this.prescripcionesService.changeMedicationStatus(statusChange, this.patientId, medicationList.map(m => m.id)).subscribe(() => {
-				this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.MEDICATION_CHANGE_SUCCESS')
+				this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.MEDICATION_CHANGE_SUCCESS');
+				this.getMedication();
 			}, _ => {this.snackBarService.showError('ambulatoria.paciente.ordenes_prescripciones.toast_messages.MEDICATION_CHANGE_ERROR')});
 		}
 	}
