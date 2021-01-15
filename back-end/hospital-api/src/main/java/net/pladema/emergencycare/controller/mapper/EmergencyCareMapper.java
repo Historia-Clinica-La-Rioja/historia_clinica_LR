@@ -48,6 +48,12 @@ public interface EmergencyCareMapper {
     EmergencyCareBo adultGynecologicalEmergencyCareDtoToEmergencyCareBo(ECAdultGynecologicalDto emergencyCareDto);
 
     @Named("pediatricEmergencyCareDtoToEmergencyCareBo")
+    @Mapping(target = "patientId", source = "administrative.patient.id")
+    @Mapping(target = "patientMedicalCoverageId", source = "administrative.patient.patientMedicalCoverageId")
+    @Mapping(target = "policeIntervention", source = "administrative.policeIntervention", qualifiedByName = "toPoliceInterventionBo")
+    @Mapping(target = "triage", source = "triage", qualifiedByName = "toTriageBo")
+    @Mapping(target = "emergencyCareType", source = "administrative.typeId", qualifiedByName = "fromEmergencyCareTypeId")
+    @Mapping(target = "emergencyCareEntrance", source = "administrative.entranceTypeId", qualifiedByName = "fromEmergencyCareEntranceId")
     EmergencyCareBo pediatricEmergencyCareDtoToEmergencyCareBo(ECPediatricDto emergencyCareDto);
 
 

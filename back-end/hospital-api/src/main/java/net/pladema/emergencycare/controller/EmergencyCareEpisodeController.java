@@ -1,6 +1,9 @@
 package net.pladema.emergencycare.controller;
 
 import io.swagger.annotations.Api;
+import net.pladema.clinichistory.documents.controller.dto.NewVitalSignsObservationDto;
+import net.pladema.clinichistory.documents.controller.service.VitalSignExternalService;
+import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.VitalSignMapper;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.service.ReasonExternalService;
 import net.pladema.emergencycare.controller.dto.ECAdministrativeDto;
 import net.pladema.emergencycare.controller.dto.ECAdultGynecologicalDto;
@@ -46,22 +49,27 @@ public class EmergencyCareEpisodeController {
 
     private final ReasonExternalService reasonExternalService;
 
-    private final PersonExternalService personExternalService;
+    private final VitalSignExternalService vitalSignExternalService;
 
-    private final PatientExternalMedicalCoverageService patientExternalMedicalCoverageService;
+    private final VitalSignMapper vitalSignMapper;
 
     private final EnumWriter enumWriter;
 
     public EmergencyCareEpisodeController(EmergencyCareEpisodeService emergencyCareEpisodeService,
                                           EmergencyCareMapper emergencyCareMapper,
-                                          ReasonExternalService reasonExternalService, PersonExternalService personExternalService, PatientExternalMedicalCoverageService patientExternalMedicalCoverageService, EnumWriter enumWriter){
+                                          ReasonExternalService reasonExternalService,
+                                          PersonExternalService personExternalService,
+                                          PatientExternalMedicalCoverageService patientExternalMedicalCoverageService,
+                                          EnumWriter enumWriter,
+                                          VitalSignExternalService vitalSignExternalService,
+                                          VitalSignMapper vitalSignMapper){
         super();
         this.emergencyCareEpisodeService = emergencyCareEpisodeService;
         this.emergencyCareMapper=emergencyCareMapper;
         this.reasonExternalService = reasonExternalService;
-        this.personExternalService = personExternalService;
-        this.patientExternalMedicalCoverageService = patientExternalMedicalCoverageService;
         this.enumWriter = enumWriter;
+        this.vitalSignExternalService = vitalSignExternalService;
+        this.vitalSignMapper = vitalSignMapper;
     }
 
     @GetMapping
@@ -84,8 +92,7 @@ public class EmergencyCareEpisodeController {
         LOG.debug("Add emergency care administrative episode => {}", body);
         EmergencyCareBo newEmergencyCare = emergencyCareMapper.administrativeEmergencyCareDtoToEmergencyCareBo(body);
         newEmergencyCare.setInstitutionId(institutionId);
-        List<String> reasonIds = (body.getAdministrative() != null && body.getAdministrative().getReasons() != null) ?
-                    reasonExternalService.addReasons(body.getAdministrative().getReasons()) : new ArrayList<>();
+        List<String> reasonIds = reasonExternalService.addReasons(body.reasons());
         newEmergencyCare.setReasonIds(reasonIds);
         newEmergencyCare = emergencyCareEpisodeService.createAdministrative(newEmergencyCare);
         Integer result = newEmergencyCare.getId();
@@ -108,13 +115,42 @@ public class EmergencyCareEpisodeController {
     @Transactional
     @PostMapping("/pediatric")
     @PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
-    public ResponseEntity<Integer> createPediatric(@RequestBody ECPediatricDto body) {
+    public ResponseEntity<Integer> createPediatric(@PathVariable(name = "institutionId") Integer institutionId,
+                                                   @RequestBody ECPediatricDto body) {
         LOG.debug("Add emergency care pediatric episode => {}", body);
         EmergencyCareBo newEmergencyCare = emergencyCareMapper.pediatricEmergencyCareDtoToEmergencyCareBo(body);
+        newEmergencyCare.setInstitutionId(institutionId);
+
+        NewVitalSignsObservationDto vitalSignsObservationDto = vitalSignMapper.fromTriagePediatricDto(body.getTriage());
+        vitalSignsObservationDto = vitalSignExternalService.saveVitalSigns(body.patientId(), vitalSignsObservationDto);
+        newEmergencyCare.getTriage().setVitalSignIds(getVitalSignIds(vitalSignsObservationDto));
+
+        List<String> reasonIds = reasonExternalService.addReasons(body.reasons());
+        newEmergencyCare.setReasonIds(reasonIds);
+
         newEmergencyCare = emergencyCareEpisodeService.createPediatric(newEmergencyCare);
         Integer result = newEmergencyCare.getId();
         LOG.debug("Output -> {}", result);
         return ResponseEntity.ok().body(result);
+    }
+
+    private List<Integer> getVitalSignIds(NewVitalSignsObservationDto vitalSignsObservationDto){
+        LOG.debug("Input parameter -> vitalSignsObservationDto {}", vitalSignsObservationDto);
+        List<Integer> result = new ArrayList<>();
+        if (vitalSignsObservationDto.getSystolicBloodPressure() != null && vitalSignsObservationDto.getSystolicBloodPressure().getId() != null)
+            result.add(vitalSignsObservationDto.getSystolicBloodPressure().getId());
+        if (vitalSignsObservationDto.getDiastolicBloodPressure() != null && vitalSignsObservationDto.getDiastolicBloodPressure().getId() != null)
+            result.add(vitalSignsObservationDto.getDiastolicBloodPressure().getId());
+        if (vitalSignsObservationDto.getTemperature() != null && vitalSignsObservationDto.getTemperature().getId() != null)
+            result.add(vitalSignsObservationDto.getTemperature().getId());
+        if (vitalSignsObservationDto.getHeartRate() != null && vitalSignsObservationDto.getHeartRate().getId() != null)
+            result.add(vitalSignsObservationDto.getHeartRate().getId());
+        if (vitalSignsObservationDto.getRespiratoryRate() != null && vitalSignsObservationDto.getRespiratoryRate().getId() != null)
+            result.add(vitalSignsObservationDto.getRespiratoryRate().getId());
+        if (vitalSignsObservationDto.getBloodOxygenSaturation() != null && vitalSignsObservationDto.getBloodOxygenSaturation().getId() != null)
+            result.add(vitalSignsObservationDto.getBloodOxygenSaturation().getId());
+        LOG.debug("Output -> {}", result);
+        return result;
     }
 
     @GetMapping("/{episodeId}/administrative")

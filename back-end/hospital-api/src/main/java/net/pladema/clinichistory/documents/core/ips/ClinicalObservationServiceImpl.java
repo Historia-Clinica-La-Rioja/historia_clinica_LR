@@ -1,10 +1,10 @@
 package net.pladema.clinichistory.documents.core.ips;
 
-import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.repository.ips.ObservationLabRepository;
 import net.pladema.clinichistory.documents.repository.ips.ObservationVitalSignRepository;
 import net.pladema.clinichistory.documents.repository.ips.entity.ObservationLab;
 import net.pladema.clinichistory.documents.repository.ips.entity.ObservationVitalSign;
+import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.ClinicalObservationService;
 import net.pladema.clinichistory.documents.service.ips.SnomedService;
@@ -13,14 +13,12 @@ import net.pladema.clinichistory.documents.service.ips.domain.ClinicalObservatio
 import net.pladema.clinichistory.documents.service.ips.domain.VitalSignBo;
 import net.pladema.clinichistory.documents.service.ips.domain.enums.EObservationLab;
 import net.pladema.clinichistory.documents.service.ips.domain.enums.EVitalSign;
-import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.snowstorm.services.CalculateCie10CodesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -59,49 +57,56 @@ public class ClinicalObservationServiceImpl implements ClinicalObservationServic
             if(mustSaveClinicalObservation(vitalSign.getSystolicBloodPressure())){
                 ObservationVitalSign systolicBloodPressure = createObservationVitalSign(patientInfo,
                         vitalSign.getSystolicBloodPressure(), EVitalSign.SYSTOLIC_BLOOD_PRESSURE);
-                documentService.createDocumentVitalSign(documentId, systolicBloodPressure.getId());
+                if (documentId != null)
+                    documentService.createDocumentVitalSign(documentId, systolicBloodPressure.getId());
                 vitalSign.setSystolicBloodPressure(createObservationFromVitalSign(systolicBloodPressure));
             }
 
             if(mustSaveClinicalObservation(vitalSign.getDiastolicBloodPressure())) {
                 ObservationVitalSign diastolicBloodPressure = createObservationVitalSign(patientInfo,
                         vitalSign.getDiastolicBloodPressure(), EVitalSign.DIASTOLIC_BLOOD_PRESSURE);
-                documentService.createDocumentVitalSign(documentId, diastolicBloodPressure.getId());
+                if (documentId != null)
+                    documentService.createDocumentVitalSign(documentId, diastolicBloodPressure.getId());
                 vitalSign.setDiastolicBloodPressure(createObservationFromVitalSign(diastolicBloodPressure));
             }
 
             if(mustSaveClinicalObservation(vitalSign.getMeanPressure())) {
                 ObservationVitalSign meanPressure = createObservationVitalSign(patientInfo,
                         vitalSign.getMeanPressure(), EVitalSign.MEAN_PRESSURE);
-                documentService.createDocumentVitalSign(documentId, meanPressure.getId());
+                if (documentId != null)
+                    documentService.createDocumentVitalSign(documentId, meanPressure.getId());
                 vitalSign.setMeanPressure(createObservationFromVitalSign(meanPressure));
             }
 
             if(mustSaveClinicalObservation(vitalSign.getTemperature())) {
                 ObservationVitalSign temperature = createObservationVitalSign(patientInfo,
                         vitalSign.getTemperature(), EVitalSign.TEMPERATURE);
-                documentService.createDocumentVitalSign(documentId, temperature.getId());
+                if (documentId != null)
+                    documentService.createDocumentVitalSign(documentId, temperature.getId());
                 vitalSign.setTemperature(createObservationFromVitalSign(temperature));
             }
 
             if(mustSaveClinicalObservation(vitalSign.getHeartRate())) {
                 ObservationVitalSign heartRate = createObservationVitalSign(patientInfo,
                         vitalSign.getHeartRate(), EVitalSign.HEART_RATE);
-                documentService.createDocumentVitalSign(documentId, heartRate.getId());
+                if (documentId != null)
+                    documentService.createDocumentVitalSign(documentId, heartRate.getId());
                 vitalSign.setHeartRate(createObservationFromVitalSign(heartRate));
             }
 
             if(mustSaveClinicalObservation(vitalSign.getRespiratoryRate())) {
                 ObservationVitalSign respiratoryRate = createObservationVitalSign(patientInfo,
                         vitalSign.getRespiratoryRate(), EVitalSign.RESPIRATORY_RATE);
-                documentService.createDocumentVitalSign(documentId, respiratoryRate.getId());
+                if (documentId != null)
+                    documentService.createDocumentVitalSign(documentId, respiratoryRate.getId());
                 vitalSign.setRespiratoryRate(createObservationFromVitalSign(respiratoryRate));
             }
 
             if(mustSaveClinicalObservation(vitalSign.getBloodOxygenSaturation())) {
                 ObservationVitalSign bloodOxygenSaturation = createObservationVitalSign(patientInfo,
                         vitalSign.getBloodOxygenSaturation(), EVitalSign.BLOOD_OXYGEN_SATURATION);
-                documentService.createDocumentVitalSign(documentId, bloodOxygenSaturation.getId());
+                if (documentId != null)
+                    documentService.createDocumentVitalSign(documentId, bloodOxygenSaturation.getId());
                 vitalSign.setBloodOxygenSaturation(createObservationFromVitalSign(bloodOxygenSaturation));
             }
         });

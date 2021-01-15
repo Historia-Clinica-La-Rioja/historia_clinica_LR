@@ -1,7 +1,5 @@
 package net.pladema.emergencycare.triage.controller.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -15,4 +13,6 @@ public abstract class TriageNoAdministrativeDto extends TriageDto {
         super(categoryId, doctorsOfficeId);
         this.notes = notes;
     }
+
+    public TriageNoAdministrativeDto() { }
 }

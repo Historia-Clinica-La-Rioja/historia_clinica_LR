@@ -105,6 +105,12 @@ export interface ApiErrorMessageDto {
     text: string;
 }
 
+export interface AppearanceDto extends Serializable {
+    bodyTemperatureId: number;
+    cryingExcessive: boolean;
+    muscleHypertonia: number;
+}
+
 export interface AppointmentBasicPatientDto {
     id: number;
     person: BasicPersonalDataDto;
@@ -240,10 +246,22 @@ export interface BedSummaryDto {
     sector: SectorSummaryDto;
 }
 
+export interface BreathingDto extends Serializable {
+    bloodOxygenSaturation: NewEffectiveClinicalObservationDto;
+    respiratoryRate: NewEffectiveClinicalObservationDto;
+    respiratoryRetractionId: number;
+    stridor: boolean;
+}
+
 export interface ChangeStateMedicationRequestDto extends Serializable {
     dayQuantity?: number;
     medicationsIds: number[];
     observations?: string;
+}
+
+export interface CirculationDto extends Serializable {
+    heartRate: NewEffectiveClinicalObservationDto;
+    perfusionId: number;
 }
 
 export interface CityDto extends AbstractMasterdataDto<number> {
@@ -472,6 +490,8 @@ export interface ECPediatricDto extends Serializable {
 }
 
 export interface EEmergencyCareState {
+    description: string;
+    id: number;
 }
 
 export interface EEmergencyCareType {
@@ -856,6 +876,10 @@ export interface NewDosageDto extends Serializable {
     frequency?: number;
 }
 
+export interface NewEffectiveClinicalObservationDto extends ClinicalObservationDto {
+    effectiveTime: DateTimeDto;
+}
+
 export interface NewEmergencyCareDto extends EmergencyCareDto {
 }
 
@@ -867,6 +891,15 @@ export interface NewMedicalRequestDto {
 export interface NewServiceRequestListDto extends Serializable {
     medicalCoverageId: number;
     studiesDto: StudyDto[];
+}
+
+export interface NewVitalSignsObservationDto extends Serializable {
+    bloodOxygenSaturation?: NewEffectiveClinicalObservationDto;
+    diastolicBloodPressure?: NewEffectiveClinicalObservationDto;
+    heartRate?: NewEffectiveClinicalObservationDto;
+    respiratoryRate?: NewEffectiveClinicalObservationDto;
+    systolicBloodPressure?: NewEffectiveClinicalObservationDto;
+    temperature?: NewEffectiveClinicalObservationDto;
 }
 
 export interface OauthConfigDto {
@@ -1262,6 +1295,9 @@ export interface TriageNoAdministrativeDto extends TriageDto {
 }
 
 export interface TriagePediatricDto extends TriageNoAdministrativeDto {
+    appearance: AppearanceDto;
+    breathing: BreathingDto;
+    circulation: CirculationDto;
 }
 
 export interface UserDto extends AbstractUserDto {

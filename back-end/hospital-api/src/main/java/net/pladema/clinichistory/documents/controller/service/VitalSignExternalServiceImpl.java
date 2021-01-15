@@ -1,0 +1,55 @@
+package net.pladema.clinichistory.documents.controller.service;
+
+import net.pladema.clinichistory.documents.controller.dto.NewVitalSignsObservationDto;
+import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
+import net.pladema.clinichistory.documents.service.ips.ClinicalObservationService;
+import net.pladema.clinichistory.documents.service.ips.domain.VitalSignBo;
+import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.VitalSignMapper;
+import net.pladema.patient.controller.dto.BasicPatientDto;
+import net.pladema.patient.controller.service.PatientExternalService;
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+@Service
+public class VitalSignExternalServiceImpl implements VitalSignExternalService{
+
+    private final Logger LOG = LoggerFactory.getLogger(VitalSignExternalServiceImpl.class);
+
+    private final ClinicalObservationService clinicalObservationService;
+
+    private final PatientExternalService patientExternalService;
+
+    private final VitalSignMapper vitalSignMapper;
+
+    public VitalSignExternalServiceImpl(ClinicalObservationService clinicalObservationService,
+                                        PatientExternalService patientExternalService,
+                                        VitalSignMapper vitalSignMapper) {
+        this.clinicalObservationService = clinicalObservationService;
+        this.patientExternalService = patientExternalService;
+        this.vitalSignMapper = vitalSignMapper;
+    }
+
+    @Override
+    public NewVitalSignsObservationDto saveVitalSigns(Integer patientId, NewVitalSignsObservationDto vitalSignsObservationDto) {
+        LOG.debug("Input parameter -> vitalSignsObservationDto {}", vitalSignsObservationDto);
+        PatientInfoBo patientInfo = getPatientInfoBo(patientId);
+        VitalSignBo vitalSignBo = vitalSignMapper.fromVitalSignsObservationDto(vitalSignsObservationDto);
+        vitalSignBo = clinicalObservationService.loadVitalSigns(patientInfo, null, Optional.of(vitalSignBo));
+        NewVitalSignsObservationDto result = vitalSignMapper.toVitalSignsObservationDto(vitalSignBo);
+        LOG.debug("Output -> {}", result);
+        return result;
+    }
+
+    @NotNull
+    private PatientInfoBo getPatientInfoBo(Integer patientId) {
+        if (patientId == null)
+            return new PatientInfoBo();
+        BasicPatientDto patientDto = (patientExternalService.getBasicDataFromPatient(patientId));
+        PatientInfoBo patientInfo = new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge());
+        return patientInfo;
+    }
+}

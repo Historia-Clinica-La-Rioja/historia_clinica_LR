@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 @Getter
 @Setter
 @EqualsAndHashCode
@@ -22,5 +24,21 @@ public class TriageBo {
     private Short categoryId;
 
     private Integer doctorsOfficeId;
+
+    private String notes;
+
+    private Short bodyTemperatureId;
+
+    private Boolean cryingExcessive;
+
+    private Short muscleHypertoniaId;
+
+    private Short respiratoryRetractionId;
+
+    private Boolean stridor;
+
+    private Short perfusionId;
+
+    private List<Integer> vitalSignIds;
 
 }

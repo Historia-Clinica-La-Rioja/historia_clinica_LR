@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.emergencycare.triage.service.domain.TriageBo;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -44,5 +45,15 @@ public class TriageDetails implements Serializable {
 
 	@Column(name = "perfusion_id", nullable = false)
 	private Short perfusionId;
+
+	public TriageDetails(TriageBo triageBo) {
+		this.triageId = triageBo.getId();
+		this.bodyTemperatureId = triageBo.getBodyTemperatureId();
+		this.cryingExcessive = triageBo.getCryingExcessive();
+		this.muscleHypertoniaId = triageBo.getMuscleHypertoniaId();
+		this.respiratoryRetractionId = triageBo.getRespiratoryRetractionId();
+		this.stridor = triageBo.getStridor();
+		this.perfusionId = triageBo.getPerfusionId();
+	}
 
 }

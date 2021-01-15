@@ -5,9 +5,12 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.Value;
+import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
 import net.pladema.emergencycare.triage.controller.dto.TriageAdministrativeDto;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Value
 @Builder
@@ -19,5 +22,10 @@ public class ECAdministrativeDto implements Serializable {
     NewEmergencyCareDto administrative;
 
     TriageAdministrativeDto triage;
+
+    public List<SnomedDto> reasons() {
+        return (this.getAdministrative() != null && this.getAdministrative().getReasons() != null) ?
+                this.getAdministrative().getReasons() : new ArrayList<>();
+    }
 
 }

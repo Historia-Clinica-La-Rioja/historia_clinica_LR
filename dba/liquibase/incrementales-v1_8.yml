@@ -158,3 +158,13 @@ databaseChangeLog:
             dropColumn:
                 tableName: diagnostic_report
                 columnName: path_file
+
+    - changeSet:
+        id: observation_vital_sign-dropNotNullConstraint-patient_id
+        author: tmedina
+        comment: Drop not null constraint in patient_id column in observation_vital_sign table
+        changes:
+            - dropNotNullConstraint:
+                columnDataType: int
+                columnName: patient_id
+                tableName: observation_vital_sign

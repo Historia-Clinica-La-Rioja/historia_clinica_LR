@@ -7,14 +7,16 @@ import net.pladema.emergencycare.triage.controller.dto.TriageListDto;
 import net.pladema.emergencycare.triage.controller.dto.TriagePediatricDto;
 import net.pladema.emergencycare.triage.repository.entity.TriageCategory;
 import net.pladema.emergencycare.triage.service.domain.TriageBo;
+import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 import java.util.Collection;
 import java.util.List;
 
-@Mapper
+@Mapper(uses = {LocalDateMapper.class})
 public interface TriageMapper {
 
     @Named("toTriageBo")
@@ -24,6 +26,12 @@ public interface TriageMapper {
     TriageBo toTriageBo(TriageAdultGynecologicalDto triageDto);
 
     @Named("toTriageBo")
+    @Mapping(target = "bodyTemperatureId", source = "appearance.bodyTemperatureId")
+    @Mapping(target = "cryingExcessive", source = "appearance.cryingExcessive")
+    @Mapping(target = "muscleHypertoniaId", source = "appearance.muscleHypertonia")
+    @Mapping(target = "respiratoryRetractionId", source = "breathing.respiratoryRetractionId")
+    @Mapping(target = "stridor", source = "breathing.stridor")
+    @Mapping(target = "perfusionId", source = "circulation.perfusionId")
     TriageBo toTriageBo(TriagePediatricDto triageDto);
 
     @Named("toTriageListDto")
