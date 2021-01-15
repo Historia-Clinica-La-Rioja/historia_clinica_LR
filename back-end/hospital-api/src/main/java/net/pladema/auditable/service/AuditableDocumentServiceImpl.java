@@ -48,7 +48,7 @@ public class AuditableDocumentServiceImpl implements AuditableService {
     public Optional<DocumentFile> save(OnGenerateDocumentEvent event)  {
         Map<String,Object> contextMap = auditableContextBuilder.buildContext(event.getDocument(), event.getPatientId());
 
-        String path = streamFile.buildPath(event.getRelativeDirectory());
+        String path = streamFile.buildPathAsString(event.getRelativeDirectory());
         String realFileName = event.getUuid();
         String fictitiousFileName = event.buildDownloadName();
         String checksum = null;

@@ -5,10 +5,11 @@ import {environment} from '@environments/environment';
 import {Observable} from 'rxjs';
 import {
 	CompleteRequestDto,
-	DiagnosticReportInfoDto,
+	DiagnosticReportInfoDto, DiagnosticReportInfoWithFilesDto,
 	PrescriptionDto
 } from '@api-rest/api-model';
-import {flatMap, map} from 'rxjs/operators';
+import {flatMap} from 'rxjs/operators';
+import { saveAs } from 'file-saver';
 
 @Injectable({
 	providedIn: 'root'
@@ -36,12 +37,6 @@ export class ServiceRequestService {
 	}
 
 
-	download(patientId: number, serviceRequestId: number): Observable<string> {
-		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${serviceRequestId}/downloadFile`;
-		return this.http.get<string>(url);
-	}
-
-
 	complete(patientId: number, diagnosticReportId: number, completeRequestDto: CompleteRequestDto, files: File[]): Observable<void> {
 		const commonUrl = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${diagnosticReportId}`;
 		const uploadFileUrl = commonUrl + '/uploadFile';
@@ -55,14 +50,22 @@ export class ServiceRequestService {
 			}));
 	}
 
-
 	delete(patientId: number, serviceRequestId: number): Observable<string> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${serviceRequestId}`;
 		return this.http.delete<string>(url);
 	}
 
-	get(patientId: number, serviceRequestId: number): Observable<DiagnosticReportInfoDto> {
-		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${serviceRequestId}`;
-		return this.http.get<DiagnosticReportInfoDto>(url);
+	get(patientId: number, diagnosticReportId: number): Observable<DiagnosticReportInfoWithFilesDto> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${diagnosticReportId}`;
+		return this.http.get<DiagnosticReportInfoWithFilesDto>(url);
 	}
+
+	download(patientId: number, fileId: number, fileName: string) {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/download/${fileId}`;
+		this.http.get(
+			url,
+			{ responseType: 'blob' }
+		).subscribe(blob => saveAs(blob, fileName));
+	}
+
 }

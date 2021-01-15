@@ -30,7 +30,7 @@ public class ImageFileService {
 
     public String buildPath(String fileRelativePath){
         LOG.debug("Input paramenter -> fileRelativePath {}", fileRelativePath);
-        String path = streamFile.buildPath(fileRelativePath);
+        String path = streamFile.buildPathAsString(fileRelativePath);
         LOG.debug(OUTPUT, path);
         return path;
     }

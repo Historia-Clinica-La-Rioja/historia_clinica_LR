@@ -23,8 +23,12 @@ public class StreamFile {
         super();
     }
 
-    public String buildPath(String relativeFilePath) {
+    public String buildPathAsString(String relativeFilePath) {
         return getRootDirectory() + relativeFilePath;
+    }
+
+    public Path buildPath(String relativeFilePath){
+        return Paths.get(getRootDirectory(), relativeFilePath);
     }
 
     public boolean saveFileInDirectory(String path, ByteArrayOutputStream byteArrayOutputStream) throws IOException {

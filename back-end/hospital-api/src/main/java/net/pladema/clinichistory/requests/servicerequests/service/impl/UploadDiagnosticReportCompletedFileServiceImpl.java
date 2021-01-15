@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -69,7 +68,7 @@ public class UploadDiagnosticReportCompletedFileServiceImpl  implements UploadDi
 
     private String buildCompleteFilePath(String partialPath){
         LOG.debug("Input parameters -> partialPath {}", partialPath);
-        String result = fileService.buildPath(partialPath);
+        String result = fileService.buildRelativePath(partialPath);
         LOG.debug(OUTPUT, result);
         return result;
     }

@@ -2,11 +2,15 @@ package net.pladema.sgx.files;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
 import java.util.UUID;
 
 @Component
@@ -22,9 +26,9 @@ public class FileService {
         this.streamFile = streamFile;
     }
 
-    public String buildPath(String fileRelativePath){
+    public String buildRelativePath(String fileRelativePath){
         LOG.debug("Input paramenter -> fileRelativePath {}", fileRelativePath);
-        String path = streamFile.buildPath(fileRelativePath);
+        String path = streamFile.buildPathAsString(fileRelativePath);
         LOG.debug(OUTPUT, path);
         return path;
     }
@@ -48,4 +52,13 @@ public class FileService {
         }
     }
 
+    public Resource loadFile(String relativeFilePath) {
+        Path path = streamFile.buildPath(relativeFilePath);
+        try {
+            return new UrlResource(path.toUri());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

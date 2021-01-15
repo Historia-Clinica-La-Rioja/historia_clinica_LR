@@ -10,6 +10,7 @@ import net.pladema.clinichistory.requests.servicerequests.service.*;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportBo;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportFilterBo;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
+import net.pladema.clinichistory.requests.servicerequests.service.domain.StoredFileBo;
 import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.sgx.security.utils.UserInfo;
@@ -19,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -52,6 +54,7 @@ public class ServiceRequestController {
     private final UpdateDiagnosticReportFileService updateDiagnosticReportFileService;
     private final DiagnosticReportInfoService diagnosticReportInfoService;
     private final FileMapper fileMapper;
+    private final ServeDiagnosticReportFileService serveDiagnosticReportFileService;
 
     public ServiceRequestController(HealthcareProfessionalExternalService healthcareProfessionalExternalService,
                                     CreateServiceRequestService createServiceRequestService,
@@ -63,7 +66,7 @@ public class ServiceRequestController {
                                     DeleteDiagnosticReportService deleteDiagnosticReportService, CompleteDiagnosticReportService completeDiagnosticReportService,
                                     CompleteDiagnosticReportMapper completeDiagnosticReportMapper,
                                     UploadDiagnosticReportCompletedFileService uploadDiagnosticReportCompletedFileService,
-                                    UpdateDiagnosticReportFileService updateDiagnosticReportFileService, DiagnosticReportInfoService diagnosticReportInfoService, FileMapper fileMapper) {
+                                    UpdateDiagnosticReportFileService updateDiagnosticReportFileService, DiagnosticReportInfoService diagnosticReportInfoService, FileMapper fileMapper, ServeDiagnosticReportFileService serveDiagnosticReportFileService) {
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.createServiceRequestService = createServiceRequestService;
         this.createServiceRequestMapper = createServiceRequestMapper;
@@ -78,6 +81,7 @@ public class ServiceRequestController {
         this.updateDiagnosticReportFileService = updateDiagnosticReportFileService;
         this.diagnosticReportInfoService = diagnosticReportInfoService;
         this.fileMapper = fileMapper;
+        this.serveDiagnosticReportFileService = serveDiagnosticReportFileService;
     }
 
     @PostMapping
@@ -112,17 +116,18 @@ public class ServiceRequestController {
         return result;
     }
 
-    @GetMapping("/{serviceRequestId}/download")
-    @ResponseStatus(code = HttpStatus.OK)
-    public FileDto download(@PathVariable(name = "institutionId") Integer institutionId,
-                            @PathVariable(name = "patientId") Integer patientId,
-                            @PathVariable(name = "serviceRequestId") Integer serviceRequestId
+    @GetMapping("/download/{fileId}")
+    public ResponseEntity download(@PathVariable(name = "institutionId") Integer institutionId,
+                                   @PathVariable(name = "patientId") Integer patientId,
+                                   @PathVariable(name = "fileId") Integer fileId
     ) {
-        LOG.debug(COMMON_INPUT, institutionId, patientId, serviceRequestId);
-        FileDto result = new FileDto();
-        //result.setFile("file");
+        LOG.debug("Input parameters -> institutionId {} patientId {}, fileId {}", institutionId, patientId, fileId);
+        StoredFileBo result = serveDiagnosticReportFileService.run(fileId);
         LOG.debug(OUTPUT, result);
-        return result;
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(result.getContentType()))
+                .contentLength(result.getContentLenght())
+                .body(result.getResource());
     }
 
     @PutMapping("/{diagnosticReportId}/complete")
