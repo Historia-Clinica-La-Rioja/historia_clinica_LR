@@ -14,7 +14,7 @@ import java.util.List;
 public class ChangeStateMedicationRequestDto implements Serializable {
 
     @Nullable
-    private Short dayQuantity;
+    private Double dayQuantity;
 
     @Nullable
     private String observations;

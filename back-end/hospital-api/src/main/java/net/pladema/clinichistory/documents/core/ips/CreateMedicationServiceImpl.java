@@ -118,7 +118,9 @@ public class CreateMedicationServiceImpl implements CreateMedicationService {
         newDosage.setDuration(!dosage.isChronic() ? dosage.getDuration() : null);
         newDosage.setDurationUnit(EUnitsOfTimeBo.DAY.getValue());
         newDosage.setPeriodUnit(dosage.getPeriodUnit());
-        newDosage.setFrequency(EUnitsOfTimeBo.DAY.getValue().equals(dosage.getPeriodUnit()) ? 1 : dosage.getFrequency());
+        if (EUnitsOfTimeBo.DAY.getValue().equals(dosage.getPeriodUnit()))
+            newDosage.setFrequency(1);
+        else newDosage.setFrequency(dosage.getFrequency());
         newDosage = dosageRepository.save(newDosage);
         LOG.debug(OUTPUT, newDosage);
         return newDosage;

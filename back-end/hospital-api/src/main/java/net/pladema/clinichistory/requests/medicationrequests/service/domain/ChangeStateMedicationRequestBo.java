@@ -12,7 +12,7 @@ public class ChangeStateMedicationRequestBo implements Serializable {
 
     private final String statusId;
 
-    private final Short dayQuantity;
+    private final Double dayQuantity;
 
     private final String observations;
 

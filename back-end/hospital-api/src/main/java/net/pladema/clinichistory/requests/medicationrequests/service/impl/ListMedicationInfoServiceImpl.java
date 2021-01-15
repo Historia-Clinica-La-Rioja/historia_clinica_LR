@@ -45,6 +45,7 @@ public class ListMedicationInfoServiceImpl implements ListMedicationInfoService 
                 .map(this::createMedicationBo)
                 .filter(mb -> byStatus(mb, filter.getStatusId()))
                 .collect(Collectors.toList());
+        result.forEach(medicationBo -> medicationBo.setStatusId(filter.getStatusId()));
         LOG.trace("OUTPUT List -> {}", result);
         return result;
     }

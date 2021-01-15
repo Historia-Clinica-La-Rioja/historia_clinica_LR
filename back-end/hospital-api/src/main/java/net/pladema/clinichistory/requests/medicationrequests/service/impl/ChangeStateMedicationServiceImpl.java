@@ -74,7 +74,7 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
     public void execute(PatientInfoBo patient, ChangeStateMedicationRequestBo changeStateMedicationRequestBo) {
         LOG.debug("Input parameters -> patient {}, changeStateMedicationRequestBo {}", patient, changeStateMedicationRequestBo);
         String newStatusId = changeStateMedicationRequestBo.getStatusId();
-        Short duration = changeStateMedicationRequestBo.getDayQuantity();
+        Double duration = changeStateMedicationRequestBo.getDayQuantity();
         assertRequiredFields(patient, newStatusId);
 
         changeStateMedicationRequestBo.getMedicationsIds().forEach(mid ->
@@ -98,7 +98,7 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
         medicationStatusValidator.isValid(newStatusId);
     }
 
-    private void assertChangeState(String newStatusId, Short duration, MedicationStatement medication, DosageBo dosage) {
+    private void assertChangeState(String newStatusId, Double duration, MedicationStatement medication, DosageBo dosage) {
         LOG.debug("Input parameters -> newStatusId {}, duration {}, medication {}, dosage {}", newStatusId, duration, medication, dosage);
         final String LA_MEDICACIÓN_CON_ID = "La medicación con id ";
         Integer id = medication.getId();
@@ -136,7 +136,7 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
         return result;
     }
 
-    private MedicationBo updateMedication(MedicationStatement medication, DosageBo dosage, String newStatusId, Short duration, String observations) {
+    private MedicationBo updateMedication(MedicationStatement medication, DosageBo dosage, String newStatusId, Double duration, String observations) {
         LOG.debug("Input parameters -> medication {}, dosage {}, statusId {}, duration {}, observations {}", medication, dosage, newStatusId, duration, observations);
         MedicationBo result = new MedicationBo();
 
@@ -155,10 +155,12 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
         return result;
     }
 
-    private DosageBo create(DosageBo dosage, String newStatusId, Short duration) {
+    private DosageBo create(DosageBo dosage, String newStatusId, Double duration) {
         LOG.debug("Input parameters -> dosage {}, statusId {}, duration {}", dosage, newStatusId, duration);
         DosageBo result = new DosageBo();
-        result.setDuration(dosage.getDuration());
+        if (dosage.getDuration() != null )
+            result.setDuration(dosage.getDuration());
+        else result.setDuration(duration);
         result.setStartDate(dosage.getStartDate() != null ? dosage.getStartDate() : dateTimeProvider.nowDate());
         result.setChronic(dosage.isChronic());
         result.setFrequency(dosage.getFrequency());
