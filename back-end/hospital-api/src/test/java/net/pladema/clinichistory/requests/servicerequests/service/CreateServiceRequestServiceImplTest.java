@@ -1,6 +1,5 @@
 package net.pladema.clinichistory.requests.servicerequests.service;
 
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.Snomed;
 import net.pladema.clinichistory.documents.service.DocumentFactory;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.domain.SnomedBo;
@@ -21,7 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
-@DataJpaTest
+@DataJpaTest(showSql = false)
 public class CreateServiceRequestServiceImplTest {
 
     private CreateServiceRequestService  createServiceRequestServiceImpl;

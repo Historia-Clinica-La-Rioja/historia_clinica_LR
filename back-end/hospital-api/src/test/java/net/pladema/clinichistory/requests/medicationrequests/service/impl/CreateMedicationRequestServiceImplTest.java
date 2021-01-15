@@ -22,8 +22,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.time.LocalDate;
 import java.util.List;
 
+
 @RunWith(SpringRunner.class)
-@DataJpaTest
+@DataJpaTest(showSql = false)
 public class CreateMedicationRequestServiceImplTest {
 
 	private CreateMedicationRequestService createMedicationRequestService;

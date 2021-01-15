@@ -33,7 +33,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
-@DataJpaTest
+@DataJpaTest(showSql = false)
 public class CreateMedicationServiceImplTest {
 
     private CreateMedicationServiceImpl medicationServiceImpl;

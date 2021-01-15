@@ -471,6 +471,8 @@ export interface EEmergencyCareState {
 }
 
 export interface EEmergencyCareType {
+    description: string;
+    id: number;
 }
 
 export interface EffectiveClinicalObservationDto extends ClinicalObservationDto {
