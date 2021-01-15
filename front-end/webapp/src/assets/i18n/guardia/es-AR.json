@@ -16,6 +16,8 @@
 			"HEART_RATE": "Frecuencia cardíaca (/min)",
 			"LEVEL": "Nivel de urgencia",
 			"MUSCLE_HYPERTONIA": "Tono muscular",
+			"NEW_TRIAGE_CONFIRMATION_MSG": "Triage agregado correctamente",
+			"NEW_TRIAGE_ERROR_MSG": "No fue posible agregar el triage",
 			"OXYGEN_SATURATION": "Saturación de oxígeno (%)",
 			"PERFUSION": "Perfusión",
 			"RESPIRATORY_RATE": "Frecuencia respiratoria (/min)",

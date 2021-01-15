@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import {
-	EmergencyCareEpisodeDto,
-	EmergencyCareEpisodeService
-} from '@api-rest/services/emergency-care-episode.service';
+import { EmergencyCareEpisodeDto, EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import { DateTimeDto } from '@api-rest/api-model';
+import { ERole } from '@api-rest/api-model';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { differenceInMinutes } from 'date-fns';
 import { EstadosEpisodio, Triages } from '../../constants/masterdata';
@@ -14,8 +12,14 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SelectConsultorioComponent } from '../../dialogs/select-consultorio/select-consultorio.component';
 import { ConfirmDialogComponent } from '@core/dialogs/confirm-dialog/confirm-dialog.component';
+import { PermissionsService } from "@core/services/permissions.service";
+import { AdministrativeTriageDialogComponent } from "../../dialogs/administrative-triage-dialog/administrative-triage-dialog.component";
+import { take } from "rxjs/operators";
 
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
+const ROLES_TO_MEDIC_TRIAGE: ERole[] = [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO];
+const ROLES_TO_ADMIN_TRIAGE: ERole[] = [ERole.ADMINISTRATIVO];
+const EC_TYPE_PEDIATRIC_ID = 2;
 
 @Component({
 	selector: 'app-home',
@@ -35,11 +39,16 @@ export class HomeComponent implements OnInit {
 		private imageDecoderService: ImageDecoderService,
 		private snackBarService: SnackBarService,
 		private readonly dialog: MatDialog,
-		public readonly episodeStateService: EpisodeStateService
+		public readonly episodeStateService: EpisodeStateService,
+		public readonly permissionsService: PermissionsService
 	) {
 	}
 
 	ngOnInit(): void {
+		this.getEpisodes();
+	}
+
+	getEpisodes(): void {
 		this.emergencyCareEpisodeService.getAll().subscribe(episodes => {
 			this.episodes = episodes.map(episode => this.mapPhotoAndWaitingTime(episode));
 		});
@@ -124,8 +133,33 @@ export class HomeComponent implements OnInit {
 		});
 	}
 
-	nuevoTriage(): void {
-		console.log('Nuevo triage');
+	nuevoTriage(episode: EmergencyCareEpisodeDto): void {
+		this.permissionsService.hasContextAssignments$(ROLES_TO_MEDIC_TRIAGE)
+			.pipe(take(1))
+			.subscribe(hasMedicRole => {
+				if(hasMedicRole) {
+					if(episode.type.id == EC_TYPE_PEDIATRIC_ID) {
+						//TODO open pediatric triage dialog
+					}
+					else {
+						//TODO open adult gynecological triage dialog
+					}
+				}
+				else {
+					this.permissionsService.hasContextAssignments$(ROLES_TO_ADMIN_TRIAGE)
+						.pipe(take(1))
+						.subscribe(hasAdministrativeRole => {
+							if(hasAdministrativeRole) {
+								const dialogRef = this.dialog.open(AdministrativeTriageDialogComponent, {data: episode.id});
+								dialogRef.afterClosed().subscribe(idReturned => {
+									if(idReturned){
+										this.getEpisodes();
+									}
+								});
+							}
+						})
+				}
+			});
 	}
 
 }
