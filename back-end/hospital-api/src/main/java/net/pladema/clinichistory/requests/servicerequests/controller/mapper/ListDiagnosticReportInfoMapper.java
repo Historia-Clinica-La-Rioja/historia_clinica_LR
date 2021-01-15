@@ -24,6 +24,7 @@ public class ListDiagnosticReportInfoMapper {
     public DiagnosticReportInfoDto parseTo(DiagnosticReportBo diagnosticReportBo, ProfessionalDto professionalDto){
         LOG.debug("input -> diagnosticReportBo{},a professionalDto {}", diagnosticReportBo, professionalDto);
         DiagnosticReportInfoDto result = new DiagnosticReportInfoDto();
+        result.setId(diagnosticReportBo.getId());
         result.setSnomed(SnomedDto.from(diagnosticReportBo.getSnomed()));
         result.setHealthCondition(HealthConditionInfoDto.from(diagnosticReportBo.getHealthCondition()));
         result.setObservations(diagnosticReportBo.getObservations());

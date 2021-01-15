@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DiagnosticReportInfoDto {
+    private Integer id;
     private SnomedDto snomed;
     private HealthConditionInfoDto healthCondition;
 

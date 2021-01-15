@@ -341,6 +341,7 @@ export interface DiagnosisDto extends HealthConditionDto {
 export interface DiagnosticReportInfoDto {
     doctor: DoctorInfoDto;
     healthCondition: HealthConditionInfoDto;
+    id: number;
     link?: string;
     observations?: string;
     serviceRequestId: number;
