@@ -56,27 +56,27 @@ public class TriageMasterDataController {
     public ResponseEntity<List<MasterDataDto>> getBodyTemperature() {
         LOG.debug("{}", "All body temperature");
         List<EBodyTemperature> data = triageMasterDataService.getBodyTemperature();
-        return ResponseEntity.ok().body(jackson.write(data));
+        return ResponseEntity.ok().body(jackson.writeList(data));
     }
 
     @GetMapping("/muscleHypertonia")
     public ResponseEntity<List<MasterDataDto>> getMuscleHypertonia() {
         LOG.debug("{}", "All muscle hypertonia");
         List<EMuscleHypertonia> data = triageMasterDataService.getMuscleHypertonia();
-        return ResponseEntity.ok().body(jackson.write(data));
+        return ResponseEntity.ok().body(jackson.writeList(data));
     }
 
     @GetMapping("/respiratoryRetraction")
     public ResponseEntity<List<MasterDataDto>> getRespiratoryRetraction() {
         LOG.debug("{}", "All muscle respiratory retraction");
         List<ERespiratoryRetraction> data = triageMasterDataService.getRespiratoryRetraction();
-        return ResponseEntity.ok().body(jackson.write(data));
+        return ResponseEntity.ok().body(jackson.writeList(data));
     }
 
     @GetMapping("/perfusion")
     public ResponseEntity<List<MasterDataDto>> getPerfusion() {
         LOG.debug("{}", "All muscle respiratory retraction");
         List<EPerfusion> data = triageMasterDataService.getPerfusion();
-        return ResponseEntity.ok().body(jackson.write(data));
+        return ResponseEntity.ok().body(jackson.writeList(data));
     }
 }

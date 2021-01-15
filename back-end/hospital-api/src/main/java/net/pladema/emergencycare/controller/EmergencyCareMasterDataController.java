@@ -34,12 +34,12 @@ public class EmergencyCareMasterDataController {
     @GetMapping(value = "/type")
     public ResponseEntity<Collection<MasterDataDto>> getType() {
         LOG.debug("{}", "All types");
-        return ResponseEntity.ok().body(enumWriter.write(emergencyCareMasterDataService.findAllType()));
+        return ResponseEntity.ok().body(enumWriter.writeList(emergencyCareMasterDataService.findAllType()));
     }
 
     @GetMapping(value = "/entranceType")
     public ResponseEntity<Collection<MasterDataDto>> getEntranceType() {
         LOG.debug("{}", "All entrance types");
-        return ResponseEntity.ok().body(enumWriter.write(emergencyCareMasterDataService.findAllEntrance()));
+        return ResponseEntity.ok().body(enumWriter.writeList(emergencyCareMasterDataService.findAllEntrance()));
     }
 }

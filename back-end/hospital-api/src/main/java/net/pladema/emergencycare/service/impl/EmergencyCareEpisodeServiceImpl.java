@@ -10,6 +10,7 @@ import net.pladema.emergencycare.repository.entity.PoliceIntervention;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
 import net.pladema.emergencycare.service.domain.PoliceInterventionBo;
+import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
 import net.pladema.emergencycare.triage.service.TriageService;
 import net.pladema.emergencycare.triage.service.domain.TriageBo;
 import net.pladema.sgx.exceptions.NotFoundException;
@@ -32,6 +33,10 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
     private static final String WRONG_CARE_ID_EPISODE = "wrong-care-id-episode";
 
     private static final String CARE_EPISODE_NOT_FOUND = "El episodio de guardia no se encontró o no existe";
+
+    private static final String WRONG_STATE_ID = "wrong-state-id";
+
+    private static final String STATE_NOT_FOUND = "El estado no se encontró o no existe";
 
     private final TriageService triageService;
 
@@ -142,10 +147,11 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
     }
 
     @Override
-    public MasterDataProjection getState(Integer episodeId) {
-        LOG.debug("Input parameters -> episodeId {}", episodeId);
-        //TODO implement method
-        return null;
+    public EEmergencyCareState getState(Integer episodeId, Integer institutionId) {
+        LOG.debug("Input parameters -> episodeId {}, institutionId {}", episodeId, institutionId);
+        Short emergencyCareStateid = emergencyCareEpisodeRepository.getState(episodeId, institutionId)
+                .orElseThrow(() -> new NotFoundException(WRONG_STATE_ID, STATE_NOT_FOUND));
+        return EEmergencyCareState.getById(emergencyCareStateid);
     }
 
     @Override

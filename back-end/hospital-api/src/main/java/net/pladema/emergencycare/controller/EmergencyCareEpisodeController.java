@@ -10,9 +10,11 @@ import net.pladema.emergencycare.controller.dto.ResponseEmergencyCareDto;
 import net.pladema.emergencycare.controller.mapper.EmergencyCareMapper;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
+import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
 import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
 import net.pladema.person.controller.service.PersonExternalService;
-import net.pladema.sgx.masterdata.repository.MasterDataProjection;
+import net.pladema.sgx.masterdata.dto.MasterDataDto;
+import net.pladema.sgx.masterdata.service.domain.EnumWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -48,15 +50,18 @@ public class EmergencyCareEpisodeController {
 
     private final PatientExternalMedicalCoverageService patientExternalMedicalCoverageService;
 
+    private final EnumWriter enumWriter;
+
     public EmergencyCareEpisodeController(EmergencyCareEpisodeService emergencyCareEpisodeService,
                                           EmergencyCareMapper emergencyCareMapper,
-                                          ReasonExternalService reasonExternalService, PersonExternalService personExternalService, PatientExternalMedicalCoverageService patientExternalMedicalCoverageService){
+                                          ReasonExternalService reasonExternalService, PersonExternalService personExternalService, PatientExternalMedicalCoverageService patientExternalMedicalCoverageService, EnumWriter enumWriter){
         super();
         this.emergencyCareEpisodeService = emergencyCareEpisodeService;
         this.emergencyCareMapper=emergencyCareMapper;
         this.reasonExternalService = reasonExternalService;
         this.personExternalService = personExternalService;
         this.patientExternalMedicalCoverageService = patientExternalMedicalCoverageService;
+        this.enumWriter = enumWriter;
     }
 
     @GetMapping
@@ -126,13 +131,13 @@ public class EmergencyCareEpisodeController {
 
     @GetMapping("/{episodeId}/state")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
-    public ResponseEntity<MasterDataProjection> getState(
+    public ResponseEntity<MasterDataDto> getState(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "episodeId") Integer episodeId) {
         LOG.debug("Input parameters -> institutionId {}, episodeId {}", institutionId, episodeId);
-        MasterDataProjection result = emergencyCareEpisodeService.getState(episodeId);
+        EEmergencyCareState result = emergencyCareEpisodeService.getState(episodeId, institutionId);
         LOG.debug("Output -> {}", result);
-        return ResponseEntity.ok().body(result);
+        return ResponseEntity.ok().body(enumWriter.write(result));
     }
 
     @PostMapping("/{episodeId}/state/change")

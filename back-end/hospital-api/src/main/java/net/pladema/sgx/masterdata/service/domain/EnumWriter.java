@@ -17,15 +17,20 @@ public class EnumWriter {
         this.jackson=jackson;
     }
 
-    public List<MasterDataDto> write(List<? extends Enum> list){
+    public List<MasterDataDto> writeList(List<? extends Enum> list){
         List<MasterDataDto> result = new ArrayList<>();
         list.forEach(e -> {
-            try {
-                result.add(jackson.readValue(jackson.writeValueAsString(e), MasterDataDto.class));
-            } catch (JsonProcessingException jsonProcessingException) {
-                jsonProcessingException.printStackTrace();
-            }
+                result.add(write(e));
         });
         return result;
+    }
+
+    public <E extends Enum> MasterDataDto write(E item){
+        try {
+            return jackson.readValue(jackson.writeValueAsString(item), MasterDataDto.class);
+        } catch (JsonProcessingException jsonProcessingException) {
+            jsonProcessingException.printStackTrace();
+        }
+        return null;
     }
 }
