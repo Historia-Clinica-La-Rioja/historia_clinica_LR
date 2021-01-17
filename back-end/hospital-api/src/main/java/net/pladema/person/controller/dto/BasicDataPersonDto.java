@@ -1,11 +1,11 @@
 package net.pladema.person.controller.dto;
 
-import java.io.Serializable;
-import java.time.LocalDate;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.io.Serializable;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -38,4 +38,8 @@ public class BasicDataPersonDto implements Serializable {
     private Short age;
 
     private LocalDate birthDate;
+
+    public String completeName(){
+        return lastName + "," + firstName;
+    }
 }

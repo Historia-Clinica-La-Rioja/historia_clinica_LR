@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head th:fragment="headerfiles">
+    <title>Report</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"/>
+    <style>
+        .logo {
+            display: inline-block;
+            width: 30%;
+        }
+        .date-header {
+            display: inline-block;
+            position: absolute;
+            right: 0;
+            margin-bottom: 15px;
+        }
+        .footer-left{
+            display: inline-block;
+            text-align: left;
+            margin-right: 30px;
+        }
+        .footer-right{
+            position: relative;
+            top: 30px;
+            display: inline-block;
+            text-align: center;
+            width: 200px;
+        }
+        header{
+            margin-bottom: 20px;
+        }
+        .hr-signature {
+            background:#222222;
+            height:1px;
+            width: 60%;
+            position: relative;
+            display: block;
+        }
+        .main-container {
+            font-size: 13px;
+        }
+        footer {
+            margin-top: 20px;
+        }
+	</style>
+</head>
+<body th:fragment="data">
+        <header>
+            <div th:if="${recipe}">
+                <div class="logo"></div>
+                <div class="date-header">
+                    <strong>Fecha de emisión: </strong>
+                    <label th:text="${request.requestDate}"></label>
+                    <strong> N° de Receta: </strong>
+                    <label th:text="${request.medicationRequestId}"></label>
+                </div>
+            </div>
+            <div th:if="${order}">
+                <div class="logo"></div>
+                <div class="date-header">
+                    <strong>Fecha de emisión: </strong>
+                    <label th:text="${request.requestDate}"></label>
+                    <strong> N° de Orden: </strong>
+                    <label th:text="${request.serviceRequestId}"></label>
+                </div>
+            </div>
+            <div>
+                <strong>DNI: </strong>
+                <label th:text="${patient.person.identificationNumber}"></label>
+                <strong> Nombre y apellido: </strong><label th:text="${patient.person.completeName()}"></label>
+                <br/>
+                <div th:if="${patientCoverage != null}">
+                    <strong>Cobertura prestacional: </strong>
+                    <label th:text="${patientCoverage.medicalCoverage.name}"></label>
+                    <br/>
+                    <strong> N° afiliado: </strong><label th:text="${patientCoverage.affiliateNumber}"></label>
+                    <br/>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-container" th:if="${recipe}">
+            <div style="padding-top: 5px; margin-top: 5px;" th:each="medication,iter: ${request.medications}">
+                <strong>CIE10: </strong>
+                <label th:text="${#strings.defaultString(medication.healthCondition.cie10codes, '-')}"></label>
+                <strong>Diagnóstico: </strong>
+                <label th:text="${medication.healthCondition.snomed.pt}"></label>
+                <br/>
+                <strong>N°: </strong>
+                <label th:text="${(iter.index + 1)}"></label>
+                <strong> Medicación: </strong>
+                <label th:text="${medication.snomed.pt}"></label>
+                <br/>
+                <strong>Observaciones: </strong>
+                <label style="word-wrap: break-word;" th:text="${#strings.defaultString(medication.note, '-')}"></label>
+                <br/>
+            </div>
+        </div>
+        <div class="main-container" th:if="${order}">
+            <div th:each="order,iter: ${request.order}">
+                <strong>CIE10: </strong>
+                <label th:text="${#strings.defaultString(order.healthCondition.cie10codes, '-')}"></label>
+                <strong>Diagnóstico: </strong>
+                <label th:text="${order.healthCondition.snomed.pt}"></label>
+                <br/>
+                <strong>N°: </strong>
+                <label th:text="${(iter.index + 1)}"></label>
+                <strong> Medicación: </strong>
+                <label th:text="${order.snomed.pt}"></label>
+                <br/>
+                <strong>Observaciones: </strong>
+                <label style="word-wrap: break-word;" th:text="${#strings.defaultString(order.note, '-')}"></label>
+                <br/>
+            </div>
+        </div>
+        <footer th:fragment="footer">
+            <div class="footer-left">
+                <strong >Profesional: </strong><label th:text="${professional.getCompleteName()}"></label>
+                <p><strong>Matrícula: </strong><label th:text="${professional.licenceNumber}"></label></p>
+            </div>
+            <div class="footer-right">
+                <hr class="hr-signature"/>
+                <div> <label> Firma </label> </div>
+            </div>
+        </footer>
+</body>
+
+</html>

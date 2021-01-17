@@ -9,7 +9,7 @@
 <div class="container">
 
     <!--Report general information-->
-    <div th:replace="fragments/appointments.html :: reportHeader"></div>
+    <div th:replace="fragments/appointments.html :: body"></div>
 
     <!--No appointments message-->
     <div class="row" th:if="${#lists.isEmpty(attentionTypes)}">

@@ -5,8 +5,11 @@ import net.pladema.clinichistory.requests.medicationrequests.controller.mapper.C
 import net.pladema.clinichistory.requests.medicationrequests.controller.mapper.ListMedicationInfoMapper;
 import net.pladema.clinichistory.requests.medicationrequests.service.ChangeStateMedicationService;
 import net.pladema.clinichistory.requests.medicationrequests.service.CreateMedicationRequestService;
+import net.pladema.clinichistory.requests.medicationrequests.service.GetMedicationRequestInfoService;
 import net.pladema.clinichistory.requests.medicationrequests.service.ListMedicationInfoService;
+import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
 import net.pladema.patient.controller.service.PatientExternalService;
+import net.pladema.sgx.pdf.PdfService;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,6 +50,15 @@ public class MedicationRequestControllerTest extends UnitController {
 
     @MockBean
     private PatientExternalService patientExternalService;
+
+    @MockBean
+    private GetMedicationRequestInfoService getMedicationRequestInfoService;
+
+    @MockBean
+    private PatientExternalMedicalCoverageService patientExternalMedicalCoverageService;
+
+    @MockBean
+    private PdfService pdfService;
 
     @Before
     public void setup() {

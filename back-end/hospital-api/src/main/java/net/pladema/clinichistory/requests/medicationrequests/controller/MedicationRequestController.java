@@ -11,12 +11,18 @@ import net.pladema.clinichistory.requests.medicationrequests.controller.mapper.C
 import net.pladema.clinichistory.requests.medicationrequests.controller.mapper.ListMedicationInfoMapper;
 import net.pladema.clinichistory.requests.medicationrequests.service.ChangeStateMedicationService;
 import net.pladema.clinichistory.requests.medicationrequests.service.CreateMedicationRequestService;
+import net.pladema.clinichistory.requests.medicationrequests.service.GetMedicationRequestInfoService;
 import net.pladema.clinichistory.requests.medicationrequests.service.ListMedicationInfoService;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.ChangeStateMedicationRequestBo;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationFilterBo;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationRequestBo;
+import net.pladema.patient.controller.dto.BasicPatientDto;
+import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
+import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.sgx.error.controller.dto.ApiErrorDto;
+import net.pladema.sgx.pdf.PDFDocumentException;
+import net.pladema.sgx.pdf.PdfService;
 import net.pladema.sgx.security.utils.UserInfo;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
@@ -34,7 +40,9 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -60,13 +68,21 @@ public class MedicationRequestController {
 
     private final PatientExternalService patientExternalService;
 
+    private final GetMedicationRequestInfoService getMedicationRequestInfoService;
+
+    private final PatientExternalMedicalCoverageService patientExternalMedicalCoverageService;
+
+    private final PdfService pdfService;
+
     public MedicationRequestController(CreateMedicationRequestService createMedicationRequestService,
                                        HealthcareProfessionalExternalService healthcareProfessionalExternalService,
                                        CreateMedicationRequestMapper createMedicationRequestMapper,
                                        ListMedicationInfoService listMedicationInfoService,
                                        ListMedicationInfoMapper listMedicationInfoMapper,
-                                       ChangeStateMedicationService changeStateMedicationService, 
-                                       PatientExternalService patientExternalService) {
+                                       ChangeStateMedicationService changeStateMedicationService,
+                                       PatientExternalService patientExternalService,
+                                       GetMedicationRequestInfoService getMedicationRequestInfoService,
+                                       PatientExternalMedicalCoverageService patientExternalMedicalCoverageService, PdfService pdfService) {
         this.createMedicationRequestService = createMedicationRequestService;
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.createMedicationRequestMapper = createMedicationRequestMapper;
@@ -74,6 +90,9 @@ public class MedicationRequestController {
         this.listMedicationInfoMapper = listMedicationInfoMapper;
         this.changeStateMedicationService = changeStateMedicationService;
         this.patientExternalService = patientExternalService;
+        this.getMedicationRequestInfoService = getMedicationRequestInfoService;
+        this.patientExternalMedicalCoverageService = patientExternalMedicalCoverageService;
+        this.pdfService = pdfService;
     }
 
 
@@ -159,15 +178,39 @@ public class MedicationRequestController {
     @GetMapping(value = "/{medicationRequestId}/download")
     public ResponseEntity<InputStreamResource> download(@PathVariable(name = "institutionId") Integer institutionId,
                                                         @PathVariable(name = "patientId") Integer patientId,
-                                                        @PathVariable(name = "medicationRequestId") Integer medicationRequestId) {
+                                                        @PathVariable(name = "medicationRequestId") Integer medicationRequestId,
+                                                        @RequestParam(name = "template") String template) throws PDFDocumentException {
         LOG.debug("medicationRequestList -> institutionId {}, patientId {}, medicationRequestId {}", institutionId, patientId, medicationRequestId);
-        String name = "MedicationRequest";
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        String name = "Receta";
+        var medicationRequestBo = getMedicationRequestInfoService.execute(medicationRequestId);
+        var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
+        var professionalDto = healthcareProfessionalExternalService.findProfessionalById(medicationRequestBo.getDoctorId());
+        var patientCoverageDto = patientExternalMedicalCoverageService.getCoverage(medicationRequestBo.getMedicalCoverageId());
+        var context = createContext(medicationRequestBo, patientDto, professionalDto, patientCoverageDto);
+
+        ByteArrayOutputStream os = pdfService.writer(template, context);
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(os.toByteArray());
         InputStreamResource resource = new InputStreamResource(byteArrayInputStream);
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + name)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename="+name)
                 .contentType(MediaType.APPLICATION_PDF).contentLength(os.size()).body(resource);
+    }
+
+    private Map<String, Object> createContext(MedicationRequestBo medicationRequestBo,
+                                              BasicPatientDto patientDto,
+                                              ProfessionalDto professionalDto,
+                                              PatientMedicalCoverageDto patientCoverageDto){
+        LOG.debug("Input parameters -> medicationRequestBo {}, patientDto {}, professionalDto {}, patientCoverageDto {}",
+                medicationRequestBo, patientDto, professionalDto, patientCoverageDto);
+        Map<String, Object> ctx = new HashMap<>();
+        ctx.put("recipe", true);
+        ctx.put("order", false);
+        ctx.put("request", medicationRequestBo);
+        ctx.put("patient", patientDto);
+        ctx.put("professional", professionalDto);
+        ctx.put("patientCoverage", patientCoverageDto);
+        LOG.debug("Output -> {}", ctx);
+        return ctx;
     }
 
 

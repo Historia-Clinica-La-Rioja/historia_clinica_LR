@@ -30,6 +30,13 @@ public class HealthConditionTestMocks {
         return result;
     }
 
+    public static HealthCondition createPersonalHistoryWithCie10Codes(Integer patientId, Integer snomedId, String statusId, String verificationId, String cie10Codes){
+        HealthCondition result = createMinimumHealthCondition(patientId, snomedId, statusId, verificationId);
+        result.setProblemId(ProblemType.PROBLEM);
+        result.setCie10Codes(cie10Codes);
+        return result;
+    }
+
     public static HealthCondition createChronicPersonalHistory(Integer patientId, Integer snomedId, String verificationId){
         HealthCondition result = createMinimumHealthCondition(patientId, snomedId, ConditionClinicalStatus.ACTIVE, verificationId);
         result.setProblemId(ProblemType.CHRONIC);

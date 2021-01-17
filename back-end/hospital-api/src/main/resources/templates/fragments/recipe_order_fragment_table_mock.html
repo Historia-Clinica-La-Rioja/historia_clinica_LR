@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head th:fragment="headerfiles">
+    <title>Report</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Bootstrap core CSS
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"/>-->
+    <style>
+        .fixed-width {
+            width: 1200px;
+        }
+		h3 {
+			padding-top:10px
+		}
+        h6 {
+            padding: 0px;
+            margin: 0px;
+        }
+        h4 {
+            padding-top:10px
+        }
+        row {
+            padding-left: 50px
+        }
+        .logo {
+            display: inline-block;
+            width: 30%;
+        }
+        .date {
+            display: inline-block;
+            width: 70%;
+        }
+        .right {
+           float: right;
+        }
+        table {
+            font-size:12px;
+            width: 900px;
+            table-layout:fixed;
+        }
+        th {
+           /* background-color: #DDDDDD;*/
+            background-color: #5e96eb;
+        }
+        td {
+            border-bottom: 1px;
+            border-bottom-color: #DDDDDD;
+            word-wrap: break-word;
+        }
+        .cie10-column {
+            width: 50px;
+        }
+        .diag-column {
+            width: 80px;
+        }
+        .n-column {
+            width: 20px;
+        }
+        .medication-column {
+            width: 80px;
+        }
+        .obs-column {
+            width: 160px;
+        }
+        strong {
+            font-size:15px;
+        }
+        label {
+            font-size:15px;
+        }
+	</style>
+</head>
+<body>
+    <header>
+        <div>
+            <div class="logo">Logo</div><div class="date"><strong>Fecha de emisión: </strong><label>2020/05/01</label><strong> N° de Receta: </strong><label>15256</label></div>
+        </div>
+        <br/>
+        <br/>
+        <div class="fixed-width">
+            <strong>DNI: </strong><label>36215942  </label> <strong>Nombre y apellido: </strong><label>Trapani Ezequiel</label><br/>
+            <strong>Cobertura prestacional: </strong><label>OSDE</label><strong> N° afiliado: </strong><label>113561A/1321</label><br/><br/>
+        </div>
+    </header>
+    <div th:fragment="data">
+        <div class="ml-2 mr-2">
+            <table class="table ">
+                <thead class="thead-light">
+                <tr>
+                    <th scope="col" class="n-column ">N° </th>
+                    <th scope="col" class="cie10-column">CIE10 </th>
+                    <th scope="col" class="diag-column">Diag. </th>
+                    <th scope="col" class="medication-column">Medicación </th>
+                    <th scope="col" class="obs-column">Obs. </th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td> 32 </td>
+                        <td>1232AS36942</td>
+                        <td>Fiebre alta</td>
+                        <td> IBUPROFENO 50mg </td>
+                        <td>asdajsdkl;qwjdlqwndlnwq;ldjknasldnasldnal;wdnlandwlnsalkd  </td>
+                    </tr>
+                    <tr>
+                        <td> 32 </td>
+                        <td>1232AS36942</td>
+                        <td>Fiebre alta</td>
+                        <td> IBUPROFENO 50mg </td>
+                        <td>asdajsdkl;qwjdlqwndlnwq;ldjknasldnasldnal;wdnlandwlnsalkd  </td>
+                    </tr>
+                    <tr>
+                        <td>32</td>
+                        <td>4652145s</td>
+                        <td>Dolor de espalda</td>
+                        <td>Paracetamol 50mg</td>
+                        <td>asdajsdkl;qwjdlqwndlnwq;ldjknasldnasldnal;wdnlandwlnsalkd</td>
+                    </tr>
+                    <tr>
+                        <td>32</td>
+                        <td>1232asa11AS36942</td>
+                        <td>Sarampion</td>
+                        <td>Clonacepan 50mg </td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <br/>
+    <footer>
+        <div class="fixed-width right">
+            <strong >Profesional: </strong><label class="center-padding">Trapani Ezequiel</label>
+            <p><strong>Matricula: </strong><label class="center-padding">12312312</label></p>
+        </div>
+    </footer>
+</body>
+</html>

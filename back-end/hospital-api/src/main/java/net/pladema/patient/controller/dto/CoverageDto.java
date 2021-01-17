@@ -19,11 +19,11 @@ import java.io.Serializable;
         @JsonSubTypes.Type(value= HealthInsuranceDto.class, name="HealthInsuranceDto"),
         @JsonSubTypes.Type(value= PrivateHealthInsuranceDto.class, name="PrivateHealthInsuranceDto")
 })
-    public abstract class CoverageDto implements Serializable {
+public abstract class CoverageDto implements Serializable {
 
-    Integer id;
+    private Integer id;
 
-    String name;
+    private String name;
 
     public abstract MedicalCoverageBo newInstance();
 }

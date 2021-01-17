@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head th:fragment="headerfiles">
+    <title>Report</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"/>
+    <style>
+        body{
+            max-width: 700px;
+        }
+        .fixed-width {
+            width: 1200px;
+        }
+        h3 {
+            padding-top:10px
+        }
+        h6 {
+            padding: 0px;
+            margin: 0px;
+        }
+        h4 {
+            padding-top:10px
+        }
+        row {
+            padding-left: 10px
+        }
+        .logo {
+            display: inline-block;
+            width: 30%;
+        }
+        .date {
+            display: inline-block;
+            width: 70%;
+        }
+        strong {
+            font-size:15px;
+        }
+        label {
+            font-size:15px;
+        }
+        .footer-container {
+            display: flex;
+            flex-direction: row;
+        }
+        .item1 {
+            text-align: left;
+            width: 300px;
+        }
+        .item2 {
+            text-align: center;
+        }
+        .signature-line{
+            background-color: #222222;
+            width:150px;
+            margin-bottom: 0;
+            margin-top: 80px;
+        }
+        .signature {
+            margin-top: 10px;
+            text-align: center;
+            display: block;
+        }
+	</style>
+</head>
+<body>
+    <div th:fragment="data">
+        <div class="logo">Logo</div><div class="date"><strong>Fecha de emisión: </strong><label>2020/05/01</label><strong> N° de Receta: </strong><label>15256</label></div>
+        <br/><br/>
+        <div>
+            <strong>DNI </strong><label>36215942  </label> <strong>Nombre y apellido </strong><label>Trapani Ezequiel</label><br/>
+            <strong>Cobertura prestacional </strong><label>OSDE</label><strong> N° afiliado </strong><label>113561A/1321</label><br/><br/>
+        </div>
+        <br/>
+
+        <div>
+            <strong>CIE10 </strong><label>1232AS36942  </label> <strong>Dg. </strong><label>Fiebre alta</label><br/>
+            <strong>N° </strong><label>32</label><strong> Medicación </strong><label>IBUPROFENO 50mg </label><br/>
+            <strong>Obs: </strong><label>asdajsdkl;qwjdlqwndlnwq;ldjknasldnasldnal;wdnlandwlnsalkd  </label> <br/><br/>
+        </div>
+        <div>
+            <strong>CIE10 </strong><label>4652145s  </label> <strong>Dg. </strong><label>Dolor de espalda </label><br/>
+            <strong>N° </strong><label>32</label><strong> Medicación </strong><label>Paracetamol 50mg </label><br/>
+            <strong>Obs: </strong><label>asdajsdkl;qwjdlqwndlnwq;ldjknasldnasldnal;wdnlandwlnsalkd  </label> <br/><br/>
+        </div>
+        <div>
+            <strong>CIE10 </strong><label>1232asa11AS36942  </label> <strong>Dg.  </strong><label>Sarampion</label><br/>
+            <strong>N° </strong><label>32</label><strong> Medicación </strong><label>Clonacepan 50mg </label><br/>
+            <strong>Obs: </strong><label>asd123123dwlnsalkd  </label> <br/><br/>
+        </div>
+        <footer>
+            <div class="footer-container">
+                <div class="item1">
+                    <strong >Profesional: </strong><label class="center-padding">Trapani Ezequiel</label>
+                    <p><strong>Matricula: </strong><label class="center-padding">12312312</label></p>
+                </div>
+                <div class="item2">
+                    <hr class="signature-line"/>
+                    <div class="signature">
+                        <label>Firma</label>
+                    </div>
+                </div>
+
+                <div/>
+        </footer>
+<div/>
+</body>
+</html>

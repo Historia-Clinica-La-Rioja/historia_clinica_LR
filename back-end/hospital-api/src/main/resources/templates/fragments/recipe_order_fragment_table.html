@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head th:fragment="headerfiles">
+    <title>Report</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Bootstrap core CSS-->
+    <!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"/>
+          -->
+    <style>
+        table {
+            font-size:12px;
+            width: 700px;
+            table-layout:fixed;
+            margin-bottom: 40px;
+        }
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        .logo {
+            display: inline-block;
+            width: 30%;
+        }
+        .date-header {
+            display: inline-block;
+            position: absolute;
+            right: 0;
+            margin-bottom: 15px;
+        }
+        th {
+            background-color: #5e96eb;
+        }
+        td {
+            border-bottom: 1px;
+            background-color: white;
+                word-wrap: break-word;
+            padding: 5px;
+        }
+        centered-cell {
+            text-align: center;
+        }
+        strong {
+            font-size:15px;
+        }
+        label {
+            font-size:15px;
+        }
+        .footer-left{
+            display: inline-block;
+            text-align: left;
+            margin-right: 30px;
+        }
+        .footer-right{
+            position: relative;
+            top: 30px;
+            display: inline-block;
+            text-align: center;
+            width: 200px;
+        }
+        header{
+            margin-bottom: 15px;
+        }
+        hr {
+            background:#222222;
+            height:1px;
+            width: 60%;
+            position: relative;
+            display: block;
+        }
+	</style>
+</head>
+<body th:fragment="data">
+    <header>
+        <div th:if="${recipe}">
+            <div class="logo"></div>
+            <div class="date-header">
+                <strong>Fecha de emisión: </strong>
+                <label th:text="${request.requestDate}"></label>
+                <strong> N° de Receta: </strong>
+                <label th:text="${request.medicationRequestId}"></label>
+            </div>
+        </div>
+        <div th:if="${order}">
+            <div class="logo"></div>
+            <div class="date">
+                <strong>Fecha de emisión: </strong>
+                <label th:text="${request.requestDate}"></label>
+                <strong> N° de Orden: </strong>
+                <label th:text="${request.serviceRequestId}"></label>
+            </div>
+        </div>
+        <br/>
+        <div class="fixed-width">
+            <strong>DNI: </strong><label th:text="${patient.person.identificationNumber}"></label> <strong> Nombre y apellido: </strong><label th:text="${patient.person.completeName()}"></label><br/>
+            <div th:if="${patientCoverage != null}">
+                <strong>Cobertura prestacional: </strong><label th:text="${patientCoverage.medicalCoverage.name}"></label><strong> N° afiliado: </strong><label th:text="${patientCoverage.affiliateNumber}"></label><br/><br/>
+            </div>
+        </div>
+    </header>
+    <div>
+        <div class="ml-2 mr-2">
+            <table class="table ">
+                <colgroup>
+                    <col span="1" style="width: 5%;"/>
+                    <col span="1" style="width: 10%;"/>
+                    <col span="1" style="width: 15%;"/>
+                    <col span="1" style="width: 30%;"/>
+                    <col span="1" style="width: 40%;"/>
+                </colgroup>
+                <thead class="thead-light">
+                <tr>
+                    <th scope="col">N° </th>
+                    <th scope="col">CIE10 </th>
+                    <th scope="col">Diagnóstico </th>
+                    <th scope="col" >Medicación </th>
+                    <th scope="col" >Observaciones </th>
+                </tr>
+                </thead>
+                <tbody th:if="${recipe}">
+                    <tr th:each="medication,iter: ${request.medications}">
+                        <td class="centered-cell" th:text="${(iter.index + 1)}"></td>
+                        <td th:text="${#strings.defaultString(medication.healthCondition.cie10codes, '-')}"></td>
+                        <td th:text="${medication.healthCondition.snomed.pt}"></td>
+                        <td th:text="${medication.snomed.pt}"></td>
+                        <td th:text="${#strings.defaultString(medication.note, '-')}"></td>
+                    </tr>
+                </tbody>
+                <tbody th:if="${order}">
+                    <tr th:each="order,iter: ${request.order}">
+                        <td class="centered-cell" th:text="${(iter.index + 1)}"></td>
+                        <td th:text="${#strings.defaultString(order.healthCondition.cie10codes, '-')}"></td>
+                        <td th:text="${order.healthCondition.snomed.pt}"></td>
+                        <td th:text="${order.snomed.pt}"></td>
+                        <td th:text="${#strings.defaultString(order.note, '-')}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <br/>
+    <footer>
+        <div class="footer-left">
+            <strong >Profesional: </strong><label th:text="${professional.getCompleteName()}"></label>
+            <p><strong>Matrícula: </strong><label th:text="${professional.licenceNumber}"></label></p>
+        </div>
+        <div class="footer-right">
+            <hr/>
+            <div> <label> Firma </label> </div>
+        </div>
+    </footer>
+</body>
+</html>

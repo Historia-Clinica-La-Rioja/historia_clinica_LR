@@ -23,12 +23,12 @@ public class PatientMedicalCoverageDto {
 
     @Nullable
     @JsonFormat(pattern = JacksonDateFormatConfig.DATE_FORMAT)
-    String vigencyDate;
+    private String vigencyDate;
 
-    Boolean active;
+    private Boolean active;
 
-    CoverageDto medicalCoverage;
+    private CoverageDto medicalCoverage;
 
     @Nullable
-    PrivateHealthInsuranceDetailsDto privateHealthInsuranceDetails;
+    private PrivateHealthInsuranceDetailsDto privateHealthInsuranceDetails;
 }

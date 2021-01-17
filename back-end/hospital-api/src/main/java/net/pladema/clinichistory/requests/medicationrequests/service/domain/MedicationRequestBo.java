@@ -10,12 +10,15 @@ import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
 import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
 import net.pladema.patient.controller.dto.BasicPatientDto;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
 public class MedicationRequestBo implements Document {
+
+    private Integer medicationRequestId;
 
     private PatientInfoBo patientInfo;
 
@@ -30,6 +33,8 @@ public class MedicationRequestBo implements Document {
     private List<MedicationBo> medications = new ArrayList<>();
 
     private boolean hasRecipe = false;
+
+    private LocalDate requestDate = LocalDate.now();
 
     public short getDocumentType() {
         return DocumentType.RECIPE;
