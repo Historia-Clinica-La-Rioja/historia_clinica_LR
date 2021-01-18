@@ -7,6 +7,7 @@ import { STUDY_STATUS } from '../../../constants/prescripciones-masterdata';
 import { ConfirmarPrescripcionComponent } from '../../../dialogs/ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
 import { NuevaPrescripcionComponent } from '../../../dialogs/ordenes-prescripciones/nueva-prescripcion/nueva-prescripcion.component';
 import { PrescripcionesService, PrescriptionTypes } from '../../../services/prescripciones.service';
+import { PrescriptionItemData } from '../item-prescripciones/item-prescripciones.component';
 
 @Component({
   selector: 'app-card-estudios',
@@ -99,5 +100,15 @@ export class CardEstudiosComponent implements OnInit {
 			this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.DELETE_STUDY_SUCCESS');
 			this.getStudy();
 		}, _ => {this.snackBarService.showError('ambulatoria.paciente.ordenes_prescripciones.toast_messages.DELETE_STUDY_ERROR')});
+	}
+
+	prescriptionItemDataBuilder(diagnosticReport: DiagnosticReportInfoDto): PrescriptionItemData {
+		return {
+			prescriptionStatus: this.renderStatusDescription(diagnosticReport.statusId),
+			prescriptionPt: diagnosticReport.snomed.pt,
+			problemPt: diagnosticReport.healthCondition.snomed.pt,
+			doctor: diagnosticReport.doctor,
+			totalDays: diagnosticReport.totalDays
+		}
 	}
 }

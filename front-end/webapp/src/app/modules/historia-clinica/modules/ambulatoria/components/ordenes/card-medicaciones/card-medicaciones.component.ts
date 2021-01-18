@@ -10,6 +10,7 @@ import { MedicationStatus, MedicationStatusChange } from '../../../constants/pre
 import { SuspenderMedicacionComponent } from '../../../dialogs/ordenes-prescripciones/suspender-medicacion/suspender-medicacion.component';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
+import { PrescriptionItemData } from '../item-prescripciones/item-prescripciones.component';
 
 @Component({
   selector: 'app-card-medicaciones',
@@ -220,4 +221,13 @@ export class CardMedicacionesComponent implements OnInit {
 		this.formFilter.controls.statusId.setValue(MedicationStatus.ACTIVE);
 	}
 
+	prescriptionItemDataBuilder(medication: MedicationInfoDto): PrescriptionItemData {
+		return {
+			prescriptionStatus: this.renderStatusDescription(medication.statusId),
+			prescriptionPt: medication.snomed.pt,
+			problemPt: medication.healthCondition.snomed.pt,
+			doctor: medication.doctor,
+			totalDays: medication.totalDays
+		}
+	}
 }

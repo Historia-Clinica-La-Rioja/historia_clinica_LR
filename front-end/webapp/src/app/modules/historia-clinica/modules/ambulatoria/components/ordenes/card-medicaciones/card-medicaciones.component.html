@@ -74,58 +74,48 @@
         <mat-list id="lista-medication" *ngIf="medicationsInfo?.length > 0 else noInfo">
             <div formArrayName="checkboxArray">
                 <div fxLayout="row" *ngFor="let medicationInfo of medicationsInfo; let i=index" [formGroupName]="i">
-                    <mat-list-item>
-                        <div fxFlex="100%" fxLayout="row" fxLayoutGap="15px">
+                    <div class="item-padding" fxFlex="100%" fxLayout="row" fxLayoutGap="15px">
 
-                            <div class="checkbox-div-body" fxFlex="5%">
-                                <mat-checkbox formControlName="checked" (change)="checkMedication($event.checked, medicationInfo)"></mat-checkbox>
+                        <div class="checkbox-div-body" fxFlex="5%">
+                            <mat-checkbox formControlName="checked" (change)="checkMedication($event.checked, medicationInfo)"></mat-checkbox>
+                        </div>
+
+                        <app-item-prescripciones fxFlex="95%" mat-list-item [prescriptionItemData]="prescriptionItemDataBuilder(medicationInfo)">
+                            <div actions>
+                                <button mat-icon-button [matMenuTriggerFor]="menu" *ngIf="true">
+                                    <mat-icon>more_vert</mat-icon>
+                                </button>
+                                <mat-menu #menu="matMenu">
+                                    <button mat-menu-item *ngIf="medicationInfo.hasRecipe && medicationInfo.medicationRequestId" (click)="downloadRecipe(medicationInfo.id)">
+                                        <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.DOWNLOAD'"></span>
+                                    </button>
+                                    <button mat-menu-item (click)="openDialogNewMedication(false, medicationInfo)">
+                                        <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.RE_PRESCRIBE'"></span>
+                                    </button>
+                                    <button mat-menu-item *ngIf="medicationInfo.statusId === medicationStatus.ACTIVE" (click)="openSuspendMedicationDialog(medicationInfo)">
+                                        <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.SUSPEND'"></span>
+                                    </button>
+                                    <button mat-menu-item *ngIf="medicationInfo.statusId === medicationStatus.SUSPENDED" (click)="changeMedicationStatus(medicationStatusChange.REACTIVATE, medicationInfo)">
+                                        <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.REACTIVATE'"></span>
+                                    </button>
+                                    <button mat-menu-item *ngIf="medicationInfo.statusId !== medicationStatus.STOPPED" (click)="changeMedicationStatus(medicationStatusChange.FINALIZE, medicationInfo)">
+                                        <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.FINALIZE'"></span>
+                                    </button>
+                                </mat-menu>
+                            </div>
+            
+                            <div prescription-number>
+                                <span mat-line class="mat-body element-light-color" *ngIf="medicationInfo.hasRecipe else NoRecipe">
+                                    Receta #{{medicationInfo.medicationRequestId}}
+                                </span>
+                                <ng-template #NoRecipe>
+                                    <span mat-line class="mat-body element-light-color"
+                                        [translate]="'ambulatoria.paciente.ordenes_prescripciones.SIN_RECETA'">
+                                    </span>
+                                </ng-template>
                             </div>
 
-                            <div fxFlex="95%">
-                                <div fxLayout="row" fxLayoutAlign="space-between start">
-                                    <h3 mat-line class="primary bold element-margin">
-                                        {{renderStatusDescription(medicationInfo.statusId)}}
-                                    </h3>
-
-                                    <div>
-                                        <button mat-icon-button [matMenuTriggerFor]="menu" *ngIf="true">
-                                            <mat-icon>more_vert</mat-icon>
-                                        </button>
-                                        <mat-menu #menu="matMenu">
-                                            <button mat-menu-item *ngIf="medicationInfo.hasRecipe && medicationInfo.medicationRequestId" (click)="downloadRecipe(medicationInfo.id)">
-                                                <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.DOWNLOAD'"></span>
-                                            </button>
-                                            <button mat-menu-item (click)="openDialogNewMedication(false, medicationInfo)">
-                                                <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.RE_PRESCRIBE'"></span>
-                                            </button>
-                                            <button mat-menu-item *ngIf="medicationInfo.statusId === medicationStatus.ACTIVE" (click)="openSuspendMedicationDialog(medicationInfo)">
-                                                <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.SUSPEND'"></span>
-                                            </button>
-                                            <button mat-menu-item *ngIf="medicationInfo.statusId === medicationStatus.SUSPENDED" (click)="changeMedicationStatus(medicationStatusChange.REACTIVATE, medicationInfo)">
-                                                <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.REACTIVATE'"></span>
-                                            </button>
-                                            <button mat-menu-item *ngIf="medicationInfo.statusId !== medicationStatus.STOPPED" (click)="changeMedicationStatus(medicationStatusChange.FINALIZE, medicationInfo)">
-                                                <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.FINALIZE'"></span>
-                                            </button>
-                                        </mat-menu>
-                                    </div>
-                                </div>
-
-                                <div class="element-margin" fxLayout="column-reverse" fxLayout.gt-sm="row" fxLayoutAlign="space-between start">
-                                    <span class="mat-subheading-2 capitalize-first-letter" style="margin: 0" fxFlex="70%">
-                                        {{medicationInfo.snomed.pt}}
-                                    </span>
-
-                                    <span mat-line class="mat-body element-light-color" *ngIf="medicationInfo.hasRecipe else NoRecipe">
-                                        Receta #{{medicationInfo.medicationRequestId}}
-                                    </span>
-                                    <ng-template #NoRecipe>
-                                        <span mat-line class="mat-body element-light-color"
-                                            [translate]="'ambulatoria.paciente.ordenes_prescripciones.SIN_RECETA'">
-                                        </span>
-                                    </ng-template>
-                                </div>
-
+                            <div dosage>
                                 <div fxLayout="column">
                                     <div>
                                         <span mat-line class="mat-body capitalize-first-letter element-light-color" *ngIf="medicationInfo.dosage?.periodUnit == 'h'">
@@ -145,31 +135,9 @@
                                         </span>
                                     </div>
                                 </div>
-
-                                <div class="element-margin">
-                                    <h3 mat-line class="primary bold capitalize-first-letter">
-                                        {{medicationInfo.healthCondition.snomed.pt}}
-                                    </h3>
-                                </div>
-
-                                <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutAlign="space-between start">
-                                    <span mat-line class="mat-body capitalize-first-letter element-light-color">
-                                        {{medicationInfo.doctor.firstName }} {{medicationInfo.doctor.lastName }}
-                                    </span>
-                                    <span mat-line class="mat-body capitalize-first-letter element-light-color" *ngIf="medicationInfo.totalDays == 0"
-                                        [translate]="'ambulatoria.paciente.ordenes_prescripciones.DESDE_HOY'">
-                                    </span>
-                                    <span mat-line class="mat-body capitalize-first-letter element-light-color" *ngIf="medicationInfo.totalDays == 1"
-                                        [translate]="'ambulatoria.paciente.ordenes_prescripciones.UN_DIA'">
-                                    </span>
-                                    <span mat-line class="mat-body capitalize-first-letter element-light-color" *ngIf="medicationInfo.totalDays > 1">
-                                        Hace {{medicationInfo.totalDays }} días
-                                    </span>
-                                </div>
                             </div>
-
-                        </div>
-                    </mat-list-item>
+                        </app-item-prescripciones>
+                    </div>
                     <mat-divider></mat-divider>
                 </div>
             </div>
