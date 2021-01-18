@@ -27,6 +27,7 @@ import { EditableFieldComponent } from './components/editable-field/editable-fie
 import { LogoComponent } from './components/logo/logo.component';
 import { DockPopupComponent } from '@presentation/components/dock-popup/dock-popup.component';
 import { FiltersCardComponent } from './components/filters-card/filters-card.component';
+import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 
 @NgModule({
 	declarations: [
@@ -54,7 +55,8 @@ import { FiltersCardComponent } from './components/filters-card/filters-card.com
 		EditableFieldComponent,
 		DockPopupComponent,
 		LogoComponent,
-		FiltersCardComponent
+		FiltersCardComponent,
+		ViewDateDtoPipe
 	],
 	imports: [
 		CommonModule,
@@ -85,7 +87,8 @@ import { FiltersCardComponent } from './components/filters-card/filters-card.com
 		PersonIdentificationPipe,
 		EditableFieldComponent,
 		DockPopupComponent,
-		FiltersCardComponent
+		FiltersCardComponent,
+		ViewDateDtoPipe
 	],
 	entryComponents: [
 		DockPopupComponent
