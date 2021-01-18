@@ -14,3 +14,22 @@
 	}
 
 }
+
+.triage-chip {
+	width: fit-content;
+	padding: 1.5px 8px;
+	border-radius: 5px;
+}
+
+.triage-subtitle-weight {
+	font-weight: 500;
+}
+
+mat-divider.margin {
+	margin: 20px 0 !important;
+}
+
+.triage-list-item {
+	box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.1);
+	line-height: 14px;
+}

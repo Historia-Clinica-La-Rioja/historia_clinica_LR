@@ -16,7 +16,7 @@ import { SearchPatientComponent } from 'src/app/modules/pacientes/component/sear
 import { TriageService } from '@api-rest/services/triage.service';
 import { Triage } from '../../components/triage-details/triage-details.component';
 import { GuardiaMapperService } from '../../services/guardia-mapper.service';
-import { map } from 'rxjs/operators';
+import { EmergencyCareTypes, Triages } from '../../constants/masterdata';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
@@ -26,6 +26,8 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 })
 export class EpisodeDetailsComponent implements OnInit {
 
+	readonly triages = Triages;
+
 	personPhoto$: Observable<PersonPhotoDto>;
 	patientBasicData;
 	personalInformation;
@@ -33,7 +35,9 @@ export class EpisodeDetailsComponent implements OnInit {
 	episodeId: number;
 	responseEmergencyCare: ResponseEmergencyCareDto;
 
-	triage: Triage;
+	emergencyCareType: EmergencyCareTypes;
+	lastTriage: Triage;
+	triagesHistory: any[];
 
 	constructor(
 		private readonly route: ActivatedRoute,
@@ -58,19 +62,24 @@ export class EpisodeDetailsComponent implements OnInit {
 				this.emergencyCareEpisodeService.getAdministrative()
 					.subscribe((responseEmergencyCare: ResponseEmergencyCareDto) => {
 						this.responseEmergencyCare = responseEmergencyCare;
-						this.triage = {
-							...this.triage,
-							emergencyCareType: this.responseEmergencyCare.emergencyCareType?.id
-						};
+						this.emergencyCareType = responseEmergencyCare.emergencyCareType?.id;
 
 						if (responseEmergencyCare.patientId) {
 							this.loadPatient(responseEmergencyCare.patientId);
 						}
 					});
 
-				this.triageService.getAll(this.episodeId)
-					.pipe(map((triages: any[]) => triages.map(this.guardiaMapperService.triageDtoToTriage)))
-					.subscribe((triages: Triage[]) => this.triage = { ...this.triage, ...triages[0] });
+				this.triageService.getAll(this.episodeId).subscribe((triages: any[]) => {
+						this.lastTriage = this.guardiaMapperService.triageDtoToTriage(triages[0]);
+						if (hasHistory(triages)) {
+							this.triagesHistory = triages;
+							this.triagesHistory.shift();
+						}
+					});
+
+				function hasHistory(triages: any[]) {
+					return triages?.length > 1;
+				}
 			});
 
 	}

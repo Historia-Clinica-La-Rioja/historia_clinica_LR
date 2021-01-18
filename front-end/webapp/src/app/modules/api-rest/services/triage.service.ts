@@ -197,6 +197,101 @@ const MOCK_ADULT_GINECOLOGICAL = [
 				}
 			}
 		}
+	},
+	{
+		id: 3,
+		creationDate: {
+			date: {day: 11, month: 1, year: 2021},
+			time: {hours: 9, minutes: 0, seconds: 12}
+		},
+		category: {
+			id: 2,
+			name: 'Nivel II',
+			description: 'Emergencia',
+			color: {
+				name: 'Naranja',
+				code: '#FF5C00'
+			}
+		},
+		professional: {
+			id: 2,
+			firstName: 'Dua',
+			lastName: 'Lipa'
+		},
+		doctorsOffice: {
+			id: 1,
+			description: 'Sala N'
+		},
+	},
+	{
+		id: 4,
+		creationDate: {
+			date: {day: 11, month: 1, year: 2021},
+			time: {hours: 8, minutes: 52}
+		},
+		category: {
+			id: 3,
+			name: 'Nivel III',
+			description: 'Urgencia',
+			color: {
+				name: 'Amarillo',
+				code: '#EDBE00'
+			}
+		},
+		professional: {
+			id: 5,
+			firstName: 'Clerk',
+			lastName: 'Kant'
+		},
+		doctorsOffice: {
+			id: 1,
+			description: 'Sala N'
+		},
+	},
+	{
+		id: 5,
+		creationDate: {
+			date: {day: 11, month: 1, year: 2021},
+			time: {hours: 8, minutes: 0, seconds: 12}
+		},
+		category: {
+			id: 4,
+			name: 'Nivel IV',
+			description: 'Menos urgente',
+			color: {
+				name: 'Verde',
+				code: '#009B68'
+			}
+		},
+		professional: {
+			id: 2,
+			firstName: 'Dua',
+			lastName: 'Lipa'
+		},
+		doctorsOffice: {
+			id: 1,
+			description: 'Sala N'
+		},
+	},
+	{
+		id: 6,
+		creationDate: {
+			date: {day: 11, month: 1, year: 2021},
+			time: {hours: 7, minutes: 0, seconds: 12}
+		},
+		category: {
+			id: 2,
+			name: 'Nivel V',
+			description: 'No urgente',
+			color: {
+				name: 'Azul',
+				code: '#2687C5'
+			}
+		},
+		professional: {
+			id: 2,
+			firstName: 'Dua'
+		}
 	}
 ];
 

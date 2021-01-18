@@ -1,4 +1,4 @@
-<div fxLayout="column" fxLayoutGap="40px">
+<div fxLayout="column" fxLayoutGap="30px">
 
 	<section id="basic-triage" fxLayout="column" fxLayoutGap="15px">
 		<div id="header" fxLayout="row" fxLayoutAlign="space-between center">
@@ -30,8 +30,8 @@
 		</div>
 	</section>
 
-	<section *ngIf="triage.emergencyCareType" id="body" fxLayout="column" fxLayoutGap="16px">
-		<div id="pediatric" *ngIf="triage.emergencyCareType === emergencyCareTypes.PEDIATRIA">
+	<section *ngIf="emergencyCareType" id="body" fxLayout="column" fxLayoutGap="16px">
+		<div id="pediatric" *ngIf="emergencyCareType === emergencyCareTypes.PEDIATRIA">
 			<h3 class="subtitle-weight">{{ 'guardia.episode.triage.ultimo.APARIENCIA_RESPIRACION_CIRCULACION' | translate }}</h3>
 			<div gdColumns="repeat(3, 1fr)" gdGap="20px">
 				<div id="temperatura" class="info" fxLayout="column" fxLayoutGap="5px" fxLayoutAlign="space-between">
@@ -92,8 +92,8 @@
 		</div>
 
 		<div id="vital-signs" *ngIf="vitalSignsCurrent?.length">
-			<h3 *ngIf="triage.emergencyCareType === emergencyCareTypes.ADULTO ||
-					triage.emergencyCareType === emergencyCareTypes.GINECOLOGIA"
+			<h3 *ngIf="emergencyCareType === emergencyCareTypes.ADULTO ||
+					emergencyCareType === emergencyCareTypes.GINECOLOGIA"
 				class="subtitle-weight">{{ 'guardia.episode.triage.ultimo.SIGNOS_VITALES' | translate }}
 			</h3>
 			<div fxLayout="row wrap">
@@ -105,7 +105,7 @@
 		</div>
 	</section>
 
-	<section *ngIf="triage.emergencyCareType">
+	<section *ngIf="emergencyCareType">
 		<h3 class="subtitle-weight" style="margin-bottom: 0">
 			{{ 'guardia.episode.triage.ultimo.EVALUACION' | translate }}
 		</h3>

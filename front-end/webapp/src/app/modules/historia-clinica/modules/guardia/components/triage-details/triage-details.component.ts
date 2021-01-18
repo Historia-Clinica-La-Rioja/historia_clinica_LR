@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { EmergencyCareTypes, Triages } from '../../constants/masterdata';
 import { VitalSingCurrentPrevious } from '@presentation/components/signo-vital-current-previous/signo-vital-current-previous.component';
 
@@ -8,33 +8,33 @@ import { VitalSingCurrentPrevious } from '@presentation/components/signo-vital-c
 	styleUrls: ['./triage-details.component.scss']
 })
 
-export class TriageDetailsComponent implements OnInit {
+export class TriageDetailsComponent implements OnInit, OnChanges {
 
-	@Input('triage')
-	set triageData(triage: Triage) {
-		this.triage = triage;
-		this.vitalSignsCurrent = includesVitalSigns() ? this.mapToVitalSignCurrentPrevious(triage) : undefined;
-
-		function includesVitalSigns(): boolean {
-			return !!triage.emergencyCareType;
-		}
-	}
+	@Input() triage: Triage;
+	@Input() emergencyCareType: EmergencyCareTypes;
 
 	readonly triages = Triages;
 	readonly emergencyCareTypes = EmergencyCareTypes;
 
-	triage: Triage;
 	vitalSignsCurrent: VitalSingCurrentPrevious[];
 
 	constructor() {
 	}
 
+	ngOnChanges() {
+		this.vitalSignsCurrent = this.includesVitalSigns() ? this.mapToVitalSignCurrentPrevious(this.triage) : undefined;
+	}
+
 	ngOnInit(): void {
+	}
+
+	private includesVitalSigns(): boolean {
+		return !!this.emergencyCareType;
 	}
 
 	private mapToVitalSignCurrentPrevious(triage: Triage): VitalSingCurrentPrevious[] {
 		const vitalSignsCurrent: VitalSingCurrentPrevious[] = [];
-		const LABELS = triage.emergencyCareType === EmergencyCareTypes.PEDIATRIA ?
+		const LABELS = this.emergencyCareType === EmergencyCareTypes.PEDIATRIA ?
 			{
 				respiratoryRate: 'Frecuencia respiratoria',
 				bloodOxygenSaturation: 'Saturación de oxígeno',
@@ -80,7 +80,6 @@ export class TriageDetailsComponent implements OnInit {
 }
 
 export interface Triage {
-	emergencyCareType?: EmergencyCareTypes;
 	creationDate: Date;
 	category: {
 		id: number;

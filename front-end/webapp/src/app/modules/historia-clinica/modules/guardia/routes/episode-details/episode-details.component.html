@@ -75,7 +75,46 @@
 			</mat-card>
 
 			<mat-card id="last-triage-card">
-				<app-triage-details [triage]="triage"></app-triage-details>
+				<app-triage-details [triage]="lastTriage" [emergencyCareType]="emergencyCareType"></app-triage-details>
+
+				<mat-divider class="margin" [inset]="true"></mat-divider>
+
+				<div id="history">
+					<h3 class="triage-subtitle-weight" style="margin-bottom: 0">
+						{{ 'guardia.episode.triage.HISTORIAL' | translate}}
+					</h3>
+					<div *ngIf="triagesHistory?.length else noInfo"
+						 style="margin-top: 16px" fxLayout="column" fxLayoutGap="10px">
+						<mat-card class="triage-list-item" *ngFor="let triage of triagesHistory">
+							<mat-card-content>
+								<div fxLayout="row" fxLayoutAlign="space-between">
+
+									<div id="left-side">
+										<span style="margin-right: 20px">
+											{{ triage.creationDate | viewDateDto: 'datetime' | date: 'dd/MM/yy - HH:mm' }}
+											hs
+										</span>
+										<span class="triage-chip"
+											  [ngStyle]="{'color':triage.category.id === triages.AMARILLO_NIVEL_3 ? 'black' : 'white' }"
+											  [style.background-color]="triage.category.color.code">{{ triage.category.name }}
+										</span>
+									</div>
+
+									<div id="right-side">
+										<span>
+											{{ triage.professional.firstName }} {{ triage.professional.lastName }}
+										</span>
+										<span *ngIf="triage.doctorsOffice?.description">•</span>
+										<span *ngIf="triage.doctorsOffice?.description">
+											{{ triage.doctorsOffice.description }}
+										</span>
+									</div>
+
+								</div>
+							</mat-card-content>
+						</mat-card>
+					</div>
+				</div>
 			</mat-card>
 		</div>
 

@@ -107,6 +107,7 @@
 				"POLICE_INTERVENTION": "Intervención policial"
 			},
 			"triage": {
+				"HISTORIAL": "Historial de triages",
 				"ultimo": {
 					"TITLE": "Último triage",
 					"NIVEL": "Nivel de urgencia",
