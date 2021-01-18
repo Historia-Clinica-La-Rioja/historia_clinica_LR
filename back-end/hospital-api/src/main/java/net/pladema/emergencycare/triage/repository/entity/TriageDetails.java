@@ -28,22 +28,22 @@ public class TriageDetails implements Serializable {
 	@Column(name = "triage_id")
 	private Integer triageId;
 
-	@Column(name = "body_temperature_id", nullable = false)
+	@Column(name = "body_temperature_id")
 	private Short bodyTemperatureId;
 
-	@Column(name = "crying_excessive", nullable = false)
+	@Column(name = "crying_excessive")
 	private Boolean cryingExcessive;
 
-	@Column(name = "muscle_hypertonia_id", nullable = false)
+	@Column(name = "muscle_hypertonia_id")
 	private Short muscleHypertoniaId;
 
-	@Column(name = "respiratory_retraction_id", nullable = false)
+	@Column(name = "respiratory_retraction_id")
 	private Short respiratoryRetractionId;
 
-	@Column(name = "stridor", nullable = false)
+	@Column(name = "stridor")
 	private Boolean stridor;
 
-	@Column(name = "perfusion_id", nullable = false)
+	@Column(name = "perfusion_id")
 	private Short perfusionId;
 
 	public TriageDetails(TriageBo triageBo) {

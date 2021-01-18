@@ -57,13 +57,26 @@ public class TriageServiceImpl implements TriageService {
 
     @Override
     public TriageBo createPediatric(TriageBo triageBo) {
-        LOG.debug("Input parameters -> triageBo {}", triageBo);
+        LOG.debug("Input parameter -> triageBo {}", triageBo);
         Triage triage = triageRepository.save(new Triage(triageBo));
         triageBo.setId(triage.getId());
-        triageDetailsRepository.save(new TriageDetails(triageBo));
+        if (existDetails(triageBo))
+            triageDetailsRepository.save(new TriageDetails(triageBo));
         saveVitalSigns(triageBo.getId(), triageBo.getVitalSignIds());
         LOG.debug("Output -> {}", triageBo);
         return triageBo;
+    }
+
+    private boolean existDetails(TriageBo triageBo) {
+        LOG.debug("Input parameter -> triageBo {}", triageBo);
+        boolean result =  (triageBo.getBodyTemperatureId() != null) ||
+                (triageBo.getCryingExcessive() != null) ||
+                (triageBo.getMuscleHypertoniaId() != null) ||
+                (triageBo.getRespiratoryRetractionId() != null) ||
+                (triageBo.getStridor() != null) ||
+                (triageBo.getPerfusionId() != null);
+        LOG.debug("Output -> {}", result);
+        return result;
     }
 
     private void saveVitalSigns(Integer triageId, List<Integer> vitalSignIds) {

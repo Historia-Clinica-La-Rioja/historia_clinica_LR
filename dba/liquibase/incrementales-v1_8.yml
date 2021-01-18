@@ -168,3 +168,63 @@ databaseChangeLog:
                 columnDataType: int
                 columnName: patient_id
                 tableName: observation_vital_sign
+
+    - changeSet:
+        id: triage_details-dropNotNullConstraint-body_temperature_id
+        author: tmedina
+        comment: Drop not null constraint in body_temperature_id column in triage_details table
+        changes:
+            - dropNotNullConstraint:
+                columnDataType: short
+                columnName: body_temperature_id
+                tableName: triage_details
+
+    - changeSet:
+        id: triage_details-dropNotNullConstraint-crying_excessive
+        author: tmedina
+        comment: Drop not null constraint in crying_excessive column in triage_details table
+        changes:
+            - dropNotNullConstraint:
+                columnDataType: boolean
+                columnName: crying_excessive
+                tableName: triage_details
+
+    - changeSet:
+        id: triage_details-dropNotNullConstraint-muscle_hypertonia_id
+        author: tmedina
+        comment: Drop not null constraint in muscle_hypertonia_id column in triage_details table
+        changes:
+            - dropNotNullConstraint:
+                columnDataType: short
+                columnName: muscle_hypertonia_id
+                tableName: triage_details
+
+    - changeSet:
+        id: triage_details-dropNotNullConstraint-respiratory_retraction_id
+        author: tmedina
+        comment: Drop not null constraint in respiratory_retraction_id column in triage_details table
+        changes:
+            - dropNotNullConstraint:
+                columnDataType: short
+                columnName: respiratory_retraction_id
+                tableName: triage_details
+
+    - changeSet:
+        id: triage_details-dropNotNullConstraint-stridor
+        author: tmedina
+        comment: Drop not null constraint in stridor column in triage_details table
+        changes:
+            - dropNotNullConstraint:
+                columnDataType: boolean
+                columnName: stridor
+                tableName: triage_details
+
+    - changeSet:
+        id: triage_details-dropNotNullConstraint-perfusion_id
+        author: tmedina
+        comment: Drop not null constraint in perfusion_id column in triage_details table
+        changes:
+            - dropNotNullConstraint:
+                columnDataType: short
+                columnName: perfusion_id
+                tableName: triage_details
