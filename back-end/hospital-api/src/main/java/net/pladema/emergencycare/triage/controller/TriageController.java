@@ -56,9 +56,12 @@ public class TriageController {
     @PostMapping
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
     public ResponseEntity<Integer> createAdministrative(
+            @PathVariable("institutionId") Integer institutionId,
+            @PathVariable("episodeId") Integer episodeId,
             @RequestBody TriageAdministrativeDto body) {
         LOG.debug("Add triage administrative => {}", body);
         TriageBo triage = triageMapper.toTriageBo(body);
+        triage.setEmergencyCareEpisodeId(episodeId);
         triage = triageService.createAdministrative(triage);
         Integer result = triage.getId();
         LOG.debug("Output -> {}", result);
@@ -68,9 +71,12 @@ public class TriageController {
     @PostMapping("/adult-gynecological")
     @PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
     public ResponseEntity<Integer> newAdultGynecological(
+            @PathVariable("institutionId") Integer institutionId,
+            @PathVariable("episodeId") Integer episodeId,
             @RequestBody TriageAdultGynecologicalDto body){
         LOG.debug("Add triage adult-gynecological => {}", body);
         TriageBo triage = triageMapper.toTriageBo(body);
+        triage.setEmergencyCareEpisodeId(episodeId);
         triage = triageService.createAdultGynecological(triage);
         Integer result = triage.getId();
         LOG.debug("Output -> {}", result);
@@ -80,9 +86,12 @@ public class TriageController {
     @PostMapping("/pediatric")
     @PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
     public ResponseEntity<Integer> newPediatric(
+            @PathVariable("institutionId") Integer institutionId,
+            @PathVariable("episodeId") Integer episodeId,
             @RequestBody TriagePediatricDto body){
         LOG.debug("Add triage pediatric => {}", body);
         TriageBo triage = triageMapper.toTriageBo(body);
+        triage.setEmergencyCareEpisodeId(episodeId);
         triage = triageService.createPediatric(triage);
         Integer result = triage.getId();
         LOG.debug("Output -> {}", result);
