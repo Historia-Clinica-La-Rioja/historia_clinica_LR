@@ -29,6 +29,8 @@ import { CardMedicacionesComponent } from './components/ordenes/card-medicacione
 import { CardEstudiosComponent } from './components/ordenes/card-estudios/card-estudios.component';
 import { CardIndicacionesComponent } from './components/ordenes/card-indicaciones/card-indicaciones.component';
 import { ItemPrescripcionesComponent } from './components/ordenes/item-prescripciones/item-prescripciones.component';
+import { CompletarEstudioComponent } from './dialogs/ordenes-prescripciones/completar-estudio/completar-estudio.component';
+import { VerResultadosEstudioComponent } from './dialogs/ordenes-prescripciones/ver-resultados-estudio/ver-resultados-estudio.component';
 
 
 @NgModule({
@@ -53,6 +55,8 @@ import { ItemPrescripcionesComponent } from './components/ordenes/item-prescripc
 		CardEstudiosComponent,
 		CardIndicacionesComponent,
 		ItemPrescripcionesComponent,
+		CompletarEstudioComponent,
+		VerResultadosEstudioComponent,
 	],
 	imports: [
 		AmbulatoriaRoutingModule,
