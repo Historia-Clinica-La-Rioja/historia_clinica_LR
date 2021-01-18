@@ -25,6 +25,8 @@ import { ContextService } from '@core/services/context.service';
 import { PatientService } from '@api-rest/services/patient.service';
 import { AMBULANCE, PERSON, POLICE_OFFICER } from '@core/constants/validation-constants';
 import { EmergencyCareEntranceType } from '@api-rest/masterdata';
+import { PermissionsService } from '@core/services/permissions.service';
+import { TriageDefinitionsService } from '../../services/triage-definitions.service';
 
 @Component({
 	selector: 'app-admision-administrativa',
@@ -69,8 +71,9 @@ export class AdmisionAdministrativaComponent implements OnInit {
 		private readonly newEpisodeService: NewEpisodeService,
 		private router: Router,
 		private readonly contextService: ContextService,
-		private readonly patientService: PatientService
-
+		private readonly patientService: PatientService,
+		private readonly permissionsService: PermissionsService,
+		private readonly triageDefinitionsService: TriageDefinitionsService
 	) {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, snomedService);
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
@@ -174,7 +177,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 
 		const formValue: AdministrativeAdmission = this.form.value;
 		if (this.form.valid) {
-			this.goToBasicTriage(formValue);
+			this.goToTriage(formValue);
 		}
 
 	}
@@ -204,10 +207,10 @@ export class AdmisionAdministrativaComponent implements OnInit {
 		}
 	}
 
-	goToBasicTriage(administrativeAdmission: AdministrativeAdmission): void {
+	goToTriage(administrativeAdmission: AdministrativeAdmission): void {
 		this.newEpisodeService.setAdministrativeAdmission(administrativeAdmission);
-		const url = `${this.routePrefix}guardia/nuevo-episodio/triage-administrativo`;
-		this.router.navigateByUrl(url);
+		this.triageDefinitionsService.getTriagePath(this.form.value.emergencyCareTypeId)
+			.subscribe( ({url}) => this.router.navigateByUrl(url));
 	}
 
 	private setPatientAndMedicalCoverages(basicData: BasicPatientDto, photo: PersonPhotoDto): void {
