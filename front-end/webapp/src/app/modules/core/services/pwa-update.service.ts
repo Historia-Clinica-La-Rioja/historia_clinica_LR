@@ -2,7 +2,6 @@ import { ApplicationRef, Injectable } from '@angular/core';
 import { SwUpdate } from '@angular/service-worker';
 import { concat, interval, Observable, ReplaySubject } from 'rxjs';
 import { first } from 'rxjs/operators';
-import { environment } from '@environments/environment';
 import { PWAAction } from '@core/core-model';
 
 @Injectable({

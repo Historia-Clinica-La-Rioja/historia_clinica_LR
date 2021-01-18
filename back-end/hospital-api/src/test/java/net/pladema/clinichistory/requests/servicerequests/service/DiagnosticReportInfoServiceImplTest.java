@@ -25,7 +25,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.persistence.EntityManager;
 
 @RunWith(SpringRunner.class)
-@DataJpaTest
 public class DiagnosticReportInfoServiceImplTest extends UnitRepository {
 
     private DiagnosticReportInfoService diagnosticReportInfoService;

@@ -3,10 +3,7 @@ package net.pladema.security.utils;
 import java.util.Map;
 
 import org.springframework.util.Assert;
-
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
 import net.pladema.security.exceptions.JWTParseException;
 
 public class JWTUtils {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, empty } from 'rxjs';
+import { Observable, of, EMPTY } from 'rxjs';
 
 @Injectable({
 	providedIn: 'root'
@@ -15,8 +15,7 @@ export class LocalStorageService {
 			localStorage.setItem(key, valueToSave);
 			return of(value);
 		}
-		// console.log(`storage[${key}] not modified`);
-		return empty();
+		return EMPTY;
 	}
 
 	public getItem<T>(key: string): Observable<T> {

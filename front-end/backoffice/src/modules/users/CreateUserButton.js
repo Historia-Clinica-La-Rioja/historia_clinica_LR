@@ -11,9 +11,6 @@ import {
 
  import PersonAddIcon from '@material-ui/icons/PersonAdd';
 
-
-
-
 const CreateUserButton = ({ record }) => {
 
     const newUserPayload = record && {
@@ -38,8 +35,6 @@ const CreateUserButton = ({ record }) => {
     if (!newUserPayload) {
         return (<span>...</span>);
     }
-
-    // console.log('UserButton newUserPayload', newUserPayload);
 
     if (newUserPayload.username) {
         return (
