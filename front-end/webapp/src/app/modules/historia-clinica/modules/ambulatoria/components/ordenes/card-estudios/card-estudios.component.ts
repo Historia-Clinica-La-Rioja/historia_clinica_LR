@@ -1,8 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DiagnosticReportInfoDto, PrescriptionDto } from '@api-rest/api-model';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ESTUDIOS } from 'src/app/modules/historia-clinica/constants/summaries';
-import { STUDY_STATUS } from '../../../constants/orders-constant';
+import { STUDY_STATUS } from '../../../constants/prescripciones-masterdata';
 import { ConfirmarPrescripcionComponent } from '../../../dialogs/ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
 import { NuevaPrescripcionComponent } from '../../../dialogs/ordenes-prescripciones/nueva-prescripcion/nueva-prescripcion.component';
 import { PrescripcionesService, PrescriptionTypes } from '../../../services/prescripciones.service';
@@ -23,6 +24,7 @@ export class CardEstudiosComponent implements OnInit {
 	constructor(
 		private readonly dialog: MatDialog,
 		private prescripcionesService: PrescripcionesService,
+		private snackBarService: SnackBarService,
 	) { }
 
 	ngOnInit(): void {
@@ -79,5 +81,23 @@ export class CardEstudiosComponent implements OnInit {
 				});
 			}
 		});
+	}
+
+	renderStatusDescription(statusId: string): string {
+		switch (statusId) {
+			case this.STUDY_STATUS.REGISTERED.id: 
+				return this.STUDY_STATUS.REGISTERED.description;
+			case this.STUDY_STATUS.FINAL.id:
+				return this.STUDY_STATUS.FINAL.description;
+			case this.STUDY_STATUS.ERROR.id:
+				return this.STUDY_STATUS.ERROR.description;
+		}
+	}
+
+	deleteStudy(id: number) {
+		this.prescripcionesService.deleteStudy(this.patientId, id).subscribe(() => {
+			this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.DELETE_STUDY_SUCCESS');
+			this.getStudy();
+		}, _ => {this.snackBarService.showError('ambulatoria.paciente.ordenes_prescripciones.toast_messages.DELETE_STUDY_ERROR')});
 	}
 }

@@ -19,8 +19,7 @@ export class ServiceRequestService {
 	constructor(
 		private readonly http: HttpClient,
 		private readonly contextService: ContextService
-	) {
-	}
+	) { }
 
 	getList(patientId: number, statusId: string, diagnosticReport: string, healthCondition: string): Observable<DiagnosticReportInfoDto[]> {
 		let queryParams: HttpParams = new HttpParams();
@@ -35,7 +34,6 @@ export class ServiceRequestService {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests`;
 		return this.http.post<number[]>(url, prescriptionDto);
 	}
-
 
 	complete(patientId: number, diagnosticReportId: number, completeRequestDto: CompleteRequestDto, files: File[]): Observable<void> {
 		const commonUrl = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${diagnosticReportId}`;

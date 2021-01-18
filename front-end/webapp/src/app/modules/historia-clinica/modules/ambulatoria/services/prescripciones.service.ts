@@ -49,6 +49,10 @@ export class PrescripcionesService {
 		return this.medicationRequestService.download(patientId, medicationRequestId);
 	}
 
+	deleteStudy(patientId: number, serviceRequestId: number): Observable<string> {
+		return this.serviceRequestService.delete(patientId, serviceRequestId);
+	}
+
 	toNewPrescriptionItem(prescriptionType: PrescriptionTypes, prescriptionItem: any): NewPrescriptionItem {
 		switch(prescriptionType) {
 			case PrescriptionTypes.MEDICATION:

@@ -231,7 +231,9 @@
 					"POST_UPDATE_COVERAGE_ERROR": "Ocurrió un error al actualizar las coberturas",
 					"MEDICATION_CHANGE_SUCCESS": "La medicación cambió de estado correctamente",
 					"MEDICATION_CHANGE_ERROR": "La medicación no puede cambiarse a este estado",
-					"DOWNLOAD_RECIPE_SUCCESS": "La receta se descargó correctamente"
+					"DOWNLOAD_RECIPE_SUCCESS": "La receta se descargó correctamente",
+					"DELETE_STUDY_SUCCESS": "El estudio se borró correctamente",
+					"DELETE_STUDY_ERROR": "Error al borrar estudio"
 				},
 				"menu_items": {
 					"DOWNLOAD": "Descargar receta",
@@ -240,7 +242,8 @@
 					"FINALIZE":"Finalizar",
 					"COMPLETE":"Completar",
 					"DELETE":"Eliminar",
-					"REACTIVATE": "Reactivar"
+					"REACTIVATE": "Reactivar",
+					"SHOW_RESULTS": "Ver resultados"
 				},
 				"filter": {
 					"STATE":"Estado",
