@@ -20,9 +20,9 @@ public interface EmergencyCareEpisodeRepository extends JpaRepository<EmergencyC
 	@Transactional(readOnly = true)
 	@Query(value = " SELECT NEW net.pladema.emergencycare.repository.domain.EmergencyCareVo(ece, pe.firstName, pe.lastName, dso.description) "+
 			" FROM EmergencyCareEpisode ece "+
-			" JOIN Patient pa ON (pa.id = ece.patientId) "+
-			" JOIN Person pe ON (pe.id = pa.personId) "+
-			" JOIN DoctorsOffice dso ON (dso.id = ece.doctorsOfficeId) "+
+			" LEFT JOIN Patient pa ON (pa.id = ece.patientId) "+
+			" LEFT JOIN Person pe ON (pe.id = pa.personId) "+
+			" LEFT JOIN DoctorsOffice dso ON (dso.id = ece.doctorsOfficeId) "+
 			" WHERE ece.emergencyCareStateId =  "+EmergencyCareState.EN_ATENCION+" OR ece.emergencyCareStateId = "+EmergencyCareState.EN_ESPERA+
 			" AND ece.institutionId = :institutionId ")
 	List<EmergencyCareVo> getAll(@Param("institutionId") Integer institutionId);

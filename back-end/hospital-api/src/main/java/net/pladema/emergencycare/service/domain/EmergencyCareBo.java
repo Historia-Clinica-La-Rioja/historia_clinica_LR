@@ -65,9 +65,12 @@ public class EmergencyCareBo {
         this.patientId = emergencyCareVo.getPatientId();
         this.triageCategoryId = emergencyCareVo.getTriageCategoryId();
         this.institutionId = emergencyCareVo.getInstitutionId();
-        this.emergencyCareType = EEmergencyCareType.getById(emergencyCareVo.getEmergencyCareTypeId());
-        this.emergencyCareState = EEmergencyCareState.getById(emergencyCareVo.getEmergencyCareStateId());
-        this.emergencyCareEntrance = EEmergencyCareEntrance.getById(emergencyCareVo.getEmergencyCareEntranceTypeId());
+        this.emergencyCareType = emergencyCareVo.getEmergencyCareTypeId() != null ?
+                EEmergencyCareType.getById(emergencyCareVo.getEmergencyCareTypeId()) : null;
+        this.emergencyCareState = emergencyCareVo.getEmergencyCareStateId() != null ?
+                EEmergencyCareState.getById(emergencyCareVo.getEmergencyCareStateId()) : null;
+        this.emergencyCareEntrance = emergencyCareVo.getEmergencyCareEntranceTypeId() != null ?
+                EEmergencyCareEntrance.getById(emergencyCareVo.getEmergencyCareEntranceTypeId()) : null;
         this.doctorsOffice = emergencyCareVo.getDoctorsOfficeId();
         this.doctorsOfficeDescription = emergencyCareVo.getDoctorsOfficeDescription();
         this.ambulanceCompanyId = emergencyCareVo.getAmbulanceCompanyId();
