@@ -9,7 +9,13 @@ import net.pladema.emergencycare.triage.service.domain.TriageBo;
 import net.pladema.sgx.auditable.entity.SGXAuditListener;
 import net.pladema.sgx.auditable.entity.SGXAuditableEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "emergency_care_episode")
@@ -74,6 +80,5 @@ public class EmergencyCareEpisode extends SGXAuditableEntity {
 		this.ambulanceCompanyId = emergencyCareBo.getAmbulanceCompanyId();
 		this.policeInterventionId = policeInterventionId;
 	}
-
 }
 

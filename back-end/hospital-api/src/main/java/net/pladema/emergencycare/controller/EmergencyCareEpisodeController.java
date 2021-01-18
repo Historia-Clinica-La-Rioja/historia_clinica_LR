@@ -13,11 +13,6 @@ import net.pladema.emergencycare.controller.dto.ResponseEmergencyCareDto;
 import net.pladema.emergencycare.controller.mapper.EmergencyCareMapper;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
-import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
-import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
-import net.pladema.person.controller.service.PersonExternalService;
-import net.pladema.sgx.masterdata.dto.MasterDataDto;
-import net.pladema.sgx.masterdata.service.domain.EnumWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +23,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.transaction.Transactional;
@@ -53,21 +47,15 @@ public class EmergencyCareEpisodeController {
 
     private final VitalSignMapper vitalSignMapper;
 
-    private final EnumWriter enumWriter;
-
     public EmergencyCareEpisodeController(EmergencyCareEpisodeService emergencyCareEpisodeService,
                                           EmergencyCareMapper emergencyCareMapper,
                                           ReasonExternalService reasonExternalService,
-                                          PersonExternalService personExternalService,
-                                          PatientExternalMedicalCoverageService patientExternalMedicalCoverageService,
-                                          EnumWriter enumWriter,
                                           VitalSignExternalService vitalSignExternalService,
                                           VitalSignMapper vitalSignMapper){
         super();
         this.emergencyCareEpisodeService = emergencyCareEpisodeService;
         this.emergencyCareMapper=emergencyCareMapper;
         this.reasonExternalService = reasonExternalService;
-        this.enumWriter = enumWriter;
         this.vitalSignExternalService = vitalSignExternalService;
         this.vitalSignMapper = vitalSignMapper;
     }
@@ -164,30 +152,6 @@ public class EmergencyCareEpisodeController {
 		LOG.debug("Output -> {}", result);
 		return ResponseEntity.ok().body(result);
 	}
-
-    @GetMapping("/{episodeId}/state")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
-    public ResponseEntity<MasterDataDto> getState(
-            @PathVariable(name = "institutionId") Integer institutionId,
-            @PathVariable(name = "episodeId") Integer episodeId) {
-        LOG.debug("Input parameters -> institutionId {}, episodeId {}", institutionId, episodeId);
-        EEmergencyCareState result = emergencyCareEpisodeService.getState(episodeId, institutionId);
-        LOG.debug("Output -> {}", result);
-        return ResponseEntity.ok().body(enumWriter.write(result));
-    }
-
-    @PostMapping("/{episodeId}/state/change")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
-    public ResponseEntity<Boolean> changeState(
-            @PathVariable(name = "episodeId") Integer episodeId,
-            @RequestParam(name = "emergencyCareStateId") Short emergencyCareStateId,
-            @RequestParam(name = "doctorsOfficeId", defaultValue = "-1") Integer doctorsOfficeId) {
-        LOG.debug("Change emergency care state -> episodeId {}, emergencyCareStateId {}, doctorsOfficeId {}",
-                episodeId, emergencyCareStateId, doctorsOfficeId);
-        Boolean result = emergencyCareEpisodeService.changeState(episodeId, emergencyCareStateId, doctorsOfficeId);
-        LOG.debug("Output -> {}", result);
-        return ResponseEntity.ok().body(result);
-    }
 
     @Transactional
     @PutMapping("/{episodeId}/administrative/patient/{patientId}")

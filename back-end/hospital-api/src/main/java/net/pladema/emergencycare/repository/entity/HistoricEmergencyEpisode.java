@@ -39,7 +39,9 @@ public class HistoricEmergencyEpisode extends SGXAuditableEntity {
 	@Column(name = "doctors_office_id", nullable = false)
 	private Integer doctorsOfficeId;
 
-	public HistoricEmergencyEpisode(Integer emergencyCareEpisodeId, LocalDateTime changeStateDate){
-		pk = new HistoricEmergencyEpisodePK(emergencyCareEpisodeId, changeStateDate);
+	public HistoricEmergencyEpisode(Integer emergencyCareEpisodeId, Short emergencyCareStateId, Integer doctorsOfficeId){
+		pk = new HistoricEmergencyEpisodePK(emergencyCareEpisodeId, LocalDateTime.now());
+		this.emergencyCareStateId = emergencyCareStateId;
+		this.doctorsOfficeId = doctorsOfficeId;
 	}
 }
