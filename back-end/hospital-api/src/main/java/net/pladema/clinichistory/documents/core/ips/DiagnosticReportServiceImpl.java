@@ -67,10 +67,7 @@ public class DiagnosticReportServiceImpl implements DiagnosticReportService {
         result.setCie10Codes(cie10Codes);
         result.setHealthConditionId(diagnosticReportBo.getHealthConditionId());
 
-        result.setNoteId(diagnosticReportBo.getNoteId() != null ?
-                diagnosticReportBo.getNoteId()
-                :
-                noteService.createNote(diagnosticReportBo.getObservations()));
+        result.setNoteId(generateNoteId(diagnosticReportBo.getNoteId(), diagnosticReportBo.getObservations()));
 
         result.setLink(diagnosticReportBo.getLink());
 
@@ -79,6 +76,14 @@ public class DiagnosticReportServiceImpl implements DiagnosticReportService {
         }
         LOG.debug(OUTPUT, result);
         return result;
+    }
+
+    public Long generateNoteId(Long noteId, String observations){
+        if (noteId != null) {
+            return noteId;
+        } else {
+            return observations != null ?  noteService.createNote(observations) : null;
+        }
     }
 
 }

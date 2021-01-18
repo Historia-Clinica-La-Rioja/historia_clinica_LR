@@ -68,7 +68,6 @@ public class DeleteDiagnosticReportServiceImpl implements DeleteDiagnosticReport
         result.setHealthConditionId(diagnosticReport.getHealthConditionId());
         result.setStatusId(DiagnosticReportStatus.CANCELLED);
         result.setNoteId(diagnosticReport.getNoteId());
-        result.setObservations(noteService.getDescriptionById(diagnosticReport.getNoteId()));
         result.setSnomed(snomedService.getSnomed(diagnosticReport.getSnomedId()));
         LOG.debug(OUTPUT, result);
         return result;
