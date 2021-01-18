@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MasterDataInterface } from '@api-rest/api-model';
-import { ContextService } from '@core/services/context.service';
+import { environment } from '@environments/environment';
 import { Observable, of } from 'rxjs';
 
+const PREFIX = '/emergency-care/masterdata';
 @Injectable({
 	providedIn: 'root'
 })
@@ -11,45 +12,17 @@ export class EmergencyCareMasterDataService {
 
 	constructor(
 		private http: HttpClient,
-		private contextService: ContextService
 	) { }
 
 	getType(): Observable<MasterDataInterface<number>[]> {
-		return of([{
-			id: 1,
-			description: 'Adulto'
-		},
-		{
-			id: 2,
-			description: 'Pediátrico'
-		},
-		{
-			id: 3,
-			description: 'Ginecología y obstetricia'
-		}]);
+		const url = `${environment.apiBase}${PREFIX}/type`;
+		return this.http.get<MasterDataInterface<number>[]>(url);
 	}
 
 
-	getEntranceType():  Observable<MasterDataInterface<number>[]>{
-		return of([
-
-			{
-				id: 1,
-				description: 'Caminando'
-			},
-			{
-				id: 2,
-				description: 'En silla de ruedas'
-			},
-			{
-				id: 3,
-				description: 'Ambulancia sin médico'
-			},
-			{
-				id: 4,
-				description: 'Ambulancia con médico'
-			}
-		]);
+	getEntranceType(): Observable<MasterDataInterface<number>[]> {
+		const url = `${environment.apiBase}${PREFIX}/entranceType`;
+		return this.http.get<MasterDataInterface<number>[]>(url);
 	}
 
 }

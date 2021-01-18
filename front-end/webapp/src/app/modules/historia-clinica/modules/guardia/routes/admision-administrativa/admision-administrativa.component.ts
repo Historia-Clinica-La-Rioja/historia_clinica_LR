@@ -24,6 +24,8 @@ import { Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
 import { PatientService } from '@api-rest/services/patient.service';
 import { AMBULANCE, PERSON, POLICE_OFFICER } from '@core/constants/validation-constants';
+import { EmergencyCareEntranceType } from '@api-rest/masterdata';
+
 @Component({
 	selector: 'app-admision-administrativa',
 	templateUrl: './admision-administrativa.component.html',
@@ -50,8 +52,8 @@ export class AdmisionAdministrativaComponent implements OnInit {
 	today: Date = new Date();
 
 	motivoNuevaConsultaService: MotivoNuevaConsultaService;
-	readonly WITH_DOCTOR_IN_AMBULANCE = 3;
-	readonly WITHOUT_DOCTOR_IN_AMBULANCE = 4;
+	readonly EMERGENCY_CARE_ENTRANCE_TYPE = EmergencyCareEntranceType;
+
 	private readonly routePrefix;
 	private selectedPatient;
 
@@ -195,7 +197,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 	}
 
 	setAmbulanceCompanyIdStatus(): void {
-		if (this.form.value.emergencyCareEntranceTypeId === this.WITH_DOCTOR_IN_AMBULANCE || this.form.value.emergencyCareEntranceTypeId === this.WITHOUT_DOCTOR_IN_AMBULANCE) {
+		if (this.form.value.emergencyCareEntranceTypeId === EmergencyCareEntranceType.AMBULANCIA_CON_MEDICO || this.form.value.emergencyCareEntranceTypeId === EmergencyCareEntranceType.AMBULANCIA_SIN_MEDICO) {
 			this.form.controls.ambulanceCompanyId.enable();
 		} else {
 			this.form.controls.ambulanceCompanyId.disable();

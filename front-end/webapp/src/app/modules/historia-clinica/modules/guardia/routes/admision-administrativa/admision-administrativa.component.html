@@ -90,7 +90,7 @@
 		</mat-form-field>
 
 		<mat-form-field appearance="outline"
-			*ngIf="form.value.emergencyCareEntranceTypeId === WITH_DOCTOR_IN_AMBULANCE || form.value.emergencyCareEntranceTypeId === WITHOUT_DOCTOR_IN_AMBULANCE">
+			*ngIf="form.value.emergencyCareEntranceTypeId === EMERGENCY_CARE_ENTRANCE_TYPE.AMBULANCIA_CON_MEDICO || form.value.emergencyCareEntranceTypeId === EMERGENCY_CARE_ENTRANCE_TYPE.AMBULANCIA_SIN_MEDICO">
 			<input formControlName="ambulanceCompanyId"
 				placeholder="{{'guardia.administrative_admision.form.AMBULANCE_COMPANY_ID' | translate }}" matInput>
 			<mat-error *ngIf="hasError(form, 'maxlength', 'ambulanceCompanyId')" translate="forms.MAX_LENGTH_ERROR"
