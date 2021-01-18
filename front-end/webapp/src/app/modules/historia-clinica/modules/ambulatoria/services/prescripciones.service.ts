@@ -1,15 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { DiagnosticReportInfoDto, MedicationInfoDto, PrescriptionDto } from '@api-rest/api-model';
+import { CompleteRequestDto, DiagnosticReportInfoDto, DiagnosticReportInfoWithFilesDto, MedicationInfoDto, PrescriptionDto } from '@api-rest/api-model';
 import { MedicationRequestService } from '@api-rest/services/medication-request.service';
 import { ServiceRequestService } from '@api-rest/services/service-request.service';
-import { MedicationStatusChange } from '../constants/prescripciones-masterdata';
+import { MEDICATION_STATUS, MedicationStatusChange, STUDY_STATUS } from '../constants/prescripciones-masterdata';
 import { NewPrescriptionItem } from '../dialogs/ordenes-prescripciones/agregar-prescripcion-item/agregar-prescripcion-item.component';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PrescripcionesService {
+
+	public readonly STUDY_STATUS = STUDY_STATUS;
+	public readonly MEDICATION_STATUS = MEDICATION_STATUS;
 
 	constructor(
 		private medicationRequestService: MedicationRequestService,
@@ -53,6 +56,18 @@ export class PrescripcionesService {
 		return this.serviceRequestService.delete(patientId, serviceRequestId);
 	}
 
+	completeStudy(patientId: number, diagnosticReportId: number, completeRequestDto: CompleteRequestDto, files: File[]): Observable<void> {
+		return this.serviceRequestService.complete(patientId, diagnosticReportId, completeRequestDto, files);
+	}
+
+	showStudyResults(patientId: number, diagnosticReportId: number): Observable<DiagnosticReportInfoWithFilesDto> {
+		return this.serviceRequestService.get(patientId, diagnosticReportId);
+	}
+
+	downloadStudyFile(patientId: number, fileId: number, fileName: string) {
+		this.serviceRequestService.download(patientId, fileId, fileName);
+	}
+
 	toNewPrescriptionItem(prescriptionType: PrescriptionTypes, prescriptionItem: any): NewPrescriptionItem {
 		switch(prescriptionType) {
 			case PrescriptionTypes.MEDICATION:
@@ -91,6 +106,37 @@ export class PrescripcionesService {
 			isDailyInterval: null,
 			isChronicAdministrationTime: null,
 			observations: studyItem.observations,
+		}
+	}
+
+	renderStatusDescription(prescriptionType: PrescriptionTypes, statusId: string): string {
+		switch(prescriptionType) {
+			case PrescriptionTypes.MEDICATION:
+				return this.renderStatusDescriptionMedication(statusId);
+			case PrescriptionTypes.STUDY:
+				return this.renderStatusDescriptionStudy(statusId);
+		}
+	}
+
+	private renderStatusDescriptionMedication(statusId: string): string {
+		switch (statusId) {
+			case this.MEDICATION_STATUS.ACTIVE.id: 
+				return this.MEDICATION_STATUS.ACTIVE.description;
+			case this.MEDICATION_STATUS.STOPPED.id:
+				return this.MEDICATION_STATUS.STOPPED.description;
+			case this.MEDICATION_STATUS.SUSPENDED.id:
+				return this.MEDICATION_STATUS.SUSPENDED.description;
+		}
+	}
+
+	private renderStatusDescriptionStudy(statusId: string): string {
+		switch (statusId) {
+			case this.STUDY_STATUS.REGISTERED.id: 
+				return this.STUDY_STATUS.REGISTERED.description;
+			case this.STUDY_STATUS.FINAL.id:
+				return this.STUDY_STATUS.FINAL.description;
+			case this.STUDY_STATUS.ERROR.id:
+				return this.STUDY_STATUS.ERROR.description;
 		}
 	}
 }

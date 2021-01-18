@@ -1,4 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { CompleteRequestDto, DiagnosticReportInfoDto } from '@api-rest/api-model';
+import { PrescriptionItemData } from '../../../components/ordenes/item-prescripciones/item-prescripciones.component';
+import { PrescripcionesService, PrescriptionTypes } from './../../../services/prescripciones.service';
 
 @Component({
   selector: 'app-completar-estudio',
@@ -7,9 +12,64 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CompletarEstudioComponent implements OnInit {
 
-  constructor() { }
+	diagnosticReport: DiagnosticReportInfoDto;
+	completeStudyForm: FormGroup;
+	selectedFiles: File[] = [];
+	selectedFilesShow: any[] = [];
 
-  ngOnInit(): void {
-  }
+	constructor(
+		private readonly formBuilder: FormBuilder,
+		private prescripcionesService: PrescripcionesService,
+		public dialogRef: MatDialogRef<CompletarEstudioComponent>,
+		@Inject(MAT_DIALOG_DATA) public data: {
+			diagnosticReport: DiagnosticReportInfoDto,
+			patientId: number,
+		}
+	) { }
 
+	ngOnInit(): void {
+		this.diagnosticReport = this.data.diagnosticReport;
+
+		this.completeStudyForm = this.formBuilder.group({
+			observations: [null],
+		});
+	}
+
+	closeModal(simpleClose: boolean, completed?: boolean): void {
+		this.dialogRef.close(simpleClose ? null : {completed: completed});
+	}
+
+	prescriptionItemDataBuilder(diagnosticReport: DiagnosticReportInfoDto): PrescriptionItemData {
+		return {
+			prescriptionStatus: this.prescripcionesService.renderStatusDescription(PrescriptionTypes.STUDY, diagnosticReport.statusId),
+			prescriptionPt: diagnosticReport.snomed.pt,
+			problemPt: diagnosticReport.healthCondition.snomed.pt,
+			doctor: diagnosticReport.doctor,
+			totalDays: diagnosticReport.totalDays
+		}
+	}
+
+	completeStudy() {
+		const completeRequest: CompleteRequestDto = {
+			observations: this.completeStudyForm.controls.observations.value,
+		}
+
+		this.prescripcionesService.completeStudy(this.data.patientId, this.diagnosticReport.id, completeRequest, this.selectedFiles).subscribe(() => {
+			this.closeModal(false, true);
+		}, _ => {
+			this.closeModal(false, false);
+		});
+	}
+
+	onSelectFileFormData($event) {
+		Array.from($event.target.files).forEach((file: File) => {
+			this.selectedFiles.push(file);
+			this.selectedFilesShow.push(file.name)
+		});
+	}
+
+	removeSelectedFile(index) {
+		this.selectedFiles.splice(index, 1);
+		this.selectedFilesShow.splice(index, 1);
+	}
 }

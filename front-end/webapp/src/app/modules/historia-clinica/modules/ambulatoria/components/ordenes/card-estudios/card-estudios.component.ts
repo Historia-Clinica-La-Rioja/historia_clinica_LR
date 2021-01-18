@@ -6,8 +6,10 @@ import { ESTUDIOS } from 'src/app/modules/historia-clinica/constants/summaries';
 import { STUDY_STATUS } from '../../../constants/prescripciones-masterdata';
 import { ConfirmarPrescripcionComponent } from '../../../dialogs/ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
 import { NuevaPrescripcionComponent } from '../../../dialogs/ordenes-prescripciones/nueva-prescripcion/nueva-prescripcion.component';
+import { VerResultadosEstudioComponent } from '../../../dialogs/ordenes-prescripciones/ver-resultados-estudio/ver-resultados-estudio.component';
 import { PrescripcionesService, PrescriptionTypes } from '../../../services/prescripciones.service';
 import { PrescriptionItemData } from '../item-prescripciones/item-prescripciones.component';
+import { CompletarEstudioComponent } from './../../../dialogs/ordenes-prescripciones/completar-estudio/completar-estudio.component';
 
 @Component({
   selector: 'app-card-estudios',
@@ -84,17 +86,6 @@ export class CardEstudiosComponent implements OnInit {
 		});
 	}
 
-	renderStatusDescription(statusId: string): string {
-		switch (statusId) {
-			case this.STUDY_STATUS.REGISTERED.id: 
-				return this.STUDY_STATUS.REGISTERED.description;
-			case this.STUDY_STATUS.FINAL.id:
-				return this.STUDY_STATUS.FINAL.description;
-			case this.STUDY_STATUS.ERROR.id:
-				return this.STUDY_STATUS.ERROR.description;
-		}
-	}
-
 	deleteStudy(id: number) {
 		this.prescripcionesService.deleteStudy(this.patientId, id).subscribe(() => {
 			this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.DELETE_STUDY_SUCCESS');
@@ -104,11 +95,44 @@ export class CardEstudiosComponent implements OnInit {
 
 	prescriptionItemDataBuilder(diagnosticReport: DiagnosticReportInfoDto): PrescriptionItemData {
 		return {
-			prescriptionStatus: this.renderStatusDescription(diagnosticReport.statusId),
+			prescriptionStatus: this.prescripcionesService.renderStatusDescription(PrescriptionTypes.STUDY, diagnosticReport.statusId),
 			prescriptionPt: diagnosticReport.snomed.pt,
 			problemPt: diagnosticReport.healthCondition.snomed.pt,
 			doctor: diagnosticReport.doctor,
 			totalDays: diagnosticReport.totalDays
 		}
+	}
+
+	completeStudy(diagnosticReport: DiagnosticReportInfoDto) {
+		const newCompleteStudy = this.dialog.open(CompletarEstudioComponent,
+			{
+				data: {
+					diagnosticReport: diagnosticReport,
+					patientId: this.patientId,
+				},
+				width: '35%',
+			});
+
+			newCompleteStudy.afterClosed().subscribe((completed: any) => {
+				if (completed) {
+					if (completed.completed) {
+						this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.COMPLETE_STUDY_SUCCESS');
+						this.getStudy();
+					} else {
+						this.snackBarService.showError('ambulatoria.paciente.ordenes_prescripciones.toast_messages.COMPLETE_STUDY_ERROR');
+					}
+				} 
+			});
+	}
+
+	showStudyResults(diagnosticReport: DiagnosticReportInfoDto) {
+		const newShowStudyResults = this.dialog.open(VerResultadosEstudioComponent,
+			{
+				data: {
+					diagnosticReport: diagnosticReport,
+					patientId: this.patientId,
+				},
+				width: '35%',
+			});
 	}
 }

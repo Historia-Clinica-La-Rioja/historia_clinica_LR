@@ -1,8 +1,17 @@
-export enum MedicationStatus {
-    ACTIVE = '55561003',
-    SUSPENDED = '385655000',
-    STOPPED = '6155003'
-}
+export const MEDICATION_STATUS = {
+	ACTIVE: {
+		id: "55561003",
+		description: "Activa"
+	},
+	SUSPENDED: {
+		id: "385655000",
+		description: "Suspendida"
+	},
+	STOPPED: {
+		id: "6155003",
+		description: "Finalizada"
+	}
+};
 
 export enum MedicationStatusChange {
     FINALIZE = 'Finalizar',

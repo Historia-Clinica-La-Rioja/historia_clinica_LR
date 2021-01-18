@@ -582,7 +582,7 @@ export interface EvolutionNoteDto extends DocumentDto, Serializable {
 }
 
 export interface FileDto {
-    fileId: string;
+    fileId: number;
     fileName: string;
 }
 

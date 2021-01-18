@@ -9,6 +9,6 @@ import lombok.ToString;
 @Setter
 @ToString
 public class FileDto {
-    private String fileId;
+    private Integer fileId;
     private String fileName;
 }

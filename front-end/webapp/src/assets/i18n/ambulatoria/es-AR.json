@@ -222,6 +222,16 @@
 					"SUSPEND_BUTTON": "Suspender",
 					"SUSPEND_TITLE": "Suspender medicación"
 				},
+				"complete_study_dialog": {
+					"TITLE": "Completar estudio",
+					"COMPLETE_BUTTON": "Completar",
+					"OBSERVATIONS_LABEL": "Observaciones",
+					"OBSERVATIONS_PLACEHOLDER": "Descripción de los resultados",
+					"UPLOAD_FILES": "Adjuntar archivos"
+				},
+				"show_study_results_dialog": {
+					"TITLE": "Resultados"
+				},
 				"toast_messages": {
 					"POST_MEDICATION_SUCCESS": "Medicación agregada correctamente",
 					"POST_MEDICATION_ERROR": "Error al agregar medicación",
@@ -233,7 +243,9 @@
 					"MEDICATION_CHANGE_ERROR": "La medicación no puede cambiarse a este estado",
 					"DOWNLOAD_RECIPE_SUCCESS": "La receta se descargó correctamente",
 					"DELETE_STUDY_SUCCESS": "El estudio se borró correctamente",
-					"DELETE_STUDY_ERROR": "Error al borrar estudio"
+					"DELETE_STUDY_ERROR": "Error al borrar estudio",
+					"COMPLETE_STUDY_SUCCESS": "Estudio completado correctamente",
+					"COMPLETE_STUDY_ERROR": "Error al completar estudio"
 				},
 				"menu_items": {
 					"DOWNLOAD": "Descargar receta",

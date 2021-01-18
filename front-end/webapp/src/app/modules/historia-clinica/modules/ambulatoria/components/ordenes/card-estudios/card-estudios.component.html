@@ -14,13 +14,13 @@
                         <mat-icon>more_vert</mat-icon>
                     </button>
                     <mat-menu #menu="matMenu">
-                        <button mat-menu-item *ngIf="diagnosticReport.statusId === STUDY_STATUS.REGISTERED.id">
+                        <button mat-menu-item (click)="completeStudy(diagnosticReport)" *ngIf="diagnosticReport.statusId === STUDY_STATUS.REGISTERED.id">
                             <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.COMPLETE'"></span>
                         </button>
                         <button mat-menu-item (click)="deleteStudy(diagnosticReport.id)" *ngIf="diagnosticReport.statusId === STUDY_STATUS.REGISTERED.id">
                             <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.DELETE'"></span>
                         </button>
-                        <button mat-menu-item *ngIf="diagnosticReport.statusId === STUDY_STATUS.FINAL.id">
+                        <button mat-menu-item (click)="showStudyResults(diagnosticReport)" *ngIf="diagnosticReport.statusId === STUDY_STATUS.FINAL.id">
                             <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.SHOW_RESULTS'"></span>
                         </button>
                     </mat-menu>

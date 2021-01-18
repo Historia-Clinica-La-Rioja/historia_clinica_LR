@@ -6,11 +6,12 @@ import { ORDENES_MEDICACION } from 'src/app/modules/historia-clinica/constants/s
 import { ConfirmarPrescripcionComponent } from '../../../dialogs/ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
 import { NuevaPrescripcionComponent } from '../../../dialogs/ordenes-prescripciones/nueva-prescripcion/nueva-prescripcion.component';
 import { PrescripcionesService, PrescriptionTypes } from '../../../services/prescripciones.service';
-import { MedicationStatus, MedicationStatusChange } from '../../../constants/prescripciones-masterdata';
+import { MedicationStatusChange } from '../../../constants/prescripciones-masterdata';
 import { SuspenderMedicacionComponent } from '../../../dialogs/ordenes-prescripciones/suspender-medicacion/suspender-medicacion.component';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
 import { PrescriptionItemData } from '../item-prescripciones/item-prescripciones.component';
+import { MEDICATION_STATUS } from './../../../constants/prescripciones-masterdata';
 
 @Component({
   selector: 'app-card-medicaciones',
@@ -20,7 +21,7 @@ import { PrescriptionItemData } from '../item-prescripciones/item-prescripciones
 export class CardMedicacionesComponent implements OnInit {
 
 	public readonly medicacion = ORDENES_MEDICACION;
-	public readonly medicationStatus = MedicationStatus;
+	public readonly MEDICATION_STATUS = MEDICATION_STATUS;
 	public readonly medicationStatusChange = MedicationStatusChange;
     public medicationsInfo : MedicationInfoDto[];
 	public selectedMedicationList: MedicationInfoDto[] = [];
@@ -56,7 +57,7 @@ export class CardMedicacionesComponent implements OnInit {
 
 		this.getMedication();
 
-		this.formFilter.controls.statusId.setValue(MedicationStatus.ACTIVE);
+		this.formFilter.controls.statusId.setValue(MEDICATION_STATUS.ACTIVE.id);
 	}
 
 	private getMedication(): void {
@@ -189,21 +190,10 @@ export class CardMedicacionesComponent implements OnInit {
 
 	checkMedicationStatus(statusId: string): boolean {
 		switch(statusId){
-			case this.medicationStatus.ACTIVE:
+			case this.MEDICATION_STATUS.ACTIVE.id:
 				return this.selectedMedicationList.every(m => m.statusId === statusId);
-			case this.medicationStatus.STOPPED:
+			case this.MEDICATION_STATUS.STOPPED.id:
 				return !this.selectedMedicationList.some(m => m.statusId === statusId);
-		}
-	}
-
-	renderStatusDescription(statusId: string): string {
-		switch (statusId) {
-			case this.medicationStatus.ACTIVE:
-				return 'Activa';
-			case this.medicationStatus.STOPPED:
-				return 'Finalizada';
-			case this.medicationStatus.SUSPENDED:
-				return 'Suspendida';
 		}
 	}
 
@@ -218,12 +208,12 @@ export class CardMedicacionesComponent implements OnInit {
 	clear(): void {
 		this.formFilter.reset();
 		this.getMedication();
-		this.formFilter.controls.statusId.setValue(MedicationStatus.ACTIVE);
+		this.formFilter.controls.statusId.setValue(MEDICATION_STATUS.ACTIVE.id);
 	}
 
 	prescriptionItemDataBuilder(medication: MedicationInfoDto): PrescriptionItemData {
 		return {
-			prescriptionStatus: this.renderStatusDescription(medication.statusId),
+			prescriptionStatus: this.prescripcionesService.renderStatusDescription(PrescriptionTypes.MEDICATION, medication.statusId),
 			prescriptionPt: medication.snomed.pt,
 			problemPt: medication.healthCondition.snomed.pt,
 			doctor: medication.doctor,

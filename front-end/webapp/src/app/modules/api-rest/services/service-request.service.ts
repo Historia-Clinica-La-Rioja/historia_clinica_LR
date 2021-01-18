@@ -40,7 +40,7 @@ export class ServiceRequestService {
 		const uploadFileUrl = commonUrl + '/uploadFile';
 		const completeUrl = commonUrl + '/complete';
 		const filesFormdata = new FormData();
-		files.forEach(file => filesFormdata.append('files', file));
+		Array.from(files).forEach(file => filesFormdata.append('files', file));
 		return this.http.post<number[]>(uploadFileUrl, filesFormdata).pipe(
 			flatMap(fileIds => {
 				completeRequestDto.fileIds = fileIds;
