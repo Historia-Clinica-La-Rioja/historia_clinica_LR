@@ -5,7 +5,6 @@ import net.pladema.emergencycare.controller.dto.ECAdministrativeDto;
 import net.pladema.emergencycare.controller.dto.ECAdultGynecologicalDto;
 import net.pladema.emergencycare.controller.dto.ECPediatricDto;
 import net.pladema.emergencycare.controller.dto.EmergencyCareListDto;
-import net.pladema.emergencycare.controller.dto.EmergencyCarePatientDto;
 import net.pladema.emergencycare.controller.dto.ResponseEmergencyCareDto;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
 import net.pladema.emergencycare.triage.controller.mapper.TriageMapper;
@@ -45,6 +44,12 @@ public interface EmergencyCareMapper {
     EmergencyCareBo administrativeEmergencyCareDtoToEmergencyCareBo(ECAdministrativeDto emergencyCareDto);
 
     @Named("adultGynecologicalEmergencyCareDtoToEmergencyCareBo")
+    @Mapping(target = "patientId", source = "administrative.patient.id")
+    @Mapping(target = "patientMedicalCoverageId", source = "administrative.patient.patientMedicalCoverageId")
+    @Mapping(target = "policeIntervention", source = "administrative.policeIntervention", qualifiedByName = "toPoliceInterventionBo")
+    @Mapping(target = "triage", source = "triage", qualifiedByName = "toTriageBo")
+    @Mapping(target = "emergencyCareType", source = "administrative.typeId", qualifiedByName = "fromEmergencyCareTypeId")
+    @Mapping(target = "emergencyCareEntrance", source = "administrative.entranceTypeId", qualifiedByName = "fromEmergencyCareEntranceId")
     EmergencyCareBo adultGynecologicalEmergencyCareDtoToEmergencyCareBo(ECAdultGynecologicalDto emergencyCareDto);
 
     @Named("pediatricEmergencyCareDtoToEmergencyCareBo")

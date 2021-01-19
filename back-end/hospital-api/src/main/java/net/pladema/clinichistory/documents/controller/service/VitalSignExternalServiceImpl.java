@@ -7,7 +7,6 @@ import net.pladema.clinichistory.documents.service.ips.domain.VitalSignBo;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.VitalSignMapper;
 import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.service.PatientExternalService;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -44,12 +43,13 @@ public class VitalSignExternalServiceImpl implements VitalSignExternalService{
         return result;
     }
 
-    @NotNull
     private PatientInfoBo getPatientInfoBo(Integer patientId) {
+        LOG.debug("Input parameter -> patientId {}", patientId);
         if (patientId == null)
             return new PatientInfoBo();
         BasicPatientDto patientDto = (patientExternalService.getBasicDataFromPatient(patientId));
         PatientInfoBo patientInfo = new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge());
+        LOG.debug("Output -> {}", patientInfo);
         return patientInfo;
     }
 }

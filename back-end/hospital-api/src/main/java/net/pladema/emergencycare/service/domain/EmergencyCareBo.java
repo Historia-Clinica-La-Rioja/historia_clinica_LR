@@ -117,4 +117,8 @@ public class EmergencyCareBo {
         return (this.emergencyCareState != null) ? this.emergencyCareState.getId() : null;
     }
 
+    public void setTriageVitalSignIds(List<Integer> vitalSignIds) {
+        this.getTriage().setVitalSignIds(vitalSignIds);
+    }
+
 }

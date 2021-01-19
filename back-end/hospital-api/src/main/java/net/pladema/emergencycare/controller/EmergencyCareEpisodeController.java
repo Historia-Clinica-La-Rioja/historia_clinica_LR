@@ -77,7 +77,7 @@ public class EmergencyCareEpisodeController {
     public ResponseEntity<Integer> createAdministrative(
             @PathVariable(name = "institutionId") Integer institutionId,
             @RequestBody ECAdministrativeDto body) {
-        LOG.debug("Add emergency care administrative episode => {}", body);
+        LOG.debug("Add emergency care administrative episode -> institutionId {}, body {}", institutionId, body);
         EmergencyCareBo newEmergencyCare = emergencyCareMapper.administrativeEmergencyCareDtoToEmergencyCareBo(body);
         newEmergencyCare.setInstitutionId(institutionId);
         List<String> reasonIds = reasonExternalService.addReasons(body.reasons());
@@ -91,9 +91,20 @@ public class EmergencyCareEpisodeController {
     @Transactional
     @PostMapping("/adult-gynecological")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
-    public ResponseEntity<Integer> createAdult(@RequestBody ECAdultGynecologicalDto body) {
-        LOG.debug("Add emergency care adult-gynecological episode => {}", body);
+    public ResponseEntity<Integer> createAdult(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @RequestBody ECAdultGynecologicalDto body) {
+        LOG.debug("Add emergency care adult-gynecological episode -> institutionId {}, body {}", institutionId, body);
         EmergencyCareBo newEmergencyCare = emergencyCareMapper.adultGynecologicalEmergencyCareDtoToEmergencyCareBo(body);
+        newEmergencyCare.setInstitutionId(institutionId);
+
+        NewVitalSignsObservationDto vitalSignsObservationDto =
+                vitalSignExternalService.saveVitalSigns(body.patientId(), body.vitalSignsObservation());
+        newEmergencyCare.setTriageVitalSignIds(getVitalSignIds(vitalSignsObservationDto));
+
+        List<String> reasonIds = reasonExternalService.addReasons(body.reasons());
+        newEmergencyCare.setReasonIds(reasonIds);
+
         newEmergencyCare = emergencyCareEpisodeService.createAdult(newEmergencyCare);
         Integer result = newEmergencyCare.getId();
         LOG.debug("Output -> {}", result);
@@ -105,13 +116,13 @@ public class EmergencyCareEpisodeController {
     @PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
     public ResponseEntity<Integer> createPediatric(@PathVariable(name = "institutionId") Integer institutionId,
                                                    @RequestBody ECPediatricDto body) {
-        LOG.debug("Add emergency care pediatric episode => {}", body);
+        LOG.debug("Add emergency care pediatric episode -> institutionId {}, body {}", institutionId, body);
         EmergencyCareBo newEmergencyCare = emergencyCareMapper.pediatricEmergencyCareDtoToEmergencyCareBo(body);
         newEmergencyCare.setInstitutionId(institutionId);
 
         NewVitalSignsObservationDto vitalSignsObservationDto = vitalSignMapper.fromTriagePediatricDto(body.getTriage());
         vitalSignsObservationDto = vitalSignExternalService.saveVitalSigns(body.patientId(), vitalSignsObservationDto);
-        newEmergencyCare.getTriage().setVitalSignIds(getVitalSignIds(vitalSignsObservationDto));
+        newEmergencyCare.setTriageVitalSignIds(getVitalSignIds(vitalSignsObservationDto));
 
         List<String> reasonIds = reasonExternalService.addReasons(body.reasons());
         newEmergencyCare.setReasonIds(reasonIds);

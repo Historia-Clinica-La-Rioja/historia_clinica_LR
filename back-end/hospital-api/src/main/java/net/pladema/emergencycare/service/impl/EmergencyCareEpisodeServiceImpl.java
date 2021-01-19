@@ -129,8 +129,26 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
     @Override
     public EmergencyCareBo createAdult(EmergencyCareBo newEmergencyCare) {
         LOG.debug("Input parameters -> newEmergencyCare {}", newEmergencyCare);
-        //TODO implement method
-        return new EmergencyCareBo();
+        PoliceInterventionBo policeInterventionBo = newEmergencyCare.getPoliceIntervention();
+        policeInterventionBo = (policeInterventionBo != null) ? savePoliceIntervention(newEmergencyCare.getPoliceIntervention()) : new PoliceInterventionBo();
+        EmergencyCareBo emergencyCareEpisodeBo = saveEmergencyCareEpisode(newEmergencyCare, newEmergencyCare.getTriage(), policeInterventionBo.getId());
+        TriageBo triageBo = saveTriageAdult(newEmergencyCare.getTriage(), emergencyCareEpisodeBo.getId());
+        List<String> reasons = saveReasons(newEmergencyCare.getReasonIds(), emergencyCareEpisodeBo.getId());
+
+        emergencyCareEpisodeBo.setPoliceIntervention(policeInterventionBo);
+        emergencyCareEpisodeBo.setTriage(triageBo);
+        emergencyCareEpisodeBo.setReasonIds(reasons);
+
+        LOG.debug(OUTPUT, emergencyCareEpisodeBo);
+        return emergencyCareEpisodeBo;
+    }
+
+    private TriageBo saveTriageAdult(TriageBo triageBo, Integer emergencyCareEpisodeId) {
+        LOG.debug("Input parameters -> triageBo {}, emergencyCareEpisodeId {}", triageBo, emergencyCareEpisodeId);
+        triageBo.setEmergencyCareEpisodeId(emergencyCareEpisodeId);
+        TriageBo result = triageService.createAdultGynecological(triageBo);
+        LOG.debug(OUTPUT, result);
+        return result;
     }
 
     private TriageBo saveTriagePediatric(TriageBo triageBo, Integer emergencyCareEpisodeId) {

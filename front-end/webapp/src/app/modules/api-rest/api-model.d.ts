@@ -1268,6 +1268,7 @@ export interface TriageAdministrativeDto extends TriageDto {
 }
 
 export interface TriageAdultGynecologicalDto extends TriageNoAdministrativeDto {
+    vitalSigns: NewVitalSignsObservationDto;
 }
 
 export interface TriageCategoryDto extends Serializable {

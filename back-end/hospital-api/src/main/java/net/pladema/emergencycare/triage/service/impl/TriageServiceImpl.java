@@ -42,7 +42,7 @@ public class TriageServiceImpl implements TriageService {
 
     @Override
     public TriageBo createAdministrative(TriageBo triageBo) {
-        LOG.debug("Input parameters -> triageBo {}", triageBo);
+        LOG.debug("Input parameter -> triageBo {}", triageBo);
         Triage triage = triageRepository.save(new Triage(triageBo));
         triageBo.setId(triage.getId());
         LOG.debug("Output -> {}", triageBo);
@@ -50,8 +50,12 @@ public class TriageServiceImpl implements TriageService {
     }
 
     @Override
-    public TriageBo createAdultGynecological(TriageBo triage) {
-        //TODO implement method
+    public TriageBo createAdultGynecological(TriageBo triageBo) {
+        LOG.debug("Input parameter -> triageBo {}", triageBo);
+        Triage triage = triageRepository.save(new Triage(triageBo));
+        triageBo.setId(triage.getId());
+        saveVitalSigns(triageBo.getId(), triageBo.getVitalSignIds());
+        LOG.debug("Output -> {}", triageBo);
         return null;
     }
 
