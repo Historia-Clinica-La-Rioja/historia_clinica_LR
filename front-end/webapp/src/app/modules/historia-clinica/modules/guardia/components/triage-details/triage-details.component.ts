@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { EmergencyCareTypes, Triages } from '../../constants/masterdata';
 import { VitalSingCurrentPrevious } from '@presentation/components/signo-vital-current-previous/signo-vital-current-previous.component';
+import { TriageCategory } from '../triage-chip/triage-chip.component';
 
 @Component({
 	selector: 'app-triage-details',
@@ -81,11 +82,7 @@ export class TriageDetailsComponent implements OnInit, OnChanges {
 
 export interface Triage {
 	creationDate: Date;
-	category: {
-		id: number;
-		name: string;
-		colorHex: string;
-	};
+	category: TriageCategory;
 	professional: {
 		firstName: string,
 		lastName: string

@@ -91,22 +91,18 @@
 
 									<div id="left-side">
 										<span style="margin-right: 20px">
-											{{ triage.creationDate | viewDateDto: 'datetime' | date: 'dd/MM/yy - HH:mm' }}
+											{{ triage.creationDate | date: 'dd/MM/yy - HH:mm' }}
 											hs
 										</span>
-										<span class="triage-chip"
-											  [ngStyle]="{'color':triage.category.id === triages.AMARILLO_NIVEL_3 ? 'black' : 'white' }"
-											  [style.background-color]="triage.category.color.code">{{ triage.category.name }}
-										</span>
+										<app-triage-chip [category]="triage.category"></app-triage-chip>
 									</div>
 
 									<div id="right-side">
 										<span>
 											{{ triage.professional.firstName }} {{ triage.professional.lastName }}
 										</span>
-										<span *ngIf="triage.doctorsOffice?.description">•</span>
-										<span *ngIf="triage.doctorsOffice?.description">
-											{{ triage.doctorsOffice.description }}
+										<span *ngIf="triage.doctorsOfficeDescription">
+											• {{ triage.doctorsOfficeDescription }}
 										</span>
 									</div>
 

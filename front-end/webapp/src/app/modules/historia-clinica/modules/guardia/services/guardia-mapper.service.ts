@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Triage } from '../components/triage-details/triage-details.component';
-import { EmergencyCareTypes } from '../constants/masterdata';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { TriageReduced } from '../routes/episode-details/episode-details.component';
 
 @Injectable({
 	providedIn: 'root'
@@ -9,6 +9,7 @@ import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 export class GuardiaMapperService {
 
 	triageDtoToTriage: (triageDto: any) => Triage = GuardiaMapperService._mapTriageDtoToTriage;
+	triageDtoToTriageReduced: (triageDto: any) => TriageReduced = GuardiaMapperService._mapTriageDtoToTriageReduced;
 
 	constructor() {
 	}
@@ -104,5 +105,18 @@ export class GuardiaMapperService {
 			};
 		}
 
+	}
+
+	private static _mapTriageDtoToTriageReduced(triageDto: any): TriageReduced {
+		return {
+			creationDate: dateTimeDtoToDate(triageDto.creationDate),
+			category: {
+				id: triageDto.category.id,
+				name: triageDto.category.name,
+				colorHex: triageDto.category.color.code
+			},
+			professional: triageDto.professional,
+			doctorsOfficeDescription: triageDto.doctorsOffice?.description
+		};
 	}
 }

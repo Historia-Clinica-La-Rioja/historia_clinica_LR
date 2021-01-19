@@ -18,6 +18,7 @@ import { Triage } from '../../components/triage-details/triage-details.component
 import { GuardiaMapperService } from '../../services/guardia-mapper.service';
 import { EmergencyCareTypes, Triages } from '../../constants/masterdata';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { TriageCategory } from '../../components/triage-chip/triage-chip.component';
 
 @Component({
 	selector: 'app-episode-details',
@@ -37,7 +38,7 @@ export class EpisodeDetailsComponent implements OnInit {
 
 	emergencyCareType: EmergencyCareTypes;
 	lastTriage: Triage;
-	triagesHistory: any[];
+	triagesHistory: TriageReduced[];
 
 	constructor(
 		private readonly route: ActivatedRoute,
@@ -72,7 +73,7 @@ export class EpisodeDetailsComponent implements OnInit {
 				this.triageService.getAll(this.episodeId).subscribe((triages: any[]) => {
 						this.lastTriage = this.guardiaMapperService.triageDtoToTriage(triages[0]);
 						if (hasHistory(triages)) {
-							this.triagesHistory = triages;
+							this.triagesHistory = triages.map(this.guardiaMapperService.triageDtoToTriageReduced);
 							this.triagesHistory.shift();
 						}
 					});
@@ -129,4 +130,14 @@ export class EpisodeDetailsComponent implements OnInit {
 		this.personPhoto$ = this.patientService.getPatientPhoto(patientId);
 	}
 
+}
+
+export interface TriageReduced {
+	creationDate: Date;
+	category: TriageCategory;
+	professional: {
+		firstName: string,
+		lastName: string
+	};
+	doctorsOfficeDescription: string;
 }
