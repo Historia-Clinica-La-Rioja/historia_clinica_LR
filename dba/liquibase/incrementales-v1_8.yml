@@ -228,3 +228,16 @@ databaseChangeLog:
                 columnDataType: short
                 columnName: perfusion_id
                 tableName: triage_details
+
+    - changeSet:            
+        id: emergency_care_episode-addConstraint-emergency_care_state_id
+        author: jlardapide
+        comment: Add default value and not null constraint for column emergency_care_state_id in emergency_care_episode table
+        changes:
+            -  addNotNullConstraint:  
+                columnDataType: smallint
+                columnName: emergency_care_state_id
+                constraintName:  NN_emergency_care_state_id   
+                tableName: emergency_care_episode
+                validate:  true
+                defaultNullValue : 2

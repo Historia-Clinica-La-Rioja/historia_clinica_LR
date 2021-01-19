@@ -9,13 +9,7 @@ import net.pladema.emergencycare.triage.service.domain.TriageBo;
 import net.pladema.sgx.auditable.entity.SGXAuditListener;
 import net.pladema.sgx.auditable.entity.SGXAuditableEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "emergency_care_episode")
@@ -45,7 +39,7 @@ public class EmergencyCareEpisode extends SGXAuditableEntity {
 	@Column(name = "emergency_care_type_id")
 	private Short emergencyCareTypeId;
 
-	@Column(name = "emergency_care_state_id")
+	@Column(name = "emergency_care_state_id", nullable = false)
 	private Short emergencyCareStateId;
 
 	@Column(name = "emergency_care_entrance_type_id")
@@ -79,6 +73,13 @@ public class EmergencyCareEpisode extends SGXAuditableEntity {
 		this.institutionId = emergencyCareBo.getInstitutionId();
 		this.ambulanceCompanyId = emergencyCareBo.getAmbulanceCompanyId();
 		this.policeInterventionId = policeInterventionId;
+	}
+
+	@PrePersist
+	void preInsert() {
+		if (this.emergencyCareStateId == null) {
+			this.emergencyCareStateId = EmergencyCareState.EN_ESPERA;
+		}
 	}
 }
 
