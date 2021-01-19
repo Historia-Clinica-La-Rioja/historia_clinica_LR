@@ -154,11 +154,12 @@ public class EmergencyCareEpisodeController {
 	}
 
     @Transactional
-    @PutMapping("/{episodeId}/administrative/patient/{patientId}")
+    @PutMapping("/{episodeId}/administrative/updatePatient")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
     public ResponseEntity<Boolean> setPatient(
+            @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "episodeId") Integer episodeId,
-            @PathVariable(name = "patientId") Integer patientId) {
+            @RequestBody Integer patientId) {
         LOG.debug("Update patient of emergency care administrative episode -> episodeId {}, patientId {}",
                 episodeId, patientId);
         Boolean result = emergencyCareEpisodeService.setPatient(episodeId, patientId);

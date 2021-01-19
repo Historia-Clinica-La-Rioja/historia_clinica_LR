@@ -271,7 +271,14 @@ export class EmergencyCareEpisodeService {
 			entrance: null,
 			policeIntervention: null
 		}); */
-}
+	}
+
+
+	setPatient(episodeId: number, patientId: number): Observable<boolean> {
+		const url = `${environment.apiBase + BASIC_URL_PREFIX}/${this.contextService.institutionId +
+			BASIC_URL_SUFIX}/episodes/${episodeId}/administrative/updatePatient`;
+		return this.http.put<boolean>(url, patientId);
+	}
 
 }
 
@@ -308,7 +315,7 @@ export interface EmergencyCareEpisodeDto {
 
 export interface ResponseEmergencyCareDto {
 	id: number;
-	patientId:number;
+	patientId: number;
 	emergencyCareType: {
 		id: number;
 		description: string;

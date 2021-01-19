@@ -54,7 +54,7 @@
 				"AMBULANCE_COMPANY_ID": "ID Compañia ambulancia",
 				"police_intervention": {
 					"CALL_DETAIL": "Detalle del llamado",
-					"DATE":"Fecha",
+					"DATE": "Fecha",
 					"TIME": "Hora",
 					"police_officer": {
 						"TITLE": "Detalle del oficial policial",
@@ -77,7 +77,7 @@
 						"finalizar_ausencia": {
 							"TITLE": "Finalizar por ausencia",
 							"CONFIRM": "¿Está seguro que desea finalizar por ausencia el episodio?",
-							"SUCCESS":  "Episodio finalizado por ausencia exitosamente",
+							"SUCCESS": "Episodio finalizado por ausencia exitosamente",
 							"ERROR": "Error al finalizar por ausencia el episodio"
 						},
 						"NUEVO_TRIAGE": "Nuevo triage"
@@ -126,9 +126,13 @@
 				}
 			},
 			"search_patient": {
-				"CONFIRM": "Confirmar Paciente"
+				"CONFIRM": "Confirmar Paciente",
+				"update": {
+					"ERROR": "Ocurrio un error al actualizar el paciente",
+					"SUCCESS":"El paciente fue actualizado correctamente"
+				}
 			}
 		},
-		"NO_INFO":"Sin información"
+		"NO_INFO": "Sin información"
 	}
 }

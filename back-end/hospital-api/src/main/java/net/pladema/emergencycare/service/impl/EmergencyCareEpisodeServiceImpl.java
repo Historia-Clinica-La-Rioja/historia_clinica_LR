@@ -162,7 +162,7 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
     public Boolean setPatient(Integer episodeId, Integer patientId) {
         LOG.debug("Input parameters -> episodeId {}, patientId {}",
                 episodeId, patientId);
-        //TODO implement method
+        emergencyCareEpisodeRepository.updatePatientId(episodeId, patientId);
         return true;
     }
 }

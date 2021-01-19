@@ -17,6 +17,7 @@ import { TriageService } from '@api-rest/services/triage.service';
 import { Triage } from '../../components/triage-details/triage-details.component';
 import { GuardiaMapperService } from '../../services/guardia-mapper.service';
 import { map } from 'rxjs/operators';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
 	selector: 'app-episode-details',
@@ -44,7 +45,8 @@ export class EpisodeDetailsComponent implements OnInit {
 		private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService,
 		private readonly dialog: MatDialog,
 		private readonly triageService: TriageService,
-		private readonly guardiaMapperService: GuardiaMapperService
+		private readonly guardiaMapperService: GuardiaMapperService,
+		private snackBarService: SnackBarService,
 
 	) { }
 
@@ -68,7 +70,7 @@ export class EpisodeDetailsComponent implements OnInit {
 
 				this.triageService.getAll(this.episodeId)
 					.pipe(map((triages: any[]) => triages.map(this.guardiaMapperService.triageDtoToTriage)))
-					.subscribe((triages: Triage[]) => this.triage = {...this.triage, ...triages[0]});
+					.subscribe((triages: Triage[]) => this.triage = { ...this.triage, ...triages[0] });
 			});
 
 	}
@@ -88,14 +90,18 @@ export class EpisodeDetailsComponent implements OnInit {
 
 					confirmRef.afterClosed().subscribe(confirmed => {
 						if (confirmed) {
-							//persistir el nuevo paciente
-							this.loadPatient(patient.basicData.id);
-							this.responseEmergencyCare.patientId = patient.basicData.id;
+							this.emergencyCareEpisodeService.setPatient(this.episodeId, patient.basicData.id).subscribe(
+								saved => {
+									if (saved) {
+										this.snackBarService.showSuccess('guardia.episode.search_patient.update.SUCCESS');
+										this.loadPatient(patient.basicData.id);
+										this.responseEmergencyCare.patientId = patient.basicData.id;
+									}
+								}, _ => this.snackBarService.showError('guardia.episode.search_patient.update.ERROR'));
 						}
-					})
+					});
 				}
-			}
-		);
+			})
 	}
 
 	//TODO Crear un servicio que englobe estos llamados (tg-2735)

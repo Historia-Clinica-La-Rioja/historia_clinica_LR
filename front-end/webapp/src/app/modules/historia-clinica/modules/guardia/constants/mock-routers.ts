@@ -1736,9 +1736,9 @@ export const MOCKS_GUARDIA = [
 				method: 'GET',
 			},
 			{
-				name: 'EmergencyCareEpisode.setPatient(): boolean',
+				name: 'EmergencyCareEpisode.setPatient(patientId: number): boolean',
 				roles: 'Cualquiera sobre guardia',
-				path: '/api/institution/{institutionId}/emergency-care/episodes/{episodeId}/administrative/patient/{patientId}',
+				path: '/api/institution/{institutionId}/emergency-care/episodes/{episodeId}/administrative/updatePatient',
 				method: 'PUT',
 			}
 		]
