@@ -12,11 +12,15 @@ export class RequestMasterDataService {
 	constructor(
 		private http: HttpClient
 	  ) { }
-	
+
 
 	categories(): Observable<any[]> {
 		const url = `${environment.apiBase}/requests/masterdata/categories`;
 		return this.http.get<any[]>(url);
 	}
-	
+
+	medicationStatus(): Observable<any[]> {
+		const url = `${environment.apiBase}/requests/masterdata/medication-status`;
+		return this.http.get<any[]>(url);
+	}
 }
