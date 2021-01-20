@@ -23,6 +23,8 @@ import { PediatricTriageComponent } from './components/pediatric-triage/pediatri
 import { NewEpisodePediatricTriageComponent } from './routes/new-episode-pediatric-triage/new-episode-pediatric-triage.component';
 import { TriageDetailsComponent } from './components/triage-details/triage-details.component';
 import { TriageChipComponent } from './components/triage-chip/triage-chip.component';
+import { PediatricTriageDialogComponent } from './dialogs/pediatric-triage-dialog/pediatric-triage-dialog.component';
+import { AdultGynecologicalTriageDialogComponent } from './dialogs/adult-gynecological-triage-dialog/adult-gynecological-triage-dialog.component';
 
 @NgModule({
 	declarations: [
@@ -40,6 +42,8 @@ import { TriageChipComponent } from './components/triage-chip/triage-chip.compon
 		EpisodeDetailsComponent,
 		TriageDetailsComponent,
 		TriageChipComponent,
+		PediatricTriageDialogComponent,
+		AdultGynecologicalTriageDialogComponent,
 	],
 	imports: [
 		CommonModule,

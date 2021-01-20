@@ -15,7 +15,7 @@ export class AdministrativeTriageDialogComponent implements OnInit {
 
 	constructor(private triageService: TriageService,
 	            private readonly snackBarService: SnackBarService,
-	            public readonly dialogRef: MatDialogRef<any>,
+	            public readonly dialogRef: MatDialogRef<AdministrativeTriageDialogComponent>,
 	            @Inject(MAT_DIALOG_DATA) public  episodeId: number) {
 	}
 
@@ -30,7 +30,6 @@ export class AdministrativeTriageDialogComponent implements OnInit {
 				this.dialogRef.close(idReturned);
 			}, _ => {
 				this.snackBarService.showError('guardia.triage.NEW_TRIAGE_ERROR_MSG');
-				this.dialogRef.close();
 			});
 	}
 }

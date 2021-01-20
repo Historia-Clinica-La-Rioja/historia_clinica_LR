@@ -7,6 +7,8 @@ import { EmergencyCareTypes } from '../constants/masterdata';
 import { ERole } from '@api-rest/api-model';
 import { forkJoin, Observable } from 'rxjs';
 import { AdministrativeTriageDialogComponent } from '../dialogs/administrative-triage-dialog/administrative-triage-dialog.component';
+import { PediatricTriageDialogComponent } from '../dialogs/pediatric-triage-dialog/pediatric-triage-dialog.component';
+import { AdultGynecologicalTriageDialogComponent } from '../dialogs/adult-gynecological-triage-dialog/adult-gynecological-triage-dialog.component';
 
 export const ROLES_TO_MEDIC_TRIAGE: ERole[] = [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO];
 
@@ -36,12 +38,12 @@ export class TriageDefinitionsService {
 			switch (emergencyCareTypeId) {
 				case EmergencyCareTypes.PEDIATRIA:
 					return { url: this.getPediatricTriageUrl(),
-							component: undefined }; // TODO PediatricTriageDialogComponent
+							component: PediatricTriageDialogComponent };
 					break;
 				case EmergencyCareTypes.ADULTO:
 				case EmergencyCareTypes.GINECOLOGIA:
 					return { url: this.getAdultTriageUrl(),
-							component: undefined }; // TODO AdultTriageDialogComponent
+							component: AdultGynecologicalTriageDialogComponent };
 					break;
 			}
 		}

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ContextService } from '@core/services/context.service';
-import { TriageAdministrativeDto } from '@api-rest/api-model';
+import { TriageAdministrativeDto, TriageAdultGynecologicalDto, TriagePediatricDto } from '@api-rest/api-model';
 import { environment } from '@environments/environment';
 import { Observable, of } from 'rxjs';
 
@@ -21,6 +21,18 @@ export class TriageService {
 	createAdministrative(episodeId: number, triage: TriageAdministrativeDto): Observable<number> {
 		let url = `${environment.apiBase}/institution/${this.contextService.institutionId +
 		URL_PREFIX}/${episodeId}${URL_SUFIX}`;
+		return this.http.post<number>(url, triage);
+	}
+
+	newAdultGynecological(episodeId: number, triage: TriageAdultGynecologicalDto): Observable<number> {
+		let url = `${environment.apiBase}/institution/${this.contextService.institutionId +
+		URL_PREFIX}/${episodeId}${URL_SUFIX}/adult-gynecological`;
+		return this.http.post<number>(url, triage);
+	}
+
+	newPediatric(episodeId: number, triage: TriagePediatricDto): Observable<number> {
+		let url = `${environment.apiBase}/institution/${this.contextService.institutionId +
+		URL_PREFIX}/${episodeId}${URL_SUFIX}/pediatric`;
 		return this.http.post<number>(url, triage);
 	}
 
