@@ -42,3 +42,15 @@
 	width: 100%;
 	overflow: hidden;
 }
+
+@mixin info-primary {
+	font-weight: 500;
+	line-height: 20px;
+	font-size: 14px;
+}
+
+@mixin info-secondary {
+	font-size: 12px;
+	font-weight: normal;
+	line-height: 14px;
+}

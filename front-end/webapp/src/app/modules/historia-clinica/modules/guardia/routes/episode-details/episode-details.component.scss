@@ -1,16 +1,21 @@
+@import "../../../../../../../assets/styles/mixins";
+
 .grid {
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);
 	grid-gap: 20px;
 
 
-	.title {
-		line-height: 16px;
+	.grid-title {
+		@include info-secondary;
 	}
 
-	.subtitle {
-		font-size: 12px;
-		line-height: 14px;
+	.content-primary {
+		@include info-primary;
+	}
+
+	.content-secondary {
+		@include info-secondary;
 	}
 
 }

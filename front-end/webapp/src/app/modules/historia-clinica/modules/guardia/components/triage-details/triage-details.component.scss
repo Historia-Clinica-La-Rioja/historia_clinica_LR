@@ -1,17 +1,16 @@
+@import "../../../../../../../assets/styles/mixins";
+
 section {
 	margin: 0;
 }
 
 .info {
 	& > span:first-child {
-		font-size: 12px;
-		font-weight: normal;
-		line-height: 14px;
+		@include info-secondary;
 	}
 
 	& > span:last-child {
-		font-weight: 500;
-		line-height: 20px;
+		@include info-primary;
 	}
 }
 

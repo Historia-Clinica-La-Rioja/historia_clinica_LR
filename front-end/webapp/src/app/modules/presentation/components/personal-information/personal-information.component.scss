@@ -1,6 +1,7 @@
 @import "../../../../../assets/styles/variables";
+@import "../../../../../assets/styles/mixins";
 
-.bold{
+.bold {
 	font-weight: bold;
 }
 
@@ -20,6 +21,8 @@ span {
 
 .noInformation{
 	color: #A8A8A8;
+	line-height: 20px;
+	font-size: 14px;
 }
 
 mat-expansion-panel-header {
@@ -33,4 +36,12 @@ mat-expansion-panel-header {
 		white-space: nowrap;
 		text-overflow: ellipsis;
 	}
+}
+
+.info-title {
+	@include info-secondary;
+}
+
+.info-content {
+	@include info-primary;
 }

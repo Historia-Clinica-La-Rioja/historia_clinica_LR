@@ -8,8 +8,8 @@
 			<mat-card class="grid">
 
 				<div fxLayout="column" fxLayoutGap="1px">
-					<span style="color: #A8A8A8;" translate="guardia.episode.administrative.EPISODE"></span>
-					<div fxLayout="row" fxLayoutGap="3px" class="title">
+					<span class="grid-title" translate="guardia.episode.administrative.EPISODE"></span>
+					<div fxLayout="row" fxLayoutGap="3px" class="content-primary">
 						<span>ID {{episodeId}}</span>
 						<div *ngIf="responseEmergencyCare.emergencyCareType" fxLayoutGap="3px">
 							<label>•</label>
@@ -19,24 +19,24 @@
 				</div>
 
 				<div fxLayout="column" fxLayoutGap="1px">
-					<span style="color: #A8A8A8;" translate="guardia.episode.administrative.REASONS"></span>
+					<span class="grid-title" translate="guardia.episode.administrative.REASONS"></span>
 					<div *ngIf="responseEmergencyCare.reasons else noInfo">
-						<div *ngFor="let reason of responseEmergencyCare.reasons">
+						<div class="content-primary" *ngFor="let reason of responseEmergencyCare.reasons">
 							<span>{{reason.description}}</span>
 						</div>
 					</div>
 				</div>
 
 				<div fxLayout="column" fxLayoutGap="1px">
-					<span style="color: #A8A8A8;" translate="guardia.episode.administrative.ENTRANCE"></span>
-					<div fxLayout="row" fxLayoutGap="3px" class="title">
+					<span class="grid-title" translate="guardia.episode.administrative.ENTRANCE"></span>
+					<div fxLayout="row" fxLayoutGap="3px" class="content-primary">
 						<span>{{responseEmergencyCare.entrance?.type?.description}}</span>
 						<div *ngIf="responseEmergencyCare.entrance?.ambulanceCompanyId" fxLayoutGap="3px">
 							<label>•</label>
 							<span>ID {{responseEmergencyCare.entrance?.ambulanceCompanyId}}</span>
 						</div>
 					</div>
-					<div fxLayout="row" fxLayoutGap="3px" class="subtitle">
+					<div fxLayout="row" fxLayoutGap="3px" class="content-secondary">
 						<span>{{responseEmergencyCare.creationDate.date.day}}/{{responseEmergencyCare.creationDate.date.month}}/{{responseEmergencyCare.creationDate.date.year}}</span>
 						<label>-</label>
 						<span>{{responseEmergencyCare.creationDate.time.hours}}:{{responseEmergencyCare.creationDate.time.minutes}}
@@ -45,9 +45,9 @@
 				</div>
 
 				<div fxLayout="column" fxLayoutGap="1px">
-					<span style="color: #A8A8A8;" translate="guardia.episode.administrative.POLICE_INTERVENTION"></span>
+					<span class="grid-title" translate="guardia.episode.administrative.POLICE_INTERVENTION"></span>
 					<div *ngIf="responseEmergencyCare.policeIntervention else noInfo">
-						<div fxLayout="row" fxLayoutGap="3px" class="title">
+						<div fxLayout="row" fxLayoutGap="3px" class="content-primary">
 							<span
 								*ngIf="responseEmergencyCare.policeIntervention.firstName || responseEmergencyCare.policeIntervention.lastName">Oficial
 								{{responseEmergencyCare.policeIntervention.firstName}}
@@ -59,7 +59,7 @@
 								<span>Mat. Nº {{responseEmergencyCare.policeIntervention.plateNumber}}</span>
 							</div>
 						</div>
-						<div fxLayout="row" fxLayoutGap="3px" class="subtitle">
+						<div fxLayout="row" fxLayoutGap="3px" class="content-secondary">
 							<span
 								*ngIf="responseEmergencyCare.policeIntervention.callDate?.date">{{responseEmergencyCare.policeIntervention.callDate.date.day}}/{{responseEmergencyCare.policeIntervention.callDate.date.month}}/{{responseEmergencyCare.policeIntervention.callDate.date.year}}
 							</span>
