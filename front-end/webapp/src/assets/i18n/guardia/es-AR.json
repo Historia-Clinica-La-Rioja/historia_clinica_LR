@@ -111,7 +111,7 @@
 				"ultimo": {
 					"TITLE": "Último triage",
 					"NIVEL": "Nivel de urgencia",
-					"PROFESIONAL": "Profesional",
+					"REALIZADO_POR": "Realizado por",
 					"UBICACION": "Ubicación",
 					"APARIENCIA_RESPIRACION_CIRCULACION": "Apariencia, respiración y circulación",
 					"TEMPERATURA": "Temperatura",
