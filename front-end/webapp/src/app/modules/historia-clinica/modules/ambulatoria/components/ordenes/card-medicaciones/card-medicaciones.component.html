@@ -4,7 +4,54 @@
 <app-summary-card id="medicacion"	[header]="medicacion"
                                     [editable]="true"
                                     [canEdit]="['ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']"
-                                    (openInNew)="openDialogNewMedication(true)">
+									(openInNew)="openDialogNewMedication(true)">
+
+	<div class="header-filters" fxLayout="row" fxLayoutGap="15px">
+		<button mat-icon-button color="primary" (click)="hideFilters(); clear()">
+			<mat-icon fontSet="material-icons-outlined">filter_list</mat-icon>
+		</button>
+	</div>
+
+	<div id="filter" *ngIf="hideFilterPanel">
+		<form id="filter-form" [formGroup]="formFilter" style="margin: 10px" (ngSubmit)="filter()">
+
+			<mat-form-field appearance="outline">
+				<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.filter.STATE'"></mat-label>
+				<mat-select name="status" formControlName="statusId">
+					<mat-option *ngFor="let status of medicamentStatus" [value]="status.id">
+						 {{status.description | translate}}
+					 </mat-option>
+				</mat-select>
+			</mat-form-field>
+			<div>
+				<mat-form-field appearance="outline">
+					<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.filter.MEDICATION'"></mat-label>
+					<input matInput
+					type="text"
+					id="medicationStatement"
+					name="medicationStatement"
+					formControlName="medicationStatement">
+				</mat-form-field>
+			</div>
+			<div>
+				<mat-form-field appearance="outline">
+					<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.filter.PROBLEM'"></mat-label>
+					<input matInput
+					type="text"
+					id="healthCondition"
+					name="healthCondition"
+					formControlName="healthCondition">
+				</mat-form-field>
+			</div>
+
+			<div align="end">
+				<button mat-flat-button color="primary" type="submit">
+					<span>Aplicar filtro</span>
+				</button>
+			</div>
+		</form>
+	</div>
+	<mat-divider></mat-divider>
 
     <div *ngIf="medicationsInfo?.length" class="header-filters" fxLayout="row" fxLayoutGap="15px">
         <div class="checkbox-div-header" fxFlex="5%">
@@ -22,8 +69,8 @@
                 <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.FINALIZE'"></span>
             </button>
         </div>
-    </div>
-    <form [formGroup]="medicationCheckboxes">						
+	</div>
+    <form [formGroup]="medicationCheckboxes">
         <mat-list id="lista-medication" *ngIf="medicationsInfo?.length > 0 else noInfo">
             <div formArrayName="checkboxArray">
                 <div fxLayout="row" *ngFor="let medicationInfo of medicationsInfo; let i=index" [formGroupName]="i">

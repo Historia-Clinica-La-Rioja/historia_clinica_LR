@@ -241,6 +241,11 @@
 					"COMPLETE":"Completar",
 					"DELETE":"Eliminar",
 					"REACTIVATE": "Reactivar"
+				},
+				"filter": {
+					"STATE":"Estado",
+					"MEDICATION":"Medicamento",
+					"PROBLEM":"Problema"
 				}
 			},
 			"profile": {

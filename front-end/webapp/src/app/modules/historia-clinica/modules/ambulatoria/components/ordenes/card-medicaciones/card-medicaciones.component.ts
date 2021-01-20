@@ -9,6 +9,7 @@ import { PrescripcionesService, PrescriptionTypes } from '../../../services/pres
 import { MedicationStatus, MedicationStatusChange } from '../../../constants/prescripciones-masterdata';
 import { SuspenderMedicacionComponent } from '../../../dialogs/ordenes-prescripciones/suspender-medicacion/suspender-medicacion.component';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
 
 @Component({
   selector: 'app-card-medicaciones',
@@ -23,27 +24,47 @@ export class CardMedicacionesComponent implements OnInit {
     public medicationsInfo : MedicationInfoDto[];
 	public selectedMedicationList: MedicationInfoDto[] = [];
 	public medicationCheckboxes: FormGroup;
+	public hideFilterPanel = false;
+	public formFilter: FormGroup;
+	public medicamentStatus = [];
 
 	@Input('patientId') patientId: number;
 
 	constructor(
 		private readonly dialog: MatDialog,
 		private readonly formBuilder: FormBuilder,
+		private readonly requestMasterDataService: RequestMasterDataService,
 		private prescripcionesService: PrescripcionesService,
 		private snackBarService: SnackBarService,
 	) { }
 
 	ngOnInit(): void {
+		this.formFilter = this.formBuilder.group({
+			statusId: [null],
+			medicationStatement: [null],
+			healthCondition: [null],
+		});
+
 		this.medicationCheckboxes = this.formBuilder.group({
 			checkboxArray: this.formBuilder.array([])
 		});
 
+		this.requestMasterDataService.medicationStatus().subscribe(status => {
+			this.medicamentStatus = status;
+		});
+
 		this.getMedication();
+
+		this.formFilter.controls.statusId.setValue(MedicationStatus.ACTIVE);
 	}
 
 	private getMedication(): void {
-		this.prescripcionesService.getPrescription(PrescriptionTypes.MEDICATION, this.patientId, null, null, null).subscribe(
-			response => {
+		this.prescripcionesService.getPrescription( PrescriptionTypes.MEDICATION,
+													this.patientId,
+													this.formFilter.controls.statusId.value,
+													this.formFilter.controls.medicationStatement.value,
+													this.formFilter.controls.healthCondition.value )
+			.subscribe( response => {
 				this.medicationsInfo = response;
 				const checkboxArray = this.medicationCheckboxes.controls['checkboxArray'] as FormArray;
 
@@ -51,6 +72,10 @@ export class CardMedicacionesComponent implements OnInit {
 					checkboxArray.push(this.formBuilder.group({checked: false}));
 				});
 			});
+	}
+
+	private getMedicationList(medication?: MedicationInfoDto) {
+		return medication ? [medication] : this.selectedMedicationList.length ? this.selectedMedicationList : null;
 	}
 
 	openDialogNewMedication(isNewMedication: boolean, medication?: MedicationInfoDto) {
@@ -118,7 +143,7 @@ export class CardMedicacionesComponent implements OnInit {
 				},
 				width: '35%',
 			});
-	
+
 			newSuspendMedicationDialog.afterClosed().subscribe(() => {
 				this.getMedication();
 			});
@@ -148,7 +173,7 @@ export class CardMedicacionesComponent implements OnInit {
 		} else {
 			let selectedMedicationListCopy = [...this.selectedMedicationList];
 			this.selectedMedicationList = selectedMedicationListCopy.filter(m => m.id !== medicationInfo.id);
-		}	
+		}
 	}
 
 	selectAllMedication(checked: boolean) {
@@ -158,7 +183,7 @@ export class CardMedicacionesComponent implements OnInit {
 			control.setValue({checked: checked});
 		});
 
-		this.selectedMedicationList = checked ? this.medicationsInfo : []; 
+		this.selectedMedicationList = checked ? this.medicationsInfo : [];
 	}
 
 	checkMedicationStatus(statusId: string): boolean {
@@ -172,7 +197,7 @@ export class CardMedicacionesComponent implements OnInit {
 
 	renderStatusDescription(statusId: string): string {
 		switch (statusId) {
-			case this.medicationStatus.ACTIVE: 
+			case this.medicationStatus.ACTIVE:
 				return 'Activa';
 			case this.medicationStatus.STOPPED:
 				return 'Finalizada';
@@ -181,8 +206,18 @@ export class CardMedicacionesComponent implements OnInit {
 		}
 	}
 
-	private getMedicationList(medication?: MedicationInfoDto) {
-		return medication ? [medication] : this.selectedMedicationList.length ? this.selectedMedicationList : null;
+	hideFilters() {
+		this.hideFilterPanel = !this.hideFilterPanel;
+	}
+
+	filter(): void {
+		this.getMedication();
+	}
+
+	clear(): void {
+		this.formFilter.reset();
+		this.getMedication();
+		this.formFilter.controls.statusId.setValue(MedicationStatus.ACTIVE);
 	}
 
 }
