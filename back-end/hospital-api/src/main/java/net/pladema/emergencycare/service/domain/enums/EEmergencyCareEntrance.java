@@ -13,8 +13,8 @@ public enum EEmergencyCareEntrance {
 
     CAMINANDO(1, "Caminando"),
     SILLA(2, "En silla de ruedas"),
-    CONMEDICO(3, "Ambulancia con médico"),
-    SINMEDICO(4, "Ambulancia sin médico");
+    SINMEDICO(3, "Ambulancia sin médico"),
+    CONMEDICO(4, "Ambulancia con médico");
 
     private final Short id;
     private final String description;
