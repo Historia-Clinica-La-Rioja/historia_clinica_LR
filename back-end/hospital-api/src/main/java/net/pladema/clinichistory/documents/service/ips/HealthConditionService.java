@@ -6,9 +6,9 @@ import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionBo;
 import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionNewConsultationBo;
 import net.pladema.clinichistory.documents.service.ips.domain.HealthHistoryConditionBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProblemBo;
-import net.pladema.patient.controller.dto.BasicPatientDto;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface HealthConditionService {
@@ -27,4 +27,5 @@ public interface HealthConditionService {
 
     HealthConditionNewConsultationBo getHealthCondition(Integer healthConditionId);
 
+    Map<Integer, HealthConditionBo> getLastHealthCondition(Integer patientId, List<Integer> collect);
 }

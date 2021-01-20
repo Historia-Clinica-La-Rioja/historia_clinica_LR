@@ -16,6 +16,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class SnomedDto implements Serializable {
 
+    private Integer id;
+
     @NotNull(message = "{value.mandatory}")
     @NotEmpty(message = "{value.mandatory}")
     @Length(max = 20, message = "{snomed.id.max.value}")
@@ -43,6 +45,7 @@ public class SnomedDto implements Serializable {
         if (snomed == null)
             return null;
         SnomedDto result = new SnomedDto();
+        result.setId(snomed.getId());
         result.setSctid(snomed.getSctid());
         result.setPt(snomed.getPt());
         return result;

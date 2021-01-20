@@ -1,7 +1,6 @@
 package net.pladema.clinichistory.documents.core.ips;
 
-import net.pladema.clinichistory.documents.service.DocumentService;
-import net.pladema.clinichistory.documents.service.NoteService;
+import net.pladema.clinichistory.documents.repository.ips.GetLastHealthConditionRepository;
 import net.pladema.clinichistory.documents.repository.ips.HealthConditionRepository;
 import net.pladema.clinichistory.documents.repository.ips.entity.HealthCondition;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.ConditionClinicalStatusRepository;
@@ -9,15 +8,14 @@ import net.pladema.clinichistory.documents.repository.ips.masterdata.ConditionVe
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.ConditionClinicalStatus;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.ConditionVerificationStatus;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.ProblemType;
+import net.pladema.clinichistory.documents.service.DocumentService;
+import net.pladema.clinichistory.documents.service.NoteService;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.HealthConditionService;
 import net.pladema.clinichistory.documents.service.ips.SnomedService;
-import net.pladema.clinichistory.documents.service.ips.domain.DiagnosisBo;
-import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionBo;
-import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionNewConsultationBo;
-import net.pladema.clinichistory.documents.service.ips.domain.HealthHistoryConditionBo;
+import net.pladema.clinichistory.documents.service.ips.domain.*;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProblemBo;
-import net.pladema.patient.controller.dto.BasicPatientDto;
+import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportBo;
 import net.pladema.sgx.dates.configuration.DateTimeProvider;
 import net.pladema.sgx.exceptions.NotFoundException;
 import net.pladema.snowstorm.services.CalculateCie10CodesService;
@@ -28,8 +26,10 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 public class HealthConditionServiceImpl implements HealthConditionService {
@@ -55,6 +55,8 @@ public class HealthConditionServiceImpl implements HealthConditionService {
 
     private final DateTimeProvider dateTimeProvider;
 
+    private final GetLastHealthConditionRepository getLastHealthConditionRepository;
+
 
     public HealthConditionServiceImpl(HealthConditionRepository healthConditionRepository,
                                       ConditionVerificationStatusRepository conditionVerificationStatusRepository,
@@ -62,7 +64,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
                                       SnomedService snomedService,
                                       CalculateCie10CodesService calculateCie10CodesService,
                                       DocumentService documentService,
-                                      NoteService noteService, DateTimeProvider dateTimeProvider){
+                                      NoteService noteService, DateTimeProvider dateTimeProvider, GetLastHealthConditionRepository getLastHealthConditionRepository){
         this.healthConditionRepository = healthConditionRepository;
         this.conditionVerificationStatusRepository = conditionVerificationStatusRepository;
         this.conditionClinicalStatusRepository = conditionClinicalStatusRepository;
@@ -71,6 +73,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         this.documentService = documentService;
         this.noteService = noteService;
         this.dateTimeProvider = dateTimeProvider;
+        this.getLastHealthConditionRepository = getLastHealthConditionRepository;
     }
 
     private HealthCondition save(HealthCondition healthCondition){
@@ -300,6 +303,40 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         HealthConditionNewConsultationBo newConsultationBo = new HealthConditionNewConsultationBo(hc);
         newConsultationBo.setSnomed(snomedService.getSnomed(hc.getSnomedId()));
         return newConsultationBo;
+    }
+
+    @Override
+    public Map<Integer, HealthConditionBo> getLastHealthCondition(Integer patientId, List<Integer> hcIds) {
+        LOG.debug("Input -> patientId {} hcIds {}", patientId, hcIds);
+        List<HealthConditionBo> lastHealthConditions = getLastHealthConditionRepository.run(patientId, hcIds).stream()
+                .map(this::buildHealthConditionBo)
+                .collect(Collectors.toList());
+
+        Map<Integer, HealthConditionBo> result = zipToMap(hcIds, lastHealthConditions);
+
+        LOG.trace(OUTPUT, result);
+        return result;
+    }
+
+    public Map<Integer, HealthConditionBo> zipToMap(List<Integer> keys, List<HealthConditionBo> values) {
+        LOG.debug("Input -> keys {} values {}", keys, values);
+
+        Map<Integer, HealthConditionBo> result = IntStream.range(0, keys.size()).boxed()
+                .collect(Collectors.toMap(keys::get, values::get));
+
+        LOG.trace(OUTPUT, result);
+        return result;
+    }
+
+    public HealthConditionBo buildHealthConditionBo(Object[] row){
+        LOG.debug("Input parameters -> row {}", row);
+
+        HealthConditionBo result = new HealthConditionBo();
+        result.setId((Integer) row[0]);
+        result.setStatusId((String) row[1]);
+
+        LOG.trace(OUTPUT, result);
+        return result;
     }
 
 }

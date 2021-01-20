@@ -1,12 +1,14 @@
 package net.pladema.clinichistory.requests.medicationrequests.service.impl;
 
+import net.pladema.UnitRepository;
+import net.pladema.clinichistory.documents.repository.ips.entity.HealthCondition;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.ConditionClinicalStatus;
 import net.pladema.clinichistory.documents.service.DocumentFactory;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
-import net.pladema.clinichistory.documents.service.ips.domain.DosageBo;
-import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionBo;
-import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
-import net.pladema.clinichistory.documents.service.ips.domain.SnomedBo;
+import net.pladema.clinichistory.documents.service.ips.HealthConditionService;
+import net.pladema.clinichistory.documents.service.ips.domain.*;
 import net.pladema.clinichistory.documents.service.ips.domain.enums.EUnitsOfTimeBo;
+import net.pladema.clinichistory.mocks.HealthConditionTestMocks;
 import net.pladema.clinichistory.requests.medicationrequests.repository.MedicationRequestRepository;
 import net.pladema.clinichistory.requests.medicationrequests.service.CreateMedicationRequestService;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationRequestBo;
@@ -20,12 +22,17 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 
 @RunWith(SpringRunner.class)
 @DataJpaTest(showSql = false)
-public class CreateMedicationRequestServiceImplTest {
+public class CreateMedicationRequestServiceImplTest extends UnitRepository {
 
 	private CreateMedicationRequestService createMedicationRequestService;
 
@@ -35,9 +42,12 @@ public class CreateMedicationRequestServiceImplTest {
 	@MockBean
 	private DocumentFactory documentFactory;
 
+	@MockBean
+	private HealthConditionService healthConditionService;
+
 	@Before
 	public void setUp() {
-		createMedicationRequestService = new CreateMedicationRequestServiceImpl(medicationRequestRepository, documentFactory);
+		createMedicationRequestService = new CreateMedicationRequestServiceImpl(medicationRequestRepository, documentFactory, healthConditionService);
 	}
 
 	@Test
@@ -115,6 +125,8 @@ public class CreateMedicationRequestServiceImplTest {
 		medication.setDosage(dosage);
 
 		medicationRequest.setMedications(List.of(medication));
+		when(healthConditionService.getHealthCondition(any())).thenReturn(mockActiveHealthCondition());
+
 		Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
 				createMedicationRequestService.execute(1, medicationRequest)
 		);
@@ -159,13 +171,13 @@ public class CreateMedicationRequestServiceImplTest {
 		Assertions.assertTrue(actualMessage.contains(expectedMessage));
 	}
 
-
 	@Test
 	public void execute_withInvalidMedication_HealthCondition_Snomed(){
 		MedicationRequestBo medicationRequest = new MedicationRequestBo();
 		medicationRequest.setPatientInfo(new PatientInfoBo(1, (short)1, (short)29));
 		medicationRequest.setDoctorId(1);
 		medicationRequest.setMedicalCoverageId(5);
+
 
 		MedicationBo medication = new MedicationBo();
 		medication.setSnomed(new SnomedBo("12314124", "IBUPROFENO 500 mg"));
@@ -193,17 +205,80 @@ public class CreateMedicationRequestServiceImplTest {
 	}
 
 	@Test
+	public void execute_withNewerSolvedHeathCondition(){
+		Integer institutionId = 5;
+
+		MedicationRequestBo medicationRequest = new MedicationRequestBo();
+		medicationRequest.setDoctorId(1);
+		medicationRequest.setPatientInfo(new PatientInfoBo(4, (short)1, (short)29));
+		medicationRequest.setMedicalCoverageId(5);
+		medicationRequest.setMedications(List.of(
+				createMedicationBo(
+						"IBUPROFENO 500",
+						1,
+						ConditionClinicalStatus.ACTIVE,
+						createDosageBo(15d, 8, EUnitsOfTimeBo.HOUR))));
+
+		when(healthConditionService.getLastHealthCondition(any(), any())).thenReturn(mockHealthConditionMapWhithNewerHealthCondition());
+
+		Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
+				createMedicationRequestService.execute(institutionId, medicationRequest)
+		);
+		String expectedMessage = "El problema asociado tiene que estar activo";
+		String actualMessage = exception.getMessage();
+		Assertions.assertTrue(actualMessage.contains(expectedMessage));
+	}
+
+	@Test
 	public void execute_success() {
 		Integer institutionId = 5;
 		MedicationRequestBo medicationRequest = new MedicationRequestBo();
 		medicationRequest.setDoctorId(1);
 		medicationRequest.setPatientInfo(new PatientInfoBo(4, (short)1, (short)29));
 		medicationRequest.setMedicalCoverageId(5);
-		medicationRequest.setMedications(List.of(createMedicationBo("IBUPROFENO 500", 13, createDosageBo(15d, 8, EUnitsOfTimeBo.HOUR))));
+		medicationRequest.setMedications(List.of(createMedicationBo(
+				"IBUPROFENO 500",
+				1,
+				ConditionClinicalStatus.ACTIVE,
+				createDosageBo(15d, 8, EUnitsOfTimeBo.HOUR))));
+		when(healthConditionService.getHealthCondition(any())).thenReturn(mockActiveHealthCondition());
+		when(healthConditionService.getLastHealthCondition(any(), any())).thenReturn(mockHealthConditionMap());
 		Integer medicationRequestId = createMedicationRequestService.execute(institutionId, medicationRequest);
 
 		Assertions.assertEquals(1, medicationRequestRepository.count());
 		Assertions.assertNotNull(medicationRequestId);
+	}
+
+	private Map<Integer, HealthConditionBo> mockHealthConditionMap() {
+		HealthConditionBo hc1 = new HealthConditionBo();
+		hc1.setId(1);
+		hc1.setStatusId(ConditionClinicalStatus.ACTIVE);
+		List<HealthConditionBo> hcs = List.of(hc1);
+		HashMap<Integer, HealthConditionBo> result = new HashMap<>();
+		result.put(1,hc1);
+		return result;
+	}
+
+	private Map<Integer, HealthConditionBo> mockHealthConditionMapWhithNewerHealthCondition() {
+		HealthConditionBo hc1 = new HealthConditionBo();
+		hc1.setId(47);
+		hc1.setStatusId(ConditionClinicalStatus.SOLVED);
+
+		HashMap<Integer, HealthConditionBo> result = new HashMap<>();
+		result.put(1,hc1);
+		return result;
+	}
+
+	private HealthConditionNewConsultationBo mockActiveHealthCondition(){
+		HealthCondition hc = new HealthCondition();
+		hc.setStatusId(ConditionClinicalStatus.ACTIVE);
+		return new HealthConditionNewConsultationBo(hc);
+	}
+
+	private HealthConditionNewConsultationBo mockSolvedHealthCondition(){
+		HealthCondition hc = new HealthCondition();
+		hc.setStatusId(ConditionClinicalStatus.SOLVED);
+		return new HealthConditionNewConsultationBo(hc);
 	}
 
 	private DosageBo createDosageBo(Double duration, Integer frequency, EUnitsOfTimeBo unitsOfTimeBo) {
@@ -215,11 +290,12 @@ public class CreateMedicationRequestServiceImplTest {
 		return result;
 	}
 
-	private MedicationBo createMedicationBo(String sctid, Integer healthConditionId, DosageBo dosage) {
+	private MedicationBo createMedicationBo(String sctid, Integer healthConditionId, String healthConditionStatus, DosageBo dosage) {
 		MedicationBo result = new MedicationBo();
 		result.setSnomed(new SnomedBo(sctid, sctid));
 		HealthConditionBo hc = new HealthConditionBo();
 		hc.setId(healthConditionId);
+		hc.setStatusId(healthConditionStatus);
 		result.setHealthCondition(hc);
 		result.setDosage(dosage);
 		result.setNote("Probando");

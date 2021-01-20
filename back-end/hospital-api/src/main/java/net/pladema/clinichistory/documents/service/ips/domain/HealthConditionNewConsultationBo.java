@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.documents.repository.ips.entity.HealthCondition;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.ConditionClinicalStatus;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.ProblemType;
 
 import java.time.LocalDate;
@@ -43,5 +44,9 @@ public class HealthConditionNewConsultationBo extends ClinicalTerm{
         this.problemId = hc.getProblemId();
         this.setStatusId(hc.getStatusId());
         this.setIsChronic(ProblemType.CHRONIC.equals(hc.getProblemId()));
+    }
+
+    public boolean isActive() {
+        return getStatusId().equals(ConditionClinicalStatus.ACTIVE);
     }
 }
