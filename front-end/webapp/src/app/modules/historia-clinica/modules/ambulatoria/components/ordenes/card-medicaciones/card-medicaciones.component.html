@@ -46,7 +46,7 @@
 
 			<div align="end">
 				<button mat-flat-button color="primary" type="submit">
-					<span>Aplicar filtro</span>
+					<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.filter.BUTTON_FILTER'"></span>
 				</button>
 			</div>
 		</form>
@@ -103,7 +103,7 @@
                                     </button>
                                 </mat-menu>
                             </div>
-            
+
                             <div prescription-number>
                                 <span mat-line class="mat-body element-light-color" *ngIf="medicationInfo.hasRecipe else NoRecipe">
                                     Receta #{{medicationInfo.medicationRequestId}}

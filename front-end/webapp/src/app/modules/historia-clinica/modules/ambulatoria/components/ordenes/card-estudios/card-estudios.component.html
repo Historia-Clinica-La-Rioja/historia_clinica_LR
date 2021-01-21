@@ -1,10 +1,60 @@
 <ng-template #noInfo>
+	<mat-divider></mat-divider>
     <app-no-data></app-no-data>
 </ng-template>
 <app-summary-card id="estudios" [header]="estudios"
                                 [editable]="true"
                                 [canEdit]="['ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']"
-                                (openInNew)="openDialogNewStudy()">
+								(openInNew)="openDialogNewStudy()">
+
+	<div class="header-filters" fxLayout="row" fxLayoutGap="15px">
+		<button mat-icon-button color="primary" (click)="hideFilters(); clear()">
+			<mat-icon fontSet="material-icons-outlined">filter_list</mat-icon>
+		</button>
+	</div>
+
+	<div id="filter" *ngIf="hideFilterPanel">
+		<form id="filter-form" [formGroup]="formFilter" style="margin: 10px" (ngSubmit)="filter()">
+
+			<mat-form-field appearance="outline">
+				<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.filter.STATE'"></mat-label>
+				<mat-select id="statusId"
+							name="statusId"
+							formControlName="statusId">
+					<mat-option *ngFor="let diagnosticReportStatus of diagnosticReportsStatus" [value]="diagnosticReportStatus.id">
+							{{diagnosticReportStatus.description | translate}}
+						</mat-option>
+				</mat-select>
+			</mat-form-field>
+			<div>
+				<mat-form-field appearance="outline">
+					<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.filter.CATEGORY'"></mat-label>
+					<mat-select id="categories"
+								name="categories"
+								formControlName="categorie">
+						<mat-option *ngFor="let categorie of categories" [value]="categorie.id">
+								{{categorie.description | translate}}
+							</mat-option>
+					</mat-select>
+				</mat-form-field>
+			</div>
+			<div>
+				<mat-form-field appearance="outline">
+					<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.filter.PROBLEM'"></mat-label>
+					<input matInput type="text"
+									id="healthCondition"
+									name="healthCondition"
+									formControlName="healthCondition">
+				</mat-form-field>
+			</div>
+
+			<div align="end">
+				<button mat-flat-button color="primary" type="submit">
+					<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.filter.BUTTON_FILTER'"></span>
+				</button>
+			</div>
+		</form>
+	</div>
 
     <mat-list id="lista-estudios" *ngIf="diagnosticReportsInfo?.length > 0 else noInfo">
         <div fxLayout="row" *ngFor="let diagnosticReport of diagnosticReportsInfo">

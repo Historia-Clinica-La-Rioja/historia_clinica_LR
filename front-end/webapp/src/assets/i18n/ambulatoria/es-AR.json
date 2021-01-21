@@ -260,7 +260,9 @@
 				"filter": {
 					"STATE":"Estado",
 					"MEDICATION":"Medicamento",
-					"PROBLEM":"Problema"
+					"PROBLEM":"Problema",
+					"CATEGORY":"Categoría",
+					"BUTTON_FILTER": "Aplicar filtro"
 				}
 			},
 			"profile": {

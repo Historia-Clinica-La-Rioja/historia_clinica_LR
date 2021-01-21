@@ -1,7 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DiagnosticReportInfoDto, PrescriptionDto } from '@api-rest/api-model';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
 import { ESTUDIOS } from 'src/app/modules/historia-clinica/constants/summaries';
 import { STUDY_STATUS } from '../../../constants/prescripciones-masterdata';
 import { ConfirmarPrescripcionComponent } from '../../../dialogs/ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
@@ -21,24 +23,52 @@ export class CardEstudiosComponent implements OnInit {
 	public readonly estudios = ESTUDIOS;
 	public readonly STUDY_STATUS = STUDY_STATUS;
 	public diagnosticReportsInfo : DiagnosticReportInfoDto[];
+	public hideFilterPanel = false;
+	public categories = [];
+	public diagnosticReportsStatus = [];
+	public formFilter: FormGroup;
 
 	@Input('patientId') patientId: number;
 
 	constructor(
 		private readonly dialog: MatDialog,
+		private readonly requestMasterDataService: RequestMasterDataService,
 		private prescripcionesService: PrescripcionesService,
 		private snackBarService: SnackBarService,
+		private readonly formBuilder: FormBuilder,
 	) { }
 
 	ngOnInit(): void {
+		this.formFilter = this.formBuilder.group({
+			categorie: [null],
+			statusId: [null],
+			healthCondition: [null],
+		});
+
 		this.getStudy();
+
+		this.requestMasterDataService.categories().subscribe(categories => {
+			this.categories = categories;
+		});
+
+		this.requestMasterDataService.diagnosticReportStatus().subscribe(diagnosticReport => {
+			this.diagnosticReportsStatus = diagnosticReport;
+		});
+
+		this.formFilter.controls.statusId.setValue(STUDY_STATUS.REGISTERED.id);
 	}
 
 	private getStudy(): void {
-		this.prescripcionesService.getPrescription(PrescriptionTypes.STUDY, this.patientId, null, null, null).subscribe(
-			response => {
-				this.diagnosticReportsInfo = response;
-			});
+		this.prescripcionesService.getPrescription( PrescriptionTypes.STUDY,
+													this.patientId,
+													this.formFilter.controls.statusId.value,
+													null,
+													this.formFilter.controls.healthCondition.value,
+													this.formFilter.controls.categorie.value )
+			.subscribe(
+				response => {
+					this.diagnosticReportsInfo = response;
+		});
 	}
 
 	openDialogNewStudy() {
@@ -121,7 +151,7 @@ export class CardEstudiosComponent implements OnInit {
 					} else {
 						this.snackBarService.showError('ambulatoria.paciente.ordenes_prescripciones.toast_messages.COMPLETE_STUDY_ERROR');
 					}
-				} 
+				}
 			});
 	}
 
@@ -134,5 +164,19 @@ export class CardEstudiosComponent implements OnInit {
 				},
 				width: '35%',
 			});
+	}
+
+	hideFilters() {
+		this.hideFilterPanel = !this.hideFilterPanel;
+	}
+
+	filter(): void {
+		this.getStudy();
+	}
+
+	clear(): void {
+		this.formFilter.reset();
+		this.getStudy();
+		this.formFilter.controls.statusId.setValue(STUDY_STATUS.REGISTERED.id);
 	}
 }

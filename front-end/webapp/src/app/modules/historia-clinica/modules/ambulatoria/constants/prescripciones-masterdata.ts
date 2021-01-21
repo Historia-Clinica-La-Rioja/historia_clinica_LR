@@ -22,7 +22,7 @@ export enum MedicationStatusChange {
 export const STUDY_STATUS = {
 	REGISTERED: {
 		id: "1",
-		description: "Pendiente"
+		description: "Activo"
 	},
 	FINAL: {
 		id: "261782000",
