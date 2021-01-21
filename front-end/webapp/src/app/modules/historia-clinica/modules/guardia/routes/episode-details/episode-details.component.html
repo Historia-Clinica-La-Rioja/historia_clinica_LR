@@ -74,7 +74,7 @@
 
 			</mat-card>
 
-			<mat-card id="last-triage-card">
+			<mat-card id="last-triage-card" fxLayout="column" fxLayoutGap="20px">
 				<app-triage-details [triage]="lastTriage" [emergencyCareType]="emergencyCareType"></app-triage-details>
 
 				<mat-divider class="margin" [inset]="true"></mat-divider>
@@ -110,6 +110,12 @@
 							</mat-card-content>
 						</mat-card>
 					</div>
+				</div>
+
+				<div fxLayout="row" fxLayoutAlign="flex-end center">
+					<button id="nuevo-triage" mat-raised-button color="primary" (click)="newTriage()">
+						{{ 'guardia.episode.triage.NUEVO' | translate | uppercase }}
+					</button>
 				</div>
 			</mat-card>
 		</div>

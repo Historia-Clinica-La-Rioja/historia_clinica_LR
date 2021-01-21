@@ -108,6 +108,7 @@
 			},
 			"triage": {
 				"HISTORIAL": "Historial de triages",
+				"NUEVO": "Nuevo triage",
 				"ultimo": {
 					"TITLE": "Último triage",
 					"NIVEL": "Nivel de urgencia",

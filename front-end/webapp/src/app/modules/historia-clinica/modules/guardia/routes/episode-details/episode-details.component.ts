@@ -19,6 +19,7 @@ import { GuardiaMapperService } from '../../services/guardia-mapper.service';
 import { EmergencyCareTypes, Triages } from '../../constants/masterdata';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { TriageCategory } from '../../components/triage-chip/triage-chip.component';
+import { TriageDefinitionsService } from '../../services/triage-definitions.service';
 
 @Component({
 	selector: 'app-episode-details',
@@ -52,7 +53,7 @@ export class EpisodeDetailsComponent implements OnInit {
 		private readonly triageService: TriageService,
 		private readonly guardiaMapperService: GuardiaMapperService,
 		private snackBarService: SnackBarService,
-
+		private readonly triageDefinitionsService: TriageDefinitionsService
 	) { }
 
 	ngOnInit(): void {
@@ -70,19 +71,23 @@ export class EpisodeDetailsComponent implements OnInit {
 						}
 					});
 
-				this.triageService.getAll(this.episodeId).subscribe((triages: any[]) => {
-						this.lastTriage = this.guardiaMapperService.triageDtoToTriage(triages[0]);
-						if (hasHistory(triages)) {
-							this.triagesHistory = triages.map(this.guardiaMapperService.triageDtoToTriageReduced);
-							this.triagesHistory.shift();
-						}
-					});
-
-				function hasHistory(triages: any[]) {
-					return triages?.length > 1;
-				}
+				this.loadTriages();
 			});
 
+	}
+
+	private loadTriages() {
+		this.triageService.getAll(this.episodeId).subscribe((triages: any[]) => {
+			this.lastTriage = this.guardiaMapperService.triageDtoToTriage(triages[0]);
+			if (hasHistory(triages)) {
+				this.triagesHistory = triages.map(this.guardiaMapperService.triageDtoToTriageReduced);
+				this.triagesHistory.shift();
+			}
+		});
+
+		function hasHistory(triages: any[]) {
+			return triages?.length > 1;
+		}
 	}
 
 	searchPatient(): void {
@@ -128,6 +133,18 @@ export class EpisodeDetailsComponent implements OnInit {
 			});
 
 		this.personPhoto$ = this.patientService.getPatientPhoto(patientId);
+	}
+
+	newTriage(): void {
+		this.triageDefinitionsService.getTriagePath(this.emergencyCareType)
+			.subscribe( ({ component }) => {
+				const dialogRef = this.dialog.open(component, {data: this.episodeId});
+				dialogRef.afterClosed().subscribe(idReturned => {
+					if (idReturned) {
+						this.loadTriages();
+					}
+				});
+			});
 	}
 
 }
