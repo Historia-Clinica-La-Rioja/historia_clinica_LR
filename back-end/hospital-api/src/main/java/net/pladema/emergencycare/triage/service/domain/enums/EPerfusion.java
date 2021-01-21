@@ -2,6 +2,7 @@ package net.pladema.emergencycare.triage.service.domain.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import net.pladema.sgx.exceptions.NotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,6 +25,14 @@ public enum EPerfusion {
     @JsonCreator
     public static List<EPerfusion> getAll(){
         return Stream.of(EPerfusion.values()).collect(Collectors.toList());
+    }
+
+    @JsonCreator
+    public static EPerfusion getById(Short id){
+        for(EPerfusion ep : values()) {
+            if(ep.id.equals(id)) return ep;
+        }
+        throw new NotFoundException("perfusion-not-exists", String.format("El valor %s es inválido", id));
     }
 
     public Short getId() {

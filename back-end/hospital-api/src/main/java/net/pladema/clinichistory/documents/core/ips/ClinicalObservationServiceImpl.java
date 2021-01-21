@@ -11,6 +11,7 @@ import net.pladema.clinichistory.documents.service.ips.SnomedService;
 import net.pladema.clinichistory.documents.service.ips.domain.AnthropometricDataBo;
 import net.pladema.clinichistory.documents.service.ips.domain.ClinicalObservationBo;
 import net.pladema.clinichistory.documents.service.ips.domain.VitalSignBo;
+import net.pladema.clinichistory.documents.service.ips.domain.VitalSignObservationBo;
 import net.pladema.clinichistory.documents.service.ips.domain.enums.EObservationLab;
 import net.pladema.clinichistory.documents.service.ips.domain.enums.EVitalSign;
 import net.pladema.snowstorm.services.CalculateCie10CodesService;
@@ -141,6 +142,15 @@ public class ClinicalObservationServiceImpl implements ClinicalObservationServic
         });
         LOG.debug(OUTPUT, optAnthropometricData);
         return optAnthropometricData.orElse(null);
+    }
+
+    @Override
+    public VitalSignObservationBo getObservationById(Integer vitalSignObservationId) {
+        LOG.debug("Input parameter -> vitalSignObservationId {}", vitalSignObservationId);
+        ObservationVitalSign observationVitalSign = observationVitalSignRepository.getOne(vitalSignObservationId);
+        VitalSignObservationBo result = new VitalSignObservationBo(observationVitalSign);
+        LOG.debug(OUTPUT, result);
+        return result;
     }
 
     private boolean mustSaveClinicalObservation(ClinicalObservationBo co) {

@@ -2,6 +2,7 @@ package net.pladema.medicalconsultation.doctorsoffice.service.impl;
 
 import net.pladema.medicalconsultation.doctorsoffice.repository.DoctorsOfficeRepository;
 import net.pladema.medicalconsultation.doctorsoffice.repository.domain.DoctorsOfficeVo;
+import net.pladema.medicalconsultation.doctorsoffice.repository.entity.DoctorsOffice;
 import net.pladema.medicalconsultation.doctorsoffice.service.DoctorsOfficeService;
 import net.pladema.medicalconsultation.doctorsoffice.service.domain.DoctorsOfficeBo;
 import org.slf4j.Logger;
@@ -42,6 +43,15 @@ public class DoctorsOfficeServiceImpl implements DoctorsOfficeService {
         List<DoctorsOfficeVo> resultQuery = doctorsOfficeRepository.findAllBySectorType(institutionId, sectorTypeId);
         List<DoctorsOfficeBo> result = new ArrayList<>();
         resultQuery.forEach(doctorsOfficeVo -> result.add(new DoctorsOfficeBo(doctorsOfficeVo)));
+        LOG.debug(LOGGING_OUTPUT, result);
+        return result;
+    }
+
+    @Override
+    public DoctorsOfficeBo getById(Integer doctorsOfficeId) {
+        LOG.debug("Input parameter -> doctorsOfficeId {}", doctorsOfficeId);
+        DoctorsOffice doctorsOffice = doctorsOfficeRepository.getOne(doctorsOfficeId);
+        DoctorsOfficeBo result = new DoctorsOfficeBo(doctorsOffice);
         LOG.debug(LOGGING_OUTPUT, result);
         return result;
     }

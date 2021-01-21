@@ -2,6 +2,7 @@ package net.pladema.emergencycare.triage.service.impl;
 
 import net.pladema.emergencycare.triage.repository.TriageCategoryRepository;
 
+import net.pladema.emergencycare.triage.repository.entity.TriageCategory;
 import net.pladema.emergencycare.triage.service.TriageMasterDataService;
 import net.pladema.emergencycare.triage.service.domain.TriageCategoryBo;
 
@@ -40,6 +41,15 @@ public class TriageMasterDataServiceImpl implements TriageMasterDataService {
         LOG.debug("Output size = {}", categories.size());
         LOG.trace(OUTPUT, categories);
         return categories;
+    }
+
+    @Override
+    public TriageCategoryBo getCategoryById(Short categoryId) {
+        LOG.debug("Input parameter -> categoryId {}", categoryId);
+        TriageCategory tc = triageCategoryRepository.getOne(categoryId);
+        TriageCategoryBo result = new TriageCategoryBo(tc);
+        LOG.debug(OUTPUT, result);
+        return result;
     }
 
     @Override

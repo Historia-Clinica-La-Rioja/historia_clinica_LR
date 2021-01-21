@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.medicalconsultation.doctorsoffice.repository.domain.DoctorsOfficeVo;
+import net.pladema.medicalconsultation.doctorsoffice.repository.entity.DoctorsOffice;
 
 import java.time.LocalTime;
 
@@ -25,5 +26,12 @@ public class DoctorsOfficeBo {
         this.description = doctorsOfficeVo.getDescription();
         this.openingTime = doctorsOfficeVo.getOpeningTime();
         this.closingTime = doctorsOfficeVo.getClosingTime();
+    }
+
+    public DoctorsOfficeBo(DoctorsOffice doctorsOffice) {
+        this.id = doctorsOffice.getId();
+        this.description = doctorsOffice.getDescription();
+        this.openingTime = doctorsOffice.getOpeningTime();
+        this.closingTime = doctorsOffice.getClosingTime();
     }
 }

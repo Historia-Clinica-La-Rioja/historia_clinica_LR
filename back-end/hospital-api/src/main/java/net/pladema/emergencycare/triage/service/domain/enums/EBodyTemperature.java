@@ -2,6 +2,7 @@ package net.pladema.emergencycare.triage.service.domain.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import net.pladema.sgx.exceptions.NotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,6 +26,14 @@ public enum EBodyTemperature {
     @JsonCreator
     public static List<EBodyTemperature> getAll(){
         return Stream.of(EBodyTemperature.values()).collect(Collectors.toList());
+    }
+
+    @JsonCreator
+    public static EBodyTemperature getById(Short id){
+        for(EBodyTemperature ebt : values()) {
+            if(ebt.id.equals(id)) return ebt;
+        }
+        throw new NotFoundException("bodyTemperature-not-exists", String.format("El valor %s es inválido", id));
     }
 
     public Short getId() {

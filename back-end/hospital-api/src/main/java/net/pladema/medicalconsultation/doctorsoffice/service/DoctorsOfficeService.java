@@ -9,4 +9,6 @@ public interface DoctorsOfficeService {
     List<DoctorsOfficeBo> getAllDoctorsOffice(Integer institutionId, Integer sectorId);
 
     List<DoctorsOfficeBo> getDoctorsOfficeBySectorType(Integer institutionId, Short sectorTypeId);
+
+    DoctorsOfficeBo getById(Integer doctorsOfficeId);
 }

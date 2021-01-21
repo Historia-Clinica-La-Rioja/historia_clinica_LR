@@ -2,6 +2,7 @@ package net.pladema.emergencycare.triage.service.domain.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import net.pladema.sgx.exceptions.NotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,6 +26,14 @@ public enum ERespiratoryRetraction {
     @JsonCreator
     public static List<ERespiratoryRetraction> getAll(){
         return Stream.of(ERespiratoryRetraction.values()).collect(Collectors.toList());
+    }
+
+    @JsonCreator
+    public static ERespiratoryRetraction getById(Short id){
+        for(ERespiratoryRetraction err : values()) {
+            if(err.id.equals(id)) return err;
+        }
+        throw new NotFoundException("respiratoryRetraction-not-exists", String.format("El valor %s es inválido", id));
     }
 
     public Short getId() {

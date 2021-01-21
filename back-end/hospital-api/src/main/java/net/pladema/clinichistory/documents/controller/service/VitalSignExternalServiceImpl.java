@@ -1,9 +1,11 @@
 package net.pladema.clinichistory.documents.controller.service;
 
 import net.pladema.clinichistory.documents.controller.dto.NewVitalSignsObservationDto;
+import net.pladema.clinichistory.documents.controller.dto.VitalSignObservationDto;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.ClinicalObservationService;
 import net.pladema.clinichistory.documents.service.ips.domain.VitalSignBo;
+import net.pladema.clinichistory.documents.service.ips.domain.VitalSignObservationBo;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.VitalSignMapper;
 import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.service.PatientExternalService;
@@ -40,6 +42,15 @@ public class VitalSignExternalServiceImpl implements VitalSignExternalService{
         vitalSignBo = clinicalObservationService.loadVitalSigns(patientInfo, null, Optional.of(vitalSignBo));
         NewVitalSignsObservationDto result = vitalSignMapper.toVitalSignsObservationDto(vitalSignBo);
         LOG.debug("Output -> {}", result);
+        return result;
+    }
+
+    @Override
+    public VitalSignObservationDto getVitalSignObservationById(Integer vitalSignObservationId) {
+        LOG.debug("Input parameter -> vitalSignObservationId {}", vitalSignObservationId);
+        VitalSignObservationBo vitalSignObservationBo = clinicalObservationService.getObservationById(vitalSignObservationId);
+        VitalSignObservationDto result = vitalSignMapper.fromVitalSignObservationBo(vitalSignObservationBo);
+        LOG.debug("Output -> result {}", result);
         return result;
     }
 

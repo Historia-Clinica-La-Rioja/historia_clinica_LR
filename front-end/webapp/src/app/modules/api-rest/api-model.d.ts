@@ -1271,11 +1271,29 @@ export interface TriageAdultGynecologicalDto extends TriageNoAdministrativeDto {
     vitalSigns: NewVitalSignsObservationDto;
 }
 
+export interface TriageAppearanceDto extends Serializable {
+    bodyTemperature: MasterDataDto;
+    cryingExcessive: boolean;
+    muscleHypertonia: MasterDataDto;
+}
+
+export interface TriageBreathingDto extends Serializable {
+    bloodOxygenSaturation: NewEffectiveClinicalObservationDto;
+    respiratoryRate: NewEffectiveClinicalObservationDto;
+    respiratoryRetraction: MasterDataDto;
+    stridor: boolean;
+}
+
 export interface TriageCategoryDto extends Serializable {
     color: TriageColorDto;
     description: string;
     id: number;
     name: string;
+}
+
+export interface TriageCirculationDto extends Serializable {
+    heartRate: NewEffectiveClinicalObservationDto;
+    perfusion: MasterDataDto;
 }
 
 export interface TriageColorDto extends Serializable {
@@ -1289,6 +1307,16 @@ export interface TriageDto extends Serializable {
 }
 
 export interface TriageListDto extends Serializable {
+    appearance: TriageAppearanceDto;
+    breathing: TriageBreathingDto;
+    category: TriageCategoryDto;
+    circulation: TriageCirculationDto;
+    creationDate: DateTimeDto;
+    doctorsOffice: DoctorsOfficeDto;
+    id: number;
+    notes: string;
+    professional: DoctorInfoDto;
+    vitalSigns: NewVitalSignsObservationDto;
 }
 
 export interface TriageNoAdministrativeDto extends TriageDto {
@@ -1328,6 +1356,11 @@ export interface VitalSignDto extends Serializable {
     respiratoryRate?: EffectiveClinicalObservationDto;
     systolicBloodPressure?: EffectiveClinicalObservationDto;
     temperature?: EffectiveClinicalObservationDto;
+}
+
+export interface VitalSignObservationDto extends Serializable {
+    loincCode: string;
+    vitalSignObservation: NewEffectiveClinicalObservationDto;
 }
 
 export interface VitalSignsReportDto extends Serializable {

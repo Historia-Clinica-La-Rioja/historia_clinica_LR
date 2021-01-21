@@ -12,6 +12,8 @@ public interface TriageMasterDataService {
 
     List<TriageCategoryBo> getCategories();
 
+    TriageCategoryBo getCategoryById(Short categoryId);
+
     List<EBodyTemperature> getBodyTemperature();
 
     List<EMuscleHypertonia> getMuscleHypertonia();

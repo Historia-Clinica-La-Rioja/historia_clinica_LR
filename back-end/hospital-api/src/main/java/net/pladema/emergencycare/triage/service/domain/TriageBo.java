@@ -6,7 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.emergencycare.triage.repository.domain.TriageVo;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -21,24 +23,55 @@ public class TriageBo {
 
     private Integer emergencyCareEpisodeId;
 
+    private Short emergencyCareTypeId;
+
     private Short categoryId;
 
     private Integer doctorsOfficeId;
+
+    private Integer professionalId;
 
     private String notes;
 
     private Short bodyTemperatureId;
 
+    private String bodyTemperatureDescription;
+
     private Boolean cryingExcessive;
 
     private Short muscleHypertoniaId;
 
+    private String muscleHypertoniaDescription;
+
     private Short respiratoryRetractionId;
+
+    private String respiratoryRetractionDescription;
 
     private Boolean stridor;
 
     private Short perfusionId;
 
+    private String perfusionDescription;
+
+    private LocalDateTime createdOn;
+
     private List<Integer> vitalSignIds;
+
+    public TriageBo(TriageVo triageVo) {
+        this.id = triageVo.getId();
+        this.emergencyCareEpisodeId = triageVo.getEmergencyCareEpisodeId();
+        this.emergencyCareTypeId = triageVo.getEmergencyCareTypeId();
+        this.categoryId = triageVo.getCategoryId();
+        this.doctorsOfficeId = triageVo.getDoctorsOfficeId();
+        this.professionalId = triageVo.getProfessionalId();
+        this.notes = triageVo.getNotes();
+        this.bodyTemperatureId = triageVo.getBodyTemperatureId();
+        this.cryingExcessive = triageVo.getCryingExcessive();
+        this.muscleHypertoniaId = triageVo.getMuscleHypertoniaId();
+        this.respiratoryRetractionId = triageVo.getRespiratoryRetractionId();
+        this.stridor = triageVo.getStridor();
+        this.perfusionId = triageVo.getPerfusionId();
+        this.createdOn = triageVo.getCreatedOn();
+    }
 
 }

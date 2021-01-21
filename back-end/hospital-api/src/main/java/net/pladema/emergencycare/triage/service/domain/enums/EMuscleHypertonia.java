@@ -2,6 +2,7 @@ package net.pladema.emergencycare.triage.service.domain.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import net.pladema.sgx.exceptions.NotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,6 +26,14 @@ public enum EMuscleHypertonia {
     @JsonCreator
     public static List<EMuscleHypertonia> getAll(){
         return Stream.of(EMuscleHypertonia.values()).collect(Collectors.toList());
+    }
+
+    @JsonCreator
+    public static EMuscleHypertonia getById(Short id){
+        for(EMuscleHypertonia emh : values()) {
+            if(emh.id.equals(id)) return emh;
+        }
+        throw new NotFoundException("muscleHypertonia-not-exists", String.format("El valor %s es inválido", id));
     }
 
     public Short getId() {
