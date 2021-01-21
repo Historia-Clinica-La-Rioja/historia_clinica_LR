@@ -158,7 +158,9 @@ export class AdmisionAdministrativaComponent implements OnInit {
 	}
 
 	clearSelectedPatient(): void {
+		this.selectedPatient = null;
 		this.patientCardInfo = null;
+		this.form.controls.patientId.setValue(null);
 		this.form.controls.patientMedicalCoverageId.setValue(null);
 	}
 
@@ -170,10 +172,6 @@ export class AdmisionAdministrativaComponent implements OnInit {
 
 	continue(): void {
 		this.form.controls.reasons.setValue(this.motivoNuevaConsultaService.getMotivosConsulta());
-
-		if (this.selectedPatient) {
-			this.form.controls.patientId.setValue(this.selectedPatient.id);
-		}
 
 		const formValue: AdministrativeAdmission = this.form.value;
 		if (this.form.valid) {
@@ -210,10 +208,12 @@ export class AdmisionAdministrativaComponent implements OnInit {
 	goToTriage(administrativeAdmission: AdministrativeAdmission): void {
 		this.newEpisodeService.setAdministrativeAdmission(administrativeAdmission);
 		this.triageDefinitionsService.getTriagePath(this.form.value.emergencyCareTypeId)
-			.subscribe( ({url}) => this.router.navigateByUrl(url));
+			.subscribe(({ url }) => this.router.navigateByUrl(url));
 	}
 
 	private setPatientAndMedicalCoverages(basicData: BasicPatientDto, photo: PersonPhotoDto): void {
+
+		this.form.controls.patientId.setValue(basicData.id);
 		this.patientCardInfo = {
 			basicData: this.patientMapperService.toPatientBasicData(basicData),
 			photo
