@@ -101,6 +101,9 @@
                                             <button mat-menu-item *ngIf="medicationInfo.statusId === medicationStatus.ACTIVE" (click)="openSuspendMedicationDialog(medicationInfo)">
                                                 <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.SUSPEND'"></span>
                                             </button>
+                                            <button mat-menu-item *ngIf="medicationInfo.statusId === medicationStatus.SUSPENDED" (click)="changeMedicationStatus(medicationStatusChange.REACTIVATE, medicationInfo)">
+                                                <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.REACTIVATE'"></span>
+                                            </button>
                                             <button mat-menu-item *ngIf="medicationInfo.statusId !== medicationStatus.STOPPED" (click)="changeMedicationStatus(medicationStatusChange.FINALIZE, medicationInfo)">
                                                 <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.FINALIZE'"></span>
                                             </button>
