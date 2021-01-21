@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MasterDataDto, TriageDto } from '@api-rest/api-model';
+import { DateTimeDto, MasterDataDto, NewEffectiveClinicalObservationDto, TriagePediatricDto } from '@api-rest/api-model';
+import { dateToDateTimeDto } from '@api-rest/mapper/date-dto.mapper';
 import { TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
 import { Observable } from 'rxjs';
 
@@ -24,21 +25,28 @@ export class PediatricTriageComponent implements OnInit {
 	respiratoryRetractionOptions$: Observable<MasterDataDto[]>;
 
 	constructor(private formBuilder: FormBuilder,
-	            private readonly triageMasterDataService: TriageMasterDataService) {
+		private readonly triageMasterDataService: TriageMasterDataService) {
 	}
 
 	ngOnInit(): void {
 		this.pediatricForm = this.formBuilder.group({
-			evaluation: [null],
-			bodyTemperatureId: [null],
-			cryingExcesive: [null],
-			triageCategoryId: [null],
-			respiratoryRate: [null],
-			respiratoryRetractionId: [null],
-			stridor: [null],
-			bloodOxygenSaturation: [null],
-			perfusionId: [null],
-			heartRate: [null]
+			notes: [null],
+			appearance: this.formBuilder.group({
+				bodyTemperatureId: [null],
+				cryingExcessive: [null],
+				muscleHypertoniaId: [null]
+
+			}),
+			breathing: this.formBuilder.group({
+				bloodOxygenSaturation: [null],
+				respiratoryRate: [null],
+				respiratoryRetractionId: [null],
+				stridor: [null]
+			}),
+			circulation: this.formBuilder.group({
+				heartRate: [null],
+				perfusionId: [null]
+			}),
 		});
 		this.bodyTemperatures$ = this.triageMasterDataService.getBodyTemperature();
 		this.muscleHypertonyaOptions$ = this.triageMasterDataService.getMuscleHypertonia();
@@ -55,14 +63,31 @@ export class PediatricTriageComponent implements OnInit {
 	}
 
 	confirm(): void {
-		const triage: TriageDto = {
-			categoryId: this.triageCategoryId,
-			doctorsOfficeId: this.doctorsOfficeId
-		};
+		const triage: TriagePediatricDto = this.toTriagePediatricDto();
 		this.onConfirm.emit(triage);
 	}
 
 	back(): void {
 		this.onCancel.emit();
 	}
+
+	private toNewEffectiveClinicalObservationDto(effectiveTime: DateTimeDto, value: any): NewEffectiveClinicalObservationDto {
+		return value ? { effectiveTime, value } : null;
+	}
+
+
+	private toTriagePediatricDto(): TriagePediatricDto {
+		const formValue = this.pediatricForm.value;
+		const dateTimeDto: DateTimeDto = dateToDateTimeDto(new Date());
+		const triage: TriagePediatricDto = {
+			categoryId: this.triageCategoryId,
+			doctorsOfficeId: this.doctorsOfficeId,
+			...formValue,
+		};
+		triage.breathing.bloodOxygenSaturation = this.toNewEffectiveClinicalObservationDto(dateTimeDto, formValue.breathing.bloodOxygenSaturation);
+		triage.breathing.respiratoryRate = this.toNewEffectiveClinicalObservationDto(dateTimeDto, formValue.breathing.respiratoryRate);
+		triage.circulation.heartRate = this.toNewEffectiveClinicalObservationDto(dateTimeDto, formValue.circulation.heartRate);
+		return triage;
+	}
+
 }
