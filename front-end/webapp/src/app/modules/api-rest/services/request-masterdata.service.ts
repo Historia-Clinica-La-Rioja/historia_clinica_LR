@@ -23,4 +23,9 @@ export class RequestMasterDataService {
 		const url = `${environment.apiBase}/requests/masterdata/medication-status`;
 		return this.http.get<any[]>(url);
 	}
+
+	diagnosticReportStatus(): Observable<any[]> {
+		const url = `${environment.apiBase}/requests/masterdata/diagnostic-report-status`;
+		return this.http.get<any[]>(url);
+	}
 }
