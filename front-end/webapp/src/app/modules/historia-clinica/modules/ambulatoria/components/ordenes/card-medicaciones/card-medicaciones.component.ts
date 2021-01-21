@@ -161,8 +161,13 @@ export class CardMedicacionesComponent implements OnInit {
 		this.selectedMedicationList = checked ? this.medicationsInfo : []; 
 	}
 
-	checkMedicationStatus(statusId: string) {
-		return this.selectedMedicationList.every(m => m.statusId === statusId);
+	checkMedicationStatus(statusId: string): boolean {
+		switch(statusId){
+			case this.medicationStatus.ACTIVE:
+				return this.selectedMedicationList.every(m => m.statusId === statusId);
+			case this.medicationStatus.STOPPED:
+				return !this.selectedMedicationList.some(m => m.statusId === statusId);
+		}
 	}
 
 	renderStatusDescription(statusId: string): string {
