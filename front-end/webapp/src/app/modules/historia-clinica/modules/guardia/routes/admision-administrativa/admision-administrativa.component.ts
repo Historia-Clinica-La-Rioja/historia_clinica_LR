@@ -173,7 +173,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 	continue(): void {
 		this.form.controls.reasons.setValue(this.motivoNuevaConsultaService.getMotivosConsulta());
 
-		const formValue: AdministrativeAdmission = this.form.value;
+		const formValue: AdministrativeAdmission = this.form.getRawValue();
 		if (this.form.valid) {
 			this.goToTriage(formValue);
 		}
