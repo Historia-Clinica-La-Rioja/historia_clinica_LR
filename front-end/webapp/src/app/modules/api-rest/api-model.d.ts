@@ -71,6 +71,18 @@ export interface AllergyConditionDto extends HealthConditionDto {
     severity: string;
 }
 
+export interface AllergyIntoleranceDto {
+    categories: string[];
+    clinicalStatus: FhirCodeDto;
+    criticality: string;
+    id: string;
+    sctidCode: string;
+    sctidTerm: string;
+    startDate: Date;
+    type: string;
+    verificationStatus: FhirCodeDto;
+}
+
 export interface AnamnesisDto extends DocumentDto, Serializable {
     allergies: AllergyConditionDto[];
     anthropometricData?: AnthropometricDataDto;
@@ -301,6 +313,17 @@ export interface CompleteRequestDto {
     fileIds?: number[];
     link?: string;
     observations?: string;
+}
+
+export interface ConditionDto {
+    clinicalStatus: FhirCodeDto;
+    createdOn: Date;
+    id: string;
+    sctidCode: string;
+    sctidTerm: string;
+    severityCode: FhirCodeDto;
+    startDate: Date;
+    verificationStatus: FhirCodeDto;
 }
 
 export interface CoverageDto extends Serializable {
@@ -574,6 +597,19 @@ export interface EvolutionNoteDto extends DocumentDto, Serializable {
     procedures?: HospitalizationProcedureDto[];
 }
 
+export interface FhirAddressDto {
+    address: string;
+    city: string;
+    country: string;
+    postcode: string;
+    province: string;
+}
+
+export interface FhirCodeDto {
+    theCode: string;
+    theDisplay: string;
+}
+
 export interface FileDto {
     fileId: number;
     fileName: string;
@@ -714,9 +750,29 @@ export interface IdentificationTypeDto extends AbstractMasterdataDto<number> {
     id: number;
 }
 
+export interface IdentifierDto extends Serializable {
+    system: string;
+    value: string;
+}
+
 export interface ImmunizationDto extends ClinicalTermDto {
     administrationDate: string;
     note: string;
+}
+
+export interface ImmunizationInteroperabilityDto {
+    administrationDate: Date;
+    batchNumber: string;
+    doseNumber: number;
+    expirationDate: Date;
+    id: string;
+    immunizationCode: string;
+    immunizationTerm: string;
+    primarySource: boolean;
+    series: string;
+    status: string;
+    vaccineCode: string;
+    vaccineTerm: string;
 }
 
 export interface InstitutionAddressDto extends Serializable {
@@ -862,6 +918,34 @@ export interface MedicationInfoDto extends Serializable {
     totalDays: number;
 }
 
+export interface MedicationIngredientDto {
+    active: boolean;
+    presentationUnit: string;
+    presentationValue: number;
+    sctidCode: string;
+    sctidTerm: string;
+    unitMeasure: string;
+    unitValue: number;
+}
+
+export interface MedicationInteroperabilityDto {
+    doseQuantityCode: string;
+    doseQuantityUnit: string;
+    doseQuantityValue: number;
+    effectiveTime: Date;
+    formCode: string;
+    formTerm: string;
+    id: string;
+    ingredients: MedicationIngredientDto[];
+    routeCode: string;
+    routeTerm: string;
+    sctidCode: string;
+    sctidTerm: string;
+    statementId: string;
+    status: string;
+    unitTime: string;
+}
+
 export interface NewDosageDto extends Serializable {
     chronic: boolean;
     diary: boolean;
@@ -909,6 +993,15 @@ export interface OccupationDto {
 export interface OpeningHoursDto extends TimeRangeDto {
     dayWeekId: number;
     id?: number;
+}
+
+export interface OrganizationDto extends Serializable {
+    address: FhirAddressDto;
+    custodian: string;
+    id: string;
+    identifier: IdentifierDto;
+    name: string;
+    phoneNumber: string;
 }
 
 export interface OutpatientAllergyConditionDto {
@@ -1034,6 +1127,19 @@ export interface PatientECEDto {
     typeId: number;
 }
 
+export interface PatientInteroperabilityDto {
+    birthdate: string;
+    firstname: string;
+    fullAddress: FhirAddressDto;
+    gender: string;
+    id: string;
+    identificationNumber: string;
+    lastname: string;
+    middlenames: string;
+    otherLastName: string;
+    phoneNumber: string;
+}
+
 export interface PatientMedicalCoverageDto {
     active: boolean;
     affiliateNumber?: string;
@@ -1048,6 +1154,15 @@ export interface PatientSearchDto {
     idPatient: number;
     person: BMPersonDto;
     ranking: number;
+}
+
+export interface PatientSummaryDto {
+    allergies: AllergyIntoleranceDto[];
+    conditions: ConditionDto[];
+    immunizations: ImmunizationInteroperabilityDto[];
+    medications: MedicationInteroperabilityDto[];
+    organization: OrganizationDto;
+    patient: PatientInteroperabilityDto;
 }
 
 export interface PatientType extends Serializable {

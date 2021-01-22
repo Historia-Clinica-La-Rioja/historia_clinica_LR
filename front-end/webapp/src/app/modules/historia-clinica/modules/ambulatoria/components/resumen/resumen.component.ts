@@ -1,17 +1,30 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { HCEAllergyDto, HCEPersonalHistoryDto, HCEMedicationDto, HCELast2VitalSignsDto, HCEAnthropometricDataDto } from "@api-rest/api-model";
-import { ActivatedRoute } from "@angular/router";
-import { Observable } from "rxjs";
-import { HceGeneralStateService } from "@api-rest/services/hce-general-state.service";
-import { ANTECEDENTES_FAMILIARES, PROBLEMAS_ANTECEDENTES } from "../../../../constants/summaries";
-import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {
+	AllergyIntoleranceDto,
+	ConditionDto,
+	HCEAllergyDto,
+	HCEAnthropometricDataDto,
+	HCELast2VitalSignsDto,
+	HCEMedicationDto,
+	HCEPersonalHistoryDto,
+	MedicationInteroperabilityDto,
+	OutpatientFamilyHistoryDto,
+	PatientSummaryDto
+} from "@api-rest/api-model";
+import {ActivatedRoute} from "@angular/router";
+import {Observable} from "rxjs";
+import {HceGeneralStateService} from "@api-rest/services/hce-general-state.service";
+import {ANTECEDENTES_FAMILIARES, PROBLEMAS_ANTECEDENTES} from "../../../../constants/summaries";
+import {AmbulatoriaSummaryFacadeService} from '../../services/ambulatoria-summary-facade.service';
+import {TableModel} from "@presentation/components/table/table.component";
+import {SnackBarService} from "@presentation/services/snack-bar.service";
 
 @Component({
 	selector: 'app-resumen',
 	templateUrl: './resumen.component.html',
 	styleUrls: ['./resumen.component.scss']
 })
-export class ResumenComponent implements OnInit {
+export class ResumenComponent implements OnInit, OnChanges {
 
 	public allergies$: Observable<HCEAllergyDto[]>;
 	public patientId: number;
@@ -22,11 +35,18 @@ export class ResumenComponent implements OnInit {
 	public anthropometricData$: Observable<HCEAnthropometricDataDto>;
 	public readonly familyHistoriesHeader = ANTECEDENTES_FAMILIARES;
 	public readonly personalProblemsHeader = PROBLEMAS_ANTECEDENTES;
+	public loadExternal : boolean = false;
+	public healthConditionsTable: TableModel<ConditionDto>;
+	public allergiesTable: TableModel<AllergyIntoleranceDto>;
+	public medicationsTable: TableModel<MedicationInteroperabilityDto>;
+	public familyHistoriesTable: TableModel<OutpatientFamilyHistoryDto>;
+	@Input() patientExternalSummary: PatientSummaryDto;
 
 	constructor(
 		private readonly hceGeneralStateService: HceGeneralStateService,
 		private route: ActivatedRoute,
-		private readonly ambulatoriaSummaryFacadeService: AmbulatoriaSummaryFacadeService
+		private readonly ambulatoriaSummaryFacadeService: AmbulatoriaSummaryFacadeService,
+		private readonly snackBarService: SnackBarService
 		) {
 	}
 
@@ -35,7 +55,19 @@ export class ResumenComponent implements OnInit {
 			(params) => {
 				this.patientId = Number(params.get('idPaciente'));
 				this.initSummaries();
+				this.loadExternalTables();
 			});
+	}
+
+	ngOnChanges(changes:SimpleChanges) {
+		if(!changes.patientExternalSummary.isFirstChange()){
+			this.loadExternalTables();
+			this.route.paramMap.subscribe(
+				(params) => {
+					this.patientId = Number(params.get('idPaciente'));
+					this.initSummaries();
+				});
+		}
 	}
 
 	initSummaries() {
@@ -45,6 +77,60 @@ export class ResumenComponent implements OnInit {
 		this.medications$ = this.ambulatoriaSummaryFacadeService.medications$;
 		this.vitalSigns$ = this.ambulatoriaSummaryFacadeService.vitalSigns$;
 		this.anthropometricData$ = this.ambulatoriaSummaryFacadeService.anthropometricData$;
+	}
+
+	loadExternalTables(){
+		if(this.externalSummaryIsLoaded()){
+			this.loadExternal = true;
+			this.healthConditionsTable = this.buildHealthConditionTable(this.patientExternalSummary.conditions);
+			this.allergiesTable = this.buildAllergiesTable(this.patientExternalSummary.allergies);
+			this.medicationsTable = this.buildMedicationsTable(this.patientExternalSummary.medications);
+		}
+		else this.snackBarService.showError('Este paciente no posee datos en la institución seleccionada');
+	}
+
+	externalSummaryIsLoaded(): boolean{
+		return !!this.patientExternalSummary.organization;
+	}
+
+	buildHealthConditionTable(data:ConditionDto[]): TableModel<ConditionDto>{
+		return {
+			columns: [
+				{
+					columnDef: 'problema',
+					text: (row) => row.id
+				}],
+			data
+		};
+	}
+
+	buildAllergiesTable(data: AllergyIntoleranceDto[]): TableModel<AllergyIntoleranceDto>{
+		return {
+			columns: [
+				{
+					columnDef: 'alergia',
+					text: (row) => row.id
+				}],
+			data
+		};
+	}
+
+	buildMedicationsTable(data: MedicationInteroperabilityDto[]): TableModel<MedicationInteroperabilityDto>{
+		return {
+			columns: [
+				{
+					header: 'Medicación',
+					columnDef: 'Medicacion',
+					text: (row) => row.id
+				},
+				{
+					header: 'Estado',
+					columnDef: 'Estado',
+					text: (row) => row.status
+				}
+				],
+			data
+		};
 	}
 
 }

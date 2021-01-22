@@ -1,0 +1,16 @@
+mat-card {
+	mat-card-header {
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		max-height: 24px;
+		color: rgba(75, 75, 75, 0.5);
+		background-color: rgba(238, 238, 238, 1);
+
+		.presumptive-button {
+			width: auto;
+		}
+	}
+
+}
+

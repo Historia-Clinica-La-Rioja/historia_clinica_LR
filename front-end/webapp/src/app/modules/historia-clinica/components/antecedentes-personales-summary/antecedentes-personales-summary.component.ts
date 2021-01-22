@@ -1,9 +1,8 @@
-import { Component, Input, OnChanges } from '@angular/core';
-import { ANTECEDENTES_PERSONALES } from '../../constants/summaries';
-import { TableModel } from '@presentation/components/table/table.component';
-import { HealthConditionDto, HealthHistoryConditionDto } from '@api-rest/api-model';
-import { InternmentStateService } from '@api-rest/services/internment-state.service';
-import { SummaryHeader } from '@presentation/components/summary-card/summary-card.component';
+import {Component, Input, OnChanges} from '@angular/core';
+import {TableModel} from '@presentation/components/table/table.component';
+import {HealthConditionDto, HealthHistoryConditionDto} from '@api-rest/api-model';
+import {InternmentStateService} from '@api-rest/services/internment-state.service';
+import {SummaryHeader} from '@presentation/components/summary-card/summary-card.component';
 
 @Component({
 	selector: 'app-antecedentes-personales-summary',

@@ -31,8 +31,8 @@ public class FhirAddress {
         return this;
     }
 
-    public FhirAddress setAddress(String street, String number, String appartment, String floor){
-        this.address = FhirString.joining(street, number, appartment, floor);
+    public FhirAddress setAddress(String street, String number, String apartment, String floor){
+        this.address = FhirString.joining(street, number, apartment, floor);
         return this;
     }
 

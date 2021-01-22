@@ -1,10 +1,10 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
-import { AllergyConditionDto, HealthConditionDto } from '@api-rest/api-model';
-import { TableModel } from '@presentation/components/table/table.component';
-import { InternmentStateService } from '@api-rest/services/internment-state.service';
-import { ALERGIAS } from '../../constants/summaries';
-import { MatDialog } from '@angular/material/dialog';
-import { AddAllergyComponent } from '../../dialogs/add-allergy/add-allergy.component';
+import {Component, Input, OnChanges} from '@angular/core';
+import {AllergyConditionDto, HealthConditionDto} from '@api-rest/api-model';
+import {TableModel} from '@presentation/components/table/table.component';
+import {InternmentStateService} from '@api-rest/services/internment-state.service';
+import {ALERGIAS} from '../../constants/summaries';
+import {MatDialog} from '@angular/material/dialog';
+import {AddAllergyComponent} from '../../dialogs/add-allergy/add-allergy.component';
 
 @Component({
 	selector: 'app-alergias-summary',

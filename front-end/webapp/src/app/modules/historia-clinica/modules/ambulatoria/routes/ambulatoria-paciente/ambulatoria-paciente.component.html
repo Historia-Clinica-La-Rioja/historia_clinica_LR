@@ -17,6 +17,27 @@
 			</div>
 		</app-patient-card>
 
+
+		<div class="flex-container">
+				<div fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center baseline" fxLayoutAlign.lt-md="baseline end">
+					<div fxFlex="60%"></div>
+					<div fxLayout="column" fxFlex="15%">
+						<h5 class=uppercase [translate]="'ambulatoria.historia-clinica-externa.TITLE'" ></h5>
+					</div>
+					<div fxLayout="column" fxFlex="25%">
+						<mat-form-field>
+							<mat-select [disabled]="!this.loaded" id="externalInstitutionId"
+										name="externalInstitutionId" (click)="this.clicked()" [placeholder]="this.externalInstitutionPlaceholder">
+								<mat-option *ngFor="let externalInstitution of this.externalInstitutions"
+											[value]="externalInstitution.name" (click)="this.loadExternalSummary(externalInstitution)">
+									{{externalInstitution.name}}
+								</mat-option>
+							</mat-select>
+						</mat-form-field>
+					</div>
+				</div>
+		</div>
+
 		<mat-card id="tab_container" class="mat-typography">
 			<mat-card-content>
 				<mat-tab-group (selectedTabChange)="onTabChanged($event)">
@@ -26,7 +47,7 @@
 							<span>{{ 'ambulatoria.paciente.resumen.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>
 						<ng-template matTabContent>
-							<app-resumen></app-resumen>
+							<app-resumen [patientExternalSummary]="patientExternalSummary" ></app-resumen>
 						</ng-template>
 					</mat-tab>
 					<mat-tab id="tab_vacunas">

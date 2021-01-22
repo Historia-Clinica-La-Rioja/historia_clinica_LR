@@ -4,6 +4,9 @@
 			"TITLE": "Historia Clínica",
 			"SUBTITLE": "Complete los campos deseados"
 		},
+		"historia-clinica-externa": {
+			"TITLE": "Ver historia clínica externa"
+		},
 		"paciente": {
 			"TITLE": "Historia Clínica",
 			"card": {
