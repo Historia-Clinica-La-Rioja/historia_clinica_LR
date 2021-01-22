@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { TriageAdultGynecologicalDto } from '@api-rest/api-model';
 import { dateToDateTimeDto } from '@api-rest/mapper/date-dto.mapper';
-import { TriageAdultGynecologicalDto } from "../../services/new-episode.service";
 
 @Component({
 	selector: 'app-adult-gynecological-triage',
@@ -56,15 +56,16 @@ export class AdultGynecologicalTriageComponent implements OnInit {
 
 		function toVitalSigns(form: FormGroup): any {
 			const vitalSigns = {};
+			const effectiveTime = dateToDateTimeDto(new Date());
 			Object.keys(form.controls).forEach((key: string) => {
 				if (formValue[key]) {
 					vitalSigns[key] = {
-						effectiveTime: dateToDateTimeDto(new Date()),
+						effectiveTime,
 						value: formValue[key]
 					};
 				}
 			});
-			return Object.keys(vitalSigns).keys.length !== 0  ? vitalSigns : undefined;
+			return Object.keys(vitalSigns).length !== 0  ? vitalSigns : undefined;
 		}
 	}
 
