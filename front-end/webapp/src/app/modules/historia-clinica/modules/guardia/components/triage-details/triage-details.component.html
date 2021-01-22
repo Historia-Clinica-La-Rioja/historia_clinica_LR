@@ -1,4 +1,4 @@
-<div fxLayout="column" fxLayoutGap="30px">
+<div *ngIf="triage" fxLayout="column" fxLayoutGap="30px">
 
 	<section id="basic-triage" fxLayout="column" fxLayoutGap="15px">
 		<div id="header" fxLayout="row" fxLayoutAlign="space-between center">
@@ -14,11 +14,12 @@
 
 			<div class="info" fxLayout="column" fxLayoutGap="6px" fxLayoutAlign="space-between">
 				<span>{{ 'guardia.episode.triage.ultimo.REALIZADO_POR' | translate }}</span>
-				<span class="padding-to-align-chip">{{ triage.professional.firstName }} {{ triage.professional.lastName }}</span>
+				<span *ngIf="triage.professional else noInfo" class="padding-to-align-chip">
+					{{ triage.professional.firstName }} {{ triage.professional.lastName }}
+				</span>
 			</div>
 
-			<div *ngIf="triage.doctorsOfficeDescription" class="info"
-				 fxLayout="column" fxLayoutGap="6px" fxLayoutAlign="space-between">
+			<div class="info" fxLayout="column" fxLayoutGap="6px" fxLayoutAlign="space-between">
 				<span>{{ 'guardia.episode.triage.ultimo.UBICACION' | translate }}</span>
 				<span *ngIf="triage.doctorsOfficeDescription else noInfo" class="padding-to-align-chip">
 					{{ triage.doctorsOfficeDescription }}

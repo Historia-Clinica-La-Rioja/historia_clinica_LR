@@ -2,33 +2,35 @@ import { Injectable } from '@angular/core';
 import { Triage } from '../components/triage-details/triage-details.component';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { TriageReduced } from '../routes/episode-details/episode-details.component';
+import { NewVitalSignsObservationDto, TriageListDto } from '@api-rest/api-model';
 
 @Injectable({
 	providedIn: 'root'
 })
+
 export class GuardiaMapperService {
 
-	triageDtoToTriage: (triageDto: any) => Triage = GuardiaMapperService._mapTriageDtoToTriage;
-	triageDtoToTriageReduced: (triageDto: any) => TriageReduced = GuardiaMapperService._mapTriageDtoToTriageReduced;
+	triageListDtoToTriage: (triageListDto: TriageListDto) => Triage = GuardiaMapperService._mapTriageListDtoToTriage;
+	triageListDtoToTriageReduced: (triageListDto: TriageListDto) => TriageReduced = GuardiaMapperService._mapTriageListDtoToTriageReduced;
 
 	constructor() {
 	}
 
-	private static _mapTriageDtoToTriage(triageDto: any): Triage {
+	private static _mapTriageListDtoToTriage(triageListDto: TriageListDto): Triage {
 		return {
-			creationDate: dateTimeDtoToDate(triageDto.creationDate),
+			creationDate: dateTimeDtoToDate(triageListDto.creationDate),
 			category: {
-				id: triageDto.category.id,
-				name: triageDto.category.name,
-				colorHex: triageDto.category.color.code
+				id: triageListDto.category.id,
+				name: triageListDto.category.name,
+				colorHex: triageListDto.category.color.code
 			},
-			professional: triageDto.professional,
-			doctorsOfficeDescription: triageDto.doctorsOffice?.description,
-			vitalSigns: mapVitalSigns(triageDto.vitalSigns),
-			appearance: mapAppearance(triageDto.appearance),
-			breathing: mapBreathing(triageDto.breathing),
-			circulation: mapCirculation(triageDto.circulation),
-			notes: triageDto.notes
+			professional: triageListDto.professional,
+			doctorsOfficeDescription: triageListDto.doctorsOffice?.description,
+			vitalSigns: mapVitalSigns(triageListDto.vitalSigns),
+			appearance: mapAppearance(triageListDto.appearance),
+			breathing: mapBreathing(triageListDto.breathing),
+			circulation: mapCirculation(triageListDto.circulation),
+			notes: triageListDto.notes
 		};
 
 		function mapAppearance(appearance) {
@@ -73,7 +75,7 @@ export class GuardiaMapperService {
 			};
 		}
 
-		function mapVitalSigns(vitalSigns) {
+		function mapVitalSigns(vitalSigns: NewVitalSignsObservationDto) {
 			if (!vitalSigns) {
 				return undefined;
 			}
@@ -107,16 +109,16 @@ export class GuardiaMapperService {
 
 	}
 
-	private static _mapTriageDtoToTriageReduced(triageDto: any): TriageReduced {
+	private static _mapTriageListDtoToTriageReduced(triageListDto: TriageListDto): TriageReduced {
 		return {
-			creationDate: dateTimeDtoToDate(triageDto.creationDate),
+			creationDate: dateTimeDtoToDate(triageListDto.creationDate),
 			category: {
-				id: triageDto.category.id,
-				name: triageDto.category.name,
-				colorHex: triageDto.category.color.code
+				id: triageListDto.category.id,
+				name: triageListDto.category.name,
+				colorHex: triageListDto.category.color.code
 			},
-			professional: triageDto.professional,
-			doctorsOfficeDescription: triageDto.doctorsOffice?.description
+			professional: triageListDto.professional,
+			doctorsOfficeDescription: triageListDto.doctorsOffice?.description
 		};
 	}
 }

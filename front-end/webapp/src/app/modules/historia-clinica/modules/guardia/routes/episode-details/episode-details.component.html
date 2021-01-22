@@ -99,7 +99,7 @@
 
 									<div id="right-side">
 										<span>
-											{{ triage.professional.firstName }} {{ triage.professional.lastName }}
+											{{ triage.professional?.firstName }} {{ triage.professional?.lastName }}
 										</span>
 										<span *ngIf="triage.doctorsOfficeDescription">
 											• {{ triage.doctorsOfficeDescription }}

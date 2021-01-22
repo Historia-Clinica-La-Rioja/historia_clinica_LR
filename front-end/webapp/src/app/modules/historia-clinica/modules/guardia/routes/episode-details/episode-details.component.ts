@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { CompletePatientDto, PersonalInformationDto, PersonPhotoDto } from '@api-rest/api-model';
+import { CompletePatientDto, PersonalInformationDto, PersonPhotoDto, TriageListDto } from '@api-rest/api-model';
 import {
 	EmergencyCareEpisodeService,
 	ResponseEmergencyCareDto
@@ -76,16 +76,16 @@ export class EpisodeDetailsComponent implements OnInit {
 
 	}
 
-	private loadTriages() {
-		this.triageService.getAll(this.episodeId).subscribe((triages: any[]) => {
-			this.lastTriage = this.guardiaMapperService.triageDtoToTriage(triages[0]);
+	private loadTriages(): void {
+		this.triageService.getAll(this.episodeId).subscribe((triages: TriageListDto[]) => {
+			this.lastTriage = this.guardiaMapperService.triageListDtoToTriage(triages[0]);
 			if (hasHistory(triages)) {
-				this.triagesHistory = triages.map(this.guardiaMapperService.triageDtoToTriageReduced);
+				this.triagesHistory = triages.map(this.guardiaMapperService.triageListDtoToTriageReduced);
 				this.triagesHistory.shift();
 			}
 		});
 
-		function hasHistory(triages: any[]) {
+		function hasHistory(triages: TriageListDto[]) {
 			return triages?.length > 1;
 		}
 	}

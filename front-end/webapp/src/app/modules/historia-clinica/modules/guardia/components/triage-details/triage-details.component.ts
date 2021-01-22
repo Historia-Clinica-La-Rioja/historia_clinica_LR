@@ -30,7 +30,7 @@ export class TriageDetailsComponent implements OnInit, OnChanges {
 	}
 
 	private includesVitalSigns(): boolean {
-		return !!this.emergencyCareType;
+		return !!this.emergencyCareType && !!this.triage;
 	}
 
 	private mapToVitalSignCurrentPrevious(triage: Triage): VitalSingCurrentPrevious[] {
@@ -55,7 +55,7 @@ export class TriageDetailsComponent implements OnInit, OnChanges {
 				vitalSignsCurrent.push({
 					description: LABELS[key],
 					currentValue: {
-						value: vitalSign?.value || undefined,
+						value: Number(vitalSign?.value) || undefined,
 						effectiveTime: vitalSign?.effectiveTime || undefined
 					}
 				});
@@ -90,27 +90,27 @@ export interface Triage {
 	doctorsOfficeDescription?: string;
 	vitalSigns?: {
 		bloodOxygenSaturation: {
-			value: number,
+			value: string,
 			effectiveTime: Date
 		},
 		diastolicBloodPressure?: {
-			value: number,
+			value: string,
 			effectiveTime: Date
 		},
 		heartRate: {
-			value: number,
+			value: string,
 			effectiveTime: Date
 		},
 		respiratoryRate: {
-			value: number,
+			value: string,
 			effectiveTime: Date
 		},
 		systolicBloodPressure?: {
-			value: number,
+			value: string,
 			effectiveTime: Date
 		},
 		temperature?: {
-			value: number,
+			value: string,
 			effectiveTime: Date
 		}
 	};
@@ -123,18 +123,18 @@ export interface Triage {
 		respiratoryRetractionDescription: string,
 		stridor: boolean,
 		respiratoryRate: {
-			value: number
+			value: string
 			effectiveTime: Date,
 		},
 		bloodOxygenSaturation: {
-			value: number
+			value: string
 			effectiveTime: Date,
 		}
 	};
 	circulation?: {
 		perfusionDescription: string,
 		heartRate: {
-			value: number
+			value: string
 			effectiveTime: Date,
 		}
 	};
