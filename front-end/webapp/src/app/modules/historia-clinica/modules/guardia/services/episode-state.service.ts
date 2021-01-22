@@ -13,11 +13,11 @@ export class EpisodeStateService {
 
 	atender(episodeId: number, doctorsOfficeId: number): Observable<boolean> {
 		return this.emergencyCareEpisodeStateService
-			.changeState(EstadosEpisodio.EN_ATENCION, episodeId, doctorsOfficeId);
+			.changeState(episodeId, EstadosEpisodio.EN_ATENCION, doctorsOfficeId);
 	}
 
 	finalizarPorAusencia(episodeId: number): Observable<boolean> {
 		return this.emergencyCareEpisodeStateService
-			.changeState(EstadosEpisodio.FINALIZADO_POR_AUSENCIA, episodeId);
+			.changeState(episodeId, EstadosEpisodio.FINALIZADO_POR_AUSENCIA);
 	}
 }

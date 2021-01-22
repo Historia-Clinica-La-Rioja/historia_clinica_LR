@@ -1,20 +1,37 @@
-import {Injectable} from '@angular/core';
-import {Observable, of} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { ContextService } from '@core/services/context.service';
+import { environment } from '@environments/environment';
+
+const BASIC_URL_PREFIX = '/institution';
+const BASIC_URL_SUFIX = '/emergency-care/episodes';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class EmergencyCareEpisodeStateService {
 
-	constructor() {
+	constructor(private http: HttpClient,
+				private contextService: ContextService) {
 	}
 
-	changeState(emergencyCareEpisodeStateId: number, episodeId: number, doctorsOfficeId?: number): Observable<boolean> {
-		return of(randomBoolean());
+	changeState(episodeId: number, emergencyCareEpisodeStateId: number, doctorsOfficeId?: number): Observable<boolean> {
+		const params: HttpParams = this.buildChangeStateParams(emergencyCareEpisodeStateId, doctorsOfficeId);
 
-		function randomBoolean(): boolean {
-			return Math.random() < 0.5;
+		const url = `${environment.apiBase + BASIC_URL_PREFIX}/${this.contextService.institutionId +
+		BASIC_URL_SUFIX}/${episodeId}/state`;
+
+		return this.http.post<boolean>(url, {}, {params});
+	}
+
+	private buildChangeStateParams(emergencyCareEpisodeStateId: number, doctorsOfficeId?: number): HttpParams {
+		let params: HttpParams = new HttpParams();
+		params = params.append('emergencyCareStateId', JSON.stringify(emergencyCareEpisodeStateId));
+		if (doctorsOfficeId) {
+			params = params.append('doctorsOfficeId', JSON.stringify(doctorsOfficeId));
 		}
+		return params;
 	}
 
 }
