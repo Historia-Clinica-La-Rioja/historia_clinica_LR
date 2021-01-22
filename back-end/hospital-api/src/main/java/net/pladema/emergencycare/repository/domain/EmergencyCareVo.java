@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.emergencycare.repository.entity.EmergencyCareEpisode;
+import net.pladema.emergencycare.repository.entity.PoliceIntervention;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -43,9 +44,9 @@ public class EmergencyCareVo implements Serializable {
 
 	private String ambulanceCompanyId;
 
-	private Integer policeInterventionId;
-
 	private LocalDateTime createdOn;
+
+	private PoliceInterventionVo policeIntervention;
 
 	public EmergencyCareVo(EmergencyCareEpisode emergencyCareEpisode, String firstname, String lastname, String doctorsOfficeDescription){
 		this.id = emergencyCareEpisode.getId();
@@ -57,10 +58,14 @@ public class EmergencyCareVo implements Serializable {
 		this.emergencyCareEntranceTypeId = emergencyCareEpisode.getEmergencyCareEntranceTypeId();
 		this.doctorsOfficeId = emergencyCareEpisode.getDoctorsOfficeId();
 		this.ambulanceCompanyId = emergencyCareEpisode.getAmbulanceCompanyId();
-		this.policeInterventionId = emergencyCareEpisode.getPoliceInterventionId();
 		this.createdOn = emergencyCareEpisode.getCreatedOn();
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.doctorsOfficeDescription = doctorsOfficeDescription;
+	}
+
+	public EmergencyCareVo(EmergencyCareEpisode emergencyCareEpisode, String firstname, String lastname, String doctorsOfficeDescription, PoliceIntervention policeIntervention){
+		this(emergencyCareEpisode, firstname, lastname, doctorsOfficeDescription);
+		this.policeIntervention = policeIntervention != null ? new PoliceInterventionVo(policeIntervention) : null;
 	}
 }

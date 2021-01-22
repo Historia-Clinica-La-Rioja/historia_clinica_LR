@@ -74,8 +74,8 @@ public class EmergencyCareBo {
         this.doctorsOffice = emergencyCareVo.getDoctorsOfficeId();
         this.doctorsOfficeDescription = emergencyCareVo.getDoctorsOfficeDescription();
         this.ambulanceCompanyId = emergencyCareVo.getAmbulanceCompanyId();
-        if (emergencyCareVo.getPoliceInterventionId()!= null)
-            this.policeIntervention.setId(emergencyCareVo.getPoliceInterventionId());
+        if (emergencyCareVo.getPoliceIntervention()!= null)
+            this.policeIntervention = new PoliceInterventionBo(emergencyCareVo.getPoliceIntervention());
         this.createdOn = emergencyCareVo.getCreatedOn();
     }
 

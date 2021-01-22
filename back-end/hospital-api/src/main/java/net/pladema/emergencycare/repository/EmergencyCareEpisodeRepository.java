@@ -3,7 +3,6 @@ package net.pladema.emergencycare.repository;
 import net.pladema.emergencycare.repository.domain.EmergencyCareVo;
 import net.pladema.emergencycare.repository.entity.EmergencyCareEpisode;
 import net.pladema.emergencycare.repository.entity.EmergencyCareState;
-import net.pladema.emergencycare.repository.entity.HistoricEmergencyEpisode;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -28,11 +27,12 @@ public interface EmergencyCareEpisodeRepository extends JpaRepository<EmergencyC
 	List<EmergencyCareVo> getAll(@Param("institutionId") Integer institutionId);
 
 	@Transactional(readOnly = true)
-	@Query(value = " SELECT NEW net.pladema.emergencycare.repository.domain.EmergencyCareVo(ece, pe.firstName, pe.lastName, dso.description) "+
+	@Query(value = " SELECT NEW net.pladema.emergencycare.repository.domain.EmergencyCareVo(ece, pe.firstName, pe.lastName, dso.description, pi) "+
 			" FROM EmergencyCareEpisode ece "+
 			" LEFT JOIN Patient pa ON (pa.id = ece.patientId) "+
 			" LEFT JOIN Person pe ON (pe.id = pa.personId) "+
 			" LEFT JOIN DoctorsOffice dso ON (dso.id = ece.doctorsOfficeId) "+
+			" LEFT JOIN PoliceIntervention pi ON (pi.id = ece.policeInterventionId) "+
 			" WHERE ece.id = :episodeId "+
 			" AND ece.institutionId = :institutionId ")
 	Optional<EmergencyCareVo> getEpisode(@Param("episodeId") Integer episodeId, @Param("institutionId") Integer institutionId);
