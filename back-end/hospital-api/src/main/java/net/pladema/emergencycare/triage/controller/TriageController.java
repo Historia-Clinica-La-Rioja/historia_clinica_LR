@@ -20,6 +20,7 @@ import net.pladema.emergencycare.triage.service.TriageService;
 import net.pladema.emergencycare.triage.service.domain.TriageBo;
 import net.pladema.emergencycare.triage.service.domain.TriageCategoryBo;
 import net.pladema.medicalconsultation.doctorsoffice.controller.service.DoctorsOfficeExternalService;
+import net.pladema.sgx.security.utils.UserInfo;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -169,6 +170,8 @@ public class TriageController {
         LOG.debug("Add triage administrative => {}", body);
         TriageBo triage = triageMapper.toTriageBo(body);
         triage.setEmergencyCareEpisodeId(episodeId);
+        Integer professionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
+        triage.setProfessionalId(professionalId);
         triage = triageService.createAdministrative(triage);
         Integer result = triage.getId();
         LOG.debug("Output -> {}", result);
@@ -184,6 +187,8 @@ public class TriageController {
         LOG.debug("Add triage adult-gynecological => {}", body);
         TriageBo triage = triageMapper.toTriageBo(body);
         triage.setEmergencyCareEpisodeId(episodeId);
+        Integer professionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
+        triage.setProfessionalId(professionalId);
         triage = triageService.createAdultGynecological(triage);
         Integer result = triage.getId();
         LOG.debug("Output -> {}", result);
@@ -199,6 +204,8 @@ public class TriageController {
         LOG.debug("Add triage pediatric => {}", body);
         TriageBo triage = triageMapper.toTriageBo(body);
         triage.setEmergencyCareEpisodeId(episodeId);
+        Integer professionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
+        triage.setProfessionalId(professionalId);
         triage = triageService.createPediatric(triage);
         Integer result = triage.getId();
         LOG.debug("Output -> {}", result);

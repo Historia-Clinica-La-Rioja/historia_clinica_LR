@@ -13,6 +13,8 @@ import net.pladema.emergencycare.controller.dto.ResponseEmergencyCareDto;
 import net.pladema.emergencycare.controller.mapper.EmergencyCareMapper;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
+import net.pladema.sgx.security.utils.UserInfo;
+import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -47,17 +49,21 @@ public class EmergencyCareEpisodeController {
 
     private final VitalSignMapper vitalSignMapper;
 
+    private final HealthcareProfessionalExternalService healthcareProfessionalExternalService;
+
     public EmergencyCareEpisodeController(EmergencyCareEpisodeService emergencyCareEpisodeService,
                                           EmergencyCareMapper emergencyCareMapper,
                                           ReasonExternalService reasonExternalService,
                                           VitalSignExternalService vitalSignExternalService,
-                                          VitalSignMapper vitalSignMapper){
+                                          VitalSignMapper vitalSignMapper,
+                                          HealthcareProfessionalExternalService healthcareProfessionalExternalService){
         super();
         this.emergencyCareEpisodeService = emergencyCareEpisodeService;
         this.emergencyCareMapper=emergencyCareMapper;
         this.reasonExternalService = reasonExternalService;
         this.vitalSignExternalService = vitalSignExternalService;
         this.vitalSignMapper = vitalSignMapper;
+        this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
     }
 
     @GetMapping
@@ -82,6 +88,8 @@ public class EmergencyCareEpisodeController {
         newEmergencyCare.setInstitutionId(institutionId);
         List<String> reasonIds = reasonExternalService.addReasons(body.reasons());
         newEmergencyCare.setReasonIds(reasonIds);
+        Integer professionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
+        newEmergencyCare.setProfessionalId(professionalId);
         newEmergencyCare = emergencyCareEpisodeService.createAdministrative(newEmergencyCare);
         Integer result = newEmergencyCare.getId();
         LOG.debug("Output -> {}", result);
@@ -105,6 +113,9 @@ public class EmergencyCareEpisodeController {
         List<String> reasonIds = reasonExternalService.addReasons(body.reasons());
         newEmergencyCare.setReasonIds(reasonIds);
 
+        Integer professionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
+        newEmergencyCare.setProfessionalId(professionalId);
+
         newEmergencyCare = emergencyCareEpisodeService.createAdult(newEmergencyCare);
         Integer result = newEmergencyCare.getId();
         LOG.debug("Output -> {}", result);
@@ -126,6 +137,9 @@ public class EmergencyCareEpisodeController {
 
         List<String> reasonIds = reasonExternalService.addReasons(body.reasons());
         newEmergencyCare.setReasonIds(reasonIds);
+
+        Integer professionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
+        newEmergencyCare.setProfessionalId(professionalId);
 
         newEmergencyCare = emergencyCareEpisodeService.createPediatric(newEmergencyCare);
         Integer result = newEmergencyCare.getId();

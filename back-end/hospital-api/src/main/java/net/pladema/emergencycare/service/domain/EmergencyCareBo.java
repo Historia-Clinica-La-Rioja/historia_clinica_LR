@@ -121,4 +121,8 @@ public class EmergencyCareBo {
         this.getTriage().setVitalSignIds(vitalSignIds);
     }
 
+    public void setProfessionalId(Integer professionalId) {
+        this.getTriage().setProfessionalId(professionalId);
+    }
+
 }

@@ -45,5 +45,6 @@ public class Triage  extends SGXAuditableEntity {
 		this.emergencyCareEpisodeId = triageBo.getEmergencyCareEpisodeId();
 		this.notes = triageBo.getNotes();
 		this.triageCategoryId = triageBo.getCategoryId();
+		this.healthcareProfessionalId = triageBo.getProfessionalId();
 	}
 }
