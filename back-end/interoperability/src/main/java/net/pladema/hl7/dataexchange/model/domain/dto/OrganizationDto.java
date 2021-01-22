@@ -16,7 +16,7 @@ public class OrganizationDto implements Serializable {
     private String name;
     private IdentifierDto identifier;
     private String phoneNumber;
-    private FhirAddressDto address;
+    private transient FhirAddressDto address;
 
     public OrganizationDto(String id, String name, IdentifierDto identifier){
         this.id = id;
@@ -25,10 +25,12 @@ public class OrganizationDto implements Serializable {
     }
 
     public OrganizationDto(OrganizationVo organization) {
-        this.setName(organization.getName());
-        this.setId(organization.getId());
-        this.setPhoneNumber(organization.getPhoneNumber());
-        this.setAddress(new FhirAddressDto(organization.getFullAddress()));
+        if(organization != null) {
+            this.setName(organization.getName());
+            this.setId(organization.getId());
+            this.setPhoneNumber(organization.getPhoneNumber());
+            this.setAddress(new FhirAddressDto(organization.getFullAddress()));
+        }
     }
 
     public String getCustodian(){

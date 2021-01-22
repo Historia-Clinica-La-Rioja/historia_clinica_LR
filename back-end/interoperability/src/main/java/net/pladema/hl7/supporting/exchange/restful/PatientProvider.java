@@ -115,20 +115,35 @@ public class PatientProvider {
             @RequestParam(name = DocumentReference.SP_SUBJECT) String subject,
             @RequestParam(name = DocumentReference.SP_CUSTODIAN) String custodian,
             @RequestParam(name = DocumentReference.SP_TYPE, required = false) String type) {
-        //if(!subject.equals("4858"))
-         //   return ResponseEntity.ok(mockSummary(custodian));
+
         String subjectIdentifier = wsIss + "|" + subject;
         DocumentReference document = getDocumentReference(subjectIdentifier, custodian, type);
         if (hasHealthcareData(document)) {
             DocumentReference.DocumentReferenceContentComponent content = document.getContent().get(0);
             if (content.hasAttachment()) {
                 String url = content.getAttachment().getUrl();
-                return ResponseEntity.ok(new PatientSummaryDto(bundleResource.encodeResourceToSummary(
-                        client.getResourceById(new IdType(url))))
-                );
+                PatientSummaryDto psdto = new PatientSummaryDto(bundleResource.encodeResourceToSummary(
+                        client.getResourceById(new IdType(url))));
+                formatDto(psdto, custodian);
+                return ResponseEntity.ok(psdto);
             }
         }
         return ResponseEntity.ok(PatientSummaryDto.emptyPatientSummary());
+    }
+
+    private void formatDto(PatientSummaryDto psdto, String custodian) {
+        if(custodian.contains("dummy")){
+            String dummyApp = "Aplicacion dummy";
+            OrganizationDto dummy = new OrganizationDto();
+            dummy.setName(dummyApp);
+            dummy.setId(dummyApp);
+            IdentifierDto dummyIdentifier = new IdentifierDto();
+            dummyIdentifier.setSystem(dummyApp);
+            dummyIdentifier.setValue(dummyApp);
+            dummy.setIdentifier(dummyIdentifier);
+            psdto.setOrganization(dummy);
+        }
+
     }
 
     private PatientSummaryDto mockSummary(String custodian){

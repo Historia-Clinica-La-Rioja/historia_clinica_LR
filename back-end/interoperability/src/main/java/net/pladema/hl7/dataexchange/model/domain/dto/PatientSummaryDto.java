@@ -2,12 +2,14 @@ package net.pladema.hl7.dataexchange.model.domain.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import net.pladema.hl7.dataexchange.model.domain.PatientSummaryVo;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class PatientSummaryDto {
 
