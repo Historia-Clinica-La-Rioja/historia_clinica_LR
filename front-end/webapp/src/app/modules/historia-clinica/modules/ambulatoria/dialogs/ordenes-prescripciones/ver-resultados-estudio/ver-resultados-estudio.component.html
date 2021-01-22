@@ -15,11 +15,16 @@
     </mat-list>
     <mat-divider></mat-divider>
 
-    <div style="margin-top: 25px;">
-        <div *ngFor="let file of diagnosticReportFiles">
-            <a mat-button color="primary" (click)="download(file)">
-                {{file.fileName}}
-            </a>
+    <div fxLayout="column" fxLayoutGap="15px" style="margin-top: 25px;">
+        <span class="mat-subheading-2 capitalize-first-letter">
+            {{observations}}
+        </span>
+        <div>
+            <div *ngFor="let file of diagnosticReportFiles">
+                <a mat-button color="primary" (click)="download(file)">
+                    {{file.fileName}}
+                </a>
+            </div>
         </div>
     </div>
 </div>

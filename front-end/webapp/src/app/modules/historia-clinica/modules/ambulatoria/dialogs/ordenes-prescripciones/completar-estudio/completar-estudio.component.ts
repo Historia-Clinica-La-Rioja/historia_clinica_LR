@@ -49,7 +49,7 @@ export class CompletarEstudioComponent implements OnInit {
 		}
 	}
 
-	completeStudy() {
+	completeStudy(): void {
 		const completeRequest: CompleteRequestDto = {
 			observations: this.completeStudyForm.controls.observations.value,
 		}
@@ -61,15 +61,19 @@ export class CompletarEstudioComponent implements OnInit {
 		});
 	}
 
-	onSelectFileFormData($event) {
+	onSelectFileFormData($event): void {
 		Array.from($event.target.files).forEach((file: File) => {
 			this.selectedFiles.push(file);
 			this.selectedFilesShow.push(file.name)
 		});
 	}
 
-	removeSelectedFile(index) {
+	removeSelectedFile(index): void {
 		this.selectedFiles.splice(index, 1);
 		this.selectedFilesShow.splice(index, 1);
+	}
+
+	disableButton(): boolean {
+		return !(this.selectedFiles.length || this.completeStudyForm.controls.observations.value);
 	}
 }

@@ -14,6 +14,7 @@ export class VerResultadosEstudioComponent implements OnInit {
 
 	diagnosticReport: DiagnosticReportInfoDto;
 	diagnosticReportFiles: FileDto[] = [];
+	observations: string;
 
   	constructor(
 	  	private prescripcionesService: PrescripcionesService,
@@ -29,6 +30,7 @@ export class VerResultadosEstudioComponent implements OnInit {
 
 		this.prescripcionesService.showStudyResults(this.data.patientId, this.diagnosticReport.id).subscribe((diagnosticReport: DiagnosticReportInfoWithFilesDto) => {
 			this.diagnosticReportFiles = diagnosticReport.files;
+			this.observations = diagnosticReport.observations;
 		});
 	}
 

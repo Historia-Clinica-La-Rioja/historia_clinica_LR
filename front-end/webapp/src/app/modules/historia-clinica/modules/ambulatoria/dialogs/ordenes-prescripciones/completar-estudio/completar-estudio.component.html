@@ -49,7 +49,7 @@
 
 
 <mat-dialog-actions fxLayout="row" fxLayoutAlign="end start">
-    <button mat-flat-button color="primary" (click)="completeStudy()" [disabled]="!selectedFiles.length">
+    <button mat-flat-button color="primary" (click)="completeStudy()" [disabled]="disableButton()">
         <span class="uppercase">{{'ambulatoria.paciente.ordenes_prescripciones.complete_study_dialog.COMPLETE_BUTTON' | translate}}</span>
     </button>
 </mat-dialog-actions>
