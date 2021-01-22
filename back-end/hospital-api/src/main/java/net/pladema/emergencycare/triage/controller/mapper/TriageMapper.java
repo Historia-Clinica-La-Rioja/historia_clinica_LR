@@ -28,7 +28,7 @@ public interface TriageMapper {
     @Named("toTriageBo")
     @Mapping(target = "bodyTemperatureId", source = "appearance.bodyTemperatureId")
     @Mapping(target = "cryingExcessive", source = "appearance.cryingExcessive")
-    @Mapping(target = "muscleHypertoniaId", source = "appearance.muscleHypertonia")
+    @Mapping(target = "muscleHypertoniaId", source = "appearance.muscleHypertoniaId")
     @Mapping(target = "respiratoryRetractionId", source = "breathing.respiratoryRetractionId")
     @Mapping(target = "stridor", source = "breathing.stridor")
     @Mapping(target = "perfusionId", source = "circulation.perfusionId")

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import net.pladema.clinichistory.documents.controller.dto.NewEffectiveClinicalObservationDto;
 
+import javax.annotation.Nullable;
 import java.io.Serializable;
 
 @Getter
@@ -14,12 +15,16 @@ import java.io.Serializable;
 @Builder
 public class BreathingDto  implements Serializable {
 
+    @Nullable
     private final Short respiratoryRetractionId;
 
+    @Nullable
     private final Boolean stridor;
 
+    @Nullable
     private final NewEffectiveClinicalObservationDto respiratoryRate;
 
+    @Nullable
     private final NewEffectiveClinicalObservationDto bloodOxygenSaturation;
 
 }

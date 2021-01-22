@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.annotation.Nullable;
 import java.io.Serializable;
 
 @Getter
@@ -12,11 +13,14 @@ import java.io.Serializable;
 @NoArgsConstructor(force = true)
 @Builder
 public class AppearanceDto  implements Serializable {
-    
+
+    @Nullable
     private final Short bodyTemperatureId;
-    
+
+    @Nullable
     private final Boolean cryingExcessive;
-    
-    private final Short muscleHypertonia;
+
+    @Nullable
+    private final Short muscleHypertoniaId;
     
 }

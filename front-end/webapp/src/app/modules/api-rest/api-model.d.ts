@@ -106,9 +106,9 @@ export interface ApiErrorMessageDto {
 }
 
 export interface AppearanceDto extends Serializable {
-    bodyTemperatureId: number;
-    cryingExcessive: boolean;
-    muscleHypertonia: number;
+    bodyTemperatureId?: number;
+    cryingExcessive?: boolean;
+    muscleHypertoniaId?: number;
 }
 
 export interface AppointmentBasicPatientDto {
@@ -248,9 +248,9 @@ export interface BedSummaryDto {
 
 export interface BreathingDto extends Serializable {
     bloodOxygenSaturation: NewEffectiveClinicalObservationDto;
-    respiratoryRate: NewEffectiveClinicalObservationDto;
-    respiratoryRetractionId: number;
-    stridor: boolean;
+    respiratoryRate?: NewEffectiveClinicalObservationDto;
+    respiratoryRetractionId?: number;
+    stridor?: boolean;
 }
 
 export interface ChangeStateMedicationRequestDto extends Serializable {
@@ -1285,7 +1285,7 @@ export interface TriageColorDto extends Serializable {
 
 export interface TriageDto extends Serializable {
     categoryId: number;
-    doctorsOfficeId: number;
+    doctorsOfficeId?: number;
 }
 
 export interface TriageListDto extends Serializable {
@@ -1296,9 +1296,9 @@ export interface TriageNoAdministrativeDto extends TriageDto {
 }
 
 export interface TriagePediatricDto extends TriageNoAdministrativeDto {
-    appearance: AppearanceDto;
-    breathing: BreathingDto;
-    circulation: CirculationDto;
+    appearance?: AppearanceDto;
+    breathing?: BreathingDto;
+    circulation?: CirculationDto;
 }
 
 export interface UserDto extends AbstractUserDto {

@@ -5,16 +5,21 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.annotation.Nullable;
+
 @Getter
 @NoArgsConstructor(force = true)
 public class TriagePediatricDto extends TriageNoAdministrativeDto {
 
+    @Nullable
     @JsonProperty("appearance")
     private final AppearanceDto appearance;
 
+    @Nullable
     @JsonProperty("breathing")
     private final BreathingDto breathing;
 
+    @Nullable
     @JsonProperty("circulation")
     private final CirculationDto circulation;
 
