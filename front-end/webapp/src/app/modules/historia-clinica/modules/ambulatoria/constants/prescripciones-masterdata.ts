@@ -29,7 +29,7 @@ export const STUDY_STATUS = {
 		description: "Completado"
 	},
 	ERROR: {
-		id: "723510000",
+		id: "89925002",
 		description: "Eliminado"
 	}
 };
