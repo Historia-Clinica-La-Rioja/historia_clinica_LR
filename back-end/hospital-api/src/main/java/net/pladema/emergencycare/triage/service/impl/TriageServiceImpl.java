@@ -84,7 +84,7 @@ public class TriageServiceImpl implements TriageService {
         triageBo.setId(triage.getId());
         saveVitalSigns(triageBo.getId(), triageBo.getVitalSignIds());
         LOG.debug("Output -> {}", triageBo);
-        return null;
+        return triageBo;
     }
 
     @Override

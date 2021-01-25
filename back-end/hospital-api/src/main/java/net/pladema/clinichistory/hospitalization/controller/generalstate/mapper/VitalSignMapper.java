@@ -8,9 +8,11 @@ import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.Vit
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.VitalSignsReportDto;
 import net.pladema.emergencycare.triage.controller.dto.TriagePediatricDto;
 import net.pladema.sgx.dates.configuration.LocalDateMapper;
+import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.mapstruct.NullValueMappingStrategy;
 
 @Mapper(uses = {LocalDateMapper.class})
 public interface VitalSignMapper {
@@ -22,6 +24,7 @@ public interface VitalSignMapper {
     NewVitalSignsObservationDto fromTriagePediatricDto(TriagePediatricDto triagePediatricDto);
 
     @Named("toVitalSignsObservationDto")
+    @BeanMapping(nullValueMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT)
     NewVitalSignsObservationDto toVitalSignsObservationDto(VitalSignBo vitalSignBo);
 
     @Named("fromVitalSignsObservationDto")

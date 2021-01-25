@@ -39,7 +39,7 @@ public class VitalSignExternalServiceImpl implements VitalSignExternalService{
         LOG.debug("Input parameter -> vitalSignsObservationDto {}", vitalSignsObservationDto);
         PatientInfoBo patientInfo = getPatientInfoBo(patientId);
         VitalSignBo vitalSignBo = vitalSignMapper.fromVitalSignsObservationDto(vitalSignsObservationDto);
-        vitalSignBo = clinicalObservationService.loadVitalSigns(patientInfo, null, Optional.of(vitalSignBo));
+        vitalSignBo = clinicalObservationService.loadVitalSigns(patientInfo, null, Optional.ofNullable(vitalSignBo));
         NewVitalSignsObservationDto result = vitalSignMapper.toVitalSignsObservationDto(vitalSignBo);
         LOG.debug("Output -> {}", result);
         return result;

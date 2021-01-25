@@ -247,7 +247,7 @@ export interface BedSummaryDto {
 }
 
 export interface BreathingDto extends Serializable {
-    bloodOxygenSaturation: NewEffectiveClinicalObservationDto;
+    bloodOxygenSaturation?: NewEffectiveClinicalObservationDto;
     respiratoryRate?: NewEffectiveClinicalObservationDto;
     respiratoryRetractionId?: number;
     stridor?: boolean;
@@ -1321,7 +1321,7 @@ export interface TriageListDto extends Serializable {
 }
 
 export interface TriageNoAdministrativeDto extends TriageDto {
-    notes: string;
+    notes?: string;
 }
 
 export interface TriagePediatricDto extends TriageNoAdministrativeDto {
