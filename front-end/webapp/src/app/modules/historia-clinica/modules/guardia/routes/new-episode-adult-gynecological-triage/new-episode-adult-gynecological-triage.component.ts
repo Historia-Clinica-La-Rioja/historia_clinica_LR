@@ -5,6 +5,7 @@ import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-e
 import { ContextService } from '@core/services/context.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { NewEpisodeService } from '../../services/new-episode.service';
+import { ROUTE_EMERGENCY_CARE } from '../../services/triage-definitions.service';
 
 @Component({
 	selector: 'app-new-episode-adult-gynecological-triage',
@@ -13,7 +14,7 @@ import { NewEpisodeService } from '../../services/new-episode.service';
 })
 export class NewEpisodeAdultGynecologicalTriageComponent implements OnInit {
 
-	private readonly routePrefix = 'institucion/' + this.contextService.institutionId + '/';
+	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
 
 	constructor(
 		private readonly newEpisodeService: NewEpisodeService,
@@ -43,7 +44,8 @@ export class NewEpisodeAdultGynecologicalTriageComponent implements OnInit {
 	}
 
 	cancelEvent(): void {
-
+		this.router.navigate([this.routePrefix + ROUTE_EMERGENCY_CARE + '/nuevo-episodio/administrativa'],
+			{ state: { commingBack: true } });
 	}
 
 }

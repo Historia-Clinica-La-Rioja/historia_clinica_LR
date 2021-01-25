@@ -5,8 +5,7 @@ import { EmergencyCareEpisodeService } from "@api-rest/services/emergency-care-e
 import { Router } from "@angular/router";
 import { SnackBarService } from "@presentation/services/snack-bar.service";
 import { ContextService } from "@core/services/context.service";
-
-const ROUTE_EMERGENCY_CARE = 'guardia/';
+import { ROUTE_EMERGENCY_CARE } from '../../services/triage-definitions.service';
 
 @Component({
 	selector: 'app-new-episode-admin-triage',
@@ -24,7 +23,7 @@ export class NewEpisodeAdminTriageComponent implements OnInit {
 		private router: Router,
 		private snackBarService: SnackBarService,
 		private contextService: ContextService) {
-		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
+		this.routePrefix = 'institucion/' + this.contextService.institutionId;
 	}
 
 	ngOnInit(): void { }

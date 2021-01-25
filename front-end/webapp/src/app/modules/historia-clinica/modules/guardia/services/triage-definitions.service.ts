@@ -11,6 +11,7 @@ import { PediatricTriageDialogComponent } from '../dialogs/pediatric-triage-dial
 import { AdultGynecologicalTriageDialogComponent } from '../dialogs/adult-gynecological-triage-dialog/adult-gynecological-triage-dialog.component';
 
 export const ROLES_TO_MEDIC_TRIAGE: ERole[] = [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO];
+export const ROUTE_EMERGENCY_CARE = '/guardia';
 
 @Injectable({
 	providedIn: 'root'
