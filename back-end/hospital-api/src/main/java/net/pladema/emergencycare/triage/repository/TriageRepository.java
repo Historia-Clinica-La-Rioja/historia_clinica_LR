@@ -16,6 +16,7 @@ public interface TriageRepository extends JpaRepository<Triage, Integer> {
             " FROM Triage t " +
             " JOIN EmergencyCareEpisode ece ON (t.emergencyCareEpisodeId = ece.id) " +
             " LEFT JOIN TriageDetails td ON (t.id = td.triageId) " +
-            " WHERE t.emergencyCareEpisodeId = :episodeId ")
+            " WHERE t.emergencyCareEpisodeId = :episodeId " +
+            " ORDER BY t.creationable.createdOn DESC ")
     List<TriageVo> getAllByEpisodeId(@Param("episodeId") Integer episodeId);
 }
