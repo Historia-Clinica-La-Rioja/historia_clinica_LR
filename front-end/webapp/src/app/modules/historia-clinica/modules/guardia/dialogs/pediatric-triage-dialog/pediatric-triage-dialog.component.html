@@ -1,7 +1,7 @@
 <div mat-dialog-title>
 	<div class="mat-h2" [translate]="'guardia.triage.TITLE'"></div>
 </div>
-<app-pediatric-triage
+<app-pediatric-triage mat-dialog-content class="mat-typography"
 	(onConfirm)="setTriage($event)"
 	(onCancel)="dialogRef.close()"
 	[confirmLabel]="'guardia.triage.CONFIRM'"
