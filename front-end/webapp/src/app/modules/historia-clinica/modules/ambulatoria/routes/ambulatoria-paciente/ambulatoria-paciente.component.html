@@ -20,7 +20,8 @@
 
 		<div class="flex-container">
 				<div fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center baseline" fxLayoutAlign.lt-md="baseline end">
-					<div fxFlex="60%"></div>
+					<div fxFlex="55%"></div>
+
 					<div fxLayout="column" fxFlex="15%">
 						<h5 class=uppercase [translate]="'ambulatoria.historia-clinica-externa.TITLE'" ></h5>
 					</div>
@@ -34,6 +35,9 @@
 								</mat-option>
 							</mat-select>
 						</mat-form-field>
+					</div>
+					<div class="spinner" *ngIf="spinner" fxFlex="5%" fxLayoutGap="7px" fxLayoutAlign="baseline end" >
+						<mat-spinner color="primary" diameter="20" ></mat-spinner>
 					</div>
 				</div>
 		</div>

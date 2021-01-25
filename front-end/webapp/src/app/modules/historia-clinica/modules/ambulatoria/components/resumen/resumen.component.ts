@@ -62,11 +62,6 @@ export class ResumenComponent implements OnInit, OnChanges {
 	ngOnChanges(changes:SimpleChanges) {
 		if(!changes.patientExternalSummary.isFirstChange()){
 			this.loadExternalTables();
-			this.route.paramMap.subscribe(
-				(params) => {
-					this.patientId = Number(params.get('idPaciente'));
-					this.initSummaries();
-				});
 		}
 	}
 
@@ -86,7 +81,9 @@ export class ResumenComponent implements OnInit, OnChanges {
 			this.allergiesTable = this.buildAllergiesTable(this.patientExternalSummary.allergies);
 			this.medicationsTable = this.buildMedicationsTable(this.patientExternalSummary.medications);
 		}
-		else this.snackBarService.showError('Este paciente no posee datos en la institución seleccionada');
+		else this.snackBarService.showError('Este paciente no posee datos en la institución seleccionada',{
+			duration: 200
+		});
 	}
 
 	externalSummaryIsLoaded(): boolean{
@@ -98,7 +95,7 @@ export class ResumenComponent implements OnInit, OnChanges {
 			columns: [
 				{
 					columnDef: 'problema',
-					text: (row) => row.id
+					text: (row) => row.sctidTerm
 				}],
 			data
 		};
@@ -109,7 +106,7 @@ export class ResumenComponent implements OnInit, OnChanges {
 			columns: [
 				{
 					columnDef: 'alergia',
-					text: (row) => row.id
+					text: (row) => row.sctidTerm
 				}],
 			data
 		};
@@ -121,7 +118,7 @@ export class ResumenComponent implements OnInit, OnChanges {
 				{
 					header: 'Medicación',
 					columnDef: 'Medicacion',
-					text: (row) => row.id
+					text: (row) => row.sctidTerm
 				},
 				{
 					header: 'Estado',

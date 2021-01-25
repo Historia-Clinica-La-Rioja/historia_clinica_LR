@@ -24,8 +24,6 @@ export class InteroperabilityBusService {
 		let queryParams: HttpParams = new HttpParams();
 		queryParams = queryParams.append('subject', subject);
 		queryParams = queryParams.append('custodian', custodian);
-		//queryParams = queryParams.append('type', type);
-
 		let url = `${environment.apiBase}/masterfile-federacion-service/Patient`;
 		return this.http.get<PatientSummaryDto>(url, { params: queryParams });
 	}

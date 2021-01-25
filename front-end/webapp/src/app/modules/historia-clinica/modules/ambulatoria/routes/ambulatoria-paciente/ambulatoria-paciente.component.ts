@@ -11,10 +11,14 @@ import {DockPopupRef} from '@presentation/services/dock-popup-ref';
 import {AmbulatoriaSummaryFacadeService} from '../../services/ambulatoria-summary-facade.service';
 import {HistoricalProblemsFacadeService} from '../../services/historical-problems-facade.service';
 import {FeatureFlagService} from '@core/services/feature-flag.service';
-import {AppFeature, BasicPatientDto, OrganizationDto, PatientSummaryDto, PersonPhotoDto} from "@api-rest/api-model";
+import {BasicPatientDto, OrganizationDto, PatientSummaryDto, PersonPhotoDto} from "@api-rest/api-model";
 import {InteroperabilityBusService} from "@api-rest/services/interoperability-bus.service";
 import {SnackBarService} from "@presentation/services/snack-bar.service";
 import { MatTabChangeEvent } from '@angular/material/tabs';
+import {
+	AppFeature,
+} from '@api-rest/api-model';
+
 
 const RESUMEN_INDEX = 0;
 
@@ -37,8 +41,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	public patientExternalSummary: PatientSummaryDto;
 	public externalInstitutionPlaceholder: string = 'Ninguna';
 	public loaded = false;
-
-
+	public spinner = false;
 
 	constructor(
 		private readonly route: ActivatedRoute,
@@ -71,20 +74,21 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	}
 
 	loadExternalInstitutions(){
-		this.interoperabilityBusService.getPatientLocation("1000030").subscribe(a =>{
-			if(a.length === 0) {
+		this.interoperabilityBusService.getPatientLocation(this.patientId+"").subscribe(location =>{
+			if(location.length === 0) {
 				this.snackBarService.showError('Este paciente no está federado en ninguna otra institución');
 				this.loaded = false;
-			} else this.externalInstitutions = a;
+			} else this.externalInstitutions = location;
 		});
 	}
 
 	loadExternalSummary(organization: OrganizationDto){
-		console.log(organization, 'organization');
-		this.interoperabilityBusService.getPatientInfo("1000030",organization.custodian)
-			.subscribe(b => {
-				this.patientExternalSummary = b;
-		});
+		this.spinner = true;
+		this.interoperabilityBusService.getPatientInfo(this.patientId+"",organization.custodian)
+			.subscribe(summary => {
+				this.patientExternalSummary = summary;
+				this.spinner = false;
+			});
 	}
 
 	clicked(){
