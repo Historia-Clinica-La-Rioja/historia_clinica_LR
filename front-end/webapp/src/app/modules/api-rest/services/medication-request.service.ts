@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { MedicationInfoDto, PrescriptionDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { of } from 'rxjs';
+import {saveAs} from 'file-saver';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +28,7 @@ export class MedicationRequestService {
 			return of();
 		}
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/medication-requests/suspend`;
-		return this.http.put<void>(url, 
+		return this.http.put<void>(url,
 			{
 				medicationsIds: medicationsIds,
 				dayQuantity: dayQuantity,
@@ -65,8 +66,11 @@ export class MedicationRequestService {
 		return this.http.get<MedicationInfoDto[]>(url, {params : queryParams});
 	}
 
-	download(patientId: number, medicationRequestId: number): Observable<string> {
+	download(patientId: number, medicationRequestId: number): Observable<any>{
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/medication-requests/${medicationRequestId}/download`;
-		return this.http.get<string>(url);
+		return this.http.get(
+			url,
+			{ responseType: 'blob' }
+		);
 	}
 }

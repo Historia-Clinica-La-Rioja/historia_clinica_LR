@@ -48,7 +48,7 @@ export class PrescripcionesService {
 		}
 	}
 
-	downloadRecipe(patientId: number, medicationRequestId: number): Observable<string> {
+	downloadRecipe(patientId: number, medicationRequestId: number): Observable<any> {
 		return this.medicationRequestService.download(patientId, medicationRequestId);
 	}
 

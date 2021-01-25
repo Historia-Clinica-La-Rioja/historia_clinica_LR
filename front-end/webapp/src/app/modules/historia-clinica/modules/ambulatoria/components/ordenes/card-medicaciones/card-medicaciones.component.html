@@ -86,7 +86,7 @@
                                     <mat-icon>more_vert</mat-icon>
                                 </button>
                                 <mat-menu #menu="matMenu">
-                                    <button mat-menu-item *ngIf="medicationInfo.hasRecipe && medicationInfo.medicationRequestId" (click)="downloadRecipe(medicationInfo.id)">
+                                    <button mat-menu-item *ngIf="medicationInfo.hasRecipe && medicationInfo.medicationRequestId" (click)="downloadRecipe(medicationInfo.medicationRequestId)">
                                         <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.DOWNLOAD'"></span>
                                     </button>
                                     <button mat-menu-item (click)="openDialogNewMedication(false, medicationInfo)">

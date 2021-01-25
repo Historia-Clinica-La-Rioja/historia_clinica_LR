@@ -178,22 +178,23 @@ public class MedicationRequestController {
     @GetMapping(value = "/{medicationRequestId}/download")
     public ResponseEntity<InputStreamResource> download(@PathVariable(name = "institutionId") Integer institutionId,
                                                         @PathVariable(name = "patientId") Integer patientId,
-                                                        @PathVariable(name = "medicationRequestId") Integer medicationRequestId,
-                                                        @RequestParam(name = "template") String template) throws PDFDocumentException {
+                                                        @PathVariable(name = "medicationRequestId") Integer medicationRequestId) throws PDFDocumentException {
         LOG.debug("medicationRequestList -> institutionId {}, patientId {}, medicationRequestId {}", institutionId, patientId, medicationRequestId);
-        String name = "Receta";
         var medicationRequestBo = getMedicationRequestInfoService.execute(medicationRequestId);
         var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
         var professionalDto = healthcareProfessionalExternalService.findProfessionalById(medicationRequestBo.getDoctorId());
         var patientCoverageDto = patientExternalMedicalCoverageService.getCoverage(medicationRequestBo.getMedicalCoverageId());
         var context = createContext(medicationRequestBo, patientDto, professionalDto, patientCoverageDto);
 
+        String template = "recipe_order_table";
+
         ByteArrayOutputStream os = pdfService.writer(template, context);
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(os.toByteArray());
         InputStreamResource resource = new InputStreamResource(byteArrayInputStream);
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename="+name)
-                .contentType(MediaType.APPLICATION_PDF).contentLength(os.size()).body(resource);
+                .contentType(MediaType.APPLICATION_PDF)
+                .contentLength(os.size())
+                .body(resource);
     }
 
     private Map<String, Object> createContext(MedicationRequestBo medicationRequestBo,

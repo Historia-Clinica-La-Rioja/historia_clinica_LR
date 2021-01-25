@@ -12,6 +12,7 @@ import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
 import { PrescriptionItemData } from '../item-prescripciones/item-prescripciones.component';
 import { MEDICATION_STATUS } from './../../../constants/prescripciones-masterdata';
+import {saveAs} from 'file-saver';
 
 @Component({
   selector: 'app-card-medicaciones',
@@ -163,9 +164,11 @@ export class CardMedicacionesComponent implements OnInit {
 		}
 	}
 
-	downloadRecipe(medicationId: number) {
-		this.prescripcionesService.downloadRecipe(this.patientId, medicationId).subscribe(() => {
-			this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.DOWNLOAD_RECIPE_SUCCESS')
+	downloadRecipe(medicationRequestId: number) {
+		this.prescripcionesService.downloadRecipe(this.patientId, medicationRequestId)
+			.subscribe((blob) => {
+				saveAs(blob, 'Receta');
+				this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.DOWNLOAD_RECIPE_SUCCESS');
 		});
 	}
 
