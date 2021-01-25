@@ -14,6 +14,7 @@
             width: 700px;
             table-layout:fixed;
             margin-bottom: 40px;
+            margin-top: 30px;
         }
         table, th, td {
             border: 1px solid black;
@@ -35,10 +36,10 @@
         td {
             border-bottom: 1px;
             background-color: white;
-                word-wrap: break-word;
+            word-wrap: break-word;
             padding: 5px;
         }
-        centered-cell {
+        .centered-cell {
             text-align: center;
         }
         strong {
@@ -48,16 +49,13 @@
             font-size:15px;
         }
         .footer-left{
-            display: inline-block;
+            display: block;
             text-align: left;
-            margin-right: 30px;
         }
         .footer-right{
-            position: relative;
-            top: 30px;
-            display: inline-block;
+            margin-top: 70px;
+            display: block;
             text-align: center;
-            width: 200px;
         }
         header{
             margin-bottom: 15px;
@@ -65,7 +63,7 @@
         hr {
             background:#222222;
             height:1px;
-            width: 60%;
+            width: 20%;
             position: relative;
             display: block;
         }
@@ -84,7 +82,7 @@
         </div>
         <div th:if="${order}">
             <div class="logo"></div>
-            <div class="date">
+            <div class="date-header">
                 <strong>Fecha de emisión: </strong>
                 <label th:text="${request.requestDate}"></label>
                 <strong> N° de Orden: </strong>
@@ -93,9 +91,17 @@
         </div>
         <br/>
         <div class="fixed-width">
-            <strong>DNI: </strong><label th:text="${patient.person.identificationNumber}"></label> <strong> Nombre y apellido: </strong><label th:text="${patient.person.completeName()}"></label><br/>
+            <strong>DNI: </strong><label th:text="${patient.person.identificationNumber}"></label>
+            <strong> Nombre y apellido: </strong>
+            <label th:text="${patient.person.completeName()}"></label>
+            <br/>
             <div th:if="${patientCoverage != null}">
-                <strong>Cobertura prestacional: </strong><label th:text="${patientCoverage.medicalCoverage.name}"></label><strong> N° afiliado: </strong><label th:text="${patientCoverage.affiliateNumber}"></label><br/><br/>
+                <strong>Cobertura prestacional: </strong>
+                <label th:text="${patientCoverage.medicalCoverage.name}"></label>
+                <br/>
+                <strong> N° afiliado: </strong>
+                <label th:text="${patientCoverage.affiliateNumber}"></label>
+                <br/>
             </div>
         </div>
     </header>
@@ -114,7 +120,8 @@
                     <th scope="col">N° </th>
                     <th scope="col">CIE10 </th>
                     <th scope="col">Diagnóstico </th>
-                    <th scope="col" >Medicación </th>
+                    <th scope="col" th:if="${recipe}" > Medicación </th>
+                    <th scope="col" th:if="${order}" > Estudio </th>
                     <th scope="col" >Observaciones </th>
                 </tr>
                 </thead>
@@ -128,12 +135,12 @@
                     </tr>
                 </tbody>
                 <tbody th:if="${order}">
-                    <tr th:each="order,iter: ${request.order}">
+                    <tr th:each="order,iter: ${request.diagnosticReports}">
                         <td class="centered-cell" th:text="${(iter.index + 1)}"></td>
                         <td th:text="${#strings.defaultString(order.healthCondition.cie10codes, '-')}"></td>
                         <td th:text="${order.healthCondition.snomed.pt}"></td>
                         <td th:text="${order.snomed.pt}"></td>
-                        <td th:text="${#strings.defaultString(order.note, '-')}"></td>
+                        <td th:text="${#strings.defaultString(order.observations, '-')}"></td>
                     </tr>
                 </tbody>
             </table>

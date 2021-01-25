@@ -12,12 +12,18 @@ import net.pladema.clinichistory.requests.servicerequests.service.domain.Diagnos
 import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.StoredFileBo;
 import net.pladema.patient.controller.dto.BasicPatientDto;
+import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
+import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
 import net.pladema.patient.controller.service.PatientExternalService;
+import net.pladema.sgx.pdf.PDFDocumentException;
+import net.pladema.sgx.pdf.PdfService;
 import net.pladema.sgx.security.utils.UserInfo;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +32,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -55,6 +64,9 @@ public class ServiceRequestController {
     private final DiagnosticReportInfoService diagnosticReportInfoService;
     private final FileMapper fileMapper;
     private final ServeDiagnosticReportFileService serveDiagnosticReportFileService;
+    private final PatientExternalMedicalCoverageService patientExternalMedicalCoverageService;
+    private final PdfService pdfService;
+    private final GetServiceRequestInfoService getServiceRequestInfoService;
 
     public ServiceRequestController(HealthcareProfessionalExternalService healthcareProfessionalExternalService,
                                     CreateServiceRequestService createServiceRequestService,
@@ -66,7 +78,7 @@ public class ServiceRequestController {
                                     DeleteDiagnosticReportService deleteDiagnosticReportService, CompleteDiagnosticReportService completeDiagnosticReportService,
                                     CompleteDiagnosticReportMapper completeDiagnosticReportMapper,
                                     UploadDiagnosticReportCompletedFileService uploadDiagnosticReportCompletedFileService,
-                                    UpdateDiagnosticReportFileService updateDiagnosticReportFileService, DiagnosticReportInfoService diagnosticReportInfoService, FileMapper fileMapper, ServeDiagnosticReportFileService serveDiagnosticReportFileService) {
+                                    UpdateDiagnosticReportFileService updateDiagnosticReportFileService, DiagnosticReportInfoService diagnosticReportInfoService, FileMapper fileMapper, ServeDiagnosticReportFileService serveDiagnosticReportFileService, PatientExternalMedicalCoverageService patientExternalMedicalCoverageService, PdfService pdfService, GetServiceRequestInfoService getServiceRequestInfoService) {
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.createServiceRequestService = createServiceRequestService;
         this.createServiceRequestMapper = createServiceRequestMapper;
@@ -82,6 +94,9 @@ public class ServiceRequestController {
         this.diagnosticReportInfoService = diagnosticReportInfoService;
         this.fileMapper = fileMapper;
         this.serveDiagnosticReportFileService = serveDiagnosticReportFileService;
+        this.patientExternalMedicalCoverageService = patientExternalMedicalCoverageService;
+        this.pdfService = pdfService;
+        this.getServiceRequestInfoService = getServiceRequestInfoService;
     }
 
     @PostMapping
@@ -182,8 +197,8 @@ public class ServiceRequestController {
     @GetMapping("/{diagnosticReportId}")
     @ResponseStatus(code = HttpStatus.OK)
     public DiagnosticReportInfoWithFilesDto get(@PathVariable(name = "institutionId") Integer institutionId,
-                                       @PathVariable(name = "patientId") Integer patientId,
-                                       @PathVariable(name = "diagnosticReportId") Integer diagnosticReportId
+                                                @PathVariable(name = "patientId") Integer patientId,
+                                                @PathVariable(name = "diagnosticReportId") Integer diagnosticReportId
     ) {
         LOG.debug(COMMON_INPUT, institutionId, patientId, diagnosticReportId);
 
@@ -226,6 +241,46 @@ public class ServiceRequestController {
 
         LOG.trace(OUTPUT, result);
         return result;
+    }
+
+
+    @GetMapping(value = "/{serviceRequestId}/download-pdf")
+    public ResponseEntity<InputStreamResource> downloadPdf(@PathVariable(name = "institutionId") Integer institutionId,
+                                                           @PathVariable(name = "patientId") Integer patientId,
+                                                           @PathVariable(name = "serviceRequestId") Integer serviceRequestId) throws PDFDocumentException {
+        LOG.debug("medicationRequestList -> institutionId {}, patientId {}, serviceRequestId {}", institutionId, patientId, serviceRequestId);
+        var medicationRequestBo = getServiceRequestInfoService.run(serviceRequestId);
+        var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
+        var professionalDto = healthcareProfessionalExternalService.findProfessionalById(medicationRequestBo.getDoctorId());
+        var patientCoverageDto = patientExternalMedicalCoverageService.getCoverage(medicationRequestBo.getMedicalCoverageId());
+        var context = createContext(medicationRequestBo, patientDto, professionalDto, patientCoverageDto);
+
+        String template = "recipe_order_table";
+
+        ByteArrayOutputStream os = pdfService.writer(template, context);
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(os.toByteArray());
+        InputStreamResource resource = new InputStreamResource(byteArrayInputStream);
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .contentLength(os.size())
+                .body(resource);
+    }
+
+    private Map<String, Object> createContext(ServiceRequestBo serviceRequestBo,
+                                              BasicPatientDto patientDto,
+                                              ProfessionalDto professionalDto,
+                                              PatientMedicalCoverageDto patientCoverageDto) {
+        LOG.debug("Input parameters -> serviceRequestBo {}, patientDto {}, professionalDto {}, patientCoverageDto {}",
+                serviceRequestBo, patientDto, professionalDto, patientCoverageDto);
+        Map<String, Object> ctx = new HashMap<>();
+        ctx.put("recipe", false);
+        ctx.put("order", true);
+        ctx.put("request", serviceRequestBo);
+        ctx.put("patient", patientDto);
+        ctx.put("professional", professionalDto);
+        ctx.put("patientCoverage", patientCoverageDto);
+        LOG.debug("Output -> {}", ctx);
+        return ctx;
     }
 
 }

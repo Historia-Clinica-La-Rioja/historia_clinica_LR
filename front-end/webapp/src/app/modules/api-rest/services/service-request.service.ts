@@ -66,4 +66,12 @@ export class ServiceRequestService {
 		).subscribe(blob => saveAs(blob, fileName));
 	}
 
+	downloadPdf(patientId: number, serviceRequestId: number): Observable<any> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${serviceRequestId}/download-pdf`;
+		return this.http.get(
+			url,
+			{ responseType: 'blob' }
+		);
+	}
+
 }

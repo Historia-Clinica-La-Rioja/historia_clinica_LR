@@ -9,6 +9,7 @@ import net.pladema.clinichistory.documents.service.Document;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -17,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ServiceRequestBo implements Document {
 
+    private Integer serviceRequestId;
     private PatientInfoBo patientInfo;
     private String categoryId;
     private Integer medicalCoverageId;
@@ -24,6 +26,7 @@ public class ServiceRequestBo implements Document {
     private Integer doctorId;
     private Long noteId;
     private List<DiagnosticReportBo> diagnosticReports;
+    private LocalDate requestDate = LocalDate.now();
 
     @Override
     public short getDocumentType() {
