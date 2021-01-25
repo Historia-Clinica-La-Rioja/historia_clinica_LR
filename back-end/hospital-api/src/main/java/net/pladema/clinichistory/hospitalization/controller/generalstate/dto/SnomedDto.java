@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.hospitalization.controller.generalstate.dto;
 
-import com.sun.istack.Nullable;
+import javax.annotation.Nullable;
 import lombok.*;
 import net.pladema.clinichistory.documents.service.ips.domain.SnomedBo;
 import org.hibernate.validator.constraints.Length;
@@ -16,6 +16,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class SnomedDto implements Serializable {
 
+    @Nullable
     private Integer id;
 
     @NotNull(message = "{value.mandatory}")
