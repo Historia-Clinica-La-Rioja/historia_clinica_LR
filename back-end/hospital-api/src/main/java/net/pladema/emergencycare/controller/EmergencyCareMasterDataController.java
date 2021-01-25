@@ -22,24 +22,20 @@ public class EmergencyCareMasterDataController {
 
     private final EmergencyCareMasterDataService emergencyCareMasterDataService;
 
-    private final EnumWriter enumWriter;
-
-    public EmergencyCareMasterDataController(EmergencyCareMasterDataService emergencyCareMasterDataService,
-                                             EnumWriter enumWriter){
+    public EmergencyCareMasterDataController(EmergencyCareMasterDataService emergencyCareMasterDataService){
         super();
         this.emergencyCareMasterDataService=emergencyCareMasterDataService;
-        this.enumWriter=enumWriter;
     }
 
     @GetMapping(value = "/type")
     public ResponseEntity<Collection<MasterDataDto>> getType() {
         LOG.debug("{}", "All types");
-        return ResponseEntity.ok().body(enumWriter.writeList(emergencyCareMasterDataService.findAllType()));
+        return ResponseEntity.ok().body(EnumWriter.writeList(emergencyCareMasterDataService.findAllType()));
     }
 
     @GetMapping(value = "/entranceType")
     public ResponseEntity<Collection<MasterDataDto>> getEntranceType() {
         LOG.debug("{}", "All entrance types");
-        return ResponseEntity.ok().body(enumWriter.writeList(emergencyCareMasterDataService.findAllEntrance()));
+        return ResponseEntity.ok().body(EnumWriter.writeList(emergencyCareMasterDataService.findAllEntrance()));
     }
 }

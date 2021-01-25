@@ -1,32 +1,35 @@
 package net.pladema.emergencycare.controller.dto;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
+import net.pladema.sgx.dates.controller.dto.DateTimeDto;
+import net.pladema.sgx.masterdata.dto.MasterDataDto;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
 @Setter
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class ResponseEmergencyCareDto extends EmergencyCareDto {
 
     Integer id;
 
-    Short emergencyCareStateId;
+    MasterDataDto emergencyCareState;
 
-    LocalDateTime createdOn;
+    DateTimeDto createdOn;
 
-    @Builder(builderMethodName = "responseAdministrativeBuilder")
-    public ResponseEmergencyCareDto(Integer id, List<SnomedDto> reasons, Short typeId,
-                                    Short entranceTypeId, PoliceInterventionDto policeIntervention, String ambulanceCompanyId, EmergencyCarePatientDto patient,
-                                    Short emergencyCareStateId, LocalDateTime createdOn){
-        super(reasons, typeId, entranceTypeId, policeIntervention, ambulanceCompanyId, patient);
+    public ResponseEmergencyCareDto(Integer id, List<SnomedDto> reasons, MasterDataDto emergencyCareType,
+                                    MasterDataDto entranceType, PoliceInterventionDto policeIntervention, String ambulanceCompanyId, EmergencyCarePatientDto patient,
+                                    MasterDataDto emergencyCareState, DateTimeDto createdOn){
+        super(reasons, emergencyCareType, entranceType, policeIntervention, ambulanceCompanyId, patient);
         this.id = id;
-        this.emergencyCareStateId = emergencyCareStateId;
+        this.emergencyCareState = emergencyCareState;
         this.createdOn = createdOn;
     }
 

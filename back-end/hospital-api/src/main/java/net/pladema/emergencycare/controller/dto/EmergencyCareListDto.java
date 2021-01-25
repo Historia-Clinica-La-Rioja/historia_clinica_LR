@@ -1,35 +1,32 @@
 package net.pladema.emergencycare.controller.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
-import lombok.Value;
-import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
-import net.pladema.emergencycare.service.domain.enums.EEmergencyCareType;
+import net.pladema.emergencycare.triage.controller.dto.TriageColorDto;
+import net.pladema.medicalconsultation.doctorsoffice.controller.dto.DoctorsOfficeDto;
+import net.pladema.sgx.masterdata.dto.MasterDataDto;
 
 import java.io.Serializable;
 
-@Value
-@Builder
+@Getter
+@Setter
 @ToString
 @AllArgsConstructor
+@NoArgsConstructor
 public class EmergencyCareListDto implements Serializable {
 
-	private Integer id;
+	Integer id;
 
-	private String firstname;
+	PatientECEDto patient;
 
-	private String lastname;
+	EmergencyCareEpisodeListTriageDto triage;
 
-	private Integer patientId;
+	MasterDataDto type;
 
-	private Short triageCategoryId;
+	MasterDataDto state;
 
-	private EEmergencyCareType emergencyCareType;
-
-	private EEmergencyCareState emergencyCareState;
-
-	private Integer doctorsOffice;
-
-	private String doctorsOfficeDescription;
+	DoctorsOfficeDto doctorsOffice;
 }

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
+import net.pladema.sgx.masterdata.dto.MasterDataDto;
 
 import java.util.List;
 
@@ -14,8 +15,8 @@ import java.util.List;
 public class NewEmergencyCareDto extends EmergencyCareDto {
 
     @Builder(builderMethodName = "newAdministrativeBuilder")
-    public NewEmergencyCareDto(List<SnomedDto> reasons, Short typeId,
-                               Short entranceTypeId, PoliceInterventionDto policeIntervention, String ambulanceCompanyId, EmergencyCarePatientDto patient){
-        super(reasons, typeId, entranceTypeId, policeIntervention, ambulanceCompanyId, patient);
+    public NewEmergencyCareDto(List<SnomedDto> reasons, MasterDataDto emergencyCareType,
+                               MasterDataDto entranceType, PoliceInterventionDto policeIntervention, String ambulanceCompanyId, EmergencyCarePatientDto patient){
+        super(reasons, emergencyCareType, entranceType, policeIntervention, ambulanceCompanyId, patient);
     }
 }

@@ -374,13 +374,11 @@ export const MOCKS_GUARDIA = [
 							description: 'motivo de consulta'
 						}
 					],
-					entrance: {
-						type: {
-							id: 1,
-							description: 'Caminando'
-						},
-						ambulanceCompanyId: '121212'
+					entranceType: {
+						id: 1,
+						description: 'Caminando'
 					},
+					ambulanceCompanyId: '121212',
 					policeIntervention: {
 						id: 1,
 						dateCall: { day: 14, month: 1, year: 2021}, // DateDto

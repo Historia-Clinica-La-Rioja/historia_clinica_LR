@@ -3,21 +3,17 @@ package net.pladema.sgx.masterdata.service.domain;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.pladema.sgx.masterdata.dto.MasterDataDto;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
 public class EnumWriter {
 
-    private final ObjectMapper jackson;
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    public EnumWriter(ObjectMapper jackson){
-        this.jackson=jackson;
-    }
+    public EnumWriter(){}
 
-    public List<MasterDataDto> writeList(List<? extends Enum> list){
+    public static List<MasterDataDto> writeList(List<? extends Enum> list){
         List<MasterDataDto> result = new ArrayList<>();
         list.forEach(e -> {
                 result.add(write(e));
@@ -25,9 +21,9 @@ public class EnumWriter {
         return result;
     }
 
-    public <E extends Enum> MasterDataDto write(E item){
+    public static <E extends Enum> MasterDataDto write(E item){
         try {
-            return jackson.readValue(jackson.writeValueAsString(item), MasterDataDto.class);
+            return OBJECT_MAPPER.readValue(OBJECT_MAPPER.writeValueAsString(item), MasterDataDto.class);
         } catch (JsonProcessingException jsonProcessingException) {
             jsonProcessingException.printStackTrace();
         }

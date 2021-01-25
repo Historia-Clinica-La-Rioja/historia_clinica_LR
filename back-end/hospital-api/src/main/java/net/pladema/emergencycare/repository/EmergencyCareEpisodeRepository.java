@@ -17,22 +17,24 @@ import java.util.Optional;
 public interface EmergencyCareEpisodeRepository extends JpaRepository<EmergencyCareEpisode, Integer> {
 
 	@Transactional(readOnly = true)
-	@Query(value = " SELECT NEW net.pladema.emergencycare.repository.domain.EmergencyCareVo(ece, pe.firstName, pe.lastName, dso.description) "+
+	@Query(value = " SELECT NEW net.pladema.emergencycare.repository.domain.EmergencyCareVo(ece, pe.firstName, pe.lastName, dso.description, tc) "+
 			" FROM EmergencyCareEpisode ece "+
 			" LEFT JOIN Patient pa ON (pa.id = ece.patientId) "+
 			" LEFT JOIN Person pe ON (pe.id = pa.personId) "+
 			" LEFT JOIN DoctorsOffice dso ON (dso.id = ece.doctorsOfficeId) "+
+			" JOIN TriageCategory tc ON (tc.id = ece.triageCategoryId) "+
 			" WHERE ece.emergencyCareStateId =  "+EmergencyCareState.EN_ATENCION+" OR ece.emergencyCareStateId = "+EmergencyCareState.EN_ESPERA+
 			" AND ece.institutionId = :institutionId ")
 	List<EmergencyCareVo> getAll(@Param("institutionId") Integer institutionId);
 
 	@Transactional(readOnly = true)
-	@Query(value = " SELECT NEW net.pladema.emergencycare.repository.domain.EmergencyCareVo(ece, pe.firstName, pe.lastName, dso.description, pi) "+
+	@Query(value = " SELECT NEW net.pladema.emergencycare.repository.domain.EmergencyCareVo(ece, pe.firstName, pe.lastName, dso.description, tc, pi) "+
 			" FROM EmergencyCareEpisode ece "+
 			" LEFT JOIN Patient pa ON (pa.id = ece.patientId) "+
 			" LEFT JOIN Person pe ON (pe.id = pa.personId) "+
 			" LEFT JOIN DoctorsOffice dso ON (dso.id = ece.doctorsOfficeId) "+
 			" LEFT JOIN PoliceIntervention pi ON (pi.id = ece.policeInterventionId) "+
+			" JOIN TriageCategory tc ON (tc.id = ece.triageCategoryId) "+
 			" WHERE ece.id = :episodeId "+
 			" AND ece.institutionId = :institutionId ")
 	Optional<EmergencyCareVo> getEpisode(@Param("episodeId") Integer episodeId, @Param("institutionId") Integer institutionId);

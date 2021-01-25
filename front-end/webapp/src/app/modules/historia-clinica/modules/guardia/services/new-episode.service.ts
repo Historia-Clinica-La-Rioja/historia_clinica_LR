@@ -32,8 +32,14 @@ export class NewEpisodeService {
 				patientMedicalCoverageId: this.administrativeAdmission.patientMedicalCoverageId,
 			},
 			reasons: this.administrativeAdmission.reasons.map(s => s.snomed),
-			typeId: this.administrativeAdmission.emergencyCareTypeId,
-			entranceTypeId: this.administrativeAdmission.emergencyCareEntranceTypeId,
+			emergencyCareType: {
+				id: this.administrativeAdmission.emergencyCareTypeId,
+				description: null
+			},
+			entranceType: {
+				id: this.administrativeAdmission.emergencyCareEntranceTypeId,
+				description: null
+			},
 			ambulanceCompanyId: this.administrativeAdmission.ambulanceCompanyId,
 			policeIntervention,
 		};

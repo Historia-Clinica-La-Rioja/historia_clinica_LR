@@ -21,6 +21,11 @@ public class DoctorsOfficeBo {
 
     private LocalTime closingTime;
 
+    public DoctorsOfficeBo(Integer id, String description) {
+        this.id = id;
+        this.description = description;
+    }
+
     public DoctorsOfficeBo(DoctorsOfficeVo doctorsOfficeVo) {
         this.id = doctorsOfficeVo.getId();
         this.description = doctorsOfficeVo.getDescription();

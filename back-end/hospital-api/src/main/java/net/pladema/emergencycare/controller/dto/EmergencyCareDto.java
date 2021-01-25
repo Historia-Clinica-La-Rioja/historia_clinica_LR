@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
+import net.pladema.sgx.masterdata.dto.MasterDataDto;
 
 import java.io.Serializable;
 import java.util.List;
@@ -17,15 +18,15 @@ import java.util.List;
 @NoArgsConstructor(force = true)
 public abstract class EmergencyCareDto implements Serializable {
 
-    private final List<SnomedDto> reasons;
+    private List<SnomedDto> reasons;
 
-    private final Short typeId;
+    private MasterDataDto emergencyCareType;
 
-    private final Short entranceTypeId;
+    private MasterDataDto entranceType;
 
-    private final PoliceInterventionDto policeIntervention;
+    private PoliceInterventionDto policeIntervention;
 
-    private final String ambulanceCompanyId;
+    private String ambulanceCompanyId;
 
-    private final EmergencyCarePatientDto patient;
+    private EmergencyCarePatientDto patient;
 }

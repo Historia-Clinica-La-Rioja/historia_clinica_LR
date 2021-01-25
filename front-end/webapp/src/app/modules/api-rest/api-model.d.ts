@@ -489,39 +489,32 @@ export interface ECPediatricDto extends Serializable {
     triage: TriagePediatricDto;
 }
 
-export interface EEmergencyCareState {
-    description: string;
-    id: number;
-}
-
-export interface EEmergencyCareType {
-    description: string;
-    id: number;
-}
-
 export interface EffectiveClinicalObservationDto extends ClinicalObservationDto {
     effectiveTime: string;
 }
 
 export interface EmergencyCareDto extends Serializable {
     ambulanceCompanyId: string;
-    entranceTypeId: number;
+    emergencyCareType: MasterDataDto;
+    entranceType: MasterDataDto;
     patient: EmergencyCarePatientDto;
     policeIntervention: PoliceInterventionDto;
     reasons: SnomedDto[];
-    typeId: number;
+}
+
+export interface EmergencyCareEpisodeListTriageDto {
+    color: string;
+    description: string;
+    id: number;
 }
 
 export interface EmergencyCareListDto extends Serializable {
-    doctorsOffice: number;
-    doctorsOfficeDescription: string;
-    emergencyCareState: EEmergencyCareState;
-    emergencyCareType: EEmergencyCareType;
-    firstname: string;
+    doctorsOffice: DoctorsOfficeDto;
     id: number;
-    lastname: string;
-    patientId: number;
-    triageCategoryId: number;
+    patient: PatientECEDto;
+    state: MasterDataDto;
+    triage: EmergencyCareEpisodeListTriageDto;
+    type: MasterDataDto;
 }
 
 export interface EmergencyCarePatientDto extends Serializable {
@@ -1035,6 +1028,12 @@ export interface PatientDto {
     lastName: string;
 }
 
+export interface PatientECEDto {
+    id: number;
+    person: PersonECEDto;
+    typeId: number;
+}
+
 export interface PatientMedicalCoverageDto {
     active: boolean;
     affiliateNumber?: string;
@@ -1066,6 +1065,12 @@ export interface PersonBasicDataResponseDto extends Serializable {
     birthDate: string;
     firstName: string;
     lastName: string;
+    photo: string;
+}
+
+export interface PersonECEDto {
+    firstname: string;
+    lastname: string;
     photo: string;
 }
 
@@ -1173,8 +1178,8 @@ export interface ResponseAnamnesisDto extends AnamnesisDto {
 }
 
 export interface ResponseEmergencyCareDto extends EmergencyCareDto {
-    createdOn: Date;
-    emergencyCareStateId: number;
+    createdOn: DateTimeDto;
+    emergencyCareState: MasterDataDto;
     id: number;
 }
 

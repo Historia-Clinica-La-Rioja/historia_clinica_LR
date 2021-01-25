@@ -31,15 +31,11 @@ public class TriageMasterDataController {
 
     private final TriageMasterDataMapper triageMasterDataMapper;
 
-    private final EnumWriter jackson;
-
     public TriageMasterDataController(TriageMasterDataService triageMasterDataService,
-                                      TriageMasterDataMapper triageMasterDataMapper,
-                                      EnumWriter jackson){
+                                      TriageMasterDataMapper triageMasterDataMapper){
         super();
         this.triageMasterDataService = triageMasterDataService;
         this.triageMasterDataMapper = triageMasterDataMapper;
-        this.jackson=jackson;
     }
 
     @GetMapping("/category")
@@ -56,27 +52,27 @@ public class TriageMasterDataController {
     public ResponseEntity<List<MasterDataDto>> getBodyTemperature() {
         LOG.debug("{}", "All body temperature");
         List<EBodyTemperature> data = triageMasterDataService.getBodyTemperature();
-        return ResponseEntity.ok().body(jackson.writeList(data));
+        return ResponseEntity.ok().body(EnumWriter.writeList(data));
     }
 
     @GetMapping("/muscleHypertonia")
     public ResponseEntity<List<MasterDataDto>> getMuscleHypertonia() {
         LOG.debug("{}", "All muscle hypertonia");
         List<EMuscleHypertonia> data = triageMasterDataService.getMuscleHypertonia();
-        return ResponseEntity.ok().body(jackson.writeList(data));
+        return ResponseEntity.ok().body(EnumWriter.writeList(data));
     }
 
     @GetMapping("/respiratoryRetraction")
     public ResponseEntity<List<MasterDataDto>> getRespiratoryRetraction() {
         LOG.debug("{}", "All muscle respiratory retraction");
         List<ERespiratoryRetraction> data = triageMasterDataService.getRespiratoryRetraction();
-        return ResponseEntity.ok().body(jackson.writeList(data));
+        return ResponseEntity.ok().body(EnumWriter.writeList(data));
     }
 
     @GetMapping("/perfusion")
     public ResponseEntity<List<MasterDataDto>> getPerfusion() {
         LOG.debug("{}", "All muscle respiratory retraction");
         List<EPerfusion> data = triageMasterDataService.getPerfusion();
-        return ResponseEntity.ok().body(jackson.writeList(data));
+        return ResponseEntity.ok().body(EnumWriter.writeList(data));
     }
 }

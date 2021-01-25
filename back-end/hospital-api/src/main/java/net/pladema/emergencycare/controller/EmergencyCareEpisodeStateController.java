@@ -27,11 +27,8 @@ public class EmergencyCareEpisodeStateController {
 
 	private final EmergencyCareEpisodeStateService emergencyCareEpisodeStateService;
 
-	private final EnumWriter enumWriter;
-
-	public EmergencyCareEpisodeStateController(EmergencyCareEpisodeStateService emergencyCareEpisodeStateService, EnumWriter enumWriter){
+	public EmergencyCareEpisodeStateController(EmergencyCareEpisodeStateService emergencyCareEpisodeStateService){
 		this.emergencyCareEpisodeStateService = emergencyCareEpisodeStateService;
-		this.enumWriter = enumWriter;
 	}
 
 	@GetMapping
@@ -42,7 +39,7 @@ public class EmergencyCareEpisodeStateController {
 		LOG.debug("Input parameters -> institutionId {}, episodeId {}", institutionId, episodeId);
 		EEmergencyCareState result = emergencyCareEpisodeStateService.getState(episodeId, institutionId);
 		LOG.debug("Output -> {}", result);
-		return ResponseEntity.ok().body(enumWriter.write(result));
+		return ResponseEntity.ok().body(EnumWriter.write(result));
 	}
 
 	@Transactional

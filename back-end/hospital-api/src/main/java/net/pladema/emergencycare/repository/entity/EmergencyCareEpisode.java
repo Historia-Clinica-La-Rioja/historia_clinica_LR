@@ -9,7 +9,14 @@ import net.pladema.emergencycare.triage.service.domain.TriageBo;
 import net.pladema.sgx.auditable.entity.SGXAuditListener;
 import net.pladema.sgx.auditable.entity.SGXAuditableEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.PrePersist;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "emergency_care_episode")
@@ -65,9 +72,9 @@ public class EmergencyCareEpisode extends SGXAuditableEntity {
 								Integer policeInterventionId) {
 		this.patientId = emergencyCareBo.getPatientId();
 		this.patientMedicalCoverageId = emergencyCareBo.getPatientMedicalCoverageId();
-		this.emergencyCareTypeId = emergencyCareBo.getEmergencyCareTypeId();
-		this.emergencyCareStateId = emergencyCareBo.getEmergencyCareStateId();
-		this.emergencyCareEntranceTypeId = emergencyCareBo.getEmergencyCareEntranceId();
+		this.emergencyCareTypeId = emergencyCareBo.getEmergencyCareType();
+		this.emergencyCareStateId = emergencyCareBo.getEmergencyCareState();
+		this.emergencyCareEntranceTypeId = emergencyCareBo.getEmergencyCareEntrance();
 		this.triageCategoryId = triageBo.getCategoryId();
 		this.doctorsOfficeId = triageBo.getDoctorsOfficeId();
 		this.institutionId = emergencyCareBo.getInstitutionId();

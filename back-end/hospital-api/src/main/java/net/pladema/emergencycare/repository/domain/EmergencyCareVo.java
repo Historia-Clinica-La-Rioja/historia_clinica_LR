@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.emergencycare.repository.entity.EmergencyCareEpisode;
 import net.pladema.emergencycare.repository.entity.PoliceIntervention;
+import net.pladema.emergencycare.triage.repository.entity.TriageCategory;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -30,6 +31,10 @@ public class EmergencyCareVo implements Serializable {
 
 	private Short triageCategoryId;
 
+	private String triageDescription;
+
+	private String triageColorCode;
+
 	private Integer institutionId;
 
 	private Short emergencyCareTypeId;
@@ -48,10 +53,12 @@ public class EmergencyCareVo implements Serializable {
 
 	private PoliceInterventionVo policeIntervention;
 
-	public EmergencyCareVo(EmergencyCareEpisode emergencyCareEpisode, String firstname, String lastname, String doctorsOfficeDescription){
+	public EmergencyCareVo(EmergencyCareEpisode emergencyCareEpisode, String firstname, String lastname, String doctorsOfficeDescription, TriageCategory triage){
 		this.id = emergencyCareEpisode.getId();
 		this.patientId = emergencyCareEpisode.getPatientId();
-		this.triageCategoryId = emergencyCareEpisode.getTriageCategoryId();
+		this.triageCategoryId = triage.getId();
+		this.triageDescription = triage.getDescription();
+		this.triageColorCode = getTriageColorCode();
 		this.institutionId = emergencyCareEpisode.getInstitutionId();
 		this.emergencyCareTypeId = emergencyCareEpisode.getEmergencyCareTypeId();
 		this.emergencyCareStateId = emergencyCareEpisode.getEmergencyCareStateId();
@@ -64,8 +71,8 @@ public class EmergencyCareVo implements Serializable {
 		this.doctorsOfficeDescription = doctorsOfficeDescription;
 	}
 
-	public EmergencyCareVo(EmergencyCareEpisode emergencyCareEpisode, String firstname, String lastname, String doctorsOfficeDescription, PoliceIntervention policeIntervention){
-		this(emergencyCareEpisode, firstname, lastname, doctorsOfficeDescription);
+	public EmergencyCareVo(EmergencyCareEpisode emergencyCareEpisode, String firstname, String lastname, String doctorsOfficeDescription, TriageCategory triage, PoliceIntervention policeIntervention){
+		this(emergencyCareEpisode, firstname, lastname, doctorsOfficeDescription, triage);
 		this.policeIntervention = policeIntervention != null ? new PoliceInterventionVo(policeIntervention) : null;
 	}
 }

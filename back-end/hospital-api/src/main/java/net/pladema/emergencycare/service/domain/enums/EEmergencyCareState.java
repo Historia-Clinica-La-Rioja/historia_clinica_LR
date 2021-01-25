@@ -31,6 +31,8 @@ public enum EEmergencyCareState {
 
     @JsonCreator
     public static EEmergencyCareState getById(Short id){
+        if (id == null)
+            return null;
         for(EEmergencyCareState ecs: values()) {
             if(ecs.id.equals(id)) return ecs;
         }
