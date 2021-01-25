@@ -59,7 +59,7 @@
     <mat-list id="lista-estudios" *ngIf="diagnosticReportsInfo?.length > 0 else noInfo">
         <div fxLayout="row" *ngFor="let diagnosticReport of diagnosticReportsInfo">
             <app-item-prescripciones fxFlex="100%" mat-list-item class="item-padding" [prescriptionItemData]="prescriptionItemDataBuilder(diagnosticReport)">
-                <div actions>
+                <div actions *ngIf="diagnosticReport.statusId !== STUDY_STATUS.ERROR.id">
                     <button mat-icon-button [matMenuTriggerFor]="menu" >
                         <mat-icon>more_vert</mat-icon>
                     </button>
