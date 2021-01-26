@@ -53,18 +53,15 @@ public class GetMedicationRequestInfoServiceImpl implements GetMedicationRequest
     private MedicationBo createMedicationBo(Object[] row) {
         MedicationBo result = new MedicationBo();
 
-        result.setId((Integer)row[4]);
+        result.setNote((String) row[4]);
 
         result.setSnomed(new SnomedBo((Integer) row[5], (String) row[6],(String) row[7]));
 
-        result.setNote((String) row[8]);
-        result.setStatusId((String) row[9]);
-        result.setStatus((String) row[10]);
 
         HealthConditionBo healthConditionBo = new HealthConditionBo();
-        healthConditionBo.setId((Integer) row[11]);
-        healthConditionBo.setSnomed(new SnomedBo((Integer) row[12], (String) row[13], (String) row[14]));
-        healthConditionBo.setCie10codes((String) row[15]);
+        healthConditionBo.setId((Integer) row[8]);
+        healthConditionBo.setSnomed(new SnomedBo((Integer) row[9], (String) row[10], (String) row[11]));
+        healthConditionBo.setCie10codes((String) row[12]);
         result.setHealthCondition(healthConditionBo);
         return result;
     }

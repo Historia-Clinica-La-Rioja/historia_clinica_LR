@@ -16,12 +16,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class GetServiceRequestServiceInfoImpl implements GetServiceRequestInfoService {
-    private static final Logger LOG = LoggerFactory.getLogger(GetServiceRequestServiceInfoImpl.class);
+public class GetServiceRequestInfoServiceImpl implements GetServiceRequestInfoService {
+    private static final Logger LOG = LoggerFactory.getLogger(GetServiceRequestInfoServiceImpl.class);
 
     private final GetServiceRequestInfoRepository getServiceRequestInfoRepository;
 
-    public GetServiceRequestServiceInfoImpl(GetServiceRequestInfoRepository getServiceRequestInfoRepository) {
+    public GetServiceRequestInfoServiceImpl(GetServiceRequestInfoRepository getServiceRequestInfoRepository) {
         this.getServiceRequestInfoRepository = getServiceRequestInfoRepository;
     }
 
@@ -52,18 +52,15 @@ public class GetServiceRequestServiceInfoImpl implements GetServiceRequestInfoSe
     private DiagnosticReportBo createDiagnosticReportBo(Object[] row) {
         DiagnosticReportBo result = new DiagnosticReportBo();
 
-        result.setId((Integer)row[4]);
+        result.setObservations((String) row[4]);
 
         result.setSnomed(new SnomedBo((Integer) row[5], (String) row[6],(String) row[7]));
 
-        result.setObservations((String) row[8]);
-        result.setStatusId((String) row[9]);
-        result.setStatus((String) row[10]);
 
         HealthConditionBo healthConditionBo = new HealthConditionBo();
-        healthConditionBo.setId((Integer) row[11]);
-        healthConditionBo.setSnomed(new SnomedBo((Integer) row[12], (String) row[13], (String) row[14]));
-        healthConditionBo.setCie10codes((String) row[15]);
+        healthConditionBo.setId((Integer) row[8]);
+        healthConditionBo.setSnomed(new SnomedBo((Integer) row[9], (String) row[10], (String) row[11]));
+        healthConditionBo.setCie10codes((String) row[12]);
         result.setHealthCondition(healthConditionBo);
         return result;
     }

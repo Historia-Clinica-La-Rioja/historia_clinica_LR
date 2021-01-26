@@ -54,7 +54,6 @@ public class GetMedicationRequestInfoServiceImplTest extends UnitRepository {
 
         Integer mr1_id = save(new MedicationRequest(patientId, 1, "status", "intent", "category", 1, true)).getId();
         Integer mr2_id = save(new MedicationRequest(patientId, 1, "status", "intent", "category", 1, true)).getId();
-
         Long outpatient_doc_id = save(DocumentsTestMocks.createDocument(1, DocumentType.OUTPATIENT, SourceType.OUTPATIENT, DocumentStatus.FINAL)).getId();
         Long hospitalization_doc_id = save(DocumentsTestMocks.createDocument(1, DocumentType.EPICRISIS, SourceType.HOSPITALIZATION, DocumentStatus.FINAL)).getId();
         Long recipe1_doc_id = save(DocumentsTestMocks.createDocument(mr1_id, DocumentType.RECIPE, SourceType.RECIPE, DocumentStatus.FINAL)).getId();
@@ -85,9 +84,6 @@ public class GetMedicationRequestInfoServiceImplTest extends UnitRepository {
         var result = getMedicationRequestInfoService.execute(mr1_id);
 
         MedicationBo ibuprofeno = new MedicationBo();
-        ibuprofeno.setId(mIbuprofenoId);
-        ibuprofeno.setStatusId(MedicationStatementStatus.ACTIVE);
-        ibuprofeno.setStatus("Activo");
         ibuprofeno.setSnomed(new SnomedBo(sctId_ibuprofeno, "IBUPROFENO", "IBUPROFENO"));
         HealthConditionBo dolor = new HealthConditionBo();
         dolor.setId(dolor_id);
@@ -96,9 +92,6 @@ public class GetMedicationRequestInfoServiceImplTest extends UnitRepository {
         ibuprofeno.setHealthCondition(dolor);
 
         MedicationBo paracetamol = new MedicationBo();
-        paracetamol.setId(mParacetamolId);
-        paracetamol.setStatusId(MedicationStatementStatus.ACTIVE);
-        paracetamol.setStatus("Activo");
         paracetamol.setSnomed(new SnomedBo(sctId_paracetamol, "PARACETAMOL", "PARACETAMOL"));
         HealthConditionBo angina = new HealthConditionBo();
         angina.setId(angina_id);
@@ -133,10 +126,7 @@ public class GetMedicationRequestInfoServiceImplTest extends UnitRepository {
     public boolean isEqualTo(MedicationBo source, MedicationBo target){
         if (source == null && target == null)
             return true;
-        return source.getId().equals(target.getId()) &&
-                source.getStatusId().equals(target.getStatusId()) &&
-                source.getStatus().equals(target.getStatus()) &&
-                source.getSnomed().equals(target.getSnomed()) &&
+        return source.getSnomed().equals(target.getSnomed()) &&
                 isEqualTo(source.getHealthCondition(), target.getHealthCondition());
     }
 
