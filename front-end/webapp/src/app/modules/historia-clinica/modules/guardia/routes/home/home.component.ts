@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { EmergencyCareEpisodeDto, EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
-import { DateTimeDto } from '@api-rest/api-model';
+import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
+import { DateTimeDto, EmergencyCareListDto } from '@api-rest/api-model';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { differenceInMinutes } from 'date-fns';
 import { EstadosEpisodio, Triages } from '../../constants/masterdata';
@@ -11,7 +11,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SelectConsultorioComponent } from '../../dialogs/select-consultorio/select-consultorio.component';
 import { ConfirmDialogComponent } from '@core/dialogs/confirm-dialog/confirm-dialog.component';
-import { PermissionsService } from "@core/services/permissions.service";
+import { PermissionsService } from '@core/services/permissions.service';
 import { TriageDefinitionsService } from '../../services/triage-definitions.service';
 
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
@@ -26,6 +26,8 @@ export class HomeComponent implements OnInit {
 	readonly estadosEpisodio = EstadosEpisodio;
 	readonly triages = Triages;
 	readonly PACIENTE_TEMPORAL = 3;
+
+	loading = true;
 	episodes: any[];
 
 	constructor(
@@ -45,12 +47,14 @@ export class HomeComponent implements OnInit {
 	}
 
 	getEpisodes(): void {
-		this.emergencyCareEpisodeService.getAll().subscribe(episodes => {
+		this.loading = true;
+		this.emergencyCareEpisodeService.getAll().subscribe((episodes: EmergencyCareListDto[]) => {
 			this.episodes = episodes.map(episode => this.mapPhotoAndWaitingTime(episode));
-		});
+			this.loading = false;
+		}, _ => this.loading = false);
 	}
 
-	private mapPhotoAndWaitingTime(episode: EmergencyCareEpisodeDto) {
+	private mapPhotoAndWaitingTime(episode: EmergencyCareListDto) {
 		return {
 			...episode,
 			waitingTime: episode.state.id === this.estadosEpisodio.EN_ESPERA ?
@@ -129,7 +133,7 @@ export class HomeComponent implements OnInit {
 		});
 	}
 
-	nuevoTriage(episode: EmergencyCareEpisodeDto): void {
+	nuevoTriage(episode: EmergencyCareListDto): void {
 		this.triageDefinitionsService.getTriagePath(episode.type?.id)
 			.subscribe( ({component}) => {
 				const dialogRef = this.dialog.open(component, {data: episode.id});

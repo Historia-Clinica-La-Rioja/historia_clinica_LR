@@ -17,7 +17,11 @@
 							translate="guardia.home.episodes.NEW_EPISODE"></button>
 				</div>
 
-				<ng-container *ngIf="episodes?.length else noData">
+				<div class="spinner" *ngIf="loading else content">
+					<mat-spinner color="primary"></mat-spinner>
+				</div>
+				<ng-template #content>
+				<ng-container *ngIf="episodes.length else noData">
 					<mat-card [ngClass]="{ 'en-atencion' : episode.state.id === estadosEpisodio.EN_ATENCION }"
 							  class="episode-card"
 							  (click)="goToEpisode(episode.id)" *ngFor="let episode of episodes">
@@ -55,14 +59,14 @@
 							<div id="triage" fxFlex="25%" fxLayout="column">
 								<div class="triage-chip"
 									 [ngStyle]="{'color':episode.triage.id === triages.AMARILLO_NIVEL_3 ? 'black' : 'white' }"
-									 [style.background-color]="episode.triage.color">{{ episode.triage.description }}</div>
-								<span class="mat-small">{{ episode.type.description }}</span>
+									 [style.background-color]="episode.triage.color">{{ episode.triage.name }}</div>
+								<span class="mat-small">{{ episode.type?.description }}</span>
 							</div>
 
 							<div id="status" fxFlex="30%" fxLayout="column">
 								<span *ngIf="episode.state.id === estadosEpisodio.EN_ESPERA else enAtencion">
 								{{ episode.state.description }}: {{ episode.waitingTime }} min</span>
-								<span class="mat-small"> {{ episode.doctorsOffice.description }} </span>
+								<span class="mat-small"> {{ episode.doctorsOffice?.description }} </span>
 
 								<ng-template #enAtencion>
 									<span id="state">{{ episode.state.description | uppercase }}</span>
@@ -96,6 +100,7 @@
 						</div>
 					</mat-card>
 				</ng-container>
+				</ng-template>
 			</div>
 
 		</app-filters-card>
