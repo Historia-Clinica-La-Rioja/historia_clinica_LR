@@ -28,7 +28,7 @@
 					<div fxLayout="column" fxFlex="25%">
 						<mat-form-field>
 							<mat-select [disabled]="!this.loaded" id="externalInstitutionId"
-										name="externalInstitutionId" (click)="this.clicked()" [placeholder]="this.externalInstitutionPlaceholder">
+										name="externalInstitutionId" (click)="this.externalInstitutionsClicked()" [placeholder]="this.externalInstitutionPlaceholder">
 								<mat-option *ngFor="let externalInstitution of this.externalInstitutions"
 											[value]="externalInstitution.name" (click)="this.loadExternalSummary(externalInstitution)">
 									{{externalInstitution.name}}

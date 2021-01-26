@@ -55,13 +55,13 @@ export class ResumenComponent implements OnInit, OnChanges {
 			(params) => {
 				this.patientId = Number(params.get('idPaciente'));
 				this.initSummaries();
-				this.loadExternalTables();
+				this.loadExternalTables(true);
 			});
 	}
 
 	ngOnChanges(changes:SimpleChanges) {
 		if(!changes.patientExternalSummary.isFirstChange()){
-			this.loadExternalTables();
+			this.loadExternalTables(false);
 		}
 	}
 
@@ -74,20 +74,23 @@ export class ResumenComponent implements OnInit, OnChanges {
 		this.anthropometricData$ = this.ambulatoriaSummaryFacadeService.anthropometricData$;
 	}
 
-	loadExternalTables(){
+	loadExternalTables(fromInit:boolean){
 		if(this.externalSummaryIsLoaded()){
 			this.loadExternal = true;
 			this.healthConditionsTable = this.buildHealthConditionTable(this.patientExternalSummary.conditions);
 			this.allergiesTable = this.buildAllergiesTable(this.patientExternalSummary.allergies);
 			this.medicationsTable = this.buildMedicationsTable(this.patientExternalSummary.medications);
 		}
-		else this.snackBarService.showError('Este paciente no posee datos en la institución seleccionada',{
-			duration: 200
-		});
+		else {
+			this.loadExternal = false;
+			if(!fromInit){
+				this.snackBarService.showError('ambulatoria.bus-interoperabilidad.PACIENTE-SIN-DATOS');
+			}
+		}
 	}
 
 	externalSummaryIsLoaded(): boolean{
-		return !!this.patientExternalSummary.organization;
+		return !!this.patientExternalSummary && !!this.patientExternalSummary.organization;
 	}
 
 	buildHealthConditionTable(data:ConditionDto[]): TableModel<ConditionDto>{
@@ -123,7 +126,8 @@ export class ResumenComponent implements OnInit, OnChanges {
 				{
 					header: 'Estado',
 					columnDef: 'Estado',
-					text: (row) => row.status
+					text: (row) => row.status || 'No informado'
+
 				}
 				],
 			data

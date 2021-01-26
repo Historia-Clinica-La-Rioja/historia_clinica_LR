@@ -23,7 +23,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { MINUTES_IN_HOUR } from '../../constants/appointment';
 import { AppointmentsFacadeService } from 'src/app/modules/turnos/services/appointments-facade.service';
 import { map, take } from 'rxjs/operators';
-import { forkJoin, Observable, of, Subscriber, Subscription } from 'rxjs';
+import { forkJoin, Observable, of, Subscription } from 'rxjs';
 import { PermissionsService } from '@core/services/permissions.service';
 import { HealthInsuranceService } from '@api-rest/services/health-insurance.service';
 import { AppointmentsService } from '@api-rest/services/appointments.service';

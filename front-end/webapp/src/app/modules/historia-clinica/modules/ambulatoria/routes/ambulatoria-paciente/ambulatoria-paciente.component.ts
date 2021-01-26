@@ -42,6 +42,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	public externalInstitutionPlaceholder: string = 'Ninguna';
 	public loaded = false;
 	public spinner = false;
+	private timeOut = 15000;
 
 	constructor(
 		private readonly route: ActivatedRoute,
@@ -74,29 +75,43 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	}
 
 	loadExternalInstitutions(){
-		this.interoperabilityBusService.getPatientLocation(this.patientId+"").subscribe(location =>{
+		let externalInstitutions = this.interoperabilityBusService.getPatientLocation(this.patientId.toString()).subscribe(location =>{
 			if(location.length === 0) {
-				this.snackBarService.showError('Este paciente no está federado en ninguna otra institución');
+				this.snackBarService.showError('ambulatoria.bus-interoperabilidad.PACIENTE-NO-FEDERADO');
 				this.loaded = false;
 			} else this.externalInstitutions = location;
 		});
+		this.showTimeOutMessages(externalInstitutions);
 	}
 
 	loadExternalSummary(organization: OrganizationDto){
 		this.spinner = true;
-		this.interoperabilityBusService.getPatientInfo(this.patientId+"",organization.custodian)
+
+		let info = this.interoperabilityBusService.getPatientInfo(this.patientId.toString(),organization.custodian)
 			.subscribe(summary => {
 				this.patientExternalSummary = summary;
 				this.spinner = false;
 			});
+
+		this.showTimeOutMessages(info);
 	}
 
-	clicked(){
+	externalInstitutionsClicked(){
 		if(!this.loaded){
 			this.loaded = true;
 			this.loadExternalInstitutions();
 			this.externalInstitutionPlaceholder = ' ';
 		}
+	}
+
+	showTimeOutMessages(subscription){
+		setTimeout(() => {
+			if(this.spinner) {
+				subscription.unsubscribe();
+				this.snackBarService.showError('ambulatoria.bus-interoperabilidad.TIMEOUT-MESSAGE');
+				this.spinner = false;
+			}
+			}, this.timeOut);
 	}
 
 	openNuevaConsulta(): void {
