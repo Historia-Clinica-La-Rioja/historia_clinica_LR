@@ -12,11 +12,15 @@ import net.pladema.emergencycare.service.domain.EmergencyCareBo;
 import net.pladema.emergencycare.service.domain.PoliceInterventionBo;
 import net.pladema.emergencycare.triage.service.TriageService;
 import net.pladema.emergencycare.triage.service.domain.TriageBo;
+import net.pladema.establishment.controller.service.InstitutionExternalService;
+import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
 import net.pladema.sgx.exceptions.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,15 +44,19 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 
     private final EmergencyCareEpisodeReasonRepository emergencyCareEpisodeReasonRepository;
 
+    private final InstitutionExternalService institutionExternalService;
+
     public EmergencyCareEpisodeServiceImpl(TriageService triageService,
                                            PoliceInterventionRepository policeInterventionRepository,
                                            EmergencyCareEpisodeRepository emergencyCareEpisodeRepository,
-                                           EmergencyCareEpisodeReasonRepository emergencyCareEpisodeReasonRepository){
+                                           EmergencyCareEpisodeReasonRepository emergencyCareEpisodeReasonRepository,
+                                           InstitutionExternalService institutionExternalService){
         super();
         this.triageService = triageService;
         this.policeInterventionRepository = policeInterventionRepository;
         this.emergencyCareEpisodeRepository = emergencyCareEpisodeRepository;
         this.emergencyCareEpisodeReasonRepository = emergencyCareEpisodeReasonRepository;
+        this.institutionExternalService = institutionExternalService;
     }
 
     @Override
@@ -68,10 +76,21 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
         EmergencyCareVo emergencyCareEpisode = emergencyCareEpisodeRepository.getEpisode(episodeId, institutionId)
                 .orElseThrow(() -> new NotFoundException(WRONG_CARE_ID_EPISODE, CARE_EPISODE_NOT_FOUND));
         EmergencyCareBo result = new EmergencyCareBo(emergencyCareEpisode);
+        result.setCreatedOn(UTCIntoInstitutionLocalDateTime(institutionId, result.getCreatedOn()));
 		LOG.debug(OUTPUT, result);
 		return result;
     }
 
+    private LocalDateTime UTCIntoInstitutionLocalDateTime(Integer institutionId, LocalDateTime date) {
+        LOG.debug("Input parameters -> institutionId {}, date {}", institutionId, date);
+        ZoneId institutionZoneId = institutionExternalService.getTimezone(institutionId);
+        LocalDateTime result = date
+                .atZone(ZoneId.of(JacksonDateFormatConfig.UTC_ZONE_ID))
+                .withZoneSameInstant(institutionZoneId)
+                .toLocalDateTime();
+        LOG.debug(OUTPUT, result);
+        return result;
+    }
 
     @Override
     public EmergencyCareBo createAdministrative(EmergencyCareBo newEmergencyCare) {

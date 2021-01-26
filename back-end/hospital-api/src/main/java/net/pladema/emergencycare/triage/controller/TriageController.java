@@ -92,7 +92,7 @@ public class TriageController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name="episodeId") Integer episodeId) {
         LOG.debug("Input parameters -> institutionId {}, episodeId {}", institutionId, episodeId);
-        List<TriageBo> triages = triageService.getAll(episodeId);
+        List<TriageBo> triages = triageService.getAll(institutionId, episodeId);
         List<TriageListDto> result = new ArrayList<>();
         triages.forEach(triageBo -> {
             TriageListDto triageListDto = createTriageListDto(triageBo);
@@ -114,17 +114,20 @@ public class TriageController {
         if (!triageBo.getVitalSignIds().isEmpty()){
             triageBo.getVitalSignIds().forEach(vitalSign -> {
                 VitalSignObservationDto vitalSignObservationDto = vitalSignExternalService.getVitalSignObservationById(vitalSign);
-                if (triageBo.getEmergencyCareTypeId().equals(EEmergencyCareType.ADULTO.getId()))
-                    setVitalSignAsAdult(triageListDto, vitalSignObservationDto);
-                else if (triageBo.getEmergencyCareTypeId().equals(EEmergencyCareType.PEDIATRIA.getId()))
-                    setVitalSignAsPediatric(triageListDto, vitalSignObservationDto);
+                if (triageBo.getEmergencyCareTypeId() != null){
+                    if (triageBo.getEmergencyCareTypeId().equals(EEmergencyCareType.ADULTO.getId()) ||
+                            (triageBo.getEmergencyCareTypeId().equals(EEmergencyCareType.GINECOLOGICA.getId())))
+                        setVitalSignAsAdultGynecological(triageListDto, vitalSignObservationDto);
+                    else if (triageBo.getEmergencyCareTypeId().equals(EEmergencyCareType.PEDIATRIA.getId()))
+                        setVitalSignAsPediatric(triageListDto, vitalSignObservationDto);
+                }
             });
         }
         LOG.debug("Output -> {}", triageListDto);
         return triageListDto;
     }
 
-    private void setVitalSignAsAdult(TriageListDto triageListDto, VitalSignObservationDto vitalSignObservationDto) {
+    private void setVitalSignAsAdultGynecological(TriageListDto triageListDto, VitalSignObservationDto vitalSignObservationDto) {
         LOG.debug("Input parameters -> triageListDto {}, vitalSignObservationDto {}", triageListDto, vitalSignObservationDto);
         if (triageListDto.getVitalSigns() == null)
             triageListDto.setVitalSigns(new NewVitalSignsObservationDto());

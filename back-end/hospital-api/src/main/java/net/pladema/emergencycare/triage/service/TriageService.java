@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface TriageService {
 
-    List<TriageBo> getAll(Integer episodeId);
+    List<TriageBo> getAll(Integer institutionId, Integer episodeId);
 
     TriageBo createAdministrative(TriageBo triage);
 

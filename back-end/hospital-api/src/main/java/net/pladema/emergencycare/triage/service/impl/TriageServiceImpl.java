@@ -13,10 +13,14 @@ import net.pladema.emergencycare.triage.service.domain.enums.EBodyTemperature;
 import net.pladema.emergencycare.triage.service.domain.enums.EMuscleHypertonia;
 import net.pladema.emergencycare.triage.service.domain.enums.EPerfusion;
 import net.pladema.emergencycare.triage.service.domain.enums.ERespiratoryRetraction;
+import net.pladema.establishment.controller.service.InstitutionExternalService;
+import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,18 +35,22 @@ public class TriageServiceImpl implements TriageService {
 
     private final TriageVitalSignsRepository triageVitalSignsRepository;
 
+    private final InstitutionExternalService institutionExternalService;
+
     public TriageServiceImpl(TriageRepository triageRepository,
                              TriageDetailsRepository triageDetailsRepository,
-                             TriageVitalSignsRepository triageVitalSignsRepository){
+                             TriageVitalSignsRepository triageVitalSignsRepository,
+                             InstitutionExternalService institutionExternalService){
         super();
         this.triageRepository = triageRepository;
         this.triageDetailsRepository = triageDetailsRepository;
         this.triageVitalSignsRepository = triageVitalSignsRepository;
+        this.institutionExternalService = institutionExternalService;
     }
 
     @Override
-    public List<TriageBo> getAll(Integer episodeId) {
-        LOG.debug("Input parameter -> episodeId {}", episodeId);
+    public List<TriageBo> getAll(Integer institutionId, Integer episodeId) {
+        LOG.debug("Input parameter -> institutionId {}, episodeId {}", institutionId, episodeId);
         List<TriageVo> triageVos = triageRepository.getAllByEpisodeId(episodeId);
         List<TriageBo> result = triageVos.stream()
                 .map(TriageBo::new)
@@ -50,9 +58,21 @@ public class TriageServiceImpl implements TriageService {
         result.forEach(t -> {
             t.setVitalSignIds(triageVitalSignsRepository.getVitalSignIds(t.getId()));
             setDetailsDescriptions(t);
+            t.setCreatedOn(UTCIntoInstitutionLocalDateTime(institutionId, t.getCreatedOn()));
         });
         LOG.debug("Output size -> {}", result.size());
         LOG.trace("Output -> {}", result);
+        return result;
+    }
+
+    private LocalDateTime UTCIntoInstitutionLocalDateTime(Integer institutionId, LocalDateTime date) {
+        LOG.debug("Input parameters -> institutionId {}, date {}", institutionId, date);
+        ZoneId institutionZoneId = institutionExternalService.getTimezone(institutionId);
+        LocalDateTime result = date
+                .atZone(ZoneId.of(JacksonDateFormatConfig.UTC_ZONE_ID))
+                .withZoneSameInstant(institutionZoneId)
+                .toLocalDateTime();
+        LOG.debug("Output -> {}", result);
         return result;
     }
 
