@@ -249,11 +249,11 @@ public class ServiceRequestController {
                                                            @PathVariable(name = "patientId") Integer patientId,
                                                            @PathVariable(name = "serviceRequestId") Integer serviceRequestId) throws PDFDocumentException {
         LOG.debug("medicationRequestList -> institutionId {}, patientId {}, serviceRequestId {}", institutionId, patientId, serviceRequestId);
-        var medicationRequestBo = getServiceRequestInfoService.run(serviceRequestId);
+        var serviceRequestBo = getServiceRequestInfoService.run(serviceRequestId);
         var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
-        var professionalDto = healthcareProfessionalExternalService.findProfessionalById(medicationRequestBo.getDoctorId());
-        var patientCoverageDto = patientExternalMedicalCoverageService.getCoverage(medicationRequestBo.getMedicalCoverageId());
-        var context = createContext(medicationRequestBo, patientDto, professionalDto, patientCoverageDto);
+        var professionalDto = healthcareProfessionalExternalService.findProfessionalById(serviceRequestBo.getDoctorId());
+        var patientCoverageDto = patientExternalMedicalCoverageService.getCoverage(serviceRequestBo.getMedicalCoverageId());
+        var context = createContext(serviceRequestBo, patientDto, professionalDto, patientCoverageDto);
 
         String template = "recipe_order_table";
 

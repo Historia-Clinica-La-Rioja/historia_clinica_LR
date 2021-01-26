@@ -165,7 +165,7 @@ export class CardMedicacionesComponent implements OnInit {
 	}
 
 	downloadRecipe(medicationRequestId: number) {
-		this.prescripcionesService.downloadRecipe(this.patientId, medicationRequestId)
+		this.prescripcionesService.downloadPrescriptionPdf(this.patientId, medicationRequestId, PrescriptionTypes.MEDICATION)
 			.subscribe((blob) => {
 				saveAs(blob, 'Receta');
 				this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.DOWNLOAD_RECIPE_SUCCESS');

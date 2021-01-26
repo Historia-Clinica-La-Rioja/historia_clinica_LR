@@ -48,8 +48,13 @@ export class PrescripcionesService {
 		}
 	}
 
-	downloadRecipe(patientId: number, medicationRequestId: number): Observable<any> {
-		return this.medicationRequestService.download(patientId, medicationRequestId);
+	downloadPrescriptionPdf(patientId: number, prescriptionId: number, prescriptionType: PrescriptionTypes): Observable<any> {
+		switch(prescriptionType) {
+			case PrescriptionTypes.MEDICATION:
+				return this.medicationRequestService.download(patientId, prescriptionId);
+			case PrescriptionTypes.STUDY:
+				return this.serviceRequestService.downloadPdf(patientId, prescriptionId);
+		}
 	}
 
 	deleteStudy(patientId: number, serviceRequestId: number): Observable<string> {

@@ -64,6 +64,9 @@
                         <mat-icon>more_vert</mat-icon>
                     </button>
                     <mat-menu #menu="matMenu">
+						<button mat-menu-item (click)="downloadOrder(diagnosticReport.serviceRequestId)">
+							<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.DOWNLOAD_STUDY'"></span>
+						</button>
                         <button mat-menu-item (click)="completeStudy(diagnosticReport)" *ngIf="diagnosticReport.statusId === STUDY_STATUS.REGISTERED.id">
                             <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.COMPLETE'"></span>
                         </button>

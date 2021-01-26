@@ -250,6 +250,7 @@
 					"MEDICATION_CHANGE_SUCCESS": "La medicación cambió de estado correctamente",
 					"MEDICATION_CHANGE_ERROR": "La medicación no puede cambiarse a este estado",
 					"DOWNLOAD_RECIPE_SUCCESS": "La receta se descargó correctamente",
+					"DOWNLOAD_ORDER_SUCCESS": "La orden se descargó correctamente",
 					"DELETE_STUDY_SUCCESS": "El estudio se borró correctamente",
 					"DELETE_STUDY_ERROR": "Error al borrar estudio",
 					"COMPLETE_STUDY_SUCCESS": "Estudio completado correctamente",
@@ -257,6 +258,7 @@
 				},
 				"menu_items": {
 					"DOWNLOAD": "Descargar receta",
+					"DOWNLOAD_STUDY": "Descargar orden",
 					"RE_PRESCRIBE": "Volver a recetar",
 					"SUSPEND":"Suspender",
 					"FINALIZE":"Finalizar",

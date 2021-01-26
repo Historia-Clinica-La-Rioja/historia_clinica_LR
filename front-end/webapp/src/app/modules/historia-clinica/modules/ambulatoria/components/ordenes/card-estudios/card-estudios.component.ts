@@ -12,6 +12,7 @@ import { VerResultadosEstudioComponent } from '../../../dialogs/ordenes-prescrip
 import { PrescripcionesService, PrescriptionTypes } from '../../../services/prescripciones.service';
 import { PrescriptionItemData } from '../item-prescripciones/item-prescripciones.component';
 import { CompletarEstudioComponent } from './../../../dialogs/ordenes-prescripciones/completar-estudio/completar-estudio.component';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-card-estudios',
@@ -164,6 +165,14 @@ export class CardEstudiosComponent implements OnInit {
 				},
 				width: '35%',
 			});
+	}
+
+	downloadOrder(diagnosticReportId: number) {
+		this.prescripcionesService.downloadPrescriptionPdf(this.patientId, diagnosticReportId, PrescriptionTypes.STUDY)
+			.subscribe((blob) => {
+				saveAs(blob, 'Orden');
+				this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.DOWNLOAD_ORDER_SUCCESS');
+		});
 	}
 
 	hideFilters() {
