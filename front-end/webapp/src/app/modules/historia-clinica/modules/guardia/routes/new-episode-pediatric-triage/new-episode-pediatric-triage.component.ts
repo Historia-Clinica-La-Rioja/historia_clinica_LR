@@ -38,8 +38,8 @@ export class NewEpisodePediatricTriageComponent implements OnInit {
 
 		this.emergercyCareEpisodeService.createPediatric(body).subscribe(
 			episodeId => {
+				this.router.navigate([this.routePrefix + ROUTE_EMERGENCY_CARE + '/episodio/' + episodeId]);
 				this.snackBarService.showSuccess('guardia.new-episode.SUCCESS');
-				this.router.navigateByUrl(`${this.routePrefix}/guardia/episodio/${episodeId}`);
 			},
 			_ => this.snackBarService.showError('guardia.new-episode.ERROR')
 		);

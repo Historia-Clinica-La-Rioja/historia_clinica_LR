@@ -36,7 +36,7 @@ export class NewEpisodeAdultGynecologicalTriageComponent implements OnInit {
 		};
 		this.emergencyCareEpisodeService.createAdult(dto)
 			.subscribe((episodeId: number) => {
-				this.router.navigate([this.routePrefix + 'guardia/episodio/' + episodeId]);
+				this.router.navigate([this.routePrefix + ROUTE_EMERGENCY_CARE + '/episodio/' + episodeId]);
 				this.snackBarService.showSuccess('guardia.new-episode.SUCCESS');
 
 			}, _ => this.snackBarService.showError('guardia.new-episode.ERROR')
