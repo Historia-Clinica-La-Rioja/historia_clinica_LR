@@ -3,6 +3,8 @@ package net.pladema.emergencycare.controller;
 import io.swagger.annotations.Api;
 import net.pladema.clinichistory.documents.controller.dto.NewVitalSignsObservationDto;
 import net.pladema.clinichistory.documents.controller.service.VitalSignExternalService;
+import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
+import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.SnomedMapper;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.VitalSignMapper;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.service.ReasonExternalService;
 import net.pladema.emergencycare.controller.dto.ECAdministrativeDto;
@@ -47,6 +49,8 @@ public class EmergencyCareEpisodeController {
 
     private final VitalSignExternalService vitalSignExternalService;
 
+    private final SnomedMapper snomedMapper;
+
     private final VitalSignMapper vitalSignMapper;
 
     private final HealthcareProfessionalExternalService healthcareProfessionalExternalService;
@@ -55,6 +59,7 @@ public class EmergencyCareEpisodeController {
                                           EmergencyCareMapper emergencyCareMapper,
                                           ReasonExternalService reasonExternalService,
                                           VitalSignExternalService vitalSignExternalService,
+                                          SnomedMapper snomedMapper,
                                           VitalSignMapper vitalSignMapper,
                                           HealthcareProfessionalExternalService healthcareProfessionalExternalService){
         super();
@@ -62,6 +67,7 @@ public class EmergencyCareEpisodeController {
         this.emergencyCareMapper=emergencyCareMapper;
         this.reasonExternalService = reasonExternalService;
         this.vitalSignExternalService = vitalSignExternalService;
+        this.snomedMapper = snomedMapper;
         this.vitalSignMapper = vitalSignMapper;
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
     }
@@ -86,8 +92,8 @@ public class EmergencyCareEpisodeController {
         LOG.debug("Add emergency care administrative episode -> institutionId {}, body {}", institutionId, body);
         EmergencyCareBo newEmergencyCare = emergencyCareMapper.administrativeEmergencyCareDtoToEmergencyCareBo(body);
         newEmergencyCare.setInstitutionId(institutionId);
-        List<String> reasonIds = reasonExternalService.addReasons(body.reasons());
-        newEmergencyCare.setReasonIds(reasonIds);
+        List<SnomedDto> reasons = reasonExternalService.addReasons(body.reasons());
+        newEmergencyCare.setReasons(snomedMapper.toListReasonBo(reasons));
         Integer professionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
         newEmergencyCare.setProfessionalId(professionalId);
         newEmergencyCare = emergencyCareEpisodeService.createAdministrative(newEmergencyCare);
@@ -110,8 +116,8 @@ public class EmergencyCareEpisodeController {
                 vitalSignExternalService.saveVitalSigns(body.patientId(), body.vitalSignsObservation());
         newEmergencyCare.setTriageVitalSignIds(getVitalSignIds(vitalSignsObservationDto));
 
-        List<String> reasonIds = reasonExternalService.addReasons(body.reasons());
-        newEmergencyCare.setReasonIds(reasonIds);
+        List<SnomedDto> reasons = reasonExternalService.addReasons(body.reasons());
+        newEmergencyCare.setReasons(snomedMapper.toListReasonBo(reasons));
 
         Integer professionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
         newEmergencyCare.setProfessionalId(professionalId);
@@ -135,8 +141,8 @@ public class EmergencyCareEpisodeController {
         vitalSignsObservationDto = vitalSignExternalService.saveVitalSigns(body.patientId(), vitalSignsObservationDto);
         newEmergencyCare.setTriageVitalSignIds(getVitalSignIds(vitalSignsObservationDto));
 
-        List<String> reasonIds = reasonExternalService.addReasons(body.reasons());
-        newEmergencyCare.setReasonIds(reasonIds);
+        List<SnomedDto> reasons = reasonExternalService.addReasons(body.reasons());
+        newEmergencyCare.setReasons(snomedMapper.toListReasonBo(reasons));
 
         Integer professionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
         newEmergencyCare.setProfessionalId(professionalId);

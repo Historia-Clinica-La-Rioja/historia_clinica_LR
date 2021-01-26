@@ -23,7 +23,7 @@ import org.mapstruct.Named;
 
 import java.util.List;
 
-@Mapper(uses = {TriageMapper.class, PoliceInterventionMapper.class, SnomedMapper.class, MasterDataMapper.class, LocalDateMapper.class, DoctorsOfficeMapper.class})
+@Mapper(uses = {TriageMapper.class, PoliceInterventionMapper.class, SnomedMapper.class, MasterDataMapper.class, LocalDateMapper.class, DoctorsOfficeMapper.class, SnomedMapper.class})
 public interface EmergencyCareMapper {
 
     @Named("toResponseEmergencyCareDto")
@@ -33,6 +33,7 @@ public interface EmergencyCareMapper {
     @Mapping(target = "patient.id", source = "patientId")
     @Mapping(target = "patient.patientMedicalCoverageId", source = "patientMedicalCoverageId")
     @Mapping(target = "policeIntervention", source = "policeIntervention", qualifiedByName = "toPoliceInterventionDto")
+    @Mapping(target = "reasons", source = "reasons", qualifiedByName = "fromListReasonBo")
     ResponseEmergencyCareDto toResponseEmergencyCareDto(EmergencyCareBo emergencyCareBo);
 
     @AfterMapping

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ReasonBo;
 import net.pladema.emergencycare.repository.domain.EmergencyCareVo;
 import net.pladema.emergencycare.repository.entity.EmergencyCareEpisode;
 import net.pladema.emergencycare.triage.service.domain.TriageBo;
@@ -50,7 +51,7 @@ public class EmergencyCareBo {
 
     private Integer patientMedicalCoverageId;
 
-    private List<String> reasonIds;
+    private List<ReasonBo> reasons;
 
     private TriageBo triage;
 

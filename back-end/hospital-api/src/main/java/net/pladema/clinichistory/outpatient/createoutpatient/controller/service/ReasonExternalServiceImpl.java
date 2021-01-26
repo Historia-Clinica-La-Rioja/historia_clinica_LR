@@ -26,7 +26,7 @@ public class ReasonExternalServiceImpl implements ReasonExternalService {
     }
 
     @Override
-    public List<String> addReasons(List<SnomedDto> reasons) {
+    public List<SnomedDto> addReasons(List<SnomedDto> reasons) {
         LOG.debug("Input Parameter -> reasons {}", reasons);
         List<ReasonBo> reasonBos = reasons.stream()
                 .map(reason -> {
@@ -35,8 +35,8 @@ public class ReasonExternalServiceImpl implements ReasonExternalService {
                     return r;
                 })
                 .collect(Collectors.toList());
-        List<String> result = reasonService.addReasons(reasonBos);
-        LOG.debug("Output -> {}", result);
-        return result;
+        reasonService.addReasons(reasonBos);
+        LOG.debug("Output -> {}", reasons);
+        return reasons;
     }
 }

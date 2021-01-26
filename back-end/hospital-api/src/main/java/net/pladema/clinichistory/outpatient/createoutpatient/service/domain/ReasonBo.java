@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.documents.service.ips.domain.SnomedBo;
+import net.pladema.clinichistory.outpatient.repository.domain.Reason;
 import net.pladema.clinichistory.outpatient.repository.domain.ReasonSummaryVo;
 import javax.validation.constraints.NotNull;
 
@@ -27,5 +28,10 @@ public class ReasonBo {
 
     public ReasonBo(ReasonSummaryVo reasonSummaryVo){
         this.snomed = new SnomedBo(reasonSummaryVo.getSnomed());
+    }
+
+    public ReasonBo(Reason reason){
+        this.snomed = new SnomedBo(reason.getId(), reason.getDescription());
+
     }
 }

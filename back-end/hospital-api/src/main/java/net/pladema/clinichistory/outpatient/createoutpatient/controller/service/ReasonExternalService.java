@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface ReasonExternalService {
 
-    List<String> addReasons(List<SnomedDto> reasons);
+    List<SnomedDto> addReasons(List<SnomedDto> reasons);
 }
