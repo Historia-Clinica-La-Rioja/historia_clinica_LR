@@ -33,7 +33,7 @@ export class SelectConsultorioComponent implements OnInit {
 
 	submit(): void {
 		if (this.form.valid) {
-			this.dialogRef.close(this.form.value);
+			this.dialogRef.close(this.form.value.consultorio);
 		}
 	}
 
