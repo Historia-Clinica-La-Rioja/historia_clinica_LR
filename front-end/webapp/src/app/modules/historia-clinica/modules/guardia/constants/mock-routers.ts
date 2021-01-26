@@ -26,7 +26,7 @@ export const MOCKS_GUARDIA = [
 						},
 						triage: {
 							id: 1,
-							description: 'Nivel 1',
+							name: 'Nivel 1',
 							color: '#D34444',
 						},
 						type: {
@@ -59,7 +59,7 @@ export const MOCKS_GUARDIA = [
 						},
 						triage: {
 							id: 5,
-							description: 'Nivel 5',
+							name: 'Nivel 5',
 							color: '#2687C5',
 						},
 						type: {
@@ -83,7 +83,7 @@ export const MOCKS_GUARDIA = [
 						},
 						triage: {
 							id: 5,
-							description: 'Nivel 5',
+							name: 'Nivel 5',
 							color: '#2687C5',
 						},
 						type: {
@@ -115,7 +115,7 @@ export const MOCKS_GUARDIA = [
 						},
 						triage: {
 							id: 1,
-							description: 'Nivel 1',
+							name: 'Nivel 1',
 							color: '#D34444',
 						},
 						type: {
@@ -139,7 +139,7 @@ export const MOCKS_GUARDIA = [
 						},
 						triage: {
 							id: 2,
-							description: 'Nivel 2',
+							name: 'Nivel 2',
 							color: '#FF5C00',
 						},
 						type: {
@@ -163,7 +163,7 @@ export const MOCKS_GUARDIA = [
 						},
 						triage: {
 							id: 3,
-							description: 'Nivel 3',
+							name: 'Nivel 3',
 							color: '#EDBE00',
 						},
 						type: {
@@ -187,7 +187,7 @@ export const MOCKS_GUARDIA = [
 						},
 						triage: {
 							id: 4,
-							description: 'Nivel 4',
+							name: 'Nivel 4',
 							color: '#009B68',
 						},
 						type: {

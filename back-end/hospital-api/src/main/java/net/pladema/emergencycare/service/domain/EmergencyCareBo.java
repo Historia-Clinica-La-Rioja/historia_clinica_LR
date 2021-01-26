@@ -34,7 +34,7 @@ public class EmergencyCareBo {
 
     private Short triageCategoryId;
 
-    private String triageDescription;
+    private String triageName;
 
     private String triageColorCode;
 
@@ -64,13 +64,13 @@ public class EmergencyCareBo {
         this.lastname = emergencyCareVo.getLastname();
         this.patientId = emergencyCareVo.getPatientId();
         this.triageCategoryId = emergencyCareVo.getTriageCategoryId();
-        this.triageDescription = emergencyCareVo.getTriageDescription();
+        this.triageName = emergencyCareVo.getTriageName();
         this.triageColorCode = emergencyCareVo.getTriageColorCode();
         this.institutionId = emergencyCareVo.getInstitutionId();
         this.emergencyCareType = emergencyCareVo.getEmergencyCareTypeId();
         this.emergencyCareState = emergencyCareVo.getEmergencyCareStateId();
         this.emergencyCareEntrance = emergencyCareVo.getEmergencyCareEntranceTypeId();
-        this.doctorsOffice = emergencyCareVo.getDoctorsOfficeId() != null ? new DoctorsOfficeBo(emergencyCareVo.getDoctorsOfficeId(), emergencyCareVo.getDoctorsOfficeDescription()) : null;
+        this.doctorsOffice = emergencyCareVo.getDoctorsOffice() != null ? new DoctorsOfficeBo(emergencyCareVo.getDoctorsOffice()) : null;
         this.ambulanceCompanyId = emergencyCareVo.getAmbulanceCompanyId();
         if (emergencyCareVo.getPoliceIntervention()!= null)
             this.policeIntervention = new PoliceInterventionBo(emergencyCareVo.getPoliceIntervention());

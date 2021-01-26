@@ -5,8 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.emergencycare.triage.controller.dto.TriageColorDto;
 import net.pladema.medicalconsultation.doctorsoffice.controller.dto.DoctorsOfficeDto;
+import net.pladema.sgx.dates.controller.dto.DateTimeDto;
 import net.pladema.sgx.masterdata.dto.MasterDataDto;
 
 import java.io.Serializable;
@@ -19,6 +19,8 @@ import java.io.Serializable;
 public class EmergencyCareListDto implements Serializable {
 
 	Integer id;
+
+	DateTimeDto creationDate;
 
 	PatientECEDto patient;
 

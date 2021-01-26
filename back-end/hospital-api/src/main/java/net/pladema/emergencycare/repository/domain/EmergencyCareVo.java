@@ -8,6 +8,7 @@ import lombok.ToString;
 import net.pladema.emergencycare.repository.entity.EmergencyCareEpisode;
 import net.pladema.emergencycare.repository.entity.PoliceIntervention;
 import net.pladema.emergencycare.triage.repository.entity.TriageCategory;
+import net.pladema.medicalconsultation.doctorsoffice.repository.domain.DoctorsOfficeVo;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -31,7 +32,7 @@ public class EmergencyCareVo implements Serializable {
 
 	private Short triageCategoryId;
 
-	private String triageDescription;
+	private String triageName;
 
 	private String triageColorCode;
 
@@ -43,9 +44,7 @@ public class EmergencyCareVo implements Serializable {
 
 	private Short emergencyCareEntranceTypeId;
 
-	private Integer doctorsOfficeId;
-
-	private String doctorsOfficeDescription;
+	private DoctorsOfficeVo doctorsOffice;
 
 	private String ambulanceCompanyId;
 
@@ -57,18 +56,17 @@ public class EmergencyCareVo implements Serializable {
 		this.id = emergencyCareEpisode.getId();
 		this.patientId = emergencyCareEpisode.getPatientId();
 		this.triageCategoryId = triage.getId();
-		this.triageDescription = triage.getDescription();
-		this.triageColorCode = getTriageColorCode();
+		this.triageName = triage.getName();
+		this.triageColorCode = triage.getColorCode();
 		this.institutionId = emergencyCareEpisode.getInstitutionId();
 		this.emergencyCareTypeId = emergencyCareEpisode.getEmergencyCareTypeId();
 		this.emergencyCareStateId = emergencyCareEpisode.getEmergencyCareStateId();
 		this.emergencyCareEntranceTypeId = emergencyCareEpisode.getEmergencyCareEntranceTypeId();
-		this.doctorsOfficeId = emergencyCareEpisode.getDoctorsOfficeId();
 		this.ambulanceCompanyId = emergencyCareEpisode.getAmbulanceCompanyId();
 		this.createdOn = emergencyCareEpisode.getCreatedOn();
 		this.firstname = firstname;
 		this.lastname = lastname;
-		this.doctorsOfficeDescription = doctorsOfficeDescription;
+		this.doctorsOffice = new DoctorsOfficeVo(emergencyCareEpisode.getDoctorsOfficeId(), doctorsOfficeDescription);
 	}
 
 	public EmergencyCareVo(EmergencyCareEpisode emergencyCareEpisode, String firstname, String lastname, String doctorsOfficeDescription, TriageCategory triage, PoliceIntervention policeIntervention){

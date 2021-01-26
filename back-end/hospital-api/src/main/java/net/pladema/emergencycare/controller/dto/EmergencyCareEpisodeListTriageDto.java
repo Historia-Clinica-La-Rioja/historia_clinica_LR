@@ -13,7 +13,7 @@ public class EmergencyCareEpisodeListTriageDto {
 
 	private Integer id;
 
-	private String description;
+	private String name;
 	//colorCode
 	private String color;
 }

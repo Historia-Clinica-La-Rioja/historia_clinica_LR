@@ -45,12 +45,13 @@ public interface EmergencyCareMapper {
     @Named("toEmergencyCareListDto")
     @Mapping(target = "type", ignore = true)
     @Mapping(target = "state", ignore = true)
+    @Mapping(target = "creationDate", source = "createdOn")
     @Mapping(target = "patient.id", source = "patientId")
     @Mapping(target = "patient.typeId", ignore = true)
     @Mapping(target = "patient.person.firstname", source = "firstname")
     @Mapping(target = "patient.person.lastname", source = "lastname")
     @Mapping(target = "triage.id", source = "triageCategoryId")
-    @Mapping(target = "triage.description", source = "triageDescription")
+    @Mapping(target = "triage.name", source = "triageName")
     @Mapping(target = "triage.color", source = "triageColorCode")
     EmergencyCareListDto toEmergencyCareListDto(EmergencyCareBo emergencyCareBo);
 

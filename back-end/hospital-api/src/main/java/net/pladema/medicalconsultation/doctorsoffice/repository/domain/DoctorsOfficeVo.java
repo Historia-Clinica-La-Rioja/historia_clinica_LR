@@ -20,4 +20,9 @@ public class DoctorsOfficeVo {
     private LocalTime openingTime;
 
     private LocalTime closingTime;
+
+    public DoctorsOfficeVo(Integer id, String description){
+        this.id = id;
+        this.description = description;
+    }
 }

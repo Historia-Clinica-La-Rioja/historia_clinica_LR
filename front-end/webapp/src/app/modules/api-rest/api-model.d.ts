@@ -527,11 +527,12 @@ export interface EmergencyCareDto extends Serializable {
 
 export interface EmergencyCareEpisodeListTriageDto {
     color: string;
-    description: string;
     id: number;
+    name: string;
 }
 
 export interface EmergencyCareListDto extends Serializable {
+    creationDate: DateTimeDto;
     doctorsOffice: DoctorsOfficeDto;
     id: number;
     patient: PatientECEDto;
