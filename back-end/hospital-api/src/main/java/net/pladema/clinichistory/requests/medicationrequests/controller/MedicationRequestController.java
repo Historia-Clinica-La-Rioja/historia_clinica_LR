@@ -40,6 +40,7 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -210,7 +211,8 @@ public class MedicationRequestController {
         ctx.put("patient", patientDto);
         ctx.put("professional", professionalDto);
         ctx.put("patientCoverage", patientCoverageDto);
-        LOG.debug("Output -> {}", ctx);
+        var date = medicationRequestBo.getRequestDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        ctx.put("requestDate", date); LOG.debug("Output -> {}", ctx);
         return ctx;
     }
 

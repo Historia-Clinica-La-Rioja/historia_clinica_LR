@@ -75,7 +75,7 @@
             <div class="logo"></div>
             <div class="date-header">
                 <strong>Fecha de emisión: </strong>
-                <label th:text="${request.requestDate}"></label>
+                <label th:text="${requestDate}"></label>
                 <strong> N° de Receta: </strong>
                 <label th:text="${request.medicationRequestId}"></label>
             </div>
@@ -84,7 +84,7 @@
             <div class="logo"></div>
             <div class="date-header">
                 <strong>Fecha de emisión: </strong>
-                <label th:text="${request.requestDate}"></label>
+                <label th:text="${requestDate}"></label>
                 <strong> N° de Orden: </strong>
                 <label th:text="${request.serviceRequestId}"></label>
             </div>
@@ -95,12 +95,12 @@
                 <div th:with="hasIdentificationType = ${patient.person.identificationType != null}">
                     <strong th:if="${hasIdentificationType}" th:text="${patient.person.identificationType}"></strong>
                     <strong th:unless="${hasIdentificationType}"> Nro. Documento </strong>
+                    <strong>: </strong>
+                    <label th:text="${patient.person.identificationNumber}"></label>
                 </div>
-                <strong>: </strong>
-                <label th:text="${patient.person.identificationNumber}"></label>
             </div>
             <div th:with="nameIsPresent = ${patient.person.completeName() != null}">
-                <strong> Nombre y apellido: </strong>
+                <strong> Apellido y nombre: </strong>
                 <label th:if="${nameIsPresent}" th:text="${patient.person.completeName()}"></label>
                 <label th:unless="${nameIsPresent}"> Sin información </label>
             </div>

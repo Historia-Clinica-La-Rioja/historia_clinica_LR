@@ -34,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -279,7 +280,10 @@ public class ServiceRequestController {
         ctx.put("patient", patientDto);
         ctx.put("professional", professionalDto);
         ctx.put("patientCoverage", patientCoverageDto);
+        var date = serviceRequestBo.getRequestDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        ctx.put("requestDate", date);
         LOG.debug("Output -> {}", ctx);
+
         return ctx;
     }
 
