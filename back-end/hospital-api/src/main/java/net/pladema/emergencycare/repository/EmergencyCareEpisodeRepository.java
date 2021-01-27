@@ -63,4 +63,9 @@ public interface EmergencyCareEpisodeRepository extends JpaRepository<EmergencyC
 	@Modifying				 
 	@Query(value = "UPDATE EmergencyCareEpisode AS ece SET ece.patientId = :patientId WHERE ece.id = :episodeId")
 	void updatePatientId(@Param("episodeId") Integer episodeId, @Param("patientId") Integer patientId);
+
+	@Transactional
+	@Modifying
+	@Query(value = "UPDATE EmergencyCareEpisode AS ece SET ece.triageCategoryId = :triageCategoryId WHERE ece.id = :episodeId")
+	void updateTriageCategoryId(@Param("episodeId") Integer episodeId, @Param("triageCategoryId") Short triageCategoryId);
 }

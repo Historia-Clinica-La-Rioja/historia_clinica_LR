@@ -1,5 +1,6 @@
 package net.pladema.emergencycare.triage.service.impl;
 
+import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
 import net.pladema.emergencycare.triage.repository.TriageDetailsRepository;
 import net.pladema.emergencycare.triage.repository.TriageRepository;
 import net.pladema.emergencycare.triage.repository.TriageVitalSignsRepository;
@@ -37,15 +38,20 @@ public class TriageServiceImpl implements TriageService {
 
     private final InstitutionExternalService institutionExternalService;
 
+    private final EmergencyCareEpisodeRepository emergencyCareEpisodeRepository;
+
     public TriageServiceImpl(TriageRepository triageRepository,
                              TriageDetailsRepository triageDetailsRepository,
                              TriageVitalSignsRepository triageVitalSignsRepository,
-                             InstitutionExternalService institutionExternalService){
+                             InstitutionExternalService institutionExternalService,
+                             EmergencyCareEpisodeRepository emergencyCareEpisodeRepository){
         super();
         this.triageRepository = triageRepository;
         this.triageDetailsRepository = triageDetailsRepository;
         this.triageVitalSignsRepository = triageVitalSignsRepository;
         this.institutionExternalService = institutionExternalService;
+        this.emergencyCareEpisodeRepository = emergencyCareEpisodeRepository;
+
     }
 
     @Override
@@ -92,6 +98,11 @@ public class TriageServiceImpl implements TriageService {
     public TriageBo createAdministrative(TriageBo triageBo) {
         LOG.debug("Input parameter -> triageBo {}", triageBo);
         Triage triage = triageRepository.save(new Triage(triageBo));
+
+        Integer episodeId = triageBo.getEmergencyCareEpisodeId();
+        Short categoryId = triageBo.getCategoryId();
+        this.setTriageCategoryId(episodeId, categoryId);
+
         triageBo.setId(triage.getId());
         LOG.debug("Output -> {}", triageBo);
         return triageBo;
@@ -101,6 +112,11 @@ public class TriageServiceImpl implements TriageService {
     public TriageBo createAdultGynecological(TriageBo triageBo) {
         LOG.debug("Input parameter -> triageBo {}", triageBo);
         Triage triage = triageRepository.save(new Triage(triageBo));
+
+        Integer episodeId = triageBo.getEmergencyCareEpisodeId();
+        Short categoryId = triageBo.getCategoryId();
+        this.setTriageCategoryId(episodeId, categoryId);
+
         triageBo.setId(triage.getId());
         saveVitalSigns(triageBo.getId(), triageBo.getVitalSignIds());
         LOG.debug("Output -> {}", triageBo);
@@ -112,9 +128,15 @@ public class TriageServiceImpl implements TriageService {
         LOG.debug("Input parameter -> triageBo {}", triageBo);
         Triage triage = triageRepository.save(new Triage(triageBo));
         triageBo.setId(triage.getId());
+
         if (existDetails(triageBo))
             triageDetailsRepository.save(new TriageDetails(triageBo));
         saveVitalSigns(triageBo.getId(), triageBo.getVitalSignIds());
+
+        Integer episodeId = triageBo.getEmergencyCareEpisodeId();
+        Short categoryId = triageBo.getCategoryId();
+        this.setTriageCategoryId(episodeId, categoryId);
+
         LOG.debug("Output -> {}", triageBo);
         return triageBo;
     }
@@ -134,5 +156,12 @@ public class TriageServiceImpl implements TriageService {
     private void saveVitalSigns(Integer triageId, List<Integer> vitalSignIds) {
         LOG.debug("Input parameters -> triageId {}, vitalSignIds {}", triageId, vitalSignIds);
         vitalSignIds.forEach(id -> triageVitalSignsRepository.save(new TriageVitalSigns(triageId, id)));
+    }
+
+    private Boolean setTriageCategoryId(Integer episodeId, Short triageCategoryId) {
+        LOG.debug("Input parameters -> episodeId {}, triageCategoryId {}",
+                episodeId, triageCategoryId);
+        emergencyCareEpisodeRepository.updateTriageCategoryId(episodeId, triageCategoryId);
+        return true;
     }
 }
