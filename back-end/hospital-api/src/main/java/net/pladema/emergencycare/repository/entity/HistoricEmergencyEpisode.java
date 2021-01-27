@@ -36,7 +36,7 @@ public class HistoricEmergencyEpisode extends SGXAuditableEntity {
 	@Column(name = "emergency_care_state_id", nullable = false)
 	private Short emergencyCareStateId;
 
-	@Column(name = "doctors_office_id", nullable = false)
+	@Column(name = "doctors_office_id")
 	private Integer doctorsOfficeId;
 
 	public HistoricEmergencyEpisode(Integer emergencyCareEpisodeId, Short emergencyCareStateId, Integer doctorsOfficeId){

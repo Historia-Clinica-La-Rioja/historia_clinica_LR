@@ -241,3 +241,23 @@ databaseChangeLog:
                 tableName: emergency_care_episode
                 validate:  true
                 defaultNullValue : 2
+
+    - changeSet:
+        id: emergency_care_episode-dropNotNullConstraint-doctors_office_id
+        author: tmedina
+        comment: Drop not null constraint in doctors_office_id column in emergency_care_episode table
+        changes:
+            - dropNotNullConstraint:
+                columnDataType: int
+                columnName: doctors_office_id
+                tableName: emergency_care_episode
+
+    - changeSet:
+        id: historic_emergency_episode-dropNotNullConstraint-doctors_office_id
+        author: tmedina
+        comment: Drop not null constraint in doctors_office_id column in historic_emergency_episode table
+        changes:
+            - dropNotNullConstraint:
+                columnDataType: int
+                columnName: doctors_office_id
+                tableName: historic_emergency_episode
