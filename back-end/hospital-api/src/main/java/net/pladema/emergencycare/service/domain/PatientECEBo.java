@@ -28,4 +28,8 @@ public class PatientECEBo {
 		this.typeId = patient.getTypeId();
 		this.person = new PersonECEBo(patient.getPerson());
 	}
+
+	public PatientECEBo(Integer patientId) {
+		this.id = patientId;
+	}
 }

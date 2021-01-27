@@ -74,8 +74,9 @@ public class EmergencyCareBo {
 
     public EmergencyCareBo(EmergencyCareEpisode emergencyCareEpisode) {
         this.id = emergencyCareEpisode.getId();
-        if(emergencyCareEpisode.getPatientId() != null)
-            this.patient.setId(emergencyCareEpisode.getPatientId());
+        if(emergencyCareEpisode.getPatientId() != null) {
+            this.patient = new PatientECEBo(emergencyCareEpisode.getPatientId());
+        }
         this.institutionId = emergencyCareEpisode.getInstitutionId();
         this.patientMedicalCoverageId = emergencyCareEpisode.getPatientMedicalCoverageId();
         this.emergencyCareEntrance = emergencyCareEpisode.getEmergencyCareEntranceTypeId();
