@@ -22,15 +22,15 @@ public class ResponseEmergencyCareDto extends EmergencyCareDto {
 
     MasterDataDto emergencyCareState;
 
-    DateTimeDto createdOn;
+    DateTimeDto creationDate;
 
     public ResponseEmergencyCareDto(Integer id, List<SnomedDto> reasons, MasterDataDto emergencyCareType,
-                                    MasterDataDto entranceType, PoliceInterventionDto policeIntervention, String ambulanceCompanyId, EmergencyCarePatientDto patient,
+                                    MasterDataDto entranceType, PoliceInterventionDto policeIntervention, String ambulanceCompanyId, PatientECEDto patient,
                                     MasterDataDto emergencyCareState, DateTimeDto createdOn){
         super(reasons, emergencyCareType, entranceType, policeIntervention, ambulanceCompanyId, patient);
         this.id = id;
         this.emergencyCareState = emergencyCareState;
-        this.createdOn = createdOn;
+        this.creationDate = createdOn;
     }
 
 }

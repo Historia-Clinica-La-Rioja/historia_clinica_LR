@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { CompletePatientDto, PersonalInformationDto, PersonPhotoDto, TriageListDto } from '@api-rest/api-model';
+import { CompletePatientDto, PersonalInformationDto, PersonPhotoDto, TriageListDto, ResponseEmergencyCareDto, MasterDataDto } from '@api-rest/api-model';
 import {
 	EmergencyCareEpisodeService,
-	ResponseEmergencyCareDto
 } from '@api-rest/services/emergency-care-episode.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PatientService } from '@api-rest/services/patient.service';
@@ -47,7 +46,6 @@ export class EpisodeDetailsComponent implements OnInit {
 		private readonly mapperService: MapperService,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private readonly personService: PersonService,
-		//No se puede hacer un llamado y que traiga todo de una? En un monton de lados debemos estar haciendo esto...
 		private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService,
 		private readonly dialog: MatDialog,
 		private readonly triageService: TriageService,
@@ -61,13 +59,13 @@ export class EpisodeDetailsComponent implements OnInit {
 			(params) => {
 				this.episodeId = Number(params.get('id'));
 
-				this.emergencyCareEpisodeService.getAdministrative()
+				this.emergencyCareEpisodeService.getAdministrative(this.episodeId)
 					.subscribe((responseEmergencyCare: ResponseEmergencyCareDto) => {
 						this.responseEmergencyCare = responseEmergencyCare;
 						this.emergencyCareType = responseEmergencyCare.emergencyCareType?.id;
 
-						if (responseEmergencyCare.patientId) {
-							this.loadPatient(responseEmergencyCare.patientId);
+						if (responseEmergencyCare.patient?.id) {
+							this.loadPatient(responseEmergencyCare.patient.id);
 						}
 					});
 
@@ -110,7 +108,12 @@ export class EpisodeDetailsComponent implements OnInit {
 									if (saved) {
 										this.snackBarService.showSuccess('guardia.episode.search_patient.update.SUCCESS');
 										this.loadPatient(patient.basicData.id);
-										this.responseEmergencyCare.patientId = patient.basicData.id;
+										this.responseEmergencyCare.patient = { // TODO La unica info necesaria es el id en realidad.
+											id: patient.basicData.id,
+											patientMedicalCoverageId: null,
+											person: null,
+											typeId: null
+										}
 									}
 								}, _ => this.snackBarService.showError('guardia.episode.search_patient.update.ERROR'));
 						}

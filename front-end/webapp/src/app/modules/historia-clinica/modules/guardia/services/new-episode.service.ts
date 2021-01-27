@@ -30,6 +30,12 @@ export class NewEpisodeService {
 			patient: {
 				id: this.administrativeAdmission.patientId,
 				patientMedicalCoverageId: this.administrativeAdmission.patientMedicalCoverageId,
+				person: { // TODO No debe usarse este dto ya que estos campos no son requeridos para dar de alta
+					firstName: null,
+					lastName: null,
+					photo: null
+				},
+				typeId: null
 			},
 			reasons: this.administrativeAdmission.reasons.map(s => s.snomed),
 			emergencyCareType: this.administrativeAdmission.emergencyCareTypeId ? {

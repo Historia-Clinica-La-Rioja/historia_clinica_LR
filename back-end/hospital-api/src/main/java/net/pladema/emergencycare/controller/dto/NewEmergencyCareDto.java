@@ -16,7 +16,7 @@ public class NewEmergencyCareDto extends EmergencyCareDto {
 
     @Builder(builderMethodName = "newAdministrativeBuilder")
     public NewEmergencyCareDto(List<SnomedDto> reasons, MasterDataDto emergencyCareType,
-                               MasterDataDto entranceType, PoliceInterventionDto policeIntervention, String ambulanceCompanyId, EmergencyCarePatientDto patient){
+                               MasterDataDto entranceType, PoliceInterventionDto policeIntervention, String ambulanceCompanyId, PatientECEDto patient){
         super(reasons, emergencyCareType, entranceType, policeIntervention, ambulanceCompanyId, patient);
     }
 }

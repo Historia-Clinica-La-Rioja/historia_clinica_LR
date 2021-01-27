@@ -11,7 +11,7 @@
 					<span class="grid-title" translate="guardia.episode.administrative.EPISODE"></span>
 					<div fxLayout="row" fxLayoutGap="3px" class="content-primary">
 						<span>ID {{episodeId}}</span>
-						<div *ngIf="responseEmergencyCare.emergencyCareType" fxLayoutGap="3px">
+						<div *ngIf="responseEmergencyCare?.emergencyCareType" fxLayoutGap="3px">
 							<label>•</label>
 							<span>{{responseEmergencyCare.emergencyCareType.description}}</span>
 						</div>
@@ -20,9 +20,9 @@
 
 				<div fxLayout="column" fxLayoutGap="1px">
 					<span class="grid-title" translate="guardia.episode.administrative.REASONS"></span>
-					<div *ngIf="responseEmergencyCare.reasons else noInfo">
+					<div *ngIf="responseEmergencyCare?.reasons else noInfo">
 						<div class="content-primary" *ngFor="let reason of responseEmergencyCare.reasons">
-							<span>{{reason.description}}</span>
+							<span>{{reason.pt}}</span>
 						</div>
 					</div>
 				</div>
@@ -30,42 +30,40 @@
 				<div fxLayout="column" fxLayoutGap="1px">
 					<span class="grid-title" translate="guardia.episode.administrative.ENTRANCE"></span>
 					<div fxLayout="row" fxLayoutGap="3px" class="content-primary">
-						<span>{{responseEmergencyCare.entrance?.type?.description}}</span>
-						<div *ngIf="responseEmergencyCare.entrance?.ambulanceCompanyId" fxLayoutGap="3px">
+						<span>{{responseEmergencyCare?.entranceType?.description}}</span>
+						<div *ngIf="responseEmergencyCare?.ambulanceCompanyId" fxLayoutGap="3px">
 							<label>•</label>
-							<span>ID {{responseEmergencyCare.entrance?.ambulanceCompanyId}}</span>
+							<span>ID {{responseEmergencyCare.ambulanceCompanyId}}</span>
 						</div>
 					</div>
 					<div fxLayout="row" fxLayoutGap="3px" class="content-secondary">
-						<span>{{responseEmergencyCare.creationDate.date.day}}/{{responseEmergencyCare.creationDate.date.month}}/{{responseEmergencyCare.creationDate.date.year}}</span>
+						<span>{{responseEmergencyCare?.creationDate.date.day}}/{{responseEmergencyCare?.creationDate.date.month}}/{{responseEmergencyCare?.creationDate.date.year}}</span>
 						<label>-</label>
-						<span>{{responseEmergencyCare.creationDate.time.hours}}:{{responseEmergencyCare.creationDate.time.minutes}}
+						<span>{{responseEmergencyCare?.creationDate.time.hours}}:{{responseEmergencyCare?.creationDate.time.minutes}}
 							Hs</span>
 					</div>
 				</div>
 
 				<div fxLayout="column" fxLayoutGap="1px">
 					<span class="grid-title" translate="guardia.episode.administrative.POLICE_INTERVENTION"></span>
-					<div *ngIf="responseEmergencyCare.policeIntervention else noInfo">
+					<div *ngIf="responseEmergencyCare?.policeIntervention else noInfo">
 						<div fxLayout="row" fxLayoutGap="3px" class="content-primary">
-							<span
-								*ngIf="responseEmergencyCare.policeIntervention.firstName || responseEmergencyCare.policeIntervention.lastName">Oficial
+							<span>
 								{{responseEmergencyCare.policeIntervention.firstName}}
 								{{responseEmergencyCare.policeIntervention.lastName}}</span>
-
 							<div *ngIf="responseEmergencyCare.policeIntervention.plateNumber" fxLayoutGap="3px">
 								<label
 									*ngIf="responseEmergencyCare.policeIntervention.firstName || responseEmergencyCare.policeIntervention.lastName">•</label>
-								<span>Mat. Nº {{responseEmergencyCare.policeIntervention.plateNumber}}</span>
+								<span>Placa. Nº {{responseEmergencyCare.policeIntervention.plateNumber}}</span>
 							</div>
 						</div>
 						<div fxLayout="row" fxLayoutGap="3px" class="content-secondary">
 							<span
-								*ngIf="responseEmergencyCare.policeIntervention.callDate?.date">{{responseEmergencyCare.policeIntervention.callDate.date.day}}/{{responseEmergencyCare.policeIntervention.callDate.date.month}}/{{responseEmergencyCare.policeIntervention.callDate.date.year}}
+								*ngIf="responseEmergencyCare.policeIntervention.dateCall">{{responseEmergencyCare.policeIntervention.dateCall.day}}/{{responseEmergencyCare.policeIntervention.dateCall.month}}/{{responseEmergencyCare.policeIntervention.dateCall.year}}
 							</span>
-							<div *ngIf="responseEmergencyCare.policeIntervention.callDate?.time" fxLayoutGap="3px">
-								<label *ngIf="responseEmergencyCare.policeIntervention.callDate.date">-</label>
-								<span>{{responseEmergencyCare.policeIntervention.callDate.time.hours}}:{{responseEmergencyCare.policeIntervention.callDate.time.minutes}}
+							<div *ngIf="responseEmergencyCare.policeIntervention.timeCall" fxLayoutGap="3px">
+								<label *ngIf="responseEmergencyCare.policeIntervention.dateCall">-</label>
+								<span>{{responseEmergencyCare.policeIntervention.timeCall.hours}}:{{responseEmergencyCare.policeIntervention.timeCall.minutes}}
 									Hs</span>
 							</div>
 						</div>
@@ -127,7 +125,7 @@
 						[patientMedicalCoverage]="patientMedicalCoverage">
 					</app-personal-information>
 
-					<button *ngIf="!responseEmergencyCare.patientId" mat-raised-button color="primary"
+					<button *ngIf="!responseEmergencyCare?.patient" mat-raised-button color="primary"
 						(click)="searchPatient()" class="uppercase" translate="Buscar Paciente"></button>
 				</div>
 			</app-patient-card>
@@ -137,5 +135,5 @@
 </app-content>
 
 <ng-template #noInfo>
-	<span translate="guardia.NO_INFO"></span>
+	<span class="content-primary" translate="guardia.NO_INFO"></span>
 </ng-template>

@@ -1,0 +1,33 @@
+package net.pladema.emergencycare.repository.domain;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import net.pladema.person.repository.entity.Person;
+
+import java.io.Serializable;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+public class PersonECEVo implements Serializable {
+
+	private static final long serialVersionUID = 6315285696051865362L;
+
+	private String firstName;
+
+	private String lastName;
+
+	private String photo;
+
+	public PersonECEVo(Person person){
+		if (person !=null) {
+			this.firstName = person.getFirstName();
+			this.lastName = person.getLastName();
+		}
+	}
+}

@@ -11,9 +11,9 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PersonECEDto {
 
-	String firstname;
+	String firstName;
 
-	String lastname;
+	String lastName;
 
 	String photo;
 }

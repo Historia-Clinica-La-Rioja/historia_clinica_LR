@@ -17,7 +17,7 @@ import java.util.Optional;
 public interface EmergencyCareEpisodeRepository extends JpaRepository<EmergencyCareEpisode, Integer> {
 
 	@Transactional(readOnly = true)
-	@Query(value = " SELECT NEW net.pladema.emergencycare.repository.domain.EmergencyCareVo(ece, pe.firstName, pe.lastName, dso.description, tc) "+
+	@Query(value = " SELECT NEW net.pladema.emergencycare.repository.domain.EmergencyCareVo(ece, pe, pa.typeId, dso.description, tc) "+
 			" FROM EmergencyCareEpisode ece "+
 			" LEFT JOIN Patient pa ON (pa.id = ece.patientId) "+
 			" LEFT JOIN Person pe ON (pe.id = pa.personId) "+
@@ -28,7 +28,7 @@ public interface EmergencyCareEpisodeRepository extends JpaRepository<EmergencyC
 	List<EmergencyCareVo> getAll(@Param("institutionId") Integer institutionId);
 
 	@Transactional(readOnly = true)
-	@Query(value = " SELECT NEW net.pladema.emergencycare.repository.domain.EmergencyCareVo(ece, pe.firstName, pe.lastName, dso.description, tc, pi) "+
+	@Query(value = " SELECT NEW net.pladema.emergencycare.repository.domain.EmergencyCareVo(ece, pe, pa.typeId, dso.description, tc, pi) "+
 			" FROM EmergencyCareEpisode ece "+
 			" LEFT JOIN Patient pa ON (pa.id = ece.patientId) "+
 			" LEFT JOIN Person pe ON (pe.id = pa.personId) "+

@@ -25,11 +25,7 @@ public class EmergencyCareBo {
 
     private Integer id;
 
-    private String firstname;
-
-    private String lastname;
-
-    private Integer patientId;
+    private PatientECEBo patient;
 
     private Integer institutionId;
 
@@ -61,9 +57,7 @@ public class EmergencyCareBo {
 
     public EmergencyCareBo(EmergencyCareVo emergencyCareVo){
         this.id = emergencyCareVo.getId();
-        this.firstname = emergencyCareVo.getFirstname();
-        this.lastname = emergencyCareVo.getLastname();
-        this.patientId = emergencyCareVo.getPatientId();
+        this.patient = emergencyCareVo.getPatient() != null ? new PatientECEBo(emergencyCareVo.getPatient()) : null;
         this.triageCategoryId = emergencyCareVo.getTriageCategoryId();
         this.triageName = emergencyCareVo.getTriageName();
         this.triageColorCode = emergencyCareVo.getTriageColorCode();
@@ -80,7 +74,8 @@ public class EmergencyCareBo {
 
     public EmergencyCareBo(EmergencyCareEpisode emergencyCareEpisode) {
         this.id = emergencyCareEpisode.getId();
-        this.patientId = emergencyCareEpisode.getPatientId();
+        if(emergencyCareEpisode.getPatientId() != null)
+            this.patient.setId(emergencyCareEpisode.getPatientId());
         this.institutionId = emergencyCareEpisode.getInstitutionId();
         this.patientMedicalCoverageId = emergencyCareEpisode.getPatientMedicalCoverageId();
         this.emergencyCareEntrance = emergencyCareEpisode.getEmergencyCareEntranceTypeId();

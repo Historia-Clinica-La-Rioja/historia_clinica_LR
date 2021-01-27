@@ -520,7 +520,7 @@ export interface EmergencyCareDto extends Serializable {
     ambulanceCompanyId: string;
     emergencyCareType: MasterDataDto;
     entranceType: MasterDataDto;
-    patient: EmergencyCarePatientDto;
+    patient: PatientECEDto;
     policeIntervention: PoliceInterventionDto;
     reasons: SnomedDto[];
 }
@@ -1124,6 +1124,7 @@ export interface PatientDto {
 
 export interface PatientECEDto {
     id: number;
+    patientMedicalCoverageId: number;
     person: PersonECEDto;
     typeId: number;
 }
@@ -1185,8 +1186,8 @@ export interface PersonBasicDataResponseDto extends Serializable {
 }
 
 export interface PersonECEDto {
-    firstname: string;
-    lastname: string;
+    firstName: string;
+    lastName: string;
     photo: string;
 }
 
@@ -1294,7 +1295,7 @@ export interface ResponseAnamnesisDto extends AnamnesisDto {
 }
 
 export interface ResponseEmergencyCareDto extends EmergencyCareDto {
-    createdOn: DateTimeDto;
+    creationDate: DateTimeDto;
     emergencyCareState: MasterDataDto;
     id: number;
 }

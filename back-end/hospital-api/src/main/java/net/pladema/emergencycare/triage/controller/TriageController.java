@@ -203,7 +203,7 @@ public class TriageController {
         triage.setEmergencyCareEpisodeId(episodeId);
         Integer professionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
         triage.setProfessionalId(professionalId);
-        Integer patientId = emergencyCareEpisodeService.get(episodeId, institutionId).getPatientId();
+        Integer patientId = emergencyCareEpisodeService.get(episodeId, institutionId).getPatient() != null ? emergencyCareEpisodeService.get(episodeId, institutionId).getPatient().getId() : null;
         NewVitalSignsObservationDto vitalSignsObservationDto = vitalSignExternalService.saveVitalSigns(patientId, body.getVitalSigns());
         triage.setVitalSignIds(getVitalSignIds(vitalSignsObservationDto));
         triage = triageService.createAdultGynecological(triage);
@@ -224,7 +224,7 @@ public class TriageController {
         triage.setEmergencyCareEpisodeId(episodeId);
         Integer professionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
         triage.setProfessionalId(professionalId);
-        Integer patientId = emergencyCareEpisodeService.get(episodeId, institutionId).getPatientId();
+        Integer patientId = emergencyCareEpisodeService.get(episodeId, institutionId).getPatient() != null ? emergencyCareEpisodeService.get(episodeId, institutionId).getPatient().getId() : null;
         NewVitalSignsObservationDto vitalSignsObservationDto = vitalSignMapper.fromTriagePediatricDto(body);
         vitalSignsObservationDto = vitalSignExternalService.saveVitalSigns(patientId, vitalSignsObservationDto);
         triage.setVitalSignIds(getVitalSignIds(vitalSignsObservationDto));

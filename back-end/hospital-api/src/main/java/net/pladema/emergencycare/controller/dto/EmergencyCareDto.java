@@ -28,5 +28,5 @@ public abstract class EmergencyCareDto implements Serializable {
 
     private String ambulanceCompanyId;
 
-    private EmergencyCarePatientDto patient;
+    private PatientECEDto patient;
 }
