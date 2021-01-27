@@ -91,16 +91,29 @@
         </div>
         <br/>
         <div class="fixed-width">
-            <strong>DNI: </strong><label th:text="${patient.person.identificationNumber}"></label>
-            <strong> Nombre y apellido: </strong>
-            <label th:text="${patient.person.completeName()}"></label>
+            <div th:if="${patient.person.identificationNumber != null}">
+                <div th:with="hasIdentificationType = ${patient.person.identificationType != null}">
+                    <strong th:if="${hasIdentificationType}" th:text="${patient.person.identificationType}"></strong>
+                    <strong th:unless="${hasIdentificationType}"> Nro. Documento </strong>
+                </div>
+                <strong>: </strong>
+                <label th:text="${patient.person.identificationNumber}"></label>
+            </div>
+            <div th:with="nameIsPresent = ${patient.person.completeName() != null}">
+                <strong> Nombre y apellido: </strong>
+                <label th:if="${nameIsPresent}" th:text="${patient.person.completeName()}"></label>
+                <label th:unless="${nameIsPresent}"> Sin información </label>
+            </div>
             <br/>
             <div th:if="${patientCoverage != null}">
                 <strong>Cobertura prestacional: </strong>
                 <label th:text="${patientCoverage.medicalCoverage.name}"></label>
                 <br/>
-                <strong> N° afiliado: </strong>
-                <label th:text="${patientCoverage.affiliateNumber}"></label>
+                <div th:with="affiliateNumberIsPresent = ${patientCoverage.affiliateNumber != null}">
+                    <strong> N° afiliado: </strong>
+                    <label th:if="${affiliateNumberIsPresent}" th:text="${patientCoverage.affiliateNumber}"></label>
+                    <label th:unless="${affiliateNumberIsPresent}">  Sin información </label>
+                </div>
                 <br/>
             </div>
         </div>
