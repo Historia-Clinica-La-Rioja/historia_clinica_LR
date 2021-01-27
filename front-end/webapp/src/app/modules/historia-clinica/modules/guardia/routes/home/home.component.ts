@@ -43,11 +43,10 @@ export class HomeComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.getEpisodes();
+		this.loadEpisodes();
 	}
 
-	getEpisodes(): void {
-		this.loading = true;
+	loadEpisodes(): void {
 		this.emergencyCareEpisodeService.getAll().subscribe((episodes: EmergencyCareListDto[]) => {
 			this.episodes = episodes.map(episode => this.mapPhotoAndWaitingTime(episode));
 			this.loading = false;
@@ -122,6 +121,7 @@ export class HomeComponent implements OnInit {
 						if (changed) {
 							this.snackBarService
 								.showSuccess(`${TRANSLATE_KEY_PREFIX}.finalizar_ausencia.SUCCESS`);
+							this.loadEpisodes();
 						} else {
 							this.snackBarService
 								.showError(`${TRANSLATE_KEY_PREFIX}.finalizar_ausencia.ERROR`);
@@ -139,7 +139,7 @@ export class HomeComponent implements OnInit {
 				const dialogRef = this.dialog.open(component, {data: episode.id});
 				dialogRef.afterClosed().subscribe(idReturned => {
 					if (idReturned) {
-						this.getEpisodes();
+						this.loadEpisodes();
 					}
 				});
 			});
