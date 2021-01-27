@@ -20,7 +20,7 @@
 
 				<div fxLayout="column" fxLayoutGap="1px">
 					<span class="grid-title" translate="guardia.episode.administrative.REASONS"></span>
-					<div *ngIf="responseEmergencyCare?.reasons else noInfo">
+					<div *ngIf="responseEmergencyCare?.reasons?.length else noInfo">
 						<div class="content-primary" *ngFor="let reason of responseEmergencyCare.reasons">
 							<span>{{reason.pt}}</span>
 						</div>
