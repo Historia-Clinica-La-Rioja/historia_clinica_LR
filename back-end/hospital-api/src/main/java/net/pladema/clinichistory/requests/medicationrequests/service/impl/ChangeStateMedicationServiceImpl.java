@@ -165,6 +165,7 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
         result.setChronic(dosage.isChronic());
         result.setFrequency(dosage.getFrequency());
         result.setPeriodUnit(dosage.getPeriodUnit() != null ? EUnitsOfTimeBo.map(dosage.getPeriodUnit()) : EUnitsOfTimeBo.HOUR);
+
         if (MedicationStatementStatus.SUSPENDED.equals(newStatusId)){
             result.setSuspendedStartDate(dateTimeProvider.nowDate());
             LocalDate suspendedEndDate = result.getSuspendedStartDate().plusDays(duration.longValue());
@@ -175,7 +176,6 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
             result.setEndDate(dateTimeProvider.nowDate().minusDays(1));
             result.setSuspendedStartDate(null);
             result.setSuspendedEndDate(null);
-            result.setChronic(false);
         }
 
         if (MedicationStatementStatus.ACTIVE.equals(newStatusId)) {
