@@ -24,10 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -308,21 +305,16 @@ public class HealthConditionServiceImpl implements HealthConditionService {
     @Override
     public Map<Integer, HealthConditionBo> getLastHealthCondition(Integer patientId, List<Integer> hcIds) {
         LOG.debug("Input -> patientId {} hcIds {}", patientId, hcIds);
-        List<HealthConditionBo> lastHealthConditions = getLastHealthConditionRepository.run(patientId, hcIds).stream()
-                .map(this::buildHealthConditionBo)
-                .collect(Collectors.toList());
 
-        Map<Integer, HealthConditionBo> result = zipToMap(hcIds, lastHealthConditions);
+        Map<Integer, HealthConditionBo> result = new HashMap<>();
 
-        LOG.trace(OUTPUT, result);
-        return result;
-    }
+        var repoResult = getLastHealthConditionRepository.run(patientId, hcIds);
 
-    public Map<Integer, HealthConditionBo> zipToMap(List<Integer> keys, List<HealthConditionBo> values) {
-        LOG.debug("Input -> keys {} values {}", keys, values);
-
-        Map<Integer, HealthConditionBo> result = IntStream.range(0, keys.size()).boxed()
-                .collect(Collectors.toMap(keys::get, values::get));
+        repoResult.forEach(row -> {
+            Integer originalHcId = (Integer) row[0];
+            HealthConditionBo updatedHc =  buildHealthConditionBo(row);
+            result.put(originalHcId, updatedHc);
+        });
 
         LOG.trace(OUTPUT, result);
         return result;
@@ -332,8 +324,8 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         LOG.debug("Input parameters -> row {}", row);
 
         HealthConditionBo result = new HealthConditionBo();
-        result.setId((Integer) row[0]);
-        result.setStatusId((String) row[1]);
+        result.setId((Integer) row[1]);
+        result.setStatusId((String) row[2]);
 
         LOG.trace(OUTPUT, result);
         return result;

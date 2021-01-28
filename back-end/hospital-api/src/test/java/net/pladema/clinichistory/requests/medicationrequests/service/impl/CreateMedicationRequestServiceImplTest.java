@@ -275,11 +275,17 @@ public class CreateMedicationRequestServiceImplTest extends UnitRepository {
 		medicationRequest.setDoctorId(1);
 		medicationRequest.setPatientInfo(new PatientInfoBo(4, (short)1, (short)29));
 		medicationRequest.setMedicalCoverageId(5);
-		medicationRequest.setMedications(List.of(createMedicationBo(
-				"IBUPROFENO 500",
-				1,
-				ConditionClinicalStatus.ACTIVE,
-				createDosageBo(15d, 8, EUnitsOfTimeBo.HOUR))));
+		medicationRequest.setMedications(List.of(
+		        createMedicationBo(
+		                "IBUPROFENO 500",
+                        1,
+                        ConditionClinicalStatus.ACTIVE,
+                        createDosageBo(15d, 8, EUnitsOfTimeBo.HOUR)),
+                createMedicationBo(
+                        "CLONA 200",
+                        1,
+                        ConditionClinicalStatus.ACTIVE,
+                        createDosageBo(7d, 12, EUnitsOfTimeBo.HOUR))));
 		when(healthConditionService.getHealthCondition(any())).thenReturn(mockActiveHealthCondition());
 		when(healthConditionService.getLastHealthCondition(any(), any())).thenReturn(mockHealthConditionMap());
 		Integer medicationRequestId = createMedicationRequestService.execute(institutionId, medicationRequest);
