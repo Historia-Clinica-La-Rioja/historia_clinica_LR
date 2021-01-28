@@ -14,6 +14,8 @@ import net.pladema.emergencycare.repository.domain.PersonECEVo;
 @ToString
 public class PersonECEBo {
 
+	private Integer id;
+
 	private String firstName;
 
 	private String lastName;
@@ -21,6 +23,7 @@ public class PersonECEBo {
 	private String photo;
 
 	public PersonECEBo(PersonECEVo person){
+		this.id = person.getId();
 		this.firstName = person.getFirstName();
 		this.lastName = person.getLastName();
 		this.photo = person.getPhoto();

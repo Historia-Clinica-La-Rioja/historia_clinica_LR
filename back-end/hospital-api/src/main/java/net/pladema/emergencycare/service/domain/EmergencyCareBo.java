@@ -93,4 +93,13 @@ public class EmergencyCareBo {
         this.getTriage().setProfessionalId(professionalId);
     }
 
+    public Integer getPersonId() {
+        return (this.getPatient() != null && this.getPatient().getPerson() != null) ?
+            this.getPatient().getPerson().getId() : null;
+    }
+
+    public void setPersonPhoto(String photo) {
+        this.getPatient().getPerson().setPhoto(photo);
+    }
+
 }

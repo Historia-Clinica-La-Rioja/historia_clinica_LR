@@ -15,6 +15,7 @@ import net.pladema.emergencycare.controller.dto.ResponseEmergencyCareDto;
 import net.pladema.emergencycare.controller.mapper.EmergencyCareMapper;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
+import net.pladema.person.controller.service.PersonExternalService;
 import net.pladema.sgx.security.utils.UserInfo;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.slf4j.Logger;
@@ -55,13 +56,16 @@ public class EmergencyCareEpisodeController {
 
     private final HealthcareProfessionalExternalService healthcareProfessionalExternalService;
 
+    private final PersonExternalService personExternalService;
+
     public EmergencyCareEpisodeController(EmergencyCareEpisodeService emergencyCareEpisodeService,
                                           EmergencyCareMapper emergencyCareMapper,
                                           ReasonExternalService reasonExternalService,
                                           VitalSignExternalService vitalSignExternalService,
                                           SnomedMapper snomedMapper,
                                           VitalSignMapper vitalSignMapper,
-                                          HealthcareProfessionalExternalService healthcareProfessionalExternalService){
+                                          HealthcareProfessionalExternalService healthcareProfessionalExternalService,
+                                          PersonExternalService personExternalService){
         super();
         this.emergencyCareEpisodeService = emergencyCareEpisodeService;
         this.emergencyCareMapper=emergencyCareMapper;
@@ -70,6 +74,7 @@ public class EmergencyCareEpisodeController {
         this.snomedMapper = snomedMapper;
         this.vitalSignMapper = vitalSignMapper;
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
+        this.personExternalService = personExternalService;
     }
 
     @GetMapping
@@ -78,6 +83,11 @@ public class EmergencyCareEpisodeController {
             @PathVariable(name = "institutionId") Integer institutionId) {
         LOG.debug("Input parameters -> institutionId {}", institutionId);
         List<EmergencyCareBo> episodes = emergencyCareEpisodeService.getAll(institutionId);
+        episodes.forEach(e -> {
+            Integer personId = e.getPersonId();
+            if (personId != null)
+                e.setPersonPhoto(personExternalService.getPersonPhoto(personId).getImageData());
+        });
         List<EmergencyCareListDto> result = emergencyCareMapper.toListEmergencyCareListDto(episodes);
         LOG.debug("Output -> {}", result);
         return ResponseEntity.ok().body(result);

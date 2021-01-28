@@ -18,6 +18,8 @@ public class PersonECEVo implements Serializable {
 
 	private static final long serialVersionUID = 6315285696051865362L;
 
+	private Integer id;
+
 	private String firstName;
 
 	private String lastName;
@@ -26,6 +28,7 @@ public class PersonECEVo implements Serializable {
 
 	public PersonECEVo(Person person){
 		if (person !=null) {
+			this.id = person.getId();
 			this.firstName = person.getFirstName();
 			this.lastName = person.getLastName();
 		}
