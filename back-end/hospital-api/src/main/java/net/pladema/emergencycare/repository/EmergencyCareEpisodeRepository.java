@@ -23,7 +23,7 @@ public interface EmergencyCareEpisodeRepository extends JpaRepository<EmergencyC
 			" LEFT JOIN Person pe ON (pe.id = pa.personId) "+
 			" LEFT JOIN DoctorsOffice dso ON (dso.id = ece.doctorsOfficeId) "+
 			" JOIN TriageCategory tc ON (tc.id = ece.triageCategoryId) "+
-			" WHERE ece.emergencyCareStateId =  "+EmergencyCareState.EN_ATENCION+" OR ece.emergencyCareStateId = "+EmergencyCareState.EN_ESPERA+
+			" WHERE (ece.emergencyCareStateId =  "+EmergencyCareState.EN_ATENCION+" OR ece.emergencyCareStateId = "+EmergencyCareState.EN_ESPERA+" ) "+
 			" AND ece.institutionId = :institutionId ")
 	List<EmergencyCareVo> getAll(@Param("institutionId") Integer institutionId);
 
