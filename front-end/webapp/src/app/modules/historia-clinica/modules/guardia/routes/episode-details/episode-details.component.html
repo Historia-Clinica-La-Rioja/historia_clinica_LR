@@ -37,35 +37,29 @@
 						</div>
 					</div>
 					<div fxLayout="row" fxLayoutGap="3px" class="content-secondary">
-						<span>{{responseEmergencyCare?.creationDate.date.day}}/{{responseEmergencyCare?.creationDate.date.month}}/{{responseEmergencyCare?.creationDate.date.year}}</span>
-						<label>-</label>
-						<span>{{responseEmergencyCare?.creationDate.time.hours}}:{{responseEmergencyCare?.creationDate.time.minutes}}
-							Hs</span>
+						<span *ngIf="responseEmergencyCare?.creationDate as creationDate">
+							{{ creationDate | viewDateDto : 'datetime' | date: 'dd/MM/yyyy - HH:mm'}} hs
+						</span>
 					</div>
 				</div>
 
 				<div fxLayout="column" fxLayoutGap="1px">
 					<span class="grid-title" translate="guardia.episode.administrative.POLICE_INTERVENTION"></span>
-					<div *ngIf="responseEmergencyCare?.policeIntervention else noInfo">
+					<div *ngIf="responseEmergencyCare?.policeIntervention as policeIntervention else noInfo">
 						<div fxLayout="row" fxLayoutGap="3px" class="content-primary">
 							<span>
-								{{responseEmergencyCare.policeIntervention.firstName}}
-								{{responseEmergencyCare.policeIntervention.lastName}}</span>
-							<div *ngIf="responseEmergencyCare.policeIntervention.plateNumber" fxLayoutGap="3px">
+								{{policeIntervention.firstName}}
+								{{policeIntervention.lastName}}</span>
+							<div *ngIf="policeIntervention.plateNumber" fxLayoutGap="3px">
 								<label
-									*ngIf="responseEmergencyCare.policeIntervention.firstName || responseEmergencyCare.policeIntervention.lastName">•</label>
-								<span>Placa. Nº {{responseEmergencyCare.policeIntervention.plateNumber}}</span>
+									*ngIf="policeIntervention.firstName || policeIntervention.lastName">•</label>
+								<span>Placa. Nº {{policeIntervention.plateNumber}}</span>
 							</div>
 						</div>
 						<div fxLayout="row" fxLayoutGap="3px" class="content-secondary">
-							<span
-								*ngIf="responseEmergencyCare.policeIntervention.dateCall">{{responseEmergencyCare.policeIntervention.dateCall.day}}/{{responseEmergencyCare.policeIntervention.dateCall.month}}/{{responseEmergencyCare.policeIntervention.dateCall.year}}
-							</span>
-							<div *ngIf="responseEmergencyCare.policeIntervention.timeCall" fxLayoutGap="3px">
-								<label *ngIf="responseEmergencyCare.policeIntervention.dateCall">-</label>
-								<span>{{responseEmergencyCare.policeIntervention.timeCall.hours}}:{{responseEmergencyCare.policeIntervention.timeCall.minutes}}
-									Hs</span>
-							</div>
+							<span *ngIf="policeIntervention.dateCall">{{ policeIntervention.dateCall | viewDateDto: 'date' | date: 'dd/MM/yyyy' }}</span>
+							<span *ngIf="policeIntervention.dateCall && policeIntervention.timeCall"> - </span>
+							<span *ngIf="policeIntervention.timeCall">{{ policeIntervention.timeCall | viewDateDto: 'time' | date: 'HH:mm' }} hs</span>
 						</div>
 					</div>
 				</div>
@@ -89,7 +83,7 @@
 
 									<div id="left-side">
 										<span style="margin-right: 20px">
-											{{ triage.creationDate | date: 'dd/MM/yy - HH:mm' }}
+											{{ triage.creationDate | date: 'dd/MM/yyyy - HH:mm' }}
 											hs
 										</span>
 										<app-triage-chip [category]="triage.category"></app-triage-chip>
