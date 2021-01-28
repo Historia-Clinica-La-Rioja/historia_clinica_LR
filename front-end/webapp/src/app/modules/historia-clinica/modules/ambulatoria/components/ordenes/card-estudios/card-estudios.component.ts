@@ -12,7 +12,6 @@ import { VerResultadosEstudioComponent } from '../../../dialogs/ordenes-prescrip
 import { PrescripcionesService, PrescriptionTypes } from '../../../services/prescripciones.service';
 import { PrescriptionItemData } from '../item-prescripciones/item-prescripciones.component';
 import { CompletarEstudioComponent } from './../../../dialogs/ordenes-prescripciones/completar-estudio/completar-estudio.component';
-import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-card-estudios',
@@ -103,6 +102,8 @@ export class CardEstudiosComponent implements OnInit {
 							downloadButtonLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.DOWNLOAD_BUTTON_STUDY',
 							successLabel: 'ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_STUDY_SUCCESS',
 							errorLabel: 'ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_STUDY_ERROR',
+							prescriptionType: PrescriptionTypes.STUDY,
+							patientId: this.patientId,
 							prescriptionRequest: newServiceRequest$,
 						},
 						width: '35%',
@@ -168,11 +169,7 @@ export class CardEstudiosComponent implements OnInit {
 	}
 
 	downloadOrder(diagnosticReportId: number) {
-		this.prescripcionesService.downloadPrescriptionPdf(this.patientId, diagnosticReportId, PrescriptionTypes.STUDY)
-			.subscribe((blob) => {
-				saveAs(blob, 'Orden');
-				this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.DOWNLOAD_ORDER_SUCCESS');
-		});
+		this.prescripcionesService.downloadPrescriptionPdf(this.patientId, diagnosticReportId, PrescriptionTypes.STUDY);
 	}
 
 	hideFilters() {

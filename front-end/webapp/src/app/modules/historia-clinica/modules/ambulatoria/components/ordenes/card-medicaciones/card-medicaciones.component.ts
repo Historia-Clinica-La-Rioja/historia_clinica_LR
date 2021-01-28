@@ -12,7 +12,6 @@ import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
 import { PrescriptionItemData } from '../item-prescripciones/item-prescripciones.component';
 import { MEDICATION_STATUS } from './../../../constants/prescripciones-masterdata';
-import {saveAs} from 'file-saver';
 
 @Component({
   selector: 'app-card-medicaciones',
@@ -115,6 +114,8 @@ export class CardMedicacionesComponent implements OnInit {
 								downloadButtonLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.DOWNLOAD_BUTTON_MEDICATION',
 								successLabel: 'ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_MEDICATION_SUCCESS',
 								errorLabel: 'ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_MEDICATION_ERROR',
+								prescriptionType: PrescriptionTypes.MEDICATION,
+								patientId: this.patientId,
 								prescriptionRequest: newMedicationRequest$,
 							},
 							width: '35%'
@@ -165,11 +166,7 @@ export class CardMedicacionesComponent implements OnInit {
 	}
 
 	downloadRecipe(medicationRequestId: number) {
-		this.prescripcionesService.downloadPrescriptionPdf(this.patientId, medicationRequestId, PrescriptionTypes.MEDICATION)
-			.subscribe((blob) => {
-				saveAs(blob, 'Receta');
-				this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.DOWNLOAD_RECIPE_SUCCESS');
-		});
+		this.prescripcionesService.downloadPrescriptionPdf(this.patientId, medicationRequestId, PrescriptionTypes.MEDICATION);
 	}
 
 	checkMedication(checked: boolean, medicationInfo: MedicationInfoDto) {

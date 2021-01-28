@@ -5,6 +5,8 @@ import { MedicationRequestService } from '@api-rest/services/medication-request.
 import { ServiceRequestService } from '@api-rest/services/service-request.service';
 import { MEDICATION_STATUS, MedicationStatusChange, STUDY_STATUS } from '../constants/prescripciones-masterdata';
 import { NewPrescriptionItem } from '../dialogs/ordenes-prescripciones/agregar-prescripcion-item/agregar-prescripcion-item.component';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { saveAs } from 'file-saver';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +19,7 @@ export class PrescripcionesService {
 	constructor(
 		private medicationRequestService: MedicationRequestService,
 		private serviceRequestService: ServiceRequestService,
+		private snackBarService: SnackBarService,
 	) { }
 
 	createPrescription(prescriptionType: PrescriptionTypes, newPrescription: PrescriptionDto, patientId: number): Observable<any> {
@@ -48,12 +51,20 @@ export class PrescripcionesService {
 		}
 	}
 
-	downloadPrescriptionPdf(patientId: number, prescriptionId: number, prescriptionType: PrescriptionTypes): Observable<any> {
+	downloadPrescriptionPdf(patientId: number, prescriptionId: number, prescriptionType: PrescriptionTypes): void {
 		switch(prescriptionType) {
 			case PrescriptionTypes.MEDICATION:
-				return this.medicationRequestService.download(patientId, prescriptionId);
+				this.medicationRequestService.download(patientId, prescriptionId).subscribe((blob) => {
+					saveAs(blob, 'Receta');
+					this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.DOWNLOAD_RECIPE_SUCCESS');
+				});
+				break;
 			case PrescriptionTypes.STUDY:
-				return this.serviceRequestService.downloadPdf(patientId, prescriptionId);
+				this.serviceRequestService.downloadPdf(patientId, prescriptionId).subscribe((blob) => {
+					saveAs(blob, 'Orden');
+					this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.DOWNLOAD_ORDER_SUCCESS')
+				});
+				break;
 		}
 	}
 
