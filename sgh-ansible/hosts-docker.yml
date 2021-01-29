@@ -30,3 +30,12 @@ all:
         sgh_database_user_password: sgh_test
         sgh_database_name: sgh_test
         token_secret: ultra_secret_token
+        app_flavor:
+        recaptcha_secret_key:
+        recaptcha_site_key:
+        renaper_usuario:
+        renaper_clave:
+        federar_issuer:
+        federar_subject:
+        federar_audience:
+        federar_sign_key:

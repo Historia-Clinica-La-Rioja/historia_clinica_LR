@@ -1,10 +1,62 @@
+# ============================================
+# Config 
+# ============================================
 spring.profiles.default=prod
+
+app.flavor = {{ app_flavor }}
+
+#Contraseña del usuario root
+admin.password = {{ admin_password }}
+
+#palabra usada para encriptar token
 token.secret=${TOKEN_SECRET:{{ token_secret }}}
 
+#Directorio de almacenamiento de documentos
+internment.document.directory=${DOCUMENT_ROOT_DIRECTORY:{{ document_root_directory }}}
+
+# ============================================
+# Database 
+# ============================================
 spring.datasource.url=jdbc:postgresql://{{
                         hostvars['postgres_master'].ansible_default_ipv4.address
                     }}:{{ database_port }}/{{ sgh_database_name }}
 spring.datasource.username={{ sgh_database_user_name }}
 spring.datasource.password={{ sgh_database_user_password }}
 
-internment.document.directory=${DOCUMENT_ROOT_DIRECTORY:{{ document_root_directory }}}
+
+# ============================================
+# Google reCAPTCHA type:v2 Checkbox 
+# ============================================
+google.recaptcha.secret.key = ${RECAPTCHA_SECRET_KEY:{{ recaptcha_secret_key }}}
+google.recaptcha.site.key = ${RECAPTCHA_PUBLIC_KEY:{{ recaptcha_site_key }}}
+
+
+# ============================================
+# Renaper
+# ============================================
+#claves de acceso a renaper
+ws.renaper.nombre= {{ renaper_usuario }}
+ws.renaper.clave= {{ renaper_clave }}
+ws.renaper.dominio= DOMINIOSINAUTORIZACIONDEALTA
+
+
+# ============================================
+# Federar
+# ============================================
+#Configuracion WS Federar
+ws.federar.claims.iss= {{ federar_issuer }}
+ws.federar.claims.sub= {{ federar_subject }}
+ws.federar.claims.aud= {{ federar_audience }} 
+ws.federar.claims.name=Prueba Jose
+ws.federar.claims.role=Project Manager
+ws.federar.claims.ident=0001
+
+ws.federar.auth.grantType=client_credentials
+ws.federar.auth.scope=Patient/*.read,Patient/*.write
+ws.federar.auth.clientAssertionType=urn:ietf:params:oauth:client-assertion-type:jwt-bearer
+ws.federar.auth.signKey= {{ federar_sign_key }}
+
+ws.federar.url.base= {{ federar_audience }}
+ws.federar.url.validateToken=/bus-auth/tokeninfo
+ws.federar.url.localIdSearch=/masterfile-federacion-service/fhir/Patient
+ws.federar.url.federate=/masterfile-federacion-service/fhir/Patient
