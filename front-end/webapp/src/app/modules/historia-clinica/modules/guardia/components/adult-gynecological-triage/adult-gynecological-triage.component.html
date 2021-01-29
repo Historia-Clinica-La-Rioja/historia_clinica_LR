@@ -1,6 +1,6 @@
 <div fxLayout="column">
 	<app-triage (onTriageCategoryIdChange)="setTriageCategoryId($event)"
-	            (onDoctorsOfficeIdChange)="setDoctorsOfficeId($event)">
+		(onDoctorsOfficeIdChange)="setDoctorsOfficeId($event)">
 	</app-triage>
 
 	<h3 class="page-title" [translate]="'guardia.triage.VITAL_SIGNS'"></h3>
@@ -8,43 +8,52 @@
 		<div fxLayout="row" fxLayoutGap="20px">
 			<mat-form-field appearance="outline">
 				<mat-label [translate]="'guardia.triage.HEART_RATE'"></mat-label>
-				<input matInput type="text" id="heartRate" name="heartRate"
-				       formControlName="heartRate"
-				       placeholder="{{'guardia.triage.HEART_RATE' | translate }}">
+				<input matInput type="number" id="heartRate" name="heartRate" formControlName="heartRate"
+					placeholder="{{'guardia.triage.HEART_RATE' | translate }}">
+				<mat-error *ngIf="hasError(adultGynecologicalForm, 'min', 'heartRate')"
+					[translate]="'forms.MIN_ERROR'" [translateParams]="{min: minValue}"></mat-error>
 			</mat-form-field>
 			<mat-form-field appearance="outline">
 				<mat-label [translate]="'guardia.triage.RESPIRATORY_RATE'"></mat-label>
-				<input matInput type="text" id="respiratoryRate" name="respiratoryRate"
-				       formControlName="respiratoryRate"
-				       placeholder="{{'guardia.triage.RESPIRATORY_RATE' | translate }}">
+				<input matInput type="number" id="respiratoryRate" name="respiratoryRate"
+					formControlName="respiratoryRate" placeholder="{{'guardia.triage.RESPIRATORY_RATE' | translate }}">
+					<mat-error *ngIf="hasError(adultGynecologicalForm, 'min', 'respiratoryRate')"
+					[translate]="'forms.MIN_ERROR'" [translateParams]="{min: minValue}"></mat-error>
 			</mat-form-field>
 		</div>
 		<div fxLayout="row" fxLayoutGap="20px">
 			<mat-form-field appearance="outline">
 				<mat-label [translate]="'guardia.triage.TEMPERATURE'"></mat-label>
-				<input matInput type="text" id="temperature" name="temperature"
-				       formControlName="temperature"
-				       placeholder="{{'guardia.triage.TEMPERATURE' | translate }}">
+				<input matInput type="number" id="temperature" name="temperature" formControlName="temperature"
+					placeholder="{{'guardia.triage.TEMPERATURE' | translate }}">
+					<mat-error *ngIf="hasError(adultGynecologicalForm, 'min', 'temperature')"
+					[translate]="'forms.MIN_ERROR'" [translateParams]="{min: minValue}"></mat-error>
 			</mat-form-field>
 			<mat-form-field appearance="outline">
 				<mat-label [translate]="'guardia.triage.OXYGEN_SATURATION'"></mat-label>
-				<input matInput type="text" id="bloodOxygenSaturation" name="bloodOxygenSaturation"
-				       formControlName="bloodOxygenSaturation"
-				       placeholder="{{'guardia.triage.OXYGEN_SATURATION' | translate }}">
+				<input matInput type="number" id="bloodOxygenSaturation" name="bloodOxygenSaturation"
+					formControlName="bloodOxygenSaturation"
+					placeholder="{{'guardia.triage.OXYGEN_SATURATION' | translate }}">
+					<mat-error *ngIf="hasError(adultGynecologicalForm, 'min', 'bloodOxygenSaturation')"
+					[translate]="'forms.MIN_ERROR'" [translateParams]="{min: minValue}"></mat-error>
 			</mat-form-field>
 		</div>
 		<div fxLayout="row" fxLayoutGap="20px">
 			<mat-form-field appearance="outline">
 				<mat-label [translate]="'guardia.triage.SYSTOLIC_BLOOD'"></mat-label>
-				<input matInput type="text" id="systolicBloodPressure" name="systolicBloodPressure"
-				       formControlName="systolicBloodPressure"
-				       placeholder="{{'guardia.triage.SYSTOLIC_BLOOD' | translate }}">
+				<input matInput type="number" id="systolicBloodPressure" name="systolicBloodPressure"
+					formControlName="systolicBloodPressure"
+					placeholder="{{'guardia.triage.SYSTOLIC_BLOOD' | translate }}" >
+					<mat-error *ngIf="hasError(adultGynecologicalForm, 'min', 'systolicBloodPressure')"
+					[translate]="'forms.MIN_ERROR'" [translateParams]="{min: minValue}"></mat-error>
 			</mat-form-field>
 			<mat-form-field appearance="outline">
 				<mat-label [translate]="'guardia.triage.DIASTOLIC_BLOOD'"></mat-label>
-				<input matInput type="text" id="diastolicBloodPressure" name="diastolicBloodPressure"
-				       formControlName="diastolicBloodPressure"
-				       placeholder="{{'guardia.triage.DIASTOLIC_BLOOD' | translate }}">
+				<input matInput type="number" id="diastolicBloodPressure" name="diastolicBloodPressure"
+					formControlName="diastolicBloodPressure"
+					placeholder="{{'guardia.triage.DIASTOLIC_BLOOD' | translate }}">
+					<mat-error *ngIf="hasError(adultGynecologicalForm, 'min', 'diastolicBloodPressure')"
+					[translate]="'forms.MIN_ERROR'" [translateParams]="{min: minValue}"></mat-error>
 			</mat-form-field>
 		</div>
 

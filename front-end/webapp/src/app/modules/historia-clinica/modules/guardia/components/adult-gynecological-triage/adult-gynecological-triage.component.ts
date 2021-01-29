@@ -1,7 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TriageAdultGynecologicalDto } from '@api-rest/api-model';
 import { dateToDateTimeDto } from '@api-rest/mapper/date-dto.mapper';
+import { VITAL_SIGNS } from '@core/constants/validation-constants';
+import { hasError } from '@core/utils/form.utils';
 
 @Component({
 	selector: 'app-adult-gynecological-triage',
@@ -17,18 +19,19 @@ export class AdultGynecologicalTriageComponent implements OnInit {
 	private triageCategoryId: number;
 	private doctorsOfficeId: number;
 	adultGynecologicalForm: FormGroup;
-
+	minValue = VITAL_SIGNS.min_value;
+	hasError = hasError;
 	constructor(private formBuilder: FormBuilder) {
 	}
 
 	ngOnInit(): void {
 		this.adultGynecologicalForm = this.formBuilder.group({
-			heartRate: [null],
-			respiratoryRate: [null],
-			temperature: [null],
-			bloodOxygenSaturation: [null],
-			systolicBloodPressure: [null],
-			diastolicBloodPressure: [null],
+			heartRate: [null, Validators.min(this.minValue)],
+			respiratoryRate: [null, Validators.min(this.minValue)],
+			temperature: [null, Validators.min(this.minValue)],
+			bloodOxygenSaturation: [null, Validators.min(this.minValue)],
+			systolicBloodPressure: [null, Validators.min(this.minValue)],
+			diastolicBloodPressure: [null, Validators.min(this.minValue)],
 			evaluation: [null]
 		});
 	}
@@ -45,14 +48,15 @@ export class AdultGynecologicalTriageComponent implements OnInit {
 	confirm(): void {
 
 		const formValue = this.adultGynecologicalForm.value;
-
-		const triage: TriageAdultGynecologicalDto = {
-			categoryId: this.triageCategoryId,
-			doctorsOfficeId: this.doctorsOfficeId,
-			notes: formValue.evaluation,
-			vitalSigns: toVitalSigns(this.adultGynecologicalForm)
-		};
-		this.onConfirm.emit(triage);
+		if (this.adultGynecologicalForm.valid) {
+			const triage: TriageAdultGynecologicalDto = {
+				categoryId: this.triageCategoryId,
+				doctorsOfficeId: this.doctorsOfficeId,
+				notes: formValue.evaluation,
+				vitalSigns: toVitalSigns(this.adultGynecologicalForm)
+			};
+			this.onConfirm.emit(triage);
+		}
 
 		function toVitalSigns(form: FormGroup): any {
 			const vitalSigns = {};
@@ -65,7 +69,7 @@ export class AdultGynecologicalTriageComponent implements OnInit {
 					};
 				}
 			});
-			return Object.keys(vitalSigns).length !== 0  ? vitalSigns : undefined;
+			return Object.keys(vitalSigns).length !== 0 ? vitalSigns : undefined;
 		}
 	}
 
