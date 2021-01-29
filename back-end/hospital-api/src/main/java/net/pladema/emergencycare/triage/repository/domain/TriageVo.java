@@ -41,13 +41,13 @@ public class TriageVo {
 
     private LocalDateTime createdOn;
 
-    public TriageVo(Triage triage, TriageDetails triageDetails, Short emergencyCareTypeId, Integer doctorsOfficeId) {
+    public TriageVo(Triage triage, TriageDetails triageDetails, Short emergencyCareTypeId) {
         this.id = triage.getId();
         this.emergencyCareEpisodeId = triage.getEmergencyCareEpisodeId();
         this.emergencyCareTypeId = emergencyCareTypeId;
         this.categoryId = triage.getTriageCategoryId();
         this.createdBy = triage.getCreatedBy();
-        this.doctorsOfficeId = doctorsOfficeId;
+        this.doctorsOfficeId = triage.getDoctorsOfficeId();
         this.notes = triage.getNotes();
         if (triageDetails != null) {
             this.bodyTemperatureId = triageDetails.getBodyTemperatureId();

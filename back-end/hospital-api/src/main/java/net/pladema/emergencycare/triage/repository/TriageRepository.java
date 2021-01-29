@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface TriageRepository extends JpaRepository<Triage, Integer> {
 
-    @Query(" SELECT NEW net.pladema.emergencycare.triage.repository.domain.TriageVo(t, td, ece.emergencyCareTypeId, ece.doctorsOfficeId) " +
+    @Query(" SELECT NEW net.pladema.emergencycare.triage.repository.domain.TriageVo(t, td, ece.emergencyCareTypeId) " +
             " FROM Triage t " +
             " JOIN EmergencyCareEpisode ece ON (t.emergencyCareEpisodeId = ece.id) " +
             " LEFT JOIN TriageDetails td ON (t.id = td.triageId) " +
