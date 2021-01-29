@@ -73,7 +73,7 @@ public class ListDiagnosticReportInfoServiceImplTest extends UnitRepository {
         DiagnosticReportFilterBo diagnosticReportFilterBo = new DiagnosticReportFilterBo(patientId,null, null, null, null);
         List<DiagnosticReportBo> result = listDiagnosticReportInfoService.execute(diagnosticReportFilterBo);
         Assertions.assertThat(result)
-                .hasSize(2);
+                .hasSize(3);
     }
 
     @Test
@@ -99,7 +99,6 @@ public class ListDiagnosticReportInfoServiceImplTest extends UnitRepository {
         Integer papera_id = save(HealthConditionTestMocks.createPersonalHistory(patientId, sctId_papera, ConditionClinicalStatus.ACTIVE, ConditionVerificationStatus.CONFIRMED)).getId();
         save(HealthConditionTestMocks.createHealthConditionDocument(outpatient_doc_id, papera_id));
 
-
         Integer diagnosticReportId = save(DiagnosticReportTestMocks.createDiagnosticReport(patientId, sctId_radiografia, DiagnosticReportStatus.REGISTERED, "", null, angina_id)).getId();
         save(DiagnosticReportTestMocks.createDocumentDiagnosticReport(order1_doc_id, diagnosticReportId));
 
@@ -107,6 +106,9 @@ public class ListDiagnosticReportInfoServiceImplTest extends UnitRepository {
         save(DiagnosticReportTestMocks.createDocumentDiagnosticReport(order1_doc_id, diagnosticReportId));
 
         diagnosticReportId = save(DiagnosticReportTestMocks.createDiagnosticReport(patientId, sctId_radiografia, DiagnosticReportStatus.REGISTERED,"", null, angina_id)).getId();
+        save(DiagnosticReportTestMocks.createDocumentDiagnosticReport(order2_doc_id, diagnosticReportId));
+
+        diagnosticReportId = save(DiagnosticReportTestMocks.createDiagnosticReport(patientId, sctId_resonancia, DiagnosticReportStatus.REGISTERED,"", null, angina_id)).getId();
         save(DiagnosticReportTestMocks.createDocumentDiagnosticReport(order2_doc_id, diagnosticReportId));
 
         diagnosticReportId = save(DiagnosticReportTestMocks.createDiagnosticReport(patientId, sctId_resonancia, DiagnosticReportStatus.FINAL,"", null, angina_id)).getId();
@@ -126,9 +128,9 @@ public class ListDiagnosticReportInfoServiceImplTest extends UnitRepository {
         result = listDiagnosticReportInfoService.execute(new DiagnosticReportFilterBo(patientId,null, null, "Sarampión", null));
         Assertions.assertThat(result).isEmpty();
 
-        result = listDiagnosticReportInfoService.execute(new DiagnosticReportFilterBo(patientId,null, "Reso", "Angi", null));
+        result = listDiagnosticReportInfoService.execute(new DiagnosticReportFilterBo(patientId,null, "Radio", "Angi", null));
         Assertions.assertThat(result)
-                .hasSize(1);
+                .hasSize(2);
 
         result = listDiagnosticReportInfoService.execute(new DiagnosticReportFilterBo(patientId,DiagnosticReportStatus.FINAL, null, null, null));
         Assertions.assertThat(result)
@@ -136,7 +138,7 @@ public class ListDiagnosticReportInfoServiceImplTest extends UnitRepository {
 
         result = listDiagnosticReportInfoService.execute(new DiagnosticReportFilterBo(patientId,DiagnosticReportStatus.REGISTERED, null, null, null));
         Assertions.assertThat(result)
-                .hasSize(2);
+                .hasSize(3);
 
         result = listDiagnosticReportInfoService.execute(new DiagnosticReportFilterBo(patientId,DiagnosticReportStatus.REGISTERED, null, "Pape", null));
         Assertions.assertThat(result)
@@ -148,7 +150,7 @@ public class ListDiagnosticReportInfoServiceImplTest extends UnitRepository {
 
         result = listDiagnosticReportInfoService.execute(new DiagnosticReportFilterBo(patientId, null, null, null, ServiceRequestCategory.COUNSELLING));
         Assertions.assertThat(result)
-                .hasSize(2);
+                .hasSize(1);
 
         result = listDiagnosticReportInfoService.execute(new DiagnosticReportFilterBo(patientId, DiagnosticReportStatus.FINAL, null, null, ServiceRequestCategory.COUNSELLING));
         Assertions.assertThat(result)

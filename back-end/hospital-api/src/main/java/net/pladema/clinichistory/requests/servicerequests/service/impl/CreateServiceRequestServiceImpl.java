@@ -5,11 +5,17 @@ import net.pladema.clinichistory.hospitalization.service.documents.validation.Sn
 import net.pladema.clinichistory.requests.servicerequests.repository.ServiceRequestRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequest;
 import net.pladema.clinichistory.requests.servicerequests.service.CreateServiceRequestService;
+import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportBo;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class CreateServiceRequestServiceImpl implements CreateServiceRequestService {
@@ -31,6 +37,7 @@ public class CreateServiceRequestServiceImpl implements CreateServiceRequestServ
         LOG.debug("Input parameters -> serviceRequestBo {}", serviceRequestBo);
 
         assertRequiredFields(institutionId, serviceRequestBo);
+        assertNoDuplicatedStudies(serviceRequestBo);
         ServiceRequest newServiceRequest = createServiceRequest(institutionId, serviceRequestBo);
         serviceRequestBo.setEncounterId(newServiceRequest.getId());
         documentFactory.run(serviceRequestBo);
@@ -49,6 +56,13 @@ public class CreateServiceRequestServiceImpl implements CreateServiceRequestServ
             snomedValidator.isValid(dr.getSnomed());
             Assert.notNull(dr.getHealthConditionId(), "El estudio tiene que estar asociado a un problema");
         });
+    }
+
+    private void assertNoDuplicatedStudies(ServiceRequestBo serviceRequestBo) {
+        Map<Pair<Integer, String>, List<DiagnosticReportBo>> result = serviceRequestBo.getDiagnosticReports()
+                .stream()
+                .collect(Collectors.groupingBy(p -> Pair.of(p.getHealthConditionId(), p.getSnomed().getSctid())));
+        result.forEach((k,v) -> Assert.isTrue(v.size() == 1, "La orden no puede contener más de un estudio con el mismo problema y el mismo tipo de estudio"));
     }
 
     private ServiceRequest createServiceRequest(Integer institutionId, ServiceRequestBo serviceRequestBo) {

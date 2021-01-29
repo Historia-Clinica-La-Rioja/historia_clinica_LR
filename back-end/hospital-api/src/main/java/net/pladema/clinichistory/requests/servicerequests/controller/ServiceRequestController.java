@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.requests.servicerequests.controller;
 
 import io.swagger.annotations.Api;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DiagnosticReportStatus;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;

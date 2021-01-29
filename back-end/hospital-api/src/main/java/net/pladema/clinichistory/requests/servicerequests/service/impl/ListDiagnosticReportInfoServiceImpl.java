@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.requests.servicerequests.service.impl;
 
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DiagnosticReportStatus;
 import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionBo;
 import net.pladema.clinichistory.documents.service.ips.domain.SnomedBo;
 import net.pladema.clinichistory.requests.servicerequests.repository.ListDiagnosticReportRepository;
@@ -31,7 +32,7 @@ public class ListDiagnosticReportInfoServiceImpl implements ListDiagnosticReport
     public List<DiagnosticReportBo> execute(DiagnosticReportFilterBo filter) {
         DiagnosticReportFilterVo filterVo = new DiagnosticReportFilterVo(
                 filter.getPatientId(),
-                filter.getStatus(),
+                filter.getStatus() == null ? DiagnosticReportStatus.REGISTERED : filter.getStatus(),
                 filter.getStudy(),
                 filter.getHealthCondition(),
                 filter.getCategory()

@@ -101,6 +101,17 @@ public class CreateServiceRequestServiceImplTest {
     }
 
     @Test
+    public void execute_withDuplicatedStudy() {
+        ServiceRequestBo serviceRequestBo = getServiceRequestBoWithDuplicatedStudy();
+        Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
+                createServiceRequestServiceImpl.execute(1, serviceRequestBo)
+        );
+        String expectedMessage = "La orden no puede contener más de un estudio con el mismo problema y el mismo tipo de estudio";
+        String actualMessage = exception.getMessage();
+        Assertions.assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
     public void execute_success() {
         ServiceRequestBo serviceRequestBo = getValidServiceRequest();
         Integer medicationRequestId = createServiceRequestServiceImpl.execute(1,serviceRequestBo);
@@ -122,7 +133,7 @@ public class CreateServiceRequestServiceImplTest {
         diagnosticReportBo1.setSnomed(getValidSnomed());
 
         DiagnosticReportBo diagnosticReportBo2 = new DiagnosticReportBo();
-        diagnosticReportBo2.setHealthConditionId(1);
+        diagnosticReportBo2.setHealthConditionId(2);
         diagnosticReportBo2.setObservations("jakek + fuerte");
         diagnosticReportBo2.setSnomed(getValidSnomed());
 
@@ -133,7 +144,39 @@ public class CreateServiceRequestServiceImplTest {
         serviceRequestBo.setDoctorId(1);
         serviceRequestBo.setNoteId(1L);
         serviceRequestBo.setMedicalCoverageId(4);
-        serviceRequestBo.setDiagnosticReports(List.of(diagnosticReportBo1,diagnosticReportBo2));
+        serviceRequestBo.setDiagnosticReports(List.of(diagnosticReportBo1, diagnosticReportBo2));
+        return serviceRequestBo;
+    }
+
+    private ServiceRequestBo getServiceRequestBoWithDuplicatedStudy() {
+
+
+        DiagnosticReportBo diagnosticReportBo1 = new DiagnosticReportBo();
+        diagnosticReportBo1.setHealthConditionId(1);
+        diagnosticReportBo1.setObservations("Una observacion");
+        diagnosticReportBo1.setSnomed(getValidSnomed());
+
+        DiagnosticReportBo diagnosticReportBo2 = new DiagnosticReportBo();
+        diagnosticReportBo2.setHealthConditionId(1);
+        diagnosticReportBo2.setObservations("Una observacion diferenTe");
+        diagnosticReportBo2.setSnomed(getValidSnomed());
+
+        DiagnosticReportBo diagnosticReportBo3 = new DiagnosticReportBo();
+        diagnosticReportBo3.setHealthConditionId(1);
+        diagnosticReportBo3.setObservations("Una observacion para el virusOriboca");
+        diagnosticReportBo3.setSnomed(
+                new SnomedBo(
+                        "25582006",
+                        "enfermedad por el virus Oriboca"));
+
+        var serviceRequestBo = new ServiceRequestBo();
+        serviceRequestBo.setPatientInfo(new PatientInfoBo(1, (short) 1, (short) 1));
+        serviceRequestBo.setCategoryId(ServiceRequestCategory.LABORATORY_PROCEDURE);
+        serviceRequestBo.setEncounterId(1);
+        serviceRequestBo.setDoctorId(1);
+        serviceRequestBo.setNoteId(1L);
+        serviceRequestBo.setMedicalCoverageId(4);
+        serviceRequestBo.setDiagnosticReports(List.of(diagnosticReportBo1, diagnosticReportBo2, diagnosticReportBo3));
         return serviceRequestBo;
     }
 

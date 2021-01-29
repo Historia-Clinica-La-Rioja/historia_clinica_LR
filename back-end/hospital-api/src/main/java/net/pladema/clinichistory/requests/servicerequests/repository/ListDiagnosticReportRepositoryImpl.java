@@ -30,7 +30,7 @@ public class ListDiagnosticReportRepositoryImpl implements ListDiagnosticReportR
                 "SELECT DISTINCT " +
                 "dr.id, dr.snomed_id, dr.status_id, dr.health_condition_id, dr.note_id, " +
                 "dr.effective_time, d.source_id, d.created_by, dr.updated_on, sr.category_id AS sr_categoryId, " +
-                "row_number() OVER (PARTITION by dr.snomed_id, dr.health_condition_id ORDER BY dr.updated_on desc) AS rw " +
+                "row_number() OVER (PARTITION by sr.id, dr.snomed_id, dr.health_condition_id ORDER BY dr.updated_on desc) AS rw " +
                 "FROM document d " +
                 "JOIN document_diagnostic_report ddr ON d.id = ddr.document_id " +
                 "JOIN diagnostic_report dr ON ddr.diagnostic_report_id = dr.id " +
