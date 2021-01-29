@@ -38,6 +38,9 @@ public class Triage  extends SGXAuditableEntity {
 	private Short triageCategoryId;
 
 
+	@Column(name = "doctors_office_id")
+	private Integer doctorsOfficeId;
+
 	public Triage(TriageBo triageBo) {
 		this.id = triageBo.getId();
 		this.emergencyCareEpisodeId = triageBo.getEmergencyCareEpisodeId();
