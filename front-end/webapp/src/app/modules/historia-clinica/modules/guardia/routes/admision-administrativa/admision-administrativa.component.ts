@@ -207,7 +207,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 
 	goToTriage(administrativeAdmission: AdministrativeAdmission): void {
 		this.newEpisodeService.setAdministrativeAdmission(administrativeAdmission);
-		this.triageDefinitionsService.getTriagePath(this.form.value.emergencyCareTypeId)
+		this.triageDefinitionsService.getTriagePath(administrativeAdmission?.emergencyCareTypeId)
 			.subscribe(({ url }) => this.router.navigateByUrl(url));
 	}
 
