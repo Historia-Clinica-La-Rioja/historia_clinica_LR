@@ -9,7 +9,8 @@
 			"INTERNACION": "Internación",
 			"PACIENTES": "Pacientes",
 			"PERFIL": "Mi cuenta",
-			"TURNOS": "Gestión de turnos"
+			"TURNOS": "Gestión de turnos",
+			"CONFIGURACION": "Configuración"
 		}
 	},
 	"buttons": {

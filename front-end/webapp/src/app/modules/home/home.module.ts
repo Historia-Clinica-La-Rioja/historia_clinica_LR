@@ -9,12 +9,14 @@ import { ProfileComponent } from './routes/profile/profile.component';
 import { HomeRoutingModule } from './home-routing.module';
 import { HomeComponent } from './home.component';
 import { InstitucionesComponent } from './routes/instituciones/instituciones.component';
+import { SettingsComponent } from './routes/settings/settings.component';
 
 @NgModule({
 	declarations: [
 		HomeComponent,
 		ProfileComponent,
 		InstitucionesComponent,
+		SettingsComponent,
 	],
 	imports: [
 		CommonModule,

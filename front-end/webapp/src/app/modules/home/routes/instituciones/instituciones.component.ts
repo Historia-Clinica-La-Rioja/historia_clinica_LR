@@ -1,10 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {LoggedUserService} from '../../../auth/services/logged-user.service';
-import {RoleAssignment} from '@api-rest/api-model';
+import {ERole, RoleAssignment} from '@api-rest/api-model';
 import {Router} from '@angular/router';
 import {InstitutionService} from '@api-rest/services/institution.service';
 import {uniqueItems} from '@core/utils/array.utils';
-import { ContextService } from './../../../core/services/context.service';
 
 @Component({
 	selector: 'app-instituciones',
@@ -18,12 +17,11 @@ export class InstitucionesComponent implements OnInit {
 	constructor(
 		loggedUserService: LoggedUserService,
 		institutionService: InstitutionService,
-		private contextService: ContextService,
 		private router: Router,
 	) {
 		loggedUserService.assignments$.subscribe((allRoles: RoleAssignment[]) => {
 			const institutionIds = allRoles
-				.filter((ra) => ra.institutionId >= 0 && ra.role !== 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')
+				.filter((ra) => ra.institutionId >= 0 && ra.role !== ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE)
 				.map(r => r.institutionId);
 
 			this.backoffice = this.hasAccessToBackoffice(allRoles);
@@ -36,8 +34,8 @@ export class InstitucionesComponent implements OnInit {
 				const onlyBackoffice = !webappAccess && this.backoffice;
 				const hasSingleIdWebapp = !this.backoffice && webappAccess && uniqueIds.length === 1;
 
-				if (hasSingleIdWebapp || onlyBackoffice)
-					this.ingresar({id: uniqueIds[0]}, this.backoffice)
+				//if (hasSingleIdWebapp || onlyBackoffice)
+				//	this.ingresar({id: uniqueIds[0]}, this.backoffice)
 				this.institutions = institutions;
 			});
 		});
@@ -56,15 +54,15 @@ export class InstitucionesComponent implements OnInit {
 
 	hasAccessToBackoffice(allRoles: RoleAssignment[]){
 		return allRoles
-			.filter((ra) => ra.role === 'ROOT' ||
-				ra.role === 'ADMINISTRADOR' ||
-				ra.role === 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE' ).length > 0;
+			.filter((ra) => ra.role === ERole.ROOT ||
+				ra.role === ERole.ADMINISTRADOR ||
+				ra.role === ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE ).length > 0;
 	}
 
 	hasAccessToWebapp(allRoles: RoleAssignment[]){
 		return allRoles
-			.filter((ra) => ra.role !== 'ROOT' &&
-				ra.role !== 'ADMINISTRADOR' &&
-				ra.role !== 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE' ).length > 0;
+			.filter((ra) => ra.role !== ERole.ROOT &&
+				ra.role !== ERole.ADMINISTRADOR &&
+				ra.role !== ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE ).length > 0;
 	}
 }

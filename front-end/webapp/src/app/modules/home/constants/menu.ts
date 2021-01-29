@@ -1,3 +1,4 @@
+import { ERole } from '@api-rest/api-model';
 import { MenuItem } from '@core/core-model';
 
 export const SIDEBAR_MENU: MenuItem[] = [
@@ -13,6 +14,15 @@ export const SIDEBAR_MENU: MenuItem[] = [
 		icon: 'account_circle',
 		id: 'home_profile',
 		url: '/home/profile',
+	},
+	{
+		text: 'app.menu.CONFIGURACION',
+		icon: 'settings',
+		id: 'home_settings',
+		url: '/home/settings',
+		permissions: [
+			ERole.ROOT,
+		],
 	},
 
 ];
