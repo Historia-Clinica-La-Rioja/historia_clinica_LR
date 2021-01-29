@@ -136,7 +136,7 @@ public class ListDiagnosticReportInfoServiceImplTest extends UnitRepository {
 
         result = listDiagnosticReportInfoService.execute(new DiagnosticReportFilterBo(patientId,DiagnosticReportStatus.REGISTERED, null, null));
         Assertions.assertThat(result)
-                .hasSize(3);
+                .hasSize(2);
 
         result = listDiagnosticReportInfoService.execute(new DiagnosticReportFilterBo(patientId,DiagnosticReportStatus.REGISTERED, null, "Pape"));
         Assertions.assertThat(result)

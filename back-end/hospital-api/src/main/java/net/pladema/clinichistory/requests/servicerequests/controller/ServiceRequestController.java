@@ -217,7 +217,7 @@ public class ServiceRequestController {
     @GetMapping
     public List<DiagnosticReportInfoDto> getList(@PathVariable(name = "institutionId") Integer institutionId,
                                                  @PathVariable(name = "patientId") Integer patientId,
-                                                 @RequestParam(value = "status", required = false) String status,
+                                                 @RequestParam(value = "statusId", required = false) String status,
                                                  @RequestParam(value = "diagnosticReport", required = false) String diagnosticReport,
                                                  @RequestParam(value = "healthCondition", required = false) String healthCondition) {
         LOG.debug("Input parameters -> institutionId {} patientId {}, status {}, diagnosticReport {}, healthCondition {}",

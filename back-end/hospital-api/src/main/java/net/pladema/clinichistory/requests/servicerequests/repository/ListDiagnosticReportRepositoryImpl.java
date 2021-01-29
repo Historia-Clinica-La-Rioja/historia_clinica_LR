@@ -52,7 +52,7 @@ public class ListDiagnosticReportRepositoryImpl implements ListDiagnosticReportR
                 "          ) AS h ON (h.id = t.health_condition_id) " +
                 "WHERE rw = 1 " +
                 "AND NOT t.status_id = :invalidStatus "+
-                (filter.getStatus() != null ? "AND UPPER(t.status_id) LIKE :statusId " : "") +
+                (filter.getStatus() != null ? "AND UPPER(t.status_id) = :statusId " : "") +
                 (filter.getDiagnosticReport() != null ? "AND UPPER(s.pt) LIKE :diagnosticReport " : "") +
                 (filter.getHealthCondition() != null ? "AND UPPER(h.pt) LIKE :healthCondition " : "") +
                 "ORDER BY t.updated_on";
@@ -65,7 +65,7 @@ public class ListDiagnosticReportRepositoryImpl implements ListDiagnosticReportR
                 .setParameter("invalidStatus", DiagnosticReportStatus.ERROR);
 
         if (filter.getStatus() != null)
-            query.setParameter("statusId", "%"+filter.getStatus().toUpperCase()+"%");
+            query.setParameter("statusId", filter.getStatus().toUpperCase());
 
         if (filter.getDiagnosticReport() != null)
             query.setParameter("diagnosticReport", "%"+filter.getDiagnosticReport().toUpperCase()+"%");
