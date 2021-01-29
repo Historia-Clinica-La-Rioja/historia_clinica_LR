@@ -198,10 +198,9 @@ export class AdmisionAdministrativaComponent implements OnInit {
 	}
 
 	setAmbulanceCompanyIdStatus(): void {
-		if (this.form.value.emergencyCareEntranceTypeId === EmergencyCareEntranceType.AMBULANCIA_CON_MEDICO || this.form.value.emergencyCareEntranceTypeId === EmergencyCareEntranceType.AMBULANCIA_SIN_MEDICO) {
-			this.form.controls.ambulanceCompanyId.enable();
-		} else {
-			this.form.controls.ambulanceCompanyId.disable();
+		if (this.form.value.emergencyCareEntranceTypeId !== EmergencyCareEntranceType.AMBULANCIA_CON_MEDICO
+			|| this.form.value.emergencyCareEntranceTypeId !== EmergencyCareEntranceType.AMBULANCIA_SIN_MEDICO) {
+				this.form.controls.ambulanceCompanyId.setValue(null);
 		}
 	}
 
