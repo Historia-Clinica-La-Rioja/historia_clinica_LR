@@ -172,7 +172,7 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
         }
 
         if (MedicationStatementStatus.STOPPED.equals(newStatusId)) {
-            result.setEndDate(dateTimeProvider.nowDate());
+            result.setEndDate(dateTimeProvider.nowDate().minusDays(1));
             result.setSuspendedStartDate(null);
             result.setSuspendedEndDate(null);
             result.setChronic(false);
