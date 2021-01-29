@@ -50,9 +50,12 @@
 		<div formGroupName="breathing">
 			<mat-form-field appearance="outline" fxLayout="row">
 				<mat-label [translate]="'guardia.triage.RESPIRATORY_RATE'"></mat-label>
-				<input matInput type="text" id="respiratoryRate" name="respiratoryRate"
-					formControlName="respiratoryRate"
-					placeholder="{{'guardia.triage.RESPIRATORY_RATE' | translate }}">
+				<input matInput id="respiratoryRate" name="respiratoryRate"
+					formControlName="respiratoryRate" placeholder="{{'guardia.triage.RESPIRATORY_RATE' | translate }}"
+					type="number">
+				<mat-error *ngIf="hasError(pediatricForm.get('breathing'), 'min', 'respiratoryRate')"
+					[translate]="'forms.MIN_ERROR'" [translateParams]="{min: minValue}">
+				</mat-error>
 			</mat-form-field>
 			<mat-form-field appearance="outline" fxLayout="row">
 				<mat-label [translate]="'guardia.triage.RESPIRATORY_RETRACTION'"></mat-label>
@@ -79,6 +82,8 @@
 				<mat-label [translate]="'guardia.triage.OXYGEN_SATURATION'"></mat-label>
 				<input id="bloodOxygenSaturation" name="bloodOxygenSaturation" formControlName="bloodOxygenSaturation"
 					placeholder="00" type="number" matInput>
+				<mat-error *ngIf="hasError(pediatricForm.get('breathing'), 'min', 'bloodOxygenSaturation')"
+					[translate]="'forms.MIN_ERROR'" [translateParams]="{min: minValue}"></mat-error>
 			</mat-form-field>
 		</div>
 
@@ -95,8 +100,10 @@
 			</mat-form-field>
 			<mat-form-field appearance="outline" fxLayout="row">
 				<mat-label [translate]="'guardia.triage.HEART_RATE'"></mat-label>
-				<input matInput type="text" id="heartRate" name="heartRate" formControlName="heartRate"
-					placeholder="{{'guardia.triage.HEART_RATE' | translate }}">
+				<input matInput id="heartRate" name="heartRate" formControlName="heartRate"
+					placeholder="{{'guardia.triage.HEART_RATE' | translate }}" type="number">
+					<mat-error *ngIf="hasError(pediatricForm.get('circulation'), 'min', 'heartRate')"
+					[translate]="'forms.MIN_ERROR'" [translateParams]="{min: minValue}"></mat-error>
 			</mat-form-field>
 		</div>
 	</form>

@@ -1,8 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DateTimeDto, MasterDataDto, NewEffectiveClinicalObservationDto, TriagePediatricDto } from '@api-rest/api-model';
 import { dateToDateTimeDto } from '@api-rest/mapper/date-dto.mapper';
 import { TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
+import { VITAL_SIGNS } from '@core/constants/validation-constants';
+import { hasError } from '@core/utils/form.utils';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -24,6 +26,8 @@ export class PediatricTriageComponent implements OnInit {
 	perfusionOptions$: Observable<MasterDataDto[]>;
 	respiratoryRetractionOptions$: Observable<MasterDataDto[]>;
 
+	hasError = hasError;
+	minValue = VITAL_SIGNS.min_value;
 	constructor(private formBuilder: FormBuilder,
 		private readonly triageMasterDataService: TriageMasterDataService) {
 	}
@@ -38,13 +42,13 @@ export class PediatricTriageComponent implements OnInit {
 
 			}),
 			breathing: this.formBuilder.group({
-				bloodOxygenSaturation: [null],
-				respiratoryRate: [null],
+				bloodOxygenSaturation: [null, Validators.min(this.minValue)],
+				respiratoryRate: [null, Validators.min(this.minValue)],
 				respiratoryRetractionId: [null],
 				stridor: [null]
 			}),
 			circulation: this.formBuilder.group({
-				heartRate: [null],
+				heartRate: [null, Validators.min(this.minValue)],
 				perfusionId: [null]
 			}),
 		});
@@ -63,8 +67,10 @@ export class PediatricTriageComponent implements OnInit {
 	}
 
 	confirm(): void {
-		const triage: TriagePediatricDto = this.toTriagePediatricDto();
-		this.onConfirm.emit(triage);
+		if (this.pediatricForm.valid) {
+			const triage: TriagePediatricDto = this.toTriagePediatricDto();
+			this.onConfirm.emit(triage);
+		}
 	}
 
 	back(): void {
