@@ -89,10 +89,6 @@ public class EmergencyCareBo {
         this.getTriage().setVitalSignIds(vitalSignIds);
     }
 
-    public void setProfessionalId(Integer professionalId) {
-        this.getTriage().setProfessionalId(professionalId);
-    }
-
     public Integer getPersonId() {
         return (this.getPatient() != null && this.getPatient().getPerson() != null) ?
             this.getPatient().getPerson().getId() : null;

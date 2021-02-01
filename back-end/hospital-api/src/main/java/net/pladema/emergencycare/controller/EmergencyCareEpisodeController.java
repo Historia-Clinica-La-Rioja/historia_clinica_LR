@@ -104,8 +104,6 @@ public class EmergencyCareEpisodeController {
         newEmergencyCare.setInstitutionId(institutionId);
         List<SnomedDto> reasons = reasonExternalService.addReasons(body.reasons());
         newEmergencyCare.setReasons(snomedMapper.toListReasonBo(reasons));
-        Integer professionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
-        newEmergencyCare.setProfessionalId(professionalId);
         newEmergencyCare = emergencyCareEpisodeService.createAdministrative(newEmergencyCare);
         Integer result = newEmergencyCare.getId();
         LOG.debug("Output -> {}", result);
@@ -129,9 +127,6 @@ public class EmergencyCareEpisodeController {
         List<SnomedDto> reasons = reasonExternalService.addReasons(body.reasons());
         newEmergencyCare.setReasons(snomedMapper.toListReasonBo(reasons));
 
-        Integer professionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
-        newEmergencyCare.setProfessionalId(professionalId);
-
         newEmergencyCare = emergencyCareEpisodeService.createAdult(newEmergencyCare);
         Integer result = newEmergencyCare.getId();
         LOG.debug("Output -> {}", result);
@@ -153,9 +148,6 @@ public class EmergencyCareEpisodeController {
 
         List<SnomedDto> reasons = reasonExternalService.addReasons(body.reasons());
         newEmergencyCare.setReasons(snomedMapper.toListReasonBo(reasons));
-
-        Integer professionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
-        newEmergencyCare.setProfessionalId(professionalId);
 
         newEmergencyCare = emergencyCareEpisodeService.createPediatric(newEmergencyCare);
         Integer result = newEmergencyCare.getId();
