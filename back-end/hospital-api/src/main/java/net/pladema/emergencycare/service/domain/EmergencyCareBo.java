@@ -98,4 +98,8 @@ public class EmergencyCareBo {
         this.getPatient().getPerson().setPhoto(photo);
     }
 
+    public Integer getDoctorsOfficeId() {
+        return (this.getDoctorsOffice() != null) ? this.getDoctorsOffice().getId() : null;
+    }
+
 }

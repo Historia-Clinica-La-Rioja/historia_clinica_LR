@@ -987,6 +987,7 @@ export interface NewEffectiveClinicalObservationDto extends ClinicalObservationD
 }
 
 export interface NewEmergencyCareDto extends AEmergencyCareDto {
+    doctorsOfficeId?: number;
 }
 
 export interface NewMedicalRequestDto {

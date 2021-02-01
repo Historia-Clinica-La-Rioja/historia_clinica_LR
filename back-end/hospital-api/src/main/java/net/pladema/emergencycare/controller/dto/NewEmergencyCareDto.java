@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 @Getter
@@ -13,9 +14,14 @@ import java.util.List;
 @NoArgsConstructor(force = true)
 public class NewEmergencyCareDto extends AEmergencyCareDto {
 
+    @Nullable
+    private Integer doctorsOfficeId;
+
     @Builder(builderMethodName = "newAdministrativeBuilder")
     public NewEmergencyCareDto(List<SnomedDto> reasons, Short emergencyCareTypeId,
-                               Short entranceTypeId, PoliceInterventionDto policeIntervention, String ambulanceCompanyId, AEmergencyCarePatientDto patient){
+                               Short entranceTypeId, PoliceInterventionDto policeIntervention,
+                               String ambulanceCompanyId, AEmergencyCarePatientDto patient, Integer doctorsOfficeId){
         super(reasons, emergencyCareTypeId, entranceTypeId, policeIntervention, ambulanceCompanyId, patient);
+        this.doctorsOfficeId = doctorsOfficeId;
     }
 }
