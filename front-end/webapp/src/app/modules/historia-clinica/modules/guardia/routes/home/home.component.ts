@@ -90,6 +90,7 @@ export class HomeComponent implements OnInit {
 
 		const dialogRef = this.dialog.open(SelectConsultorioComponent, {
 			width: '25%',
+			data: {title : 'guardia.select_consultorio.ATENDER'}
 		});
 
 		dialogRef.afterClosed().subscribe(consultorio => {

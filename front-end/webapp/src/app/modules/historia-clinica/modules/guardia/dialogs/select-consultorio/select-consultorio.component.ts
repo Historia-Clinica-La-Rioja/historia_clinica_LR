@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DoctorsOfficeDto } from '@api-rest/api-model';
@@ -19,7 +19,8 @@ export class SelectConsultorioComponent implements OnInit {
 	constructor(
 		private readonly dialogRef: MatDialogRef<SelectConsultorioComponent>,
 		private readonly formBuilder: FormBuilder,
-		private readonly doctorsOfficeService: DoctorsOfficeService
+		private readonly doctorsOfficeService: DoctorsOfficeService,
+		@Inject(MAT_DIALOG_DATA) public data: { title: string},
 	) {
 	}
 

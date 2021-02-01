@@ -1,6 +1,12 @@
 <app-content width="full">
 
-	<h1 translate="guardia.episode.TITLE"></h1>
+	<div fxLayout="row" fxLayoutAlign="space-between">
+		<h1 translate="guardia.episode.TITLE"></h1>
+		<button *ngIf="episodeState === enAtencion" id="nuevo-triage" mat-raised-button color="primary" (click)="cancelAttention()"
+			style="height: 90%;">
+			{{ 'guardia.episode.CANCEL_ATTENTION' | translate | uppercase }}
+		</button>
+	</div>
 
 	<div fxLayoutGap="24px">
 
@@ -51,15 +57,16 @@
 								{{policeIntervention.firstName}}
 								{{policeIntervention.lastName}}</span>
 							<div *ngIf="policeIntervention.plateNumber" fxLayoutGap="3px">
-								<label
-									*ngIf="policeIntervention.firstName || policeIntervention.lastName">•</label>
+								<label *ngIf="policeIntervention.firstName || policeIntervention.lastName">•</label>
 								<span>Placa. Nº {{policeIntervention.plateNumber}}</span>
 							</div>
 						</div>
 						<div fxLayout="row" fxLayoutGap="3px" class="content-secondary">
-							<span *ngIf="policeIntervention.dateCall">{{ policeIntervention.dateCall | viewDateDto: 'date' | date: 'dd/MM/yyyy' }}</span>
+							<span *ngIf="policeIntervention.dateCall">{{ policeIntervention.dateCall | viewDateDto:
+								'date' | date: 'dd/MM/yyyy' }}</span>
 							<span *ngIf="policeIntervention.dateCall && policeIntervention.timeCall"> - </span>
-							<span *ngIf="policeIntervention.timeCall">{{ policeIntervention.timeCall | viewDateDto: 'time' | date: 'HH:mm' }} hs</span>
+							<span *ngIf="policeIntervention.timeCall">{{ policeIntervention.timeCall | viewDateDto:
+								'time' | date: 'HH:mm' }} hs</span>
 						</div>
 					</div>
 				</div>
@@ -75,8 +82,8 @@
 					<h3 class="triage-subtitle-weight" style="margin-bottom: 0">
 						{{ 'guardia.episode.triage.HISTORIAL' | translate}}
 					</h3>
-					<div *ngIf="triagesHistory?.length else noInfo"
-						 style="margin-top: 16px" fxLayout="column" fxLayoutGap="10px">
+					<div *ngIf="triagesHistory?.length else noInfo" style="margin-top: 16px" fxLayout="column"
+						fxLayoutGap="10px">
 						<mat-card class="triage-list-item" *ngFor="let triage of triagesHistory">
 							<mat-card-content>
 								<div fxLayout="row" fxLayoutAlign="space-between">

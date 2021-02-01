@@ -15,10 +15,13 @@ import { SearchPatientComponent } from 'src/app/modules/pacientes/component/sear
 import { TriageService } from '@api-rest/services/triage.service';
 import { Triage } from '../../components/triage-details/triage-details.component';
 import { GuardiaMapperService } from '../../services/guardia-mapper.service';
-import { EmergencyCareTypes, Triages } from '../../constants/masterdata';
+import { EmergencyCareTypes, EstadosEpisodio, Triages } from '../../constants/masterdata';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { TriageCategory } from '../../components/triage-chip/triage-chip.component';
 import { TriageDefinitionsService } from '../../services/triage-definitions.service';
+import { EpisodeStateService } from '../../services/episode-state.service';
+import { SelectConsultorioComponent } from '../../dialogs/select-consultorio/select-consultorio.component';
+import { EmergencyCareEpisodeStateService } from '@api-rest/services/emergency-care-episode-state.service';
 
 @Component({
 	selector: 'app-episode-details',
@@ -39,7 +42,8 @@ export class EpisodeDetailsComponent implements OnInit {
 	emergencyCareType: EmergencyCareTypes;
 	lastTriage: Triage;
 	triagesHistory: TriageReduced[];
-
+	episodeState: EstadosEpisodio;
+	enAtencion = EstadosEpisodio.EN_ATENCION;
 	constructor(
 		private readonly route: ActivatedRoute,
 		private readonly patientService: PatientService,
@@ -51,13 +55,20 @@ export class EpisodeDetailsComponent implements OnInit {
 		private readonly triageService: TriageService,
 		private readonly guardiaMapperService: GuardiaMapperService,
 		private snackBarService: SnackBarService,
-		private readonly triageDefinitionsService: TriageDefinitionsService
+		private readonly triageDefinitionsService: TriageDefinitionsService,
+		private readonly episodeStateService: EpisodeStateService,
+		private readonly emergencyCareEpisodeStateService: EmergencyCareEpisodeStateService,
 	) { }
 
 	ngOnInit(): void {
 		this.route.paramMap.subscribe(
 			(params) => {
 				this.episodeId = Number(params.get('id'));
+
+
+				this.emergencyCareEpisodeStateService.getState(this.episodeId).subscribe(
+					state => this.episodeState = state.id
+				);
 
 				this.emergencyCareEpisodeService.getAdministrative(this.episodeId)
 					.subscribe((responseEmergencyCare: ResponseEmergencyCareDto) => {
@@ -140,8 +151,8 @@ export class EpisodeDetailsComponent implements OnInit {
 
 	newTriage(): void {
 		this.triageDefinitionsService.getTriagePath(this.emergencyCareType)
-			.subscribe( ({ component }) => {
-				const dialogRef = this.dialog.open(component, {data: this.episodeId});
+			.subscribe(({ component }) => {
+				const dialogRef = this.dialog.open(component, { data: this.episodeId });
 				dialogRef.afterClosed().subscribe(idReturned => {
 					if (idReturned) {
 						this.loadTriages();
@@ -150,6 +161,27 @@ export class EpisodeDetailsComponent implements OnInit {
 			});
 	}
 
+
+	cancelAttention(): void {
+		const dialogRef = this.dialog.open(SelectConsultorioComponent, {
+			width: '25%',
+			data: { title: 'guardia.episode.CANCEL_ATTENTION' }
+		});
+
+		dialogRef.afterClosed().subscribe(consultorio => {
+			if (consultorio) {
+				this.episodeStateService.cancelar(this.episodeId, consultorio.id).subscribe(changed => {
+					if (changed) {
+						this.snackBarService.showSuccess(`guardia.episode.cancel_attention.SUCCESS`);
+						this.episodeState = EstadosEpisodio.EN_ESPERA;
+					} else {
+						this.snackBarService.showError(`guardia.episode.cancel_attention.ERROR`);
+					}
+				}, _ => this.snackBarService.showError(`guardia.episode.cancel_attention.ERROR`)
+				);
+			}
+		});
+	}
 }
 
 export interface TriageReduced {

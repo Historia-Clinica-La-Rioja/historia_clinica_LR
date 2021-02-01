@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
+import { MasterDataDto } from '@api-rest/api-model';
 
 const BASIC_URL_PREFIX = '/institution';
 const BASIC_URL_SUFIX = '/emergency-care/episodes';
@@ -23,6 +24,12 @@ export class EmergencyCareEpisodeStateService {
 		BASIC_URL_SUFIX}/${episodeId}/state`;
 
 		return this.http.post<boolean>(url, {}, {params});
+	}
+
+	getState(episodeId: number): Observable<MasterDataDto> {
+		const url = `${environment.apiBase + BASIC_URL_PREFIX}/${this.contextService.institutionId +
+			BASIC_URL_SUFIX}/${episodeId}/state`;
+		return this.http.get<MasterDataDto>(url);
 	}
 
 	private buildChangeStateParams(emergencyCareEpisodeStateId: number, doctorsOfficeId?: number): HttpParams {
