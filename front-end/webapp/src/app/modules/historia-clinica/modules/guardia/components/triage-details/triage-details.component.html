@@ -14,8 +14,8 @@
 
 			<div class="info" fxLayout="column" fxLayoutGap="6px" fxLayoutAlign="space-between">
 				<span>{{ 'guardia.episode.triage.ultimo.REALIZADO_POR' | translate }}</span>
-				<span *ngIf="triage.professional else noInfo" class="padding-to-align-chip">
-					{{ triage.professional.firstName }} {{ triage.professional.lastName }}
+				<span *ngIf="triage.createdBy else noInfo" class="padding-to-align-chip">
+					{{ triage.createdBy.firstName }} {{ triage.createdBy.lastName }}
 				</span>
 			</div>
 

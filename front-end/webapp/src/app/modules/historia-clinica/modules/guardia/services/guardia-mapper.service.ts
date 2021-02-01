@@ -24,7 +24,7 @@ export class GuardiaMapperService {
 				name: triageListDto.category.name,
 				colorHex: triageListDto.category.color.code
 			},
-			professional: triageListDto.professional,
+			createdBy: triageListDto.createdBy,
 			doctorsOfficeDescription: triageListDto.doctorsOffice?.description,
 			vitalSigns: mapVitalSigns(triageListDto.vitalSigns),
 			appearance: mapAppearance(triageListDto.appearance),
@@ -117,7 +117,7 @@ export class GuardiaMapperService {
 				name: triageListDto.category.name,
 				colorHex: triageListDto.category.color.code
 			},
-			professional: triageListDto.professional,
+			createdBy: triageListDto.createdBy,
 			doctorsOfficeDescription: triageListDto.doctorsOffice?.description
 		};
 	}

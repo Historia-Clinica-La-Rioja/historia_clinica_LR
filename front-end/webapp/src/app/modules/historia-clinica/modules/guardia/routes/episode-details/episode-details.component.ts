@@ -187,7 +187,7 @@ export class EpisodeDetailsComponent implements OnInit {
 export interface TriageReduced {
 	creationDate: Date;
 	category: TriageCategory;
-	professional: {
+	createdBy: {
 		firstName: string,
 		lastName: string
 	};

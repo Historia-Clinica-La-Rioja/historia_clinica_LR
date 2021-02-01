@@ -83,7 +83,7 @@ export class TriageDetailsComponent implements OnInit, OnChanges {
 export interface Triage {
 	creationDate: Date;
 	category: TriageCategory;
-	professional: {
+	createdBy: {
 		firstName: string,
 		lastName: string
 	};
