@@ -54,6 +54,7 @@
 				"EMERGENCY_CARE_TYPE": "Tipo de guardia",
 				"EMERGENCY_CARE_ENTRANCE_TYPE": "Forma de ingreso",
 				"AMBULANCE_COMPANY_ID": "ID Compañia ambulancia",
+				"WAITING_ROOM": "Sala de espera",
 				"police_intervention": {
 					"CALL_DETAIL": "Detalle del llamado",
 					"DATE": "Fecha",

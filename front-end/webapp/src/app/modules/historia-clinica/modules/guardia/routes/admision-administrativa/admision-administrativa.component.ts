@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import {
-	BasicPatientDto,
+	BasicPatientDto, DoctorsOfficeDto,
 	MasterDataInterface,
 	PatientMedicalCoverageDto,
 	PersonPhotoDto,
@@ -27,6 +27,9 @@ import { AMBULANCE, PERSON, POLICE_OFFICER } from '@core/constants/validation-co
 import { EmergencyCareEntranceType } from '@api-rest/masterdata';
 import { PermissionsService } from '@core/services/permissions.service';
 import { TriageDefinitionsService } from '../../services/triage-definitions.service';
+import {DoctorsOfficeService} from '@api-rest/services/doctors-office.service';
+
+const SECTOR_TYPE_ID_AMBULATORY = 1; // TODO mover al archivo de constantes a agregar
 
 @Component({
 	selector: 'app-admision-administrativa',
@@ -56,6 +59,8 @@ export class AdmisionAdministrativaComponent implements OnInit {
 	motivoNuevaConsultaService: MotivoNuevaConsultaService;
 	readonly EMERGENCY_CARE_ENTRANCE_TYPE = EmergencyCareEntranceType;
 
+	doctorsOffices$: Observable<DoctorsOfficeDto[]>;
+
 	private readonly routePrefix;
 	private selectedPatient;
 
@@ -73,7 +78,8 @@ export class AdmisionAdministrativaComponent implements OnInit {
 		private readonly contextService: ContextService,
 		private readonly patientService: PatientService,
 		private readonly permissionsService: PermissionsService,
-		private readonly triageDefinitionsService: TriageDefinitionsService
+		private readonly triageDefinitionsService: TriageDefinitionsService,
+		private readonly doctorsOfficeService: DoctorsOfficeService
 	) {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, snomedService);
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
@@ -83,11 +89,13 @@ export class AdmisionAdministrativaComponent implements OnInit {
 
 		this.emergencyCareType$ = this.emergencyCareMasterData.getType();
 		this.emergencyCareEntranceType$ = this.emergencyCareMasterData.getEntranceType();
+		this.doctorsOffices$ = this.doctorsOfficeService.getBySectorType(SECTOR_TYPE_ID_AMBULATORY);
 
 		this.form = this.formBuilder.group({
 			patientMedicalCoverageId: [null],
 			emergencyCareTypeId: [null],
 			emergencyCareEntranceTypeId: [null],
+			doctorsOfficeId: [null],
 			ambulanceCompanyId: [null, Validators.maxLength(AMBULANCE.COMPANY_ID.max_length)],
 			callDate: [null],
 			callTime: [null],

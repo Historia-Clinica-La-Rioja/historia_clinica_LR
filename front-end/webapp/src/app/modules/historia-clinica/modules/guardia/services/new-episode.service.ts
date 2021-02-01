@@ -35,6 +35,7 @@ export class NewEpisodeService {
 			emergencyCareTypeId: this.administrativeAdmission.emergencyCareTypeId,
 			entranceTypeId: this.administrativeAdmission.emergencyCareEntranceTypeId,
 			ambulanceCompanyId: this.administrativeAdmission.ambulanceCompanyId,
+			doctorsOfficeId: this.administrativeAdmission.doctorsOfficeId,
 			policeIntervention,
 		};
 		return newEmergencyCareDto;
@@ -87,6 +88,7 @@ export interface AdministrativeAdmission {
 	reasons: MotivoConsulta[];
 	patientMedicalCoverageId: number;
 	emergencyCareTypeId: number;
+	doctorsOfficeId: number;
 	emergencyCareEntranceTypeId: number;
 	ambulanceCompanyId: string;
 	callDate: Moment;

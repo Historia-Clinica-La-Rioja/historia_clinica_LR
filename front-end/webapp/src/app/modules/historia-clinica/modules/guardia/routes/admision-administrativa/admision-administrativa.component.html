@@ -97,6 +97,15 @@
 				[translateParams]="{max: AMBULANCE.COMPANY_ID.max_length}"></mat-error>
 		</mat-form-field>
 
+		<mat-form-field appearance="outline">
+			<mat-select formControlName="doctorsOfficeId" name="doctorsOfficeId" id="doctorsOfficeId"
+						placeholder="{{'guardia.administrative_admision.form.WAITING_ROOM' | translate}}">
+				<mat-option *ngFor="let office of (doctorsOffices$ | async )" [value]="office.id">
+					{{office.description}}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+
 
 		<h2 [translate]="'Intervención policial'"></h2>
 		<mat-radio-group name="policeIntervention" id="policeInterventionRadio" (change)="onChange($event)">
