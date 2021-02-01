@@ -8,6 +8,8 @@ import lombok.Getter;
 public class DiagnosticReportFilterBo {
     private final Integer patientId;
     private final String status;
-    private final String diagnosticReport;
+    private final String study;
     private final String healthCondition;
+    private final String category;
 }
+

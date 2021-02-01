@@ -28,12 +28,14 @@ public class ListDiagnosticReportRepositoryImpl implements ListDiagnosticReportR
 
         String sqlString = "with temporal as (" +
                 "SELECT DISTINCT " +
-                "dr.id, dr.snomed_id, dr.status_id, dr.health_condition_id, dr.note_id, dr.effective_time, d.source_id, d.created_by, dr.updated_on, " +
+                "dr.id, dr.snomed_id, dr.status_id, dr.health_condition_id, dr.note_id, " +
+                "dr.effective_time, d.source_id, d.created_by, dr.updated_on, sr.category_id AS sr_categoryId, " +
                 "row_number() OVER (PARTITION by dr.snomed_id, dr.health_condition_id ORDER BY dr.updated_on desc) AS rw " +
                 "FROM document d " +
                 "JOIN document_diagnostic_report ddr ON d.id = ddr.document_id " +
                 "JOIN diagnostic_report dr ON ddr.diagnostic_report_id = dr.id " +
-                "WHERE dr.patient_id = :patientId  " +
+                "JOIN service_request sr ON d.source_id = sr.id " +
+                "WHERE dr.patient_id = :patientId " +
                 "AND d.type_id = :documentType " +
                 "AND d.status_id = :documentStatusId " +
                 ") " +
@@ -53,8 +55,9 @@ public class ListDiagnosticReportRepositoryImpl implements ListDiagnosticReportR
                 "WHERE rw = 1 " +
                 "AND NOT t.status_id = :invalidStatus "+
                 (filter.getStatus() != null ? "AND UPPER(t.status_id) = :statusId " : "") +
-                (filter.getDiagnosticReport() != null ? "AND UPPER(s.pt) LIKE :diagnosticReport " : "") +
+                (filter.getStudy() != null ? "AND UPPER(s.pt) LIKE :study " : "") +
                 (filter.getHealthCondition() != null ? "AND UPPER(h.pt) LIKE :healthCondition " : "") +
+                (filter.getCategory() != null ? "AND UPPER(t.sr_categoryId) = :category " : "") +
                 "ORDER BY t.updated_on";
 
 
@@ -67,11 +70,14 @@ public class ListDiagnosticReportRepositoryImpl implements ListDiagnosticReportR
         if (filter.getStatus() != null)
             query.setParameter("statusId", filter.getStatus().toUpperCase());
 
-        if (filter.getDiagnosticReport() != null)
-            query.setParameter("diagnosticReport", "%"+filter.getDiagnosticReport().toUpperCase()+"%");
+        if (filter.getStudy() != null)
+            query.setParameter("study", "%"+filter.getStudy().toUpperCase()+"%");
 
         if (filter.getHealthCondition() != null)
             query.setParameter("healthCondition", "%"+filter.getHealthCondition().toUpperCase()+"%");
+
+        if (filter.getCategory() != null)
+            query.setParameter("category", filter.getCategory().toUpperCase());
 
         List<Object[]> result = query.getResultList();
         return result;

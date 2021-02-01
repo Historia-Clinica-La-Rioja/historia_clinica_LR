@@ -32,8 +32,9 @@ public class ListDiagnosticReportInfoServiceImpl implements ListDiagnosticReport
         DiagnosticReportFilterVo filterVo = new DiagnosticReportFilterVo(
                 filter.getPatientId(),
                 filter.getStatus(),
-                filter.getDiagnosticReport(),
-                filter.getHealthCondition()
+                filter.getStudy(),
+                filter.getHealthCondition(),
+                filter.getCategory()
         );
         List<DiagnosticReportBo> result = listDiagnosticReportRepository.execute(filterVo).stream()
                 .map(this::createDiagnosticReportBo)

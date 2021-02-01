@@ -31,12 +31,12 @@ export class PrescripcionesService {
 		}
 	}
 
-	getPrescription(prescriptionType: PrescriptionTypes, patientId: number, statusId: string, medicationStatement: string, healthCondition: string, diagnosticReport?: string): Observable<any> {
+	getPrescription(prescriptionType: PrescriptionTypes, patientId: number, statusId: string, medicationStatement: string, healthCondition: string, study?: string): Observable<any> {
 		switch(prescriptionType) {
 			case PrescriptionTypes.MEDICATION:
 				return this.medicationRequestService.medicationRequestList(patientId, statusId, medicationStatement, healthCondition);
 			case PrescriptionTypes.STUDY:
-				return this.serviceRequestService.getList(patientId, statusId, diagnosticReport, healthCondition);
+				return this.serviceRequestService.getList(patientId, statusId, study, healthCondition, null);
 		}
 	}
 
@@ -46,7 +46,7 @@ export class PrescripcionesService {
 				return this.medicationRequestService.finalize(patientId, medicationsIds);
 			case MedicationStatusChange.REACTIVATE:
 				return this.medicationRequestService.reactivate(patientId, medicationsIds);
-			case MedicationStatusChange.SUSPEND: 
+			case MedicationStatusChange.SUSPEND:
 				return this.medicationRequestService.suspend(patientId, dayQuantity, observations, medicationsIds);
 		}
 	}
@@ -136,7 +136,7 @@ export class PrescripcionesService {
 
 	private renderStatusDescriptionMedication(statusId: string): string {
 		switch (statusId) {
-			case this.MEDICATION_STATUS.ACTIVE.id: 
+			case this.MEDICATION_STATUS.ACTIVE.id:
 				return this.MEDICATION_STATUS.ACTIVE.description;
 			case this.MEDICATION_STATUS.STOPPED.id:
 				return this.MEDICATION_STATUS.STOPPED.description;
@@ -147,7 +147,7 @@ export class PrescripcionesService {
 
 	private renderStatusDescriptionStudy(statusId: string): string {
 		switch (statusId) {
-			case this.STUDY_STATUS.REGISTERED.id: 
+			case this.STUDY_STATUS.REGISTERED.id:
 				return this.STUDY_STATUS.REGISTERED.description;
 			case this.STUDY_STATUS.FINAL.id:
 				return this.STUDY_STATUS.FINAL.description;

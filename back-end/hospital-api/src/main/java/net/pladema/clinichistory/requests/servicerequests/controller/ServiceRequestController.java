@@ -218,20 +218,23 @@ public class ServiceRequestController {
     public List<DiagnosticReportInfoDto> getList(@PathVariable(name = "institutionId") Integer institutionId,
                                                  @PathVariable(name = "patientId") Integer patientId,
                                                  @RequestParam(value = "statusId", required = false) String status,
-                                                 @RequestParam(value = "diagnosticReport", required = false) String diagnosticReport,
+                                                 @RequestParam(value = "study", required = false) String study,
+                                                 @RequestParam(value = "category", required = false) String category,
                                                  @RequestParam(value = "healthCondition", required = false) String healthCondition) {
-        LOG.debug("Input parameters -> institutionId {} patientId {}, status {}, diagnosticReport {}, healthCondition {}",
+        LOG.debug("Input parameters -> institutionId {} patientId {}, status {}, diagnosticReport {}, healthCondition {}, categpry {}",
                 institutionId,
                 patientId,
                 status,
-                diagnosticReport,
-                healthCondition);
+                study,
+                healthCondition,
+                category);
 
         List<DiagnosticReportBo> resultService = listDiagnosticReportInfoService.execute(new DiagnosticReportFilterBo(
                 patientId,
                 status,
-                diagnosticReport,
-                healthCondition));
+                study,
+                healthCondition,
+                category));
 
         List<DiagnosticReportInfoDto> result = resultService.stream()
                 .map(diagnosticReportBo -> {
