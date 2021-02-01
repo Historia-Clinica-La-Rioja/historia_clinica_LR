@@ -1,5 +1,6 @@
 package net.pladema.user.service.impl;
 
+import net.pladema.permissions.service.domain.UserBo;
 import net.pladema.user.repository.UserRepository;
 import net.pladema.user.repository.entity.User;
 import net.pladema.user.service.UserService;
@@ -56,4 +57,9 @@ public class UserServiceImpl implements UserService {
 		return userRepository.isEnable(username);
 	}
 
+	@Override
+	public Optional<UserBo> getUser(Integer userId) {
+		Optional<User> userOpt = userRepository.findById(userId);
+		return userOpt.map(UserBo::new);
+	}
 }
