@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.documents.controller.dto.NewVitalSignsObservationDto;
-import net.pladema.clinichistory.requests.medicationrequests.controller.dto.DoctorInfoDto;
+import net.pladema.emergencycare.controller.dto.EmergencyCareUserDto;
 import net.pladema.medicalconsultation.doctorsoffice.controller.dto.DoctorsOfficeDto;
 import net.pladema.sgx.dates.controller.dto.DateTimeDto;
 
@@ -25,7 +25,7 @@ public class TriageListDto implements Serializable {
 
     private TriageCategoryDto category;
 
-    private DoctorInfoDto professional;
+    private EmergencyCareUserDto createdBy;
 
     private DoctorsOfficeDto doctorsOffice;
 

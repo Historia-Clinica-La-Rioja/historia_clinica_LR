@@ -1,11 +1,7 @@
 package net.pladema.emergencycare.controller.mapper;
 
 import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.SnomedMapper;
-import net.pladema.emergencycare.controller.dto.ECAdministrativeDto;
-import net.pladema.emergencycare.controller.dto.ECAdultGynecologicalDto;
-import net.pladema.emergencycare.controller.dto.ECPediatricDto;
-import net.pladema.emergencycare.controller.dto.EmergencyCareListDto;
-import net.pladema.emergencycare.controller.dto.ResponseEmergencyCareDto;
+import net.pladema.emergencycare.controller.dto.*;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareEntrance;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
@@ -14,6 +10,7 @@ import net.pladema.emergencycare.triage.controller.mapper.TriageMapper;
 import net.pladema.medicalconsultation.doctorsoffice.controller.mapper.DoctorsOfficeMapper;
 import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import net.pladema.sgx.masterdata.service.domain.EnumWriter;
+import net.pladema.user.controller.dto.UserDto;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
@@ -86,6 +83,10 @@ public interface EmergencyCareMapper {
     @Mapping(target = "emergencyCareEntrance", source = "administrative.entranceType", qualifiedByName = "fromMasterDataDto")
     EmergencyCareBo pediatricEmergencyCareDtoToEmergencyCareBo(ECPediatricDto emergencyCareDto);
 
+    @Named("toEmergencyCareUserDto")
+    @Mapping(target = "firstName", source = "personDto.firstName")
+    @Mapping(target = "lastName", source = "personDto.lastName")
+    EmergencyCareUserDto toEmergencyCareUserDto(UserDto userDto);
 
 
 }

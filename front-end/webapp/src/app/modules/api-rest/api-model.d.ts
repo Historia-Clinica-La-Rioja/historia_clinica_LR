@@ -546,6 +546,12 @@ export interface EmergencyCarePatientDto extends Serializable {
     patientMedicalCoverageId: number;
 }
 
+export interface EmergencyCareUserDto {
+    firstName: string;
+    id: number;
+    lastName: string;
+}
+
 export interface EpicrisisDto extends Serializable {
     allergies: AllergyConditionDto[];
     confirmed: boolean;
@@ -1434,11 +1440,11 @@ export interface TriageListDto extends Serializable {
     breathing: TriageBreathingDto;
     category: TriageCategoryDto;
     circulation: TriageCirculationDto;
+    createdBy: EmergencyCareUserDto;
     creationDate: DateTimeDto;
     doctorsOffice: DoctorsOfficeDto;
     id: number;
     notes: string;
-    professional: DoctorInfoDto;
     vitalSigns: NewVitalSignsObservationDto;
 }
 

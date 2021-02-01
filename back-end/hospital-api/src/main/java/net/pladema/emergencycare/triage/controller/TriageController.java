@@ -7,6 +7,7 @@ import net.pladema.clinichistory.documents.controller.service.VitalSignExternalS
 import net.pladema.clinichistory.documents.service.ips.domain.enums.EVitalSign;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.VitalSignMapper;
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.DoctorInfoDto;
+import net.pladema.emergencycare.controller.mapper.EmergencyCareMapper;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareType;
 import net.pladema.emergencycare.triage.controller.dto.TriageAdministrativeDto;
@@ -22,8 +23,9 @@ import net.pladema.emergencycare.triage.service.TriageService;
 import net.pladema.emergencycare.triage.service.domain.TriageBo;
 import net.pladema.emergencycare.triage.service.domain.TriageCategoryBo;
 import net.pladema.medicalconsultation.doctorsoffice.controller.service.DoctorsOfficeExternalService;
-import net.pladema.sgx.security.utils.UserInfo;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
+import net.pladema.user.controller.dto.UserDto;
+import net.pladema.user.controller.service.UserExternalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -61,9 +63,11 @@ public class TriageController {
 
     private final VitalSignMapper vitalSignMapper;
 
-    private final HealthcareProfessionalExternalService healthcareProfessionalExternalService;
-
     private final DoctorsOfficeExternalService doctorsOfficeExternalService;
+
+    private final UserExternalService userExternalService;
+
+    private final EmergencyCareMapper emergencyCareMapper;
 
     public TriageController(TriageService triageService,
                             TriageMapper triageMapper,
@@ -72,8 +76,9 @@ public class TriageController {
                             EmergencyCareEpisodeService emergencyCareEpisodeService,
                             VitalSignExternalService vitalSignExternalService,
                             VitalSignMapper vitalSignMapper,
-                            HealthcareProfessionalExternalService healthcareProfessionalExternalService,
-                            DoctorsOfficeExternalService doctorsOfficeExternalService){
+                            DoctorsOfficeExternalService doctorsOfficeExternalService,
+                            UserExternalService userExternalService,
+                            EmergencyCareMapper emergencyCareMapper){
         super();
         this.triageService=triageService;
         this.triageMapper=triageMapper;
@@ -82,8 +87,9 @@ public class TriageController {
         this.emergencyCareEpisodeService = emergencyCareEpisodeService;
         this.vitalSignExternalService = vitalSignExternalService;
         this.vitalSignMapper = vitalSignMapper;
-        this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.doctorsOfficeExternalService = doctorsOfficeExternalService;
+        this.userExternalService = userExternalService;
+        this.emergencyCareMapper = emergencyCareMapper;
     }
 
     @GetMapping
@@ -105,8 +111,10 @@ public class TriageController {
     private TriageListDto createTriageListDto(TriageBo triageBo) {
         LOG.debug("Input parameter -> triageBo {}", triageBo);
         TriageListDto triageListDto = triageMapper.toTriageListDto(triageBo);
-        if (triageBo.getProfessionalId() != null)
-            triageListDto.setProfessional(DoctorInfoDto.from(healthcareProfessionalExternalService.findProfessionalById(triageBo.getProfessionalId())));
+        if (triageBo.getCreatedBy() != null) {
+            UserDto userDto = userExternalService.getUser(triageBo.getCreatedBy());
+            triageListDto.setCreatedBy(this.emergencyCareMapper.toEmergencyCareUserDto(userDto));
+        }
         if (triageBo.getDoctorsOfficeId() != null)
             triageListDto.setDoctorsOffice(doctorsOfficeExternalService.getDoctorsOfficeById(triageBo.getDoctorsOfficeId()));
         TriageCategoryBo category = triageMasterDataService.getCategoryById(triageBo.getCategoryId());
@@ -183,8 +191,6 @@ public class TriageController {
         LOG.debug("Add triage administrative => {}", body);
         TriageBo triage = triageMapper.toTriageBo(body);
         triage.setEmergencyCareEpisodeId(episodeId);
-        Integer professionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
-        triage.setProfessionalId(professionalId);
         triage = triageService.createAdministrative(triage);
         Integer result = triage.getId();
         LOG.debug("Output -> {}", result);
@@ -201,8 +207,6 @@ public class TriageController {
         LOG.debug("Add triage adult-gynecological => {}", body);
         TriageBo triage = triageMapper.toTriageBo(body);
         triage.setEmergencyCareEpisodeId(episodeId);
-        Integer professionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
-        triage.setProfessionalId(professionalId);
         Integer patientId = emergencyCareEpisodeService.get(episodeId, institutionId).getPatient() != null ? emergencyCareEpisodeService.get(episodeId, institutionId).getPatient().getId() : null;
         NewVitalSignsObservationDto vitalSignsObservationDto = vitalSignExternalService.saveVitalSigns(patientId, body.getVitalSigns());
         triage.setVitalSignIds(getVitalSignIds(vitalSignsObservationDto));
@@ -222,8 +226,6 @@ public class TriageController {
         LOG.debug("Add triage pediatric => {}", body);
         TriageBo triage = triageMapper.toTriageBo(body);
         triage.setEmergencyCareEpisodeId(episodeId);
-        Integer professionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
-        triage.setProfessionalId(professionalId);
         Integer patientId = emergencyCareEpisodeService.get(episodeId, institutionId).getPatient() != null ? emergencyCareEpisodeService.get(episodeId, institutionId).getPatient().getId() : null;
         NewVitalSignsObservationDto vitalSignsObservationDto = vitalSignMapper.fromTriagePediatricDto(body);
         vitalSignsObservationDto = vitalSignExternalService.saveVitalSigns(patientId, vitalSignsObservationDto);

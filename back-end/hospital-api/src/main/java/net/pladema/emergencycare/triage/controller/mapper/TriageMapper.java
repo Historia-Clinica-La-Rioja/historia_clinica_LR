@@ -40,6 +40,7 @@ public interface TriageMapper {
     TriageBo toTriageBo(TriagePediatricDto triageDto);
 
     @Named("toTriageListDto")
+    @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "creationDate", source = "createdOn")
     @Mapping(target = "category.id", source = "categoryId")
     @Mapping(target = "appearance.bodyTemperature.id", source = "bodyTemperatureId")

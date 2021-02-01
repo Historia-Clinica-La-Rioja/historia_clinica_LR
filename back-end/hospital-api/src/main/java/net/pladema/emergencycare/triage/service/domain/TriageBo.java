@@ -29,7 +29,7 @@ public class TriageBo {
 
     private Integer doctorsOfficeId;
 
-    private Integer professionalId;
+    private Integer createdBy;
 
     private String notes;
 
@@ -63,7 +63,7 @@ public class TriageBo {
         this.emergencyCareTypeId = triageVo.getEmergencyCareTypeId();
         this.categoryId = triageVo.getCategoryId();
         this.doctorsOfficeId = triageVo.getDoctorsOfficeId();
-        this.professionalId = triageVo.getProfessionalId();
+        this.createdBy = triageVo.getCreatedBy();
         this.notes = triageVo.getNotes();
         this.bodyTemperatureId = triageVo.getBodyTemperatureId();
         this.cryingExcessive = triageVo.getCryingExcessive();

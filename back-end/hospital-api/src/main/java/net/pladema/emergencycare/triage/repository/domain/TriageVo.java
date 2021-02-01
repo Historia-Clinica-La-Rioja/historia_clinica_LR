@@ -23,7 +23,7 @@ public class TriageVo {
 
     private Integer doctorsOfficeId;
 
-    private Integer professionalId;
+    private Integer createdBy;
 
     private String notes;
 
@@ -46,7 +46,7 @@ public class TriageVo {
         this.emergencyCareEpisodeId = triage.getEmergencyCareEpisodeId();
         this.emergencyCareTypeId = emergencyCareTypeId;
         this.categoryId = triage.getTriageCategoryId();
-        this.professionalId = triage.getHealthcareProfessionalId();
+        this.createdBy = triage.getCreatedBy();
         this.doctorsOfficeId = doctorsOfficeId;
         this.notes = triage.getNotes();
         if (triageDetails != null) {
