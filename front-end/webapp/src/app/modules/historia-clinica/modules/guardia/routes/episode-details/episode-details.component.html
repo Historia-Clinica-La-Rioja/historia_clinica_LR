@@ -71,6 +71,13 @@
 					</div>
 				</div>
 
+				<div fxLayout="column" fxLayoutGap="1px">
+					<span class="grid-title"> Ubicación </span>
+					<span *ngIf="doctorsOfficeDescription else noInfo" class="content-primary">
+					{{ doctorsOfficeDescription }}
+				</span>
+				</div>
+
 			</mat-card>
 
 			<mat-card id="last-triage-card" fxLayout="column" fxLayoutGap="20px">

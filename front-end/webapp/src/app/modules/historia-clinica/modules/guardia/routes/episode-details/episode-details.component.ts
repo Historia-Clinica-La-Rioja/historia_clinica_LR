@@ -38,6 +38,7 @@ export class EpisodeDetailsComponent implements OnInit {
 	patientMedicalCoverage;
 	episodeId: number;
 	responseEmergencyCare: ResponseEmergencyCareDto;
+	doctorsOfficeDescription: string;
 
 	emergencyCareType: EmergencyCareTypes;
 	lastTriage: Triage;
@@ -74,6 +75,7 @@ export class EpisodeDetailsComponent implements OnInit {
 					.subscribe((responseEmergencyCare: ResponseEmergencyCareDto) => {
 						this.responseEmergencyCare = responseEmergencyCare;
 						this.emergencyCareType = responseEmergencyCare.emergencyCareType?.id;
+						this.doctorsOfficeDescription = responseEmergencyCare.doctorsOffice?.description;
 
 						if (responseEmergencyCare.patient?.id) {
 							this.loadPatient(responseEmergencyCare.patient.id);
