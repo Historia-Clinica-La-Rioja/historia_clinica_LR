@@ -12,6 +12,8 @@ import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
 import { PrescriptionItemData } from '../item-prescripciones/item-prescripciones.component';
 import { MEDICATION_STATUS } from './../../../constants/prescripciones-masterdata';
+import {saveAs} from 'file-saver';
+import { MedicacionesService } from '../../../services/medicaciones.service';
 
 @Component({
   selector: 'app-card-medicaciones',
@@ -38,6 +40,7 @@ export class CardMedicacionesComponent implements OnInit {
 		private readonly requestMasterDataService: RequestMasterDataService,
 		private prescripcionesService: PrescripcionesService,
 		private snackBarService: SnackBarService,
+		private medicacionesService: MedicacionesService,
 	) { }
 
 	ngOnInit(): void {
@@ -51,6 +54,15 @@ export class CardMedicacionesComponent implements OnInit {
 			checkboxArray: this.formBuilder.array([])
 		});
 
+		this.medicacionesService.medicaments$.subscribe(response => {
+			this.medicationsInfo = response;
+			const checkboxArray = this.medicationCheckboxes.controls['checkboxArray'] as FormArray;
+
+			this.medicationsInfo.forEach(m => {
+				checkboxArray.push(this.formBuilder.group({checked: false}));
+			});
+		});
+
 		this.requestMasterDataService.medicationStatus().subscribe(status => {
 			this.medicamentStatus = status;
 		});
@@ -58,22 +70,14 @@ export class CardMedicacionesComponent implements OnInit {
 		this.getMedication();
 
 		this.formFilter.controls.statusId.setValue(MEDICATION_STATUS.ACTIVE.id);
+
 	}
 
 	private getMedication(): void {
-		this.prescripcionesService.getPrescription( PrescriptionTypes.MEDICATION,
-													this.patientId,
-													this.formFilter.controls.statusId.value,
-													this.formFilter.controls.medicationStatement.value,
-													this.formFilter.controls.healthCondition.value )
-			.subscribe( response => {
-				this.medicationsInfo = response;
-				const checkboxArray = this.medicationCheckboxes.controls['checkboxArray'] as FormArray;
-
-				this.medicationsInfo.forEach(m => {
-					checkboxArray.push(this.formBuilder.group({checked: false}));
-				});
-			});
+		this.medicacionesService.updateMedicationFilter( this.patientId,
+																  this.formFilter.controls.statusId.value,
+																  this.formFilter.controls.medicationStatement.value,
+																  this.formFilter.controls.healthCondition.value);
 	}
 
 	private getMedicationList(medication?: MedicationInfoDto) {

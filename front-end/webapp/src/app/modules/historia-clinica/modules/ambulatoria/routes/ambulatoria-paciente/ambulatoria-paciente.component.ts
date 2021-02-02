@@ -18,6 +18,7 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
 import {
 	AppFeature,
 } from '@api-rest/api-model';
+import { MedicacionesService } from '../../services/medicaciones.service';
 
 
 const RESUMEN_INDEX = 0;
@@ -52,7 +53,8 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		private readonly ambulatoriaSummaryFacadeService: AmbulatoriaSummaryFacadeService,
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly interoperabilityBusService: InteroperabilityBusService,
-		private readonly snackBarService: SnackBarService
+		private readonly snackBarService: SnackBarService,
+		private medicacionesService: MedicacionesService,
 	) {}
 
 	ngOnInit(): void {
@@ -120,6 +122,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 			this.dialogRef = this.dockPopupService.open(NuevaConsultaDockPopupComponent, {idPaciente: this.patientId});
 			this.dialogRef.afterClosed().subscribe(fieldsToUpdate => {
 				delete this.dialogRef;
+				this.medicacionesService.updateMedicaments();
 				if (fieldsToUpdate) {
 					this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
 				}
