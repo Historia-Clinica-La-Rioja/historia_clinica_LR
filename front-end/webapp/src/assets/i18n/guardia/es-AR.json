@@ -24,7 +24,8 @@
 			"PERFUSION": "Perfusión",
 			"RESPIRATORY_RATE": "Frecuencia respiratoria (/min)",
 			"RESPIRATORY_RETRACTION": "Respiración con tiraje",
-			"ROOM": "Consultorio",
+			"TRIAGE_ROOM": "Zona de Triage",
+			"TRIAGE_ROOM_DESCRIPTION": "Lugar físico en el que se realiza el Triage",
 			"STRIDOR": "Respiración con estridor",
 			"SYSTOLIC_BLOOD": "Tensión arterial sistólica",
 			"VITAL_SIGNS": "Signos vitales",
@@ -54,7 +55,10 @@
 				"EMERGENCY_CARE_TYPE": "Tipo de guardia",
 				"EMERGENCY_CARE_ENTRANCE_TYPE": "Forma de ingreso",
 				"AMBULANCE_COMPANY_ID": "ID Compañia ambulancia",
-				"WAITING_ROOM": "Sala de espera",
+				"waiting_room": {
+					"PLACEHOLDER" : "Sala de espera",
+					"DESCRIPTION" : "Lugar físico donde el paciente esperará a ser atendido"
+				},
 				"police_intervention": {
 					"CALL_DETAIL": "Detalle del llamado",
 					"DATE": "Fecha",
@@ -108,7 +112,8 @@
 				"EPISODE": "Episodio",
 				"REASONS": "Motivos de consulta",
 				"ENTRANCE": "Ingreso",
-				"POLICE_INTERVENTION": "Intervención policial"
+				"POLICE_INTERVENTION": "Intervención policial",
+				"UBICACION" : "Ubicación"
 			},
 			"triage": {
 				"HISTORIAL": "Historial de triages",
@@ -117,7 +122,7 @@
 					"TITLE": "Último triage",
 					"NIVEL": "Nivel de urgencia",
 					"REALIZADO_POR": "Realizado por",
-					"UBICACION": "Ubicación",
+					"UBICACION": "Zona de Triage",
 					"APARIENCIA_RESPIRACION_CIRCULACION": "Apariencia, respiración y circulación",
 					"TEMPERATURA": "Temperatura",
 					"LLANTO_SIN_CONSUELO": "Llanto sin consuelo",

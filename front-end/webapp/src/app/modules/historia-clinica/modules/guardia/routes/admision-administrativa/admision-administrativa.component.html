@@ -99,7 +99,8 @@
 
 		<mat-form-field appearance="outline">
 			<mat-select formControlName="doctorsOfficeId" name="doctorsOfficeId" id="doctorsOfficeId"
-						placeholder="{{'guardia.administrative_admision.form.WAITING_ROOM' | translate}}">
+						matTooltip="{{'guardia.administrative_admision.form.waiting_room.DESCRIPTION' | translate}}"
+						placeholder="{{'guardia.administrative_admision.form.waiting_room.PLACEHOLDER' | translate}}">
 				<mat-option *ngFor="let office of (doctorsOffices$ | async )" [value]="office.id">
 					{{office.description}}
 				</mat-option>

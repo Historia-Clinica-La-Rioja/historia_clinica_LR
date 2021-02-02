@@ -5,9 +5,7 @@ import { DoctorsOfficeDto } from "@api-rest/api-model";
 import { TriageCategoryDto, TriageMasterDataService } from "@api-rest/services/triage-master-data.service";
 import { MatOptionSelectionChange } from "@angular/material/core";
 import { Observable } from "rxjs";
-
-const SECTOR_TYPE_ID_AMBULATORY = 1; // TODO mover al archivo de constantes a agregar
-const TRIAGE_LEVEL_V_ID = 5; // TODO mover al archivo de constantes a agregar
+import {SECTOR_AMBULATORIO, TRIAGE_LEVEL_V_ID} from '../../constants/masterdata';
 
 @Component({
 	selector: 'app-triage',
@@ -45,7 +43,7 @@ export class TriageComponent implements OnInit {
 			}
 		);
 
-		this.doctorsOffices$ = this.doctorsOfficeService.getBySectorType(SECTOR_TYPE_ID_AMBULATORY);
+		this.doctorsOffices$ = this.doctorsOfficeService.getBySectorType(SECTOR_AMBULATORIO);
 	}
 
 	selectTriageCategoryId(event: MatOptionSelectionChange, choosed: number): void {

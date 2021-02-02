@@ -28,8 +28,7 @@ import { EmergencyCareEntranceType } from '@api-rest/masterdata';
 import { PermissionsService } from '@core/services/permissions.service';
 import { TriageDefinitionsService } from '../../services/triage-definitions.service';
 import {DoctorsOfficeService} from '@api-rest/services/doctors-office.service';
-
-const SECTOR_TYPE_ID_AMBULATORY = 1; // TODO mover al archivo de constantes a agregar
+import {SECTOR_AMBULATORIO} from '../../constants/masterdata';
 
 @Component({
 	selector: 'app-admision-administrativa',
@@ -89,7 +88,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 
 		this.emergencyCareType$ = this.emergencyCareMasterData.getType();
 		this.emergencyCareEntranceType$ = this.emergencyCareMasterData.getEntranceType();
-		this.doctorsOffices$ = this.doctorsOfficeService.getBySectorType(SECTOR_TYPE_ID_AMBULATORY);
+		this.doctorsOffices$ = this.doctorsOfficeService.getBySectorType(SECTOR_AMBULATORIO);
 
 		this.form = this.formBuilder.group({
 			patientMedicalCoverageId: [null],

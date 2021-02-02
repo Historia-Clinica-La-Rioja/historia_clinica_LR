@@ -10,8 +10,8 @@
 		</mat-select>
 	</mat-form-field>
 	<mat-form-field class="simple-form-field" appearance="outline">
-		<mat-label [translate]="'guardia.triage.ROOM'"></mat-label>
-		<mat-select formControlName="doctorsOfficeId">
+		<mat-label [translate]="'guardia.triage.TRIAGE_ROOM'"></mat-label>
+		<mat-select matTooltip="{{'guardia.triage.TRIAGE_ROOM_DESCRIPTION' | translate}}" formControlName="doctorsOfficeId">
 			<mat-option id="doctorsOfficeId"
 			            *ngFor="let office of (doctorsOffices$ | async )" [value]="office.id"
 			            (onSelectionChange)="selectDoctorsOfficeId($event, office.id)">
