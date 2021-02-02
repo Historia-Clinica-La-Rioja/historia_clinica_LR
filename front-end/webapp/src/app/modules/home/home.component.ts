@@ -36,10 +36,10 @@ export class HomeComponent implements OnInit {
 
 	private mapToFullName(userInfo: UserDto): string {
 		let fullName: string;
-		if (userInfo.personDto.firstName) {
+		if (userInfo.personDto?.firstName) {
 			fullName = userInfo.personDto.firstName;
 		}
-		if (userInfo.personDto.lastName) {
+		if (userInfo.personDto?.lastName) {
 			if (fullName) {
 				fullName += ' ' + userInfo.personDto.lastName;
 			} else {

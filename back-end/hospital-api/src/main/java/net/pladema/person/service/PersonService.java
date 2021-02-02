@@ -15,6 +15,8 @@ public interface PersonService {
 
     Person getPerson(Integer id);
 
+    Optional<Person> findPerson(Integer id);
+
     List<Person> getPeople(Set<Integer> personIds);
 
     PersonExtended addPersonExtended(PersonExtended person);

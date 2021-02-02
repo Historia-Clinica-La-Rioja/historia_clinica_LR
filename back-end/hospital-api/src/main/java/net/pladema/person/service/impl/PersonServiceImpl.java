@@ -43,9 +43,13 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public Person getPerson(Integer id) {
+        return findPerson(id).orElseThrow(this.personNotFound(id));
+    }
+
+    @Override
+    public Optional<Person> findPerson(Integer id) {
         LOG.debug("Going to get person -> {}", id);
-        Person result = personRepository.findById(id)
-                .orElseThrow(this.personNotFound(id));
+        Optional<Person> result = personRepository.findById(id);
         LOG.debug("Person gotten-> {}", result);
         return result;
     }

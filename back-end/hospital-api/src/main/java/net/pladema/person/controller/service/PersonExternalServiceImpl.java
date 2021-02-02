@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -102,12 +103,32 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 	public BasicDataPersonDto getBasicDataPerson(Integer personId) {
 		LOG.debug(ONE_INPUT_PARAMETER, personId);
 		Person person = personService.getPerson(personId);
-		Gender gender = personMasterDataService.getGender(person.getGenderId()).orElse(new Gender());
-		IdentificationType identificationType = personMasterDataService.getIdentificationType(person.getIdentificationTypeId()).orElse(new IdentificationType());
-		BasicDataPersonDto result = personMapper.basicDataFromPerson(person, gender, identificationType);
+		BasicDataPersonDto result = personMapper.basicDataFromPerson(
+				person,
+				getGender(person.getGenderId()),
+				getIdentificationType(person.getIdentificationTypeId())
+		);
 		LOG.debug(OUTPUT, result);
 		return result;
 	}
+
+	@Override
+	public Optional<BasicDataPersonDto> findBasicDataPerson(Integer personId) {
+		LOG.debug(ONE_INPUT_PARAMETER, personId);
+		Optional<BasicDataPersonDto> basicDataPerson = personService.findPerson(personId)
+			.map(person -> personMapper.basicDataFromPerson(
+					person,
+					getGender(person.getGenderId()),
+					getIdentificationType(person.getIdentificationTypeId())
+			));
+		LOG.debug(OUTPUT, basicDataPerson);
+		return basicDataPerson;
+	}
+
+	private IdentificationType getIdentificationType(Short identificationTypeId) {
+		return personMasterDataService.getIdentificationType(identificationTypeId).orElse(new IdentificationType());
+	}
+
 
 	@Override
 	public List<BasicDataPersonDto> getBasicDataPerson(Set<Integer> personIds) {
@@ -183,4 +204,7 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 		return result;
 	}
 
+	private Gender getGender(Short genderId) {
+		return personMasterDataService.getGender(genderId).orElse(new Gender());
+	}
 }

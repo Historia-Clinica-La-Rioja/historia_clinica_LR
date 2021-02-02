@@ -9,6 +9,7 @@ import net.pladema.person.controller.dto.PersonalInformationDto;
 import net.pladema.person.repository.entity.PersonExtended;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public interface PersonExternalService {
@@ -26,6 +27,8 @@ public interface PersonExternalService {
     PersonalInformationDto getPersonalInformation(Integer personId);
 
     BasicDataPersonDto getBasicDataPerson(Integer personId);
+
+    Optional<BasicDataPersonDto> findBasicDataPerson(Integer personId);
 
     List<BasicDataPersonDto> getBasicDataPerson(Set<Integer> personIds);
 

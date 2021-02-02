@@ -41,9 +41,10 @@ public class LoggedUserController {
 	@GetMapping(value = "/info")
 	public ResponseEntity<UserDto> getInfo() {
 		UserBo userBo = loggedUserService.getInfo();
-		BasicDataPersonDto personBasicData = personExternalService.getBasicDataPerson(userBo.getPersonId());
-		UserPersonDto userPersonDto = userInfoMapper.toUserPersonDto(personBasicData);
-		UserDto userDto = userInfoMapper.toUserDto(userPersonDto,userBo);
+		UserPersonDto userPersonDto = personExternalService.findBasicDataPerson(userBo.getPersonId())
+				.map(userInfoMapper::toUserPersonDto)
+				.orElse(null);
+		UserDto userDto = userInfoMapper.toUserDto(userPersonDto, userBo);
 		return ResponseEntity.ok(userDto);
 	}
 }
