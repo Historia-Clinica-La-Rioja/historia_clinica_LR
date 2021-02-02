@@ -1,11 +1,11 @@
 package net.pladema.sgx.auditable.entity;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import java.time.LocalDateTime;
 
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
-import java.time.LocalDateTime;
+
+import net.pladema.security.utils.SecurityContextUtils;
 
 public class SGXAuditListener {
 
@@ -25,11 +25,7 @@ public class SGXAuditListener {
 
 
 	public Integer getCurrentAuditor() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication == null || !authentication.isAuthenticated() ||
-				authentication.getPrincipal().equals("anonymousUser"))
-			return -1;
-		return (Integer) authentication.getPrincipal();
+		return SecurityContextUtils.getUserDetails().userId;
 	}
 
 }

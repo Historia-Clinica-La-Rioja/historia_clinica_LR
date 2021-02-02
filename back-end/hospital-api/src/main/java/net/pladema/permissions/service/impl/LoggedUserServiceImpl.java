@@ -7,11 +7,11 @@ import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.permissions.service.LoggedUserService;
 import net.pladema.permissions.service.domain.UserBo;
 import net.pladema.permissions.service.dto.RoleAssignment;
+import net.pladema.security.utils.SecurityContextUtils;
 import net.pladema.user.repository.UserRepository;
 import net.pladema.user.repository.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,7 +35,7 @@ public class LoggedUserServiceImpl implements LoggedUserService {
 
 	@Override
 	public Integer getUserId() {
-		return (Integer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return SecurityContextUtils.getUserDetails().userId;
 	}
 
 	@Override

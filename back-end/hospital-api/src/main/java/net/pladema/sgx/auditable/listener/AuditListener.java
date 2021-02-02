@@ -1,9 +1,8 @@
 package net.pladema.sgx.auditable.listener;
 
+import net.pladema.security.utils.SecurityContextUtils;
 import net.pladema.sgx.auditable.Auditable;
 import net.pladema.sgx.auditable.entity.Audit;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -30,17 +29,9 @@ public class AuditListener {
 			a.setUpdatedBy(getCurrentAuditor());
 		});
 	}
-
-
-	private static boolean isAnonymousUser(Authentication authentication){
-		return authentication.getPrincipal().equals("anonymousUser");
-	}
 	
 	public Integer getCurrentAuditor() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication == null || !authentication.isAuthenticated() || isAnonymousUser(authentication) )
-			return -1;
-		return (Integer) authentication.getPrincipal();
+		return SecurityContextUtils.getUserDetails().userId;
 	}
 
 }
