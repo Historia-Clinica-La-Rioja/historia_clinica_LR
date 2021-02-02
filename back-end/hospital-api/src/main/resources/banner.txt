@@ -1,0 +1,10 @@
+     _    _    _____   _____
+    | |  | |  / ____| |_   _|
+    | |__| | | (___     | |
+    |  __  |  \___ \    | |
+    | |  | |  ____) |  _| |_
+    |_|  |_| |_____/  |_____|
+    ${application.formatted-version}
+=================================
+:: Historia de Salud Integrada ::
+:: UNICEN / Pladema / Lamansys ::
