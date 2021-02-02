@@ -12,6 +12,7 @@ import net.pladema.clinichistory.mocks.HealthConditionTestMocks;
 import net.pladema.clinichistory.requests.medicationrequests.repository.MedicationRequestRepository;
 import net.pladema.clinichistory.requests.medicationrequests.service.CreateMedicationRequestService;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationRequestBo;
+import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -225,6 +226,44 @@ public class CreateMedicationRequestServiceImplTest extends UnitRepository {
 				createMedicationRequestService.execute(institutionId, medicationRequest)
 		);
 		String expectedMessage = "El problema asociado tiene que estar activo";
+		String actualMessage = exception.getMessage();
+		Assertions.assertTrue(actualMessage.contains(expectedMessage));
+	}
+
+	@Test
+	public void execute_withDuplicatedStudy() {
+
+		Integer institutionId = 5;
+		MedicationRequestBo medicationRequest = new MedicationRequestBo();
+		medicationRequest.setDoctorId(1);
+		medicationRequest.setPatientInfo(new PatientInfoBo(4, (short) 1, (short) 29));
+		medicationRequest.setMedicalCoverageId(5);
+
+		String repetedSnomedSctid = "IBUPROFENO 500";
+
+		medicationRequest.setMedications(List.of(
+				createMedicationBo(
+						"Bayaspirina",
+						1,
+						ConditionClinicalStatus.ACTIVE,
+						createDosageBo(30d, 1, EUnitsOfTimeBo.DAY)),
+				createMedicationBo(
+						repetedSnomedSctid,
+						1,
+						ConditionClinicalStatus.ACTIVE,
+						createDosageBo(15d, 8, EUnitsOfTimeBo.HOUR)),
+				createMedicationBo(
+						repetedSnomedSctid,
+						1,
+						ConditionClinicalStatus.ACTIVE,
+						createDosageBo(10d, 3, EUnitsOfTimeBo.HOUR))
+		));
+
+
+		Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
+				createMedicationRequestService.execute(institutionId, medicationRequest)
+		);
+		String expectedMessage = "La receta no puede contener más de un medicamento con el mismo problema y el mismo concepto snomed";
 		String actualMessage = exception.getMessage();
 		Assertions.assertTrue(actualMessage.contains(expectedMessage));
 	}

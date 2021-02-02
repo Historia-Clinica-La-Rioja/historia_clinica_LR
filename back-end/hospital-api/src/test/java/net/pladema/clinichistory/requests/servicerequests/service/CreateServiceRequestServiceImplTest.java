@@ -106,7 +106,7 @@ public class CreateServiceRequestServiceImplTest {
         Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
                 createServiceRequestServiceImpl.execute(1, serviceRequestBo)
         );
-        String expectedMessage = "La orden no puede contener más de un estudio con el mismo problema y el mismo tipo de estudio";
+        String expectedMessage = "La orden no puede contener más de un estudio con el mismo problema y el mismo concepto snomed";
         String actualMessage = exception.getMessage();
         Assertions.assertTrue(actualMessage.contains(expectedMessage));
     }

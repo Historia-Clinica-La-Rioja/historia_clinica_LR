@@ -33,7 +33,7 @@ public class ListMedicationRepositoryImpl implements ListMedicationRepository {
         String sqlString = "with temporal as (" +
                 "SELECT DISTINCT " +
                 "ms.id, ms.snomed_id, ms.status_id, ms.health_condition_id, ms.note_id, ms.dosage_id, ms.created_on, d.source_id, d.source_type_id, d.created_by, ms.updated_on, " +
-                "row_number() OVER (PARTITION by ms.snomed_id, ms.health_condition_id ORDER BY ms.updated_on desc) AS rw " +
+                "row_number() OVER (PARTITION by d.id, ms.snomed_id, ms.health_condition_id ORDER BY ms.updated_on desc) AS rw " +
                 "FROM document d " +
                 "JOIN document_medicamention_statement dms ON d.id = dms.document_id " +
                 "JOIN medication_statement ms ON dms.medication_statement_id = ms.id " +

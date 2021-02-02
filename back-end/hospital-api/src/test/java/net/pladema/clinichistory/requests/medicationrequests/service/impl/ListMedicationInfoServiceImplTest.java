@@ -101,6 +101,8 @@ public class ListMedicationInfoServiceImplTest extends UnitRepository {
         medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_ibuprofeno, "", MedicationStatementStatus.ACTIVE, null, angina_id, dosageId)).getId();
         save(MedicationTestMocks.createDocumentMedicationStatement(recipe2_doc_id, medicationId));
 
+        medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_ibuprofeno, "", MedicationStatementStatus.SUSPENDED, null, angina_id, null)).getId();
+        save(MedicationTestMocks.createDocumentMedicationStatement(recipe2_doc_id, medicationId));
 
         dosageId = save(MedicationTestMocks.createDosage(5d,"d", 8, "h", false,
                 LocalDate.of(2020,12,20), LocalDate.of(2020,12,25), null, null)).getId();
@@ -120,14 +122,14 @@ public class ListMedicationInfoServiceImplTest extends UnitRepository {
         medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_ibuprofeno, "", MedicationStatementStatus.ACTIVE, null, angina_id, dosageId)).getId();
         save(MedicationTestMocks.createDocumentMedicationStatement(recipe5_doc_id, medicationId));
 
-        MedicationFilterBo medicationFilterBo = new MedicationFilterBo(patientId, MedicationStatementStatus.ACTIVE, null, null);
-        List<MedicationBo> result = listMedicationInfoService.execute(medicationFilterBo);
+        MedicationFilterBo medicationFilterBo1 = new MedicationFilterBo(patientId, MedicationStatementStatus.ACTIVE, null, null);
+        List<MedicationBo> result = listMedicationInfoService.execute(medicationFilterBo1);
         Assertions.assertThat(result)
-                .hasSize(4);
+                .hasSize(6);
 
         result.forEach(r -> {
             Assertions.assertThat(r.getStatusId())
-                    .isEqualTo(medicationFilterBo.getStatusId());
+                    .isEqualTo(medicationFilterBo1.getStatusId());
 
             if (mr1_id.equals(r.getEncounterId()))
                 Assertions.assertThat(r.isHasRecipe())
@@ -324,7 +326,7 @@ public class ListMedicationInfoServiceImplTest extends UnitRepository {
 
         List<MedicationBo> result = listMedicationInfoService.execute(new MedicationFilterBo(patientId, MedicationStatementStatus.ACTIVE, "IBuPR", null));
         Assertions.assertThat(result)
-                .hasSize(4);
+                .hasSize(7);
 
         result.forEach(r -> {
             Assertions.assertThat(r.getStatusId())
@@ -441,9 +443,10 @@ public class ListMedicationInfoServiceImplTest extends UnitRepository {
                 LocalDate.of(2021,01,01), LocalDate.of(2021,01,11), null, null)).getId();
         medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_clonacepan, "", MedicationStatementStatus.ACTIVE, null, papera_id, dosageId)).getId();
         save(MedicationTestMocks.createDocumentMedicationStatement(recipe5_doc_id, medicationId));
+
         List<MedicationBo> result = listMedicationInfoService.execute(new MedicationFilterBo(patientId, MedicationStatementStatus.ACTIVE, null, "Angi"));
         Assertions.assertThat(result)
-                .hasSize(2);
+                .hasSize(4);
 
         result.forEach(r -> {
             Assertions.assertThat(r.getStatusId())
@@ -566,7 +569,7 @@ public class ListMedicationInfoServiceImplTest extends UnitRepository {
 
         result = listMedicationInfoService.execute(new MedicationFilterBo(patientId, MedicationStatementStatus.ACTIVE, "IBU", "Angi"));
         Assertions.assertThat(result)
-                .hasSize(1);
+                .hasSize(3);
 
         result = listMedicationInfoService.execute(new MedicationFilterBo(patientId, MedicationStatementStatus.ACTIVE, "PARA", "DOL"));
         Assertions.assertThat(result)

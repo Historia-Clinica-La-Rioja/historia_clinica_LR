@@ -11,12 +11,16 @@ import net.pladema.clinichistory.requests.medicationrequests.repository.Medicati
 import net.pladema.clinichistory.requests.medicationrequests.repository.entity.MedicationRequest;
 import net.pladema.clinichistory.requests.medicationrequests.service.CreateMedicationRequestService;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationRequestBo;
+import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportBo;
+import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -44,6 +48,7 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
     public Integer execute(Integer institutionId, MedicationRequestBo medicationRequest) {
         LOG.debug("Input parameters -> {}, {} ", institutionId, medicationRequest);
         assertRequiredFields(institutionId, medicationRequest);
+        assertNoDuplicatedMedications(medicationRequest);
 
         Map<Integer, HealthConditionBo> healthConditionMap = healthConditionService.getLastHealthCondition(
                 medicationRequest.getPatientInfo().getId(),
@@ -82,6 +87,13 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
             Assert.notNull(md.getHealthCondition().getId(), "La medicación tiene que estar asociada a un problema");
             dosageValidator.isValid(md.getDosage());
         });
+    }
+
+    private void assertNoDuplicatedMedications(MedicationRequestBo medicationRequestBo) {
+        Map<Pair<Integer, String>, List<MedicationBo>> result = medicationRequestBo.getMedications()
+                .stream()
+                .collect(Collectors.groupingBy(p -> Pair.of(p.getHealthCondition().getId(), p.getSnomed().getSctid())));
+        result.forEach((k,v) -> Assert.isTrue(v.size() == 1, "La receta no puede contener más de un medicamento con el mismo problema y el mismo concepto snomed"));
     }
 
     private MedicationRequest createMedicationRequest(Integer institutionId, MedicationRequestBo medicationRequest) {

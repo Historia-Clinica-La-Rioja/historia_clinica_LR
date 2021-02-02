@@ -62,7 +62,7 @@ public class CreateServiceRequestServiceImpl implements CreateServiceRequestServ
         Map<Pair<Integer, String>, List<DiagnosticReportBo>> result = serviceRequestBo.getDiagnosticReports()
                 .stream()
                 .collect(Collectors.groupingBy(p -> Pair.of(p.getHealthConditionId(), p.getSnomed().getSctid())));
-        result.forEach((k,v) -> Assert.isTrue(v.size() == 1, "La orden no puede contener más de un estudio con el mismo problema y el mismo tipo de estudio"));
+        result.forEach((k,v) -> Assert.isTrue(v.size() == 1, "La orden no puede contener más de un estudio con el mismo problema y el mismo concepto snomed"));
     }
 
     private ServiceRequest createServiceRequest(Integer institutionId, ServiceRequestBo serviceRequestBo) {
