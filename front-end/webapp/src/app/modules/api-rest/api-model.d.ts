@@ -1312,6 +1312,7 @@ export interface ResponseAnamnesisDto extends AnamnesisDto {
 
 export interface ResponseEmergencyCareDto extends EmergencyCareDto {
     creationDate: DateTimeDto;
+    doctorsOffice: DoctorsOfficeDto;
     emergencyCareState: MasterDataDto;
     id: number;
 }

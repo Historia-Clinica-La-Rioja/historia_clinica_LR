@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
+import net.pladema.medicalconsultation.doctorsoffice.controller.dto.DoctorsOfficeDto;
 import net.pladema.sgx.dates.controller.dto.DateTimeDto;
 import net.pladema.sgx.masterdata.dto.MasterDataDto;
 
@@ -23,6 +24,8 @@ public class ResponseEmergencyCareDto extends EmergencyCareDto {
     MasterDataDto emergencyCareState;
 
     DateTimeDto creationDate;
+
+    DoctorsOfficeDto doctorsOffice;
 
     public ResponseEmergencyCareDto(Integer id, List<SnomedDto> reasons, MasterDataDto emergencyCareType,
                                     MasterDataDto entranceType, PoliceInterventionDto policeIntervention,
