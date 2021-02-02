@@ -1,5 +1,14 @@
 package net.pladema.person.service.impl;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Supplier;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
 import net.pladema.person.repository.PersonExtendedRepository;
 import net.pladema.person.repository.PersonRepository;
 import net.pladema.person.repository.domain.CompletePersonVo;
@@ -7,14 +16,7 @@ import net.pladema.person.repository.domain.PersonalInformation;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;
 import net.pladema.person.service.PersonService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
-import javax.persistence.EntityNotFoundException;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import net.pladema.sgx.exceptions.NotFoundException;
 
 @Service
 public class PersonServiceImpl implements PersonService {
@@ -23,11 +25,9 @@ public class PersonServiceImpl implements PersonService {
     public static final String OUTPUT = "Output -> {}";
 
     private final PersonRepository personRepository;
-
     private final PersonExtendedRepository personExtendedRepository;
 
-    public PersonServiceImpl(PersonRepository personRepository, PersonExtendedRepository personExtendedRepository)
-    {
+    public PersonServiceImpl(PersonRepository personRepository, PersonExtendedRepository personExtendedRepository) {
         super();
         this.personRepository = personRepository;
         this.personExtendedRepository = personExtendedRepository;
@@ -45,7 +45,7 @@ public class PersonServiceImpl implements PersonService {
     public Person getPerson(Integer id) {
         LOG.debug("Going to get person -> {}", id);
         Person result = personRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(String.valueOf(id)));
+                .orElseThrow(this.personNotFound(id));
         LOG.debug("Person gotten-> {}", result);
         return result;
     }
@@ -63,11 +63,11 @@ public class PersonServiceImpl implements PersonService {
 	public PersonExtended getPersonExtended(Integer personId) {
 		LOG.debug("Going to get PersonExtended -> {}", personId);
 		PersonExtended personExtFound = personExtendedRepository.findById(personId)
-				.orElseThrow(() -> new EntityNotFoundException(String.valueOf(personId)));
+				.orElseThrow(this.personNotFound(personId));
 		   LOG.debug("PersonExtended found-> {}", personExtFound);
 		return personExtFound;
 	}
-    
+
     @Override
     public PersonExtended addPersonExtended(PersonExtended person) {
         LOG.debug("Going to save -> {}", person);
@@ -100,5 +100,9 @@ public class PersonServiceImpl implements PersonService {
         LOG.debug(OUTPUT, result);
         return result;
 	}
+
+    private Supplier<NotFoundException> personNotFound(Integer personId) {
+        return () -> new NotFoundException("person-not-exists", String.format("La persona %s no existe", personId));
+    }
 
 }
