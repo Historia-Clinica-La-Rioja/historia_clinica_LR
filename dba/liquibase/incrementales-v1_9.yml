@@ -1,3 +1,10 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v1_9 
 
+    - changeSet:
+        id: drop-column-healthcare_professional_id-triage
+        author: nayerdi
+        changes:
+            dropColumn:
+                tableName: triage
+                columnName: healthcare_professional_id
