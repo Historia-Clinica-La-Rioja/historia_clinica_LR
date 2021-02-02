@@ -182,7 +182,8 @@ export class CardEstudiosComponent implements OnInit {
 
 	clear(): void {
 		this.formFilter.reset();
-		this.getStudy();
 		this.formFilter.controls.statusId.setValue(STUDY_STATUS.REGISTERED.id);
+		if (this.hideFilterPanel === false)
+			this.getStudy();
 	}
 }

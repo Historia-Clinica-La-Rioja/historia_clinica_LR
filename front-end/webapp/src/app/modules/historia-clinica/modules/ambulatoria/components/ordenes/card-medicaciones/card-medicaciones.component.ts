@@ -211,8 +211,9 @@ export class CardMedicacionesComponent implements OnInit {
 
 	clear(): void {
 		this.formFilter.reset();
-		this.getMedication();
 		this.formFilter.controls.statusId.setValue(MEDICATION_STATUS.ACTIVE.id);
+		if (this.hideFilterPanel === false)
+			this.getMedication();
 	}
 
 	prescriptionItemDataBuilder(medication: MedicationInfoDto): PrescriptionItemData {

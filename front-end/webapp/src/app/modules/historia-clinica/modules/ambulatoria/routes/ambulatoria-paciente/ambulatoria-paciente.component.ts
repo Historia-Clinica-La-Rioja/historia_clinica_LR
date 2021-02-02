@@ -122,7 +122,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 			this.dialogRef = this.dockPopupService.open(NuevaConsultaDockPopupComponent, {idPaciente: this.patientId});
 			this.dialogRef.afterClosed().subscribe(fieldsToUpdate => {
 				delete this.dialogRef;
-				this.medicacionesService.updateMedicaments();
+				this.medicacionesService.updateMedication();
 				if (fieldsToUpdate) {
 					this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
 				}

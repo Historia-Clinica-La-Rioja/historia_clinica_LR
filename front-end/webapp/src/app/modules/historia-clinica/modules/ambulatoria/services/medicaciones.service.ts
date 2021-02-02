@@ -23,10 +23,10 @@ export class MedicacionesService {
 		this.statusId = statusId;
 		this.medicationStatement = medicationStatement;
 		this.healthCondition = healthCondition;
-		this.updateMedicaments();
+		this.updateMedication();
 	}
 
-	updateMedicaments() {
+	updateMedication() {
 		if (this.patientId) {
 			this.prescripcionesService.getPrescription( PrescriptionTypes.MEDICATION,
 				this.patientId,
