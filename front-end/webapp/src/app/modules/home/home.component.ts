@@ -5,7 +5,7 @@ import { SIDEBAR_MENU } from './constants/menu';
 import { PermissionsService } from '../core/services/permissions.service';
 import { MenuFooter } from '@presentation/components/main-layout/main-layout.component';
 import { AccountService } from '@api-rest/services/account.service';
-import { UserDto } from '@api-rest/api-model';
+import { mapToFullName } from '@api-rest/mapper/user-person-dto.mapper';
 
 @Component({
 	selector: 'app-home',
@@ -28,25 +28,9 @@ export class HomeComponent implements OnInit {
 				.subscribe( userInfo => {
 					this.menuFooterItems.user = {
 						userName: userInfo.email,
-						fullName: this.mapToFullName(userInfo)
+						fullName: mapToFullName(userInfo.personDto)
 					};
 				}
 			);
 	}
-
-	private mapToFullName(userInfo: UserDto): string {
-		let fullName: string;
-		if (userInfo.personDto?.firstName) {
-			fullName = userInfo.personDto.firstName;
-		}
-		if (userInfo.personDto?.lastName) {
-			if (fullName) {
-				fullName += ' ' + userInfo.personDto.lastName;
-			} else {
-				fullName = userInfo.personDto.lastName;
-			}
-		}
-		return fullName;
-	}
-
 }

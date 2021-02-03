@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 import { ContextService } from '@core/services/context.service';
 import { MenuItem } from '@core/core-model';
@@ -9,10 +10,10 @@ import { SIDEBAR_MENU } from './constants/menu';
 import { PermissionsService } from '../core/services/permissions.service';
 import { MenuFooter } from '@presentation/components/main-layout/main-layout.component';
 import { InstitutionService } from '@api-rest/services/institution.service';
-import { InstitutionDto, UserDto } from '@api-rest/api-model';
+import { InstitutionDto } from '@api-rest/api-model';
 import { AccountService } from '@api-rest/services/account.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
-import { switchMap } from 'rxjs/operators';
+import { mapToFullName } from '@api-rest/mapper/user-person-dto.mapper';
 
 @Component({
 	selector: 'app-institucion',
@@ -49,7 +50,7 @@ export class InstitucionComponent implements OnInit {
 			this.accountService.getInfo()
 				.subscribe( userInfo => {
 					this.menuFooterItems.user.userName = userInfo.email;
-					this.menuFooterItems.user.fullName = this.mapToFullName(userInfo);
+					this.menuFooterItems.user.fullName = mapToFullName(userInfo.personDto);
 				}
 			);
 		});
@@ -63,21 +64,6 @@ export class InstitucionComponent implements OnInit {
 			apartment: institutionDto.institutionAddressDto.apartment,
 			cityName:  institutionDto.institutionAddressDto.city.description
 		};
-	}
-
-	private mapToFullName(userInfo: UserDto): string {
-		let fullName: string;
-		if (userInfo.personDto.firstName) {
-			fullName = userInfo.personDto.firstName;
-		}
-		if (userInfo.personDto.lastName) {
-			if (fullName) {
-				fullName += ' ' + userInfo.personDto.lastName;
-			} else {
-				fullName = userInfo.personDto.lastName;
-			}
-		}
-		return fullName;
 	}
 
 }
