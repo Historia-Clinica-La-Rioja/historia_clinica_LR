@@ -270,7 +270,8 @@
 				"filter": {
 					"STATE":"Estado",
 					"MEDICATION":"Medicamento",
-					"PROBLEM":"Problema",
+					"PROBLEM":"Problema asociado",
+					"STUDY":"Estudio",
 					"CATEGORY":"Categoría",
 					"BUTTON_FILTER": "Aplicar filtro"
 				}

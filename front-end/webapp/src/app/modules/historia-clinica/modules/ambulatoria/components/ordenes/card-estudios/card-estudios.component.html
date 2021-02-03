@@ -31,7 +31,7 @@
 					<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.filter.CATEGORY'"></mat-label>
 					<mat-select id="categories"
 								name="categories"
-								formControlName="categorie">
+								formControlName="categorieId">
 						<mat-option *ngFor="let categorie of categories" [value]="categorie.id">
 								{{categorie.description | translate}}
 							</mat-option>
@@ -45,6 +45,15 @@
 									id="healthCondition"
 									name="healthCondition"
 									formControlName="healthCondition">
+				</mat-form-field>
+			</div>
+			<div>
+				<mat-form-field appearance="outline">
+					<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.filter.STUDY'"></mat-label>
+					<input matInput type="text"
+									id="study"
+									name="study"
+									formControlName="study">
 				</mat-form-field>
 			</div>
 

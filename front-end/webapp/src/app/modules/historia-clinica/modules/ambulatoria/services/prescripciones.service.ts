@@ -31,12 +31,12 @@ export class PrescripcionesService {
 		}
 	}
 
-	getPrescription(prescriptionType: PrescriptionTypes, patientId: number, statusId: string, medicationStatement: string, healthCondition: string, study?: string): Observable<any> {
+	getPrescription(prescriptionType: PrescriptionTypes, patientId: number, statusId: string, medicationStatement: string, healthCondition: string, study?: string, categoryId?: string): Observable<any> {
 		switch(prescriptionType) {
 			case PrescriptionTypes.MEDICATION:
 				return this.medicationRequestService.medicationRequestList(patientId, statusId, medicationStatement, healthCondition);
 			case PrescriptionTypes.STUDY:
-				return this.serviceRequestService.getList(patientId, statusId, study, healthCondition, null);
+				return this.serviceRequestService.getList(patientId, statusId, study, healthCondition, categoryId);
 		}
 	}
 

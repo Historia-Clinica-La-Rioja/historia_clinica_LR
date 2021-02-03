@@ -40,9 +40,10 @@ export class CardEstudiosComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.formFilter = this.formBuilder.group({
-			categorie: [null],
+			categorieId: [null],
 			statusId: [null],
 			healthCondition: [null],
+			study: [null],
 		});
 
 		this.getStudy();
@@ -64,10 +65,10 @@ export class CardEstudiosComponent implements OnInit {
 													this.formFilter.controls.statusId.value,
 													null,
 													this.formFilter.controls.healthCondition.value,
-													this.formFilter.controls.categorie.value )
-			.subscribe(
-				response => {
-					this.diagnosticReportsInfo = response;
+													this.formFilter.controls.study.value,
+													this.formFilter.controls.categorieId.value )
+			.subscribe((response: DiagnosticReportInfoDto[]) => {
+						this.diagnosticReportsInfo = response;
 		});
 	}
 
