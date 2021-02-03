@@ -248,6 +248,12 @@ export interface BasicPersonalDataDto extends IBasicPersonalData {
     genderId: number;
 }
 
+export interface BedCategoriesDataDto {
+    category: BedCategoryDto;
+    freeBeds: number;
+    occupiedBeds: number;
+}
+
 export interface BedCategoryDto extends AbstractMasterdataDto<number> {
     id: number;
 }
