@@ -1,10 +1,28 @@
-@import '../../../../../../../assets/styles/mixins';
 @import '../../../../../../../assets/styles/mat-mixins';
 
 form {
 	@include mat-form-field-background-white;
 }
 
-.mat-action-row {
-	@include form-buttons;
+h4 {
+	font-weight: 500;
+	font-size: medium;
+}
+
+.page {
+	width: 100%;
+	max-width: 500px;
+}
+
+.simple-form-field {
+	width: 60%;
+	min-width: 280px;
+}
+
+section {
+	margin: 1.5vh 0;
+}
+
+mat-radio-group {
+	margin-left: 0.75em;
 }
