@@ -17,9 +17,9 @@ import java.io.Serializable;
 @ToString
 public class PoliceInterventionDto implements Serializable {
 
-    private DateDto dateCall;
+    private DateDto callDate;
 
-    private TimeDto timeCall;
+    private TimeDto callTime;
 
     private String plateNumber;
 

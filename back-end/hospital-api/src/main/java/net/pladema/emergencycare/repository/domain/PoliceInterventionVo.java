@@ -22,9 +22,9 @@ public class PoliceInterventionVo implements Serializable {
 
 	private Integer id;
 
-	private LocalDate dateCall;
+	private LocalDate callDate;
 
-	private LocalTime timeCall;
+	private LocalTime callTime;
 
 	private String plateNumber;
 
@@ -35,8 +35,8 @@ public class PoliceInterventionVo implements Serializable {
 	public PoliceInterventionVo(PoliceIntervention policeIntervention){
 		if (policeIntervention!= null) {
 			this.id = policeIntervention.getId();
-			this.dateCall = policeIntervention.getCallDate();
-			this.timeCall = policeIntervention.getCallTime();
+			this.callDate = policeIntervention.getCallDate();
+			this.callTime = policeIntervention.getCallTime();
 			this.plateNumber = policeIntervention.getPlateNumber();
 			this.firstName = policeIntervention.getFirstname();
 			this.lastName = policeIntervention.getLastname();

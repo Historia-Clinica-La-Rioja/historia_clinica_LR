@@ -20,9 +20,9 @@ public class PoliceInterventionBo {
 
     private Integer id;
 
-    private LocalDate dateCall;
+    private LocalDate callDate;
 
-    private LocalTime timeCall;
+    private LocalTime callTime;
 
     private String plateNumber;
 
@@ -32,8 +32,8 @@ public class PoliceInterventionBo {
 
     public PoliceInterventionBo(PoliceIntervention policeIntervention){
         this.id = policeIntervention.getId();
-        this.dateCall = policeIntervention.getCallDate();
-        this.timeCall = policeIntervention.getCallTime();
+        this.callDate = policeIntervention.getCallDate();
+        this.callTime = policeIntervention.getCallTime();
         this.plateNumber = policeIntervention.getPlateNumber();
         this.firstName = policeIntervention.getFirstname();
         this.lastName = policeIntervention.getLastname();
@@ -41,8 +41,8 @@ public class PoliceInterventionBo {
 
     public PoliceInterventionBo(PoliceInterventionVo policeIntervention){
         this.id = policeIntervention.getId();
-        this.dateCall = policeIntervention.getDateCall();
-        this.timeCall = policeIntervention.getTimeCall();
+        this.callDate = policeIntervention.getCallDate();
+        this.callTime = policeIntervention.getCallTime();
         this.plateNumber = policeIntervention.getPlateNumber();
         this.firstName = policeIntervention.getFirstName();
         this.lastName = policeIntervention.getLastName();

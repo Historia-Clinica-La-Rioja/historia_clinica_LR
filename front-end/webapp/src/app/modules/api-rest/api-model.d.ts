@@ -18,8 +18,8 @@ export interface AEmergencyCareDto extends Serializable {
 }
 
 export interface AEmergencyCarePatientDto extends Serializable {
-    id: number;
-    patientMedicalCoverageId: number;
+    id?: number;
+    patientMedicalCoverageId?: number;
 }
 
 export interface APatientDto extends APersonDto {
@@ -1222,11 +1222,11 @@ export interface PersonalInformationDto {
 }
 
 export interface PoliceInterventionDto extends Serializable {
-    dateCall: DateDto;
+    callDate: DateDto;
+    callTime: TimeDto;
     firstName: string;
     lastName: string;
     plateNumber: string;
-    timeCall: TimeDto;
 }
 
 export interface PrescriptionDto extends Serializable {

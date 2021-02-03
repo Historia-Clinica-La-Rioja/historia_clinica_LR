@@ -89,8 +89,8 @@ export class AdmisionAdministrativaComponent implements OnInit {
 			emergencyCareTypeId: [null],
 			emergencyCareEntranceTypeId: [null],
 			ambulanceCompanyId: [null, Validators.maxLength(AMBULANCE.COMPANY_ID.max_length)],
-			dateCall: [null],
-			timeCall: [null],
+			callDate: [null],
+			callTime: [null],
 			plateNumber: [null, Validators.maxLength(POLICE_OFFICER.PLATE_NUMBER.max_length)],
 			firstName: [null, Validators.maxLength(PERSON.MAX_LENGTH.firstName)],
 			lastName: [null, Validators.maxLength(PERSON.MAX_LENGTH.firstName)],
@@ -183,8 +183,8 @@ export class AdmisionAdministrativaComponent implements OnInit {
 	onChange(mrChange): void {
 		this.hasPoliceIntervention = eval(mrChange.value);
 		if (!this.hasPoliceIntervention) {
-			this.form.controls.dateCall.setValue(null);
-			this.form.controls.timeCall.setValue(null);
+			this.form.controls.callDate.setValue(null);
+			this.form.controls.callTime.setValue(null);
 			this.form.controls.plateNumber.setValue(null);
 			this.form.controls.firstName.setValue(null);
 			this.form.controls.lastName.setValue(null);

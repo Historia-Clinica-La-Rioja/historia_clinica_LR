@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import javax.annotation.Nullable;
 import java.io.Serializable;
 
 @Builder
@@ -15,8 +16,10 @@ import java.io.Serializable;
 @NoArgsConstructor(force = true)
 public class AEmergencyCarePatientDto implements Serializable {
 
+    @Nullable
     private final Integer id;
 
+    @Nullable
     private final Integer patientMedicalCoverageId;
 
 }

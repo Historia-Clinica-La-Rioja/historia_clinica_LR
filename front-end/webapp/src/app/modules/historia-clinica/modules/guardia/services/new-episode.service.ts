@@ -32,8 +32,8 @@ export class NewEpisodeService {
 				patientMedicalCoverageId: this.administrativeAdmission.patientMedicalCoverageId
 			},
 			reasons: this.administrativeAdmission.reasons.map(s => s.snomed),
-			emergencyCareType: this.administrativeAdmission.emergencyCareTypeId,
-			entranceType: this.administrativeAdmission.emergencyCareEntranceTypeId,
+			emergencyCareTypeId: this.administrativeAdmission.emergencyCareTypeId,
+			entranceTypeId: this.administrativeAdmission.emergencyCareEntranceTypeId,
 			ambulanceCompanyId: this.administrativeAdmission.ambulanceCompanyId,
 			policeIntervention,
 		};
@@ -45,8 +45,8 @@ export class NewEpisodeService {
 	}
 
 	hasPoliceIntervention(): boolean {
-		if (this.administrativeAdmission?.dateCall ||
-			this.administrativeAdmission?.timeCall ||
+		if (this.administrativeAdmission?.callDate ||
+			this.administrativeAdmission?.callTime ||
 			this.administrativeAdmission?.plateNumber ||
 			this.administrativeAdmission?.firstName ||
 			this.administrativeAdmission?.lastName) {
@@ -59,8 +59,8 @@ export class NewEpisodeService {
 	private toPoliceIntervention(): PoliceInterventionDto {
 
 		return {
-			dateCall: this.administrativeAdmission.dateCall ? dateToDateDto(this.administrativeAdmission.dateCall.toDate()) : undefined,
-			timeCall: this.administrativeAdmission.timeCall ? dateToTimeDto(getDateWithTime(getTimeArray(this.administrativeAdmission.timeCall))) : undefined,
+			callDate: this.administrativeAdmission.callDate ? dateToDateDto(this.administrativeAdmission.callDate.toDate()) : undefined,
+			callTime: this.administrativeAdmission.callTime ? dateToTimeDto(getDateWithTime(getTimeArray(this.administrativeAdmission.callTime))) : undefined,
 			plateNumber: this.administrativeAdmission.plateNumber,
 			firstName: this.administrativeAdmission.firstName,
 			lastName: this.administrativeAdmission.lastName
@@ -89,8 +89,8 @@ export interface AdministrativeAdmission {
 	emergencyCareTypeId: number;
 	emergencyCareEntranceTypeId: number;
 	ambulanceCompanyId: string;
-	dateCall: Moment;
-	timeCall: string;
+	callDate: Moment;
+	callTime: string;
 	plateNumber: string;
 	firstName: string;
 	lastName: string;

@@ -389,8 +389,8 @@ export const MOCKS_GUARDIA = [
 					ambulanceCompanyId: '121212',
 					policeIntervention: {
 						id: 1,
-						dateCall: { day: 14, month: 1, year: 2021}, // DateDto
-						timeCall: { hours: 12, minutes: 0, seconds: 0}, // TimeDto
+						callDate: { day: 14, month: 1, year: 2021}, // DateDto
+						callTime: { hours: 12, minutes: 0, seconds: 0}, // TimeDto
 						plateNumber: 'ABC 111',
 						firstName: 'Ricardo',
 						lastName: 'Gutierrez'
@@ -758,8 +758,8 @@ export const MOCKS_GUARDIA = [
 						entranceTypeId: 1,
 						ambulanceCompanyId: 1,
 						policeIntervention: {
-							dateCall: { day: 14, month: 1, year: 2021}, // DateDto
-							timeCall: { hours: 12, minutes: 0, seconds: 0}, // TimeDto
+							callDate: { day: 14, month: 1, year: 2021}, // DateDto
+							callTime: { hours: 12, minutes: 0, seconds: 0}, // TimeDto
 							plateNumber: '91218',
 							firstName: 'Ricardo',
 							lastName: 'Gutierrez'
@@ -876,8 +876,8 @@ export const MOCKS_GUARDIA = [
 						typeId: 1,
 						entranceTypeId: 1,
 						policeIntervention: {
-							dateCall: { day: 14, month: 1, year: 2021}, // DateDto
-							timeCall: { hours: 12, minutes: 0, seconds: 0}, // TimeDto
+							callDate: { day: 14, month: 1, year: 2021}, // DateDto
+							callTime: { hours: 12, minutes: 0, seconds: 0}, // TimeDto
 							plateNumber: '91218',
 							firstName: 'Ricardo',
 							lastName: 'Gutierrez'
@@ -1124,8 +1124,8 @@ export const MOCKS_GUARDIA = [
 						typeId: 2,
 						entranceTypeId: 1,
 						policeIntervention: {
-							dateCall: { day: 14, month: 1, year: 2021}, // DateDto
-							timeCall: { hours: 12, minutes: 0, seconds: 0}, // TimeDto
+							callDate: { day: 14, month: 1, year: 2021}, // DateDto
+							callTime: { hours: 12, minutes: 0, seconds: 0}, // TimeDto
 							plateNumber: '91218',
 							firstName: 'Ricardo',
 							lastName: 'Gutierrez'

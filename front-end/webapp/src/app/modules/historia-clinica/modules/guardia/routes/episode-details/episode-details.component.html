@@ -62,10 +62,10 @@
 							</div>
 						</div>
 						<div fxLayout="row" fxLayoutGap="3px" class="content-secondary">
-							<span *ngIf="policeIntervention.dateCall">{{ policeIntervention.dateCall | viewDateDto:
+							<span *ngIf="policeIntervention.callDate">{{ policeIntervention.callDate | viewDateDto:
 								'date' | date: 'dd/MM/yyyy' }}</span>
-							<span *ngIf="policeIntervention.dateCall && policeIntervention.timeCall"> - </span>
-							<span *ngIf="policeIntervention.timeCall">{{ policeIntervention.timeCall | viewDateDto:
+							<span *ngIf="policeIntervention.callDate && policeIntervention.callTime"> - </span>
+							<span *ngIf="policeIntervention.callTime">{{ policeIntervention.callTime | viewDateDto:
 								'time' | date: 'HH:mm' }} hs</span>
 						</div>
 					</div>

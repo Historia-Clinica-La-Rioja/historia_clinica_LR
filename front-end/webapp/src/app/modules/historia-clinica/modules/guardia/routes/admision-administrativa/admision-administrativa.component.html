@@ -113,7 +113,7 @@
 
 			<div fxLayout="row" fxLayoutGap="5px">
 				<mat-form-field appearance="outline">
-					<input formControlName="dateCall" id="dateCall" matInput [matDatepicker]="initPicker" [max]="today"
+					<input formControlName="callDate" id="callDate" matInput [matDatepicker]="initPicker" [max]="today"
 						placeholder="{{'guardia.administrative_admision.form.police_intervention.DATE' | translate}}">
 					<mat-datepicker-toggle matSuffix [for]="initPicker"></mat-datepicker-toggle>
 					<mat-datepicker #initPicker></mat-datepicker>
@@ -121,9 +121,9 @@
 
 
 				<mat-form-field appearance="outline">
-					<input matInput id="time" type="text" formControlName="timeCall" pattern="{{TIME_PATTERN}}"
+					<input matInput id="time" type="text" formControlName="callTime" pattern="{{TIME_PATTERN}}"
 						placeholder="{{'guardia.administrative_admision.form.police_intervention.TIME' | translate}}">
-					<mat-error *ngIf="hasError(form, 'pattern', 'timeCall')">La hora debe cumplir con el formato de 24
+					<mat-error *ngIf="hasError(form, 'pattern', 'callTime')">La hora debe cumplir con el formato de 24
 						hs y tener dos digitos para la hora y los minutos respectivamente</mat-error>
 				</mat-form-field>
 			</div>
