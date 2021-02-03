@@ -1,1 +1,40 @@
-<p>settings works!</p>
+<app-content width="full">
+    <section fxLayout="column" fxLayoutGap="20px">
+        <h1 class="mat-headline" [translate]="'configuracion.logos.TITLE'"></h1>
+
+        <div fxLayout="column" fxLayoutGap="10px">
+            <h2 class="mat-title" [translate]="'configuracion.logos.SUBTITLE_1'"></h2>
+            <span mat-line class="mat-body" [translate]="'configuracion.logos.logotipo.DESCRIPTION'"></span>
+            <span mat-line class="mat-body" [translate]="'configuracion.logos.logotipo.IMAGE_FORMAT'"></span>
+            <div>
+                <button (click)="fileInput.click()" mat-raised-button color="primary">
+                    <mat-icon>attach_file</mat-icon>
+                    {{'configuracion.logos.UPLOAD_FILE' | translate}}
+                </button>
+                <span [hidden]="true">
+                    <input type="file" #fileInput multiple />
+                </span>
+            </div>
+        </div>
+
+        <div fxLayout="column" fxLayoutGap="10px">
+            <h2 class="mat-title" [translate]="'configuracion.logos.SUBTITLE_2'"></h2>
+            <span mat-line class="mat-body" [translate]="'configuracion.logos.icono_pagina.DESCRIPTION'"></span>
+            <span mat-line class="mat-body" [translate]="'configuracion.logos.icono_pagina.IMAGE_FORMAT'"></span>
+        </div>
+
+        <div fxLayout="column" fxLayoutGap="10px">
+            <h2 class="mat-title" [translate]="'configuracion.logos.SUBTITLE_3'"></h2>
+            <span mat-line class="mat-body" [translate]="'configuracion.logos.icono_escritorio.DESCRIPTION'"></span>
+            <span mat-line class="mat-body" [translate]="'configuracion.logos.icono_escritorio.IMAGE_FORMAT_72'"></span>
+            <span mat-line class="mat-body" [translate]="'configuracion.logos.icono_escritorio.IMAGE_FORMAT_96'"></span>
+            <span mat-line class="mat-body" [translate]="'configuracion.logos.icono_escritorio.IMAGE_FORMAT_128'"></span>
+            <span mat-line class="mat-body" [translate]="'configuracion.logos.icono_escritorio.IMAGE_FORMAT_144'"></span>
+            <span mat-line class="mat-body" [translate]="'configuracion.logos.icono_escritorio.IMAGE_FORMAT_152'"></span>
+            <span mat-line class="mat-body" [translate]="'configuracion.logos.icono_escritorio.IMAGE_FORMAT_192'"></span>
+            <span mat-line class="mat-body" [translate]="'configuracion.logos.icono_escritorio.IMAGE_FORMAT_384'"></span>
+            <span mat-line class="mat-body" [translate]="'configuracion.logos.icono_escritorio.IMAGE_FORMAT_512'"></span>
+        </div>
+        
+    </section>
+</app-content>
