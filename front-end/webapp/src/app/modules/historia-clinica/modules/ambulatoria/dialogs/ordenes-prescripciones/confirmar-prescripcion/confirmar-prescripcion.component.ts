@@ -12,7 +12,7 @@ import { PrescripcionesService, PrescriptionTypes } from '../../../services/pres
 export class ConfirmarPrescripcionComponent implements OnInit {
 
 	loading = true;
-	hasError: boolean;
+	hasError = false;
 	prescriptionId: number;
 
 	constructor(
@@ -27,9 +27,11 @@ export class ConfirmarPrescripcionComponent implements OnInit {
 			this.loading = false;
 			this.hasError = false;
 			this.prescriptionId = prescriptionId;
-		}, _ => {
-			this.snackBarService.showError(this.data.errorLabel);
-			 this.hasError = true;
+		}, err => {
+			this.snackBarService.showError(err.errors[0]);
+			this.hasError = true;
+			this.loading = false;
+			this.closeModal();
 			});
 	}
 

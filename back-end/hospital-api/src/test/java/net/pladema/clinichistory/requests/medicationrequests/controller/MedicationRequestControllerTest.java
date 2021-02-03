@@ -20,9 +20,11 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(MedicationRequestController.class)
@@ -119,20 +121,6 @@ public class MedicationRequestControllerTest extends UnitController {
                 "  \"items\": [],\n" +
                 "  \"medicalCoverageId\": 0\n" +
                 "}";
-    }
-
-    @Test
-    @WithMockUser(authorities = {"ROOT"})
-    public void test_createWithoutHealthConditionId_fail() throws Exception {
-        String URL = BASE_PATH
-                .replace("{institutionId}","1")
-                .replace("{patientId}", "1");
-        mockMvc.perform(post(URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mockWithoutHealthConditionId()))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.*")
-                        .value(buildMessage("value.mandatory")));
     }
 
     private String mockWithoutHealthConditionId() {

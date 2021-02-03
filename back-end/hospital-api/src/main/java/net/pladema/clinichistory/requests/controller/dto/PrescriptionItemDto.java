@@ -22,7 +22,6 @@ public class PrescriptionItemDto implements Serializable {
     @NotNull(message = "{value.mandatory}")
     private SnomedDto snomed;
 
-    @NotNull(message = "{value.mandatory}")
     private Integer healthConditionId;
 
     @Nullable

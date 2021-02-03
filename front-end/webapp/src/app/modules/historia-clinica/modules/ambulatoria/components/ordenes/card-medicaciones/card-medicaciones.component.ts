@@ -134,7 +134,9 @@ export class CardMedicacionesComponent implements OnInit {
 					newMedicationRequest$.subscribe((newRecipe: number) => {
 						this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_MEDICATION_SUCCESS');
 						this.getMedication();
-					}, _ => {this.snackBarService.showError('ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_MEDICATION_ERROR')});
+					}, err => {
+						this.snackBarService.showError(err.errors[0]);
+					});
 				}
 			}
 		});
