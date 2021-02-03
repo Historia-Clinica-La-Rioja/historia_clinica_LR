@@ -118,7 +118,7 @@
                             <div dosage>
                                 <div fxLayout="column">
                                     <div>
-                                        <span mat-line class="mat-body capitalize-first-letter element-light-color" *ngIf="medicationInfo.dosage?.periodUnit == 'h'">
+                                        <span mat-line class="mat-body capitalize-first-letter element-light-color" *ngIf="medicationInfo.dosage?.periodUnit == 'h' && medicationInfo.healthCondition.id !== undefined">
                                             Una aplicación cada {{medicationInfo.dosage.frequency}} hs
                                         </span>
                                         <span mat-line class="mat-body capitalize-first-letter element-light-color" *ngIf="medicationInfo.dosage?.periodUnit == 'd'"
