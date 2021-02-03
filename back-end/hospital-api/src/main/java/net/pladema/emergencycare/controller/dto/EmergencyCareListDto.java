@@ -22,7 +22,7 @@ public class EmergencyCareListDto implements Serializable {
 
 	DateTimeDto creationDate;
 
-	PatientECEDto patient;
+	EmergencyCarePatientDto patient;
 
 	EmergencyCareEpisodeListTriageDto triage;
 

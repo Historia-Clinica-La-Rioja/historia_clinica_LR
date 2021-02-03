@@ -1,25 +1,22 @@
 package net.pladema.emergencycare.controller.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serializable;
 
+@Builder
 @Getter
-@Setter
 @ToString
-@NoArgsConstructor
 @AllArgsConstructor
-public class EmergencyCarePatientDto implements Serializable {
+@NoArgsConstructor(force = true)
+public class AEmergencyCarePatientDto implements Serializable {
 
-	Integer id;
+    private final Integer id;
 
-	Integer patientMedicalCoverageId;
+    private final Integer patientMedicalCoverageId;
 
-	Short typeId;
-
-	EmergencyCarePersonDto person;
 }

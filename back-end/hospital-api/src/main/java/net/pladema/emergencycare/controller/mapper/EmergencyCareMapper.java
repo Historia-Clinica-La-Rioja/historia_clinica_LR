@@ -34,9 +34,9 @@ public interface EmergencyCareMapper {
 
     @AfterMapping
     default void masterDataResponseMapping(@MappingTarget ResponseEmergencyCareDto target, EmergencyCareBo emergencyCareBo) {
-        target.setEmergencyCareState(EnumWriter.write(EEmergencyCareState.getById(emergencyCareBo.getEmergencyCareState())));
-        target.setEmergencyCareType(EnumWriter.write(EEmergencyCareType.getById(emergencyCareBo.getEmergencyCareType())));
-        target.setEntranceType(EnumWriter.write(EEmergencyCareEntrance.getById(emergencyCareBo.getEmergencyCareEntrance())));
+        target.setEmergencyCareState(EnumWriter.write(EEmergencyCareState.getById(emergencyCareBo.getEmergencyCareStateId())));
+        target.setEmergencyCareType(EnumWriter.write(EEmergencyCareType.getById(emergencyCareBo.getEmergencyCareTypeId())));
+        target.setEntranceType(EnumWriter.write(EEmergencyCareEntrance.getById(emergencyCareBo.getEmergencyCareEntranceId())));
     }
 
     @Named("toEmergencyCareListDto")
@@ -54,8 +54,8 @@ public interface EmergencyCareMapper {
 
     @AfterMapping
     default void masterDataListMapping(@MappingTarget EmergencyCareListDto target, EmergencyCareBo emergencyCareBo) {
-        target.setType(EnumWriter.write(EEmergencyCareType.getById(emergencyCareBo.getEmergencyCareType())));
-        target.setState(EnumWriter.write(EEmergencyCareState.getById(emergencyCareBo.getEmergencyCareState())));
+        target.setType(EnumWriter.write(EEmergencyCareType.getById(emergencyCareBo.getEmergencyCareTypeId())));
+        target.setState(EnumWriter.write(EEmergencyCareState.getById(emergencyCareBo.getEmergencyCareStateId())));
     }
 
     @Named("administrativeEmergencyCareDtoToEmergencyCareBo")
@@ -63,24 +63,24 @@ public interface EmergencyCareMapper {
     @Mapping(target = "ambulanceCompanyId", source = "administrative.ambulanceCompanyId")
     @Mapping(target = "policeIntervention", source = "administrative.policeIntervention", qualifiedByName = "toPoliceInterventionBo")
     @Mapping(target = "triage", source = "triage", qualifiedByName = "toTriageBo")
-    @Mapping(target = "emergencyCareType", source = "administrative.emergencyCareType", qualifiedByName = "fromMasterDataDto")
-    @Mapping(target = "emergencyCareEntrance", source = "administrative.entranceType", qualifiedByName = "fromMasterDataDto")
+    @Mapping(target = "emergencyCareTypeId", source = "administrative.emergencyCareTypeId", qualifiedByName = "fromMasterDataDto")
+    @Mapping(target = "emergencyCareEntranceId", source = "administrative.entranceTypeId", qualifiedByName = "fromMasterDataDto")
     EmergencyCareBo administrativeEmergencyCareDtoToEmergencyCareBo(ECAdministrativeDto emergencyCareDto);
 
     @Named("adultGynecologicalEmergencyCareDtoToEmergencyCareBo")
     @Mapping(target = "patient.id", source = "administrative.patient.id")
     @Mapping(target = "policeIntervention", source = "administrative.policeIntervention", qualifiedByName = "toPoliceInterventionBo")
     @Mapping(target = "triage", source = "triage", qualifiedByName = "toTriageBo")
-    @Mapping(target = "emergencyCareType", source = "administrative.emergencyCareType", qualifiedByName = "fromMasterDataDto")
-    @Mapping(target = "emergencyCareEntrance", source = "administrative.entranceType", qualifiedByName = "fromMasterDataDto")
+    @Mapping(target = "emergencyCareTypeId", source = "administrative.emergencyCareTypeId", qualifiedByName = "fromMasterDataDto")
+    @Mapping(target = "emergencyCareEntranceId", source = "administrative.entranceTypeId", qualifiedByName = "fromMasterDataDto")
     EmergencyCareBo adultGynecologicalEmergencyCareDtoToEmergencyCareBo(ECAdultGynecologicalDto emergencyCareDto);
 
     @Named("pediatricEmergencyCareDtoToEmergencyCareBo")
     @Mapping(target = "patient.id", source = "administrative.patient.id")
     @Mapping(target = "policeIntervention", source = "administrative.policeIntervention", qualifiedByName = "toPoliceInterventionBo")
     @Mapping(target = "triage", source = "triage", qualifiedByName = "toTriageBo")
-    @Mapping(target = "emergencyCareType", source = "administrative.emergencyCareType", qualifiedByName = "fromMasterDataDto")
-    @Mapping(target = "emergencyCareEntrance", source = "administrative.entranceType", qualifiedByName = "fromMasterDataDto")
+    @Mapping(target = "emergencyCareTypeId", source = "administrative.emergencyCareTypeId", qualifiedByName = "fromMasterDataDto")
+    @Mapping(target = "emergencyCareEntranceId", source = "administrative.entranceTypeId", qualifiedByName = "fromMasterDataDto")
     EmergencyCareBo pediatricEmergencyCareDtoToEmergencyCareBo(ECPediatricDto emergencyCareDto);
 
     @Named("toEmergencyCareUserDto")

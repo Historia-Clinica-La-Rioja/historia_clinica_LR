@@ -46,7 +46,7 @@
 								</mat-card-header>
 
 								<ng-template #patientInfo>
-									<span *ngIf="(episode.patient?.typeId !== PACIENTE_TEMPORAL || episode.patient?.firstName || episode.patient?.lastName) else temporal">
+									<span *ngIf="(episode.patient?.typeId !== PACIENTE_TEMPORAL || episode.patient?.person?.firstName || episode.patient?.person?.lastName) else temporal">
 									{{ episode.patient?.person?.firstName }} {{ episode.patient?.person?.lastName }}
 									</span>
 								</ng-template>

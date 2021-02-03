@@ -8,6 +8,20 @@ export interface AAdditionalDoctorDto {
     phoneNumber: string;
 }
 
+export interface AEmergencyCareDto extends Serializable {
+    ambulanceCompanyId?: string;
+    emergencyCareTypeId?: number;
+    entranceTypeId?: number;
+    patient?: AEmergencyCarePatientDto;
+    policeIntervention?: PoliceInterventionDto;
+    reasons?: SnomedDto[];
+}
+
+export interface AEmergencyCarePatientDto extends Serializable {
+    id: number;
+    patientMedicalCoverageId: number;
+}
+
 export interface APatientDto extends APersonDto {
     comments: string;
     generalPractitioner: AAdditionalDoctorDto;
@@ -520,7 +534,7 @@ export interface EmergencyCareDto extends Serializable {
     ambulanceCompanyId: string;
     emergencyCareType: MasterDataDto;
     entranceType: MasterDataDto;
-    patient: PatientECEDto;
+    patient: EmergencyCarePatientDto;
     policeIntervention: PoliceInterventionDto;
     reasons: SnomedDto[];
 }
@@ -535,7 +549,7 @@ export interface EmergencyCareListDto extends Serializable {
     creationDate: DateTimeDto;
     doctorsOffice: DoctorsOfficeDto;
     id: number;
-    patient: PatientECEDto;
+    patient: EmergencyCarePatientDto;
     state: MasterDataDto;
     triage: EmergencyCareEpisodeListTriageDto;
     type: MasterDataDto;
@@ -544,6 +558,14 @@ export interface EmergencyCareListDto extends Serializable {
 export interface EmergencyCarePatientDto extends Serializable {
     id: number;
     patientMedicalCoverageId: number;
+    person: EmergencyCarePersonDto;
+    typeId: number;
+}
+
+export interface EmergencyCarePersonDto {
+    firstName: string;
+    lastName: string;
+    photo: string;
 }
 
 export interface EmergencyCareUserDto {
@@ -964,7 +986,7 @@ export interface NewEffectiveClinicalObservationDto extends ClinicalObservationD
     effectiveTime: DateTimeDto;
 }
 
-export interface NewEmergencyCareDto extends EmergencyCareDto {
+export interface NewEmergencyCareDto extends AEmergencyCareDto {
 }
 
 export interface NewMedicalRequestDto {
@@ -1128,13 +1150,6 @@ export interface PatientDto {
     lastName: string;
 }
 
-export interface PatientECEDto {
-    id: number;
-    patientMedicalCoverageId: number;
-    person: PersonECEDto;
-    typeId: number;
-}
-
 export interface PatientInteroperabilityDto {
     birthdate: string;
     firstname: string;
@@ -1186,12 +1201,6 @@ export interface PermissionsDto {
 
 export interface PersonBasicDataResponseDto extends Serializable {
     birthDate: string;
-    firstName: string;
-    lastName: string;
-    photo: string;
-}
-
-export interface PersonECEDto {
     firstName: string;
     lastName: string;
     photo: string;

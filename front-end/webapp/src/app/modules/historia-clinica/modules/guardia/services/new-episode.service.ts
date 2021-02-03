@@ -29,23 +29,11 @@ export class NewEpisodeService {
 		const newEmergencyCareDto: NewEmergencyCareDto = {
 			patient: {
 				id: this.administrativeAdmission.patientId,
-				patientMedicalCoverageId: this.administrativeAdmission.patientMedicalCoverageId,
-				person: { // TODO No debe usarse este dto ya que estos campos no son requeridos para dar de alta
-					firstName: null,
-					lastName: null,
-					photo: null
-				},
-				typeId: null
+				patientMedicalCoverageId: this.administrativeAdmission.patientMedicalCoverageId
 			},
 			reasons: this.administrativeAdmission.reasons.map(s => s.snomed),
-			emergencyCareType: this.administrativeAdmission.emergencyCareTypeId ? {
-				id: this.administrativeAdmission.emergencyCareTypeId,
-				description: null
-			} : undefined,
-			entranceType: this.administrativeAdmission.emergencyCareEntranceTypeId ? {
-				id: this.administrativeAdmission.emergencyCareEntranceTypeId,
-				description: null
-			} : undefined,
+			emergencyCareType: this.administrativeAdmission.emergencyCareTypeId,
+			entranceType: this.administrativeAdmission.emergencyCareEntranceTypeId,
 			ambulanceCompanyId: this.administrativeAdmission.ambulanceCompanyId,
 			policeIntervention,
 		};

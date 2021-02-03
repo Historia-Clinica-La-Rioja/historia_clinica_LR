@@ -4,20 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class PatientECEDto {
+public class EmergencyCarePersonDto {
 
-	Integer id;
+	String firstName;
 
-	Integer patientMedicalCoverageId;
+	String lastName;
 
-	Short typeId;
-
-	PersonECEDto person;
+	String photo;
 }

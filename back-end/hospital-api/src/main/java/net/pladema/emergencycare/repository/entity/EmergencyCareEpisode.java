@@ -72,9 +72,9 @@ public class EmergencyCareEpisode extends SGXAuditableEntity {
 								Integer policeInterventionId) {
 		this.patientId = emergencyCareBo.getPatient() != null ? emergencyCareBo.getPatient().getId() : null;
 		this.patientMedicalCoverageId = emergencyCareBo.getPatientMedicalCoverageId();
-		this.emergencyCareTypeId = emergencyCareBo.getEmergencyCareType();
-		this.emergencyCareStateId = emergencyCareBo.getEmergencyCareState();
-		this.emergencyCareEntranceTypeId = emergencyCareBo.getEmergencyCareEntrance();
+		this.emergencyCareTypeId = emergencyCareBo.getEmergencyCareTypeId();
+		this.emergencyCareStateId = emergencyCareBo.getEmergencyCareStateId();
+		this.emergencyCareEntranceTypeId = emergencyCareBo.getEmergencyCareEntranceId();
 		this.triageCategoryId = triageBo.getCategoryId();
 		this.doctorsOfficeId = triageBo.getDoctorsOfficeId();
 		this.institutionId = emergencyCareBo.getInstitutionId();

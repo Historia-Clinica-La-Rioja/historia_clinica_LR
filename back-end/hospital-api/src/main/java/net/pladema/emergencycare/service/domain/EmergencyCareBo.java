@@ -35,11 +35,11 @@ public class EmergencyCareBo {
 
     private String triageColorCode;
 
-    private Short emergencyCareType;
+    private Short emergencyCareTypeId;
 
-    private Short emergencyCareState;
+    private Short emergencyCareStateId;
 
-    private Short emergencyCareEntrance;
+    private Short emergencyCareEntranceId;
 
     private DoctorsOfficeBo doctorsOffice;
 
@@ -62,9 +62,9 @@ public class EmergencyCareBo {
         this.triageName = emergencyCareVo.getTriageName();
         this.triageColorCode = emergencyCareVo.getTriageColorCode();
         this.institutionId = emergencyCareVo.getInstitutionId();
-        this.emergencyCareType = emergencyCareVo.getEmergencyCareTypeId();
-        this.emergencyCareState = emergencyCareVo.getEmergencyCareStateId();
-        this.emergencyCareEntrance = emergencyCareVo.getEmergencyCareEntranceTypeId();
+        this.emergencyCareTypeId = emergencyCareVo.getEmergencyCareTypeId();
+        this.emergencyCareStateId = emergencyCareVo.getEmergencyCareStateId();
+        this.emergencyCareEntranceId = emergencyCareVo.getEmergencyCareEntranceTypeId();
         this.doctorsOffice = emergencyCareVo.getDoctorsOffice() != null ? new DoctorsOfficeBo(emergencyCareVo.getDoctorsOffice()) : null;
         this.ambulanceCompanyId = emergencyCareVo.getAmbulanceCompanyId();
         if (emergencyCareVo.getPoliceIntervention()!= null)
@@ -79,9 +79,9 @@ public class EmergencyCareBo {
         }
         this.institutionId = emergencyCareEpisode.getInstitutionId();
         this.patientMedicalCoverageId = emergencyCareEpisode.getPatientMedicalCoverageId();
-        this.emergencyCareEntrance = emergencyCareEpisode.getEmergencyCareEntranceTypeId();
-        this.emergencyCareType = emergencyCareEpisode.getEmergencyCareTypeId();
-        this.emergencyCareState = emergencyCareEpisode.getEmergencyCareStateId();
+        this.emergencyCareEntranceId = emergencyCareEpisode.getEmergencyCareEntranceTypeId();
+        this.emergencyCareTypeId = emergencyCareEpisode.getEmergencyCareTypeId();
+        this.emergencyCareStateId = emergencyCareEpisode.getEmergencyCareStateId();
         this.ambulanceCompanyId = emergencyCareEpisode.getAmbulanceCompanyId();
     }
 

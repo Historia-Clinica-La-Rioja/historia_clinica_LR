@@ -65,7 +65,7 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
         LOG.debug("Input parameters -> institutionId {}", institutionId);
         List<EmergencyCareVo> resultQuery = emergencyCareEpisodeRepository.getAll(institutionId);
         List<EmergencyCareBo> result = resultQuery.stream().map(EmergencyCareBo::new)
-                .sorted(Comparator.comparing(EmergencyCareBo::getEmergencyCareState).thenComparing(EmergencyCareBo::getTriageCategoryId).thenComparing(EmergencyCareBo::getCreatedOn))
+                .sorted(Comparator.comparing(EmergencyCareBo::getEmergencyCareStateId).thenComparing(EmergencyCareBo::getTriageCategoryId).thenComparing(EmergencyCareBo::getCreatedOn))
                         .collect(Collectors.toList());
         result.forEach(ec -> ec.setCreatedOn(UTCIntoInstitutionLocalDateTime(institutionId, ec.getCreatedOn())));
         LOG.debug(OUTPUT, result);
