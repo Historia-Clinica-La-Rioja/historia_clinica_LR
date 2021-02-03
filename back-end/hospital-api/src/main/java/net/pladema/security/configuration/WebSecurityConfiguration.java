@@ -74,6 +74,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.antMatchers("/oauth/**").permitAll()
 		.antMatchers(HttpMethod.GET,PUBLIC + "/**").permitAll()
 		.antMatchers(HttpMethod.POST, PASSWORD_RESET).permitAll()
+		.antMatchers(HttpMethod.GET, "/bed/reports/**").permitAll()		
 		.antMatchers("/**").authenticated()
 		.anyRequest().authenticated();
 
