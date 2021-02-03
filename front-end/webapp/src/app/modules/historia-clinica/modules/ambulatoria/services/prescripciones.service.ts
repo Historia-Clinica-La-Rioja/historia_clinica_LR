@@ -102,12 +102,13 @@ export class PrescripcionesService {
 				description: medicationItem.healthCondition.snomed.pt,
 			},
 			studyCategory: null,
-			isDailyInterval: medicationItem.dosage.dailyInterval,
-			isChronicAdministrationTime: medicationItem.dosage.chronic,
-			intervalHours: String(medicationItem.dosage.frequency),
-			administrationTimeDays: String(medicationItem.dosage.duration),
+
+			isDailyInterval: medicationItem.dosage ? medicationItem.dosage.dailyInterval : null,
+			isChronicAdministrationTime: medicationItem.dosage ? medicationItem.dosage.chronic : null,
+			intervalHours: medicationItem.dosage ? String(medicationItem.dosage.frequency) : null,
+			administrationTimeDays: medicationItem.dosage ? String(medicationItem.dosage.duration) : null,
 			observations: medicationItem.observations,
-		}
+		};
 	}
 
 	private mapStudy(studyItem: DiagnosticReportInfoDto): NewPrescriptionItem {
