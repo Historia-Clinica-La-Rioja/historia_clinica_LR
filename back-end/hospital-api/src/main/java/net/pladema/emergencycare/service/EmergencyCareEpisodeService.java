@@ -16,5 +16,5 @@ public interface  EmergencyCareEpisodeService {
 
     EmergencyCareBo createPediatric(EmergencyCareBo newEmergencyCare);
 
-    Boolean setPatient(Integer episodeId, Integer patientId);
+    Boolean validateAndSetPatient(Integer episodeId, Integer patientId, Integer institutionId);
 }

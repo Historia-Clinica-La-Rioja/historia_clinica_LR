@@ -128,7 +128,7 @@ export class EpisodeDetailsComponent implements OnInit {
 											typeId: null
 										}
 									}
-								}, _ => this.snackBarService.showError('guardia.episode.search_patient.update.ERROR'));
+								}, error => this.snackBarService.showError(error.text));
 						}
 					});
 				}

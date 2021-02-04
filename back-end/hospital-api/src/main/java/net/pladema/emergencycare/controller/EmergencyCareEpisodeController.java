@@ -195,7 +195,7 @@ public class EmergencyCareEpisodeController {
             @RequestBody Integer patientId) {
         LOG.debug("Update patient of emergency care administrative episode -> episodeId {}, patientId {}",
                 episodeId, patientId);
-        Boolean result = emergencyCareEpisodeService.setPatient(episodeId, patientId);
+        Boolean result = emergencyCareEpisodeService.validateAndSetPatient(episodeId, patientId, institutionId);
         LOG.debug("Output -> {}", result);
         return ResponseEntity.ok().body(result);
     }

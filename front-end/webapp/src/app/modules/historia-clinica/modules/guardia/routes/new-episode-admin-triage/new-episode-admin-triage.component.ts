@@ -35,7 +35,9 @@ export class NewEpisodeAdminTriageComponent implements OnInit {
 		this.emergencyCareEpisodeService.createAdministrative(this.emergencyCareDto).subscribe(
 			emergencyCareId =>
 				this.router.navigate([this.routePrefix + ROUTE_EMERGENCY_CARE + '/episodio/' + emergencyCareId]),
-			_ => this.snackBarService.showError('Ocurrio un error al intentar crear el episodio')
+			error =>
+				error?.text ?
+					this.snackBarService.showError(error.text) : this.snackBarService.showError('guardia.new-episode.ERROR')
 		);
 	}
 

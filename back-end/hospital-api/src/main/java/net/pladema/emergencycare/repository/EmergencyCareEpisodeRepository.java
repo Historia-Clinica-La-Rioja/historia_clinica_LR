@@ -68,4 +68,11 @@ public interface EmergencyCareEpisodeRepository extends JpaRepository<EmergencyC
 	@Modifying
 	@Query(value = "UPDATE EmergencyCareEpisode AS ece SET ece.triageCategoryId = :triageCategoryId WHERE ece.id = :episodeId")
 	void updateTriageCategoryId(@Param("episodeId") Integer episodeId, @Param("triageCategoryId") Short triageCategoryId);
+
+	@Transactional(readOnly = true)
+	@Query( value = "SELECT  (case when count(ece.id)> 0 then true else false end) " +
+			"FROM EmergencyCareEpisode ece " +
+			"WHERE ece.patientId = :patientId AND ( ece.emergencyCareStateId =" + EmergencyCareState.EN_ESPERA + " or ece.emergencyCareStateId = " + EmergencyCareState.EN_ATENCION + " ) " +
+			"AND ece.institutionId = :institutionId")
+	boolean existsActiveEpisodeByPatientIdAndInstitutionId(@Param("patientId") Integer patientId, @Param("institutionId") Integer institutionId);
 }

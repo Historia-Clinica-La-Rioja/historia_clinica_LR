@@ -41,7 +41,9 @@ export class NewEpisodePediatricTriageComponent implements OnInit {
 				this.router.navigate([this.routePrefix + ROUTE_EMERGENCY_CARE + '/episodio/' + episodeId]);
 				this.snackBarService.showSuccess('guardia.new-episode.SUCCESS');
 			},
-			_ => this.snackBarService.showError('guardia.new-episode.ERROR')
+			error =>
+				error?.text ?
+					this.snackBarService.showError(error.text) : this.snackBarService.showError('guardia.new-episode.ERROR')
 		);
 
 	}

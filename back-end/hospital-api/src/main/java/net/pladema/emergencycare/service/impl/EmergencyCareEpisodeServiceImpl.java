@@ -10,6 +10,7 @@ import net.pladema.emergencycare.repository.entity.EmergencyCareEpisodeReason;
 import net.pladema.emergencycare.repository.entity.PoliceIntervention;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
+import net.pladema.emergencycare.service.domain.PatientECEBo;
 import net.pladema.emergencycare.service.domain.PoliceInterventionBo;
 import net.pladema.emergencycare.triage.service.TriageService;
 import net.pladema.emergencycare.triage.service.domain.TriageBo;
@@ -20,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.validation.ValidationException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Comparator;
@@ -138,11 +140,23 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 
     private EmergencyCareBo saveEmergencyCareEpisode(EmergencyCareBo emergencyCareBo, TriageBo triageBo, Integer policeInterventionId) {
         LOG.debug("Input parameters -> emergencyCareBo {}, triageBo {}, policeInterventionId {}", emergencyCareBo, triageBo, policeInterventionId);
+        validPatient(emergencyCareBo.getPatient(), emergencyCareBo.getInstitutionId());
         EmergencyCareEpisode emergencyCareEpisode = new EmergencyCareEpisode(emergencyCareBo, triageBo, policeInterventionId);
         emergencyCareEpisode = emergencyCareEpisodeRepository.save(emergencyCareEpisode);
         EmergencyCareBo result = new EmergencyCareBo(emergencyCareEpisode);
         LOG.debug(OUTPUT, result);
         return result;
+    }
+
+    private void validPatient(PatientECEBo patient, Integer institutionId) {
+        if (patient != null)
+            assertPatientValid(patient.getId(), institutionId);
+    }
+
+    private void assertPatientValid(Integer patientId, Integer institutionId) {
+        boolean violatesConstraint = emergencyCareEpisodeRepository.existsActiveEpisodeByPatientIdAndInstitutionId(patientId,institutionId);
+        if (violatesConstraint)
+            throw new ValidationException("care-episode.patient.invalid");
     }
 
     private List<ReasonBo> saveReasons(List<ReasonBo> reasons, Integer emergencyCareEpisodeId) {
@@ -206,9 +220,10 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
     }
 
     @Override
-    public Boolean setPatient(Integer episodeId, Integer patientId) {
+    public Boolean validateAndSetPatient(Integer episodeId, Integer patientId, Integer institutionId) {
         LOG.debug("Input parameters -> episodeId {}, patientId {}",
                 episodeId, patientId);
+        assertPatientValid(patientId, institutionId);
         emergencyCareEpisodeRepository.updatePatientId(episodeId, patientId);
         return true;
     }
