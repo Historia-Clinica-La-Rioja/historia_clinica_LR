@@ -3,3 +3,13 @@
 form {
 	@include mat-form-field-background-white;
 }
+
+.simple-form-field {
+	width: 60%;
+	min-width: 280px;
+}
+
+.page {
+	width: 100%;
+	max-width: 500px;
+}
