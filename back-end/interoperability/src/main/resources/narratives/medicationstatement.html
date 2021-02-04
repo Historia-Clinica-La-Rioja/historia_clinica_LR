@@ -12,7 +12,11 @@
         </thead>
         <tbody>
         <tr>
-            <td th:narrative="${resource.medication}"></td>
+            <td>
+                <th:block th:if="${resource.hasMedicationCodeableConcept()}">
+                    <th:block th:narrative="${resource.medication}"></th:block>
+                </th:block>
+            </td>
             <td>
                 <th:block th:if="${not resource.dosage.empty} and ${not resource.dosage[0].doseAndRate.empty}" th:text="${resource.dosage[0].doseAndRate[0].dose.unit}"></th:block>
             </td>
@@ -20,7 +24,7 @@
                 <th:block th:if="${not resource.dosage.empty} and ${not resource.dosage[0].doseAndRate.empty}" th:text="${resource.dosage[0].doseAndRate[0].dose.value}"></th:block>
             </td>
             <td>
-                <th:block th:if="${not resource.dosage.empty} and ${not resource.dosage[0].route.coding.empty}" th:text="${resource.dosage[0].route.coding.display}"></th:block>
+                <th:block th:if="${not resource.dosage.empty} and ${not resource.dosage[0].route.coding.empty}" th:narrative="${resource.dosage[0].route}"></th:block>
             </td>
             <td><th:block th:if="${not resource.statusElement.empty}" th:text="${resource.statusElement.value}"></th:block></td>
             <td th:if="${resource.effectivePeriod != null}" th:text="${resource.effectivePeriod.start}"></td>

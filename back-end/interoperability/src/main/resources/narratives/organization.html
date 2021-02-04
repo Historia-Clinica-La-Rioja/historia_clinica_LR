@@ -7,6 +7,9 @@
     <p th:if="${resource.hasTelecom()}">
         <b>telecom: </b>ph:<span th:utext="*{resource.telecom.get(0).value}"></span>
     </p>
-    <p><b>address: </b><th:block th:if="${not #lists.isEmpty(resource.address)}" th:narrative="${resource.address[0]}"></th:block></p>
+    <div th:if="${not resource.address.empty}">
+        <p th:narrative="${resource.address[0]}"><b>address: </b></p>
+    </div>
 </div>
+
 

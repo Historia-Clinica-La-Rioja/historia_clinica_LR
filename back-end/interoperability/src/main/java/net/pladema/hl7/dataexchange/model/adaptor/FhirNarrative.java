@@ -54,7 +54,8 @@ public class FhirNarrative {
                     content.append(row(((Condition) resource).getCode()));
                     break;
                 case MedicationStatement:
-                    content.append(row(((MedicationStatement) resource).getMedicationCodeableConcept()));
+                    if(((MedicationStatement) resource).hasMedicationCodeableConcept())
+                        content.append(row(((MedicationStatement) resource).getMedicationCodeableConcept()));
                     break;
                 case AllergyIntolerance:
                     content.append(row(((AllergyIntolerance) resource).getCode()));
