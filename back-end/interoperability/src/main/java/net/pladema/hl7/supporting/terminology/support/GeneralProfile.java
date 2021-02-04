@@ -31,7 +31,8 @@ public class GeneralProfile {
     public static List<ValueSet> allValueSet(){
         return new ArrayList<>(){{
             add(TerminologySupport.loadValueSet(
-                    CodingValueSet.DOC_TYPE, CodingSystem.LOINC, "60591-5"));
+                    CodingValueSet.DOC_TYPE,
+                    CodingSystem.LOINC, CodingCode.Document.PATIENT_SUMMARY_DOC));
         }};
     }
 }

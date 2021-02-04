@@ -6,10 +6,16 @@ public class CodingCode {
 
     public static final FhirCode ABSENT_REASON = new FhirCode("unknown");
 
+    public static class Document {
+        public static final String PATIENT_SUMMARY_DOC = "60591-5";
+    }
+
     public static class Allergy {
         public static final FhirCode KNOWN_ABSENT = new FhirCode("no-allergy-info",
                 "No information about current allergies");
         public static final String NOT_KNOWN = "no-known-allergies";
+
+        public static final FhirCode ENTRY = new FhirCode("48765-2", "Allergies and/or adverse reactions");
     }
 
     public static class Condition {
@@ -17,6 +23,9 @@ public class CodingCode {
                 "no-problem-info", "No information about current problems");
         public static final FhirCode NOT_KNOWN = new FhirCode(
                 "no-known-problems", "No known problems");
+
+        public static final FhirCode ENTRY = new FhirCode("11450-4", "Problem list");
+
         public static final FhirCode CATEGORY = new FhirCode("75326-9", "Problem");
 
         public static final String DIAGNOSIS = "439401001";
@@ -33,6 +42,8 @@ public class CodingCode {
         public static final FhirCode KNOWN_ABSENT = new FhirCode("no-immunization-info",
                 "No information about current immunizations");
         public static final String NOT_KNOWN = "no-known-immunization";
+
+        public static final FhirCode ENTRY = new FhirCode("60484-3", "Immunization record");
     }
 
     public static class Medication {
@@ -40,6 +51,8 @@ public class CodingCode {
                 "no-medication-info", "No information about current medications");
         public static final FhirCode NOT_KNOWN = new FhirCode(
                 "no-known-medications", "No known medications");
+
+        public static final FhirCode ENTRY = new FhirCode("10160-0", "Medication use");
 
         public static final FhirCode DOSE = new FhirCode("ordered", "ordered");
     }

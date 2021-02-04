@@ -18,8 +18,8 @@ import net.pladema.hl7.dataexchange.medications.ImmunizationResource;
 import net.pladema.hl7.dataexchange.medications.MedicationStatementResource;
 import net.pladema.hl7.dataexchange.model.domain.CompositionVo;
 import net.pladema.hl7.supporting.exchange.documents.CompositionResource;
+import net.pladema.hl7.supporting.terminology.coding.CodingCode;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
-import net.pladema.hl7.dataexchange.model.adaptor.FhirCode;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.Composition;
@@ -37,7 +37,7 @@ public class PatientSummaryDocument extends IDocumentProfile {
 
     public static final Coding TYPE = new Coding()
                     .setSystem(CodingSystem.LOINC)
-                    .setCode("60591-5")
+                    .setCode(CodingCode.Document.PATIENT_SUMMARY_DOC)
                     .setDisplay("Patient summary Document");
 
     public PatientSummaryDocument(PatientResource patientResource, DeviceResource deviceResource,
@@ -124,22 +124,22 @@ public class PatientSummaryDocument extends IDocumentProfile {
         return new ArrayList<>(){{
             add(CompositionResource.newSection(
                     CodingSystem.LOINC,
-                    new FhirCode("11450-4", "Problem list"),
+                    CodingCode.Condition.ENTRY,
                     "Problemas",
                     entries[0]));
             add(CompositionResource.newSection(
                     CodingSystem.LOINC,
-                    new FhirCode("10160-0", "Medication use"),
+                    CodingCode.Medication.ENTRY,
                     "Medicamentos",
                     entries[1]));
             add(CompositionResource.newSection(
                     CodingSystem.LOINC,
-                    new FhirCode("48765-2", "Allergies and/or adverse reactions"),
+                    CodingCode.Allergy.ENTRY,
                     "Alergias e intolerancias",
                     entries[2]));
             add(CompositionResource.newSection(
                     CodingSystem.LOINC,
-                    new FhirCode("60484-3", "Immunization record"),
+                    CodingCode.Immunization.ENTRY,
                     "Vacunas",
                     entries[3]));
         }};
