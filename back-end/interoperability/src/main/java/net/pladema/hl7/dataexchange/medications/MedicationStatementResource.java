@@ -72,7 +72,7 @@ public class MedicationStatementResource extends IMultipleResourceFhir {
             resource.addDosage(buildDosage(medication));
 
             Medication medicament = medicationResource.fetch(medication);
-            resource.setMedication(new Reference(fullUrl(medicament)));
+            resource.setMedication(new Reference(fullDomainUrl(medicament)));
 
             resource.setMeta(newMeta(CodingProfile.MedicationStatement.URL));
             resources.put(resource, medicament);
