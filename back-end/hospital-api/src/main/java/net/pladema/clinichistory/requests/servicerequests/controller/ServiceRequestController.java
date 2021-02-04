@@ -16,6 +16,7 @@ import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
 import net.pladema.patient.controller.service.PatientExternalService;
+import net.pladema.sgx.error.controller.dto.ApiErrorDto;
 import net.pladema.sgx.pdf.PDFDocumentException;
 import net.pladema.sgx.pdf.PdfService;
 import net.pladema.sgx.security.utils.UserInfo;
@@ -289,6 +290,13 @@ public class ServiceRequestController {
         LOG.debug("Output -> {}", ctx);
 
         return ctx;
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({ IllegalArgumentException.class })
+    public ApiErrorDto handleValidationExceptions(IllegalArgumentException ex) {
+        LOG.error("Constraint violation -> {}", ex.getMessage());
+        return new ApiErrorDto("Constraint violation", ex.getMessage());
     }
 
 }
