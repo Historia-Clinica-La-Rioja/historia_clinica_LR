@@ -28,6 +28,7 @@ import { LogoComponent } from './components/logo/logo.component';
 import { DockPopupComponent } from '@presentation/components/dock-popup/dock-popup.component';
 import { FiltersCardComponent } from './components/filters-card/filters-card.component';
 import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
+import { ImgUploaderComponent } from './components/img-uploader/img-uploader.component';
 
 @NgModule({
 	declarations: [
@@ -56,7 +57,8 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		DockPopupComponent,
 		LogoComponent,
 		FiltersCardComponent,
-		ViewDateDtoPipe
+		ViewDateDtoPipe,
+		ImgUploaderComponent,
 	],
 	imports: [
 		CommonModule,
@@ -88,7 +90,8 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		EditableFieldComponent,
 		DockPopupComponent,
 		FiltersCardComponent,
-		ViewDateDtoPipe
+		ViewDateDtoPipe,
+		ImgUploaderComponent,
 	],
 	entryComponents: [
 		DockPopupComponent
