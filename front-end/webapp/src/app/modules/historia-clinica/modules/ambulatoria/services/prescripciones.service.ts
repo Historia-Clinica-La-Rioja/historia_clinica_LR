@@ -22,10 +22,10 @@ export class PrescripcionesService {
 		private snackBarService: SnackBarService,
 	) { }
 
-	createPrescription(prescriptionType: PrescriptionTypes, newPrescription: PrescriptionDto, patientId: number): Observable<any> {
+	createPrescription(prescriptionType: PrescriptionTypes, newPrescription: PrescriptionDto, patientId: number): Observable<number | number[]> {
 		switch(prescriptionType) {
 			case PrescriptionTypes.MEDICATION:
-				return this.medicationRequestService.create(patientId, newPrescription)
+				return this.medicationRequestService.create(patientId, newPrescription);
 			case PrescriptionTypes.STUDY:
 				return this.serviceRequestService.create(patientId, newPrescription);
 		}
@@ -51,18 +51,21 @@ export class PrescripcionesService {
 		}
 	}
 
-	downloadPrescriptionPdf(patientId: number, prescriptionId: number, prescriptionType: PrescriptionTypes): void {
+	downloadPrescriptionPdf(patientId: number, prescriptionPdfInfo: number[], prescriptionType: PrescriptionTypes): void {
 		switch(prescriptionType) {
 			case PrescriptionTypes.MEDICATION:
-				this.medicationRequestService.download(patientId, prescriptionId).subscribe((blob) => {
-					saveAs(blob, 'Receta');
+				const recipeId = prescriptionPdfInfo[0];
+				this.medicationRequestService.download(patientId, recipeId).subscribe((blob) => {
+					saveAs(blob, 'Receta ' + recipeId);
 					this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.DOWNLOAD_RECIPE_SUCCESS');
 				});
 				break;
 			case PrescriptionTypes.STUDY:
-				this.serviceRequestService.downloadPdf(patientId, prescriptionId).subscribe((blob) => {
-					saveAs(blob, 'Orden');
-					this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.DOWNLOAD_ORDER_SUCCESS')
+				prescriptionPdfInfo.forEach(orderId => {
+					this.serviceRequestService.downloadPdf(patientId, orderId).subscribe((blob) => {
+						saveAs(blob, 'Orden ' + orderId);
+						this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.DOWNLOAD_ORDER_SUCCESS')
+					});
 				});
 				break;
 		}

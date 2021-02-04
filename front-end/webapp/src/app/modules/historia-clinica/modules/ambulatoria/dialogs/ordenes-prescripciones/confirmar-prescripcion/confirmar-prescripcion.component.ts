@@ -13,7 +13,7 @@ export class ConfirmarPrescripcionComponent implements OnInit {
 
 	loading = true;
 	hasError = false;
-	prescriptionId: number;
+	prescriptionPdfInfo: number[];
 
 	constructor(
 		private snackBarService: SnackBarService,
@@ -22,11 +22,11 @@ export class ConfirmarPrescripcionComponent implements OnInit {
 		@Inject(MAT_DIALOG_DATA) public data: ConfirmPrescriptionData) { }
 
 	ngOnInit(): void {
-		this.data.prescriptionRequest.subscribe((prescriptionId: number) => {
+		this.data.prescriptionRequest.subscribe((prescriptionPdfInfo: number | number[]) => {
 			this.snackBarService.showSuccess(this.data.successLabel);
 			this.loading = false;
 			this.hasError = false;
-			this.prescriptionId = prescriptionId;
+			this.prescriptionPdfInfo = typeof prescriptionPdfInfo === 'number' ? [prescriptionPdfInfo] : prescriptionPdfInfo;
 		}, err => {
 			this.snackBarService.showError(err.errors[0]);
 			this.hasError = true;
@@ -37,7 +37,7 @@ export class ConfirmarPrescripcionComponent implements OnInit {
 
 	downloadPrescription() {
 		const { patientId, prescriptionType } = this.data;
-		this.prescripcionesService.downloadPrescriptionPdf(patientId, this.prescriptionId, prescriptionType);
+		this.prescripcionesService.downloadPrescriptionPdf(patientId, this.prescriptionPdfInfo, prescriptionType);
 		this.closeModal();
 	}
 
@@ -54,5 +54,5 @@ export class ConfirmPrescriptionData {
 	errorLabel: string;
 	prescriptionType: PrescriptionTypes;
 	patientId: number;
-	prescriptionRequest: Observable<number>;
+	prescriptionRequest: Observable<number | number[]>;
 }

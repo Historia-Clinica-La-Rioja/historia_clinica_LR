@@ -9,7 +9,7 @@ import { STUDY_STATUS } from '../../../constants/prescripciones-masterdata';
 import { ConfirmarPrescripcionComponent } from '../../../dialogs/ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
 import { NuevaPrescripcionComponent } from '../../../dialogs/ordenes-prescripciones/nueva-prescripcion/nueva-prescripcion.component';
 import { VerResultadosEstudioComponent } from '../../../dialogs/ordenes-prescripciones/ver-resultados-estudio/ver-resultados-estudio.component';
-import { PrescripcionesService, PrescriptionTypes } from '../../../services/prescripciones.service';
+import {PrescripcionesService, PrescriptionTypes} from '../../../services/prescripciones.service';
 import { PrescriptionItemData } from '../item-prescripciones/item-prescripciones.component';
 import { CompletarEstudioComponent } from './../../../dialogs/ordenes-prescripciones/completar-estudio/completar-estudio.component';
 
@@ -169,8 +169,8 @@ export class CardEstudiosComponent implements OnInit {
 			});
 	}
 
-	downloadOrder(diagnosticReportId: number) {
-		this.prescripcionesService.downloadPrescriptionPdf(this.patientId, diagnosticReportId, PrescriptionTypes.STUDY);
+	downloadOrder(serviceRequestId: number) {
+		this.prescripcionesService.downloadPrescriptionPdf(this.patientId, [serviceRequestId], PrescriptionTypes.STUDY);
 	}
 
 	hideFilters() {

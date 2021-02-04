@@ -5,7 +5,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ORDENES_MEDICACION } from 'src/app/modules/historia-clinica/constants/summaries';
 import { ConfirmarPrescripcionComponent } from '../../../dialogs/ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
 import { NuevaPrescripcionComponent } from '../../../dialogs/ordenes-prescripciones/nueva-prescripcion/nueva-prescripcion.component';
-import { PrescripcionesService, PrescriptionTypes } from '../../../services/prescripciones.service';
+import {PrescripcionesService, PrescriptionTypes} from '../../../services/prescripciones.service';
 import { MedicationStatusChange } from '../../../constants/prescripciones-masterdata';
 import { SuspenderMedicacionComponent } from '../../../dialogs/ordenes-prescripciones/suspender-medicacion/suspender-medicacion.component';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
@@ -172,7 +172,7 @@ export class CardMedicacionesComponent implements OnInit {
 	}
 
 	downloadRecipe(medicationRequestId: number) {
-		this.prescripcionesService.downloadPrescriptionPdf(this.patientId, medicationRequestId, PrescriptionTypes.MEDICATION);
+		this.prescripcionesService.downloadPrescriptionPdf(this.patientId, [medicationRequestId], PrescriptionTypes.MEDICATION);
 	}
 
 	checkMedication(checked: boolean, medicationInfo: MedicationInfoDto) {
