@@ -81,6 +81,10 @@ public class AllergyIntoleranceVo {
         return categories;
     }
 
+    public boolean noInformationAboutCategories(){
+        return categories.isEmpty();
+    }
+
     public String getCriticality(){
         return CRITICALITY.getOrDefault(criticality, null);
     }

@@ -48,7 +48,7 @@ public class AllergyIntoleranceResource extends IMultipleResourceFhir {
             resource.setId(allergy.getId());
             resource.setType(AllergyIntolerance.AllergyIntoleranceType.fromCode(allergy.getType()));
             allergy.getCategories().forEach(c-> resource.addCategory(
-                    AllergyIntolerance.AllergyIntoleranceCategory.fromCode(c))
+                        AllergyIntolerance.AllergyIntoleranceCategory.fromCode(c))
             );
             resource.setCriticality(AllergyIntolerance.AllergyIntoleranceCriticality.fromCode(allergy.getCriticality()));
             resource.setPatient(references[0]);
@@ -79,6 +79,7 @@ public class AllergyIntoleranceResource extends IMultipleResourceFhir {
                 CodingSystem.Allergy.CLINICAL_STATUS,
                 AllergyIntoleranceVo.defaultClinicalStatus())
         );
+        none.addCategory(AllergyIntolerance.AllergyIntoleranceCategory.MEDICATION);
         return Collections.singletonList(none);
     }
 

@@ -1,5 +1,6 @@
 package net.pladema.hl7.dataexchange.clinical;
 
+import ca.uhn.fhir.model.api.TemporalPrecisionEnum;
 import net.pladema.hl7.dataexchange.IMultipleResourceFhir;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirDateMapper;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirID;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -69,6 +71,7 @@ public class ConditionResource extends IMultipleResourceFhir {
         none.setClinicalStatus(newCodeableConcept(CodingSystem.Condition.STATUS, ConditionVo.defaultClinicalStatus()));
         none.setVerificationStatus(newCodeableConcept(CodingSystem.Condition.VERIFICATION, ConditionVo.defaultVerificationStatus()));
         none.setSubject(patientRef);
+        none.getOnsetDateTimeType().setValue(new Date(), TemporalPrecisionEnum.YEAR);
         none.getOnsetDateTimeType().addExtension(newExtension(
                 CodingProfile.DATA_ABSENT_REASON, CodingCode.ABSENT_REASON)
         );

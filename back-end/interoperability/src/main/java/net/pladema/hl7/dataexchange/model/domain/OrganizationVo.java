@@ -31,6 +31,6 @@ public class OrganizationVo {
     }
 
     public boolean hasAddress() {
-        return fullAddress != null && fullAddress.hasAddressData();
+        return fullAddress != null;
     }
 }

@@ -7,7 +7,8 @@ public class CodingCode {
     public static final FhirCode ABSENT_REASON = new FhirCode("unknown");
 
     public static class Allergy {
-        public static final FhirCode KNOWN_ABSENT = new FhirCode("no-allergy-info");
+        public static final FhirCode KNOWN_ABSENT = new FhirCode("no-allergy-info",
+                "No information about current allergies");
         public static final String NOT_KNOWN = "no-known-allergies";
     }
 
@@ -29,7 +30,8 @@ public class CodingCode {
     }
 
     public static class Immunization {
-        public static final FhirCode KNOWN_ABSENT = new FhirCode("no-immunization-info");
+        public static final FhirCode KNOWN_ABSENT = new FhirCode("no-immunization-info",
+                "No information about current immunizations");
         public static final String NOT_KNOWN = "no-known-immunization";
     }
 

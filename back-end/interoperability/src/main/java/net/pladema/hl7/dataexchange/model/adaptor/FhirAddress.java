@@ -72,4 +72,8 @@ public class FhirAddress {
     public boolean hasAddressData(){
         return address != null && !address.isBlank();
     }
+
+    public String getAddress(){
+        return hasAddressData() ? address : null;
+    }
 }

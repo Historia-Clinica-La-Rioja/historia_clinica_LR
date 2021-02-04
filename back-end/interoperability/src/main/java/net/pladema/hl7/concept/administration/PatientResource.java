@@ -52,6 +52,8 @@ public class PatientResource extends ISingleResourceFhir {
                 .setText(patient.getFullName());
         resource.getName().get(0).getFamilyElement().addExtension(fatherSurname);
 
+        resource.addTelecom(newTelecom(patient.getPhoneNumber()));
+
         resource.setGender(Enumerations.AdministrativeGender.fromCode(patient.getGender()));
         resource.setActive(true);
 
@@ -71,9 +73,6 @@ public class PatientResource extends ISingleResourceFhir {
 
         if(patient.hasAddressData())
             resource.addAddress(newAddress(patient.getFullAddress()));
-
-        if(patient.hasPhoneNumber())
-            resource.addTelecom(newTelecom(patient.getPhoneNumber()));
 
         if(patient.hasBirthDateData()) {
             DateType birthdate = new DateType();
