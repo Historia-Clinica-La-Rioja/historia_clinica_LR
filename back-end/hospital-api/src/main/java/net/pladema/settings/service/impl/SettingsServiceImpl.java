@@ -3,7 +3,6 @@ package net.pladema.settings.service.impl;
 import net.pladema.clinichistory.requests.servicerequests.controller.ServiceRequestController;
 import net.pladema.settings.service.SettingsService;
 import net.pladema.settings.service.domain.Assets;
-import net.pladema.settings.service.domain.EIconsAndLogos;
 import net.pladema.sgx.files.FileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,11 +33,19 @@ public class SettingsServiceImpl implements SettingsService {
     }
 
     @Override
-    public void execute(String fileName, MultipartFile file) {
-        String newFileName = this.createFileName(fileName);
+    public boolean execute(String fileName, MultipartFile file) {
+        String newFileName = this.createFileName(fileName.split("\\.")[0]);
         String partialPath = PATH.concat(newFileName);
         String completePath = fileService.buildRelativePath(partialPath);
-        fileService.saveFile(completePath, file);
+        return fileService.saveFile(completePath, true, file);
+    }
+
+    @Override
+    public boolean deleteFile(String fileName) {
+        String newFileName = this.createFileName(fileName.split("\\.")[0]);
+        String partialPath = PATH.concat(newFileName);
+        String completePath = fileService.buildRelativePath(partialPath);
+        return fileService.deleteFile(completePath);
     }
 
     private String createFileName(String fileName) {

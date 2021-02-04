@@ -54,7 +54,7 @@ public class AuditableDocumentServiceImpl implements AuditableService {
         String checksum = null;
         try {
             ByteArrayOutputStream output =  pdfService.writer(event.getTemplateName(), contextMap);
-            streamFile.saveFileInDirectory(path, output);
+            streamFile.saveFileInDirectory(path, false, output);
             checksum = getHash(path);
         } catch (IOException | PDFDocumentException e) {
             LOG.error("Save document file -> {}", event, e);
@@ -66,7 +66,7 @@ public class AuditableDocumentServiceImpl implements AuditableService {
                 event.getDocumentTypeId(), path, fictitiousFileName, realFileName, checksum));
     }
 
-      private static String getHash(String path) {
+    private static String getHash(String path) {
         LOG.debug("Input parameters -> path {}", path);
         String result;
         String algorithm = "SHA-256";

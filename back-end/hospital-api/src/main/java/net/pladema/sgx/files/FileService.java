@@ -39,11 +39,11 @@ public class FileService {
         return result;
     }
 
-    public boolean saveFile(String path, MultipartFile file) {
+    public boolean saveFile(String path, Boolean override, MultipartFile file) {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         try {
             os.writeBytes(file.getBytes());
-            boolean result = streamFile.saveFileInDirectory(path, os);
+            boolean result = streamFile.saveFileInDirectory(path, override, os);
             LOG.debug(OUTPUT, result);
             return result;
         } catch (IOException e) {
@@ -60,5 +60,9 @@ public class FileService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public boolean deleteFile(String path) {
+        return streamFile.deleteFileInDirectory(path);
     }
 }

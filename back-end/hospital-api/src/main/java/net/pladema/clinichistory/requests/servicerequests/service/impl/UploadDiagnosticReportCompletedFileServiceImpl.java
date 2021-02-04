@@ -35,7 +35,7 @@ public class UploadDiagnosticReportCompletedFileServiceImpl  implements UploadDi
             String newFileName = fileService.createFileName(FilenameUtils.getExtension(file.getOriginalFilename()));
             String partialPath = buildPartialPath(patientId, newFileName, diagnosticReportId);
             String completePath = buildCompleteFilePath(partialPath);
-            fileService.saveFile(completePath, file);
+            fileService.saveFile(completePath, false, file);
             return saveDiagnosticReportFileMetadata(partialPath, file);
         })
                 .boxed()

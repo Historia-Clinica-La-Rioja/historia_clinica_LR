@@ -31,7 +31,7 @@ public class StreamFile {
         return Paths.get(getRootDirectory(), relativeFilePath);
     }
 
-    public boolean saveFileInDirectory(String path, ByteArrayOutputStream byteArrayOutputStream) throws IOException {
+    public boolean saveFileInDirectory(String path, Boolean override, ByteArrayOutputStream byteArrayOutputStream) throws IOException {
         boolean fileCreated;
         boolean directoryCreated = true;
 
@@ -39,7 +39,8 @@ public class StreamFile {
         if(!file.getParentFile().exists())
             directoryCreated = file.getParentFile().mkdirs();
 
-        if(directoryCreated && !file.exists()) {
+        boolean overrideFile = override ? true : !file.exists();
+        if(directoryCreated && overrideFile) {
             fileCreated = file.createNewFile();
 
             try(OutputStream outputStream = new FileOutputStream(file)){
@@ -61,6 +62,11 @@ public class StreamFile {
         result = new String(bytes, charset);
         LOG.debug("Output -> {}", dataToString(result));
         return result;
+    }
+
+    public boolean deleteFileInDirectory(String path) {
+        File file = new File(path);
+        return file.delete();
     }
 
     private ByteArrayInputStream reader(String path) throws IOException{

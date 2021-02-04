@@ -58,7 +58,7 @@ public class ImageFileService {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         os.writeBytes(imageData.getBytes());
         try {
-            boolean result = streamFile.saveFileInDirectory(path, os);
+            boolean result = streamFile.saveFileInDirectory(path, false, os);
             LOG.debug(OUTPUT, result);
             return result;
         } catch (IOException e) {
