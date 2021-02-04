@@ -38,10 +38,15 @@ public class FhirPersistentStore {
                 + " left join outpatient_consultation op on ( pat.id = op.patient_id )"
                 + " where pat.id = :id"
                 + " group by pat.id, first_name, middle_names, last_name";
-        Object[] queryResult = (Object[]) entityManager
-                .createNativeQuery(sqlQuery).setParameter("id", Integer.valueOf(id))
-                .getSingleResult();
-        return new BundleVo(queryResult);
+        try {
+            Object[] queryResult = (Object[]) entityManager
+                    .createNativeQuery(sqlQuery).setParameter("id", Integer.valueOf(id))
+                    .getSingleResult();
+            return new BundleVo(queryResult);
+        }
+        catch (NoResultException ex){
+            return new BundleVo();
+        }
     }
 
     @Transactional(readOnly = true)
@@ -53,12 +58,17 @@ public class FhirPersistentStore {
                 + " join Person p on ( pat.personId = p.id )"
                 + " left join PersonExtended pe on ( p.id = pe.id )"
                 + " where pat.id = :patientId";
-        Object[] queryResult = (Object[]) entityManager
-                .createQuery(sqlQuery).setParameter("patientId", Integer.valueOf(patientId))
-                .getSingleResult();
-        PatientVo data = new PatientVo(queryResult);
-        data.setFullAddress(getAddress(Cast.toInteger(queryResult[9]), Address.AddressUse.HOME));
-        return data;
+        try {
+            Object[] queryResult = (Object[]) entityManager
+                    .createQuery(sqlQuery).setParameter("patientId", Integer.valueOf(patientId))
+                    .getSingleResult();
+            PatientVo data = new PatientVo(queryResult);
+            data.setFullAddress(getAddress(Cast.toInteger(queryResult[9]), Address.AddressUse.HOME));
+            return data;
+        }
+        catch(NoResultException ex){
+            return new PatientVo();
+        }
     }
 
     @Transactional(readOnly = true)
@@ -73,7 +83,8 @@ public class FhirPersistentStore {
                     + " left join Country co on ( p.countryId = co.id )"
                     + " where a.id = :addressId";
             Object[] queryResult = (Object[]) entityManager
-                    .createQuery(sqlQuery).setParameter("addressId", addressId).getSingleResult();
+                    .createQuery(sqlQuery).setParameter("addressId", addressId)
+                    .getSingleResult();
             return new FhirAddress(addressUse).setAll(queryResult);
         }
         return null;
@@ -221,11 +232,15 @@ public class FhirPersistentStore {
                 " ) as subquery" +
                 " limit 1" +
                 ")";
-        Object[] queryResult = getSingleResult(sqlQuery, patientId);
-        //todo "diagnostics": "Failed to call access method: org.springframework.dao.EmptyResultDataAccessException: No entity found for query; nested exception is javax.persistence.NoResultException: No entity found for query"
-        OrganizationVo data = new OrganizationVo(queryResult);
-        data.setFullAddress(getAddress(Cast.toInteger(queryResult[3]), Address.AddressUse.WORK));
-        return data;
+        try {
+            Object[] queryResult = getSingleResult(sqlQuery, patientId);
+            OrganizationVo data = new OrganizationVo(queryResult);
+            data.setFullAddress(getAddress(Cast.toInteger(queryResult[3]), Address.AddressUse.WORK));
+            return data;
+        }
+        catch (NoResultException ex){
+            return new OrganizationVo();
+        }
     }
 
     private Object[] getSingleResult(String sqlQuery, String id){
