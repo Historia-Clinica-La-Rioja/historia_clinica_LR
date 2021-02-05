@@ -36,7 +36,7 @@ public class GetMedicationRequestInfoRepositoryImpl implements GetMedicationRequ
                 "JOIN document d ON (mr.id = d.source_id AND d.source_type_id = "+ SourceType.RECIPE + ") " +
                 "JOIN document_medicamention_statement dms ON (d.id = dms.document_id) " +
                 "JOIN medication_statement ms ON (dms.medication_statement_id = ms.id) " +
-                "LEFT JOIN note n ON (mr.note_id = n.id) " +
+                "LEFT JOIN note n ON (ms.note_id = n.id) " +
                 "WHERE mr.id = :medicationRequestId  " +
                 ")" +
                 "SELECT t.mr_id, t.doctor_id, t.request_date, t.medical_coverage_id, t.note, " +
