@@ -47,7 +47,7 @@
                 </div>
             </div>
             <span class="mat-body-1" *ngIf="data.addPrescriptionItemDialogData.showStudyCategory">{{prescriptionItem.studyCategory.description}}</span>
-            <span class="mat-body-1" *ngIf="data.addPrescriptionItemDialogData.showDosage">{{getDosage(prescriptionItem)}}</span>
+            <span class="mat-body-1" *ngIf="data.addPrescriptionItemDialogData.showDosage && isDailyMedication(prescriptionItem)">{{getDosage(prescriptionItem)}}</span>
             <h3 class="mat-subheading-2 capitalize-first-letter color-primary">{{prescriptionItem.healthProblem.description}}</h3>
             <span class="mat-body-1" *ngIf="prescriptionItem.observations">{{prescriptionItem.observations}}</span>
         </div>

@@ -120,6 +120,10 @@ export class NuevaPrescripcionComponent implements OnInit {
 		return this.data.prescriptionType === PrescriptionTypes.MEDICATION;
 	}
 
+	isDailyMedication(prescriptionItem: NewPrescriptionItem): boolean {
+		return (prescriptionItem.intervalHours !== null || prescriptionItem.administrationTimeDays !== null);
+	}
+
 	private editPrescriptionItem(prescriptionItem: NewPrescriptionItem): void {
 		let editPrescriptionItem = this.prescriptionItems.find(pi => pi.id === prescriptionItem.id);
 
