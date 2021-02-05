@@ -33,6 +33,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -100,6 +101,7 @@ public class MedicationRequestController {
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
     @Transactional
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO')")
     public @ResponseBody
     Integer create(@PathVariable(name = "institutionId") Integer institutionId,
                    @PathVariable(name = "patientId") Integer patientId,
@@ -117,6 +119,7 @@ public class MedicationRequestController {
 
     @PutMapping(value = "/suspend")
     @ResponseStatus(code = HttpStatus.OK)
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO')")
     @Transactional
     public void suspendMedication(@PathVariable(name = "institutionId") Integer institutionId,
                                   @PathVariable(name = "patientId") Integer patientId,
@@ -131,6 +134,7 @@ public class MedicationRequestController {
 
     @PutMapping(value = "/finalize")
     @ResponseStatus(code = HttpStatus.OK)
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO')")
     @Transactional
     public void finalizeMedication(@PathVariable(name = "institutionId") Integer institutionId,
                         @PathVariable(name = "patientId") Integer patientId,
@@ -144,6 +148,7 @@ public class MedicationRequestController {
 
     @PutMapping(value = "/reactivate")
     @ResponseStatus(code = HttpStatus.OK)
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO')")
     @Transactional
     public void reactivateMedication(@PathVariable(name = "institutionId") Integer institutionId,
                                      @PathVariable(name = "patientId") Integer patientId,
