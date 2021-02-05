@@ -22,13 +22,11 @@ export class ImgUploaderComponent implements OnInit {
 	onSelectFile($event) {
 		const imgFile = $event.target.files[0];
 		this.imgLoading(imgFile).subscribe(data => {
-				if (this.validations.height !== data.height)
-					return;
-				
-				if (this.validations.width !== data.width)
-					return;
-
-				this.onSelectFiles.emit(imgFile);
+				if (this.validations.height !== data.height || this.validations.width !== data.width) {
+					this.onSelectFiles.emit(null);
+				} else {
+					this.onSelectFiles.emit(imgFile);
+				}
 		});
 	}
 	

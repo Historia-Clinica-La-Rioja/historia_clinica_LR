@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {LoggedUserService} from '../../../auth/services/logged-user.service';
-import {ERole, RoleAssignment} from '@api-rest/api-model';
+import { RoleAssignment } from '@api-rest/api-model';
+import { ERole } from '@api-rest/api-model';
 import {Router} from '@angular/router';
 import {InstitutionService} from '@api-rest/services/institution.service';
 import {uniqueItems} from '@core/utils/array.utils';

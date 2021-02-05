@@ -25,6 +25,11 @@
 				"IMAGE_FORMAT_192": "192 x 192 pixeles.",
 				"IMAGE_FORMAT_384": "384 x 384 pixeles.",
 				"IMAGE_FORMAT_512": "512 x 512 pixeles."
+			},
+			"toast_messages": {
+				"UPDATE_IMAGE_SUCCESS": "La imagen se actualizó correctamente",
+				"UPDATE_IMAGE_ERROR": "Hubo un error al actualizar la imagen",
+				"VALID_IMAGE_ERROR": "La imagen no responde al formato y/o medidas requeridas"
 			}
 		}
 	}
