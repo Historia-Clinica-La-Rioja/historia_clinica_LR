@@ -25,7 +25,7 @@ public class SettingsController {
         this.settingsService = settingsService;
     }
 
-    @PostMapping(value = "/uploadFile/{fileName:.+}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/assets/{fileName:.+}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Transactional
     @ResponseStatus(code = HttpStatus.OK)
     public boolean uploadFile(@PathVariable(name = "fileName") String fileName,
@@ -35,10 +35,10 @@ public class SettingsController {
         return settingsService.execute(fileName, file);
     }
 
-    @DeleteMapping(value = "/deleteFile/{fileName:.+}")
+    @DeleteMapping(value = "/assets/{fileName:.+}")
     @Transactional
     @ResponseStatus(code = HttpStatus.OK)
-    public boolean uploadFile(@PathVariable(name = "fileName") String fileName) {
+    public boolean deleteFile(@PathVariable(name = "fileName") String fileName) {
         LOG.debug("Input parameters ->  {} fileName {}",
                 fileName);
         return settingsService.deleteFile(fileName);

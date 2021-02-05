@@ -1,4 +1,4 @@
-import { ERole } from '@api-rest/api-model';
+import { AppFeature, ERole } from '@api-rest/api-model';
 import { MenuItem } from '@core/core-model';
 
 export const SIDEBAR_MENU: MenuItem[] = [
@@ -23,6 +23,7 @@ export const SIDEBAR_MENU: MenuItem[] = [
 		permissions: [
 			ERole.ROOT,
 		],
+		featureFlag: AppFeature.HABILITAR_CONFIGURACION
 	},
 
 ];
