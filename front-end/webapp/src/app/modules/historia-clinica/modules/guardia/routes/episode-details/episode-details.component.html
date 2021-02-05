@@ -2,7 +2,7 @@
 
 	<div fxLayout="row" fxLayoutAlign="space-between">
 		<h1 translate="guardia.episode.TITLE"></h1>
-		<button *ngIf="episodeState === enAtencion" id="nuevo-triage" mat-raised-button color="primary" (click)="cancelAttention()"
+		<button *ngIf="episodeState === enAtencion" id="cancel-attention" mat-raised-button color="primary" (click)="cancelAttention()"
 			style="height: 90%;">
 			{{ 'guardia.episode.CANCEL_ATTENTION' | translate | uppercase }}
 		</button>
@@ -51,7 +51,7 @@
 
 				<div fxLayout="column" fxLayoutGap="1px">
 					<span class="grid-title" translate="guardia.episode.administrative.POLICE_INTERVENTION"></span>
-					<div *ngIf="responseEmergencyCare?.policeIntervention as policeIntervention else noInfo">
+					<div *ngIf="responseEmergencyCare?.policeIntervention as policeIntervention else no">
 						<div fxLayout="row" fxLayoutGap="3px" class="content-primary">
 							<span>
 								{{policeIntervention.firstName}}
@@ -144,4 +144,8 @@
 
 <ng-template #noInfo>
 	<span class="content-primary" translate="guardia.NO_INFO"></span>
+</ng-template>
+
+<ng-template #no>
+	<span class="content-primary" translate="guardia.NO"></span>
 </ng-template>
