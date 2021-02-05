@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum EMedicationStatus {
 
-    ACTIVE("55561003", "Activo"),
+    ACTIVE("55561003", "Activa"),
     SUSPENDED("385655000", "Suspendida"),
     STOPPED("6155003", "Finalizada"),
     ERROR("723510000", "Eliminada");
