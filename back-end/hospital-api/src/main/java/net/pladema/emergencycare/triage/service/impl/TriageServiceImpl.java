@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @Service
@@ -96,42 +97,25 @@ public class TriageServiceImpl implements TriageService {
 
     @Override
     public TriageBo createAdministrative(TriageBo triageBo) {
-        LOG.debug("Input parameter -> triageBo {}", triageBo);
-        Triage triage = triageRepository.save(new Triage(triageBo));
-
-        Integer episodeId = triageBo.getEmergencyCareEpisodeId();
-        Short categoryId = triageBo.getCategoryId();
-        this.setTriageCategoryId(episodeId, categoryId);
-
-        triageBo.setId(triage.getId());
-        LOG.debug("Output -> {}", triageBo);
-        return triageBo;
+        return persistTriage(triageBo, getAdministrativeConsumer());
     }
 
     @Override
     public TriageBo createAdultGynecological(TriageBo triageBo) {
-        LOG.debug("Input parameter -> triageBo {}", triageBo);
-        Triage triage = triageRepository.save(new Triage(triageBo));
-
-        Integer episodeId = triageBo.getEmergencyCareEpisodeId();
-        Short categoryId = triageBo.getCategoryId();
-        this.setTriageCategoryId(episodeId, categoryId);
-
-        triageBo.setId(triage.getId());
-        saveVitalSigns(triageBo.getId(), triageBo.getVitalSignIds());
-        LOG.debug("Output -> {}", triageBo);
-        return triageBo;
+        return persistTriage(triageBo, getAdultConsumer());
     }
 
     @Override
     public TriageBo createPediatric(TriageBo triageBo) {
+        return persistTriage(triageBo, getPediatricConsumer());
+    }
+
+    private TriageBo persistTriage(TriageBo triageBo, Consumer<TriageBo> consumer) {
         LOG.debug("Input parameter -> triageBo {}", triageBo);
         Triage triage = triageRepository.save(new Triage(triageBo));
         triageBo.setId(triage.getId());
 
-        if (existDetails(triageBo))
-            triageDetailsRepository.save(new TriageDetails(triageBo));
-        saveVitalSigns(triageBo.getId(), triageBo.getVitalSignIds());
+        consumer.accept(triageBo);
 
         Integer episodeId = triageBo.getEmergencyCareEpisodeId();
         Short categoryId = triageBo.getCategoryId();
@@ -140,6 +124,23 @@ public class TriageServiceImpl implements TriageService {
         LOG.debug("Output -> {}", triageBo);
         return triageBo;
     }
+
+    private Consumer<TriageBo> getAdultConsumer() {
+        return triageBo -> saveVitalSigns(triageBo.getId(), triageBo.getVitalSignIds());
+    }
+
+    private Consumer<TriageBo> getPediatricConsumer() {
+        return triageBo -> {
+            if (existDetails(triageBo))
+                triageDetailsRepository.save(new TriageDetails(triageBo));
+            saveVitalSigns(triageBo.getId(), triageBo.getVitalSignIds());
+        };
+    }
+
+    private Consumer<TriageBo> getAdministrativeConsumer() {
+        return triageBo -> {};
+    }
+
 
     private boolean existDetails(TriageBo triageBo) {
         LOG.debug("Input parameter -> triageBo {}", triageBo);
