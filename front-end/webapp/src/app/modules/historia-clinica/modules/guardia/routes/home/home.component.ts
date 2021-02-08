@@ -1,7 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
-import { DateTimeDto, EmergencyCareListDto } from '@api-rest/api-model';
+import {
+	DateTimeDto,
+	DoctorsOfficeDto, EmergencyCareEpisodeListTriageDto,
+	EmergencyCareListDto,
+	EmergencyCarePatientDto,
+	MasterDataDto,
+	PatientPhotoDto
+} from '@api-rest/api-model';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { differenceInMinutes } from 'date-fns';
 import { EstadosEpisodio, Triages } from '../../constants/masterdata';
@@ -13,6 +20,9 @@ import { SelectConsultorioComponent } from '../../dialogs/select-consultorio/sel
 import { ConfirmDialogComponent } from '@core/dialogs/confirm-dialog/confirm-dialog.component';
 import { PermissionsService } from '@core/services/permissions.service';
 import { TriageDefinitionsService } from '../../services/triage-definitions.service';
+import { PatientService } from '@api-rest/services/patient.service';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 
@@ -23,13 +33,6 @@ const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 })
 export class HomeComponent implements OnInit {
 
-	readonly estadosEpisodio = EstadosEpisodio;
-	readonly triages = Triages;
-	readonly PACIENTE_TEMPORAL = 3;
-
-	loading = true;
-	episodes: any[];
-
 	constructor(
 		private router: Router,
 		private emergencyCareEpisodeService: EmergencyCareEpisodeService,
@@ -38,8 +41,23 @@ export class HomeComponent implements OnInit {
 		private readonly dialog: MatDialog,
 		public readonly episodeStateService: EpisodeStateService,
 		private readonly permissionsService: PermissionsService,
-		private readonly triageDefinitionsService: TriageDefinitionsService
+		private readonly triageDefinitionsService: TriageDefinitionsService,
+		private readonly patientService: PatientService
 	) {
+	}
+
+	readonly estadosEpisodio = EstadosEpisodio;
+	readonly triages = Triages;
+	readonly PACIENTE_TEMPORAL = 3;
+
+	loading = true;
+	episodes: any[];
+	patientsPhotos: PatientPhotoDto[];
+
+	private static calculateWaitingTime(dateTime: DateTimeDto): number {
+		const creationDate = dateTimeDtoToDate(dateTime);
+		const now = new Date();
+		return differenceInMinutes(now, creationDate);
 	}
 
 	ngOnInit(): void {
@@ -47,31 +65,18 @@ export class HomeComponent implements OnInit {
 	}
 
 	loadEpisodes(): void {
-		this.emergencyCareEpisodeService.getAll().subscribe((episodes: EmergencyCareListDto[]) => {
-			this.episodes = episodes.map(episode => this.mapPhotoAndWaitingTime(episode));
-			this.loading = false;
-		}, _ => this.loading = false);
-	}
+		this.emergencyCareEpisodeService.getAll()
+			.pipe(
+				map((episodes: EmergencyCareListDto[]) =>
+					episodes.map(episode => this.setWaitingTime(episode))
+				)
+			)
+			.subscribe((episodes: any[]) => {
+				this.episodes = episodes;
+				this.loading = false;
+				this.completePatientPhotos();
 
-	private mapPhotoAndWaitingTime(episode: EmergencyCareListDto) {
-		return {
-			...episode,
-			waitingTime: episode.state.id === this.estadosEpisodio.EN_ESPERA ?
-				this.calculateWaitingTime(episode.creationDate) : undefined,
-			patient: episode.patient ? {
-				...episode.patient,
-				person: {
-					...episode.patient?.person,
-					decodedPhoto$: this.imageDecoderService.decode(episode.patient?.person?.photo)
-				}
-			} : undefined
-		};
-	}
-
-	private calculateWaitingTime(dateTime: DateTimeDto): number {
-		const creationDate = dateTimeDtoToDate(dateTime);
-		const now = new Date();
-		return differenceInMinutes(now, creationDate);
+			}, _ => this.loading = false);
 	}
 
 	goToEpisode(id: number) {
@@ -144,6 +149,60 @@ export class HomeComponent implements OnInit {
 					}
 				});
 			});
-
 	}
+
+	private completePatientPhotos() {
+		if (this.patientsPhotos) {
+			this.patientsPhotos.forEach(patientPhoto => {
+				this.setEpisodePhoto(patientPhoto.patientId, patientPhoto.imageData);
+			});
+		} else {
+			const patientsIds = getPatientsIds(this.episodes);
+			if (patientsIds.length) {
+				this.patientService.getPatientsPhotos(patientsIds).subscribe(patientsPhotos => {
+					this.patientsPhotos = patientsPhotos;
+					this.patientsPhotos.forEach(patientPhoto => {
+						this.setEpisodePhoto(patientPhoto.patientId, patientPhoto.imageData);
+					});
+				});
+			}
+		}
+
+		function getPatientsIds(episodes: any[]) {
+			const ids = [];
+			episodes.forEach(ep => {
+				if (ep.patient?.id) {
+					ids.push(ep.patient.id);
+				}
+			});
+			return ids;
+		}
+	}
+
+	private setEpisodePhoto(patientId: number, imageData: string) {
+		const episode = this.episodes.find(ep => ep.patient?.id === patientId);
+		if (episode) {
+			episode.decodedPatientPhoto = this.imageDecoderService.decode(imageData);
+		}
+	}
+
+	private setWaitingTime(episode: EmergencyCareListDto): Episode {
+		return {
+			...episode,
+			waitingTime: episode.state.id === this.estadosEpisodio.EN_ESPERA ?
+				HomeComponent.calculateWaitingTime(episode.creationDate) : undefined
+		};
+	}
+}
+
+export interface Episode {
+	waitingTime: number;
+	decodedPatientPhoto?: Observable<string>;
+	creationDate: DateTimeDto;
+	doctorsOffice: DoctorsOfficeDto;
+	id: number;
+	patient: EmergencyCarePatientDto;
+	state: MasterDataDto;
+	triage: EmergencyCareEpisodeListTriageDto;
+	type: MasterDataDto;
 }
