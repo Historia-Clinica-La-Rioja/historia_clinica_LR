@@ -9,11 +9,11 @@
 			"RESTORE": "Restablecer",
 			"logotipo": {
 				"DESCRIPTION": "El logotipo de auspiciante se ubicará en el encabezado alineado a la derecha en el mismo nivel de jerarquia que la marca de HSI.",
-				"IMAGE_FORMAT": "La imagen debe estar en formato .PNG y tener un tamaño máximo de 512 x 128 pixeles."
+				"IMAGE_FORMAT": "La imagen debe estar en formato .PNG y tener un tamaño de 512 x 128 pixeles."
 			},
 			"icono_pagina": {
 				"DESCRIPTION": "El ícono de página o favicon es la imagen que aparece antecediendo al título de la pestaña.",
-				"IMAGE_FORMAT": "La imagen deberá estar en formato .PNG y tener un tamaño cuadrado máximo de 512 x 512 pixeles."
+				"IMAGE_FORMAT": "La imagen deberá estar en formato .PNG y tener un tamaño cuadrado de 512 x 512 pixeles."
 			},
 			"icono_escritorio": {
 				"DESCRIPTION": "El ícono de escritorio es la imagen que tendrá el acceso directo de la aplicación una vez que se instale en cualquier dispositivo.",

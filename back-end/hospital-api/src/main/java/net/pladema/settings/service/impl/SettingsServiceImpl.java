@@ -1,9 +1,12 @@
 package net.pladema.settings.service.impl;
 
+import net.bytebuddy.implementation.bytecode.Throw;
 import net.pladema.clinichistory.requests.servicerequests.controller.ServiceRequestController;
 import net.pladema.settings.service.SettingsService;
 import net.pladema.settings.service.domain.Assets;
 import net.pladema.sgx.files.FileService;
+import net.pladema.sgx.files.StreamFile;
+import org.apache.http.MethodNotSupportedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -34,21 +37,37 @@ public class SettingsServiceImpl implements SettingsService {
 
     @Override
     public boolean execute(String fileName, MultipartFile file) {
-        String newFileName = this.createFileName(fileName.split("\\.")[0]);
+        LOG.debug("Input parameters ->  {} fileName {}", fileName);
+        String newFileName = null;
+        try {
+            newFileName = this.createFileName(fileName.split("\\.")[0]);
+        } catch (MethodNotSupportedException e) {
+            LOG.error("Asset name -> {}", e);
+            return false;
+        }
         String partialPath = PATH.concat(newFileName);
         String completePath = fileService.buildRelativePath(partialPath);
+        LOG.debug("Output -> {}", completePath);
         return fileService.saveFile(completePath, true, file);
     }
 
     @Override
     public boolean deleteFile(String fileName) {
-        String newFileName = this.createFileName(fileName.split("\\.")[0]);
+        LOG.debug("Input parameters ->  {} fileName {}", fileName);
+        String newFileName = null;
+        try {
+            newFileName = this.createFileName(fileName.split("\\.")[0]);
+        } catch (MethodNotSupportedException e) {
+            LOG.error("Asset name -> {}", e);
+            return false;
+        }
         String partialPath = PATH.concat(newFileName);
         String completePath = fileService.buildRelativePath(partialPath);
+        LOG.debug("Output -> {}", completePath);
         return fileService.deleteFile(completePath);
     }
 
-    private String createFileName(String fileName) {
+    private String createFileName(String fileName) throws MethodNotSupportedException {
         switch (fileName) {
             case "sponsor_logo":
                 return SPONSOR_LOGO.getNameFile().concat(SPONSOR_LOGO.getExtension());
@@ -70,7 +89,8 @@ public class SettingsServiceImpl implements SettingsService {
                 return ICON_384.getNameFile().concat(ICON_384.getExtension());
             case "512x512_logo":
                 return ICON_512.getNameFile().concat(ICON_512.getExtension());
+            default:
+                throw new MethodNotSupportedException("Icono/Logo no soportado por el momento");
         }
-        return null;
     }
 }

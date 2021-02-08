@@ -1,5 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { AppFeature, ERole } from '@api-rest/api-model';
+import { FeatureFlagGuard } from '@core/guards/FeatureFlagGuard';
+import { RoleGuard } from '@core/guards/RoleGuard';
 
 import { HomeComponent } from './home.component';
 import { InstitucionesComponent } from './routes/instituciones/instituciones.component';
@@ -13,7 +16,13 @@ const routes: Routes = [
 		children: [
 			{ path: '', pathMatch: 'full', component: InstitucionesComponent },
 			{ path: 'profile', component: ProfileComponent },
-			{ path: 'settings', component: SettingsComponent }
+			{ 
+				path: 'settings', 
+				component: SettingsComponent,
+				canActivate: [RoleGuard, FeatureFlagGuard],
+				data: { allowedRoles: [ERole.ROOT],
+						featureFlag: AppFeature.HABILITAR_CONFIGURACION },
+			}
 		]
 	}
 ];
