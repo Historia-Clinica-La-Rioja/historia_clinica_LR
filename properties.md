@@ -133,6 +133,10 @@ Para la configuracion de ReCaptcha seguir los siguientes pasos:
 | ws.snowstorm.appKey |   | - | Obligatorio(si Snowstorm lo requiere) |  Key de la aplicación utilizada para autorización de request  | v1.2.0  |
 | ws.snowstorm.appId |   | - | Obligatorio(si Snowstorm lo requiere) |  Id de la aplicación utilizada para autorización de request  | v1.2.0  |
 
+## Integración con sistemas relacionados
+| Propiedad               | Parametro       | Valor por defecto       | Necesidad | Descripcion | Desde |
+| ----------------------- | ----------------| ----------------------- | --------- | ----------- | ----- |
+| integration.covid.encryption.key | | WillGriggIsOnFir | Opcional | Clave para la encriptación de datos provistos por endpoints de SGH a otras aplicaciones (ej: covid) | v1.9.0 |
 
 ## Propiedades específicas de flavors 
 
