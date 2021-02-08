@@ -94,10 +94,6 @@ public class EmergencyCareBo {
             this.getPatient().getPerson().getId() : null;
     }
 
-    public void setPersonPhoto(String photo) {
-        this.getPatient().getPerson().setPhoto(photo);
-    }
-
     public Integer getDoctorsOfficeId() {
         return (this.getDoctorsOffice() != null) ? this.getDoctorsOffice().getId() : null;
     }

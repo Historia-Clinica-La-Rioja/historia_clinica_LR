@@ -15,5 +15,4 @@ public class EmergencyCarePersonDto {
 
 	String lastName;
 
-	String photo;
 }
