@@ -46,7 +46,7 @@ export class EmergencyCareEpisodeService {
 
 	setPatient(episodeId: number, patientId: number): Observable<boolean> {
 		const url = `${environment.apiBase + BASIC_URL_PREFIX}/${this.contextService.institutionId +
-			BASIC_URL_SUFIX}/episodes/${episodeId}/administrative/updatePatient`;
+			BASIC_URL_SUFIX}/episodes/${episodeId}/administrative`;
 		return this.http.put<boolean>(url, patientId);
 	}
 
