@@ -29,6 +29,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -105,6 +106,7 @@ public class ServiceRequestController {
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
     @Transactional
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO')")
     public List<Integer> create(@PathVariable(name = "institutionId") Integer institutionId,
                                 @PathVariable(name = "patientId") Integer patientId,
                                 @RequestBody @Valid PrescriptionDto serviceRequestListDto
@@ -151,6 +153,7 @@ public class ServiceRequestController {
     @PutMapping("/{diagnosticReportId}/complete")
     @Transactional
     @ResponseStatus(code = HttpStatus.OK)
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO')")
     public void complete(@PathVariable(name = "institutionId") Integer institutionId,
                          @PathVariable(name = "patientId") Integer patientId,
                          @PathVariable(name = "diagnosticReportId") Integer diagnosticReportId,
@@ -170,6 +173,7 @@ public class ServiceRequestController {
     @PostMapping(value = "/{diagnosticReportId}/uploadFile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Transactional
     @ResponseStatus(code = HttpStatus.OK)
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO')")
     public List<Integer> uploadFile(@PathVariable(name = "institutionId") Integer institutionId,
                                     @PathVariable(name = "patientId") Integer patientId,
                                     @PathVariable(name = "diagnosticReportId") Integer diagnosticReportId,
@@ -187,6 +191,7 @@ public class ServiceRequestController {
     @DeleteMapping("/{diagnosticReportId}")
     @Transactional
     @ResponseStatus(code = HttpStatus.OK)
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO')")
     public void delete(@PathVariable(name = "institutionId") Integer institutionId,
                        @PathVariable(name = "patientId") Integer patientId,
                        @PathVariable(name = "diagnosticReportId") Integer diagnosticReportId
