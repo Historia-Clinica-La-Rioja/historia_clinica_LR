@@ -18,6 +18,7 @@ public class PersonPhotoDto {
     @Override
     public String toString() {
         return "PersonPhotoDto{" +
+                "personId" + personId +
                 "exists imageData='" + (imageData != null) + '\'' +
                 '}';
     }

@@ -571,7 +571,6 @@ export interface EmergencyCarePatientDto extends Serializable {
 export interface EmergencyCarePersonDto {
     firstName: string;
     lastName: string;
-    photo: string;
 }
 
 export interface EmergencyCareUserDto {
@@ -1179,6 +1178,11 @@ export interface PatientMedicalCoverageDto {
     vigencyDate?: string;
 }
 
+export interface PatientPhotoDto {
+    imageData: string;
+    patientId: number;
+}
+
 export interface PatientSearchDto {
     activo: boolean;
     idPatient: number;
@@ -1215,6 +1219,7 @@ export interface PersonBasicDataResponseDto extends Serializable {
 
 export interface PersonPhotoDto {
     imageData: string;
+    personId?: number;
 }
 
 export interface PersonalInformationDto {

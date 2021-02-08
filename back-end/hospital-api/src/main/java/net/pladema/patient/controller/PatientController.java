@@ -33,9 +33,9 @@ import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/patient")
@@ -172,6 +172,29 @@ public class PatientController {
 		return ResponseEntity.ok().body(personPhotoDto);
 	}
 
+
+	@GetMapping(value= "/photos", params = "patientsIds")
+	public ResponseEntity<List<PatientPhotoDto>> getPatientPhotos(@RequestParam List<Integer> patientsIds) {
+		LOG.debug("Input parameters -> {}", patientsIds);
+
+		List<Patient> patients = patientService.getPatients(Set.copyOf(patientsIds));
+		List<Integer> personsIds = getPersonsIds(patients);
+
+		List<PersonPhotoDto> personsPhotos = personExternalService.getPersonsPhotos(personsIds);
+		List<PatientPhotoDto> patientsPhotos = new ArrayList<>();
+		patients.forEach(p -> {
+			Optional<PersonPhotoDto> personPhotoDto = findPhoto(p.getPersonId(), personsPhotos);
+			personPhotoDto.ifPresent(pp -> {
+				PatientPhotoDto patientPhotoDto = new PatientPhotoDto(p.getId(), pp.getImageData());
+				patientsPhotos.add(patientPhotoDto);
+			});
+		});
+
+		LOG.debug("Output size -> {}", patientsPhotos.size());
+		LOG.trace(OUTPUT, patientsPhotos);
+		return ResponseEntity.ok().body(patientsPhotos);
+	}
+
 	@PostMapping("/{patientId}/photo")
 	@Transactional
 	public ResponseEntity<Boolean> addPatientPhoto(@PathVariable(name = "patientId") Integer patientId,
@@ -202,6 +225,17 @@ public class PatientController {
 		return ResponseEntity.ok().body(result);
 	}
 
+	@GetMapping("/{patientId}/appointment-patient-data")
+	public ResponseEntity<ReducedPatientDto> getBasicPersonalData(@PathVariable(name = "patientId") Integer patientId) {
+		LOG.debug(INPUT_PARAMETERS_PATIENT_ID, patientId);
+		Patient patient = patientService.getPatient(patientId)
+				.orElseThrow(() -> new EntityNotFoundException(PATIENT_INVALID));
+		BasicPersonalDataDto personData = personExternalService.getBasicPersonalDataDto(patient.getPersonId());
+		ReducedPatientDto result = new ReducedPatientDto(personData, patient.getTypeId());
+		LOG.debug(OUTPUT, result);
+		return ResponseEntity.ok().body(result);
+	}
+
 	private AddressDto persistPatientAddress(APatientDto patientDto, Optional<Integer> idAdress) {
 		AddressDto addressToAdd = patientMapper.updatePatientAddress(patientDto);
 		LOG.debug("Going to add address -> {}", addressToAdd);
@@ -220,14 +254,31 @@ public class PatientController {
 		return createdPatient;
 	}
 
-	@GetMapping("/{patientId}/appointment-patient-data")
-	public ResponseEntity<ReducedPatientDto> getBasicPersonalData(@PathVariable(name = "patientId") Integer patientId) {
-		LOG.debug(INPUT_PARAMETERS_PATIENT_ID, patientId);
-		Patient patient = patientService.getPatient(patientId)
-				.orElseThrow(() -> new EntityNotFoundException(PATIENT_INVALID));
-		BasicPersonalDataDto personData = personExternalService.getBasicPersonalDataDto(patient.getPersonId());
-		ReducedPatientDto result = new ReducedPatientDto(personData, patient.getTypeId());
-		LOG.debug(OUTPUT, result);
-		return ResponseEntity.ok().body(result);
+	private List<Integer> getPersonsIds(List<Patient> patients) {
+		LOG.debug("Input size -> {}", patients.size());
+		LOG.trace("Input parameters -> patients {}", patients);
+
+		List<Integer> personsIds = patients
+				.stream()
+				.map(Patient::getPersonId)
+				.filter(Objects::nonNull)
+				.collect(Collectors.toList());
+
+		LOG.debug("Output size -> {}", personsIds.size());
+		LOG.trace(OUTPUT, personsIds);
+		return personsIds;
+	}
+
+	private Optional<PersonPhotoDto> findPhoto(Integer personId, List<PersonPhotoDto> personsPhotos) {
+		LOG.debug("Input parameters -> personId {}, personsPhotosSize {}", personId, personsPhotos.size());
+		LOG.trace("Input parameters -> personId {}, personsPhotos {}", personId, personsPhotos);
+
+		Optional<PersonPhotoDto> optPhoto = personsPhotos
+				.stream()
+				.filter(p -> personId.equals(p.getPersonId()))
+				.findFirst();
+
+		LOG.debug("Output -> {}", optPhoto);
+		return optPhoto;
 	}
 }

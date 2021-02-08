@@ -62,9 +62,13 @@ public class PersonPhotoServiceImpl implements PersonPhotoService {
     }
 
     private PersonPhotoDto buildPersonPhotoDto(PersonPhotoVo personPhotoVo) {
+        LOG.debug("Input parameter -> personPhotoVo {}", personPhotoVo);
+
         if (personPhotoVo.getImageData() != null) {
             String image = imageFileService.readImage(personPhotoVo.getImageData());
-            return (image != null) ? new PersonPhotoDto(personPhotoVo.getPersonId(), image) : null;
+            PersonPhotoDto result = (image != null) ? new PersonPhotoDto(personPhotoVo.getPersonId(), image) : null;
+            LOG.debug(OUTPUT, result);
+            return result;
         }
         return null;
     }
