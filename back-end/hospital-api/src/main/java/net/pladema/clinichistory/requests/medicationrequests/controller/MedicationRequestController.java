@@ -164,6 +164,7 @@ public class MedicationRequestController {
     @GetMapping
     @ResponseStatus(code = HttpStatus.OK)
     public @ResponseBody
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
     List<MedicationInfoDto> medicationRequestList(@PathVariable(name = "institutionId") Integer institutionId,
                                                   @PathVariable(name = "patientId") Integer patientId,
                                                   @RequestParam(value = "statusId", defaultValue = MedicationStatementStatus.ACTIVE) String statusId,
@@ -182,6 +183,7 @@ public class MedicationRequestController {
     }
 
     @GetMapping(value = "/{medicationRequestId}/download")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
     public ResponseEntity<InputStreamResource> download(@PathVariable(name = "institutionId") Integer institutionId,
                                                         @PathVariable(name = "patientId") Integer patientId,
                                                         @PathVariable(name = "medicationRequestId") Integer medicationRequestId) throws PDFDocumentException {
