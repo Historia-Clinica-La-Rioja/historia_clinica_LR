@@ -197,6 +197,14 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 	}
 
 	@Override
+	public List<PersonPhotoDto> getPersonsPhotos(List<Integer> personIds) {
+		LOG.debug("Input parameter -> personIds {}", personIds);
+		List<PersonPhotoDto> personsPhotos = personPhotoService.get(personIds);
+		LOG.debug(OUTPUT, personsPhotos);
+		return personsPhotos;
+	}
+
+	@Override
 	public boolean savePersonPhoto(Integer personId, String imageData) {
 		LOG.debug("Input parameters -> personId {}, imageData {}", personId, imageData);
 		boolean result = personPhotoService.save(personId, imageData);

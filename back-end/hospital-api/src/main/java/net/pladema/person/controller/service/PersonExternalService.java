@@ -36,6 +36,8 @@ public interface PersonExternalService {
 
     PersonPhotoDto getPersonPhoto(Integer personId);
 
+    List<PersonPhotoDto> getPersonsPhotos(List<Integer> personIds);
+
     boolean savePersonPhoto(Integer personId, String imageData);
 
 }

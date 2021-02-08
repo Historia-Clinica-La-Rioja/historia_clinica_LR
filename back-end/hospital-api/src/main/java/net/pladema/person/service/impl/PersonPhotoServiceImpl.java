@@ -2,6 +2,7 @@ package net.pladema.person.service.impl;
 
 import net.pladema.person.controller.dto.PersonPhotoDto;
 import net.pladema.person.repository.PersonExtendedRepository;
+import net.pladema.person.repository.domain.PersonPhotoVo;
 import net.pladema.person.repository.entity.PersonExtended;
 import net.pladema.person.service.PersonPhotoService;
 import net.pladema.sgx.images.ImageFileService;
@@ -9,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -39,6 +42,31 @@ public class PersonPhotoServiceImpl implements PersonPhotoService {
         photoFilePath.ifPresent(path -> personPhotoDto.setImageData(imageFileService.readImage(path)));
         LOG.debug(OUTPUT, personPhotoDto);
         return personPhotoDto;
+    }
+
+    @Override
+    public List<PersonPhotoDto> get(List<Integer> personIds) {
+        LOG.debug("Input parameter -> personIds {}", personIds);
+
+        List<PersonPhotoVo> personPhotoVoList = personExtendedRepository.getPhotoFilePath(personIds);
+
+        List<PersonPhotoDto> result = new ArrayList<>();
+        personPhotoVoList.forEach(p -> {
+            PersonPhotoDto personPhotoDto = buildPersonPhotoDto(p);
+            if (personPhotoDto != null)
+                result.add(personPhotoDto);
+        });
+
+        LOG.debug(OUTPUT, result);
+        return result;
+    }
+
+    private PersonPhotoDto buildPersonPhotoDto(PersonPhotoVo personPhotoVo) {
+        if (personPhotoVo.getImageData() != null) {
+            String image = imageFileService.readImage(personPhotoVo.getImageData());
+            return (image != null) ? new PersonPhotoDto(personPhotoVo.getPersonId(), image) : null;
+        }
+        return null;
     }
 
     @Override
