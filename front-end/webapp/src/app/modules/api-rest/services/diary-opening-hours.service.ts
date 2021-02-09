@@ -20,12 +20,12 @@ export class DiaryOpeningHoursService {
 			return of([]);
 		}
 		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/diaryOpeningHours`;
-		return this.http.get<DiaryOpeningHoursDto[]>(url,{
+		return this.http.get<DiaryOpeningHoursDto[]>(url, {
 			params: { diaryIds: `${diaryIds.join(',')}` }
 		});
 	}
 
-	getAllWeeklyDoctorsOfficeOcupation(doctorsOfficeId: number, diaryId:number, startDate, endDate): Observable<OccupationDto[]> {
+	getAllWeeklyDoctorsOfficeOcupation(doctorsOfficeId: number, diaryId: number, startDate, endDate): Observable<OccupationDto[]> {
 		let queryParams: HttpParams = new HttpParams();
 		queryParams = queryParams.append('startDate', startDate);
 		queryParams = queryParams.append('endDate', endDate);

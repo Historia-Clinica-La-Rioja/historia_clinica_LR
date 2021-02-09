@@ -74,7 +74,7 @@ export class DocumentsSummaryComponent implements OnInit {
 		});
 	}
 
-	viewEvolutionNote():boolean {
+	viewEvolutionNote(): boolean {
 		return (this.activeDocument?.notes || this.activeDocument?.procedures.length > 0);
 	}
 

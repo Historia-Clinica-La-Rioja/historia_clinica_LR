@@ -27,7 +27,7 @@ export class AppointmentsService {
 			return of([]);
 		}
 		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments`;
-		return this.http.get<AppointmentListDto[]>(url,{
+		return this.http.get<AppointmentListDto[]>(url, {
 			params: {
 				diaryIds: `${diaryIds.join(',')}`
 			}

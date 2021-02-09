@@ -22,7 +22,7 @@ export class ProfileComponent implements OnInit {
 			mergeMap((roleAssignments: RoleAssignment[]) =>
 				institutionService.getInstitutions(roleAssignments.map(roleAssignment => roleAssignment.institutionId))
 					.pipe(
-						map((institutions: InstitutionDto[]) => roleAssignments.map(roleAssignment =>({
+						map((institutions: InstitutionDto[]) => roleAssignments.map(roleAssignment => ({
 							label: `auth.roles.names.${roleAssignment.role}`,
 							institution: institutions.find(institution => institution.id === roleAssignment.institutionId),
 						})))

@@ -90,7 +90,7 @@ export class NewInternmentComponent implements OnInit {
 						});
 				});
 			this.patientService.getPatientPhoto(this.patientId)
-				.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto;});
+				.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto; });
 
 			this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this.patientId)
 				.subscribe(patientMedicalCoverageDto => this.patientMedicalCoverage = patientMedicalCoverageDto);

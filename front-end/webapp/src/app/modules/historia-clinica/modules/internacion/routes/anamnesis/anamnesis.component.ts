@@ -43,7 +43,7 @@ export class AnamnesisComponent implements OnInit {
 				);
 
 				this.patientService.getPatientPhoto(patientId)
-					.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto;});
+					.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto; });
 			}
 		);
 	}

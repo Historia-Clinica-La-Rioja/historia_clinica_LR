@@ -66,7 +66,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit {
 
 	ngAfterViewInit(): void {
 		this.prescriptionItemForm.controls.interval.valueChanges.subscribe((newValue) => {
-			if(newValue !== this.DEFAULT_RADIO_OPTION) {
+			if (newValue !== this.DEFAULT_RADIO_OPTION) {
 				this.intervalHoursInput.nativeElement.focus();
 				this.prescriptionItemForm.controls.intervalHours.setValidators([Validators.required]);
 				this.prescriptionItemForm.controls.intervalHours.updateValueAndValidity();
@@ -77,7 +77,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit {
 		});
 
 		this.prescriptionItemForm.controls.administrationTime.valueChanges.subscribe((newValue) => {
-			if(newValue !== this.DEFAULT_RADIO_OPTION) {
+			if (newValue !== this.DEFAULT_RADIO_OPTION) {
 				this.administrationTimeDaysInput.nativeElement.focus();
 				this.prescriptionItemForm.controls.administrationTimeDays.setValidators([Validators.required]);
 				this.prescriptionItemForm.controls.administrationTimeDays.updateValueAndValidity();
@@ -93,7 +93,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit {
 	}
 
 	addPrescriptionItem() {
-		if(this.prescriptionItemForm.valid) {
+		if (this.prescriptionItemForm.valid) {
 			const {item, showDosage, showStudyCategory} = this.data;
 			let newItem: NewPrescriptionItem = {
 				id: item ? item.id : null,

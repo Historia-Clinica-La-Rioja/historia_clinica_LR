@@ -177,7 +177,7 @@ export class AplicarVacunaComponent implements OnInit {
 	}
 
 	save() {
-		if(this.appliedVaccines.length >= 1 ) {
+		if (this.appliedVaccines.length >= 1 ) {
 			const finishAppointment = this.dialog.open(ConfirmDialogComponent, {
 				width: '450px',
 				data: {
@@ -189,7 +189,7 @@ export class AplicarVacunaComponent implements OnInit {
 			});
 
 			finishAppointment.afterClosed().subscribe(accepted => {
-				if(accepted){
+				if (accepted){
 					this.loading = true;
 					this.hceImmunizationService.gettingVaccine(this.appliedVaccines, this.data.patientId)
 						.subscribe(() => {

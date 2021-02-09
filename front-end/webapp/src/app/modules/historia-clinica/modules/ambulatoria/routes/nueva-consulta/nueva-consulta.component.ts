@@ -77,7 +77,7 @@ export class NuevaConsultaComponent implements OnInit {
 			snomed: p.snomed,
 			cronico: p.isChronic,
 			fechaInicio: dateToMomentTimeZone(p.startDate),
-			fechaFin: p.inactivationDate? dateToMomentTimeZone(p.inactivationDate) : undefined
+			fechaFin: p.inactivationDate ? dateToMomentTimeZone(p.inactivationDate) : undefined
 		};
 		return problema;
 	}
@@ -85,7 +85,7 @@ export class NuevaConsultaComponent implements OnInit {
 	ngOnInit(): void {
 		//tg-1910
 		this.appointmentsService.considerAppointments().subscribe(consider => {
-			if(consider){
+			if (consider){
 				this.route.paramMap.subscribe((params) => {
 					const idPaciente = Number(params.get('idPaciente'));
 					this.clinicalSpecialtyService.getAppointmentClinicalSpecialty(idPaciente).subscribe(specialty => {
@@ -107,7 +107,7 @@ export class NuevaConsultaComponent implements OnInit {
 
 
 		this.route.data.subscribe( data => {
-				if(data.problemaReadOnly){
+				if (data.problemaReadOnly){
 					this.readOnlyProblema = true;
 					this.route.paramMap.subscribe( param => {
 						let hcId = Number(param.get('idProblema'));
@@ -123,22 +123,22 @@ export class NuevaConsultaComponent implements OnInit {
 			clinicalSpecialty: []
 		});
 		this.motivoNuevaConsultaService.error$.subscribe(motivoError => {
-			this.errores[0]=motivoError;
+			this.errores[0] = motivoError;
 		});
 		this.problemasNuevaConsultaService.error$.subscribe(problemasError => {
-			this.errores[1]=problemasError;
+			this.errores[1] = problemasError;
 		});
 		this.datosAntropometricosNuevaConsultaService.heightError$.subscribe(tallaError => {
-			this.errores[2]=tallaError;
+			this.errores[2] = tallaError;
 		});
 		this.datosAntropometricosNuevaConsultaService.weightError$.subscribe(pesoError => {
-			this.errores[3]=pesoError;
+			this.errores[3] = pesoError;
 		});
 		this.signosVitalesNuevaConsultaService.systolicBloodPressureError$.subscribe(presionSistolicaError => {
-			this.errores[4]=presionSistolicaError;
+			this.errores[4] = presionSistolicaError;
 		});
 		this.signosVitalesNuevaConsultaService.diastolicBloodPressureError$.subscribe(presionDiastolicaError => {
-			this.errores[5]=presionDiastolicaError;
+			this.errores[5] = presionDiastolicaError;
 		});
 	}
 
@@ -174,7 +174,7 @@ export class NuevaConsultaComponent implements OnInit {
 	public isValidConsultation(): boolean {
 		return(this.errores.find( elem =>
 			elem !== undefined
-		)===undefined);
+		) === undefined);
 	}
 
 	private addErrorMessage(consulta: CreateOutpatientDto): void {
@@ -257,7 +257,7 @@ export class NuevaConsultaComponent implements OnInit {
 	}
 
 	editProblema() {
-		if(this.problemasNuevaConsultaService.editProblem()) {
+		if (this.problemasNuevaConsultaService.editProblem()) {
 			this.readOnlyProblema = false;
 		}
 	}

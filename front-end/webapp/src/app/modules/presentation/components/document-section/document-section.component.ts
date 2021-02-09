@@ -21,7 +21,7 @@ export class DocumentSectionComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.displayedColumns = this.addRemoveColumn? this.columns?.map(c => c.def).concat(['remove']) : this.columns?.map(c => c.def);
+		this.displayedColumns = this.addRemoveColumn ? this.columns?.map(c => c.def).concat(['remove']) : this.columns?.map(c => c.def);
 	}
 
 }

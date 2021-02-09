@@ -29,7 +29,7 @@ export class ViewPatientDetailComponent implements OnInit {
 
 	ngOnInit() {
 		this.patientService.getPatientPhoto(this.patient.id)
-			.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto;});
+			.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto; });
 	}
 
 	back() {

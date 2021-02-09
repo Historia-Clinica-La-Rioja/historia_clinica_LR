@@ -168,7 +168,7 @@ export class ProblemasNuevaConsultaService {
 	editProblem(): boolean {
 		//tg-1302
 		//in this case, there's one and only one health condition
-		if(this.form.valid) {
+		if (this.form.valid) {
 			this.getProblemas()[0].snomed.pt = this.form.controls.snomed.value;
 			this.getProblemas()[0].cronico = this.form.controls.cronico.value;
 			this.getProblemas()[0].fechaInicio = this.form.controls.fechaInicio.value;

@@ -102,7 +102,7 @@ export class NewPatientComponent implements OnInit {
 				});
 				this.lockFormField(params);
 				this.patientType = params.typeId;
-				this.personPhoto = { imageData: params.photo? params.photo : null};
+				this.personPhoto = { imageData: params.photo ? params.photo : null};
 			});
 
 		this.personMasterDataService.getGenders()

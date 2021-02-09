@@ -35,7 +35,7 @@ export class BedService {
 
 	relocatePatientBed(patientBedRelocationDto : PatientBedRelocationDto): Observable<PatientBedRelocationDto> {
 		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/bed/relocation`;
-		 return this.http.post<PatientBedRelocationDto>(url,patientBedRelocationDto);
+		 return this.http.post<PatientBedRelocationDto>(url, patientBedRelocationDto);
 	}
 
 }

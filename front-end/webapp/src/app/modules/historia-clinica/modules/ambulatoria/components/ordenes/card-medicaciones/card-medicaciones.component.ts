@@ -114,7 +114,7 @@ export class CardMedicacionesComponent implements OnInit {
 			});
 
 		newMedicationDialog.afterClosed().subscribe((newPrescription: PrescriptionDto) => {
-			if(newPrescription) {
+			if (newPrescription) {
 				const newMedicationRequest$ = this.prescripcionesService.createPrescription(PrescriptionTypes.MEDICATION, newPrescription, this.patientId);
 				if (newPrescription.hasRecipe) {
 					const confirmPrescriptionDialog = this.dialog.open(ConfirmarPrescripcionComponent,
@@ -202,7 +202,7 @@ export class CardMedicacionesComponent implements OnInit {
 	}
 
 	checkMedicationStatus(statusId: string): boolean {
-		switch(statusId){
+		switch (statusId){
 			case this.MEDICATION_STATUS.ACTIVE.id:
 				return this.selectedMedicationList.every(m => m.statusId === statusId);
 			case this.MEDICATION_STATUS.STOPPED.id:

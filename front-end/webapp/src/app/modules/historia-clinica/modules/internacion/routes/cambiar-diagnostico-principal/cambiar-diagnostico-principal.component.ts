@@ -70,7 +70,7 @@ export class CambiarDiagnosticoPrincipalComponent implements OnInit {
 				);
 
 				this.patientService.getPatientPhoto(this.patientId)
-					.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto;});
+					.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto; });
 
 				this.internmentEpisodeSummary$ = this.internmentService.getInternmentEpisodeSummary(this.internmentEpisodeId).pipe(
 					map((internmentEpisodeSummary: InternmentSummaryDto) => this.mapperService.toInternmentEpisodeSummary(internmentEpisodeSummary))

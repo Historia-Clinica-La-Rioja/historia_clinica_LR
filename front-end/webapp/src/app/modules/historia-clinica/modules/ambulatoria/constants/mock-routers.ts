@@ -696,7 +696,7 @@ export const MOCKS_ORDERS = [
 				body: {
 					observation: 'El paciente presenta la tiroide alta',
 					link: 'http://www.google.com',
-					fileIds: [1,2,3]
+					fileIds: [1, 2, 3]
 				}
 			}
 		],

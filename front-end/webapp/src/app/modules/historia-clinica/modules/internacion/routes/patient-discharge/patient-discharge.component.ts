@@ -142,7 +142,7 @@ export class PatientDischargeComponent implements OnInit {
 		if (this.dischargeForm.valid) {
 			let request: PatientDischargeDto = this.dischargeForm.getRawValue();
 			request.administrativeDischargeDate = this.dischargeForm.value.dischargeDate.format(DateFormat.API_DATE);
-			this.intermentEpisodeService.dischargeInternmentEpisode<PatientDischargeDto>(request,this.internmentId)
+			this.intermentEpisodeService.dischargeInternmentEpisode<PatientDischargeDto>(request, this.internmentId)
 				.subscribe(response => {
 					this.snackBarService.showSuccess('internaciones.discharge.messages.SUCCESS');
 					this.router.navigate([`${this.routePrefix}${ROUTE_PROFILE}${this.patientId}`]);

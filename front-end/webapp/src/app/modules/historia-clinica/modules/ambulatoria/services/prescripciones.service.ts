@@ -23,7 +23,7 @@ export class PrescripcionesService {
 	) { }
 
 	createPrescription(prescriptionType: PrescriptionTypes, newPrescription: PrescriptionDto, patientId: number): Observable<number | number[]> {
-		switch(prescriptionType) {
+		switch (prescriptionType) {
 			case PrescriptionTypes.MEDICATION:
 				return this.medicationRequestService.create(patientId, newPrescription);
 			case PrescriptionTypes.STUDY:
@@ -32,7 +32,7 @@ export class PrescripcionesService {
 	}
 
 	getPrescription(prescriptionType: PrescriptionTypes, patientId: number, statusId: string, medicationStatement: string, healthCondition: string, study?: string, categoryId?: string): Observable<any> {
-		switch(prescriptionType) {
+		switch (prescriptionType) {
 			case PrescriptionTypes.MEDICATION:
 				return this.medicationRequestService.medicationRequestList(patientId, statusId, medicationStatement, healthCondition);
 			case PrescriptionTypes.STUDY:
@@ -41,7 +41,7 @@ export class PrescripcionesService {
 	}
 
 	changeMedicationStatus(statusChange: string, patientId: number, medicationsIds: number[], dayQuantity?: number, observations?: string): Observable<void> {
-		switch(statusChange) {
+		switch (statusChange) {
 			case MedicationStatusChange.FINALIZE:
 				return this.medicationRequestService.finalize(patientId, medicationsIds);
 			case MedicationStatusChange.REACTIVATE:
@@ -52,7 +52,7 @@ export class PrescripcionesService {
 	}
 
 	downloadPrescriptionPdf(patientId: number, prescriptionPdfInfo: number[], prescriptionType: PrescriptionTypes): void {
-		switch(prescriptionType) {
+		switch (prescriptionType) {
 			case PrescriptionTypes.MEDICATION:
 				const recipeId = prescriptionPdfInfo[0];
 				this.medicationRequestService.download(patientId, recipeId).subscribe((blob) => {
@@ -88,7 +88,7 @@ export class PrescripcionesService {
 	}
 
 	toNewPrescriptionItem(prescriptionType: PrescriptionTypes, prescriptionItem: any): NewPrescriptionItem {
-		switch(prescriptionType) {
+		switch (prescriptionType) {
 			case PrescriptionTypes.MEDICATION:
 				return this.mapMedication(prescriptionItem);
 			case PrescriptionTypes.STUDY:
@@ -131,7 +131,7 @@ export class PrescripcionesService {
 	}
 
 	renderStatusDescription(prescriptionType: PrescriptionTypes, statusId: string): string {
-		switch(prescriptionType) {
+		switch (prescriptionType) {
 			case PrescriptionTypes.MEDICATION:
 				return this.renderStatusDescriptionMedication(statusId);
 			case PrescriptionTypes.STUDY:

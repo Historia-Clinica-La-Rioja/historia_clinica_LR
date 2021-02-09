@@ -16,7 +16,7 @@ export class FeatureFlagGuard implements CanActivate {
 		return this.featureFlagService.isActive(featureFlag)
 			.pipe(
 				switchMap(isOn => {
-					return isOn? of(true) : of(this.router.createUrlTree(['/']));
+					return isOn ? of(true) : of(this.router.createUrlTree(['/']));
 				})
 			);
 	}

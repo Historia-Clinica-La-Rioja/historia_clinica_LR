@@ -18,7 +18,7 @@ export class SettingsComponent implements OnInit {
 	}
 
 	selectFile(file: File, fileName: string): void {
-		if(file) {
+		if (file) {
 			this.settingsService.uploadFile(fileName, file).subscribe(data => {
 				if (data) {
 					this.snackBarService.showSuccess('configuracion.logos.toast_messages.UPDATE_IMAGE_SUCCESS');

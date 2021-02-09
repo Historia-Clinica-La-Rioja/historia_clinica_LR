@@ -17,7 +17,7 @@ export class DatosPersonales {
     religion: string;
     nameSelfDetermination: string;
     genderSelfDeterminationId: number;
-    healthInsuranceId:number;
+    healthInsuranceId: number;
 
     //Address
     addressStreet: string;

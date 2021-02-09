@@ -13,7 +13,7 @@ export class DailyAppointmentService {
 
 	constructor(
 		private downloadService: DownloadService,
-		private contextService: ContextService,) { }
+		private contextService: ContextService, ) { }
 
 
 	getDailyAppointmentsByDiaryIdAndDate(diaryId: number, date: Moment): Observable<any> {

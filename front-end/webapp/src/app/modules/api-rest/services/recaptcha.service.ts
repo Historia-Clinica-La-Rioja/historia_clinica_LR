@@ -10,7 +10,7 @@ export class RecaptchaService {
 
 	constructor(private http: HttpClient) {}
 
-	isRecaptchaEnable():Observable<boolean> {
+	isRecaptchaEnable(): Observable<boolean> {
 		return this.http.get<boolean>(`${environment.apiBase}/recaptcha/is-enable`);
 	}
 

@@ -22,12 +22,12 @@ export class AddressMasterDataService {
 		return this.http.get<any[]>(url);
   }
   
-  getDepartmentsByProvince(provinceId:number):Observable<any[]> {
+  getDepartmentsByProvince(provinceId: number): Observable<any[]> {
     let url = `${environment.apiBase}/address/masterdata/province/${provinceId}/departments`;
 		return this.http.get<any[]>(url);
   }
 
-  getCitiesByDepartment(departmentId:number):Observable<any[]> {
+  getCitiesByDepartment(departmentId: number): Observable<any[]> {
     let url = `${environment.apiBase}/address/masterdata/department/${departmentId}/cities`;
 		return this.http.get<any[]>(url);
   }

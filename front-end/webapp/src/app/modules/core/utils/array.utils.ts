@@ -3,7 +3,7 @@ export const pushTo = <T>(data: T[], elem: T): T[] => {
 };
 
 export const removeFrom = <T>(data: T[], index: number): T[] => {
-	return data.slice(0, index).concat(data.slice(index+1));
+	return data.slice(0, index).concat(data.slice(index + 1));
 };
 
 export const anyMatch = <T>(a1: T[], a2: T[]): boolean => {

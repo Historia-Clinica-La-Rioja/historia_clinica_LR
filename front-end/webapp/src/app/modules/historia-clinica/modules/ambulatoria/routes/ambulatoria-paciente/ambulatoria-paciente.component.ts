@@ -71,14 +71,14 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 			this.ambulatoriaSummaryFacadeService.setIdPaciente(this.patientId);
 			this.hasNewConsultationEnabled$ = this.ambulatoriaSummaryFacadeService.hasNewConsultationEnabled$;
 			this.patientService.getPatientPhoto(this.patientId)
-				.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto;});
+				.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto; });
 		});
 
 	}
 
 	loadExternalInstitutions(){
-		let externalInstitutions = this.interoperabilityBusService.getPatientLocation(this.patientId.toString()).subscribe(location =>{
-			if(location.length === 0) {
+		let externalInstitutions = this.interoperabilityBusService.getPatientLocation(this.patientId.toString()).subscribe(location => {
+			if (location.length === 0) {
 				this.snackBarService.showError('ambulatoria.bus-interoperabilidad.PACIENTE-NO-FEDERADO');
 				this.loaded = false;
 			} else this.externalInstitutions = location;
@@ -89,7 +89,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	loadExternalSummary(organization: OrganizationDto){
 		this.spinner = true;
 
-		let info = this.interoperabilityBusService.getPatientInfo(this.patientId.toString(),organization.custodian)
+		let info = this.interoperabilityBusService.getPatientInfo(this.patientId.toString(), organization.custodian)
 			.subscribe(summary => {
 				this.patientExternalSummary = summary;
 				this.spinner = false;
@@ -99,7 +99,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	}
 
 	externalInstitutionsClicked(){
-		if(!this.loaded){
+		if (!this.loaded){
 			this.loaded = true;
 			this.loadExternalInstitutions();
 			this.externalInstitutionPlaceholder = ' ';
@@ -108,7 +108,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 
 	showTimeOutMessages(subscription){
 		setTimeout(() => {
-			if(this.spinner) {
+			if (this.spinner) {
 				subscription.unsubscribe();
 				this.snackBarService.showError('ambulatoria.bus-interoperabilidad.TIMEOUT-MESSAGE');
 				this.spinner = false;

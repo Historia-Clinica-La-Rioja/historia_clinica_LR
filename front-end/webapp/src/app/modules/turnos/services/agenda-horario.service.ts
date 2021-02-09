@@ -240,7 +240,7 @@ export class AgendaHorarioService {
 			return;
 		}
 		const endOfView = endOfWeek(this.viewDate, { weekStartsOn: this.weekStartsOn });
-		if ( newEnd.getHours()>=23 ) {
+		if ( newEnd.getHours() >= 23 ) {
 			newEnd.setHours(23);
 			newEnd.setMinutes(0);
 			newEnd.setSeconds(0);

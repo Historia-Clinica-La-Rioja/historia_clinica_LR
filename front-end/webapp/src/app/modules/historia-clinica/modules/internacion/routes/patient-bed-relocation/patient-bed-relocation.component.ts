@@ -100,7 +100,7 @@ export class PatientBedRelocationComponent implements OnInit {
 
 					this.bed.getLastPatientBedRelocation(this.internmentId).subscribe(patientBedRelocation => {
 						const lastRelocationDate = patientBedRelocation ? momentParseDateTime(patientBedRelocation.relocationDate).toDate() : null;
-						const iesEntryDateTime =momentParseDate(ies.entryDate.toString()).toDate();
+						const iesEntryDateTime = momentParseDate(ies.entryDate.toString()).toDate();
 						this.minDate = dateToMoment(lastRelocationDate && lastRelocationDate > iesEntryDateTime ? lastRelocationDate : iesEntryDateTime);
 						this.minDateTimeValidator = new MinTimeValidator(this.minDate);
 						this.minTimeStr = momentFormat(this.minDate, DateFormat.HOUR_MINUTE);

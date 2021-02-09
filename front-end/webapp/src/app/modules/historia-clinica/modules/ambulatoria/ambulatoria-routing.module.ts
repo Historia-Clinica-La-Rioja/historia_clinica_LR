@@ -33,7 +33,7 @@ const routes: Routes = [
 			{
 				path: 'paciente/:idPaciente/nuevaDesdeProblema/:idProblema',
 				component: NuevaConsultaComponent,
-				data:{problemaReadOnly: true}
+				data: {problemaReadOnly: true}
 			},
 			...mockRouters(MOCKS_ORDERS)
 		],

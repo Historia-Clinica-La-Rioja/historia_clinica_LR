@@ -23,9 +23,9 @@ export class SolveProblemComponent implements OnInit {
     problemasNuevaConsultaService: ProblemasNuevaConsultaService;
 	private readonly form: FormGroup;
 	private problema: HealthConditionNewConsultationDto;
-	private dataDto:HCEPersonalHistoryDto;
-	private readonly patientId:number;
-	private readonly problemId:number;
+	private dataDto: HCEPersonalHistoryDto;
+	private readonly patientId: number;
+	private readonly problemId: number;
 	private readonly startDate: Date;
 
 	constructor(
@@ -61,11 +61,11 @@ export class SolveProblemComponent implements OnInit {
 	initializeFields(p: HealthConditionNewConsultationDto){
 		this.form.controls.snomed.setValue(p.snomed.pt);
 		this.form.controls.cronico.setValue(p.isChronic);
-		this.form.controls.fechaInicio.setValue(new Date(p.startDate).toLocaleDateString('es-AR', {timeZone: 'UTC', year:'numeric', month:'2-digit', day:'2-digit'}));
+		this.form.controls.fechaInicio.setValue(new Date(p.startDate).toLocaleDateString('es-AR', {timeZone: 'UTC', year: 'numeric', month: '2-digit', day: '2-digit'}));
 	}
 
 	solveProblem() {
-		if(this.form.valid) {
+		if (this.form.valid) {
 			const dialogRefConfirmation = this.dialog.open(ConfirmDialogComponent,
 				{
 					data: {
@@ -102,10 +102,10 @@ export class SolveProblemComponent implements OnInit {
 	checkInactivationDate() {
 		const fechaFin = this.form.controls.fechaFin.value;
 
-		if(fechaFin){
+		if (fechaFin){
 			const inactivationDate = fechaFin.toDate();
-			if(this.startDate > inactivationDate)
-				this.form.controls.fechaFin.setErrors({min:true});
+			if (this.startDate > inactivationDate)
+				this.form.controls.fechaFin.setErrors({min: true});
 			const actualDate = new Date();
 			if (inactivationDate > actualDate)
 				this.form.controls.fechaFin.setErrors({max: true});

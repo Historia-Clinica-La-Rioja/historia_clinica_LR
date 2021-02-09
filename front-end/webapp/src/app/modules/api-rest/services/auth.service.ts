@@ -21,7 +21,7 @@ export class AuthService {
 
 	public login(loginDto: LoginDto, recaptchaResponse): Observable<any> {
 		let httpHeaders;
-		if(recaptchaResponse) {
+		if (recaptchaResponse) {
 			httpHeaders = new HttpHeaders({
 				recaptcha: recaptchaResponse
 			});

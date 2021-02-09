@@ -62,7 +62,7 @@ export class ProcedimientosService {
 		if (this.form.valid && this.snomedConcept) {
 			const nuevoProcedimiento: Procedimiento = {
 				snomed: this.snomedConcept,
-				performedDate: this.form.value.performedDate? momentFormat(this.form.value.performedDate, DateFormat.API_DATE) : undefined
+				performedDate: this.form.value.performedDate ? momentFormat(this.form.value.performedDate, DateFormat.API_DATE) : undefined
 			};
 			this.add(nuevoProcedimiento);
 			this.resetForm();

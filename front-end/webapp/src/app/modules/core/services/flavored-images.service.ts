@@ -23,7 +23,7 @@ export class FlavoredImagesService {
 	constructor(private readonly publicInfoService: PublicService) {
 	}
 
-	public getFooterImages():Observable<ImageSrc[]> {
+	public getFooterImages(): Observable<ImageSrc[]> {
 		return this.publicInfoService.getInfo()
 			.pipe(
 				map(publicInfo => {
@@ -32,7 +32,7 @@ export class FlavoredImagesService {
 			);
 	}
 
-	public getLogos():Observable<ImageSrc[]> {
+	public getLogos(): Observable<ImageSrc[]> {
 		return this.publicInfoService.getInfo()
 			.pipe(
 				map(publicInfo => {
@@ -43,7 +43,7 @@ export class FlavoredImagesService {
 			);
 	}
 
-	public getHeaderSecondaryLogos():Observable<ImageSrc[]> {
+	public getHeaderSecondaryLogos(): Observable<ImageSrc[]> {
 		return this.publicInfoService.getInfo()
 			.pipe(
 				map(publicInfo => {
