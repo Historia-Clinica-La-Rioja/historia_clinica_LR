@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FlavoredImagesService } from "@core/services/flavored-images.service";
 import { ImageSrc } from "@core/utils/flavored-image-definitions";
+import { Observable } from 'rxjs';
 
 @Component({
 	selector: 'app-logo',
@@ -10,18 +11,15 @@ import { ImageSrc } from "@core/utils/flavored-image-definitions";
 export class LogoComponent implements OnInit {
 
 	@Input() isSecondaryLogo: boolean = false;
-	public logos: ImageSrc[] = []
+	public logos$: Observable<ImageSrc[]>;
 
 	constructor(private flavoredImagesService: FlavoredImagesService) {
 	}
 
 	ngOnInit(): void {
-		if(this.isSecondaryLogo) {
-			this.flavoredImagesService.getHeaderSecondaryLogos().subscribe(logos => this.logos = logos);
-		}
-		else {
-			this.flavoredImagesService.getLogos().subscribe(logos => this.logos = logos);
-		}
+		this.logos$ = this.isSecondaryLogo ?
+			this.flavoredImagesService.getHeaderSecondaryLogos() :
+			this.flavoredImagesService.getLogos();
 	}
 
 }

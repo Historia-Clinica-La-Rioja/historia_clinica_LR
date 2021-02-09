@@ -1,3 +1,3 @@
-<div class="img-logo-container" *ngFor="let img of logos">
-	<img src="{{img.location}}" alt="{{img.alt}}">
+<div class="img-logo-container" *ngFor="let img of logos$ | async">
+	<img [src]="img.location" [alt]="img.alt">
 </div>
