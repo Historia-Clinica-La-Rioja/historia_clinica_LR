@@ -32,7 +32,7 @@
 			<mat-form-field appearance="outline">
 				<mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.ASSOCIATED_PROBLEM' | translate}}</mat-label>
 				<mat-select formControlName="healthProblem" name="healthProblem">
-					<mat-option *ngFor="let healthProblem of healthProblemOptions" [value]="healthProblem.id">
+					<mat-option *ngFor="let healthProblem of healthProblemOptions" [value]="healthProblem.sctId">
 						{{healthProblem.description | translate}}
 					</mat-option>
 				</mat-select>

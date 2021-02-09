@@ -46,10 +46,10 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit {
 		this.formConfiguration();
 
 		this.hceGeneralStateService.getActiveProblems(this.data.patientId).subscribe((activeProblems: HCEPersonalHistoryDto[]) => {
-			let activeProblemsList = activeProblems.map(problem => {return {id: problem.id, description: problem.snomed.pt}});
+			let activeProblemsList = activeProblems.map(problem => {return {id: problem.id, description: problem.snomed.pt, sctId: problem.snomed.sctid}});
 
 			this.hceGeneralStateService.getChronicConditions(this.data.patientId).subscribe((chronicProblems: HCEPersonalHistoryDto[]) => {
-				let chronicProblemsList = chronicProblems.map(problem => {return {id: problem.id, description: problem.snomed.pt}});
+				let chronicProblemsList = chronicProblems.map(problem => {return {id: problem.id, description: problem.snomed.pt,  sctId: problem.snomed.sctid}});
 				this.healthProblemOptions = activeProblemsList.concat(chronicProblemsList);
 			});
 
@@ -99,8 +99,9 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit {
 				id: item ? item.id : null,
 				snomed: this.snomedConcept,
 				healthProblem: {
-					id: this.prescriptionItemForm.controls.healthProblem.value,
-					description: this.healthProblemOptions.find(hp => hp.id === this.prescriptionItemForm.controls.healthProblem.value).description
+					id: this.healthProblemOptions.find(hp => hp.sctId === this.prescriptionItemForm.controls.healthProblem.value).id,
+					description: this.healthProblemOptions.find(hp => hp.sctId === this.prescriptionItemForm.controls.healthProblem.value).description,
+					sctId: this.prescriptionItemForm.controls.healthProblem.value
 				},
 				studyCategory: {
 					id: showStudyCategory ? this.prescriptionItemForm.controls.studyCategory.value : null,
@@ -145,7 +146,8 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit {
 	}
 
 	private setItemData(prescriptionItem: NewPrescriptionItem): void {
-		this.prescriptionItemForm.controls.healthProblem.setValue(prescriptionItem.healthProblem.id);
+		this.prescriptionItemForm.controls.healthProblem.setValue(prescriptionItem.healthProblem.sctId);
+
 		this.prescriptionItemForm.controls.observations.setValue(prescriptionItem.observations);
 
 		if (this.data.showDosage) {
@@ -239,6 +241,7 @@ export class NewPrescriptionItem {
 	healthProblem: {
 		id: number;
 		description: string;
+		sctId?: string;
 	};
 	studyCategory: {
 		id: string;

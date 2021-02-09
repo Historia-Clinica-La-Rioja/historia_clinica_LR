@@ -103,6 +103,7 @@ export class PrescripcionesService {
 			healthProblem: {
 				id: medicationItem.healthCondition.id,
 				description: medicationItem.healthCondition.snomed.pt,
+				sctId: medicationItem.healthCondition.snomed.sctid
 			},
 			studyCategory: null,
 
