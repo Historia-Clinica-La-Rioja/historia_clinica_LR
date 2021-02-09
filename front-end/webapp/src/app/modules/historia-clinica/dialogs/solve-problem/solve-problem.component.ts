@@ -20,7 +20,7 @@ export class SolveProblemComponent implements OnInit {
 
 	removeForm: FormGroup;
 	clinicalStatus: MasterDataInterface<string>[];
-    problemasNuevaConsultaService: ProblemasNuevaConsultaService;
+	problemasNuevaConsultaService: ProblemasNuevaConsultaService;
 	private readonly form: FormGroup;
 	private problema: HealthConditionNewConsultationDto;
 	private dataDto: HCEPersonalHistoryDto;

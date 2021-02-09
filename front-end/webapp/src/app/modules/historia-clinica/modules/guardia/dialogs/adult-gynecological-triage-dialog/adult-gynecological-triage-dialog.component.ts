@@ -13,10 +13,12 @@ export class AdultGynecologicalTriageDialogComponent implements OnInit {
 
 	private triage: TriageAdultGynecologicalDto;
 
-	constructor(private triageService: TriageService,
-	            private readonly snackBarService: SnackBarService,
-	            public readonly dialogRef: MatDialogRef<AdultGynecologicalTriageDialogComponent>,
-	            @Inject(MAT_DIALOG_DATA) public  episodeId: number) {
+	constructor(
+		private triageService: TriageService,
+		private readonly snackBarService: SnackBarService,
+		public readonly dialogRef: MatDialogRef<AdultGynecologicalTriageDialogComponent>,
+		@Inject(MAT_DIALOG_DATA) public episodeId: number,
+	) {
 	}
 
 	ngOnInit(): void {

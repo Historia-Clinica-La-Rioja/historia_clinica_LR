@@ -4,7 +4,6 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MasterDataInterface } from '../../../api-rest/api-model';
 import { MedicalConsultationMasterdataService } from '../../../api-rest/services/medical-consultation-masterdata.service';
 import { MEDICAL_ATTENTION } from '../../constants/descriptions';
-import * as moment from 'moment';
 import { REMOVEATTENTION } from '@core/constants/validation-constants';
 
 @Component({
@@ -18,10 +17,18 @@ export class NewAttentionComponent implements OnInit {
 	public readonly SPONTANEOUS = MEDICAL_ATTENTION.SPONTANEOUS;
 	public medicalAttentionTypes: MasterDataInterface<number>[];
 
-	constructor(public dialogRef: MatDialogRef<NewAttentionComponent>,
-		           private readonly formBuilder: FormBuilder,
-		           private readonly medicalConsultationMasterdataService: MedicalConsultationMasterdataService,
-		           @Inject(MAT_DIALOG_DATA) public data: {start: Date, end: Date, overturnCount?: number, medicalAttentionTypeId?: number, isEdit?: boolean }) { }
+	constructor(
+		public dialogRef: MatDialogRef<NewAttentionComponent>,
+		private readonly formBuilder: FormBuilder,
+		private readonly medicalConsultationMasterdataService: MedicalConsultationMasterdataService,
+		@Inject(MAT_DIALOG_DATA) public data: {
+			start: Date,
+			end: Date,
+			overturnCount?: number,
+			medicalAttentionTypeId?: number,
+			isEdit?: boolean,
+		}
+	) { }
 
 
 	ngOnInit(): void {

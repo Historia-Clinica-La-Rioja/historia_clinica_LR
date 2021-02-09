@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
 import { PermissionsService } from '@core/services/permissions.service';
 import { map, take } from 'rxjs/operators';
 import { EmergencyCareTypes } from '../constants/masterdata';
 import { ERole } from '@api-rest/api-model';
-import { forkJoin, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { AdministrativeTriageDialogComponent } from '../dialogs/administrative-triage-dialog/administrative-triage-dialog.component';
 import { PediatricTriageDialogComponent } from '../dialogs/pediatric-triage-dialog/pediatric-triage-dialog.component';
 import { AdultGynecologicalTriageDialogComponent } from '../dialogs/adult-gynecological-triage-dialog/adult-gynecological-triage-dialog.component';
@@ -20,9 +19,10 @@ export class TriageDefinitionsService {
 
 	private readonly routePrefix;
 
-	constructor(private readonly router: Router,
-	            private readonly contextService: ContextService,
-	            private readonly permissionsService: PermissionsService) {
+	constructor(
+		private readonly contextService: ContextService,
+		private readonly permissionsService: PermissionsService,
+	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}`;
 	}
 

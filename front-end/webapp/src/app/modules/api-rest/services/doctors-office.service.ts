@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {ContextService} from '@core/services/context.service';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { ContextService } from '@core/services/context.service';
 import { Observable, of } from 'rxjs';
-import {environment} from '@environments/environment';
-import {DoctorsOfficeDto} from '@api-rest/api-model';
+import { environment } from '@environments/environment';
+import { DoctorsOfficeDto } from '@api-rest/api-model';
 
 
 const BASIC_URL_PREFIX = '/institutions';
@@ -15,10 +15,10 @@ const BASIC_URL_SUFIX = '/doctorsOffice';
 export class DoctorsOfficeService {
 
 	constructor(private http: HttpClient,
-	            private contextService: ContextService) {
+		private contextService: ContextService) {
 	}
 
-	getAll(sectorId: number): Observable<DoctorsOfficeDto[]>{
+	getAll(sectorId: number): Observable<DoctorsOfficeDto[]> {
 		let url = `${environment.apiBase}` + BASIC_URL_PREFIX + '/' + `${this.contextService.institutionId}` +
 			BASIC_URL_SUFIX + `/sector/${sectorId}`;
 		return this.http.get<DoctorsOfficeDto[]>(url);
@@ -31,7 +31,7 @@ export class DoctorsOfficeService {
 	 */
 	getBySectorType(sectorTypeId: number): Observable<DoctorsOfficeDto[]> {
 		let url = `${environment.apiBase + BASIC_URL_PREFIX}/${this.contextService.institutionId +
-					BASIC_URL_SUFIX}/sectorType/${sectorTypeId}`;
+			BASIC_URL_SUFIX}/sectorType/${sectorTypeId}`;
 		return this.http.get<DoctorsOfficeDto[]>(url);
 	}
 }

@@ -28,7 +28,7 @@ export class CardMedicacionesComponent implements OnInit {
 	public readonly medicacion = ORDENES_MEDICACION;
 	public readonly MEDICATION_STATUS = MEDICATION_STATUS;
 	public readonly medicationStatusChange = MedicationStatusChange;
-    public medicationsInfo : MedicationInfoDto[];
+	public medicationsInfo : MedicationInfoDto[];
 	public selectedMedicationList: MedicationInfoDto[] = [];
 	public medicationCheckboxes: FormGroup;
 	public hideFilterPanel = false;

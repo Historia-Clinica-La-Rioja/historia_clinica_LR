@@ -7,9 +7,9 @@ import { ThemePalette } from '@angular/material/core';
  * Basic confirm dialog with simple text message
  * input data example :
  * data {
- *     title: 'Dialog title',
- *     content: 'This is the content dialog',
- *     okButtonLabel: 'Continue'
+ *   title: 'Dialog title',
+ *   content: 'This is the content dialog',
+ *   okButtonLabel: 'Continue'
  * }
  */
 @Component({
@@ -21,14 +21,16 @@ export class ConfirmDialogComponent implements OnInit {
 
 	public okBottonColor: ThemePalette;
 
-	constructor(public dialogRef: MatDialogRef<ConfirmDialogComponent>,
-	            @Inject(MAT_DIALOG_DATA) public data: {
-		            title: string,
-		            content: string,
-		            okButtonLabel: string,
-		            cancelButtonLabel: string,
-		            okBottonColor?: ThemePalette
-	            }) {
+	constructor(
+		public dialogRef: MatDialogRef<ConfirmDialogComponent>,
+		@Inject(MAT_DIALOG_DATA) public data: {
+			title: string,
+			content: string,
+			okButtonLabel: string,
+			cancelButtonLabel: string,
+			okBottonColor?: ThemePalette
+		}
+	) {
 	}
 
 	ngOnInit(): void {

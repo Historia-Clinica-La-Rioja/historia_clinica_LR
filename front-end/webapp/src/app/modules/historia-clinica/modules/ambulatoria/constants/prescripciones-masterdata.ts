@@ -14,9 +14,9 @@ export const MEDICATION_STATUS = {
 };
 
 export enum MedicationStatusChange {
-    FINALIZE = 'Finalizar',
-    REACTIVATE = 'Reactivar',
-    SUSPEND = 'Suspender'
+	FINALIZE = 'Finalizar',
+	REACTIVATE = 'Reactivar',
+	SUSPEND = 'Suspender'
 }
 
 export const STUDY_STATUS = {

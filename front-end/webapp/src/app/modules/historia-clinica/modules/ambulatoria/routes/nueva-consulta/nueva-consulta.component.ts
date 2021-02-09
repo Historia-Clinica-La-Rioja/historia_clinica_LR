@@ -1,28 +1,28 @@
-import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
-import {SnomedService} from 'src/app/modules/historia-clinica/services/snomed.service';
-import {Problema, ProblemasNuevaConsultaService} from '../../services/problemas-nueva-consulta.service';
-import {MotivoNuevaConsultaService} from '../../services/motivo-nueva-consulta.service';
-import {Medicacion, MedicacionesNuevaConsultaService} from '../../services/medicaciones-nueva-consulta.service';
-import {ProcedimientosService} from '../../../../services/procedimientos.service';
-import {DatosAntropometricosNuevaConsultaService} from '../../services/datos-antropometricos-nueva-consulta.service';
-import {InternacionMasterDataService} from '@api-rest/services/internacion-master-data.service';
-import {SignosVitalesNuevaConsultaService} from '../../services/signos-vitales-nueva-consulta.service';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { SnomedService } from 'src/app/modules/historia-clinica/services/snomed.service';
+import { Problema, ProblemasNuevaConsultaService } from '../../services/problemas-nueva-consulta.service';
+import { MotivoNuevaConsultaService } from '../../services/motivo-nueva-consulta.service';
+import { Medicacion, MedicacionesNuevaConsultaService } from '../../services/medicaciones-nueva-consulta.service';
+import { ProcedimientosService } from '../../../../services/procedimientos.service';
+import { DatosAntropometricosNuevaConsultaService } from '../../services/datos-antropometricos-nueva-consulta.service';
+import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
+import { SignosVitalesNuevaConsultaService } from '../../services/signos-vitales-nueva-consulta.service';
 
 import {
 	AntecedenteFamiliar,
 	AntecedentesFamiliaresNuevaConsultaService
 } from '../../services/antecedentes-familiares-nueva-consulta.service';
-import {ClinicalSpecialtyDto, CreateOutpatientDto, HealthConditionNewConsultationDto} from '@api-rest/api-model';
-import {DateFormat, dateToMomentTimeZone, momentFormat, newMoment} from '@core/utils/moment.utils';
-import {OutpatientConsultationService} from '@api-rest/services/outpatient-consultation.service';
-import {ActivatedRoute, Router} from '@angular/router';
-import {SnackBarService} from '@presentation/services/snack-bar.service';
-import {ContextService} from '@core/services/context.service';
-import {Alergia, AlergiasNuevaConsultaService} from '../../services/alergias-nueva-consulta.service';
-import {HealthConditionService} from '@api-rest/services/healthcondition.service';
-import {ClinicalSpecialtyService} from '@api-rest/services/clinical-specialty.service';
-import {AppointmentsService} from '@api-rest/services/appointments.service';
+import { ClinicalSpecialtyDto, CreateOutpatientDto, HealthConditionNewConsultationDto } from '@api-rest/api-model';
+import { DateFormat, dateToMomentTimeZone, momentFormat, newMoment } from '@core/utils/moment.utils';
+import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { ContextService } from '@core/services/context.service';
+import { Alergia, AlergiasNuevaConsultaService } from '../../services/alergias-nueva-consulta.service';
+import { HealthConditionService } from '@api-rest/services/healthcondition.service';
+import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
+import { AppointmentsService } from '@api-rest/services/appointments.service';
 
 @Component({
 	selector: 'app-nueva-consulta-page',
@@ -85,7 +85,7 @@ export class NuevaConsultaComponent implements OnInit {
 	ngOnInit(): void {
 		//tg-1910
 		this.appointmentsService.considerAppointments().subscribe(consider => {
-			if (consider){
+			if (consider) {
 				this.route.paramMap.subscribe((params) => {
 					const idPaciente = Number(params.get('idPaciente'));
 					this.clinicalSpecialtyService.getAppointmentClinicalSpecialty(idPaciente).subscribe(specialty => {
@@ -96,7 +96,7 @@ export class NuevaConsultaComponent implements OnInit {
 				});
 			}
 			else {
-				this.clinicalSpecialtyService.getLoggedInProfessionalClinicalSpecialties().subscribe( specialties => {
+				this.clinicalSpecialtyService.getLoggedInProfessionalClinicalSpecialties().subscribe(specialties => {
 					this.specialties = specialties;
 					this.fixedSpecialty = false;
 					this.defaultSpecialty = specialties[0];
@@ -106,16 +106,16 @@ export class NuevaConsultaComponent implements OnInit {
 		});
 
 
-		this.route.data.subscribe( data => {
-				if (data.problemaReadOnly){
-					this.readOnlyProblema = true;
-					this.route.paramMap.subscribe( param => {
-						let hcId = Number(param.get('idProblema'));
-						this.healthConditionService.getHealthCondition(hcId).subscribe(p => {
-							this.problemasNuevaConsultaService.addProblemToList(NuevaConsultaComponent.buildProblema(p));
-						});
+		this.route.data.subscribe(data => {
+			if (data.problemaReadOnly) {
+				this.readOnlyProblema = true;
+				this.route.paramMap.subscribe(param => {
+					let hcId = Number(param.get('idProblema'));
+					this.healthConditionService.getHealthCondition(hcId).subscribe(p => {
+						this.problemasNuevaConsultaService.addProblemToList(NuevaConsultaComponent.buildProblema(p));
 					});
-				}
+				});
+			}
 		});
 
 		this.formEvolucion = this.formBuilder.group({
@@ -161,7 +161,7 @@ export class NuevaConsultaComponent implements OnInit {
 					errors => {
 						Object.getOwnPropertyNames(errors).forEach(val => {
 							this.apiErrors.push(errors[val]);
-						  });
+						});
 						this.snackBarService.showError('ambulatoria.paciente.nueva-consulta.messages.ERROR');
 					}
 				);
@@ -172,7 +172,7 @@ export class NuevaConsultaComponent implements OnInit {
 	}
 
 	public isValidConsultation(): boolean {
-		return(this.errores.find( elem =>
+		return (this.errores.find(elem =>
 			elem !== undefined
 		) === undefined);
 	}
@@ -199,7 +199,7 @@ export class NuevaConsultaComponent implements OnInit {
 		else if (parseInt(consulta.anthropometricData.weight.value) > 1000) {
 			this.datosAntropometricosNuevaConsultaService.setWeightError('ambulatoria.paciente.nueva-consulta.errors.PESO_MAX');
 		}
-		if (!consulta.vitalSigns.diastolicBloodPressure ) {
+		if (!consulta.vitalSigns.diastolicBloodPressure) {
 			this.signosVitalesNuevaConsultaService.setDiastolicBloodPressureError('ambulatoria.paciente.nueva-consulta.errors.TENSION_DIASTOLICA_OBLIGATORIO');
 		}
 		if (!consulta.vitalSigns.systolicBloodPressure) {
@@ -251,7 +251,7 @@ export class NuevaConsultaComponent implements OnInit {
 			procedures: this.procedimientoNuevaConsultaService.getProcedimientos(),
 			reasons: this.motivoNuevaConsultaService.getMotivosConsulta(),
 			vitalSigns: this.signosVitalesNuevaConsultaService.getSignosVitales(),
-		    clinicalSpecialtyId: this.defaultSpecialty.id
+			clinicalSpecialtyId: this.defaultSpecialty.id
 
 		};
 	}
@@ -262,7 +262,7 @@ export class NuevaConsultaComponent implements OnInit {
 		}
 	}
 
-	setDefaultSpecialty(){
+	setDefaultSpecialty() {
 		this.defaultSpecialty = this.formEvolucion.controls.clinicalSpecialty.value;
 	}
 }

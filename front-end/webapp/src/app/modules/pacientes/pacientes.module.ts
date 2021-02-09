@@ -30,7 +30,7 @@ import { EditPatientComponent } from './routes/edit-patient/edit-patient.compone
 		FormsModule,
 		PacientesRoutingModule,
 		PresentationModule,
-        ReactiveFormsModule,
+		ReactiveFormsModule,
 	]
 })
 export class PacientesModule {

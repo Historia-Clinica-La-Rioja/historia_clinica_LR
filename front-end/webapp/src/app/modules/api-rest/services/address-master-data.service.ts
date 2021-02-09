@@ -4,33 +4,33 @@ import { environment } from '@environments/environment';
 import { Observable } from 'rxjs/internal/Observable';
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
 export class AddressMasterDataService {
 
-  constructor(
-    private http: HttpClient
-  ) { }
+	constructor(
+		private http: HttpClient
+	) { }
 
-  getAllCountries(): Observable<any[]> {
+	getAllCountries(): Observable<any[]> {
 		let url = `${environment.apiBase}/address/masterdata/countries`;
 		return this.http.get<any[]>(url);
 	}
 
-  getByCountry(countryId: number): Observable<any[]> {
+	getByCountry(countryId: number): Observable<any[]> {
 		let url = `${environment.apiBase}/address/masterdata/country/${countryId}/provinces`;
 		return this.http.get<any[]>(url);
-  }
-  
-  getDepartmentsByProvince(provinceId: number): Observable<any[]> {
-    let url = `${environment.apiBase}/address/masterdata/province/${provinceId}/departments`;
-		return this.http.get<any[]>(url);
-  }
+	}
 
-  getCitiesByDepartment(departmentId: number): Observable<any[]> {
-    let url = `${environment.apiBase}/address/masterdata/department/${departmentId}/cities`;
+	getDepartmentsByProvince(provinceId: number): Observable<any[]> {
+		let url = `${environment.apiBase}/address/masterdata/province/${provinceId}/departments`;
 		return this.http.get<any[]>(url);
-  }
+	}
 
-  
+	getCitiesByDepartment(departmentId: number): Observable<any[]> {
+		let url = `${environment.apiBase}/address/masterdata/department/${departmentId}/cities`;
+		return this.http.get<any[]>(url);
+	}
+
+
 }

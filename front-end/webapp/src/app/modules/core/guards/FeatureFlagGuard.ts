@@ -6,8 +6,9 @@ import { switchMap } from 'rxjs/operators';
 
 @Injectable({providedIn: 'root'})
 export class FeatureFlagGuard implements CanActivate {
-	constructor(private router: Router,
-	            private featureFlagService: FeatureFlagService) {
+	constructor(
+		private router: Router,
+		private featureFlagService: FeatureFlagService) {
 	}
 
 	canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> {

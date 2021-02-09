@@ -15,12 +15,12 @@ const BASIC_URL_SUFIX = '/emergency-care';
 export class EmergencyCareEpisodeService {
 
 	constructor(private http: HttpClient,
-		           private contextService: ContextService) {
+		private contextService: ContextService) {
 	}
 
 	getAll(): Observable<EmergencyCareListDto[]> {
 		const url = `${environment.apiBase + BASIC_URL_PREFIX}/${this.contextService.institutionId +
-		BASIC_URL_SUFIX}/episodes`;
+			BASIC_URL_SUFIX}/episodes`;
 		return this.http.get<EmergencyCareListDto[]>(url);
 	}
 
