@@ -12,8 +12,11 @@ import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
 import { PrescriptionItemData } from '../item-prescripciones/item-prescripciones.component';
 import { MEDICATION_STATUS } from './../../../constants/prescripciones-masterdata';
-import {saveAs} from 'file-saver';
+import { PermissionsService } from '@core/services/permissions.service';
 import { MedicacionesService } from '../../../services/medicaciones.service';
+import { ERole } from '@api-rest/api-model';
+
+const ROLES_TO_VIEW: ERole[] = [ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO];
 
 @Component({
   selector: 'app-card-medicaciones',
@@ -31,6 +34,7 @@ export class CardMedicacionesComponent implements OnInit {
 	public hideFilterPanel = false;
 	public formFilter: FormGroup;
 	public medicamentStatus = [];
+	private hasRoleToView: boolean;
 
 	@Input('patientId') patientId: number;
 
@@ -38,6 +42,7 @@ export class CardMedicacionesComponent implements OnInit {
 		private readonly dialog: MatDialog,
 		private readonly formBuilder: FormBuilder,
 		private readonly requestMasterDataService: RequestMasterDataService,
+		private readonly permissionsService: PermissionsService,
 		private prescripcionesService: PrescripcionesService,
 		private snackBarService: SnackBarService,
 		private medicacionesService: MedicacionesService,
@@ -70,6 +75,8 @@ export class CardMedicacionesComponent implements OnInit {
 		this.getMedication();
 
 		this.formFilter.controls.statusId.setValue(MEDICATION_STATUS.ACTIVE.id);
+
+		this.permissionsService.hasContextAssignments$(ROLES_TO_VIEW).subscribe(hasRole => this.hasRoleToView = hasRole);
 
 	}
 
@@ -227,4 +234,11 @@ export class CardMedicacionesComponent implements OnInit {
 			totalDays: medication.totalDays
 		}
 	}
+
+	hasActionsMenu(medicationInfo: MedicationInfoDto): boolean {
+		if (this.hasRoleToView)
+			return (medicationInfo.hasRecipe && medicationInfo.medicationRequestId !== null)
+		else return true
+	}
+
 }
