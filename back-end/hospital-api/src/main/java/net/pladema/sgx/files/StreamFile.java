@@ -41,7 +41,7 @@ public class StreamFile {
 
         boolean overrideFile = override ? true : !file.exists();
         if(directoryCreated && overrideFile) {
-            fileCreated = file.createNewFile();
+            fileCreated = override ? true : file.createNewFile();
 
             try(OutputStream outputStream = new FileOutputStream(file)){
                 outputStream.write(byteArrayOutputStream.toByteArray());

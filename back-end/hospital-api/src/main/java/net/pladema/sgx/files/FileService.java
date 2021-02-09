@@ -39,7 +39,7 @@ public class FileService {
         return result;
     }
 
-    public boolean saveFile(String path, Boolean override, MultipartFile file) {
+    public boolean saveFile(String path, boolean override, MultipartFile file) {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         try {
             os.writeBytes(file.getBytes());
