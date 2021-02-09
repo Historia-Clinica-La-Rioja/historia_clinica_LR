@@ -6,6 +6,7 @@ cd "$BASEDIR"
 
 cd front-end/webapp
 npm install
+npm run lint
 npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
 npm run build:prod
 cd -

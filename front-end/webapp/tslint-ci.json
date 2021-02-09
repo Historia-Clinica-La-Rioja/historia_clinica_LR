@@ -1,0 +1,116 @@
+{
+  "extends": "tslint:recommended",
+  "rules": {
+    "array-type": false,
+    "arrow-parens": false,
+    "deprecation": {
+      "severity": "warning"
+    },
+    "component-class-suffix": true,
+    "contextual-lifecycle": true,
+    "directive-class-suffix": true,
+    "directive-selector": [
+      false,
+      "attribute",
+      "app",
+      "camelCase"
+    ],
+	"indent": [
+	  false,
+	  "tabs",
+	  4
+	],
+    "component-selector": [
+      true,
+      "element",
+      "app",
+      "kebab-case"
+    ],
+    "import-blacklist": [
+      true,
+      "rxjs/Rx"
+    ],
+    "interface-name": false,
+    "max-classes-per-file": false,
+    "max-line-length": [
+      false,
+      300
+    ],
+    "member-access": false,
+    "member-ordering": [
+      true,
+      {
+        "order": [
+          "static-field",
+          "instance-field",
+          "static-method",
+          "instance-method"
+        ]
+      }
+    ],
+    "no-consecutive-blank-lines": false,
+    "no-console": [
+      true,
+      "debug",
+      "info",
+      "time",
+      "timeEnd",
+      "trace"
+    ],
+    "no-empty": false,
+    "no-inferrable-types": [
+	  false,
+      "ignore-params"
+    ],
+    "no-non-null-assertion": true,
+    "no-redundant-jsdoc": true,
+    "no-switch-case-fall-through": true,
+    "no-var-requires": false,
+    "object-literal-key-quotes": [
+      false,
+      "as-needed"
+    ],
+    "object-literal-sort-keys": false,
+    "ordered-imports": false,
+    "quotemark": [
+      false,
+      "single"
+    ],
+    "trailing-comma": false,
+    "no-conflicting-lifecycle": true,
+    "no-host-metadata-property": true,
+    "no-input-rename": false,
+    "no-inputs-metadata-property": true,
+    "no-output-native": true,
+    "no-output-on-prefix": false,
+    "no-outputs-metadata-property": true,
+    "template-banana-in-box": true,
+    "template-no-negated-async": false,
+    "use-lifecycle-interface": false,
+    "use-pipe-transform-interface": true,
+	"semicolon": false,
+	"only-arrow-functions": false,
+	"comment-format": false,
+	"whitespace": false,
+	"one-line": false,
+	"no-unused-expression": false,
+	"prefer-const": false,
+	"no-var-keyword": false,
+	"variable-name": false,
+	"no-trailing-whitespace": false,
+	"triple-equals": false,
+	"curly": false,
+	"align": false,
+	"typedef-whitespace": false,
+	"no-string-literal": false,
+	"no-angle-bracket-type-assertion": false,
+	"no-eval": false,
+	"radix": false,
+	"object-literal-shorthand": false,
+	"no-shadowed-variable": false,
+	"arrow-return-shorthand": false
+  },
+  "rulesDirectory": [
+    "codelyzer"
+  ]
+}

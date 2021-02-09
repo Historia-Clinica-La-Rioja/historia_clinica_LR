@@ -134,7 +134,7 @@ export class AppointmentsFacadeService {
 
 export function toCalendarEvent(from: string, to: string, date: Moment, appointment: AppointmentListDto): CalendarEvent {
 	const fullName = [appointment.patient.person.lastName, appointment.patient.person.firstName].
-		filter(function (val) { return val; }).join(', ');
+		filter((val) => { return val; }).join(', ');
 
 	const title = appointment.patient.typeId === TEMPORARY_PATIENT ?
 		`${momentParseTime(from).format(DateFormat.HOUR_MINUTE_12)} Temporal` : `${momentParseTime(from).format(DateFormat.HOUR_MINUTE_12)}	 ${fullName}`;

@@ -22,7 +22,6 @@ export class ContextService {
 	/**
 	 * Permite definir la institución del contexto
 	 * Subscribiendose a institutionId$ se puede saber cuando cambia su valor.
-	 * @param id
 	 */
 	public setInstitutionId(id: number): void {
 		this._institutionId = id;

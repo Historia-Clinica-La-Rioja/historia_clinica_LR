@@ -299,15 +299,15 @@ export class SearchComponent implements OnInit {
 		return this.isLoading;
 	}
 
-	private splitStringByFirstSpaceCharacter(string: String): any {
-		const spaceIndex: number = string.indexOf(' ');
+	private splitStringByFirstSpaceCharacter(text: string): any {
+		const spaceIndex: number = text.indexOf(' ');
 		return (spaceIndex != -1) ?
 			{
-				firstSubstring: string.substr(0, spaceIndex),
-				secondSubstring: string.substr(spaceIndex + 1)
+				firstSubstring: text.substr(0, spaceIndex),
+				secondSubstring: text.substr(spaceIndex + 1)
 			}
 			:
-			{ firstSubstring: string };
+			{ firstSubstring: text };
 	}
 
 	private mapToPerson(personData): any {

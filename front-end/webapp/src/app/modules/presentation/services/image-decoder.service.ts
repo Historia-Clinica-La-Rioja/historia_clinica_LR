@@ -20,7 +20,7 @@ export class ImageDecoderService {
 	}
 
 	private getBase64ImageFromURL(url: string): Observable<string> {
-		return Observable.create((observer: Observer<string>) => {
+		return new Observable((observer: Observer<string>) => {
 			// create an image object
 			let img = new Image();
 			img.crossOrigin = 'Anonymous';
