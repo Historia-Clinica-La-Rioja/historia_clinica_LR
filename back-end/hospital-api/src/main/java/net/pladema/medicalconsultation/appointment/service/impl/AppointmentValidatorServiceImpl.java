@@ -89,9 +89,6 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
             boolean hasProfessionalRole = loggedUserExternalService.hasAnyRoleInstitution(institutionId,
                     List.of(ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO));
 
-            if (hasProfessionalRole && !diary.isProfessionalAssignShift()) {
-            	throw new ValidationException("appointment.new.professional.assign.not.allowed");
-            }
             Integer professionalId = healthcareProfessionalService.getProfessionalId(UserInfo.getCurrentAuditor());
             if (hasProfessionalRole && !diary.getHealthcareProfessionalId().equals(professionalId)) {
             	throw new ValidationException("appointment.new.professional.id.invalid}");
