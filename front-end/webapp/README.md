@@ -1,4 +1,4 @@
-# SGH | Front-End | WebApp
+# HSI | Front-End | WebApp
 
 Este proyecto fue generado y es mantenido usando [Angular CLI](https://github.com/angular/angular-cli) version 9.1.9.
 

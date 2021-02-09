@@ -1,4 +1,4 @@
-# SGH | Front-End
+# HSI | Front-End
 
 El front-end del proyecto está compuesto por una WebApp y un Backoffice.
 

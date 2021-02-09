@@ -1,6 +1,6 @@
 {
-	"name": "Sistema de Gestion de Hospitales",
-	"short_name": "sgh",
+	"name": "Historia de salud integrada",
+	"short_name": "HSI",
 	"theme_color": "#1976d2",
 	"background_color": "#fafafa",
 	"display": "standalone",
