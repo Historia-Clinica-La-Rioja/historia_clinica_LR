@@ -12,8 +12,7 @@ public enum EMedicationStatus {
 
     ACTIVE("55561003", "Activa"),
     SUSPENDED("385655000", "Suspendida"),
-    STOPPED("6155003", "Finalizada"),
-    ERROR("723510000", "Eliminada");
+    STOPPED("6155003", "Finalizada");
 
     private final String id;
     private final String description;
