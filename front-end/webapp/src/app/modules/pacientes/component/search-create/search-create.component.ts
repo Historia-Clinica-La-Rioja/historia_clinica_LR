@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { Router } from "@angular/router";
-import { VALIDATIONS, hasError, updateForm } from "@core/utils/form.utils";
-import { PatientService } from "@api-rest/services/patient.service";
-import { PatientMasterDataService } from "@api-rest/services/patient-master-data.service";
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { VALIDATIONS, hasError, updateForm } from '@core/utils/form.utils';
+import { PatientService } from '@api-rest/services/patient.service';
+import { PatientMasterDataService } from '@api-rest/services/patient-master-data.service';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
-import { ContextService } from "@core/services/context.service";
+import { ContextService } from '@core/services/context.service';
 import { IDENTIFICATION_TYPE_IDS } from '@core/utils/patient.utils';
 
 const ROUTE_SEARCH = 'pacientes/search';

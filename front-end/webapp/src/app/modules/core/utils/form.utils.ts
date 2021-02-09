@@ -10,7 +10,7 @@ export const VALIDATIONS = {
 	}
 };
 
-export const TIME_PATTERN = "([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}";
+export const TIME_PATTERN = '([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}';
 export const DEFAULT_COUNTRY_ID = 14;
 
 export function hasError(form: AbstractControl, type: string, control: string): boolean {

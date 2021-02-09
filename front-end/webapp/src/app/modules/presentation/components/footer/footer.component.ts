@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ImageSrc } from "@core/utils/flavored-image-definitions";
-import { FlavoredImagesService } from "@core/services/flavored-images.service";
+import { ImageSrc } from '@core/utils/flavored-image-definitions';
+import { FlavoredImagesService } from '@core/services/flavored-images.service';
 
 @Component({
 	selector: 'app-footer',

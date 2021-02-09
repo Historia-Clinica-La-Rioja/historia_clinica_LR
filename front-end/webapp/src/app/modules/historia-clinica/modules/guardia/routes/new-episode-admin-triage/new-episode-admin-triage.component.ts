@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ECAdministrativeDto, TriageAdministrativeDto } from "@api-rest/api-model";
+import { ECAdministrativeDto, TriageAdministrativeDto } from '@api-rest/api-model';
 import { NewEpisodeService } from '../../services/new-episode.service';
-import { EmergencyCareEpisodeService } from "@api-rest/services/emergency-care-episode.service";
-import { Router } from "@angular/router";
-import { SnackBarService } from "@presentation/services/snack-bar.service";
-import { ContextService } from "@core/services/context.service";
+import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
+import { Router } from '@angular/router';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { ContextService } from '@core/services/context.service';
 import { ROUTE_EMERGENCY_CARE } from '../../services/triage-definitions.service';
 
 @Component({

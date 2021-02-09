@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 
 import { InstitutionDto } from '@api-rest/api-model';
-import { environment } from "@environments/environment";
+import { environment } from '@environments/environment';
 
 @Injectable({
 	providedIn: 'root'

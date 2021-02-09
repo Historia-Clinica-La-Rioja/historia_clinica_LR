@@ -11,7 +11,7 @@ import { EpicrisisComponent } from './routes/epicrisis/epicrisis.component';
 import { EvaluacionClinicaDiagnosticosComponent } from './routes/evaluacion-clinica-diagnosticos/evaluacion-clinica-diagnosticos.component';
 import { InternacionesHomeComponent } from './routes/home/internaciones-home.component';
 import { InternacionPacienteComponent } from './routes/internacion-paciente/internacion-paciente.component';
-import { NewInternmentComponent } from "./routes/new-internment/new-internment.component";
+import { NewInternmentComponent } from './routes/new-internment/new-internment.component';
 import { NotaEvolucionComponent } from './routes/nota-evolucion/nota-evolucion.component';
 import { PatientDischargeComponent } from './routes/patient-discharge/patient-discharge.component';
 

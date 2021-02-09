@@ -2,7 +2,7 @@ import { Directive, ElementRef, Input, TemplateRef, ViewContainerRef } from '@an
 import { PermissionsService } from '@core/services/permissions.service';
 import { ERole } from '@api-rest/api-model';
 import { anyMatch } from '@core/utils/array.utils';
-import { getElementViewFunction } from "@core/utils/directive.utils";
+import { getElementViewFunction } from '@core/utils/directive.utils';
 
 @Directive({
 	selector: '[hasRole]'

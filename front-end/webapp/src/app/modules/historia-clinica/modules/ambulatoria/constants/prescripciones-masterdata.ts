@@ -1,15 +1,15 @@
 export const MEDICATION_STATUS = {
 	ACTIVE: {
-		id: "55561003",
-		description: "Activa"
+		id: '55561003',
+		description: 'Activa'
 	},
 	SUSPENDED: {
-		id: "385655000",
-		description: "Suspendida"
+		id: '385655000',
+		description: 'Suspendida'
 	},
 	STOPPED: {
-		id: "6155003",
-		description: "Finalizada"
+		id: '6155003',
+		description: 'Finalizada'
 	}
 };
 
@@ -21,15 +21,15 @@ export enum MedicationStatusChange {
 
 export const STUDY_STATUS = {
 	REGISTERED: {
-		id: "1",
-		description: "Activo"
+		id: '1',
+		description: 'Activo'
 	},
 	FINAL: {
-		id: "261782000",
-		description: "Completado"
+		id: '261782000',
+		description: 'Completado'
 	},
 	ERROR: {
-		id: "89925002",
-		description: "Eliminado"
+		id: '89925002',
+		description: 'Eliminado'
 	}
 };

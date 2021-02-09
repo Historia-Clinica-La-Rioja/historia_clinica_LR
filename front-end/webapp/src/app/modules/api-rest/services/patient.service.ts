@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from "rxjs";
-import { environment } from "@environments/environment";
-import { HttpClient } from "@angular/common/http";
+import { Observable, of } from 'rxjs';
+import { environment } from '@environments/environment';
+import { HttpClient } from '@angular/common/http';
 import {
 	APatientDto,
 	BMPatientDto,
@@ -9,7 +9,7 @@ import {
 	ReducedPatientDto,
 	PersonPhotoDto,
 	PatientPhotoDto
-} from "@api-rest/api-model";
+} from '@api-rest/api-model';
 import { DateFormat, momentFormat } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 

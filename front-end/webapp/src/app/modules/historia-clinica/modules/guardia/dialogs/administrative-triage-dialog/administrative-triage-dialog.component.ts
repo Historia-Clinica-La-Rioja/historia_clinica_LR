@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { TriageService } from "@api-rest/services/triage.service";
-import { TriageAdministrativeDto } from "@api-rest/api-model";
-import { SnackBarService } from "@presentation/services/snack-bar.service";
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { TriageService } from '@api-rest/services/triage.service';
+import { TriageAdministrativeDto } from '@api-rest/api-model';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
 	selector: 'app-administrative-triage-dialog',

@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {ContextService} from "@core/services/context.service";
-import { Observable, of } from "rxjs";
-import {environment} from "@environments/environment";
-import {DoctorsOfficeDto} from "@api-rest/api-model";
+import {HttpClient} from '@angular/common/http';
+import {ContextService} from '@core/services/context.service';
+import { Observable, of } from 'rxjs';
+import {environment} from '@environments/environment';
+import {DoctorsOfficeDto} from '@api-rest/api-model';
 
 
 const BASIC_URL_PREFIX = '/institutions';

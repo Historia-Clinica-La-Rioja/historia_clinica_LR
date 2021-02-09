@@ -20,9 +20,9 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {SnackBarService} from '@presentation/services/snack-bar.service';
 import {ContextService} from '@core/services/context.service';
 import {Alergia, AlergiasNuevaConsultaService} from '../../services/alergias-nueva-consulta.service';
-import {HealthConditionService} from "@api-rest/services/healthcondition.service";
-import {ClinicalSpecialtyService} from "@api-rest/services/clinical-specialty.service";
-import {AppointmentsService} from "@api-rest/services/appointments.service";
+import {HealthConditionService} from '@api-rest/services/healthcondition.service';
+import {ClinicalSpecialtyService} from '@api-rest/services/clinical-specialty.service';
+import {AppointmentsService} from '@api-rest/services/appointments.service';
 
 @Component({
 	selector: 'app-nueva-consulta-page',

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { TriageAdministrativeDto, TriageDto } from "@api-rest/api-model";
+import { TriageAdministrativeDto, TriageDto } from '@api-rest/api-model';
 
 @Component({
 	selector: 'app-administrative-triage',

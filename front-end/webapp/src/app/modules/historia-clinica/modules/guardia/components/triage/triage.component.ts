@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { DoctorsOfficeService } from "@api-rest/services/doctors-office.service";
-import { DoctorsOfficeDto } from "@api-rest/api-model";
-import { TriageCategoryDto, TriageMasterDataService } from "@api-rest/services/triage-master-data.service";
-import { MatOptionSelectionChange } from "@angular/material/core";
-import { Observable } from "rxjs";
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DoctorsOfficeService } from '@api-rest/services/doctors-office.service';
+import { DoctorsOfficeDto } from '@api-rest/api-model';
+import { TriageCategoryDto, TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
+import { MatOptionSelectionChange } from '@angular/material/core';
+import { Observable } from 'rxjs';
 import {SECTOR_AMBULATORIO, TRIAGE_LEVEL_V_ID} from '../../constants/masterdata';
 
 @Component({

@@ -11,7 +11,7 @@ import { EditPatientComponent } from './routes/edit-patient/edit-patient.compone
 import { HomeComponent } from './routes/home/home.component';
 import { NewPatientComponent } from './routes/new-patient/new-patient.component';
 import { NewTemporaryPatientComponent } from './routes/new-temporary-patient/new-temporary-patient.component';
-import { ProfileComponent } from "./routes/profile/profile.component";
+import { ProfileComponent } from './routes/profile/profile.component';
 import { SearchComponent } from './routes/search/search.component';
 
 const routes: Routes = [

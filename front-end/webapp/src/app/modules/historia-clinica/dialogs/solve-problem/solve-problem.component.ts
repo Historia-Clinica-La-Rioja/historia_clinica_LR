@@ -2,13 +2,13 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {HCEPersonalHistoryDto, HealthConditionNewConsultationDto, MasterDataInterface} from '@api-rest/api-model';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {SnackBarService} from '@presentation/services/snack-bar.service';
-import {MAT_DIALOG_DATA, MatDialog} from "@angular/material/dialog";
-import {ConfirmDialogComponent} from "@core/dialogs/confirm-dialog/confirm-dialog.component";
-import {HealthConditionService} from "@api-rest/services/healthcondition.service";
-import {ProblemasNuevaConsultaService} from "../../modules/ambulatoria/services/problemas-nueva-consulta.service";
-import {SnomedService} from "../../services/snomed.service";
-import {HEALTH_CLINICAL_STATUS} from "../../modules/internacion/constants/ids";
-import {OutpatientConsultationService} from "@api-rest/services/outpatient-consultation.service";
+import {MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
+import {ConfirmDialogComponent} from '@core/dialogs/confirm-dialog/confirm-dialog.component';
+import {HealthConditionService} from '@api-rest/services/healthcondition.service';
+import {ProblemasNuevaConsultaService} from '../../modules/ambulatoria/services/problemas-nueva-consulta.service';
+import {SnomedService} from '../../services/snomed.service';
+import {HEALTH_CLINICAL_STATUS} from '../../modules/internacion/constants/ids';
+import {OutpatientConsultationService} from '@api-rest/services/outpatient-consultation.service';
 import {hasError} from '@core/utils/form.utils';
 
 @Component({
@@ -61,7 +61,7 @@ export class SolveProblemComponent implements OnInit {
 	initializeFields(p: HealthConditionNewConsultationDto){
 		this.form.controls.snomed.setValue(p.snomed.pt);
 		this.form.controls.cronico.setValue(p.isChronic);
-		this.form.controls.fechaInicio.setValue(new Date(p.startDate).toLocaleDateString('es-AR', {timeZone: 'UTC', year:'numeric', month:"2-digit", day:"2-digit"}));
+		this.form.controls.fechaInicio.setValue(new Date(p.startDate).toLocaleDateString('es-AR', {timeZone: 'UTC', year:'numeric', month:'2-digit', day:'2-digit'}));
 	}
 
 	solveProblem() {
@@ -118,7 +118,7 @@ export class SolveProblemComponent implements OnInit {
 
 
 	toFormatDate = (dateStr) => {
-		const [day, month, year] = dateStr.split("/")
+		const [day, month, year] = dateStr.split('/')
 		return new Date(year, month - 1, day)
 	}
 }

@@ -21,22 +21,22 @@ export class SettingsComponent implements OnInit {
 		if(file) {
 			this.settingsService.uploadFile(fileName, file).subscribe(data => {
 				if (data) {
-					this.snackBarService.showSuccess("configuracion.logos.toast_messages.UPDATE_IMAGE_SUCCESS");
+					this.snackBarService.showSuccess('configuracion.logos.toast_messages.UPDATE_IMAGE_SUCCESS');
 				} else {
-					this.snackBarService.showError("configuracion.logos.toast_messages.UPDATE_IMAGE_ERROR");
+					this.snackBarService.showError('configuracion.logos.toast_messages.UPDATE_IMAGE_ERROR');
 				}
 			})
 		} else {
-			this.snackBarService.showError("configuracion.logos.toast_messages.VALID_IMAGE_ERROR");
+			this.snackBarService.showError('configuracion.logos.toast_messages.VALID_IMAGE_ERROR');
 		}
 	}
 
 	restore(fileName: string): void {
 		this.settingsService.deleteFile(fileName).subscribe(data => {
 			if (data) {
-				this.snackBarService.showSuccess("configuracion.logos.toast_messages.UPDATE_IMAGE_SUCCESS");
+				this.snackBarService.showSuccess('configuracion.logos.toast_messages.UPDATE_IMAGE_SUCCESS');
 			} else {
-				this.snackBarService.showError("configuracion.logos.toast_messages.UPDATE_IMAGE_ERROR");
+				this.snackBarService.showError('configuracion.logos.toast_messages.UPDATE_IMAGE_ERROR');
 			}
 		});
 	}

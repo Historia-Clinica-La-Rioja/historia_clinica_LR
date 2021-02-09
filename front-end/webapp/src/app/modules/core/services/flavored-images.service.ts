@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { PublicService } from "@api-rest/services/public.service";
-import { Observable, of } from "rxjs";
+import { PublicService } from '@api-rest/services/public.service';
+import { Observable, of } from 'rxjs';
 import {
 	FLAVORED_FOOTER_IMAGES,
 	FLAVORED_LOGOS,
 	FLAVORED_SECONDARY_LOGOS,
 	FlavoredImagesObj,
 	ImageSrc
-} from "@core/utils/flavored-image-definitions";
-import { map } from "rxjs/operators";
+} from '@core/utils/flavored-image-definitions';
+import { map } from 'rxjs/operators';
 
 const getLogosPath = (flavor: string) => `assets/flavors/${flavor}/images/logos/logo_HSI.svg`;
 const getHeaderSecondaryLogosPath = (flavor: string) => `assets/flavors/${flavor}/images/logos/header_secondary_logo.svg`;

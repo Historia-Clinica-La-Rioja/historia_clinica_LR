@@ -29,8 +29,8 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit {
 
 	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 
-	@ViewChild("intervalHoursInput") intervalHoursInput: ElementRef;
-	@ViewChild("administrationTimeDaysInput") administrationTimeDaysInput: ElementRef;
+	@ViewChild('intervalHoursInput') intervalHoursInput: ElementRef;
+	@ViewChild('administrationTimeDaysInput') administrationTimeDaysInput: ElementRef;
 
 	private MIN_INPUT_LENGTH = 1;
 

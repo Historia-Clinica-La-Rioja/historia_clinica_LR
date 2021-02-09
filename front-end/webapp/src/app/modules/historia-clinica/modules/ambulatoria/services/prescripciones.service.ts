@@ -163,6 +163,6 @@ export class PrescripcionesService {
 }
 
 export const enum PrescriptionTypes {
-    MEDICATION = "Medication",
-    STUDY = "Study",
+    MEDICATION = 'Medication',
+    STUDY = 'Study',
 }

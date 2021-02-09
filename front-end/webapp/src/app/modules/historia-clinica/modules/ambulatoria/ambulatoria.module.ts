@@ -15,7 +15,7 @@ import { HistoriaClinicaModule } from '../../historia-clinica.module';
 import { AplicarVacunaComponent } from './dialogs/aplicar-vacuna/aplicar-vacuna.component';
 import { AppMaterialModule } from '../../../material/app.material.module';
 import { NuevaConsultaComponent as OldComponentNuevaConsulta } from './routes/nueva-consulta/nueva-consulta.component';
-import {SolveProblemComponent} from "../../dialogs/solve-problem/solve-problem.component";
+import {SolveProblemComponent} from '../../dialogs/solve-problem/solve-problem.component';
 import { HistoricalProblemsFiltersComponent } from './components/historical-problems-filters/historical-problems-filters.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { PortalModule } from '@angular/cdk/portal';
@@ -31,7 +31,7 @@ import { CardIndicacionesComponent } from './components/ordenes/card-indicacione
 import { ItemPrescripcionesComponent } from './components/ordenes/item-prescripciones/item-prescripciones.component';
 import { CompletarEstudioComponent } from './dialogs/ordenes-prescripciones/completar-estudio/completar-estudio.component';
 import { VerResultadosEstudioComponent } from './dialogs/ordenes-prescripciones/ver-resultados-estudio/ver-resultados-estudio.component';
-import {ExternalSummaryCardComponent} from "@presentation/components/external-summary-card/external-summary-card.component";
+import {ExternalSummaryCardComponent} from '@presentation/components/external-summary-card/external-summary-card.component';
 
 
 @NgModule({

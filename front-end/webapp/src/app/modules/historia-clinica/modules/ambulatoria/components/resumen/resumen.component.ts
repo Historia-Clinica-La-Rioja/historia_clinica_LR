@@ -10,14 +10,14 @@ import {
 	MedicationInteroperabilityDto,
 	OutpatientFamilyHistoryDto,
 	PatientSummaryDto
-} from "@api-rest/api-model";
-import {ActivatedRoute} from "@angular/router";
-import {Observable} from "rxjs";
-import {HceGeneralStateService} from "@api-rest/services/hce-general-state.service";
-import {ANTECEDENTES_FAMILIARES, PROBLEMAS_ANTECEDENTES} from "../../../../constants/summaries";
+} from '@api-rest/api-model';
+import {ActivatedRoute} from '@angular/router';
+import {Observable} from 'rxjs';
+import {HceGeneralStateService} from '@api-rest/services/hce-general-state.service';
+import {ANTECEDENTES_FAMILIARES, PROBLEMAS_ANTECEDENTES} from '../../../../constants/summaries';
 import {AmbulatoriaSummaryFacadeService} from '../../services/ambulatoria-summary-facade.service';
-import {TableModel} from "@presentation/components/table/table.component";
-import {SnackBarService} from "@presentation/services/snack-bar.service";
+import {TableModel} from '@presentation/components/table/table.component';
+import {SnackBarService} from '@presentation/services/snack-bar.service';
 
 @Component({
 	selector: 'app-resumen',

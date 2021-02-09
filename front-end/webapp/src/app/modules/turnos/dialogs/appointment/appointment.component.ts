@@ -11,13 +11,13 @@ import { ERole } from '@api-rest/api-model';
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
 import { getError, hasError, processErrors } from '@core/utils/form.utils';
 import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
-import { MapperService } from "@core/services/mapper.service";
+import { MapperService } from '@core/services/mapper.service';
 import {
 	determineIfIsHealthInsurance,
 	HealthInsurance,
 	PatientMedicalCoverage, PrivateHealthInsurance
-} from "@core/dialogs/medical-coverage/medical-coverage.component";
-import { map, take } from "rxjs/operators";
+} from '@core/dialogs/medical-coverage/medical-coverage.component';
+import { map, take } from 'rxjs/operators';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PermissionsService } from '@core/services/permissions.service';
 import { Observable } from 'rxjs';

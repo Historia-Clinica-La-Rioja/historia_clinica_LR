@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs";
-import { environment } from "@environments/environment";
-import { BedDto, PatientBedRelocationDto, BedSummaryDto, BedInfoDto } from "@api-rest/api-model";
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from '@environments/environment';
+import { BedDto, PatientBedRelocationDto, BedSummaryDto, BedInfoDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 
 @Injectable({

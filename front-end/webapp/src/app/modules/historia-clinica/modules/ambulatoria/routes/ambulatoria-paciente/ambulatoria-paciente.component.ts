@@ -11,9 +11,9 @@ import {DockPopupRef} from '@presentation/services/dock-popup-ref';
 import {AmbulatoriaSummaryFacadeService} from '../../services/ambulatoria-summary-facade.service';
 import {HistoricalProblemsFacadeService} from '../../services/historical-problems-facade.service';
 import {FeatureFlagService} from '@core/services/feature-flag.service';
-import {BasicPatientDto, OrganizationDto, PatientSummaryDto, PersonPhotoDto} from "@api-rest/api-model";
-import {InteroperabilityBusService} from "@api-rest/services/interoperability-bus.service";
-import {SnackBarService} from "@presentation/services/snack-bar.service";
+import {BasicPatientDto, OrganizationDto, PatientSummaryDto, PersonPhotoDto} from '@api-rest/api-model';
+import {InteroperabilityBusService} from '@api-rest/services/interoperability-bus.service';
+import {SnackBarService} from '@presentation/services/snack-bar.service';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import {
 	AppFeature,

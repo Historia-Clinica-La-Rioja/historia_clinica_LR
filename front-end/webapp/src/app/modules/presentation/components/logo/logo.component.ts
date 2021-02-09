@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FlavoredImagesService } from "@core/services/flavored-images.service";
-import { ImageSrc } from "@core/utils/flavored-image-definitions";
+import { FlavoredImagesService } from '@core/services/flavored-images.service';
+import { ImageSrc } from '@core/utils/flavored-image-definitions';
 import { Observable } from 'rxjs';
 
 @Component({

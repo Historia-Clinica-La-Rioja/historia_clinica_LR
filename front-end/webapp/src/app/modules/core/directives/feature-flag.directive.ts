@@ -1,6 +1,6 @@
 import { Directive, Input, TemplateRef, ViewContainerRef } from '@angular/core';
-import { FeatureFlagService } from "@core/services/feature-flag.service";
-import { getElementViewFunction } from "@core/utils/directive.utils";
+import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { getElementViewFunction } from '@core/utils/directive.utils';
 
 /**
  *  Example:

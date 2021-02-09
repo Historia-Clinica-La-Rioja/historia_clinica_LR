@@ -1,7 +1,7 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { APatientDto, BMPatientDto, GenderDto, IdentificationTypeDto, PatientMedicalCoverageDto } from '@api-rest/api-model';
-import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID } from "@core/utils/form.utils";
+import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID } from '@core/utils/form.utils';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PatientService } from '@api-rest/services/patient.service';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
@@ -9,7 +9,7 @@ import { PersonMasterDataService } from '@api-rest/services/person-master-data.s
 import { Moment } from 'moment';
 import * as moment from 'moment';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { ContextService } from "@core/services/context.service";
+import { ContextService } from '@core/services/context.service';
 import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.utils';
 import { MatDialog } from '@angular/material/dialog';
 import { MedicalCoverageComponent, PatientMedicalCoverage } from 'src/app/modules/core/dialogs/medical-coverage/medical-coverage.component';
