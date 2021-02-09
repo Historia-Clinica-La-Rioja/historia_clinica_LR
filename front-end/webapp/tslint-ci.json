@@ -106,8 +106,7 @@
 	"no-eval": false,
 	"radix": false,
 	"object-literal-shorthand": false,
-	"no-shadowed-variable": false,
-	"arrow-return-shorthand": false
+	"no-shadowed-variable": false
   },
   "rulesDirectory": [
     "codelyzer"

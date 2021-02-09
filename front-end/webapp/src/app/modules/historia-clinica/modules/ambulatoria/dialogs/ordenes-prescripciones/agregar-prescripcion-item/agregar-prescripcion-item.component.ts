@@ -46,10 +46,10 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit {
 		this.formConfiguration();
 
 		this.hceGeneralStateService.getActiveProblems(this.data.patientId).subscribe((activeProblems: HCEPersonalHistoryDto[]) => {
-			let activeProblemsList = activeProblems.map(problem => {return {id: problem.id, description: problem.snomed.pt, sctId: problem.snomed.sctid}});
+			let activeProblemsList = activeProblems.map(problem => ({id: problem.id, description: problem.snomed.pt, sctId: problem.snomed.sctid}));
 
 			this.hceGeneralStateService.getChronicConditions(this.data.patientId).subscribe((chronicProblems: HCEPersonalHistoryDto[]) => {
-				let chronicProblemsList = chronicProblems.map(problem => {return {id: problem.id, description: problem.snomed.pt,  sctId: problem.snomed.sctid}});
+				let chronicProblemsList = chronicProblems.map(problem => ({id: problem.id, description: problem.snomed.pt,  sctId: problem.snomed.sctid}));
 				this.healthProblemOptions = activeProblemsList.concat(chronicProblemsList);
 			});
 
