@@ -27,12 +27,14 @@ export class SearchCreateComponent implements OnInit {
 	public hasError = hasError;
 	private readonly routePrefix;
 
-	constructor(private formBuilder: FormBuilder,
+	constructor(
+		private formBuilder: FormBuilder,
 		private router: Router,
 		private patientService: PatientService,
 		private patientMasterDataService: PatientMasterDataService,
 		private personMasterDataService: PersonMasterDataService,
-		private contextService: ContextService) {
+		private contextService: ContextService,
+	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 

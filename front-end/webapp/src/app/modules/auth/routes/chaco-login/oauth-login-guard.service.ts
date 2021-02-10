@@ -11,8 +11,10 @@ export class OauthLoginGuardService implements CanActivate {
 	) {
 	}
 
-	canActivate(route: ActivatedRouteSnapshot,
-		state: RouterStateSnapshot): Observable<boolean | UrlTree> {
+	canActivate(
+		route: ActivatedRouteSnapshot,
+		state: RouterStateSnapshot,
+	): Observable<boolean | UrlTree> {
 		return this.authService.getOauthConfig().pipe(
 			map(oauthConfig => {
 				if (oauthConfig.enabled && oauthConfig.loginUrl) {

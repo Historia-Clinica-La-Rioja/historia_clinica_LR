@@ -28,8 +28,10 @@ export class PediatricTriageComponent implements OnInit {
 
 	hasError = hasError;
 	minValue = VITAL_SIGNS.min_value;
-	constructor(private formBuilder: FormBuilder,
-		private readonly triageMasterDataService: TriageMasterDataService) {
+	constructor(
+		private formBuilder: FormBuilder,
+		private readonly triageMasterDataService: TriageMasterDataService,
+	) {
 	}
 
 	ngOnInit(): void {

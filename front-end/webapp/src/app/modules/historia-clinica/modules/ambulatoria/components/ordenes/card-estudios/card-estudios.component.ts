@@ -151,7 +151,7 @@ export class CardEstudiosComponent implements OnInit {
 				width: '35%',
 			});
 
-			newCompleteStudy.afterClosed().subscribe((completed: any) => {
+		newCompleteStudy.afterClosed().subscribe((completed: any) => {
 				if (completed) {
 					if (completed.completed) {
 						this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.COMPLETE_STUDY_SUCCESS');

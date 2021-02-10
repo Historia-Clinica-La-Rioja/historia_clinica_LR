@@ -35,14 +35,16 @@ export class ProfileComponent implements OnInit {
 	private readonly routePrefix;
 	public internmentEpisode;
 
-	constructor(private patientService: PatientService,
+	constructor(
+		private patientService: PatientService,
 		private mapperService: MapperService,
 		private route: ActivatedRoute,
 		private router: Router,
 		private personService: PersonService,
 		private contextService: ContextService,
 		private internmentPatientService: InternmentPatientService,
-		private readonly patientMedicalCoverageService: PatientMedicalCoverageService) {
+		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
+	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 

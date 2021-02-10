@@ -21,9 +21,11 @@ export class TriageComponent implements OnInit {
 	doctorsOffices$: Observable<DoctorsOfficeDto[]>;
 	triageCategories: TriageCategoryDto[];
 
-	constructor(private formBuilder: FormBuilder,
+	constructor(
+		private formBuilder: FormBuilder,
 		private doctorsOfficeService: DoctorsOfficeService,
-		private triageMasterDataService: TriageMasterDataService) {
+		private triageMasterDataService: TriageMasterDataService,
+	) {
 	}
 
 	ngOnInit(): void {

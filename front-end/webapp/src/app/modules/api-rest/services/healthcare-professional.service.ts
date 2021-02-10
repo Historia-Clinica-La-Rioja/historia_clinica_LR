@@ -32,8 +32,10 @@ const PROFESSIONALS = [
 })
 export class HealthcareProfessionalService {
 
-	constructor(private http: HttpClient,
-				private contextService: ContextService) {
+	constructor(
+		private http: HttpClient,
+		private contextService: ContextService,
+	) {
 	}
 
 	getAll(): Observable<ProfessionalDto[]> {

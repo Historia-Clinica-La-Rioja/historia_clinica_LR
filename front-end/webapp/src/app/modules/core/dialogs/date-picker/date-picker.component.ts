@@ -13,11 +13,12 @@ export class DatePickerComponent implements OnInit {
 	okBottonColor: ThemePalette;
 	form: FormGroup;
 
-	constructor(public dialogRef: MatDialogRef<DatePickerComponent>,
+	constructor(
+		public dialogRef: MatDialogRef<DatePickerComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: {
 			title: string, okButtonLabel: string,
 			cancelButtonLabel: string, okBottonColor?: ThemePalette,
-			minDate?, maxDate?
+			minDate?, maxDate?,
 		},
 		private formBuilder: FormBuilder,
 	) { }

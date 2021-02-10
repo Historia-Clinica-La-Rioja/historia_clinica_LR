@@ -44,7 +44,8 @@ export class NewTemporaryPatientComponent implements OnInit {
 	private comments;
 	private readonly routePrefix;
 
-	constructor(private formBuilder: FormBuilder,
+	constructor(
+		private formBuilder: FormBuilder,
 		private router: Router,
 		private el: ElementRef,
 		private patientService: PatientService,
@@ -55,7 +56,8 @@ export class NewTemporaryPatientComponent implements OnInit {
 		private contextService: ContextService,
 		private dialog: MatDialog,
 		private mapperService: MapperService,
-		private readonly patientMedicalCoverageService: PatientMedicalCoverageService) {
+		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
+	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 
@@ -137,7 +139,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 				.subscribe(patientId => {
 					if (this.patientMedicalCoveragesToAdd) {
 						const patientMedicalCoveragesDto: PatientMedicalCoverageDto[] =
-						this.patientMedicalCoveragesToAdd.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
+							this.patientMedicalCoveragesToAdd.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
 						this.patientMedicalCoverageService.addPatientMedicalCoverages
 							(patientId, patientMedicalCoveragesDto).subscribe();
 					}

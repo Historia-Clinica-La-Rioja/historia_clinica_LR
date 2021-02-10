@@ -13,8 +13,10 @@ const BASIC_URL_SUFIX = '/internments/patients';
 })
 export class InternmentPatientService {
 
-	constructor(private http: HttpClient,
-				private contextService: ContextService) {
+	constructor(
+		private http: HttpClient,
+		private contextService: ContextService,
+	) {
 	}
 
 	getAllInternmentPatientsBasicData(): Observable<InternmentPatientDto[]> {

@@ -94,7 +94,6 @@
 	"no-var-keyword": false,
 	"variable-name": false,
 	"triple-equals": false,
-	"align": false,
 	"no-angle-bracket-type-assertion": false,
 	"no-eval": false,
 	"radix": false,

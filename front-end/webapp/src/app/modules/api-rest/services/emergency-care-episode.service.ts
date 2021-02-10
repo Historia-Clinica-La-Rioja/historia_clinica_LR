@@ -14,8 +14,10 @@ const BASIC_URL_SUFIX = '/emergency-care';
 })
 export class EmergencyCareEpisodeService {
 
-	constructor(private http: HttpClient,
-		private contextService: ContextService) {
+	constructor(
+		private http: HttpClient,
+		private contextService: ContextService,
+	) {
 	}
 
 	getAll(): Observable<EmergencyCareListDto[]> {

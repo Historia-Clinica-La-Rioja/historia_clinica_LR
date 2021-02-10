@@ -43,7 +43,8 @@ export class NewPatientComponent implements OnInit {
 	public personPhoto: PersonPhotoDto;
 	patientMedicalCoveragesToAdd: PatientMedicalCoverage[];
 
-	constructor(private formBuilder: FormBuilder,
+	constructor(
+		private formBuilder: FormBuilder,
 		private router: Router,
 		private el: ElementRef,
 		private patientService: PatientService,
@@ -54,7 +55,8 @@ export class NewPatientComponent implements OnInit {
 		private contextService: ContextService,
 		private dialog: MatDialog,
 		private mapperService: MapperService,
-		private patientMedicalCoverageService: PatientMedicalCoverageService) {
+		private patientMedicalCoverageService: PatientMedicalCoverageService,
+	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 
@@ -102,7 +104,7 @@ export class NewPatientComponent implements OnInit {
 				});
 				this.lockFormField(params);
 				this.patientType = params.typeId;
-				this.personPhoto = { imageData: params.photo ? params.photo : null};
+				this.personPhoto = { imageData: params.photo ? params.photo : null };
 			});
 
 		this.personMasterDataService.getGenders()
@@ -161,7 +163,7 @@ export class NewPatientComponent implements OnInit {
 						const patientMedicalCoveragesDto: PatientMedicalCoverageDto[] =
 							this.patientMedicalCoveragesToAdd.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
 						this.patientMedicalCoverageService.addPatientMedicalCoverages
-							(patientId, patientMedicalCoveragesDto ).subscribe();
+							(patientId, patientMedicalCoveragesDto).subscribe();
 					}
 					this.router.navigate([this.routePrefix + ROUTE_PROFILE + patientId]);
 					this.snackBarService.showSuccess('pacientes.new.messages.SUCCESS');

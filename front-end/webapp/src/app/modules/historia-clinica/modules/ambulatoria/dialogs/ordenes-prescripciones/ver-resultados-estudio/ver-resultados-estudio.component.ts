@@ -17,12 +17,12 @@ export class VerResultadosEstudioComponent implements OnInit {
 	observations: string;
 
   	constructor(
-	  	private prescripcionesService: PrescripcionesService,
+		private prescripcionesService: PrescripcionesService,
 		public dialogRef: MatDialogRef<CompletarEstudioComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: {
 			diagnosticReport: DiagnosticReportInfoDto,
 			patientId: number,
-		}
+		},
   	) { }
 
 	ngOnInit(): void {

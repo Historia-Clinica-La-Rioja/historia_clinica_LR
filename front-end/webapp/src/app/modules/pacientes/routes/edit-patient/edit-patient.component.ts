@@ -50,7 +50,8 @@ export class EditPatientComponent implements OnInit {
 
 	private medicalCoverages: PatientMedicalCoverage[];
 
-	constructor(private formBuilder: FormBuilder,
+	constructor(
+		private formBuilder: FormBuilder,
 		private router: Router,
 		private el: ElementRef,
 		private patientService: PatientService,

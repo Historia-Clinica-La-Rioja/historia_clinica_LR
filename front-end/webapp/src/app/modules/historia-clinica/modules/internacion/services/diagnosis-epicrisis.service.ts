@@ -42,9 +42,12 @@ export class DiagnosisEpicrisisService {
 	private healthClinicalStatus;
 	private verifications;
 
-	constructor(private readonly internacionMasterDataService: InternacionMasterDataService,
-				private readonly internmentStateService: InternmentStateService,
-				private readonly tableService: TableService, private readonly internmentEpisodeId) {
+	constructor(
+		private readonly internacionMasterDataService: InternacionMasterDataService,
+		private readonly internmentStateService: InternmentStateService,
+		private readonly tableService: TableService,
+		private readonly internmentEpisodeId,
+	) {
 
 		const healthClinicalMasterData$ = this.internacionMasterDataService.getHealthClinical();
 		healthClinicalMasterData$.subscribe(healthClinical => {

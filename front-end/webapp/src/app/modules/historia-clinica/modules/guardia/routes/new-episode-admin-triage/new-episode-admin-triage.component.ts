@@ -18,11 +18,13 @@ export class NewEpisodeAdminTriageComponent implements OnInit {
 	private emergencyCareDto = {} as ECAdministrativeDto;
 	private readonly routePrefix;
 
-	constructor(private readonly newEpisodeService: NewEpisodeService,
+	constructor(
+		private readonly newEpisodeService: NewEpisodeService,
 		private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService,
 		private router: Router,
 		private snackBarService: SnackBarService,
-		private contextService: ContextService) {
+		private contextService: ContextService,
+	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId;
 	}
 

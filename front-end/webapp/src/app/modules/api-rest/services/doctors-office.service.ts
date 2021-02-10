@@ -14,8 +14,10 @@ const BASIC_URL_SUFIX = '/doctorsOffice';
 })
 export class DoctorsOfficeService {
 
-	constructor(private http: HttpClient,
-		private contextService: ContextService) {
+	constructor(
+		private http: HttpClient,
+		private contextService: ContextService,
+	) {
 	}
 
 	getAll(sectorId: number): Observable<DoctorsOfficeDto[]> {

@@ -13,8 +13,10 @@ const BASIC_URL_SUFIX = '/emergency-care/episodes';
 })
 export class EmergencyCareEpisodeStateService {
 
-	constructor(private http: HttpClient,
-				private contextService: ContextService) {
+	constructor(
+		private http: HttpClient,
+		private contextService: ContextService,
+	) {
 	}
 
 	changeState(episodeId: number, emergencyCareEpisodeStateId: number, doctorsOfficeId?: number): Observable<boolean> {
