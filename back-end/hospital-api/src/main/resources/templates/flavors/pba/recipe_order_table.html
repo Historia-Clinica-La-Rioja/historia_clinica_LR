@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+
+    <th:block th:include="fragments/recipe_order_fragment_table.html :: headerfiles"></th:block>
+</head>
+<body>
+    <div class="container">
+            <div th:replace="fragments/recipe_order_fragment_table.html :: data"></div>
+    </div>
+</body>
+<footer>
+</footer>
+</html>
+
