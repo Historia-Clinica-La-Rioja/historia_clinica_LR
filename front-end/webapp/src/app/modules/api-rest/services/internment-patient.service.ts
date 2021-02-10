@@ -22,7 +22,7 @@ export class InternmentPatientService {
 		return this.http.get<InternmentPatientDto[]>(url);
 	}
 
-	internmentEpisodeIdInProcess(patientId: number) : Observable<InternmentEpisodeProcessDto> {
+	internmentEpisodeIdInProcess(patientId: number): Observable<InternmentEpisodeProcessDto> {
 		let url = `${environment.apiBase}` + BASIC_URL_PREFIX + `/${this.contextService.institutionId}` + BASIC_URL_SUFIX  + `/${patientId}` + `/internmentEpisodeIdInProcess/`;
 		return this.http.get<InternmentEpisodeProcessDto>(url);
 	}

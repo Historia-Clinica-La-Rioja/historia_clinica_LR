@@ -33,7 +33,7 @@ export class BedService {
 		return this.http.get<PatientBedRelocationDto>(url);
 	}
 
-	relocatePatientBed(patientBedRelocationDto : PatientBedRelocationDto): Observable<PatientBedRelocationDto> {
+	relocatePatientBed(patientBedRelocationDto: PatientBedRelocationDto): Observable<PatientBedRelocationDto> {
 		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/bed/relocation`;
 		 return this.http.post<PatientBedRelocationDto>(url, patientBedRelocationDto);
 	}

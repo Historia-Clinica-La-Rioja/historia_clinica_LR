@@ -95,7 +95,6 @@
 	"variable-name": false,
 	"triple-equals": false,
 	"align": false,
-	"typedef-whitespace": false,
 	"no-angle-bracket-type-assertion": false,
 	"no-eval": false,
 	"radix": false,

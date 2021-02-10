@@ -22,7 +22,7 @@ export class CardEstudiosComponent implements OnInit {
 
 	public readonly estudios = ESTUDIOS;
 	public readonly STUDY_STATUS = STUDY_STATUS;
-	public diagnosticReportsInfo : DiagnosticReportInfoDto[];
+	public diagnosticReportsInfo: DiagnosticReportInfoDto[];
 	public hideFilterPanel = false;
 	public categories = [];
 	public diagnosticReportsStatus = [];
