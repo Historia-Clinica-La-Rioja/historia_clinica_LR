@@ -61,7 +61,7 @@ export class CardMedicacionesComponent implements OnInit {
 
 		this.medicacionesService.medicaments$.subscribe(response => {
 			this.medicationsInfo = response;
-			const checkboxArray = this.medicationCheckboxes.controls['checkboxArray'] as FormArray;
+			const checkboxArray = this.medicationCheckboxes.controls.checkboxArray as FormArray;
 
 			this.medicationsInfo.forEach(m => {
 				checkboxArray.push(this.formBuilder.group({checked: false}));
@@ -192,7 +192,7 @@ export class CardMedicacionesComponent implements OnInit {
 	}
 
 	selectAllMedication(checked: boolean) {
-		const checkboxArray = this.medicationCheckboxes.controls['checkboxArray'] as FormArray;
+		const checkboxArray = this.medicationCheckboxes.controls.checkboxArray as FormArray;
 
 		checkboxArray.controls.forEach(control => {
 			control.setValue({checked: checked});

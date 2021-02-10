@@ -41,13 +41,13 @@ export class RemoveDiagnosisComponent implements OnInit {
 			statusId: [null]
 		});
 
-		this.removeForm.controls['verificationId'].valueChanges.subscribe(
+		this.removeForm.controls.verificationId.valueChanges.subscribe(
 			value => {
 				if (value === this.DESCARTADO) {
-					this.removeForm.controls['statusId'].setValidators(Validators.required);
+					this.removeForm.controls.statusId.setValidators(Validators.required);
 				} else {
-					this.removeForm.controls['statusId'].setValidators(null);
-					this.removeForm.controls['statusId'].setValue(HEALTH_CLINICAL_STATUS.INACTIVO);
+					this.removeForm.controls.statusId.setValidators(null);
+					this.removeForm.controls.statusId.setValue(HEALTH_CLINICAL_STATUS.INACTIVO);
 				}
 			}
 		);
@@ -64,8 +64,8 @@ export class RemoveDiagnosisComponent implements OnInit {
 	createEvolutionNote() {
 		if (this.removeForm.valid) {
 			this.loading = true;
-			this.diagnosis.verificationId = this.removeForm.controls['verificationId'].value;
-			this.diagnosis.statusId = this.removeForm.controls['statusId'].value;
+			this.diagnosis.verificationId = this.removeForm.controls.verificationId.value;
+			this.diagnosis.statusId = this.removeForm.controls.statusId.value;
 			const evolutionNote: EvolutionNoteDto = {
 				confirmed: true,
 				diagnosis: [this.diagnosis],

@@ -29,16 +29,16 @@ export class EffectiveTimeDialogComponent implements OnInit {
 			time: [momentFormat(this.data.datetime, DateFormat.HOUR_MINUTE), [Validators.required, futureTimeValidation]],
 		});
 
-		this.timeForm.controls['date'].valueChanges.subscribe(
+		this.timeForm.controls.date.valueChanges.subscribe(
 			(selectedDate: Moment) => {
 				const selectedDateString = momentFormat(selectedDate, DateFormat.API_DATE);
 				const todayDateString = momentFormat(this.today, DateFormat.API_DATE);
 				if (selectedDateString === todayDateString) {
-					this.timeForm.controls['time'].setValidators([Validators.required, futureTimeValidation]);
-					this.timeForm.controls['time'].updateValueAndValidity();
+					this.timeForm.controls.time.setValidators([Validators.required, futureTimeValidation]);
+					this.timeForm.controls.time.updateValueAndValidity();
 				} else {
-					this.timeForm.controls['time'].setValidators(Validators.required);
-					this.timeForm.controls['time'].updateValueAndValidity();
+					this.timeForm.controls.time.setValidators(Validators.required);
+					this.timeForm.controls.time.updateValueAndValidity();
 				}
 			}
 		);
@@ -46,8 +46,8 @@ export class EffectiveTimeDialogComponent implements OnInit {
 
 	set(): void {
 		if (this.timeForm.valid) {
-			const newTime: string = this.timeForm.controls['time'].value;
-			const newDatetime: Moment = this.timeForm.controls['date'].value;
+			const newTime: string = this.timeForm.controls.time.value;
+			const newDatetime: Moment = this.timeForm.controls.date.value;
 			newDatetime.set({
 				hour: +newTime.substr(0, 2),
 				minute: +newTime.substr(3, 2),

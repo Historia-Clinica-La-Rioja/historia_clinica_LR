@@ -78,7 +78,7 @@ export class NewInternmentComponent implements OnInit {
 	ngOnInit(): void {
 
 		this.route.queryParams.subscribe(params => {
-			this.patientId = Number(params['patientId']);
+			this.patientId = Number(params.patientId);
 			this.patientService.getPatientCompleteData<CompletePatientDto>(this.patientId)
 				.subscribe(completeData => {
 					this.patientTypeData = this.mapperService.toPatientTypeData(completeData.patientType);
