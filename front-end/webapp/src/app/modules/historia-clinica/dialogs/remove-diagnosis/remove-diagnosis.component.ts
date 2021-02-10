@@ -17,7 +17,7 @@ export class RemoveDiagnosisComponent implements OnInit {
 
 	DESCARTADO = HEALTH_VERIFICATIONS.DESCARTADO;
 
-	loading: boolean = false;
+	loading = false;
 	removeForm: FormGroup;
 	diagnosis: HealthConditionDto;
 

@@ -11,7 +11,7 @@ export class PersonalInformationComponent implements OnInit {
 
 	@Input() personalInformation: PersonalInformation;
 	@Input() patientMedicalCoverage: PatientMedicalCoverageDto[];
-	public addressPresent: boolean = false;
+	public addressPresent = false;
 	public address: Address;
 	constructor() { }
 

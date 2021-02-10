@@ -10,7 +10,7 @@ import { BedInfoDto } from '@api-rest/api-model';
 export class BedDetailComponent implements OnInit, OnChanges {
 
   	@Input() bedId: number;
-	@Input() bedAssign?: boolean = false;
+	@Input() bedAssign = false;
 	@Output() assignedBed?: EventEmitter<BedInfoDto> = new EventEmitter<BedInfoDto>();
 
 	bedInfo: BedInfoDto;

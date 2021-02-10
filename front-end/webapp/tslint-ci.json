@@ -59,7 +59,7 @@
     ],
     "no-empty": false,
     "no-inferrable-types": [
-	  false,
+	  true,
       "ignore-params"
     ],
     "no-non-null-assertion": true,

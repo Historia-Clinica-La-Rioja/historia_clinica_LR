@@ -7,7 +7,7 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class NoDataComponent implements OnInit {
 
-  @Input() message: string = 'messages.NO_DATA';
+  @Input() message = 'messages.NO_DATA';
 
   constructor() { }
 

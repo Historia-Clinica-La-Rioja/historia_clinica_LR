@@ -12,8 +12,8 @@ export class SummaryCardComponent implements OnInit {
 	@Input() header: SummaryHeader;
 	@Input() tooltip: string;
 	@Input() canEdit: ERole[] = [];
-	@Input() editable: boolean = false;
-	@Input() hasCovidAlert: boolean = false;
+	@Input() editable = false;
+	@Input() hasCovidAlert = false;
 	@Output() openInNew = new EventEmitter();
 	@Output() covidAlertEvent = new EventEmitter();
 

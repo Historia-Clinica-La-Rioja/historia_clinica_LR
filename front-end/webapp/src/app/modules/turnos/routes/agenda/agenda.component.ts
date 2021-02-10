@@ -55,7 +55,7 @@ export class AgendaComponent implements OnInit, OnDestroy {
 	dayEndHour: number;
 	diaryOpeningHours: DiaryOpeningHoursDto[];
 
-	enableAppointmentScheduling: boolean = true;
+	enableAppointmentScheduling = true;
 	appointments: CalendarEvent[];
 	dailyAmounts: AppointmentDailyAmountDto[];
 	dailyAmounts$: Observable<AppointmentDailyAmountDto[]>;

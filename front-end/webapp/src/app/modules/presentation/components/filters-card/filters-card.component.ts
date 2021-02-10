@@ -7,7 +7,7 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class FiltersCardComponent implements OnInit {
 
-	@Input() filtering: boolean = false;
+	@Input() filtering = false;
 	@Input() cardTitle: string;
 
 	constructor() {

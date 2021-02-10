@@ -22,7 +22,7 @@ export class DocumentsSummaryComponent implements OnInit {
 	public form: FormGroup;
 	public activeDocument;
 	public documentHistoric: DocumentHistoricDto;
-	public searchTriggered: boolean = false;
+	public searchTriggered = false;
 
 	constructor(
 		private formBuilder: FormBuilder,

@@ -16,8 +16,8 @@ export class LoginComponent implements OnInit {
 	public apiError: ApiErrorMessageDto = null;
 	public form: FormGroup;
 	public recaptchaRes: string;
-	public recaptchaEnable: boolean = false;
-	public recaptchaSiteKey: string = '';
+	public recaptchaEnable = false;
+	public recaptchaSiteKey = '';
 	private returnUrl: string;
 
 	constructor(

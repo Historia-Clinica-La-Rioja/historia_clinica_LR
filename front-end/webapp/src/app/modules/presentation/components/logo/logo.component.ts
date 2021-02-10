@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 })
 export class LogoComponent implements OnInit {
 
-	@Input() isSecondaryLogo: boolean = false;
+	@Input() isSecondaryLogo = false;
 	public logos$: Observable<ImageSrc[]>;
 
 	constructor(private flavoredImagesService: FlavoredImagesService) {

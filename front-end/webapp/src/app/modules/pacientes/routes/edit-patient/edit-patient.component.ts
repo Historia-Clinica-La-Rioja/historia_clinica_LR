@@ -34,7 +34,7 @@ export class EditPatientComponent implements OnInit {
 
 	public form: FormGroup;
 	public personResponse: BMPatientDto;
-	public formSubmitted: boolean = false;
+	public formSubmitted = false;
 	public today: Moment = moment();
 	public hasError = hasError;
 	public genders: GenderDto[];

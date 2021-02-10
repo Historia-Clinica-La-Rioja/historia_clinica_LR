@@ -32,7 +32,7 @@ export class AnamnesisFormComponent implements OnInit {
 	getError = getError;
 	hasError = hasError;
 
-	mainDiagnosisError: string = '';
+	mainDiagnosisError = '';
 	anamnesis: ResponseAnamnesisDto;
 	form: FormGroup;
 

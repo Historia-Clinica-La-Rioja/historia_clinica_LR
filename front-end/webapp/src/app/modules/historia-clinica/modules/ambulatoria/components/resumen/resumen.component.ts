@@ -35,7 +35,7 @@ export class ResumenComponent implements OnInit, OnChanges {
 	public anthropometricData$: Observable<HCEAnthropometricDataDto>;
 	public readonly familyHistoriesHeader = ANTECEDENTES_FAMILIARES;
 	public readonly personalProblemsHeader = PROBLEMAS_ANTECEDENTES;
-	public loadExternal: boolean = false;
+	public loadExternal = false;
 	public healthConditionsTable: TableModel<ConditionDto>;
 	public allergiesTable: TableModel<AllergyIntoleranceDto>;
 	public medicationsTable: TableModel<MedicationInteroperabilityDto>;

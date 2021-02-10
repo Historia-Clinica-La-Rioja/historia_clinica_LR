@@ -19,7 +19,7 @@ const ROUTE_PROFILE = 'pacientes/profile/';
 export class SearchCreateComponent implements OnInit {
 
 	public formSearch: FormGroup;
-	public formSearchSubmitted: boolean = false;
+	public formSearchSubmitted = false;
 	public genderOptions;
 	public noIdentity = false;
 	public IdentityVerificationStatusArray;

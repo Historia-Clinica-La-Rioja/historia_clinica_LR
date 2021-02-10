@@ -27,7 +27,7 @@ export class MedicacionComponent implements OnInit {
 	}
 
 	@Input() hideSuspended: boolean;
-	@Input() title: string = 'internaciones.anamnesis.medicacion.MEDICATION';
+	@Input() title = 'internaciones.anamnesis.medicacion.MEDICATION';
 
 	snomedConcept: SnomedDto;
 

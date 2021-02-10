@@ -41,10 +41,10 @@ export class NuevaConsultaComponent implements OnInit {
 	signosVitalesNuevaConsultaService: SignosVitalesNuevaConsultaService;
 	antecedentesFamiliaresNuevaConsultaService: AntecedentesFamiliaresNuevaConsultaService;
 	alergiasNuevaConsultaService: AlergiasNuevaConsultaService;
-	readOnlyProblema: boolean = false;
+	readOnlyProblema = false;
 	apiErrors: string[] = [];
 	public today = newMoment();
-	fixedSpecialty: boolean = true;
+	fixedSpecialty = true;
 	defaultSpecialty: ClinicalSpecialtyDto;
 	specialties: ClinicalSpecialtyDto[];
 

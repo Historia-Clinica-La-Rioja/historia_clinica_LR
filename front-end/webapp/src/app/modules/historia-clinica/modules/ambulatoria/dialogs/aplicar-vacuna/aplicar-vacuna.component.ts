@@ -29,7 +29,7 @@ export class AplicarVacunaComponent implements OnInit {
 	searching = false;
 	conceptsResultsTable: TableModel<any>;
 	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
-	fixedSpecialty: boolean = true;
+	fixedSpecialty = true;
 	defaultSpecialty: ClinicalSpecialtyDto;
 	specialties: ClinicalSpecialtyDto[];
 	appliedVaccines: OutpatientImmunizationDto[];

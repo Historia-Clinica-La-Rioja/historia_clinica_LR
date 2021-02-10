@@ -9,7 +9,7 @@ import {MatDialog} from '@angular/material/dialog';
 export class ExternalSummaryCardComponent implements OnInit, OnChanges {
 
 	@Input() header: string;
-	minimized: boolean = false;
+	minimized = false;
 
 	constructor(
 		public dialog: MatDialog

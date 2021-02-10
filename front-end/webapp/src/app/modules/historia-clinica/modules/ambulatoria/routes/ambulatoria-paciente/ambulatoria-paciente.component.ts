@@ -40,7 +40,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	public showOrders: boolean;
 	public externalInstitutions: OrganizationDto[];
 	public patientExternalSummary: PatientSummaryDto;
-	public externalInstitutionPlaceholder: string = 'Ninguna';
+	public externalInstitutionPlaceholder = 'Ninguna';
 	public loaded = false;
 	public spinner = false;
 	private timeOut = 15000;

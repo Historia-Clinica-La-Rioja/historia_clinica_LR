@@ -22,13 +22,13 @@ export const COVID_SNOMED = { sctid: '186747009', pt: 'infección por coronaviru
 export class DiagnosisSummaryComponent implements OnInit {
 
 	@Input() internmentEpisodeId: number;
-	@Input() editable: boolean = true;
+	@Input() editable = true;
 
 	diagnosticosSummary = DIAGNOSTICOS;
 	verifications: MasterDataInterface<string>[];
 	clinicalStatus: MasterDataInterface<string>[];
 	tableModel: TableModel<HealthConditionDto>;
-	viewCovidAlert: boolean = true;
+	viewCovidAlert = true;
 
 	constructor(
 		private readonly internmentStateService: InternmentStateService,
