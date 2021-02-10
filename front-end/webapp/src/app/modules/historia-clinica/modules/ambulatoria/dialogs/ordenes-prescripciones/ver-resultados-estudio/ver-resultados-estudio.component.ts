@@ -45,7 +45,7 @@ export class VerResultadosEstudioComponent implements OnInit {
 			problemPt: diagnosticReport.healthCondition.snomed.pt,
 			doctor: diagnosticReport.doctor,
 			totalDays: diagnosticReport.totalDays
-		}
+		};
 	}
 
 	download(file: FileDto) {

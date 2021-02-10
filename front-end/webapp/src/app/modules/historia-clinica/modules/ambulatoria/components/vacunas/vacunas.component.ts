@@ -39,7 +39,7 @@ export class VacunasComponent implements OnInit {
 			(params) => {
 				this.patientId = Number(params.get('idPaciente'));
 				this.hceGeneralStateService.getImmunizations(this.patientId).subscribe(dataTable => {
-					this.tableModel = this.buildTable(dataTable)
+					this.tableModel = this.buildTable(dataTable);
 				});
 			});
 	}
@@ -56,7 +56,7 @@ export class VacunasComponent implements OnInit {
 		dialogRef.afterClosed().subscribe(submitted => {
 			if (submitted) {
 				this.hceGeneralStateService.getImmunizations(this.patientId).subscribe(dataTable => {
-					this.tableModel = this.buildTable(dataTable)
+					this.tableModel = this.buildTable(dataTable);
 				});
 				this.appointmentsService.hasNewConsultationEnabled(this.patientId).subscribe(response => {
 					this.hasConfirmedAppointment = response;
@@ -74,7 +74,7 @@ export class VacunasComponent implements OnInit {
 			if (submitted) {
 				this.hceImmunizationService.updateImmunization(this.buildApplyImmunization(submitted), this.patientId).subscribe(_ => {
 					this.hceGeneralStateService.getImmunizations(this.patientId).subscribe(dataTable => {
-						this.tableModel = this.buildTable(dataTable)
+						this.tableModel = this.buildTable(dataTable);
 					});
 					this.snackBarService.showSuccess('internaciones.internacion-paciente.vacunas-summary.save.SUCCESS');
 

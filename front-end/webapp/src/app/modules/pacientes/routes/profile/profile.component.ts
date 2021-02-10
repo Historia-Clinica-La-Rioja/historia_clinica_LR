@@ -90,7 +90,7 @@ export class ProfileComponent implements OnInit {
 	goToEditProfile(): void {
 		let person = {
 			id: this.patientBasicData.id,
-		}
+		};
 		this.router.navigate([this.routePrefix + ROUTE_EDIT_PATIENT], {
 			queryParams: person
 		});

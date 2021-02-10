@@ -262,7 +262,7 @@ export class EditPatientComponent implements OnInit {
 		let countryId: number = this.form.controls.addressCountryId.value;
 		this.addressMasterDataService.getByCountry(countryId)
 			.subscribe(provinces => {
-				this.provinces = provinces
+				this.provinces = provinces;
 			});
 	}
 
@@ -270,7 +270,7 @@ export class EditPatientComponent implements OnInit {
 		let provinceId: number = this.form.controls.addressProvinceId.value;
 		this.addressMasterDataService.getDepartmentsByProvince(provinceId)
 			.subscribe(departments => {
-				this.departments = departments
+				this.departments = departments;
 			});
 	}
 
@@ -335,7 +335,7 @@ export class EditPatientComponent implements OnInit {
 						patientMedicalCoveragesDto.map(s => this.mapperService.toPatientMedicalCoverage(s))
 				)
 			)
-			.subscribe((s: PatientMedicalCoverage[]) => { this.medicalCoverages = s });
+			.subscribe((s: PatientMedicalCoverage[]) => { this.medicalCoverages = s; });
 	}
 
 }

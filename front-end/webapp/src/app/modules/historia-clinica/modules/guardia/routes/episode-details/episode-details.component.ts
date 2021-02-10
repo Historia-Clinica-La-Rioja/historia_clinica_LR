@@ -126,13 +126,13 @@ export class EpisodeDetailsComponent implements OnInit {
 											patientMedicalCoverageId: null,
 											person: null,
 											typeId: null
-										}
+										};
 									}
 								}, error => this.snackBarService.showError(error.text));
 						}
 					});
 				}
-			})
+			});
 	}
 
 	// TODO Crear un servicio que englobe estos llamados (tg-2735)

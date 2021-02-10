@@ -19,7 +19,7 @@ export class EvolutionNotesListenerService {
 	private loadHistoric(): void {
 		this.documentSearchService.getHistoric(this.internmentEpisodeId, this.searchFilter)
 		.subscribe(historicalData => {
-			this.subject.next(historicalData)
+			this.subject.next(historicalData);
 		});
 	}
 

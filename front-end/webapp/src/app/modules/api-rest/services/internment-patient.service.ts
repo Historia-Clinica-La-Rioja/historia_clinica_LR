@@ -5,8 +5,8 @@ import { InternmentPatientDto, InternmentEpisodeProcessDto } from '@api-rest/api
 import { environment } from '@environments/environment';
 import { ContextService } from '@core/services/context.service';
 
-const BASIC_URL_PREFIX = '/institutions'
-const BASIC_URL_SUFIX = '/internments/patients'
+const BASIC_URL_PREFIX = '/institutions';
+const BASIC_URL_SUFIX = '/internments/patients';
 
 @Injectable({
 	providedIn: 'root'

@@ -64,7 +64,7 @@ export class PrescripcionesService {
 				prescriptionPdfInfo.forEach(orderId => {
 					this.serviceRequestService.downloadPdf(patientId, orderId).subscribe((blob) => {
 						saveAs(blob, 'Orden ' + orderId);
-						this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.DOWNLOAD_ORDER_SUCCESS')
+						this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.DOWNLOAD_ORDER_SUCCESS');
 					});
 				});
 				break;
@@ -127,7 +127,7 @@ export class PrescripcionesService {
 			isDailyInterval: null,
 			isChronicAdministrationTime: null,
 			observations: studyItem.observations,
-		}
+		};
 	}
 
 	renderStatusDescription(prescriptionType: PrescriptionTypes, statusId: string): string {

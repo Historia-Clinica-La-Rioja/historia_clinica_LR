@@ -86,7 +86,7 @@ export class SolveProblemComponent implements OnInit {
 							this.snackBarService.showSuccess('ambulatoria.paciente.problemas.SUCCESS_CONFIRMAR_POPUP');
 						},
 						_ => {
-							this.snackBarService.showError('ambulatoria.paciente.problemas.ERROR_CONFIRMAR_POPUP')
+							this.snackBarService.showError('ambulatoria.paciente.problemas.ERROR_CONFIRMAR_POPUP');
 						}
 					);
 					this.dialog.closeAll();
@@ -120,7 +120,7 @@ export class SolveProblemComponent implements OnInit {
 
 
 	toFormatDate = (dateStr) => {
-		const [day, month, year] = dateStr.split('/')
-		return new Date(year, month - 1, day)
+		const [day, month, year] = dateStr.split('/');
+		return new Date(year, month - 1, day);
 	}
 }

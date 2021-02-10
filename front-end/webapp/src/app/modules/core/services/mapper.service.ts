@@ -45,7 +45,7 @@ export class MapperService {
 			medicalCoverage: toMedicalCoverage(s.medicalCoverage),
 			privateHealthInsuranceDetails: mapDetails(),
 			active: s.active,
-		}
+		};
 
 		// TODO ver la posibilidad de quitar ese if
 		function toMedicalCoverage(dto: CoverageDtoUnion): HealthInsurance | PrivateHealthInsurance {

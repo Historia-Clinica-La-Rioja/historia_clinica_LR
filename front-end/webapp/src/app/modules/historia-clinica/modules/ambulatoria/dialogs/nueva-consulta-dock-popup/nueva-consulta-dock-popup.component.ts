@@ -72,7 +72,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 
 	setProfessionalSpecialties() {
 		this.clinicalSpecialtyService.getLoggedInProfessionalClinicalSpecialties().subscribe( specialties => {
-			this.setSpecialtyFields(specialties, false)
+			this.setSpecialtyFields(specialties, false);
 		});
 	}
 

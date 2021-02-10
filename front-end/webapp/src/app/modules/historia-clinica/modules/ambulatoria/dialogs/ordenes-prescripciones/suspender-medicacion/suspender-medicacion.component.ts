@@ -45,12 +45,20 @@ export class SuspenderMedicacionComponent implements OnInit {
 	}
 
 	suspendMedication() {
-		this.prescripcionesService.changeMedicationStatus(this.medicationStatusChange.SUSPEND, this.data.patientId, this.medications.map(m => m.id),
+		this.prescripcionesService.changeMedicationStatus(
+			this.medicationStatusChange.SUSPEND,
+			this.data.patientId,
+			this.medications.map(m => m.id),
 			this.suspendMedicationForm.controls.dayQuantity.value, this.suspendMedicationForm.controls.observations.value
-			).subscribe(() => {
+		).subscribe(
+			() => {
 				this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.MEDICATION_CHANGE_SUCCESS');
 				this.closeModal();
-			}, _ => {this.snackBarService.showError('ambulatoria.paciente.ordenes_prescripciones.toast_messages.MEDICATION_CHANGE_ERROR')});
+			},
+			_ => {
+				this.snackBarService.showError('ambulatoria.paciente.ordenes_prescripciones.toast_messages.MEDICATION_CHANGE_ERROR');
+			}
+		);
 	}
 
 }

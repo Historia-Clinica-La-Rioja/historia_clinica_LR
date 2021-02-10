@@ -44,7 +44,7 @@ export class AppointmentsFacadeService {
 	}
 
 	clear(): void {
-		this.appointmenstEmitter.next(undefined)
+		this.appointmenstEmitter.next(undefined);
 	}
 
 	private loadAppointments(): void {

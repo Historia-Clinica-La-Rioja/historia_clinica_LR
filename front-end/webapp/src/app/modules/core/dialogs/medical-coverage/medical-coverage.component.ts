@@ -180,7 +180,7 @@ export class MedicalCoverageComponent implements OnInit {
 			validDate: newMoment(),
 			privateHealthInsuranceDetails,
 			active: true
-		}
+		};
 		return toAdd;
 	}
 
@@ -283,7 +283,7 @@ export class PrivateHealthInsurance extends MedicalCoverage {
 
 export function determineIfIsHealthInsurance(toBeDetermined: HealthInsurance | PrivateHealthInsurance): toBeDetermined is HealthInsurance {
 	if ((toBeDetermined as HealthInsurance).type) {
-		return true
+		return true;
 	}
-	return false // case PrivateHealthInsurance
+	return false; // case PrivateHealthInsurance
 }

@@ -199,7 +199,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 		let idCountry: number = this.form.controls.addressCountryId.value;
 		this.addressMasterDataService.getByCountry(idCountry)
 			.subscribe(provinces => {
-				this.provinces = provinces
+				this.provinces = provinces;
 			});
 	}
 
@@ -207,7 +207,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 		let idProvince: number = this.form.controls.addressProvinceId.value;
 		this.addressMasterDataService.getDepartmentsByProvince(idProvince)
 			.subscribe(departments => {
-				this.departments = departments
+				this.departments = departments;
 			});
 		this.form.controls.addressDepartmentId.enable();
 	}

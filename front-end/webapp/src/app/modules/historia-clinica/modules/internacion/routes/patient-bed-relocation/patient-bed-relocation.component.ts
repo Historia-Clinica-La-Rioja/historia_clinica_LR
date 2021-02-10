@@ -104,7 +104,7 @@ export class PatientBedRelocationComponent implements OnInit {
 						this.minDate = dateToMoment(lastRelocationDate && lastRelocationDate > iesEntryDateTime ? lastRelocationDate : iesEntryDateTime);
 						this.minDateTimeValidator = new MinTimeValidator(this.minDate);
 						this.minTimeStr = momentFormat(this.minDate, DateFormat.HOUR_MINUTE);
-					})
+					});
 				});
 
 			});

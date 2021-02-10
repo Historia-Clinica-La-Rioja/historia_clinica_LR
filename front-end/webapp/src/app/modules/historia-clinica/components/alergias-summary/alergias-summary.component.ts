@@ -40,7 +40,7 @@ export class AlergiasSummaryComponent implements OnChanges {
 	}
 
 	ngOnChanges(): void {
-		this.tableModel = AlergiasSummaryComponent.buildTable(this.allergies)
+		this.tableModel = AlergiasSummaryComponent.buildTable(this.allergies);
 	}
 
 	openDialog() {

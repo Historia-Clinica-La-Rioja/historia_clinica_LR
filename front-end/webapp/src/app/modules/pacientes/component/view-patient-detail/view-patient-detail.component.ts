@@ -33,13 +33,13 @@ export class ViewPatientDetailComponent implements OnInit {
 	}
 
 	back() {
-		this.dialogRef.close()
+		this.dialogRef.close();
 	}
 
 	goToProfile() {
 		let id = this.patient.id;
 		this.router.navigate([this.routePrefix + ROUTE_PROFILE + `${id}`]);
-		this.dialogRef.close()
+		this.dialogRef.close();
 	}
 
 }

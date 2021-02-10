@@ -41,7 +41,7 @@ export class CambiarDiagnosticoPrincipalComponent implements OnInit {
 	patient$: Observable<PatientBasicData>;
 	public personPhoto: PersonPhotoDto;
 	internmentEpisodeSummary$: Observable<InternmentEpisodeSummary>;
-	diagnostics$: Observable<HealthConditionDto[]>
+	diagnostics$: Observable<HealthConditionDto[]>;
 
 	constructor(
 		private readonly patientService: PatientService,
@@ -102,10 +102,10 @@ export class CambiarDiagnosticoPrincipalComponent implements OnInit {
 					const mainDiagnosisDto: MainDiagnosisDto = {
 						mainDiagnosis: this.newMainDiagnosis,
 						notes: this.form.value
-					}
+					};
 					this.mainDiagnosesService.addMainDiagnosis(this.internmentEpisodeId, mainDiagnosisDto).subscribe(
 						_ => {
-							this.snackBarService.showSuccess('internaciones.clinical-assessment-diagnosis.messages.SUCCESS')
+							this.snackBarService.showSuccess('internaciones.clinical-assessment-diagnosis.messages.SUCCESS');
 							const url = `institucion/${this.contextService.institutionId}/internaciones/internacion/${this.internmentEpisodeId}/paciente/${this.patientId}`;
 							this.router.navigate([url]);
 						},
@@ -142,7 +142,7 @@ export class CambiarDiagnosticoPrincipalComponent implements OnInit {
 					if (selectedConcept) {
 						this.newMainDiagnosis = {
 							snomed: selectedConcept
-						}
+						};
 					}
 				});
 		}

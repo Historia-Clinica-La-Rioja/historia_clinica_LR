@@ -33,7 +33,7 @@ export class PersonalInformationComponent implements OnInit {
 			number: addressDto.number,
 			floor: addressDto.floor,
 			apartment: addressDto.apartment
-		}
+		};
 	}
 
 }

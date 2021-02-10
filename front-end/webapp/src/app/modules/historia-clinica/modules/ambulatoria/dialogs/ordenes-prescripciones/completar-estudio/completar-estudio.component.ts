@@ -46,13 +46,13 @@ export class CompletarEstudioComponent implements OnInit {
 			problemPt: diagnosticReport.healthCondition.snomed.pt,
 			doctor: diagnosticReport.doctor,
 			totalDays: diagnosticReport.totalDays
-		}
+		};
 	}
 
 	completeStudy(): void {
 		const completeRequest: CompleteRequestDto = {
 			observations: this.completeStudyForm.controls.observations.value,
-		}
+		};
 
 		this.prescripcionesService.completeStudy(this.data.patientId, this.diagnosticReport.id, completeRequest, this.selectedFiles).subscribe(() => {
 			this.closeModal(false, true);
@@ -64,7 +64,7 @@ export class CompletarEstudioComponent implements OnInit {
 	onSelectFileFormData($event): void {
 		Array.from($event.target.files).forEach((file: File) => {
 			this.selectedFiles.push(file);
-			this.selectedFilesShow.push(file.name)
+			this.selectedFilesShow.push(file.name);
 		});
 	}
 

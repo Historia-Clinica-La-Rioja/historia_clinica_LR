@@ -50,7 +50,7 @@ export function futureTimeValidation(control: FormControl): ValidationErrors | n
 		if (time > momentFormat(today, DateFormat.HOUR_MINUTE)) {
 			return {
 				futureTime: true
-			}
+			};
 		}
 	}
 	return null;
@@ -68,7 +68,7 @@ export class MinTimeValidator {
 			if (time <= momentFormat(this.minDateTime, DateFormat.HOUR_MINUTE)) {
 				return {
 					previousTime: true
-				}
+				};
 			}
 		}
 		return null;

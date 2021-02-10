@@ -153,10 +153,10 @@ export class EvaluacionClinicaDiagnosticosComponent implements OnInit {
 			const evolutionNote: EvolutionDiagnosisDto = {
 				diagnosesId: this.diagnostics.selection.selected.map(diagnosis => diagnosis.id),
 				notes: this.form.value
-			}
+			};
 			this.evolutionNoteService.createEvolutionDiagnosis(evolutionNote, this.internmentEpisodeId).subscribe(
 				_ => {
-					this.snackBarService.showSuccess('internaciones.clinical-assessment-diagnosis.messages.SUCCESS')
+					this.snackBarService.showSuccess('internaciones.clinical-assessment-diagnosis.messages.SUCCESS');
 					const url = `institucion/${this.contextService.institutionId}/internaciones/internacion/${this.internmentEpisodeId}/paciente/${this.patientId}`;
 					this.router.navigate([url]);
 				},

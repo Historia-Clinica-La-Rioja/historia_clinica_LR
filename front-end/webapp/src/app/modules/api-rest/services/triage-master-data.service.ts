@@ -84,10 +84,10 @@ export class TriageMasterDataService {
 }
 
 export interface TriageCategoryDto {
-	id: number,
-	description: string,
+	id: number;
+	description: string;
 	colour: {
 		name: string,
 		code: string
-	}
+	};
 }

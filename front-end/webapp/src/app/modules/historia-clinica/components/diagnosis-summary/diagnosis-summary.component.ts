@@ -12,7 +12,7 @@ import { EvolutionNoteService } from '@api-rest/services/evolution-note.service'
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { EvolutionNotesListenerService } from '../../modules/internacion/services/evolution-notes-listener.service';
 
-export const COVID_SNOMED = { sctid: '186747009', pt: 'infección por coronavirus' }
+export const COVID_SNOMED = { sctid: '186747009', pt: 'infección por coronavirus' };
 
 @Component({
 	selector: 'app-diagnosis-summary',

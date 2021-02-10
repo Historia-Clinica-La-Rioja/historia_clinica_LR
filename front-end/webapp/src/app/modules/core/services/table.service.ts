@@ -12,14 +12,14 @@ export class TableService {
 		const numSelected = selection.selected.length;
 		const numRows = dataSource.length;
 		return numSelected === numRows;
-	};
+	}
 
 	/** Selects all rows if they are not all selected; otherwise clear selection. */
 	masterToggle = (dataSource, selection: SelectionModel<any>) => {
 		this.isAllSelected(dataSource, selection) ?
 			selection.clear() :
 			dataSource.forEach(row => selection.select(row));
-	};
+	}
 
 	predicateFilter = (data, filter: string) => {
 		const accumulator = (currentTerm, key) => {
@@ -29,7 +29,7 @@ export class TableService {
 		// Transform the filter by converting it to lowercase and removing whitespace.
 		const transformedFilter = filter.trim().toLowerCase();
 		return dataStr.indexOf(transformedFilter) !== -1;
-	};
+	}
 
 	private nestedFilterCheck(search, data, key) {
 		if (typeof data[key] === 'object') {

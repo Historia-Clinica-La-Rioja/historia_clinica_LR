@@ -171,10 +171,15 @@ export class CardMedicacionesComponent implements OnInit {
 		const medicationList = this.getMedicationList(medication);
 
 		if (medicationList) {
-			this.prescripcionesService.changeMedicationStatus(statusChange, this.patientId, medicationList.map(m => m.id)).subscribe(() => {
-				this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.MEDICATION_CHANGE_SUCCESS');
-				this.getMedication();
-			}, _ => {this.snackBarService.showError('ambulatoria.paciente.ordenes_prescripciones.toast_messages.MEDICATION_CHANGE_ERROR')});
+			this.prescripcionesService.changeMedicationStatus(statusChange, this.patientId, medicationList.map(m => m.id)).subscribe(
+				() => {
+					this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.MEDICATION_CHANGE_SUCCESS');
+					this.getMedication();
+				},
+				_ => {
+					this.snackBarService.showError('ambulatoria.paciente.ordenes_prescripciones.toast_messages.MEDICATION_CHANGE_ERROR');
+				}
+			);
 		}
 	}
 
@@ -233,7 +238,7 @@ export class CardMedicacionesComponent implements OnInit {
 			problemPt: medication.healthCondition.snomed.pt,
 			doctor: medication.doctor,
 			totalDays: medication.totalDays
-		}
+		};
 	}
 
 	hasActionsMenu(medicationInfo: MedicationInfoDto): boolean {

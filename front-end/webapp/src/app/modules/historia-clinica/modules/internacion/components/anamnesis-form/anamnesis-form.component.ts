@@ -168,7 +168,7 @@ export class AnamnesisFormComponent implements OnInit {
 
 	save(): void {
 		if (this.form.valid) {
-			console.warn('form valid')
+			console.warn('form valid');
 			const anamnesis: AnamnesisDto = this.buildAnamnesisDto();
 			this.apiErrors = [];
 			if (this.anamnesisId) {
@@ -184,7 +184,7 @@ export class AnamnesisFormComponent implements OnInit {
 						this.goToInternmentSummary();
 					}, responseErrors => {
 						this.apiErrorsProcess(responseErrors);
-						this.snackBarService.showError('internaciones.anamnesis.messages.ERROR')
+						this.snackBarService.showError('internaciones.anamnesis.messages.ERROR');
 					});
 				}
 			} else {

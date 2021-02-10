@@ -109,7 +109,7 @@ export class MapperService {
 			lastName: patient.lastName,
 			patientId: patient.patientId,
 			fullName: `${patient.firstName} ${patient.lastName}`
-		}
+		};
 	}
 
 	private static _toBedManagement(bedSummary: BedSummaryDto[]): BedManagement[] {

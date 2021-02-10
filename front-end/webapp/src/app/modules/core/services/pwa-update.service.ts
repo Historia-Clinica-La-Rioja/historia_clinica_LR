@@ -43,7 +43,7 @@ export class PwaUpdateService {
 		if (this.updates.isEnabled) {
 			this.updates.checkForUpdate();
 		} else {
-			console.warn('Service Worker not enabled')
+			console.warn('Service Worker not enabled');
 		}
 	}
 

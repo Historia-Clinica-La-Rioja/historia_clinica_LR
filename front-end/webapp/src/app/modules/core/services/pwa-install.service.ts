@@ -26,7 +26,7 @@ export class PwaInstallService {
 		window.addEventListener('beforeinstallprompt', (event: any) => {
 			event.preventDefault();
 			if (event?.prompt) {
-				this.installSubject.next({ run: promptInstall(event)})
+				this.installSubject.next({ run: promptInstall(event)});
 			}
 		});
 	}

@@ -37,11 +37,11 @@ export class PasswordResetComponent implements OnInit {
 			const passwordInput = group.controls[passwordKey];
 			const passwordConfirmationInput = group.controls[passwordConfirmationKey];
 			if (passwordInput.value !== passwordConfirmationInput.value) {
-				return passwordConfirmationInput.setErrors({ notEquivalent: true })
+				return passwordConfirmationInput.setErrors({ notEquivalent: true });
 			} else {
 				return passwordConfirmationInput.setErrors(null);
 			}
-		}
+		};
 	}
 
 	hasError(type: string, control: string): boolean {

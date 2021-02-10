@@ -25,7 +25,7 @@ export class SettingsComponent implements OnInit {
 				} else {
 					this.snackBarService.showError('configuracion.logos.toast_messages.UPDATE_IMAGE_ERROR');
 				}
-			})
+			});
 		} else {
 			this.snackBarService.showError('configuracion.logos.toast_messages.VALID_IMAGE_ERROR');
 		}

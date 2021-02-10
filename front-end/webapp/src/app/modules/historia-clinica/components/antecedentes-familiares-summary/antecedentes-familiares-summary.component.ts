@@ -22,7 +22,7 @@ export class AntecedentesFamiliaresSummaryComponent implements OnChanges {
 	}
 
 	ngOnChanges(): void {
-		this.tableModel = this.buildTable(this.familyHistories)
+		this.tableModel = this.buildTable(this.familyHistories);
 	}
 
 	private buildTable(data: HealthHistoryConditionDto[]): TableModel<HealthHistoryConditionDto> {

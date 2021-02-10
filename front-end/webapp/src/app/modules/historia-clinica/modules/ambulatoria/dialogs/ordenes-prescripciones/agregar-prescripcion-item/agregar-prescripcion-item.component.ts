@@ -112,7 +112,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit {
 				intervalHours: showDosage ? this.prescriptionItemForm.controls.interval.value !== this.DEFAULT_RADIO_OPTION ? this.prescriptionItemForm.controls.intervalHours.value : null : null,
 				administrationTimeDays: showDosage ? this.prescriptionItemForm.controls.administrationTime.value !== this.DEFAULT_RADIO_OPTION ? this.prescriptionItemForm.controls.administrationTimeDays.value : null : null,
 				observations: this.prescriptionItemForm.controls.observations.value
-			}
+			};
 
 			this.dialogRef.close(newItem);
 		}
@@ -161,7 +161,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit {
 			}
 
 			if (prescriptionItem.isChronicAdministrationTime) {
-				this.prescriptionItemForm.controls.administrationTime.setValue(this.DEFAULT_RADIO_OPTION)
+				this.prescriptionItemForm.controls.administrationTime.setValue(this.DEFAULT_RADIO_OPTION);
 			} else {
 				this.prescriptionItemForm.controls.administrationTime.setValue(this.OTHER_RADIO_OPTION);
 				this.prescriptionItemForm.controls.administrationTimeDays.setValue(prescriptionItem.administrationTimeDays);
@@ -246,7 +246,7 @@ export class NewPrescriptionItem {
 	studyCategory: {
 		id: string;
 		description: string;
-	}
+	};
 	isDailyInterval: boolean;
 	isChronicAdministrationTime: boolean;
 	intervalHours?: string;

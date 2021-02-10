@@ -52,7 +52,7 @@ export class SearchCreateComponent implements OnInit {
 			genders => { this.genderOptions = genders; });
 
 		this.patientMasterDataService.getIdentityVerificationStatus().subscribe(
-			data => { this.IdentityVerificationStatusArray = data });
+			data => { this.IdentityVerificationStatusArray = data; });
 
 	}
 
@@ -63,7 +63,7 @@ export class SearchCreateComponent implements OnInit {
 				identificationTypeId: this.formSearch.controls.identifType.value,
 				identificationNumber: this.formSearch.controls.identifNumber.value,
 				genderId: this.formSearch.controls.gender.value,
-			}
+			};
 
 			if (this.noIdentity) {
 				this.navigateToSearchPatient();

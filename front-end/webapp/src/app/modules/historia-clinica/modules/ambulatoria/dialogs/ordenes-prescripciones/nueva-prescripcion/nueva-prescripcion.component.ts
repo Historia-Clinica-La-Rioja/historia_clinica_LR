@@ -93,9 +93,9 @@ export class NuevaPrescripcionComponent implements OnInit {
 						duration: Number(pi.administrationTimeDays),
 						frequency: Number(pi.intervalHours)
 					}
-				}
+				};
 			})
-		}
+		};
 
 		this.closeModal(newPrescription);
 	}
@@ -187,5 +187,5 @@ export class NewPrescriptionData {
 		showDosage: boolean;
 		showStudyCategory: boolean;
 		eclTerm: string;
-	}
+	};
 }

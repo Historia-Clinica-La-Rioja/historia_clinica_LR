@@ -222,7 +222,7 @@ export class NewPatientComponent implements OnInit {
 		let countryId: number = this.form.controls.addressCountryId.value;
 		this.addressMasterDataService.getByCountry(countryId)
 			.subscribe(provinces => {
-				this.provinces = provinces
+				this.provinces = provinces;
 			});
 	}
 
@@ -230,7 +230,7 @@ export class NewPatientComponent implements OnInit {
 		let provinceId: number = this.form.controls.addressProvinceId.value;
 		this.addressMasterDataService.getDepartmentsByProvince(provinceId)
 			.subscribe(departments => {
-				this.departments = departments
+				this.departments = departments;
 			});
 		this.form.controls.addressDepartmentId.enable();
 	}

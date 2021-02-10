@@ -120,10 +120,15 @@ export class CardEstudiosComponent implements OnInit {
 	}
 
 	deleteStudy(id: number) {
-		this.prescripcionesService.deleteStudy(this.patientId, id).subscribe(() => {
-			this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.DELETE_STUDY_SUCCESS');
-			this.getStudy();
-		}, _ => {this.snackBarService.showError('ambulatoria.paciente.ordenes_prescripciones.toast_messages.DELETE_STUDY_ERROR')});
+		this.prescripcionesService.deleteStudy(this.patientId, id).subscribe(
+			() => {
+				this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.DELETE_STUDY_SUCCESS');
+				this.getStudy();
+			},
+			_ => {
+				this.snackBarService.showError('ambulatoria.paciente.ordenes_prescripciones.toast_messages.DELETE_STUDY_ERROR');
+			}
+		);
 	}
 
 	prescriptionItemDataBuilder(diagnosticReport: DiagnosticReportInfoDto): PrescriptionItemData {
@@ -133,7 +138,7 @@ export class CardEstudiosComponent implements OnInit {
 			problemPt: diagnosticReport.healthCondition.snomed.pt,
 			doctor: diagnosticReport.doctor,
 			totalDays: diagnosticReport.totalDays
-		}
+		};
 	}
 
 	completeStudy(diagnosticReport: DiagnosticReportInfoDto) {

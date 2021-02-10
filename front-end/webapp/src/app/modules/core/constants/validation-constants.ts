@@ -22,6 +22,6 @@ export const POLICE_OFFICER = {
 
 export const VITAL_SIGNS = {
 	min_value: 1
-}
+};
 
 export const REMOVEATTENTION = 'removeAttention';

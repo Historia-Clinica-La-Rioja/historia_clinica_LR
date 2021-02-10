@@ -130,10 +130,10 @@ export const FLAVORED_SECONDARY_LOGOS: FlavoredImagesObj = {
 };
 
 export interface ImageSrc {
-	location: string
-	alt: string
+	location: string;
+	alt: string;
 }
 
 export interface FlavoredImagesObj {
-	[flavor: string]: ImageSrc[]
+	[flavor: string]: ImageSrc[];
 }

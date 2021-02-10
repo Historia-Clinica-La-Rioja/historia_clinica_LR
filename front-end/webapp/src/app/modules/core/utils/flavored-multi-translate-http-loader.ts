@@ -25,7 +25,7 @@ export class FlavoredMultiTranslateHttpLoader implements TranslateLoader {
 					));
 					observer.complete();
 				}
-			)
+			);
 		});
 	}
 

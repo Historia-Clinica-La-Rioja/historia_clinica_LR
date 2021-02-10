@@ -6,5 +6,5 @@ export function getElementViewFunction(viewContainer, templateRef): (boolean) =>
 		} else {
 			viewContainer.clear();
 		}
-	}
+	};
 }

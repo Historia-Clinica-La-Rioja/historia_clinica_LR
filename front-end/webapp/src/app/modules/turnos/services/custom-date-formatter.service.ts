@@ -20,7 +20,7 @@ export class CustomDateFormatter extends CalendarDateFormatter {
 	}
 
 	public dayViewTitle({date, locale}: DateFormatterParams): string {
-		return momentFormat(dateToMoment(date), DateFormat.HUMAN)
+		return momentFormat(dateToMoment(date), DateFormat.HUMAN);
 	}
 
 }

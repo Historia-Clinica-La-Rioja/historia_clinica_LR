@@ -18,7 +18,7 @@ export class OauthLoginGuardService implements CanActivate {
 				if (oauthConfig.enabled && oauthConfig.loginUrl) {
 					window.location.href = oauthConfig.loginUrl;
 					return false;
-				} else { return true }
+				} else { return true; }
 			}));
 	}
 }
