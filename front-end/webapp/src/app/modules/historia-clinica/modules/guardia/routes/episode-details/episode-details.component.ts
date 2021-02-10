@@ -135,7 +135,7 @@ export class EpisodeDetailsComponent implements OnInit {
 			})
 	}
 
-	//TODO Crear un servicio que englobe estos llamados (tg-2735)
+	// TODO Crear un servicio que englobe estos llamados (tg-2735)
 	private loadPatient(patientId: number): void {
 		this.patientService.getPatientCompleteData<CompletePatientDto>(patientId)
 			.subscribe(completeData => {

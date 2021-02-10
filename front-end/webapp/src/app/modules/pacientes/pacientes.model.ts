@@ -8,7 +8,7 @@ export class DatosPersonales {
 	genderId: number;
 	birthDate: Date;
 
-	//Person_extended
+	// Person_extended
 	cuil: string;
 	mothersLastName: string;
 	phoneNumber: string;
@@ -19,7 +19,7 @@ export class DatosPersonales {
 	genderSelfDeterminationId: number;
 	healthInsuranceId: number;
 
-	//Address
+	// Address
 	addressStreet: string;
 	addressNumber: string;
 	addressFloor: string;

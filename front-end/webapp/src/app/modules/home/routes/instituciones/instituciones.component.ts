@@ -35,8 +35,8 @@ export class InstitucionesComponent implements OnInit {
 				const onlyBackoffice = !webappAccess && this.backoffice;
 				const hasSingleIdWebapp = !this.backoffice && webappAccess && uniqueIds.length === 1;
 
-				//if (hasSingleIdWebapp || onlyBackoffice)
-				//	this.ingresar({id: uniqueIds[0]}, this.backoffice)
+				// if (hasSingleIdWebapp || onlyBackoffice)
+				// 	this.ingresar({id: uniqueIds[0]}, this.backoffice)
 				this.institutions = institutions;
 			});
 		});

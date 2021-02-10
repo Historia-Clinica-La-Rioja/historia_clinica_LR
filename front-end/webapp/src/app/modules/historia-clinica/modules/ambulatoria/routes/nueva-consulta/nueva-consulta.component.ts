@@ -83,7 +83,7 @@ export class NuevaConsultaComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		//tg-1910
+		// tg-1910
 		this.appointmentsService.considerAppointments().subscribe(consider => {
 			if (consider) {
 				this.route.paramMap.subscribe((params) => {

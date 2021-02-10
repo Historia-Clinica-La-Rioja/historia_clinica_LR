@@ -71,7 +71,7 @@ export class NewPatientComponent implements OnInit {
 					identificationTypeId: [Number(params.identificationTypeId), [Validators.required]],
 					birthDate: [params.birthDate ? moment(params.birthDate) : null, [Validators.required]],
 
-					//Person extended
+					// Person extended
 					cuil: [null, [Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)]],
 					mothersLastName: [],
 					phoneNumber: [],
@@ -81,7 +81,7 @@ export class NewPatientComponent implements OnInit {
 					nameSelfDetermination: [],
 					genderSelfDeterminationId: [],
 
-					//Address
+					// Address
 					addressStreet: [],
 					addressNumber: [],
 					addressFloor: [],
@@ -94,7 +94,7 @@ export class NewPatientComponent implements OnInit {
 					addressCountryId: [],
 					addressDepartmentId: { value: null, disabled: true },
 
-					//doctors
+					// doctors
 					generalPractitioner: [],
 					generalPractitionerPhoneNumber: [],
 					pamiDoctor: [],
@@ -180,7 +180,7 @@ export class NewPatientComponent implements OnInit {
 			lastName: this.form.controls.lastName.value,
 			middleNames: this.form.controls.middleNames.value && this.form.controls.middleNames.value.length ? this.form.controls.middleNames.value : null,
 			otherLastNames: this.form.controls.otherLastNames.value && this.form.controls.otherLastNames.value.length ? this.form.controls.otherLastNames.value : null,
-			//Person extended
+			// Person extended
 			cuil: this.form.controls.cuil.value,
 			email: this.form.controls.email.value,
 			ethnic: this.form.controls.ethnic.value,
@@ -189,7 +189,7 @@ export class NewPatientComponent implements OnInit {
 			nameSelfDetermination: this.form.controls.nameSelfDetermination.value,
 			phoneNumber: this.form.controls.phoneNumber.value,
 			religion: this.form.controls.religion.value,
-			//Address
+			// Address
 			apartment: this.form.controls.addressApartment.value,
 			cityId: this.form.controls.addressCityId.value,
 			floor: this.form.controls.addressFloor.value,
@@ -197,11 +197,11 @@ export class NewPatientComponent implements OnInit {
 			postcode: this.form.controls.addressPostcode.value,
 			quarter: this.form.controls.addressQuarter.value,
 			street: this.form.controls.addressStreet.value,
-			//Patient
+			// Patient
 			typeId: this.patientType,
 			comments: null,
 			identityVerificationStatusId: null,
-			//doctors
+			// doctors
 			generalPractitioner: {
 				fullName: this.form.controls.generalPractitioner.value,
 				phoneNumber: this.form.controls.generalPractitionerPhoneNumber.value,

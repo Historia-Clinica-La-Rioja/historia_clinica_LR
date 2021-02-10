@@ -76,7 +76,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 					genderId: [Number(params.genderId)],
 					birthDate: [params.birthDate ? momentParseDate(params.birthDate) : undefined],
 
-					//Person extended
+					// Person extended
 					cuil: [null, Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)],
 					mothersLastName: [],
 					phoneNumber: [],
@@ -85,7 +85,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 					religion: [],
 					nameSelfDetermination: [],
 					genderSelfDeterminationId: [],
-					//Address
+					// Address
 					addressStreet: [],
 					addressNumber: [],
 					addressFloor: [],
@@ -98,7 +98,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 					addressCountryId: [],
 					addressDepartmentId: { value: null, disabled: true },
 
-					//doctors
+					// doctors
 					generalPractitioner: [],
 					generalPractitionerPhoneNumber: [],
 					pamiDoctor: [],
@@ -160,7 +160,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 			lastName: this.form.controls.lastName.value,
 			middleNames: this.form.controls.middleNames.value,
 			otherLastNames: this.form.controls.otherLastNames.value,
-			//Person extended
+			// Person extended
 			cuil: this.form.controls.cuil.value,
 			email: this.form.controls.email.value,
 			ethnic: this.form.controls.ethnic.value,
@@ -169,7 +169,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 			nameSelfDetermination: this.form.controls.nameSelfDetermination.value,
 			phoneNumber: this.form.controls.phoneNumber.value,
 			religion: this.form.controls.religion.value,
-			//Address
+			// Address
 			apartment: this.form.controls.addressApartment.value,
 			cityId: this.form.controls.addressCityId.value,
 			floor: this.form.controls.addressFloor.value,
@@ -177,11 +177,11 @@ export class NewTemporaryPatientComponent implements OnInit {
 			postcode: this.form.controls.addressPostcode.value,
 			quarter: this.form.controls.addressQuarter.value,
 			street: this.form.controls.addressStreet.value,
-			//Patient
+			// Patient
 			typeId: TEMPORARY_PATIENT,
 			comments: this.comments,
 			identityVerificationStatusId: this.identityVerificationStatus,
-			//doctors
+			// doctors
 			generalPractitioner: {
 				fullName: this.form.controls.generalPractitioner.value,
 				phoneNumber: this.form.controls.generalPractitionerPhoneNumber.value,

@@ -95,7 +95,7 @@ export function updateControlValidator(form: FormGroup, control: string, validat
 }
 
 export function updateForm(form: FormGroup) {
-	//Esta función se hizo porque no funciona form.updateValueAndValidity() - bug
+	// Esta función se hizo porque no funciona form.updateValueAndValidity() - bug
 	Object.keys(form.controls).forEach((key: string) => {
 		const abstractControl = form.controls[key];
 		abstractControl.updateValueAndValidity();

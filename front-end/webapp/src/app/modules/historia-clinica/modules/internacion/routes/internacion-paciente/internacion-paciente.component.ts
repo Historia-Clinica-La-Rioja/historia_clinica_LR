@@ -113,8 +113,8 @@ export class InternacionPacienteComponent implements OnInit {
 						this.epicrisisDoc = internmentEpisode.documents?.epicrisis;
 						this.lastEvolutionNoteDoc = internmentEpisode.documents?.lastEvaluationNote;
 						this.lastProbableDischargeDate = internmentEpisode.probableDischargeDate ? momentParseDateTime(internmentEpisode.probableDischargeDate) : undefined;
-						//La alta administrativa está disponible cuando existe el alta medica
-						//o el flag de alta sin epicrisis está activa
+						// La alta administrativa está disponible cuando existe el alta medica
+						// o el flag de alta sin epicrisis está activa
 						this.featureFlagService.isActive(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS).subscribe(isOn => {
 							this.showDischarge = isOn || (this.hasMedicalDischarge === true);
 						});

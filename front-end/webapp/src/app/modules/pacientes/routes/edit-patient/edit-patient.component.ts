@@ -81,7 +81,7 @@ export class EditPatientComponent implements OnInit {
 								if (personInformationData.identificationTypeId)
 									this.form.setControl('identificationTypeId', new FormControl(Number(personInformationData.identificationTypeId), Validators.required));
 								this.form.setControl('identificationNumber', new FormControl(personInformationData.identificationNumber, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]));
-								//person
+								// person
 								this.form.setControl('firstName', new FormControl(completeData.person.firstName, Validators.required));
 								this.form.setControl('middleNames', new FormControl(personInformationData.middleNames));
 								this.form.setControl('lastName', new FormControl(completeData.person.lastName, Validators.required));
@@ -97,7 +97,7 @@ export class EditPatientComponent implements OnInit {
 								this.form.setControl('phoneNumber', new FormControl(personInformationData.phoneNumber));
 								this.form.setControl('religion', new FormControl(personInformationData.religion));
 								this.form.setControl('ethnic', new FormControl(personInformationData.ethnic));
-								//address
+								// address
 								this.form.setControl('addressCountryId', new FormControl(DEFAULT_COUNTRY_ID));
 								if (personInformationData.province !== undefined) {
 									this.form.setControl('addressProvinceId', new FormControl(personInformationData.province.id));
@@ -114,7 +114,7 @@ export class EditPatientComponent implements OnInit {
 								this.form.setControl('addressApartment', new FormControl(personInformationData.apartment));
 								this.form.setControl('addressQuarter', new FormControl(personInformationData.quarter));
 								this.form.setControl('addressPostcode', new FormControl(personInformationData.postcode));
-								//doctors
+								// doctors
 								this.form.setControl('generalPractitioner', new FormControl(completeData.generalPractitioner?.fullName));
 								this.form.setControl('generalPractitionerPhoneNumber', new FormControl(completeData.generalPractitioner?.phoneNumber));
 								this.form.setControl('pamiDoctor', new FormControl(completeData.pamiDoctor?.fullName));
@@ -156,7 +156,7 @@ export class EditPatientComponent implements OnInit {
 			identificationTypeId: [null, [Validators.required]],
 			birthDate: [null, [Validators.required]],
 
-			//Person extended
+			// Person extended
 			cuil: [null, [Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)]],
 			mothersLastName: [],
 			phoneNumber: [],
@@ -166,7 +166,7 @@ export class EditPatientComponent implements OnInit {
 			nameSelfDetermination: [],
 			genderSelfDeterminationId: [],
 
-			//Address
+			// Address
 			addressStreet: [],
 			addressNumber: [],
 			addressFloor: [],
@@ -179,7 +179,7 @@ export class EditPatientComponent implements OnInit {
 			addressCountryId: [],
 			addressDepartmentId: [],
 
-			//doctors
+			// doctors
 			generalPractitioner: [],
 			generalPractitionerPhoneNumber: [],
 			pamiDoctor: [],
@@ -217,7 +217,7 @@ export class EditPatientComponent implements OnInit {
 			lastName: this.form.controls.lastName.value,
 			middleNames: this.form.controls.middleNames.value && this.form.controls.middleNames.value.length ? this.form.controls.middleNames.value : null,
 			otherLastNames: this.form.controls.otherLastNames.value && this.form.controls.otherLastNames.value.length ? this.form.controls.otherLastNames.value : null,
-			//Person extended
+			// Person extended
 			cuil: this.form.controls.cuil.value,
 			email: this.form.controls.email.value,
 			ethnic: this.form.controls.ethnic.value,
@@ -226,7 +226,7 @@ export class EditPatientComponent implements OnInit {
 			nameSelfDetermination: this.form.controls.nameSelfDetermination.value,
 			phoneNumber: this.form.controls.phoneNumber.value,
 			religion: this.form.controls.religion.value,
-			//Address
+			// Address
 			apartment: this.form.controls.addressApartment.value,
 			cityId: this.form.controls.addressCityId.value,
 			floor: this.form.controls.addressFloor.value,
@@ -234,11 +234,11 @@ export class EditPatientComponent implements OnInit {
 			postcode: this.form.controls.addressPostcode.value,
 			quarter: this.form.controls.addressQuarter.value,
 			street: this.form.controls.addressStreet.value,
-			//Patient
+			// Patient
 			typeId: this.patientType,
 			comments: null,
 			identityVerificationStatusId: null,
-			//Doctors
+			// Doctors
 			generalPractitioner: {
 				id: this.completeDataPatient.generalPractitioner?.id,
 				fullName: this.form.controls.generalPractitioner.value,

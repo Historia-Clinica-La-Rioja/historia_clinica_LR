@@ -82,7 +82,7 @@ export class DiagnosisEpicrisisService {
 		};
 	}
 
-	//selection
+	// selection
 	public selectionHasValue(): boolean {
 		return this.table.selection.hasValue();
 	}
@@ -108,7 +108,7 @@ export class DiagnosisEpicrisisService {
 		return this.tableService.isAllSelected(this.table.data, this.table.selection);
 	}
 
-	//diagnosis
+	// diagnosis
 	public addMainDiagnosis(newDiagnosis: DiagnosisDto, mainDiagnosisFormControl): void {
 		const duplicatedDiagnosis = this.table.data.find(diagnosis => diagnosis.snomed.sctid === newDiagnosis.snomed.sctid);
 		if (duplicatedDiagnosis) {

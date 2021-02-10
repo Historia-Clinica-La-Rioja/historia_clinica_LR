@@ -18,7 +18,7 @@ export class CardIndicacionesComponent implements OnInit {
 	}
 
   	openDialogNewRecommendation() {
-		//TODO completar con pop-up nueva recomendacion
+		// TODO completar con pop-up nueva recomendacion
 	}
 
 }

@@ -31,7 +31,7 @@ export class AntecedentesPersonalesComponent implements OnInit {
 	form: FormGroup;
 	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 
-	//Mat table
+	// Mat table
 	columns = [
 		{
 			def: 'problemType',

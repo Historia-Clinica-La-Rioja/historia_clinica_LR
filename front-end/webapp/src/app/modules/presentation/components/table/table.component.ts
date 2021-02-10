@@ -50,11 +50,11 @@ export class TableComponent implements OnInit {
 			this.dataSource.data = this.model.data;
 			this.displayedColumns = this.columns?.map(c => c.columnDef);
 
-			//filtering
+			// filtering
 			this.filterEnabled = this.model.enableFilter;
 			this.dataSource.filterPredicate = this.tableService.predicateFilter;
 
-			//pagination
+			// pagination
 			this.paginationEnabled = this.model.enablePagination;
 		}
 

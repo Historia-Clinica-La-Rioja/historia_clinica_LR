@@ -97,7 +97,7 @@ export class PacientesTableComponent implements OnInit {
 	}
 
 	actionRow(): void {
-		//TODO redirect
+		// TODO redirect
 	}
 
 	applyFilter(event: Event) {

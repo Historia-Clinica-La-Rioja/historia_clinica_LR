@@ -20,7 +20,7 @@ const routes: Routes = [
 @NgModule({
 	imports: [RouterModule.forRoot(routes, {
 		// habilitar log de routeos en consola
-		//enableTracing: true,
+		// enableTracing: true,
 		scrollPositionRestoration: 'enabled'
 	})],
 	exports: [RouterModule]
