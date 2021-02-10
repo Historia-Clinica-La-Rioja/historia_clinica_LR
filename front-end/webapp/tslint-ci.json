@@ -91,7 +91,6 @@
 	"semicolon": false,
 	"only-arrow-functions": false,
 	"comment-format": false,
-	"one-line": false,
 	"no-unused-expression": false,
 	"prefer-const": false,
 	"no-var-keyword": false,

@@ -15,8 +15,7 @@ export class MainLayoutComponent implements OnDestroy {
 	private _menuItems: MenuItem[];
 	@Input('menuFooterItems') menuFooterItems: MenuFooter;
 
-	constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, private authenticationService: AuthenticationService, )
-	{
+	constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, private authenticationService: AuthenticationService, ) {
 		this.mobileQuery = media.matchMedia('(max-width: 600px)');
 		this._mobileQueryListener = () => changeDetectorRef.detectChanges();
 		this.mobileQuery.addEventListener('change', this._mobileQueryListener);

@@ -45,7 +45,7 @@ export class BedManagementFacadeService {
 		return this.bedSummary$;
 	}
 
-	public getBedManagementFilter(): Observable<BedManagementFilter>{
+	public getBedManagementFilter(): Observable<BedManagementFilter> {
 		return this.bedManagementFilter$;
 	}
 

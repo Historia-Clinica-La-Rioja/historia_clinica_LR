@@ -67,8 +67,7 @@ export class SearchCreateComponent implements OnInit {
 
 			if (this.noIdentity) {
 				this.navigateToSearchPatient();
-			}
-			else{
+			} else {
 				this.patientService.getPatientMinimal(searchRequest).subscribe(
 					(data: number[]) => {
 						if (!data.length) {
@@ -105,8 +104,7 @@ export class SearchCreateComponent implements OnInit {
 			this.formSearch.controls.gender.clearValidators();
 			this.formSearch.controls.IdentityVerificationStatus.setValidators(Validators.required);
 			updateForm(this.formSearch);
-		}
-		else {
+		} else {
 			this.formSearch.controls.identifType.setValidators(Validators.required);
 			this.formSearch.controls.gender.setValidators(Validators.required);
 			this.formSearch.controls.IdentityVerificationStatus.clearValidators();

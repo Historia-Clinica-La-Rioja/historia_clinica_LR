@@ -85,19 +85,19 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		this.loadHistoricalProblems();
 	}
 
-	loadActiveProblems(){
+	loadActiveProblems() {
 		this.activeProblems$ = this.ambulatoriaSummaryFacadeService.activeProblems$.pipe(
 			map(this.formatProblemsDates)
 		);
 	}
 
-	loadSolvedProblems(){
+	loadSolvedProblems() {
 		this.solvedProblems$ = this.hceGeneralStateService.getSolvedProblems(this.patientId).pipe(
 			map(this.formatProblemsDates)
 		);
 	}
 
-	loadChronicProblems(){
+	loadChronicProblems() {
 		this.chronicProblems$ = this.ambulatoriaSummaryFacadeService.chronicProblems$.pipe(
 			map(this.formatProblemsDates)
 		);
@@ -112,7 +112,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	loadHospitalizationProblems(){
+	loadHospitalizationProblems() {
 		this.hospitalizationProblems$ = this.hceGeneralStateService.getHospitalizationHistory(this.patientId).pipe(
 			map((problemas: HCEHospitalizationHistoryDto[]) => {
 				return problemas.map((problema: HCEHospitalizationHistoryDto) => {
@@ -170,7 +170,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 
 
 
-	solveProblemPopUp(problema: HCEPersonalHistoryDto){
+	solveProblemPopUp(problema: HCEPersonalHistoryDto) {
 		this.dialog.open(SolveProblemComponent, {
 			data: {
 				problema,

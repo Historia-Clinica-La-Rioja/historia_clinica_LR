@@ -56,7 +56,7 @@ export class InstitucionComponent implements OnInit {
 		});
 	}
 
-	private mapToAddress(institutionDto: InstitutionDto){
+	private mapToAddress(institutionDto: InstitutionDto) {
 		return {
 			street: institutionDto.institutionAddressDto.street,
 			number: institutionDto.institutionAddressDto.number,

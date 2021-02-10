@@ -58,7 +58,7 @@ export class SolveProblemComponent implements OnInit {
 
 	}
 
-	initializeFields(p: HealthConditionNewConsultationDto){
+	initializeFields(p: HealthConditionNewConsultationDto) {
 		this.form.controls.snomed.setValue(p.snomed.pt);
 		this.form.controls.cronico.setValue(p.isChronic);
 		this.form.controls.fechaInicio.setValue(new Date(p.startDate).toLocaleDateString('es-AR', {timeZone: 'UTC', year: 'numeric', month: '2-digit', day: '2-digit'}));
@@ -95,14 +95,14 @@ export class SolveProblemComponent implements OnInit {
 		}
 	}
 
-	getForm(): FormGroup{
+	getForm(): FormGroup {
 		return this.form;
 	}
 
 	checkInactivationDate() {
 		const fechaFin = this.form.controls.fechaFin.value;
 
-		if (fechaFin){
+		if (fechaFin) {
 			const inactivationDate = fechaFin.toDate();
 			if (this.startDate > inactivationDate)
 				this.form.controls.fechaFin.setErrors({min: true});

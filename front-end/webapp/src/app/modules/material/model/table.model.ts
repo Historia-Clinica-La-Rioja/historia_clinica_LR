@@ -6,7 +6,7 @@ export interface BasicTable<T> {
 	displayedColumns: string[];
 }
 
-export interface TableCheckbox<T> extends BasicTable<T>{
+export interface TableCheckbox<T> extends BasicTable<T> {
 	selection: SelectionModel<T>;
 }
 

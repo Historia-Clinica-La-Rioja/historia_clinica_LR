@@ -154,7 +154,7 @@ export class AplicarVacunaComponent implements OnInit {
 		}
 	}
 
-	setDefaultSpecialty(){
+	setDefaultSpecialty() {
 		this.defaultSpecialty = this.form.controls.clinicalSpecialty.value;
 	}
 
@@ -189,7 +189,7 @@ export class AplicarVacunaComponent implements OnInit {
 			});
 
 			finishAppointment.afterClosed().subscribe(accepted => {
-				if (accepted){
+				if (accepted) {
 					this.loading = true;
 					this.hceImmunizationService.gettingVaccine(this.appliedVaccines, this.data.patientId)
 						.subscribe(() => {

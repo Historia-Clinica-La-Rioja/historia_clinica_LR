@@ -78,8 +78,7 @@ export class SearchComponent implements OnInit {
 							this.isLoading = false;
 						}
 					});
-			}
-			else {
+			} else {
 				this.buildFormSearchWithoutValidations(params);
 				this.isLoading = false;
 			}

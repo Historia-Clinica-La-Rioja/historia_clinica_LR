@@ -17,7 +17,7 @@ export class ExternalSummaryCardComponent implements OnInit, OnChanges {
 
 	ngOnInit(): void {}
 
-	ngOnChanges(){
+	ngOnChanges() {
 		this.minimized = false;
 	}
 

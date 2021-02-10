@@ -29,7 +29,7 @@ export class AuthenticationService {
 		});
 	}
 
-	closeModals(){
+	closeModals() {
 		this.dialogRef.closeAll();
 	}
 

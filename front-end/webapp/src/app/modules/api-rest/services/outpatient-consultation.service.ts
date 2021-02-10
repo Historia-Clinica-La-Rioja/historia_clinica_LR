@@ -21,7 +21,7 @@ export class OutpatientConsultationService {
 		return this.http.post<boolean>(url, createOutpatientDto);
 	}
 
-	solveProblem(solvedProblem: HealthConditionNewConsultationDto, patientId: number): Observable<boolean>{
+	solveProblem(solvedProblem: HealthConditionNewConsultationDto, patientId: number): Observable<boolean> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/outpatient/consultations/solveProblem`;
 		return this.http.post<boolean>(url, solvedProblem);
 	}

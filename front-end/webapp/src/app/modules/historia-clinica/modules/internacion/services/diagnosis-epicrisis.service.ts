@@ -113,8 +113,7 @@ export class DiagnosisEpicrisisService {
 		const duplicatedDiagnosis = this.table.data.find(diagnosis => diagnosis.snomed.sctid === newDiagnosis.snomed.sctid);
 		if (duplicatedDiagnosis) {
 			this.changeMainDiagnosis(duplicatedDiagnosis, mainDiagnosisFormControl);
-		}
-		else {
+		} else {
 			this.table.data = pushTo<DiagnosisDto>(this.table.data, newDiagnosis);
 			this.changeMainDiagnosis(newDiagnosis, mainDiagnosisFormControl);
 		}

@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit {
 			if (recaptchaPublicConfigDto) {
 				this.recaptchaEnable = recaptchaPublicConfigDto.enabled;
 				this.recaptchaSiteKey = recaptchaPublicConfigDto.siteKey;
-				if (this.recaptchaEnable){
+				if (this.recaptchaEnable) {
 					this.form.controls.recaptchaReactive.setValidators(Validators.required);
 				}
 			}

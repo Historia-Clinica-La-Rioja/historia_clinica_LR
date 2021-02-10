@@ -231,7 +231,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 			}
 		});
 		dialogRef.afterClosed().subscribe(medicalCoverages => {
-			if (medicalCoverages){
+			if (medicalCoverages) {
 				this.patientMedicalCoveragesToAdd = medicalCoverages.patientMedicalCoverages;
 			}
 		});

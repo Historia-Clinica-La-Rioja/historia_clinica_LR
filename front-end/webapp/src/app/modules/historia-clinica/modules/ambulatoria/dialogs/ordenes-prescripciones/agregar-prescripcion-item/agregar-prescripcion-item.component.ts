@@ -151,7 +151,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit {
 		this.prescriptionItemForm.controls.observations.setValue(prescriptionItem.observations);
 
 		if (this.data.showDosage) {
-			if (prescriptionItem.isDailyInterval){
+			if (prescriptionItem.isDailyInterval) {
 				this.prescriptionItemForm.controls.interval.setValue(this.DEFAULT_RADIO_OPTION);
 			} else {
 				this.prescriptionItemForm.controls.interval.setValue(this.OTHER_RADIO_OPTION);

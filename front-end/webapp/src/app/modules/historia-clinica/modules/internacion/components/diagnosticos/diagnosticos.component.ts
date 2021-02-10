@@ -49,8 +49,7 @@ export class DiagnosticosComponent implements OnInit {
 	constructor(
 		private formBuilder: FormBuilder,
 		private snomedService: SnomedService
-	)
-	{
+	) {
 		this.displayedColumns = this.columns?.map(c => c.def).concat(['remove']);
 	}
 

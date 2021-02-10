@@ -93,7 +93,7 @@ export class AgendaComponent implements OnInit, OnDestroy {
 				this.router.navigateByUrl(`${this.routePrefix}/turnos`);
 			});
 			this.appointmentSubscription = this.appointmentFacade.getAppointments().subscribe(appointments => {
-					if (appointments){
+					if (appointments) {
 						this.appointments = appointments;
 						this.dailyAmounts$ = this.appointmentsService.getDailyAmounts(idAgenda);
 						this.loading = false;

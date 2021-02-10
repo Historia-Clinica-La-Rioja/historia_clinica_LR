@@ -35,7 +35,7 @@ export class ConceptsSearchComponent implements OnInit {
 	}
 
 	emitSearch(): void {
-		if (this.form.valid){
+		if (this.form.valid) {
 			this.search.emit(this.form.controls.searchValue.value);
 		}
 	}

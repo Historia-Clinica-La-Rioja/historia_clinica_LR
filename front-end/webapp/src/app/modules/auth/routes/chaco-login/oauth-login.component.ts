@@ -28,7 +28,7 @@ export class OauthLoginComponent implements OnInit {
 		});
 	}
 
-	loading(){
+	loading() {
 		return this.isLoading;
 	}
 

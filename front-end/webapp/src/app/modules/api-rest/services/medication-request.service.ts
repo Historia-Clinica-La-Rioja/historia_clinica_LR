@@ -66,7 +66,7 @@ export class MedicationRequestService {
 		return this.http.get<MedicationInfoDto[]>(url, {params : queryParams});
 	}
 
-	download(patientId: number, medicationRequestId: number): Observable<any>{
+	download(patientId: number, medicationRequestId: number): Observable<any> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/medication-requests/${medicationRequestId}/download`;
 		return this.http.get(
 			url,

@@ -89,7 +89,7 @@ export class ProblemasNuevaConsultaService {
 		}
 	}
 
-	addProblemToList(problema: Problema): void{
+	addProblemToList(problema: Problema): void {
 		this.add(problema);
 		this.form.controls.cronico.setValue(problema.cronico);
 		this.form.controls.fechaInicio.setValue(problema.fechaInicio);

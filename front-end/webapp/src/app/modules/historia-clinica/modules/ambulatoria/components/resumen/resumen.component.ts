@@ -60,7 +60,7 @@ export class ResumenComponent implements OnInit, OnChanges {
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
-		if (!changes.patientExternalSummary.isFirstChange()){
+		if (!changes.patientExternalSummary.isFirstChange()) {
 			this.loadExternalTables(false);
 		}
 	}
@@ -74,26 +74,25 @@ export class ResumenComponent implements OnInit, OnChanges {
 		this.anthropometricData$ = this.ambulatoriaSummaryFacadeService.anthropometricData$;
 	}
 
-	loadExternalTables(fromInit: boolean){
-		if (this.externalSummaryIsLoaded()){
+	loadExternalTables(fromInit: boolean) {
+		if (this.externalSummaryIsLoaded()) {
 			this.loadExternal = true;
 			this.healthConditionsTable = this.buildHealthConditionTable(this.patientExternalSummary.conditions);
 			this.allergiesTable = this.buildAllergiesTable(this.patientExternalSummary.allergies);
 			this.medicationsTable = this.buildMedicationsTable(this.patientExternalSummary.medications);
-		}
-		else {
+		} else {
 			this.loadExternal = false;
-			if (!fromInit){
+			if (!fromInit) {
 				this.snackBarService.showError('ambulatoria.bus-interoperabilidad.PACIENTE-SIN-DATOS');
 			}
 		}
 	}
 
-	externalSummaryIsLoaded(): boolean{
+	externalSummaryIsLoaded(): boolean {
 		return !!this.patientExternalSummary && !!this.patientExternalSummary.organization;
 	}
 
-	buildHealthConditionTable(data: ConditionDto[]): TableModel<ConditionDto>{
+	buildHealthConditionTable(data: ConditionDto[]): TableModel<ConditionDto> {
 		return {
 			columns: [
 				{
@@ -104,7 +103,7 @@ export class ResumenComponent implements OnInit, OnChanges {
 		};
 	}
 
-	buildAllergiesTable(data: AllergyIntoleranceDto[]): TableModel<AllergyIntoleranceDto>{
+	buildAllergiesTable(data: AllergyIntoleranceDto[]): TableModel<AllergyIntoleranceDto> {
 		return {
 			columns: [
 				{
@@ -115,7 +114,7 @@ export class ResumenComponent implements OnInit, OnChanges {
 		};
 	}
 
-	buildMedicationsTable(data: MedicationInteroperabilityDto[]): TableModel<MedicationInteroperabilityDto>{
+	buildMedicationsTable(data: MedicationInteroperabilityDto[]): TableModel<MedicationInteroperabilityDto> {
 		return {
 			columns: [
 				{

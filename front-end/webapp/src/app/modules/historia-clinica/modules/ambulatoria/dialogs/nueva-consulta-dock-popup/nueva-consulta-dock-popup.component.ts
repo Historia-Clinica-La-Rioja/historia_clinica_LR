@@ -70,13 +70,13 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, snomedService);
 	}
 
-	setProfessionalSpecialties(){
+	setProfessionalSpecialties() {
 		this.clinicalSpecialtyService.getLoggedInProfessionalClinicalSpecialties().subscribe( specialties => {
 			this.setSpecialtyFields(specialties, false)
 		});
 	}
 
-	setSpecialtyFields(specialtyArray, fixedSpecialty){
+	setSpecialtyFields(specialtyArray, fixedSpecialty) {
 		this.specialties = specialtyArray;
 		this.fixedSpecialty = fixedSpecialty;
 		this.defaultSpecialty = specialtyArray[0];
@@ -189,19 +189,19 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			this.datosAntropometricosNuevaConsultaService.setWeightError('ambulatoria.paciente.nueva-consulta.errors.PESO_MAX');
 		}
 
-		if (parseInt(consulta.vitalSigns.heartRate?.value) < 0){
+		if (parseInt(consulta.vitalSigns.heartRate?.value) < 0) {
 			this.signosVitalesNuevaConsultaService.setHeartRateError('ambulatoria.paciente.nueva-consulta.errors.FRECUENCIA_CARDIACA_MIN');
 		}
 
-		if (parseInt(consulta.vitalSigns.respiratoryRate?.value) < 0){
+		if (parseInt(consulta.vitalSigns.respiratoryRate?.value) < 0) {
 			this.signosVitalesNuevaConsultaService.setRespiratoryRateError('ambulatoria.paciente.nueva-consulta.errors.FRECUENCIA_RESPIRATORIA_MIN');
 		}
 
-		if (parseInt(consulta.vitalSigns.temperature?.value) < 0){
+		if (parseInt(consulta.vitalSigns.temperature?.value) < 0) {
 			this.signosVitalesNuevaConsultaService.setTemperatureError('ambulatoria.paciente.nueva-consulta.errors.TEMPERATURA_CORPORAL_MIN');
 		}
 
-		if (parseInt(consulta.vitalSigns.bloodOxygenSaturation?.value) < 0){
+		if (parseInt(consulta.vitalSigns.bloodOxygenSaturation?.value) < 0) {
 			this.signosVitalesNuevaConsultaService.setBloodOxygenSaturationError('ambulatoria.paciente.nueva-consulta.errors.SATURACION_OXIGENO_MIN');
 		}
 

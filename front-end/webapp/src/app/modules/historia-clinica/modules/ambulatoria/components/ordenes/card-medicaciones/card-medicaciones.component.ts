@@ -202,7 +202,7 @@ export class CardMedicacionesComponent implements OnInit {
 	}
 
 	checkMedicationStatus(statusId: string): boolean {
-		switch (statusId){
+		switch (statusId) {
 			case this.MEDICATION_STATUS.ACTIVE.id:
 				return this.selectedMedicationList.every(m => m.statusId === statusId);
 			case this.MEDICATION_STATUS.STOPPED.id:

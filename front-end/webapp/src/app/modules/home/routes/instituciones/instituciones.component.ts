@@ -53,14 +53,14 @@ export class InstitucionesComponent implements OnInit {
 		}
 	}
 
-	hasAccessToBackoffice(allRoles: RoleAssignment[]){
+	hasAccessToBackoffice(allRoles: RoleAssignment[]) {
 		return allRoles
 			.filter((ra) => ra.role === ERole.ROOT ||
 				ra.role === ERole.ADMINISTRADOR ||
 				ra.role === ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE ).length > 0;
 	}
 
-	hasAccessToWebapp(allRoles: RoleAssignment[]){
+	hasAccessToWebapp(allRoles: RoleAssignment[]) {
 		return allRoles
 			.filter((ra) => ra.role !== ERole.ROOT &&
 				ra.role !== ERole.ADMINISTRADOR &&

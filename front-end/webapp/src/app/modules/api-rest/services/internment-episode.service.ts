@@ -18,7 +18,7 @@ export class InternmentEpisodeService {
 		private contextService: ContextService) {
 	}
 
-	setNewInternmentEpisode(intenmentEpisode): Observable<any>{
+	setNewInternmentEpisode(intenmentEpisode): Observable<any> {
 		const url = `${environment.apiBase}` + BASIC_URL_PREFIX + `/${this.contextService.institutionId}` + BASIC_URL_SUFIX;
 		return this.http.post<any>(url, intenmentEpisode);
 	}

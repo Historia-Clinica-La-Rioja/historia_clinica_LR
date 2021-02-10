@@ -236,7 +236,7 @@ export class AgendaHorarioService {
 			return;
 		}
 		const newEnd = addDays(addMinutes(segment.date, minutesDiff), daysDiff);
-		if (newEnd.getDay() !== dragToSelectEvent.start.getDay()){
+		if (newEnd.getDay() !== dragToSelectEvent.start.getDay()) {
 			return;
 		}
 		const endOfView = endOfWeek(this.viewDate, { weekStartsOn: this.weekStartsOn });
@@ -274,7 +274,7 @@ export class AgendaHorarioService {
 	private setNewEvent(event: CalendarEvent, dialogInfo) {
 		if (dialogInfo === REMOVEATTENTION) {
 			this.diaryOpeningHours = this.diaryOpeningHours.filter((iEvent) => iEvent !== event);
-		}else{
+		} else {
 			delete event.meta?.tmpEvent;
 			event.meta = dialogInfo;
 			event.title = this.getMedicalAttentionTypeText(dialogInfo.medicalAttentionType.id);

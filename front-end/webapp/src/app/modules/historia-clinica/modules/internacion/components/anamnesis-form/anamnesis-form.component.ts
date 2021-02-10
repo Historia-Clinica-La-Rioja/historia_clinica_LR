@@ -249,13 +249,13 @@ export class AnamnesisFormComponent implements OnInit {
 	private apiErrorsProcess(responseErrors): void {
 		this.mainDiagnosisError = responseErrors.mainDiagnosis;
 		Object.getOwnPropertyNames(responseErrors).forEach(val => {
-			if (val !== 'mainDiagnosis' && val !== 'message'){
+			if (val !== 'mainDiagnosis' && val !== 'message') {
 				let error = responseErrors[val];
-				if (Array.isArray(error)){
+				if (Array.isArray(error)) {
 					error.forEach(elementError =>
 						this.apiErrors.push(elementError)
 					);
-				}else
+				} else
 				this.apiErrors.push(error);
 			}
 		});

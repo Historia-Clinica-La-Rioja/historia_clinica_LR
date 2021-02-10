@@ -21,13 +21,13 @@ export class PersonalInformationComponent implements OnInit {
 	ngOnChanges() {
 		if (this.personalInformation?.address) {
 			this.addressPresent = Object.values(this.personalInformation?.address).find(o => o && typeof(o) !== 'object') ? true : false;
-			if (this.addressPresent){
+			if (this.addressPresent) {
 				this.address = this.mapToAddress(this.personalInformation.address);
 			}
 		}
 	}
 
-	mapToAddress(addressDto: AddressDto){
+	mapToAddress(addressDto: AddressDto) {
 		return {
 			street: addressDto.street,
 			number: addressDto.number,

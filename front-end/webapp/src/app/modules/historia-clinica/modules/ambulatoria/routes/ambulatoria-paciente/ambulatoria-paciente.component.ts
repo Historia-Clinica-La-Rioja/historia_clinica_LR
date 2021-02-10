@@ -76,7 +76,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 
 	}
 
-	loadExternalInstitutions(){
+	loadExternalInstitutions() {
 		let externalInstitutions = this.interoperabilityBusService.getPatientLocation(this.patientId.toString()).subscribe(location => {
 			if (location.length === 0) {
 				this.snackBarService.showError('ambulatoria.bus-interoperabilidad.PACIENTE-NO-FEDERADO');
@@ -86,7 +86,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		this.showTimeOutMessages(externalInstitutions);
 	}
 
-	loadExternalSummary(organization: OrganizationDto){
+	loadExternalSummary(organization: OrganizationDto) {
 		this.spinner = true;
 
 		let info = this.interoperabilityBusService.getPatientInfo(this.patientId.toString(), organization.custodian)
@@ -98,15 +98,15 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		this.showTimeOutMessages(info);
 	}
 
-	externalInstitutionsClicked(){
-		if (!this.loaded){
+	externalInstitutionsClicked() {
+		if (!this.loaded) {
 			this.loaded = true;
 			this.loadExternalInstitutions();
 			this.externalInstitutionPlaceholder = ' ';
 		}
 	}
 
-	showTimeOutMessages(subscription){
+	showTimeOutMessages(subscription) {
 		setTimeout(() => {
 			if (this.spinner) {
 				subscription.unsubscribe();
@@ -134,11 +134,10 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		}
 	}
 
-	onTabChanged(event: MatTabChangeEvent)
-	{
+	onTabChanged(event: MatTabChangeEvent) {
 		// TODO Utilizar este método para actualizar componentes asociados a Tabs
 
-		if (event.index == RESUMEN_INDEX){
+		if (event.index == RESUMEN_INDEX) {
 			this.ambulatoriaSummaryFacadeService.setFieldsToUpdate({
 				allergies: false,
 				familyHistories: false,

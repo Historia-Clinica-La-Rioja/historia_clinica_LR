@@ -114,14 +114,14 @@ export class PatientDischargeComponent implements OnInit {
 
 	}
 
-	private loadForm(){
+	private loadForm() {
 		this.dischargeForm = this.formBuilder.group({
 			dischargeDate: [null, [Validators.required]],
 			dischargeTypeId: [null, [Validators.required]]
 		});
 	}
 
-	private setDischargeFormWithEpicrisisRequired(){
+	private setDischargeFormWithEpicrisisRequired() {
 		this.dischargeForm.controls.dischargeTypeId.disable();
 		this.intermentEpisodeService.getPatientDischarge(this.internmentId)
 			.subscribe(discharge => {
@@ -129,7 +129,7 @@ export class PatientDischargeComponent implements OnInit {
 			});
 	}
 
-	private setMinimumDateForDischarge(){
+	private setMinimumDateForDischarge() {
 		this.intermentEpisodeService.getMinDischargeDate(this.internmentId)
 				.subscribe ( minDischargeDate => {
 					this.minDischargeDate = minDischargeDate;

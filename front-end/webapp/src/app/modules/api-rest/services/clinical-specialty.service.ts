@@ -31,12 +31,12 @@ export class ClinicalSpecialtyService {
 		return of([]);
 	}
 
-	getAppointmentClinicalSpecialty(patientId): Observable<any>{
+	getAppointmentClinicalSpecialty(patientId): Observable<any> {
 		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/clinicalspecialty/patient/${patientId}`;
 		return this.http.get<any[]>(url);
 	}
 
-	getLoggedInProfessionalClinicalSpecialties(): Observable<any[]>{
+	getLoggedInProfessionalClinicalSpecialties(): Observable<any[]> {
 		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/clinicalspecialty/loggedProfessionalClinicalSpecialty`;
 		return this.http.get<any[]>(url);
 	}
