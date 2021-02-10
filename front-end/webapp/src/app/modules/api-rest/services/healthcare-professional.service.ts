@@ -54,7 +54,7 @@ export class HealthcareProfessionalService {
 	searchByName(name: string): Observable<ProfessionalDto[]> {
 		let url = `${environment.apiBase}` + BASIC_URL_PREFIX + '/' + `${this.contextService.institutionId}` +
 			BASIC_URL_SUFIX + '/search-by-name';
-		return this.http.get<ProfessionalDto[]>(url, { params: { 'name': name } });
+		return this.http.get<ProfessionalDto[]>(url, { params: { name: name } });
 	}
 
 	getOne(healthcareProfessionalId: number): Observable<ProfessionalDto> {

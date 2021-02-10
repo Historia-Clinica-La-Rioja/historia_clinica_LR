@@ -6,43 +6,43 @@ import { HttpClient } from '@angular/common/http';
 
 const TRIAGE_CATEGORIES = [
 	{
-		'id': 1,
-		'description': 'Nivel I',
-		'colour': {
-			'name': 'red',
-			'code': 'some'
+		id: 1,
+		description: 'Nivel I',
+		colour: {
+			name: 'red',
+			code: 'some'
 		}
 	},
 	{
-		'id': 2,
-		'description': 'Nivel II',
-		'colour': {
-			'name': 'orange',
-			'code': 'some'
+		id: 2,
+		description: 'Nivel II',
+		colour: {
+			name: 'orange',
+			code: 'some'
 		}
 	},
 	{
-		'id': 3,
-		'description': 'Nivel III',
-		'colour': {
-			'name': 'yellow',
-			'code': 'some'
+		id: 3,
+		description: 'Nivel III',
+		colour: {
+			name: 'yellow',
+			code: 'some'
 		}
 	},
 	{
-		'id': 4,
-		'description': 'Nivel IV',
-		'colour': {
-			'name': 'green',
-			'code': 'some'
+		id: 4,
+		description: 'Nivel IV',
+		colour: {
+			name: 'green',
+			code: 'some'
 		}
 	},
 	{
-		'id': 5,
-		'description': 'Nivel V',
-		'colour': {
-			'name': 'blue',
-			'code': 'some'
+		id: 5,
+		description: 'Nivel V',
+		colour: {
+			name: 'blue',
+			code: 'some'
 		}
 	}
 ];

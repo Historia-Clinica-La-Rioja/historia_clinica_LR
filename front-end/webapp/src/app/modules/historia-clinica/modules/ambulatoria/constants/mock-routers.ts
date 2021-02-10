@@ -131,9 +131,9 @@ export const MOCKS_ORDERS = [
 						},
 						observations: 'Hacerlo en ayuno',
 						doctor: {
-							'id': 1,
-							'firstName': 'San',
-							'lastName': 'Martin'
+							id: 1,
+							firstName: 'San',
+							lastName: 'Martin'
 						  },
 						serviceRequestId: 1,
 						totalDays: 10
@@ -150,9 +150,9 @@ export const MOCKS_ORDERS = [
 						},
 						observations: 'Bien de costado (?',
 						doctor: {
-							'id': 1,
-							'firstName': 'San',
-							'lastName': 'Martin'
+							id: 1,
+							firstName: 'San',
+							lastName: 'Martin'
 						},
 						serviceRequestId: 5,
 						totalDays: 3
@@ -744,9 +744,9 @@ export const MOCKS_ORDERS = [
 						pt: 'ANGINAS'
 					},
 					doctor: {
-						'id': 1,
-						'firstName': 'San',
-						'lastName': 'Martin'
+						id: 1,
+						firstName: 'San',
+						lastName: 'Martin'
 					  },
 					serviceRequestId: 1,
 					statusId: '213123',
