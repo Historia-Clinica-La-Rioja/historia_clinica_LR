@@ -60,7 +60,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 				showDosage: this.data.addPrescriptionItemDialogData.showDosage,
 				showStudyCategory: this.data.addPrescriptionItemDialogData.showStudyCategory,
 				eclTerm: this.data.addPrescriptionItemDialogData.eclTerm,
-				item: item,
+				item,
 			},
 			width: '35%',
 		});

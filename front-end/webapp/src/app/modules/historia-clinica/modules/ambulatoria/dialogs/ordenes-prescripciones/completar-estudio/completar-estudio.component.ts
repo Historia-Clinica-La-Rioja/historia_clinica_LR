@@ -36,7 +36,7 @@ export class CompletarEstudioComponent implements OnInit {
 	}
 
 	closeModal(simpleClose: boolean, completed?: boolean): void {
-		this.dialogRef.close(simpleClose ? null : {completed: completed});
+		this.dialogRef.close(simpleClose ? null : {completed});
 	}
 
 	prescriptionItemDataBuilder(diagnosticReport: DiagnosticReportInfoDto): PrescriptionItemData {

@@ -30,9 +30,9 @@ export class MedicationRequestService {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/medication-requests/suspend`;
 		return this.http.put<void>(url,
 			{
-				medicationsIds: medicationsIds,
-				dayQuantity: dayQuantity,
-				observations: observations,
+				medicationsIds,
+				dayQuantity,
+				observations,
 			}
 		);
 	}
@@ -42,7 +42,7 @@ export class MedicationRequestService {
 			return of();
 		}
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/medication-requests/finalize`;
-		return this.http.put<void>(url, {medicationsIds: medicationsIds});
+		return this.http.put<void>(url, {medicationsIds});
 	}
 
 	reactivate(patientId: number, medicationsIds: number[]) {
@@ -50,7 +50,7 @@ export class MedicationRequestService {
 			return;
 		}
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/medication-requests/reactivate`;
-		return this.http.put<void>(url, {medicationsIds: medicationsIds});
+		return this.http.put<void>(url, {medicationsIds});
 	}
 
 	medicationRequestList(patientId: number, statusId: string, medicationStatement: string, healthCondition: string): Observable<MedicationInfoDto[]> {

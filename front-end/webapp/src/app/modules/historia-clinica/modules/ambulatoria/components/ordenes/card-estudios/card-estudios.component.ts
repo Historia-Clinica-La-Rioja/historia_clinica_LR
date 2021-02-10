@@ -140,7 +140,7 @@ export class CardEstudiosComponent implements OnInit {
 		const newCompleteStudy = this.dialog.open(CompletarEstudioComponent,
 			{
 				data: {
-					diagnosticReport: diagnosticReport,
+					diagnosticReport,
 					patientId: this.patientId,
 				},
 				width: '35%',
@@ -162,7 +162,7 @@ export class CardEstudiosComponent implements OnInit {
 		const newShowStudyResults = this.dialog.open(VerResultadosEstudioComponent,
 			{
 				data: {
-					diagnosticReport: diagnosticReport,
+					diagnosticReport,
 					patientId: this.patientId,
 				},
 				width: '35%',

@@ -100,7 +100,6 @@
 	"no-angle-bracket-type-assertion": false,
 	"no-eval": false,
 	"radix": false,
-	"object-literal-shorthand": false,
 	"no-shadowed-variable": false
   },
   "rulesDirectory": [

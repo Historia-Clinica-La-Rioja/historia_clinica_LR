@@ -14,7 +14,7 @@ export class PersonService {
 
 	getRenaperPersonData(params): Observable<PersonBasicDataResponseDto> {
 		let url = `${environment.apiBase}/renaper/searchPerson`;
-		return this.http.get<PersonBasicDataResponseDto>(url, { params: params });
+		return this.http.get<PersonBasicDataResponseDto>(url, { params });
 	}
 
 	getPersonalInformation<PersonalInformationDto>(personId): Observable<PersonalInformationDto> {

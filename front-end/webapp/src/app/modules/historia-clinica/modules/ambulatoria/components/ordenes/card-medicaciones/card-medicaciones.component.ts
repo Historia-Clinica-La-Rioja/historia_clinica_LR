@@ -195,7 +195,7 @@ export class CardMedicacionesComponent implements OnInit {
 		const checkboxArray = this.medicationCheckboxes.controls.checkboxArray as FormArray;
 
 		checkboxArray.controls.forEach(control => {
-			control.setValue({checked: checked});
+			control.setValue({checked});
 		});
 
 		this.selectedMedicationList = checked ? this.medicationsInfo : [];
