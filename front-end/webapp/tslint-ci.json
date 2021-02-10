@@ -96,7 +96,6 @@
 	"variable-name": false,
 	"no-trailing-whitespace": false,
 	"triple-equals": false,
-	"curly": false,
 	"align": false,
 	"typedef-whitespace": false,
 	"no-string-literal": false,

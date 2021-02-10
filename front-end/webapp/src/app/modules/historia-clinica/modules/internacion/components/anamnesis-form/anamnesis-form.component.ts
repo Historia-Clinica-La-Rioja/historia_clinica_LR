@@ -255,8 +255,9 @@ export class AnamnesisFormComponent implements OnInit {
 					error.forEach(elementError =>
 						this.apiErrors.push(elementError)
 					);
-				} else
+				} else {
 				this.apiErrors.push(error);
+				}
 			}
 		});
 	}

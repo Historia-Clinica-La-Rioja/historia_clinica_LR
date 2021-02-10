@@ -54,7 +54,7 @@ const ROUTE_EDIT_PATIENT = 'pacientes/edit';
 export class InternacionPacienteComponent implements OnInit {
 
 	public patient$: Observable<PatientBasicData>;
-	
+
 	public personPhoto: PersonPhotoDto;
 	public internacionSummary = INTERNACION;
 	public anamnesisDoc: AnamnesisSummaryDto;
@@ -140,10 +140,11 @@ export class InternacionPacienteComponent implements OnInit {
 	}
 
 	goToAnamnesis(): void {
-		if (this.anamnesisDoc?.id)
+		if (this.anamnesisDoc?.id) {
 			this.router.navigate([`${this.router.url}/anamnesis/${this.anamnesisDoc?.id}`]);
-		else
+		} else {
 			this.router.navigate([`${this.router.url}/anamnesis`]);
+		}
 	}
 
 	goToNotaEvolucion(): void {

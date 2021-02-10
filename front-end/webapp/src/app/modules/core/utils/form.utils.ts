@@ -32,8 +32,9 @@ export function scrollIntoError(form: FormGroup, el: ElementRef) {
 
 	function getInvalidElement(el: ElementRef, controlName: string, form: FormGroup) {
 		const formControl = form.controls[controlName] as FormArray;
-		if (formControl.controls)
+		if (formControl.controls) {
 			return el.nativeElement.querySelector('[formgroupname="' + controlName + '"]');
+		}
 		return el.nativeElement.querySelector('[formcontrolname="' + controlName + '"]');
 	}
 }

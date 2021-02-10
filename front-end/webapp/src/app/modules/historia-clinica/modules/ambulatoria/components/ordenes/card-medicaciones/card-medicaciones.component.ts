@@ -221,8 +221,9 @@ export class CardMedicacionesComponent implements OnInit {
 	clear(): void {
 		this.formFilter.reset();
 		this.formFilter.controls.statusId.setValue(MEDICATION_STATUS.ACTIVE.id);
-		if (this.hideFilterPanel === false)
+		if (this.hideFilterPanel === false) {
 			this.getMedication();
+		}
 	}
 
 	prescriptionItemDataBuilder(medication: MedicationInfoDto): PrescriptionItemData {
@@ -236,9 +237,10 @@ export class CardMedicacionesComponent implements OnInit {
 	}
 
 	hasActionsMenu(medicationInfo: MedicationInfoDto): boolean {
-		if (this.hasRoleToView)
-			return (medicationInfo.hasRecipe && medicationInfo.medicationRequestId !== null)
-		else return true
+		if (this.hasRoleToView) {
+			return (medicationInfo.hasRecipe && medicationInfo.medicationRequestId !== null);
+		}
+		return true;
 	}
 
 }

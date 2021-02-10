@@ -7,9 +7,9 @@ const getTokenExpirationDate = (token: string): Date => {
 }
 
 const isTokenExpired = (token: string): boolean => {
-	if (!token) return true;
+	if (!token) { return true; }
 	const tokenExpirationDate = getTokenExpirationDate(token);
-	if (tokenExpirationDate === null) return false;
+	if (tokenExpirationDate === null) { return false; }
 	const actualDate = new Date().valueOf() / 1000;
 	return tokenExpirationDate.valueOf() <= actualDate;
 }

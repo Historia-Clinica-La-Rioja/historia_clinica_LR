@@ -277,9 +277,9 @@ export class SearchComponent implements OnInit {
 	}
 
 	goToNewPatient() {
-		if (this.searchPatient)
+		if (this.searchPatient) {
 			this.goToAddPatient(this.searchPatient);
-		else {
+		} else {
 			const patient = {
 				identificationTypeId: this.identificationTypeId,
 				identificationNumber: this.identificationNumber,

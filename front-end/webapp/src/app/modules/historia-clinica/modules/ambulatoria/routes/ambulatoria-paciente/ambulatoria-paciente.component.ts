@@ -81,7 +81,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 			if (location.length === 0) {
 				this.snackBarService.showError('ambulatoria.bus-interoperabilidad.PACIENTE-NO-FEDERADO');
 				this.loaded = false;
-			} else this.externalInstitutions = location;
+			} else { this.externalInstitutions = location; }
 		});
 		this.showTimeOutMessages(externalInstitutions);
 	}

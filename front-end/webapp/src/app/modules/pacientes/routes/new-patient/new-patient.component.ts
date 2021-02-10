@@ -153,8 +153,9 @@ export class NewPatientComponent implements OnInit {
 			let personRequest: APatientDto = this.mapToPersonRequest();
 			this.patientService.addPatient(personRequest)
 				.subscribe(patientId => {
-					if (this.personPhoto != null)
+					if (this.personPhoto != null) {
 						this.patientService.addPatientPhoto(patientId, this.personPhoto).subscribe();
+					}
 
 					if (this.patientMedicalCoveragesToAdd) {
 						const patientMedicalCoveragesDto: PatientMedicalCoverageDto[] =

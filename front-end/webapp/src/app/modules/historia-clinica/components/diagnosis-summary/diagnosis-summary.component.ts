@@ -64,8 +64,9 @@ export class DiagnosisSummaryComponent implements OnInit {
 				this.viewCovidAlert = true;
 				this.tableModel = this.buildTable(data);
 				data.forEach(elem => {
-					if (elem.snomed.sctid == COVID_SNOMED.sctid && elem.statusId == HEALTH_CLINICAL_STATUS.ACTIVO)
+					if (elem.snomed.sctid == COVID_SNOMED.sctid && elem.statusId == HEALTH_CLINICAL_STATUS.ACTIVO) {
 						this.viewCovidAlert = false;
+					}
 				});
 			}
 		);

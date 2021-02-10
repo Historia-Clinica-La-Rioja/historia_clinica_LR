@@ -108,8 +108,9 @@ export class SearchCreateComponent implements OnInit {
 			this.formSearch.controls.identifType.setValidators(Validators.required);
 			this.formSearch.controls.gender.setValidators(Validators.required);
 			this.formSearch.controls.IdentityVerificationStatus.clearValidators();
-			if (this.formSearch.controls.identifType.value !== IDENTIFICATION_TYPE_IDS.NO_POSEE)
+			if (this.formSearch.controls.identifType.value !== IDENTIFICATION_TYPE_IDS.NO_POSEE) {
 				this.formSearch.controls.identifNumber.setValidators([Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]);
+			}
 			updateForm(this.formSearch);
 		}
 	}

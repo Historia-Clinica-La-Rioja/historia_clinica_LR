@@ -94,8 +94,9 @@ export class HistoricalProblemsFacadeService {
 	private filterOptions(outpatientEvolutionSummary: OutpatientEvolutionSummaryDto[]): void {
 		outpatientEvolutionSummary.forEach(outpatientEvolution => {
 
-			if (outpatientEvolution.clinicalSpecialty)
+			if (outpatientEvolution.clinicalSpecialty) {
 				this.specialties = pushIfNotExists(this.specialties, outpatientEvolution.clinicalSpecialty, this.compareSpecialty);
+			}
 
 			outpatientEvolution.healthConditions.forEach(oe => {
 				this.problems = pushIfNotExists(this.problems, {problemId: oe.snomed.sctid, problemDescription: oe.snomed.pt}, this.compareProblems);
