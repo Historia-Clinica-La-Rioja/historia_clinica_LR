@@ -19,7 +19,7 @@ export class DiaryOpeningHoursService {
 		if (!diaryIds || diaryIds.length === 0) {
 			return of([]);
 		}
-		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/diaryOpeningHours`;
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/diaryOpeningHours`;
 		return this.http.get<DiaryOpeningHoursDto[]>(url, {
 			params: { diaryIds: `${diaryIds.join(',')}` }
 		});

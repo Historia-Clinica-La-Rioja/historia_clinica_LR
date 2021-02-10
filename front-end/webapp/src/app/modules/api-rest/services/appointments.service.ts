@@ -26,7 +26,7 @@ export class AppointmentsService {
 		if (!diaryIds || diaryIds.length === 0) {
 			return of([]);
 		}
-		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments`;
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments`;
 		return this.http.get<AppointmentListDto[]>(url, {
 			params: {
 				diaryIds: `${diaryIds.join(',')}`

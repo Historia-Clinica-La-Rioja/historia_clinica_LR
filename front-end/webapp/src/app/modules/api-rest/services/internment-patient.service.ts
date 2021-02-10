@@ -20,12 +20,12 @@ export class InternmentPatientService {
 	}
 
 	getAllInternmentPatientsBasicData(): Observable<InternmentPatientDto[]> {
-		let url = `${environment.apiBase}` + BASIC_URL_PREFIX + `/${this.contextService.institutionId}` + BASIC_URL_SUFIX + `/basicdata`;
+		const url = `${environment.apiBase}` + BASIC_URL_PREFIX + `/${this.contextService.institutionId}` + BASIC_URL_SUFIX + `/basicdata`;
 		return this.http.get<InternmentPatientDto[]>(url);
 	}
 
 	internmentEpisodeIdInProcess(patientId: number): Observable<InternmentEpisodeProcessDto> {
-		let url = `${environment.apiBase}` + BASIC_URL_PREFIX + `/${this.contextService.institutionId}` + BASIC_URL_SUFIX  + `/${patientId}` + `/internmentEpisodeIdInProcess/`;
+		const url = `${environment.apiBase}` + BASIC_URL_PREFIX + `/${this.contextService.institutionId}` + BASIC_URL_SUFIX  + `/${patientId}` + `/internmentEpisodeIdInProcess/`;
 		return this.http.get<InternmentEpisodeProcessDto>(url);
 	}
 }

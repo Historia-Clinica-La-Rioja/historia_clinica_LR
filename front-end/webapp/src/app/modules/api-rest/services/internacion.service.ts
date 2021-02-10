@@ -16,12 +16,12 @@ export class InternacionService {
 	) {	}
 
 	getAllPacientesInternados(): Observable<InternmentEpisodeDto[]> {
-		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/patients`;
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/patients`;
 		return this.http.get<InternmentEpisodeDto[]>(url);
 	}
 
 	getInternmentEpisodeSummary(internmentId: number): Observable<InternmentSummaryDto> {
-		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentId}/summary`;
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentId}/summary`;
 		return this.http.get<InternmentSummaryDto>(url);
 	}
 

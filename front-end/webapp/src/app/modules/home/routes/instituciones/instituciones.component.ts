@@ -28,7 +28,7 @@ export class InstitucionesComponent implements OnInit {
 			this.backoffice = this.hasAccessToBackoffice(allRoles);
 
 			institutionService.getInstitutions(institutionIds).subscribe(institutions => {
-				let uniqueIds = uniqueItems(institutionIds);
+				const uniqueIds = uniqueItems(institutionIds);
 
 				const webappAccess = this.hasAccessToWebapp(allRoles);
 

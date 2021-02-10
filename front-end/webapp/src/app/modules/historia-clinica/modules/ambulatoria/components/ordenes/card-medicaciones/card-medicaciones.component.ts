@@ -191,7 +191,7 @@ export class CardMedicacionesComponent implements OnInit {
 		if (checked) {
 			this.selectedMedicationList.push(medicationInfo);
 		} else {
-			let selectedMedicationListCopy = [...this.selectedMedicationList];
+			const selectedMedicationListCopy = [...this.selectedMedicationList];
 			this.selectedMedicationList = selectedMedicationListCopy.filter(m => m.id !== medicationInfo.id);
 		}
 	}

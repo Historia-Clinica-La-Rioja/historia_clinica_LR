@@ -75,7 +75,7 @@ export class NewEpisodeService {
 		}
 
 		function getDateWithTime(time: string[]): Date {
-			let date = new Date();
+			const date = new Date();
 			date.setHours(Number(time[0]), Number(time[1]));
 			return date;
 		}

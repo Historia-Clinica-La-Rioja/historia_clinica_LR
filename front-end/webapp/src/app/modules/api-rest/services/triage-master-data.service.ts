@@ -58,27 +58,27 @@ export class TriageMasterDataService {
 	}
 
 	getCategories(): Observable<TriageCategoryDto[]> {
-		let url = `${environment.apiBase + BASIC_URL_PREFIX}/category`;
+		const url = `${environment.apiBase + BASIC_URL_PREFIX}/category`;
 		return of(TRIAGE_CATEGORIES);
 	}
 
 	getBodyTemperature(): Observable<MasterDataDto[]> {
-		let url = `${environment.apiBase + BASIC_URL_PREFIX}/bodyTemperature`;
+		const url = `${environment.apiBase + BASIC_URL_PREFIX}/bodyTemperature`;
 		return this.http.get<MasterDataDto[]>(url);
 	}
 
 	getMuscleHypertonia(): Observable<MasterDataDto[]> {
-		let url = `${environment.apiBase + BASIC_URL_PREFIX}/muscleHypertonia`;
+		const url = `${environment.apiBase + BASIC_URL_PREFIX}/muscleHypertonia`;
 		return this.http.get<MasterDataDto[]>(url);
 	}
 
 	getRespiratoryRetraction(): Observable<MasterDataDto[]> {
-		let url = `${environment.apiBase + BASIC_URL_PREFIX}/respiratoryRetraction`;
+		const url = `${environment.apiBase + BASIC_URL_PREFIX}/respiratoryRetraction`;
 		return this.http.get<MasterDataDto[]>(url);
 	}
 
 	getPerfusion(): Observable<MasterDataDto[]> {
-		let url = `${environment.apiBase + BASIC_URL_PREFIX}/perfusion`;
+		const url = `${environment.apiBase + BASIC_URL_PREFIX}/perfusion`;
 		return this.http.get<MasterDataDto[]>(url);
 	}
 }

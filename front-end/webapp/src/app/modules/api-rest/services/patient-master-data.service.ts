@@ -13,7 +13,7 @@ export class PatientMasterDataService {
 	}
 
 	getIdentityVerificationStatus(): Observable<IdentityVerificationStatus[]> {
-		let url = `${environment.apiBase}/masterdata/patient/withoutIdentityReasons`;
+		const url = `${environment.apiBase}/masterdata/patient/withoutIdentityReasons`;
 		return this.http.get<IdentityVerificationStatus[]>(url);
 	}
 }

@@ -16,7 +16,7 @@ export class InteroperabilityBusService {
 	getPatientLocation(patientId: string): Observable<OrganizationDto[]> {
 		let queryParams: HttpParams = new HttpParams();
 		queryParams = queryParams.append('identifier', patientId);
-		let url = `${environment.apiBase}/masterfile-federacion-service/Patient/patient-location`;
+		const url = `${environment.apiBase}/masterfile-federacion-service/Patient/patient-location`;
 		return this.http.get<OrganizationDto[]>(url, { params: queryParams });
 	}
 
@@ -24,7 +24,7 @@ export class InteroperabilityBusService {
 		let queryParams: HttpParams = new HttpParams();
 		queryParams = queryParams.append('subject', subject);
 		queryParams = queryParams.append('custodian', custodian);
-		let url = `${environment.apiBase}/masterfile-federacion-service/Patient`;
+		const url = `${environment.apiBase}/masterfile-federacion-service/Patient`;
 		return this.http.get<PatientSummaryDto>(url, { params: queryParams });
 	}
 

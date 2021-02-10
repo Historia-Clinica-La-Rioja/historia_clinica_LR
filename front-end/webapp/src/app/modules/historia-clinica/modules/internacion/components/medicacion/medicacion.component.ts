@@ -79,7 +79,7 @@ export class MedicacionComponent implements OnInit {
 
 	setConcept(selectedConcept: SnomedDto): void {
 		this.snomedConcept = selectedConcept;
-		let pt = selectedConcept ? selectedConcept.pt : '';
+		const pt = selectedConcept ? selectedConcept.pt : '';
 		this.form.controls.snomed.setValue(pt);
 	}
 

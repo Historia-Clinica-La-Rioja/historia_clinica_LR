@@ -41,6 +41,19 @@ El código en este proyecto sigue los estilos propuestos en [Angular coding styl
 
 En el archivo [.editorconfig](./.editorconf) se definen principalmente el estilo y tamaño de identación. Comprobar que el IDE esté utilizando esta configuración. Mas información en [EditorConfig](https://editorconfig.org/).
 
+### Lint
+
+La aplicación hace uso de la herramienta de _linting_ para verificar que se sigan las reglas especificadas.
+
+En el CI se utilizan las reglas definidas en [tslint-ci.json](./tslint-ci.json) mientras se trabaja en eliminar las diferencias con las reglas originales de Angular definidas en [tslint.json](./tslint.json).
+
+### Verificación que se hace en el CI
+> `npm run lint`
+
+### Reparación automática de la verificación del CI
+> `npm run lint:fix`
+
+
 ### Módulos
 
 La aplicación está compuesta por distintos módulos que se pueden agrupar en módulos de infraestructura y del dominio.

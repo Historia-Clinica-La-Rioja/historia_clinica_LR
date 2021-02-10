@@ -21,7 +21,7 @@ export class DoctorsOfficeService {
 	}
 
 	getAll(sectorId: number): Observable<DoctorsOfficeDto[]> {
-		let url = `${environment.apiBase}` + BASIC_URL_PREFIX + '/' + `${this.contextService.institutionId}` +
+		const url = `${environment.apiBase}` + BASIC_URL_PREFIX + '/' + `${this.contextService.institutionId}` +
 			BASIC_URL_SUFIX + `/sector/${sectorId}`;
 		return this.http.get<DoctorsOfficeDto[]>(url);
 	}
@@ -32,7 +32,7 @@ export class DoctorsOfficeService {
 	 *  = 2 Internación
 	 */
 	getBySectorType(sectorTypeId: number): Observable<DoctorsOfficeDto[]> {
-		let url = `${environment.apiBase + BASIC_URL_PREFIX}/${this.contextService.institutionId +
+		const url = `${environment.apiBase + BASIC_URL_PREFIX}/${this.contextService.institutionId +
 			BASIC_URL_SUFIX}/sectorType/${sectorTypeId}`;
 		return this.http.get<DoctorsOfficeDto[]>(url);
 	}

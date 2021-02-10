@@ -14,13 +14,13 @@ export class PersonMasterDataService {
 	) { }
 
 	getGenders(): Observable<GenderDto[]> {
-		let url = `${environment.apiBase}/person/masterdata/genders`;
+		const url = `${environment.apiBase}/person/masterdata/genders`;
 		return this.http.get<GenderDto[]>(url);
 	}
 
 
 	getIdentificationTypes(): Observable<IdentificationTypeDto[]> {
-		let url = `${environment.apiBase}/person/masterdata/identificationTypes`;
+		const url = `${environment.apiBase}/person/masterdata/identificationTypes`;
 		return this.http.get<IdentificationTypeDto[]>(url);
 	}
 }

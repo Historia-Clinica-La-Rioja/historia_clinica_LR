@@ -134,7 +134,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 	save(): void {
 		this.formSubmitted = true;
 		if (this.form.valid) {
-			let personRequest: APatientDto = this.mapToPersonRequest();
+			const personRequest: APatientDto = this.mapToPersonRequest();
 			this.patientService.addPatient(personRequest)
 				.subscribe(patientId => {
 					if (this.patientMedicalCoveragesToAdd) {
@@ -198,7 +198,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 	}
 
 	setProvinces() {
-		let idCountry: number = this.form.controls.addressCountryId.value;
+		const idCountry: number = this.form.controls.addressCountryId.value;
 		this.addressMasterDataService.getByCountry(idCountry)
 			.subscribe(provinces => {
 				this.provinces = provinces;
@@ -206,7 +206,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 	}
 
 	setDepartments() {
-		let idProvince: number = this.form.controls.addressProvinceId.value;
+		const idProvince: number = this.form.controls.addressProvinceId.value;
 		this.addressMasterDataService.getDepartmentsByProvince(idProvince)
 			.subscribe(departments => {
 				this.departments = departments;
@@ -215,7 +215,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 	}
 
 	setCities() {
-		let idDepartment: number = this.form.controls.addressDepartmentId.value;
+		const idDepartment: number = this.form.controls.addressDepartmentId.value;
 		this.addressMasterDataService.getCitiesByDepartment(idDepartment)
 			.subscribe(cities => {
 				this.cities = cities;

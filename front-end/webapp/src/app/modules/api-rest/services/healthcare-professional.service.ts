@@ -39,12 +39,12 @@ export class HealthcareProfessionalService {
 	}
 
 	getAll(): Observable<ProfessionalDto[]> {
-		let url = `${environment.apiBase}` + BASIC_URL_PREFIX + '/' + `${this.contextService.institutionId}` + BASIC_URL_SUFIX;
+		const url = `${environment.apiBase}` + BASIC_URL_PREFIX + '/' + `${this.contextService.institutionId}` + BASIC_URL_SUFIX;
 		return this.http.get<ProfessionalDto[]>(url);
 	}
 
 	getAllDoctors(): Observable<HealthcareProfessionalDto[]> {
-		let url = `${environment.apiBase}` + BASIC_URL_PREFIX + '/' + `${this.contextService.institutionId}` +
+		const url = `${environment.apiBase}` + BASIC_URL_PREFIX + '/' + `${this.contextService.institutionId}` +
 			BASIC_URL_SUFIX + '/doctors';
 		return this.http.get<HealthcareProfessionalDto[]>(url);
 	}
@@ -54,13 +54,13 @@ export class HealthcareProfessionalService {
 	}
 
 	searchByName(name: string): Observable<ProfessionalDto[]> {
-		let url = `${environment.apiBase}` + BASIC_URL_PREFIX + '/' + `${this.contextService.institutionId}` +
+		const url = `${environment.apiBase}` + BASIC_URL_PREFIX + '/' + `${this.contextService.institutionId}` +
 			BASIC_URL_SUFIX + '/search-by-name';
 		return this.http.get<ProfessionalDto[]>(url, { params: { name } });
 	}
 
 	getOne(healthcareProfessionalId: number): Observable<ProfessionalDto> {
-		let url = `${environment.apiBase}` + BASIC_URL_PREFIX + '/' + `${this.contextService.institutionId}` +
+		const url = `${environment.apiBase}` + BASIC_URL_PREFIX + '/' + `${this.contextService.institutionId}` +
 			BASIC_URL_SUFIX + '/' + healthcareProfessionalId;
 		return this.http.get<ProfessionalDto>(url);
 	}

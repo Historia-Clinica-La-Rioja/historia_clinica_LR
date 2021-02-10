@@ -77,7 +77,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	}
 
 	loadExternalInstitutions() {
-		let externalInstitutions = this.interoperabilityBusService.getPatientLocation(this.patientId.toString()).subscribe(location => {
+		const externalInstitutions = this.interoperabilityBusService.getPatientLocation(this.patientId.toString()).subscribe(location => {
 			if (location.length === 0) {
 				this.snackBarService.showError('ambulatoria.bus-interoperabilidad.PACIENTE-NO-FEDERADO');
 				this.loaded = false;
@@ -89,7 +89,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	loadExternalSummary(organization: OrganizationDto) {
 		this.spinner = true;
 
-		let info = this.interoperabilityBusService.getPatientInfo(this.patientId.toString(), organization.custodian)
+		const info = this.interoperabilityBusService.getPatientInfo(this.patientId.toString(), organization.custodian)
 			.subscribe(summary => {
 				this.patientExternalSummary = summary;
 				this.spinner = false;

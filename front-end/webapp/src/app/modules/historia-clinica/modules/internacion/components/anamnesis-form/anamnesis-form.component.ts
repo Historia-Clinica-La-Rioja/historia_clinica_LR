@@ -243,14 +243,14 @@ export class AnamnesisFormComponent implements OnInit {
 	}
 
 	setVitalSignEffectiveTime(newEffectiveTime: Moment, formField: string): void {
-		(<FormGroup> (<FormGroup> this.form.controls.vitalSigns).controls[formField]).controls.effectiveTime.setValue(newEffectiveTime);
+		((this.form.controls.vitalSigns as FormGroup).controls[formField] as FormGroup).controls.effectiveTime.setValue(newEffectiveTime);
 	}
 
 	private apiErrorsProcess(responseErrors): void {
 		this.mainDiagnosisError = responseErrors.mainDiagnosis;
 		Object.getOwnPropertyNames(responseErrors).forEach(val => {
 			if (val !== 'mainDiagnosis' && val !== 'message') {
-				let error = responseErrors[val];
+				const error = responseErrors[val];
 				if (Array.isArray(error)) {
 					error.forEach(elementError =>
 						this.apiErrors.push(elementError)

@@ -227,7 +227,7 @@ export class EpicrisisFormComponent implements OnInit {
 
 	setConcept(selectedConcept: SnomedDto): void {
 		this.snomedConcept = selectedConcept;
-		let pt = selectedConcept ? selectedConcept.pt : '';
+		const pt = selectedConcept ? selectedConcept.pt : '';
 		this.formDiagnosis.controls.snomed.setValue(pt);
 	}
 

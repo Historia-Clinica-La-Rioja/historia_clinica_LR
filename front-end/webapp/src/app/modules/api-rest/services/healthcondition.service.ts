@@ -16,7 +16,7 @@ export class HealthConditionService {
 	) {	}
 
 	getHealthCondition(healthConditionId: number): Observable<HealthConditionNewConsultationDto> {
-		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/healthcondition/${healthConditionId}`;
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/healthcondition/${healthConditionId}`;
 		return this.http.get<HealthConditionNewConsultationDto>(url);
 	}
 }

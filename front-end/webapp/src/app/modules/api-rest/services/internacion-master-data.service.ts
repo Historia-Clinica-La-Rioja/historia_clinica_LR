@@ -13,62 +13,62 @@ export class InternacionMasterDataService {
 	}
 
 	getAllergyClinical(): Observable<any[]> {
-		let url = `${environment.apiBase}/internments/masterdata/allergy/clinical`;
+		const url = `${environment.apiBase}/internments/masterdata/allergy/clinical`;
 		return this.http.get<any[]>(url);
 	}
 
 	getAllergyVerifications(): Observable<MasterDataInterface<string>[]> {
-		let url = `${environment.apiBase}/internments/masterdata/allergy/verification`;
+		const url = `${environment.apiBase}/internments/masterdata/allergy/verification`;
 		return this.http.get<[]>(url);
 	}
 
 	getAllergyCategories(): Observable<MasterDataInterface<string>[]> {
-		let url = `${environment.apiBase}/internments/masterdata/allergy/category`;
+		const url = `${environment.apiBase}/internments/masterdata/allergy/category`;
 		return this.http.get<[]>(url);
 	}
 
 	getHealthClinical(): Observable<any[]> {
-		let url = `${environment.apiBase}/internments/masterdata/health/clinical`;
+		const url = `${environment.apiBase}/internments/masterdata/health/clinical`;
 		return this.http.get<any[]>(url);
 	}
 
 	getHealthClinicalDown(): Observable<any[]> {
-		let url = `${environment.apiBase}/internments/masterdata/health/clinical/down`;
+		const url = `${environment.apiBase}/internments/masterdata/health/clinical/down`;
 		return this.http.get<any[]>(url);
 	}
 
 	getHealthVerification(): Observable<MasterDataInterface<string>[]> {
-		let url = `${environment.apiBase}/internments/masterdata/health/verification`;
+		const url = `${environment.apiBase}/internments/masterdata/health/verification`;
 		return this.http.get<[]>(url);
 	}
 
 	getHealthVerificationDown(): Observable<MasterDataInterface<string>[]> {
-		let url = `${environment.apiBase}/internments/masterdata/health/verification/down`;
+		const url = `${environment.apiBase}/internments/masterdata/health/verification/down`;
 		return this.http.get<[]>(url);
 	}
 
 	getInmunizationClinical(): Observable<MasterDataInterface<string>[]> {
-		let url = `${environment.apiBase}/internments/masterdata/inmunization`;
+		const url = `${environment.apiBase}/internments/masterdata/inmunization`;
 		return this.http.get<[]>(url);
 	}
 
 	getMedicationClinical(): Observable<MasterDataInterface<string>[]> {
-		let url = `${environment.apiBase}/internments/masterdata/medication`;
+		const url = `${environment.apiBase}/internments/masterdata/medication`;
 		return this.http.get<[]>(url);
 	}
 
 	getBloodTypes(): Observable<MasterDataInterface<string>[]> {
-		let url = `${environment.apiBase}/internments/masterdata/bloodtypes`;
+		const url = `${environment.apiBase}/internments/masterdata/bloodtypes`;
 		return this.http.get<[]>(url);
 	}
 
 	getClinicalSpecialty(): Observable<MasterDataInterface<string>[]> {
-		let url = `${environment.apiBase}/internments/masterdata/clinical/specialty`;
+		const url = `${environment.apiBase}/internments/masterdata/clinical/specialty`;
 		return this.http.get<any[]>(url);
 	}
 
 	getDischargeType(): Observable<MasterDataInterface<string>[]> {
-		let url = `${environment.apiBase}/internments/masterdata/discharge/type`;
+		const url = `${environment.apiBase}/internments/masterdata/discharge/type`;
 		return this.http.get<any[]>(url);
 	}
 }

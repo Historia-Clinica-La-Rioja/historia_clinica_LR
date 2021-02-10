@@ -13,22 +13,22 @@ export class AddressMasterDataService {
 	) { }
 
 	getAllCountries(): Observable<any[]> {
-		let url = `${environment.apiBase}/address/masterdata/countries`;
+		const url = `${environment.apiBase}/address/masterdata/countries`;
 		return this.http.get<any[]>(url);
 	}
 
 	getByCountry(countryId: number): Observable<any[]> {
-		let url = `${environment.apiBase}/address/masterdata/country/${countryId}/provinces`;
+		const url = `${environment.apiBase}/address/masterdata/country/${countryId}/provinces`;
 		return this.http.get<any[]>(url);
 	}
 
 	getDepartmentsByProvince(provinceId: number): Observable<any[]> {
-		let url = `${environment.apiBase}/address/masterdata/province/${provinceId}/departments`;
+		const url = `${environment.apiBase}/address/masterdata/province/${provinceId}/departments`;
 		return this.http.get<any[]>(url);
 	}
 
 	getCitiesByDepartment(departmentId: number): Observable<any[]> {
-		let url = `${environment.apiBase}/address/masterdata/department/${departmentId}/cities`;
+		const url = `${environment.apiBase}/address/masterdata/department/${departmentId}/cities`;
 		return this.http.get<any[]>(url);
 	}
 

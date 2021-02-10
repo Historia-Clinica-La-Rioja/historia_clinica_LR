@@ -62,7 +62,7 @@ export class DiagnosticosComponent implements OnInit {
 
 	addToList() {
 		if (this.form.valid && this.snomedConcept) {
-			let diagnostico: DiagnosisDto = {
+			const diagnostico: DiagnosisDto = {
 				statusId: this.form.value.statusId,
 				presumptive: this.form.value.presumptive,
 				snomed: this.snomedConcept
@@ -74,7 +74,7 @@ export class DiagnosticosComponent implements OnInit {
 
 	setConcept(selectedConcept: SnomedDto): void {
 		this.snomedConcept = selectedConcept;
-		let pt = selectedConcept ? selectedConcept.pt : '';
+		const pt = selectedConcept ? selectedConcept.pt : '';
 		this.form.controls.snomed.setValue(pt);
 	}
 

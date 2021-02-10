@@ -109,7 +109,7 @@ export class NuevaConsultaComponent implements OnInit {
 			if (data.problemaReadOnly) {
 				this.readOnlyProblema = true;
 				this.route.paramMap.subscribe(param => {
-					let hcId = Number(param.get('idProblema'));
+					const hcId = Number(param.get('idProblema'));
 					this.healthConditionService.getHealthCondition(hcId).subscribe(p => {
 						this.problemasNuevaConsultaService.addProblemToList(NuevaConsultaComponent.buildProblema(p));
 					});

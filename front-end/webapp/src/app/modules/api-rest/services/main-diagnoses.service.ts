@@ -17,7 +17,7 @@ export class MainDiagnosesService {
 
 	addMainDiagnosis(internmentId: number, newMainDiagnosis: MainDiagnosisDto): Observable<MainDiagnosisDto> {
 		// Por el modelo siempre se crea y el anterior diagnóstico principal pasara a ser uno alternativo
-		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentId}/main-diagnoses`;
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentId}/main-diagnoses`;
 		return this.http.post<MainDiagnosisDto>(url, newMainDiagnosis);
 	}
 

@@ -39,7 +39,7 @@ export class ViewPatientDetailComponent implements OnInit {
 	}
 
 	goToProfile() {
-		let id = this.patient.id;
+		const id = this.patient.id;
 		this.router.navigate([this.routePrefix + ROUTE_PROFILE + `${id}`]);
 		this.dialogRef.close();
 	}

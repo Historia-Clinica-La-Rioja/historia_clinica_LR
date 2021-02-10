@@ -73,7 +73,7 @@ export class DiagnosisSummaryComponent implements OnInit {
 	}
 
 	private buildTable(data: HealthConditionDto[]): TableModel<HealthConditionDto> {
-		let model: TableModel<HealthConditionDto> = {
+		const model: TableModel<HealthConditionDto> = {
 			columns: [
 				{
 					columnDef: 'diagnosis',

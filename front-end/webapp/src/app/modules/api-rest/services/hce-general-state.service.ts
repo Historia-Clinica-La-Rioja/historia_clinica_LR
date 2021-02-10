@@ -25,57 +25,57 @@ export class HceGeneralStateService {
 	}
 
 	getAllergies(patientId: number): Observable<HCEAllergyDto[]> {
-		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/allergies`;
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/allergies`;
 		return this.http.get<HCEAllergyDto[]>(url);
 	}
 
 	getFamilyHistories(patientId: number): Observable<HCEPersonalHistoryDto[]> {
-		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/familyHistories`;
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/familyHistories`;
 		return this.http.get<HCEPersonalHistoryDto[]>(url);
 	}
 
 	getPersonalHistories(patientId: number): Observable<HCEPersonalHistoryDto[]> {
-		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/personalHistories`;
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/personalHistories`;
 		return this.http.get<HCEPersonalHistoryDto[]>(url);
 	}
 
 	getMedications(patientId: number): Observable<HCEMedicationDto[]> {
-		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/medications`;
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/medications`;
 		return this.http.get<HCEMedicationDto[]>(url);
 	}
 
 	getImmunizations(patientId: number): Observable<HCEImmunizationDto[]> {
-		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/immunizations`;
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/immunizations`;
 		return this.http.get<HCEImmunizationDto[]>(url);
 	}
 
 	getVitalSigns(patientId: number): Observable<HCELast2VitalSignsDto> {
-		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/vitalSigns`;
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/vitalSigns`;
 		return this.http.get<HCELast2VitalSignsDto>(url);
 	}
 
 	getAnthropometricData(patientId: number): Observable<HCEAnthropometricDataDto> {
-		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/anthropometricData`;
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/anthropometricData`;
 		return this.http.get<HCEAnthropometricDataDto>(url);
 	}
 
 	getActiveProblems(patientId: number): Observable<HCEPersonalHistoryDto[]> {
-		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/activeProblems`;
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/activeProblems`;
 		return this.http.get<HCEPersonalHistoryDto[]>(url);
 	}
 
 	getSolvedProblems(patientId: number): Observable<HCEPersonalHistoryDto[]> {
-		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/solvedProblems`;
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/solvedProblems`;
 		return this.http.get<HCEPersonalHistoryDto[]>(url);
 	}
 
 	getChronicConditions(patientId: number): Observable<HCEPersonalHistoryDto[]> {
-		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/chronic`;
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/chronic`;
 		return this.http.get<HCEPersonalHistoryDto[]>(url);
 	}
 
 	getHospitalizationHistory(patientId: number): Observable<HCEHospitalizationHistoryDto[]> {
-		let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/hospitalization`;
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/hospitalization`;
 		return this.http.get<HCEHospitalizationHistoryDto[]>(url);
 	}
 

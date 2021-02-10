@@ -44,8 +44,8 @@ export function atLeastOneValueInFormGroup(form: FormGroup): boolean {
 }
 
 export function futureTimeValidation(control: FormControl): ValidationErrors | null {
-	let time: string = control.value;
-	let today: Moment = newMoment();
+	const time: string = control.value;
+	const today: Moment = newMoment();
 	if (isValidTime(time)) {
 		if (time > momentFormat(today, DateFormat.HOUR_MINUTE)) {
 			return {

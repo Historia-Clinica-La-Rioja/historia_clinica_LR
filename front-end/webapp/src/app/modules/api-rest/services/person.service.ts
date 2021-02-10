@@ -13,17 +13,17 @@ export class PersonService {
 	}
 
 	getRenaperPersonData(params): Observable<PersonBasicDataResponseDto> {
-		let url = `${environment.apiBase}/renaper/searchPerson`;
+		const url = `${environment.apiBase}/renaper/searchPerson`;
 		return this.http.get<PersonBasicDataResponseDto>(url, { params });
 	}
 
 	getPersonalInformation<PersonalInformationDto>(personId): Observable<PersonalInformationDto> {
-		let url = `${environment.apiBase}/person/${personId}/personalInformation`;
+		const url = `${environment.apiBase}/person/${personId}/personalInformation`;
 		return this.http.get<PersonalInformationDto>(url);
 	}
 
 	getCompletePerson<BMPersonDto>(personId): Observable<BMPersonDto> {
-		let url = `${environment.apiBase}/person/${personId}`;
+		const url = `${environment.apiBase}/person/${personId}`;
 		return this.http.get<BMPersonDto>(url);
 	}
 

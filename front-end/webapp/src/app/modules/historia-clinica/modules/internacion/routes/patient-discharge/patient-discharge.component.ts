@@ -140,7 +140,7 @@ export class PatientDischargeComponent implements OnInit {
 	save(): void {
 		this.formSubmited = true;
 		if (this.dischargeForm.valid) {
-			let request: PatientDischargeDto = this.dischargeForm.getRawValue();
+			const request: PatientDischargeDto = this.dischargeForm.getRawValue();
 			request.administrativeDischargeDate = this.dischargeForm.value.dischargeDate.format(DateFormat.API_DATE);
 			this.intermentEpisodeService.dischargeInternmentEpisode<PatientDischargeDto>(request, this.internmentId)
 				.subscribe(response => {

@@ -125,7 +125,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 	}
 
 	private editPrescriptionItem(prescriptionItem: NewPrescriptionItem): void {
-		let editPrescriptionItem = this.prescriptionItems.find(pi => pi.id === prescriptionItem.id);
+		const editPrescriptionItem = this.prescriptionItems.find(pi => pi.id === prescriptionItem.id);
 
 		editPrescriptionItem.snomed = prescriptionItem.snomed;
 		editPrescriptionItem.healthProblem = prescriptionItem.healthProblem;

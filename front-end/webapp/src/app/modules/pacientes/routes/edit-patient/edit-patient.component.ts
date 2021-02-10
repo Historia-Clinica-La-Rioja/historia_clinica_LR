@@ -193,7 +193,7 @@ export class EditPatientComponent implements OnInit {
 	save(): void {
 		this.formSubmitted = true;
 		if (this.form.valid) {
-			let personRequest: APatientDto = this.mapToPersonRequest();
+			const personRequest: APatientDto = this.mapToPersonRequest();
 			this.patientService.editPatient(personRequest, this.patientId)
 				.subscribe(patientId => {
 					if (this.medicalCoverages) {
@@ -260,7 +260,7 @@ export class EditPatientComponent implements OnInit {
 	}
 
 	setProvinces() {
-		let countryId: number = this.form.controls.addressCountryId.value;
+		const countryId: number = this.form.controls.addressCountryId.value;
 		this.addressMasterDataService.getByCountry(countryId)
 			.subscribe(provinces => {
 				this.provinces = provinces;
@@ -268,7 +268,7 @@ export class EditPatientComponent implements OnInit {
 	}
 
 	setDepartments() {
-		let provinceId: number = this.form.controls.addressProvinceId.value;
+		const provinceId: number = this.form.controls.addressProvinceId.value;
 		this.addressMasterDataService.getDepartmentsByProvince(provinceId)
 			.subscribe(departments => {
 				this.departments = departments;
@@ -276,7 +276,7 @@ export class EditPatientComponent implements OnInit {
 	}
 
 	setCities() {
-		let departmentId: number = this.form.controls.addressDepartmentId.value;
+		const departmentId: number = this.form.controls.addressDepartmentId.value;
 		this.addressMasterDataService.getCitiesByDepartment(departmentId)
 			.subscribe(cities => {
 				this.cities = cities;

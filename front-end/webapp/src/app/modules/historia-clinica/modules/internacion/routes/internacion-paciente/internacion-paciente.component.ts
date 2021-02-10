@@ -198,7 +198,7 @@ export class InternacionPacienteComponent implements OnInit {
 	}
 
 	goToEditPatient(): void {
-		let person = {
+		const person = {
 			id: this.patientId ,
 		};
 		this.router.navigate([this.routePrefix + ROUTE_EDIT_PATIENT], {

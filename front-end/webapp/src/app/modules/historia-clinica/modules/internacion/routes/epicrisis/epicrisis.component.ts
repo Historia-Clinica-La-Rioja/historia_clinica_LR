@@ -31,8 +31,8 @@ export class EpicrisisComponent implements OnInit {
 	ngOnInit(): void {
 		this.route.paramMap.subscribe(
 			(params) => {
-				let patientId = Number(params.get('idPaciente'));
-				let internmentId = Number(params.get('idInternacion'));
+				const patientId = Number(params.get('idPaciente'));
+				const internmentId = Number(params.get('idInternacion'));
 
 				this.patient$ = this.patientService.getPatientBasicData<BasicPatientDto>(patientId).pipe(
 					map(patient => this.mapperService.toPatientBasicData(patient))

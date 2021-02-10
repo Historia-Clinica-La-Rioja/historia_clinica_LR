@@ -61,7 +61,7 @@ export class SearchCreateComponent implements OnInit {
 	search(): void {
 		this.formSearchSubmitted = true;
 		if (this.formSearch.valid) {
-			let searchRequest = {
+			const searchRequest = {
 				identificationTypeId: this.formSearch.controls.identifType.value,
 				identificationNumber: this.formSearch.controls.identifNumber.value,
 				genderId: this.formSearch.controls.gender.value,
@@ -75,7 +75,7 @@ export class SearchCreateComponent implements OnInit {
 						if (!data.length) {
 							this.navigateToSearchPatient();
 						} else {
-							let id = data[0];
+							const id = data[0];
 							this.router.navigate([this.routePrefix + ROUTE_PROFILE + `${id}`]);
 						}
 					}
@@ -118,7 +118,7 @@ export class SearchCreateComponent implements OnInit {
 	}
 
 	onIdentifTypeChange() {
-		let identifTypeID = this.formSearch.controls.identifType.value;
+		const identifTypeID = this.formSearch.controls.identifType.value;
 
 		if (identifTypeID === IDENTIFICATION_TYPE_IDS.NO_POSEE) {
 			this.formSearch.controls.identifNumber.clearValidators();
