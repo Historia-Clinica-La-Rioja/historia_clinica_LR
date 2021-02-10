@@ -1,9 +1,9 @@
 package net.pladema.emergencycare.service.impl;
 
 import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
-import net.pladema.emergencycare.repository.HistoricEmergencyEpisodeRepository;
-import net.pladema.emergencycare.repository.entity.HistoricEmergencyEpisode;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeStateService;
+import net.pladema.emergencycare.service.HistoricEmergencyEpisodeService;
+import net.pladema.emergencycare.service.domain.HistoricEmergencyEpisodeBo;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
 import net.pladema.sgx.exceptions.NotFoundException;
 import org.slf4j.Logger;
@@ -25,11 +25,12 @@ public class EmergencyCareEpisodeStateServiceImpl implements EmergencyCareEpisod
 
 	private EmergencyCareEpisodeRepository emergencyCareEpisodeRepository;
 
-	private final HistoricEmergencyEpisodeRepository historicEmergencyEpisodeRepository;
+	private final HistoricEmergencyEpisodeService historicEmergencyEpisodeService;
 
-	public EmergencyCareEpisodeStateServiceImpl(EmergencyCareEpisodeRepository emergencyCareEpisodeRepository, HistoricEmergencyEpisodeRepository historicEmergencyEpisodeRepository){
+	public EmergencyCareEpisodeStateServiceImpl(EmergencyCareEpisodeRepository emergencyCareEpisodeRepository,
+												HistoricEmergencyEpisodeService historicEmergencyEpisodeService){
 		this.emergencyCareEpisodeRepository = emergencyCareEpisodeRepository;
-		this.historicEmergencyEpisodeRepository = historicEmergencyEpisodeRepository;
+		this.historicEmergencyEpisodeService = historicEmergencyEpisodeService;
 	}
 
 	@Override
@@ -44,9 +45,9 @@ public class EmergencyCareEpisodeStateServiceImpl implements EmergencyCareEpisod
 	public Boolean changeState(Integer episodeId, Integer institutionId, Short emergencyCareStateId, Integer doctorsOfficeId) {
 		LOG.debug("Input parameters -> episodeId {}, emergencyCareStateId {}, doctorsOfficeId {}",
 				episodeId, emergencyCareStateId, doctorsOfficeId);
-		HistoricEmergencyEpisode toSave = new HistoricEmergencyEpisode(episodeId, emergencyCareStateId, doctorsOfficeId);
+		HistoricEmergencyEpisodeBo toSave = new HistoricEmergencyEpisodeBo(episodeId, emergencyCareStateId, doctorsOfficeId);
 		emergencyCareEpisodeRepository.updateState(episodeId, institutionId, emergencyCareStateId, doctorsOfficeId);
-		historicEmergencyEpisodeRepository.save(toSave);
+		historicEmergencyEpisodeService.saveChange(toSave);
 		return true;
 	}
 }

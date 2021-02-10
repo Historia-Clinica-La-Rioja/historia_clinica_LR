@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.emergencycare.service.domain.HistoricEmergencyEpisodeBo;
 import net.pladema.sgx.auditable.entity.SGXAuditListener;
 import net.pladema.sgx.auditable.entity.SGXAuditableEntity;
 
@@ -39,9 +40,13 @@ public class HistoricEmergencyEpisode extends SGXAuditableEntity {
 	@Column(name = "doctors_office_id")
 	private Integer doctorsOfficeId;
 
-	public HistoricEmergencyEpisode(Integer emergencyCareEpisodeId, Short emergencyCareStateId, Integer doctorsOfficeId){
-		pk = new HistoricEmergencyEpisodePK(emergencyCareEpisodeId, LocalDateTime.now());
-		this.emergencyCareStateId = emergencyCareStateId;
-		this.doctorsOfficeId = doctorsOfficeId;
+	public HistoricEmergencyEpisode(HistoricEmergencyEpisodeBo historicEmergencyEpisodeBo) {
+		this.pk = new HistoricEmergencyEpisodePK(historicEmergencyEpisodeBo.getEmergencyCareEpisodeId(), LocalDateTime.now());
+		this.emergencyCareStateId = historicEmergencyEpisodeBo.getEmergencyCareStateId();
+		this.doctorsOfficeId = historicEmergencyEpisodeBo.getDoctorsOfficeId();
+	}
+
+	public LocalDateTime getChangeStateDate() {
+		return this.pk.getChangeStateDate();
 	}
 }

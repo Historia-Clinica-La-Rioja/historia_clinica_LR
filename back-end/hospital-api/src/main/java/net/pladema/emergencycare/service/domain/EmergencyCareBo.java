@@ -83,6 +83,10 @@ public class EmergencyCareBo {
         this.emergencyCareTypeId = emergencyCareEpisode.getEmergencyCareTypeId();
         this.emergencyCareStateId = emergencyCareEpisode.getEmergencyCareStateId();
         this.ambulanceCompanyId = emergencyCareEpisode.getAmbulanceCompanyId();
+        if (emergencyCareEpisode.getDoctorsOfficeId() != null){
+            this.doctorsOffice = new DoctorsOfficeBo();
+            this.doctorsOffice.setId(emergencyCareEpisode.getDoctorsOfficeId());
+        }
     }
 
     public void setTriageVitalSignIds(List<Integer> vitalSignIds) {
