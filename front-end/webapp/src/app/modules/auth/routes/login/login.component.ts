@@ -50,7 +50,7 @@ export class LoginComponent implements OnInit {
 			if (params['returnUrl']) {
 				this.returnUrl = params['returnUrl'];
 			}
-		}); 
+		});
 
 	}
 

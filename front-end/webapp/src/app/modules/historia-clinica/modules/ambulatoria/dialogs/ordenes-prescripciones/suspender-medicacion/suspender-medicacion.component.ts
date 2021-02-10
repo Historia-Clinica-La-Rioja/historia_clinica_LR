@@ -17,7 +17,7 @@ export class SuspenderMedicacionComponent implements OnInit {
 	medications: MedicationInfoDto[];
 	suspendMedicationForm: FormGroup;
 	hasError = hasError;
-	
+
 	public readonly medicationStatusChange = MedicationStatusChange;
 
 	constructor(
@@ -26,7 +26,7 @@ export class SuspenderMedicacionComponent implements OnInit {
 		private readonly formBuilder: FormBuilder,
 		public dialogRef: MatDialogRef<SuspenderMedicacionComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: {
-			medications: MedicationInfoDto[], 
+			medications: MedicationInfoDto[],
 			patientId: number,
 		}
 	) { }
@@ -45,7 +45,7 @@ export class SuspenderMedicacionComponent implements OnInit {
 	}
 
 	suspendMedication() {
-		this.prescripcionesService.changeMedicationStatus(this.medicationStatusChange.SUSPEND, this.data.patientId, this.medications.map(m => m.id), 
+		this.prescripcionesService.changeMedicationStatus(this.medicationStatusChange.SUSPEND, this.data.patientId, this.medications.map(m => m.id),
 			this.suspendMedicationForm.controls.dayQuantity.value, this.suspendMedicationForm.controls.observations.value
 			).subscribe(() => {
 				this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.MEDICATION_CHANGE_SUCCESS');

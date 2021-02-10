@@ -33,7 +33,7 @@ export class ImgUploaderComponent implements OnInit {
 				}
 		});
 	}
-	
+
 	imgLoading(file: File): Observable<{width: number; height: number}> {
 		return new Observable((observer) => {
 				const img = new Image();

@@ -15,8 +15,8 @@ const routes: Routes = [
 		children: [
 			{ path: '', pathMatch: 'full', component: InstitucionesComponent },
 			{ path: 'profile', component: ProfileComponent },
-			{ 
-				path: 'settings', 
+			{
+				path: 'settings',
 				component: SettingsComponent,
 				canActivate: [FeatureFlagGuard],
 				data: { featureFlag: AppFeature.HABILITAR_CONFIGURACION },

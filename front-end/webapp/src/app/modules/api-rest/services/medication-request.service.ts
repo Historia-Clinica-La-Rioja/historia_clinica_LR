@@ -55,7 +55,7 @@ export class MedicationRequestService {
 
 	medicationRequestList(patientId: number, statusId: string, medicationStatement: string, healthCondition: string): Observable<MedicationInfoDto[]> {
 		let queryParams: HttpParams = new HttpParams();
-		
+
 		queryParams = statusId ? queryParams.append('statusId', statusId) : queryParams;
 
 		queryParams = medicationStatement ? queryParams.append('medicationStatement', medicationStatement) : queryParams;

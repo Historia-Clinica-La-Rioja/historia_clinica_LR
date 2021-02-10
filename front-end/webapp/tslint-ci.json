@@ -94,7 +94,6 @@
 	"prefer-const": false,
 	"no-var-keyword": false,
 	"variable-name": false,
-	"no-trailing-whitespace": false,
 	"triple-equals": false,
 	"align": false,
 	"typedef-whitespace": false,

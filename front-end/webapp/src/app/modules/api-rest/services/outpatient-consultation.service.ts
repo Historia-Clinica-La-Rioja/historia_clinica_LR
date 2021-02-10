@@ -25,7 +25,7 @@ export class OutpatientConsultationService {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/outpatient/consultations/solveProblem`;
 		return this.http.post<boolean>(url, solvedProblem);
 	}
-	
+
 	getEvolutionSummaryList(patientId: number): Observable<OutpatientEvolutionSummaryDto[]> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/outpatient/consultations/summary-list`;
 		return this.http.get<OutpatientEvolutionSummaryDto[]>(url);
