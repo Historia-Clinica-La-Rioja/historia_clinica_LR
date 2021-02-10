@@ -11,7 +11,7 @@ export const anyMatch = <T>(a1: T[], a2: T[]): boolean => {
 };
 
 export const uniqueItems = <T>(data: T[]): T[] => {
-	return data.filter(function(elem, index, self) {
+	return data.filter((elem, index, self) => {
 			return index === self.indexOf(elem);
 		});
 };

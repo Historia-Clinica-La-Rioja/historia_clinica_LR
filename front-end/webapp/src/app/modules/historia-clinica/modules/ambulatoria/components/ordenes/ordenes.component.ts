@@ -6,7 +6,7 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class OrdenesComponent implements OnInit {
 
-	@Input('patientId') patientId: number;
+	@Input() patientId: number;
 
 	constructor(
 	) { }

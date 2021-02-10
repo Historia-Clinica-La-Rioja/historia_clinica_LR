@@ -36,7 +36,7 @@ export class CardMedicacionesComponent implements OnInit {
 	public medicamentStatus = [];
 	private hasRoleToView: boolean;
 
-	@Input('patientId') patientId: number;
+	@Input() patientId: number;
 
 	constructor(
 		private readonly dialog: MatDialog,

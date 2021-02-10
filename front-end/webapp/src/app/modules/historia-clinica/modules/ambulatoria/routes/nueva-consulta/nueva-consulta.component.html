@@ -347,8 +347,8 @@
 										matInput>
 							</mat-form-field>
 							<app-effective-time
-								[model]="signosVitalesNuevaConsultaService.getForm().value.heartRate.effectiveTime"
-								(onChange)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'heartRate')">
+								[effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.heartRate.effectiveTime"
+								(update)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'heartRate')">
 							</app-effective-time>
 						</div>
 						<div class="signos-vitales-field" formGroupName="respiratoryRate">
@@ -363,8 +363,8 @@
 										matInput>
 							</mat-form-field>
 							<app-effective-time
-								[model]="signosVitalesNuevaConsultaService.getForm().value.respiratoryRate.effectiveTime"
-								(onChange)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'respiratoryRate')">
+								[effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.respiratoryRate.effectiveTime"
+								(update)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'respiratoryRate')">
 							</app-effective-time>
 						</div>
 					</div>
@@ -381,8 +381,8 @@
 										matInput>
 							</mat-form-field>
 							<app-effective-time
-								[model]="signosVitalesNuevaConsultaService.getForm().value.temperature.effectiveTime"
-								(onChange)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'temperature')">
+								[effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.temperature.effectiveTime"
+								(update)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'temperature')">
 							</app-effective-time>
 						</div>
 						<div class="signos-vitales-field" formGroupName="bloodOxygenSaturation">
@@ -397,8 +397,8 @@
 										matInput>
 							</mat-form-field>
 							<app-effective-time
-								[model]="signosVitalesNuevaConsultaService.getForm().value.bloodOxygenSaturation.effectiveTime"
-								(onChange)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'bloodOxygenSaturation')">
+								[effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.bloodOxygenSaturation.effectiveTime"
+								(update)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'bloodOxygenSaturation')">
 							</app-effective-time>
 						</div>
 					</div>
@@ -416,8 +416,8 @@
 										matInput>
 							</mat-form-field>
 							<app-effective-time
-								[model]="signosVitalesNuevaConsultaService.getForm().value.systolicBloodPressure.effectiveTime"
-								(onChange)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'systolicBloodPressure')">
+								[effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.systolicBloodPressure.effectiveTime"
+								(update)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'systolicBloodPressure')">
 							</app-effective-time>
 						</div>
 						<div class="signos-vitales-field" formGroupName="diastolicBloodPressure">
@@ -432,8 +432,8 @@
 										matInput>
 							</mat-form-field>
 							<app-effective-time
-								[model]="signosVitalesNuevaConsultaService.getForm().value.diastolicBloodPressure.effectiveTime"
-								(onChange)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'diastolicBloodPressure')">
+								[effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.diastolicBloodPressure.effectiveTime"
+								(update)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'diastolicBloodPressure')">
 							</app-effective-time>
 						</div>
 					</div>

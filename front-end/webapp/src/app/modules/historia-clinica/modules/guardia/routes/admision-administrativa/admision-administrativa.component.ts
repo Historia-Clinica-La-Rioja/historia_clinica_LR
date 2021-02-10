@@ -154,12 +154,15 @@ export class AdmisionAdministrativaComponent implements OnInit {
 				const patientCoverages: PatientMedicalCoverageDto[] =
 					values.patientMedicalCoverages.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
 
-				this.patientMedicalCoverageService.addPatientMedicalCoverages(this.selectedPatient.id, patientCoverages).subscribe(_ => {
-					this.snackBarService.showSuccess('Las coberturas fueron actualizadas correctamente');
-					this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this.selectedPatient.id).subscribe(updatedCoverages => {
-						this.patientMedicalCoverages = updatedCoverages;
-					});
-				}), _ => this.snackBarService.showError('Ocurrió un error al actualizar las coberturas');
+				this.patientMedicalCoverageService.addPatientMedicalCoverages(this.selectedPatient.id, patientCoverages).subscribe(
+					_ => {
+						this.snackBarService.showSuccess('Las coberturas fueron actualizadas correctamente');
+						this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this.selectedPatient.id).subscribe(updatedCoverages => {
+							this.patientMedicalCoverages = updatedCoverages;
+						});
+					},
+					_ => this.snackBarService.showError('Ocurrió un error al actualizar las coberturas')
+				);
 			}
 		});
 	}

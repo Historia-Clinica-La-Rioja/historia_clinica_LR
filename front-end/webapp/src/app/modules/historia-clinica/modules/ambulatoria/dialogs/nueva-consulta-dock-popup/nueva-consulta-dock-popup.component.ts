@@ -176,44 +176,44 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		}
 		if (!consulta.anthropometricData.height) {
 			this.datosAntropometricosNuevaConsultaService.setHeightError('ambulatoria.paciente.nueva-consulta.errors.TALLA_OBLIGATORIO');
-		} else if (parseInt(consulta.anthropometricData.height.value) < 0) {
+		} else if (parseInt(consulta.anthropometricData.height.value, 10) < 0) {
 			this.datosAntropometricosNuevaConsultaService.setHeightError('ambulatoria.paciente.nueva-consulta.errors.TALLA_MIN');
-		} else if (parseInt(consulta.anthropometricData.height.value) > 1000) {
+		} else if (parseInt(consulta.anthropometricData.height.value, 10) > 1000) {
 			this.datosAntropometricosNuevaConsultaService.setHeightError('ambulatoria.paciente.nueva-consulta.errors.TALLA_MAX');
 		}
 		if (!consulta.anthropometricData.weight) {
 			this.datosAntropometricosNuevaConsultaService.setWeightError('ambulatoria.paciente.nueva-consulta.errors.PESO_OBLIGATORIO');
-		} else if (parseInt(consulta.anthropometricData.weight.value) < 0) {
+		} else if (parseInt(consulta.anthropometricData.weight.value, 10) < 0) {
 			this.datosAntropometricosNuevaConsultaService.setWeightError('ambulatoria.paciente.nueva-consulta.errors.PESO_MIN');
-		} else if (parseInt(consulta.anthropometricData.weight.value) > 1000) {
+		} else if (parseInt(consulta.anthropometricData.weight.value, 10) > 1000) {
 			this.datosAntropometricosNuevaConsultaService.setWeightError('ambulatoria.paciente.nueva-consulta.errors.PESO_MAX');
 		}
 
-		if (parseInt(consulta.vitalSigns.heartRate?.value) < 0) {
+		if (parseInt(consulta.vitalSigns.heartRate?.value, 10) < 0) {
 			this.signosVitalesNuevaConsultaService.setHeartRateError('ambulatoria.paciente.nueva-consulta.errors.FRECUENCIA_CARDIACA_MIN');
 		}
 
-		if (parseInt(consulta.vitalSigns.respiratoryRate?.value) < 0) {
+		if (parseInt(consulta.vitalSigns.respiratoryRate?.value, 10) < 0) {
 			this.signosVitalesNuevaConsultaService.setRespiratoryRateError('ambulatoria.paciente.nueva-consulta.errors.FRECUENCIA_RESPIRATORIA_MIN');
 		}
 
-		if (parseInt(consulta.vitalSigns.temperature?.value) < 0) {
+		if (parseInt(consulta.vitalSigns.temperature?.value, 10) < 0) {
 			this.signosVitalesNuevaConsultaService.setTemperatureError('ambulatoria.paciente.nueva-consulta.errors.TEMPERATURA_CORPORAL_MIN');
 		}
 
-		if (parseInt(consulta.vitalSigns.bloodOxygenSaturation?.value) < 0) {
+		if (parseInt(consulta.vitalSigns.bloodOxygenSaturation?.value, 10) < 0) {
 			this.signosVitalesNuevaConsultaService.setBloodOxygenSaturationError('ambulatoria.paciente.nueva-consulta.errors.SATURACION_OXIGENO_MIN');
 		}
 
 		if (!consulta.vitalSigns.diastolicBloodPressure ) {
 			this.signosVitalesNuevaConsultaService.setDiastolicBloodPressureError('ambulatoria.paciente.nueva-consulta.errors.TENSION_DIASTOLICA_OBLIGATORIO');
-		} else if (parseInt(consulta.vitalSigns.diastolicBloodPressure.value) < 0) {
+		} else if (parseInt(consulta.vitalSigns.diastolicBloodPressure.value, 10) < 0) {
 			this.signosVitalesNuevaConsultaService.setDiastolicBloodPressureError('ambulatoria.paciente.nueva-consulta.errors.TENSION_DIASTOLICA_MIN');
 		}
 
 		if (!consulta.vitalSigns.systolicBloodPressure) {
 			this.signosVitalesNuevaConsultaService.setSystolicBloodPressureError('ambulatoria.paciente.nueva-consulta.errors.TENSION_SISTOLICA_OBLIGATORIO');
-		} else if (parseInt(consulta.vitalSigns.systolicBloodPressure.value) < 0) {
+		} else if (parseInt(consulta.vitalSigns.systolicBloodPressure.value, 10) < 0) {
 			this.signosVitalesNuevaConsultaService.setSystolicBloodPressureError('ambulatoria.paciente.nueva-consulta.errors.TENSION_SISTOLICA_MIN');
 		}
 

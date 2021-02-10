@@ -28,7 +28,7 @@ export class CardEstudiosComponent implements OnInit {
 	public diagnosticReportsStatus = [];
 	public formFilter: FormGroup;
 
-	@Input('patientId') patientId: number;
+	@Input() patientId: number;
 
 	constructor(
 		private readonly dialog: MatDialog,

@@ -10,7 +10,7 @@ export class CardIndicacionesComponent implements OnInit {
 
   public readonly indicaciones = INDICACIONES;
 
-	@Input('patientId') patientId: number;
+	@Input() patientId: number;
 
 	constructor() { }
 

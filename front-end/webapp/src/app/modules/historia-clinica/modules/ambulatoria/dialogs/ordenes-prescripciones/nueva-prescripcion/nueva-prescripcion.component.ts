@@ -164,10 +164,13 @@ export class NuevaPrescripcionComponent implements OnInit {
 					const patientCoverages: PatientMedicalCoverageDto[] =
 						values.patientMedicalCoverages.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
 
-					this.patientMedicalCoverageService.addPatientMedicalCoverages(Number(this.data.patientId), patientCoverages).subscribe(_ => {
-						this.setMedicalCoverages();
-						this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_UPDATE_COVERAGE_SUCCESS');
-					}), _ => this.snackBarService.showError('ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_UPDATE_COVERAGE_ERROR');
+					this.patientMedicalCoverageService.addPatientMedicalCoverages(Number(this.data.patientId), patientCoverages).subscribe(
+						_ => {
+							this.setMedicalCoverages();
+							this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_UPDATE_COVERAGE_SUCCESS');
+						},
+						_ => this.snackBarService.showError('ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_UPDATE_COVERAGE_ERROR')
+					);
 				}
 			}
 		);

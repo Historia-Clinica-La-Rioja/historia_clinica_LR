@@ -8,8 +8,7 @@ import { Moment } from 'moment';
 })
 export class SignoVitalCurrentPreviousComponent implements OnInit {
 
-	@Input('data')
-	vitalSign: VitalSingCurrentPrevious;
+	@Input() vitalSign: VitalSingCurrentPrevious;
 
 	constructor() { }
 

@@ -14,7 +14,7 @@ import { SECTOR_AMBULATORIO, TRIAGE_LEVEL_V_ID } from '../../constants/masterdat
 })
 export class TriageComponent implements OnInit {
 
-	@Input('cancelFunction') cancelFunction: () => void;
+	@Input() cancelFunction: () => void;
 	@Output() onTriageCategoryIdChange = new EventEmitter();
 	@Output() onDoctorsOfficeIdChange = new EventEmitter();
 	triageForm: FormGroup;

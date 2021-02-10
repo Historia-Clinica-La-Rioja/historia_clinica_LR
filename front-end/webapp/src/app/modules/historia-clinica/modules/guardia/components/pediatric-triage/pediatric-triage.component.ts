@@ -14,8 +14,8 @@ import { Observable } from 'rxjs';
 })
 export class PediatricTriageComponent implements OnInit {
 
-	@Input('confirmLabel') confirmLabel = 'Confirmar episodio';
-	@Input('cancelLabel') cancelLabel = 'Volver';
+	@Input() confirmLabel = 'Confirmar episodio';
+	@Input() cancelLabel = 'Volver';
 	@Output() onConfirm = new EventEmitter();
 	@Output() onCancel = new EventEmitter();
 	private triageCategoryId: number;

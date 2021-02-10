@@ -37,7 +37,7 @@ export class ImgUploaderComponent implements OnInit {
 	imgLoading(file: File): Observable<{width: number; height: number}> {
 		return new Observable((observer) => {
 				const img = new Image();
-				img.onload = function() {
+				img.onload = () => {
 					observer.next({width: img.width, height: img.height});
 					observer.complete();
 				};

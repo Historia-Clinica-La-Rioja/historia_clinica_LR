@@ -11,11 +11,9 @@ import { EffectiveTimeDialogComponent } from '../../dialogs/effective-time-dialo
 })
 export class EffectiveTimeComponent implements OnInit {
 
-	@Input('model')
-	dateObj: Moment = newMoment();
+	@Input() effectiveTime: Moment = newMoment();
 
-	@Output('onChange')
-	update = new EventEmitter();
+	@Output() update = new EventEmitter();
 
 	constructor(
 		public dialog: MatDialog,
@@ -27,13 +25,13 @@ export class EffectiveTimeComponent implements OnInit {
 		const dialogRef = this.dialog.open(EffectiveTimeDialogComponent, {
 			disableClose: true,
 			data: {
-				datetime: this.dateObj.clone()
+				datetime: this.effectiveTime.clone()
 			}
 		});
 		dialogRef.afterClosed().subscribe(
 			(newDatetime: Moment) => {
 				if (newDatetime) {
-					this.dateObj = newDatetime;
+					this.effectiveTime = newDatetime;
 					this.update.emit(newDatetime);
 				}
 			}

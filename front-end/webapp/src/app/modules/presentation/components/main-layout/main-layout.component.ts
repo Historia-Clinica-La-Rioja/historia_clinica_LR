@@ -13,7 +13,7 @@ export class MainLayoutComponent implements OnDestroy {
 	mobileQuery: MediaQueryList;
 	private _mobileQueryListener: () => void;
 	private _menuItems: MenuItem[];
-	@Input('menuFooterItems') menuFooterItems: MenuFooter;
+	@Input() menuFooterItems: MenuFooter;
 
 	constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, private authenticationService: AuthenticationService, ) {
 		this.mobileQuery = media.matchMedia('(max-width: 600px)');

@@ -6,8 +6,8 @@
 	<mat-card-content>
 		<div fxLayout="row wrap" fxLayoutAlign="space-evenly" fxLayoutAlign.xs="center center" fxLayout.xs="column">
 			<app-signo-vital-current-previous
-				*ngFor="let signoVital of signosVitales"
-				[data]="signoVital">
+				*ngFor="let vitalSign of signosVitales"
+				[vitalSign]="vitalSign">
 			</app-signo-vital-current-previous>
 		</div>
 	</mat-card-content>

@@ -116,7 +116,7 @@ export class MatPaginatorIntlAR extends MatPaginatorIntl {
 	lastPageLabel = 'Última página';
 	firstPageLabel = 'Primera página';
 
-	getRangeLabel = function(page, pageSize, length) {
+	getRangeLabel = (page, pageSize, length) => {
 		if (length === 0 || pageSize === 0) {
 			return '0 de ' + length;
 		}
@@ -126,7 +126,7 @@ export class MatPaginatorIntlAR extends MatPaginatorIntl {
 			Math.min(startIndex + pageSize, length) :
 			startIndex + pageSize;
 		return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
-	};
+	}
 
 }
 
