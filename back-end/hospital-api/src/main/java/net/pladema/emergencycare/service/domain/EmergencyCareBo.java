@@ -55,6 +55,8 @@ public class EmergencyCareBo {
 
     private PoliceInterventionDetailsBo policeInterventionDetails;
 
+    private Boolean hasPoliceIntervention;
+
     public EmergencyCareBo(EmergencyCareVo emergencyCareVo){
         this.id = emergencyCareVo.getId();
         this.patient = emergencyCareVo.getPatient() != null ? new PatientECEBo(emergencyCareVo.getPatient()) : null;
@@ -70,6 +72,7 @@ public class EmergencyCareBo {
         if (emergencyCareVo.getPoliceInterventionDetails()!= null)
             this.policeInterventionDetails = new PoliceInterventionDetailsBo(emergencyCareVo.getPoliceInterventionDetails());
         this.createdOn = emergencyCareVo.getCreatedOn();
+        this.hasPoliceIntervention = emergencyCareVo.getHasPoliceIntervention();
     }
 
     public EmergencyCareBo(EmergencyCareEpisode emergencyCareEpisode) {
@@ -87,6 +90,7 @@ public class EmergencyCareBo {
             this.doctorsOffice = new DoctorsOfficeBo();
             this.doctorsOffice.setId(emergencyCareEpisode.getDoctorsOfficeId());
         }
+        this.hasPoliceIntervention = emergencyCareEpisode.getHasPoliceIntervention();
     }
 
     public void setTriageVitalSignIds(List<Integer> vitalSignIds) {

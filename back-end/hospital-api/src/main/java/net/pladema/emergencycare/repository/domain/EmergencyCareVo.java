@@ -49,6 +49,8 @@ public class EmergencyCareVo implements Serializable {
 
 	private PoliceInterventionDetailsVo policeInterventionDetails;
 
+	private Boolean hasPoliceIntervention;
+
 	public EmergencyCareVo(EmergencyCareEpisode emergencyCareEpisode, Person person, Short patientTypeId, String doctorsOfficeDescription, TriageCategory triage){
 		this.id = emergencyCareEpisode.getId();
 		this.patient = emergencyCareEpisode.getPatientId() != null ? new PatientECEVo(emergencyCareEpisode.getPatientId(), emergencyCareEpisode.getPatientMedicalCoverageId(), patientTypeId, person) : null;
@@ -62,6 +64,7 @@ public class EmergencyCareVo implements Serializable {
 		this.ambulanceCompanyId = emergencyCareEpisode.getAmbulanceCompanyId();
 		this.createdOn = emergencyCareEpisode.getCreatedOn();
 		this.doctorsOffice = emergencyCareEpisode.getDoctorsOfficeId() != null ? new DoctorsOfficeVo(emergencyCareEpisode.getDoctorsOfficeId(), doctorsOfficeDescription) : null;
+		this.hasPoliceIntervention = emergencyCareEpisode.getHasPoliceIntervention();
 	}
 
 	public EmergencyCareVo(EmergencyCareEpisode emergencyCareEpisode, Person person, Short patientTypeId, String doctorsOfficeDescription, TriageCategory triage, PoliceInterventionDetails policeInterventionDetails){

@@ -66,6 +66,7 @@ public interface EmergencyCareMapper {
     @Mapping(target = "triage", source = "triage", qualifiedByName = "toTriageBo")
     @Mapping(target = "emergencyCareTypeId", source = "administrative.emergencyCareTypeId", qualifiedByName = "fromMasterDataDto")
     @Mapping(target = "emergencyCareEntranceId", source = "administrative.entranceTypeId", qualifiedByName = "fromMasterDataDto")
+    @Mapping(target = "hasPoliceIntervention", source = "administrative.hasPoliceIntervention")
     EmergencyCareBo administrativeEmergencyCareDtoToEmergencyCareBo(ECAdministrativeDto emergencyCareDto);
 
     @Named("adultGynecologicalEmergencyCareDtoToEmergencyCareBo")
@@ -75,6 +76,7 @@ public interface EmergencyCareMapper {
     @Mapping(target = "triage", source = "triage", qualifiedByName = "toTriageBo")
     @Mapping(target = "emergencyCareTypeId", source = "administrative.emergencyCareTypeId", qualifiedByName = "fromMasterDataDto")
     @Mapping(target = "emergencyCareEntranceId", source = "administrative.entranceTypeId", qualifiedByName = "fromMasterDataDto")
+    @Mapping(target = "hasPoliceIntervention", source = "administrative.hasPoliceIntervention")
     EmergencyCareBo adultGynecologicalEmergencyCareDtoToEmergencyCareBo(ECAdultGynecologicalDto emergencyCareDto);
 
     @Named("pediatricEmergencyCareDtoToEmergencyCareBo")
@@ -84,6 +86,7 @@ public interface EmergencyCareMapper {
     @Mapping(target = "triage", source = "triage", qualifiedByName = "toTriageBo")
     @Mapping(target = "emergencyCareTypeId", source = "administrative.emergencyCareTypeId", qualifiedByName = "fromMasterDataDto")
     @Mapping(target = "emergencyCareEntranceId", source = "administrative.entranceTypeId", qualifiedByName = "fromMasterDataDto")
+    @Mapping(target = "hasPoliceIntervention", source = "administrative.hasPoliceIntervention")
     EmergencyCareBo pediatricEmergencyCareDtoToEmergencyCareBo(ECPediatricDto emergencyCareDto);
 
     @Named("toEmergencyCareUserDto")

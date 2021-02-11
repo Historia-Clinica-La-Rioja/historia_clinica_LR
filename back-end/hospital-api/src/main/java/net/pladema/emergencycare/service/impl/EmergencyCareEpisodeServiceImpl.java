@@ -138,16 +138,17 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
     private EmergencyCareBo createEpisode(EmergencyCareBo newEmergencyCare, BiFunction<TriageBo,Integer, TriageBo> saveTriage) {
 
         LOG.debug("Input parameters -> newEmergencyCare {}", newEmergencyCare);
-        PoliceInterventionDetailsBo policeInterventionBo = newEmergencyCare.getPoliceInterventionDetails();
-        policeInterventionBo = (policeInterventionBo != null) ? savePoliceIntervention(newEmergencyCare.getPoliceInterventionDetails()) : new PoliceInterventionDetailsBo();
-        EmergencyCareBo emergencyCareEpisodeBo = saveEmergencyCareEpisode(newEmergencyCare, newEmergencyCare.getTriage(), policeInterventionBo.getId());
+        EmergencyCareBo emergencyCareEpisodeBo = saveEmergencyCareEpisode(newEmergencyCare, newEmergencyCare.getTriage());
+
+        PoliceInterventionDetailsBo policeInterventionDetailsBo = newEmergencyCare.getPoliceInterventionDetails();
+        policeInterventionDetailsBo = (policeInterventionDetailsBo != null && (emergencyCareEpisodeBo.getHasPoliceIntervention() != null && emergencyCareEpisodeBo.getHasPoliceIntervention())  ) ? savePoliceIntervention(policeInterventionDetailsBo, emergencyCareEpisodeBo.getId()) : new PoliceInterventionDetailsBo();
         saveHistoricEmergencyEpisode(emergencyCareEpisodeBo);
 
         TriageBo triageBo = saveTriage.apply(newEmergencyCare.getTriage(), emergencyCareEpisodeBo.getId());
 
         List<ReasonBo> reasons = saveReasons(newEmergencyCare.getReasons(), emergencyCareEpisodeBo.getId());
 
-        emergencyCareEpisodeBo.setPoliceInterventionDetails(policeInterventionBo);
+        emergencyCareEpisodeBo.setPoliceInterventionDetails(policeInterventionDetailsBo);
         emergencyCareEpisodeBo.setTriage(triageBo);
         emergencyCareEpisodeBo.setReasons(reasons);
 
@@ -163,19 +164,20 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
         return historicEmergencyEpisodeBo;
     }
 
-    private PoliceInterventionDetailsBo savePoliceIntervention(PoliceInterventionDetailsBo policeInterventionBo) {
-        LOG.debug("Input parameter -> policeInterventionBo {}", policeInterventionBo);
-        PoliceInterventionDetails policeIntervention = new PoliceInterventionDetails(policeInterventionBo);
-        policeIntervention = policeInterventionRepository.save(policeIntervention);
-        PoliceInterventionDetailsBo result = new PoliceInterventionDetailsBo(policeIntervention);
+    private PoliceInterventionDetailsBo savePoliceIntervention(PoliceInterventionDetailsBo policeInterventionDetailsBo, Integer emergencyCareId) {
+        LOG.debug("Input parameter -> policeInterventionBo {}, emergencyCareId {}", policeInterventionDetailsBo, emergencyCareId);
+        PoliceInterventionDetails policeInterventionDetails = new PoliceInterventionDetails(policeInterventionDetailsBo);
+        policeInterventionDetails.setId(emergencyCareId);
+        policeInterventionDetails = policeInterventionRepository.save(policeInterventionDetails);
+        PoliceInterventionDetailsBo result = new PoliceInterventionDetailsBo(policeInterventionDetails);
         LOG.debug(OUTPUT, result);
         return result;
     }
 
-    private EmergencyCareBo saveEmergencyCareEpisode(EmergencyCareBo emergencyCareBo, TriageBo triageBo, Integer policeInterventionId) {
-        LOG.debug("Input parameters -> emergencyCareBo {}, triageBo {}, policeInterventionId {}", emergencyCareBo, triageBo, policeInterventionId);
+    private EmergencyCareBo saveEmergencyCareEpisode(EmergencyCareBo emergencyCareBo, TriageBo triageBo) {
+        LOG.debug("Input parameters -> emergencyCareBo {}, triageBo {}", emergencyCareBo, triageBo);
         validPatient(emergencyCareBo.getPatient(), emergencyCareBo.getInstitutionId());
-        EmergencyCareEpisode emergencyCareEpisode = new EmergencyCareEpisode(emergencyCareBo, triageBo, policeInterventionId);
+        EmergencyCareEpisode emergencyCareEpisode = new EmergencyCareEpisode(emergencyCareBo, triageBo);
         emergencyCareEpisode = emergencyCareEpisodeRepository.save(emergencyCareEpisode);
         EmergencyCareBo result = new EmergencyCareBo(emergencyCareEpisode);
         LOG.debug(OUTPUT, result);

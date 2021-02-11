@@ -31,6 +31,9 @@ public abstract class AEmergencyCareDto implements Serializable {
 	private PoliceInterventionDetailsDto policeInterventionDetails;
 
 	@Nullable
+	private Boolean hasPoliceIntervention;
+
+	@Nullable
 	private String ambulanceCompanyId;
 
 	@Nullable

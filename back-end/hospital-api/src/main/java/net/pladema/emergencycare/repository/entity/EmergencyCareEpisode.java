@@ -68,8 +68,7 @@ public class EmergencyCareEpisode extends SGXAuditableEntity {
 	private Boolean hasPoliceIntervention;
 
 	public EmergencyCareEpisode(EmergencyCareBo emergencyCareBo,
-								TriageBo triageBo,
-								Integer policeInterventionId) {
+								TriageBo triageBo) {
 		this.patientId = emergencyCareBo.getPatient() != null ? emergencyCareBo.getPatient().getId() : null;
 		this.patientMedicalCoverageId = emergencyCareBo.getPatientMedicalCoverageId();
 		this.emergencyCareTypeId = emergencyCareBo.getEmergencyCareTypeId();
@@ -79,6 +78,7 @@ public class EmergencyCareEpisode extends SGXAuditableEntity {
 		this.doctorsOfficeId = emergencyCareBo.getDoctorsOfficeId();
 		this.institutionId = emergencyCareBo.getInstitutionId();
 		this.ambulanceCompanyId = emergencyCareBo.getAmbulanceCompanyId();
+		this.hasPoliceIntervention = emergencyCareBo.getHasPoliceIntervention();
 	}
 
 	@PrePersist
