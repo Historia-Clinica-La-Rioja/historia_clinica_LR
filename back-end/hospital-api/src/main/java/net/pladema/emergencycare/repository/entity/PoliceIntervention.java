@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
-@Table(name = "police_intervention")
+@Table(name = "police_intervention_details")
 @Getter
 @Setter
 @ToString
@@ -24,8 +24,7 @@ public class PoliceIntervention implements Serializable {
 		private static final long serialVersionUID = -8562878895269889422L;
 
 		@Id
-		@Column(name = "id")
-		@GeneratedValue(strategy = GenerationType.IDENTITY)
+		@Column(name = "emergency_care_episode_id")
 		private Integer id;
 
 		@Column(name = "call_date")

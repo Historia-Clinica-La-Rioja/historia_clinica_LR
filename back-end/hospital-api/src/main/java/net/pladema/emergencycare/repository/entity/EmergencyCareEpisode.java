@@ -64,8 +64,8 @@ public class EmergencyCareEpisode extends SGXAuditableEntity {
 	@Column(name = "ambulance_company_id", length = 15)
 	private String ambulanceCompanyId;
 
-	@Column(name = "police_intervention_id")
-	private Integer policeInterventionId;
+	@Column(name = "has_police_intervention")
+	private Boolean hasPoliceIntervention;
 
 	public EmergencyCareEpisode(EmergencyCareBo emergencyCareBo,
 								TriageBo triageBo,
@@ -79,7 +79,6 @@ public class EmergencyCareEpisode extends SGXAuditableEntity {
 		this.doctorsOfficeId = emergencyCareBo.getDoctorsOfficeId();
 		this.institutionId = emergencyCareBo.getInstitutionId();
 		this.ambulanceCompanyId = emergencyCareBo.getAmbulanceCompanyId();
-		this.policeInterventionId = policeInterventionId;
 	}
 
 	@PrePersist

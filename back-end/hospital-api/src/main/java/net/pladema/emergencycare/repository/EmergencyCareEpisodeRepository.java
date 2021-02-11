@@ -33,7 +33,7 @@ public interface EmergencyCareEpisodeRepository extends JpaRepository<EmergencyC
 			" LEFT JOIN Patient pa ON (pa.id = ece.patientId) "+
 			" LEFT JOIN Person pe ON (pe.id = pa.personId) "+
 			" LEFT JOIN DoctorsOffice dso ON (dso.id = ece.doctorsOfficeId) "+
-			" LEFT JOIN PoliceIntervention pi ON (pi.id = ece.policeInterventionId) "+
+			" LEFT JOIN PoliceIntervention pi ON (pi.id = ece.id) "+
 			" JOIN TriageCategory tc ON (tc.id = ece.triageCategoryId) "+
 			" WHERE ece.id = :episodeId "+
 			" AND ece.institutionId = :institutionId ")
