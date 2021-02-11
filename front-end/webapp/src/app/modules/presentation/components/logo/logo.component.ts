@@ -11,15 +11,17 @@ import { Observable } from 'rxjs';
 export class LogoComponent implements OnInit {
 
 	@Input() isSecondaryLogo = false;
-	public logos$: Observable<ImageSrc[]>;
+	public img: ImageSrc = { location: 'assets/logos/logo_HSI.svg', alt: 'HSI' };
 
 	constructor(private flavoredImagesService: FlavoredImagesService) {
 	}
 
 	ngOnInit(): void {
-		this.logos$ = this.isSecondaryLogo ?
-			this.flavoredImagesService.getHeaderSecondaryLogos() :
-			this.flavoredImagesService.getLogos();
+		if (this.isSecondaryLogo) {
+			this.flavoredImagesService.getHeaderSecondaryLogos().subscribe(
+				images => this.img = images[0]
+			);
+		}
 	}
 
 }
