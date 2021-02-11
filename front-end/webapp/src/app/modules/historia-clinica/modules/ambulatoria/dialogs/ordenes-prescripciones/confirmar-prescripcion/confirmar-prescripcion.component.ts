@@ -1,7 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { Observable } from 'rxjs';
 import { PrescripcionesService, PrescriptionTypes } from '../../../services/prescripciones.service';
 
 @Component({
@@ -11,8 +10,6 @@ import { PrescripcionesService, PrescriptionTypes } from '../../../services/pres
 })
 export class ConfirmarPrescripcionComponent implements OnInit {
 
-	loading = true;
-	hasError = false;
 	prescriptionPdfInfo: number[];
 
 	constructor(
@@ -22,17 +19,8 @@ export class ConfirmarPrescripcionComponent implements OnInit {
 		@Inject(MAT_DIALOG_DATA) public data: ConfirmPrescriptionData) { }
 
 	ngOnInit(): void {
-		this.data.prescriptionRequest.subscribe((prescriptionPdfInfo: number | number[]) => {
-			this.snackBarService.showSuccess(this.data.successLabel);
-			this.loading = false;
-			this.hasError = false;
-			this.prescriptionPdfInfo = typeof prescriptionPdfInfo === 'number' ? [prescriptionPdfInfo] : prescriptionPdfInfo;
-		}, err => {
-			this.snackBarService.showError(err.errors[0]);
-			this.hasError = true;
-			this.loading = false;
-			this.closeModal();
-			});
+		this.snackBarService.showSuccess(this.data.successLabel);
+		this.prescriptionPdfInfo = typeof this.data.prescriptionRequest === 'number' ? [this.data.prescriptionRequest] : this.data.prescriptionRequest;
 	}
 
 	downloadPrescription() {
@@ -42,7 +30,7 @@ export class ConfirmarPrescripcionComponent implements OnInit {
 	}
 
 	closeModal() {
-		this.dialogRef.close(this.hasError);
+		this.dialogRef.close();
 	}
 
 }
@@ -51,8 +39,7 @@ export class ConfirmPrescriptionData {
 	titleLabel: string;
 	downloadButtonLabel: string;
 	successLabel: string;
-	errorLabel: string;
 	prescriptionType: PrescriptionTypes;
 	patientId: number;
-	prescriptionRequest: Observable<number | number[]>;
+	prescriptionRequest: number | number[];
 }

@@ -6,8 +6,8 @@ import { MedicalCoverageComponent, PatientMedicalCoverage } from '@core/dialogs/
 import { MapperService } from '@core/services/mapper.service';
 import { map } from 'rxjs/operators';
 import { AgregarPrescripcionItemComponent, NewPrescriptionItem } from '../agregar-prescripcion-item/agregar-prescripcion-item.component';
-import { BasicPatientDto, PatientMedicalCoverageDto, PrescriptionDto } from '@api-rest/api-model';
-import { PrescriptionTypes } from '../../../services/prescripciones.service';
+import {ApiErrorDto, BasicPatientDto, PatientMedicalCoverageDto, PrescriptionDto} from '@api-rest/api-model';
+import {PrescripcionesService, PrescriptionTypes} from '../../../services/prescripciones.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { PatientService } from '@api-rest/services/patient.service';
 
@@ -31,6 +31,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 		private readonly dialog: MatDialog,
 		private readonly snackBarService: SnackBarService,
 		private readonly patientService: PatientService,
+		private prescripcionesService: PrescripcionesService,
 		public dialogRef: MatDialogRef<NuevaPrescripcionComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: NewPrescriptionData) { }
 
@@ -46,7 +47,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 		});
 	}
 
-	closeModal(newPrescription?: PrescriptionDto): void {
+	closeModal(newPrescription?: NewPrescription): void {
 		this.dialogRef.close(newPrescription);
 	}
 
@@ -97,17 +98,36 @@ export class NuevaPrescripcionComponent implements OnInit {
 			})
 		};
 
-		this.closeModal(newPrescription);
+		this.savePrescription(newPrescription);
+
 	}
+
+	savePrescription(prescriptionDto: PrescriptionDto) {
+		if (prescriptionDto) {
+			this.prescripcionesService.createPrescription(this.data.prescriptionType, prescriptionDto, this.data.patientId)
+				.subscribe(prescriptionRequestResponse => {
+						this.closeModal({prescriptionDto, prescriptionRequestResponse});
+					},
+					(err: ApiErrorDto) => {
+						this.snackBarService.showError(err.errors[0]);
+					});
+		}
+	}
+
 
 	deletePrescriptionItem(prescriptionItem: NewPrescriptionItem): void {
 		this.prescriptionItems.splice(this.prescriptionItems.findIndex(item => item.id === prescriptionItem.id) , 1);
 	}
 
 	getDosage(prescriptionItem: NewPrescriptionItem): string {
-		const intervalText = prescriptionItem.isDailyInterval ? 'Diario - ' : `Cada ${prescriptionItem.intervalHours} hs - `;
-		const administrationTimeText = prescriptionItem.isChronicAdministrationTime ? 'Habitual' : `Durante ${prescriptionItem.administrationTimeDays} días`;
-		return (intervalText + administrationTimeText);
+		const intervalText = prescriptionItem.isDailyInterval ? 'Diario' :
+			prescriptionItem.intervalHours ? `Cada ${prescriptionItem.intervalHours} hs` : null;
+
+		const administrationTimeText = prescriptionItem.isChronicAdministrationTime ? 'Habitual'
+			: prescriptionItem.administrationTimeDays ? `Durante ${prescriptionItem.administrationTimeDays} días` : null;
+
+		return intervalText && administrationTimeText ? (intervalText + ' - ' + administrationTimeText)
+			: intervalText ? intervalText : administrationTimeText ? administrationTimeText : '';
 	}
 
 	getFullMedicalCoverageText(patientMedicalCoverage): string {
@@ -179,7 +199,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 }
 
 export class NewPrescriptionData {
-	patientId: string;
+	patientId: number;
 	titleLabel: string;
 	addLabel: string;
 	prescriptionType: PrescriptionTypes;
@@ -191,4 +211,9 @@ export class NewPrescriptionData {
 		showStudyCategory: boolean;
 		eclTerm: string;
 	};
+}
+
+export class NewPrescription {
+	prescriptionDto: PrescriptionDto;
+	prescriptionRequestResponse: number | number[];
 }

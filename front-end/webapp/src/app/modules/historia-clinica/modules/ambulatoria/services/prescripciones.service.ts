@@ -109,8 +109,8 @@ export class PrescripcionesService {
 
 			isDailyInterval: medicationItem.dosage ? medicationItem.dosage.dailyInterval : null,
 			isChronicAdministrationTime: medicationItem.dosage ? medicationItem.dosage.chronic : null,
-			intervalHours: medicationItem.dosage ? String(medicationItem.dosage.frequency) : null,
-			administrationTimeDays: medicationItem.dosage ? String(medicationItem.dosage.duration) : null,
+			intervalHours: medicationItem.dosage?.frequency ? String(medicationItem.dosage.frequency) : null,
+			administrationTimeDays: medicationItem.dosage?.duration ? String(medicationItem.dosage.duration) : null,
 			observations: medicationItem.observations,
 		};
 	}

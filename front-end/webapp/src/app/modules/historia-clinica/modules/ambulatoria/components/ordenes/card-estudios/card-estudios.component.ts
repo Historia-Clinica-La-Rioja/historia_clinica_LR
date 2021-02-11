@@ -1,13 +1,16 @@
 import { Component, Input, OnInit } from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup} from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { DiagnosticReportInfoDto, PrescriptionDto } from '@api-rest/api-model';
+import { DiagnosticReportInfoDto } from '@api-rest/api-model';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
 import { ESTUDIOS } from 'src/app/modules/historia-clinica/constants/summaries';
 import { STUDY_STATUS } from '../../../constants/prescripciones-masterdata';
 import { ConfirmarPrescripcionComponent } from '../../../dialogs/ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
-import { NuevaPrescripcionComponent } from '../../../dialogs/ordenes-prescripciones/nueva-prescripcion/nueva-prescripcion.component';
+import {
+	NewPrescription,
+	NuevaPrescripcionComponent
+} from '../../../dialogs/ordenes-prescripciones/nueva-prescripcion/nueva-prescripcion.component';
 import { VerResultadosEstudioComponent } from '../../../dialogs/ordenes-prescripciones/ver-resultados-estudio/ver-resultados-estudio.component';
 import {PrescripcionesService, PrescriptionTypes} from '../../../services/prescripciones.service';
 import { PrescriptionItemData } from '../item-prescripciones/item-prescripciones.component';
@@ -62,13 +65,13 @@ export class CardEstudiosComponent implements OnInit {
 			study: [null],
 		});
 
+		this.formFilter.controls.statusId.setValue(STUDY_STATUS.REGISTERED.id);
 		this.getStudy();
 
 		this.requestMasterDataService.categories().subscribe(categories => {
 			this.categories = categories;
 		});
 
-		this.formFilter.controls.statusId.setValue(STUDY_STATUS.REGISTERED.id);
 	}
 
 	private getStudy(): void {
@@ -104,30 +107,21 @@ export class CardEstudiosComponent implements OnInit {
 				width: '35%',
 			});
 
-		newStudyDialog.afterClosed().subscribe((newPrescription: PrescriptionDto) => {
-			if (newPrescription) {
-				const newServiceRequest$ = this.prescripcionesService.createPrescription(PrescriptionTypes.STUDY, newPrescription, this.patientId);
-				const confirmPrescriptionDialog = this.dialog.open(ConfirmarPrescripcionComponent,
-					{
-						disableClose: true,
-						data: {
-							titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.STUDY_TITLE',
-							downloadButtonLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.DOWNLOAD_BUTTON_STUDY',
-							successLabel: 'ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_STUDY_SUCCESS',
-							errorLabel: 'ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_STUDY_ERROR',
-							prescriptionType: PrescriptionTypes.STUDY,
-							patientId: this.patientId,
-							prescriptionRequest: newServiceRequest$,
-						},
-						width: '35%',
-					});
-
-				confirmPrescriptionDialog.afterClosed().subscribe( (hasError: boolean) => {
-					if (!hasError) {
-						this.getStudy();
-					}
+		newStudyDialog.afterClosed().subscribe((newPrescription: NewPrescription) => {
+			this.dialog.open(ConfirmarPrescripcionComponent,
+				{
+					disableClose: true,
+					data: {
+						titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.STUDY_TITLE',
+						downloadButtonLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.DOWNLOAD_BUTTON_STUDY',
+						successLabel: 'ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_STUDY_SUCCESS',
+						prescriptionType: PrescriptionTypes.STUDY,
+						patientId: this.patientId,
+						prescriptionRequest: newPrescription.prescriptionRequestResponse,
+					},
+					width: '35%',
 				});
-			}
+			this.getStudy();
 		});
 	}
 
