@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
 import { BedManagementFacadeService, Sector, Speciality, Category } from '../../services/bed-management-facade.service';
-import { momentFormat, DateFormat } from '@core/utils/moment.utils';
+import { momentFormat, DateFormat, momentParse } from '@core/utils/moment.utils';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -42,7 +42,7 @@ export class BedFiltersComponent implements OnInit, OnDestroy {
 				this.form.controls.sector.setValue(data.sector);
 				this.form.controls.speciality.setValue(data.speciality);
 				this.form.controls.category.setValue(data.category);
-				this.form.controls.probableDischargeDate.setValue(data.probableDischargeDate);
+				this.form.controls.probableDischargeDate.setValue(momentParse(data.probableDischargeDate, DateFormat.API_DATE));
 				this.form.controls.filled.setValue(data.filled);
 			});
 
@@ -57,7 +57,8 @@ export class BedFiltersComponent implements OnInit, OnDestroy {
 			sector: this.form.value.sector,
 			speciality: this.form.value.speciality,
 			category: this.form.value.category,
-			probableDischargeDate: this.form.value.probableDischargeDate ? momentFormat(this.form.value.probableDischargeDate, DateFormat.API_DATE) : null,
+			probableDischargeDate: this.form.value.probableDischargeDate ?
+				momentFormat(this.form.value.probableDischargeDate, DateFormat.API_DATE) : null,
 			filled: this.form.value.filled
 		};
 	}
