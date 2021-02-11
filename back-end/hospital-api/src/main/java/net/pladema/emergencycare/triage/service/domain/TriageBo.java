@@ -72,6 +72,7 @@ public class TriageBo {
         this.stridor = triageVo.getStridor();
         this.perfusionId = triageVo.getPerfusionId();
         this.createdOn = triageVo.getCreatedOn();
+        this.vitalSignIds = triageVo.getVitalSignIds();
     }
 
 }

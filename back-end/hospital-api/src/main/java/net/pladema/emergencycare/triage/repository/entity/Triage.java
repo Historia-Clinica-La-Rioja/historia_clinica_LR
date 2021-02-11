@@ -1,5 +1,6 @@
 package net.pladema.emergencycare.triage.repository.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,6 +18,7 @@ import javax.persistence.*;
 @Setter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 public class Triage  extends SGXAuditableEntity {
 	/**
 	 *
@@ -36,7 +38,6 @@ public class Triage  extends SGXAuditableEntity {
 
 	@Column(name = "triage_category_id", nullable = false)
 	private Short triageCategoryId;
-
 
 	@Column(name = "doctors_office_id")
 	private Integer doctorsOfficeId;

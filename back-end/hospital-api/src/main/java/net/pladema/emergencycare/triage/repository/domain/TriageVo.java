@@ -7,6 +7,7 @@ import net.pladema.emergencycare.triage.repository.entity.Triage;
 import net.pladema.emergencycare.triage.repository.entity.TriageDetails;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -41,7 +42,9 @@ public class TriageVo {
 
     private LocalDateTime createdOn;
 
-    public TriageVo(Triage triage, TriageDetails triageDetails, Short emergencyCareTypeId) {
+    private List<Integer> vitalSignIds;
+
+    public TriageVo(Triage triage, TriageDetails triageDetails, Short emergencyCareTypeId, List<Integer> vitalSignIds) {
         this.id = triage.getId();
         this.emergencyCareEpisodeId = triage.getEmergencyCareEpisodeId();
         this.emergencyCareTypeId = emergencyCareTypeId;
@@ -58,6 +61,7 @@ public class TriageVo {
             this.perfusionId = triageDetails.getPerfusionId();
         }
         this.createdOn = triage.getCreatedOn();
+        this.vitalSignIds = vitalSignIds;
     }
 
 }

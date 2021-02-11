@@ -45,14 +45,13 @@ public class TriageServiceImpl implements TriageService {
                              TriageDetailsRepository triageDetailsRepository,
                              TriageVitalSignsRepository triageVitalSignsRepository,
                              InstitutionExternalService institutionExternalService,
-                             EmergencyCareEpisodeRepository emergencyCareEpisodeRepository){
+                             EmergencyCareEpisodeRepository emergencyCareEpisodeRepository) {
         super();
         this.triageRepository = triageRepository;
         this.triageDetailsRepository = triageDetailsRepository;
         this.triageVitalSignsRepository = triageVitalSignsRepository;
         this.institutionExternalService = institutionExternalService;
         this.emergencyCareEpisodeRepository = emergencyCareEpisodeRepository;
-
     }
 
     @Override
@@ -63,7 +62,6 @@ public class TriageServiceImpl implements TriageService {
                 .map(TriageBo::new)
                 .collect(Collectors.toList());
         result.forEach(t -> {
-            t.setVitalSignIds(triageVitalSignsRepository.getVitalSignIds(t.getId()));
             setDetailsDescriptions(t);
             t.setCreatedOn(UTCIntoInstitutionLocalDateTime(institutionId, t.getCreatedOn()));
         });

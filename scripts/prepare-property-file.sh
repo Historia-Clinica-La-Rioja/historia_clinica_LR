@@ -32,7 +32,6 @@ echo "
 [ -z $DB_USER  ] || echo "spring.datasource.username=${DB_USER}" >> env.properties
 [ -z $DB_PASS  ] || echo "spring.datasource.password=${DB_PASS}" >> env.properties
 
-[ "$DB_TYPE" != "postgresql" ] || echo "spring.jpa.database-platform=org.hibernate.dialect.PostgreSQL95Dialect" >> env.properties
 [ "$DB_TYPE" != "mssql" ] || echo "spring.datasource.driver-class-name=com.microsoft.sqlserver.jdbc.SQLServerDriver" >> env.properties
 [ "$DB_TYPE" != "mssql" ] || echo "spring.jpa.database-platform=org.hibernate.dialect.SQLServer2012Dialect" >> env.properties
 
