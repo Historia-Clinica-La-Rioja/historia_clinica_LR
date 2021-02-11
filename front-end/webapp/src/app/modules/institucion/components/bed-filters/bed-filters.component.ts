@@ -42,7 +42,9 @@ export class BedFiltersComponent implements OnInit, OnDestroy {
 				this.form.controls.sector.setValue(data.sector);
 				this.form.controls.speciality.setValue(data.speciality);
 				this.form.controls.category.setValue(data.category);
-				this.form.controls.probableDischargeDate.setValue(momentParse(data.probableDischargeDate, DateFormat.API_DATE));
+				this.form.controls.probableDischargeDate
+					.setValue(data.probableDischargeDate ?
+						momentParse(data.probableDischargeDate, DateFormat.API_DATE) : null);
 				this.form.controls.filled.setValue(data.filled);
 			});
 
