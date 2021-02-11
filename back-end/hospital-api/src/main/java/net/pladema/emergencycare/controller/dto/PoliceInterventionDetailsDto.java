@@ -15,7 +15,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class PoliceInterventionDto implements Serializable {
+public class PoliceInterventionDetailsDto implements Serializable {
 
     private DateDto callDate;
 

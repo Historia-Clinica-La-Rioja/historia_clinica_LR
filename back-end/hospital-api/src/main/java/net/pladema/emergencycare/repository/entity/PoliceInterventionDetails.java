@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.emergencycare.service.domain.PoliceInterventionBo;
+import net.pladema.emergencycare.service.domain.PoliceInterventionDetailsBo;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -17,7 +17,7 @@ import java.time.LocalTime;
 @Setter
 @ToString
 @NoArgsConstructor
-public class PoliceIntervention implements Serializable {
+public class PoliceInterventionDetails implements Serializable {
 		/**
 		 *
 		 */
@@ -42,11 +42,11 @@ public class PoliceIntervention implements Serializable {
 		@Column(name = "lastname", length = 20)
 		private String lastname;
 
-		public PoliceIntervention(PoliceInterventionBo policeInterventionBo){
-			this.callDate = policeInterventionBo.getCallDate();
-			this.callTime = policeInterventionBo.getCallTime();
-			this.plateNumber = policeInterventionBo.getPlateNumber();
-			this.firstname = policeInterventionBo.getFirstName();
-			this.lastname = policeInterventionBo.getLastName();
+		public PoliceInterventionDetails(PoliceInterventionDetailsBo policeInterventionDetailsBo){
+			this.callDate = policeInterventionDetailsBo.getCallDate();
+			this.callTime = policeInterventionDetailsBo.getCallTime();
+			this.plateNumber = policeInterventionDetailsBo.getPlateNumber();
+			this.firstname = policeInterventionDetailsBo.getFirstName();
+			this.lastname = policeInterventionDetailsBo.getLastName();
 		}
 }

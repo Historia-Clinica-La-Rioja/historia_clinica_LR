@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.emergencycare.repository.entity.EmergencyCareEpisode;
-import net.pladema.emergencycare.repository.entity.PoliceIntervention;
+import net.pladema.emergencycare.repository.entity.PoliceInterventionDetails;
 import net.pladema.emergencycare.triage.repository.entity.TriageCategory;
 import net.pladema.medicalconsultation.doctorsoffice.repository.domain.DoctorsOfficeVo;
 import net.pladema.person.repository.entity.Person;
@@ -47,7 +47,7 @@ public class EmergencyCareVo implements Serializable {
 
 	private LocalDateTime createdOn;
 
-	private PoliceInterventionVo policeIntervention;
+	private PoliceInterventionDetailsVo policeInterventionDetails;
 
 	public EmergencyCareVo(EmergencyCareEpisode emergencyCareEpisode, Person person, Short patientTypeId, String doctorsOfficeDescription, TriageCategory triage){
 		this.id = emergencyCareEpisode.getId();
@@ -64,8 +64,8 @@ public class EmergencyCareVo implements Serializable {
 		this.doctorsOffice = emergencyCareEpisode.getDoctorsOfficeId() != null ? new DoctorsOfficeVo(emergencyCareEpisode.getDoctorsOfficeId(), doctorsOfficeDescription) : null;
 	}
 
-	public EmergencyCareVo(EmergencyCareEpisode emergencyCareEpisode, Person person, Short patientTypeId, String doctorsOfficeDescription, TriageCategory triage, PoliceIntervention policeIntervention){
+	public EmergencyCareVo(EmergencyCareEpisode emergencyCareEpisode, Person person, Short patientTypeId, String doctorsOfficeDescription, TriageCategory triage, PoliceInterventionDetails policeInterventionDetails){
 		this(emergencyCareEpisode, person, patientTypeId, doctorsOfficeDescription, triage);
-		this.policeIntervention = policeIntervention != null ? new PoliceInterventionVo(policeIntervention) : null;
+		this.policeInterventionDetails = policeInterventionDetails != null ? new PoliceInterventionDetailsVo(policeInterventionDetails) : null;
 	}
 }

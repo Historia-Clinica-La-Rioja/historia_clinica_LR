@@ -5,8 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.emergencycare.repository.domain.PoliceInterventionVo;
-import net.pladema.emergencycare.repository.entity.PoliceIntervention;
+import net.pladema.emergencycare.repository.domain.PoliceInterventionDetailsVo;
+import net.pladema.emergencycare.repository.entity.PoliceInterventionDetails;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -16,7 +16,7 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class PoliceInterventionBo {
+public class PoliceInterventionDetailsBo {
 
     private Integer id;
 
@@ -30,16 +30,16 @@ public class PoliceInterventionBo {
 
     private String lastName;
 
-    public PoliceInterventionBo(PoliceIntervention policeIntervention){
-        this.id = policeIntervention.getId();
-        this.callDate = policeIntervention.getCallDate();
-        this.callTime = policeIntervention.getCallTime();
-        this.plateNumber = policeIntervention.getPlateNumber();
-        this.firstName = policeIntervention.getFirstname();
-        this.lastName = policeIntervention.getLastname();
+    public PoliceInterventionDetailsBo(PoliceInterventionDetails policeInterventionDetails){
+        this.id = policeInterventionDetails.getId();
+        this.callDate = policeInterventionDetails.getCallDate();
+        this.callTime = policeInterventionDetails.getCallTime();
+        this.plateNumber = policeInterventionDetails.getPlateNumber();
+        this.firstName = policeInterventionDetails.getFirstname();
+        this.lastName = policeInterventionDetails.getLastname();
     }
 
-    public PoliceInterventionBo(PoliceInterventionVo policeIntervention){
+    public PoliceInterventionDetailsBo(PoliceInterventionDetailsVo policeIntervention){
         this.id = policeIntervention.getId();
         this.callDate = policeIntervention.getCallDate();
         this.callTime = policeIntervention.getCallTime();

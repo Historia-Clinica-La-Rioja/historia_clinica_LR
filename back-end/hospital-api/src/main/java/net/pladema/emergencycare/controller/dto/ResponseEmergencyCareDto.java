@@ -28,7 +28,7 @@ public class ResponseEmergencyCareDto extends EmergencyCareDto {
     DoctorsOfficeDto doctorsOffice;
 
     public ResponseEmergencyCareDto(Integer id, List<SnomedDto> reasons, MasterDataDto emergencyCareType,
-                                    MasterDataDto entranceType, PoliceInterventionDto policeIntervention,
+                                    MasterDataDto entranceType, PoliceInterventionDetailsDto policeIntervention,
                                     String ambulanceCompanyId, EmergencyCarePatientDto patient,
                                     MasterDataDto emergencyCareState, DateTimeDto createdOn){
         super(reasons, emergencyCareType, entranceType, policeIntervention, ambulanceCompanyId, patient);

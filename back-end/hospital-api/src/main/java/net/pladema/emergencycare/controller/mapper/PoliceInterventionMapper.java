@@ -1,7 +1,7 @@
 package net.pladema.emergencycare.controller.mapper;
 
-import net.pladema.emergencycare.controller.dto.PoliceInterventionDto;
-import net.pladema.emergencycare.service.domain.PoliceInterventionBo;
+import net.pladema.emergencycare.controller.dto.PoliceInterventionDetailsDto;
+import net.pladema.emergencycare.service.domain.PoliceInterventionDetailsBo;
 import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
@@ -10,8 +10,8 @@ import org.mapstruct.Named;
 public interface PoliceInterventionMapper {
 
     @Named("toPoliceInterventionDto")
-    PoliceInterventionDto toPoliceInterventionDto(PoliceInterventionBo policeInterventionBo);
+	PoliceInterventionDetailsDto toPoliceInterventionDetailsDto(PoliceInterventionDetailsBo policeInterventionDetailsBo);
 
     @Named("toPoliceInterventionBo")
-    PoliceInterventionBo toPoliceInterventionBo(PoliceInterventionDto policeInterventionDto);
+	PoliceInterventionDetailsBo toPoliceInterventionDetailsBo(PoliceInterventionDetailsDto policeInterventionDetailsDto);
 }

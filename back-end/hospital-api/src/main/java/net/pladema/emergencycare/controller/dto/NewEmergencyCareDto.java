@@ -19,7 +19,7 @@ public class NewEmergencyCareDto extends AEmergencyCareDto {
 
     @Builder(builderMethodName = "newAdministrativeBuilder")
     public NewEmergencyCareDto(List<SnomedDto> reasons, Short emergencyCareTypeId,
-                               Short entranceTypeId, PoliceInterventionDto policeIntervention,
+                               Short entranceTypeId, PoliceInterventionDetailsDto policeIntervention,
                                String ambulanceCompanyId, AEmergencyCarePatientDto patient, Integer doctorsOfficeId){
         super(reasons, emergencyCareTypeId, entranceTypeId, policeIntervention, ambulanceCompanyId, patient);
         this.doctorsOfficeId = doctorsOfficeId;

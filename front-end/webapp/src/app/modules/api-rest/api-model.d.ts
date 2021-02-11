@@ -13,7 +13,7 @@ export interface AEmergencyCareDto extends Serializable {
     emergencyCareTypeId?: number;
     entranceTypeId?: number;
     patient?: AEmergencyCarePatientDto;
-    policeIntervention?: PoliceInterventionDto;
+    policeInterventionDetails?: PoliceInterventionDetailsDto;
     reasons?: SnomedDto[];
 }
 
@@ -541,7 +541,7 @@ export interface EmergencyCareDto extends Serializable {
     emergencyCareType: MasterDataDto;
     entranceType: MasterDataDto;
     patient: EmergencyCarePatientDto;
-    policeIntervention: PoliceInterventionDto;
+    policeInterventionDetails: PoliceInterventionDetailsDto;
     reasons: SnomedDto[];
 }
 
@@ -1238,7 +1238,7 @@ export interface PersonalInformationDto {
     phoneNumber: string;
 }
 
-export interface PoliceInterventionDto extends Serializable {
+export interface PoliceInterventionDetailsDto extends Serializable {
     callDate: DateDto;
     callTime: TimeDto;
     firstName: string;

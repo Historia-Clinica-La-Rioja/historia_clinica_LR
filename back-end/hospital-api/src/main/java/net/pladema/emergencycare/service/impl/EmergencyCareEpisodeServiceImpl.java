@@ -7,13 +7,13 @@ import net.pladema.emergencycare.repository.PoliceInterventionRepository;
 import net.pladema.emergencycare.repository.domain.EmergencyCareVo;
 import net.pladema.emergencycare.repository.entity.EmergencyCareEpisode;
 import net.pladema.emergencycare.repository.entity.EmergencyCareEpisodeReason;
-import net.pladema.emergencycare.repository.entity.PoliceIntervention;
+import net.pladema.emergencycare.repository.entity.PoliceInterventionDetails;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.emergencycare.service.HistoricEmergencyEpisodeService;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
 import net.pladema.emergencycare.service.domain.HistoricEmergencyEpisodeBo;
 import net.pladema.emergencycare.service.domain.PatientECEBo;
-import net.pladema.emergencycare.service.domain.PoliceInterventionBo;
+import net.pladema.emergencycare.service.domain.PoliceInterventionDetailsBo;
 import net.pladema.emergencycare.triage.service.TriageService;
 import net.pladema.emergencycare.triage.service.domain.TriageBo;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
@@ -138,8 +138,8 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
     private EmergencyCareBo createEpisode(EmergencyCareBo newEmergencyCare, BiFunction<TriageBo,Integer, TriageBo> saveTriage) {
 
         LOG.debug("Input parameters -> newEmergencyCare {}", newEmergencyCare);
-        PoliceInterventionBo policeInterventionBo = newEmergencyCare.getPoliceIntervention();
-        policeInterventionBo = (policeInterventionBo != null) ? savePoliceIntervention(newEmergencyCare.getPoliceIntervention()) : new PoliceInterventionBo();
+        PoliceInterventionDetailsBo policeInterventionBo = newEmergencyCare.getPoliceInterventionDetails();
+        policeInterventionBo = (policeInterventionBo != null) ? savePoliceIntervention(newEmergencyCare.getPoliceInterventionDetails()) : new PoliceInterventionDetailsBo();
         EmergencyCareBo emergencyCareEpisodeBo = saveEmergencyCareEpisode(newEmergencyCare, newEmergencyCare.getTriage(), policeInterventionBo.getId());
         saveHistoricEmergencyEpisode(emergencyCareEpisodeBo);
 
@@ -147,7 +147,7 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 
         List<ReasonBo> reasons = saveReasons(newEmergencyCare.getReasons(), emergencyCareEpisodeBo.getId());
 
-        emergencyCareEpisodeBo.setPoliceIntervention(policeInterventionBo);
+        emergencyCareEpisodeBo.setPoliceInterventionDetails(policeInterventionBo);
         emergencyCareEpisodeBo.setTriage(triageBo);
         emergencyCareEpisodeBo.setReasons(reasons);
 
@@ -163,11 +163,11 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
         return historicEmergencyEpisodeBo;
     }
 
-    private PoliceInterventionBo savePoliceIntervention(PoliceInterventionBo policeInterventionBo) {
+    private PoliceInterventionDetailsBo savePoliceIntervention(PoliceInterventionDetailsBo policeInterventionBo) {
         LOG.debug("Input parameter -> policeInterventionBo {}", policeInterventionBo);
-        PoliceIntervention policeIntervention = new PoliceIntervention(policeInterventionBo);
+        PoliceInterventionDetails policeIntervention = new PoliceInterventionDetails(policeInterventionBo);
         policeIntervention = policeInterventionRepository.save(policeIntervention);
-        PoliceInterventionBo result = new PoliceInterventionBo(policeIntervention);
+        PoliceInterventionDetailsBo result = new PoliceInterventionDetailsBo(policeIntervention);
         LOG.debug(OUTPUT, result);
         return result;
     }

@@ -53,7 +53,7 @@ public class EmergencyCareBo {
 
     private String ambulanceCompanyId;
 
-    private PoliceInterventionBo policeIntervention;
+    private PoliceInterventionDetailsBo policeInterventionDetails;
 
     public EmergencyCareBo(EmergencyCareVo emergencyCareVo){
         this.id = emergencyCareVo.getId();
@@ -67,8 +67,8 @@ public class EmergencyCareBo {
         this.emergencyCareEntranceId = emergencyCareVo.getEmergencyCareEntranceTypeId();
         this.doctorsOffice = emergencyCareVo.getDoctorsOffice() != null ? new DoctorsOfficeBo(emergencyCareVo.getDoctorsOffice()) : null;
         this.ambulanceCompanyId = emergencyCareVo.getAmbulanceCompanyId();
-        if (emergencyCareVo.getPoliceIntervention()!= null)
-            this.policeIntervention = new PoliceInterventionBo(emergencyCareVo.getPoliceIntervention());
+        if (emergencyCareVo.getPoliceInterventionDetails()!= null)
+            this.policeInterventionDetails = new PoliceInterventionDetailsBo(emergencyCareVo.getPoliceInterventionDetails());
         this.createdOn = emergencyCareVo.getCreatedOn();
     }
 

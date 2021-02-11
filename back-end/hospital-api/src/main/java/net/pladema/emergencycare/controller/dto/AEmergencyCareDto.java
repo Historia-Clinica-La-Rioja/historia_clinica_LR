@@ -28,7 +28,7 @@ public abstract class AEmergencyCareDto implements Serializable {
 	private Short entranceTypeId;
 
 	@Nullable
-	private PoliceInterventionDto policeIntervention;
+	private PoliceInterventionDetailsDto policeInterventionDetails;
 
 	@Nullable
 	private String ambulanceCompanyId;
