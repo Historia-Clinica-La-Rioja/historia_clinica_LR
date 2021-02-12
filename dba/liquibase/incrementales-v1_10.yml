@@ -103,3 +103,4 @@ databaseChangeLog:
             columnName: mothers_last_name
             newDataType: varchar(40)
             tableName: person_extended
+

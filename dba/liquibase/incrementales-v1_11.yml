@@ -1,3 +1,100 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v1_11 
 
+    - changeSet:        
+        id:  createTable-emergency_care_discharge
+        author: tmedina  
+        changes:  
+        - createTable: 
+            tableName: emergency_care_discharge  
+            columns:  
+            - column: 
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_emergency_care_discharge 
+                name:  emergency_care_episode_id  
+                type:  int 
+            - column:
+                constraints:
+                    nullable: true
+                name: medical_discharge_on
+                type: datetime
+            - column:
+                constraints:
+                    nullable: false
+                name: medical_discharge_by_professional
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: true
+                name: administrative_discharge_on
+                type: datetime
+            - column:
+                constraints:
+                    nullable: false
+                name: administrative_discharge_by_user
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: true
+                name: autopsy
+                type: boolean
+            - column:
+                constraints:
+                    nullable: false
+                name: discharge_type_id
+                type: smallint
+            - column:
+                constraints:
+                    nullable: true
+                name: hospital_transport_id   
+                type: smallint
+            - column:
+                constraints:
+                    nullable: true
+                name: ambulance_company_id
+                type: varchar(15)
+
+    - changeSet:
+        id: emergency_care_discharge-addForeignKeyConstraint-emergency_care_episode_id
+        author: tmedina
+        changes:
+            - addForeignKeyConstraint:
+                baseColumnNames: emergency_care_episode_id 
+                baseTableName: emergency_care_discharge
+                constraintName: FK_emergency_care_discharge_emergency_care_episode_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: emergency_care_episode
+                validate: true
+
+    - changeSet:
+        id: emergency_care_discharge-addForeignKeyConstraint-discharge_type_id
+        author: tmedina
+        changes:
+            - addForeignKeyConstraint:
+                baseColumnNames: discharge_type_id 
+                baseTableName: emergency_care_discharge
+                constraintName: FK_emergency_care_discharge_discharge_type_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: discharge_type
+                validate: true
+
+    - changeSet:
+        id: emergency_care_discharge-addForeignKeyConstraint-hospital_transport_id 
+        author: tmedina
+        changes:
+            - addForeignKeyConstraint:
+                baseColumnNames: hospital_transport_id 
+                baseTableName: emergency_care_discharge
+                constraintName: FK_emergency_care_discharge_hospital_transport_id 
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: emergency_care_entrance_type
+                validate: true
