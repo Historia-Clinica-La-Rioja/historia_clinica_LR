@@ -16,7 +16,7 @@ import { PermissionsService } from '@core/services/permissions.service';
 import { MedicacionesService } from '../../../services/medicaciones.service';
 import { ERole } from '@api-rest/api-model';
 
-const ROLES_TO_VIEW: ERole[] = [ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO];
+const ROLES_TO_EDIT: ERole[] = [ERole.ESPECIALISTA_MEDICO];
 
 @Component({
   selector: 'app-card-medicaciones',
@@ -34,7 +34,7 @@ export class CardMedicacionesComponent implements OnInit {
 	public hideFilterPanel = false;
 	public formFilter: FormGroup;
 	public medicamentStatus = [];
-	private hasRoleToView: boolean;
+	private hasRoleToEdit: boolean;
 
 	@Input() patientId: number;
 
@@ -76,7 +76,7 @@ export class CardMedicacionesComponent implements OnInit {
 
 		this.formFilter.controls.statusId.setValue(MEDICATION_STATUS.ACTIVE.id);
 
-		this.permissionsService.hasContextAssignments$(ROLES_TO_VIEW).subscribe(hasRole => this.hasRoleToView = hasRole);
+		this.permissionsService.hasContextAssignments$(ROLES_TO_EDIT).subscribe(hasRole => this.hasRoleToEdit = hasRole);
 
 	}
 
@@ -242,10 +242,14 @@ export class CardMedicacionesComponent implements OnInit {
 	}
 
 	hasActionsMenu(medicationInfo: MedicationInfoDto): boolean {
-		if (this.hasRoleToView) {
-			return (medicationInfo.hasRecipe && medicationInfo.medicationRequestId !== null);
+		if (this.hasRoleToEdit) {
+			return true;
 		}
-		return true;
+		return this.hasRecipe(medicationInfo);
+	}
+
+	hasRecipe(medicationInfo: MedicationInfoDto): boolean {
+		return (medicationInfo.hasRecipe && medicationInfo.medicationRequestId !== null);
 	}
 
 }
