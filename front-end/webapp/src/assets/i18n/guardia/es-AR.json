@@ -95,6 +95,12 @@
 						"TEMPORAL": "Paciente temporal"
 					}
 				},
+				"filters": {
+					"RESULTS": "Resultado: {{amount}} episodios",
+					"URGENCY": "Nivel de urgencia",
+					"TYPE": "Tipo de guardia"
+
+				},
 				"NEW_EPISODE": "Nuevo episodio",
 				"NO_DATA": "No existen episodios activos",
 				"TITLE": "Episodios de guardia"

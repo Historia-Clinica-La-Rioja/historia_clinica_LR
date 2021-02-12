@@ -10,11 +10,15 @@
 	<section id="body">
 		<app-filters-card [cardTitle]="'guardia.home.episodes.TITLE'">
 
+			<span results-amount translate="guardia.home.episodes.filters.RESULTS"
+				  [translateParams]="{ amount: episodes?.length || 0 }">
+			</span>
+
 			<div filters>
 				<div fxLayout="column">
 					<form [formGroup]="filterService.getForm()">
 						<mat-form-field fxFlexFill appearance="outline">
-							<mat-label>Nivel de urgencia</mat-label>
+							<mat-label translate="guardia.home.episodes.filters.URGENCY"></mat-label>
 							<mat-select formControlName="triage" (selectionChange)="filter()">
 								<mat-option
 										*ngFor="let triageCategory of triageCategories$ | async"
@@ -31,7 +35,7 @@
 						</mat-form-field>
 
 						<mat-form-field fxFlexFill appearance="outline">
-							<mat-label>Tipo de guardia</mat-label>
+							<mat-label translate="guardia.home.episodes.filters.TYPE"></mat-label>
 							<mat-select formControlName="emergencyCareType" (selectionChange)="filter()">
 								<mat-option
 										*ngFor="let emergencyCareType of emergencyCareTypes$ | async"
