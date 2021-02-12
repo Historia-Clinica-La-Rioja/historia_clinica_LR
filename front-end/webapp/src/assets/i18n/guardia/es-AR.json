@@ -103,6 +103,7 @@
 				},
 				"NEW_EPISODE": "Nuevo episodio",
 				"NO_DATA": "No existen episodios activos",
+				"NO_DATA_FOR_FILTER": "No existen episodios activos para la búsqueda seleccionada",
 				"TITLE": "Episodios de guardia"
 			},
 			"TITLE": "Guardia de emergencia"

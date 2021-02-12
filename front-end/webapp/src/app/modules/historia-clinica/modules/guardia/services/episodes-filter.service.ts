@@ -6,6 +6,7 @@ import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-car
 import { Observable } from 'rxjs';
 import { MasterDataInterface } from '@api-rest/api-model';
 import { tap } from 'rxjs/operators';
+import { atLeastOneValueInFormGroup } from '@core/utils/form.utils';
 
 const NO_INFO: MasterDataInterface<number> = {
 	id: -1,
@@ -16,8 +17,6 @@ const NO_INFO: MasterDataInterface<number> = {
 	providedIn: 'root'
 })
 export class EpisodesFilterService {
-
-	private form: FormGroup;
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -30,27 +29,14 @@ export class EpisodesFilterService {
 		});
 	}
 
-	getForm(): FormGroup {
-		return this.form;
-	}
+	private form: FormGroup;
 
-	filter(episodes: Episode[]): Episode[] {
-		const filters = this.form.value as EpisodeFilters;
-		return episodes.filter(episode => {
-			return this.filterByTriage(episode, filters) &&
-				this.filterByEmergencyCareType(episode, filters);
-		});
-	}
 
-	clear(control: string): void {
-		this.form.controls[control].reset();
-	}
-
-	filterByTriage(episode: Episode, filters: EpisodeFilters): boolean {
+	private static filterByTriage(episode: Episode, filters: EpisodeFilters): boolean {
 		return (filters.triage ? episode.triage.id === filters.triage : true);
 	}
 
-	filterByEmergencyCareType(episode: Episode, filters: EpisodeFilters): boolean {
+	private static filterByEmergencyCareType(episode: Episode, filters: EpisodeFilters): boolean {
 		if (!filters.emergencyCareType) {
 			return true;
 		}
@@ -58,6 +44,26 @@ export class EpisodesFilterService {
 			return (!episode.type);
 		}
 		return (filters.emergencyCareType ? episode.type?.id === filters.emergencyCareType : true);
+	}
+
+	getForm(): FormGroup {
+		return this.form;
+	}
+
+	filter(episodes: Episode[]): Episode[] {
+		const filters = this.form.value as EpisodeFilters;
+		return episodes.filter(episode => {
+			return EpisodesFilterService.filterByTriage(episode, filters) &&
+				EpisodesFilterService.filterByEmergencyCareType(episode, filters);
+		});
+	}
+
+	clear(control: string): void {
+		this.form.controls[control].reset();
+	}
+
+	hasFilters(): boolean {
+		return atLeastOneValueInFormGroup(this.form);
 	}
 
 	getTriageCategories(): Observable<TriageCategoryDto[]> {

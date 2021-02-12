@@ -19,7 +19,7 @@
 					<form [formGroup]="filterService.getForm()">
 						<mat-form-field fxFlexFill appearance="outline">
 							<mat-label translate="guardia.home.episodes.filters.URGENCY"></mat-label>
-							<mat-select formControlName="triage" (selectionChange)="filter()">
+							<mat-select id="triage-filter" formControlName="triage" (selectionChange)="filter()">
 								<mat-option
 										*ngFor="let triageCategory of triageCategories$ | async"
 										[value]="triageCategory.id">
@@ -36,7 +36,8 @@
 
 						<mat-form-field fxFlexFill appearance="outline">
 							<mat-label translate="guardia.home.episodes.filters.TYPE"></mat-label>
-							<mat-select formControlName="emergencyCareType" (selectionChange)="filter()">
+							<mat-select id="type-filter" formControlName="emergencyCareType"
+										(selectionChange)="filter()">
 								<mat-option
 										*ngFor="let emergencyCareType of emergencyCareTypes$ | async"
 										[value]="emergencyCareType.id">
@@ -155,6 +156,13 @@
 
 <ng-template #noData>
 	<div id="no-data" fxFlex="100%" fxLayout="column" fxLayoutAlign="center">
-		<h2 class="mat-h2" style="text-align: center" [translate]="'guardia.home.episodes.NO_DATA'"></h2>
+		<h2 *ngIf="filterService.hasFilters() else noActiveEpisodes" class="mat-h2" style="text-align: center"
+			translate="guardia.home.episodes.NO_DATA_FOR_FILTER">
+		</h2>
+		<ng-template #noActiveEpisodes>
+			<h2 class="mat-h2" style="text-align: center"
+				translate="guardia.home.episodes.NO_DATA">
+			</h2>
+		</ng-template>
 	</div>
 </ng-template>
