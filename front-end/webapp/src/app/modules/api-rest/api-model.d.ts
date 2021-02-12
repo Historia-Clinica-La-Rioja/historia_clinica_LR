@@ -899,7 +899,7 @@ export interface Last2VitalSignsDto extends Serializable {
 }
 
 export interface LimitedPatientSearchDto {
-    actualPatientListSize: number;
+    actualPatientSearchSize: number;
     patientList: PatientSearchDto[];
 }
 

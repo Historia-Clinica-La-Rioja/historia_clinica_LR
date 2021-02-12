@@ -13,7 +13,7 @@
 			},
 			"icono_pagina": {
 				"DESCRIPTION": "El ícono de página o favicon es la imagen que aparece antecediendo al título de la pestaña.",
-				"IMAGE_FORMAT": "La imagen deberá estar en formato .PNG y tener un tamaño cuadrado de 512 x 512 pixeles."
+				"IMAGE_FORMAT": "La imagen deberá estar en formato .ICO y tener un tamaño cuadrado de 15 x 16 pixeles."
 			},
 			"icono_escritorio": {
 				"DESCRIPTION": "El ícono de escritorio es la imagen que tendrá el acceso directo de la aplicación una vez que se instale en cualquier dispositivo.",

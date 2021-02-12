@@ -31,6 +31,11 @@ public class StreamFile {
         return Paths.get(getRootDirectory(), relativeFilePath);
     }
 
+    public boolean existFile(String path) {
+        File file = new File(path);
+        return file.isFile();
+    }
+
     public boolean saveFileInDirectory(String path, boolean override, ByteArrayOutputStream byteArrayOutputStream) throws IOException {
         boolean fileCreated;
         boolean directoryCreated = true;

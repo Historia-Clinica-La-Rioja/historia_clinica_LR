@@ -10,8 +10,8 @@
                 <app-img-uploader buttonLabel="configuracion.logos.UPLOAD_FILE" 
                                     [validations]="{acceptFormat: '.png', width: 512, height: 128}"
                                     icon="attach_file"
-                                    (onSelectFiles)="selectFile($event, 'sponsor_logo.png')"></app-img-uploader>
-                <button mat-raised-button color="warn" translate="configuracion.logos.RESTORE" (click)="restore('sponsor_logo.png')"></button>
+                                    (onSelectFiles)="selectFile($event, SPONSOR_LOGO)"></app-img-uploader>
+                <button mat-raised-button color="warn" translate="configuracion.logos.RESTORE" (click)="restore(SPONSOR_LOGO)"></button>
             </div>
         </div>
 
@@ -21,10 +21,10 @@
             <span mat-line class="mat-body" [translate]="'configuracion.logos.icono_pagina.IMAGE_FORMAT'"></span>
             <div fxLayout="row" fxLayoutGap="15px">
                 <app-img-uploader buttonLabel="configuracion.logos.UPLOAD_FILE"
-                                    [validations]="{acceptFormat: '.ico', width: 512, height: 512}"
+                                    [validations]="{acceptFormat: '.ico', width: 15, height: 16}"
                                     icon="attach_file"
-                                    (onSelectFiles)="selectFile($event, 'favicon.ico')"></app-img-uploader>
-                <button mat-raised-button color="warn" translate="configuracion.logos.RESTORE" (click)="restore('favicon.ico')"></button>
+                                    (onSelectFiles)="selectFile($event, FAVICON)"></app-img-uploader>
+                <button mat-raised-button color="warn" translate="configuracion.logos.RESTORE" (click)="restore(FAVICON)"></button>
             </div>
         </div>
 
@@ -37,8 +37,8 @@
                 <app-img-uploader buttonLabel="configuracion.logos.UPLOAD_FILE" 
                                     [validations]="{acceptFormat: '.png', width: 72, height: 72}"
                                     icon="attach_file"
-                                    (onSelectFiles)="selectFile($event, '72x72_logo.png')"></app-img-uploader>
-                <button mat-raised-button color="warn" translate="configuracion.logos.RESTORE" (click)="restore('72x72_logo.png')"></button>
+                                    (onSelectFiles)="selectFile($event, ICON_72)"></app-img-uploader>
+                <button mat-raised-button color="warn" translate="configuracion.logos.RESTORE" (click)="restore(ICON_72)"></button>
             </div>
 
             <span mat-line class="mat-body" [translate]="'configuracion.logos.icono_escritorio.IMAGE_FORMAT_96'"></span>
@@ -46,8 +46,8 @@
                 <app-img-uploader buttonLabel="configuracion.logos.UPLOAD_FILE" 
                                     [validations]="{acceptFormat: '.png', width: 96, height: 96}"
                                     icon="attach_file"
-                                    (onSelectFiles)="selectFile($event, '96x96_logo.png')"></app-img-uploader>
-                <button mat-raised-button color="warn" translate="configuracion.logos.RESTORE" (click)="restore('96x96_logo.png')"></button>
+                                    (onSelectFiles)="selectFile($event, ICON_96)"></app-img-uploader>
+                <button mat-raised-button color="warn" translate="configuracion.logos.RESTORE" (click)="restore(ICON_96)"></button>
             </div>
 
             <span mat-line class="mat-body" [translate]="'configuracion.logos.icono_escritorio.IMAGE_FORMAT_128'"></span>
@@ -55,8 +55,8 @@
                 <app-img-uploader buttonLabel="configuracion.logos.UPLOAD_FILE" 
                                     [validations]="{acceptFormat: '.png', width: 128, height: 128}"
                                     icon="attach_file"
-                                    (onSelectFiles)="selectFile($event, '128x128_logo.png')"></app-img-uploader>
-                <button mat-raised-button color="warn" translate="configuracion.logos.RESTORE" (click)="restore('128x128_logo.png')"></button>
+                                    (onSelectFiles)="selectFile($event, ICON_128)"></app-img-uploader>
+                <button mat-raised-button color="warn" translate="configuracion.logos.RESTORE" (click)="restore(ICON_128)"></button>
             </div>
 
             <span mat-line class="mat-body" [translate]="'configuracion.logos.icono_escritorio.IMAGE_FORMAT_144'"></span>
@@ -64,8 +64,8 @@
                 <app-img-uploader buttonLabel="configuracion.logos.UPLOAD_FILE" 
                                     [validations]="{acceptFormat: '.png', width: 144, height: 144}"
                                     icon="attach_file"
-                                    (onSelectFiles)="selectFile($event, '144x144_logo.png')"></app-img-uploader>
-                <button mat-raised-button color="warn" translate="configuracion.logos.RESTORE" (click)="restore('144x144_logo.png')"></button>
+                                    (onSelectFiles)="selectFile($event, ICON_144)"></app-img-uploader>
+                <button mat-raised-button color="warn" translate="configuracion.logos.RESTORE" (click)="restore(ICON_144)"></button>
             </div>
 
             <span mat-line class="mat-body" [translate]="'configuracion.logos.icono_escritorio.IMAGE_FORMAT_152'"></span>
@@ -73,8 +73,8 @@
                 <app-img-uploader buttonLabel="configuracion.logos.UPLOAD_FILE" 
                                     [validations]="{acceptFormat: '.png', width: 152, height: 152}"
                                     icon="attach_file"
-                                    (onSelectFiles)="selectFile($event, '152x152_logo.png')"></app-img-uploader>
-                <button mat-raised-button color="warn" translate="configuracion.logos.RESTORE" (click)="restore('152x152_logo.png')"></button>
+                                    (onSelectFiles)="selectFile($event, ICON_152)"></app-img-uploader>
+                <button mat-raised-button color="warn" translate="configuracion.logos.RESTORE" (click)="restore(ICON_152)"></button>
             </div>
 
             <span mat-line class="mat-body" [translate]="'configuracion.logos.icono_escritorio.IMAGE_FORMAT_192'"></span>
@@ -82,8 +82,8 @@
                 <app-img-uploader buttonLabel="configuracion.logos.UPLOAD_FILE" 
                                     [validations]="{acceptFormat: '.png', width: 192, height: 192}"
                                     icon="attach_file"
-                                    (onSelectFiles)="selectFile($event, '192x192_logo.png')"></app-img-uploader>
-                <button mat-raised-button color="warn" translate="configuracion.logos.RESTORE" (click)="restore('192x192_logo.png')"></button>
+                                    (onSelectFiles)="selectFile($event, ICON_192)"></app-img-uploader>
+                <button mat-raised-button color="warn" translate="configuracion.logos.RESTORE" (click)="restore(ICON_192)"></button>
             </div>
 
             <span mat-line class="mat-body" [translate]="'configuracion.logos.icono_escritorio.IMAGE_FORMAT_384'"></span>
@@ -91,8 +91,8 @@
                 <app-img-uploader buttonLabel="configuracion.logos.UPLOAD_FILE" 
                                     [validations]="{acceptFormat: '.png', width: 384, height: 384}"
                                     icon="attach_file"
-                                    (onSelectFiles)="selectFile($event, '384x384_logo.png')"></app-img-uploader>
-                <button mat-raised-button color="warn" translate="configuracion.logos.RESTORE" (click)="restore('384x384_logo.png')"></button>
+                                    (onSelectFiles)="selectFile($event, ICON_384)"></app-img-uploader>
+                <button mat-raised-button color="warn" translate="configuracion.logos.RESTORE" (click)="restore(ICON_384)"></button>
             </div>
 
             <span mat-line class="mat-body" [translate]="'configuracion.logos.icono_escritorio.IMAGE_FORMAT_512'"></span>
@@ -100,8 +100,8 @@
                 <app-img-uploader buttonLabel="configuracion.logos.UPLOAD_FILE" 
                                     [validations]="{acceptFormat: '.png', width: 512, height: 512}"
                                     icon="attach_file"
-                                    (onSelectFiles)="selectFile($event, '512x512_logo.png')"></app-img-uploader>
-                <button mat-raised-button color="warn" translate="configuracion.logos.RESTORE" (click)="restore('512x512_logo.png')"></button>
+                                    (onSelectFiles)="selectFile($event, ICON_512)"></app-img-uploader>
+                <button mat-raised-button color="warn" translate="configuracion.logos.RESTORE" (click)="restore(ICON_512)"></button>
             </div>
 
         </div>

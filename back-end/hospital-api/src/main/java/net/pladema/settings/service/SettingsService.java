@@ -1,9 +1,13 @@
 package net.pladema.settings.service;
 
+import net.pladema.assets.service.domain.Assets;
+import org.apache.http.MethodNotSupportedException;
 import org.springframework.web.multipart.MultipartFile;
 
-public interface SettingsService {
-    boolean execute(String fileName, MultipartFile file);
+import java.util.Optional;
 
-    boolean deleteFile(String fileName);
+public interface SettingsService {
+    boolean uploadFile(Optional<Assets> newAsset, MultipartFile file) throws MethodNotSupportedException;
+
+    boolean deleteFile(Optional<Assets> newAsset) throws MethodNotSupportedException;
 }
