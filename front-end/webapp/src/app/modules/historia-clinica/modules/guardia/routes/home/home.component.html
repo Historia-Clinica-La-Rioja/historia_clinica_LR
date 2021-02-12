@@ -10,6 +10,48 @@
 	<section id="body">
 		<app-filters-card [cardTitle]="'guardia.home.episodes.TITLE'">
 
+			<div filters>
+				<div fxLayout="column">
+					<form [formGroup]="filterService.getForm()">
+						<mat-form-field fxFlexFill appearance="outline">
+							<mat-label>Nivel de urgencia</mat-label>
+							<mat-select formControlName="triage" (selectionChange)="filter()">
+								<mat-option
+										*ngFor="let triageCategory of triageCategories$ | async"
+										[value]="triageCategory.id">
+									{{ triageCategory.description }}
+								</mat-option>
+							</mat-select>
+							<button
+								*ngIf="filterService.getForm().value.triage"
+								id="clear-triage-filter" type="button" mat-icon-button matSuffix color="warn"
+								(click)="clear('triage'); $event.stopPropagation()">
+								<mat-icon>close</mat-icon>
+							</button>
+						</mat-form-field>
+
+						<mat-form-field fxFlexFill appearance="outline">
+							<mat-label>Tipo de guardia</mat-label>
+							<mat-select formControlName="emergencyCareType" (selectionChange)="filter()">
+								<mat-option
+										*ngFor="let emergencyCareType of emergencyCareTypes$ | async"
+										[value]="emergencyCareType.id">
+									{{ emergencyCareType.description }}
+								</mat-option>
+							</mat-select>
+							<button
+								*ngIf="filterService.getForm().value.emergencyCareType"
+								id="clear-type-filter" type="button" mat-icon-button matSuffix color="warn"
+								(click)="clear('emergencyCareType'); $event.stopPropagation()">
+								<mat-icon>close</mat-icon>
+							</button>
+						</mat-form-field>
+					</form>
+
+				</div>
+
+			</div>
+
 			<div results fxLayout="column" fxLayoutGap="15px" fxFlexFill>
 
 				<div class="new-episode" fxLayoutAlign="end end">

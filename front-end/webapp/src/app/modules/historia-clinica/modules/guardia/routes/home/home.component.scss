@@ -1,4 +1,8 @@
 @import '../../../../../../../assets/styles/mixins';
+@import '../../../../../../../assets/styles/mat-mixins';
+
+@include mat-form-field-background-white;
+
 
 .episode-card {
 	width: 100%;

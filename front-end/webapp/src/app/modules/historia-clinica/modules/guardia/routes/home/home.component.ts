@@ -6,7 +6,7 @@ import {
 	DoctorsOfficeDto, EmergencyCareEpisodeListTriageDto,
 	EmergencyCareListDto,
 	EmergencyCarePatientDto,
-	MasterDataDto,
+	MasterDataDto, MasterDataInterface,
 	PatientPhotoDto
 } from '@api-rest/api-model';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
@@ -23,6 +23,8 @@ import { TriageDefinitionsService } from '../../services/triage-definitions.serv
 import { PatientService } from '@api-rest/services/patient.service';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { EpisodesFilterService } from '../../services/episodes-filter.service';
+import { TriageCategoryDto } from '@api-rest/services/triage-master-data.service';
 
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 
@@ -42,7 +44,8 @@ export class HomeComponent implements OnInit {
 		public readonly episodeStateService: EpisodeStateService,
 		private readonly permissionsService: PermissionsService,
 		private readonly triageDefinitionsService: TriageDefinitionsService,
-		private readonly patientService: PatientService
+		private readonly patientService: PatientService,
+		public readonly filterService: EpisodesFilterService
 	) {
 	}
 
@@ -51,8 +54,12 @@ export class HomeComponent implements OnInit {
 	readonly PACIENTE_TEMPORAL = 3;
 
 	loading = true;
-	episodes: any[];
+	episodes: Episode[];
+	episodesOriginal: Episode[];
 	patientsPhotos: PatientPhotoDto[];
+
+	triageCategories$: Observable<TriageCategoryDto[]>;
+	emergencyCareTypes$: Observable<MasterDataInterface<number>[]>;
 
 	private static calculateWaitingTime(dateTime: DateTimeDto): number {
 		const creationDate = dateTimeDtoToDate(dateTime);
@@ -62,6 +69,8 @@ export class HomeComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.loadEpisodes();
+		this.triageCategories$ = this.filterService.getTriageCategories();
+		this.emergencyCareTypes$ = this.filterService.getEmergencyCareTypes();
 	}
 
 	loadEpisodes(): void {
@@ -73,9 +82,10 @@ export class HomeComponent implements OnInit {
 			)
 			.subscribe((episodes: any[]) => {
 				this.episodes = episodes;
+				this.episodesOriginal = episodes;
 				this.loading = false;
 				this.completePatientPhotos();
-
+				this.episodes = this.filterService.filter(this.episodesOriginal);
 			}, _ => this.loading = false);
 	}
 
@@ -149,6 +159,15 @@ export class HomeComponent implements OnInit {
 					}
 				});
 			});
+	}
+
+	filter(): void {
+		this.episodes = this.filterService.filter(this.episodesOriginal);
+	}
+
+	clear(control: string): void {
+		this.filterService.clear(control);
+		this.episodes = this.filterService.filter(this.episodesOriginal);
 	}
 
 	private completePatientPhotos() {
