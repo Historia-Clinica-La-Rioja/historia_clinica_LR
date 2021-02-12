@@ -51,6 +51,9 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit {
 			this.hceGeneralStateService.getChronicConditions(this.data.patientId).subscribe((chronicProblems: HCEPersonalHistoryDto[]) => {
 				const chronicProblemsList = chronicProblems.map(problem => ({id: problem.id, description: problem.snomed.pt,  sctId: problem.snomed.sctid}));
 				this.healthProblemOptions = activeProblemsList.concat(chronicProblemsList);
+				if (this.data.item) {
+					this.updateSelectedHealthProblem(this.data.item.healthProblem.sctId);
+				}
 			});
 
 		});
@@ -62,6 +65,12 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit {
 		if (this.data.item) {
 			this.setItemData(this.data.item);
 		}
+	}
+
+
+	private updateSelectedHealthProblem(actualSctid: string): void {
+		const problemExists = this.healthProblemOptions.find(hpo => hpo.sctId === actualSctid);
+		this.prescriptionItemForm.controls.healthProblem.setValue(problemExists ? actualSctid : null);
 	}
 
 	ngAfterViewInit(): void {
@@ -146,7 +155,6 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit {
 	}
 
 	private setItemData(prescriptionItem: NewPrescriptionItem): void {
-		this.prescriptionItemForm.controls.healthProblem.setValue(prescriptionItem.healthProblem.sctId);
 
 		this.prescriptionItemForm.controls.observations.setValue(prescriptionItem.observations);
 
