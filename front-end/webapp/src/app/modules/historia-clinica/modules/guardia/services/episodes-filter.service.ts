@@ -49,12 +49,10 @@ export class EpisodesFilterService {
 		return this.form;
 	}
 
-	filter(episodes: Episode[]): Episode[] {
+	filter(episode: Episode): boolean {
 		const filters = this.form.value as EpisodeFilters;
-		return episodes.filter(episode => {
-			return EpisodesFilterService.filterByTriage(episode, filters) &&
+		return EpisodesFilterService.filterByTriage(episode, filters) &&
 				EpisodesFilterService.filterByEmergencyCareType(episode, filters);
-		});
 	}
 
 	clear(control: string): void {

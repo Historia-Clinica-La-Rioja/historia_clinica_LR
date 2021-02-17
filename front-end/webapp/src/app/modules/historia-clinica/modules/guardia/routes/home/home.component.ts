@@ -85,7 +85,7 @@ export class HomeComponent implements OnInit {
 				this.episodesOriginal = episodes;
 				this.loading = false;
 				this.completePatientPhotos();
-				this.episodes = this.filterService.filter(this.episodesOriginal);
+				this.episodes = this.episodesOriginal.filter(episode => this.filterService.filter(episode));
 			}, _ => this.loading = false);
 	}
 
@@ -162,12 +162,12 @@ export class HomeComponent implements OnInit {
 	}
 
 	filter(): void {
-		this.episodes = this.filterService.filter(this.episodesOriginal);
+		this.episodes = this.episodesOriginal.filter(episode => this.filterService.filter(episode));
 	}
 
 	clear(control: string): void {
 		this.filterService.clear(control);
-		this.episodes = this.filterService.filter(this.episodesOriginal);
+		this.episodes = this.episodesOriginal.filter(episode => this.filterService.filter(episode));
 	}
 
 	private completePatientPhotos() {
