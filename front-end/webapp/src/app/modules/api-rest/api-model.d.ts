@@ -934,6 +934,13 @@ export interface MedicalCoverageDto {
     service: string;
 }
 
+export interface MedicalDischargeDto {
+    autopsy: boolean;
+    dischargeTypeId: number;
+    medicalDischargeOn: DateTimeDto;
+    problems: OutpatientProblemDto[];
+}
+
 export interface MedicalRequestDto {
     healthConditionSnomed: SnomedDto;
     observations: string;
