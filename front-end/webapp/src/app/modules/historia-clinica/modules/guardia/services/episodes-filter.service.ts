@@ -31,12 +31,11 @@ export class EpisodesFilterService {
 
 	private form: FormGroup;
 
-
-	private static filterByTriage(episode: Episode, filters: EpisodeFilters): boolean {
+	static filterByTriage(episode: Episode, filters: EpisodeFilters): boolean {
 		return (filters.triage ? episode.triage.id === filters.triage : true);
 	}
 
-	private static filterByEmergencyCareType(episode: Episode, filters: EpisodeFilters): boolean {
+	static filterByEmergencyCareType(episode: Episode, filters: EpisodeFilters): boolean {
 		if (!filters.emergencyCareType) {
 			return true;
 		}
