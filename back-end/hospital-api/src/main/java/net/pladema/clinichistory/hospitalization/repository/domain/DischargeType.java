@@ -31,4 +31,10 @@ public class DischargeType implements Serializable {
 	@Column(name = "description", nullable = false)
 	private String description;
 
+	@Column(name = "internment", nullable = false)
+	private Boolean internment;
+
+	@Column(name = "emergency_care", nullable = false)
+	private Boolean emergencyCare;
+
 }

@@ -98,3 +98,54 @@ databaseChangeLog:
                 referencedColumnNames: id
                 referencedTableName: emergency_care_entrance_type
                 validate: true
+
+    - changeSet:
+        id: discharge_type-addColumns
+        author: tmedina
+        changes:
+            addColumn:
+                tableName: discharge_type
+                columns:
+                - column:
+                    name: internment
+                    type: boolean
+                    defaultValueBoolean: ${boolean.true}
+                    constraints: 
+                        nullable: false
+                - column:
+                    name: emergency_care
+                    type: boolean
+                    defaultValueBoolean: ${boolean.true}
+                    constraints: 
+                        nullable: false
+
+    - changeSet:
+        id: discharge_type-update-values
+        comment: Update values for new discharge_type columns
+        author: tmedina
+        context: "!schema-only"
+        changes:
+        - update:
+            tableName: discharge_type
+            columns:
+                name: emergency_care
+                valueBoolean: ${boolean.false}
+            where: id = 2
+
+
+    - changeSet:
+        id: discharge_type-insert-values
+        comment: Insert new values in discharge_type
+        author: tmedina
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    INSERT INTO discharge_type (id, description, internment, emergency_care) VALUES(6, 'Cancelación', ${boolean.false}, ${boolean.true});
+                    INSERT INTO discharge_type (id, description, internment, emergency_care) VALUES(7, 'Suspensión', ${boolean.false}, ${boolean.true});
+                    INSERT INTO discharge_type (id, description, internment, emergency_care) VALUES(8, 'Traslado a otro hospital', ${boolean.false}, ${boolean.true});
+                    INSERT INTO discharge_type (id, description, internment, emergency_care) VALUES(9, 'Traslado a tercer nivel', ${boolean.false}, ${boolean.true});
+                    INSERT INTO discharge_type (id, description, internment, emergency_care) VALUES(10, 'Traslado a otro tipo de institución', ${boolean.false}, ${boolean.true});
+                    INSERT INTO discharge_type (id, description, internment, emergency_care) VALUES(11, 'Alta a internación', ${boolean.false}, ${boolean.true});
+                    INSERT INTO discharge_type (id, description, internment, emergency_care) VALUES(12, 'Alta a internación domiciliaria', ${boolean.false}, ${boolean.true});
+                    INSERT INTO discharge_type (id, description, internment, emergency_care) VALUES(13, 'Alta a seguimiento domiciliario', ${boolean.false}, ${boolean.true});

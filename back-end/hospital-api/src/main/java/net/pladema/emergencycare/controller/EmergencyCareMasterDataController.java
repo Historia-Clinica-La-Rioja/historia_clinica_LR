@@ -1,6 +1,8 @@
 package net.pladema.emergencycare.controller;
 
 import io.swagger.annotations.Api;
+import net.pladema.emergencycare.controller.mapper.DischargeTypeMasterDataMapper;
+import net.pladema.emergencycare.service.DischargeTypeMasterDataService;
 import net.pladema.emergencycare.service.EmergencyCareMasterDataService;
 import net.pladema.sgx.masterdata.dto.MasterDataDto;
 import net.pladema.sgx.masterdata.service.domain.EnumWriter;
@@ -22,9 +24,17 @@ public class EmergencyCareMasterDataController {
 
     private final EmergencyCareMasterDataService emergencyCareMasterDataService;
 
-    public EmergencyCareMasterDataController(EmergencyCareMasterDataService emergencyCareMasterDataService){
+    private final DischargeTypeMasterDataService dischargeTypeMasterDataService;
+
+    private final DischargeTypeMasterDataMapper dischargeTypeMasterDataMapper;
+
+    public EmergencyCareMasterDataController(EmergencyCareMasterDataService emergencyCareMasterDataService,
+                                             DischargeTypeMasterDataService dischargeTypeMasterDataService,
+                                             DischargeTypeMasterDataMapper dischargeTypeMasterDataMapper){
         super();
         this.emergencyCareMasterDataService=emergencyCareMasterDataService;
+        this.dischargeTypeMasterDataService = dischargeTypeMasterDataService;
+        this.dischargeTypeMasterDataMapper = dischargeTypeMasterDataMapper;
     }
 
     @GetMapping(value = "/type")
@@ -37,5 +47,12 @@ public class EmergencyCareMasterDataController {
     public ResponseEntity<Collection<MasterDataDto>> getEntranceType() {
         LOG.debug("{}", "All entrance types");
         return ResponseEntity.ok().body(EnumWriter.writeList(emergencyCareMasterDataService.findAllEntrance()));
+    }
+
+    @GetMapping(value = "/dischargeType")
+    public ResponseEntity<Collection<MasterDataDto>> getDischargeType() {
+        LOG.debug("{}", "All emergency care discharge types");
+        return ResponseEntity.ok().body(dischargeTypeMasterDataMapper
+                .fromListDischargeTypeBo(dischargeTypeMasterDataService.getAllEmergencyCareDischargeTypes()));
     }
 }
