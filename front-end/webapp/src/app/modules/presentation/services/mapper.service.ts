@@ -154,7 +154,7 @@ export class MapperService {
 	private static _toHistoricalProblems(outpatientEvolutionSummary: OutpatientEvolutionSummaryDto[]): HistoricalProblems[] {
 
 		return outpatientEvolutionSummary.reduce((historicalProblemsList, currentOutpatientEvolutionSummary) => {
-
+			currentOutpatientEvolutionSummary.healthConditions.length ?
 			historicalProblemsList = [...historicalProblemsList, ...currentOutpatientEvolutionSummary.healthConditions.map(problem => ({
 					consultationDate: currentOutpatientEvolutionSummary.startDate,
 					consultationEvolutionNote: currentOutpatientEvolutionSummary.evolutionNote,
@@ -166,9 +166,19 @@ export class MapperService {
 					specialityPt: currentOutpatientEvolutionSummary.clinicalSpecialty?.name,
 					consultationReasons: currentOutpatientEvolutionSummary.reasons.map(r => ({reasonId: r.snomed.sctid, reasonPt: r.snomed.pt})),
 					consultationProcedures: currentOutpatientEvolutionSummary.procedures.map(p => ({procedureDate: p.performedDate, procedureId: p.snomed.sctid, procedurePt: p.snomed.pt}))
-				}))];
+				}))] : historicalProblemsList = [...historicalProblemsList, {
+					consultationDate: currentOutpatientEvolutionSummary.startDate,
+					consultationEvolutionNote: currentOutpatientEvolutionSummary.evolutionNote,
+					consultationProfessionalName: `${currentOutpatientEvolutionSummary.medic.person.firstName} ${currentOutpatientEvolutionSummary.medic.person.lastName}`,
+					consultationProfessionalId: currentOutpatientEvolutionSummary.medic.id,
+					problemId: 'Problema no informado',
+					problemPt: 'Problema no informado',
+					specialtyId: currentOutpatientEvolutionSummary.clinicalSpecialty?.id,
+					specialityPt: currentOutpatientEvolutionSummary.clinicalSpecialty?.name,
+					consultationReasons: currentOutpatientEvolutionSummary.reasons.map(r => ({reasonId: r.snomed.sctid, reasonPt: r.snomed.pt})),
+					consultationProcedures: currentOutpatientEvolutionSummary.procedures.map(p => ({procedureDate: p.performedDate, procedureId: p.snomed.sctid, procedurePt: p.snomed.pt}))
+				}];
 			return historicalProblemsList;
-
 		}, []);
 
 

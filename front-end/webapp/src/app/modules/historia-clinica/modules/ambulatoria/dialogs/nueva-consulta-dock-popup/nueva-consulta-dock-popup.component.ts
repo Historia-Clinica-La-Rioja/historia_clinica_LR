@@ -21,6 +21,8 @@ import {OutpatientConsultationService} from '@api-rest/services/outpatient-consu
 import {SnackBarService} from '@presentation/services/snack-bar.service';
 import {HealthConditionService} from '@api-rest/services/healthcondition.service';
 import {ClinicalSpecialtyService} from '@api-rest/services/clinical-specialty.service';
+import {MatDialog} from '@angular/material/dialog';
+import {ConfirmarNuevaConsultaPopupComponent} from '../confirmar-nueva-consulta-popup/confirmar-nueva-consulta-popup.component';
 
 @Component({
 	selector: 'app-nueva-consulta-dock-popup',
@@ -56,6 +58,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private readonly healthConditionService: HealthConditionService,
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
+		private readonly dialog: MatDialog
 	) {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService);
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService);
@@ -133,18 +136,26 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.apiErrors = [];
 		this.addErrorMessage(nuevaConsulta);
 		if (this.isValidConsultation()) {
-			this.outpatientConsultationService.createOutpatientConsultation(nuevaConsulta, this.data.idPaciente).subscribe(
-				_ => {
-					this.snackBarService.showSuccess('ambulatoria.paciente.nueva-consulta.messages.SUCCESS');
-					this.dockPopupRef.close(mapToFieldsToUpdate(nuevaConsulta));
-				},
-				errors => {
-					Object.getOwnPropertyNames(errors).forEach(val => {
-						this.apiErrors.push(errors[val]);
-					});
-					this.snackBarService.showError('ambulatoria.paciente.nueva-consulta.messages.ERROR');
+			const dialogRef = this.dialog.open(ConfirmarNuevaConsultaPopupComponent, {
+				data: {	nuevaConsulta }
+			});
+			dialogRef.afterClosed().subscribe(confirmado => {
+				if (confirmado) {
+					this.outpatientConsultationService.createOutpatientConsultation(nuevaConsulta, this.data.idPaciente).subscribe(
+						_ => {
+							this.snackBarService.showSuccess('ambulatoria.paciente.nueva-consulta.messages.SUCCESS');
+							this.dockPopupRef.close(mapToFieldsToUpdate(nuevaConsulta));
+						},
+						errors => {
+							Object.getOwnPropertyNames(errors).forEach(val => {
+								this.apiErrors.push(errors[val]);
+							});
+							this.snackBarService.showError('ambulatoria.paciente.nueva-consulta.messages.ERROR');
+						}
+					);
 				}
-			);
+			}
+		);
 		} else {
 			this.snackBarService.showError('ambulatoria.paciente.nueva-consulta.messages.ERROR');
 		}
@@ -169,21 +180,15 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	}
 
 	private addErrorMessage(consulta: CreateOutpatientDto): void {
-		if (!consulta.reasons?.length) {
-			this.motivoNuevaConsultaService.setError('ambulatoria.paciente.nueva-consulta.errors.MOTIVO_OBLIGATORIO');
-		}
-		if (!consulta.anthropometricData.height) {
-			this.datosAntropometricosNuevaConsultaService.setHeightError('ambulatoria.paciente.nueva-consulta.errors.TALLA_OBLIGATORIO');
-		} else if (parseInt(consulta.anthropometricData.height.value, 10) < 0) {
+		if (parseInt(consulta.anthropometricData?.height?.value, 10) < 0) {
 			this.datosAntropometricosNuevaConsultaService.setHeightError('ambulatoria.paciente.nueva-consulta.errors.TALLA_MIN');
-		} else if (parseInt(consulta.anthropometricData.height.value, 10) > 1000) {
+		} else if (parseInt(consulta.anthropometricData?.height?.value, 10) > 1000) {
 			this.datosAntropometricosNuevaConsultaService.setHeightError('ambulatoria.paciente.nueva-consulta.errors.TALLA_MAX');
 		}
-		if (!consulta.anthropometricData.weight) {
-			this.datosAntropometricosNuevaConsultaService.setWeightError('ambulatoria.paciente.nueva-consulta.errors.PESO_OBLIGATORIO');
-		} else if (parseInt(consulta.anthropometricData.weight.value, 10) < 0) {
+
+		if (parseInt(consulta.anthropometricData?.weight?.value, 10) < 0) {
 			this.datosAntropometricosNuevaConsultaService.setWeightError('ambulatoria.paciente.nueva-consulta.errors.PESO_MIN');
-		} else if (parseInt(consulta.anthropometricData.weight.value, 10) > 1000) {
+		} else if (parseInt(consulta.anthropometricData?.weight?.value, 10) > 1000) {
 			this.datosAntropometricosNuevaConsultaService.setWeightError('ambulatoria.paciente.nueva-consulta.errors.PESO_MAX');
 		}
 
@@ -203,21 +208,14 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			this.signosVitalesNuevaConsultaService.setBloodOxygenSaturationError('ambulatoria.paciente.nueva-consulta.errors.SATURACION_OXIGENO_MIN');
 		}
 
-		if (!consulta.vitalSigns.diastolicBloodPressure ) {
-			this.signosVitalesNuevaConsultaService.setDiastolicBloodPressureError('ambulatoria.paciente.nueva-consulta.errors.TENSION_DIASTOLICA_OBLIGATORIO');
-		} else if (parseInt(consulta.vitalSigns.diastolicBloodPressure.value, 10) < 0) {
+		if (parseInt(consulta.vitalSigns.diastolicBloodPressure?.value, 10) < 0) {
 			this.signosVitalesNuevaConsultaService.setDiastolicBloodPressureError('ambulatoria.paciente.nueva-consulta.errors.TENSION_DIASTOLICA_MIN');
 		}
 
-		if (!consulta.vitalSigns.systolicBloodPressure) {
-			this.signosVitalesNuevaConsultaService.setSystolicBloodPressureError('ambulatoria.paciente.nueva-consulta.errors.TENSION_SISTOLICA_OBLIGATORIO');
-		} else if (parseInt(consulta.vitalSigns.systolicBloodPressure.value, 10) < 0) {
+		if (parseInt(consulta.vitalSigns?.systolicBloodPressure?.value, 10) < 0) {
 			this.signosVitalesNuevaConsultaService.setSystolicBloodPressureError('ambulatoria.paciente.nueva-consulta.errors.TENSION_SISTOLICA_MIN');
 		}
 
-		if (!consulta.problems?.length) {
-			this.problemasNuevaConsultaService.setError('ambulatoria.paciente.nueva-consulta.errors.PROBLEMA_OBLIGATORIO');
-		}
 	}
 
 	private buildProblema(p: HealthConditionNewConsultationDto) {

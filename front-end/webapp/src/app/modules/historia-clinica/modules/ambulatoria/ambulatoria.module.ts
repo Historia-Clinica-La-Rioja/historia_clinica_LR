@@ -32,6 +32,7 @@ import { ItemPrescripcionesComponent } from './components/ordenes/item-prescripc
 import { CompletarEstudioComponent } from './dialogs/ordenes-prescripciones/completar-estudio/completar-estudio.component';
 import { VerResultadosEstudioComponent } from './dialogs/ordenes-prescripciones/ver-resultados-estudio/ver-resultados-estudio.component';
 import {ExternalSummaryCardComponent} from '@presentation/components/external-summary-card/external-summary-card.component';
+import {ConfirmarNuevaConsultaPopupComponent} from './dialogs/confirmar-nueva-consulta-popup/confirmar-nueva-consulta-popup.component';
 
 
 @NgModule({
@@ -58,7 +59,8 @@ import {ExternalSummaryCardComponent} from '@presentation/components/external-su
 		ItemPrescripcionesComponent,
 		CompletarEstudioComponent,
 		VerResultadosEstudioComponent,
-		ExternalSummaryCardComponent
+		ExternalSummaryCardComponent,
+		ConfirmarNuevaConsultaPopupComponent
 	],
 	imports: [
 		AmbulatoriaRoutingModule,

@@ -27,6 +27,7 @@
 
 		<div id="motivo">
 			<app-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.motivo.TITLE'"
+								  [sectionImportance]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'"
 								  [tableTitle]="'ambulatoria.paciente.nueva-consulta.motivo.table.TITLE'"
 								  [columns]="motivoNuevaConsultaService.getColumns()"
 								  [data]="motivoNuevaConsultaService.getMotivosConsulta()">
@@ -66,6 +67,7 @@
 
 		<div id="problemas">
 			<app-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.problemas.TITLE'"
+								  [sectionImportance]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'"
 								  [tableTitle]="'ambulatoria.paciente.nueva-consulta.problemas.TABLE_TITLE'"
 								  [columns]="problemasNuevaConsultaService.getColumns()"
 								  [data]="problemasNuevaConsultaService.getProblemas()">
@@ -146,7 +148,6 @@
 							</button>
 						</div>
 
-
 					</form>
 				</ng-template>
 			</app-document-section>
@@ -178,6 +179,7 @@
 									<input id="height" name="height" formControlName="height" placeholder="Ej: 180"
 										   type="number" matInput>
 								</mat-form-field>
+								<h5 class="recomendado recomendado-antropo" [translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'"></h5>
 							</div>
 							<div>
 								<mat-form-field [floatLabel]="'never'" appearance="outline">
@@ -187,6 +189,7 @@
 										   type="number"
 										   matInput>
 								</mat-form-field>
+								<h5 class="recomendado recomendado-antropo" [translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'"></h5>
 							</div>
 						</form>
 					</ng-container>
@@ -441,6 +444,7 @@
 											   type="number"
 											   matInput>
 									</mat-form-field>
+									<h5 class="recomendado recomendado-tension" [translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'"></h5>
 									<app-effective-time
 										[effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.systolicBloodPressure.effectiveTime"
 										(update)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'systolicBloodPressure')">
@@ -457,6 +461,7 @@
 											   type="number"
 											   matInput>
 									</mat-form-field>
+									<h5 class="recomendado recomendado-tension" [translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'"></h5>
 									<app-effective-time
 										[effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.diastolicBloodPressure.effectiveTime"
 										(update)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'diastolicBloodPressure')">
@@ -527,6 +532,7 @@
 				<mat-error class="mat-body-2" *ngFor="let error of apiErrors">{{ error }}</mat-error>
 			</mat-card>
 		</div>
+
 	</div>
 	<div actions id="buttons">
 		<div align="end">

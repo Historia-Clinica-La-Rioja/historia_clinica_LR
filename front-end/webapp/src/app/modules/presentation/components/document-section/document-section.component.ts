@@ -8,6 +8,7 @@ import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 export class DocumentSectionComponent implements OnInit {
 
 	@Input() sectionTitle: string;
+	@Input() sectionImportance: string;
 	@Input() tableTitle: string;
 	@Input() columns: ColumnConfig[];
 	@Input() data: any[];

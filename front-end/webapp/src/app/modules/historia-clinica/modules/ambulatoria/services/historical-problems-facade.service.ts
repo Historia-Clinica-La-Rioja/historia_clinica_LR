@@ -76,7 +76,7 @@ export class HistoricalProblemsFacadeService {
 	}
 
 	private filterByProblem(filter: HistoricalProblemsFilter, problem: HistoricalProblems): boolean {
-		return (filter.problem ? Number(problem.problemId) === Number(filter.problem) : true);
+		return (filter.problem ? problem.problemId === filter.problem :	true);
 	}
 
 	private filterByConsultationDate(filter: HistoricalProblemsFilter, problem: HistoricalProblems): boolean {
@@ -98,9 +98,13 @@ export class HistoricalProblemsFacadeService {
 				this.specialties = pushIfNotExists(this.specialties, outpatientEvolution.clinicalSpecialty, this.compareSpecialty);
 			}
 
-			outpatientEvolution.healthConditions.forEach(oe => {
-				this.problems = pushIfNotExists(this.problems, {problemId: oe.snomed.sctid, problemDescription: oe.snomed.pt}, this.compareProblems);
-			});
+			if (!outpatientEvolution.healthConditions.length) {
+				this.problems = pushIfNotExists(this.problems, {problemId: 'Problema no informado', problemDescription: 'Problema no informado'}, this.compareProblems);
+			} else {
+				outpatientEvolution.healthConditions.forEach(oe => {
+					this.problems = pushIfNotExists(this.problems, {problemId: oe.snomed.sctid, problemDescription: oe.snomed.pt}, this.compareProblems);
+				});
+			}
 
 			this.professionals = pushIfNotExists(this.professionals, {professionalId: outpatientEvolution.medic.id, professionalDescription: `${outpatientEvolution.medic.person.firstName} ${outpatientEvolution.medic.person.lastName}`} , this.compareProfessional);
 

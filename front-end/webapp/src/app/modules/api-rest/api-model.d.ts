@@ -302,7 +302,7 @@ export interface CityDto extends AbstractMasterdataDto<number> {
 
 export interface ClinicalObservationDto extends Serializable {
     id?: number;
-    value: string;
+    value?: string;
 }
 
 export interface ClinicalSpecialtyDto extends Serializable {
