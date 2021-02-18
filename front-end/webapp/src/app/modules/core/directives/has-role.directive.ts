@@ -1,4 +1,4 @@
-import { Directive, ElementRef, Input, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Directive, Input, TemplateRef, ViewContainerRef } from '@angular/core';
 import { PermissionsService } from '@core/services/permissions.service';
 import { ERole } from '@api-rest/api-model';
 import { anyMatch } from '@core/utils/array.utils';
