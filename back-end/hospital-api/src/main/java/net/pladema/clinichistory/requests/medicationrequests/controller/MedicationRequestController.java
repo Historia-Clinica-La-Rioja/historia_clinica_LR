@@ -167,7 +167,7 @@ public class MedicationRequestController {
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
     List<MedicationInfoDto> medicationRequestList(@PathVariable(name = "institutionId") Integer institutionId,
                                                   @PathVariable(name = "patientId") Integer patientId,
-                                                  @RequestParam(value = "statusId", defaultValue = MedicationStatementStatus.ACTIVE) String statusId,
+                                                  @RequestParam(value = "statusId", required = false) String statusId,
                                                   @RequestParam(value = "medicationStatement", required = false) String medicationStatement,
                                                   @RequestParam(value = "healthCondition", required = false) String healthCondition) {
         LOG.debug("medicationRequestList -> institutionId {}, patientId {}, statusId {}, medicationStatement {}, healthCondition {}", institutionId, patientId, statusId, medicationStatement, healthCondition);

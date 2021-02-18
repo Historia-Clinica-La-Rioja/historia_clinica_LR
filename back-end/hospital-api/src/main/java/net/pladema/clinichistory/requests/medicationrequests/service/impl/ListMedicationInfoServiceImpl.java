@@ -45,7 +45,6 @@ public class ListMedicationInfoServiceImpl implements ListMedicationInfoService 
                 .map(this::createMedicationBo)
                 .filter(mb -> byStatus(mb, filter.getStatusId()))
                 .collect(Collectors.toList());
-        result.forEach(medicationBo -> medicationBo.setStatusId(filter.getStatusId()));
         LOG.trace("OUTPUT List -> {}", result);
         return result;
     }
@@ -94,12 +93,14 @@ public class ListMedicationInfoServiceImpl implements ListMedicationInfoService 
 
 
     private boolean byStatus(MedicationBo medicationBo, String filterStatusId) {
+        String computedStatus = medicationCalculateStatus.execute(medicationBo.getStatusId(), medicationBo.getDosage());
+        medicationBo.setStatusId(computedStatus);
         if (MedicationStatementStatus.SUSPENDED.equals(filterStatusId))
-            return MedicationStatementStatus.SUSPENDED.equals(medicationCalculateStatus.execute(medicationBo.getStatusId(), medicationBo.getDosage()));
+            return MedicationStatementStatus.SUSPENDED.equals(computedStatus);
         if (MedicationStatementStatus.STOPPED.equals(filterStatusId))
-            return MedicationStatementStatus.STOPPED.equals(medicationCalculateStatus.execute(medicationBo.getStatusId(), medicationBo.getDosage()));
+            return MedicationStatementStatus.STOPPED.equals(computedStatus);
         if (MedicationStatementStatus.ACTIVE.equals(filterStatusId))
-            return MedicationStatementStatus.ACTIVE.equals(medicationCalculateStatus.execute(medicationBo.getStatusId(), medicationBo.getDosage()));
-        return false;
+            return MedicationStatementStatus.ACTIVE.equals(computedStatus);
+        return filterStatusId == null;
     }
 }

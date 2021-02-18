@@ -119,11 +119,11 @@ public class ListDiagnosticReportInfoServiceImplTest extends UnitRepository {
 
         List<DiagnosticReportBo> result = listDiagnosticReportInfoService.execute(new DiagnosticReportFilterBo(patientId,null, null, null, null));
         Assertions.assertThat(result)
-                .hasSize(3);
+                .hasSize(4);
 
         result = listDiagnosticReportInfoService.execute(new DiagnosticReportFilterBo(patientId,null, null, "Angi", null));
         Assertions.assertThat(result)
-                .hasSize(2);
+                .hasSize(3);
 
         result = listDiagnosticReportInfoService.execute(new DiagnosticReportFilterBo(patientId,null, null, "Sarampión", null));
         Assertions.assertThat(result).isEmpty();
@@ -150,7 +150,7 @@ public class ListDiagnosticReportInfoServiceImplTest extends UnitRepository {
 
         result = listDiagnosticReportInfoService.execute(new DiagnosticReportFilterBo(patientId, null, null, null, ServiceRequestCategory.COUNSELLING));
         Assertions.assertThat(result)
-                .hasSize(1);
+                .hasSize(2);
 
         result = listDiagnosticReportInfoService.execute(new DiagnosticReportFilterBo(patientId, DiagnosticReportStatus.FINAL, null, null, ServiceRequestCategory.COUNSELLING));
         Assertions.assertThat(result)

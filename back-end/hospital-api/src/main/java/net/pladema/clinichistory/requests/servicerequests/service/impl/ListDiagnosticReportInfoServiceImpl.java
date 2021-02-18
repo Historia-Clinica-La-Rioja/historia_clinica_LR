@@ -32,7 +32,7 @@ public class ListDiagnosticReportInfoServiceImpl implements ListDiagnosticReport
     public List<DiagnosticReportBo> execute(DiagnosticReportFilterBo filter) {
         DiagnosticReportFilterVo filterVo = new DiagnosticReportFilterVo(
                 filter.getPatientId(),
-                filter.getStatus() == null ? DiagnosticReportStatus.REGISTERED : filter.getStatus(),
+                filter.getStatus(),
                 filter.getStudy(),
                 filter.getHealthCondition(),
                 filter.getCategory()
