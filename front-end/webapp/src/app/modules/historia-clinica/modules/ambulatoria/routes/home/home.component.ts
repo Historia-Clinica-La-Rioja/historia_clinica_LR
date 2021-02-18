@@ -27,7 +27,9 @@ export class HomeComponent implements OnInit {
   public tableModel: TableModel<PatientSearchDto>;
   public formSubmitted: boolean;
   public requiringValues: boolean;
+  public patientResultsLength: number;
   public readonly validations = PERSON;
+  readonly MAX_RESULT_SIZE: number = 150;
 
   private readonly routePrefix;
   private genderTableView: string[] = [];
@@ -92,8 +94,10 @@ export class HomeComponent implements OnInit {
 		this.requiringValues = false;
 		const personalInformationReq: PersonInformationRequest = this.personalInformationForm.value;
 		this.patientService.searchPatientOptionalFilters(personalInformationReq)
-			.subscribe( (data: LimitedPatientSearchDto) =>
-					this.tableModel = this.buildTable(data.patientList));
+			.subscribe( (data: LimitedPatientSearchDto) => {
+				this.tableModel = this.buildTable(data.patientList);
+				this.patientResultsLength = data.actualPatientSearchSize;
+			});
 	}
 
   }

@@ -124,6 +124,16 @@
 
 	<section id="searchResults" *ngIf="formSubmitted">
 		<h2 class="page-title" translate="forms.SEARCH_RESULTS"></h2>
+
+		<mat-card id="search_limit" name="search_limit" *ngIf="tableModel && patientResultsLength > 1">
+			<span class="mat-body-1" [translate]="'ambulatoria.home.search_limit.TITLE'" style="display:block;"
+				[translateParams]="{ resultsLength: patientResultsLength }">
+			</span>
+			<span class="mat-body-1 warning" *ngIf="patientResultsLength > MAX_RESULT_SIZE "
+				[translate]="'ambulatoria.home.search_limit.WARNING'">
+			</span>
+		</mat-card>
+
 		<app-table id="resultTable" [model]="tableModel"  *ngIf="tableModel?.data.length > 0 else noInfo"></app-table>
 		<ng-template #noInfo>
 			<app-no-data></app-no-data>

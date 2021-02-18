@@ -7,7 +7,11 @@
 		},
 		"home": {
 			"TITLE": "Historia Clínica",
-			"SUBTITLE": "Complete los campos deseados"
+			"SUBTITLE": "Complete los campos deseados",
+			"search_limit": {
+				"TITLE": "Se encontraron {{resultsLength}} resultados en la búsqueda",
+				"WARNING": "Si no se encuentra el resultado esperado, por favor refine la búsqueda"
+			}
 		},
 		"historia-clinica-externa": {
 			"TITLE": "Ver historia clínica externa"
