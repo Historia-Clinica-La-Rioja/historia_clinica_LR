@@ -2,6 +2,7 @@ package net.pladema.patient.service;
 
 import net.pladema.patient.controller.dto.PatientSearchFilter;
 import net.pladema.patient.repository.entity.Patient;
+import net.pladema.patient.service.domain.LimitedPatientSearchBo;
 import net.pladema.patient.service.domain.PatientSearch;
 import net.pladema.person.repository.entity.Person;
 
@@ -13,7 +14,7 @@ public interface PatientService {
 
 	List<PatientSearch> searchPatient(PatientSearchFilter searchFilter);
 
-    List<PatientSearch> searchPatientOptionalFilters(PatientSearchFilter searchFilter);
+    LimitedPatientSearchBo searchPatientOptionalFilters(PatientSearchFilter searchFilter);
 
     Optional<Patient> getPatient(Integer patientId);
 

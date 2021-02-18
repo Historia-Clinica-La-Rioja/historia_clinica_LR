@@ -27,7 +27,7 @@ public class PatientRepositoryImpl implements PatientRepositoryCustom {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<PatientSearch> getAllByOptionalFilter(PatientSearchFilter searchFilter) {
+    public List<PatientSearch> getAllByOptionalFilter(PatientSearchFilter searchFilter, Integer resultSize) {
         PatientSearchQuery patientSearchQuery = new PatientSearchQuery(searchFilter);
         QueryPart queryPart = new QueryPart(
                 "SELECT ")
@@ -37,7 +37,21 @@ public class PatientRepositoryImpl implements PatientRepositoryCustom {
                 .concat("WHERE ")
                 .concatPart(patientSearchQuery.whereWithAllAttributes(AND_JOINING_OPERATOR, LIKE_COMPARATOR));
         Query query = entityManager.createQuery(queryPart.toString());
+        query.setMaxResults(resultSize);
         queryPart.configParams(query);
         return patientSearchQuery.construct(query.getResultList());
+    }
+
+    public Long getCountByOptionalFilter(PatientSearchFilter searchFilter){
+        PatientSearchQuery patientSearchQuery = new PatientSearchQuery(searchFilter);
+        QueryPart queryPart = new QueryPart(
+                "SELECT COUNT(*)")
+                .concat(" FROM ")
+                .concatPart(patientSearchQuery.from())
+                .concat("WHERE ")
+                .concatPart(patientSearchQuery.whereWithAllAttributes(AND_JOINING_OPERATOR, LIKE_COMPARATOR));
+        Query query = entityManager.createQuery(queryPart.toString());
+        queryPart.configParams(query);
+        return (Long) query.getSingleResult();
     }
 }

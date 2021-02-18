@@ -9,6 +9,7 @@ import net.pladema.patient.repository.PrivateHealthInsuranceDetailsRepository;
 import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.repository.entity.PatientType;
 import net.pladema.patient.service.PatientService;
+import net.pladema.patient.service.domain.LimitedPatientSearchBo;
 import net.pladema.patient.service.domain.PatientSearch;
 import net.pladema.person.repository.MedicalCoverageRepository;
 import net.pladema.person.repository.entity.Person;
@@ -37,6 +38,8 @@ public class PatientServiceImpl implements PatientService {
 	private static final String OUTPUT = "Output -> {}";
 	private static final String INPUT_DATA = "Input data -> {}";
 
+	public static final Integer MAX_RESULT_SIZE = 150;
+
 	private final PatientRepository patientRepository;
 
 	private final FederarService federarService;
@@ -44,7 +47,8 @@ public class PatientServiceImpl implements PatientService {
 	public PatientServiceImpl(PatientRepository patientRepository,
 							  PatientMedicalCoverageRepository patientMedicalCoverageRepository,
 							  MedicalCoverageRepository medicalCoverageRepository,
-							  PrivateHealthInsuranceDetailsRepository privateHealthInsuranceDetailsRepository, FederarService federarService) {
+							  PrivateHealthInsuranceDetailsRepository privateHealthInsuranceDetailsRepository,
+							  FederarService federarService) {
 		this.patientRepository = patientRepository;
 		this.federarService = federarService;
 	}
@@ -65,8 +69,13 @@ public class PatientServiceImpl implements PatientService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<PatientSearch> searchPatientOptionalFilters(PatientSearchFilter searchFilter) {
-		return patientRepository.getAllByOptionalFilter(searchFilter);
+	public LimitedPatientSearchBo searchPatientOptionalFilters(PatientSearchFilter searchFilter) {
+		LOG.debug(INPUT_DATA, searchFilter);
+		Integer actualPatientListSize = patientRepository.getCountByOptionalFilter(searchFilter).intValue();
+		List<PatientSearch> patientList = patientRepository.getAllByOptionalFilter(searchFilter, MAX_RESULT_SIZE);
+		LimitedPatientSearchBo result = new LimitedPatientSearchBo(patientList, actualPatientListSize);
+		LOG.trace(OUTPUT, result);
+		return result;
 	}
 
 	@Override

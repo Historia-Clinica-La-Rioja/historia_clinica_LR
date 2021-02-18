@@ -2,12 +2,15 @@ package net.pladema.patient.controller.mapper;
 
 import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.patient.controller.dto.APatientDto;
+import net.pladema.patient.controller.dto.LimitedPatientSearchDto;
 import net.pladema.patient.controller.dto.PatientSearchDto;
 import net.pladema.patient.repository.entity.Patient;
+import net.pladema.patient.service.domain.LimitedPatientSearchBo;
 import net.pladema.patient.service.domain.PatientSearch;
 import net.pladema.person.controller.mapper.PersonMapper;
 import net.pladema.sgx.dates.configuration.LocalDateMapper;
 import org.mapstruct.Mapper;
+import org.mapstruct.Named;
 
 import java.util.List;
 
@@ -22,4 +25,6 @@ public interface PatientMapper {
 
 	Patient fromPatientDto(APatientDto patientDto);
 
+	@Named("toLimitedPatientSearchDto")
+	LimitedPatientSearchDto toLimitedPatientSearchDto(LimitedPatientSearchBo limitedPatientSearchBo);
 }
