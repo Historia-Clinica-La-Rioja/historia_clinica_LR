@@ -300,13 +300,17 @@ export class SearchComponent implements OnInit {
 
 	private splitStringByFirstSpaceCharacter(text: string): any {
 		const spaceIndex: number = text.indexOf(' ');
-		return (spaceIndex != -1) ?
-			{
-				firstSubstring: text.substr(0, spaceIndex),
-				secondSubstring: text.substr(spaceIndex + 1)
-			}
-			:
-			{ firstSubstring: text };
+		if (spaceIndex === 0) {
+			return this.splitStringByFirstSpaceCharacter(text.substr(1));
+		} else {
+			return (spaceIndex !== -1) ?
+				{
+					firstSubstring: text.substr(0, spaceIndex),
+					secondSubstring: text.substr(spaceIndex + 1)
+				}
+				:
+				{firstSubstring: text};
+		}
 	}
 
 	private mapToPerson(personData): any {
