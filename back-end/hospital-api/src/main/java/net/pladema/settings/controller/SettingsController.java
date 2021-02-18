@@ -7,6 +7,7 @@ import org.apache.http.MethodNotSupportedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +28,7 @@ public class SettingsController {
     }
 
     @PostMapping(value = "/assets/{fileName:.+}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasAnyAuthority('ROOT')")
     @Transactional
     public boolean uploadFile(@PathVariable(name = "fileName") String fileName,
                                 @RequestPart("file") MultipartFile file) throws MethodNotSupportedException {
@@ -38,6 +40,7 @@ public class SettingsController {
     }
 
     @DeleteMapping(value = "/assets/{fileName:.+}")
+    @PreAuthorize("hasAnyAuthority('ROOT')")
     @Transactional
     public boolean deleteFile(@PathVariable(name = "fileName") String fileName) throws MethodNotSupportedException {
         LOG.debug("Input parameters ->  {} fileName {}",

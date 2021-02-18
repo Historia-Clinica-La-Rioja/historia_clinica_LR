@@ -19,7 +19,7 @@ export class HomeComponent implements OnInit {
 	menuItems$: Observable<MenuItem[]>;
 	menuFooterItems: MenuFooter = {user: {}};
 
-	private NO_INSTITUTION = -1;
+	private readonly NO_INSTITUTION = -1;
 
 	constructor(
 		private contextService: ContextService,

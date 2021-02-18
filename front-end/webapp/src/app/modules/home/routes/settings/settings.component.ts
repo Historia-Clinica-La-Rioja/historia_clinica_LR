@@ -2,16 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { SettingsService } from './../../../api-rest/services/settings.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
-const SPONSOR_LOGO = "sponsor-logo-512x128.png";
-const FAVICON = "favicon.ico";
-const ICON_72 = "icons/icon-72x72.png";
-const ICON_96 = "icons/icon-96x96.png";
-const ICON_128 = "icons/icon-128x128.png";
-const ICON_144 = "icons/icon-144x144.png";
-const ICON_152 = "icons/icon-152x152.png";
-const ICON_192 = "icons/icon-192x192.png";
-const ICON_384 = "icons/icon-384x384.png";
-const ICON_512 = "icons/icon-512x512.png";
+const SPONSOR_LOGO = 'sponsor-logo-512x128.png';
+const FAVICON = 'favicon.ico';
+const ICON_72 = 'icons/icon-72x72.png';
+const ICON_96 = 'icons/icon-96x96.png';
+const ICON_128 = 'icons/icon-128x128.png';
+const ICON_144 = 'icons/icon-144x144.png';
+const ICON_152 = 'icons/icon-152x152.png';
+const ICON_192 = 'icons/icon-192x192.png';
+const ICON_384 = 'icons/icon-384x384.png';
+const ICON_512 = 'icons/icon-512x512.png';
 @Component({
 	selector: 'app-settings',
 	templateUrl: './settings.component.html',
@@ -19,16 +19,16 @@ const ICON_512 = "icons/icon-512x512.png";
 })
 export class SettingsComponent implements OnInit {
 
-	SPONSOR_LOGO = SPONSOR_LOGO;
-	FAVICON = FAVICON;
-	ICON_72 = ICON_72;
-	ICON_96 = ICON_96;
-	ICON_128 = ICON_128;
-	ICON_144 = ICON_144;
-	ICON_152 = ICON_152;
-	ICON_192 = ICON_192;
-	ICON_384 = ICON_384;
-	ICON_512 = ICON_512;
+	readonly SPONSOR_LOGO = SPONSOR_LOGO;
+	readonly FAVICON = FAVICON;
+	readonly ICON_72 = ICON_72;
+	readonly ICON_96 = ICON_96;
+	readonly ICON_128 = ICON_128;
+	readonly ICON_144 = ICON_144;
+	readonly ICON_152 = ICON_152;
+	readonly ICON_192 = ICON_192;
+	readonly ICON_384 = ICON_384;
+	readonly ICON_512 = ICON_512;
 
 	constructor(
 		private settingsService: SettingsService,

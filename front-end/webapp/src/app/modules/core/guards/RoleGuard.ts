@@ -8,6 +8,9 @@ import { switchMap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class RoleGuard implements CanActivate {
+
+	private readonly NO_INSTITUTION = -1;
+
 	constructor(
 		private router: Router,
 		private permissionsService: PermissionsService
@@ -16,7 +19,8 @@ export class RoleGuard implements CanActivate {
 
 	canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> {
 		const allowedRoles = route.data.allowedRoles;
-		const institutionId = this.getInstitutionIdFrom(route);
+		const needsRoot = route.data?.needsRoot;
+		const institutionId = needsRoot ? this.NO_INSTITUTION : this.getInstitutionIdFrom(route);
 
 		return this.permissionsService.filterAssignments$(institutionId)
 			.pipe(switchMap((userRoles: ERole[]) => {

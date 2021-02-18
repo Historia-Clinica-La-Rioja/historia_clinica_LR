@@ -21,7 +21,7 @@
             <span mat-line class="mat-body" [translate]="'configuracion.logos.icono_pagina.IMAGE_FORMAT'"></span>
             <div fxLayout="row" fxLayoutGap="15px">
                 <app-img-uploader buttonLabel="configuracion.logos.UPLOAD_FILE"
-                                    [validations]="{acceptFormat: '.ico', width: 15, height: 16}"
+                                    [validations]="{acceptFormat: '.ico', width: 16, height: 16}"
                                     icon="attach_file"
                                     (onSelectFiles)="selectFile($event, FAVICON)"></app-img-uploader>
                 <button mat-raised-button color="warn" translate="configuracion.logos.RESTORE" (click)="restore(FAVICON)"></button>
