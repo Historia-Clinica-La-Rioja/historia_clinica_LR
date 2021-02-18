@@ -7,7 +7,6 @@ import net.pladema.clinichistory.documents.controller.dto.EffectiveClinicalObser
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Getter
@@ -16,11 +15,9 @@ import java.io.Serializable;
 public class OutpatientVitalSignDto implements Serializable {
 
     @Valid
-    @NotNull(message = "{value.mandatory}")
     private EffectiveClinicalObservationDto systolicBloodPressure;
 
     @Valid
-    @NotNull(message = "{value.mandatory}")
     private EffectiveClinicalObservationDto diastolicBloodPressure;
 
     @Valid
