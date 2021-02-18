@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
-import { GenderDto, IdentificationTypeDto, PatientSearchDto } from '@api-rest/api-model';
+import {GenderDto, IdentificationTypeDto, LimitedPatientSearchDto, PatientSearchDto} from '@api-rest/api-model';
 import { atLeastOneValueInFormGroup, hasError, } from '@core/utils/form.utils';
 import { Moment } from 'moment';
 import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
@@ -92,8 +92,8 @@ export class HomeComponent implements OnInit {
 		this.requiringValues = false;
 		const personalInformationReq: PersonInformationRequest = this.personalInformationForm.value;
 		this.patientService.searchPatientOptionalFilters(personalInformationReq)
-			.subscribe( data =>
-					this.tableModel = this.buildTable(data));
+			.subscribe( (data: LimitedPatientSearchDto) =>
+					this.tableModel = this.buildTable(data.patientList));
 	}
 
   }

@@ -8,7 +8,7 @@ import {
 	PatientSearchDto,
 	ReducedPatientDto,
 	PersonPhotoDto,
-	PatientPhotoDto
+	PatientPhotoDto, LimitedPatientSearchDto
 } from '@api-rest/api-model';
 import { DateFormat, momentFormat } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
@@ -92,11 +92,11 @@ export class PatientService {
 		return this.http.put<BMPatientDto>(url, datosPersonales);
 	}
 
-	searchPatientOptionalFilters(person: PersonInformationRequest): Observable<PatientSearchDto[]> {
+	searchPatientOptionalFilters(person: PersonInformationRequest): Observable<LimitedPatientSearchDto> {
 
 		this.mapToRequestParams(person);
 		const url = `${environment.apiBase}/patient/optionalfilter`;
-		return this.http.get<PatientSearchDto[]>(url, { params: { searchFilterStr: JSON.stringify(person) } });
+		return this.http.get<LimitedPatientSearchDto>(url, { params: { searchFilterStr: JSON.stringify(person) } });
 	}
 
 	private mapToRequestParams(person: PersonInformationRequest) {

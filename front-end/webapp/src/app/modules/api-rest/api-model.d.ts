@@ -898,6 +898,11 @@ export interface Last2VitalSignsDto extends Serializable {
     previous: VitalSignDto;
 }
 
+export interface LimitedPatientSearchDto {
+    actualPatientListSize: number;
+    patientList: PatientSearchDto[];
+}
+
 export interface LoginDto extends Serializable {
     password: string;
     username: string;
