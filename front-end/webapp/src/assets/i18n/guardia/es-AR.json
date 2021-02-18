@@ -2,7 +2,7 @@
 	"guardia": {
 		"new-episode": {
 			"TITLE": "Nuevo episodio",
-			"SUB_TITLE": "Complete los datos para continuar",
+			"SUB_TITLE": "Complete los datos solicitados para continuar",
 			"ADM_TRIAGE": "Triage",
 			"SUCCESS": "El episodio fue creado exitosamente",
 			"ERROR": "Ocurrió un error al crear el episodio"
