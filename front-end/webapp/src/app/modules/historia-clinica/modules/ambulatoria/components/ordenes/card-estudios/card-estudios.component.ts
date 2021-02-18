@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup} from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DiagnosticReportInfoDto, PrescriptionDto } from '@api-rest/api-model';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -192,5 +192,9 @@ export class CardEstudiosComponent implements OnInit {
 		if (this.hideFilterPanel === false) {
 			this.getStudy();
 		}
+	}
+
+	clearFilterField(control: AbstractControl): void {
+		control.reset();
 	}
 }

@@ -8,7 +8,7 @@ import { NuevaPrescripcionComponent } from '../../../dialogs/ordenes-prescripcio
 import {PrescripcionesService, PrescriptionTypes} from '../../../services/prescripciones.service';
 import { MedicationStatusChange } from '../../../constants/prescripciones-masterdata';
 import { SuspenderMedicacionComponent } from '../../../dialogs/ordenes-prescripciones/suspender-medicacion/suspender-medicacion.component';
-import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import {FormBuilder, FormGroup, FormArray, AbstractControl} from '@angular/forms';
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
 import { PrescriptionItemData } from '../item-prescripciones/item-prescripciones.component';
 import { MEDICATION_STATUS } from './../../../constants/prescripciones-masterdata';
@@ -229,6 +229,10 @@ export class CardMedicacionesComponent implements OnInit {
 		if (this.hideFilterPanel === false) {
 			this.getMedication();
 		}
+	}
+
+	clearFilterField(control: AbstractControl): void {
+		control.reset();
 	}
 
 	prescriptionItemDataBuilder(medication: MedicationInfoDto): PrescriptionItemData {

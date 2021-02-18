@@ -13,8 +13,8 @@
 		</button>
 	</div>
 
-	<div id="filter" *ngIf="hideFilterPanel">
-		<form id="filter-form" [formGroup]="formFilter" style="margin: 10px" (ngSubmit)="filter()">
+	<div id="filter" *ngIf="hideFilterPanel" >
+		<form id="filter-form" [formGroup]="formFilter" fxLayout="column" style="margin: 15px" (ngSubmit)="filter()">
 
 			<mat-form-field appearance="outline">
 				<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.filter.STATE'"></mat-label>
@@ -25,37 +25,57 @@
 							{{diagnosticReportStatus.description | translate}}
 						</mat-option>
 				</mat-select>
+				<button id="clear-status-study" type="button" mat-button *ngIf="formFilter.controls.statusId.value" matSuffix
+						color="warn"
+						mat-icon-button
+						(click)="clearFilterField(formFilter.controls.statusId); $event.stopPropagation()">
+					<mat-icon>close</mat-icon>
+				</button>
 			</mat-form-field>
-			<div>
+
 				<mat-form-field appearance="outline">
 					<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.filter.CATEGORY'"></mat-label>
 					<mat-select id="categories"
 								name="categories"
-								formControlName="categorieId">
-						<mat-option *ngFor="let categorie of categories" [value]="categorie.id">
-								{{categorie.description | translate}}
+								formControlName="categoryId">
+						<mat-option *ngFor="let category of categories" [value]="category.id">
+								{{category.description | translate}}
 							</mat-option>
 					</mat-select>
+					<button id="clear-categoryId-study" type="button" mat-button *ngIf="formFilter.controls.categoryId.value" matSuffix
+							color="warn"
+							mat-icon-button
+							(click)="clearFilterField(formFilter.controls.categoryId); $event.stopPropagation()">
+						<mat-icon>close</mat-icon>
+					</button>
 				</mat-form-field>
-			</div>
-			<div>
+
 				<mat-form-field appearance="outline">
 					<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.filter.PROBLEM'"></mat-label>
 					<input matInput type="text"
 									id="healthCondition"
 									name="healthCondition"
 									formControlName="healthCondition">
+					<button id="clear-healthCondition-study" type="button" mat-button *ngIf="formFilter.controls.healthCondition.value" matSuffix
+							color="warn"
+							mat-icon-button
+							(click)="clearFilterField(formFilter.controls.healthCondition); $event.stopPropagation()">
+						<mat-icon>close</mat-icon>
+					</button>
 				</mat-form-field>
-			</div>
-			<div>
 				<mat-form-field appearance="outline">
 					<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.filter.STUDY'"></mat-label>
 					<input matInput type="text"
 									id="study"
 									name="study"
 									formControlName="study">
+					<button id="clear-study" type="button" mat-button *ngIf="formFilter.controls.study.value" matSuffix
+							color="warn"
+							mat-icon-button
+							(click)="clearFilterField(formFilter.controls.study); $event.stopPropagation()">
+						<mat-icon>close</mat-icon>
+					</button>
 				</mat-form-field>
-			</div>
 
 			<div align="end">
 				<button mat-flat-button color="primary" type="submit">
