@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MedicationInfoDto, PrescriptionDto } from '@api-rest/api-model';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -33,10 +33,17 @@ export class CardMedicacionesComponent implements OnInit {
 	public medicationCheckboxes: FormGroup;
 	public hideFilterPanel = false;
 	public formFilter: FormGroup;
-	public medicamentStatus = [];
 	private hasRoleToEdit: boolean;
 
 	@Input() patientId: number;
+	@Input()
+	set medicamentStatus(medicamentStatus: any[]) {
+		this._medicamentStatus = medicamentStatus;
+	}
+	get medicamentStatus(): any[] {
+		return this._medicamentStatus;
+	}
+	private _medicamentStatus: any[];
 
 	constructor(
 		private readonly dialog: MatDialog,
@@ -66,10 +73,6 @@ export class CardMedicacionesComponent implements OnInit {
 			this.medicationsInfo.forEach(m => {
 				checkboxArray.push(this.formBuilder.group({checked: false}));
 			});
-		});
-
-		this.requestMasterDataService.medicationStatus().subscribe(status => {
-			this.medicamentStatus = status;
 		});
 
 		this.getMedication();
@@ -255,5 +258,4 @@ export class CardMedicacionesComponent implements OnInit {
 	hasRecipe(medicationInfo: MedicationInfoDto): boolean {
 		return (medicationInfo.hasRecipe && medicationInfo.medicationRequestId !== null);
 	}
-
 }

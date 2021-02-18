@@ -3,10 +3,10 @@
 		<h2 [translate]="'ambulatoria.paciente.ordenes_prescripciones.TITLE'"></h2>
 		<div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="20px">
 			<div fxFlex="50%">
-				<app-card-medicaciones [patientId]="patientId"></app-card-medicaciones>
+				<app-card-medicaciones [patientId]="patientId" [medicamentStatus]="medicamentStatus" ></app-card-medicaciones>
 			</div>
 			<div fxFlex="50%" fxLayoutGap="20px">
-				<app-card-estudios [patientId]="patientId"></app-card-estudios>
+				<app-card-estudios [patientId]="patientId" [diagnosticReportsStatus]="diagnosticReportsStatus" [categories]="studyCategories"></app-card-estudios>
 				<app-card-indicaciones [patientId]="patientId" *ngIf="false"></app-card-indicaciones>
 			</div>
 		</div>

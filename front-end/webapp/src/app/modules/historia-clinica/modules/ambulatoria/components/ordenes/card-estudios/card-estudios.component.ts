@@ -24,11 +24,27 @@ export class CardEstudiosComponent implements OnInit {
 	public readonly STUDY_STATUS = STUDY_STATUS;
 	public diagnosticReportsInfo: DiagnosticReportInfoDto[];
 	public hideFilterPanel = false;
-	public categories = [];
-	public diagnosticReportsStatus = [];
 	public formFilter: FormGroup;
 
 	@Input() patientId: number;
+
+	@Input()
+	set categories(categories: any[]) {
+		this._categories = categories;
+	}
+	get categories(): any[] {
+		return this._categories;
+	}
+	private _categories: any[];
+
+	@Input()
+	set diagnosticReportsStatus(diagnosticReportsStatus: any[]) {
+		this._diagnosticReportsStatus = diagnosticReportsStatus;
+	}
+	get diagnosticReportsStatus(): any[] {
+		return this._diagnosticReportsStatus;
+	}
+	private _diagnosticReportsStatus: any[];
 
 	constructor(
 		private readonly dialog: MatDialog,
@@ -40,7 +56,7 @@ export class CardEstudiosComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.formFilter = this.formBuilder.group({
-			categorieId: [null],
+			categoryId: [null],
 			statusId: [null],
 			healthCondition: [null],
 			study: [null],
@@ -50,10 +66,6 @@ export class CardEstudiosComponent implements OnInit {
 
 		this.requestMasterDataService.categories().subscribe(categories => {
 			this.categories = categories;
-		});
-
-		this.requestMasterDataService.diagnosticReportStatus().subscribe(diagnosticReport => {
-			this.diagnosticReportsStatus = diagnosticReport;
 		});
 
 		this.formFilter.controls.statusId.setValue(STUDY_STATUS.REGISTERED.id);
@@ -66,7 +78,7 @@ export class CardEstudiosComponent implements OnInit {
 													null,
 													this.formFilter.controls.healthCondition.value,
 													this.formFilter.controls.study.value,
-													this.formFilter.controls.categorieId.value )
+													this.formFilter.controls.categoryId.value )
 			.subscribe((response: DiagnosticReportInfoDto[]) => {
 						this.diagnosticReportsInfo = response;
 		});
