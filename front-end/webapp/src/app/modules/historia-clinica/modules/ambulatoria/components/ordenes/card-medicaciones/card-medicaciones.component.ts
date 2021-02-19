@@ -73,9 +73,10 @@ export class CardMedicacionesComponent implements OnInit {
 			});
 		});
 
+		this.formFilter.controls.statusId.setValue(MEDICATION_STATUS.ACTIVE.id);
+
 		this.getMedication();
 
-		this.formFilter.controls.statusId.setValue(MEDICATION_STATUS.ACTIVE.id);
 
 		this.permissionsService.hasContextAssignments$(ROLES_TO_EDIT).subscribe(hasRole => this.hasRoleToEdit = hasRole);
 
