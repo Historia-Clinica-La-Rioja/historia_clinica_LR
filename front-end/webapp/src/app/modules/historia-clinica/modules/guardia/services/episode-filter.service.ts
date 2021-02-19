@@ -1,4 +1,3 @@
-import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Episode } from '../routes/home/home.component';
 import { TriageCategoryDto, TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
@@ -13,10 +12,7 @@ const NO_INFO: MasterDataInterface<number> = {
 	description: 'No definido'
 };
 
-@Injectable({
-	providedIn: 'root'
-})
-export class EpisodesFilterService {
+export class EpisodeFilterService {
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -83,13 +79,13 @@ export class EpisodesFilterService {
 
 	filter(episode: Episode): boolean {
 		const filters = this.form.value as EpisodeFilters;
-		return 	EpisodesFilterService.filterByTriage(episode, filters) &&
-				EpisodesFilterService.filterByEmergencyCareType(episode, filters) &&
-				EpisodesFilterService.filterByPatientId(episode, filters) &&
-				EpisodesFilterService.filterByFirstName(episode, filters) &&
-				EpisodesFilterService.filterByLastName(episode, filters) &&
-				EpisodesFilterService.filterTemporal(episode, filters) &&
-				EpisodesFilterService.filterNoPatient(episode, filters);
+		return 	EpisodeFilterService.filterByTriage(episode, filters) &&
+				EpisodeFilterService.filterByEmergencyCareType(episode, filters) &&
+				EpisodeFilterService.filterByPatientId(episode, filters) &&
+				EpisodeFilterService.filterByFirstName(episode, filters) &&
+				EpisodeFilterService.filterByLastName(episode, filters) &&
+				EpisodeFilterService.filterTemporal(episode, filters) &&
+				EpisodeFilterService.filterNoPatient(episode, filters);
 	}
 
 	clear(control: string): void {

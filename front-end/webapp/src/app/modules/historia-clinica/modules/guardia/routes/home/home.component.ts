@@ -22,8 +22,10 @@ import { TriageDefinitionsService } from '../../services/triage-definitions.serv
 import { PatientService } from '@api-rest/services/patient.service';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { EpisodesFilterService } from '../../services/episodes-filter.service';
-import { TriageCategoryDto } from '@api-rest/services/triage-master-data.service';
+import { EpisodeFilterService } from '../../services/episode-filter.service';
+import { TriageCategoryDto, TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
+import { FormBuilder } from '@angular/forms';
+import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
 
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 
@@ -43,9 +45,14 @@ export class HomeComponent implements OnInit {
 		public readonly episodeStateService: EpisodeStateService,
 		private readonly triageDefinitionsService: TriageDefinitionsService,
 		private readonly patientService: PatientService,
-		public readonly filterService: EpisodesFilterService
+		public readonly formBuilder: FormBuilder,
+		public readonly triageMasterDataService: TriageMasterDataService,
+		public readonly emergencyCareMasterDataService: EmergencyCareMasterDataService
 	) {
+		this.filterService = new EpisodeFilterService(formBuilder, triageMasterDataService, emergencyCareMasterDataService);
 	}
+
+	filterService: EpisodeFilterService;
 
 	readonly estadosEpisodio = EstadosEpisodio;
 	readonly triages = Triages;
