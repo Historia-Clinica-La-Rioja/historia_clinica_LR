@@ -149,3 +149,16 @@ databaseChangeLog:
                     INSERT INTO discharge_type (id, description, internment, emergency_care) VALUES(11, 'Alta a internación', ${boolean.false}, ${boolean.true});
                     INSERT INTO discharge_type (id, description, internment, emergency_care) VALUES(12, 'Alta a internación domiciliaria', ${boolean.false}, ${boolean.true});
                     INSERT INTO discharge_type (id, description, internment, emergency_care) VALUES(13, 'Alta a seguimiento domiciliario', ${boolean.false}, ${boolean.true});
+
+    - changeSet:
+        id: create-discharge-for-emergency-care-episodes
+        comment: Create discharge for emergency care episodes finished by absence
+        author: tmedina
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    INSERT INTO emergency_care_discharge (emergency_care_episode_id , discharge_type_id, administrative_discharge_on, administrative_discharge_by_user) 
+                        (SELECT hee.emergency_care_episode_id , 4, hee.change_state_date , hee.created_by
+                        FROM historic_emergency_episode hee
+                        WHERE hee.emergency_care_state_id = 3);   
