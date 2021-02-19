@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { AddressDto, IdentificationTypeDto, PatientMedicalCoverageDto } from '@api-rest/api-model';
 import { Address } from '@presentation/pipes/fullHouseAddress.pipe';
 
@@ -7,7 +7,7 @@ import { Address } from '@presentation/pipes/fullHouseAddress.pipe';
 	templateUrl: './personal-information.component.html',
 	styleUrls: ['./personal-information.component.scss']
 })
-export class PersonalInformationComponent implements OnInit {
+export class PersonalInformationComponent implements OnInit, OnChanges {
 
 	@Input() personalInformation: PersonalInformation;
 	@Input() patientMedicalCoverage: PatientMedicalCoverageDto[];

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, Injectable } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, Injectable, OnChanges } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { TableService } from '@core/services/table.service';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
@@ -9,7 +9,7 @@ import { ThemePalette } from '@angular/material/core';
 	templateUrl: './table.component.html',
 	styleUrls: ['./table.component.scss']
 })
-export class TableComponent implements OnInit {
+export class TableComponent implements OnInit, OnChanges {
 
 	ActionDisplays = ActionDisplays;
 	TableStyles = TableStyles;

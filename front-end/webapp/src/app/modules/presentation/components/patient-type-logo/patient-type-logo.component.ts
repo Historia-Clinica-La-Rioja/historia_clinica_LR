@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 
 @Component({
 	selector: 'app-patient-type-logo',
@@ -6,7 +6,7 @@ import { Component, OnInit, Input } from '@angular/core';
 	styleUrls: ['./patient-type-logo.component.scss']
 })
 
-export class PatientTypeLogoComponent implements OnInit {
+export class PatientTypeLogoComponent implements OnInit, OnChanges {
 
 
 	@Input() patientTypeData: PatientTypeData;
