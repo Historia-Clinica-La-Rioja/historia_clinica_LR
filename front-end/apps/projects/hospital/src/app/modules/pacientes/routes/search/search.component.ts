@@ -5,6 +5,7 @@ import { IDENTIFICATION_TYPE_IDS, PATIENT_TYPE } from '@core/utils/patient.utils
 import { ActivatedRoute, Router } from '@angular/router';
 import { Moment } from 'moment';
 import { GenderDto, IdentificationTypeDto, PatientSearchDto } from '@api-rest/api-model';
+import { AppFeature } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
@@ -23,7 +24,6 @@ import { MIN_DATE } from "@core/utils/date.utils";
 const ROUTE_NEW = 'pacientes/new';
 const ROUTE_NEW_TEMPORARY = 'pacientes/temporary';
 const ROUTE_HOME = 'pacientes';
-const RENAPER_FFLAG = 'habilitarServicioRenaper';
 
 @Component({
 	selector: 'app-search',
@@ -81,7 +81,7 @@ export class SearchComponent implements OnInit {
 				this.noIdentity = params.noIdentity === 'true';
 				if (!this.noIdentity) {
 					this.buildFormSearchWithValidations(params);
-					this.featureFlagService.isOn(RENAPER_FFLAG)
+					this.featureFlagService.isActive(AppFeature.HABILITAR_SERVICIO_RENAPER)
 						.subscribe(result => {
 							if (result && Number(this.identificationTypeId) === IDENTIFICATION_TYPE_IDS.DNI) {
 								this.callRenaperService();

@@ -60,6 +60,9 @@ public enum AppFeature implements Feature {
     @Label("Habilita la pestaña para ver las historias clínicas externas del paciente")
     HABILITAR_HISTORIA_CLINICA_EXTERNA,
 
+    @Label("Indica si se habilita la integración con RENAPER")
+    HABILITAR_SERVICIO_RENAPER,
+    
     ;
 
     public boolean isActive() {

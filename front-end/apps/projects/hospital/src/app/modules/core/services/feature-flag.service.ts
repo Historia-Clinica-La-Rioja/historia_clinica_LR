@@ -16,10 +16,6 @@ const FEATURE_FLAGS = [
 		flavorMatch: []
 	},
 	{
-		name: 'habilitarServicioRenaper',
-		flavorMatch: [FLAVOR_HOSPITALES, FLAVOR_PBA]
-	},
-	{
 		name: 'mainDiagnosisRequired',
 		flavorMatch: [FLAVOR_HOSPITALES, FLAVOR_PBA]
 	},
