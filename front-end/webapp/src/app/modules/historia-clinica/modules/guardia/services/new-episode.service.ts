@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { NewEmergencyCareDto, DateTimeDto, PoliceInterventionDto } from '@api-rest/api-model';
+import { NewEmergencyCareDto, DateTimeDto, PoliceInterventionDetailsDto } from '@api-rest/api-model';
 import { dateToDateDto, dateToTimeDto } from '@api-rest/mapper/date-dto.mapper';
 import { Moment } from 'moment';
 import { MotivoConsulta } from '../../ambulatoria/services/motivo-nueva-consulta.service';
@@ -24,8 +24,8 @@ export class NewEpisodeService {
 		if (!this.administrativeAdmission) {
 			return null;
 		}
-		const policeIntervention: PoliceInterventionDto = this.hasPoliceIntervention() ?
-			this.toPoliceIntervention() : null;
+		const policeInterventionDetails: PoliceInterventionDetailsDto = this.hasPoliceIntervention() ?
+			this.toPoliceInterventionDetails() : null;
 		const newEmergencyCareDto: NewEmergencyCareDto = {
 			patient: {
 				id: this.administrativeAdmission.patientId,
@@ -36,7 +36,7 @@ export class NewEpisodeService {
 			entranceTypeId: this.administrativeAdmission.emergencyCareEntranceTypeId,
 			ambulanceCompanyId: this.administrativeAdmission.ambulanceCompanyId,
 			doctorsOfficeId: this.administrativeAdmission.doctorsOfficeId,
-			policeIntervention,
+			policeInterventionDetails,
 		};
 		return newEmergencyCareDto;
 	}
@@ -57,7 +57,7 @@ export class NewEpisodeService {
 	}
 
 
-	private toPoliceIntervention(): PoliceInterventionDto {
+	private toPoliceInterventionDetails(): PoliceInterventionDetailsDto {
 
 		return {
 			callDate: this.administrativeAdmission.callDate ? dateToDateDto(this.administrativeAdmission.callDate.toDate()) : undefined,

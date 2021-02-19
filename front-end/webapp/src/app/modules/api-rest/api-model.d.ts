@@ -12,6 +12,7 @@ export interface AEmergencyCareDto extends Serializable {
     ambulanceCompanyId?: string;
     emergencyCareTypeId?: number;
     entranceTypeId?: number;
+    hasPoliceIntervention?: boolean;
     patient?: AEmergencyCarePatientDto;
     policeInterventionDetails?: PoliceInterventionDetailsDto;
     reasons?: SnomedDto[];

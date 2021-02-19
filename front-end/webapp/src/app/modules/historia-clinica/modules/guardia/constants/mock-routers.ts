@@ -391,7 +391,7 @@ export const MOCKS_GUARDIA = [
 						id: 1,
 						description: 'Consultorio 1'
 					},
-					policeIntervention: {
+					policeInterventionDetails: {
 						id: 1,
 						callDate: { day: 14, month: 1, year: 2021}, // DateDto
 						callTime: { hours: 12, minutes: 0, seconds: 0}, // TimeDto
@@ -762,7 +762,7 @@ export const MOCKS_GUARDIA = [
 						entranceTypeId: 1,
 						ambulanceCompanyId: 1,
 						doctorsOfficeId : 1,
-						policeIntervention: {
+						policeInterventionDetails: {
 							callDate: { day: 14, month: 1, year: 2021}, // DateDto
 							callTime: { hours: 12, minutes: 0, seconds: 0}, // TimeDto
 							plateNumber: '91218',
@@ -881,7 +881,7 @@ export const MOCKS_GUARDIA = [
 						typeId: 1,
 						entranceTypeId: 1,
 						doctorsOfficeId : 1,
-						policeIntervention: {
+						policeInterventionDetails: {
 							callDate: { day: 14, month: 1, year: 2021}, // DateDto
 							callTime: { hours: 12, minutes: 0, seconds: 0}, // TimeDto
 							plateNumber: '91218',
@@ -1130,7 +1130,7 @@ export const MOCKS_GUARDIA = [
 						typeId: 2,
 						entranceTypeId: 1,
 						doctorsOfficeId : 1,
-						policeIntervention: {
+						policeInterventionDetails: {
 							callDate: { day: 14, month: 1, year: 2021}, // DateDto
 							callTime: { hours: 12, minutes: 0, seconds: 0}, // TimeDto
 							plateNumber: '91218',
