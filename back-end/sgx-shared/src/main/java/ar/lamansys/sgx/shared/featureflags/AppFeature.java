@@ -62,6 +62,9 @@ public enum AppFeature implements Feature {
 
     @Label("Indica si se habilita la integración con RENAPER")
     HABILITAR_SERVICIO_RENAPER,
+
+    @Label("Indica si se restringe la opción de editar paciente")
+    RESTRINGIR_DATOS_EDITAR_PACIENTE,
     
     ;
 

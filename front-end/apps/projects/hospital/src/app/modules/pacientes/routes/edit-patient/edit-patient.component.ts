@@ -16,6 +16,8 @@ import {
 	EducationLevelDto,
 	SelfPerceivedGenderDto
 } from '@api-rest/api-model';
+
+import { AppFeature, } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID } from '@core/utils/form.utils';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
@@ -35,7 +37,6 @@ import { PERSON } from '@core/constants/validation-constants';
 
 const ROUTE_PROFILE = 'pacientes/profile/';
 const ROUTE_HOME_PATIENT = 'pacientes';
-const RESTRICT_EDIT_FFLAG = 'restringirDatosEditarPaciente';
 
 @Component({
 	selector: 'app-edit-patient',
@@ -382,7 +383,7 @@ export class EditPatientComponent implements OnInit {
 	}
 
 	private restrictFormEdit(): void {
-		this.featureFlagService.isOn(RESTRICT_EDIT_FFLAG)
+		this.featureFlagService.isActive(AppFeature.RESTRINGIR_DATOS_EDITAR_PACIENTE)
 			.subscribe(result => {
 				if (result && this.isLockablePatientType()) {
 					this.disableFormField();

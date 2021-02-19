@@ -36,10 +36,6 @@ const FEATURE_FLAGS = [
 		flavorMatch: [FLAVOR_HOSPITALES, FLAVOR_PBA]
 	},
 	{
-		name: 'restringirDatosEditarPaciente',
-		flavorMatch: [FLAVOR_HOSPITALES, FLAVOR_PBA]
-	},
-	{
 		name: 'habilitarEdicionPacienteInternacion',
 		flavorMatch: [FLAVOR_HOSPITALES, FLAVOR_PBA]
 	},
