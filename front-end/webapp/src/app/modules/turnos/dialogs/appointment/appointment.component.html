@@ -66,14 +66,14 @@
 			<span class="mat-body-strong">Estado de turno</span>
 			<div class="appointment-actions" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
 
-				<button type="button" [disabled]="!(hasRoleToChangeState$ | async)"
+				<button type="button" [disabled]="(hasRoleToChangeState$ | async) === false"
 					[ngClass]="{'selected assigned': estadoSelected === appointmentStatesIds.ASSIGNED }"
 					(click)="onClickedState(appointmentStatesIds.ASSIGNED)" mat-stroked-button>
 					<mat-icon matTooltip="{{getAppointmentState(appointmentStatesIds.ASSIGNED).description}}"
 						color="primary">event_available</mat-icon>
 				</button>
 
-				<button type="button" [disabled]="!(hasRoleToChangeState$ | async)"
+				<button type="button" [disabled]="(hasRoleToChangeState$ | async) === false"
 					[ngClass]="{'selected confirmed': estadoSelected === appointmentStatesIds.CONFIRMED }"
 					(click)="onClickedState(appointmentStatesIds.CONFIRMED)" mat-stroked-button>
 					<mat-icon matTooltip="{{getAppointmentState(appointmentStatesIds.CONFIRMED).description}}"
@@ -83,7 +83,7 @@
 
 				<button type="button" [ngClass]="{'selected absent': estadoSelected === appointmentStatesIds.ABSENT }"
 					(click)="onClickedState(appointmentStatesIds.ABSENT)" mat-stroked-button
-					[disabled]="!(hasRoleToChangeState$ | async)">
+					[disabled]="(hasRoleToChangeState$ | async) === false">
 					<mat-icon matTooltip="{{getAppointmentState(appointmentStatesIds.ABSENT).description}}"
 						color="primary" svgIcon="person_cancel_outlined">
 					</mat-icon>
