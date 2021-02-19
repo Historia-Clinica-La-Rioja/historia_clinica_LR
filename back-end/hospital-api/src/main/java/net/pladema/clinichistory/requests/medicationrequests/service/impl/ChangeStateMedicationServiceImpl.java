@@ -160,7 +160,6 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
         DosageBo result = new DosageBo();
         if (dosage.getDuration() != null )
             result.setDuration(dosage.getDuration());
-        else result.setDuration(duration);
         result.setStartDate(dosage.getStartDate() != null ? dosage.getStartDate() : dateTimeProvider.nowDate());
         result.setChronic(dosage.isChronic());
         result.setFrequency(dosage.getFrequency());
