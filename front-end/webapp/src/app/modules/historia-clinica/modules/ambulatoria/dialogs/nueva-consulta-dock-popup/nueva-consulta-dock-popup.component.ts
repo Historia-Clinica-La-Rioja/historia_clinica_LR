@@ -136,29 +136,47 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.apiErrors = [];
 		this.addErrorMessage(nuevaConsulta);
 		if (this.isValidConsultation()) {
-			const dialogRef = this.dialog.open(ConfirmarNuevaConsultaPopupComponent, {
-				data: {	nuevaConsulta }
-			});
-			dialogRef.afterClosed().subscribe(confirmado => {
-				if (confirmado) {
-					this.outpatientConsultationService.createOutpatientConsultation(nuevaConsulta, this.data.idPaciente).subscribe(
-						_ => {
-							this.snackBarService.showSuccess('ambulatoria.paciente.nueva-consulta.messages.SUCCESS');
-							this.dockPopupRef.close(mapToFieldsToUpdate(nuevaConsulta));
-						},
-						errors => {
-							Object.getOwnPropertyNames(errors).forEach(val => {
-								this.apiErrors.push(errors[val]);
-							});
-							this.snackBarService.showError('ambulatoria.paciente.nueva-consulta.messages.ERROR');
-						}
-					);
-				}
-			}
-		);
+			this.suggestedFieldsCompleted(nuevaConsulta) ?
+				this.createConsultation(nuevaConsulta) :
+				this.openDialog(nuevaConsulta);
 		} else {
 			this.snackBarService.showError('ambulatoria.paciente.nueva-consulta.messages.ERROR');
 		}
+	}
+
+	private openDialog(nuevaConsulta: CreateOutpatientDto): void {
+		const dialogRef = this.dialog.open(ConfirmarNuevaConsultaPopupComponent, {
+			data: {	nuevaConsulta }
+		});
+		dialogRef.afterClosed().subscribe(confirmado => {
+			if (confirmado) {
+				this.createConsultation(nuevaConsulta);
+			}
+		});
+	}
+
+	private suggestedFieldsCompleted(nuevaConsulta: CreateOutpatientDto) {
+		return nuevaConsulta.vitalSigns?.diastolicBloodPressure &&
+			nuevaConsulta.vitalSigns?.systolicBloodPressure &&
+			nuevaConsulta.anthropometricData?.height &&
+			nuevaConsulta.anthropometricData?.weight &&
+			nuevaConsulta.problems?.length &&
+			nuevaConsulta.reasons?.length;
+	}
+
+	private createConsultation(nuevaConsulta: CreateOutpatientDto) {
+		this.outpatientConsultationService.createOutpatientConsultation(nuevaConsulta, this.data.idPaciente).subscribe(
+			_ => {
+				this.snackBarService.showSuccess('ambulatoria.paciente.nueva-consulta.messages.SUCCESS');
+				this.dockPopupRef.close(mapToFieldsToUpdate(nuevaConsulta));
+			},
+			errors => {
+				Object.getOwnPropertyNames(errors).forEach(val => {
+					this.apiErrors.push(errors[val]);
+				});
+				this.snackBarService.showError('ambulatoria.paciente.nueva-consulta.messages.ERROR');
+			}
+		);
 
 		function mapToFieldsToUpdate(nuevaConsultaDto: CreateOutpatientDto) {
 			return {
