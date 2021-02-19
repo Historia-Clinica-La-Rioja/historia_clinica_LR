@@ -14,8 +14,8 @@ export class AdultGynecologicalTriageComponent implements OnInit {
 
 	@Input() confirmLabel = 'Confirmar episodio';
 	@Input() cancelLabel = 'Volver';
-	@Output() onConfirm = new EventEmitter();
-	@Output() onCancel = new EventEmitter();
+	@Output() confirm = new EventEmitter();
+	@Output() cancel = new EventEmitter();
 	private triageCategoryId: number;
 	private doctorsOfficeId: number;
 	adultGynecologicalForm: FormGroup;
@@ -45,7 +45,7 @@ export class AdultGynecologicalTriageComponent implements OnInit {
 	}
 
 
-	confirm(): void {
+	confirmAdultGynecologicalTriage(): void {
 
 		const formValue = this.adultGynecologicalForm.value;
 		if (this.adultGynecologicalForm.valid) {
@@ -55,7 +55,7 @@ export class AdultGynecologicalTriageComponent implements OnInit {
 				notes: formValue.evaluation,
 				vitalSigns: toVitalSigns(this.adultGynecologicalForm)
 			};
-			this.onConfirm.emit(triage);
+			this.confirm.emit(triage);
 		}
 
 		function toVitalSigns(form: FormGroup): any {
@@ -74,6 +74,6 @@ export class AdultGynecologicalTriageComponent implements OnInit {
 	}
 
 	back(): void {
-		this.onCancel.emit();
+		this.cancel.emit();
 	}
 }

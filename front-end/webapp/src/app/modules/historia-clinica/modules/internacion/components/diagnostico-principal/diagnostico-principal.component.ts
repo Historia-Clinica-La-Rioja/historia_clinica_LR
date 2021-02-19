@@ -12,7 +12,7 @@ import { SnomedSemanticSearch, SnomedService } from '../../../../services/snomed
 export class DiagnosticoPrincipalComponent implements OnInit {
 
 	@Output()
-	onChange = new EventEmitter();
+	changeMainDiagnosis = new EventEmitter();
 
 	@Input()
 	diagnosis: HealthConditionDto;
@@ -42,13 +42,13 @@ export class DiagnosticoPrincipalComponent implements OnInit {
 				snomed: selectedConcept
 			};
 		}
-		this.onChange.emit(newMainDiagnosis);
+		this.changeMainDiagnosis.emit(newMainDiagnosis);
 	}
 
 	resetForm(): void {
 		delete this.diagnosis;
 		this.form.reset();
-		this.onChange.emit();
+		this.changeMainDiagnosis.emit();
 	}
 
 	openSearchDialog(searchValue: string): void {

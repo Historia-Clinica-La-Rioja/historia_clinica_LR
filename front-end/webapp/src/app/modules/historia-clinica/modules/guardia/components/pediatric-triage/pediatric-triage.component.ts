@@ -16,8 +16,8 @@ export class PediatricTriageComponent implements OnInit {
 
 	@Input() confirmLabel = 'Confirmar episodio';
 	@Input() cancelLabel = 'Volver';
-	@Output() onConfirm = new EventEmitter();
-	@Output() onCancel = new EventEmitter();
+	@Output() confirm = new EventEmitter();
+	@Output() cancel = new EventEmitter();
 	private triageCategoryId: number;
 	private doctorsOfficeId: number;
 	pediatricForm: FormGroup;
@@ -68,15 +68,15 @@ export class PediatricTriageComponent implements OnInit {
 		this.doctorsOfficeId = doctorsOfficeId;
 	}
 
-	confirm(): void {
+	confirmPediatricTriage(): void {
 		if (this.pediatricForm.valid) {
 			const triage: TriagePediatricDto = this.toTriagePediatricDto();
-			this.onConfirm.emit(triage);
+			this.confirm.emit(triage);
 		}
 	}
 
 	back(): void {
-		this.onCancel.emit();
+		this.cancel.emit();
 	}
 
 	private toNewEffectiveClinicalObservationDto(effectiveTime: DateTimeDto, value: any): NewEffectiveClinicalObservationDto {

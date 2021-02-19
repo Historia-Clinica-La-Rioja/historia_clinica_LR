@@ -14,7 +14,7 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 	@Input() options: TypeaheadOption<any>[] = [];
 	@Input() placeholder: string;
 	@Input() initValue: TypeaheadOption<any>;
-	@Output() onSelectionChange = new EventEmitter();
+	@Output() selectionChange = new EventEmitter();
 
 	form: FormGroup;
 	optionsFiltered: TypeaheadOption<any>[];
@@ -52,7 +52,7 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 	select(event: MatOptionSelectionChange, option: TypeaheadOption<any>): void {
 		if (event.isUserInput) {
 			this.optionSelected = option;
-			this.onSelectionChange.emit(option.value);
+			this.selectionChange.emit(option.value);
 		}
 	}
 
@@ -65,7 +65,7 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 	private reset(): void {
 		this.optionSelected = null;
 		this.form.controls.searchValue.reset();
-		this.onSelectionChange.emit(null);
+		this.selectionChange.emit(null);
 	}
 
 	private filter(value: string): TypeaheadOption<any>[] {

@@ -10,8 +10,8 @@ export class AdministrativeTriageComponent implements OnInit {
 
 	@Input() confirmLabel = 'Confirmar episodio';
 	@Input() cancelLabel = 'Volver';
-	@Output() onConfirm = new EventEmitter();
-	@Output() onCancel = new EventEmitter();
+	@Output() confirm = new EventEmitter();
+	@Output() cancel = new EventEmitter();
 	private triageCategoryId: number;
 	private doctorsOfficeId: number;
 
@@ -29,15 +29,15 @@ export class AdministrativeTriageComponent implements OnInit {
 		this.doctorsOfficeId = doctorsOfficeId;
 	}
 
-	confirm(): void {
+	confirmTriage(): void {
 		const triage: TriageAdministrativeDto = {
 				categoryId: this.triageCategoryId,
 				doctorsOfficeId: this.doctorsOfficeId
 		};
-		this.onConfirm.emit(triage);
+		this.confirm.emit(triage);
 	}
 
 	back(): void {
-		this.onCancel.emit();
+		this.cancel.emit();
 	}
 }

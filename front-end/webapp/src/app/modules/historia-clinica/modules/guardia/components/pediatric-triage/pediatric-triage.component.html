@@ -2,8 +2,8 @@
 	<form [formGroup]="pediatricForm">
 
 		<section id="triage">
-			<app-triage (onTriageCategoryIdChange)="setTriageCategoryId($event)"
-						(onDoctorsOfficeIdChange)="setDoctorsOfficeId($event)">
+			<app-triage (triageCategoryIdChange)="setTriageCategoryId($event)"
+						(doctorsOfficeIdChange)="setDoctorsOfficeId($event)">
 			</app-triage>
 		</section>
 
@@ -139,7 +139,7 @@
 		<button mat-stroked-button class="uppercase" (click)="back()">
 			<span [translate]="cancelLabel"></span>
 		</button>
-		<button mat-raised-button class="uppercase" color="primary" (click)="confirm()">
+		<button mat-raised-button class="uppercase" color="primary" (click)="confirmPediatricTriage()">
 			<span [translate]="confirmLabel"></span>
 		</button>
 	</div>

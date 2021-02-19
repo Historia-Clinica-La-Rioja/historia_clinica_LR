@@ -1,8 +1,8 @@
 <div class="page" fxLayout="column">
 	<form [formGroup]="adultGynecologicalForm" fxLayout="column">
 		<section id="triage">
-			<app-triage (onTriageCategoryIdChange)="setTriageCategoryId($event)"
-						(onDoctorsOfficeIdChange)="setDoctorsOfficeId($event)">
+			<app-triage (triageCategoryIdChange)="setTriageCategoryId($event)"
+						(doctorsOfficeIdChange)="setDoctorsOfficeId($event)">
 			</app-triage>
 		</section>
 
@@ -78,7 +78,7 @@
 		<button mat-stroked-button class="uppercase" (click)="back()">
 			<span [translate]="cancelLabel"></span>
 		</button>
-		<button mat-raised-button class="uppercase" color="primary" matBadgeColor="accent" (click)="confirm()">
+		<button mat-raised-button class="uppercase" color="primary" matBadgeColor="accent" (click)="confirmAdultGynecologicalTriage()">
 			<span [translate]="confirmLabel"></span>
 		</button>
 	</div>

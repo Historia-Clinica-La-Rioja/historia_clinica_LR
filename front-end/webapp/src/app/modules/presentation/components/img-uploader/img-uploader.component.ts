@@ -12,7 +12,7 @@ export class ImgUploaderComponent implements OnInit {
 	@Input() icon: string;
 	@Input() validations: ImgValidation;
 
-	@Output() onSelectFiles = new EventEmitter<string>();
+	@Output() selectFiles = new EventEmitter<string>();
 
 	@ViewChild('fileInput') fileInput: ElementRef;
 
@@ -26,10 +26,10 @@ export class ImgUploaderComponent implements OnInit {
 		this.imgLoading(imgFile).subscribe(data => {
 				if (this.validations.height !== data.height || this.validations.width !== data.width) {
 					this.fileInput.nativeElement.value = '';
-					this.onSelectFiles.emit(null);
+					this.selectFiles.emit(null);
 				} else {
 					this.fileInput.nativeElement.value = '';
-					this.onSelectFiles.emit(imgFile);
+					this.selectFiles.emit(imgFile);
 				}
 		});
 	}

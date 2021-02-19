@@ -15,8 +15,8 @@ import { SECTOR_AMBULATORIO, TRIAGE_LEVEL_V_ID } from '../../constants/masterdat
 export class TriageComponent implements OnInit {
 
 	@Input() cancelFunction: () => void;
-	@Output() onTriageCategoryIdChange = new EventEmitter();
-	@Output() onDoctorsOfficeIdChange = new EventEmitter();
+	@Output() triageCategoryIdChange = new EventEmitter();
+	@Output() doctorsOfficeIdChange = new EventEmitter();
 	triageForm: FormGroup;
 	doctorsOffices$: Observable<DoctorsOfficeDto[]>;
 	triageCategories: TriageCategoryDto[];
@@ -41,7 +41,7 @@ export class TriageComponent implements OnInit {
 					this.triageForm.controls.triageCategoryId.setValue(
 						this.triageCategories.find(category => category.id === TRIAGE_LEVEL_V_ID).id
 					);
-					this.onTriageCategoryIdChange.emit(this.triageForm.controls.triageCategoryId.value);
+					this.triageCategoryIdChange.emit(this.triageForm.controls.triageCategoryId.value);
 				}
 			);
 
@@ -50,13 +50,13 @@ export class TriageComponent implements OnInit {
 
 	selectTriageCategoryId(event: MatOptionSelectionChange, choosed: number): void {
 		if (event.isUserInput) {
-			this.onTriageCategoryIdChange.emit(choosed);
+			this.triageCategoryIdChange.emit(choosed);
 		}
 	}
 
 	selectDoctorsOfficeId(event: MatOptionSelectionChange, choosed: number): void {
 		if (event.isUserInput) {
-			this.onDoctorsOfficeIdChange.emit(choosed);
+			this.doctorsOfficeIdChange.emit(choosed);
 		}
 	}
 }

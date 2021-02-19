@@ -6,8 +6,8 @@
 		</div>
 		<div>
 			<h3 [translate]="'guardia.new-episode.ADM_TRIAGE'"></h3>
-			<app-pediatric-triage (onConfirm)="confirmEvent($event)"
-								  (onCancel)="cancelEvent()"></app-pediatric-triage>
+			<app-pediatric-triage (confirm)="confirmEvent($event)"
+								  (cancel)="cancelEvent()"></app-pediatric-triage>
 		</div>
 	</section>
 </app-content>

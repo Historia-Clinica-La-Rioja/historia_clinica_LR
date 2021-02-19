@@ -7,7 +7,7 @@
 		<ng-container *featureFlag="'mainDiagnosisRequired'">
 			<ng-container *hasRole="['ESPECIALISTA_MEDICO']">
 				<section id="diagnostico-principal">
-					<app-diagnostico-principal [diagnosis]="mainDiagnosis" (onChange)="setMainDiagnosis($event)"></app-diagnostico-principal>
+					<app-diagnostico-principal [diagnosis]="mainDiagnosis" (changeMainDiagnosis)="setMainDiagnosis($event)"></app-diagnostico-principal>
 				</section>
 			</ng-container>
 		</ng-container>

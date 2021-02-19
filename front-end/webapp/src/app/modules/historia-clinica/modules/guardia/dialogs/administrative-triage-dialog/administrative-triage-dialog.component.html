@@ -2,8 +2,8 @@
 	<div class="mat-h2" [translate]="'guardia.triage.TITLE'"></div>
 </div>
 <app-administrative-triage
-	(onConfirm)="setTriage($event)"
-	(onCancel)="dialogRef.close()"
+	(confirm)="setTriage($event)"
+	(cancel)="dialogRef.close()"
 	[confirmLabel]="'guardia.triage.CONFIRM'"
 	[cancelLabel]="'buttons.CANCEL'"></app-administrative-triage>
 
