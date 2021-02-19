@@ -38,6 +38,11 @@
 							[translate]="'forms.MAX_ERROR'"
 							[translateParams]="{max: getError(this.form, 'max', 'height').max}">
 					</mat-error>
+					<mat-error
+						*ngIf="hasError(this.form, 'pattern', 'height')"
+						[translate]="'forms.FORMAT_NUMERIC'"
+						[translateParams]="{pattern: getError(this.form, 'pattern', 'height').pattern}">
+					</mat-error>
 				</mat-form-field>
 			</div>
 			<div>
@@ -58,6 +63,11 @@
 							*ngIf="hasError(this.form, 'max', 'weight')"
 							[translate]="'forms.MAX_ERROR'"
 							[translateParams]="{max: getError(this.form, 'max', 'weight').max}">
+					</mat-error>
+					<mat-error
+						*ngIf="hasError(this.form, 'pattern', 'weight')"
+						[translate]="'forms.FORMAT_NUMERIC'"
+						[translateParams]="{pattern: getError(this.form, 'pattern', 'weight').pattern}">
 					</mat-error>
 				</mat-form-field>
 			</div>

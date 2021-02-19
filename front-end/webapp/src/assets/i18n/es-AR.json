@@ -42,7 +42,8 @@
 		"MIN_TIME_ERROR": "La hora debe ser posterior a la hora: {{minTime}}",
 		"MAX_TIME_ERROR": "La hora debe ser anterior a la hora actual",
 		"TIME_FORMAT": "La hora debe cumplir con el formato de 24 hs y tener dos digitos para la hora y los minutos respectivamente",
-		"MAX_DATE_TODAY": "La fecha no puede ser posterior al día de hoy"
+		"MAX_DATE_TODAY": "La fecha no puede ser posterior al día de hoy",
+		"FORMAT_NUMERIC": "El valor debe ser numérico"
 	},
 	"messages": {
 		"NO_DATA": "No hay información para mostrar"
