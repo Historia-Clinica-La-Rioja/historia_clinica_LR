@@ -1,5 +1,5 @@
 
-export function getElementViewFunction(viewContainer, templateRef): (boolean) => void {
+export function getElementViewFunction(viewContainer: any, templateRef: any): (show: boolean) => void {
 	return (condition: boolean) => {
 		if (condition) {
 			viewContainer.createEmbeddedView(templateRef);

@@ -120,8 +120,8 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.signosVitalesNuevaConsultaService.temperatureError$.subscribe(temperaturaCorporalError => {
 			this.errores[6] = temperaturaCorporalError;
 		});
-		this.signosVitalesNuevaConsultaService.bloodOxygenSaturationError$.subscribe(SaturacionOxigenoError => {
-			this.errores[7] = SaturacionOxigenoError;
+		this.signosVitalesNuevaConsultaService.bloodOxygenSaturationError$.subscribe(saturacionOxigenoError => {
+			this.errores[7] = saturacionOxigenoError;
 		});
 		this.signosVitalesNuevaConsultaService.systolicBloodPressureError$.subscribe(presionSistolicaError => {
 			this.errores[8] = presionSistolicaError;

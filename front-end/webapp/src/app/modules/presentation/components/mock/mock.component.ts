@@ -11,7 +11,7 @@ const flat = (route: ActivatedRoute) => route ? [...flat(route.parent), ...route
 })
 export class MockComponent implements OnInit {
 	urlSegments: string[];
-	navigate: (string) => void;
+	navigate: (path: string) => void;
 	screenshot: string;
 	loads: [];
 	actions: [];

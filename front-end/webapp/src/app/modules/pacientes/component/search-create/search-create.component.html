@@ -60,7 +60,7 @@
 						<mat-label>Seleccione motivo</mat-label>
 						<mat-select formControlName="IdentityVerificationStatus">
 							<mat-option id="IdentityVerificationStatus"
-								*ngFor="let cause of IdentityVerificationStatusArray" [value]="cause.id">
+								*ngFor="let cause of identityVerificationStatusArray" [value]="cause.id">
 								{{cause.description}}
 							</mat-option>
 						</mat-select>

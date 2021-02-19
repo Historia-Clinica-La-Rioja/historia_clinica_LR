@@ -9,7 +9,7 @@ import { getElementViewFunction } from '@core/utils/directive.utils';
 })
 export class HasRoleDirective {
 
-	private showElement: (boolean) => void;
+	private showElement: (showElement: boolean) => void;
 
 	constructor(
 		templateRef: TemplateRef<any>,

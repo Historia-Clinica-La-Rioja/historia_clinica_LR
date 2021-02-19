@@ -30,12 +30,12 @@ export function scrollIntoError(form: FormGroup, el: ElementRef) {
 		}
 	}
 
-	function getInvalidElement(el: ElementRef, controlName: string, form: FormGroup) {
-		const formControl = form.controls[controlName] as FormArray;
+	function getInvalidElement(elementRef: ElementRef, controlName: string, formGroup: FormGroup) {
+		const formControl = formGroup.controls[controlName] as FormArray;
 		if (formControl.controls) {
-			return el.nativeElement.querySelector('[formgroupname="' + controlName + '"]');
+			return elementRef.nativeElement.querySelector('[formgroupname="' + controlName + '"]');
 		}
-		return el.nativeElement.querySelector('[formcontrolname="' + controlName + '"]');
+		return elementRef.nativeElement.querySelector('[formcontrolname="' + controlName + '"]');
 	}
 }
 

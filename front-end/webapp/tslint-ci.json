@@ -89,10 +89,17 @@
 		"template-no-negated-async": true,
 		"use-lifecycle-interface": true,
 		"use-pipe-transform-interface": true,
-		"variable-name": false,
+		"variable-name": {
+			"options": [
+				"ban-keywords",
+				"check-format",
+				"allow-leading-underscore",
+				"require-const-for-all-caps"
+			]
+		},
 		"triple-equals": false,
 		"no-eval": false,
-		"no-shadowed-variable": false,
+		"no-shadowed-variable": true,
 		"no-unused-variable": true
 	},
 	"rulesDirectory": [

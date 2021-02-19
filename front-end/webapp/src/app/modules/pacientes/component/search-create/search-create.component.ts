@@ -22,7 +22,7 @@ export class SearchCreateComponent implements OnInit {
 	public formSearchSubmitted = false;
 	public genderOptions;
 	public noIdentity = false;
-	public IdentityVerificationStatusArray;
+	public identityVerificationStatusArray;
 	public identifyTypeArray;
 	public hasError = hasError;
 	private readonly routePrefix;
@@ -54,7 +54,7 @@ export class SearchCreateComponent implements OnInit {
 			genders => { this.genderOptions = genders; });
 
 		this.patientMasterDataService.getIdentityVerificationStatus().subscribe(
-			data => { this.IdentityVerificationStatusArray = data; });
+			data => { this.identityVerificationStatusArray = data; });
 
 	}
 

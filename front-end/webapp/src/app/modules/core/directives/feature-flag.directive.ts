@@ -14,7 +14,7 @@ import { getElementViewFunction } from '@core/utils/directive.utils';
 })
 export class FeatureFlagDirective {
 
-	private showElement: (boolean) => void;
+	private showElement: (showElement: boolean) => void;
 
 	constructor(
 		templateRef: TemplateRef<any>,

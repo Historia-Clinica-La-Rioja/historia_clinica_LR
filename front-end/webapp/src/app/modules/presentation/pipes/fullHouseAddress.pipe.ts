@@ -9,11 +9,11 @@ export class FullHouseAddressPipe implements PipeTransform {
 		return '';
 	}
 
-	const street = address.street ? address.street : '';
-	const number = address.number ? ' ' + address.number : '';
+	const streetName = address.street ? address.street : '';
+	const streetNumber = address.number ? ' ' + address.number : '';
 	const floor = address.floor ? ' ' +  address.floor : '';
 	const apartment = address.apartment ? ' ' +  address.apartment : '';
-	return street + number + floor + apartment;
+	return streetName + streetNumber + floor + apartment;
   }
 
 }
