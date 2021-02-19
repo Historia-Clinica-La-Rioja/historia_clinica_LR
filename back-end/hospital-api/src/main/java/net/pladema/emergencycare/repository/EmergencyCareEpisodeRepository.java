@@ -23,7 +23,9 @@ public interface EmergencyCareEpisodeRepository extends JpaRepository<EmergencyC
 			" LEFT JOIN Person pe ON (pe.id = pa.personId) "+
 			" LEFT JOIN DoctorsOffice dso ON (dso.id = ece.doctorsOfficeId) "+
 			" JOIN TriageCategory tc ON (tc.id = ece.triageCategoryId) "+
-			" WHERE (ece.emergencyCareStateId =  "+EmergencyCareState.EN_ATENCION+" OR ece.emergencyCareStateId = "+EmergencyCareState.EN_ESPERA+" ) "+
+			" WHERE (ece.emergencyCareStateId = " + EmergencyCareState.EN_ATENCION +
+				" OR ece.emergencyCareStateId = " + EmergencyCareState.EN_ESPERA +
+				" OR ece.emergencyCareStateId = " + EmergencyCareState.CON_ALTA_MEDICA + " ) "+
 			" AND ece.institutionId = :institutionId ")
 	List<EmergencyCareVo> getAll(@Param("institutionId") Integer institutionId);
 
@@ -72,7 +74,9 @@ public interface EmergencyCareEpisodeRepository extends JpaRepository<EmergencyC
 	@Transactional(readOnly = true)
 	@Query( value = "SELECT  (case when count(ece.id)> 0 then true else false end) " +
 			"FROM EmergencyCareEpisode ece " +
-			"WHERE ece.patientId = :patientId AND ( ece.emergencyCareStateId =" + EmergencyCareState.EN_ESPERA + " or ece.emergencyCareStateId = " + EmergencyCareState.EN_ATENCION + " ) " +
+			"WHERE ece.patientId = :patientId AND ( ece.emergencyCareStateId =" + EmergencyCareState.EN_ESPERA +
+				" or ece.emergencyCareStateId = " + EmergencyCareState.EN_ATENCION +
+				" or ece.emergencyCareStateId = " + EmergencyCareState.CON_ALTA_MEDICA + " ) " +
 			"AND ece.institutionId = :institutionId")
 	boolean existsActiveEpisodeByPatientIdAndInstitutionId(@Param("patientId") Integer patientId, @Param("institutionId") Integer institutionId);
 }
