@@ -5,8 +5,6 @@ import { AgendaSetupComponent } from './routes/agenda-setup/agenda-setup.compone
 import { ERole } from '@api-rest/api-model';
 import { RoleGuard } from '@core/guards/RoleGuard';
 import { AgendaComponent } from './routes/agenda/agenda.component';
-import { MedicalCoverageComponent } from '../core/dialogs/medical-coverage/medical-coverage.component';
-
 
 const routes: Routes = [
 	{

@@ -2,7 +2,6 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { MEDICACION } from '../../constants/summaries';
 import { TableModel } from '@presentation/components/table/table.component';
 import { HealthConditionDto, MasterDataInterface, MedicationDto } from '@api-rest/api-model';
-import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 
 @Component({
@@ -21,7 +20,6 @@ export class MedicacionSummaryComponent implements OnChanges {
 	clinicalStatus: MasterDataInterface<string>[];
 
 	constructor(
-		private internmentStateService: InternmentStateService,
 		private internacionMasterDataService: InternacionMasterDataService
 	) {
 	}

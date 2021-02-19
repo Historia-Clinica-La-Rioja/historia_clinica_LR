@@ -18,7 +18,6 @@ import {DateFormat, dateToMomentTimeZone, momentFormat, newMoment} from '@core/u
 import {ClinicalSpecialtyDto, CreateOutpatientDto, HealthConditionNewConsultationDto} from '@api-rest/api-model';
 import {InternacionMasterDataService} from '@api-rest/services/internacion-master-data.service';
 import {OutpatientConsultationService} from '@api-rest/services/outpatient-consultation.service';
-import {ContextService} from '@core/services/context.service';
 import {SnackBarService} from '@presentation/services/snack-bar.service';
 import {HealthConditionService} from '@api-rest/services/healthcondition.service';
 import {ClinicalSpecialtyService} from '@api-rest/services/clinical-specialty.service';
@@ -54,20 +53,19 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		private readonly snomedService: SnomedService,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly outpatientConsultationService: OutpatientConsultationService,
-		private readonly contextService: ContextService,
 		private readonly snackBarService: SnackBarService,
 		private readonly healthConditionService: HealthConditionService,
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 	) {
-		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, snomedService);
-		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, snomedService);
-		this.problemasNuevaConsultaService = new ProblemasNuevaConsultaService(formBuilder, snomedService);
-		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, snomedService);
+		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService);
+		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService);
+		this.problemasNuevaConsultaService = new ProblemasNuevaConsultaService(formBuilder, this.snomedService);
+		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, this.snomedService);
 		this.datosAntropometricosNuevaConsultaService =
-			new DatosAntropometricosNuevaConsultaService(formBuilder, internacionMasterDataService);
+			new DatosAntropometricosNuevaConsultaService(formBuilder, this.internacionMasterDataService);
 		this.signosVitalesNuevaConsultaService = new SignosVitalesNuevaConsultaService(formBuilder);
-		this.antecedentesFamiliaresNuevaConsultaService = new AntecedentesFamiliaresNuevaConsultaService(formBuilder, snomedService);
-		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, snomedService);
+		this.antecedentesFamiliaresNuevaConsultaService = new AntecedentesFamiliaresNuevaConsultaService(formBuilder, this.snomedService);
+		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService);
 	}
 
 	setProfessionalSpecialties() {

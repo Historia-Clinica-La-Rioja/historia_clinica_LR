@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ECAdministrativeDto, ECPediatricDto, ECAdultGynecologicalDto, ResponseEmergencyCareDto, EmergencyCareListDto } from '@api-rest/api-model';
 import { environment } from '@environments/environment';
 import { HttpClient } from '@angular/common/http';

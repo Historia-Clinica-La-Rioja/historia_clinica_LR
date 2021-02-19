@@ -1,7 +1,7 @@
 import { ChangeDetectorRef } from '@angular/core';
 import { fromEvent, Observable } from 'rxjs';
 import { finalize, map, takeUntil } from 'rxjs/operators';
-import { CalendarEvent, CalendarEventAction, DAYS_OF_WEEK } from 'angular-calendar';
+import { CalendarEvent, DAYS_OF_WEEK } from 'angular-calendar';
 import { WeekViewHourSegment } from 'calendar-utils';
 import { addDays, addMinutes, endOfWeek } from 'date-fns';
 import { MEDICAL_ATTENTION } from '../constants/descriptions';

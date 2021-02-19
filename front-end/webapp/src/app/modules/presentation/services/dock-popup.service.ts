@@ -25,7 +25,7 @@ export class DockPopupService {
 	open(type: ComponentType<any>, data?: any): DockPopupRef {
 		const overlayRef = this.overlay.create(this.getOverlayConfig());
 		const dockPopupRef = new DockPopupRef(overlayRef);
-		const overlayComponent = this.attachDialogContainer(overlayRef, data, dockPopupRef, type);
+		this.attachDialogContainer(overlayRef, data, dockPopupRef, type);
 		this.eventsSubscription = this.router.events.pipe(take(1)).subscribe(_ => dockPopupRef.close());
 		return dockPopupRef;
 	}

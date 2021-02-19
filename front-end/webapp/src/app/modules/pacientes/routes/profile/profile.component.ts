@@ -9,7 +9,6 @@ import { PersonalInformation } from '@presentation/components/personal-informati
 import { PatientTypeData } from '@presentation/components/patient-type-logo/patient-type-logo.component';
 import { ContextService } from '@core/services/context.service';
 import { InternmentPatientService } from '@api-rest/services/internment-patient.service';
-import { DateFormat } from '@core/utils/moment.utils';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 
 const ROUTE_NEW_INTERNMENT = 'internaciones/internacion/new';

@@ -2,9 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DiaryListDto } from '@api-rest/api-model';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DiaryOpeningHoursService } from '@api-rest/services/diary-opening-hours.service';
-import { Observable, Subscription } from 'rxjs';
-import { DiariesService } from '@api-rest/services/diaries.service';
+import { Subscription } from 'rxjs';
 import { ConfirmDialogComponent } from '@core/dialogs/confirm-dialog/confirm-dialog.component';
 import { DiaryService } from '@api-rest/services/diary.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -37,8 +35,6 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 	constructor(
 		private readonly router: Router,
 		public readonly route: ActivatedRoute,
-		private readonly diaryOpeningHoursService: DiaryOpeningHoursService,
-		private readonly diariesService: DiariesService,
 		private readonly diaryService: DiaryService,
 		private readonly dialog: MatDialog,
 		private readonly datePipe: DatePipe,

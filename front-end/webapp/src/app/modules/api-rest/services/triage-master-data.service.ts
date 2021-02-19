@@ -58,7 +58,6 @@ export class TriageMasterDataService {
 	}
 
 	getCategories(): Observable<TriageCategoryDto[]> {
-		const url = `${environment.apiBase + BASIC_URL_PREFIX}/category`;
 		return of(TRIAGE_CATEGORIES);
 	}
 

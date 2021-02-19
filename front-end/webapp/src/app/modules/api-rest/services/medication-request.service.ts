@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import { MedicationInfoDto, PrescriptionDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { of } from 'rxjs';
-import {saveAs} from 'file-saver';
 
 @Injectable({
   providedIn: 'root'

@@ -61,15 +61,15 @@ export class NuevaConsultaComponent implements OnInit {
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 		private readonly appointmentsService: AppointmentsService,
 	) {
-		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, snomedService);
-		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, snomedService);
-		this.problemasNuevaConsultaService = new ProblemasNuevaConsultaService(formBuilder, snomedService);
-		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, snomedService);
+		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService);
+		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService);
+		this.problemasNuevaConsultaService = new ProblemasNuevaConsultaService(formBuilder, this.snomedService);
+		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, this.snomedService);
 		this.datosAntropometricosNuevaConsultaService =
-			new DatosAntropometricosNuevaConsultaService(formBuilder, internacionMasterDataService);
+			new DatosAntropometricosNuevaConsultaService(formBuilder, this.internacionMasterDataService);
 		this.signosVitalesNuevaConsultaService = new SignosVitalesNuevaConsultaService(formBuilder);
-		this.antecedentesFamiliaresNuevaConsultaService = new AntecedentesFamiliaresNuevaConsultaService(formBuilder, snomedService);
-		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, snomedService);
+		this.antecedentesFamiliaresNuevaConsultaService = new AntecedentesFamiliaresNuevaConsultaService(formBuilder, this.snomedService);
+		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService);
 	}
 
 	static buildProblema(p: HealthConditionNewConsultationDto) {

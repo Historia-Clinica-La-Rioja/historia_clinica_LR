@@ -37,7 +37,7 @@ export class SolveProblemComponent implements OnInit {
 		private readonly snomedService: SnomedService,
 		private readonly outpatientConsultationService: OutpatientConsultationService,
 	) {
-		this.problemasNuevaConsultaService = new ProblemasNuevaConsultaService(formBuilder, snomedService);
+		this.problemasNuevaConsultaService = new ProblemasNuevaConsultaService(formBuilder, this.snomedService);
 		this.dataDto = data.problema;
 		this.patientId = data.patientId;
 		this.problemId = this.dataDto.id;

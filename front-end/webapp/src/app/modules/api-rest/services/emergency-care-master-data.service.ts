@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MasterDataInterface } from '@api-rest/api-model';
 import { environment } from '@environments/environment';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 
 const PREFIX = '/emergency-care/masterdata';
 @Injectable({

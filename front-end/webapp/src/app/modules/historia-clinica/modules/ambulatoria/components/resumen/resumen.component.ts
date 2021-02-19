@@ -13,7 +13,6 @@ import {
 } from '@api-rest/api-model';
 import {ActivatedRoute} from '@angular/router';
 import {Observable} from 'rxjs';
-import {HceGeneralStateService} from '@api-rest/services/hce-general-state.service';
 import {ANTECEDENTES_FAMILIARES, PROBLEMAS_ANTECEDENTES} from '../../../../constants/summaries';
 import {AmbulatoriaSummaryFacadeService} from '../../services/ambulatoria-summary-facade.service';
 import {TableModel} from '@presentation/components/table/table.component';
@@ -43,7 +42,6 @@ export class ResumenComponent implements OnInit, OnChanges {
 	@Input() patientExternalSummary: PatientSummaryDto;
 
 	constructor(
-		private readonly hceGeneralStateService: HceGeneralStateService,
 		private route: ActivatedRoute,
 		private readonly ambulatoriaSummaryFacadeService: AmbulatoriaSummaryFacadeService,
 		private readonly snackBarService: SnackBarService

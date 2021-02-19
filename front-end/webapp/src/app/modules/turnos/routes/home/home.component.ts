@@ -1,13 +1,8 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder } from '@angular/forms';
-import { map, take } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
 import { ProfessionalDto, ProfessionalsByClinicalSpecialtyDto } from '@api-rest/api-model';
-import { MatDialog } from '@angular/material/dialog';
-import { Location } from '@angular/common';
-import { DiariesService } from '@api-rest/services/diaries.service';
-import { DiaryOpeningHoursService } from '@api-rest/services/diary-opening-hours.service';
 import { ContextService } from '@core/services/context.service';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { TypeaheadOption } from '@core/components/typeahead/typeahead.component';
@@ -38,14 +33,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 	constructor(
 		private readonly router: Router,
-		private readonly formBuilder: FormBuilder,
 		private readonly healthCareProfessionalService: HealthcareProfessionalService,
-		private readonly cdr: ChangeDetectorRef,
-		private readonly dialog: MatDialog,
-		private readonly location: Location,
 		public readonly route: ActivatedRoute,
-		private readonly diariesService: DiariesService,
-		private readonly diaryOpeningHoursService: DiaryOpeningHoursService,
 		private readonly contextService: ContextService,
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 		private readonly agendaSearchService: AgendaSearchService,

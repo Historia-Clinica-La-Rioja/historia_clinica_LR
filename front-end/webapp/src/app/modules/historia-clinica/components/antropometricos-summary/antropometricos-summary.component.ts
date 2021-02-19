@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ANTROPOMETRICOS } from '../../constants/summaries';
 import { DetailBox } from '@presentation/components/detail-box/detail-box.component';
-import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { AnthropometricDataDto } from '@api-rest/api-model';
 import { MatDialog } from '@angular/material/dialog';
 import { AddAnthropometricComponent } from '../../dialogs/add-anthropometric/add-anthropometric.component';
@@ -30,7 +29,6 @@ export class AntropometricosSummaryComponent implements OnInit {
 	};
 
 	constructor(
-		private readonly internmentStateService: InternmentStateService,
 		public dialog: MatDialog
 	) { }
 

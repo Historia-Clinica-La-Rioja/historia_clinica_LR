@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { CompletePatientDto, PersonalInformationDto, PersonPhotoDto, TriageListDto, ResponseEmergencyCareDto, MasterDataDto } from '@api-rest/api-model';
+import { CompletePatientDto, PersonalInformationDto, PersonPhotoDto, TriageListDto, ResponseEmergencyCareDto } from '@api-rest/api-model';
 import {
 	EmergencyCareEpisodeService,
 } from '@api-rest/services/emergency-care-episode.service';

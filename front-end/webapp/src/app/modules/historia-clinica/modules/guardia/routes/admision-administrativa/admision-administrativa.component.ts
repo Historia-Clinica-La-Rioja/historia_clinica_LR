@@ -25,7 +25,6 @@ import { ContextService } from '@core/services/context.service';
 import { PatientService } from '@api-rest/services/patient.service';
 import { AMBULANCE, PERSON, POLICE_OFFICER } from '@core/constants/validation-constants';
 import { EmergencyCareEntranceType } from '@api-rest/masterdata';
-import { PermissionsService } from '@core/services/permissions.service';
 import { TriageDefinitionsService } from '../../services/triage-definitions.service';
 import {DoctorsOfficeService} from '@api-rest/services/doctors-office.service';
 import {SECTOR_AMBULATORIO} from '../../constants/masterdata';
@@ -76,11 +75,10 @@ export class AdmisionAdministrativaComponent implements OnInit {
 		private router: Router,
 		private readonly contextService: ContextService,
 		private readonly patientService: PatientService,
-		private readonly permissionsService: PermissionsService,
 		private readonly triageDefinitionsService: TriageDefinitionsService,
 		private readonly doctorsOfficeService: DoctorsOfficeService
 	) {
-		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, snomedService);
+		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService);
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 	}
 

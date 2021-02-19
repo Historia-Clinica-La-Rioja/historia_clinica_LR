@@ -18,8 +18,6 @@ import { ContextService } from '@core/services/context.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 
-const ROUTE_PROFILE = 'pacientes/profile/';
-
 @Component({
 	selector: 'app-medical-discharge',
 	templateUrl: './medical-discharge.component.html',

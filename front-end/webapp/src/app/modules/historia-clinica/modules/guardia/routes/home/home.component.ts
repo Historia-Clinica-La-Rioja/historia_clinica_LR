@@ -18,7 +18,6 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SelectConsultorioComponent } from '../../dialogs/select-consultorio/select-consultorio.component';
 import { ConfirmDialogComponent } from '@core/dialogs/confirm-dialog/confirm-dialog.component';
-import { PermissionsService } from '@core/services/permissions.service';
 import { TriageDefinitionsService } from '../../services/triage-definitions.service';
 import { PatientService } from '@api-rest/services/patient.service';
 import { map } from 'rxjs/operators';
@@ -42,7 +41,6 @@ export class HomeComponent implements OnInit {
 		private snackBarService: SnackBarService,
 		private readonly dialog: MatDialog,
 		public readonly episodeStateService: EpisodeStateService,
-		private readonly permissionsService: PermissionsService,
 		private readonly triageDefinitionsService: TriageDefinitionsService,
 		private readonly patientService: PatientService,
 		public readonly filterService: EpisodesFilterService

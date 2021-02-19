@@ -1,7 +1,6 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { TableModel } from '@presentation/components/table/table.component';
 import { HealthConditionDto, HealthHistoryConditionDto } from '@api-rest/api-model';
-import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { SummaryHeader } from '@presentation/components/summary-card/summary-card.component';
 
 @Component({
@@ -16,10 +15,7 @@ export class AntecedentesFamiliaresSummaryComponent implements OnChanges {
 
 	tableModel: TableModel<HealthConditionDto>;
 
-	constructor(
-		private internmentStateService: InternmentStateService
-	) {
-	}
+	constructor() {}
 
 	ngOnChanges(): void {
 		this.tableModel = this.buildTable(this.familyHistories);

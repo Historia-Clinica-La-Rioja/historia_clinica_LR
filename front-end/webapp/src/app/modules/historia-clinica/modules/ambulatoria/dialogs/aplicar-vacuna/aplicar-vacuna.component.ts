@@ -9,9 +9,7 @@ import {ActionDisplays, TableModel} from '@presentation/components/table/table.c
 import {SnowstormService} from '@api-rest/services/snowstorm.service';
 import {SnackBarService} from '@presentation/services/snack-bar.service';
 import {HceImmunizationService} from '@api-rest/services/hce-immunization.service';
-import {TranslateService} from '@ngx-translate/core';
 import {ConfirmDialogComponent} from '@core/dialogs/confirm-dialog/confirm-dialog.component';
-import {AppointmentsService} from '@api-rest/services/appointments.service';
 import {ClinicalSpecialtyService} from '@api-rest/services/clinical-specialty.service';
 import {VACUNAS} from 'src/app/modules/historia-clinica/constants/summaries';
 
@@ -44,8 +42,6 @@ export class AplicarVacunaComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private readonly formBuilder: FormBuilder,
 		private readonly dialog: MatDialog,
-		private readonly translator: TranslateService,
-		private readonly appointmentsService: AppointmentsService,
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService
 	) {
 		this.appliedVaccines = [];

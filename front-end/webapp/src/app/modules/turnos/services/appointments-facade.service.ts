@@ -22,8 +22,6 @@ const TEMPORARY_PATIENT = 3;
 export class AppointmentsFacadeService {
 
 	private agendaId: number;
-	private startDate: string;
-	private endDate: string;
 	private appointmentDuration: number;
 
 

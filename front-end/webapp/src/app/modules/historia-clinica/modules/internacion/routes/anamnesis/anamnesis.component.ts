@@ -8,7 +8,6 @@ import { ActivatedRoute } from '@angular/router';
 import { InternmentEpisodeSummary } from '@presentation/components/internment-episode-summary/internment-episode-summary.component';
 import { InternacionService } from '@api-rest/services/internacion.service';
 import { MapperService } from '@presentation/services/mapper.service';
-import { ContextService } from '@core/services/context.service';
 
 @Component({
 	selector: 'app-anamnesis',

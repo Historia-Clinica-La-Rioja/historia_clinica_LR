@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ECAdministrativeDto, TriageAdministrativeDto } from '@api-rest/api-model';
 import { NewEpisodeService } from '../../services/new-episode.service';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';

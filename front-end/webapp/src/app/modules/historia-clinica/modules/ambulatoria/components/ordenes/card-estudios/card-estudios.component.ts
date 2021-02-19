@@ -176,7 +176,7 @@ export class CardEstudiosComponent implements OnInit {
 	}
 
 	showStudyResults(diagnosticReport: DiagnosticReportInfoDto) {
-		const newShowStudyResults = this.dialog.open(VerResultadosEstudioComponent,
+		this.dialog.open(VerResultadosEstudioComponent,
 			{
 				data: {
 					diagnosticReport,

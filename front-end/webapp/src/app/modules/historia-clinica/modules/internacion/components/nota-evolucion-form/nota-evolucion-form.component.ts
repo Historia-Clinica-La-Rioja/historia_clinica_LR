@@ -4,8 +4,7 @@ import {
 	DiagnosisDto,
 	AllergyConditionDto,
 	ImmunizationDto,
-	EvolutionNoteDto,
-	ResponseEvolutionNoteDto
+	EvolutionNoteDto
 } from '@api-rest/api-model';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
@@ -51,7 +50,7 @@ export class NotaEvolucionFormComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private readonly snomedService: SnomedService,
 	) {
-		this.procedimientosService = new ProcedimientosService(formBuilder, snomedService);
+		this.procedimientosService = new ProcedimientosService(formBuilder, this.snomedService);
 	}
 
 	ngOnInit(): void {

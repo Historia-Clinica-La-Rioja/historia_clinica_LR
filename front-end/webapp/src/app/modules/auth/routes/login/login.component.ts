@@ -3,7 +3,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AuthenticationService } from '../../services/authentication.service';
 import { catchError } from 'rxjs/operators';
 import { ApiErrorMessageDto, RecaptchaPublicConfigDto } from '@api-rest/api-model';
-import { RecaptchaService } from '@api-rest/services/recaptcha.service';
 import { PublicService } from '@api-rest/services/public.service';
 import { ActivatedRoute } from '@angular/router';
 
@@ -23,7 +22,6 @@ export class LoginComponent implements OnInit {
 	constructor(
 		private formBuilder: FormBuilder,
 		private authenticationService: AuthenticationService,
-		private recaptchaService: RecaptchaService,
 		private publicService: PublicService,
 		private route: ActivatedRoute) {
 	}

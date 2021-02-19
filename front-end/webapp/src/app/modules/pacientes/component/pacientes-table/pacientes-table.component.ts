@@ -100,10 +100,6 @@ export class PacientesTableComponent implements OnInit {
 		// TODO redirect
 	}
 
-	applyFilter(event: Event) {
-		const filterValue = (event.target as HTMLInputElement).value;
-	}
-
 }
 
 export interface PatientTableData {

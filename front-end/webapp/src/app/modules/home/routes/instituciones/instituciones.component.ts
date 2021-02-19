@@ -4,7 +4,6 @@ import { RoleAssignment } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import {Router} from '@angular/router';
 import {InstitutionService} from '@api-rest/services/institution.service';
-import {uniqueItems} from '@core/utils/array.utils';
 
 @Component({
 	selector: 'app-instituciones',
@@ -28,15 +27,15 @@ export class InstitucionesComponent implements OnInit {
 			this.backoffice = this.hasAccessToBackoffice(allRoles);
 
 			institutionService.getInstitutions(institutionIds).subscribe(institutions => {
-				const uniqueIds = uniqueItems(institutionIds);
+				/*const uniqueIds = uniqueItems(institutionIds);
 
 				const webappAccess = this.hasAccessToWebapp(allRoles);
 
 				const onlyBackoffice = !webappAccess && this.backoffice;
 				const hasSingleIdWebapp = !this.backoffice && webappAccess && uniqueIds.length === 1;
 
-				// if (hasSingleIdWebapp || onlyBackoffice)
-				// 	this.ingresar({id: uniqueIds[0]}, this.backoffice)
+				if (hasSingleIdWebapp || onlyBackoffice)
+					this.ingresar({id: uniqueIds[0]}, this.backoffice)*/
 				this.institutions = institutions;
 			});
 		});

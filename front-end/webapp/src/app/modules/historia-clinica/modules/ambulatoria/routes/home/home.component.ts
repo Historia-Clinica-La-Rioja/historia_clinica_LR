@@ -5,7 +5,7 @@ import {GenderDto, IdentificationTypeDto, LimitedPatientSearchDto, PatientSearch
 import { atLeastOneValueInFormGroup, hasError, } from '@core/utils/form.utils';
 import { Moment } from 'moment';
 import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
-import { DateFormat, momentFormat, momentFormatDate, momentParseDate, momentParseDateTime, newMoment } from '@core/utils/moment.utils';
+import { DateFormat, momentFormat, momentParseDateTime, newMoment } from '@core/utils/moment.utils';
 import { Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
 import { PatientService, PersonInformationRequest } from '@api-rest/services/patient.service';

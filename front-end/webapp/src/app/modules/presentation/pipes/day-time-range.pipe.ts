@@ -1,6 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import * as moment from 'moment';
-import { momentFormatDate, DateFormat } from '@core/utils/moment.utils';
 import { DatePipe } from '@angular/common';
 
 @Pipe({

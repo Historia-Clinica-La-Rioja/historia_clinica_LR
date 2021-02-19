@@ -10,7 +10,7 @@ import { Moment } from 'moment';
 import * as moment from 'moment';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from '@core/services/context.service';
-import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.utils';
+import { momentParseDate } from '@core/utils/moment.utils';
 import { MatDialog } from '@angular/material/dialog';
 import { MedicalCoverageComponent, PatientMedicalCoverage } from 'src/app/modules/core/dialogs/medical-coverage/medical-coverage.component';
 import { MapperService } from '@core/services/mapper.service';

@@ -92,7 +92,8 @@
 		"variable-name": false,
 		"triple-equals": false,
 		"no-eval": false,
-		"no-shadowed-variable": false
+		"no-shadowed-variable": false,
+		"no-unused-variable": true
 	},
 	"rulesDirectory": [
 		"codelyzer"

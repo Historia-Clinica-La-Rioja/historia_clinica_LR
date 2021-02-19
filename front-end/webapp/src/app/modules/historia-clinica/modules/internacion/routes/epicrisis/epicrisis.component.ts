@@ -8,7 +8,6 @@ import { MapperService } from '@presentation/services/mapper.service';
 import { ActivatedRoute } from '@angular/router';
 import { BasicPatientDto, InternmentSummaryDto, PersonPhotoDto } from '@api-rest/api-model';
 import { map } from 'rxjs/operators';
-import { ContextService } from '@core/services/context.service';
 
 @Component({
   selector: 'app-epicrisis',

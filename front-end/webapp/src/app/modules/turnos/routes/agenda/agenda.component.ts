@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AppointmentDailyAmountDto, CompleteDiaryDto, DiaryOpeningHoursDto, MedicalCoverageDto } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { CalendarMonthViewBeforeRenderEvent, CalendarView, CalendarWeekViewBeforeRenderEvent, DAYS_OF_WEEK } from 'angular-calendar';
@@ -64,7 +64,6 @@ export class AgendaComponent implements OnInit, OnDestroy {
 	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
 
 	constructor(
-		private readonly cdr: ChangeDetectorRef,
 		private readonly dialog: MatDialog,
 		private readonly diaryService: DiaryService,
 		private readonly route: ActivatedRoute,

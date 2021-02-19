@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { SummaryHeader } from '@presentation/components/summary-card/summary-card.component';
 import { SIGNOS_VITALES } from '../../constants/summaries';
 import { VitalSingCurrentPrevious } from '@presentation/components/signo-vital-current-previous/signo-vital-current-previous.component';
-import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { Last2VitalSignsDto, VitalSignDto } from '@api-rest/api-model';
 import { momentParseDateTime } from '@core/utils/moment.utils';
 import { MatDialog } from '@angular/material/dialog';
@@ -24,7 +23,6 @@ export class SignosVitalesSummaryComponent implements OnInit {
 	signosVitales: VitalSingCurrentPrevious[] = [];
 
 	constructor(
-		private readonly internmentStateService: InternmentStateService,
 		public dialog: MatDialog
 	) { }
 

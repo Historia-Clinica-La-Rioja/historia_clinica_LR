@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { TriageService } from '@api-rest/services/triage.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { TriageAdministrativeDto, TriageAdultGynecologicalDto } from '@api-rest/api-model';
+import { TriageAdultGynecologicalDto } from '@api-rest/api-model';
 
 @Component({
 	selector: 'app-adult-gynecological-triage-dialog',

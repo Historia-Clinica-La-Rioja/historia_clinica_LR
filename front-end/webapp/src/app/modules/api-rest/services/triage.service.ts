@@ -8,7 +8,7 @@ import {
 	TriagePediatricDto
 } from '@api-rest/api-model';
 import { environment } from '@environments/environment';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 
 const URL_PREFIX = '/emergency-care/episodes';
 const URL_SUFIX = '/triage';

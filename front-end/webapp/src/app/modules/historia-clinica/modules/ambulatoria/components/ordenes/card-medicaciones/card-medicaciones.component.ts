@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MedicationInfoDto, PrescriptionDto } from '@api-rest/api-model';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -9,7 +9,6 @@ import {PrescripcionesService, PrescriptionTypes} from '../../../services/prescr
 import { MedicationStatusChange } from '../../../constants/prescripciones-masterdata';
 import { SuspenderMedicacionComponent } from '../../../dialogs/ordenes-prescripciones/suspender-medicacion/suspender-medicacion.component';
 import {FormBuilder, FormGroup, FormArray, AbstractControl} from '@angular/forms';
-import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
 import { PrescriptionItemData } from '../item-prescripciones/item-prescripciones.component';
 import { MEDICATION_STATUS } from './../../../constants/prescripciones-masterdata';
 import { PermissionsService } from '@core/services/permissions.service';
@@ -48,7 +47,6 @@ export class CardMedicacionesComponent implements OnInit {
 	constructor(
 		private readonly dialog: MatDialog,
 		private readonly formBuilder: FormBuilder,
-		private readonly requestMasterDataService: RequestMasterDataService,
 		private readonly permissionsService: PermissionsService,
 		private prescripcionesService: PrescripcionesService,
 		private snackBarService: SnackBarService,
