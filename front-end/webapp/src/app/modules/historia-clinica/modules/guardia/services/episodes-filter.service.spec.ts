@@ -12,7 +12,12 @@ describe('EpisodesFilterService', () => {
 		creationDate: null,
 		doctorsOffice: null,
 		id: null,
-		patient: null,
+		patient: {
+			id: 3,
+			patientMedicalCoverageId: null,
+			person: null,
+			typeId: null
+		},
 		state: null,
 		triage: {
 			color: 'Rojo',
@@ -27,7 +32,8 @@ describe('EpisodesFilterService', () => {
 
 	const filters = {
 		triage: 1,
-		emergencyCareType: 1
+		emergencyCareType: 1,
+		patientId: 3
 	};
 
 	it('it should return true if the episode passes the filter by triage', () => {
@@ -37,6 +43,11 @@ describe('EpisodesFilterService', () => {
 	it('it should return true if the episode does not passes the filter by emergency care type', () => {
 		expect(EpisodesFilterService.filterByEmergencyCareType(episode, filters)).toBe(false);
 	});
+
+	it('it should return true if the episode passes the filter by patient id', () => {
+		expect(EpisodesFilterService.filterByPatientId(episode, filters)).toBe(true);
+	});
+
 
 	beforeEach(async(() => {
 	  TestBed.configureTestingModule({

@@ -96,9 +96,15 @@
 					}
 				},
 				"filters": {
+					"FILTER_BY_PATIENT": "Filtrar por paciente",
+					"FIRST_NAME": "Nombre",
+					"LAST_NAME": "Apellido",
+					"NO_PATIENT": "Paciente sin definir",
+					"PATIENT_ID": "ID de paciente",
 					"RESULTS": "Resultado: {{amount}} episodios",
-					"URGENCY": "Nivel de urgencia",
-					"TYPE": "Tipo de guardia"
+					"TEMPORAL_PATIENT": "Paciente temporal",
+					"TYPE": "Tipo de guardia",
+					"URGENCY": "Nivel de urgencia"
 
 				},
 				"NEW_EPISODE": "Nuevo episodio",
