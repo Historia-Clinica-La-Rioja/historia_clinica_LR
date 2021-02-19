@@ -18,7 +18,7 @@ export class EpisodeStateService {
 
 	finalizarPorAusencia(episodeId: number): Observable<boolean> {
 		return this.emergencyCareEpisodeStateService
-			.changeState(episodeId, EstadosEpisodio.FINALIZADO_POR_AUSENCIA);
+			.changeState(episodeId, EstadosEpisodio.CON_ALTA_ADMINISTRATIVA);
 	}
 
 	cancelar(episodeId: number, doctorsOfficeId: number): Observable<boolean> {

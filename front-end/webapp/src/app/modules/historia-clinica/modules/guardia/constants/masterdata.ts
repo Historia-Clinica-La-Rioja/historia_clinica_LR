@@ -1,8 +1,8 @@
 export enum EstadosEpisodio {
 	EN_ATENCION = 1,
 	EN_ESPERA = 2,
-	FINALIZADO_POR_AUSENCIA = 3,
-	FINALIZADO_POR_ALTA = 4
+	CON_ALTA_ADMINISTRATIVA = 3,
+	CON_ALTA_MEDICA = 4
 }
 
 export enum Triages {

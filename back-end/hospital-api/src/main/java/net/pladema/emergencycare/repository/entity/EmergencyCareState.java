@@ -25,8 +25,8 @@ public class EmergencyCareState implements Serializable {
 
 		public static final short EN_ATENCION = 1;
 		public static final short EN_ESPERA = 2;
-		public static final short FINALIZADO_POR_AUSENCIA = 3;
-		public static final short FINALIZADO_POR_ALTA = 4;
+		public static final short CON_ALTA_ADMINISTRATIVA = 3;
+		public static final short CON_ALTA_MEDICA = 4;
 
 		@Id
 		@Column(name = "id")
