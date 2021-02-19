@@ -27,6 +27,7 @@ public class SourceType implements Serializable {
     public static final short OUTPATIENT = (short)1;
     public static final short RECIPE = (short)2;
     public static final short ORDER = (short)3;
+    public static final short EMERGENCY_CARE = (short)4;
 
     @Id
     @Column(name = "id", nullable = false)

@@ -173,3 +173,14 @@ databaseChangeLog:
                 sql: |-
                     UPDATE emergency_care_state SET description='Con alta administrativa' WHERE id=3;
                     UPDATE emergency_care_state SET description='Con alta médica' WHERE id=4;
+
+    - changeSet:        
+        id: emergency_care_source_type_and_document_type-data_update
+        comment: Carga de datos source_type y document type para el modulo de guardia
+        author: jlardapide
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-      
+                    INSERT INTO source_type VALUES (4, 'Guardia');
+                    INSERT INTO document_type VALUES (7, 'Guardia');
