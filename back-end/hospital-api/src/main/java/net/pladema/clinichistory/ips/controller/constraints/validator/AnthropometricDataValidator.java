@@ -14,8 +14,12 @@ public class AnthropometricDataValidator implements ConstraintValidator<Anthropo
     @Override
     public boolean isValid(ClinicalObservationDto clinicalObservationDto, ConstraintValidatorContext context){
         if (clinicalObservationDto != null && clinicalObservationDto.getValue() != null) {
-            int anthropometricValue = Integer.parseInt(clinicalObservationDto.getValue());
-            return anthropometricValue >= MIN_VALUE && anthropometricValue <= MAX_VALUE;
+            try {
+                int anthropometricValue = Integer.parseInt(clinicalObservationDto.getValue());
+                return anthropometricValue >= MIN_VALUE && anthropometricValue <= MAX_VALUE;
+            } catch (NumberFormatException exc) {
+                return false;
+            }
         }
         return true;
     }
