@@ -2,7 +2,7 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {HCEPersonalHistoryDto, HealthConditionNewConsultationDto, MasterDataInterface} from '@api-rest/api-model';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {SnackBarService} from '@presentation/services/snack-bar.service';
-import {MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {ConfirmDialogComponent} from '@core/dialogs/confirm-dialog/confirm-dialog.component';
 import {HealthConditionService} from '@api-rest/services/healthcondition.service';
 import {ProblemasNuevaConsultaService} from '../../modules/ambulatoria/services/problemas-nueva-consulta.service';
@@ -30,6 +30,7 @@ export class SolveProblemComponent implements OnInit {
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) data,
+		private dialogRef: MatDialogRef<SolveProblemComponent>,
 		private snackBarService: SnackBarService,
 		private formBuilder: FormBuilder,
 		private readonly dialog: MatDialog,
@@ -84,12 +85,12 @@ export class SolveProblemComponent implements OnInit {
 					this.outpatientConsultationService.solveProblem(this.problema, this.patientId).subscribe(
 						_ => {
 							this.snackBarService.showSuccess('ambulatoria.paciente.problemas.SUCCESS_CONFIRMAR_POPUP');
+							this.dialogRef.close(true);
 						},
 						_ => {
 							this.snackBarService.showError('ambulatoria.paciente.problemas.ERROR_CONFIRMAR_POPUP');
 						}
 					);
-					this.dialog.closeAll();
 				}
 			});
 		}

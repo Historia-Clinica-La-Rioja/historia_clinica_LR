@@ -78,27 +78,27 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 		this.hasNewConsultationEnabled$ = this.ambulatoriaSummaryFacadeService.hasNewConsultationEnabled$;
-		this.loadActiveProblems();
-		this.loadChronicProblems();
+		this.setActiveProblems$();
+		this.setChronicProblems$();
 		this.loadHospitalizationProblems();
 		this.loadSolvedProblems();
 		this.loadHistoricalProblems();
 	}
 
-	loadActiveProblems() {
+	setActiveProblems$() {
 		this.activeProblems$ = this.ambulatoriaSummaryFacadeService.activeProblems$.pipe(
+			map(this.formatProblemsDates)
+		);
+	}
+
+	setChronicProblems$() {
+		this.chronicProblems$ = this.ambulatoriaSummaryFacadeService.chronicProblems$.pipe(
 			map(this.formatProblemsDates)
 		);
 	}
 
 	loadSolvedProblems() {
 		this.solvedProblems$ = this.hceGeneralStateService.getSolvedProblems(this.patientId).pipe(
-			map(this.formatProblemsDates)
-		);
-	}
-
-	loadChronicProblems() {
-		this.chronicProblems$ = this.ambulatoriaSummaryFacadeService.chronicProblems$.pipe(
 			map(this.formatProblemsDates)
 		);
 	}
@@ -176,11 +176,10 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 				problema,
 				patientId: this.patientId
 			}
-		}).afterClosed().subscribe(submit => {
-			if (!submit) {
-				this.loadChronicProblems();
+		}).afterClosed().subscribe(submitted => {
+			if (submitted) {
+				this.ambulatoriaSummaryFacadeService.setFieldsToUpdate({problems: true});
 				this.loadSolvedProblems();
-				this.loadActiveProblems();
 			}});
 	}
 
