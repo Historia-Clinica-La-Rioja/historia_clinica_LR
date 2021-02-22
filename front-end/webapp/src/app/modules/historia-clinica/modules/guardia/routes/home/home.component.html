@@ -82,6 +82,12 @@
 									<mat-icon>search</mat-icon>
 								</button>
 							</div>
+							<mat-error
+									*ngIf="hasError(filterService.getForm(), 'maxlength', 'firstName')"
+									translate="forms.MAX_LENGTH_ERROR"
+									[translateParams]=" { max: getError(filterService.getForm(), 'maxlength', 'firstName').requiredLength }"
+							>
+							</mat-error>
 						</mat-form-field>
 
 						<mat-form-field fxFlexFill appearance="outline">
@@ -98,6 +104,12 @@
 									<mat-icon>search</mat-icon>
 								</button>
 							</div>
+							<mat-error
+									*ngIf="hasError(filterService.getForm(), 'maxlength', 'lastName')"
+									translate="forms.MAX_LENGTH_ERROR"
+									[translateParams]=" { max: getError(filterService.getForm(), 'maxlength', 'lastName').requiredLength }"
+							>
+							</mat-error>
 						</mat-form-field>
 
 						<div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px"

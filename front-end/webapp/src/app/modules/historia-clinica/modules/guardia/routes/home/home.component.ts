@@ -26,6 +26,7 @@ import { EpisodeFilterService } from '../../services/episode-filter.service';
 import { TriageCategoryDto, TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
 import { FormBuilder } from '@angular/forms';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
+import { getError, hasError } from '@core/utils/form.utils';
 
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 
@@ -35,6 +36,9 @@ const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 	styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
+
+	getError = getError;
+	hasError = hasError;
 
 	constructor(
 		private router: Router,
@@ -167,12 +171,15 @@ export class HomeComponent implements OnInit {
 	}
 
 	filter(): void {
-		this.episodes = this.episodesOriginal.filter(episode => this.filterService.filter(episode));
+		if (this.filterService.isValid()) {
+			this.episodes = this.episodesOriginal
+				.filter(episode => this.filterService.filter(episode));
+		}
 	}
 
 	clear(control: string): void {
 		this.filterService.clear(control);
-		this.episodes = this.episodesOriginal.filter(episode => this.filterService.filter(episode));
+		this.filter();
 	}
 
 	private completePatientPhotos() {

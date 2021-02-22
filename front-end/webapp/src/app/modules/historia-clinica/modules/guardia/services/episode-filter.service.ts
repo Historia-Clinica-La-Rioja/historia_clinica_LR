@@ -1,4 +1,4 @@
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Episode } from '../routes/home/home.component';
 import { TriageCategoryDto, TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { MasterDataInterface } from '@api-rest/api-model';
 import { tap } from 'rxjs/operators';
 import { atLeastOneValueInFormGroup } from '@core/utils/form.utils';
+import { PERSON } from '@core/constants/validation-constants';
 
 const NO_INFO: MasterDataInterface<number> = {
 	id: -1,
@@ -23,8 +24,8 @@ export class EpisodeFilterService {
 			triage: [null],
 			emergencyCareType: [null],
 			patientId: [null],
-			firstName: [null],
-			lastName: [null],
+			firstName: [null, Validators.maxLength(PERSON.MAX_LENGTH.firstName)],
+			lastName: [null, Validators.maxLength(PERSON.MAX_LENGTH.lastName)],
 			temporal: [null],
 			noPatient: [null]
 		});
@@ -94,6 +95,10 @@ export class EpisodeFilterService {
 
 	hasFilters(): boolean {
 		return atLeastOneValueInFormGroup(this.form);
+	}
+
+	isValid(): boolean {
+		return this.form.valid;
 	}
 
 	getTriageCategories(): Observable<TriageCategoryDto[]> {
