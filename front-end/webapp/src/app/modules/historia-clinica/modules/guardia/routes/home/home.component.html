@@ -10,9 +10,15 @@
 	<section id="body">
 		<app-filters-card [cardTitle]="'guardia.home.episodes.TITLE'">
 
-			<span results-amount translate="guardia.home.episodes.filters.RESULTS"
-				  [translateParams]="{ amount: episodes?.length || 0 }">
+			<span results-amount *ngIf="episodes?.length === 1 else results"
+				translate="guardia.home.episodes.filters.RESULT_ONE_EPISODE">
 			</span>
+
+			<ng-template #results>
+				<span translate="guardia.home.episodes.filters.RESULTS"
+					  [translateParams]="{ amount: episodes?.length || 0 }">
+				</span>
+			</ng-template>
 
 			<div filters>
 				<div fxLayout="column" style="max-width: 300px">

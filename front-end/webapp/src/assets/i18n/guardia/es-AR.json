@@ -102,6 +102,7 @@
 					"NO_PATIENT": "Paciente sin definir",
 					"PATIENT_ID": "ID de paciente",
 					"RESULTS": "Resultado: {{amount}} episodios",
+					"RESULT_ONE_EPISODE": "Resultado: 1 episodio",
 					"TEMPORAL_PATIENT": "Paciente temporal",
 					"TYPE": "Tipo de guardia",
 					"URGENCY": "Nivel de urgencia"
