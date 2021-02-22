@@ -6,8 +6,6 @@ import { PatientProfileComponent } from './routes/patient-profile/patient-profil
 import { AmbulatoriaPacienteComponent } from './routes/ambulatoria-paciente/ambulatoria-paciente.component';
 import { NuevaConsultaComponent } from './routes/nueva-consulta/nueva-consulta.component';
 import { ERole } from '@api-rest/api-model';
-import { MOCKS_ORDERS } from './constants/mock-routers';
-import { mockRouters } from '@presentation/utils/mock-routers.utils';
 
 const routes: Routes = [
 	{
@@ -35,7 +33,6 @@ const routes: Routes = [
 				component: NuevaConsultaComponent,
 				data: {problemaReadOnly: true}
 			},
-			...mockRouters(MOCKS_ORDERS)
 		],
 		canActivate: [RoleGuard],
 		data: { allowedRoles: [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO] },

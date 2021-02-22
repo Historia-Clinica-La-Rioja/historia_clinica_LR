@@ -33,9 +33,6 @@ public enum AppFeature implements Feature {
     @Label("Indica si esta habilitado el modulo de Guardia")
     HABILITAR_MODULO_GUARDIA,
 
-    @Label("Indica si esta habilitado la pestaña de ordenes y preescripciones")
-    HABILITAR_ORDENES_PRESCRIPCIONES,
-
     @Label("Indica si esta habilitado el menu configuracion")
     HABILITAR_CONFIGURACION;
 

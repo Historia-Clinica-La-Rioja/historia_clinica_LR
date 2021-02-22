@@ -10,14 +10,10 @@ import {NuevaConsultaDockPopupComponent} from '../../dialogs/nueva-consulta-dock
 import {DockPopupRef} from '@presentation/services/dock-popup-ref';
 import {AmbulatoriaSummaryFacadeService} from '../../services/ambulatoria-summary-facade.service';
 import {HistoricalProblemsFacadeService} from '../../services/historical-problems-facade.service';
-import {FeatureFlagService} from '@core/services/feature-flag.service';
 import {BasicPatientDto, OrganizationDto, PatientSummaryDto, PersonPhotoDto} from '@api-rest/api-model';
 import {InteroperabilityBusService} from '@api-rest/services/interoperability-bus.service';
 import {SnackBarService} from '@presentation/services/snack-bar.service';
 import { MatTabChangeEvent } from '@angular/material/tabs';
-import {
-	AppFeature,
-} from '@api-rest/api-model';
 import { MedicacionesService } from '../../services/medicaciones.service';
 
 
@@ -51,7 +47,6 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		private readonly mapperService: MapperService,
 		private readonly dockPopupService: DockPopupService,
 		private readonly ambulatoriaSummaryFacadeService: AmbulatoriaSummaryFacadeService,
-		private readonly featureFlagService: FeatureFlagService,
 		private readonly interoperabilityBusService: InteroperabilityBusService,
 		private readonly snackBarService: SnackBarService,
 		private medicacionesService: MedicacionesService,
@@ -63,10 +58,6 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 			this.patient$ = this.patientService.getPatientBasicData<BasicPatientDto>(this.patientId).pipe(
 				map(patient => this.mapperService.toPatientBasicData(patient))
 			);
-
-			this.featureFlagService.isActive(AppFeature.HABILITAR_ORDENES_PRESCRIPCIONES).subscribe(isOn => {
-				this.showOrders = isOn;
-			});
 
 			this.ambulatoriaSummaryFacadeService.setIdPaciente(this.patientId);
 			this.hasNewConsultationEnabled$ = this.ambulatoriaSummaryFacadeService.hasNewConsultationEnabled$;
