@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.emergencycare.service.domain.enums.EEmergencyCareType;
 import net.pladema.emergencycare.triage.repository.domain.TriageVo;
 
 import java.time.LocalDateTime;
@@ -73,6 +74,15 @@ public class TriageBo {
         this.perfusionId = triageVo.getPerfusionId();
         this.createdOn = triageVo.getCreatedOn();
         this.vitalSignIds = triageVo.getVitalSignIds();
+    }
+
+    public boolean isAdultGynecological() {
+        return EEmergencyCareType.ADULTO.getId().equals(emergencyCareTypeId) ||
+                EEmergencyCareType.GINECOLOGICA.getId().equals(emergencyCareTypeId);
+    }
+
+    public boolean isPediatric() {
+        return EEmergencyCareType.PEDIATRIA.getId().equals(emergencyCareTypeId);
     }
 
 }
