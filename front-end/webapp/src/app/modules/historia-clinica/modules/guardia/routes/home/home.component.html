@@ -22,7 +22,7 @@
 
 			<div filters>
 				<div fxLayout="column" style="max-width: 300px">
-					<form [formGroup]="filterService.getForm()" (ngSubmit)="filter()">
+					<form [formGroup]="filterService.getForm()">
 						<mat-form-field fxFlexFill appearance="outline">
 							<mat-label translate="guardia.home.episodes.filters.URGENCY"></mat-label>
 							<mat-select id="triage-filter" formControlName="triage" (selectionChange)="filter()">
@@ -62,14 +62,14 @@
 
 						<mat-form-field fxFlexFill appearance="outline">
 							<mat-label translate="guardia.home.episodes.filters.PATIENT_ID"></mat-label>
-							<input id="patient-id-filter" matInput type="number" formControlName="patientId">
+							<input id="patient-id-filter" matInput type="number" formControlName="patientId" (keydown.enter)="filter()">
 							<div matSuffix fxLayout="row">
 								<button *ngIf="filterService.getForm().value.patientId"
 										id="clear-patientId-filter" type="button" mat-icon-button color="warn"
 										(click)="clear('patientId'); $event.stopPropagation()">
 									<mat-icon>close</mat-icon>
 								</button>
-								<button id="search-patientId-filter" type="submit" mat-icon-button>
+								<button id="search-patientId-filter" type="button" mat-icon-button (click)="filter(); $event.stopPropagation()">
 									<mat-icon>search</mat-icon>
 								</button>
 							</div>
@@ -77,14 +77,14 @@
 
 						<mat-form-field fxFlexFill appearance="outline">
 							<mat-label translate="guardia.home.episodes.filters.FIRST_NAME"></mat-label>
-							<input id="first-name-filter" matInput type="text" formControlName="firstName">
+							<input id="first-name-filter" matInput type="text" formControlName="firstName" (keydown.enter)="filter()">
 							<div matSuffix fxLayout="row">
 								<button *ngIf="filterService.getForm().value.firstName"
 										id="clear-first-name-filter" type="button" mat-icon-button color="warn"
 										(click)="clear('firstName'); $event.stopPropagation()">
 									<mat-icon>close</mat-icon>
 								</button>
-								<button id="search-first-name-filter" type="submit" mat-icon-button>
+								<button id="search-first-name-filter" type="button" mat-icon-button (click)="filter(); $event.stopPropagation()">
 									<mat-icon>search</mat-icon>
 								</button>
 							</div>
@@ -98,15 +98,14 @@
 
 						<mat-form-field fxFlexFill appearance="outline">
 							<mat-label translate="guardia.home.episodes.filters.LAST_NAME"></mat-label>
-							<input id="last-name-filter" matInput type="text" formControlName="lastName">
+							<input id="last-name-filter" matInput type="text" formControlName="lastName" (keydown.enter)="filter()">
 							<div matSuffix fxLayout="row">
 								<button *ngIf="filterService.getForm().value.lastName"
 										id="clear-last-name-filter" type="button" mat-icon-button color="warn"
 										(click)="clear('lastName'); $event.stopPropagation()">
 									<mat-icon>close</mat-icon>
 								</button>
-								<button id="search-last-name-filter" type="button" mat-icon-button
-										(click)="filter(); $event.stopPropagation()">
+								<button id="search-last-name-filter" type="button" mat-icon-button (click)="filter(); $event.stopPropagation()">
 									<mat-icon>search</mat-icon>
 								</button>
 							</div>
