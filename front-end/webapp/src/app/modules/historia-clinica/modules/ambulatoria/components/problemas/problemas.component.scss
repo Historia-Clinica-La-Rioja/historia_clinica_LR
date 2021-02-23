@@ -1,4 +1,7 @@
 @import '../../../../../../../assets/styles/mixins.scss';
+@import '../../../../../../../assets/styles/mat-mixins';
+
+@include mat-form-field-background-white;
 
 div.spinner {
 	@include centered-spinner;
@@ -28,10 +31,17 @@ div.spinner {
     padding: 0px;
 }
 
+.mat-list-item {
+	padding-bottom: 5px;
+	padding-top: 5px;
+}
+
 section.problems {
-    width: 70%;
     padding: 20px;
-    margin-top: 0px;
+    margin-top: 0;
+	max-height: 80vh;
+	overflow-y: auto;
+	word-break: break-word;
 }
 
 .problem {
@@ -46,3 +56,4 @@ section.problems {
 h3 {
     margin: 0px;
 }
+

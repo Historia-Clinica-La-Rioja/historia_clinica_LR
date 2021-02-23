@@ -6,117 +6,125 @@
 	<ng-template #noInfo>
 		<app-no-data></app-no-data>
 	</ng-template>
-	<section id="problemas" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
-			<div fxFlex="25%">
-				<app-summary-card id="active_problems" [header]="activos" [editable]="false">
-					<mat-list id="lista-problemas-activos" *ngIf="(activeProblems$ | async )?.length > 0 else noInfo">
-						<div fxLayout="row" *ngFor="let problem of (activeProblems$ | async)">
-							<mat-list-item>
-								<div (click)="onProblemClick(problem)" fxFlex="100%">
-									<span mat-line class="capitalize-first-letter">
-										{{ problem.snomed.pt }}
-									</span>
-									<span mat-line class="mat-body">
-										{{problem.startDate }}
-									</span>
-								</div>
-								<button *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']" mat-icon-button [matMenuTriggerFor]="menu" >
-									<mat-icon>more_vert</mat-icon>
-								</button>
-								<mat-menu #menu="matMenu">
-									<button *ngIf="hasNewConsultationEnabled$ | async" mat-menu-item (click)="openNuevaConsulta(problem)">
-										<span [translate]="'ambulatoria.paciente.nueva-consulta.TITLE_MENU'"></span>
-									</button>
-									<button mat-menu-item (click)="solveProblemPopUp(problem)">
-										<span [translate]="'ambulatoria.paciente.problemas.END'"></span>
-									</button>
-								</mat-menu>
+	<section id="problemas">
 
-							</mat-list-item>
-							<mat-divider></mat-divider>
-						</div>
-					</mat-list>
-				</app-summary-card>
-			</div>
-			<div fxFlex="25%">
-				<app-summary-card id="chronic_problems" [header]="cronicos" [editable]="false">
-					<mat-list id="lista-problemas-cronicos" *ngIf="(chronicProblems$ | async)?.length > 0 else noInfo">
-						<div fxLayout="row" *ngFor="let problem of (chronicProblems$ | async)">
-							<mat-list-item>
-								<div (click)="onProblemClick(problem)" fxFlex="100%">
-									<span mat-line class="capitalize-first-letter">
-										{{ problem.snomed.pt}}
-									</span>
-									<span mat-line class="mat-body">
-										{{problem.startDate }}
-									</span>
-								</div>
-
-								<button *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']" mat-icon-button [matMenuTriggerFor]="menu" >
-									<mat-icon>more_vert</mat-icon>
-								</button>
-								<mat-menu #menu="matMenu">
-									<button *ngIf="hasNewConsultationEnabled$ | async" mat-menu-item
-											(click)="openNuevaConsulta(problem)">
-										<span [translate]="'ambulatoria.paciente.nueva-consulta.TITLE_MENU'"></span>
+		<div fxLayout="column" fxLayoutGap="20px">
+			<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
+				<div fxFlex="50%">
+					<app-summary-card id="active_problems" [header]="activos" [editable]="false">
+						<mat-list id="lista-problemas-activos" *ngIf="(activeProblems$ | async )?.length > 0 else noInfo">
+							<div fxLayout="row" *ngFor="let problem of (activeProblems$ | async)">
+								<mat-list-item>
+									<div (click)="filterByProblemOnProblemClick(problem)" fxFlex="100%">
+										<span mat-line class="capitalize-first-letter">
+											{{ problem.snomed.pt }}
+										</span>
+										<span mat-line class="mat-body">
+											{{problem.startDate }}
+										</span>
+									</div>
+									<button *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']" mat-icon-button [matMenuTriggerFor]="menu" >
+										<mat-icon>more_vert</mat-icon>
 									</button>
-									<button mat-menu-item (click)="solveProblemPopUp(problem)">
-										<span [translate]="'ambulatoria.paciente.problemas.END'"></span>
-									</button>
-								</mat-menu>
+									<mat-menu #menu="matMenu">
+										<button *ngIf="hasNewConsultationEnabled$ | async" mat-menu-item (click)="openNuevaConsulta(problem)">
+											<span [translate]="'ambulatoria.paciente.nueva-consulta.TITLE_MENU'"></span>
+										</button>
+										<button mat-menu-item (click)="solveProblemPopUp(problem)">
+											<span [translate]="'ambulatoria.paciente.problemas.END'"></span>
+										</button>
+									</mat-menu>
 
-							</mat-list-item>
-							<mat-divider></mat-divider>
-						</div>
-					</mat-list>
-				</app-summary-card>
-			</div>
-			<div fxFlex="25%">
-				<app-summary-card id="solved_problems" [header]="resueltos" [editable]="false">
-					<mat-list id="lista-problemas-resueltos" *ngIf="(solvedProblems$ | async)?.length > 0 else noInfo">
-						<div fxLayout="row" *ngFor="let problem of (solvedProblems$ | async)">
-							<mat-list-item>
-								<div (click)="onProblemClick(problem)" fxFlex="100%">
+								</mat-list-item>
+								<mat-divider></mat-divider>
+							</div>
+						</mat-list>
+					</app-summary-card>
+				</div>
+				<div fxFlex="50%">
+					<app-summary-card id="chronic_problems" [header]="cronicos" [editable]="false">
+						<mat-list id="lista-problemas-cronicos" *ngIf="(chronicProblems$ | async)?.length > 0 else noInfo">
+							<div fxLayout="row" *ngFor="let problem of (chronicProblems$ | async)">
+								<mat-list-item>
+									<div (click)="filterByProblemOnProblemClick(problem)" fxFlex="100%">
 									<span mat-line class="capitalize-first-letter">
 										{{ problem.snomed.pt}}
 									</span>
-									<span mat-line class="mat-body">
+										<span mat-line class="mat-body">
 										{{problem.startDate }}
 									</span>
-								</div>
-							</mat-list-item>
-							<mat-divider></mat-divider>
-						</div>
-					</mat-list>
-				</app-summary-card>
+									</div>
+
+									<button *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']" mat-icon-button [matMenuTriggerFor]="menu" >
+										<mat-icon>more_vert</mat-icon>
+									</button>
+									<mat-menu #menu="matMenu">
+										<button *ngIf="hasNewConsultationEnabled$ | async" mat-menu-item
+												(click)="openNuevaConsulta(problem)">
+											<span [translate]="'ambulatoria.paciente.nueva-consulta.TITLE_MENU'"></span>
+										</button>
+										<button mat-menu-item (click)="solveProblemPopUp(problem)">
+											<span [translate]="'ambulatoria.paciente.problemas.END'"></span>
+										</button>
+									</mat-menu>
+
+								</mat-list-item>
+								<mat-divider></mat-divider>
+							</div>
+						</mat-list>
+					</app-summary-card>
+				</div>
 			</div>
-			<div fxFlex="25%">
-				<app-summary-card id="hospitalization_problems" [header]="internacion" [editable]="false">
-					<mat-list id="lista-problemas-hospitalization" *ngIf="(hospitalizationProblems$ | async)?.length > 0 else noInfo">
-						<div fxLayout="row" *ngFor="let problem of (hospitalizationProblems$ | async)">
-							<mat-list-item>
-								<div>
+
+			<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
+				<div fxFlex="50%">
+					<app-summary-card id="solved_problems" [header]="resueltos" [editable]="false">
+						<mat-list id="lista-problemas-resueltos" *ngIf="(solvedProblems$ | async)?.length > 0 else noInfo">
+							<div fxLayout="row" *ngFor="let problem of (solvedProblems$ | async)">
+								<mat-list-item>
+									<div (click)="filterByProblemOnProblemClick(problem)" fxFlex="100%">
+									<span mat-line class="capitalize-first-letter">
+										{{ problem.snomed.pt}}
+									</span>
+										<span mat-line class="mat-body">
+										{{problem.startDate }}
+									</span>
+									</div>
+								</mat-list-item>
+								<mat-divider></mat-divider>
+							</div>
+						</mat-list>
+					</app-summary-card>
+				</div>
+				<div fxFlex="50%">
+					<app-summary-card id="hospitalization_problems" [header]="internacion" [editable]="false" >
+						<mat-list id="lista-problemas-hospitalization" *ngIf="(hospitalizationProblems$ | async)?.length > 0 else noInfo">
+							<div fxLayout="row" *ngFor="let problem of (hospitalizationProblems$ | async)">
+								<mat-list-item>
+									<div>
 									<span mat-line class="capitalize-first-letter">
 										{{ problem.mainDiagnose.snomed.pt }}
 									</span>
-									<span mat-line class="mat-body">
+										<span mat-line class="mat-body">
 										{{ problem.entryDate }} - {{ problem.dischargeDate? problem.dischargeDate : "actualmente internado" }}
 									</span>
-								</div>
-								<button *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO']" mat-icon-button [matMenuTriggerFor]="menu" >
-									<mat-icon>more_vert</mat-icon>
-								</button>
-								<mat-menu #menu="matMenu">
-									<button mat-menu-item (click)="goToHospitalizationEpisode(problem)">
-										<span [translate]="'ambulatoria.paciente.problemas.ACCEDER'"></span>
+									</div>
+									<button *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO']" mat-icon-button [matMenuTriggerFor]="menu" >
+										<mat-icon>more_vert</mat-icon>
 									</button>
-								</mat-menu>
-							</mat-list-item>
-							<mat-divider></mat-divider>
-						</div>
-					</mat-list>
-				</app-summary-card>
+									<mat-menu #menu="matMenu">
+										<button mat-menu-item (click)="goToHospitalizationEpisode(problem)">
+											<span [translate]="'ambulatoria.paciente.problemas.ACCEDER'"></span>
+										</button>
+									</mat-menu>
+								</mat-list-item>
+								<mat-divider></mat-divider>
+							</div>
+						</mat-list>
+					</app-summary-card>
+				</div>
 			</div>
+		</div>
 	</section>
 
 	<section id="historical-problems" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="space-between start">
@@ -124,7 +132,7 @@
 		<mat-card id="historical-problems-card">
 			<mat-card-content>
 				<div fxLayout="row" fxLayout.xs="column">
-					<div id="filters" class="filter-panel">
+					<div id="filters" class="filter-panel" fxFlex="30%">
 						<h2 class="page-title" [translate]="'ambulatoria.paciente.problemas.historical-problems.HISTORICAL_TITLE'"></h2>
 						<div fxLayout="row" fxLayoutAlign="space-between start">
 							<mat-card-subtitle>
@@ -136,7 +144,7 @@
 						</div>
 						<app-historical-problems-filters fxShow="true" [fxShow.xs]="hideFilterPanel"></app-historical-problems-filters>
 					</div>
-					<section class="problems" id="historical-problem-mapping" *ngIf="historicalProblemsList && historicalProblemsList.length">
+					<section fxFlex="70%" class="problems" id="historical-problem-mapping" *ngIf="historicalProblemsList && historicalProblemsList.length">
 						<div class="problem" fxLayout="row" fxLayoutGap="15px" *ngFor="let historicalProblem of historicalProblemsList">
 
 							<mat-icon mat-list-icon fontSet="material-icons-outlined" color="primary">assignment</mat-icon>
@@ -179,7 +187,7 @@
 
 								<div *ngIf="historicalProblem.consultationEvolutionNote">
 									<h3 class="mat-h2 primary" [translate]="'ambulatoria.paciente.problemas.historical-problems.EVOLUTION_NOTE'"></h3>
-									<div class="mat-body capitalize-first-letter">{{historicalProblem.consultationEvolutionNote}}</div>
+									<p class="mat-body capitalize-first-letter">{{historicalProblem.consultationEvolutionNote}}</p>
 								</div>
 
 								<mat-divider id="mat-divider" inset></mat-divider>

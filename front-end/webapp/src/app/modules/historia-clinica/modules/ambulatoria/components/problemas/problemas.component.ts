@@ -183,7 +183,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 			}});
 	}
 
-	onProblemClick(problem: HCEPersonalHistoryDto) {
+	filterByProblemOnProblemClick(problem: HCEPersonalHistoryDto) {
 		this.historicalProblemsFacadeService.sendHistoricalProblemsFilter({
 			specialty: null,
 			professional: null,
