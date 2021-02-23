@@ -20,7 +20,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/fhir")
-@ConditionalOnProperty(value="ws.renaper.enabled", havingValue = "true")
+@ConditionalOnProperty(value="ws.federar.enabled", havingValue = "true")
 public class DocumentReferenceProvider implements IResourceProvider {
 
 

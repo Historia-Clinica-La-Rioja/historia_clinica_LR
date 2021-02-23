@@ -30,7 +30,7 @@ import java.util.function.Predicate;
 
 @RestController
 @RequestMapping("/masterfile-federacion-service/Patient")
-@ConditionalOnProperty(value="ws.renaper.enabled", havingValue = "true")
+@ConditionalOnProperty(value="ws.federar.enabled", havingValue = "true")
 @Api(value = "Fhir Patient Provider", tags = {"Fhir Patient Provider"})
 public class PatientProvider {
 

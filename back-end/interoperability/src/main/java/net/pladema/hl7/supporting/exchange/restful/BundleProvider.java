@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/fhir")
-@ConditionalOnProperty(value="ws.renaper.enabled", havingValue = "true")
+@ConditionalOnProperty(value="ws.federar.enabled", havingValue = "true")
 public class BundleProvider implements IResourceProvider {
 
     private final BundleResource bundleResource;

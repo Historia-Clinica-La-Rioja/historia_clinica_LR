@@ -41,7 +41,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-@ConditionalOnProperty(value="ws.renaper.enabled", havingValue = "true")
+@ConditionalOnProperty(value="ws.federar.enabled", havingValue = "true")
 public class BundleResource extends IResourceFhir {
 
     private final DocumentReferenceResource documentReferenceResource;

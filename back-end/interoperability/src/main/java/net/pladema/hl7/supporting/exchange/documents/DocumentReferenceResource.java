@@ -16,7 +16,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 @Service
-@ConditionalOnProperty(value="ws.renaper.enabled", havingValue = "true")
+@ConditionalOnProperty(value="ws.federar.enabled", havingValue = "true")
 public class DocumentReferenceResource extends IResourceFhir {
 
     @Autowired
