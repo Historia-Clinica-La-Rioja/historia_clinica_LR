@@ -109,16 +109,16 @@
 
 
 		<h2 [translate]="'Intervención policial'"></h2>
-		<mat-radio-group name="policeIntervention" id="policeInterventionRadio" (change)="onChange($event)">
-			<mat-radio-button id="policeIntervention" value='true' [checked]="hasPoliceIntervention">
+		<mat-radio-group formControlName="hasPoliceIntervention" name="policeIntervention" id="policeInterventionRadio" (change)="onChange()">
+			<mat-radio-button id="policeIntervention" [value]="true" [checked]="form.value.hasPoliceIntervention">
 				Si
 			</mat-radio-button>
-			<mat-radio-button id="withoutPoliceIntervention" value='false'>
+			<mat-radio-button id="withoutPoliceIntervention" [value]="false">
 				No
 			</mat-radio-button>
 		</mat-radio-group>
 
-		<ng-container *ngIf="hasPoliceIntervention">
+		<ng-container *ngIf="form.value.hasPoliceIntervention">
 			<span translate="guardia.administrative_admision.form.police_intervention.CALL_DETAIL"></span>
 
 			<div fxLayout="row" fxLayoutGap="5px">

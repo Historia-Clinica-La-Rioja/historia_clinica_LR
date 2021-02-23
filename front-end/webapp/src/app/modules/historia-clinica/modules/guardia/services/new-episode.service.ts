@@ -36,6 +36,7 @@ export class NewEpisodeService {
 			entranceTypeId: this.administrativeAdmission.emergencyCareEntranceTypeId,
 			ambulanceCompanyId: this.administrativeAdmission.ambulanceCompanyId,
 			doctorsOfficeId: this.administrativeAdmission.doctorsOfficeId,
+			hasPoliceIntervention: this.administrativeAdmission.hasPoliceIntervention,
 			policeInterventionDetails,
 		};
 		return newEmergencyCareDto;
@@ -91,6 +92,7 @@ export interface AdministrativeAdmission {
 	doctorsOfficeId: number;
 	emergencyCareEntranceTypeId: number;
 	ambulanceCompanyId: string;
+	hasPoliceIntervention: boolean;
 	callDate: Moment;
 	callTime: string;
 	plateNumber: string;

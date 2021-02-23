@@ -50,7 +50,6 @@ export class AdmisionAdministrativaComponent implements OnInit {
 	patientMedicalCoverages: PatientMedicalCoverageDto[];
 	emergencyCareEntranceType$: Observable<MasterDataInterface<number>[]>;
 	emergencyCareType$: Observable<MasterDataInterface<number>[]>;
-	hasPoliceIntervention = false;
 	form: FormGroup;
 	today: Date = new Date();
 
@@ -94,6 +93,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 			emergencyCareEntranceTypeId: [null],
 			doctorsOfficeId: [null],
 			ambulanceCompanyId: [null, Validators.maxLength(AMBULANCE.COMPANY_ID.max_length)],
+			hasPoliceIntervention: [null],
 			callDate: [null],
 			callTime: [null],
 			plateNumber: [null, Validators.maxLength(POLICE_OFFICER.PLATE_NUMBER.max_length)],
@@ -110,8 +110,6 @@ export class AdmisionAdministrativaComponent implements OnInit {
 				return;
 			}
 			this.form.setValue(administrativeAdmission);
-
-			this.hasPoliceIntervention = this.newEpisodeService.hasPoliceIntervention();
 
 			if (administrativeAdmission?.patientId) {
 				this.loadPatient(administrativeAdmission.patientId);
@@ -188,9 +186,8 @@ export class AdmisionAdministrativaComponent implements OnInit {
 
 	}
 
-	onChange(mrChange): void {
-		this.hasPoliceIntervention = eval(mrChange.value);
-		if (!this.hasPoliceIntervention) {
+	onChange(): void {
+		if (!this.form.controls.hasPoliceIntervention.value) {
 			this.form.controls.callDate.setValue(null);
 			this.form.controls.callTime.setValue(null);
 			this.form.controls.plateNumber.setValue(null);
