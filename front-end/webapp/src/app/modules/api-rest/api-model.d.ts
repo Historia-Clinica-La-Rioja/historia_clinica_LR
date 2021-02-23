@@ -541,6 +541,7 @@ export interface EmergencyCareDto extends Serializable {
     ambulanceCompanyId: string;
     emergencyCareType: MasterDataDto;
     entranceType: MasterDataDto;
+    hasPoliceIntervention: boolean;
     patient: EmergencyCarePatientDto;
     policeInterventionDetails: PoliceInterventionDetailsDto;
     reasons: SnomedDto[];

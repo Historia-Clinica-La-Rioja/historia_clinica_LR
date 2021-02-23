@@ -24,6 +24,8 @@ public abstract class EmergencyCareDto implements Serializable {
 
     private MasterDataDto entranceType;
 
+    private Boolean hasPoliceIntervention;
+
     private PoliceInterventionDetailsDto policeInterventionDetails;
 
     private String ambulanceCompanyId;

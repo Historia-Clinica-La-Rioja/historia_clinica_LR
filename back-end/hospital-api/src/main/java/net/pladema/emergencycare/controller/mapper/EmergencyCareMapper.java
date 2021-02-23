@@ -30,6 +30,7 @@ public interface EmergencyCareMapper {
     @Mapping(target = "policeInterventionDetails", source = "policeInterventionDetails", qualifiedByName = "toPoliceInterventionDto")
     @Mapping(target = "reasons", source = "reasons", qualifiedByName = "fromListReasonBo")
     @Mapping(target = "creationDate", source = "createdOn")
+    @Mapping(target = "hasPoliceIntervention", source = "hasPoliceIntervention")
     ResponseEmergencyCareDto toResponseEmergencyCareDto(EmergencyCareBo emergencyCareBo);
 
     @AfterMapping

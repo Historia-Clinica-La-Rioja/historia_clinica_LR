@@ -2,8 +2,8 @@
 
 	<div fxLayout="row" fxLayoutAlign="space-between">
 		<h1 translate="guardia.episode.TITLE"></h1>
-		<button *ngIf="episodeState === enAtencion" id="cancel-attention" mat-raised-button color="primary" (click)="cancelAttention()"
-			style="height: 90%;">
+		<button *ngIf="episodeState === enAtencion" id="cancel-attention" mat-raised-button color="primary"
+			(click)="cancelAttention()" style="height: 90%;">
 			{{ 'guardia.episode.CANCEL_ATTENTION' | translate | uppercase }}
 		</button>
 	</div>
@@ -51,31 +51,48 @@
 
 				<div fxLayout="column" fxLayoutGap="1px">
 					<span class="grid-title" translate="guardia.episode.administrative.POLICE_INTERVENTION"></span>
-					<div *ngIf="responseEmergencyCare?.policeInterventionDetails as policeInterventionDetails else no">
-						<div fxLayout="row" fxLayoutGap="3px" class="content-primary">
-							<span>
-								{{policeInterventionDetails.firstName}}
-								{{policeInterventionDetails.lastName}}</span>
-							<div *ngIf="policeInterventionDetails.plateNumber" fxLayoutGap="3px">
-								<label *ngIf="policeInterventionDetails.firstName || policeInterventionDetails.lastName">•</label>
-								<span>Placa. Nº {{policeInterventionDetails.plateNumber}}</span>
+					<div
+						*ngIf="(responseEmergencyCare?.hasPoliceIntervention == null || responseEmergencyCare?.hasPoliceIntervention == undefined) else withInfo">
+						<span class="content-primary" translate="guardia.NO_INFO"></span>
+					</div>
+					<ng-template #withInfo>
+						<div *ngIf="responseEmergencyCare?.hasPoliceIntervention === true else no">
+							<div
+								*ngIf="responseEmergencyCare.policeInterventionDetails as policeInterventionDetails else yes">
+								<div fxLayout="row" fxLayoutGap="3px" class="content-primary">
+									<span>
+										{{policeInterventionDetails.firstName}}
+										{{policeInterventionDetails.lastName}}</span>
+									<div *ngIf="policeInterventionDetails.plateNumber" fxLayoutGap="3px">
+										<label
+											*ngIf="policeInterventionDetails.firstName || policeInterventionDetails.lastName">•</label>
+										<span>Placa. Nº {{policeInterventionDetails.plateNumber}}</span>
+									</div>
+								</div>
+								<div fxLayout="row" fxLayoutGap="3px" class="content-secondary">
+									<span *ngIf="policeInterventionDetails.callDate">{{
+										policeInterventionDetails.callDate |
+										viewDateDto:
+										'date' | date: 'dd/MM/yyyy' }}</span>
+									<span
+										*ngIf="policeInterventionDetails.callDate && policeInterventionDetails.callTime">
+										- </span>
+									<span *ngIf="policeInterventionDetails.callTime">{{
+										policeInterventionDetails.callTime |
+										viewDateDto:
+										'time' | date: 'HH:mm' }} hs</span>
+								</div>
 							</div>
 						</div>
-						<div fxLayout="row" fxLayoutGap="3px" class="content-secondary">
-							<span *ngIf="policeInterventionDetails.callDate">{{ policeInterventionDetails.callDate | viewDateDto:
-								'date' | date: 'dd/MM/yyyy' }}</span>
-							<span *ngIf="policeInterventionDetails.callDate && policeInterventionDetails.callTime"> - </span>
-							<span *ngIf="policeInterventionDetails.callTime">{{ policeInterventionDetails.callTime | viewDateDto:
-								'time' | date: 'HH:mm' }} hs</span>
-						</div>
-					</div>
+
+					</ng-template>
 				</div>
 
 				<div fxLayout="column" fxLayoutGap="1px">
 					<span class="grid-title" translate="guardia.episode.administrative.UBICACION"></span>
 					<span *ngIf="doctorsOfficeDescription else noInfo" class="content-primary">
-					{{ doctorsOfficeDescription }}
-				</span>
+						{{ doctorsOfficeDescription }}
+					</span>
 				</div>
 
 			</mat-card>
@@ -148,4 +165,8 @@
 
 <ng-template #no>
 	<span class="content-primary" translate="guardia.NO"></span>
+</ng-template>
+
+<ng-template #yes>
+	<span class="content-primary" translate="guardia.SI"></span>
 </ng-template>

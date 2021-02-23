@@ -164,6 +164,7 @@
 			"SUBTITLE": "Consultorio destino para el paciente"
 		},
 		"NO_INFO": "Sin información",
-		"NO": "No"
+		"NO": "No",
+		"SI": "Si"
 	}
 }
