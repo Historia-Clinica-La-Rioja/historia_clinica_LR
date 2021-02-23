@@ -237,7 +237,7 @@
 
 <ng-template #noData>
 	<div id="no-data" fxFlex="100%" fxLayout="column" fxLayoutAlign="center">
-		<h2 *ngIf="filterService.hasFilters() else noActiveEpisodes" class="mat-h2" style="text-align: center"
+		<h2 *ngIf="episodesOriginal?.length || filterService.hasFilters() else noActiveEpisodes" class="mat-h2" style="text-align: center"
 			translate="guardia.home.episodes.NO_DATA_FOR_FILTER">
 		</h2>
 		<ng-template #noActiveEpisodes>

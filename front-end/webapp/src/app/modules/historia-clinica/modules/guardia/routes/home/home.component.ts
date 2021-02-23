@@ -171,6 +171,7 @@ export class HomeComponent implements OnInit {
 	}
 
 	filter(): void {
+		this.filterService.markAsFiltered();
 		if (this.filterService.isValid()) {
 			this.episodes = this.episodesOriginal
 				.filter(episode => this.filterService.filter(episode));

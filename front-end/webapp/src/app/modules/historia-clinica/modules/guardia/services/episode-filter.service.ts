@@ -93,6 +93,10 @@ export class EpisodeFilterService {
 		this.form.controls[control].reset();
 	}
 
+	markAsFiltered(): void {
+		this.form.markAllAsTouched();
+	}
+
 	hasFilters(): boolean {
 		return atLeastOneValueInFormGroup(this.form);
 	}
