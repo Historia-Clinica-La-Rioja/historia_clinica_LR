@@ -45,8 +45,6 @@ public class EmergencyCareBo {
 
     private LocalDateTime createdOn;
 
-    private Integer patientMedicalCoverageId;
-
     private List<ReasonBo> reasons;
 
     private TriageBo triage;
@@ -78,10 +76,9 @@ public class EmergencyCareBo {
     public EmergencyCareBo(EmergencyCareEpisode emergencyCareEpisode) {
         this.id = emergencyCareEpisode.getId();
         if(emergencyCareEpisode.getPatientId() != null) {
-            this.patient = new PatientECEBo(emergencyCareEpisode.getPatientId());
+            this.patient = new PatientECEBo(emergencyCareEpisode.getPatientId(), emergencyCareEpisode.getPatientMedicalCoverageId());
         }
         this.institutionId = emergencyCareEpisode.getInstitutionId();
-        this.patientMedicalCoverageId = emergencyCareEpisode.getPatientMedicalCoverageId();
         this.emergencyCareEntranceId = emergencyCareEpisode.getEmergencyCareEntranceTypeId();
         this.emergencyCareTypeId = emergencyCareEpisode.getEmergencyCareTypeId();
         this.emergencyCareStateId = emergencyCareEpisode.getEmergencyCareStateId();
