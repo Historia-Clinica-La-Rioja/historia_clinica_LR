@@ -43,6 +43,7 @@ export class NewPatientComponent implements OnInit {
 	public patientType;
 	public personPhoto: PersonPhotoDto;
 	patientMedicalCoveragesToAdd: PatientMedicalCoverage[];
+	public isSubmitButtonDisabled = false;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -153,6 +154,7 @@ export class NewPatientComponent implements OnInit {
 	save(): void {
 		this.formSubmitted = true;
 		if (this.form.valid) {
+			this.isSubmitButtonDisabled = true;
 			const personRequest: APatientDto = this.mapToPersonRequest();
 			this.patientService.addPatient(personRequest)
 				.subscribe(patientId => {
@@ -168,7 +170,10 @@ export class NewPatientComponent implements OnInit {
 					}
 					this.router.navigate([this.routePrefix + ROUTE_PROFILE + patientId]);
 					this.snackBarService.showSuccess('pacientes.new.messages.SUCCESS');
-				}, _ => this.snackBarService.showError('pacientes.new.messages.ERROR'));
+				}, _ => {
+					this.isSubmitButtonDisabled = false;
+					this.snackBarService.showError('pacientes.new.messages.ERROR');
+				});
 		} else {
 			scrollIntoError(this.form, this.el);
 		}

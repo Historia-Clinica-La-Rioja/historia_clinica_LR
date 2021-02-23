@@ -408,7 +408,7 @@
 				<button mat-stroked-button type="button" (click)="goBack()">
 					<span [translate]="'buttons.BACK'"></span>
 				</button>
-				<button mat-raised-button color="primary" type="submit">
+				<button mat-raised-button color="primary" type="submit" [disabled]="isSubmitButtonDisabled">
 					<span [translate]="'buttons.CONTINUE'"></span>
 				</button>
 			</div>
