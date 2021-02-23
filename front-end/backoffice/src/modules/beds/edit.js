@@ -1,19 +1,19 @@
 import React from 'react';
 import {
+    BooleanInput,
+    Datagrid,
     Edit,
-    TextInput,
+    Pagination,
     ReferenceInput,
+    ReferenceManyField,
+    required,
     SelectInput,
     SimpleForm,
-    required,
-    BooleanInput,
-    DateField,
-    ReferenceManyField,
-    Datagrid,
-    Pagination
+    TextInput
 } from 'react-admin';
 import SgxSelectInput from "../../sgxSelectInput/SgxSelectInput";
 import CustomToolbar from "../../modules/components/CustomToolbar";
+import SgxDateField from "../../dateComponents/sgxDateField";
 
 const BedEdit = props => (
     <Edit {...props}>
@@ -45,7 +45,7 @@ const BedEdit = props => (
                 pagination={<Pagination />}
             >
                 <Datagrid>
-                    <DateField source="entryDate" />
+                    <SgxDateField source="entryDate" />
                 </Datagrid>
             </ReferenceManyField>
 

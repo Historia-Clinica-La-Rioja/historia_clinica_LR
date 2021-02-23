@@ -1,7 +1,6 @@
 import React from 'react';
 import {
     Datagrid,
-    DateField,
     DeleteButton,
     EditButton,
     ReferenceField,
@@ -12,6 +11,7 @@ import {
 } from 'react-admin';
 import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
+import SgxDateField from "../../dateComponents/sgxDateField";
 
 const SectorShow = props => (
     <Show {...props}>
@@ -57,7 +57,7 @@ const SectorShow = props => (
                     <TextField source="roomNumber" />
                     <TextField source="description"/>
                     <TextField source="type" />
-                    <DateField source="dischargeDate" />
+                    <SgxDateField source="dischargeDate" />
                     <EditButton />
                 </Datagrid>
             </ReferenceManyField>

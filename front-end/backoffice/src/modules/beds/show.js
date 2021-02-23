@@ -1,16 +1,16 @@
 import React from 'react';
 import {
+    BooleanField,
+    Datagrid,
+    FunctionField,
+    Pagination,
+    ReferenceField,
+    ReferenceManyField,
     Show,
     SimpleShowLayout,
-    ReferenceField,
     TextField,
-    FunctionField,
-    BooleanField,
-    ReferenceManyField,
-    Datagrid,
-    DateField,
-    Pagination,
 } from 'react-admin';
+import SgxDateField from "../../dateComponents/sgxDateField";
 
 const renderRoom = room => `${room.roomNumber} - ${room.description}`;
 const BedShow = props => (
@@ -33,7 +33,7 @@ const BedShow = props => (
                 pagination={<Pagination />}
             >
                 <Datagrid>
-                    <DateField source="entryDate" />
+                    <SgxDateField source="entryDate" />
                 </Datagrid>
             </ReferenceManyField>
             <ReferenceField source="bedCategoryId" reference="bedcategories" >

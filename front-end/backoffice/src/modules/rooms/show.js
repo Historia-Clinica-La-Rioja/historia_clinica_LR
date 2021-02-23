@@ -1,16 +1,8 @@
 import React from 'react';
-import {
-    Datagrid,
-    DateField,
-    EditButton,
-    ReferenceField,
-    ReferenceManyField,
-    Show,
-    SimpleShowLayout,
-    TextField
-} from 'react-admin';
+import {Datagrid, EditButton, ReferenceField, ReferenceManyField, Show, SimpleShowLayout, TextField} from 'react-admin';
 import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
+import SgxDateField from "../../dateComponents/sgxDateField";
 
 const RoomShow = props => (
     <Show  {...props}>
@@ -18,7 +10,7 @@ const RoomShow = props => (
             <TextField source="roomNumber"/>
             <TextField source="description" />
             <TextField source="type" />
-            <DateField source="dischargeDate" />
+            <SgxDateField source="dischargeDate" />
             <ReferenceField source="sectorId" reference="sectors" link="show">
                 <TextField source="description"/>
             </ReferenceField>

@@ -1,15 +1,8 @@
 import React from 'react';
-import {
-    List,
-    Datagrid,
-    TextField,
-    ReferenceField,
-    DateField, 
-    Filter,
-    TextInput
-} from 'react-admin';
+import {Datagrid, Filter, List, ReferenceField, TextField, TextInput} from 'react-admin';
 
 import SgxSelectInput from '../../sgxSelectInput/SgxSelectInput';
+import SgxDateField from "../../dateComponents/sgxDateField";
 
 const RoomFilter = props =>(
 
@@ -27,7 +20,7 @@ const InstitutionList = props => (
             <TextField source="roomNumber"/>
             <TextField source="description" />
             <TextField source="type" />
-            <DateField source="dischargeDate" />
+            <SgxDateField source="dischargeDate" />
             <ReferenceField source="sectorId" reference="sectors">
                 <TextField source="description"/>
             </ReferenceField>

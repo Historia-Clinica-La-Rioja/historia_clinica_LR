@@ -1,17 +1,17 @@
 import React, {Fragment} from 'react';
 import {
-    Show,
-    TextField,
-    ReferenceManyField,
-    Datagrid,
     BooleanField,
-    DateField,
-    TabbedShowLayout,
-    Tab,
+    Datagrid,
     ReferenceField,
+    ReferenceManyField,
+    Show,
+    Tab,
+    TabbedShowLayout,
+    TextField
 } from 'react-admin';
 import CreateRelatedButton from '../components/CreateRelatedButton';
 import HealthcareProfessionalSpecialtiesTab from './HealthcareProfessionalSpecialitiesTab';
+import SgxDateField from "../../dateComponents/sgxDateField";
 
 const UserTab = ({ personId, loaded, total, ...props }) => (
     <Fragment>
@@ -19,7 +19,7 @@ const UserTab = ({ personId, loaded, total, ...props }) => (
                 <Datagrid loaded={loaded} total={total} {...props} rowClick="edit">
                     <TextField source="username" />
                     <BooleanField source="enable" />
-                    <DateField source="lastLogin" />
+                    <SgxDateField source="lastLogin" />
                 </Datagrid>
             : <CreateRelatedButton
                 customRecord={{personId: personId}}
@@ -49,7 +49,7 @@ const PersonShow = props =>{
                 <ReferenceField source="genderId" reference="genders" link={false}>
                     <TextField source="description" />
                 </ReferenceField>
-                <DateField source="birthDate" />
+                <SgxDateField source="birthDate" />
             </Tab>
 
             <Tab label="resources.person.tabs.users">

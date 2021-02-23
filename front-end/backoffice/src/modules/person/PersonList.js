@@ -1,14 +1,7 @@
 import React from 'react';
-import {
-    List,
-    Datagrid,
-    TextField,
-    ReferenceField,
-    DateField,
-    Filter,
-    TextInput,
-} from 'react-admin';
+import {Datagrid, Filter, List, ReferenceField, TextField, TextInput,} from 'react-admin';
 import SgxSelectInput from '../../sgxSelectInput/SgxSelectInput';
+import SgxDateField from "../../dateComponents/sgxDateField";
 
 const PersonFilter = props =>(
     <Filter {...props}>
@@ -32,7 +25,7 @@ export const PersonList = props => (
             <ReferenceField source="genderId" reference="genders" link={false} sortable={false}>
                 <TextField source="description" />
             </ReferenceField>
-            <DateField source="birthDate" />
+            <SgxDateField source="birthDate" />
         </Datagrid>
     </List>
 );
