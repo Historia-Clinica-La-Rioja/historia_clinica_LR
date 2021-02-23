@@ -63,7 +63,7 @@
 								name="firstName"
 								formControlName="firstName"
 								placeholder="{{'pacientes.form.FIRST_NAME' | translate}}"
-								maxlength="20"
+							   	[maxLength]="PERSON_MAX_LENGTH.firstName"
 								matInput>
 						<mat-error [translate]="'pacientes.form.REQUIRED'"></mat-error>
 					</mat-form-field>
@@ -74,7 +74,7 @@
 							name="middleNames"
 							formControlName="middleNames"
 							placeholder="{{'pacientes.form.MIDDLE_NAMES' | translate}}"
-							maxlength="20"
+						   	[maxLength]="PERSON_MAX_LENGTH.middleNames"
 							matInput>
 				</mat-form-field>
 			</div>
@@ -89,7 +89,7 @@
 								name="lastName"
 								formControlName="lastName"
 								placeholder="{{'pacientes.form.LAST_NAME' | translate}}"
-								maxlength="20"
+							   [maxLength]="PERSON_MAX_LENGTH.lastName"
 								matInput>
 						<mat-error [translate]="'pacientes.form.REQUIRED'"></mat-error>
 					</mat-form-field>
@@ -98,7 +98,7 @@
 								name="otherLastNames"
 								formControlName="otherLastNames"
 								placeholder="{{'pacientes.form.OTHER_LAST_NAMES' | translate}}"
-								maxlength="20"
+							   	[maxLength]="PERSON_MAX_LENGTH.otherLastNames"
 								matInput>
 					</mat-form-field>
 				</div>
@@ -112,7 +112,7 @@
 						name="mothersLastName"
 						formControlName="mothersLastName"
 						placeholder="{{'pacientes.form.MOTHERS_LAST_NAME' | translate}}"
-						maxlength="20"
+					   	[maxLength]="PERSON_MAX_LENGTH.mothersLastName"
 						matInput>
 			</mat-form-field>
 

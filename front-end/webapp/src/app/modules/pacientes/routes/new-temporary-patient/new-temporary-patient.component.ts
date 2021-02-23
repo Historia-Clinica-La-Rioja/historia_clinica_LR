@@ -15,6 +15,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MedicalCoverageComponent, PatientMedicalCoverage } from 'src/app/modules/core/dialogs/medical-coverage/medical-coverage.component';
 import { MapperService } from '@core/services/mapper.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
+import { PERSON } from '@core/constants/validation-constants';
 
 const TEMPORARY_PATIENT = 3;
 const ROUTE_HOME = 'pacientes';
@@ -26,6 +27,8 @@ const ROUTE_PROFILE = 'pacientes/profile/';
 	styleUrls: ['./new-temporary-patient.component.scss']
 })
 export class NewTemporaryPatientComponent implements OnInit {
+
+	readonly PERSON_MAX_LENGTH = PERSON.MAX_LENGTH;
 
 	public form: FormGroup;
 	public personResponse: BMPatientDto;

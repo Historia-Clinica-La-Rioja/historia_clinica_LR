@@ -16,8 +16,9 @@ import { PATIENT_TYPE } from '@core/utils/patient.utils';
 import { MatDialog } from '@angular/material/dialog';
 import { MedicalCoverageComponent, PatientMedicalCoverage, } from 'src/app/modules/core/dialogs/medical-coverage/medical-coverage.component';
 import { map } from 'rxjs/operators';
-import { MapperService } from '../../../core/services/mapper.service';
+import { MapperService } from '@core/services/mapper.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
+import { PERSON } from '@core/constants/validation-constants';
 
 
 const ROUTE_PROFILE = 'pacientes/profile/';
@@ -30,6 +31,8 @@ const RESTRICT_EDIT_FFLAG = 'restringirDatosEditarPaciente';
 	styleUrls: ['./edit-patient.component.scss']
 })
 export class EditPatientComponent implements OnInit {
+
+	readonly PERSON_MAX_LENGTH = PERSON.MAX_LENGTH;
 
 	public form: FormGroup;
 	public personResponse: BMPatientDto;

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -14,13 +15,17 @@ import java.time.LocalDateTime;
 public class APersonDto {
 
     @NotNull
+    @Length(max = 40, message = "{person.name.max.value}")
     private String firstName;
 
+    @Length(max = 40, message = "{person.name.max.value}")
     private String middleNames;
 
     @NotNull
+    @Length(max = 40, message = "{person.name.max.value}")
     private String lastName;
 
+    @Length(max = 40, message = "{person.name.max.value}")
     private String otherLastNames;
 
     @NotNull
@@ -37,6 +42,7 @@ public class APersonDto {
 
     private String cuil;
 
+    @Length(max = 40, message = "{person.name.max.value}")
     private String mothersLastName;
 
     private String phoneNumber;

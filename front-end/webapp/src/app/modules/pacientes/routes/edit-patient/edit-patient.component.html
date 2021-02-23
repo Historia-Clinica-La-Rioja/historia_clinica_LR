@@ -59,14 +59,16 @@
 					<div>
 						<mat-form-field appearance="outline">
 							<input id="firstName" name="firstName" formControlName="firstName"
-								placeholder="{{'pacientes.form.FIRST_NAME' | translate}}" maxlength="20" matInput>
+								placeholder="{{'pacientes.form.FIRST_NAME' | translate}}"
+								   [maxLength]="PERSON_MAX_LENGTH.firstName" matInput>
 							<mat-error [translate]="'pacientes.form.REQUIRED'"></mat-error>
 						</mat-form-field>
 					</div>
 
 					<mat-form-field appearance="outline">
 						<input id="middleNames" name="middleNames" formControlName="middleNames"
-							placeholder="{{'pacientes.form.MIDDLE_NAMES' | translate}}" maxlength="20" matInput>
+							placeholder="{{'pacientes.form.MIDDLE_NAMES' | translate}}"
+							   [maxLength]="PERSON_MAX_LENGTH.middleNames" matInput>
 					</mat-form-field>
 				</div>
 
@@ -77,12 +79,14 @@
 						</div>
 						<mat-form-field appearance="outline">
 							<input id="lastName" name="lastName" formControlName="lastName"
-								placeholder="{{'pacientes.form.LAST_NAME' | translate}}" maxlength="20" matInput>
+								placeholder="{{'pacientes.form.LAST_NAME' | translate}}"
+								   [maxLength]="PERSON_MAX_LENGTH.lastName" matInput>
 							<mat-error [translate]="'pacientes.form.REQUIRED'"></mat-error>
 						</mat-form-field>
 						<mat-form-field appearance="outline">
 							<input id="otherLastNames" name="otherLastNames" formControlName="otherLastNames"
-								placeholder="{{'pacientes.form.OTHER_LAST_NAMES' | translate}}" maxlength="20" matInput>
+								placeholder="{{'pacientes.form.OTHER_LAST_NAMES' | translate}}"
+								   [maxLength]="PERSON_MAX_LENGTH.otherLastNames" matInput>
 						</mat-form-field>
 					</div>
 				</div>
@@ -92,7 +96,8 @@
 				</div>
 				<mat-form-field appearance="outline">
 					<input id="mothersLastName" name="mothersLastName" formControlName="mothersLastName"
-						placeholder="{{'pacientes.form.MOTHERS_LAST_NAME' | translate}}" maxlength="20" matInput>
+						placeholder="{{'pacientes.form.MOTHERS_LAST_NAME' | translate}}"
+						   [maxLength]="PERSON_MAX_LENGTH.mothersLastName" matInput>
 				</mat-form-field>
 
 				<div>

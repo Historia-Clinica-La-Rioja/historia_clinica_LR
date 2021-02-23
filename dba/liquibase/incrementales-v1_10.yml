@@ -73,3 +73,33 @@ databaseChangeLog:
         - renameTable:
             newTableName: police_intervention_details
             oldTableName: police_intervention
+
+        - changeSet:  
+        id:  modifyDataType-person
+        author: saguero
+        changes:
+        -  modifyDataType:
+            columnName: first_name
+            newDataType: varchar(40)
+            tableName: person
+        -  modifyDataType:
+            columnName: middle_names
+            newDataType: varchar(40)
+            tableName: person
+        -  modifyDataType:
+            columnName: last_name
+            newDataType: varchar(40)
+            tableName: person
+        -  modifyDataType:
+            columnName: other_last_names
+            newDataType: varchar(40)
+            tableName: person
+
+    - changeSet:  
+        id:  modifyDataType-person_extended
+        author: saguero
+        changes:
+        -  modifyDataType:
+            columnName: mothers_last_name
+            newDataType: varchar(40)
+            tableName: person_extended

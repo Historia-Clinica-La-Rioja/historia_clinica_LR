@@ -35,16 +35,16 @@ public class Person implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "first_name")
+    @Column(name = "first_name", length = 40)
     private String firstName;
 
-    @Column(name = "middle_names")
+    @Column(name = "middle_names", length = 40)
     private String middleNames;
 
-    @Column(name = "last_name")
+    @Column(name = "last_name", length = 40)
     private String lastName;
 
-    @Column(name = "other_last_names")
+    @Column(name = "other_last_names", length = 40)
     private String otherLastNames;
 
     @Column(name = "identification_type_id")

@@ -16,6 +16,7 @@ import { ViewPatientDetailComponent } from '../../component/view-patient-detail/
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from '@core/services/context.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { PERSON } from '@core/constants/validation-constants';
 
 const ROUTE_NEW = 'pacientes/new';
 const ROUTE_NEW_TEMPORARY = 'pacientes/temporary';
@@ -28,6 +29,8 @@ const RENAPER_FFLAG = 'habilitarServicioRenaper';
 	styleUrls: ['./search.component.scss']
 })
 export class SearchComponent implements OnInit {
+
+	readonly PERSON_MAX_LENGHT = PERSON;
 
 	today: Moment = newMoment();
 	public formSearchSubmitted = false;

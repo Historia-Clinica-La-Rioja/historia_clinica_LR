@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -55,7 +56,7 @@ public class PersonController {
     @PostMapping
     @Transactional
     public ResponseEntity<BMPersonDto> addPerson(
-            @RequestBody APersonDto personDto) throws URISyntaxException {
+            @RequestBody @Valid APersonDto personDto) throws URISyntaxException {
 
         Person personToAdd = personMapper.fromPersonDto(personDto);
         LOG.debug("Going to add person -> {}", personToAdd);

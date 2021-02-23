@@ -7,10 +7,11 @@ export const AMBULANCE = {
 export const PERSON = {
 	MAX_LENGTH: {
 		identificationNumber: 11,
-		firstName: 20,
-		middleNames: 20,
-		lastName: 20,
-		otherLastNames: 20,
+		firstName: 40,
+		middleNames: 40,
+		lastName: 40,
+		otherLastNames: 40,
+		mothersLastName: 40
 	}
 };
 
