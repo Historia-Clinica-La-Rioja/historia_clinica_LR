@@ -24,6 +24,8 @@ public class PersonECEVo implements Serializable {
 
 	private String lastName;
 
+	private String identificationNumber;
+
 	private String photo;
 
 	public PersonECEVo(Person person){
@@ -31,6 +33,7 @@ public class PersonECEVo implements Serializable {
 			this.id = person.getId();
 			this.firstName = person.getFirstName();
 			this.lastName = person.getLastName();
+			this.identificationNumber = person.getIdentificationNumber();
 		}
 	}
 }

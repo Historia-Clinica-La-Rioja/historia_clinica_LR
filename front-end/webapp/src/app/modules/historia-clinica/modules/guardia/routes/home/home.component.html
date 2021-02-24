@@ -76,6 +76,27 @@
 						</mat-form-field>
 
 						<mat-form-field fxFlexFill appearance="outline">
+							<mat-label translate="guardia.home.episodes.filters.IDENTIFICATION_NUMBER"></mat-label>
+							<input id="person-idNumber-filter" matInput type="text" formControlName="identificationNumber" (keydown.enter)="filter()">
+							<div matSuffix fxLayout="row">
+								<button *ngIf="filterService.getForm().value.identificationNumber"
+										id="clear-idNumber-filter" type="button" mat-icon-button color="warn"
+										(click)="clear('identificationNumber'); $event.stopPropagation()">
+									<mat-icon>close</mat-icon>
+								</button>
+								<button id="search-idNumber-filter" type="button" mat-icon-button (click)="filter(); $event.stopPropagation()">
+									<mat-icon>search</mat-icon>
+								</button>
+							</div>
+							<mat-error
+									*ngIf="hasError(filterService.getForm(), 'maxlength', 'identificationNumber')"
+									translate="forms.MAX_LENGTH_ERROR"
+									[translateParams]=" { max: getError(filterService.getForm(), 'maxlength', 'identificationNumber').requiredLength }"
+							>
+							</mat-error>
+						</mat-form-field>
+
+						<mat-form-field fxFlexFill appearance="outline">
 							<mat-label translate="guardia.home.episodes.filters.FIRST_NAME"></mat-label>
 							<input id="first-name-filter" matInput type="text" formControlName="firstName" (keydown.enter)="filter()">
 							<div matSuffix fxLayout="row">

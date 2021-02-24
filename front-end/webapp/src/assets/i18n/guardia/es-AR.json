@@ -98,6 +98,7 @@
 				"filters": {
 					"FILTER_BY_PATIENT": "Filtrar por paciente",
 					"FIRST_NAME": "Nombre",
+					"IDENTIFICATION_NUMBER": "Nro de documento",
 					"LAST_NAME": "Apellido",
 					"NO_PATIENT": "Paciente sin definir",
 					"PATIENT_ID": "ID de paciente",

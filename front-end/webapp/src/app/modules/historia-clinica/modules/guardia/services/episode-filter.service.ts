@@ -24,6 +24,7 @@ export class EpisodeFilterService {
 			triage: [null],
 			emergencyCareType: [null],
 			patientId: [null],
+			identificationNumber: [null, Validators.maxLength(PERSON.MAX_LENGTH.identificationNumber)],
 			firstName: [null, Validators.maxLength(PERSON.MAX_LENGTH.firstName)],
 			lastName: [null, Validators.maxLength(PERSON.MAX_LENGTH.lastName)],
 			temporal: [null],
@@ -49,6 +50,11 @@ export class EpisodeFilterService {
 
 	static filterByPatientId(episode: Episode, filters: EpisodeFilters): boolean {
 		return (filters.patientId ? episode.patient?.id === filters.patientId : true);
+	}
+
+	static filterByIdentificationNumber(episode: Episode, filters: EpisodeFilters): boolean {
+		return (filters.identificationNumber ?
+			this.filterString(episode.patient?.person?.identificationNumber, filters.identificationNumber) : true);
 	}
 
 	static filterByFirstName(episode: Episode, filters: EpisodeFilters): boolean {
@@ -82,6 +88,7 @@ export class EpisodeFilterService {
 		const filters = this.form.value as EpisodeFilters;
 		return 	EpisodeFilterService.filterByTriage(episode, filters) &&
 				EpisodeFilterService.filterByEmergencyCareType(episode, filters) &&
+				EpisodeFilterService.filterByIdentificationNumber(episode, filters) &&
 				EpisodeFilterService.filterByPatientId(episode, filters) &&
 				EpisodeFilterService.filterByFirstName(episode, filters) &&
 				EpisodeFilterService.filterByLastName(episode, filters) &&
@@ -119,6 +126,7 @@ interface EpisodeFilters {
 	triage?: number;
 	emergencyCareType?: number;
 	patientId?: number;
+	identificationNumber?: string;
 	firstName?: string;
 	lastName?: string;
 	temporal?: boolean;

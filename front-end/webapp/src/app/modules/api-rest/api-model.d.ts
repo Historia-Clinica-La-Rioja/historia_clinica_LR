@@ -572,6 +572,7 @@ export interface EmergencyCarePatientDto extends Serializable {
 
 export interface EmergencyCarePersonDto {
     firstName: string;
+    identificationNumber: string;
     lastName: string;
 }
 
