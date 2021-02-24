@@ -74,7 +74,7 @@ databaseChangeLog:
             newTableName: police_intervention_details
             oldTableName: police_intervention
 
-        - changeSet:  
+    - changeSet:  
         id:  modifyDataType-person
         author: saguero
         changes:
