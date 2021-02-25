@@ -1,6 +1,8 @@
 package net.pladema.emergencycare.repository.entity;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.Column;
@@ -11,6 +13,8 @@ import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
+@Setter
+@Getter
 @NoArgsConstructor
 @Table(name = "emergency_care_discharge")
 public class EmergencyCareDischarge {
@@ -58,6 +62,14 @@ public class EmergencyCareDischarge {
 
         if (this.administrativeDischargeByUser == null)
             this.administrativeDischargeByUser = -1;
+    }
+
+    public EmergencyCareDischarge(Integer emergencyCareEpisodeId, LocalDateTime administrativeDischargeOn, Integer administrativeDischargeByUser, Short hospitalTransportId, String ambulanceCompanyId) {
+        this.emergencyCareEpisodeId = emergencyCareEpisodeId;
+        this.administrativeDischargeOn = administrativeDischargeOn;
+        this.administrativeDischargeByUser = administrativeDischargeByUser;
+        this.hospitalTransportId = hospitalTransportId;
+        this.ambulanceCompanyId = ambulanceCompanyId;
     }
 
 }

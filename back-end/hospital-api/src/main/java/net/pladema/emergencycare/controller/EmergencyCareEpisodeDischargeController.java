@@ -2,12 +2,14 @@ package net.pladema.emergencycare.controller;
 
 import io.swagger.annotations.Api;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
+import net.pladema.emergencycare.controller.dto.AdministrativeDischargeDto;
 import net.pladema.emergencycare.controller.dto.MedicalDischargeDto;
 import net.pladema.emergencycare.controller.mapper.EmergencyCareDischargeMapper;
 import net.pladema.emergencycare.repository.entity.EmergencyCareState;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeDischargeService;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeStateService;
+import net.pladema.emergencycare.service.domain.AdministrativeDischargeBo;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
 import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.service.PatientExternalService;
@@ -71,6 +73,22 @@ public class EmergencyCareEpisodeDischargeController {
         PatientInfoBo patientInfo =  new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge());
         boolean saved = emergencyCareEpisodeDischargeService.newMedicalDischarge(emergencyCareDischargeMapper.toMedicalDischargeBo(medicalDischargeDto,medicalDischargeBy,patientInfo, episodeId));
         emergencyCareEpisodeStateService.changeState(episodeId, institutionId, EmergencyCareState.CON_ALTA_MEDICA, null);
+        LOG.debug("Output -> {}", saved);
+        return ResponseEntity.ok().body(saved);
+    }
+
+    @Transactional
+    @PutMapping("/administrativeDischarge")
+    public ResponseEntity<Boolean> newAdministrativeDischarge(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "episodeId") Integer episodeId,
+            @RequestBody AdministrativeDischargeDto administrativeDischargeDto) {
+       LOG.debug("Change emergency care state -> episodeId {}, institutionId {}, administrativeDischargeDto {}", episodeId, institutionId, administrativeDischargeDto);
+
+        Integer userId = UserInfo.getCurrentAuditor();
+
+        AdministrativeDischargeBo administrativeDischargeBo = emergencyCareDischargeMapper.toAdministrativeDischargeBo(administrativeDischargeDto, episodeId, userId);
+        boolean saved = emergencyCareEpisodeDischargeService.newAdministrativeDischarge(administrativeDischargeBo, institutionId);
         LOG.debug("Output -> {}", saved);
         return ResponseEntity.ok().body(saved);
     }

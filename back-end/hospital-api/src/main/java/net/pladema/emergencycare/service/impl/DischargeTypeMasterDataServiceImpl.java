@@ -1,7 +1,8 @@
-package net.pladema.emergencycare.service;
+package net.pladema.emergencycare.service.impl;
 
 import net.pladema.clinichistory.hospitalization.repository.domain.DischargeType;
 import net.pladema.emergencycare.repository.DischargeTypeRepository;
+import net.pladema.emergencycare.service.DischargeTypeMasterDataService;
 import net.pladema.emergencycare.service.domain.DischargeTypeBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -80,6 +80,12 @@ export interface AddressDto extends Serializable {
     street: string;
 }
 
+export interface AdministrativeDischargeDto {
+    administrativeDischargeOn: DateTimeDto;
+    ambulanceCompanyId: string;
+    hospitalTransportId: number;
+}
+
 export interface AllergyConditionDto extends HealthConditionDto {
     categoryId: string;
     date: string;
