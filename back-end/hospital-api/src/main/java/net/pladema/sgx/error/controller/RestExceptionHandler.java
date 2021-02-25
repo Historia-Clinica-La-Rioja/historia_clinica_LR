@@ -12,6 +12,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 
+import net.pladema.sgx.exceptions.StringValidatorException;
 import org.apache.http.MethodNotSupportedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -173,5 +174,14 @@ public class RestExceptionHandler {
 				errorMessage
 		);
 	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ StringValidatorException.class })
+	protected ApiErrorDto handleStringValidatorException(StringValidatorException ex) {
+		LOG.info(ex.getMessage());
+		LOG.debug(ex.getMessage(), ex);
+		return new ApiErrorDto("String constraint violation", ex.getMessage());
+	}
+
 
 }
