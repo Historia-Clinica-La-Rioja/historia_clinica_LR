@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
+import org.hibernate.validator.constraints.Length;
 
 import javax.annotation.Nullable;
 import java.io.Serializable;
@@ -34,6 +35,7 @@ public abstract class AEmergencyCareDto implements Serializable {
 	private Boolean hasPoliceIntervention;
 
 	@Nullable
+	@Length(max = 255)
 	private String ambulanceCompanyId;
 
 	@Nullable
