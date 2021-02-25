@@ -25,7 +25,7 @@ export class CompletarEstudioComponent implements OnInit {
 		private prescripcionesService: PrescripcionesService,
 		public dialogRef: MatDialogRef<CompletarEstudioComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: {
-			diagnosticReport: DiagnosticReportInfoDto,a
+			diagnosticReport: DiagnosticReportInfoDto,
 			patientId: number,
 		}
 	) { }
