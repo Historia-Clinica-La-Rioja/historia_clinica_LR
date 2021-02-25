@@ -1,6 +1,7 @@
 package net.pladema.hl7.concept.administration;
 
 import net.pladema.hl7.dataexchange.ISingleResourceFhir;
+import net.pladema.hl7.supporting.conformance.InteroperabilityCondition;
 import net.pladema.hl7.supporting.exchange.database.FhirPersistentStore;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
 import net.pladema.hl7.dataexchange.model.domain.OrganizationVo;
@@ -10,9 +11,11 @@ import org.hl7.fhir.r4.model.Organization;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.ResourceType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Service;
 
 @Service
+@Conditional(InteroperabilityCondition.class)
 public class OrganizationResource extends ISingleResourceFhir {
 
     @Autowired
