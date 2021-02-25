@@ -28,13 +28,12 @@ export class EvolutionNotesListenerService {
 		this.loadHistoric();
 	}
 
-	public setInternmentEpisodeId(internmentEpisodeId: number) {
-		this.internmentEpisodeId = internmentEpisodeId;
-		this.loadHistoric();
-	}
-
 	public loadEvolutionNotes() {
 		this.loadHistoric();
 	}
 
+	initializeEvolutionNoteFilterResult(internmentEpisodeId: number) {
+		this.internmentEpisodeId = internmentEpisodeId;
+		this.setSerchFilter(null);
+	}
 }

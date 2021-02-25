@@ -43,7 +43,7 @@ export class DocumentsSummaryComponent implements OnInit {
 			field: ['ALL'],
 			mainDiagnosisOnly: [false],
 		});
-		this.evolutionNotesListenerService.setInternmentEpisodeId(this.internmentEpisodeId);
+		this.evolutionNotesListenerService.initializeEvolutionNoteFilterResult(this.internmentEpisodeId);
 	}
 
 	search(): void {
