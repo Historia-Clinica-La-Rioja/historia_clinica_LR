@@ -5,7 +5,7 @@ import {OVERLAY_DATA} from '@presentation/presentation-model';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {MotivoNuevaConsultaService} from '../../services/motivo-nueva-consulta.service';
 import {Medicacion, MedicacionesNuevaConsultaService} from '../../services/medicaciones-nueva-consulta.service';
-import {Problema, ProblemasNuevaConsultaService} from '../../services/problemas-nueva-consulta.service';
+import {Problema, ProblemasService} from '../../../../services/problemas-nueva-consulta.service';
 import {ProcedimientosService} from '../../../../services/procedimientos.service';
 import {DatosAntropometricosNuevaConsultaService} from '../../services/datos-antropometricos-nueva-consulta.service';
 import {SignosVitalesNuevaConsultaService} from '../../services/signos-vitales-nueva-consulta.service';
@@ -35,7 +35,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	errores: string[] = [];
 	motivoNuevaConsultaService: MotivoNuevaConsultaService;
 	medicacionesNuevaConsultaService: MedicacionesNuevaConsultaService;
-	problemasNuevaConsultaService: ProblemasNuevaConsultaService;
+	problemasService: ProblemasService;
 	procedimientoNuevaConsultaService: ProcedimientosService;
 	datosAntropometricosNuevaConsultaService: DatosAntropometricosNuevaConsultaService;
 	signosVitalesNuevaConsultaService: SignosVitalesNuevaConsultaService;
@@ -62,7 +62,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	) {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService);
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService);
-		this.problemasNuevaConsultaService = new ProblemasNuevaConsultaService(formBuilder, this.snomedService);
+		this.problemasService = new ProblemasService(formBuilder, this.snomedService);
 		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, this.snomedService);
 		this.datosAntropometricosNuevaConsultaService =
 			new DatosAntropometricosNuevaConsultaService(formBuilder, this.internacionMasterDataService);
@@ -91,7 +91,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		if (this.data.idProblema) {
 			this.readOnlyProblema = true;
 			this.healthConditionService.getHealthCondition(this.data.idProblema).subscribe(p => {
-				this.problemasNuevaConsultaService.addProblemToList(this.buildProblema(p));
+				this.problemasService.addProblemToList(this.buildProblema(p));
 			});
 		}
 
@@ -102,7 +102,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.motivoNuevaConsultaService.error$.subscribe(motivoError => {
 			this.errores[0] = motivoError;
 		});
-		this.problemasNuevaConsultaService.error$.subscribe(problemasError => {
+		this.problemasService.error$.subscribe(problemasError => {
 			this.errores[1] = problemasError;
 		});
 		this.datosAntropometricosNuevaConsultaService.heightError$.subscribe(tallaError => {
@@ -274,7 +274,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 					};
 				}
 			),
-			problems: this.problemasNuevaConsultaService.getProblemas().map(
+			problems: this.problemasService.getProblemas().map(
 				(problema: Problema) => {
 					return {
 						chronic: problema.cronico,
@@ -293,7 +293,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	}
 
 	editProblema() {
-		if (this.problemasNuevaConsultaService.editProblem()) {
+		if (this.problemasService.editProblem()) {
 			this.readOnlyProblema = false;
 		}
 	}

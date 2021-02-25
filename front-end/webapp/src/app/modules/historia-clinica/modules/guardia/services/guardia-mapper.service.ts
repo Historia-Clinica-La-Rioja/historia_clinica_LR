@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Triage } from '../components/triage-details/triage-details.component';
-import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { dateTimeDtoToDate, dateToDateDto, dateToTimeDto } from '@api-rest/mapper/date-dto.mapper';
 import { TriageReduced } from '../routes/episode-details/episode-details.component';
-import { NewVitalSignsObservationDto, TriageListDto } from '@api-rest/api-model';
+import { MedicalDischargeDto, NewVitalSignsObservationDto, TriageListDto } from '@api-rest/api-model';
+import { parse } from 'date-fns';
+import { Problema } from '../../../services/problemas-nueva-consulta.service';
+import { DateFormat, momentFormat } from '@core/utils/moment.utils';
+import { MedicalDischargeForm } from '../routes/medical-discharge/medical-discharge.component';
 
 @Injectable({
 	providedIn: 'root'
@@ -12,6 +16,7 @@ export class GuardiaMapperService {
 
 	triageListDtoToTriage: (triageListDto: TriageListDto) => Triage = GuardiaMapperService._mapTriageListDtoToTriage;
 	triageListDtoToTriageReduced: (triageListDto: TriageListDto) => TriageReduced = GuardiaMapperService._mapTriageListDtoToTriageReduced;
+	formToMedicalDischargeDto: (s: MedicalDischargeForm) => MedicalDischargeDto = GuardiaMapperService._mapFormToMedicalDischargeDto;
 
 	constructor() {
 	}
@@ -120,5 +125,27 @@ export class GuardiaMapperService {
 			createdBy: triageListDto.createdBy,
 			doctorsOfficeDescription: triageListDto.doctorsOffice?.description
 		};
+	}
+
+	private static _mapFormToMedicalDischargeDto(s: MedicalDischargeForm): MedicalDischargeDto {
+		return {
+			medicalDischargeOn: {
+				date: dateToDateDto(s.dateTime.date.toDate()),
+				time: dateToTimeDto(parse(s.dateTime.time, 'HH:mm', new Date()))
+			},
+			problems: s.problems.map(
+				(problema: Problema) => {
+					return {
+						chronic: problema.cronico,
+						endDate: problema.fechaFin ? momentFormat(problema.fechaFin, DateFormat.API_DATE) : undefined,
+						snomed: problema.snomed,
+						startDate: momentFormat(problema.fechaInicio, DateFormat.API_DATE)
+					};
+				}
+			),
+			dischargeTypeId: s.dischargeTypeId,
+			autopsy: s.autopsy,
+		};
+
 	}
 }

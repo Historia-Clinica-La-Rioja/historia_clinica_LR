@@ -1,8 +1,8 @@
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {SnomedDto} from '@api-rest/api-model';
 import {ColumnConfig} from '@presentation/components/document-section/document-section.component';
-import {SEMANTICS_CONFIG} from '../../../constants/snomed-semantics';
-import {SnomedSemanticSearch, SnomedService} from '../../../services/snomed.service';
+import {SEMANTICS_CONFIG} from '../constants/snomed-semantics';
+import {SnomedSemanticSearch, SnomedService} from './snomed.service';
 import {pushTo} from '@core/utils/array.utils';
 import {DateFormat, momentFormat, newMoment} from '@core/utils/moment.utils';
 import {Moment} from 'moment';
@@ -16,7 +16,7 @@ export interface Problema {
 	fechaFin?: Moment;
 }
 
-export class ProblemasNuevaConsultaService {
+export class ProblemasService {
 
 	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 

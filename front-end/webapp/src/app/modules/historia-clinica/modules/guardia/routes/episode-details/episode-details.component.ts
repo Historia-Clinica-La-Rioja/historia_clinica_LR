@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
 import { CompletePatientDto, PersonalInformationDto, PersonPhotoDto, TriageListDto, ResponseEmergencyCareDto } from '@api-rest/api-model';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
 	EmergencyCareEpisodeService,
 } from '@api-rest/services/emergency-care-episode.service';
@@ -31,6 +31,7 @@ import { EmergencyCareEpisodeStateService } from '@api-rest/services/emergency-c
 export class EpisodeDetailsComponent implements OnInit {
 
 	readonly triages = Triages;
+	readonly STATES = EstadosEpisodio;
 
 	personPhoto$: Observable<PersonPhotoDto>;
 	patientBasicData;
@@ -44,7 +45,6 @@ export class EpisodeDetailsComponent implements OnInit {
 	lastTriage: Triage;
 	triagesHistory: TriageReduced[];
 	episodeState: EstadosEpisodio;
-	enAtencion = EstadosEpisodio.EN_ATENCION;
 	constructor(
 		private readonly route: ActivatedRoute,
 		private readonly patientService: PatientService,
@@ -59,6 +59,7 @@ export class EpisodeDetailsComponent implements OnInit {
 		private readonly triageDefinitionsService: TriageDefinitionsService,
 		private readonly episodeStateService: EpisodeStateService,
 		private readonly emergencyCareEpisodeStateService: EmergencyCareEpisodeStateService,
+		private readonly router: Router
 	) { }
 
 	ngOnInit(): void {
@@ -183,6 +184,10 @@ export class EpisodeDetailsComponent implements OnInit {
 				);
 			}
 		});
+	}
+
+	altaMedica(): void {
+		this.router.navigate([`${this.router.url}/alta-medica`]);
 	}
 }
 

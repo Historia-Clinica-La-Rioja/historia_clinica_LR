@@ -25,4 +25,9 @@ export class EmergencyCareMasterDataService {
 		return this.http.get<MasterDataInterface<number>[]>(url);
 	}
 
+	getDischargeType(): Observable<MasterDataInterface<number>[]> {
+		const url = `${environment.apiBase}${PREFIX}/dischargeType`;
+		return this.http.get<MasterDataInterface<number>[]>(url);
+	}
+
 }

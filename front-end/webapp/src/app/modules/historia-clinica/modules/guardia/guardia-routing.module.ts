@@ -11,6 +11,7 @@ import { AdmisionAdministrativaComponent } from './routes/admision-administrativ
 import { NewEpisodeAdultGynecologicalTriageComponent } from './routes/new-episode-adult-gynecological-triage/new-episode-adult-gynecological-triage.component';
 import { NewEpisodePediatricTriageComponent } from './routes/new-episode-pediatric-triage/new-episode-pediatric-triage.component';
 import { EpisodeDetailsComponent } from './routes/episode-details/episode-details.component';
+import { MedicalDischargeComponent } from './routes/medical-discharge/medical-discharge.component';
 
 
 const routes: Routes = [{
@@ -40,6 +41,11 @@ const routes: Routes = [{
 			path: 'episodio/:id',
 			component: EpisodeDetailsComponent
 		},
+		{
+			path: 'episodio/:id/alta-medica',
+			component: MedicalDischargeComponent
+		},
+
 		...mockRouters(MOCKS_GUARDIA)
 	],
 	canActivate: [RoleGuard, FeatureFlagGuard],

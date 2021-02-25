@@ -2,9 +2,9 @@
 	<app-document-section [sectionTitle]="'ambulatoria.paciente.problemas.TITLE_POPUP_RESOLVER_PROBLEMA'">
 
 		<div concept-form *ngIf="false else problemaForm">
-			<app-concepts-search *ngIf="!problemasNuevaConsultaService.getSnomedConcept() else problemaForm"
+			<app-concepts-search *ngIf="!problemasService.getSnomedConcept() else problemaForm"
 								 [label]="'ambulatoria.paciente.nueva-consulta.problemas.CONCEPT_LABEL'"
-								 (search)="problemasNuevaConsultaService.openSearchDialog($event)">
+								 (search)="problemasService.openSearchDialog($event)">
 			</app-concepts-search>
 		</div>
 

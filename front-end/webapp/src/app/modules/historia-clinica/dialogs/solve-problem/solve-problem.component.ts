@@ -5,7 +5,7 @@ import {SnackBarService} from '@presentation/services/snack-bar.service';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {ConfirmDialogComponent} from '@core/dialogs/confirm-dialog/confirm-dialog.component';
 import {HealthConditionService} from '@api-rest/services/healthcondition.service';
-import {ProblemasNuevaConsultaService} from '../../modules/ambulatoria/services/problemas-nueva-consulta.service';
+import {ProblemasService} from '../../services/problemas-nueva-consulta.service';
 import {SnomedService} from '../../services/snomed.service';
 import {HEALTH_CLINICAL_STATUS} from '../../modules/internacion/constants/ids';
 import {OutpatientConsultationService} from '@api-rest/services/outpatient-consultation.service';
@@ -20,7 +20,7 @@ export class SolveProblemComponent implements OnInit {
 
 	removeForm: FormGroup;
 	clinicalStatus: MasterDataInterface<string>[];
-	problemasNuevaConsultaService: ProblemasNuevaConsultaService;
+	problemasService: ProblemasService;
 	private readonly form: FormGroup;
 	private problema: HealthConditionNewConsultationDto;
 	private dataDto: HCEPersonalHistoryDto;
@@ -38,7 +38,7 @@ export class SolveProblemComponent implements OnInit {
 		private readonly snomedService: SnomedService,
 		private readonly outpatientConsultationService: OutpatientConsultationService,
 	) {
-		this.problemasNuevaConsultaService = new ProblemasNuevaConsultaService(formBuilder, this.snomedService);
+		this.problemasService = new ProblemasService(formBuilder, this.snomedService);
 		this.dataDto = data.problema;
 		this.patientId = data.patientId;
 		this.problemId = this.dataDto.id;
