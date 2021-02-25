@@ -7,6 +7,7 @@ import net.pladema.sgx.files.FileService;
 import net.pladema.sgx.files.StreamFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ import java.util.Optional;
 @Service
 public class AssetsServiceImpl implements AssetsService {
 
-    private static final String ORIGINAL_PATH = "/resources/assets/";
+    private static final String ORIGINAL_PATH = "/assets/webapp/";
     private static final String CUSTOM_PATH = "/assets/custom/";
     private static final Logger LOG = LoggerFactory.getLogger(AssetsServiceImpl.class);
 
@@ -64,7 +65,7 @@ public class AssetsServiceImpl implements AssetsService {
 
         String newPartialPath = ORIGINAL_PATH.concat(newAsset.getNameFile());
         return new AssetsFileBo(
-                this.fileService.loadFile(newPartialPath),
+                new ClassPathResource(newPartialPath),
                 newAsset.getContentType());
     }
 }
