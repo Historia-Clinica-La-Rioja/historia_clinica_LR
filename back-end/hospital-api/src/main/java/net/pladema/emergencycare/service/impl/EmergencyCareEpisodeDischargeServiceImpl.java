@@ -1,6 +1,7 @@
 package net.pladema.emergencycare.service.impl;
 
 import net.pladema.clinichistory.documents.service.DocumentFactory;
+import net.pladema.clinichistory.hospitalization.repository.domain.DischargeType;
 import net.pladema.emergencycare.repository.EmergencyCareEpisodeDischargeRepository;
 import net.pladema.emergencycare.repository.entity.EmergencyCareDischarge;
 import net.pladema.emergencycare.repository.entity.EmergencyCareState;
@@ -8,9 +9,14 @@ import net.pladema.emergencycare.service.EmergencyCareEpisodeDischargeService;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeStateService;
 import net.pladema.emergencycare.service.domain.AdministrativeDischargeBo;
 import net.pladema.emergencycare.service.domain.MedicalDischargeBo;
+import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Optional;
+
+import static net.pladema.emergencycare.repository.entity.EmergencyCareDischarge.WITHOUT_DOCTOR;
 
 @Service
 public class EmergencyCareEpisodeDischargeServiceImpl implements EmergencyCareEpisodeDischargeService {
@@ -42,6 +48,18 @@ public class EmergencyCareEpisodeDischargeServiceImpl implements EmergencyCareEp
         emergencyCareDischarge.setEmergencyCareEpisodeId(administrativeDischargeBo.getEpisodeId());
         emergencyCareDischarge.setHospitalTransportId(administrativeDischargeBo.getHospitalTransportId());
         emergencyCareDischarge.setAmbulanceCompanyId(administrativeDischargeBo.getAmbulanceCompanyId());
+        emergencyCareDischarge = emergencyCareEpisodeDischargeRepository.save(emergencyCareDischarge);
+        emergencyCareEpisodeStateService.changeState(emergencyCareDischarge.getEmergencyCareEpisodeId(), institutionId, EmergencyCareState.CON_ALTA_ADMINISTRATIVA, null);
+        return true;
+    }
+
+    @Override
+    public boolean newAdministrativeDischargeByAbsence(Integer episodeId, Integer institutionId, Integer userId, ZoneId institutionZoneId) {
+        LocalDateTime localDateTIme = LocalDateTime.now()
+                .atZone(ZoneId.of(JacksonDateFormatConfig.UTC_ZONE_ID))
+                .withZoneSameInstant(institutionZoneId)
+                .toLocalDateTime();
+        EmergencyCareDischarge emergencyCareDischarge = new EmergencyCareDischarge(episodeId,localDateTIme,userId,DischargeType.RETIRO_VOLUNTARIO, WITHOUT_DOCTOR);
         emergencyCareDischarge = emergencyCareEpisodeDischargeRepository.save(emergencyCareDischarge);
         emergencyCareEpisodeStateService.changeState(emergencyCareDischarge.getEmergencyCareEpisodeId(), institutionId, EmergencyCareState.CON_ALTA_ADMINISTRATIVA, null);
         return true;

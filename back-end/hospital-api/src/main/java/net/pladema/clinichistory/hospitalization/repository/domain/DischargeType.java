@@ -19,6 +19,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class DischargeType implements Serializable {
 
+	public static final Short RETIRO_VOLUNTARIO = 4;
 	/**
 	 * 
 	 */

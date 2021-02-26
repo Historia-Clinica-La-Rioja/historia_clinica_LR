@@ -3,8 +3,6 @@ package net.pladema.emergencycare.repository.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -19,6 +17,7 @@ import java.time.LocalDateTime;
 @Table(name = "emergency_care_discharge")
 public class EmergencyCareDischarge {
 
+    public static Integer WITHOUT_DOCTOR = -1;
 
     @Id
     @Column(name = "emergency_care_episode_id")
@@ -70,6 +69,14 @@ public class EmergencyCareDischarge {
         this.administrativeDischargeByUser = administrativeDischargeByUser;
         this.hospitalTransportId = hospitalTransportId;
         this.ambulanceCompanyId = ambulanceCompanyId;
+    }
+
+    public EmergencyCareDischarge(Integer emergencyCareEpisodeId, LocalDateTime administrativeDischargeOn, Integer userId, Short dischargeTypeId, Integer medicalDischargeByProfessional) {
+        this.emergencyCareEpisodeId = emergencyCareEpisodeId;
+        this.setAdministrativeDischargeOn(administrativeDischargeOn);
+        this.setAdministrativeDischargeByUser(userId);
+        this.setDischargeTypeId(dischargeTypeId);
+        this.medicalDischargeByProfessional = medicalDischargeByProfessional;
     }
 
 }

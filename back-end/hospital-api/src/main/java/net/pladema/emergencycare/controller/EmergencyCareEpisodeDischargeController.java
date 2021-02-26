@@ -11,6 +11,7 @@ import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeStateService;
 import net.pladema.emergencycare.service.domain.AdministrativeDischargeBo;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
+import net.pladema.establishment.controller.service.InstitutionExternalService;
 import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.sgx.exceptions.NotFoundException;
@@ -22,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.time.ZoneId;
 
 @RestController
 @RequestMapping("/institution/{institutionId}/emergency-care/episodes/{episodeId}/discharge")
@@ -36,6 +38,7 @@ public class EmergencyCareEpisodeDischargeController {
     private final PatientExternalService patientExternalService;
     private final EmergencyCareEpisodeService emergencyCareEpisodeService;
     private final EmergencyCareEpisodeStateService emergencyCareEpisodeStateService;
+    private final InstitutionExternalService institutionExternalService;
 
     EmergencyCareEpisodeDischargeController(
             EmergencyCareEpisodeDischargeService emergencyCareEpisodeDischargeService,
@@ -43,8 +46,8 @@ public class EmergencyCareEpisodeDischargeController {
             HealthcareProfessionalExternalService healthcareProfessionalExternalService,
             PatientExternalService patientExternalService,
             EmergencyCareEpisodeService emergencyCareEpisodeService,
-            EmergencyCareEpisodeStateService emergencyCareEpisodeStateService
-
+            EmergencyCareEpisodeStateService emergencyCareEpisodeStateService,
+            InstitutionExternalService institutionExternalService
     ) {
         this.emergencyCareEpisodeDischargeService = emergencyCareEpisodeDischargeService;
         this.emergencyCareDischargeMapper = emergencyCareDischargeMapper;
@@ -52,6 +55,7 @@ public class EmergencyCareEpisodeDischargeController {
         this.patientExternalService = patientExternalService;
         this.emergencyCareEpisodeService = emergencyCareEpisodeService;
         this.emergencyCareEpisodeStateService = emergencyCareEpisodeStateService;
+        this.institutionExternalService = institutionExternalService;
     }
 
     @Transactional
@@ -89,6 +93,19 @@ public class EmergencyCareEpisodeDischargeController {
 
         AdministrativeDischargeBo administrativeDischargeBo = emergencyCareDischargeMapper.toAdministrativeDischargeBo(administrativeDischargeDto, episodeId, userId);
         boolean saved = emergencyCareEpisodeDischargeService.newAdministrativeDischarge(administrativeDischargeBo, institutionId);
+        LOG.debug("Output -> {}", saved);
+        return ResponseEntity.ok().body(saved);
+    }
+
+    @Transactional
+    @PostMapping("/administrativeDischarge/absence")
+    public ResponseEntity<Boolean> newAdministrativeDischargeByAbsence(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "episodeId") Integer episodeId) {
+        LOG.debug("Change emergency care state -> episodeId {}, institutionId {}", episodeId, institutionId);
+        Integer userId = UserInfo.getCurrentAuditor();
+        ZoneId institutionZoneId = institutionExternalService.getTimezone(institutionId);
+        boolean saved = emergencyCareEpisodeDischargeService.newAdministrativeDischargeByAbsence(episodeId, institutionId, userId, institutionZoneId);
         LOG.debug("Output -> {}", saved);
         return ResponseEntity.ok().body(saved);
     }
