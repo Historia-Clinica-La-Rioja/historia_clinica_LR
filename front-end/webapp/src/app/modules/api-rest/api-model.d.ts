@@ -149,6 +149,10 @@ export interface AppearanceDto extends Serializable {
     muscleHypertoniaId?: number;
 }
 
+export interface ApplicationVersionDto {
+    version: string;
+}
+
 export interface AppointmentBasicPatientDto {
     id: number;
     person: BasicPersonalDataDto;

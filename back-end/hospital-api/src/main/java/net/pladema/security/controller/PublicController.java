@@ -1,19 +1,21 @@
 package net.pladema.security.controller;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
 import io.swagger.annotations.Api;
 import net.pladema.flavor.service.FlavorService;
 import net.pladema.security.controller.dto.PublicInfoDto;
 import net.pladema.sgx.featureflags.AppFeature;
-
 import net.pladema.sgx.recaptcha.controller.dto.RecaptchaPublicConfigDto;
 import net.pladema.sgx.recaptcha.service.ICaptchaService;
+import net.pladema.security.controller.dto.ApplicationVersionDto;
+import net.pladema.sgx.version.service.ApplicationVersionService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/public")
@@ -24,13 +26,16 @@ public class PublicController {
 
 	private final ICaptchaService recaptchaService;
 
+	private final ApplicationVersionService applicationVersionService;
+
 	public PublicController(
 			FlavorService flavorService,
-			ICaptchaService recaptchaService
-	) {
+			ICaptchaService recaptchaService,
+			ApplicationVersionService applicationVersionService) {
 		super();
 		this.flavor = flavorService.getFlavor().toString();
 		this.recaptchaService = recaptchaService;
+		this.applicationVersionService = applicationVersionService;
 	}
 
 	@GetMapping(value = "/info")
@@ -49,5 +54,10 @@ public class PublicController {
 		return result;
 	}
 
+	@GetMapping(value = "/version")
+	public ResponseEntity<ApplicationVersionDto> getApplicationVersion() {
+		ApplicationVersionDto result = new ApplicationVersionDto(applicationVersionService.getCurrentVersion());
+		return ResponseEntity.ok(result);
+	}
 
 }
