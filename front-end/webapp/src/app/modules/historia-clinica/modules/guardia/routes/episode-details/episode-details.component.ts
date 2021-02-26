@@ -22,6 +22,7 @@ import { TriageDefinitionsService } from '../../services/triage-definitions.serv
 import { EpisodeStateService } from '../../services/episode-state.service';
 import { SelectConsultorioComponent } from '../../dialogs/select-consultorio/select-consultorio.component';
 import { EmergencyCareEpisodeStateService } from '@api-rest/services/emergency-care-episode-state.service';
+import { ContextService } from '@core/services/context.service';
 
 @Component({
 	selector: 'app-episode-details',
@@ -32,6 +33,7 @@ export class EpisodeDetailsComponent implements OnInit {
 
 	readonly triages = Triages;
 	readonly STATES = EstadosEpisodio;
+	private readonly routePrefix;
 
 	personPhoto$: Observable<PersonPhotoDto>;
 	patientBasicData;
@@ -46,6 +48,7 @@ export class EpisodeDetailsComponent implements OnInit {
 	triagesHistory: TriageReduced[];
 	episodeState: EstadosEpisodio;
 	constructor(
+		private readonly router: Router,
 		private readonly route: ActivatedRoute,
 		private readonly patientService: PatientService,
 		private readonly mapperService: MapperService,
@@ -59,33 +62,54 @@ export class EpisodeDetailsComponent implements OnInit {
 		private readonly triageDefinitionsService: TriageDefinitionsService,
 		private readonly episodeStateService: EpisodeStateService,
 		private readonly emergencyCareEpisodeStateService: EmergencyCareEpisodeStateService,
-		private readonly router: Router
-	) { }
+		private readonly contextService: ContextService,
+	) {
+		this.routePrefix = 'institucion/' + this.contextService.institutionId;
+	}
 
 	ngOnInit(): void {
 		this.route.paramMap.subscribe(
 			(params) => {
 				this.episodeId = Number(params.get('id'));
 
-
 				this.emergencyCareEpisodeStateService.getState(this.episodeId).subscribe(
-					state => this.episodeState = state.id
-				);
+					state => {
+						this.episodeState = state.id;
 
-				this.emergencyCareEpisodeService.getAdministrative(this.episodeId)
-					.subscribe((responseEmergencyCare: ResponseEmergencyCareDto) => {
-						this.responseEmergencyCare = responseEmergencyCare;
-						this.emergencyCareType = responseEmergencyCare.emergencyCareType?.id;
-						this.doctorsOfficeDescription = responseEmergencyCare.doctorsOffice?.description;
-
-						if (responseEmergencyCare.patient?.id) {
-							this.loadPatient(responseEmergencyCare.patient.id);
+						if (this.isActive(this.episodeState)) {
+							this.loadEpisode();
+						} else {
+							this.snackBarService.showError('guardia.episode.NOT_ACTIVE');
+							this.goToEmergencyCareHome();
 						}
-					});
-
-				this.loadTriages();
+					}, error => {
+						this.snackBarService.showError(error.text);
+						this.goToEmergencyCareHome();
+					}
+				);
 			});
 
+	}
+
+	private isActive(episodeStateId: number): boolean {
+		return episodeStateId === this.STATES.EN_ATENCION
+			|| episodeStateId === this.STATES.EN_ESPERA
+			|| episodeStateId === this.STATES.CON_ALTA_MEDICA;
+	}
+
+	private loadEpisode(): void {
+		this.emergencyCareEpisodeService.getAdministrative(this.episodeId)
+			.subscribe((responseEmergencyCare: ResponseEmergencyCareDto) => {
+				this.responseEmergencyCare = responseEmergencyCare;
+				this.emergencyCareType = responseEmergencyCare.emergencyCareType?.id;
+				this.doctorsOfficeDescription = responseEmergencyCare.doctorsOffice?.description;
+
+				if (responseEmergencyCare.patient?.id) {
+					this.loadPatient(responseEmergencyCare.patient.id);
+				}
+			});
+
+		this.loadTriages();
 	}
 
 	private loadTriages(): void {
@@ -100,6 +124,10 @@ export class EpisodeDetailsComponent implements OnInit {
 		function hasHistory(triages: TriageListDto[]) {
 			return triages?.length > 1;
 		}
+	}
+
+	private goToEmergencyCareHome(): void {
+		this.router.navigateByUrl(this.routePrefix + '/guardia');
 	}
 
 	searchPatient(): void {

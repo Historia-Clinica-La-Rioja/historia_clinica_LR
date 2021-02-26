@@ -17,7 +17,7 @@ public class EmergencyCareEpisodeStateServiceImpl implements EmergencyCareEpisod
 
 	private static final String WRONG_STATE_ID = "wrong-state-id";
 
-	private static final String STATE_NOT_FOUND = "El estado no se encontró o no existe";
+	private static final String STATE_NOT_FOUND = "El estado del episodio de guardia no se encontró o no existe";
 
 	private static final String WRONG_CARE_ID_EPISODE = "wrong-care-id-episode";
 

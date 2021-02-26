@@ -119,6 +119,7 @@
 		"episode": {
 			"TITLE": "Episodio de guardia",
 			"CANCEL_ATTENTION": "Cancelar atención",
+			"NOT_ACTIVE": "El episodio de guardia no se encuentra activo",
 			"cancel_attention": {
 				"SUCCESS": "La atención fue cancelada exitosamente",
 				"ERROR": "Ocurrio un error al cancelar la atención"
