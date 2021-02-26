@@ -25,6 +25,8 @@ import { InternmentStateService } from '@api-rest/services/internment-state.serv
 import { SnomedSemanticSearch, SnomedService } from '../../../../services/snomed.service';
 import { SEMANTICS_CONFIG } from '../../../../constants/snomed-semantics';
 import { DiagnosisEpicrisisService } from '../../services/diagnosis-epicrisis.service';
+import { hasError } from '@core/utils/form.utils';
+import {TEXT_AREA_MAX_LENGTH} from '@core/constants/validation-constants';
 
 @Component({
 	selector: 'app-epicrisis-form',
@@ -39,8 +41,11 @@ export class EpicrisisFormComponent implements OnInit {
 	private patientId: number;
 	private healthClinicalStatus;
 
+	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
+
 	isAllSelected = this.tableService.isAllSelected;
 	masterToggle = this.tableService.masterToggle;
+	public hasError = hasError;
 
 	diagnosticsEpicrisisService: DiagnosisEpicrisisService;
 
@@ -142,11 +147,11 @@ export class EpicrisisFormComponent implements OnInit {
 			mainDiagnosis: [null, Validators.required],
 			snomed: [null],
 			observations: this.formBuilder.group ({
-				evolutionNote: [null, Validators.required],
-				indicationsNote: [null, Validators.required],
-				otherNote: [null],
-				physicalExamNote: [null, Validators.required],
-				studiesSummaryNote: [null, Validators.required]
+				evolutionNote: [null, [Validators.required, Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
+				indicationsNote: [null, [Validators.required, Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
+				otherNote: [null, Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)],
+				physicalExamNote: [null, [Validators.required, Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
+				studiesSummaryNote: [null, [Validators.required, Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]]
 			}),
 		});
 

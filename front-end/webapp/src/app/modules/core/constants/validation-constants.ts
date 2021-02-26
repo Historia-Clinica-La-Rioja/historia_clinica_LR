@@ -25,4 +25,6 @@ export const VITAL_SIGNS = {
 	min_value: 1
 };
 
+export const TEXT_AREA_MAX_LENGTH = 1024;
+
 export const REMOVEATTENTION = 'removeAttention';

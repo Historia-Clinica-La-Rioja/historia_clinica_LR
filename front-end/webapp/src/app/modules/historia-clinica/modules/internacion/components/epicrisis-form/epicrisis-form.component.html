@@ -18,7 +18,8 @@
 							<mat-form-field appearance="outline">
 								<mat-label [translate]="'internaciones.anamnesis.diagnosticos.DIAGNOSIS'">
 								</mat-label>
-								<input matInput type="text" formControlName="snomed" name="snomed" readonly matTooltip="{{ snomedConcept.pt }}">
+								<input matInput type="text" formControlName="snomed" name="snomed" readonly
+									   matTooltip="{{ snomedConcept.pt }}">
 								<button id="clear" mat-button matSuffix color="warn" mat-icon-button
 										(click)="resetForm()">
 									<mat-icon>close</mat-icon>
@@ -36,47 +37,50 @@
 		</section>
 
 		<section id="diagnosticos">
-						<table mat-table [dataSource]="diagnosticsEpicrisisService?.getTable().data" class="secondary">
-							<mat-radio-group formControlName="mainDiagnosis">
+			<table mat-table [dataSource]="diagnosticsEpicrisisService?.getTable().data" class="secondary">
+				<mat-radio-group formControlName="mainDiagnosis">
 
-								<ng-container matColumnDef="mainDiagnosis">
-									<th *matHeaderCellDef>Principal</th>
-									<td mat-cell *matCellDef="let row">
-										<mat-radio-button [value]="row"
-														  [disabled]="!diagnosticsEpicrisisService?.isSelectableAsMain(row)"
-														  (change)="diagnosticsEpicrisisService?.changeMainDiagnosis(row)">
-										</mat-radio-button>
-									</td>
-								</ng-container>
+					<ng-container matColumnDef="mainDiagnosis">
+						<th *matHeaderCellDef>Principal</th>
+						<td mat-cell *matCellDef="let row">
+							<mat-radio-button [value]="row"
+											  [disabled]="!diagnosticsEpicrisisService?.isSelectableAsMain(row)"
+											  (change)="diagnosticsEpicrisisService?.changeMainDiagnosis(row)">
+							</mat-radio-button>
+						</td>
+					</ng-container>
 
-								<ng-container *ngFor="let column of diagnosticsEpicrisisService?.getTable().columns" [matColumnDef]="column.def">
-									<th *matHeaderCellDef>{{ column.header | translate }}</th>
-									<td mat-cell *matCellDef="let element"> {{ column.display(element) }} </td>
-								</ng-container>
+					<ng-container *ngFor="let column of diagnosticsEpicrisisService?.getTable().columns"
+								  [matColumnDef]="column.def">
+						<th *matHeaderCellDef>{{ column.header | translate }}</th>
+						<td mat-cell *matCellDef="let element"> {{ column.display(element) }} </td>
+					</ng-container>
 
-								<tr mat-header-row *matHeaderRowDef="diagnosticsEpicrisisService?.getTable().displayedColumns"></tr>
-								<tr mat-row *matRowDef="let row; columns: diagnosticsEpicrisisService?.getTable().displayedColumns;"></tr>
+					<tr mat-header-row *matHeaderRowDef="diagnosticsEpicrisisService?.getTable().displayedColumns"></tr>
+					<tr mat-row
+						*matRowDef="let row; columns: diagnosticsEpicrisisService?.getTable().displayedColumns;"></tr>
 
-								<ng-container matColumnDef="select">
-									<th mat-header-cell class="actions" *matHeaderCellDef>
-										<mat-checkbox *ngIf="diagnosticsEpicrisisService?.getTable().data.length !== 0"
-													  (change)="$event ? diagnosticsEpicrisisService?.diagnosisMasterToggle() : null"
-													  [checked]="diagnosticsEpicrisisService?.selectionHasValue() && diagnosticsEpicrisisService?.isAllSelected()"
-													  [indeterminate]="diagnosticsEpicrisisService?.selectionHasValue() && !diagnosticsEpicrisisService?.isAllSelected()">
-										</mat-checkbox>
-									</th>
-									<td mat-cell class="actions" *matCellDef="let row">
-										<mat-checkbox (click)="$event.stopPropagation()"
-													  (change)="$event ? diagnosticsEpicrisisService?.toggle(row) : null"
-													  [checked]="diagnosticsEpicrisisService?.isSelected(row)"
-													  [disabled]="row.snomed.id === form.value.mainDiagnosis?.snomed.id">
-						</mat-checkbox>
-					</td>
-				</ng-container>
+					<ng-container matColumnDef="select">
+						<th mat-header-cell class="actions" *matHeaderCellDef>
+							<mat-checkbox *ngIf="diagnosticsEpicrisisService?.getTable().data.length !== 0"
+										  (change)="$event ? diagnosticsEpicrisisService?.diagnosisMasterToggle() : null"
+										  [checked]="diagnosticsEpicrisisService?.selectionHasValue() && diagnosticsEpicrisisService?.isAllSelected()"
+										  [indeterminate]="diagnosticsEpicrisisService?.selectionHasValue() && !diagnosticsEpicrisisService?.isAllSelected()">
+							</mat-checkbox>
+						</th>
+						<td mat-cell class="actions" *matCellDef="let row">
+							<mat-checkbox (click)="$event.stopPropagation()"
+										  (change)="$event ? diagnosticsEpicrisisService?.toggle(row) : null"
+										  [checked]="diagnosticsEpicrisisService?.isSelected(row)"
+										  [disabled]="row.snomed.id === form.value.mainDiagnosis?.snomed.id">
+							</mat-checkbox>
+						</td>
+					</ng-container>
 				</mat-radio-group>
 
 			</table>
-			<app-no-data class="secondary" *ngIf="diagnosticsEpicrisisService?.getTable().data.length === 0"></app-no-data>
+			<app-no-data class="secondary"
+						 *ngIf="diagnosticsEpicrisisService?.getTable().data.length === 0"></app-no-data>
 
 		</section>
 
@@ -229,17 +233,29 @@
 							<textarea matInput type="text" id="evolutionNote" name="evolutionNote"
 									  formControlName="evolutionNote">
 							</textarea>
-							<mat-error [translate]="'forms.REQUIRED'">
+							<mat-error *ngIf="hasError(form.get('observations'), 'required', 'evolutionNote')"
+									   [translate]="'forms.REQUIRED'">
+							</mat-error>
+							<mat-error *ngIf="hasError(form.get('observations'), 'maxlength', 'evolutionNote')"
+									   [translate]="'forms.MAX_LENGTH_ERROR'"
+									   [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
 							</mat-error>
 						</mat-form-field>
 					</div>
 					<div>
-						<mat-label [translate]="'internaciones.epicrisis.observations.STUDIES_SUMMARY'"></mat-label>
+						<mat-label *ngIf="hasError(form.get('observations'), 'required', 'indicationsNote')"
+								   [translate]="'internaciones.epicrisis.observations.STUDIES_SUMMARY'"></mat-label>
 						<mat-form-field [floatLabel]="'never'" appearance="outline">
 							<textarea matInput type="text" id="studiesSummaryNote" name="studiesSummaryNote"
-									  formControlName="studiesSummaryNote">
+									  formControlName="studiesSummaryNote"
+							>
 							</textarea>
-							<mat-error [translate]="'forms.REQUIRED'">
+							<mat-error *ngIf="hasError(form.get('observations'), 'required', 'studiesSummaryNote')"
+									   [translate]="'forms.REQUIRED'">
+							</mat-error>
+							<mat-error *ngIf="hasError(form.get('observations'), 'maxlength', 'studiesSummaryNote')"
+									   [translate]="'forms.MAX_LENGTH_ERROR'"
+									   [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
 							</mat-error>
 						</mat-form-field>
 					</div>
@@ -248,9 +264,15 @@
 						</mat-label>
 						<mat-form-field [floatLabel]="'never'" appearance="outline">
 							<textarea matInput type="text" id="physicalExamNote" name="physicalExamNote"
-									  formControlName="physicalExamNote">
+									  formControlName="physicalExamNote"
+							>
 							</textarea>
-							<mat-error [translate]="'forms.REQUIRED'">
+							<mat-error *ngIf="hasError(form.get('observations'), 'required', 'physicalExamNote')"
+									   [translate]="'forms.REQUIRED'">
+							</mat-error>
+							<mat-error *ngIf="hasError(form.get('observations'), 'maxlength', 'physicalExamNote')"
+									   [translate]="'forms.MAX_LENGTH_ERROR'"
+									   [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
 							</mat-error>
 						</mat-form-field>
 					</div>
@@ -258,17 +280,28 @@
 						<mat-label [translate]="'internaciones.epicrisis.observations.INDICATIONS_NOTE'"></mat-label>
 						<mat-form-field [floatLabel]="'never'" appearance="outline">
 							<textarea matInput type="text" id="indicationsNote" name="indicationsNote"
-									  formControlName="indicationsNote">
+									  formControlName="indicationsNote"
+							>
 							</textarea>
-							<mat-error [translate]="'forms.REQUIRED'">
+							<mat-error *ngIf="hasError(form.get('observations'), 'maxlength', 'indicationsNote')"
+									   [translate]="'forms.MAX_LENGTH_ERROR'"
+									   [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
+							</mat-error>
+							<mat-error *ngIf="hasError(form.get('observations'), 'required', 'indicationsNote')"
+									[translate]="'forms.REQUIRED'">
 							</mat-error>
 						</mat-form-field>
 					</div>
 					<div>
 						<mat-label [translate]="'internaciones.epicrisis.observations.OTHERS'"></mat-label>
 						<mat-form-field [floatLabel]="'never'" appearance="outline">
-							<textarea matInput type="text" id="otherNote" name="otherNote" formControlName="otherNote">
+							<textarea matInput type="text" id="otherNote" name="otherNote" formControlName="otherNote"
+							>
 							</textarea>
+									<mat-error *ngIf="hasError(form.get('observations'), 'maxlength', 'otherNote')"
+									   [translate]="'forms.MAX_LENGTH_ERROR'"
+									   [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
+							</mat-error>
 						</mat-form-field>
 					</div>
 
@@ -282,7 +315,8 @@
 					  [translate]="'buttons.BACK'">
 				</span>
 			</button>
-			<button id="sign-confirm" mat-raised-button type="submit" color="primary" *hasRole="['ESPECIALISTA_MEDICO']">
+			<button id="sign-confirm" mat-raised-button type="submit" color="primary"
+					*hasRole="['ESPECIALISTA_MEDICO']">
 				<span class="uppercase" [translate]="'internaciones.epicrisis.buttons.CONFIRM'"></span>
 			</button>
 		</section>

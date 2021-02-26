@@ -8,6 +8,7 @@ import { RequestMasterDataService } from '@api-rest/services/request-masterdata.
 import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
 import { SEMANTICS_CONFIG } from 'src/app/modules/historia-clinica/constants/snomed-semantics';
 import { hasError } from '@core/utils/form.utils';
+import {TEXT_AREA_MAX_LENGTH} from '@core/constants/validation-constants';
 
 @Component({
   selector: 'app-agregar-prescripcion-item',
@@ -28,6 +29,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit {
 	hasError = hasError;
 
 	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
+	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 
 	@ViewChild('intervalHoursInput') intervalHoursInput: ElementRef;
 	@ViewChild('administrationTimeDaysInput') administrationTimeDaysInput: ElementRef;
@@ -195,7 +197,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit {
 			intervalHours: [null],
 			administrationTime: [this.DEFAULT_RADIO_OPTION],
 			administrationTimeDays: [null],
-			observations: [null],
+			observations: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
 			studyCategory: [null],
 		});
 

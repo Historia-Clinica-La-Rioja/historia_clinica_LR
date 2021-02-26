@@ -57,7 +57,8 @@
 					"PESO_OBLIGATORIO": "Peso obligatorio",
 					"PESO_MIN": "El peso mínimo debe ser 0 kg",
 					"PESO_MAX": "El peso máximo debe ser 1000 kg",
-					"PROBLEMA_OBLIGATORIO": "Problema de consulta obligatorio"
+					"PROBLEMA_OBLIGATORIO": "Problema de consulta obligatorio",
+					"MAX_LENGTH_NOTA": "La nota de evolución debe tener como máximo 1024 caracteres"
 				},
 				"motivo": {
 					"TITLE": "Motivo de consulta",

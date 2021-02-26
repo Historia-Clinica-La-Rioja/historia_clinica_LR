@@ -18,11 +18,16 @@
     <form [formGroup]="completeStudyForm" fxLayout="column" fxLayoutGap="5px" style="margin-top: 25px;">
         <mat-form-field appearance="outline">
             <mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.complete_study_dialog.OBSERVATIONS_LABEL' | translate}}</mat-label>
-            <textarea matInput maxlength="1024" type="text" id="observations" name="observations"
-                    formControlName="observations"
-                    placeholder="{{'ambulatoria.paciente.ordenes_prescripciones.complete_study_dialog.OBSERVATIONS_PLACEHOLDER' | translate }}">
+			<textarea matInput  type="text" id="observations" name="observations"
+					  formControlName="observations"
+					  placeholder="{{'ambulatoria.paciente.ordenes_prescripciones.complete_study_dialog.OBSERVATIONS_PLACEHOLDER' | translate }}"
+			>
             </textarea>
-        </mat-form-field>
+			<mat-error *ngIf="hasError(completeStudyForm, 'maxlength', 'observations')" translate="forms.MAX_LENGTH_ERROR"
+					   [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
+			</mat-error>
+
+		</mat-form-field>
 
         <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="15px">
             <div>

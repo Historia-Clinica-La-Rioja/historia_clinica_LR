@@ -83,10 +83,14 @@
 
 			<mat-form-field appearance="outline">
 				<mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.OBSERVATIONS' | translate}}</mat-label>
-				<textarea matInput maxlength="1024" type="text" id="observations" name="observations"
+				<textarea matInput type="text" id="observations" name="observations"
 						  formControlName="observations"
 						  placeholder="{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.OBSERVATIONS' | translate }}">
 				</textarea>
+				<mat-error *ngIf="hasError(prescriptionItemForm, 'maxlength', 'observations')" translate="forms.MAX_LENGTH_ERROR"
+						   [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
+				</mat-error>
+
 			</mat-form-field>
 
 			<div fxLayout="row" fxLayoutAlign="end start">

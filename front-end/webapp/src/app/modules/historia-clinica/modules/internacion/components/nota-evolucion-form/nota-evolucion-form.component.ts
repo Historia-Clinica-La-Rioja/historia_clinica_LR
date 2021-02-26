@@ -17,6 +17,7 @@ import { Moment } from 'moment';
 import { getError, hasError } from '@core/utils/form.utils';
 import { ProcedimientosService } from '../../../../services/procedimientos.service';
 import { SnomedService } from 'src/app/modules/historia-clinica/services/snomed.service';
+import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 
 @Component({
 	selector: 'app-nota-evolucion-form',
@@ -39,6 +40,8 @@ export class NotaEvolucionFormComponent implements OnInit {
 	allergies: AllergyConditionDto[] = [];
 	immunizations: ImmunizationDto[] = [];
 	procedimientosService: ProcedimientosService;
+
+	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -94,12 +97,12 @@ export class NotaEvolucionFormComponent implements OnInit {
 				}),
 			}),
 			observations: this.formBuilder.group({
-				currentIllnessNote: [null],
-				physicalExamNote: [null],
-				studiesSummaryNote: [null],
-				evolutionNote: [null],
-				clinicalImpressionNote: [null],
-				otherNote: [null]
+				currentIllnessNote: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
+				physicalExamNote: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
+				studiesSummaryNote: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
+				evolutionNote: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
+				clinicalImpressionNote: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
+				otherNote: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]]
 			})
 		});
 

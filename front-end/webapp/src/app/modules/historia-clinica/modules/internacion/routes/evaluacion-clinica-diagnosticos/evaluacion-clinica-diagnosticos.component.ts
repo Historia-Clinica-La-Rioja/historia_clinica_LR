@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Observable } from 'rxjs';
@@ -13,6 +13,8 @@ import { MapperService } from '@presentation/services/mapper.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
 import { InternmentEpisodeSummary } from '@presentation/components/internment-episode-summary/internment-episode-summary.component';
+import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
+import { hasError } from '@core/utils/form.utils';
 
 import {
 	BasicPatientDto,
@@ -77,6 +79,8 @@ export class EvaluacionClinicaDiagnosticosComponent implements OnInit {
 	isAllSelected = this.tableService.isAllSelected;
 	masterToggle = this.tableService.masterToggle;
 
+	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
+	public hasError = hasError;
 	constructor(
 		private readonly patientService: PatientService,
 		private readonly internmentService: InternacionService,
@@ -138,12 +142,12 @@ export class EvaluacionClinicaDiagnosticosComponent implements OnInit {
 		});
 
 		this.form = this.formBuilder.group({
-			currentIllnessNote: [],
-			physicalExamNote: [],
-			studiesSummaryNote: [],
-			evolutionNote: [],
-			clinicalImpressionNote: [],
-			otherNote: [],
+			currentIllnessNote: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
+			physicalExamNote: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
+			studiesSummaryNote: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
+			evolutionNote: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
+			clinicalImpressionNote: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
+			otherNote: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
 		});
 
 	}

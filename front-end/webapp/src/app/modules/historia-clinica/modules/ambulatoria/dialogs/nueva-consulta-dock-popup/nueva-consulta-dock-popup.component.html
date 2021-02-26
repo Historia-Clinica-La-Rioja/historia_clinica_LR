@@ -284,8 +284,12 @@
 								[translate]="'ambulatoria.paciente.nueva-consulta.medicaciones.OBSERVACIONES'"></mat-label>
 							<textarea matInput type="text" id="observaciones" name="observaciones"
 									  formControlName="observaciones"
-									  placeholder="{{'ambulatoria.paciente.nueva-consulta.medicaciones.DESCRIPCION' | translate }}">
-</textarea>
+									  placeholder="{{'ambulatoria.paciente.nueva-consulta.medicaciones.DESCRIPCION' | translate }}"
+							>
+							</textarea>
+							<mat-error *ngIf="hasError(medicacionesNuevaConsultaService.getForm(), 'maxlength', 'observaciones')" translate="forms.MAX_LENGTH_ERROR"
+									   [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
+							</mat-error>
 						</mat-form-field>
 
 						<div class="margin-checkbox">
@@ -516,9 +520,11 @@
 				<ng-container concept-form>
 					<form [formGroup]="formEvolucion">
 						<mat-form-field appearance="outline">
-<textarea matInput type="text" id="evolucion-input" name="evolucion" formControlName="evolucion"
-		  placeholder="{{'ambulatoria.paciente.nueva-consulta.evolucion.DESCRIPCION' | translate }}">
-</textarea>
+							<textarea matInput type="text" id="evolucion-input" name="evolucion" formControlName="evolucion"
+									  placeholder="{{'ambulatoria.paciente.nueva-consulta.evolucion.DESCRIPCION' | translate }}"
+
+							>
+							</textarea>
 						</mat-form-field>
 					</form>
 				</ng-container>

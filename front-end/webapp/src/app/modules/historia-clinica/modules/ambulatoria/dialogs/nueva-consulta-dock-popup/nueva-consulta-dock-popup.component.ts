@@ -2,7 +2,7 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {DockPopupRef} from '@presentation/services/dock-popup-ref';
 import {SnomedService} from '../../../../services/snomed.service';
 import {OVERLAY_DATA} from '@presentation/presentation-model';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MotivoNuevaConsultaService} from '../../services/motivo-nueva-consulta.service';
 import {Medicacion, MedicacionesNuevaConsultaService} from '../../services/medicaciones-nueva-consulta.service';
 import {Problema, ProblemasService} from '../../../../services/problemas-nueva-consulta.service';
@@ -23,6 +23,8 @@ import {HealthConditionService} from '@api-rest/services/healthcondition.service
 import {ClinicalSpecialtyService} from '@api-rest/services/clinical-specialty.service';
 import {MatDialog} from '@angular/material/dialog';
 import {ConfirmarNuevaConsultaPopupComponent} from '../confirmar-nueva-consulta-popup/confirmar-nueva-consulta-popup.component';
+import {TEXT_AREA_MAX_LENGTH} from '@core/constants/validation-constants';
+import {hasError} from '@core/utils/form.utils';
 
 @Component({
 	selector: 'app-nueva-consulta-dock-popup',
@@ -47,6 +49,8 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	fixedSpecialty = true;
 	defaultSpecialty: ClinicalSpecialtyDto;
 	specialties: ClinicalSpecialtyDto[];
+	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
+	public hasError = hasError;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: NuevaConsultaData,
@@ -96,7 +100,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		}
 
 		this.formEvolucion = this.formBuilder.group({
-			evolucion: [null],
+			evolucion: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
 			clinicalSpecialty: []
 		});
 		this.motivoNuevaConsultaService.error$.subscribe(motivoError => {
@@ -234,6 +238,9 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			this.signosVitalesNuevaConsultaService.setSystolicBloodPressureError('ambulatoria.paciente.nueva-consulta.errors.TENSION_SISTOLICA_MIN');
 		}
 
+		hasError(this.formEvolucion, 'maxlength', 'evolucion') ?
+			this.errores[10] =  'ambulatoria.paciente.nueva-consulta.errors.MAX_LENGTH_NOTA'
+			: this.errores[10] = undefined;
 	}
 
 	private buildProblema(p: HealthConditionNewConsultationDto) {

@@ -4,6 +4,7 @@ import { ColumnConfig } from '@presentation/components/document-section/document
 import { SnomedSemanticSearch, SnomedService } from '../../../services/snomed.service';
 import { SEMANTICS_CONFIG } from '../../../constants/snomed-semantics';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
+import {TEXT_AREA_MAX_LENGTH} from '@core/constants/validation-constants';
 
 export interface Medicacion {
 	snomed: SnomedDto;
@@ -19,6 +20,7 @@ export class MedicacionesNuevaConsultaService {
 	private snomedConcept: SnomedDto;
 	private readonly columns: ColumnConfig[];
 	private data: Medicacion[];
+	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -26,7 +28,7 @@ export class MedicacionesNuevaConsultaService {
 	) {
 		this.form = this.formBuilder.group({
 			snomed: [null, Validators.required],
-			observaciones: [null],
+			observaciones: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
 			suspendido: [false]
 		});
 

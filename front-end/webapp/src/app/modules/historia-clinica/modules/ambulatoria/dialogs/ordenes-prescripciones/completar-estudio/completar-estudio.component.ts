@@ -1,9 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CompleteRequestDto, DiagnosticReportInfoDto } from '@api-rest/api-model';
 import { PrescriptionItemData } from '../../../components/ordenes/item-prescripciones/item-prescripciones.component';
 import { PrescripcionesService, PrescriptionTypes } from './../../../services/prescripciones.service';
+import { hasError } from '@core/utils/form.utils';
+import {TEXT_AREA_MAX_LENGTH} from '@core/constants/validation-constants';
 
 @Component({
   selector: 'app-completar-estudio',
@@ -16,13 +18,14 @@ export class CompletarEstudioComponent implements OnInit {
 	completeStudyForm: FormGroup;
 	selectedFiles: File[] = [];
 	selectedFilesShow: any[] = [];
-
+	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
+	public hasError = hasError;
 	constructor(
 		private readonly formBuilder: FormBuilder,
 		private prescripcionesService: PrescripcionesService,
 		public dialogRef: MatDialogRef<CompletarEstudioComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: {
-			diagnosticReport: DiagnosticReportInfoDto,
+			diagnosticReport: DiagnosticReportInfoDto,a
 			patientId: number,
 		}
 	) { }
@@ -31,7 +34,7 @@ export class CompletarEstudioComponent implements OnInit {
 		this.diagnosticReport = this.data.diagnosticReport;
 
 		this.completeStudyForm = this.formBuilder.group({
-			observations: [null],
+			observations: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
 		});
 	}
 

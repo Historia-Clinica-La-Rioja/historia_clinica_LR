@@ -1,6 +1,7 @@
 <app-content class="full">
 	<div fxLayout="row" fxLayoutGap="50px" fxLayout.xs="column">
-		<app-patient-card *ngIf="personPhoto" [patient]="patient$ | async" [personPhoto]="personPhoto" fxFlexOrder="2" fxFlexOrder.xs="1">
+		<app-patient-card *ngIf="personPhoto" [patient]="patient$ | async" [personPhoto]="personPhoto" fxFlexOrder="2"
+						  fxFlexOrder.xs="1">
 			<app-internment-episode-summary [internmentEpisode]="internmentEpisodeSummary$ | async" content>
 			</app-internment-episode-summary>
 		</app-patient-card>
@@ -25,15 +26,15 @@
 					<ng-container matColumnDef="select">
 						<th mat-header-cell class="actions" *matHeaderCellDef>
 							<mat-checkbox *ngIf="diagnostics.data.length !== 0"
-								(change)="$event ? masterToggle(diagnostics.data, diagnostics.selection) : null"
-								[checked]="diagnostics.selection.hasValue() && isAllSelected(diagnostics.data, diagnostics.selection)"
-								[indeterminate]="diagnostics.selection.hasValue() && !isAllSelected(diagnostics.data, diagnostics.selection)">
+										  (change)="$event ? masterToggle(diagnostics.data, diagnostics.selection) : null"
+										  [checked]="diagnostics.selection.hasValue() && isAllSelected(diagnostics.data, diagnostics.selection)"
+										  [indeterminate]="diagnostics.selection.hasValue() && !isAllSelected(diagnostics.data, diagnostics.selection)">
 							</mat-checkbox>
 						</th>
 						<td mat-cell class="actions" *matCellDef="let row">
 							<mat-checkbox (click)="$event.stopPropagation()"
-								(change)="$event ? diagnostics.selection.toggle(row) : null"
-								[checked]="diagnostics.selection.isSelected(row)">
+										  (change)="$event ? diagnostics.selection.toggle(row) : null"
+										  [checked]="diagnostics.selection.isSelected(row)">
 							</mat-checkbox>
 						</td>
 					</ng-container>
@@ -51,8 +52,14 @@
 								</mat-label>
 								<mat-form-field [floatLabel]="'never'" appearance="outline">
 									<textarea matInput type="text" id="currentIllnessNote" name="currentIllnessNote"
-										formControlName="currentIllnessNote">
-										</textarea>
+											  formControlName="currentIllnessNote"
+									>
+									</textarea>
+									<mat-error *ngIf="hasError(form, 'maxlength', 'currentIllnessNote')"
+											   translate="forms.MAX_LENGTH_ERROR"
+											   [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
+									</mat-error>
+
 								</mat-form-field>
 							</div>
 							<div fxLayout="column" fxLayoutGap="5px">
@@ -61,8 +68,14 @@
 								</mat-label>
 								<mat-form-field [floatLabel]="'never'" appearance="outline">
 									<textarea matInput type="text" id="physicalExamNote" name="physicalExamNote"
-										formControlName="physicalExamNote">
-										</textarea>
+											  formControlName="physicalExamNote"
+									>
+									</textarea>
+									<mat-error *ngIf="hasError(form, 'maxlength', 'physicalExamNote')"
+											   translate="forms.MAX_LENGTH_ERROR"
+											   [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
+									</mat-error>
+
 								</mat-form-field>
 							</div>
 							<div fxLayout="column" fxLayoutGap="5px">
@@ -71,8 +84,14 @@
 								</mat-label>
 								<mat-form-field [floatLabel]="'never'" appearance="outline">
 									<textarea matInput type="text" id="studiesSummaryNote" name="studiesSummaryNote"
-										formControlName="studiesSummaryNote">
-										</textarea>
+											  formControlName="studiesSummaryNote"
+									>
+									</textarea>
+									<mat-error *ngIf="hasError(form, 'maxlength', 'studiesSummaryNote')"
+											   translate="forms.MAX_LENGTH_ERROR"
+											   [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
+									</mat-error>
+
 								</mat-form-field>
 							</div>
 							<div fxLayout="column" fxLayoutGap="5px">
@@ -81,8 +100,14 @@
 								</mat-label>
 								<mat-form-field [floatLabel]="'never'" appearance="outline">
 									<textarea matInput type="text" id="evolutionNote" name="evolutionNote"
-										formControlName="evolutionNote">
-										</textarea>
+											  formControlName="evolutionNote"
+									>
+									</textarea>
+									<mat-error *ngIf="hasError(form, 'maxlength', 'evolutionNote')"
+											   translate="forms.MAX_LENGTH_ERROR"
+											   [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
+									</mat-error>
+
 								</mat-form-field>
 							</div>
 							<div fxLayout="column" fxLayoutGap="5px">
@@ -91,8 +116,14 @@
 								</mat-label>
 								<mat-form-field [floatLabel]="'never'" appearance="outline">
 									<textarea matInput type="text" id="clinicalImpressionNote"
-										name="clinicalImpressionNote" formControlName="clinicalImpressionNote">
-										</textarea>
+											  name="clinicalImpressionNote" formControlName="clinicalImpressionNote"
+									>
+									</textarea>
+									<mat-error *ngIf="hasError(form, 'maxlength', 'clinicalImpressionNote')"
+											   translate="forms.MAX_LENGTH_ERROR"
+											   [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
+									</mat-error>
+
 								</mat-form-field>
 							</div>
 							<div fxLayout="column" fxLayoutGap="5px">
@@ -100,8 +131,14 @@
 								</mat-label>
 								<mat-form-field [floatLabel]="'never'" appearance="outline">
 									<textarea matInput type="text" id="otherNote" name="otherNote"
-										formControlName="otherNote">
-										</textarea>
+											  formControlName="otherNote"
+									>
+									</textarea>
+									<mat-error *ngIf="hasError(form, 'maxlength', 'otherNote')"
+											   translate="forms.MAX_LENGTH_ERROR"
+											   [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
+									</mat-error>
+
 								</mat-form-field>
 							</div>
 						</mat-card-content>
@@ -112,7 +149,7 @@
 						<span class="uppercase" [translate]="'buttons.BACK'"></span>
 					</button>
 					<button id="sign-confirm" mat-raised-button type="submit" color="primary"
-						*hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD']">
+							*hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD']">
 						<span class="uppercase" [translate]="'buttons.CONFIRM'"></span>
 					</button>
 				</section>
