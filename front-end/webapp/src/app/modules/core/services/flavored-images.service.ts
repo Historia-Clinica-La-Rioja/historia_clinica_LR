@@ -8,7 +8,7 @@ import {
 } from '@core/utils/flavored-image-definitions';
 import { map } from 'rxjs/operators';
 
-const getHeaderSecondaryLogosPath = (flavor: string) => `assets/custom/sponsor-logo-512x128`;
+const getHeaderSecondaryLogosPath = () => `assets/custom/sponsor-logo-512x128.png`;
 
 @Injectable({
 	providedIn: 'root'
@@ -34,7 +34,7 @@ export class FlavoredImagesService {
 			.pipe(
 				map(publicInfo => {
 					this.logos = FLAVORED_SECONDARY_LOGOS[publicInfo.flavor];
-					this.logos[0].location = getHeaderSecondaryLogosPath(publicInfo.flavor);
+					this.logos[0].location = getHeaderSecondaryLogosPath();
 					return this.logos;
 				}),
 			);
