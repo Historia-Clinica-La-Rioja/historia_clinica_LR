@@ -102,10 +102,6 @@ export class HomeComponent implements OnInit {
 		this.router.navigate([`${this.router.url}/episodio/${id}`]);
 	}
 
-	goToMockup(): void {
-		this.router.navigate([`${this.router.url}/mock`]);
-	}
-
 	goToAdmisionAdministrativa(): void {
 		this.router.navigate([`${this.router.url}/nuevo-episodio/administrativa`]);
 	}
