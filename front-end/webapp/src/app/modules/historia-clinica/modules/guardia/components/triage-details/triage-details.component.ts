@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { EmergencyCareTypes, Triages } from '../../constants/masterdata';
-import { VitalSingCurrentPrevious } from '@presentation/components/signo-vital-current-previous/signo-vital-current-previous.component';
 import { TriageCategory } from '../triage-chip/triage-chip.component';
+import { VitalSign } from '@presentation/components/signo-vital-current/signo-vital.component';
 
 @Component({
 	selector: 'app-triage-details',
@@ -17,13 +17,13 @@ export class TriageDetailsComponent implements OnInit, OnChanges {
 	readonly triages = Triages;
 	readonly emergencyCareTypes = EmergencyCareTypes;
 
-	vitalSignsCurrent: VitalSingCurrentPrevious[];
+	vitalSigns: { description: string, value: VitalSign } [];
 
 	constructor() {
 	}
 
 	ngOnChanges() {
-		this.vitalSignsCurrent = this.includesVitalSigns() ? this.mapToVitalSignCurrentPrevious(this.triage) : undefined;
+		this.vitalSigns = this.includesVitalSigns() ? this.mapToVitalSign(this.triage) : undefined;
 	}
 
 	ngOnInit(): void {
@@ -33,8 +33,8 @@ export class TriageDetailsComponent implements OnInit, OnChanges {
 		return !!this.emergencyCareType && !!this.triage;
 	}
 
-	private mapToVitalSignCurrentPrevious(triage: Triage): VitalSingCurrentPrevious[] {
-		const vitalSignsCurrent: VitalSingCurrentPrevious[] = [];
+	private mapToVitalSign(triage: Triage): { description: string, value: VitalSign }[] {
+		const vitalSigns = [];
 		const LABELS = this.emergencyCareType === EmergencyCareTypes.PEDIATRIA ?
 			{
 				respiratoryRate: 'Frecuencia respiratoria',
@@ -52,9 +52,9 @@ export class TriageDetailsComponent implements OnInit, OnChanges {
 
 		Object.keys(LABELS).forEach(key => {
 				const vitalSign = getVitalSign(key);
-				vitalSignsCurrent.push({
+				vitalSigns.push({
 					description: LABELS[key],
-					currentValue: {
+					value: {
 						value: Number(vitalSign?.value) || undefined,
 						effectiveTime: vitalSign?.effectiveTime || undefined
 					}
@@ -62,7 +62,7 @@ export class TriageDetailsComponent implements OnInit, OnChanges {
 			}
 		);
 
-		return vitalSignsCurrent;
+		return vitalSigns;
 
 		function getVitalSign(key): { value: number, effectiveTime: Date } {
 			if (triage.vitalSigns && triage.vitalSigns[key]) {

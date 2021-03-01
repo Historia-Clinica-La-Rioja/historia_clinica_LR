@@ -89,16 +89,15 @@
 			</div>
 		</div>
 
-		<div id="vital-signs" *ngIf="vitalSignsCurrent?.length">
+		<div id="vital-signs" *ngIf="vitalSigns?.length">
 			<h3 *ngIf="emergencyCareType === emergencyCareTypes.ADULTO ||
 					emergencyCareType === emergencyCareTypes.GINECOLOGIA"
 				class="subtitle-weight">{{ 'guardia.episode.triage.ultimo.SIGNOS_VITALES' | translate }}
 			</h3>
 			<div fxLayout="row wrap">
-				<app-signo-vital-current-previous
-						*ngFor="let vitalSign of vitalSignsCurrent"
-						[vitalSign]="vitalSign">
-				</app-signo-vital-current-previous>
+				<app-signo-vital *ngFor="let vitalSign of vitalSigns"
+										 [vitalSign]="vitalSign.value" [description]="vitalSign.description">
+				</app-signo-vital>
 			</div>
 		</div>
 	</section>

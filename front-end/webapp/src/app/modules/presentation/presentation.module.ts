@@ -29,6 +29,7 @@ import { DockPopupComponent } from '@presentation/components/dock-popup/dock-pop
 import { FiltersCardComponent } from './components/filters-card/filters-card.component';
 import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 import { ImgUploaderComponent } from './components/img-uploader/img-uploader.component';
+import { SignoVitalComponent } from './components/signo-vital-current/signo-vital.component';
 
 @NgModule({
 	declarations: [
@@ -59,6 +60,7 @@ import { ImgUploaderComponent } from './components/img-uploader/img-uploader.com
 		FiltersCardComponent,
 		ViewDateDtoPipe,
 		ImgUploaderComponent,
+		SignoVitalComponent,
 	],
 	imports: [
 		CommonModule,
@@ -92,6 +94,7 @@ import { ImgUploaderComponent } from './components/img-uploader/img-uploader.com
 		FiltersCardComponent,
 		ViewDateDtoPipe,
 		ImgUploaderComponent,
+		SignoVitalComponent,
 	],
 	entryComponents: [
 		DockPopupComponent

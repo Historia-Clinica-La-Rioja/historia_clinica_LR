@@ -221,7 +221,7 @@ $default-color: 50;
 
 @mixin signos-vitales-box($theme) {
 	$palette: map-get($theme, primary);
-	app-signo-vital-current-previous {
+	app-signo-vital-current-previous, app-signo-vital {
 		mat-card.mat-card {
 			background-color: $primary-bg;
 
