@@ -1,10 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DOCUMENTS, DOCUMENTS_SEARCH_FIELDS } from '../../constants/summaries';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
 import { Moment } from 'moment';
 import { DocumentSearchFilterDto, EDocumentSearch, DocumentSearchDto, DocumentHistoricDto } from '@api-rest/api-model';
 import { DateFormat, momentFormat, newMoment } from '@core/utils/moment.utils';
 import { EvolutionNotesListenerService } from '../../modules/internacion/services/evolution-notes-listener.service';
+import { hasError } from '@core/utils/form.utils';
+import {pairwise, startWith} from 'rxjs/operators';
 
 @Component({
 	selector: 'app-documents-summary',
@@ -23,7 +25,7 @@ export class DocumentsSummaryComponent implements OnInit {
 	public activeDocument;
 	public documentHistoric: DocumentHistoricDto;
 	public searchTriggered = false;
-
+	public hasError = hasError;
 	constructor(
 		private formBuilder: FormBuilder,
 		private evolutionNotesListenerService: EvolutionNotesListenerService,
@@ -40,28 +42,41 @@ export class DocumentsSummaryComponent implements OnInit {
 		this.form = this.formBuilder.group({
 			text: [''],
 			date: [null],
-			field: ['ALL'],
+			field: [null],
 			mainDiagnosisOnly: [false],
+		}, {
+			validators: this.filterFieldIsRequiredWhenInputIsSet()
 		});
+
 		this.evolutionNotesListenerService.initializeEvolutionNoteFilterResult(this.internmentEpisodeId);
+
+		this.setInputResetBehaviour();
 	}
 
 	search(): void {
-		this.searchTriggered = true;
-		const searchFilter: DocumentSearchFilterDto = {
-			plainText: isDate(this.form.value.field) ?
-				this.form.controls.date.valid && this.form.value.date ? momentFormat(this.form.value.date, DateFormat.API_DATE) : undefined
-				: this.form.value.text,
-			searchType: this.form.value.field,
-		};
-
-		if (!isDate(searchFilter.searchType) || (isDate(searchFilter.searchType) && searchFilter.plainText)) {
+		if (this.form.valid) {
+			this.searchTriggered = true;
+			const searchFilter: DocumentSearchFilterDto = this.buildSearchFilter();
 			this.evolutionNotesListenerService.setSerchFilter(searchFilter);
 		}
+	}
 
-		function isDate(field): boolean {
-			return field === 'CREATED_ON';
+	private buildSearchFilter(): DocumentSearchFilterDto {
+		if (this.isDate(this.form.value.field) && !this.form.value.date) {
+			return null;
+		} else if (!this.isDate(this.form.value.field) && this.form.value.text === '') {
+			return null;
+		} else {
+			return {
+				plainText: this.isDate(this.form.value.field) ? momentFormat(this.form.value.date, DateFormat.API_DATE)
+					: this.form.value.text,
+				searchType: this.form.value.field,
+			};
 		}
+	}
+
+	private isDate(field): boolean {
+		return field === 'CREATED_ON';
 	}
 
 	setActive(document) {
@@ -78,9 +93,41 @@ export class DocumentsSummaryComponent implements OnInit {
 		return (this.activeDocument?.notes || this.activeDocument?.procedures.length > 0);
 	}
 
+	setFilterValueAndSearchIfEmptyForm(control: AbstractControl, value: string) {
+		control.setValue(value);
+		if (this.form.value.text === '' && !this.form.value.field) {
+			this.search();
+		}
+	}
+
+	filterFieldIsRequiredWhenInputIsSet(): ValidatorFn {
+		return (control: AbstractControl): ValidationErrors | null => {
+			const text = control.get('text');
+			const field = control.get('field');
+			const error = (text.value !== '') && (field.value === null);
+			field.setErrors(error ? {filterFieldIsRequiredWhenInputIsSet: true} : null);
+			return null;
+		};
+	}
+
+	private setInputResetBehaviour() {
+		this.form.controls.field.valueChanges.pipe(
+			startWith(null as string),
+			pairwise()
+		).subscribe(
+			([oldValue, newValue]) => {
+				if (oldValue && newValue) {
+					this.form.controls.text.setValue('');
+					this.form.controls.date.setValue(null);
+				}
+			}
+		);
+	}
 }
 
 export interface SearchField {
 	field: EDocumentSearch;
 	label: string;
 }
+
+

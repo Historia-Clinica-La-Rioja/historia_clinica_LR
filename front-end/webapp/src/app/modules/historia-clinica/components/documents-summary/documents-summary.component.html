@@ -2,42 +2,58 @@
 	<ng-container *ngIf="this.documentHistoric?.documents.length !== 0 || searchTriggered; else noData">
 		<div class="search-form" id="header">
 			<form fxLayout="row" fxLayoutGap="10px" id="document-search-form" [formGroup]="form" (ngSubmit)="search()">
-				<div style="width: 35%">
-					<div style="padding-left: 16px;">
-						<mat-form-field class="input" appearance="outline"
-										*ngIf="form.value.field === 'CREATED_ON'; else textInput">
-							<mat-label>Fecha</mat-label>
-							<input matInput
-								   id="date"
-								   formControlName="date"
-								   [matDatepicker]="myDatepicker"
-								   [max]="this.today">
-							<mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
-							<mat-datepicker #myDatepicker></mat-datepicker>
-							<mat-error>La fecha ingresada no es válida</mat-error>
-						</mat-form-field>
-
-						<ng-template #textInput>
-							<mat-form-field class="input" appearance="outline">
-								<mat-label>Filtro</mat-label>
-								<input matInput
-									   id="filter"
-									   name="text"
-									   formControlName="text"
-									   type="text">
-							</mat-form-field>
-						</ng-template>
-					</div>
+				<div style="padding-left: 16px;">
+					<mat-form-field appearance="outline">
+						<mat-label>Campo</mat-label>
+						<mat-select formControlName="field" name="field">
+							<mat-option *ngFor="let field of searchFields" [value]="field.field">
+								{{field.label | translate}}
+							</mat-option>
+						</mat-select>
+						<button id="clear-filter-field" type="button" mat-button *ngIf="form.value.field" matSuffix
+								color="warn"
+								mat-icon-button
+								(click)="setFilterValueAndSearchIfEmptyForm(form.controls.field, null); $event.stopPropagation()">
+							<mat-icon>close</mat-icon>
+						</button>
+						<mat-error *ngIf="hasError(form, 'filterFieldIsRequiredWhenInputIsSet', 'field')"
+								   [translate]="'historia-clinica.summary-card.evolution-notes-filter.filterFieldIsRequiredWhenInputIsSet'">
+						</mat-error>
+					</mat-form-field>
 				</div>
-
-				<mat-form-field appearance="outline">
-					<mat-label>Campo</mat-label>
-					<mat-select formControlName="field" name="field">
-						<mat-option *ngFor="let field of searchFields" [value]="field.field">
-							{{field.label | translate}}
-						</mat-option>
-					</mat-select>
-				</mat-form-field>
+				<div style="width: 35%">
+					<mat-form-field class="input" appearance="outline"
+									*ngIf="form.value.field === 'CREATED_ON'; else textInput">
+						<mat-label>Fecha</mat-label>
+						<input matInput
+							   id="date"
+							   formControlName="date"
+							   [matDatepicker]="myDatepicker"
+							   [max]="this.today"
+						>
+						<mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
+						<mat-datepicker #myDatepicker></mat-datepicker>
+						<mat-error
+							[translate]="'historia-clinica.summary-card.evolution-notes-filter.generalDateError'">
+						</mat-error>
+					</mat-form-field>
+					<ng-template #textInput>
+						<mat-form-field class="input" appearance="outline">
+							<mat-label>Filtro</mat-label>
+							<input matInput
+								   id="filter"
+								   name="text"
+								   formControlName="text"
+								   type="text">
+							<button id="clear-filter-text" type="button" mat-button *ngIf="form.value.text" matSuffix
+									color="warn"
+									mat-icon-button
+									(click)="setFilterValueAndSearchIfEmptyForm(form.controls.text, ''); $event.stopPropagation()">
+								<mat-icon>close</mat-icon>
+							</button>
+						</mat-form-field>
+					</ng-template>
+				</div>
 				<div *featureFlag="'habilitarToggleFiltroDiagnosticoPrincipal'" class="main-diagnosis-toggle">
 					<mat-label>Diagnóstico principal</mat-label>
 					<mat-slide-toggle formControlName="mainDiagnosisOnly" (change)="updateDocuments()">

@@ -4,8 +4,7 @@ public enum EDocumentSearch {
 
     DIAGNOSIS("diagnosis"),
     DOCTOR("doctor"),
-    CREATED_ON("createdOn"),
-    ALL("all");
+    CREATED_ON("createdOn");
 
     private String value;
 

@@ -1557,7 +1557,6 @@ export const enum EDocumentSearch {
     DIAGNOSIS = "DIAGNOSIS",
     DOCTOR = "DOCTOR",
     CREATED_ON = "CREATED_ON",
-    ALL = "ALL",
 }
 
 export const enum ERole {

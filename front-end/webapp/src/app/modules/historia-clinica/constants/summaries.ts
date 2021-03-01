@@ -69,10 +69,6 @@ export const DOCUMENTS_SEARCH_FIELDS: SearchField[] = [
 	{
 		field: EDocumentSearch.CREATED_ON,
 		label: 'internaciones.documents-summary.search-fields.CREATEDON',
-	},
-	{
-		field: EDocumentSearch.ALL,
-		label: 'internaciones.documents-summary.search-fields.ALL',
 	}
 ];
 
