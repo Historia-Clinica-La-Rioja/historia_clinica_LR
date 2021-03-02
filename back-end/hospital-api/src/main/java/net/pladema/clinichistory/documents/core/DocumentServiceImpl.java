@@ -229,6 +229,10 @@ public class  DocumentServiceImpl implements DocumentService {
         return result;
     }
 
+    @Override
+    public Long getDocumentId(Integer sourceId, Short sourceTypeId) {
+        return documentRepository.findBySourceIdAndSourceTypeId(sourceId,sourceTypeId);
+    }
 
     @Override
     public void deleteHealthConditionHistory(Long documentId) {

@@ -2,8 +2,9 @@ package net.pladema.emergencycare.controller;
 
 import io.swagger.annotations.Api;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
+import net.pladema.emergencycare.controller.dto.AMedicalDischargeDto;
 import net.pladema.emergencycare.controller.dto.AdministrativeDischargeDto;
-import net.pladema.emergencycare.controller.dto.MedicalDischargeDto;
+import net.pladema.emergencycare.controller.dto.VMedicalDischargeDto;
 import net.pladema.emergencycare.controller.mapper.EmergencyCareDischargeMapper;
 import net.pladema.emergencycare.repository.entity.EmergencyCareState;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeDischargeService;
@@ -11,6 +12,7 @@ import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeStateService;
 import net.pladema.emergencycare.service.domain.AdministrativeDischargeBo;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
+import net.pladema.emergencycare.service.domain.EpisodeDischargeBo;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.service.PatientExternalService;
@@ -24,6 +26,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.time.ZoneId;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/institution/{institutionId}/emergency-care/episodes/{episodeId}/discharge")
@@ -63,8 +67,8 @@ public class EmergencyCareEpisodeDischargeController {
     public ResponseEntity<Boolean> newMedicalDischarge(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "episodeId") Integer episodeId,
-            @RequestBody MedicalDischargeDto medicalDischargeDto) {
-        LOG.debug("Change emergency care state -> episodeId {}, institutionId {}, medicalDischargeDto {}", episodeId, institutionId, medicalDischargeDto);
+            @RequestBody AMedicalDischargeDto medicalDischargeDto) {
+        LOG.debug("New medical discharge -> episodeId {}, institutionId {}, medicalDischargeDto {}", episodeId, institutionId, medicalDischargeDto);
 
         Integer medicalDischargeBy = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
 
@@ -87,7 +91,7 @@ public class EmergencyCareEpisodeDischargeController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "episodeId") Integer episodeId,
             @RequestBody AdministrativeDischargeDto administrativeDischargeDto) {
-       LOG.debug("Change emergency care state -> episodeId {}, institutionId {}, administrativeDischargeDto {}", episodeId, institutionId, administrativeDischargeDto);
+       LOG.debug("New administrative discharge -> episodeId {}, institutionId {}, administrativeDischargeDto {}", episodeId, institutionId, administrativeDischargeDto);
 
         Integer userId = UserInfo.getCurrentAuditor();
 
@@ -102,12 +106,25 @@ public class EmergencyCareEpisodeDischargeController {
     public ResponseEntity<Boolean> newAdministrativeDischargeByAbsence(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "episodeId") Integer episodeId) {
-        LOG.debug("Change emergency care state -> episodeId {}, institutionId {}", episodeId, institutionId);
+        LOG.debug("New administrative discharge by absence -> episodeId {}, institutionId {}", episodeId, institutionId);
         Integer userId = UserInfo.getCurrentAuditor();
         ZoneId institutionZoneId = institutionExternalService.getTimezone(institutionId);
         boolean saved = emergencyCareEpisodeDischargeService.newAdministrativeDischargeByAbsence(episodeId, institutionId, userId, institutionZoneId);
         LOG.debug("Output -> {}", saved);
         return ResponseEntity.ok().body(saved);
+    }
+
+    @GetMapping()
+    public ResponseEntity<VMedicalDischargeDto> getMedicalDischarge(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "episodeId") Integer episodeId) {
+        LOG.debug("Change emergency care state -> episodeId {}, institutionId {}", episodeId, institutionId);
+        EpisodeDischargeBo episodeDischargeBo = emergencyCareEpisodeDischargeService.getDischarge(episodeId);
+        VMedicalDischargeDto medicalDischargeDto = this.emergencyCareDischargeMapper.toMedicalDischargeDto(episodeDischargeBo);
+        List<String> problems = episodeDischargeBo.getProblems().stream().map(p -> p.getSnomed().getPt()).collect(Collectors.toList());
+        medicalDischargeDto.setSnomedPtProblems(problems);
+        LOG.debug("Output -> {}", medicalDischargeDto);
+        return ResponseEntity.ok().body(medicalDischargeDto);
     }
 
 }

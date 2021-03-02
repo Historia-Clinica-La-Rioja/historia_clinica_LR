@@ -50,4 +50,10 @@ public interface DocumentRepository extends JpaRepository<Document, Long>, Docum
             "JOIN Snomed AS snomedPr ON (pr.snomedId = snomedPr.id) " +
             "WHERE dp.pk.documentId = :documentId")
     List<ProcedureReduced> getProceduresByDocuments(@Param("documentId") Long documentId);
+
+    @Transactional(readOnly = true)
+    @Query(value = "SELECT d.id " +
+            "FROM Document d " +
+            "WHERE d.sourceId = :sourceId AND d.sourceTypeId = :sourceTypeId")
+    Long findBySourceIdAndSourceTypeId(@Param("sourceId") Integer sourceId, @Param("sourceTypeId") Short sourceTypeId );
 }

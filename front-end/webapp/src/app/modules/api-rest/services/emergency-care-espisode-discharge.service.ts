@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AdministrativeDischargeDto, MedicalDischargeDto } from '@api-rest/api-model';
+import { AdministrativeDischargeDto, AMedicalDischargeDto, VMedicalDischargeDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { Observable } from 'rxjs';
 import { environment } from '@environments/environment';
@@ -20,7 +20,7 @@ export class EmergencyCareEspisodeDischargeService {
 	) { }
 
 
-	newMedicalDischarge(episodeId: number, medicalDischargeDto: MedicalDischargeDto): Observable<boolean> {
+	newMedicalDischarge(episodeId: number, medicalDischargeDto: AMedicalDischargeDto): Observable<boolean> {
 		const url = this.URL_PREFIX + episodeId + `/discharge`;
 		return this.http.post<boolean>(url, medicalDischargeDto);
 	}

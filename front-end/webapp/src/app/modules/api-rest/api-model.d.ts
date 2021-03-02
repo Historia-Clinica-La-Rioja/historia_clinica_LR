@@ -23,6 +23,11 @@ export interface AEmergencyCarePatientDto extends Serializable {
     patientMedicalCoverageId?: number;
 }
 
+export interface AMedicalDischargeDto extends MedicalDischargeDto {
+    dischargeTypeId: number;
+    problems: OutpatientProblemDto[];
+}
+
 export interface APatientDto extends APersonDto {
     comments: string;
     generalPractitioner: AAdditionalDoctorDto;
@@ -942,9 +947,7 @@ export interface MedicalCoverageDto {
 
 export interface MedicalDischargeDto {
     autopsy: boolean;
-    dischargeTypeId: number;
     medicalDischargeOn: DateTimeDto;
-    problems: OutpatientProblemDto[];
 }
 
 export interface MedicalRequestDto {
@@ -1519,6 +1522,11 @@ export interface VInstitutionDto {
     patientCount: number;
     patientWithCovidPresumtiveCount: number;
     patientWithVitalSignCount: number;
+}
+
+export interface VMedicalDischargeDto extends MedicalDischargeDto {
+    dischargeType: MasterDataDto;
+    snomedPtProblems: string[];
 }
 
 export interface VitalSignDto extends Serializable {

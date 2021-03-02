@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DiagnosisDto, MasterDataInterface, MedicalDischargeDto } from '@api-rest/api-model';
+import { AMedicalDischargeDto, DiagnosisDto, MasterDataInterface } from '@api-rest/api-model';
 import { EmergencyCareEspisodeDischargeService } from '@api-rest/services/emergency-care-espisode-discharge.service';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
 import { ContextService } from '@core/services/context.service';
@@ -68,7 +68,7 @@ export class MedicalDischargeComponent implements OnInit {
 		this.formSubmited = true;
 		if (this.form.valid && this.problemasService.getProblemas().length) {
 			const s: MedicalDischargeForm = {... this.form.value, problems: this.problemasService.getProblemas()};
-			const medicalCoverageDto: MedicalDischargeDto = this.guardiaMapperService.formToMedicalDischargeDto(s);
+			const medicalCoverageDto: AMedicalDischargeDto = this.guardiaMapperService.formToAMedicalDischargeDto(s);
 			this.emergencyCareEspisodeDischargeService.newMedicalDischarge
 				(this.episodeId, medicalCoverageDto).subscribe(
 					saved => {
