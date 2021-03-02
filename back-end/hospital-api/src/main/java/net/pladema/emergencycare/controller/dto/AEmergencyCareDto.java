@@ -35,7 +35,7 @@ public abstract class AEmergencyCareDto implements Serializable {
 	private Boolean hasPoliceIntervention;
 
 	@Nullable
-	@Length(max = 255)
+	@Length(max = 15)
 	private String ambulanceCompanyId;
 
 	@Nullable
