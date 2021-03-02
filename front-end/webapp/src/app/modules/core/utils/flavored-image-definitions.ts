@@ -75,33 +75,6 @@ export const FLAVORED_FOOTER_IMAGES: FlavoredImagesObj = {
 	],
 };
 
-export const FLAVORED_SECONDARY_LOGOS: FlavoredImagesObj = {
-	tandil: [
-		{
-			location: '',
-			alt: 'HSI'
-		}
-	],
-	minsal: [
-		{
-			location: '',
-			alt: 'HSI'
-		}
-	],
-	pba: [
-		{
-			location: '',
-			alt: 'HSI'
-		}
-	],
-	chaco: [
-		{
-			location: '',
-			alt: 'HSI'
-		}
-	],
-};
-
 export interface ImageSrc {
 	location: string;
 	alt: string;

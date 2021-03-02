@@ -50,10 +50,6 @@ const FEATURE_FLAGS = [
 		name: 'habilitarEdicionPacienteInternacion',
 		flavorMatch: [FLAVOR_HOSPITALES, FLAVOR_PBA]
 	},
-	{
-		name: 'habilitarSecondaryHeaderLogo',
-		flavorMatch: [FLAVOR_PBA]
-	},
 ];
 
 @Injectable({

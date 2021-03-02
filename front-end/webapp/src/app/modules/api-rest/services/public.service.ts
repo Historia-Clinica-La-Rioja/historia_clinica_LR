@@ -30,7 +30,7 @@ export class PublicService {
 			}
 		);
 
-		http.get<PublicInfoDto>(`${environment.apiBase}` + BASIC_URL_PREFIX + '/info').pipe(
+		http.get<PublicInfoDto>(`${environment.apiBase}${BASIC_URL_PREFIX}/info`).pipe(
 			switchMap(publicInfoFromApi => localStorageService.updateItem(PUBLIC_INFO_KEY, publicInfoFromApi)),
 		).subscribe(
 			publicInfoUpdated => this.publicInfoEmitter.next(publicInfoUpdated)

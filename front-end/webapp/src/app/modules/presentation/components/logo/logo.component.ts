@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FlavoredImagesService } from '@core/services/flavored-images.service';
 import { ImageSrc } from '@core/utils/flavored-image-definitions';
 @Component({
 	selector: 'app-logo',
@@ -11,14 +10,15 @@ export class LogoComponent implements OnInit {
 	@Input() isSecondaryLogo = false;
 	public img: ImageSrc = { location: 'assets/logos/logo_HSI.svg', alt: 'HSI' };
 
-	constructor(private flavoredImagesService: FlavoredImagesService) {
+	constructor() {
 	}
 
 	ngOnInit(): void {
 		if (this.isSecondaryLogo) {
-			this.flavoredImagesService.getHeaderSecondaryLogos().subscribe(
-				images => this.img = images[0]
-			);
+			this.img = {
+				location: `assets/custom/sponsor-logo-512x128.png`,
+				alt: 'Sponsor Logo'
+			};
 		}
 	}
 
