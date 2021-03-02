@@ -131,6 +131,30 @@
 				"POLICE_INTERVENTION": "Intervención policial",
 				"UBICACION" : "Ubicación"
 			},
+			"administrative_discharge": {
+				"TITLE":"Alta Administrativa",
+				"medical_discharge_card": {
+					"DATE_TIME": "Fecha y hora",
+					"PROBLEMS": "Problemas",
+					"DISCHARGE_TYPE": "Tipo de egreso",
+					"AUTHORIZE_AUTOPSY": "Autopsia autorizada"
+				},
+				"form": {
+					"TITLE": "Formulario de alta administrativa",
+					"DATE": "Fecha",
+					"TIME":"Hora",
+					"AMBULANCE_COMPANY_ID":"ID Compañia ambulancia"
+				},
+				"messages": {
+					"SUCCESS":"El alta administrativa se guardó exitosamente",
+					"ERROR": "Ocurrió un error al intentar guardar el alta administrativa"
+				},
+				"autopsy": {
+					"YES": "Si",
+					"NO": "No",
+					"NO_INFORMATION": "Sin información"
+				}
+			},
 			"medical_discharge": {
 				"TITLE": "Alta Médica",
 				"form": {

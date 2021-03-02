@@ -12,6 +12,7 @@ import {
 import { NewEpisodePediatricTriageComponent } from './routes/new-episode-pediatric-triage/new-episode-pediatric-triage.component';
 import { EpisodeDetailsComponent } from './routes/episode-details/episode-details.component';
 import { MedicalDischargeComponent } from './routes/medical-discharge/medical-discharge.component';
+import { AdministrativeDischargeComponent } from './routes/administrative-discharge/administrative-discharge.component';
 
 
 const routes: Routes = [{
@@ -44,6 +45,10 @@ const routes: Routes = [{
 		{
 			path: 'episodio/:id/alta-medica',
 			component: MedicalDischargeComponent
+		},
+		{
+			path: 'episodio/:id/alta-administrativa',
+			component: AdministrativeDischargeComponent
 		},
 	],
 	canActivate: [RoleGuard, FeatureFlagGuard],

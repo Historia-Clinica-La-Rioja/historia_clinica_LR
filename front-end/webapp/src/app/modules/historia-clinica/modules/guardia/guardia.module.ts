@@ -26,6 +26,7 @@ import { TriageChipComponent } from './components/triage-chip/triage-chip.compon
 import { PediatricTriageDialogComponent } from './dialogs/pediatric-triage-dialog/pediatric-triage-dialog.component';
 import { AdultGynecologicalTriageDialogComponent } from './dialogs/adult-gynecological-triage-dialog/adult-gynecological-triage-dialog.component';
 import { MedicalDischargeComponent } from './routes/medical-discharge/medical-discharge.component';
+import { AdministrativeDischargeComponent } from './routes/administrative-discharge/administrative-discharge.component';
 
 @NgModule({
 	declarations: [
@@ -46,6 +47,7 @@ import { MedicalDischargeComponent } from './routes/medical-discharge/medical-di
 		PediatricTriageDialogComponent,
 		AdultGynecologicalTriageDialogComponent,
 		MedicalDischargeComponent,
+		AdministrativeDischargeComponent,
 	],
 	imports: [
 		CommonModule,

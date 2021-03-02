@@ -11,6 +11,12 @@
 				(click)="altaMedica()">
 				{{ 'guardia.episode.medical_discharge.TITLE' | translate | uppercase }}
 			</button>
+			<div *hasRole="['ADMINISTRATIVO']">
+				<button *ngIf="episodeState === STATES.CON_ALTA_MEDICA" id="administrative-discharge" mat-raised-button
+					color="primary" (click)="administrativeDischarge()">
+					{{ 'guardia.episode.administrative_discharge.TITLE' | translate | uppercase }}
+				</button>
+			</div>
 		</div>
 	</div>
 

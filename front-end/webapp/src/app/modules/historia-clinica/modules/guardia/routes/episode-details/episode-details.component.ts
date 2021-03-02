@@ -217,6 +217,10 @@ export class EpisodeDetailsComponent implements OnInit {
 	altaMedica(): void {
 		this.router.navigate([`${this.router.url}/alta-medica`]);
 	}
+
+	administrativeDischarge(): void {
+		this.router.navigate([`${this.router.url}/alta-administrativa`]);
+	}
 }
 
 export interface TriageReduced {

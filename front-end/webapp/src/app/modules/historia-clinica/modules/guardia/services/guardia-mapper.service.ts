@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 import { Triage } from '../components/triage-details/triage-details.component';
 import { dateTimeDtoToDate, dateToDateDto, dateToTimeDto } from '@api-rest/mapper/date-dto.mapper';
 import { TriageReduced } from '../routes/episode-details/episode-details.component';
-import {  AMedicalDischargeDto, NewVitalSignsObservationDto, TriageListDto } from '@api-rest/api-model';
+import { AdministrativeDischargeDto, AMedicalDischargeDto, NewVitalSignsObservationDto, TriageListDto } from '@api-rest/api-model';
 import { parse } from 'date-fns';
 import { Problema } from '../../../services/problemas-nueva-consulta.service';
 import { DateFormat, momentFormat } from '@core/utils/moment.utils';
 import { MedicalDischargeForm } from '../routes/medical-discharge/medical-discharge.component';
+import { AdministrativeForm } from '../routes/administrative-discharge/administrative-discharge.component';
 
 @Injectable({
 	providedIn: 'root'
@@ -17,6 +18,7 @@ export class GuardiaMapperService {
 	triageListDtoToTriage: (triageListDto: TriageListDto) => Triage = GuardiaMapperService._mapTriageListDtoToTriage;
 	triageListDtoToTriageReduced: (triageListDto: TriageListDto) => TriageReduced = GuardiaMapperService._mapTriageListDtoToTriageReduced;
 	formToAMedicalDischargeDto: (s: MedicalDischargeForm) => AMedicalDischargeDto = GuardiaMapperService._mapFormToAMedicalDischargeDto;
+	toAdministrativeDischargeDto: (s: AdministrativeForm) => AdministrativeDischargeDto = GuardiaMapperService._toAdministrativeDischargeDto;
 
 	constructor() {
 	}
@@ -147,5 +149,16 @@ export class GuardiaMapperService {
 			autopsy: s.autopsy,
 		};
 
+	}
+
+	private static _toAdministrativeDischargeDto(s: AdministrativeForm): AdministrativeDischargeDto {
+		return {
+			administrativeDischargeOn: {
+					date: dateToDateDto(s.dateTime.date.toDate()),
+					time: dateToTimeDto(parse(s.dateTime.time, 'HH:mm', new Date()))
+			},
+			ambulanceCompanyId: s.ambulanceCompanyId,
+			hospitalTransportId: s.hospitalTransportId,
+		};
 	}
 }

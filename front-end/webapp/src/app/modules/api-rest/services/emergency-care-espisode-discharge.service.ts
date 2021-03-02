@@ -34,4 +34,9 @@ export class EmergencyCareEspisodeDischargeService {
 		const url = this.URL_PREFIX + episodeId + `/discharge/administrativeDischarge/absence`;
 		return this.http.post<boolean>(url, {});
 	}
+
+	getMedicalDischarge(episodeId: number): Observable<VMedicalDischargeDto> {
+		const url = this.URL_PREFIX + episodeId + `/discharge`;
+		return this.http.get<VMedicalDischargeDto>(url);
+	}
 }
