@@ -1,5 +1,16 @@
-<div class="footer-container" fxLayout="row wrap">
-	<ng-container *ngFor="let img of footerImages">
-		<img src="{{img.location}}" alt="{{img.alt}}">
-	</ng-container>
+<div class="footer-container" gdColumns="1fr 7fr 1fr">
+
+	<div class="footer-logos" gdColumn="2">
+		<ng-container *ngFor="let img of footerImages">
+			<img src="{{img.location}}" alt="{{img.alt}}">
+		</ng-container>
+	</div>
+
+	<div class="footer-version" gdColumn="3">
+		<span *ngIf="applicationVersionNumber" class="footer-version-text">
+			<strong translate="app.SHORT_NAME"></strong>
+			<span [translate]="'version.SHORTENED'" [translateParams]="{versionNumber: applicationVersionNumber}"></span>
+		</span>
+	</div>
+
 </div>

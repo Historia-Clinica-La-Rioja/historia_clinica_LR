@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, ReplaySubject } from 'rxjs';
-import { PublicInfoDto, RecaptchaPublicConfigDto } from '@api-rest/api-model';
+import {ApplicationVersionDto, PublicInfoDto, RecaptchaPublicConfigDto} from '@api-rest/api-model';
 import { HttpClient } from '@angular/common/http';
 
 import { environment } from '@environments/environment';
@@ -44,6 +44,11 @@ export class PublicService {
 
 	public getRecaptchaPublicConfig(): Observable<RecaptchaPublicConfigDto> {
 		return this.http.get<RecaptchaPublicConfigDto>(`${environment.apiBase}${BASIC_URL_PREFIX}/recaptcha`);
+	}
+
+	getApplicationCurrentVersion(): Observable<ApplicationVersionDto> {
+		const url = `${environment.apiBase}${BASIC_URL_PREFIX}/version`;
+		return this.http.get<ApplicationVersionDto>(url);
 	}
 
 }

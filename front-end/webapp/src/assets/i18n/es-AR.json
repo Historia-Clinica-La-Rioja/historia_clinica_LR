@@ -1,6 +1,7 @@
 {
 	"app": {
 		"TITLE": "Historia de salud integrada",
+		"SHORT_NAME": "HSI",
 		"menu": {
 			"AMBULATORIA": "Historia Clínica",
 			"CAMAS": "Gestión de camas",
@@ -57,5 +58,8 @@
 		"ADD_PRIVATE_HEALTH_INSURANCES":"Agregar prepaga",
 		"NEW_HEALTH_INSURANCES": "Agregar nueva obra social",
 		"NEW_PRIVATE_HEALTH_INSURANCES": "Agregar nueva prepaga"
+	},
+	"version": {
+		"SHORTENED": "V. {{versionNumber}}"
 	}
 }

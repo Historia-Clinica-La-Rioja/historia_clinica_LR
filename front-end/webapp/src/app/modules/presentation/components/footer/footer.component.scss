@@ -1,9 +1,23 @@
 .footer-container {
-	background-color: #404040;
-	display: flex;
-	justify-content: center;
+	background-color: #9c9fa3;
+	align-items: center;
+	text-align: center;
+	padding: 25px;
+}
+
+.footer-logos {
 	img {
 		margin: 10px;
-		max-height: 60px;
+		max-height: 55px;
 	}
+}
+
+.footer-version {
+	color: #f8f8f8;
+	min-width: max-content;
+	font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.footer-version-text > * {
+	margin: 3px;
 }
