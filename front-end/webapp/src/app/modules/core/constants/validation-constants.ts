@@ -22,7 +22,7 @@ export const POLICE_OFFICER = {
 };
 
 export const VITAL_SIGNS = {
-	min_value: 1
+	min_value: 0
 };
 
 export const TEXT_AREA_MAX_LENGTH = 1024;
