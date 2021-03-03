@@ -1,12 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Triage } from '../components/triage-details/triage-details.component';
-import { dateTimeDtoToDate, dateToDateDto, dateToTimeDto } from '@api-rest/mapper/date-dto.mapper';
+import { dateTimeDtoToDate, dateToDateDto, dateToTimeDto, dateToDateTimeDto } from '@api-rest/mapper/date-dto.mapper';
 import { TriageReduced } from '../routes/episode-details/episode-details.component';
-import { AdministrativeDischargeDto, AMedicalDischargeDto, NewVitalSignsObservationDto, TriageListDto } from '@api-rest/api-model';
+import {
+	AdministrativeDischargeDto,
+	AMedicalDischargeDto,
+	NewEffectiveClinicalObservationDto,
+	NewVitalSignsObservationDto,
+	TriageListDto
+} from '@api-rest/api-model';
 import { parse } from 'date-fns';
 import { Problema } from '../../../services/problemas-nueva-consulta.service';
 import { DateFormat, momentFormat } from '@core/utils/moment.utils';
 import { MedicalDischargeForm } from '../routes/medical-discharge/medical-discharge.component';
+import { VitalSignsValue } from '../../../services/vital-signs-form.service';
 import { AdministrativeForm } from '../routes/administrative-discharge/administrative-discharge.component';
 
 @Injectable({
@@ -17,6 +24,7 @@ export class GuardiaMapperService {
 
 	triageListDtoToTriage: (triageListDto: TriageListDto) => Triage = GuardiaMapperService._mapTriageListDtoToTriage;
 	triageListDtoToTriageReduced: (triageListDto: TriageListDto) => TriageReduced = GuardiaMapperService._mapTriageListDtoToTriageReduced;
+	vitalSignsValuetoNewVitalSignsObservationDto: (v: VitalSignsValue) => NewVitalSignsObservationDto = GuardiaMapperService._mapVitalSignsValuetoNewVitalSignsObservationDto;
 	formToAMedicalDischargeDto: (s: MedicalDischargeForm) => AMedicalDischargeDto = GuardiaMapperService._mapFormToAMedicalDischargeDto;
 	toAdministrativeDischargeDto: (s: AdministrativeForm) => AdministrativeDischargeDto = GuardiaMapperService._toAdministrativeDischargeDto;
 
@@ -160,5 +168,21 @@ export class GuardiaMapperService {
 			ambulanceCompanyId: s.ambulanceCompanyId,
 			hospitalTransportId: s.hospitalTransportId,
 		};
+	}
+
+	private static _mapVitalSignsValuetoNewVitalSignsObservationDto(vitalSignsValue: VitalSignsValue): NewVitalSignsObservationDto {
+		if (!vitalSignsValue) {
+			return undefined;
+		}
+		const vitalSigns = {};
+		Object.keys(vitalSignsValue).forEach((key: string) => {
+			if (vitalSignsValue[key]) {
+				vitalSigns[key] = {
+					value: vitalSignsValue[key].value,
+					effectiveTime: dateToDateTimeDto(vitalSignsValue[key].effectiveTime)
+				};
+			}
+		});
+		return vitalSigns !== {} ? vitalSigns : undefined;
 	}
 }
