@@ -14,6 +14,7 @@ databaseChangeLog:
 - changeSet:  
     id:  dropNotNullConstraints-outpatient_consultation
     author:  etrapani  
+    dbms: "!mssql"  
     changes:  
     -  dropNotNullConstraint:  
         columnName:  document_id  
@@ -21,6 +22,20 @@ databaseChangeLog:
     -  dropNotNullConstraint:  
         columnName:  clinical_specialty_id  
         tableName:  outpatient_consultation
+
+- changeSet:  
+    id:  dropNotNullConstraints-outpatient_consultation-mssql
+    author: saguero
+    dbms: mssql
+    changes:
+    -  dropNotNullConstraint:
+        columnName: document_id
+        columnDataType: bigint
+        tableName: outpatient_consultation
+    -  dropNotNullConstraint:
+        columnName: clinical_specialty_id
+        columnDataType: int
+        tableName: outpatient_consultation
 
 - changeSet:
     id: add-problem_type-data
@@ -35,6 +50,7 @@ databaseChangeLog:
 - changeSet:
     id: update data document_file
     author: etrapani
+    dbms: "!db2"
     changes:
     - addColumn:
         tableName: document_file
@@ -66,11 +82,48 @@ databaseChangeLog:
         baseTableName:  document_file  
         constraintName:  FK_document_file_internment_episode_id
 
+#FK_DOCUMENT_FILE_INTERNMENT_EPISODE_ID
+- changeSet:
+    id: update data document_file
+    author: saguero
+    dbms: db2
+    changes:
+    - addColumn:
+        tableName: document_file
+        columns:
+        - column:
+            name: source_type_id
+            type: smallint
+        - column:
+            name: checksum
+            type: varchar(512)
+    -  dropForeignKeyConstraint:  
+        baseTableName:  document_file  
+        constraintName:  FK_document_file_internment_episode_id
+    - renameColumn:  
+            columnDataType:  int
+            newColumnName:  source_id
+            oldColumnName:  internment_episode_id  
+            tableName:  document_file
+    - update:  
+        columns:  
+        -  column:  
+            name: source_type_id
+            value: 0            
+        tableName: document_file
+    -  addNotNullConstraint:  
+        columnDataType: smallint
+        columnName: source_type_id
+        constraintName:  NN_source_type_id   
+        tableName: document_file
+        validate:  true
+
 ### Manejo de fechas 
 - changeSet:
     id: day_week-createTable
     comment: Create table day_week
     author: saguero
+    dbms: postgresql
     changes: 
     - createTable: 
         tableName: day_week
@@ -87,6 +140,27 @@ databaseChangeLog:
                 nullable: false
             name: description 
             type: varchar(9)
+
+- changeSet:
+    id: day_week-createTable
+    comment: Create table day_week
+    author: saguero
+    dbms: "!postgresql"
+    changes: 
+    - createTable: 
+        tableName: day_week
+        columns: 
+        - column:
+            constraints:
+                primaryKey: true
+                primaryKeyName: PK_day_week
+            name: id
+            type: smallint
+        - column:
+            constraints:
+                nullable: false
+            name: description 
+            type: varchar(12)
 
 - changeSet:
     id: day_week-data
@@ -1110,6 +1184,7 @@ databaseChangeLog:
     id: medical_attention_type-createTable
     comment: Create table medical_attention_type
     author: saguero
+    dbms: "!db2"
     changes: 
     - createTable: 
         tableName: medical_attention_type
@@ -1127,17 +1202,53 @@ databaseChangeLog:
             name: description 
             type: varchar(10)
 
+#-------------------- Ajuste tamaño de columna para DB2 - Agrega 2 Bytes de prefijo ------------------
+- changeSet:
+    id: medical_attention_type-createTable
+    comment: Create table medical_attention_type
+    author: saguero
+    dbms: db2
+    changes: 
+    - createTable: 
+        tableName: medical_attention_type
+        columns: 
+        - column:
+            autoIncrement: true
+            constraints:
+                primaryKey: true
+                primaryKeyName: PK_medical_attention_type
+            name: id
+            type: smallint
+        - column:
+            constraints:
+                nullable: false
+            name: description 
+            type: varchar(12)
+
 - changeSet:
     id: medical_attention_type-data
     comment: Carga de datos medical_attention_type
     author: saguero
+    dbms: "!mssql"
     context: "!schema-only"
     changes:
         - sql:
             sql: |-
                 INSERT INTO medical_attention_type VALUES (1, 'Programada');
                 INSERT INTO medical_attention_type VALUES (2, 'Espontánea');          
-                
+
+- changeSet:
+    id: medical_attention_type-data
+    comment: Carga de datos medical_attention_type
+    author: saguero
+    dbms: mssql
+    context: "!schema-only"
+    changes:
+        - sql:
+            sql: |-
+                INSERT INTO medical_attention_type VALUES ('Programada');
+                INSERT INTO medical_attention_type VALUES ('Espontánea');  
+
 - changeSet:
     id: diary_opening_hours-createTable  
     comment: Create table diary_opening_hours
@@ -1389,6 +1500,7 @@ databaseChangeLog:
 - changeSet:
     id: procedures table
     author: etrapani
+    dbms: "!db2"
     changes: 
     - createTable: 
         tableName: procedures_status
@@ -1543,6 +1655,165 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: procedures
         validate: true 
+
+- changeSet:
+    id: procedures table
+    author: saguero
+    dbms: db2
+    changes: 
+    - createTable: 
+        tableName: procedures_status
+        columns: 
+        - column:
+            constraints:
+                primaryKey: true
+                primaryKeyName: PK_procedures_status
+            name: id
+            type: varchar(20)
+        - column:
+            constraints:
+                nullable: false
+            name: description
+            type: varchar(100)
+    - createTable: 
+        tableName: procedures
+        columns: 
+        - column:
+            autoIncrement: true
+            constraints:
+                primaryKey: true
+                primaryKeyName: PK_procedures
+            name: id
+            type: int
+        - column:
+            constraints:
+                nullable: false
+            name: patient_id
+            type: int
+        - column:
+            constraints:
+                nullable: false
+            name: sctid_code
+            type: varchar(20)
+        - column:
+            constraints:
+                nullable: false
+            name: status_id
+            type: varchar(20)
+        - column:
+            constraints:
+                nullable: true
+            name: note_id
+            type: bigint    
+        - column:
+            constraints:
+                nullable: false
+            name: performed_date
+            type: date        
+            defaultValueDate: CURRENT DATE    
+        - column:
+            constraints:
+                nullable: false
+            name: created_by
+            type: int
+            defaultValue: -1
+        - column:
+            constraints:
+                nullable: false
+            name: updated_by
+            type: int
+            defaultValue: -1
+        - column:
+            constraints:
+                nullable: false
+            name: created_on
+            type: datetime
+            defaultValueDate: ${date.now}
+        - column:
+            constraints:
+                nullable: false
+            name: updated_on
+            type: datetime
+            defaultValueDate: ${date.now}   
+    - addForeignKeyConstraint:
+        baseColumnNames: patient_id
+        baseTableName: procedures
+        constraintName: FK_procedures_patient_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: patient
+        validate: true
+    - addForeignKeyConstraint:
+        baseColumnNames: status_id
+        baseTableName: procedures
+        constraintName: FK_procedures_status_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: procedures_status
+        validate: true  
+    - addForeignKeyConstraint:
+        baseColumnNames: sctid_code
+        baseTableName: procedures
+        constraintName: FK_procedures_sctid_code
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: snomed
+        validate: true  
+    - addForeignKeyConstraint:
+        baseColumnNames: note_id
+        baseTableName: procedures
+        constraintName: FK_procedures_note_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: note
+        validate: true   
+    - createIndex:
+        columns:
+        - column:
+            name: patient_id
+        indexName: IDX_procedures_patient_id
+        tableName: procedures
+    - createTable: 
+        tableName: document_procedure
+        columns: 
+        - column:
+            constraints:
+                nullable: false
+            name: procedure_id
+            type: int
+        - column:
+            constraints:
+                nullable: false
+            name: document_id
+            type: bigint
+    - addPrimaryKey:
+        clustered: true
+        columnNames: document_id, procedure_id
+        constraintName: PK_document_procedure
+        tableName: document_procedure
+        validate: true
+    - addForeignKeyConstraint:
+        baseColumnNames: document_id
+        baseTableName: document_procedure
+        constraintName: FK_document_procedure_document_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: document
+        validate: true 
+    - addForeignKeyConstraint:
+        baseColumnNames: procedure_id
+        baseTableName: document_procedure
+        constraintName: FK_document_procedure_procedure_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: procedures
+        validate: true
 
 - changeSet: 
     id: procedures_status-metadata

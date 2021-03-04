@@ -53,6 +53,7 @@
 - changeSet:
     id: identification_type-table
     author: saguero
+    dbms: "!db2"
     changes: 
     - createTable: 
         tableName: identification_type
@@ -68,6 +69,27 @@
                 nullable: false
             name: description
             type: varchar(30)
+
+#-------------------- Ajuste tamaño de columna para DB2 - Agrega 2 Bytes de prefijo ------------------
+- changeSet:
+    id: identification_type-table
+    author: saguero
+    dbms: db2
+    changes: 
+    - createTable: 
+        tableName: identification_type
+        columns: 
+        - column:
+            constraints:
+                primaryKey: true
+                primaryKeyName: PK_identification_type
+            name: id
+            type: smallint
+        - column:
+            constraints:
+                nullable: false
+            name: description
+            type: varchar(32)
 
 - changeSet: 
     id: identification_type-metadata
@@ -119,6 +141,7 @@
 - changeSet:
     id: patient_type-table
     author: saguero
+    dbms: "!db2"
     changes: 
     - createTable: 
         tableName: patient_type
@@ -145,9 +168,40 @@
             name: audit
             type: boolean
 
+- changeSet:
+    id: patient_type-table
+    author: saguero
+    dbms: db2
+    changes: 
+    - createTable: 
+        tableName: patient_type
+        columns: 
+        - column:
+            constraints:
+                primaryKey: true
+                primaryKeyName: PK_patient_type
+            name: id
+            type: smallint
+        - column:
+            constraints:
+                nullable: false
+            name: description
+            type: varchar(15)
+        - column:
+            constraints:
+                nullable: false
+            name: active
+            type: boolean
+        - column:
+            constraints:
+                nullable: false
+            name: audit
+            type: boolean
+
 - changeSet: 
     id: patient_type-metadata
     author: saguero
+    dbms: "!db2"
     changes: 
         - sql:
             sql: |-
@@ -157,6 +211,21 @@
                 INSERT INTO patient_type (id,description,active,audit) VALUES (4,'Histórico',${boolean.true},${boolean.true});
                 INSERT INTO patient_type (id,description,active,audit) VALUES (5,'Telefónico',${boolean.true},${boolean.true});
                 INSERT INTO patient_type (id,description,active,audit) VALUES (6,'Rechazado',${boolean.false},${boolean.false});
+
+#----------------------------- Ajuste por palabra reservada 'audit' en DB2 ---------------------------
+- changeSet: 
+    id: patient_type-metadata
+    author: saguero
+    dbms: db2
+    changes: 
+        - sql:
+            sql: |-
+                INSERT INTO patient_type (id,description,active,"audit") VALUES (1,'Permanente',${boolean.true},${boolean.false});
+                INSERT INTO patient_type (id,description,active,"audit") VALUES (2,'Validado',${boolean.true},${boolean.false});
+                INSERT INTO patient_type (id,description,active,"audit") VALUES (3,'Temporario',${boolean.true},${boolean.true});
+                INSERT INTO patient_type (id,description,active,"audit") VALUES (4,'Histórico',${boolean.true},${boolean.true});
+                INSERT INTO patient_type (id,description,active,"audit") VALUES (5,'Telefónico',${boolean.true},${boolean.true});
+                INSERT INTO patient_type (id,description,active,"audit") VALUES (6,'Rechazado',${boolean.false},${boolean.false});
 
 - changeSet:
     id: health_insurance-table

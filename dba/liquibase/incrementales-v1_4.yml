@@ -47,6 +47,7 @@ databaseChangeLog:
 - changeSet:
     id: addColumn-clinical_specialty_type_id-clinical_specialty
     author: saguero
+    dbms: "!mssql"
     changes:
     - addColumn:
         tableName: clinical_specialty
@@ -76,6 +77,40 @@ databaseChangeLog:
             referencedTableName: clinical_specialty_type
             validate: true
 
+#------------ Repite changeSet para mssql y db2 por declarar un tipo de dato como 'short' ------------
+- changeSet:
+    id: addColumn-clinical_specialty_type_id-clinical_specialty
+    author: saguero
+    dbms: mssql
+    changes:
+    - addColumn:
+        tableName: clinical_specialty
+        columns:
+        - column:
+            name: clinical_specialty_type_id
+            type: smallint
+    - update:  
+        columns:  
+        - column:  
+            name: clinical_specialty_type_id
+            value: 1            
+        tableName: clinical_specialty
+    - addNotNullConstraint:
+        columnDataType: smallint  
+        columnName: clinical_specialty_type_id  
+        constraintName: NN_clinical_specialty_type_id      
+        tableName: clinical_specialty  
+        validate:  true
+    - addForeignKeyConstraint:
+            baseColumnNames: clinical_specialty_type_id
+            baseTableName: clinical_specialty
+            constraintName: FK_clinical_specialty_clinical_specialty_type_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: clinical_specialty_type
+            validate: true
+
 - changeSet:  
     id:  modifyDataType-clinical_specialty-sctid_code 
     author:  saguero  
@@ -89,6 +124,7 @@ databaseChangeLog:
 - changeSet: 
     id: clinical_specialty-metadata2
     author: saguero
+    dbms: postgresql
     context: "!schema-only"
     changes: 
         - sql:
@@ -261,7 +297,184 @@ databaseChangeLog:
                 INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Trauma (r)', '322051000221103',2);
                 INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Cirugía gastroenterológica', '320361000221100',2);
                 INSERT INTO clinical_specialty(id,name,sctid_code,clinical_specialty_type_id) VALUES ((SELECT nextval('clinical_specialty_id_seq')), 'Psicología clínica', '722162001',2);
-                    
+
+- changeSet: 
+    id: clinical_specialty-metadata2
+    author: saguero
+    dbms: "!postgresql"
+    context: "!schema-only"
+    changes: 
+        - sql:
+            sql: |-
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Clínica médica', '320591000221104',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Medicina general y/o medicina de familia', '394814009',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Alergia e Inmunología', '394805004',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Cardiología', '394579002',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Angiología general y hemodinamia', '722414000',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Dermatología', '394582007',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Endocrinología', '394583002',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Farmacología clínica', '394600006',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Fisiatría (medicina física y rehabilitación)', '394602003',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Gastroenterología', '394584008',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Genética médica', '394580004',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Geriatría', '394811001',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Hematología', '394803006',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Infectología', '321221000221106',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Nefrología', '394589003',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Neumonología', '418112009',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Neurología', '394591006',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Nutrición', '321381000221103',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Oncología', '394593009',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Reumatología', '394810000',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Terapia intensiva', '419192003',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Cirugía general', '394609007',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Cirugía cardiovascular', '408463005',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Cirugía de cabeza y cuello', '320341000221104',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Cirugía de tórax (cirugía torácica)', '408456005',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Cirugía infantil (cirugía pediátrica)', '394539006',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Cirugía plástica y reparadora', '394611003',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Cirugía vascular periférica', '320381000221107',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Coloproctología', '320441000221109',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Ginecología', '394586005',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Neurocirugía', '394610002',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Obstetricia', '408470005',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Oftalmología', '394813003',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Ortopedia y traumatología', '394801008',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Otorrinolaringología', ' 322811000221107',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Tocoginecología', '321481000221109',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Urología', '394612005',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Pediatría', '394537008',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Cardiología infantil', '408459003',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Endocrinología infantil', '419610006',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Gastroenterología infantil', '418058008',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Hematología infantil', '418652005',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Infectología infantil', '321251000221100',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Nefrología infantil', '419365004',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Neonatología', '408445005',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Neumonología infantil', '419170002',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Neurología infantil', '394538003',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Oncología infantil', '418002000',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Reumatología infantil', '419472004',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Terapia intensiva infantil', '321451000221104',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Psiquiatría', '394587001',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Psiquiatría infanto juvenil', '394588006',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Anatomía patológica', '394595002',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Anestesiología', '394577000',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Diagnóstico por imágenes', '320501000221108',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Hemoterapia e inmunohematología', '394819004',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Medicina del deporte', ' 321351000221108',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Medicina del trabajo', '394821009',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Medicina legal', '722204007',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Medicina nuclear', '394649004',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Radioterapia o terapia radiante', '419815003',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Toxicología', '409967009',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Dermatología pediátrica', '23971000087106',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Emergentologia', '773568002',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Especialidad en anatomía patológica bucalmaxilofacial', ' 321161000221107',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Especialidad en cirugía y traumatología bucomaxilofacial', '408449004 ',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Especialidad de endodoncia', '408441001',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Especialidad de periodoncia', '408461007',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Especialidad de odontopediatría', '394607009',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Especialidad de ortodoncia y ortopedia maxilar', '394608004',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Especialización en diagnóstico por imágenes bucomaxilofacial', '322311000221102',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Especialidad en odontología legal', '321201000221104',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Especialidad en clínica estomatológica', '321181000221100',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Especialidad en prótesis dentobucomaxilar', '408460008',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Enfermería en salud del adulto', '321051000221106',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Enfermería en salud del anciano', '321071000221104',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Enfermería en salud materno infantil y del adolescente', '321151000221105',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Enfermería en salud mental y psiquiatría', '321191000221102',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Enfermería en la atención del paciente crítico: neonatal, pediátrico y adulto', '320901000221102',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Enfermería en cuidados paliativos', '320851000221109',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Electrofisiología cardíaca', '320651000221108',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Ortopedia y traumatología infantil', '322281000221104',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Hepatología', '408472002',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Hepatología pediátrica', '321231000221109',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Alergia e inmunología pediátrica', '321741000221107',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Cirugía cardiovascular pediátrica', '320311000221103',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Salud pública', '321421000221105',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Epidemiología', '321441000221101',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Auditoría de servicios de salud', '320171000221107',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Gestión de servicios de salud', ' 322701000221104',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Farmacia hospitalaria', '322441000221108',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Farmacia comunitaria', '322321000221107',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Esterilización', ' 321211000221101',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Farmacia industrial', '322661000221109',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Farmacia sanitaria y legal', '322671000221100',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Nutrición y análisis de los alimentos', '321701000221105',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Biofarmacia', '320161000221103',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Bioquímica clínica', '394596001',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Toxicología legal y forense', ' 321551000221103',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Bromatología', '321521000221109',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Biotecnología', '320271000221103',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Bioquímica del medio ambiente', '320191000221108',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Nutrición en bioquimica', '321631000221106',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Bioquímica industrial', '320211000221109',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Gestión de calidad en el laboratorio', '321571000221105',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Enfermeria en rehabilitación', '321011000221105',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Odontología (r)', '722163006',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Psicología (r)', '722162001',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Enfermería', '722165004',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Fonoaudiología (r)', '331141000221106',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Kinesiología (r)', '321341000221106',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Terapia ocupacional (r)', '321471000221106',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Enfermería en cuidados críticos', '320841000221107',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Salud mental (r)', '321401000221103',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Microbiología (r)', '394820005',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Inocuidad y seguridad de alimentos (r)', '322741000221102',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Control de calidad de medicamentos', '320471000221104',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Enfermeria general y familiar', '321261000221103',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Enfermeria UTI pediátrica', '321411000221100',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Enfermería UTI neonatal', '321771000221102',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Enfermería clinico quirúrgico', '320771000221108',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Enfermería UTI adultos', '321321000221102',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Enfermería en neonatología', '320961000221101',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Enfermería en salud familiar y comunitaria', '321111000221109',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Emergentología pediátrica', '320691000221100',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Enfermería comunitaria', '320781000221106',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Nutrición y alimentación clinica infantojuvenil', '321671000221109',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Nutrición y alimentación clinica del adulto', '321651000221102',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Enfermería en control de infecciones', '320821000221103',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Enfermería oncologica', '321281000221105',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Psicología comunitaria (r)', '322111000221100',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Kinesiologia en respiratorio de adultos (r)', '322781000221105',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Salud pública veterinaria (r)', '321431000221108',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Psicología clínica y comunitaria (r)', '322101000221103',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Neurocirugía pediátrica (r)', '321371000221101',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Trabajo social en salud (r)', '321491000221107',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Ingeniería clinica (r)', '321591000221106',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Cirugía oncológica', '419321007',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Bioquímica toxicológica', '320231000221101',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Bioquímica y nutrición', '320251000221105',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Citogenética', '394804000',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Enfermería pediátrica', '321301000221109',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Radiología (r)', '394914008',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Seguridad y eficacia de medicamentos (r)', '322161000221102',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Quemados pediátrico (r)', '322331000221105',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Hemato-oncología pediátrica', '23981000087108',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Medicina paliativa', '394806003',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Adolescencia', '320111000221101',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Anatomía patológica pediátrica', '320141000221102',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Obstetricia (r)', '408470005',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Otorrinolaringología pediátrica (r)', '322471000221103',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Interdisciplinaria de educación para la salud (r)', '321291000221108',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Musicoterapia (r)', '321361000221105',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Diagnóstico por imagenes pediátrico', '320541000221105',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Diagnóstico por imagenes pediátrico', '320541000221105',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Enfermería en perinatología', '320981000221108',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Interdisciplinaria en cuidados paliativos (r)', ' 321311000221107',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Interdisciplinaria en gerontología (r)', '322431000221101',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Investigación en salud (r)', '322711000221101',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Kinesiología en pediatría y neonatología (r)', '322251000221109',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Kinesiología en rehabilitación psicofísica (r)', ' 322751000221100',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Mastología (r)', '322231000221100',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Procuración y transplante de órganos y tejidos (r)', '408477008',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Psicología clínica infanto-juvenil (r)', '322071000221105',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Psicopedagogía (r)', '321391000221100',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Trauma (r)', '322051000221103',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Cirugía gastroenterológica', '320361000221100',2);
+                INSERT INTO clinical_specialty(name,sctid_code,clinical_specialty_type_id) VALUES ('Psicología clínica', '722162001',2);
+
 - changeSet:        
     id: addColumn-person-photo-file-path
     author: tmedina
@@ -279,6 +492,7 @@ databaseChangeLog:
 - changeSet:
     id: medical_coverage-createTable
     author: lbergottini
+    dbms: postgresql
     comment: Create table medical_coverage
     changes: 
     - createTable: 
@@ -294,6 +508,28 @@ databaseChangeLog:
             - column:
                 name: name
                 type: varchar
+                constraints:
+                    nullable: false
+
+- changeSet:
+    id: medical_coverage-createTable
+    author: saguero
+    dbms: "!postgresql"
+    comment: Create table medical_coverage
+    changes: 
+    - createTable: 
+        tableName: medical_coverage
+        columns: 
+            - column:
+                autoIncrement: true
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_medical_coverage
+                name: id
+                type: int
+            - column:
+                name: name
+                type: varchar(255)
                 constraints:
                     nullable: false
                     
@@ -389,6 +625,7 @@ databaseChangeLog:
 - changeSet:
     id: health_insurance-hierarchy
     author: jlardapide
+    dbms: postgresql
     changes:
         - createTable: 
             tableName: health_insurance_v2
@@ -428,8 +665,115 @@ databaseChangeLog:
             oldTableName: health_insurance_v2
 
 - changeSet:
+    id: health_insurance-hierarchy
+    author: saguero
+    dbms: mssql
+    changes:
+        - createTable: 
+            tableName: health_insurance_v2
+            columns:
+            - column:
+                    constraints:
+                        primaryKey: true
+                        primaryKeyName: PK_health_insurance_v2
+                        references: medical_coverage(id)
+                        foreignKeyName: FK_health_insurance_medical_coverage_id
+                    name: id
+                    type: int      
+            - column:
+                constraints:
+                    unique: true
+                name: rnos
+                type: int
+            - column:
+                name: acronym
+                type: varchar(18)
+        - sql:
+            sql: |-                     
+                INSERT INTO medical_coverage(name)
+                        SELECT DISTINCT hi.name
+                        FROM health_insurance hi
+                ;
+
+                INSERT INTO health_insurance_v2(id,rnos,acronym)
+                    SELECT mc.id, hi.rnos, hi.acronym
+                    FROM health_insurance hi 
+                        JOIN medical_coverage mc on (mc.name = hi.name);
+        - dropForeignKeyConstraint:
+            baseTableName: appointment
+            constraintName: FK_appointment_health_insurance_id
+        - dropForeignKeyConstraint:
+            baseTableName: patient
+            constraintName: FK_health_insurance_id
+        - dropTable:
+            cascadeConstraints: true
+            tableName: health_insurance
+        - renameTable:
+            newTableName: health_insurance
+            oldTableName: health_insurance_v2
+
+- changeSet:
+    id: health_insurance-hierarchy
+    author: saguero
+    dbms: db2
+    changes:
+        - createTable: 
+            tableName: health_insurance_v2
+            columns:
+            - column:
+                    constraints:
+                        primaryKey: true
+                        primaryKeyName: PK_health_insurance_v2
+                    name: id
+                    type: int      
+            - column:
+                constraints:
+                    nullable: false
+                name: rnos
+                type: int
+            - column:
+                name: acronym
+                type: varchar(18)
+        - sql:
+            sql: |-                     
+                INSERT INTO medical_coverage(name)
+                        SELECT DISTINCT hi.name
+                        FROM health_insurance hi
+                ;
+
+                INSERT INTO health_insurance_v2(id,rnos,acronym)
+                    SELECT mc.id, hi.rnos, hi.acronym
+                    FROM health_insurance hi 
+                        JOIN medical_coverage mc on (mc.name = hi.name);
+        - dropForeignKeyConstraint:
+            baseTableName: appointment
+            constraintName: FK_appointment_health_insurance_id
+        - dropForeignKeyConstraint:
+            baseTableName: patient
+            constraintName: FK_health_insurance_id
+        - dropTable:
+            cascadeConstraints: true
+            tableName: health_insurance
+        - renameTable:
+            newTableName: health_insurance
+            oldTableName: health_insurance_v2
+        - addUniqueConstraint:
+            columnNames: rnos
+            tableName: health_insurance
+        - addForeignKeyConstraint:
+            baseColumnNames: id
+            baseTableName: health_insurance
+            constraintName: FK_health_insurance_medical_coverage_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: medical_coverage
+            validate: true
+
+- changeSet:
     id: patient-medical_coverage-update
     author: jlardapide
+    dbms: postgresql
     changes:
         - addColumn:
             tableName: appointment
@@ -506,6 +850,177 @@ databaseChangeLog:
             tableName: appointment 
         - dropColumn:
             columnName: medical_coverage_affiliate_number
+            tableName: appointment
+        - dropColumn:
+            columnName: medical_coverage_name
+            tableName: appointment
+
+- changeSet:
+    id: patient-medical_coverage-update
+    author: saguero
+    dbms: mssql
+    changes:
+        - addColumn:
+            tableName: appointment
+            columns:
+                - column:
+                    constraints:
+                        references: patient_medical_coverage(id)
+                        foreignKeyName: FK_patient_medical_coverage_id
+                    name: patient_medical_coverage_id
+                    type: int
+        - sql:
+            sql: |-
+                    insert into medical_coverage(name)
+                    select distinct medical_coverage_name
+                    from (
+                        select p.medical_coverage_name
+                        from patient p
+                        where p.medical_coverage_name is not null 
+                        union
+                        select a.medical_coverage_name
+                        from appointment a 
+                        where a.medical_coverage_name is not null
+                    ) as naming
+                    ;
+                    insert into private_health_insurance(id)
+                    select id
+                    FROM medical_coverage 
+                    ;
+                    select p.id, p.id as patient_id, phi.id as private_id, null as public_id,
+                    p.medical_coverage_affiliate_number, ${boolean.false} as from_appointment
+                    into #coverage
+                    from patient as p
+                    left join medical_coverage as mc on (p.medical_coverage_name = mc.name)
+                    left join private_health_insurance phi on (mc.id = phi.id)
+                    union
+                    select a.id, a.patient_id, phi.id as private_id, hi.id as public_id, a.medical_coverage_affiliate_number, ${boolean.true} as from_appointment
+                    from appointment a
+                    left join medical_coverage as mc on (a.medical_coverage_name = mc.name)
+                    left join private_health_insurance phi on (mc.id = phi.id)
+                    left join health_insurance as hi on (a.health_insurance_id = hi.rnos)
+                    ;
+                    insert into patient_medical_coverage (patient_id, medical_coverage_id, active, affiliate_number)
+                    select patient_id, private_id, ${boolean.true}, medical_coverage_affiliate_number
+                    from #coverage
+                    where private_id is not null
+                    union
+                    select patient_id, public_id, ${boolean.true}, medical_coverage_affiliate_number
+                    from #coverage
+                    where public_id is not null
+                    ;
+                    update appointment
+                    set appointment.patient_medical_coverage_id = (
+                    select top 1 pmc.id as id
+                    from #coverage as c 
+                    join patient_medical_coverage as pmc on (c.patient_id = pmc.patient_id and c.medical_coverage_affiliate_number = pmc.affiliate_number)
+                    where c.from_appointment = ${boolean.true} and c.id = appointment.id
+                    order by medical_coverage_id desc
+                    );
+        - dropColumn:
+            columnName: medical_coverage_affiliate_number
+            tableName: patient
+        - dropColumn:
+            columnName: medical_coverage_name
+            tableName: patient
+        - dropColumn:
+            columnName: health_insurance_id
+            tableName: patient
+        - dropColumn:
+            columnName: health_insurance_id
+            tableName: appointment 
+        - dropColumn:
+            columnName: medical_coverage_affiliate_number
+            tableName: appointment
+        - dropDefaultValue:
+            columnName: medical_coverage_name
+            tableName: appointment
+        - dropColumn:
+            columnName: medical_coverage_name
+            tableName: appointment
+
+- changeSet:
+    id: patient-medical_coverage-update
+    author: saguero
+    dbms: db2
+    changes:
+        - addColumn:
+            tableName: appointment
+            columns:
+                - column:
+                    constraints:
+                        references: patient_medical_coverage(id)
+                        foreignKeyName: FK_patient_medical_coverage_id
+                    name: patient_medical_coverage_id
+                    type: int
+        - sql:
+            sql: |-
+                    insert into medical_coverage(name)
+                    select distinct medical_coverage_name
+                    from (
+                        select p.medical_coverage_name
+                        from patient p
+                        where p.medical_coverage_name is not null 
+                        union
+                        select a.medical_coverage_name
+                        from appointment a 
+                        where a.medical_coverage_name is not null
+                    ) as naming
+                    ;
+                    insert into private_health_insurance(id)
+                    select id
+                    FROM medical_coverage 
+                    ;
+                    CREATE TABLE coverage AS (
+                    select p.id, p.id as patient_id, phi.id as private_id, null as public_id,
+                    p.medical_coverage_affiliate_number, ${boolean.false} as from_appointment
+                    from patient as p
+                    left join medical_coverage as mc on (p.medical_coverage_name = mc.name)
+                    left join private_health_insurance phi on (mc.id = phi.id)
+                    union
+                    select a.id, a.patient_id, phi.id as private_id, hi.id as public_id, a.medical_coverage_affiliate_number, ${boolean.true} as from_appointment
+                    from appointment a
+                    left join medical_coverage as mc on (a.medical_coverage_name = mc.name)
+                    left join private_health_insurance phi on (mc.id = phi.id)
+                    left join health_insurance as hi on (a.health_insurance_id = hi.rnos)
+                    ) WITH DATA
+                    ;
+                    insert into patient_medical_coverage (patient_id, medical_coverage_id, active, affiliate_number)
+                    select patient_id, private_id, ${boolean.true}, medical_coverage_affiliate_number
+                    from coverage
+                    where private_id is not null
+                    union
+                    select patient_id, public_id, ${boolean.true}, medical_coverage_affiliate_number
+                    from coverage
+                    where public_id is not null
+                    ;
+                    update appointment
+                    set appointment.patient_medical_coverage_id = (
+                    select pmc.id as id
+                    from coverage as c 
+                    join patient_medical_coverage as pmc on (c.patient_id = pmc.patient_id and c.medical_coverage_affiliate_number = pmc.affiliate_number)
+                    where c.from_appointment = ${boolean.true} and c.id = appointment.id
+                    order by medical_coverage_id desc
+                    limit 1
+                    );
+                    DROP TABLE coverage
+        - dropColumn:
+            columnName: medical_coverage_affiliate_number
+            tableName: patient
+        - dropColumn:
+            columnName: medical_coverage_name
+            tableName: patient
+        - dropColumn:
+            columnName: health_insurance_id
+            tableName: patient
+        - dropColumn:
+            columnName: health_insurance_id
+            tableName: appointment 
+        - dropColumn:
+            columnName: medical_coverage_affiliate_number
+            tableName: appointment
+        - dropDefaultValue:
+            columnName: medical_coverage_name
             tableName: appointment
         - dropColumn:
             columnName: medical_coverage_name

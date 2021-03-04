@@ -98,6 +98,7 @@
 - changeSet:
     id: bed_add_columns_free_available_enabled
     author: efernandez
+    dbms: "!db2"
     changes:
     - addColumn:
         tableName: bed
@@ -126,6 +127,37 @@
             ALTER TABLE bed ADD CONSTRAINT CH_bed_available_free CHECK (not ((available = ${boolean.false}) and (free = ${boolean.true})));
 
 - changeSet:
+    id: bed_add_columns_free_available_enabled
+    author: saguero
+    dbms: db2
+    changes:
+    - addColumn:
+        tableName: bed
+        columns:
+        - column:
+            name: enabled
+            type: boolean
+            defaultValue: ${boolean.true}
+            constraints:
+                nullable: false  
+        - column:
+            name: available
+            type: boolean
+            defaultValue: ${boolean.true}
+            constraints:
+                nullable: false  
+        - column:
+            name: free
+            type: boolean
+            defaultValue: ${boolean.true}
+            constraints:
+                nullable: false  
+    - sql: 
+        sql: |- 
+            ALTER TABLE bed ADD CONSTRAINT CH_bed_enabled_available CHECK (not ((enabled = ${boolean.false}) and (available = ${boolean.true})));
+            ALTER TABLE bed ADD CONSTRAINT CH_bed_available_free CHECK (not ((available = ${boolean.false}) and ("free" = ${boolean.true})));
+
+- changeSet:
     id: document_file-modifyDataType-file_path
     author: saguero
     comment: Modify data type column file_path in document_file table
@@ -148,6 +180,7 @@
 - changeSet:
     id: document_file-addColumn-uuid_file
     author: saguero
+    dbms: "!db2"
     comment: Add column uuid_file to document_file table
     changes:
     - addColumn:
@@ -157,6 +190,22 @@
                 nullable: false
             name: uuid_file
             type: varchar(36)
+        tableName: document_file
+
+- changeSet:
+    id: document_file-addColumn-uuid_file
+    author: saguero
+    dbms: db2
+    comment: Add column uuid_file to document_file table
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            constraints:
+                nullable: false
+            name: uuid_file
+            type: varchar(36)
+            defaultValue: uuid
         tableName: document_file
 
 - changeSet:

@@ -1259,6 +1259,7 @@ databaseChangeLog:
 - changeSet:
     id: internment_episode table
     author: etrapani
+    dbms: "!db2"
     changes: 
     - createTable: 
         tableName: internment_episode
@@ -1377,6 +1378,129 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: note
         validate: true 
+
+- changeSet:
+    id: internment_episode table
+    author: etrapani
+    dbms: db2
+    changes: 
+    - createTable: 
+        tableName: internment_episode
+        columns: 
+        - column:
+            autoIncrement: true
+            constraints:
+                primaryKey: true
+                primaryKeyName: PK_internment_episode
+            name: id
+            type: int
+        - column:
+            constraints:
+                nullable: false
+            name: patient_id
+            type: int
+        - column:
+            constraints:
+                nullable: false
+            name: bed_id
+            type: int 
+        - column:
+            constraints:
+                nullable: true
+            name: clinical_speciality_id
+            type: varchar(20)                 
+        - column:
+            constraints:
+                nullable: false
+            name: status_id
+            type: smallint
+        - column:
+            constraints:
+                nullable: true
+            name: note_id
+            type: bigint 
+        - column:
+            constraints:
+                nullable: true
+            name: anamnesis_doc_id
+            type: bigint 
+        - column:
+            constraints:
+                nullable: true
+            name: epicrisis_doc_id
+            type: bigint 
+        - column:
+            constraints:
+                nullable: false
+            name: entry_date
+            type: date
+            defaultValueDate: current_date
+        - column:
+            constraints:
+                nullable: true
+            name: discharge_date
+            type: date
+            defaultValueDate: current_date
+        - column:
+            constraints:
+                nullable: false
+            name: created_by
+            type: int
+            defaultValue: -1
+        - column:
+            constraints:
+                nullable: false
+            name: updated_by
+            type: int
+            defaultValue: -1
+        - column:
+            constraints:
+                nullable: false
+            name: created_on
+            type: datetime
+            defaultValueDate: ${date.now}
+        - column:
+            constraints:
+                nullable: false
+            name: updated_on
+            type: datetime
+            defaultValueDate: ${date.now} 
+    - addForeignKeyConstraint:
+        baseColumnNames: patient_id
+        baseTableName: internment_episode
+        constraintName: FK_internment_episode_patient_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: patient
+        validate: true   
+    - addForeignKeyConstraint:
+        baseColumnNames: status_id
+        baseTableName: internment_episode
+        constraintName: FK_internment_episode_status_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: internment_episode_status
+        validate: true                   
+    - addForeignKeyConstraint:
+        baseColumnNames: bed_id
+        baseTableName: internment_episode
+        constraintName: FK_internment_episode_bed_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: bed
+        validate: true
+    - addForeignKeyConstraint:
+        baseColumnNames: note_id
+        baseTableName: internment_episode
+        constraintName: FK_internment_episode_note_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: note
+        validate: true
 
 - changeSet:
     id: IDX_internment_episode_patient_id

@@ -54,6 +54,7 @@ databaseChangeLog:
 - changeSet:
     id: add_column-data appointment
     author: etrapani
+    dbms: "!db2"
     changes:
     - addColumn:
         tableName: appointment
@@ -82,6 +83,38 @@ databaseChangeLog:
         referencedTableName: health_insurance
         validate: true
 
+- changeSet:
+    id: add_column-data appointment
+    author: saguero
+    dbms: db2
+    changes:
+    - addColumn:
+        tableName: appointment
+        columns:
+        - column:
+            name: health_insurance_id
+            type: int
+        - column:
+            constraints:
+                nullable: false
+            name: medical_coverage_name
+            type: varchar(255)
+            defaultValue: 'Sumar'
+        - column:
+            constraints:
+                nullable: false
+            name: medical_coverage_affiliate_number
+            type: varchar(150)
+            defaultValue: -1
+    - addForeignKeyConstraint:
+        baseColumnNames: health_insurance_id
+        baseTableName: appointment
+        constraintName: FK_appointment_health_insurance_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: rnos
+        referencedTableName: health_insurance
+        validate: true
 
 - changeSet:
     id: set-default-value-person_id-users
@@ -152,11 +185,21 @@ databaseChangeLog:
 - changeSet:  
     id:  dropNotNullConstraint-appointment-medical_coverage_name
     author:  saguero  
+    dbms: "!mssql" 
     changes:  
     -  dropNotNullConstraint:  
         columnName:  medical_coverage_name  
         tableName:  appointment       
 
+- changeSet:  
+    id:  dropNotNullConstraint-appointment-medical_coverage_name-mssql
+    author: saguero 
+    dbms: mssql
+    changes:
+    -  dropNotNullConstraint:
+        columnName: medical_coverage_name
+        columnDataType: varchar(255)
+        tableName: appointment
 
 - changeSet:
     id: healthcare_professional_specialty-unique-constraint
