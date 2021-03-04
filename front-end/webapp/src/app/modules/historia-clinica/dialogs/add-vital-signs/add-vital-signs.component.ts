@@ -74,9 +74,11 @@ export class AddVitalSignsComponent implements OnInit {
 			this.evolutionNoteService.createDocument(evolutionNote, this.data.internmentEpisodeId).subscribe(_ => {
 					this.snackBarService.showSuccess('internaciones.internacion-paciente.vital-signs-summary.save.SUCCESS');
 					this.dialogRef.close(true);
-				}, _ => {
-					this.snackBarService.showError('internaciones.internacion-paciente.vital-signs-summary.save.ERROR');
-					this.loading = false;
+				}, error => {
+				const errorMessages = error.errors.join() ? error.errors.join(', ')
+					: 'internaciones.internacion-paciente.vital-signs-summary.save.ERROR';
+				this.snackBarService.showError(errorMessages);
+				this.loading = false;
 				}
 			);
 		}
