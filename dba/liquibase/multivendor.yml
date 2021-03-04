@@ -10,7 +10,7 @@ databaseChangeLog:
         dbms: postgresql
     - property:
         name: boolean.false
-        value: false
+        value: 0
         dbms: db2
     - property: 
         name: boolean.true
@@ -22,7 +22,7 @@ databaseChangeLog:
         dbms: postgresql
     - property:
         name: boolean.true
-        value: true
+        value: 1
         dbms: db2
     - property: 
         name: date.now 
@@ -34,7 +34,7 @@ databaseChangeLog:
         dbms: postgresql
     - property:
         name: date.now
-        value: CURRENT DATE
+        value: CURRENT_TIMESTAMP
         dbms: db2
     - property: 
         name: varchar.max 

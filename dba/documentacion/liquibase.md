@@ -10,9 +10,14 @@ Como migrar BBDD con Liquibase:
 
 ```shell
 #Postgres
-mvn -Dliquibase.propertyFile=liquibase/postgresql.properties -Dliquibase.contexts=schema-only liquibase:update
+mvn -Dliquibase.propertyFile=liquibase/postgresql.properties -Dliquibase.contexts=default liquibase:update
+
 #MSSQL
-mvn -Dliquibase.propertyFile=liquibase/mssql.properties -Dliquibase.contexts=schema-only liquibase:update
+mvn -Dliquibase.propertyFile=liquibase/mssql.properties -Dliquibase.contexts=default liquibase:update
+
+#DB2
+mvn -Dliquibase.propertyFile=liquibase/db2.properties -Dliquibase.contexts=default liquibase:update
+
 ```
 
 ## Como escribir un changeset

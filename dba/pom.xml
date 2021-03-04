@@ -28,31 +28,36 @@
 
 <build>
     <plugins>
-      <plugin>
-        <groupId>org.liquibase</groupId>
-        <artifactId>liquibase-maven-plugin</artifactId>
-        <version>3.8.0</version>
-        <configuration>
-          <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>com.microsoft.sqlserver</groupId>
-            <artifactId>mssql-jdbc</artifactId>
-            <version>${mssql-jdbc.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-            <version>1.12</version>
-          </dependency>
-          <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>${postgresql.version}</version>
-          </dependency>
-        </dependencies>
-      </plugin>
+		  <plugin>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-maven-plugin</artifactId>
+			<version>3.8.0</version>
+			<configuration>
+			  <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
+			</configuration>
+			<dependencies>
+			  <dependency>
+				<groupId>com.microsoft.sqlserver</groupId>
+				<artifactId>mssql-jdbc</artifactId>
+				<version>${mssql-jdbc.version}</version>
+			  </dependency>
+			  <dependency>
+				<groupId>org.yaml</groupId>
+				<artifactId>snakeyaml</artifactId>
+				<version>1.12</version>
+			  </dependency>
+			  <dependency>
+				<groupId>org.postgresql</groupId>
+				<artifactId>postgresql</artifactId>
+				<version>${postgresql.version}</version>
+			  </dependency>
+			  <dependency>
+				<groupId>com.ibm.db2</groupId>
+				<artifactId>jcc</artifactId>
+				<version>11.5.0.0</version>
+			  </dependency>
+			</dependencies>
+		  </plugin>
     </plugins>
   </build>
 </project>
