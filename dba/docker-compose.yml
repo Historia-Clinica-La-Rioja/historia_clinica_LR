@@ -1,0 +1,42 @@
+version: '3'
+services:
+  postgresql:
+    image: postgres:11
+    container_name: postgresql
+    environment:
+      POSTGRES_PASSWORD: Local123
+      POSTGRES_DB: hospitalDB
+    volumes:
+      - ../ci/dbapgsql/:/app/pg/
+      - ./docker-data/postgres/:/data/
+    ports:
+      - "5432:5432"
+    restart: always
+  mssql:
+    build:
+      context: './docker/mssql'
+      dockerfile: mssql.Dockerfile
+    container_name: mssql
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: Local123
+    volumes:
+      - ../ci/dbapgsql/:/app/mssql/
+      - ./docker-data/mssql/:/data/
+    ports:
+      - "1433:1433"
+    restart: always
+  db2:
+    image: ibmcom/db2
+    container_name: db2
+    environment:
+      LICENSE: accept
+      DB2INST1_PASSWORD: Local123
+      DBNAME: hsidb
+    volumes:
+      - ../ci/dbapgsql/:/app/db2/
+      - ./docker-data/db2/:/data/
+    ports:
+      - "50000:50000"
+    privileged: true
+    restart: always
