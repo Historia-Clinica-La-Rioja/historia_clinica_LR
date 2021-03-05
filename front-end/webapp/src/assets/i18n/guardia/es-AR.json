@@ -157,16 +157,18 @@
 			},
 			"medical_discharge": {
 				"TITLE": "Alta Médica",
+				"PATIENT_REQUIRED": "El episodio de guardia debe tener un paciente asociado",
 				"form": {
 					"DATE": "Fecha",
 					"TIME":"Hora",
-					"AUTOPSY": "Autopsia",
+					"INVALID_DATE":"La fecha no debe ser una fecha pasada",
+					"AUTOPSY": "Autopsia autorizada",
 					"DISCHARGE_TYPE": "Tipo de egreso"
 				},
 				"REQUIRED_PROBLEM": "Debe ingresar al menos un problema",
 				"messages": {
-					"SUCCESS": "El alta medica se guardó exitosamente",
-					"ERROR": "Ocurrió un error al intentar guardar el alta medica"
+					"SUCCESS": "El alta médica se guardó exitosamente",
+					"ERROR": "Ocurrió un error al intentar guardar el alta médica"
 				},
 				"problems": {
 					"buttons": {

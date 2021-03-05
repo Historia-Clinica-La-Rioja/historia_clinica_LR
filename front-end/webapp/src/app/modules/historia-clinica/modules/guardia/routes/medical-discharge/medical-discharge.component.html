@@ -5,11 +5,15 @@
 
 		<div fxLayout="row" fxLayoutGap="5px" formGroupName="dateTime">
 			<mat-form-field appearance="outline">
-				<input formControlName="date" id="date" matInput [matDatepicker]="initPicker"
+				<input formControlName="date" id="date" matInput [matDatepicker]="initPicker" [min]="today"
 					placeholder="{{'guardia.episode.medical_discharge.form.DATE' | translate}}">
 				<mat-datepicker-toggle matSuffix [for]="initPicker"></mat-datepicker-toggle>
 				<mat-datepicker #initPicker></mat-datepicker>
-				<mat-error translate="forms.REQUIRED"></mat-error>
+				<mat-error *ngIf="hasError(form.get('dateTime'), 'required', 'date') else invalidDate" translate="forms.REQUIRED"></mat-error>
+				<ng-template #invalidDate>
+					<mat-error translate="guardia.episode.medical_discharge.form.INVALID_DATE"></mat-error>
+				</ng-template>
+
 			</mat-form-field>
 
 

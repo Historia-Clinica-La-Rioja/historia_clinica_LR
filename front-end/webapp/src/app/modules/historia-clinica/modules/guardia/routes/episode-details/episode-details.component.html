@@ -2,15 +2,17 @@
 
 	<div fxLayout="row" fxLayoutAlign="space-between">
 		<h1 translate="guardia.episode.TITLE"></h1>
-		<div fxLayoutGap="5px" style="height: 90%;">
+		<div fxLayoutGap="5px" style="height: 90%;" fxLayout="row">
 			<button *ngIf="episodeState === STATES.EN_ATENCION" id="cancel-attention" mat-raised-button color="primary"
 				(click)="cancelAttention()">
 				{{ 'guardia.episode.CANCEL_ATTENTION' | translate | uppercase }}
 			</button>
-			<button *ngIf="episodeState === STATES.EN_ATENCION" id="alta-medica" mat-raised-button color="primary"
-				(click)="goToMedicalDischarge()">
-				{{ 'guardia.episode.medical_discharge.TITLE' | translate | uppercase }}
-			</button>
+			<div *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO', 'PROFESIONAL_DE_SALUD']">
+				<button *ngIf="episodeState === STATES.EN_ATENCION" id="alta-medica" mat-raised-button color="primary"
+					(click)="goToMedicalDischarge()">
+					{{ 'guardia.episode.medical_discharge.TITLE' | translate | uppercase }}
+				</button>
+			</div>
 			<div *hasRole="['ADMINISTRATIVO']">
 				<button *ngIf="episodeState === STATES.CON_ALTA_MEDICA" id="administrative-discharge" mat-raised-button
 					color="primary" (click)="goToAdministrativeDischarge()">

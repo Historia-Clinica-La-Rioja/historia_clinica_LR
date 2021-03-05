@@ -2,13 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AMedicalDischargeDto, DiagnosisDto, MasterDataInterface } from '@api-rest/api-model';
+import { DischargeTypes } from '@api-rest/masterdata';
 import { EmergencyCareEpisodeMedicalDischargeService } from '@api-rest/services/emergency-care-episode-medical-discharge.service';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
 import { ContextService } from '@core/services/context.service';
+import { sortBy } from '@core/utils/array.utils';
 import { hasError, TIME_PATTERN } from '@core/utils/form.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Moment } from 'moment';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/internal/operators/map';
 import { SnomedService } from 'src/app/modules/historia-clinica/services/snomed.service';
 import { ProblemasService } from '../../../../services/problemas-nueva-consulta.service';
 import { GuardiaMapperService } from '../../services/guardia-mapper.service';
@@ -45,7 +48,7 @@ export class MedicalDischargeComponent implements OnInit {
 
 	) {
 		this.problemasService = new ProblemasService(formBuilder, this.snomedService);
-	 }
+	}
 
 	ngOnInit(): void {
 		this.form = this.formBuilder.group({
@@ -54,20 +57,25 @@ export class MedicalDischargeComponent implements OnInit {
 				time: [null, Validators.required],
 			}),
 			autopsy: [null],
-			dischargeTypeId: [null, Validators.required]
+			dischargeTypeId: [DischargeTypes.ALTA_MEDICA, Validators.required]
 		});
 
 		this.route.paramMap.subscribe(params => {
 			this.episodeId = Number(params.get('id'));
 		});
 
-		this.dischargeTypes$ = this.emergencyCareMasterDataService.getDischargeType();
+		const sortByDescription = sortBy('description');
+		this.dischargeTypes$ = this.emergencyCareMasterDataService.getDischargeType()
+			.pipe(
+				map((dischargeTypes) => sortByDescription(dischargeTypes))
+			);
+
 	}
 
 	confirm(): void {
 		this.formSubmited = true;
 		if (this.form.valid && this.problemasService.getProblemas().length) {
-			const s: MedicalDischargeForm = {... this.form.value, problems: this.problemasService.getProblemas()};
+			const s: MedicalDischargeForm = { ... this.form.value, problems: this.problemasService.getProblemas() };
 			const medicalCoverageDto: AMedicalDischargeDto = this.guardiaMapperService.formToAMedicalDischargeDto(s);
 			this.emergencyCareEspisodeDischargeService.newMedicalDischarge
 				(this.episodeId, medicalCoverageDto).subscribe(

@@ -12,8 +12,8 @@ export const anyMatch = <T>(a1: T[], a2: T[]): boolean => {
 
 export const uniqueItems = <T>(data: T[]): T[] => {
 	return data.filter((elem, index, self) => {
-			return index === self.indexOf(elem);
-		});
+		return index === self.indexOf(elem);
+	});
 };
 
 export const pushIfNotExists = <T>(data: T[], obj: T, compareFunction: (obj1: T, obj2: T) => boolean): T[] => {
@@ -21,4 +21,8 @@ export const pushIfNotExists = <T>(data: T[], obj: T, compareFunction: (obj1: T,
 		data.push(obj);
 	}
 	return data;
+};
+
+export const sortBy = (field: string) => <T>(data: T[]): T[] => {
+	return data?.sort((a, b) => a[field] < b[field] ? -1 : 1);
 };

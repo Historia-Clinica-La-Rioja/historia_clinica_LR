@@ -215,7 +215,11 @@ export class EpisodeDetailsComponent implements OnInit {
 	}
 
 	goToMedicalDischarge(): void {
-		this.router.navigate([`${this.router.url}/alta-medica`]);
+		if (!this.responseEmergencyCare?.patient) {
+			this.snackBarService.showError('guardia.episode.medical_discharge.PATIENT_REQUIRED');
+		} else {
+			this.router.navigate([`${this.router.url}/alta-medica`]);
+		}
 	}
 
 	goToAdministrativeDischarge(): void {
