@@ -13,7 +13,7 @@ import { parse } from 'date-fns';
 import { Problema } from '../../../services/problemas-nueva-consulta.service';
 import { DateFormat, momentFormat } from '@core/utils/moment.utils';
 import { MedicalDischargeForm } from '../routes/medical-discharge/medical-discharge.component';
-import { VitalSignsValue } from '../../../services/vital-signs-form.service';
+import { EffectiveObservation, VitalSignsValue } from '../../../services/vital-signs-form.service';
 import { AdministrativeForm } from '../routes/administrative-discharge/administrative-discharge.component';
 
 @Injectable({
@@ -27,6 +27,7 @@ export class GuardiaMapperService {
 	vitalSignsValuetoNewVitalSignsObservationDto: (v: VitalSignsValue) => NewVitalSignsObservationDto = GuardiaMapperService._mapVitalSignsValuetoNewVitalSignsObservationDto;
 	formToAMedicalDischargeDto: (s: MedicalDischargeForm) => AMedicalDischargeDto = GuardiaMapperService._mapFormToAMedicalDischargeDto;
 	toAdministrativeDischargeDto: (s: AdministrativeForm) => AdministrativeDischargeDto = GuardiaMapperService._toAdministrativeDischargeDto;
+	mapEffectiveObservationToNewEffectiveClinicalObservationDto: (e: EffectiveObservation) => NewEffectiveClinicalObservationDto = GuardiaMapperService._mapEffectiveObservationToNewEffectiveClinicalObservationDto;
 
 	constructor() {
 	}
@@ -162,15 +163,15 @@ export class GuardiaMapperService {
 	private static _toAdministrativeDischargeDto(s: AdministrativeForm): AdministrativeDischargeDto {
 		return {
 			administrativeDischargeOn: {
-					date: dateToDateDto(s.dateTime.date.toDate()),
-					time: dateToTimeDto(parse(s.dateTime.time, 'HH:mm', new Date()))
+				date: dateToDateDto(s.dateTime.date.toDate()),
+				time: dateToTimeDto(parse(s.dateTime.time, 'HH:mm', new Date()))
 			},
 			ambulanceCompanyId: s.ambulanceCompanyId,
 			hospitalTransportId: s.hospitalTransportId,
 		};
 	}
 
-	private static _mapVitalSignsValuetoNewVitalSignsObservationDto(vitalSignsValue: VitalSignsValue): NewVitalSignsObservationDto {
+	static _mapVitalSignsValuetoNewVitalSignsObservationDto(vitalSignsValue: VitalSignsValue): NewVitalSignsObservationDto {
 		if (!vitalSignsValue) {
 			return undefined;
 		}
@@ -184,5 +185,16 @@ export class GuardiaMapperService {
 			}
 		});
 		return vitalSigns !== {} ? vitalSigns : undefined;
+	}
+
+	static _mapEffectiveObservationToNewEffectiveClinicalObservationDto(effectiveObservation: EffectiveObservation): NewEffectiveClinicalObservationDto {
+		if (!effectiveObservation) {
+			return undefined;
+		}
+
+		return {
+			value: effectiveObservation.value,
+			effectiveTime: dateToDateTimeDto(effectiveObservation.effectiveTime)
+		};
 	}
 }

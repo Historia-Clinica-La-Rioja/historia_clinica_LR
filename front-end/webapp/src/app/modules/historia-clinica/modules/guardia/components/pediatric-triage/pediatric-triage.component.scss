@@ -17,6 +17,13 @@ h4 {
 .simple-form-field {
 	width: 60%;
 	min-width: 280px;
+
+	&.vital-sign {
+		::ng-deep .mat-form-field-wrapper {
+			padding-bottom: 0;
+			margin-bottom: 0;
+		}
+	}
 }
 
 section {

@@ -61,18 +61,24 @@
 
 			<section id="breathing" fxLayout="column">
 				<h4 [translate]="'guardia.triage.BREATH'"></h4>
-				<div formGroupName="breathing" fxLayout="column">
-
-					<mat-form-field class="simple-form-field" appearance="outline">
-						<mat-label [translate]="'guardia.triage.RESPIRATORY_RATE'"></mat-label>
-						<input matInput id="respiratoryRate" name="respiratoryRate"
-							   formControlName="respiratoryRate"
-							   placeholder="{{'guardia.triage.RESPIRATORY_RATE' | translate }}"
-							   type="number">
-						<mat-error *ngIf="hasError(pediatricForm.get('breathing'), 'min', 'respiratoryRate')"
-								   [translate]="'forms.MIN_ERROR'" [translateParams]="{min: minValue}">
-						</mat-error>
-					</mat-form-field>
+				<div fxLayout="column" formGroupName="breathing">
+					<div fxLayout="column" formGroupName="respiratoryRate" class="mat-form-field-wrapper">
+						<mat-form-field class="simple-form-field vital-sign" appearance="outline">
+							<mat-label [translate]="'guardia.triage.RESPIRATORY_RATE'"></mat-label>
+							<input matInput id="respiratoryRate"
+								   formControlName="value"
+								   placeholder="{{'guardia.triage.RESPIRATORY_RATE' | translate }}"
+								   type="number">
+							<mat-error *ngIf="hasError(pediatricForm.get('breathing'), 'min', 'respiratoryRate')"
+									   [translate]="'forms.MIN_ERROR'"
+									   [translateParams]=" { min: getError(pediatricForm.get('breathing'), 'min', 'respiratoryRate').min }">
+							</mat-error>
+						</mat-form-field>
+						<app-effective-time
+							[effectiveTime]="pediatricForm.value.breathing.respiratoryRate.effectiveTime"
+							(update)="setVitalSignEffectiveTime($event, pediatricForm.controls.breathing,'respiratoryRate')">
+						</app-effective-time>
+					</div>
 
 					<mat-form-field class="simple-form-field" appearance="outline">
 						<mat-label [translate]="'guardia.triage.RESPIRATORY_RETRACTION'"></mat-label>
@@ -97,15 +103,22 @@
 						</mat-radio-group>
 					</div>
 
-					<mat-form-field class="simple-form-field" appearance="outline">
-						<mat-label [translate]="'guardia.triage.OXYGEN_SATURATION'"></mat-label>
-						<input id="bloodOxygenSaturation" name="bloodOxygenSaturation"
-							   formControlName="bloodOxygenSaturation"
-							   placeholder="00" type="number" matInput>
-						<mat-error *ngIf="hasError(pediatricForm.get('breathing'), 'min', 'bloodOxygenSaturation')"
-								   [translate]="'forms.MIN_ERROR'" [translateParams]="{min: minValue}"></mat-error>
-					</mat-form-field>
-
+					<div fxLayout="column" formGroupName="bloodOxygenSaturation">
+						<mat-form-field class="simple-form-field vital-sign" appearance="outline">
+							<mat-label [translate]="'guardia.triage.OXYGEN_SATURATION'"></mat-label>
+							<input id="bloodOxygenSaturation"
+								   formControlName="value"
+								   placeholder="00" type="number" matInput>
+							<mat-error *ngIf="hasError(pediatricForm.get('breathing'), 'min', 'bloodOxygenSaturation')"
+									   [translate]="'forms.MIN_ERROR'"
+									   [translateParams]=" { min: getError(pediatricForm.get('breathing'), 'min', 'bloodOxygenSaturation').min }">
+							</mat-error>
+						</mat-form-field>
+						<app-effective-time
+							[effectiveTime]="pediatricForm.value.breathing.bloodOxygenSaturation.effectiveTime"
+							(update)="setVitalSignEffectiveTime($event, pediatricForm.controls.breathing,'bloodOxygenSaturation')">
+						</app-effective-time>
+					</div>
 				</div>
 			</section>
 
@@ -121,13 +134,21 @@
 							</mat-option>
 						</mat-select>
 					</mat-form-field>
-					<mat-form-field class="simple-form-field" appearance="outline">
-						<mat-label [translate]="'guardia.triage.HEART_RATE'"></mat-label>
-						<input matInput id="heartRate" name="heartRate" formControlName="heartRate"
-							   placeholder="{{'guardia.triage.HEART_RATE' | translate }}" type="number">
-						<mat-error *ngIf="hasError(pediatricForm.get('circulation'), 'min', 'heartRate')"
-								   [translate]="'forms.MIN_ERROR'" [translateParams]="{min: minValue}"></mat-error>
-					</mat-form-field>
+
+					<div fxLayout="column" formGroupName="heartRate">
+						<mat-form-field class="simple-form-field vital-sign" appearance="outline">
+							<mat-label [translate]="'guardia.triage.HEART_RATE'"></mat-label>
+							<input matInput id="heartRate" formControlName="value"
+								   placeholder="{{'guardia.triage.HEART_RATE' | translate }}" type="number">
+							<mat-error *ngIf="hasError(pediatricForm.get('circulation'), 'min', 'heartRate')"
+									   [translate]="'forms.MIN_ERROR'"
+									   [translateParams]=" { min: getError(pediatricForm.get('circulation'), 'min', 'heartRate').min }">
+							</mat-error>
+						</mat-form-field>
+						<app-effective-time [effectiveTime]="pediatricForm.value.circulation.heartRate.effectiveTime"
+											(update)="setVitalSignEffectiveTime($event, pediatricForm.controls.circulation,'heartRate')">
+						</app-effective-time>
+					</div>
 				</div>
 			</section>
 

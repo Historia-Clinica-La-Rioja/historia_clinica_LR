@@ -54,24 +54,24 @@ export class VitalSignsFormService {
 			&& (form.value.temperature.value === null));
 	}
 
-	buildDto(form: FormGroup): VitalSignsValue {
+	getEffectiveObservation(controlValue: any): EffectiveObservation {
+		return (controlValue.value !== null && controlValue.value !== undefined) ?
+			{ value: controlValue.value, effectiveTime: controlValue.effectiveTime.toDate() }
+			: undefined;
+	}
+
+	buildVitalSignsValue(form: FormGroup): VitalSignsValue {
 		return isNull(form.value) ? undefined : {
-			bloodOxygenSaturation: getEffectiveObservation(form.value.bloodOxygenSaturation),
-			diastolicBloodPressure: getEffectiveObservation(form.value.diastolicBloodPressure),
-			heartRate: getEffectiveObservation(form.value.heartRate),
-			respiratoryRate: getEffectiveObservation(form.value.respiratoryRate),
-			systolicBloodPressure: getEffectiveObservation(form.value.systolicBloodPressure),
-			temperature: getEffectiveObservation(form.value.temperature)
+			bloodOxygenSaturation: this.getEffectiveObservation(form.value.bloodOxygenSaturation),
+			diastolicBloodPressure: this.getEffectiveObservation(form.value.diastolicBloodPressure),
+			heartRate: this.getEffectiveObservation(form.value.heartRate),
+			respiratoryRate: this.getEffectiveObservation(form.value.respiratoryRate),
+			systolicBloodPressure: this.getEffectiveObservation(form.value.systolicBloodPressure),
+			temperature: this.getEffectiveObservation(form.value.temperature)
 		};
 
 		function isNull(formGroupValues: any): boolean {
 			return Object.values(formGroupValues).every((el: { value: number, effectiveTime: Moment }) => el.value === null);
-		}
-
-		function getEffectiveObservation(controlValue: any): EffectiveObservation {
-			return (controlValue.value !== null && controlValue.value !== undefined) ?
-				{ value: controlValue.value, effectiveTime: controlValue.effectiveTime.toDate() }
-				: undefined;
 		}
 	}
 
@@ -86,7 +86,7 @@ export interface VitalSignsValue {
 	temperature?: EffectiveObservation;
 }
 
-interface EffectiveObservation {
-	effectiveTime: Date | Moment;
+export interface EffectiveObservation {
+	effectiveTime: Date;
 	value: string;
 }

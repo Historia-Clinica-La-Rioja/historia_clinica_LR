@@ -1,11 +1,14 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DateTimeDto, MasterDataDto, NewEffectiveClinicalObservationDto, TriagePediatricDto } from '@api-rest/api-model';
-import { dateToDateTimeDto } from '@api-rest/mapper/date-dto.mapper';
+import { MasterDataDto, NewEffectiveClinicalObservationDto, TriagePediatricDto } from '@api-rest/api-model';
 import { TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
 import { VITAL_SIGNS } from '@core/constants/validation-constants';
-import { hasError } from '@core/utils/form.utils';
+import { getError, hasError } from '@core/utils/form.utils';
 import { Observable } from 'rxjs';
+import { EffectiveObservation, VitalSignsFormService } from '../../../../services/vital-signs-form.service';
+import { Moment } from 'moment';
+import { newMoment } from '@core/utils/moment.utils';
+import { GuardiaMapperService } from '../../services/guardia-mapper.service';
 
 @Component({
 	selector: 'app-pediatric-triage',
@@ -27,10 +30,12 @@ export class PediatricTriageComponent implements OnInit {
 	respiratoryRetractionOptions$: Observable<MasterDataDto[]>;
 
 	hasError = hasError;
-	minValue = VITAL_SIGNS.min_value;
+	getError = getError;
+
 	constructor(
 		private formBuilder: FormBuilder,
 		private readonly triageMasterDataService: TriageMasterDataService,
+		private readonly vitalSignsFormService: VitalSignsFormService
 	) {
 	}
 
@@ -44,13 +49,22 @@ export class PediatricTriageComponent implements OnInit {
 
 			}),
 			breathing: this.formBuilder.group({
-				bloodOxygenSaturation: [null, Validators.min(this.minValue)],
-				respiratoryRate: [null, Validators.min(this.minValue)],
+				bloodOxygenSaturation: this.formBuilder.group({
+					value: [null, Validators.min(VITAL_SIGNS.min_value)],
+					effectiveTime: [newMoment()]
+				}),
+				respiratoryRate: this.formBuilder.group({
+					value: [null, Validators.min(VITAL_SIGNS.min_value)],
+					effectiveTime: [newMoment()]
+				}),
 				respiratoryRetractionId: [null],
 				stridor: [null]
 			}),
 			circulation: this.formBuilder.group({
-				heartRate: [null, Validators.min(this.minValue)],
+				heartRate: this.formBuilder.group({
+					value: [null, Validators.min(VITAL_SIGNS.min_value)],
+					effectiveTime: [newMoment()]
+				}),
 				perfusionId: [null]
 			}),
 		});
@@ -70,32 +84,43 @@ export class PediatricTriageComponent implements OnInit {
 
 	confirmPediatricTriage(): void {
 		if (this.pediatricForm.valid) {
-			const triage: TriagePediatricDto = this.toTriagePediatricDto();
+			const triage: TriagePediatricDto = this.buildTriagePediatricDto();
 			this.confirm.emit(triage);
 		}
+	}
+
+	setVitalSignEffectiveTime(newEffectiveTime: Moment, form, field: string): void {
+		this.vitalSignsFormService.setVitalSignEffectiveTime(newEffectiveTime, form as FormGroup, field);
 	}
 
 	back(): void {
 		this.cancel.emit();
 	}
 
-	private toNewEffectiveClinicalObservationDto(effectiveTime: DateTimeDto, value: any): NewEffectiveClinicalObservationDto {
-		return value ? { effectiveTime, value } : null;
+	private mapVitalSignToDto(vitalSignValue): NewEffectiveClinicalObservationDto {
+		const effectiveObservation: EffectiveObservation = this.vitalSignsFormService.getEffectiveObservation(vitalSignValue);
+		return GuardiaMapperService._mapEffectiveObservationToNewEffectiveClinicalObservationDto(effectiveObservation);
 	}
 
 
-	private toTriagePediatricDto(): TriagePediatricDto {
+	private buildTriagePediatricDto(): TriagePediatricDto {
 		const formValue = this.pediatricForm.value;
-		const dateTimeDto: DateTimeDto = dateToDateTimeDto(new Date());
-		const triage: TriagePediatricDto = {
+		return {
 			categoryId: this.triageCategoryId,
 			doctorsOfficeId: this.doctorsOfficeId,
-			...formValue,
+			appearance: {
+				...formValue.appearance,
+			},
+			breathing: {
+				...formValue.breathing,
+				bloodOxygenSaturation: this.mapVitalSignToDto(formValue.breathing.bloodOxygenSaturation),
+				respiratoryRate: this.mapVitalSignToDto(formValue.breathing.respiratoryRate)
+			},
+			circulation: {
+				...formValue.circulation,
+				heartRate: this.mapVitalSignToDto(formValue.circulation.heartRate)
+			}
 		};
-		triage.breathing.bloodOxygenSaturation = this.toNewEffectiveClinicalObservationDto(dateTimeDto, formValue.breathing.bloodOxygenSaturation);
-		triage.breathing.respiratoryRate = this.toNewEffectiveClinicalObservationDto(dateTimeDto, formValue.breathing.respiratoryRate);
-		triage.circulation.heartRate = this.toNewEffectiveClinicalObservationDto(dateTimeDto, formValue.circulation.heartRate);
-		return triage;
-	}
+}
 
 }

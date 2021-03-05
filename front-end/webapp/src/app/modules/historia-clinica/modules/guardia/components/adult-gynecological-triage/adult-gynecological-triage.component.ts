@@ -51,7 +51,7 @@ export class AdultGynecologicalTriageComponent implements OnInit {
 	confirmAdultGynecologicalTriage(): void {
 		const formValue = this.adultGynecologicalForm.value;
 		if (this.adultGynecologicalForm.valid && this.vitalSignsForm.valid) {
-			const vitalSignsValue: VitalSignsValue = this.vitalSignsFormService.buildDto(this.vitalSignsForm);
+			const vitalSignsValue: VitalSignsValue = this.vitalSignsFormService.buildVitalSignsValue(this.vitalSignsForm);
 			const triage: TriageAdultGynecologicalDto = {
 				categoryId: this.triageCategoryId,
 				doctorsOfficeId: this.doctorsOfficeId,
