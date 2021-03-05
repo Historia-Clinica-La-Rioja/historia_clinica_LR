@@ -421,6 +421,39 @@
 					<generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
 				</configuration>
 			</plugin>
+
+			<!-- Plugin for creating a pom.properties file in the classpath -->
+			<plugin>
+				<groupId>com.internetitem</groupId>
+				<artifactId>write-properties-file-maven-plugin</artifactId>
+				<version>1.0.1</version>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>write-properties-file</goal>
+						</goals>
+						<configuration>
+							<filename>pom.properties</filename>
+							<properties>
+								<property>
+									<name>artifactId</name>
+									<value>${project.artifactId}</value>
+								</property>
+								<property>
+									<name>groupId</name>
+									<value>${project.groupId}</value>
+								</property>
+								<property>
+									<name>version</name>
+									<value>${revision}</value>
+								</property>
+							</properties>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
 	</build>
 
