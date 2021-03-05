@@ -30,6 +30,9 @@
 				"UPDATE_IMAGE_SUCCESS": "La imagen se actualizó correctamente",
 				"UPDATE_IMAGE_ERROR": "Hubo un error al actualizar la imagen",
 				"VALID_IMAGE_ERROR": "La imagen no responde al formato y/o medidas requeridas"
+			},
+			"confirm_dialog": {
+				"TITLE": "Restablecer"
 			}
 		}
 	}
