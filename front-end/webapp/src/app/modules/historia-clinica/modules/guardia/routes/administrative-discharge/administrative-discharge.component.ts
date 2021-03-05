@@ -3,7 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AdministrativeDischargeDto, MasterDataInterface, VMedicalDischargeDto } from '@api-rest/api-model';
 import { EmergencyCareEntranceType } from '@api-rest/masterdata';
-import { EmergencyCareEspisodeDischargeService } from '@api-rest/services/emergency-care-espisode-discharge.service';
+import { EmergencyCareEpisodeAdministrativeDischargeService } from '@api-rest/services/emergency-care-episode-administrative-service.service';
+import { EmergencyCareEpisodeMedicalDischargeService } from '@api-rest/services/emergency-care-episode-medical-discharge.service';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
 import { AMBULANCE } from '@core/constants/validation-constants';
 import { ContextService } from '@core/services/context.service';
@@ -36,7 +37,8 @@ export class AdministrativeDischargeComponent implements OnInit {
 		private readonly formBuilder: FormBuilder,
 		private readonly contextService: ContextService,
 		private readonly emergencyCareMasterDataService: EmergencyCareMasterDataService,
-		private readonly emergencyCareEspisodeDischargeService: EmergencyCareEspisodeDischargeService,
+		private readonly emergencyCareEpisodeAdministrativeDischargeService: EmergencyCareEpisodeAdministrativeDischargeService,
+		private readonly emergencyCareEspisodeMedicalDischargeService: EmergencyCareEpisodeMedicalDischargeService,
 		private readonly guardiaMapperService: GuardiaMapperService,
 		private readonly snackBarService: SnackBarService,
 	) { }
@@ -56,29 +58,24 @@ export class AdministrativeDischargeComponent implements OnInit {
 
 		this.route.paramMap.subscribe(params => {
 			this.episodeId = Number(params.get('id'));
+			this.administrativeDischarge$ = this.emergencyCareEspisodeMedicalDischargeService.getMedicalDischarge(this.episodeId);
 		});
 
-		this.administrativeDischarge$ = this.emergencyCareEspisodeDischargeService.getMedicalDischarge(this.episodeId);
 	}
-
-	cancel(): void {
-		this.goToEpisodeDetails();
-	}
-
 
 	confirm(): void {
 		if (this.form.valid) {
 			const administrativeDischargeDto: AdministrativeDischargeDto = this.guardiaMapperService.toAdministrativeDischargeDto(this.form.value);
-			this.emergencyCareEspisodeDischargeService.newAdministrativeDischarge(this.episodeId, administrativeDischargeDto).subscribe(
+			this.emergencyCareEpisodeAdministrativeDischargeService.newAdministrativeDischarge(this.episodeId, administrativeDischargeDto).subscribe(
 				saved => {
 					this.snackBarService.showSuccess('guardia.episode.administrative_discharge.messages.SUCCESS');
 					this.router.navigateByUrl(`institucion/${this.contextService.institutionId}/guardia`);
-				}, _ => this.snackBarService.showSuccess('guardia.episode.administrative_discharge.messages.ERROR')
+				}, _ => this.snackBarService.showError('guardia.episode.administrative_discharge.messages.ERROR')
 			);
 		}
 	}
 
-	private goToEpisodeDetails(): void {
+	goToEpisodeDetails(): void {
 		this.router.navigateByUrl(`institucion/${this.contextService.institutionId}/guardia/episodio/${this.episodeId}`);
 	}
 

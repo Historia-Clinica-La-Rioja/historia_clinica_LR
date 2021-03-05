@@ -230,7 +230,7 @@ public class  DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public Long getDocumentId(Integer sourceId, Short sourceTypeId) {
+    public List<Long> getDocumentId(Integer sourceId, Short sourceTypeId) {
         return documentRepository.findBySourceIdAndSourceTypeId(sourceId,sourceTypeId);
     }
 

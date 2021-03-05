@@ -8,12 +8,12 @@
 				{{ 'guardia.episode.CANCEL_ATTENTION' | translate | uppercase }}
 			</button>
 			<button *ngIf="episodeState === STATES.EN_ATENCION" id="alta-medica" mat-raised-button color="primary"
-				(click)="altaMedica()">
+				(click)="goToMedicalDischarge()">
 				{{ 'guardia.episode.medical_discharge.TITLE' | translate | uppercase }}
 			</button>
 			<div *hasRole="['ADMINISTRATIVO']">
 				<button *ngIf="episodeState === STATES.CON_ALTA_MEDICA" id="administrative-discharge" mat-raised-button
-					color="primary" (click)="administrativeDischarge()">
+					color="primary" (click)="goToAdministrativeDischarge()">
 					{{ 'guardia.episode.administrative_discharge.TITLE' | translate | uppercase }}
 				</button>
 			</div>

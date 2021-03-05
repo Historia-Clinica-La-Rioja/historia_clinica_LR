@@ -48,7 +48,7 @@ public interface DocumentService {
 
     DocumentDiagnosticReport getDocumentFromDiagnosticReport(Integer drid);
 
-    Long getDocumentId(Integer sourceId, Short sourceTypeId);
+    List<Long> getDocumentId(Integer sourceId, Short sourceTypeId);
 
     void deleteHealthConditionHistory(Long documentId);
 

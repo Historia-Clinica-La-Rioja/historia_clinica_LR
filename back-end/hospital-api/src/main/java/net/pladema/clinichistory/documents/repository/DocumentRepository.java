@@ -55,5 +55,5 @@ public interface DocumentRepository extends JpaRepository<Document, Long>, Docum
     @Query(value = "SELECT d.id " +
             "FROM Document d " +
             "WHERE d.sourceId = :sourceId AND d.sourceTypeId = :sourceTypeId")
-    Long findBySourceIdAndSourceTypeId(@Param("sourceId") Integer sourceId, @Param("sourceTypeId") Short sourceTypeId );
+    List<Long> findBySourceIdAndSourceTypeId(@Param("sourceId") Integer sourceId, @Param("sourceTypeId") Short sourceTypeId );
 }

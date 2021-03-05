@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AMedicalDischargeDto, DiagnosisDto, MasterDataInterface } from '@api-rest/api-model';
-import { EmergencyCareEspisodeDischargeService } from '@api-rest/services/emergency-care-espisode-discharge.service';
+import { EmergencyCareEpisodeMedicalDischargeService } from '@api-rest/services/emergency-care-episode-medical-discharge.service';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
 import { ContextService } from '@core/services/context.service';
 import { hasError, TIME_PATTERN } from '@core/utils/form.utils';
@@ -37,7 +37,7 @@ export class MedicalDischargeComponent implements OnInit {
 		private readonly route: ActivatedRoute,
 		private readonly formBuilder: FormBuilder,
 		private readonly contextService: ContextService,
-		private readonly emergencyCareEspisodeDischargeService: EmergencyCareEspisodeDischargeService,
+		private readonly emergencyCareEspisodeDischargeService: EmergencyCareEpisodeMedicalDischargeService,
 		private readonly guardiaMapperService: GuardiaMapperService,
 		private readonly emergencyCareMasterDataService: EmergencyCareMasterDataService,
 		private readonly snomedService: SnomedService,

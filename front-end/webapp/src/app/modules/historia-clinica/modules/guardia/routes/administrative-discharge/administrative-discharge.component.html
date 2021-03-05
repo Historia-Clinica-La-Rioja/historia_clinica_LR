@@ -1,9 +1,9 @@
 <app-content>
 
-	<h1>{{ 'guardia.episode.administrative_discharge.TITLE' | translate}}</h1>
+	<h1 translate="guardia.episode.administrative_discharge.TITLE"></h1>
 
 	<mat-card *ngIf="(administrativeDischarge$ | async ) as administrativeDischarge">
-		<h2> {{ 'guardia.episode.medical_discharge.TITLE'| translate}}</h2>
+		<h2 translate="guardia.episode.medical_discharge.TITLE"></h2>
 		<mat-card-content gdColumns="repeat(2, 1fr)" gdGap="20px">
 
 			<div fxLayout="column" fxLayoutGap="1px" id="dateTime">
@@ -39,7 +39,7 @@
 
 	</mat-card>
 
-	<h2 style="margin-top: 15px;">{{ 'guardia.episode.administrative_discharge.form.TITLE'| translate}}</h2>
+	<h2 style="margin-top: 15px;" translate="guardia.episode.administrative_discharge.form.TITLE"></h2>
 
 	<form [formGroup]="form" (submit)="confirm()">
 		<div fxLayout="row" fxLayoutGap="5px" formGroupName="dateTime">
@@ -82,7 +82,7 @@
 		</div>
 
 		<div fxLayoutGap="10px" fxLayout="row" fxLayoutAlign="flex-end">
-			<button mat-stroked-button class="uppercase" type="button" (click)="cancel()">
+			<button mat-stroked-button class="uppercase" type="button" (click)="goToEpisodeDetails()">
 				<span [translate]="'buttons.BACK'"></span>
 			</button>
 			<button mat-raised-button class="uppercase" color="primary">

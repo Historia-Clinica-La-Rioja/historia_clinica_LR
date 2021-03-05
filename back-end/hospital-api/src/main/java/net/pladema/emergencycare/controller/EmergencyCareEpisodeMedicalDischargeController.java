@@ -3,17 +3,14 @@ package net.pladema.emergencycare.controller;
 import io.swagger.annotations.Api;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.emergencycare.controller.dto.AMedicalDischargeDto;
-import net.pladema.emergencycare.controller.dto.AdministrativeDischargeDto;
 import net.pladema.emergencycare.controller.dto.VMedicalDischargeDto;
 import net.pladema.emergencycare.controller.mapper.EmergencyCareDischargeMapper;
 import net.pladema.emergencycare.repository.entity.EmergencyCareState;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeDischargeService;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeStateService;
-import net.pladema.emergencycare.service.domain.AdministrativeDischargeBo;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
 import net.pladema.emergencycare.service.domain.EpisodeDischargeBo;
-import net.pladema.establishment.controller.service.InstitutionExternalService;
 import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.sgx.exceptions.NotFoundException;
@@ -25,16 +22,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/institution/{institutionId}/emergency-care/episodes/{episodeId}/discharge")
+@RequestMapping("/institution/{institutionId}/emergency-care/episodes/{episodeId}/medical-discharge")
 @Api(value = "Emergency care Episodes Discharge", tags = {"Emergency care Episodes Discharge"})
-public class EmergencyCareEpisodeDischargeController {
+public class EmergencyCareEpisodeMedicalDischargeController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(EmergencyCareEpisodeDischargeController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EmergencyCareEpisodeMedicalDischargeController.class);
 
     private final EmergencyCareEpisodeDischargeService emergencyCareEpisodeDischargeService;
     private final EmergencyCareDischargeMapper emergencyCareDischargeMapper;
@@ -42,16 +38,14 @@ public class EmergencyCareEpisodeDischargeController {
     private final PatientExternalService patientExternalService;
     private final EmergencyCareEpisodeService emergencyCareEpisodeService;
     private final EmergencyCareEpisodeStateService emergencyCareEpisodeStateService;
-    private final InstitutionExternalService institutionExternalService;
 
-    EmergencyCareEpisodeDischargeController(
+    EmergencyCareEpisodeMedicalDischargeController(
             EmergencyCareEpisodeDischargeService emergencyCareEpisodeDischargeService,
             EmergencyCareDischargeMapper emergencyCareDischargeMapper,
             HealthcareProfessionalExternalService healthcareProfessionalExternalService,
             PatientExternalService patientExternalService,
             EmergencyCareEpisodeService emergencyCareEpisodeService,
-            EmergencyCareEpisodeStateService emergencyCareEpisodeStateService,
-            InstitutionExternalService institutionExternalService
+            EmergencyCareEpisodeStateService emergencyCareEpisodeStateService
     ) {
         this.emergencyCareEpisodeDischargeService = emergencyCareEpisodeDischargeService;
         this.emergencyCareDischargeMapper = emergencyCareDischargeMapper;
@@ -59,7 +53,6 @@ public class EmergencyCareEpisodeDischargeController {
         this.patientExternalService = patientExternalService;
         this.emergencyCareEpisodeService = emergencyCareEpisodeService;
         this.emergencyCareEpisodeStateService = emergencyCareEpisodeStateService;
-        this.institutionExternalService = institutionExternalService;
     }
 
     @Transactional
@@ -85,42 +78,13 @@ public class EmergencyCareEpisodeDischargeController {
         return ResponseEntity.ok().body(saved);
     }
 
-    @Transactional
-    @PutMapping("/administrativeDischarge")
-    public ResponseEntity<Boolean> newAdministrativeDischarge(
-            @PathVariable(name = "institutionId") Integer institutionId,
-            @PathVariable(name = "episodeId") Integer episodeId,
-            @RequestBody AdministrativeDischargeDto administrativeDischargeDto) {
-       LOG.debug("New administrative discharge -> episodeId {}, institutionId {}, administrativeDischargeDto {}", episodeId, institutionId, administrativeDischargeDto);
-
-        Integer userId = UserInfo.getCurrentAuditor();
-
-        AdministrativeDischargeBo administrativeDischargeBo = emergencyCareDischargeMapper.toAdministrativeDischargeBo(administrativeDischargeDto, episodeId, userId);
-        boolean saved = emergencyCareEpisodeDischargeService.newAdministrativeDischarge(administrativeDischargeBo, institutionId);
-        LOG.debug("Output -> {}", saved);
-        return ResponseEntity.ok().body(saved);
-    }
-
-    @Transactional
-    @PostMapping("/administrativeDischarge/absence")
-    public ResponseEntity<Boolean> newAdministrativeDischargeByAbsence(
-            @PathVariable(name = "institutionId") Integer institutionId,
-            @PathVariable(name = "episodeId") Integer episodeId) {
-        LOG.debug("New administrative discharge by absence -> episodeId {}, institutionId {}", episodeId, institutionId);
-        Integer userId = UserInfo.getCurrentAuditor();
-        ZoneId institutionZoneId = institutionExternalService.getTimezone(institutionId);
-        boolean saved = emergencyCareEpisodeDischargeService.newAdministrativeDischargeByAbsence(episodeId, institutionId, userId, institutionZoneId);
-        LOG.debug("Output -> {}", saved);
-        return ResponseEntity.ok().body(saved);
-    }
-
     @GetMapping()
     public ResponseEntity<VMedicalDischargeDto> getMedicalDischarge(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "episodeId") Integer episodeId) {
         LOG.debug("Change emergency care state -> episodeId {}, institutionId {}", episodeId, institutionId);
         EpisodeDischargeBo episodeDischargeBo = emergencyCareEpisodeDischargeService.getDischarge(episodeId);
-        VMedicalDischargeDto medicalDischargeDto = this.emergencyCareDischargeMapper.toMedicalDischargeDto(episodeDischargeBo);
+        VMedicalDischargeDto medicalDischargeDto = emergencyCareDischargeMapper.toMedicalDischargeDto(episodeDischargeBo);
         List<String> problems = episodeDischargeBo.getProblems().stream().map(p -> p.getSnomed().getPt()).collect(Collectors.toList());
         medicalDischargeDto.setSnomedPtProblems(problems);
         LOG.debug("Output -> {}", medicalDischargeDto);

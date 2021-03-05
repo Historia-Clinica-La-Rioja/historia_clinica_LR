@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AdministrativeDischargeDto, AMedicalDischargeDto, VMedicalDischargeDto } from '@api-rest/api-model';
+import { AMedicalDischargeDto, VMedicalDischargeDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { Observable } from 'rxjs';
 import { environment } from '@environments/environment';
@@ -10,7 +10,7 @@ import { environment } from '@environments/environment';
 @Injectable({
 	providedIn: 'root'
 })
-export class EmergencyCareEspisodeDischargeService {
+export class EmergencyCareEpisodeMedicalDischargeService {
 
 	private URL_PREFIX = `${environment.apiBase}` + '/institution/' + `${this.contextService.institutionId}` + `/emergency-care/episodes/`;
 
@@ -21,22 +21,12 @@ export class EmergencyCareEspisodeDischargeService {
 
 
 	newMedicalDischarge(episodeId: number, medicalDischargeDto: AMedicalDischargeDto): Observable<boolean> {
-		const url = this.URL_PREFIX + episodeId + `/discharge`;
+		const url = this.URL_PREFIX + episodeId + `/medical-discharge`;
 		return this.http.post<boolean>(url, medicalDischargeDto);
 	}
 
-	newAdministrativeDischarge(episodeId: number, administrativeDischargeDto: AdministrativeDischargeDto): Observable<boolean> {
-		const url = this.URL_PREFIX + episodeId + `/discharge/administrativeDischarge`;
-		return this.http.put<boolean>(url, administrativeDischargeDto);
-	}
-
-	newAdministrativeDischargeByAbsence(episodeId: number): Observable<boolean> {
-		const url = this.URL_PREFIX + episodeId + `/discharge/administrativeDischarge/absence`;
-		return this.http.post<boolean>(url, {});
-	}
-
 	getMedicalDischarge(episodeId: number): Observable<VMedicalDischargeDto> {
-		const url = this.URL_PREFIX + episodeId + `/discharge`;
+		const url = this.URL_PREFIX + episodeId + `/medical-discharge`;
 		return this.http.get<VMedicalDischargeDto>(url);
 	}
 }

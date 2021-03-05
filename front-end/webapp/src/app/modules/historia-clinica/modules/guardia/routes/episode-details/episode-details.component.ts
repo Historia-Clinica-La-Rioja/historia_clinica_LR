@@ -214,11 +214,11 @@ export class EpisodeDetailsComponent implements OnInit {
 		});
 	}
 
-	altaMedica(): void {
+	goToMedicalDischarge(): void {
 		this.router.navigate([`${this.router.url}/alta-medica`]);
 	}
 
-	administrativeDischarge(): void {
+	goToAdministrativeDischarge(): void {
 		this.router.navigate([`${this.router.url}/alta-administrativa`]);
 	}
 }
