@@ -101,13 +101,13 @@
 						<mat-list id="lista-problemas-hospitalization" *ngIf="(hospitalizationProblems$ | async)?.length > 0 else noInfo">
 							<div fxLayout="row" *ngFor="let problem of (hospitalizationProblems$ | async)">
 								<mat-list-item>
-									<div>
-									<span mat-line class="capitalize-first-letter">
-										{{ problem.mainDiagnose.snomed.pt }}
-									</span>
+									<div fxFlex="100%">
+										<span mat-line class="capitalize-first-letter">
+											{{ problem.mainDiagnose.snomed.pt }}
+										</span>
 										<span mat-line class="mat-body">
-										{{ problem.entryDate }} - {{ problem.dischargeDate? problem.dischargeDate : "actualmente internado" }}
-									</span>
+											{{ problem.entryDate }} - {{ problem.dischargeDate? problem.dischargeDate : "actualmente internado" }}
+										</span>
 									</div>
 									<button *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO']" mat-icon-button [matMenuTriggerFor]="menu" >
 										<mat-icon>more_vert</mat-icon>
