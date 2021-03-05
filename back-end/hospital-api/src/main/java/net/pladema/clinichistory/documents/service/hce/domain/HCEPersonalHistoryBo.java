@@ -38,11 +38,11 @@ public class HCEPersonalHistoryBo extends HCEClinicalTermBo {
     }
 
     public boolean isChronic() {
-        return problemId.equals(ProblemType.CHRONIC);
+        return getStatusId().equals(ConditionClinicalStatus.ACTIVE) && problemId.equals(ProblemType.CHRONIC);
     }
 
     public boolean isActiveProblem() {
-        return getStatusId().equals(ConditionClinicalStatus.ACTIVE);
+        return getStatusId().equals(ConditionClinicalStatus.ACTIVE) && !problemId.equals(ProblemType.CHRONIC);
     }
 
     public boolean isSolvedProblem() {
