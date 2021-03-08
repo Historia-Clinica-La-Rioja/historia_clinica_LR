@@ -118,10 +118,10 @@ export class NotaEvolucionFormComponent implements OnInit {
 			.subscribe(() => {
 					this.snackBarService.showSuccess('internaciones.nota-evolucion.messages.SUCCESS');
 					this.goToInternmentSummary();
-				}, errors => {
-					Object.getOwnPropertyNames(errors).forEach(val => {
-						this.apiErrors.push(errors[val]);
-					  });
+				}, error => {
+					error.errors.forEach(val => {
+						this.apiErrors.push(val);
+					});
 					this.snackBarService.showError('internaciones.nota-evolucion.messages.ERROR');
 				});
 		} else {
