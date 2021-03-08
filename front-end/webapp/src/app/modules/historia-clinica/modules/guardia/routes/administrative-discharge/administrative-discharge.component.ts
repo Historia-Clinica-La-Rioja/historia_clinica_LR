@@ -53,7 +53,7 @@ export class AdministrativeDischargeComponent implements OnInit {
 				time: [null, Validators.required],
 			}),
 			hospitalTransportId: [null],
-			ambulanceCompanyId: [null]
+			ambulanceCompanyId: [null, Validators.maxLength(AMBULANCE.COMPANY_ID.max_length)]
 		});
 
 		this.route.paramMap.subscribe(params => {

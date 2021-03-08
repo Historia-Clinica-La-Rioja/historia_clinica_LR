@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.pladema.sgx.dates.controller.dto.DateTimeDto;
+import org.hibernate.validator.constraints.Length;
 
 @Setter
 @Getter
@@ -14,5 +15,6 @@ public class AdministrativeDischargeDto {
 
     private Short hospitalTransportId;
 
+    @Length(max = 15)
     private String ambulanceCompanyId;
 }
