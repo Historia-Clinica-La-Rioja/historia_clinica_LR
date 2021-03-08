@@ -2,6 +2,7 @@ package net.pladema.emergencycare.controller;
 
 import io.swagger.annotations.Api;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
+import net.pladema.clinichistory.documents.service.ips.domain.SnomedBo;
 import net.pladema.emergencycare.controller.dto.AMedicalDischargeDto;
 import net.pladema.emergencycare.controller.dto.VMedicalDischargeDto;
 import net.pladema.emergencycare.controller.mapper.EmergencyCareDischargeMapper;
@@ -22,7 +23,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -85,8 +85,7 @@ public class EmergencyCareEpisodeMedicalDischargeController {
         LOG.debug("Change emergency care state -> episodeId {}, institutionId {}", episodeId, institutionId);
         EpisodeDischargeBo episodeDischargeBo = emergencyCareEpisodeDischargeService.getDischarge(episodeId);
         VMedicalDischargeDto medicalDischargeDto = emergencyCareDischargeMapper.toMedicalDischargeDto(episodeDischargeBo);
-        List<String> problems = episodeDischargeBo.getProblems().stream().map(p -> p.getSnomed().getPt()).collect(Collectors.toList());
-        medicalDischargeDto.setSnomedPtProblems(problems);
+        medicalDischargeDto.setSnomedPtProblems(episodeDischargeBo.getProblems().stream().map(SnomedBo::getPt).collect(Collectors.toList()));
         LOG.debug("Output -> {}", medicalDischargeDto);
         return ResponseEntity.ok().body(medicalDischargeDto);
     }

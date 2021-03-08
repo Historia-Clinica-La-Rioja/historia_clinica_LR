@@ -1,7 +1,7 @@
 package net.pladema.emergencycare.service.domain;
 
 import lombok.Getter;
-import net.pladema.clinichistory.documents.service.ips.domain.HealthHistoryConditionBo;
+import net.pladema.clinichistory.documents.service.ips.domain.SnomedBo;
 import net.pladema.clinichistory.hospitalization.repository.domain.DischargeType;
 import net.pladema.emergencycare.repository.entity.EmergencyCareDischarge;
 
@@ -13,7 +13,7 @@ public class EpisodeDischargeBo {
 
     private Integer episodeId;
 
-    private List<HealthHistoryConditionBo> problems;
+    private List<SnomedBo> problems;
 
     private LocalDateTime medicalDischargeOn;
 
@@ -37,7 +37,7 @@ public class EpisodeDischargeBo {
         this.ambulanceCompanyId = emergencyCareDischarge.getAmbulanceCompanyId();
     }
 
-    public void setProblems(List<HealthHistoryConditionBo> problems) {
+    public void setProblems(List<SnomedBo> problems) {
         this.problems = problems;
     }
 }
