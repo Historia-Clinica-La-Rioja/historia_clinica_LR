@@ -52,6 +52,7 @@ export class SettingsComponent implements OnInit {
 	readonly NAME_ICON_384 = NAME_ICON_384;
 	readonly NAME_ICON_512 = NAME_ICON_512;
 	readonly BASE_PATH = 'assets/custom/';
+	timestamp: string;
 
 	constructor(
 		private dialog: MatDialog,
@@ -60,12 +61,14 @@ export class SettingsComponent implements OnInit {
 	) { }
 
 	ngOnInit(): void {
+		this.timestamp  = this.getTimestamp();
 	}
 
 	selectFile(file: File, fileName: string): void {
 		if (file) {
 			this.settingsService.uploadFile(fileName, file).subscribe(data => {
 				if (data) {
+					this.timestamp = this.getTimestamp();
 					this.snackBarService.showSuccess('configuracion.logos.toast_messages.UPDATE_IMAGE_SUCCESS');
 				} else {
 					this.snackBarService.showError('configuracion.logos.toast_messages.UPDATE_IMAGE_ERROR');
@@ -84,11 +87,12 @@ export class SettingsComponent implements OnInit {
 					content: 'Esta seguro que desea restablecer el ' + fileNameToShow + '?',
 				}
 			});
-		
+
 		dialogRefConfirmation.afterClosed().subscribe(confirmed => {
-			if(confirmed) {
+			if (confirmed) {
 				this.settingsService.deleteFile(fileName).subscribe(data => {
 					if (data) {
+						this.timestamp = this.getTimestamp();
 						this.snackBarService.showSuccess('configuracion.logos.toast_messages.UPDATE_IMAGE_SUCCESS');
 					} else {
 						this.snackBarService.showError('configuracion.logos.toast_messages.UPDATE_IMAGE_ERROR');
@@ -96,5 +100,9 @@ export class SettingsComponent implements OnInit {
 				});
 			}
 		});
+	}
+
+	private getTimestamp() {
+		return '?ts=' + new Date().getTime();
 	}
 }
