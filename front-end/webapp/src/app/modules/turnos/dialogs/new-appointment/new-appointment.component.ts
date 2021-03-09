@@ -49,6 +49,8 @@ export class NewAppointmentComponent implements OnInit {
 	public readonly hasError = hasError;
 	readonly TEMPORARY_PATIENT_ID = TEMPORARY_PATIENT_ID;
 	private readonly routePrefix;
+	isFormSubmitted = false;
+	VALIDATIONS = VALIDATIONS;
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
 			date: string, diaryId: number, hour: string, openingHoursId: number, overturnMode: boolean
@@ -104,6 +106,7 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	search(): void {
+		this.isFormSubmitted = true;
 		if (this.isFormSearchValid()) {
 			const formSearchValue = this.formSearch.value;
 			if (formSearchValue.patientId) {
@@ -212,7 +215,7 @@ export class NewAppointmentComponent implements OnInit {
 	private isFormSearchValid() {
 		return (this.formSearch.controls.identifType.valid
 			&& this.formSearch.controls.identifNumber.valid
-			&& this.formSearch.controls.gender.valid) || this.formSearch.controls.patientId.value.length > 0;
+			&& this.formSearch.controls.gender.valid) || this.formSearch.controls.patientId.value;
 	}
 
 

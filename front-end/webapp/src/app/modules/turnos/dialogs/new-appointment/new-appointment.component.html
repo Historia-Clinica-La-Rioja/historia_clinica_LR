@@ -22,6 +22,9 @@
 										{{type.description}}
 									</mat-option>
 								</mat-select>
+								<mat-error *ngIf="hasError(formSearch, 'required', 'identifType')">
+									<span translate="forms.REQUIRED"></span>
+								</mat-error>
 							</mat-form-field>
 							<mat-form-field appearance="outline">
 								<mat-label>Nro de documento</mat-label>
@@ -31,6 +34,12 @@
 									name="identifNumber"
 									formControlName="identifNumber"
 									placeholder="Nro de documento">
+								<mat-error *ngIf="hasError(formSearch, 'required', 'identifNumber')">
+									<span translate="forms.REQUIRED"></span>
+								</mat-error>
+								<mat-error *ngIf="hasError(formSearch, 'maxlength', 'identifNumber')"
+										   translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: VALIDATIONS.MAX_LENGTH.identif_number}">
+								</mat-error>
 							</mat-form-field>
 							<div class="padding-bottom">
 								<mat-label>Sexo</mat-label>
@@ -39,6 +48,9 @@
 										<mat-radio-button id="genderButton_{{gender.id}}" *ngFor="let gender of genderOptions" [value]="gender.id">
 											{{gender.description}}
 										</mat-radio-button>
+										<mat-error *ngIf="isFormSubmitted && hasError(formSearch, 'required', 'gender') ">
+											<span translate="forms.REQUIRED"></span>
+										</mat-error>
 									</mat-radio-group>
 								</div>
 							</div>
