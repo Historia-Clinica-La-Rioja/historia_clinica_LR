@@ -185,7 +185,7 @@ public class TriageController {
         LOG.debug("Add triage administrative => {}", body);
         TriageBo triage = triageMapper.toTriageBo(body);
         triage.setEmergencyCareEpisodeId(episodeId);
-        triage = triageService.createAdministrative(triage);
+        triage = triageService.createAdministrative(triage, institutionId);
         Integer result = triage.getId();
         LOG.debug("Output -> {}", result);
         return ResponseEntity.ok().body(result);
@@ -204,7 +204,7 @@ public class TriageController {
         Integer patientId = emergencyCareEpisodeService.get(episodeId, institutionId).getPatient() != null ? emergencyCareEpisodeService.get(episodeId, institutionId).getPatient().getId() : null;
         NewVitalSignsObservationDto vitalSignsObservationDto = vitalSignExternalService.saveVitalSigns(patientId, body.getVitalSigns());
         triage.setVitalSignIds(getVitalSignIds(vitalSignsObservationDto));
-        triage = triageService.createAdultGynecological(triage);
+        triage = triageService.createAdultGynecological(triage, institutionId);
         Integer result = triage.getId();
         LOG.debug("Output -> {}", result);
         return ResponseEntity.ok().body(result);
@@ -224,7 +224,7 @@ public class TriageController {
         NewVitalSignsObservationDto vitalSignsObservationDto = vitalSignMapper.fromTriagePediatricDto(body);
         vitalSignsObservationDto = vitalSignExternalService.saveVitalSigns(patientId, vitalSignsObservationDto);
         triage.setVitalSignIds(getVitalSignIds(vitalSignsObservationDto));
-        triage = triageService.createPediatric(triage);
+        triage = triageService.createPediatric(triage, institutionId);
         Integer result = triage.getId();
         LOG.debug("Output -> {}", result);
         return ResponseEntity.ok().body(result);

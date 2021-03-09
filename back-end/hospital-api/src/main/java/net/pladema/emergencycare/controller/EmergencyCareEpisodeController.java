@@ -89,7 +89,7 @@ public class EmergencyCareEpisodeController {
         newEmergencyCare.setInstitutionId(institutionId);
         List<SnomedDto> reasons = reasonExternalService.addReasons(body.reasons());
         newEmergencyCare.setReasons(snomedMapper.toListReasonBo(reasons));
-        newEmergencyCare = emergencyCareEpisodeService.createAdministrative(newEmergencyCare);
+        newEmergencyCare = emergencyCareEpisodeService.createAdministrative(newEmergencyCare, institutionId);
         Integer result = newEmergencyCare.getId();
         LOG.debug("Output -> {}", result);
         return ResponseEntity.ok().body(result);
@@ -112,7 +112,7 @@ public class EmergencyCareEpisodeController {
         List<SnomedDto> reasons = reasonExternalService.addReasons(body.reasons());
         newEmergencyCare.setReasons(snomedMapper.toListReasonBo(reasons));
 
-        newEmergencyCare = emergencyCareEpisodeService.createAdult(newEmergencyCare);
+        newEmergencyCare = emergencyCareEpisodeService.createAdult(newEmergencyCare, institutionId);
         Integer result = newEmergencyCare.getId();
         LOG.debug("Output -> {}", result);
         return ResponseEntity.ok().body(result);
@@ -134,7 +134,7 @@ public class EmergencyCareEpisodeController {
         List<SnomedDto> reasons = reasonExternalService.addReasons(body.reasons());
         newEmergencyCare.setReasons(snomedMapper.toListReasonBo(reasons));
 
-        newEmergencyCare = emergencyCareEpisodeService.createPediatric(newEmergencyCare);
+        newEmergencyCare = emergencyCareEpisodeService.createPediatric(newEmergencyCare, institutionId);
         Integer result = newEmergencyCare.getId();
         LOG.debug("Output -> {}", result);
         return ResponseEntity.ok().body(result);

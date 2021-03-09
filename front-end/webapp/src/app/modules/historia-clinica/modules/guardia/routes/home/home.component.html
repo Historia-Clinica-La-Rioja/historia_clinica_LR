@@ -220,7 +220,7 @@
 								</ng-template>
 							</div>
 
-							<div id="actions-container" fxFlex="5%">
+							<div id="actions-container" fxFlex="5%" *ngIf="episode.state.id !== estadosEpisodio.CON_ALTA_MEDICA">
 								<button id="actions" mat-icon-button
 										(click)="$event.stopPropagation()" [matMenuTriggerFor]="actions">
 									<mat-icon>more_vert</mat-icon>

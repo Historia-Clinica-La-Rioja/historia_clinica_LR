@@ -10,11 +10,11 @@ public interface  EmergencyCareEpisodeService {
 
     EmergencyCareBo get(Integer episodeId, Integer institutionId);
 
-    EmergencyCareBo createAdministrative(EmergencyCareBo newEmergencyCare);
+    EmergencyCareBo createAdministrative(EmergencyCareBo newEmergencyCare, Integer institutionId);
 
-    EmergencyCareBo createAdult(EmergencyCareBo newEmergencyCare);
+    EmergencyCareBo createAdult(EmergencyCareBo newEmergencyCare, Integer institutionId);
 
-    EmergencyCareBo createPediatric(EmergencyCareBo newEmergencyCare);
+    EmergencyCareBo createPediatric(EmergencyCareBo newEmergencyCare, Integer institutionId);
 
     Boolean validateAndSetPatient(Integer episodeId, Integer patientId, Integer institutionId);
 }

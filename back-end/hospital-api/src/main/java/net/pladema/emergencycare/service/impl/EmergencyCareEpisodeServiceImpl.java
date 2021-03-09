@@ -19,6 +19,7 @@ import net.pladema.emergencycare.triage.service.domain.TriageBo;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
 import net.pladema.sgx.exceptions.NotFoundException;
+import org.elasticsearch.common.TriFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 @Service
@@ -110,18 +110,18 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
     }
 
     @Override
-    public EmergencyCareBo createAdministrative(EmergencyCareBo newEmergencyCare) {
-        return createEpisode(newEmergencyCare,administrativeTriageSaveFunction());
+    public EmergencyCareBo createAdministrative(EmergencyCareBo newEmergencyCare, Integer institutionId) {
+        return createEpisode(newEmergencyCare, institutionId, administrativeTriageSaveFunction());
     }
 
     @Override
-    public EmergencyCareBo createAdult(EmergencyCareBo newEmergencyCare) {
-        return createEpisode(newEmergencyCare, adultTriageSaveFunction());
+    public EmergencyCareBo createAdult(EmergencyCareBo newEmergencyCare, Integer institutionId) {
+        return createEpisode(newEmergencyCare, institutionId, adultTriageSaveFunction());
     }
 
     @Override
-    public EmergencyCareBo createPediatric(EmergencyCareBo newEmergencyCare) {
-        return createEpisode(newEmergencyCare, pediatricTriageSaveFunction());
+    public EmergencyCareBo createPediatric(EmergencyCareBo newEmergencyCare, Integer institutionId) {
+        return createEpisode(newEmergencyCare, institutionId, pediatricTriageSaveFunction());
     }
 
     private void validPatient(PatientECEBo patient, Integer institutionId) {
@@ -135,16 +135,16 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
             throw new ValidationException("care-episode.patient.invalid");
     }
 
-    private EmergencyCareBo createEpisode(EmergencyCareBo newEmergencyCare, BiFunction<TriageBo,Integer, TriageBo> saveTriage) {
+    private EmergencyCareBo createEpisode(EmergencyCareBo newEmergencyCare, Integer institutionId, TriFunction<TriageBo,Integer,Integer, TriageBo> saveTriage) {
 
-        LOG.debug("Input parameters -> newEmergencyCare {}", newEmergencyCare);
+        LOG.debug("Input parameters -> newEmergencyCare {}, institutionId{}", newEmergencyCare, institutionId);
         EmergencyCareBo emergencyCareEpisodeBo = saveEmergencyCareEpisode(newEmergencyCare, newEmergencyCare.getTriage());
 
         PoliceInterventionDetailsBo policeInterventionDetailsBo = newEmergencyCare.getPoliceInterventionDetails();
         policeInterventionDetailsBo = (policeInterventionDetailsBo != null && (emergencyCareEpisodeBo.getHasPoliceIntervention() != null && emergencyCareEpisodeBo.getHasPoliceIntervention())  ) ? savePoliceIntervention(policeInterventionDetailsBo, emergencyCareEpisodeBo.getId()) : new PoliceInterventionDetailsBo();
         saveHistoricEmergencyEpisode(emergencyCareEpisodeBo);
 
-        TriageBo triageBo = saveTriage.apply(newEmergencyCare.getTriage(), emergencyCareEpisodeBo.getId());
+        TriageBo triageBo = saveTriage.apply(newEmergencyCare.getTriage(), emergencyCareEpisodeBo.getId(), institutionId);
 
         List<ReasonBo> reasons = saveReasons(newEmergencyCare.getReasons(), emergencyCareEpisodeBo.getId());
 
@@ -184,38 +184,38 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
         return result;
     }
 
-    private BiFunction<TriageBo,Integer, TriageBo> pediatricTriageSaveFunction () {
+    private TriFunction<TriageBo,Integer,Integer, TriageBo> pediatricTriageSaveFunction () {
         return this::saveTriagePediatric;
     }
 
-    private BiFunction<TriageBo,Integer, TriageBo> adultTriageSaveFunction () {
+    private TriFunction<TriageBo,Integer,Integer, TriageBo> adultTriageSaveFunction () {
         return this::saveTriageAdult;
     }
 
-    private BiFunction<TriageBo,Integer, TriageBo> administrativeTriageSaveFunction () {
+    private  TriFunction<TriageBo,Integer,Integer, TriageBo> administrativeTriageSaveFunction () {
         return this::saveTriageAdministrative;
     }
 
-    private TriageBo saveTriageAdult(TriageBo triageBo, Integer emergencyCareEpisodeId) {
-        LOG.debug("Input parameters -> triageBo {}, emergencyCareEpisodeId {}", triageBo, emergencyCareEpisodeId);
+    private TriageBo saveTriageAdult(TriageBo triageBo, Integer emergencyCareEpisodeId, Integer institutionId) {
+        LOG.debug("Input parameters -> triageBo {}, emergencyCareEpisodeId {}, institutionId{}", triageBo, emergencyCareEpisodeId, institutionId);
         triageBo.setEmergencyCareEpisodeId(emergencyCareEpisodeId);
-        TriageBo result = triageService.createAdultGynecological(triageBo);
+        TriageBo result = triageService.createAdultGynecological(triageBo, institutionId);
         LOG.debug(OUTPUT, result);
         return result;
     }
 
-    private TriageBo saveTriageAdministrative(TriageBo triageBo, Integer emergencyCareEpisodeId) {
-        LOG.debug("Input parameters -> triageBo {}, emergencyCareEpisodeId {}", triageBo, emergencyCareEpisodeId);
+    private TriageBo saveTriageAdministrative(TriageBo triageBo, Integer emergencyCareEpisodeId, Integer institutionId) {
+        LOG.debug("Input parameters -> triageBo {}, emergencyCareEpisodeId {}, institutionId{}", triageBo, emergencyCareEpisodeId, institutionId);
         triageBo.setEmergencyCareEpisodeId(emergencyCareEpisodeId);
-        TriageBo result = triageService.createAdministrative(triageBo);
+        TriageBo result = triageService.createAdministrative(triageBo, institutionId);
         LOG.debug(OUTPUT, result);
         return result;
     }
 
-    private TriageBo saveTriagePediatric(TriageBo triageBo, Integer emergencyCareEpisodeId) {
-        LOG.debug("Input parameters -> triageBo {}, emergencyCareEpisodeId {}", triageBo, emergencyCareEpisodeId);
+    private TriageBo saveTriagePediatric(TriageBo triageBo, Integer emergencyCareEpisodeId, Integer institutionId) {
+        LOG.debug("Input parameters -> triageBo {}, emergencyCareEpisodeId {}, institutionId{}", triageBo, emergencyCareEpisodeId, institutionId);
         triageBo.setEmergencyCareEpisodeId(emergencyCareEpisodeId);
-        TriageBo result = triageService.createPediatric(triageBo);
+        TriageBo result = triageService.createPediatric(triageBo, institutionId);
         LOG.debug(OUTPUT, result);
         return result;
     }

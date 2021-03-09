@@ -149,7 +149,7 @@
 					</div>
 				</div>
 
-				<div fxLayout="row" fxLayoutAlign="flex-end center">
+				<div fxLayout="row" fxLayoutAlign="flex-end center" *ngIf="episodeState !== STATES.CON_ALTA_MEDICA">
 					<button id="nuevo-triage" mat-raised-button color="primary" (click)="newTriage()">
 						{{ 'guardia.episode.triage.NUEVO' | translate | uppercase }}
 					</button>
