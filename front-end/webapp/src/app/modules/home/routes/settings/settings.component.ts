@@ -84,7 +84,7 @@ export class SettingsComponent implements OnInit {
 			{
 				data: {
 					title: 'configuracion.logos.confirm_dialog.TITLE',
-					content: 'Esta seguro que desea restablecer el ' + fileNameToShow + '?',
+					content: '¿Está seguro que desea restablecer el ' + fileNameToShow + '?',
 				}
 			});
 
