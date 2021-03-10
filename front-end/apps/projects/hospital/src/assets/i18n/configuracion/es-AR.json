@@ -16,15 +16,7 @@
 				"IMAGE_FORMAT": "La imagen deberá estar en formato .ICO y tener un tamaño cuadrado de 16 x 16 pixeles."
 			},
 			"icono_escritorio": {
-				"DESCRIPTION": "El ícono de escritorio es la imagen que tendrá el acceso directo de la aplicación una vez que se instale en cualquier dispositivo.",
-				"IMAGE_FORMAT_72": "72 x 72 pixeles.",
-				"IMAGE_FORMAT_96": "96 x 96 pixeles.",
-				"IMAGE_FORMAT_128": "128 x 128 pixeles.",
-				"IMAGE_FORMAT_144": "144 x 144 pixeles.",
-				"IMAGE_FORMAT_152": "152 x 152 pixeles.",
-				"IMAGE_FORMAT_192": "192 x 192 pixeles.",
-				"IMAGE_FORMAT_384": "384 x 384 pixeles.",
-				"IMAGE_FORMAT_512": "512 x 512 pixeles."
+				"DESCRIPTION": "El ícono de escritorio es la imagen que tendrá el acceso directo de la aplicación una vez que se instale en cualquier dispositivo."
 			},
 			"toast_messages": {
 				"UPDATE_IMAGE_SUCCESS": "La imagen se actualizó correctamente",
