@@ -52,6 +52,10 @@ export class InstitucionesComponent implements OnInit {
 		}
 	}
 
+	ingresarPortalPaciente(): void {
+		this.router.navigate(['/paciente']);
+	}
+
 	hasAccessToBackoffice(allRoles: RoleAssignment[]) {
 		return allRoles
 			.filter((ra) => ra.role === ERole.ROOT ||

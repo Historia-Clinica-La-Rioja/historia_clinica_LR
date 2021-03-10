@@ -5,13 +5,15 @@
 		"menu": {
 			"AMBULATORIA": "Historia Clínica",
 			"CAMAS": "Gestión de camas",
+			"CONFIGURACION": "Configuración",
 			"GUARDIA": "Guardia",
 			"INSTITUCIONES": "Instituciones",
 			"INTERNACION": "Internación",
+			"MI_HISTORIA_CLINICA": "Mi Historia Clínica",
+			"MIS_DATOS_PERSONALES": "Mis Datos Personales",
 			"PACIENTES": "Pacientes",
 			"PERFIL": "Mi cuenta",
-			"TURNOS": "Gestión de turnos",
-			"CONFIGURACION": "Configuración"
+			"TURNOS": "Gestión de turnos"
 		}
 	},
 	"buttons": {
