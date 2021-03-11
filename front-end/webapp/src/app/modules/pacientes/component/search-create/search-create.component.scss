@@ -1,7 +1,6 @@
 @import '../../../../../assets/styles/mixins';
 
 .mat-card {
-	@include card-properties;
 
 	mat-card-content {
 		@include card-content;
@@ -11,7 +10,4 @@
 		@include form-radio-button;
 	}
 
-	.mat-form-field + .mat-form-field {
-		@include form-field;
-	}
 }

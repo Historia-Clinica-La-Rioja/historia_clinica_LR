@@ -5,29 +5,29 @@
 			<mat-card-subtitle [translate]="'pacientes.home.SUBTITLE'">
 			</mat-card-subtitle>
 		</mat-card-header>
-		<mat-card-content>
-			<div>
-				<mat-form-field appearance="outline">
+		<mat-card-content fxLayout="column" fxLayoutGap="20px">
+			<div fxLayout="row" fxLayoutGap="20px"  fxLayout.lt-md="column" fxLayoutGap.lt-md="0">
+				<mat-form-field appearance="outline" fxFlex="50%">
 					<mat-label>Tipo</mat-label>
 					<mat-select formControlName="identifType" (openedChange)="onIdentifTypeChange()">
 						<mat-option id="identifType" name="identifType" *ngFor="let type of identifyTypeArray"
-							[value]="type.id">
+									[value]="type.id">
 							{{type.description}}
 						</mat-option>
 					</mat-select>
 					<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'identifType')">
-						El campo es requerido
+						<span translate="forms.REQUIRED"></span>
 					</mat-error>
 				</mat-form-field>
-				<mat-form-field appearance="outline">
+				<mat-form-field appearance="outline" fxFlex="50%">
 					<mat-label>Nro de documento</mat-label>
 					<input matInput type="text" id="identifNumber" name="identifNumber" formControlName="identifNumber"
-						placeholder="Nro de documento">
+						   placeholder="Nro de documento">
 					<mat-error *ngIf="formSearchSubmitted &&  hasError(formSearch, 'required', 'identifNumber')">
-						El campo es requerido
+						<span translate="forms.REQUIRED"></span>
 					</mat-error>
-					<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'maxlength', 'identifNumber')">
-						Introduzca como máximo 11 caracteres
+					<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'maxlength', 'identifNumber')"
+							   translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 11}">
 					</mat-error>
 				</mat-form-field>
 			</div>
@@ -55,8 +55,8 @@
 					<mat-card-title [translate]="'pacientes.home.find_add_section.NO_IDENTITY'">
 					</mat-card-title>
 				</mat-card-header>
-				<mat-card-content *ngIf="noIdentity">
-					<mat-form-field appearance="outline">
+				<mat-card-content *ngIf="noIdentity" fxLayout="row" fxLayoutGap="20px"  fxLayout.lt-md="column" fxLayoutGap.lt-md="0">
+					<mat-form-field appearance="outline" fxFlex="50">
 						<mat-label>Seleccione motivo</mat-label>
 						<mat-select formControlName="IdentityVerificationStatus">
 							<mat-option id="IdentityVerificationStatus"
@@ -68,7 +68,7 @@
 							El campo es requerido
 						</mat-error>
 					</mat-form-field>
-					<mat-form-field appearance="outline">
+					<mat-form-field appearance="outline" fxFlex="50">
 						<mat-label>Comentarios</mat-label>
 						<textarea matInput cdkTextareaAutosize id="comments" cdkAutosizeMinRows="1"
 							cdkAutosizeMaxRows="5" formControlName="comments">
