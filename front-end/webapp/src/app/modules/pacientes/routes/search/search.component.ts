@@ -193,7 +193,7 @@ export class SearchComponent implements OnInit {
 		this.formSearch = this.formBuilder.group({
 			identificationNumber: [params.identificationNumber, this.identificationTypeId == IDENTIFICATION_TYPE_IDS.NO_POSEE ? [] :
 				[Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
-			identificationTypeId: [Number(params.identificationTypeId), Validators.required],
+			identificationTypeId: [params.identificationTypeId ? Number(params.identificationTypeId) : null, Validators.required],
 			firstName: [params.firstName, Validators.required],
 			middleNames: [params.middleNames],
 			lastName: [params.lastName, Validators.required],

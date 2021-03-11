@@ -25,6 +25,9 @@
 									{{type.description}}
 								</mat-option>
 							</mat-select>
+							<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'identificationTypeId')">
+								<span [translate]="'pacientes.form.REQUIRED'"></span>
+							</mat-error>
 						</mat-form-field>
 					</div>
 
@@ -33,7 +36,7 @@
 							<span [translate]="'pacientes.form.IDENTIFICATION_NUMBER'"></span>
 						</div>
 						<mat-form-field appearance="outline">
-							<input id="identificationTypeId"
+							<input id="identificationNumber"
 								   formControlName="identificationNumber"
 								   placeholder="Sin puntos"
 								   matInput>
