@@ -119,7 +119,8 @@ export class PediatricTriageComponent implements OnInit {
 			circulation: {
 				...formValue.circulation,
 				heartRate: this.mapVitalSignToDto(formValue.circulation.heartRate)
-			}
+			},
+			notes: formValue.notes
 		};
 }
 
