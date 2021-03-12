@@ -6,15 +6,18 @@ import { CoreModule } from '@core/core.module';
 import { PresentationModule } from '@presentation/presentation.module';
 import { PortalPacienteComponent } from './portal-paciente.component';
 import { HomeComponent } from './routes/home/home.component';
+import { ResumenHistoriaClinicaComponent } from './components/resumen-historia-clinica/resumen-historia-clinica.component';
+import {HistoriaClinicaModule} from '../historia-clinica/historia-clinica.module';
 
 
 @NgModule({
-	declarations: [PortalPacienteComponent, HomeComponent],
+	declarations: [PortalPacienteComponent, HomeComponent, ResumenHistoriaClinicaComponent],
 	imports: [
 		CommonModule,
 		CoreModule,
 		PresentationModule,
-		PortalPacienteRoutingModule
+		PortalPacienteRoutingModule,
+		HistoriaClinicaModule
 	]
 })
 export class PortalPacienteModule {
