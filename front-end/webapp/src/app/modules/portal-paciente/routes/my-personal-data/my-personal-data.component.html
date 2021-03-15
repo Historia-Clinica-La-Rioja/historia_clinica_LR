@@ -1,0 +1,15 @@
+<app-content width="full">
+	<div class="section-container">
+		<section fxLayout="column" fxFlex="40%" fxFlex.lt-md="100%" fxLayoutGap="15px">
+			<div class="profile-card">
+				<app-patient-card *ngIf="personPhoto" [patient]="patientBasicData" [personPhoto]="personPhoto">
+					<div content>
+						<app-personal-information [personalInformation]="personalInformation"
+												  [patientMedicalCoverage]="patientMedicalCoverage">
+						</app-personal-information>
+					</div>
+				</app-patient-card>
+			</div>
+		</section>
+	</div>
+</app-content>

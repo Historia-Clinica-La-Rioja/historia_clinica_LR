@@ -13,6 +13,7 @@ export const SIDEBAR_MENU: MenuItem[] = [
 		icon: 'switch_account',
 		id: 'my_hc',
 		url: '/paciente',
+		options: {exact: true},
 	},
 	{
 		text: 'app.menu.MIS_DATOS_PERSONALES',

@@ -8,10 +8,11 @@ import { PortalPacienteComponent } from './portal-paciente.component';
 import { HomeComponent } from './routes/home/home.component';
 import { ResumenHistoriaClinicaComponent } from './components/resumen-historia-clinica/resumen-historia-clinica.component';
 import {HistoriaClinicaModule} from '../historia-clinica/historia-clinica.module';
+import { MyPersonalDataComponent } from './routes/my-personal-data/my-personal-data.component';
 
 
 @NgModule({
-	declarations: [PortalPacienteComponent, HomeComponent, ResumenHistoriaClinicaComponent],
+	declarations: [PortalPacienteComponent, HomeComponent, ResumenHistoriaClinicaComponent, MyPersonalDataComponent],
 	imports: [
 		CommonModule,
 		CoreModule,
