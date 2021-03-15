@@ -12,4 +12,10 @@ public class BackofficeUserRoleDto {
 	private Integer institutionId;
 	private Short roleId;
 	private Integer userId;
+
+	public BackofficeUserRoleDto(Integer institutionId, Short roleId, Integer userId) {
+		this.institutionId = institutionId;
+		this.roleId = roleId;
+		this.userId = userId;
+	}
 }

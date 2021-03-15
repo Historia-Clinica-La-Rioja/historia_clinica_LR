@@ -18,12 +18,16 @@ public class BackofficePasswordResetValidator
 
 	@Override
 	public void assertGetList(PasswordResetToken entity) {
+		if (authoritiesValidator.hasRole(ERole.ROOT)) {
+			throw new PermissionDeniedException("No se puede resetear la contraseña al admin");
+		}
+
 		if (authoritiesValidator.isLoggedUserId(entity.getUserId())) {
 			// se puede cambiar el password a si mismo
 			return;
 		}
 		authoritiesValidator.assertLoggedUserOutrank(entity.getUserId());
- 	}
+	}
 
 	@Override
 	public List<Long> filterIdsByPermission(List<Long> ids) {
