@@ -3,6 +3,7 @@ package net.pladema.hl7.supporting.exchange.documents.profile;
 import ca.uhn.fhir.rest.param.TokenParam;
 
 import net.pladema.hl7.dataexchange.model.adaptor.FhirParam;
+import net.pladema.hl7.supporting.exchange.documents.ips.PatientSummaryDocument;
 import net.pladema.hl7.supporting.terminology.coding.CodingCode;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
 import org.hl7.fhir.r4.model.Coding;

@@ -25,7 +25,7 @@ import net.pladema.hl7.supporting.conformance.InteroperabilityCondition;
 import net.pladema.hl7.supporting.exchange.database.FhirPersistentStore;
 import net.pladema.hl7.dataexchange.model.domain.PatientSummaryVo;
 import net.pladema.hl7.supporting.exchange.documents.profile.FhirDocument;
-import net.pladema.hl7.supporting.exchange.documents.profile.PatientSummaryDocument;
+import net.pladema.hl7.supporting.exchange.documents.ips.PatientSummaryDocument;
 import net.pladema.hl7.supporting.exchange.restful.validator.DocumentReferenceValidation;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Coding;
