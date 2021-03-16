@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import {Observable, of} from 'rxjs';
 import { MenuItem } from '@core/core-model';
-import { SIDEBAR_MENU } from './constants/menu';
+import {NO_ROLES_USER_SIDEBAR_MENU, ROLES_USER_SIDEBAR_MENU} from './constants/menu';
 import { PermissionsService } from '@core/services/permissions.service';
 import { MenuFooter } from '@presentation/components/main-layout/main-layout.component';
 import { AccountService } from '@api-rest/services/account.service';
@@ -9,6 +9,8 @@ import { mapToFullName } from '@api-rest/mapper/user-person-dto.mapper';
 import { ContextService } from '@core/services/context.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { switchMap } from 'rxjs/operators';
+import {LoggedUserService} from '../auth/services/logged-user.service';
+import {RoleAssignment} from '@api-rest/api-model';
 
 @Component({
 	selector: 'app-home',
@@ -26,13 +28,20 @@ export class HomeComponent implements OnInit {
 		private permissionsService: PermissionsService,
 		private accountService: AccountService,
 		private featureFlagService: FeatureFlagService,
+		private loggedUserService: LoggedUserService,
 	) { }
 
 	ngOnInit(): void {
 		this.contextService.setInstitutionId(this.NO_INSTITUTION);
 
-		this.menuItems$ = this.featureFlagService.filterItems$(SIDEBAR_MENU);
-		this.menuItems$ = this.menuItems$.pipe(switchMap(menu => this.permissionsService.filterItems$(menu)));
+		this.loggedUserService.assignments$.subscribe(roleAssignment => {
+			if (this.userHasAnyRole(roleAssignment)) {
+				this.menuItems$ = this.featureFlagService.filterItems$(ROLES_USER_SIDEBAR_MENU);
+				this.menuItems$ = this.menuItems$.pipe(switchMap(menu => this.permissionsService.filterItems$(menu)));
+			} else {
+				this.menuItems$ = of(NO_ROLES_USER_SIDEBAR_MENU);
+			}
+		});
 
 		this.accountService.getInfo()
 				.subscribe( userInfo => {
@@ -42,5 +51,9 @@ export class HomeComponent implements OnInit {
 					};
 				}
 			);
+	}
+
+	private userHasAnyRole(roleAssignments: RoleAssignment[]): boolean {
+		return (roleAssignments.length > 0);
 	}
 }

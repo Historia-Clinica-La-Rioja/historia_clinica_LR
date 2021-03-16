@@ -1,7 +1,7 @@
 import { AppFeature, ERole } from '@api-rest/api-model';
 import { MenuItem } from '@core/core-model';
 
-export const SIDEBAR_MENU: MenuItem[] = [
+export const ROLES_USER_SIDEBAR_MENU: MenuItem[] = [
 	{
 		text: 'app.menu.INSTITUCIONES',
 		icon: 'home',
@@ -26,4 +26,14 @@ export const SIDEBAR_MENU: MenuItem[] = [
 		featureFlag: AppFeature.HABILITAR_CONFIGURACION
 	},
 
+];
+
+export const NO_ROLES_USER_SIDEBAR_MENU: MenuItem[] = [
+	{
+		text: 'app.menu.INSTITUCIONES',
+		icon: 'home',
+		id: 'home',
+		url: '/home',
+		options: {exact: true},
+	},
 ];

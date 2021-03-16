@@ -1,6 +1,6 @@
 import { MenuItem } from '@core/core-model';
 
-export const SIDEBAR_MENU: MenuItem[] = [
+export const ROLES_USER_SIDEBAR_MENU: MenuItem[] = [
 	{
 		text: 'app.menu.INSTITUCIONES',
 		icon: 'home',
@@ -26,5 +26,21 @@ export const SIDEBAR_MENU: MenuItem[] = [
 		icon: 'account_circle',
 		id: 'home_profile',
 		url: '/home/profile',
+	},
+];
+
+export const NO_ROLES_USER_SIDEBAR_MENU: MenuItem[] = [
+	{
+		text: 'app.menu.MI_HISTORIA_CLINICA',
+		icon: 'switch_account',
+		id: 'my_hc',
+		url: '/paciente',
+		options: {exact: true},
+	},
+	{
+		text: 'app.menu.MIS_DATOS_PERSONALES',
+		icon: 'person_outline',
+		id: 'my_personal_data',
+		url: '/paciente/perfil',
 	},
 ];
