@@ -21,6 +21,7 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,7 +39,7 @@ public class PatientResource extends ISingleResourceFhir {
     }
 
     @Override
-    public Patient fetch(String id, Reference[] references) {
+    public Patient fetch(String id, Map<ResourceType, Reference> references) {
         PatientVo patient = store.getPatient(id);
 
         Patient resource = new Patient();

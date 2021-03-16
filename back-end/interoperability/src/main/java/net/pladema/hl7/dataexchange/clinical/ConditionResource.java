@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Conditional(InteroperabilityCondition.class)
@@ -40,18 +41,18 @@ public class ConditionResource extends IMultipleResourceFhir {
     }
 
     @Override
-    public List<Condition> fetch(String id, Reference[] references) {
+    public List<Condition> fetch(String id, Map<ResourceType, Reference> references) {
         List<ConditionVo> conditions = store.findAllCondition(id);
 
         if(conditions.isEmpty())
-            return noInformationAvailable(references[0]);
+            return noInformationAvailable(references.get(ResourceType.Patient));
 
         List<Condition> resources = new ArrayList<>();
         conditions.forEach( (condition) ->{
             Condition resource = new Condition();
             resource.setId(condition.getId());
             resource.addCategory(newCodeableConcept(CodingSystem.LOINC, CodingCode.Condition.CATEGORY));
-            resource.setSubject(references[0]);
+            resource.setSubject(references.get(ResourceType.Patient));
             resource.getOnsetDateTimeType().setValue(FhirDateMapper.toDate(condition.getCreatedOn()));
             resource.setVerificationStatus(newCodeableConcept(CodingSystem.Condition.VERIFICATION, condition.getVerificationStatus()));
             resource.setCode(newCodeableConcept(CodingSystem.SNOMED, condition.get()));

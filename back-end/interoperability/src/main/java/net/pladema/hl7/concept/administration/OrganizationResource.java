@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 @Service
 @Conditional(InteroperabilityCondition.class)
 public class OrganizationResource extends ISingleResourceFhir {
@@ -29,7 +31,7 @@ public class OrganizationResource extends ISingleResourceFhir {
     }
 
     @Override
-    public Organization fetch(String id, Reference[] references) {
+    public Organization fetch(String id, Map<ResourceType, Reference> references) {
         OrganizationVo organization = store.getOrganization(id);
 
         Organization resource = new Organization();

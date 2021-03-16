@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Conditional(InteroperabilityCondition.class)
@@ -38,11 +39,11 @@ public class AllergyIntoleranceResource extends IMultipleResourceFhir {
 
 
     @Override
-    public List<AllergyIntolerance> fetch(String id, Reference[] references) {
+    public List<AllergyIntolerance> fetch(String id, Map<ResourceType, Reference> references) {
         List<AllergyIntoleranceVo> allergies = store.findAllAllergies(id);
 
         if (allergies.isEmpty())
-            return noInformationAvailable(references[0]);
+            return noInformationAvailable(references.get(ResourceType.Patient));
 
         List<AllergyIntolerance> resources = new ArrayList<>();
         allergies.forEach((allergy) -> {
@@ -54,7 +55,7 @@ public class AllergyIntoleranceResource extends IMultipleResourceFhir {
                         AllergyIntolerance.AllergyIntoleranceCategory.fromCode(c))
             );
             resource.setCriticality(AllergyIntolerance.AllergyIntoleranceCriticality.fromCode(allergy.getCriticality()));
-            resource.setPatient(references[0]);
+            resource.setPatient(references.get(ResourceType.Patient));
             resource.setCode(newCodeableConcept(CodingSystem.SNOMED, allergy.get()));
             resource.getOnsetDateTimeType().setValue(FhirDateMapper.toDate(allergy.getStartDate()));
 
