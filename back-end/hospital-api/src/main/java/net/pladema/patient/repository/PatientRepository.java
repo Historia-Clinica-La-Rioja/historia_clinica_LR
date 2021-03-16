@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 @Repository
@@ -22,4 +23,10 @@ public interface PatientRepository extends JpaRepository<Patient, Integer>, Pati
 			" OR person.birthDate = :birthDate ")
 	public Stream<PatientSearch> getAllByFilter(@Param("name") String name, @Param("lastName") String lastName,
 												@Param("identificationNumber") String identificationNumber, @Param("birthDate") LocalDate birthDate);
+
+	@Query(value = " SELECT p.id " +
+			"FROM User u " +
+			"LEFT JOIN Patient p ON (p.personId = u.personId) " +
+			"WHERE u.id = :userId")
+	public Optional<Integer> getPatientIdByUser(@Param("userId") Integer userId);
 }
