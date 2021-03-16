@@ -33,7 +33,7 @@ public class FhirDocument {
         supported.put(PatientSummaryDocument.TYPE, PatientSummaryDocument.class);
     }
 
-    public Boolean isSupported(TokenParam type){
+    public boolean isSupported(TokenParam type){
         return supported.keySet().stream()
                 .map(c -> new TokenParam().setSystem(c.getSystem()).setValue(c.getCode()))
                 .anyMatch(c -> c.equals(type));

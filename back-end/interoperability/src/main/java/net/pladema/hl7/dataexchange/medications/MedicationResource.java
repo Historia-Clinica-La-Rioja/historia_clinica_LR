@@ -46,7 +46,7 @@ public class MedicationResource extends IResourceFhir {
 
     private List<Medication.MedicationIngredientComponent> buildIngredientsData(MedicationVo medication) {
         List<Medication.MedicationIngredientComponent> ingredients = new ArrayList<>();
-        medication.getIngredients().forEach((ingredient) ->
+        medication.getIngredients().forEach(ingredient ->
             ingredients.add(new Medication.MedicationIngredientComponent()
                     .setItem(newCodeableConcept(CodingSystem.SNOMED, ingredient.get()))
                     .setIsActive(ingredient.isActive())
@@ -77,7 +77,7 @@ public class MedicationResource extends IResourceFhir {
 
     private static List<MedicationIngredientVo> encodeIngredients(Medication resource){
         List<MedicationIngredientVo> ingredients = new ArrayList<>();
-        resource.getIngredient().forEach((ingredient)->{
+        resource.getIngredient().forEach(ingredient->{
             MedicationIngredientVo ingredientData = new MedicationIngredientVo();
 
             if(ingredient.hasItemCodeableConcept()) {

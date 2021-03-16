@@ -12,17 +12,17 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public abstract class IMultipleResourceFhir extends IResourceFhir {
+public abstract class IMultipleResourceFhir<R extends IBaseResource> extends IResourceFhir {
 
-    public IMultipleResourceFhir(FhirPersistentStore store){
+    protected IMultipleResourceFhir(FhirPersistentStore store){
         super(store);
     }
 
-    public abstract List<? extends IBaseResource> fetch(String id, Map<ResourceType, Reference> references);
+    public abstract List<R> fetch(String id, Map<ResourceType, Reference> references);
 
     public List<Bundle.BundleEntryComponent> fetchEntries(String id, Map<ResourceType, Reference> references) {
         List<Bundle.BundleEntryComponent> entries = new ArrayList<>();
-        fetch(id, references).forEach((resource)->
+        fetch(id, references).forEach(resource->
                 entries.add(fetchEntry(resource))
         );
         return entries;

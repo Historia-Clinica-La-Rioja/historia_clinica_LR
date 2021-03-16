@@ -19,18 +19,19 @@ import java.util.List;
 @Setter
 public class MedicationVo implements Serializable {
 
-    private final BidiMap<Short, String> UNIT_TIME;
+    private static final long serialVersionUID = -6874235756444884533L;
+
+    private final BidiMap<Short, String> unitTimeCoding;
 
     public MedicationVo(){
-        //Todo: add to DB
-        UNIT_TIME = new DualHashBidiMap<>();
-        UNIT_TIME.put((short)1, "s");
-        UNIT_TIME.put((short)2, "min");
-        UNIT_TIME.put((short)3, "h");
-        UNIT_TIME.put((short)4, "d");
-        UNIT_TIME.put((short)5, "wk");
-        UNIT_TIME.put((short)6, "mo");
-        UNIT_TIME.put((short)7, "a");
+        unitTimeCoding = new DualHashBidiMap<>();
+        unitTimeCoding.put((short)1, "s");
+        unitTimeCoding.put((short)2, "min");
+        unitTimeCoding.put((short)3, "h");
+        unitTimeCoding.put((short)4, "d");
+        unitTimeCoding.put((short)5, "wk");
+        unitTimeCoding.put((short)6, "mo");
+        unitTimeCoding.put((short)7, "a");
     }
 
     public MedicationVo(Object[] tuple){
@@ -88,7 +89,7 @@ public class MedicationVo implements Serializable {
     }
 
     public String getUnitTime(){
-        return UNIT_TIME.getOrDefault(unitTime, null);
+        return unitTimeCoding.getOrDefault(unitTime, null);
     }
 
     public FhirCode getRoute(){
@@ -100,6 +101,6 @@ public class MedicationVo implements Serializable {
     }
 
     public void setUnitTime(String unitTime){
-        this.unitTime = UNIT_TIME.getKey(unitTime);
+        this.unitTime = unitTimeCoding.getKey(unitTime);
     }
 }

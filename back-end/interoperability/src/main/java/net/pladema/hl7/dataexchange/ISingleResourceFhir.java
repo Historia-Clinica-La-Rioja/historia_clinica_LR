@@ -12,7 +12,7 @@ import java.util.Map;
 @Component
 public abstract class ISingleResourceFhir extends IResourceFhir {
 
-    public ISingleResourceFhir(FhirPersistentStore store){
+    protected ISingleResourceFhir(FhirPersistentStore store){
         super(store);
     }
 

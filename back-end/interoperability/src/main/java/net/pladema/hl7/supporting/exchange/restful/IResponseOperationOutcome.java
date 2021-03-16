@@ -33,6 +33,5 @@ public interface IResponseOperationOutcome {
         return new Bundle.BundleEntryComponent()
                 .setResource(warning)
                 .setSearch(new Bundle.BundleEntrySearchComponent().setMode(Bundle.SearchEntryMode.OUTCOME));
-        //throw new ResourceNotFoundException(Patient.class, new IdType());
     }
 }

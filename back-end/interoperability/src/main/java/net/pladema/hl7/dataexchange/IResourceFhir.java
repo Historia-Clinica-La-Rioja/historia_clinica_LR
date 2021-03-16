@@ -38,7 +38,7 @@ public abstract class IResourceFhir {
 
     protected FhirPersistentStore store;
 
-    public IResourceFhir(FhirPersistentStore store){
+    protected IResourceFhir(FhirPersistentStore store){
         super();
         this.store=store;
     }

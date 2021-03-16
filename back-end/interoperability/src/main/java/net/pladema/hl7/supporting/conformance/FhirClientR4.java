@@ -56,7 +56,7 @@ public class FhirClientR4 {
         testClient = context.newRestfulGenericClient(CodingSystem.SERVER.TESTAPP);
     }
 
-    public DocumentReference readDocumentReferences(ReferenceParam subject, StringParam custodian, ReferenceParam type) throws Exception {
+    public DocumentReference readDocumentReferences(ReferenceParam subject, StringParam custodian, ReferenceParam type) {
         // Invoke the server with method Read and the given ID
         try {
             return busClient.getDocumentReference(subject, custodian, type);
@@ -65,7 +65,7 @@ public class FhirClientR4 {
             return null;
         }
         catch(InvalidRequestException ex){
-            throw new Exception(ex.getMessage());
+            throw new InvalidRequestException(ex.getMessage());
         }
     }
 

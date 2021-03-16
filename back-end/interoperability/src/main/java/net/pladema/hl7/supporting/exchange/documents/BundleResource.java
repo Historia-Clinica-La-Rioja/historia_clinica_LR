@@ -99,7 +99,7 @@ public class BundleResource extends IResourceFhir {
         resource.setLanguage(language);
 
         //=======================Content=======================
-        fhirDocument.get(code).ifPresent((document) ->
+        fhirDocument.get(code).ifPresent(document ->
                 resource.setEntry(document.getContent(id.getIdPart()))
         );
         return resource;

@@ -15,14 +15,14 @@ import java.time.LocalDate;
 @Setter
 public class PatientVo {
 
-    public final static String COUNTRY="AR";
+    public static final String COUNTRY="AR";
 
-    private final BidiMap<Short, String> GENDER;
+    private final BidiMap<Short, String> genderCoding;
 
     public PatientVo(){
-        GENDER = new DualHashBidiMap<>();
-        GENDER.put((short)1, "female");
-        GENDER.put((short)2, "male");
+        genderCoding = new DualHashBidiMap<>();
+        genderCoding.put((short)1, "female");
+        genderCoding.put((short)2, "male");
     }
 
     public PatientVo(Object[] tuple){
@@ -33,8 +33,8 @@ public class PatientVo {
         setLastname(Cast.toString(tuple[index++]));
         setOtherLastName(Cast.toString(tuple[index++]), Cast.toString(tuple[index++]));
         setIdentificationNumber(Cast.toString(tuple[index++]));
-        Short gender = Cast.toShort(tuple[index++]);
-        setGender(GENDER.getOrDefault(gender, null));
+        Short genderCode = Cast.toShort(tuple[index++]);
+        setGender(genderCoding.getOrDefault(genderCode, null));
         setBirthdate(Cast.toLocalDate(tuple[index++]));
         setPhoneNumber(Cast.toString(tuple[index]));
     }
@@ -62,7 +62,7 @@ public class PatientVo {
     private Short gender;
 
     public String getGender(){
-        return GENDER.get(gender);
+        return genderCoding.get(gender);
     }
 
     public String getFullName(){
@@ -82,7 +82,7 @@ public class PatientVo {
     }
 
     public void setGender(String gender){
-        this.gender = GENDER.getKey(gender);
+        this.gender = genderCoding.getKey(gender);
     }
 
     public boolean hasOtherLastName() {

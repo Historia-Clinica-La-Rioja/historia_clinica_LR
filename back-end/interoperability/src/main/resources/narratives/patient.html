@@ -3,17 +3,18 @@
         <div th:narrative="${resource.name[0]}"></div>
     </th:block>
     <table>
+        <caption>Resumen de datos del Paciente</caption>
         <tbody>
         <tr th:if="${not resource.identifier.empty}">
-            <td>Identificador</td>
+            <th scope="col">Identificador</th>
             <td th:narrative="${resource.identifier[0]}"></td>
         </tr>
         <tr th:if="${not resource.address.empty}">
-            <td>Dirección</td>
+            <th scope="col">Dirección</th>
             <td th:narrative="${resource.address[0]}"></td>
         </tr>
         <tr th:if="${not resource.birthDateElement.empty}">
-            <td>Fecha de nacimiento</td>
+            <th scope="col">Fecha de nacimiento</th>
             <td><span th:text="${#dates.format(resource.birthDateElement.value,'dd MMMM yyyy')}"></span></td>
         </tr>
         </tbody>

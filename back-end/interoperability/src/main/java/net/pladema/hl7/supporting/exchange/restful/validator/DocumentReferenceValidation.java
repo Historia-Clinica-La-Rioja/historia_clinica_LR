@@ -38,7 +38,7 @@ public class DocumentReferenceValidation implements IResponseOperationOutcome {
         if(!type.getSystem().equals(CodingSystem.LOINC))
             badRequest("type parameter must have a loinc system");
         else {
-            if(type.isEmpty() && !fhirDocument.isSupported(type)) {
+            if(Boolean.FALSE.equals(fhirDocument.isSupported(type))) {
                 //return empty Bundle with status 200
                 return Optional.of(BundleResource.empty());
             }

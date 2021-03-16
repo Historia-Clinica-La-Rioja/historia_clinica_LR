@@ -23,7 +23,7 @@ import java.util.Map;
 @Setter
 public class CompositionVo {
 
-    private final Map<Short, String> CONFIDENTIALITY = new HashMap<>();
+    private final Map<Short, String> confidentialityCoding = new HashMap<>();
 
     private Date createdOn;
     private Short confidentiality;
@@ -37,12 +37,12 @@ public class CompositionVo {
     }
 
     public CompositionVo(){
-        CONFIDENTIALITY.put((short)1, "U");
-        CONFIDENTIALITY.put((short)2, "L");
-        CONFIDENTIALITY.put((short)3, "M");
-        CONFIDENTIALITY.put((short)4, "N");
-        CONFIDENTIALITY.put((short)5, "R");
-        CONFIDENTIALITY.put((short)6, "V");
+        confidentialityCoding.put((short)1, "U");
+        confidentialityCoding.put((short)2, "L");
+        confidentialityCoding.put((short)3, "M");
+        confidentialityCoding.put((short)4, "N");
+        confidentialityCoding.put((short)5, "R");
+        confidentialityCoding.put((short)6, "V");
     }
 
     public void setCreatedOn(LocalDate date){
@@ -52,7 +52,7 @@ public class CompositionVo {
     public String getConfidentiality(){
         if(confidentiality == null)
             return "N";
-        return CONFIDENTIALITY.get(confidentiality);
+        return confidentialityCoding.get(confidentiality);
     }
 
     public String getTitle() {

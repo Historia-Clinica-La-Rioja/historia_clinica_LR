@@ -1,15 +1,14 @@
 <div xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/html">
     <table>
-        <thead>
+        <caption>Resumen de Problemas de salud</caption>
         <tr>
-            <td>Problema</td>
-            <td>Estado</td>
-            <td>Verificación</td>
-            <td>Categoria</td>
-            <td>Severidad</td>
-            <td>Fecha Registro</td>
+            <th scope="col">Problema</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Verificación</th>
+            <th scope="col">Categoria</th>
+            <th scope="col">Severidad</th>
+            <th scope="col">Fecha Registro</th>
         </tr>
-        </thead>
         <tbody>
         <tr>
             <td th:narrative="${resource.code}"></td>

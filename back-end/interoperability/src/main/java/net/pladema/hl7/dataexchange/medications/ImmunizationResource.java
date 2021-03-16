@@ -22,12 +22,11 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Date;
 import java.util.Map;
 
 @Service
 @Conditional(InteroperabilityCondition.class)
-public class ImmunizationResource extends IMultipleResourceFhir {
+public class ImmunizationResource extends IMultipleResourceFhir<Immunization> {
 
     @Autowired
     public ImmunizationResource(FhirPersistentStore store){
@@ -47,7 +46,7 @@ public class ImmunizationResource extends IMultipleResourceFhir {
             return noInformationAvailable(references.get(ResourceType.Patient));
 
         List<Immunization> resources = new ArrayList<>();
-        immunizations.forEach( (immunization) -> {
+        immunizations.forEach( immunization -> {
             Immunization resource = new Immunization();
             resource.setId(immunization.getId());
             resource.setStatus(Immunization.ImmunizationStatus.fromCode(immunization.getStatus()));

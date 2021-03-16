@@ -31,13 +31,13 @@ public class BundleVo {
 
     public BundleVo(Object[] tuple) {
         int index=0;
-        PatientVo patient = new PatientVo();
-        patient.setId(Cast.toString(tuple[index++]));
-        patient.setFirstname(Cast.toString(tuple[index++]));
-        patient.setMiddlenames(Cast.toString(tuple[index++]));
-        patient.setLastname(Cast.toString(tuple[index++]));
-        this.patient = patient;
-        setId(patient.getId());
+        PatientVo patientData = new PatientVo();
+        patientData.setId(Cast.toString(tuple[index++]));
+        patientData.setFirstname(Cast.toString(tuple[index++]));
+        patientData.setMiddlenames(Cast.toString(tuple[index++]));
+        patientData.setLastname(Cast.toString(tuple[index++]));
+        this.patient = patientData;
+        setId(patientData.getId());
         setHasDocuments(Cast.toBoolean(tuple[index]));
     }
 

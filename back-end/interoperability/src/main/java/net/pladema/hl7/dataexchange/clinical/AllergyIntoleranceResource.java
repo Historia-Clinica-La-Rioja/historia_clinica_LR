@@ -25,7 +25,7 @@ import java.util.Map;
 
 @Service
 @Conditional(InteroperabilityCondition.class)
-public class AllergyIntoleranceResource extends IMultipleResourceFhir {
+public class AllergyIntoleranceResource extends IMultipleResourceFhir<AllergyIntolerance> {
 
     @Autowired
     public AllergyIntoleranceResource(FhirPersistentStore store) {
@@ -46,7 +46,7 @@ public class AllergyIntoleranceResource extends IMultipleResourceFhir {
             return noInformationAvailable(references.get(ResourceType.Patient));
 
         List<AllergyIntolerance> resources = new ArrayList<>();
-        allergies.forEach((allergy) -> {
+        allergies.forEach(allergy -> {
 
             AllergyIntolerance resource = new AllergyIntolerance();
             resource.setId(allergy.getId());

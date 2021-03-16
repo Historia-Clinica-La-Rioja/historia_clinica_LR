@@ -38,7 +38,7 @@ import java.util.Map;
 
 @Service
 @Conditional(InteroperabilityCondition.class)
-public class MedicationStatementResource extends IMultipleResourceFhir {
+public class MedicationStatementResource extends IMultipleResourceFhir<MedicationStatement> {
 
     private final MedicationResource medicationResource;
 
@@ -66,7 +66,7 @@ public class MedicationStatementResource extends IMultipleResourceFhir {
             return noInformationAvailable(references.get(ResourceType.Patient));
 
         Map<MedicationStatement, Medication> resources = new LinkedHashMap<>();
-        medications.forEach((medication)->{
+        medications.forEach(medication->{
             MedicationStatement resource = new MedicationStatement();
             resource.setId(medication.getStatementId());
             resource.setStatus(MedicationStatement.MedicationStatementStatus.fromCode(medication.getStatus()))
@@ -92,9 +92,9 @@ public class MedicationStatementResource extends IMultipleResourceFhir {
         none.getEffectivePeriod().addExtension(newExtension(
                 CodingProfile.DATA_ABSENT_REASON, CodingCode.ABSENT_REASON)
         );
-        return new LinkedHashMap<>(){{
-            put(none, null);
-        }};
+        Map<MedicationStatement, Medication> resource = new LinkedHashMap<>();
+        resource.put(none, null);
+        return resource;
     }
 
     private Dosage buildDosage(MedicationVo medication){

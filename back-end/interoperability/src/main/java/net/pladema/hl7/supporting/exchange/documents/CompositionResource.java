@@ -85,7 +85,7 @@ public class CompositionResource extends IResourceFhir {
                         .map(Bundle.BundleEntryComponent::getResource)
                         .collect(Collectors.toList()))
                 );
-        entries.forEach((entry) ->
+        entries.forEach(entry ->
             section.addEntry().setReference(entry.getFullUrl())
         );
         return section;

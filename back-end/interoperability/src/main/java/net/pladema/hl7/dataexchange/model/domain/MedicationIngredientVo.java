@@ -4,12 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirCode;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Getter
 @Setter
-public class MedicationIngredientVo {
+public class MedicationIngredientVo implements Serializable {
 
+    private static final long serialVersionUID = 3140670141305795660L;
 
     private String sctidCode;
 

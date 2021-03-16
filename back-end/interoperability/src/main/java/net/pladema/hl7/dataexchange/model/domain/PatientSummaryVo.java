@@ -46,7 +46,7 @@ public class PatientSummaryVo {
         this.organization=resource;
     }
 
-    public static PatientSummaryVo empty(){
+    public static PatientSummaryVo emptyInstance(){
         return EMPTY;
     }
 }

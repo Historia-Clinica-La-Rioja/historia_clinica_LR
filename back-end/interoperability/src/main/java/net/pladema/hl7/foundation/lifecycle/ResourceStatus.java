@@ -14,7 +14,7 @@ public class ResourceStatus {
     private static final Map<String, String> status = new HashMap<>();
     private static final Map<String, String> defaults = new HashMap<>();
 
-    public ResourceStatus(){
+    private ResourceStatus(){
         status.put(null,"");
         status.put("55561003", "active");
         status.put("255594003","completed");

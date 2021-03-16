@@ -3,19 +3,19 @@
 
 <th:block th:switch="${fhirVersion}">
     <th:block th:case="'DSTU1'">
-        <b th:each="familyName : ${resource.family}"      th:if="${!familyName.empty}" th:text="${#strings.toUpperCase(familyName.value)} + ' '"></b>
+        <strong th:each="familyName : ${resource.family}"      th:if="${!familyName.empty}" th:text="${#strings.toUpperCase(familyName.value)} + ' '"></strong>
     </th:block>
     <th:block th:case="'DSTU2'">
-        <b th:each="familyName : ${resource.family}"      th:if="${!familyName.empty}" th:text="${#strings.toUpperCase(familyName.value)} + ' '"></b>
+        <strong th:each="familyName : ${resource.family}"      th:if="${!familyName.empty}" th:text="${#strings.toUpperCase(familyName.value)} + ' '"></strong>
     </th:block>
     <th:block th:case="'DSTU2_1'">
-        <b th:each="familyName : ${resource.family}"      th:if="${!familyName.empty}" th:text="${#strings.toUpperCase(familyName.value)} + ' '"></b>
+        <strong th:each="familyName : ${resource.family}"      th:if="${!familyName.empty}" th:text="${#strings.toUpperCase(familyName.value)} + ' '"></strong>
     </th:block>
     <th:block th:case="'DSTU2_HL7ORG'">
-        <b th:each="familyName : ${resource.family}"      th:if="${!familyName.empty}" th:text="${#strings.toUpperCase(familyName.value)} + ' '"></b>
+        <strong th:each="familyName : ${resource.family}"      th:if="${!familyName.empty}" th:text="${#strings.toUpperCase(familyName.value)} + ' '"></strong>
     </th:block>
     <th:block th:case="*">
-        <b th:if="${!resource.familyElement.empty}" th:text="${#strings.toUpperCase(resource.family)} + ' '"></b>
+        <strong th:if="${!resource.familyElement.empty}" th:text="${#strings.toUpperCase(resource.family)} + ' '"></strong>
     </th:block>
 </th:block>
 

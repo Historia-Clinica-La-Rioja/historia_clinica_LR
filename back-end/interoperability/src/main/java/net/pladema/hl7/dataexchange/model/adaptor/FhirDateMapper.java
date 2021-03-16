@@ -1,10 +1,13 @@
 package net.pladema.hl7.dataexchange.model.adaptor;
 
+import lombok.experimental.UtilityClass;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
+@UtilityClass
 public class FhirDateMapper {
 
     public static LocalDate toLocalDate(java.util.Date date){

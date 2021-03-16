@@ -1,5 +1,6 @@
 package net.pladema.hl7.supporting.terminology.support;
 
+import lombok.experimental.UtilityClass;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirCode;
 
 import org.hl7.fhir.r4.model.CodeSystem;
@@ -13,7 +14,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class TerminologySupport {
+@UtilityClass
+public final class TerminologySupport {
 
     public static CodeSystem loadCodeSystem(String url, String valueSetUrl, List<FhirCode> codes){
         return new CodeSystem().setUrl(url)
@@ -24,7 +26,7 @@ public class TerminologySupport {
 
     private static List<CodeSystem.ConceptDefinitionComponent> mapToConcepts(List<FhirCode> codes){
         List<CodeSystem.ConceptDefinitionComponent> concepts = new ArrayList<>();
-        codes.forEach((code)->
+        codes.forEach(code->
             concepts.add(new CodeSystem.ConceptDefinitionComponent().setCode(code.getTheCode()))
         );
         return concepts;

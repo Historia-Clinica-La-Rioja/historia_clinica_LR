@@ -28,7 +28,7 @@ import java.util.Map;
 
 @Service
 @Conditional(InteroperabilityCondition.class)
-public class ConditionResource extends IMultipleResourceFhir {
+public class ConditionResource extends IMultipleResourceFhir<Condition> {
 
     @Autowired
     public ConditionResource(FhirPersistentStore store){
@@ -48,7 +48,7 @@ public class ConditionResource extends IMultipleResourceFhir {
             return noInformationAvailable(references.get(ResourceType.Patient));
 
         List<Condition> resources = new ArrayList<>();
-        conditions.forEach( (condition) ->{
+        conditions.forEach(condition ->{
             Condition resource = new Condition();
             resource.setId(condition.getId());
             resource.addCategory(newCodeableConcept(CodingSystem.LOINC, CodingCode.Condition.CATEGORY));

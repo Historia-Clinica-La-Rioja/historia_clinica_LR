@@ -51,20 +51,18 @@ public class BusAuthorizationService extends RestTemplate {
     public ResponseEntity<FederarLoginResponse> validate(String accessToken) throws RestClientException {
         ResponseEntity<FederarLoginResponse> result;
         try {
-            result = exchangePost(relativeUrl,
-                    new AuthorizationPayload(accessToken), FederarLoginResponse.class);
+            result = exchangePost(relativeUrl, new AuthorizationPayload(accessToken));
         } catch (RestClientException e) {
             throw new AuthenticationException("Invalid access token: " + e.getMessage() ) ;
         }
         return result;
     }
 
-    private <ResponseBody, RequestBody> ResponseEntity<ResponseBody> exchangePost(String relUrl,
-                                                                                  RequestBody requestBody,
-                                                                                  Class<ResponseBody> responseType) {
+    private ResponseEntity<FederarLoginResponse> exchangePost(String relUrl,
+                                                              AuthorizationPayload requestBody) {
         String fullUrl = configuration.getAbsoluteURL(relUrl);
-        HttpEntity<RequestBody> entity = new HttpEntity<>(requestBody, getHeaders());
-        return exchange(fullUrl, HttpMethod.POST, entity, responseType);
+        HttpEntity<AuthorizationPayload> entity = new HttpEntity<>(requestBody, getHeaders());
+        return exchange(fullUrl, HttpMethod.POST, entity, FederarLoginResponse.class);
     }
 
     private static HttpHeaders getHeaders() {

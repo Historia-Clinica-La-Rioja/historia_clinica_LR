@@ -24,6 +24,10 @@ import java.util.List;
 @Repository
 public class FhirPersistentStore {
 
+    private static final String PATIENTID = "patientId";
+    private static final String STATUSID = "statusId";
+    private static final String DOCUMENTTYPE = "documentType";
+
     private final EntityManager entityManager;
 
     public FhirPersistentStore(EntityManager entityManager) {
@@ -60,7 +64,7 @@ public class FhirPersistentStore {
                 + " where pat.id = :patientId";
         try {
             Object[] queryResult = (Object[]) entityManager
-                    .createQuery(sqlQuery).setParameter("patientId", Integer.valueOf(patientId))
+                    .createQuery(sqlQuery).setParameter(PATIENTID, Integer.valueOf(patientId))
                     .getSingleResult();
             PatientVo data = new PatientVo(queryResult);
             data.setFullAddress(getAddress(Cast.toInteger(queryResult[9]), Address.AddressUse.HOME));
@@ -112,14 +116,14 @@ public class FhirPersistentStore {
                 " AND NOT verification_status_id = :statusId";
         List<Object[]> queryResult = entityManager
                 .createNativeQuery(sqlQuery)
-                .setParameter("patientId", Integer.valueOf(patientId))
+                .setParameter(PATIENTID, Integer.valueOf(patientId))
                 .setParameter("docStatusId", CodingCode.DocumentReference.FINAL_STATUS)
                 .setParameter("diagnosisId", CodingCode.Condition.DIAGNOSIS)
-                .setParameter("statusId", ResourceStatus.ENTERED_IN_ERROR)
-                .setParameter("documentType", CodingCode.DocumentReference.OUTPATIENT_TYPE)
+                .setParameter(STATUSID, ResourceStatus.ENTERED_IN_ERROR)
+                .setParameter(DOCUMENTTYPE, CodingCode.DocumentReference.OUTPATIENT_TYPE)
                 .getResultList();
         List<ConditionVo> data = new ArrayList<>();
-        queryResult.forEach((tuple)->data.add(new ConditionVo(tuple)));
+        queryResult.forEach(tuple->data.add(new ConditionVo(tuple)));
         return data;
     }
 
@@ -146,12 +150,12 @@ public class FhirPersistentStore {
 
         List<Object[]> queryResult = entityManager.createNativeQuery(sqlString)
                 .setParameter("docStatusId", CodingCode.DocumentReference.FINAL_STATUS)
-                .setParameter("statusId", ResourceStatus.ENTERED_IN_ERROR)
-                .setParameter("patientId", Integer.valueOf(patientId))
-                .setParameter("documentType", CodingCode.DocumentReference.OUTPATIENT_TYPE)
+                .setParameter(STATUSID, ResourceStatus.ENTERED_IN_ERROR)
+                .setParameter(PATIENTID, Integer.valueOf(patientId))
+                .setParameter(DOCUMENTTYPE, CodingCode.DocumentReference.OUTPATIENT_TYPE)
                 .getResultList();
         List<ImmunizationVo> data = new ArrayList<>();
-        queryResult.forEach((tuple)->data.add(new ImmunizationVo(tuple)));
+        queryResult.forEach(tuple->data.add(new ImmunizationVo(tuple)));
         return data;
     }
 
@@ -178,14 +182,14 @@ public class FhirPersistentStore {
                 " ORDER BY t.updated_on desc ";
 
         List<Object[]> queryResult = entityManager.createNativeQuery(sqlString)
-                .setParameter("patientId", Integer.valueOf(patientId))
+                .setParameter(PATIENTID, Integer.valueOf(patientId))
                 .setParameter("documentStatusId", CodingCode.DocumentReference.FINAL_STATUS)
-                .setParameter("documentType", CodingCode.DocumentReference.OUTPATIENT_TYPE)
+                .setParameter(DOCUMENTTYPE, CodingCode.DocumentReference.OUTPATIENT_TYPE)
                 .setParameter("allergyIntoleranceStatus", ResourceStatus.ENTERED_IN_ERROR)
                 .getResultList();
 
         List<AllergyIntoleranceVo> data = new ArrayList<>();
-        queryResult.forEach((tuple)->data.add(new AllergyIntoleranceVo(tuple)));
+        queryResult.forEach(tuple->data.add(new AllergyIntoleranceVo(tuple)));
         return data;
     }
 
@@ -210,12 +214,12 @@ public class FhirPersistentStore {
                 "ORDER BY t.updated_on";
         List<Object[]> queryResult = entityManager.createNativeQuery(sqlString)
                 .setParameter("documentStatusId", CodingCode.DocumentReference.FINAL_STATUS)
-                .setParameter("statusId", ResourceStatus.ENTERED_IN_ERROR)
-                .setParameter("patientId", Integer.valueOf(patientId))
-                .setParameter("documentType", CodingCode.DocumentReference.OUTPATIENT_TYPE)
+                .setParameter(STATUSID, ResourceStatus.ENTERED_IN_ERROR)
+                .setParameter(PATIENTID, Integer.valueOf(patientId))
+                .setParameter(DOCUMENTTYPE, CodingCode.DocumentReference.OUTPATIENT_TYPE)
                 .getResultList();
         List<MedicationVo> data = new ArrayList<>();
-        queryResult.forEach((tuple)->data.add(new MedicationVo(tuple)));
+        queryResult.forEach(tuple->data.add(new MedicationVo(tuple)));
         return data;
     }
 
@@ -247,7 +251,7 @@ public class FhirPersistentStore {
         try{
             return (Object[]) entityManager
                     .createNativeQuery(sqlQuery)
-                    .setParameter("patientId", Integer.valueOf(id))
+                    .setParameter(PATIENTID, Integer.valueOf(id))
                     .getSingleResult();
         }
         catch(NoResultException ex){
