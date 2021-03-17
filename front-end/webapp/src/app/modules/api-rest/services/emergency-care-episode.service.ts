@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ECAdministrativeDto, ECPediatricDto, ECAdultGynecologicalDto, ResponseEmergencyCareDto, EmergencyCareListDto } from '@api-rest/api-model';
+import { ECAdministrativeDto, ECPediatricDto, ECAdultGynecologicalDto, ResponseEmergencyCareDto, EmergencyCareListDto, DateTimeDto } from '@api-rest/api-model';
 import { environment } from '@environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { ContextService } from '@core/services/context.service';
@@ -56,4 +56,9 @@ export class EmergencyCareEpisodeService {
 		return this.http.get<ResponseEmergencyCareDto>(url);
 	}
 
+	getCreationDate(episodeId: number): Observable<DateTimeDto> {
+		const url = `${environment.apiBase + BASIC_URL_PREFIX}/${this.contextService.institutionId +
+			BASIC_URL_SUFIX}/episodes/` + episodeId + '/creation-date';
+		return this.http.get<DateTimeDto>(url);
+	}
 }

@@ -14,6 +14,8 @@ import net.pladema.emergencycare.controller.dto.EmergencyCareListDto;
 import net.pladema.emergencycare.controller.mapper.EmergencyCareMapper;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
+import net.pladema.sgx.dates.configuration.LocalDateMapper;
+import net.pladema.sgx.dates.controller.dto.DateTimeDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -52,12 +55,14 @@ public class EmergencyCareEpisodeController {
 
     private final VitalSignMapper vitalSignMapper;
 
+    private final LocalDateMapper localDateMapper;
+
     public EmergencyCareEpisodeController(EmergencyCareEpisodeService emergencyCareEpisodeService,
                                           EmergencyCareMapper emergencyCareMapper,
                                           ReasonExternalService reasonExternalService,
                                           VitalSignExternalService vitalSignExternalService,
                                           SnomedMapper snomedMapper,
-                                          VitalSignMapper vitalSignMapper){
+                                          VitalSignMapper vitalSignMapper, LocalDateMapper localDateMapper){
         super();
         this.emergencyCareEpisodeService = emergencyCareEpisodeService;
         this.emergencyCareMapper=emergencyCareMapper;
@@ -65,6 +70,7 @@ public class EmergencyCareEpisodeController {
         this.vitalSignExternalService = vitalSignExternalService;
         this.snomedMapper = snomedMapper;
         this.vitalSignMapper = vitalSignMapper;
+        this.localDateMapper = localDateMapper;
     }
 
     @GetMapping
@@ -138,6 +144,18 @@ public class EmergencyCareEpisodeController {
         Integer result = newEmergencyCare.getId();
         LOG.debug("Output -> {}", result);
         return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/{episodeId}/creation-date")
+    @PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+    public ResponseEntity<DateTimeDto> getCreationDate(@PathVariable(name = "institutionId") Integer institutionId,
+                                                       @PathVariable(name = "episodeId") Integer episodeId) {
+        LOG.debug("Get episode creation date -> institutionId {}, episodeId {}", institutionId, episodeId);
+        EmergencyCareBo emergencyCareBo = emergencyCareEpisodeService.get(episodeId,institutionId);
+        LocalDateTime creationDate = emergencyCareBo.getCreatedOn();
+        DateTimeDto output = localDateMapper.toDateTimeDto(creationDate);
+        LOG.debug("Output -> {}", output);
+        return ResponseEntity.ok().body(output);
     }
 
     private List<Integer> getVitalSignIds(NewVitalSignsObservationDto vitalSignsObservationDto){

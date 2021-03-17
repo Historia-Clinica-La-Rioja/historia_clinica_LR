@@ -161,7 +161,7 @@
 				"form": {
 					"DATE": "Fecha",
 					"TIME":"Hora",
-					"INVALID_DATE":"La fecha no debe ser una fecha pasada",
+					"INVALID_DATE": "La fecha ingresada debe estar dentro del rango establecido por el calendario",
 					"AUTOPSY": "Autopsia autorizada",
 					"DISCHARGE_TYPE": "Tipo de egreso"
 				},

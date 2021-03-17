@@ -12,6 +12,8 @@ import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeStateService;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
 import net.pladema.emergencycare.service.domain.EpisodeDischargeBo;
+import net.pladema.emergencycare.service.domain.MedicalDischargeBo;
+import net.pladema.establishment.controller.service.InstitutionExternalService;
 import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.sgx.exceptions.NotFoundException;
@@ -23,6 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.time.ZoneId;
 import java.util.stream.Collectors;
 
 @RestController
@@ -38,6 +41,7 @@ public class EmergencyCareEpisodeMedicalDischargeController {
     private final PatientExternalService patientExternalService;
     private final EmergencyCareEpisodeService emergencyCareEpisodeService;
     private final EmergencyCareEpisodeStateService emergencyCareEpisodeStateService;
+    private final InstitutionExternalService institutionExternalService;
 
     EmergencyCareEpisodeMedicalDischargeController(
             EmergencyCareEpisodeDischargeService emergencyCareEpisodeDischargeService,
@@ -45,14 +49,15 @@ public class EmergencyCareEpisodeMedicalDischargeController {
             HealthcareProfessionalExternalService healthcareProfessionalExternalService,
             PatientExternalService patientExternalService,
             EmergencyCareEpisodeService emergencyCareEpisodeService,
-            EmergencyCareEpisodeStateService emergencyCareEpisodeStateService
-    ) {
+            EmergencyCareEpisodeStateService emergencyCareEpisodeStateService,
+            InstitutionExternalService institutionExternalService) {
         this.emergencyCareEpisodeDischargeService = emergencyCareEpisodeDischargeService;
         this.emergencyCareDischargeMapper = emergencyCareDischargeMapper;
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.patientExternalService = patientExternalService;
         this.emergencyCareEpisodeService = emergencyCareEpisodeService;
         this.emergencyCareEpisodeStateService = emergencyCareEpisodeStateService;
+        this.institutionExternalService = institutionExternalService;
     }
 
     @Transactional
@@ -72,7 +77,9 @@ public class EmergencyCareEpisodeMedicalDischargeController {
         Integer patientId = emergencyCareBo.getPatient().getId();
         BasicPatientDto patientDto = patientExternalService.getBasicDataFromPatient(patientId);
         PatientInfoBo patientInfo =  new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge());
-        boolean saved = emergencyCareEpisodeDischargeService.newMedicalDischarge(emergencyCareDischargeMapper.toMedicalDischargeBo(medicalDischargeDto,medicalDischargeBy,patientInfo, episodeId));
+        ZoneId institutionZoneId = institutionExternalService.getTimezone(institutionId);
+        MedicalDischargeBo medicalDischargeBo = emergencyCareDischargeMapper.toMedicalDischargeBo(medicalDischargeDto,medicalDischargeBy,patientInfo, episodeId);
+        boolean saved = emergencyCareEpisodeDischargeService.newMedicalDischarge(medicalDischargeBo, institutionZoneId, institutionId);
         emergencyCareEpisodeStateService.changeState(episodeId, institutionId, EmergencyCareState.CON_ALTA_MEDICA, null);
         LOG.debug("Output -> {}", saved);
         return ResponseEntity.ok().body(saved);

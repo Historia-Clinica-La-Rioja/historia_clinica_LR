@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 /**
  * Class to mock date in unit test
@@ -27,5 +28,14 @@ public class DateTimeProvider {
         LocalDate result = LocalDate.now();
         LOG.debug(OUTPUT, result);
         return result;
+    }
+
+    public LocalDateTime nowDateTimeWithZone(ZoneId zoneId) {
+        LocalDateTime localDateTime = LocalDateTime.now()
+                .atZone(ZoneId.of(JacksonDateFormatConfig.UTC_ZONE_ID))
+                .withZoneSameInstant(zoneId)
+                .toLocalDateTime();
+        LOG.debug(OUTPUT, localDateTime);
+        return localDateTime;
     }
 }

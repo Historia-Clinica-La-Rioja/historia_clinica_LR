@@ -5,10 +5,10 @@
 
 		<div fxLayout="row" fxLayoutGap="5px" formGroupName="dateTime">
 			<mat-form-field appearance="outline">
-				<input formControlName="date" id="date" matInput [matDatepicker]="initPicker" [min]="today"
+				<input formControlName="date" id="date" matInput [matDatepicker]="datePicker" [min]="episodeCreatedOn" [max]="today"
 					placeholder="{{'guardia.episode.medical_discharge.form.DATE' | translate}}">
-				<mat-datepicker-toggle matSuffix [for]="initPicker"></mat-datepicker-toggle>
-				<mat-datepicker #initPicker></mat-datepicker>
+				<mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+				<mat-datepicker #datePicker></mat-datepicker>
 				<mat-error *ngIf="hasError(form.get('dateTime'), 'required', 'date') else invalidDate" translate="forms.REQUIRED"></mat-error>
 				<ng-template #invalidDate>
 					<mat-error translate="guardia.episode.medical_discharge.form.INVALID_DATE"></mat-error>
@@ -24,6 +24,8 @@
 				</mat-error>
 				<mat-error *ngIf="hasError(form.get('dateTime'), 'required', 'time')" translate="forms.REQUIRED">
 				</mat-error>
+				<mat-error *ngIf="hasError(form.get('dateTime'), 'futureTime', 'time')" translate="forms.MAX_TIME_ERROR"></mat-error>
+				<mat-error *ngIf="hasError(form.get('dateTime'), 'beforeTime', 'time')">La hora debe ser posterior a la de creacion del episodio</mat-error>
 			</mat-form-field>
 		</div>
 

@@ -1,13 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AMedicalDischargeDto, DiagnosisDto, MasterDataInterface } from '@api-rest/api-model';
+import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { DischargeTypes } from '@api-rest/masterdata';
 import { EmergencyCareEpisodeMedicalDischargeService } from '@api-rest/services/emergency-care-episode-medical-discharge.service';
+import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
 import { ContextService } from '@core/services/context.service';
 import { sortBy } from '@core/utils/array.utils';
-import { hasError, TIME_PATTERN } from '@core/utils/form.utils';
+import { futureTimeValidation, hasError, beforeTimeValidation, TIME_PATTERN } from '@core/utils/form.utils';
+import { DateFormat, dateToMoment, momentFormat, newMoment } from '@core/utils/moment.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Moment } from 'moment';
 import { Observable } from 'rxjs';
@@ -32,6 +35,7 @@ export class MedicalDischargeComponent implements OnInit {
 
 	problemasService: ProblemasService;
 	today = new Date();
+	episodeCreatedOn: Moment;
 	formSubmited = false;
 	private episodeId: number;
 
@@ -45,6 +49,7 @@ export class MedicalDischargeComponent implements OnInit {
 		private readonly emergencyCareMasterDataService: EmergencyCareMasterDataService,
 		private readonly snomedService: SnomedService,
 		private readonly snackBarService: SnackBarService,
+		private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService,
 
 	) {
 		this.problemasService = new ProblemasService(formBuilder, this.snomedService);
@@ -53,8 +58,8 @@ export class MedicalDischargeComponent implements OnInit {
 	ngOnInit(): void {
 		this.form = this.formBuilder.group({
 			dateTime: this.formBuilder.group({
-				date: [null, Validators.required],
-				time: [null, Validators.required],
+				date: [newMoment(), Validators.required],
+				time: [momentFormat(newMoment(), DateFormat.HOUR_MINUTE)]
 			}),
 			autopsy: [null],
 			dischargeTypeId: [DischargeTypes.ALTA_MEDICA, Validators.required]
@@ -62,8 +67,14 @@ export class MedicalDischargeComponent implements OnInit {
 
 		this.route.paramMap.subscribe(params => {
 			this.episodeId = Number(params.get('id'));
-		});
+			const episodeCreatedOn$ = this.emergencyCareEpisodeService.getCreationDate(this.episodeId)
+				.pipe(map(dateTimeDtoToDate), map(dateToMoment));
 
+			episodeCreatedOn$.subscribe(episodeCreatedOn => {
+				this.episodeCreatedOn = episodeCreatedOn;
+				this.setDateTimeValidation(episodeCreatedOn);
+			});
+		});
 		const sortByDescription = sortBy('description');
 		this.dischargeTypes$ = this.emergencyCareMasterDataService.getDischargeType()
 			.pipe(
@@ -93,6 +104,42 @@ export class MedicalDischargeComponent implements OnInit {
 		this.router.navigateByUrl(`institucion/${this.contextService.institutionId}/guardia/episodio/${this.episodeId}`);
 	}
 
+	private setDateTimeValidation(episodeCreatedOn: Moment): void {
+		const dateControl: FormGroup = (this.form.controls.dateTime) as FormGroup;
+		const timeControl: AbstractControl = dateControl.controls.time;
+		timeControl.setValidators([Validators.required, beforeTimeValidation(episodeCreatedOn),
+			futureTimeValidation, Validators.pattern(TIME_PATTERN)]);
+
+		this.form.get('dateTime.date').valueChanges.subscribe(
+			(selectedDate: Moment) => {
+				timeControl.clearValidators();
+				requiredAndPatternValidation();
+				if (newMoment().isSame(selectedDate, 'day')) {
+					beforeTodayValidation();
+				}
+				if (episodeCreatedOn.isSame(selectedDate, 'day')) {
+					afterEpisodeCreationValidation();
+				}
+
+				function requiredAndPatternValidation(): void {
+					timeControl.setValidators([Validators.required, Validators.pattern(TIME_PATTERN)]);
+					timeControl.updateValueAndValidity();
+				}
+
+				function beforeTodayValidation(): void {
+					const existingValidators = timeControl.validator;
+					timeControl.setValidators([existingValidators, futureTimeValidation]);
+					timeControl.updateValueAndValidity();
+				}
+
+				function afterEpisodeCreationValidation(): void {
+					const existingValidators = timeControl.validator;
+					timeControl.setValidators([existingValidators, beforeTimeValidation(episodeCreatedOn)]);
+					timeControl.updateValueAndValidity();
+				}
+			}
+		);
+	}
 }
 
 export class MedicalDischargeForm {
