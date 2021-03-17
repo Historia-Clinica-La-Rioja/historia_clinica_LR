@@ -27,9 +27,9 @@ const validateInstitutionRequired = (values, entity) => {
         if(roleAndInstitution) {
             let error = {};
             let isAdmin = (authProvider.getRole(roleAndInstitution.roleId) === 'ROOT' ||
-                                   authProvider.getRole(roleAndInstitution.roleId) === 'ADMINISTRADOR');
+                                authProvider.getRole(roleAndInstitution.roleId) === 'ADMINISTRADOR');
 
-            if(!isAdmin && !roleAndInstitution.institutionId) {
+            if(!isAdmin && roleAndInstitution.institutionId === -1) {
                 error.institutionId = 'La institucion es requerida';
             }
 
@@ -50,7 +50,7 @@ const UserEdit = props => (
             <BooleanInput source="enable" validate={[required()]}/>
             <SgxDateField source="lastLogin" showTime/>
             <ArrayInput source="roles" validate={validateInstitutionRequired}>
-                <SimpleFormIterator >
+                <SimpleFormIterator>
                     <ReferenceInput source="roleId" reference="roles" validate={[required()]}>
                         <SelectInput optionText="description" optionValue="id"/>
                     </ReferenceInput>
