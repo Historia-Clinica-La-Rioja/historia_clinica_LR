@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Observable} from 'rxjs';
 import {HCEAllergyDto, HCEAnthropometricDataDto, HCELast2VitalSignsDto, HCEMedicationDto, HCEPersonalHistoryDto} from '@api-rest/api-model';
 import {ANTECEDENTES_FAMILIARES, PROBLEMAS_ANTECEDENTES} from '../../../historia-clinica/constants/summaries';
-import {PatientHceService} from '@api-rest/services/patient-hce.service';
+import {PatientPortalService} from '@api-rest/services/patient-portal.service';
 
 @Component({
   selector: 'app-resumen-historia-clinica',
@@ -21,18 +21,16 @@ export class ResumenHistoriaClinicaComponent implements OnInit {
 	public anthropometricData$: Observable<HCEAnthropometricDataDto>;
 
   	constructor(
-		private readonly patientHceService: PatientHceService,
+		private readonly patientPortalService: PatientPortalService,
 	) { }
 
   	ngOnInit(): void {
-  		this.personalHistory$ = this.patientHceService.getPersonalHistories();
-  		this.familyHistories$ = this.patientHceService.getFamilyHistories();
-  		this.medications$ = this.patientHceService.getMedications();
-  		this.allergies$ = this.patientHceService.getAllergies();
-  		this.anthropometricData$ = this.patientHceService.getAnthropometricData();
-  		this.vitalSigns$ = this.patientHceService.getVitalSigns();
+  		this.personalHistory$ = this.patientPortalService.getPersonalHistories();
+  		this.familyHistories$ = this.patientPortalService.getFamilyHistories();
+  		this.medications$ = this.patientPortalService.getMedications();
+  		this.allergies$ = this.patientPortalService.getAllergies();
+  		this.anthropometricData$ = this.patientPortalService.getAnthropometricData();
+  		this.vitalSigns$ = this.patientPortalService.getVitalSigns();
   	}
-
-
 
 }
