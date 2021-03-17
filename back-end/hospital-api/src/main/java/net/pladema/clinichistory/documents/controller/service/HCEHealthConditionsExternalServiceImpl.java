@@ -37,20 +37,12 @@ public class HCEHealthConditionsExternalServiceImpl implements HCEHealthConditio
 	}
 
 	@Override
-	public List<HCEPersonalHistoryDto> getActiveProblems(Integer patientId) {
+	public List<HCEPersonalHistoryDto> getActivePersonalHistories(Integer patientId) {
 		LOG.debug(LOGGING_INPUT, patientId);
-		List<HCEPersonalHistoryBo> resultService = hceHealthConditionsService.getActiveProblems(patientId);
+		List<HCEPersonalHistoryBo> resultService = hceHealthConditionsService.getActivePersonalHistories(patientId);
 		List<HCEPersonalHistoryDto> result = hceGeneralStateMapper.toListHCEPersonalHistoryDto(resultService);
 		LOG.debug(LOGGING_OUTPUT, result);
 		return result;
 	}
 
-	@Override
-	public List<HCEPersonalHistoryDto> getChronicConditions(Integer patientId) {
-		LOG.debug(LOGGING_INPUT, patientId);
-		List<HCEPersonalHistoryBo> resultService= hceHealthConditionsService.getChronicConditions(patientId);
-		List<HCEPersonalHistoryDto> result = hceGeneralStateMapper.toListHCEPersonalHistoryDto(resultService);
-		LOG.debug(LOGGING_OUTPUT, result);
-		return result;
-	}
 }

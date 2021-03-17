@@ -27,4 +27,13 @@ public class PatientPortalServiceImpl implements PatientPortalService{
 		return patientId;
 	}
 
+	@Override
+	public Integer getPersonId() {
+		Integer userId = SecurityContextUtils.getUserDetails().userId;
+		Integer personId = patientRepository.getPersonIdByUser(userId).orElseThrow(
+				() -> new NotFoundException("Person-not-found", "Person not found"));
+		LOG.debug("Output -> {}", personId);
+		return personId;
+	}
+
 }

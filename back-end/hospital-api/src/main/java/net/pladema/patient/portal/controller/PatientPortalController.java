@@ -11,6 +11,8 @@ import net.pladema.clinichistory.documents.controller.service.HCEClinicalObserva
 import net.pladema.clinichistory.documents.controller.service.HCEHealthConditionsExternalService;
 import net.pladema.clinichistory.documents.controller.service.HCEMedicationExternalService;
 import net.pladema.patient.portal.service.PatientPortalService;
+import net.pladema.person.controller.dto.PersonalInformationDto;
+import net.pladema.person.controller.service.PersonExternalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/patient/{patientId}/portal")
+@RequestMapping("/patientportal")
 @Api(value = "Patient Portal", tags = { "Patient Portal" })
 @Validated
 public class PatientPortalController {
@@ -41,13 +43,16 @@ public class PatientPortalController {
 
 	private final PatientPortalService patientPortalService;
 
+	private final PersonExternalService personExternalService;
+
 	public PatientPortalController(HCEHealthConditionsExternalService hceHealthConditionsExternalService, HCEMedicationExternalService hceMedicationExternalService,
-								   HCEAllergyExternalService hceAllergyExternalService, HCEClinicalObservationExternalService hceClinicalObservationExternalService, PatientPortalService patientPortalService){
+								   HCEAllergyExternalService hceAllergyExternalService, HCEClinicalObservationExternalService hceClinicalObservationExternalService, PatientPortalService patientPortalService, PersonExternalService personExternalService){
 		this.hceHealthConditionsExternalService = hceHealthConditionsExternalService;
 		this.hceMedicationExternalService = hceMedicationExternalService;
 		this.hceAllergyExternalService = hceAllergyExternalService;
 		this.hceClinicalObservationExternalService = hceClinicalObservationExternalService;
 		this.patientPortalService = patientPortalService;
+		this.personExternalService = personExternalService;
 	}
 
 	@GetMapping("/medications")
@@ -90,19 +95,19 @@ public class PatientPortalController {
 		return ResponseEntity.ok().body(result);
 	}
 
-	@GetMapping("/activeProblems")
-	public ResponseEntity<List<HCEPersonalHistoryDto>> getActiveProblems(){
+	@GetMapping("/personalHistories")
+	public ResponseEntity<List<HCEPersonalHistoryDto>> getPersonalHistories(){
 		Integer patientId = patientPortalService.getPatientId();
-		List<HCEPersonalHistoryDto> result = hceHealthConditionsExternalService.getActiveProblems(patientId);
+		List<HCEPersonalHistoryDto> result = hceHealthConditionsExternalService.getActivePersonalHistories(patientId);
 		LOG.debug(LOGGING_OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}
 
-	@GetMapping("/chronic")
-	public ResponseEntity<List<HCEPersonalHistoryDto>> getChronicConditions(){
-		Integer patientId = patientPortalService.getPatientId();
-		List<HCEPersonalHistoryDto> result = hceHealthConditionsExternalService.getChronicConditions(patientId);
+	@GetMapping("/personalInformation")
+	public ResponseEntity<PersonalInformationDto> getPersonalInformation(){
+		Integer personId = patientPortalService.getPersonId();
+		PersonalInformationDto result = personExternalService.getPersonalInformation(personId);
 		LOG.debug(LOGGING_OUTPUT, result);
-		return ResponseEntity.ok().body(result);
+		return  ResponseEntity.ok().body(result);
 	}
 }

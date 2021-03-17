@@ -29,4 +29,9 @@ public interface PatientRepository extends JpaRepository<Patient, Integer>, Pati
 			"LEFT JOIN Patient p ON (p.personId = u.personId) " +
 			"WHERE u.id = :userId")
 	public Optional<Integer> getPatientIdByUser(@Param("userId") Integer userId);
+
+	@Query(value = " SELECT u.personId " +
+			"FROM User u " +
+			"WHERE u.id = :userId")
+	public Optional<Integer> getPersonIdByUser(@Param("userId") Integer userId);
 }

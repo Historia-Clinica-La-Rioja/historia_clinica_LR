@@ -8,7 +8,5 @@ public interface HCEHealthConditionsExternalService {
 
 	List<HCEPersonalHistoryDto> getFamilyHistories(Integer patientId);
 
-	List<HCEPersonalHistoryDto> getActiveProblems(Integer patientId);
-
-	List<HCEPersonalHistoryDto> getChronicConditions(Integer patientId);
+	List<HCEPersonalHistoryDto> getActivePersonalHistories(Integer patientId);
 }
