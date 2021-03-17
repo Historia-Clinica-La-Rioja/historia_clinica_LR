@@ -14,7 +14,7 @@ import { DateFormat, dateToMoment, momentFormat, newMoment } from '@core/utils/m
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Moment } from 'moment';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/internal/operators/map';
+import { map } from 'rxjs/operators';
 import { GuardiaMapperService } from '../../services/guardia-mapper.service';
 
 @Component({

@@ -48,6 +48,8 @@ export const momentFormat = (momentDate: Moment, format?: DateFormat): string =>
 
 export const momentParse = (dateString: string, format: DateFormat): Moment => moment(dateString, format);
 
+export const isMoment = (date: any): boolean => moment.isMoment(date);
+
 export const buildFullDate = (time: string, date: Moment): Moment => {
 	const timeMoment: Moment = momentParseTime(time);
 	const output = date.clone();

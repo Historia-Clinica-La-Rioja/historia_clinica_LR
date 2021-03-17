@@ -17,6 +17,11 @@
 				"build": {
 					"builder": "@angular-devkit/build-angular:browser",
 					"options": {
+						"allowedCommonJsDependencies": [
+							"angular-calendar",
+							"file-saver",
+							"@mattlewis92/dom-autoscroller"
+						],
 						"outputPath": "dist/sgh",
 						"index": "src/index.html",
 						"main": "src/main.ts",
@@ -46,7 +51,6 @@
 							"optimization": true,
 							"outputHashing": "all",
 							"sourceMap": false,
-							"extractCss": true,
 							"namedChunks": false,
 							"extractLicenses": true,
 							"vendorChunk": false,

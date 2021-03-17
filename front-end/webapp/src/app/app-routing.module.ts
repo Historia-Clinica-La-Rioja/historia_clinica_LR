@@ -23,10 +23,11 @@ const routes: Routes = [
 
 @NgModule({
 	imports: [RouterModule.forRoot(routes, {
-		// habilitar log de routeos en consola
-		// enableTracing: true,
-		scrollPositionRestoration: 'enabled'
-	})],
+	// habilitar log de routeos en consola
+	// enableTracing: true,
+	scrollPositionRestoration: 'enabled',
+	relativeLinkResolution: 'legacy'
+})],
 	exports: [RouterModule]
 })
 export class AppRoutingModule {

@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { VitalSign } from '@presentation/components/signo-vital-current/signo-vital.component';
+import { isMoment } from '@core/utils/moment.utils';
 
 @Component({
 	selector: 'app-signo-vital-current-previous',
@@ -13,6 +14,10 @@ export class SignoVitalCurrentPreviousComponent implements OnInit {
 	constructor() { }
 
 	ngOnInit(): void { }
+
+	getDate(effectiveTime): Date {
+		return (isMoment(effectiveTime)) ? effectiveTime.toDate() : effectiveTime;
+	}
 
 }
 

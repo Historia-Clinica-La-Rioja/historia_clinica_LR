@@ -5,7 +5,7 @@
 			<span class="mat-caption">Anterior</span>
 			<div class="flex-row">
 				<mat-icon *ngIf="vitalSign.previousValue?.effectiveTime" inline color="accent"
-						  matTooltip="{{ vitalSign.previousValue.effectiveTime | date: 'dd/MM/yy - HH:mm' }} hs">
+						  matTooltip="{{ getDate(vitalSign.previousValue.effectiveTime) | date: 'dd/MM/yy - HH:mm' }} hs">
 					access_time
 				</mat-icon>
 				<span class="mat-body-1">
