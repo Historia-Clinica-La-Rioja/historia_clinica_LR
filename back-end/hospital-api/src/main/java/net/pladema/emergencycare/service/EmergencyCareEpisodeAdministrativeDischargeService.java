@@ -6,7 +6,7 @@ import java.time.ZoneId;
 
 public interface EmergencyCareEpisodeAdministrativeDischargeService {
 
-    boolean newAdministrativeDischarge(AdministrativeDischargeBo administrativeDischargeBo, Integer institutionId);
+    boolean newAdministrativeDischarge(AdministrativeDischargeBo administrativeDischargeBo, Integer institutionId, ZoneId institutionZoneId);
 
     boolean newAdministrativeDischargeByAbsence(Integer episodeId, Integer institutionId, Integer userdId, ZoneId institutionZoneId);
 }

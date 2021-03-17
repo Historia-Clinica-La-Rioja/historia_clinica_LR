@@ -1,17 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AdministrativeDischargeDto, MasterDataInterface, VMedicalDischargeDto } from '@api-rest/api-model';
+import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { EmergencyCareEntranceType } from '@api-rest/masterdata';
 import { EmergencyCareEpisodeAdministrativeDischargeService } from '@api-rest/services/emergency-care-episode-administrative-service.service';
 import { EmergencyCareEpisodeMedicalDischargeService } from '@api-rest/services/emergency-care-episode-medical-discharge.service';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
 import { AMBULANCE } from '@core/constants/validation-constants';
 import { ContextService } from '@core/services/context.service';
-import { hasError, TIME_PATTERN } from '@core/utils/form.utils';
+import { futureTimeValidation, hasError, beforeTimeValidation, TIME_PATTERN } from '@core/utils/form.utils';
+import { DateFormat, dateToMoment, momentFormat, newMoment } from '@core/utils/moment.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Moment } from 'moment';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/internal/operators/map';
 import { GuardiaMapperService } from '../../services/guardia-mapper.service';
 
 @Component({
@@ -29,6 +32,8 @@ export class AdministrativeDischargeComponent implements OnInit {
 	form: FormGroup;
 	hospitalTransports$: Observable<MasterDataInterface<number>[]>;
 	administrativeDischarge$: Observable<VMedicalDischargeDto>;
+	medicalDischargeOn: Moment;
+	today = newMoment();
 
 	private episodeId: number;
 	constructor(
@@ -49,8 +54,8 @@ export class AdministrativeDischargeComponent implements OnInit {
 
 		this.form = this.formBuilder.group({
 			dateTime: this.formBuilder.group({
-				date: [null, Validators.required],
-				time: [null, Validators.required],
+				date: [newMoment(), Validators.required],
+				time: [momentFormat(newMoment(), DateFormat.HOUR_MINUTE)],
 			}),
 			hospitalTransportId: [null],
 			ambulanceCompanyId: [null, Validators.maxLength(AMBULANCE.COMPANY_ID.max_length)]
@@ -59,7 +64,14 @@ export class AdministrativeDischargeComponent implements OnInit {
 		this.route.paramMap.subscribe(params => {
 			this.episodeId = Number(params.get('id'));
 			this.administrativeDischarge$ = this.emergencyCareEspisodeMedicalDischargeService.getMedicalDischarge(this.episodeId);
+			const medicalDischargeOn$ = this.administrativeDischarge$.pipe(map(s => dateTimeDtoToDate(s.medicalDischargeOn)), map(dateToMoment));
+			medicalDischargeOn$.subscribe(medicalDischargeOn => {
+				this.medicalDischargeOn = medicalDischargeOn;
+				this.setDateTimeValidation(medicalDischargeOn);
+			});
+
 		});
+
 
 	}
 
@@ -70,13 +82,51 @@ export class AdministrativeDischargeComponent implements OnInit {
 				saved => {
 					this.snackBarService.showSuccess('guardia.episode.administrative_discharge.messages.SUCCESS');
 					this.router.navigateByUrl(`institucion/${this.contextService.institutionId}/guardia`);
-				}, _ => this.snackBarService.showError('guardia.episode.administrative_discharge.messages.ERROR')
+				}, error => error?.text ? this.snackBarService.showError(error.text)
+					: this.snackBarService.showError('guardia.episode.administrative_discharge.messages.ERROR')
 			);
 		}
 	}
 
 	goToEpisodeDetails(): void {
 		this.router.navigateByUrl(`institucion/${this.contextService.institutionId}/guardia/episodio/${this.episodeId}`);
+	}
+
+	private setDateTimeValidation(medicalDischargeOn: Moment): void {
+		const dateControl: FormGroup = (this.form.controls.dateTime) as FormGroup;
+		const timeControl: AbstractControl = dateControl.controls.time;
+		timeControl.setValidators([Validators.required, beforeTimeValidation(medicalDischargeOn),
+			futureTimeValidation, Validators.pattern(TIME_PATTERN)]);
+
+		this.form.get('dateTime.date').valueChanges.subscribe(
+			(selectedDate: Moment) => {
+				timeControl.clearValidators();
+				requiredAndPatternValidation();
+				if (newMoment().isSame(selectedDate, 'day')) {
+					beforeTodayValidation();
+				}
+				if (medicalDischargeOn.isSame(selectedDate, 'day')) {
+					afterEpisodeCreationValidation();
+				}
+
+				function requiredAndPatternValidation(): void {
+					timeControl.setValidators([Validators.required, Validators.pattern(TIME_PATTERN)]);
+					timeControl.updateValueAndValidity();
+				}
+
+				function beforeTodayValidation(): void {
+					const existingValidators = timeControl.validator;
+					timeControl.setValidators([existingValidators, futureTimeValidation]);
+					timeControl.updateValueAndValidity();
+				}
+
+				function afterEpisodeCreationValidation(): void {
+					const existingValidators = timeControl.validator;
+					timeControl.setValidators([existingValidators, beforeTimeValidation(medicalDischargeOn)]);
+					timeControl.updateValueAndValidity();
+				}
+			}
+		);
 	}
 
 }

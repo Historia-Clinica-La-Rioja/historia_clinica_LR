@@ -143,7 +143,8 @@
 					"TITLE": "Formulario de alta administrativa",
 					"DATE": "Fecha",
 					"TIME":"Hora",
-					"AMBULANCE_COMPANY_ID":"ID Compañia ambulancia"
+					"AMBULANCE_COMPANY_ID":"ID Compañia ambulancia",
+					"TIME_LIMIT": "La hora debe ser posterior a la del alta medica"
 				},
 				"messages": {
 					"SUCCESS":"El alta administrativa se guardó exitosamente",

@@ -39,11 +39,10 @@ public class EmergencyCareEpisodeAdministrativeDischargeController {
             @PathVariable(name = "episodeId") Integer episodeId,
             @RequestBody AdministrativeDischargeDto administrativeDischargeDto) {
         LOG.debug("New administrative discharge -> episodeId {}, institutionId {}, administrativeDischargeDto {}", episodeId, institutionId, administrativeDischargeDto);
-
         Integer userId = UserInfo.getCurrentAuditor();
-
         AdministrativeDischargeBo administrativeDischargeBo = emergencyCareDischargeMapper.toAdministrativeDischargeBo(administrativeDischargeDto, episodeId, userId);
-        boolean saved = emergencyCareEpisodeAdministrativeDischargeService.newAdministrativeDischarge(administrativeDischargeBo, institutionId);
+        ZoneId institutionZoneId = institutionExternalService.getTimezone(institutionId);
+        boolean saved = emergencyCareEpisodeAdministrativeDischargeService.newAdministrativeDischarge(administrativeDischargeBo, institutionId, institutionZoneId);
         LOG.debug("Output -> {}", saved);
         return ResponseEntity.ok().body(saved);
     }

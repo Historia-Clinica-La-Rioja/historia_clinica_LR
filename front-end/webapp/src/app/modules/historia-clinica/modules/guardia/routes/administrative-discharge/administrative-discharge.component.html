@@ -45,10 +45,10 @@
 		<div fxLayout="row" fxLayoutGap="5px" formGroupName="dateTime">
 			<mat-form-field appearance="outline">
 				<input formControlName="date" id="date" matInput [matDatepicker]="initPicker"
-					placeholder="{{'guardia.episode.administrative_discharge.form.DATE' | translate}}">
+					placeholder="{{'guardia.episode.administrative_discharge.form.DATE' | translate}}" [min]="medicalDischargeOn" [max]="today">
 				<mat-datepicker-toggle matSuffix [for]="initPicker"></mat-datepicker-toggle>
 				<mat-datepicker #initPicker></mat-datepicker>
-				<mat-error translate="forms.REQUIRED"></mat-error>
+				<mat-error *ngIf="hasError(form.get('dateTime'), 'required', 'time')" translate="forms.REQUIRED"></mat-error>
 			</mat-form-field>
 
 
@@ -56,7 +56,9 @@
 				<input matInput id="time" type="text" formControlName="time" pattern="{{TIME_PATTERN}}"
 					placeholder="{{'guardia.episode.administrative_discharge.form.TIME' | translate}}">
 				<mat-error *ngIf="hasError(form.get('dateTime'), 'pattern', 'time')" translate="forms.TIME_FORMAT"></mat-error>
-					<mat-error *ngIf="hasError(form.get('dateTime'), 'required', 'time')" translate="forms.REQUIRED"></mat-error>
+				<mat-error *ngIf="hasError(form.get('dateTime'), 'required', 'time')" translate="forms.REQUIRED"></mat-error>
+				<mat-error *ngIf="hasError(form.get('dateTime'), 'futureTime', 'time')" translate="forms.MAX_TIME_ERROR"></mat-error>
+				<mat-error *ngIf="hasError(form.get('dateTime'), 'beforeTime', 'time')" translate="guardia.episode.administrative_discharge.form.TIME_LIMIT"></mat-error>
 			</mat-form-field>
 		</div>
 
