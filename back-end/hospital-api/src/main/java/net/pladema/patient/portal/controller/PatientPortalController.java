@@ -13,6 +13,8 @@ import net.pladema.clinichistory.documents.controller.service.HCEMedicationExter
 import net.pladema.patient.controller.dto.AAdditionalDoctorDto;
 import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.dto.CompletePatientDto;
+import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
+import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
 import net.pladema.patient.portal.service.PatientPortalService;
 import net.pladema.patient.repository.PatientTypeRepository;
 import net.pladema.patient.repository.entity.Patient;
@@ -65,8 +67,18 @@ public class PatientPortalController {
 
 	private final PatientTypeRepository patientTypeRepository;
 
-	public PatientPortalController(HCEHealthConditionsExternalService hceHealthConditionsExternalService, HCEMedicationExternalService hceMedicationExternalService,
-								   HCEAllergyExternalService hceAllergyExternalService, HCEClinicalObservationExternalService hceClinicalObservationExternalService, PatientPortalService patientPortalService, PersonExternalService personExternalService, PatientService patientService, AdditionalDoctorService additionalDoctorService, PatientTypeRepository patientTypeRepository){
+	private final PatientExternalMedicalCoverageService patientExternalMedicalCoverageService;
+
+	public PatientPortalController(HCEHealthConditionsExternalService hceHealthConditionsExternalService,
+								   HCEMedicationExternalService hceMedicationExternalService,
+								   HCEAllergyExternalService hceAllergyExternalService,
+								   HCEClinicalObservationExternalService hceClinicalObservationExternalService,
+								   PatientPortalService patientPortalService,
+								   PersonExternalService personExternalService,
+								   PatientService patientService,
+								   AdditionalDoctorService additionalDoctorService,
+								   PatientTypeRepository patientTypeRepository,
+								   PatientExternalMedicalCoverageService patientExternalMedicalCoverageService){
 		this.hceHealthConditionsExternalService = hceHealthConditionsExternalService;
 		this.hceMedicationExternalService = hceMedicationExternalService;
 		this.hceAllergyExternalService = hceAllergyExternalService;
@@ -76,6 +88,7 @@ public class PatientPortalController {
 		this.patientService = patientService;
 		this.additionalDoctorService = additionalDoctorService;
 		this.patientTypeRepository = patientTypeRepository;
+		this.patientExternalMedicalCoverageService = patientExternalMedicalCoverageService;
 	}
 
 	@GetMapping("/medications")
@@ -168,6 +181,14 @@ public class PatientPortalController {
 						? new AAdditionalDoctorDto(doctorsBo.getGeneralPractitionerBo())
 						: null,
 				doctorsBo.getPamiDoctorBo() != null ? new AAdditionalDoctorDto(doctorsBo.getPamiDoctorBo()) : null);
+		LOG.debug(LOGGING_OUTPUT, result);
+		return ResponseEntity.ok().body(result);
+	}
+	
+	@GetMapping(value = "/coverages")
+	public ResponseEntity<List<PatientMedicalCoverageDto>> getActivePatientMedicalCoverages() {
+		Integer patientId = patientPortalService.getPatientId();
+		List<PatientMedicalCoverageDto> result = patientExternalMedicalCoverageService.getActivePrivateMedicalCoverages(patientId);
 		LOG.debug(LOGGING_OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}
