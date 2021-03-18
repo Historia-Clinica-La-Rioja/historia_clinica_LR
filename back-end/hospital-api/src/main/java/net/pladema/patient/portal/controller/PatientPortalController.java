@@ -168,7 +168,7 @@ public class PatientPortalController {
 		return ResponseEntity.ok().body(personPhotoDto);
 	}
 
-	@GetMapping("/{patientId}/completedata")
+	@GetMapping("/completedata")
 	public ResponseEntity<CompletePatientDto> getCompleteDataPatient() {
 		Integer patientId = patientPortalService.getPatientId();
 		Patient patient = patientService.getPatient(patientId)

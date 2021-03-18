@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {PersonalInformation} from '@presentation/components/personal-information/personal-information.component';
-import {CompletePatientDto, PatientMedicalCoverageDto, PersonalInformationDto, PersonPhotoDto} from '@api-rest/api-model';
+import {PatientMedicalCoverageDto, PersonPhotoDto} from '@api-rest/api-model';
 import {PatientBasicData} from '@presentation/components/patient-card/patient-card.component';
-import {PatientService} from '@api-rest/services/patient.service';
-import {PersonService} from '@api-rest/services/person.service';
 import {MapperService} from '@presentation/services/mapper.service';
-import {PatientMedicalCoverageService} from '@api-rest/services/patient-medical-coverage.service';
+import {PatientPortalService} from '@api-rest/services/patient-portal.service';
 
 @Component({
   selector: 'app-my-personal-data',
@@ -20,29 +18,24 @@ export class MyPersonalDataComponent implements OnInit {
 	public personPhoto: PersonPhotoDto;
 
   	constructor(
-		private readonly patientService: PatientService,
-		private readonly personService: PersonService,
+		private readonly patientPortalService: PatientPortalService,
 		private readonly mapperService: MapperService,
-		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 	) { }
 
   	ngOnInit(): void {
-
-		const patientId = 1;
-		this.patientService.getPatientCompleteData<CompletePatientDto>(patientId)
-			.subscribe(completeData => {
+		this.patientPortalService.getCompleteDataPatient().subscribe(completeData => {
 				this.patientBasicData = this.mapperService.toPatientBasicData(completeData);
-				this.personService.getPersonalInformation<PersonalInformationDto>(completeData.person.id)
+				this.patientPortalService.getPersonalInformation()
 					.subscribe(personInformationData => {
 						this.personalInformation =
 							this.mapperService.toPersonalInformationData(completeData, personInformationData);
 					});
 			});
 
-		this.patientMedicalCoverageService.getActivePatientMedicalCoverages(patientId)
+		this.patientPortalService.getActivePatientMedicalCoverages()
 			.subscribe(patientMedicalCoverageDto => this.patientMedicalCoverage = patientMedicalCoverageDto);
 
-		this.patientService.getPatientPhoto(patientId)
+		this.patientPortalService.getPatientPhoto()
 			.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto; });
   	}
 
