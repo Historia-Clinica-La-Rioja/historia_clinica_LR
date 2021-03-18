@@ -10,7 +10,11 @@ import net.pladema.clinichistory.documents.controller.service.HCEAllergyExternal
 import net.pladema.clinichistory.documents.controller.service.HCEClinicalObservationExternalService;
 import net.pladema.clinichistory.documents.controller.service.HCEHealthConditionsExternalService;
 import net.pladema.clinichistory.documents.controller.service.HCEMedicationExternalService;
+import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.portal.service.PatientPortalService;
+import net.pladema.patient.repository.entity.Patient;
+import net.pladema.patient.service.PatientService;
+import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.controller.dto.PersonalInformationDto;
 import net.pladema.person.controller.service.PersonExternalService;
 import org.slf4j.Logger;
@@ -21,6 +25,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @RestController
@@ -45,14 +50,17 @@ public class PatientPortalController {
 
 	private final PersonExternalService personExternalService;
 
+	private final PatientService patientService;
+
 	public PatientPortalController(HCEHealthConditionsExternalService hceHealthConditionsExternalService, HCEMedicationExternalService hceMedicationExternalService,
-								   HCEAllergyExternalService hceAllergyExternalService, HCEClinicalObservationExternalService hceClinicalObservationExternalService, PatientPortalService patientPortalService, PersonExternalService personExternalService){
+								   HCEAllergyExternalService hceAllergyExternalService, HCEClinicalObservationExternalService hceClinicalObservationExternalService, PatientPortalService patientPortalService, PersonExternalService personExternalService, PatientService patientService){
 		this.hceHealthConditionsExternalService = hceHealthConditionsExternalService;
 		this.hceMedicationExternalService = hceMedicationExternalService;
 		this.hceAllergyExternalService = hceAllergyExternalService;
 		this.hceClinicalObservationExternalService = hceClinicalObservationExternalService;
 		this.patientPortalService = patientPortalService;
 		this.personExternalService = personExternalService;
+		this.patientService = patientService;
 	}
 
 	@GetMapping("/medications")
@@ -109,5 +117,16 @@ public class PatientPortalController {
 		PersonalInformationDto result = personExternalService.getPersonalInformation(personId);
 		LOG.debug(LOGGING_OUTPUT, result);
 		return  ResponseEntity.ok().body(result);
+	}
+
+	@GetMapping("/basicdata")
+	public ResponseEntity<BasicPatientDto> getBasicDataPatient() {
+		Integer patientId = patientPortalService.getPatientId();
+		Patient patient = patientService.getPatient(patientId)
+				.orElseThrow(() -> new EntityNotFoundException("patient.invalid"));
+		BasicDataPersonDto personData = personExternalService.getBasicDataPerson(patient.getPersonId());
+		BasicPatientDto result = new BasicPatientDto(patient.getId(), personData, patient.getTypeId());
+		LOG.debug(LOGGING_OUTPUT, result);
+		return ResponseEntity.ok().body(result);
 	}
 }
