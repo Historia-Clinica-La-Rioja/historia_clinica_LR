@@ -10,10 +10,16 @@ import net.pladema.clinichistory.documents.controller.service.HCEAllergyExternal
 import net.pladema.clinichistory.documents.controller.service.HCEClinicalObservationExternalService;
 import net.pladema.clinichistory.documents.controller.service.HCEHealthConditionsExternalService;
 import net.pladema.clinichistory.documents.controller.service.HCEMedicationExternalService;
+import net.pladema.patient.controller.dto.AAdditionalDoctorDto;
 import net.pladema.patient.controller.dto.BasicPatientDto;
+import net.pladema.patient.controller.dto.CompletePatientDto;
 import net.pladema.patient.portal.service.PatientPortalService;
+import net.pladema.patient.repository.PatientTypeRepository;
 import net.pladema.patient.repository.entity.Patient;
+import net.pladema.patient.repository.entity.PatientType;
+import net.pladema.patient.service.AdditionalDoctorService;
 import net.pladema.patient.service.PatientService;
+import net.pladema.patient.service.domain.DoctorsBo;
 import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.controller.dto.PersonPhotoDto;
 import net.pladema.person.controller.dto.PersonalInformationDto;
@@ -23,7 +29,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -56,8 +61,12 @@ public class PatientPortalController {
 
 	private final PatientService patientService;
 
+	private final AdditionalDoctorService additionalDoctorService;
+
+	private final PatientTypeRepository patientTypeRepository;
+
 	public PatientPortalController(HCEHealthConditionsExternalService hceHealthConditionsExternalService, HCEMedicationExternalService hceMedicationExternalService,
-								   HCEAllergyExternalService hceAllergyExternalService, HCEClinicalObservationExternalService hceClinicalObservationExternalService, PatientPortalService patientPortalService, PersonExternalService personExternalService, PatientService patientService){
+								   HCEAllergyExternalService hceAllergyExternalService, HCEClinicalObservationExternalService hceClinicalObservationExternalService, PatientPortalService patientPortalService, PersonExternalService personExternalService, PatientService patientService, AdditionalDoctorService additionalDoctorService, PatientTypeRepository patientTypeRepository){
 		this.hceHealthConditionsExternalService = hceHealthConditionsExternalService;
 		this.hceMedicationExternalService = hceMedicationExternalService;
 		this.hceAllergyExternalService = hceAllergyExternalService;
@@ -65,6 +74,8 @@ public class PatientPortalController {
 		this.patientPortalService = patientPortalService;
 		this.personExternalService = personExternalService;
 		this.patientService = patientService;
+		this.additionalDoctorService = additionalDoctorService;
+		this.patientTypeRepository = patientTypeRepository;
 	}
 
 	@GetMapping("/medications")
@@ -142,5 +153,22 @@ public class PatientPortalController {
 		PersonPhotoDto personPhotoDto = personExternalService.getPersonPhoto(patient.getPersonId());
 		LOG.debug(LOGGING_OUTPUT, personPhotoDto);
 		return ResponseEntity.ok().body(personPhotoDto);
+	}
+
+	@GetMapping("/{patientId}/completedata")
+	public ResponseEntity<CompletePatientDto> getCompleteDataPatient() {
+		Integer patientId = patientPortalService.getPatientId();
+		Patient patient = patientService.getPatient(patientId)
+				.orElseThrow(() -> new EntityNotFoundException(PATIENT_INVALID));
+		DoctorsBo doctorsBo = additionalDoctorService.getAdditionalDoctors(patientId);
+		BasicDataPersonDto personData = personExternalService.getBasicDataPerson(patient.getPersonId());
+		PatientType patientType = patientTypeRepository.getOne(patient.getTypeId());
+		CompletePatientDto result = new CompletePatientDto(patient, patientType, personData,
+				doctorsBo.getGeneralPractitionerBo() != null
+						? new AAdditionalDoctorDto(doctorsBo.getGeneralPractitionerBo())
+						: null,
+				doctorsBo.getPamiDoctorBo() != null ? new AAdditionalDoctorDto(doctorsBo.getPamiDoctorBo()) : null);
+		LOG.debug(LOGGING_OUTPUT, result);
+		return ResponseEntity.ok().body(result);
 	}
 }
