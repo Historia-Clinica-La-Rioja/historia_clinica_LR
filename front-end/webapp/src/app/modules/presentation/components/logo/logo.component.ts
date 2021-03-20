@@ -9,7 +9,7 @@ import { ImageSrc } from '@core/utils/flavored-image-definitions';
 export class LogoComponent implements OnInit {
 
 	@Input() isSecondaryLogo = false;
-	public img: ImageSrc = { location: 'assets/logos/logo_HSI.svg', alt: 'HSI' };
+	public img: ImageSrc = { location: 'assets/logos/logos_salud.png', alt: 'La Rioja' };
 
 	constructor(private flavoredImagesService: FlavoredImagesService) {
 	}
