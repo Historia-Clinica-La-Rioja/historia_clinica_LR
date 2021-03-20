@@ -39,7 +39,7 @@ echo Crea environment con hash: $(
         -l traefik.frontend.rule=Host:${REVIEW_APP_URL} \
         -l traefik.port=8280 \
         -l temporal=${TEMPORAL} \
-        --network=web \
+        --network=host \
         --restart=unless-stopped \
         -e GLOWROOT_PROJECT=${GLOWROOT_PROJECT} \
         -e GLOWROOT_AGENT_ID="${ENV_NAME}" \
