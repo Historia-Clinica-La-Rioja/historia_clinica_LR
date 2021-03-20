@@ -23,18 +23,11 @@ export const FLAVORED_FOOTER_IMAGES: FlavoredImagesObj = {
 			alt: 'unicen'
 		},
 	],
+	// TODO: This should be add as a new flavor.
 	minsal: [
 		{
-			location: 'assets/flavors/minsal/images/logos/ministerio-salud.png',
-			alt: 'ministerio-salud'
-		},
-		{
-			location: 'assets/flavors/minsal/images/logos/pladema.png',
-			alt: 'pladema'
-		},
-		{
-			location: 'assets/flavors/minsal/images/logos/unicen.png',
-			alt: 'unicen'
+			location: 'assets/logos/marca_larioja.png',
+			alt: 'larioja'
 		},
 	],
 	pba: [
@@ -71,6 +64,12 @@ export const FLAVORED_FOOTER_IMAGES: FlavoredImagesObj = {
 		{
 			location: 'assets/flavors/chaco/images/logos/unicen.png',
 			alt: 'unicen'
+		},
+	],
+	larioja: [
+		{
+			location: 'assets/logos/marca_larioja.png',
+			alt: 'larioja'
 		},
 	],
 };
