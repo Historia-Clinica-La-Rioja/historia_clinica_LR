@@ -12,8 +12,9 @@ import {InstitutionService} from '@api-rest/services/institution.service';
 })
 export class InstitucionesComponent implements OnInit {
 	institutions: { id: number, name: string }[] = null;
-	backoffice: boolean;
-	patientPortal: boolean;
+	webappInstitutionsAccess: boolean;
+	backofficeAccess: boolean;
+	patientPortalAccess: boolean;
 
 	constructor(
 		loggedUserService: LoggedUserService,
@@ -25,9 +26,9 @@ export class InstitucionesComponent implements OnInit {
 				.filter((ra) => ra.institutionId >= 0 && ra.role !== ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE)
 				.map(r => r.institutionId);
 
-			this.backoffice = this.hasAccessToBackoffice(allRoles);
-
-			this.patientPortal = this.hasAccessToPatientPortal(allRoles);
+			this.webappInstitutionsAccess = this.hasAccessToWebappInstitutions(allRoles);
+			this.backofficeAccess = this.hasAccessToBackoffice(allRoles);
+			this.patientPortalAccess = this.hasAccessToPatientPortal(allRoles);
 
 			institutionService.getInstitutions(institutionIds).subscribe(institutions => {
 				/*const uniqueIds = uniqueItems(institutionIds);
@@ -66,7 +67,7 @@ export class InstitucionesComponent implements OnInit {
 				ra.role === ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE ).length > 0;
 	}
 
-	hasAccessToWebapp(allRoles: RoleAssignment[]) {
+	hasAccessToWebappInstitutions(allRoles: RoleAssignment[]) {
 		return allRoles
 			.filter((ra) => ra.role !== ERole.ROOT &&
 				ra.role !== ERole.ADMINISTRADOR &&

@@ -1,5 +1,5 @@
 <app-content width="narrow">
-	<mat-card>
+	<mat-card *ngIf="webappInstitutionsAccess">
 		<mat-card-header>
 			<mat-card-title translate="app.menu.INSTITUCIONES"></mat-card-title>
 		</mat-card-header>
@@ -21,7 +21,7 @@
 		</ng-template>
 	</mat-card>
 	<div class="space"></div>
-	<mat-card *ngIf="backoffice">
+	<mat-card *ngIf="backofficeAccess">
 		<mat-card-header>
 			<mat-card-title>Acceso de administrador</mat-card-title>
 		</mat-card-header>
@@ -33,7 +33,7 @@
 		</mat-action-list>
 	</mat-card>
 	<div class="space"></div>
-	<mat-card *ngIf="patientPortal">
+	<mat-card *ngIf="patientPortalAccess">
 		<mat-card-header>
 			<mat-card-title>Acceso como paciente</mat-card-title>
 		</mat-card-header>
