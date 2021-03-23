@@ -168,6 +168,11 @@
 							</mat-form-field>
 							<app-effective-time [effectiveTime]="form.value.vitalSigns.heartRate.effectiveTime"
 												(update)="setVitalSignEffectiveTime($event, 'heartRate')"></app-effective-time>
+							<mat-error
+								*ngIf="hasError(this.form.controls.vitalSigns, 'min', 'heartRate.value')"
+								[translate]="'forms.MIN_ERROR'"
+								[translateParams]="{min: getError(this.form.controls.vitalSigns, 'min', 'heartRate.value').min}">
+							</mat-error>
 						</div>
 						<div class="field-container" formGroupName="respiratoryRate">
 							<mat-label [translate]="'internaciones.anamnesis.vital-signs.form.RESPIRATORY_RATE'">
@@ -178,6 +183,11 @@
 							</mat-form-field>
 							<app-effective-time [effectiveTime]="form.value.vitalSigns.respiratoryRate.effectiveTime"
 												(update)="setVitalSignEffectiveTime($event, 'respiratoryRate')"></app-effective-time>
+							<mat-error
+								*ngIf="hasError(this.form.controls.vitalSigns, 'min', 'respiratoryRate.value')"
+								[translate]="'forms.MIN_ERROR'"
+								[translateParams]="{min: getError(this.form.controls.vitalSigns, 'min', 'respiratoryRate.value').min}">
+							</mat-error>
 						</div>
 					</div>
 
@@ -190,6 +200,11 @@
 							</mat-form-field>
 							<app-effective-time [effectiveTime]="form.value.vitalSigns.temperature.effectiveTime"
 												(update)="setVitalSignEffectiveTime($event, 'temperature')"></app-effective-time>
+							<mat-error
+								*ngIf="hasError(this.form.controls.vitalSigns, 'min', 'temperature.value')"
+								[translate]="'forms.MIN_ERROR'"
+								[translateParams]="{min: getError(this.form.controls.vitalSigns, 'min', 'temperature.value').min}">
+							</mat-error>
 						</div>
 						<div class="field-container" formGroupName="bloodOxygenSaturation">
 							<mat-label [translate]="'internaciones.anamnesis.vital-signs.form.BLOOD_OXYGEN_SATURATION'">
@@ -202,6 +217,11 @@
 								[effectiveTime]="form.value.vitalSigns.bloodOxygenSaturation.effectiveTime"
 								(update)="setVitalSignEffectiveTime($event, 'bloodOxygenSaturation')">
 							</app-effective-time>
+							<mat-error
+								*ngIf="hasError(this.form.controls.vitalSigns, 'min', 'bloodOxygenSaturation.value')"
+								[translate]="'forms.MIN_ERROR'"
+								[translateParams]="{min: getError(this.form.controls.vitalSigns, 'min', 'bloodOxygenSaturation.value').min}">
+							</mat-error>
 						</div>
 					</div>
 
@@ -217,6 +237,11 @@
 								[effectiveTime]="form.value.vitalSigns.systolicBloodPressure.effectiveTime"
 								(update)="setVitalSignEffectiveTime($event, 'systolicBloodPressure')">
 							</app-effective-time>
+							<mat-error
+								*ngIf="hasError(this.form.controls.vitalSigns, 'min', 'systolicBloodPressure.value')"
+								[translate]="'forms.MIN_ERROR'"
+								[translateParams]="{min: getError(this.form.controls.vitalSigns, 'min', 'systolicBloodPressure.value').min}">
+							</mat-error>
 						</div>
 						<div class="field-container" formGroupName="diastolicBloodPressure">
 							<mat-label
@@ -230,6 +255,11 @@
 								[effectiveTime]="form.value.vitalSigns.diastolicBloodPressure.effectiveTime"
 								(update)="setVitalSignEffectiveTime($event, 'diastolicBloodPressure')">
 							</app-effective-time>
+							<mat-error
+								*ngIf="hasError(this.form.controls.vitalSigns, 'min', 'diastolicBloodPressure.value')"
+								[translate]="'forms.MIN_ERROR'"
+								[translateParams]="{min: getError(this.form.controls.vitalSigns, 'min', 'diastolicBloodPressure.value').min}">
+							</mat-error>
 						</div>
 					</div>
 				</mat-card-content>
